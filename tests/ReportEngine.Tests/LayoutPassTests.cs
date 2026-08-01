@@ -115,8 +115,8 @@ public sealed class LayoutPassTests
             var font = resolver.ResolveTypeface("Noto Sans JP", bold: false, italic: false);
 
             Assert.NotNull(font);
-            Assert.Equal(Path.GetFullPath(fontFilePath), font.Value.FaceName);
-            Assert.Equal(fontData, resolver.GetFont(font.Value.FaceName));
+            Assert.Equal(Path.GetFullPath(fontFilePath), font.FaceName);
+            Assert.Equal(fontData, resolver.GetFont(font.FaceName));
             Assert.Null(resolver.ResolveTypeface("Other Font", bold: false, italic: false));
         }
         finally

@@ -196,7 +196,7 @@ public sealed class PdfSampleOutputTests
 
     private static void ConfigureJapaneseFont()
     {
-        var fontPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "NotoSansJP-VF.ttf");
+        var fontPath = Path.Combine(AppContext.BaseDirectory, "NotoSansJP-VariableFont_wght.ttf");
         Assert.True(File.Exists(fontPath), $"日本語フォントが見つかりません: {fontPath}");
         GlobalFontSettings.FontResolver ??= new PdfSharpFontResolver("Noto Sans JP", fontPath);
     }

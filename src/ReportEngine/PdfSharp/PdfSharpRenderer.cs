@@ -58,7 +58,7 @@ public sealed class PdfSharpRenderer : IRenderer
 
     private static void DrawText(XGraphics graphics, DrawTextCommand command)
     {
-        var font = PdfSharpTextMeasurer.CreateFont(command.Style.Font);
+        var font = CreateFontToFit(graphics, command.Text, command.Style, command.Bounds.Width);
         var lines = WrapText(graphics, command.Text, font, command.Bounds.Width, command.Style.WrapText);
         var lineHeight = graphics.MeasureString("Ag", font).Height;
         var textHeight = lineHeight * lines.Count;
@@ -69,7 +69,8 @@ public sealed class PdfSharpRenderer : IRenderer
             _ => command.Bounds.Y
         };
         var state = graphics.Save();
-        graphics.IntersectClip(ToRect(command.Bounds));
+        if (command.Style.WrapText || command.Style.ShrinkToFit)
+            graphics.IntersectClip(ToRect(command.Bounds));
         var format = ToFormat(command.Style);
         format.LineAlignment = XLineAlignment.Near;
         var brush = new XSolidBrush(ToColor(command.Style.Font.Color ?? new(0, 0, 0)));
@@ -79,6 +80,21 @@ public sealed class PdfSharpRenderer : IRenderer
             y += lineHeight;
         }
         graphics.Restore(state);
+    }
+
+    private static XFont CreateFontToFit(XGraphics graphics, string text, CellStyle style, double width)
+    {
+        var font = PdfSharpTextMeasurer.CreateFont(style.Font);
+        if (!style.ShrinkToFit || style.WrapText || width <= 0) return font;
+
+        var widestLine = text.Replace("\r\n", "\n", StringComparison.Ordinal)
+            .Split('\n').Max(line => graphics.MeasureString(line, font).Width);
+        if (widestLine <= width) return font;
+
+        return PdfSharpTextMeasurer.CreateFont(style.Font with
+        {
+            Size = style.Font.Size * width / widestLine
+        });
     }
 
     private static IReadOnlyList<string> WrapText(XGraphics graphics, string text, XFont font, double width, bool wrap)

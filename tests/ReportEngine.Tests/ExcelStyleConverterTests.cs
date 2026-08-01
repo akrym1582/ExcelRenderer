@@ -86,4 +86,16 @@ public sealed class ExcelStyleConverterTests
 
         Assert.Equal(HorizontalAlignment.Left, style.HorizontalAlignment);
     }
+
+    [Fact]
+    public void Convert_reads_shrink_to_fit()
+    {
+        using var workbook = new XLWorkbook();
+        var cell = workbook.AddWorksheet("Sheet1").Cell(1, 1);
+        cell.Style.Alignment.ShrinkToFit = true;
+
+        var style = ExcelStyleConverter.Convert(cell);
+
+        Assert.True(style.ShrinkToFit);
+    }
 }

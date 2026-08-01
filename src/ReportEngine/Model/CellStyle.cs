@@ -6,7 +6,8 @@ public sealed record CellStyle(
     BorderStyle? Border = null,
     HorizontalAlignment HorizontalAlignment = HorizontalAlignment.Left,
     VerticalAlignment VerticalAlignment = VerticalAlignment.Top,
-    bool WrapText = false)
+    bool WrapText = false,
+    bool ShrinkToFit = false)
 {
     public static CellStyle Default { get; } = new(new FontStyle());
 }

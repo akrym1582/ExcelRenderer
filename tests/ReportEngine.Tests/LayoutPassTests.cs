@@ -1,8 +1,11 @@
+using ClosedXML.Excel;
 using ReportEngine.Abstractions;
 using ReportEngine.Drawing;
+using ReportEngine.Excel;
 using ReportEngine.Layout;
 using ReportEngine.Model;
 using ReportEngine.PdfSharp;
+using SkiaSharp;
 using Xunit;
 
 namespace ReportEngine.Tests;
@@ -70,6 +73,56 @@ public sealed class LayoutPassTests
     }
 
     [Fact]
+    public void PaginationPass_positions_images_from_their_anchor_cell()
+    {
+        var imageBytes = CreateImageBytes();
+        var context = CreateContext(
+            columns: new Dictionary<int, ColumnDefinition> { [1] = new(80) },
+            rows: new Dictionary<int, RowDefinition> { [1] = new(20) },
+            images: [new(new(1, 1), 2, 3, 10, 11, imageBytes)]);
+        context.PrintArea = new(new(1, 1), new(1, 1));
+        new HiddenRowColumnPass().Execute(context);
+        new ColumnLayoutPass().Execute(context);
+        new RowLayoutPass().Execute(context);
+        new TextMeasurePass().Execute(context);
+        new CellBoundsPass().Execute(context);
+
+        new PaginationPass().Execute(context);
+
+        var image = Assert.Single(context.RenderDocument!.Pages[0].Images!);
+        Assert.Equal(new ReportRect(38, 39, 10, 11), image.Bounds);
+        Assert.Equal(imageBytes, image.ImageBytes);
+    }
+
+    [Fact]
+    public void ExcelReader_reads_worksheet_images()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
+        var imageBytes = CreateImageBytes();
+
+        try
+        {
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.AddWorksheet("Sheet1");
+                worksheet.Pictures.Add(new MemoryStream(imageBytes)).MoveTo(worksheet.Cell(2, 3), 4, 5);
+                workbook.SaveAs(path);
+            }
+
+            var image = Assert.Single(new ExcelReader().Read(path).Sheets[0].Images!);
+
+            Assert.Equal(new CellAddress(2, 3), image.Anchor);
+            Assert.Equal(3, image.OffsetX);
+            Assert.Equal(3.75, image.OffsetY);
+            Assert.Equal(imageBytes, image.ImageBytes);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [Fact]
     public void DrawCommandGenerator_orders_fill_before_border_before_text()
     {
         var style = CellStyle.Default with
@@ -91,11 +144,40 @@ public sealed class LayoutPassTests
     }
 
     [Fact]
+    public void DrawCommandGenerator_adds_images_after_cell_content()
+    {
+        var imageBytes = CreateImageBytes();
+        var document = new RenderDocument(
+        [
+            new RenderPage(1, [new(new("text", CellStyle.Default), new(0, 0, 10, 10))],
+                [new(new(10, 20, 30, 40), imageBytes)])
+        ]);
+
+        var commands = new DrawCommandGeneratorPass().Generate(document);
+
+        var image = Assert.IsType<DrawImageCommand>(commands.Last());
+        Assert.Equal(new ReportRect(10, 20, 30, 40), image.Bounds);
+        Assert.Equal(imageBytes, image.ImageBytes);
+    }
+
+    [Fact]
     public void PdfSharpRenderer_writes_a_pdf_document()
     {
         using var output = new MemoryStream();
 
         new PdfSharpRenderer().Render([], new PageSettings(), output);
+
+        Assert.True(output.Length > 0);
+        Assert.Equal("%PDF-", System.Text.Encoding.ASCII.GetString(output.GetBuffer(), 0, 5));
+    }
+
+    [Fact]
+    public void PdfSharpRenderer_renders_an_image()
+    {
+        using var output = new MemoryStream();
+        var command = new DrawImageCommand(1, new(0, 0, 20, 20), CreateImageBytes());
+
+        new PdfSharpRenderer().Render([command], new PageSettings(), output);
 
         Assert.True(output.Length > 0);
         Assert.Equal("%PDF-", System.Text.Encoding.ASCII.GetString(output.GetBuffer(), 0, 5));
@@ -129,12 +211,22 @@ public sealed class LayoutPassTests
         IReadOnlyDictionary<CellAddress, ReportCell>? cells = null,
         IReadOnlyDictionary<int, ColumnDefinition>? columns = null,
         IReadOnlyDictionary<int, RowDefinition>? rows = null,
-        PageSettings? pageSettings = null) =>
+        PageSettings? pageSettings = null,
+        IReadOnlyList<ReportImage>? images = null) =>
         new(new ReportSheet("Sheet1",
             cells ?? new Dictionary<CellAddress, ReportCell> { [new(1, 1)] = new(null, CellStyle.Default) },
             columns ?? new Dictionary<int, ColumnDefinition> { [1] = new() },
             rows ?? new Dictionary<int, RowDefinition> { [1] = new() },
-            [], pageSettings ?? new()), new FixedTextMeasurer());
+            [], pageSettings ?? new(), Images: images), new FixedTextMeasurer());
+
+    private static byte[] CreateImageBytes()
+    {
+        using var bitmap = new SKBitmap(1, 1);
+        bitmap.SetPixel(0, 0, SKColors.Red);
+        using var image = SKImage.FromBitmap(bitmap);
+        using var data = image.Encode(SKEncodedImageFormat.Png, 100);
+        return data.ToArray();
+    }
 
     private sealed class FixedTextMeasurer : ITextMeasurer
     {

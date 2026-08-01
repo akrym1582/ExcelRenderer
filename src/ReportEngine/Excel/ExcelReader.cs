@@ -45,6 +45,27 @@ public sealed class ExcelReader
             new(range.RangeAddress.FirstAddress.RowNumber, range.RangeAddress.FirstAddress.ColumnNumber),
             new(range.RangeAddress.LastAddress.RowNumber, range.RangeAddress.LastAddress.ColumnNumber))).ToArray();
         cells = ApplyMergedSpans(cells, mergedRanges);
+
+        foreach (var range in mergedRanges)
+        {
+            for (var column = range.First.Column; column <= range.Last.Column; column++)
+            {
+                if (!columns.ContainsKey(column))
+                {
+                    var source = worksheet.Column(column);
+                    columns[column] = new(ExcelColumnWidthToPoints(source.Width), source.IsHidden);
+                }
+            }
+            for (var row = range.First.Row; row <= range.Last.Row; row++)
+            {
+                if (!rows.ContainsKey(row))
+                {
+                    var source = worksheet.Row(row);
+                    rows[row] = new(source.Height, source.IsHidden);
+                }
+            }
+        }
+
         var images = worksheet.Pictures.Select(ReadImage).ToArray();
 
         return new(worksheet.Name, cells, columns, rows, mergedRanges, ReadPageSettings(worksheet),
@@ -146,6 +167,9 @@ public static class ExcelStyleConverter
     public static CellStyle Convert(IXLCell cell)
     {
         var style = cell.Style;
+        var horizontalAlignment = style.Alignment.Horizontal == XLAlignmentHorizontalValues.General
+            ? ResolveGeneralAlignment(cell)
+            : ToHorizontalAlignment(style.Alignment.Horizontal);
         return new(new FontStyle(
             style.Font.FontName,
             style.Font.FontSize,
@@ -155,10 +179,17 @@ public static class ExcelStyleConverter
             ToColor(style.Font.FontColor)),
             ToBackground(style.Fill),
             ToBorder(style.Border),
-            ToHorizontalAlignment(style.Alignment.Horizontal),
+            horizontalAlignment,
             ToVerticalAlignment(style.Alignment.Vertical),
             style.Alignment.WrapText);
     }
+
+    private static HorizontalAlignment ResolveGeneralAlignment(IXLCell cell) =>
+        cell.DataType is XLDataType.Number or XLDataType.DateTime or XLDataType.TimeSpan
+            ? HorizontalAlignment.Right
+            : cell.DataType is XLDataType.Boolean
+                ? HorizontalAlignment.Center
+                : HorizontalAlignment.Left;
 
     private static ReportColor? ToBackground(IXLFill fill) =>
         fill.PatternType == XLFillPatternValues.None ? null : ToColor(fill.BackgroundColor);

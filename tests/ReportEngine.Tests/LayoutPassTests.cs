@@ -415,6 +415,47 @@ public sealed class LayoutPassTests
         }
     }
 
+    [Fact]
+    public void ResolvePrintAreaPass_expands_range_to_cover_merged_cell_spans()
+    {
+        var context = CreateContext(
+            cells: new Dictionary<CellAddress, ReportCell>
+            {
+                [new(1, 1)] = new("merged", CellStyle.Default, RowSpan: 2, ColumnSpan: 3)
+            },
+            columns: new Dictionary<int, ColumnDefinition> { [1] = new(50), [2] = new(60), [3] = new(70) },
+            rows: new Dictionary<int, RowDefinition> { [1] = new(20), [2] = new(25) });
+
+        new ResolvePrintAreaPass().Execute(context);
+
+        Assert.Equal(new CellRange(new(1, 1), new(2, 3)), context.PrintArea);
+    }
+
+    [Fact]
+    public void ExcelReader_reads_column_and_row_definitions_for_merged_range_extents()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
+        try
+        {
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.AddWorksheet("Sheet1");
+                worksheet.Cell(1, 1).Value = "merged";
+                worksheet.Range(1, 1, 1, 3).Merge();
+                workbook.SaveAs(path);
+            }
+
+            var sheet = new ExcelReader().Read(path).Sheets[0];
+
+            Assert.True(sheet.Columns.ContainsKey(2), "結合範囲内の列2の定義が必要です");
+            Assert.True(sheet.Columns.ContainsKey(3), "結合範囲内の列3の定義が必要です");
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
     private static ReportLayoutContext CreateContext(
         IReadOnlyDictionary<CellAddress, ReportCell>? cells = null,
         IReadOnlyDictionary<int, ColumnDefinition>? columns = null,

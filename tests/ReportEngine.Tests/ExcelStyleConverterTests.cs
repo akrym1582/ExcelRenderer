@@ -47,4 +47,43 @@ public sealed class ExcelStyleConverterTests
         Assert.Null(style.Background);
         Assert.Null(style.Border);
     }
+
+    [Fact]
+    public void Convert_resolves_general_alignment_right_for_numbers()
+    {
+        using var workbook = new XLWorkbook();
+        var worksheet = workbook.AddWorksheet("Sheet1");
+        var cell = worksheet.Cell(1, 1);
+        cell.Value = 123.45;
+
+        var style = ExcelStyleConverter.Convert(cell);
+
+        Assert.Equal(HorizontalAlignment.Right, style.HorizontalAlignment);
+    }
+
+    [Fact]
+    public void Convert_resolves_general_alignment_center_for_booleans()
+    {
+        using var workbook = new XLWorkbook();
+        var worksheet = workbook.AddWorksheet("Sheet1");
+        var cell = worksheet.Cell(1, 1);
+        cell.Value = true;
+
+        var style = ExcelStyleConverter.Convert(cell);
+
+        Assert.Equal(HorizontalAlignment.Center, style.HorizontalAlignment);
+    }
+
+    [Fact]
+    public void Convert_resolves_general_alignment_left_for_text()
+    {
+        using var workbook = new XLWorkbook();
+        var worksheet = workbook.AddWorksheet("Sheet1");
+        var cell = worksheet.Cell(1, 1);
+        cell.Value = "hello";
+
+        var style = ExcelStyleConverter.Convert(cell);
+
+        Assert.Equal(HorizontalAlignment.Left, style.HorizontalAlignment);
+    }
 }

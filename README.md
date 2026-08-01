@@ -381,7 +381,7 @@ DrawCommand
 必要な SDK は .NET 10 です。テストはリポジトリのルートで実行します。
 
 ```bash
-dotnet test Excel2Pdf.slnx
+dotnet test ExcelRenderer.slnx
 ```
 
 ソースコードは `src/ExcelRenderer`、テストコードは `tests/ExcelRenderer.Tests` にあります。

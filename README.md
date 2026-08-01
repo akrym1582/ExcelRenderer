@@ -1,4 +1,4 @@
-# excel2pdf
+# ExcelRenderer
 
 Excel ワークブックを読み込み、レイアウト計算を経て PDF を生成する .NET ライブラリです。
 

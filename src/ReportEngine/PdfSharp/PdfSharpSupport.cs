@@ -34,16 +34,23 @@ public sealed class PdfSharpRenderer : IRenderer
     public void Render(IReadOnlyList<DrawCommand> commands, PageSettings pageSettings, Stream output)
     {
         using var document = new PdfDocument();
-        foreach (var pageCommands in commands.GroupBy(x => x.PageNumber).OrderBy(x => x.Key))
-        {
-            var page = document.AddPage();
-            page.Width = pageSettings.Width;
-            page.Height = pageSettings.Height;
-            using var graphics = XGraphics.FromPdfPage(page);
-            foreach (var command in pageCommands)
-                Execute(graphics, command);
-        }
+        var pages = commands.GroupBy(x => x.PageNumber).OrderBy(x => x.Key).ToArray();
+        if (pages.Length == 0)
+            AddPage(document, pageSettings, []);
+
+        foreach (var pageCommands in pages)
+            AddPage(document, pageSettings, pageCommands);
         document.Save(output, false);
+    }
+
+    private static void AddPage(PdfDocument document, PageSettings pageSettings, IEnumerable<DrawCommand> commands)
+    {
+        var page = document.AddPage();
+        page.Width = XUnit.FromPoint(pageSettings.Width);
+        page.Height = XUnit.FromPoint(pageSettings.Height);
+        using var graphics = XGraphics.FromPdfPage(page);
+        foreach (var command in commands)
+            Execute(graphics, command);
     }
 
     private static void Execute(XGraphics graphics, DrawCommand command)

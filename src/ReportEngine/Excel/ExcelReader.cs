@@ -1,4 +1,5 @@
 using ClosedXML.Excel;
+using ClosedXML.Excel.Drawings;
 using ReportEngine.Model;
 
 namespace ReportEngine.Excel;
@@ -44,9 +45,25 @@ public sealed class ExcelReader
             new(range.RangeAddress.FirstAddress.RowNumber, range.RangeAddress.FirstAddress.ColumnNumber),
             new(range.RangeAddress.LastAddress.RowNumber, range.RangeAddress.LastAddress.ColumnNumber))).ToArray();
         cells = ApplyMergedSpans(cells, mergedRanges);
+        var images = worksheet.Pictures.Select(ReadImage).ToArray();
 
-        return new(worksheet.Name, cells, columns, rows, mergedRanges, new PageSettings());
+        return new(worksheet.Name, cells, columns, rows, mergedRanges, new PageSettings(), Images: images);
     }
+
+    private static ReportImage ReadImage(IXLPicture picture)
+    {
+        var anchor = picture.TopLeftCell.Address;
+        var offset = picture.GetOffset(XLMarkerPosition.TopLeft);
+        return new(
+            new CellAddress(anchor.RowNumber, anchor.ColumnNumber),
+            PixelsToPoints(offset.X),
+            PixelsToPoints(offset.Y),
+            PixelsToPoints(picture.Width),
+            PixelsToPoints(picture.Height),
+            picture.ImageStream.ToArray());
+    }
+
+    private static double PixelsToPoints(int value) => value * 72d / 96d;
 
     private static Dictionary<CellAddress, ReportCell> ApplyMergedSpans(
         Dictionary<CellAddress, ReportCell> cells, IEnumerable<CellRange> ranges)

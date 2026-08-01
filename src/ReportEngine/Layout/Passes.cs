@@ -133,7 +133,23 @@ public sealed class PaginationPass : IReportLayoutPass
                 .Select(layout => new RenderCell(context.Sheet.Cells[layout.Address],
                     layout.Bounds with { X = layout.Bounds.X + settings.MarginLeft, Y = layout.Bounds.Y - start + settings.MarginTop }))
                 .ToArray();
-            return new RenderPage(index + 1, cells);
+            var images = (context.Sheet.Images ?? [])
+                .Where(image => context.RowLayouts.TryGetValue(image.Anchor.Row, out var row) &&
+                    row.Y >= start && row.Y < end &&
+                    context.ColumnLayouts.ContainsKey(image.Anchor.Column))
+                .Select(image =>
+                {
+                    var column = context.ColumnLayouts[image.Anchor.Column];
+                    var row = context.RowLayouts[image.Anchor.Row];
+                    return new RenderImage(new(
+                        column.X + image.OffsetX + settings.MarginLeft,
+                        row.Y - start + image.OffsetY + settings.MarginTop,
+                        image.Width,
+                        image.Height),
+                        image.ImageBytes);
+                })
+                .ToArray();
+            return new RenderPage(index + 1, cells, images);
         }).ToArray());
     }
 }

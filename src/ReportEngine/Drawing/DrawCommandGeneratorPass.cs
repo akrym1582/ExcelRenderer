@@ -3,13 +3,6 @@ using ReportEngine.Model;
 
 namespace ReportEngine.Drawing;
 
-public abstract record DrawCommand(int PageNumber);
-public sealed record FillRectangleCommand(int PageNumber, ReportRect Bounds, ReportColor Color) : DrawCommand(PageNumber);
-public sealed record DrawBorderCommand(int PageNumber, ReportRect Bounds, BorderStyle Border) : DrawCommand(PageNumber);
-public sealed record DrawTextCommand(int PageNumber, ReportRect Bounds, string Text, CellStyle Style) : DrawCommand(PageNumber);
-public sealed record DrawLineCommand(int PageNumber, double X1, double Y1, double X2, double Y2, BorderSide Style) : DrawCommand(PageNumber);
-public sealed record DrawImageCommand(int PageNumber, ReportRect Bounds, byte[] ImageBytes) : DrawCommand(PageNumber);
-
 public sealed class DrawCommandGeneratorPass
 {
     public IReadOnlyList<DrawCommand> Generate(RenderDocument document)

@@ -9,55 +9,6 @@ using SkiaSharp;
 
 namespace ReportEngine.PdfSharp;
 
-public sealed class PdfSharpFontResolver : IFontResolver
-{
-    private readonly string _familyName;
-    private readonly string _faceName;
-    private readonly byte[] _fontData;
-
-    public PdfSharpFontResolver(string familyName, string fontFilePath)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(familyName);
-        ArgumentException.ThrowIfNullOrWhiteSpace(fontFilePath);
-
-        _familyName = familyName;
-        _faceName = Path.GetFullPath(fontFilePath);
-        _fontData = File.ReadAllBytes(_faceName);
-    }
-
-    public FontResolverInfo? ResolveTypeface(string familyName, bool bold, bool italic) =>
-        string.Equals(familyName, _familyName, StringComparison.OrdinalIgnoreCase)
-            ? new FontResolverInfo(_faceName)
-            : null;
-
-    public byte[]? GetFont(string faceName) =>
-        string.Equals(faceName, _faceName, StringComparison.Ordinal)
-            ? _fontData
-            : null;
-}
-
-public sealed class PdfSharpTextMeasurer : ITextMeasurer
-{
-    public TextSize Measure(string text, FontStyle font, double availableWidth, bool wrap)
-    {
-        if (string.IsNullOrEmpty(text)) return new(0, 0);
-        using var graphics = XGraphics.CreateMeasureContext(new XSize(availableWidth, double.MaxValue), XGraphicsUnit.Point, XPageDirection.Downwards);
-        var size = graphics.MeasureString(text, CreateFont(font));
-        if (!wrap || size.Width <= availableWidth) return new(size.Width, size.Height);
-        var lines = Math.Ceiling(size.Width / Math.Max(availableWidth, 1));
-        return new(availableWidth, size.Height * lines);
-    }
-
-    internal static XFont CreateFont(FontStyle font)
-    {
-        var style = XFontStyleEx.Regular;
-        if (font.Bold) style |= XFontStyleEx.Bold;
-        if (font.Italic) style |= XFontStyleEx.Italic;
-        if (font.Underline) style |= XFontStyleEx.Underline;
-        return new XFont(font.Family, font.Size, style);
-    }
-}
-
 public sealed class PdfSharpRenderer : IRenderer
 {
     public void Render(IReadOnlyList<DrawCommand> commands, PageSettings pageSettings, Stream output)

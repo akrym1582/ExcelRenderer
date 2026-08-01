@@ -11,6 +11,13 @@ Excel ワークブックを読み込み、レイアウト計算を経て PDF を
 - 背景色、罫線、文字列を PDFsharp で描画
 - ワークシートに配置された PNG/JPEG などの画像を SkiaSharp で処理して描画
 
+## 処理の流れ
+
+1. `ExcelReader` が ClosedXML から `ReportDocument` を作成します。
+2. `ReportLayoutEngine` が正規化、印刷領域解決、非表示行列処理、列・行レイアウト、テキスト計測、セル境界計算、ページ分割を順に実行し、`RenderDocument` を作成します。
+3. `DrawCommandGeneratorPass` が背景、罫線、テキスト、画像の順に描画コマンドを生成します。
+4. `PdfSharpRenderer` が描画コマンドを PDF に出力します。画像は SkiaSharp でデコードします。
+
 ## 利用方法
 
 ライブラリを参照し、`ExcelReader`、`ReportLayoutEngine`、`DrawCommandGeneratorPass`、`PdfSharpRenderer` の順に使用します。
@@ -31,7 +38,7 @@ var commands = new DrawCommandGeneratorPass().Generate(layout);
 renderer.Render(commands, document.Sheets[0].PageSettings, output);
 ```
 
-`ReportDocument` には複数シートを保持できます。PDF を作成する対象シートは呼び出し側で選択してください。
+`ReportDocument` には複数シートを保持できます。PDF を作成する対象シートは呼び出し側で選択し、シートごとにレイアウトから描画までの処理を行ってください。
 
 ### フォントファイルの指定
 

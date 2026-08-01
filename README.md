@@ -15,7 +15,7 @@ Excel ワークブックを読み込み、レイアウト計算を経て PDF を
 
 1. `ExcelReader` が ClosedXML から `ReportDocument` を作成します。
 2. `ReportLayoutEngine` が正規化、印刷領域解決、非表示行列処理、列・行レイアウト、テキスト計測、セル境界計算、ページ分割を順に実行し、`RenderDocument` を作成します。
-3. `DrawCommandGeneratorPass` が背景、罫線、テキスト、画像の順に描画コマンドを生成します。
+3. `DrawCommandGeneratorPass` が背景、罫線、セルのテキスト、画像、ヘッダー／フッターの順に描画コマンドを生成します。
 4. `PdfSharpRenderer` が描画コマンドを PDF に出力します。画像は SkiaSharp でデコードします。
 
 ## 利用方法

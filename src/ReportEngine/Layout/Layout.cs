@@ -9,10 +9,12 @@ public sealed record RowLayout(int Row, double Y, double Height);
 public sealed record CellLayout(CellAddress Address, ReportRect Bounds, TextSize TextSize);
 public sealed record RenderCell(ReportCell Cell, ReportRect Bounds);
 public sealed record RenderImage(ReportRect Bounds, byte[] ImageBytes);
+public sealed record RenderText(ReportRect Bounds, string Text, CellStyle Style);
 public sealed record RenderPage(
     int Number,
     IReadOnlyList<RenderCell> Cells,
-    IReadOnlyList<RenderImage>? Images = null);
+    IReadOnlyList<RenderImage>? Images = null,
+    IReadOnlyList<RenderText>? HeaderFooterTexts = null);
 public sealed record RenderDocument(IReadOnlyList<RenderPage> Pages);
 
 public sealed class ReportLayoutContext

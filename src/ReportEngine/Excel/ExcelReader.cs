@@ -47,8 +47,24 @@ public sealed class ExcelReader
         cells = ApplyMergedSpans(cells, mergedRanges);
         var images = worksheet.Pictures.Select(ReadImage).ToArray();
 
-        return new(worksheet.Name, cells, columns, rows, mergedRanges, new PageSettings(), Images: images);
+        return new(worksheet.Name, cells, columns, rows, mergedRanges, new PageSettings(), Images: images,
+            HeaderFooter: ReadHeaderFooter(worksheet));
     }
+
+    private static HeaderFooter? ReadHeaderFooter(IXLWorksheet worksheet)
+    {
+        var header = ReadHeaderFooterSection(worksheet.PageSetup.Header);
+        var footer = ReadHeaderFooterSection(worksheet.PageSetup.Footer);
+        return header == new HeaderFooterSection() && footer == new HeaderFooterSection()
+            ? null
+            : new(header, footer);
+    }
+
+    private static HeaderFooterSection ReadHeaderFooterSection(IXLHeaderFooter headerFooter) =>
+        new(
+            headerFooter.Left.GetText(XLHFOccurrence.OddPages),
+            headerFooter.Center.GetText(XLHFOccurrence.OddPages),
+            headerFooter.Right.GetText(XLHFOccurrence.OddPages));
 
     private static ReportImage ReadImage(IXLPicture picture)
     {

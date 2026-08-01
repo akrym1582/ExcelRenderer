@@ -67,6 +67,19 @@ public sealed class ExcelReader
         }
 
         var images = worksheet.Pictures.Select(ReadImage).ToArray();
+        foreach (var image in images)
+        {
+            if (!columns.ContainsKey(image.Anchor.Column))
+            {
+                var source = worksheet.Column(image.Anchor.Column);
+                columns[image.Anchor.Column] = new(ExcelColumnWidthToPoints(source.Width), source.IsHidden);
+            }
+            if (!rows.ContainsKey(image.Anchor.Row))
+            {
+                var source = worksheet.Row(image.Anchor.Row);
+                rows[image.Anchor.Row] = new(source.Height, source.IsHidden);
+            }
+        }
 
         return new(worksheet.Name, cells, columns, rows, mergedRanges, ReadPageSettings(worksheet),
             ReadPrintArea(worksheet), images, ReadHeaderFooter(worksheet));

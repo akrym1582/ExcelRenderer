@@ -159,12 +159,15 @@ public sealed class LayoutPassTests
                 workbook.SaveAs(path);
             }
 
-            var image = Assert.Single(new ExcelReader().Read(path).Sheets[0].Images!);
+            var sheet = new ExcelReader().Read(path).Sheets[0];
+            var image = Assert.Single(sheet.Images!);
 
             Assert.Equal(new CellAddress(2, 3), image.Anchor);
             Assert.Equal(3, image.OffsetX);
             Assert.Equal(3.75, image.OffsetY);
             Assert.Equal(imageBytes, image.ImageBytes);
+            Assert.True(sheet.Columns.ContainsKey(3));
+            Assert.True(sheet.Rows.ContainsKey(2));
         }
         finally
         {
@@ -441,6 +444,52 @@ public sealed class LayoutPassTests
         new ResolvePrintAreaPass().Execute(context);
 
         Assert.Equal(new CellRange(new(1, 1), new(2, 3)), context.PrintArea);
+    }
+
+    [Fact]
+    public void ReportLayoutEngine_renders_an_image_only_sheet()
+    {
+        var imageBytes = CreateImageBytes();
+        var sheet = new ReportSheet("Sheet1", new Dictionary<CellAddress, ReportCell>(),
+            new Dictionary<int, ColumnDefinition> { [3] = new(80) },
+            new Dictionary<int, RowDefinition> { [2] = new(20) }, [], new(),
+            Images: [new(new(2, 3), 0, 0, 10, 11, imageBytes)]);
+
+        var page = Assert.Single(new ReportLayoutEngine(new FixedTextMeasurer()).Layout(sheet).Pages);
+
+        var image = Assert.Single(page.Images!);
+        Assert.Equal(new ReportRect(36, 36, 10, 11), image.Bounds);
+        Assert.Equal(imageBytes, image.ImageBytes);
+    }
+
+    [Fact]
+    public void ResolvePrintAreaPass_expands_range_to_cover_an_image_outside_cells()
+    {
+        var context = CreateContext(
+            cells: new Dictionary<CellAddress, ReportCell> { [new(1, 1)] = new("text", CellStyle.Default) },
+            columns: new Dictionary<int, ColumnDefinition> { [1] = new(80), [3] = new(80) },
+            rows: new Dictionary<int, RowDefinition> { [1] = new(20), [2] = new(20) },
+            images: [new(new(2, 3), 0, 0, 10, 11, CreateImageBytes())]);
+
+        new ResolvePrintAreaPass().Execute(context);
+
+        Assert.Equal(new CellRange(new(1, 1), new(2, 3)), context.PrintArea);
+    }
+
+    [Fact]
+    public void ReportLayoutEngine_renders_cells_and_images()
+    {
+        var imageBytes = CreateImageBytes();
+        var sheet = new ReportSheet("Sheet1",
+            new Dictionary<CellAddress, ReportCell> { [new(1, 1)] = new("text", CellStyle.Default) },
+            new Dictionary<int, ColumnDefinition> { [1] = new(80) },
+            new Dictionary<int, RowDefinition> { [1] = new(20) }, [], new(),
+            Images: [new(new(1, 1), 0, 0, 10, 11, imageBytes)]);
+
+        var page = Assert.Single(new ReportLayoutEngine(new FixedTextMeasurer()).Layout(sheet).Pages);
+
+        Assert.Single(page.Cells);
+        Assert.Equal(imageBytes, Assert.Single(page.Images!).ImageBytes);
     }
 
     [Fact]

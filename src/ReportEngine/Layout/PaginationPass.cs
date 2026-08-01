@@ -7,7 +7,8 @@ public sealed class PaginationPass : IReportLayoutPass
 {
     public void Execute(ReportLayoutContext context)
     {
-        if (context.PrintArea is not { } || context.CellLayouts.Count == 0)
+        if (context.PrintArea is not { } ||
+            (context.CellLayouts.Count == 0 && (context.Sheet.Images?.Count ?? 0) == 0))
         {
             var headerFooterTexts = CreateHeaderFooterTexts(context.Sheet, 1, 1);
             context.RenderDocument = new(headerFooterTexts.Count == 0

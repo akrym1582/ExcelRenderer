@@ -93,8 +93,7 @@ public sealed class PdfSharpRenderer : IRenderer
                 DrawBorder(graphics, border);
                 break;
             case DrawTextCommand text:
-                graphics.DrawString(text.Text, PdfSharpTextMeasurer.CreateFont(text.Style.Font),
-                    new XSolidBrush(ToColor(text.Style.Font.Color ?? new(0, 0, 0))), ToRect(text.Bounds), ToFormat(text.Style));
+                DrawText(graphics, text);
                 break;
             case DrawLineCommand line:
                 graphics.DrawLine(new XPen(ToColor(line.Style.Color ?? new(0, 0, 0)), line.Style.Width),
@@ -104,6 +103,61 @@ public sealed class PdfSharpRenderer : IRenderer
                 DrawImage(graphics, image);
                 break;
         }
+    }
+
+    private static void DrawText(XGraphics graphics, DrawTextCommand command)
+    {
+        var font = PdfSharpTextMeasurer.CreateFont(command.Style.Font);
+        var lines = WrapText(graphics, command.Text, font, command.Bounds.Width, command.Style.WrapText);
+        var lineHeight = graphics.MeasureString("Ag", font).Height;
+        var textHeight = lineHeight * lines.Count;
+        var y = command.Style.VerticalAlignment switch
+        {
+            VerticalAlignment.Center => command.Bounds.Y + (command.Bounds.Height - textHeight) / 2,
+            VerticalAlignment.Bottom => command.Bounds.Y + command.Bounds.Height - textHeight,
+            _ => command.Bounds.Y
+        };
+        var state = graphics.Save();
+        graphics.IntersectClip(ToRect(command.Bounds));
+        var format = ToFormat(command.Style);
+        format.LineAlignment = XLineAlignment.Near;
+        var brush = new XSolidBrush(ToColor(command.Style.Font.Color ?? new(0, 0, 0)));
+        foreach (var line in lines)
+        {
+            graphics.DrawString(line, font, brush, new XRect(command.Bounds.X, y, command.Bounds.Width, lineHeight), format);
+            y += lineHeight;
+        }
+        graphics.Restore(state);
+    }
+
+    private static IReadOnlyList<string> WrapText(XGraphics graphics, string text, XFont font, double width, bool wrap)
+    {
+        if (!wrap || width <= 0) return text.Split('\n');
+
+        var lines = new List<string>();
+        foreach (var paragraph in text.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n'))
+        {
+            if (paragraph.Length == 0)
+            {
+                lines.Add(string.Empty);
+                continue;
+            }
+
+            var line = string.Empty;
+            foreach (var character in paragraph)
+            {
+                var candidate = line + character;
+                if (line.Length > 0 && graphics.MeasureString(candidate, font).Width > width)
+                {
+                    lines.Add(line);
+                    line = character.ToString();
+                }
+                else
+                    line = candidate;
+            }
+            lines.Add(line);
+        }
+        return lines;
     }
 
     private static void DrawImage(XGraphics graphics, DrawImageCommand command)

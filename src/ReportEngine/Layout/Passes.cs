@@ -16,15 +16,16 @@ public sealed class ResolvePrintAreaPass : IReportLayoutPass
 {
     public void Execute(ReportLayoutContext context)
     {
-        context.PrintArea = context.Sheet.PrintArea ?? GetUsedRange(context.Sheet.Cells.Keys);
+        context.PrintArea = context.Sheet.PrintArea ?? GetUsedRange(context.Sheet.Cells);
     }
 
-    private static CellRange? GetUsedRange(IEnumerable<CellAddress> addresses)
+    private static CellRange? GetUsedRange(IReadOnlyDictionary<CellAddress, ReportCell> cells)
     {
-        var cells = addresses.ToArray();
-        return cells.Length == 0 ? null : new CellRange(
-            new(cells.Min(x => x.Row), cells.Min(x => x.Column)),
-            new(cells.Max(x => x.Row), cells.Max(x => x.Column)));
+        if (cells.Count == 0) return null;
+        return new CellRange(
+            new(cells.Keys.Min(x => x.Row), cells.Keys.Min(x => x.Column)),
+            new(cells.Max(x => x.Key.Row + x.Value.RowSpan - 1),
+                cells.Max(x => x.Key.Column + x.Value.ColumnSpan - 1)));
     }
 }
 

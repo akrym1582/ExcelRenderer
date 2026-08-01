@@ -77,4 +77,8 @@ public sealed record HeaderFooterSection(
 
 public sealed record HeaderFooter(
     HeaderFooterSection Header,
-    HeaderFooterSection Footer);
+    HeaderFooterSection Footer,
+    HeaderFooterSection? FirstPageHeader = null,
+    HeaderFooterSection? FirstPageFooter = null,
+    HeaderFooterSection? EvenPageHeader = null,
+    HeaderFooterSection? EvenPageFooter = null);

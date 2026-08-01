@@ -49,6 +49,56 @@ public sealed class LayoutPassTests
     }
 
     [Fact]
+    public void PaginationPass_splits_wide_sheets_at_column_boundaries()
+    {
+        var context = CreateContext(
+            cells: new Dictionary<CellAddress, ReportCell>
+            {
+                [new(1, 1)] = new("left", CellStyle.Default),
+                [new(1, 2)] = new("right", CellStyle.Default)
+            },
+            columns: new Dictionary<int, ColumnDefinition> { [1] = new(50), [2] = new(50) },
+            pageSettings: new(70, 100, 10, 10, 10, 10));
+        context.PrintArea = new(new(1, 1), new(1, 2));
+        new HiddenRowColumnPass().Execute(context);
+        new ColumnLayoutPass().Execute(context);
+        new RowLayoutPass().Execute(context);
+        new TextMeasurePass().Execute(context);
+        new CellBoundsPass().Execute(context);
+
+        new PaginationPass().Execute(context);
+
+        Assert.Equal(2, context.RenderDocument!.Pages.Count);
+        Assert.Equal("left", Assert.Single(context.RenderDocument.Pages[0].Cells).Cell.Text);
+        Assert.Equal("right", Assert.Single(context.RenderDocument.Pages[1].Cells).Cell.Text);
+    }
+
+    [Fact]
+    public void PaginationPass_keeps_merged_cells_on_one_page()
+    {
+        var context = CreateContext(
+            cells: new Dictionary<CellAddress, ReportCell>
+            {
+                [new(1, 1)] = new("merged", CellStyle.Default, 2),
+                [new(3, 1)] = new("next", CellStyle.Default)
+            },
+            rows: new Dictionary<int, RowDefinition> { [1] = new(30), [2] = new(30), [3] = new(30) },
+            pageSettings: new(100, 80, 10, 10, 10, 10));
+        context.PrintArea = new(new(1, 1), new(3, 1));
+        new HiddenRowColumnPass().Execute(context);
+        new ColumnLayoutPass().Execute(context);
+        new RowLayoutPass().Execute(context);
+        new TextMeasurePass().Execute(context);
+        new CellBoundsPass().Execute(context);
+
+        new PaginationPass().Execute(context);
+
+        Assert.Equal(2, context.RenderDocument!.Pages.Count);
+        Assert.Equal("merged", Assert.Single(context.RenderDocument.Pages[0].Cells).Cell.Text);
+        Assert.Equal("next", Assert.Single(context.RenderDocument.Pages[1].Cells).Cell.Text);
+    }
+
+    [Fact]
     public void PaginationPass_does_not_split_rows()
     {
         var cells = new Dictionary<CellAddress, ReportCell>
@@ -149,6 +199,62 @@ public sealed class LayoutPassTests
     }
 
     [Fact]
+    public void ExcelReader_reads_print_settings_and_converts_column_widths()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
+        try
+        {
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.AddWorksheet("Sheet1");
+                worksheet.Cell(2, 3).Value = "text";
+                worksheet.PageSetup.PrintAreas.Add(2, 3, 4, 5);
+                worksheet.PageSetup.PaperSize = XLPaperSize.A4Paper;
+                worksheet.PageSetup.PageOrientation = XLPageOrientation.Landscape;
+                worksheet.PageSetup.Margins.Left = 0.5;
+                workbook.SaveAs(path);
+            }
+
+            var sheet = new ExcelReader().Read(path).Sheets[0];
+
+            Assert.Equal(new CellRange(new(2, 3), new(4, 5)), sheet.PrintArea);
+            Assert.Equal(841.89, sheet.PageSettings.Width, 2);
+            Assert.Equal(36, sheet.PageSettings.MarginLeft, 2);
+            Assert.Equal(48, sheet.Columns[3].Width, 2);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [Fact]
+    public void ExcelReader_normalizes_empty_merged_cells_to_the_top_left_cell()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
+        try
+        {
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.AddWorksheet("Sheet1");
+                worksheet.Range(1, 1, 2, 2).Merge();
+                workbook.SaveAs(path);
+            }
+
+            var sheet = new ExcelReader().Read(path).Sheets[0];
+
+            var cell = Assert.Single(sheet.Cells);
+            Assert.Equal(new CellAddress(1, 1), cell.Key);
+            Assert.Equal(2, cell.Value.RowSpan);
+            Assert.Equal(2, cell.Value.ColumnSpan);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [Fact]
     public void PaginationPass_adds_header_and_footer_texts_with_resolved_fields()
     {
         var context = CreateContext(
@@ -173,6 +279,31 @@ public sealed class LayoutPassTests
         Assert.Equal(2, pages.Count);
         Assert.Equal(["左 Sheet1", "ページ 1 / 2"], pages[0].HeaderFooterTexts!.Select(text => text.Text));
         Assert.Equal(["左 Sheet1", "ページ 2 / 2"], pages[1].HeaderFooterTexts!.Select(text => text.Text));
+    }
+
+    [Fact]
+    public void PaginationPass_uses_first_and_even_page_headers()
+    {
+        var context = CreateContext(
+            cells: new Dictionary<CellAddress, ReportCell>
+            {
+                [new(1, 1)] = new("one", CellStyle.Default),
+                [new(2, 1)] = new("two", CellStyle.Default)
+            },
+            rows: new Dictionary<int, RowDefinition> { [1] = new(40), [2] = new(40) },
+            pageSettings: new(100, 90, 10, 10, 10, 10),
+            headerFooter: new(new("通常"), new(), new("先頭"), EvenPageHeader: new("偶数")));
+        context.PrintArea = new(new(1, 1), new(2, 1));
+        new HiddenRowColumnPass().Execute(context);
+        new ColumnLayoutPass().Execute(context);
+        new RowLayoutPass().Execute(context);
+        new TextMeasurePass().Execute(context);
+        new CellBoundsPass().Execute(context);
+
+        new PaginationPass().Execute(context);
+
+        Assert.Equal("先頭", Assert.Single(context.RenderDocument!.Pages[0].HeaderFooterTexts!).Text);
+        Assert.Equal("偶数", Assert.Single(context.RenderDocument.Pages[1].HeaderFooterTexts!).Text);
     }
 
     [Fact]
@@ -246,6 +377,18 @@ public sealed class LayoutPassTests
 
         Assert.True(output.Length > 0);
         Assert.Equal("%PDF-", System.Text.Encoding.ASCII.GetString(output.GetBuffer(), 0, 5));
+    }
+
+    [Fact]
+    public void DrawCommandGenerator_preserves_wrapped_text_style()
+    {
+        var style = CellStyle.Default with { WrapText = true };
+        var document = new RenderDocument([new RenderPage(1,
+            [new(new("長い文字列", style), new(0, 0, 10, 10))])]);
+
+        var command = Assert.IsType<DrawTextCommand>(Assert.Single(new DrawCommandGeneratorPass().Generate(document)));
+
+        Assert.True(command.Style.WrapText);
     }
 
     [Fact]

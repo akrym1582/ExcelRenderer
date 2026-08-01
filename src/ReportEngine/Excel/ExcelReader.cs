@@ -30,7 +30,7 @@ public sealed class ExcelReader
                  column <= usedRange.RangeAddress.LastAddress.ColumnNumber; column++)
             {
                 var source = worksheet.Column(column);
-                columns[column] = new(source.Width, source.IsHidden);
+                columns[column] = new(ExcelColumnWidthToPoints(source.Width), source.IsHidden);
             }
 
             for (var row = usedRange.RangeAddress.FirstAddress.RowNumber;
@@ -47,24 +47,64 @@ public sealed class ExcelReader
         cells = ApplyMergedSpans(cells, mergedRanges);
         var images = worksheet.Pictures.Select(ReadImage).ToArray();
 
-        return new(worksheet.Name, cells, columns, rows, mergedRanges, new PageSettings(), Images: images,
-            HeaderFooter: ReadHeaderFooter(worksheet));
+        return new(worksheet.Name, cells, columns, rows, mergedRanges, ReadPageSettings(worksheet),
+            ReadPrintArea(worksheet), images, ReadHeaderFooter(worksheet));
     }
+
+    private static CellRange? ReadPrintArea(IXLWorksheet worksheet)
+    {
+        var range = worksheet.PageSetup.PrintAreas.FirstOrDefault();
+        return range is null ? null : new(
+            new(range.RangeAddress.FirstAddress.RowNumber, range.RangeAddress.FirstAddress.ColumnNumber),
+            new(range.RangeAddress.LastAddress.RowNumber, range.RangeAddress.LastAddress.ColumnNumber));
+    }
+
+    private static PageSettings ReadPageSettings(IXLWorksheet worksheet)
+    {
+        var pageSetup = worksheet.PageSetup;
+        var (width, height) = GetPaperSize(pageSetup.PaperSize);
+        if (pageSetup.PageOrientation == XLPageOrientation.Landscape)
+            (width, height) = (height, width);
+
+        var margins = pageSetup.Margins;
+        return new(width, height,
+            InchesToPoints(margins.Left), InchesToPoints(margins.Top),
+            InchesToPoints(margins.Right), InchesToPoints(margins.Bottom));
+    }
+
+    private static (double Width, double Height) GetPaperSize(XLPaperSize paperSize) => paperSize switch
+    {
+        XLPaperSize.LetterPaper or XLPaperSize.LetterSmallPaper => (612, 792),
+        XLPaperSize.LegalPaper => (612, 1008),
+        XLPaperSize.A3Paper => (841.89, 1190.55),
+        XLPaperSize.A5Paper => (419.53, 595.28),
+        XLPaperSize.B4Paper => (708.66, 1000.63),
+        XLPaperSize.B5Paper => (498.9, 708.66),
+        _ => (595.276, 841.89)
+    };
 
     private static HeaderFooter? ReadHeaderFooter(IXLWorksheet worksheet)
     {
         var header = ReadHeaderFooterSection(worksheet.PageSetup.Header);
         var footer = ReadHeaderFooterSection(worksheet.PageSetup.Footer);
-        return header == new HeaderFooterSection() && footer == new HeaderFooterSection()
+        var firstHeader = ReadHeaderFooterSection(worksheet.PageSetup.Header, XLHFOccurrence.FirstPage);
+        var firstFooter = ReadHeaderFooterSection(worksheet.PageSetup.Footer, XLHFOccurrence.FirstPage);
+        var evenHeader = ReadHeaderFooterSection(worksheet.PageSetup.Header, XLHFOccurrence.EvenPages);
+        var evenFooter = ReadHeaderFooterSection(worksheet.PageSetup.Footer, XLHFOccurrence.EvenPages);
+        return header == new HeaderFooterSection() && footer == new HeaderFooterSection() &&
+            firstHeader == new HeaderFooterSection() && firstFooter == new HeaderFooterSection() &&
+            evenHeader == new HeaderFooterSection() && evenFooter == new HeaderFooterSection()
             ? null
-            : new(header, footer);
+            : new(header, footer, firstHeader, firstFooter, evenHeader, evenFooter);
     }
 
-    private static HeaderFooterSection ReadHeaderFooterSection(IXLHeaderFooter headerFooter) =>
+    private static HeaderFooterSection ReadHeaderFooterSection(
+        IXLHeaderFooter headerFooter,
+        XLHFOccurrence occurrence = XLHFOccurrence.OddPages) =>
         new(
-            headerFooter.Left.GetText(XLHFOccurrence.OddPages),
-            headerFooter.Center.GetText(XLHFOccurrence.OddPages),
-            headerFooter.Right.GetText(XLHFOccurrence.OddPages));
+            headerFooter.Left.GetText(occurrence),
+            headerFooter.Center.GetText(occurrence),
+            headerFooter.Right.GetText(occurrence));
 
     private static ReportImage ReadImage(IXLPicture picture)
     {
@@ -80,18 +120,22 @@ public sealed class ExcelReader
     }
 
     private static double PixelsToPoints(int value) => value * 72d / 96d;
+    private static double InchesToPoints(double value) => value * 72d;
+    private static double ExcelColumnWidthToPoints(double value) => Math.Truncate(value * 7 + 5) * 72d / 96d;
 
     private static Dictionary<CellAddress, ReportCell> ApplyMergedSpans(
         Dictionary<CellAddress, ReportCell> cells, IEnumerable<CellRange> ranges)
     {
         foreach (var range in ranges)
         {
-            if (cells.TryGetValue(range.First, out var cell))
-                cells[range.First] = cell with
-                {
-                    RowSpan = range.Last.Row - range.First.Row + 1,
-                    ColumnSpan = range.Last.Column - range.First.Column + 1
-                };
+            var cell = cells.GetValueOrDefault(range.First, new(null, CellStyle.Default));
+            cells[range.First] = cell with
+            {
+                RowSpan = range.Last.Row - range.First.Row + 1,
+                ColumnSpan = range.Last.Column - range.First.Column + 1
+            };
+            foreach (var address in cells.Keys.Where(range.Contains).Where(address => address != range.First).ToArray())
+                cells.Remove(address);
         }
         return cells;
     }

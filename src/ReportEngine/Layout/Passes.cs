@@ -107,7 +107,10 @@ public sealed class PaginationPass : IReportLayoutPass
     {
         if (context.PrintArea is not { } || context.CellLayouts.Count == 0)
         {
-            context.RenderDocument = new([]);
+            var headerFooterTexts = CreateHeaderFooterTexts(context.Sheet, 1, 1);
+            context.RenderDocument = new(headerFooterTexts.Count == 0
+                ? []
+                : [new RenderPage(1, [], HeaderFooterTexts: headerFooterTexts)]);
             return;
         }
 
@@ -125,7 +128,7 @@ public sealed class PaginationPass : IReportLayoutPass
             }
         }
 
-        context.RenderDocument = new(pageStarts.Select((start, index) =>
+        var pages = pageStarts.Select((start, index) =>
         {
             var end = index + 1 < pageStarts.Count ? pageStarts[index + 1] : double.PositiveInfinity;
             var cells = context.CellLayouts.Values
@@ -150,6 +153,40 @@ public sealed class PaginationPass : IReportLayoutPass
                 })
                 .ToArray();
             return new RenderPage(index + 1, cells, images);
+        }).ToArray();
+        context.RenderDocument = new(pages.Select(page => page with
+        {
+            HeaderFooterTexts = CreateHeaderFooterTexts(context.Sheet, page.Number, pages.Length)
         }).ToArray());
+    }
+
+    private static IReadOnlyList<RenderText> CreateHeaderFooterTexts(ReportSheet sheet, int pageNumber, int pageCount)
+    {
+        if (sheet.HeaderFooter is not { } headerFooter) return [];
+
+        var settings = sheet.PageSettings;
+        var width = settings.Width - settings.MarginLeft - settings.MarginRight;
+        return CreateSection(headerFooter.Header, 0, settings.MarginTop)
+            .Concat(CreateSection(headerFooter.Footer, settings.Height - settings.MarginBottom, settings.MarginBottom))
+            .ToArray();
+
+        IEnumerable<RenderText> CreateSection(HeaderFooterSection section, double y, double height)
+        {
+            var style = CellStyle.Default with { VerticalAlignment = VerticalAlignment.Center };
+            return new[]
+            {
+                new RenderText(new(settings.MarginLeft, y, width, height),
+                    ResolveFields(section.Left), style),
+                new RenderText(new(settings.MarginLeft, y, width, height),
+                    ResolveFields(section.Center), style with { HorizontalAlignment = HorizontalAlignment.Center }),
+                new RenderText(new(settings.MarginLeft, y, width, height),
+                    ResolveFields(section.Right), style with { HorizontalAlignment = HorizontalAlignment.Right })
+            }.Where(text => !string.IsNullOrEmpty(text.Text));
+        }
+
+        string ResolveFields(string text) => text
+            .Replace("&P", pageNumber.ToString(), StringComparison.OrdinalIgnoreCase)
+            .Replace("&N", pageCount.ToString(), StringComparison.OrdinalIgnoreCase)
+            .Replace("&A", sheet.Name, StringComparison.OrdinalIgnoreCase);
     }
 }

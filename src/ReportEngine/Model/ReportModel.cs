@@ -10,7 +10,8 @@ public sealed record ReportSheet(
     IReadOnlyList<CellRange> MergedRanges,
     PageSettings PageSettings,
     CellRange? PrintArea = null,
-    IReadOnlyList<ReportImage>? Images = null);
+    IReadOnlyList<ReportImage>? Images = null,
+    HeaderFooter? HeaderFooter = null);
 
 public readonly record struct CellAddress(int Row, int Column);
 public readonly record struct CellRange(CellAddress First, CellAddress Last)
@@ -68,3 +69,12 @@ public sealed record PageSettings(
     double MarginTop = 36,
     double MarginRight = 36,
     double MarginBottom = 36);
+
+public sealed record HeaderFooterSection(
+    string Left = "",
+    string Center = "",
+    string Right = "");
+
+public sealed record HeaderFooter(
+    HeaderFooterSection Header,
+    HeaderFooterSection Footer);

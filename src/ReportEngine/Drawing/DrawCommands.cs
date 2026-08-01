@@ -25,6 +25,8 @@ public sealed class DrawCommandGeneratorPass
                 .Select(x => (DrawCommand)new DrawTextCommand(page.Number, x.Bounds, x.Cell.Text!, x.Cell.Style)));
             commands.AddRange((page.Images ?? [])
                 .Select(x => (DrawCommand)new DrawImageCommand(page.Number, x.Bounds, x.ImageBytes)));
+            commands.AddRange((page.HeaderFooterTexts ?? [])
+                .Select(x => (DrawCommand)new DrawTextCommand(page.Number, x.Bounds, x.Text, x.Style)));
         }
         return commands;
     }

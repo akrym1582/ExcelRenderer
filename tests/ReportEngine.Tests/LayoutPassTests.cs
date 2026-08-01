@@ -123,6 +123,71 @@ public sealed class LayoutPassTests
     }
 
     [Fact]
+    public void ExcelReader_reads_worksheet_header_and_footer()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
+
+        try
+        {
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.AddWorksheet("Sheet1");
+                worksheet.PageSetup.Header.Left.AddText("ヘッダー");
+                worksheet.PageSetup.Footer.Center.AddText("ページ &P / &N");
+                workbook.SaveAs(path);
+            }
+
+            var headerFooter = new ExcelReader().Read(path).Sheets[0].HeaderFooter!;
+
+            Assert.Equal("ヘッダー", headerFooter.Header.Left);
+            Assert.Equal("ページ &P / &N", headerFooter.Footer.Center);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [Fact]
+    public void PaginationPass_adds_header_and_footer_texts_with_resolved_fields()
+    {
+        var context = CreateContext(
+            cells: new Dictionary<CellAddress, ReportCell>
+            {
+                [new(1, 1)] = new("one", CellStyle.Default),
+                [new(2, 1)] = new("two", CellStyle.Default)
+            },
+            rows: new Dictionary<int, RowDefinition> { [1] = new(40), [2] = new(40) },
+            pageSettings: new(100, 90, 10, 10, 10, 10),
+            headerFooter: new(new("左 &A"), new("", "ページ &P / &N")));
+        context.PrintArea = new(new(1, 1), new(2, 1));
+        new HiddenRowColumnPass().Execute(context);
+        new ColumnLayoutPass().Execute(context);
+        new RowLayoutPass().Execute(context);
+        new TextMeasurePass().Execute(context);
+        new CellBoundsPass().Execute(context);
+
+        new PaginationPass().Execute(context);
+
+        var pages = context.RenderDocument!.Pages;
+        Assert.Equal(2, pages.Count);
+        Assert.Equal(["左 Sheet1", "ページ 1 / 2"], pages[0].HeaderFooterTexts!.Select(text => text.Text));
+        Assert.Equal(["左 Sheet1", "ページ 2 / 2"], pages[1].HeaderFooterTexts!.Select(text => text.Text));
+    }
+
+    [Fact]
+    public void PaginationPass_renders_header_and_footer_without_cells()
+    {
+        var context = CreateContext(cells: new Dictionary<CellAddress, ReportCell>(),
+            headerFooter: new(new("ヘッダー"), new("フッター")));
+
+        new PaginationPass().Execute(context);
+
+        var page = Assert.Single(context.RenderDocument!.Pages);
+        Assert.Equal(["ヘッダー", "フッター"], page.HeaderFooterTexts!.Select(text => text.Text));
+    }
+
+    [Fact]
     public void DrawCommandGenerator_orders_fill_before_border_before_text()
     {
         var style = CellStyle.Default with
@@ -212,12 +277,13 @@ public sealed class LayoutPassTests
         IReadOnlyDictionary<int, ColumnDefinition>? columns = null,
         IReadOnlyDictionary<int, RowDefinition>? rows = null,
         PageSettings? pageSettings = null,
-        IReadOnlyList<ReportImage>? images = null) =>
+        IReadOnlyList<ReportImage>? images = null,
+        HeaderFooter? headerFooter = null) =>
         new(new ReportSheet("Sheet1",
             cells ?? new Dictionary<CellAddress, ReportCell> { [new(1, 1)] = new(null, CellStyle.Default) },
             columns ?? new Dictionary<int, ColumnDefinition> { [1] = new() },
             rows ?? new Dictionary<int, RowDefinition> { [1] = new() },
-            [], pageSettings ?? new(), Images: images), new FixedTextMeasurer());
+            [], pageSettings ?? new(), Images: images, HeaderFooter: headerFooter), new FixedTextMeasurer());
 
     private static byte[] CreateImageBytes()
     {

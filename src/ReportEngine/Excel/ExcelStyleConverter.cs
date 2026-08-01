@@ -23,7 +23,8 @@ public static class ExcelStyleConverter
             ToBorder(style.Border),
             horizontalAlignment,
             ToVerticalAlignment(style.Alignment.Vertical),
-            style.Alignment.WrapText);
+            style.Alignment.WrapText,
+            style.Alignment.ShrinkToFit);
     }
 
     private static HorizontalAlignment ResolveGeneralAlignment(IXLCell cell) =>

@@ -392,6 +392,18 @@ public sealed class LayoutPassTests
     }
 
     [Fact]
+    public void DrawCommandGenerator_preserves_shrink_to_fit_style()
+    {
+        var style = CellStyle.Default with { ShrinkToFit = true };
+        var document = new RenderDocument([new RenderPage(1,
+            [new(new("長い文字列", style), new(0, 0, 10, 10))])]);
+
+        var command = Assert.IsType<DrawTextCommand>(Assert.Single(new DrawCommandGeneratorPass().Generate(document)));
+
+        Assert.True(command.Style.ShrinkToFit);
+    }
+
+    [Fact]
     public void PdfSharpFontResolver_returns_the_configured_font_file()
     {
         var fontFilePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.ttf");

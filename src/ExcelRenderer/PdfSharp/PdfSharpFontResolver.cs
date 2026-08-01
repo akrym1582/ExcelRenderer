@@ -17,8 +17,10 @@ public sealed class PdfSharpFontResolver : IFontResolver
 
     public PdfSharpFontResolver(string familyName, string fontFilePath)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(familyName);
-        ArgumentException.ThrowIfNullOrWhiteSpace(fontFilePath);
+        if (string.IsNullOrWhiteSpace(familyName))
+            throw new ArgumentException("フォントファミリー名は必須です。", nameof(familyName));
+        if (string.IsNullOrWhiteSpace(fontFilePath))
+            throw new ArgumentException("フォントファイルパスは必須です。", nameof(fontFilePath));
 
         _familyName = familyName;
         _faceName = Path.GetFullPath(fontFilePath);

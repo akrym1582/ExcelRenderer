@@ -5,6 +5,7 @@ using ReportEngine.Abstractions;
 using ReportEngine.Drawing;
 using ReportEngine.Layout;
 using ReportEngine.Model;
+using SkiaSharp;
 
 namespace ReportEngine.PdfSharp;
 
@@ -99,9 +100,23 @@ public sealed class PdfSharpRenderer : IRenderer
                 graphics.DrawLine(new XPen(ToColor(line.Style.Color ?? new(0, 0, 0)), line.Style.Width),
                     line.X1, line.Y1, line.X2, line.Y2);
                 break;
-            case DrawImageCommand:
-                throw new NotSupportedException("Image rendering is not implemented in the MVP.");
+            case DrawImageCommand image:
+                DrawImage(graphics, image);
+                break;
         }
+    }
+
+    private static void DrawImage(XGraphics graphics, DrawImageCommand command)
+    {
+        using var bitmap = SKBitmap.Decode(command.ImageBytes);
+        if (bitmap is null)
+            throw new InvalidDataException("画像データを読み込めません。");
+
+        using var image = SKImage.FromBitmap(bitmap);
+        using var pngData = image.Encode(SKEncodedImageFormat.Png, 100);
+        using var stream = pngData.AsStream();
+        using var pdfImage = XImage.FromStream(stream);
+        graphics.DrawImage(pdfImage, ToRect(command.Bounds));
     }
 
     private static void DrawBorder(XGraphics graphics, DrawBorderCommand command)

@@ -9,7 +9,8 @@ public sealed record ReportSheet(
     IReadOnlyDictionary<int, RowDefinition> Rows,
     IReadOnlyList<CellRange> MergedRanges,
     PageSettings PageSettings,
-    CellRange? PrintArea = null);
+    CellRange? PrintArea = null,
+    IReadOnlyList<ReportImage>? Images = null);
 
 public readonly record struct CellAddress(int Row, int Column);
 public readonly record struct CellRange(CellAddress First, CellAddress Last)
@@ -20,6 +21,13 @@ public readonly record struct CellRange(CellAddress First, CellAddress Last)
 }
 
 public sealed record ReportCell(string? Text, CellStyle Style, int RowSpan = 1, int ColumnSpan = 1);
+public sealed record ReportImage(
+    CellAddress Anchor,
+    double OffsetX,
+    double OffsetY,
+    double Width,
+    double Height,
+    byte[] ImageBytes);
 public sealed record ColumnDefinition(double Width = 64, bool IsHidden = false);
 public sealed record RowDefinition(double Height = 15, bool IsHidden = false);
 

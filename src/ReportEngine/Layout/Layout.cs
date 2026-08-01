@@ -8,7 +8,11 @@ public sealed record ColumnLayout(int Column, double X, double Width);
 public sealed record RowLayout(int Row, double Y, double Height);
 public sealed record CellLayout(CellAddress Address, ReportRect Bounds, TextSize TextSize);
 public sealed record RenderCell(ReportCell Cell, ReportRect Bounds);
-public sealed record RenderPage(int Number, IReadOnlyList<RenderCell> Cells);
+public sealed record RenderImage(ReportRect Bounds, byte[] ImageBytes);
+public sealed record RenderPage(
+    int Number,
+    IReadOnlyList<RenderCell> Cells,
+    IReadOnlyList<RenderImage>? Images = null);
 public sealed record RenderDocument(IReadOnlyList<RenderPage> Pages);
 
 public sealed class ReportLayoutContext

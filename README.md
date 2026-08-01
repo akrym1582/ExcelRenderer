@@ -239,10 +239,10 @@ PDFsharp を使用する場合は `PdfSharpTextMeasurer` を指定します。�
 ライブラリを参照し、`ExcelReader`、`ReportLayoutEngine`、`DrawCommandGeneratorPass`、`PdfSharpRenderer` の順に使用します。
 
 ```csharp
-using ReportEngine.Drawing;
-using ReportEngine.Excel;
-using ReportEngine.Layout;
-using ReportEngine.PdfSharp;
+using ExcelRenderer.Drawing;
+using ExcelRenderer.Excel;
+using ExcelRenderer.Layout;
+using ExcelRenderer.PdfSharp;
 
 var document = new ExcelReader().Read("report.xlsx");
 var layoutEngine = new ReportLayoutEngine(new PdfSharpTextMeasurer());
@@ -277,7 +277,7 @@ foreach (var sheet in document.Sheets)
 
 ```csharp
 using PdfSharp.Fonts;
-using ReportEngine.PdfSharp;
+using ExcelRenderer.PdfSharp;
 
 GlobalFontSettings.FontResolver = new PdfSharpFontResolver(
     "Noto Sans JP",
@@ -302,8 +302,8 @@ Excel から PDF を生成する処理を 1 つの巨大な変換処理にせず
 新しいレイアウト処理は `IReportLayoutPass` を実装するクラスとして追加し、`ReportLayoutEngine` の Pass 一覧へ適切な順序で登録します。
 
 ```csharp
-using ReportEngine.Abstractions;
-using ReportEngine.Layout;
+using ExcelRenderer.Abstractions;
+using ExcelRenderer.Layout;
 
 public sealed class CellPaddingPass : IReportLayoutPass
 {
@@ -360,7 +360,7 @@ DrawCommand
 - Pass の順序には依存関係があります。`CellBoundsPass` は `ColumnLayouts` と `RowLayouts` を使用するため、レイアウト Pass より前には実行できません。
 - 新しい Pass では、必要なプロパティが設定済みであることを前提にしすぎず、必要に応じて未設定状態を検証します。
 - `DrawCommand` の順番はそのまま描画順序になります。新しいコマンドをどの要素の前後に配置するかを明確にします。
-- PDFsharp 固有の処理は `PdfSharpRenderer` や `ReportEngine.PdfSharp` 名前空間内に閉じ込めます。
+- PDFsharp 固有の処理は `PdfSharpRenderer` や `ExcelRenderer.PdfSharp` 名前空間内に閉じ込めます。
 
 ## 制約
 
@@ -384,10 +384,10 @@ DrawCommand
 dotnet test Excel2Pdf.slnx
 ```
 
-ソースコードは `src/ReportEngine`、テストコードは `tests/ReportEngine.Tests` にあります。
+ソースコードは `src/ExcelRenderer`、テストコードは `tests/ExcelRenderer.Tests` にあります。
 
 ```text
-src/ReportEngine
+src/ExcelRenderer
 ├─ Abstractions
 │  ├─ IReportLayoutPass
 │  └─ ITextMeasurer

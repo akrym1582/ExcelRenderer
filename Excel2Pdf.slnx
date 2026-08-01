@@ -1,8 +1,8 @@
 <Solution>
   <Folder Name="/src/">
-    <Project Path="src/ReportEngine/ReportEngine.csproj" />
+    <Project Path="src/ExcelRenderer/ExcelRenderer.csproj" />
   </Folder>
   <Folder Name="/tests/">
-    <Project Path="tests/ReportEngine.Tests/ReportEngine.Tests.csproj" />
+    <Project Path="tests/ExcelRenderer.Tests/ExcelRenderer.Tests.csproj" />
   </Folder>
 </Solution>

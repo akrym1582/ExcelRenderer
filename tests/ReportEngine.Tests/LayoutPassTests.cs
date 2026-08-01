@@ -101,6 +101,30 @@ public sealed class LayoutPassTests
         Assert.Equal("%PDF-", System.Text.Encoding.ASCII.GetString(output.GetBuffer(), 0, 5));
     }
 
+    [Fact]
+    public void PdfSharpFontResolver_returns_the_configured_font_file()
+    {
+        var fontFilePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.ttf");
+        var fontData = new byte[] { 1, 2, 3 };
+        File.WriteAllBytes(fontFilePath, fontData);
+
+        try
+        {
+            var resolver = new PdfSharpFontResolver("Noto Sans JP", fontFilePath);
+
+            var font = resolver.ResolveTypeface("Noto Sans JP", bold: false, italic: false);
+
+            Assert.NotNull(font);
+            Assert.Equal(Path.GetFullPath(fontFilePath), font.FaceName);
+            Assert.Equal(fontData, resolver.GetFont(font.FaceName));
+            Assert.Null(resolver.ResolveTypeface("Other Font", bold: false, italic: false));
+        }
+        finally
+        {
+            File.Delete(fontFilePath);
+        }
+    }
+
     private static ReportLayoutContext CreateContext(
         IReadOnlyDictionary<CellAddress, ReportCell>? cells = null,
         IReadOnlyDictionary<int, ColumnDefinition>? columns = null,

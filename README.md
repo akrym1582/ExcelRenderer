@@ -32,12 +32,27 @@ renderer.Render(commands, document.Sheets[0].PageSettings, output);
 
 `ReportDocument` には複数シートを保持できます。PDF を作成する対象シートは呼び出し側で選択してください。
 
+### フォントファイルの指定
+
+フォントがインストールされていない環境では、PDFsharp のフォント操作を行う前にフォントリゾルバーを設定してください。指定するファミリー名は Excel のセルに設定されたフォント名と一致させます。
+
+```csharp
+using PdfSharp.Fonts;
+using ReportEngine.PdfSharp;
+
+GlobalFontSettings.FontResolver = new PdfSharpFontResolver(
+    "Noto Sans JP",
+    "/app/fonts/NotoSansJP-Regular.ttf");
+```
+
+フォントリゾルバーはアプリケーション ドメインごとに一度だけ、かつ PDFsharp のフォント操作より前に設定します。
+
 ## 制約
 
 - 画像の描画は未実装です。
 - Excel の印刷設定、数式、グラフ、条件付き書式などは完全には再現しません。
 - ページ分割は縦方向のみで、行を分割しません。
-- PDFsharp で使用できるフォントが実行環境にインストールされている必要があります。
+- システムフォントを使用する場合は、実行環境にフォントをインストールする必要があります。
 
 ## 開発
 

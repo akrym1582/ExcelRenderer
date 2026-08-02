@@ -8,7 +8,7 @@
     <Version>1.0.0</Version>
     <PackageTags>excel pdf png closedxml pdfsharp skiasharp</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <RepositoryUrl>https://github.com/ユーザー名/excel2pdf</RepositoryUrl>
+    <RepositoryUrl>https://github.com/akrym1582/ExcelRenderer</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
 
   </PropertyGroup>

@@ -39,6 +39,6 @@ jobs:
           name: test-output-pr-${{ github.event.pull_request.number }}
           path: |
             TestResults/**/*.trx
-            tests/ExcelRenderer.Tests/bin/Release/net10.0/PdfSamples/**
+            tests/ExcelRenderer.Tests/bin/Release/net10.0/SampleOutputs/**
           if-no-files-found: warn
           retention-days: 14

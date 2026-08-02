@@ -22,11 +22,11 @@ jobs:
           dotnet-version: 10.0.x
 
       - name: Restore dependencies
-        run: dotnet restore Excel2Pdf.slnx
+        run: dotnet restore ExcelRenderer.slnx
 
       - name: Run unit tests
         run: >-
-          dotnet test Excel2Pdf.slnx
+          dotnet test ExcelRenderer.slnx
           --configuration Release
           --no-restore
           --logger "trx;LogFileName=unit-tests.trx"

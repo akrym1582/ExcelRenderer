@@ -1,0 +1,161 @@
+name: Publish NuGet package
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_bump:
+        description: Version component to increment
+        required: true
+        default: patch
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+      publish_nuget:
+        description: Publish the package to NuGet.org
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nuget-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Create release
+    runs-on: ubuntu-latest
+    if: github.ref_name == github.event.repository.default_branch
+    outputs:
+      version: ${{ steps.version.outputs.next }}
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Update package version
+        id: version
+        shell: pwsh
+        env:
+          VERSION_BUMP: ${{ inputs.version_bump }}
+        run: |
+          $projectPath = 'src/ExcelRenderer/ExcelRenderer.csproj'
+          $project = Get-Content $projectPath -Raw
+          $match = [regex]::Match($project, '<Version>(?<version>\d+\.\d+\.\d+)</Version>')
+
+          if (-not $match.Success) {
+            throw "A three-part <Version> was not found in $projectPath."
+          }
+
+          $current = [version]$match.Groups['version'].Value
+          $next = switch ($env:VERSION_BUMP) {
+            'major' { '{0}.0.0' -f ($current.Major + 1) }
+            'minor' { '{0}.{1}.0' -f $current.Major, ($current.Minor + 1) }
+            'patch' { '{0}.{1}.{2}' -f $current.Major, $current.Minor, ($current.Build + 1) }
+            default { throw "Unsupported version bump: $env:VERSION_BUMP" }
+          }
+
+          if (git tag --list "v$next") {
+            throw "Tag v$next already exists."
+          }
+
+          $updated = $project.Remove($match.Groups['version'].Index, $match.Groups['version'].Length)
+          $updated = $updated.Insert($match.Groups['version'].Index, $next)
+          Set-Content $projectPath $updated -NoNewline -Encoding utf8
+
+          "current=$current" >> $env:GITHUB_OUTPUT
+          "next=$next" >> $env:GITHUB_OUTPUT
+          "tag=v$next" >> $env:GITHUB_OUTPUT
+          Write-Host "Version: $current -> $next"
+
+      - name: Restore dependencies
+        run: dotnet restore ExcelRenderer.slnx
+
+      - name: Run unit tests
+        run: dotnet test ExcelRenderer.slnx --configuration Release --no-restore
+
+      - name: Create NuGet package
+        run: >-
+          dotnet pack src/ExcelRenderer/ExcelRenderer.csproj
+          --configuration Release
+          --no-restore
+          --output artifacts/packages
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ExcelRenderer-${{ steps.version.outputs.next }}
+          path: artifacts/packages/*.nupkg
+          if-no-files-found: error
+
+      - name: Commit version and create tag
+        env:
+          VERSION: ${{ steps.version.outputs.next }}
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/ExcelRenderer/ExcelRenderer.csproj
+          git commit -m "chore(release): $VERSION"
+          git tag --annotate "$TAG" --message "Release $VERSION"
+          git push origin "HEAD:${{ github.event.repository.default_branch }}" --follow-tags
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+          VERSION: ${{ steps.version.outputs.next }}
+        run: >-
+          gh release create "$TAG"
+          artifacts/packages/*.nupkg
+          --title "ExcelRenderer $VERSION"
+          --generate-notes
+          --verify-tag
+
+  publish-nuget:
+    name: Publish to NuGet.org
+    needs: publish
+    if: inputs.publish_nuget
+    runs-on: ubuntu-latest
+    environment: nuget
+
+    steps:
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Download NuGet package
+        uses: actions/download-artifact@v4
+        with:
+          name: ExcelRenderer-${{ needs.publish.outputs.version }}
+          path: artifacts/packages
+
+      - name: Verify publishing credentials
+        shell: pwsh
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:NUGET_API_KEY)) {
+            throw 'The NUGET_API_KEY secret is not configured in the nuget environment.'
+          }
+
+      - name: Publish package
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: >-
+          dotnet nuget push "artifacts/packages/*.nupkg"
+          --api-key "$NUGET_API_KEY"
+          --source https://api.nuget.org/v3/index.json
+          --skip-duplicate

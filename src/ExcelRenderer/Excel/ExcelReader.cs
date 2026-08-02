@@ -103,7 +103,10 @@ public sealed class ExcelReader
         var margins = pageSetup.Margins;
         return new(width, height,
             InchesToPoints(margins.Left), InchesToPoints(margins.Top),
-            InchesToPoints(margins.Right), InchesToPoints(margins.Bottom));
+            InchesToPoints(margins.Right), InchesToPoints(margins.Bottom),
+            pageSetup.Scale > 0 ? pageSetup.Scale / 100d : null,
+            pageSetup.Scale > 0 || pageSetup.PagesWide <= 0 ? null : pageSetup.PagesWide,
+            pageSetup.Scale > 0 || pageSetup.PagesTall <= 0 ? null : pageSetup.PagesTall);
     }
 
     private static (double Width, double Height) GetPaperSize(XLPaperSize paperSize) => paperSize switch

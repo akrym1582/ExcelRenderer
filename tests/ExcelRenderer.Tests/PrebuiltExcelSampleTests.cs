@@ -27,6 +27,7 @@ public sealed class PrebuiltExcelSampleTests
         var textDecoration = SampleOutputTestSupport.ReadAndLayout("04-text-decoration.xlsx");
         var borders = SampleOutputTestSupport.ReadAndLayout("05-borders.xlsx");
         var pagination = SampleOutputTestSupport.ReadAndLayout("06-layout-and-pagination.xlsx");
+        var printScaling = SampleOutputTestSupport.ReadAndLayout("08-print-scaling.xlsx");
 
         Assert.Equal("日本語 PDF 出力サンプル", japanese.Sheet.Cells[new(1, 1)].Text);
         Assert.Equal(2, images.Commands.OfType<DrawImageCommand>().Count());
@@ -37,5 +38,9 @@ public sealed class PrebuiltExcelSampleTests
         Assert.DoesNotContain(pagination.Commands.OfType<DrawTextCommand>(),
             command => command.Text.Contains("印刷範囲外", StringComparison.Ordinal));
         Assert.Contains(pagination.Commands.OfType<DrawTextCommand>(), command => command.Text == "ページ 4 / 4");
+        Assert.Equal(0.75, printScaling.Sheet.PageSettings.Scale);
+        Assert.Single(printScaling.Layout.Pages);
+        Assert.Contains(printScaling.Commands.OfType<DrawTextCommand>(),
+            command => command.Text == "75% 縮小 / ページ 1 / 1");
     }
 }

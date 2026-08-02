@@ -74,6 +74,62 @@ public sealed class LayoutPassTests
     }
 
     [Fact]
+    public void PaginationPass_applies_print_scale_to_content_and_pagination()
+    {
+        var context = CreateContext(
+            cells: new Dictionary<CellAddress, ReportCell>
+            {
+                [new(1, 1)] = new("left", CellStyle.Default),
+                [new(1, 2)] = new("right", CellStyle.Default)
+            },
+            columns: new Dictionary<int, ColumnDefinition> { [1] = new(50), [2] = new(50) },
+            pageSettings: new(70, 100, 10, 10, 10, 10, Scale: 0.5));
+        context.PrintArea = new(new(1, 1), new(1, 2));
+        new HiddenRowColumnPass().Execute(context);
+        new ColumnLayoutPass().Execute(context);
+        new RowLayoutPass().Execute(context);
+        new TextMeasurePass().Execute(context);
+        new CellBoundsPass().Execute(context);
+
+        new PaginationPass().Execute(context);
+
+        var page = Assert.Single(context.RenderDocument!.Pages);
+        Assert.Equal(2, page.Cells.Count);
+        Assert.Equal(new ReportRect(10, 10, 25, 7.5), page.Cells[0].Bounds);
+        Assert.Equal(new ReportRect(35, 10, 25, 7.5), page.Cells[1].Bounds);
+        Assert.Equal(5, page.Cells[0].Cell.Style.Font.Size);
+    }
+
+    [Fact]
+    public void PaginationPass_fits_content_to_requested_page_count()
+    {
+        var context = CreateContext(
+            cells: new Dictionary<CellAddress, ReportCell>
+            {
+                [new(1, 1)] = new("top left", CellStyle.Default),
+                [new(1, 2)] = new("top right", CellStyle.Default),
+                [new(2, 1)] = new("bottom left", CellStyle.Default),
+                [new(2, 2)] = new("bottom right", CellStyle.Default)
+            },
+            columns: new Dictionary<int, ColumnDefinition> { [1] = new(50), [2] = new(50) },
+            rows: new Dictionary<int, RowDefinition> { [1] = new(40), [2] = new(40) },
+            pageSettings: new(70, 60, 10, 10, 10, 10, Scale: null,
+                FitToPagesWide: 1, FitToPagesTall: 1));
+        context.PrintArea = new(new(1, 1), new(2, 2));
+        new HiddenRowColumnPass().Execute(context);
+        new ColumnLayoutPass().Execute(context);
+        new RowLayoutPass().Execute(context);
+        new TextMeasurePass().Execute(context);
+        new CellBoundsPass().Execute(context);
+
+        new PaginationPass().Execute(context);
+
+        var page = Assert.Single(context.RenderDocument!.Pages);
+        Assert.Equal(4, page.Cells.Count);
+        Assert.Equal(new ReportRect(35, 30, 25, 20), page.Cells[3].Bounds);
+    }
+
+    [Fact]
     public void PaginationPass_keeps_merged_cells_on_one_page()
     {
         var context = CreateContext(
@@ -224,6 +280,58 @@ public sealed class LayoutPassTests
             Assert.Equal(841.89, sheet.PageSettings.Width, 2);
             Assert.Equal(36, sheet.PageSettings.MarginLeft, 2);
             Assert.Equal(48, sheet.Columns[3].Width, 2);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [Fact]
+    public void ExcelReader_reads_percentage_print_scale()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
+        try
+        {
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.AddWorksheet("Sheet1");
+                worksheet.Cell(1, 1).Value = "scaled";
+                worksheet.PageSetup.AdjustTo(75);
+                workbook.SaveAs(path);
+            }
+
+            var settings = new ExcelReader().Read(path).Sheets[0].PageSettings;
+
+            Assert.Equal(0.75, settings.Scale);
+            Assert.Null(settings.FitToPagesWide);
+            Assert.Null(settings.FitToPagesTall);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [Fact]
+    public void ExcelReader_reads_fit_to_pages_print_scale()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
+        try
+        {
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.AddWorksheet("Sheet1");
+                worksheet.Cell(1, 1).Value = "fitted";
+                worksheet.PageSetup.FitToPages(1, 2);
+                workbook.SaveAs(path);
+            }
+
+            var settings = new ExcelReader().Read(path).Sheets[0].PageSettings;
+
+            Assert.Null(settings.Scale);
+            Assert.Equal(1, settings.FitToPagesWide);
+            Assert.Equal(2, settings.FitToPagesTall);
         }
         finally
         {

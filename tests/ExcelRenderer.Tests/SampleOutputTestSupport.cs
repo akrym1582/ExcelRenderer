@@ -20,7 +20,8 @@ internal static class SampleOutputTestSupport
         "03-wrapped-text.xlsx",
         "04-text-decoration.xlsx",
         "05-borders.xlsx",
-        "06-layout-and-pagination.xlsx"
+        "06-layout-and-pagination.xlsx",
+        "08-print-scaling.xlsx"
     };
 
     internal static SampleOutput ReadAndLayout(string excelFileName)

@@ -1,6 +1,6 @@
 # ExcelRenderer
 
-Excel ワークブックを読み込み、レイアウト計算を経て PDF を生成する .NET ライブラリです。
+Excel ワークブックを読み込み、レイアウト計算を経て PDF またはページごとの PNG を生成する .NET ライブラリです。
 
 Excel を直接 PDF へ描画するのではなく、次の中間モデルを段階的に生成します。
 
@@ -13,10 +13,10 @@ RenderDocument
     ↓
 DrawCommand
     ↓
-PDF
+PDF / PNG
 ```
 
-読み込み、レイアウト計算、描画命令生成、PDF 出力を分離することで、処理内容を理解しやすくし、将来的な機能追加や出力先の追加を行いやすい構成にしています。
+読み込み、レイアウト計算、描画命令生成、出力を分離することで、処理内容を理解しやすくし、将来的な機能追加や出力先の追加を行いやすい構成にしています。
 
 現在は MVP 段階であり、コマンドラインアプリケーションは含まれません。
 
@@ -32,7 +32,7 @@ PDF
 - PNG、JPEG などのワークシート画像の描画
 - ヘッダー、フッター文字列の描画
 - PDFsharp による PDF 出力
-- SkiaSharp による画像のデコード
+- SkiaSharp によるページごとの PNG 出力と画像のデコード
 
 ## 全体の処理フロー
 
@@ -71,10 +71,10 @@ DrawCommandGeneratorPass
     └─ DrawImageCommand
     │
     ▼
-PdfSharpRenderer
+PdfSharpRenderer / PngRenderer
     │
     ▼
-PDF
+PDF / PNG
 ```
 
 処理は大きく次の 4 段階に分かれています。
@@ -82,7 +82,7 @@ PDF
 1. Excel ファイルの読み込み
 2. レイアウト計算
 3. 描画コマンドの生成
-4. PDF への描画
+4. PDF または PNG への描画
 
 ## 1. Excel ファイルの読み込み
 
@@ -221,7 +221,7 @@ PDFsharp を使用する場合は `PdfSharpTextMeasurer` を指定します。�
 
 描画コマンドを中間モデルとして持つことで、レイアウト計算と実際の描画処理を分離できます。レイアウト処理を変更せずにレンダラーを追加したり、描画コマンドを検査するテストを作成したりできます。
 
-## 4. PDF への描画
+## 4. PDF / PNG への描画
 
 `PdfSharpRenderer` は生成された `DrawCommand` を順番に処理して PDF を作成します。
 
@@ -233,6 +233,8 @@ PDFsharp を使用する場合は `PdfSharpTextMeasurer` を指定します。�
 | `DrawImageCommand` | 画像の描画 |
 
 `PdfSharpRenderer` の責務は、抽象的な描画コマンドを PDFsharp の API 呼び出しへ変換することです。画像データは SkiaSharp でデコードしてから PDF へ描画します。
+
+`PngRenderer` は同じ `DrawCommand` を SkiaSharp で描画し、各ページを独立した PNG にします。用紙寸法と描画座標はポイント単位のまま受け取り、既定の 96 DPI（または指定した DPI）でピクセルへ変換します。PNG は複数ページを格納できないため、複数ページの出力にはページ番号を受け取る出力ストリームファクトリを使用します。
 
 ## 利用方法
 
@@ -271,6 +273,31 @@ foreach (var sheet in document.Sheets)
 }
 ```
 
+### PNG として出力する
+
+PDF と同じレイアウトおよび描画コマンドを `PngRenderer` に渡します。次の例では `report-1.png`、`report-2.png` のようにページごとのファイルを作成します。出力ストリームは各ページの描画後にレンダラーが破棄します。
+
+```csharp
+using ExcelRenderer.SkiaSharp;
+
+var pngRenderer = new PngRenderer();
+pngRenderer.Render(
+    commands,
+    sheet.PageSettings,
+    pageNumber => File.Create($"report-{pageNumber}.png"),
+    dpi: 144);
+```
+
+1 ページだけを既存のストリームへ書き込む場合は `RenderPage` を使用します。この場合、渡したストリームはレンダラーが破棄しません。
+
+```csharp
+using var output = File.Create("report.png");
+pngRenderer.RenderPage(
+    commands.Where(command => command.PageNumber == 1),
+    sheet.PageSettings,
+    output);
+```
+
 ### フォントファイルの指定
 
 フォントがインストールされていない環境では、PDFsharp のフォント操作を行う前にフォントリゾルバーを設定してください。指定するファミリー名は、Excel のセルに設定されたフォント名と一致させます。
@@ -288,7 +315,7 @@ GlobalFontSettings.FontResolver = new PdfSharpFontResolver(
 
 ## 設計方針
 
-Excel から PDF を生成する処理を 1 つの巨大な変換処理にせず、入力の解釈、レイアウト計算、描画命令の生成、出力形式への描画に分割しています。
+Excel から PDF や PNG を生成する処理を 1 つの巨大な変換処理にせず、入力の解釈、レイアウト計算、描画命令の生成、出力形式への描画に分割しています。
 
 - レイアウト計算は複数の Pass に分割し、各 Pass は基本的に 1 つの目的だけを持つ
 - Pass 間の情報は `ReportLayoutContext` を介して受け渡す
@@ -339,6 +366,7 @@ new PaginationPass()
 ```text
 DrawCommand
     ├─ PdfSharpRenderer
+    ├─ PngRenderer
     ├─ SvgRenderer
     ├─ CanvasRenderer
     └─ DebugJsonRenderer
@@ -374,7 +402,7 @@ DrawCommand
 - ヘッダー、フッターのすべての書式指定には対応していません。
 - ページ分割は行・列の境界で行い、結合セル、行、列の途中では分割しません。
 - システムフォントを使用する場合は、実行環境にフォントをインストールする必要があります。
-- Excel と PDF では文字列計測や描画方式が異なるため、完全に同一の見た目になることは保証しません。
+- Excel、PDF、PNG では文字列計測や描画方式が異なるため、完全に同一の見た目になることは保証しません。
 
 ## 開発
 
@@ -404,10 +432,12 @@ src/ExcelRenderer
 │  ├─ ReportDocument
 │  ├─ ReportSheet
 │  └─ RenderDocument
-└─ PdfSharp
+├─ PdfSharp
    ├─ PdfSharpRenderer
    ├─ PdfSharpTextMeasurer
    └─ PdfSharpFontResolver
+└─ SkiaSharp
+   └─ PngRenderer
 ```
 
 機能を追加する際は、既存クラスへ複数の責務を追加するのではなく、新しい読み込み処理、新しいレイアウト Pass、新しい描画コマンド、新しいレンダラー、または新しい抽象インターフェースとして分離することを基本方針とします。

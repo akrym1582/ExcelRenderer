@@ -17,6 +17,8 @@ public sealed class PngRenderer
         Func<int, Stream> outputFactory,
         double dpi = DefaultDpi)
     {
+        if (commands is null) throw new ArgumentNullException(nameof(commands));
+        if (pageSettings is null) throw new ArgumentNullException(nameof(pageSettings));
         if (outputFactory is null) throw new ArgumentNullException(nameof(outputFactory));
         ValidateDpi(dpi);
 
@@ -43,6 +45,7 @@ public sealed class PngRenderer
         double dpi = DefaultDpi)
     {
         if (commands is null) throw new ArgumentNullException(nameof(commands));
+        if (pageSettings is null) throw new ArgumentNullException(nameof(pageSettings));
         if (output is null) throw new ArgumentNullException(nameof(output));
         ValidateDpi(dpi);
 

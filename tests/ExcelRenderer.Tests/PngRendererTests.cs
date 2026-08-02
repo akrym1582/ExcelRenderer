@@ -29,7 +29,7 @@ public sealed class PngRendererTests
         Assert.NotNull(bitmap);
         Assert.Equal(144, bitmap.Width);
         Assert.Equal(72, bitmap.Height);
-        Assert.Equal(SKColors.Red, bitmap.GetPixel(100, 10));
+        Assert.Equal(SKColors.Red, bitmap.GetPixel(100, 60));
     }
 
     [Fact]
@@ -49,7 +49,7 @@ public sealed class PngRendererTests
             return stream;
         });
 
-        Assert.Equal([1, 2], outputs.Keys);
+        Assert.Equal([1, 2], outputs.Keys.OrderBy(pageNumber => pageNumber).ToArray());
         Assert.All(outputs.Values, output =>
             Assert.Equal(new byte[] { 137, 80, 78, 71 }, output.ToArray()[..4]));
     }
@@ -75,7 +75,7 @@ public sealed class PngRendererTests
     public void Render_writes_a_blank_first_page_when_there_are_no_commands()
     {
         var pageNumber = 0;
-        var output = new MemoryStream();
+        var output = new CaptureOnDisposeStream();
 
         new PngRenderer().Render([], new PageSettings(10, 10), number =>
         {
@@ -84,7 +84,7 @@ public sealed class PngRendererTests
         });
 
         Assert.Equal(1, pageNumber);
-        Assert.NotEmpty(output.ToArray());
+        Assert.NotEmpty(output.CapturedBytes);
     }
 
     [Fact]
@@ -94,5 +94,18 @@ public sealed class PngRendererTests
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             new PngRenderer().RenderPage([], new PageSettings(), output, 0));
+    }
+
+    private sealed class CaptureOnDisposeStream : MemoryStream
+    {
+        public byte[] CapturedBytes { get; private set; } = [];
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+                CapturedBytes = ToArray();
+
+            base.Dispose(disposing);
+        }
     }
 }

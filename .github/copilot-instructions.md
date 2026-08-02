@@ -1,36 +1,36 @@
-# Copilot 向け指示
+# Copilot Instructions
 
-## プロジェクト概要
+## Project Overview
 
-このリポジトリは、Excel ファイルを中間モデルに変換し、レイアウト計算と描画コマンド生成を経て PDF またはページごとの PNG を出力する .NET 10 ライブラリです。実装の対象は `src/ExcelRenderer`、テストは `tests/ExcelRenderer.Tests` にあります。
+This repository contains a .NET library that converts Excel files into an intermediate model, calculates their layout, generates drawing commands, and renders them as PDF documents or page-by-page PNG images. Production code is under `src/ExcelRenderer`, and tests are under `tests/ExcelRenderer.Tests`. The library targets .NET Standard 2.1; the repository uses the .NET 10 SDK for builds and tests.
 
-処理の主な流れは次のとおりです。
+The main processing flow is:
 
-1. `Excel/ExcelReader.cs` が ClosedXML から `Model` の中間モデルを作成する。
-2. `Layout/ReportLayoutEngine` が各レイアウトパスを順番に実行して `RenderDocument` を作成する。
-3. `Drawing/DrawCommandGeneratorPass` がレンダリング対象のセルと画像を描画コマンドへ変換する。
-4. `PdfSharp/PdfSharpRenderer` が PDFsharp で PDF に、`SkiaSharp/PngRenderer` が SkiaSharp でページごとの PNG に描画コマンドを出力する。
+1. `Excel/ExcelReader.cs` creates the intermediate models in `Model` from a ClosedXML workbook.
+2. `Layout/ReportLayoutEngine` runs the layout passes in sequence and creates a `RenderDocument`.
+3. `Drawing/DrawCommandGeneratorPass` converts the cells and images to render into drawing commands.
+4. `PdfSharp/PdfSharpRenderer` renders the commands to PDF with PDFsharp, while `SkiaSharp/PngRenderer` renders one PNG per page with SkiaSharp.
 
-## 実装方針
+## Implementation Guidelines
 
-- 中間モデル、レイアウト、描画、PDF/PNG 出力の責務を分離し、層をまたぐ変更は必要最小限にする。
-- 新しいレイアウト処理は `IReportLayoutPass` として追加し、`ReportLayoutEngine` の実行順序を明示する。現在の順序は正規化、印刷領域解決、非表示行列処理、列レイアウト、行レイアウト、テキスト計測、セル境界計算、ページ分割である。
-- 座標とサイズは PDF のポイント単位として扱い、ページ余白はページ分割時に適用する。
-- 結合セルは左上セルに `RowSpan` と `ColumnSpan` を保持する。結合範囲内の他セルを重複して描画しない。
-- null 許容参照型を維持し、公開 API の変更は既存の呼び出し側への影響を確認する。
-- 未実装の機能を実装済みとして扱わない。PNG/JPEG などの画像は読み込みと描画に対応するが、ページをまたぐ画像の分割描画には対応していない。
-- PNG は 1 ファイルにつき 1 ページとし、複数ページではページ番号を受け取る出力ストリームファクトリを使用する。ポイントからピクセルへの変換には指定された DPI を使用する。
+- Keep the intermediate model, layout, drawing, and PDF/PNG output responsibilities separate. Minimize changes that cross these layers.
+- Add new layout behavior as an `IReportLayoutPass`, and make its position in `ReportLayoutEngine` explicit. The current order is normalization, print-area resolution, hidden-row and hidden-column handling, column layout, row layout, text measurement, cell-bounds calculation, and pagination.
+- Treat coordinates and dimensions as PDF points. Apply page margins during pagination.
+- Store `RowSpan` and `ColumnSpan` on the top-left cell of a merged range. Do not render the other cells in that range again.
+- Preserve nullable reference type annotations. Before changing a public API, assess the impact on existing callers.
+- Do not describe unimplemented features as supported. PNG and JPEG worksheet images can be read and rendered, but images cannot be split across pages.
+- Produce one page per PNG file. For multi-page output, use the output-stream factory that receives the page number. Convert points to pixels using the requested DPI.
 
-## コーディング規約
+## Coding Conventions
 
-- 既存の C# のファイルスコープ名前空間、レコード型、暗黙的な型推論のスタイルに合わせる。
-- 変更に直接関係しないリファクタリングや依存関係の追加を行わない。
-- テストには xUnit を使用し、振る舞いを変更する場合は `tests/ExcelRenderer.Tests` に対応するテストを追加または更新する。
-- ドキュメントとユーザー向けメッセージは日本語で記述する。
+- Follow the existing C# style, including file-scoped namespaces, record types, and implicit typing where appropriate.
+- Do not introduce unrelated refactoring or dependencies.
+- Use xUnit for tests. When behavior changes, add or update the corresponding tests in `tests/ExcelRenderer.Tests`.
+- Write code, comments, documentation, and user-facing messages in English unless a file is explicitly language-specific, such as `README.ja.md`.
 
-## 検証
+## Verification
 
-変更後はリポジトリのルートで次を実行する。
+After making changes, run the following command from the repository root:
 
 ```bash
 dotnet test ExcelRenderer.slnx

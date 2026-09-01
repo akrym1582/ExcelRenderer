@@ -25,7 +25,8 @@ public sealed class ExcelReader
             foreach (var cell in usedRange.CellsUsed(XLCellsUsedOptions.All))
             {
                 var address = new CellAddress(cell.Address.RowNumber, cell.Address.ColumnNumber);
-                cells[address] = new(cell.GetFormattedString(), ExcelStyleConverter.Convert(cell));
+                cells[address] = new(cell.GetFormattedString(), ExcelStyleConverter.Convert(cell),
+                    Formula: cell.HasFormula ? "=" + cell.FormulaA1 : null);
             }
 
             for (var column = usedRange.RangeAddress.FirstAddress.ColumnNumber;
@@ -169,7 +170,7 @@ public sealed class ExcelReader
             PixelsToPoints(offset.Y),
             PixelsToPoints(picture.Width),
             PixelsToPoints(picture.Height),
-            picture.ImageStream.ToArray(), zIndex);
+            picture.ImageStream.ToArray(), zIndex, picture.Name);
     }
 
     private static double PixelsToPoints(int value) => value * 72d / 96d;

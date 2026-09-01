@@ -7,4 +7,7 @@ public sealed record ReportImage(
     double Width,
     double Height,
     byte[] ImageBytes,
-    int ZIndex = 0);
+    int ZIndex = 0,
+    string? Name = null,
+    string? ContentType = null,
+    string? Extension = null);

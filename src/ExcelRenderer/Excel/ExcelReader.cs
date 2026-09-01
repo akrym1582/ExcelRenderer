@@ -9,10 +9,12 @@ public sealed class ExcelReader
     public ReportDocument Read(string path)
     {
         using var workbook = new XLWorkbook(path);
-        return new(workbook.Worksheets.Select(ReadSheet).ToArray());
+        var shapes = DrawingMLReader.Read(path);
+        return new(workbook.Worksheets.Select(sheet => ReadSheet(sheet,
+            shapes.GetValueOrDefault(sheet.Name, Array.Empty<ReportShape>()))).ToArray());
     }
 
-    private static ReportSheet ReadSheet(IXLWorksheet worksheet)
+    private static ReportSheet ReadSheet(IXLWorksheet worksheet, IReadOnlyList<ReportShape> shapes)
     {
         var cells = new Dictionary<CellAddress, ReportCell>();
         var columns = new Dictionary<int, ColumnDefinition>();
@@ -66,7 +68,7 @@ public sealed class ExcelReader
             }
         }
 
-        var images = worksheet.Pictures.Select(ReadImage).ToArray();
+        var images = worksheet.Pictures.Select((picture, index) => ReadImage(picture, index)).ToArray();
         foreach (var image in images)
         {
             if (!columns.ContainsKey(image.Anchor.Column))
@@ -82,7 +84,7 @@ public sealed class ExcelReader
         }
 
         return new(worksheet.Name, cells, columns, rows, mergedRanges, ReadPageSettings(worksheet),
-            ReadPrintArea(worksheet), images, ReadHeaderFooter(worksheet));
+            ReadPrintArea(worksheet), images, ReadHeaderFooter(worksheet), shapes);
     }
 
     private static CellRange? ReadPrintArea(IXLWorksheet worksheet)
@@ -143,7 +145,7 @@ public sealed class ExcelReader
             headerFooter.Center.GetText(occurrence),
             headerFooter.Right.GetText(occurrence));
 
-    private static ReportImage ReadImage(IXLPicture picture)
+    private static ReportImage ReadImage(IXLPicture picture, int zIndex)
     {
         var anchor = picture.TopLeftCell.Address;
         var offset = picture.GetOffset(XLMarkerPosition.TopLeft);
@@ -153,7 +155,7 @@ public sealed class ExcelReader
             PixelsToPoints(offset.Y),
             PixelsToPoints(picture.Width),
             PixelsToPoints(picture.Height),
-            picture.ImageStream.ToArray());
+            picture.ImageStream.ToArray(), zIndex);
     }
 
     private static double PixelsToPoints(int value) => value * 72d / 96d;

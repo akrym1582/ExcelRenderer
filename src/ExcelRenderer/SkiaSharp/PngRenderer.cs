@@ -86,7 +86,36 @@ public sealed class PngRenderer
             case DrawImageCommand image:
                 DrawImage(canvas, image);
                 break;
+            case DrawShapeCommand shape:
+                DrawShape(canvas, shape);
+                break;
         }
+    }
+
+    private static void DrawShape(SKCanvas canvas, DrawShapeCommand command)
+    {
+        var b = ToRect(command.Bounds); canvas.Save();
+        if (command.Shape.Rotation != 0) canvas.RotateDegrees((float)command.Shape.Rotation, b.MidX, b.MidY);
+        void Paint(SKPaintStyle style, ReportColor color, Action<SKPaint> draw)
+        { using var paint = CreatePaint(color, style, command.Shape.Style.LineWidth); draw(paint); }
+        void Draw(SKPaint paint)
+        {
+            if (command.Shape.Kind == ShapeKind.Ellipse) canvas.DrawOval(b, paint);
+            else if (command.Shape.Kind == ShapeKind.RoundedRectangle) canvas.DrawRoundRect(b, 10, 10, paint);
+            else if (command.Shape.Kind is ShapeKind.WedgeRectangleCallout or ShapeKind.WedgeRoundedRectangleCallout)
+            { using var p = new SKPath(); p.MoveTo(b.Left,b.Top); p.LineTo(b.Right,b.Top); p.LineTo(b.Right,b.Bottom); p.LineTo(b.Left+b.Width*.35f,b.Bottom); p.LineTo(b.Left+b.Width*.15f,b.Bottom+b.Height*.2f); p.LineTo(b.Left+b.Width*.2f,b.Bottom); p.LineTo(b.Left,b.Bottom); p.Close(); canvas.DrawPath(p,paint); }
+            else canvas.DrawRect(b, paint);
+        }
+        if (command.Shape.Style.FillColor is { } fill) Paint(SKPaintStyle.Fill, fill, Draw);
+        if (command.Shape.Style.LineColor is { } line) Paint(SKPaintStyle.Stroke, line, Draw);
+        if (command.Shape.Text is { } text)
+        {
+            var bounds = new ReportRect(command.Bounds.X + text.MarginLeft, command.Bounds.Y + text.MarginTop,
+                Math.Max(0, command.Bounds.Width-text.MarginLeft-text.MarginRight), Math.Max(0, command.Bounds.Height-text.MarginTop-text.MarginBottom));
+            DrawText(canvas, new DrawTextCommand(command.PageNumber, bounds, text.Text, CellStyle.Default with
+            { Font=text.Font, HorizontalAlignment=text.HorizontalAlignment, VerticalAlignment=text.VerticalAlignment, WrapText=text.WrapText }));
+        }
+        canvas.Restore();
     }
 
     private static void DrawText(SKCanvas canvas, DrawTextCommand command)

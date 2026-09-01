@@ -9,4 +9,5 @@ public sealed record ReportSheet(
     PageSettings PageSettings,
     CellRange? PrintArea = null,
     IReadOnlyList<ReportImage>? Images = null,
-    HeaderFooter? HeaderFooter = null);
+    HeaderFooter? HeaderFooter = null,
+    IReadOnlyList<ReportShape>? Shapes = null);

@@ -6,4 +6,5 @@ public sealed record ReportImage(
     double OffsetY,
     double Width,
     double Height,
-    byte[] ImageBytes);
+    byte[] ImageBytes,
+    int ZIndex = 0);

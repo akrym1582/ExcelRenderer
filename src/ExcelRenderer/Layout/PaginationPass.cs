@@ -8,7 +8,7 @@ public sealed class PaginationPass : IReportLayoutPass
     public void Execute(ReportLayoutContext context)
     {
         if (context.PrintArea is not { } ||
-            (context.CellLayouts.Count == 0 && (context.Sheet.Images?.Count ?? 0) == 0))
+            (context.CellLayouts.Count == 0 && (context.Sheet.Images?.Count ?? 0) == 0 && (context.Sheet.Shapes?.Count ?? 0) == 0))
         {
             var headerFooterTexts = CreateHeaderFooterTexts(context.Sheet, 1, 1);
             context.RenderDocument = new(headerFooterTexts.Count == 0
@@ -66,10 +66,19 @@ public sealed class PaginationPass : IReportLayoutPass
                         (row.Y - vertical.Start + image.OffsetY) * scale + settings.MarginTop,
                         image.Width * scale,
                         image.Height * scale),
-                        image.ImageBytes);
+                        image.ImageBytes, image.ZIndex);
                 })
                 .ToArray();
-            return new RenderPage(verticalIndex * horizontalBands.Count + horizontalIndex + 1, cells, images);
+            var shapes = (context.Sheet.Shapes ?? [])
+                .Where(shape => context.RowLayouts.TryGetValue(shape.Anchor.Row, out var row) && row.Y >= vertical.Start && row.Y < vertical.End &&
+                    context.ColumnLayouts.TryGetValue(shape.Anchor.Column, out var column) && column.X >= horizontal.Start && column.X < horizontal.End)
+                .Select(shape =>
+                {
+                    var column = context.ColumnLayouts[shape.Anchor.Column]; var row = context.RowLayouts[shape.Anchor.Row];
+                    return new RenderShape(new((column.X - horizontal.Start + shape.OffsetX) * scale + settings.MarginLeft,
+                        (row.Y - vertical.Start + shape.OffsetY) * scale + settings.MarginTop, shape.Width * scale, shape.Height * scale), shape);
+                }).ToArray();
+            return new RenderPage(verticalIndex * horizontalBands.Count + horizontalIndex + 1, cells, images, Shapes: shapes);
         })).ToArray();
         context.RenderDocument = new(pages.Select(page => page with
         {

@@ -6,14 +6,16 @@ using ExcelRenderer.Drawing;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Model;
 using SkiaSharp;
+using ExcelRenderer.Fonts;
 
 namespace ExcelRenderer.PdfSharp;
 
 public sealed class PdfSharpFontResolver : IFontResolver
 {
-    private readonly string _familyName;
-    private readonly string _faceName;
-    private readonly byte[] _fontData;
+    private readonly IFontManager _manager;
+    private readonly Dictionary<string, byte[]> _fontData = new();
+    private readonly string? _legacyFamily;
+    private readonly string? _legacyFace;
 
     public PdfSharpFontResolver(string familyName, string fontFilePath)
     {
@@ -22,18 +24,23 @@ public sealed class PdfSharpFontResolver : IFontResolver
         if (string.IsNullOrWhiteSpace(fontFilePath))
             throw new ArgumentException("フォントファイルパスは必須です。", nameof(fontFilePath));
 
-        _familyName = familyName;
-        _faceName = Path.GetFullPath(fontFilePath);
-        _fontData = File.ReadAllBytes(_faceName);
+        _legacyFamily = familyName; _legacyFace = Path.GetFullPath(fontFilePath);
+        var manager = new FontManager(); manager.Register(familyName, fontFilePath, fontFilePath, fontFilePath, fontFilePath); _manager = manager;
+        _fontData[_legacyFace] = File.ReadAllBytes(_legacyFace);
     }
 
-    public FontResolverInfo? ResolveTypeface(string familyName, bool bold, bool italic) =>
-        string.Equals(familyName, _familyName, StringComparison.OrdinalIgnoreCase)
-            ? new FontResolverInfo(_faceName)
-            : null;
+    public PdfSharpFontResolver(IFontManager manager) => _manager = manager ?? throw new ArgumentNullException(nameof(manager));
+
+    public FontResolverInfo? ResolveTypeface(string familyName, bool bold, bool italic)
+    {
+        if (_legacyFace is not null)
+            return string.Equals(familyName, _legacyFamily, StringComparison.OrdinalIgnoreCase) ? new FontResolverInfo(_legacyFace) : null;
+        var font = _manager.Resolve(new(familyName, bold ? 700 : 400, italic));
+        var face = $"{font.Family}|{font.Weight}|{(font.Italic ? "italic" : "normal")}|{font.FilePath}";
+        if (!_fontData.ContainsKey(face)) _fontData[face] = File.ReadAllBytes(font.FilePath);
+        return new FontResolverInfo(face);
+    }
 
     public byte[]? GetFont(string faceName) =>
-        string.Equals(faceName, _faceName, StringComparison.Ordinal)
-            ? _fontData
-            : null;
+        _fontData.GetValueOrDefault(faceName);
 }

@@ -92,18 +92,41 @@ public sealed class MarkdownExporter
     private static void WriteHtmlTable(StringBuilder output, IReadOnlyList<VisualCell> cells,
         MarkdownExportOptions options)
     {
+        var cellsByAddress = cells.ToDictionary(cell => cell.Range.First);
+        var firstRow = cells.Min(cell => cell.Range.First.Row);
+        var lastRow = cells.Max(cell => cell.Range.Last.Row);
+        var firstColumn = cells.Min(cell => cell.Range.First.Column);
+        var lastColumn = cells.Max(cell => cell.Range.Last.Column);
+        var occupiedThroughRow = new Dictionary<int, int>();
+
         output.AppendLine("<table>");
-        foreach (var row in cells.GroupBy(c => c.Range.First.Row).OrderBy(r => r.Key))
+        for (var row = firstRow; row <= lastRow; row++)
         {
             output.AppendLine("<tr>");
-            foreach (var cell in row.OrderBy(c => c.Range.First.Column))
+            for (var column = firstColumn; column <= lastColumn;)
             {
+                if (occupiedThroughRow.TryGetValue(column, out var occupiedRow) && occupiedRow >= row)
+                {
+                    column++;
+                    continue;
+                }
+
+                if (!cellsByAddress.TryGetValue(new CellAddress(row, column), out var cell))
+                {
+                    output.AppendLine("  <td></td>");
+                    column++;
+                    continue;
+                }
+
                 var rowSpan = cell.Range.Last.Row - cell.Range.First.Row + 1;
                 var colSpan = cell.Range.Last.Column - cell.Range.First.Column + 1;
                 output.Append("  <td");
                 if (rowSpan > 1) output.Append(" rowspan=\"").Append(rowSpan).Append('"');
                 if (colSpan > 1) output.Append(" colspan=\"").Append(colSpan).Append('"');
                 output.Append('>').Append(Html(CellText(cell, options))).AppendLine("</td>");
+                for (var spannedColumn = column; spannedColumn <= cell.Range.Last.Column; spannedColumn++)
+                    occupiedThroughRow[spannedColumn] = cell.Range.Last.Row;
+                column = cell.Range.Last.Column + 1;
             }
             output.AppendLine("</tr>");
         }

@@ -20,6 +20,7 @@ public sealed class VisualCellBuilder
     public IReadOnlyList<VisualCell> Build(ReportSheet sheet)
     {
         var result = new List<VisualCell>();
+        var metrics = new LayoutMetrics(sheet);
         foreach (var entry in sheet.Cells.OrderBy(x => x.Key.Row).ThenBy(x => x.Key.Column))
         {
             var address = entry.Key;
@@ -27,8 +28,8 @@ public sealed class VisualCellBuilder
             if (IsHidden(sheet, address, cell)) continue;
             var range = new CellRange(address,
                 new(address.Row + cell.RowSpan - 1, address.Column + cell.ColumnSpan - 1));
-            result.Add(new(range, cell.Text, OffsetX(sheet, address.Column), OffsetY(sheet, address.Row),
-                Width(sheet, range), Height(sheet, range), cell.Style, cell.Formula));
+            result.Add(new(range, cell.Text, metrics.OffsetX(address.Column), metrics.OffsetY(address.Row),
+                metrics.Width(range), metrics.Height(range), cell.Style, cell.Formula));
         }
         return result;
     }
@@ -48,4 +49,35 @@ public sealed class VisualCellBuilder
     private static bool IsHidden(ReportSheet s, CellAddress a, ReportCell cell) =>
         Enumerable.Range(a.Column, cell.ColumnSpan).Any(c => s.Columns.TryGetValue(c, out var d) && d.IsHidden) ||
         Enumerable.Range(a.Row, cell.RowSpan).Any(r => s.Rows.TryGetValue(r, out var d) && d.IsHidden);
+
+    private sealed class LayoutMetrics
+    {
+        private readonly double[] _columnOffsets;
+        private readonly double[] _rowOffsets;
+
+        public LayoutMetrics(ReportSheet sheet)
+        {
+            var maxColumn = sheet.Cells.Count == 0 ? 0 : sheet.Cells.Max(entry =>
+                entry.Key.Column + entry.Value.ColumnSpan - 1);
+            var maxRow = sheet.Cells.Count == 0 ? 0 : sheet.Cells.Max(entry =>
+                entry.Key.Row + entry.Value.RowSpan - 1);
+            _columnOffsets = PrefixSums(maxColumn, column => ColumnWidth(sheet, column));
+            _rowOffsets = PrefixSums(maxRow, row => RowHeight(sheet, row));
+        }
+
+        public double OffsetX(int column) => _columnOffsets[column - 1];
+        public double OffsetY(int row) => _rowOffsets[row - 1];
+        public double Width(CellRange range) =>
+            _columnOffsets[range.Last.Column] - _columnOffsets[range.First.Column - 1];
+        public double Height(CellRange range) =>
+            _rowOffsets[range.Last.Row] - _rowOffsets[range.First.Row - 1];
+
+        private static double[] PrefixSums(int count, Func<int, double> size)
+        {
+            var offsets = new double[count + 1];
+            for (var index = 1; index <= count; index++)
+                offsets[index] = offsets[index - 1] + size(index);
+            return offsets;
+        }
+    }
 }

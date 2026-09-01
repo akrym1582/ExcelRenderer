@@ -57,4 +57,52 @@ public sealed class MarkdownExporterTests
         Assert.Equal("left", layout.Children[0].Cells.Single().Text);
         Assert.Equal("right", layout.Children[1].Cells.Single().Text);
     }
+
+    [Fact]
+    public void VisualCellBuilder_UsesCumulativeOffsetsForDistantRows()
+    {
+        var cells = new Dictionary<CellAddress, ReportCell>
+        {
+            [new(1, 1)] = new("first", CellStyle.Default),
+            [new(100_000, 1)] = new("last", CellStyle.Default)
+        };
+        var rows = Enumerable.Range(1, 100_000)
+            .ToDictionary(row => row, _ => new RowDefinition(2));
+        var sheet = new ReportSheet("Sheet", cells,
+            new Dictionary<int, ColumnDefinition> { [1] = new(10) }, rows,
+            Array.Empty<CellRange>(), new PageSettings());
+
+        var visualCells = new VisualCellBuilder().Build(sheet);
+
+        Assert.Equal(199_998, visualCells[1].Y);
+        Assert.Equal(2, visualCells[1].Height);
+    }
+
+    [Fact]
+    public async Task ExportAsync_PreservesBlankColumnsBeforeMergedCells()
+    {
+        var cells = new Dictionary<CellAddress, ReportCell>
+        {
+            [new(1, 1)] = new("A", CellStyle.Default),
+            [new(1, 3)] = new("C-D", CellStyle.Default, ColumnSpan: 2)
+        };
+        var sheet = new ReportSheet("Sheet", cells,
+            Enumerable.Range(1, 4).ToDictionary(column => column, _ => new ColumnDefinition(10)),
+            new Dictionary<int, RowDefinition> { [1] = new(10) },
+            new[] { new CellRange(new(1, 3), new(1, 4)) }, new PageSettings());
+        var directory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+        try
+        {
+            await new MarkdownExporter().ExportAsync(new ReportDocument(new[] { sheet }), directory,
+                documentName: "gaps.xlsx");
+
+            var markdown = await File.ReadAllTextAsync(Path.Combine(directory, "gaps.md"));
+            Assert.Contains("<td>A</td>\n  <td></td>\n  <td colspan=\"2\">C-D</td>",
+                markdown.Replace("\r\n", "\n"));
+        }
+        finally
+        {
+            if (Directory.Exists(directory)) Directory.Delete(directory, true);
+        }
+    }
 }

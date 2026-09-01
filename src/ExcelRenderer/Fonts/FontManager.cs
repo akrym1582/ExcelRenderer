@@ -43,10 +43,11 @@ public sealed class FontManager : IFontManager
             : new[] { "/usr/share/fonts", "/usr/local/share/fonts", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".fonts") });
         foreach (var dir in dirs.Where(Directory.Exists)) foreach (var file in Directory.EnumerateFiles(dir, "*.*", SearchOption.AllDirectories).Where(x => x.EndsWith(".ttf", StringComparison.OrdinalIgnoreCase) || x.EndsWith(".otf", StringComparison.OrdinalIgnoreCase)))
         {
-            var name = Path.GetFileNameWithoutExtension(file); var italic = name.Contains("Italic", StringComparison.OrdinalIgnoreCase) || name.Contains("Oblique", StringComparison.OrdinalIgnoreCase);
-            var weight = name.Contains("Bold", StringComparison.OrdinalIgnoreCase) ? 700 : 400;
-            var family = name.Split('-')[0].Replace("-VariableFont_wght", "");
-            _faces.TryAdd((family,weight,italic), file);
+            using var typeface = global::SkiaSharp.SKTypeface.FromFile(file);
+            if (typeface is null || string.IsNullOrWhiteSpace(typeface.FamilyName)) continue;
+            var style = typeface.FontStyle;
+            var italic = style.Slant != global::SkiaSharp.SKFontStyleSlant.Upright;
+            _faces.TryAdd((typeface.FamilyName, style.Weight, italic), file);
         }
     }
 }

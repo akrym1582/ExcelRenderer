@@ -134,6 +134,25 @@ public sealed class ShapeAndFontTests
         finally { File.Delete(regular); File.Delete(bold); }
     }
 
+    [Fact]
+    public void FontManager_scans_family_metadata_instead_of_the_file_name()
+    {
+        var directory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+        Directory.CreateDirectory(directory);
+        File.Copy(Path.Combine(AppContext.BaseDirectory, "NotoSansJP-VariableFont_wght.ttf"),
+            Path.Combine(directory, "unrelated-file-name.ttf"));
+        try
+        {
+            var manager = new FontManager(new FontOptions { FontDirectories = [directory], FallbackFamilies = [] });
+
+            var resolved = manager.Resolve(new("Noto Sans JP"));
+
+            Assert.Equal("Noto Sans JP", resolved.Family);
+            Assert.StartsWith(directory, resolved.FilePath);
+        }
+        finally { Directory.Delete(directory, true); }
+    }
+
     private static ReportShape CreateShape(int z, ReportColor fill) => new(new(1, 1), 0, 0, 10, 10,
         ShapeKind.Rectangle, new(fill, new ReportColor(0, 0, 255), 2), null, 0, z);
 

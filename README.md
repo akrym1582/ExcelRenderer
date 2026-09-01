@@ -28,6 +28,7 @@ This makes the rendering pipeline easier to test, understand, and extend with ne
 - Renders header and footer text
 - Produces PDF output with PDFsharp
 - Produces one PNG image per page with SkiaSharp
+- Exports AI-friendly Markdown with merged-cell HTML, layout-aware reading order, formulas, and external images
 
 ## Requirements
 
@@ -67,6 +68,19 @@ new PngRenderer().Render(
     pageNumber => File.Create($"report-{pageNumber}.png"),
     dpi: 144);
 ```
+
+To convert an entire workbook to Markdown and extract its images:
+
+```csharp
+using ExcelRenderer.Markdown;
+
+await ExcelMarkdownConverter.ConvertAsync("sample.xlsx", "output");
+```
+
+This creates `output/sample.md` and image files under `output/images`. Use
+`MarkdownExportOptions` to control formula/address metadata, hidden rows and columns,
+nearby image text, layout analysis, and image export. Markdown export consumes the
+same `ReportDocument` model as the renderers and does not alter the PDF/PNG pipeline.
 
 For environments where the workbook font is not installed, configure a font resolver before PDFsharp first accesses a font:
 

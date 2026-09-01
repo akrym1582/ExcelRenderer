@@ -53,7 +53,40 @@ public sealed class PdfSharpRenderer : IRenderer
             case DrawImageCommand image:
                 DrawImage(graphics, image);
                 break;
+            case DrawShapeCommand shape:
+                DrawShape(graphics, shape);
+                break;
         }
+    }
+
+    private static void DrawShape(XGraphics graphics, DrawShapeCommand command)
+    {
+        var state = graphics.Save();
+        var b = command.Bounds;
+        if (command.Shape.Rotation != 0)
+            graphics.RotateAtTransform(command.Shape.Rotation, new XPoint(b.X + b.Width / 2, b.Y + b.Height / 2));
+        var brush = command.Shape.Style.FillColor is { } fill ? new XSolidBrush(ToColor(fill)) : null;
+        var pen = command.Shape.Style.LineColor is { } line ? new XPen(ToColor(line), command.Shape.Style.LineWidth) : null;
+        if (command.Shape.Kind == ShapeKind.Ellipse) graphics.DrawEllipse(pen, brush, ToRect(b));
+        else if (command.Shape.Kind == ShapeKind.RoundedRectangle) graphics.DrawRoundedRectangle(pen, brush, ToRect(b), new XSize(Math.Min(10, b.Width / 4), Math.Min(10, b.Height / 4)));
+        else if (command.Shape.Kind is ShapeKind.WedgeRectangleCallout or ShapeKind.WedgeRoundedRectangleCallout)
+        {
+            var path = new XGraphicsPath();
+            path.AddPolygon([new(b.X, b.Y), new(b.X + b.Width, b.Y), new(b.X + b.Width, b.Y + b.Height),
+                new(b.X + b.Width * .35, b.Y + b.Height), new(b.X + b.Width * .15, b.Y + b.Height * 1.2),
+                new(b.X + b.Width * .2, b.Y + b.Height), new(b.X, b.Y + b.Height)]);
+            path.CloseFigure(); graphics.DrawPath(pen, brush, path);
+        }
+        else graphics.DrawRectangle(pen, brush, ToRect(b));
+        if (command.Shape.Text is { } text)
+        {
+            var bounds = new ReportRect(b.X + text.MarginLeft, b.Y + text.MarginTop,
+                Math.Max(0, b.Width - text.MarginLeft - text.MarginRight), Math.Max(0, b.Height - text.MarginTop - text.MarginBottom));
+            DrawText(graphics, new DrawTextCommand(command.PageNumber, bounds, text.Text,
+                CellStyle.Default with { Font = text.Font, HorizontalAlignment = text.HorizontalAlignment,
+                    VerticalAlignment = text.VerticalAlignment, WrapText = text.WrapText }));
+        }
+        graphics.Restore(state);
     }
 
     private static void DrawText(XGraphics graphics, DrawTextCommand command)

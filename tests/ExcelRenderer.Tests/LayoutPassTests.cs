@@ -585,6 +585,20 @@ public sealed class LayoutPassTests
     }
 
     [Fact]
+    public void ResolvePrintAreaPass_uses_shape_anchors_for_shape_only_sheets()
+    {
+        var shape = new ReportShape(new(4, 6), 0, 0, 20, 10, ShapeKind.Rectangle,
+            new(new ReportColor(255, 0, 0), null, 0), null, 0, 0);
+        var context = CreateContext(cells: new Dictionary<CellAddress, ReportCell>(),
+            columns: new Dictionary<int, ColumnDefinition> { [6] = new(80) },
+            rows: new Dictionary<int, RowDefinition> { [4] = new(20) }, shapes: [shape]);
+
+        new ResolvePrintAreaPass().Execute(context);
+
+        Assert.Equal(new CellRange(new(4, 6), new(4, 6)), context.PrintArea);
+    }
+
+    [Fact]
     public void ReportLayoutEngine_renders_cells_and_images()
     {
         var imageBytes = CreateImageBytes();
@@ -631,12 +645,13 @@ public sealed class LayoutPassTests
         IReadOnlyDictionary<int, RowDefinition>? rows = null,
         PageSettings? pageSettings = null,
         IReadOnlyList<ReportImage>? images = null,
-        HeaderFooter? headerFooter = null) =>
+        HeaderFooter? headerFooter = null,
+        IReadOnlyList<ReportShape>? shapes = null) =>
         new(new ReportSheet("Sheet1",
             cells ?? new Dictionary<CellAddress, ReportCell> { [new(1, 1)] = new(null, CellStyle.Default) },
             columns ?? new Dictionary<int, ColumnDefinition> { [1] = new() },
             rows ?? new Dictionary<int, RowDefinition> { [1] = new() },
-            [], pageSettings ?? new(), Images: images, HeaderFooter: headerFooter), new FixedTextMeasurer());
+            [], pageSettings ?? new(), Images: images, HeaderFooter: headerFooter, Shapes: shapes), new FixedTextMeasurer());
 
     private static byte[] CreateImageBytes()
     {

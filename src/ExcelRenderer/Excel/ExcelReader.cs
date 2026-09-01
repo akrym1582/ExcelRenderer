@@ -83,6 +83,20 @@ public sealed class ExcelReader
             }
         }
 
+        foreach (var shape in shapes)
+        {
+            if (!columns.ContainsKey(shape.Anchor.Column))
+            {
+                var source = worksheet.Column(shape.Anchor.Column);
+                columns[shape.Anchor.Column] = new(ExcelColumnWidthToPoints(source.Width), source.IsHidden);
+            }
+            if (!rows.ContainsKey(shape.Anchor.Row))
+            {
+                var source = worksheet.Row(shape.Anchor.Row);
+                rows[shape.Anchor.Row] = new(source.Height, source.IsHidden);
+            }
+        }
+
         return new(worksheet.Name, cells, columns, rows, mergedRanges, ReadPageSettings(worksheet),
             ReadPrintArea(worksheet), images, ReadHeaderFooter(worksheet), shapes);
     }

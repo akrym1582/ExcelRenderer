@@ -43,16 +43,13 @@ internal static class DrawingMLReader
 
     private static ReportShape? Parse(Xdr.Shape shape, OpenXmlElement anchor, int z)
     {
-        var preset = shape.ShapeProperties?.GetFirstChild<A.PresetGeometry>()?.Preset?.Value.ToString();
-        var kind = preset switch
-        {
-            "rect" => ShapeKind.Rectangle,
-            "roundRect" => ShapeKind.RoundedRectangle,
-            "ellipse" => ShapeKind.Ellipse,
-            "wedgeRectCallout" => ShapeKind.WedgeRectangleCallout,
-            "wedgeRoundRectCallout" => ShapeKind.WedgeRoundedRectangleCallout,
-            _ => (ShapeKind?)null
-        };
+        var preset = shape.ShapeProperties?.GetFirstChild<A.PresetGeometry>()?.Preset?.Value;
+        ShapeKind? kind = null;
+        if (preset == A.ShapeTypeValues.Rectangle) kind = ShapeKind.Rectangle;
+        else if (preset == A.ShapeTypeValues.RoundRectangle) kind = ShapeKind.RoundedRectangle;
+        else if (preset == A.ShapeTypeValues.Ellipse) kind = ShapeKind.Ellipse;
+        else if (preset == A.ShapeTypeValues.WedgeRectangleCallout) kind = ShapeKind.WedgeRectangleCallout;
+        else if (preset == A.ShapeTypeValues.WedgeRoundRectangleCallout) kind = ShapeKind.WedgeRoundedRectangleCallout;
         if (kind is null) return null;
 
         var (cell, x, y, width, height) = GetBounds(anchor);
@@ -100,8 +97,10 @@ internal static class DrawingMLReader
         var font = new FontStyle(run?.GetFirstChild<A.LatinFont>()?.Typeface?.Value ?? "Noto Sans JP",
             (run?.FontSize?.Value ?? 1000) / 100d, run?.Bold?.Value ?? false, run?.Italic?.Value ?? false,
             Color: ReadColor(run?.GetFirstChild<A.SolidFill>()));
-        var horizontal = paragraph?.Alignment?.Value.ToString() switch { "ctr" => HorizontalAlignment.Center, "r" => HorizontalAlignment.Right, _ => HorizontalAlignment.Left };
-        var vertical = props?.Anchor?.Value.ToString() switch { "ctr" => VerticalAlignment.Center, "b" => VerticalAlignment.Bottom, _ => VerticalAlignment.Top };
+        var horizontal = paragraph?.Alignment?.Value == A.TextAlignmentTypeValues.Center ? HorizontalAlignment.Center
+            : paragraph?.Alignment?.Value == A.TextAlignmentTypeValues.Right ? HorizontalAlignment.Right : HorizontalAlignment.Left;
+        var vertical = props?.Anchor?.Value == A.TextAnchoringTypeValues.Center ? VerticalAlignment.Center
+            : props?.Anchor?.Value == A.TextAnchoringTypeValues.Bottom ? VerticalAlignment.Bottom : VerticalAlignment.Top;
         return new(text, font, horizontal, vertical, true, ToPoints(props?.LeftInset?.Value ?? 91440),
             ToPoints(props?.TopInset?.Value ?? 45720), ToPoints(props?.RightInset?.Value ?? 91440), ToPoints(props?.BottomInset?.Value ?? 45720));
     }

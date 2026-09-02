@@ -98,4 +98,23 @@ public sealed class ExcelStyleConverterTests
 
         Assert.True(style.ShrinkToFit);
     }
+
+    [Fact]
+    public void Convert_resolves_theme_colors_and_tints()
+    {
+        using var workbook = new XLWorkbook();
+        workbook.Theme.Accent1 = XLColor.FromArgb(255, 100, 150, 200);
+        var cell = workbook.AddWorksheet("Sheet1").Cell(1, 1);
+        cell.Style.Font.FontColor = XLColor.FromTheme(XLThemeColor.Accent1);
+        cell.Style.Fill.PatternType = XLFillPatternValues.Solid;
+        cell.Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.5);
+        cell.Style.Border.TopBorder = XLBorderStyleValues.Thin;
+        cell.Style.Border.TopBorderColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.5);
+
+        var style = ExcelStyleConverter.Convert(cell);
+
+        Assert.Equal(new ReportColor(100, 150, 200, 255), style.Font.Color);
+        Assert.Equal(new ReportColor(178, 202, 228, 255), style.Background);
+        Assert.Equal(new ReportColor(50, 75, 100, 255), style.Border!.Top!.Color);
+    }
 }

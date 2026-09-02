@@ -62,7 +62,7 @@ public sealed class ToolIntegrationTests : IDisposable
     private static async Task<Result> RunAsync(params string[] arguments)
     {
         var root = FindRepositoryRoot();
-        var tool = Path.Combine(root, "src", "ExcelRenderer.Tool", "bin", "Release", "net10.0", "ExcelRenderer.Tool.dll");
+        var tool = ResolveToolAssemblyPath(root);
         var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true };
         start.ArgumentList.Add(tool);
         foreach (var argument in arguments) start.ArgumentList.Add(argument);
@@ -71,6 +71,18 @@ public sealed class ToolIntegrationTests : IDisposable
         var error = process.StandardError.ReadToEndAsync();
         await process.WaitForExitAsync();
         return new(process.ExitCode, await output, await error);
+    }
+
+    private static string ResolveToolAssemblyPath(string repositoryRoot)
+    {
+        var debug = Path.Combine(repositoryRoot, "src", "ExcelRenderer.Tool", "bin", "Debug", "net10.0", "ExcelRenderer.Tool.dll");
+        if (File.Exists(debug)) return debug;
+
+        var release = Path.Combine(repositoryRoot, "src", "ExcelRenderer.Tool", "bin", "Release", "net10.0", "ExcelRenderer.Tool.dll");
+        if (File.Exists(release)) return release;
+
+        throw new FileNotFoundException(
+            $"Tool assembly not found. Checked both Debug and Release outputs:{Environment.NewLine}{debug}{Environment.NewLine}{release}");
     }
 
     private static string FindRepositoryRoot()

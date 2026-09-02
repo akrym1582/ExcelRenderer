@@ -48,8 +48,12 @@ public static class ExcelConverter
         ImageExportOptions? options = null, CancellationToken cancellationToken = default)
     {
         ValidateInput(inputPath);
+        if (string.IsNullOrWhiteSpace(outputDirectory))
+            throw new ArgumentException("An output directory is required.", nameof(outputDirectory));
         options ??= new ImageExportOptions();
-        if (options.Dpi <= 0) throw new ArgumentOutOfRangeException(nameof(options), "DPI must be greater than zero.");
+        if (options.Dpi <= 0)
+            throw new ArgumentOutOfRangeException(nameof(ImageExportOptions.Dpi), options.Dpi,
+                "DPI must be greater than zero.");
         cancellationToken.ThrowIfCancellationRequested();
         var sheets = SelectSheets(new ExcelReader().Read(inputPath), options.SheetName);
         if (Directory.Exists(outputDirectory) && Directory.EnumerateFileSystemEntries(outputDirectory).Any())

@@ -2,6 +2,7 @@ namespace ExcelRenderer.Markdown;
 
 public sealed record MarkdownExportOptions
 {
+    public string? SheetName { get; init; }
     public bool DetectLayout { get; init; } = true;
     public bool DetectRegions { get; init; } = true;
     public bool IncludeCellAddresses { get; init; } = true;

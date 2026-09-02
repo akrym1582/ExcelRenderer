@@ -24,6 +24,20 @@ public sealed class MarkdownExporter
         cancellationToken.ThrowIfCancellationRequested();
     }
 
+    public async Task ExportToFileAsync(ReportDocument document, string outputPath,
+        MarkdownExportOptions? options = null, string documentName = "workbook.xlsx",
+        CancellationToken cancellationToken = default)
+    {
+        options ??= new MarkdownExportOptions();
+        var outputDirectory = Path.GetDirectoryName(Path.GetFullPath(outputPath))!;
+        Directory.CreateDirectory(outputDirectory);
+        if (options.ExportImages) Directory.CreateDirectory(Path.Combine(outputDirectory, options.ImageDirectoryName));
+        var markdown = Build(document, outputDirectory, documentName, options);
+        using var writer = new StreamWriter(outputPath, false, new UTF8Encoding(false));
+        await writer.WriteAsync(markdown).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
+    }
+
     private static string Build(ReportDocument document, string directory, string name, MarkdownExportOptions options)
     {
         var output = new StringBuilder().Append("# ").AppendLine(Escape(Path.GetFileName(name))).AppendLine();
@@ -38,8 +52,10 @@ public sealed class MarkdownExporter
             var index = 1;
             foreach (var region in regions)
             {
-                output.Append("### Region ").Append(index++).Append(" [")
-                    .Append(Range(region.BoundingRange)).AppendLine("]").AppendLine();
+                output.Append("### Region ").Append(index++);
+                if (options.IncludeCellAddresses)
+                    output.Append(" [").Append(Range(region.BoundingRange)).Append(']');
+                output.AppendLine().AppendLine();
                 WriteRegion(output, region, options);
                 output.AppendLine();
             }
@@ -136,6 +152,12 @@ public sealed class MarkdownExporter
     private static void WriteRangeList(StringBuilder output, IEnumerable<VisualCell> cells,
         MarkdownExportOptions options)
     {
+        if (!options.IncludeCellAddresses)
+        {
+            foreach (var cell in cells.OrderBy(c => c.Range.First.Row).ThenBy(c => c.Range.First.Column))
+                output.Append("- ").AppendLine(Escape(CellText(cell, options)));
+            return;
+        }
         output.AppendLine("| Range | Text |").AppendLine("|---|---|");
         foreach (var cell in cells.OrderBy(c => c.Range.First.Row).ThenBy(c => c.Range.First.Column))
             output.Append("| ").Append(Range(cell.Range)).Append(" | ")

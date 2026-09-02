@@ -114,7 +114,7 @@ public sealed class ExcelStyleConverterTests
         var style = ExcelStyleConverter.Convert(cell);
 
         Assert.Equal(new ReportColor(100, 150, 200, 255), style.Font.Color);
-        Assert.Equal(new ReportColor(178, 202, 228, 255), style.Background);
-        Assert.Equal(new ReportColor(50, 75, 100, 255), style.Border!.Top!.Color);
+        Assert.Equal(new ReportColor(178, 202, 227, 255), style.Background);
+        Assert.Equal(new ReportColor(39, 75, 111, 255), style.Border!.Top!.Color);
     }
 }

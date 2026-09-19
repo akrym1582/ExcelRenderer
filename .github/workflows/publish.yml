@@ -1,4 +1,4 @@
-name: Publish NuGet package
+name: Publish NuGet packages
 
 on:
   workflow_dispatch:
@@ -70,9 +70,14 @@ jobs:
             throw "Tag v$next already exists."
           }
 
-          $updated = $project.Remove($match.Groups['version'].Index, $match.Groups['version'].Length)
-          $updated = $updated.Insert($match.Groups['version'].Index, $next)
-          Set-Content $projectPath $updated -NoNewline -Encoding utf8
+          foreach ($path in @($projectPath, 'src/ExcelRenderer.Tool/ExcelRenderer.Tool.csproj')) {
+            $text = Get-Content $path -Raw
+            if (-not [regex]::IsMatch($text, '<Version>\d+\.\d+\.\d+</Version>')) {
+              throw "A three-part <Version> was not found in $path."
+            }
+            $updated = [regex]::Replace($text, '<Version>\d+\.\d+\.\d+</Version>', "<Version>$next</Version>")
+            Set-Content $path $updated -NoNewline -Encoding utf8
+          }
 
           "current=$current" >> $env:GITHUB_OUTPUT
           "next=$next" >> $env:GITHUB_OUTPUT
@@ -92,6 +97,13 @@ jobs:
           --no-restore
           --output artifacts/packages
 
+      - name: Create dotnet tool package
+        run: >-
+          dotnet pack src/ExcelRenderer.Tool/ExcelRenderer.Tool.csproj
+          --configuration Release
+          --no-restore
+          --output artifacts/packages
+
       - name: Upload package artifact
         uses: actions/upload-artifact@v4
         with:
@@ -106,7 +118,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/ExcelRenderer/ExcelRenderer.csproj
+          git add src/ExcelRenderer/ExcelRenderer.csproj src/ExcelRenderer.Tool/ExcelRenderer.Tool.csproj
           git commit -m "chore(release): $VERSION"
           git tag --annotate "$TAG" --message "Release $VERSION"
           git push origin "HEAD:${{ github.event.repository.default_branch }}" --follow-tags
@@ -129,6 +141,9 @@ jobs:
     if: inputs.publish_nuget
     runs-on: ubuntu-latest
     environment: nuget
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
       - name: Set up .NET
@@ -142,18 +157,15 @@ jobs:
           name: ExcelRenderer-${{ needs.publish.outputs.version }}
           path: artifacts/packages
 
-      - name: Verify publishing credentials
-        shell: pwsh
-        env:
-          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-        run: |
-          if ([string]::IsNullOrWhiteSpace($env:NUGET_API_KEY)) {
-            throw 'The NUGET_API_KEY secret is not configured in the nuget environment.'
-          }
+      - name: NuGet login with Trusted Publishing
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: akiymnk
 
       - name: Publish package
         env:
-          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+          NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
         run: >-
           dotnet nuget push "artifacts/packages/*.nupkg"
           --api-key "$NUGET_API_KEY"

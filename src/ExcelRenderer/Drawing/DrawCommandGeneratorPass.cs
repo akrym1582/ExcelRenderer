@@ -14,6 +14,8 @@ public sealed class DrawCommandGeneratorPass
                 .Select(x => (DrawCommand)new FillRectangleCommand(page.Number, x.Bounds, x.Cell.Style.Background!.Value)));
             commands.AddRange(page.Cells.Where(x => x.Cell.Style.Border is not null)
                 .Select(x => (DrawCommand)new DrawBorderCommand(page.Number, x.Bounds, x.Cell.Style.Border!)));
+            commands.AddRange(page.Cells.SelectMany(cell => cell.MergedBorders ?? [])
+                .Select(border => (DrawCommand)new DrawBorderCommand(page.Number, border.Bounds, border.Border)));
             commands.AddRange(page.Cells.Where(x => !string.IsNullOrEmpty(x.Cell.Text))
                 .Select(x => (DrawCommand)new DrawTextCommand(page.Number, x.Bounds, x.Cell.Text!, x.Cell.Style)));
             commands.AddRange((page.Images ?? [])

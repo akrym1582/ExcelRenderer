@@ -8,6 +8,25 @@ namespace ExcelRenderer.Tests;
 public sealed class ExcelStyleConverterTests
 {
     [Fact]
+    public void Convert_resolves_workbook_theme_colors_tints_and_automatic_border_color()
+    {
+        using var workbook = new XLWorkbook();
+        workbook.Theme.Accent1 = XLColor.FromArgb(255, 0, 0);
+        var cell = workbook.AddWorksheet("Theme").Cell(1, 1);
+        cell.Style.Font.FontColor = XLColor.FromTheme(XLThemeColor.Accent1);
+        cell.Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.5);
+        cell.Style.Border.TopBorder = XLBorderStyleValues.Dotted;
+        cell.Style.Border.TopBorderColor = XLColor.FromIndex(64);
+
+        var style = ExcelStyleConverter.Convert(cell);
+
+        Assert.Equal(new ReportColor(255, 0, 0), style.Font.Color);
+        Assert.Equal(new ReportColor(255, 128, 128), style.Background);
+        Assert.Equal(new ReportColor(0, 0, 0), style.Border!.Top!.Color);
+        Assert.Equal(BorderLineStyle.Dotted, style.Border.Top.LineStyle);
+    }
+
+    [Fact]
     public void Convert_maps_background_border_alignment_and_font_color()
     {
         using var workbook = new XLWorkbook();

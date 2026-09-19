@@ -1,11 +1,47 @@
 using ExcelRenderer.Drawing;
 using ExcelRenderer.Excel;
+using ExcelRenderer.Model;
 using Xunit;
 
 namespace ExcelRenderer.Tests;
 
 public sealed class PrebuiltExcelSampleTests
 {
+    [Fact]
+    public void Cell_border_sample_preserves_empty_cells_and_merged_perimeter_fragments()
+    {
+        SampleOutputTestSupport.ConfigureJapaneseFont();
+        var sample = SampleOutputTestSupport.ReadAndLayout("09-cell-border.xlsx");
+
+        Assert.Single(sample.Layout.Pages);
+        Assert.Single(sample.Commands.OfType<DrawImageCommand>());
+        Assert.NotNull(sample.Sheet.Cells[new(2, 2)].Style.Border!.Top);
+        Assert.NotNull(sample.Sheet.Cells[new(33, 38)].Style.Border!.Bottom);
+
+        var heading = sample.Sheet.Cells[new(19, 3)];
+        Assert.Equal(25, heading.ColumnSpan);
+        Assert.Contains(heading.MergedBorders!, border => border.Address == new CellAddress(19, 27) &&
+            border.Border.Right!.Color == new ReportColor(255, 0, 0));
+
+        // P20:AA20 has a bottom border only at AA20. Stretching it across
+        // the whole merged cell would hide the dotted top edge of P21:Z21.
+        var upper = sample.Sheet.Cells[new(20, 16)];
+        var bottom = Assert.Single(upper.MergedBorders!, border => border.Border.Bottom is not null);
+        Assert.Equal(new CellAddress(20, 27), bottom.Address);
+        var middle = sample.Sheet.Cells[new(21, 16)];
+        var dottedTop = middle.MergedBorders!.Where(border => border.Border.Top is not null).ToArray();
+        Assert.Equal(11, dottedTop.Length);
+        Assert.All(dottedTop, border => Assert.Equal(BorderLineStyle.Dotted, border.Border.Top!.LineStyle));
+
+        var rendered = Assert.Single(sample.Layout.Pages[0].Cells, cell => cell.Cell.Text == heading.Text);
+        Assert.All(rendered.MergedBorders!, border =>
+        {
+            Assert.InRange(border.Bounds.X, rendered.Bounds.X, rendered.Bounds.X + rendered.Bounds.Width);
+            Assert.Equal(rendered.Bounds.Height, border.Bounds.Height, 8);
+            Assert.Equal(0.3, (border.Border.Top ?? border.Border.Bottom ?? border.Border.Left ?? border.Border.Right)!.Width, 8);
+        });
+    }
+
     [Fact]
     public void Excel_reader_preserves_multiple_sheets_for_caller_selection()
     {

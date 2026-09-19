@@ -21,7 +21,8 @@ internal static class SampleOutputTestSupport
         "04-text-decoration.xlsx",
         "05-borders.xlsx",
         "06-layout-and-pagination.xlsx",
-        "08-print-scaling.xlsx"
+        "08-print-scaling.xlsx",
+        "09-cell-border.xlsx"
     };
 
     internal static SampleOutput ReadAndLayout(string excelFileName)
@@ -44,7 +45,7 @@ internal static class SampleOutputTestSupport
     {
         var fontPath = Path.Combine(AppContext.BaseDirectory, "NotoSansJP-VariableFont_wght.ttf");
         Assert.True(File.Exists(fontPath), $"日本語フォントが見つかりません: {fontPath}");
-        GlobalFontSettings.FontResolver ??= new PdfSharpFontResolver("Noto Sans JP", fontPath);
+        GlobalFontSettings.FontResolver ??= new PdfSharpFontResolver("Noto Sans JP", fontPath, "游ゴシック", "Yu Gothic");
     }
 
     internal sealed record SampleOutput(

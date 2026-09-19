@@ -80,7 +80,7 @@ public sealed class PngRenderer
                 DrawText(canvas, text);
                 break;
             case DrawLineCommand line:
-                using (var paint = CreatePaint(line.Style.Color ?? new(0, 0, 0), SKPaintStyle.Stroke, line.Style.Width))
+                using (var paint = CreateBorderPaint(line.Style))
                     canvas.DrawLine((float)line.X1, (float)line.Y1, (float)line.X2, (float)line.Y2, paint);
                 break;
             case DrawImageCommand image:
@@ -187,9 +187,28 @@ public sealed class PngRenderer
         void DrawSide(BorderSide? side, double x1, double y1, double x2, double y2)
         {
             if (side is null) return;
-            using var paint = CreatePaint(side.Color ?? new(0, 0, 0), SKPaintStyle.Stroke, side.Width);
+            using var paint = CreateBorderPaint(side);
             canvas.DrawLine((float)x1, (float)y1, (float)x2, (float)y2, paint);
         }
+    }
+
+    private static SKPaint CreateBorderPaint(BorderSide side)
+    {
+        var paint = CreatePaint(side.Color ?? new(0, 0, 0), SKPaintStyle.Stroke, side.Width);
+        var pattern = side.LineStyle switch
+        {
+            BorderLineStyle.Dotted => new float[] { 1, 2 },
+            BorderLineStyle.Dashed => new float[] { 3, 2 },
+            BorderLineStyle.DashDot => new float[] { 3, 2, 1, 2 },
+            BorderLineStyle.DashDotDot => new float[] { 3, 2, 1, 2, 1, 2 },
+            _ => null
+        };
+        if (pattern is not null)
+        {
+            using var effect = SKPathEffect.CreateDash(pattern.Select(x => x * (float)side.Width).ToArray(), 0);
+            paint.PathEffect = effect;
+        }
+        return paint;
     }
 
     private static SKPaint CreatePaint(ReportColor color, SKPaintStyle style, double width = 1) => new()

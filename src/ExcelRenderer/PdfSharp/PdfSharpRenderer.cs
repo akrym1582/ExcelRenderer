@@ -47,7 +47,7 @@ public sealed class PdfSharpRenderer : IRenderer
                 DrawText(graphics, text);
                 break;
             case DrawLineCommand line:
-                graphics.DrawLine(new XPen(ToColor(line.Style.Color ?? new(0, 0, 0)), line.Style.Width),
+                graphics.DrawLine(CreateBorderPen(line.Style),
                     line.X1, line.Y1, line.X2, line.Y2);
                 break;
             case DrawImageCommand image:
@@ -151,8 +151,23 @@ public sealed class PdfSharpRenderer : IRenderer
         void DrawSide(BorderSide? side, double x1, double y1, double x2, double y2)
         {
             if (side is not null)
-                graphics.DrawLine(new XPen(ToColor(side.Color ?? new(0, 0, 0)), side.Width), x1, y1, x2, y2);
+                graphics.DrawLine(CreateBorderPen(side), x1, y1, x2, y2);
         }
+    }
+
+    private static XPen CreateBorderPen(BorderSide side)
+    {
+        var pen = new XPen(ToColor(side.Color ?? new(0, 0, 0)), side.Width);
+        var pattern = side.LineStyle switch
+        {
+            BorderLineStyle.Dotted => new double[] { 1, 2 },
+            BorderLineStyle.Dashed => new double[] { 3, 2 },
+            BorderLineStyle.DashDot => new double[] { 3, 2, 1, 2 },
+            BorderLineStyle.DashDotDot => new double[] { 3, 2, 1, 2, 1, 2 },
+            _ => null
+        };
+        if (pattern is not null) pen.DashPattern = pattern;
+        return pen;
     }
 
     private static XRect ToRect(ReportRect rect) => new(rect.X, rect.Y, rect.Width, rect.Height);

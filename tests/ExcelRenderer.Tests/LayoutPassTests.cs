@@ -531,6 +531,11 @@ public sealed class LayoutPassTests
             Assert.Equal(Path.GetFullPath(fontFilePath), font.FaceName);
             Assert.Equal(fontData, resolver.GetFont(font.FaceName));
             Assert.Null(resolver.ResolveTypeface("Other Font", bold: false, italic: false));
+
+            var aliases = new PdfSharpFontResolver("Noto Sans JP", fontFilePath, "游ゴシック", "Yu Gothic");
+            Assert.Equal(font.FaceName, aliases.ResolveTypeface("游ゴシック", false, false)!.FaceName);
+            Assert.Equal(font.FaceName, aliases.ResolveTypeface("yu gothic", false, false)!.FaceName);
+            Assert.Null(aliases.ResolveTypeface("Other Font", false, false));
         }
         finally
         {

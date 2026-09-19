@@ -16,7 +16,18 @@ public sealed class CellBoundsPass : IReportLayoutPass
             var height = Enumerable.Range(address.Row, cell.RowSpan)
                 .Where(context.RowLayouts.ContainsKey).Sum(x => context.RowLayouts[x].Height);
             context.CellLayouts[address] = new(address, new(column.X, row.Y, width, height),
-                context.TextSizes.GetValueOrDefault(address));
+                context.TextSizes.GetValueOrDefault(address))
+            {
+                MergedBorders = cell.MergedBorders?
+                    .Where(border => context.ColumnLayouts.ContainsKey(border.Address.Column) &&
+                        context.RowLayouts.ContainsKey(border.Address.Row))
+                    .Select(border =>
+                    {
+                        var borderColumn = context.ColumnLayouts[border.Address.Column];
+                        var borderRow = context.RowLayouts[border.Address.Row];
+                        return new RenderBorder(new(borderColumn.X, borderRow.Y, borderColumn.Width, borderRow.Height), border.Border);
+                    }).ToArray()
+            };
         }
     }
 }

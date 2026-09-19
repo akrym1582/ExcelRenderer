@@ -10,6 +10,23 @@ namespace ExcelRenderer.Tests;
 public sealed class PngRendererTests
 {
     [Fact]
+    public void RenderPage_preserves_gaps_in_dotted_borders()
+    {
+        using var output = new MemoryStream();
+        new PngRenderer().RenderPage(
+            [new DrawBorderCommand(1, new ReportRect(4, 10, 60, 10),
+                new BorderStyle(Top: new BorderSide(2, LineStyle: BorderLineStyle.Dotted)))],
+            new PageSettings(72, 24), output, 72);
+
+        using var bitmap = SKBitmap.Decode(output.ToArray());
+        for (var x = 4; x < 60; x += 6)
+        {
+            Assert.True(bitmap.GetPixel(x, 10).Red < 50, $"Missing dot at {x}");
+            Assert.Equal(SKColors.White, bitmap.GetPixel(x + 3, 10));
+        }
+    }
+
+    [Fact]
     public void RenderPage_writes_png_at_requested_dpi()
     {
         var commands = new DrawCommand[]

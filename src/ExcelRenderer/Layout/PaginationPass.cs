@@ -50,7 +50,13 @@ public sealed class PaginationPass : IReportLayoutPass
                     (layout.Bounds.X - horizontal.Start) * scale + settings.MarginLeft,
                     (layout.Bounds.Y - vertical.Start) * scale + settings.MarginTop,
                     layout.Bounds.Width * scale,
-                    layout.Bounds.Height * scale)))
+                    layout.Bounds.Height * scale))
+                {
+                    MergedBorders = layout.MergedBorders?.Select(border => new RenderBorder(new(
+                        (border.Bounds.X - horizontal.Start) * scale + settings.MarginLeft,
+                        (border.Bounds.Y - vertical.Start) * scale + settings.MarginTop,
+                        border.Bounds.Width * scale, border.Bounds.Height * scale), ScaleBorder(border.Border, scale))).ToArray()
+                })
                 .ToArray();
             var images = (context.Sheet.Images ?? [])
                 .Where(image => context.RowLayouts.TryGetValue(image.Anchor.Row, out var row) &&
@@ -103,23 +109,20 @@ public sealed class PaginationPass : IReportLayoutPass
         return scales.Count == 0 ? 1 : scales.Min();
     }
 
+    private static BorderStyle ScaleBorder(BorderStyle border, double scale)
+    {
+        BorderSide? Side(BorderSide? side) => side is null ? null : side with { Width = side.Width * scale };
+        return new(Side(border.Left), Side(border.Top), Side(border.Right), Side(border.Bottom));
+    }
+
     private static ReportCell ScaleCell(ReportCell cell, double scale)
     {
-        BorderSide? ScaleSide(BorderSide? side) => side is null ? null : side with { Width = side.Width * scale };
-        var border = cell.Style.Border;
-        var scaledBorder = border is null ? null : border with
-        {
-            Left = ScaleSide(border.Left),
-            Top = ScaleSide(border.Top),
-            Right = ScaleSide(border.Right),
-            Bottom = ScaleSide(border.Bottom)
-        };
         return cell with
         {
             Style = cell.Style with
             {
                 Font = cell.Style.Font with { Size = cell.Style.Font.Size * scale },
-                Border = scaledBorder
+                Border = cell.Style.Border is { } border ? ScaleBorder(border, scale) : null
             }
         };
     }

@@ -17,7 +17,7 @@ public sealed class ExcelReader
         var cells = new Dictionary<CellAddress, ReportCell>();
         var columns = new Dictionary<int, ColumnDefinition>();
         var rows = new Dictionary<int, RowDefinition>();
-        var usedRange = worksheet.RangeUsed();
+        var usedRange = worksheet.RangeUsed(XLCellsUsedOptions.All);
         if (usedRange is not null)
         {
             foreach (var cell in usedRange.CellsUsed(XLCellsUsedOptions.All))
@@ -160,6 +160,24 @@ public sealed class ExcelReader
     private static double InchesToPoints(double value) => value * 72d;
     private static double ExcelColumnWidthToPoints(double value) => Math.Truncate(value * 7 + 5) * 72d / 96d;
 
+    private static IReadOnlyList<CellBorder> ReadMergedBorders(Dictionary<CellAddress, ReportCell> cells, CellRange range)
+    {
+        var borders = new List<CellBorder>();
+        foreach (var entry in cells.Where(entry => range.Contains(entry.Key)))
+        {
+            var source = entry.Value.Style.Border;
+            if (source is null) continue;
+            var address = entry.Key;
+            var border = new BorderStyle(
+                address.Column == range.First.Column ? source.Left : null,
+                address.Row == range.First.Row ? source.Top : null,
+                address.Column == range.Last.Column ? source.Right : null,
+                address.Row == range.Last.Row ? source.Bottom : null);
+            if (border != new BorderStyle()) borders.Add(new(address, border));
+        }
+        return borders;
+    }
+
     private static Dictionary<CellAddress, ReportCell> ApplyMergedSpans(
         Dictionary<CellAddress, ReportCell> cells, IEnumerable<CellRange> ranges)
     {
@@ -169,7 +187,9 @@ public sealed class ExcelReader
             cells[range.First] = cell with
             {
                 RowSpan = range.Last.Row - range.First.Row + 1,
-                ColumnSpan = range.Last.Column - range.First.Column + 1
+                ColumnSpan = range.Last.Column - range.First.Column + 1,
+                Style = cell.Style with { Border = null },
+                MergedBorders = ReadMergedBorders(cells, range)
             };
             foreach (var address in cells.Keys.Where(range.Contains).Where(address => address != range.First).ToArray())
                 cells.Remove(address);

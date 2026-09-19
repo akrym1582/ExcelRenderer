@@ -14,8 +14,9 @@ public sealed class PdfSharpFontResolver : IFontResolver
     private readonly string _familyName;
     private readonly string _faceName;
     private readonly byte[] _fontData;
+    private readonly string[] _familyAliases;
 
-    public PdfSharpFontResolver(string familyName, string fontFilePath)
+    public PdfSharpFontResolver(string familyName, string fontFilePath, params string[] familyAliases)
     {
         if (string.IsNullOrWhiteSpace(familyName))
             throw new ArgumentException("フォントファミリー名は必須です。", nameof(familyName));
@@ -25,10 +26,12 @@ public sealed class PdfSharpFontResolver : IFontResolver
         _familyName = familyName;
         _faceName = Path.GetFullPath(fontFilePath);
         _fontData = File.ReadAllBytes(_faceName);
+        _familyAliases = familyAliases.ToArray();
     }
 
     public FontResolverInfo? ResolveTypeface(string familyName, bool bold, bool italic) =>
-        string.Equals(familyName, _familyName, StringComparison.OrdinalIgnoreCase)
+        (string.Equals(familyName, _familyName, StringComparison.OrdinalIgnoreCase) ||
+            _familyAliases.Contains(familyName, StringComparer.OrdinalIgnoreCase))
             ? new FontResolverInfo(_faceName)
             : null;
 

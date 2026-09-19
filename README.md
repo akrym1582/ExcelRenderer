@@ -36,11 +36,50 @@ This makes the rendering pipeline easier to test, understand, and extend with ne
 - A target framework compatible with .NET Standard 2.1 to consume the library
 - Appropriate fonts installed or supplied through `PdfSharpFontResolver`
 
+## Installation
+
+The library and command-line tool are separate NuGet packages. After the corresponding package is published to NuGet.org, install it using the commands below. Publishing `ExcelRenderer` alone does not publish `ExcelRenderer.Tool`.
+
+### Library (NuGet)
+
+Run this in your application's project directory (.NET Standard 2.1-compatible target required):
+
+```bash
+dotnet add package ExcelRenderer
+```
+
+### Command-line tool (dotnet tool)
+
+Install the .NET 10 SDK, then install the CLI from NuGet.org:
+
+```bash
+dotnet tool install --global ExcelRenderer.Tool
+excelrenderer --help
+```
+
+The package name is `ExcelRenderer.Tool`; the executable command is `excelrenderer`. You do not need to install the library separately to use the CLI. These commands assume NuGet.org is enabled in your NuGet sources.
+
+To update an existing global installation:
+
+```bash
+dotnet tool update --global ExcelRenderer.Tool
+```
+
+For a project-local installation, run the following in the repository where you want to use the tool. Create the manifest only if one does not already exist:
+
+```bash
+dotnet new tool-manifest
+dotnet tool install --local ExcelRenderer.Tool
+dotnet tool run excelrenderer --help
+```
+
+Commit `.config/dotnet-tools.json` so other contributors can install the same tool version with `dotnet tool restore`.
+
 ## Quick start
 
 ### High-level library API
 
-After building a local `ExcelRenderer` NuGet package (or referencing the project), the facade API performs the complete read, layout, render, and write pipeline:
+After installing `ExcelRenderer`, the facade API performs the complete read, layout, render, and write pipeline:
 
 ```csharp
 using ExcelRenderer;
@@ -54,14 +93,7 @@ Use `PdfExportOptions`, `ImageExportOptions`, and `MarkdownExportOptions` to sel
 
 ### Command-line tool
 
-The CLI package is not yet published to nuget.org. To try it, first create and install the local package:
-
-```bash
-dotnet pack src/ExcelRenderer.Tool/ExcelRenderer.Tool.csproj -c Release -o artifacts
-dotnet tool install --global --add-source ./artifacts ExcelRenderer.Tool
-```
-
-Then convert workbooks with the `pdf`, `image`, or `markdown` (`md`) commands:
+After installing `ExcelRenderer.Tool`, convert workbooks with the `pdf`, `image`, or `markdown` (`md`) commands:
 
 ```bash
 excelrenderer pdf input.xlsx -o output.pdf
@@ -73,7 +105,7 @@ Run `excelrenderer --help` or a subcommand's `--help` for options such as `--she
 
 ### Low-level rendering API
 
-Reference the `ExcelRenderer` project, then run the workbook through the layout and rendering pipeline:
+Install the `ExcelRenderer` package or reference the project, then run the workbook through the layout and rendering pipeline:
 
 ```csharp
 using ExcelRenderer.Drawing;
@@ -150,6 +182,14 @@ The [Japanese guide](README.ja.md) contains a detailed description of the models
 - Output can differ from Excel because font measurement and rendering engines differ.
 
 ## Development
+
+To try the CLI from source before publishing, create and install a local package:
+
+```bash
+dotnet pack src/ExcelRenderer.Tool/ExcelRenderer.Tool.csproj -c Release -o artifacts/packages
+dotnet tool install --tool-path ./artifacts/tool-test --add-source ./artifacts/packages ExcelRenderer.Tool
+./artifacts/tool-test/excelrenderer --help
+```
 
 Run the test suite from the repository root:
 

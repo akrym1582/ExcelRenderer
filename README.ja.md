@@ -20,7 +20,62 @@ PDF / PNG
 
 読み込み、レイアウト計算、描画命令生成、出力を分離することで、処理内容を理解しやすくし、将来的な機能追加や出力先の追加を行いやすい構成にしています。
 
-現在は MVP 段階であり、コマンドラインアプリケーションは含まれません。
+現在は MVP 段階です。ライブラリに加えて、PDF・PNG・Markdownへ変換するコマンドラインツールを提供します。
+
+## インストール
+
+ライブラリとコマンドラインツールは、それぞれ別の NuGet パッケージです。対象のパッケージが NuGet.org に公開された後、以下のコマンドでインストールできます。`ExcelRenderer` の公開だけでは `ExcelRenderer.Tool` は公開されません。
+
+### ライブラリ（NuGet）
+
+.NET Standard 2.1 と互換性のあるアプリケーションのプロジェクトディレクトリで実行します。
+
+```bash
+dotnet add package ExcelRenderer
+```
+
+インストール後、次の API で変換できます。
+
+```csharp
+using ExcelRenderer;
+
+await ExcelConverter.ConvertToPdfAsync("input.xlsx", "output.pdf");
+await ExcelConverter.ConvertToImagesAsync("input.xlsx", "./images");
+await ExcelConverter.ConvertToMarkdownAsync("input.xlsx", "output.md");
+```
+
+### コマンドラインツール（dotnet tool）
+
+.NET 10 SDK をインストールし、NuGet.org からツールを取得します。
+
+```bash
+dotnet tool install --global ExcelRenderer.Tool
+excelrenderer --help
+```
+
+パッケージ名は `ExcelRenderer.Tool`、実行コマンド名は `excelrenderer` です。CLI の利用にライブラリの個別インストールは不要です。これらのコマンドは、NuGet のパッケージソースで NuGet.org が有効になっていることを前提とします。
+
+```bash
+excelrenderer pdf input.xlsx -o output.pdf
+excelrenderer image input.xlsx -o ./images
+excelrenderer md input.xlsx -o output.md
+```
+
+既にグローバルインストールしている場合は、次のコマンドで更新します。
+
+```bash
+dotnet tool update --global ExcelRenderer.Tool
+```
+
+プロジェクト単位で管理する場合は、利用するリポジトリでローカルインストールします。`dotnet new tool-manifest` は、既存のマニフェストがない場合だけ実行してください。
+
+```bash
+dotnet new tool-manifest
+dotnet tool install --local ExcelRenderer.Tool
+dotnet tool run excelrenderer --help
+```
+
+`.config/dotnet-tools.json` をコミットすると、他の開発者は `dotnet tool restore` で同じバージョンをインストールできます。
 
 ## 対応範囲
 

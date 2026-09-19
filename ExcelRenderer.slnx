@@ -1,8 +1,10 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/ExcelRenderer.Tool/ExcelRenderer.Tool.csproj" />
     <Project Path="src/ExcelRenderer/ExcelRenderer.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/ExcelRenderer.Tests/ExcelRenderer.Tests.csproj" />
+    <Project Path="tests/ExcelRenderer.Tool.Tests/ExcelRenderer.Tool.Tests.csproj" />
   </Folder>
 </Solution>

@@ -9,6 +9,7 @@ public static class ExcelStyleConverter
     public static CellStyle Convert(IXLCell cell)
     {
         var style = cell.Style;
+        var theme = cell.Worksheet.Workbook.Theme;
         var horizontalAlignment = style.Alignment.Horizontal == XLAlignmentHorizontalValues.General
             ? ResolveGeneralAlignment(cell)
             : ToHorizontalAlignment(style.Alignment.Horizontal);
@@ -18,9 +19,9 @@ public static class ExcelStyleConverter
             style.Font.Bold,
             style.Font.Italic,
             style.Font.Underline != XLFontUnderlineValues.None,
-            ToColor(style.Font.FontColor, cell.Worksheet.Workbook.Theme)),
-            ToBackground(style.Fill, cell.Worksheet.Workbook.Theme),
-            ToBorder(style.Border, cell.Worksheet.Workbook.Theme),
+            ToColor(style.Font.FontColor, theme)),
+            ToBackground(style.Fill, theme),
+            ToBorder(style.Border, theme),
             horizontalAlignment,
             ToVerticalAlignment(style.Alignment.Vertical),
             style.Alignment.WrapText,
@@ -71,37 +72,84 @@ public static class ExcelStyleConverter
 
     private static ReportColor? ToColor(XLColor color, IXLTheme theme)
     {
-        if (!color.HasValue) return null;
-        // Indexed 64/65 are automatic foreground/background, not palette entries.
+        if (!color.HasValue)
+            return null;
+
+        // Indexed 64/65 represent automatic foreground/background colors.
         if (color.ColorType == XLColorType.Indexed && color.Indexed >= 64)
             return color.Indexed == 65 ? new(255, 255, 255) : new(0, 0, 0);
-        var resolved = color.ColorType == XLColorType.Theme
+
+        var resolvedColor = color.ColorType == XLColorType.Theme
             ? theme.ResolveThemeColor(color.ThemeColor).Color
             : color.Color;
-        if (color.ColorType != XLColorType.Theme || color.ThemeTint == 0)
-            return new(resolved.R, resolved.G, resolved.B, resolved.A);
+        var tint = color.ColorType == XLColorType.Theme ? color.ThemeTint : 0;
 
-        // SpreadsheetML tint modifies HSL luminance, preserving hue/saturation.
-        var luminance = (double)resolved.GetBrightness();
-        var tint = color.ThemeTint;
-        luminance = tint < 0 ? luminance * (1 + tint) : luminance * (1 - tint) + tint;
-        var saturation = resolved.GetSaturation();
-        var chroma = (1 - Math.Abs(2 * luminance - 1)) * saturation;
-        var hue = resolved.GetHue() / 60d;
-        var x = chroma * (1 - Math.Abs(hue % 2 - 1));
-        var (r, g, b) = hue switch
-        {
-            < 1 => (chroma, x, 0d),
-            < 2 => (x, chroma, 0d),
-            < 3 => (0d, chroma, x),
-            < 4 => (0d, x, chroma),
-            < 5 => (x, 0d, chroma),
-            _ => (chroma, 0d, x)
-        };
-        var m = luminance - chroma / 2;
-        byte Channel(double value) => (byte)Math.Round((value + m) * 255);
-        return new(Channel(r), Channel(g), Channel(b), resolved.A);
+        var (red, green, blue) = ApplyTint(resolvedColor.R, resolvedColor.G, resolvedColor.B, tint);
+        return new ReportColor(red, green, blue, resolvedColor.A);
     }
+
+    private static (byte Red, byte Green, byte Blue) ApplyTint(byte red, byte green, byte blue, double tint)
+    {
+        if (tint == 0)
+            return (red, green, blue);
+
+        var normalizedRed = red / 255d;
+        var normalizedGreen = green / 255d;
+        var normalizedBlue = blue / 255d;
+        var maximum = Math.Max(normalizedRed, Math.Max(normalizedGreen, normalizedBlue));
+        var minimum = Math.Min(normalizedRed, Math.Min(normalizedGreen, normalizedBlue));
+        var luminance = (maximum + minimum) / 2;
+        var saturation = 0d;
+        var hue = 0d;
+
+        if (maximum != minimum)
+        {
+            var difference = maximum - minimum;
+            saturation = luminance > 0.5
+                ? difference / (2 - maximum - minimum)
+                : difference / (maximum + minimum);
+
+            hue = maximum == normalizedRed
+                ? (normalizedGreen - normalizedBlue) / difference + (normalizedGreen < normalizedBlue ? 6 : 0)
+                : maximum == normalizedGreen
+                    ? (normalizedBlue - normalizedRed) / difference + 2
+                    : (normalizedRed - normalizedGreen) / difference + 4;
+            hue /= 6;
+        }
+
+        luminance = tint < 0
+            ? luminance * (1 + tint)
+            : luminance * (1 - tint) + tint;
+        luminance = Math.Max(0, Math.Min(1, luminance));
+
+        if (saturation == 0)
+        {
+            var component = ToByte(luminance);
+            return (component, component, component);
+        }
+
+        var second = luminance < 0.5
+            ? luminance * (1 + saturation)
+            : luminance + saturation - luminance * saturation;
+        var first = 2 * luminance - second;
+        return (
+            ToByte(HueToRgb(first, second, hue + 1d / 3)),
+            ToByte(HueToRgb(first, second, hue)),
+            ToByte(HueToRgb(first, second, hue - 1d / 3)));
+    }
+
+    private static double HueToRgb(double first, double second, double hue)
+    {
+        if (hue < 0) hue += 1;
+        if (hue > 1) hue -= 1;
+        if (hue < 1d / 6) return first + (second - first) * 6 * hue;
+        if (hue < 1d / 2) return second;
+        if (hue < 2d / 3) return first + (second - first) * (2d / 3 - hue) * 6;
+        return first;
+    }
+
+    private static byte ToByte(double component) =>
+        (byte)Math.Round(Math.Max(0, Math.Min(255, component * 255)));
 
     private static HorizontalAlignment ToHorizontalAlignment(XLAlignmentHorizontalValues value) => value switch
     {

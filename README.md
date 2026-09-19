@@ -15,7 +15,7 @@ Excel (.xlsx)
 This makes the rendering pipeline easier to test, understand, and extend with new layout behavior or output formats.
 
 > [!NOTE]
-> ExcelRenderer is currently an MVP. It is a library rather than a command-line application, and it does not aim for pixel-perfect parity with Microsoft Excel.
+> ExcelRenderer is currently an MVP and does not aim for pixel-perfect parity with Microsoft Excel.
 
 ## Features
 
@@ -28,6 +28,7 @@ This makes the rendering pipeline easier to test, understand, and extend with ne
 - Renders header and footer text
 - Produces PDF output with PDFsharp
 - Produces one PNG image per page with SkiaSharp
+- Exports AI-friendly Markdown with merged-cell HTML, layout-aware reading order, formulas, and external images
 
 ## Requirements
 
@@ -36,6 +37,41 @@ This makes the rendering pipeline easier to test, understand, and extend with ne
 - Appropriate fonts installed or supplied through `PdfSharpFontResolver`
 
 ## Quick start
+
+### High-level library API
+
+After building a local `ExcelRenderer` NuGet package (or referencing the project), the facade API performs the complete read, layout, render, and write pipeline:
+
+```csharp
+using ExcelRenderer;
+
+await ExcelConverter.ConvertToPdfAsync("input.xlsx", "output.pdf");
+await ExcelConverter.ConvertToImagesAsync("input.xlsx", "./images");
+await ExcelConverter.ConvertToMarkdownAsync("input.xlsx", "output.md");
+```
+
+Use `PdfExportOptions`, `ImageExportOptions`, and `MarkdownExportOptions` to select a worksheet or configure format-specific behavior. Existing output files, and non-empty image output directories, are not overwritten.
+
+### Command-line tool
+
+The CLI package is not yet published to nuget.org. To try it, first create and install the local package:
+
+```bash
+dotnet pack src/ExcelRenderer.Tool/ExcelRenderer.Tool.csproj -c Release -o artifacts
+dotnet tool install --global --add-source ./artifacts ExcelRenderer.Tool
+```
+
+Then convert workbooks with the `pdf`, `image`, or `markdown` (`md`) commands:
+
+```bash
+excelrenderer pdf input.xlsx -o output.pdf
+excelrenderer image input.xlsx -o ./images
+excelrenderer md input.xlsx -o output.md
+```
+
+Run `excelrenderer --help` or a subcommand's `--help` for options such as `--sheet`, `--dpi`, and Markdown image/layout controls.
+
+### Low-level rendering API
 
 Reference the `ExcelRenderer` project, then run the workbook through the layout and rendering pipeline:
 
@@ -67,6 +103,19 @@ new PngRenderer().Render(
     pageNumber => File.Create($"report-{pageNumber}.png"),
     dpi: 144);
 ```
+
+To convert an entire workbook to Markdown and extract its images:
+
+```csharp
+using ExcelRenderer.Markdown;
+
+await ExcelMarkdownConverter.ConvertAsync("sample.xlsx", "output");
+```
+
+This creates `output/sample.md` and image files under `output/images`. Use
+`MarkdownExportOptions` to control formula/address metadata, hidden rows and columns,
+nearby image text, layout analysis, and image export. Markdown export consumes the
+same `ReportDocument` model as the renderers and does not alter the PDF/PNG pipeline.
 
 For environments where the workbook font is not installed, configure a font resolver before PDFsharp first accesses a font:
 

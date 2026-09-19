@@ -7,4 +7,5 @@ public sealed record RenderPage(
     int Number,
     IReadOnlyList<RenderCell> Cells,
     IReadOnlyList<RenderImage>? Images = null,
-    IReadOnlyList<RenderText>? HeaderFooterTexts = null);
+    IReadOnlyList<RenderText>? HeaderFooterTexts = null,
+    IReadOnlyList<RenderShape>? Shapes = null);

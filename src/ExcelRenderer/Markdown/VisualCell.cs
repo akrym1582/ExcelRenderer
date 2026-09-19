@@ -47,8 +47,8 @@ public sealed class VisualCellBuilder
     private static double RowHeight(ReportSheet s, int r) =>
         s.Rows.TryGetValue(r, out var value) && !value.IsHidden ? value.Height : 0;
     private static bool IsHidden(ReportSheet s, CellAddress a, ReportCell cell) =>
-        Enumerable.Range(a.Column, cell.ColumnSpan).Any(c => s.Columns.TryGetValue(c, out var d) && d.IsHidden) ||
-        Enumerable.Range(a.Row, cell.RowSpan).Any(r => s.Rows.TryGetValue(r, out var d) && d.IsHidden);
+        Enumerable.Range(a.Column, cell.ColumnSpan).All(c => s.Columns.TryGetValue(c, out var d) && d.IsHidden) ||
+        Enumerable.Range(a.Row, cell.RowSpan).All(r => s.Rows.TryGetValue(r, out var d) && d.IsHidden);
 
     private sealed class LayoutMetrics
     {

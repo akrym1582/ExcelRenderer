@@ -123,7 +123,12 @@ public sealed class ExcelReader
             InchesToPoints(margins.Right), InchesToPoints(margins.Bottom),
             pageSetup.Scale > 0 ? pageSetup.Scale / 100d : null,
             pageSetup.Scale > 0 || pageSetup.PagesWide <= 0 ? null : pageSetup.PagesWide,
-            pageSetup.Scale > 0 || pageSetup.PagesTall <= 0 ? null : pageSetup.PagesTall);
+            pageSetup.Scale > 0 || pageSetup.PagesTall <= 0 ? null : pageSetup.PagesTall,
+            ReadRange(pageSetup.FirstRowToRepeatAtTop, pageSetup.LastRowToRepeatAtTop),
+            ReadRange(pageSetup.FirstColumnToRepeatAtLeft, pageSetup.LastColumnToRepeatAtLeft));
+
+        static IndexRange? ReadRange(int first, int last) =>
+            first > 0 && last >= first ? new(first, last) : null;
     }
 
     private static (double Width, double Height) GetPaperSize(XLPaperSize paperSize) => paperSize switch
@@ -139,17 +144,24 @@ public sealed class ExcelReader
 
     private static HeaderFooter? ReadHeaderFooter(IXLWorksheet worksheet)
     {
-        var header = ReadHeaderFooterSection(worksheet.PageSetup.Header);
-        var footer = ReadHeaderFooterSection(worksheet.PageSetup.Footer);
-        var firstHeader = ReadHeaderFooterSection(worksheet.PageSetup.Header, XLHFOccurrence.FirstPage);
-        var firstFooter = ReadHeaderFooterSection(worksheet.PageSetup.Footer, XLHFOccurrence.FirstPage);
-        var evenHeader = ReadHeaderFooterSection(worksheet.PageSetup.Header, XLHFOccurrence.EvenPages);
-        var evenFooter = ReadHeaderFooterSection(worksheet.PageSetup.Footer, XLHFOccurrence.EvenPages);
+        var pageSetup = worksheet.PageSetup;
+        var header = ReadHeaderFooterSection(pageSetup.Header);
+        var footer = ReadHeaderFooterSection(pageSetup.Footer);
+        var firstHeader = pageSetup.DifferentFirstPageOnHF
+            ? EmptyToNull(ReadHeaderFooterSection(pageSetup.Header, XLHFOccurrence.FirstPage)) : null;
+        var firstFooter = pageSetup.DifferentFirstPageOnHF
+            ? EmptyToNull(ReadHeaderFooterSection(pageSetup.Footer, XLHFOccurrence.FirstPage)) : null;
+        var evenHeader = pageSetup.DifferentOddEvenPagesOnHF
+            ? EmptyToNull(ReadHeaderFooterSection(pageSetup.Header, XLHFOccurrence.EvenPages)) : null;
+        var evenFooter = pageSetup.DifferentOddEvenPagesOnHF
+            ? EmptyToNull(ReadHeaderFooterSection(pageSetup.Footer, XLHFOccurrence.EvenPages)) : null;
         return header == new HeaderFooterSection() && footer == new HeaderFooterSection() &&
-            firstHeader == new HeaderFooterSection() && firstFooter == new HeaderFooterSection() &&
-            evenHeader == new HeaderFooterSection() && evenFooter == new HeaderFooterSection()
+            firstHeader is null && firstFooter is null && evenHeader is null && evenFooter is null
             ? null
             : new(header, footer, firstHeader, firstFooter, evenHeader, evenFooter);
+
+        static HeaderFooterSection? EmptyToNull(HeaderFooterSection section) =>
+            section == new HeaderFooterSection() ? null : section;
     }
 
     private static HeaderFooterSection ReadHeaderFooterSection(

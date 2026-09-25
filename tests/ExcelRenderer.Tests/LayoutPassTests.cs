@@ -179,6 +179,65 @@ public sealed class LayoutPassTests
     }
 
     [Fact]
+    public void PaginationPass_repeats_title_rows_and_columns_on_each_page()
+    {
+        var cells = new Dictionary<CellAddress, ReportCell>();
+        for (var row = 1; row <= 3; row++)
+        for (var column = 1; column <= 3; column++)
+            cells[new(row, column)] = new($"{row},{column}", CellStyle.Default);
+        var context = CreateContext(cells: cells,
+            columns: new Dictionary<int, ColumnDefinition> { [1] = new(20), [2] = new(40), [3] = new(40) },
+            rows: new Dictionary<int, RowDefinition> { [1] = new(10), [2] = new(30), [3] = new(30) },
+            pageSettings: new(80, 70, 10, 10, 10, 10, TitleRows: new(1, 1), TitleColumns: new(1, 1)));
+        context.PrintArea = new(new(1, 1), new(3, 3));
+        new HiddenRowColumnPass().Execute(context);
+        new ColumnLayoutPass().Execute(context);
+        new RowLayoutPass().Execute(context);
+        new TextMeasurePass().Execute(context);
+        new CellBoundsPass().Execute(context);
+
+        new PaginationPass().Execute(context);
+
+        Assert.Equal(4, context.RenderDocument!.Pages.Count);
+        var lastPage = context.RenderDocument.Pages[3];
+        Assert.Equal(["1,1", "1,3", "3,1", "3,3"], lastPage.Cells.Select(cell => cell.Cell.Text));
+        Assert.Equal(new ReportRect(10, 10, 20, 10), lastPage.Cells[0].Bounds);
+        Assert.Equal(new ReportRect(30, 20, 40, 30), lastPage.Cells[3].Bounds);
+    }
+
+    [Fact]
+    public void PaginationPass_accounts_for_repeated_titles_when_fitting_page_counts()
+    {
+        var cells = new Dictionary<CellAddress, ReportCell>();
+        var columns = new Dictionary<int, ColumnDefinition>();
+        var rows = new Dictionary<int, RowDefinition>();
+        for (var index = 1; index <= 10; index++)
+        {
+            columns[index] = new(10);
+            rows[index] = new(10);
+            for (var column = 1; column <= 10; column++)
+                cells[new(index, column)] = new($"{index},{column}", CellStyle.Default);
+        }
+        var context = CreateContext(cells: cells, columns: columns, rows: rows,
+            pageSettings: new(70, 70, 10, 10, 10, 10, Scale: null,
+                FitToPagesWide: 2, FitToPagesTall: 2,
+                TitleRows: new(1, 1), TitleColumns: new(1, 1)));
+        context.PrintArea = new(new(1, 1), new(10, 10));
+        new HiddenRowColumnPass().Execute(context);
+        new ColumnLayoutPass().Execute(context);
+        new RowLayoutPass().Execute(context);
+        new TextMeasurePass().Execute(context);
+        new CellBoundsPass().Execute(context);
+
+        new PaginationPass().Execute(context);
+
+        Assert.Equal(4, context.RenderDocument!.Pages.Count);
+        var lastPage = context.RenderDocument.Pages[3];
+        Assert.Contains(lastPage.Cells, cell => cell.Cell.Text == "1,1");
+        Assert.Contains(lastPage.Cells, cell => cell.Cell.Text == "10,10");
+    }
+
+    [Fact]
     public void PaginationPass_positions_images_from_their_anchor_cell()
     {
         var imageBytes = CreateImageBytes();
@@ -250,6 +309,47 @@ public sealed class LayoutPassTests
 
             Assert.Equal("ヘッダー", headerFooter.Header.Left);
             Assert.Equal("ページ &P / &N", headerFooter.Footer.Center);
+            Assert.Null(headerFooter.FirstPageHeader);
+            Assert.Null(headerFooter.FirstPageFooter);
+            Assert.Null(headerFooter.EvenPageHeader);
+            Assert.Null(headerFooter.EvenPageFooter);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [Fact]
+    public void ExcelReader_regular_header_and_footer_are_rendered_on_every_page()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
+        try
+        {
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.AddWorksheet("Sheet1");
+                worksheet.Cell(1, 1).Value = "one";
+                worksheet.Cell(2, 1).Value = "two";
+                worksheet.Row(1).Height = 40;
+                worksheet.Row(2).Height = 40;
+                worksheet.PageSetup.PaperSize = XLPaperSize.LetterPaper;
+                worksheet.PageSetup.Margins.Top = 0.1;
+                worksheet.PageSetup.Margins.Bottom = 0.1;
+                worksheet.PageSetup.Header.Center.AddText("ページ &P / &N");
+                worksheet.PageSetup.Footer.Center.AddText("フッター &P / &N");
+                workbook.SaveAs(path);
+            }
+
+            var sheet = new ExcelReader().Read(path).Sheets[0] with
+            {
+                PageSettings = new(100, 70, 10, 10, 10, 10)
+            };
+            var pages = new ReportLayoutEngine(new FixedTextMeasurer()).Layout(sheet).Pages;
+
+            Assert.Equal(2, pages.Count);
+            Assert.Equal(["ページ 1 / 2", "フッター 1 / 2"], pages[0].HeaderFooterTexts!.Select(text => text.Text));
+            Assert.Equal(["ページ 2 / 2", "フッター 2 / 2"], pages[1].HeaderFooterTexts!.Select(text => text.Text));
         }
         finally
         {
@@ -306,6 +406,32 @@ public sealed class LayoutPassTests
             Assert.Equal(0.75, settings.Scale);
             Assert.Null(settings.FitToPagesWide);
             Assert.Null(settings.FitToPagesTall);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [Fact]
+    public void ExcelReader_reads_print_title_rows_and_columns()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
+        try
+        {
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.AddWorksheet("Sheet1");
+                worksheet.Cell(1, 1).Value = "title";
+                worksheet.PageSetup.SetRowsToRepeatAtTop(1, 2);
+                worksheet.PageSetup.SetColumnsToRepeatAtLeft(1, 3);
+                workbook.SaveAs(path);
+            }
+
+            var settings = new ExcelReader().Read(path).Sheets[0].PageSettings;
+
+            Assert.Equal(new IndexRange(1, 2), settings.TitleRows);
+            Assert.Equal(new IndexRange(1, 3), settings.TitleColumns);
         }
         finally
         {

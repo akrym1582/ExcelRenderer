@@ -7,7 +7,7 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>excelrenderer</ToolCommandName>
     <PackageId>ExcelRenderer.Tool</PackageId>
-    <Version>1.1.1</Version>
+    <Version>1.1.2</Version>
     <Title>ExcelRenderer command-line tool</Title>
     <Description>Convert Excel XLSX files to PDF, PNG and AI-friendly Markdown.</Description>
     <Authors>akrym1582</Authors>

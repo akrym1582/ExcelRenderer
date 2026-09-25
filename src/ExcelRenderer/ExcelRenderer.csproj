@@ -5,7 +5,7 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
-    <Version>1.1.1</Version>
+    <Version>1.1.2</Version>
     <PackageId>ExcelRenderer</PackageId>
     <Title>ExcelRenderer</Title>
     <Description>Render Excel XLSX files to PDF, PNG and AI-friendly Markdown.</Description>

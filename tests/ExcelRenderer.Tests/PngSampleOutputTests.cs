@@ -3,8 +3,15 @@ using Xunit;
 
 namespace ExcelRenderer.Tests;
 
+/// <summary>
+/// PngSampleOutputTests が表すデータと操作を提供します.
+/// </summary>
 public sealed class PngSampleOutputTests
 {
+    /// <summary>
+    /// Generates_pngs_from_prebuilt_excel を実行します.
+    /// </summary>
+    /// <param name="excelFileName">excelFileName に渡す値です。</param>
     [Theory]
     [MemberData(nameof(SampleOutputTestSupport.RenderSamples), MemberType = typeof(SampleOutputTestSupport))]
     public void Generates_pngs_from_prebuilt_excel(string excelFileName)

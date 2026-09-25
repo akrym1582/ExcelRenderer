@@ -4,13 +4,22 @@ using ExcelRenderer.Model;
 
 namespace ExcelRenderer.Excel;
 
+/// <summary>
+/// ExcelReader が表すデータと操作を提供します.
+/// </summary>
 public sealed class ExcelReader
 {
+    /// <summary>
+    /// Read を実行します.
+    /// </summary>
+    /// <param name="path">path に渡す値です。</param>
+    /// <returns>処理によって得られた結果を返します。</returns>
     public ReportDocument Read(string path)
     {
         using var workbook = new XLWorkbook(path);
         var shapes = DrawingMLReader.Read(path);
-        return new(workbook.Worksheets.Select(sheet => ReadSheet(sheet,
+        return new(workbook.Worksheets.Select(sheet => ReadSheet(
+            sheet,
             shapes.GetValueOrDefault(sheet.Name, Array.Empty<ReportShape>()))).ToArray());
     }
 
@@ -25,7 +34,9 @@ public sealed class ExcelReader
             foreach (var cell in usedRange.CellsUsed(XLCellsUsedOptions.All))
             {
                 var address = new CellAddress(cell.Address.RowNumber, cell.Address.ColumnNumber);
-                cells[address] = new(cell.GetFormattedString(), ExcelStyleConverter.Convert(cell),
+                cells[address] = new(
+                    cell.GetFormattedString(),
+                    ExcelStyleConverter.Convert(cell),
                     Formula: cell.HasFormula ? "=" + cell.FormulaA1 : null);
             }
 
@@ -59,6 +70,7 @@ public sealed class ExcelReader
                     columns[column] = new(ExcelColumnWidthToPoints(source.Width), source.IsHidden);
                 }
             }
+
             for (var row = range.First.Row; row <= range.Last.Row; row++)
             {
                 if (!rows.ContainsKey(row))
@@ -77,6 +89,7 @@ public sealed class ExcelReader
                 var source = worksheet.Column(image.Anchor.Column);
                 columns[image.Anchor.Column] = new(ExcelColumnWidthToPoints(source.Width), source.IsHidden);
             }
+
             if (!rows.ContainsKey(image.Anchor.Row))
             {
                 var source = worksheet.Row(image.Anchor.Row);
@@ -91,6 +104,7 @@ public sealed class ExcelReader
                 var source = worksheet.Column(shape.Anchor.Column);
                 columns[shape.Anchor.Column] = new(ExcelColumnWidthToPoints(source.Width), source.IsHidden);
             }
+
             if (!rows.ContainsKey(shape.Anchor.Row))
             {
                 var source = worksheet.Row(shape.Anchor.Row);
@@ -98,8 +112,17 @@ public sealed class ExcelReader
             }
         }
 
-        return new(worksheet.Name, cells, columns, rows, mergedRanges, ReadPageSettings(worksheet),
-            ReadPrintArea(worksheet), images, ReadHeaderFooter(worksheet), shapes);
+        return new(
+            worksheet.Name,
+            cells,
+            columns,
+            rows,
+            mergedRanges,
+            ReadPageSettings(worksheet),
+            ReadPrintArea(worksheet),
+            images,
+            ReadHeaderFooter(worksheet),
+            shapes);
     }
 
     private static CellRange? ReadPrintArea(IXLWorksheet worksheet)
@@ -115,12 +138,18 @@ public sealed class ExcelReader
         var pageSetup = worksheet.PageSetup;
         var (width, height) = GetPaperSize(pageSetup.PaperSize);
         if (pageSetup.PageOrientation == XLPageOrientation.Landscape)
+        {
             (width, height) = (height, width);
+        }
 
         var margins = pageSetup.Margins;
-        return new(width, height,
-            InchesToPoints(margins.Left), InchesToPoints(margins.Top),
-            InchesToPoints(margins.Right), InchesToPoints(margins.Bottom),
+        return new(
+            width,
+            height,
+            InchesToPoints(margins.Left),
+            InchesToPoints(margins.Top),
+            InchesToPoints(margins.Right),
+            InchesToPoints(margins.Bottom),
             pageSetup.Scale > 0 ? pageSetup.Scale / 100d : null,
             pageSetup.Scale > 0 || pageSetup.PagesWide <= 0 ? null : pageSetup.PagesWide,
             pageSetup.Scale > 0 || pageSetup.PagesTall <= 0 ? null : pageSetup.PagesTall,
@@ -139,7 +168,7 @@ public sealed class ExcelReader
         XLPaperSize.A5Paper => (419.53, 595.28),
         XLPaperSize.B4Paper => (708.66, 1000.63),
         XLPaperSize.B5Paper => (498.9, 708.66),
-        _ => (595.276, 841.89)
+        _ => (595.276, 841.89),
     };
 
     private static HeaderFooter? ReadHeaderFooter(IXLWorksheet worksheet)
@@ -182,12 +211,16 @@ public sealed class ExcelReader
             PixelsToPoints(offset.Y),
             PixelsToPoints(picture.Width),
             PixelsToPoints(picture.Height),
-            picture.ImageStream.ToArray(), zIndex, picture.Name);
+            picture.ImageStream.ToArray(),
+            zIndex,
+            picture.Name);
     }
 
     private static double PixelsToPoints(int value) => value * 72d / 96d;
+
     private static double InchesToPoints(double value) => value * 72d;
-    private static double ExcelColumnWidthToPoints(double value) => Math.Truncate(value * 7 + 5) * 72d / 96d;
+
+    private static double ExcelColumnWidthToPoints(double value) => Math.Truncate((value * 7) + 5) * 72d / 96d;
 
     private static IReadOnlyList<CellBorder> ReadMergedBorders(Dictionary<CellAddress, ReportCell> cells, CellRange range)
     {
@@ -195,15 +228,23 @@ public sealed class ExcelReader
         foreach (var entry in cells.Where(entry => range.Contains(entry.Key)))
         {
             var source = entry.Value.Style.Border;
-            if (source is null) continue;
+            if (source is null)
+            {
+                continue;
+            }
+
             var address = entry.Key;
             var border = new BorderStyle(
                 address.Column == range.First.Column ? source.Left : null,
                 address.Row == range.First.Row ? source.Top : null,
                 address.Column == range.Last.Column ? source.Right : null,
                 address.Row == range.Last.Row ? source.Bottom : null);
-            if (border != new BorderStyle()) borders.Add(new(address, border));
+            if (border != new BorderStyle())
+            {
+                borders.Add(new(address, border));
+            }
         }
+
         return borders;
     }
 
@@ -218,11 +259,14 @@ public sealed class ExcelReader
                 RowSpan = range.Last.Row - range.First.Row + 1,
                 ColumnSpan = range.Last.Column - range.First.Column + 1,
                 Style = cell.Style with { Border = null },
-                MergedBorders = ReadMergedBorders(cells, range)
+                MergedBorders = ReadMergedBorders(cells, range),
             };
             foreach (var address in cells.Keys.Where(range.Contains).Where(address => address != range.First).ToArray())
+            {
                 cells.Remove(address);
+            }
         }
+
         return cells;
     }
 }

@@ -3,8 +3,15 @@ using ExcelRenderer.Model;
 
 namespace ExcelRenderer.Layout;
 
+/// <summary>
+/// ResolvePrintAreaPass が表すデータと操作を提供します.
+/// </summary>
 public sealed class ResolvePrintAreaPass : IReportLayoutPass
 {
+    /// <summary>
+    /// Execute を実行します.
+    /// </summary>
+    /// <param name="context">context に渡す値です。</param>
     public void Execute(ReportLayoutContext context)
     {
         context.PrintArea = context.Sheet.PrintArea ?? GetUsedRange(context.Sheet);
@@ -16,7 +23,11 @@ public sealed class ResolvePrintAreaPass : IReportLayoutPass
             .Concat((sheet.Images ?? []).Select(image => image.Anchor))
             .Concat((sheet.Shapes ?? []).Select(shape => shape.Anchor))
             .ToArray();
-        if (addresses.Length == 0) return null;
+        if (addresses.Length == 0)
+        {
+            return null;
+        }
+
         var lastRows = sheet.Cells
             .Select(cell => cell.Key.Row + cell.Value.RowSpan - 1)
             .Concat((sheet.Images ?? []).Select(image => image.Anchor.Row));

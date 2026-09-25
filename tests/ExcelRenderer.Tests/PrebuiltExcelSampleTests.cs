@@ -5,8 +5,14 @@ using Xunit;
 
 namespace ExcelRenderer.Tests;
 
+/// <summary>
+/// PrebuiltExcelSampleTests が表すデータと操作を提供します.
+/// </summary>
 public sealed class PrebuiltExcelSampleTests
 {
+    /// <summary>
+    /// Cell_border_sample_preserves_empty_cells_and_merged_perimeter_fragments を実行します.
+    /// </summary>
     [Fact]
     public void Cell_border_sample_preserves_empty_cells_and_merged_perimeter_fragments()
     {
@@ -42,6 +48,9 @@ public sealed class PrebuiltExcelSampleTests
         });
     }
 
+    /// <summary>
+    /// Excel_reader_preserves_multiple_sheets_for_caller_selection を実行します.
+    /// </summary>
     [Fact]
     public void Excel_reader_preserves_multiple_sheets_for_caller_selection()
     {
@@ -53,6 +62,9 @@ public sealed class PrebuiltExcelSampleTests
         Assert.Equal("在庫シート", document.Sheets[1].Cells[new(1, 1)].Text);
     }
 
+    /// <summary>
+    /// Prebuilt_excel_samples_preserve_the_visual_test_features を実行します.
+    /// </summary>
     [Fact]
     public void Prebuilt_excel_samples_preserve_the_visual_test_features()
     {
@@ -71,12 +83,14 @@ public sealed class PrebuiltExcelSampleTests
         Assert.True(textDecoration.Sheet.Cells[new(3, 1)].Style.Font.Bold);
         Assert.NotNull(borders.Sheet.Cells[new(3, 4)].Style.Border);
         Assert.Equal(4, pagination.Layout.Pages.Count);
-        Assert.DoesNotContain(pagination.Commands.OfType<DrawTextCommand>(),
+        Assert.DoesNotContain(
+            pagination.Commands.OfType<DrawTextCommand>(),
             command => command.Text.Contains("印刷範囲外", StringComparison.Ordinal));
         Assert.Contains(pagination.Commands.OfType<DrawTextCommand>(), command => command.Text == "ページ 4 / 4");
         Assert.Equal(0.75, printScaling.Sheet.PageSettings.Scale);
         Assert.Single(printScaling.Layout.Pages);
-        Assert.Contains(printScaling.Commands.OfType<DrawTextCommand>(),
+        Assert.Contains(
+            printScaling.Commands.OfType<DrawTextCommand>(),
             command => command.Text == "75% 縮小 / ページ 1 / 1");
     }
 }

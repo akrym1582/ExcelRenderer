@@ -7,16 +7,26 @@ using Xunit;
 
 namespace ExcelRenderer.Tests;
 
+/// <summary>
+/// PngRendererTests が表すデータと操作を提供します.
+/// </summary>
 public sealed class PngRendererTests
 {
+    /// <summary>
+    /// RenderPage_preserves_gaps_in_dotted_borders を実行します.
+    /// </summary>
     [Fact]
     public void RenderPage_preserves_gaps_in_dotted_borders()
     {
         using var output = new MemoryStream();
         new PngRenderer().RenderPage(
-            [new DrawBorderCommand(1, new ReportRect(4, 10, 60, 10),
+            [new DrawBorderCommand(
+                1,
+                new ReportRect(4, 10, 60, 10),
                 new BorderStyle(Top: new BorderSide(2, LineStyle: BorderLineStyle.Dotted)))],
-            new PageSettings(72, 24), output, 72);
+            new PageSettings(72, 24),
+            output,
+            72);
 
         using var bitmap = SKBitmap.Decode(output.ToArray());
         for (var x = 4; x < 60; x += 6)
@@ -26,6 +36,9 @@ public sealed class PngRendererTests
         }
     }
 
+    /// <summary>
+    /// RenderPage_writes_png_at_requested_dpi を実行します.
+    /// </summary>
     [Fact]
     public void RenderPage_writes_png_at_requested_dpi()
     {
@@ -34,7 +47,7 @@ public sealed class PngRendererTests
             new FillRectangleCommand(1, new ReportRect(0, 0, 72, 36), new ReportColor(255, 0, 0)),
             new DrawBorderCommand(1, new ReportRect(5, 5, 40, 20), new BorderStyle(new BorderSide(1))),
             new DrawLineCommand(1, 0, 20, 72, 20, new BorderSide(1, new ReportColor(0, 0, 255))),
-            new DrawTextCommand(1, new ReportRect(5, 5, 60, 20), "PNG", CellStyle.Default)
+            new DrawTextCommand(1, new ReportRect(5, 5, 60, 20), "PNG", CellStyle.Default),
         };
         using var output = new MemoryStream();
 
@@ -49,13 +62,16 @@ public sealed class PngRendererTests
         Assert.Equal(SKColors.Red, bitmap.GetPixel(100, 60));
     }
 
+    /// <summary>
+    /// Render_writes_one_png_for_each_page を実行します.
+    /// </summary>
     [Fact]
     public void Render_writes_one_png_for_each_page()
     {
         var commands = new DrawCommand[]
         {
             new FillRectangleCommand(2, new ReportRect(0, 0, 10, 10), new ReportColor(0, 255, 0)),
-            new FillRectangleCommand(1, new ReportRect(0, 0, 10, 10), new ReportColor(255, 0, 0))
+            new FillRectangleCommand(1, new ReportRect(0, 0, 10, 10), new ReportColor(255, 0, 0)),
         };
         var outputs = new Dictionary<int, MemoryStream>();
 
@@ -71,6 +87,9 @@ public sealed class PngRendererTests
             Assert.Equal(new byte[] { 137, 80, 78, 71 }, output.ToArray()[..4]));
     }
 
+    /// <summary>
+    /// RenderPage_renders_an_embedded_image を実行します.
+    /// </summary>
     [Fact]
     public void RenderPage_renders_an_embedded_image()
     {
@@ -88,6 +107,9 @@ public sealed class PngRendererTests
         Assert.Equal(SKColors.Blue, rendered.GetPixel(5, 5));
     }
 
+    /// <summary>
+    /// Render_writes_a_blank_first_page_when_there_are_no_commands を実行します.
+    /// </summary>
     [Fact]
     public void Render_writes_a_blank_first_page_when_there_are_no_commands()
     {
@@ -104,6 +126,9 @@ public sealed class PngRendererTests
         Assert.NotEmpty(output.CapturedBytes);
     }
 
+    /// <summary>
+    /// RenderPage_rejects_non_positive_dpi を実行します.
+    /// </summary>
     [Fact]
     public void RenderPage_rejects_non_positive_dpi()
     {
@@ -120,7 +145,9 @@ public sealed class PngRendererTests
         protected override void Dispose(bool disposing)
         {
             if (disposing)
+            {
                 CapturedBytes = ToArray();
+            }
 
             base.Dispose(disposing);
         }

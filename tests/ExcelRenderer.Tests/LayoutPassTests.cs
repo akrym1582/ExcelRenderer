@@ -10,14 +10,20 @@ using Xunit;
 
 namespace ExcelRenderer.Tests;
 
+/// <summary>
+/// LayoutPassTests が表すデータと操作を提供します.
+/// </summary>
 public sealed class LayoutPassTests
 {
+    /// <summary>
+    /// ColumnLayoutPass_assigns_cumulative_positions を実行します.
+    /// </summary>
     [Fact]
     public void ColumnLayoutPass_assigns_cumulative_positions()
     {
         var context = CreateContext(columns: new Dictionary<int, ColumnDefinition>
         {
-            [1] = new(80), [2] = new(120), [3] = new(60)
+            [1] = new(80), [2] = new(120), [3] = new(60),
         });
         context.PrintArea = new(new(1, 1), new(1, 3));
         new HiddenRowColumnPass().Execute(context);
@@ -29,6 +35,9 @@ public sealed class LayoutPassTests
         Assert.Equal(200, context.ColumnLayouts[3].X);
     }
 
+    /// <summary>
+    /// CellBoundsPass_uses_merged_cell_span を実行します.
+    /// </summary>
     [Fact]
     public void CellBoundsPass_uses_merged_cell_span()
     {
@@ -48,6 +57,9 @@ public sealed class LayoutPassTests
         Assert.Equal(new ReportRect(0, 0, 200, 45), context.CellLayouts[address].Bounds);
     }
 
+    /// <summary>
+    /// PaginationPass_splits_wide_sheets_at_column_boundaries を実行します.
+    /// </summary>
     [Fact]
     public void PaginationPass_splits_wide_sheets_at_column_boundaries()
     {
@@ -55,7 +67,7 @@ public sealed class LayoutPassTests
             cells: new Dictionary<CellAddress, ReportCell>
             {
                 [new(1, 1)] = new("left", CellStyle.Default),
-                [new(1, 2)] = new("right", CellStyle.Default)
+                [new(1, 2)] = new("right", CellStyle.Default),
             },
             columns: new Dictionary<int, ColumnDefinition> { [1] = new(50), [2] = new(50) },
             pageSettings: new(70, 100, 10, 10, 10, 10));
@@ -73,6 +85,9 @@ public sealed class LayoutPassTests
         Assert.Equal("right", Assert.Single(context.RenderDocument.Pages[1].Cells).Cell.Text);
     }
 
+    /// <summary>
+    /// PaginationPass_applies_print_scale_to_content_and_pagination を実行します.
+    /// </summary>
     [Fact]
     public void PaginationPass_applies_print_scale_to_content_and_pagination()
     {
@@ -80,7 +95,7 @@ public sealed class LayoutPassTests
             cells: new Dictionary<CellAddress, ReportCell>
             {
                 [new(1, 1)] = new("left", CellStyle.Default),
-                [new(1, 2)] = new("right", CellStyle.Default)
+                [new(1, 2)] = new("right", CellStyle.Default),
             },
             columns: new Dictionary<int, ColumnDefinition> { [1] = new(50), [2] = new(50) },
             pageSettings: new(70, 100, 10, 10, 10, 10, Scale: 0.5));
@@ -100,6 +115,9 @@ public sealed class LayoutPassTests
         Assert.Equal(5, page.Cells[0].Cell.Style.Font.Size);
     }
 
+    /// <summary>
+    /// PaginationPass_fits_content_to_requested_page_count を実行します.
+    /// </summary>
     [Fact]
     public void PaginationPass_fits_content_to_requested_page_count()
     {
@@ -109,12 +127,20 @@ public sealed class LayoutPassTests
                 [new(1, 1)] = new("top left", CellStyle.Default),
                 [new(1, 2)] = new("top right", CellStyle.Default),
                 [new(2, 1)] = new("bottom left", CellStyle.Default),
-                [new(2, 2)] = new("bottom right", CellStyle.Default)
+                [new(2, 2)] = new("bottom right", CellStyle.Default),
             },
             columns: new Dictionary<int, ColumnDefinition> { [1] = new(50), [2] = new(50) },
             rows: new Dictionary<int, RowDefinition> { [1] = new(40), [2] = new(40) },
-            pageSettings: new(70, 60, 10, 10, 10, 10, Scale: null,
-                FitToPagesWide: 1, FitToPagesTall: 1));
+            pageSettings: new(
+                70,
+                60,
+                10,
+                10,
+                10,
+                10,
+                Scale: null,
+                FitToPagesWide: 1,
+                FitToPagesTall: 1));
         context.PrintArea = new(new(1, 1), new(2, 2));
         new HiddenRowColumnPass().Execute(context);
         new ColumnLayoutPass().Execute(context);
@@ -129,6 +155,9 @@ public sealed class LayoutPassTests
         Assert.Equal(new ReportRect(35, 30, 25, 20), page.Cells[3].Bounds);
     }
 
+    /// <summary>
+    /// PaginationPass_keeps_merged_cells_on_one_page を実行します.
+    /// </summary>
     [Fact]
     public void PaginationPass_keeps_merged_cells_on_one_page()
     {
@@ -136,7 +165,7 @@ public sealed class LayoutPassTests
             cells: new Dictionary<CellAddress, ReportCell>
             {
                 [new(1, 1)] = new("merged", CellStyle.Default, 2),
-                [new(3, 1)] = new("next", CellStyle.Default)
+                [new(3, 1)] = new("next", CellStyle.Default),
             },
             rows: new Dictionary<int, RowDefinition> { [1] = new(30), [2] = new(30), [3] = new(30) },
             pageSettings: new(100, 80, 10, 10, 10, 10));
@@ -154,15 +183,19 @@ public sealed class LayoutPassTests
         Assert.Equal("next", Assert.Single(context.RenderDocument.Pages[1].Cells).Cell.Text);
     }
 
+    /// <summary>
+    /// PaginationPass_does_not_split_rows を実行します.
+    /// </summary>
     [Fact]
     public void PaginationPass_does_not_split_rows()
     {
         var cells = new Dictionary<CellAddress, ReportCell>
         {
             [new(1, 1)] = new("one", CellStyle.Default),
-            [new(2, 1)] = new("two", CellStyle.Default)
+            [new(2, 1)] = new("two", CellStyle.Default),
         };
-        var context = CreateContext(cells: cells,
+        var context = CreateContext(
+            cells: cells,
             rows: new Dictionary<int, RowDefinition> { [1] = new(40), [2] = new(40) },
             pageSettings: new(100, 90, 10, 10, 10, 10));
         context.PrintArea = new(new(1, 1), new(2, 1));
@@ -178,14 +211,23 @@ public sealed class LayoutPassTests
         Assert.All(context.RenderDocument.Pages, page => Assert.Single(page.Cells));
     }
 
+    /// <summary>
+    /// PaginationPass_repeats_title_rows_and_columns_on_each_page を実行します.
+    /// </summary>
     [Fact]
     public void PaginationPass_repeats_title_rows_and_columns_on_each_page()
     {
         var cells = new Dictionary<CellAddress, ReportCell>();
         for (var row = 1; row <= 3; row++)
-        for (var column = 1; column <= 3; column++)
-            cells[new(row, column)] = new($"{row},{column}", CellStyle.Default);
-        var context = CreateContext(cells: cells,
+        {
+            for (var column = 1; column <= 3; column++)
+            {
+                cells[new(row, column)] = new($"{row},{column}", CellStyle.Default);
+            }
+        }
+
+        var context = CreateContext(
+            cells: cells,
             columns: new Dictionary<int, ColumnDefinition> { [1] = new(20), [2] = new(40), [3] = new(40) },
             rows: new Dictionary<int, RowDefinition> { [1] = new(10), [2] = new(30), [3] = new(30) },
             pageSettings: new(80, 70, 10, 10, 10, 10, TitleRows: new(1, 1), TitleColumns: new(1, 1)));
@@ -205,6 +247,9 @@ public sealed class LayoutPassTests
         Assert.Equal(new ReportRect(30, 20, 40, 30), lastPage.Cells[3].Bounds);
     }
 
+    /// <summary>
+    /// PaginationPass_accounts_for_repeated_titles_when_fitting_page_counts を実行します.
+    /// </summary>
     [Fact]
     public void PaginationPass_accounts_for_repeated_titles_when_fitting_page_counts()
     {
@@ -216,12 +261,27 @@ public sealed class LayoutPassTests
             columns[index] = new(10);
             rows[index] = new(10);
             for (var column = 1; column <= 10; column++)
+            {
                 cells[new(index, column)] = new($"{index},{column}", CellStyle.Default);
+            }
         }
-        var context = CreateContext(cells: cells, columns: columns, rows: rows,
-            pageSettings: new(70, 70, 10, 10, 10, 10, Scale: null,
-                FitToPagesWide: 2, FitToPagesTall: 2,
-                TitleRows: new(1, 1), TitleColumns: new(1, 1)));
+
+        var context = CreateContext(
+            cells: cells,
+            columns: columns,
+            rows: rows,
+            pageSettings: new(
+                70,
+                70,
+                10,
+                10,
+                10,
+                10,
+                Scale: null,
+                FitToPagesWide: 2,
+                FitToPagesTall: 2,
+                TitleRows: new(1, 1),
+                TitleColumns: new(1, 1)));
         context.PrintArea = new(new(1, 1), new(10, 10));
         new HiddenRowColumnPass().Execute(context);
         new ColumnLayoutPass().Execute(context);
@@ -237,6 +297,9 @@ public sealed class LayoutPassTests
         Assert.Contains(lastPage.Cells, cell => cell.Cell.Text == "10,10");
     }
 
+    /// <summary>
+    /// PaginationPass_positions_images_from_their_anchor_cell を実行します.
+    /// </summary>
     [Fact]
     public void PaginationPass_positions_images_from_their_anchor_cell()
     {
@@ -259,6 +322,9 @@ public sealed class LayoutPassTests
         Assert.Equal(imageBytes, image.ImageBytes);
     }
 
+    /// <summary>
+    /// ExcelReader_reads_worksheet_images を実行します.
+    /// </summary>
     [Fact]
     public void ExcelReader_reads_worksheet_images()
     {
@@ -290,6 +356,9 @@ public sealed class LayoutPassTests
         }
     }
 
+    /// <summary>
+    /// ExcelReader_reads_worksheet_header_and_footer を実行します.
+    /// </summary>
     [Fact]
     public void ExcelReader_reads_worksheet_header_and_footer()
     {
@@ -320,6 +389,9 @@ public sealed class LayoutPassTests
         }
     }
 
+    /// <summary>
+    /// ExcelReader_regular_header_and_footer_are_rendered_on_every_page を実行します.
+    /// </summary>
     [Fact]
     public void ExcelReader_regular_header_and_footer_are_rendered_on_every_page()
     {
@@ -343,7 +415,7 @@ public sealed class LayoutPassTests
 
             var sheet = new ExcelReader().Read(path).Sheets[0] with
             {
-                PageSettings = new(100, 70, 10, 10, 10, 10)
+                PageSettings = new(100, 70, 10, 10, 10, 10),
             };
             var pages = new ReportLayoutEngine(new FixedTextMeasurer()).Layout(sheet).Pages;
 
@@ -357,6 +429,9 @@ public sealed class LayoutPassTests
         }
     }
 
+    /// <summary>
+    /// ExcelReader_reads_print_settings_and_converts_column_widths を実行します.
+    /// </summary>
     [Fact]
     public void ExcelReader_reads_print_settings_and_converts_column_widths()
     {
@@ -387,6 +462,9 @@ public sealed class LayoutPassTests
         }
     }
 
+    /// <summary>
+    /// ExcelReader_reads_percentage_print_scale を実行します.
+    /// </summary>
     [Fact]
     public void ExcelReader_reads_percentage_print_scale()
     {
@@ -413,6 +491,9 @@ public sealed class LayoutPassTests
         }
     }
 
+    /// <summary>
+    /// ExcelReader_reads_print_title_rows_and_columns を実行します.
+    /// </summary>
     [Fact]
     public void ExcelReader_reads_print_title_rows_and_columns()
     {
@@ -439,6 +520,9 @@ public sealed class LayoutPassTests
         }
     }
 
+    /// <summary>
+    /// ExcelReader_reads_fit_to_pages_print_scale を実行します.
+    /// </summary>
     [Fact]
     public void ExcelReader_reads_fit_to_pages_print_scale()
     {
@@ -465,6 +549,9 @@ public sealed class LayoutPassTests
         }
     }
 
+    /// <summary>
+    /// ExcelReader_normalizes_empty_merged_cells_to_the_top_left_cell を実行します.
+    /// </summary>
     [Fact]
     public void ExcelReader_normalizes_empty_merged_cells_to_the_top_left_cell()
     {
@@ -491,6 +578,9 @@ public sealed class LayoutPassTests
         }
     }
 
+    /// <summary>
+    /// PaginationPass_adds_header_and_footer_texts_with_resolved_fields を実行します.
+    /// </summary>
     [Fact]
     public void PaginationPass_adds_header_and_footer_texts_with_resolved_fields()
     {
@@ -498,11 +588,11 @@ public sealed class LayoutPassTests
             cells: new Dictionary<CellAddress, ReportCell>
             {
                 [new(1, 1)] = new("one", CellStyle.Default),
-                [new(2, 1)] = new("two", CellStyle.Default)
+                [new(2, 1)] = new("two", CellStyle.Default),
             },
             rows: new Dictionary<int, RowDefinition> { [1] = new(40), [2] = new(40) },
             pageSettings: new(100, 90, 10, 10, 10, 10),
-            headerFooter: new(new("左 &A"), new("", "ページ &P / &N")));
+            headerFooter: new(new("左 &A"), new(string.Empty, "ページ &P / &N")));
         context.PrintArea = new(new(1, 1), new(2, 1));
         new HiddenRowColumnPass().Execute(context);
         new ColumnLayoutPass().Execute(context);
@@ -518,6 +608,9 @@ public sealed class LayoutPassTests
         Assert.Equal(["左 Sheet1", "ページ 2 / 2"], pages[1].HeaderFooterTexts!.Select(text => text.Text));
     }
 
+    /// <summary>
+    /// PaginationPass_uses_first_and_even_page_headers を実行します.
+    /// </summary>
     [Fact]
     public void PaginationPass_uses_first_and_even_page_headers()
     {
@@ -525,7 +618,7 @@ public sealed class LayoutPassTests
             cells: new Dictionary<CellAddress, ReportCell>
             {
                 [new(1, 1)] = new("one", CellStyle.Default),
-                [new(2, 1)] = new("two", CellStyle.Default)
+                [new(2, 1)] = new("two", CellStyle.Default),
             },
             rows: new Dictionary<int, RowDefinition> { [1] = new(40), [2] = new(40) },
             pageSettings: new(100, 90, 10, 10, 10, 10),
@@ -543,10 +636,14 @@ public sealed class LayoutPassTests
         Assert.Equal("偶数", Assert.Single(context.RenderDocument.Pages[1].HeaderFooterTexts!).Text);
     }
 
+    /// <summary>
+    /// PaginationPass_renders_header_and_footer_without_cells を実行します.
+    /// </summary>
     [Fact]
     public void PaginationPass_renders_header_and_footer_without_cells()
     {
-        var context = CreateContext(cells: new Dictionary<CellAddress, ReportCell>(),
+        var context = CreateContext(
+            cells: new Dictionary<CellAddress, ReportCell>(),
             headerFooter: new(new("ヘッダー"), new("フッター")));
 
         new PaginationPass().Execute(context);
@@ -555,13 +652,16 @@ public sealed class LayoutPassTests
         Assert.Equal(["ヘッダー", "フッター"], page.HeaderFooterTexts!.Select(text => text.Text));
     }
 
+    /// <summary>
+    /// DrawCommandGenerator_orders_fill_before_border_before_text を実行します.
+    /// </summary>
     [Fact]
     public void DrawCommandGenerator_orders_fill_before_border_before_text()
     {
         var style = CellStyle.Default with
         {
             Background = new(1, 2, 3),
-            Border = new(new BorderSide())
+            Border = new(new BorderSide()),
         };
         var document = new RenderDocument(
         [
@@ -570,29 +670,54 @@ public sealed class LayoutPassTests
 
         var commands = new DrawCommandGeneratorPass().Generate(document);
 
-        Assert.Collection(commands,
+        Assert.Collection(
+            commands,
             command => Assert.IsType<FillRectangleCommand>(command),
             command => Assert.IsType<DrawBorderCommand>(command),
             command => Assert.IsType<DrawTextCommand>(command));
     }
 
+    /// <summary>
+    /// DrawCommandGenerator_insets_cell_text_from_borders を実行します.
+    /// </summary>
+    [Fact]
+    public void DrawCommandGenerator_insets_cell_text_from_borders()
+    {
+        var document = new RenderDocument(
+        [
+            new RenderPage(1, [new(new("text", CellStyle.Default), new(10, 20, 30, 40))])
+        ]);
+
+        var command = Assert.IsType<DrawTextCommand>(Assert.Single(new DrawCommandGeneratorPass().Generate(document)));
+
+        Assert.Equal(new ReportRect(10.5, 20.5, 29, 39), command.Bounds);
+    }
+
+    /// <summary>
+    /// DrawCommandGenerator_adds_images_after_cell_content を実行します.
+    /// </summary>
     [Fact]
     public void DrawCommandGenerator_adds_images_after_cell_content()
     {
         var imageBytes = CreateImageBytes();
         var document = new RenderDocument(
         [
-            new RenderPage(1, [new(new("text", CellStyle.Default), new(0, 0, 10, 10))],
+            new RenderPage(
+                1,
+                [new(new("text", CellStyle.Default), new(0, 0, 10, 10))],
                 [new(new(10, 20, 30, 40), imageBytes)])
         ]);
 
         var commands = new DrawCommandGeneratorPass().Generate(document);
 
-        var image = Assert.IsType<DrawImageCommand>(commands.Last());
+        var image = Assert.IsType<DrawImageCommand>(commands[commands.Count - 1]);
         Assert.Equal(new ReportRect(10, 20, 30, 40), image.Bounds);
         Assert.Equal(imageBytes, image.ImageBytes);
     }
 
+    /// <summary>
+    /// PdfSharpRenderer_writes_a_pdf_document を実行します.
+    /// </summary>
     [Fact]
     public void PdfSharpRenderer_writes_a_pdf_document()
     {
@@ -604,6 +729,9 @@ public sealed class LayoutPassTests
         Assert.Equal("%PDF-", System.Text.Encoding.ASCII.GetString(output.GetBuffer(), 0, 5));
     }
 
+    /// <summary>
+    /// PdfSharpRenderer_renders_an_image を実行します.
+    /// </summary>
     [Fact]
     public void PdfSharpRenderer_renders_an_image()
     {
@@ -616,11 +744,15 @@ public sealed class LayoutPassTests
         Assert.Equal("%PDF-", System.Text.Encoding.ASCII.GetString(output.GetBuffer(), 0, 5));
     }
 
+    /// <summary>
+    /// DrawCommandGenerator_preserves_wrapped_text_style を実行します.
+    /// </summary>
     [Fact]
     public void DrawCommandGenerator_preserves_wrapped_text_style()
     {
         var style = CellStyle.Default with { WrapText = true };
-        var document = new RenderDocument([new RenderPage(1,
+        var document = new RenderDocument([new RenderPage(
+            1,
             [new(new("長い文字列", style), new(0, 0, 10, 10))])]);
 
         var command = Assert.IsType<DrawTextCommand>(Assert.Single(new DrawCommandGeneratorPass().Generate(document)));
@@ -628,11 +760,15 @@ public sealed class LayoutPassTests
         Assert.True(command.Style.WrapText);
     }
 
+    /// <summary>
+    /// DrawCommandGenerator_preserves_shrink_to_fit_style を実行します.
+    /// </summary>
     [Fact]
     public void DrawCommandGenerator_preserves_shrink_to_fit_style()
     {
         var style = CellStyle.Default with { ShrinkToFit = true };
-        var document = new RenderDocument([new RenderPage(1,
+        var document = new RenderDocument([new RenderPage(
+            1,
             [new(new("長い文字列", style), new(0, 0, 10, 10))])]);
 
         var command = Assert.IsType<DrawTextCommand>(Assert.Single(new DrawCommandGeneratorPass().Generate(document)));
@@ -640,6 +776,9 @@ public sealed class LayoutPassTests
         Assert.True(command.Style.ShrinkToFit);
     }
 
+    /// <summary>
+    /// PdfSharpFontResolver_returns_the_configured_font_file を実行します.
+    /// </summary>
     [Fact]
     public void PdfSharpFontResolver_returns_the_configured_font_file()
     {
@@ -669,13 +808,16 @@ public sealed class LayoutPassTests
         }
     }
 
+    /// <summary>
+    /// ResolvePrintAreaPass_expands_range_to_cover_merged_cell_spans を実行します.
+    /// </summary>
     [Fact]
     public void ResolvePrintAreaPass_expands_range_to_cover_merged_cell_spans()
     {
         var context = CreateContext(
             cells: new Dictionary<CellAddress, ReportCell>
             {
-                [new(1, 1)] = new("merged", CellStyle.Default, RowSpan: 2, ColumnSpan: 3)
+                [new(1, 1)] = new("merged", CellStyle.Default, RowSpan: 2, ColumnSpan: 3),
             },
             columns: new Dictionary<int, ColumnDefinition> { [1] = new(50), [2] = new(60), [3] = new(70) },
             rows: new Dictionary<int, RowDefinition> { [1] = new(20), [2] = new(25) });
@@ -685,13 +827,20 @@ public sealed class LayoutPassTests
         Assert.Equal(new CellRange(new(1, 1), new(2, 3)), context.PrintArea);
     }
 
+    /// <summary>
+    /// ReportLayoutEngine_renders_an_image_only_sheet を実行します.
+    /// </summary>
     [Fact]
     public void ReportLayoutEngine_renders_an_image_only_sheet()
     {
         var imageBytes = CreateImageBytes();
-        var sheet = new ReportSheet("Sheet1", new Dictionary<CellAddress, ReportCell>(),
+        var sheet = new ReportSheet(
+            "Sheet1",
+            new Dictionary<CellAddress, ReportCell>(),
             new Dictionary<int, ColumnDefinition> { [3] = new(80) },
-            new Dictionary<int, RowDefinition> { [2] = new(20) }, [], new(),
+            new Dictionary<int, RowDefinition> { [2] = new(20) },
+            [],
+            new(),
             Images: [new(new(2, 3), 0, 0, 10, 11, imageBytes)]);
 
         var page = Assert.Single(new ReportLayoutEngine(new FixedTextMeasurer()).Layout(sheet).Pages);
@@ -701,6 +850,9 @@ public sealed class LayoutPassTests
         Assert.Equal(imageBytes, image.ImageBytes);
     }
 
+    /// <summary>
+    /// ResolvePrintAreaPass_expands_range_to_cover_an_image_outside_cells を実行します.
+    /// </summary>
     [Fact]
     public void ResolvePrintAreaPass_expands_range_to_cover_an_image_outside_cells()
     {
@@ -715,28 +867,48 @@ public sealed class LayoutPassTests
         Assert.Equal(new CellRange(new(1, 1), new(2, 3)), context.PrintArea);
     }
 
+    /// <summary>
+    /// ResolvePrintAreaPass_uses_shape_anchors_for_shape_only_sheets を実行します.
+    /// </summary>
     [Fact]
     public void ResolvePrintAreaPass_uses_shape_anchors_for_shape_only_sheets()
     {
-        var shape = new ReportShape(new(4, 6), 0, 0, 20, 10, ShapeKind.Rectangle,
-            new(new ReportColor(255, 0, 0), null, 0), null, 0, 0);
-        var context = CreateContext(cells: new Dictionary<CellAddress, ReportCell>(),
+        var shape = new ReportShape(
+            new(4, 6),
+            0,
+            0,
+            20,
+            10,
+            ShapeKind.Rectangle,
+            new(new ReportColor(255, 0, 0), null, 0),
+            null,
+            0,
+            0);
+        var context = CreateContext(
+            cells: new Dictionary<CellAddress, ReportCell>(),
             columns: new Dictionary<int, ColumnDefinition> { [6] = new(80) },
-            rows: new Dictionary<int, RowDefinition> { [4] = new(20) }, shapes: [shape]);
+            rows: new Dictionary<int, RowDefinition> { [4] = new(20) },
+            shapes: [shape]);
 
         new ResolvePrintAreaPass().Execute(context);
 
         Assert.Equal(new CellRange(new(4, 6), new(4, 6)), context.PrintArea);
     }
 
+    /// <summary>
+    /// ReportLayoutEngine_renders_cells_and_images を実行します.
+    /// </summary>
     [Fact]
     public void ReportLayoutEngine_renders_cells_and_images()
     {
         var imageBytes = CreateImageBytes();
-        var sheet = new ReportSheet("Sheet1",
+        var sheet = new ReportSheet(
+            "Sheet1",
             new Dictionary<CellAddress, ReportCell> { [new(1, 1)] = new("text", CellStyle.Default) },
             new Dictionary<int, ColumnDefinition> { [1] = new(80) },
-            new Dictionary<int, RowDefinition> { [1] = new(20) }, [], new(),
+            new Dictionary<int, RowDefinition> { [1] = new(20) },
+            [],
+            new(),
             Images: [new(new(1, 1), 0, 0, 10, 11, imageBytes)]);
 
         var page = Assert.Single(new ReportLayoutEngine(new FixedTextMeasurer()).Layout(sheet).Pages);
@@ -745,6 +917,9 @@ public sealed class LayoutPassTests
         Assert.Equal(imageBytes, Assert.Single(page.Images!).ImageBytes);
     }
 
+    /// <summary>
+    /// ExcelReader_reads_column_and_row_definitions_for_merged_range_extents を実行します.
+    /// </summary>
     [Fact]
     public void ExcelReader_reads_column_and_row_definitions_for_merged_range_extents()
     {
@@ -778,11 +953,18 @@ public sealed class LayoutPassTests
         IReadOnlyList<ReportImage>? images = null,
         HeaderFooter? headerFooter = null,
         IReadOnlyList<ReportShape>? shapes = null) =>
-        new(new ReportSheet("Sheet1",
-            cells ?? new Dictionary<CellAddress, ReportCell> { [new(1, 1)] = new(null, CellStyle.Default) },
-            columns ?? new Dictionary<int, ColumnDefinition> { [1] = new() },
-            rows ?? new Dictionary<int, RowDefinition> { [1] = new() },
-            [], pageSettings ?? new(), Images: images, HeaderFooter: headerFooter, Shapes: shapes), new FixedTextMeasurer());
+        new(
+            new ReportSheet(
+                "Sheet1",
+                cells ?? new Dictionary<CellAddress, ReportCell> { [new(1, 1)] = new(null, CellStyle.Default) },
+                columns ?? new Dictionary<int, ColumnDefinition> { [1] = new() },
+                rows ?? new Dictionary<int, RowDefinition> { [1] = new() },
+                [],
+                pageSettings ?? new(),
+                Images: images,
+                HeaderFooter: headerFooter,
+                Shapes: shapes),
+            new FixedTextMeasurer());
 
     private static byte[] CreateImageBytes()
     {

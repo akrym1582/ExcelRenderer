@@ -1,9 +1,6 @@
 using ClosedXML.Excel;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
-using A = DocumentFormat.OpenXml.Drawing;
-using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
-using S = DocumentFormat.OpenXml.Spreadsheet;
 using ExcelRenderer.Drawing;
 using ExcelRenderer.Excel;
 using ExcelRenderer.Fonts;
@@ -12,11 +9,20 @@ using ExcelRenderer.Model;
 using ExcelRenderer.SkiaSharp;
 using SkiaSharp;
 using Xunit;
+using A = DocumentFormat.OpenXml.Drawing;
+using S = DocumentFormat.OpenXml.Spreadsheet;
+using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 
 namespace ExcelRenderer.Tests;
 
+/// <summary>
+/// ShapeAndFontTests が表すデータと操作を提供します.
+/// </summary>
 public sealed class ShapeAndFontTests
 {
+    /// <summary>
+    /// ExcelReader_reads_supported_DrawingML_shape_properties_and_skips_unknown_geometry を実行します.
+    /// </summary>
     [Fact]
     public void ExcelReader_reads_supported_DrawingML_shape_properties_and_skips_unknown_geometry()
     {
@@ -39,9 +45,15 @@ public sealed class ShapeAndFontTests
             Assert.Equal(HorizontalAlignment.Center, shape.Text.HorizontalAlignment);
             Assert.Equal(VerticalAlignment.Center, shape.Text.VerticalAlignment);
         }
-        finally { File.Delete(path); }
+        finally
+        {
+            File.Delete(path);
+        }
     }
 
+    /// <summary>
+    /// DrawCommandGenerator_orders_images_and_shapes_by_ZIndex を実行します.
+    /// </summary>
     [Fact]
     public void DrawCommandGenerator_orders_images_and_shapes_by_ZIndex()
     {
@@ -58,13 +70,16 @@ public sealed class ShapeAndFontTests
         Assert.Equal(3, ((DrawShapeCommand)commands[2]).Shape.ZIndex);
     }
 
+    /// <summary>
+    /// PngRenderer_renders_shape_fill_border_and_Z_order を実行します.
+    /// </summary>
     [Fact]
     public void PngRenderer_renders_shape_fill_border_and_Z_order()
     {
         var commands = new DrawCommand[]
         {
             new DrawShapeCommand(1, new(2, 2, 16, 16), CreateShape(0, new ReportColor(255, 0, 0))),
-            new DrawShapeCommand(1, new(8, 8, 10, 10), CreateShape(1, new ReportColor(0, 255, 0)))
+            new DrawShapeCommand(1, new(8, 8, 10, 10), CreateShape(1, new ReportColor(0, 255, 0))),
         };
         using var output = new MemoryStream();
 
@@ -76,6 +91,10 @@ public sealed class ShapeAndFontTests
         Assert.Equal(SKColors.Blue, bitmap.GetPixel(2, 10));
     }
 
+    /// <summary>
+    /// PngRenderer_renders_every_supported_geometry_with_rotation_and_Japanese_text を実行します.
+    /// </summary>
+    /// <param name="kind">kind に渡す値です。</param>
     [Theory]
     [InlineData(ShapeKind.Rectangle)]
     [InlineData(ShapeKind.RoundedRectangle)]
@@ -84,21 +103,36 @@ public sealed class ShapeAndFontTests
     [InlineData(ShapeKind.WedgeRoundedRectangleCallout)]
     public void PngRenderer_renders_every_supported_geometry_with_rotation_and_Japanese_text(ShapeKind kind)
     {
-        var text = new ShapeText("日本語 ABC 123", new FontStyle(Size: 8, Bold: true, Italic: true),
-            HorizontalAlignment.Center, VerticalAlignment.Center, true, 2, 2, 2, 2);
+        var text = new ShapeText(
+            "日本語 ABC 123",
+            new FontStyle(Size: 8, Bold: true, Italic: true),
+            HorizontalAlignment.Center,
+            VerticalAlignment.Center,
+            true,
+            2,
+            2,
+            2,
+            2);
         var shape = CreateShape(0, new ReportColor(255, 255, 0)) with { Kind = kind, Rotation = 45, Text = text };
         using var output = new MemoryStream();
 
-        new PngRenderer().RenderPage([new DrawShapeCommand(1, new(5, 5, 30, 20), shape)],
-            new PageSettings(40, 30), output, 72);
+        new PngRenderer().RenderPage(
+            [new DrawShapeCommand(1, new(5, 5, 30, 20), shape)],
+            new PageSettings(40, 30),
+            output,
+            72);
 
         using var bitmap = SKBitmap.Decode(output.ToArray());
         Assert.NotNull(bitmap);
         Assert.Equal(40, bitmap.Width);
-        Assert.Contains(Enumerable.Range(0, bitmap.Width).SelectMany(x => Enumerable.Range(0, bitmap.Height).Select(y => bitmap.GetPixel(x, y))),
+        Assert.Contains(
+            Enumerable.Range(0, bitmap.Width).SelectMany(x => Enumerable.Range(0, bitmap.Height).Select(y => bitmap.GetPixel(x, y))),
             color => color != SKColors.White);
     }
 
+    /// <summary>
+    /// FontManager_resolves_regular_bold_italic_and_boldItalic_to_registered_faces を実行します.
+    /// </summary>
     [Fact]
     public void FontManager_resolves_regular_bold_italic_and_boldItalic_to_registered_faces()
     {
@@ -113,13 +147,23 @@ public sealed class ShapeAndFontTests
             Assert.Equal(files[2], manager.Resolve(new("Report Font", 400, true)).FilePath);
             Assert.Equal(files[3], manager.Resolve(new("Report Font", 700, true)).FilePath);
         }
-        finally { foreach (var file in files) File.Delete(file); }
+        finally
+        {
+            foreach (var file in files)
+            {
+                File.Delete(file);
+            }
+        }
     }
 
+    /// <summary>
+    /// FontManager_uses_configured_family_fallback_and_nearest_weight を実行します.
+    /// </summary>
     [Fact]
     public void FontManager_uses_configured_family_fallback_and_nearest_weight()
     {
-        var regular = CopyTestFont(); var bold = CopyTestFont();
+        var regular = CopyTestFont();
+        var bold = CopyTestFont();
         try
         {
             var manager = new FontManager(new FontOptions { FontDirectories = [], FallbackFamilies = ["Noto Sans JP"] });
@@ -131,15 +175,23 @@ public sealed class ShapeAndFontTests
             Assert.Equal(700, resolved.Weight);
             Assert.Equal(bold, resolved.FilePath);
         }
-        finally { File.Delete(regular); File.Delete(bold); }
+        finally
+        {
+            File.Delete(regular);
+            File.Delete(bold);
+        }
     }
 
+    /// <summary>
+    /// FontManager_scans_family_metadata_instead_of_the_file_name を実行します.
+    /// </summary>
     [Fact]
     public void FontManager_scans_family_metadata_instead_of_the_file_name()
     {
         var directory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
         Directory.CreateDirectory(directory);
-        File.Copy(Path.Combine(AppContext.BaseDirectory, "NotoSansJP-VariableFont_wght.ttf"),
+        File.Copy(
+            Path.Combine(AppContext.BaseDirectory, "NotoSansJP-VariableFont_wght.ttf"),
             Path.Combine(directory, "unrelated-file-name.ttf"));
         try
         {
@@ -150,11 +202,23 @@ public sealed class ShapeAndFontTests
             Assert.Equal("Noto Sans JP", resolved.Family);
             Assert.StartsWith(directory, resolved.FilePath);
         }
-        finally { Directory.Delete(directory, true); }
+        finally
+        {
+            Directory.Delete(directory, true);
+        }
     }
 
-    private static ReportShape CreateShape(int z, ReportColor fill) => new(new(1, 1), 0, 0, 10, 10,
-        ShapeKind.Rectangle, new(fill, new ReportColor(0, 0, 255), 2), null, 0, z);
+    private static ReportShape CreateShape(int z, ReportColor fill) => new(
+        new(1, 1),
+        0,
+        0,
+        10,
+        10,
+        ShapeKind.Rectangle,
+        new(fill, new ReportColor(0, 0, 255), 2),
+        null,
+        0,
+        z);
 
     private static string CopyTestFont()
     {
@@ -171,6 +235,7 @@ public sealed class ShapeAndFontTests
             workbook.AddWorksheet("Shapes").Cell("A1").Value = "anchor";
             workbook.SaveAs(path);
         }
+
         using var document = SpreadsheetDocument.Open(path, true);
         var worksheetPart = document.WorkbookPart!.WorksheetParts.Single();
         var drawingsPart = worksheetPart.AddNewPart<DrawingsPart>();
@@ -179,21 +244,29 @@ public sealed class ShapeAndFontTests
         worksheetPart.Worksheet.Save();
 
         var known = new Xdr.TwoCellAnchor(
-            Marker<Xdr.FromMarker>(0, 0), Marker<Xdr.ToMarker>(2, 2),
-            CreateOpenXmlShape(1, A.ShapeTypeValues.RoundRectangle), new Xdr.ClientData());
+            Marker<Xdr.FromMarker>(0, 0),
+            Marker<Xdr.ToMarker>(2, 2),
+            CreateOpenXmlShape(1, A.ShapeTypeValues.RoundRectangle),
+            new Xdr.ClientData());
         var unknown = new Xdr.TwoCellAnchor(
-            Marker<Xdr.FromMarker>(0, 0), Marker<Xdr.ToMarker>(2, 2),
-            CreateOpenXmlShape(2, A.ShapeTypeValues.Triangle), new Xdr.ClientData());
+            Marker<Xdr.FromMarker>(0, 0),
+            Marker<Xdr.ToMarker>(2, 2),
+            CreateOpenXmlShape(2, A.ShapeTypeValues.Triangle),
+            new Xdr.ClientData());
         drawingsPart.WorksheetDrawing = new Xdr.WorksheetDrawing(known, unknown);
         drawingsPart.WorksheetDrawing.Save();
         return path;
     }
 
-    private static T Marker<T>(int column, int row) where T : OpenXmlCompositeElement, new()
+    private static T Marker<T>(int column, int row)
+        where T : OpenXmlCompositeElement, new()
     {
         var marker = new T();
-        marker.Append(new Xdr.ColumnId(column.ToString()), new Xdr.ColumnOffset("0"),
-            new Xdr.RowId(row.ToString()), new Xdr.RowOffset("0"));
+        marker.Append(
+            new Xdr.ColumnId(column.ToString()),
+            new Xdr.ColumnOffset("0"),
+            new Xdr.RowId(row.ToString()),
+            new Xdr.RowOffset("0"));
         return marker;
     }
 
@@ -205,10 +278,15 @@ public sealed class ShapeAndFontTests
             new A.SolidFill(new A.RgbColorModelHex { Val = "FF0000" }),
             new A.Outline(new A.SolidFill(new A.RgbColorModelHex { Val = "0000FF" })) { Width = 12700 });
         var body = new Xdr.TextBody(
-            new A.BodyProperties { Anchor = A.TextAnchoringTypeValues.Center }, new A.ListStyle(),
-            new A.Paragraph(new A.ParagraphProperties { Alignment = A.TextAlignmentTypeValues.Center },
-                new A.Run(new A.RunProperties { Bold = true, Italic = true, FontSize = 1200 }, new A.Text("日本語 ABC"))));
-        return new Xdr.Shape(new Xdr.NonVisualShapeProperties(
-            new Xdr.NonVisualDrawingProperties { Id = id, Name = $"Shape {id}" }, new Xdr.NonVisualShapeDrawingProperties()), properties, body);
+            new A.BodyProperties { Anchor = A.TextAnchoringTypeValues.Center },
+            new A.ListStyle(),
+            new A.Paragraph(
+            new A.ParagraphProperties { Alignment = A.TextAlignmentTypeValues.Center },
+            new A.Run(new A.RunProperties { Bold = true, Italic = true, FontSize = 1200 }, new A.Text("日本語 ABC"))));
+        return new Xdr.Shape(
+            new Xdr.NonVisualShapeProperties(
+            new Xdr.NonVisualDrawingProperties { Id = id, Name = $"Shape {id}" }, new Xdr.NonVisualShapeDrawingProperties()),
+            properties,
+            body);
     }
 }

@@ -5,8 +5,14 @@ using Xunit;
 
 namespace ExcelRenderer.Tests;
 
+/// <summary>
+/// ExcelStyleConverterTests が表すデータと操作を提供します.
+/// </summary>
 public sealed class ExcelStyleConverterTests
 {
+    /// <summary>
+    /// Convert_resolves_workbook_theme_colors_tints_and_automatic_border_color を実行します.
+    /// </summary>
     [Fact]
     public void Convert_resolves_workbook_theme_colors_tints_and_automatic_border_color()
     {
@@ -26,6 +32,9 @@ public sealed class ExcelStyleConverterTests
         Assert.Equal(BorderLineStyle.Dotted, style.Border.Top.LineStyle);
     }
 
+    /// <summary>
+    /// Convert_maps_background_border_alignment_and_font_color を実行します.
+    /// </summary>
     [Fact]
     public void Convert_maps_background_border_alignment_and_font_color()
     {
@@ -53,6 +62,9 @@ public sealed class ExcelStyleConverterTests
         Assert.Equal(VerticalAlignment.Center, style.VerticalAlignment);
     }
 
+    /// <summary>
+    /// Convert_returns_no_background_or_border_for_default_style を実行します.
+    /// </summary>
     [Fact]
     public void Convert_returns_no_background_or_border_for_default_style()
     {
@@ -67,6 +79,9 @@ public sealed class ExcelStyleConverterTests
         Assert.Null(style.Border);
     }
 
+    /// <summary>
+    /// Convert_resolves_general_alignment_right_for_numbers を実行します.
+    /// </summary>
     [Fact]
     public void Convert_resolves_general_alignment_right_for_numbers()
     {
@@ -80,6 +95,9 @@ public sealed class ExcelStyleConverterTests
         Assert.Equal(HorizontalAlignment.Right, style.HorizontalAlignment);
     }
 
+    /// <summary>
+    /// Convert_resolves_general_alignment_center_for_booleans を実行します.
+    /// </summary>
     [Fact]
     public void Convert_resolves_general_alignment_center_for_booleans()
     {
@@ -93,6 +111,9 @@ public sealed class ExcelStyleConverterTests
         Assert.Equal(HorizontalAlignment.Center, style.HorizontalAlignment);
     }
 
+    /// <summary>
+    /// Convert_resolves_general_alignment_left_for_text を実行します.
+    /// </summary>
     [Fact]
     public void Convert_resolves_general_alignment_left_for_text()
     {
@@ -106,6 +127,9 @@ public sealed class ExcelStyleConverterTests
         Assert.Equal(HorizontalAlignment.Left, style.HorizontalAlignment);
     }
 
+    /// <summary>
+    /// Convert_reads_shrink_to_fit を実行します.
+    /// </summary>
     [Fact]
     public void Convert_reads_shrink_to_fit()
     {
@@ -118,6 +142,9 @@ public sealed class ExcelStyleConverterTests
         Assert.True(style.ShrinkToFit);
     }
 
+    /// <summary>
+    /// Convert_resolves_theme_colors_and_tints を実行します.
+    /// </summary>
     [Fact]
     public void Convert_resolves_theme_colors_and_tints()
     {

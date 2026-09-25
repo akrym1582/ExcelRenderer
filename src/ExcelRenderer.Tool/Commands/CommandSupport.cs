@@ -2,13 +2,25 @@ using System.CommandLine;
 
 namespace ExcelRenderer.Tool.Commands;
 
+/// <summary>
+/// CommandSupport が表すデータと操作を提供します.
+/// </summary>
 internal static class CommandSupport
 {
+    /// <summary>
+    /// InputArgument を実行します.
+    /// </summary>
+    /// <returns>処理によって得られた結果を返します。</returns>
     internal static Argument<string> InputArgument() => new("input")
     {
-        Description = "Path to the input .xlsx file."
+        Description = "Path to the input .xlsx file.",
     };
 
+    /// <summary>
+    /// OutputOption を実行します.
+    /// </summary>
+    /// <param name="description">description に渡す値です。</param>
+    /// <returns>処理によって得られた結果を返します。</returns>
     internal static Option<string> OutputOption(string description)
     {
         var option = new Option<string>("--output") { Description = description, Required = true };
@@ -16,6 +28,11 @@ internal static class CommandSupport
         return option;
     }
 
+    /// <summary>
+    /// RunAsync を実行します.
+    /// </summary>
+    /// <param name="conversion">conversion に渡す値です。</param>
+    /// <returns>処理によって得られた結果を返します。</returns>
     internal static async Task<int> RunAsync(Func<Task> conversion)
     {
         try

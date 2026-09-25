@@ -18,7 +18,6 @@ public sealed class PaginationPass : IReportLayoutPass
         }
 
         var settings = context.Sheet.PageSettings;
-        var scale = GetScale(context, settings);
         var area = context.PrintArea.Value;
         var bodyColumns = context.VisibleColumns.Where(column => column >= area.First.Column && column <= area.Last.Column).ToArray();
         var bodyRows = context.VisibleRows.Where(row => row >= area.First.Row && row <= area.Last.Row).ToArray();
@@ -30,26 +29,30 @@ public sealed class PaginationPass : IReportLayoutPass
             : context.ColumnLayouts[titleColumns[titleColumns.Count - 1]].X + context.ColumnLayouts[titleColumns[titleColumns.Count - 1]].Width;
         var titleRowEnd = titleRows.Count == 0 ? double.NegativeInfinity
             : context.RowLayouts[titleRows[titleRows.Count - 1]].Y + context.RowLayouts[titleRows[titleRows.Count - 1]].Height;
+        double GetColumnEnd(int column, double end) => context.Sheet.Cells
+            .Where(cell => cell.Key.Column == column)
+            .Select(cell => cell.Key.Column + cell.Value.ColumnSpan - 1)
+            .Where(context.ColumnLayouts.ContainsKey)
+            .Select(last => context.ColumnLayouts[last].X + context.ColumnLayouts[last].Width)
+            .Append(end).Max();
+        double GetRowEnd(int row, double end) => context.Sheet.Cells
+            .Where(cell => cell.Key.Row == row)
+            .Select(cell => cell.Key.Row + cell.Value.RowSpan - 1)
+            .Where(context.RowLayouts.ContainsKey)
+            .Select(last => context.RowLayouts[last].Y + context.RowLayouts[last].Height)
+            .Append(end).Max();
+        var scale = GetScale(context, settings, bodyColumns, bodyRows, titleColumnEnd, titleWidth,
+            titleRowEnd, titleHeight, GetColumnEnd, GetRowEnd);
         var horizontalBands = CreateBands(bodyColumns,
             column => context.ColumnLayouts[column].X,
             column => context.ColumnLayouts[column].X + context.ColumnLayouts[column].Width,
             (settings.Width - settings.MarginLeft - settings.MarginRight) / scale,
-            (column, end) => context.Sheet.Cells
-                .Where(cell => cell.Key.Column == column)
-                .Select(cell => cell.Key.Column + cell.Value.ColumnSpan - 1)
-                .Where(context.ColumnLayouts.ContainsKey)
-                .Select(last => context.ColumnLayouts[last].X + context.ColumnLayouts[last].Width)
-                .Append(end).Max(), titleColumnEnd, titleWidth);
+            GetColumnEnd, titleColumnEnd, titleWidth);
         var verticalBands = CreateBands(bodyRows,
             row => context.RowLayouts[row].Y,
             row => context.RowLayouts[row].Y + context.RowLayouts[row].Height,
             (settings.Height - settings.MarginTop - settings.MarginBottom) / scale,
-            (row, end) => context.Sheet.Cells
-                .Where(cell => cell.Key.Row == row)
-                .Select(cell => cell.Key.Row + cell.Value.RowSpan - 1)
-                .Where(context.RowLayouts.ContainsKey)
-                .Select(last => context.RowLayouts[last].Y + context.RowLayouts[last].Height)
-                .Append(end).Max(), titleRowEnd, titleHeight);
+            GetRowEnd, titleRowEnd, titleHeight);
 
         var pageCount = horizontalBands.Count * verticalBands.Count;
         var pages = verticalBands.SelectMany((vertical, verticalIndex) => horizontalBands.Select((horizontal, horizontalIndex) =>
@@ -114,30 +117,66 @@ public sealed class PaginationPass : IReportLayoutPass
         }).ToArray());
     }
 
-    private static double GetScale(ReportLayoutContext context, PageSettings settings)
+    private static double GetScale(ReportLayoutContext context, PageSettings settings,
+        IReadOnlyList<int> columns, IReadOnlyList<int> rows,
+        double titleColumnEnd, double titleWidth, double titleRowEnd, double titleHeight,
+        Func<int, double, double> getColumnEnd, Func<int, double, double> getRowEnd)
     {
         if (settings.Scale is > 0) return settings.Scale.Value;
 
         var scales = new List<double>();
-        if (settings.FitToPagesWide is > 0 && context.VisibleColumns.Count > 0)
+        if (settings.FitToPagesWide is > 0 && columns.Count > 0)
         {
-            var first = context.ColumnLayouts[context.VisibleColumns[0]];
-            var last = context.ColumnLayouts[context.VisibleColumns[context.VisibleColumns.Count - 1]];
+            var first = context.ColumnLayouts[columns[0]];
+            var last = context.ColumnLayouts[columns[columns.Count - 1]];
             var contentWidth = last.X + last.Width - first.X;
             if (contentWidth > 0)
-                scales.Add(settings.FitToPagesWide.Value *
-                    (settings.Width - settings.MarginLeft - settings.MarginRight) / contentWidth);
+                scales.Add(GetFitScale(settings.FitToPagesWide.Value,
+                    settings.Width - settings.MarginLeft - settings.MarginRight, contentWidth, columns,
+                    column => context.ColumnLayouts[column].X,
+                    column => context.ColumnLayouts[column].X + context.ColumnLayouts[column].Width,
+                    getColumnEnd, titleColumnEnd, titleWidth));
         }
-        if (settings.FitToPagesTall is > 0 && context.VisibleRows.Count > 0)
+        if (settings.FitToPagesTall is > 0 && rows.Count > 0)
         {
-            var first = context.RowLayouts[context.VisibleRows[0]];
-            var last = context.RowLayouts[context.VisibleRows[context.VisibleRows.Count - 1]];
+            var first = context.RowLayouts[rows[0]];
+            var last = context.RowLayouts[rows[rows.Count - 1]];
             var contentHeight = last.Y + last.Height - first.Y;
             if (contentHeight > 0)
-                scales.Add(settings.FitToPagesTall.Value *
-                    (settings.Height - settings.MarginTop - settings.MarginBottom) / contentHeight);
+                scales.Add(GetFitScale(settings.FitToPagesTall.Value,
+                    settings.Height - settings.MarginTop - settings.MarginBottom, contentHeight, rows,
+                    row => context.RowLayouts[row].Y,
+                    row => context.RowLayouts[row].Y + context.RowLayouts[row].Height,
+                    getRowEnd, titleRowEnd, titleHeight));
         }
         return scales.Count == 0 ? 1 : scales.Min();
+    }
+
+    private static double GetFitScale(int pageCount, double pageSize, double contentSize,
+        IReadOnlyList<int> indices, Func<int, double> getStart, Func<int, double> getEnd,
+        Func<int, double, double> getMergedEnd, double repeatedEnd, double repeatedSize)
+    {
+        var initialScale = pageCount * pageSize / contentSize;
+        if (pageCount >= indices.Count) return initialScale;
+
+        var lower = 0d;
+        var upper = initialScale;
+        while (CreateBands(indices, getStart, getEnd, pageSize / upper, getMergedEnd,
+                   repeatedEnd, repeatedSize).Count <= pageCount)
+            upper *= 2;
+
+        for (var iteration = 0; iteration < 64; iteration++)
+        {
+            var candidate = (lower + upper) / 2;
+            if (CreateBands(indices, getStart, getEnd, pageSize / candidate, getMergedEnd,
+                    repeatedEnd, repeatedSize).Count <= pageCount)
+                lower = candidate;
+            else
+                upper = candidate;
+        }
+        // Avoid carrying the pagination epsilon into rendered coordinates when the
+        // exact band boundary has a simple decimal representation.
+        return Math.Round(lower, 8);
     }
 
     private static BorderStyle ScaleBorder(BorderStyle border, double scale)

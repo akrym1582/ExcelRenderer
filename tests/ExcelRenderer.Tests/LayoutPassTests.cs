@@ -206,6 +206,38 @@ public sealed class LayoutPassTests
     }
 
     [Fact]
+    public void PaginationPass_accounts_for_repeated_titles_when_fitting_page_counts()
+    {
+        var cells = new Dictionary<CellAddress, ReportCell>();
+        var columns = new Dictionary<int, ColumnDefinition>();
+        var rows = new Dictionary<int, RowDefinition>();
+        for (var index = 1; index <= 10; index++)
+        {
+            columns[index] = new(10);
+            rows[index] = new(10);
+            for (var column = 1; column <= 10; column++)
+                cells[new(index, column)] = new($"{index},{column}", CellStyle.Default);
+        }
+        var context = CreateContext(cells: cells, columns: columns, rows: rows,
+            pageSettings: new(70, 70, 10, 10, 10, 10, Scale: null,
+                FitToPagesWide: 2, FitToPagesTall: 2,
+                TitleRows: new(1, 1), TitleColumns: new(1, 1)));
+        context.PrintArea = new(new(1, 1), new(10, 10));
+        new HiddenRowColumnPass().Execute(context);
+        new ColumnLayoutPass().Execute(context);
+        new RowLayoutPass().Execute(context);
+        new TextMeasurePass().Execute(context);
+        new CellBoundsPass().Execute(context);
+
+        new PaginationPass().Execute(context);
+
+        Assert.Equal(4, context.RenderDocument!.Pages.Count);
+        var lastPage = context.RenderDocument.Pages[3];
+        Assert.Contains(lastPage.Cells, cell => cell.Cell.Text == "1,1");
+        Assert.Contains(lastPage.Cells, cell => cell.Cell.Text == "10,10");
+    }
+
+    [Fact]
     public void PaginationPass_positions_images_from_their_anchor_cell()
     {
         var imageBytes = CreateImageBytes();

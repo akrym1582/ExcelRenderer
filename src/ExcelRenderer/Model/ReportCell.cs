@@ -1,7 +1,7 @@
 namespace ExcelRenderer.Model;
 
 /// <summary>
-/// ReportCell が表すデータと操作を提供します.
+/// セルの表示文字列、数式、スタイル、および結合範囲の大きさを表します。
 /// </summary>
 public sealed record ReportCell(
     string? Text,
@@ -11,7 +11,7 @@ public sealed record ReportCell(
     string? Formula = null)
 {
     /// <summary>
-    /// Gets the value. 対応する値を取得または設定します.
+    /// Gets the merged-cell border fragments. 結合セルを構成する各セル位置の罫線情報を取得します。
     /// </summary>
     public IReadOnlyList<CellBorder>? MergedBorders { get; init; }
 }

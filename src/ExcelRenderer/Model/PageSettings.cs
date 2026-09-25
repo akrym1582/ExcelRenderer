@@ -1,7 +1,7 @@
 namespace ExcelRenderer.Model;
 
 /// <summary>
-/// PageSettings が表すデータと操作を提供します.
+/// 用紙寸法、余白、拡大縮小、ページ数への収め方、および印刷タイトルを表します。
 /// </summary>
 public sealed record PageSettings(
     double Width = 595.276,

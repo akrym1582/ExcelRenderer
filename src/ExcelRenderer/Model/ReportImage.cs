@@ -1,7 +1,7 @@
 namespace ExcelRenderer.Model;
 
 /// <summary>
-/// ReportImage が表すデータと操作を提供します.
+/// セルを基準とする位置、寸法、画像データ、重なり順、および画像メタデータを表します。
 /// </summary>
 public sealed record ReportImage(
     CellAddress Anchor,

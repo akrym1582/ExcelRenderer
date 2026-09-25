@@ -3,42 +3,42 @@ using ExcelRenderer.Model;
 namespace ExcelRenderer.Markdown;
 
 /// <summary>
-/// RegionType が表すデータと操作を提供します.
+/// ワークシート内で検出した領域の内容種別を表します。
 /// </summary>
 public enum RegionType
 {
     /// <summary>
-    /// この選択肢が表す状態を示します.
+    /// 内容種別を判定できない領域を表します。
     /// </summary>
     Unknown,
 
     /// <summary>
-    /// この選択肢が表す状態を示します.
+    /// 見出しとして扱う領域を表します。
     /// </summary>
     Title,
 
     /// <summary>
-    /// この選択肢が表す状態を示します.
+    /// 項目名と値の組で構成されるフォーム領域を表します。
     /// </summary>
     Form,
 
     /// <summary>
-    /// この選択肢が表す状態を示します.
+    /// 行と列がそろった表形式の領域を表します。
     /// </summary>
     Table,
 
     /// <summary>
-    /// この選択肢が表す状態を示します.
+    /// 単一の文章または文字列を含む領域を表します。
     /// </summary>
     Text,
 
     /// <summary>
-    /// この選択肢が表す状態を示します.
+    /// 画像を主体とする領域を表します。
     /// </summary>
     Image,
 
     /// <summary>
-    /// この選択肢が表す状態を示します.
+    /// 定型的な配置に分類できない領域を表します。
     /// </summary>
     FreeLayout,
 }

@@ -14,13 +14,9 @@ using PdfSharp.Pdf.IO;
 
 namespace ExcelRenderer;
 
-/// <summary>
-/// PdfExportOptions が表すデータと操作を提供します.
-/// </summary>
+/// <summary>Excel ワークシートを PDF 文書へ出力するときの設定を表します。</summary>
 public sealed record PdfExportOptions
 {
-    /// <summary>
-    /// Gets the value. 対応する値を取得または設定します.
-    /// </summary>
+    /// <summary>Gets the worksheet name. 出力対象のワークシート名を取得します。<see langword="null"/> の場合はすべてのワークシートを出力します。</summary>
     public string? SheetName { get; init; }
 }

@@ -4,6 +4,6 @@ using ExcelRenderer.Model;
 namespace ExcelRenderer.Layout;
 
 /// <summary>
-/// ColumnLayout が表すデータと操作を提供します.
+/// 表示対象の列番号、シート左端からの位置、および列幅を表します。
 /// </summary>
 public sealed record ColumnLayout(int Column, double X, double Width);

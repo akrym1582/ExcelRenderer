@@ -4,14 +4,14 @@ using Xunit;
 namespace ExcelRenderer.Tests;
 
 /// <summary>
-/// PngSampleOutputTests が表すデータと操作を提供します.
+/// サンプル Excel ブックから生成する PNG 出力を検証します。
 /// </summary>
 public sealed class PngSampleOutputTests
 {
     /// <summary>
-    /// Generates_pngs_from_prebuilt_excel を実行します.
+    /// サンプル Excel ブックの全ページを PNG ファイルとして生成できることを検証します。
     /// </summary>
-    /// <param name="excelFileName">excelFileName に渡す値です。</param>
+    /// <param name="excelFileName">入力に使用するサンプル Excel ファイルの名前。</param>
     [Theory]
     [MemberData(nameof(SampleOutputTestSupport.RenderSamples), MemberType = typeof(SampleOutputTestSupport))]
     public void Generates_pngs_from_prebuilt_excel(string excelFileName)

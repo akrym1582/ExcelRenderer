@@ -6,12 +6,12 @@ using Xunit;
 namespace ExcelRenderer.Tests;
 
 /// <summary>
-/// ExcelStyleConverterTests が表すデータと操作を提供します.
+/// Excel セル書式から描画用セルスタイルへの変換を検証します。
 /// </summary>
 public sealed class ExcelStyleConverterTests
 {
     /// <summary>
-    /// Convert_resolves_workbook_theme_colors_tints_and_automatic_border_color を実行します.
+    /// テーマ色、明暗補正および自動罫線色が具体的な描画色へ解決されることを検証します。
     /// </summary>
     [Fact]
     public void Convert_resolves_workbook_theme_colors_tints_and_automatic_border_color()
@@ -33,7 +33,7 @@ public sealed class ExcelStyleConverterTests
     }
 
     /// <summary>
-    /// Convert_maps_background_border_alignment_and_font_color を実行します.
+    /// セルの背景、罫線、配置およびフォント色が描画用スタイルへ変換されることを検証します。
     /// </summary>
     [Fact]
     public void Convert_maps_background_border_alignment_and_font_color()
@@ -63,7 +63,7 @@ public sealed class ExcelStyleConverterTests
     }
 
     /// <summary>
-    /// Convert_returns_no_background_or_border_for_default_style を実行します.
+    /// 既定スタイルのセルでは背景色と罫線が設定されないことを検証します。
     /// </summary>
     [Fact]
     public void Convert_returns_no_background_or_border_for_default_style()
@@ -80,7 +80,7 @@ public sealed class ExcelStyleConverterTests
     }
 
     /// <summary>
-    /// Convert_resolves_general_alignment_right_for_numbers を実行します.
+    /// 標準配置の数値セルが右揃えとして解決されることを検証します。
     /// </summary>
     [Fact]
     public void Convert_resolves_general_alignment_right_for_numbers()
@@ -96,7 +96,7 @@ public sealed class ExcelStyleConverterTests
     }
 
     /// <summary>
-    /// Convert_resolves_general_alignment_center_for_booleans を実行します.
+    /// 標準配置の真偽値セルが中央揃えとして解決されることを検証します。
     /// </summary>
     [Fact]
     public void Convert_resolves_general_alignment_center_for_booleans()
@@ -112,7 +112,7 @@ public sealed class ExcelStyleConverterTests
     }
 
     /// <summary>
-    /// Convert_resolves_general_alignment_left_for_text を実行します.
+    /// 標準配置の文字列セルが左揃えとして解決されることを検証します。
     /// </summary>
     [Fact]
     public void Convert_resolves_general_alignment_left_for_text()
@@ -128,7 +128,7 @@ public sealed class ExcelStyleConverterTests
     }
 
     /// <summary>
-    /// Convert_reads_shrink_to_fit を実行します.
+    /// セルの縮小表示設定が描画用スタイルへ反映されることを検証します。
     /// </summary>
     [Fact]
     public void Convert_reads_shrink_to_fit()
@@ -143,7 +143,7 @@ public sealed class ExcelStyleConverterTests
     }
 
     /// <summary>
-    /// Convert_resolves_theme_colors_and_tints を実行します.
+    /// テーマ色と明暗補正がセルの実際の色へ解決されることを検証します。
     /// </summary>
     [Fact]
     public void Convert_resolves_theme_colors_and_tints()

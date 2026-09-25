@@ -4,16 +4,12 @@ using ExcelRenderer.Model;
 
 namespace ExcelRenderer.Excel;
 
-/// <summary>
-/// ExcelReader が表すデータと操作を提供します.
-/// </summary>
+/// <summary>Excel ブックのワークシート、セル、印刷設定、画像、および図形をレンダリング用モデルとして読み込みます。</summary>
 public sealed class ExcelReader
 {
-    /// <summary>
-    /// Read を実行します.
-    /// </summary>
-    /// <param name="path">path に渡す値です。</param>
-    /// <returns>処理によって得られた結果を返します。</returns>
+    /// <summary>指定した Excel ファイルを読み取り、各ワークシートの内容をレンダリング用ドキュメントへ変換します。</summary>
+    /// <param name="path">読み取る Excel ファイルのパスです。</param>
+    /// <returns>ブック内のワークシートを元の順序で格納したレンダリング用ドキュメントを返します。</returns>
     public ReportDocument Read(string path)
     {
         using var workbook = new XLWorkbook(path);

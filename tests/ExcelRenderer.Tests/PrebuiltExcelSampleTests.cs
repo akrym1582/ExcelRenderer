@@ -6,12 +6,12 @@ using Xunit;
 namespace ExcelRenderer.Tests;
 
 /// <summary>
-/// PrebuiltExcelSampleTests が表すデータと操作を提供します.
+/// リポジトリに格納された Excel サンプルの読み取り結果を検証します。
 /// </summary>
 public sealed class PrebuiltExcelSampleTests
 {
     /// <summary>
-    /// Cell_border_sample_preserves_empty_cells_and_merged_perimeter_fragments を実行します.
+    /// 罫線サンプルから空セルと結合範囲外周の罫線断片が読み取られることを検証します。
     /// </summary>
     [Fact]
     public void Cell_border_sample_preserves_empty_cells_and_merged_perimeter_fragments()
@@ -49,7 +49,7 @@ public sealed class PrebuiltExcelSampleTests
     }
 
     /// <summary>
-    /// Excel_reader_preserves_multiple_sheets_for_caller_selection を実行します.
+    /// 複数シートを持つブックの全シートが呼び出し側で選択できる状態で読み取られることを検証します。
     /// </summary>
     [Fact]
     public void Excel_reader_preserves_multiple_sheets_for_caller_selection()
@@ -63,7 +63,7 @@ public sealed class PrebuiltExcelSampleTests
     }
 
     /// <summary>
-    /// Prebuilt_excel_samples_preserve_the_visual_test_features を実行します.
+    /// 各サンプルブックから視覚検証に必要なセル、画像、図形などの要素が保持されることを検証します。
     /// </summary>
     [Fact]
     public void Prebuilt_excel_samples_preserve_the_visual_test_features()

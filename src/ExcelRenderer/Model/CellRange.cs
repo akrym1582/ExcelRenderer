@@ -1,15 +1,15 @@
 namespace ExcelRenderer.Model;
 
 /// <summary>
-/// CellRange が表すデータと操作を提供します.
+/// 左上セルと右下セルを両端として含む矩形のセル範囲を表します。
 /// </summary>
 public readonly record struct CellRange(CellAddress First, CellAddress Last)
 {
     /// <summary>
-    /// Contains を実行します.
+    /// 指定したセルアドレスが、この範囲の行および列の内側にあるかを判定します。
     /// </summary>
-    /// <param name="address">address に渡す値です。</param>
-    /// <returns>処理によって得られた結果を返します。</returns>
+    /// <param name="address">範囲に含まれるかを判定するセルアドレスです。</param>
+    /// <returns>指定したアドレスが範囲内にある場合は <see langword="true"/>、それ以外は <see langword="false"/> を返します。</returns>
     public bool Contains(CellAddress address) =>
         address.Row >= First.Row && address.Row <= Last.Row &&
         address.Column >= First.Column && address.Column <= Last.Column;

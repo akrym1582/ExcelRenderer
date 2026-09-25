@@ -4,16 +4,12 @@ using ExcelRenderer.Model;
 
 namespace ExcelRenderer.Excel;
 
-/// <summary>
-/// ExcelStyleConverter が表すデータと操作を提供します.
-/// </summary>
+/// <summary>ClosedXML のセル書式をレンダリング用の書式モデルへ変換します。</summary>
 public static class ExcelStyleConverter
 {
-    /// <summary>
-    /// Convert を実行します.
-    /// </summary>
-    /// <param name="cell">cell に渡す値です。</param>
-    /// <returns>処理によって得られた結果を返します。</returns>
+    /// <summary>セルのフォント、塗りつぶし、罫線、配置、および文字表示設定をレンダリング用書式へ変換します。</summary>
+    /// <param name="cell">書式とデータ型を読み取る ClosedXML のセルです。</param>
+    /// <returns>テーマ色を実色へ解決し、標準配置をセルのデータ型に応じて確定したセル書式を返します。</returns>
     public static CellStyle Convert(IXLCell cell)
     {
         var style = cell.Style;

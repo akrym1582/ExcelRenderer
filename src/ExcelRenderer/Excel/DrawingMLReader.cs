@@ -12,11 +12,9 @@ internal static class DrawingMLReader
 {
     private const double EmusPerPoint = 914400d / 72d;
 
-    /// <summary>
-    /// Read を実行します.
-    /// </summary>
-    /// <param name="path">path に渡す値です。</param>
-    /// <returns>処理によって得られた結果を返します。</returns>
+    /// <summary>Excel ファイル内の DrawingML を解析し、対応するオートシェイプをワークシート別に読み取ります。</summary>
+    /// <param name="path">DrawingML を含む Excel ファイルのパスです。</param>
+    /// <returns>ワークシート名をキーとし、描画順に並んだ対応図形を値とする読み取り専用辞書を返します。</returns>
     public static IReadOnlyDictionary<string, IReadOnlyList<ReportShape>> Read(string path)
     {
         using var document = SpreadsheetDocument.Open(path, false);

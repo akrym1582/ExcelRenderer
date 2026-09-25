@@ -1,7 +1,7 @@
 namespace ExcelRenderer.Model;
 
 /// <summary>
-/// HeaderFooter が表すデータと操作を提供します.
+/// 通常ページ、先頭ページ、および偶数ページに使用するヘッダーとフッターを表します。
 /// </summary>
 public sealed record HeaderFooter(
     HeaderFooterSection Header,

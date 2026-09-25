@@ -10,7 +10,7 @@ namespace ExcelRenderer.Tests;
 public sealed partial class MarkdownSampleOutputTests
 {
     /// <summary>
-    /// Gets the value. 対応する値を取得または設定します.
+    /// Gets the sample workbook data. Markdown 出力の検証対象となるすべてのサンプル Excel ファイル名を列挙します。
     /// </summary>
     public static IEnumerable<object[]> Samples => Directory
         .EnumerateFiles(SampleOutputTestSupport.InputDirectory, "*.xlsx")
@@ -18,10 +18,10 @@ public sealed partial class MarkdownSampleOutputTests
         .Select(path => new object[] { Path.GetFileName(path) });
 
     /// <summary>
-    /// Generates_markdown_from_prebuilt_excel を実行します.
+    /// サンプル Excel ブックからシート構造と内容を保持した Markdown を生成できることを検証します。
     /// </summary>
-    /// <param name="excelFileName">excelFileName に渡す値です。</param>
-    /// <returns>処理によって得られた結果を返します。</returns>
+    /// <param name="excelFileName">入力に使用するサンプル Excel ファイルの名前。</param>
+    /// <returns>非同期の検証処理を表すタスク。</returns>
     [Theory]
     [MemberData(nameof(Samples))]
     public async Task Generates_markdown_from_prebuilt_excel(string excelFileName)

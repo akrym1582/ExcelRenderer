@@ -1,6 +1,6 @@
 namespace ExcelRenderer.Model;
 
 /// <summary>
-/// CellAddress が表すデータと操作を提供します.
+/// 0 から始まる行番号と列番号によってシート上のセル位置を表します。
 /// </summary>
 public readonly record struct CellAddress(int Row, int Column);

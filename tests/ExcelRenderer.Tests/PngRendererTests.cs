@@ -8,12 +8,12 @@ using Xunit;
 namespace ExcelRenderer.Tests;
 
 /// <summary>
-/// PngRendererTests が表すデータと操作を提供します.
+/// 描画命令から PNG ページを生成するレンダラーの出力を検証します。
 /// </summary>
 public sealed class PngRendererTests
 {
     /// <summary>
-    /// RenderPage_preserves_gaps_in_dotted_borders を実行します.
+    /// 点線罫線を描画したとき、線分間の空白が塗りつぶされずに保持されることを検証します。
     /// </summary>
     [Fact]
     public void RenderPage_preserves_gaps_in_dotted_borders()
@@ -37,7 +37,7 @@ public sealed class PngRendererTests
     }
 
     /// <summary>
-    /// RenderPage_writes_png_at_requested_dpi を実行します.
+    /// 指定した DPI が PNG の解像度メタデータとピクセル寸法に反映されることを検証します。
     /// </summary>
     [Fact]
     public void RenderPage_writes_png_at_requested_dpi()
@@ -63,7 +63,7 @@ public sealed class PngRendererTests
     }
 
     /// <summary>
-    /// Render_writes_one_png_for_each_page を実行します.
+    /// 複数ページの描画結果がページごとに個別の PNG ファイルへ出力されることを検証します。
     /// </summary>
     [Fact]
     public void Render_writes_one_png_for_each_page()
@@ -88,7 +88,7 @@ public sealed class PngRendererTests
     }
 
     /// <summary>
-    /// RenderPage_renders_an_embedded_image を実行します.
+    /// ページ内の埋め込み画像が指定位置へ描画されることを検証します。
     /// </summary>
     [Fact]
     public void RenderPage_renders_an_embedded_image()
@@ -108,7 +108,7 @@ public sealed class PngRendererTests
     }
 
     /// <summary>
-    /// Render_writes_a_blank_first_page_when_there_are_no_commands を実行します.
+    /// 描画命令がない文書でも空の先頭ページが PNG として出力されることを検証します。
     /// </summary>
     [Fact]
     public void Render_writes_a_blank_first_page_when_there_are_no_commands()
@@ -127,7 +127,7 @@ public sealed class PngRendererTests
     }
 
     /// <summary>
-    /// RenderPage_rejects_non_positive_dpi を実行します.
+    /// ゼロ以下の DPI を指定した場合に引数エラーとなることを検証します。
     /// </summary>
     [Fact]
     public void RenderPage_rejects_non_positive_dpi()

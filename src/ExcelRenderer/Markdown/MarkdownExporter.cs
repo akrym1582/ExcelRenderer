@@ -8,19 +8,19 @@ using ExcelRenderer.Model;
 namespace ExcelRenderer.Markdown;
 
 /// <summary>
-/// MarkdownExporter が表すデータと操作を提供します.
+/// 解析済みの Excel 文書を、セル領域と埋め込み画像を表現する Markdown として出力します。
 /// </summary>
 public sealed class MarkdownExporter
 {
     /// <summary>
-    /// ExportAsync を実行します.
+    /// 文書名から決定したファイル名で Markdown を出力ディレクトリへ書き出します。
     /// </summary>
-    /// <param name="document">document に渡す値です。</param>
-    /// <param name="outputDirectory">outputDirectory に渡す値です。</param>
-    /// <returns>処理によって得られた結果を返します。</returns>
-    /// <param name="options">options に渡す値です。</param>
-    /// <param name="documentName">documentName に渡す値です。</param>
-        /// <param name="cancellationToken">cancellationToken に渡す値です。</param>
+    /// <param name="document">出力対象となる解析済みの Excel 文書。</param>
+    /// <param name="outputDirectory">Markdown ファイルと画像を配置するディレクトリのパス。</param>
+    /// <param name="options">対象シートや出力内容を指定するオプション。<see langword="null"/> の場合は既定値を使用します。</param>
+    /// <param name="documentName">見出しと出力ファイル名の基になる元文書名。</param>
+    /// <param name="cancellationToken">ファイル書き出し後にキャンセルを確認するためのトークン。</param>
+    /// <returns>Markdown ファイルの書き出しが完了したときに完了するタスク。</returns>
     public async Task ExportAsync(
         ReportDocument document,
         string outputDirectory,
@@ -46,14 +46,14 @@ public sealed class MarkdownExporter
     }
 
     /// <summary>
-    /// ExportToFileAsync を実行します.
+    /// 解析済み文書を Markdown に変換し、指定したファイルへ書き出します。
     /// </summary>
-    /// <param name="document">document に渡す値です。</param>
-    /// <param name="outputPath">outputPath に渡す値です。</param>
-    /// <returns>処理によって得られた結果を返します。</returns>
-    /// <param name="options">options に渡す値です。</param>
-    /// <param name="documentName">documentName に渡す値です。</param>
-        /// <param name="cancellationToken">cancellationToken に渡す値です。</param>
+    /// <param name="document">出力対象となる解析済みの Excel 文書。</param>
+    /// <param name="outputPath">書き出す Markdown ファイルのパス。</param>
+    /// <param name="options">対象シートや出力内容を指定するオプション。<see langword="null"/> の場合は既定値を使用します。</param>
+    /// <param name="documentName">Markdown の先頭見出しに使用する元文書名。</param>
+    /// <param name="cancellationToken">ファイル書き出し後にキャンセルを確認するためのトークン。</param>
+    /// <returns>指定した Markdown ファイルの書き出しが完了したときに完了するタスク。</returns>
     public async Task ExportToFileAsync(
         ReportDocument document,
         string outputPath,
@@ -76,18 +76,18 @@ public sealed class MarkdownExporter
     }
 
     /// <summary>
-    /// Range を実行します.
+    /// セル範囲を A1 形式のアドレス文字列へ変換します。
     /// </summary>
-    /// <param name="range">range に渡す値です。</param>
-    /// <returns>処理によって得られた結果を返します。</returns>
+    /// <param name="range">文字列へ変換する先頭セルと末尾セルの範囲。</param>
+    /// <returns>単一セルの場合はそのアドレス、複数セルの場合はコロンで区切った範囲アドレス。</returns>
     internal static string Range(CellRange range) => range.First == range.Last
         ? Address(range.First) : Address(range.First) + ":" + Address(range.Last);
 
     /// <summary>
-    /// SanitizeFileName を実行します.
+    /// ファイル名として使用できない文字と制御文字をアンダースコアへ置き換えます。
     /// </summary>
-    /// <param name="value">value に渡す値です。</param>
-    /// <returns>処理によって得られた結果を返します。</returns>
+    /// <param name="value">ファイル名として正規化する文字列。</param>
+    /// <returns>末尾の空白とピリオドを除去した安全なファイル名。結果が空の場合は <c>sheet</c>。</returns>
     internal static string SanitizeFileName(string value)
     {
         var invalid = Path.GetInvalidFileNameChars().Concat(new[] { '/', '\\', ':', '*', '?', '"', '<', '>', '|' }).ToHashSet();
@@ -393,10 +393,10 @@ public sealed class MarkdownExporter
     }
 
     /// <summary>
-    /// Address を実行します.
+    /// 行番号と列番号から A1 形式のセルアドレスを生成します。
     /// </summary>
-    /// <param name="address">address に渡す値です。</param>
-    /// <returns>処理によって得られた結果を返します。</returns>
+    /// <param name="address">1 始まりの行番号と列番号を持つセルアドレス。</param>
+    /// <returns>列を英字、行を数字で表した A1 形式のセルアドレス。</returns>
     private static string Address(CellAddress address)
     {
         var n = address.Column;

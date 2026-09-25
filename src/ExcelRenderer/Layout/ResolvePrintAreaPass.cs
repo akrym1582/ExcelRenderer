@@ -4,14 +4,14 @@ using ExcelRenderer.Model;
 namespace ExcelRenderer.Layout;
 
 /// <summary>
-/// ResolvePrintAreaPass が表すデータと操作を提供します.
+/// 明示された印刷範囲を採用し、未指定の場合はセル、画像、および図形から使用範囲を求めます。
 /// </summary>
 public sealed class ResolvePrintAreaPass : IReportLayoutPass
 {
     /// <summary>
-    /// Execute を実行します.
+    /// 明示された印刷範囲を採用し、未指定の場合は内容が存在するセル、画像、および図形を包含する範囲を設定します。
     /// </summary>
-    /// <param name="context">context に渡す値です。</param>
+    /// <param name="context">入力シート、計測機能、および各工程の計算結果を保持するレイアウトコンテキストです。</param>
     public void Execute(ReportLayoutContext context)
     {
         context.PrintArea = context.Sheet.PrintArea ?? GetUsedRange(context.Sheet);

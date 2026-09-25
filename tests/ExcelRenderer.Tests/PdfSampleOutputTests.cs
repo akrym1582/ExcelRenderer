@@ -4,14 +4,14 @@ using Xunit;
 namespace ExcelRenderer.Tests;
 
 /// <summary>
-/// PdfSampleOutputTests が表すデータと操作を提供します.
+/// サンプル Excel ブックから生成する PDF 出力を検証します。
 /// </summary>
 public sealed class PdfSampleOutputTests
 {
     /// <summary>
-    /// Generates_pdf_from_prebuilt_excel を実行します.
+    /// サンプル Excel ブックをレイアウトし、内容を含む PDF を生成できることを検証します。
     /// </summary>
-    /// <param name="excelFileName">excelFileName に渡す値です。</param>
+    /// <param name="excelFileName">入力に使用するサンプル Excel ファイルの名前。</param>
     [Theory]
     [MemberData(nameof(SampleOutputTestSupport.RenderSamples), MemberType = typeof(SampleOutputTestSupport))]
     public void Generates_pdf_from_prebuilt_excel(string excelFileName)

@@ -1,32 +1,32 @@
 namespace ExcelRenderer.Model;
 
 /// <summary>
-/// ShapeKind が表すデータと操作を提供します.
+/// 帳票上に描画できる図形の幾何形状を表します。
 /// </summary>
 public enum ShapeKind
 {
     /// <summary>
-    /// この選択肢が表す状態を示します.
+    /// 角が直角の長方形を表します。
     /// </summary>
     Rectangle,
 
     /// <summary>
-    /// この選択肢が表す状態を示します.
+    /// 角を丸めた長方形を表します。
     /// </summary>
     RoundedRectangle,
 
     /// <summary>
-    /// この選択肢が表す状態を示します.
+    /// 楕円形を表します。
     /// </summary>
     Ellipse,
 
     /// <summary>
-    /// この選択肢が表す状態を示します.
+    /// 長方形にくさび形の引き出し線を付けた吹き出しを表します。
     /// </summary>
     WedgeRectangleCallout,
 
     /// <summary>
-    /// この選択肢が表す状態を示します.
+    /// 角丸長方形にくさび形の引き出し線を付けた吹き出しを表します。
     /// </summary>
     WedgeRoundedRectangleCallout,
 }

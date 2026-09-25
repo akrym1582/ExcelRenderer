@@ -1,7 +1,7 @@
 namespace ExcelRenderer.Model;
 
 /// <summary>
-/// ReportSheet が表すデータと操作を提供します.
+/// 帳票の 1 ワークシートを構成するセル、行列、結合範囲、印刷設定、画像、および図形を表します。
 /// </summary>
 public sealed record ReportSheet(
     string Name,

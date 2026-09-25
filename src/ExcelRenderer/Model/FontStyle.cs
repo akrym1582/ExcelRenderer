@@ -1,7 +1,7 @@
 namespace ExcelRenderer.Model;
 
 /// <summary>
-/// FontStyle が表すデータと操作を提供します.
+/// 文字列のフォントファミリー、サイズ、装飾、および色を表します。
 /// </summary>
 public sealed record FontStyle(
     string Family = "Noto Sans JP",

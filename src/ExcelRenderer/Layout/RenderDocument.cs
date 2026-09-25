@@ -4,6 +4,6 @@ using ExcelRenderer.Model;
 namespace ExcelRenderer.Layout;
 
 /// <summary>
-/// RenderDocument が表すデータと操作を提供します.
+/// レイアウト計算によって生成された描画対象ページの集合を表します。
 /// </summary>
 public sealed record RenderDocument(IReadOnlyList<RenderPage> Pages);

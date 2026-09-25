@@ -1,17 +1,11 @@
 namespace ExcelRenderer.Fonts;
 
-/// <summary>
-/// FontOptions が表すデータと操作を提供します.
-/// </summary>
+/// <summary>フォント解決時のフォールバック順序と検索場所を指定します。</summary>
 public sealed class FontOptions
 {
-    /// <summary>
-    /// Gets the value. 対応する値を取得または設定します.
-    /// </summary>
+    /// <summary>Gets the fallback font families. 要求されたフォントが見つからない場合に、記載順で検索するフォントファミリー名を取得します。</summary>
     public IReadOnlyList<string> FallbackFamilies { get; init; } = ["Noto Sans JP", "Noto Sans", "Liberation Sans"];
 
-    /// <summary>
-    /// Gets the value. 対応する値を取得または設定します.
-    /// </summary>
+    /// <summary>Gets the additional font directories. オペレーティングシステム標準の場所に加えて再帰的に検索するフォントディレクトリを取得します。</summary>
     public IReadOnlyList<string> FontDirectories { get; init; } = [];
 }

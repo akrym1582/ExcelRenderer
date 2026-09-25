@@ -3,22 +3,22 @@ using ExcelRenderer.Model;
 namespace ExcelRenderer.Markdown;
 
 /// <summary>
-/// LayoutSegmenter が表すデータと操作を提供します.
+/// セル間にある十分な幅の空白を境として、ワークシートの表示レイアウトを階層的に分割します。
 /// </summary>
 public sealed class LayoutSegmenter
 {
     /// <summary>
-    /// Segment を実行します.
+    /// セル間の水平または垂直方向の空白を再帰的に探索し、レイアウトツリーを構築します。
     /// </summary>
-    /// <param name="cells">cells に渡す値です。</param>
-    /// <returns>処理によって得られた結果を返します。</returns>
+    /// <param name="cells">分割対象となる表示セルの一覧。</param>
+    /// <returns>指定したすべてのセルを包含し、空白で分割された子ノードを持つルートノード。</returns>
     public LayoutNode Segment(IReadOnlyList<VisualCell> cells) => Split(cells, 0);
 
     /// <summary>
-    /// Bounds を実行します.
+    /// 指定したすべての表示セルを包含する最小の矩形を求めます。
     /// </summary>
-    /// <param name="cells">cells に渡す値です。</param>
-    /// <returns>処理によって得られた結果を返します。</returns>
+    /// <param name="cells">表示領域を集約するセルの一覧。</param>
+    /// <returns>すべてのセルを包含する矩形。セルがない場合は各値がゼロの矩形。</returns>
     internal static LayoutRect Bounds(IReadOnlyList<VisualCell> cells)
     {
         if (cells.Count == 0)

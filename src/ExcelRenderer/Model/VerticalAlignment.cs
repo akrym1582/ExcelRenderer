@@ -1,22 +1,22 @@
 namespace ExcelRenderer.Model;
 
 /// <summary>
-/// VerticalAlignment が表すデータと操作を提供します.
+/// 矩形内で文字列を垂直方向に配置する位置を表します。
 /// </summary>
 public enum VerticalAlignment
 {
     /// <summary>
-    /// この選択肢が表す状態を示します.
+    /// 文字列を矩形の上端に揃えます。
     /// </summary>
     Top,
 
     /// <summary>
-    /// この選択肢が表す状態を示します.
+    /// 文字列を矩形の垂直方向中央に揃えます。
     /// </summary>
     Center,
 
     /// <summary>
-    /// この選択肢が表す状態を示します.
+    /// 文字列を矩形の下端に揃えます。
     /// </summary>
     Bottom,
 }

@@ -4,6 +4,6 @@ using ExcelRenderer.Model;
 namespace ExcelRenderer.Drawing;
 
 /// <summary>
-/// DrawCommand が表すデータと操作を提供します.
+/// 特定のページへ出力する描画操作の基底データを表します。
 /// </summary>
 public abstract record DrawCommand(int PageNumber);

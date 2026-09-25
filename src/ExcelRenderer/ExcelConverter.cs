@@ -14,17 +14,15 @@ using PdfSharp.Pdf.IO;
 
 namespace ExcelRenderer;
 
-/// <summary>Provides convenient, end-to-end Excel conversion operations.</summary>
+/// <summary>Excel ファイルを PDF、PNG 画像、または Markdown 文書へ変換する一連の操作を提供します。</summary>
 public static class ExcelConverter
 {
-    /// <summary>
-    /// ConvertToPdfAsync を実行します.
-    /// </summary>
-        /// <param name="inputPath">inputPath に渡す値です。</param>
-        /// <param name="outputPath">outputPath に渡す値です。</param>
-        /// <returns>処理によって得られた結果を返します。</returns>
-        /// <param name="options">options に渡す値です。</param>
-        /// <param name="cancellationToken">cancellationToken に渡す値です。</param>
+    /// <summary>Excel ブックのワークシートをレイアウトし、単一の PDF 文書へ非同期に変換します。</summary>
+    /// <param name="inputPath">読み取る Excel ファイルのパスです。</param>
+    /// <param name="outputPath">変換した PDF 文書を新規作成するファイルパスです。</param>
+    /// <param name="options">出力対象のワークシートを指定する設定です。省略時はすべてのワークシートを出力します。</param>
+    /// <param name="cancellationToken">変換処理のキャンセルを通知するトークンです。</param>
+    /// <returns>PDF ファイルの書き込みが完了したときに完了するタスクを返します。</returns>
     public static async Task ConvertToPdfAsync(
         string inputPath,
         string outputPath,
@@ -62,14 +60,12 @@ public static class ExcelConverter
         .ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// ConvertToImagesAsync を実行します.
-    /// </summary>
-        /// <param name="inputPath">inputPath に渡す値です。</param>
-        /// <param name="outputDirectory">outputDirectory に渡す値です。</param>
-        /// <returns>処理によって得られた結果を返します。</returns>
-        /// <param name="options">options に渡す値です。</param>
-        /// <param name="cancellationToken">cancellationToken に渡す値です。</param>
+    /// <summary>Excel ブックのワークシートをレイアウトし、各ページを PNG 画像へ非同期に変換します。</summary>
+    /// <param name="inputPath">読み取る Excel ファイルのパスです。</param>
+    /// <param name="outputDirectory">ワークシート名とページ番号を含む PNG ファイルを新規作成する空のディレクトリです。</param>
+    /// <param name="options">出力対象のワークシートと画像解像度を指定する設定です。省略時は既定値を使用します。</param>
+    /// <param name="cancellationToken">変換処理のキャンセルを通知するトークンです。</param>
+    /// <returns>対象ページすべての PNG ファイルの書き込みが完了したときに完了するタスクを返します。</returns>
     public static async Task ConvertToImagesAsync(
         string inputPath,
         string outputDirectory,
@@ -121,14 +117,12 @@ public static class ExcelConverter
         .ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// ConvertToMarkdownAsync を実行します.
-    /// </summary>
-        /// <param name="inputPath">inputPath に渡す値です。</param>
-        /// <param name="outputPath">outputPath に渡す値です。</param>
-        /// <returns>処理によって得られた結果を返します。</returns>
-        /// <param name="options">options に渡す値です。</param>
-        /// <param name="cancellationToken">cancellationToken に渡す値です。</param>
+    /// <summary>Excel ブックの表領域を Markdown の表または HTML として表現し、埋め込み画像とともに非同期に出力します。</summary>
+    /// <param name="inputPath">読み取る Excel ファイルのパスです。</param>
+    /// <param name="outputPath">変換した Markdown 文書を新規作成するファイルパスです。</param>
+    /// <param name="options">対象ワークシート、画像格納先、およびレイアウト解析方法を指定する設定です。省略時は既定値を使用します。</param>
+    /// <param name="cancellationToken">変換処理のキャンセルを通知するトークンです。</param>
+    /// <returns>Markdown 文書と付随する画像ファイルの書き込みが完了したときに完了するタスクを返します。</returns>
     public static async Task ConvertToMarkdownAsync(
         string inputPath,
         string outputPath,

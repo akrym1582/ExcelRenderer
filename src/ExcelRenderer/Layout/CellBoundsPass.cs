@@ -4,14 +4,14 @@ using ExcelRenderer.Model;
 namespace ExcelRenderer.Layout;
 
 /// <summary>
-/// CellBoundsPass が表すデータと操作を提供します.
+/// 列幅と行高から各セルおよび結合セルの罫線の配置矩形を算出します。
 /// </summary>
 public sealed class CellBoundsPass : IReportLayoutPass
 {
     /// <summary>
-    /// Execute を実行します.
+    /// 列と行の配置情報を合算して各セルの矩形を求め、結合セルの部分罫線とともにコンテキストへ格納します。
     /// </summary>
-    /// <param name="context">context に渡す値です。</param>
+    /// <param name="context">入力シート、計測機能、および各工程の計算結果を保持するレイアウトコンテキストです。</param>
     public void Execute(ReportLayoutContext context)
     {
         foreach (var (address, cell) in context.Sheet.Cells)

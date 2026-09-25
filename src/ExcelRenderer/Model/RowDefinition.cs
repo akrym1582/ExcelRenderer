@@ -1,6 +1,6 @@
 namespace ExcelRenderer.Model;
 
 /// <summary>
-/// RowDefinition が表すデータと操作を提供します.
+/// シート内の行高と非表示状態を表します。
 /// </summary>
 public sealed record RowDefinition(double Height = 15, bool IsHidden = false);

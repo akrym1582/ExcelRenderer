@@ -4,14 +4,14 @@ using ExcelRenderer;
 namespace ExcelRenderer.Tool.Commands;
 
 /// <summary>
-/// ImageCommand が表すデータと操作を提供します.
+/// Excel ワークシートを PNG 画像へ変換するコマンドを構築します。
 /// </summary>
 public static class ImageCommand
 {
     /// <summary>
-    /// Create を実行します.
+    /// 入出力先、対象シート、および解像度を受け付ける <c>image</c> コマンドを作成します。
     /// </summary>
-    /// <returns>処理によって得られた結果を返します。</returns>
+    /// <returns>指定した Excel ファイルの各ワークシートを PNG ファイルへ変換するコマンド。</returns>
     public static Command Create()
     {
         var input = CommandSupport.InputArgument();

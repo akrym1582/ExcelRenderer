@@ -3,15 +3,15 @@ using ExcelRenderer.Model;
 namespace ExcelRenderer.Markdown;
 
 /// <summary>
-/// RegionClassifier が表すデータと操作を提供します.
+/// 表示セルの個数、配置、および書式からワークシート領域の内容種別を判定します。
 /// </summary>
 public sealed class RegionClassifier
 {
     /// <summary>
-    /// Classify を実行します.
+    /// 空でないセルの行ごとの配置と見出し書式を調べ、領域の内容種別を判定します。
     /// </summary>
-    /// <param name="cells">cells に渡す値です。</param>
-    /// <returns>処理によって得られた結果を返します。</returns>
+    /// <param name="cells">同じ領域に属する表示セルの一覧。</param>
+    /// <returns>セルの内容と配置に該当する領域種別。定型的な配置に該当しない場合は <see cref="RegionType.FreeLayout"/>。</returns>
     public RegionType Classify(IReadOnlyList<VisualCell> cells)
     {
         var nonEmpty = cells.Where(c => !string.IsNullOrWhiteSpace(c.Text)).ToArray();

@@ -1,32 +1,32 @@
 namespace ExcelRenderer.Model;
 
 /// <summary>
-/// BorderLineStyle が表すデータと操作を提供します.
+/// 罫線の描画に使用する線種を表します。
 /// </summary>
 public enum BorderLineStyle
 {
     /// <summary>
-    /// この選択肢が表す状態を示します.
+    /// 切れ目のない実線を表します。
     /// </summary>
     Solid,
 
     /// <summary>
-    /// この選択肢が表す状態を示します.
+    /// 点を連ねた点線を表します。
     /// </summary>
     Dotted,
 
     /// <summary>
-    /// この選択肢が表す状態を示します.
+    /// 短い線を連ねた破線を表します。
     /// </summary>
     Dashed,
 
     /// <summary>
-    /// この選択肢が表す状態を示します.
+    /// 破線と点を交互に並べた一点鎖線を表します。
     /// </summary>
     DashDot,
 
     /// <summary>
-    /// この選択肢が表す状態を示します.
+    /// 破線と 2 点を交互に並べた二点鎖線を表します。
     /// </summary>
     DashDotDot,
 }

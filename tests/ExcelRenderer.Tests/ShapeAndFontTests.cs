@@ -16,12 +16,12 @@ using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 namespace ExcelRenderer.Tests;
 
 /// <summary>
-/// ShapeAndFontTests が表すデータと操作を提供します.
+/// DrawingML 図形の読み取り・描画とフォント解決を検証します。
 /// </summary>
 public sealed class ShapeAndFontTests
 {
     /// <summary>
-    /// ExcelReader_reads_supported_DrawingML_shape_properties_and_skips_unknown_geometry を実行します.
+    /// 対応する DrawingML 図形の位置、形状、書式を読み取り、未知のジオメトリを無視することを検証します。
     /// </summary>
     [Fact]
     public void ExcelReader_reads_supported_DrawingML_shape_properties_and_skips_unknown_geometry()
@@ -52,7 +52,7 @@ public sealed class ShapeAndFontTests
     }
 
     /// <summary>
-    /// DrawCommandGenerator_orders_images_and_shapes_by_ZIndex を実行します.
+    /// 画像と図形の描画命令が Z インデックス順に並ぶことを検証します。
     /// </summary>
     [Fact]
     public void DrawCommandGenerator_orders_images_and_shapes_by_ZIndex()
@@ -71,7 +71,7 @@ public sealed class ShapeAndFontTests
     }
 
     /// <summary>
-    /// PngRenderer_renders_shape_fill_border_and_Z_order を実行します.
+    /// 図形の塗りつぶしと枠線が描画され、重なり順が維持されることを検証します。
     /// </summary>
     [Fact]
     public void PngRenderer_renders_shape_fill_border_and_Z_order()
@@ -92,9 +92,9 @@ public sealed class ShapeAndFontTests
     }
 
     /// <summary>
-    /// PngRenderer_renders_every_supported_geometry_with_rotation_and_Japanese_text を実行します.
+    /// 各対応図形について、回転と日本語テキストを含む描画が成功することを検証します。
     /// </summary>
-    /// <param name="kind">kind に渡す値です。</param>
+    /// <param name="kind">描画を検証する図形の種類。</param>
     [Theory]
     [InlineData(ShapeKind.Rectangle)]
     [InlineData(ShapeKind.RoundedRectangle)]
@@ -131,7 +131,7 @@ public sealed class ShapeAndFontTests
     }
 
     /// <summary>
-    /// FontManager_resolves_regular_bold_italic_and_boldItalic_to_registered_faces を実行します.
+    /// 標準、太字、斜体、太字斜体の要求が登録済みの各フォントフェイスへ解決されることを検証します。
     /// </summary>
     [Fact]
     public void FontManager_resolves_regular_bold_italic_and_boldItalic_to_registered_faces()
@@ -157,7 +157,7 @@ public sealed class ShapeAndFontTests
     }
 
     /// <summary>
-    /// FontManager_uses_configured_family_fallback_and_nearest_weight を実行します.
+    /// 要求したファミリがない場合に設定済み代替ファミリと最も近いウェイトが選ばれることを検証します。
     /// </summary>
     [Fact]
     public void FontManager_uses_configured_family_fallback_and_nearest_weight()
@@ -183,7 +183,7 @@ public sealed class ShapeAndFontTests
     }
 
     /// <summary>
-    /// FontManager_scans_family_metadata_instead_of_the_file_name を実行します.
+    /// ファイル名ではなくフォント内部のファミリ情報を使って登録されることを検証します。
     /// </summary>
     [Fact]
     public void FontManager_scans_family_metadata_instead_of_the_file_name()

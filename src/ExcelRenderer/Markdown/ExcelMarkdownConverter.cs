@@ -8,18 +8,18 @@ using ExcelRenderer.Model;
 namespace ExcelRenderer.Markdown;
 
 /// <summary>
-/// ExcelMarkdownConverter が表すデータと操作を提供します.
+/// Excel ブックを読み込み、ワークシートの内容を Markdown ファイルへ変換します。
 /// </summary>
 public static class ExcelMarkdownConverter
 {
     /// <summary>
-    /// ConvertAsync を実行します.
+    /// 指定した Excel ファイルを解析し、文書名に基づく Markdown ファイルと埋め込み画像を出力します。
     /// </summary>
-        /// <param name="inputPath">inputPath に渡す値です。</param>
-        /// <param name="outputDirectory">outputDirectory に渡す値です。</param>
-        /// <returns>処理によって得られた結果を返します。</returns>
-        /// <param name="options">options に渡す値です。</param>
-        /// <param name="cancellationToken">cancellationToken に渡す値です。</param>
+    /// <param name="inputPath">読み込む Excel ファイルのパス。</param>
+    /// <param name="outputDirectory">Markdown ファイルと画像を配置するディレクトリのパス。</param>
+    /// <param name="options">対象シートや出力内容を指定するオプション。<see langword="null"/> の場合は既定値を使用します。</param>
+    /// <param name="cancellationToken">出力処理のキャンセルを通知するトークン。</param>
+    /// <returns>Markdown ファイルと画像の書き出しが完了したときに完了するタスク。</returns>
     public static Task ConvertAsync(
         string inputPath,
         string outputDirectory,

@@ -4,14 +4,14 @@ using ExcelRenderer.Model;
 namespace ExcelRenderer.Layout;
 
 /// <summary>
-/// HiddenRowColumnPass が表すデータと操作を提供します.
+/// 印刷範囲と印刷タイトルから、非表示設定を除いた描画対象の行および列を抽出します。
 /// </summary>
 public sealed class HiddenRowColumnPass : IReportLayoutPass
 {
     /// <summary>
-    /// Execute を実行します.
+    /// 印刷範囲と印刷タイトルの行列から非表示項目を除外し、描画対象の行番号と列番号を確定します。
     /// </summary>
-    /// <param name="context">context に渡す値です。</param>
+    /// <param name="context">入力シート、計測機能、および各工程の計算結果を保持するレイアウトコンテキストです。</param>
     public void Execute(ReportLayoutContext context)
     {
         if (context.PrintArea is not { } area)

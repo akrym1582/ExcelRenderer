@@ -3,22 +3,22 @@ using ExcelRenderer.Model;
 namespace ExcelRenderer.Markdown;
 
 /// <summary>
-/// LayoutSplitDirection が表すデータと操作を提供します.
+/// セルのレイアウトを分割した方向を表します。
 /// </summary>
 public enum LayoutSplitDirection
 {
     /// <summary>
-    /// この選択肢が表す状態を示します.
+    /// 分割されていない末端ノードを表します。
     /// </summary>
     None,
 
     /// <summary>
-    /// この選択肢が表す状態を示します.
+    /// 水平方向の空白を境に、上下へ分割したことを表します。
     /// </summary>
     Horizontal,
 
     /// <summary>
-    /// この選択肢が表す状態を示します.
+    /// 垂直方向の空白を境に、左右へ分割したことを表します。
     /// </summary>
     Vertical,
 }

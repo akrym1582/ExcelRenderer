@@ -5,14 +5,14 @@ using ExcelRenderer.Markdown;
 namespace ExcelRenderer.Tool.Commands;
 
 /// <summary>
-/// MarkdownCommand が表すデータと操作を提供します.
+/// Excel ブックを Markdown 文書へ変換するコマンドを構築します。
 /// </summary>
 public static class MarkdownCommand
 {
     /// <summary>
-    /// Create を実行します.
+    /// 出力内容、レイアウト解析、および画像出力を選択できる <c>markdown</c> コマンドを作成します。
     /// </summary>
-    /// <returns>処理によって得られた結果を返します。</returns>
+    /// <returns>指定した Excel ブックを単一の Markdown ファイルと関連画像へ変換するコマンド。</returns>
     public static Command Create()
     {
         var input = CommandSupport.InputArgument();

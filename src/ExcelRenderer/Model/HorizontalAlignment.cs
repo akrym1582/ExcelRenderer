@@ -1,22 +1,22 @@
 namespace ExcelRenderer.Model;
 
 /// <summary>
-/// HorizontalAlignment が表すデータと操作を提供します.
+/// 矩形内で文字列を水平方向に配置する位置を表します。
 /// </summary>
 public enum HorizontalAlignment
 {
     /// <summary>
-    /// この選択肢が表す状態を示します.
+    /// 文字列を矩形の左端に揃えます。
     /// </summary>
     Left,
 
     /// <summary>
-    /// この選択肢が表す状態を示します.
+    /// 文字列を矩形の水平方向中央に揃えます。
     /// </summary>
     Center,
 
     /// <summary>
-    /// この選択肢が表す状態を示します.
+    /// 文字列を矩形の右端に揃えます。
     /// </summary>
     Right,
 }

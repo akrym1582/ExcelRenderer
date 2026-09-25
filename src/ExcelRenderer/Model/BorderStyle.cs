@@ -1,7 +1,7 @@
 namespace ExcelRenderer.Model;
 
 /// <summary>
-/// BorderStyle が表すデータと操作を提供します.
+/// セル矩形の左、上、右、および下の各辺に適用する罫線を表します。
 /// </summary>
 public sealed record BorderStyle(
     BorderSide? Left = null,

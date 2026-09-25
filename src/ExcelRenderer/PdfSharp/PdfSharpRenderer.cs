@@ -9,17 +9,13 @@ using SkiaSharp;
 
 namespace ExcelRenderer.PdfSharp;
 
-/// <summary>
-/// PdfSharpRenderer が表すデータと操作を提供します.
-/// </summary>
+/// <summary>ページ別の描画コマンドを PDFsharp で描画し、PDF 文書として出力します。</summary>
 public sealed class PdfSharpRenderer : IRenderer
 {
-    /// <summary>
-    /// Render を実行します.
-    /// </summary>
-    /// <param name="commands">commands に渡す値です。</param>
-    /// <param name="pageSettings">pageSettings に渡す値です。</param>
-    /// <param name="output">output に渡す値です。</param>
+    /// <summary>描画コマンドをページ番号ごとに描画し、すべてのページを含む PDF 文書を出力します。</summary>
+    /// <param name="commands">背景、罫線、文字、画像、および図形をページ上へ配置する描画コマンドです。</param>
+    /// <param name="pageSettings">各 PDF ページに適用する幅と高さを含むページ設定です。</param>
+    /// <param name="output">生成した PDF 文書を書き込むストリームです。</param>
     public void Render(IReadOnlyList<DrawCommand> commands, PageSettings pageSettings, Stream output)
     {
         using var document = new PdfDocument();

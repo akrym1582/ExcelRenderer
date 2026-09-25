@@ -5,7 +5,7 @@ using Xunit;
 namespace ExcelRenderer.Tool.Tests;
 
 /// <summary>
-/// ToolIntegrationTests が表すデータと操作を提供します.
+/// コマンドラインツールの各変換コマンド、入力検証およびエラー表示を検証します。
 /// </summary>
 public sealed class ToolIntegrationTests : IDisposable
 {
@@ -14,7 +14,7 @@ public sealed class ToolIntegrationTests : IDisposable
     private static string Input => Path.Combine(AppContext.BaseDirectory, "SampleInputs", "sample.xlsx");
 
     /// <summary>
-    /// Dispose を実行します.
+    /// テストごとに作成した一時ディレクトリと出力ファイルを削除します。
     /// </summary>
     public void Dispose()
     {
@@ -25,9 +25,9 @@ public sealed class ToolIntegrationTests : IDisposable
     }
 
     /// <summary>
-    /// Pdf_command_creates_a_pdf を実行します.
+    /// PDF コマンドが Excel 入力から PDF ファイルを生成することを検証します。
     /// </summary>
-    /// <returns>処理によって得られた結果を返します。</returns>
+    /// <returns>非同期の検証処理を表すタスク。</returns>
     [Fact]
     public async Task Pdf_command_creates_a_pdf()
     {
@@ -38,9 +38,9 @@ public sealed class ToolIntegrationTests : IDisposable
     }
 
     /// <summary>
-    /// Image_command_creates_png_files を実行します.
+    /// image コマンドが Excel 入力からページ単位の PNG ファイルを生成することを検証します。
     /// </summary>
-    /// <returns>処理によって得られた結果を返します。</returns>
+    /// <returns>非同期の検証処理を表すタスク。</returns>
     [Fact]
     public async Task Image_command_creates_png_files()
     {
@@ -52,9 +52,9 @@ public sealed class ToolIntegrationTests : IDisposable
     }
 
     /// <summary>
-    /// Md_alias_creates_markdown を実行します.
+    /// md エイリアスが Excel 入力から Markdown ファイルを生成することを検証します。
     /// </summary>
-    /// <returns>処理によって得られた結果を返します。</returns>
+    /// <returns>非同期の検証処理を表すタスク。</returns>
     [Fact]
     public async Task Md_alias_creates_markdown()
     {
@@ -65,19 +65,19 @@ public sealed class ToolIntegrationTests : IDisposable
     }
 
     /// <summary>
-    /// Invalid_input_fails を実行します.
+    /// 存在しない入力パスまたは未対応の拡張子に対してコマンドが失敗することを検証します。
     /// </summary>
-    /// <param name="arguments">arguments に渡す値です。</param>
-    /// <returns>処理によって得られた結果を返します。</returns>
+    /// <param name="arguments">入力エラーを発生させるコマンドライン引数。</param>
+    /// <returns>非同期の検証処理を表すタスク。</returns>
     [Theory]
     [InlineData("md")]
     [InlineData("md", "not-found.xlsx", "-o", "output.md")]
     public async Task Invalid_input_fails(params string[] arguments) => Assert.NotEqual(0, (await RunAsync(arguments)).ExitCode);
 
     /// <summary>
-    /// Invalid_dpi_is_rejected_by_parser を実行します.
+    /// 範囲外の DPI がコマンドライン解析時に拒否されることを検証します。
     /// </summary>
-    /// <returns>処理によって得られた結果を返します。</returns>
+    /// <returns>非同期の検証処理を表すタスク。</returns>
     [Fact]
     public async Task Invalid_dpi_is_rejected_by_parser()
     {
@@ -87,9 +87,9 @@ public sealed class ToolIntegrationTests : IDisposable
     }
 
     /// <summary>
-    /// Unknown_sheet_fails_without_a_stack_trace を実行します.
+    /// 存在しないシート名を指定した場合、スタックトレースを出さずエラー終了することを検証します。
     /// </summary>
-    /// <returns>処理によって得られた結果を返します。</returns>
+    /// <returns>非同期の検証処理を表すタスク。</returns>
     [Fact]
     public async Task Unknown_sheet_fails_without_a_stack_trace()
     {

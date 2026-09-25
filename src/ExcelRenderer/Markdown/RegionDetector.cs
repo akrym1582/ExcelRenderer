@@ -3,16 +3,16 @@ using ExcelRenderer.Model;
 namespace ExcelRenderer.Markdown;
 
 /// <summary>
-/// RegionDetector が表すデータと操作を提供します.
+/// レイアウトツリーの末端ノードから、セルと画像を含むワークシート領域を検出します。
 /// </summary>
 public sealed class RegionDetector
 {
     /// <summary>
-    /// Detect を実行します.
+    /// セルを持つ末端ノードごとに範囲と領域種別を求め、領域内に配置された画像を関連付けます。
     /// </summary>
-    /// <param name="root">root に渡す値です。</param>
-    /// <param name="sheet">sheet に渡す値です。</param>
-    /// <returns>処理によって得られた結果を返します。</returns>
+    /// <param name="root">検出元となるレイアウトツリーのルートノード。</param>
+    /// <param name="sheet">画像の位置情報を取得するワークシート。</param>
+    /// <returns>レイアウトツリーの末端ノード順に作成した、空でないワークシート領域の一覧。</returns>
     public IReadOnlyList<SheetRegion> Detect(LayoutNode root, ReportSheet sheet)
     {
         var leaves = Flatten(root).Where(x => x.Cells.Count > 0).ToArray();

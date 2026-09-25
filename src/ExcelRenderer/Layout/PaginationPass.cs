@@ -4,14 +4,14 @@ using ExcelRenderer.Model;
 namespace ExcelRenderer.Layout;
 
 /// <summary>
-/// PaginationPass が表すデータと操作を提供します.
+/// 印刷範囲を用紙サイズに分割し、拡大縮小、余白、印刷タイトル、およびヘッダー・フッターを反映したページを生成します。
 /// </summary>
 public sealed class PaginationPass : IReportLayoutPass
 {
     /// <summary>
-    /// Execute を実行します.
+    /// 印刷可能領域に合わせてセル、画像、および図形をページへ分割し、印刷タイトルとヘッダー・フッターを配置します。
     /// </summary>
-    /// <param name="context">context に渡す値です。</param>
+    /// <param name="context">入力シート、計測機能、および各工程の計算結果を保持するレイアウトコンテキストです。</param>
     public void Execute(ReportLayoutContext context)
     {
         if (context.PrintArea is not { } ||

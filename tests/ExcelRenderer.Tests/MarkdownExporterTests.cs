@@ -5,14 +5,14 @@ using Xunit;
 namespace ExcelRenderer.Tests;
 
 /// <summary>
-/// MarkdownExporterTests が表すデータと操作を提供します.
+/// シートの視覚レイアウトを Markdown の読み順と表構造へ変換する処理を検証します。
 /// </summary>
 public sealed class MarkdownExporterTests
 {
     /// <summary>
-    /// ExportAsync_PreservesMergedCellsFormulaAndImageAsExternalFile を実行します.
+    /// 結合セル、数式表示値および外部ファイル化した画像が Markdown 出力に保持されることを検証します。
     /// </summary>
-    /// <returns>処理によって得られた結果を返します。</returns>
+    /// <returns>非同期の検証処理を表すタスク。</returns>
     [Fact]
     public async Task ExportAsync_PreservesMergedCellsFormulaAndImageAsExternalFile()
     {
@@ -64,7 +64,7 @@ public sealed class MarkdownExporterTests
     }
 
     /// <summary>
-    /// LayoutSegmenter_OrdersLeftColumnBeforeRightColumn を実行します.
+    /// レイアウト領域が左列から右列の順に読み順へ整列されることを検証します。
     /// </summary>
     [Fact]
     public void LayoutSegmenter_OrdersLeftColumnBeforeRightColumn()
@@ -84,7 +84,7 @@ public sealed class MarkdownExporterTests
     }
 
     /// <summary>
-    /// VisualCellBuilder_UsesCumulativeOffsetsForDistantRows を実行します.
+    /// 離れた行の表示位置に途中の行高を累積したオフセットが使われることを検証します。
     /// </summary>
     [Fact]
     public void VisualCellBuilder_UsesCumulativeOffsetsForDistantRows()
@@ -112,9 +112,9 @@ public sealed class MarkdownExporterTests
     }
 
     /// <summary>
-    /// ExportAsync_PreservesBlankColumnsBeforeMergedCells を実行します.
+    /// 結合セルの前にある空列が Markdown 表の列配置に保持されることを検証します。
     /// </summary>
-    /// <returns>処理によって得られた結果を返します。</returns>
+    /// <returns>非同期の検証処理を表すタスク。</returns>
     [Fact]
     public async Task ExportAsync_PreservesBlankColumnsBeforeMergedCells()
     {

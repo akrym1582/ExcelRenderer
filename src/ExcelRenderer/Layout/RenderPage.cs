@@ -4,7 +4,7 @@ using ExcelRenderer.Model;
 namespace ExcelRenderer.Layout;
 
 /// <summary>
-/// RenderPage が表すデータと操作を提供します.
+/// ページ番号と、そのページに配置するセル、画像、図形、およびヘッダー・フッター文字列を表します。
 /// </summary>
 public sealed record RenderPage(
     int Number,

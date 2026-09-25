@@ -4,14 +4,14 @@ using ExcelRenderer.Model;
 namespace ExcelRenderer.Layout;
 
 /// <summary>
-/// TextMeasurePass が表すデータと操作を提供します.
+/// 各セルの結合幅と折り返し設定を考慮して、セル文字列の描画寸法を計測します。
 /// </summary>
 public sealed class TextMeasurePass : IReportLayoutPass
 {
     /// <summary>
-    /// Execute を実行します.
+    /// 各セルが占有する列幅を合算し、フォントと折り返し設定を適用した文字列寸法をコンテキストへ格納します。
     /// </summary>
-    /// <param name="context">context に渡す値です。</param>
+    /// <param name="context">入力シート、計測機能、および各工程の計算結果を保持するレイアウトコンテキストです。</param>
     public void Execute(ReportLayoutContext context)
     {
         foreach (var (address, cell) in context.Sheet.Cells)

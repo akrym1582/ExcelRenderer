@@ -3,25 +3,25 @@ using ExcelRenderer.Model;
 namespace ExcelRenderer.Markdown;
 
 /// <summary>
-/// LayoutRect が表すデータと操作を提供します.
+/// ワークシート上の位置と大きさをポイント単位で表す矩形です。
 /// </summary>
 public readonly record struct LayoutRect(double X, double Y, double Width, double Height)
 {
     /// <summary>
-    /// Gets the value. 対応する値を取得または設定します.
+    /// Gets the right edge coordinate. 矩形の右端の X 座標を取得します。
     /// </summary>
     public double Right => X + Width;
 
     /// <summary>
-    /// Gets the value. 対応する値を取得または設定します.
+    /// Gets the bottom edge coordinate. 矩形の下端の Y 座標を取得します。
     /// </summary>
     public double Bottom => Y + Height;
 
     /// <summary>
-    /// Contains を実行します.
+    /// 指定した座標が矩形の境界上または内部にあるかを判定します。
     /// </summary>
-    /// <param name="x">x に渡す値です。</param>
-    /// <param name="y">y に渡す値です。</param>
-    /// <returns>処理によって得られた結果を返します。</returns>
+    /// <param name="x">判定する点の X 座標。</param>
+    /// <param name="y">判定する点の Y 座標。</param>
+    /// <returns>座標が矩形の境界上または内部にある場合は <see langword="true"/>、それ以外は <see langword="false"/>。</returns>
     public bool Contains(double x, double y) => x >= X && x <= Right && y >= Y && y <= Bottom;
 }

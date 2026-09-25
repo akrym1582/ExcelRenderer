@@ -11,12 +11,12 @@ using Xunit;
 namespace ExcelRenderer.Tests;
 
 /// <summary>
-/// LayoutPassTests が表すデータと操作を提供します.
+/// Excel の読み取りからページ分割と描画命令生成までのレイアウト処理を検証します。
 /// </summary>
 public sealed class LayoutPassTests
 {
     /// <summary>
-    /// ColumnLayoutPass_assigns_cumulative_positions を実行します.
+    /// 各列の X 座標が先行列の幅を累積した位置に設定されることを検証します。
     /// </summary>
     [Fact]
     public void ColumnLayoutPass_assigns_cumulative_positions()
@@ -36,7 +36,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// CellBoundsPass_uses_merged_cell_span を実行します.
+    /// 結合セルの境界が結合対象の全行列にまたがる寸法となることを検証します。
     /// </summary>
     [Fact]
     public void CellBoundsPass_uses_merged_cell_span()
@@ -58,7 +58,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// PaginationPass_splits_wide_sheets_at_column_boundaries を実行します.
+    /// 横幅がページを超えるシートが列境界で分割されることを検証します。
     /// </summary>
     [Fact]
     public void PaginationPass_splits_wide_sheets_at_column_boundaries()
@@ -86,7 +86,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// PaginationPass_applies_print_scale_to_content_and_pagination を実行します.
+    /// 印刷倍率がページ分割とページ内コンテンツの寸法の両方に適用されることを検証します。
     /// </summary>
     [Fact]
     public void PaginationPass_applies_print_scale_to_content_and_pagination()
@@ -116,7 +116,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// PaginationPass_fits_content_to_requested_page_count を実行します.
+    /// 指定した横・縦ページ数に収まる倍率が計算されることを検証します。
     /// </summary>
     [Fact]
     public void PaginationPass_fits_content_to_requested_page_count()
@@ -156,7 +156,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// PaginationPass_keeps_merged_cells_on_one_page を実行します.
+    /// 結合セルが改ページ位置で分断されず同じページに配置されることを検証します。
     /// </summary>
     [Fact]
     public void PaginationPass_keeps_merged_cells_on_one_page()
@@ -184,7 +184,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// PaginationPass_does_not_split_rows を実行します.
+    /// 行の途中では改ページされず、行全体がいずれかのページに配置されることを検証します。
     /// </summary>
     [Fact]
     public void PaginationPass_does_not_split_rows()
@@ -212,7 +212,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// PaginationPass_repeats_title_rows_and_columns_on_each_page を実行します.
+    /// 印刷タイトルに指定した行と列が各ページで繰り返されることを検証します。
     /// </summary>
     [Fact]
     public void PaginationPass_repeats_title_rows_and_columns_on_each_page()
@@ -248,7 +248,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// PaginationPass_accounts_for_repeated_titles_when_fitting_page_counts を実行します.
+    /// ページ数に合わせる倍率計算で繰り返し印刷するタイトル領域が考慮されることを検証します。
     /// </summary>
     [Fact]
     public void PaginationPass_accounts_for_repeated_titles_when_fitting_page_counts()
@@ -298,7 +298,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// PaginationPass_positions_images_from_their_anchor_cell を実行します.
+    /// 画像がアンカーセルを基準としたページ内座標へ配置されることを検証します。
     /// </summary>
     [Fact]
     public void PaginationPass_positions_images_from_their_anchor_cell()
@@ -323,7 +323,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// ExcelReader_reads_worksheet_images を実行します.
+    /// ワークシートに埋め込まれた画像のデータ、位置および寸法が読み取られることを検証します。
     /// </summary>
     [Fact]
     public void ExcelReader_reads_worksheet_images()
@@ -357,7 +357,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// ExcelReader_reads_worksheet_header_and_footer を実行します.
+    /// ワークシートのヘッダーとフッターの各セクションが読み取られることを検証します。
     /// </summary>
     [Fact]
     public void ExcelReader_reads_worksheet_header_and_footer()
@@ -390,7 +390,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// ExcelReader_regular_header_and_footer_are_rendered_on_every_page を実行します.
+    /// 通常ヘッダーとフッターが分割後のすべてのページに描画されることを検証します。
     /// </summary>
     [Fact]
     public void ExcelReader_regular_header_and_footer_are_rendered_on_every_page()
@@ -430,7 +430,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// ExcelReader_reads_print_settings_and_converts_column_widths を実行します.
+    /// 印刷設定が読み取られ、Excel の列幅が描画用の幅へ変換されることを検証します。
     /// </summary>
     [Fact]
     public void ExcelReader_reads_print_settings_and_converts_column_widths()
@@ -463,7 +463,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// ExcelReader_reads_percentage_print_scale を実行します.
+    /// パーセント指定の印刷倍率がワークシートから読み取られることを検証します。
     /// </summary>
     [Fact]
     public void ExcelReader_reads_percentage_print_scale()
@@ -492,7 +492,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// ExcelReader_reads_print_title_rows_and_columns を実行します.
+    /// 繰り返し印刷するタイトル行とタイトル列の範囲が読み取られることを検証します。
     /// </summary>
     [Fact]
     public void ExcelReader_reads_print_title_rows_and_columns()
@@ -521,7 +521,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// ExcelReader_reads_fit_to_pages_print_scale を実行します.
+    /// 指定ページ数に合わせる印刷設定が読み取られることを検証します。
     /// </summary>
     [Fact]
     public void ExcelReader_reads_fit_to_pages_print_scale()
@@ -550,7 +550,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// ExcelReader_normalizes_empty_merged_cells_to_the_top_left_cell を実行します.
+    /// 空の結合セル範囲が左上セルを基準とする一つのセルへ正規化されることを検証します。
     /// </summary>
     [Fact]
     public void ExcelReader_normalizes_empty_merged_cells_to_the_top_left_cell()
@@ -579,7 +579,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// PaginationPass_adds_header_and_footer_texts_with_resolved_fields を実行します.
+    /// ページ番号などのフィールドを解決したヘッダー・フッターテキストがページに追加されることを検証します。
     /// </summary>
     [Fact]
     public void PaginationPass_adds_header_and_footer_texts_with_resolved_fields()
@@ -609,7 +609,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// PaginationPass_uses_first_and_even_page_headers を実行します.
+    /// 先頭ページ用と偶数ページ用のヘッダーが該当ページで選択されることを検証します。
     /// </summary>
     [Fact]
     public void PaginationPass_uses_first_and_even_page_headers()
@@ -637,7 +637,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// PaginationPass_renders_header_and_footer_without_cells を実行します.
+    /// セルがないシートでもヘッダーとフッターだけのページが生成されることを検証します。
     /// </summary>
     [Fact]
     public void PaginationPass_renders_header_and_footer_without_cells()
@@ -653,7 +653,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// DrawCommandGenerator_orders_fill_before_border_before_text を実行します.
+    /// セルの塗りつぶし、罫線、テキストの順に描画命令が生成されることを検証します。
     /// </summary>
     [Fact]
     public void DrawCommandGenerator_orders_fill_before_border_before_text()
@@ -678,7 +678,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// DrawCommandGenerator_insets_cell_text_from_borders を実行します.
+    /// セルテキストの描画領域が罫線から内側へ余白を取ることを検証します。
     /// </summary>
     [Fact]
     public void DrawCommandGenerator_insets_cell_text_from_borders()
@@ -694,7 +694,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// DrawCommandGenerator_adds_images_after_cell_content を実行します.
+    /// 画像の描画命令がセル内容の描画命令より後に追加されることを検証します。
     /// </summary>
     [Fact]
     public void DrawCommandGenerator_adds_images_after_cell_content()
@@ -716,7 +716,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// PdfSharpRenderer_writes_a_pdf_document を実行します.
+    /// 描画文書が有効な PDF データとしてストリームへ書き込まれることを検証します。
     /// </summary>
     [Fact]
     public void PdfSharpRenderer_writes_a_pdf_document()
@@ -730,7 +730,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// PdfSharpRenderer_renders_an_image を実行します.
+    /// 埋め込み画像が PDF ページへ描画されることを検証します。
     /// </summary>
     [Fact]
     public void PdfSharpRenderer_renders_an_image()
@@ -745,7 +745,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// DrawCommandGenerator_preserves_wrapped_text_style を実行します.
+    /// 折り返し指定がテキスト描画命令のスタイルに保持されることを検証します。
     /// </summary>
     [Fact]
     public void DrawCommandGenerator_preserves_wrapped_text_style()
@@ -761,7 +761,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// DrawCommandGenerator_preserves_shrink_to_fit_style を実行します.
+    /// 縮小表示指定がテキスト描画命令のスタイルに保持されることを検証します。
     /// </summary>
     [Fact]
     public void DrawCommandGenerator_preserves_shrink_to_fit_style()
@@ -777,7 +777,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// PdfSharpFontResolver_returns_the_configured_font_file を実行します.
+    /// 登録したフォントファミリに対して設定済みフォントファイルのバイト列が返されることを検証します。
     /// </summary>
     [Fact]
     public void PdfSharpFontResolver_returns_the_configured_font_file()
@@ -809,7 +809,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// ResolvePrintAreaPass_expands_range_to_cover_merged_cell_spans を実行します.
+    /// 印刷範囲が結合セルの終端まで拡張されることを検証します。
     /// </summary>
     [Fact]
     public void ResolvePrintAreaPass_expands_range_to_cover_merged_cell_spans()
@@ -828,7 +828,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// ReportLayoutEngine_renders_an_image_only_sheet を実行します.
+    /// セルがなく画像だけのシートから描画ページが生成されることを検証します。
     /// </summary>
     [Fact]
     public void ReportLayoutEngine_renders_an_image_only_sheet()
@@ -851,7 +851,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// ResolvePrintAreaPass_expands_range_to_cover_an_image_outside_cells を実行します.
+    /// セル範囲外にある画像を含むよう印刷範囲が拡張されることを検証します。
     /// </summary>
     [Fact]
     public void ResolvePrintAreaPass_expands_range_to_cover_an_image_outside_cells()
@@ -868,7 +868,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// ResolvePrintAreaPass_uses_shape_anchors_for_shape_only_sheets を実行します.
+    /// 図形だけのシートで図形アンカーから印刷範囲が決定されることを検証します。
     /// </summary>
     [Fact]
     public void ResolvePrintAreaPass_uses_shape_anchors_for_shape_only_sheets()
@@ -896,7 +896,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// ReportLayoutEngine_renders_cells_and_images を実行します.
+    /// セルと画像を含むシートから両方の描画命令が生成されることを検証します。
     /// </summary>
     [Fact]
     public void ReportLayoutEngine_renders_cells_and_images()
@@ -918,7 +918,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// ExcelReader_reads_column_and_row_definitions_for_merged_range_extents を実行します.
+    /// 結合範囲の末端まで列定義と行定義が読み取られることを検証します。
     /// </summary>
     [Fact]
     public void ExcelReader_reads_column_and_row_definitions_for_merged_range_extents()

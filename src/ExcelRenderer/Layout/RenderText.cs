@@ -4,6 +4,6 @@ using ExcelRenderer.Model;
 namespace ExcelRenderer.Layout;
 
 /// <summary>
-/// RenderText が表すデータと操作を提供します.
+/// ページ上に配置する文字列、その描画矩形、およびセルスタイルを表します。
 /// </summary>
 public sealed record RenderText(ReportRect Bounds, string Text, CellStyle Style);

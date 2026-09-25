@@ -16,7 +16,11 @@ public sealed class ResolvePrintAreaPass : IReportLayoutPass
             .Concat((sheet.Images ?? []).Select(image => image.Anchor))
             .Concat((sheet.Shapes ?? []).Select(shape => shape.Anchor))
             .ToArray();
-        if (addresses.Length == 0) return null;
+        if (addresses.Length == 0)
+        {
+            return null;
+        }
+
         var lastRows = sheet.Cells
             .Select(cell => cell.Key.Row + cell.Value.RowSpan - 1)
             .Concat((sheet.Images ?? []).Select(image => image.Anchor.Row));

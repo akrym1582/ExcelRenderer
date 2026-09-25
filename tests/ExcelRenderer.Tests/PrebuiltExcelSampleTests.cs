@@ -71,12 +71,14 @@ public sealed class PrebuiltExcelSampleTests
         Assert.True(textDecoration.Sheet.Cells[new(3, 1)].Style.Font.Bold);
         Assert.NotNull(borders.Sheet.Cells[new(3, 4)].Style.Border);
         Assert.Equal(4, pagination.Layout.Pages.Count);
-        Assert.DoesNotContain(pagination.Commands.OfType<DrawTextCommand>(),
+        Assert.DoesNotContain(
+            pagination.Commands.OfType<DrawTextCommand>(),
             command => command.Text.Contains("印刷範囲外", StringComparison.Ordinal));
         Assert.Contains(pagination.Commands.OfType<DrawTextCommand>(), command => command.Text == "ページ 4 / 4");
         Assert.Equal(0.75, printScaling.Sheet.PageSettings.Scale);
         Assert.Single(printScaling.Layout.Pages);
-        Assert.Contains(printScaling.Commands.OfType<DrawTextCommand>(),
+        Assert.Contains(
+            printScaling.Commands.OfType<DrawTextCommand>(),
             command => command.Text == "75% 縮小 / ページ 1 / 1");
     }
 }

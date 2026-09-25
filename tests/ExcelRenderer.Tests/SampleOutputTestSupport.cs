@@ -1,9 +1,9 @@
-using PdfSharp.Fonts;
 using ExcelRenderer.Drawing;
 using ExcelRenderer.Excel;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Model;
 using ExcelRenderer.PdfSharp;
+using PdfSharp.Fonts;
 using Xunit;
 
 namespace ExcelRenderer.Tests;
@@ -22,7 +22,7 @@ internal static class SampleOutputTestSupport
         "05-borders.xlsx",
         "06-layout-and-pagination.xlsx",
         "08-print-scaling.xlsx",
-        "09-cell-border.xlsx"
+        "09-cell-border.xlsx",
     };
 
     internal static SampleOutput ReadAndLayout(string excelFileName)

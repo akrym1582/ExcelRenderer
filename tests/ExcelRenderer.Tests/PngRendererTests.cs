@@ -34,7 +34,7 @@ public sealed class PngRendererTests
             new FillRectangleCommand(1, new ReportRect(0, 0, 72, 36), new ReportColor(255, 0, 0)),
             new DrawBorderCommand(1, new ReportRect(5, 5, 40, 20), new BorderStyle(new BorderSide(1))),
             new DrawLineCommand(1, 0, 20, 72, 20, new BorderSide(1, new ReportColor(0, 0, 255))),
-            new DrawTextCommand(1, new ReportRect(5, 5, 60, 20), "PNG", CellStyle.Default)
+            new DrawTextCommand(1, new ReportRect(5, 5, 60, 20), "PNG", CellStyle.Default),
         };
         using var output = new MemoryStream();
 
@@ -55,7 +55,7 @@ public sealed class PngRendererTests
         var commands = new DrawCommand[]
         {
             new FillRectangleCommand(2, new ReportRect(0, 0, 10, 10), new ReportColor(0, 255, 0)),
-            new FillRectangleCommand(1, new ReportRect(0, 0, 10, 10), new ReportColor(255, 0, 0))
+            new FillRectangleCommand(1, new ReportRect(0, 0, 10, 10), new ReportColor(255, 0, 0)),
         };
         var outputs = new Dictionary<int, MemoryStream>();
 
@@ -120,7 +120,9 @@ public sealed class PngRendererTests
         protected override void Dispose(bool disposing)
         {
             if (disposing)
+            {
                 CapturedBytes = ToArray();
+            }
 
             base.Dispose(disposing);
         }

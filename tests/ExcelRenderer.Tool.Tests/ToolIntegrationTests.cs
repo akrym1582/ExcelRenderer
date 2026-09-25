@@ -7,7 +7,8 @@ namespace ExcelRenderer.Tool.Tests;
 public sealed class ToolIntegrationTests : IDisposable
 {
     private readonly string _directory = Path.Combine(Path.GetTempPath(), "ExcelRenderer.Tool.Tests", Guid.NewGuid().ToString("N"));
-    private string Input => Path.Combine(AppContext.BaseDirectory, "SampleInputs", "sample.xlsx");
+
+    private static string Input => Path.Combine(AppContext.BaseDirectory, "SampleInputs", "sample.xlsx");
 
     [Fact]
     public async Task Pdf_command_creates_a_pdf()
@@ -65,7 +66,11 @@ public sealed class ToolIntegrationTests : IDisposable
         var tool = ResolveToolAssemblyPath(root);
         var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true };
         start.ArgumentList.Add(tool);
-        foreach (var argument in arguments) start.ArgumentList.Add(argument);
+        foreach (var argument in arguments)
+        {
+            start.ArgumentList.Add(argument);
+        }
+
         using var process = Process.Start(start)!;
         var output = process.StandardOutput.ReadToEndAsync();
         var error = process.StandardError.ReadToEndAsync();
@@ -76,10 +81,16 @@ public sealed class ToolIntegrationTests : IDisposable
     private static string ResolveToolAssemblyPath(string repositoryRoot)
     {
         var debug = Path.Combine(repositoryRoot, "src", "ExcelRenderer.Tool", "bin", "Debug", "net10.0", "ExcelRenderer.Tool.dll");
-        if (File.Exists(debug)) return debug;
+        if (File.Exists(debug))
+        {
+            return debug;
+        }
 
         var release = Path.Combine(repositoryRoot, "src", "ExcelRenderer.Tool", "bin", "Release", "net10.0", "ExcelRenderer.Tool.dll");
-        if (File.Exists(release)) return release;
+        if (File.Exists(release))
+        {
+            return release;
+        }
 
         throw new FileNotFoundException(
             $"Tool assembly not found. Checked both Debug and Release outputs:{Environment.NewLine}{debug}{Environment.NewLine}{release}");
@@ -88,11 +99,23 @@ public sealed class ToolIntegrationTests : IDisposable
     private static string FindRepositoryRoot()
     {
         for (var directory = new DirectoryInfo(AppContext.BaseDirectory); directory is not null; directory = directory.Parent)
-            if (File.Exists(Path.Combine(directory.FullName, "ExcelRenderer.slnx"))) return directory.FullName;
+        {
+            if (File.Exists(Path.Combine(directory.FullName, "ExcelRenderer.slnx")))
+            {
+                return directory.FullName;
+            }
+        }
+
         throw new InvalidOperationException("Repository root was not found.");
     }
 
     private static void AssertSuccess(Result result) => Assert.True(result.ExitCode == 0, result.Output + result.Error);
-    public void Dispose() { if (Directory.Exists(_directory)) Directory.Delete(_directory, true); }
+
+    public void Dispose() { if (Directory.Exists(_directory))
+        {
+            Directory.Delete(_directory, true);
+        }
+    }
+
     private sealed record Result(int ExitCode, string Output, string Error);
 }

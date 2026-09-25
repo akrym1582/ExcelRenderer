@@ -13,7 +13,7 @@ public sealed class MarkdownExporterTests
         {
             [new(1, 1)] = new("申請書", CellStyle.Default, ColumnSpan: 2),
             [new(3, 1)] = new("氏名", CellStyle.Default),
-            [new(3, 2)] = new("山田 太郎", CellStyle.Default, Formula: "=A1")
+            [new(3, 2)] = new("山田 太郎", CellStyle.Default, Formula: "=A1"),
         };
         var image = new ReportImage(new(3, 2), 0, 0, 180, 64,
             new byte[] { 0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a });
@@ -37,7 +37,10 @@ public sealed class MarkdownExporterTests
         }
         finally
         {
-            if (Directory.Exists(directory)) Directory.Delete(directory, true);
+            if (Directory.Exists(directory))
+            {
+                Directory.Delete(directory, true);
+            }
         }
     }
 
@@ -48,7 +51,7 @@ public sealed class MarkdownExporterTests
         var cells = new[]
         {
             new VisualCell(new(new(1, 1), new(1, 1)), "left", 0, 0, 40, 10, style),
-            new VisualCell(new(new(1, 3), new(1, 3)), "right", 100, 0, 40, 10, style)
+            new VisualCell(new(new(1, 3), new(1, 3)), "right", 100, 0, 40, 10, style),
         };
 
         var layout = new LayoutSegmenter().Segment(cells);
@@ -64,7 +67,7 @@ public sealed class MarkdownExporterTests
         var cells = new Dictionary<CellAddress, ReportCell>
         {
             [new(1, 1)] = new("first", CellStyle.Default),
-            [new(100_000, 1)] = new("last", CellStyle.Default)
+            [new(100_000, 1)] = new("last", CellStyle.Default),
         };
         var rows = Enumerable.Range(1, 100_000)
             .ToDictionary(row => row, _ => new RowDefinition(2));
@@ -84,7 +87,7 @@ public sealed class MarkdownExporterTests
         var cells = new Dictionary<CellAddress, ReportCell>
         {
             [new(1, 1)] = new("A", CellStyle.Default),
-            [new(1, 3)] = new("C-D", CellStyle.Default, ColumnSpan: 2)
+            [new(1, 3)] = new("C-D", CellStyle.Default, ColumnSpan: 2),
         };
         var sheet = new ReportSheet("Sheet", cells,
             Enumerable.Range(1, 4).ToDictionary(column => column, _ => new ColumnDefinition(10)),
@@ -97,12 +100,16 @@ public sealed class MarkdownExporterTests
                 documentName: "gaps.xlsx");
 
             var markdown = await File.ReadAllTextAsync(Path.Combine(directory, "gaps.md"));
-            Assert.Contains("<td>A</td>\n  <td></td>\n  <td colspan=\"2\">C-D</td>",
+            Assert.Contains(
+                "<td>A</td>\n  <td></td>\n  <td colspan=\"2\">C-D</td>",
                 markdown.Replace("\r\n", "\n"));
         }
         finally
         {
-            if (Directory.Exists(directory)) Directory.Delete(directory, true);
+            if (Directory.Exists(directory))
+            {
+                Directory.Delete(directory, true);
+            }
         }
     }
 }

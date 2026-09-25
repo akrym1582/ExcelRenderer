@@ -5,7 +5,9 @@ namespace ExcelRenderer.Markdown;
 public readonly record struct LayoutRect(double X, double Y, double Width, double Height)
 {
     public double Right => X + Width;
+
     public double Bottom => Y + Height;
+
     public bool Contains(double x, double y) => x >= X && x <= Right && y >= Y && y <= Bottom;
 }
 
@@ -25,27 +27,39 @@ public sealed class VisualCellBuilder
         {
             var address = entry.Key;
             var cell = entry.Value;
-            if (IsHidden(sheet, address, cell)) continue;
-            var range = new CellRange(address,
+            if (IsHidden(sheet, address, cell))
+            {
+                continue;
+            }
+
+            var range = new CellRange(
+                address,
                 new(address.Row + cell.RowSpan - 1, address.Column + cell.ColumnSpan - 1));
             result.Add(new(range, cell.Text, metrics.OffsetX(address.Column), metrics.OffsetY(address.Row),
                 metrics.Width(range), metrics.Height(range), cell.Style, cell.Formula));
         }
+
         return result;
     }
 
     internal static double OffsetX(ReportSheet sheet, int column) =>
         Enumerable.Range(1, Math.Max(0, column - 1)).Sum(c => ColumnWidth(sheet, c));
+
     internal static double OffsetY(ReportSheet sheet, int row) =>
         Enumerable.Range(1, Math.Max(0, row - 1)).Sum(r => RowHeight(sheet, r));
+
     private static double Width(ReportSheet s, CellRange r) =>
         Enumerable.Range(r.First.Column, r.Last.Column - r.First.Column + 1).Sum(c => ColumnWidth(s, c));
+
     private static double Height(ReportSheet s, CellRange r) =>
         Enumerable.Range(r.First.Row, r.Last.Row - r.First.Row + 1).Sum(x => RowHeight(s, x));
+
     private static double ColumnWidth(ReportSheet s, int c) =>
         s.Columns.TryGetValue(c, out var value) && !value.IsHidden ? value.Width : 0;
+
     private static double RowHeight(ReportSheet s, int r) =>
         s.Rows.TryGetValue(r, out var value) && !value.IsHidden ? value.Height : 0;
+
     private static bool IsHidden(ReportSheet s, CellAddress a, ReportCell cell) =>
         Enumerable.Range(a.Column, cell.ColumnSpan).All(c => s.Columns.TryGetValue(c, out var d) && d.IsHidden) ||
         Enumerable.Range(a.Row, cell.RowSpan).All(r => s.Rows.TryGetValue(r, out var d) && d.IsHidden);
@@ -66,9 +80,12 @@ public sealed class VisualCellBuilder
         }
 
         public double OffsetX(int column) => _columnOffsets[column - 1];
+
         public double OffsetY(int row) => _rowOffsets[row - 1];
+
         public double Width(CellRange range) =>
             _columnOffsets[range.Last.Column] - _columnOffsets[range.First.Column - 1];
+
         public double Height(CellRange range) =>
             _rowOffsets[range.Last.Row] - _rowOffsets[range.First.Row - 1];
 
@@ -76,7 +93,10 @@ public sealed class VisualCellBuilder
         {
             var offsets = new double[count + 1];
             for (var index = 1; index <= count; index++)
+            {
                 offsets[index] = offsets[index - 1] + size(index);
+            }
+
             return offsets;
         }
     }

@@ -13,7 +13,8 @@ public static class ExcelStyleConverter
         var horizontalAlignment = style.Alignment.Horizontal == XLAlignmentHorizontalValues.General
             ? ResolveGeneralAlignment(cell)
             : ToHorizontalAlignment(style.Alignment.Horizontal);
-        return new(new FontStyle(
+        return new(
+            new FontStyle(
             style.Font.FontName,
             style.Font.FontSize,
             style.Font.Bold,
@@ -58,7 +59,7 @@ public static class ExcelStyleConverter
         XLBorderStyleValues.Medium or XLBorderStyleValues.MediumDashed or
             XLBorderStyleValues.MediumDashDot or XLBorderStyleValues.MediumDashDotDot => 1,
         XLBorderStyleValues.Double => 0.75,
-        _ => 0.5
+        _ => 0.5,
     };
 
     private static BorderLineStyle ToLineStyle(XLBorderStyleValues style) => style switch
@@ -67,17 +68,21 @@ public static class ExcelStyleConverter
         XLBorderStyleValues.Dashed or XLBorderStyleValues.MediumDashed => BorderLineStyle.Dashed,
         XLBorderStyleValues.DashDot or XLBorderStyleValues.MediumDashDot => BorderLineStyle.DashDot,
         XLBorderStyleValues.DashDotDot or XLBorderStyleValues.MediumDashDotDot => BorderLineStyle.DashDotDot,
-        _ => BorderLineStyle.Solid
+        _ => BorderLineStyle.Solid,
     };
 
     private static ReportColor? ToColor(XLColor color, IXLTheme theme)
     {
         if (!color.HasValue)
+        {
             return null;
+        }
 
         // Indexed 64/65 represent automatic foreground/background colors.
         if (color.ColorType == XLColorType.Indexed && color.Indexed >= 64)
+        {
             return color.Indexed == 65 ? new(255, 255, 255) : new(0, 0, 0);
+        }
 
         var resolvedColor = color.ColorType == XLColorType.Theme
             ? theme.ResolveThemeColor(color.ThemeColor).Color
@@ -91,7 +96,9 @@ public static class ExcelStyleConverter
     private static (byte Red, byte Green, byte Blue) ApplyTint(byte red, byte green, byte blue, double tint)
     {
         if (tint == 0)
+        {
             return (red, green, blue);
+        }
 
         var normalizedRed = red / 255d;
         var normalizedGreen = green / 255d;
@@ -110,16 +117,16 @@ public static class ExcelStyleConverter
                 : difference / (maximum + minimum);
 
             hue = maximum == normalizedRed
-                ? (normalizedGreen - normalizedBlue) / difference + (normalizedGreen < normalizedBlue ? 6 : 0)
+                ? ((normalizedGreen - normalizedBlue) / difference) + (normalizedGreen < normalizedBlue ? 6 : 0)
                 : maximum == normalizedGreen
-                    ? (normalizedBlue - normalizedRed) / difference + 2
-                    : (normalizedRed - normalizedGreen) / difference + 4;
+                    ? ((normalizedBlue - normalizedRed) / difference) + 2
+                    : ((normalizedRed - normalizedGreen) / difference) + 4;
             hue /= 6;
         }
 
         luminance = tint < 0
             ? luminance * (1 + tint)
-            : luminance * (1 - tint) + tint;
+            : (luminance * (1 - tint)) + tint;
         luminance = Math.Max(0, Math.Min(1, luminance));
 
         if (saturation == 0)
@@ -130,21 +137,41 @@ public static class ExcelStyleConverter
 
         var second = luminance < 0.5
             ? luminance * (1 + saturation)
-            : luminance + saturation - luminance * saturation;
-        var first = 2 * luminance - second;
+            : luminance + saturation - (luminance * saturation);
+        var first = (2 * luminance) - second;
         return (
-            ToByte(HueToRgb(first, second, hue + 1d / 3)),
+            ToByte(HueToRgb(first, second, hue + (1d / 3))),
             ToByte(HueToRgb(first, second, hue)),
-            ToByte(HueToRgb(first, second, hue - 1d / 3)));
+            ToByte(HueToRgb(first, second, hue - (1d / 3))));
     }
 
     private static double HueToRgb(double first, double second, double hue)
     {
-        if (hue < 0) hue += 1;
-        if (hue > 1) hue -= 1;
-        if (hue < 1d / 6) return first + (second - first) * 6 * hue;
-        if (hue < 1d / 2) return second;
-        if (hue < 2d / 3) return first + (second - first) * (2d / 3 - hue) * 6;
+        if (hue < 0)
+        {
+            hue += 1;
+        }
+
+        if (hue > 1)
+        {
+            hue -= 1;
+        }
+
+        if (hue < 1d / 6)
+        {
+            return first + ((second - first) * 6 * hue);
+        }
+
+        if (hue < 1d / 2)
+        {
+            return second;
+        }
+
+        if (hue < 2d / 3)
+        {
+            return first + ((second - first) * ((2d / 3) - hue) * 6);
+        }
+
         return first;
     }
 
@@ -156,13 +183,13 @@ public static class ExcelStyleConverter
         XLAlignmentHorizontalValues.Center or XLAlignmentHorizontalValues.CenterContinuous or
             XLAlignmentHorizontalValues.Distributed => HorizontalAlignment.Center,
         XLAlignmentHorizontalValues.Right => HorizontalAlignment.Right,
-        _ => HorizontalAlignment.Left
+        _ => HorizontalAlignment.Left,
     };
 
     private static VerticalAlignment ToVerticalAlignment(XLAlignmentVerticalValues value) => value switch
     {
         XLAlignmentVerticalValues.Center or XLAlignmentVerticalValues.Distributed => VerticalAlignment.Center,
         XLAlignmentVerticalValues.Bottom => VerticalAlignment.Bottom,
-        _ => VerticalAlignment.Top
+        _ => VerticalAlignment.Top,
     };
 }

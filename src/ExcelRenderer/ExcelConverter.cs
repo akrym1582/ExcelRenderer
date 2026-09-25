@@ -8,9 +8,9 @@ using ExcelRenderer.Markdown;
 using ExcelRenderer.Model;
 using ExcelRenderer.PdfSharp;
 using ExcelRenderer.SkiaSharp;
+using PdfSharp.Fonts;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
-using PdfSharp.Fonts;
 
 namespace ExcelRenderer;
 
@@ -27,7 +27,8 @@ public static class ExcelConverter
         var sheets = SelectSheets(new ExcelReader().Read(inputPath), options.SheetName);
         EnsureParentDirectory(outputPath);
 
-        await Task.Run(() =>
+        await Task.Run(
+            () =>
         {
             using var result = new PdfDocument();
             foreach (var sheet in sheets)
@@ -37,8 +38,12 @@ public static class ExcelConverter
                 new PdfSharpRenderer().Render(CreateCommands(sheet), sheet.PageSettings, rendered);
                 rendered.Position = 0;
                 using var source = PdfReader.Open(rendered, PdfDocumentOpenMode.Import);
-                foreach (var page in source.Pages) result.AddPage(page);
+                foreach (var page in source.Pages)
+                {
+                    result.AddPage(page);
+                }
             }
+
             using var output = File.Create(outputPath);
             result.Save(output, false);
         }, cancellationToken).ConfigureAwait(false);
@@ -49,18 +54,28 @@ public static class ExcelConverter
     {
         ValidateInput(inputPath);
         if (string.IsNullOrWhiteSpace(outputDirectory))
+        {
             throw new ArgumentException("An output directory is required.", nameof(outputDirectory));
+        }
+
         options ??= new ImageExportOptions();
         if (options.Dpi <= 0)
+        {
             throw new ArgumentOutOfRangeException(nameof(ImageExportOptions.Dpi), options.Dpi,
                 "DPI must be greater than zero.");
+        }
+
         cancellationToken.ThrowIfCancellationRequested();
         var sheets = SelectSheets(new ExcelReader().Read(inputPath), options.SheetName);
         if (Directory.Exists(outputDirectory) && Directory.EnumerateFileSystemEntries(outputDirectory).Any())
+        {
             throw new IOException($"Output directory is not empty: {outputDirectory}");
+        }
+
         Directory.CreateDirectory(outputDirectory);
 
-        await Task.Run(() =>
+        await Task.Run(
+            () =>
         {
             foreach (var sheet in sheets)
             {
@@ -80,7 +95,10 @@ public static class ExcelConverter
         options ??= new MarkdownExportOptions();
         if (string.IsNullOrWhiteSpace(options.ImageDirectoryName) || Path.IsPathRooted(options.ImageDirectoryName) ||
             options.ImageDirectoryName.Split(new[] { '/', '\\' }).Any(part => part == ".."))
+        {
             throw new ArgumentException("The image directory must be a relative path below the Markdown output directory.", nameof(options));
+        }
+
         cancellationToken.ThrowIfCancellationRequested();
         var document = new ExcelReader().Read(inputPath);
         var selected = new ReportDocument(SelectSheets(document, options.SheetName));
@@ -98,7 +116,11 @@ public static class ExcelConverter
 
     private static ReportSheet[] SelectSheets(ReportDocument document, string? sheetName)
     {
-        if (sheetName is null) return document.Sheets.ToArray();
+        if (sheetName is null)
+        {
+            return document.Sheets.ToArray();
+        }
+
         var sheet = document.Sheets.FirstOrDefault(x => string.Equals(x.Name, sheetName, StringComparison.Ordinal));
         return sheet is null
             ? throw new ArgumentException($"Worksheet was not found: {sheetName}", nameof(sheetName))
@@ -107,20 +129,37 @@ public static class ExcelConverter
 
     private static void ValidateInput(string path)
     {
-        if (string.IsNullOrWhiteSpace(path)) throw new ArgumentException("An input path is required.", nameof(path));
-        if (!File.Exists(path)) throw new FileNotFoundException($"Excel file was not found: {path}", path);
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            throw new ArgumentException("An input path is required.", nameof(path));
+        }
+
+        if (!File.Exists(path))
+        {
+            throw new FileNotFoundException($"Excel file was not found: {path}", path);
+        }
     }
 
     private static void ValidateNewFile(string path)
     {
-        if (string.IsNullOrWhiteSpace(path)) throw new ArgumentException("An output path is required.", nameof(path));
-        if (File.Exists(path)) throw new IOException($"Output file already exists: {path}");
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            throw new ArgumentException("An output path is required.", nameof(path));
+        }
+
+        if (File.Exists(path))
+        {
+            throw new IOException($"Output file already exists: {path}");
+        }
     }
 
     private static void EnsureParentDirectory(string path)
     {
         var directory = Path.GetDirectoryName(Path.GetFullPath(path));
-        if (directory is not null) Directory.CreateDirectory(directory);
+        if (directory is not null)
+        {
+            Directory.CreateDirectory(directory);
+        }
     }
 
     private static string SanitizeFileName(string value)
@@ -139,5 +178,6 @@ public sealed record PdfExportOptions
 public sealed record ImageExportOptions
 {
     public string? SheetName { get; init; }
+
     public int Dpi { get; init; } = 144;
 }

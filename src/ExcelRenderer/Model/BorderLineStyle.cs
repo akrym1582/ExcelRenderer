@@ -6,5 +6,5 @@ public enum BorderLineStyle
     Dotted,
     Dashed,
     DashDot,
-    DashDotDot
+    DashDotDot,
 }

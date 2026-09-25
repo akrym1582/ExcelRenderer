@@ -1,6 +1,13 @@
 namespace ExcelRenderer.Model;
 
-public enum ShapeKind { Rectangle, RoundedRectangle, Ellipse, WedgeRectangleCallout, WedgeRoundedRectangleCallout }
+public enum ShapeKind
+{
+    Rectangle,
+    RoundedRectangle,
+    Ellipse,
+    WedgeRectangleCallout,
+    WedgeRoundedRectangleCallout,
+}
 
 public sealed record ShapeStyle(ReportColor? FillColor, ReportColor? LineColor, double LineWidth = 1);
 

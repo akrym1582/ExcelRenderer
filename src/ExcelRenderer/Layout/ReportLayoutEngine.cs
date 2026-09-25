@@ -24,7 +24,10 @@ public sealed class ReportLayoutEngine
     {
         var context = new ReportLayoutContext(sheet, TextMeasurer);
         foreach (var pass in passes)
+        {
             pass.Execute(context);
+        }
+
         return context.RenderDocument ?? new RenderDocument([]);
     }
 }

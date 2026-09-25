@@ -10,7 +10,11 @@ public sealed class CellBoundsPass : IReportLayoutPass
         foreach (var (address, cell) in context.Sheet.Cells)
         {
             if (!context.ColumnLayouts.TryGetValue(address.Column, out var column) ||
-                !context.RowLayouts.TryGetValue(address.Row, out var row)) continue;
+                !context.RowLayouts.TryGetValue(address.Row, out var row))
+            {
+                continue;
+            }
+
             var width = Enumerable.Range(address.Column, cell.ColumnSpan)
                 .Where(context.ColumnLayouts.ContainsKey).Sum(x => context.ColumnLayouts[x].Width);
             var height = Enumerable.Range(address.Row, cell.RowSpan)
@@ -26,7 +30,7 @@ public sealed class CellBoundsPass : IReportLayoutPass
                         var borderColumn = context.ColumnLayouts[border.Address.Column];
                         var borderRow = context.RowLayouts[border.Address.Row];
                         return new RenderBorder(new(borderColumn.X, borderRow.Y, borderColumn.Width, borderRow.Height), border.Border);
-                    }).ToArray()
+                    }).ToArray(),
             };
         }
     }

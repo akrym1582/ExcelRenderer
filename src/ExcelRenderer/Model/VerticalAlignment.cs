@@ -1,3 +1,8 @@
 namespace ExcelRenderer.Model;
 
-public enum VerticalAlignment { Top, Center, Bottom }
+public enum VerticalAlignment
+{
+    Top,
+    Center,
+    Bottom,
+}

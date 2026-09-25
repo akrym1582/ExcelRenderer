@@ -6,7 +6,7 @@ internal static class CommandSupport
 {
     internal static Argument<string> InputArgument() => new("input")
     {
-        Description = "Path to the input .xlsx file."
+        Description = "Path to the input .xlsx file.",
     };
 
     internal static Option<string> OutputOption(string description)

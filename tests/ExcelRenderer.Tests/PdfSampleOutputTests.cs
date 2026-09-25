@@ -14,7 +14,9 @@ public sealed class PdfSampleOutputTests
         var outputPath = SampleOutputTestSupport.OutputPath(excelFileName, ".pdf");
 
         using (var output = File.Create(outputPath))
+        {
             new PdfSharpRenderer().Render(sample.Commands, sample.Sheet.PageSettings, output);
+        }
 
         var bytes = File.ReadAllBytes(outputPath);
         Assert.True(bytes.Length > 0, $"PDF が出力されていません: {outputPath}");

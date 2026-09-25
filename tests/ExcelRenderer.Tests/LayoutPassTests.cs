@@ -17,7 +17,7 @@ public sealed class LayoutPassTests
     {
         var context = CreateContext(columns: new Dictionary<int, ColumnDefinition>
         {
-            [1] = new(80), [2] = new(120), [3] = new(60)
+            [1] = new(80), [2] = new(120), [3] = new(60),
         });
         context.PrintArea = new(new(1, 1), new(1, 3));
         new HiddenRowColumnPass().Execute(context);
@@ -55,7 +55,7 @@ public sealed class LayoutPassTests
             cells: new Dictionary<CellAddress, ReportCell>
             {
                 [new(1, 1)] = new("left", CellStyle.Default),
-                [new(1, 2)] = new("right", CellStyle.Default)
+                [new(1, 2)] = new("right", CellStyle.Default),
             },
             columns: new Dictionary<int, ColumnDefinition> { [1] = new(50), [2] = new(50) },
             pageSettings: new(70, 100, 10, 10, 10, 10));
@@ -80,7 +80,7 @@ public sealed class LayoutPassTests
             cells: new Dictionary<CellAddress, ReportCell>
             {
                 [new(1, 1)] = new("left", CellStyle.Default),
-                [new(1, 2)] = new("right", CellStyle.Default)
+                [new(1, 2)] = new("right", CellStyle.Default),
             },
             columns: new Dictionary<int, ColumnDefinition> { [1] = new(50), [2] = new(50) },
             pageSettings: new(70, 100, 10, 10, 10, 10, Scale: 0.5));
@@ -109,7 +109,7 @@ public sealed class LayoutPassTests
                 [new(1, 1)] = new("top left", CellStyle.Default),
                 [new(1, 2)] = new("top right", CellStyle.Default),
                 [new(2, 1)] = new("bottom left", CellStyle.Default),
-                [new(2, 2)] = new("bottom right", CellStyle.Default)
+                [new(2, 2)] = new("bottom right", CellStyle.Default),
             },
             columns: new Dictionary<int, ColumnDefinition> { [1] = new(50), [2] = new(50) },
             rows: new Dictionary<int, RowDefinition> { [1] = new(40), [2] = new(40) },
@@ -136,7 +136,7 @@ public sealed class LayoutPassTests
             cells: new Dictionary<CellAddress, ReportCell>
             {
                 [new(1, 1)] = new("merged", CellStyle.Default, 2),
-                [new(3, 1)] = new("next", CellStyle.Default)
+                [new(3, 1)] = new("next", CellStyle.Default),
             },
             rows: new Dictionary<int, RowDefinition> { [1] = new(30), [2] = new(30), [3] = new(30) },
             pageSettings: new(100, 80, 10, 10, 10, 10));
@@ -160,9 +160,10 @@ public sealed class LayoutPassTests
         var cells = new Dictionary<CellAddress, ReportCell>
         {
             [new(1, 1)] = new("one", CellStyle.Default),
-            [new(2, 1)] = new("two", CellStyle.Default)
+            [new(2, 1)] = new("two", CellStyle.Default),
         };
-        var context = CreateContext(cells: cells,
+        var context = CreateContext(
+            cells: cells,
             rows: new Dictionary<int, RowDefinition> { [1] = new(40), [2] = new(40) },
             pageSettings: new(100, 90, 10, 10, 10, 10));
         context.PrintArea = new(new(1, 1), new(2, 1));
@@ -183,9 +184,15 @@ public sealed class LayoutPassTests
     {
         var cells = new Dictionary<CellAddress, ReportCell>();
         for (var row = 1; row <= 3; row++)
-        for (var column = 1; column <= 3; column++)
-            cells[new(row, column)] = new($"{row},{column}", CellStyle.Default);
-        var context = CreateContext(cells: cells,
+        {
+            for (var column = 1; column <= 3; column++)
+            {
+                cells[new(row, column)] = new($"{row},{column}", CellStyle.Default);
+            }
+        }
+
+        var context = CreateContext(
+            cells: cells,
             columns: new Dictionary<int, ColumnDefinition> { [1] = new(20), [2] = new(40), [3] = new(40) },
             rows: new Dictionary<int, RowDefinition> { [1] = new(10), [2] = new(30), [3] = new(30) },
             pageSettings: new(80, 70, 10, 10, 10, 10, TitleRows: new(1, 1), TitleColumns: new(1, 1)));
@@ -216,8 +223,11 @@ public sealed class LayoutPassTests
             columns[index] = new(10);
             rows[index] = new(10);
             for (var column = 1; column <= 10; column++)
+            {
                 cells[new(index, column)] = new($"{index},{column}", CellStyle.Default);
+            }
         }
+
         var context = CreateContext(cells: cells, columns: columns, rows: rows,
             pageSettings: new(70, 70, 10, 10, 10, 10, Scale: null,
                 FitToPagesWide: 2, FitToPagesTall: 2,
@@ -343,7 +353,7 @@ public sealed class LayoutPassTests
 
             var sheet = new ExcelReader().Read(path).Sheets[0] with
             {
-                PageSettings = new(100, 70, 10, 10, 10, 10)
+                PageSettings = new(100, 70, 10, 10, 10, 10),
             };
             var pages = new ReportLayoutEngine(new FixedTextMeasurer()).Layout(sheet).Pages;
 
@@ -498,11 +508,11 @@ public sealed class LayoutPassTests
             cells: new Dictionary<CellAddress, ReportCell>
             {
                 [new(1, 1)] = new("one", CellStyle.Default),
-                [new(2, 1)] = new("two", CellStyle.Default)
+                [new(2, 1)] = new("two", CellStyle.Default),
             },
             rows: new Dictionary<int, RowDefinition> { [1] = new(40), [2] = new(40) },
             pageSettings: new(100, 90, 10, 10, 10, 10),
-            headerFooter: new(new("左 &A"), new("", "ページ &P / &N")));
+            headerFooter: new(new("左 &A"), new(string.Empty, "ページ &P / &N")));
         context.PrintArea = new(new(1, 1), new(2, 1));
         new HiddenRowColumnPass().Execute(context);
         new ColumnLayoutPass().Execute(context);
@@ -525,7 +535,7 @@ public sealed class LayoutPassTests
             cells: new Dictionary<CellAddress, ReportCell>
             {
                 [new(1, 1)] = new("one", CellStyle.Default),
-                [new(2, 1)] = new("two", CellStyle.Default)
+                [new(2, 1)] = new("two", CellStyle.Default),
             },
             rows: new Dictionary<int, RowDefinition> { [1] = new(40), [2] = new(40) },
             pageSettings: new(100, 90, 10, 10, 10, 10),
@@ -546,7 +556,8 @@ public sealed class LayoutPassTests
     [Fact]
     public void PaginationPass_renders_header_and_footer_without_cells()
     {
-        var context = CreateContext(cells: new Dictionary<CellAddress, ReportCell>(),
+        var context = CreateContext(
+            cells: new Dictionary<CellAddress, ReportCell>(),
             headerFooter: new(new("ヘッダー"), new("フッター")));
 
         new PaginationPass().Execute(context);
@@ -561,7 +572,7 @@ public sealed class LayoutPassTests
         var style = CellStyle.Default with
         {
             Background = new(1, 2, 3),
-            Border = new(new BorderSide())
+            Border = new(new BorderSide()),
         };
         var document = new RenderDocument(
         [
@@ -570,10 +581,24 @@ public sealed class LayoutPassTests
 
         var commands = new DrawCommandGeneratorPass().Generate(document);
 
-        Assert.Collection(commands,
+        Assert.Collection(
+            commands,
             command => Assert.IsType<FillRectangleCommand>(command),
             command => Assert.IsType<DrawBorderCommand>(command),
             command => Assert.IsType<DrawTextCommand>(command));
+    }
+
+    [Fact]
+    public void DrawCommandGenerator_insets_cell_text_from_borders()
+    {
+        var document = new RenderDocument(
+        [
+            new RenderPage(1, [new(new("text", CellStyle.Default), new(10, 20, 30, 40))])
+        ]);
+
+        var command = Assert.IsType<DrawTextCommand>(Assert.Single(new DrawCommandGeneratorPass().Generate(document)));
+
+        Assert.Equal(new ReportRect(10.5, 20.5, 29, 39), command.Bounds);
     }
 
     [Fact]
@@ -588,7 +613,7 @@ public sealed class LayoutPassTests
 
         var commands = new DrawCommandGeneratorPass().Generate(document);
 
-        var image = Assert.IsType<DrawImageCommand>(commands.Last());
+        var image = Assert.IsType<DrawImageCommand>(commands[commands.Count - 1]);
         Assert.Equal(new ReportRect(10, 20, 30, 40), image.Bounds);
         Assert.Equal(imageBytes, image.ImageBytes);
     }
@@ -620,7 +645,8 @@ public sealed class LayoutPassTests
     public void DrawCommandGenerator_preserves_wrapped_text_style()
     {
         var style = CellStyle.Default with { WrapText = true };
-        var document = new RenderDocument([new RenderPage(1,
+        var document = new RenderDocument([new RenderPage(
+            1,
             [new(new("長い文字列", style), new(0, 0, 10, 10))])]);
 
         var command = Assert.IsType<DrawTextCommand>(Assert.Single(new DrawCommandGeneratorPass().Generate(document)));
@@ -632,7 +658,8 @@ public sealed class LayoutPassTests
     public void DrawCommandGenerator_preserves_shrink_to_fit_style()
     {
         var style = CellStyle.Default with { ShrinkToFit = true };
-        var document = new RenderDocument([new RenderPage(1,
+        var document = new RenderDocument([new RenderPage(
+            1,
             [new(new("長い文字列", style), new(0, 0, 10, 10))])]);
 
         var command = Assert.IsType<DrawTextCommand>(Assert.Single(new DrawCommandGeneratorPass().Generate(document)));
@@ -675,7 +702,7 @@ public sealed class LayoutPassTests
         var context = CreateContext(
             cells: new Dictionary<CellAddress, ReportCell>
             {
-                [new(1, 1)] = new("merged", CellStyle.Default, RowSpan: 2, ColumnSpan: 3)
+                [new(1, 1)] = new("merged", CellStyle.Default, RowSpan: 2, ColumnSpan: 3),
             },
             columns: new Dictionary<int, ColumnDefinition> { [1] = new(50), [2] = new(60), [3] = new(70) },
             rows: new Dictionary<int, RowDefinition> { [1] = new(20), [2] = new(25) });
@@ -720,7 +747,8 @@ public sealed class LayoutPassTests
     {
         var shape = new ReportShape(new(4, 6), 0, 0, 20, 10, ShapeKind.Rectangle,
             new(new ReportColor(255, 0, 0), null, 0), null, 0, 0);
-        var context = CreateContext(cells: new Dictionary<CellAddress, ReportCell>(),
+        var context = CreateContext(
+            cells: new Dictionary<CellAddress, ReportCell>(),
             columns: new Dictionary<int, ColumnDefinition> { [6] = new(80) },
             rows: new Dictionary<int, RowDefinition> { [4] = new(20) }, shapes: [shape]);
 
@@ -733,7 +761,8 @@ public sealed class LayoutPassTests
     public void ReportLayoutEngine_renders_cells_and_images()
     {
         var imageBytes = CreateImageBytes();
-        var sheet = new ReportSheet("Sheet1",
+        var sheet = new ReportSheet(
+            "Sheet1",
             new Dictionary<CellAddress, ReportCell> { [new(1, 1)] = new("text", CellStyle.Default) },
             new Dictionary<int, ColumnDefinition> { [1] = new(80) },
             new Dictionary<int, RowDefinition> { [1] = new(20) }, [], new(),
@@ -778,7 +807,9 @@ public sealed class LayoutPassTests
         IReadOnlyList<ReportImage>? images = null,
         HeaderFooter? headerFooter = null,
         IReadOnlyList<ReportShape>? shapes = null) =>
-        new(new ReportSheet("Sheet1",
+        new(
+            new ReportSheet(
+            "Sheet1",
             cells ?? new Dictionary<CellAddress, ReportCell> { [new(1, 1)] = new(null, CellStyle.Default) },
             columns ?? new Dictionary<int, ColumnDefinition> { [1] = new() },
             rows ?? new Dictionary<int, RowDefinition> { [1] = new() },

@@ -9,4 +9,6 @@ public sealed record PageSettings(
     double MarginBottom = 36,
     double? Scale = 1,
     int? FitToPagesWide = null,
-    int? FitToPagesTall = null);
+    int? FitToPagesTall = null,
+    IndexRange? TitleRows = null,
+    IndexRange? TitleColumns = null);

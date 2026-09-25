@@ -1,25 +1,39 @@
-using PdfSharp.Drawing;
-using PdfSharp.Fonts;
-using PdfSharp.Pdf;
 using ExcelRenderer.Abstractions;
 using ExcelRenderer.Drawing;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Model;
+using PdfSharp.Drawing;
+using PdfSharp.Fonts;
+using PdfSharp.Pdf;
 using SkiaSharp;
 
 namespace ExcelRenderer.PdfSharp;
 
+/// <summary>
+/// PdfSharpRenderer が表すデータと操作を提供します.
+/// </summary>
 public sealed class PdfSharpRenderer : IRenderer
 {
+    /// <summary>
+    /// Render を実行します.
+    /// </summary>
+    /// <param name="commands">commands に渡す値です。</param>
+    /// <param name="pageSettings">pageSettings に渡す値です。</param>
+    /// <param name="output">output に渡す値です。</param>
     public void Render(IReadOnlyList<DrawCommand> commands, PageSettings pageSettings, Stream output)
     {
         using var document = new PdfDocument();
         var pages = commands.GroupBy(x => x.PageNumber).OrderBy(x => x.Key).ToArray();
         if (pages.Length == 0)
+        {
             AddPage(document, pageSettings, []);
+        }
 
         foreach (var pageCommands in pages)
+        {
             AddPage(document, pageSettings, pageCommands);
+        }
+
         document.Save(output, false);
     }
 
@@ -30,7 +44,9 @@ public sealed class PdfSharpRenderer : IRenderer
         page.Height = XUnit.FromPoint(pageSettings.Height);
         using var graphics = XGraphics.FromPdfPage(page);
         foreach (var command in commands)
+        {
             Execute(graphics, command);
+        }
     }
 
     private static void Execute(XGraphics graphics, DrawCommand command)
@@ -47,8 +63,12 @@ public sealed class PdfSharpRenderer : IRenderer
                 DrawText(graphics, text);
                 break;
             case DrawLineCommand line:
-                graphics.DrawLine(CreateBorderPen(line.Style),
-                    line.X1, line.Y1, line.X2, line.Y2);
+                graphics.DrawLine(
+                    CreateBorderPen(line.Style),
+                    line.X1,
+                    line.Y1,
+                    line.X2,
+                    line.Y2);
                 break;
             case DrawImageCommand image:
                 DrawImage(graphics, image);
@@ -64,28 +84,49 @@ public sealed class PdfSharpRenderer : IRenderer
         var state = graphics.Save();
         var b = command.Bounds;
         if (command.Shape.Rotation != 0)
-            graphics.RotateAtTransform(command.Shape.Rotation, new XPoint(b.X + b.Width / 2, b.Y + b.Height / 2));
+        {
+            graphics.RotateAtTransform(command.Shape.Rotation, new XPoint(b.X + (b.Width / 2), b.Y + (b.Height / 2)));
+        }
+
         var brush = command.Shape.Style.FillColor is { } fill ? new XSolidBrush(ToColor(fill)) : null;
         var pen = command.Shape.Style.LineColor is { } line ? new XPen(ToColor(line), command.Shape.Style.LineWidth) : null;
-        if (command.Shape.Kind == ShapeKind.Ellipse) graphics.DrawEllipse(pen, brush, ToRect(b));
-        else if (command.Shape.Kind == ShapeKind.RoundedRectangle) graphics.DrawRoundedRectangle(pen, brush, ToRect(b), new XSize(Math.Min(10, b.Width / 4), Math.Min(10, b.Height / 4)));
+        if (command.Shape.Kind == ShapeKind.Ellipse)
+        {
+            graphics.DrawEllipse(pen, brush, ToRect(b));
+        }
+        else if (command.Shape.Kind == ShapeKind.RoundedRectangle)
+        {
+            graphics.DrawRoundedRectangle(pen, brush, ToRect(b), new XSize(Math.Min(10, b.Width / 4), Math.Min(10, b.Height / 4)));
+        }
         else if (command.Shape.Kind is ShapeKind.WedgeRectangleCallout or ShapeKind.WedgeRoundedRectangleCallout)
         {
             var path = new XGraphicsPath();
             path.AddPolygon([new(b.X, b.Y), new(b.X + b.Width, b.Y), new(b.X + b.Width, b.Y + b.Height),
-                new(b.X + b.Width * .35, b.Y + b.Height), new(b.X + b.Width * .15, b.Y + b.Height * 1.2),
-                new(b.X + b.Width * .2, b.Y + b.Height), new(b.X, b.Y + b.Height)]);
-            path.CloseFigure(); graphics.DrawPath(pen, brush, path);
+                new(b.X + (b.Width * .35), b.Y + b.Height), new(b.X + (b.Width * .15), b.Y + (b.Height * 1.2)),
+                new(b.X + (b.Width * .2), b.Y + b.Height), new(b.X, b.Y + b.Height)]);
+            path.CloseFigure();
+            graphics.DrawPath(pen, brush, path);
         }
-        else graphics.DrawRectangle(pen, brush, ToRect(b));
+        else
+        {
+            graphics.DrawRectangle(pen, brush, ToRect(b));
+        }
+
         if (command.Shape.Text is { } text)
         {
-            var bounds = new ReportRect(b.X + text.MarginLeft, b.Y + text.MarginTop,
-                Math.Max(0, b.Width - text.MarginLeft - text.MarginRight), Math.Max(0, b.Height - text.MarginTop - text.MarginBottom));
-            DrawText(graphics, new DrawTextCommand(command.PageNumber, bounds, text.Text,
+            var bounds = new ReportRect(
+                b.X + text.MarginLeft,
+                b.Y + text.MarginTop,
+                Math.Max(0, b.Width - text.MarginLeft - text.MarginRight),
+                Math.Max(0, b.Height - text.MarginTop - text.MarginBottom));
+            DrawText(graphics, new DrawTextCommand(
+                command.PageNumber,
+                bounds,
+                text.Text,
                 CellStyle.Default with { Font = text.Font, HorizontalAlignment = text.HorizontalAlignment,
-                    VerticalAlignment = text.VerticalAlignment, WrapText = text.WrapText }));
+                VerticalAlignment = text.VerticalAlignment, WrapText = text.WrapText, }));
         }
+
         graphics.Restore(state);
     }
 
@@ -97,13 +138,16 @@ public sealed class PdfSharpRenderer : IRenderer
         var textHeight = lineHeight * lines.Count;
         var y = command.Style.VerticalAlignment switch
         {
-            VerticalAlignment.Center => command.Bounds.Y + (command.Bounds.Height - textHeight) / 2,
+            VerticalAlignment.Center => command.Bounds.Y + ((command.Bounds.Height - textHeight) / 2),
             VerticalAlignment.Bottom => command.Bounds.Y + command.Bounds.Height - textHeight,
-            _ => command.Bounds.Y
+            _ => command.Bounds.Y,
         };
         var state = graphics.Save();
         if (command.Style.WrapText || command.Style.ShrinkToFit)
+        {
             graphics.IntersectClip(ToRect(command.Bounds));
+        }
+
         var format = ToFormat(command.Style);
         format.LineAlignment = XLineAlignment.Near;
         var brush = new XSolidBrush(ToColor(command.Style.Font.Color ?? new(0, 0, 0)));
@@ -112,27 +156,37 @@ public sealed class PdfSharpRenderer : IRenderer
             graphics.DrawString(line, font, brush, new XRect(command.Bounds.X, y, command.Bounds.Width, lineHeight), format);
             y += lineHeight;
         }
+
         graphics.Restore(state);
     }
 
     private static XFont CreateFontToFit(XGraphics graphics, string text, CellStyle style, double width)
     {
         var font = PdfSharpTextMeasurer.CreateFont(style.Font);
-        if (!style.ShrinkToFit || style.WrapText || width <= 0) return font;
+        if (!style.ShrinkToFit || style.WrapText || width <= 0)
+        {
+            return font;
+        }
 
         var widestLine = text.Replace("\r\n", "\n", StringComparison.Ordinal)
             .Split('\n').Max(line => graphics.MeasureString(line, font).Width);
-        if (widestLine <= width) return font;
+        if (widestLine <= width)
+        {
+            return font;
+        }
 
         return PdfSharpTextMeasurer.CreateFont(style.Font with
         {
-            Size = style.Font.Size * width / widestLine
+            Size = style.Font.Size * width / widestLine,
         });
     }
 
     private static IReadOnlyList<string> WrapText(XGraphics graphics, string text, XFont font, double width, bool wrap)
     {
-        if (!wrap || width <= 0) return text.Split('\n');
+        if (!wrap || width <= 0)
+        {
+            return text.Split('\n');
+        }
 
         var lines = new List<string>();
         foreach (var paragraph in text.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n'))
@@ -153,10 +207,14 @@ public sealed class PdfSharpRenderer : IRenderer
                     line = character.ToString();
                 }
                 else
+                {
                     line = candidate;
+                }
             }
+
             lines.Add(line);
         }
+
         return lines;
     }
 
@@ -164,7 +222,9 @@ public sealed class PdfSharpRenderer : IRenderer
     {
         using var bitmap = SKBitmap.Decode(command.ImageBytes);
         if (bitmap is null)
+        {
             throw new InvalidDataException("画像データを読み込めません。");
+        }
 
         using var image = SKImage.FromBitmap(bitmap);
         using var pngData = image.Encode(SKEncodedImageFormat.Png, 100);
@@ -184,7 +244,9 @@ public sealed class PdfSharpRenderer : IRenderer
         void DrawSide(BorderSide? side, double x1, double y1, double x2, double y2)
         {
             if (side is not null)
+            {
                 graphics.DrawLine(CreateBorderPen(side), x1, y1, x2, y2);
+            }
         }
     }
 
@@ -197,13 +259,18 @@ public sealed class PdfSharpRenderer : IRenderer
             BorderLineStyle.Dashed => new double[] { 3, 2 },
             BorderLineStyle.DashDot => new double[] { 3, 2, 1, 2 },
             BorderLineStyle.DashDotDot => new double[] { 3, 2, 1, 2, 1, 2 },
-            _ => null
+            _ => null,
         };
-        if (pattern is not null) pen.DashPattern = pattern;
+        if (pattern is not null)
+        {
+            pen.DashPattern = pattern;
+        }
+
         return pen;
     }
 
     private static XRect ToRect(ReportRect rect) => new(rect.X, rect.Y, rect.Width, rect.Height);
+
     private static XColor ToColor(ReportColor color) => XColor.FromArgb(color.Alpha, color.Red, color.Green, color.Blue);
 
     private static XStringFormat ToFormat(CellStyle style) => new()
@@ -212,13 +279,13 @@ public sealed class PdfSharpRenderer : IRenderer
         {
             HorizontalAlignment.Center => XStringAlignment.Center,
             HorizontalAlignment.Right => XStringAlignment.Far,
-            _ => XStringAlignment.Near
+            _ => XStringAlignment.Near,
         },
         LineAlignment = style.VerticalAlignment switch
         {
             VerticalAlignment.Center => XLineAlignment.Center,
             VerticalAlignment.Bottom => XLineAlignment.Far,
-            _ => XLineAlignment.Near
-        }
+            _ => XLineAlignment.Near,
+        },
     };
 }

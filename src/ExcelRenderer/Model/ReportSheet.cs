@@ -1,5 +1,8 @@
 namespace ExcelRenderer.Model;
 
+/// <summary>
+/// ReportSheet が表すデータと操作を提供します.
+/// </summary>
 public sealed record ReportSheet(
     string Name,
     IReadOnlyDictionary<CellAddress, ReportCell> Cells,

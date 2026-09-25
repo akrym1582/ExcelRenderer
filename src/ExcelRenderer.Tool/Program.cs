@@ -1,5 +1,5 @@
-using ExcelRenderer.Tool.Commands;
 using System.CommandLine;
+using ExcelRenderer.Tool.Commands;
 
 var root = new RootCommand("Convert Excel files to PDF, images and Markdown.");
 root.Subcommands.Add(PdfCommand.Create());

@@ -1,5 +1,8 @@
 namespace ExcelRenderer.Model;
 
+/// <summary>
+/// ReportImage が表すデータと操作を提供します.
+/// </summary>
 public sealed record ReportImage(
     CellAddress Anchor,
     double OffsetX,

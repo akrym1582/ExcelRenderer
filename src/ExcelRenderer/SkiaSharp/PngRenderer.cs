@@ -8,18 +8,35 @@ namespace ExcelRenderer.SkiaSharp;
 /// <summary>描画コマンドをページごとの PNG 画像として出力します。</summary>
 public sealed class PngRenderer
 {
+    /// <summary>PNG画像の標準解像度を取得します。</summary>
     public const double DefaultDpi = 96;
 
-    /// <summary>すべてのページを、ページ番号から出力先を作るファクトリを使って出力します。</summary>
+    /// <summary>すべてのページを、ページ番号に対応する出力先へPNG画像として出力します。</summary>
+    /// <param name="commands">出力対象の描画コマンドです。</param>
+    /// <param name="pageSettings">ページの寸法と余白の設定です。</param>
+    /// <param name="outputFactory">ページ番号から出力ストリームを生成する関数です。</param>
+    /// <param name="dpi">出力画像の解像度です。</param>
     public void Render(
         IReadOnlyList<DrawCommand> commands,
         PageSettings pageSettings,
         Func<int, Stream> outputFactory,
         double dpi = DefaultDpi)
     {
-        if (commands is null) throw new ArgumentNullException(nameof(commands));
-        if (pageSettings is null) throw new ArgumentNullException(nameof(pageSettings));
-        if (outputFactory is null) throw new ArgumentNullException(nameof(outputFactory));
+        if (commands is null)
+        {
+            throw new ArgumentNullException(nameof(commands));
+        }
+
+        if (pageSettings is null)
+        {
+            throw new ArgumentNullException(nameof(pageSettings));
+        }
+
+        if (outputFactory is null)
+        {
+            throw new ArgumentNullException(nameof(outputFactory));
+        }
+
         ValidateDpi(dpi);
 
         var pages = commands.GroupBy(command => command.PageNumber).OrderBy(page => page.Key).ToArray();
@@ -37,16 +54,32 @@ public sealed class PngRenderer
         }
     }
 
-    /// <summary>指定した 1 ページ分の描画コマンドを PNG として出力します。</summary>
+    /// <summary>指定した1ページ分の描画コマンドをPNG画像として出力します。</summary>
+    /// <param name="commands">出力対象の描画コマンドです。</param>
+    /// <param name="pageSettings">ページの寸法と余白の設定です。</param>
+    /// <param name="output">PNG画像を書き込むストリームです。</param>
+    /// <param name="dpi">出力画像の解像度です。</param>
     public void RenderPage(
         IEnumerable<DrawCommand> commands,
         PageSettings pageSettings,
         Stream output,
         double dpi = DefaultDpi)
     {
-        if (commands is null) throw new ArgumentNullException(nameof(commands));
-        if (pageSettings is null) throw new ArgumentNullException(nameof(pageSettings));
-        if (output is null) throw new ArgumentNullException(nameof(output));
+        if (commands is null)
+        {
+            throw new ArgumentNullException(nameof(commands));
+        }
+
+        if (pageSettings is null)
+        {
+            throw new ArgumentNullException(nameof(pageSettings));
+        }
+
+        if (output is null)
+        {
+            throw new ArgumentNullException(nameof(output));
+        }
+
         ValidateDpi(dpi);
 
         var scale = (float)(dpi / 72d);
@@ -58,7 +91,9 @@ public sealed class PngRenderer
         canvas.Scale(scale);
 
         foreach (var command in commands)
+        {
             Execute(canvas, command);
+        }
 
         using var image = SKImage.FromBitmap(bitmap);
         using var data = image.Encode(SKEncodedImageFormat.Png, 100);
@@ -71,7 +106,10 @@ public sealed class PngRenderer
         {
             case FillRectangleCommand fill:
                 using (var paint = CreatePaint(fill.Color, SKPaintStyle.Fill))
+                {
                     canvas.DrawRect(ToRect(fill.Bounds), paint);
+                }
+
                 break;
             case DrawBorderCommand border:
                 DrawBorder(canvas, border);
@@ -81,7 +119,10 @@ public sealed class PngRenderer
                 break;
             case DrawLineCommand line:
                 using (var paint = CreateBorderPaint(line.Style))
+                {
                     canvas.DrawLine((float)line.X1, (float)line.Y1, (float)line.X2, (float)line.Y2, paint);
+                }
+
                 break;
             case DrawImageCommand image:
                 DrawImage(canvas, image);
@@ -94,33 +135,77 @@ public sealed class PngRenderer
 
     private static void DrawShape(SKCanvas canvas, DrawShapeCommand command)
     {
-        var b = ToRect(command.Bounds); canvas.Save();
-        if (command.Shape.Rotation != 0) canvas.RotateDegrees((float)command.Shape.Rotation, b.MidX, b.MidY);
+        var b = ToRect(command.Bounds);
+        canvas.Save();
+        if (command.Shape.Rotation != 0)
+        {
+            canvas.RotateDegrees((float)command.Shape.Rotation, b.MidX, b.MidY);
+        }
+
         void Paint(SKPaintStyle style, ReportColor color, Action<SKPaint> draw)
-        { using var paint = CreatePaint(color, style, command.Shape.Style.LineWidth); draw(paint); }
+        {
+            using var paint = CreatePaint(color, style, command.Shape.Style.LineWidth);
+            draw(paint);
+        }
+
         void Draw(SKPaint paint)
         {
-            if (command.Shape.Kind == ShapeKind.Ellipse) canvas.DrawOval(b, paint);
-            else if (command.Shape.Kind == ShapeKind.RoundedRectangle) canvas.DrawRoundRect(b, 10, 10, paint);
+            if (command.Shape.Kind == ShapeKind.Ellipse)
+            {
+                canvas.DrawOval(b, paint);
+            }
+            else if (command.Shape.Kind == ShapeKind.RoundedRectangle)
+            {
+                canvas.DrawRoundRect(b, 10, 10, paint);
+            }
             else if (command.Shape.Kind is ShapeKind.WedgeRectangleCallout or ShapeKind.WedgeRoundedRectangleCallout)
-            { using var p = new SKPath(); p.MoveTo(b.Left,b.Top); p.LineTo(b.Right,b.Top); p.LineTo(b.Right,b.Bottom); p.LineTo(b.Left+b.Width*.35f,b.Bottom); p.LineTo(b.Left+b.Width*.15f,b.Bottom+b.Height*.2f); p.LineTo(b.Left+b.Width*.2f,b.Bottom); p.LineTo(b.Left,b.Bottom); p.Close(); canvas.DrawPath(p,paint); }
-            else canvas.DrawRect(b, paint);
+            {
+                using var pathBuilder = new SKPathBuilder();
+                pathBuilder.MoveTo(b.Left, b.Top);
+                pathBuilder.LineTo(b.Right, b.Top);
+                pathBuilder.LineTo(b.Right, b.Bottom);
+                pathBuilder.LineTo(b.Left + (b.Width * .35f), b.Bottom);
+                pathBuilder.LineTo(b.Left + (b.Width * .15f), b.Bottom + (b.Height * .2f));
+                pathBuilder.LineTo(b.Left + (b.Width * .2f), b.Bottom);
+                pathBuilder.LineTo(b.Left, b.Bottom);
+                pathBuilder.Close();
+                using var path = pathBuilder.Detach();
+                canvas.DrawPath(path, paint);
+            }
+            else
+            {
+                canvas.DrawRect(b, paint);
+            }
         }
-        if (command.Shape.Style.FillColor is { } fill) Paint(SKPaintStyle.Fill, fill, Draw);
-        if (command.Shape.Style.LineColor is { } line) Paint(SKPaintStyle.Stroke, line, Draw);
+
+        if (command.Shape.Style.FillColor is { } fill)
+        {
+            Paint(SKPaintStyle.Fill, fill, Draw);
+        }
+
+        if (command.Shape.Style.LineColor is { } line)
+        {
+            Paint(SKPaintStyle.Stroke, line, Draw);
+        }
+
         if (command.Shape.Text is { } text)
         {
-            var bounds = new ReportRect(command.Bounds.X + text.MarginLeft, command.Bounds.Y + text.MarginTop,
-                Math.Max(0, command.Bounds.Width-text.MarginLeft-text.MarginRight), Math.Max(0, command.Bounds.Height-text.MarginTop-text.MarginBottom));
+            var bounds = new ReportRect(
+                command.Bounds.X + text.MarginLeft,
+                command.Bounds.Y + text.MarginTop,
+                Math.Max(0, command.Bounds.Width - text.MarginLeft - text.MarginRight),
+                Math.Max(0, command.Bounds.Height - text.MarginTop - text.MarginBottom));
             DrawText(canvas, new DrawTextCommand(command.PageNumber, bounds, text.Text, CellStyle.Default with
-            { Font=text.Font, HorizontalAlignment=text.HorizontalAlignment, VerticalAlignment=text.VerticalAlignment, WrapText=text.WrapText }));
+            { Font = text.Font, HorizontalAlignment = text.HorizontalAlignment, VerticalAlignment = text.VerticalAlignment, WrapText = text.WrapText }));
         }
+
         canvas.Restore();
     }
 
     private static void DrawText(SKCanvas canvas, DrawTextCommand command)
     {
-        using var typeface = SKTypeface.FromFamilyName(command.Style.Font.Family,
+        using var typeface = SKTypeface.FromFamilyName(
+            command.Style.Font.Family,
             command.Style.Font.Bold ? SKFontStyleWeight.Bold : SKFontStyleWeight.Normal,
             SKFontStyleWidth.Normal,
             command.Style.Font.Italic ? SKFontStyleSlant.Italic : SKFontStyleSlant.Upright);
@@ -133,7 +218,9 @@ public sealed class PngRenderer
             var widest = command.Text.Replace("\r\n", "\n", StringComparison.Ordinal)
                 .Split('\n').Max(line => font.MeasureText(line, paint));
             if (widest > command.Bounds.Width)
+            {
                 font.Size *= (float)(command.Bounds.Width / widest);
+            }
         }
 
         var lines = WrapText(command.Text, font, paint, command.Bounds.Width, command.Style.WrapText);
@@ -142,35 +229,44 @@ public sealed class PngRenderer
         var textHeight = lineHeight * lines.Count;
         var y = command.Style.VerticalAlignment switch
         {
-            VerticalAlignment.Center => (float)(command.Bounds.Y + (command.Bounds.Height - textHeight) / 2) - metrics.Ascent,
+            VerticalAlignment.Center => (float)(command.Bounds.Y + ((command.Bounds.Height - textHeight) / 2)) - metrics.Ascent,
             VerticalAlignment.Bottom => (float)(command.Bounds.Y + command.Bounds.Height - textHeight) - metrics.Ascent,
-            _ => (float)command.Bounds.Y - metrics.Ascent
+            _ => (float)command.Bounds.Y - metrics.Ascent,
         };
 
         canvas.Save();
         if (command.Style.WrapText || command.Style.ShrinkToFit)
+        {
             canvas.ClipRect(ToRect(command.Bounds));
+        }
+
         foreach (var line in lines)
         {
             var lineWidth = font.MeasureText(line, paint);
             var x = command.Style.HorizontalAlignment switch
             {
-                HorizontalAlignment.Center => (float)(command.Bounds.X + (command.Bounds.Width - lineWidth) / 2),
+                HorizontalAlignment.Center => (float)(command.Bounds.X + ((command.Bounds.Width - lineWidth) / 2)),
                 HorizontalAlignment.Right => (float)(command.Bounds.X + command.Bounds.Width - lineWidth),
-                _ => (float)command.Bounds.X
+                _ => (float)command.Bounds.X,
             };
             canvas.DrawText(line, x, y, SKTextAlign.Left, font, paint);
             if (command.Style.Font.Underline)
+            {
                 canvas.DrawLine(x, y + 1, x + lineWidth, y + 1, paint);
+            }
+
             y += lineHeight;
         }
+
         canvas.Restore();
     }
 
     private static IReadOnlyList<string> WrapText(string text, SKFont font, SKPaint paint, double width, bool wrap)
     {
         if (!wrap || width <= 0)
+        {
             return text.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n');
+        }
 
         var lines = new List<string>();
         foreach (var paragraph in text.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n'))
@@ -191,10 +287,14 @@ public sealed class PngRenderer
                     line = character.ToString();
                 }
                 else
+                {
                     line = candidate;
+                }
             }
+
             lines.Add(line);
         }
+
         return lines;
     }
 
@@ -215,7 +315,11 @@ public sealed class PngRenderer
 
         void DrawSide(BorderSide? side, double x1, double y1, double x2, double y2)
         {
-            if (side is null) return;
+            if (side is null)
+            {
+                return;
+            }
+
             using var paint = CreateBorderPaint(side);
             canvas.DrawLine((float)x1, (float)y1, (float)x2, (float)y2, paint);
         }
@@ -230,13 +334,14 @@ public sealed class PngRenderer
             BorderLineStyle.Dashed => new float[] { 3, 2 },
             BorderLineStyle.DashDot => new float[] { 3, 2, 1, 2 },
             BorderLineStyle.DashDotDot => new float[] { 3, 2, 1, 2, 1, 2 },
-            _ => null
+            _ => null,
         };
         if (pattern is not null)
         {
             using var effect = SKPathEffect.CreateDash(pattern.Select(x => x * (float)side.Width).ToArray(), 0);
             paint.PathEffect = effect;
         }
+
         return paint;
     }
 
@@ -245,7 +350,7 @@ public sealed class PngRenderer
         Color = new SKColor(color.Red, color.Green, color.Blue, color.Alpha),
         Style = style,
         StrokeWidth = (float)width,
-        IsAntialias = true
+        IsAntialias = true,
     };
 
     private static SKRect ToRect(ReportRect rect) =>
@@ -254,6 +359,8 @@ public sealed class PngRenderer
     private static void ValidateDpi(double dpi)
     {
         if (double.IsNaN(dpi) || double.IsInfinity(dpi) || dpi <= 0)
+        {
             throw new ArgumentOutOfRangeException(nameof(dpi), "DPI は 0 より大きい有限値で指定してください。");
+        }
     }
 }

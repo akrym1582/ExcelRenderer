@@ -4,11 +4,30 @@ using Xunit;
 
 namespace ExcelRenderer.Tool.Tests;
 
+/// <summary>
+/// ToolIntegrationTests が表すデータと操作を提供します.
+/// </summary>
 public sealed class ToolIntegrationTests : IDisposable
 {
     private readonly string _directory = Path.Combine(Path.GetTempPath(), "ExcelRenderer.Tool.Tests", Guid.NewGuid().ToString("N"));
-    private string Input => Path.Combine(AppContext.BaseDirectory, "SampleInputs", "sample.xlsx");
 
+    private static string Input => Path.Combine(AppContext.BaseDirectory, "SampleInputs", "sample.xlsx");
+
+    /// <summary>
+    /// Dispose を実行します.
+    /// </summary>
+    public void Dispose()
+    {
+        if (Directory.Exists(_directory))
+        {
+            Directory.Delete(_directory, true);
+        }
+    }
+
+    /// <summary>
+    /// Pdf_command_creates_a_pdf を実行します.
+    /// </summary>
+    /// <returns>処理によって得られた結果を返します。</returns>
     [Fact]
     public async Task Pdf_command_creates_a_pdf()
     {
@@ -18,6 +37,10 @@ public sealed class ToolIntegrationTests : IDisposable
         Assert.Equal("%PDF", Encoding.ASCII.GetString(File.ReadAllBytes(output), 0, 4));
     }
 
+    /// <summary>
+    /// Image_command_creates_png_files を実行します.
+    /// </summary>
+    /// <returns>処理によって得られた結果を返します。</returns>
     [Fact]
     public async Task Image_command_creates_png_files()
     {
@@ -28,6 +51,10 @@ public sealed class ToolIntegrationTests : IDisposable
         Assert.Equal(new byte[] { 0x89, 0x50, 0x4e, 0x47 }, File.ReadAllBytes(png)[..4]);
     }
 
+    /// <summary>
+    /// Md_alias_creates_markdown を実行します.
+    /// </summary>
+    /// <returns>処理によって得られた結果を返します。</returns>
     [Fact]
     public async Task Md_alias_creates_markdown()
     {
@@ -37,11 +64,20 @@ public sealed class ToolIntegrationTests : IDisposable
         Assert.Contains("折り返し", await File.ReadAllTextAsync(output));
     }
 
+    /// <summary>
+    /// Invalid_input_fails を実行します.
+    /// </summary>
+    /// <param name="arguments">arguments に渡す値です。</param>
+    /// <returns>処理によって得られた結果を返します。</returns>
     [Theory]
     [InlineData("md")]
     [InlineData("md", "not-found.xlsx", "-o", "output.md")]
     public async Task Invalid_input_fails(params string[] arguments) => Assert.NotEqual(0, (await RunAsync(arguments)).ExitCode);
 
+    /// <summary>
+    /// Invalid_dpi_is_rejected_by_parser を実行します.
+    /// </summary>
+    /// <returns>処理によって得られた結果を返します。</returns>
     [Fact]
     public async Task Invalid_dpi_is_rejected_by_parser()
     {
@@ -50,6 +86,10 @@ public sealed class ToolIntegrationTests : IDisposable
         Assert.Contains("greater than zero", result.Error);
     }
 
+    /// <summary>
+    /// Unknown_sheet_fails_without_a_stack_trace を実行します.
+    /// </summary>
+    /// <returns>処理によって得られた結果を返します。</returns>
     [Fact]
     public async Task Unknown_sheet_fails_without_a_stack_trace()
     {
@@ -65,7 +105,11 @@ public sealed class ToolIntegrationTests : IDisposable
         var tool = ResolveToolAssemblyPath(root);
         var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true };
         start.ArgumentList.Add(tool);
-        foreach (var argument in arguments) start.ArgumentList.Add(argument);
+        foreach (var argument in arguments)
+        {
+            start.ArgumentList.Add(argument);
+        }
+
         using var process = Process.Start(start)!;
         var output = process.StandardOutput.ReadToEndAsync();
         var error = process.StandardError.ReadToEndAsync();
@@ -76,10 +120,16 @@ public sealed class ToolIntegrationTests : IDisposable
     private static string ResolveToolAssemblyPath(string repositoryRoot)
     {
         var debug = Path.Combine(repositoryRoot, "src", "ExcelRenderer.Tool", "bin", "Debug", "net10.0", "ExcelRenderer.Tool.dll");
-        if (File.Exists(debug)) return debug;
+        if (File.Exists(debug))
+        {
+            return debug;
+        }
 
         var release = Path.Combine(repositoryRoot, "src", "ExcelRenderer.Tool", "bin", "Release", "net10.0", "ExcelRenderer.Tool.dll");
-        if (File.Exists(release)) return release;
+        if (File.Exists(release))
+        {
+            return release;
+        }
 
         throw new FileNotFoundException(
             $"Tool assembly not found. Checked both Debug and Release outputs:{Environment.NewLine}{debug}{Environment.NewLine}{release}");
@@ -88,11 +138,17 @@ public sealed class ToolIntegrationTests : IDisposable
     private static string FindRepositoryRoot()
     {
         for (var directory = new DirectoryInfo(AppContext.BaseDirectory); directory is not null; directory = directory.Parent)
-            if (File.Exists(Path.Combine(directory.FullName, "ExcelRenderer.slnx"))) return directory.FullName;
+        {
+            if (File.Exists(Path.Combine(directory.FullName, "ExcelRenderer.slnx")))
+            {
+                return directory.FullName;
+            }
+        }
+
         throw new InvalidOperationException("Repository root was not found.");
     }
 
     private static void AssertSuccess(Result result) => Assert.True(result.ExitCode == 0, result.Output + result.Error);
-    public void Dispose() { if (Directory.Exists(_directory)) Directory.Delete(_directory, true); }
+
     private sealed record Result(int ExitCode, string Output, string Error);
 }

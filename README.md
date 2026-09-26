@@ -149,7 +149,7 @@ This creates `output/sample.md` and image files under `output/images`. Use
 nearby image text, layout analysis, and image export. Markdown export consumes the
 same `ReportDocument` model as the renderers and does not alter the PDF/PNG pipeline.
 
-For environments where the workbook font is not installed, configure a font resolver before PDFsharp first accesses a font:
+PDF and PNG conversion use the bundled Noto Sans JP Regular font by default, including when it is not installed on the host. If the bundled font is unavailable, they fall back to OS fonts. To use an external font for PDFsharp, configure a resolver before PDFsharp first accesses a font:
 
 ```csharp
 using ExcelRenderer.PdfSharp;
@@ -208,7 +208,6 @@ Production code is under `src/ExcelRenderer`, and tests are under `tests/ExcelRe
 
 ExcelRenderer is available under the [MIT License](LICENSE).
 
-The repository also contains Noto Sans JP for reproducible Japanese font
-rendering in the test suite. The font is licensed separately under the SIL
-Open Font License 1.1; see [Third-party notices](THIRD-PARTY-NOTICES.md). It is
-not included in the `ExcelRenderer` or `ExcelRenderer.Tool` NuGet packages.
+Noto Sans JP Regular is embedded in the `ExcelRenderer` assembly and therefore
+included in both NuGet packages. The font is licensed separately under the SIL
+Open Font License 1.1; see [Third-party notices](THIRD-PARTY-NOTICES.md).

@@ -66,7 +66,7 @@ internal static class SampleOutputTestSupport
     /// </summary>
     internal static void ConfigureJapaneseFont()
     {
-        var fontPath = Path.Combine(AppContext.BaseDirectory, "NotoSansJP-VariableFont_wght.ttf");
+        var fontPath = Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf");
         Assert.True(File.Exists(fontPath), $"日本語フォントが見つかりません: {fontPath}");
         GlobalFontSettings.FontResolver ??= new PdfSharpFontResolver("Noto Sans JP", fontPath, "游ゴシック", "Yu Gothic");
     }

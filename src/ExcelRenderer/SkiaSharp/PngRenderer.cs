@@ -1,4 +1,5 @@
 using ExcelRenderer.Drawing;
+using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Model;
 using SkiaSharp;
@@ -204,11 +205,15 @@ public sealed class PngRenderer
 
     private static void DrawText(SKCanvas canvas, DrawTextCommand command)
     {
-        using var typeface = SKTypeface.FromFamilyName(
-            command.Style.Font.Family,
-            command.Style.Font.Bold ? SKFontStyleWeight.Bold : SKFontStyleWeight.Normal,
-            SKFontStyleWidth.Normal,
-            command.Style.Font.Italic ? SKFontStyleSlant.Italic : SKFontStyleSlant.Upright);
+        var bundledTypeface = BundledJapaneseFont.Typeface;
+        using var systemTypeface = bundledTypeface is null
+            ? SKTypeface.FromFamilyName(
+                command.Style.Font.Family,
+                command.Style.Font.Bold ? SKFontStyleWeight.Bold : SKFontStyleWeight.Normal,
+                SKFontStyleWidth.Normal,
+                command.Style.Font.Italic ? SKFontStyleSlant.Italic : SKFontStyleSlant.Upright)
+            : null;
+        var typeface = bundledTypeface ?? systemTypeface ?? SKTypeface.Default;
         using var font = new SKFont(typeface, (float)command.Style.Font.Size);
         using var paint = CreatePaint(command.Style.Font.Color ?? new(0, 0, 0), SKPaintStyle.Fill);
         paint.IsAntialias = true;

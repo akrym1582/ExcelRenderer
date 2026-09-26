@@ -808,6 +808,22 @@ public sealed class LayoutPassTests
         }
     }
 
+    /// <summary>既定のリゾルバーが NuGet アセンブリに内蔵した静的フォントを返すことを検証します。</summary>
+    [Fact]
+    public void PdfSharpFontResolver_returns_bundled_regular_font()
+    {
+        var resolver = new PdfSharpFontResolver();
+        var face = resolver.ResolveTypeface("游ゴシック", bold: false, italic: false);
+
+        Assert.NotNull(face);
+        var data = resolver.GetFont(face.FaceName);
+        Assert.NotNull(data);
+        Assert.Equal(File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf")), data);
+        using var stream = new MemoryStream(data);
+        using var typeface = SKTypeface.FromStream(stream);
+        Assert.Equal("Noto Sans JP", typeface.FamilyName);
+    }
+
     /// <summary>
     /// 印刷範囲が結合セルの終端まで拡張されることを検証します。
     /// </summary>

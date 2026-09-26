@@ -191,7 +191,7 @@ public sealed class ShapeAndFontTests
         var directory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
         Directory.CreateDirectory(directory);
         File.Copy(
-            Path.Combine(AppContext.BaseDirectory, "NotoSansJP-VariableFont_wght.ttf"),
+            Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf"),
             Path.Combine(directory, "unrelated-file-name.ttf"));
         try
         {
@@ -223,7 +223,7 @@ public sealed class ShapeAndFontTests
     private static string CopyTestFont()
     {
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.ttf");
-        File.Copy(Path.Combine(AppContext.BaseDirectory, "NotoSansJP-VariableFont_wght.ttf"), path);
+        File.Copy(Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf"), path);
         return path;
     }
 

@@ -13,11 +13,19 @@ namespace ExcelRenderer.PdfSharp;
 /// <summary>PDFsharp から要求された書体をフォントファイルへ解決し、そのバイナリデータを提供します。</summary>
 public sealed class PdfSharpFontResolver : IFontResolver
 {
-    private readonly IFontManager _manager;
+    private readonly IFontManager? _manager;
     private readonly Dictionary<string, byte[]> _fontData = new();
     private readonly string? _legacyFamily;
     private readonly string? _legacyFace;
     private readonly string[] _familyAliases = [];
+    private readonly bool _useBundledFont;
+    private readonly Lazy<IFontManager> _systemFontManager = new(() => new FontManager());
+
+    /// <summary>Initializes a new instance of the <see cref="PdfSharpFontResolver"/> class. 内蔵の Noto Sans JP Regular を使用するリゾルバーを初期化します。</summary>
+    public PdfSharpFontResolver()
+    {
+        _useBundledFont = true;
+    }
 
     /// <summary>Initializes a new instance of the <see cref="PdfSharpFontResolver"/> class. 単一のフォントファイルを指定したファミリー名と別名に割り当てる互換モードのリゾルバーを初期化します。</summary>
     /// <param name="familyName">フォントファイルを割り当てる正式なフォントファミリー名です。</param>
@@ -55,6 +63,11 @@ public sealed class PdfSharpFontResolver : IFontResolver
     /// <returns>解決したフォントを識別するフェイス情報を返します。互換モードでファミリー名が登録名または別名に一致しない場合は <see langword="null"/> を返します。</returns>
     public FontResolverInfo? ResolveTypeface(string familyName, bool bold, bool italic)
     {
+        if (_useBundledFont && BundledJapaneseFont.Data is not null)
+        {
+            return new FontResolverInfo(BundledJapaneseFont.FaceName);
+        }
+
         if (_legacyFace is not null)
         {
             return string.Equals(familyName, _legacyFamily, StringComparison.OrdinalIgnoreCase) ||
@@ -62,7 +75,7 @@ public sealed class PdfSharpFontResolver : IFontResolver
                 ? new FontResolverInfo(_legacyFace) : null;
         }
 
-        var font = _manager.Resolve(new(familyName, bold ? 700 : 400, italic));
+        var font = (_manager ?? _systemFontManager.Value).Resolve(new(familyName, bold ? 700 : 400, italic));
         var face = $"{font.Family}|{font.Weight}|{(font.Italic ? "italic" : "normal")}|{font.FilePath}";
         if (!_fontData.ContainsKey(face))
         {
@@ -76,5 +89,7 @@ public sealed class PdfSharpFontResolver : IFontResolver
     /// <param name="faceName"><see cref="ResolveTypeface"/> が返したフォントフェイス名です。</param>
     /// <returns>フォントファイルの全バイトを返します。フェイス名が未解決の場合は <see langword="null"/> を返します。</returns>
     public byte[]? GetFont(string faceName) =>
-        _fontData.GetValueOrDefault(faceName);
+        _useBundledFont && faceName == BundledJapaneseFont.FaceName
+            ? BundledJapaneseFont.Data
+            : _fontData.GetValueOrDefault(faceName);
 }

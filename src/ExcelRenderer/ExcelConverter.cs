@@ -153,7 +153,7 @@ public static class ExcelConverter
 
     private static IReadOnlyList<DrawCommand> CreateCommands(ReportSheet sheet)
     {
-        GlobalFontSettings.FontResolver ??= new PdfSharpFontResolver(new FontManager());
+        GlobalFontSettings.FontResolver ??= new PdfSharpFontResolver();
         var layout = new ReportLayoutEngine(new PdfSharpTextMeasurer()).Layout(sheet);
         return new DrawCommandGeneratorPass().Generate(layout);
     }

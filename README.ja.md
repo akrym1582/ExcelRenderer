@@ -357,7 +357,7 @@ pngRenderer.RenderPage(
 
 ### フォントファイルの指定
 
-フォントがインストールされていない環境では、PDFsharp のフォント操作を行う前にフォントリゾルバーを設定してください。指定するファミリー名は、Excel のセルに設定されたフォント名と一致させます。
+PDF と PNG の変換では、インストール不要の内蔵 Noto Sans JP Regular を既定で使用します。内蔵フォントが見つからない場合は OS のシステムフォントにフォールバックします。PDFsharp で外部フォントを使う場合は、PDFsharp がフォントを使用する前にフォントリゾルバーを設定してください。指定するファミリー名は、Excel のセルに設定されたフォント名と一致させます。
 
 ```csharp
 using PdfSharp.Fonts;
@@ -503,7 +503,4 @@ src/ExcelRenderer
 
 ExcelRenderer は [MIT License](LICENSE) で提供されます。
 
-このリポジトリには、日本語フォント描画のテスト結果を再現可能にするため、Noto
-Sans JP も含まれています。このフォントには MIT License ではなく SIL Open Font
-License 1.1 が適用されます。詳細は[サードパーティ通知](THIRD-PARTY-NOTICES.md)を参照してください。
-フォントは `ExcelRenderer` および `ExcelRenderer.Tool` の NuGet パッケージには含まれません。
+Noto Sans JP Regular は `ExcelRenderer` に埋め込まれ、`ExcelRenderer.Tool` を含む両方の NuGet パッケージに同梱されます。このフォントには MIT License ではなく SIL Open Font License 1.1 が適用されます。詳細は[サードパーティ通知](THIRD-PARTY-NOTICES.md)を参照してください。

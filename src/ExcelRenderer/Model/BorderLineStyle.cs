@@ -29,4 +29,13 @@ public enum BorderLineStyle
     /// 破線と 2 点を交互に並べた二点鎖線を表します。
     /// </summary>
     DashDotDot,
+
+    /// <summary>平行な 2 本の実線を表します。</summary>
+    Double,
+
+    /// <summary>極細の実線を表します。</summary>
+    Hair,
+
+    /// <summary>斜めの破線と点を交互に並べた線を表します。</summary>
+    SlantDashDot,
 }

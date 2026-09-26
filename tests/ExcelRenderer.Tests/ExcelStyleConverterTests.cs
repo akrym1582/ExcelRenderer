@@ -10,6 +10,36 @@ namespace ExcelRenderer.Tests;
 /// </summary>
 public sealed class ExcelStyleConverterTests
 {
+    /// <summary>Excel の各罫線スタイルと太さが描画モデルへ保持されることを検証します。</summary>
+    /// <param name="excelStyle">Excel の罫線スタイルです。</param>
+    /// <param name="expectedStyle">変換後の線種です。</param>
+    /// <param name="expectedWidth">変換後の線幅です。</param>
+    [Theory]
+    [InlineData(XLBorderStyleValues.Thin, BorderLineStyle.Solid, 0.5)]
+    [InlineData(XLBorderStyleValues.Medium, BorderLineStyle.Solid, 1)]
+    [InlineData(XLBorderStyleValues.Thick, BorderLineStyle.Solid, 2)]
+    [InlineData(XLBorderStyleValues.Hair, BorderLineStyle.Hair, 0.25)]
+    [InlineData(XLBorderStyleValues.Double, BorderLineStyle.Double, 0.75)]
+    [InlineData(XLBorderStyleValues.Dotted, BorderLineStyle.Dotted, 0.5)]
+    [InlineData(XLBorderStyleValues.Dashed, BorderLineStyle.Dashed, 0.5)]
+    [InlineData(XLBorderStyleValues.MediumDashed, BorderLineStyle.Dashed, 1)]
+    [InlineData(XLBorderStyleValues.DashDot, BorderLineStyle.DashDot, 0.5)]
+    [InlineData(XLBorderStyleValues.MediumDashDot, BorderLineStyle.DashDot, 1)]
+    [InlineData(XLBorderStyleValues.DashDotDot, BorderLineStyle.DashDotDot, 0.5)]
+    [InlineData(XLBorderStyleValues.MediumDashDotDot, BorderLineStyle.DashDotDot, 1)]
+    [InlineData(XLBorderStyleValues.SlantDashDot, BorderLineStyle.SlantDashDot, 0.5)]
+    public void Convert_preserves_excel_border_styles(XLBorderStyleValues excelStyle, BorderLineStyle expectedStyle, double expectedWidth)
+    {
+        using var workbook = new XLWorkbook();
+        var cell = workbook.AddWorksheet("Borders").Cell(1, 1);
+        cell.Style.Border.TopBorder = excelStyle;
+
+        var side = ExcelStyleConverter.Convert(cell).Border!.Top!;
+
+        Assert.Equal(expectedStyle, side.LineStyle);
+        Assert.Equal(expectedWidth, side.Width);
+    }
+
     /// <summary>
     /// テーマ色、明暗補正および自動罫線色が具体的な描画色へ解決されることを検証します。
     /// </summary>

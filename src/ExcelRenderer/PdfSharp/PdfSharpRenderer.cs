@@ -59,12 +59,7 @@ public sealed class PdfSharpRenderer : IRenderer
                 DrawText(graphics, text);
                 break;
             case DrawLineCommand line:
-                graphics.DrawLine(
-                    CreateBorderPen(line.Style),
-                    line.X1,
-                    line.Y1,
-                    line.X2,
-                    line.Y2);
+                DrawStyledLine(graphics, line.Style, line.X1, line.Y1, line.X2, line.Y2);
                 break;
             case DrawImageCommand image:
                 DrawImage(graphics, image);
@@ -232,17 +227,26 @@ public sealed class PdfSharpRenderer : IRenderer
     private static void DrawBorder(XGraphics graphics, DrawBorderCommand command)
     {
         var rect = command.Bounds;
-        DrawSide(command.Border.Top, rect.X, rect.Y, rect.X + rect.Width, rect.Y);
-        DrawSide(command.Border.Right, rect.X + rect.Width, rect.Y, rect.X + rect.Width, rect.Y + rect.Height);
-        DrawSide(command.Border.Bottom, rect.X, rect.Y + rect.Height, rect.X + rect.Width, rect.Y + rect.Height);
-        DrawSide(command.Border.Left, rect.X, rect.Y, rect.X, rect.Y + rect.Height);
+        DrawSide(command.Border.Top, rect.X, rect.Y, rect.X + rect.Width, rect.Y, 0, 1);
+        DrawSide(command.Border.Right, rect.X + rect.Width, rect.Y, rect.X + rect.Width, rect.Y + rect.Height, -1, 0);
+        DrawSide(command.Border.Bottom, rect.X, rect.Y + rect.Height, rect.X + rect.Width, rect.Y + rect.Height, 0, -1);
+        DrawSide(command.Border.Left, rect.X, rect.Y, rect.X, rect.Y + rect.Height, 1, 0);
 
-        void DrawSide(BorderSide? side, double x1, double y1, double x2, double y2)
+        void DrawSide(BorderSide? side, double x1, double y1, double x2, double y2, double inwardX, double inwardY)
         {
             if (side is not null)
             {
-                graphics.DrawLine(CreateBorderPen(side), x1, y1, x2, y2);
+                DrawStyledLine(graphics, side, x1, y1, x2, y2, inwardX, inwardY);
             }
+        }
+    }
+
+    private static void DrawStyledLine(XGraphics graphics, BorderSide side, double x1, double y1, double x2, double y2, double inwardX = 0, double inwardY = 0)
+    {
+        var pen = CreateBorderPen(side);
+        foreach (var stroke in BorderStrokeGeometry.GetStrokes(side, x1, y1, x2, y2, inwardX, inwardY))
+        {
+            graphics.DrawLine(pen, stroke.X1, stroke.Y1, stroke.X2, stroke.Y2);
         }
     }
 

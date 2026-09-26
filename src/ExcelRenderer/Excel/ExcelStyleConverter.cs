@@ -63,6 +63,7 @@ public static class ExcelStyleConverter
         XLBorderStyleValues.Medium or XLBorderStyleValues.MediumDashed or
             XLBorderStyleValues.MediumDashDot or XLBorderStyleValues.MediumDashDotDot => 1,
         XLBorderStyleValues.Double => 0.75,
+        XLBorderStyleValues.Hair => 0.25,
         _ => 0.5,
     };
 
@@ -72,6 +73,9 @@ public static class ExcelStyleConverter
         XLBorderStyleValues.Dashed or XLBorderStyleValues.MediumDashed => BorderLineStyle.Dashed,
         XLBorderStyleValues.DashDot or XLBorderStyleValues.MediumDashDot => BorderLineStyle.DashDot,
         XLBorderStyleValues.DashDotDot or XLBorderStyleValues.MediumDashDotDot => BorderLineStyle.DashDotDot,
+        XLBorderStyleValues.Double => BorderLineStyle.Double,
+        XLBorderStyleValues.Hair => BorderLineStyle.Hair,
+        XLBorderStyleValues.SlantDashDot => BorderLineStyle.SlantDashDot,
         _ => BorderLineStyle.Solid,
     };
 

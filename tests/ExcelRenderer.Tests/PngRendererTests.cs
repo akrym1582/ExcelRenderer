@@ -12,6 +12,26 @@ namespace ExcelRenderer.Tests;
 /// </summary>
 public sealed class PngRendererTests
 {
+    /// <summary>二重線の 2 本の線と間の空白が PNG 上に残ることを検証します。</summary>
+    [Fact]
+    public void RenderPage_draws_two_separate_lines_for_double_border()
+    {
+        using var output = new MemoryStream();
+        new PngRenderer().RenderPage(
+            [new DrawBorderCommand(
+                1,
+                new ReportRect(5, 10, 60, 20),
+                new BorderStyle(Top: new BorderSide(1, LineStyle: BorderLineStyle.Double)))],
+            new PageSettings(72, 40),
+            output,
+            144);
+
+        using var bitmap = SKBitmap.Decode(output.ToArray());
+        Assert.True(bitmap.GetPixel(40, 21).Red < 100);
+        Assert.Equal(SKColors.White, bitmap.GetPixel(40, 24));
+        Assert.True(bitmap.GetPixel(40, 27).Red < 100);
+    }
+
     /// <summary>
     /// 点線罫線を描画したとき、線分間の空白が塗りつぶされずに保持されることを検証します。
     /// </summary>

@@ -119,10 +119,7 @@ public sealed class PngRenderer
                 DrawText(canvas, text);
                 break;
             case DrawLineCommand line:
-                using (var paint = CreateBorderPaint(line.Style))
-                {
-                    canvas.DrawLine((float)line.X1, (float)line.Y1, (float)line.X2, (float)line.Y2, paint);
-                }
+                DrawStyledLine(canvas, line.Style, line.X1, line.Y1, line.X2, line.Y2);
 
                 break;
             case DrawImageCommand image:
@@ -313,20 +310,28 @@ public sealed class PngRenderer
     private static void DrawBorder(SKCanvas canvas, DrawBorderCommand command)
     {
         var rect = command.Bounds;
-        DrawSide(command.Border.Top, rect.X, rect.Y, rect.X + rect.Width, rect.Y);
-        DrawSide(command.Border.Right, rect.X + rect.Width, rect.Y, rect.X + rect.Width, rect.Y + rect.Height);
-        DrawSide(command.Border.Bottom, rect.X, rect.Y + rect.Height, rect.X + rect.Width, rect.Y + rect.Height);
-        DrawSide(command.Border.Left, rect.X, rect.Y, rect.X, rect.Y + rect.Height);
+        DrawSide(command.Border.Top, rect.X, rect.Y, rect.X + rect.Width, rect.Y, 0, 1);
+        DrawSide(command.Border.Right, rect.X + rect.Width, rect.Y, rect.X + rect.Width, rect.Y + rect.Height, -1, 0);
+        DrawSide(command.Border.Bottom, rect.X, rect.Y + rect.Height, rect.X + rect.Width, rect.Y + rect.Height, 0, -1);
+        DrawSide(command.Border.Left, rect.X, rect.Y, rect.X, rect.Y + rect.Height, 1, 0);
 
-        void DrawSide(BorderSide? side, double x1, double y1, double x2, double y2)
+        void DrawSide(BorderSide? side, double x1, double y1, double x2, double y2, double inwardX, double inwardY)
         {
             if (side is null)
             {
                 return;
             }
 
-            using var paint = CreateBorderPaint(side);
-            canvas.DrawLine((float)x1, (float)y1, (float)x2, (float)y2, paint);
+            DrawStyledLine(canvas, side, x1, y1, x2, y2, inwardX, inwardY);
+        }
+    }
+
+    private static void DrawStyledLine(SKCanvas canvas, BorderSide side, double x1, double y1, double x2, double y2, double inwardX = 0, double inwardY = 0)
+    {
+        using var paint = CreateBorderPaint(side);
+        foreach (var stroke in BorderStrokeGeometry.GetStrokes(side, x1, y1, x2, y2, inwardX, inwardY))
+        {
+            canvas.DrawLine((float)stroke.X1, (float)stroke.Y1, (float)stroke.X2, (float)stroke.Y2, paint);
         }
     }
 

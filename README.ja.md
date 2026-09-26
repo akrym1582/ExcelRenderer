@@ -498,3 +498,12 @@ src/ExcelRenderer
 ```
 
 機能を追加する際は、既存クラスへ複数の責務を追加するのではなく、新しい読み込み処理、新しいレイアウト Pass、新しい描画コマンド、新しいレンダラー、または新しい抽象インターフェースとして分離することを基本方針とします。
+
+## ライセンス
+
+ExcelRenderer は [MIT License](LICENSE) で提供されます。
+
+このリポジトリには、日本語フォント描画のテスト結果を再現可能にするため、Noto
+Sans JP も含まれています。このフォントには MIT License ではなく SIL Open Font
+License 1.1 が適用されます。詳細は[サードパーティ通知](THIRD-PARTY-NOTICES.md)を参照してください。
+フォントは `ExcelRenderer` および `ExcelRenderer.Tool` の NuGet パッケージには含まれません。

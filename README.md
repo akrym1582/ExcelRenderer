@@ -202,7 +202,7 @@ Production code is under `src/ExcelRenderer`, and tests are under `tests/ExcelRe
 ## Documentation
 
 - [Detailed guide (Japanese)](README.ja.md)
-- [Contributing instructions for GitHub Copilot](.github/copilot-instructions.md)
+- [AI coding agent guide](AGENTS.md)
 
 ## License
 

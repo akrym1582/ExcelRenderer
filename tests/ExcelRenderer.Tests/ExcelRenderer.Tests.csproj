@@ -17,7 +17,10 @@
     <ProjectReference Include="../../src/ExcelRenderer/ExcelRenderer.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="NotoSansJP-VariableFont_wght.ttf">
+    <None Include="../../third_party/NotoSansJP/NotoSansJP-VariableFont_wght.ttf" Link="NotoSansJP-VariableFont_wght.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="../../third_party/NotoSansJP/OFL.txt" Link="OFL-NotoSansJP.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="SampleInputs/**/*.xlsx">

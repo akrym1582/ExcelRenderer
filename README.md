@@ -207,3 +207,8 @@ Production code is under `src/ExcelRenderer`, and tests are under `tests/ExcelRe
 ## License
 
 ExcelRenderer is available under the [MIT License](LICENSE).
+
+The repository also contains Noto Sans JP for reproducible Japanese font
+rendering in the test suite. The font is licensed separately under the SIL
+Open Font License 1.1; see [Third-party notices](THIRD-PARTY-NOTICES.md). It is
+not included in the `ExcelRenderer` or `ExcelRenderer.Tool` NuGet packages.

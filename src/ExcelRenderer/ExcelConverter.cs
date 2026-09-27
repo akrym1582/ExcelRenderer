@@ -15,7 +15,7 @@ using PdfSharp.Pdf.IO;
 namespace ExcelRenderer;
 
 /// <summary>Excel ファイルを PDF、PNG、SVG、または Markdown 文書へ変換する一連の操作を提供します。</summary>
-public static class ExcelConverter
+public static partial class ExcelConverter
 {
     /// <summary>Excel ブックのワークシートをレイアウトし、単一の PDF 文書へ非同期に変換します。</summary>
     /// <param name="inputPath">読み取る Excel ファイルのパスです。</param>

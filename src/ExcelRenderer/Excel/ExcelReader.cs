@@ -1,6 +1,7 @@
 using ClosedXML.Excel;
 using ClosedXML.Excel.Drawings;
 using ExcelRenderer.Model;
+using ExcelRenderer.Rendering;
 
 namespace ExcelRenderer.Excel;
 
@@ -12,8 +13,26 @@ public sealed class ExcelReader
     /// <returns>ブック内のワークシートを元の順序で格納したレンダリング用ドキュメントを返します。</returns>
     public ReportDocument Read(string path)
     {
-        using var workbook = new XLWorkbook(path);
-        var shapes = DrawingMLReader.Read(path);
+        if (path is null) throw new ArgumentNullException(nameof(path));
+        using var input = File.OpenRead(path);
+        return Read(input);
+    }
+
+    /// <summary>Reads a workbook from its current position without closing the caller-owned stream.</summary>
+    public ReportDocument Read(Stream input)
+    {
+        if (input is null) throw new ArgumentNullException(nameof(input));
+        using var copy = new MemoryStream();
+        input.CopyTo(copy);
+        return Read(copy.ToArray(), null);
+    }
+
+    internal ReportDocument Read(byte[] workbookBytes, DiagnosticCollector? diagnostics)
+    {
+        using var workbookStream = new MemoryStream(workbookBytes, writable: false);
+        using var drawingStream = new MemoryStream(workbookBytes, writable: false);
+        using var workbook = new XLWorkbook(workbookStream);
+        var shapes = DrawingMLReader.Read(drawingStream, diagnostics);
         return new(workbook.Worksheets.Select(sheet => ReadSheet(
             sheet,
             shapes.GetValueOrDefault(sheet.Name, Array.Empty<ReportShape>()))).ToArray());

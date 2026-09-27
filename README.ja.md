@@ -45,6 +45,13 @@ await ExcelConverter.ConvertToSvgAsync("input.xlsx", "./svg-output");
 await ExcelConverter.ConvertToMarkdownAsync("input.xlsx", "output.md");
 ```
 
+ストリーム連携には `RenderAsync` を使用できます。入力は現在位置から読み取り、入力
+ストリームと `SingleStreamOutputSink` の出力ストリームは閉じません。ページごとの
+PNG/SVG には `DirectoryOutputSink` を使用します。`RenderRequest` では完全一致の
+シート名（指定順）と PDF/PNG/SVG の文書ページを選択できます。Markdown はページ
+選択を受け付けません。`ConversionManifest.WriteAsync` は完了した成果物メタデータと
+診断を、相対成果物名だけを含む schema version 1 の JSON として出力します。
+
 ### コマンドラインツール（dotnet tool）
 
 .NET 10 SDK をインストールし、NuGet.org からツールを取得します。

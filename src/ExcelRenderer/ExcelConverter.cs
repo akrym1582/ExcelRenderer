@@ -14,7 +14,7 @@ using PdfSharp.Pdf.IO;
 
 namespace ExcelRenderer;
 
-/// <summary>Excel ファイルを PDF、PNG 画像、または Markdown 文書へ変換する一連の操作を提供します。</summary>
+/// <summary>Excel ファイルを PDF、PNG、SVG、または Markdown 文書へ変換する一連の操作を提供します。</summary>
 public static class ExcelConverter
 {
     /// <summary>Excel ブックのワークシートをレイアウトし、単一の PDF 文書へ非同期に変換します。</summary>
@@ -117,6 +117,82 @@ public static class ExcelConverter
         .ConfigureAwait(false);
     }
 
+    /// <summary>Excel ブックのワークシートをレイアウトし、各ページを自己完結 SVG へ非同期に変換します。</summary>
+    /// <param name="inputPath">読み取る Excel ファイルのパスです。</param>
+    /// <param name="outputDirectory">ワークシート名とページ番号を含む SVG ファイルを新規作成する空のディレクトリです。</param>
+    /// <param name="options">出力対象のワークシートを指定する設定です。省略時はすべてのワークシートを出力します。</param>
+    /// <param name="cancellationToken">変換処理のキャンセルを通知するトークンです。</param>
+    /// <returns>対象ページすべての SVG ファイルの書き込みが完了したときに完了するタスクを返します。</returns>
+    public static async Task ConvertToSvgAsync(
+        string inputPath,
+        string outputDirectory,
+        SvgExportOptions? options = null,
+        CancellationToken cancellationToken = default)
+    {
+        ValidateInput(inputPath);
+        if (string.IsNullOrWhiteSpace(outputDirectory))
+        {
+            throw new ArgumentException("An output directory is required.", nameof(outputDirectory));
+        }
+
+        options ??= new SvgExportOptions();
+        cancellationToken.ThrowIfCancellationRequested();
+        var sheets = SelectSheets(new ExcelReader().Read(inputPath), options.SheetName);
+        if (Directory.Exists(outputDirectory) && Directory.EnumerateFileSystemEntries(outputDirectory).Any())
+        {
+            throw new IOException($"Output directory is not empty: {outputDirectory}");
+        }
+
+        Directory.CreateDirectory(outputDirectory);
+        var names = CreateUniqueSheetNames(sheets);
+        await Task.Run(
+            () =>
+            {
+                for (var sheetIndex = 0; sheetIndex < sheets.Length; sheetIndex++)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    var sheet = sheets[sheetIndex];
+                    var commands = CreateCommands(sheet);
+                    var pages = commands.GroupBy(command => command.PageNumber).OrderBy(page => page.Key).ToArray();
+                    if (pages.Length == 0)
+                    {
+                        WriteSvgPage([], sheet.PageSettings, names[sheetIndex], 1);
+                        continue;
+                    }
+
+                    foreach (var page in pages)
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+                        WriteSvgPage(page, sheet.PageSettings, names[sheetIndex], page.Key);
+                    }
+                }
+            },
+            cancellationToken)
+        .ConfigureAwait(false);
+
+        void WriteSvgPage(IEnumerable<DrawCommand> commands, PageSettings settings, string sheetName, int pageNumber)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var path = Path.Combine(outputDirectory, $"{sheetName}-{pageNumber}.svg");
+            var created = false;
+            try
+            {
+                using var output = new FileStream(path, FileMode.CreateNew, FileAccess.Write, FileShare.None);
+                created = true;
+                new SvgRenderer().RenderPage(commands, settings, output);
+            }
+            catch
+            {
+                if (created && File.Exists(path))
+                {
+                    File.Delete(path);
+                }
+
+                throw;
+            }
+        }
+    }
+
     /// <summary>Excel ブックの表領域を Markdown の表または HTML として表現し、埋め込み画像とともに非同期に出力します。</summary>
     /// <param name="inputPath">読み取る Excel ファイルのパスです。</param>
     /// <param name="outputPath">変換した Markdown 文書を新規作成するファイルパスです。</param>
@@ -211,5 +287,21 @@ public static class ExcelConverter
         var invalid = Path.GetInvalidFileNameChars().Concat(new[] { '/', '\\', ':', '*', '?', '"', '<', '>', '|' }).ToHashSet();
         var safe = new string(value.Select(c => invalid.Contains(c) || char.IsControl(c) ? '_' : c).ToArray()).Trim().Trim('.');
         return safe.Length == 0 ? "sheet" : safe;
+    }
+
+    private static string[] CreateUniqueSheetNames(IReadOnlyList<ReportSheet> sheets)
+    {
+        var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        return sheets.Select(sheet =>
+        {
+            var baseName = SanitizeFileName(sheet.Name);
+            var name = baseName;
+            for (var suffix = 2; !used.Add(name); suffix++)
+            {
+                name = $"{baseName}-{suffix}";
+            }
+
+            return name;
+        }).ToArray();
     }
 }

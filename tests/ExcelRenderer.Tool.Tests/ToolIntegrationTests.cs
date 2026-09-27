@@ -51,6 +51,27 @@ public sealed class ToolIntegrationTests : IDisposable
         Assert.Equal(new byte[] { 0x89, 0x50, 0x4e, 0x47 }, File.ReadAllBytes(png)[..4]);
     }
 
+    /// <summary>svg コマンドが Excel 入力からページ単位の SVG ファイルを生成することを検証します。</summary>
+    /// <returns>非同期の検証処理を表すタスク。</returns>
+    [Fact]
+    public async Task Svg_command_creates_svg_files()
+    {
+        var output = Path.Combine(_directory, "svg");
+        var result = await RunAsync("svg", Input, "-o", output);
+        AssertSuccess(result);
+        var svg = Assert.Single(Directory.GetFiles(output, "*.svg"));
+        Assert.Contains("<svg", await File.ReadAllTextAsync(svg));
+    }
+
+    /// <summary>svg コマンドが PNG 専用の DPI オプションを受け付けないことを検証します。</summary>
+    /// <returns>非同期の検証処理を表すタスク。</returns>
+    [Fact]
+    public async Task Svg_command_rejects_dpi()
+    {
+        var result = await RunAsync("svg", Input, "-o", Path.Combine(_directory, "svg"), "--dpi", "72");
+        Assert.NotEqual(0, result.ExitCode);
+    }
+
     /// <summary>
     /// md エイリアスが Excel 入力から Markdown ファイルを生成することを検証します。
     /// </summary>

@@ -1,6 +1,6 @@
 # ExcelRenderer
 
-ExcelRenderer is a .NET library for rendering Excel (`.xlsx`) worksheets as PDF documents or page-by-page PNG images.
+ExcelRenderer is a .NET library for rendering Excel (`.xlsx`) worksheets as PDF documents or page-by-page PNG and SVG images.
 
 It separates workbook parsing, layout, drawing-command generation, and output rendering into distinct stages:
 
@@ -9,7 +9,7 @@ Excel (.xlsx)
     -> ReportDocument
     -> RenderDocument
     -> DrawCommand
-    -> PDF / PNG
+    -> PDF / PNG / SVG
 ```
 
 This makes the rendering pipeline easier to test, understand, and extend with new layout behavior or output formats.
@@ -28,6 +28,7 @@ This makes the rendering pipeline easier to test, understand, and extend with ne
 - Renders header and footer text
 - Produces PDF output with PDFsharp
 - Produces one PNG image per page with SkiaSharp
+- Produces one self-contained SVG per page with outlined text and embedded images
 - Exports AI-friendly Markdown with merged-cell HTML, layout-aware reading order, formulas, and external images
 
 ## Requirements
@@ -86,18 +87,20 @@ using ExcelRenderer;
 
 await ExcelConverter.ConvertToPdfAsync("input.xlsx", "output.pdf");
 await ExcelConverter.ConvertToImagesAsync("input.xlsx", "./images");
+await ExcelConverter.ConvertToSvgAsync("input.xlsx", "./svg-output");
 await ExcelConverter.ConvertToMarkdownAsync("input.xlsx", "output.md");
 ```
 
-Use `PdfExportOptions`, `ImageExportOptions`, and `MarkdownExportOptions` to select a worksheet or configure format-specific behavior. Existing output files, and non-empty image output directories, are not overwritten.
+Use `PdfExportOptions`, `ImageExportOptions`, `SvgExportOptions`, and `MarkdownExportOptions` to select a worksheet or configure format-specific behavior. Existing output files, and non-empty image or SVG output directories, are not overwritten.
 
 ### Command-line tool
 
-After installing `ExcelRenderer.Tool`, convert workbooks with the `pdf`, `image`, or `markdown` (`md`) commands:
+After installing `ExcelRenderer.Tool`, convert workbooks with the `pdf`, `image`, `svg`, or `markdown` (`md`) commands:
 
 ```bash
 excelrenderer pdf input.xlsx -o output.pdf
 excelrenderer image input.xlsx -o ./images
+excelrenderer svg input.xlsx -o ./svg-output
 excelrenderer md input.xlsx -o output.md
 ```
 
@@ -136,6 +139,17 @@ new PngRenderer().Render(
     dpi: 144);
 ```
 
+To render one self-contained SVG file per page, with dimensions and coordinates in PDF points:
+
+```csharp
+new SvgRenderer().Render(
+    commands,
+    sheet.PageSettings,
+    pageNumber => File.Create($"report-{pageNumber}.svg"));
+```
+
+SVG text is converted to vector paths so the viewer does not need the source font. This intentionally prevents text search and copy; it does not prevent editing. Raster images are embedded in each SVG. Text shaping has the same limitations as PNG rendering, and complex scripts or color/bitmap-only glyphs are not guaranteed.
+
 To convert an entire workbook to Markdown and extract its images:
 
 ```csharp
@@ -167,7 +181,7 @@ ExcelRenderer uses four main stages:
 1. `ExcelReader` converts a workbook into the library's report model.
 2. `ReportLayoutEngine` runs focused layout passes and creates a paginated `RenderDocument`.
 3. `DrawCommandGeneratorPass` converts laid-out cells and images into renderer-independent commands.
-4. `PdfSharpRenderer` or `PngRenderer` writes the final output.
+4. `PdfSharpRenderer`, `PngRenderer`, or `SvgRenderer` writes the final output.
 
 The [Japanese guide](README.ja.md) contains a detailed description of the models, layout passes, extension points, and rendering pipeline.
 

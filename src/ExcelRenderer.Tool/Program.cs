@@ -6,4 +6,5 @@ root.Subcommands.Add(PdfCommand.Create());
 root.Subcommands.Add(ImageCommand.Create());
 root.Subcommands.Add(SvgCommand.Create());
 root.Subcommands.Add(MarkdownCommand.Create());
+root.Subcommands.Add(RenderCommand.Create());
 return await root.Parse(args).InvokeAsync();

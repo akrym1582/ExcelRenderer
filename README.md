@@ -91,6 +91,13 @@ await ExcelConverter.ConvertToSvgAsync("input.xlsx", "./svg-output");
 await ExcelConverter.ConvertToMarkdownAsync("input.xlsx", "output.md");
 ```
 
+For stream-based integrations, `RenderAsync` reads from the input's current position and leaves both
+the input stream and a `SingleStreamOutputSink` output stream open. Use `DirectoryOutputSink` for
+page-by-page PNG/SVG output. `RenderRequest` selects sheets by exact name (in request order) and
+can select rendered PDF/PNG/SVG document pages; Markdown does not support page selection.
+`ConversionManifest.WriteAsync` writes the completed artifact metadata and diagnostics as schema
+version 1 JSON with relative artifact names.
+
 Use `PdfExportOptions`, `ImageExportOptions`, `SvgExportOptions`, and `MarkdownExportOptions` to select a worksheet or configure format-specific behavior. Existing output files, and non-empty image or SVG output directories, are not overwritten.
 
 ### Command-line tool

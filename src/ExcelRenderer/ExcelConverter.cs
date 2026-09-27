@@ -7,6 +7,7 @@ using ExcelRenderer.Layout;
 using ExcelRenderer.Markdown;
 using ExcelRenderer.Model;
 using ExcelRenderer.PdfSharp;
+using ExcelRenderer.Rendering;
 using ExcelRenderer.SkiaSharp;
 using PdfSharp.Fonts;
 using PdfSharp.Pdf;
@@ -15,7 +16,7 @@ using PdfSharp.Pdf.IO;
 namespace ExcelRenderer;
 
 /// <summary>Excel ファイルを PDF、PNG、SVG、または Markdown 文書へ変換する一連の操作を提供します。</summary>
-public static class ExcelConverter
+public static partial class ExcelConverter
 {
     /// <summary>Excel ブックのワークシートをレイアウトし、単一の PDF 文書へ非同期に変換します。</summary>
     /// <param name="inputPath">読み取る Excel ファイルのパスです。</param>
@@ -32,32 +33,9 @@ public static class ExcelConverter
         ValidateInput(inputPath);
         ValidateNewFile(outputPath);
         options ??= new PdfExportOptions();
-        cancellationToken.ThrowIfCancellationRequested();
-        var sheets = SelectSheets(new ExcelReader().Read(inputPath), options.SheetName);
-        EnsureParentDirectory(outputPath);
-
-        await Task.Run(
-            () =>
-            {
-                using var result = new PdfDocument();
-                foreach (var sheet in sheets)
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    using var rendered = new MemoryStream();
-                    new PdfSharpRenderer().Render(CreateCommands(sheet), sheet.PageSettings, rendered);
-                    rendered.Position = 0;
-                    using var source = PdfReader.Open(rendered, PdfDocumentOpenMode.Import);
-                    foreach (var page in source.Pages)
-                    {
-                        result.AddPage(page);
-                    }
-                }
-
-                using var output = File.Create(outputPath);
-                result.Save(output, false);
-            },
-            cancellationToken)
-        .ConfigureAwait(false);
+        await using var input = File.OpenRead(inputPath);
+        await RenderAsync(input, CreateLegacyRequest(OutputFormat.Pdf, options.SheetName), new NewFileOutputSink(outputPath), cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <summary>Excel ブックのワークシートをレイアウトし、各ページを PNG 画像へ非同期に変換します。</summary>
@@ -87,34 +65,14 @@ public static class ExcelConverter
                 "DPI must be greater than zero.");
         }
 
-        cancellationToken.ThrowIfCancellationRequested();
-        var sheets = SelectSheets(new ExcelReader().Read(inputPath), options.SheetName);
         if (Directory.Exists(outputDirectory) && Directory.EnumerateFileSystemEntries(outputDirectory).Any())
         {
             throw new IOException($"Output directory is not empty: {outputDirectory}");
         }
 
-        Directory.CreateDirectory(outputDirectory);
-
-        await Task.Run(
-            () =>
-            {
-                foreach (var sheet in sheets)
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    var sheetName = SanitizeFileName(sheet.Name);
-                    new PngRenderer().Render(
-                        CreateCommands(sheet),
-                        sheet.PageSettings,
-                        page =>
-                        File.Create(Path.Combine(
-                            outputDirectory,
-                            $"{sheetName}-{page}.png")),
-                        options.Dpi);
-                }
-            },
-            cancellationToken)
-        .ConfigureAwait(false);
+        await using var input = File.OpenRead(inputPath);
+        await RenderAsync(input, CreateLegacyRequest(OutputFormat.Png, options.SheetName, options.Dpi),
+            new DirectoryOutputSink(outputDirectory), cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Excel ブックのワークシートをレイアウトし、各ページを自己完結 SVG へ非同期に変換します。</summary>
@@ -136,61 +94,14 @@ public static class ExcelConverter
         }
 
         options ??= new SvgExportOptions();
-        cancellationToken.ThrowIfCancellationRequested();
-        var sheets = SelectSheets(new ExcelReader().Read(inputPath), options.SheetName);
         if (Directory.Exists(outputDirectory) && Directory.EnumerateFileSystemEntries(outputDirectory).Any())
         {
             throw new IOException($"Output directory is not empty: {outputDirectory}");
         }
 
-        Directory.CreateDirectory(outputDirectory);
-        var names = CreateUniqueSheetNames(sheets);
-        await Task.Run(
-            () =>
-            {
-                for (var sheetIndex = 0; sheetIndex < sheets.Length; sheetIndex++)
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    var sheet = sheets[sheetIndex];
-                    var commands = CreateCommands(sheet);
-                    var pages = commands.GroupBy(command => command.PageNumber).OrderBy(page => page.Key).ToArray();
-                    if (pages.Length == 0)
-                    {
-                        WriteSvgPage([], sheet.PageSettings, names[sheetIndex], 1);
-                        continue;
-                    }
-
-                    foreach (var page in pages)
-                    {
-                        cancellationToken.ThrowIfCancellationRequested();
-                        WriteSvgPage(page, sheet.PageSettings, names[sheetIndex], page.Key);
-                    }
-                }
-            },
-            cancellationToken)
-        .ConfigureAwait(false);
-
-        void WriteSvgPage(IEnumerable<DrawCommand> commands, PageSettings settings, string sheetName, int pageNumber)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            var path = Path.Combine(outputDirectory, $"{sheetName}-{pageNumber}.svg");
-            var created = false;
-            try
-            {
-                using var output = new FileStream(path, FileMode.CreateNew, FileAccess.Write, FileShare.None);
-                created = true;
-                new SvgRenderer().RenderPage(commands, settings, output);
-            }
-            catch
-            {
-                if (created && File.Exists(path))
-                {
-                    File.Delete(path);
-                }
-
-                throw;
-            }
-        }
+        await using var input = File.OpenRead(inputPath);
+        await RenderAsync(input, CreateLegacyRequest(OutputFormat.Svg, options.SheetName),
+            new DirectoryOutputSink(outputDirectory), cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Excel ブックの表領域を Markdown の表または HTML として表現し、埋め込み画像とともに非同期に出力します。</summary>
@@ -214,17 +125,12 @@ public static class ExcelConverter
             throw new ArgumentException("The image directory must be a relative path below the Markdown output directory.", nameof(options));
         }
 
-        cancellationToken.ThrowIfCancellationRequested();
-        var document = new ExcelReader().Read(inputPath);
-        var selected = new ReportDocument(SelectSheets(document, options.SheetName));
-        EnsureParentDirectory(outputPath);
-        await new MarkdownExporter().ExportToFileAsync(
-            selected,
-            outputPath,
-            options,
-            Path.GetFileName(inputPath),
-            cancellationToken)
-        .ConfigureAwait(false);
+        await using var input = File.OpenRead(inputPath);
+        await RenderAsync(
+            input,
+            CreateLegacyRequest(OutputFormat.Markdown, options.SheetName),
+            new LegacyMarkdownOutputSink(outputPath, options, Path.GetFileName(inputPath)),
+            cancellationToken).ConfigureAwait(false);
     }
 
     private static IReadOnlyList<DrawCommand> CreateCommands(ReportSheet sheet)
@@ -233,6 +139,21 @@ public static class ExcelConverter
         var layout = new ReportLayoutEngine(new PdfSharpTextMeasurer()).Layout(sheet);
         return new DrawCommandGeneratorPass().Generate(layout);
     }
+
+    private static RenderRequest CreateLegacyRequest(OutputFormat outputFormat, string? sheetName, double dpi = PngRenderer.DefaultDpi) =>
+        new()
+        {
+            OutputFormat = outputFormat,
+            Dpi = dpi,
+            Selection = sheetName is null ? new SelectionOptions() : new SelectionOptions { SheetNames = [sheetName] },
+            Input = new WorkbookInputOptions
+            {
+                MemoryThresholdBytes = long.MaxValue,
+                MaxInputBytes = long.MaxValue,
+                MaxZipEntryCount = int.MaxValue,
+                MaxUncompressedZipBytes = long.MaxValue,
+            },
+        };
 
     private static ReportSheet[] SelectSheets(ReportDocument document, string? sheetName)
     {

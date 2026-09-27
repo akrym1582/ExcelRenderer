@@ -1,6 +1,7 @@
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using ExcelRenderer.Model;
+using ExcelRenderer.Rendering;
 using A = DocumentFormat.OpenXml.Drawing;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
@@ -17,7 +18,23 @@ internal static class DrawingMLReader
     /// <returns>ワークシート名をキーとし、描画順に並んだ対応図形を値とする読み取り専用辞書を返します。</returns>
     public static IReadOnlyDictionary<string, IReadOnlyList<ReportShape>> Read(string path)
     {
-        using var document = SpreadsheetDocument.Open(path, false);
+        using var stream = File.OpenRead(path);
+        return Read(stream, null);
+    }
+
+    /// <summary>Reads DrawingML from a stream without closing the caller-owned stream.</summary>
+    public static IReadOnlyDictionary<string, IReadOnlyList<ReportShape>> Read(Stream input)
+    {
+        if (input is null) throw new ArgumentNullException(nameof(input));
+        using var copy = new MemoryStream();
+        input.CopyTo(copy);
+        copy.Position = 0;
+        return Read(copy, null);
+    }
+
+    internal static IReadOnlyDictionary<string, IReadOnlyList<ReportShape>> Read(Stream input, DiagnosticCollector? diagnostics)
+    {
+        using var document = SpreadsheetDocument.Open(input, false);
         var workbook = document.WorkbookPart;
         if (workbook?.Workbook.Sheets is null)
         {
@@ -47,6 +64,18 @@ internal static class DrawingMLReader
                         {
                             list.Add(parsed);
                         }
+                        else
+                        {
+                            diagnostics?.Add(new("UnsupportedShape", DiagnosticSeverity.Warning, DiagnosticStage.Read,
+                                $"DrawingML shape preset '{shape.ShapeProperties?.GetFirstChild<A.PresetGeometry>()?.Preset?.Value.ToString() ?? "unknown"}' is not supported.",
+                                sheet.Name?.Value, ObjectId: shape.NonVisualShapeProperties?.NonVisualDrawingProperties?.Id?.Value.ToString()));
+                        }
+                    }
+
+                    foreach (var child in anchor.ChildElements.Where(x => x is Xdr.GraphicFrame or Xdr.GroupShape))
+                    {
+                        diagnostics?.Add(new("UnsupportedDrawingObject", DiagnosticSeverity.Warning, DiagnosticStage.Read,
+                            $"DrawingML object '{child.LocalName}' is not supported.", sheet.Name?.Value));
                     }
 
                     z++;

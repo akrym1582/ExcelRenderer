@@ -85,6 +85,30 @@ public sealed class ToolIntegrationTests : IDisposable
         Assert.Contains("折り返し", await File.ReadAllTextAsync(output));
     }
 
+    /// <summary>render コマンドが RenderAsync 経由で PDF とマニフェストを生成することを検証します。</summary>
+    /// <returns>非同期の検証処理を表すタスク。</returns>
+    [Fact]
+    public async Task Render_command_creates_pdf_and_manifest()
+    {
+        var output = Path.Combine(_directory, "rendered", "report.pdf");
+        var manifest = Path.Combine(_directory, "rendered", "manifest.json");
+        var result = await RunAsync("render", Input, "-o", output, "--format", "pdf", "--pages", "1", "--manifest", manifest);
+        AssertSuccess(result);
+        Assert.Equal("%PDF", Encoding.ASCII.GetString(File.ReadAllBytes(output), 0, 4));
+        Assert.Contains("\"completionStatus\":\"Completed\"", await File.ReadAllTextAsync(manifest));
+    }
+
+    /// <summary>render コマンドがページごとの形式に出力ディレクトリを使用することを検証します。</summary>
+    /// <returns>非同期の検証処理を表すタスク。</returns>
+    [Fact]
+    public async Task Render_command_creates_svg_in_output_directory()
+    {
+        var output = Path.Combine(_directory, "rendered-svg");
+        var result = await RunAsync("render", Input, "-o", output, "--format", "svg", "--sheet", "折り返し");
+        AssertSuccess(result);
+        Assert.Single(Directory.GetFiles(output, "*.svg"));
+    }
+
     /// <summary>
     /// 存在しない入力パスまたは未対応の拡張子に対してコマンドが失敗することを検証します。
     /// </summary>

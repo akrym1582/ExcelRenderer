@@ -8,18 +8,19 @@ namespace ExcelRenderer.SkiaSharp;
 /// <summary>描画コマンドをページごとの PNG 画像として出力します。</summary>
 public sealed class PngRenderer
 {
+    /// <summary>PNG画像の標準解像度を取得します。</summary>
+    public const double DefaultDpi = 96;
+
     private readonly IFontManager? _fontManager;
 
-    /// <summary>Initializes a PNG renderer with the default bundled-font policy.</summary>
+    /// <summary>Initializes a new instance of the <see cref="PngRenderer"/> class. 既定の内蔵フォントポリシーを使用する PNG レンダラーを初期化します。</summary>
     public PngRenderer()
     {
     }
 
-    /// <summary>Initializes a PNG renderer using the supplied font manager.</summary>
+    /// <summary>Initializes a new instance of the <see cref="PngRenderer"/> class. 指定したフォントマネージャーを使用する PNG レンダラーを初期化します。</summary>
+    /// <param name="fontManager">文字の描画に使用するフォントを解決するマネージャーです。</param>
     public PngRenderer(IFontManager fontManager) => _fontManager = fontManager ?? throw new ArgumentNullException(nameof(fontManager));
-
-    /// <summary>PNG画像の標準解像度を取得します。</summary>
-    public const double DefaultDpi = 96;
 
     /// <summary>すべてのページを、ページ番号に対応する出力先へPNG画像として出力します。</summary>
     /// <param name="commands">出力対象の描画コマンドです。</param>

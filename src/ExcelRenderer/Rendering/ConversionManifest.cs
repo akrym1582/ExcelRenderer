@@ -3,16 +3,32 @@ using System.Text;
 
 namespace ExcelRenderer.Rendering;
 
-/// <summary>Serializes conversion results using the stable manifest schema.</summary>
+/// <summary>安定したマニフェストスキーマを使用して変換結果を直列化します。</summary>
 public static class ConversionManifest
 {
+    /// <summary>このライブラリが生成するマニフェストのスキーマバージョンです。</summary>
     public const int SchemaVersion = 1;
 
-    /// <summary>Writes a UTF-8 JSON manifest. The manifest contains relative artifact names only.</summary>
+    /// <summary>UTF-8 の JSON マニフェストを書き込みます。</summary>
+    /// <remarks>マニフェストには生成物の相対名だけが含まれるため、出力先の絶対パスを漏らしません。</remarks>
+    /// <param name="output">マニフェストを書き込むストリームです。呼び出し元が所有し、メソッドは閉じません。</param>
+    /// <param name="result">マニフェストへ変換する結果です。</param>
+    /// <param name="cancellationToken">書き込みのキャンセルを通知するトークンです。</param>
+    /// <returns>JSON の書き込みが完了したときに完了するタスクを返します。</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="output"/> または <paramref name="result"/> が <see langword="null"/> の場合にスローされます。</exception>
+    /// <exception cref="OperationCanceledException">書き込みがキャンセルされた場合にスローされます。</exception>
     public static Task WriteAsync(Stream output, ConversionResult result, CancellationToken cancellationToken = default)
     {
-        if (output is null) throw new ArgumentNullException(nameof(output));
-        if (result is null) throw new ArgumentNullException(nameof(result));
+        if (output is null)
+        {
+            throw new ArgumentNullException(nameof(output));
+        }
+
+        if (result is null)
+        {
+            throw new ArgumentNullException(nameof(result));
+        }
+
         cancellationToken.ThrowIfCancellationRequested();
         var json = new StringBuilder()
             .Append("{\"schemaVersion\":").Append(result.SchemaVersion)

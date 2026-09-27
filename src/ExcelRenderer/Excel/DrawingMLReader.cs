@@ -8,7 +8,7 @@ using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 
 namespace ExcelRenderer.Excel;
 
-/// <summary>Reads the DrawingML features that ClosedXML deliberately does not expose.</summary>
+/// <summary>ClosedXML が公開していない DrawingML の機能を読み取ります。</summary>
 internal static class DrawingMLReader
 {
     private const double EmusPerPoint = 914400d / 72d;
@@ -22,16 +22,26 @@ internal static class DrawingMLReader
         return Read(stream, null);
     }
 
-    /// <summary>Reads DrawingML from a stream without closing the caller-owned stream.</summary>
+    /// <summary>ストリームから DrawingML を読み取り、呼び出し元が所有するストリームを閉じずに処理します。</summary>
+    /// <param name="input">読み取り対象の Excel データを含むストリームです。</param>
+    /// <returns>ワークシート名をキーとし、描画順に並んだ対応図形を値とする読み取り専用辞書を返します。</returns>
     public static IReadOnlyDictionary<string, IReadOnlyList<ReportShape>> Read(Stream input)
     {
-        if (input is null) throw new ArgumentNullException(nameof(input));
+        if (input is null)
+        {
+            throw new ArgumentNullException(nameof(input));
+        }
+
         using var copy = new MemoryStream();
         input.CopyTo(copy);
         copy.Position = 0;
         return Read(copy, null);
     }
 
+    /// <summary>読み取り時の診断情報を収集しながら、ストリーム内の DrawingML を解析します。</summary>
+    /// <param name="input">読み取り対象の Excel データを含むストリームです。</param>
+    /// <param name="diagnostics">解析できない描画オブジェクトの診断情報を追加するコレクターです。</param>
+    /// <returns>ワークシート名をキーとし、描画順に並んだ対応図形を値とする読み取り専用辞書を返します。</returns>
     internal static IReadOnlyDictionary<string, IReadOnlyList<ReportShape>> Read(Stream input, DiagnosticCollector? diagnostics)
     {
         using var document = SpreadsheetDocument.Open(input, false);
@@ -66,16 +76,26 @@ internal static class DrawingMLReader
                         }
                         else
                         {
-                            diagnostics?.Add(new("UnsupportedShape", DiagnosticSeverity.Warning, DiagnosticStage.Read,
-                                $"DrawingML shape preset '{shape.ShapeProperties?.GetFirstChild<A.PresetGeometry>()?.Preset?.Value.ToString() ?? "unknown"}' is not supported.",
-                                sheet.Name?.Value, ObjectId: shape.NonVisualShapeProperties?.NonVisualDrawingProperties?.Id?.Value.ToString()));
+                            diagnostics?.Add(
+                                new(
+                                    "UnsupportedShape",
+                                    DiagnosticSeverity.Warning,
+                                    DiagnosticStage.Read,
+                                    $"DrawingML shape preset '{shape.ShapeProperties?.GetFirstChild<A.PresetGeometry>()?.Preset?.Value.ToString() ?? "unknown"}' is not supported.",
+                                    sheet.Name?.Value,
+                                    ObjectId: shape.NonVisualShapeProperties?.NonVisualDrawingProperties?.Id?.Value.ToString()));
                         }
                     }
 
                     foreach (var child in anchor.ChildElements.Where(x => x is Xdr.GraphicFrame or Xdr.GroupShape))
                     {
-                        diagnostics?.Add(new("UnsupportedDrawingObject", DiagnosticSeverity.Warning, DiagnosticStage.Read,
-                            $"DrawingML object '{child.LocalName}' is not supported.", sheet.Name?.Value));
+                        diagnostics?.Add(
+                            new(
+                                "UnsupportedDrawingObject",
+                                DiagnosticSeverity.Warning,
+                                DiagnosticStage.Read,
+                                $"DrawingML object '{child.LocalName}' is not supported.",
+                                sheet.Name?.Value));
                     }
 
                     z++;

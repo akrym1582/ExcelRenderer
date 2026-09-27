@@ -1,3 +1,4 @@
+using System.Text;
 using ExcelRenderer.Drawing;
 using ExcelRenderer.Excel;
 using ExcelRenderer.Fonts;
@@ -10,25 +11,39 @@ using ExcelRenderer.SkiaSharp;
 using PdfSharp.Fonts;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
-using System.Text;
 
 namespace ExcelRenderer;
 
+/// <summary>Excel ブックをストリームから非同期に読み取り、指定された出力先へ変換します。</summary>
 public static partial class ExcelConverter
 {
-    /// <summary>
-    /// Converts an XLSX stream from its current position to artifacts supplied by <paramref name="sink"/>.
-    /// Neither <paramref name="input"/> nor streams returned by the sink are closed by this method.
-    /// </summary>
+    /// <summary>現在位置から XLSX ストリームを読み取り、指定された出力シンクへ変換成果物を書き込みます。</summary>
+    /// <param name="input">読み取り対象の XLSX データを含むストリームです。メソッドはこのストリームを閉じません。</param>
+    /// <param name="request">出力形式、シート選択、解像度、および診断ポリシーを指定する変換設定です。</param>
+    /// <param name="sink">生成した成果物を受け取り、保存する出力シンクです。</param>
+    /// <param name="cancellationToken">変換処理のキャンセルを通知するトークンです。</param>
+    /// <returns>すべての成果物の書き込みが完了したときに完了するタスクを返します。</returns>
     public static async Task<ConversionResult> RenderAsync(
         Stream input,
         RenderRequest request,
         IRenderOutputSink sink,
         CancellationToken cancellationToken = default)
     {
-        if (input is null) throw new ArgumentNullException(nameof(input));
-        if (request is null) throw new ArgumentNullException(nameof(request));
-        if (sink is null) throw new ArgumentNullException(nameof(sink));
+        if (input is null)
+        {
+            throw new ArgumentNullException(nameof(input));
+        }
+
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        if (sink is null)
+        {
+            throw new ArgumentNullException(nameof(sink));
+        }
+
         ValidateRequest(request);
         var diagnostics = new DiagnosticCollector(request.DiagnosticOptions);
         var artifacts = new List<ArtifactMetadata>();
@@ -38,7 +53,9 @@ public static partial class ExcelConverter
             var document = new ExcelReader().Read(source, diagnostics);
             var sheets = SelectSheets(document, request.Selection.SheetNames);
             if (diagnostics.HasFailure)
+            {
                 throw Failure("Conversion was stopped by diagnostic policy.", null, diagnostics, artifacts);
+            }
 
             if (request.OutputFormat == OutputFormat.Markdown && request.Selection.Pages is not null)
             {
@@ -48,19 +65,33 @@ public static partial class ExcelConverter
             if (request.OutputFormat == OutputFormat.Markdown)
             {
                 await WriteMarkdownAsync(sheets, sink, artifacts, cancellationToken).ConfigureAwait(false);
-                return new(ConversionManifest.SchemaVersion, "Completed", sheets.Select(x => x.Sheet.Name).ToArray(),
-                    Array.Empty<RenderPageDescriptor>(), artifacts, diagnostics.ToArray());
+                return new(
+                    ConversionManifest.SchemaVersion,
+                    "Completed",
+                    sheets.Select(x => x.Sheet.Name).ToArray(),
+                    Array.Empty<RenderPageDescriptor>(),
+                    artifacts,
+                    diagnostics.ToArray());
             }
 
             var pages = LayoutPages(sheets, request.Dpi, request.FontOptions);
             var selectedPages = SelectPages(pages, request.Selection.Pages);
             if (request.OutputFormat == OutputFormat.Pdf)
+            {
                 await WritePdfAsync(selectedPages, sink, artifacts, cancellationToken).ConfigureAwait(false);
+            }
             else
+            {
                 await WritePageArtifactsAsync(selectedPages, request, sink, artifacts, cancellationToken).ConfigureAwait(false);
+            }
 
-            return new(ConversionManifest.SchemaVersion, "Completed", sheets.Select(x => x.Sheet.Name).ToArray(),
-                selectedPages.Select(x => x.Descriptor).ToArray(), artifacts, diagnostics.ToArray());
+            return new(
+                ConversionManifest.SchemaVersion,
+                "Completed",
+                sheets.Select(x => x.Sheet.Name).ToArray(),
+                selectedPages.Select(x => x.Descriptor).ToArray(),
+                artifacts,
+                diagnostics.ToArray());
         }
         catch (OperationCanceledException)
         {
@@ -83,7 +114,9 @@ public static partial class ExcelConverter
     private static void ValidateRequest(RenderRequest request)
     {
         if (double.IsNaN(request.Dpi) || double.IsInfinity(request.Dpi) || request.Dpi <= 0)
+        {
             throw new ArgumentOutOfRangeException(nameof(request), "DPI must be a positive finite value.");
+        }
     }
 
     private static IReadOnlyList<SheetPage> LayoutPages(IReadOnlyList<SelectedSheet> sheets, double dpi, FontOptions fontOptions)
@@ -101,9 +134,21 @@ public static partial class ExcelConverter
             {
                 var width = selected.Sheet.PageSettings.Width;
                 var height = selected.Sheet.PageSettings.Height;
-                pages.Add(new(selected.Sheet, Array.Empty<DrawCommand>(), new(selected.Index, selected.Sheet.Name, 1,
-                    ++documentPage, null, width, height, checked((int)Math.Ceiling(width * dpi / 72d)),
-                    checked((int)Math.Ceiling(height * dpi / 72d)), dpi)));
+                pages.Add(
+                    new(
+                        selected.Sheet,
+                        Array.Empty<DrawCommand>(),
+                        new(
+                            selected.Index,
+                            selected.Sheet.Name,
+                            1,
+                            ++documentPage,
+                            null,
+                            width,
+                            height,
+                            checked((int)Math.Ceiling(width * dpi / 72d)),
+                            checked((int)Math.Ceiling(height * dpi / 72d)),
+                            dpi)));
                 continue;
             }
 
@@ -114,55 +159,104 @@ public static partial class ExcelConverter
                 var height = selected.Sheet.PageSettings.Height;
                 var pixels = checked((int)Math.Ceiling(width * dpi / 72d));
                 var pixelHeight = checked((int)Math.Ceiling(height * dpi / 72d));
-                pages.Add(new(selected.Sheet, group.ToArray(), new(selected.Index, selected.Sheet.Name, sourcePage,
-                    ++documentPage, null, width, height, pixels, pixelHeight, dpi)));
+                pages.Add(
+                    new(
+                        selected.Sheet,
+                        group.ToArray(),
+                        new(
+                            selected.Index,
+                            selected.Sheet.Name,
+                            sourcePage,
+                            ++documentPage,
+                            null,
+                            width,
+                            height,
+                            pixels,
+                            pixelHeight,
+                            dpi)));
             }
         }
+
         return pages;
     }
 
     private static IReadOnlyList<SheetPage> SelectPages(IReadOnlyList<SheetPage> pages, IReadOnlyList<int>? requested)
     {
-        if (requested is null) return pages.Select((x, i) => x with { Descriptor = x.Descriptor with { OutputPageNumber = i + 1 } }).ToArray();
-        if (requested.Count == 0 || requested.Any(x => x <= 0)) throw new ArgumentException("Page numbers must be positive.");
+        if (requested is null)
+        {
+            return pages.Select((x, i) => x with { Descriptor = x.Descriptor with { OutputPageNumber = i + 1 } }).ToArray();
+        }
+
+        if (requested.Count == 0 || requested.Any(x => x <= 0))
+        {
+            throw new ArgumentException("Page numbers must be positive.");
+        }
+
         var wanted = new HashSet<int>(requested);
-        if (wanted.Any(x => x > pages.Count)) throw new ArgumentOutOfRangeException(nameof(requested), "A selected page is outside the document.");
+        if (wanted.Any(x => x > pages.Count))
+        {
+            throw new ArgumentOutOfRangeException(nameof(requested), "A selected page is outside the document.");
+        }
+
         return pages.Where(x => wanted.Contains(x.Descriptor.DocumentPageNumber))
             .Select((x, i) => x with { Descriptor = x.Descriptor with { OutputPageNumber = i + 1 } }).ToArray();
     }
 
     private static IReadOnlyList<SelectedSheet> SelectSheets(ReportDocument document, IReadOnlyList<string>? names)
     {
-        if (names is null) return document.Sheets.Select((x, i) => new SelectedSheet(i + 1, x)).ToArray();
-        if (names.Any(string.IsNullOrEmpty)) throw new ArgumentException("Sheet names must not be empty.", nameof(names));
+        if (names is null)
+        {
+            return document.Sheets.Select((x, i) => new SelectedSheet(i + 1, x)).ToArray();
+        }
+
+        if (names.Any(string.IsNullOrEmpty))
+        {
+            throw new ArgumentException("Sheet names must not be empty.", nameof(names));
+        }
+
         var selected = new List<SelectedSheet>();
         var seen = new HashSet<string>(StringComparer.Ordinal);
         foreach (var name in names)
         {
-            if (!seen.Add(name)) continue;
+            if (!seen.Add(name))
+            {
+                continue;
+            }
+
             var index = document.Sheets.ToList().FindIndex(x => string.Equals(x.Name, name, StringComparison.Ordinal));
-            if (index < 0) throw new ArgumentException($"Worksheet was not found: {name}", nameof(names));
+            if (index < 0)
+            {
+                throw new ArgumentException($"Worksheet was not found: {name}", nameof(names));
+            }
+
             selected.Add(new(index + 1, document.Sheets[index]));
         }
+
         return selected;
     }
 
     private static async Task WritePdfAsync(IReadOnlyList<SheetPage> pages, IRenderOutputSink sink, List<ArtifactMetadata> artifacts, CancellationToken token)
     {
         var descriptor = new ArtifactDescriptor("pdf", "pdf", "application/pdf", "workbook.pdf");
-        await WriteArtifactAsync(sink, descriptor, artifacts, stream =>
-        {
-            using var result = new PdfDocument();
-            foreach (var page in pages)
+        await WriteArtifactAsync(
+            sink,
+            descriptor,
+            artifacts,
+            stream =>
             {
-                using var rendered = new MemoryStream();
-                new PdfSharpRenderer().Render(page.Commands, page.Sheet.PageSettings, rendered);
-                rendered.Position = 0;
-                using var source = PdfReader.Open(rendered, PdfDocumentOpenMode.Import);
-                result.AddPage(source.Pages[0]);
-            }
-            result.Save(stream, false);
-        }, token).ConfigureAwait(false);
+                using var result = new PdfDocument();
+                foreach (var page in pages)
+                {
+                    using var rendered = new MemoryStream();
+                    new PdfSharpRenderer().Render(page.Commands, page.Sheet.PageSettings, rendered);
+                    rendered.Position = 0;
+                    using var source = PdfReader.Open(rendered, PdfDocumentOpenMode.Import);
+                    result.AddPage(source.Pages[0]);
+                }
+
+                result.Save(stream, false);
+            },
+            token).ConfigureAwait(false);
     }
 
     private static async Task WritePageArtifactsAsync(IReadOnlyList<SheetPage> pages, RenderRequest request, IRenderOutputSink sink, List<ArtifactMetadata> artifacts, CancellationToken token)
@@ -174,16 +268,30 @@ public static partial class ExcelConverter
         {
             token.ThrowIfCancellationRequested();
             var safe = names[page.Descriptor.SourceSheetIndex];
-            var descriptor = new ArtifactDescriptor($"{extension}-{page.Descriptor.OutputPageNumber}", extension, media,
-                $"{safe}-{page.Descriptor.SourcePageNumber}.{extension}", page.Descriptor.SourcePageNumber, page.Descriptor.OutputPageNumber);
-            await WriteArtifactAsync(sink, descriptor, artifacts, stream =>
-            {
-                var fontManager = new FontManager(request.FontOptions);
-                if (request.OutputFormat == OutputFormat.Png)
-                    new PngRenderer(fontManager).RenderPage(page.Commands, page.Sheet.PageSettings, stream, request.Dpi);
-                else
-                    new SvgRenderer(fontManager).RenderPage(page.Commands, page.Sheet.PageSettings, stream);
-            }, token).ConfigureAwait(false);
+            var descriptor = new ArtifactDescriptor(
+                $"{extension}-{page.Descriptor.OutputPageNumber}",
+                extension,
+                media,
+                $"{safe}-{page.Descriptor.SourcePageNumber}.{extension}",
+                page.Descriptor.SourcePageNumber,
+                page.Descriptor.OutputPageNumber);
+            await WriteArtifactAsync(
+                sink,
+                descriptor,
+                artifacts,
+                stream =>
+                {
+                    var fontManager = new FontManager(request.FontOptions);
+                    if (request.OutputFormat == OutputFormat.Png)
+                    {
+                        new PngRenderer(fontManager).RenderPage(page.Commands, page.Sheet.PageSettings, stream, request.Dpi);
+                    }
+                    else
+                    {
+                        new SvgRenderer(fontManager).RenderPage(page.Commands, page.Sheet.PageSettings, stream);
+                    }
+                },
+                token).ConfigureAwait(false);
         }
     }
 
@@ -195,17 +303,28 @@ public static partial class ExcelConverter
             return WriteLegacyMarkdownAsync(markdownSink, sheets, descriptor, artifacts, token);
         }
 
-        return WriteArtifactAsync(sink, descriptor, artifacts, stream =>
-        {
-            using var writer = new StreamWriter(stream, new UTF8Encoding(false), 1024, leaveOpen: true);
-            foreach (var sheet in sheets)
+        return WriteArtifactAsync(
+            sink,
+            descriptor,
+            artifacts,
+            stream =>
             {
-                writer.WriteLine("## Sheet: " + sheet.Sheet.Name);
-                foreach (var cell in sheet.Sheet.Cells.OrderBy(x => x.Key.Row).ThenBy(x => x.Key.Column))
-                    if (!string.IsNullOrEmpty(cell.Value.Text)) writer.WriteLine(cell.Value.Text);
-                writer.WriteLine();
-            }
-        }, token);
+                using var writer = new StreamWriter(stream, new UTF8Encoding(false), 1024, leaveOpen: true);
+                foreach (var sheet in sheets)
+                {
+                    writer.WriteLine("## Sheet: " + sheet.Sheet.Name);
+                    foreach (var cell in sheet.Sheet.Cells.OrderBy(x => x.Key.Row).ThenBy(x => x.Key.Column))
+                    {
+                        if (!string.IsNullOrEmpty(cell.Value.Text))
+                        {
+                            writer.WriteLine(cell.Value.Text);
+                        }
+                    }
+
+                    writer.WriteLine();
+                }
+            },
+            token);
     }
 
     private static async Task WriteLegacyMarkdownAsync(
@@ -236,9 +355,16 @@ public static partial class ExcelConverter
         {
             if (stream is not null)
             {
-                try { await sink.AbortAsync(descriptor, error, token).ConfigureAwait(false); }
-                catch (Exception abortError) { error.Data["AbortException"] = abortError; }
+                try
+                {
+                    await sink.AbortAsync(descriptor, error, token).ConfigureAwait(false);
+                }
+                catch (Exception abortError)
+                {
+                    error.Data["AbortException"] = abortError;
+                }
             }
+
             throw;
         }
     }
@@ -278,23 +404,37 @@ public static partial class ExcelConverter
     }
 
     private sealed record SelectedSheet(int Index, ReportSheet Sheet);
+
     private sealed record SheetPage(ReportSheet Sheet, IReadOnlyList<DrawCommand> Commands, RenderPageDescriptor Descriptor);
 
     private sealed class CountingStream : Stream
     {
         private readonly Stream _inner;
+
         public CountingStream(Stream inner) => _inner = inner;
+
         public long BytesWritten { get; private set; }
+
         public override bool CanRead => _inner.CanRead;
+
         public override bool CanSeek => _inner.CanSeek;
+
         public override bool CanWrite => _inner.CanWrite;
+
         public override long Length => _inner.Length;
+
         public override long Position { get => _inner.Position; set => _inner.Position = value; }
+
         public override void Flush() => _inner.Flush();
+
         public override Task FlushAsync(CancellationToken cancellationToken) => _inner.FlushAsync(cancellationToken);
+
         public override int Read(byte[] buffer, int offset, int count) => _inner.Read(buffer, offset, count);
+
         public override long Seek(long offset, SeekOrigin origin) => _inner.Seek(offset, origin);
+
         public override void SetLength(long value) => _inner.SetLength(value);
+
         public override void Write(byte[] buffer, int offset, int count)
         {
             _inner.Write(buffer, offset, count);

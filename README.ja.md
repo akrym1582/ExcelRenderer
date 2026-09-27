@@ -92,6 +92,14 @@ dotnet tool run excelrenderer --help
 追加ディレクトリを設定済みフォールバックおよび同梱フォントより先に検索します。フォール
 バックは Unicode テキスト要素単位で決定するため、サロゲートペアと結合文字列は分断しません。
 
+統合 `render` コマンドでは、選択した各シートを印刷ページの余白・改ページ・タイトル・ヘッダーなしの連続画像として出力できます。
+
+```bash
+excelrenderer render input.xlsx -o ./continuous-images --format svg --image-layout continuous
+```
+
+連続レイアウトは PNG と SVG のみで、`--pages` とは併用できません。印刷範囲ではなくシートの使用範囲を使います。PNG の連続出力は、RGBA bitmap とエンコード時の追加メモリを安全に抑えるため、既定で 1 億ピクセル（bitmap 本体で約 381 MiB）の上限を適用します。より大きいキャンバスが必要な場合も、`RenderRequest.MaxPngPixels` には安全な有限値を指定してください。
+
 ## 対応範囲
 
 - ClosedXML による `.xlsx` の読み込み

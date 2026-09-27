@@ -45,4 +45,25 @@ public sealed class ReportLayoutEngine
 
         return context.RenderDocument ?? new RenderDocument([]);
     }
+
+    /// <summary>印刷範囲やページ設定を適用せず、使用範囲を単一キャンバスへ配置します。</summary>
+    public ContinuousRenderDocument LayoutContinuous(ReportSheet sheet)
+    {
+        var context = new ReportLayoutContext(sheet, TextMeasurer);
+        new NormalizePass().Execute(context);
+        new ResolvePrintAreaPass { IgnoreExplicitPrintArea = true }.Execute(context);
+        new HiddenRowColumnPass { IncludePrintTitles = false }.Execute(context);
+        new ColumnLayoutPass().Execute(context);
+        new RowLayoutPass().Execute(context);
+        new TextMeasurePass().Execute(context);
+        new CellBoundsPass().Execute(context);
+        new ContinuousLayoutPass().Execute(context);
+        var document = context.RenderDocument ?? new RenderDocument([]);
+        var bounds = document.Pages.SelectMany(page => page.Cells.Select(cell => cell.Bounds)
+            .Concat((page.Images ?? []).Select(image => image.Bounds))
+            .Concat((page.Shapes ?? []).Select(shape => shape.Bounds))).ToArray();
+        var width = bounds.Length == 0 ? 1 : Math.Max(1, bounds.Max(bound => bound.X + bound.Width));
+        var height = bounds.Length == 0 ? 1 : Math.Max(1, bounds.Max(bound => bound.Y + bound.Height));
+        return new(document, width, height);
+    }
 }

@@ -32,6 +32,18 @@ public static class RenderCommand
                 result.AddError("--pages must use positive page numbers and ranges, for example: 1,3-5.");
             }
         });
+        var imageLayout = new Option<string>("--image-layout")
+        {
+            Description = "Image layout for PNG/SVG: paginated or continuous.",
+            DefaultValueFactory = _ => "paginated",
+        };
+        imageLayout.Validators.Add(result =>
+        {
+            if (result.GetValueOrDefault<string>() is not ("paginated" or "continuous"))
+            {
+                result.AddError("--image-layout must be paginated or continuous.");
+            }
+        });
         var strict = new Option<bool>("--strict") { Description = "Treat all warnings and errors as conversion failures." };
         var warningsAsErrors = new Option<string[]>("--warnings-as-errors")
         {
@@ -65,7 +77,7 @@ public static class RenderCommand
         var noSystemFonts = new Option<bool>("--no-system-fonts") { Description = "Do not search operating-system fonts." };
         var command = new Command("render", "Render an Excel workbook using the unified rendering API.")
         {
-            input, output, format, sheet, pages, strict, warningsAsErrors, manifest, fontPolicy, fontDirectories, fallbackFonts, noSystemFonts,
+            input, output, format, sheet, pages, imageLayout, strict, warningsAsErrors, manifest, fontPolicy, fontDirectories, fallbackFonts, noSystemFonts,
         };
 
         command.SetAction((result, cancellationToken) => CommandSupport.RunAsync(() => RenderAsync(
@@ -74,6 +86,7 @@ public static class RenderCommand
             result.GetValue(format)!,
             result.GetValue(sheet),
             result.GetValue(pages),
+            result.GetValue(imageLayout)!,
             result.GetValue(strict),
             result.GetValue(warningsAsErrors),
             result.GetValue(manifest),
@@ -91,6 +104,7 @@ public static class RenderCommand
         string formatText,
         string[]? sheetNames,
         string? pagesText,
+        string imageLayoutText,
         bool strict,
         string[]? warningsAsErrors,
         string? manifestPath,
@@ -100,7 +114,8 @@ public static class RenderCommand
         bool noSystemFonts,
         CancellationToken cancellationToken)
     {
-        if (!TryParseFormat(formatText, out var format) || !TryParsePages(pagesText, out var pages))
+        if (!TryParseFormat(formatText, out var format) || !TryParsePages(pagesText, out var pages) ||
+            !TryParseImageLayout(imageLayoutText, out var imageLayout))
         {
             throw new ArgumentException("Invalid render command options.");
         }
@@ -108,6 +123,7 @@ public static class RenderCommand
         var request = new RenderRequest
         {
             OutputFormat = format,
+            ImageLayout = imageLayout,
             Selection = new SelectionOptions
             {
                 SheetNames = sheetNames is { Length: > 0 } ? sheetNames : null,
@@ -162,6 +178,18 @@ public static class RenderCommand
             text.Equals("png", StringComparison.OrdinalIgnoreCase) ||
             text.Equals("svg", StringComparison.OrdinalIgnoreCase) ||
             text.Equals("markdown", StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static bool TryParseImageLayout(string? text, out ImageLayoutMode layout)
+    {
+        layout = text?.ToLowerInvariant() switch
+        {
+            "paginated" => ImageLayoutMode.Paginated,
+            "continuous" => ImageLayoutMode.Continuous,
+            _ => default,
+        };
+        return text is not null && (text.Equals("paginated", StringComparison.OrdinalIgnoreCase) ||
+            text.Equals("continuous", StringComparison.OrdinalIgnoreCase));
     }
 
     private static bool TryParsePages(string? text, out IReadOnlyList<int>? pages)

@@ -8,6 +8,9 @@ namespace ExcelRenderer.Layout;
 /// </summary>
 public sealed class HiddenRowColumnPass : IReportLayoutPass
 {
+    /// <summary>Gets or sets whether print titles are included in the visible range.</summary>
+    public bool IncludePrintTitles { get; init; } = true;
+
     /// <summary>
     /// 印刷範囲と印刷タイトルの行列から非表示項目を除外し、描画対象の行番号と列番号を確定します。
     /// </summary>
@@ -21,7 +24,7 @@ public sealed class HiddenRowColumnPass : IReportLayoutPass
 
         var settings = context.Sheet.PageSettings;
         var columns = Enumerable.Range(area.First.Column, area.Last.Column - area.First.Column + 1);
-        if (settings.TitleColumns is { } titleColumns)
+        if (IncludePrintTitles && settings.TitleColumns is { } titleColumns)
         {
             columns = columns.Concat(Enumerable.Range(titleColumns.First, titleColumns.Last - titleColumns.First + 1));
         }
@@ -29,7 +32,7 @@ public sealed class HiddenRowColumnPass : IReportLayoutPass
         context.VisibleColumns = columns.Distinct().OrderBy(column => column)
             .Where(column => !context.Sheet.Columns.GetValueOrDefault(column, new()).IsHidden).ToArray();
         var rows = Enumerable.Range(area.First.Row, area.Last.Row - area.First.Row + 1);
-        if (settings.TitleRows is { } titleRows)
+        if (IncludePrintTitles && settings.TitleRows is { } titleRows)
         {
             rows = rows.Concat(Enumerable.Range(titleRows.First, titleRows.Last - titleRows.First + 1));
         }

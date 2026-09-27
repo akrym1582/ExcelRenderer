@@ -15,6 +15,31 @@ namespace ExcelRenderer.Tests;
 /// </summary>
 public sealed class LayoutPassTests
 {
+    /// <summary>連続レイアウトが印刷範囲とページ設定を無視し、元の座標を保持することを検証します。</summary>
+    [Fact]
+    public void LayoutContinuous_uses_used_range_without_print_scaling_or_margins()
+    {
+        var sheet = new ReportSheet(
+            "Sheet",
+            new Dictionary<CellAddress, ReportCell>
+            {
+                [new(1, 1)] = new("left", CellStyle.Default),
+                [new(1, 2)] = new("right", CellStyle.Default),
+            },
+            new Dictionary<int, ColumnDefinition> { [1] = new(50), [2] = new(70) },
+            new Dictionary<int, RowDefinition> { [1] = new(20) },
+            [],
+            new(70, 100, 10, 10, 10, 10, Scale: 0.5),
+            new(new(1, 1), new(1, 1)));
+
+        var layout = new ReportLayoutEngine(new PdfSharpTextMeasurer()).LayoutContinuous(sheet);
+
+        var page = Assert.Single(layout.Document.Pages);
+        Assert.Equal(120, layout.Width);
+        Assert.Equal(20, layout.Height);
+        Assert.Equal(new ReportRect(50, 0, 70, 20), page.Cells.Single(cell => cell.Cell.Text == "right").Bounds);
+    }
+
     /// <summary>
     /// 各列の X 座標が先行列の幅を累積した位置に設定されることを検証します。
     /// </summary>

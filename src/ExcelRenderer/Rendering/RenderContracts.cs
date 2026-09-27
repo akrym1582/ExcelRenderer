@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using ExcelRenderer.Fonts;
 
 namespace ExcelRenderer.Rendering;
 
@@ -62,6 +63,8 @@ public sealed record RenderRequest
     public SelectionOptions Selection { get; init; } = new();
     public DiagnosticOptions DiagnosticOptions { get; init; } = new();
     public WorkbookInputOptions Input { get; init; } = new();
+    /// <summary>Controls font selection for PDF, PNG, and SVG rendering.</summary>
+    public FontOptions FontOptions { get; init; } = new();
     public double Dpi { get; init; } = 96;
 }
 

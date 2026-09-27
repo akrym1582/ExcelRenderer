@@ -3,6 +3,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using ExcelRenderer.Drawing;
+using ExcelRenderer.Fonts;
 using ExcelRenderer.Model;
 using SkiaSharp;
 
@@ -11,6 +12,16 @@ namespace ExcelRenderer.SkiaSharp;
 /// <summary>描画コマンドを、文字をパス化したページごとの自己完結 SVG として出力します。</summary>
 public sealed class SvgRenderer
 {
+    private readonly IFontManager? _fontManager;
+
+    /// <summary>Initializes an SVG renderer with the default bundled-font policy.</summary>
+    public SvgRenderer()
+    {
+    }
+
+    /// <summary>Initializes an SVG renderer using the supplied font manager.</summary>
+    public SvgRenderer(IFontManager fontManager) => _fontManager = fontManager ?? throw new ArgumentNullException(nameof(fontManager));
+
     /// <summary>すべてのページを、ページ番号に対応する出力先へ SVG として出力します。</summary>
     /// <param name="commands">出力対象の描画コマンドです。</param>
     /// <param name="pageSettings">ページの寸法と余白の設定です。</param>
@@ -89,7 +100,7 @@ public sealed class SvgRenderer
         {
             using var background = new SKPaint { Color = SKColors.White, Style = SKPaintStyle.Fill };
             canvas.DrawRect(0, 0, (float)pageSettings.Width, (float)pageSettings.Height, background);
-            var drawingContext = new SkiaDrawingContext(textAsPaths: true);
+            var drawingContext = new SkiaDrawingContext(textAsPaths: true, _fontManager);
             foreach (var command in commands)
             {
                 drawingContext.Execute(canvas, command);

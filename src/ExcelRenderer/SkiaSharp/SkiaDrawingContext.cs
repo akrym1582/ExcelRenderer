@@ -10,12 +10,14 @@ namespace ExcelRenderer.SkiaSharp;
 internal sealed class SkiaDrawingContext
 {
     private readonly bool _textAsPaths;
+    private readonly IFontManager? _fontManager;
 
     /// <summary>Initializes a new instance of the <see cref="SkiaDrawingContext"/> class.</summary>
     /// <param name="textAsPaths">true の場合は文字をパスとして描画します。</param>
-    internal SkiaDrawingContext(bool textAsPaths)
+    internal SkiaDrawingContext(bool textAsPaths, IFontManager? fontManager = null)
     {
         _textAsPaths = textAsPaths;
+        _fontManager = fontManager;
     }
 
     /// <summary>単一の描画コマンドを実行します。</summary>
@@ -122,7 +124,12 @@ internal sealed class SkiaDrawingContext
 
     private void DrawText(SKCanvas canvas, DrawTextCommand command)
     {
-        var bundledTypeface = BundledJapaneseFont.Typeface;
+        var resolved = _fontManager?.Resolve(new FontRequest(
+            command.Style.Font.Family,
+            command.Style.Font.Bold ? 700 : 400,
+            command.Style.Font.Italic));
+        using var resolvedTypeface = resolved is null ? null : CreateTypeface(resolved);
+        var bundledTypeface = resolvedTypeface ?? BundledJapaneseFont.Typeface;
         using var systemTypeface = bundledTypeface is null
             ? SKTypeface.FromFamilyName(
                 command.Style.Font.Family,
@@ -195,6 +202,14 @@ internal sealed class SkiaDrawingContext
         }
 
         canvas.Restore();
+    }
+
+    private static SKTypeface? CreateTypeface(ResolvedFont font)
+    {
+        using Stream stream = font.FontData is null
+            ? File.OpenRead(font.FilePath)
+            : new MemoryStream(font.FontData, writable: false);
+        return SKTypeface.FromStream(stream);
     }
 
     private IReadOnlyList<string> WrapText(string text, SKFont font, SKPaint paint, double width, bool wrap)

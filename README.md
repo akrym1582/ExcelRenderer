@@ -181,6 +181,12 @@ GlobalFontSettings.FontResolver = new PdfSharpFontResolver(
     "/app/fonts/NotoSansJP-Regular.ttf");
 ```
 
+The unified `render` command also accepts `--font-policy bundled|requested`, repeated `--font-dir`
+and `--fallback-font` options, and `--no-system-fonts`. `bundled` is the default for compatibility;
+`requested` prioritizes registered and supplied font directories before configured fallbacks and the
+bundled font. Font fallback is selected per Unicode text element, so surrogate pairs and combining
+sequences are not split.
+
 ## Architecture
 
 ExcelRenderer uses four main stages:

@@ -1,4 +1,5 @@
 using ExcelRenderer.Drawing;
+using ExcelRenderer.Fonts;
 using ExcelRenderer.Model;
 using SkiaSharp;
 
@@ -7,6 +8,16 @@ namespace ExcelRenderer.SkiaSharp;
 /// <summary>描画コマンドをページごとの PNG 画像として出力します。</summary>
 public sealed class PngRenderer
 {
+    private readonly IFontManager? _fontManager;
+
+    /// <summary>Initializes a PNG renderer with the default bundled-font policy.</summary>
+    public PngRenderer()
+    {
+    }
+
+    /// <summary>Initializes a PNG renderer using the supplied font manager.</summary>
+    public PngRenderer(IFontManager fontManager) => _fontManager = fontManager ?? throw new ArgumentNullException(nameof(fontManager));
+
     /// <summary>PNG画像の標準解像度を取得します。</summary>
     public const double DefaultDpi = 96;
 
@@ -89,7 +100,7 @@ public sealed class PngRenderer
         canvas.Clear(SKColors.White);
         canvas.Scale(scale);
 
-        var drawingContext = new SkiaDrawingContext(textAsPaths: false);
+        var drawingContext = new SkiaDrawingContext(textAsPaths: false, _fontManager);
         foreach (var command in commands)
         {
             drawingContext.Execute(canvas, command);

@@ -52,7 +52,7 @@ public static partial class ExcelConverter
                     Array.Empty<RenderPageDescriptor>(), artifacts, diagnostics.ToArray());
             }
 
-            var pages = LayoutPages(sheets, request.Dpi);
+            var pages = LayoutPages(sheets, request.Dpi, request.FontOptions);
             var selectedPages = SelectPages(pages, request.Selection.Pages);
             if (request.OutputFormat == OutputFormat.Pdf)
                 await WritePdfAsync(selectedPages, sink, artifacts, cancellationToken).ConfigureAwait(false);
@@ -86,9 +86,10 @@ public static partial class ExcelConverter
             throw new ArgumentOutOfRangeException(nameof(request), "DPI must be a positive finite value.");
     }
 
-    private static IReadOnlyList<SheetPage> LayoutPages(IReadOnlyList<SelectedSheet> sheets, double dpi)
+    private static IReadOnlyList<SheetPage> LayoutPages(IReadOnlyList<SelectedSheet> sheets, double dpi, FontOptions fontOptions)
     {
-        GlobalFontSettings.FontResolver ??= new PdfSharpFontResolver();
+        var fontManager = new FontManager(fontOptions);
+        GlobalFontSettings.FontResolver ??= new PdfSharpFontResolver(fontManager);
         var pages = new List<SheetPage>();
         var documentPage = 0;
         foreach (var selected in sheets)
@@ -177,10 +178,11 @@ public static partial class ExcelConverter
                 $"{safe}-{page.Descriptor.SourcePageNumber}.{extension}", page.Descriptor.SourcePageNumber, page.Descriptor.OutputPageNumber);
             await WriteArtifactAsync(sink, descriptor, artifacts, stream =>
             {
+                var fontManager = new FontManager(request.FontOptions);
                 if (request.OutputFormat == OutputFormat.Png)
-                    new PngRenderer().RenderPage(page.Commands, page.Sheet.PageSettings, stream, request.Dpi);
+                    new PngRenderer(fontManager).RenderPage(page.Commands, page.Sheet.PageSettings, stream, request.Dpi);
                 else
-                    new SvgRenderer().RenderPage(page.Commands, page.Sheet.PageSettings, stream);
+                    new SvgRenderer(fontManager).RenderPage(page.Commands, page.Sheet.PageSettings, stream);
             }, token).ConfigureAwait(false);
         }
     }

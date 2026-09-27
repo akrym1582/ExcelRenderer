@@ -208,6 +208,54 @@ public sealed class ShapeAndFontTests
         }
     }
 
+    /// <summary>同梱フォントだけでも決定的なフェイス ID と Unicode テキスト要素単位のランを返すことを検証します。</summary>
+    [Fact]
+    public void FontManager_resolves_bundled_font_and_keeps_combining_text_together()
+    {
+        var manager = new FontManager(new FontOptions
+        {
+            AllowSystemFonts = false,
+            FontDirectories = [],
+            FallbackFamilies = [],
+        });
+
+        var font = manager.Resolve(new("Noto Sans JP"));
+        var runs = manager.ResolveTextRuns("A\u0301日本語", new("Noto Sans JP"));
+
+        Assert.NotEmpty(font.FaceId);
+        Assert.NotNull(font.FontData);
+        Assert.NotEmpty(runs);
+        Assert.Equal("A\u0301日本語", string.Concat(runs.Select(run => run.Text)));
+        Assert.DoesNotContain(runs, run => run.Text == "\u0301");
+    }
+
+    /// <summary>明示登録を優先するポリシーが同梱フォントではなく登録済みファイルを選ぶことを検証します。</summary>
+    [Fact]
+    public void FontManager_prefer_requested_uses_explicit_registration()
+    {
+        var path = CopyTestFont();
+        try
+        {
+            var manager = new FontManager(new FontOptions
+            {
+                Policy = FontPolicy.PreferRequested,
+                AllowSystemFonts = false,
+                FontDirectories = [],
+                FallbackFamilies = [],
+                Registrations = [new("Noto Sans JP", path)],
+            });
+
+            var font = manager.Resolve(new("Noto Sans JP"));
+
+            Assert.Equal(path, font.FilePath);
+            Assert.True(font.FontStyleApproximated == false);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
     private static ReportShape CreateShape(int z, ReportColor fill) => new(
         new(1, 1),
         0,

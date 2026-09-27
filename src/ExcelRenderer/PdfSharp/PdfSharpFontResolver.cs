@@ -79,7 +79,7 @@ public sealed class PdfSharpFontResolver : IFontResolver
         var face = $"{font.Family}|{font.Weight}|{(font.Italic ? "italic" : "normal")}|{font.FilePath}";
         if (!_fontData.ContainsKey(face))
         {
-            _fontData[face] = File.ReadAllBytes(font.FilePath);
+            _fontData[face] = font.FontData ?? File.ReadAllBytes(font.FilePath);
         }
 
         return new FontResolverInfo(face);

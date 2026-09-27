@@ -86,6 +86,12 @@ dotnet tool run excelrenderer --help
 
 `.config/dotnet-tools.json` をコミットすると、他の開発者は `dotnet tool restore` で同じバージョンをインストールできます。
 
+統合 `render` コマンドでは、`--font-policy bundled|requested`、繰り返し指定できる
+`--font-dir` と `--fallback-font`、および `--no-system-fonts` を使用できます。既定の
+`bundled` は既存出力との互換性のため同梱フォントを優先し、`requested` は指定フォントと
+追加ディレクトリを設定済みフォールバックおよび同梱フォントより先に検索します。フォール
+バックは Unicode テキスト要素単位で決定するため、サロゲートペアと結合文字列は分断しません。
+
 ## 対応範囲
 
 - ClosedXML による `.xlsx` の読み込み

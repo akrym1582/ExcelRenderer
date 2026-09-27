@@ -12,8 +12,9 @@ internal sealed class SkiaDrawingContext
     private readonly bool _textAsPaths;
     private readonly IFontManager? _fontManager;
 
-    /// <summary>Initializes a new instance of the <see cref="SkiaDrawingContext"/> class.</summary>
+    /// <summary>Initializes a new instance of the <see cref="SkiaDrawingContext"/> class. PNG または SVG の描画先へコマンドを実行するコンテキストを初期化します。</summary>
     /// <param name="textAsPaths">true の場合は文字をパスとして描画します。</param>
+    /// <param name="fontManager">文字の描画に使用するフォントを解決するマネージャーです。指定しない場合は内蔵フォントを使用します。</param>
     internal SkiaDrawingContext(bool textAsPaths, IFontManager? fontManager = null)
     {
         _textAsPaths = textAsPaths;
@@ -52,6 +53,17 @@ internal sealed class SkiaDrawingContext
                 break;
         }
     }
+
+    private static SKTypeface? CreateTypeface(ResolvedFont font)
+    {
+        using Stream stream = font.FontData is null
+            ? File.OpenRead(font.FilePath)
+            : new MemoryStream(font.FontData, writable: false);
+        return SKTypeface.FromStream(stream);
+    }
+
+    private static SKRect ToRect(ReportRect rect) =>
+        new((float)rect.X, (float)rect.Y, (float)(rect.X + rect.Width), (float)(rect.Y + rect.Height));
 
     private void DrawShape(SKCanvas canvas, DrawShapeCommand command)
     {
@@ -204,14 +216,6 @@ internal sealed class SkiaDrawingContext
         canvas.Restore();
     }
 
-    private static SKTypeface? CreateTypeface(ResolvedFont font)
-    {
-        using Stream stream = font.FontData is null
-            ? File.OpenRead(font.FilePath)
-            : new MemoryStream(font.FontData, writable: false);
-        return SKTypeface.FromStream(stream);
-    }
-
     private IReadOnlyList<string> WrapText(string text, SKFont font, SKPaint paint, double width, bool wrap)
     {
         if (!wrap || width <= 0)
@@ -311,7 +315,4 @@ internal sealed class SkiaDrawingContext
         StrokeWidth = (float)width,
         IsAntialias = true,
     };
-
-    private SKRect ToRect(ReportRect rect) =>
-        new((float)rect.X, (float)rect.Y, (float)(rect.X + rect.Width), (float)(rect.Y + rect.Height));
 }

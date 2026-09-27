@@ -11,7 +11,8 @@ public sealed class FontManager : IFontManager
     private readonly List<FontFace> _faces = [];
     private readonly Dictionary<FontRequest, ResolvedFont> _cache = new();
 
-    /// <summary>Initializes a new instance of the <see cref="FontManager"/> class.</summary>
+    /// <summary>Initializes a new instance of the <see cref="FontManager"/> class. 指定された設定でフォントマネージャーを初期化します。</summary>
+    /// <param name="options">登録フォント、追加検索フォルダー、フォールバック名を含む設定です。省略時は既定設定を使用します。</param>
     public FontManager(FontOptions? options = null)
     {
         _options = options ?? new();
@@ -24,10 +25,19 @@ public sealed class FontManager : IFontManager
         Scan();
     }
 
-    /// <summary>フォントファイルを明示的に登録します。</summary>
+    /// <summary>フォントファイルを明示的に登録し、以後の解決対象に追加します。</summary>
+    /// <param name="family">登録するフォントファミリー名です。</param>
+    /// <param name="regular">通常体のフォントファイルパスです。</param>
+    /// <param name="bold">太字体のフォントファイルパスです。指定しない場合は通常体が候補になります。</param>
+    /// <param name="italic">斜体のフォントファイルパスです。指定しない場合は通常体が候補になります。</param>
+    /// <param name="boldItalic">太字斜体のフォントファイルパスです。指定しない場合は通常体が候補になります。</param>
     public void Register(string family, string regular, string? bold = null, string? italic = null, string? boldItalic = null)
     {
-        if (string.IsNullOrWhiteSpace(family)) throw new ArgumentException("Font family is required.", nameof(family));
+        if (string.IsNullOrWhiteSpace(family))
+        {
+            throw new ArgumentException("Font family is required.", nameof(family));
+        }
+
         Add(family, 400, false, regular, 0);
         Add(family, 700, false, bold, 0);
         Add(family, 400, true, italic, 0);
@@ -35,31 +45,50 @@ public sealed class FontManager : IFontManager
         _cache.Clear();
     }
 
-    /// <inheritdoc />
+    /// <summary>要求されたファミリー名と書体属性に最も近い使用可能なフォントを解決します。</summary>
+    /// <param name="request">必要なフォントファミリー、ウェイト、および斜体を指定する要求です。</param>
+    /// <returns>描画に使用するフォントファイルと選択結果を表すフォント情報を返します。</returns>
     public ResolvedFont Resolve(FontRequest request)
     {
-        if (string.IsNullOrWhiteSpace(request.Family)) throw new ArgumentException("Font family is required.", nameof(request));
-        if (_cache.TryGetValue(request, out var cached)) return cached;
+        if (string.IsNullOrWhiteSpace(request.Family))
+        {
+            throw new ArgumentException("Font family is required.", nameof(request));
+        }
+
+        if (_cache.TryGetValue(request, out var cached))
+        {
+            return cached;
+        }
 
         var requestedFamilies = new[] { request.Family }.Concat(_options.FallbackFamilies)
             .Where(x => !string.IsNullOrWhiteSpace(x)).Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
-        var candidates = _faces        .OrderBy(x => x.SourcePriority)
+        var candidates = _faces
+            .OrderBy(x => x.SourcePriority)
             .ThenBy(x => x.SortKey, StringComparer.Ordinal);
 
         foreach (var family in requestedFamilies)
         {
             var matching = candidates.Where(x => string.Equals(x.Family, family, StringComparison.OrdinalIgnoreCase)).ToArray();
-            if (matching.Length > 0) return _cache[request] = Select(matching, request);
+            if (matching.Length > 0)
+            {
+                return _cache[request] = Select(matching, request);
+            }
         }
 
         throw new InvalidOperationException(
             $"No usable font was found. Requested: \"{request.Family}\" Fallbacks: {string.Join(", ", _options.FallbackFamilies)}");
     }
 
-    /// <inheritdoc />
+    /// <summary>文字列を Unicode の書記素クラスタごとに分割し、各文字を表示できるフォントの実行列へ変換します。</summary>
+    /// <param name="text">フォントを解決する文字列です。</param>
+    /// <param name="request">最初に試すフォントファミリーと書体属性を指定する要求です。</param>
+    /// <returns>連続して同じフォントを使用できる文字をまとめたフォント実行列を返します。</returns>
     public IReadOnlyList<TextRun> ResolveTextRuns(string text, FontRequest request)
     {
-        if (string.IsNullOrEmpty(text)) return [];
+        if (string.IsNullOrEmpty(text))
+        {
+            return [];
+        }
 
         var elements = StringInfo.GetTextElementEnumerator(text);
         var runs = new List<TextRun>();
@@ -78,20 +107,6 @@ public sealed class FontManager : IFontManager
         }
 
         return runs;
-    }
-
-    private ResolvedFont ResolveForTextElement(string element, FontRequest request)
-    {
-        var primary = Resolve(request);
-        if (Supports(primary, element)) return primary;
-
-        foreach (var family in _options.FallbackFamilies.Where(x => !string.IsNullOrWhiteSpace(x)))
-        {
-            var fallback = Resolve(new FontRequest(family, request.Weight, request.Italic));
-            if (Supports(fallback, element)) return fallback;
-        }
-
-        return primary;
     }
 
     private static bool Supports(ResolvedFont font, string text)
@@ -118,19 +133,57 @@ public sealed class FontManager : IFontManager
         };
     }
 
+    private ResolvedFont ResolveForTextElement(string element, FontRequest request)
+    {
+        var primary = Resolve(request);
+        if (Supports(primary, element))
+        {
+            return primary;
+        }
+
+        foreach (var family in _options.FallbackFamilies.Where(x => !string.IsNullOrWhiteSpace(x)))
+        {
+            var fallback = Resolve(new FontRequest(family, request.Weight, request.Italic));
+            if (Supports(fallback, element))
+            {
+                return fallback;
+            }
+        }
+
+        return primary;
+    }
+
     private void AddBundledFont()
     {
-        if (BundledJapaneseFont.Data is not { } data) return;
+        if (BundledJapaneseFont.Data is not { } data)
+        {
+            return;
+        }
+
         using var stream = new MemoryStream(data, writable: false);
         using var typeface = SKTypeface.FromStream(stream);
-        if (typeface is null || string.IsNullOrWhiteSpace(typeface.FamilyName)) return;
-        Add(typeface.FamilyName, typeface.FontStyle.Weight, typeface.FontStyle.Slant != SKFontStyleSlant.Upright,
-            BundledJapaneseFont.FaceName, data, true, 1);
+        if (typeface is null || string.IsNullOrWhiteSpace(typeface.FamilyName))
+        {
+            return;
+        }
+
+        Add(
+            typeface.FamilyName,
+            typeface.FontStyle.Weight,
+            typeface.FontStyle.Slant != SKFontStyleSlant.Upright,
+            BundledJapaneseFont.FaceName,
+            data,
+            true,
+            1);
     }
 
     private void Add(string family, int weight, bool italic, string? path, int sourcePriority)
     {
-        if (string.IsNullOrWhiteSpace(path) || !File.Exists(path)) return;
+        if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
+        {
+            return;
+        }
+
         Add(family, weight, italic, Path.GetFullPath(path), null, false, sourcePriority);
     }
 
@@ -142,7 +195,11 @@ public sealed class FontManager : IFontManager
         var candidate = new FontFace(family, weight, italic, path, bytes, id, bundled, sourcePriority);
         if (_faces.Any(x => x.Family.Equals(candidate.Family, StringComparison.OrdinalIgnoreCase) &&
             x.Weight == candidate.Weight && x.Italic == candidate.Italic &&
-            string.Equals(x.FilePath, candidate.FilePath, StringComparison.OrdinalIgnoreCase))) return;
+            string.Equals(x.FilePath, candidate.FilePath, StringComparison.OrdinalIgnoreCase)))
+        {
+            return;
+        }
+
         _faces.Add(candidate);
     }
 
@@ -168,10 +225,20 @@ public sealed class FontManager : IFontManager
                 try
                 {
                     using var typeface = SKTypeface.FromFile(file);
-                    if (typeface is null || string.IsNullOrWhiteSpace(typeface.FamilyName)) continue;
+                    if (typeface is null || string.IsNullOrWhiteSpace(typeface.FamilyName))
+                    {
+                        continue;
+                    }
+
                     var style = typeface.FontStyle;
-                    Add(typeface.FamilyName, style.Weight, style.Slant != SKFontStyleSlant.Upright, Path.GetFullPath(file),
-                        null, false, configuredDirectories.Contains(directory) ? 0 : 2);
+                    Add(
+                        typeface.FamilyName,
+                        style.Weight,
+                        style.Slant != SKFontStyleSlant.Upright,
+                        Path.GetFullPath(file),
+                        null,
+                        false,
+                        configuredDirectories.Contains(directory) ? 0 : 2);
                 }
                 catch (IOException)
                 {

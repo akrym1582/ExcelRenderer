@@ -13,20 +13,34 @@ public sealed class ExcelReader
     /// <returns>ブック内のワークシートを元の順序で格納したレンダリング用ドキュメントを返します。</returns>
     public ReportDocument Read(string path)
     {
-        if (path is null) throw new ArgumentNullException(nameof(path));
+        if (path is null)
+        {
+            throw new ArgumentNullException(nameof(path));
+        }
+
         using var input = File.OpenRead(path);
         return Read(input);
     }
 
-    /// <summary>Reads a workbook from its current position without closing the caller-owned stream.</summary>
+    /// <summary>ストリームの現在位置からブックを読み取り、呼び出し元が所有するストリームを閉じずに処理します。</summary>
+    /// <param name="input">読み取り対象の Excel データを含むストリームです。</param>
+    /// <returns>ブック内のワークシートを元の順序で格納したレンダリング用ドキュメントを返します。</returns>
     public ReportDocument Read(Stream input)
     {
-        if (input is null) throw new ArgumentNullException(nameof(input));
+        if (input is null)
+        {
+            throw new ArgumentNullException(nameof(input));
+        }
+
         using var copy = new MemoryStream();
         input.CopyTo(copy);
         return Read(copy.ToArray(), null);
     }
 
+    /// <summary>読み取り時の診断情報を収集しながら、バイト配列の Excel ブックを読み取ります。</summary>
+    /// <param name="workbookBytes">Excel ブック全体を格納したバイト配列です。</param>
+    /// <param name="diagnostics">読み取り中に発生した診断情報を追加するコレクターです。</param>
+    /// <returns>ブック内のワークシートを元の順序で格納したレンダリング用ドキュメントを返します。</returns>
     internal ReportDocument Read(byte[] workbookBytes, DiagnosticCollector? diagnostics)
     {
         using var workbookStream = new MemoryStream(workbookBytes, writable: false);

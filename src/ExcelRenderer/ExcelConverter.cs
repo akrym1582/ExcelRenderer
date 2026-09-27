@@ -71,8 +71,11 @@ public static partial class ExcelConverter
         }
 
         await using var input = File.OpenRead(inputPath);
-        await RenderAsync(input, CreateLegacyRequest(OutputFormat.Png, options.SheetName, options.Dpi),
-            new DirectoryOutputSink(outputDirectory), cancellationToken).ConfigureAwait(false);
+        await RenderAsync(
+            input,
+            CreateLegacyRequest(OutputFormat.Png, options.SheetName, options.Dpi),
+            new DirectoryOutputSink(outputDirectory),
+            cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Excel ブックのワークシートをレイアウトし、各ページを自己完結 SVG へ非同期に変換します。</summary>
@@ -100,8 +103,11 @@ public static partial class ExcelConverter
         }
 
         await using var input = File.OpenRead(inputPath);
-        await RenderAsync(input, CreateLegacyRequest(OutputFormat.Svg, options.SheetName),
-            new DirectoryOutputSink(outputDirectory), cancellationToken).ConfigureAwait(false);
+        await RenderAsync(
+            input,
+            CreateLegacyRequest(OutputFormat.Svg, options.SheetName),
+            new DirectoryOutputSink(outputDirectory),
+            cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Excel ブックの表領域を Markdown の表または HTML として表現し、埋め込み画像とともに非同期に出力します。</summary>

@@ -14,12 +14,13 @@ public sealed class SvgRenderer
 {
     private readonly IFontManager? _fontManager;
 
-    /// <summary>Initializes an SVG renderer with the default bundled-font policy.</summary>
+    /// <summary>Initializes a new instance of the <see cref="SvgRenderer"/> class. 既定の内蔵フォントポリシーを使用する SVG レンダラーを初期化します。</summary>
     public SvgRenderer()
     {
     }
 
-    /// <summary>Initializes an SVG renderer using the supplied font manager.</summary>
+    /// <summary>Initializes a new instance of the <see cref="SvgRenderer"/> class. 指定したフォントマネージャーを使用する SVG レンダラーを初期化します。</summary>
+    /// <param name="fontManager">文字の描画に使用するフォントを解決するマネージャーです。</param>
     public SvgRenderer(IFontManager fontManager) => _fontManager = fontManager ?? throw new ArgumentNullException(nameof(fontManager));
 
     /// <summary>すべてのページを、ページ番号に対応する出力先へ SVG として出力します。</summary>

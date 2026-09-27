@@ -109,6 +109,27 @@ public sealed class ToolIntegrationTests : IDisposable
         Assert.Single(Directory.GetFiles(output, "*.svg"));
     }
 
+    /// <summary>連続 SVG 出力がシートごとに 1 ファイルを生成することを検証します。</summary>
+    [Fact]
+    public async Task Render_command_creates_continuous_svg()
+    {
+        var output = Path.Combine(_directory, "continuous-svg");
+        var result = await RunAsync("render", Input, "-o", output, "--format", "svg", "--sheet", "折り返し", "--image-layout", "continuous");
+
+        AssertSuccess(result);
+        Assert.Single(Directory.GetFiles(output, "*.svg"));
+    }
+
+    /// <summary>連続レイアウトでページ選択を指定すると説明的に失敗することを検証します。</summary>
+    [Fact]
+    public async Task Render_command_rejects_pages_with_continuous_layout()
+    {
+        var result = await RunAsync("render", Input, "-o", Path.Combine(_directory, "continuous-svg"), "--format", "svg", "--pages", "1", "--image-layout", "continuous");
+
+        Assert.NotEqual(0, result.ExitCode);
+        Assert.Contains("Page selection is not supported with continuous image layout", result.Error);
+    }
+
     /// <summary>
     /// 存在しない入力パスまたは未対応の拡張子に対してコマンドが失敗することを検証します。
     /// </summary>

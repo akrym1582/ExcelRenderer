@@ -113,6 +113,14 @@ excelrenderer md input.xlsx -o output.md
 
 Run `excelrenderer --help` or a subcommand's `--help` for options such as `--sheet`, `--dpi`, and Markdown image/layout controls.
 
+The unified `render` command can generate a single continuous image per selected worksheet without print-page margins, breaks, titles, or headers:
+
+```bash
+excelrenderer render input.xlsx -o ./continuous-images --format svg --image-layout continuous
+```
+
+Continuous layout is available only for PNG and SVG, cannot be combined with `--pages`, and uses the sheet's used range rather than its print area. PNG continuous output defaults to a 100 million-pixel limit (about 381 MiB for an RGBA bitmap before encoder overhead); set `RenderRequest.MaxPngPixels` only to a safe finite value when larger canvases are required.
+
 ### Low-level rendering API
 
 Install the `ExcelRenderer` package or reference the project, then run the workbook through the layout and rendering pipeline:

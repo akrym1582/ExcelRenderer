@@ -10,6 +10,8 @@ public sealed class PngRenderer
 {
     /// <summary>PNG画像の標準解像度を取得します。</summary>
     public const double DefaultDpi = 96;
+    /// <summary>Default maximum number of pixels for one bitmap.</summary>
+    public const long DefaultMaxPixels = 100_000_000;
 
     private readonly IFontManager? _fontManager;
 
@@ -106,10 +108,55 @@ public sealed class PngRenderer
         {
             drawingContext.Execute(canvas, command);
         }
-
         using var image = SKImage.FromBitmap(bitmap);
         using var data = image.Encode(SKEncodedImageFormat.Png, 100);
         data.SaveTo(output);
+    }
+
+    /// <summary>指定されたポイント寸法の単一キャンバスを PNG として出力します。</summary>
+    public void RenderCanvas(
+        IEnumerable<DrawCommand> commands,
+        double widthPoints,
+        double heightPoints,
+        Stream output,
+        double dpi = DefaultDpi,
+        long maxPixels = DefaultMaxPixels)
+    {
+        if (commands is null) throw new ArgumentNullException(nameof(commands));
+        if (output is null) throw new ArgumentNullException(nameof(output));
+        ValidateDpi(dpi);
+        if (maxPixels <= 0) throw new ArgumentOutOfRangeException(nameof(maxPixels), "Maximum PNG pixels must be positive.");
+        var (width, height) = GetPixelDimensions(widthPoints, heightPoints, dpi, maxPixels);
+        using var bitmap = new SKBitmap(width, height, SKColorType.Rgba8888, SKAlphaType.Premul);
+        using var canvas = new SKCanvas(bitmap);
+        canvas.Clear(SKColors.White);
+        canvas.Scale((float)(dpi / 72d));
+        var drawingContext = new SkiaDrawingContext(textAsPaths: false, _fontManager);
+        foreach (var command in commands) drawingContext.Execute(canvas, command);
+        using var image = SKImage.FromBitmap(bitmap);
+        using var data = image.Encode(SKEncodedImageFormat.Png, 100);
+        data.SaveTo(output);
+    }
+
+    /// <summary>ポイント寸法を安全な PNG ピクセル寸法へ変換します。</summary>
+    public static (int Width, int Height) GetPixelDimensions(double widthPoints, double heightPoints, double dpi, long maxPixels)
+    {
+        if (double.IsNaN(widthPoints) || double.IsInfinity(widthPoints) || widthPoints <= 0 ||
+            double.IsNaN(heightPoints) || double.IsInfinity(heightPoints) || heightPoints <= 0)
+            throw new ArgumentOutOfRangeException(nameof(widthPoints), "Canvas dimensions must be positive finite values.");
+        var scale = dpi / 72d;
+        var widthValue = Math.Ceiling(widthPoints * scale);
+        var heightValue = Math.Ceiling(heightPoints * scale);
+        if (widthValue > int.MaxValue || heightValue > int.MaxValue)
+            throw new ArgumentOutOfRangeException(nameof(widthPoints), "PNG canvas dimensions exceed Skia bitmap limits.");
+        var width = Math.Max(1, (int)widthValue);
+        var height = Math.Max(1, (int)heightValue);
+        long pixels;
+        try { pixels = checked((long)width * height); }
+        catch (OverflowException) { throw new ArgumentOutOfRangeException(nameof(widthPoints), "PNG canvas pixel count overflows."); }
+        if (pixels > maxPixels)
+            throw new ArgumentOutOfRangeException(nameof(widthPoints), $"PNG canvas requires {width}x{height} ({pixels} pixels), exceeding the {maxPixels} pixel limit. Lower DPI or reduce the worksheet content.");
+        return (width, height);
     }
 
     private static void ValidateDpi(double dpi)

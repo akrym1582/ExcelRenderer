@@ -8,13 +8,16 @@ namespace ExcelRenderer.Layout;
 /// </summary>
 public sealed class ResolvePrintAreaPass : IReportLayoutPass
 {
+    /// <summary>Gets or sets whether an explicit print area is ignored.</summary>
+    public bool IgnoreExplicitPrintArea { get; init; }
+
     /// <summary>
     /// 明示された印刷範囲を採用し、未指定の場合は内容が存在するセル、画像、および図形を包含する範囲を設定します。
     /// </summary>
     /// <param name="context">入力シート、計測機能、および各工程の計算結果を保持するレイアウトコンテキストです。</param>
     public void Execute(ReportLayoutContext context)
     {
-        context.PrintArea = context.Sheet.PrintArea ?? GetUsedRange(context.Sheet);
+        context.PrintArea = !IgnoreExplicitPrintArea ? context.Sheet.PrintArea ?? GetUsedRange(context.Sheet) : GetUsedRange(context.Sheet);
     }
 
     private static CellRange? GetUsedRange(ReportSheet sheet)

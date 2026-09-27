@@ -158,6 +158,18 @@ public sealed class PngRendererTests
             new PngRenderer().RenderPage([], new PageSettings(), output, 0));
     }
 
+    /// <summary>連続キャンバスが bitmap を確保する前にピクセル上限を検証することを確認します。</summary>
+    [Fact]
+    public void RenderCanvas_rejects_canvas_exceeding_pixel_limit()
+    {
+        using var output = new MemoryStream();
+
+        var error = Assert.Throws<ArgumentOutOfRangeException>(() =>
+            new PngRenderer().RenderCanvas([], 100, 100, output, 72, maxPixels: 9_999));
+
+        Assert.Contains("Lower DPI", error.Message);
+    }
+
     private sealed class CaptureOnDisposeStream : MemoryStream
     {
         public byte[] CapturedBytes { get; private set; } = [];

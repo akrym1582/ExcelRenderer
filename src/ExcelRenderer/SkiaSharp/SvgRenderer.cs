@@ -137,6 +137,12 @@ public sealed class SvgRenderer
         document.Save(writer);
     }
 
+    /// <summary>指定されたポイント寸法の単一キャンバスを SVG として出力します。</summary>
+    public void RenderCanvas(IEnumerable<DrawCommand> commands, double widthPoints, double heightPoints, Stream output)
+    {
+        RenderPage(commands, new PageSettings(widthPoints, heightPoints), output);
+    }
+
     private static string Format(double value) => value.ToString("R", CultureInfo.InvariantCulture);
 
     private static void ValidateDimension(double value, string parameterName)

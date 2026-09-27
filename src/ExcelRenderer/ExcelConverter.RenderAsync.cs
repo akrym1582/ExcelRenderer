@@ -74,7 +74,9 @@ public static partial class ExcelConverter
                     diagnostics.ToArray());
             }
 
-            var pages = LayoutPages(sheets, request.Dpi, request.FontOptions);
+            var pages = request.ImageLayout == ImageLayoutMode.Continuous
+                ? LayoutContinuous(sheets, request.Dpi, request.FontOptions)
+                : LayoutPages(sheets, request.Dpi, request.FontOptions);
             var selectedPages = SelectPages(pages, request.Selection.Pages);
             if (request.OutputFormat == OutputFormat.Pdf)
             {
@@ -116,6 +118,24 @@ public static partial class ExcelConverter
         if (double.IsNaN(request.Dpi) || double.IsInfinity(request.Dpi) || request.Dpi <= 0)
         {
             throw new ArgumentOutOfRangeException(nameof(request), "DPI must be a positive finite value.");
+        }
+
+        if (request.MaxPngPixels <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(request), "Maximum PNG pixels must be positive.");
+        }
+
+        if (request.ImageLayout == ImageLayoutMode.Continuous)
+        {
+            if (request.OutputFormat is not (OutputFormat.Png or OutputFormat.Svg))
+            {
+                throw new ArgumentException("Continuous image layout is supported only for PNG and SVG.", nameof(request));
+            }
+
+            if (request.Selection.Pages is not null)
+            {
+                throw new ArgumentException("Page selection is not supported with continuous image layout.", nameof(request));
+            }
         }
     }
 
@@ -178,6 +198,38 @@ public static partial class ExcelConverter
         }
 
         return pages;
+    }
+
+    private static IReadOnlyList<SheetPage> LayoutContinuous(IReadOnlyList<SelectedSheet> sheets, double dpi, FontOptions fontOptions)
+    {
+        var fontManager = new FontManager(fontOptions);
+        GlobalFontSettings.FontResolver ??= new PdfSharpFontResolver(fontManager);
+        var pages = new List<SheetPage>();
+        var documentPage = 0;
+        foreach (var selected in sheets)
+        {
+            var layout = new ReportLayoutEngine(new PdfSharpTextMeasurer()).LayoutContinuous(selected.Sheet);
+            var width = layout.Width;
+            var height = layout.Height;
+            var (pixelWidth, pixelHeight) = GetContinuousPixelDimensions(width, height, dpi);
+            pages.Add(new(
+                selected.Sheet,
+                new DrawCommandGeneratorPass().Generate(layout.Document),
+                new(selected.Index, selected.Sheet.Name, 1, ++documentPage, documentPage, width, height, pixelWidth, pixelHeight, dpi),
+                IsContinuous: true));
+        }
+
+        return pages;
+    }
+
+    private static (int? Width, int? Height) GetContinuousPixelDimensions(double width, double height, double dpi)
+    {
+        var scale = dpi / 72d;
+        var pixelWidth = Math.Ceiling(width * scale);
+        var pixelHeight = Math.Ceiling(height * scale);
+        return pixelWidth <= int.MaxValue && pixelHeight <= int.MaxValue
+            ? ((int)pixelWidth, (int)pixelHeight)
+            : (null, null);
     }
 
     private static IReadOnlyList<SheetPage> SelectPages(IReadOnlyList<SheetPage> pages, IReadOnlyList<int>? requested)
@@ -272,9 +324,15 @@ public static partial class ExcelConverter
                 $"{extension}-{page.Descriptor.OutputPageNumber}",
                 extension,
                 media,
-                $"{safe}-{page.Descriptor.SourcePageNumber}.{extension}",
+                page.IsContinuous ? $"{safe}.{extension}" : $"{safe}-{page.Descriptor.SourcePageNumber}.{extension}",
                 page.Descriptor.SourcePageNumber,
-                page.Descriptor.OutputPageNumber);
+                page.Descriptor.OutputPageNumber,
+                page.IsContinuous,
+                page.Descriptor.SourceSheetName,
+                page.Descriptor.WidthPoints,
+                page.Descriptor.HeightPoints,
+                page.Descriptor.PixelWidth,
+                page.Descriptor.PixelHeight);
             await WriteArtifactAsync(
                 sink,
                 descriptor,
@@ -284,11 +342,33 @@ public static partial class ExcelConverter
                     var fontManager = new FontManager(request.FontOptions);
                     if (request.OutputFormat == OutputFormat.Png)
                     {
-                        new PngRenderer(fontManager).RenderPage(page.Commands, page.Sheet.PageSettings, stream, request.Dpi);
+                        var renderer = new PngRenderer(fontManager);
+                        if (page.IsContinuous)
+                        {
+                            renderer.RenderCanvas(
+                                page.Commands,
+                                page.Descriptor.WidthPoints,
+                                page.Descriptor.HeightPoints,
+                                stream,
+                                request.Dpi,
+                                request.MaxPngPixels);
+                        }
+                        else
+                        {
+                            renderer.RenderPage(page.Commands, page.Sheet.PageSettings, stream, request.Dpi);
+                        }
                     }
                     else
                     {
-                        new SvgRenderer(fontManager).RenderPage(page.Commands, page.Sheet.PageSettings, stream);
+                        var renderer = new SvgRenderer(fontManager);
+                        if (page.IsContinuous)
+                        {
+                            renderer.RenderCanvas(page.Commands, page.Descriptor.WidthPoints, page.Descriptor.HeightPoints, stream);
+                        }
+                        else
+                        {
+                            renderer.RenderPage(page.Commands, page.Sheet.PageSettings, stream);
+                        }
                     }
                 },
                 token).ConfigureAwait(false);
@@ -405,7 +485,7 @@ public static partial class ExcelConverter
 
     private sealed record SelectedSheet(int Index, ReportSheet Sheet);
 
-    private sealed record SheetPage(ReportSheet Sheet, IReadOnlyList<DrawCommand> Commands, RenderPageDescriptor Descriptor);
+    private sealed record SheetPage(ReportSheet Sheet, IReadOnlyList<DrawCommand> Commands, RenderPageDescriptor Descriptor, bool IsContinuous = false);
 
     private sealed class CountingStream : Stream
     {

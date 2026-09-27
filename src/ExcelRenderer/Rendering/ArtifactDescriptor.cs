@@ -7,4 +7,16 @@ namespace ExcelRenderer.Rendering;
 /// <param name="RelativeName">出力先のルートからの相対パスです。</param>
 /// <param name="SourcePageNumber">対応する元文書ページ番号です。ページ単位でない生成物では <see langword="null"/> です。</param>
 /// <param name="OutputPageNumber">選択後の出力ページ番号です。ページ単位でない生成物では <see langword="null"/> です。</param>
-public sealed record ArtifactDescriptor(string ArtifactId, string Kind, string MediaType, string RelativeName, int? SourcePageNumber = null, int? OutputPageNumber = null);
+public sealed record ArtifactDescriptor(
+    string ArtifactId,
+    string Kind,
+    string MediaType,
+    string RelativeName,
+    int? SourcePageNumber = null,
+    int? OutputPageNumber = null,
+    bool IsContinuous = false,
+    string? SourceSheetName = null,
+    double? WidthPoints = null,
+    double? HeightPoints = null,
+    int? PixelWidth = null,
+    int? PixelHeight = null);

@@ -25,7 +25,7 @@ public static class ImageCommand
                 result.AddError("--dpi must be greater than zero.");
             }
         });
-        var command = new Command("image", "Convert Excel worksheets to PNG images.") { input, output, sheet, dpi };
+        var command = new Command("image", "Convert Excel worksheets to paginated PNG images. Use 'render --format png --image-layout continuous' for continuous images.") { input, output, sheet, dpi };
         command.SetAction((parseResult, cancellationToken) => CommandSupport.RunAsync(() =>
             ExcelConverter.ConvertToImagesAsync(
                 parseResult.GetValue(input)!,

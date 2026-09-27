@@ -2,7 +2,7 @@
 
 [English](README.md) | 日本語
 
-Excel ワークブックを読み込み、レイアウト計算を経て PDF またはページごとの PNG を生成する .NET ライブラリです。
+Excel ワークブックを読み込み、レイアウト計算を経て PDF またはページごとの PNG・SVG を生成する .NET ライブラリです。
 
 Excel を直接 PDF へ描画するのではなく、次の中間モデルを段階的に生成します。
 
@@ -15,12 +15,12 @@ RenderDocument
     ↓
 DrawCommand
     ↓
-PDF / PNG
+PDF / PNG / SVG
 ```
 
 読み込み、レイアウト計算、描画命令生成、出力を分離することで、処理内容を理解しやすくし、将来的な機能追加や出力先の追加を行いやすい構成にしています。
 
-現在は MVP 段階です。ライブラリに加えて、PDF・PNG・Markdownへ変換するコマンドラインツールを提供します。
+現在は MVP 段階です。ライブラリに加えて、PDF・PNG・SVG・Markdownへ変換するコマンドラインツールを提供します。
 
 ## インストール
 
@@ -41,6 +41,7 @@ using ExcelRenderer;
 
 await ExcelConverter.ConvertToPdfAsync("input.xlsx", "output.pdf");
 await ExcelConverter.ConvertToImagesAsync("input.xlsx", "./images");
+await ExcelConverter.ConvertToSvgAsync("input.xlsx", "./svg-output");
 await ExcelConverter.ConvertToMarkdownAsync("input.xlsx", "output.md");
 ```
 
@@ -58,6 +59,7 @@ excelrenderer --help
 ```bash
 excelrenderer pdf input.xlsx -o output.pdf
 excelrenderer image input.xlsx -o ./images
+excelrenderer svg input.xlsx -o ./svg-output
 excelrenderer md input.xlsx -o output.md
 ```
 
@@ -278,7 +280,7 @@ PDFsharp を使用する場合は `PdfSharpTextMeasurer` を指定します。�
 
 描画コマンドを中間モデルとして持つことで、レイアウト計算と実際の描画処理を分離できます。レイアウト処理を変更せずにレンダラーを追加したり、描画コマンドを検査するテストを作成したりできます。
 
-## 4. PDF / PNG への描画
+## 4. PDF / PNG / SVG への描画
 
 `PdfSharpRenderer` は生成された `DrawCommand` を順番に処理して PDF を作成します。
 
@@ -292,6 +294,8 @@ PDFsharp を使用する場合は `PdfSharpTextMeasurer` を指定します。�
 `PdfSharpRenderer` の責務は、抽象的な描画コマンドを PDFsharp の API 呼び出しへ変換することです。画像データは SkiaSharp でデコードしてから PDF へ描画します。
 
 `PngRenderer` は同じ `DrawCommand` を SkiaSharp で描画し、各ページを独立した PNG にします。用紙寸法と描画座標はポイント単位のまま受け取り、既定の 96 DPI（または指定した DPI）でピクセルへ変換します。PNG は複数ページを格納できないため、複数ページの出力にはページ番号を受け取る出力ストリームファクトリを使用します。
+
+`SvgRenderer` は PNG と描画処理を共有し、ポイント単位のままページごとの自己完結 SVG を生成します。文字は生成時のフォントでベクターパス化され、画像はファイル内へ埋め込まれます。このため閲覧側に日本語フォントは不要ですが、文字検索・コピーはできません。パス化は編集防止機能ではなく、複雑な文字体系やカラーフォントの完全な再現も保証しません。
 
 ## 利用方法
 
@@ -353,6 +357,18 @@ pngRenderer.RenderPage(
     commands.Where(command => command.PageNumber == 1),
     sheet.PageSettings,
     output);
+```
+
+### SVG として出力する
+
+同じ描画コマンドから `report-1.svg`、`report-2.svg` のようにページごとのファイルを作成します。SVG の寸法と座標は PDF ポイントです。
+
+```csharp
+var svgRenderer = new SvgRenderer();
+svgRenderer.Render(
+    commands,
+    sheet.PageSettings,
+    pageNumber => File.Create($"report-{pageNumber}.svg"));
 ```
 
 ### フォントファイルの指定

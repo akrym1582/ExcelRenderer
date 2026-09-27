@@ -8,9 +8,9 @@
     <Version>1.2.0</Version>
     <PackageId>ExcelRenderer</PackageId>
     <Title>ExcelRenderer</Title>
-    <Description>Render Excel XLSX files to PDF, PNG and AI-friendly Markdown.</Description>
+    <Description>Render Excel XLSX files to PDF, PNG, SVG and AI-friendly Markdown.</Description>
     <Authors>akrym1582</Authors>
-    <PackageTags>excel xlsx pdf png markdown closedxml pdfsharp skia</PackageTags>
+    <PackageTags>excel xlsx pdf png svg markdown closedxml pdfsharp skia</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/akrym1582/ExcelRenderer</RepositoryUrl>
     <RepositoryType>git</RepositoryType>

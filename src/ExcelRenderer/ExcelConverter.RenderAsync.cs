@@ -40,17 +40,24 @@ public static partial class ExcelConverter
             if (diagnostics.HasFailure)
                 throw Failure("Conversion was stopped by diagnostic policy.", null, diagnostics, artifacts);
 
+            if (request.OutputFormat == OutputFormat.Markdown && request.Selection.Pages is not null)
+            {
+                throw new ArgumentException("Page selection is not supported for Markdown.", nameof(request));
+            }
+
+            if (request.OutputFormat == OutputFormat.Markdown)
+            {
+                await WriteMarkdownAsync(sheets, sink, artifacts, cancellationToken).ConfigureAwait(false);
+                return new(ConversionManifest.SchemaVersion, "Completed", sheets.Select(x => x.Sheet.Name).ToArray(),
+                    Array.Empty<RenderPageDescriptor>(), artifacts, diagnostics.ToArray());
+            }
+
             var pages = LayoutPages(sheets, request.Dpi);
             var selectedPages = SelectPages(pages, request.Selection.Pages);
-            if (request.OutputFormat == OutputFormat.Markdown && request.Selection.Pages is not null)
-                throw new ArgumentException("Page selection is not supported for Markdown.", nameof(request));
-
             if (request.OutputFormat == OutputFormat.Pdf)
                 await WritePdfAsync(selectedPages, sink, artifacts, cancellationToken).ConfigureAwait(false);
-            else if (request.OutputFormat is OutputFormat.Png or OutputFormat.Svg)
-                await WritePageArtifactsAsync(selectedPages, request, sink, artifacts, cancellationToken).ConfigureAwait(false);
             else
-                await WriteMarkdownAsync(sheets, sink, artifacts, cancellationToken).ConfigureAwait(false);
+                await WritePageArtifactsAsync(selectedPages, request, sink, artifacts, cancellationToken).ConfigureAwait(false);
 
             return new(ConversionManifest.SchemaVersion, "Completed", sheets.Select(x => x.Sheet.Name).ToArray(),
                 selectedPages.Select(x => x.Descriptor).ToArray(), artifacts, diagnostics.ToArray());
@@ -177,6 +184,11 @@ public static partial class ExcelConverter
     private static Task WriteMarkdownAsync(IReadOnlyList<SelectedSheet> sheets, IRenderOutputSink sink, List<ArtifactMetadata> artifacts, CancellationToken token)
     {
         var descriptor = new ArtifactDescriptor("markdown", "markdown", "text/markdown", "workbook.md");
+        if (sink is IMarkdownDocumentOutputSink markdownSink)
+        {
+            return WriteLegacyMarkdownAsync(markdownSink, sheets, descriptor, artifacts, token);
+        }
+
         return WriteArtifactAsync(sink, descriptor, artifacts, stream =>
         {
             using var writer = new StreamWriter(stream, new UTF8Encoding(false), 1024, leaveOpen: true);
@@ -188,6 +200,17 @@ public static partial class ExcelConverter
                 writer.WriteLine();
             }
         }, token);
+    }
+
+    private static async Task WriteLegacyMarkdownAsync(
+        IMarkdownDocumentOutputSink sink,
+        IReadOnlyList<SelectedSheet> sheets,
+        ArtifactDescriptor descriptor,
+        List<ArtifactMetadata> artifacts,
+        CancellationToken token)
+    {
+        await sink.WriteMarkdownAsync(new ReportDocument(sheets.Select(x => x.Sheet).ToArray()), token).ConfigureAwait(false);
+        artifacts.Add(new(descriptor, sink.GetMarkdownByteLength()));
     }
 
     private static async Task WriteArtifactAsync(IRenderOutputSink sink, ArtifactDescriptor descriptor, List<ArtifactMetadata> artifacts, Action<Stream> write, CancellationToken token)

@@ -1,3 +1,6 @@
+using ExcelRenderer.Markdown;
+using ExcelRenderer.Model;
+
 namespace ExcelRenderer.Rendering;
 
 /// <summary>Writes one artifact to a caller-owned stream without closing it.</summary>
@@ -15,6 +18,78 @@ public sealed class SingleStreamOutputSink : IRenderOutputSink
         _opened = true;
         return new(_stream);
     }
+
+    public ValueTask CompleteAsync(ArtifactDescriptor artifact, long byteLength, CancellationToken cancellationToken) => default;
+    public ValueTask AbortAsync(ArtifactDescriptor artifact, Exception error, CancellationToken cancellationToken) => default;
+}
+
+/// <summary>Creates a new file only when the renderer opens its single artifact.</summary>
+internal sealed class NewFileOutputSink : IRenderOutputSink
+{
+    private readonly string _path;
+    private Stream? _stream;
+
+    internal NewFileOutputSink(string path) => _path = path ?? throw new ArgumentNullException(nameof(path));
+
+    public ValueTask<Stream> OpenAsync(ArtifactDescriptor artifact, CancellationToken cancellationToken)
+    {
+        var directory = Path.GetDirectoryName(Path.GetFullPath(_path));
+        if (directory is not null)
+        {
+            Directory.CreateDirectory(directory);
+        }
+
+        _stream = new FileStream(_path, FileMode.CreateNew, FileAccess.Write, FileShare.None);
+        return new(_stream);
+    }
+
+    public ValueTask CompleteAsync(ArtifactDescriptor artifact, long byteLength, CancellationToken cancellationToken)
+    {
+        _stream?.Dispose();
+        _stream = null;
+        return default;
+    }
+
+    public ValueTask AbortAsync(ArtifactDescriptor artifact, Exception error, CancellationToken cancellationToken)
+    {
+        _stream?.Dispose();
+        _stream = null;
+        if (File.Exists(_path))
+        {
+            File.Delete(_path);
+        }
+
+        return default;
+    }
+}
+
+internal interface IMarkdownDocumentOutputSink
+{
+    Task WriteMarkdownAsync(ReportDocument document, CancellationToken cancellationToken);
+    long GetMarkdownByteLength();
+}
+
+internal sealed class LegacyMarkdownOutputSink : IRenderOutputSink, IMarkdownDocumentOutputSink
+{
+    private readonly string _outputPath;
+    private readonly MarkdownExportOptions _options;
+    private readonly string _documentName;
+
+    internal LegacyMarkdownOutputSink(string outputPath, MarkdownExportOptions options, string documentName)
+    {
+        _outputPath = outputPath;
+        _options = options;
+        _documentName = documentName;
+    }
+
+    public async Task WriteMarkdownAsync(ReportDocument document, CancellationToken cancellationToken) =>
+        await new MarkdownExporter().ExportToFileAsync(document, _outputPath, _options, _documentName, cancellationToken)
+            .ConfigureAwait(false);
+
+    public long GetMarkdownByteLength() => new FileInfo(_outputPath).Length;
+
+    public ValueTask<Stream> OpenAsync(ArtifactDescriptor artifact, CancellationToken cancellationToken) =>
+        throw new NotSupportedException("The legacy Markdown adapter writes the complete document directly.");
 
     public ValueTask CompleteAsync(ArtifactDescriptor artifact, long byteLength, CancellationToken cancellationToken) => default;
     public ValueTask AbortAsync(ArtifactDescriptor artifact, Exception error, CancellationToken cancellationToken) => default;

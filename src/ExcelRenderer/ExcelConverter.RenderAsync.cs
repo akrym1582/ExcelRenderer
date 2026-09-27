@@ -66,6 +66,10 @@ public static partial class ExcelConverter
         {
             throw;
         }
+        catch (ArgumentException)
+        {
+            throw;
+        }
         catch (ConversionException)
         {
             throw;

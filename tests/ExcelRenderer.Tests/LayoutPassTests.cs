@@ -19,6 +19,7 @@ public sealed class LayoutPassTests
     [Fact]
     public void LayoutContinuous_uses_used_range_without_print_scaling_or_margins()
     {
+        SampleOutputTestSupport.ConfigureJapaneseFont();
         var sheet = new ReportSheet(
             "Sheet",
             new Dictionary<CellAddress, ReportCell>

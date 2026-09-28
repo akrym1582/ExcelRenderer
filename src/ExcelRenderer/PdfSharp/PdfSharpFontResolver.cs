@@ -21,7 +21,7 @@ public sealed class PdfSharpFontResolver : IFontResolver
     private readonly bool _useBundledFont;
     private readonly Lazy<IFontManager> _systemFontManager = new(() => new FontManager());
 
-    /// <summary>Initializes a new instance of the <see cref="PdfSharpFontResolver"/> class. 内蔵の Noto Sans JP Regular を使用するリゾルバーを初期化します。</summary>
+    /// <summary>Initializes a new instance of the <see cref="PdfSharpFontResolver"/> class. 内蔵の Noto Sans CJK JP Regular を使用するリゾルバーを初期化します。</summary>
     public PdfSharpFontResolver()
     {
         _useBundledFont = true;

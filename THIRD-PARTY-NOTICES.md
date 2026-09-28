@@ -15,6 +15,18 @@ The regular font is embedded in ExcelRenderer and included transitively in
 ExcelRenderer.Tool to make Japanese text rendering deterministic. The SIL Open
 Font License text is included in both NuGet packages.
 
+## Noto Serif CJK JP
+
+- File: `third_party/NotoSerifCJKJP/NotoSerifCJKjp-Regular.otf` (unmodified)
+- License: SIL Open Font License, Version 1.1
+- Upstream: <https://github.com/notofonts/noto-cjk/blob/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Serif/OTF/Japanese/NotoSerifCJKjp-Regular.otf>
+- License text: [`third_party/NotoSerifCJKJP/LICENSE`](third_party/NotoSerifCJKJP/LICENSE)
+- SHA-256: `d9854c7a8ef170b5a7932558856fd64eb8de0b007cd823fed6f9f514ad2803d3`
+
+The regular font is embedded in ExcelRenderer and included transitively in
+ExcelRenderer.Tool. The SIL Open Font License text is included in both NuGet
+packages. Embedding this font does not change the current default renderer font.
+
 ## IPAmj Mincho
 
 - File: `third_party/IPAmjMincho/ipamjm.ttf` (version 006.01, unmodified)

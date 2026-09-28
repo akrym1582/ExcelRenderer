@@ -22,9 +22,11 @@
     <None Include="../../README.md" Pack="true" PackagePath="/" />
     <None Include="../../THIRD-PARTY-NOTICES.md" Pack="true" PackagePath="/" />
     <None Include="../../third_party/NotoSansJP/OFL.txt" Pack="true" PackagePath="licenses/" />
+    <None Include="../../third_party/NotoSerifCJKJP/LICENSE" Pack="true" PackagePath="licenses/NotoSerifCJKJP/" />
     <None Include="../../third_party/IPAmjMincho/IPA_Font_License_Agreement_v1.0.txt" Pack="true" PackagePath="licenses/IPAmjMincho/" />
     <None Include="../../third_party/IPAmjMincho/Readme.txt" Pack="true" PackagePath="licenses/IPAmjMincho/" />
     <EmbeddedResource Include="../../third_party/NotoSansJP/NotoSansCJKjp-Regular.otf" LogicalName="ExcelRenderer.NotoSansCJKjp-Regular.otf" />
+    <EmbeddedResource Include="../../third_party/NotoSerifCJKJP/NotoSerifCJKjp-Regular.otf" LogicalName="ExcelRenderer.NotoSerifCJKjp-Regular.otf" />
     <EmbeddedResource Include="../../third_party/IPAmjMincho/ipamjm.ttf" LogicalName="ExcelRenderer.ipamjm.ttf" />
   </ItemGroup>
 

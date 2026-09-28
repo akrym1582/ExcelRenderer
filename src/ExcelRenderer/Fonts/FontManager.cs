@@ -22,7 +22,10 @@ public sealed class FontManager : IFontManager
             Register(registration.Family, registration.Regular, registration.Bold, registration.Italic, registration.BoldItalic);
         }
 
-        AddBundledFonts();
+        if (_options.UseFontPack)
+        {
+            AddFontPack();
+        }
         Scan();
     }
 
@@ -213,48 +216,35 @@ public sealed class FontManager : IFontManager
         return primary;
     }
 
-    private void AddBundledFonts()
+    private void AddFontPack()
     {
-        if (BundledJapaneseFont.Data is { } data)
+        foreach (var resource in OptionalFontPack.Fonts)
         {
+            var data = resource.Data;
             using var stream = new MemoryStream(data, writable: false);
             using var typeface = SKTypeface.FromStream(stream);
-            if (typeface is not null && !string.IsNullOrWhiteSpace(typeface.FamilyName))
+            if (typeface is null || string.IsNullOrWhiteSpace(typeface.FamilyName))
             {
-                Add(
-                    typeface.FamilyName,
-                    typeface.FontStyle.Weight,
-                    typeface.FontStyle.Slant != SKFontStyleSlant.Upright,
-                    BundledJapaneseFont.FaceName,
-                    data,
-                    true,
-                    1,
-                    0,
-                    IvsFontStyle.Gothic);
-                if (!string.Equals(typeface.FamilyName, "Noto Sans JP", StringComparison.OrdinalIgnoreCase))
-                {
-                    Add(
-                        "Noto Sans JP",
-                        typeface.FontStyle.Weight,
-                        typeface.FontStyle.Slant != SKFontStyleSlant.Upright,
-                        BundledJapaneseFont.FaceName,
-                        data,
-                        true,
-                        1,
-                        0,
-                        IvsFontStyle.Gothic);
-                }
+                continue;
             }
-        }
 
-        if (BundledJapaneseSerifFont.Data is { } serifData && BundledJapaneseSerifFont.FamilyName is { } serifFamily)
-        {
-            Add(serifFamily, 400, false, BundledJapaneseSerifFont.FaceName, serifData, true, 1, 0, IvsFontStyle.Mincho);
-        }
+            var style = resource.Name switch
+            {
+                "NotoSansCJKjp-Regular.otf" => IvsFontStyle.Gothic,
+                "NotoSerifCJKjp-Regular.otf" => IvsFontStyle.Mincho,
+                _ => (IvsFontStyle?)null,
+            };
+            var ivsPriority = style is null ? 1 : 0;
+            Add(typeface.FamilyName, typeface.FontStyle.Weight,
+                typeface.FontStyle.Slant != SKFontStyleSlant.Upright,
+                resource.Name, data, true, 1, ivsPriority, style);
+            if (style == IvsFontStyle.Gothic &&
+                !string.Equals(typeface.FamilyName, "Noto Sans JP", StringComparison.OrdinalIgnoreCase))
+            {
+                Add("Noto Sans JP", typeface.FontStyle.Weight, false,
+                    resource.Name, data, true, 1, ivsPriority, style);
+            }
 
-        if (BundledIvsFont.Data is { } ivsData && BundledIvsFont.FamilyName is { } ivsFamily)
-        {
-            Add(ivsFamily, 400, false, BundledIvsFont.FaceName, ivsData, true, 1, 1, null);
         }
     }
 

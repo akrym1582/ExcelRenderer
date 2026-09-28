@@ -18,13 +18,11 @@ public sealed class PdfSharpFontResolver : IFontResolver
     private readonly string? _legacyFamily;
     private readonly string? _legacyFace;
     private readonly string[] _familyAliases = [];
-    private readonly bool _useBundledFont;
     private readonly Lazy<IFontManager> _systemFontManager = new(() => new FontManager());
 
-    /// <summary>Initializes a new instance of the <see cref="PdfSharpFontResolver"/> class. 内蔵の Noto Sans CJK JP Regular を使用するリゾルバーを初期化します。</summary>
+    /// <summary>Initializes a new instance of the <see cref="PdfSharpFontResolver"/> class. 使用可能なフォントを解決するリゾルバーを初期化します。</summary>
     public PdfSharpFontResolver()
     {
-        _useBundledFont = true;
     }
 
     /// <summary>Initializes a new instance of the <see cref="PdfSharpFontResolver"/> class. 単一のフォントファイルを指定したファミリー名と別名に割り当てる互換モードのリゾルバーを初期化します。</summary>
@@ -63,11 +61,6 @@ public sealed class PdfSharpFontResolver : IFontResolver
     /// <returns>解決したフォントを識別するフェイス情報を返します。互換モードでファミリー名が登録名または別名に一致しない場合は <see langword="null"/> を返します。</returns>
     public FontResolverInfo? ResolveTypeface(string familyName, bool bold, bool italic)
     {
-        if (_useBundledFont && BundledJapaneseFont.Data is not null)
-        {
-            return new FontResolverInfo(BundledJapaneseFont.FaceName);
-        }
-
         if (_legacyFace is not null)
         {
             return string.Equals(familyName, _legacyFamily, StringComparison.OrdinalIgnoreCase) ||
@@ -88,8 +81,5 @@ public sealed class PdfSharpFontResolver : IFontResolver
     /// <summary>解決済みのフェイス名に対応するフォントファイルのバイナリデータを取得します。</summary>
     /// <param name="faceName"><see cref="ResolveTypeface"/> が返したフォントフェイス名です。</param>
     /// <returns>フォントファイルの全バイトを返します。フェイス名が未解決の場合は <see langword="null"/> を返します。</returns>
-    public byte[]? GetFont(string faceName) =>
-        _useBundledFont && faceName == BundledJapaneseFont.FaceName
-            ? BundledJapaneseFont.Data
-            : _fontData.GetValueOrDefault(faceName);
+    public byte[]? GetFont(string faceName) => _fontData.GetValueOrDefault(faceName);
 }

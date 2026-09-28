@@ -37,18 +37,18 @@ This makes the rendering pipeline easier to test, understand, and extend with ne
 - A target framework compatible with .NET Standard 2.1 to consume the library
 - Appropriate fonts installed or supplied through `PdfSharpFontResolver`
 
-The packages include Noto Sans CJK JP, Noto Serif CJK JP, and the unmodified
-IPAmj Mincho font. Noto Serif CJK JP is available as an embedded resource and
-can be selected for IVS rendering as described below.
-IVS rendering defaults to Gothic (Noto Sans CJK JP, then IPAmj Mincho). Set
-`FontOptions.IvsFontStyle` to `IvsFontStyle.Mincho`, or pass
-`--ivs-font-style mincho` to the CLI, to prefer Noto Serif CJK JP before the
-IPAmj Mincho fallback. See [third-party notices](THIRD-PARTY-NOTICES.md)
-and the bundled IPA Font License Agreement for its terms.
+The optional `ExcelRenderer.Fonts` package contains Noto Sans CJK JP, Noto Serif
+CJK JP, and IPAmj Mincho. Install it alongside the library to enable bundled
+font and IVS fallback; otherwise the library uses explicitly registered or
+system fonts. The CLI depends on this package. IVS rendering defaults to Gothic
+(Noto Sans CJK JP, then IPAmj Mincho). Set `FontOptions.IvsFontStyle` to
+`IvsFontStyle.Mincho`, or pass `--ivs-font-style mincho` to the CLI, to prefer
+Noto Serif CJK JP before IPAmj Mincho. See [third-party notices](THIRD-PARTY-NOTICES.md).
+
 
 ## Installation
 
-The library and command-line tool are separate NuGet packages. After the corresponding package is published to NuGet.org, install it using the commands below. Publishing `ExcelRenderer` alone does not publish `ExcelRenderer.Tool`.
+The library, optional fonts, and command-line tool are separate NuGet packages. After the corresponding packages are published to NuGet.org, install them using the commands below. The tool installs its font dependency automatically.
 
 ### Library (NuGet)
 
@@ -56,6 +56,7 @@ Run this in your application's project directory (.NET Standard 2.1-compatible t
 
 ```bash
 dotnet add package ExcelRenderer
+dotnet add package ExcelRenderer.Fonts  # optional Japanese fonts
 ```
 
 ### Command-line tool (dotnet tool)
@@ -187,7 +188,7 @@ This creates `output/sample.md` and image files under `output/images`. Use
 nearby image text, layout analysis, and image export. Markdown export consumes the
 same `ReportDocument` model as the renderers and does not alter the PDF/PNG pipeline.
 
-PDF and PNG conversion use the bundled Noto Sans CJK JP Regular font by default, including when it is not installed on the host. If the bundled font is unavailable, they fall back to OS fonts. To use an external font for PDFsharp, configure a resolver before PDFsharp first accesses a font:
+PDF and PNG conversion can use Noto Sans CJK JP Regular when `ExcelRenderer.Fonts` is installed. Otherwise, they resolve registered or OS fonts. To use an external font for PDFsharp, configure a resolver before PDFsharp first accesses a font:
 
 ```csharp
 using ExcelRenderer.PdfSharp;
@@ -231,6 +232,8 @@ To try the CLI from source before publishing, create and install a local package
 
 ```bash
 dotnet pack src/ExcelRenderer.Tool/ExcelRenderer.Tool.csproj -c Release -o artifacts/packages
+dotnet pack src/ExcelRenderer/ExcelRenderer.csproj -c Release -o artifacts/packages
+dotnet pack src/ExcelRenderer.Fonts/ExcelRenderer.Fonts.csproj -c Release -o artifacts/packages
 dotnet tool install --tool-path ./artifacts/tool-test --add-source ./artifacts/packages ExcelRenderer.Tool
 ./artifacts/tool-test/excelrenderer --help
 ```
@@ -252,6 +255,5 @@ Production code is under `src/ExcelRenderer`, and tests are under `tests/ExcelRe
 
 ExcelRenderer is available under the [MIT License](LICENSE).
 
-Noto Sans CJK JP Regular is embedded in the `ExcelRenderer` assembly and therefore
-included in both NuGet packages. The font is licensed separately under the SIL
-Open Font License 1.1; see [Third-party notices](THIRD-PARTY-NOTICES.md).
+The optional `ExcelRenderer.Fonts` package contains the Japanese fonts and their
+separate license texts; see [Third-party notices](THIRD-PARTY-NOTICES.md).

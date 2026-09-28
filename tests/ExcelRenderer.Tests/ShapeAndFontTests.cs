@@ -229,6 +229,7 @@ public sealed class ShapeAndFontTests
         Assert.DoesNotContain(runs, run => run.Text == "\u0301");
     }
 
+
     /// <summary>IVS を基底文字から分離せず、format 14 に登録された同梱フォントで解決することを検証します。</summary>
     [Fact]
     public void FontManager_resolves_registered_ivs_as_one_text_element()
@@ -288,6 +289,31 @@ public sealed class ShapeAndFontTests
         Assert.Equal(source, run.SourceText);
         Assert.Equal(source, run.Text);
         Assert.False(run.MissingIvsGlyph);
+    }
+
+    /// <summary>フォントパッケージを無効にした場合、システムフォントなしでは解決できません。</summary>
+    [Fact]
+    public void FontManager_without_font_pack_does_not_use_embedded_fonts()
+    {
+        var manager = new FontManager(new FontOptions
+        {
+            UseFontPack = false,
+            AllowSystemFonts = false,
+            FallbackFamilies = [],
+        });
+
+        Assert.Throws<InvalidOperationException>(() => manager.Resolve(new("Noto Sans JP")));
+    }
+
+    /// <summary>追加の二つのフォントも任意パッケージから解決します。</summary>
+    [Theory]
+    [InlineData("Noto Serif CJK JP")]
+    [InlineData("IPAmjMincho")]
+    public void FontManager_resolves_optional_serif_fonts(string family)
+    {
+        var manager = new FontManager(new FontOptions { AllowSystemFonts = false, FallbackFamilies = [] });
+
+        Assert.NotEmpty(manager.Resolve(new(family)).FontData!);
     }
 
     /// <summary>明示登録を優先するポリシーが同梱フォントではなく登録済みファイルを選ぶことを検証します。</summary>

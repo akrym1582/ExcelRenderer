@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/ExcelRenderer.Fonts/ExcelRenderer.Fonts.csproj" />
     <Project Path="src/ExcelRenderer.Tool/ExcelRenderer.Tool.csproj" />
     <Project Path="src/ExcelRenderer/ExcelRenderer.csproj" />
   </Folder>

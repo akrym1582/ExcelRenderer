@@ -142,15 +142,14 @@ internal sealed class SkiaDrawingContext
             command.Style.Font.Italic);
         var resolved = _fontManager?.Resolve(request);
         using var resolvedTypeface = resolved is null ? null : CreateTypeface(resolved);
-        var bundledTypeface = resolvedTypeface ?? BundledJapaneseFont.Typeface;
-        using var systemTypeface = bundledTypeface is null
+        using var systemTypeface = resolvedTypeface is null
             ? SKTypeface.FromFamilyName(
                 command.Style.Font.Family,
                 command.Style.Font.Bold ? SKFontStyleWeight.Bold : SKFontStyleWeight.Normal,
                 SKFontStyleWidth.Normal,
                 command.Style.Font.Italic ? SKFontStyleSlant.Italic : SKFontStyleSlant.Upright)
             : null;
-        var typeface = bundledTypeface ?? systemTypeface ?? SKTypeface.Default;
+        var typeface = resolvedTypeface ?? systemTypeface ?? SKTypeface.Default;
         using var font = new SKFont(typeface, (float)command.Style.Font.Size);
         using var paint = CreatePaint(command.Style.Font.Color ?? new(0, 0, 0), SKPaintStyle.Fill);
         paint.IsAntialias = true;
@@ -279,7 +278,7 @@ internal sealed class SkiaDrawingContext
         foreach (var run in runs)
         {
             using var typeface = string.IsNullOrEmpty(run.Font.FilePath) ? null : CreateTypeface(run.Font);
-            using var font = new SKFont(typeface ?? BundledJapaneseFont.Typeface ?? SKTypeface.Default, size);
+            using var font = new SKFont(typeface ?? SKTypeface.Default, size);
             if (asPaths)
             {
                 using var path = font.GetTextPath(run.Text, new SKPoint(x, y));

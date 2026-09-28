@@ -70,7 +70,7 @@ jobs:
             throw "Tag v$next already exists."
           }
 
-          foreach ($path in @($projectPath, 'src/ExcelRenderer.Tool/ExcelRenderer.Tool.csproj')) {
+          foreach ($path in @($projectPath, 'src/ExcelRenderer.Fonts/ExcelRenderer.Fonts.csproj', 'src/ExcelRenderer.Tool/ExcelRenderer.Tool.csproj')) {
             $text = Get-Content $path -Raw
             if (-not [regex]::IsMatch($text, '<Version>\d+\.\d+\.\d+</Version>')) {
               throw "A three-part <Version> was not found in $path."
@@ -97,6 +97,13 @@ jobs:
           --no-restore
           --output artifacts/packages
 
+      - name: Create optional font package
+        run: >-
+          dotnet pack src/ExcelRenderer.Fonts/ExcelRenderer.Fonts.csproj
+          --configuration Release
+          --no-restore
+          --output artifacts/packages
+
       - name: Create dotnet tool package
         run: >-
           dotnet pack src/ExcelRenderer.Tool/ExcelRenderer.Tool.csproj
@@ -118,7 +125,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/ExcelRenderer/ExcelRenderer.csproj src/ExcelRenderer.Tool/ExcelRenderer.Tool.csproj
+          git add src/ExcelRenderer/ExcelRenderer.csproj src/ExcelRenderer.Fonts/ExcelRenderer.Fonts.csproj src/ExcelRenderer.Tool/ExcelRenderer.Tool.csproj
           git commit -m "chore(release): $VERSION"
           git tag --annotate "$TAG" --message "Release $VERSION"
           git push origin "HEAD:${{ github.event.repository.default_branch }}" --follow-tags

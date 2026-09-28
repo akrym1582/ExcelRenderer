@@ -12,6 +12,9 @@ public sealed class FontOptions
     /// <summary>Gets a value indicating whether operating-system font directories may be searched. OS 標準のフォントフォルダーを検索するかどうかを取得または設定します。</summary>
     public bool AllowSystemFonts { get; init; } = true;
 
+    /// <summary>Gets whether installed ExcelRenderer.Fonts resources may be used. インストール済みのフォントパッケージを使用するかどうかです。</summary>
+    public bool UseFontPack { get; init; } = true;
+
     /// <summary>Gets the fallback font families. フォールバックとして記載順に検索するフォントファミリー名を取得または設定します。要求されたフォントが見つからない場合に使用します。</summary>
     public IReadOnlyList<string> FallbackFamilies { get; init; } = ["Noto Sans JP", "Noto Sans", "Liberation Sans"];
 

@@ -22,7 +22,7 @@
     <None Include="../../README.md" Pack="true" PackagePath="/" />
     <None Include="../../THIRD-PARTY-NOTICES.md" Pack="true" PackagePath="/" />
     <None Include="../../third_party/NotoSansJP/OFL.txt" Pack="true" PackagePath="licenses/" />
-    <EmbeddedResource Include="../../third_party/NotoSansJP/NotoSansJP-Regular.ttf" LogicalName="ExcelRenderer.NotoSansJP-Regular.ttf" />
+    <EmbeddedResource Include="../../third_party/NotoSansJP/NotoSansCJKjp-Regular.otf" LogicalName="ExcelRenderer.NotoSansCJKjp-Regular.otf" />
   </ItemGroup>
 
   <ItemGroup>

@@ -394,7 +394,7 @@ svgRenderer.Render(
 
 ### フォントファイルの指定
 
-PDF と PNG の変換では、インストール不要の内蔵 Noto Sans JP Regular を既定で使用します。内蔵フォントが見つからない場合は OS のシステムフォントにフォールバックします。PDFsharp で外部フォントを使う場合は、PDFsharp がフォントを使用する前にフォントリゾルバーを設定してください。指定するファミリー名は、Excel のセルに設定されたフォント名と一致させます。
+PDF と PNG の変換では、インストール不要の内蔵 Noto Sans CJK JP Regular を既定で使用します。内蔵フォントが見つからない場合は OS のシステムフォントにフォールバックします。PDFsharp で外部フォントを使う場合は、PDFsharp がフォントを使用する前にフォントリゾルバーを設定してください。指定するファミリー名は、Excel のセルに設定されたフォント名と一致させます。
 
 ```csharp
 using PdfSharp.Fonts;
@@ -402,7 +402,7 @@ using ExcelRenderer.PdfSharp;
 
 GlobalFontSettings.FontResolver = new PdfSharpFontResolver(
     "Noto Sans JP",
-    "/app/fonts/NotoSansJP-Regular.ttf");
+    "/app/fonts/NotoSansCJKjp-Regular.otf");
 ```
 
 フォントリゾルバーはアプリケーションドメインごとに一度だけ、PDFsharp がフォントを使用する処理より前に設定します。
@@ -540,4 +540,4 @@ src/ExcelRenderer
 
 ExcelRenderer は [MIT License](LICENSE) で提供されます。
 
-Noto Sans JP Regular は `ExcelRenderer` に埋め込まれ、`ExcelRenderer.Tool` を含む両方の NuGet パッケージに同梱されます。このフォントには MIT License ではなく SIL Open Font License 1.1 が適用されます。詳細は[サードパーティ通知](THIRD-PARTY-NOTICES.md)を参照してください。
+Noto Sans CJK JP Regular は `ExcelRenderer` に埋め込まれ、`ExcelRenderer.Tool` を含む両方の NuGet パッケージに同梱されます。このフォントには MIT License ではなく SIL Open Font License 1.1 が適用されます。詳細は[サードパーティ通知](THIRD-PARTY-NOTICES.md)を参照してください。

@@ -843,10 +843,10 @@ public sealed class LayoutPassTests
         Assert.NotNull(face);
         var data = resolver.GetFont(face.FaceName);
         Assert.NotNull(data);
-        Assert.Equal(File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf")), data);
+        Assert.Equal(File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "NotoSansCJKjp-Regular.otf")), data);
         using var stream = new MemoryStream(data);
         using var typeface = SKTypeface.FromStream(stream);
-        Assert.Equal("Noto Sans JP", typeface.FamilyName);
+        Assert.Equal("Noto Sans CJK JP", typeface.FamilyName);
     }
 
     /// <summary>

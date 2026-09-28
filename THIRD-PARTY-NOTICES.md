@@ -3,13 +3,13 @@
 ExcelRenderer's MIT license does not cover the third-party component listed
 below.
 
-## Noto Sans JP
+## Noto Sans CJK JP
 
-- File: `third_party/NotoSansJP/NotoSansJP-Regular.ttf`
+- File: `third_party/NotoSansJP/NotoSansCJKjp-Regular.otf`
 - Copyright: Copyright 2014-2021 Adobe (http://www.adobe.com/), with Reserved
   Font Name "Source"
 - License: SIL Open Font License, Version 1.1
-- Upstream: <https://github.com/google/fonts/tree/main/ofl/notosansjp>
+- Upstream: <https://github.com/notofonts/noto-cjk>
 - License text: [`third_party/NotoSansJP/OFL.txt`](third_party/NotoSansJP/OFL.txt)
 
 The regular font is embedded in ExcelRenderer and included transitively in

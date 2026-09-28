@@ -191,15 +191,15 @@ public sealed class ShapeAndFontTests
         var directory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
         Directory.CreateDirectory(directory);
         File.Copy(
-            Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf"),
-            Path.Combine(directory, "unrelated-file-name.ttf"));
+            Path.Combine(AppContext.BaseDirectory, "NotoSansCJKjp-Regular.otf"),
+            Path.Combine(directory, "unrelated-file-name.otf"));
         try
         {
             var manager = new FontManager(new FontOptions { FontDirectories = [directory], FallbackFamilies = [] });
 
-            var resolved = manager.Resolve(new("Noto Sans JP"));
+            var resolved = manager.Resolve(new("Noto Sans CJK JP"));
 
-            Assert.Equal("Noto Sans JP", resolved.Family);
+            Assert.Equal("Noto Sans CJK JP", resolved.Family);
             Assert.StartsWith(directory, resolved.FilePath);
         }
         finally
@@ -270,8 +270,8 @@ public sealed class ShapeAndFontTests
 
     private static string CopyTestFont()
     {
-        var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.ttf");
-        File.Copy(Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf"), path);
+        var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.otf");
+        File.Copy(Path.Combine(AppContext.BaseDirectory, "NotoSansCJKjp-Regular.otf"), path);
         return path;
     }
 

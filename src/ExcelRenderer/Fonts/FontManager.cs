@@ -175,6 +175,17 @@ public sealed class FontManager : IFontManager
             data,
             true,
             1);
+        if (!string.Equals(typeface.FamilyName, "Noto Sans JP", StringComparison.OrdinalIgnoreCase))
+        {
+            Add(
+                "Noto Sans JP",
+                typeface.FontStyle.Weight,
+                typeface.FontStyle.Slant != SKFontStyleSlant.Upright,
+                BundledJapaneseFont.FaceName,
+                data,
+                true,
+                1);
+        }
     }
 
     private void Add(string family, int weight, bool italic, string? path, int sourcePriority)

@@ -2,15 +2,15 @@ using SkiaSharp;
 
 namespace ExcelRenderer.Fonts;
 
-/// <summary>内蔵の Noto Sans JP Regular フォントを共有します。</summary>
+/// <summary>内蔵の Noto Sans CJK JP Regular フォントを共有します。</summary>
 internal static class BundledJapaneseFont
 {
     /// <summary>PDFsharp が内蔵フォントを識別するフェイス名です。</summary>
-    internal const string FaceName = "ExcelRenderer.NotoSansJP-Regular";
+    internal const string FaceName = "ExcelRenderer.NotoSansCJKjp-Regular";
 
     private static readonly Lazy<byte[]?> FontData = new(() =>
     {
-        using var stream = typeof(BundledJapaneseFont).Assembly.GetManifestResourceStream("ExcelRenderer.NotoSansJP-Regular.ttf");
+        using var stream = typeof(BundledJapaneseFont).Assembly.GetManifestResourceStream("ExcelRenderer.NotoSansCJKjp-Regular.otf");
         if (stream is null)
         {
             return null;

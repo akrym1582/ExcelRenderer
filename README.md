@@ -43,7 +43,9 @@ can be selected for IVS rendering as described below.
 IVS rendering defaults to Gothic (Noto Sans CJK JP, then IPAmj Mincho). Set
 `FontOptions.IvsFontStyle` to `IvsFontStyle.Mincho`, or pass
 `--ivs-font-style mincho` to the CLI, to prefer Noto Serif CJK JP before the
-IPAmj Mincho fallback. See [third-party notices](THIRD-PARTY-NOTICES.md)
+IPAmj Mincho fallback. Set `FontOptions.ReplaceIvsWithBaseCharacter` to `true`
+to render an ideographic variation sequence as its base character with the
+variation selector removed. See [third-party notices](THIRD-PARTY-NOTICES.md)
 and the bundled IPA Font License Agreement for its terms.
 
 ## Installation

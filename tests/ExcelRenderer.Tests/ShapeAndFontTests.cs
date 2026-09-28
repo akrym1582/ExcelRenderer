@@ -290,6 +290,47 @@ public sealed class ShapeAndFontTests
         Assert.False(run.MissingIvsGlyph);
     }
 
+    /// <summary>IVS 置換オプションが異体字セレクターを除き、元の基底文字を描画することを検証します。</summary>
+    [Theory]
+    [InlineData("\u4FAE\uFE00", "\u4FAE")]
+    [InlineData("\U00020000\U000E0100", "\U00020000")]
+    public void FontManager_replaces_ivs_with_base_character_when_requested(string source, string expected)
+    {
+        var manager = new FontManager(new FontOptions
+        {
+            AllowSystemFonts = false,
+            FontDirectories = [],
+            FallbackFamilies = [],
+            ReplaceIvsWithBaseCharacter = true,
+        });
+
+        var run = Assert.Single(manager.ResolveTextRuns(source, new("Noto Sans JP")));
+
+        Assert.Equal(source, run.SourceText);
+        Assert.Equal(expected, run.Text);
+        Assert.False(run.MissingIvsGlyph);
+        Assert.Equal(0, run.Utf16Start);
+    }
+
+    /// <summary>IVS 置換オプションが絵文字の標準化異体字シーケンスには影響しないことを検証します。</summary>
+    [Fact]
+    public void FontManager_does_not_replace_non_ideographic_variation_sequence()
+    {
+        const string source = "\u2764\uFE0F";
+        var manager = new FontManager(new FontOptions
+        {
+            AllowSystemFonts = false,
+            FontDirectories = [],
+            FallbackFamilies = [],
+            ReplaceIvsWithBaseCharacter = true,
+        });
+
+        var run = Assert.Single(manager.ResolveTextRuns(source, new("Noto Sans JP")));
+
+        Assert.Equal(source, run.SourceText);
+        Assert.Equal(source, run.Text);
+    }
+
     /// <summary>明示登録を優先するポリシーが同梱フォントではなく登録済みファイルを選ぶことを検証します。</summary>
     [Fact]
     public void FontManager_prefer_requested_uses_explicit_registration()

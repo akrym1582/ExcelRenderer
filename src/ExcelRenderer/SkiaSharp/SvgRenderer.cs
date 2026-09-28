@@ -138,6 +138,10 @@ public sealed class SvgRenderer
     }
 
     /// <summary>指定されたポイント寸法の単一キャンバスを SVG として出力します。</summary>
+    /// <param name="commands">出力対象の描画コマンドです。</param>
+    /// <param name="widthPoints">キャンバスの幅をポイント単位で指定します。</param>
+    /// <param name="heightPoints">キャンバスの高さをポイント単位で指定します。</param>
+    /// <param name="output">SVG を書き込むストリームです。</param>
     public void RenderCanvas(IEnumerable<DrawCommand> commands, double widthPoints, double heightPoints, Stream output)
     {
         RenderPage(commands, new PageSettings(widthPoints, heightPoints), output);

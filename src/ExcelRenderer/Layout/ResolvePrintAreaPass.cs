@@ -8,7 +8,7 @@ namespace ExcelRenderer.Layout;
 /// </summary>
 public sealed class ResolvePrintAreaPass : IReportLayoutPass
 {
-    /// <summary>Gets or sets whether an explicit print area is ignored.</summary>
+    /// <summary>Gets a value indicating whether an explicit print area is ignored.</summary>
     public bool IgnoreExplicitPrintArea { get; init; }
 
     /// <summary>

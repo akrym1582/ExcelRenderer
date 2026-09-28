@@ -8,7 +8,7 @@ namespace ExcelRenderer.Layout;
 /// </summary>
 public sealed class HiddenRowColumnPass : IReportLayoutPass
 {
-    /// <summary>Gets or sets whether print titles are included in the visible range.</summary>
+    /// <summary>Gets a value indicating whether print titles are included in the visible range.</summary>
     public bool IncludePrintTitles { get; init; } = true;
 
     /// <summary>

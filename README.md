@@ -37,6 +37,11 @@ This makes the rendering pipeline easier to test, understand, and extend with ne
 - A target framework compatible with .NET Standard 2.1 to consume the library
 - Appropriate fonts installed or supplied through `PdfSharpFontResolver`
 
+The packages include Noto Sans CJK JP and the unmodified IPAmj Mincho font.
+IPAmj Mincho is supplied for planned IVS fallback; the renderer does not yet
+select it automatically. See [third-party notices](THIRD-PARTY-NOTICES.md)
+and the bundled IPA Font License Agreement for its terms.
+
 ## Installation
 
 The library and command-line tool are separate NuGet packages. After the corresponding package is published to NuGet.org, install it using the commands below. Publishing `ExcelRenderer` alone does not publish `ExcelRenderer.Tool`.

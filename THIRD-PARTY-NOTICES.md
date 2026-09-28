@@ -1,7 +1,6 @@
 # Third-party notices
 
-ExcelRenderer's MIT license does not cover the third-party component listed
-below.
+ExcelRenderer's MIT license does not cover the third-party fonts listed below.
 
 ## Noto Sans CJK JP
 
@@ -15,3 +14,18 @@ below.
 The regular font is embedded in ExcelRenderer and included transitively in
 ExcelRenderer.Tool to make Japanese text rendering deterministic. The SIL Open
 Font License text is included in both NuGet packages.
+
+## IPAmj Mincho
+
+- File: `third_party/IPAmjMincho/ipamjm.ttf` (version 006.01, unmodified)
+- License: IPA Font License Agreement v1.0
+- Upstream: <https://moji.or.jp/mojikiban/font/>
+- License text: [`third_party/IPAmjMincho/IPA_Font_License_Agreement_v1.0.txt`](third_party/IPAmjMincho/IPA_Font_License_Agreement_v1.0.txt)
+- Original readme: [`third_party/IPAmjMincho/Readme.txt`](third_party/IPAmjMincho/Readme.txt)
+- SHA-256: `a3e84f495f3c388db7a1473bf1985c1c076d0c814100f10a027ca6853eb1e8cb`
+
+The original font is embedded in ExcelRenderer and included transitively in
+ExcelRenderer.Tool. The IPA Font License Agreement and upstream readme are
+included in both NuGet packages. Use and redistribution are subject to the IPA
+Font License Agreement v1.0. Rendering support for IVS fallback is planned;
+embedding this font alone does not enable it.

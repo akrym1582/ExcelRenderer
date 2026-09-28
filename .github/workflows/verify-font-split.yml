@@ -1,0 +1,61 @@
+name: Verify font package split
+
+on:
+  push:
+    paths:
+      - '.github/workflows/verify-font-split.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet test ExcelRenderer.slnx --configuration Release
+      - run: dotnet pack src/ExcelRenderer/ExcelRenderer.csproj -c Release -o artifacts/packages
+      - run: dotnet pack src/ExcelRenderer.Fonts/ExcelRenderer.Fonts.csproj -c Release -o artifacts/packages
+      - run: dotnet pack src/ExcelRenderer.Tool/ExcelRenderer.Tool.csproj -c Release -o artifacts/packages
+      - name: Verify package sizes and tool dependency
+        run: |
+          python3 - <<'PY'
+          import glob, os, zipfile
+          files = {os.path.basename(p).split('.1.5.2.')[0]: p for p in glob.glob('artifacts/packages/*.nupkg')}
+          for name, path in files.items():
+              print(name, os.path.getsize(path))
+          assert os.path.getsize(files['ExcelRenderer']) < 3_000_000
+          assert os.path.getsize(files['ExcelRenderer.Fonts']) > 20_000_000
+          with zipfile.ZipFile(files['ExcelRenderer.Tool']) as z:
+              nuspec = z.read('ExcelRenderer.Tool.nuspec').decode()
+              assert 'ExcelRenderer.Fonts' in nuspec, nuspec
+          PY
+      - name: Verify library without font pack
+        run: |
+          dotnet new console -n WithoutFonts -o /tmp/without-fonts --framework net10.0
+          dotnet add /tmp/without-fonts/WithoutFonts.csproj package ExcelRenderer --version 1.5.2 --source "$PWD/artifacts/packages"
+          cat > /tmp/without-fonts/Program.cs <<'CS'
+          using ExcelRenderer.Fonts;
+          var manager = new FontManager(new FontOptions { AllowSystemFonts = false, FallbackFamilies = [] });
+          try { manager.Resolve(new FontRequest("Noto Sans JP")); throw new Exception("Unexpected bundled font"); }
+          catch (InvalidOperationException ex) when (ex.Message.StartsWith("No usable font")) { }
+          CS
+          dotnet run --project /tmp/without-fonts/WithoutFonts.csproj
+      - name: Verify library with font pack
+        run: |
+          dotnet add /tmp/without-fonts/WithoutFonts.csproj package ExcelRenderer.Fonts --version 1.5.2 --source "$PWD/artifacts/packages"
+          cat > /tmp/without-fonts/Program.cs <<'CS'
+          using ExcelRenderer.Fonts;
+          var manager = new FontManager(new FontOptions { AllowSystemFonts = false, FallbackFamilies = [] });
+          foreach (var family in new[] { "Noto Sans JP", "Noto Serif CJK JP", "IPAmjMincho" })
+              if (manager.Resolve(new FontRequest(family)).FontData is not { Length: > 0 })
+                  throw new Exception($"Missing {family}");
+          CS
+          dotnet run --project /tmp/without-fonts/WithoutFonts.csproj
+      - name: Verify local CLI installation
+        run: |
+          dotnet tool install --tool-path /tmp/excelrenderer-cli --add-source "$PWD/artifacts/packages" ExcelRenderer.Tool --version 1.5.2
+          /tmp/excelrenderer-cli/excelrenderer --help

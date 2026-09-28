@@ -15,6 +15,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../../src/ExcelRenderer/ExcelRenderer.csproj" />
+    <ProjectReference Include="../../src/ExcelRenderer.Fonts/ExcelRenderer.Fonts.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="../../third_party/NotoSansJP/NotoSansCJKjp-Regular.otf" Link="NotoSansCJKjp-Regular.otf">

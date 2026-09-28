@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Version>1.5.2</Version>
+    <PackageId>ExcelRenderer.Fonts</PackageId>
+    <Title>ExcelRenderer Japanese fonts</Title>
+    <Description>Optional Noto Sans CJK JP, Noto Serif CJK JP and IPAmj Mincho fonts for ExcelRenderer.</Description>
+    <Authors>akrym1582</Authors>
+    <PackageTags>excelrenderer fonts japanese cjk ivs</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/akrym1582/ExcelRenderer</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="/" />
+    <None Include="../../THIRD-PARTY-NOTICES.md" Pack="true" PackagePath="/" />
+    <None Include="../../third_party/NotoSansJP/OFL.txt" Pack="true" PackagePath="licenses/" />
+    <None Include="../../third_party/NotoSerifCJKJP/LICENSE" Pack="true" PackagePath="licenses/NotoSerifCJKJP/" />
+    <None Include="../../third_party/IPAmjMincho/IPA_Font_License_Agreement_v1.0.txt" Pack="true" PackagePath="licenses/IPAmjMincho/" />
+    <None Include="../../third_party/IPAmjMincho/Readme.txt" Pack="true" PackagePath="licenses/IPAmjMincho/" />
+    <EmbeddedResource Include="../../third_party/NotoSansJP/NotoSansCJKjp-Regular.otf" LogicalName="ExcelRenderer.Fonts.NotoSansCJKjp-Regular.otf" />
+    <EmbeddedResource Include="../../third_party/NotoSerifCJKJP/NotoSerifCJKjp-Regular.otf" LogicalName="ExcelRenderer.Fonts.NotoSerifCJKjp-Regular.otf" />
+    <EmbeddedResource Include="../../third_party/IPAmjMincho/ipamjm.ttf" LogicalName="ExcelRenderer.Fonts.ipamjm.ttf" />
+  </ItemGroup>
+</Project>

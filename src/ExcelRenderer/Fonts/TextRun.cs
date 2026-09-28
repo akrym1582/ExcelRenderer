@@ -9,6 +9,6 @@ public sealed record TextRun(string Text, ResolvedFont Font)
     /// <summary>Gets the unmodified source text represented by this run.</summary>
     public string SourceText { get; init; } = Text;
 
-    /// <summary>Gets a value indicating that an IVS could not be represented by any bundled IVS font.</summary>
+    /// <summary>Gets a value indicating whether an IVS could not be represented by any bundled IVS font.</summary>
     public bool MissingIvsGlyph { get; init; }
 }

@@ -4,6 +4,10 @@ namespace ExcelRenderer.Fonts;
 internal static class OpenTypeVariationSequences
 {
     /// <summary>Tests whether a font's format 14 cmap explicitly supports a base-scalar/selector pair.</summary>
+    /// <param name="font">The complete OpenType font data.</param>
+    /// <param name="baseScalar">The Unicode base scalar.</param>
+    /// <param name="selector">The Unicode variation selector.</param>
+    /// <returns><see langword="true"/> when format 14 contains the requested pair.</returns>
     internal static bool Supports(byte[] font, int baseScalar, int selector)
     {
         try

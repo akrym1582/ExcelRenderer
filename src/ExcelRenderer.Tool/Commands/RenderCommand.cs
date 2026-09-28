@@ -75,9 +75,21 @@ public static class RenderCommand
             AllowMultipleArgumentsPerToken = true,
         };
         var noSystemFonts = new Option<bool>("--no-system-fonts") { Description = "Do not search operating-system fonts." };
+        var ivsFontStyle = new Option<string>("--ivs-font-style")
+        {
+            Description = "Bundled IVS font style: gothic or mincho.",
+            DefaultValueFactory = _ => "gothic",
+        };
+        ivsFontStyle.Validators.Add(result =>
+        {
+            if (result.GetValueOrDefault<string>() is not ("gothic" or "mincho"))
+            {
+                result.AddError("--ivs-font-style must be gothic or mincho.");
+            }
+        });
         var command = new Command("render", "Render an Excel workbook using the unified rendering API.")
         {
-            input, output, format, sheet, pages, imageLayout, strict, warningsAsErrors, manifest, fontPolicy, fontDirectories, fallbackFonts, noSystemFonts,
+            input, output, format, sheet, pages, imageLayout, strict, warningsAsErrors, manifest, fontPolicy, fontDirectories, fallbackFonts, noSystemFonts, ivsFontStyle,
         };
 
         command.SetAction((result, cancellationToken) => CommandSupport.RunAsync(() => RenderAsync(
@@ -94,6 +106,7 @@ public static class RenderCommand
             result.GetValue(fontDirectories),
             result.GetValue(fallbackFonts),
             result.GetValue(noSystemFonts),
+            result.GetValue(ivsFontStyle)!,
             cancellationToken)));
         return command;
     }
@@ -112,6 +125,7 @@ public static class RenderCommand
         string[]? fontDirectories,
         string[]? fallbackFonts,
         bool noSystemFonts,
+        string ivsFontStyle,
         CancellationToken cancellationToken)
     {
         if (!TryParseFormat(formatText, out var format) || !TryParsePages(pagesText, out var pages) ||
@@ -137,6 +151,7 @@ public static class RenderCommand
             FontOptions = new FontOptions
             {
                 Policy = fontPolicy == "requested" ? FontPolicy.PreferRequested : FontPolicy.BundledCompatible,
+                IvsFontStyle = ivsFontStyle == "mincho" ? IvsFontStyle.Mincho : IvsFontStyle.Gothic,
                 AllowSystemFonts = !noSystemFonts,
                 FontDirectories = fontDirectories is { Length: > 0 } ? fontDirectories : Array.Empty<string>(),
                 FallbackFamilies = fallbackFonts is { Length: > 0 } ? fallbackFonts : new FontOptions().FallbackFamilies,

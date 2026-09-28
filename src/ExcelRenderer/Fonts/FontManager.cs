@@ -112,28 +112,6 @@ public sealed class FontManager : IFontManager
         return runs;
     }
 
-    private (ResolvedFont Font, bool Missing) ResolveIvs(int baseScalar, int selector, FontRequest request)
-    {
-        // IVS selection is intentionally independent of ordinary family fallback: bundled Noto first, then IPAmj.
-        foreach (var face in _faces.Where(x => x.IsBundled).OrderBy(x => x.IvsPriority))
-        {
-            var font = Select([face], request);
-            var key = (font.FaceId, baseScalar, selector);
-            if (!_ivsSupport.TryGetValue(key, out var supported))
-            {
-                supported = OpenTypeVariationSequences.Supports(face.Data, baseScalar, selector);
-                _ivsSupport[key] = supported;
-            }
-
-            if (supported)
-            {
-                return (font, false);
-            }
-        }
-
-        return (Resolve(request), true);
-    }
-
     private static IEnumerable<(string Text, int Start, int BaseScalar, int? Selector)> EnumerateElements(string text)
     {
         var enumerator = StringInfo.GetTextElementEnumerator(text);
@@ -182,6 +160,30 @@ public sealed class FontManager : IFontManager
         };
     }
 
+    private (ResolvedFont Font, bool Missing) ResolveIvs(int baseScalar, int selector, FontRequest request)
+    {
+        // IVS selection is intentionally independent of ordinary family fallback: bundled Noto first, then IPAmj.
+        foreach (var face in _faces
+            .Where(x => x.IsBundled && (x.IvsFontStyle == _options.IvsFontStyle || x.IvsFontStyle is null))
+            .OrderBy(x => x.IvsPriority))
+        {
+            var font = Select([face], request);
+            var key = (font.FaceId, baseScalar, selector);
+            if (!_ivsSupport.TryGetValue(key, out var supported))
+            {
+                supported = OpenTypeVariationSequences.Supports(face.Data, baseScalar, selector);
+                _ivsSupport[key] = supported;
+            }
+
+            if (supported)
+            {
+                return (font, false);
+            }
+        }
+
+        return (Resolve(request), true);
+    }
+
     private ResolvedFont ResolveForTextElement(string element, FontRequest request)
     {
         var primary = Resolve(request);
@@ -218,7 +220,8 @@ public sealed class FontManager : IFontManager
                     data,
                     true,
                     1,
-                    0);
+                    0,
+                    IvsFontStyle.Gothic);
                 if (!string.Equals(typeface.FamilyName, "Noto Sans JP", StringComparison.OrdinalIgnoreCase))
                 {
                     Add(
@@ -229,14 +232,20 @@ public sealed class FontManager : IFontManager
                         data,
                         true,
                         1,
-                        0);
+                        0,
+                        IvsFontStyle.Gothic);
                 }
             }
         }
 
+        if (BundledJapaneseSerifFont.Data is { } serifData && BundledJapaneseSerifFont.FamilyName is { } serifFamily)
+        {
+            Add(serifFamily, 400, false, BundledJapaneseSerifFont.FaceName, serifData, true, 1, 0, IvsFontStyle.Mincho);
+        }
+
         if (BundledIvsFont.Data is { } ivsData && BundledIvsFont.FamilyName is { } ivsFamily)
         {
-            Add(ivsFamily, 400, false, BundledIvsFont.FaceName, ivsData, true, 1, 1);
+            Add(ivsFamily, 400, false, BundledIvsFont.FaceName, ivsData, true, 1, 1, null);
         }
     }
 
@@ -247,15 +256,15 @@ public sealed class FontManager : IFontManager
             return;
         }
 
-        Add(family, weight, italic, Path.GetFullPath(path), null, false, sourcePriority, int.MaxValue);
+        Add(family, weight, italic, Path.GetFullPath(path), null, false, sourcePriority, int.MaxValue, null);
     }
 
-    private void Add(string family, int weight, bool italic, string path, byte[]? data, bool bundled, int sourcePriority, int ivsPriority)
+    private void Add(string family, int weight, bool italic, string path, byte[]? data, bool bundled, int sourcePriority, int ivsPriority, IvsFontStyle? ivsFontStyle)
     {
         var bytes = data ?? File.ReadAllBytes(path);
         using var hasher = SHA256.Create();
         var id = BitConverter.ToString(hasher.ComputeHash(bytes)).Replace("-", string.Empty, StringComparison.Ordinal);
-        var candidate = new FontFace(family, weight, italic, path, bytes, id, bundled, sourcePriority, ivsPriority);
+        var candidate = new FontFace(family, weight, italic, path, bytes, id, bundled, sourcePriority, ivsPriority, ivsFontStyle);
         if (_faces.Any(x => x.Family.Equals(candidate.Family, StringComparison.OrdinalIgnoreCase) &&
             x.Weight == candidate.Weight && x.Italic == candidate.Italic &&
             string.Equals(x.FilePath, candidate.FilePath, StringComparison.OrdinalIgnoreCase)))
@@ -302,7 +311,8 @@ public sealed class FontManager : IFontManager
                         null,
                         false,
                         configuredDirectories.Contains(directory) ? 0 : 2,
-                        int.MaxValue);
+                        int.MaxValue,
+                        null);
                 }
                 catch (IOException)
                 {
@@ -316,7 +326,7 @@ public sealed class FontManager : IFontManager
         }
     }
 
-    private sealed record FontFace(string Family, int Weight, bool Italic, string FilePath, byte[] Data, string FaceId, bool IsBundled, int SourcePriority, int IvsPriority)
+    private sealed record FontFace(string Family, int Weight, bool Italic, string FilePath, byte[] Data, string FaceId, bool IsBundled, int SourcePriority, int IvsPriority, IvsFontStyle? IvsFontStyle)
     {
         public string SortKey => $"{Family}\0{Weight:D4}\0{Italic}\0{FilePath}";
     }

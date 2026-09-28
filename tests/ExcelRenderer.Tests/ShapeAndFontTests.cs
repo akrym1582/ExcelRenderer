@@ -242,6 +242,26 @@ public sealed class ShapeAndFontTests
         Assert.Contains(runs, run => run.SourceText.Contains("\u4FAE\uFE00", StringComparison.Ordinal));
     }
 
+    /// <summary>IVS の優先書体をゴシック体と明朝体から明示的に選択できることを検証します。</summary>
+    [Theory]
+    [InlineData(IvsFontStyle.Gothic, "Sans")]
+    [InlineData(IvsFontStyle.Mincho, "Serif")]
+    public void FontManager_honors_selected_ivs_font_style(IvsFontStyle style, string expectedFamilyPart)
+    {
+        var manager = new FontManager(new FontOptions
+        {
+            AllowSystemFonts = false,
+            FontDirectories = [],
+            FallbackFamilies = [],
+            IvsFontStyle = style,
+        });
+
+        var run = Assert.Single(manager.ResolveTextRuns("\u4FAE\uFE00", new("Noto Sans JP")));
+
+        Assert.Contains(expectedFamilyPart, run.Font.Family, StringComparison.OrdinalIgnoreCase);
+        Assert.False(run.MissingIvsGlyph);
+    }
+
     /// <summary>未登録 IVS はセレクターを黙って捨てず、元列と UTF-16 位置を保持して欠字化することを検証します。</summary>
     [Fact]
     public void FontManager_marks_unsupported_supplementary_ivs_as_missing()

@@ -7,6 +7,7 @@ namespace ExcelRenderer.Layout;
 public sealed class ContinuousLayoutPass : IReportLayoutPass
 {
     /// <summary>計算済みのセル、画像、および図形を座標を変えずに単一ページへ配置します。</summary>
+    /// <param name="context">入力シートおよび計算済みのレイアウトを保持するコンテキストです。</param>
     public void Execute(ReportLayoutContext context)
     {
         var cells = context.CellLayouts.Values

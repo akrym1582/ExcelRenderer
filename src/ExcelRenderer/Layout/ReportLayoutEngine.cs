@@ -47,6 +47,8 @@ public sealed class ReportLayoutEngine
     }
 
     /// <summary>印刷範囲やページ設定を適用せず、使用範囲を単一キャンバスへ配置します。</summary>
+    /// <param name="sheet">単一キャンバスへ配置するシートです。</param>
+    /// <returns>配置済みの文書とキャンバス寸法を返します。</returns>
     public ContinuousRenderDocument LayoutContinuous(ReportSheet sheet)
     {
         var context = new ReportLayoutContext(sheet, TextMeasurer);

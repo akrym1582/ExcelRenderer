@@ -53,14 +53,38 @@ public static class ConversionManifest
 
     private static string OptionalArtifactMetadata(ArtifactDescriptor descriptor)
     {
-    var properties = new List<string>();
-    if (descriptor.IsContinuous) properties.Add("\"imageLayout\":\"continuous\"");
-    if (descriptor.SourceSheetName is not null) properties.Add("\"sourceSheetName\":\"" + Escape(descriptor.SourceSheetName) + "\"");
-    if (descriptor.WidthPoints is { } width) properties.Add("\"widthPoints\":" + width.ToString("R", CultureInfo.InvariantCulture));
-    if (descriptor.HeightPoints is { } height) properties.Add("\"heightPoints\":" + height.ToString("R", CultureInfo.InvariantCulture));
-    if (descriptor.PixelWidth is { } pixelWidth) properties.Add("\"pixelWidth\":" + pixelWidth.ToString(CultureInfo.InvariantCulture));
-    if (descriptor.PixelHeight is { } pixelHeight) properties.Add("\"pixelHeight\":" + pixelHeight.ToString(CultureInfo.InvariantCulture));
-    return properties.Count == 0 ? string.Empty : "," + string.Join(",", properties);
+        var properties = new List<string>();
+        if (descriptor.IsContinuous)
+        {
+            properties.Add("\"imageLayout\":\"continuous\"");
+        }
+
+        if (descriptor.SourceSheetName is not null)
+        {
+            properties.Add("\"sourceSheetName\":\"" + Escape(descriptor.SourceSheetName) + "\"");
+        }
+
+        if (descriptor.WidthPoints is { } width)
+        {
+            properties.Add("\"widthPoints\":" + width.ToString("R", CultureInfo.InvariantCulture));
+        }
+
+        if (descriptor.HeightPoints is { } height)
+        {
+            properties.Add("\"heightPoints\":" + height.ToString("R", CultureInfo.InvariantCulture));
+        }
+
+        if (descriptor.PixelWidth is { } pixelWidth)
+        {
+            properties.Add("\"pixelWidth\":" + pixelWidth.ToString(CultureInfo.InvariantCulture));
+        }
+
+        if (descriptor.PixelHeight is { } pixelHeight)
+        {
+            properties.Add("\"pixelHeight\":" + pixelHeight.ToString(CultureInfo.InvariantCulture));
+        }
+
+        return properties.Count == 0 ? string.Empty : "," + string.Join(",", properties);
     }
 
     private static string Diagnostic(ConversionDiagnostic diagnostic) =>

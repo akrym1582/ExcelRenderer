@@ -120,7 +120,9 @@ public sealed class FontManager : IFontManager
             var element = (string)enumerator.Current!;
             var start = enumerator.ElementIndex;
             var scalars = UnicodeScalars(element).ToArray();
-            var selector = scalars.Length == 2 && IsVariationSelector(scalars[1]) ? scalars[1] : (int?)null;
+            var selector = scalars.Length == 2 && IsVariationSelector(scalars[1]) && IsIdeographicBase(scalars[0])
+                ? scalars[1]
+                : (int?)null;
             yield return (element, start, scalars[0], selector);
         }
     }
@@ -135,6 +137,13 @@ public sealed class FontManager : IFontManager
     }
 
     private static bool IsVariationSelector(int scalar) => scalar is >= 0xFE00 and <= 0xFE0F or >= 0xE0100 and <= 0xE01EF;
+
+    private static bool IsIdeographicBase(int scalar) => scalar is
+        >= 0x3400 and <= 0x4DBF or
+        >= 0x4E00 and <= 0x9FFF or
+        >= 0xF900 and <= 0xFAFF or
+        >= 0x20000 and <= 0x2FA1F or
+        >= 0x30000 and <= 0x323AF;
 
     private static bool Supports(ResolvedFont font, string text)
     {

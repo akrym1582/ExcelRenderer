@@ -276,6 +276,20 @@ public sealed class ShapeAndFontTests
         Assert.Equal(1, missing.Utf16Start);
     }
 
+    /// <summary>絵文字の標準化異体字シーケンスを IVS 欠字として置換しないことを検証します。</summary>
+    [Fact]
+    public void FontManager_preserves_non_ideographic_variation_sequences()
+    {
+        var manager = new FontManager(new FontOptions { AllowSystemFonts = false, FontDirectories = [], FallbackFamilies = [] });
+        const string source = "\u2764\uFE0F";
+
+        var run = Assert.Single(manager.ResolveTextRuns(source, new("Noto Sans JP")));
+
+        Assert.Equal(source, run.SourceText);
+        Assert.Equal(source, run.Text);
+        Assert.False(run.MissingIvsGlyph);
+    }
+
     /// <summary>明示登録を優先するポリシーが同梱フォントではなく登録済みファイルを選ぶことを検証します。</summary>
     [Fact]
     public void FontManager_prefer_requested_uses_explicit_registration()

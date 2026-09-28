@@ -136,10 +136,11 @@ internal sealed class SkiaDrawingContext
 
     private void DrawText(SKCanvas canvas, DrawTextCommand command)
     {
-        var resolved = _fontManager?.Resolve(new FontRequest(
+        var request = new FontRequest(
             command.Style.Font.Family,
             command.Style.Font.Bold ? 700 : 400,
-            command.Style.Font.Italic));
+            command.Style.Font.Italic);
+        var resolved = _fontManager?.Resolve(request);
         using var resolvedTypeface = resolved is null ? null : CreateTypeface(resolved);
         var bundledTypeface = resolvedTypeface ?? BundledJapaneseFont.Typeface;
         using var systemTypeface = bundledTypeface is null
@@ -157,14 +158,14 @@ internal sealed class SkiaDrawingContext
         if (command.Style.ShrinkToFit && !command.Style.WrapText && command.Bounds.Width > 0)
         {
             var widest = command.Text.Replace("\r\n", "\n", StringComparison.Ordinal)
-                .Split('\n').Max(line => font.MeasureText(line, paint));
+                .Split('\n').Max(line => MeasureText(line, request, font, paint));
             if (widest > command.Bounds.Width)
             {
                 font.Size *= (float)(command.Bounds.Width / widest);
             }
         }
 
-        var lines = WrapText(command.Text, font, paint, command.Bounds.Width, command.Style.WrapText);
+        var lines = WrapText(command.Text, request, font, paint, command.Bounds.Width, command.Style.WrapText);
         var metrics = font.Metrics;
         var lineHeight = metrics.Descent - metrics.Ascent + metrics.Leading;
         var textHeight = lineHeight * lines.Count;
@@ -183,7 +184,7 @@ internal sealed class SkiaDrawingContext
 
         foreach (var line in lines)
         {
-            var lineWidth = font.MeasureText(line, paint);
+            var lineWidth = MeasureText(line, request, font, paint);
             var x = command.Style.HorizontalAlignment switch
             {
                 HorizontalAlignment.Center => (float)(command.Bounds.X + ((command.Bounds.Width - lineWidth) / 2)),
@@ -192,17 +193,11 @@ internal sealed class SkiaDrawingContext
             };
             if (_textAsPaths)
             {
-                using var path = font.GetTextPath(line, new SKPoint(x, y));
-                if (path.IsEmpty && line.Any(character => !char.IsWhiteSpace(character)))
-                {
-                    throw new InvalidOperationException("文字のアウトラインを生成できません。");
-                }
-
-                canvas.DrawPath(path, paint);
+                DrawResolvedLine(canvas, line, request, font.Size, x, y, paint, asPaths: true);
             }
             else
             {
-                canvas.DrawText(line, x, y, SKTextAlign.Left, font, paint);
+                DrawResolvedLine(canvas, line, request, font.Size, x, y, paint, asPaths: false);
             }
 
             if (command.Style.Font.Underline)
@@ -216,7 +211,7 @@ internal sealed class SkiaDrawingContext
         canvas.Restore();
     }
 
-    private IReadOnlyList<string> WrapText(string text, SKFont font, SKPaint paint, double width, bool wrap)
+    private IReadOnlyList<string> WrapText(string text, FontRequest request, SKFont font, SKPaint paint, double width, bool wrap)
     {
         if (!wrap || width <= 0)
         {
@@ -233,13 +228,15 @@ internal sealed class SkiaDrawingContext
             }
 
             var line = string.Empty;
-            foreach (var character in paragraph)
+            var elements = System.Globalization.StringInfo.GetTextElementEnumerator(paragraph);
+            while (elements.MoveNext())
             {
-                var candidate = line + character;
-                if (line.Length > 0 && font.MeasureText(candidate, paint) > width)
+                var element = (string)elements.Current!;
+                var candidate = line + element;
+                if (line.Length > 0 && MeasureText(candidate, request, font, paint) > width)
                 {
                     lines.Add(line);
-                    line = character.ToString();
+                    line = element;
                 }
                 else
                 {
@@ -251,6 +248,55 @@ internal sealed class SkiaDrawingContext
         }
 
         return lines;
+    }
+
+    private float MeasureText(string text, FontRequest request, SKFont defaultFont, SKPaint paint)
+    {
+        if (_fontManager is null)
+        {
+            return defaultFont.MeasureText(text, paint);
+        }
+
+        var width = 0f;
+        foreach (var run in _fontManager.ResolveTextRuns(text, request))
+        {
+            using var typeface = CreateTypeface(run.Font);
+            using var font = new SKFont(typeface, defaultFont.Size);
+            width += font.MeasureText(run.Text, paint);
+        }
+
+        return width;
+    }
+
+    private void DrawResolvedLine(SKCanvas canvas, string text, FontRequest request, float size, float x, float y, SKPaint paint, bool asPaths)
+    {
+        var runs = _fontManager?.ResolveTextRuns(text, request);
+        if (runs is null)
+        {
+            runs = [new(text, new ResolvedFont(string.Empty, request.Weight, request.Italic, string.Empty))];
+        }
+
+        foreach (var run in runs)
+        {
+            using var typeface = string.IsNullOrEmpty(run.Font.FilePath) ? null : CreateTypeface(run.Font);
+            using var font = new SKFont(typeface ?? BundledJapaneseFont.Typeface ?? SKTypeface.Default, size);
+            if (asPaths)
+            {
+                using var path = font.GetTextPath(run.Text, new SKPoint(x, y));
+                if (path.IsEmpty && run.Text.Any(character => !char.IsWhiteSpace(character)))
+                {
+                    throw new InvalidOperationException("文字のアウトラインを生成できません。");
+                }
+
+                canvas.DrawPath(path, paint);
+            }
+            else
+            {
+                canvas.DrawText(run.Text, x, y, SKTextAlign.Left, font, paint);
+            }
+
+            x += font.MeasureText(run.Text, paint);
+        }
     }
 
     private void DrawImage(SKCanvas canvas, DrawImageCommand command)

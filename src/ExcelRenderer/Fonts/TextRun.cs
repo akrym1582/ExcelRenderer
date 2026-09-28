@@ -1,4 +1,14 @@
 namespace ExcelRenderer.Fonts;
 
 /// <summary>一つのフォントフェイスで描画する、Unicode テキスト要素境界のテキスト範囲を表します。</summary>
-public sealed record TextRun(string Text, ResolvedFont Font);
+public sealed record TextRun(string Text, ResolvedFont Font)
+{
+    /// <summary>Gets a value indicating the zero-based UTF-16 offset in the original string.</summary>
+    public int Utf16Start { get; init; }
+
+    /// <summary>Gets the unmodified source text represented by this run.</summary>
+    public string SourceText { get; init; } = Text;
+
+    /// <summary>Gets a value indicating whether an IVS could not be represented by any bundled IVS font.</summary>
+    public bool MissingIvsGlyph { get; init; }
+}

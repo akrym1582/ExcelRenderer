@@ -189,13 +189,15 @@ public sealed class PdfSharpRenderer : IRenderer
             }
 
             var line = string.Empty;
-            foreach (var character in paragraph)
+            var elements = System.Globalization.StringInfo.GetTextElementEnumerator(paragraph);
+            while (elements.MoveNext())
             {
-                var candidate = line + character;
+                var element = (string)elements.Current!;
+                var candidate = line + element;
                 if (line.Length > 0 && graphics.MeasureString(candidate, font).Width > width)
                 {
                     lines.Add(line);
-                    line = character.ToString();
+                    line = element;
                 }
                 else
                 {

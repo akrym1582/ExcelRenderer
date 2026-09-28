@@ -39,5 +39,8 @@ packages. Embedding this font does not change the current default renderer font.
 The original font is embedded in ExcelRenderer and included transitively in
 ExcelRenderer.Tool. The IPA Font License Agreement and upstream readme are
 included in both NuGet packages. Use and redistribution are subject to the IPA
-Font License Agreement v1.0. Rendering support for IVS fallback is planned;
-embedding this font alone does not enable it.
+Font License Agreement v1.0. The renderer uses this unmodified font as the
+second bundled IVS fallback after the selected Noto Sans CJK JP or Noto Serif
+CJK JP style. Unsupported registered or
+unregistered variation sequences are reported rather than silently dropping
+the variation selector.

@@ -74,9 +74,16 @@ public static partial class ExcelConverter
                     diagnostics.ToArray());
             }
 
+            var fontManager = new FontManager(request.FontOptions);
+            CollectMissingIvsDiagnostics(sheets, fontManager, diagnostics);
+            if (diagnostics.HasFailure)
+            {
+                throw Failure("Conversion was stopped by diagnostic policy.", null, diagnostics, artifacts);
+            }
+
             var pages = request.ImageLayout == ImageLayoutMode.Continuous
-                ? LayoutContinuous(sheets, request.Dpi, request.FontOptions)
-                : LayoutPages(sheets, request.Dpi, request.FontOptions);
+                ? LayoutContinuous(sheets, request.Dpi, fontManager)
+                : LayoutPages(sheets, request.Dpi, fontManager);
             var selectedPages = SelectPages(pages, request.Selection.Pages);
             if (request.OutputFormat == OutputFormat.Pdf)
             {
@@ -84,7 +91,7 @@ public static partial class ExcelConverter
             }
             else
             {
-                await WritePageArtifactsAsync(selectedPages, request, sink, artifacts, cancellationToken).ConfigureAwait(false);
+                await WritePageArtifactsAsync(selectedPages, request, fontManager, sink, artifacts, cancellationToken).ConfigureAwait(false);
             }
 
             return new(
@@ -139,9 +146,8 @@ public static partial class ExcelConverter
         }
     }
 
-    private static IReadOnlyList<SheetPage> LayoutPages(IReadOnlyList<SelectedSheet> sheets, double dpi, FontOptions fontOptions)
+    private static IReadOnlyList<SheetPage> LayoutPages(IReadOnlyList<SelectedSheet> sheets, double dpi, FontManager fontManager)
     {
-        var fontManager = new FontManager(fontOptions);
         GlobalFontSettings.FontResolver ??= new PdfSharpFontResolver(fontManager);
         var pages = new List<SheetPage>();
         var documentPage = 0;
@@ -200,9 +206,8 @@ public static partial class ExcelConverter
         return pages;
     }
 
-    private static IReadOnlyList<SheetPage> LayoutContinuous(IReadOnlyList<SelectedSheet> sheets, double dpi, FontOptions fontOptions)
+    private static IReadOnlyList<SheetPage> LayoutContinuous(IReadOnlyList<SelectedSheet> sheets, double dpi, FontManager fontManager)
     {
-        var fontManager = new FontManager(fontOptions);
         GlobalFontSettings.FontResolver ??= new PdfSharpFontResolver(fontManager);
         var pages = new List<SheetPage>();
         var documentPage = 0;
@@ -311,7 +316,7 @@ public static partial class ExcelConverter
             token).ConfigureAwait(false);
     }
 
-    private static async Task WritePageArtifactsAsync(IReadOnlyList<SheetPage> pages, RenderRequest request, IRenderOutputSink sink, List<ArtifactMetadata> artifacts, CancellationToken token)
+    private static async Task WritePageArtifactsAsync(IReadOnlyList<SheetPage> pages, RenderRequest request, FontManager fontManager, IRenderOutputSink sink, List<ArtifactMetadata> artifacts, CancellationToken token)
     {
         var extension = request.OutputFormat == OutputFormat.Png ? "png" : "svg";
         var media = request.OutputFormat == OutputFormat.Png ? "image/png" : "image/svg+xml";
@@ -339,7 +344,6 @@ public static partial class ExcelConverter
                 artifacts,
                 stream =>
                 {
-                    var fontManager = new FontManager(request.FontOptions);
                     if (request.OutputFormat == OutputFormat.Png)
                     {
                         var renderer = new PngRenderer(fontManager);
@@ -372,6 +376,73 @@ public static partial class ExcelConverter
                     }
                 },
                 token).ConfigureAwait(false);
+        }
+    }
+
+    private static void CollectMissingIvsDiagnostics(IReadOnlyList<SelectedSheet> sheets, FontManager fonts, DiagnosticCollector diagnostics)
+    {
+        foreach (var selected in sheets)
+        {
+            foreach (var (address, cell) in selected.Sheet.Cells)
+            {
+                Add(cell.Text, cell.Style.Font, CellName(address), null);
+            }
+
+            var shapes = selected.Sheet.Shapes ?? [];
+            for (var i = 0; i < shapes.Count; i++)
+            {
+                var shape = shapes[i];
+                if (shape.Text is { } text)
+                {
+                    Add(text.Text, text.Font, null, $"shape-{i + 1}");
+                }
+            }
+
+            void Add(string? text, FontStyle style, string? cell, string? objectId)
+            {
+                if (string.IsNullOrEmpty(text))
+                {
+                    return;
+                }
+
+                var request = new FontRequest(style.Family, style.Bold ? 700 : 400, style.Italic);
+                foreach (var run in fonts.ResolveTextRuns(text, request).Where(x => x.MissingIvsGlyph))
+                {
+                    var sequence = string.Join(" ", ToScalars(run.SourceText).Select(x => $"U+{x:X4}"));
+                    diagnostics.Add(new(
+                        "MissingIvsGlyph",
+                        DiagnosticSeverity.Warning,
+                        DiagnosticStage.Layout,
+                        $"No bundled IVS font supports {sequence} at UTF-16 offset {run.Utf16Start}; a replacement glyph will be rendered.",
+                        selected.Sheet.Name,
+                        cell,
+                        objectId,
+                        UnicodeSequence: sequence));
+                }
+            }
+        }
+
+        static IEnumerable<int> ToScalars(string value)
+        {
+            for (var i = 0; i < value.Length; i++)
+            {
+                yield return char.IsHighSurrogate(value[i]) && i + 1 < value.Length && char.IsLowSurrogate(value[i + 1])
+                    ? char.ConvertToUtf32(value[i], value[++i]) : value[i];
+            }
+        }
+
+        static string CellName(CellAddress address)
+        {
+            var column = address.Column + 1;
+            var name = string.Empty;
+            while (column > 0)
+            {
+                column--;
+                name = (char)('A' + (column % 26)) + name;
+                column /= 26;
+            }
+
+            return name + (address.Row + 1);
         }
     }
 

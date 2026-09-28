@@ -6,6 +6,9 @@ public sealed class FontOptions
     /// <summary>Gets the font selection policy. フォント選択時に適用するポリシーを取得または設定します。</summary>
     public FontPolicy Policy { get; init; } = FontPolicy.BundledCompatible;
 
+    /// <summary>Gets the bundled Gothic or Mincho face preferred for registered IVS glyphs. IVS 字形に優先する同梱のゴシック体または明朝体を取得または設定します。</summary>
+    public IvsFontStyle IvsFontStyle { get; init; } = IvsFontStyle.Gothic;
+
     /// <summary>Gets a value indicating whether operating-system font directories may be searched. OS 標準のフォントフォルダーを検索するかどうかを取得または設定します。</summary>
     public bool AllowSystemFonts { get; init; } = true;
 

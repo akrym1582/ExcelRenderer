@@ -38,10 +38,12 @@ This makes the rendering pipeline easier to test, understand, and extend with ne
 - Appropriate fonts installed or supplied through `PdfSharpFontResolver`
 
 The packages include Noto Sans CJK JP, Noto Serif CJK JP, and the unmodified
-IPAmj Mincho font. Noto Serif CJK JP is available as an embedded resource but
-is not selected automatically by the renderer.
-IPAmj Mincho is supplied for planned IVS fallback; the renderer does not yet
-select it automatically. See [third-party notices](THIRD-PARTY-NOTICES.md)
+IPAmj Mincho font. Noto Serif CJK JP is available as an embedded resource and
+can be selected for IVS rendering as described below.
+IVS rendering defaults to Gothic (Noto Sans CJK JP, then IPAmj Mincho). Set
+`FontOptions.IvsFontStyle` to `IvsFontStyle.Mincho`, or pass
+`--ivs-font-style mincho` to the CLI, to prefer Noto Serif CJK JP before the
+IPAmj Mincho fallback. See [third-party notices](THIRD-PARTY-NOTICES.md)
 and the bundled IPA Font License Agreement for its terms.
 
 ## Installation

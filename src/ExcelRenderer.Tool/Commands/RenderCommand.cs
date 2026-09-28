@@ -156,6 +156,12 @@ public static class RenderCommand
             conversion = await ExcelConverter.RenderAsync(input, request, new DirectoryOutputSink(outputPath), cancellationToken).ConfigureAwait(false);
         }
 
+        foreach (var diagnostic in conversion.Diagnostics.Where(x => x.Severity != DiagnosticSeverity.Info))
+        {
+            var location = diagnostic.CellRange ?? diagnostic.ObjectId ?? "workbook";
+            Console.Error.WriteLine($"{diagnostic.Severity}: {diagnostic.Code} [{diagnostic.SheetName ?? "workbook"}!{location}]: {diagnostic.Message}");
+        }
+
         if (manifestPath is not null)
         {
             EnsureParentDirectory(manifestPath);

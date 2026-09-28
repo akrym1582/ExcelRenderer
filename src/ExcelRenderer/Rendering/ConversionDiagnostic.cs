@@ -10,6 +10,7 @@ namespace ExcelRenderer.Rendering;
 /// <param name="ObjectId">診断に関係する図形などの ID です。</param>
 /// <param name="SourcePageNumber">診断に関係する元ページ番号です。</param>
 /// <param name="OccurrenceCount">同じ診断が発生した回数です。</param>
+/// <param name="UnicodeSequence">診断対象だけを U+XXXX 形式で表した列です。セル全文は含みません。</param>
 public sealed record ConversionDiagnostic(
     string Code,
     DiagnosticSeverity Severity,
@@ -19,4 +20,5 @@ public sealed record ConversionDiagnostic(
     string? CellRange = null,
     string? ObjectId = null,
     int? SourcePageNumber = null,
-    int OccurrenceCount = 1);
+    int OccurrenceCount = 1,
+    string? UnicodeSequence = null);

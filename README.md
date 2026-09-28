@@ -40,8 +40,8 @@ This makes the rendering pipeline easier to test, understand, and extend with ne
 The packages include Noto Sans CJK JP, Noto Serif CJK JP, and the unmodified
 IPAmj Mincho font. Noto Serif CJK JP is available as an embedded resource but
 is not selected automatically by the renderer.
-IPAmj Mincho is supplied for planned IVS fallback; the renderer does not yet
-select it automatically. See [third-party notices](THIRD-PARTY-NOTICES.md)
+IPAmj Mincho is supplied as the second IVS fallback after Noto Sans CJK JP; the renderer
+selects it automatically for a variation sequence that Noto does not support. See [third-party notices](THIRD-PARTY-NOTICES.md)
 and the bundled IPA Font License Agreement for its terms.
 
 ## Installation

@@ -31,7 +31,7 @@ internal sealed class DiagnosticCollector
         _failure |= diagnostic.Severity == DiagnosticSeverity.Error ||
             (_options.StrictMode && diagnostic.Severity != DiagnosticSeverity.Info) ||
             _options.TreatAsErrors.Contains(diagnostic.Code, StringComparer.Ordinal);
-        var key = string.Join("\u001f", diagnostic.Code, diagnostic.SheetName, diagnostic.CellRange, diagnostic.ObjectId, diagnostic.SourcePageNumber);
+        var key = string.Join("\u001f", diagnostic.Code, diagnostic.SheetName, diagnostic.CellRange, diagnostic.ObjectId, diagnostic.SourcePageNumber, diagnostic.UnicodeSequence);
         if (_diagnostics.TryGetValue(key, out var existing))
         {
             _diagnostics[key] = existing with { OccurrenceCount = existing.OccurrenceCount + diagnostic.OccurrenceCount };

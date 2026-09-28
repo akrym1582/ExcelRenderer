@@ -229,6 +229,33 @@ public sealed class ShapeAndFontTests
         Assert.DoesNotContain(runs, run => run.Text == "\u0301");
     }
 
+    /// <summary>IVS を基底文字から分離せず、format 14 に登録された同梱フォントで解決することを検証します。</summary>
+    [Fact]
+    public void FontManager_resolves_registered_ivs_as_one_text_element()
+    {
+        var manager = new FontManager(new FontOptions { AllowSystemFonts = false, FontDirectories = [], FallbackFamilies = [] });
+
+        var runs = manager.ResolveTextRuns("X\u4FAE\uFE00Y", new("Noto Sans JP"));
+
+        Assert.Equal("X\u4FAE\uFE00Y", string.Concat(runs.Select(run => run.SourceText)));
+        Assert.DoesNotContain(runs, run => run.MissingIvsGlyph);
+        Assert.Contains(runs, run => run.SourceText.Contains("\u4FAE\uFE00", StringComparison.Ordinal));
+    }
+
+    /// <summary>未登録 IVS はセレクターを黙って捨てず、元列と UTF-16 位置を保持して欠字化することを検証します。</summary>
+    [Fact]
+    public void FontManager_marks_unsupported_supplementary_ivs_as_missing()
+    {
+        var manager = new FontManager(new FontOptions { AllowSystemFonts = false, FontDirectories = [], FallbackFamilies = [] });
+        var source = "A\u4E00\U000E01EFB";
+
+        var missing = Assert.Single(manager.ResolveTextRuns(source, new("Noto Sans JP")), run => run.MissingIvsGlyph);
+
+        Assert.Equal("\u4E00\U000E01EF", missing.SourceText);
+        Assert.Equal("\uFFFD", missing.Text);
+        Assert.Equal(1, missing.Utf16Start);
+    }
+
     /// <summary>明示登録を優先するポリシーが同梱フォントではなく登録済みファイルを選ぶことを検証します。</summary>
     [Fact]
     public void FontManager_prefer_requested_uses_explicit_registration()

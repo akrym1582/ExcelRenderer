@@ -24,7 +24,7 @@ PDF / PNG / SVG
 
 ## インストール
 
-ライブラリ、任意のフォント、コマンドラインツールは別々の NuGet パッケージです。NuGet.org に公開された後、以下のコマンドでインストールできます。CLI はフォントパッケージを依存関係としてインストールします。
+ライブラリ、任意のフォント、コマンドラインツールは別々の NuGet パッケージです。NuGet.org に公開された後、以下のコマンドでインストールできます。CLI はライブラリとフォントパッケージを依存関係としてインストールします。
 
 ### ライブラリ（NuGet）
 
@@ -34,6 +34,12 @@ PDF / PNG / SVG
 dotnet add package ExcelRenderer
 dotnet add package ExcelRenderer.Fonts  # 日本語フォントが必要な場合
 ```
+
+`ExcelRenderer` はアプリケーション側でフォントを用意する場合、単独で使用できます。
+`ExcelRenderer.Fonts` は Noto Sans CJK JP、Noto Serif CJK JP、IPAmj 明朝の
+フォントリソースだけを追加する任意パッケージであり、ライブラリ API の利用には
+必須ではありません。フォントを再配布する場合は、それぞれのライセンスに従って
+ください。詳細は[サードパーティ通知](THIRD-PARTY-NOTICES.md)を参照してください。
 
 インストール後、次の API で変換できます。
 
@@ -62,7 +68,10 @@ dotnet tool install --global ExcelRenderer.Tool
 excelrenderer --help
 ```
 
-パッケージ名は `ExcelRenderer.Tool`、実行コマンド名は `excelrenderer` です。CLI の利用にライブラリの個別インストールは不要です。これらのコマンドは、NuGet のパッケージソースで NuGet.org が有効になっていることを前提とします。
+パッケージ名は `ExcelRenderer.Tool`、実行コマンド名は `excelrenderer` です。CLI は
+`ExcelRenderer` と `ExcelRenderer.Fonts` に依存するため、これらを個別にインストールする
+必要はありません。これらのコマンドは、NuGet のパッケージソースで NuGet.org が有効に
+なっていることを前提とします。
 
 ```bash
 excelrenderer pdf input.xlsx -o output.pdf
@@ -395,7 +404,11 @@ svgRenderer.Render(
 
 ### フォントファイルの指定
 
-PDF と PNG の変換では、`ExcelRenderer.Fonts` が導入されていれば Noto Sans CJK JP Regular を使用できます。未導入の場合は登録済みまたは OS のフォントを解決します。PDFsharp で外部フォントを使う場合は、PDFsharp がフォントを使用する前にフォントリゾルバーを設定してください。指定するファミリー名は、Excel のセルに設定されたフォント名と一致させます。
+PDF と PNG の変換では、任意の `ExcelRenderer.Fonts` パッケージが導入されていれば、
+埋め込まれた Noto Sans CJK JP、Noto Serif CJK JP、IPAmj 明朝を使用できます。未導入
+の場合は登録済みまたは OS のフォントを解決します。PDFsharp で外部フォントを使う
+場合は、PDFsharp がフォントを使用する前にフォントリゾルバーを設定してください。
+指定するファミリー名は、Excel のセルに設定されたフォント名と一致させます。
 
 ```csharp
 using PdfSharp.Fonts;

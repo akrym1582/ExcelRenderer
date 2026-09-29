@@ -37,10 +37,12 @@ This makes the rendering pipeline easier to test, understand, and extend with ne
 - A target framework compatible with .NET Standard 2.1 to consume the library
 - Appropriate fonts installed or supplied through `PdfSharpFontResolver`
 
-The optional `ExcelRenderer.Fonts` package contains Noto Sans CJK JP, Noto Serif
-CJK JP, and IPAmj Mincho. Install it alongside the library to enable bundled
-font and IVS fallback; otherwise the library uses explicitly registered or
-system fonts. The CLI depends on this package. IVS rendering defaults to Gothic
+The optional `ExcelRenderer.Fonts` package contains the embedded Noto Sans CJK JP,
+Noto Serif CJK JP, and IPAmj Mincho font resources. The `ExcelRenderer` library
+does not depend on that package: install it alongside the library only when you
+want those bundled resources and IVS fallback. Without it, the library uses
+explicitly registered or system fonts. The CLI depends on this package and
+installs it transitively. IVS rendering defaults to Gothic
 (Noto Sans CJK JP, then IPAmj Mincho). Set `FontOptions.IvsFontStyle` to
 `IvsFontStyle.Mincho`, or pass `--ivs-font-style mincho` to the CLI, to prefer
 Noto Serif CJK JP before IPAmj Mincho. See [third-party notices](THIRD-PARTY-NOTICES.md).
@@ -62,6 +64,12 @@ dotnet add package ExcelRenderer
 dotnet add package ExcelRenderer.Fonts  # optional Japanese fonts
 ```
 
+`ExcelRenderer` is sufficient when your application provides its own fonts.
+`ExcelRenderer.Fonts` adds only the bundled font resources; it is not required
+to use the library API. The package includes Noto Sans CJK JP, Noto Serif CJK JP,
+and IPAmj Mincho under their respective licenses. See
+[third-party notices](THIRD-PARTY-NOTICES.md) for redistribution requirements.
+
 ### Command-line tool (dotnet tool)
 
 Install the .NET 10 SDK, then install the CLI from NuGet.org:
@@ -71,7 +79,10 @@ dotnet tool install --global ExcelRenderer.Tool
 excelrenderer --help
 ```
 
-The package name is `ExcelRenderer.Tool`; the executable command is `excelrenderer`. You do not need to install the library separately to use the CLI. These commands assume NuGet.org is enabled in your NuGet sources.
+The package name is `ExcelRenderer.Tool`; the executable command is `excelrenderer`.
+The tool declares `ExcelRenderer` and `ExcelRenderer.Fonts` as dependencies, so
+you do not need to install either package separately to use the CLI. These
+commands assume NuGet.org is enabled in your NuGet sources.
 
 To update an existing global installation:
 

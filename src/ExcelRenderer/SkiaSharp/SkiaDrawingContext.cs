@@ -281,15 +281,25 @@ internal sealed class SkiaDrawingContext
             using var font = new SKFont(typeface ?? SKTypeface.Default, size);
             if (run.GlyphId is { } glyphId)
             {
-                using var glyphPath = font.GetGlyphPath(glyphId)
-                    ?? throw new InvalidOperationException($"IVS glyph {glyphId} のアウトラインを生成できません。");
-                if (glyphPath.IsEmpty)
+                if (asPaths)
                 {
-                    throw new InvalidOperationException($"IVS glyph {glyphId} のアウトラインが空です。");
-                }
+                    using var glyphPath = font.GetGlyphPath(glyphId)
+                        ?? throw new InvalidOperationException($"IVS glyph {glyphId} のアウトラインを生成できません。");
+                    if (glyphPath.IsEmpty)
+                    {
+                        throw new InvalidOperationException($"IVS glyph {glyphId} のアウトラインが空です。");
+                    }
 
-                glyphPath.Transform(SKMatrix.CreateTranslation(x, y));
-                canvas.DrawPath(glyphPath, paint);
+                    glyphPath.Transform(SKMatrix.CreateTranslation(x, y));
+                    canvas.DrawPath(glyphPath, paint);
+                }
+                else
+                {
+                    using var builder = new SKTextBlobBuilder();
+                    builder.AddRun([glyphId], font, new SKPoint(x, y));
+                    using var blob = builder.Build();
+                    canvas.DrawText(blob, 0, 0, paint);
+                }
             }
             else if (asPaths)
             {

@@ -43,7 +43,7 @@ public sealed class PdfSharpTextMeasurer : ITextMeasurer
         using var graphics = XGraphics.CreateMeasureContext(new XSize(availableWidth, double.MaxValue), XGraphicsUnit.Point, XPageDirection.Downwards);
         var request = new FontRequest(font.Family, font.Bold ? 700 : 400, font.Italic);
         var runs = _fontManager?.ResolveTextRuns(text, request);
-        var size = runs is not null && runs.Any(x => x.GlyphId is not null)
+        var size = runs is not null && runs.Any(x => x.GlyphId is not null || x.ColorEmojiGlyphId is not null)
             ? new XSize(runs.Sum(run => MeasureRun(graphics, run, font)), graphics.MeasureString("Ag", CreateFont(font)).Height)
             : graphics.MeasureString(text, CreateFont(font));
         if (!wrap || size.Width <= availableWidth)
@@ -57,7 +57,7 @@ public sealed class PdfSharpTextMeasurer : ITextMeasurer
 
     private static double MeasureRun(XGraphics graphics, TextRun run, FontStyle style)
     {
-        if (run.GlyphId is not { } glyph)
+        if ((run.GlyphId ?? run.ColorEmojiGlyphId) is not { } glyph)
         {
             return graphics.MeasureString(run.Text, CreateFont(style with { Family = run.Font.Family })).Width;
         }

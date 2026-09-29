@@ -2,6 +2,28 @@
 
 ExcelRenderer's MIT license does not cover the third-party fonts listed below.
 
+## Noto Sans JP Regular TTF
+
+- File: `third_party/NotoSansJP/NotoSansJP-Regular.ttf` (existing static Regular font)
+- License: SIL Open Font License, Version 1.1
+- SHA-256: `d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec`
+- License text: [`third_party/NotoSansJP/OFL.txt`](third_party/NotoSansJP/OFL.txt)
+
+The optional ExcelRenderer.Fonts package uses this font for ordinary Japanese
+text. Noto Sans CJK JP remains available for IVS fallback.
+
+## Noto Color Emoji
+
+- File: `third_party/NotoColorEmoji/NotoColorEmoji.ttf` (unmodified, CBDT/CBLC color glyphs)
+- License: SIL Open Font License, Version 1.1
+- Upstream: <https://github.com/googlefonts/noto-emoji/blob/e20cbc2bbec1926686be9f9bee7d1d2cfa1fea0e/2D/fonts/NotoColorEmoji.ttf>
+- SHA-256: `15671215ab769fdc7162a045d56fd7d7e477c51b04e6b3c761d914d8fdd6cc44`
+- License text: [`third_party/NotoColorEmoji/OFL.txt`](third_party/NotoColorEmoji/OFL.txt)
+
+The optional ExcelRenderer.Fonts package contains this font for single emoji
+scalars and emoji followed by VS16. PDF and SVG embed rasterized color glyphs.
+Complex emoji sequences (ZWJ, flags, skin tones) are not covered by this fallback.
+
 ## Noto Sans CJK JP
 
 - File: `third_party/NotoSansJP/NotoSansCJKjp-Regular.otf`

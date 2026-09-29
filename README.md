@@ -39,8 +39,9 @@ This makes the rendering pipeline easier to test, understand, and extend with ne
 - A target framework compatible with .NET Standard 2.1 to consume the library
 - Appropriate fonts installed or supplied through `PdfSharpFontResolver`
 
-The optional `ExcelRenderer.Fonts` package contains the embedded Noto Sans CJK JP,
-Noto Serif CJK JP, and IPAmj Mincho font resources. The `ExcelRenderer` library
+The optional `ExcelRenderer.Fonts` package contains Noto Sans JP Regular TTF for
+ordinary text, Noto Sans CJK JP and Noto Serif CJK JP for IVS fallback,
+IPAmj Mincho, and Noto Color Emoji. The `ExcelRenderer` library
 does not depend on that package: install it alongside the library only when you
 want those bundled resources and IVS fallback. Without it, the library uses
 explicitly registered or system fonts. The CLI depends on this package and
@@ -68,7 +69,7 @@ dotnet add package ExcelRenderer.Fonts  # optional Japanese fonts
 
 `ExcelRenderer` is sufficient when your application provides its own fonts.
 `ExcelRenderer.Fonts` adds only the bundled font resources; it is not required
-to use the library API. The package includes Noto Sans CJK JP, Noto Serif CJK JP,
+to use the library API. The package includes Noto Sans JP Regular, Noto Sans CJK JP, Noto Serif CJK JP,
 and IPAmj Mincho under their respective licenses. See
 [third-party notices](THIRD-PARTY-NOTICES.md) for redistribution requirements.
 
@@ -204,7 +205,7 @@ This creates `output/sample.md` and image files under `output/images`. Use
 nearby image text, layout analysis, and image export. Markdown export consumes the
 same `ReportDocument` model as the renderers and does not alter the PDF/PNG pipeline.
 
-PDF and PNG conversion can use Noto Sans CJK JP Regular when `ExcelRenderer.Fonts` is installed. Otherwise, they resolve registered or OS fonts. To use an external font for PDFsharp, configure a resolver before PDFsharp first accesses a font:
+PDF and PNG conversion use Noto Sans JP Regular TTF when `ExcelRenderer.Fonts` is installed. Simple emoji (one scalar, optionally followed by VS16) use Noto Color Emoji; PDF and SVG embed them as color bitmap images. Complex emoji sequences need a separate shaping implementation. Otherwise, the library resolves registered or OS fonts. To use an external font for PDFsharp, configure a resolver before PDFsharp first accesses a font:
 
 ```csharp
 using ExcelRenderer.PdfSharp;
@@ -212,7 +213,7 @@ using PdfSharp.Fonts;
 
 GlobalFontSettings.FontResolver = new PdfSharpFontResolver(
     "Noto Sans JP",
-    "/app/fonts/NotoSansCJKjp-Regular.otf");
+    "/app/fonts/NotoSansJP-Regular.ttf");
 ```
 
 The unified `render` command also accepts `--font-policy bundled|requested`, repeated `--font-dir`

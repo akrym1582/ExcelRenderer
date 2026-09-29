@@ -1,4 +1,5 @@
 using ExcelRenderer.Drawing;
+using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Model;
 using ExcelRenderer.SkiaSharp;
@@ -125,6 +126,31 @@ public sealed class PngRendererTests
         using var rendered = SKBitmap.Decode(output.ToArray());
         Assert.NotNull(rendered);
         Assert.Equal(SKColors.Blue, rendered.GetPixel(5, 5));
+    }
+
+    /// <summary>同梱フォントで解決した IVS の字形が PNG 上に描画されることを検証します。</summary>
+    [Fact]
+    public void RenderPage_renders_resolved_ivs_glyph()
+    {
+        var manager = new FontManager(new FontOptions
+        {
+            AllowSystemFonts = false,
+            FontDirectories = [],
+            FallbackFamilies = [],
+        });
+        var command = new DrawTextCommand(
+            1,
+            new ReportRect(4, 4, 64, 28),
+            "\u8FBB\U000E0100",
+            CellStyle.Default with { Font = new FontStyle(Family: "Noto Sans JP", Size: 20) });
+        using var output = new MemoryStream();
+
+        new PngRenderer(manager).RenderPage([command], new PageSettings(72, 36), output, 72);
+
+        using var bitmap = SKBitmap.Decode(output.ToArray());
+        Assert.Contains(
+            Enumerable.Range(4, 64).SelectMany(x => Enumerable.Range(4, 28).Select(y => bitmap.GetPixel(x, y))),
+            color => color != SKColors.White);
     }
 
     /// <summary>

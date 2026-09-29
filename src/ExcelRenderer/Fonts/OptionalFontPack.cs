@@ -24,7 +24,7 @@ internal static class OptionalFontPack
         }
 
         var fonts = new List<Resource>();
-        foreach (var name in new[] { "NotoSansJP-Regular.ttf", "NotoSansCJKjp-Regular.otf", "NotoSerifCJKjp-Regular.otf", "ipamjm.ttf", "NotoColorEmoji.ttf" })
+        foreach (var name in new[] { "NotoSansJP-Regular.ttf", "NotoSansCJKjp-Regular.otf", "ipamjm.ttf", "NotoColorEmoji.ttf" })
         {
             using var stream = assembly.GetManifestResourceStream($"ExcelRenderer.Fonts.{name}");
             if (stream is null)

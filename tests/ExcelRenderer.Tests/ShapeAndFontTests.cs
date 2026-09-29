@@ -339,9 +339,9 @@ public sealed class ShapeAndFontTests
 
     /// <summary>IVS の優先書体をゴシック体と明朝体から明示的に選択できることを検証します。</summary>
     [Theory]
-    [InlineData(IvsFontStyle.Gothic, "Sans")]
-    [InlineData(IvsFontStyle.Mincho, "Serif")]
-    public void FontManager_honors_selected_ivs_font_style(IvsFontStyle style, string expectedFamilyPart)
+    [InlineData(IvsFontStyle.Gothic, "\u4FAE\uFE00", "Sans")]
+    [InlineData(IvsFontStyle.Mincho, "\u4FAE\uFE00", "IPAmjMincho")]
+    public void FontManager_honors_selected_ivs_font_style(IvsFontStyle style, string text, string expectedFamilyPart)
     {
         var manager = new FontManager(new FontOptions
         {
@@ -351,7 +351,7 @@ public sealed class ShapeAndFontTests
             IvsFontStyle = style,
         });
 
-        var run = Assert.Single(manager.ResolveTextRuns("\u4FAE\uFE00", new("Noto Sans JP")));
+        var run = Assert.Single(manager.ResolveTextRuns(text, new("Noto Sans JP")));
 
         Assert.Contains(expectedFamilyPart, run.Font.Family, StringComparison.OrdinalIgnoreCase);
         Assert.False(run.MissingIvsGlyph);
@@ -450,15 +450,13 @@ public sealed class ShapeAndFontTests
         Assert.Throws<InvalidOperationException>(() => manager.Resolve(new("Noto Sans JP")));
     }
 
-    /// <summary>追加の二つのフォントも任意パッケージから解決します。</summary>
-    [Theory]
-    [InlineData("Noto Serif CJK JP")]
-    [InlineData("IPAmjMincho")]
-    public void FontManager_resolves_optional_serif_fonts(string family)
+    /// <summary>IVS 用の明朝体を任意パッケージから解決します。</summary>
+    [Fact]
+    public void FontManager_resolves_optional_mincho_font()
     {
         var manager = new FontManager(new FontOptions { AllowSystemFonts = false, FallbackFamilies = [] });
 
-        Assert.NotEmpty(manager.Resolve(new(family)).FontData!);
+        Assert.NotEmpty(manager.Resolve(new("IPAmjMincho")).FontData!);
     }
 
     /// <summary>明示登録を優先するポリシーが同梱フォントではなく登録済みファイルを選ぶことを検証します。</summary>

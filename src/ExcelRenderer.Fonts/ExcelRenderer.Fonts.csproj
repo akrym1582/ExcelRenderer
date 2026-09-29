@@ -20,13 +20,11 @@
     <None Include="../../THIRD-PARTY-NOTICES.md" Pack="true" PackagePath="/" />
     <None Include="../../third_party/NotoSansJP/OFL.txt" Pack="true" PackagePath="licenses/" />
     <None Include="../../third_party/NotoColorEmoji/OFL.txt" Pack="true" PackagePath="licenses/NotoColorEmoji/" />
-    <None Include="../../third_party/NotoSerifCJKJP/LICENSE" Pack="true" PackagePath="licenses/NotoSerifCJKJP/" />
     <None Include="../../third_party/IPAmjMincho/IPA_Font_License_Agreement_v1.0.txt" Pack="true" PackagePath="licenses/IPAmjMincho/" />
     <None Include="../../third_party/IPAmjMincho/Readme.txt" Pack="true" PackagePath="licenses/IPAmjMincho/" />
     <EmbeddedResource Include="../../third_party/NotoSansJP/NotoSansCJKjp-Regular.otf" LogicalName="ExcelRenderer.Fonts.NotoSansCJKjp-Regular.otf" />
     <EmbeddedResource Include="../../third_party/NotoSansJP/NotoSansJP-Regular.ttf" LogicalName="ExcelRenderer.Fonts.NotoSansJP-Regular.ttf" />
     <EmbeddedResource Include="../../third_party/NotoColorEmoji/NotoColorEmoji.ttf" LogicalName="ExcelRenderer.Fonts.NotoColorEmoji.ttf" />
-    <EmbeddedResource Include="../../third_party/NotoSerifCJKJP/NotoSerifCJKjp-Regular.otf" LogicalName="ExcelRenderer.Fonts.NotoSerifCJKjp-Regular.otf" />
     <EmbeddedResource Include="../../third_party/IPAmjMincho/ipamjm.ttf" LogicalName="ExcelRenderer.Fonts.ipamjm.ttf" />
   </ItemGroup>
 </Project>

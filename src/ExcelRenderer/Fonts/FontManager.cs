@@ -206,7 +206,8 @@ public sealed class FontManager : IFontManager
         // IVS selection is intentionally independent of ordinary family fallback: bundled Noto first, then IPAmj.
         foreach (var face in _faces
             .Where(x => x.IsBundled && x.Family != "Noto Color Emoji" &&
-                (x.IvsFontStyle == _options.IvsFontStyle || x.IvsFontStyle is null))
+                (x.IvsFontStyle == _options.IvsFontStyle ||
+                    (_options.IvsFontStyle == IvsFontStyle.Gothic && x.IvsFontStyle == IvsFontStyle.Mincho)))
             .OrderBy(x => x.IvsPriority))
         {
             var font = Select([face], request);
@@ -341,7 +342,7 @@ public sealed class FontManager : IFontManager
             var style = resource.Name switch
             {
                 "NotoSansCJKjp-Regular.otf" => IvsFontStyle.Gothic,
-                "NotoSerifCJKjp-Regular.otf" => IvsFontStyle.Mincho,
+                "ipamjm.ttf" => IvsFontStyle.Mincho,
                 _ => (IvsFontStyle?)null,
             };
             var ivsPriority = style is null ? 1 : 0;

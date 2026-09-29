@@ -133,7 +133,8 @@ public sealed class PdfSharpRenderer : IRenderer
 
     private void DrawText(XGraphics graphics, DrawTextCommand command)
     {
-        if (_fontManager is not null && _fontManager.ResolveTextRuns(command.Text, ToRequest(command.Style)).Any(x => x.GlyphId is not null))
+        if (_fontManager is not null && _fontManager.ResolveTextRuns(command.Text, ToRequest(command.Style))
+            .Any(x => x.GlyphId is not null || x.ColorEmojiGlyphId is not null))
         {
             DrawTextWithIvs(graphics, command);
             return;
@@ -203,7 +204,20 @@ public sealed class PdfSharpRenderer : IRenderer
             };
             foreach (var run in _fontManager.ResolveTextRuns(line, request))
             {
-                if (run.GlyphId is { } glyph)
+                if (run.ColorEmojiGlyphId is { } emojiGlyph)
+                {
+                    using var bitmap = ColorEmojiBitmap.Create(run.Font, emojiGlyph, (float)size);
+                    using var png = bitmap.Image.Encode(SKEncodedImageFormat.Png, 100);
+                    using var stream = png.AsStream();
+                    using var image = XImage.FromStream(stream);
+                    graphics.DrawImage(image, new XRect(x + bitmap.Bounds.Left,
+                        y - metrics.Ascent + bitmap.Bounds.Top,
+                        bitmap.Bounds.Width, bitmap.Bounds.Height));
+                    using var emojiTypeface = CreateTypeface(run.Font);
+                    using var emojiFont = new SKFont(emojiTypeface, (float)size);
+                    x += emojiFont.GetGlyphWidths([emojiGlyph])[0];
+                }
+                else if (run.GlyphId is { } glyph)
                 {
                     using var typeface = CreateTypeface(run.Font);
                     using var font = new SKFont(typeface, (float)size);
@@ -257,7 +271,7 @@ public sealed class PdfSharpRenderer : IRenderer
         var width = 0d;
         foreach (var run in _fontManager!.ResolveTextRuns(text, request))
         {
-            if (run.GlyphId is { } glyph)
+            if ((run.GlyphId ?? run.ColorEmojiGlyphId) is { } glyph)
             {
                 using var typeface = CreateTypeface(run.Font);
                 using var font = new SKFont(typeface, (float)size);

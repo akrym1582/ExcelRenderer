@@ -15,6 +15,9 @@ public sealed record TextRun(string Text, ResolvedFont Font)
     /// <summary>Gets the font-specific glyph selected by an OpenType format 14 mapping, or null for ordinary text.</summary>
     public ushort? GlyphId { get; init; }
 
+    /// <summary>Gets a color emoji glyph ID, rendered as a bitmap in PDF and SVG.</summary>
+    public ushort? ColorEmojiGlyphId { get; init; }
+
     /// <summary>Gets a value indicating whether the variation sequence uses its default UVS mapping.</summary>
     public bool IsDefaultVariationGlyph { get; init; }
 }

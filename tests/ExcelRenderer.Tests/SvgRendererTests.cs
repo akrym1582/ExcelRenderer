@@ -1,5 +1,6 @@
 using System.Xml.Linq;
 using ExcelRenderer.Drawing;
+using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Model;
 using ExcelRenderer.SkiaSharp;
@@ -53,6 +54,23 @@ public sealed class SvgRendererTests
         XNamespace svg = "http://www.w3.org/2000/svg";
         var imageElement = Assert.Single(document.Descendants(svg + "image"));
         Assert.Contains(imageElement.Attributes(), attribute => attribute.Value.StartsWith("data:image/png;base64,", StringComparison.Ordinal));
+    }
+
+    /// <summary>カラー絵文字を SVG に自己完結の画像として格納します。</summary>
+    [Fact]
+    public void RenderPage_embeds_color_emoji()
+    {
+        var manager = new FontManager(new FontOptions { AllowSystemFonts = false, FallbackFamilies = [] });
+        using var output = new MemoryStream();
+        new SvgRenderer(manager).RenderPage(
+            [new DrawTextCommand(1, new ReportRect(4, 4, 80, 58), "😀", CellStyle.Default with
+            { Font = new FontStyle("Noto Sans JP", 40) })],
+            new PageSettings(88, 66), output);
+
+        var document = XDocument.Parse(System.Text.Encoding.UTF8.GetString(output.ToArray()));
+        XNamespace svg = "http://www.w3.org/2000/svg";
+        var image = Assert.Single(document.Descendants(svg + "image"));
+        Assert.Contains(image.Attributes(), attribute => attribute.Value.StartsWith("data:image/png;base64,", StringComparison.Ordinal));
     }
 
     /// <summary>seek 非対応の書き込み可能ストリームにも完全な SVG を出力できることを検証します。</summary>

@@ -224,6 +224,8 @@ public sealed class ShapeAndFontTests
 
         Assert.NotEmpty(font.FaceId);
         Assert.NotNull(font.FontData);
+        Assert.Equal("Noto Sans JP", font.Family);
+        Assert.Equal(File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf")), font.FontData);
         Assert.NotEmpty(runs);
         Assert.Equal("A\u0301日本語", string.Concat(runs.Select(run => run.Text)));
         Assert.DoesNotContain(runs, run => run.Text == "\u0301");
@@ -325,6 +327,36 @@ public sealed class ShapeAndFontTests
         Assert.Equal(source, run.SourceText);
         Assert.Equal(source, run.Text);
         Assert.False(run.MissingIvsGlyph);
+    }
+
+    /// <summary>通常の絵文字と VS16 付き絵文字を同梱カラー書体に解決します。</summary>
+    [Theory]
+    [InlineData("A😀B")]
+    [InlineData("A❤️B")]
+    public void FontManager_uses_color_emoji_font_for_simple_emoji(string text)
+    {
+        var manager = new FontManager(new FontOptions { AllowSystemFonts = false, FallbackFamilies = [] });
+        var runs = manager.ResolveTextRuns(text, new("Noto Sans JP"));
+        var emoji = Assert.Single(runs, run => run.ColorEmojiGlyphId is not null);
+
+        Assert.Equal("Noto Color Emoji", emoji.Font.Family);
+        Assert.Equal(text, string.Concat(runs.Select(run => run.SourceText)));
+    }
+
+    /// <summary>絵文字を日本語フォントの欠字ではなくカラー画素として PNG に描画します。</summary>
+    [Fact]
+    public void PngRenderer_draws_color_emoji_from_optional_font()
+    {
+        var manager = new FontManager(new FontOptions { AllowSystemFonts = false, FallbackFamilies = [] });
+        using var output = new MemoryStream();
+        new PngRenderer(manager).RenderPage(
+            [new DrawTextCommand(1, new(4, 4, 80, 58), "😀", CellStyle.Default with
+            { Font = new FontStyle("Noto Sans JP", 40) })],
+            new PageSettings(88, 66), output, 72);
+
+        using var bitmap = SKBitmap.Decode(output.ToArray());
+        Assert.Contains(Enumerable.Range(0, bitmap.Width).SelectMany(x => Enumerable.Range(0, bitmap.Height)
+            .Select(y => bitmap.GetPixel(x, y))), color => color.Red > 180 && color.Green > 80 && color.Blue < 100);
     }
 
     /// <summary>フォントパッケージを無効にした場合、システムフォントなしでは解決できません。</summary>

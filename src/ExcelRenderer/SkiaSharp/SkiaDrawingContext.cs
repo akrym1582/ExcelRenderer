@@ -279,7 +279,25 @@ internal sealed class SkiaDrawingContext
         {
             using var typeface = string.IsNullOrEmpty(run.Font.FilePath) ? null : CreateTypeface(run.Font);
             using var font = new SKFont(typeface ?? SKTypeface.Default, size);
-            if (run.GlyphId is { } glyphId)
+            if (run.ColorEmojiGlyphId is { } emojiGlyph)
+            {
+                if (asPaths)
+                {
+                    using var bitmap = ColorEmojiBitmap.Create(run.Font, emojiGlyph, size);
+                    canvas.DrawImage(bitmap.Image, new SKRect(
+                        x + bitmap.Bounds.Left, y + bitmap.Bounds.Top,
+                        x + bitmap.Bounds.Right, y + bitmap.Bounds.Bottom));
+                }
+                else
+                {
+                    using var builder = new SKTextBlobBuilder();
+                    builder.AddRun([emojiGlyph], font, new SKPoint(x, y));
+                    using var blob = builder.Build();
+                    using var emojiPaint = new SKPaint { Color = SKColors.White, IsAntialias = true };
+                    canvas.DrawText(blob, 0, 0, emojiPaint);
+                }
+            }
+            else if (run.GlyphId is { } glyphId)
             {
                 if (asPaths)
                 {
@@ -322,7 +340,7 @@ internal sealed class SkiaDrawingContext
 
     private static float MeasureRun(SKFont font, TextRun run, SKPaint paint)
     {
-        if (run.GlyphId is not { } glyphId)
+        if ((run.GlyphId ?? run.ColorEmojiGlyphId) is not { } glyphId)
         {
             return font.MeasureText(run.Text, paint);
         }

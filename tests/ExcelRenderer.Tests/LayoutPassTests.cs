@@ -2,6 +2,7 @@ using ClosedXML.Excel;
 using ExcelRenderer.Abstractions;
 using ExcelRenderer.Drawing;
 using ExcelRenderer.Excel;
+using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Model;
 using ExcelRenderer.PdfSharp;
@@ -770,6 +771,21 @@ public sealed class LayoutPassTests
         Assert.Equal("%PDF-", System.Text.Encoding.ASCII.GetString(output.GetBuffer(), 0, 5));
     }
 
+    /// <summary>CBDT カラー絵文字を PDF に画像として描画できます。</summary>
+    [Fact]
+    public void PdfSharpRenderer_renders_color_emoji()
+    {
+        var manager = new FontManager(new FontOptions { AllowSystemFonts = false, FallbackFamilies = [] });
+        using var output = new MemoryStream();
+        new PdfSharpRenderer(manager).Render(
+            [new DrawTextCommand(1, new(4, 4, 80, 58), "😀", CellStyle.Default with
+            { Font = new FontStyle("Noto Sans JP", 40) })],
+            new PageSettings(88, 66), output);
+
+        Assert.True(output.Length > 0);
+        Assert.Equal("%PDF-", System.Text.Encoding.ASCII.GetString(output.GetBuffer(), 0, 5));
+    }
+
     /// <summary>
     /// 折り返し指定がテキスト描画命令のスタイルに保持されることを検証します。
     /// </summary>
@@ -844,10 +860,10 @@ public sealed class LayoutPassTests
         Assert.NotNull(face);
         var data = resolver.GetFont(face.FaceName);
         Assert.NotNull(data);
-        Assert.Equal(File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "NotoSansCJKjp-Regular.otf")), data);
+        Assert.Equal(File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf")), data);
         using var stream = new MemoryStream(data);
         using var typeface = SKTypeface.FromStream(stream);
-        Assert.Equal("Noto Sans CJK JP", typeface.FamilyName);
+        Assert.Equal("Noto Sans JP", typeface.FamilyName);
     }
 
     /// <summary>

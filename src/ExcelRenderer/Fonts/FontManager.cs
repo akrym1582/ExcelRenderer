@@ -99,12 +99,24 @@ public sealed class FontManager : IFontManager
         {
             var replaceIvs = selector is not null && _options.ReplaceIvsWithBaseCharacter;
             var renderedText = replaceIvs ? char.ConvertFromUtf32(baseScalar) : element;
-            var (font, missing, glyph) = selector is null || replaceIvs
-                ? (ResolveForTextElement(renderedText, request), false, (OpenTypeVariationSequences.Resolution?)null)
-                : ResolveIvs(baseScalar, selector.Value, request);
+            ResolvedFont font;
+            bool missing;
+            OpenTypeVariationSequences.Resolution? glyph;
+            ushort? colorEmojiGlyph = null;
+            if (selector is null || replaceIvs)
+            {
+                (font, colorEmojiGlyph) = ResolveForTextElement(renderedText, request);
+                missing = false;
+                glyph = null;
+            }
+            else
+            {
+                (font, missing, glyph) = ResolveIvs(baseScalar, selector.Value, request);
+            }
             renderedText = missing ? "\uFFFD" : renderedText;
             if (runs.Count > 0 && runs[^1].Font.FaceId == font.FaceId &&
-                glyph is null && runs[^1].GlyphId is null && runs[^1].MissingIvsGlyph == missing &&
+                glyph is null && colorEmojiGlyph is null && runs[^1].GlyphId is null &&
+                runs[^1].ColorEmojiGlyphId is null && runs[^1].MissingIvsGlyph == missing &&
                 runs[^1].Utf16Start + runs[^1].SourceText.Length == start)
             {
                 runs[^1] = runs[^1] with { Text = runs[^1].Text + renderedText, SourceText = runs[^1].SourceText + element };
@@ -112,7 +124,8 @@ public sealed class FontManager : IFontManager
             else
             {
                 runs.Add(new(renderedText, font) { Utf16Start = start, SourceText = element, MissingIvsGlyph = missing,
-                    GlyphId = glyph?.GlyphId, IsDefaultVariationGlyph = glyph?.IsDefault ?? false });
+                    GlyphId = glyph?.GlyphId, ColorEmojiGlyphId = colorEmojiGlyph,
+                    IsDefaultVariationGlyph = glyph?.IsDefault ?? false });
             }
         }
 
@@ -180,7 +193,8 @@ public sealed class FontManager : IFontManager
     {
         // IVS selection is intentionally independent of ordinary family fallback: bundled Noto first, then IPAmj.
         foreach (var face in _faces
-            .Where(x => x.IsBundled && (x.IvsFontStyle == _options.IvsFontStyle || x.IvsFontStyle is null))
+            .Where(x => x.IsBundled && x.Family != "Noto Color Emoji" &&
+                (x.IvsFontStyle == _options.IvsFontStyle || x.IvsFontStyle is null))
             .OrderBy(x => x.IvsPriority))
         {
             var font = Select([face], request);
@@ -200,12 +214,26 @@ public sealed class FontManager : IFontManager
         return (Resolve(request), true, null);
     }
 
-    private ResolvedFont ResolveForTextElement(string element, FontRequest request)
+    private (ResolvedFont Font, ushort? ColorEmojiGlyph) ResolveForTextElement(string element, FontRequest request)
     {
         var primary = Resolve(request);
+        var scalars = UnicodeScalars(element).ToArray();
+        if (scalars.Length == 2 && scalars[1] == 0xFE0F && TryColorEmoji(scalars[0], request) is { } requestedEmoji)
+        {
+            return requestedEmoji;
+        }
+
         if (Supports(primary, element))
         {
-            return primary;
+            return (primary, null);
+        }
+
+        // A single emoji scalar, optionally followed by VS16, is rendered with the
+        // bitmap glyph from the optional color font. Complex ZWJ sequences need shaping.
+        if (scalars.Length is 1 or 2 && (scalars.Length == 1 || scalars[1] == 0xFE0F) &&
+            TryColorEmoji(scalars[0], request) is { } emoji)
+        {
+            return emoji;
         }
 
         foreach (var family in _options.FallbackFamilies.Where(x => !string.IsNullOrWhiteSpace(x)))
@@ -213,11 +241,26 @@ public sealed class FontManager : IFontManager
             var fallback = Resolve(new FontRequest(family, request.Weight, request.Italic));
             if (Supports(fallback, element))
             {
-                return fallback;
+                return (fallback, null);
             }
         }
 
-        return primary;
+        return (primary, null);
+    }
+
+    private (ResolvedFont Font, ushort Glyph)? TryColorEmoji(int scalar, FontRequest request)
+    {
+        if (scalar is not (>= 0x1F300 and <= 0x1FAFF or >= 0x2600 and <= 0x27BF) ||
+            _faces.FirstOrDefault(x => x.IsBundled && x.Family == "Noto Color Emoji") is not { } emoji)
+        {
+            return null;
+        }
+
+        using var stream = new MemoryStream(emoji.Data, writable: false);
+        using var typeface = SKTypeface.FromStream(stream);
+        using var font = typeface is null ? null : new SKFont(typeface);
+        var glyph = font?.GetGlyph(scalar) ?? 0;
+        return glyph == 0 ? null : (Select([emoji], request), glyph);
     }
 
     private void AddFontPack()
@@ -242,13 +285,6 @@ public sealed class FontManager : IFontManager
             Add(typeface.FamilyName, typeface.FontStyle.Weight,
                 typeface.FontStyle.Slant != SKFontStyleSlant.Upright,
                 resource.Name, data, true, 1, ivsPriority, style);
-            if (style == IvsFontStyle.Gothic &&
-                !string.Equals(typeface.FamilyName, "Noto Sans JP", StringComparison.OrdinalIgnoreCase))
-            {
-                Add("Noto Sans JP", typeface.FontStyle.Weight, false,
-                    resource.Name, data, true, 1, ivsPriority, style);
-            }
-
         }
     }
 

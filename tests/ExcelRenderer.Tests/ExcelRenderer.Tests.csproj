@@ -21,6 +21,9 @@
     <None Include="../../third_party/NotoSansJP/NotoSansCJKjp-Regular.otf" Link="NotoSansCJKjp-Regular.otf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="../../third_party/NotoSansJP/NotoSansJP-Regular.ttf" Link="NotoSansJP-Regular.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="../../third_party/NotoSansJP/OFL.txt" Link="OFL-NotoSansJP.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

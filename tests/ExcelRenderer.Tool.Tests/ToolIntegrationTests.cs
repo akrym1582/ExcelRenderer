@@ -109,6 +109,32 @@ public sealed class ToolIntegrationTests : IDisposable
         Assert.Single(Directory.GetFiles(output, "*.svg"));
     }
 
+    /// <summary>render コマンドが TTE 拡張子の有効な外部フォントを受け付けます。</summary>
+    [Fact]
+    public async Task Render_command_accepts_explicit_tte_font_file()
+    {
+        Directory.CreateDirectory(_directory);
+        var font = Path.Combine(_directory, "external.tte");
+        File.Copy(Path.Combine(FindRepositoryRoot(), "third_party", "NotoSansJP", "NotoSansJP-Regular.ttf"), font);
+        var output = Path.Combine(_directory, "font-svg");
+
+        var result = await RunAsync("render", Input, "-o", output, "--format", "svg", "--font-file", font);
+
+        AssertSuccess(result);
+        Assert.Single(Directory.GetFiles(output, "*.svg"));
+    }
+
+    /// <summary>render コマンドが存在しない外部フォントを変換前に拒否します。</summary>
+    [Fact]
+    public async Task Render_command_rejects_missing_explicit_font_file()
+    {
+        var result = await RunAsync("render", Input, "-o", Path.Combine(_directory, "font-svg"), "--format", "svg",
+            "--font-file", Path.Combine(_directory, "missing.tte"));
+
+        Assert.NotEqual(0, result.ExitCode);
+        Assert.Contains("Font file was not found", result.Error);
+    }
+
     /// <summary>連続 SVG 出力がシートごとに 1 ファイルを生成することを検証します。</summary>
     [Fact]
     public async Task Render_command_creates_continuous_svg()

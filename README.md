@@ -216,8 +216,18 @@ GlobalFontSettings.FontResolver = new PdfSharpFontResolver(
     "/app/fonts/NotoSansJP-Regular.ttf");
 ```
 
-The unified `render` command also accepts `--font-policy bundled|requested`, repeated `--font-dir`
-and `--fallback-font` options, and `--no-system-fonts`. `bundled` is the default for compatibility;
+The unified `render` command also accepts `--font-policy bundled|requested`, repeated `--font-dir`,
+`--font-file`, and `--fallback-font` options, and `--no-system-fonts`. `--font-file` reads each
+font directly and registers its internal family and style; supported TrueType/OpenType content can
+therefore be supplied as `.ttf`, Windows EUDC `.tte`, or `.otf` without relying on its extension.
+For example: `--font-file /app/fonts/report.ttf --font-file C:\Windows\Fonts\EUDC.TTE`.
+For BMP private-use characters (U+E000–U+F8FF), the requested font is tried first, followed by
+these files in command-line order and then normal family fallbacks. If none contains the glyph,
+`MissingPrivateUseGlyph` is reported and U+FFFD is rendered; `--strict` and
+`--warnings-as-errors MissingPrivateUseGlyph` can make this a conversion failure. Font files must
+be readable and valid, and users are responsible for their licenses and PDF embedding rights.
+The option has no effect on Markdown output because Markdown does not render glyphs.
+`bundled` is the default for compatibility;
 `requested` prioritizes registered and supplied font directories before configured fallbacks and the
 bundled font. Font fallback is selected per Unicode text element, so surrogate pairs and combining
 sequences are not split.

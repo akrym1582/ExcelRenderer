@@ -99,7 +99,17 @@ dotnet tool run excelrenderer --help
 `.config/dotnet-tools.json` をコミットすると、他の開発者は `dotnet tool restore` で同じバージョンをインストールできます。
 
 統合 `render` コマンドでは、`--font-policy bundled|requested`、繰り返し指定できる
-`--font-dir` と `--fallback-font`、および `--no-system-fonts` を使用できます。既定の
+`--font-dir`、`--font-file`、`--fallback-font`、および `--no-system-fonts` を使用できます。
+`--font-file` はファイルを直接読み、内部のファミリー名と書体を登録します。このため、
+拡張子ではなく内容が SkiaSharp で有効な TrueType/OpenType であれば `.ttf`、Windows EUDC の
+`.tte`、`.otf` を同じ入口から指定できます。例:
+`--font-file /app/fonts/report.ttf --font-file "C:\Windows\Fonts\EUDC.TTE"`。
+BMP 私用領域 (U+E000–U+F8FF) は要求フォント、指定ファイル（コマンド行の順）、通常の
+フォールバックの順に調べます。どのフォントにも字形がなければ `MissingPrivateUseGlyph` を
+報告して U+FFFD を描画し、`--strict` または `--warnings-as-errors MissingPrivateUseGlyph` で
+変換を失敗させられます。ファイルは読取可能かつ有効でなければならず、ライセンスと PDF
+埋め込み条件の確認は利用者の責任です。Markdown は字形を描画しないため、この指定の影響を
+受けません。既定の
 `bundled` は既存出力との互換性のため同梱フォントを優先し、`requested` は指定フォントと
 追加ディレクトリを設定済みフォールバックおよび同梱フォントより先に検索します。フォール
 バックは Unicode テキスト要素単位で決定するため、サロゲートペアと結合文字列は分断しません。

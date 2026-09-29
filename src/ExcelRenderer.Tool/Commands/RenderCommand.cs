@@ -69,6 +69,11 @@ public static class RenderCommand
             Description = "Additional font directory.",
             AllowMultipleArgumentsPerToken = true,
         };
+        var fontFiles = new Option<string[]>("--font-file")
+        {
+            Description = "TrueType/OpenType font file to register (repeatable; .ttf, .tte, and supported .otf contents are accepted).",
+            AllowMultipleArgumentsPerToken = true,
+        };
         var fallbackFonts = new Option<string[]>("--fallback-font")
         {
             Description = "Fallback font family.",
@@ -89,7 +94,7 @@ public static class RenderCommand
         });
         var command = new Command("render", "Render an Excel workbook using the unified rendering API.")
         {
-            input, output, format, sheet, pages, imageLayout, strict, warningsAsErrors, manifest, fontPolicy, fontDirectories, fallbackFonts, noSystemFonts, ivsFontStyle,
+            input, output, format, sheet, pages, imageLayout, strict, warningsAsErrors, manifest, fontPolicy, fontDirectories, fontFiles, fallbackFonts, noSystemFonts, ivsFontStyle,
         };
 
         command.SetAction((result, cancellationToken) => CommandSupport.RunAsync(() => RenderAsync(
@@ -104,6 +109,7 @@ public static class RenderCommand
             result.GetValue(manifest),
             result.GetValue(fontPolicy)!,
             result.GetValue(fontDirectories),
+            result.GetValue(fontFiles),
             result.GetValue(fallbackFonts),
             result.GetValue(noSystemFonts),
             result.GetValue(ivsFontStyle)!,
@@ -123,6 +129,7 @@ public static class RenderCommand
         string? manifestPath,
         string fontPolicy,
         string[]? fontDirectories,
+        string[]? fontFiles,
         string[]? fallbackFonts,
         bool noSystemFonts,
         string ivsFontStyle,
@@ -154,6 +161,7 @@ public static class RenderCommand
                 IvsFontStyle = ivsFontStyle == "mincho" ? IvsFontStyle.Mincho : IvsFontStyle.Gothic,
                 AllowSystemFonts = !noSystemFonts,
                 FontDirectories = fontDirectories is { Length: > 0 } ? fontDirectories : Array.Empty<string>(),
+                FontFiles = fontFiles is { Length: > 0 } ? fontFiles : Array.Empty<string>(),
                 FallbackFamilies = fallbackFonts is { Length: > 0 } ? fallbackFonts : new FontOptions().FallbackFamilies,
             },
         };

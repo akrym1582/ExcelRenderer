@@ -1,3 +1,5 @@
+using ExcelRenderer.Fonts;
+
 namespace ExcelRenderer.Markdown;
 
 /// <summary>
@@ -54,4 +56,7 @@ public sealed record MarkdownExportOptions
     /// Gets the image output directory name. Markdown ファイルを基準とした画像出力先ディレクトリ名を取得します。
     /// </summary>
     public string ImageDirectoryName { get; init; } = "images";
+
+    /// <summary>Gets the font selection criteria. Markdown は字形を描画しないため、現在この設定は出力に影響しません。</summary>
+    public FontOptions FontOptions { get; init; } = new();
 }

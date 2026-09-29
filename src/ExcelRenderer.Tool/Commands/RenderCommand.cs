@@ -51,51 +51,12 @@ public static class RenderCommand
             AllowMultipleArgumentsPerToken = true,
         };
         var manifest = new Option<string?>("--manifest") { Description = "Optional path for the conversion manifest JSON." };
-        var fontPolicy = new Option<string>("--font-policy")
-        {
-            Description = "Font policy: bundled or requested.",
-            DefaultValueFactory = _ => "bundled",
-        };
-        fontPolicy.Validators.Add(result =>
-        {
-            var value = result.GetValueOrDefault<string>();
-            if (value is not ("bundled" or "requested"))
-            {
-                result.AddError("--font-policy must be bundled or requested.");
-            }
-        });
-        var fontDirectories = new Option<string[]>("--font-dir")
-        {
-            Description = "Additional font directory.",
-            AllowMultipleArgumentsPerToken = true,
-        };
-        var fontFiles = new Option<string[]>("--font-file")
-        {
-            Description = "TrueType/OpenType font file to register (repeatable; .ttf, .tte, and supported .otf contents are accepted).",
-            AllowMultipleArgumentsPerToken = true,
-        };
-        var fallbackFonts = new Option<string[]>("--fallback-font")
-        {
-            Description = "Fallback font family.",
-            AllowMultipleArgumentsPerToken = true,
-        };
-        var noSystemFonts = new Option<bool>("--no-system-fonts") { Description = "Do not search operating-system fonts." };
-        var ivsFontStyle = new Option<string>("--ivs-font-style")
-        {
-            Description = "Bundled IVS font style: gothic or mincho.",
-            DefaultValueFactory = _ => "gothic",
-        };
-        ivsFontStyle.Validators.Add(result =>
-        {
-            if (result.GetValueOrDefault<string>() is not ("gothic" or "mincho"))
-            {
-                result.AddError("--ivs-font-style must be gothic or mincho.");
-            }
-        });
+        var fonts = CommandSupport.FontOptions();
         var command = new Command("render", "Render an Excel workbook using the unified rendering API.")
         {
-            input, output, format, sheet, pages, imageLayout, strict, warningsAsErrors, manifest, fontPolicy, fontDirectories, fontFiles, fallbackFonts, noSystemFonts, ivsFontStyle,
+            input, output, format, sheet, pages, imageLayout, strict, warningsAsErrors, manifest,
         };
+        CommandSupport.AddFontOptions(command, fonts);
 
         command.SetAction((result, cancellationToken) => CommandSupport.RunAsync(() => RenderAsync(
             result.GetValue(input)!,
@@ -107,12 +68,7 @@ public static class RenderCommand
             result.GetValue(strict),
             result.GetValue(warningsAsErrors),
             result.GetValue(manifest),
-            result.GetValue(fontPolicy)!,
-            result.GetValue(fontDirectories),
-            result.GetValue(fontFiles),
-            result.GetValue(fallbackFonts),
-            result.GetValue(noSystemFonts),
-            result.GetValue(ivsFontStyle)!,
+            CommandSupport.GetFontOptions(result, fonts),
             cancellationToken)));
         return command;
     }
@@ -127,12 +83,7 @@ public static class RenderCommand
         bool strict,
         string[]? warningsAsErrors,
         string? manifestPath,
-        string fontPolicy,
-        string[]? fontDirectories,
-        string[]? fontFiles,
-        string[]? fallbackFonts,
-        bool noSystemFonts,
-        string ivsFontStyle,
+        FontOptions fontOptions,
         CancellationToken cancellationToken)
     {
         if (!TryParseFormat(formatText, out var format) || !TryParsePages(pagesText, out var pages) ||
@@ -155,15 +106,7 @@ public static class RenderCommand
                 StrictMode = strict,
                 TreatAsErrors = warningsAsErrors is { Length: > 0 } ? warningsAsErrors : Array.Empty<string>(),
             },
-            FontOptions = new FontOptions
-            {
-                Policy = fontPolicy == "requested" ? FontPolicy.PreferRequested : FontPolicy.BundledCompatible,
-                IvsFontStyle = ivsFontStyle == "mincho" ? IvsFontStyle.Mincho : IvsFontStyle.Gothic,
-                AllowSystemFonts = !noSystemFonts,
-                FontDirectories = fontDirectories is { Length: > 0 } ? fontDirectories : Array.Empty<string>(),
-                FontFiles = fontFiles is { Length: > 0 } ? fontFiles : Array.Empty<string>(),
-                FallbackFamilies = fallbackFonts is { Length: > 0 } ? fallbackFonts : new FontOptions().FallbackFamilies,
-            },
+            FontOptions = fontOptions,
         };
 
         await using var input = new FileStream(inputPath, FileMode.Open, FileAccess.Read, FileShare.Read);

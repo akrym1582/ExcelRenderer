@@ -29,11 +29,13 @@ public static class MarkdownCommand
         var regions = Flag("--region-detection", "Enable region detection.");
         var noRegions = Flag("--no-region-detection", "Disable region detection.");
         var imageDir = new Option<string>("--image-dir") { Description = "Relative image directory name.", DefaultValueFactory = _ => "images" };
+        var fonts = CommandSupport.FontOptions();
         var command = new Command("markdown", "Convert an Excel workbook to Markdown.")
             {
                 input, output, sheet, images, noImages, addresses, noAddresses, formulas, noFormulas,
                 layout, noLayout, regions, noRegions, imageDir,
             };
+        CommandSupport.AddFontOptions(command, fonts);
         command.Aliases.Add("md");
         command.SetAction((result, cancellationToken) => CommandSupport.RunAsync(() =>
             ExcelConverter.ConvertToMarkdownAsync(
@@ -48,6 +50,7 @@ public static class MarkdownCommand
                     DetectLayout = Enabled(result, layout, noLayout, true),
                     DetectRegions = Enabled(result, regions, noRegions, true),
                     ImageDirectoryName = result.GetValue(imageDir)!,
+                    FontOptions = CommandSupport.GetFontOptions(result, fonts),
                 },
                 cancellationToken)));
         return command;

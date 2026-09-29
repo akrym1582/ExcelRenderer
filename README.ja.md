@@ -82,6 +82,44 @@ excelrenderer svg input.xlsx -o ./svg-output
 excelrenderer md input.xlsx -o output.md
 ```
 
+基本構文は次のとおりです。`input.xlsx` は位置引数で、必須の `--output` は `-o` と省略できます。
+
+```text
+excelrenderer <command> <input.xlsx> --output <path> [options]
+```
+
+| コマンド | 出力 | コマンド固有の主なオプション |
+| --- | --- | --- |
+| `pdf` | 1 個の PDF | `--sheet <シート名>` |
+| `image` | 印刷ページごとの PNG | `--sheet <シート名>`、`--dpi <数値>`（既定値 `144`） |
+| `svg` | 印刷ページごとの自己完結 SVG | `--sheet <シート名>` |
+| `markdown` / `md` | 1 個の Markdown と任意の抽出画像 | `--sheet`、`--image-dir`、`--[no-]images`、`--[no-]cell-addresses`、`--[no-]formulas`、`--[no-]layout-detection`、`--[no-]region-detection` |
+| `render` | PDF ファイル、または PNG/SVG/Markdown の出力ディレクトリ | `--format pdf\|png\|svg\|markdown` と選択、レイアウト、診断、マニフェスト、フォント方針の各オプション |
+
+すべてのコマンドで次のフォント指定を使用できます。
+
+| オプション | 説明 |
+| --- | --- |
+| `--font-dir <ディレクトリ>` | 追加ディレクトリを再帰的に検索します。複数回指定、または 1 回に複数の値を指定できます。 |
+| `--font-file <ファイル>` | フォントファイルを直接登録します。複数指定時はコマンド行の順に使用します。.ttf、.tte、.otf の TrueType/OpenType 内容を使用できます。 |
+| `--fallback-font <ファミリー名>` | 既定のフォールバック一覧を、指定順のファミリーで置き換えます。複数回指定して優先順を作れます。 |
+| `--no-system-fonts` | OS のフォントディレクトリを検索しません。明示ファイル、追加ディレクトリ、CLI 同梱フォントは引き続き使用できます。 |
+| `--font-policy bundled\|requested` | 同梱の互換フォント（既定）と、要求・明示指定したフォントのどちらを優先するか選びます。 |
+| `--ivs-font-style gothic\|mincho` | IVS に使用する同梱フォントの書体を選びます（既定値 `gothic`）。 |
+
+これらは PDF、PNG、SVG の字形選択に影響します。Markdown は字形を描画しませんが、共通のフォント引数を持つスクリプトでコマンドを切り替えられるよう同じ指定を受け付けます。空白を含むパスは引用符で囲んでください。コンテナーで再現可能な出力にする例:
+
+```bash
+excelrenderer pdf report.xlsx -o report.pdf \
+  --font-dir /app/fonts \
+  --font-file /app/company-fonts/ReportSans.ttf \
+  --fallback-font "Noto Sans JP" \
+  --fallback-font "Liberation Sans" \
+  --no-system-fonts
+```
+
+コマンド一覧は `excelrenderer --help`、各コマンドの完全なオプション一覧は `excelrenderer <command> --help` で確認できます。
+
 既にグローバルインストールしている場合は、次のコマンドで更新します。
 
 ```bash
@@ -98,8 +136,7 @@ dotnet tool run excelrenderer --help
 
 `.config/dotnet-tools.json` をコミットすると、他の開発者は `dotnet tool restore` で同じバージョンをインストールできます。
 
-統合 `render` コマンドでは、`--font-policy bundled|requested`、繰り返し指定できる
-`--font-dir`、`--font-file`、`--fallback-font`、および `--no-system-fonts` を使用できます。
+上記のフォント指定はすべてのコマンドで使用できます。
 `--font-file` はファイルを直接読み、内部のファミリー名と書体を登録します。このため、
 拡張子ではなく内容が SkiaSharp で有効な TrueType/OpenType であれば `.ttf`、Windows EUDC の
 `.tte`、`.otf` を同じ入口から指定できます。例:

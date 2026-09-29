@@ -129,7 +129,13 @@ Use `PdfExportOptions`, `ImageExportOptions`, `SvgExportOptions`, and `MarkdownE
 
 ### Command-line tool
 
-After installing `ExcelRenderer.Tool`, convert workbooks with the `pdf`, `image`, `svg`, or `markdown` (`md`) commands:
+After installing `ExcelRenderer.Tool`, use the following syntax. `input.xlsx` is positional and `-o` is an alias for the required `--output` option:
+
+```text
+excelrenderer <command> <input.xlsx> --output <path> [options]
+```
+
+The format-specific commands cover the common conversion cases:
 
 ```bash
 excelrenderer pdf input.xlsx -o output.pdf
@@ -138,7 +144,37 @@ excelrenderer svg input.xlsx -o ./svg-output
 excelrenderer md input.xlsx -o output.md
 ```
 
-Run `excelrenderer --help` or a subcommand's `--help` for options such as `--sheet`, `--dpi`, and Markdown image/layout controls.
+| Command | Output | Command-specific options |
+| --- | --- | --- |
+| `pdf` | One PDF file | `--sheet <name>` |
+| `image` | One paginated PNG per worksheet page | `--sheet <name>`, `--dpi <number>` (default: `144`) |
+| `svg` | One self-contained SVG per worksheet page | `--sheet <name>` |
+| `markdown` / `md` | One Markdown file and optional extracted images | `--sheet`, `--image-dir`, `--[no-]images`, `--[no-]cell-addresses`, `--[no-]formulas`, `--[no-]layout-detection`, `--[no-]region-detection` |
+| `render` | PDF file, or a PNG/SVG/Markdown output directory | `--format pdf\|png\|svg\|markdown` plus selection, layout, diagnostics, manifest, and font-policy options |
+
+Every command accepts these font-source options:
+
+| Option | Meaning |
+| --- | --- |
+| `--font-dir <directory>` | Recursively search an additional directory. Repeat the option, or provide multiple values, to add directories. |
+| `--font-file <file>` | Register a font file directly. Repeat the option, or provide multiple values; order is significant. Supported font content includes TrueType/OpenType `.ttf`, `.tte`, and `.otf` files. |
+| `--fallback-font <family>` | Replace the default fallback-family list with the supplied families, in command-line order. Repeat it to specify a fallback chain. |
+| `--no-system-fonts` | Do not search operating-system font directories. Explicit files, added directories, and bundled CLI fonts remain available. |
+| `--font-policy bundled\|requested` | Choose whether bundled compatibility fonts (the default) or requested/explicit fonts take priority. |
+| `--ivs-font-style gothic\|mincho` | Choose the bundled font style used for ideographic variation sequences (default: `gothic`). |
+
+Font options affect glyph selection for PDF, PNG, and SVG. Markdown does not render glyphs, but accepts the same options so scripts can switch commands without changing their shared font arguments. Paths containing spaces must be quoted. For reproducible rendering in a container, for example:
+
+```bash
+excelrenderer pdf report.xlsx -o report.pdf \
+  --font-dir /app/fonts \
+  --font-file /app/company-fonts/ReportSans.ttf \
+  --fallback-font "Noto Sans JP" \
+  --fallback-font "Liberation Sans" \
+  --no-system-fonts
+```
+
+Run `excelrenderer --help` to list commands and `excelrenderer <command> --help` for the complete, current option list.
 
 The unified `render` command can generate a single continuous image per selected worksheet without print-page margins, breaks, titles, or headers:
 
@@ -216,8 +252,7 @@ GlobalFontSettings.FontResolver = new PdfSharpFontResolver(
     "/app/fonts/NotoSansJP-Regular.ttf");
 ```
 
-The unified `render` command also accepts `--font-policy bundled|requested`, repeated `--font-dir`,
-`--font-file`, and `--fallback-font` options, and `--no-system-fonts`. `--font-file` reads each
+All commands accept the font options described above. `--font-file` reads each
 font directly and registers its internal family and style; supported TrueType/OpenType content can
 therefore be supplied as `.ttf`, Windows EUDC `.tte`, or `.otf` without relying on its extension.
 For example: `--font-file /app/fonts/report.ttf --font-file C:\Windows\Fonts\EUDC.TTE`.

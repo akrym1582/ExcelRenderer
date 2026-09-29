@@ -18,6 +18,7 @@ public static class ImageCommand
         var output = CommandSupport.OutputOption("Directory for generated PNG files.");
         var sheet = new Option<string?>("--sheet") { Description = "Worksheet name to convert." };
         var dpi = new Option<int>("--dpi") { Description = "Output resolution in dots per inch.", DefaultValueFactory = _ => 144 };
+        var fonts = CommandSupport.FontOptions();
         dpi.Validators.Add(result =>
         {
             if (result.GetValueOrDefault<int>() <= 0)
@@ -26,11 +27,12 @@ public static class ImageCommand
             }
         });
         var command = new Command("image", "Convert Excel worksheets to paginated PNG images. Use 'render --format png --image-layout continuous' for continuous images.") { input, output, sheet, dpi };
+        CommandSupport.AddFontOptions(command, fonts);
         command.SetAction((parseResult, cancellationToken) => CommandSupport.RunAsync(() =>
             ExcelConverter.ConvertToImagesAsync(
                 parseResult.GetValue(input)!,
                 parseResult.GetValue(output)!,
-                new ImageExportOptions { SheetName = parseResult.GetValue(sheet), Dpi = parseResult.GetValue(dpi) },
+                new ImageExportOptions { SheetName = parseResult.GetValue(sheet), Dpi = parseResult.GetValue(dpi), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
                 cancellationToken)));
         return command;
     }

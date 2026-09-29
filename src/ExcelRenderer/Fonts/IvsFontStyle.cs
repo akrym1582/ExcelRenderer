@@ -6,6 +6,6 @@ public enum IvsFontStyle
     /// <summary>Noto Sans CJK JP を優先し、必要な場合だけ IPAmj 明朝へフォールバックします。</summary>
     Gothic,
 
-    /// <summary>Noto Serif CJK JP を優先し、必要な場合だけ IPAmj 明朝へフォールバックします。</summary>
+    /// <summary>IPAmj 明朝を使用します。</summary>
     Mincho,
 }

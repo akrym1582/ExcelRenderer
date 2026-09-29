@@ -87,7 +87,7 @@ public static partial class ExcelConverter
             var selectedPages = SelectPages(pages, request.Selection.Pages);
             if (request.OutputFormat == OutputFormat.Pdf)
             {
-                await WritePdfAsync(selectedPages, sink, artifacts, cancellationToken).ConfigureAwait(false);
+                await WritePdfAsync(selectedPages, fontManager, sink, artifacts, cancellationToken).ConfigureAwait(false);
             }
             else
             {
@@ -154,7 +154,7 @@ public static partial class ExcelConverter
         foreach (var selected in sheets)
         {
             var commands = new DrawCommandGeneratorPass().Generate(
-                new ReportLayoutEngine(new PdfSharpTextMeasurer()).Layout(selected.Sheet));
+                new ReportLayoutEngine(new PdfSharpTextMeasurer(fontManager)).Layout(selected.Sheet));
             var groups = commands.GroupBy(x => x.PageNumber).OrderBy(x => x.Key).ToArray();
             if (groups.Length == 0)
             {
@@ -213,7 +213,7 @@ public static partial class ExcelConverter
         var documentPage = 0;
         foreach (var selected in sheets)
         {
-            var layout = new ReportLayoutEngine(new PdfSharpTextMeasurer()).LayoutContinuous(selected.Sheet);
+            var layout = new ReportLayoutEngine(new PdfSharpTextMeasurer(fontManager)).LayoutContinuous(selected.Sheet);
             var width = layout.Width;
             var height = layout.Height;
             var (pixelWidth, pixelHeight) = GetContinuousPixelDimensions(width, height, dpi);
@@ -292,7 +292,7 @@ public static partial class ExcelConverter
         return selected;
     }
 
-    private static async Task WritePdfAsync(IReadOnlyList<SheetPage> pages, IRenderOutputSink sink, List<ArtifactMetadata> artifacts, CancellationToken token)
+    private static async Task WritePdfAsync(IReadOnlyList<SheetPage> pages, FontManager fontManager, IRenderOutputSink sink, List<ArtifactMetadata> artifacts, CancellationToken token)
     {
         var descriptor = new ArtifactDescriptor("pdf", "pdf", "application/pdf", "workbook.pdf");
         await WriteArtifactAsync(
@@ -305,7 +305,7 @@ public static partial class ExcelConverter
                 foreach (var page in pages)
                 {
                     using var rendered = new MemoryStream();
-                    new PdfSharpRenderer().Render(page.Commands, page.Sheet.PageSettings, rendered);
+                    new PdfSharpRenderer(fontManager).Render(page.Commands, page.Sheet.PageSettings, rendered);
                     rendered.Position = 0;
                     using var source = PdfReader.Open(rendered, PdfDocumentOpenMode.Import);
                     result.AddPage(source.Pages[0]);

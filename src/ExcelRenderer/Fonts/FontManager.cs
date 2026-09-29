@@ -10,7 +10,7 @@ public sealed class FontManager : IFontManager
     private readonly FontOptions _options;
     private readonly List<FontFace> _faces = [];
     private readonly Dictionary<FontRequest, ResolvedFont> _cache = new();
-    private readonly Dictionary<(string FaceId, int Base, int Selector), bool> _ivsSupport = new();
+    private readonly Dictionary<(string FaceId, int Base, int Selector), OpenTypeVariationSequences.Resolution?> _ivsSupport = new();
 
     /// <summary>Initializes a new instance of the <see cref="FontManager"/> class. 指定された設定でフォントマネージャーを初期化します。</summary>
     /// <param name="options">登録フォント、追加検索フォルダー、フォールバック名を含む設定です。省略時は既定設定を使用します。</param>
@@ -99,18 +99,20 @@ public sealed class FontManager : IFontManager
         {
             var replaceIvs = selector is not null && _options.ReplaceIvsWithBaseCharacter;
             var renderedText = replaceIvs ? char.ConvertFromUtf32(baseScalar) : element;
-            var (font, missing) = selector is null || replaceIvs
-                ? (ResolveForTextElement(renderedText, request), false)
+            var (font, missing, glyph) = selector is null || replaceIvs
+                ? (ResolveForTextElement(renderedText, request), false, (OpenTypeVariationSequences.Resolution?)null)
                 : ResolveIvs(baseScalar, selector.Value, request);
             renderedText = missing ? "\uFFFD" : renderedText;
             if (runs.Count > 0 && runs[^1].Font.FaceId == font.FaceId &&
-                runs[^1].MissingIvsGlyph == missing && runs[^1].Utf16Start + runs[^1].SourceText.Length == start)
+                glyph is null && runs[^1].GlyphId is null && runs[^1].MissingIvsGlyph == missing &&
+                runs[^1].Utf16Start + runs[^1].SourceText.Length == start)
             {
                 runs[^1] = runs[^1] with { Text = runs[^1].Text + renderedText, SourceText = runs[^1].SourceText + element };
             }
             else
             {
-                runs.Add(new(renderedText, font) { Utf16Start = start, SourceText = element, MissingIvsGlyph = missing });
+                runs.Add(new(renderedText, font) { Utf16Start = start, SourceText = element, MissingIvsGlyph = missing,
+                    GlyphId = glyph?.GlyphId, IsDefaultVariationGlyph = glyph?.IsDefault ?? false });
             }
         }
 
@@ -174,7 +176,7 @@ public sealed class FontManager : IFontManager
         };
     }
 
-    private (ResolvedFont Font, bool Missing) ResolveIvs(int baseScalar, int selector, FontRequest request)
+    private (ResolvedFont Font, bool Missing, OpenTypeVariationSequences.Resolution? Glyph) ResolveIvs(int baseScalar, int selector, FontRequest request)
     {
         // IVS selection is intentionally independent of ordinary family fallback: bundled Noto first, then IPAmj.
         foreach (var face in _faces
@@ -183,19 +185,19 @@ public sealed class FontManager : IFontManager
         {
             var font = Select([face], request);
             var key = (font.FaceId, baseScalar, selector);
-            if (!_ivsSupport.TryGetValue(key, out var supported))
+            if (!_ivsSupport.TryGetValue(key, out var resolution))
             {
-                supported = OpenTypeVariationSequences.Supports(face.Data, baseScalar, selector);
-                _ivsSupport[key] = supported;
+                resolution = OpenTypeVariationSequences.TryResolve(face.Data, baseScalar, selector, out var found) ? found : null;
+                _ivsSupport[key] = resolution;
             }
 
-            if (supported)
+            if (resolution is not null)
             {
-                return (font, false);
+                return (font, false, resolution);
             }
         }
 
-        return (Resolve(request), true);
+        return (Resolve(request), true, null);
     }
 
     private ResolvedFont ResolveForTextElement(string element, FontRequest request)

@@ -1,5 +1,6 @@
 using ExcelRenderer.Abstractions;
 using ExcelRenderer.Drawing;
+using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Model;
 using PdfSharp.Drawing;
@@ -12,6 +13,15 @@ namespace ExcelRenderer.PdfSharp;
 /// <summary>ページ別の描画コマンドを PDFsharp で描画し、PDF 文書として出力します。</summary>
 public sealed class PdfSharpRenderer : IRenderer
 {
+    private readonly IFontManager? _fontManager;
+
+    /// <summary>Initializes a renderer that uses PDFsharp for ordinary text.</summary>
+    public PdfSharpRenderer() { }
+
+    /// <summary>Initializes a renderer with the font manager used to resolve IVS glyphs.</summary>
+    /// <param name="fontManager">The font manager shared with layout and diagnostics.</param>
+    public PdfSharpRenderer(IFontManager fontManager) => _fontManager = fontManager ?? throw new ArgumentNullException(nameof(fontManager));
+
     /// <summary>描画コマンドをページ番号ごとに描画し、すべてのページを含む PDF 文書を出力します。</summary>
     /// <param name="commands">背景、罫線、文字、画像、および図形をページ上へ配置する描画コマンドです。</param>
     /// <param name="pageSettings">各 PDF ページに適用する幅と高さを含むページ設定です。</param>
@@ -33,7 +43,7 @@ public sealed class PdfSharpRenderer : IRenderer
         document.Save(output, false);
     }
 
-    private static void AddPage(PdfDocument document, PageSettings pageSettings, IEnumerable<DrawCommand> commands)
+    private void AddPage(PdfDocument document, PageSettings pageSettings, IEnumerable<DrawCommand> commands)
     {
         var page = document.AddPage();
         page.Width = XUnit.FromPoint(pageSettings.Width);
@@ -45,7 +55,7 @@ public sealed class PdfSharpRenderer : IRenderer
         }
     }
 
-    private static void Execute(XGraphics graphics, DrawCommand command)
+    private void Execute(XGraphics graphics, DrawCommand command)
     {
         switch (command)
         {
@@ -70,7 +80,7 @@ public sealed class PdfSharpRenderer : IRenderer
         }
     }
 
-    private static void DrawShape(XGraphics graphics, DrawShapeCommand command)
+    private void DrawShape(XGraphics graphics, DrawShapeCommand command)
     {
         var state = graphics.Save();
         var b = command.Bounds;
@@ -121,8 +131,14 @@ public sealed class PdfSharpRenderer : IRenderer
         graphics.Restore(state);
     }
 
-    private static void DrawText(XGraphics graphics, DrawTextCommand command)
+    private void DrawText(XGraphics graphics, DrawTextCommand command)
     {
+        if (_fontManager is not null && _fontManager.ResolveTextRuns(command.Text, ToRequest(command.Style)).Any(x => x.GlyphId is not null))
+        {
+            DrawTextWithIvs(graphics, command);
+            return;
+        }
+
         var font = CreateFontToFit(graphics, command.Text, command.Style, command.Bounds.Width);
         var lines = WrapText(graphics, command.Text, font, command.Bounds.Width, command.Style.WrapText);
         var lineHeight = graphics.MeasureString("Ag", font).Height;
@@ -149,6 +165,145 @@ public sealed class PdfSharpRenderer : IRenderer
         }
 
         graphics.Restore(state);
+    }
+
+    private void DrawTextWithIvs(XGraphics graphics, DrawTextCommand command)
+    {
+        var request = ToRequest(command.Style);
+        var size = command.Style.Font.Size;
+        var lines = WrapResolvedText(graphics, command.Text, request, size, command.Bounds.Width, command.Style.WrapText);
+        if (command.Style.ShrinkToFit && !command.Style.WrapText && command.Bounds.Width > 0)
+        {
+            var widest = lines.Max(x => MeasureResolvedText(graphics, x, request, size));
+            if (widest > command.Bounds.Width) size *= command.Bounds.Width / widest;
+        }
+
+        using var metricsTypeface = CreateTypeface(_fontManager!.Resolve(request));
+        using var metricsFont = new SKFont(metricsTypeface, (float)size);
+        var metrics = metricsFont.Metrics;
+        var lineHeight = metrics.Descent - metrics.Ascent + metrics.Leading;
+        var textHeight = lineHeight * lines.Count;
+        var y = command.Style.VerticalAlignment switch
+        {
+            VerticalAlignment.Center => command.Bounds.Y + ((command.Bounds.Height - textHeight) / 2),
+            VerticalAlignment.Bottom => command.Bounds.Y + command.Bounds.Height - textHeight,
+            _ => command.Bounds.Y,
+        };
+        var state = graphics.Save();
+        if (command.Style.WrapText || command.Style.ShrinkToFit) graphics.IntersectClip(ToRect(command.Bounds));
+        var brush = new XSolidBrush(ToColor(command.Style.Font.Color ?? new(0, 0, 0)));
+        foreach (var line in lines)
+        {
+            var lineWidth = MeasureResolvedText(graphics, line, request, size);
+            var x = command.Style.HorizontalAlignment switch
+            {
+                HorizontalAlignment.Center => command.Bounds.X + ((command.Bounds.Width - lineWidth) / 2),
+                HorizontalAlignment.Right => command.Bounds.X + command.Bounds.Width - lineWidth,
+                _ => command.Bounds.X,
+            };
+            foreach (var run in _fontManager.ResolveTextRuns(line, request))
+            {
+                if (run.GlyphId is { } glyph)
+                {
+                    using var typeface = CreateTypeface(run.Font);
+                    using var font = new SKFont(typeface, (float)size);
+                    using var path = font.GetGlyphPath(glyph)
+                        ?? throw new InvalidOperationException($"IVS glyph {glyph} のアウトラインを生成できません。");
+                    if (path.IsEmpty) throw new InvalidOperationException($"IVS glyph {glyph} のアウトラインが空です。");
+                    graphics.DrawPath(brush, ToPdfPath(path, x, y - metrics.Ascent));
+                    x += font.GetGlyphWidths([glyph])[0];
+                }
+                else
+                {
+                    var runFont = PdfSharpTextMeasurer.CreateFont(command.Style.Font with { Family = run.Font.Family, Size = size });
+                    graphics.DrawString(run.Text, runFont, brush, new XPoint(x, y), XStringFormats.TopLeft);
+                    x += graphics.MeasureString(run.Text, runFont).Width;
+                }
+            }
+            if (command.Style.Font.Underline) graphics.DrawLine(new XPen(brush.Color), command.Bounds.X, y + lineHeight - 1, command.Bounds.X + lineWidth, y + lineHeight - 1);
+            y += lineHeight;
+        }
+        graphics.Restore(state);
+    }
+
+    private IReadOnlyList<string> WrapResolvedText(XGraphics graphics, string text, FontRequest request, double size, double width, bool wrap)
+    {
+        if (!wrap || width <= 0) return text.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n');
+        var result = new List<string>();
+        foreach (var paragraph in text.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n'))
+        {
+            var line = string.Empty;
+            var elements = System.Globalization.StringInfo.GetTextElementEnumerator(paragraph);
+            while (elements.MoveNext())
+            {
+                var element = (string)elements.Current!;
+                if (line.Length > 0 && MeasureResolvedText(graphics, line + element, request, size) > width)
+                {
+                    result.Add(line);
+                    line = element;
+                }
+                else
+                {
+                    line += element;
+                }
+            }
+            result.Add(line);
+        }
+        return result;
+    }
+
+    private double MeasureResolvedText(XGraphics graphics, string text, FontRequest request, double size)
+    {
+        var width = 0d;
+        foreach (var run in _fontManager!.ResolveTextRuns(text, request))
+        {
+            if (run.GlyphId is { } glyph)
+            {
+                using var typeface = CreateTypeface(run.Font);
+                using var font = new SKFont(typeface, (float)size);
+                width += font.GetGlyphWidths([glyph])[0];
+            }
+            else
+            {
+                width += graphics.MeasureString(run.Text, PdfSharpTextMeasurer.CreateFont(new FontStyle(run.Font.Family, size))).Width;
+            }
+        }
+        return width;
+    }
+
+    private static FontRequest ToRequest(CellStyle style) => new(style.Font.Family, style.Font.Bold ? 700 : 400, style.Font.Italic);
+
+    private static SKTypeface CreateTypeface(ResolvedFont font)
+    {
+        using Stream stream = font.FontData is null ? File.OpenRead(font.FilePath) : new MemoryStream(font.FontData, false);
+        return SKTypeface.FromStream(stream) ?? throw new InvalidOperationException($"フォント {font.Family} を読み込めません。");
+    }
+
+    private static XGraphicsPath ToPdfPath(SKPath source, double offsetX, double offsetY)
+    {
+        var result = new XGraphicsPath { FillMode = XFillMode.Winding };
+        using var iterator = source.CreateRawIterator();
+        var points = new SKPoint[4];
+        while (true)
+        {
+            var verb = iterator.Next(points);
+            XPoint P(int index) => new(offsetX + points[index].X, offsetY + points[index].Y);
+            if (verb == SKPathVerb.Done) break;
+            switch (verb)
+            {
+                case SKPathVerb.Move: result.StartFigure(); break;
+                case SKPathVerb.Line: result.AddLine(P(0), P(1)); break;
+                case SKPathVerb.Quad:
+                    var p0 = P(0); var p1 = P(1); var p2 = P(2);
+                    result.AddBezier(p0, new(p0.X + ((p1.X - p0.X) * 2 / 3), p0.Y + ((p1.Y - p0.Y) * 2 / 3)),
+                        new(p2.X + ((p1.X - p2.X) * 2 / 3), p2.Y + ((p1.Y - p2.Y) * 2 / 3)), p2);
+                    break;
+                case SKPathVerb.Cubic: result.AddBezier(P(0), P(1), P(2), P(3)); break;
+                case SKPathVerb.Close: result.CloseFigure(); break;
+                case SKPathVerb.Conic: throw new InvalidOperationException("Conic IVS glyph paths are not supported by PDFsharp.");
+            }
+        }
+        return result;
     }
 
     private static XFont CreateFontToFit(XGraphics graphics, string text, CellStyle style, double width)

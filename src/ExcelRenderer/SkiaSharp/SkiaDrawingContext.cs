@@ -261,7 +261,7 @@ internal sealed class SkiaDrawingContext
         {
             using var typeface = CreateTypeface(run.Font);
             using var font = new SKFont(typeface, defaultFont.Size);
-            width += font.MeasureText(run.Text, paint);
+            width += MeasureRun(font, run, paint);
         }
 
         return width;
@@ -279,7 +279,19 @@ internal sealed class SkiaDrawingContext
         {
             using var typeface = string.IsNullOrEmpty(run.Font.FilePath) ? null : CreateTypeface(run.Font);
             using var font = new SKFont(typeface ?? SKTypeface.Default, size);
-            if (asPaths)
+            if (run.GlyphId is { } glyphId)
+            {
+                using var glyphPath = font.GetGlyphPath(glyphId)
+                    ?? throw new InvalidOperationException($"IVS glyph {glyphId} のアウトラインを生成できません。");
+                if (glyphPath.IsEmpty)
+                {
+                    throw new InvalidOperationException($"IVS glyph {glyphId} のアウトラインが空です。");
+                }
+
+                glyphPath.Transform(SKMatrix.CreateTranslation(x, y));
+                canvas.DrawPath(glyphPath, paint);
+            }
+            else if (asPaths)
             {
                 using var path = font.GetTextPath(run.Text, new SKPoint(x, y));
                 if (path.IsEmpty && run.Text.Any(character => !char.IsWhiteSpace(character)))
@@ -294,8 +306,19 @@ internal sealed class SkiaDrawingContext
                 canvas.DrawText(run.Text, x, y, SKTextAlign.Left, font, paint);
             }
 
-            x += font.MeasureText(run.Text, paint);
+            x += MeasureRun(font, run, paint);
         }
+    }
+
+    private static float MeasureRun(SKFont font, TextRun run, SKPaint paint)
+    {
+        if (run.GlyphId is not { } glyphId)
+        {
+            return font.MeasureText(run.Text, paint);
+        }
+
+        var widths = font.GetGlyphWidths([glyphId]);
+        return widths.Length == 0 ? 0 : widths[0];
     }
 
     private void DrawImage(SKCanvas canvas, DrawImageCommand command)

@@ -208,6 +208,83 @@ public sealed class ShapeAndFontTests
         }
     }
 
+    /// <summary>拡張子ではなく内容を検査し、TTE 名の外部ファイルを内部ファミリー名で登録します。</summary>
+    [Fact]
+    public void FontManager_registers_explicit_tte_by_its_internal_metadata()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.tte");
+        File.Copy(Path.Combine(AppContext.BaseDirectory, "NotoSansCJKjp-Regular.otf"), path);
+        try
+        {
+            var manager = new FontManager(new FontOptions
+            {
+                UseFontPack = false,
+                AllowSystemFonts = false,
+                FallbackFamilies = [],
+                FontFiles = [path],
+            });
+
+            var resolved = manager.Resolve(new("Noto Sans CJK JP"));
+
+            Assert.Equal(path, resolved.FilePath);
+            Assert.Equal("Noto Sans CJK JP", resolved.Family);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    /// <summary>明示ファイルの欠落と不正な内容を入力エラーとして報告します。</summary>
+    [Fact]
+    public void FontManager_rejects_missing_or_invalid_explicit_font_files()
+    {
+        var missing = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.tte");
+        var invalid = Path.GetTempFileName();
+        File.WriteAllText(invalid, "not a font");
+        try
+        {
+            Assert.Contains("not found", Assert.Throws<ArgumentException>(() => new FontManager(new FontOptions
+            {
+                FontFiles = [missing],
+            })).Message);
+            Assert.Contains("not a supported", Assert.Throws<ArgumentException>(() => new FontManager(new FontOptions
+            {
+                FontFiles = [invalid],
+            })).Message);
+        }
+        finally
+        {
+            File.Delete(invalid);
+        }
+    }
+
+    /// <summary>外部ファイル指定時に未収録の BMP 私用文字を置換対象として保持します。</summary>
+    [Fact]
+    public void FontManager_marks_missing_private_use_glyph_when_external_fonts_are_configured()
+    {
+        var path = CopyTestFont();
+        try
+        {
+            var manager = new FontManager(new FontOptions
+            {
+                AllowSystemFonts = false,
+                FallbackFamilies = [],
+                FontFiles = [path],
+            });
+
+            var run = Assert.Single(manager.ResolveTextRuns("\uE000", new("Noto Sans JP")));
+
+            Assert.True(run.MissingPrivateUseGlyph);
+            Assert.Equal("\uE000", run.SourceText);
+            Assert.Equal("\uFFFD", run.Text);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
     /// <summary>同梱フォントだけでも決定的なフェイス ID と Unicode テキスト要素単位のランを返すことを検証します。</summary>
     [Fact]
     public void FontManager_resolves_bundled_font_and_keeps_combining_text_together()

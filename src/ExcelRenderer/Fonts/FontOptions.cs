@@ -24,6 +24,10 @@ public sealed class FontOptions
     /// <summary>Gets the additional font directories. OS 標準の場所に加えて再帰的に検索するフォントディレクトリを取得または設定します。</summary>
     public IReadOnlyList<string> FontDirectories { get; init; } = [];
 
+    /// <summary>Gets font files that are loaded directly in the specified order. 指定順に直接読み込む外部フォントファイルを取得または設定します。</summary>
+    /// <remarks>The file contents, rather than the extension, determine whether a file is a supported font.</remarks>
+    public IReadOnlyList<string> FontFiles { get; init; } = [];
+
     /// <summary>Gets explicitly registered font faces. 明示的に登録するフォントフェイスの一覧を取得または設定します。</summary>
     public IReadOnlyList<FontRegistration> Registrations { get; init; } = [];
 }

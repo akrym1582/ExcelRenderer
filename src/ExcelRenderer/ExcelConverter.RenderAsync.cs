@@ -75,7 +75,7 @@ public static partial class ExcelConverter
             }
 
             var fontManager = new FontManager(request.FontOptions);
-            CollectMissingIvsDiagnostics(sheets, fontManager, diagnostics);
+            CollectMissingGlyphDiagnostics(sheets, fontManager, diagnostics);
             if (diagnostics.HasFailure)
             {
                 throw Failure("Conversion was stopped by diagnostic policy.", null, diagnostics, artifacts);
@@ -379,7 +379,7 @@ public static partial class ExcelConverter
         }
     }
 
-    private static void CollectMissingIvsDiagnostics(IReadOnlyList<SelectedSheet> sheets, FontManager fonts, DiagnosticCollector diagnostics)
+    private static void CollectMissingGlyphDiagnostics(IReadOnlyList<SelectedSheet> sheets, FontManager fonts, DiagnosticCollector diagnostics)
     {
         foreach (var selected in sheets)
         {
@@ -414,6 +414,20 @@ public static partial class ExcelConverter
                         DiagnosticSeverity.Warning,
                         DiagnosticStage.Layout,
                         $"No bundled IVS font supports {sequence} at UTF-16 offset {run.Utf16Start}; a replacement glyph will be rendered.",
+                        selected.Sheet.Name,
+                        cell,
+                        objectId,
+                        UnicodeSequence: sequence));
+                }
+
+                foreach (var run in fonts.ResolveTextRuns(text, request).Where(x => x.MissingPrivateUseGlyph))
+                {
+                    var sequence = string.Join(" ", ToScalars(run.SourceText).Select(x => $"U+{x:X4}"));
+                    diagnostics.Add(new(
+                        "MissingPrivateUseGlyph",
+                        DiagnosticSeverity.Warning,
+                        DiagnosticStage.Layout,
+                        $"No explicitly configured font supports private-use character {sequence} at UTF-16 offset {run.Utf16Start}; a replacement glyph will be rendered.",
                         selected.Sheet.Name,
                         cell,
                         objectId,

@@ -9,6 +9,7 @@ public sealed class FontManager : IFontManager
 {
     private readonly FontOptions _options;
     private readonly List<FontFace> _faces = [];
+    private readonly List<FontFace> _externalFaces = [];
     private readonly Dictionary<FontRequest, ResolvedFont> _cache = new();
     private readonly Dictionary<(string FaceId, int Base, int Selector), OpenTypeVariationSequences.Resolution?> _ivsSupport = new();
 
@@ -22,10 +23,16 @@ public sealed class FontManager : IFontManager
             Register(registration.Family, registration.Regular, registration.Bold, registration.Italic, registration.BoldItalic);
         }
 
+        for (var i = 0; i < _options.FontFiles.Count; i++)
+        {
+            AddExternalFile(_options.FontFiles[i], i);
+        }
+
         if (_options.UseFontPack)
         {
             AddFontPack();
         }
+
         Scan();
     }
 
@@ -101,22 +108,26 @@ public sealed class FontManager : IFontManager
             var renderedText = replaceIvs ? char.ConvertFromUtf32(baseScalar) : element;
             ResolvedFont font;
             bool missing;
+            bool missingPrivateUse;
             OpenTypeVariationSequences.Resolution? glyph;
             ushort? colorEmojiGlyph = null;
             if (selector is null || replaceIvs)
             {
-                (font, colorEmojiGlyph) = ResolveForTextElement(renderedText, request);
+                (font, colorEmojiGlyph, missingPrivateUse) = ResolveForTextElement(renderedText, baseScalar, request);
                 missing = false;
                 glyph = null;
             }
             else
             {
                 (font, missing, glyph) = ResolveIvs(baseScalar, selector.Value, request);
+                missingPrivateUse = false;
             }
-            renderedText = missing ? "\uFFFD" : renderedText;
+
+            renderedText = missing || missingPrivateUse ? "\uFFFD" : renderedText;
             if (runs.Count > 0 && runs[^1].Font.FaceId == font.FaceId &&
                 glyph is null && colorEmojiGlyph is null && runs[^1].GlyphId is null &&
                 runs[^1].ColorEmojiGlyphId is null && runs[^1].MissingIvsGlyph == missing &&
+                runs[^1].MissingPrivateUseGlyph == missingPrivateUse &&
                 runs[^1].Utf16Start + runs[^1].SourceText.Length == start)
             {
                 runs[^1] = runs[^1] with { Text = runs[^1].Text + renderedText, SourceText = runs[^1].SourceText + element };
@@ -124,6 +135,7 @@ public sealed class FontManager : IFontManager
             else
             {
                 runs.Add(new(renderedText, font) { Utf16Start = start, SourceText = element, MissingIvsGlyph = missing,
+                    MissingPrivateUseGlyph = missingPrivateUse,
                     GlyphId = glyph?.GlyphId, ColorEmojiGlyphId = colorEmojiGlyph,
                     IsDefaultVariationGlyph = glyph?.IsDefault ?? false });
             }
@@ -214,18 +226,30 @@ public sealed class FontManager : IFontManager
         return (Resolve(request), true, null);
     }
 
-    private (ResolvedFont Font, ushort? ColorEmojiGlyph) ResolveForTextElement(string element, FontRequest request)
+    private (ResolvedFont Font, ushort? ColorEmojiGlyph, bool MissingPrivateUse) ResolveForTextElement(string element, int baseScalar, FontRequest request)
     {
         var primary = Resolve(request);
         var scalars = UnicodeScalars(element).ToArray();
         if (scalars.Length == 2 && scalars[1] == 0xFE0F && TryColorEmoji(scalars[0], request) is { } requestedEmoji)
         {
-            return requestedEmoji;
+            return (requestedEmoji.Font, requestedEmoji.Glyph, false);
         }
 
         if (Supports(primary, element))
         {
-            return (primary, null);
+            return (primary, null, false);
+        }
+
+        if (baseScalar is >= 0xE000 and <= 0xF8FF && _externalFaces.Count > 0)
+        {
+            foreach (var face in _externalFaces)
+            {
+                var external = Select([face], request);
+                if (Supports(external, element))
+                {
+                    return (external, null, false);
+                }
+            }
         }
 
         // A single emoji scalar, optionally followed by VS16, is rendered with the
@@ -233,7 +257,7 @@ public sealed class FontManager : IFontManager
         if (scalars.Length is 1 or 2 && (scalars.Length == 1 || scalars[1] == 0xFE0F) &&
             TryColorEmoji(scalars[0], request) is { } emoji)
         {
-            return emoji;
+            return (emoji.Font, emoji.Glyph, false);
         }
 
         foreach (var family in _options.FallbackFamilies.Where(x => !string.IsNullOrWhiteSpace(x)))
@@ -241,11 +265,50 @@ public sealed class FontManager : IFontManager
             var fallback = Resolve(new FontRequest(family, request.Weight, request.Italic));
             if (Supports(fallback, element))
             {
-                return (fallback, null);
+                return (fallback, null, false);
             }
         }
 
-        return (primary, null);
+        return (primary, null, baseScalar is >= 0xE000 and <= 0xF8FF && _externalFaces.Count > 0);
+    }
+
+    private void AddExternalFile(string path, int order)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            throw new ArgumentException("An explicitly configured font file path cannot be empty.", nameof(_options.FontFiles));
+        }
+
+        var fullPath = Path.GetFullPath(path);
+        if (!File.Exists(fullPath))
+        {
+            throw new ArgumentException($"Font file was not found: {fullPath}", nameof(_options.FontFiles));
+        }
+
+        byte[] bytes;
+        try
+        {
+            bytes = File.ReadAllBytes(fullPath);
+        }
+        catch (Exception error) when (error is IOException or UnauthorizedAccessException)
+        {
+            throw new ArgumentException($"Font file could not be read: {fullPath}", nameof(_options.FontFiles), error);
+        }
+
+        using var stream = new MemoryStream(bytes, writable: false);
+        using var typeface = SKTypeface.FromStream(stream);
+        if (typeface is null || string.IsNullOrWhiteSpace(typeface.FamilyName))
+        {
+            throw new ArgumentException($"File is not a supported TrueType/OpenType font: {fullPath}", nameof(_options.FontFiles));
+        }
+
+        var style = typeface.FontStyle;
+        var face = Add(typeface.FamilyName, style.Weight, style.Slant != SKFontStyleSlant.Upright,
+            fullPath, bytes, false, 0, int.MaxValue, null, order);
+        if (!_externalFaces.Any(x => x.FaceId == face.FaceId))
+        {
+            _externalFaces.Add(face);
+        }
     }
 
     private (ResolvedFont Font, ushort Glyph)? TryColorEmoji(int scalar, FontRequest request)
@@ -298,20 +361,23 @@ public sealed class FontManager : IFontManager
         Add(family, weight, italic, Path.GetFullPath(path), null, false, sourcePriority, int.MaxValue, null);
     }
 
-    private void Add(string family, int weight, bool italic, string path, byte[]? data, bool bundled, int sourcePriority, int ivsPriority, IvsFontStyle? ivsFontStyle)
+    private FontFace Add(string family, int weight, bool italic, string path, byte[]? data, bool bundled, int sourcePriority, int ivsPriority, IvsFontStyle? ivsFontStyle, int explicitOrder = int.MaxValue)
     {
         var bytes = data ?? File.ReadAllBytes(path);
         using var hasher = SHA256.Create();
         var id = BitConverter.ToString(hasher.ComputeHash(bytes)).Replace("-", string.Empty, StringComparison.Ordinal);
-        var candidate = new FontFace(family, weight, italic, path, bytes, id, bundled, sourcePriority, ivsPriority, ivsFontStyle);
+        var candidate = new FontFace(family, weight, italic, path, bytes, id, bundled, sourcePriority, ivsPriority, ivsFontStyle, explicitOrder);
         if (_faces.Any(x => x.Family.Equals(candidate.Family, StringComparison.OrdinalIgnoreCase) &&
             x.Weight == candidate.Weight && x.Italic == candidate.Italic &&
             string.Equals(x.FilePath, candidate.FilePath, StringComparison.OrdinalIgnoreCase)))
         {
-            return;
+            return _faces.First(x => x.Family.Equals(candidate.Family, StringComparison.OrdinalIgnoreCase) &&
+                x.Weight == candidate.Weight && x.Italic == candidate.Italic &&
+                string.Equals(x.FilePath, candidate.FilePath, StringComparison.OrdinalIgnoreCase));
         }
 
         _faces.Add(candidate);
+        return candidate;
     }
 
     private void Scan()
@@ -365,8 +431,8 @@ public sealed class FontManager : IFontManager
         }
     }
 
-    private sealed record FontFace(string Family, int Weight, bool Italic, string FilePath, byte[] Data, string FaceId, bool IsBundled, int SourcePriority, int IvsPriority, IvsFontStyle? IvsFontStyle)
+    private sealed record FontFace(string Family, int Weight, bool Italic, string FilePath, byte[] Data, string FaceId, bool IsBundled, int SourcePriority, int IvsPriority, IvsFontStyle? IvsFontStyle, int ExplicitOrder = int.MaxValue)
     {
-        public string SortKey => $"{Family}\0{Weight:D4}\0{Italic}\0{FilePath}";
+        public string SortKey => $"{ExplicitOrder:D8}\0{Family}\0{Weight:D4}\0{Italic}\0{FilePath}";
     }
 }

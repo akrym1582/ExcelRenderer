@@ -786,6 +786,22 @@ public sealed class LayoutPassTests
         Assert.Equal("%PDF-", System.Text.Encoding.ASCII.GetString(output.GetBuffer(), 0, 5));
     }
 
+    /// <summary>欠落した私用文字の置換を PDF の解決済みテキスト描画経路へ渡します。</summary>
+    [Fact]
+    public void PdfSharpRenderer_uses_resolved_runs_for_missing_private_use_glyphs()
+    {
+        var manager = new MissingPrivateUseFontManager();
+        using var output = new MemoryStream();
+
+        new PdfSharpRenderer(manager).Render(
+            [new DrawTextCommand(1, new(4, 4, 80, 20), "\uE000", CellStyle.Default with
+            { Font = new FontStyle("Noto Sans JP", 12) })],
+            new PageSettings(88, 28), output);
+
+        Assert.True(manager.ResolveTextRunsCallCount > 1);
+        Assert.Equal("%PDF-", System.Text.Encoding.ASCII.GetString(output.GetBuffer(), 0, 5));
+    }
+
     /// <summary>
     /// 折り返し指定がテキスト描画命令のスタイルに保持されることを検証します。
     /// </summary>
@@ -1036,5 +1052,30 @@ public sealed class LayoutPassTests
     private sealed class FixedTextMeasurer : ITextMeasurer
     {
         public TextSize Measure(string text, FontStyle font, double availableWidth, bool wrap) => new(10, 10);
+    }
+
+    private sealed class MissingPrivateUseFontManager : IFontManager
+    {
+        private readonly ResolvedFont _font;
+
+        public MissingPrivateUseFontManager()
+        {
+            var path = Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf");
+            _font = new("Noto Sans JP", 400, false, path)
+            {
+                FaceId = path,
+                FontData = File.ReadAllBytes(path),
+            };
+        }
+
+        public int ResolveTextRunsCallCount { get; private set; }
+
+        public ResolvedFont Resolve(FontRequest request) => _font;
+
+        public IReadOnlyList<TextRun> ResolveTextRuns(string text, FontRequest request)
+        {
+            ResolveTextRunsCallCount++;
+            return [new("\uFFFD", _font) { SourceText = text, MissingPrivateUseGlyph = true }];
+        }
     }
 }

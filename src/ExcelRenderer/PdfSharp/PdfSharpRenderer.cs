@@ -18,7 +18,7 @@ public sealed class PdfSharpRenderer : IRenderer
     /// <summary>Initializes a renderer that uses PDFsharp for ordinary text.</summary>
     public PdfSharpRenderer() { }
 
-    /// <summary>Initializes a renderer with the font manager used to resolve IVS glyphs.</summary>
+    /// <summary>Initializes a renderer with the font manager used to resolve per-run fonts and glyphs.</summary>
     /// <param name="fontManager">The font manager shared with layout and diagnostics.</param>
     public PdfSharpRenderer(IFontManager fontManager) => _fontManager = fontManager ?? throw new ArgumentNullException(nameof(fontManager));
 
@@ -133,8 +133,9 @@ public sealed class PdfSharpRenderer : IRenderer
 
     private void DrawText(XGraphics graphics, DrawTextCommand command)
     {
-        if (_fontManager is not null && _fontManager.ResolveTextRuns(command.Text, ToRequest(command.Style))
-            .Any(x => x.GlyphId is not null || x.ColorEmojiGlyphId is not null))
+        var request = ToRequest(command.Style);
+        if (_fontManager is not null && RequiresResolvedTextPath(
+            _fontManager.ResolveTextRuns(command.Text, request), _fontManager.Resolve(request)))
         {
             DrawTextWithIvs(graphics, command);
             return;
@@ -167,6 +168,10 @@ public sealed class PdfSharpRenderer : IRenderer
 
         graphics.Restore(state);
     }
+
+    private static bool RequiresResolvedTextPath(IReadOnlyList<TextRun> runs, ResolvedFont primary) =>
+        runs.Any(x => x.GlyphId is not null || x.ColorEmojiGlyphId is not null ||
+            x.MissingPrivateUseGlyph || x.Font.FaceId != primary.FaceId);
 
     private void DrawTextWithIvs(XGraphics graphics, DrawTextCommand command)
     {

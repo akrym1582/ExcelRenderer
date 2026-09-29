@@ -263,6 +263,27 @@ public sealed class ShapeAndFontTests
         Assert.False(run.MissingIvsGlyph);
     }
 
+    /// <summary>IVS 置換を有効にすると異体字セレクターを除き、基底文字のみを描画することを検証します。</summary>
+    [Theory]
+    [InlineData("A\u4FAE\uFE00B", "A\u4FAEB")]
+    [InlineData("A\U00020000\U000E0100B", "A\U00020000B")]
+    public void FontManager_can_replace_ivs_with_its_base_character(string source, string expected)
+    {
+        var manager = new FontManager(new FontOptions
+        {
+            AllowSystemFonts = false,
+            FontDirectories = [],
+            FallbackFamilies = [],
+            ReplaceIvsWithBaseCharacter = true,
+        });
+
+        var runs = manager.ResolveTextRuns(source, new("Noto Sans JP"));
+
+        Assert.Equal(source, string.Concat(runs.Select(run => run.SourceText)));
+        Assert.Equal(expected, string.Concat(runs.Select(run => run.Text)));
+        Assert.DoesNotContain(runs, run => run.MissingIvsGlyph);
+    }
+
     /// <summary>未登録 IVS はセレクターを黙って捨てず、元列と UTF-16 位置を保持して欠字化することを検証します。</summary>
     [Fact]
     public void FontManager_marks_unsupported_supplementary_ivs_as_missing()

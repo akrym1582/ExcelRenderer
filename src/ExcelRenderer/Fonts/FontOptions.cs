@@ -9,6 +9,9 @@ public sealed class FontOptions
     /// <summary>Gets the bundled Gothic or Mincho face preferred for registered IVS glyphs. IVS 字形に優先する同梱のゴシック体または明朝体を取得または設定します。</summary>
     public IvsFontStyle IvsFontStyle { get; init; } = IvsFontStyle.Gothic;
 
+    /// <summary>Gets a value indicating whether ideographic variation sequences are rendered as their base characters. IVS を異体字セレクターを除いた基底文字として出力するかどうかを取得または設定します。</summary>
+    public bool ReplaceIvsWithBaseCharacter { get; init; }
+
     /// <summary>Gets a value indicating whether operating-system font directories may be searched. OS 標準のフォントフォルダーを検索するかどうかを取得または設定します。</summary>
     public bool AllowSystemFonts { get; init; } = true;
 

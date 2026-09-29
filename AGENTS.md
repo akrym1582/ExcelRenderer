@@ -11,7 +11,7 @@
 - Coordinates and dimensions in the model and drawing commands are PDF points. Convert to pixels only at PNG output using the requested DPI.
 - Merged ranges use their top-left cell for `RowSpan` and `ColumnSpan`; avoid drawing the remaining cells again.
 - When a drawing command or style changes, check both PDFsharp and SkiaSharp renderers. Preserve Excel line style and width separately when converting borders.
-- Japanese fonts are embedded in the optional `ExcelRenderer.Fonts` package. The CLI depends on it; the library can resolve system or explicitly registered fonts without it. Keep font licenses and `THIRD-PARTY-NOTICES.md` aligned with any font changes.
+- Japanese fonts are embedded in the optional `ExcelRenderer.Fonts` package. The `ExcelRenderer` library does not depend on that package, while the CLI depends on it transitively. Keep README.md and README.ja.md consistent about package responsibilities, and keep font licenses and `THIRD-PARTY-NOTICES.md` aligned with any font changes.
 - Preserve nullable annotations and consider existing callers before changing public APIs. Follow the surrounding C# style and the language used in each file; `README.md` is English and `README.ja.md` is Japanese.
 - Document only behavior that is implemented. Keep changes focused and add meaningful tests for changed behavior in the relevant test project.
 

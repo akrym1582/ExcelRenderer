@@ -44,6 +44,9 @@ system fonts. The CLI depends on this package. IVS rendering defaults to Gothic
 (Noto Sans CJK JP, then IPAmj Mincho). Set `FontOptions.IvsFontStyle` to
 `IvsFontStyle.Mincho`, or pass `--ivs-font-style mincho` to the CLI, to prefer
 Noto Serif CJK JP before IPAmj Mincho. See [third-party notices](THIRD-PARTY-NOTICES.md).
+Set `FontOptions.ReplaceIvsWithBaseCharacter` to `true` when the library should
+render an ideographic variation sequence as its base character without the
+variation selector instead of selecting its IVS glyph.
 
 
 ## Installation

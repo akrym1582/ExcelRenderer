@@ -97,10 +97,12 @@ public sealed class FontManager : IFontManager
         var runs = new List<TextRun>();
         foreach (var (element, start, baseScalar, selector) in EnumerateElements(text))
         {
-            var (font, missing) = selector is null
-                ? (ResolveForTextElement(element, request), false)
+            var replaceIvs = selector is not null && _options.ReplaceIvsWithBaseCharacter;
+            var renderedText = replaceIvs ? char.ConvertFromUtf32(baseScalar) : element;
+            var (font, missing) = selector is null || replaceIvs
+                ? (ResolveForTextElement(renderedText, request), false)
                 : ResolveIvs(baseScalar, selector.Value, request);
-            var renderedText = missing ? "\uFFFD" : element;
+            renderedText = missing ? "\uFFFD" : renderedText;
             if (runs.Count > 0 && runs[^1].Font.FaceId == font.FaceId &&
                 runs[^1].MissingIvsGlyph == missing && runs[^1].Utf16Start + runs[^1].SourceText.Length == start)
             {

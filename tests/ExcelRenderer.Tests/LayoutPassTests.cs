@@ -2,6 +2,7 @@ using ClosedXML.Excel;
 using ExcelRenderer.Abstractions;
 using ExcelRenderer.Drawing;
 using ExcelRenderer.Excel;
+using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Model;
 using ExcelRenderer.PdfSharp;
@@ -765,6 +766,21 @@ public sealed class LayoutPassTests
         var command = new DrawImageCommand(1, new(0, 0, 20, 20), CreateImageBytes());
 
         new PdfSharpRenderer().Render([command], new PageSettings(), output);
+
+        Assert.True(output.Length > 0);
+        Assert.Equal("%PDF-", System.Text.Encoding.ASCII.GetString(output.GetBuffer(), 0, 5));
+    }
+
+    /// <summary>CBDT カラー絵文字を PDF に画像として描画できます。</summary>
+    [Fact]
+    public void PdfSharpRenderer_renders_color_emoji()
+    {
+        var manager = new FontManager(new FontOptions { AllowSystemFonts = false, FallbackFamilies = [] });
+        using var output = new MemoryStream();
+        new PdfSharpRenderer(manager).Render(
+            [new DrawTextCommand(1, new(4, 4, 80, 58), "😀", CellStyle.Default with
+            { Font = new FontStyle("Noto Sans JP", 40) })],
+            new PageSettings(88, 66), output);
 
         Assert.True(output.Length > 0);
         Assert.Equal("%PDF-", System.Text.Encoding.ASCII.GetString(output.GetBuffer(), 0, 5));

@@ -1,5 +1,7 @@
 # ExcelRenderer
 
+> PDF output keeps ordinary text searchable, but supported ideographic variation sequences (IVS) are emitted as vector outlines so the selected format 14 glyph is preserved. Those outlined IVS characters are not searchable or copyable as text.
+
 ExcelRenderer is a .NET library for rendering Excel (`.xlsx`) worksheets as PDF documents or page-by-page PNG and SVG images.
 
 It separates workbook parsing, layout, drawing-command generation, and output rendering into distinct stages:

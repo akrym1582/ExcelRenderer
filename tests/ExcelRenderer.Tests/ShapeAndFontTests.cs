@@ -243,6 +243,21 @@ public sealed class ShapeAndFontTests
         Assert.Contains(runs, run => run.SourceText.Contains("\u4FAE\uFE00", StringComparison.Ordinal));
     }
 
+    /// <summary>IVS を隣接する通常文字から分離し、選択したフォント固有の glyph ID を保持することを検証します。</summary>
+    [Fact]
+    public void FontManager_keeps_resolved_ivs_glyph_separate_from_neighbors()
+    {
+        var manager = new FontManager(new FontOptions { AllowSystemFonts = false, FontDirectories = [], FallbackFamilies = [] });
+
+        var runs = manager.ResolveTextRuns("A\u8FBB\U000E0100B", new("Noto Sans JP"));
+        var ivs = Assert.Single(runs, run => run.GlyphId is not null);
+
+        Assert.Equal("\u8FBB\U000E0100", ivs.SourceText);
+        Assert.NotEqual((ushort)0, ivs.GlyphId);
+        Assert.Equal("A\u8FBB\U000E0100B", string.Concat(runs.Select(run => run.SourceText)));
+        Assert.Equal(3, runs.Count);
+    }
+
     /// <summary>IVS の優先書体をゴシック体と明朝体から明示的に選択できることを検証します。</summary>
     [Theory]
     [InlineData(IvsFontStyle.Gothic, "Sans")]

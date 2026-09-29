@@ -11,4 +11,10 @@ public sealed record TextRun(string Text, ResolvedFont Font)
 
     /// <summary>Gets a value indicating whether an IVS could not be represented by any bundled IVS font.</summary>
     public bool MissingIvsGlyph { get; init; }
+
+    /// <summary>Gets the font-specific glyph selected by an OpenType format 14 mapping, or null for ordinary text.</summary>
+    public ushort? GlyphId { get; init; }
+
+    /// <summary>Gets a value indicating whether the variation sequence uses its default UVS mapping.</summary>
+    public bool IsDefaultVariationGlyph { get; init; }
 }

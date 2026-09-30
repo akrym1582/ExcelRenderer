@@ -15,10 +15,12 @@ public sealed class PdfSharpRenderer : IRenderer
 {
     private readonly IFontManager? _fontManager;
 
-    /// <summary>Initializes a renderer that uses PDFsharp for ordinary text.</summary>
-    public PdfSharpRenderer() { }
+    /// <summary>Initializes a new instance of the <see cref="PdfSharpRenderer"/> class.</summary>
+    public PdfSharpRenderer()
+    {
+    }
 
-    /// <summary>Initializes a renderer with the font manager used to resolve per-run fonts and glyphs.</summary>
+    /// <summary>Initializes a new instance of the <see cref="PdfSharpRenderer"/> class.</summary>
     /// <param name="fontManager">The font manager shared with layout and diagnostics.</param>
     public PdfSharpRenderer(IFontManager fontManager) => _fontManager = fontManager ?? throw new ArgumentNullException(nameof(fontManager));
 
@@ -43,252 +45,9 @@ public sealed class PdfSharpRenderer : IRenderer
         document.Save(output, false);
     }
 
-    private void AddPage(PdfDocument document, PageSettings pageSettings, IEnumerable<DrawCommand> commands)
-    {
-        var page = document.AddPage();
-        page.Width = XUnit.FromPoint(pageSettings.Width);
-        page.Height = XUnit.FromPoint(pageSettings.Height);
-        using var graphics = XGraphics.FromPdfPage(page);
-        foreach (var command in commands)
-        {
-            Execute(graphics, command);
-        }
-    }
-
-    private void Execute(XGraphics graphics, DrawCommand command)
-    {
-        switch (command)
-        {
-            case FillRectangleCommand fill:
-                graphics.DrawRectangle(new XSolidBrush(ToColor(fill.Color)), ToRect(fill.Bounds));
-                break;
-            case DrawBorderCommand border:
-                DrawBorder(graphics, border);
-                break;
-            case DrawTextCommand text:
-                DrawText(graphics, text);
-                break;
-            case DrawLineCommand line:
-                DrawStyledLine(graphics, line.Style, line.X1, line.Y1, line.X2, line.Y2);
-                break;
-            case DrawImageCommand image:
-                DrawImage(graphics, image);
-                break;
-            case DrawShapeCommand shape:
-                DrawShape(graphics, shape);
-                break;
-        }
-    }
-
-    private void DrawShape(XGraphics graphics, DrawShapeCommand command)
-    {
-        var state = graphics.Save();
-        var b = command.Bounds;
-        if (command.Shape.Rotation != 0)
-        {
-            graphics.RotateAtTransform(command.Shape.Rotation, new XPoint(b.X + (b.Width / 2), b.Y + (b.Height / 2)));
-        }
-
-        var brush = command.Shape.Style.FillColor is { } fill ? new XSolidBrush(ToColor(fill)) : null;
-        var pen = command.Shape.Style.LineColor is { } line ? new XPen(ToColor(line), command.Shape.Style.LineWidth) : null;
-        if (command.Shape.Kind == ShapeKind.Ellipse)
-        {
-            graphics.DrawEllipse(pen, brush, ToRect(b));
-        }
-        else if (command.Shape.Kind == ShapeKind.RoundedRectangle)
-        {
-            graphics.DrawRoundedRectangle(pen, brush, ToRect(b), new XSize(Math.Min(10, b.Width / 4), Math.Min(10, b.Height / 4)));
-        }
-        else if (command.Shape.Kind is ShapeKind.WedgeRectangleCallout or ShapeKind.WedgeRoundedRectangleCallout)
-        {
-            var path = new XGraphicsPath();
-            path.AddPolygon([new(b.X, b.Y), new(b.X + b.Width, b.Y), new(b.X + b.Width, b.Y + b.Height),
-                new(b.X + (b.Width * .35), b.Y + b.Height), new(b.X + (b.Width * .15), b.Y + (b.Height * 1.2)),
-                new(b.X + (b.Width * .2), b.Y + b.Height), new(b.X, b.Y + b.Height)]);
-            path.CloseFigure();
-            graphics.DrawPath(pen, brush, path);
-        }
-        else
-        {
-            graphics.DrawRectangle(pen, brush, ToRect(b));
-        }
-
-        if (command.Shape.Text is { } text)
-        {
-            var bounds = new ReportRect(
-                b.X + text.MarginLeft,
-                b.Y + text.MarginTop,
-                Math.Max(0, b.Width - text.MarginLeft - text.MarginRight),
-                Math.Max(0, b.Height - text.MarginTop - text.MarginBottom));
-            DrawText(graphics, new DrawTextCommand(
-                command.PageNumber,
-                bounds,
-                text.Text,
-                CellStyle.Default with { Font = text.Font, HorizontalAlignment = text.HorizontalAlignment,
-                VerticalAlignment = text.VerticalAlignment, WrapText = text.WrapText, }));
-        }
-
-        graphics.Restore(state);
-    }
-
-    private void DrawText(XGraphics graphics, DrawTextCommand command)
-    {
-        var request = ToRequest(command.Style);
-        if (_fontManager is not null && RequiresResolvedTextPath(
-            _fontManager.ResolveTextRuns(command.Text, request), _fontManager.Resolve(request)))
-        {
-            DrawTextWithIvs(graphics, command);
-            return;
-        }
-
-        var font = CreateFontToFit(graphics, command.Text, command.Style, command.Bounds.Width);
-        var lines = WrapText(graphics, command.Text, font, command.Bounds.Width, command.Style.WrapText);
-        var lineHeight = graphics.MeasureString("Ag", font).Height;
-        var textHeight = lineHeight * lines.Count;
-        var y = command.Style.VerticalAlignment switch
-        {
-            VerticalAlignment.Center => command.Bounds.Y + ((command.Bounds.Height - textHeight) / 2),
-            VerticalAlignment.Bottom => command.Bounds.Y + command.Bounds.Height - textHeight,
-            _ => command.Bounds.Y,
-        };
-        var state = graphics.Save();
-        if (command.Style.WrapText || command.Style.ShrinkToFit)
-        {
-            graphics.IntersectClip(ToRect(command.Bounds));
-        }
-
-        var format = ToFormat(command.Style);
-        format.LineAlignment = XLineAlignment.Near;
-        var brush = new XSolidBrush(ToColor(command.Style.Font.Color ?? new(0, 0, 0)));
-        foreach (var line in lines)
-        {
-            graphics.DrawString(line, font, brush, new XRect(command.Bounds.X, y, command.Bounds.Width, lineHeight), format);
-            y += lineHeight;
-        }
-
-        graphics.Restore(state);
-    }
-
     private static bool RequiresResolvedTextPath(IReadOnlyList<TextRun> runs, ResolvedFont primary) =>
         runs.Any(x => x.GlyphId is not null || x.ColorEmojiGlyphId is not null ||
             x.MissingPrivateUseGlyph || x.Font.FaceId != primary.FaceId);
-
-    private void DrawTextWithIvs(XGraphics graphics, DrawTextCommand command)
-    {
-        var request = ToRequest(command.Style);
-        var size = command.Style.Font.Size;
-        var lines = WrapResolvedText(graphics, command.Text, request, size, command.Bounds.Width, command.Style.WrapText);
-        if (command.Style.ShrinkToFit && !command.Style.WrapText && command.Bounds.Width > 0)
-        {
-            var widest = lines.Max(x => MeasureResolvedText(graphics, x, request, size));
-            if (widest > command.Bounds.Width) size *= command.Bounds.Width / widest;
-        }
-
-        using var metricsTypeface = CreateTypeface(_fontManager!.Resolve(request));
-        using var metricsFont = new SKFont(metricsTypeface, (float)size);
-        var metrics = metricsFont.Metrics;
-        var lineHeight = metrics.Descent - metrics.Ascent + metrics.Leading;
-        var textHeight = lineHeight * lines.Count;
-        var y = command.Style.VerticalAlignment switch
-        {
-            VerticalAlignment.Center => command.Bounds.Y + ((command.Bounds.Height - textHeight) / 2),
-            VerticalAlignment.Bottom => command.Bounds.Y + command.Bounds.Height - textHeight,
-            _ => command.Bounds.Y,
-        };
-        var state = graphics.Save();
-        if (command.Style.WrapText || command.Style.ShrinkToFit) graphics.IntersectClip(ToRect(command.Bounds));
-        var brush = new XSolidBrush(ToColor(command.Style.Font.Color ?? new(0, 0, 0)));
-        foreach (var line in lines)
-        {
-            var lineWidth = MeasureResolvedText(graphics, line, request, size);
-            var x = command.Style.HorizontalAlignment switch
-            {
-                HorizontalAlignment.Center => command.Bounds.X + ((command.Bounds.Width - lineWidth) / 2),
-                HorizontalAlignment.Right => command.Bounds.X + command.Bounds.Width - lineWidth,
-                _ => command.Bounds.X,
-            };
-            foreach (var run in _fontManager.ResolveTextRuns(line, request))
-            {
-                if (run.ColorEmojiGlyphId is { } emojiGlyph)
-                {
-                    using var bitmap = ColorEmojiBitmap.Create(run.Font, emojiGlyph, (float)size);
-                    using var png = bitmap.Image.Encode(SKEncodedImageFormat.Png, 100);
-                    using var stream = png.AsStream();
-                    using var image = XImage.FromStream(stream);
-                    graphics.DrawImage(image, new XRect(x + bitmap.Bounds.Left,
-                        y - metrics.Ascent + bitmap.Bounds.Top,
-                        bitmap.Bounds.Width, bitmap.Bounds.Height));
-                    using var emojiTypeface = CreateTypeface(run.Font);
-                    using var emojiFont = new SKFont(emojiTypeface, (float)size);
-                    x += emojiFont.GetGlyphWidths([emojiGlyph])[0];
-                }
-                else if (run.GlyphId is { } glyph)
-                {
-                    using var typeface = CreateTypeface(run.Font);
-                    using var font = new SKFont(typeface, (float)size);
-                    using var path = font.GetGlyphPath(glyph)
-                        ?? throw new InvalidOperationException($"IVS glyph {glyph} のアウトラインを生成できません。");
-                    if (path.IsEmpty) throw new InvalidOperationException($"IVS glyph {glyph} のアウトラインが空です。");
-                    graphics.DrawPath(brush, ToPdfPath(path, x, y - metrics.Ascent));
-                    x += font.GetGlyphWidths([glyph])[0];
-                }
-                else
-                {
-                    var runFont = PdfSharpTextMeasurer.CreateFont(command.Style.Font with { Family = run.Font.Family, Size = size });
-                    graphics.DrawString(run.Text, runFont, brush, new XPoint(x, y), XStringFormats.TopLeft);
-                    x += graphics.MeasureString(run.Text, runFont).Width;
-                }
-            }
-            if (command.Style.Font.Underline) graphics.DrawLine(new XPen(brush.Color), command.Bounds.X, y + lineHeight - 1, command.Bounds.X + lineWidth, y + lineHeight - 1);
-            y += lineHeight;
-        }
-        graphics.Restore(state);
-    }
-
-    private IReadOnlyList<string> WrapResolvedText(XGraphics graphics, string text, FontRequest request, double size, double width, bool wrap)
-    {
-        if (!wrap || width <= 0) return text.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n');
-        var result = new List<string>();
-        foreach (var paragraph in text.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n'))
-        {
-            var line = string.Empty;
-            var elements = System.Globalization.StringInfo.GetTextElementEnumerator(paragraph);
-            while (elements.MoveNext())
-            {
-                var element = (string)elements.Current!;
-                if (line.Length > 0 && MeasureResolvedText(graphics, line + element, request, size) > width)
-                {
-                    result.Add(line);
-                    line = element;
-                }
-                else
-                {
-                    line += element;
-                }
-            }
-            result.Add(line);
-        }
-        return result;
-    }
-
-    private double MeasureResolvedText(XGraphics graphics, string text, FontRequest request, double size)
-    {
-        var width = 0d;
-        foreach (var run in _fontManager!.ResolveTextRuns(text, request))
-        {
-            if ((run.GlyphId ?? run.ColorEmojiGlyphId) is { } glyph)
-            {
-                using var typeface = CreateTypeface(run.Font);
-                using var font = new SKFont(typeface, (float)size);
-                width += font.GetGlyphWidths([glyph])[0];
-            }
-            else
-            {
-                width += graphics.MeasureString(run.Text, PdfSharpTextMeasurer.CreateFont(new FontStyle(run.Font.Family, size))).Width;
-            }
-        }
-        return width;
-    }
 
     private static FontRequest ToRequest(CellStyle style) => new(style.Font.Family, style.Font.Bold ? 700 : 400, style.Font.Italic);
 
@@ -307,21 +66,29 @@ public sealed class PdfSharpRenderer : IRenderer
         {
             var verb = iterator.Next(points);
             XPoint P(int index) => new(offsetX + points[index].X, offsetY + points[index].Y);
-            if (verb == SKPathVerb.Done) break;
+            if (verb == SKPathVerb.Done)
+            {
+                break;
+            }
+
             switch (verb)
             {
                 case SKPathVerb.Move: result.StartFigure(); break;
                 case SKPathVerb.Line: result.AddLine(P(0), P(1)); break;
                 case SKPathVerb.Quad:
                     var p0 = P(0); var p1 = P(1); var p2 = P(2);
-                    result.AddBezier(p0, new(p0.X + ((p1.X - p0.X) * 2 / 3), p0.Y + ((p1.Y - p0.Y) * 2 / 3)),
-                        new(p2.X + ((p1.X - p2.X) * 2 / 3), p2.Y + ((p1.Y - p2.Y) * 2 / 3)), p2);
+                    result.AddBezier(
+                        p0,
+                        new(p0.X + ((p1.X - p0.X) * 2 / 3), p0.Y + ((p1.Y - p0.Y) * 2 / 3)),
+                        new(p2.X + ((p1.X - p2.X) * 2 / 3), p2.Y + ((p1.Y - p2.Y) * 2 / 3)),
+                        p2);
                     break;
                 case SKPathVerb.Cubic: result.AddBezier(P(0), P(1), P(2), P(3)); break;
                 case SKPathVerb.Close: result.CloseFigure(); break;
                 case SKPathVerb.Conic: throw new InvalidOperationException("Conic IVS glyph paths are not supported by PDFsharp.");
             }
         }
+
         return result;
     }
 
@@ -464,4 +231,275 @@ public sealed class PdfSharpRenderer : IRenderer
             _ => XLineAlignment.Near,
         },
     };
+
+    private void AddPage(PdfDocument document, PageSettings pageSettings, IEnumerable<DrawCommand> commands)
+    {
+        var page = document.AddPage();
+        page.Width = XUnit.FromPoint(pageSettings.Width);
+        page.Height = XUnit.FromPoint(pageSettings.Height);
+        using var graphics = XGraphics.FromPdfPage(page);
+        foreach (var command in commands)
+        {
+            Execute(graphics, command);
+        }
+    }
+
+    private void Execute(XGraphics graphics, DrawCommand command)
+    {
+        switch (command)
+        {
+            case FillRectangleCommand fill:
+                graphics.DrawRectangle(new XSolidBrush(ToColor(fill.Color)), ToRect(fill.Bounds));
+                break;
+            case DrawBorderCommand border:
+                DrawBorder(graphics, border);
+                break;
+            case DrawTextCommand text:
+                DrawText(graphics, text);
+                break;
+            case DrawLineCommand line:
+                DrawStyledLine(graphics, line.Style, line.X1, line.Y1, line.X2, line.Y2);
+                break;
+            case DrawImageCommand image:
+                DrawImage(graphics, image);
+                break;
+            case DrawShapeCommand shape:
+                DrawShape(graphics, shape);
+                break;
+        }
+    }
+
+    private void DrawShape(XGraphics graphics, DrawShapeCommand command)
+    {
+        var state = graphics.Save();
+        var b = command.Bounds;
+        if (command.Shape.Rotation != 0)
+        {
+            graphics.RotateAtTransform(command.Shape.Rotation, new XPoint(b.X + (b.Width / 2), b.Y + (b.Height / 2)));
+        }
+
+        var brush = command.Shape.Style.FillColor is { } fill ? new XSolidBrush(ToColor(fill)) : null;
+        var pen = command.Shape.Style.LineColor is { } line ? new XPen(ToColor(line), command.Shape.Style.LineWidth) : null;
+        if (command.Shape.Kind == ShapeKind.Ellipse)
+        {
+            graphics.DrawEllipse(pen, brush, ToRect(b));
+        }
+        else if (command.Shape.Kind == ShapeKind.RoundedRectangle)
+        {
+            graphics.DrawRoundedRectangle(pen, brush, ToRect(b), new XSize(Math.Min(10, b.Width / 4), Math.Min(10, b.Height / 4)));
+        }
+        else if (command.Shape.Kind is ShapeKind.WedgeRectangleCallout or ShapeKind.WedgeRoundedRectangleCallout)
+        {
+            var path = new XGraphicsPath();
+            path.AddPolygon([new(b.X, b.Y), new(b.X + b.Width, b.Y), new(b.X + b.Width, b.Y + b.Height),
+                new(b.X + (b.Width * .35), b.Y + b.Height), new(b.X + (b.Width * .15), b.Y + (b.Height * 1.2)),
+                new(b.X + (b.Width * .2), b.Y + b.Height), new(b.X, b.Y + b.Height)]);
+            path.CloseFigure();
+            graphics.DrawPath(pen, brush, path);
+        }
+        else
+        {
+            graphics.DrawRectangle(pen, brush, ToRect(b));
+        }
+
+        if (command.Shape.Text is { } text)
+        {
+            var bounds = new ReportRect(
+                b.X + text.MarginLeft,
+                b.Y + text.MarginTop,
+                Math.Max(0, b.Width - text.MarginLeft - text.MarginRight),
+                Math.Max(0, b.Height - text.MarginTop - text.MarginBottom));
+            DrawText(graphics, new DrawTextCommand(
+                command.PageNumber,
+                bounds,
+                text.Text,
+                CellStyle.Default with { Font = text.Font, HorizontalAlignment = text.HorizontalAlignment,
+                VerticalAlignment = text.VerticalAlignment, WrapText = text.WrapText, }));
+        }
+
+        graphics.Restore(state);
+    }
+
+    private void DrawText(XGraphics graphics, DrawTextCommand command)
+    {
+        var request = ToRequest(command.Style);
+        if (_fontManager is not null && RequiresResolvedTextPath(
+            _fontManager.ResolveTextRuns(command.Text, request), _fontManager.Resolve(request)))
+        {
+            DrawTextWithIvs(graphics, command);
+            return;
+        }
+
+        var font = CreateFontToFit(graphics, command.Text, command.Style, command.Bounds.Width);
+        var lines = WrapText(graphics, command.Text, font, command.Bounds.Width, command.Style.WrapText);
+        var lineHeight = graphics.MeasureString("Ag", font).Height;
+        var textHeight = lineHeight * lines.Count;
+        var y = command.Style.VerticalAlignment switch
+        {
+            VerticalAlignment.Center => command.Bounds.Y + ((command.Bounds.Height - textHeight) / 2),
+            VerticalAlignment.Bottom => command.Bounds.Y + command.Bounds.Height - textHeight,
+            _ => command.Bounds.Y,
+        };
+        var state = graphics.Save();
+        if (command.Style.WrapText || command.Style.ShrinkToFit)
+        {
+            graphics.IntersectClip(ToRect(command.Bounds));
+        }
+
+        var format = ToFormat(command.Style);
+        format.LineAlignment = XLineAlignment.Near;
+        var brush = new XSolidBrush(ToColor(command.Style.Font.Color ?? new(0, 0, 0)));
+        foreach (var line in lines)
+        {
+            graphics.DrawString(line, font, brush, new XRect(command.Bounds.X, y, command.Bounds.Width, lineHeight), format);
+            y += lineHeight;
+        }
+
+        graphics.Restore(state);
+    }
+
+    private void DrawTextWithIvs(XGraphics graphics, DrawTextCommand command)
+    {
+        var request = ToRequest(command.Style);
+        var size = command.Style.Font.Size;
+        var lines = WrapResolvedText(graphics, command.Text, request, size, command.Bounds.Width, command.Style.WrapText);
+        if (command.Style.ShrinkToFit && !command.Style.WrapText && command.Bounds.Width > 0)
+        {
+            var widest = lines.Max(x => MeasureResolvedText(graphics, x, request, size));
+            if (widest > command.Bounds.Width)
+            {
+                size *= command.Bounds.Width / widest;
+            }
+        }
+
+        using var metricsTypeface = CreateTypeface(_fontManager!.Resolve(request));
+        using var metricsFont = new SKFont(metricsTypeface, (float)size);
+        var metrics = metricsFont.Metrics;
+        var lineHeight = metrics.Descent - metrics.Ascent + metrics.Leading;
+        var textHeight = lineHeight * lines.Count;
+        var y = command.Style.VerticalAlignment switch
+        {
+            VerticalAlignment.Center => command.Bounds.Y + ((command.Bounds.Height - textHeight) / 2),
+            VerticalAlignment.Bottom => command.Bounds.Y + command.Bounds.Height - textHeight,
+            _ => command.Bounds.Y,
+        };
+        var state = graphics.Save();
+        if (command.Style.WrapText || command.Style.ShrinkToFit)
+        {
+            graphics.IntersectClip(ToRect(command.Bounds));
+        }
+
+        var brush = new XSolidBrush(ToColor(command.Style.Font.Color ?? new(0, 0, 0)));
+        foreach (var line in lines)
+        {
+            var lineWidth = MeasureResolvedText(graphics, line, request, size);
+            var x = command.Style.HorizontalAlignment switch
+            {
+                HorizontalAlignment.Center => command.Bounds.X + ((command.Bounds.Width - lineWidth) / 2),
+                HorizontalAlignment.Right => command.Bounds.X + command.Bounds.Width - lineWidth,
+                _ => command.Bounds.X,
+            };
+            foreach (var run in _fontManager.ResolveTextRuns(line, request))
+            {
+                if (run.ColorEmojiGlyphId is { } emojiGlyph)
+                {
+                    using var bitmap = ColorEmojiBitmap.Create(run.Font, emojiGlyph, (float)size);
+                    using var png = bitmap.Image.Encode(SKEncodedImageFormat.Png, 100);
+                    using var stream = png.AsStream();
+                    using var image = XImage.FromStream(stream);
+                    graphics.DrawImage(
+                        image,
+                        new XRect(
+                            x + bitmap.Bounds.Left,
+                            y - metrics.Ascent + bitmap.Bounds.Top,
+                            bitmap.Bounds.Width,
+                            bitmap.Bounds.Height));
+                    using var emojiTypeface = CreateTypeface(run.Font);
+                    using var emojiFont = new SKFont(emojiTypeface, (float)size);
+                    x += emojiFont.GetGlyphWidths([emojiGlyph])[0];
+                }
+                else if (run.GlyphId is { } glyph)
+                {
+                    using var typeface = CreateTypeface(run.Font);
+                    using var font = new SKFont(typeface, (float)size);
+                    using var path = font.GetGlyphPath(glyph)
+                        ?? throw new InvalidOperationException($"IVS glyph {glyph} のアウトラインを生成できません。");
+                    if (path.IsEmpty)
+                    {
+                        throw new InvalidOperationException($"IVS glyph {glyph} のアウトラインが空です。");
+                    }
+
+                    graphics.DrawPath(brush, ToPdfPath(path, x, y - metrics.Ascent));
+                    x += font.GetGlyphWidths([glyph])[0];
+                }
+                else
+                {
+                    var runFont = PdfSharpTextMeasurer.CreateFont(command.Style.Font with { Family = run.Font.Family, Size = size });
+                    graphics.DrawString(run.Text, runFont, brush, new XPoint(x, y), XStringFormats.TopLeft);
+                    x += graphics.MeasureString(run.Text, runFont).Width;
+                }
+            }
+
+            if (command.Style.Font.Underline)
+            {
+                graphics.DrawLine(new XPen(brush.Color), command.Bounds.X, y + lineHeight - 1, command.Bounds.X + lineWidth, y + lineHeight - 1);
+            }
+
+            y += lineHeight;
+        }
+
+        graphics.Restore(state);
+    }
+
+    private IReadOnlyList<string> WrapResolvedText(XGraphics graphics, string text, FontRequest request, double size, double width, bool wrap)
+    {
+        if (!wrap || width <= 0)
+        {
+            return text.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n');
+        }
+
+        var result = new List<string>();
+        foreach (var paragraph in text.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n'))
+        {
+            var line = string.Empty;
+            var elements = System.Globalization.StringInfo.GetTextElementEnumerator(paragraph);
+            while (elements.MoveNext())
+            {
+                var element = (string)elements.Current!;
+                if (line.Length > 0 && MeasureResolvedText(graphics, line + element, request, size) > width)
+                {
+                    result.Add(line);
+                    line = element;
+                }
+                else
+                {
+                    line += element;
+                }
+            }
+
+            result.Add(line);
+        }
+
+        return result;
+    }
+
+    private double MeasureResolvedText(XGraphics graphics, string text, FontRequest request, double size)
+    {
+        var width = 0d;
+        foreach (var run in _fontManager!.ResolveTextRuns(text, request))
+        {
+            if ((run.GlyphId ?? run.ColorEmojiGlyphId) is { } glyph)
+            {
+                using var typeface = CreateTypeface(run.Font);
+                using var font = new SKFont(typeface, (float)size);
+                width += font.GetGlyphWidths([glyph])[0];
+            }
+            else
+            {
+                width += graphics.MeasureString(run.Text, PdfSharpTextMeasurer.CreateFont(new FontStyle(run.Font.Family, size))).Width;
+            }
+        }
+
+        return width;
+    }
 }

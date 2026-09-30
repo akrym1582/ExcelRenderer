@@ -21,6 +21,54 @@ namespace ExcelRenderer.Tests;
 public sealed class ShapeAndFontTests
 {
     /// <summary>
+    /// 埋め込みリソースがない場合に、ExcelRenderer.dll 配下の同名ファイルを読み込むことを検証します。
+    /// </summary>
+    [Fact]
+    public void OptionalFontPack_loads_missing_resource_from_ExcelRenderer_subdirectory()
+    {
+        var excelRendererDirectory = Path.GetDirectoryName(typeof(OptionalFontPack).Assembly.Location)!;
+        var directory = Path.Combine(excelRendererDirectory, $"font-fallback-{Guid.NewGuid():N}");
+        var name = $"fallback-{Guid.NewGuid():N}.ttf";
+        var expected = new byte[] { 1, 2, 3, 4 };
+        Directory.CreateDirectory(directory);
+        try
+        {
+            File.WriteAllBytes(Path.Combine(directory, name), expected);
+
+            var actual = OptionalFontPack.LoadFontData(name);
+
+            Assert.Equal(expected, actual);
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    /// <summary>
+    /// ExcelRenderer.dll と同じディレクトリにある DLL から埋め込みフォントを読み込み、
+    /// 読み込めない DLL があっても探索を継続することを検証します。
+    /// </summary>
+    [Fact]
+    public void OptionalFontPack_loads_first_embedded_font_from_neighboring_dll_and_ignores_invalid_dll()
+    {
+        var excelRendererDirectory = Path.GetDirectoryName(typeof(OptionalFontPack).Assembly.Location)!;
+        var invalidDll = Path.Combine(excelRendererDirectory, $"000-invalid-{Guid.NewGuid():N}.dll");
+        File.WriteAllText(invalidDll, "not a managed assembly");
+        try
+        {
+            var actual = OptionalFontPack.LoadFontData("NotoColorEmoji.ttf");
+
+            Assert.NotNull(actual);
+            Assert.NotEmpty(actual);
+        }
+        finally
+        {
+            File.Delete(invalidDll);
+        }
+    }
+
+    /// <summary>
     /// 対応する DrawingML 図形の位置、形状、書式を読み取り、未知のジオメトリを無視することを検証します。
     /// </summary>
     [Fact]

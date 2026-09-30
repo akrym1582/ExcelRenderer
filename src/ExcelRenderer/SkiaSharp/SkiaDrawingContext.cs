@@ -65,6 +65,17 @@ internal sealed class SkiaDrawingContext
     private static SKRect ToRect(ReportRect rect) =>
         new((float)rect.X, (float)rect.Y, (float)(rect.X + rect.Width), (float)(rect.Y + rect.Height));
 
+    private static float MeasureRun(SKFont font, TextRun run, SKPaint paint)
+    {
+        if ((run.GlyphId ?? run.ColorEmojiGlyphId) is not { } glyphId)
+        {
+            return font.MeasureText(run.Text, paint);
+        }
+
+        var widths = font.GetGlyphWidths([glyphId]);
+        return widths.Length == 0 ? 0 : widths[0];
+    }
+
     private void DrawShape(SKCanvas canvas, DrawShapeCommand command)
     {
         var b = ToRect(command.Bounds);
@@ -284,9 +295,14 @@ internal sealed class SkiaDrawingContext
                 if (asPaths)
                 {
                     using var bitmap = ColorEmojiBitmap.Create(run.Font, emojiGlyph, size);
-                    canvas.DrawImage(bitmap.Image, new SKRect(
-                        x + bitmap.Bounds.Left, y + bitmap.Bounds.Top,
-                        x + bitmap.Bounds.Right, y + bitmap.Bounds.Bottom));
+                    canvas.DrawImage(
+                        bitmap.Image,
+                        new SKRect(
+                            x + bitmap.Bounds.Left,
+                            y + bitmap.Bounds.Top,
+                            x + bitmap.Bounds.Right,
+                            y + bitmap.Bounds.Bottom),
+                        new SKSamplingOptions(SKCubicResampler.Mitchell));
                 }
                 else
                 {
@@ -336,17 +352,6 @@ internal sealed class SkiaDrawingContext
 
             x += MeasureRun(font, run, paint);
         }
-    }
-
-    private static float MeasureRun(SKFont font, TextRun run, SKPaint paint)
-    {
-        if ((run.GlyphId ?? run.ColorEmojiGlyphId) is not { } glyphId)
-        {
-            return font.MeasureText(run.Text, paint);
-        }
-
-        var widths = font.GetGlyphWidths([glyphId]);
-        return widths.Length == 0 ? 0 : widths[0];
     }
 
     private void DrawImage(SKCanvas canvas, DrawImageCommand command)

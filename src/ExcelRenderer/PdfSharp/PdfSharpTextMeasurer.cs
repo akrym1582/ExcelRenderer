@@ -15,12 +15,12 @@ public sealed class PdfSharpTextMeasurer : ITextMeasurer
 {
     private readonly IFontManager? _fontManager;
 
-    /// <summary>Initializes a PDFsharp text measurer.</summary>
+    /// <summary>Initializes a new instance of the <see cref="PdfSharpTextMeasurer"/> class.</summary>
     public PdfSharpTextMeasurer()
     {
     }
 
-    /// <summary>Initializes a text measurer that resolves IVS glyph advances with the shared font manager.</summary>
+    /// <summary>Initializes a new instance of the <see cref="PdfSharpTextMeasurer"/> class.</summary>
     /// <param name="fontManager">Font manager used by output rendering.</param>
     public PdfSharpTextMeasurer(IFontManager fontManager)
     {
@@ -58,19 +58,6 @@ public sealed class PdfSharpTextMeasurer : ITextMeasurer
         return new(availableWidth, size.Height * lines);
     }
 
-    private static double MeasureRun(XGraphics graphics, TextRun run, FontStyle style)
-    {
-        if ((run.GlyphId ?? run.ColorEmojiGlyphId) is not { } glyph)
-        {
-            return graphics.MeasureString(run.Text, CreateFont(style with { Family = run.Font.Family })).Width;
-        }
-
-        using Stream stream = run.Font.FontData is null ? File.OpenRead(run.Font.FilePath) : new MemoryStream(run.Font.FontData, false);
-        using var typeface = SKTypeface.FromStream(stream) ?? throw new InvalidOperationException($"フォント {run.Font.Family} を読み込めません。");
-        using var skFont = new SKFont(typeface, (float)style.Size);
-        return skFont.GetGlyphWidths([glyph])[0];
-    }
-
     /// <summary>レンダリング用フォント書式を、同じファミリー、サイズ、太字、斜体、および下線を持つ PDFsharp フォントへ変換します。</summary>
     /// <param name="font">PDFsharp フォントへ反映するレンダリング用フォント書式です。</param>
     /// <returns>指定された書式属性を持つ PDFsharp のフォントを返します。</returns>
@@ -93,5 +80,18 @@ public sealed class PdfSharpTextMeasurer : ITextMeasurer
         }
 
         return new XFont(font.Family, font.Size, style);
+    }
+
+    private static double MeasureRun(XGraphics graphics, TextRun run, FontStyle style)
+    {
+        if ((run.GlyphId ?? run.ColorEmojiGlyphId) is not { } glyph)
+        {
+            return graphics.MeasureString(run.Text, CreateFont(style with { Family = run.Font.Family })).Width;
+        }
+
+        using Stream stream = run.Font.FontData is null ? File.OpenRead(run.Font.FilePath) : new MemoryStream(run.Font.FontData, false);
+        using var typeface = SKTypeface.FromStream(stream) ?? throw new InvalidOperationException($"フォント {run.Font.Family} を読み込めません。");
+        using var skFont = new SKFont(typeface, (float)style.Size);
+        return skFont.GetGlyphWidths([glyph])[0];
     }
 }

@@ -135,6 +135,58 @@ public sealed class ToolIntegrationTests : IDisposable
         Assert.Contains("Font file was not found", result.Error);
     }
 
+    /// <summary>すべての変換コマンドが共通フォントオプションをヘルプに公開することを検証します。</summary>
+    [Theory]
+    [InlineData("pdf")]
+    [InlineData("image")]
+    [InlineData("svg")]
+    [InlineData("markdown")]
+    [InlineData("render")]
+    public async Task Every_command_exposes_font_options(string command)
+    {
+        var result = await RunAsync(command, "--help");
+
+        AssertSuccess(result);
+        Assert.Contains("--font-dir", result.Output);
+        Assert.Contains("--font-file", result.Output);
+        Assert.Contains("--fallback-font", result.Output);
+        Assert.Contains("--no-system-fonts", result.Output);
+        Assert.Contains("--font-policy", result.Output);
+        Assert.Contains("--ivs-font-style", result.Output);
+    }
+
+    /// <summary>繰り返した font-file が指定順を維持したまますべて渡されることを検証します。</summary>
+    [Fact]
+    public async Task Pdf_command_preserves_multiple_font_files_in_command_line_order()
+    {
+        Directory.CreateDirectory(_directory);
+        var missingFirst = Path.Combine(_directory, "first-missing.ttf");
+        var validSecond = Path.Combine(_directory, "second-valid.ttf");
+        File.Copy(Path.Combine(FindRepositoryRoot(), "third_party", "NotoSansJP", "NotoSansJP-Regular.ttf"), validSecond);
+
+        var result = await RunAsync(
+            "pdf", Input, "-o", Path.Combine(_directory, "report.pdf"),
+            "--font-file", missingFirst,
+            "--font-file", validSecond);
+
+        Assert.NotEqual(0, result.ExitCode);
+        Assert.Contains(missingFirst, result.Error);
+    }
+
+    /// <summary>従来形式の描画コマンドにも明示フォントファイルが適用されることを検証します。</summary>
+    [Theory]
+    [InlineData("pdf")]
+    [InlineData("image")]
+    [InlineData("svg")]
+    public async Task Format_commands_reject_a_missing_explicit_font_file(string command)
+    {
+        var output = command == "pdf" ? Path.Combine(_directory, "report.pdf") : Path.Combine(_directory, command);
+        var result = await RunAsync(command, Input, "-o", output, "--font-file", Path.Combine(_directory, "missing.ttf"));
+
+        Assert.NotEqual(0, result.ExitCode);
+        Assert.Contains("Font file was not found", result.Error);
+    }
+
     /// <summary>連続 SVG 出力がシートごとに 1 ファイルを生成することを検証します。</summary>
     [Fact]
     public async Task Render_command_creates_continuous_svg()

@@ -1,4 +1,5 @@
 using System.CommandLine;
+using ExcelRenderer.Fonts;
 
 namespace ExcelRenderer.Tool.Commands;
 
@@ -28,6 +29,82 @@ internal static class CommandSupport
         return option;
     }
 
+    /// <summary>すべての変換コマンドで共有するフォント検索オプションを作成します。</summary>
+    /// <returns>生成したフォントオプション一式。</returns>
+    internal static FontOptionsArguments FontOptions()
+    {
+        var fontDirectories = new Option<string[]>("--font-dir")
+        {
+            Description = "Additional font directory (repeatable).",
+            AllowMultipleArgumentsPerToken = true,
+        };
+        var fontFiles = new Option<string[]>("--font-file")
+        {
+            Description = "TrueType/OpenType font file to register (repeatable; .ttf, .tte, and supported .otf contents are accepted).",
+            AllowMultipleArgumentsPerToken = true,
+        };
+        var fallbackFonts = new Option<string[]>("--fallback-font")
+        {
+            Description = "Fallback font family, in priority order (repeatable).",
+            AllowMultipleArgumentsPerToken = true,
+        };
+        var noSystemFonts = new Option<bool>("--no-system-fonts") { Description = "Do not search operating-system fonts." };
+        var fontPolicy = new Option<string>("--font-policy")
+        {
+            Description = "Font policy: bundled or requested.",
+            DefaultValueFactory = _ => "bundled",
+        };
+        fontPolicy.Validators.Add(result =>
+        {
+            if (result.GetValueOrDefault<string>() is not ("bundled" or "requested"))
+            {
+                result.AddError("--font-policy must be bundled or requested.");
+            }
+        });
+        var ivsFontStyle = new Option<string>("--ivs-font-style")
+        {
+            Description = "Bundled IVS font style: gothic or mincho.",
+            DefaultValueFactory = _ => "gothic",
+        };
+        ivsFontStyle.Validators.Add(result =>
+        {
+            if (result.GetValueOrDefault<string>() is not ("gothic" or "mincho"))
+            {
+                result.AddError("--ivs-font-style must be gothic or mincho.");
+            }
+        });
+        return new(fontDirectories, fontFiles, fallbackFonts, noSystemFonts, fontPolicy, ivsFontStyle);
+    }
+
+    /// <summary>コマンドラインで指定されたフォント検索設定をライブラリ設定へ変換します。</summary>
+    /// <param name="result">解析済みのコマンドライン。</param>
+    /// <param name="options">値を取得するフォントオプション。</param>
+    /// <returns>ライブラリへ渡すフォント設定。</returns>
+    internal static FontOptions GetFontOptions(ParseResult result, FontOptionsArguments options) => new()
+    {
+        AllowSystemFonts = !result.GetValue(options.NoSystemFonts),
+        FontDirectories = NonEmpty(result.GetValue(options.FontDirectories)),
+        FontFiles = NonEmpty(result.GetValue(options.FontFiles)),
+        FallbackFamilies = result.GetValue(options.FallbackFonts) is { Length: > 0 } fallbacks
+            ? fallbacks
+            : new FontOptions().FallbackFamilies,
+        Policy = result.GetValue(options.FontPolicy) == "requested" ? FontPolicy.PreferRequested : FontPolicy.BundledCompatible,
+        IvsFontStyle = result.GetValue(options.IvsFontStyle) == "mincho" ? IvsFontStyle.Mincho : IvsFontStyle.Gothic,
+    };
+
+    /// <summary>フォント検索オプションをコマンドへ追加します。</summary>
+    /// <param name="command">オプションを追加するコマンド。</param>
+    /// <param name="options">追加するフォントオプション。</param>
+    internal static void AddFontOptions(Command command, FontOptionsArguments options)
+    {
+        command.Options.Add(options.FontDirectories);
+        command.Options.Add(options.FontFiles);
+        command.Options.Add(options.FallbackFonts);
+        command.Options.Add(options.NoSystemFonts);
+        command.Options.Add(options.FontPolicy);
+        command.Options.Add(options.IvsFontStyle);
+    }
+
     /// <summary>
     /// 変換処理を実行し、キャンセルまたは例外を標準エラーへ通知して終了コードへ変換します。
     /// </summary>
@@ -51,4 +128,15 @@ internal static class CommandSupport
             return 1;
         }
     }
+
+    private static IReadOnlyList<string> NonEmpty(string[]? values) => values is { Length: > 0 } ? values : Array.Empty<string>();
+
+    /// <summary>System.CommandLine のフォントオプション一式を保持します。</summary>
+    internal sealed record FontOptionsArguments(
+        Option<string[]> FontDirectories,
+        Option<string[]> FontFiles,
+        Option<string[]> FallbackFonts,
+        Option<bool> NoSystemFonts,
+        Option<string> FontPolicy,
+        Option<string> IvsFontStyle);
 }

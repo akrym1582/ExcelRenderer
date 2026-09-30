@@ -34,7 +34,7 @@ public static partial class ExcelConverter
         ValidateNewFile(outputPath);
         options ??= new PdfExportOptions();
         await using var input = File.OpenRead(inputPath);
-        await RenderAsync(input, CreateLegacyRequest(OutputFormat.Pdf, options.SheetName), new NewFileOutputSink(outputPath), cancellationToken)
+        await RenderAsync(input, CreateLegacyRequest(OutputFormat.Pdf, options.SheetName, fontOptions: options.FontOptions), new NewFileOutputSink(outputPath), cancellationToken)
             .ConfigureAwait(false);
     }
 
@@ -73,7 +73,7 @@ public static partial class ExcelConverter
         await using var input = File.OpenRead(inputPath);
         await RenderAsync(
             input,
-            CreateLegacyRequest(OutputFormat.Png, options.SheetName, options.Dpi),
+            CreateLegacyRequest(OutputFormat.Png, options.SheetName, options.Dpi, options.FontOptions),
             new DirectoryOutputSink(outputDirectory),
             cancellationToken).ConfigureAwait(false);
     }
@@ -105,7 +105,7 @@ public static partial class ExcelConverter
         await using var input = File.OpenRead(inputPath);
         await RenderAsync(
             input,
-            CreateLegacyRequest(OutputFormat.Svg, options.SheetName),
+            CreateLegacyRequest(OutputFormat.Svg, options.SheetName, fontOptions: options.FontOptions),
             new DirectoryOutputSink(outputDirectory),
             cancellationToken).ConfigureAwait(false);
     }
@@ -134,7 +134,7 @@ public static partial class ExcelConverter
         await using var input = File.OpenRead(inputPath);
         await RenderAsync(
             input,
-            CreateLegacyRequest(OutputFormat.Markdown, options.SheetName),
+            CreateLegacyRequest(OutputFormat.Markdown, options.SheetName, fontOptions: options.FontOptions),
             new LegacyMarkdownOutputSink(outputPath, options, Path.GetFileName(inputPath)),
             cancellationToken).ConfigureAwait(false);
     }
@@ -146,11 +146,12 @@ public static partial class ExcelConverter
         return new DrawCommandGeneratorPass().Generate(layout);
     }
 
-    private static RenderRequest CreateLegacyRequest(OutputFormat outputFormat, string? sheetName, double dpi = PngRenderer.DefaultDpi) =>
+    private static RenderRequest CreateLegacyRequest(OutputFormat outputFormat, string? sheetName, double dpi = PngRenderer.DefaultDpi, FontOptions? fontOptions = null) =>
         new()
         {
             OutputFormat = outputFormat,
             Dpi = dpi,
+            FontOptions = fontOptions ?? new FontOptions(),
             Selection = sheetName is null ? new SelectionOptions() : new SelectionOptions { SheetNames = [sheetName] },
             Input = new WorkbookInputOptions
             {

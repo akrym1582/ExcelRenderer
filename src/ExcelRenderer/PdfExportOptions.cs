@@ -19,4 +19,7 @@ public sealed record PdfExportOptions
 {
     /// <summary>Gets the worksheet name. 出力対象のワークシート名を取得します。<see langword="null"/> の場合はすべてのワークシートを出力します。</summary>
     public string? SheetName { get; init; }
+
+    /// <summary>Gets the font selection criteria. 描画に使用するフォントの検索設定を取得します。</summary>
+    public FontOptions FontOptions { get; init; } = new();
 }

@@ -22,4 +22,7 @@ public sealed record ImageExportOptions
 
     /// <summary>Gets the PNG resolution. 出力する PNG 画像の解像度を DPI 単位で取得します。</summary>
     public int Dpi { get; init; } = 144;
+
+    /// <summary>Gets the font selection criteria. 描画に使用するフォントの検索設定を取得します。</summary>
+    public FontOptions FontOptions { get; init; } = new();
 }

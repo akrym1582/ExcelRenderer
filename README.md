@@ -40,13 +40,12 @@ This makes the rendering pipeline easier to test, understand, and extend with ne
 - Appropriate fonts installed or supplied through `PdfSharpFontResolver`
 
 The optional `ExcelRenderer.Fonts` package contains Noto Sans JP Regular TTF for
-ordinary text, Noto Sans CJK JP for Gothic IVS rendering, IPAmj Mincho for
-Mincho IVS rendering and fallback, and Noto Color Emoji. The `ExcelRenderer` library
+ordinary text, IPAmj Mincho for IVS rendering, and Noto Color Emoji. The `ExcelRenderer` library
 does not depend on that package: install it alongside the library only when you
 want those bundled resources and IVS fallback. Without it, the library uses
 explicitly registered or system fonts. The CLI depends on this package and
 installs it transitively. IVS rendering defaults to Gothic
-(Noto Sans CJK JP, then IPAmj Mincho). Set `FontOptions.IvsFontStyle` to
+(IPAmj Mincho when no bundled Gothic font supports the sequence). Set `FontOptions.IvsFontStyle` to
 `IvsFontStyle.Mincho`, or pass `--ivs-font-style mincho` to the CLI, to use
 IPAmj Mincho directly. See [third-party notices](THIRD-PARTY-NOTICES.md).
 Set `FontOptions.ReplaceIvsWithBaseCharacter` to `true` when the library should
@@ -69,7 +68,7 @@ dotnet add package ExcelRenderer.Fonts  # optional Japanese fonts
 
 `ExcelRenderer` is sufficient when your application provides its own fonts.
 `ExcelRenderer.Fonts` adds only the bundled font resources; it is not required
-to use the library API. The package includes Noto Sans JP Regular, Noto Sans CJK JP, IPAmj Mincho,
+to use the library API. The package includes Noto Sans JP Regular, IPAmj Mincho,
 and Noto Color Emoji under their respective licenses. See
 [third-party notices](THIRD-PARTY-NOTICES.md) for redistribution requirements.
 

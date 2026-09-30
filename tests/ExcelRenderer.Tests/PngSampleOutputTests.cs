@@ -16,7 +16,6 @@ public sealed class PngSampleOutputTests
     [MemberData(nameof(SampleOutputTestSupport.RenderSamples), MemberType = typeof(SampleOutputTestSupport))]
     public void Generates_pngs_from_prebuilt_excel(string excelFileName)
     {
-        SampleOutputTestSupport.ConfigureJapaneseFont();
         var sample = SampleOutputTestSupport.ReadAndLayout(excelFileName);
         var outputPaths = new Dictionary<int, string>();
 

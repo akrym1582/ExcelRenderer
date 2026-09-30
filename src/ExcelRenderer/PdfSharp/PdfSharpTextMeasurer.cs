@@ -46,8 +46,9 @@ public sealed class PdfSharpTextMeasurer : ITextMeasurer
         var primary = _fontManager?.Resolve(request);
         var size = runs is not null && primary is not null && runs.Any(x =>
                 x.GlyphId is not null || x.ColorEmojiGlyphId is not null ||
-                x.MissingPrivateUseGlyph || x.Font.FaceId != primary.FaceId)
-            ? new XSize(runs.Sum(run => MeasureRun(graphics, run, font)), graphics.MeasureString("Ag", CreateFont(font)).Height)
+                x.MissingPrivateUseGlyph || x.Font.FaceId != primary.FaceId ||
+                !string.Equals(primary.Family, request.Family, StringComparison.OrdinalIgnoreCase))
+            ? new XSize(runs.Sum(run => MeasureRun(graphics, run, font)), MeasureLineHeight(primary, font.Size))
             : graphics.MeasureString(text, CreateFont(font));
         if (!wrap || size.Width <= availableWidth)
         {
@@ -84,7 +85,7 @@ public sealed class PdfSharpTextMeasurer : ITextMeasurer
 
     private static double MeasureRun(XGraphics graphics, TextRun run, FontStyle style)
     {
-        if ((run.GlyphId ?? run.ColorEmojiGlyphId) is not { } glyph)
+        if ((run.GlyphId ?? run.ColorEmojiGlyphId) is not { } glyph && !run.MissingPrivateUseGlyph)
         {
             return graphics.MeasureString(run.Text, CreateFont(style with { Family = run.Font.Family })).Width;
         }
@@ -92,6 +93,16 @@ public sealed class PdfSharpTextMeasurer : ITextMeasurer
         using Stream stream = run.Font.FontData is null ? File.OpenRead(run.Font.FilePath) : new MemoryStream(run.Font.FontData, false);
         using var typeface = SKTypeface.FromStream(stream) ?? throw new InvalidOperationException($"フォント {run.Font.Family} を読み込めません。");
         using var skFont = new SKFont(typeface, (float)style.Size);
+        glyph = run.GlyphId ?? run.ColorEmojiGlyphId ?? skFont.GetGlyphs(run.Text)[0];
         return skFont.GetGlyphWidths([glyph])[0];
+    }
+
+    private static double MeasureLineHeight(ResolvedFont font, double size)
+    {
+        using Stream stream = font.FontData is null ? File.OpenRead(font.FilePath) : new MemoryStream(font.FontData, false);
+        using var typeface = SKTypeface.FromStream(stream) ?? throw new InvalidOperationException($"フォント {font.Family} を読み込めません。");
+        using var skFont = new SKFont(typeface, (float)size);
+        var metrics = skFont.Metrics;
+        return metrics.Descent - metrics.Ascent + metrics.Leading;
     }
 }

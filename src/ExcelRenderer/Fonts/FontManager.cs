@@ -206,7 +206,7 @@ public sealed class FontManager : IFontManager
 
     private (ResolvedFont Font, bool Missing, OpenTypeVariationSequences.Resolution? Glyph) ResolveIvs(int baseScalar, int selector, FontRequest request)
     {
-        // IVS selection is intentionally independent of ordinary family fallback: bundled Noto first, then IPAmj.
+        // IVS selection is intentionally independent of ordinary family fallback.
         foreach (var face in _faces
             .Where(x => x.IsBundled && x.Family != "Noto Color Emoji" &&
                 (x.IvsFontStyle == _options.IvsFontStyle ||
@@ -351,12 +351,7 @@ public sealed class FontManager : IFontManager
                 continue;
             }
 
-            var style = resource.Name switch
-            {
-                "NotoSansCJKjp-Regular.otf" => IvsFontStyle.Gothic,
-                "ipamjm.ttf" => IvsFontStyle.Mincho,
-                _ => (IvsFontStyle?)null,
-            };
+            var style = resource.Name == "ipamjm.ttf" ? IvsFontStyle.Mincho : (IvsFontStyle?)null;
             var ivsPriority = style is null ? 1 : 0;
             Add(
                 typeface.FamilyName,

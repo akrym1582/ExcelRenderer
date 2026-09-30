@@ -9,7 +9,7 @@
     <Title>ExcelRenderer Japanese fonts</Title>
     <Description>Optional Japanese and color emoji fonts for ExcelRenderer.</Description>
     <Authors>akrym1582</Authors>
-    <PackageTags>excelrenderer fonts japanese cjk ivs</PackageTags>
+    <PackageTags>excelrenderer fonts japanese ivs</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/akrym1582/ExcelRenderer</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -22,7 +22,6 @@
     <None Include="../../third_party/NotoColorEmoji/OFL.txt" Pack="true" PackagePath="licenses/NotoColorEmoji/" />
     <None Include="../../third_party/IPAmjMincho/IPA_Font_License_Agreement_v1.0.txt" Pack="true" PackagePath="licenses/IPAmjMincho/" />
     <None Include="../../third_party/IPAmjMincho/Readme.txt" Pack="true" PackagePath="licenses/IPAmjMincho/" />
-    <EmbeddedResource Include="../../third_party/NotoSansJP/NotoSansCJKjp-Regular.otf" LogicalName="ExcelRenderer.Fonts.NotoSansCJKjp-Regular.otf" />
     <EmbeddedResource Include="../../third_party/NotoSansJP/NotoSansJP-Regular.ttf" LogicalName="ExcelRenderer.Fonts.NotoSansJP-Regular.ttf" />
     <EmbeddedResource Include="../../third_party/NotoColorEmoji/NotoColorEmoji.ttf" LogicalName="ExcelRenderer.Fonts.NotoColorEmoji.ttf" />
     <EmbeddedResource Include="../../third_party/IPAmjMincho/ipamjm.ttf" LogicalName="ExcelRenderer.Fonts.ipamjm.ttf" />

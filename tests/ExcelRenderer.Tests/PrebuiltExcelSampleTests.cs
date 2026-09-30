@@ -16,7 +16,6 @@ public sealed class PrebuiltExcelSampleTests
     [Fact]
     public void Cell_border_sample_preserves_empty_cells_and_merged_perimeter_fragments()
     {
-        SampleOutputTestSupport.ConfigureJapaneseFont();
         var sample = SampleOutputTestSupport.ReadAndLayout("09-cell-border.xlsx");
 
         Assert.Single(sample.Layout.Pages);
@@ -68,7 +67,6 @@ public sealed class PrebuiltExcelSampleTests
     [Fact]
     public void Prebuilt_excel_samples_preserve_the_visual_test_features()
     {
-        SampleOutputTestSupport.ConfigureJapaneseFont();
         var japanese = SampleOutputTestSupport.ReadAndLayout("01-japanese.xlsx");
         var images = SampleOutputTestSupport.ReadAndLayout("02-image.xlsx");
         var wrappedText = SampleOutputTestSupport.ReadAndLayout("03-wrapped-text.xlsx");

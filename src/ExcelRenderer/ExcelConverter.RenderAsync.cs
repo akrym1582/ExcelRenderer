@@ -17,6 +17,8 @@ namespace ExcelRenderer;
 /// <summary>Excel ブックをストリームから非同期に読み取り、指定された出力先へ変換します。</summary>
 public static partial class ExcelConverter
 {
+    private static readonly SemaphoreSlim PdfSharpFontLock = new(1, 1);
+
     /// <summary>現在位置から XLSX ストリームを読み取り、指定された出力シンクへ変換成果物を書き込みます。</summary>
     /// <param name="input">読み取り対象の XLSX データを含むストリームです。メソッドはこのストリームを閉じません。</param>
     /// <param name="request">出力形式、シート選択、解像度、および診断ポリシーを指定する変換設定です。</param>
@@ -81,26 +83,39 @@ public static partial class ExcelConverter
                 throw Failure("Conversion was stopped by diagnostic policy.", null, diagnostics, artifacts);
             }
 
-            var pages = request.ImageLayout == ImageLayoutMode.Continuous
-                ? LayoutContinuous(sheets, request.Dpi, fontManager)
-                : LayoutPages(sheets, request.Dpi, fontManager);
-            var selectedPages = SelectPages(pages, request.Selection.Pages);
-            if (request.OutputFormat == OutputFormat.Pdf)
+            await PdfSharpFontLock.WaitAsync(cancellationToken).ConfigureAwait(false);
+            try
             {
-                await WritePdfAsync(selectedPages, fontManager, sink, artifacts, cancellationToken).ConfigureAwait(false);
-            }
-            else
-            {
-                await WritePageArtifactsAsync(selectedPages, request, fontManager, sink, artifacts, cancellationToken).ConfigureAwait(false);
-            }
+                // PDFsharp caches resolved typefaces process-wide. Reset that cache while conversions are
+                // serialized so that this request's font manager is used for both measurement and PDF output.
+                GlobalFontSettings.ResetFontManagement();
+                GlobalFontSettings.FontResolver = new PdfSharpFontResolver(fontManager);
 
-            return new(
-                ConversionManifest.SchemaVersion,
-                "Completed",
-                sheets.Select(x => x.Sheet.Name).ToArray(),
-                selectedPages.Select(x => x.Descriptor).ToArray(),
-                artifacts,
-                diagnostics.ToArray());
+                var pages = request.ImageLayout == ImageLayoutMode.Continuous
+                    ? LayoutContinuous(sheets, request.Dpi, fontManager)
+                    : LayoutPages(sheets, request.Dpi, fontManager);
+                var selectedPages = SelectPages(pages, request.Selection.Pages);
+                if (request.OutputFormat == OutputFormat.Pdf)
+                {
+                    await WritePdfAsync(selectedPages, fontManager, sink, artifacts, cancellationToken).ConfigureAwait(false);
+                }
+                else
+                {
+                    await WritePageArtifactsAsync(selectedPages, request, fontManager, sink, artifacts, cancellationToken).ConfigureAwait(false);
+                }
+
+                return new(
+                    ConversionManifest.SchemaVersion,
+                    "Completed",
+                    sheets.Select(x => x.Sheet.Name).ToArray(),
+                    selectedPages.Select(x => x.Descriptor).ToArray(),
+                    artifacts,
+                    diagnostics.ToArray());
+            }
+            finally
+            {
+                PdfSharpFontLock.Release();
+            }
         }
         catch (OperationCanceledException)
         {
@@ -148,7 +163,6 @@ public static partial class ExcelConverter
 
     private static IReadOnlyList<SheetPage> LayoutPages(IReadOnlyList<SelectedSheet> sheets, double dpi, FontManager fontManager)
     {
-        GlobalFontSettings.FontResolver ??= new PdfSharpFontResolver(fontManager);
         var pages = new List<SheetPage>();
         var documentPage = 0;
         foreach (var selected in sheets)
@@ -208,7 +222,6 @@ public static partial class ExcelConverter
 
     private static IReadOnlyList<SheetPage> LayoutContinuous(IReadOnlyList<SelectedSheet> sheets, double dpi, FontManager fontManager)
     {
-        GlobalFontSettings.FontResolver ??= new PdfSharpFontResolver(fontManager);
         var pages = new List<SheetPage>();
         var documentPage = 0;
         foreach (var selected in sheets)

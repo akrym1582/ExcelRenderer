@@ -2,7 +2,7 @@
   <PropertyGroup Condition="'$(MSBuildProjectName)' != 'ExcelRenderer.Tests' And '$(MSBuildProjectName)' != 'ExcelRenderer.Tool.Tests'">
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);SA1101;SA1200;SA1309;SA1629;SA1633</NoWarn>
-    <WarningsAsErrors>$(WarningsAsErrors);SA*</WarningsAsErrors>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(MSBuildProjectName)' != 'ExcelRenderer.Tests' And '$(MSBuildProjectName)' != 'ExcelRenderer.Tool.Tests'">

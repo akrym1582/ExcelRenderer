@@ -134,10 +134,13 @@ public sealed class FontManager : IFontManager
             }
             else
             {
-                runs.Add(new(renderedText, font) { Utf16Start = start, SourceText = element, MissingIvsGlyph = missing,
+                runs.Add(new(renderedText, font)
+                {
+                    Utf16Start = start, SourceText = element, MissingIvsGlyph = missing,
                     MissingPrivateUseGlyph = missingPrivateUse,
                     GlyphId = glyph?.GlyphId, ColorEmojiGlyphId = colorEmojiGlyph,
-                    IsDefaultVariationGlyph = glyph?.IsDefault ?? false });
+                    IsDefaultVariationGlyph = glyph?.IsDefault ?? false,
+                });
             }
         }
 
@@ -304,8 +307,17 @@ public sealed class FontManager : IFontManager
         }
 
         var style = typeface.FontStyle;
-        var face = Add(typeface.FamilyName, style.Weight, style.Slant != SKFontStyleSlant.Upright,
-            fullPath, bytes, false, 0, int.MaxValue, null, order);
+        var face = Add(
+            typeface.FamilyName,
+            style.Weight,
+            style.Slant != SKFontStyleSlant.Upright,
+            fullPath,
+            bytes,
+            false,
+            0,
+            int.MaxValue,
+            null,
+            order);
         if (!_externalFaces.Any(x => x.FaceId == face.FaceId))
         {
             _externalFaces.Add(face);
@@ -346,9 +358,16 @@ public sealed class FontManager : IFontManager
                 _ => (IvsFontStyle?)null,
             };
             var ivsPriority = style is null ? 1 : 0;
-            Add(typeface.FamilyName, typeface.FontStyle.Weight,
+            Add(
+                typeface.FamilyName,
+                typeface.FontStyle.Weight,
                 typeface.FontStyle.Slant != SKFontStyleSlant.Upright,
-                resource.Name, data, true, 1, ivsPriority, style);
+                resource.Name,
+                data,
+                true,
+                1,
+                ivsPriority,
+                style);
         }
     }
 

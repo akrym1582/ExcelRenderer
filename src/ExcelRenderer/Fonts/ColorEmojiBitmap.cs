@@ -11,11 +11,20 @@ internal sealed class ColorEmojiBitmap : IDisposable
         Bounds = bounds;
     }
 
-    internal SKImage Image { get; }
+    /// <summary>Gets the rasterized emoji image.</summary>
+    public SKImage Image { get; }
 
-    /// <summary>Image rectangle relative to the glyph's baseline origin, in points.</summary>
-    internal SKRect Bounds { get; }
+    /// <summary>Gets image rectangle relative to the glyph's baseline origin, in points.</summary>
+    public SKRect Bounds { get; }
 
+    /// <inheritdoc/>
+    public void Dispose() => Image.Dispose();
+
+    /// <summary>Creates a rasterized color emoji glyph.</summary>
+    /// <param name="face">The font face containing the glyph.</param>
+    /// <param name="glyphId">The glyph identifier.</param>
+    /// <param name="size">The requested glyph size in points.</param>
+    /// <returns>The rasterized color emoji.</returns>
     internal static ColorEmojiBitmap Create(ResolvedFont face, ushort glyphId, float size)
     {
         using Stream stream = face.FontData is null ? File.OpenRead(face.FilePath) : new MemoryStream(face.FontData, false);
@@ -27,8 +36,8 @@ internal sealed class ColorEmojiBitmap : IDisposable
         const float scale = 4;
         var padding = Math.Max(2f, size * .25f);
         var height = metrics.Descent - metrics.Ascent + metrics.Leading;
-        var pixelWidth = Math.Max(1, (int)Math.Ceiling((advance + padding * 2) * scale));
-        var pixelHeight = Math.Max(1, (int)Math.Ceiling((height + padding * 2) * scale));
+        var pixelWidth = Math.Max(1, (int)Math.Ceiling((advance + (padding * 2)) * scale));
+        var pixelHeight = Math.Max(1, (int)Math.Ceiling((height + (padding * 2)) * scale));
         using var surface = SKSurface.Create(new SKImageInfo(pixelWidth, pixelHeight, SKColorType.Rgba8888, SKAlphaType.Premul))
             ?? throw new InvalidOperationException("Color emoji surface cannot be created.");
         var canvas = surface.Canvas;
@@ -39,10 +48,12 @@ internal sealed class ColorEmojiBitmap : IDisposable
         using var blob = builder.Build();
         using var paint = new SKPaint { Color = SKColors.White, IsAntialias = true };
         canvas.DrawText(blob, 0, 0, paint);
-        return new ColorEmojiBitmap(surface.Snapshot(),
-            new SKRect(-padding, metrics.Ascent - padding,
-                pixelWidth / scale - padding, pixelHeight / scale + metrics.Ascent - padding));
+        return new ColorEmojiBitmap(
+            surface.Snapshot(),
+            new SKRect(
+                -padding,
+                metrics.Ascent - padding,
+                (pixelWidth / scale) - padding,
+                (pixelHeight / scale) + metrics.Ascent - padding));
     }
-
-    public void Dispose() => Image.Dispose();
 }

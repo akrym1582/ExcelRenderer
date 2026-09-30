@@ -6,6 +6,7 @@ using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Model;
 using ExcelRenderer.PdfSharp;
+using PdfSharp.Fonts;
 using SkiaSharp;
 using Xunit;
 
@@ -20,7 +21,6 @@ public sealed class LayoutPassTests
     [Fact]
     public void LayoutContinuous_uses_used_range_without_print_scaling_or_margins()
     {
-        SampleOutputTestSupport.ConfigureJapaneseFont();
         var sheet = new ReportSheet(
             "Sheet",
             new Dictionary<CellAddress, ReportCell>
@@ -791,15 +791,27 @@ public sealed class LayoutPassTests
     public void PdfSharpRenderer_uses_resolved_runs_for_missing_private_use_glyphs()
     {
         var manager = new MissingPrivateUseFontManager();
+        var resolver = new CountingFontResolver();
         using var output = new MemoryStream();
+        GlobalFontSettings.ResetFontManagement();
+        GlobalFontSettings.FontResolver = resolver;
+        try
+        {
+            var measured = new PdfSharpTextMeasurer(manager).Measure("\uE000", new FontStyle("Missing Font", 12), 80, false);
+            new PdfSharpRenderer(manager).Render(
+                [new DrawTextCommand(1, new(4, 4, 80, 20), "\uE000", CellStyle.Default with
+                { Font = new FontStyle("Missing Font", 12) })],
+                new PageSettings(88, 28), output);
 
-        new PdfSharpRenderer(manager).Render(
-            [new DrawTextCommand(1, new(4, 4, 80, 20), "\uE000", CellStyle.Default with
-            { Font = new FontStyle("Noto Sans JP", 12) })],
-            new PageSettings(88, 28), output);
-
-        Assert.True(manager.ResolveTextRunsCallCount > 1);
-        Assert.Equal("%PDF-", System.Text.Encoding.ASCII.GetString(output.GetBuffer(), 0, 5));
+            Assert.True(measured.Width > 0);
+            Assert.True(manager.ResolveTextRunsCallCount > 1);
+            Assert.Equal(0, resolver.ResolveTypefaceCallCount);
+            Assert.Equal("%PDF-", System.Text.Encoding.ASCII.GetString(output.GetBuffer(), 0, 5));
+        }
+        finally
+        {
+            TestAssembly.Initialize();
+        }
     }
 
     /// <summary>
@@ -1076,6 +1088,19 @@ public sealed class LayoutPassTests
         {
             ResolveTextRunsCallCount++;
             return [new("\uFFFD", _font) { SourceText = text, MissingPrivateUseGlyph = true }];
+        }
+    }
+
+    private sealed class CountingFontResolver : IFontResolver
+    {
+        public int ResolveTypefaceCallCount { get; private set; }
+
+        public byte[]? GetFont(string faceName) => null;
+
+        public FontResolverInfo? ResolveTypeface(string familyName, bool bold, bool italic)
+        {
+            ResolveTypefaceCallCount++;
+            return null;
         }
     }
 }

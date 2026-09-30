@@ -239,15 +239,15 @@ public sealed class ShapeAndFontTests
         var directory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
         Directory.CreateDirectory(directory);
         File.Copy(
-            Path.Combine(AppContext.BaseDirectory, "NotoSansCJKjp-Regular.otf"),
+            Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf"),
             Path.Combine(directory, "unrelated-file-name.otf"));
         try
         {
             var manager = new FontManager(new FontOptions { FontDirectories = [directory], FallbackFamilies = [] });
 
-            var resolved = manager.Resolve(new("Noto Sans CJK JP"));
+            var resolved = manager.Resolve(new("Noto Sans JP"));
 
-            Assert.Equal("Noto Sans CJK JP", resolved.Family);
+            Assert.Equal("Noto Sans JP", resolved.Family);
             Assert.StartsWith(directory, resolved.FilePath);
         }
         finally
@@ -261,7 +261,7 @@ public sealed class ShapeAndFontTests
     public void FontManager_registers_explicit_tte_by_its_internal_metadata()
     {
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.tte");
-        File.Copy(Path.Combine(AppContext.BaseDirectory, "NotoSansCJKjp-Regular.otf"), path);
+        File.Copy(Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf"), path);
         try
         {
             var manager = new FontManager(new FontOptions
@@ -272,10 +272,10 @@ public sealed class ShapeAndFontTests
                 FontFiles = [path],
             });
 
-            var resolved = manager.Resolve(new("Noto Sans CJK JP"));
+            var resolved = manager.Resolve(new("Noto Sans JP"));
 
             Assert.Equal(path, resolved.FilePath);
-            Assert.Equal("Noto Sans CJK JP", resolved.Family);
+            Assert.Equal("Noto Sans JP", resolved.Family);
         }
         finally
         {
@@ -376,18 +376,18 @@ public sealed class ShapeAndFontTests
     {
         var manager = new FontManager(new FontOptions { AllowSystemFonts = false, FontDirectories = [], FallbackFamilies = [] });
 
-        var runs = manager.ResolveTextRuns("A\u8FBB\U000E0100B", new("Noto Sans JP"));
+        var runs = manager.ResolveTextRuns("A\u4FAE\uFE00B", new("Noto Sans JP"));
         var ivs = Assert.Single(runs, run => run.GlyphId is not null);
 
-        Assert.Equal("\u8FBB\U000E0100", ivs.SourceText);
+        Assert.Equal("\u4FAE\uFE00", ivs.SourceText);
         Assert.NotEqual((ushort)0, ivs.GlyphId);
-        Assert.Equal("A\u8FBB\U000E0100B", string.Concat(runs.Select(run => run.SourceText)));
+        Assert.Equal("A\u4FAE\uFE00B", string.Concat(runs.Select(run => run.SourceText)));
         Assert.Equal(3, runs.Count);
     }
 
-    /// <summary>IVS の優先書体をゴシック体と明朝体から明示的に選択できることを検証します。</summary>
+    /// <summary>同梱ゴシック体がない場合は、どちらの設定でも IPAmj 明朝で IVS を解決することを検証します。</summary>
     [Theory]
-    [InlineData(IvsFontStyle.Gothic, "\u4FAE\uFE00", "Sans")]
+    [InlineData(IvsFontStyle.Gothic, "\u4FAE\uFE00", "IPAmjMincho")]
     [InlineData(IvsFontStyle.Mincho, "\u4FAE\uFE00", "IPAmjMincho")]
     public void FontManager_honors_selected_ivs_font_style(IvsFontStyle style, string text, string expectedFamilyPart)
     {
@@ -549,7 +549,7 @@ public sealed class ShapeAndFontTests
     private static string CopyTestFont()
     {
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.otf");
-        File.Copy(Path.Combine(AppContext.BaseDirectory, "NotoSansCJKjp-Regular.otf"), path);
+        File.Copy(Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf"), path);
         return path;
     }
 

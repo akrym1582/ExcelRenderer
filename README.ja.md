@@ -38,7 +38,7 @@ dotnet add package ExcelRenderer.Fonts  # 日本語フォントが必要な場�
 ```
 
 `ExcelRenderer` はアプリケーション側でフォントを用意する場合、単独で使用できます。
-`ExcelRenderer.Fonts` は通常描画用 Noto Sans JP Regular TTF、IVS 用 Noto Sans CJK JP と IPAmj 明朝、Noto Color Emoji の
+`ExcelRenderer.Fonts` は通常描画用 Noto Sans JP Regular TTF、IVS 用 IPAmj 明朝、Noto Color Emoji の
 フォントリソースだけを追加する任意パッケージであり、ライブラリ API の利用には
 必須ではありません。フォントを再配布する場合は、それぞれのライセンスに従って
 ください。詳細は[サードパーティ通知](THIRD-PARTY-NOTICES.md)を参照してください。
@@ -454,7 +454,7 @@ svgRenderer.Render(
 ### フォントファイルの指定
 
 PDF と PNG の変換では、任意の `ExcelRenderer.Fonts` パッケージが導入されていれば、
-埋め込まれた Noto Sans JP Regular TTF、IVS 用の Noto Sans CJK JP と IPAmj 明朝、および Noto Color Emoji を使用できます。単体の絵文字と VS16 付き絵文字はカラーで描画し、PDF と SVG には画像として埋め込みます。ZWJ などの複合絵文字には別途シェーピングが必要です。未導入
+埋め込まれた Noto Sans JP Regular TTF、IVS 用の IPAmj 明朝、および Noto Color Emoji を使用できます。単体の絵文字と VS16 付き絵文字はカラーで描画し、PDF と SVG には画像として埋め込みます。ZWJ などの複合絵文字には別途シェーピングが必要です。未導入
 の場合は登録済みまたは OS のフォントを解決します。PDFsharp で外部フォントを使う
 場合は、PDFsharp がフォントを使用する前にフォントリゾルバーを設定してください。
 指定するファミリー名は、Excel のセルに設定されたフォント名と一致させます。
@@ -603,4 +603,4 @@ src/ExcelRenderer
 
 ExcelRenderer は [MIT License](LICENSE) で提供されます。
 
-日本語フォントと Noto Color Emoji は任意の `ExcelRenderer.Fonts` パッケージに収録されます。ライブラリで使用する場合は `dotnet add package ExcelRenderer.Fonts` を追加してください。未導入の場合は登録済みまたはシステムのフォントを使います。CLI はフォントパッケージに依存します。Noto Sans JP、Noto Sans CJK JP、Noto Color Emoji には SIL Open Font License 1.1、IPAmj 明朝には IPA Font License Agreement v1.0 が適用されます。`FontOptions.ReplaceIvsWithBaseCharacter` を `true` にすると、IVS を異体字セレクターのない基底文字に置換して描画できます。詳細は[サードパーティ通知](THIRD-PARTY-NOTICES.md)を参照してください。
+日本語フォントと Noto Color Emoji は任意の `ExcelRenderer.Fonts` パッケージに収録されます。ライブラリで使用する場合は `dotnet add package ExcelRenderer.Fonts` を追加してください。未導入の場合は登録済みまたはシステムのフォントを使います。CLI はフォントパッケージに依存します。Noto Sans JP と Noto Color Emoji には SIL Open Font License 1.1、IPAmj 明朝には IPA Font License Agreement v1.0 が適用されます。`FontOptions.ReplaceIvsWithBaseCharacter` を `true` にすると、IVS を異体字セレクターのない基底文字に置換して描画できます。詳細は[サードパーティ通知](THIRD-PARTY-NOTICES.md)を参照してください。

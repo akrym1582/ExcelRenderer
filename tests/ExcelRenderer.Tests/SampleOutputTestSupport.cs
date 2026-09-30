@@ -3,7 +3,6 @@ using ExcelRenderer.Excel;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Model;
 using ExcelRenderer.PdfSharp;
-using PdfSharp.Fonts;
 using Xunit;
 
 namespace ExcelRenderer.Tests;
@@ -59,16 +58,6 @@ internal static class SampleOutputTestSupport
     {
         Directory.CreateDirectory(OutputDirectory);
         return Path.Combine(OutputDirectory, Path.GetFileNameWithoutExtension(excelFileName) + suffix);
-    }
-
-    /// <summary>
-    /// テスト用の日本語フォントを既定フォントとして登録します。
-    /// </summary>
-    internal static void ConfigureJapaneseFont()
-    {
-        var fontPath = Path.Combine(AppContext.BaseDirectory, "NotoSansCJKjp-Regular.otf");
-        Assert.True(File.Exists(fontPath), $"日本語フォントが見つかりません: {fontPath}");
-        GlobalFontSettings.FontResolver ??= new PdfSharpFontResolver("Noto Sans JP", fontPath, "游ゴシック", "Yu Gothic");
     }
 
     /// <summary>

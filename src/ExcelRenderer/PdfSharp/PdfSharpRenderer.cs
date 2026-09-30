@@ -45,9 +45,10 @@ public sealed class PdfSharpRenderer : IRenderer
         document.Save(output, false);
     }
 
-    private static bool RequiresResolvedTextPath(IReadOnlyList<TextRun> runs, ResolvedFont primary) =>
+    private static bool RequiresResolvedTextPath(IReadOnlyList<TextRun> runs, ResolvedFont primary, FontRequest request) =>
         runs.Any(x => x.GlyphId is not null || x.ColorEmojiGlyphId is not null ||
-            x.MissingPrivateUseGlyph || x.Font.FaceId != primary.FaceId);
+            x.MissingPrivateUseGlyph || x.Font.FaceId != primary.FaceId) ||
+        !string.Equals(primary.Family, request.Family, StringComparison.OrdinalIgnoreCase);
 
     private static FontRequest ToRequest(CellStyle style) => new(style.Font.Family, style.Font.Bold ? 700 : 400, style.Font.Italic);
 
@@ -324,7 +325,7 @@ public sealed class PdfSharpRenderer : IRenderer
     {
         var request = ToRequest(command.Style);
         if (_fontManager is not null && RequiresResolvedTextPath(
-            _fontManager.ResolveTextRuns(command.Text, request), _fontManager.Resolve(request)))
+            _fontManager.ResolveTextRuns(command.Text, request), _fontManager.Resolve(request), request))
         {
             DrawTextWithIvs(graphics, command);
             return;
@@ -418,15 +419,16 @@ public sealed class PdfSharpRenderer : IRenderer
                     using var emojiFont = new SKFont(emojiTypeface, (float)size);
                     x += emojiFont.GetGlyphWidths([emojiGlyph])[0];
                 }
-                else if (run.GlyphId is { } glyph)
+                else if (run.GlyphId is { } glyph || run.MissingPrivateUseGlyph)
                 {
                     using var typeface = CreateTypeface(run.Font);
                     using var font = new SKFont(typeface, (float)size);
+                    glyph = run.GlyphId ?? font.GetGlyphs(run.Text)[0];
                     using var path = font.GetGlyphPath(glyph)
-                        ?? throw new InvalidOperationException($"IVS glyph {glyph} のアウトラインを生成できません。");
+                        ?? throw new InvalidOperationException($"Glyph {glyph} のアウトラインを生成できません。");
                     if (path.IsEmpty)
                     {
-                        throw new InvalidOperationException($"IVS glyph {glyph} のアウトラインが空です。");
+                        throw new InvalidOperationException($"Glyph {glyph} のアウトラインが空です。");
                     }
 
                     graphics.DrawPath(brush, ToPdfPath(path, x, y - metrics.Ascent));
@@ -488,10 +490,11 @@ public sealed class PdfSharpRenderer : IRenderer
         var width = 0d;
         foreach (var run in _fontManager!.ResolveTextRuns(text, request))
         {
-            if ((run.GlyphId ?? run.ColorEmojiGlyphId) is { } glyph)
+            if ((run.GlyphId ?? run.ColorEmojiGlyphId) is { } glyph || run.MissingPrivateUseGlyph)
             {
                 using var typeface = CreateTypeface(run.Font);
                 using var font = new SKFont(typeface, (float)size);
+                glyph = run.GlyphId ?? run.ColorEmojiGlyphId ?? font.GetGlyphs(run.Text)[0];
                 width += font.GetGlyphWidths([glyph])[0];
             }
             else

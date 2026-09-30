@@ -10,7 +10,7 @@ ExcelRenderer's MIT license does not cover the third-party fonts listed below.
 - License text: [`third_party/NotoSansJP/OFL.txt`](third_party/NotoSansJP/OFL.txt)
 
 The optional ExcelRenderer.Fonts package uses this font for ordinary Japanese
-text. Noto Sans CJK JP remains available for IVS fallback.
+text and as the default fallback for unavailable font families.
 
 ## Noto Color Emoji
 
@@ -23,18 +23,6 @@ text. Noto Sans CJK JP remains available for IVS fallback.
 The optional ExcelRenderer.Fonts package contains this font for single emoji
 scalars and emoji followed by VS16. PDF and SVG embed rasterized color glyphs.
 Complex emoji sequences (ZWJ, flags, skin tones) are not covered by this fallback.
-
-## Noto Sans CJK JP
-
-- File: `third_party/NotoSansJP/NotoSansCJKjp-Regular.otf`
-- Copyright: Copyright 2014-2021 Adobe (http://www.adobe.com/), with Reserved
-  Font Name "Source"
-- License: SIL Open Font License, Version 1.1
-- Upstream: <https://github.com/notofonts/noto-cjk>
-- License text: [`third_party/NotoSansJP/OFL.txt`](third_party/NotoSansJP/OFL.txt)
-
-The regular font is embedded in the optional ExcelRenderer.Fonts package, which
-ExcelRenderer.Tool installs as a dependency. Its license text is in the font package.
 
 ## IPAmj Mincho
 
@@ -49,6 +37,6 @@ The original font is embedded in ExcelRenderer.Fonts, a dependency of
 ExcelRenderer.Tool. The IPA Font License Agreement and upstream readme are
 included in the font package. Use and redistribution are subject to the IPA
 Font License Agreement v1.0. The renderer uses this unmodified font as the
-Mincho IVS font and as the fallback after Noto Sans CJK JP for the Gothic
-style. Unsupported variation sequences are reported rather than silently
+Mincho IVS font and as the fallback when no bundled Gothic font supports a
+sequence. Unsupported variation sequences are reported rather than silently
 dropping the variation selector.

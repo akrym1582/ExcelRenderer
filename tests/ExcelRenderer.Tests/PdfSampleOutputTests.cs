@@ -16,7 +16,6 @@ public sealed class PdfSampleOutputTests
     [MemberData(nameof(SampleOutputTestSupport.RenderSamples), MemberType = typeof(SampleOutputTestSupport))]
     public void Generates_pdf_from_prebuilt_excel(string excelFileName)
     {
-        SampleOutputTestSupport.ConfigureJapaneseFont();
         var sample = SampleOutputTestSupport.ReadAndLayout(excelFileName);
         var outputPath = SampleOutputTestSupport.OutputPath(excelFileName, ".pdf");
 

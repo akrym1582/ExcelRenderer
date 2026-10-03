@@ -17,7 +17,9 @@ public sealed class RowLayoutPass : IReportLayoutPass
         var y = 0d;
         foreach (var row in context.VisibleRows)
         {
-            var height = context.Sheet.Rows.GetValueOrDefault(row, new()).Height;
+            var height = context.Sheet.Rows.TryGetValue(row, out var definition)
+                ? definition.Height
+                : context.Sheet.DefaultRowHeight;
             context.RowLayouts[row] = new(row, y, height);
             y += height;
         }

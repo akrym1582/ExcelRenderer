@@ -17,7 +17,9 @@ public sealed class ColumnLayoutPass : IReportLayoutPass
         var x = 0d;
         foreach (var column in context.VisibleColumns)
         {
-            var width = context.Sheet.Columns.GetValueOrDefault(column, new()).Width;
+            var width = context.Sheet.Columns.TryGetValue(column, out var definition)
+                ? definition.Width
+                : context.Sheet.DefaultColumnWidth;
             context.ColumnLayouts[column] = new(column, x, width);
             x += width;
         }

@@ -14,4 +14,11 @@ public sealed record PageSettings(
     int? FitToPagesWide = null,
     int? FitToPagesTall = null,
     IndexRange? TitleRows = null,
-    IndexRange? TitleColumns = null);
+    IndexRange? TitleColumns = null)
+{
+    /// <summary>
+    /// Gets or initializes 印刷倍率を明示倍率とページ数への適合のどちらから解決するかを示すモードです。
+    /// <see langword="null"/> の場合は、既存の <see cref="Scale"/> 優先の動作を使用します。
+    /// </summary>
+    public PrintScaleMode? ScaleMode { get; init; }
+}

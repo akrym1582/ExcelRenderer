@@ -400,6 +400,23 @@ using var output = File.Create("report.pdf");
 renderer.Render(commands, sheet.PageSettings, output);
 ```
 
+`ExcelReader` は、xlsx が明示倍率とページ数への適合のどちらを使用するかを
+`PageSettings.ScaleMode` に保持します。ページ数への適合では 100% を超えて拡大しません。
+`PageSettings` を直接生成して `ScaleMode` を指定しない場合は、正の `Scale` を優先する従来の
+規則を維持します。位置引数の既定倍率よりページ数指定を優先するには、モードを明示します。
+
+```csharp
+var settings = new PageSettings(FitToPagesWide: 1)
+{
+    ScaleMode = PrintScaleMode.FitToPages,
+};
+```
+
+xlsx の個別列幅と既定列幅は、Excel の基準である固定96 DPIのraw値から変換します。PNGの出力DPIは
+シートの幾何には影響しません。Normalスタイルのstyle XFからフォントをたどり、themeのmajor/minor
+指定を解決したうえで、設定されたフォントマネージャーにより0～9を計測します。計測できない場合は
+最大数字幅7pxを使用し、変換診断へ`MaximumDigitWidthFallback`を記録します。
+
 `ReportDocument` には複数シートを保持できます。PDF を作成する対象シートを呼び出し側で選択し、シートごとにレイアウトから描画までの処理を行ってください。
 
 ```csharp

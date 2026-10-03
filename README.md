@@ -204,6 +204,24 @@ using var output = File.Create("report.pdf");
 new PdfSharpRenderer().Render(commands, sheet.PageSettings, output);
 ```
 
+`ExcelReader` preserves whether an xlsx uses an explicit percentage or Fit-to-pages in
+`PageSettings.ScaleMode`. Fit-to-pages never enlarges content beyond 100%. When constructing
+`PageSettings` directly, leaving `ScaleMode` unset preserves the legacy rule that a positive
+`Scale` wins; opt in explicitly when a fit count must override the positional default scale:
+
+```csharp
+var settings = new PageSettings(FitToPagesWide: 1)
+{
+    ScaleMode = PrintScaleMode.FitToPages,
+};
+```
+
+For xlsx input, explicit and default raw column widths are converted at the fixed Excel
+reference DPI of 96; output PNG DPI does not change sheet geometry. The Normal style is resolved
+through its style XF and theme major/minor font before measuring digits 0–9 with the configured
+font manager. If that font cannot be measured, a 7px compatibility width is used and
+`MaximumDigitWidthFallback` is reported through conversion diagnostics.
+
 To render the same commands as page-by-page PNG files:
 
 ```csharp

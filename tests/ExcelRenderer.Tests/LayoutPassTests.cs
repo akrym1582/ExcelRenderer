@@ -1,4 +1,5 @@
 using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Packaging;
 using ExcelRenderer.Abstractions;
 using ExcelRenderer.Drawing;
 using ExcelRenderer.Excel;
@@ -6,8 +7,10 @@ using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Model;
 using ExcelRenderer.PdfSharp;
+using ExcelRenderer.Rendering;
 using PdfSharp.Fonts;
 using SkiaSharp;
+using S = DocumentFormat.OpenXml.Spreadsheet;
 using Xunit;
 
 namespace ExcelRenderer.Tests;
@@ -180,6 +183,106 @@ public sealed class LayoutPassTests
         var page = Assert.Single(context.RenderDocument!.Pages);
         Assert.Equal(4, page.Cells.Count);
         Assert.Equal(new ReportRect(35, 30, 25, 20), page.Cells[3].Bounds);
+    }
+
+    /// <summary>
+    /// ページ数への適合で既に収まっている内容が拡大されないことを検証します。
+    /// </summary>
+    [Fact]
+    public void PaginationPass_does_not_enlarge_content_when_fitting()
+    {
+        var context = CreateContext(
+            columns: new Dictionary<int, ColumnDefinition> { [1] = new(100) },
+            pageSettings: new(
+                520,
+                100,
+                10,
+                10,
+                10,
+                10,
+                Scale: null,
+                FitToPagesWide: 1));
+        context.PrintArea = new(new(1, 1), new(1, 1));
+        new HiddenRowColumnPass().Execute(context);
+        new ColumnLayoutPass().Execute(context);
+        new RowLayoutPass().Execute(context);
+        new TextMeasurePass().Execute(context);
+        new CellBoundsPass().Execute(context);
+
+        new PaginationPass().Execute(context);
+
+        var cell = Assert.Single(Assert.Single(context.RenderDocument!.Pages).Cells);
+        Assert.Equal(100, cell.Bounds.Width);
+        Assert.Equal(10, cell.Cell.Style.Font.Size);
+    }
+
+    /// <summary>
+    /// 単一の巨大な列も指定ページ数へ収める倍率の判定対象になることを検証します。
+    /// </summary>
+    [Fact]
+    public void PaginationPass_fits_a_single_oversized_column()
+    {
+        var context = CreateContext(
+            columns: new Dictionary<int, ColumnDefinition> { [1] = new(1000) },
+            pageSettings: new(
+                520,
+                100,
+                10,
+                10,
+                10,
+                10,
+                Scale: null,
+                FitToPagesWide: 1));
+        context.PrintArea = new(new(1, 1), new(1, 1));
+        new HiddenRowColumnPass().Execute(context);
+        new ColumnLayoutPass().Execute(context);
+        new RowLayoutPass().Execute(context);
+        new TextMeasurePass().Execute(context);
+        new CellBoundsPass().Execute(context);
+
+        new PaginationPass().Execute(context);
+
+        var cell = Assert.Single(Assert.Single(context.RenderDocument!.Pages).Cells);
+        Assert.Equal(500, cell.Bounds.Width, 6);
+    }
+
+    /// <summary>
+    /// ページ倍率が図形の線幅、文字サイズ、および内側余白にも一貫して適用されることを検証します。
+    /// </summary>
+    [Fact]
+    public void PaginationPass_scales_shape_lengths_with_shape_bounds()
+    {
+        var shape = new ReportShape(
+            new(1, 1),
+            0,
+            0,
+            40,
+            20,
+            ShapeKind.Rectangle,
+            new(null, new ReportColor(0, 0, 0), 2),
+            new("shape", new FontStyle(Size: 12), HorizontalAlignment.Left, VerticalAlignment.Top, true, 4, 6, 8, 10),
+            0,
+            0);
+        var context = CreateContext(
+            columns: new Dictionary<int, ColumnDefinition> { [1] = new(80) },
+            rows: new Dictionary<int, RowDefinition> { [1] = new(30) },
+            pageSettings: new(100, 100, 10, 10, 10, 10, Scale: 0.5),
+            shapes: [shape]);
+        context.PrintArea = new(new(1, 1), new(1, 1));
+        new HiddenRowColumnPass().Execute(context);
+        new ColumnLayoutPass().Execute(context);
+        new RowLayoutPass().Execute(context);
+        new TextMeasurePass().Execute(context);
+        new CellBoundsPass().Execute(context);
+
+        new PaginationPass().Execute(context);
+
+        var rendered = Assert.Single(Assert.Single(context.RenderDocument!.Pages).Shapes!);
+        Assert.Equal(20, rendered.Bounds.Width);
+        Assert.Equal(1, rendered.Shape.Style.LineWidth);
+        Assert.Equal(6, rendered.Shape.Text!.Font.Size);
+        Assert.Equal(2, rendered.Shape.Text.MarginLeft);
+        Assert.Equal(5, rendered.Shape.Text.MarginBottom);
     }
 
     /// <summary>
@@ -490,6 +593,49 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
+    /// SpreadsheetML の raw 列幅が仕様の最大数字幅の式でポイントへ変換されることを検証します。
+    /// </summary>
+    [Theory]
+    [InlineData(8.7109375, 7, 45.75)]
+    [InlineData(0, 7, 0)]
+    [InlineData(0.5, 7, 2.25)]
+    public void ColumnWidthCalculator_converts_raw_width_to_points(double rawWidth, double mdw, double expected)
+    {
+        Assert.Equal(expected, ColumnWidthCalculator.ToPoints(rawWidth, mdw), 6);
+    }
+
+    /// <summary>
+    /// Normal スタイルのテーマフォントを実フォントへ解決してMDWを計測することを検証します。
+    /// </summary>
+    [Fact]
+    public void ExcelReader_measures_maximum_digit_width_from_normal_theme_font()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
+        try
+        {
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.AddWorksheet("Sheet1");
+                worksheet.Cell(1, 1).Value = "value";
+                worksheet.Column(1).Width = 8;
+                workbook.SaveAs(path);
+            }
+
+            var diagnostics = new DiagnosticCollector(new DiagnosticOptions());
+            var document = new ExcelReader(new MissingPrivateUseFontManager())
+                .Read(File.ReadAllBytes(path), diagnostics);
+
+            Assert.NotEmpty(document.Sheets[0].Columns);
+            Assert.Contains(diagnostics.ToArray(), diagnostic => diagnostic.Code == "MaximumDigitWidthResolved");
+            Assert.DoesNotContain(diagnostics.ToArray(), diagnostic => diagnostic.Code == "MaximumDigitWidthFallback");
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    /// <summary>
     /// パーセント指定の印刷倍率がワークシートから読み取られることを検証します。
     /// </summary>
     [Fact]
@@ -569,6 +715,71 @@ public sealed class LayoutPassTests
             Assert.Null(settings.Scale);
             Assert.Equal(1, settings.FitToPagesWide);
             Assert.Equal(2, settings.FitToPagesTall);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    /// <summary>
+    /// raw XML の Fit モードが残存する明示倍率より優先されることを検証します。
+    /// </summary>
+    [Fact]
+    public void ExcelReader_uses_raw_fit_mode_when_scale_is_also_present()
+    {
+        var path = CreateWorkbookWithPageSetup(fitToPage: true, scale: 75, fitToWidth: 1, fitToHeight: 0);
+        try
+        {
+            var settings = new ExcelReader().Read(path).Sheets[0].PageSettings;
+
+            Assert.Equal(PrintScaleMode.FitToPages, settings.ScaleMode);
+            Assert.Null(settings.Scale);
+            Assert.Equal(1, settings.FitToPagesWide);
+            Assert.Equal(0, settings.FitToPagesTall);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    /// <summary>
+    /// raw XML で Fit が無効ならページ数属性があっても明示倍率を使用することを検証します。
+    /// </summary>
+    [Fact]
+    public void ExcelReader_uses_raw_explicit_scale_when_fit_mode_is_disabled()
+    {
+        var path = CreateWorkbookWithPageSetup(fitToPage: false, scale: 75, fitToWidth: 1, fitToHeight: 1);
+        try
+        {
+            var settings = new ExcelReader().Read(path).Sheets[0].PageSettings;
+
+            Assert.Equal(PrintScaleMode.Explicit, settings.ScaleMode);
+            Assert.Equal(0.75, settings.Scale);
+            Assert.Null(settings.FitToPagesWide);
+            Assert.Null(settings.FitToPagesTall);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    /// <summary>
+    /// Fit のページ数属性が省略された場合にスキーマ既定値の各1ページを使用することを検証します。
+    /// </summary>
+    [Fact]
+    public void ExcelReader_defaults_missing_fit_page_counts_to_one()
+    {
+        var path = CreateWorkbookWithPageSetup(fitToPage: true, scale: 75, fitToWidth: null, fitToHeight: null);
+        try
+        {
+            var settings = new ExcelReader().Read(path).Sheets[0].PageSettings;
+
+            Assert.Equal(PrintScaleMode.FitToPages, settings.ScaleMode);
+            Assert.Equal(1, settings.FitToPagesWide);
+            Assert.Equal(1, settings.FitToPagesTall);
         }
         finally
         {
@@ -1059,6 +1270,41 @@ public sealed class LayoutPassTests
         using var image = SKImage.FromBitmap(bitmap);
         using var data = image.Encode(SKEncodedImageFormat.Png, 100);
         return data.ToArray();
+    }
+
+    private static string CreateWorkbookWithPageSetup(
+        bool fitToPage,
+        uint scale,
+        uint? fitToWidth,
+        uint? fitToHeight)
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
+        using (var workbook = new XLWorkbook())
+        {
+            var worksheet = workbook.AddWorksheet("Sheet1");
+            worksheet.Cell(1, 1).Value = "value";
+            workbook.SaveAs(path);
+        }
+
+        using (var document = SpreadsheetDocument.Open(path, true))
+        {
+            var worksheetPart = document.WorkbookPart!.WorksheetParts.Single();
+            var worksheet = worksheetPart.Worksheet;
+            var properties = worksheet.SheetProperties ?? worksheet.InsertAt(new S.SheetProperties(), 0);
+            properties.PageSetupProperties = new S.PageSetupProperties { FitToPage = fitToPage };
+            var pageSetup = worksheet.GetFirstChild<S.PageSetup>();
+            if (pageSetup is null)
+            {
+                pageSetup = worksheet.AppendChild(new S.PageSetup());
+            }
+
+            pageSetup.Scale = scale;
+            pageSetup.FitToWidth = fitToWidth;
+            pageSetup.FitToHeight = fitToHeight;
+            worksheet.Save();
+        }
+
+        return path;
     }
 
     private sealed class FixedTextMeasurer : ITextMeasurer

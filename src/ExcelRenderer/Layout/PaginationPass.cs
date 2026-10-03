@@ -135,7 +135,7 @@ public sealed class PaginationPass : IReportLayoutPass
                             ((row.Y - vertical.Start + repeatedHeight + shape.OffsetY) * scale) + settings.MarginTop,
                             shape.Width * scale,
                             shape.Height * scale),
-                        shape);
+                        ScaleShape(shape, scale));
                 }).ToArray();
             return new RenderPage((verticalIndex * horizontalBands.Count) + horizontalIndex + 1, cells, images, Shapes: shapes);
         })).ToArray();
@@ -161,9 +161,16 @@ public sealed class PaginationPass : IReportLayoutPass
         double,
         double> getRowEnd)
     {
-        if (settings.Scale is > 0)
+        var usesExplicitScale = settings.ScaleMode == PrintScaleMode.Explicit ||
+            (settings.ScaleMode is null && settings.Scale is > 0);
+        if (usesExplicitScale && settings.Scale is > 0 && double.IsFinite(settings.Scale.Value))
         {
             return settings.Scale.Value;
+        }
+
+        if (settings.ScaleMode == PrintScaleMode.Explicit)
+        {
+            return 1;
         }
 
         var scales = new List<double>();
@@ -225,39 +232,23 @@ public sealed class PaginationPass : IReportLayoutPass
         double repeatedEnd,
         double repeatedSize)
     {
-        var initialScale = pageCount * pageSize / contentSize;
-        if (pageCount >= indices.Count)
+        if (pageCount <= 0 || !double.IsFinite(pageSize) || pageSize <= 0 ||
+            !double.IsFinite(contentSize) || contentSize <= 0)
         {
-            return initialScale;
+            return 1;
         }
 
         var lower = 0d;
-        var upper = initialScale;
-        while (CreateBands(
-            indices,
-            getStart,
-            getEnd,
-            pageSize / upper,
-            getMergedEnd,
-            repeatedEnd,
-            repeatedSize)
-        .Count <= pageCount)
+        var upper = 1d;
+        if (Fits(upper))
         {
-            upper *= 2;
+            return upper;
         }
 
         for (var iteration = 0; iteration < 64; iteration++)
         {
             var candidate = (lower + upper) / 2;
-            if (CreateBands(
-                indices,
-                getStart,
-                getEnd,
-                pageSize / candidate,
-                getMergedEnd,
-                repeatedEnd,
-                repeatedSize)
-            .Count <= pageCount)
+            if (Fits(candidate))
             {
                 lower = candidate;
             }
@@ -267,9 +258,32 @@ public sealed class PaginationPass : IReportLayoutPass
             }
         }
 
-        // Avoid carrying the pagination epsilon into rendered coordinates when the
-        // exact band boundary has a simple decimal representation.
-        return Math.Round(lower, 8);
+        return lower;
+
+        bool Fits(double scale)
+        {
+            var availableSize = pageSize / scale;
+            var bands = CreateBands(
+                indices,
+                getStart,
+                getEnd,
+                availableSize,
+                getMergedEnd,
+                repeatedEnd,
+                repeatedSize);
+            if (bands.Count > pageCount)
+            {
+                return false;
+            }
+
+            return bands.All(band => indices
+                .Where(index => getStart(index) >= band.Start && getStart(index) < band.End)
+                .All(index =>
+                {
+                    var titleSize = band.Start >= repeatedEnd - 1e-7 ? repeatedSize : 0;
+                    return getMergedEnd(index, getEnd(index)) - band.Start <= availableSize - titleSize;
+                }));
+        }
     }
 
     private static BorderStyle ScaleBorder(BorderStyle border, double scale)
@@ -289,6 +303,19 @@ public sealed class PaginationPass : IReportLayoutPass
             },
         };
     }
+
+    private static ReportShape ScaleShape(ReportShape shape, double scale) => shape with
+    {
+        Style = shape.Style with { LineWidth = shape.Style.LineWidth * scale },
+        Text = shape.Text is not { } text ? null : text with
+        {
+            Font = text.Font with { Size = text.Font.Size * scale },
+            MarginLeft = text.MarginLeft * scale,
+            MarginTop = text.MarginTop * scale,
+            MarginRight = text.MarginRight * scale,
+            MarginBottom = text.MarginBottom * scale,
+        },
+    };
 
     private static List<PageBand> CreateBands(
         IReadOnlyList<int> indices,

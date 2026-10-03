@@ -12,6 +12,7 @@ namespace ExcelRenderer.Excel;
 /// <param name="DefaultColumnWidth">raw 既定列幅です。</param>
 /// <param name="DefaultRowHeight">ポイント単位の既定行高です。</param>
 /// <param name="Columns">raw 列定義区間です。</param>
+/// <param name="Rows">Sparse raw row definitions that affect sheet-origin geometry.</param>
 /// <param name="NormalFont">Normal セルスタイルが参照するフォントです。</param>
 /// <param name="RowBreaks">改ページ後の行番号です。</param>
 /// <param name="ColumnBreaks">改ページ後の列番号です。</param>
@@ -27,6 +28,7 @@ internal sealed record SheetPageSetupMetadata(
     double? DefaultColumnWidth,
     double DefaultRowHeight,
     IReadOnlyList<RawColumnDefinition> Columns,
+    IReadOnlyList<RawRowDefinition> Rows,
     NormalFontMetadata? NormalFont,
     IReadOnlyList<int> RowBreaks,
     IReadOnlyList<int> ColumnBreaks,

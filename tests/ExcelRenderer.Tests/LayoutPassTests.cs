@@ -1436,6 +1436,41 @@ public sealed class LayoutPassTests
         }
     }
 
+    /// <summary>Empty leading rows and columns with XML dimensions remain part of sheet-origin geometry.</summary>
+    [Fact]
+    public void ExcelReader_preserves_dimensions_before_used_and_printed_range()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
+        try
+        {
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.AddWorksheet("Sheet1");
+                worksheet.Column(1).Width = 20;
+                worksheet.Column(2).Hide();
+                worksheet.Row(1).Height = 31;
+                worksheet.Row(2).Hide();
+                worksheet.Cell(3, 3).Value = "used";
+                worksheet.PageSetup.PrintAreas.Add("C3:C3");
+                workbook.SaveAs(path);
+            }
+
+            var sheet = Assert.Single(new ExcelReader().Read(path).Sheets);
+            var geometry = new SheetGeometry(sheet);
+
+            Assert.True(sheet.Columns.ContainsKey(1));
+            Assert.True(sheet.Columns[2].IsHidden);
+            Assert.True(sheet.Rows.ContainsKey(1));
+            Assert.True(sheet.Rows[2].IsHidden);
+            Assert.Equal(sheet.Columns[1].Width, geometry.ColumnStart(3), 6);
+            Assert.Equal(31, geometry.RowStart(3), 6);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
     private static ReportLayoutContext CreateContext(
         IReadOnlyDictionary<CellAddress, ReportCell>? cells = null,
         IReadOnlyDictionary<int, ColumnDefinition>? columns = null,

@@ -281,6 +281,21 @@ same `ReportDocument` model as the renderers and does not alter the PDF/PNG pipe
 
 PDF and PNG conversion use Noto Sans JP Regular TTF when `ExcelRenderer.Fonts` is installed. Simple emoji (one scalar, optionally followed by VS16) use Noto Color Emoji; PDF and SVG embed them as color bitmap images. Complex emoji sequences need a separate shaping implementation. Otherwise, the library resolves registered or OS fonts. To use an external font for PDFsharp, configure a resolver before PDFsharp first accesses a font:
 
+When loading the optional bundled fonts, ExcelRenderer looks for each expected
+file name (`NotoSansJP-Regular.ttf`, `ipamjm.ttf`, and `NotoColorEmoji.ttf`) in
+this order:
+
+1. Embedded resources in `*.dll` files directly beside `ExcelRenderer.dll`.
+   A resource name must equal the font file name or end with `.` plus that
+   name. DLLs are checked in ordinal path order; DLLs that cannot be loaded or
+   inspected are skipped.
+2. Loose files with the exact font file name anywhere in the directory
+   containing `ExcelRenderer.dll` or its subdirectories. If several match, the
+   first path in ordinal order is used.
+
+An embedded resource takes precedence over a loose file. The DLL search is not
+recursive; only the loose-file search includes subdirectories.
+
 ```csharp
 using ExcelRenderer.PdfSharp;
 using PdfSharp.Fonts;

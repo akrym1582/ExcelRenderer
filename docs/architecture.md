@@ -308,3 +308,23 @@ When adding a feature, prefer a new reader, layout pass, drawing command, render
 `TextLayoutTransform` is the single non-mutating operation for scaling finalized text geometry. It scales sizes, line metrics, run positions, and an explicitly supplied effective font size; an unspecified effective size remains unspecified. Shrink-to-fit first finalizes the source font size, while pagination deliberately preserves unspecified state.
 
 PDF resolved-face registrations are process-lifetime entries because PDFsharp owns a global resolver and can request font bytes after a page has been drawn. Registration snapshots caller-owned bytes, identifies the snapshot by its content digest as well as its face ID, and retains it for the process lifetime. Reusing a resolved face avoids repeated file reads and hashing; entries are not evicted or cleared after an individual output.
+
+## Finalized and compatibility text paths
+
+PDFsharp and Skia keep text dispatch separate from shape, border, and image dispatch. Each backend's
+`TextPainter` owns vertical-text normalization, the page-coordinate clip, rotation, and balanced
+save/restore. It then selects exactly one path: finalized layouts consume the stored baseline, run X
+position, effective size, and resolved face without wrapping or shrinking again; commands without a
+layout use the compatibility path, which retains wrapping, shrink-to-fit, fallback, IVS, and emoji
+handling. Backend objects remain in their backend namespace; the shared placement and effective-size
+helpers have no PDFsharp or Skia dependency.
+
+## Pagination planning
+
+`PaginationPass` orchestrates pagination rather than owning every calculation. `PageBandBuilder`
+creates half-open bands for one axis and is also used unchanged by `PrintScaleResolver` while testing
+fit-to-pages scales. `PagePlacement` freezes each page's margins, centering, repeated-title offsets,
+body clip, and distinct cell/body-object coordinate maps. `HeaderFooterLayout` expands fields only
+after final page numbers and page counts are known. These helpers consume immutable values and do not
+mutate `ReportLayoutContext`; the pass retains print-area preparation, page-order selection, and page
+assembly.

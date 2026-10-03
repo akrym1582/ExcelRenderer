@@ -14,15 +14,18 @@ namespace ExcelRenderer.PdfSharp;
 public sealed class PdfSharpRenderer : IRenderer
 {
     private readonly IFontManager? _fontManager;
+    private readonly PdfSharpTextPainter _textPainter;
 
     /// <summary>Initializes a new instance of the <see cref="PdfSharpRenderer"/> class.</summary>
-    public PdfSharpRenderer()
-    {
-    }
+    public PdfSharpRenderer() => _textPainter = new(DrawFinalizedText, DrawLegacyText);
 
     /// <summary>Initializes a new instance of the <see cref="PdfSharpRenderer"/> class.</summary>
     /// <param name="fontManager">The font manager shared with layout and diagnostics.</param>
-    public PdfSharpRenderer(IFontManager fontManager) => _fontManager = fontManager ?? throw new ArgumentNullException(nameof(fontManager));
+    public PdfSharpRenderer(IFontManager fontManager)
+    {
+        _fontManager = fontManager ?? throw new ArgumentNullException(nameof(fontManager));
+        _textPainter = new(DrawFinalizedText, DrawLegacyText);
+    }
 
     /// <summary>描画コマンドをページ番号ごとに描画し、すべてのページを含む PDF 文書を出力します。</summary>
     /// <param name="commands">背景、罫線、文字、画像、および図形をページ上へ配置する描画コマンドです。</param>
@@ -282,7 +285,7 @@ public sealed class PdfSharpRenderer : IRenderer
                 DrawBorder(graphics, border);
                 break;
             case DrawTextCommand text:
-                DrawText(graphics, text);
+                _textPainter.Paint(graphics, text);
                 break;
             case DrawLineCommand line:
                 DrawStyledLine(graphics, line.Style, line.X1, line.Y1, line.X2, line.Y2);
@@ -341,7 +344,7 @@ public sealed class PdfSharpRenderer : IRenderer
                 b.Y + text.MarginTop,
                 Math.Max(0, b.Width - text.MarginLeft - text.MarginRight),
                 Math.Max(0, b.Height - text.MarginTop - text.MarginBottom));
-            DrawText(graphics, new DrawTextCommand(
+            _textPainter.Paint(graphics, new DrawTextCommand(
                 command.PageNumber,
                 bounds,
                 text.Text,
@@ -357,35 +360,8 @@ public sealed class PdfSharpRenderer : IRenderer
         graphics.Restore(state);
     }
 
-    private void DrawText(XGraphics graphics, DrawTextCommand command)
+    private void DrawLegacyText(XGraphics graphics, DrawTextCommand command)
     {
-        command = NormalizeVerticalText(command);
-        var rotation = command.Style.TextRotation == 255 ? 0 : command.Style.TextRotation;
-        if (rotation == 0)
-        {
-            DrawTextCore(graphics, command);
-            return;
-        }
-
-        var state = graphics.Save();
-        graphics.IntersectClip(ToRect(command.Bounds));
-        graphics.RotateAtTransform(
-            rotation,
-            new XPoint(
-                command.Bounds.X + (command.Bounds.Width / 2),
-                command.Bounds.Y + (command.Bounds.Height / 2)));
-        DrawTextCore(graphics, command);
-        graphics.Restore(state);
-    }
-
-    private void DrawTextCore(XGraphics graphics, DrawTextCommand command)
-    {
-        if (command.TextLayout is { } layout)
-        {
-            DrawFinalizedText(graphics, command, layout);
-            return;
-        }
-
         var request = ToRequest(command.Style);
         if (_fontManager is not null && RequiresResolvedTextPath(
             _fontManager.ResolveTextRuns(command.Text, request), _fontManager.Resolve(request), request))
@@ -527,27 +503,6 @@ public sealed class PdfSharpRenderer : IRenderer
 
         var runFont = PdfSharpTextMeasurer.CreateResolvedFont(run.Font, size);
         graphics.DrawString(run.Text, runFont, brush, new XPoint(x, baseline), XStringFormats.BaseLineLeft);
-    }
-
-    private DrawTextCommand NormalizeVerticalText(DrawTextCommand command)
-    {
-        if (command.TextLayout is not null || (!command.Style.TopToBottom && command.Style.TextRotation != 255))
-        {
-            return command;
-        }
-
-        var elements = System.Globalization.StringInfo.GetTextElementEnumerator(command.Text);
-        var result = new List<string>();
-        while (elements.MoveNext())
-        {
-            result.Add(elements.GetTextElement());
-        }
-
-        return command with
-        {
-            Text = string.Join("\n", result),
-            Style = command.Style with { TextRotation = 0, TopToBottom = true },
-        };
     }
 
     private void DrawTextWithIvs(XGraphics graphics, DrawTextCommand command)

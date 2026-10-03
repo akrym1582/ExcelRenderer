@@ -105,6 +105,9 @@ public sealed class PaginationPass : IReportLayoutPass
                     layout.Bounds.Width * scale,
                     layout.Bounds.Height * scale))
                 {
+                    TextLayout = context.TextLayouts.TryGetValue(layout.Address, out var textLayout)
+                        ? ScaleTextLayout(textLayout, scale)
+                        : null,
                     MergedBorders = layout.MergedBorders?.Select(border => new RenderBorder(
                         new(
                             (GetPosition(border.Bounds.X, horizontal.Start, repeatColumns, titleColumns.Contains(layout.Address.Column), titleColumns, column => context.ColumnLayouts[column].X, repeatedWidth) * scale) + settings.MarginLeft,
@@ -134,7 +137,13 @@ public sealed class PaginationPass : IReportLayoutPass
                         image.Width * scale,
                         image.Height * scale),
                         image.ImageBytes,
-                        image.ZIndex);
+                        image.ZIndex)
+                    {
+                        Crop = image.Crop,
+                        Rotation = image.Rotation,
+                        FlipHorizontal = image.FlipHorizontal,
+                        FlipVertical = image.FlipVertical,
+                    };
                 })
                 .ToArray();
             var shapes = (context.Sheet.Shapes ?? [])
@@ -350,6 +359,20 @@ public sealed class PaginationPass : IReportLayoutPass
             MarginBottom = text.MarginBottom * scale,
         },
     };
+
+    private static TextLayoutResult ScaleTextLayout(TextLayoutResult layout, double scale) => new(
+        new(layout.Size.Width * scale, layout.Size.Height * scale),
+        layout.Lines.Select(line => line with
+        {
+            Width = line.Width * scale,
+            Height = line.Height * scale,
+            Baseline = line.Baseline * scale,
+            Runs = line.Runs.Select(run => run with
+            {
+                X = run.X * scale,
+                Advance = run.Advance * scale,
+            }).ToArray(),
+        }).ToArray());
 
     private static bool TryGetObjectBounds(
         ReportLayoutContext context,

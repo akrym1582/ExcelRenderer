@@ -31,9 +31,18 @@ public sealed class DrawCommandGeneratorPass
                     page.Number,
                     InsetCellText(x.Bounds, x.Cell.Style),
                     x.Cell.Text!,
-                    x.Cell.Style)));
+                    x.Cell.Style)
+                {
+                    TextLayout = x.TextLayout,
+                }));
             commands.AddRange((page.Images ?? []).Select(x => (Z: x.ZIndex,
-                    Command: (DrawCommand)new DrawImageCommand(page.Number, x.Bounds, x.ImageBytes)))
+                    Command: (DrawCommand)new DrawImageCommand(page.Number, x.Bounds, x.ImageBytes)
+                    {
+                        Crop = x.Crop,
+                        Rotation = x.Rotation,
+                        FlipHorizontal = x.FlipHorizontal,
+                        FlipVertical = x.FlipVertical,
+                    }))
                 .Concat((page.Shapes ?? []).Select(x => (Z: x.Shape.ZIndex,
                     Command: (DrawCommand)new DrawShapeCommand(page.Number, x.Bounds, x.Shape))))
                 .OrderBy(x => x.Z).Select(x => x.Command));

@@ -10,7 +10,9 @@ using ExcelRenderer.PdfSharp;
 using ExcelRenderer.Rendering;
 using PdfSharp.Fonts;
 using SkiaSharp;
+using A = DocumentFormat.OpenXml.Drawing;
 using S = DocumentFormat.OpenXml.Spreadsheet;
+using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 using Xunit;
 
 namespace ExcelRenderer.Tests;
@@ -567,6 +569,70 @@ public sealed class LayoutPassTests
         {
             File.Delete(path);
         }
+    }
+
+    /// <summary>DrawingML画像のアンカー、crop、および変換情報がモデルへ保持されることを検証します。</summary>
+    [Fact]
+    public void ExcelReader_preserves_picture_anchor_crop_and_transform()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
+        try
+        {
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.AddWorksheet("Sheet1");
+                worksheet.Pictures.Add(new MemoryStream(CreateImageBytes())).MoveTo(worksheet.Cell(2, 3), 4, 5);
+                workbook.SaveAs(path);
+            }
+
+            using (var document = SpreadsheetDocument.Open(path, true))
+            {
+                var picture = document.WorkbookPart!.WorksheetParts.Single().DrawingsPart!
+                    .WorksheetDrawing.Descendants<Xdr.Picture>().Single();
+                picture.BlipFill!.SourceRectangle = new A.SourceRectangle { Left = 10000, Right = 20000 };
+                picture.ShapeProperties!.Transform2D!.Rotation = 900000;
+                picture.ShapeProperties.Transform2D.HorizontalFlip = true;
+                picture.Ancestors<Xdr.WorksheetDrawing>().Single().Save();
+            }
+
+            var image = Assert.Single(new ExcelReader().Read(path).Sheets[0].Images!);
+
+            Assert.NotNull(image.DrawingAnchor);
+            Assert.Equal(DrawingAnchorKind.OneCell, image.DrawingAnchor!.Kind);
+            Assert.Equal(0.1, image.Crop!.Left);
+            Assert.Equal(0.2, image.Crop.Right);
+            Assert.Equal(15, image.Rotation);
+            Assert.True(image.FlipHorizontal);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    /// <summary>確定した改行とfont runが描画命令まで共有されることを検証します。</summary>
+    [Fact]
+    public void TextLayout_is_finalized_once_and_carried_to_draw_commands()
+    {
+        var fontManager = new MissingPrivateUseFontManager();
+        var sheet = new ReportSheet(
+            "Sheet1",
+            new Dictionary<CellAddress, ReportCell>
+            {
+                [new(1, 1)] = new("A😀B\nC", CellStyle.Default with { WrapText = true }),
+            },
+            new Dictionary<int, ColumnDefinition> { [1] = new(20) },
+            new Dictionary<int, RowDefinition> { [1] = new(40) },
+            [],
+            new());
+
+        var layout = new ReportLayoutEngine(new PdfSharpTextMeasurer(fontManager)).Layout(sheet);
+        var command = Assert.IsType<DrawTextCommand>(Assert.Single(new DrawCommandGeneratorPass().Generate(layout)));
+
+        Assert.NotNull(command.TextLayout);
+        Assert.True(command.TextLayout!.Lines.Count >= 2);
+        Assert.Contains(command.TextLayout.Lines, line => line.ExplicitBreak);
+        Assert.All(command.TextLayout.Lines, line => Assert.NotNull(line.Runs));
     }
 
     /// <summary>

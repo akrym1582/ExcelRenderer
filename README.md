@@ -228,6 +228,14 @@ Fit-to-pages ignores manual breaks. Objects intersecting more than one page are 
 same source geometry on each page and clipped by the output page. Cell indentation and text
 rotation are carried into PDF, PNG, and SVG drawing.
 
+Wrapped cell text is finalized during layout into lines and resolved font runs, including
+grapheme-safe forced breaks and explicit-newline markers. The result is carried by the draw
+command so PDF, PNG, and SVG do not independently choose different line breaks.
+
+DrawingML picture metadata preserves one-cell, two-cell, and absolute anchors in points together
+with marker offsets, extents, `editAs`, source crop, rotation, flips, and worksheet drawing order.
+Source crop is applied by both renderer backends without changing the destination bounds.
+
 To render the same commands as page-by-page PNG files:
 
 ```csharp

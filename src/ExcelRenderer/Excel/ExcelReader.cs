@@ -62,13 +62,18 @@ public sealed class ExcelReader
     {
         using var workbookStream = new MemoryStream(workbookBytes, writable: false);
         using var drawingStream = new MemoryStream(workbookBytes, writable: false);
+        using var pictureMetadataStream = new MemoryStream(workbookBytes, writable: false);
         using var metadataStream = new MemoryStream(workbookBytes, writable: false);
         using var workbook = new XLWorkbook(workbookStream);
         var shapes = DrawingMLReader.Read(drawingStream, diagnostics);
+        var pictureMetadata = DrawingMLReader.ReadPictureMetadata(pictureMetadataStream);
         var pageSetups = WorkbookLayoutMetadataReader.ReadPageSetups(metadataStream);
         return new(workbook.Worksheets.Select(sheet => ReadSheet(
             sheet,
             shapes.GetValueOrDefault(sheet.Name, Array.Empty<ReportShape>()),
+            pictureMetadata.GetValueOrDefault(
+                sheet.Name,
+                new Dictionary<string, DrawingPictureMetadata>(StringComparer.Ordinal)),
             pageSetups.GetValueOrDefault(sheet.Name),
             diagnostics,
             fontManager,
@@ -78,6 +83,7 @@ public sealed class ExcelReader
     private static ReportSheet ReadSheet(
         IXLWorksheet worksheet,
         IReadOnlyList<ReportShape> shapes,
+        IReadOnlyDictionary<string, DrawingPictureMetadata> pictureMetadata,
         SheetPageSetupMetadata? pageSetupMetadata,
         DiagnosticCollector? diagnostics,
         IFontManager? fontManager,
@@ -141,7 +147,10 @@ public sealed class ExcelReader
             }
         }
 
-        var images = worksheet.Pictures.Select((picture, index) => ReadImage(picture, index)).ToArray();
+        var images = worksheet.Pictures.Select((picture, index) => ReadImage(
+            picture,
+            pictureMetadata.GetValueOrDefault(picture.Name),
+            index)).ToArray();
         foreach (var image in images)
         {
             if (!columns.ContainsKey(image.Anchor.Column))
@@ -392,19 +401,39 @@ public sealed class ExcelReader
             headerFooter.Center.GetText(occurrence),
             headerFooter.Right.GetText(occurrence));
 
-    private static ReportImage ReadImage(IXLPicture picture, int zIndex)
+    private static ReportImage ReadImage(
+        IXLPicture picture,
+        DrawingPictureMetadata? metadata,
+        int zIndex)
     {
         var anchor = picture.TopLeftCell.Address;
         var offset = picture.GetOffset(XLMarkerPosition.TopLeft);
-        return new(
-            new CellAddress(anchor.RowNumber, anchor.ColumnNumber),
-            PixelsToPoints(offset.X),
-            PixelsToPoints(offset.Y),
-            PixelsToPoints(picture.Width),
-            PixelsToPoints(picture.Height),
+        var sourceAnchor = metadata?.Anchor;
+        var cell = sourceAnchor?.From ?? new CellAddress(anchor.RowNumber, anchor.ColumnNumber);
+        var offsetX = sourceAnchor?.Kind == DrawingAnchorKind.Absolute
+            ? sourceAnchor.PositionX
+            : sourceAnchor?.FromOffsetX ?? PixelsToPoints(offset.X);
+        var offsetY = sourceAnchor?.Kind == DrawingAnchorKind.Absolute
+            ? sourceAnchor.PositionY
+            : sourceAnchor?.FromOffsetY ?? PixelsToPoints(offset.Y);
+        var width = sourceAnchor is { ExtentWidth: > 0 } ? sourceAnchor.ExtentWidth : PixelsToPoints(picture.Width);
+        var height = sourceAnchor is { ExtentHeight: > 0 } ? sourceAnchor.ExtentHeight : PixelsToPoints(picture.Height);
+        return new ReportImage(
+            cell,
+            offsetX,
+            offsetY,
+            width,
+            height,
             picture.ImageStream.ToArray(),
-            zIndex,
-            picture.Name);
+            metadata?.ZIndex ?? zIndex,
+            picture.Name)
+        {
+            DrawingAnchor = sourceAnchor,
+            Crop = metadata?.Crop,
+            Rotation = metadata?.Rotation ?? 0,
+            FlipHorizontal = metadata?.FlipHorizontal ?? false,
+            FlipVertical = metadata?.FlipVertical ?? false,
+        };
     }
 
     private static double PixelsToPoints(int value) => value * 72d / 96d;

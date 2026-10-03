@@ -126,6 +126,10 @@ Example output (a workbook report converted to SVG):
 
 ![Sample rendering result](samples/svg/japanese-report.svg)
 
+A grid-paper (方眼紙) style Japanese monthly report, including IVS characters (葛󠄂, 辻󠄂) and emoji, rendered to PNG. The source workbook is [samples/excel/japanese-grid-report.xlsx](samples/excel/japanese-grid-report.xlsx).
+
+![Japanese grid-paper report sample](samples/png/japanese-grid-report.png)
+
 See [Command-line usage](#command-line-usage), [C# API (high-level)](#c-api-high-level), and [C# API (low-level)](#c-api-low-level) for details.
 
 ## Command-line usage

@@ -111,6 +111,10 @@ await ExcelConverter.ConvertToPdfAsync("input.xlsx", "output.pdf");
 
 ![変換結果のサンプル](samples/svg/japanese-report.svg)
 
+方眼紙形式の日本語月次報告書を PNG にした例です。IVS（異体字）と絵文字も出力されます。元の Excel は [samples/excel/japanese-grid-report.xlsx](samples/excel/japanese-grid-report.xlsx) です。
+
+![方眼紙報告書のサンプル](samples/png/japanese-grid-report.png)
+
 詳しくは [CLI の使い方](#cli-の使い方)、[C# API（高レベル）](#c-api高レベル)、[C# API（低レベル）](#c-api低レベル)を参照してください。
 
 ## CLI の使い方

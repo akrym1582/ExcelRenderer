@@ -11,6 +11,7 @@ public sealed class FontManager : IFontManager
     private readonly List<FontFace> _faces = [];
     private readonly List<FontFace> _externalFaces = [];
     private readonly Dictionary<FontRequest, ResolvedFont> _cache = new();
+    private readonly Dictionary<(string FaceId, int Weight, bool Italic), ResolvedFont> _resolvedFaces = new();
     private readonly Dictionary<(string FaceId, int Base, int Selector), OpenTypeVariationSequences.Resolution?> _ivsSupport = new();
 
     /// <summary>Initializes a new instance of the <see cref="FontManager"/> class. 指定された設定でフォントマネージャーを初期化します。</summary>
@@ -189,14 +190,20 @@ public sealed class FontManager : IFontManager
         return typeface is not null && typeface.GetGlyphs(text).All(glyph => glyph != 0);
     }
 
-    private static ResolvedFont Select(IEnumerable<FontFace> candidates, FontRequest request)
+    private ResolvedFont Select(IEnumerable<FontFace> candidates, FontRequest request)
     {
         var selected = candidates
             .OrderBy(x => x.Italic == request.Italic ? 0 : 1)
             .ThenBy(x => Math.Abs(x.Weight - request.Weight))
             .ThenBy(x => x.SortKey, StringComparer.Ordinal)
             .First();
-        return new(selected.Family, selected.Weight, selected.Italic, selected.FilePath)
+        var key = (selected.FaceId, request.Weight, request.Italic);
+        if (_resolvedFaces.TryGetValue(key, out var cached))
+        {
+            return cached;
+        }
+
+        return _resolvedFaces[key] = new(selected.Family, selected.Weight, selected.Italic, selected.FilePath)
         {
             FaceId = selected.FaceId,
             FontData = selected.Data,

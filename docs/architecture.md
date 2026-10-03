@@ -302,3 +302,9 @@ src/ExcelRenderer
 ```
 
 When adding a feature, prefer a new reader, layout pass, drawing command, renderer, or abstraction over adding responsibilities to an existing class.
+
+## Finalized text scaling and PDF font lifetime
+
+`TextLayoutTransform` is the single non-mutating operation for scaling finalized text geometry. It scales sizes, line metrics, run positions, and an explicitly supplied effective font size; an unspecified effective size remains unspecified. Shrink-to-fit first finalizes the source font size, while pagination deliberately preserves unspecified state.
+
+PDF resolved-face registrations are process-lifetime entries because PDFsharp owns a global resolver and can request font bytes after a page has been drawn. Registration snapshots caller-owned bytes, identifies the snapshot by its content digest as well as its face ID, and retains it for the process lifetime. Reusing a resolved face avoids repeated file reads and hashing; entries are not evicted or cleared after an individual output.

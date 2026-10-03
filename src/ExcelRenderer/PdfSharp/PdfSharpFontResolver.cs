@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using ExcelRenderer.Abstractions;
 using ExcelRenderer.Drawing;
@@ -17,6 +18,9 @@ public sealed class PdfSharpFontResolver : IFontResolver
 {
     private const string ResolvedFacePrefix = "excel-renderer-face:";
     private static readonly ConcurrentDictionary<string, byte[]> ResolvedFontData = new();
+    private static readonly ConditionalWeakTable<ResolvedFont, Lazy<RegisteredFont>> ResolvedFonts = new();
+    private static int _resolvedFontHashCount;
+    private static int _resolvedFontReadCount;
     private readonly IFontManager? _manager;
     private readonly Dictionary<string, byte[]> _fontData = new();
     private readonly string? _legacyFamily;
@@ -58,6 +62,10 @@ public sealed class PdfSharpFontResolver : IFontResolver
     /// <param name="manager">フォント属性から実際のフォントファイルを選択するマネージャーです。</param>
     public PdfSharpFontResolver(IFontManager manager) => _manager = manager ?? throw new ArgumentNullException(nameof(manager));
 
+    /// <summary>Gets process-lifetime registration work counters for regression tests.</summary>
+    internal static (int Reads, int Hashes) RegistrationWork =>
+        (Volatile.Read(ref _resolvedFontReadCount), Volatile.Read(ref _resolvedFontHashCount));
+
     /// <summary>PDFsharp のファミリー名と書体要求をフォントファイルに対応するフェイス名へ解決します。</summary>
     /// <param name="familyName">要求されたフォントファミリー名です。</param>
     /// <param name="bold">太字を要求する場合は <see langword="true"/> です。</param>
@@ -98,11 +106,41 @@ public sealed class PdfSharpFontResolver : IFontResolver
     /// <returns>A unique internal PDFsharp family key.</returns>
     internal static string RegisterResolvedFont(ResolvedFont font)
     {
-        var data = font.FontData ?? File.ReadAllBytes(font.FilePath);
-        using var sha256 = SHA256.Create();
-        var digest = BitConverter.ToString(sha256.ComputeHash(data)).Replace("-", string.Empty, StringComparison.Ordinal);
-        var key = $"{ResolvedFacePrefix}{font.FaceId}:{digest}";
-        ResolvedFontData.TryAdd(key, data);
-        return key;
+        if (font is null)
+        {
+            throw new ArgumentNullException(nameof(font));
+        }
+
+        return ResolvedFonts.GetValue(
+            font,
+            static value => new Lazy<RegisteredFont>(
+                () => RegisterCore(value),
+                LazyThreadSafetyMode.ExecutionAndPublication)).Value.Key;
     }
+
+    private static RegisteredFont RegisterCore(ResolvedFont font)
+    {
+        byte[] source;
+        if (font.FontData is null)
+        {
+            Interlocked.Increment(ref _resolvedFontReadCount);
+            source = File.ReadAllBytes(font.FilePath);
+        }
+        else
+        {
+            source = font.FontData;
+        }
+
+        // Own the bytes used by the digest so mutations of a caller-owned array cannot
+        // change the data behind an already-issued PDFsharp key.
+        var snapshot = source.ToArray();
+        Interlocked.Increment(ref _resolvedFontHashCount);
+        using var sha256 = SHA256.Create();
+        var digest = BitConverter.ToString(sha256.ComputeHash(snapshot)).Replace("-", string.Empty, StringComparison.Ordinal);
+        var key = $"{ResolvedFacePrefix}{font.FaceId}:{digest}";
+        var registered = ResolvedFontData.GetOrAdd(key, snapshot);
+        return new(key, registered);
+    }
+
+    private sealed record RegisteredFont(string Key, byte[] Data);
 }

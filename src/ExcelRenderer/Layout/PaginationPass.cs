@@ -137,7 +137,7 @@ public sealed class PaginationPass : IReportLayoutPass
                             layout.ContentBounds.Width * scale,
                             layout.ContentBounds.Height * scale),
                         TextLayout = context.TextLayouts.TryGetValue(layout.Address, out var textLayout)
-                            ? ScaleTextLayout(textLayout, scale)
+                            ? TextLayoutTransform.Scale(textLayout, scale)
                             : null,
                         MergedBorders = layout.MergedBorders?.Select(border => new RenderBorder(
                             new(
@@ -411,29 +411,6 @@ public sealed class PaginationPass : IReportLayoutPass
             MarginBottom = text.MarginBottom * scale,
         },
     };
-
-    private static TextLayoutResult ScaleTextLayout(TextLayoutResult layout, double scale)
-    {
-        var scaled = new TextLayoutResult(
-            new(layout.Size.Width * scale, layout.Size.Height * scale),
-            layout.Lines.Select(line => line with
-        {
-            Width = line.Width * scale,
-            Height = line.Height * scale,
-            Baseline = line.Baseline * scale,
-            Ascent = line.Ascent * scale,
-            Descent = line.Descent * scale,
-            Leading = line.Leading * scale,
-            Runs = line.Runs.Select(run => run with
-            {
-                X = run.X * scale,
-                Advance = run.Advance * scale,
-            }).ToArray(),
-            }).ToArray());
-        return layout.HasExplicitEffectiveFontSize
-            ? scaled with { EffectiveFontSize = layout.EffectiveFontSize * scale }
-            : scaled;
-    }
 
     private static bool TryGetObjectBounds(
         ReportLayoutContext context,

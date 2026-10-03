@@ -24,7 +24,11 @@ public sealed class ResolvePrintAreaPass : IReportLayoutPass
     {
         var addresses = sheet.Cells.Keys
             .Concat((sheet.Images ?? []).Select(image => image.Anchor))
+            .Concat((sheet.Images ?? []).Where(image => image.DrawingAnchor?.To is not null)
+                .Select(image => image.DrawingAnchor!.To!.Value))
             .Concat((sheet.Shapes ?? []).Select(shape => shape.Anchor))
+            .Concat((sheet.Shapes ?? []).Where(shape => shape.DrawingAnchor?.To is not null)
+                .Select(shape => shape.DrawingAnchor!.To!.Value))
             .ToArray();
         if (addresses.Length == 0)
         {
@@ -35,10 +39,20 @@ public sealed class ResolvePrintAreaPass : IReportLayoutPass
             .Select(cell => cell.Key.Row + cell.Value.RowSpan - 1)
             .Concat((sheet.Images ?? []).Select(image => image.Anchor.Row));
         lastRows = lastRows.Concat((sheet.Shapes ?? []).Select(shape => shape.Anchor.Row));
+        lastRows = lastRows
+            .Concat((sheet.Images ?? []).Where(image => image.DrawingAnchor?.To is not null)
+                .Select(image => image.DrawingAnchor!.To!.Value.Row))
+            .Concat((sheet.Shapes ?? []).Where(shape => shape.DrawingAnchor?.To is not null)
+                .Select(shape => shape.DrawingAnchor!.To!.Value.Row));
         var lastColumns = sheet.Cells
             .Select(cell => cell.Key.Column + cell.Value.ColumnSpan - 1)
             .Concat((sheet.Images ?? []).Select(image => image.Anchor.Column));
         lastColumns = lastColumns.Concat((sheet.Shapes ?? []).Select(shape => shape.Anchor.Column));
+        lastColumns = lastColumns
+            .Concat((sheet.Images ?? []).Where(image => image.DrawingAnchor?.To is not null)
+                .Select(image => image.DrawingAnchor!.To!.Value.Column))
+            .Concat((sheet.Shapes ?? []).Where(shape => shape.DrawingAnchor?.To is not null)
+                .Select(shape => shape.DrawingAnchor!.To!.Value.Column));
         return new CellRange(
             new(addresses.Min(address => address.Row), addresses.Min(address => address.Column)),
             new(lastRows.Max(), lastColumns.Max()));

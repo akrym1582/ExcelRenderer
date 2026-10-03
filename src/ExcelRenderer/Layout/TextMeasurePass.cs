@@ -25,20 +25,66 @@ public sealed class TextMeasurePass : IReportLayoutPass
 
             var availableWidth = Enumerable.Range(address.Column, cell.ColumnSpan)
                 .Where(context.ColumnLayouts.ContainsKey).Sum(x => context.ColumnLayouts[x].Width);
-            var indent = cell.Style.Indent * cell.Style.Font.Size * 0.5;
-            availableWidth = Math.Max(0, availableWidth - (CellTextPadding * 2) - indent);
+            availableWidth = CellContentBounds.Calculate(new(0, 0, availableWidth, double.MaxValue), cell.Style).Width;
             if (context.TextMeasurer is ITextLayoutService layoutService)
             {
-                var layout = layoutService.Layout(
-                    cell.Text ?? string.Empty, cell.Style.Font, availableWidth, cell.Style.WrapText);
+                var text = GetLayoutText(cell.Text ?? string.Empty, cell.Style);
+                var layout = layoutService.Layout(text, cell.Style.Font, availableWidth, cell.Style.WrapText);
+                if (cell.Style.ShrinkToFit && !cell.Style.WrapText && layout.Size.Width > availableWidth &&
+                    layout.Size.Width > 0)
+                {
+                    layout = ScaleLayout(layout, availableWidth / layout.Size.Width, cell.Style.Font.Size);
+                }
+                else
+                {
+                    layout = layout with { EffectiveFontSize = cell.Style.Font.Size };
+                }
+
                 context.TextLayouts[address] = layout;
                 context.TextSizes[address] = layout.Size;
             }
             else
             {
                 context.TextSizes[address] = context.TextMeasurer.Measure(
-                    cell.Text ?? string.Empty, cell.Style.Font, availableWidth, cell.Style.WrapText);
+                    GetLayoutText(cell.Text ?? string.Empty, cell.Style), cell.Style.Font, availableWidth, cell.Style.WrapText);
             }
         }
     }
+
+    private static string GetLayoutText(string text, CellStyle style)
+    {
+        if (!style.TopToBottom && style.TextRotation != 255)
+        {
+            return text;
+        }
+
+        var elements = System.Globalization.StringInfo.GetTextElementEnumerator(text);
+        var result = new List<string>();
+        while (elements.MoveNext())
+        {
+            result.Add(elements.GetTextElement());
+        }
+
+        return string.Join("\n", result);
+    }
+
+    private static TextLayoutResult ScaleLayout(TextLayoutResult layout, double scale, double fontSize) => new(
+        new(layout.Size.Width * scale, layout.Size.Height * scale),
+        layout.Lines.Select(line => line with
+        {
+            Width = line.Width * scale,
+            Height = line.Height * scale,
+            Baseline = line.Baseline * scale,
+            Ascent = line.Ascent * scale,
+            Descent = line.Descent * scale,
+            Leading = line.Leading * scale,
+            Runs = line.Runs.Select(run => run with
+            {
+                X = run.X * scale,
+                Advance = run.Advance * scale,
+            }).ToArray(),
+        }).ToArray())
+    {
+        EffectiveFontSize = fontSize * scale,
+    };
 }

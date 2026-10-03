@@ -60,7 +60,10 @@ internal static class WorkbookLayoutMetadataReader
                 normalFont,
                 ReadBreaks(worksheet.GetFirstChild<S.RowBreaks>()),
                 ReadBreaks(worksheet.GetFirstChild<S.ColumnBreaks>()),
-                pageOrder);
+                pageOrder,
+                sheetFormat?.BaseColumnWidth?.Value,
+                worksheet.GetFirstChild<S.PrintOptions>()?.HorizontalCentered?.Value ?? false,
+                worksheet.GetFirstChild<S.PrintOptions>()?.VerticalCentered?.Value ?? false);
         }
 
         return result;

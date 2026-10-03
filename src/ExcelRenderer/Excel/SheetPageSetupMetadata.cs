@@ -16,6 +16,9 @@ namespace ExcelRenderer.Excel;
 /// <param name="RowBreaks">改ページ後の行番号です。</param>
 /// <param name="ColumnBreaks">改ページ後の列番号です。</param>
 /// <param name="PageOrder">ページを出力する順序です。</param>
+/// <param name="BaseColumnWidth">Padding-free default character count.</param>
+/// <param name="HorizontalCentered">Whether print content is centered horizontally.</param>
+/// <param name="VerticalCentered">Whether print content is centered vertically.</param>
 internal sealed record SheetPageSetupMetadata(
     bool FitToPage,
     uint? Scale,
@@ -27,4 +30,7 @@ internal sealed record SheetPageSetupMetadata(
     NormalFontMetadata? NormalFont,
     IReadOnlyList<int> RowBreaks,
     IReadOnlyList<int> ColumnBreaks,
-    PrintPageOrder PageOrder);
+    PrintPageOrder PageOrder,
+    double? BaseColumnWidth,
+    bool HorizontalCentered,
+    bool VerticalCentered);

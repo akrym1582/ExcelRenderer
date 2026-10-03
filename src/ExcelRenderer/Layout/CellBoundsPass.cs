@@ -31,6 +31,7 @@ public sealed class CellBoundsPass : IReportLayoutPass
                 new(column.X, row.Y, width, height),
                 context.TextSizes.GetValueOrDefault(address))
             {
+                ContentBounds = CellContentBounds.Calculate(new(column.X, row.Y, width, height), cell.Style),
                 MergedBorders = cell.MergedBorders?
                     .Where(border => context.ColumnLayouts.ContainsKey(border.Address.Column) &&
                         context.RowLayouts.ContainsKey(border.Address.Row))

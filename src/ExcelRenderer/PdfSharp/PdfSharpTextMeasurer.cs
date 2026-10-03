@@ -123,13 +123,13 @@ public sealed class PdfSharpTextMeasurer : ITextMeasurer, ITextLayoutService
         return skFont.GetGlyphWidths([glyph])[0];
     }
 
-    private static double MeasureLineHeight(ResolvedFont font, double size)
+    private static (double Ascent, double Descent, double Leading) MeasureLineMetrics(ResolvedFont font, double size)
     {
         using Stream stream = font.FontData is null ? File.OpenRead(font.FilePath) : new MemoryStream(font.FontData, false);
         using var typeface = SKTypeface.FromStream(stream) ?? throw new InvalidOperationException($"フォント {font.Family} を読み込めません。");
         using var skFont = new SKFont(typeface, (float)size);
         var metrics = skFont.Metrics;
-        return metrics.Descent - metrics.Ascent + metrics.Leading;
+        return (-metrics.Ascent, metrics.Descent, metrics.Leading);
     }
 
     private TextLayoutLine CreateLine(
@@ -150,11 +150,21 @@ public sealed class PdfSharpTextMeasurer : ITextMeasurer, ITextLayoutService
         }
 
         var primary = _fontManager?.Resolve(request);
-        var height = primary is null
-            ? graphics.MeasureString("Ag", CreateFont(style)).Height
-            : MeasureLineHeight(primary, style.Size);
+        var metrics = resolvedRuns.Select(run => MeasureLineMetrics(run.Font, style.Size))
+            .Concat(primary is null ? [] : [MeasureLineMetrics(primary, style.Size)])
+            .ToArray();
+        var fallbackHeight = metrics.Length == 0 ? graphics.MeasureString("Ag", CreateFont(style)).Height : 0;
+        var ascent = metrics.Length == 0 ? fallbackHeight * 0.8 : metrics.Max(item => item.Ascent);
+        var descent = metrics.Length == 0 ? fallbackHeight - ascent : metrics.Max(item => item.Descent);
+        var leading = metrics.Length == 0 ? 0 : metrics.Max(item => item.Leading);
+        var height = ascent + descent + leading;
         var width = resolvedRuns.Count == 0 ? graphics.MeasureString(text, CreateFont(style)).Width : x;
-        return new(text, width, height, height, positionedRuns, explicitBreak);
+        return new(text, width, height, ascent, positionedRuns, explicitBreak)
+        {
+            Ascent = ascent,
+            Descent = descent,
+            Leading = leading,
+        };
     }
 
     private double MeasureWidth(XGraphics graphics, string text, FontStyle style, FontRequest request)

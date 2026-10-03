@@ -80,6 +80,11 @@ internal sealed class SkiaDrawingContext
     {
         var b = ToRect(command.Bounds);
         canvas.Save();
+        if (command.ClipBounds is { } clip)
+        {
+            canvas.ClipRect(ToRect(clip));
+        }
+
         if (command.Shape.Rotation != 0)
         {
             canvas.RotateDegrees((float)command.Shape.Rotation, b.MidX, b.MidY);
@@ -147,18 +152,20 @@ internal sealed class SkiaDrawingContext
 
     private void DrawText(SKCanvas canvas, DrawTextCommand command)
     {
-        if (command.Style.TextRotation == 0)
+        command = NormalizeVerticalText(command);
+        var rotation = command.Style.TextRotation == 255 ? 0 : command.Style.TextRotation;
+        if (rotation == 0)
         {
             DrawTextCore(canvas, command);
             return;
         }
 
         canvas.Save();
+        canvas.ClipRect(ToRect(command.Bounds));
         canvas.RotateDegrees(
-            command.Style.TextRotation,
+            rotation,
             (float)(command.Bounds.X + (command.Bounds.Width / 2)),
             (float)(command.Bounds.Y + (command.Bounds.Height / 2)));
-        canvas.ClipRect(ToRect(command.Bounds));
         DrawTextCore(canvas, command);
         canvas.Restore();
     }
@@ -183,7 +190,12 @@ internal sealed class SkiaDrawingContext
         using var paint = CreatePaint(command.Style.Font.Color ?? new(0, 0, 0), SKPaintStyle.Fill);
         paint.IsAntialias = true;
 
-        if (command.Style.ShrinkToFit && !command.Style.WrapText && command.Bounds.Width > 0)
+        if (command.TextLayout is { EffectiveFontSize: > 0 } finalizedLayout)
+        {
+            font.Size = (float)finalizedLayout.EffectiveFontSize;
+        }
+
+        if (command.TextLayout is null && command.Style.ShrinkToFit && !command.Style.WrapText && command.Bounds.Width > 0)
         {
             var widest = command.Text.Replace("\r\n", "\n", StringComparison.Ordinal)
                 .Split('\n').Max(line => MeasureText(line, request, font, paint));
@@ -196,8 +208,8 @@ internal sealed class SkiaDrawingContext
         var lines = command.TextLayout?.Lines.Select(line => line.Text).ToArray() ??
             WrapText(command.Text, request, font, paint, command.Bounds.Width, command.Style.WrapText);
         var metrics = font.Metrics;
-        var lineHeight = metrics.Descent - metrics.Ascent + metrics.Leading;
-        var textHeight = lineHeight * lines.Count;
+        var lineHeight = command.TextLayout?.Lines.FirstOrDefault()?.Height ?? metrics.Descent - metrics.Ascent + metrics.Leading;
+        var textHeight = command.TextLayout?.Size.Height ?? lineHeight * lines.Count;
         var y = command.Style.VerticalAlignment switch
         {
             VerticalAlignment.Center => (float)(command.Bounds.Y + ((command.Bounds.Height - textHeight) / 2)) - metrics.Ascent,
@@ -211,9 +223,11 @@ internal sealed class SkiaDrawingContext
             canvas.ClipRect(ToRect(command.Bounds));
         }
 
-        foreach (var line in lines)
+        for (var index = 0; index < lines.Count; index++)
         {
-            var lineWidth = MeasureText(line, request, font, paint);
+            var line = lines[index];
+            var finalizedLine = command.TextLayout?.Lines[index];
+            var lineWidth = finalizedLine?.Width ?? MeasureText(line, request, font, paint);
             var x = command.Style.HorizontalAlignment switch
             {
                 HorizontalAlignment.Center => (float)(command.Bounds.X + ((command.Bounds.Width - lineWidth) / 2)),
@@ -231,13 +245,34 @@ internal sealed class SkiaDrawingContext
 
             if (command.Style.Font.Underline)
             {
-                canvas.DrawLine(x, y + 1, x + lineWidth, y + 1, paint);
+                canvas.DrawLine(x, y + 1, x + (float)lineWidth, y + 1, paint);
             }
 
-            y += lineHeight;
+            y += (float)(finalizedLine?.Height ?? lineHeight);
         }
 
         canvas.Restore();
+    }
+
+    private DrawTextCommand NormalizeVerticalText(DrawTextCommand command)
+    {
+        if (command.TextLayout is not null || (!command.Style.TopToBottom && command.Style.TextRotation != 255))
+        {
+            return command;
+        }
+
+        var elements = System.Globalization.StringInfo.GetTextElementEnumerator(command.Text);
+        var result = new List<string>();
+        while (elements.MoveNext())
+        {
+            result.Add(elements.GetTextElement());
+        }
+
+        return command with
+        {
+            Text = string.Join("\n", result),
+            Style = command.Style with { TextRotation = 0, TopToBottom = true },
+        };
     }
 
     private IReadOnlyList<string> WrapText(string text, FontRequest request, SKFont font, SKPaint paint, double width, bool wrap)
@@ -386,6 +421,11 @@ internal sealed class SkiaDrawingContext
                 (float)((1 - crop.Right) * image.Width),
                 (float)((1 - crop.Bottom) * image.Height));
         canvas.Save();
+        if (command.ClipBounds is { } clip)
+        {
+            canvas.ClipRect(ToRect(clip));
+        }
+
         canvas.RotateDegrees((float)command.Rotation, destination.MidX, destination.MidY);
         canvas.Scale(
             command.FlipHorizontal ? -1 : 1,

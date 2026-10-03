@@ -124,6 +124,7 @@ public sealed class ExcelReader
             new(range.RangeAddress.FirstAddress.RowNumber, range.RangeAddress.FirstAddress.ColumnNumber),
             new(range.RangeAddress.LastAddress.RowNumber, range.RangeAddress.LastAddress.ColumnNumber))).ToArray();
         cells = ApplyMergedSpans(cells, mergedRanges);
+        var printAreas = ReadPrintAreas(worksheet);
 
         foreach (var range in mergedRanges)
         {
@@ -195,6 +196,41 @@ public sealed class ExcelReader
             }
         }
 
+        var geometryRanges = printAreas.Concat(mergedRanges)
+            .Concat(images.SelectMany(image => GetAnchorRanges(image.Anchor, image.DrawingAnchor)))
+            .Concat(shapes.SelectMany(shape => GetAnchorRanges(shape.Anchor, shape.DrawingAnchor)))
+            .ToArray();
+        if (geometryRanges.Length > 0)
+        {
+            var firstColumn = geometryRanges.Min(range => range.First.Column);
+            var lastColumn = geometryRanges.Max(range => range.Last.Column);
+            for (var column = firstColumn; column <= lastColumn; column++)
+            {
+                if (!columns.ContainsKey(column))
+                {
+                    columns[column] = ReadColumnDefinition(
+                        column,
+                        worksheet.Column(column),
+                        pageSetupMetadata,
+                        diagnostics,
+                        worksheet.Name,
+                        fontManager,
+                        maximumDigitWidths);
+                }
+            }
+
+            var firstRow = geometryRanges.Min(range => range.First.Row);
+            var lastRow = geometryRanges.Max(range => range.Last.Row);
+            for (var row = firstRow; row <= lastRow; row++)
+            {
+                if (!rows.ContainsKey(row))
+                {
+                    var source = worksheet.Row(row);
+                    rows[row] = new(source.Height, source.IsHidden);
+                }
+            }
+        }
+
         var sheet = new ReportSheet(
             worksheet.Name,
             cells,
@@ -210,9 +246,18 @@ public sealed class ExcelReader
             DefaultColumnWidth = GetDefaultColumnWidth(
                 worksheet, pageSetupMetadata, diagnostics, fontManager, maximumDigitWidths),
             DefaultRowHeight = pageSetupMetadata?.DefaultRowHeight ?? worksheet.RowHeight,
-            PrintAreas = ReadPrintAreas(worksheet),
+            PrintAreas = printAreas,
         };
         return sheet;
+
+        static IEnumerable<CellRange> GetAnchorRanges(CellAddress fallback, DrawingAnchor? anchor)
+        {
+            var from = anchor?.From ?? fallback;
+            var to = anchor?.To ?? from;
+            yield return new(
+                new(Math.Min(from.Row, to.Row), Math.Min(from.Column, to.Column)),
+                new(Math.Max(from.Row, to.Row), Math.Max(from.Column, to.Column)));
+        }
     }
 
     private static ColumnDefinition ReadColumnDefinition(
@@ -226,14 +271,11 @@ public sealed class ExcelReader
     {
         var raw = metadata?.Columns.LastOrDefault(definition =>
             column >= definition.First && column <= definition.Last);
-        if (raw?.Width is not { } width)
-        {
-            return new(ExcelColumnWidthToPoints(source.Width), source.IsHidden);
-        }
-
         var maximumDigitWidth = ResolveMaximumDigitWidth(
-            metadata!, diagnostics, sheetName, fontManager, maximumDigitWidths);
-        return new(ColumnWidthCalculator.ToPoints(width, maximumDigitWidth), raw.Hidden);
+            metadata, diagnostics, sheetName, fontManager, maximumDigitWidths);
+        var width = raw?.Width ?? metadata?.DefaultColumnWidth ??
+            ColumnWidthCalculator.FromBaseColumnWidth(metadata?.BaseColumnWidth ?? 8, maximumDigitWidth);
+        return new(ColumnWidthCalculator.ToPoints(width, maximumDigitWidth), raw?.Hidden ?? source.IsHidden);
     }
 
     private static double GetDefaultColumnWidth(
@@ -243,24 +285,26 @@ public sealed class ExcelReader
         IFontManager? fontManager,
         Dictionary<NormalFontMetadata, double> maximumDigitWidths)
     {
-        if (metadata?.DefaultColumnWidth is not { } width)
+        if (metadata is null)
         {
             return ExcelColumnWidthToPoints(worksheet.ColumnWidth);
         }
 
         var maximumDigitWidth = ResolveMaximumDigitWidth(
             metadata, diagnostics, worksheet.Name, fontManager, maximumDigitWidths);
+        var width = metadata.DefaultColumnWidth ??
+            ColumnWidthCalculator.FromBaseColumnWidth(metadata.BaseColumnWidth ?? 8, maximumDigitWidth);
         return ColumnWidthCalculator.ToPoints(width, maximumDigitWidth);
     }
 
     private static double ResolveMaximumDigitWidth(
-        SheetPageSetupMetadata metadata,
+        SheetPageSetupMetadata? metadata,
         DiagnosticCollector? diagnostics,
         string sheetName,
         IFontManager? fontManager,
         Dictionary<NormalFontMetadata, double> maximumDigitWidths)
     {
-        if (fontManager is not null && metadata.NormalFont is { } normalFont)
+        if (fontManager is not null && metadata?.NormalFont is { } normalFont)
         {
             try
             {
@@ -297,7 +341,7 @@ public sealed class ExcelReader
             "MaximumDigitWidthFallback",
             DiagnosticSeverity.Warning,
             DiagnosticStage.Read,
-            $"Normal font '{metadata.NormalFont?.Family ?? "unknown"}' could not be measured; the 7px compatibility metric was used.",
+            $"Normal font '{metadata?.NormalFont?.Family ?? "unknown"}' could not be measured; the 7px compatibility metric was used.",
             sheetName));
         return 7;
     }
@@ -353,6 +397,8 @@ public sealed class ExcelReader
             ManualRowBreaks = metadata?.RowBreaks ?? [],
             ManualColumnBreaks = metadata?.ColumnBreaks ?? [],
             PageOrder = metadata?.PageOrder ?? PrintPageOrder.DownThenOver,
+            HorizontalCentered = metadata?.HorizontalCentered ?? false,
+            VerticalCentered = metadata?.VerticalCentered ?? false,
         };
         return settings;
 

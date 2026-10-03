@@ -323,6 +323,25 @@ public sealed class PdfSharpRenderer : IRenderer
 
     private void DrawText(XGraphics graphics, DrawTextCommand command)
     {
+        if (command.Style.TextRotation == 0)
+        {
+            DrawTextCore(graphics, command);
+            return;
+        }
+
+        var state = graphics.Save();
+        graphics.RotateAtTransform(
+            command.Style.TextRotation,
+            new XPoint(
+                command.Bounds.X + (command.Bounds.Width / 2),
+                command.Bounds.Y + (command.Bounds.Height / 2)));
+        graphics.IntersectClip(ToRect(command.Bounds));
+        DrawTextCore(graphics, command);
+        graphics.Restore(state);
+    }
+
+    private void DrawTextCore(XGraphics graphics, DrawTextCommand command)
+    {
         var request = ToRequest(command.Style);
         if (_fontManager is not null && RequiresResolvedTextPath(
             _fontManager.ResolveTextRuns(command.Text, request), _fontManager.Resolve(request), request))

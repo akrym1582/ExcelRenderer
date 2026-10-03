@@ -341,6 +341,64 @@ public sealed class LayoutPassTests
         Assert.All(context.RenderDocument.Pages, page => Assert.Single(page.Cells));
     }
 
+    /// <summary>明示倍率モードで保存された手動改ページが行バンドを分割することを検証します。</summary>
+    [Fact]
+    public void PaginationPass_honors_manual_row_breaks_in_explicit_mode()
+    {
+        var context = CreateContext(
+            cells: new Dictionary<CellAddress, ReportCell>
+            {
+                [new(1, 1)] = new("one", CellStyle.Default),
+                [new(2, 1)] = new("two", CellStyle.Default),
+                [new(3, 1)] = new("three", CellStyle.Default),
+            },
+            rows: new Dictionary<int, RowDefinition> { [1] = new(10), [2] = new(10), [3] = new(10) },
+            pageSettings: new PageSettings(100, 100, 10, 10, 10, 10)
+            {
+                ScaleMode = PrintScaleMode.Explicit,
+                ManualRowBreaks = [1],
+            });
+        context.PrintArea = new(new(1, 1), new(3, 1));
+        new HiddenRowColumnPass().Execute(context);
+        new ColumnLayoutPass().Execute(context);
+        new RowLayoutPass().Execute(context);
+        new TextMeasurePass().Execute(context);
+        new CellBoundsPass().Execute(context);
+
+        new PaginationPass().Execute(context);
+
+        Assert.Equal(2, context.RenderDocument!.Pages.Count);
+        Assert.Equal("one", Assert.Single(context.RenderDocument.Pages[0].Cells).Cell.Text);
+        Assert.Equal(["two", "three"], context.RenderDocument.Pages[1].Cells.Select(cell => cell.Cell.Text));
+    }
+
+    /// <summary>離れた複数印刷範囲が外接矩形ではなく独立ページとして生成されることを検証します。</summary>
+    [Fact]
+    public void ReportLayoutEngine_paginates_multiple_print_areas_independently()
+    {
+        var sheet = new ReportSheet(
+            "Sheet1",
+            new Dictionary<CellAddress, ReportCell>
+            {
+                [new(1, 1)] = new("first", CellStyle.Default),
+                [new(1, 3)] = new("second", CellStyle.Default),
+            },
+            new Dictionary<int, ColumnDefinition> { [1] = new(20), [2] = new(20), [3] = new(20) },
+            new Dictionary<int, RowDefinition> { [1] = new(15) },
+            [],
+            new())
+        {
+            PrintAreas = [new(new(1, 1), new(1, 1)), new(new(1, 3), new(1, 3))],
+        };
+
+        var pages = new ReportLayoutEngine(new FixedTextMeasurer()).Layout(sheet).Pages;
+
+        Assert.Equal(2, pages.Count);
+        Assert.Equal("first", Assert.Single(pages[0].Cells).Cell.Text);
+        Assert.Equal("second", Assert.Single(pages[1].Cells).Cell.Text);
+        Assert.Equal([1, 2], pages.Select(page => page.Number));
+    }
+
     /// <summary>
     /// 印刷タイトルに指定した行と列が各ページで繰り返されることを検証します。
     /// </summary>
@@ -450,6 +508,31 @@ public sealed class LayoutPassTests
         var image = Assert.Single(context.RenderDocument!.Pages[0].Images!);
         Assert.Equal(new ReportRect(38, 39, 10, 11), image.Bounds);
         Assert.Equal(imageBytes, image.ImageBytes);
+    }
+
+    /// <summary>複数ページに交差する画像が各ページへ同じ倍率で配置されることを検証します。</summary>
+    [Fact]
+    public void PaginationPass_places_cross_page_images_on_each_intersecting_page()
+    {
+        var imageBytes = CreateImageBytes();
+        var context = CreateContext(
+            columns: new Dictionary<int, ColumnDefinition> { [1] = new(30), [2] = new(30) },
+            rows: new Dictionary<int, RowDefinition> { [1] = new(20) },
+            pageSettings: new(50, 50, 10, 10, 10, 10),
+            images: [new(new(1, 1), 0, 0, 50, 10, imageBytes)]);
+        context.PrintArea = new(new(1, 1), new(1, 2));
+        new HiddenRowColumnPass().Execute(context);
+        new ColumnLayoutPass().Execute(context);
+        new RowLayoutPass().Execute(context);
+        new TextMeasurePass().Execute(context);
+        new CellBoundsPass().Execute(context);
+
+        new PaginationPass().Execute(context);
+
+        Assert.Equal(2, context.RenderDocument!.Pages.Count);
+        Assert.All(context.RenderDocument.Pages, page => Assert.Single(page.Images!));
+        Assert.Equal(50, context.RenderDocument.Pages[0].Images![0].Bounds.Width);
+        Assert.Equal(-20, context.RenderDocument.Pages[1].Images![0].Bounds.X);
     }
 
     /// <summary>
@@ -929,6 +1012,21 @@ public sealed class LayoutPassTests
         var command = Assert.IsType<DrawTextCommand>(Assert.Single(new DrawCommandGeneratorPass().Generate(document)));
 
         Assert.Equal(new ReportRect(10.5, 20.5, 29, 39), command.Bounds);
+    }
+
+    /// <summary>セルのインデントが文字の内容領域へ反映されることを検証します。</summary>
+    [Fact]
+    public void DrawCommandGenerator_applies_cell_indent_to_content_bounds()
+    {
+        var style = CellStyle.Default with { Indent = 2 };
+        var document = new RenderDocument(
+        [
+            new RenderPage(1, [new(new("text", style), new(10, 20, 30, 40))])
+        ]);
+
+        var command = Assert.IsType<DrawTextCommand>(Assert.Single(new DrawCommandGeneratorPass().Generate(document)));
+
+        Assert.Equal(new ReportRect(20.5, 20.5, 19, 39), command.Bounds);
     }
 
     /// <summary>

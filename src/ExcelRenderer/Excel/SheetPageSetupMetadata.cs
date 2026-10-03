@@ -1,3 +1,5 @@
+using ExcelRenderer.Model;
+
 namespace ExcelRenderer.Excel;
 
 /// <summary>
@@ -11,6 +13,9 @@ namespace ExcelRenderer.Excel;
 /// <param name="DefaultRowHeight">ポイント単位の既定行高です。</param>
 /// <param name="Columns">raw 列定義区間です。</param>
 /// <param name="NormalFont">Normal セルスタイルが参照するフォントです。</param>
+/// <param name="RowBreaks">改ページ後の行番号です。</param>
+/// <param name="ColumnBreaks">改ページ後の列番号です。</param>
+/// <param name="PageOrder">ページを出力する順序です。</param>
 internal sealed record SheetPageSetupMetadata(
     bool FitToPage,
     uint? Scale,
@@ -19,4 +24,7 @@ internal sealed record SheetPageSetupMetadata(
     double? DefaultColumnWidth,
     double DefaultRowHeight,
     IReadOnlyList<RawColumnDefinition> Columns,
-    NormalFontMetadata? NormalFont);
+    NormalFontMetadata? NormalFont,
+    IReadOnlyList<int> RowBreaks,
+    IReadOnlyList<int> ColumnBreaks,
+    PrintPageOrder PageOrder);

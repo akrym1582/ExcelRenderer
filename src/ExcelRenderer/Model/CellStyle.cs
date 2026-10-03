@@ -16,4 +16,10 @@ public sealed record CellStyle(
     /// Gets the default cell style. 未指定のセルに適用する標準フォントと既定の配置を持つスタイルを取得します。
     /// </summary>
     public static CellStyle Default { get; } = new(new FontStyle());
+
+    /// <summary>Gets the indentation level applied inside the cell content bounds.</summary>
+    public int Indent { get; init; }
+
+    /// <summary>Gets the clockwise text rotation in degrees.</summary>
+    public int TextRotation { get; init; }
 }

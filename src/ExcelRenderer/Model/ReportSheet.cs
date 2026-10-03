@@ -20,4 +20,10 @@ public sealed record ReportSheet(
 
     /// <summary>Gets the default height in points for rows without an explicit definition.</summary>
     public double DefaultRowHeight { get; init; } = 15;
+
+    /// <summary>
+    /// Gets the independently paginated print areas in workbook order. An empty collection uses
+    /// <see cref="PrintArea"/> or the automatically resolved used range.
+    /// </summary>
+    public IReadOnlyList<CellRange> PrintAreas { get; init; } = [];
 }

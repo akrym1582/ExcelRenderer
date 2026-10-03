@@ -147,6 +147,24 @@ internal sealed class SkiaDrawingContext
 
     private void DrawText(SKCanvas canvas, DrawTextCommand command)
     {
+        if (command.Style.TextRotation == 0)
+        {
+            DrawTextCore(canvas, command);
+            return;
+        }
+
+        canvas.Save();
+        canvas.RotateDegrees(
+            command.Style.TextRotation,
+            (float)(command.Bounds.X + (command.Bounds.Width / 2)),
+            (float)(command.Bounds.Y + (command.Bounds.Height / 2)));
+        canvas.ClipRect(ToRect(command.Bounds));
+        DrawTextCore(canvas, command);
+        canvas.Restore();
+    }
+
+    private void DrawTextCore(SKCanvas canvas, DrawTextCommand command)
+    {
         var request = new FontRequest(
             command.Style.Font.Family,
             command.Style.Font.Bold ? 700 : 400,

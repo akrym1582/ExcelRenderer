@@ -201,6 +201,7 @@ public sealed class ExcelReader
             DefaultColumnWidth = GetDefaultColumnWidth(
                 worksheet, pageSetupMetadata, diagnostics, fontManager, maximumDigitWidths),
             DefaultRowHeight = pageSetupMetadata?.DefaultRowHeight ?? worksheet.RowHeight,
+            PrintAreas = ReadPrintAreas(worksheet),
         };
         return sheet;
     }
@@ -294,11 +295,14 @@ public sealed class ExcelReader
 
     private static CellRange? ReadPrintArea(IXLWorksheet worksheet)
     {
-        var range = worksheet.PageSetup.PrintAreas.FirstOrDefault();
-        return range is null ? null : new(
-            new(range.RangeAddress.FirstAddress.RowNumber, range.RangeAddress.FirstAddress.ColumnNumber),
-            new(range.RangeAddress.LastAddress.RowNumber, range.RangeAddress.LastAddress.ColumnNumber));
+        var areas = ReadPrintAreas(worksheet);
+        return areas.Count == 0 ? null : areas[0];
     }
+
+    private static IReadOnlyList<CellRange> ReadPrintAreas(IXLWorksheet worksheet) =>
+        worksheet.PageSetup.PrintAreas.Select(range => new CellRange(
+            new(range.RangeAddress.FirstAddress.RowNumber, range.RangeAddress.FirstAddress.ColumnNumber),
+            new(range.RangeAddress.LastAddress.RowNumber, range.RangeAddress.LastAddress.ColumnNumber))).ToArray();
 
     private static PageSettings ReadPageSettings(
         IXLWorksheet worksheet,
@@ -337,6 +341,9 @@ public sealed class ExcelReader
             ReadRange(pageSetup.FirstColumnToRepeatAtLeft, pageSetup.LastColumnToRepeatAtLeft))
         {
             ScaleMode = metadata?.FitToPage == true ? PrintScaleMode.FitToPages : PrintScaleMode.Explicit,
+            ManualRowBreaks = metadata?.RowBreaks ?? [],
+            ManualColumnBreaks = metadata?.ColumnBreaks ?? [],
+            PageOrder = metadata?.PageOrder ?? PrintPageOrder.DownThenOver,
         };
         return settings;
 

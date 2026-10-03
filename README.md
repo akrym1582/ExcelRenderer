@@ -222,6 +222,12 @@ through its style XF and theme major/minor font before measuring digits 0–9 wi
 font manager. If that font cannot be measured, a 7px compatibility width is used and
 `MaximumDigitWidthFallback` is reported through conversion diagnostics.
 
+Distinct print areas are paginated independently without filling their bounding rectangle.
+Explicit-scale output honors saved row and column page breaks and the worksheet page order;
+Fit-to-pages ignores manual breaks. Objects intersecting more than one page are placed from the
+same source geometry on each page and clipped by the output page. Cell indentation and text
+rotation are carried into PDF, PNG, and SVG drawing.
+
 To render the same commands as page-by-page PNG files:
 
 ```csharp

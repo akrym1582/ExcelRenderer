@@ -37,13 +37,22 @@ public sealed class ReportLayoutEngine
     /// <returns>ページごとのセル、画像、図形、およびヘッダー・フッターの配置を保持するレンダリング文書を返します。</returns>
     public RenderDocument Layout(ReportSheet sheet)
     {
-        var context = new ReportLayoutContext(sheet, TextMeasurer);
-        foreach (var pass in passes)
+        if (sheet.PrintAreas.Count > 1)
         {
-            pass.Execute(context);
+            var pages = new List<RenderPage>();
+            foreach (var area in sheet.PrintAreas)
+            {
+                var areaDocument = LayoutSingleArea(sheet with { PrintArea = area, PrintAreas = [] });
+                pages.AddRange(areaDocument.Pages.Select(page => page with { Number = pages.Count + page.Number }));
+            }
+
+            return new(pages.Select(page => page with
+            {
+                HeaderFooterTexts = PaginationPass.GetHeaderFooterTexts(sheet, page.Number, pages.Count),
+            }).ToArray());
         }
 
-        return context.RenderDocument ?? new RenderDocument([]);
+        return LayoutSingleArea(sheet);
     }
 
     /// <summary>印刷範囲やページ設定を適用せず、使用範囲を単一キャンバスへ配置します。</summary>
@@ -67,5 +76,16 @@ public sealed class ReportLayoutEngine
         var width = bounds.Length == 0 ? 1 : Math.Max(1, bounds.Max(bound => bound.X + bound.Width));
         var height = bounds.Length == 0 ? 1 : Math.Max(1, bounds.Max(bound => bound.Y + bound.Height));
         return new(document, width, height);
+    }
+
+    private RenderDocument LayoutSingleArea(ReportSheet sheet)
+    {
+        var context = new ReportLayoutContext(sheet, TextMeasurer);
+        foreach (var pass in passes)
+        {
+            pass.Execute(context);
+        }
+
+        return context.RenderDocument ?? new RenderDocument([]);
     }
 }

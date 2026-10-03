@@ -1,5 +1,6 @@
+using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
-using A = DocumentFormat.OpenXml.Drawing;
+using ExcelRenderer.Model;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 
 namespace ExcelRenderer.Excel;
@@ -45,6 +46,9 @@ internal static class WorkbookLayoutMetadataReader
                     column.Width?.Value,
                     column.Hidden?.Value ?? false))
                 .ToArray() ?? [];
+            var pageOrder = pageSetup?.PageOrder?.Value == S.PageOrderValues.OverThenDown
+                ? PrintPageOrder.OverThenDown
+                : PrintPageOrder.DownThenOver;
             result[name] = new(
                 fitToPage,
                 pageSetup?.Scale?.Value,
@@ -53,11 +57,21 @@ internal static class WorkbookLayoutMetadataReader
                 sheetFormat?.DefaultColumnWidth?.Value,
                 sheetFormat?.DefaultRowHeight?.Value ?? 15,
                 columns,
-                normalFont);
+                normalFont,
+                ReadBreaks(worksheet.GetFirstChild<S.RowBreaks>()),
+                ReadBreaks(worksheet.GetFirstChild<S.ColumnBreaks>()),
+                pageOrder);
         }
 
         return result;
     }
+
+    private static IReadOnlyList<int> ReadBreaks(OpenXmlCompositeElement? breaks) => breaks?.Elements<S.Break>()
+        .Where(pageBreak => pageBreak.Id?.Value is > 0)
+        .Select(pageBreak => (int)Math.Min(pageBreak.Id!.Value, int.MaxValue))
+        .Distinct()
+        .OrderBy(value => value)
+        .ToArray() ?? [];
 
     private static NormalFontMetadata? ReadNormalFont(WorkbookPart workbookPart)
     {

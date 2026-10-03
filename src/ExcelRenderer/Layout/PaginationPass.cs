@@ -109,36 +109,44 @@ public sealed class PaginationPass : IReportLayoutPass
             var centerX = settings.HorizontalCentered ? Math.Max(0, (bodyWidth - occupiedWidth) / 2) : 0;
             var centerY = settings.VerticalCentered ? Math.Max(0, (bodyHeight - occupiedHeight) / 2) : 0;
             var bodyClip = new ReportRect(
-                settings.MarginLeft + centerX,
-                settings.MarginTop + centerY,
-                occupiedWidth,
-                occupiedHeight);
+                settings.MarginLeft + centerX + (repeatedWidth * scale),
+                settings.MarginTop + centerY + (repeatedHeight * scale),
+                Math.Max(0, occupiedWidth - (repeatedWidth * scale)),
+                Math.Max(0, occupiedHeight - (repeatedHeight * scale)));
             var cells = context.CellLayouts.Values
                 .Where(layout => ((layout.Bounds.X >= horizontal.Start && layout.Bounds.X < horizontal.End) ||
                         (repeatColumns && titleColumns.Contains(layout.Address.Column))) &&
                     ((layout.Bounds.Y >= vertical.Start && layout.Bounds.Y < vertical.End) ||
                         (repeatRows && titleRows.Contains(layout.Address.Row))))
-                .Select(layout => new RenderCell(ScaleCell(context.Sheet.Cells[layout.Address], scale), new(
-                    (GetPosition(layout.Bounds.X, horizontal.Start, repeatColumns, titleColumns.Contains(layout.Address.Column), titleColumns, column => context.ColumnLayouts[column].X, repeatedWidth) * scale) + settings.MarginLeft + centerX,
-                    (GetPosition(layout.Bounds.Y, vertical.Start, repeatRows, titleRows.Contains(layout.Address.Row), titleRows, row => context.RowLayouts[row].Y, repeatedHeight) * scale) + settings.MarginTop + centerY,
-                    layout.Bounds.Width * scale,
-                    layout.Bounds.Height * scale))
+                .Select(layout =>
                 {
-                    ContentBounds = new(
-                        ((layout.ContentBounds.X - horizontal.Start + repeatedWidth) * scale) + settings.MarginLeft + centerX,
-                        ((layout.ContentBounds.Y - vertical.Start + repeatedHeight) * scale) + settings.MarginTop + centerY,
-                        layout.ContentBounds.Width * scale,
-                        layout.ContentBounds.Height * scale),
-                    TextLayout = context.TextLayouts.TryGetValue(layout.Address, out var textLayout)
-                        ? ScaleTextLayout(textLayout, scale)
-                        : null,
-                    MergedBorders = layout.MergedBorders?.Select(border => new RenderBorder(
-                        new(
-                            (GetPosition(border.Bounds.X, horizontal.Start, repeatColumns, titleColumns.Contains(layout.Address.Column), titleColumns, column => context.ColumnLayouts[column].X, repeatedWidth) * scale) + settings.MarginLeft + centerX,
-                            (GetPosition(border.Bounds.Y, vertical.Start, repeatRows, titleRows.Contains(layout.Address.Row), titleRows, row => context.RowLayouts[row].Y, repeatedHeight) * scale) + settings.MarginTop + centerY,
-                            border.Bounds.Width * scale,
-                            border.Bounds.Height * scale),
-                        ScaleBorder(border.Border, scale))).ToArray(),
+                    var isTitleColumn = titleColumns.Contains(layout.Address.Column);
+                    var isTitleRow = titleRows.Contains(layout.Address.Row);
+                    double PageX(double x) => (GetPosition(x, horizontal.Start, repeatColumns, isTitleColumn, titleColumns, column => context.ColumnLayouts[column].X, repeatedWidth) * scale) + settings.MarginLeft + centerX;
+                    double PageY(double y) => (GetPosition(y, vertical.Start, repeatRows, isTitleRow, titleRows, row => context.RowLayouts[row].Y, repeatedHeight) * scale) + settings.MarginTop + centerY;
+                    var cellBounds = new ReportRect(
+                        PageX(layout.Bounds.X),
+                        PageY(layout.Bounds.Y),
+                        layout.Bounds.Width * scale,
+                        layout.Bounds.Height * scale);
+                    return new RenderCell(ScaleCell(context.Sheet.Cells[layout.Address], scale), cellBounds)
+                    {
+                        ContentBounds = new(
+                            cellBounds.X + ((layout.ContentBounds.X - layout.Bounds.X) * scale),
+                            cellBounds.Y + ((layout.ContentBounds.Y - layout.Bounds.Y) * scale),
+                            layout.ContentBounds.Width * scale,
+                            layout.ContentBounds.Height * scale),
+                        TextLayout = context.TextLayouts.TryGetValue(layout.Address, out var textLayout)
+                            ? ScaleTextLayout(textLayout, scale)
+                            : null,
+                        MergedBorders = layout.MergedBorders?.Select(border => new RenderBorder(
+                            new(
+                                PageX(border.Bounds.X),
+                                PageY(border.Bounds.Y),
+                                border.Bounds.Width * scale,
+                                border.Bounds.Height * scale),
+                            ScaleBorder(border.Border, scale))).ToArray(),
+                    };
                 })
                 .ToArray();
             var images = (context.Sheet.Images ?? [])
@@ -150,7 +158,7 @@ public sealed class PaginationPass : IReportLayoutPass
                     image.Width,
                     image.Height,
                     image.DrawingAnchor,
-                    out var bounds) && Intersects(bounds, horizontal, vertical))
+                    out var bounds) && Intersects(ObjectGeometry.GetVisualBounds(bounds, image.Rotation), horizontal, vertical))
                 .Select(image =>
                 {
                     DrawingAnchorResolver.TryResolve(
@@ -188,7 +196,7 @@ public sealed class PaginationPass : IReportLayoutPass
                     shape.Width,
                     shape.Height,
                     shape.DrawingAnchor,
-                    out var bounds) && Intersects(bounds, horizontal, vertical))
+                    out var bounds) && Intersects(ObjectGeometry.GetVisualBounds(bounds, shape.Rotation), horizontal, vertical))
                 .Select(shape =>
                 {
                     DrawingAnchorResolver.TryResolve(

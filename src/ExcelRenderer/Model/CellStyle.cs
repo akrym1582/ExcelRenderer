@@ -22,4 +22,7 @@ public sealed record CellStyle(
 
     /// <summary>Gets the clockwise text rotation in degrees.</summary>
     public int TextRotation { get; init; }
+
+    /// <summary>Gets a value indicating whether text elements are stacked from top to bottom.</summary>
+    public bool TopToBottom { get; init; }
 }

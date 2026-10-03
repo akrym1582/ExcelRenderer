@@ -13,18 +13,33 @@ public sealed class ContinuousLayoutPass : IReportLayoutPass
         var cells = context.CellLayouts.Values
             .Select(layout => new RenderCell(context.Sheet.Cells[layout.Address], layout.Bounds)
             {
+                ContentBounds = layout.ContentBounds,
                 MergedBorders = layout.MergedBorders,
                 TextLayout = context.TextLayouts.GetValueOrDefault(layout.Address),
             }).ToArray();
         var images = (context.Sheet.Images ?? [])
-            .Where(image => context.ColumnLayouts.TryGetValue(image.Anchor.Column, out _) &&
-                context.RowLayouts.TryGetValue(image.Anchor.Row, out _))
+            .Where(image => DrawingAnchorResolver.TryResolve(
+                context,
+                image.Anchor,
+                image.OffsetX,
+                image.OffsetY,
+                image.Width,
+                image.Height,
+                image.DrawingAnchor,
+                out _))
             .Select(image =>
             {
-                var column = context.ColumnLayouts[image.Anchor.Column];
-                var row = context.RowLayouts[image.Anchor.Row];
+                DrawingAnchorResolver.TryResolve(
+                    context,
+                    image.Anchor,
+                    image.OffsetX,
+                    image.OffsetY,
+                    image.Width,
+                    image.Height,
+                    image.DrawingAnchor,
+                    out var bounds);
                 return new RenderImage(
-                    new(column.X + image.OffsetX, row.Y + image.OffsetY, image.Width, image.Height),
+                    bounds,
                     image.ImageBytes,
                     image.ZIndex)
                 {
@@ -35,14 +50,28 @@ public sealed class ContinuousLayoutPass : IReportLayoutPass
                 };
             }).ToArray();
         var shapes = (context.Sheet.Shapes ?? [])
-            .Where(shape => context.ColumnLayouts.TryGetValue(shape.Anchor.Column, out _) &&
-                context.RowLayouts.TryGetValue(shape.Anchor.Row, out _))
+            .Where(shape => DrawingAnchorResolver.TryResolve(
+                context,
+                shape.Anchor,
+                shape.OffsetX,
+                shape.OffsetY,
+                shape.Width,
+                shape.Height,
+                shape.DrawingAnchor,
+                out _))
             .Select(shape =>
             {
-                var column = context.ColumnLayouts[shape.Anchor.Column];
-                var row = context.RowLayouts[shape.Anchor.Row];
+                DrawingAnchorResolver.TryResolve(
+                    context,
+                    shape.Anchor,
+                    shape.OffsetX,
+                    shape.OffsetY,
+                    shape.Width,
+                    shape.Height,
+                    shape.DrawingAnchor,
+                    out var bounds);
                 return new RenderShape(
-                    new(column.X + shape.OffsetX, row.Y + shape.OffsetY, shape.Width, shape.Height),
+                    bounds,
                     shape);
             }).ToArray();
         context.RenderDocument = new([new RenderPage(1, cells, images, Shapes: shapes)]);

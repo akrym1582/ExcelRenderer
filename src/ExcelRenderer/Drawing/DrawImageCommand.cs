@@ -19,4 +19,7 @@ public sealed record DrawImageCommand(int PageNumber, ReportRect Bounds, byte[] 
 
     /// <summary>Gets a value indicating whether the image is flipped vertically.</summary>
     public bool FlipVertical { get; init; }
+
+    /// <summary>Gets the page-space clipping rectangle.</summary>
+    public ReportRect? ClipBounds { get; init; }
 }

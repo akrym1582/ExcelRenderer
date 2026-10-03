@@ -13,4 +13,14 @@ public sealed record TextLayoutLine(
     double Height,
     double Baseline,
     IReadOnlyList<TextLayoutRun> Runs,
-    bool ExplicitBreak);
+    bool ExplicitBreak)
+{
+    /// <summary>Gets the maximum distance above the baseline.</summary>
+    public double Ascent { get; init; }
+
+    /// <summary>Gets the maximum distance below the baseline.</summary>
+    public double Descent { get; init; }
+
+    /// <summary>Gets the additional inter-line spacing.</summary>
+    public double Leading { get; init; }
+}

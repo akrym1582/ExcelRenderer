@@ -224,15 +224,19 @@ font manager. If that font cannot be measured, a 7px compatibility width is used
 
 Distinct print areas are paginated independently without filling their bounding rectangle.
 Explicit-scale output honors saved row and column page breaks and the worksheet page order;
-Fit-to-pages ignores manual breaks. Objects intersecting more than one page are placed from the
-same source geometry on each page and clipped by the output page. Cell indentation and text
-rotation are carried into PDF, PNG, and SVG drawing.
+Fit-to-pages ignores manual breaks. The combined pages are renumbered once across all areas, so
+page fields and PDF/PNG/SVG page selection use the same sequence. Objects intersecting more than
+one page are placed from the same source geometry on each page and clipped to that page's body
+viewport rather than merely to the physical paper. Saved horizontal and vertical centering moves
+cells, objects, and their body clip together; continuous output intentionally ignores print setup.
+Cell indentation, content padding, ordinary rotation, and stacked top-to-bottom text are carried
+into PDF, PNG, and SVG drawing.
 
 Wrapped cell text is finalized during layout into lines and resolved font runs, including
 grapheme-safe forced breaks and explicit-newline markers. The result is carried by the draw
 command so PDF, PNG, and SVG do not independently choose different line breaks.
 
-DrawingML picture metadata preserves one-cell, two-cell, and absolute anchors in points together
+DrawingML picture metadata preserves and resolves one-cell, two-cell, and absolute anchors in points together
 with marker offsets, extents, `editAs`, source crop, rotation, flips, and worksheet drawing order.
 Source crop is applied by both renderer backends without changing the destination bounds.
 
@@ -311,12 +315,12 @@ The [Japanese guide](README.ja.md) contains a detailed description of the models
 
 ## Current limitations
 
-- Only the first print area is used when a worksheet defines multiple print areas.
-- Images are positioned from their top-left Excel anchor and are not split across pages.
 - Charts are not supported.
 - Formula behavior and conditional formatting are not reproduced completely.
 - Not every paper size or header/footer formatting code is supported.
 - Page breaks occur only at row and column boundaries.
+- Japanese top-to-bottom mode stacks Unicode text elements; it does not yet select full
+  typographic vertical glyph variants or reproduce every Japanese line-breaking rule.
 - Output can differ from Excel because font measurement and rendering engines differ.
 
 ## Development

@@ -19,4 +19,7 @@ public sealed record RenderImage(ReportRect Bounds, byte[] ImageBytes, int ZInde
 
     /// <summary>Gets a value indicating whether the image is flipped vertically.</summary>
     public bool FlipVertical { get; init; }
+
+    /// <summary>Gets the page-space body viewport that clips this object.</summary>
+    public ReportRect? ClipBounds { get; init; }
 }

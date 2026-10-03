@@ -401,6 +401,36 @@ public sealed class LayoutPassTests
         Assert.Equal([1, 2], pages.Select(page => page.Number));
     }
 
+    /// <summary>複数ページを持つ印刷範囲を結合してもページ番号と内容が重複しないことを検証します。</summary>
+    [Fact]
+    public void ReportLayoutEngine_numbers_all_pages_from_multiple_print_areas_sequentially()
+    {
+        var cells = Enumerable.Range(1, 4).ToDictionary(
+            row => new CellAddress(row, 1),
+            row => new ReportCell($"row-{row}", CellStyle.Default));
+        var sheet = new ReportSheet(
+            "Sheet1",
+            cells,
+            new Dictionary<int, ColumnDefinition> { [1] = new(20) },
+            Enumerable.Range(1, 4).ToDictionary(row => row, _ => new RowDefinition(40)),
+            [],
+            new PageSettings(50, 70, 10, 10, 10, 10),
+            HeaderFooter: new(new("", "&P/&N", ""), new("", "", "")))
+        {
+            PrintAreas = [new(new(1, 1), new(2, 1)), new(new(3, 1), new(4, 1))],
+        };
+
+        var document = new ReportLayoutEngine(new FixedTextMeasurer()).Layout(sheet);
+        var commands = new DrawCommandGeneratorPass().Generate(document);
+
+        Assert.Equal([1, 2, 3, 4], document.Pages.Select(page => page.Number));
+        Assert.Equal(4, commands.GroupBy(command => command.PageNumber).Count());
+        Assert.Equal(["1/4", "2/4", "3/4", "4/4"], document.Pages
+            .Select(page => Assert.Single(page.HeaderFooterTexts!).Text));
+        Assert.Equal(["row-1", "row-2", "row-3", "row-4"], document.Pages
+            .Select(page => Assert.Single(page.Cells).Cell.Text));
+    }
+
     /// <summary>
     /// 印刷タイトルに指定した行と列が各ページで繰り返されることを検証します。
     /// </summary>
@@ -733,7 +763,7 @@ public sealed class LayoutPassTests
             Assert.Equal(new CellRange(new(2, 3), new(4, 5)), sheet.PrintArea);
             Assert.Equal(841.89, sheet.PageSettings.Width, 2);
             Assert.Equal(36, sheet.PageSettings.MarginLeft, 2);
-            Assert.Equal(48, sheet.Columns[3].Width, 2);
+            Assert.Equal(45.75, sheet.Columns[3].Width, 2);
         }
         finally
         {

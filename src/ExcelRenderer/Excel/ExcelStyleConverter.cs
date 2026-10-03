@@ -33,7 +33,8 @@ public static class ExcelStyleConverter
             style.Alignment.ShrinkToFit)
         {
             Indent = Math.Max(0, style.Alignment.Indent + style.Alignment.RelativeIndent),
-            TextRotation = style.Alignment.TextRotation,
+            TextRotation = style.Alignment.TextRotation == 255 ? 0 : style.Alignment.TextRotation,
+            TopToBottom = style.Alignment.TextRotation == 255,
         };
     }
 

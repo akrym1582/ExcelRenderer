@@ -43,7 +43,8 @@ public sealed class ReportLayoutEngine
             foreach (var area in sheet.PrintAreas)
             {
                 var areaDocument = LayoutSingleArea(sheet with { PrintArea = area, PrintAreas = [] });
-                pages.AddRange(areaDocument.Pages.Select(page => page with { Number = pages.Count + page.Number }));
+                var offset = pages.Count;
+                pages.AddRange(areaDocument.Pages.Select(page => page with { Number = offset + page.Number }));
             }
 
             return new(pages.Select(page => page with

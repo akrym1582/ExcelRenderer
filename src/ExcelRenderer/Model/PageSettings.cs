@@ -30,4 +30,10 @@ public sealed record PageSettings(
 
     /// <summary>Gets the order in which two-dimensional page bands are emitted.</summary>
     public PrintPageOrder PageOrder { get; init; } = PrintPageOrder.DownThenOver;
+
+    /// <summary>Gets a value indicating whether printed content is horizontally centered.</summary>
+    public bool HorizontalCentered { get; init; }
+
+    /// <summary>Gets a value indicating whether printed content is vertically centered.</summary>
+    public bool VerticalCentered { get; init; }
 }

@@ -166,6 +166,11 @@ public sealed class PdfSharpRenderer : IRenderer
         using var stream = pngData.AsStream();
         using var pdfImage = XImage.FromStream(stream);
         var state = graphics.Save();
+        if (command.ClipBounds is { } clip)
+        {
+            graphics.IntersectClip(ToRect(clip));
+        }
+
         var centerX = command.Bounds.X + (command.Bounds.Width / 2);
         var centerY = command.Bounds.Y + (command.Bounds.Height / 2);
         graphics.TranslateTransform(centerX, centerY);
@@ -295,6 +300,11 @@ public sealed class PdfSharpRenderer : IRenderer
     {
         var state = graphics.Save();
         var b = command.Bounds;
+        if (command.ClipBounds is { } clip)
+        {
+            graphics.IntersectClip(ToRect(clip));
+        }
+
         if (command.Shape.Rotation != 0)
         {
             graphics.RotateAtTransform(command.Shape.Rotation, new XPoint(b.X + (b.Width / 2), b.Y + (b.Height / 2)));
@@ -335,8 +345,13 @@ public sealed class PdfSharpRenderer : IRenderer
                 command.PageNumber,
                 bounds,
                 text.Text,
-                CellStyle.Default with { Font = text.Font, HorizontalAlignment = text.HorizontalAlignment,
-                VerticalAlignment = text.VerticalAlignment, WrapText = text.WrapText, }));
+                CellStyle.Default with
+                {
+                    Font = text.Font,
+                    HorizontalAlignment = text.HorizontalAlignment,
+                    VerticalAlignment = text.VerticalAlignment,
+                    WrapText = text.WrapText,
+                }));
         }
 
         graphics.Restore(state);
@@ -344,19 +359,21 @@ public sealed class PdfSharpRenderer : IRenderer
 
     private void DrawText(XGraphics graphics, DrawTextCommand command)
     {
-        if (command.Style.TextRotation == 0)
+        command = NormalizeVerticalText(command);
+        var rotation = command.Style.TextRotation == 255 ? 0 : command.Style.TextRotation;
+        if (rotation == 0)
         {
             DrawTextCore(graphics, command);
             return;
         }
 
         var state = graphics.Save();
+        graphics.IntersectClip(ToRect(command.Bounds));
         graphics.RotateAtTransform(
-            command.Style.TextRotation,
+            rotation,
             new XPoint(
                 command.Bounds.X + (command.Bounds.Width / 2),
                 command.Bounds.Y + (command.Bounds.Height / 2)));
-        graphics.IntersectClip(ToRect(command.Bounds));
         DrawTextCore(graphics, command);
         graphics.Restore(state);
     }
@@ -371,11 +388,13 @@ public sealed class PdfSharpRenderer : IRenderer
             return;
         }
 
-        var font = CreateFontToFit(graphics, command.Text, command.Style, command.Bounds.Width);
+        var font = command.TextLayout is { EffectiveFontSize: > 0 } layout
+            ? PdfSharpTextMeasurer.CreateFont(command.Style.Font with { Size = layout.EffectiveFontSize })
+            : CreateFontToFit(graphics, command.Text, command.Style, command.Bounds.Width);
         var lines = command.TextLayout?.Lines.Select(line => line.Text).ToArray() ??
             WrapText(graphics, command.Text, font, command.Bounds.Width, command.Style.WrapText);
-        var lineHeight = graphics.MeasureString("Ag", font).Height;
-        var textHeight = lineHeight * lines.Count;
+        var lineHeight = command.TextLayout?.Lines.FirstOrDefault()?.Height ?? graphics.MeasureString("Ag", font).Height;
+        var textHeight = command.TextLayout?.Size.Height ?? lineHeight * lines.Count;
         var y = command.Style.VerticalAlignment switch
         {
             VerticalAlignment.Center => command.Bounds.Y + ((command.Bounds.Height - textHeight) / 2),
@@ -391,13 +410,47 @@ public sealed class PdfSharpRenderer : IRenderer
         var format = ToFormat(command.Style);
         format.LineAlignment = XLineAlignment.Near;
         var brush = new XSolidBrush(ToColor(command.Style.Font.Color ?? new(0, 0, 0)));
-        foreach (var line in lines)
+        for (var index = 0; index < lines.Count; index++)
         {
-            graphics.DrawString(line, font, brush, new XRect(command.Bounds.X, y, command.Bounds.Width, lineHeight), format);
-            y += lineHeight;
+            var finalizedLine = command.TextLayout?.Lines[index];
+            var finalizedWidth = finalizedLine?.Width;
+            var x = finalizedWidth is null ? command.Bounds.X : command.Style.HorizontalAlignment switch
+            {
+                HorizontalAlignment.Center => command.Bounds.X + ((command.Bounds.Width - finalizedWidth.Value) / 2),
+                HorizontalAlignment.Right => command.Bounds.X + command.Bounds.Width - finalizedWidth.Value,
+                _ => command.Bounds.X,
+            };
+            if (finalizedWidth is not null)
+            {
+                format.Alignment = XStringAlignment.Near;
+            }
+
+            graphics.DrawString(lines[index], font, brush, new XRect(x, y, finalizedWidth ?? command.Bounds.Width, lineHeight), format);
+            y += finalizedLine?.Height ?? lineHeight;
         }
 
         graphics.Restore(state);
+    }
+
+    private DrawTextCommand NormalizeVerticalText(DrawTextCommand command)
+    {
+        if (command.TextLayout is not null || (!command.Style.TopToBottom && command.Style.TextRotation != 255))
+        {
+            return command;
+        }
+
+        var elements = System.Globalization.StringInfo.GetTextElementEnumerator(command.Text);
+        var result = new List<string>();
+        while (elements.MoveNext())
+        {
+            result.Add(elements.GetTextElement());
+        }
+
+        return command with
+        {
+            Text = string.Join("\n", result),
+            Style = command.Style with { TextRotation = 0, TopToBottom = true },
+        };
     }
 
     private void DrawTextWithIvs(XGraphics graphics, DrawTextCommand command)

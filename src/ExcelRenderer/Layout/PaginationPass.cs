@@ -94,24 +94,48 @@ public sealed class PaginationPass : IReportLayoutPass
             var repeatRows = vertical.Start >= titleRowEnd - 1e-7;
             var repeatedWidth = repeatColumns ? titleWidth : 0;
             var repeatedHeight = repeatRows ? titleHeight : 0;
+            var bodyWidth = settings.Width - settings.MarginLeft - settings.MarginRight;
+            var bodyHeight = settings.Height - settings.MarginTop - settings.MarginBottom;
+            var horizontalEnd = double.IsFinite(horizontal.End)
+                ? horizontal.End
+                : context.ColumnLayouts[bodyColumns[bodyColumns.Length - 1]].X +
+                    context.ColumnLayouts[bodyColumns[bodyColumns.Length - 1]].Width;
+            var verticalEnd = double.IsFinite(vertical.End)
+                ? vertical.End
+                : context.RowLayouts[bodyRows[bodyRows.Length - 1]].Y +
+                    context.RowLayouts[bodyRows[bodyRows.Length - 1]].Height;
+            var occupiedWidth = Math.Min(bodyWidth, ((horizontalEnd - horizontal.Start) + repeatedWidth) * scale);
+            var occupiedHeight = Math.Min(bodyHeight, ((verticalEnd - vertical.Start) + repeatedHeight) * scale);
+            var centerX = settings.HorizontalCentered ? Math.Max(0, (bodyWidth - occupiedWidth) / 2) : 0;
+            var centerY = settings.VerticalCentered ? Math.Max(0, (bodyHeight - occupiedHeight) / 2) : 0;
+            var bodyClip = new ReportRect(
+                settings.MarginLeft + centerX,
+                settings.MarginTop + centerY,
+                occupiedWidth,
+                occupiedHeight);
             var cells = context.CellLayouts.Values
                 .Where(layout => ((layout.Bounds.X >= horizontal.Start && layout.Bounds.X < horizontal.End) ||
                         (repeatColumns && titleColumns.Contains(layout.Address.Column))) &&
                     ((layout.Bounds.Y >= vertical.Start && layout.Bounds.Y < vertical.End) ||
                         (repeatRows && titleRows.Contains(layout.Address.Row))))
                 .Select(layout => new RenderCell(ScaleCell(context.Sheet.Cells[layout.Address], scale), new(
-                    (GetPosition(layout.Bounds.X, horizontal.Start, repeatColumns, titleColumns.Contains(layout.Address.Column), titleColumns, column => context.ColumnLayouts[column].X, repeatedWidth) * scale) + settings.MarginLeft,
-                    (GetPosition(layout.Bounds.Y, vertical.Start, repeatRows, titleRows.Contains(layout.Address.Row), titleRows, row => context.RowLayouts[row].Y, repeatedHeight) * scale) + settings.MarginTop,
+                    (GetPosition(layout.Bounds.X, horizontal.Start, repeatColumns, titleColumns.Contains(layout.Address.Column), titleColumns, column => context.ColumnLayouts[column].X, repeatedWidth) * scale) + settings.MarginLeft + centerX,
+                    (GetPosition(layout.Bounds.Y, vertical.Start, repeatRows, titleRows.Contains(layout.Address.Row), titleRows, row => context.RowLayouts[row].Y, repeatedHeight) * scale) + settings.MarginTop + centerY,
                     layout.Bounds.Width * scale,
                     layout.Bounds.Height * scale))
                 {
+                    ContentBounds = new(
+                        ((layout.ContentBounds.X - horizontal.Start + repeatedWidth) * scale) + settings.MarginLeft + centerX,
+                        ((layout.ContentBounds.Y - vertical.Start + repeatedHeight) * scale) + settings.MarginTop + centerY,
+                        layout.ContentBounds.Width * scale,
+                        layout.ContentBounds.Height * scale),
                     TextLayout = context.TextLayouts.TryGetValue(layout.Address, out var textLayout)
                         ? ScaleTextLayout(textLayout, scale)
                         : null,
                     MergedBorders = layout.MergedBorders?.Select(border => new RenderBorder(
                         new(
-                            (GetPosition(border.Bounds.X, horizontal.Start, repeatColumns, titleColumns.Contains(layout.Address.Column), titleColumns, column => context.ColumnLayouts[column].X, repeatedWidth) * scale) + settings.MarginLeft,
-                            (GetPosition(border.Bounds.Y, vertical.Start, repeatRows, titleRows.Contains(layout.Address.Row), titleRows, row => context.RowLayouts[row].Y, repeatedHeight) * scale) + settings.MarginTop,
+                            (GetPosition(border.Bounds.X, horizontal.Start, repeatColumns, titleColumns.Contains(layout.Address.Column), titleColumns, column => context.ColumnLayouts[column].X, repeatedWidth) * scale) + settings.MarginLeft + centerX,
+                            (GetPosition(border.Bounds.Y, vertical.Start, repeatRows, titleRows.Contains(layout.Address.Row), titleRows, row => context.RowLayouts[row].Y, repeatedHeight) * scale) + settings.MarginTop + centerY,
                             border.Bounds.Width * scale,
                             border.Bounds.Height * scale),
                         ScaleBorder(border.Border, scale))).ToArray(),
@@ -125,17 +149,25 @@ public sealed class PaginationPass : IReportLayoutPass
                     image.OffsetY,
                     image.Width,
                     image.Height,
+                    image.DrawingAnchor,
                     out var bounds) && Intersects(bounds, horizontal, vertical))
                 .Select(image =>
                 {
-                    var column = context.ColumnLayouts[image.Anchor.Column];
-                    var row = context.RowLayouts[image.Anchor.Row];
+                    DrawingAnchorResolver.TryResolve(
+                        context,
+                        image.Anchor,
+                        image.OffsetX,
+                        image.OffsetY,
+                        image.Width,
+                        image.Height,
+                        image.DrawingAnchor,
+                        out var sourceBounds);
                     return new RenderImage(
                         new(
-                        ((column.X - horizontal.Start + repeatedWidth + image.OffsetX) * scale) + settings.MarginLeft,
-                        ((row.Y - vertical.Start + repeatedHeight + image.OffsetY) * scale) + settings.MarginTop,
-                        image.Width * scale,
-                        image.Height * scale),
+                        ((sourceBounds.X - horizontal.Start + repeatedWidth) * scale) + settings.MarginLeft + centerX,
+                        ((sourceBounds.Y - vertical.Start + repeatedHeight) * scale) + settings.MarginTop + centerY,
+                        sourceBounds.Width * scale,
+                        sourceBounds.Height * scale),
                         image.ImageBytes,
                         image.ZIndex)
                     {
@@ -143,6 +175,7 @@ public sealed class PaginationPass : IReportLayoutPass
                         Rotation = image.Rotation,
                         FlipHorizontal = image.FlipHorizontal,
                         FlipVertical = image.FlipVertical,
+                        ClipBounds = bodyClip,
                     };
                 })
                 .ToArray();
@@ -154,18 +187,29 @@ public sealed class PaginationPass : IReportLayoutPass
                     shape.OffsetY,
                     shape.Width,
                     shape.Height,
+                    shape.DrawingAnchor,
                     out var bounds) && Intersects(bounds, horizontal, vertical))
                 .Select(shape =>
                 {
-                    var column = context.ColumnLayouts[shape.Anchor.Column];
-                    var row = context.RowLayouts[shape.Anchor.Row];
+                    DrawingAnchorResolver.TryResolve(
+                        context,
+                        shape.Anchor,
+                        shape.OffsetX,
+                        shape.OffsetY,
+                        shape.Width,
+                        shape.Height,
+                        shape.DrawingAnchor,
+                        out var sourceBounds);
                     return new RenderShape(
                         new(
-                            ((column.X - horizontal.Start + repeatedWidth + shape.OffsetX) * scale) + settings.MarginLeft,
-                            ((row.Y - vertical.Start + repeatedHeight + shape.OffsetY) * scale) + settings.MarginTop,
-                            shape.Width * scale,
-                            shape.Height * scale),
-                        ScaleShape(shape, scale));
+                            ((sourceBounds.X - horizontal.Start + repeatedWidth) * scale) + settings.MarginLeft + centerX,
+                            ((sourceBounds.Y - vertical.Start + repeatedHeight) * scale) + settings.MarginTop + centerY,
+                            sourceBounds.Width * scale,
+                            sourceBounds.Height * scale),
+                        ScaleShape(shape, scale))
+                    {
+                        ClipBounds = bodyClip,
+                    };
                 }).ToArray();
             return new RenderPage(pageIndex + 1, cells, images, Shapes: shapes);
         }).ToArray();
@@ -367,12 +411,18 @@ public sealed class PaginationPass : IReportLayoutPass
             Width = line.Width * scale,
             Height = line.Height * scale,
             Baseline = line.Baseline * scale,
+            Ascent = line.Ascent * scale,
+            Descent = line.Descent * scale,
+            Leading = line.Leading * scale,
             Runs = line.Runs.Select(run => run with
             {
                 X = run.X * scale,
                 Advance = run.Advance * scale,
             }).ToArray(),
-        }).ToArray());
+        }).ToArray())
+    {
+        EffectiveFontSize = layout.EffectiveFontSize * scale,
+    };
 
     private static bool TryGetObjectBounds(
         ReportLayoutContext context,
@@ -381,17 +431,11 @@ public sealed class PaginationPass : IReportLayoutPass
         double offsetY,
         double width,
         double height,
+        DrawingAnchor? drawingAnchor,
         out ReportRect bounds)
     {
-        if (!context.ColumnLayouts.TryGetValue(anchor.Column, out var column) ||
-            !context.RowLayouts.TryGetValue(anchor.Row, out var row))
-        {
-            bounds = default;
-            return false;
-        }
-
-        bounds = new(column.X + offsetX, row.Y + offsetY, width, height);
-        return true;
+        return DrawingAnchorResolver.TryResolve(
+            context, anchor, offsetX, offsetY, width, height, drawingAnchor, out bounds);
     }
 
     private static bool Intersects(ReportRect bounds, PageBand horizontal, PageBand vertical) =>

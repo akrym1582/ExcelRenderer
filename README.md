@@ -122,11 +122,7 @@ Or from C#, after adding the library:
 await ExcelConverter.ConvertToPdfAsync("input.xlsx", "output.pdf");
 ```
 
-Example output (a workbook report converted to SVG):
-
-![Sample rendering result](samples/svg/japanese-report.svg)
-
-A grid-paper (方眼紙) style Japanese monthly report, including IVS characters (葛󠄂, 辻󠄂) and emoji, rendered to PNG. The source workbook is [samples/excel/japanese-grid-report.xlsx](samples/excel/japanese-grid-report.xlsx).
+Example output:
 
 ![Japanese grid-paper report sample](samples/png/japanese-grid-report.png)
 

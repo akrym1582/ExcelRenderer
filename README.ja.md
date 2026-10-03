@@ -107,11 +107,7 @@ C# から呼び出す場合は、ライブラリを追加して次の 1 行で�
 await ExcelConverter.ConvertToPdfAsync("input.xlsx", "output.pdf");
 ```
 
-出力例（Excel の帳票を SVG へ変換した結果）:
-
-![変換結果のサンプル](samples/svg/japanese-report.svg)
-
-方眼紙形式の日本語月次報告書を PNG にした例です。IVS（異体字）と絵文字も出力されます。元の Excel は [samples/excel/japanese-grid-report.xlsx](samples/excel/japanese-grid-report.xlsx) です。
+出力例:
 
 ![方眼紙報告書のサンプル](samples/png/japanese-grid-report.png)
 

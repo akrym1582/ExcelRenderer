@@ -394,13 +394,10 @@ public sealed class PdfSharpRenderer : IRenderer
             return;
         }
 
-        var font = command.TextLayout is { EffectiveFontSize: > 0 } compatibilityLayout
-            ? PdfSharpTextMeasurer.CreateFont(command.Style.Font with { Size = compatibilityLayout.EffectiveFontSize })
-            : CreateFontToFit(graphics, command.Text, command.Style, command.Bounds.Width);
-        var lines = command.TextLayout?.Lines.Select(line => line.Text).ToArray() ??
-            WrapText(graphics, command.Text, font, command.Bounds.Width, command.Style.WrapText);
-        var lineHeight = command.TextLayout?.Lines.FirstOrDefault()?.Height ?? graphics.MeasureString("Ag", font).Height;
-        var textHeight = command.TextLayout?.Size.Height ?? lineHeight * lines.Count;
+        var font = CreateFontToFit(graphics, command.Text, command.Style, command.Bounds.Width);
+        var lines = WrapText(graphics, command.Text, font, command.Bounds.Width, command.Style.WrapText);
+        var lineHeight = graphics.MeasureString("Ag", font).Height;
+        var textHeight = lineHeight * lines.Count;
         var y = command.Style.VerticalAlignment switch
         {
             VerticalAlignment.Center => command.Bounds.Y + ((command.Bounds.Height - textHeight) / 2),
@@ -418,21 +415,8 @@ public sealed class PdfSharpRenderer : IRenderer
         var brush = new XSolidBrush(ToColor(command.Style.Font.Color ?? new(0, 0, 0)));
         for (var index = 0; index < lines.Count; index++)
         {
-            var finalizedLine = command.TextLayout?.Lines[index];
-            var finalizedWidth = finalizedLine?.Width;
-            var x = finalizedWidth is null ? command.Bounds.X : command.Style.HorizontalAlignment switch
-            {
-                HorizontalAlignment.Center => command.Bounds.X + ((command.Bounds.Width - finalizedWidth.Value) / 2),
-                HorizontalAlignment.Right => command.Bounds.X + command.Bounds.Width - finalizedWidth.Value,
-                _ => command.Bounds.X,
-            };
-            if (finalizedWidth is not null)
-            {
-                format.Alignment = XStringAlignment.Near;
-            }
-
-            graphics.DrawString(lines[index], font, brush, new XRect(x, y, finalizedWidth ?? command.Bounds.Width, lineHeight), format);
-            y += finalizedLine?.Height ?? lineHeight;
+            graphics.DrawString(lines[index], font, brush, new XRect(command.Bounds.X, y, command.Bounds.Width, lineHeight), format);
+            y += lineHeight;
         }
 
         graphics.Restore(state);

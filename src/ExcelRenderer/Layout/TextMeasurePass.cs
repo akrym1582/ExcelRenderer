@@ -33,7 +33,9 @@ public sealed class TextMeasurePass : IReportLayoutPass
                 if (cell.Style.ShrinkToFit && !cell.Style.WrapText && layout.Size.Width > availableWidth &&
                     layout.Size.Width > 0)
                 {
-                    layout = ScaleLayout(layout, availableWidth / layout.Size.Width, cell.Style.Font.Size);
+                    layout = TextLayoutTransform.Scale(
+                        layout with { EffectiveFontSize = cell.Style.Font.Size },
+                        availableWidth / layout.Size.Width);
                 }
                 else
                 {
@@ -67,24 +69,4 @@ public sealed class TextMeasurePass : IReportLayoutPass
 
         return string.Join("\n", result);
     }
-
-    private static TextLayoutResult ScaleLayout(TextLayoutResult layout, double scale, double fontSize) => new(
-        new(layout.Size.Width * scale, layout.Size.Height * scale),
-        layout.Lines.Select(line => line with
-        {
-            Width = line.Width * scale,
-            Height = line.Height * scale,
-            Baseline = line.Baseline * scale,
-            Ascent = line.Ascent * scale,
-            Descent = line.Descent * scale,
-            Leading = line.Leading * scale,
-            Runs = line.Runs.Select(run => run with
-            {
-                X = run.X * scale,
-                Advance = run.Advance * scale,
-            }).ToArray(),
-        }).ToArray())
-    {
-        EffectiveFontSize = fontSize * scale,
-    };
 }

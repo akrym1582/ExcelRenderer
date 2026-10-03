@@ -105,7 +105,7 @@ public sealed class FinalizedTextRenderingTests
     {
         var first = MemoryFont();
         var secondData = first.FontData!.Concat(new byte[] { 0 }).ToArray();
-        var second = first with { FaceId = "memory-noto-second", FontData = secondData };
+        var second = first with { FontData = secondData };
 
         var firstKey = PdfSharpFontResolver.RegisterResolvedFont(first);
         var secondKey = PdfSharpFontResolver.RegisterResolvedFont(second);
@@ -114,6 +114,72 @@ public sealed class FinalizedTextRenderingTests
         Assert.NotEqual(firstKey, secondKey);
         Assert.Equal(first.FontData, resolver.GetFont(firstKey));
         Assert.Equal(secondData, resolver.GetFont(secondKey));
+    }
+
+    /// <summary>Registration snapshots mutable memory data and performs expensive work once under contention.</summary>
+    [Fact]
+    public void Pdf_face_registration_is_atomic_cached_and_immutable()
+    {
+        var font = MemoryFont() with { FaceId = $"parallel-{Guid.NewGuid():N}" };
+        var mutableData = font.FontData!;
+        var original = mutableData.ToArray();
+        var before = PdfSharpFontResolver.RegistrationWork;
+
+        var keys = Enumerable.Range(0, 32)
+            .AsParallel()
+            .Select(_ => PdfSharpFontResolver.RegisterResolvedFont(font))
+            .ToArray();
+        mutableData[0] ^= 0xff;
+        var after = PdfSharpFontResolver.RegistrationWork;
+
+        Assert.Single(keys.Distinct());
+        Assert.Equal(before.Hashes + 1, after.Hashes);
+        Assert.Equal(before.Reads, after.Reads);
+        Assert.Equal(original, new PdfSharpFontResolver().GetFont(keys[0]));
+        Assert.Equal(keys[0], PdfSharpFontResolver.RegisterResolvedFont(font));
+    }
+
+    /// <summary>The real manager/layout path reuses the selected face registration across repeated wrapping probes.</summary>
+    [Fact]
+    public void Text_measurer_reuses_registration_from_font_manager()
+    {
+        var path = Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf");
+        var options = new FontOptions
+        {
+            AllowSystemFonts = false,
+            UseFontPack = false,
+            Registrations = [new("Measured Face", path)],
+        };
+        var measurer = new PdfSharpTextMeasurer(new FontManager(options));
+        var before = PdfSharpFontResolver.RegistrationWork;
+
+        _ = measurer.Layout("repeated wrapping measurement", new("Measured Face", 12), 30, true);
+        var middle = PdfSharpFontResolver.RegistrationWork;
+        _ = measurer.Layout("repeated wrapping measurement", new("Measured Face", 12), 30, true);
+        var after = PdfSharpFontResolver.RegistrationWork;
+
+        Assert.Equal(before.Hashes + 1, middle.Hashes);
+        Assert.Equal(middle, after);
+    }
+
+    /// <summary>A file-backed face reads and hashes its immutable registration snapshot only once.</summary>
+    [Fact]
+    public void Pdf_file_face_registration_avoids_repeated_io_and_hashing()
+    {
+        var path = Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf");
+        var font = new ResolvedFont("File Face", 400, false, path)
+        {
+            FaceId = $"file-{Guid.NewGuid():N}",
+        };
+        var before = PdfSharpFontResolver.RegistrationWork;
+
+        var first = PdfSharpFontResolver.RegisterResolvedFont(font);
+        var second = PdfSharpFontResolver.RegisterResolvedFont(font);
+        var after = PdfSharpFontResolver.RegistrationWork;
+
+        Assert.Equal(first, second);
+        Assert.Equal(before.Reads + 1, after.Reads);
+        Assert.Equal(before.Hashes + 1, after.Hashes);
     }
 
     /// <summary>Invalid explicit effective sizes are rejected at the public state boundary.</summary>

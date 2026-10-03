@@ -2,6 +2,10 @@
 
 > PDF output keeps ordinary text searchable, but supported ideographic variation sequences (IVS) are emitted as vector outlines so the selected format 14 glyph is preserved. Those outlined IVS characters are not searchable or copyable as text.
 
+English | [日本語](README.ja.md)
+
+## Overview
+
 ExcelRenderer is a .NET library for rendering Excel (`.xlsx`) worksheets as PDF documents or page-by-page PNG and SVG images.
 
 It separates workbook parsing, layout, drawing-command generation, and output rendering into distinct stages:
@@ -19,7 +23,7 @@ This makes the rendering pipeline easier to test, understand, and extend with ne
 > [!NOTE]
 > ExcelRenderer is currently an MVP and does not aim for pixel-perfect parity with Microsoft Excel.
 
-## Features
+### Features
 
 - Reads `.xlsx` workbooks with ClosedXML
 - Supports cell text, fonts, alignment, wrapping, fills, and borders
@@ -33,7 +37,9 @@ This makes the rendering pipeline easier to test, understand, and extend with ne
 - Produces one self-contained SVG per page with outlined text and embedded images
 - Exports AI-friendly Markdown with merged-cell HTML, layout-aware reading order, formulas, and external images
 
-## Requirements
+## Installation
+
+### Requirements
 
 - .NET 10 SDK to build and test the repository
 - A target framework compatible with .NET Standard 2.1 to consume the library
@@ -51,9 +57,6 @@ IPAmj Mincho directly. See [third-party notices](THIRD-PARTY-NOTICES.md).
 Set `FontOptions.ReplaceIvsWithBaseCharacter` to `true` when the library should
 render an ideographic variation sequence as its base character without the
 variation selector instead of selecting its IVS glyph.
-
-
-## Installation
 
 The library, optional fonts, and command-line tool are separate NuGet packages. After the corresponding packages are published to NuGet.org, install them using the commands below. The tool installs its font dependency automatically.
 
@@ -104,29 +107,30 @@ Commit `.config/dotnet-tools.json` so other contributors can install the same to
 
 ## Quick start
 
-### High-level library API
+Convert a workbook with the CLI:
 
-After installing `ExcelRenderer`, the facade API performs the complete read, layout, render, and write pipeline:
-
-```csharp
-using ExcelRenderer;
-
-await ExcelConverter.ConvertToPdfAsync("input.xlsx", "output.pdf");
-await ExcelConverter.ConvertToImagesAsync("input.xlsx", "./images");
-await ExcelConverter.ConvertToSvgAsync("input.xlsx", "./svg-output");
-await ExcelConverter.ConvertToMarkdownAsync("input.xlsx", "output.md");
+```bash
+excelrenderer pdf input.xlsx -o output.pdf
+excelrenderer image input.xlsx -o ./images
+excelrenderer svg input.xlsx -o ./svg-output
+excelrenderer md input.xlsx -o output.md
 ```
 
-For stream-based integrations, `RenderAsync` reads from the input's current position and leaves both
-the input stream and a `SingleStreamOutputSink` output stream open. Use `DirectoryOutputSink` for
-page-by-page PNG/SVG output. `RenderRequest` selects sheets by exact name (in request order) and
-can select rendered PDF/PNG/SVG document pages; Markdown does not support page selection.
-`ConversionManifest.WriteAsync` writes the completed artifact metadata and diagnostics as schema
-version 1 JSON with relative artifact names.
+Or from C#, after adding the library:
 
-Use `PdfExportOptions`, `ImageExportOptions`, `SvgExportOptions`, and `MarkdownExportOptions` to select a worksheet or configure format-specific behavior. Existing output files, and non-empty image or SVG output directories, are not overwritten.
+```csharp
+await ExcelConverter.ConvertToPdfAsync("input.xlsx", "output.pdf");
+```
 
-### Command-line tool
+Example output (a workbook report converted to SVG):
+
+![Sample rendering result](samples/svg/japanese-report.svg)
+
+See [Command-line usage](#command-line-usage), [C# API (high-level)](#c-api-high-level), and [C# API (low-level)](#c-api-low-level) for details.
+
+## Command-line usage
+
+### Syntax and commands
 
 After installing `ExcelRenderer.Tool`, use the following syntax. `input.xlsx` is positional and `-o` is an alias for the required `--output` option:
 
@@ -150,6 +154,8 @@ excelrenderer md input.xlsx -o output.md
 | `svg` | One self-contained SVG per worksheet page | `--sheet <name>` |
 | `markdown` / `md` | One Markdown file and optional extracted images | `--sheet`, `--image-dir`, `--[no-]images`, `--[no-]cell-addresses`, `--[no-]formulas`, `--[no-]layout-detection`, `--[no-]region-detection` |
 | `render` | PDF file, or a PNG/SVG/Markdown output directory | `--format pdf\|png\|svg\|markdown` plus selection, layout, diagnostics, manifest, and font-policy options |
+
+### Font options
 
 Every command accepts these font-source options:
 
@@ -175,6 +181,8 @@ excelrenderer pdf report.xlsx -o report.pdf \
 
 Run `excelrenderer --help` to list commands and `excelrenderer <command> --help` for the complete, current option list.
 
+### Continuous image layout
+
 The unified `render` command can generate a single continuous image per selected worksheet without print-page margins, breaks, titles, or headers:
 
 ```bash
@@ -183,7 +191,29 @@ excelrenderer render input.xlsx -o ./continuous-images --format svg --image-layo
 
 Continuous layout is available only for PNG and SVG, cannot be combined with `--pages`, and uses the sheet's used range rather than its print area. PNG continuous output defaults to a 100 million-pixel limit (about 381 MiB for an RGBA bitmap before encoder overhead); set `RenderRequest.MaxPngPixels` only to a safe finite value when larger canvases are required.
 
-### Low-level rendering API
+## C# API (high-level)
+
+After installing `ExcelRenderer`, the facade API performs the complete read, layout, render, and write pipeline:
+
+```csharp
+using ExcelRenderer;
+
+await ExcelConverter.ConvertToPdfAsync("input.xlsx", "output.pdf");
+await ExcelConverter.ConvertToImagesAsync("input.xlsx", "./images");
+await ExcelConverter.ConvertToSvgAsync("input.xlsx", "./svg-output");
+await ExcelConverter.ConvertToMarkdownAsync("input.xlsx", "output.md");
+```
+
+For stream-based integrations, `RenderAsync` reads from the input's current position and leaves both
+the input stream and a `SingleStreamOutputSink` output stream open. Use `DirectoryOutputSink` for
+page-by-page PNG/SVG output. `RenderRequest` selects sheets by exact name (in request order) and
+can select rendered PDF/PNG/SVG document pages; Markdown does not support page selection.
+`ConversionManifest.WriteAsync` writes the completed artifact metadata and diagnostics as schema
+version 1 JSON with relative artifact names.
+
+Use `PdfExportOptions`, `ImageExportOptions`, `SvgExportOptions`, and `MarkdownExportOptions` to select a worksheet or configure format-specific behavior. Existing output files, and non-empty image or SVG output directories, are not overwritten.
+
+## C# API (low-level)
 
 Install the `ExcelRenderer` package or reference the project, then run the workbook through the layout and rendering pipeline:
 
@@ -279,7 +309,7 @@ This creates `output/sample.md` and image files under `output/images`. Use
 nearby image text, layout analysis, and image export. Markdown export consumes the
 same `ReportDocument` model as the renderers and does not alter the PDF/PNG pipeline.
 
-PDF and PNG conversion use Noto Sans JP Regular TTF when `ExcelRenderer.Fonts` is installed. Simple emoji (one scalar, optionally followed by VS16) use Noto Color Emoji; PDF and SVG embed them as color bitmap images. Complex emoji sequences need a separate shaping implementation. Otherwise, the library resolves registered or OS fonts. To use an external font for PDFsharp, configure a resolver before PDFsharp first accesses a font:
+## Fonts
 
 When loading the optional bundled fonts, ExcelRenderer looks for each expected
 file name (`NotoSansJP-Regular.ttf`, `ipamjm.ttf`, and `NotoColorEmoji.ttf`) in
@@ -322,14 +352,13 @@ sequences are not split.
 
 ## Architecture
 
-ExcelRenderer uses four main stages:
+ExcelRenderer converts a workbook to `ReportDocument`, `RenderDocument`, and `DrawCommand`, then renders PDF, PNG, or SVG.
 
-1. `ExcelReader` converts a workbook into the library's report model.
-2. `ReportLayoutEngine` runs focused layout passes and creates a paginated `RenderDocument`.
-3. `DrawCommandGeneratorPass` converts laid-out cells and images into renderer-independent commands.
-4. `PdfSharpRenderer`, `PngRenderer`, or `SvgRenderer` writes the final output.
+```text
+Excel (.xlsx) -> ReportDocument -> RenderDocument -> DrawCommand -> PDF / PNG / SVG
+```
 
-The [Japanese guide](README.ja.md) contains a detailed description of the models, layout passes, extension points, and rendering pipeline.
+See [Architecture](docs/architecture.md) for the layout passes, drawing commands, renderers, extension points, and source layout.
 
 ## Current limitations
 
@@ -366,7 +395,8 @@ Production code is under `src/ExcelRenderer`, and tests are under `tests/ExcelRe
 
 ## Documentation
 
-- [Detailed guide (Japanese)](README.ja.md)
+- [Architecture](docs/architecture.md) ([Japanese](docs/architecture.ja.md))
+- [Japanese README](README.ja.md)
 - [AI coding agent guide](AGENTS.md)
 
 ## License

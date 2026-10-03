@@ -380,6 +380,12 @@ public sealed class PdfSharpRenderer : IRenderer
 
     private void DrawTextCore(XGraphics graphics, DrawTextCommand command)
     {
+        if (command.TextLayout is { } layout)
+        {
+            DrawFinalizedText(graphics, command, layout);
+            return;
+        }
+
         var request = ToRequest(command.Style);
         if (_fontManager is not null && RequiresResolvedTextPath(
             _fontManager.ResolveTextRuns(command.Text, request), _fontManager.Resolve(request), request))
@@ -388,8 +394,8 @@ public sealed class PdfSharpRenderer : IRenderer
             return;
         }
 
-        var font = command.TextLayout is { EffectiveFontSize: > 0 } layout
-            ? PdfSharpTextMeasurer.CreateFont(command.Style.Font with { Size = layout.EffectiveFontSize })
+        var font = command.TextLayout is { EffectiveFontSize: > 0 } compatibilityLayout
+            ? PdfSharpTextMeasurer.CreateFont(command.Style.Font with { Size = compatibilityLayout.EffectiveFontSize })
             : CreateFontToFit(graphics, command.Text, command.Style, command.Bounds.Width);
         var lines = command.TextLayout?.Lines.Select(line => line.Text).ToArray() ??
             WrapText(graphics, command.Text, font, command.Bounds.Width, command.Style.WrapText);
@@ -430,6 +436,110 @@ public sealed class PdfSharpRenderer : IRenderer
         }
 
         graphics.Restore(state);
+    }
+
+    private void DrawFinalizedText(XGraphics graphics, DrawTextCommand command, TextLayoutResult layout)
+    {
+        if (layout.EffectiveFontSize <= 0)
+        {
+            return;
+        }
+
+        var state = graphics.Save();
+        if (command.Style.WrapText || command.Style.ShrinkToFit)
+        {
+            graphics.IntersectClip(ToRect(command.Bounds));
+        }
+
+        var brush = new XSolidBrush(ToColor(command.Style.Font.Color ?? new(0, 0, 0)));
+        foreach (var positioned in TextLayoutPlacement.Place(
+                     layout,
+                     command.Bounds,
+                     command.Style.HorizontalAlignment,
+                     command.Style.VerticalAlignment))
+        {
+            if (positioned.Line.Runs.Count == 0)
+            {
+                var font = PdfSharpTextMeasurer.CreateFont(command.Style.Font with { Size = layout.EffectiveFontSize });
+                graphics.DrawString(
+                    positioned.Line.Text,
+                    font,
+                    brush,
+                    new XPoint(positioned.Left, positioned.Baseline),
+                    XStringFormats.BaseLineLeft);
+            }
+            else
+            {
+                foreach (var run in positioned.Line.Runs)
+                {
+                    DrawFinalizedRun(
+                        graphics,
+                        run.Run,
+                        layout.EffectiveFontSize,
+                        positioned.Left + run.X,
+                        positioned.Baseline,
+                        command.Style,
+                        brush);
+                }
+            }
+
+            if (command.Style.Font.Underline)
+            {
+                graphics.DrawLine(
+                    new XPen(brush.Color),
+                    positioned.Left,
+                    positioned.Baseline + 1,
+                    positioned.Left + positioned.Line.Width,
+                    positioned.Baseline + 1);
+            }
+        }
+
+        graphics.Restore(state);
+    }
+
+    private void DrawFinalizedRun(
+        XGraphics graphics,
+        TextRun run,
+        double size,
+        double x,
+        double baseline,
+        CellStyle style,
+        XSolidBrush brush)
+    {
+        if (run.ColorEmojiGlyphId is { } emojiGlyph)
+        {
+            using var bitmap = ColorEmojiBitmap.Create(run.Font, emojiGlyph, (float)size);
+            using var png = bitmap.Image.Encode(SKEncodedImageFormat.Png, 100);
+            using var stream = png.AsStream();
+            using var image = XImage.FromStream(stream);
+            graphics.DrawImage(
+                image,
+                new XRect(
+                    x + bitmap.Bounds.Left,
+                    baseline + bitmap.Bounds.Top,
+                    bitmap.Bounds.Width,
+                    bitmap.Bounds.Height));
+            return;
+        }
+
+        if (run.GlyphId is { } glyph || run.MissingPrivateUseGlyph)
+        {
+            using var typeface = CreateTypeface(run.Font);
+            using var font = new SKFont(typeface, (float)size);
+            glyph = run.GlyphId ?? font.GetGlyphs(run.Text)[0];
+            using var path = font.GetGlyphPath(glyph)
+                ?? throw new InvalidOperationException($"Glyph {glyph} のアウトラインを生成できません。");
+            if (path.IsEmpty)
+            {
+                throw new InvalidOperationException($"Glyph {glyph} のアウトラインが空です。");
+            }
+
+            graphics.DrawPath(brush, ToPdfPath(path, x, baseline));
+            return;
+        }
+
+        var runFont = PdfSharpTextMeasurer.CreateFont(style.Font with { Family = run.Font.Family, Size = size });
+        graphics.DrawString(run.Text, runFont, brush, new XPoint(x, baseline), XStringFormats.BaseLineLeft);
     }
 
     private DrawTextCommand NormalizeVerticalText(DrawTextCommand command)

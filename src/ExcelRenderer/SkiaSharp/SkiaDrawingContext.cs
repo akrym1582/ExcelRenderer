@@ -1,3 +1,4 @@
+using ExcelRenderer.Abstractions;
 using ExcelRenderer.Drawing;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
@@ -172,6 +173,12 @@ internal sealed class SkiaDrawingContext
 
     private void DrawTextCore(SKCanvas canvas, DrawTextCommand command)
     {
+        if (command.TextLayout is { } layout)
+        {
+            DrawFinalizedText(canvas, command, layout);
+            return;
+        }
+
         var request = new FontRequest(
             command.Style.Font.Family,
             command.Style.Font.Bold ? 700 : 400,
@@ -190,12 +197,7 @@ internal sealed class SkiaDrawingContext
         using var paint = CreatePaint(command.Style.Font.Color ?? new(0, 0, 0), SKPaintStyle.Fill);
         paint.IsAntialias = true;
 
-        if (command.TextLayout is { EffectiveFontSize: > 0 } finalizedLayout)
-        {
-            font.Size = (float)finalizedLayout.EffectiveFontSize;
-        }
-
-        if (command.TextLayout is null && command.Style.ShrinkToFit && !command.Style.WrapText && command.Bounds.Width > 0)
+        if (command.Style.ShrinkToFit && !command.Style.WrapText && command.Bounds.Width > 0)
         {
             var widest = command.Text.Replace("\r\n", "\n", StringComparison.Ordinal)
                 .Split('\n').Max(line => MeasureText(line, request, font, paint));
@@ -205,11 +207,10 @@ internal sealed class SkiaDrawingContext
             }
         }
 
-        var lines = command.TextLayout?.Lines.Select(line => line.Text).ToArray() ??
-            WrapText(command.Text, request, font, paint, command.Bounds.Width, command.Style.WrapText);
+        var lines = WrapText(command.Text, request, font, paint, command.Bounds.Width, command.Style.WrapText);
         var metrics = font.Metrics;
-        var lineHeight = command.TextLayout?.Lines.FirstOrDefault()?.Height ?? metrics.Descent - metrics.Ascent + metrics.Leading;
-        var textHeight = command.TextLayout?.Size.Height ?? lineHeight * lines.Count;
+        var lineHeight = metrics.Descent - metrics.Ascent + metrics.Leading;
+        var textHeight = lineHeight * lines.Count;
         var y = command.Style.VerticalAlignment switch
         {
             VerticalAlignment.Center => (float)(command.Bounds.Y + ((command.Bounds.Height - textHeight) / 2)) - metrics.Ascent,
@@ -226,8 +227,7 @@ internal sealed class SkiaDrawingContext
         for (var index = 0; index < lines.Count; index++)
         {
             var line = lines[index];
-            var finalizedLine = command.TextLayout?.Lines[index];
-            var lineWidth = finalizedLine?.Width ?? MeasureText(line, request, font, paint);
+            var lineWidth = MeasureText(line, request, font, paint);
             var x = command.Style.HorizontalAlignment switch
             {
                 HorizontalAlignment.Center => (float)(command.Bounds.X + ((command.Bounds.Width - lineWidth) / 2)),
@@ -248,7 +248,73 @@ internal sealed class SkiaDrawingContext
                 canvas.DrawLine(x, y + 1, x + (float)lineWidth, y + 1, paint);
             }
 
-            y += (float)(finalizedLine?.Height ?? lineHeight);
+            y += lineHeight;
+        }
+
+        canvas.Restore();
+    }
+
+    private void DrawFinalizedText(SKCanvas canvas, DrawTextCommand command, TextLayoutResult layout)
+    {
+        if (layout.EffectiveFontSize <= 0)
+        {
+            return;
+        }
+
+        using var paint = CreatePaint(command.Style.Font.Color ?? new(0, 0, 0), SKPaintStyle.Fill);
+        paint.IsAntialias = true;
+        canvas.Save();
+        if (command.Style.WrapText || command.Style.ShrinkToFit)
+        {
+            canvas.ClipRect(ToRect(command.Bounds));
+        }
+
+        var request = new FontRequest(
+            command.Style.Font.Family,
+            command.Style.Font.Bold ? 700 : 400,
+            command.Style.Font.Italic);
+        foreach (var positioned in TextLayoutPlacement.Place(
+                     layout,
+                     command.Bounds,
+                     command.Style.HorizontalAlignment,
+                     command.Style.VerticalAlignment))
+        {
+            if (positioned.Line.Runs.Count == 0)
+            {
+                DrawResolvedLine(
+                    canvas,
+                    positioned.Line.Text,
+                    request,
+                    (float)layout.EffectiveFontSize,
+                    (float)positioned.Left,
+                    (float)positioned.Baseline,
+                    paint,
+                    _textAsPaths);
+            }
+            else
+            {
+                foreach (var run in positioned.Line.Runs)
+                {
+                    DrawResolvedRun(
+                        canvas,
+                        run.Run,
+                        (float)layout.EffectiveFontSize,
+                        (float)(positioned.Left + run.X),
+                        (float)positioned.Baseline,
+                        paint,
+                        _textAsPaths);
+                }
+            }
+
+            if (command.Style.Font.Underline)
+            {
+                canvas.DrawLine(
+                    (float)positioned.Left,
+                    (float)(positioned.Baseline + 1),
+                    (float)(positioned.Left + positioned.Line.Width),
+                    (float)(positioned.Baseline + 1),
+                    paint);
+            }
         }
 
         canvas.Restore();
@@ -342,69 +408,82 @@ internal sealed class SkiaDrawingContext
 
         foreach (var run in runs)
         {
+            DrawResolvedRun(canvas, run, size, x, y, paint, asPaths);
             using var typeface = string.IsNullOrEmpty(run.Font.FilePath) ? null : CreateTypeface(run.Font);
             using var font = new SKFont(typeface ?? SKTypeface.Default, size);
-            if (run.ColorEmojiGlyphId is { } emojiGlyph)
-            {
-                if (asPaths)
-                {
-                    using var bitmap = ColorEmojiBitmap.Create(run.Font, emojiGlyph, size);
-                    canvas.DrawImage(
-                        bitmap.Image,
-                        new SKRect(
-                            x + bitmap.Bounds.Left,
-                            y + bitmap.Bounds.Top,
-                            x + bitmap.Bounds.Right,
-                            y + bitmap.Bounds.Bottom),
-                        new SKSamplingOptions(SKCubicResampler.Mitchell));
-                }
-                else
-                {
-                    using var builder = new SKTextBlobBuilder();
-                    builder.AddRun([emojiGlyph], font, new SKPoint(x, y));
-                    using var blob = builder.Build();
-                    using var emojiPaint = new SKPaint { Color = SKColors.White, IsAntialias = true };
-                    canvas.DrawText(blob, 0, 0, emojiPaint);
-                }
-            }
-            else if (run.GlyphId is { } glyphId)
-            {
-                if (asPaths)
-                {
-                    using var glyphPath = font.GetGlyphPath(glyphId)
-                        ?? throw new InvalidOperationException($"IVS glyph {glyphId} のアウトラインを生成できません。");
-                    if (glyphPath.IsEmpty)
-                    {
-                        throw new InvalidOperationException($"IVS glyph {glyphId} のアウトラインが空です。");
-                    }
+            x += MeasureRun(font, run, paint);
+        }
+    }
 
-                    glyphPath.Transform(SKMatrix.CreateTranslation(x, y));
-                    canvas.DrawPath(glyphPath, paint);
-                }
-                else
-                {
-                    using var builder = new SKTextBlobBuilder();
-                    builder.AddRun([glyphId], font, new SKPoint(x, y));
-                    using var blob = builder.Build();
-                    canvas.DrawText(blob, 0, 0, paint);
-                }
-            }
-            else if (asPaths)
+    private void DrawResolvedRun(
+        SKCanvas canvas,
+        TextRun run,
+        float size,
+        float x,
+        float y,
+        SKPaint paint,
+        bool asPaths)
+    {
+        using var typeface = string.IsNullOrEmpty(run.Font.FilePath) ? null : CreateTypeface(run.Font);
+        using var font = new SKFont(typeface ?? SKTypeface.Default, size);
+        if (run.ColorEmojiGlyphId is { } emojiGlyph)
+        {
+            if (asPaths)
             {
-                using var path = font.GetTextPath(run.Text, new SKPoint(x, y));
-                if (path.IsEmpty && run.Text.Any(character => !char.IsWhiteSpace(character)))
-                {
-                    throw new InvalidOperationException("文字のアウトラインを生成できません。");
-                }
-
-                canvas.DrawPath(path, paint);
+                using var bitmap = ColorEmojiBitmap.Create(run.Font, emojiGlyph, size);
+                canvas.DrawImage(
+                    bitmap.Image,
+                    new SKRect(
+                        x + bitmap.Bounds.Left,
+                        y + bitmap.Bounds.Top,
+                        x + bitmap.Bounds.Right,
+                        y + bitmap.Bounds.Bottom),
+                    new SKSamplingOptions(SKCubicResampler.Mitchell));
             }
             else
             {
-                canvas.DrawText(run.Text, x, y, SKTextAlign.Left, font, paint);
+                using var builder = new SKTextBlobBuilder();
+                builder.AddRun([emojiGlyph], font, new SKPoint(x, y));
+                using var blob = builder.Build();
+                using var emojiPaint = new SKPaint { Color = SKColors.White, IsAntialias = true };
+                canvas.DrawText(blob, 0, 0, emojiPaint);
+            }
+        }
+        else if (run.GlyphId is { } glyphId)
+        {
+            if (asPaths)
+            {
+                using var glyphPath = font.GetGlyphPath(glyphId)
+                    ?? throw new InvalidOperationException($"IVS glyph {glyphId} のアウトラインを生成できません。");
+                if (glyphPath.IsEmpty)
+                {
+                    throw new InvalidOperationException($"IVS glyph {glyphId} のアウトラインが空です。");
+                }
+
+                glyphPath.Transform(SKMatrix.CreateTranslation(x, y));
+                canvas.DrawPath(glyphPath, paint);
+            }
+            else
+            {
+                using var builder = new SKTextBlobBuilder();
+                builder.AddRun([glyphId], font, new SKPoint(x, y));
+                using var blob = builder.Build();
+                canvas.DrawText(blob, 0, 0, paint);
+            }
+        }
+        else if (asPaths)
+        {
+            using var path = font.GetTextPath(run.Text, new SKPoint(x, y));
+            if (path.IsEmpty && run.Text.Any(character => !char.IsWhiteSpace(character)))
+            {
+                throw new InvalidOperationException("文字のアウトラインを生成できません。");
             }
 
-            x += MeasureRun(font, run, paint);
+            canvas.DrawPath(path, paint);
+        }
+        else
+        {
+            canvas.DrawText(run.Text, x, y, SKTextAlign.Left, font, paint);
         }
     }
 

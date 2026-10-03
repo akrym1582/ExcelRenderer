@@ -234,7 +234,10 @@ into PDF, PNG, and SVG drawing.
 
 Wrapped cell text is finalized during layout into lines and resolved font runs, including
 grapheme-safe forced breaks and explicit-newline markers. The result is carried by the draw
-command so PDF, PNG, and SVG do not independently choose different line breaks.
+command. PDF, PNG, and SVG consume the finalized effective font size, per-line baseline and
+height, selected run font, and logical run X/advance instead of independently wrapping,
+shrinking, or advancing the text. Commands created directly without a `TextLayout` retain the
+legacy renderer-side compatibility path.
 
 DrawingML picture metadata preserves and resolves one-cell, two-cell, and absolute anchors in points together
 with marker offsets, extents, `editAs`, source crop, rotation, flips, and worksheet drawing order.
@@ -321,9 +324,9 @@ The [Japanese guide](README.ja.md) contains a detailed description of the models
 - Page breaks occur only at row and column boundaries.
 - Japanese top-to-bottom mode stacks Unicode text elements; it does not yet select full
   typographic vertical glyph variants or reproduce every Japanese line-breaking rule.
-- Drawing anchors are resolved on a print-area independent sheet geometry (hidden rows/columns occupy 0 pt); the
-  interaction of hidden rows/columns with anchors has not been verified against Excel. Repeated titles do not repeat
-  drawing objects, and renderers do not yet consume every finalized text baseline/run position.
+- Drawing anchors are resolved on print-area-independent sheet geometry. XML row/column overrides
+  outside the used and print ranges are retained, and hidden rows/columns occupy 0 pt. The latter
+  anchor behavior has not been verified against desktop Excel. Repeated titles do not repeat drawing objects.
 - Output can differ from Excel because font measurement and rendering engines differ.
 
 ## Development

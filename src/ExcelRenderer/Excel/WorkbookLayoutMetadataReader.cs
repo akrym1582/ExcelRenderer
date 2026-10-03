@@ -46,6 +46,14 @@ internal static class WorkbookLayoutMetadataReader
                     column.Width?.Value,
                     column.Hidden?.Value ?? false))
                 .ToArray() ?? [];
+            var rows = worksheet.GetFirstChild<S.SheetData>()?.Elements<S.Row>()
+                .Where(row => row.RowIndex?.Value is > 0 &&
+                    (row.CustomHeight?.Value == true || row.Hidden?.Value == true))
+                .Select(row => new RawRowDefinition(
+                    (int)Math.Min(row.RowIndex!.Value, int.MaxValue),
+                    row.CustomHeight?.Value == true ? row.Height?.Value : null,
+                    row.Hidden?.Value ?? false))
+                .ToArray() ?? [];
             var pageOrder = pageSetup?.PageOrder?.Value == S.PageOrderValues.OverThenDown
                 ? PrintPageOrder.OverThenDown
                 : PrintPageOrder.DownThenOver;
@@ -57,6 +65,7 @@ internal static class WorkbookLayoutMetadataReader
                 sheetFormat?.DefaultColumnWidth?.Value,
                 sheetFormat?.DefaultRowHeight?.Value ?? 15,
                 columns,
+                rows,
                 normalFont,
                 ReadBreaks(worksheet.GetFirstChild<S.RowBreaks>()),
                 ReadBreaks(worksheet.GetFirstChild<S.ColumnBreaks>()),

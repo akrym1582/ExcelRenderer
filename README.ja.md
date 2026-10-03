@@ -4,6 +4,8 @@
 
 [English](README.md) | 日本語
 
+## 概要
+
 Excel ワークブックを読み込み、レイアウト計算を経て PDF またはページごとの PNG・SVG を生成する .NET ライブラリです。
 
 Excel を直接 PDF へ描画するのではなく、次の中間モデルを段階的に生成します。
@@ -24,6 +26,21 @@ PDF / PNG / SVG
 
 現在は MVP 段階です。ライブラリに加えて、PDF・PNG・SVG・Markdownへ変換するコマンドラインツールを提供します。
 
+### 主な機能
+
+- ClosedXML による `.xlsx` の読み込み
+- セル文字列、フォント、文字サイズ、配置、折り返しの読み込み
+- 結合セル、列幅、行高の読み込み
+- 非表示行・非表示列の除外
+- 印刷領域、用紙サイズ、向き、余白、拡大縮小設定の読み込み
+- 背景色、罫線、セル文字列の描画
+- 行・列境界を基準としたページ分割
+- PNG、JPEG などのワークシート画像の描画
+- ヘッダー、フッター文字列の描画
+- 印刷範囲に依存しないシート座標での図形・画像のアンカー解決（回転後の外接矩形によるページ判定・自動使用範囲・連続キャンバス寸法、反復タイトル領域を除いた本文クリップ）。非表示行列とアンカーの相互作用は Excel 実機で未検証です
+- PDFsharp による PDF 出力
+- SkiaSharp によるページごとの PNG 出力と画像のデコード
+
 ## インストール
 
 ライブラリ、任意のフォント、コマンドラインツールは別々の NuGet パッケージです。NuGet.org に公開された後、以下のコマンドでインストールできます。CLI はライブラリとフォントパッケージを依存関係としてインストールします。
@@ -43,24 +60,6 @@ dotnet add package ExcelRenderer.Fonts  # 日本語フォントが必要な場�
 必須ではありません。フォントを再配布する場合は、それぞれのライセンスに従って
 ください。詳細は[サードパーティ通知](THIRD-PARTY-NOTICES.md)を参照してください。
 
-インストール後、次の API で変換できます。
-
-```csharp
-using ExcelRenderer;
-
-await ExcelConverter.ConvertToPdfAsync("input.xlsx", "output.pdf");
-await ExcelConverter.ConvertToImagesAsync("input.xlsx", "./images");
-await ExcelConverter.ConvertToSvgAsync("input.xlsx", "./svg-output");
-await ExcelConverter.ConvertToMarkdownAsync("input.xlsx", "output.md");
-```
-
-ストリーム連携には `RenderAsync` を使用できます。入力は現在位置から読み取り、入力
-ストリームと `SingleStreamOutputSink` の出力ストリームは閉じません。ページごとの
-PNG/SVG には `DirectoryOutputSink` を使用します。`RenderRequest` では完全一致の
-シート名（指定順）と PDF/PNG/SVG の文書ページを選択できます。Markdown はページ
-選択を受け付けません。`ConversionManifest.WriteAsync` は完了した成果物メタデータと
-診断を、相対成果物名だけを含む schema version 1 の JSON として出力します。
-
 ### コマンドラインツール（dotnet tool）
 
 .NET 10 SDK をインストールし、NuGet.org からツールを取得します。
@@ -75,12 +74,48 @@ excelrenderer --help
 必要はありません。これらのコマンドは、NuGet のパッケージソースで NuGet.org が有効に
 なっていることを前提とします。
 
+既にグローバルインストールしている場合は、次のコマンドで更新します。
+
+```bash
+dotnet tool update --global ExcelRenderer.Tool
+```
+
+プロジェクト単位で管理する場合は、利用するリポジトリでローカルインストールします。`dotnet new tool-manifest` は、既存のマニフェストがない場合だけ実行してください。
+
+```bash
+dotnet new tool-manifest
+dotnet tool install --local ExcelRenderer.Tool
+dotnet tool run excelrenderer --help
+```
+
+`.config/dotnet-tools.json` をコミットすると、他の開発者は `dotnet tool restore` で同じバージョンをインストールできます。
+
+## クイックスタート
+
+CLI で PDF・画像・SVG・Markdown に変換します。
+
 ```bash
 excelrenderer pdf input.xlsx -o output.pdf
 excelrenderer image input.xlsx -o ./images
 excelrenderer svg input.xlsx -o ./svg-output
 excelrenderer md input.xlsx -o output.md
 ```
+
+C# から呼び出す場合は、ライブラリを追加して次の 1 行で変換できます。
+
+```csharp
+await ExcelConverter.ConvertToPdfAsync("input.xlsx", "output.pdf");
+```
+
+出力例（Excel の帳票を SVG へ変換した結果）:
+
+![変換結果のサンプル](samples/svg/japanese-report.svg)
+
+詳しくは [CLI の使い方](#cli-の使い方)、[C# API（高レベル）](#c-api高レベル)、[C# API（低レベル）](#c-api低レベル)を参照してください。
+
+## CLI の使い方
+
+### 基本構文とコマンド
 
 基本構文は次のとおりです。`input.xlsx` は位置引数で、必須の `--output` は `-o` と省略できます。
 
@@ -95,6 +130,8 @@ excelrenderer <command> <input.xlsx> --output <path> [options]
 | `svg` | 印刷ページごとの自己完結 SVG | `--sheet <シート名>` |
 | `markdown` / `md` | 1 個の Markdown と任意の抽出画像 | `--sheet`、`--image-dir`、`--[no-]images`、`--[no-]cell-addresses`、`--[no-]formulas`、`--[no-]layout-detection`、`--[no-]region-detection` |
 | `render` | PDF ファイル、または PNG/SVG/Markdown の出力ディレクトリ | `--format pdf\|png\|svg\|markdown` と選択、レイアウト、診断、マニフェスト、フォント方針の各オプション |
+
+### フォント指定
 
 すべてのコマンドで次のフォント指定を使用できます。
 
@@ -120,22 +157,6 @@ excelrenderer pdf report.xlsx -o report.pdf \
 
 コマンド一覧は `excelrenderer --help`、各コマンドの完全なオプション一覧は `excelrenderer <command> --help` で確認できます。
 
-既にグローバルインストールしている場合は、次のコマンドで更新します。
-
-```bash
-dotnet tool update --global ExcelRenderer.Tool
-```
-
-プロジェクト単位で管理する場合は、利用するリポジトリでローカルインストールします。`dotnet new tool-manifest` は、既存のマニフェストがない場合だけ実行してください。
-
-```bash
-dotnet new tool-manifest
-dotnet tool install --local ExcelRenderer.Tool
-dotnet tool run excelrenderer --help
-```
-
-`.config/dotnet-tools.json` をコミットすると、他の開発者は `dotnet tool restore` で同じバージョンをインストールできます。
-
 上記のフォント指定はすべてのコマンドで使用できます。
 `--font-file` はファイルを直接読み、内部のファミリー名と書体を登録します。このため、
 拡張子ではなく内容が SkiaSharp で有効な TrueType/OpenType であれば `.ttf`、Windows EUDC の
@@ -151,6 +172,8 @@ BMP 私用領域 (U+E000–U+F8FF) は要求フォント、指定ファイル（
 追加ディレクトリを設定済みフォールバックおよび同梱フォントより先に検索します。フォール
 バックは Unicode テキスト要素単位で決定するため、サロゲートペアと結合文字列は分断しません。
 
+### 連続画像として出力する
+
 統合 `render` コマンドでは、選択した各シートを印刷ページの余白・改ページ・タイトル・ヘッダーなしの連続画像として出力できます。
 
 ```bash
@@ -159,226 +182,26 @@ excelrenderer render input.xlsx -o ./continuous-images --format svg --image-layo
 
 連続レイアウトは PNG と SVG のみで、`--pages` とは併用できません。印刷範囲ではなくシートの使用範囲を使います。PNG の連続出力は、RGBA bitmap とエンコード時の追加メモリを安全に抑えるため、既定で 1 億ピクセル（bitmap 本体で約 381 MiB）の上限を適用します。より大きいキャンバスが必要な場合も、`RenderRequest.MaxPngPixels` には安全な有限値を指定してください。
 
-## 対応範囲
+## C# API（高レベル）
 
-- ClosedXML による `.xlsx` の読み込み
-- セル文字列、フォント、文字サイズ、配置、折り返しの読み込み
-- 結合セル、列幅、行高の読み込み
-- 非表示行・非表示列の除外
-- 印刷領域、用紙サイズ、向き、余白、拡大縮小設定の読み込み
-- 背景色、罫線、セル文字列の描画
-- 行・列境界を基準としたページ分割
-- PNG、JPEG などのワークシート画像の描画
-- ヘッダー、フッター文字列の描画
-- 印刷範囲に依存しないシート座標での図形・画像のアンカー解決（回転後の外接矩形によるページ判定・自動使用範囲・連続キャンバス寸法、反復タイトル領域を除いた本文クリップ）。非表示行列とアンカーの相互作用は Excel 実機で未検証です
-- PDFsharp による PDF 出力
-- SkiaSharp によるページごとの PNG 出力と画像のデコード
-
-## 全体の処理フロー
-
-ライブラリ内部では、次の順番で処理します。
-
-```text
-Excelファイル
-    │
-    ▼
-ExcelReader
-    │
-    ▼
-ReportDocument / ReportSheet
-    │
-    ▼
-ReportLayoutEngine
-    │
-    ├─ NormalizePass
-    ├─ ResolvePrintAreaPass
-    ├─ HiddenRowColumnPass
-    ├─ ColumnLayoutPass
-    ├─ RowLayoutPass
-    ├─ TextMeasurePass
-    ├─ CellBoundsPass
-    └─ PaginationPass
-    │
-    ▼
-RenderDocument
-    │
-    ▼
-DrawCommandGeneratorPass
-    │
-    ├─ FillRectangleCommand
-    ├─ DrawBorderCommand
-    ├─ DrawTextCommand
-    └─ DrawImageCommand
-    │
-    ▼
-PdfSharpRenderer / PngRenderer
-    │
-    ▼
-PDF / PNG
-```
-
-処理は大きく次の 4 段階に分かれています。
-
-1. Excel ファイルの読み込み
-2. レイアウト計算
-3. 描画コマンドの生成
-4. PDF または PNG への描画
-
-## 1. Excel ファイルの読み込み
-
-`ExcelReader` が ClosedXML を使用して Excel ワークブックを読み込み、ライブラリ独自のモデルである `ReportDocument` を生成します。
-
-```text
-Excel Workbook
-    ↓
-ExcelReader
-    ↓
-ReportDocument
-    └─ ReportSheet
-        ├─ Cells
-        ├─ Rows
-        ├─ Columns
-        ├─ MergedCells
-        ├─ Images
-        └─ PageSettings
-```
-
-`ReportDocument` は複数の `ReportSheet` を保持します。この段階では Excel から取得した情報を保持しますが、PDF 上の具体的な座標やページ番号はまだ決定しません。
-
-読み込み処理とレイアウト処理を分離しているため、将来的には ClosedXML 以外の入力元を追加することも可能です。同じ `ReportDocument` を生成できれば、CSV、JSON、データベース、独自帳票定義、他の Excel 読み込みライブラリなどにも対応できます。
-
-## 2. レイアウト計算
-
-`ReportLayoutEngine` は、複数のレイアウト Pass を順番に実行します。
+`ExcelConverter` が読み込み、レイアウト、描画、書き出しまでを行います。
 
 ```csharp
-public interface IReportLayoutPass
-{
-    void Execute(ReportLayoutContext context);
-}
+using ExcelRenderer;
+
+await ExcelConverter.ConvertToPdfAsync("input.xlsx", "output.pdf");
+await ExcelConverter.ConvertToImagesAsync("input.xlsx", "./images");
+await ExcelConverter.ConvertToSvgAsync("input.xlsx", "./svg-output");
+await ExcelConverter.ConvertToMarkdownAsync("input.xlsx", "output.md");
 ```
 
-各 Pass は共有される `ReportLayoutContext` を参照・更新します。
+ストリーム連携には `RenderAsync` を使用できます。入力は現在位置から読み取り、入力
+ストリームと `SingleStreamOutputSink` の出力ストリームは閉じません。ページごとの
+PNG/SVG には `DirectoryOutputSink` を使用します。`RenderRequest` では完全一致の
+シート名（指定順）と PDF/PNG/SVG の文書ページを選択できます。Markdown はページ
+選択を受け付けません。`ConversionManifest.WriteAsync` は完了した成果物メタデータと
 
-```text
-ReportSheet
-    ↓
-ReportLayoutContext
-    ↓
-Pass 1 → Pass 2 → Pass 3 → ...
-    ↓
-RenderDocument
-```
-
-### ReportLayoutContext
-
-`ReportLayoutContext` はレイアウト計算中の状態を保持するオブジェクトです。主に次の情報を保持します。
-
-| プロパティ | 内容 |
-| --- | --- |
-| `Sheet` | レイアウト対象のワークシート |
-| `TextMeasurer` | 文字列の描画サイズを計測する実装 |
-| `PrintArea` | 解決済みの印刷範囲 |
-| `VisibleColumns` | 描画対象となる列 |
-| `VisibleRows` | 描画対象となる行 |
-| `ColumnLayouts` | 各列の位置と幅 |
-| `RowLayouts` | 各行の位置と高さ |
-| `TextSizes` | セル文字列の計測結果 |
-| `CellLayouts` | 各セルの描画領域 |
-| `RenderDocument` | 最終的なページレイアウト |
-
-各 Pass は前の Pass が作成した情報を利用し、次の Pass に必要な情報を追加します。この方式により、大きなレイアウト処理を 1 つのクラスに集中させず、責務ごとに分割しています。
-
-### レイアウト Pass の実行順序
-
-現在の `ReportLayoutEngine` は、次の順番で Pass を実行します。
-
-```csharp
-new NormalizePass(),
-new ResolvePrintAreaPass(),
-new HiddenRowColumnPass(),
-new ColumnLayoutPass(),
-new RowLayoutPass(),
-new TextMeasurePass(),
-new CellBoundsPass(),
-new PaginationPass()
-```
-
-Pass には依存順序があります。例えば、セルの描画領域には列幅と行高が必要であり、ページ分割にはセルの位置と用紙設定が必要です。新しい Pass を追加する場合は、入力として必要な情報がどの Pass で作られるかを確認し、適切な位置に組み込みます。
-
-### NormalizePass
-
-入力されたワークシート情報を後続の処理で扱いやすい状態に正規化します。Excel 固有の表現差異を後続 Pass へ持ち込まず、セル・行・列情報を共通の前提へ揃えます。
-
-### ResolvePrintAreaPass
-
-ワークシートの印刷領域を解決します。印刷領域が設定されている場合はその領域を使用し、設定されていない場合はシート内のデータ範囲などから描画対象範囲を決定します。結果は `ReportLayoutContext.PrintArea` に保存されます。
-
-### HiddenRowColumnPass
-
-印刷領域内の行・列から非表示行と非表示列を除外し、結果を `VisibleRows` と `VisibleColumns` に保存します。以降の処理では非表示の行・列は幅や高さを持たないものとして扱います。
-
-### ColumnLayoutPass / RowLayoutPass
-
-`ColumnLayoutPass` は描画対象となる各列の開始位置、幅、累積位置を計算し、`ColumnLayouts` に保存します。`RowLayoutPass` は同様に各行の開始位置、高さ、累積位置を計算し、`RowLayouts` に保存します。
-
-Excel の列幅と PDF 上のポイント値は単位が異なるため、描画用の寸法への変換もこの段階で行います。
-
-### TextMeasurePass
-
-各セルの文字列を描画した場合に必要となるサイズを、`ITextMeasurer` で計測して `TextSizes` に保存します。主にフォントファミリー、フォントサイズ、太字などのスタイル、折り返し、セル幅、改行を考慮します。
-
-PDFsharp を使用する場合は `PdfSharpTextMeasurer` を指定します。計測をインターフェースとして分離しているため、PDFsharp 以外の計測方法にも差し替えられます。
-
-### CellBoundsPass
-
-列レイアウトと行レイアウトを組み合わせ、各セルの PDF 上の座標と描画領域を `CellLayouts` に保存します。結合セルでは対象となる複数の行・列をまとめて 1 つの描画領域として扱います。
-
-### PaginationPass
-
-用紙サイズ、向き、余白、拡大縮小設定、セル位置を使用してページ分割を行い、最終的な `RenderDocument` を生成します。倍率指定（例: 75%）と「横・縦を指定ページ数に合わせる」の両方を反映し、セル、文字、罫線、画像を同じ比率で拡大縮小します。`RenderDocument` は複数の `RenderPage` を保持し、ページ番号、ページ内のセル・画像、ヘッダー・フッター、各要素のページ内座標を含みます。
-
-ページ分割は行・列の境界を基準として行います。セルや結合セルの途中では分割せず、配置可能な行・列の単位で改ページ位置を決定します。
-
-## 3. 描画コマンドの生成
-
-レイアウト計算後の `RenderDocument` は、まだ PDFsharp に直接依存していません。`DrawCommandGeneratorPass` が `RenderDocument` を読み取り、描画内容を `DrawCommand` に変換します。
-
-ページごとに、おおむね次の順番でコマンドを生成します。
-
-1. 背景
-2. 罫線
-3. セル文字列
-4. 画像
-5. ヘッダー、フッター
-
-描画順序は要素の重なり方に影響します。例えば、背景を文字列より後に描画すると文字列が隠れてしまうため、背景を先に生成します。
-
-- `FillRectangleCommand`: セルの背景色を描画
-- `DrawBorderCommand`: セルの罫線を描画
-- `DrawTextCommand`: セル文字列、ヘッダー、フッターを描画
-- `DrawImageCommand`: ワークシート上の画像を描画
-
-描画コマンドを中間モデルとして持つことで、レイアウト計算と実際の描画処理を分離できます。レイアウト処理を変更せずにレンダラーを追加したり、描画コマンドを検査するテストを作成したりできます。
-
-## 4. PDF / PNG / SVG への描画
-
-`PdfSharpRenderer` は生成された `DrawCommand` を順番に処理して PDF を作成します。
-
-| 描画コマンド | PDFsharp での処理 |
-| --- | --- |
-| `FillRectangleCommand` | 矩形の塗りつぶし |
-| `DrawBorderCommand` | 線の描画 |
-| `DrawTextCommand` | 文字列の描画 |
-| `DrawImageCommand` | 画像の描画 |
-
-`PdfSharpRenderer` の責務は、抽象的な描画コマンドを PDFsharp の API 呼び出しへ変換することです。画像データは SkiaSharp でデコードしてから PDF へ描画します。
-
-`PngRenderer` は同じ `DrawCommand` を SkiaSharp で描画し、各ページを独立した PNG にします。用紙寸法と描画座標はポイント単位のまま受け取り、既定の 96 DPI（または指定した DPI）でピクセルへ変換します。PNG は複数ページを格納できないため、複数ページの出力にはページ番号を受け取る出力ストリームファクトリを使用します。
-
-`SvgRenderer` は PNG と描画処理を共有し、ポイント単位のままページごとの自己完結 SVG を生成します。文字は生成時のフォントでベクターパス化され、画像はファイル内へ埋め込まれます。このため閲覧側に日本語フォントは不要ですが、文字検索・コピーはできません。パス化は編集防止機能ではなく、複雑な文字体系やカラーフォントの完全な再現も保証しません。
-
-## 利用方法
+## C# API（低レベル）
 
 ライブラリを参照し、`ExcelReader`、`ReportLayoutEngine`、`DrawCommandGeneratorPass`、`PdfSharpRenderer` の順に使用します。
 
@@ -486,7 +309,7 @@ svgRenderer.Render(
     pageNumber => File.Create($"report-{pageNumber}.svg"));
 ```
 
-### フォントファイルの指定
+## フォント
 
 PDF と PNG の変換では、任意の `ExcelRenderer.Fonts` パッケージが導入されていれば、
 埋め込まれた Noto Sans JP Regular TTF、IVS 用の IPAmj 明朝、および Noto Color Emoji を使用できます。単体の絵文字と VS16 付き絵文字はカラーで描画し、PDF と SVG には画像として埋め込みます。ZWJ などの複合絵文字には別途シェーピングが必要です。未導入
@@ -518,82 +341,15 @@ GlobalFontSettings.FontResolver = new PdfSharpFontResolver(
 
 フォントリゾルバーはアプリケーションドメインごとに一度だけ、PDFsharp がフォントを使用する処理より前に設定します。
 
-## 設計方針
+## アーキテクチャ
 
-Excel から PDF や PNG を生成する処理を 1 つの巨大な変換処理にせず、入力の解釈、レイアウト計算、描画命令の生成、出力形式への描画に分割しています。
-
-- レイアウト計算は複数の Pass に分割し、各 Pass は基本的に 1 つの目的だけを持つ
-- Pass 間の情報は `ReportLayoutContext` を介して受け渡す
-- `ReportLayoutEngine` は PDFsharp を直接操作せず、`RenderDocument` と `DrawCommand` を生成する
-- 描画内容をコマンドとして表現し、単体テスト、描画順序の変更、別レンダラー、デバッグ出力を容易にする
-
-## 拡張方法
-
-### 新しいレイアウト処理を追加する
-
-新しいレイアウト処理は `IReportLayoutPass` を実装するクラスとして追加し、`ReportLayoutEngine` の Pass 一覧へ適切な順序で登録します。
-
-```csharp
-using ExcelRenderer.Abstractions;
-using ExcelRenderer.Layout;
-
-public sealed class CellPaddingPass : IReportLayoutPass
-{
-    public void Execute(ReportLayoutContext context)
-    {
-        // context.CellLayouts などを参照・更新する
-    }
-}
-```
-
-```csharp
-new CellBoundsPass(),
-new CellPaddingPass(),
-new PaginationPass()
-```
-
-現在の実装では Pass 一覧は `ReportLayoutEngine` 内で構築されています。Pass を追加する場合は、クラスの作成に加えて登録順序を変更する必要があります。
-
-### 新しい描画コマンドを追加する
-
-新しい描画要素を追加する場合は、次の 3 か所を拡張します。
-
-1. 新しい `DrawCommand` を定義する
-2. `DrawCommandGeneratorPass` でコマンドを生成する
-3. `PdfSharpRenderer` でコマンドを描画する
-
-例えば透かしは、`Watermark` 情報から `DrawWatermarkCommand` を生成し、`PdfSharpRenderer` で描画する構成にできます。
-
-### 新しい出力形式を追加する
-
-`RenderDocument` または `DrawCommand` を入力として、新しいレンダラーを追加できます。出力先として SVG、HTML Canvas、PNG、プレビュー画面、デバッグ用 JSON などが考えられます。
+Excel を `ReportDocument`、`RenderDocument`、`DrawCommand` の順に変換し、PDF・PNG・SVG へ描画します。
 
 ```text
-DrawCommand
-    ├─ PdfSharpRenderer
-    ├─ PngRenderer
-    ├─ SvgRenderer
-    ├─ CanvasRenderer
-    └─ DebugJsonRenderer
+Excel (.xlsx) → ReportDocument → RenderDocument → DrawCommand → PDF / PNG / SVG
 ```
 
-### 文字列計測方法を差し替える
-
-文字列計測は `ITextMeasurer` として分離されています。PDFsharp、SkiaSharp、ブラウザー相当、テスト用の固定サイズなど、用途に応じた実装を追加できます。
-
-## 拡張例
-
-- SVG データを `ReportImage` に保持し、`DrawSvgCommand` または SVG 対応レンダラーで描画する
-- `DrawCommandGeneratorPass` に `DrawWatermarkCommand` を追加して透かしを描画する
-- `CustomPaginationPass` で特定の行や帳票セクション単位の改ページを追加する
-- `DrawDebugBoundsCommand` でセル境界やページ領域を表示する
-
-## 拡張時の注意点
-
-- Pass の順序には依存関係があります。`CellBoundsPass` は `ColumnLayouts` と `RowLayouts` を使用するため、レイアウト Pass より前には実行できません。
-- 新しい Pass では、必要なプロパティが設定済みであることを前提にしすぎず、必要に応じて未設定状態を検証します。
-- `DrawCommand` の順番はそのまま描画順序になります。新しいコマンドをどの要素の前後に配置するかを明確にします。
-- PDFsharp 固有の処理は `PdfSharpRenderer` や `ExcelRenderer.PdfSharp` 名前空間内に閉じ込めます。
+レイアウト Pass、描画コマンド、レンダラー、拡張方法、ソースコード構成の詳細は [アーキテクチャ](docs/architecture.ja.md)を参照してください。
 
 ## 制約
 
@@ -618,33 +374,7 @@ dotnet test ExcelRenderer.slnx
 
 ソースコードは `src/ExcelRenderer`、テストコードは `tests/ExcelRenderer.Tests` にあります。
 
-```text
-src/ExcelRenderer
-├─ Abstractions
-│  ├─ IReportLayoutPass
-│  └─ ITextMeasurer
-├─ Drawing
-│  ├─ DrawCommand
-│  └─ DrawCommandGeneratorPass
-├─ Excel
-│  └─ ExcelReader
-├─ Layout
-│  ├─ ReportLayoutEngine
-│  ├─ ReportLayoutContext
-│  └─ 各種 Layout Pass
-├─ Model
-│  ├─ ReportDocument
-│  ├─ ReportSheet
-│  └─ RenderDocument
-├─ PdfSharp
-   ├─ PdfSharpRenderer
-   ├─ PdfSharpTextMeasurer
-   └─ PdfSharpFontResolver
-└─ SkiaSharp
-   └─ PngRenderer
-```
-
-機能を追加する際は、既存クラスへ複数の責務を追加するのではなく、新しい読み込み処理、新しいレイアウト Pass、新しい描画コマンド、新しいレンダラー、または新しい抽象インターフェースとして分離することを基本方針とします。
+詳細な設計資料は [アーキテクチャ](docs/architecture.ja.md)、[English](README.md) も参照してください。
 
 ## ライセンス
 

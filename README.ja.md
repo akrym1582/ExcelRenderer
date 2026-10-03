@@ -494,6 +494,19 @@ PDF と PNG の変換では、任意の `ExcelRenderer.Fonts` パッケージが
 場合は、PDFsharp がフォントを使用する前にフォントリゾルバーを設定してください。
 指定するファミリー名は、Excel のセルに設定されたフォント名と一致させます。
 
+任意の同梱フォントを読み込む際は、次のファイル名（`NotoSansJP-Regular.ttf`、
+`ipamjm.ttf`、`NotoColorEmoji.ttf`）をこの順で検索します。
+
+1. `ExcelRenderer.dll` と同じディレクトリにある `*.dll` 内の埋め込みリソース。
+   リソース名はファイル名と完全一致するか、`.` とファイル名で終わる必要があります。
+   DLL はパスの ordinal 順に確認し、読み込みまたは検査できない DLL はスキップします。
+2. `ExcelRenderer.dll` の配置ディレクトリおよびそのサブディレクトリにある、
+   ファイル名が完全一致する通常ファイル。複数見つかった場合はパスの ordinal 順で
+   最初のファイルを使用します。
+
+埋め込みリソースが見つかった場合は通常ファイルより優先します。DLL の検索は再帰せず、
+サブディレクトリまで検索するのは通常ファイルだけです。
+
 ```csharp
 using PdfSharp.Fonts;
 using ExcelRenderer.PdfSharp;

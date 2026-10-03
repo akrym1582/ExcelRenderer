@@ -412,9 +412,11 @@ public sealed class PaginationPass : IReportLayoutPass
         },
     };
 
-    private static TextLayoutResult ScaleTextLayout(TextLayoutResult layout, double scale) => new(
-        new(layout.Size.Width * scale, layout.Size.Height * scale),
-        layout.Lines.Select(line => line with
+    private static TextLayoutResult ScaleTextLayout(TextLayoutResult layout, double scale)
+    {
+        var scaled = new TextLayoutResult(
+            new(layout.Size.Width * scale, layout.Size.Height * scale),
+            layout.Lines.Select(line => line with
         {
             Width = line.Width * scale,
             Height = line.Height * scale,
@@ -427,10 +429,11 @@ public sealed class PaginationPass : IReportLayoutPass
                 X = run.X * scale,
                 Advance = run.Advance * scale,
             }).ToArray(),
-        }).ToArray())
-    {
-        EffectiveFontSize = layout.EffectiveFontSize * scale,
-    };
+            }).ToArray());
+        return layout.HasExplicitEffectiveFontSize
+            ? scaled with { EffectiveFontSize = layout.EffectiveFontSize * scale }
+            : scaled;
+    }
 
     private static bool TryGetObjectBounds(
         ReportLayoutContext context,

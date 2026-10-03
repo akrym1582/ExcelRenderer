@@ -1471,6 +1471,44 @@ public sealed class LayoutPassTests
         }
     }
 
+    /// <summary>Reader dimensions participate in anchor resolution through final page coordinates.</summary>
+    [Fact]
+    public void ExcelReader_resolves_leading_dimensions_and_picture_to_page_coordinates()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
+        try
+        {
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.AddWorksheet("Sheet1");
+                worksheet.Column(1).Width = 20;
+                worksheet.Column(2).Hide();
+                worksheet.Row(1).Height = 31;
+                worksheet.Row(2).Hide();
+                worksheet.Cell(3, 3).Value = "used";
+                worksheet.PageSetup.PrintAreas.Add("C3:D4");
+                worksheet.Pictures.Add(new MemoryStream(CreateImageBytes())).MoveTo(worksheet.Cell(3, 3), 4, 5);
+                workbook.SaveAs(path);
+            }
+
+            var sheet = Assert.Single(new ExcelReader().Read(path).Sheets);
+            var geometry = new SheetGeometry(sheet);
+            var source = Assert.Single(sheet.Images!);
+            var page = Assert.Single(new ReportLayoutEngine(new PdfSharpTextMeasurer()).Layout(sheet).Pages);
+            var rendered = Assert.Single(page.Images!);
+
+            Assert.Equal(sheet.Columns[1].Width, geometry.ColumnStart(3), 6);
+            Assert.Equal(31, geometry.RowStart(3), 6);
+            Assert.Equal(new CellAddress(3, 3), source.DrawingAnchor!.From);
+            Assert.Equal(sheet.PageSettings.MarginLeft + 3, rendered.Bounds.X, 6);
+            Assert.Equal(sheet.PageSettings.MarginTop + 3.75, rendered.Bounds.Y, 6);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
     private static ReportLayoutContext CreateContext(
         IReadOnlyDictionary<CellAddress, ReportCell>? cells = null,
         IReadOnlyDictionary<int, ColumnDefinition>? columns = null,

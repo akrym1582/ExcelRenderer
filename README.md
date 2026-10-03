@@ -269,6 +269,12 @@ height, selected run font, and logical run X/advance instead of independently wr
 shrinking, or advancing the text. Commands created directly without a `TextLayout` retain the
 legacy renderer-side compatibility path.
 
+`TextLayoutResult.EffectiveFontSize` preserves a compatibility distinction: results created with
+the original two-argument constructor use the command style size, while an explicitly assigned zero
+suppresses drawing. PDF and Skia reuse the physical face selected for each finalized run, including
+memory-backed faces. Finalized underlines are drawn once from the stored line origin, baseline, and
+width; PDF font decoration is disabled on that path so it cannot produce a second underline.
+
 DrawingML picture metadata preserves and resolves one-cell, two-cell, and absolute anchors in points together
 with marker offsets, extents, `editAs`, source crop, rotation, flips, and worksheet drawing order.
 Source crop is applied by both renderer backends without changing the destination bounds.

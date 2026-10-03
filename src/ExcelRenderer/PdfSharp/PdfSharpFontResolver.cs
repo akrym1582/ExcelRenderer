@@ -1,3 +1,5 @@
+using System.Collections.Concurrent;
+using System.Security.Cryptography;
 using ExcelRenderer.Abstractions;
 using ExcelRenderer.Drawing;
 using ExcelRenderer.Fonts;
@@ -13,6 +15,8 @@ namespace ExcelRenderer.PdfSharp;
 /// <summary>PDFsharp から要求された書体をフォントファイルへ解決し、そのバイナリデータを提供します。</summary>
 public sealed class PdfSharpFontResolver : IFontResolver
 {
+    private const string ResolvedFacePrefix = "excel-renderer-face:";
+    private static readonly ConcurrentDictionary<string, byte[]> ResolvedFontData = new();
     private readonly IFontManager? _manager;
     private readonly Dictionary<string, byte[]> _fontData = new();
     private readonly string? _legacyFamily;
@@ -61,6 +65,11 @@ public sealed class PdfSharpFontResolver : IFontResolver
     /// <returns>解決したフォントを識別するフェイス情報を返します。互換モードでファミリー名が登録名または別名に一致しない場合は <see langword="null"/> を返します。</returns>
     public FontResolverInfo? ResolveTypeface(string familyName, bool bold, bool italic)
     {
+        if (familyName.StartsWith(ResolvedFacePrefix, StringComparison.Ordinal))
+        {
+            return ResolvedFontData.ContainsKey(familyName) ? new FontResolverInfo(familyName) : null;
+        }
+
         if (_legacyFace is not null)
         {
             return string.Equals(familyName, _legacyFamily, StringComparison.OrdinalIgnoreCase) ||
@@ -81,5 +90,19 @@ public sealed class PdfSharpFontResolver : IFontResolver
     /// <summary>解決済みのフェイス名に対応するフォントファイルのバイナリデータを取得します。</summary>
     /// <param name="faceName"><see cref="ResolveTypeface"/> が返したフォントフェイス名です。</param>
     /// <returns>フォントファイルの全バイトを返します。フェイス名が未解決の場合は <see langword="null"/> を返します。</returns>
-    public byte[]? GetFont(string faceName) => _fontData.GetValueOrDefault(faceName);
+    public byte[]? GetFont(string faceName) =>
+        ResolvedFontData.GetValueOrDefault(faceName) ?? _fontData.GetValueOrDefault(faceName);
+
+    /// <summary>Registers an already resolved physical face and returns its PDFsharp family key.</summary>
+    /// <param name="font">The physical face selected during layout.</param>
+    /// <returns>A unique internal PDFsharp family key.</returns>
+    internal static string RegisterResolvedFont(ResolvedFont font)
+    {
+        var data = font.FontData ?? File.ReadAllBytes(font.FilePath);
+        using var sha256 = SHA256.Create();
+        var digest = BitConverter.ToString(sha256.ComputeHash(data)).Replace("-", string.Empty, StringComparison.Ordinal);
+        var key = $"{ResolvedFacePrefix}{font.FaceId}:{digest}";
+        ResolvedFontData.TryAdd(key, data);
+        return key;
+    }
 }

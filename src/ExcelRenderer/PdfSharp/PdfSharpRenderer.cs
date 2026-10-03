@@ -440,7 +440,8 @@ public sealed class PdfSharpRenderer : IRenderer
 
     private void DrawFinalizedText(XGraphics graphics, DrawTextCommand command, TextLayoutResult layout)
     {
-        if (layout.EffectiveFontSize <= 0)
+        var effectiveFontSize = TextLayoutFontSize.Resolve(layout, command.Style.Font);
+        if (effectiveFontSize == 0)
         {
             return;
         }
@@ -460,7 +461,9 @@ public sealed class PdfSharpRenderer : IRenderer
         {
             if (positioned.Line.Runs.Count == 0)
             {
-                var font = PdfSharpTextMeasurer.CreateFont(command.Style.Font with { Size = layout.EffectiveFontSize });
+                var font = PdfSharpTextMeasurer.CreateFont(
+                    command.Style.Font with { Size = effectiveFontSize },
+                    includeUnderline: false);
                 graphics.DrawString(
                     positioned.Line.Text,
                     font,
@@ -475,7 +478,7 @@ public sealed class PdfSharpRenderer : IRenderer
                     DrawFinalizedRun(
                         graphics,
                         run.Run,
-                        layout.EffectiveFontSize,
+                        effectiveFontSize,
                         positioned.Left + run.X,
                         positioned.Baseline,
                         command.Style,
@@ -538,7 +541,7 @@ public sealed class PdfSharpRenderer : IRenderer
             return;
         }
 
-        var runFont = PdfSharpTextMeasurer.CreateFont(style.Font with { Family = run.Font.Family, Size = size });
+        var runFont = PdfSharpTextMeasurer.CreateResolvedFont(run.Font, size);
         graphics.DrawString(run.Text, runFont, brush, new XPoint(x, baseline), XStringFormats.BaseLineLeft);
     }
 

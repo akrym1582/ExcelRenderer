@@ -12,6 +12,7 @@ internal sealed class SkiaDrawingContext
 {
     private readonly bool _textAsPaths;
     private readonly IFontManager? _fontManager;
+    private readonly SkiaTextPainter _textPainter;
 
     /// <summary>Initializes a new instance of the <see cref="SkiaDrawingContext"/> class. PNG または SVG の描画先へコマンドを実行するコンテキストを初期化します。</summary>
     /// <param name="textAsPaths">true の場合は文字をパスとして描画します。</param>
@@ -20,6 +21,7 @@ internal sealed class SkiaDrawingContext
     {
         _textAsPaths = textAsPaths;
         _fontManager = fontManager;
+        _textPainter = new(DrawFinalizedText, DrawLegacyText);
     }
 
     /// <summary>単一の描画コマンドを実行します。</summary>
@@ -40,7 +42,7 @@ internal sealed class SkiaDrawingContext
                 DrawBorder(canvas, border);
                 break;
             case DrawTextCommand text:
-                DrawText(canvas, text);
+                _textPainter.Paint(canvas, text);
                 break;
             case DrawLineCommand line:
                 DrawStyledLine(canvas, line.Style, line.X1, line.Y1, line.X2, line.Y2);
@@ -144,41 +146,15 @@ internal sealed class SkiaDrawingContext
                 command.Bounds.Y + text.MarginTop,
                 Math.Max(0, command.Bounds.Width - text.MarginLeft - text.MarginRight),
                 Math.Max(0, command.Bounds.Height - text.MarginTop - text.MarginBottom));
-            DrawText(canvas, new DrawTextCommand(command.PageNumber, bounds, text.Text, CellStyle.Default with
+            _textPainter.Paint(canvas, new DrawTextCommand(command.PageNumber, bounds, text.Text, CellStyle.Default with
             { Font = text.Font, HorizontalAlignment = text.HorizontalAlignment, VerticalAlignment = text.VerticalAlignment, WrapText = text.WrapText }));
         }
 
         canvas.Restore();
     }
 
-    private void DrawText(SKCanvas canvas, DrawTextCommand command)
+    private void DrawLegacyText(SKCanvas canvas, DrawTextCommand command)
     {
-        command = NormalizeVerticalText(command);
-        var rotation = command.Style.TextRotation == 255 ? 0 : command.Style.TextRotation;
-        if (rotation == 0)
-        {
-            DrawTextCore(canvas, command);
-            return;
-        }
-
-        canvas.Save();
-        canvas.ClipRect(ToRect(command.Bounds));
-        canvas.RotateDegrees(
-            rotation,
-            (float)(command.Bounds.X + (command.Bounds.Width / 2)),
-            (float)(command.Bounds.Y + (command.Bounds.Height / 2)));
-        DrawTextCore(canvas, command);
-        canvas.Restore();
-    }
-
-    private void DrawTextCore(SKCanvas canvas, DrawTextCommand command)
-    {
-        if (command.TextLayout is { } layout)
-        {
-            DrawFinalizedText(canvas, command, layout);
-            return;
-        }
-
         var request = new FontRequest(
             command.Style.Font.Family,
             command.Style.Font.Bold ? 700 : 400,
@@ -319,27 +295,6 @@ internal sealed class SkiaDrawingContext
         }
 
         canvas.Restore();
-    }
-
-    private DrawTextCommand NormalizeVerticalText(DrawTextCommand command)
-    {
-        if (command.TextLayout is not null || (!command.Style.TopToBottom && command.Style.TextRotation != 255))
-        {
-            return command;
-        }
-
-        var elements = System.Globalization.StringInfo.GetTextElementEnumerator(command.Text);
-        var result = new List<string>();
-        while (elements.MoveNext())
-        {
-            result.Add(elements.GetTextElement());
-        }
-
-        return command with
-        {
-            Text = string.Join("\n", result),
-            Style = command.Style with { TextRotation = 0, TopToBottom = true },
-        };
     }
 
     private IReadOnlyList<string> WrapText(string text, FontRequest request, SKFont font, SKPaint paint, double width, bool wrap)

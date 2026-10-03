@@ -71,11 +71,40 @@ public sealed class ReportLayoutEngine
         new CellBoundsPass().Execute(context);
         new ContinuousLayoutPass().Execute(context);
         var document = context.RenderDocument ?? new RenderDocument([]);
-        var bounds = document.Pages.SelectMany(page => page.Cells.Select(cell => cell.Bounds)
-            .Concat((page.Images ?? []).Select(image => image.Bounds))
-            .Concat((page.Shapes ?? []).Select(shape => shape.Bounds))).ToArray();
-        var width = bounds.Length == 0 ? 1 : Math.Max(1, bounds.Max(bound => bound.X + bound.Width));
-        var height = bounds.Length == 0 ? 1 : Math.Max(1, bounds.Max(bound => bound.Y + bound.Height));
+        var page = document.Pages.Count == 0 ? null : document.Pages[0];
+        if (page is null)
+        {
+            return new(document, 1, 1);
+        }
+
+        var visual = page.Cells.SelectMany(cell => new[] { cell.Bounds }.Concat(cell.MergedBorders?.Select(border => border.Bounds) ?? []))
+            .Concat((page.Images ?? []).Select(image => ObjectGeometry.GetVisualBounds(image.Bounds, image.Rotation)))
+            .Concat((page.Shapes ?? []).Select(shape => ObjectGeometry.GetVisualBounds(shape.Bounds, shape.Shape.Rotation)))
+            .ToArray();
+
+        // Rotated objects may extend past the origin; translate every element equally to keep them on the canvas.
+        var shiftX = visual.Length == 0 ? 0 : Math.Max(0, -visual.Min(bound => bound.X));
+        var shiftY = visual.Length == 0 ? 0 : Math.Max(0, -visual.Min(bound => bound.Y));
+        if (shiftX > 0 || shiftY > 0)
+        {
+            ReportRect Move(ReportRect rect) => rect with { X = rect.X + shiftX, Y = rect.Y + shiftY };
+            page = page with
+            {
+                Cells = page.Cells.Select(cell => cell with
+                {
+                    Bounds = Move(cell.Bounds),
+                    ContentBounds = Move(cell.ContentBounds),
+                    MergedBorders = cell.MergedBorders?.Select(border => border with { Bounds = Move(border.Bounds) }).ToArray(),
+                }).ToArray(),
+                Images = page.Images?.Select(image => image with { Bounds = Move(image.Bounds) }).ToArray(),
+                Shapes = page.Shapes?.Select(shape => shape with { Bounds = Move(shape.Bounds) }).ToArray(),
+            };
+            document = new RenderDocument([page]);
+            visual = visual.Select(Move).ToArray();
+        }
+
+        var width = visual.Length == 0 ? 1 : Math.Max(1, visual.Max(bound => bound.X + bound.Width));
+        var height = visual.Length == 0 ? 1 : Math.Max(1, visual.Max(bound => bound.Y + bound.Height));
         return new(document, width, height);
     }
 

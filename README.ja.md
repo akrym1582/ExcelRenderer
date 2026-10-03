@@ -170,6 +170,7 @@ excelrenderer render input.xlsx -o ./continuous-images --format svg --image-layo
 - 行・列境界を基準としたページ分割
 - PNG、JPEG などのワークシート画像の描画
 - ヘッダー、フッター文字列の描画
+- 印刷範囲に依存しないシート座標での図形・画像のアンカー解決（回転後の外接矩形によるページ判定・自動使用範囲・連続キャンバス寸法、反復タイトル領域を除いた本文クリップ）。非表示行列とアンカーの相互作用は Excel 実機で未検証です
 - PDFsharp による PDF 出力
 - SkiaSharp によるページごとの PNG 出力と画像のデコード
 

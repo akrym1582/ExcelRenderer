@@ -8,6 +8,8 @@ namespace ExcelRenderer.Layout;
 /// </summary>
 public sealed class ReportLayoutContext
 {
+    private SheetGeometry? geometry;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ReportLayoutContext"/> class. 入力シートと文字計測実装を指定して、レイアウト工程間で共有するコンテキストを初期化します。
     /// </summary>
@@ -71,4 +73,7 @@ public sealed class ReportLayoutContext
     /// Gets or sets the rendered document. 全レイアウト工程から生成されたページ集合を取得または設定します。
     /// </summary>
     public RenderDocument? RenderDocument { get; set; }
+
+    /// <summary>Gets the print-area independent sheet-origin geometry.</summary>
+    internal SheetGeometry Geometry => geometry ??= new(Sheet);
 }

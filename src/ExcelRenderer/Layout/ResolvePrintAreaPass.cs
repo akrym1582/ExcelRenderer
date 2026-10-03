@@ -8,6 +8,8 @@ namespace ExcelRenderer.Layout;
 /// </summary>
 public sealed class ResolvePrintAreaPass : IReportLayoutPass
 {
+    private const double Epsilon = 1e-6;
+
     /// <summary>Gets a value indicating whether an explicit print area is ignored.</summary>
     public bool IgnoreExplicitPrintArea { get; init; }
 
@@ -22,39 +24,48 @@ public sealed class ResolvePrintAreaPass : IReportLayoutPass
 
     private static CellRange? GetUsedRange(ReportSheet sheet)
     {
-        var addresses = sheet.Cells.Keys
-            .Concat((sheet.Images ?? []).Select(image => image.Anchor))
-            .Concat((sheet.Images ?? []).Where(image => image.DrawingAnchor?.To is not null)
-                .Select(image => image.DrawingAnchor!.To!.Value))
-            .Concat((sheet.Shapes ?? []).Select(shape => shape.Anchor))
-            .Concat((sheet.Shapes ?? []).Where(shape => shape.DrawingAnchor?.To is not null)
-                .Select(shape => shape.DrawingAnchor!.To!.Value))
+        var geometry = new SheetGeometry(sheet);
+        var objects = (sheet.Images ?? []).Select(image =>
+            {
+                var rect = ObjectGeometry.GetSheetRect(
+                    geometry, image.Anchor, image.OffsetX, image.OffsetY, image.Width, image.Height, image.DrawingAnchor);
+                return (
+                    Anchor: GetAnchor(geometry, image.DrawingAnchor, image.Anchor, rect),
+                    Visual: ObjectGeometry.GetVisualBounds(rect, image.Rotation));
+            })
+            .Concat((sheet.Shapes ?? []).Select(shape =>
+            {
+                var rect = ObjectGeometry.GetSheetRect(
+                    geometry, shape.Anchor, shape.OffsetX, shape.OffsetY, shape.Width, shape.Height, shape.DrawingAnchor);
+                return (
+                    Anchor: GetAnchor(geometry, shape.DrawingAnchor, shape.Anchor, rect),
+                    Visual: ObjectGeometry.GetVisualBounds(rect, shape.Rotation));
+            }))
             .ToArray();
-        if (addresses.Length == 0)
+        if (sheet.Cells.Count == 0 && objects.Length == 0)
         {
             return null;
         }
 
-        var lastRows = sheet.Cells
-            .Select(cell => cell.Key.Row + cell.Value.RowSpan - 1)
-            .Concat((sheet.Images ?? []).Select(image => image.Anchor.Row));
-        lastRows = lastRows.Concat((sheet.Shapes ?? []).Select(shape => shape.Anchor.Row));
-        lastRows = lastRows
-            .Concat((sheet.Images ?? []).Where(image => image.DrawingAnchor?.To is not null)
-                .Select(image => image.DrawingAnchor!.To!.Value.Row))
-            .Concat((sheet.Shapes ?? []).Where(shape => shape.DrawingAnchor?.To is not null)
-                .Select(shape => shape.DrawingAnchor!.To!.Value.Row));
-        var lastColumns = sheet.Cells
-            .Select(cell => cell.Key.Column + cell.Value.ColumnSpan - 1)
-            .Concat((sheet.Images ?? []).Select(image => image.Anchor.Column));
-        lastColumns = lastColumns.Concat((sheet.Shapes ?? []).Select(shape => shape.Anchor.Column));
-        lastColumns = lastColumns
-            .Concat((sheet.Images ?? []).Where(image => image.DrawingAnchor?.To is not null)
-                .Select(image => image.DrawingAnchor!.To!.Value.Column))
-            .Concat((sheet.Shapes ?? []).Where(shape => shape.DrawingAnchor?.To is not null)
-                .Select(shape => shape.DrawingAnchor!.To!.Value.Column));
-        return new CellRange(
-            new(addresses.Min(address => address.Row), addresses.Min(address => address.Column)),
-            new(lastRows.Max(), lastColumns.Max()));
+        var firstRows = sheet.Cells.Keys.Select(address => address.Row)
+            .Concat(objects.Select(item => Math.Min(item.Anchor.Row, geometry.RowAt(item.Visual.Y))));
+        var firstColumns = sheet.Cells.Keys.Select(address => address.Column)
+            .Concat(objects.Select(item => Math.Min(item.Anchor.Column, geometry.ColumnAt(item.Visual.X))));
+
+        // Object ends are half-open: an end exactly on a boundary does not claim the next row or column.
+        var lastRows = sheet.Cells.Select(cell => cell.Key.Row + cell.Value.RowSpan - 1)
+            .Concat(objects.Select(item => Math.Max(
+                item.Anchor.Row,
+                geometry.RowAt(Math.Max(item.Visual.Y, item.Visual.Y + item.Visual.Height - Epsilon)))));
+        var lastColumns = sheet.Cells.Select(cell => cell.Key.Column + cell.Value.ColumnSpan - 1)
+            .Concat(objects.Select(item => Math.Max(
+                item.Anchor.Column,
+                geometry.ColumnAt(Math.Max(item.Visual.X, item.Visual.X + item.Visual.Width - Epsilon)))));
+        return new CellRange(new(firstRows.Min(), firstColumns.Min()), new(lastRows.Max(), lastColumns.Max()));
     }
+
+    private static CellAddress GetAnchor(SheetGeometry geometry, DrawingAnchor? anchor, CellAddress fallback, ReportRect rect) =>
+        anchor?.Kind == DrawingAnchorKind.Absolute
+            ? new(geometry.RowAt(rect.Y), geometry.ColumnAt(rect.X))
+            : anchor?.From ?? fallback;
 }

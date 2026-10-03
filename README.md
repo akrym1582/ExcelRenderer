@@ -321,6 +321,9 @@ The [Japanese guide](README.ja.md) contains a detailed description of the models
 - Page breaks occur only at row and column boundaries.
 - Japanese top-to-bottom mode stacks Unicode text elements; it does not yet select full
   typographic vertical glyph variants or reproduce every Japanese line-breaking rule.
+- Drawing anchors are resolved on a print-area independent sheet geometry (hidden rows/columns occupy 0 pt); the
+  interaction of hidden rows/columns with anchors has not been verified against Excel. Repeated titles do not repeat
+  drawing objects, and renderers do not yet consume every finalized text baseline/run position.
 - Output can differ from Excel because font measurement and rendering engines differ.
 
 ## Development

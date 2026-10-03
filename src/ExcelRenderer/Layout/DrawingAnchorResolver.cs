@@ -25,50 +25,49 @@ internal static class DrawingAnchorResolver
         DrawingAnchor? anchor,
         out ReportRect bounds)
     {
-        if (anchor?.Kind == DrawingAnchorKind.Absolute)
-        {
-            bounds = new(anchor.PositionX, anchor.PositionY, anchor.ExtentWidth, anchor.ExtentHeight);
-            return true;
-        }
-
-        var from = anchor?.From ?? fallbackAnchor;
-        if (!TryPosition(context, from, out var fromX, out var fromY))
+        var rect = ObjectGeometry.GetSheetRect(
+            context.Geometry,
+            fallbackAnchor,
+            fallbackOffsetX,
+            fallbackOffsetY,
+            fallbackWidth,
+            fallbackHeight,
+            anchor);
+        if (context.VisibleColumns.Count == 0 || context.VisibleRows.Count == 0)
         {
             bounds = default;
             return false;
         }
 
-        fromX += anchor?.FromOffsetX ?? fallbackOffsetX;
-        fromY += anchor?.FromOffsetY ?? fallbackOffsetY;
-        if (anchor?.Kind == DrawingAnchorKind.TwoCell && anchor.To is { } to &&
-            TryPosition(context, to, out var toX, out var toY))
-        {
-            bounds = new(
-                fromX,
-                fromY,
-                Math.Max(0, toX + anchor.ToOffsetX - fromX),
-                Math.Max(0, toY + anchor.ToOffsetY - fromY));
-            return true;
-        }
-
-        var width = anchor is null ? fallbackWidth : anchor.ExtentWidth;
-        var height = anchor is null ? fallbackHeight : anchor.ExtentHeight;
-        bounds = new(fromX, fromY, width > 0 ? width : fallbackWidth, height > 0 ? height : fallbackHeight);
+        bounds = new(
+            MapToLayout(rect.X, context.VisibleColumns, context.Geometry.ColumnStart, column => context.ColumnLayouts[column].X),
+            MapToLayout(rect.Y, context.VisibleRows, context.Geometry.RowStart, row => context.RowLayouts[row].Y),
+            rect.Width,
+            rect.Height);
         return true;
     }
 
-    private static bool TryPosition(ReportLayoutContext context, CellAddress address, out double x, out double y)
+    /// <summary>
+    /// Converts a sheet-origin coordinate to layout coordinates by subtracting the true origin of the
+    /// nearest preceding visible column or row, so every anchor kind shares one origin.
+    /// </summary>
+    private static double MapToLayout(
+        double position,
+        IReadOnlyList<int> visible,
+        Func<int, double> sheetStart,
+        Func<int, double> layoutStart)
     {
-        if (!context.ColumnLayouts.TryGetValue(address.Column, out var column) ||
-            !context.RowLayouts.TryGetValue(address.Row, out var row))
+        var reference = visible[0];
+        foreach (var index in visible)
         {
-            x = 0;
-            y = 0;
-            return false;
+            if (sheetStart(index) > position)
+            {
+                break;
+            }
+
+            reference = index;
         }
 
-        x = column.X;
-        y = row.Y;
-        return true;
+        return layoutStart(reference) + (position - sheetStart(reference));
     }
 }

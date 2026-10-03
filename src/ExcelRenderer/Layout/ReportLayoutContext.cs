@@ -59,6 +59,9 @@ public sealed class ReportLayoutContext
     /// </summary>
     public Dictionary<CellAddress, TextSize> TextSizes { get; } = [];
 
+    /// <summary>Gets finalized text layouts keyed by their source cell address.</summary>
+    public Dictionary<CellAddress, TextLayoutResult> TextLayouts { get; } = [];
+
     /// <summary>
     /// Gets the calculated cell layouts. セルアドレスごとに算出した配置矩形と文字寸法を取得します。
     /// </summary>

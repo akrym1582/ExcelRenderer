@@ -5,4 +5,8 @@ namespace ExcelRenderer.Model;
 /// </summary>
 public sealed record ReportShape(CellAddress Anchor, double OffsetX, double OffsetY, double Width,
     double Height, ShapeKind Kind, ShapeStyle Style, ShapeText? Text, double Rotation, int ZIndex,
-    ShapeAdjustment? Adjustment = null);
+    ShapeAdjustment? Adjustment = null)
+{
+    /// <summary>Gets the original DrawingML anchor metadata when available.</summary>
+    public DrawingAnchor? DrawingAnchor { get; init; }
+}

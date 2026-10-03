@@ -8,6 +8,8 @@ namespace ExcelRenderer.Layout;
 /// </summary>
 public sealed class TextMeasurePass : IReportLayoutPass
 {
+    private const double CellTextPadding = 0.5;
+
     /// <summary>
     /// 各セルが占有する列幅を合算し、フォントと折り返し設定を適用した文字列寸法をコンテキストへ格納します。
     /// </summary>
@@ -23,8 +25,20 @@ public sealed class TextMeasurePass : IReportLayoutPass
 
             var availableWidth = Enumerable.Range(address.Column, cell.ColumnSpan)
                 .Where(context.ColumnLayouts.ContainsKey).Sum(x => context.ColumnLayouts[x].Width);
-            context.TextSizes[address] = context.TextMeasurer.Measure(
-                cell.Text ?? string.Empty, cell.Style.Font, availableWidth, cell.Style.WrapText);
+            var indent = cell.Style.Indent * cell.Style.Font.Size * 0.5;
+            availableWidth = Math.Max(0, availableWidth - (CellTextPadding * 2) - indent);
+            if (context.TextMeasurer is ITextLayoutService layoutService)
+            {
+                var layout = layoutService.Layout(
+                    cell.Text ?? string.Empty, cell.Style.Font, availableWidth, cell.Style.WrapText);
+                context.TextLayouts[address] = layout;
+                context.TextSizes[address] = layout.Size;
+            }
+            else
+            {
+                context.TextSizes[address] = context.TextMeasurer.Measure(
+                    cell.Text ?? string.Empty, cell.Style.Font, availableWidth, cell.Style.WrapText);
+            }
         }
     }
 }

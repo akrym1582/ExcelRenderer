@@ -147,6 +147,24 @@ internal sealed class SkiaDrawingContext
 
     private void DrawText(SKCanvas canvas, DrawTextCommand command)
     {
+        if (command.Style.TextRotation == 0)
+        {
+            DrawTextCore(canvas, command);
+            return;
+        }
+
+        canvas.Save();
+        canvas.RotateDegrees(
+            command.Style.TextRotation,
+            (float)(command.Bounds.X + (command.Bounds.Width / 2)),
+            (float)(command.Bounds.Y + (command.Bounds.Height / 2)));
+        canvas.ClipRect(ToRect(command.Bounds));
+        DrawTextCore(canvas, command);
+        canvas.Restore();
+    }
+
+    private void DrawTextCore(SKCanvas canvas, DrawTextCommand command)
+    {
         var request = new FontRequest(
             command.Style.Font.Family,
             command.Style.Font.Bold ? 700 : 400,
@@ -175,7 +193,8 @@ internal sealed class SkiaDrawingContext
             }
         }
 
-        var lines = WrapText(command.Text, request, font, paint, command.Bounds.Width, command.Style.WrapText);
+        var lines = command.TextLayout?.Lines.Select(line => line.Text).ToArray() ??
+            WrapText(command.Text, request, font, paint, command.Bounds.Width, command.Style.WrapText);
         var metrics = font.Metrics;
         var lineHeight = metrics.Descent - metrics.Ascent + metrics.Leading;
         var textHeight = lineHeight * lines.Count;
@@ -358,7 +377,23 @@ internal sealed class SkiaDrawingContext
     {
         using var image = SKImage.FromEncodedData(command.ImageBytes)
             ?? throw new InvalidDataException("画像データを読み込めません。");
-        canvas.DrawImage(image, ToRect(command.Bounds), new SKSamplingOptions(SKCubicResampler.Mitchell));
+        var destination = ToRect(command.Bounds);
+        var source = command.Crop is not { } crop
+            ? new SKRect(0, 0, image.Width, image.Height)
+            : new SKRect(
+                (float)(crop.Left * image.Width),
+                (float)(crop.Top * image.Height),
+                (float)((1 - crop.Right) * image.Width),
+                (float)((1 - crop.Bottom) * image.Height));
+        canvas.Save();
+        canvas.RotateDegrees((float)command.Rotation, destination.MidX, destination.MidY);
+        canvas.Scale(
+            command.FlipHorizontal ? -1 : 1,
+            command.FlipVertical ? -1 : 1,
+            destination.MidX,
+            destination.MidY);
+        canvas.DrawImage(image, source, destination, new SKSamplingOptions(SKCubicResampler.Mitchell));
+        canvas.Restore();
     }
 
     private void DrawBorder(SKCanvas canvas, DrawBorderCommand command)

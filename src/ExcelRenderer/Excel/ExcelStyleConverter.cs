@@ -17,7 +17,7 @@ public static class ExcelStyleConverter
         var horizontalAlignment = style.Alignment.Horizontal == XLAlignmentHorizontalValues.General
             ? ResolveGeneralAlignment(cell)
             : ToHorizontalAlignment(style.Alignment.Horizontal);
-        return new(
+        return new CellStyle(
             new FontStyle(
             style.Font.FontName,
             style.Font.FontSize,
@@ -30,7 +30,11 @@ public static class ExcelStyleConverter
             horizontalAlignment,
             ToVerticalAlignment(style.Alignment.Vertical),
             style.Alignment.WrapText,
-            style.Alignment.ShrinkToFit);
+            style.Alignment.ShrinkToFit)
+        {
+            Indent = Math.Max(0, style.Alignment.Indent + style.Alignment.RelativeIndent),
+            TextRotation = style.Alignment.TextRotation,
+        };
     }
 
     private static HorizontalAlignment ResolveGeneralAlignment(IXLCell cell) =>

@@ -13,4 +13,17 @@ public sealed record ReportSheet(
     CellRange? PrintArea = null,
     IReadOnlyList<ReportImage>? Images = null,
     HeaderFooter? HeaderFooter = null,
-    IReadOnlyList<ReportShape>? Shapes = null);
+    IReadOnlyList<ReportShape>? Shapes = null)
+{
+    /// <summary>Gets the default width in points for columns without an explicit definition.</summary>
+    public double DefaultColumnWidth { get; init; } = 64;
+
+    /// <summary>Gets the default height in points for rows without an explicit definition.</summary>
+    public double DefaultRowHeight { get; init; } = 15;
+
+    /// <summary>
+    /// Gets the independently paginated print areas in workbook order. An empty collection uses
+    /// <see cref="PrintArea"/> or the automatically resolved used range.
+    /// </summary>
+    public IReadOnlyList<CellRange> PrintAreas { get; init; } = [];
+}

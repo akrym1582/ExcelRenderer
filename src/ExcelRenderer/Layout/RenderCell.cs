@@ -12,4 +12,7 @@ public sealed record RenderCell(ReportCell Cell, ReportRect Bounds)
     /// Gets the merged-cell border fragments. 結合セルを構成する各セル位置の罫線と配置矩形を取得します。
     /// </summary>
     public IReadOnlyList<RenderBorder>? MergedBorders { get; init; }
+
+    /// <summary>Gets the finalized text layout, when the measurer provides one.</summary>
+    public TextLayoutResult? TextLayout { get; init; }
 }

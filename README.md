@@ -204,6 +204,38 @@ using var output = File.Create("report.pdf");
 new PdfSharpRenderer().Render(commands, sheet.PageSettings, output);
 ```
 
+`ExcelReader` preserves whether an xlsx uses an explicit percentage or Fit-to-pages in
+`PageSettings.ScaleMode`. Fit-to-pages never enlarges content beyond 100%. When constructing
+`PageSettings` directly, leaving `ScaleMode` unset preserves the legacy rule that a positive
+`Scale` wins; opt in explicitly when a fit count must override the positional default scale:
+
+```csharp
+var settings = new PageSettings(FitToPagesWide: 1)
+{
+    ScaleMode = PrintScaleMode.FitToPages,
+};
+```
+
+For xlsx input, explicit and default raw column widths are converted at the fixed Excel
+reference DPI of 96; output PNG DPI does not change sheet geometry. The Normal style is resolved
+through its style XF and theme major/minor font before measuring digits 0–9 with the configured
+font manager. If that font cannot be measured, a 7px compatibility width is used and
+`MaximumDigitWidthFallback` is reported through conversion diagnostics.
+
+Distinct print areas are paginated independently without filling their bounding rectangle.
+Explicit-scale output honors saved row and column page breaks and the worksheet page order;
+Fit-to-pages ignores manual breaks. Objects intersecting more than one page are placed from the
+same source geometry on each page and clipped by the output page. Cell indentation and text
+rotation are carried into PDF, PNG, and SVG drawing.
+
+Wrapped cell text is finalized during layout into lines and resolved font runs, including
+grapheme-safe forced breaks and explicit-newline markers. The result is carried by the draw
+command so PDF, PNG, and SVG do not independently choose different line breaks.
+
+DrawingML picture metadata preserves one-cell, two-cell, and absolute anchors in points together
+with marker offsets, extents, `editAs`, source crop, rotation, flips, and worksheet drawing order.
+Source crop is applied by both renderer backends without changing the destination bounds.
+
 To render the same commands as page-by-page PNG files:
 
 ```csharp

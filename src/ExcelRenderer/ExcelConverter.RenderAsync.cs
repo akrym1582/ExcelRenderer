@@ -52,7 +52,8 @@ public static partial class ExcelConverter
         try
         {
             var source = await WorkbookInputPreparer.ReadAsync(input, request.Input, cancellationToken).ConfigureAwait(false);
-            var document = new ExcelReader().Read(source, diagnostics);
+            var fontManager = new FontManager(request.FontOptions);
+            var document = new ExcelReader(fontManager).Read(source, diagnostics);
             var sheets = SelectSheets(document, request.Selection.SheetNames);
             if (diagnostics.HasFailure)
             {
@@ -76,7 +77,6 @@ public static partial class ExcelConverter
                     diagnostics.ToArray());
             }
 
-            var fontManager = new FontManager(request.FontOptions);
             CollectMissingGlyphDiagnostics(sheets, fontManager, diagnostics);
             if (diagnostics.HasFailure)
             {

@@ -1,3 +1,4 @@
+using System.Globalization;
 using ExcelRenderer.Abstractions;
 using ExcelRenderer.Drawing;
 using ExcelRenderer.Fonts;
@@ -11,7 +12,7 @@ using SkiaSharp;
 namespace ExcelRenderer.PdfSharp;
 
 /// <summary>PDFsharp のフォントメトリクスを使用して、レイアウトに必要な文字列の寸法を測定します。</summary>
-public sealed class PdfSharpTextMeasurer : ITextMeasurer
+public sealed class PdfSharpTextMeasurer : ITextMeasurer, ITextLayoutService
 {
     private readonly IFontManager? _fontManager;
 
@@ -35,28 +36,53 @@ public sealed class PdfSharpTextMeasurer : ITextMeasurer
     /// <returns>折り返さない場合は文字列本来の幅と高さ、折り返す場合は利用可能幅と推定した全行の高さを返します。空文字列の場合は幅と高さがともに 0 です。</returns>
     public TextSize Measure(string text, FontStyle font, double availableWidth, bool wrap)
     {
+        return Layout(text, font, availableWidth, wrap).Size;
+    }
+
+    /// <inheritdoc/>
+    public TextLayoutResult Layout(string text, FontStyle font, double availableWidth, bool wrap)
+    {
         if (string.IsNullOrEmpty(text))
         {
-            return new(0, 0);
+            return new(new(0, 0), []);
         }
 
         using var graphics = XGraphics.CreateMeasureContext(new XSize(availableWidth, double.MaxValue), XGraphicsUnit.Point, XPageDirection.Downwards);
         var request = new FontRequest(font.Family, font.Bold ? 700 : 400, font.Italic);
-        var runs = _fontManager?.ResolveTextRuns(text, request);
-        var primary = _fontManager?.Resolve(request);
-        var size = runs is not null && primary is not null && runs.Any(x =>
-                x.GlyphId is not null || x.ColorEmojiGlyphId is not null ||
-                x.MissingPrivateUseGlyph || x.Font.FaceId != primary.FaceId ||
-                !string.Equals(primary.Family, request.Family, StringComparison.OrdinalIgnoreCase))
-            ? new XSize(runs.Sum(run => MeasureRun(graphics, run, font)), MeasureLineHeight(primary, font.Size))
-            : graphics.MeasureString(text, CreateFont(font));
-        if (!wrap || size.Width <= availableWidth)
+        var paragraphs = text.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n');
+        var lineTexts = new List<(string Text, bool ExplicitBreak)>();
+        for (var paragraphIndex = 0; paragraphIndex < paragraphs.Length; paragraphIndex++)
         {
-            return new(size.Width, size.Height);
+            var paragraph = paragraphs[paragraphIndex];
+            var explicitBreak = paragraphIndex < paragraphs.Length - 1;
+            if (!wrap || availableWidth <= 0)
+            {
+                lineTexts.Add((paragraph, explicitBreak));
+                continue;
+            }
+
+            var current = string.Empty;
+            foreach (var element in EnumerateTextElements(paragraph))
+            {
+                var candidate = current + element;
+                if (current.Length > 0 && MeasureWidth(graphics, candidate, font, request) > availableWidth)
+                {
+                    lineTexts.Add((current, false));
+                    current = element;
+                }
+                else
+                {
+                    current = candidate;
+                }
+            }
+
+            lineTexts.Add((current, explicitBreak));
         }
 
-        var lines = Math.Ceiling(size.Width / Math.Max(availableWidth, 1));
-        return new(availableWidth, size.Height * lines);
+        var lines = lineTexts.Select(line => CreateLine(graphics, line.Text, line.ExplicitBreak, font, request)).ToArray();
+        return new(
+            new(lines.Length == 0 ? 0 : lines.Max(line => line.Width), lines.Sum(line => line.Height)),
+            lines);
     }
 
     /// <summary>レンダリング用フォント書式を、同じファミリー、サイズ、太字、斜体、および下線を持つ PDFsharp フォントへ変換します。</summary>
@@ -104,5 +130,47 @@ public sealed class PdfSharpTextMeasurer : ITextMeasurer
         using var skFont = new SKFont(typeface, (float)size);
         var metrics = skFont.Metrics;
         return metrics.Descent - metrics.Ascent + metrics.Leading;
+    }
+
+    private TextLayoutLine CreateLine(
+        XGraphics graphics,
+        string text,
+        bool explicitBreak,
+        FontStyle style,
+        FontRequest request)
+    {
+        var resolvedRuns = _fontManager?.ResolveTextRuns(text, request) ?? [];
+        var positionedRuns = new List<TextLayoutRun>();
+        var x = 0d;
+        foreach (var run in resolvedRuns)
+        {
+            var advance = MeasureRun(graphics, run, style);
+            positionedRuns.Add(new(run, x, advance));
+            x += advance;
+        }
+
+        var primary = _fontManager?.Resolve(request);
+        var height = primary is null
+            ? graphics.MeasureString("Ag", CreateFont(style)).Height
+            : MeasureLineHeight(primary, style.Size);
+        var width = resolvedRuns.Count == 0 ? graphics.MeasureString(text, CreateFont(style)).Width : x;
+        return new(text, width, height, height, positionedRuns, explicitBreak);
+    }
+
+    private double MeasureWidth(XGraphics graphics, string text, FontStyle style, FontRequest request)
+    {
+        var runs = _fontManager?.ResolveTextRuns(text, request);
+        return runs is null
+            ? graphics.MeasureString(text, CreateFont(style)).Width
+            : runs.Sum(run => MeasureRun(graphics, run, style));
+    }
+
+    private IEnumerable<string> EnumerateTextElements(string text)
+    {
+        var enumerator = StringInfo.GetTextElementEnumerator(text);
+        while (enumerator.MoveNext())
+        {
+            yield return enumerator.GetTextElement();
+        }
     }
 }

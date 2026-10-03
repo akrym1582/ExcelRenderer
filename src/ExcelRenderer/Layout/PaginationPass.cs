@@ -66,7 +66,8 @@ public sealed class PaginationPass : IReportLayoutPass
             (settings.Width - settings.MarginLeft - settings.MarginRight) / scale,
             GetColumnEnd,
             titleColumnEnd,
-            titleWidth);
+            titleWidth,
+            UsesFitMode(settings) ? null : settings.ManualColumnBreaks);
         var verticalBands = CreateBands(
             bodyRows,
             row => context.RowLayouts[row].Y,
@@ -74,11 +75,21 @@ public sealed class PaginationPass : IReportLayoutPass
             (settings.Height - settings.MarginTop - settings.MarginBottom) / scale,
             GetRowEnd,
             titleRowEnd,
-            titleHeight);
+            titleHeight,
+            UsesFitMode(settings) ? null : settings.ManualRowBreaks);
 
         var pageCount = horizontalBands.Count * verticalBands.Count;
-        var pages = verticalBands.SelectMany((vertical, verticalIndex) => horizontalBands.Select((horizontal, horizontalIndex) =>
+        var bandPairs = settings.PageOrder == PrintPageOrder.DownThenOver
+            ? horizontalBands.SelectMany((horizontal, horizontalIndex) => verticalBands.Select(
+                (vertical, verticalIndex) => (Horizontal: horizontal, HorizontalIndex: horizontalIndex,
+                    Vertical: vertical, VerticalIndex: verticalIndex)))
+            : verticalBands.SelectMany((vertical, verticalIndex) => horizontalBands.Select(
+                (horizontal, horizontalIndex) => (Horizontal: horizontal, HorizontalIndex: horizontalIndex,
+                    Vertical: vertical, VerticalIndex: verticalIndex)));
+        var pages = bandPairs.Select((pair, pageIndex) =>
         {
+            var horizontal = pair.Horizontal;
+            var vertical = pair.Vertical;
             var repeatColumns = horizontal.Start >= titleColumnEnd - 1e-7;
             var repeatRows = vertical.Start >= titleRowEnd - 1e-7;
             var repeatedWidth = repeatColumns ? titleWidth : 0;
@@ -94,6 +105,9 @@ public sealed class PaginationPass : IReportLayoutPass
                     layout.Bounds.Width * scale,
                     layout.Bounds.Height * scale))
                 {
+                    TextLayout = context.TextLayouts.TryGetValue(layout.Address, out var textLayout)
+                        ? ScaleTextLayout(textLayout, scale)
+                        : null,
                     MergedBorders = layout.MergedBorders?.Select(border => new RenderBorder(
                         new(
                             (GetPosition(border.Bounds.X, horizontal.Start, repeatColumns, titleColumns.Contains(layout.Address.Column), titleColumns, column => context.ColumnLayouts[column].X, repeatedWidth) * scale) + settings.MarginLeft,
@@ -104,10 +118,14 @@ public sealed class PaginationPass : IReportLayoutPass
                 })
                 .ToArray();
             var images = (context.Sheet.Images ?? [])
-                .Where(image => context.RowLayouts.TryGetValue(image.Anchor.Row, out var row) &&
-                    row.Y >= vertical.Start && row.Y < vertical.End &&
-                    context.ColumnLayouts.TryGetValue(image.Anchor.Column, out var column) &&
-                    column.X >= horizontal.Start && column.X < horizontal.End)
+                .Where(image => TryGetObjectBounds(
+                    context,
+                    image.Anchor,
+                    image.OffsetX,
+                    image.OffsetY,
+                    image.Width,
+                    image.Height,
+                    out var bounds) && Intersects(bounds, horizontal, vertical))
                 .Select(image =>
                 {
                     var column = context.ColumnLayouts[image.Anchor.Column];
@@ -119,12 +137,24 @@ public sealed class PaginationPass : IReportLayoutPass
                         image.Width * scale,
                         image.Height * scale),
                         image.ImageBytes,
-                        image.ZIndex);
+                        image.ZIndex)
+                    {
+                        Crop = image.Crop,
+                        Rotation = image.Rotation,
+                        FlipHorizontal = image.FlipHorizontal,
+                        FlipVertical = image.FlipVertical,
+                    };
                 })
                 .ToArray();
             var shapes = (context.Sheet.Shapes ?? [])
-                .Where(shape => context.RowLayouts.TryGetValue(shape.Anchor.Row, out var row) && row.Y >= vertical.Start && row.Y < vertical.End &&
-                    context.ColumnLayouts.TryGetValue(shape.Anchor.Column, out var column) && column.X >= horizontal.Start && column.X < horizontal.End)
+                .Where(shape => TryGetObjectBounds(
+                    context,
+                    shape.Anchor,
+                    shape.OffsetX,
+                    shape.OffsetY,
+                    shape.Width,
+                    shape.Height,
+                    out var bounds) && Intersects(bounds, horizontal, vertical))
                 .Select(shape =>
                 {
                     var column = context.ColumnLayouts[shape.Anchor.Column];
@@ -135,15 +165,25 @@ public sealed class PaginationPass : IReportLayoutPass
                             ((row.Y - vertical.Start + repeatedHeight + shape.OffsetY) * scale) + settings.MarginTop,
                             shape.Width * scale,
                             shape.Height * scale),
-                        shape);
+                        ScaleShape(shape, scale));
                 }).ToArray();
-            return new RenderPage((verticalIndex * horizontalBands.Count) + horizontalIndex + 1, cells, images, Shapes: shapes);
-        })).ToArray();
+            return new RenderPage(pageIndex + 1, cells, images, Shapes: shapes);
+        }).ToArray();
         context.RenderDocument = new(pages.Select(page => page with
         {
             HeaderFooterTexts = CreateHeaderFooterTexts(context.Sheet, page.Number, pageCount),
         }).ToArray());
     }
+
+    /// <summary>ページ番号を解決したヘッダーおよびフッターの配置を作成します。</summary>
+    /// <param name="sheet">ヘッダーおよびフッター設定を持つシートです。</param>
+    /// <param name="pageNumber">対象ページ番号です。</param>
+    /// <param name="pageCount">シートの総ページ数です。</param>
+    /// <returns>ページへ配置するヘッダーおよびフッター文字列です。</returns>
+    internal static IReadOnlyList<RenderText> GetHeaderFooterTexts(
+        ReportSheet sheet,
+        int pageNumber,
+        int pageCount) => CreateHeaderFooterTexts(sheet, pageNumber, pageCount);
 
     private static double GetScale(
         ReportLayoutContext context,
@@ -161,9 +201,16 @@ public sealed class PaginationPass : IReportLayoutPass
         double,
         double> getRowEnd)
     {
-        if (settings.Scale is > 0)
+        var usesExplicitScale = settings.ScaleMode == PrintScaleMode.Explicit ||
+            (settings.ScaleMode is null && settings.Scale is > 0);
+        if (usesExplicitScale && settings.Scale is > 0 && double.IsFinite(settings.Scale.Value))
         {
             return settings.Scale.Value;
+        }
+
+        if (settings.ScaleMode == PrintScaleMode.Explicit)
+        {
+            return 1;
         }
 
         var scales = new List<double>();
@@ -210,6 +257,9 @@ public sealed class PaginationPass : IReportLayoutPass
         return scales.Count == 0 ? 1 : scales.Min();
     }
 
+    private static bool UsesFitMode(PageSettings settings) => settings.ScaleMode == PrintScaleMode.FitToPages ||
+        (settings.ScaleMode is null && settings.Scale is not > 0);
+
     private static double GetFitScale(
         int pageCount,
         double pageSize,
@@ -225,39 +275,23 @@ public sealed class PaginationPass : IReportLayoutPass
         double repeatedEnd,
         double repeatedSize)
     {
-        var initialScale = pageCount * pageSize / contentSize;
-        if (pageCount >= indices.Count)
+        if (pageCount <= 0 || !double.IsFinite(pageSize) || pageSize <= 0 ||
+            !double.IsFinite(contentSize) || contentSize <= 0)
         {
-            return initialScale;
+            return 1;
         }
 
         var lower = 0d;
-        var upper = initialScale;
-        while (CreateBands(
-            indices,
-            getStart,
-            getEnd,
-            pageSize / upper,
-            getMergedEnd,
-            repeatedEnd,
-            repeatedSize)
-        .Count <= pageCount)
+        var upper = 1d;
+        if (Fits(upper))
         {
-            upper *= 2;
+            return upper;
         }
 
         for (var iteration = 0; iteration < 64; iteration++)
         {
             var candidate = (lower + upper) / 2;
-            if (CreateBands(
-                indices,
-                getStart,
-                getEnd,
-                pageSize / candidate,
-                getMergedEnd,
-                repeatedEnd,
-                repeatedSize)
-            .Count <= pageCount)
+            if (Fits(candidate))
             {
                 lower = candidate;
             }
@@ -267,9 +301,32 @@ public sealed class PaginationPass : IReportLayoutPass
             }
         }
 
-        // Avoid carrying the pagination epsilon into rendered coordinates when the
-        // exact band boundary has a simple decimal representation.
-        return Math.Round(lower, 8);
+        return lower;
+
+        bool Fits(double scale)
+        {
+            var availableSize = pageSize / scale;
+            var bands = CreateBands(
+                indices,
+                getStart,
+                getEnd,
+                availableSize,
+                getMergedEnd,
+                repeatedEnd,
+                repeatedSize);
+            if (bands.Count > pageCount)
+            {
+                return false;
+            }
+
+            return bands.All(band => indices
+                .Where(index => getStart(index) >= band.Start && getStart(index) < band.End)
+                .All(index =>
+                {
+                    var titleSize = band.Start >= repeatedEnd - 1e-7 ? repeatedSize : 0;
+                    return getMergedEnd(index, getEnd(index)) - band.Start <= availableSize - titleSize;
+                }));
+        }
     }
 
     private static BorderStyle ScaleBorder(BorderStyle border, double scale)
@@ -290,6 +347,57 @@ public sealed class PaginationPass : IReportLayoutPass
         };
     }
 
+    private static ReportShape ScaleShape(ReportShape shape, double scale) => shape with
+    {
+        Style = shape.Style with { LineWidth = shape.Style.LineWidth * scale },
+        Text = shape.Text is not { } text ? null : text with
+        {
+            Font = text.Font with { Size = text.Font.Size * scale },
+            MarginLeft = text.MarginLeft * scale,
+            MarginTop = text.MarginTop * scale,
+            MarginRight = text.MarginRight * scale,
+            MarginBottom = text.MarginBottom * scale,
+        },
+    };
+
+    private static TextLayoutResult ScaleTextLayout(TextLayoutResult layout, double scale) => new(
+        new(layout.Size.Width * scale, layout.Size.Height * scale),
+        layout.Lines.Select(line => line with
+        {
+            Width = line.Width * scale,
+            Height = line.Height * scale,
+            Baseline = line.Baseline * scale,
+            Runs = line.Runs.Select(run => run with
+            {
+                X = run.X * scale,
+                Advance = run.Advance * scale,
+            }).ToArray(),
+        }).ToArray());
+
+    private static bool TryGetObjectBounds(
+        ReportLayoutContext context,
+        CellAddress anchor,
+        double offsetX,
+        double offsetY,
+        double width,
+        double height,
+        out ReportRect bounds)
+    {
+        if (!context.ColumnLayouts.TryGetValue(anchor.Column, out var column) ||
+            !context.RowLayouts.TryGetValue(anchor.Row, out var row))
+        {
+            bounds = default;
+            return false;
+        }
+
+        bounds = new(column.X + offsetX, row.Y + offsetY, width, height);
+        return true;
+    }
+
+    private static bool Intersects(ReportRect bounds, PageBand horizontal, PageBand vertical) =>
+        bounds.X < horizontal.End && bounds.X + bounds.Width > horizontal.Start &&
+        bounds.Y < vertical.End && bounds.Y + bounds.Height > vertical.Start;
+
     private static List<PageBand> CreateBands(
         IReadOnlyList<int> indices,
         Func<int, double> getStart,
@@ -297,7 +405,8 @@ public sealed class PaginationPass : IReportLayoutPass
         double availableSize,
         Func<int, double, double> getMergedEnd,
         double repeatedEnd = double.NegativeInfinity,
-        double repeatedSize = 0)
+        double repeatedSize = 0,
+        IReadOnlyCollection<int>? manualBreaks = null)
     {
         var bands = new List<PageBand>();
         for (var position = 0; position < indices.Count;)
@@ -308,6 +417,11 @@ public sealed class PaginationPass : IReportLayoutPass
             var pageAvailableSize = availableSize - (start >= repeatedEnd - 1e-7 ? repeatedSize : 0);
             while (position < indices.Count)
             {
+                if (position > firstPosition && manualBreaks?.Contains(indices[position - 1]) == true)
+                {
+                    break;
+                }
+
                 var candidateEnd = getMergedEnd(indices[position], Math.Max(end, getEnd(indices[position])));
                 if (position > firstPosition && candidateEnd - start > pageAvailableSize + 1e-7)
                 {

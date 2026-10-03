@@ -1,13 +1,30 @@
 using ClosedXML.Excel;
 using ClosedXML.Excel.Drawings;
+using ExcelRenderer.Fonts;
 using ExcelRenderer.Model;
 using ExcelRenderer.Rendering;
+using SkiaSharp;
 
 namespace ExcelRenderer.Excel;
 
 /// <summary>Excel ブックのワークシート、セル、印刷設定、画像、および図形をレンダリング用モデルとして読み込みます。</summary>
 public sealed class ExcelReader
 {
+    private readonly Dictionary<NormalFontMetadata, double> maximumDigitWidths = new();
+    private readonly IFontManager? fontManager;
+
+    /// <summary>Initializes a new instance of the <see cref="ExcelReader"/> class.</summary>
+    public ExcelReader()
+    {
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="ExcelReader"/> class.</summary>
+    /// <param name="fontManager">Normal スタイルの列幅計測に使用するフォントマネージャーです。</param>
+    public ExcelReader(IFontManager fontManager)
+    {
+        this.fontManager = fontManager ?? throw new ArgumentNullException(nameof(fontManager));
+    }
+
     /// <summary>指定した Excel ファイルを読み取り、各ワークシートの内容をレンダリング用ドキュメントへ変換します。</summary>
     /// <param name="path">読み取る Excel ファイルのパスです。</param>
     /// <returns>ブック内のワークシートを元の順序で格納したレンダリング用ドキュメントを返します。</returns>
@@ -45,14 +62,32 @@ public sealed class ExcelReader
     {
         using var workbookStream = new MemoryStream(workbookBytes, writable: false);
         using var drawingStream = new MemoryStream(workbookBytes, writable: false);
+        using var pictureMetadataStream = new MemoryStream(workbookBytes, writable: false);
+        using var metadataStream = new MemoryStream(workbookBytes, writable: false);
         using var workbook = new XLWorkbook(workbookStream);
         var shapes = DrawingMLReader.Read(drawingStream, diagnostics);
+        var pictureMetadata = DrawingMLReader.ReadPictureMetadata(pictureMetadataStream);
+        var pageSetups = WorkbookLayoutMetadataReader.ReadPageSetups(metadataStream);
         return new(workbook.Worksheets.Select(sheet => ReadSheet(
             sheet,
-            shapes.GetValueOrDefault(sheet.Name, Array.Empty<ReportShape>()))).ToArray());
+            shapes.GetValueOrDefault(sheet.Name, Array.Empty<ReportShape>()),
+            pictureMetadata.GetValueOrDefault(
+                sheet.Name,
+                new Dictionary<string, DrawingPictureMetadata>(StringComparer.Ordinal)),
+            pageSetups.GetValueOrDefault(sheet.Name),
+            diagnostics,
+            fontManager,
+            maximumDigitWidths)).ToArray());
     }
 
-    private static ReportSheet ReadSheet(IXLWorksheet worksheet, IReadOnlyList<ReportShape> shapes)
+    private static ReportSheet ReadSheet(
+        IXLWorksheet worksheet,
+        IReadOnlyList<ReportShape> shapes,
+        IReadOnlyDictionary<string, DrawingPictureMetadata> pictureMetadata,
+        SheetPageSetupMetadata? pageSetupMetadata,
+        DiagnosticCollector? diagnostics,
+        IFontManager? fontManager,
+        Dictionary<NormalFontMetadata, double> maximumDigitWidths)
     {
         var cells = new Dictionary<CellAddress, ReportCell>();
         var columns = new Dictionary<int, ColumnDefinition>();
@@ -73,7 +108,8 @@ public sealed class ExcelReader
                  column <= usedRange.RangeAddress.LastAddress.ColumnNumber; column++)
             {
                 var source = worksheet.Column(column);
-                columns[column] = new(ExcelColumnWidthToPoints(source.Width), source.IsHidden);
+                columns[column] = ReadColumnDefinition(
+                    column, source, pageSetupMetadata, diagnostics, worksheet.Name, fontManager, maximumDigitWidths);
             }
 
             for (var row = usedRange.RangeAddress.FirstAddress.RowNumber;
@@ -96,7 +132,8 @@ public sealed class ExcelReader
                 if (!columns.ContainsKey(column))
                 {
                     var source = worksheet.Column(column);
-                    columns[column] = new(ExcelColumnWidthToPoints(source.Width), source.IsHidden);
+                    columns[column] = ReadColumnDefinition(
+                        column, source, pageSetupMetadata, diagnostics, worksheet.Name, fontManager, maximumDigitWidths);
                 }
             }
 
@@ -110,13 +147,23 @@ public sealed class ExcelReader
             }
         }
 
-        var images = worksheet.Pictures.Select((picture, index) => ReadImage(picture, index)).ToArray();
+        var images = worksheet.Pictures.Select((picture, index) => ReadImage(
+            picture,
+            pictureMetadata.GetValueOrDefault(picture.Name),
+            index)).ToArray();
         foreach (var image in images)
         {
             if (!columns.ContainsKey(image.Anchor.Column))
             {
                 var source = worksheet.Column(image.Anchor.Column);
-                columns[image.Anchor.Column] = new(ExcelColumnWidthToPoints(source.Width), source.IsHidden);
+                columns[image.Anchor.Column] = ReadColumnDefinition(
+                    image.Anchor.Column,
+                    source,
+                    pageSetupMetadata,
+                    diagnostics,
+                    worksheet.Name,
+                    fontManager,
+                    maximumDigitWidths);
             }
 
             if (!rows.ContainsKey(image.Anchor.Row))
@@ -131,7 +178,14 @@ public sealed class ExcelReader
             if (!columns.ContainsKey(shape.Anchor.Column))
             {
                 var source = worksheet.Column(shape.Anchor.Column);
-                columns[shape.Anchor.Column] = new(ExcelColumnWidthToPoints(source.Width), source.IsHidden);
+                columns[shape.Anchor.Column] = ReadColumnDefinition(
+                    shape.Anchor.Column,
+                    source,
+                    pageSetupMetadata,
+                    diagnostics,
+                    worksheet.Name,
+                    fontManager,
+                    maximumDigitWidths);
             }
 
             if (!rows.ContainsKey(shape.Anchor.Row))
@@ -141,28 +195,128 @@ public sealed class ExcelReader
             }
         }
 
-        return new(
+        var sheet = new ReportSheet(
             worksheet.Name,
             cells,
             columns,
             rows,
             mergedRanges,
-            ReadPageSettings(worksheet),
+            ReadPageSettings(worksheet, pageSetupMetadata, diagnostics),
             ReadPrintArea(worksheet),
             images,
             ReadHeaderFooter(worksheet),
-            shapes);
+            shapes)
+        {
+            DefaultColumnWidth = GetDefaultColumnWidth(
+                worksheet, pageSetupMetadata, diagnostics, fontManager, maximumDigitWidths),
+            DefaultRowHeight = pageSetupMetadata?.DefaultRowHeight ?? worksheet.RowHeight,
+            PrintAreas = ReadPrintAreas(worksheet),
+        };
+        return sheet;
+    }
+
+    private static ColumnDefinition ReadColumnDefinition(
+        int column,
+        IXLColumn source,
+        SheetPageSetupMetadata? metadata,
+        DiagnosticCollector? diagnostics,
+        string sheetName,
+        IFontManager? fontManager,
+        Dictionary<NormalFontMetadata, double> maximumDigitWidths)
+    {
+        var raw = metadata?.Columns.LastOrDefault(definition =>
+            column >= definition.First && column <= definition.Last);
+        if (raw?.Width is not { } width)
+        {
+            return new(ExcelColumnWidthToPoints(source.Width), source.IsHidden);
+        }
+
+        var maximumDigitWidth = ResolveMaximumDigitWidth(
+            metadata!, diagnostics, sheetName, fontManager, maximumDigitWidths);
+        return new(ColumnWidthCalculator.ToPoints(width, maximumDigitWidth), raw.Hidden);
+    }
+
+    private static double GetDefaultColumnWidth(
+        IXLWorksheet worksheet,
+        SheetPageSetupMetadata? metadata,
+        DiagnosticCollector? diagnostics,
+        IFontManager? fontManager,
+        Dictionary<NormalFontMetadata, double> maximumDigitWidths)
+    {
+        if (metadata?.DefaultColumnWidth is not { } width)
+        {
+            return ExcelColumnWidthToPoints(worksheet.ColumnWidth);
+        }
+
+        var maximumDigitWidth = ResolveMaximumDigitWidth(
+            metadata, diagnostics, worksheet.Name, fontManager, maximumDigitWidths);
+        return ColumnWidthCalculator.ToPoints(width, maximumDigitWidth);
+    }
+
+    private static double ResolveMaximumDigitWidth(
+        SheetPageSetupMetadata metadata,
+        DiagnosticCollector? diagnostics,
+        string sheetName,
+        IFontManager? fontManager,
+        Dictionary<NormalFontMetadata, double> maximumDigitWidths)
+    {
+        if (fontManager is not null && metadata.NormalFont is { } normalFont)
+        {
+            try
+            {
+                if (!maximumDigitWidths.TryGetValue(normalFont, out var cached))
+                {
+                    var resolved = fontManager.Resolve(new(normalFont.Family));
+                    using Stream stream = resolved.FontData is null
+                        ? File.OpenRead(resolved.FilePath)
+                        : new MemoryStream(resolved.FontData, writable: false);
+                    using var typeface = SKTypeface.FromStream(stream) ??
+                        throw new InvalidOperationException($"Font {resolved.Family} could not be loaded.");
+                    using var font = new SKFont(typeface, (float)(normalFont.Size * 96 / 72));
+                    cached = Math.Max(1, Math.Round(
+                        Enumerable.Range(0, 10).Max(digit => font.MeasureText(digit.ToString())),
+                        MidpointRounding.AwayFromZero));
+                    maximumDigitWidths[normalFont] = cached;
+                    diagnostics?.Add(new(
+                        "MaximumDigitWidthResolved",
+                        DiagnosticSeverity.Info,
+                        DiagnosticStage.Read,
+                        $"Normal font '{normalFont.Family}' resolved to '{resolved.Family}' with MDW {cached}px.",
+                        sheetName));
+                }
+
+                return cached;
+            }
+            catch (Exception error) when (error is IOException or InvalidOperationException)
+            {
+                // Fall through to the documented compatibility metric.
+            }
+        }
+
+        diagnostics?.Add(new(
+            "MaximumDigitWidthFallback",
+            DiagnosticSeverity.Warning,
+            DiagnosticStage.Read,
+            $"Normal font '{metadata.NormalFont?.Family ?? "unknown"}' could not be measured; the 7px compatibility metric was used.",
+            sheetName));
+        return 7;
     }
 
     private static CellRange? ReadPrintArea(IXLWorksheet worksheet)
     {
-        var range = worksheet.PageSetup.PrintAreas.FirstOrDefault();
-        return range is null ? null : new(
-            new(range.RangeAddress.FirstAddress.RowNumber, range.RangeAddress.FirstAddress.ColumnNumber),
-            new(range.RangeAddress.LastAddress.RowNumber, range.RangeAddress.LastAddress.ColumnNumber));
+        var areas = ReadPrintAreas(worksheet);
+        return areas.Count == 0 ? null : areas[0];
     }
 
-    private static PageSettings ReadPageSettings(IXLWorksheet worksheet)
+    private static IReadOnlyList<CellRange> ReadPrintAreas(IXLWorksheet worksheet) =>
+        worksheet.PageSetup.PrintAreas.Select(range => new CellRange(
+            new(range.RangeAddress.FirstAddress.RowNumber, range.RangeAddress.FirstAddress.ColumnNumber),
+            new(range.RangeAddress.LastAddress.RowNumber, range.RangeAddress.LastAddress.ColumnNumber))).ToArray();
+
+    private static PageSettings ReadPageSettings(
+        IXLWorksheet worksheet,
+        SheetPageSetupMetadata? metadata,
+        DiagnosticCollector? diagnostics)
     {
         var pageSetup = worksheet.PageSetup;
         var (width, height) = GetPaperSize(pageSetup.PaperSize);
@@ -172,18 +326,35 @@ public sealed class ExcelReader
         }
 
         var margins = pageSetup.Margins;
-        return new(
+        if (metadata is { FitToPage: true, FitToWidth: 0, FitToHeight: 0 })
+        {
+            diagnostics?.Add(new(
+                "FitToPagesUnbounded",
+                DiagnosticSeverity.Info,
+                DiagnosticStage.Read,
+                "Both fitToWidth and fitToHeight are zero; a 100% print scale will be used.",
+                worksheet.Name));
+        }
+
+        var settings = new PageSettings(
             width,
             height,
             InchesToPoints(margins.Left),
             InchesToPoints(margins.Top),
             InchesToPoints(margins.Right),
             InchesToPoints(margins.Bottom),
-            pageSetup.Scale > 0 ? pageSetup.Scale / 100d : null,
-            pageSetup.Scale > 0 || pageSetup.PagesWide <= 0 ? null : pageSetup.PagesWide,
-            pageSetup.Scale > 0 || pageSetup.PagesTall <= 0 ? null : pageSetup.PagesTall,
+            metadata?.FitToPage == true ? null : (metadata?.Scale ?? 100) / 100d,
+            metadata?.FitToPage == true ? (int)(metadata.FitToWidth ?? 1) : null,
+            metadata?.FitToPage == true ? (int)(metadata.FitToHeight ?? 1) : null,
             ReadRange(pageSetup.FirstRowToRepeatAtTop, pageSetup.LastRowToRepeatAtTop),
-            ReadRange(pageSetup.FirstColumnToRepeatAtLeft, pageSetup.LastColumnToRepeatAtLeft));
+            ReadRange(pageSetup.FirstColumnToRepeatAtLeft, pageSetup.LastColumnToRepeatAtLeft))
+        {
+            ScaleMode = metadata?.FitToPage == true ? PrintScaleMode.FitToPages : PrintScaleMode.Explicit,
+            ManualRowBreaks = metadata?.RowBreaks ?? [],
+            ManualColumnBreaks = metadata?.ColumnBreaks ?? [],
+            PageOrder = metadata?.PageOrder ?? PrintPageOrder.DownThenOver,
+        };
+        return settings;
 
         static IndexRange? ReadRange(int first, int last) =>
             first > 0 && last >= first ? new(first, last) : null;
@@ -230,19 +401,39 @@ public sealed class ExcelReader
             headerFooter.Center.GetText(occurrence),
             headerFooter.Right.GetText(occurrence));
 
-    private static ReportImage ReadImage(IXLPicture picture, int zIndex)
+    private static ReportImage ReadImage(
+        IXLPicture picture,
+        DrawingPictureMetadata? metadata,
+        int zIndex)
     {
         var anchor = picture.TopLeftCell.Address;
         var offset = picture.GetOffset(XLMarkerPosition.TopLeft);
-        return new(
-            new CellAddress(anchor.RowNumber, anchor.ColumnNumber),
-            PixelsToPoints(offset.X),
-            PixelsToPoints(offset.Y),
-            PixelsToPoints(picture.Width),
-            PixelsToPoints(picture.Height),
+        var sourceAnchor = metadata?.Anchor;
+        var cell = sourceAnchor?.From ?? new CellAddress(anchor.RowNumber, anchor.ColumnNumber);
+        var offsetX = sourceAnchor?.Kind == DrawingAnchorKind.Absolute
+            ? sourceAnchor.PositionX
+            : sourceAnchor?.FromOffsetX ?? PixelsToPoints(offset.X);
+        var offsetY = sourceAnchor?.Kind == DrawingAnchorKind.Absolute
+            ? sourceAnchor.PositionY
+            : sourceAnchor?.FromOffsetY ?? PixelsToPoints(offset.Y);
+        var width = sourceAnchor is { ExtentWidth: > 0 } ? sourceAnchor.ExtentWidth : PixelsToPoints(picture.Width);
+        var height = sourceAnchor is { ExtentHeight: > 0 } ? sourceAnchor.ExtentHeight : PixelsToPoints(picture.Height);
+        return new ReportImage(
+            cell,
+            offsetX,
+            offsetY,
+            width,
+            height,
             picture.ImageStream.ToArray(),
-            zIndex,
-            picture.Name);
+            metadata?.ZIndex ?? zIndex,
+            picture.Name)
+        {
+            DrawingAnchor = sourceAnchor,
+            Crop = metadata?.Crop,
+            Rotation = metadata?.Rotation ?? 0,
+            FlipHorizontal = metadata?.FlipHorizontal ?? false,
+            FlipVertical = metadata?.FlipVertical ?? false,
+        };
     }
 
     private static double PixelsToPoints(int value) => value * 72d / 96d;

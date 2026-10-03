@@ -165,7 +165,28 @@ public sealed class PdfSharpRenderer : IRenderer
         using var pngData = image.Encode(SKEncodedImageFormat.Png, 100);
         using var stream = pngData.AsStream();
         using var pdfImage = XImage.FromStream(stream);
-        graphics.DrawImage(pdfImage, ToRect(command.Bounds));
+        var state = graphics.Save();
+        var centerX = command.Bounds.X + (command.Bounds.Width / 2);
+        var centerY = command.Bounds.Y + (command.Bounds.Height / 2);
+        graphics.TranslateTransform(centerX, centerY);
+        graphics.RotateTransform(command.Rotation);
+        graphics.ScaleTransform(command.FlipHorizontal ? -1 : 1, command.FlipVertical ? -1 : 1);
+        graphics.TranslateTransform(-centerX, -centerY);
+        if (command.Crop is { } crop)
+        {
+            var source = new XRect(
+                crop.Left * pdfImage.PointWidth,
+                crop.Top * pdfImage.PointHeight,
+                Math.Max(0, 1 - crop.Left - crop.Right) * pdfImage.PointWidth,
+                Math.Max(0, 1 - crop.Top - crop.Bottom) * pdfImage.PointHeight);
+            graphics.DrawImage(pdfImage, ToRect(command.Bounds), source, XGraphicsUnit.Point);
+        }
+        else
+        {
+            graphics.DrawImage(pdfImage, ToRect(command.Bounds));
+        }
+
+        graphics.Restore(state);
     }
 
     private static void DrawBorder(XGraphics graphics, DrawBorderCommand command)
@@ -323,6 +344,25 @@ public sealed class PdfSharpRenderer : IRenderer
 
     private void DrawText(XGraphics graphics, DrawTextCommand command)
     {
+        if (command.Style.TextRotation == 0)
+        {
+            DrawTextCore(graphics, command);
+            return;
+        }
+
+        var state = graphics.Save();
+        graphics.RotateAtTransform(
+            command.Style.TextRotation,
+            new XPoint(
+                command.Bounds.X + (command.Bounds.Width / 2),
+                command.Bounds.Y + (command.Bounds.Height / 2)));
+        graphics.IntersectClip(ToRect(command.Bounds));
+        DrawTextCore(graphics, command);
+        graphics.Restore(state);
+    }
+
+    private void DrawTextCore(XGraphics graphics, DrawTextCommand command)
+    {
         var request = ToRequest(command.Style);
         if (_fontManager is not null && RequiresResolvedTextPath(
             _fontManager.ResolveTextRuns(command.Text, request), _fontManager.Resolve(request), request))
@@ -332,7 +372,8 @@ public sealed class PdfSharpRenderer : IRenderer
         }
 
         var font = CreateFontToFit(graphics, command.Text, command.Style, command.Bounds.Width);
-        var lines = WrapText(graphics, command.Text, font, command.Bounds.Width, command.Style.WrapText);
+        var lines = command.TextLayout?.Lines.Select(line => line.Text).ToArray() ??
+            WrapText(graphics, command.Text, font, command.Bounds.Width, command.Style.WrapText);
         var lineHeight = graphics.MeasureString("Ag", font).Height;
         var textHeight = lineHeight * lines.Count;
         var y = command.Style.VerticalAlignment switch
@@ -363,7 +404,8 @@ public sealed class PdfSharpRenderer : IRenderer
     {
         var request = ToRequest(command.Style);
         var size = command.Style.Font.Size;
-        var lines = WrapResolvedText(graphics, command.Text, request, size, command.Bounds.Width, command.Style.WrapText);
+        var lines = command.TextLayout?.Lines.Select(line => line.Text).ToArray() ??
+            WrapResolvedText(graphics, command.Text, request, size, command.Bounds.Width, command.Style.WrapText);
         if (command.Style.ShrinkToFit && !command.Style.WrapText && command.Bounds.Width > 0)
         {
             var widest = lines.Max(x => MeasureResolvedText(graphics, x, request, size));

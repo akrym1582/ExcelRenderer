@@ -14,6 +14,7 @@ public sealed class ContinuousLayoutPass : IReportLayoutPass
             .Select(layout => new RenderCell(context.Sheet.Cells[layout.Address], layout.Bounds)
             {
                 MergedBorders = layout.MergedBorders,
+                TextLayout = context.TextLayouts.GetValueOrDefault(layout.Address),
             }).ToArray();
         var images = (context.Sheet.Images ?? [])
             .Where(image => context.ColumnLayouts.TryGetValue(image.Anchor.Column, out _) &&
@@ -25,7 +26,13 @@ public sealed class ContinuousLayoutPass : IReportLayoutPass
                 return new RenderImage(
                     new(column.X + image.OffsetX, row.Y + image.OffsetY, image.Width, image.Height),
                     image.ImageBytes,
-                    image.ZIndex);
+                    image.ZIndex)
+                {
+                    Crop = image.Crop,
+                    Rotation = image.Rotation,
+                    FlipHorizontal = image.FlipHorizontal,
+                    FlipVertical = image.FlipVertical,
+                };
             }).ToArray();
         var shapes = (context.Sheet.Shapes ?? [])
             .Where(shape => context.ColumnLayouts.TryGetValue(shape.Anchor.Column, out _) &&

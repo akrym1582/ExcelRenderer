@@ -107,9 +107,9 @@ C# から呼び出す場合は、ライブラリを追加して次の 1 行で�
 await ExcelConverter.ConvertToPdfAsync("input.xlsx", "output.pdf");
 ```
 
-出力例（Excel の帳票を SVG へ変換した結果）:
+出力例:
 
-![変換結果のサンプル](samples/svg/japanese-report.svg)
+![方眼紙報告書のサンプル](samples/png/japanese-grid-report.png)
 
 詳しくは [CLI の使い方](#cli-の使い方)、[C# API（高レベル）](#c-api高レベル)、[C# API（低レベル）](#c-api低レベル)を参照してください。
 

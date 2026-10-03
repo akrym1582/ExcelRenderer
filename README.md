@@ -122,9 +122,9 @@ Or from C#, after adding the library:
 await ExcelConverter.ConvertToPdfAsync("input.xlsx", "output.pdf");
 ```
 
-Example output (a workbook report converted to SVG):
+Example output:
 
-![Sample rendering result](samples/svg/japanese-report.svg)
+![Japanese grid-paper report sample](samples/png/japanese-grid-report.png)
 
 See [Command-line usage](#command-line-usage), [C# API (high-level)](#c-api-high-level), and [C# API (low-level)](#c-api-low-level) for details.
 

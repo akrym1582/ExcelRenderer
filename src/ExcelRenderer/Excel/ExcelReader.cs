@@ -120,6 +120,37 @@ public sealed class ExcelReader
             }
         }
 
+        // Row/column dimensions before a used or printed range contribute to every drawing anchor's
+        // sheet-origin coordinate. Keep XML overrides even when ClosedXML does not include them in RangeUsed.
+        if (pageSetupMetadata is not null)
+        {
+            foreach (var raw in pageSetupMetadata.Columns)
+            {
+                for (var column = raw.First; column <= raw.Last && column <= 16_384; column++)
+                {
+                    if (!columns.ContainsKey(column))
+                    {
+                        columns[column] = ReadColumnDefinition(
+                            column,
+                            worksheet.Column(column),
+                            pageSetupMetadata,
+                            diagnostics,
+                            worksheet.Name,
+                            fontManager,
+                            maximumDigitWidths);
+                    }
+                }
+            }
+
+            foreach (var raw in pageSetupMetadata.Rows)
+            {
+                if (!rows.ContainsKey(raw.Index))
+                {
+                    rows[raw.Index] = new(raw.Height ?? pageSetupMetadata.DefaultRowHeight, raw.Hidden);
+                }
+            }
+        }
+
         var mergedRanges = worksheet.MergedRanges.Select(range => new CellRange(
             new(range.RangeAddress.FirstAddress.RowNumber, range.RangeAddress.FirstAddress.ColumnNumber),
             new(range.RangeAddress.LastAddress.RowNumber, range.RangeAddress.LastAddress.ColumnNumber))).ToArray();

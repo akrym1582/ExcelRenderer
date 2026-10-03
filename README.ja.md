@@ -254,6 +254,11 @@ xlsx の個別列幅と既定列幅は、Excel の基準である固定96 DPIの
 選択済みrunフォント、論理run X/advanceを使用し、描画時に折返し・縮小・送り位置を再決定しません。
 `TextLayout`を持たずAPIから直接作成した描画命令には、従来のレンダラ側互換経路を維持します。
 
+`TextLayoutResult.EffectiveFontSize` は互換性のため状態を区別します。従来の2引数コンストラクターで
+サイズを未指定にした結果は描画命令のstyleサイズを使い、明示的な0は描画を抑止します。PDFとSkiaは
+確定runで選択された実faceをメモリフォントを含めて再利用します。確定経路の下線は保存済みの行原点・
+baseline・幅から一度だけ手動描画し、PDFフォント自身の下線装飾は無効にします。
+
 DrawingML画像ではoneCell、twoCell、absoluteアンカーをpoint単位で解決し、marker offset、extent、`editAs`、
 source crop、回転、flip、描画順とともに保持します。source cropは描画先Boundsを変更せず、両方の
 レンダラーバックエンドで適用します。

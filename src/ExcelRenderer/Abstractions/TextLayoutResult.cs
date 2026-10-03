@@ -5,6 +5,23 @@ namespace ExcelRenderer.Abstractions;
 /// <param name="Lines">Finalized lines.</param>
 public sealed record TextLayoutResult(TextSize Size, IReadOnlyList<TextLayoutLine> Lines)
 {
-    /// <summary>Gets the finalized effective font size, or zero for the compatibility path.</summary>
-    public double EffectiveFontSize { get; init; }
+    private double? _effectiveFontSize;
+
+    /// <summary>Gets the finalized effective font size, or zero when legacy callers did not specify one.</summary>
+    public double EffectiveFontSize
+    {
+        get => _effectiveFontSize ?? 0;
+        init
+        {
+            if (!double.IsFinite(value) || value < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), "Effective font size must be finite and non-negative.");
+            }
+
+            _effectiveFontSize = value;
+        }
+    }
+
+    /// <summary>Gets a value indicating whether an effective size was explicitly finalized.</summary>
+    internal bool HasExplicitEffectiveFontSize => _effectiveFontSize.HasValue;
 }

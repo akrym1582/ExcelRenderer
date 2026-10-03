@@ -44,7 +44,7 @@ public sealed class PdfSharpTextMeasurer : ITextMeasurer, ITextLayoutService
     {
         if (string.IsNullOrEmpty(text))
         {
-            return new(new(0, 0), []);
+            return new(new(0, 0), []) { EffectiveFontSize = font.Size };
         }
 
         using var graphics = XGraphics.CreateMeasureContext(new XSize(availableWidth, double.MaxValue), XGraphicsUnit.Point, XPageDirection.Downwards);
@@ -82,13 +82,17 @@ public sealed class PdfSharpTextMeasurer : ITextMeasurer, ITextLayoutService
         var lines = lineTexts.Select(line => CreateLine(graphics, line.Text, line.ExplicitBreak, font, request)).ToArray();
         return new(
             new(lines.Length == 0 ? 0 : lines.Max(line => line.Width), lines.Sum(line => line.Height)),
-            lines);
+            lines)
+        {
+            EffectiveFontSize = font.Size,
+        };
     }
 
     /// <summary>レンダリング用フォント書式を、同じファミリー、サイズ、太字、斜体、および下線を持つ PDFsharp フォントへ変換します。</summary>
     /// <param name="font">PDFsharp フォントへ反映するレンダリング用フォント書式です。</param>
+    /// <param name="includeUnderline">下線属性を PDFsharp フォント自体へ含める場合は <see langword="true"/> です。</param>
     /// <returns>指定された書式属性を持つ PDFsharp のフォントを返します。</returns>
-    internal static XFont CreateFont(FontStyle font)
+    internal static XFont CreateFont(FontStyle font, bool includeUnderline = true)
     {
         var style = XFontStyleEx.Regular;
         if (font.Bold)
@@ -101,7 +105,7 @@ public sealed class PdfSharpTextMeasurer : ITextMeasurer, ITextLayoutService
             style |= XFontStyleEx.Italic;
         }
 
-        if (font.Underline)
+        if (includeUnderline && font.Underline)
         {
             style |= XFontStyleEx.Underline;
         }
@@ -109,11 +113,18 @@ public sealed class PdfSharpTextMeasurer : ITextMeasurer, ITextLayoutService
         return new XFont(font.Family, font.Size, style);
     }
 
+    /// <summary>Creates a PDF font bound to an already selected physical face.</summary>
+    /// <param name="font">The selected physical face.</param>
+    /// <param name="size">The font size in points.</param>
+    /// <returns>A PDFsharp font that uses exactly the supplied face.</returns>
+    internal static XFont CreateResolvedFont(ResolvedFont font, double size) =>
+        new(PdfSharpFontResolver.RegisterResolvedFont(font), size, XFontStyleEx.Regular);
+
     private static double MeasureRun(XGraphics graphics, TextRun run, FontStyle style)
     {
         if ((run.GlyphId ?? run.ColorEmojiGlyphId) is not { } glyph && !run.MissingPrivateUseGlyph)
         {
-            return graphics.MeasureString(run.Text, CreateFont(style with { Family = run.Font.Family })).Width;
+            return graphics.MeasureString(run.Text, CreateResolvedFont(run.Font, style.Size)).Width;
         }
 
         using Stream stream = run.Font.FontData is null ? File.OpenRead(run.Font.FilePath) : new MemoryStream(run.Font.FontData, false);

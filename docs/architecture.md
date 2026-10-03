@@ -146,6 +146,12 @@ Compute the start position, size, and cumulative position of each visible column
 
 Measures the size each cell's text needs using `ITextMeasurer` and stores it in `TextSizes`, considering font family, size, style, wrapping, cell width, and line breaks. `PdfSharpTextMeasurer` is the PDFsharp-based implementation; the interface allows other measurement methods.
 
+With `ITextLayoutService`, the pass also finalizes baselines, run offsets and advances, selected
+physical faces, and an explicit effective size. A legacy result with no explicit size remains
+distinct from an explicit zero through pagination. PDFsharp uses an internal face key backed by the
+selected bytes for both measurement and drawing; Skia likewise accepts memory-backed font data.
+Finalized underlines are manual line geometry and are not also enabled on the PDF font.
+
 ### CellBoundsPass
 
 Combines column and row layouts into each cell's coordinates and drawing area in `CellLayouts`. A merged cell is treated as one area spanning its rows and columns.

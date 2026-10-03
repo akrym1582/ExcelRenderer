@@ -256,7 +256,8 @@ internal sealed class SkiaDrawingContext
 
     private void DrawFinalizedText(SKCanvas canvas, DrawTextCommand command, TextLayoutResult layout)
     {
-        if (layout.EffectiveFontSize <= 0)
+        var effectiveFontSize = TextLayoutFontSize.Resolve(layout, command.Style.Font);
+        if (effectiveFontSize == 0)
         {
             return;
         }
@@ -285,7 +286,7 @@ internal sealed class SkiaDrawingContext
                     canvas,
                     positioned.Line.Text,
                     request,
-                    (float)layout.EffectiveFontSize,
+                    (float)effectiveFontSize,
                     (float)positioned.Left,
                     (float)positioned.Baseline,
                     paint,
@@ -298,7 +299,7 @@ internal sealed class SkiaDrawingContext
                     DrawResolvedRun(
                         canvas,
                         run.Run,
-                        (float)layout.EffectiveFontSize,
+                        (float)effectiveFontSize,
                         (float)(positioned.Left + run.X),
                         (float)positioned.Baseline,
                         paint,
@@ -409,7 +410,9 @@ internal sealed class SkiaDrawingContext
         foreach (var run in runs)
         {
             DrawResolvedRun(canvas, run, size, x, y, paint, asPaths);
-            using var typeface = string.IsNullOrEmpty(run.Font.FilePath) ? null : CreateTypeface(run.Font);
+            using var typeface = run.Font.FontData is null && string.IsNullOrEmpty(run.Font.FilePath)
+                ? null
+                : CreateTypeface(run.Font);
             using var font = new SKFont(typeface ?? SKTypeface.Default, size);
             x += MeasureRun(font, run, paint);
         }
@@ -424,7 +427,9 @@ internal sealed class SkiaDrawingContext
         SKPaint paint,
         bool asPaths)
     {
-        using var typeface = string.IsNullOrEmpty(run.Font.FilePath) ? null : CreateTypeface(run.Font);
+        using var typeface = run.Font.FontData is null && string.IsNullOrEmpty(run.Font.FilePath)
+            ? null
+            : CreateTypeface(run.Font);
         using var font = new SKFont(typeface ?? SKTypeface.Default, size);
         if (run.ColorEmojiGlyphId is { } emojiGlyph)
         {

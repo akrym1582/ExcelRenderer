@@ -1,30 +1,23 @@
-using ExcelRenderer.Abstractions;
 using ExcelRenderer.Drawing;
+using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
 using PdfSharp.Drawing;
 
 namespace ExcelRenderer.PdfSharp;
 
-/// <summary>Owns PDF text transforms and selects the finalized or compatibility path.</summary>
+/// <summary>Owns PDF text normalization and transforms and selects one concrete drawing path.</summary>
 internal sealed class PdfSharpTextPainter
 {
-    private readonly PdfSharpFinalizedTextPainter _finalized;
+    private readonly PdfSharpFinalizedTextPainter _finalized = new();
     private readonly PdfSharpLegacyTextPainter _legacy;
 
-    /// <summary>Initializes a new instance of the <see cref="PdfSharpTextPainter"/> class.Provides the backend-specific pagination or text operation.</summary>
-    /// <param name="drawFinalized">The drawFinalized value.</param>
-    /// <param name="drawLegacy">The drawLegacy value.</param>
-    internal PdfSharpTextPainter(
-        Action<XGraphics, DrawTextCommand, TextLayoutResult> drawFinalized,
-        Action<XGraphics, DrawTextCommand> drawLegacy)
-    {
-        _finalized = new(drawFinalized);
-        _legacy = new(drawLegacy);
-    }
+    /// <summary>Initializes a new instance of the <see cref="PdfSharpTextPainter"/> class.</summary>
+    /// <param name="fontManager">The optional font manager used by the compatibility painter.</param>
+    internal PdfSharpTextPainter(IFontManager? fontManager) => _legacy = new(fontManager);
 
-    /// <summary>Provides the backend-specific pagination or text operation.</summary>
-    /// <param name="graphics">The graphics value.</param>
-    /// <param name="command">The command value.</param>
+    /// <summary>Paints text in PDF point coordinates and restores every transform it owns.</summary>
+    /// <param name="graphics">The PDF graphics target, owned by the renderer.</param>
+    /// <param name="command">The text command to paint.</param>
     internal void Paint(XGraphics graphics, DrawTextCommand command)
     {
         command = NormalizeVerticalText(command);

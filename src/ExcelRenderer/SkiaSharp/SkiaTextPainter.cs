@@ -11,15 +11,14 @@ internal sealed class SkiaTextPainter
     private readonly SkiaFinalizedTextPainter _finalized;
     private readonly SkiaLegacyTextPainter _legacy;
 
-    /// <summary>Initializes a new instance of the <see cref="SkiaTextPainter"/> class.Provides the backend-specific pagination or text operation.</summary>
-    /// <param name="drawFinalized">The drawFinalized value.</param>
-    /// <param name="drawLegacy">The drawLegacy value.</param>
-    internal SkiaTextPainter(
-        Action<SKCanvas, DrawTextCommand, TextLayoutResult> drawFinalized,
-        Action<SKCanvas, DrawTextCommand> drawLegacy)
+    /// <summary>Initializes a new instance of the <see cref="SkiaTextPainter"/> class.</summary>
+    /// <param name="textAsPaths">Whether ordinary glyphs are drawn as paths.</param>
+    /// <param name="fontManager">The optional resolved-font source.</param>
+    internal SkiaTextPainter(bool textAsPaths, Fonts.IFontManager? fontManager)
     {
-        _finalized = new(drawFinalized);
-        _legacy = new(drawLegacy);
+        var drawing = new SkiaTextDrawing(textAsPaths, fontManager);
+        _finalized = new(drawing);
+        _legacy = new(drawing);
     }
 
     /// <summary>Provides the backend-specific pagination or text operation.</summary>

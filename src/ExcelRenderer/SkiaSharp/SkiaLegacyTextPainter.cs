@@ -1,15 +1,19 @@
-using ExcelRenderer.Abstractions;
 using ExcelRenderer.Drawing;
 using SkiaSharp;
 
 namespace ExcelRenderer.SkiaSharp;
 
-/// <summary>Invokes the Skia compatibility path that performs wrapping and shrinking.</summary>
-/// <param name="paint">The paint value.</param>
-internal sealed class SkiaLegacyTextPainter(Action<SKCanvas, DrawTextCommand> paint)
+/// <summary>Draws compatibility text, including wrapping, shrinking, fallback, IVS, and emoji.</summary>
+internal sealed class SkiaLegacyTextPainter
 {
-    /// <summary>Provides the backend-specific pagination or text operation.</summary>
-    /// <param name="canvas">The canvas value.</param>
-    /// <param name="command">The command value.</param>
-    internal void Paint(SKCanvas canvas, DrawTextCommand command) => paint(canvas, command);
+    private readonly SkiaTextDrawing _drawing;
+
+    /// <summary>Initializes a new instance of the <see cref="SkiaLegacyTextPainter"/> class.</summary>
+    /// <param name="drawing">The backend run and resource owner.</param>
+    internal SkiaLegacyTextPainter(SkiaTextDrawing drawing) => _drawing = drawing;
+
+    /// <summary>Measures and paints a command which has no finalized layout.</summary>
+    /// <param name="canvas">The caller-owned canvas.</param>
+    /// <param name="command">The compatibility text command.</param>
+    internal void Paint(SKCanvas canvas, DrawTextCommand command) => _drawing.PaintLegacy(canvas, command);
 }

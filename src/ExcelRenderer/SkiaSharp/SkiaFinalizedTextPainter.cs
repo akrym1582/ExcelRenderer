@@ -4,14 +4,19 @@ using SkiaSharp;
 
 namespace ExcelRenderer.SkiaSharp;
 
-/// <summary>Invokes the Skia path that consumes finalized line and run placement.</summary>
-/// <param name="paint">The paint value.</param>
-internal sealed class SkiaFinalizedTextPainter(Action<SKCanvas, DrawTextCommand, TextLayoutResult> paint)
+/// <summary>Draws finalized Skia lines at stored point-coordinate baselines and run offsets.</summary>
+internal sealed class SkiaFinalizedTextPainter
 {
-    /// <summary>Provides the backend-specific pagination or text operation.</summary>
-    /// <param name="canvas">The canvas value.</param>
-    /// <param name="command">The command value.</param>
-    /// <param name="layout">The layout value.</param>
+    private readonly SkiaTextDrawing _drawing;
+
+    /// <summary>Initializes a new instance of the <see cref="SkiaFinalizedTextPainter"/> class.</summary>
+    /// <param name="drawing">The backend run and resource owner.</param>
+    internal SkiaFinalizedTextPainter(SkiaTextDrawing drawing) => _drawing = drawing;
+
+    /// <summary>Paints a finalized layout without rewrapping, shrinking, or resolving its runs.</summary>
+    /// <param name="canvas">The caller-owned canvas.</param>
+    /// <param name="command">The finalized text command.</param>
+    /// <param name="layout">The finalized point-coordinate layout.</param>
     internal void Paint(SKCanvas canvas, DrawTextCommand command, TextLayoutResult layout) =>
-        paint(canvas, command, layout);
+        _drawing.PaintFinalized(canvas, command, layout);
 }

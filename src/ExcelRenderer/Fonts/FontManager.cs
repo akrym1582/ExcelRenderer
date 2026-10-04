@@ -11,7 +11,7 @@ public sealed class FontManager : IFontManager
     private readonly List<FontFace> _faces = [];
     private readonly List<FontFace> _externalFaces = [];
     private readonly Dictionary<FontRequest, ResolvedFont> _cache = new();
-    private readonly Dictionary<(string FaceId, int Weight, bool Italic), ResolvedFont> _resolvedFaces = new();
+    private readonly Dictionary<(int RegistrationId, int Weight, bool Italic), ResolvedFont> _resolvedFaces = new();
     private readonly Dictionary<(string FaceId, int Base, int Selector), OpenTypeVariationSequences.Resolution?> _ivsSupport = new();
 
     /// <summary>Initializes a new instance of the <see cref="FontManager"/> class. 指定された設定でフォントマネージャーを初期化します。</summary>
@@ -137,9 +137,12 @@ public sealed class FontManager : IFontManager
             {
                 runs.Add(new(renderedText, font)
                 {
-                    Utf16Start = start, SourceText = element, MissingIvsGlyph = missing,
+                    Utf16Start = start,
+                    SourceText = element,
+                    MissingIvsGlyph = missing,
                     MissingPrivateUseGlyph = missingPrivateUse,
-                    GlyphId = glyph?.GlyphId, ColorEmojiGlyphId = colorEmojiGlyph,
+                    GlyphId = glyph?.GlyphId,
+                    ColorEmojiGlyphId = colorEmojiGlyph,
                     IsDefaultVariationGlyph = glyph?.IsDefault ?? false,
                 });
             }
@@ -197,7 +200,11 @@ public sealed class FontManager : IFontManager
             .ThenBy(x => Math.Abs(x.Weight - request.Weight))
             .ThenBy(x => x.SortKey, StringComparer.Ordinal)
             .First();
-        var key = (selected.FaceId, request.Weight, request.Italic);
+
+        // FaceId identifies the bytes and is deliberately shared by aliases.  A resolved
+        // result also describes the selected registration (family and registered style),
+        // so it must not be shared by registrations which happen to contain those bytes.
+        var key = (selected.RegistrationId, request.Weight, request.Italic);
         if (_resolvedFaces.TryGetValue(key, out var cached))
         {
             return cached;
@@ -388,7 +395,19 @@ public sealed class FontManager : IFontManager
         var bytes = data ?? File.ReadAllBytes(path);
         using var hasher = SHA256.Create();
         var id = BitConverter.ToString(hasher.ComputeHash(bytes)).Replace("-", string.Empty, StringComparison.Ordinal);
-        var candidate = new FontFace(family, weight, italic, path, bytes, id, bundled, sourcePriority, ivsPriority, ivsFontStyle, explicitOrder);
+        var candidate = new FontFace(
+            _faces.Count,
+            family,
+            weight,
+            italic,
+            path,
+            bytes,
+            id,
+            bundled,
+            sourcePriority,
+            ivsPriority,
+            ivsFontStyle,
+            explicitOrder);
         if (_faces.Any(x => x.Family.Equals(candidate.Family, StringComparison.OrdinalIgnoreCase) &&
             x.Weight == candidate.Weight && x.Italic == candidate.Italic &&
             string.Equals(x.FilePath, candidate.FilePath, StringComparison.OrdinalIgnoreCase)))
@@ -453,7 +472,7 @@ public sealed class FontManager : IFontManager
         }
     }
 
-    private sealed record FontFace(string Family, int Weight, bool Italic, string FilePath, byte[] Data, string FaceId, bool IsBundled, int SourcePriority, int IvsPriority, IvsFontStyle? IvsFontStyle, int ExplicitOrder = int.MaxValue)
+    private sealed record FontFace(int RegistrationId, string Family, int Weight, bool Italic, string FilePath, byte[] Data, string FaceId, bool IsBundled, int SourcePriority, int IvsPriority, IvsFontStyle? IvsFontStyle, int ExplicitOrder = int.MaxValue)
     {
         public string SortKey => $"{ExplicitOrder:D8}\0{Family}\0{Weight:D4}\0{Italic}\0{FilePath}";
     }

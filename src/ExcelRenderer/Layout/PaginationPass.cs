@@ -89,139 +89,21 @@ public sealed class PaginationPass : IReportLayoutPass
             : verticalBands.SelectMany((vertical, verticalIndex) => horizontalBands.Select(
                 (horizontal, horizontalIndex) => (Horizontal: horizontal, HorizontalIndex: horizontalIndex,
                     Vertical: vertical, VerticalIndex: verticalIndex)));
-        var pages = bandPairs.Select((pair, pageIndex) =>
-        {
-            var horizontal = pair.Horizontal;
-            var vertical = pair.Vertical;
-            var repeatColumns = horizontal.Start >= titleColumnEnd - 1e-7;
-            var repeatRows = vertical.Start >= titleRowEnd - 1e-7;
-            var repeatedWidth = repeatColumns ? titleWidth : 0;
-            var repeatedHeight = repeatRows ? titleHeight : 0;
-            var horizontalEnd = double.IsFinite(horizontal.End)
-                ? horizontal.End
-                : context.ColumnLayouts[bodyColumns[bodyColumns.Length - 1]].X +
-                    context.ColumnLayouts[bodyColumns[bodyColumns.Length - 1]].Width;
-            var verticalEnd = double.IsFinite(vertical.End)
-                ? vertical.End
-                : context.RowLayouts[bodyRows[bodyRows.Length - 1]].Y +
-                    context.RowLayouts[bodyRows[bodyRows.Length - 1]].Height;
-            var placement = new PagePlacement(
-                settings,
-                horizontal,
-                vertical,
-                horizontalEnd,
-                verticalEnd,
-                repeatedWidth,
-                repeatedHeight,
-                scale);
-            var cells = context.CellLayouts.Values
-                .Where(layout => ((layout.Bounds.X >= horizontal.Start && layout.Bounds.X < horizontal.End) ||
-                        (repeatColumns && titleColumns.Contains(layout.Address.Column))) &&
-                    ((layout.Bounds.Y >= vertical.Start && layout.Bounds.Y < vertical.End) ||
-                        (repeatRows && titleRows.Contains(layout.Address.Row))))
-                .Select(layout =>
-                {
-                    var isTitleColumn = titleColumns.Contains(layout.Address.Column);
-                    var isTitleRow = titleRows.Contains(layout.Address.Row);
-                    double PageX(double x) => placement.MapCellX(
-                        x,
-                        repeatColumns,
-                        isTitleColumn,
-                        titleColumns.Count == 0 ? 0 : context.ColumnLayouts[titleColumns[0]].X);
-                    double PageY(double y) => placement.MapCellY(
-                        y,
-                        repeatRows,
-                        isTitleRow,
-                        titleRows.Count == 0 ? 0 : context.RowLayouts[titleRows[0]].Y);
-                    var cellBounds = new ReportRect(
-                        PageX(layout.Bounds.X),
-                        PageY(layout.Bounds.Y),
-                        layout.Bounds.Width * scale,
-                        layout.Bounds.Height * scale);
-                    return new RenderCell(ScaleCell(context.Sheet.Cells[layout.Address], scale), cellBounds)
-                    {
-                        ContentBounds = new(
-                            cellBounds.X + ((layout.ContentBounds.X - layout.Bounds.X) * scale),
-                            cellBounds.Y + ((layout.ContentBounds.Y - layout.Bounds.Y) * scale),
-                            layout.ContentBounds.Width * scale,
-                            layout.ContentBounds.Height * scale),
-                        TextLayout = context.TextLayouts.TryGetValue(layout.Address, out var textLayout)
-                            ? TextLayoutTransform.Scale(textLayout, scale)
-                            : null,
-                        MergedBorders = layout.MergedBorders?.Select(border => new RenderBorder(
-                            new(
-                                PageX(border.Bounds.X),
-                                PageY(border.Bounds.Y),
-                                border.Bounds.Width * scale,
-                                border.Bounds.Height * scale),
-                            ScaleBorder(border.Border, scale))).ToArray(),
-                    };
-                })
-                .ToArray();
-            var images = (context.Sheet.Images ?? [])
-                .Where(image => TryGetObjectBounds(
-                    context,
-                    image.Anchor,
-                    image.OffsetX,
-                    image.OffsetY,
-                    image.Width,
-                    image.Height,
-                    image.DrawingAnchor,
-                    out var bounds) && Intersects(ObjectGeometry.GetVisualBounds(bounds, image.Rotation), horizontal, vertical))
-                .Select(image =>
-                {
-                    DrawingAnchorResolver.TryResolve(
-                        context,
-                        image.Anchor,
-                        image.OffsetX,
-                        image.OffsetY,
-                        image.Width,
-                        image.Height,
-                        image.DrawingAnchor,
-                        out var sourceBounds);
-                    return new RenderImage(
-                        placement.MapBodyObjectBounds(sourceBounds),
-                        image.ImageBytes,
-                        image.ZIndex)
-                    {
-                        Crop = image.Crop,
-                        Rotation = image.Rotation,
-                        FlipHorizontal = image.FlipHorizontal,
-                        FlipVertical = image.FlipVertical,
-                        ClipBounds = placement.BodyClip,
-                    };
-                })
-                .ToArray();
-            var shapes = (context.Sheet.Shapes ?? [])
-                .Where(shape => TryGetObjectBounds(
-                    context,
-                    shape.Anchor,
-                    shape.OffsetX,
-                    shape.OffsetY,
-                    shape.Width,
-                    shape.Height,
-                    shape.DrawingAnchor,
-                    out var bounds) && Intersects(ObjectGeometry.GetVisualBounds(bounds, shape.Rotation), horizontal, vertical))
-                .Select(shape =>
-                {
-                    DrawingAnchorResolver.TryResolve(
-                        context,
-                        shape.Anchor,
-                        shape.OffsetX,
-                        shape.OffsetY,
-                        shape.Width,
-                        shape.Height,
-                        shape.DrawingAnchor,
-                        out var sourceBounds);
-                    return new RenderShape(
-                        placement.MapBodyObjectBounds(sourceBounds),
-                        ScaleShape(shape, scale))
-                    {
-                        ClipBounds = placement.BodyClip,
-                    };
-                }).ToArray();
-            return new RenderPage(pageIndex + 1, cells, images, Shapes: shapes);
-        }).ToArray();
+        var pageBuilder = new RenderPageBuilder(
+            context,
+            bodyColumns,
+            bodyRows,
+            titleColumns,
+            titleRows,
+            titleColumnEnd,
+            titleRowEnd,
+            titleWidth,
+            titleHeight,
+            scale);
+        var pages = bandPairs.Select((pair, pageIndex) => pageBuilder.Build(
+            pageIndex + 1,
+            pair.Horizontal,
+            pair.Vertical)).ToArray();
         context.RenderDocument = new(pages.Select(page => page with
         {
             HeaderFooterTexts = HeaderFooterLayout.Create(context.Sheet, page.Number, pageCount),
@@ -237,55 +119,6 @@ public sealed class PaginationPass : IReportLayoutPass
         ReportSheet sheet,
         int pageNumber,
         int pageCount) => HeaderFooterLayout.Create(sheet, pageNumber, pageCount);
-
-    private static BorderStyle ScaleBorder(BorderStyle border, double scale)
-    {
-        BorderSide? Side(BorderSide? side) => side is null ? null : side with { Width = side.Width * scale };
-        return new(Side(border.Left), Side(border.Top), Side(border.Right), Side(border.Bottom));
-    }
-
-    private static ReportCell ScaleCell(ReportCell cell, double scale)
-    {
-        return cell with
-        {
-            Style = cell.Style with
-            {
-                Font = cell.Style.Font with { Size = cell.Style.Font.Size * scale },
-                Border = cell.Style.Border is { } border ? ScaleBorder(border, scale) : null,
-            },
-        };
-    }
-
-    private static ReportShape ScaleShape(ReportShape shape, double scale) => shape with
-    {
-        Style = shape.Style with { LineWidth = shape.Style.LineWidth * scale },
-        Text = shape.Text is not { } text ? null : text with
-        {
-            Font = text.Font with { Size = text.Font.Size * scale },
-            MarginLeft = text.MarginLeft * scale,
-            MarginTop = text.MarginTop * scale,
-            MarginRight = text.MarginRight * scale,
-            MarginBottom = text.MarginBottom * scale,
-        },
-    };
-
-    private static bool TryGetObjectBounds(
-        ReportLayoutContext context,
-        CellAddress anchor,
-        double offsetX,
-        double offsetY,
-        double width,
-        double height,
-        DrawingAnchor? drawingAnchor,
-        out ReportRect bounds)
-    {
-        return DrawingAnchorResolver.TryResolve(
-            context, anchor, offsetX, offsetY, width, height, drawingAnchor, out bounds);
-    }
-
-    private static bool Intersects(ReportRect bounds, PageBand horizontal, PageBand vertical) =>
-        bounds.X < horizontal.End && bounds.X + bounds.Width > horizontal.Start &&
-        bounds.Y < vertical.End && bounds.Y + bounds.Height > vertical.Start;
 
     private static IReadOnlyList<int> GetIndices(IReadOnlyList<int> visibleIndices, IndexRange? range) =>
         range is not { } value ? [] : visibleIndices.Where(index => index >= value.First && index <= value.Last).ToArray();

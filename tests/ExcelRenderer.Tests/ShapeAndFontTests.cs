@@ -205,6 +205,82 @@ public sealed class ShapeAndFontTests
     }
 
     /// <summary>
+    /// 同じフォントデータを別名および別書体として登録しても、解決結果の登録属性が混同されないことを検証します。
+    /// </summary>
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void FontManager_keeps_alias_and_registered_style_in_resolved_cache(bool resolveBoldAliasFirst)
+    {
+        var path = CopyTestFont();
+        try
+        {
+            var manager = new FontManager(new FontOptions
+            {
+                AllowSystemFonts = false,
+                UseFontPack = false,
+                FontDirectories = [],
+                FallbackFamilies = [],
+            });
+            manager.Register("A", path);
+            manager.Register("B", path, bold: path, italic: path);
+
+            ResolvedFont a;
+            ResolvedFont b;
+            if (resolveBoldAliasFirst)
+            {
+                b = manager.Resolve(new("B", 700, false));
+                a = manager.Resolve(new("A", 700, false));
+            }
+            else
+            {
+                a = manager.Resolve(new("A", 700, false));
+                b = manager.Resolve(new("B", 700, false));
+            }
+
+            Assert.Equal(("A", 400, true), (a.Family, a.Weight, a.FontStyleApproximated));
+            Assert.Equal(("B", 700, false), (b.Family, b.Weight, b.FontStyleApproximated));
+            var italic = manager.Resolve(new FontRequest("B", 400, true));
+            Assert.Equal(("B", 400, true, false),
+                (italic.Family, italic.Weight, italic.Italic, italic.FontStyleApproximated));
+            Assert.Same(b, manager.Resolve(new("B", 700, false)));
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    /// <summary>登録追加後に要求キャッシュを破棄し、新しく最適になった書体を選ぶことを検証します。</summary>
+    [Fact]
+    public void FontManager_reselects_after_registration_changes_candidates()
+    {
+        var path = CopyTestFont();
+        try
+        {
+            var manager = new FontManager(new FontOptions
+            {
+                AllowSystemFonts = false,
+                UseFontPack = false,
+                FontDirectories = [],
+                FallbackFamilies = [],
+            });
+            manager.Register("A", path);
+            Assert.True(manager.Resolve(new("A", 700, false)).FontStyleApproximated);
+
+            manager.Register("A", path, bold: path);
+
+            var resolved = manager.Resolve(new FontRequest("A", 700, false));
+            Assert.Equal(700, resolved.Weight);
+            Assert.False(resolved.FontStyleApproximated);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    /// <summary>
     /// 要求したファミリがない場合に設定済み代替ファミリと最も近いウェイトが選ばれることを検証します。
     /// </summary>
     [Fact]

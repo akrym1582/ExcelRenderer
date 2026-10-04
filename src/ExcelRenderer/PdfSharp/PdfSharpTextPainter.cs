@@ -13,7 +13,9 @@ internal sealed class PdfSharpTextPainter
 
     /// <summary>Initializes a new instance of the <see cref="PdfSharpTextPainter"/> class.</summary>
     /// <param name="fontManager">The optional font manager used by the compatibility painter.</param>
-    internal PdfSharpTextPainter(IFontManager? fontManager) => _legacy = new(fontManager);
+    /// <param name="beforeResolvedDrawing">Optional internal compatibility drawing observer.</param>
+    internal PdfSharpTextPainter(IFontManager? fontManager, Action? beforeResolvedDrawing = null) =>
+        _legacy = new(fontManager, beforeResolvedDrawing);
 
     /// <summary>Paints text in PDF point coordinates and restores every transform it owns.</summary>
     /// <param name="graphics">The PDF graphics target, owned by the renderer.</param>

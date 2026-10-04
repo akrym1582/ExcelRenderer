@@ -12,10 +12,16 @@ namespace ExcelRenderer.PdfSharp;
 internal sealed class PdfSharpLegacyTextPainter
 {
     private readonly IFontManager? _fontManager;
+    private readonly Action? _beforeResolvedDrawing;
 
     /// <summary>Initializes a new instance of the <see cref="PdfSharpLegacyTextPainter"/> class.</summary>
     /// <param name="fontManager">The optional resolved-font source.</param>
-    internal PdfSharpLegacyTextPainter(IFontManager? fontManager) => _fontManager = fontManager;
+    /// <param name="beforeResolvedDrawing">Optional internal observer after clipping and measurement, before resolved run drawing.</param>
+    internal PdfSharpLegacyTextPainter(IFontManager? fontManager, Action? beforeResolvedDrawing = null)
+    {
+        _fontManager = fontManager;
+        _beforeResolvedDrawing = beforeResolvedDrawing;
+    }
 
     /// <summary>Measures and paints a compatibility command.</summary>
     /// <param name="graphics">The caller-owned PDF graphics target.</param>
@@ -235,6 +241,7 @@ internal sealed class PdfSharpLegacyTextPainter
                     HorizontalAlignment.Right => command.Bounds.X + command.Bounds.Width - lineWidth,
                     _ => command.Bounds.X,
                 };
+                _beforeResolvedDrawing?.Invoke();
                 foreach (var run in _fontManager.ResolveTextRuns(line, request))
                 {
                     if (run.ColorEmojiGlyphId is { } emojiGlyph)

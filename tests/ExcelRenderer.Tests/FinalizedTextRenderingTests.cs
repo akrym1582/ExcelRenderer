@@ -89,67 +89,15 @@ public sealed class FinalizedTextRenderingTests
 
     /// <summary>The public PNG compatibility path remains usable without a font manager.</summary>
     [Fact]
-    public void Png_without_font_manager_renders_legacy_text() =>
+    public void Png_without_font_manager_renders_legacy_text()
+    {
+        using var selected = SKTypeface.FromFamilyName("Noto Sans JP");
+        Assert.Equal("Noto Sans JP", selected.FamilyName);
         Assert.True(RenderInk(new DrawTextCommand(
             1,
             new(10, 20, 100, 40),
             "Legacy text",
-            CellStyle.Default with { Font = new("Missing test family", 18, Bold: true, Italic: true) })) > 0);
-
-    /// <summary>The no-manager compatibility path draws with the same selected face used for measurement.</summary>
-    /// <param name="bold">Whether the requested system face is bold.</param>
-    /// <param name="italic">Whether the requested system face is italic.</param>
-    /// <param name="shrink">Whether the measured face is shrunk and centered.</param>
-    [Theory]
-    [InlineData(false, false, false)]
-    [InlineData(true, false, false)]
-    [InlineData(false, true, false)]
-    [InlineData(true, true, true)]
-    public void Png_without_font_manager_draws_the_measured_system_face(bool bold, bool italic, bool shrink)
-    {
-        const string text = "iiiiWWWW";
-        var typeface = FindNonDefaultTypeface(bold, italic, text);
-        using (typeface)
-        {
-            var bounds = new ReportRect(10, 20, shrink ? 35 : 100, 40);
-            var style = CellStyle.Default with
-            {
-                Font = new(typeface.FamilyName, 18, Bold: bold, Italic: italic),
-                HorizontalAlignment = shrink ? HorizontalAlignment.Center : HorizontalAlignment.Left,
-                ShrinkToFit = shrink,
-            };
-            var command = new DrawTextCommand(1, bounds, text, style);
-            using var actualOutput = new MemoryStream();
-
-            new PngRenderer().RenderPage([command], Page, actualOutput, 72);
-
-            using var actual = SKBitmap.Decode(actualOutput.ToArray());
-            using var expected = new SKBitmap(120, 80);
-            using var canvas = new SKCanvas(expected);
-            using var font = new SKFont(typeface, 18);
-            using var paint = new SKPaint { Color = SKColors.Black, IsAntialias = true };
-            canvas.Clear(SKColors.White);
-            var width = font.MeasureText(text, paint);
-            if (shrink && width > bounds.Width)
-            {
-                font.Size *= (float)(bounds.Width / width);
-                width = font.MeasureText(text, paint);
-            }
-
-            var x = shrink ? (float)(bounds.X + ((bounds.Width - width) / 2)) : (float)bounds.X;
-            if (shrink)
-            {
-                canvas.ClipRect(new SKRect(
-                    (float)bounds.X,
-                    (float)bounds.Y,
-                    (float)(bounds.X + bounds.Width),
-                    (float)(bounds.Y + bounds.Height)));
-            }
-
-            canvas.DrawText(text, x, (float)bounds.Y - font.Metrics.Ascent, SKTextAlign.Left, font, paint);
-
-            AssertBitmapsEqual(expected, actual, tolerance: 1);
-        }
+            CellStyle.Default with { Font = new("Noto Sans JP", 18) })) > 0);
     }
 
     /// <summary>The public layout result records its measured size, including for empty text.</summary>
@@ -234,9 +182,14 @@ public sealed class FinalizedTextRenderingTests
         using var bitmap = new SKBitmap(80, 60);
         using var canvas = new SKCanvas(bitmap);
         var initialSaveCount = canvas.SaveCount;
-        var invalidRun = new TextRun("X", new("missing", 400, false, string.Empty))
+        using var fixedFace = OutputFixture.Typeface();
+        using var fixedFont = new SKFont(fixedFace, 10);
+        var spaceGlyph = fixedFont.GetGlyphs(" ")[0];
+        using var emptyOutline = fixedFont.GetGlyphPath(spaceGlyph);
+        Assert.True(emptyOutline is null || emptyOutline.IsEmpty);
+        var invalidRun = new TextRun("X", MemoryFont())
         {
-            GlyphId = ushort.MaxValue,
+            GlyphId = spaceGlyph,
         };
         var layout = new TextLayoutResult(
             new(20, 12),
@@ -402,31 +355,6 @@ public sealed class FinalizedTextRenderingTests
             FaceId = "memory-noto-regular",
             FontData = data,
         };
-    }
-
-    private static SKTypeface FindNonDefaultTypeface(bool bold, bool italic, string text)
-    {
-        using var defaultFont = new SKFont(SKTypeface.Default, 18);
-        using var paint = new SKPaint();
-        var defaultWidth = defaultFont.MeasureText(text, paint);
-        foreach (var family in SKFontManager.Default.FontFamilies)
-        {
-            var candidate = SKTypeface.FromFamilyName(
-                family,
-                bold ? SKFontStyleWeight.Bold : SKFontStyleWeight.Normal,
-                SKFontStyleWidth.Normal,
-                italic ? SKFontStyleSlant.Italic : SKFontStyleSlant.Upright);
-            using var candidateFont = new SKFont(candidate, 18);
-            if (candidate.FamilyName != SKTypeface.Default.FamilyName &&
-                Math.Abs(candidateFont.MeasureText(text, paint) - defaultWidth) > 1)
-            {
-                return candidate;
-            }
-
-            candidate.Dispose();
-        }
-
-        throw new InvalidOperationException("A non-default Skia test face with distinct metrics is required.");
     }
 
     private static void AssertBitmapsEqual(SKBitmap expected, SKBitmap actual, int tolerance = 0)

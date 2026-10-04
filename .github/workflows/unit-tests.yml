@@ -21,14 +21,30 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
+      - name: Set up fixed fonts for public renderer smoke tests
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fontconfig
+          source scripts/test-fonts.sh
+          echo "FONTCONFIG_FILE=$FONTCONFIG_FILE" >> "$GITHUB_ENV"
+
+      - name: Verify fixed test font assets
+        run: sha256sum -c tests/ExcelRenderer.Tests/Fonts/SHA256SUMS
+
       - name: Restore dependencies
-        run: dotnet restore ExcelRenderer.slnx
+        run: dotnet restore ExcelRenderer.slnx --locked-mode
+
+      - name: Check regression detection with temporary mutations
+        run: python3 scripts/check-output-mutations.py
+
+      - name: Rebuild solution
+        run: dotnet build ExcelRenderer.slnx -t:Rebuild --configuration Release --no-restore
 
       - name: Run unit tests
         run: >-
           dotnet test ExcelRenderer.slnx
           --configuration Release
-          --no-restore
+          --no-build
           --logger "trx;LogFileName=unit-tests.trx"
           --results-directory TestResults
 
@@ -39,6 +55,7 @@ jobs:
           name: test-output-pr-${{ github.event.pull_request.number }}
           path: |
             TestResults/**/*.trx
+            TestResults/Mutations/**
             tests/ExcelRenderer.Tests/bin/Release/net10.0/SampleOutputs/**
           if-no-files-found: warn
           retention-days: 14

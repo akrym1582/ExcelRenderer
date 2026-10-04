@@ -91,13 +91,11 @@ public sealed class FinalizedTextRenderingTests
     [Fact]
     public void Png_without_font_manager_renders_legacy_text()
     {
-        using var selected = SKTypeface.FromFamilyName("Noto Sans JP");
-        Assert.Equal("Noto Sans JP", selected.FamilyName);
         Assert.True(RenderInk(new DrawTextCommand(
             1,
             new(10, 20, 100, 40),
             "Legacy text",
-            CellStyle.Default with { Font = new("Noto Sans JP", 18) })) > 0);
+            CellStyle.Default with { Font = new("Missing test family", 18) })) > 0);
     }
 
     /// <summary>The public layout result records its measured size, including for empty text.</summary>

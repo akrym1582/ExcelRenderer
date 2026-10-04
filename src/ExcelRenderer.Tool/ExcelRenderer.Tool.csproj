@@ -4,6 +4,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>excelrenderer</ToolCommandName>
     <PackageId>ExcelRenderer.Tool</PackageId>

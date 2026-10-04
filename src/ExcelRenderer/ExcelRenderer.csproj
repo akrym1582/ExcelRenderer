@@ -4,6 +4,7 @@
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
 
     <Version>1.6.7</Version>
     <PackageId>ExcelRenderer</PackageId>

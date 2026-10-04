@@ -40,6 +40,6 @@ CLI nupkgをローカルpackage sourceから `/tmp/excelrenderer-packaged-tool` 
 
 PNGおよびPDFをraster化したサンプルを画像として目視確認した。Excel実機比較、Windows／macOSでの実行は行っていない。
 
-## 未完了
+## 公開状況・未実施項目
 
-GitHubへのpush／PR作成は、このセッションのGitHub認証が無効でAPIアクセスも許可されていないため未完了。PR用本文は `docs/ranges-trim-hyperlinks-pr.md` に保存する。すべての必須ケースの全組合せを個別テスト化したわけではない（例：回転文字のtrimと内部リンクの同時指定、複数PrintAreasと反復タイトルを同時に持つ全倍率のリンク矩形、全rendererに対するキャンセル時の追加fixture）。既存回帰に加え上記の独立数値・保存再読込・mutationを実施した範囲を証拠として扱う。
+ブランチをpushし、GitHubコネクターで [Draft PR #62](https://github.com/akrym1582/ExcelRenderer/pull/62) を作成した。gh経由のAPIアクセスは拒否されたがコネクター経由で完了した。PR用本文は `docs/ranges-trim-hyperlinks-pr.md` に保存している。すべての必須ケースの全組合せを個別テスト化したわけではない（例：回転文字のtrimと内部リンクの同時指定、複数PrintAreasと反復タイトルを同時に持つ全倍率のリンク矩形、全rendererに対するキャンセル時の追加fixture）。既存回帰に加え上記の独立数値・保存再読込・mutationを実施した範囲を証拠として扱う。

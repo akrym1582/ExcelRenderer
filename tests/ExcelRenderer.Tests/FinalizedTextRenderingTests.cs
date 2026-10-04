@@ -18,6 +18,84 @@ public sealed class FinalizedTextRenderingTests
 {
     private static readonly PageSettings Page = new(120, 80);
 
+    /// <summary>The no-manager compatibility boundary draws with the same selected face used for measurement.</summary>
+    /// <param name="bold">Whether the requested system face is bold.</param>
+    /// <param name="italic">Whether the requested system face is italic.</param>
+    /// <param name="shrink">Whether the measured face is shrunk and centered.</param>
+    /// <param name="asPaths">Whether the selected face is rendered through glyph paths.</param>
+    [Theory]
+    [InlineData(false, false, false, false)]
+    [InlineData(true, false, false, false)]
+    [InlineData(false, true, false, true)]
+    [InlineData(true, true, true, true)]
+    public void Skia_without_font_manager_draws_the_measured_system_face(
+        bool bold,
+        bool italic,
+        bool shrink,
+        bool asPaths)
+    {
+        const string text = "iiiiWWWW";
+        var fontData = File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf"));
+        FontStyle? selectedStyle = null;
+        SKTypeface SelectTypeface(FontStyle style)
+        {
+            selectedStyle = style;
+            return SKTypeface.FromStream(new MemoryStream(fontData, writable: false))!;
+        }
+
+        var bounds = new ReportRect(10, 20, shrink ? 35 : 100, 40);
+        var style = CellStyle.Default with
+        {
+            Font = new("Controlled test face", 18, Bold: bold, Italic: italic),
+            HorizontalAlignment = shrink ? HorizontalAlignment.Center : HorizontalAlignment.Left,
+            ShrinkToFit = shrink,
+        };
+        var command = new DrawTextCommand(1, bounds, text, style);
+        using var actual = new SKBitmap(120, 80);
+        using var actualCanvas = new SKCanvas(actual);
+        actualCanvas.Clear(SKColors.White);
+
+        new SkiaTextDrawing(asPaths, fontManager: null, SelectTypeface).PaintLegacy(actualCanvas, command);
+
+        using var expected = new SKBitmap(120, 80);
+        using var canvas = new SKCanvas(expected);
+        using var typeface = SKTypeface.FromStream(new MemoryStream(fontData, writable: false));
+        using var font = new SKFont(typeface, 18);
+        using var paint = new SKPaint { Color = SKColors.Black, IsAntialias = true };
+        canvas.Clear(SKColors.White);
+        var width = font.MeasureText(text, paint);
+        if (shrink && width > bounds.Width)
+        {
+            font.Size *= (float)(bounds.Width / width);
+            width = font.MeasureText(text, paint);
+            canvas.ClipRect(new SKRect(10, 20, 45, 60));
+        }
+
+        var x = shrink ? (float)(bounds.X + ((bounds.Width - width) / 2)) : (float)bounds.X;
+        if (asPaths)
+        {
+            using var path = font.GetTextPath(text, new SKPoint(x, (float)bounds.Y - font.Metrics.Ascent));
+            canvas.DrawPath(path, paint);
+        }
+        else
+        {
+            canvas.DrawText(text, x, (float)bounds.Y - font.Metrics.Ascent, SKTextAlign.Left, font, paint);
+        }
+
+        Assert.Equal(bold, selectedStyle!.Bold);
+        Assert.Equal(italic, selectedStyle.Italic);
+        AssertBitmapsEqual(expected, actual);
+    }
+
+    /// <summary>The public PNG compatibility path remains usable without a font manager.</summary>
+    [Fact]
+    public void Png_without_font_manager_renders_legacy_text() =>
+        Assert.True(RenderInk(new DrawTextCommand(
+            1,
+            new(10, 20, 100, 40),
+            "Legacy text",
+            CellStyle.Default with { Font = new("Missing test family", 18, Bold: true, Italic: true) })) > 0);
+
     /// <summary>The public layout result records its measured size, including for empty text.</summary>
     [Fact]
     public void Layout_records_effective_font_size_for_text_and_empty_text()
@@ -63,6 +141,31 @@ public sealed class FinalizedTextRenderingTests
         Assert.True(HasInk(bitmap, 34, 43, 12, 26));
         Assert.True(HasInk(bitmap, 16, 25, 35, 51));
         Assert.False(HasInk(bitmap, 21, 31, 12, 26));
+    }
+
+    /// <summary>Populated finalized runs never resolve the unrelated command-style primary face.</summary>
+    [Fact]
+    public void Skia_finalized_runs_do_not_select_an_unused_primary_face()
+    {
+        var font = MemoryFont();
+        var layout = new TextLayoutResult(
+            new(20, 14),
+            [new("A", 20, 14, 11, [new(new("A", font), 0, 10)], false)])
+        {
+            EffectiveFontSize = 12,
+        };
+        using var bitmap = new SKBitmap(120, 80);
+        using var canvas = new SKCanvas(bitmap);
+        var drawing = new SkiaTextDrawing(
+            textAsPaths: false,
+            fontManager: null,
+            _ => throw new InvalidOperationException("The unused primary face was selected."));
+
+        drawing.PaintFinalized(canvas, CreateCommand(layout), layout);
+
+        var ink = Enumerable.Range(0, bitmap.Width).Sum(x =>
+            Enumerable.Range(0, bitmap.Height).Count(y => bitmap.GetPixel(x, y).Alpha != 0));
+        Assert.NotEqual(0, ink);
     }
 
     /// <summary>Finalized Skia clipping and optional rotation restore the caller's canvas when glyph drawing fails.</summary>
@@ -243,6 +346,19 @@ public sealed class FinalizedTextRenderingTests
             FaceId = "memory-noto-regular",
             FontData = data,
         };
+    }
+
+    private static void AssertBitmapsEqual(SKBitmap expected, SKBitmap actual)
+    {
+        Assert.Equal(expected.Width, actual.Width);
+        Assert.Equal(expected.Height, actual.Height);
+        for (var y = 0; y < expected.Height; y++)
+        {
+            for (var x = 0; x < expected.Width; x++)
+            {
+                Assert.Equal(expected.GetPixel(x, y), actual.GetPixel(x, y));
+            }
+        }
     }
 
     private static MemoryStream Render(DrawTextCommand command)

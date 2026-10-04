@@ -268,6 +268,8 @@ command. PDF, PNG, and SVG consume the finalized effective font size, per-line b
 height, selected run font, and logical run X/advance instead of independently wrapping,
 shrinking, or advancing the text. Commands created directly without a `TextLayout` retain the
 legacy renderer-side compatibility path.
+On that compatibility path, PNG and SVG select one Skia system face from the requested family,
+weight, and slant and retain that same face for measurement, wrapping, shrinking, and drawing.
 
 `TextLayoutResult.EffectiveFontSize` preserves a compatibility distinction: results created with
 the original two-argument constructor use the command style size, while an explicitly assigned zero

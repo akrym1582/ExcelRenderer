@@ -12,14 +12,20 @@ internal sealed class SkiaTextDrawing
 {
     private readonly bool _textAsPaths;
     private readonly IFontManager? _fontManager;
+    private readonly Func<FontStyle, SKTypeface?> _systemTypefaceSelector;
 
     /// <summary>Initializes a new instance of the <see cref="SkiaTextDrawing"/> class.</summary>
     /// <param name="textAsPaths">Whether ordinary text is converted to owned glyph paths.</param>
     /// <param name="fontManager">The optional resolved-font source.</param>
-    internal SkiaTextDrawing(bool textAsPaths, IFontManager? fontManager)
+    /// <param name="systemTypefaceSelector">The optional system-face selection boundary used by deterministic tests.</param>
+    internal SkiaTextDrawing(
+        bool textAsPaths,
+        IFontManager? fontManager,
+        Func<FontStyle, SKTypeface?>? systemTypefaceSelector = null)
     {
         _textAsPaths = textAsPaths;
         _fontManager = fontManager;
+        _systemTypefaceSelector = systemTypefaceSelector ?? CreateSystemTypeface;
     }
 
     /// <summary>Paints and measures compatibility text while owning all temporary font resources.</summary>
@@ -34,11 +40,7 @@ internal sealed class SkiaTextDrawing
         var resolved = _fontManager?.Resolve(request);
         using var resolvedTypeface = resolved is null ? null : CreateTypeface(resolved);
         using var systemTypeface = resolvedTypeface is null
-            ? SKTypeface.FromFamilyName(
-                command.Style.Font.Family,
-                command.Style.Font.Bold ? SKFontStyleWeight.Bold : SKFontStyleWeight.Normal,
-                SKFontStyleWidth.Normal,
-                command.Style.Font.Italic ? SKFontStyleSlant.Italic : SKFontStyleSlant.Upright)
+            ? _systemTypefaceSelector(command.Style.Font)
             : null;
         var typeface = resolvedTypeface ?? systemTypeface ?? SKTypeface.Default;
         using var font = new SKFont(typeface, (float)command.Style.Font.Size);
@@ -86,11 +88,11 @@ internal sealed class SkiaTextDrawing
                 };
                 if (_textAsPaths)
                 {
-                    DrawResolvedLine(canvas, line, request, font.Size, x, y, paint, asPaths: true);
+                    DrawResolvedLine(canvas, line, request, typeface, font.Size, x, y, paint, asPaths: true);
                 }
                 else
                 {
-                    DrawResolvedLine(canvas, line, request, font.Size, x, y, paint, asPaths: false);
+                    DrawResolvedLine(canvas, line, request, typeface, font.Size, x, y, paint, asPaths: false);
                 }
 
                 if (command.Style.Font.Underline)
@@ -121,6 +123,8 @@ internal sealed class SkiaTextDrawing
 
         using var paint = CreatePaint(command.Style.Font.Color ?? new(0, 0, 0), SKPaintStyle.Fill);
         paint.IsAntialias = true;
+        SKTypeface? selectedPrimaryTypeface = null;
+        var primaryTypefaceSelected = false;
         canvas.Save();
         try
         {
@@ -130,9 +134,9 @@ internal sealed class SkiaTextDrawing
             }
 
             var request = new FontRequest(
-            command.Style.Font.Family,
-            command.Style.Font.Bold ? 700 : 400,
-            command.Style.Font.Italic);
+                command.Style.Font.Family,
+                command.Style.Font.Bold ? 700 : 400,
+                command.Style.Font.Italic);
             foreach (var positioned in TextLayoutPlacement.Place(
                          layout,
                          command.Bounds,
@@ -141,10 +145,17 @@ internal sealed class SkiaTextDrawing
             {
                 if (positioned.Line.Runs.Count == 0)
                 {
+                    if (!primaryTypefaceSelected)
+                    {
+                        selectedPrimaryTypeface = SelectPrimaryTypeface(command.Style.Font, request);
+                        primaryTypefaceSelected = true;
+                    }
+
                     DrawResolvedLine(
                         canvas,
                         positioned.Line.Text,
                         request,
+                        selectedPrimaryTypeface ?? SKTypeface.Default,
                         (float)effectiveFontSize,
                         (float)positioned.Left,
                         (float)positioned.Baseline,
@@ -179,6 +190,7 @@ internal sealed class SkiaTextDrawing
         }
         finally
         {
+            selectedPrimaryTypeface?.Dispose();
             canvas.Restore();
         }
     }
@@ -188,8 +200,16 @@ internal sealed class SkiaTextDrawing
         using Stream stream = font.FontData is null
             ? File.OpenRead(font.FilePath)
             : new MemoryStream(font.FontData, writable: false);
-        return SKTypeface.FromStream(stream);
+        return SKTypeface.FromStream(stream)
+            ?? throw new InvalidDataException($"フォントデータから書体を生成できません: {font.Family}");
     }
+
+    private static SKTypeface? CreateSystemTypeface(FontStyle style) =>
+        SKTypeface.FromFamilyName(
+            style.Family,
+            style.Bold ? SKFontStyleWeight.Bold : SKFontStyleWeight.Normal,
+            SKFontStyleWidth.Normal,
+            style.Italic ? SKFontStyleSlant.Italic : SKFontStyleSlant.Upright);
 
     private static SKRect ToRect(ReportRect rect) =>
         new((float)rect.X, (float)rect.Y, (float)(rect.X + rect.Width), (float)(rect.Y + rect.Height));
@@ -203,6 +223,14 @@ internal sealed class SkiaTextDrawing
 
         var widths = font.GetGlyphWidths([glyphId]);
         return widths.Length == 0 ? 0 : widths[0];
+    }
+
+    private SKTypeface? SelectPrimaryTypeface(FontStyle style, FontRequest request)
+    {
+        var resolved = _fontManager?.Resolve(request);
+        return resolved is null
+            ? _systemTypefaceSelector(style)
+            : CreateTypeface(resolved);
     }
 
     private IReadOnlyList<string> WrapText(string text, FontRequest request, SKFont font, SKPaint paint, double width, bool wrap)
@@ -262,12 +290,23 @@ internal sealed class SkiaTextDrawing
         return width;
     }
 
-    private void DrawResolvedLine(SKCanvas canvas, string text, FontRequest request, float size, float x, float y, SKPaint paint, bool asPaths)
+    private void DrawResolvedLine(
+        SKCanvas canvas,
+        string text,
+        FontRequest request,
+        SKTypeface primaryTypeface,
+        float size,
+        float x,
+        float y,
+        SKPaint paint,
+        bool asPaths)
     {
         var runs = _fontManager?.ResolveTextRuns(text, request);
         if (runs is null)
         {
-            runs = [new(text, new ResolvedFont(string.Empty, request.Weight, request.Italic, string.Empty))];
+            using var font = new SKFont(primaryTypeface, size);
+            DrawUnresolvedRun(canvas, text, x, y, font, paint, asPaths);
+            return;
         }
 
         foreach (var run in runs)
@@ -278,6 +317,31 @@ internal sealed class SkiaTextDrawing
                 : CreateTypeface(run.Font);
             using var font = new SKFont(typeface ?? SKTypeface.Default, size);
             x += MeasureRun(font, run, paint);
+        }
+    }
+
+    private void DrawUnresolvedRun(
+        SKCanvas canvas,
+        string text,
+        float x,
+        float y,
+        SKFont font,
+        SKPaint paint,
+        bool asPaths)
+    {
+        if (asPaths)
+        {
+            using var path = font.GetTextPath(text, new SKPoint(x, y));
+            if (path.IsEmpty && text.Any(character => !char.IsWhiteSpace(character)))
+            {
+                throw new InvalidOperationException("文字のアウトラインを生成できません。");
+            }
+
+            canvas.DrawPath(path, paint);
+        }
+        else
+        {
+            canvas.DrawText(text, x, y, SKTextAlign.Left, font, paint);
         }
     }
 

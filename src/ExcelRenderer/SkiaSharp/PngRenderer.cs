@@ -16,7 +16,7 @@ public sealed class PngRenderer
 
     private readonly IFontManager? _fontManager;
 
-    /// <summary>Initializes a new instance of the <see cref="PngRenderer"/> class. 既定の内蔵フォントポリシーを使用する PNG レンダラーを初期化します。</summary>
+    /// <summary>Initializes a new instance of the <see cref="PngRenderer"/> class. Skia のシステムフォント選択を使用する PNG レンダラーを初期化します。</summary>
     public PngRenderer()
     {
     }

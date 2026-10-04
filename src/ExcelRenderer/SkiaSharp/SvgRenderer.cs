@@ -14,7 +14,7 @@ public sealed class SvgRenderer
 {
     private readonly IFontManager? _fontManager;
 
-    /// <summary>Initializes a new instance of the <see cref="SvgRenderer"/> class. 既定の内蔵フォントポリシーを使用する SVG レンダラーを初期化します。</summary>
+    /// <summary>Initializes a new instance of the <see cref="SvgRenderer"/> class. Skia のシステムフォント選択を使用する SVG レンダラーを初期化します。</summary>
     public SvgRenderer()
     {
     }

@@ -14,7 +14,7 @@ internal sealed class SkiaDrawingContext
 
     /// <summary>Initializes a new instance of the <see cref="SkiaDrawingContext"/> class. PNG または SVG の描画先へコマンドを実行するコンテキストを初期化します。</summary>
     /// <param name="textAsPaths">true の場合は文字をパスとして描画します。</param>
-    /// <param name="fontManager">文字の描画に使用するフォントを解決するマネージャーです。指定しない場合は内蔵フォントを使用します。</param>
+    /// <param name="fontManager">文字の描画に使用するフォントを解決するマネージャーです。指定しない場合は Skia のシステムフォント選択を使用します。</param>
     internal SkiaDrawingContext(bool textAsPaths, IFontManager? fontManager = null)
     {
         _textPainter = new(textAsPaths, fontManager);

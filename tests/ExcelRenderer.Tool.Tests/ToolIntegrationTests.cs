@@ -243,6 +243,49 @@ public sealed class ToolIntegrationTests : IDisposable
         Assert.DoesNotContain(" at ", result.Error);
     }
 
+    [Fact]
+    public async Task Render_range_trim_and_hyperlink_options_create_a_pdf_after_preflight()
+    {
+        var output = Path.Combine(_directory, "range.pdf");
+        var result = await RunAsync("render", Input, "-o", output, "--format", "pdf", "--sheet", "折り返し",
+            "--range", "A1:D8", "--trim", "--trim-padding", "2", "--hyperlinks", "none");
+        AssertSuccess(result);
+        Assert.Equal("%PDF", Encoding.ASCII.GetString(File.ReadAllBytes(output), 0, 4));
+    }
+
+    [Theory]
+    [InlineData("--range", "B2:A1")]
+    [InlineData("--trim-padding", "2")]
+    [InlineData("--hyperlinks", "javascript")]
+    [InlineData("--max-range-cells", "0")]
+    public async Task Render_argument_failures_preserve_existing_pdf(string option, string value)
+    {
+        Directory.CreateDirectory(_directory);
+        var output = Path.Combine(_directory, "preserved.pdf");
+        File.WriteAllText(output, "sentinel");
+        var result = await RunAsync("render", Input, "-o", output, "--format", "pdf", option, value);
+        Assert.NotEqual(0, result.ExitCode);
+        Assert.Equal("sentinel", File.ReadAllText(output));
+    }
+
+    [Fact]
+    public async Task Render_duplicate_ranges_and_same_input_output_are_rejected_before_write()
+    {
+        Directory.CreateDirectory(_directory);
+        var output = Path.Combine(_directory, "preserved.pdf");
+        File.WriteAllText(output, "sentinel");
+        var result = await RunAsync("render", Input, "-o", output, "--format", "pdf", "--sheet", "折り返し",
+            "--range", "A1:D8", "--range", "A1:D8");
+        Assert.NotEqual(0, result.ExitCode);
+        Assert.Equal("sentinel", File.ReadAllText(output));
+        var copy = Path.Combine(_directory, "same.xlsx");
+        File.Copy(Input, copy);
+        var bytes = File.ReadAllBytes(copy);
+        result = await RunAsync("render", copy, "-o", copy, "--format", "pdf");
+        Assert.NotEqual(0, result.ExitCode);
+        Assert.Equal(bytes, File.ReadAllBytes(copy));
+    }
+
     private static async Task<Result> RunAsync(params string[] arguments)
     {
         var root = FindRepositoryRoot();

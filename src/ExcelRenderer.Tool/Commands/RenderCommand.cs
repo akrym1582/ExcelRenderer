@@ -1,4 +1,6 @@
 using System.CommandLine;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
 using ExcelRenderer;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Rendering;
@@ -44,6 +46,11 @@ public static class RenderCommand
                 result.AddError("--image-layout must be paginated or continuous.");
             }
         });
+        var ranges = new Option<string[]>("--range") { Description = "Explicit A1 rectangle, optionally sheet-qualified. Repeat once per sheet." };
+        var maxRangeCells = new Option<long>("--max-range-cells") { Description = "Maximum total explicit range cells.", DefaultValueFactory = _ => 1_000_000 };
+        var trim = new Option<bool>("--trim") { Description = "Crop each page or canvas around visible drawing content." };
+        var padding = new Option<double?>("--trim-padding") { Description = "Nonnegative crop padding in points (default: 2). Requires --trim." };
+        var hyperlinks = CommandSupport.HyperlinksOption();
         var strict = new Option<bool>("--strict") { Description = "Treat all warnings and errors as conversion failures." };
         var warningsAsErrors = new Option<string[]>("--warnings-as-errors")
         {
@@ -54,7 +61,7 @@ public static class RenderCommand
         var fonts = CommandSupport.FontOptions();
         var command = new Command("render", "Render an Excel workbook using the unified rendering API.")
         {
-            input, output, format, sheet, pages, imageLayout, strict, warningsAsErrors, manifest,
+            input, output, format, sheet, pages, imageLayout, ranges, maxRangeCells, trim, padding, hyperlinks, strict, warningsAsErrors, manifest,
         };
         CommandSupport.AddFontOptions(command, fonts);
 
@@ -65,6 +72,11 @@ public static class RenderCommand
             result.GetValue(sheet),
             result.GetValue(pages),
             result.GetValue(imageLayout)!,
+            result.GetValue(ranges),
+            result.GetValue(maxRangeCells),
+            result.GetValue(trim),
+            result.GetValue(padding),
+            CommandSupport.GetHyperlinks(result.GetValue(hyperlinks)!),
             result.GetValue(strict),
             result.GetValue(warningsAsErrors),
             result.GetValue(manifest),
@@ -80,6 +92,11 @@ public static class RenderCommand
         string[]? sheetNames,
         string? pagesText,
         string imageLayoutText,
+        string[]? rangeTexts,
+        long maxRangeCells,
+        bool trim,
+        double? padding,
+        HyperlinkMode hyperlinks,
         bool strict,
         string[]? warningsAsErrors,
         string? manifestPath,
@@ -92,14 +109,53 @@ public static class RenderCommand
             throw new ArgumentException("Invalid render command options.");
         }
 
+        if (Path.GetFullPath(inputPath).Equals(Path.GetFullPath(outputPath), OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+        {
+            throw new ArgumentException("Input and output paths must differ.");
+        }
+
+        if (padding is not null && !trim)
+        {
+            throw new ArgumentException("--trim-padding requires --trim.");
+        }
+
+        IReadOnlyList<SheetRangeSelection>? ranges = null;
+        if (rangeTexts is { Length: > 0 })
+        {
+            var parsed = rangeTexts.Select(text =>
+            {
+                var range = CellRangeParser.Parse(text, out var name);
+                return (Range: range, Name: name);
+            }).ToArray();
+            string[] selectedNames;
+            if (sheetNames is { Length: > 0 })
+            {
+                selectedNames = sheetNames.Distinct(StringComparer.Ordinal).ToArray();
+            }
+            else
+            {
+                using var workbook = SpreadsheetDocument.Open(inputPath, false);
+                selectedNames = workbook.WorkbookPart!.Workbook.Sheets!.Elements<Sheet>().Select(s => s.Name!.Value!).ToArray();
+            }
+
+            ranges = parsed.Select(item => new SheetRangeSelection(
+                item.Name ?? (selectedNames.Length == 1 ? selectedNames[0] :
+                throw new ArgumentException("An unqualified --range requires exactly one selected sheet.")),
+                item.Range)).ToArray();
+        }
+
         var request = new RenderRequest
         {
             OutputFormat = format,
+            Trim = new TrimOptions { Enabled = trim, PaddingPoints = padding ?? 2 },
+            Hyperlinks = hyperlinks,
             ImageLayout = imageLayout,
             Selection = new SelectionOptions
             {
                 SheetNames = sheetNames is { Length: > 0 } ? sheetNames : null,
                 Pages = pages,
+                Ranges = ranges,
+                MaxRangeCells = maxRangeCells,
             },
             DiagnosticOptions = new DiagnosticOptions
             {
@@ -113,9 +169,7 @@ public static class RenderCommand
         ConversionResult conversion;
         if (format == OutputFormat.Pdf)
         {
-            EnsureParentDirectory(outputPath);
-            await using var output = new FileStream(outputPath, FileMode.Create, FileAccess.Write, FileShare.None);
-            conversion = await ExcelConverter.RenderAsync(input, request, new SingleStreamOutputSink(output), cancellationToken).ConfigureAwait(false);
+            conversion = await ExcelConverter.RenderAsync(input, request, new FileOutputSink(outputPath), cancellationToken).ConfigureAwait(false);
         }
         else
         {

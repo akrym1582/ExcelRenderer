@@ -54,7 +54,7 @@ public static partial class ExcelConverter
             var source = await WorkbookInputPreparer.ReadAsync(input, request.Input, cancellationToken).ConfigureAwait(false);
             var fontManager = new FontManager(request.FontOptions);
             var document = new ExcelReader(fontManager).Read(source, diagnostics);
-            var sheets = SelectSheets(document, request.Selection.SheetNames);
+            var sheets = ApplyRanges(SelectSheets(document, request.Selection.SheetNames), request.Selection, diagnostics);
             if (diagnostics.HasFailure)
             {
                 throw Failure("Conversion was stopped by diagnostic policy.", null, diagnostics, artifacts);
@@ -67,7 +67,13 @@ public static partial class ExcelConverter
 
             if (request.OutputFormat == OutputFormat.Markdown)
             {
-                await WriteMarkdownAsync(sheets, sink, artifacts, cancellationToken).ConfigureAwait(false);
+                _ = new MarkdownHyperlinks(new ReportDocument(sheets.Select(s => s.Sheet).ToArray()), request.Hyperlinks, diagnostics);
+                if (diagnostics.HasFailure)
+                {
+                    throw Failure("Conversion was stopped by diagnostic policy.", null, diagnostics, artifacts);
+                }
+
+                await WriteMarkdownAsync(sheets, request.Hyperlinks, sink, artifacts, cancellationToken).ConfigureAwait(false);
                 return new(
                     ConversionManifest.SchemaVersion,
                     "Completed",
@@ -94,7 +100,17 @@ public static partial class ExcelConverter
                 var pages = request.ImageLayout == ImageLayoutMode.Continuous
                     ? LayoutContinuous(sheets, request.Dpi, fontManager)
                     : LayoutPages(sheets, request.Dpi, fontManager);
-                var selectedPages = SelectPages(pages, request.Selection.Pages);
+                var selectedPages = PrepareViewports(SelectPages(pages, request.Selection.Pages), request, fontManager, diagnostics);
+                if (request.OutputFormat == OutputFormat.Pdf && request.Hyperlinks == HyperlinkMode.Preserve)
+                {
+                    selectedPages = ResolvePdfLinks(selectedPages, document, diagnostics);
+                }
+
+                if (diagnostics.HasFailure)
+                {
+                    throw Failure("Conversion was stopped by diagnostic policy.", null, diagnostics, artifacts);
+                }
+
                 if (request.OutputFormat == OutputFormat.Pdf)
                 {
                     await WritePdfAsync(selectedPages, fontManager, sink, artifacts, cancellationToken).ConfigureAwait(false);
@@ -137,6 +153,27 @@ public static partial class ExcelConverter
 
     private static void ValidateRequest(RenderRequest request)
     {
+        if (request.Selection is null || request.Trim is null || request.Input is null || request.FontOptions is null || request.DiagnosticOptions is null)
+        {
+            throw new ArgumentException("Required render options must not be null.", nameof(request));
+        }
+
+        if (!Enum.IsDefined(typeof(OutputFormat), request.OutputFormat) || !Enum.IsDefined(typeof(ImageLayoutMode), request.ImageLayout) ||
+            !Enum.IsDefined(typeof(HyperlinkMode), request.Hyperlinks))
+        {
+            throw new ArgumentException("Unknown rendering option value.", nameof(request));
+        }
+
+        if (request.Selection.MaxRangeCells <= 0 || !double.IsFinite(request.Trim.PaddingPoints) || request.Trim.PaddingPoints < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(request), "Range limits must be positive and padding must be finite and nonnegative.");
+        }
+
+        if (request.OutputFormat == OutputFormat.Markdown && (request.Selection.Ranges is not null || request.Trim.Enabled || request.Selection.Pages is not null))
+        {
+            throw new ArgumentException("Markdown does not support explicit ranges, trimming or page selection.", nameof(request));
+        }
+
         if (double.IsNaN(request.Dpi) || double.IsInfinity(request.Dpi) || request.Dpi <= 0)
         {
             throw new ArgumentOutOfRangeException(nameof(request), "DPI must be a positive finite value.");
@@ -167,9 +204,14 @@ public static partial class ExcelConverter
         var documentPage = 0;
         foreach (var selected in sheets)
         {
-            var commands = new DrawCommandGeneratorPass().Generate(
-                new ReportLayoutEngine(new PdfSharpTextMeasurer(fontManager)).Layout(selected.Sheet));
-            var groups = commands.GroupBy(x => x.PageNumber).OrderBy(x => x.Key).ToArray();
+            var layout = new ReportLayoutEngine(new PdfSharpTextMeasurer(fontManager)).Layout(selected.Sheet);
+            var commands = new DrawCommandGeneratorPass().Generate(layout);
+            var groups = layout.Pages.Select(page => new
+            {
+                Key = page.Number,
+                Commands = commands.Where(command => command.PageNumber == page.Number).ToArray(),
+                Regions = page.SourceRegions,
+            }).ToArray();
             if (groups.Length == 0)
             {
                 var width = selected.Sheet.PageSettings.Width;
@@ -202,7 +244,7 @@ public static partial class ExcelConverter
                 pages.Add(
                     new(
                         selected.Sheet,
-                        group.ToArray(),
+                        group.Commands,
                         new(
                             selected.Index,
                             selected.Sheet.Name,
@@ -213,7 +255,13 @@ public static partial class ExcelConverter
                             height,
                             pixels,
                             pixelHeight,
-                            dpi)));
+                            dpi)
+                        {
+                            RequestedRange = selected.Sheet.RequestedRange,
+                            SourceCellRanges = group.Regions.Where(region => region.Cells is not null).Select(region => region.Cells!.Value).ToArray(),
+                            SourceRegions = group.Regions.Select(region => region.SourceBounds).ToArray(),
+                        },
+                        Regions: group.Regions));
             }
         }
 
@@ -233,7 +281,12 @@ public static partial class ExcelConverter
             pages.Add(new(
                 selected.Sheet,
                 new DrawCommandGeneratorPass().Generate(layout.Document),
-                new(selected.Index, selected.Sheet.Name, 1, ++documentPage, documentPage, width, height, pixelWidth, pixelHeight, dpi),
+                new(selected.Index, selected.Sheet.Name, 1, ++documentPage, documentPage, width, height, pixelWidth, pixelHeight, dpi)
+                {
+                    RequestedRange = selected.Sheet.RequestedRange,
+                    SourceCellRanges = layout.Document.Pages.SelectMany(p => p.SourceRegions).Where(region => region.Cells is not null).Select(region => region.Cells!.Value).ToArray(),
+                    SourceRegions = layout.Document.Pages.SelectMany(p => p.SourceRegions).Select(region => region.SourceBounds).ToArray(),
+                },
                 IsContinuous: true));
         }
 
@@ -318,10 +371,15 @@ public static partial class ExcelConverter
                 foreach (var page in pages)
                 {
                     using var rendered = new MemoryStream();
-                    new PdfSharpRenderer(fontManager).Render(page.Commands, page.Sheet.PageSettings, rendered);
+                    new PdfSharpRenderer(fontManager).Render(page.Commands, page.Sheet.PageSettings with { Width = page.Descriptor.WidthPoints, Height = page.Descriptor.HeightPoints }, rendered);
                     rendered.Position = 0;
                     using var source = PdfReader.Open(rendered, PdfDocumentOpenMode.Import);
                     result.AddPage(source.Pages[0]);
+                }
+
+                foreach (var page in pages)
+                {
+                    PdfHyperlinkWriter.Write(result, page.Descriptor.OutputPageNumber!.Value, page.Descriptor.HeightPoints, page.Links ?? []);
                 }
 
                 result.Save(stream, false);
@@ -350,7 +408,14 @@ public static partial class ExcelConverter
                 page.Descriptor.WidthPoints,
                 page.Descriptor.HeightPoints,
                 page.Descriptor.PixelWidth,
-                page.Descriptor.PixelHeight);
+                page.Descriptor.PixelHeight)
+            {
+                RequestedRange = page.Descriptor.RequestedRange,
+                OriginalWidthPoints = page.Descriptor.OriginalWidthPoints,
+                OriginalHeightPoints = page.Descriptor.OriginalHeightPoints,
+                CropBounds = page.Descriptor.CropBounds,
+                PaddingPoints = page.Descriptor.PaddingPoints,
+            };
             await WriteArtifactAsync(
                 sink,
                 descriptor,
@@ -360,32 +425,18 @@ public static partial class ExcelConverter
                     if (request.OutputFormat == OutputFormat.Png)
                     {
                         var renderer = new PngRenderer(fontManager);
-                        if (page.IsContinuous)
-                        {
-                            renderer.RenderCanvas(
-                                page.Commands,
-                                page.Descriptor.WidthPoints,
-                                page.Descriptor.HeightPoints,
-                                stream,
-                                request.Dpi,
-                                request.MaxPngPixels);
-                        }
-                        else
-                        {
-                            renderer.RenderPage(page.Commands, page.Sheet.PageSettings, stream, request.Dpi);
-                        }
+                        renderer.RenderCanvas(
+                            page.Commands,
+                            page.Descriptor.WidthPoints,
+                            page.Descriptor.HeightPoints,
+                            stream,
+                            request.Dpi,
+                            request.MaxPngPixels);
                     }
                     else
                     {
                         var renderer = new SvgRenderer(fontManager);
-                        if (page.IsContinuous)
-                        {
-                            renderer.RenderCanvas(page.Commands, page.Descriptor.WidthPoints, page.Descriptor.HeightPoints, stream);
-                        }
-                        else
-                        {
-                            renderer.RenderPage(page.Commands, page.Sheet.PageSettings, stream);
-                        }
+                        renderer.RenderCanvas(page.Commands, page.Descriptor.WidthPoints, page.Descriptor.HeightPoints, stream);
                     }
                 },
                 token).ConfigureAwait(false);
@@ -473,7 +524,7 @@ public static partial class ExcelConverter
         }
     }
 
-    private static Task WriteMarkdownAsync(IReadOnlyList<SelectedSheet> sheets, IRenderOutputSink sink, List<ArtifactMetadata> artifacts, CancellationToken token)
+    private static Task WriteMarkdownAsync(IReadOnlyList<SelectedSheet> sheets, HyperlinkMode hyperlinks, IRenderOutputSink sink, List<ArtifactMetadata> artifacts, CancellationToken token)
     {
         var descriptor = new ArtifactDescriptor("markdown", "markdown", "text/markdown", "workbook.md");
         if (sink is IMarkdownDocumentOutputSink markdownSink)
@@ -488,19 +539,11 @@ public static partial class ExcelConverter
             stream =>
             {
                 using var writer = new StreamWriter(stream, new UTF8Encoding(false), 1024, leaveOpen: true);
-                foreach (var sheet in sheets)
-                {
-                    writer.WriteLine("## Sheet: " + sheet.Sheet.Name);
-                    foreach (var cell in sheet.Sheet.Cells.OrderBy(x => x.Key.Row).ThenBy(x => x.Key.Column))
-                    {
-                        if (!string.IsNullOrEmpty(cell.Value.Text))
-                        {
-                            writer.WriteLine(cell.Value.Text);
-                        }
-                    }
-
-                    writer.WriteLine();
-                }
+                writer.Write(MarkdownExporter.Build(
+                    new ReportDocument(sheets.Select(s => s.Sheet).ToArray()),
+                    string.Empty,
+                    "workbook.xlsx",
+                    new MarkdownExportOptions { ExportImages = false, Hyperlinks = hyperlinks }));
             },
             token);
     }
@@ -583,7 +626,14 @@ public static partial class ExcelConverter
 
     private sealed record SelectedSheet(int Index, ReportSheet Sheet);
 
-    private sealed record SheetPage(ReportSheet Sheet, IReadOnlyList<DrawCommand> Commands, RenderPageDescriptor Descriptor, bool IsContinuous = false);
+    private sealed record SheetPage(
+        ReportSheet Sheet,
+        IReadOnlyList<DrawCommand> Commands,
+        RenderPageDescriptor Descriptor,
+        bool IsContinuous = false,
+        IReadOnlyList<PageSourceRegion>? Regions = null,
+        PageViewport? Viewport = null,
+        IReadOnlyList<ResolvedPdfHyperlink>? Links = null);
 
     private sealed class CountingStream : Stream
     {

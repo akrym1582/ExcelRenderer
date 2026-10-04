@@ -129,6 +129,31 @@ internal static class CommandSupport
         }
     }
 
+    /// <summary>Creates the shared hyperlink preservation option.</summary>
+    /// <returns>The validated CLI option.</returns>
+    internal static Option<string> HyperlinksOption()
+    {
+        var option = new Option<string>("--hyperlinks") { Description = "Cell hyperlinks: preserve or none.", DefaultValueFactory = _ => "preserve" };
+        option.Validators.Add(result =>
+        {
+            if (result.GetValueOrDefault<string>() is not ("preserve" or "none"))
+            {
+                result.AddError("--hyperlinks must be preserve or none.");
+            }
+        });
+        return option;
+    }
+
+    /// <summary>Reads the shared hyperlink mode.</summary>
+    /// <param name="value">The validated option text.</param>
+    /// <returns>The requested mode.</returns>
+    internal static ExcelRenderer.Rendering.HyperlinkMode GetHyperlinks(string value) => value switch
+    {
+        "preserve" => ExcelRenderer.Rendering.HyperlinkMode.Preserve,
+        "none" => ExcelRenderer.Rendering.HyperlinkMode.None,
+        _ => throw new ArgumentException("--hyperlinks must be preserve or none."),
+    };
+
     private static IReadOnlyList<string> NonEmpty(string[]? values) => values is { Length: > 0 } ? values : Array.Empty<string>();
 
     /// <summary>System.CommandLine のフォントオプション一式を保持します。</summary>

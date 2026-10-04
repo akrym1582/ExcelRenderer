@@ -27,6 +27,23 @@ internal sealed class SkiaDrawingContext
     {
         switch (command)
         {
+            case DrawViewportCommand viewport:
+                var saved = canvas.Save();
+                try
+                {
+                    canvas.Translate((float)viewport.OffsetX, (float)viewport.OffsetY);
+                    canvas.ClipRect(ToRect(viewport.Clip));
+                    foreach (var child in viewport.Commands)
+                    {
+                        Execute(canvas, child);
+                    }
+                }
+                finally
+                {
+                    canvas.RestoreToCount(saved);
+                }
+
+                break;
             case FillRectangleCommand fill:
                 using (var paint = CreatePaint(fill.Color, SKPaintStyle.Fill))
                 {
@@ -123,7 +140,13 @@ internal sealed class SkiaDrawingContext
                 command.Bounds.Y + text.MarginTop,
                 Math.Max(0, command.Bounds.Width - text.MarginLeft - text.MarginRight),
                 Math.Max(0, command.Bounds.Height - text.MarginTop - text.MarginBottom));
-            _textPainter.Paint(canvas, new DrawTextCommand(command.PageNumber, bounds, text.Text, CellStyle.Default with
+            _textPainter.Paint(
+                canvas,
+                new DrawTextCommand(
+                command.PageNumber,
+                bounds,
+                text.Text,
+                CellStyle.Default with
             { Font = text.Font, HorizontalAlignment = text.HorizontalAlignment, VerticalAlignment = text.VerticalAlignment, WrapText = text.WrapText }));
         }
 

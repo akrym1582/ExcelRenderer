@@ -20,7 +20,7 @@ public sealed class RowLayoutPass : IReportLayoutPass
             var height = context.Sheet.Rows.TryGetValue(row, out var definition)
                 ? definition.Height
                 : context.Sheet.DefaultRowHeight;
-            context.RowLayouts[row] = new(row, y, height);
+            context.RowLayouts[row] = new(row, context.Sheet.RequestedRange is null ? y : context.Geometry.RowStart(row), height);
             y += height;
         }
     }

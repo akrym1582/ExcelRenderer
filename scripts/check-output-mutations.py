@@ -65,6 +65,21 @@ change('pdf-legacy-ordinary-restore', 'src/ExcelRenderer/PdfSharp/PdfSharpLegacy
 change('pdf-rotation-restore', 'src/ExcelRenderer/PdfSharp/PdfSharpTextPainter.cs',
        '            graphics.Restore(state);', '            _ = graphics.Transform;', 'Pdf_legacy_restores_graphics_after_drawing_failure|Pdf_finalized_restores_graphics_after_drawing_failure')
 
+change('trim-origin', 'src/ExcelRenderer/Rendering/PageViewport.cs',
+       '-Crop.X + Padding, -Crop.Y + Padding', 'Padding, Padding',
+       'Artificial_scene_trim_and_PDF_annotations_have_independent_numeric_expectations')
+change('pdf-link-y', 'src/ExcelRenderer/PdfSharp/PdfHyperlinkWriter.cs',
+       'height - b.Y - b.Height', 'b.Y',
+       'Artificial_scene_trim_and_PDF_annotations_have_independent_numeric_expectations')
+change('pdf-destination-selection', 'src/ExcelRenderer/ExcelConverter.Viewports.cs',
+       'targetPage?.Descriptor.OutputPageNumber', 'targetPage?.Descriptor.DocumentPageNumber',
+       'Generated_PDF_destination_references_final_selected_document_page')
+change('merged-source-outside-range', 'src/ExcelRenderer/Layout/RenderPageBuilder.cs',
+       '_context.Sheet.RequestedRange is not null', '_context.Sheet.RequestedRange is null',
+       'Generated_range_replaces_print_area_and_preserves_partial_merge_geometry')
+change('markdown-href-escaping', 'src/ExcelRenderer/Markdown/MarkdownHyperlinks.cs',
+       'Html(uri)', 'uri', 'Markdown_links_anchors_lists_and_HTML_attributes_are_safe_and_None_is_plain')
+
 originals = {path: (root / path).read_bytes() for _, path, *_ in mutations}
 results = []
 try:

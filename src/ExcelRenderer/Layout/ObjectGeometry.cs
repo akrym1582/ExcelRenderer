@@ -45,6 +45,25 @@ internal static class ObjectGeometry
         return new(x, y, width > 0 ? width : fallbackWidth, height > 0 ? height : fallbackHeight);
     }
 
+    /// <summary>Gets conservative rotated bounds including a shape's protrusion and visible stroke.</summary>
+    /// <param name="bounds">The original shape rectangle.</param>
+    /// <param name="shape">The shape style and geometry.</param>
+    /// <returns>The visual sheet-space bounding rectangle.</returns>
+    internal static ReportRect GetShapeVisualBounds(ReportRect bounds, ReportShape shape)
+    {
+        var stroke = shape.Style.LineColor?.Alpha is > 0 ? Math.Max(0, shape.Style.LineWidth) / 2 : 0;
+        var height = shape.Kind is ShapeKind.WedgeRectangleCallout or ShapeKind.WedgeRoundedRectangleCallout ? bounds.Height * 1.2 : bounds.Height;
+        var expanded = new ReportRect(bounds.X - stroke, bounds.Y - stroke, bounds.Width + (stroke * 2), height + (stroke * 2));
+        var rotated = GetVisualBounds(expanded, shape.Rotation);
+        var offsetY = (height - bounds.Height) / 2;
+        var radians = shape.Rotation * Math.PI / 180;
+        return rotated with
+        {
+            X = rotated.X - (offsetY * Math.Sin(radians)),
+            Y = rotated.Y + (offsetY * (Math.Cos(radians) - 1)),
+        };
+    }
+
     /// <summary>
     /// Gets the axis-aligned bounds of a rectangle rotated clockwise about its centre, matching the renderers.
     /// </summary>

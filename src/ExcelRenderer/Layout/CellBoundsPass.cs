@@ -16,6 +16,13 @@ public sealed class CellBoundsPass : IReportLayoutPass
     {
         foreach (var (address, cell) in context.Sheet.Cells)
         {
+            if (context.Sheet.RequestedRange is { } selected && !selected.Contains(address) &&
+                !context.Sheet.MergedRanges.Any(range => range.First == address && range.First.Row <= selected.Last.Row &&
+                    range.Last.Row >= selected.First.Row && range.First.Column <= selected.Last.Column && range.Last.Column >= selected.First.Column))
+            {
+                continue;
+            }
+
             if (!context.ColumnLayouts.TryGetValue(address.Column, out var column) ||
                 !context.RowLayouts.TryGetValue(address.Row, out var row))
             {
@@ -26,6 +33,11 @@ public sealed class CellBoundsPass : IReportLayoutPass
                 .Where(context.ColumnLayouts.ContainsKey).Sum(x => context.ColumnLayouts[x].Width);
             var height = Enumerable.Range(address.Row, cell.RowSpan)
                 .Where(context.RowLayouts.ContainsKey).Sum(x => context.RowLayouts[x].Height);
+            if (width <= 0 || height <= 0)
+            {
+                continue;
+            }
+
             context.CellLayouts[address] = new(
                 address,
                 new(column.X, row.Y, width, height),

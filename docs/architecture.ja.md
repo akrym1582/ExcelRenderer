@@ -349,3 +349,11 @@ PDFsharp と Skia では、文字の振り分けを図形・罫線・画像の�
 入力として受け取り `ReportLayoutContext` を変更しません。`RenderPageBuilder` は1ページ分のセルとオブジェクトを
 選択・変換し、画像・図形の anchor を一度だけ解決します。回転後の視覚範囲は所属判定だけに使い、描画 Bounds は
 元の範囲を維持します。`PaginationPass` には印刷対象の準備、ページ順の選択、ページ生成、ヘッダー付与が残ります。
+
+### 明示選択と最終出力座標
+
+`SelectionOptions.Ranges` は選択済みシートとcheckedな総セル数でSink Open前に検証します。元セルの削除や結合span変更をせず、要求ごとに印刷設定だけを複製します。`ExplicitRangeGeometryPass` は交差する結合セルの元寸法を維持し、明示選択の可視行列は元シート座標を使います。`RenderPageBuilder` は本文／反復タイトル別の `PageSourceRegion` を記録し、連続の明示選択は固定矩形を維持します。
+
+描画コマンドは確定文字レイアウトを保持し、セルごとのclipと元の回転オブジェクトのclipを適用します。`DrawCommandBounds` がclip後の可視境界をunionし、`PageViewport` が確定シーンを平行移動してPDF／PNG／SVGとdescriptorへ最終寸法を供給します。viewportのSaveはfinallyでRestoreし、PNG上限は事前検証します。元セル領域・要求範囲・元寸法・crop・paddingはSchema 1の任意metadataです。
+
+`HyperlinkReader` はXML定義・relationship・名前スコープ・literal HYPERLINKを読み、リンク先の取得や数式評価をしません。問題は元定義に保持し、PDF／Markdownでリンク元が出力される場合に確定します。`HyperlinkPolicy` はURI方針と単純内部参照解決を共用します。PDFは選択後の最終ページと元領域で解決し、`PdfHyperlinkWriter` はImport完了後の最終文書に注釈を追加して、上端基準ptをPDF座標に変換します。Markdownはplain textとリンク先を分離し、全表示経路で共通formatterを使用し、必要な安定アンカーと空／範囲リンクの明示一覧を出力します。Noneと画像出力ではリンク診断を評価しません。

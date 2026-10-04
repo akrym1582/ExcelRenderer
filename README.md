@@ -189,7 +189,56 @@ The unified `render` command can generate a single continuous image per selected
 excelrenderer render input.xlsx -o ./continuous-images --format svg --image-layout continuous
 ```
 
-Continuous layout is available only for PNG and SVG, cannot be combined with `--pages`, and uses the sheet's used range rather than its print area. PNG continuous output defaults to a 100 million-pixel limit (about 381 MiB for an RGBA bitmap before encoder overhead); set `RenderRequest.MaxPngPixels` only to a safe finite value when larger canvases are required.
+Continuous layout is available only for PNG and SVG, cannot be combined with `--pages`, and uses the sheet's used range rather than its print area unless an explicit range is supplied. PNG continuous output defaults to a 100 million-pixel limit (about 381 MiB for an RGBA bitmap before encoder overhead); set `RenderRequest.MaxPngPixels` only to a safe finite value when larger canvases are required.
+
+### Explicit ranges, trimming and cell hyperlinks
+
+Use `render` for range selection and content trimming:
+
+```bash
+excelrenderer render input.xlsx -o report.pdf --format pdf \
+  --sheet "売上 2026" --range "'売上 2026'!B2:F40" \
+  --trim --trim-padding 2 --hyperlinks preserve --manifest report.json
+excelrenderer render input.xlsx -o images --format png \
+  --sheet Sheet1 --range B2:F40 --image-layout continuous --trim
+excelrenderer render input.xlsx -o svg --format svg --sheet Sheet1 --range B2:F40 --trim
+excelrenderer render input.xlsx -o markdown --format markdown --hyperlinks preserve
+```
+
+| Option | Behavior |
+|---|---|
+| `--range` | Repeat once per selected sheet. Accepts a single A1 cell or forward rectangle, `$` and lowercase letters. Quote sheet names with spaces; escape an apostrophe as `''`. Unqualified ranges require exactly one selected sheet. |
+| `--max-range-cells` | Positive total limit for explicitly selected rectangles, default 1,000,000. Includes empty cells; this is a processing limit, not a memory guarantee. |
+| `--trim` | Crop each already paginated page or continuous canvas around visible drawing bounds without reflowing or rescaling content. |
+| `--trim-padding` | Nonnegative finite padding in points, default 2; requires `--trim`. |
+| `--hyperlinks preserve\|none` | Default `preserve`; also available on `pdf` and `markdown`/`md`. `none` retains display text and formatting without hyperlink diagnostics, anchors or link lists. |
+
+A range replaces that sheet's print areas, preserves paper, margins, scaling and page order, and intersects repeated print titles with the selection. Ranges never select additional sheets. Entire rows/columns, unions, names, reversed ranges and external/3D references are rejected. A continuous image uses the explicit rectangle without expansion by outside objects. Partially selected merges retain their original measurement, alignment and borders and are clipped, with a `ClippedMergedCell` warning. `--pages` selects document page numbers after range pagination and before trimming. Hidden-only selections keep an empty page/canvas.
+
+Trimming includes visible fills (including explicitly white fills), strokes, positioned text, images, shapes and headers/footers. Font glyph bounds are used where available; emoji and compatibility glyphs use conservative finalized logical bounds. This is drawing-bound cropping, not pixel-based removal of white or transparent areas inside images. An empty trimmed page remains 1×1pt plus padding (5×5pt by default), with `EmptyContent` information. PNG dimensions use ceiling at the requested DPI, and `RenderRequest.MaxPngPixels` applies to both page and continuous output before bitmap allocation.
+
+PDF and Markdown preserve `http`, `https`, `mailto` and same-workbook cell links, including range references, empty source cells, simple scoped A1 names, and literal-string `HYPERLINK` formulas. Explicit XML definitions take precedence over formulas. Cached displays are retained; uncached supported formulas use the literal friendly name or location without general formula recalculation. PDF annotations are attached to the final merged document and follow page selection and trimming. Markdown uses stable `xl-sN-rN-cN` anchors and explicit target/source lists where a blank cell or source range cannot carry a natural label. PNG and SVG retain cell appearance without clickable links or hyperlink warnings. SVG links and link sidecars are not generated.
+
+Unsafe URIs (including local files, relative paths, UNC, embedded HTTP credentials, control characters and unsupported schemes), conflicting definitions and unsupported dynamic formulas retain display text and yield `HyperlinkRejected`/`HyperlinkUnsupported` warnings. Missing or omitted internal destinations yield `HyperlinkTargetOmitted`; excluded sources do not produce destination warnings. Diagnostics omit URI/recipient/query contents. Readable invalid link definitions are warnings; a corrupt workbook rejected by ClosedXML remains a fatal input error. Strict mode or matching `--warnings-as-errors` stops output before the sink opens. The PDF CLI creates/truncates its file only after preflight; identical input/output paths are rejected before reading.
+
+The stream API exposes the same options without changing existing positional constructors:
+
+```csharp
+var request = new RenderRequest
+{
+    OutputFormat = OutputFormat.Pdf,
+    Selection = new SelectionOptions
+    {
+        SheetNames = new[] { "Sheet1" },
+        Ranges = new[] { new SheetRangeSelection("Sheet1", new CellRange(new(2, 2), new(40, 6))) },
+        MaxRangeCells = 1_000_000,
+    },
+    Trim = new TrimOptions { Enabled = true, PaddingPoints = 2 },
+    Hyperlinks = HyperlinkMode.Preserve,
+};
+```
+
+Import `ExcelRenderer.Rendering` and `ExcelRenderer.Model` for these settings. PDF/Markdown legacy options also expose `Hyperlinks`. Markdown rejects ranges, trimming and page selection before output. With no ranges or trim, page dimensions and existing layout stay unchanged. Schema-version-1 manifests add optional page/range/crop metadata: widths/heights describe final output, while original dimensions and crop coordinates describe the page before trim. Missing range means existing print/used-range selection; missing crop/padding means identity translation. No link targets or full tooltips are listed in manifests.
 
 ## C# API (high-level)
 

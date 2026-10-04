@@ -11,4 +11,8 @@ public sealed record RenderPage(
     IReadOnlyList<RenderCell> Cells,
     IReadOnlyList<RenderImage>? Images = null,
     IReadOnlyList<RenderText>? HeaderFooterTexts = null,
-    IReadOnlyList<RenderShape>? Shapes = null);
+    IReadOnlyList<RenderShape>? Shapes = null)
+{
+    /// <summary>Gets the source-to-page mappings, including repeated titles.</summary>
+    internal IReadOnlyList<PageSourceRegion> SourceRegions { get; init; } = [];
+}

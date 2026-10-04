@@ -19,20 +19,22 @@ public sealed class DrawCommandGeneratorPass
         foreach (var page in document.Pages)
         {
             commands.AddRange(page.Cells.Where(x => x.Cell.Style.Background is not null)
-                .Select(x => (DrawCommand)new FillRectangleCommand(page.Number, x.Bounds, x.Cell.Style.Background!.Value)));
+                .Select(x => Wrap(new FillRectangleCommand(page.Number, x.Bounds, x.Cell.Style.Background!.Value), x.ClipBounds)));
             commands.AddRange(page.Cells.Where(x => x.Cell.Style.Border is not null)
-                .Select(x => (DrawCommand)new DrawBorderCommand(page.Number, x.Bounds, x.Cell.Style.Border!)));
-            commands.AddRange(page.Cells.SelectMany(cell => cell.MergedBorders ?? [])
-                .Select(border => (DrawCommand)new DrawBorderCommand(page.Number, border.Bounds, border.Border)));
+                .Select(x => Wrap(new DrawBorderCommand(page.Number, x.Bounds, x.Cell.Style.Border!), x.ClipBounds)));
+            commands.AddRange(page.Cells.SelectMany(cell => (cell.MergedBorders ?? []).Select(border =>
+                    Wrap(new DrawBorderCommand(page.Number, border.Bounds, border.Border), cell.ClipBounds))));
             commands.AddRange(page.Cells.Where(x => !string.IsNullOrEmpty(x.Cell.Text))
-                .Select(x => (DrawCommand)new DrawTextCommand(
+                .Select(x => Wrap(
+                    new DrawTextCommand(
                     page.Number,
                     GetContentBounds(x),
                     x.Cell.Text!,
                     x.Cell.Style)
                 {
                     TextLayout = x.TextLayout,
-                }));
+                },
+                    x.ClipBounds)));
             commands.AddRange((page.Images ?? []).Select(x => (Z: x.ZIndex,
                     Command: (DrawCommand)new DrawImageCommand(page.Number, x.Bounds, x.ImageBytes)
                     {
@@ -54,6 +56,9 @@ public sealed class DrawCommandGeneratorPass
 
         return commands;
     }
+
+    private static DrawCommand Wrap(DrawCommand command, ReportRect? clip) => clip is { } bounds
+        ? new DrawViewportCommand(command.PageNumber, [command], bounds, 0, 0) : command;
 
     private static ReportRect GetContentBounds(RenderCell cell) =>
         cell.ContentBounds.Width > 0 || cell.ContentBounds.Height > 0

@@ -64,11 +64,12 @@ public sealed class ExcelReader
         using var drawingStream = new MemoryStream(workbookBytes, writable: false);
         using var pictureMetadataStream = new MemoryStream(workbookBytes, writable: false);
         using var metadataStream = new MemoryStream(workbookBytes, writable: false);
+        var hyperlinks = HyperlinkReader.Read(workbookBytes);
         using var workbook = new XLWorkbook(workbookStream);
         var shapes = DrawingMLReader.Read(drawingStream, diagnostics);
         var pictureMetadata = DrawingMLReader.ReadPictureMetadata(pictureMetadataStream);
         var pageSetups = WorkbookLayoutMetadataReader.ReadPageSetups(metadataStream);
-        return new(workbook.Worksheets.Select(sheet => ReadSheet(
+        return new(workbook.Worksheets.Select((sheet, index) => ReadSheet(
             sheet,
             shapes.GetValueOrDefault(sheet.Name, Array.Empty<ReportShape>()),
             pictureMetadata.GetValueOrDefault(
@@ -77,7 +78,8 @@ public sealed class ExcelReader
             pageSetups.GetValueOrDefault(sheet.Name),
             diagnostics,
             fontManager,
-            maximumDigitWidths)).ToArray());
+            maximumDigitWidths,
+            hyperlinks.GetValueOrDefault(sheet.Name)) with { SourceSheetIndex = index + 1 }).ToArray());
     }
 
     private static ReportSheet ReadSheet(
@@ -87,7 +89,8 @@ public sealed class ExcelReader
         SheetPageSetupMetadata? pageSetupMetadata,
         DiagnosticCollector? diagnostics,
         IFontManager? fontManager,
-        Dictionary<NormalFontMetadata, double> maximumDigitWidths)
+        Dictionary<NormalFontMetadata, double> maximumDigitWidths,
+        SheetHyperlinkMetadata? hyperlinks)
     {
         var cells = new Dictionary<CellAddress, ReportCell>();
         var columns = new Dictionary<int, ColumnDefinition>();
@@ -98,8 +101,13 @@ public sealed class ExcelReader
             foreach (var cell in usedRange.CellsUsed(XLCellsUsedOptions.All))
             {
                 var address = new CellAddress(cell.Address.RowNumber, cell.Address.ColumnNumber);
+                if (hyperlinks is not null && !hyperlinks.OriginalCells.Contains(address) && hyperlinks.Links.Any(link => link.SourceRange.Contains(address)))
+                {
+                    continue;
+                }
+
                 cells[address] = new(
-                    cell.GetFormattedString(),
+                    hyperlinks?.UncachedDisplays.GetValueOrDefault(address) ?? ReadDisplay(cell),
                     ExcelStyleConverter.Convert(cell),
                     Formula: cell.HasFormula ? "=" + cell.FormulaA1 : null);
             }
@@ -109,7 +117,13 @@ public sealed class ExcelReader
             {
                 var source = worksheet.Column(column);
                 columns[column] = ReadColumnDefinition(
-                    column, source, pageSetupMetadata, diagnostics, worksheet.Name, fontManager, maximumDigitWidths);
+                    column,
+                    source,
+                    pageSetupMetadata,
+                    diagnostics,
+                    worksheet.Name,
+                    fontManager,
+                    maximumDigitWidths);
             }
 
             for (var row = usedRange.RangeAddress.FirstAddress.RowNumber;
@@ -165,7 +179,13 @@ public sealed class ExcelReader
                 {
                     var source = worksheet.Column(column);
                     columns[column] = ReadColumnDefinition(
-                        column, source, pageSetupMetadata, diagnostics, worksheet.Name, fontManager, maximumDigitWidths);
+                        column,
+                        source,
+                        pageSetupMetadata,
+                        diagnostics,
+                        worksheet.Name,
+                        fontManager,
+                        maximumDigitWidths);
                 }
             }
 
@@ -275,9 +295,15 @@ public sealed class ExcelReader
             shapes)
         {
             DefaultColumnWidth = GetDefaultColumnWidth(
-                worksheet, pageSetupMetadata, diagnostics, fontManager, maximumDigitWidths),
+                worksheet,
+                pageSetupMetadata,
+                diagnostics,
+                fontManager,
+                maximumDigitWidths),
             DefaultRowHeight = pageSetupMetadata?.DefaultRowHeight ?? worksheet.RowHeight,
             PrintAreas = printAreas,
+            Hyperlinks = hyperlinks?.Links ?? [],
+            HyperlinkNames = hyperlinks?.Names ?? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase),
         };
         return sheet;
 
@@ -289,6 +315,20 @@ public sealed class ExcelReader
                 new(Math.Min(from.Row, to.Row), Math.Min(from.Column, to.Column)),
                 new(Math.Max(from.Row, to.Row), Math.Max(from.Column, to.Column)));
         }
+    }
+
+    private static string ReadDisplay(IXLCell cell)
+    {
+        if (!cell.HasFormula || cell.FormulaA1.IndexOf("HYPERLINK", StringComparison.OrdinalIgnoreCase) < 0)
+        {
+            return cell.GetFormattedString();
+        }
+
+        using var scratch = new XLWorkbook();
+        var cached = scratch.AddWorksheet("cached").Cell(1, 1);
+        cached.Value = cell.CachedValue;
+        cached.Style = cell.Style;
+        return cached.GetFormattedString();
     }
 
     private static ColumnDefinition ReadColumnDefinition(
@@ -303,7 +343,11 @@ public sealed class ExcelReader
         var raw = metadata?.Columns.LastOrDefault(definition =>
             column >= definition.First && column <= definition.Last);
         var maximumDigitWidth = ResolveMaximumDigitWidth(
-            metadata, diagnostics, sheetName, fontManager, maximumDigitWidths);
+            metadata,
+            diagnostics,
+            sheetName,
+            fontManager,
+            maximumDigitWidths);
         var width = raw?.Width ?? metadata?.DefaultColumnWidth ??
             ColumnWidthCalculator.FromBaseColumnWidth(metadata?.BaseColumnWidth ?? 8, maximumDigitWidth);
         return new(ColumnWidthCalculator.ToPoints(width, maximumDigitWidth), raw?.Hidden ?? source.IsHidden);
@@ -322,7 +366,11 @@ public sealed class ExcelReader
         }
 
         var maximumDigitWidth = ResolveMaximumDigitWidth(
-            metadata, diagnostics, worksheet.Name, fontManager, maximumDigitWidths);
+            metadata,
+            diagnostics,
+            worksheet.Name,
+            fontManager,
+            maximumDigitWidths);
         var width = metadata.DefaultColumnWidth ??
             ColumnWidthCalculator.FromBaseColumnWidth(metadata.BaseColumnWidth ?? 8, maximumDigitWidth);
         return ColumnWidthCalculator.ToPoints(width, maximumDigitWidth);
@@ -348,7 +396,9 @@ public sealed class ExcelReader
                     using var typeface = SKTypeface.FromStream(stream) ??
                         throw new InvalidOperationException($"Font {resolved.Family} could not be loaded.");
                     using var font = new SKFont(typeface, (float)(normalFont.Size * 96 / 72));
-                    cached = Math.Max(1, Math.Round(
+                    cached = Math.Max(
+                        1,
+                        Math.Round(
                         Enumerable.Range(0, 10).Max(digit => font.MeasureText(digit.ToString())),
                         MidpointRounding.AwayFromZero));
                     maximumDigitWidths[normalFont] = cached;
@@ -546,7 +596,8 @@ public sealed class ExcelReader
     }
 
     private static Dictionary<CellAddress, ReportCell> ApplyMergedSpans(
-        Dictionary<CellAddress, ReportCell> cells, IEnumerable<CellRange> ranges)
+        Dictionary<CellAddress, ReportCell> cells,
+        IEnumerable<CellRange> ranges)
     {
         foreach (var range in ranges)
         {

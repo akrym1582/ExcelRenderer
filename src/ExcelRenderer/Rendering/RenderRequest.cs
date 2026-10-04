@@ -5,6 +5,12 @@ namespace ExcelRenderer.Rendering;
 /// <summary>ストリームを入力として実行する変換要求を記述します。</summary>
 public sealed record RenderRequest
 {
+    /// <summary>Gets the content cropping options.</summary>
+    public TrimOptions Trim { get; init; } = new();
+
+    /// <summary>Gets the cell hyperlink preservation mode.</summary>
+    public HyperlinkMode Hyperlinks { get; init; } = HyperlinkMode.Preserve;
+
     /// <summary>Gets the output format to generate. 生成する出力形式です。</summary>
     public OutputFormat OutputFormat { get; init; }
 

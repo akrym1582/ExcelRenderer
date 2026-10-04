@@ -8,6 +8,12 @@ namespace ExcelRenderer.Layout;
 /// </summary>
 public sealed record RenderCell(ReportCell Cell, ReportRect Bounds)
 {
+    /// <summary>Gets the original one-based worksheet address.</summary>
+    public CellAddress? SourceAddress { get; init; }
+
+    /// <summary>Gets the page-space clipping rectangle for explicit selections.</summary>
+    public ReportRect? ClipBounds { get; init; }
+
     /// <summary>Gets the text content rectangle in page coordinates.</summary>
     public ReportRect ContentBounds { get; init; }
 

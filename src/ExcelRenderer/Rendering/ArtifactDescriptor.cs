@@ -1,3 +1,6 @@
+using ExcelRenderer.Layout;
+using ExcelRenderer.Model;
+
 namespace ExcelRenderer.Rendering;
 
 /// <summary>内容を開く前の生成物を識別します。</summary>
@@ -25,4 +28,20 @@ public sealed record ArtifactDescriptor(
     double? WidthPoints = null,
     double? HeightPoints = null,
     int? PixelWidth = null,
-    int? PixelHeight = null);
+    int? PixelHeight = null)
+{
+    /// <summary>Gets the source request range when explicitly selected.</summary>
+    public CellRange? RequestedRange { get; init; }
+
+    /// <summary>Gets the original width before trimming.</summary>
+    public double? OriginalWidthPoints { get; init; }
+
+    /// <summary>Gets the original height before trimming.</summary>
+    public double? OriginalHeightPoints { get; init; }
+
+    /// <summary>Gets the original page-space crop rectangle.</summary>
+    public ReportRect? CropBounds { get; init; }
+
+    /// <summary>Gets the padding on each crop side.</summary>
+    public double? PaddingPoints { get; init; }
+}

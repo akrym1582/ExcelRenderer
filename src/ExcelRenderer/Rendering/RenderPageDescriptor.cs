@@ -1,3 +1,6 @@
+using ExcelRenderer.Layout;
+using ExcelRenderer.Model;
+
 namespace ExcelRenderer.Rendering;
 
 /// <summary>描画ページの元文書上および出力上の識別情報を記述します。</summary>
@@ -21,4 +24,26 @@ public sealed record RenderPageDescriptor(
     double HeightPoints,
     int? PixelWidth = null,
     int? PixelHeight = null,
-    double? Dpi = null);
+    double? Dpi = null)
+{
+    /// <summary>Gets the requested explicit cell range, when supplied.</summary>
+    public CellRange? RequestedRange { get; init; }
+
+    /// <summary>Gets the original inclusive body and title cell regions.</summary>
+    public IReadOnlyList<CellRange>? SourceCellRanges { get; init; }
+
+    /// <summary>Gets the visible original sheet rectangles for body and repeated titles.</summary>
+    public IReadOnlyList<ReportRect>? SourceRegions { get; init; }
+
+    /// <summary>Gets the width before cropping.</summary>
+    public double? OriginalWidthPoints { get; init; }
+
+    /// <summary>Gets the height before cropping.</summary>
+    public double? OriginalHeightPoints { get; init; }
+
+    /// <summary>Gets the original page-space content crop rectangle.</summary>
+    public ReportRect? CropBounds { get; init; }
+
+    /// <summary>Gets the padding added to each side of the content crop.</summary>
+    public double? PaddingPoints { get; init; }
+}

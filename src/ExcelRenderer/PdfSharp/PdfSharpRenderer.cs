@@ -157,6 +157,7 @@ public sealed class PdfSharpRenderer : IRenderer
         var page = document.AddPage();
         page.Width = XUnit.FromPoint(pageSettings.Width);
         page.Height = XUnit.FromPoint(pageSettings.Height);
+        page.CropBox = page.MediaBox;
         using var graphics = XGraphics.FromPdfPage(page);
         foreach (var command in commands)
         {
@@ -168,6 +169,23 @@ public sealed class PdfSharpRenderer : IRenderer
     {
         switch (command)
         {
+            case DrawViewportCommand viewport:
+                var saved = graphics.Save();
+                try
+                {
+                    graphics.TranslateTransform(viewport.OffsetX, viewport.OffsetY);
+                    graphics.IntersectClip(ToRect(viewport.Clip));
+                    foreach (var child in viewport.Commands)
+                    {
+                        Execute(graphics, child);
+                    }
+                }
+                finally
+                {
+                    graphics.Restore(saved);
+                }
+
+                break;
             case FillRectangleCommand fill:
                 graphics.DrawRectangle(new XSolidBrush(ToColor(fill.Color)), ToRect(fill.Bounds));
                 break;
@@ -234,7 +252,9 @@ public sealed class PdfSharpRenderer : IRenderer
                 b.Y + text.MarginTop,
                 Math.Max(0, b.Width - text.MarginLeft - text.MarginRight),
                 Math.Max(0, b.Height - text.MarginTop - text.MarginBottom));
-            _textPainter.Paint(graphics, new DrawTextCommand(
+            _textPainter.Paint(
+                graphics,
+                new DrawTextCommand(
                 command.PageNumber,
                 bounds,
                 text.Text,

@@ -1,4 +1,5 @@
 using ExcelRenderer.Fonts;
+using ExcelRenderer.Rendering;
 
 namespace ExcelRenderer.Markdown;
 
@@ -7,6 +8,9 @@ namespace ExcelRenderer.Markdown;
 /// </summary>
 public sealed record MarkdownExportOptions
 {
+    /// <summary>Gets the cell hyperlink preservation mode.</summary>
+    public HyperlinkMode Hyperlinks { get; init; } = HyperlinkMode.Preserve;
+
     /// <summary>
     /// Gets the worksheet name. 出力対象とするワークシート名を取得します。<see langword="null"/> の場合はすべてのシートを出力します。
     /// </summary>

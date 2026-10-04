@@ -14,9 +14,10 @@ internal sealed class SkiaTextPainter
     /// <summary>Initializes a new instance of the <see cref="SkiaTextPainter"/> class.</summary>
     /// <param name="textAsPaths">Whether ordinary glyphs are drawn as paths.</param>
     /// <param name="fontManager">The optional resolved-font source.</param>
-    internal SkiaTextPainter(bool textAsPaths, Fonts.IFontManager? fontManager)
+    /// <param name="beforeLegacyDrawing">Optional internal compatibility drawing observer.</param>
+    internal SkiaTextPainter(bool textAsPaths, Fonts.IFontManager? fontManager, Action? beforeLegacyDrawing = null)
     {
-        var drawing = new SkiaTextDrawing(textAsPaths, fontManager);
+        var drawing = new SkiaTextDrawing(textAsPaths, fontManager, beforeLegacyDrawing: beforeLegacyDrawing);
         _finalized = new(drawing);
         _legacy = new(drawing);
     }

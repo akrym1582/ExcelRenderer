@@ -11,6 +11,7 @@ namespace ExcelRenderer.SkiaSharp;
 internal sealed class SkiaTextDrawing
 {
     private readonly bool _textAsPaths;
+    private readonly Action? _beforeLegacyDrawing;
     private readonly IFontManager? _fontManager;
     private readonly Func<FontStyle, SKTypeface?> _systemTypefaceSelector;
 
@@ -18,12 +19,15 @@ internal sealed class SkiaTextDrawing
     /// <param name="textAsPaths">Whether ordinary text is converted to owned glyph paths.</param>
     /// <param name="fontManager">The optional resolved-font source.</param>
     /// <param name="systemTypefaceSelector">The optional system-face selection boundary used by deterministic tests.</param>
+    /// <param name="beforeLegacyDrawing">Optional internal observer after clipping and measurement, before compatibility run drawing.</param>
     internal SkiaTextDrawing(
         bool textAsPaths,
         IFontManager? fontManager,
-        Func<FontStyle, SKTypeface?>? systemTypefaceSelector = null)
+        Func<FontStyle, SKTypeface?>? systemTypefaceSelector = null,
+        Action? beforeLegacyDrawing = null)
     {
         _textAsPaths = textAsPaths;
+        _beforeLegacyDrawing = beforeLegacyDrawing;
         _fontManager = fontManager;
         _systemTypefaceSelector = systemTypefaceSelector ?? CreateSystemTypeface;
     }
@@ -86,6 +90,7 @@ internal sealed class SkiaTextDrawing
                     HorizontalAlignment.Right => (float)(command.Bounds.X + command.Bounds.Width - lineWidth),
                     _ => (float)command.Bounds.X,
                 };
+                _beforeLegacyDrawing?.Invoke();
                 if (_textAsPaths)
                 {
                     DrawResolvedLine(canvas, line, request, typeface, font.Size, x, y, paint, asPaths: true);

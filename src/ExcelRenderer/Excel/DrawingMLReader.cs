@@ -247,7 +247,7 @@ internal static class DrawingMLReader
             ToPoints(position?.Y?.Value ?? 0),
             ToPoints(extent?.Cx?.Value ?? 0),
             ToPoints(extent?.Cy?.Value ?? 0),
-            (anchor as Xdr.TwoCellAnchor)?.EditAs?.Value.ToString());
+            (anchor as Xdr.TwoCellAnchor)?.EditAs?.InnerText);
     }
 
     private static CellAddress? ReadMarkerAddress(OpenXmlCompositeElement? marker) => marker switch

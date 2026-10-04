@@ -40,3 +40,15 @@ Font License Agreement v1.0. The renderer uses this unmodified font as the
 Mincho IVS font and as the fallback when no bundled Gothic font supports a
 sequence. Unsupported variation sequences are reported rather than silently
 dropping the variation selector.
+
+## Test-only Noto Sans Mono
+
+- File: `tests/ExcelRenderer.Tests/Fonts/NotoSansMono-Regular.ttf` (unmodified)
+- Upstream: <https://github.com/notofonts/noto-fonts/blob/ffebf8c1ee449e544955a7e813c54f9b73848eac/hinted/ttf/NotoSansMono/NotoSansMono-Regular.ttf>
+- License: SIL Open Font License, Version 1.1
+- SHA-256: `d9e2b23d19f8230be7146f409a52b1d23117e635e28f2e2892cf91b7382f325b`
+- License text: [`tests/ExcelRenderer.Tests/Fonts/OFL.txt`](tests/ExcelRenderer.Tests/Fonts/OFL.txt)
+
+This font is used only by deterministic rendering tests and is not embedded in
+ExcelRenderer or ExcelRenderer.Fonts. The test-only SVG rasterizer, Svg.Skia
+5.2.3, is licensed under MIT: <https://www.nuget.org/packages/Svg.Skia/5.2.3>.

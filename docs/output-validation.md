@@ -25,10 +25,14 @@ dotnet pack src/ExcelRenderer/ExcelRenderer.csproj --configuration Release --no-
 `test-fonts.sh` はTestResults配下にFontconfigの設定・キャッシュを作り、
 同梱Noto Sans JPとテスト専用Noto Sans Monoだけを列挙する。
 OSフォントの探索順に依存するテストは削除し、固定selectorの比較に置き換えた。
-公開PngRendererのsmoke testはno-managerでNoto Sans JPを選択し、そのFamilyNameもassertする。
-LinuxのCIでも同じ設定を使用する。Windows/macOSで公開smoke testを実行する場合は、
-`third_party/NotoSansJP/NotoSansJP-Regular.ttf` をOSにインストールする。
+公開PngRendererのsmoke testはno-managerでgeneric family `sans-serif` を要求し、実画像のインクをassertする。
+特定のシステムFamilyNameをassertしない。LinuxのCIでは同じ設定のgeneric aliasが同梱Noto Sans JPを選択する。
+Windows/macOSではOSのgeneric sans-serifを使用する。
 内部selectorの回帰テストはシステムフォントを使わない。
+
+存在しないfamilyを指定すると、SkiaSharp 4.151.0のこのLinux環境では空のtypefaceが返り、
+SKTypeface.Defaultも幅0・glyph 0となって白紙になることを再現した。
+smoke testの要求を有効なgeneric familyに揃え、通常描画の確認を安定させた。
 
 CIは固定フォントのハッシュ確認、locked restore、一時改変のred確認、改変復元後のRebuild、
 全体テスト、artifact収集を実行する。TRXファイル名は指示された名称を使用するため、

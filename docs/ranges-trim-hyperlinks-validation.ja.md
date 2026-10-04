@@ -24,7 +24,7 @@ Linux、.NET SDK 10.0.401。指定フォントの SHA256 は全件一致。locke
 
 `python3 scripts/check-output-mutations.py` は19件すべてテスト失敗を検出し、`TestResults/Mutations/results.json` の `sources_restored` は `true`。検出後の最終Rebuild／testはgreen。Destのテストは、誤ったページ番号がPDFsharpによって最終ページへclampされて偶然正解になるのを避け、出力ページを3ページにして検出力を確認した。
 
-CLI nupkgをローカルpackage sourceから `/tmp/excelrenderer-packaged-tool` にインストールし、`--no-system-fonts` でPDF、連続PNG、連続SVG、Markdownを生成した。別プロセスのprobeで保存PDF寸法と注釈、PNGdecodeとmanifest、SVG再読込とPNG比較、Markdownアンカーの一意性／参照整合を検査した。CLI標準エラーに出るfixture由来のWarningも想定どおり。
+CLI nupkgをローカルpackage sourceから `/tmp/excelrenderer-packaged-final` にインストールし、`--no-system-fonts` でPDF、連続PNG、連続SVG、Markdownを生成した。別プロセスのprobeで保存PDF寸法と注釈、PNGdecodeとmanifest、SVG再読込とPNG比較、Markdownアンカーの一意性／参照整合を検査した。CLI標準エラーに出るfixture由来のWarningも想定どおり。
 
 ## 取得先
 

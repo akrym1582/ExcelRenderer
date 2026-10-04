@@ -35,6 +35,7 @@ public static class ConversionManifest
             .Append(",\"completionStatus\":\"").Append(Escape(result.CompletionStatus)).Append('"')
             .Append(",\"selectedSheets\":[").Append(string.Join(",", result.SelectedSheets.Select(x => "\"" + Escape(x) + "\""))).Append(']')
             .Append(",\"artifacts\":[").Append(string.Join(",", result.Artifacts.Select(Artifact))).Append(']')
+            .Append(",\"pages\":[").Append(string.Join(",", result.Pages.Select(Page))).Append(']')
             .Append(",\"diagnostics\":[").Append(string.Join(",", result.Diagnostics.Select(Diagnostic))).Append("]}").ToString();
         return WriteAsyncCore(output, json, cancellationToken);
     }
@@ -43,6 +44,30 @@ public static class ConversionManifest
     {
         var bytes = new UTF8Encoding(false).GetBytes(json);
         await output.WriteAsync(bytes, 0, bytes.Length, cancellationToken).ConfigureAwait(false);
+    }
+
+    private static string Page(RenderPageDescriptor page)
+    {
+        var metadata = new ArtifactDescriptor(
+            string.Empty,
+            string.Empty,
+            string.Empty,
+            string.Empty,
+            WidthPoints: page.WidthPoints,
+            HeightPoints: page.HeightPoints,
+            PixelWidth: page.PixelWidth,
+            PixelHeight: page.PixelHeight)
+        {
+            RequestedRange = page.RequestedRange,
+            OriginalWidthPoints = page.OriginalWidthPoints,
+            OriginalHeightPoints = page.OriginalHeightPoints,
+            CropBounds = page.CropBounds,
+            PaddingPoints = page.PaddingPoints,
+        };
+        return "{\"sourceSheetIndex\":" + page.SourceSheetIndex + ",\"sourceSheetName\":\"" + Escape(page.SourceSheetName) +
+            "\",\"sourcePageNumber\":" + page.SourcePageNumber + ",\"documentPageNumber\":" + page.DocumentPageNumber +
+            ",\"outputPageNumber\":" + (page.OutputPageNumber?.ToString(CultureInfo.InvariantCulture) ?? "null") + OptionalArtifactMetadata(metadata) +
+            (page.SourceCellRanges is { Count: > 0 } regions ? ",\"sourceCellRanges\":[" + string.Join(",", regions.Select(r => "\"" + Markdown.MarkdownExporter.Range(r) + "\"")) + "]" : string.Empty) + "}";
     }
 
     private static string Artifact(ArtifactMetadata artifact) =>
@@ -82,6 +107,24 @@ public static class ConversionManifest
         if (descriptor.PixelHeight is { } pixelHeight)
         {
             properties.Add("\"pixelHeight\":" + pixelHeight.ToString(CultureInfo.InvariantCulture));
+        }
+
+        if (descriptor.RequestedRange is { } range)
+        {
+            properties.Add("\"requestedRange\":\"" + Markdown.MarkdownExporter.Range(range) + "\"");
+        }
+
+        if (descriptor.OriginalWidthPoints is { } originalWidth)
+        {
+            properties.Add("\"originalWidthPoints\":" + originalWidth.ToString("R", CultureInfo.InvariantCulture));
+            properties.Add("\"originalHeightPoints\":" + descriptor.OriginalHeightPoints!.Value.ToString("R", CultureInfo.InvariantCulture));
+        }
+
+        if (descriptor.CropBounds is { } crop)
+        {
+            properties.Add("\"cropBounds\":{\"x\":" + crop.X.ToString("R", CultureInfo.InvariantCulture) + ",\"y\":" + crop.Y.ToString("R", CultureInfo.InvariantCulture) +
+                ",\"width\":" + crop.Width.ToString("R", CultureInfo.InvariantCulture) + ",\"height\":" + crop.Height.ToString("R", CultureInfo.InvariantCulture) + "}");
+            properties.Add("\"paddingPoints\":" + descriptor.PaddingPoints!.Value.ToString("R", CultureInfo.InvariantCulture));
         }
 
         return properties.Count == 0 ? string.Empty : "," + string.Join(",", properties);

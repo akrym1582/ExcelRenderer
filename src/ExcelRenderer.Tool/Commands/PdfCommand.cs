@@ -17,14 +17,16 @@ public static class PdfCommand
         var input = CommandSupport.InputArgument();
         var output = CommandSupport.OutputOption("Path to the output PDF file.");
         var sheet = new Option<string?>("--sheet") { Description = "Worksheet name to convert." };
+        var hyperlinks = CommandSupport.HyperlinksOption();
         var fonts = CommandSupport.FontOptions();
         var command = new Command("pdf", "Convert Excel worksheets to PDF.") { input, output, sheet };
+        command.Add(hyperlinks);
         CommandSupport.AddFontOptions(command, fonts);
         command.SetAction((parseResult, cancellationToken) => CommandSupport.RunAsync(() =>
             ExcelConverter.ConvertToPdfAsync(
                 parseResult.GetValue(input)!,
                 parseResult.GetValue(output)!,
-                new PdfExportOptions { SheetName = parseResult.GetValue(sheet), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
+                new PdfExportOptions { Hyperlinks = CommandSupport.GetHyperlinks(parseResult.GetValue(hyperlinks)!), SheetName = parseResult.GetValue(sheet), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
                 cancellationToken)));
         return command;
     }

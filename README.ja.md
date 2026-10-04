@@ -180,7 +180,56 @@ BMP 私用領域 (U+E000–U+F8FF) は要求フォント、指定ファイル（
 excelrenderer render input.xlsx -o ./continuous-images --format svg --image-layout continuous
 ```
 
-連続レイアウトは PNG と SVG のみで、`--pages` とは併用できません。印刷範囲ではなくシートの使用範囲を使います。PNG の連続出力は、RGBA bitmap とエンコード時の追加メモリを安全に抑えるため、既定で 1 億ピクセル（bitmap 本体で約 381 MiB）の上限を適用します。より大きいキャンバスが必要な場合も、`RenderRequest.MaxPngPixels` には安全な有限値を指定してください。
+連続レイアウトは PNG と SVG のみで、`--pages` とは併用できません。明示範囲がなければ印刷範囲ではなくシートの使用範囲を使います。PNG の連続出力は、RGBA bitmap とエンコード時の追加メモリを安全に抑えるため、既定で 1 億ピクセル（bitmap 本体で約 381 MiB）の上限を適用します。より大きいキャンバスが必要な場合も、`RenderRequest.MaxPngPixels` には安全な有限値を指定してください。
+
+### 明示範囲・余白切り詰め・セルリンク
+
+範囲指定と余白切り詰めには統合 `render` を使用します。
+
+```bash
+excelrenderer render input.xlsx -o report.pdf --format pdf \
+  --sheet "売上 2026" --range "'売上 2026'!B2:F40" \
+  --trim --trim-padding 2 --hyperlinks preserve --manifest report.json
+excelrenderer render input.xlsx -o images --format png \
+  --sheet Sheet1 --range B2:F40 --image-layout continuous --trim
+excelrenderer render input.xlsx -o svg --format svg --sheet Sheet1 --range B2:F40 --trim
+excelrenderer render input.xlsx -o markdown --format markdown --hyperlinks preserve
+```
+
+| オプション | 動作 |
+|---|---|
+| `--range` | 選択シートごとに1矩形。繰返し可。A1単一セル／順方向矩形、`$`、英字小文字を受け付けます。空白を含むシート名は単一引用符、名前内の引用符は `''`。シート省略は選択シートが1つの場合だけ可能です。 |
+| `--max-range-cells` | 明示範囲の総セル数上限。正の整数、既定100万。空セルも数えます。処理量の制限でありメモリ保証ではありません。 |
+| `--trim` | 通常の改ページ後、各ページ／連続キャンバスの描画内容の外周を切り詰めます。再配置・再倍率計算をしません。 |
+| `--trim-padding` | 四辺のpt余白。非負有限値、既定2。`--trim` が必要です。 |
+| `--hyperlinks preserve\|none` | 既定 `preserve`。旧 `pdf` と `markdown`／`md` でも使用可能。`none` は表示・書式を保ち、リンク診断・追加アンカー・リンク一覧を出しません。 |
+
+明示範囲はシートの既存印刷範囲を置き換え、用紙・余白・倍率・ページ順を維持します。印刷タイトルは指定範囲との交差部分だけ反復します。範囲でシートを暗黙選択しません。全行／全列、union、名前、逆順、外部／3D参照は引数エラーです。連続画像では指定矩形を使い、範囲外オブジェクトで自動拡張しません。部分結合セルは元の幅で文字を計測し、整列・罫線・位置を保ってclipし、`ClippedMergedCell` Warningを記録します。`--pages` は範囲適用後・trim前の文書通番です。全非表示範囲も空ページ／キャンバスを維持します。
+
+trimの対象は可視の塗り（明示白塗りも含む）、線、配置済み文字、画像、図形、ヘッダー／フッターです。取得可能な文字は字形境界を使い、絵文字・互換字形は確定配置の安全側の論理境界を使います。画像内の白／透明領域をピクセル解析して除去する処理ではありません。空のtrim結果は1×1ptに四辺paddingを加え（既定5×5pt）、`EmptyContent` Infoを記録します。PNGは最終pt寸法からceilでpx寸法を求め、ページ／連続の双方でbitmap確保前に `RenderRequest.MaxPngPixels` を適用します。
+
+PDF／Markdownは `http`、`https`、`mailto` と同一ブックのセルリンクを保持します。範囲ref、空セル、単純A1を参照するスコープ付き名前、定数文字列引数の `HYPERLINK` に対応します。XMLの明示定義を数式より優先し、cached表示を保持します。対応数式でcached値がなければliteralの表示名／リンク先を表示し、一般的な数式再計算は行いません。PDF注釈は最終結合文書へ付け、ページ選択・範囲・trimを反映します。Markdownは安定した `xl-sN-rN-cN` アンカーと、空セル／範囲refを表す明示一覧を使います。PNG／SVGはセルの見た目を保持し、クリック機能やリンク警告を追加しません。SVGリンクやリンクsidecarは生成しません。
+
+ローカルファイル、相対パス、UNC、HTTP埋込み認証情報、制御文字、非対応schemeや競合定義は表示文字を残して `HyperlinkRejected`、動的数式等は `HyperlinkUnsupported` Warningになります。未存在／出力外の内部リンク先は `HyperlinkTargetOmitted`。出力外のリンク元にはリンク先欠落警告を出しません。診断にURL・宛先・query全文を載せません。読込可能な不正リンク定義はWarningですが、ClosedXMLが拒否する破損ブックは致命的入力エラーです。Strict／指定したwarnings-as-errorsはSink Open前に失敗します。PDF CLIは事前検証後に初めて作成・truncateし、入力と出力の同一パスは読込前に拒否します。
+
+APIでは `RenderRequest.Selection.Ranges` に `SheetRangeSelection`、`MaxRangeCells` に総上限、`RenderRequest.Trim` に `TrimOptions`、`Hyperlinks` に `HyperlinkMode` を指定します。
+
+```csharp
+var request = new RenderRequest
+{
+    OutputFormat = OutputFormat.Pdf,
+    Selection = new SelectionOptions
+    {
+        SheetNames = new[] { "Sheet1" },
+        Ranges = new[] { new SheetRangeSelection("Sheet1", new CellRange(new(2, 2), new(40, 6))) },
+        MaxRangeCells = 1_000_000,
+    },
+    Trim = new TrimOptions { Enabled = true, PaddingPoints = 2 },
+    Hyperlinks = HyperlinkMode.Preserve,
+};
+```
+
+設定には `ExcelRenderer.Rendering` と `ExcelRenderer.Model` をimportします。旧PDF／Markdown設定にも `Hyperlinks` があります。Markdownの範囲・trim・ページ選択は出力前に拒否します。範囲／trimなしでは従来のページ寸法と配置を維持します。manifestはSchemaVersion=1にページ・範囲・crop情報を任意項目として追加します。幅・高さは最終寸法、元寸法とcrop座標はtrim前ページを表します。範囲省略は従来の印刷／使用範囲、crop／padding省略は恒等変換です。リンク先やtooltip全文をmanifestに列挙しません。
 
 ## C# API（高レベル）
 

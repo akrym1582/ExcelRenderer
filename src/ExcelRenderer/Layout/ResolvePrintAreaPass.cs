@@ -28,7 +28,13 @@ public sealed class ResolvePrintAreaPass : IReportLayoutPass
         var objects = (sheet.Images ?? []).Select(image =>
             {
                 var rect = ObjectGeometry.GetSheetRect(
-                    geometry, image.Anchor, image.OffsetX, image.OffsetY, image.Width, image.Height, image.DrawingAnchor);
+                    geometry,
+                    image.Anchor,
+                    image.OffsetX,
+                    image.OffsetY,
+                    image.Width,
+                    image.Height,
+                    image.DrawingAnchor);
                 return (
                     Anchor: GetAnchor(geometry, image.DrawingAnchor, image.Anchor, rect),
                     Visual: ObjectGeometry.GetVisualBounds(rect, image.Rotation));
@@ -36,7 +42,13 @@ public sealed class ResolvePrintAreaPass : IReportLayoutPass
             .Concat((sheet.Shapes ?? []).Select(shape =>
             {
                 var rect = ObjectGeometry.GetSheetRect(
-                    geometry, shape.Anchor, shape.OffsetX, shape.OffsetY, shape.Width, shape.Height, shape.DrawingAnchor);
+                    geometry,
+                    shape.Anchor,
+                    shape.OffsetX,
+                    shape.OffsetY,
+                    shape.Width,
+                    shape.Height,
+                    shape.DrawingAnchor);
                 return (
                     Anchor: GetAnchor(geometry, shape.DrawingAnchor, shape.Anchor, rect),
                     Visual: ObjectGeometry.GetVisualBounds(rect, shape.Rotation));
@@ -44,7 +56,10 @@ public sealed class ResolvePrintAreaPass : IReportLayoutPass
             .ToArray();
         if (sheet.Cells.Count == 0 && objects.Length == 0)
         {
-            return null;
+            var links = sheet.Hyperlinks.Where(link => link.SourceRange != default).Select(link => link.SourceRange).ToArray();
+            return links.Length == 0 ? null : new CellRange(
+                new(links.Min(link => link.First.Row), links.Min(link => link.First.Column)),
+                new(links.Max(link => link.Last.Row), links.Max(link => link.Last.Column)));
         }
 
         var firstRows = sheet.Cells.Keys.Select(address => address.Row)

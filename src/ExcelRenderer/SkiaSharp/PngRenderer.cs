@@ -39,6 +39,12 @@ public sealed class PngRenderer
             throw new ArgumentOutOfRangeException(nameof(widthPoints), "Canvas dimensions must be positive finite values.");
         }
 
+        ValidateDpi(dpi);
+        if (maxPixels <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(maxPixels));
+        }
+
         var scale = dpi / 72d;
         var widthValue = Math.Ceiling(widthPoints * scale);
         var heightValue = Math.Ceiling(heightPoints * scale);

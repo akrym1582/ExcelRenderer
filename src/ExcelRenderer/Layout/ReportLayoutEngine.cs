@@ -19,7 +19,7 @@ public sealed class ReportLayoutEngine
         passes =
         [
             new NormalizePass(), new ResolvePrintAreaPass(), new HiddenRowColumnPass(),
-            new ColumnLayoutPass(), new RowLayoutPass(), new TextMeasurePass(),
+            new ColumnLayoutPass(), new RowLayoutPass(), new ExplicitRangeGeometryPass(), new TextMeasurePass(),
             new CellBoundsPass(), new PaginationPass()
         ];
         TextMeasurer = textMeasurer;
@@ -63,10 +63,11 @@ public sealed class ReportLayoutEngine
     {
         var context = new ReportLayoutContext(sheet, TextMeasurer);
         new NormalizePass().Execute(context);
-        new ResolvePrintAreaPass { IgnoreExplicitPrintArea = true }.Execute(context);
+        new ResolvePrintAreaPass { IgnoreExplicitPrintArea = sheet.RequestedRange is null }.Execute(context);
         new HiddenRowColumnPass { IncludePrintTitles = false }.Execute(context);
         new ColumnLayoutPass().Execute(context);
         new RowLayoutPass().Execute(context);
+        new ExplicitRangeGeometryPass().Execute(context);
         new TextMeasurePass().Execute(context);
         new CellBoundsPass().Execute(context);
         new ContinuousLayoutPass().Execute(context);
@@ -75,6 +76,31 @@ public sealed class ReportLayoutEngine
         if (page is null)
         {
             return new(document, 1, 1);
+        }
+
+        if (sheet.RequestedRange is { } requested)
+        {
+            var clip = RectangleGeometry.Bounds(context.Geometry, requested);
+            var source = new PageSourceRegion(clip, new(0, 0, clip.Width, clip.Height), 1, false) { Cells = requested };
+            ReportRect Move(ReportRect rect) => rect with { X = rect.X - clip.X, Y = rect.Y - clip.Y };
+            var mappedClip = Move(clip);
+            page = page with
+            {
+                Cells = page.Cells.Where(cell => RectangleGeometry.Intersect(cell.Bounds, clip) is not null)
+                    .Select(cell => cell with
+                    {
+                        Bounds = Move(cell.Bounds),
+                        ContentBounds = Move(cell.ContentBounds),
+                        ClipBounds = mappedClip,
+                        MergedBorders = cell.MergedBorders?.Select(border => border with { Bounds = Move(border.Bounds) }).ToArray(),
+                    }).ToArray(),
+                Images = page.Images?.Where(image => RectangleGeometry.Intersect(ObjectGeometry.GetVisualBounds(image.Bounds, image.Rotation), clip) is not null)
+                    .Select(image => image with { Bounds = Move(image.Bounds), ClipBounds = mappedClip }).ToArray(),
+                Shapes = page.Shapes?.Where(shape => RectangleGeometry.Intersect(ObjectGeometry.GetShapeVisualBounds(shape.Bounds, shape.Shape), clip) is not null)
+                    .Select(shape => shape with { Bounds = Move(shape.Bounds), ClipBounds = mappedClip }).ToArray(),
+                SourceRegions = [source],
+            };
+            return new(new([page]), clip.Width > 0 && clip.Height > 0 ? clip.Width : 1, clip.Width > 0 && clip.Height > 0 ? clip.Height : 1);
         }
 
         var visual = page.Cells.SelectMany(cell => new[] { cell.Bounds }.Concat(cell.MergedBorders?.Select(border => border.Bounds) ?? []))

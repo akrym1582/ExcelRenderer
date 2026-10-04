@@ -15,7 +15,7 @@ public sealed class PaginationPass : IReportLayoutPass
     public void Execute(ReportLayoutContext context)
     {
         if (context.PrintArea is not { } ||
-            (context.CellLayouts.Count == 0 && (context.Sheet.Images?.Count ?? 0) == 0 && (context.Sheet.Shapes?.Count ?? 0) == 0))
+            (context.Sheet.RequestedRange is null && context.Sheet.Hyperlinks.Count == 0 && context.CellLayouts.Count == 0 && (context.Sheet.Images?.Count ?? 0) == 0 && (context.Sheet.Shapes?.Count ?? 0) == 0))
         {
             var headerFooterTexts = HeaderFooterLayout.Create(context.Sheet, 1, 1);
             context.RenderDocument = new(headerFooterTexts.Count == 0
@@ -36,18 +36,24 @@ public sealed class PaginationPass : IReportLayoutPass
             : context.ColumnLayouts[titleColumns[titleColumns.Count - 1]].X + context.ColumnLayouts[titleColumns[titleColumns.Count - 1]].Width;
         var titleRowEnd = titleRows.Count == 0 ? double.NegativeInfinity
             : context.RowLayouts[titleRows[titleRows.Count - 1]].Y + context.RowLayouts[titleRows[titleRows.Count - 1]].Height;
-        double GetColumnEnd(int column, double end) => context.Sheet.Cells
+        double GetColumnEnd(int column, double end) => context.Sheet.RequestedRange is not null ? end : context.Sheet.Cells
             .Where(cell => cell.Key.Column == column)
             .Select(cell => cell.Key.Column + cell.Value.ColumnSpan - 1)
             .Where(context.ColumnLayouts.ContainsKey)
             .Select(last => context.ColumnLayouts[last].X + context.ColumnLayouts[last].Width)
             .Append(end).Max();
-        double GetRowEnd(int row, double end) => context.Sheet.Cells
+        double GetRowEnd(int row, double end) => context.Sheet.RequestedRange is not null ? end : context.Sheet.Cells
             .Where(cell => cell.Key.Row == row)
             .Select(cell => cell.Key.Row + cell.Value.RowSpan - 1)
             .Where(context.RowLayouts.ContainsKey)
             .Select(last => context.RowLayouts[last].Y + context.RowLayouts[last].Height)
             .Append(end).Max();
+        if (bodyColumns.Length == 0 || bodyRows.Length == 0)
+        {
+            context.RenderDocument = new([new RenderPage(1, [], HeaderFooterTexts: HeaderFooterLayout.Create(context.Sheet, 1, 1))]);
+            return;
+        }
+
         var scale = PrintScaleResolver.Resolve(
             settings,
             bodyColumns,

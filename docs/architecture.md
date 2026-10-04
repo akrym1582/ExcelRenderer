@@ -336,3 +336,11 @@ mutate `ReportLayoutContext`. `RenderPageBuilder` selects and maps a single page
 it resolves each image or shape anchor once and retains the original bounds while using rotated visual
 bounds only for membership. The pass retains print-area preparation, page-order selection, page
 construction, and header/footer attachment.
+
+### Explicit selections and final output geometry
+
+`SelectionOptions.Ranges` is validated against selected sheet identities and a checked total cell count before any output sink opens. The request pipeline clones only selection/print settings; it does not remove original cells or change merged spans. `ExplicitRangeGeometryPass` retains full intersecting merge metrics. Visible axes keep original sheet coordinates for explicit selections. `RenderPageBuilder` records body and repeated-title `PageSourceRegion` mappings; continuous explicit selection keeps a fixed source rectangle.
+
+Drawing commands retain finalized text layout. Cell clips are applied individually, and object clips use their original rotated geometry. `DrawCommandBounds` unions visible command boundaries after clipping. `PageViewport` translates that finalized scene and supplies final dimensions to PDF, PNG, SVG and descriptors. Renderer viewport saves are restored in `finally`; PNG limits are checked during preflight. Source cell regions, requested range, original dimensions, crop and padding are optional schema-1 metadata.
+
+`HyperlinkReader` reads XML definitions, relationships, scoped names and literal HYPERLINK arguments without fetching targets or evaluating formulas. Issues stay attached to original definitions until a PDF/Markdown request includes their sources. `HyperlinkPolicy` shares URI safety and simple internal-target resolution. PDF resolution uses selected final pages and their source regions; `PdfHyperlinkWriter` adds annotations only after import into the final document, converting top-origin point coordinates to PDF default coordinates. Markdown keeps plain text and targets separate, uses one formatter for every display path, and emits stable required anchors and explicit lists for blank or range sources. None and image output do not evaluate hyperlink diagnostics.

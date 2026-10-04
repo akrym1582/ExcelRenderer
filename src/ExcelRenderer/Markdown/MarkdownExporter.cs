@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ExcelRenderer.Excel;
 using ExcelRenderer.Model;
+using ExcelRenderer.Rendering;
 
 namespace ExcelRenderer.Markdown;
 
@@ -95,17 +96,30 @@ public sealed class MarkdownExporter
         return string.IsNullOrEmpty(cleaned) ? "sheet" : cleaned;
     }
 
-    private static string Build(ReportDocument document, string directory, string name, MarkdownExportOptions options)
+    /// <summary>Builds the shared Markdown document without opening an output stream.</summary>
+    /// <param name="document">The selected document.</param>
+    /// <param name="directory">The optional image output directory.</param>
+    /// <param name="name">The document name.</param>
+    /// <param name="options">The export settings.</param>
+    /// <returns>The formatted Markdown.</returns>
+    internal static string Build(ReportDocument document, string directory, string name, MarkdownExportOptions options)
     {
+        var hyperlinks = new MarkdownHyperlinks(document, options.Hyperlinks, null);
         var output = new StringBuilder().Append("# ").AppendLine(Escape(Path.GetFileName(name))).AppendLine();
         foreach (var sheet in document.Sheets)
         {
             output.Append("## Sheet: ").AppendLine(Escape(sheet.Name)).AppendLine();
-            var cells = new VisualCellBuilder().Build(sheet);
+            var cells = hyperlinks.Attach(sheet, new VisualCellBuilder().Build(sheet));
             var root = options.DetectLayout && options.DetectRegions ? new LayoutSegmenter().Segment(cells) :
                 new LayoutNode { Cells = cells, BoundingBox = LayoutSegmenter.Bounds(cells) };
             var regions = options.DetectRegions ? new RegionDetector().Detect(root, sheet) :
                 cells.Count == 0 ? Array.Empty<SheetRegion>() : new RegionDetector().Detect(root, sheet);
+            hyperlinks.WriteTargets(
+                output,
+                sheet,
+                regions.SelectMany(region => region.Cells)
+                .Where(cell => !string.IsNullOrWhiteSpace(cell.Text) || (options.IncludeFormula && !string.IsNullOrWhiteSpace(cell.Formula)))
+                .Select(cell => cell.Range.First).Distinct().ToArray());
             var index = 1;
             foreach (var region in regions)
             {
@@ -126,6 +140,7 @@ public sealed class MarkdownExporter
             }
 
             WriteImages(output, sheet, cells, regions, directory, options);
+            hyperlinks.WriteList(output, sheet, cells);
         }
 
         return output.ToString();
@@ -140,9 +155,18 @@ public sealed class MarkdownExporter
             return;
         }
 
+        var form = region.Type == RegionType.Form && cells.GroupBy(c => c.Range.First.Row).All(r => r.Count() == 2);
+        if (form || cells.All(cell => cell.Range.First == cell.Range.Last))
+        {
+            foreach (var anchor in cells.Select(cell => cell.AnchorId).Where(anchor => anchor is not null).Distinct())
+            {
+                output.Append("<a id=\"").Append(anchor).AppendLine("\"></a>");
+            }
+        }
+
         if (region.Type == RegionType.Title && cells.All(c => c.Range.First == c.Range.Last))
         {
-            output.Append("#### ").AppendLine(Escape(CellText(cells[0], options)));
+            output.Append("#### ").AppendLine(CellMarkup(cells[0], options));
             return;
         }
 
@@ -151,8 +175,8 @@ public sealed class MarkdownExporter
             foreach (var row in cells.GroupBy(c => c.Range.First.Row).OrderBy(r => r.Key))
             {
                 var pair = row.OrderBy(c => c.X).ToArray();
-                output.Append("- **").Append(Escape(pair[0].Text ?? Address(pair[0].Range.First)))
-                    .Append(":** ").AppendLine(Escape(CellText(pair[1], options)));
+                output.Append("- **").Append(CellMarkup(pair[0], options))
+                    .Append(":** ").AppendLine(CellMarkup(pair[1], options));
             }
 
             return;
@@ -182,12 +206,12 @@ public sealed class MarkdownExporter
         MarkdownExportOptions options)
     {
         var ordered = rows.Select(r => r.OrderBy(c => c.Range.First.Column).ToArray()).ToArray();
-        output.Append("| ").Append(string.Join(" | ", ordered[0].Select(c => EscapeTable(CellText(c, options)))))
+        output.Append("| ").Append(string.Join(" | ", ordered[0].Select(c => CellMarkup(c, options, table: true))))
             .AppendLine(" |");
         output.Append("|").Append(string.Join("|", ordered[0].Select(_ => "---"))).AppendLine("|");
         foreach (var row in ordered.Skip(1))
         {
-            output.Append("| ").Append(string.Join(" | ", row.Select(c => EscapeTable(CellText(c, options)))))
+            output.Append("| ").Append(string.Join(" | ", row.Select(c => CellMarkup(c, options, table: true))))
                 .AppendLine(" |");
         }
     }
@@ -236,7 +260,7 @@ public sealed class MarkdownExporter
                     output.Append(" colspan=\"").Append(colSpan).Append('"');
                 }
 
-                output.Append('>').Append(Html(CellText(cell, options))).AppendLine("</td>");
+                output.Append('>').Append(CellMarkup(cell, options, html: true)).AppendLine("</td>");
                 for (var spannedColumn = column; spannedColumn <= cell.Range.Last.Column; spannedColumn++)
                 {
                     occupiedThroughRow[spannedColumn] = cell.Range.Last.Row;
@@ -260,7 +284,7 @@ public sealed class MarkdownExporter
         {
             foreach (var cell in cells.OrderBy(c => c.Range.First.Row).ThenBy(c => c.Range.First.Column))
             {
-                output.Append("- ").AppendLine(Escape(CellText(cell, options)));
+                output.Append("- ").AppendLine(CellMarkup(cell, options));
             }
 
             return;
@@ -270,7 +294,7 @@ public sealed class MarkdownExporter
         foreach (var cell in cells.OrderBy(c => c.Range.First.Row).ThenBy(c => c.Range.First.Column))
         {
             output.Append("| ").Append(Range(cell.Range)).Append(" | ")
-                .Append(EscapeTable(CellText(cell, options))).AppendLine(" |");
+                .Append(CellMarkup(cell, options, table: true)).AppendLine(" |");
         }
     }
 
@@ -354,6 +378,24 @@ public sealed class MarkdownExporter
         }
 
         output.AppendLine();
+    }
+
+    private static string CellMarkup(VisualCell cell, MarkdownExportOptions options, bool html = false, bool table = false)
+    {
+        if (cell.Hyperlink is null)
+        {
+            var plain = CellText(cell, options);
+            return (html && cell.AnchorId is { } anchor ? "<a id=\"" + anchor + "\"></a>" : string.Empty) +
+                (html ? Html(plain) : table ? EscapeTable(plain) : Escape(plain));
+        }
+
+        var markup = MarkdownHyperlinks.Format(cell.Text ?? string.Empty, cell.Hyperlink, html, table, cell.LinkTooltip);
+        if (options.IncludeFormula && !string.IsNullOrEmpty(cell.Formula))
+        {
+            markup += " (" + MarkdownHyperlinks.Format(cell.Formula!, null, html, table) + ")";
+        }
+
+        return (html && cell.AnchorId is { } target ? "<a id=\"" + target + "\"></a>" : string.Empty) + markup;
     }
 
     private static string CellText(VisualCell cell, MarkdownExportOptions options) =>

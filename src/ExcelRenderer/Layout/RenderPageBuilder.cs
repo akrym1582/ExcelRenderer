@@ -79,13 +79,17 @@ internal sealed class RenderPageBuilder
             repeatRows ? _titleHeight : 0,
             _scale);
 
+        var regions = BuildRegions(placement, horizontal, vertical, repeatColumns, repeatRows);
         var cells = _context.CellLayouts.Values
             .Where(layout => IsCellOnPage(layout, horizontal, vertical, repeatColumns, repeatRows))
-            .Select(layout => BuildCell(layout, placement, repeatColumns, repeatRows))
+            .Select(layout => BuildCell(layout, placement, repeatColumns, repeatRows, regions))
             .ToArray();
         var images = BuildImages(horizontal, vertical, placement);
         var shapes = BuildShapes(horizontal, vertical, placement);
-        return new(pageNumber, cells, images, Shapes: shapes);
+        return new(pageNumber, cells, images, Shapes: shapes)
+        {
+            SourceRegions = regions,
+        };
     }
 
     private static BorderStyle ScaleBorder(BorderStyle border, double scale)
@@ -126,12 +130,15 @@ internal sealed class RenderPageBuilder
         PageBand vertical,
         bool repeatColumns,
         bool repeatRows) =>
-        ((layout.Bounds.X >= horizontal.Start && layout.Bounds.X < horizontal.End) ||
+        (_context.Sheet.RequestedRange is not null &&
+            (_context.Sheet.Cells[layout.Address].ColumnSpan > 1 || _context.Sheet.Cells[layout.Address].RowSpan > 1) &&
+            Intersects(layout.Bounds, horizontal, vertical)) ||
+        (((layout.Bounds.X >= horizontal.Start && layout.Bounds.X < horizontal.End) ||
             (repeatColumns && _titleColumns.Contains(layout.Address.Column))) &&
         ((layout.Bounds.Y >= vertical.Start && layout.Bounds.Y < vertical.End) ||
-            (repeatRows && _titleRows.Contains(layout.Address.Row)));
+            (repeatRows && _titleRows.Contains(layout.Address.Row))));
 
-    private RenderCell BuildCell(CellLayout layout, PagePlacement placement, bool repeatColumns, bool repeatRows)
+    private RenderCell BuildCell(CellLayout layout, PagePlacement placement, bool repeatColumns, bool repeatRows, IReadOnlyList<PageSourceRegion> regions)
     {
         var isTitleColumn = _titleColumns.Contains(layout.Address.Column);
         var isTitleRow = _titleRows.Contains(layout.Address.Row);
@@ -150,8 +157,16 @@ internal sealed class RenderPageBuilder
             PageY(layout.Bounds.Y),
             layout.Bounds.Width * _scale,
             layout.Bounds.Height * _scale);
-        return new(ScaleCell(_context.Sheet.Cells[layout.Address], _scale), bounds)
+        var cell = _context.Sheet.Cells[layout.Address];
+        var source = RectangleGeometry.Bounds(
+            _context.Geometry,
+            new(layout.Address, new(layout.Address.Row + cell.RowSpan - 1, layout.Address.Column + cell.ColumnSpan - 1)));
+        var clip = regions.FirstOrDefault(region => Math.Abs(region.Map(source).X - bounds.X) < Epsilon &&
+            Math.Abs(region.Map(source).Y - bounds.Y) < Epsilon)?.PageBounds ?? placement.BodyClip;
+        return new(ScaleCell(cell, _scale), bounds)
         {
+            SourceAddress = layout.Address,
+            ClipBounds = _context.Sheet.RequestedRange is null ? null : clip,
             ContentBounds = new(
                 bounds.X + ((layout.ContentBounds.X - layout.Bounds.X) * _scale),
                 bounds.Y + ((layout.ContentBounds.Y - layout.Bounds.Y) * _scale),
@@ -216,7 +231,7 @@ internal sealed class RenderPageBuilder
                 shape.Height,
                 shape.DrawingAnchor,
                 out var sourceBounds) ||
-                !Intersects(ObjectGeometry.GetVisualBounds(sourceBounds, shape.Rotation), horizontal, vertical))
+                !Intersects(_context.Sheet.RequestedRange is null ? ObjectGeometry.GetVisualBounds(sourceBounds, shape.Rotation) : ObjectGeometry.GetShapeVisualBounds(sourceBounds, shape), horizontal, vertical))
             {
                 continue;
             }
@@ -228,6 +243,56 @@ internal sealed class RenderPageBuilder
         }
 
         return result;
+    }
+
+    private IReadOnlyList<PageSourceRegion> BuildRegions(
+        PagePlacement placement,
+        PageBand horizontal,
+        PageBand vertical,
+        bool repeatColumns,
+        bool repeatRows)
+    {
+        var columns = _bodyColumns.Where(c => _context.ColumnLayouts[c].X >= horizontal.Start && _context.ColumnLayouts[c].X < horizontal.End).ToArray();
+        var rows = _bodyRows.Where(r => _context.RowLayouts[r].Y >= vertical.Start && _context.RowLayouts[r].Y < vertical.End).ToArray();
+        var regions = new List<PageSourceRegion>();
+        Add(columns, rows, false, false);
+        if (repeatColumns)
+        {
+            Add(_titleColumns, rows, true, false);
+        }
+
+        if (repeatRows)
+        {
+            Add(columns, _titleRows, false, true);
+        }
+
+        if (repeatColumns && repeatRows)
+        {
+            Add(_titleColumns, _titleRows, true, true);
+        }
+
+        return regions;
+
+        void Add(IReadOnlyList<int> cs, IReadOnlyList<int> rs, bool titleColumn, bool titleRow)
+        {
+            if (cs.Count == 0 || rs.Count == 0)
+            {
+                return;
+            }
+
+            var source = RectangleGeometry.Bounds(_context.Geometry, new(new(rs[0], cs[0]), new(rs[rs.Count - 1], cs[cs.Count - 1])));
+            var x = placement.MapCellX(
+                _context.ColumnLayouts[cs[0]].X,
+                repeatColumns,
+                titleColumn,
+                _titleColumns.Count == 0 ? 0 : _context.ColumnLayouts[_titleColumns[0]].X);
+            var y = placement.MapCellY(
+                _context.RowLayouts[rs[0]].Y,
+                repeatRows,
+                titleRow,
+                _titleRows.Count == 0 ? 0 : _context.RowLayouts[_titleRows[0]].Y);
+            regions.Add(new(source, new(x, y, source.Width * _scale, source.Height * _scale), _scale, titleColumn || titleRow) { Cells = new(new(rs[0], cs[0]), new(rs[rs.Count - 1], cs[cs.Count - 1])) });
+        }
     }
 
     private double LastColumnEnd()

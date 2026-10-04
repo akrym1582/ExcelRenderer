@@ -34,7 +34,7 @@ public static partial class ExcelConverter
         ValidateNewFile(outputPath);
         options ??= new PdfExportOptions();
         await using var input = File.OpenRead(inputPath);
-        await RenderAsync(input, CreateLegacyRequest(OutputFormat.Pdf, options.SheetName, fontOptions: options.FontOptions), new NewFileOutputSink(outputPath), cancellationToken)
+        await RenderAsync(input, CreateLegacyRequest(OutputFormat.Pdf, options.SheetName, fontOptions: options.FontOptions) with { Hyperlinks = options.Hyperlinks }, new NewFileOutputSink(outputPath), cancellationToken)
             .ConfigureAwait(false);
     }
 
@@ -134,7 +134,7 @@ public static partial class ExcelConverter
         await using var input = File.OpenRead(inputPath);
         await RenderAsync(
             input,
-            CreateLegacyRequest(OutputFormat.Markdown, options.SheetName, fontOptions: options.FontOptions),
+            CreateLegacyRequest(OutputFormat.Markdown, options.SheetName, fontOptions: options.FontOptions) with { Hyperlinks = options.Hyperlinks },
             new LegacyMarkdownOutputSink(outputPath, options, Path.GetFileName(inputPath)),
             cancellationToken).ConfigureAwait(false);
     }

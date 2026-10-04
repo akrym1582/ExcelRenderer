@@ -20,7 +20,7 @@ public sealed class ColumnLayoutPass : IReportLayoutPass
             var width = context.Sheet.Columns.TryGetValue(column, out var definition)
                 ? definition.Width
                 : context.Sheet.DefaultColumnWidth;
-            context.ColumnLayouts[column] = new(column, x, width);
+            context.ColumnLayouts[column] = new(column, context.Sheet.RequestedRange is null ? x : context.Geometry.ColumnStart(column), width);
             x += width;
         }
     }

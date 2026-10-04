@@ -13,6 +13,7 @@ public sealed class ContinuousLayoutPass : IReportLayoutPass
         var cells = context.CellLayouts.Values
             .Select(layout => new RenderCell(context.Sheet.Cells[layout.Address], layout.Bounds)
             {
+                SourceAddress = layout.Address,
                 ContentBounds = layout.ContentBounds,
                 MergedBorders = layout.MergedBorders,
                 TextLayout = context.TextLayouts.GetValueOrDefault(layout.Address),

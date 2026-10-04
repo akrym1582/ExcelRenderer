@@ -253,6 +253,8 @@ xlsx の個別列幅と既定列幅は、Excel の基準である固定96 DPIの
 再改行することはありません。各バックエンドは確定した実効フォントサイズ、行ごとのbaselineと高さ、
 選択済みrunフォント、論理run X/advanceを使用し、描画時に折返し・縮小・送り位置を再決定しません。
 `TextLayout`を持たずAPIから直接作成した描画命令には、従来のレンダラ側互換経路を維持します。
+この互換経路のPNG/SVGでは、指定family・weight・slantからSkiaのシステムfaceを一度選択し、
+計測、折返し、縮小、描画まで同じfaceを維持します。
 
 `TextLayoutResult.EffectiveFontSize` は互換性のため状態を区別します。従来の2引数コンストラクターで
 サイズを未指定にした結果は描画命令のstyleサイズを使い、明示的な0は描画を抑止します。PDFとSkiaは

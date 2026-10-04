@@ -198,6 +198,10 @@ Image data is decoded with SkiaSharp before being drawn into the PDF.
 
 `SvgRenderer` shares drawing logic with PNG and writes one self-contained SVG per page in points. Text is converted to vector paths with the font used at generation time, and images are embedded. Viewers do not need the font, but text cannot be searched or copied. Outlining is not an anti-editing feature and does not guarantee complex scripts or color fonts.
 
+When no font manager is supplied, the shared Skia compatibility painter selects a system face once
+from the requested family, weight, and slant. Measurement and text/path drawing borrow that same
+face, including after wrapping or shrink-to-fit changes the font size.
+
 ## Design principles
 
 Conversion is split into interpreting input, computing layout, generating drawing commands, and rendering to an output format, rather than one large routine.

@@ -309,6 +309,8 @@ When adding a feature, prefer a new reader, layout pass, drawing command, render
 
 PDF resolved-face registrations are process-lifetime entries because PDFsharp owns a global resolver and can request font bytes after a page has been drawn. Registration snapshots caller-owned bytes, identifies the snapshot by its content digest as well as its face ID, and retains it for the process lifetime. Reusing a resolved face avoids repeated file reads and hashing; entries are not evicted or cleared after an individual output.
 
+`FontManager` keeps byte identity separate from resolution identity. A face ID may be shared by aliases backed by identical bytes, but the resolved-result cache is keyed by the selected registration and requested style. This preserves the registered family and style diagnostics while still reusing repeated resolutions of the same registration.
+
 ## Finalized and compatibility text paths
 
 PDFsharp and Skia keep text dispatch separate from shape, border, and image dispatch. Each backend's
@@ -326,5 +328,7 @@ creates half-open bands for one axis and is also used unchanged by `PrintScaleRe
 fit-to-pages scales. `PagePlacement` freezes each page's margins, centering, repeated-title offsets,
 body clip, and distinct cell/body-object coordinate maps. `HeaderFooterLayout` expands fields only
 after final page numbers and page counts are known. These helpers consume immutable values and do not
-mutate `ReportLayoutContext`; the pass retains print-area preparation, page-order selection, and page
-assembly.
+mutate `ReportLayoutContext`. `RenderPageBuilder` selects and maps a single page's cells and objects;
+it resolves each image or shape anchor once and retains the original bounds while using rotated visual
+bounds only for membership. The pass retains print-area preparation, page-order selection, page
+construction, and header/footer attachment.

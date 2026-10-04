@@ -65,6 +65,39 @@ public sealed class FinalizedTextRenderingTests
         Assert.False(HasInk(bitmap, 21, 31, 12, 26));
     }
 
+    /// <summary>Finalized Skia clipping and optional rotation restore the caller's canvas when glyph drawing fails.</summary>
+    /// <param name="rotation">The text rotation applied by the outer painter.</param>
+    [Theory]
+    [InlineData(0)]
+    [InlineData(30)]
+    public void Skia_restores_finalized_text_state_after_drawing_exception(int rotation)
+    {
+        using var bitmap = new SKBitmap(80, 60);
+        using var canvas = new SKCanvas(bitmap);
+        var initialSaveCount = canvas.SaveCount;
+        var invalidRun = new TextRun("X", new("missing", 400, false, string.Empty))
+        {
+            GlyphId = ushort.MaxValue,
+        };
+        var layout = new TextLayoutResult(
+            new(20, 12),
+            [new("X", 20, 12, 9, [new(invalidRun, 0, 10)], false)])
+        {
+            EffectiveFontSize = 10,
+        };
+        var command = CreateCommand(layout) with
+        {
+            Style = CreateCommand(layout).Style with { TextRotation = rotation, WrapText = true },
+        };
+
+        Assert.Throws<InvalidOperationException>(() => new SkiaDrawingContext(true).Execute(canvas, command));
+        Assert.Equal(initialSaveCount, canvas.SaveCount);
+
+        using var paint = new SKPaint { Color = SKColors.Red };
+        canvas.DrawRect(new SKRect(70, 50, 80, 60), paint);
+        Assert.Equal(SKColors.Red, bitmap.GetPixel(75, 55));
+    }
+
     /// <summary>Memory-only resolved fonts are accepted by both finalized backends and PDF text stays text.</summary>
     [Fact]
     public void Resolved_memory_face_is_used_by_pdf_and_skia()

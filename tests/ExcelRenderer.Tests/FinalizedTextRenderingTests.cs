@@ -96,6 +96,62 @@ public sealed class FinalizedTextRenderingTests
             "Legacy text",
             CellStyle.Default with { Font = new("Missing test family", 18, Bold: true, Italic: true) })) > 0);
 
+    /// <summary>The no-manager compatibility path draws with the same selected face used for measurement.</summary>
+    /// <param name="bold">Whether the requested system face is bold.</param>
+    /// <param name="italic">Whether the requested system face is italic.</param>
+    /// <param name="shrink">Whether the measured face is shrunk and centered.</param>
+    [Theory]
+    [InlineData(false, false, false)]
+    [InlineData(true, false, false)]
+    [InlineData(false, true, false)]
+    [InlineData(true, true, true)]
+    public void Png_without_font_manager_draws_the_measured_system_face(bool bold, bool italic, bool shrink)
+    {
+        const string text = "iiiiWWWW";
+        var typeface = FindNonDefaultTypeface(bold, italic, text);
+        using (typeface)
+        {
+            var bounds = new ReportRect(10, 20, shrink ? 35 : 100, 40);
+            var style = CellStyle.Default with
+            {
+                Font = new(typeface.FamilyName, 18, Bold: bold, Italic: italic),
+                HorizontalAlignment = shrink ? HorizontalAlignment.Center : HorizontalAlignment.Left,
+                ShrinkToFit = shrink,
+            };
+            var command = new DrawTextCommand(1, bounds, text, style);
+            using var actualOutput = new MemoryStream();
+
+            new PngRenderer().RenderPage([command], Page, actualOutput, 72);
+
+            using var actual = SKBitmap.Decode(actualOutput.ToArray());
+            using var expected = new SKBitmap(120, 80);
+            using var canvas = new SKCanvas(expected);
+            using var font = new SKFont(typeface, 18);
+            using var paint = new SKPaint { Color = SKColors.Black, IsAntialias = true };
+            canvas.Clear(SKColors.White);
+            var width = font.MeasureText(text, paint);
+            if (shrink && width > bounds.Width)
+            {
+                font.Size *= (float)(bounds.Width / width);
+                width = font.MeasureText(text, paint);
+            }
+
+            var x = shrink ? (float)(bounds.X + ((bounds.Width - width) / 2)) : (float)bounds.X;
+            if (shrink)
+            {
+                canvas.ClipRect(new SKRect(
+                    (float)bounds.X,
+                    (float)bounds.Y,
+                    (float)(bounds.X + bounds.Width),
+                    (float)(bounds.Y + bounds.Height)));
+            }
+
+            canvas.DrawText(text, x, (float)bounds.Y - font.Metrics.Ascent, SKTextAlign.Left, font, paint);
+
+            AssertBitmapsEqual(expected, actual, tolerance: 1);
+        }
+    }
+
     /// <summary>The public layout result records its measured size, including for empty text.</summary>
     [Fact]
     public void Layout_records_effective_font_size_for_text_and_empty_text()
@@ -348,7 +404,32 @@ public sealed class FinalizedTextRenderingTests
         };
     }
 
-    private static void AssertBitmapsEqual(SKBitmap expected, SKBitmap actual)
+    private static SKTypeface FindNonDefaultTypeface(bool bold, bool italic, string text)
+    {
+        using var defaultFont = new SKFont(SKTypeface.Default, 18);
+        using var paint = new SKPaint();
+        var defaultWidth = defaultFont.MeasureText(text, paint);
+        foreach (var family in SKFontManager.Default.FontFamilies)
+        {
+            var candidate = SKTypeface.FromFamilyName(
+                family,
+                bold ? SKFontStyleWeight.Bold : SKFontStyleWeight.Normal,
+                SKFontStyleWidth.Normal,
+                italic ? SKFontStyleSlant.Italic : SKFontStyleSlant.Upright);
+            using var candidateFont = new SKFont(candidate, 18);
+            if (candidate.FamilyName != SKTypeface.Default.FamilyName &&
+                Math.Abs(candidateFont.MeasureText(text, paint) - defaultWidth) > 1)
+            {
+                return candidate;
+            }
+
+            candidate.Dispose();
+        }
+
+        throw new InvalidOperationException("A non-default Skia test face with distinct metrics is required.");
+    }
+
+    private static void AssertBitmapsEqual(SKBitmap expected, SKBitmap actual, int tolerance = 0)
     {
         Assert.Equal(expected.Width, actual.Width);
         Assert.Equal(expected.Height, actual.Height);
@@ -356,7 +437,12 @@ public sealed class FinalizedTextRenderingTests
         {
             for (var x = 0; x < expected.Width; x++)
             {
-                Assert.Equal(expected.GetPixel(x, y), actual.GetPixel(x, y));
+                var expectedPixel = expected.GetPixel(x, y);
+                var actualPixel = actual.GetPixel(x, y);
+                Assert.True(Math.Abs(expectedPixel.Red - actualPixel.Red) <= tolerance);
+                Assert.True(Math.Abs(expectedPixel.Green - actualPixel.Green) <= tolerance);
+                Assert.True(Math.Abs(expectedPixel.Blue - actualPixel.Blue) <= tolerance);
+                Assert.True(Math.Abs(expectedPixel.Alpha - actualPixel.Alpha) <= tolerance);
             }
         }
     }

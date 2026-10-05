@@ -233,6 +233,13 @@ var request = new RenderRequest
 
 ## C# API（高レベル）
 
+PDF出力では、Skiaがcodecを生成できない画像やbitmapへデコードできない画像をスキップし、
+`ImageDecodeFailed` の警告を報告します。診断にはシート名、元ページ番号、画像の位置・寸法、
+バイト数、先頭最大16バイト、失敗理由が含まれます。`render` コマンドは警告を標準エラーに表示し、
+`--manifest report.json` で詳細をJSONに保存できます。厳格モード、またはこの警告コードを
+エラー扱いにした場合は変換を中止します。低レベルの `PdfSharpRenderer` では
+`DiagnosticHandler` で警告を受け取れます。`System.Diagnostics.Trace` のリスナーにも出力します。
+
 `ExcelConverter` が読み込み、レイアウト、描画、書き出しまでを行います。
 
 ```csharp

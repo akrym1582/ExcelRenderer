@@ -260,6 +260,14 @@ can select rendered PDF/PNG/SVG document pages; Markdown does not support page s
 `ConversionManifest.WriteAsync` writes the completed artifact metadata and diagnostics as schema
 version 1 JSON with relative artifact names.
 
+PDF export skips images when Skia cannot create a codec or decode a bitmap, and reports
+`ImageDecodeFailed` warnings. Diagnostics include the sheet, source page, image bounds,
+byte length, up to 16 header bytes, and the decode failure reason. The `render` command
+prints warnings to stderr; use `--manifest report.json` to save these details as JSON.
+Strict mode or treating `ImageDecodeFailed` as an error stops conversion instead.
+Low-level `PdfSharpRenderer` callers can receive warnings through `DiagnosticHandler`;
+warnings are also written to `System.Diagnostics.Trace` listeners.
+
 Use `PdfExportOptions`, `ImageExportOptions`, `SvgExportOptions`, and `MarkdownExportOptions` to select a worksheet or configure format-specific behavior. Existing output files, and non-empty image or SVG output directories, are not overwritten.
 
 ## C# API (low-level)

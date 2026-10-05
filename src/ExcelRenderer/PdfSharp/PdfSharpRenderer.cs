@@ -125,8 +125,8 @@ public sealed class PdfSharpRenderer : IRenderer
             return;
         }
 
-        using var data = SKData.CreateCopy(command.ImageBytes);
-        using var codec = SKCodec.Create(data, out var codecResult);
+        using var encoded = new SKMemoryStream(command.ImageBytes);
+        using var codec = SKCodec.Create(encoded, out var codecResult);
         if (codec is null)
         {
             ReportImageFailure(command, $"SKCodec.Create returned null ({codecResult}); the image format may be unsupported or the data may be corrupt.");

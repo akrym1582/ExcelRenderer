@@ -1,8 +1,11 @@
+using System.Diagnostics;
+using System.Globalization;
 using ExcelRenderer.Abstractions;
 using ExcelRenderer.Drawing;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Model;
+using ExcelRenderer.Rendering;
 using PdfSharp.Drawing;
 using PdfSharp.Fonts;
 using PdfSharp.Pdf;
@@ -25,6 +28,9 @@ public sealed class PdfSharpRenderer : IRenderer
         _textPainter = new(fontManager ?? throw new ArgumentNullException(nameof(fontManager)));
     }
 
+    /// <summary>Gets the callback for image warnings, including decode failure details. Warnings are also written to trace listeners.</summary>
+    public Action<ConversionDiagnostic>? DiagnosticHandler { get; init; }
+
     /// <summary>描画コマンドをページ番号ごとに描画し、すべてのページを含む PDF 文書を出力します。</summary>
     /// <param name="commands">背景、罫線、文字、画像、および図形をページ上へ配置する描画コマンドです。</param>
     /// <param name="pageSettings">各 PDF ページに適用する幅と高さを含むページ設定です。</param>
@@ -44,47 +50,6 @@ public sealed class PdfSharpRenderer : IRenderer
         }
 
         document.Save(output, false);
-    }
-
-    private static void DrawImage(XGraphics graphics, DrawImageCommand command)
-    {
-        using var bitmap = SKBitmap.Decode(command.ImageBytes);
-        if (bitmap is null)
-        {
-            throw new InvalidDataException("画像データを読み込めません。");
-        }
-
-        using var image = SKImage.FromBitmap(bitmap);
-        using var pngData = image.Encode(SKEncodedImageFormat.Png, 100);
-        using var stream = pngData.AsStream();
-        using var pdfImage = XImage.FromStream(stream);
-        var state = graphics.Save();
-        if (command.ClipBounds is { } clip)
-        {
-            graphics.IntersectClip(ToRect(clip));
-        }
-
-        var centerX = command.Bounds.X + (command.Bounds.Width / 2);
-        var centerY = command.Bounds.Y + (command.Bounds.Height / 2);
-        graphics.TranslateTransform(centerX, centerY);
-        graphics.RotateTransform(command.Rotation);
-        graphics.ScaleTransform(command.FlipHorizontal ? -1 : 1, command.FlipVertical ? -1 : 1);
-        graphics.TranslateTransform(-centerX, -centerY);
-        if (command.Crop is { } crop)
-        {
-            var source = new XRect(
-                crop.Left * pdfImage.PointWidth,
-                crop.Top * pdfImage.PointHeight,
-                Math.Max(0, 1 - crop.Left - crop.Right) * pdfImage.PointWidth,
-                Math.Max(0, 1 - crop.Top - crop.Bottom) * pdfImage.PointHeight);
-            graphics.DrawImage(pdfImage, ToRect(command.Bounds), source, XGraphicsUnit.Point);
-        }
-        else
-        {
-            graphics.DrawImage(pdfImage, ToRect(command.Bounds));
-        }
-
-        graphics.Restore(state);
     }
 
     private static void DrawBorder(XGraphics graphics, DrawBorderCommand command)
@@ -151,6 +116,78 @@ public sealed class PdfSharpRenderer : IRenderer
             _ => XLineAlignment.Near,
         },
     };
+
+    private void DrawImage(XGraphics graphics, DrawImageCommand command)
+    {
+        if (command.ImageBytes.Length == 0)
+        {
+            ReportImageFailure(command, "Image data is empty.");
+            return;
+        }
+
+        using var data = SKData.CreateCopy(command.ImageBytes);
+        using var codec = SKCodec.Create(data, out var codecResult);
+        if (codec is null)
+        {
+            ReportImageFailure(command, $"SKCodec.Create returned null ({codecResult}); the image format may be unsupported or the data may be corrupt.");
+            return;
+        }
+
+        using var bitmap = SKBitmap.Decode(codec);
+        if (bitmap is null)
+        {
+            ReportImageFailure(command, $"SKBitmap.Decode returned null (format={codec.EncodedFormat}, size={codec.Info.Width}x{codec.Info.Height}); the image data could not be decoded.");
+            return;
+        }
+
+        using var image = SKImage.FromBitmap(bitmap);
+        using var pngData = image.Encode(SKEncodedImageFormat.Png, 100);
+        using var stream = pngData.AsStream();
+        using var pdfImage = XImage.FromStream(stream);
+        var state = graphics.Save();
+        if (command.ClipBounds is { } clip)
+        {
+            graphics.IntersectClip(ToRect(clip));
+        }
+
+        var centerX = command.Bounds.X + (command.Bounds.Width / 2);
+        var centerY = command.Bounds.Y + (command.Bounds.Height / 2);
+        graphics.TranslateTransform(centerX, centerY);
+        graphics.RotateTransform(command.Rotation);
+        graphics.ScaleTransform(command.FlipHorizontal ? -1 : 1, command.FlipVertical ? -1 : 1);
+        graphics.TranslateTransform(-centerX, -centerY);
+        if (command.Crop is { } crop)
+        {
+            var source = new XRect(
+                crop.Left * pdfImage.PointWidth,
+                crop.Top * pdfImage.PointHeight,
+                Math.Max(0, 1 - crop.Left - crop.Right) * pdfImage.PointWidth,
+                Math.Max(0, 1 - crop.Top - crop.Bottom) * pdfImage.PointHeight);
+            graphics.DrawImage(pdfImage, ToRect(command.Bounds), source, XGraphicsUnit.Point);
+        }
+        else
+        {
+            graphics.DrawImage(pdfImage, ToRect(command.Bounds));
+        }
+
+        graphics.Restore(state);
+    }
+
+    private void ReportImageFailure(DrawImageCommand command, string reason)
+    {
+        var bounds = command.Bounds;
+        var location = string.Format(CultureInfo.InvariantCulture, "image@{0},{1},{2},{3}", bounds.X, bounds.Y, bounds.Width, bounds.Height);
+        var header = BitConverter.ToString(command.ImageBytes, 0, Math.Min(16, command.ImageBytes.Length));
+        var diagnostic = new ConversionDiagnostic(
+            "ImageDecodeFailed",
+            DiagnosticSeverity.Warning,
+            DiagnosticStage.Render,
+            $"画像を読み込めないためスキップしました。Skipped image: {reason} Bytes={command.ImageBytes.Length}; header={header}; bounds={location}; page={command.PageNumber}.",
+            ObjectId: location,
+            SourcePageNumber: command.PageNumber);
+        Trace.TraceWarning("{0}: {1}", diagnostic.Code, diagnostic.Message);
+        DiagnosticHandler?.Invoke(diagnostic);
+    }
 
     private void AddPage(PdfDocument document, PageSettings pageSettings, IEnumerable<DrawCommand> commands)
     {

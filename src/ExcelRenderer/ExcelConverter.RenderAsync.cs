@@ -113,7 +113,7 @@ public static partial class ExcelConverter
 
                 if (request.OutputFormat == OutputFormat.Pdf)
                 {
-                    await WritePdfAsync(selectedPages, fontManager, sink, artifacts, cancellationToken).ConfigureAwait(false);
+                    await WritePdfAsync(selectedPages, fontManager, diagnostics, sink, artifacts, cancellationToken).ConfigureAwait(false);
                 }
                 else
                 {
@@ -358,7 +358,7 @@ public static partial class ExcelConverter
         return selected;
     }
 
-    private static async Task WritePdfAsync(IReadOnlyList<SheetPage> pages, FontManager fontManager, IRenderOutputSink sink, List<ArtifactMetadata> artifacts, CancellationToken token)
+    private static async Task WritePdfAsync(IReadOnlyList<SheetPage> pages, FontManager fontManager, DiagnosticCollector diagnostics, IRenderOutputSink sink, List<ArtifactMetadata> artifacts, CancellationToken token)
     {
         var descriptor = new ArtifactDescriptor("pdf", "pdf", "application/pdf", "workbook.pdf");
         await WriteArtifactAsync(
@@ -371,7 +371,20 @@ public static partial class ExcelConverter
                 foreach (var page in pages)
                 {
                     using var rendered = new MemoryStream();
-                    new PdfSharpRenderer(fontManager).Render(page.Commands, page.Sheet.PageSettings with { Width = page.Descriptor.WidthPoints, Height = page.Descriptor.HeightPoints }, rendered);
+                    var renderer = new PdfSharpRenderer(fontManager)
+                    {
+                        DiagnosticHandler = diagnostic => diagnostics.Add(diagnostic with
+                        {
+                            SheetName = page.Sheet.Name,
+                            SourcePageNumber = page.Descriptor.SourcePageNumber,
+                        }),
+                    };
+                    renderer.Render(page.Commands, page.Sheet.PageSettings with { Width = page.Descriptor.WidthPoints, Height = page.Descriptor.HeightPoints }, rendered);
+                    if (diagnostics.HasFailure)
+                    {
+                        throw Failure("Conversion was stopped by diagnostic policy.", null, diagnostics, artifacts);
+                    }
+
                     rendered.Position = 0;
                     using var source = PdfReader.Open(rendered, PdfDocumentOpenMode.Import);
                     result.AddPage(source.Pages[0]);

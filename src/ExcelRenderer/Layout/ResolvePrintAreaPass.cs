@@ -22,8 +22,16 @@ public sealed class ResolvePrintAreaPass : IReportLayoutPass
         context.PrintArea = !IgnoreExplicitPrintArea ? context.Sheet.PrintArea ?? GetUsedRange(context.Sheet) : GetUsedRange(context.Sheet);
     }
 
-    private static CellRange? GetUsedRange(ReportSheet sheet)
+    /// <summary>Gets the get used range.</summary>
+    /// <param name="sheet">The sheet used by this operation.</param>
+    /// <returns>The planned or generated result.</returns>
+    internal static CellRange? GetUsedRange(ReportSheet sheet)
     {
+        if (sheet.RenderUsedRange is { } preserved)
+        {
+            return preserved;
+        }
+
         var geometry = new SheetGeometry(sheet);
         var objects = (sheet.Images ?? []).Select(image =>
             {

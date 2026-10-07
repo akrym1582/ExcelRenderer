@@ -40,6 +40,7 @@ public sealed class PdfSharpRenderer : IRenderer
     /// <param name="output">生成した PDF 文書を書き込むストリームです。</param>
     public void Render(IReadOnlyList<DrawCommand> commands, PageSettings pageSettings, Stream output)
     {
+        using var imageResources = ImageResources.Current is null ? new ImageResources() : null;
         using var document = new PdfDocument();
         var pages = commands.GroupBy(x => x.PageNumber).OrderBy(x => x.Key).ToArray();
         if (pages.Length == 0)
@@ -129,31 +130,14 @@ public sealed class PdfSharpRenderer : IRenderer
 
     private void DrawImage(XGraphics graphics, DrawImageCommand command)
     {
-        if (command.ImageBytes.Length == 0)
+        using var ownedResources = ImageResources.Current is null ? new ImageResources() : null;
+        using var lease = ImageResources.Current!.Acquire<XImage>(command.ImageBytes, () => DecodePdfImage(command));
+        var pdfImage = lease?.Value;
+        if (pdfImage is null)
         {
-            ReportImageFailure(command, "Image data is empty.");
             return;
         }
 
-        using var encoded = new SKMemoryStream(command.ImageBytes);
-        using var codec = SKCodec.Create(encoded, out var codecResult);
-        if (codec is null)
-        {
-            ReportImageFailure(command, $"SKCodec.Create returned null ({codecResult}); the image format may be unsupported or the data may be corrupt.");
-            return;
-        }
-
-        using var bitmap = SKBitmap.Decode(codec);
-        if (bitmap is null)
-        {
-            ReportImageFailure(command, $"SKBitmap.Decode returned null (format={codec.EncodedFormat}, size={codec.Info.Width}x{codec.Info.Height}); the image data could not be decoded.");
-            return;
-        }
-
-        using var image = SKImage.FromBitmap(bitmap);
-        using var pngData = image.Encode(SKEncodedImageFormat.Png, 100);
-        using var stream = pngData.AsStream();
-        using var pdfImage = XImage.FromStream(stream);
         var state = graphics.Save();
         if (command.ClipBounds is { } clip)
         {
@@ -181,6 +165,36 @@ public sealed class PdfSharpRenderer : IRenderer
         }
 
         graphics.Restore(state);
+    }
+
+    private (XImage? Value, long Bytes) DecodePdfImage(DrawImageCommand command)
+    {
+        if (command.ImageBytes.Length == 0)
+        {
+            ReportImageFailure(command, "Image data is empty.");
+            return (null, 0);
+        }
+
+        using var encoded = new SKMemoryStream(command.ImageBytes);
+        using var codec = SKCodec.Create(encoded, out var codecResult);
+        if (codec is null)
+        {
+            ReportImageFailure(command, $"SKCodec.Create returned null ({codecResult}); the image format may be unsupported or the data may be corrupt.");
+            return (null, 0);
+        }
+
+        using var bitmap = SKBitmap.Decode(codec);
+        if (bitmap is null)
+        {
+            ReportImageFailure(command, $"SKBitmap.Decode returned null (format={codec.EncodedFormat}, size={codec.Info.Width}x{codec.Info.Height}); the image data could not be decoded.");
+            return (null, 0);
+        }
+
+        using var image = SKImage.FromBitmap(bitmap);
+        using var pngData = image.Encode(SKEncodedImageFormat.Png, 100);
+        using var stream = pngData.AsStream();
+        var pdfImage = XImage.FromStream(stream);
+        return (pdfImage, ((long)bitmap.RowBytes * bitmap.Height) + pngData.Size);
     }
 
     private void ReportImageFailure(DrawImageCommand command, string reason)

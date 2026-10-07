@@ -3,6 +3,7 @@ using ExcelRenderer.Drawing;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Model;
+using ExcelRenderer.Rendering;
 using SkiaSharp;
 
 namespace ExcelRenderer.SkiaSharp;
@@ -167,7 +168,13 @@ internal sealed class SkiaDrawingContext
 
     private void DrawImage(SKCanvas canvas, DrawImageCommand command)
     {
-        using var image = DecodeImage(command.ImageBytes);
+        using var ownedResources = ImageResources.Current is null ? new ImageResources() : null;
+        using var lease = ImageResources.Current!.Acquire(command.ImageBytes, () =>
+        {
+            var decoded = DecodeImage(command.ImageBytes);
+            return (decoded, decoded is null ? 0 : Math.Max((long)decoded.Width * 4, decoded.Info.RowBytes) * decoded.Height);
+        });
+        var image = lease?.Value;
         if (image is null)
         {
             return;

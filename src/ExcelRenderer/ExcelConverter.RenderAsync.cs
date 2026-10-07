@@ -50,12 +50,14 @@ public static partial class ExcelConverter
         var artifacts = new List<ArtifactMetadata>();
         try
         {
-            using var fontResources = new ConversionFontResources();
+            using var resources = new RenderResourceSession();
             var inputTimer = System.Diagnostics.Stopwatch.StartNew();
-            var source = await WorkbookInputPreparer.ReadAsync(input, request.Input, cancellationToken).ConfigureAwait(false);
+            using var source = await WorkbookInputPreparer.ReadAsync(input, request.Input, cancellationToken).ConfigureAwait(false);
             ConversionMetrics.Report("input.ms", inputTimer.Elapsed.TotalMilliseconds);
             var fontManager = ConversionMetrics.Measure("fonts", () => new FontManager(request.FontOptions));
-            var document = ConversionMetrics.Measure("reader", () => new ExcelReader(fontManager).Read(source, diagnostics));
+            resources.TextMeasurer = new PdfSharpTextMeasurer(fontManager, cacheLayouts: true);
+            var document = ConversionMetrics.Measure("reader", () => new ExcelReader(fontManager).Read(source, diagnostics, request.OutputFormat == OutputFormat.Markdown ? null : request.Selection.SheetNames));
+            source.Dispose();
             if (ConversionMetrics.Observer is not null)
             {
                 ConversionMetrics.Report("cells", document.Sheets.Sum(sheet => sheet.Cells.Count));
@@ -102,6 +104,11 @@ public static partial class ExcelConverter
                 throw Failure("Conversion was stopped by diagnostic policy.", null, diagnostics, artifacts);
             }
 
+            sheets = sheets.Select(selected => selected with { Sheet = ProjectSheet(selected.Sheet, request) }).ToArray();
+            var workbookMetadata = new WorkbookRenderMetadata(document);
+            document = new ReportDocument([]);
+            ConversionMetrics.Report("modelSelectedCells", sheets.Sum(selected => selected.Sheet.Cells.Count));
+
             var lockTimer = System.Diagnostics.Stopwatch.StartNew();
             await PdfSharpFontLock.WaitAsync(cancellationToken).ConfigureAwait(false);
             ConversionMetrics.Report("fontLockWait.ms", lockTimer.Elapsed.TotalMilliseconds);
@@ -115,10 +122,11 @@ public static partial class ExcelConverter
                 var pages = request.ImageLayout == ImageLayoutMode.Continuous
                     ? LayoutContinuous(sheets, request.Dpi, fontManager)
                     : LayoutPages(sheets, request.Dpi, fontManager);
-                var selectedPages = ConversionMetrics.Measure("viewports", () => PrepareViewports(SelectPages(pages, request.Selection.Pages), request, fontManager, diagnostics));
+                var selectedPages = SelectPages(pages, request.Selection.Pages).Select(page =>
+                    ConversionMetrics.Measure("pagePreflight", () => PreflightPage(page, request, fontManager, diagnostics, cancellationToken))).ToArray();
                 if (request.OutputFormat == OutputFormat.Pdf && request.Hyperlinks == HyperlinkMode.Preserve)
                 {
-                    selectedPages = ConversionMetrics.Measure("links", () => ResolvePdfLinks(selectedPages, document, diagnostics));
+                    selectedPages = ConversionMetrics.Measure("links", () => ResolvePdfLinks(selectedPages, workbookMetadata, diagnostics)).ToArray();
                 }
 
                 if (diagnostics.HasFailure)
@@ -168,11 +176,12 @@ public static partial class ExcelConverter
 
     private static void ValidateRequest(RenderRequest request)
     {
-        if (request.Selection is null || request.Trim is null || request.Input is null || request.FontOptions is null || request.DiagnosticOptions is null)
+        if (request.Buffering is null || request.Selection is null || request.Trim is null || request.Input is null || request.FontOptions is null || request.DiagnosticOptions is null)
         {
             throw new ArgumentException("Required render options must not be null.", nameof(request));
         }
 
+        request.Buffering.Validate();
         if (!Enum.IsDefined(typeof(OutputFormat), request.OutputFormat) || !Enum.IsDefined(typeof(ImageLayoutMode), request.ImageLayout) ||
             !Enum.IsDefined(typeof(HyperlinkMode), request.Hyperlinks))
         {
@@ -216,107 +225,132 @@ public static partial class ExcelConverter
     private static IReadOnlyList<SheetPage> LayoutPages(IReadOnlyList<SelectedSheet> sheets, double dpi, FontManager fontManager)
     {
         var pages = new List<SheetPage>();
-        var documentPage = 0;
         foreach (var selected in sheets)
         {
-            var layout = new ReportLayoutEngine(new PdfSharpTextMeasurer(fontManager, cacheLayouts: true)).Layout(selected.Sheet);
-            var commands = ConversionMetrics.Measure("commands", () => new DrawCommandGeneratorPass().Generate(layout));
-            ConversionMetrics.Report("commands", commands.Count);
-            if (ConversionMetrics.Observer is not null)
+            var plans = new ReportLayoutEngine(RenderResourceSession.Current?.TextMeasurer ?? new PdfSharpTextMeasurer(fontManager, cacheLayouts: true)).Plan(selected.Sheet);
+            var count = plans.Sum(plan => plan.Pages.Count);
+            var sourceNumber = 0;
+            foreach (var plan in plans)
             {
-                ConversionMetrics.Report("renderCells", layout.Pages.Sum(page => page.Cells.Count));
-                foreach (var group in commands.GroupBy(command => command.GetType().Name))
+                for (var index = 0; index < plan.Pages.Count; index++)
                 {
-                    ConversionMetrics.Report("commands." + group.Key, group.Count());
+                    pages.Add(CreatePage(selected, ++sourceNumber, pages.Count + 1, dpi) with
+                    {
+                        Plan = plan,
+                        PlanIndex = index,
+                        SheetPageCount = count,
+                    });
                 }
             }
 
-            var byPage = commands.ToLookup(command => command.PageNumber);
-            var groups = layout.Pages.Select(page => new
+            if (count == 0)
             {
-                Key = page.Number,
-                Commands = byPage[page.Number].ToArray(),
-                Regions = page.SourceRegions,
-            }).ToArray();
-            if (groups.Length == 0)
-            {
-                var width = selected.Sheet.PageSettings.Width;
-                var height = selected.Sheet.PageSettings.Height;
-                pages.Add(
-                    new(
-                        selected.Sheet,
-                        Array.Empty<DrawCommand>(),
-                        new(
-                            selected.Index,
-                            selected.Sheet.Name,
-                            1,
-                            ++documentPage,
-                            null,
-                            width,
-                            height,
-                            checked((int)Math.Ceiling(width * dpi / 72d)),
-                            checked((int)Math.Ceiling(height * dpi / 72d)),
-                            dpi)));
-                continue;
-            }
-
-            foreach (var group in groups)
-            {
-                var sourcePage = group.Key == 0 ? 1 : group.Key;
-                var width = selected.Sheet.PageSettings.Width;
-                var height = selected.Sheet.PageSettings.Height;
-                var pixels = checked((int)Math.Ceiling(width * dpi / 72d));
-                var pixelHeight = checked((int)Math.Ceiling(height * dpi / 72d));
-                pages.Add(
-                    new(
-                        selected.Sheet,
-                        group.Commands,
-                        new(
-                            selected.Index,
-                            selected.Sheet.Name,
-                            sourcePage,
-                            ++documentPage,
-                            null,
-                            width,
-                            height,
-                            pixels,
-                            pixelHeight,
-                            dpi)
-                        {
-                            RequestedRange = selected.Sheet.RequestedRange,
-                            SourceCellRanges = group.Regions.Where(region => region.Cells is not null).Select(region => region.Cells!.Value).ToArray(),
-                            SourceRegions = group.Regions.Select(region => region.SourceBounds).ToArray(),
-                        },
-                        Regions: group.Regions));
+                pages.Add(CreatePage(selected, 1, pages.Count + 1, dpi));
             }
         }
 
         return pages;
     }
 
-    private static IReadOnlyList<SheetPage> LayoutContinuous(IReadOnlyList<SelectedSheet> sheets, double dpi, FontManager fontManager)
-    {
-        var pages = new List<SheetPage>();
-        var documentPage = 0;
-        foreach (var selected in sheets)
+    private static SheetPage CreatePage(SelectedSheet selected, int sourceNumber, int documentNumber, double dpi) => new(
+        selected.Sheet,
+        new(selected.Index, selected.Sheet.Name, sourceNumber, documentNumber, null, selected.Sheet.PageSettings.Width, selected.Sheet.PageSettings.Height, null, null, dpi)
         {
-            var layout = new ReportLayoutEngine(new PdfSharpTextMeasurer(fontManager, cacheLayouts: true)).LayoutContinuous(selected.Sheet);
-            var width = layout.Width;
-            var height = layout.Height;
-            var (pixelWidth, pixelHeight) = GetContinuousPixelDimensions(width, height, dpi);
-            pages.Add(new(
-                selected.Sheet,
-                new DrawCommandGeneratorPass().Generate(layout.Document),
-                new(selected.Index, selected.Sheet.Name, 1, ++documentPage, documentPage, width, height, pixelWidth, pixelHeight, dpi)
-                {
-                    RequestedRange = selected.Sheet.RequestedRange,
-                    SourceCellRanges = layout.Document.Pages.SelectMany(p => p.SourceRegions).Where(region => region.Cells is not null).Select(region => region.Cells!.Value).ToArray(),
-                    SourceRegions = layout.Document.Pages.SelectMany(p => p.SourceRegions).Select(region => region.SourceBounds).ToArray(),
-                },
-                IsContinuous: true));
+            RequestedRange = selected.Sheet.RequestedRange,
+        });
+
+    private static IReadOnlyList<SheetPage> LayoutContinuous(IReadOnlyList<SelectedSheet> sheets, double dpi, FontManager fontManager) =>
+        sheets.Select((selected, index) =>
+        {
+            var plan = new ContinuousLayoutPlan(selected.Sheet, RenderResourceSession.Current?.TextMeasurer ?? new PdfSharpTextMeasurer(fontManager, cacheLayouts: true));
+            return CreatePage(selected, 1, index + 1, dpi) with
+            {
+                IsContinuous = true,
+                CanvasPlan = plan,
+                Regions = plan.SourceRegions,
+                Descriptor = CreatePage(selected, 1, index + 1, dpi).Descriptor with { WidthPoints = plan.Width, HeightPoints = plan.Height },
+            };
+        }).ToArray();
+
+    private static PageRenderPayload BuildPage(SheetPage page, FontManager fonts, CancellationToken token)
+    {
+        var measurer = RenderResourceSession.Current?.TextMeasurer ?? new PdfSharpTextMeasurer(fonts, cacheLayouts: true);
+        if (page.IsContinuous)
+        {
+            return new(ConversionMetrics.MeasureCommands(new DrawCommandGeneratorPass().GenerateContinuous(page.CanvasPlan!, measurer)), page.CanvasPlan!.SourceRegions);
         }
 
-        return pages;
+        var built = page.Plan?.Build(page.PlanIndex, page.Descriptor.SourcePageNumber, page.SheetPageCount, measurer, token) ?? new RenderPage(1, []);
+        built = built with { HeaderFooterTexts = PaginationPass.GetHeaderFooterTexts(page.Sheet, page.Descriptor.SourcePageNumber, page.SheetPageCount, RenderResourceSession.Current?.HeaderFooterTimestamp) };
+        var commands = new DrawCommandGeneratorPass().GeneratePage(built);
+        ConversionMetrics.Report("renderCells", built.Cells.Count);
+        ConversionMetrics.Report("commands", commands.Count);
+        return new(commands, built.SourceRegions);
+    }
+
+    private static SheetPage PreflightPage(SheetPage page, RenderRequest request, FontManager fonts, DiagnosticCollector diagnostics, CancellationToken token)
+    {
+        token.ThrowIfCancellationRequested();
+        ConversionMetrics.Report("pagePayloadActive", 1);
+        try
+        {
+            var payload = ConversionMetrics.Measure("pageBuild", () => BuildPage(page, fonts, token));
+            var final = PrepareViewport(page with { Regions = payload.Regions }, WithCancellation(payload.Commands, token), request, fonts, diagnostics);
+            return final with
+            {
+                Descriptor = final.Descriptor with
+                {
+                    SourceCellRanges = page.Plan is null && !page.IsContinuous ? null : (final.Regions ?? []).Where(region => region.Cells is not null).Select(region => region.Cells!.Value).ToArray(),
+                    SourceRegions = page.Plan is null && !page.IsContinuous ? null : (final.Regions ?? []).Select(region => region.SourceBounds).ToArray(),
+                },
+            };
+        }
+        finally
+        {
+            ConversionMetrics.Report("pagePayloadActive", -1);
+        }
+    }
+
+    private static void RenderPagePayload(SheetPage page, FontManager fonts, CancellationToken token, Action<IEnumerable<DrawCommand>> render)
+    {
+        token.ThrowIfCancellationRequested();
+        ConversionMetrics.Report("pagePayloadActive", 1);
+        try
+        {
+            var payload = ConversionMetrics.Measure("pageBuild", () => BuildPage(page, fonts, token));
+            var commands = page.Descriptor.CropBounds is not null
+                ? ApplyViewport(payload.Commands, page.Viewport!, page.Descriptor.SourcePageNumber)
+                : payload.Commands;
+            render(WithCancellation(commands, token));
+        }
+        finally
+        {
+            ConversionMetrics.Report("pagePayloadActive", -1);
+        }
+    }
+
+    private static IEnumerable<DrawCommand> WithCancellation(IEnumerable<DrawCommand> commands, CancellationToken token)
+    {
+        var count = 0;
+        foreach (var command in commands)
+        {
+            if ((count++ & 255) == 0)
+            {
+                token.ThrowIfCancellationRequested();
+            }
+
+            yield return command;
+        }
+
+        token.ThrowIfCancellationRequested();
+    }
+
+    private static IEnumerable<DrawCommand> ApplyViewport(IEnumerable<DrawCommand> commands, PageViewport viewport, int number)
+    {
+        foreach (var command in commands)
+        {
+            yield return viewport.Apply([command], number);
+        }
     }
 
     private static (int? Width, int? Height) GetContinuousPixelDimensions(double width, double height, double dpi)
@@ -405,10 +439,10 @@ public static partial class ExcelConverter
                     });
                     ConversionMetrics.Measure("pdfPage", () =>
                     {
-                        renderer.AppendPage(
+                        RenderPagePayload(page, fontManager, token, commands => renderer.AppendPage(
                             result,
                             page.Sheet.PageSettings with { Width = page.Descriptor.WidthPoints, Height = page.Descriptor.HeightPoints },
-                            page.Commands);
+                            commands));
                         return true;
                     });
                     if (diagnostics.HasFailure)
@@ -468,11 +502,13 @@ public static partial class ExcelConverter
                 artifacts,
                 stream =>
                 {
+                    RenderPagePayload(page, fontManager, token, commands =>
+                    {
                     if (request.OutputFormat == OutputFormat.Png)
                     {
                         var renderer = new PngRenderer(fontManager);
                         renderer.RenderCanvas(
-                            page.Commands,
+                            commands,
                             page.Descriptor.WidthPoints,
                             page.Descriptor.HeightPoints,
                             stream,
@@ -482,8 +518,9 @@ public static partial class ExcelConverter
                     else
                     {
                         var renderer = new SvgRenderer(fontManager);
-                        renderer.RenderCanvas(page.Commands, page.Descriptor.WidthPoints, page.Descriptor.HeightPoints, stream);
+                        renderer.RenderCanvas(commands, page.Descriptor.WidthPoints, page.Descriptor.HeightPoints, stream, request.Buffering, token);
                     }
+                    });
                 },
                 token).ConfigureAwait(false);
         }
@@ -675,12 +712,17 @@ public static partial class ExcelConverter
 
     private sealed record SheetPage(
         ReportSheet Sheet,
-        IReadOnlyList<DrawCommand> Commands,
         RenderPageDescriptor Descriptor,
         bool IsContinuous = false,
         IReadOnlyList<PageSourceRegion>? Regions = null,
         PageViewport? Viewport = null,
-        IReadOnlyList<ResolvedPdfHyperlink>? Links = null);
+        IReadOnlyList<ResolvedPdfHyperlink>? Links = null,
+        SheetLayoutPlan? Plan = null,
+        int PlanIndex = 0,
+        int SheetPageCount = 1,
+        ContinuousLayoutPlan? CanvasPlan = null);
+
+    private sealed record PageRenderPayload(IEnumerable<DrawCommand> Commands, IReadOnlyList<PageSourceRegion> Regions);
 
     private sealed class CountingStream : Stream
     {

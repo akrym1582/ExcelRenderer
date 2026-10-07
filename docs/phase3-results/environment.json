@@ -1,0 +1,33 @@
+{
+  "BaselineCommit": "8f73fbdce043668f07718a08611d35312313f059",
+  "CurrentSourceSHA256": "184fb214b0b796d665b6e41050b0c3c2ca3566b719e249c6b0f8d670a47a6a4b",
+  "Date": "2026-10-07",
+  "BuildWarnings": 0,
+  "BuildErrors": 0,
+  "LibraryTests": 379,
+  "CliTests": 32,
+  "Configuration": "Release",
+  "SDK": "10.0.401",
+  "Runtime": "10.0.12",
+  "CPUQuota": 2,
+  "MemoryLimitBytes": 8589934592,
+  "PngDpi": 24,
+  "Fixtures": {
+    "mixed-100.xlsx": "1308e5fa8fa8cafe97fe9da3dc425a30624421f66fea3db4975d9015762ef0db",
+    "images-1000.xlsx": "a6d17e45fa3c99713ddac716f96124d846739a8a768d856f4959f37d6f5c5385",
+    "latin-100.xlsx": "352b69b1b8abd726cf829e0cfd54741acee6599cf182820f2d654f01117c1142",
+    "latin-1000.xlsx": "8acee1cc3efb86a2711b081f67699a8458b8b8c82f7aef0c2acf4978201aa9c3",
+    "empty-1000.xlsx": "5bd761023395c7e058f34cdb0bfb215b7b7384cddbfc41470f87c7533dbeaff0",
+    "latin-5000.xlsx": "5d5573a72b5c17d207ce159f9ce096cb4f96f5cf20326d18c213e197c5b2ac8b",
+    "empty-5000.xlsx": "f9e8d8fc3dd87a5e48d5b30b0a5978fb080352adb606e085c9c19d5ef02c77e9",
+    "latin-10000.xlsx": "d800b26f3daa197326fe7918322651ad0760fbefa0563ded7e57c084a25dceee",
+    "empty-10000.xlsx": "1a5cd4dcf85af8bca6a3d1f485c0a12096c7a11e8bb9f6f1de8999e03e00774a"
+  },
+  "StandaloneInputZIP": {
+    "Bytes": 33554552,
+    "SHA256": "3a7e6ba0397d0f4f3a583fa03f43e2a593adc03cc5615afccb2cca8a300095c9"
+  },
+  "MainFreshProcesses": 180,
+  "SupplementFreshProcesses": 70,
+  "ExtendedRetentionConversions": 200
+}

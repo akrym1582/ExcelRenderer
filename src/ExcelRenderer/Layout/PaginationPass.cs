@@ -14,14 +14,34 @@ public sealed class PaginationPass : IReportLayoutPass
     /// <param name="context">入力シート、計測機能、および各工程の計算結果を保持するレイアウトコンテキストです。</param>
     public void Execute(ReportLayoutContext context)
     {
+        var plans = Plan(context);
+        context.RenderDocument = new(plans.Select((plan, index) => Materialize(context, plan, index + 1, plans.Count)).ToArray());
+    }
+
+    /// <summary>Builds a single planned page and resolves its header and footer.</summary>
+    /// <param name="context">The context used by this operation.</param>
+    /// <param name="plan">The plan used by this operation.</param>
+    /// <param name="number">The number used by this operation.</param>
+    /// <param name="count">The count used by this operation.</param>
+    /// <returns>The planned or generated result.</returns>
+    internal static RenderPage Materialize(ReportLayoutContext context, PaginationPagePlan plan, int number, int count)
+    {
+        var page = plan.Horizontal is null || plan.Vertical is null
+            ? new RenderPage(number, [])
+            : new RenderPageBuilder(context, plan.BodyColumns, plan.BodyRows, plan.TitleColumns, plan.TitleRows, plan.TitleColumnEnd, plan.TitleRowEnd, plan.TitleWidth, plan.TitleHeight, plan.Scale)
+                .Build(number, plan.Horizontal.Value, plan.Vertical.Value);
+        return page with { HeaderFooterTexts = HeaderFooterLayout.Create(context.Sheet, number, count) };
+    }
+
+    /// <summary>Plans page bands without measuring cell text.</summary>
+    /// <param name="context">The context used by this operation.</param>
+    /// <returns>The planned or generated result.</returns>
+    internal static IReadOnlyList<PaginationPagePlan> Plan(ReportLayoutContext context)
+    {
         if (context.PrintArea is not { } ||
-            (context.Sheet.RequestedRange is null && context.Sheet.Hyperlinks.Count == 0 && context.CellLayouts.Count == 0 && (context.Sheet.Images?.Count ?? 0) == 0 && (context.Sheet.Shapes?.Count ?? 0) == 0))
+            (context.Sheet.RequestedRange is null && context.Sheet.Hyperlinks.Count == 0 && !context.Sheet.Cells.Keys.Any(address => context.ColumnLayouts.ContainsKey(address.Column) && context.RowLayouts.ContainsKey(address.Row)) && (context.Sheet.Images?.Count ?? 0) == 0 && (context.Sheet.Shapes?.Count ?? 0) == 0))
         {
-            var headerFooterTexts = HeaderFooterLayout.Create(context.Sheet, 1, 1);
-            context.RenderDocument = new(headerFooterTexts.Count == 0
-                ? []
-                : [new RenderPage(1, [], HeaderFooterTexts: headerFooterTexts)]);
-            return;
+            return HeaderFooterLayout.Create(context.Sheet, 1, 1).Count == 0 ? [] : [new(null, null, [], [], [], [], 0, 0, 0, 0, 1)];
         }
 
         var settings = context.Sheet.PageSettings;
@@ -36,22 +56,29 @@ public sealed class PaginationPass : IReportLayoutPass
             : context.ColumnLayouts[titleColumns[titleColumns.Count - 1]].X + context.ColumnLayouts[titleColumns[titleColumns.Count - 1]].Width;
         var titleRowEnd = titleRows.Count == 0 ? double.NegativeInfinity
             : context.RowLayouts[titleRows[titleRows.Count - 1]].Y + context.RowLayouts[titleRows[titleRows.Count - 1]].Height;
-        double GetColumnEnd(int column, double end) => context.Sheet.RequestedRange is not null ? end : context.Sheet.Cells
-            .Where(cell => cell.Key.Column == column)
-            .Select(cell => cell.Key.Column + cell.Value.ColumnSpan - 1)
-            .Where(context.ColumnLayouts.ContainsKey)
-            .Select(last => context.ColumnLayouts[last].X + context.ColumnLayouts[last].Width)
-            .Append(end).Max();
-        double GetRowEnd(int row, double end) => context.Sheet.RequestedRange is not null ? end : context.Sheet.Cells
-            .Where(cell => cell.Key.Row == row)
-            .Select(cell => cell.Key.Row + cell.Value.RowSpan - 1)
-            .Where(context.RowLayouts.ContainsKey)
-            .Select(last => context.RowLayouts[last].Y + context.RowLayouts[last].Height)
-            .Append(end).Max();
+        var columnEnds = new Dictionary<int, double>();
+        var rowEnds = new Dictionary<int, double>();
+        if (context.Sheet.RequestedRange is null)
+        {
+            foreach (var (address, cell) in context.Sheet.Cells)
+            {
+                if (context.ColumnLayouts.TryGetValue(address.Column + cell.ColumnSpan - 1, out var lastColumn))
+                {
+                    columnEnds[address.Column] = Math.Max(columnEnds.GetValueOrDefault(address.Column, double.NegativeInfinity), lastColumn.X + lastColumn.Width);
+                }
+
+                if (context.RowLayouts.TryGetValue(address.Row + cell.RowSpan - 1, out var lastRow))
+                {
+                    rowEnds[address.Row] = Math.Max(rowEnds.GetValueOrDefault(address.Row, double.NegativeInfinity), lastRow.Y + lastRow.Height);
+                }
+            }
+        }
+
+        double GetColumnEnd(int column, double end) => Math.Max(end, columnEnds.GetValueOrDefault(column, end));
+        double GetRowEnd(int row, double end) => Math.Max(end, rowEnds.GetValueOrDefault(row, end));
         if (bodyColumns.Length == 0 || bodyRows.Length == 0)
         {
-            context.RenderDocument = new([new RenderPage(1, [], HeaderFooterTexts: HeaderFooterLayout.Create(context.Sheet, 1, 1))]);
-            return;
+            return [new(null, null, [], [], [], [], 0, 0, 0, 0, 1)];
         }
 
         var scale = PrintScaleResolver.Resolve(
@@ -87,7 +114,6 @@ public sealed class PaginationPass : IReportLayoutPass
             titleHeight,
             PrintScaleResolver.UsesFitMode(settings) ? null : settings.ManualRowBreaks);
 
-        var pageCount = horizontalBands.Count * verticalBands.Count;
         var bandPairs = settings.PageOrder == PrintPageOrder.DownThenOver
             ? horizontalBands.SelectMany((horizontal, horizontalIndex) => verticalBands.Select(
                 (vertical, verticalIndex) => (Horizontal: horizontal, HorizontalIndex: horizontalIndex,
@@ -95,36 +121,21 @@ public sealed class PaginationPass : IReportLayoutPass
             : verticalBands.SelectMany((vertical, verticalIndex) => horizontalBands.Select(
                 (horizontal, horizontalIndex) => (Horizontal: horizontal, HorizontalIndex: horizontalIndex,
                     Vertical: vertical, VerticalIndex: verticalIndex)));
-        var pageBuilder = new RenderPageBuilder(
-            context,
-            bodyColumns,
-            bodyRows,
-            titleColumns,
-            titleRows,
-            titleColumnEnd,
-            titleRowEnd,
-            titleWidth,
-            titleHeight,
-            scale);
-        var pages = bandPairs.Select((pair, pageIndex) => pageBuilder.Build(
-            pageIndex + 1,
-            pair.Horizontal,
-            pair.Vertical)).ToArray();
-        context.RenderDocument = new(pages.Select(page => page with
-        {
-            HeaderFooterTexts = HeaderFooterLayout.Create(context.Sheet, page.Number, pageCount),
-        }).ToArray());
+        return bandPairs.Select(pair => new PaginationPagePlan(
+            pair.Horizontal, pair.Vertical, bodyColumns, bodyRows, titleColumns, titleRows, titleColumnEnd, titleRowEnd, titleWidth, titleHeight, scale)).ToArray();
     }
 
     /// <summary>ページ番号を解決したヘッダーおよびフッターの配置を作成します。</summary>
     /// <param name="sheet">ヘッダーおよびフッター設定を持つシートです。</param>
     /// <param name="pageNumber">対象ページ番号です。</param>
     /// <param name="pageCount">シートの総ページ数です。</param>
+    /// <param name="timestamp">事前確認と本描画で共有する時刻です。</param>
     /// <returns>ページへ配置するヘッダーおよびフッター文字列です。</returns>
     internal static IReadOnlyList<RenderText> GetHeaderFooterTexts(
         ReportSheet sheet,
         int pageNumber,
-        int pageCount) => HeaderFooterLayout.Create(sheet, pageNumber, pageCount);
+        int pageCount,
+        DateTime? timestamp = null) => HeaderFooterLayout.Create(sheet, pageNumber, pageCount, timestamp);
 
     private static IReadOnlyList<int> GetIndices(IReadOnlyList<int> visibleIndices, IndexRange? range) =>
         range is not { } value ? [] : visibleIndices.Where(index => index >= value.First && index <= value.Last).ToArray();

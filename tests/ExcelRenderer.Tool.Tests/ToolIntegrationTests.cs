@@ -51,6 +51,34 @@ public sealed class ToolIntegrationTests : IDisposable
         Assert.Equal(new byte[] { 0x89, 0x50, 0x4e, 0x47 }, File.ReadAllBytes(png)[..4]);
     }
 
+    /// <summary>Both SVG entry points expose buffer limits and clean up spills on failure.</summary>
+    /// <param name="command">The CLI entry point.</param>
+    /// <returns>The asynchronous test completion.</returns>
+    [Theory]
+    [InlineData("svg")]
+    [InlineData("render")]
+    public async Task Svg_buffer_options_support_spill_and_no_temp_failure(string command)
+    {
+        Directory.CreateDirectory(_directory);
+        var temporary = Path.Combine(_directory, "buffer-temp");
+        Directory.CreateDirectory(temporary);
+        var output = Path.Combine(_directory, "buffer-svg");
+        var arguments = new List<string> { command, Input, "-o", output, "--buffer-memory-threshold", "1", "--buffer-temp-directory", temporary };
+        if (command == "render")
+        {
+            arguments.AddRange(["--format", "svg"]);
+        }
+
+        AssertSuccess(await RunAsync(arguments.ToArray()));
+        Assert.Empty(Directory.GetFiles(temporary));
+        arguments[3] = Path.Combine(_directory, "rejected-svg");
+        arguments.Add("--no-buffer-temp");
+        var rejected = await RunAsync(arguments.ToArray());
+        Assert.NotEqual(0, rejected.ExitCode);
+        Assert.Contains("MemoryThresholdBytes", rejected.Error);
+        Assert.Empty(Directory.GetFiles(temporary));
+    }
+
     /// <summary>svg コマンドが Excel 入力からページ単位の SVG ファイルを生成することを検証します。</summary>
     /// <returns>非同期の検証処理を表すタスク。</returns>
     [Fact]

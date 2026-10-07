@@ -11,6 +11,7 @@ public sealed class FontManager : IFontManager
     private readonly Dictionary<(FontRequest Request, string Text), IReadOnlyList<TextRun>> _runs = new();
     private readonly FontOptions _options;
 
+    private readonly Dictionary<(string Path, long Length, long Modified), Lazy<FontSnapshot>> _snapshots = new();
     private readonly List<FontFace> _faces = [];
     private readonly List<FontFace> _externalFaces = [];
     private readonly Dictionary<FontRequest, ResolvedFont> _cache = new();
@@ -174,6 +175,39 @@ public sealed class FontManager : IFontManager
         }
 
         return result;
+    }
+
+    private static FontSnapshot LoadSnapshot(string path, long expectedLength, long expectedModified)
+    {
+        try
+        {
+            var info = new FileInfo(path);
+            if (!info.Exists || info.Length != expectedLength || info.LastWriteTimeUtc.Ticks != expectedModified)
+            {
+                throw new IOException($"Font changed or disappeared before its first selection: {path}");
+            }
+
+            var bytes = File.ReadAllBytes(path);
+            return Snapshot(bytes);
+        }
+        catch (Exception error) when (error is IOException or UnauthorizedAccessException)
+        {
+            throw new InvalidOperationException($"Font could not be loaded: {path}", error);
+        }
+    }
+
+    private static FontSnapshot Snapshot(byte[] bytes)
+    {
+        using var stream = new MemoryStream(bytes, writable: false);
+        using var face = SKTypeface.FromStream(stream);
+        if (face is null)
+        {
+            throw new InvalidDataException("Configured font data could not be loaded.");
+        }
+
+        using var hasher = SHA256.Create();
+        ExcelRenderer.Rendering.ConversionMetrics.Report("fontsBytesLoaded", bytes.Length);
+        return new(bytes, BitConverter.ToString(hasher.ComputeHash(bytes)).Replace("-", string.Empty, StringComparison.Ordinal));
     }
 
     private static IEnumerable<(string Text, int Start, int BaseScalar, int? Selector)> EnumerateElements(string text)
@@ -416,26 +450,8 @@ public sealed class FontManager : IFontManager
     {
         foreach (var resource in OptionalFontPack.Fonts)
         {
-            var data = resource.Data;
-            using var stream = new MemoryStream(data, writable: false);
-            using var typeface = SKTypeface.FromStream(stream);
-            if (typeface is null || string.IsNullOrWhiteSpace(typeface.FamilyName))
-            {
-                continue;
-            }
-
             var style = resource.Name == "ipamjm.ttf" ? IvsFontStyle.Mincho : (IvsFontStyle?)null;
-            var ivsPriority = style is null ? 1 : 0;
-            Add(
-                typeface.FamilyName,
-                typeface.FontStyle.Weight,
-                typeface.FontStyle.Slant != SKFontStyleSlant.Upright,
-                resource.Name,
-                data,
-                true,
-                1,
-                ivsPriority,
-                style);
+            _faces.Add(new FontFace(_faces.Count, resource.Family, 400, false, resource.Name, new Lazy<FontSnapshot>(() => Snapshot(resource.Load())), true, 1, style is null ? 1 : 0, style));
         }
     }
 
@@ -449,19 +465,29 @@ public sealed class FontManager : IFontManager
         Add(family, weight, italic, Path.GetFullPath(path), null, false, sourcePriority, int.MaxValue, null);
     }
 
-    private FontFace Add(string family, int weight, bool italic, string path, byte[]? data, bool bundled, int sourcePriority, int ivsPriority, IvsFontStyle? ivsFontStyle, int explicitOrder = int.MaxValue)
+    private FontFace Add(string family, int weight, bool italic, string path, byte[]? data, bool bundled, int sourcePriority, int ivsPriority, IvsFontStyle? ivsFontStyle, int explicitOrder = int.MaxValue, bool lazy = false)
     {
-        var bytes = data ?? File.ReadAllBytes(path);
-        using var hasher = SHA256.Create();
-        var id = BitConverter.ToString(hasher.ComputeHash(bytes)).Replace("-", string.Empty, StringComparison.Ordinal);
+        var info = bundled ? null : new FileInfo(path);
+        var key = (path, info?.Length ?? data?.LongLength ?? 0, info?.LastWriteTimeUtc.Ticks ?? 0);
+        if (!_snapshots.TryGetValue(key, out var holder))
+        {
+            holder = lazy ? new Lazy<FontSnapshot>(() => LoadSnapshot(path, key.Item2, key.Item3))
+                : new Lazy<FontSnapshot>(() => Snapshot(data ?? File.ReadAllBytes(path)));
+            _snapshots.Add(key, holder);
+        }
+
+        if (!lazy)
+        {
+            _ = holder.Value;
+        }
+
         var candidate = new FontFace(
             _faces.Count,
             family,
             weight,
             italic,
             path,
-            bytes,
-            id,
+            holder,
             bundled,
             sourcePriority,
             ivsPriority,
@@ -517,7 +543,8 @@ public sealed class FontManager : IFontManager
                         false,
                         configuredDirectories.Contains(directory) ? 0 : 2,
                         int.MaxValue,
-                        null);
+                        null,
+                        lazy: true);
                 }
                 catch (IOException)
                 {
@@ -531,8 +558,14 @@ public sealed class FontManager : IFontManager
         }
     }
 
-    private sealed record FontFace(int RegistrationId, string Family, int Weight, bool Italic, string FilePath, byte[] Data, string FaceId, bool IsBundled, int SourcePriority, int IvsPriority, IvsFontStyle? IvsFontStyle, int ExplicitOrder = int.MaxValue)
+    private sealed record FontSnapshot(byte[] Data, string FaceId);
+
+    private sealed record FontFace(int RegistrationId, string Family, int Weight, bool Italic, string FilePath, Lazy<FontSnapshot> Snapshot, bool IsBundled, int SourcePriority, int IvsPriority, IvsFontStyle? IvsFontStyle, int ExplicitOrder = int.MaxValue)
     {
+        public byte[] Data => Snapshot.Value.Data;
+
+        public string FaceId => Snapshot.Value.FaceId;
+
         public string SortKey => $"{ExplicitOrder:D8}\0{Family}\0{Weight:D4}\0{Italic}\0{FilePath}";
     }
 }

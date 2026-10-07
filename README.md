@@ -447,20 +447,66 @@ are purged at conversion end to release retained native font data. Text caches a
 Sparse sheet coordinates, page candidates and merged-cell queries use indices, and equal
 converted styles share immutable values. Styled blank cells remain part of the model.
 
-PDFsharp still retains document resources until the final save, and the converter retains
-the sheet models and page commands. This is not constant-memory streaming.
-See the [measurement harness and results](docs/pdf-performance.ja.md) for reproducible
-synthetic workloads and remaining work.
+The converter plans page bands first, selects pages in document order, and preflights
+all selected output dimensions, trimming and links before opening any output sink.
+It then generates and writes one page at a time. Paginated output uses two page
+passes; public `ReportLayoutEngine.Layout` remains a materializing compatibility API.
+Continuous PNG/SVG rescans cells by drawing layer, preserving backgrounds, borders,
+text and object order without keeping all commands. Markdown retains its existing path.
 
-## PNG and SVG performance
+Selected-sheet body models and drawing-range projection reduce retained models.
+OS and additional-directory font scans retain metadata; a physical face's bytes and
+SHA256 identity are loaded once when first selected. Explicit font files and registrations
+are validated and snapshotted immediately. Optional font-pack data is also loaded on demand.
+An OS font is not a complete snapshot until its first selection; a file that changes or
+disappears before that read raises a font load error. PDFsharp's process-wide resolved
+font-byte cache remains in place.
 
-PNG and SVG conversions share the indexed reader/layout and conversion-scoped font
-resources described above. Direct `PngRenderer` and `SvgRenderer` calls also share
-native font faces across their pages and release them when the rendering call ends.
-PNG encoding uses the existing bitmap pixels without an immutable image copy.
-SVG dimensions are rewritten with streaming XML processing, without retaining an XML
-tree for the page. The SVG byte buffer and sheet/page commands are still retained.
-See the [PNG/SVG measurements](docs/image-performance.ja.md) for results and limits.
+PDFsharp still retains its final document and resources until the single save.
+ClosedXML still reads the whole workbook. Layout geometry and selected models also
+scale with workbook size. This is not constant-memory streaming.
+See the [phase 3 measurements](docs/phase3-performance.ja.md) and the historical
+[PDF](docs/pdf-performance.ja.md) and [image](docs/image-performance.ja.md) reports.
+
+## PNG and SVG performance and buffering
+
+PNG encoding uses the existing bitmap pixels. Page output keeps one bitmap at a time;
+continuous PNG remains one worksheet per PNG with one full bitmap, not scanline or tiled
+encoding. Its RGBA pixels require approximately `4 × width × height` bytes plus alignment
+and encoder overhead. Both PNG APIs validate dimensions and enforce their pixel limit.
+A conversion-local image cache estimates decoded resource memory and uses a 64 MiB LRU
+budget; an image exceeding that budget is owned only during its active draw. PDFsharp's
+own retained document image resources are additional to that estimate.
+
+SVG keeps Skia's SVG canvas and streaming XML normalization (outlined text, embedded
+images, point dimensions, and `viewBox`). Its seekable intermediate buffer spills before
+exceeding the configured memory capacity. Skia may also buffer native SVG data, so the
+stream threshold does not bound the whole conversion's memory.
+
+`RenderRequest.Buffering`, `SvgExportOptions.Buffering`, and overloads of
+`SvgRenderer.Render`, `RenderPage`, and `RenderCanvas` accept `RenderBufferOptions`:
+
+| Property | Default | Meaning |
+|---|---|---|
+| `MemoryThresholdBytes` | 8,388,608 | Maximum intermediate memory capacity in bytes. |
+| `AllowTemporaryFiles` | `true` | Spill once to a temporary file above the threshold; when false, reject excess data. |
+| `TemporaryDirectory` | `null` | System temp directory, or the specified existing directory. |
+
+The `render` and `svg` CLI commands expose `--buffer-memory-threshold` (bytes),
+`--no-buffer-temp`, and `--buffer-temp-directory`:
+
+```bash
+excelrenderer render input.xlsx -o ./svg --format svg --buffer-memory-threshold 8388608
+excelrenderer svg input.xlsx -o ./svg --buffer-memory-threshold 1048576 --buffer-temp-directory ./existing-temp
+```
+
+These options affect only the SVG intermediate stream, even when passed with PDF/PNG.
+They are independent of `WorkbookInputOptions`: input buffering now spools to a seekable
+temporary file when its own threshold is exceeded and temporary files are allowed.
+Readers use independent cursors without converting the spool back to a byte array.
+Temporary buffers are cleaned up on success, cancellation, and failures; caller-owned
+input and output streams stay open. Heavy native drawing, encoding, and ClosedXML load
+operations cannot be interrupted immediately.
 
 ## Development
 

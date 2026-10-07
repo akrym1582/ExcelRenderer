@@ -105,7 +105,7 @@ public static partial class ExcelConverter
         await using var input = File.OpenRead(inputPath);
         await RenderAsync(
             input,
-            CreateLegacyRequest(OutputFormat.Svg, options.SheetName, fontOptions: options.FontOptions),
+            CreateLegacyRequest(OutputFormat.Svg, options.SheetName, fontOptions: options.FontOptions) with { Buffering = options.Buffering },
             new DirectoryOutputSink(outputDirectory),
             cancellationToken).ConfigureAwait(false);
     }

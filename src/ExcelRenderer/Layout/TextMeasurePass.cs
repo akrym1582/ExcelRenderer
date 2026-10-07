@@ -16,8 +16,14 @@ public sealed class TextMeasurePass : IReportLayoutPass
     /// <param name="context">入力シート、計測機能、および各工程の計算結果を保持するレイアウトコンテキストです。</param>
     public void Execute(ReportLayoutContext context)
     {
-        foreach (var (address, cell) in context.Sheet.Cells)
+        var count = 0;
+        foreach (var (address, cell) in context.CandidateCells)
         {
+            if ((count++ & 255) == 0)
+            {
+                context.CancellationToken.ThrowIfCancellationRequested();
+            }
+
             if (string.IsNullOrEmpty(cell.Text))
             {
                 continue;

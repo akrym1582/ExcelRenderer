@@ -125,6 +125,11 @@ internal static class CommandSupport
         catch (Exception exception)
         {
             Console.Error.WriteLine($"Error: {exception.Message}");
+            if (exception is ExcelRenderer.Rendering.ConversionException && exception.InnerException is { } cause)
+            {
+                Console.Error.WriteLine(cause.Message);
+            }
+
             return 1;
         }
     }

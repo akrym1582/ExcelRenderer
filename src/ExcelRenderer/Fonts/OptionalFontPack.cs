@@ -15,15 +15,20 @@ internal static class OptionalFontPack
     /// <returns>The loaded font data, or <see langword="null"/> when the font cannot be found.</returns>
     internal static byte[]? LoadFontData(string name)
     {
-        var excelRendererDirectory = Path.GetDirectoryName(typeof(OptionalFontPack).Assembly.Location);
-        var resourceData = FindResourceData(excelRendererDirectory, name);
-        if (resourceData is not null)
+        return FindLoader(name)?.Invoke();
+    }
+
+    private static Func<byte[]>? FindLoader(string name)
+    {
+        var directory = Path.GetDirectoryName(typeof(OptionalFontPack).Assembly.Location);
+        var resource = FindResourceLoader(directory, name);
+        if (resource is not null)
         {
-            return resourceData;
+            return resource;
         }
 
-        var path = FindFontFile(excelRendererDirectory, name);
-        return path is null ? null : File.ReadAllBytes(path);
+        var path = FindFontFile(directory, name);
+        return path is null ? null : () => File.ReadAllBytes(path);
     }
 
     private static IReadOnlyList<Resource> Load()
@@ -31,16 +36,22 @@ internal static class OptionalFontPack
         var fonts = new List<Resource>();
         foreach (var name in new[] { "NotoSansJP-Regular.ttf", "ipamjm.ttf", "NotoColorEmoji.ttf" })
         {
-            if (LoadFontData(name) is { } data)
+            if (FindLoader(name) is { } loader)
             {
-                fonts.Add(new Resource(name, data));
+                var family = name switch
+                {
+                    "ipamjm.ttf" => "IPAmjMincho",
+                    "NotoColorEmoji.ttf" => "Noto Color Emoji",
+                    _ => "Noto Sans JP",
+                };
+                fonts.Add(new Resource(name, family, loader));
             }
         }
 
         return fonts;
     }
 
-    private static byte[]? FindResourceData(string? assemblyDirectory, string name)
+    private static Func<byte[]>? FindResourceLoader(string? assemblyDirectory, string name)
     {
         if (string.IsNullOrEmpty(assemblyDirectory) || !Directory.Exists(assemblyDirectory))
         {
@@ -73,15 +84,13 @@ internal static class OptionalFontPack
                     continue;
                 }
 
-                using var stream = assembly.GetManifestResourceStream(resourceName);
-                if (stream is null)
+                return () =>
                 {
-                    continue;
-                }
-
-                using var buffer = new MemoryStream();
-                stream.CopyTo(buffer);
-                return buffer.ToArray();
+                    using var stream = assembly.GetManifestResourceStream(resourceName) ?? throw new InvalidDataException($"Font resource is unavailable: {resourceName}");
+                    using var buffer = new MemoryStream();
+                    stream.CopyTo(buffer);
+                    return buffer.ToArray();
+                };
             }
             catch (Exception)
             {
@@ -123,6 +132,7 @@ internal static class OptionalFontPack
 
     /// <summary>Represents a font resource loaded from the optional font package.</summary>
     /// <param name="Name">The resource file name.</param>
-    /// <param name="Data">The font data.</param>
-    internal sealed record Resource(string Name, byte[] Data);
+    /// <param name="Family">The physical font family verified by font-pack tests.</param>
+    /// <param name="Load">The deferred byte loader.</param>
+    internal sealed record Resource(string Name, string Family, Func<byte[]> Load);
 }

@@ -59,11 +59,13 @@ public static class RenderCommand
         };
         var manifest = new Option<string?>("--manifest") { Description = "Optional path for the conversion manifest JSON." };
         var fonts = CommandSupport.FontOptions();
+        var buffering = new BufferOptions();
         var command = new Command("render", "Render an Excel workbook using the unified rendering API.")
         {
             input, output, format, sheet, pages, imageLayout, ranges, maxRangeCells, trim, padding, hyperlinks, strict, warningsAsErrors, manifest,
         };
         CommandSupport.AddFontOptions(command, fonts);
+        buffering.AddTo(command);
 
         command.SetAction((result, cancellationToken) => CommandSupport.RunAsync(() => RenderAsync(
             result.GetValue(input)!,
@@ -81,6 +83,7 @@ public static class RenderCommand
             result.GetValue(warningsAsErrors),
             result.GetValue(manifest),
             CommandSupport.GetFontOptions(result, fonts),
+            buffering.Get(result),
             cancellationToken)));
         return command;
     }
@@ -101,6 +104,7 @@ public static class RenderCommand
         string[]? warningsAsErrors,
         string? manifestPath,
         FontOptions fontOptions,
+        RenderBufferOptions buffering,
         CancellationToken cancellationToken)
     {
         if (!TryParseFormat(formatText, out var format) || !TryParsePages(pagesText, out var pages) ||
@@ -147,6 +151,7 @@ public static class RenderCommand
         var request = new RenderRequest
         {
             OutputFormat = format,
+            Buffering = buffering,
             Trim = new TrimOptions { Enabled = trim, PaddingPoints = padding ?? 2 },
             Hyperlinks = hyperlinks,
             ImageLayout = imageLayout,

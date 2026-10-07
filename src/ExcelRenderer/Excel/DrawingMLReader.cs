@@ -42,7 +42,9 @@ internal static class DrawingMLReader
     /// <param name="input">読み取り対象の Excel データを含むストリームです。</param>
     /// <param name="diagnostics">解析できない描画オブジェクトの診断情報を追加するコレクターです。</param>
     /// <returns>ワークシート名をキーとし、描画順に並んだ対応図形を値とする読み取り専用辞書を返します。</returns>
-    internal static IReadOnlyDictionary<string, IReadOnlyList<ReportShape>> Read(Stream input, DiagnosticCollector? diagnostics)
+    /// <param name="selectedSheets">Sheet bodies to retain; diagnostics still cover every sheet.</param>
+    /// <param name="unselectedGeometry">Optional lightweight anchor ranges for unselected-sheet dimension and diagnostic scans.</param>
+    internal static IReadOnlyDictionary<string, IReadOnlyList<ReportShape>> Read(Stream input, DiagnosticCollector? diagnostics, IReadOnlyList<string>? selectedSheets = null, IDictionary<string, IReadOnlyList<CellRange>>? unselectedGeometry = null)
     {
         using var document = SpreadsheetDocument.Open(input, false);
         var workbook = document.WorkbookPart;
@@ -61,6 +63,7 @@ internal static class DrawingMLReader
             }
 
             var list = new List<ReportShape>();
+            var geometry = new List<CellRange>();
             var drawing = worksheet.DrawingsPart?.WorksheetDrawing;
             if (drawing is not null)
             {
@@ -69,10 +72,24 @@ internal static class DrawingMLReader
                 {
                     foreach (var shape in anchor.Elements<Xdr.Shape>())
                     {
-                        var parsed = Parse(shape, anchor, z, theme);
-                        if (parsed is not null)
+                        var selected = selectedSheets is null || selectedSheets.Contains(sheet.Name?.Value, StringComparer.Ordinal);
+                        if (GetKind(shape) is not null)
                         {
-                            list.Add(parsed);
+                            if (selected && Parse(shape, anchor, z, theme) is { } parsed)
+                            {
+                                list.Add(parsed);
+                            }
+                            else if (!selected)
+                            {
+                                // Validate original anchors without allocating text or shape styles.
+                                _ = GetBounds(anchor);
+                                var source = ReadAnchor(anchor);
+                                var from = source.From ?? new CellAddress(1, 1);
+                                var to = source.To ?? from;
+                                geometry.Add(new(
+                                    new(Math.Min(from.Row, to.Row), Math.Min(from.Column, to.Column)),
+                                    new(Math.Max(from.Row, to.Row), Math.Max(from.Column, to.Column))));
+                            }
                         }
                         else
                         {
@@ -102,7 +119,12 @@ internal static class DrawingMLReader
                 }
             }
 
-            result[sheet.Name?.Value ?? string.Empty] = list;
+            var name = sheet.Name?.Value ?? string.Empty;
+            result[name] = list;
+            if (unselectedGeometry is not null)
+            {
+                unselectedGeometry[name] = geometry;
+            }
         }
 
         return result;
@@ -164,7 +186,7 @@ internal static class DrawingMLReader
         return result;
     }
 
-    private static ReportShape? Parse(Xdr.Shape shape, OpenXmlElement anchor, int z, ThemeColorResolver theme)
+    private static ShapeKind? GetKind(Xdr.Shape shape)
     {
         var preset = shape.ShapeProperties?.GetFirstChild<A.PresetGeometry>()?.Preset?.Value;
         ShapeKind? kind = null;
@@ -188,6 +210,13 @@ internal static class DrawingMLReader
         {
             kind = ShapeKind.WedgeRoundedRectangleCallout;
         }
+
+        return kind;
+    }
+
+    private static ReportShape? Parse(Xdr.Shape shape, OpenXmlElement anchor, int z, ThemeColorResolver theme)
+    {
+        var kind = GetKind(shape);
 
         if (kind is null)
         {

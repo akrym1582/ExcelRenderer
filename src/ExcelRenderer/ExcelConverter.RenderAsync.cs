@@ -234,53 +234,43 @@ public static partial class ExcelConverter
             {
                 for (var index = 0; index < plan.Pages.Count; index++)
                 {
-                    pages.Add(CreatePage(selected, ++sourceNumber, pages.Count + 1, dpi) with
-                    {
-                        Plan = plan,
-                        PlanIndex = index,
-                        SheetPageCount = count,
-                    });
+                    pages.Add(SheetPage.CreatePaginated(selected.Sheet, CreateDescriptor(selected, ++sourceNumber, pages.Count + 1, dpi), plan, index, count));
                 }
             }
 
             if (count == 0)
             {
-                pages.Add(CreatePage(selected, 1, pages.Count + 1, dpi));
+                pages.Add(SheetPage.CreateEmpty(selected.Sheet, CreateDescriptor(selected, 1, pages.Count + 1, dpi)));
             }
         }
 
         return pages;
     }
 
-    private static SheetPage CreatePage(SelectedSheet selected, int sourceNumber, int documentNumber, double dpi) => new(
-        selected.Sheet,
-        new(selected.Index, selected.Sheet.Name, sourceNumber, documentNumber, null, selected.Sheet.PageSettings.Width, selected.Sheet.PageSettings.Height, null, null, dpi)
-        {
-            RequestedRange = selected.Sheet.RequestedRange,
-        });
+    private static RenderPageDescriptor CreateDescriptor(SelectedSheet selected, int sourceNumber, int documentNumber, double dpi) => new(selected.Index, selected.Sheet.Name, sourceNumber, documentNumber, null, selected.Sheet.PageSettings.Width, selected.Sheet.PageSettings.Height, null, null, dpi)
+    {
+        RequestedRange = selected.Sheet.RequestedRange,
+    };
 
     private static IReadOnlyList<SheetPage> LayoutContinuous(IReadOnlyList<SelectedSheet> sheets, double dpi, FontManager fontManager) =>
         sheets.Select((selected, index) =>
         {
             var plan = new ContinuousLayoutPlan(selected.Sheet, RenderResourceSession.Current?.TextMeasurer ?? new PdfSharpTextMeasurer(fontManager, cacheLayouts: true));
-            return CreatePage(selected, 1, index + 1, dpi) with
-            {
-                IsContinuous = true,
-                CanvasPlan = plan,
-                Regions = plan.SourceRegions,
-                Descriptor = CreatePage(selected, 1, index + 1, dpi).Descriptor with { WidthPoints = plan.Width, HeightPoints = plan.Height },
-            };
+            var descriptor = CreateDescriptor(selected, 1, index + 1, dpi) with { WidthPoints = plan.Width, HeightPoints = plan.Height };
+            return SheetPage.CreateContinuous(selected.Sheet, descriptor, plan);
         }).ToArray();
 
     private static PageRenderPayload BuildPage(SheetPage page, FontManager fonts, CancellationToken token)
     {
         var measurer = RenderResourceSession.Current?.TextMeasurer ?? new PdfSharpTextMeasurer(fonts, cacheLayouts: true);
-        if (page.IsContinuous)
+        if (page.CanvasPlan is { } canvas)
         {
-            return new(ConversionMetrics.MeasureCommands(new DrawCommandGeneratorPass().GenerateContinuous(page.CanvasPlan!, measurer)), page.CanvasPlan!.SourceRegions);
+            return new(ConversionMetrics.MeasureCommands(new DrawCommandGeneratorPass().GenerateContinuous(canvas, measurer)), canvas.SourceRegions);
         }
 
-        var built = page.Plan?.Build(page.PlanIndex, page.Descriptor.SourcePageNumber, page.SheetPageCount, measurer, token) ?? new RenderPage(1, []);
+        var built = page.Plan is { } plan
+            ? plan.Build(page.PlanIndex, page.Descriptor.SourcePageNumber, page.SheetPageCount, measurer, token)
+            : new RenderPage(1, []);
         built = built with { HeaderFooterTexts = PaginationPass.GetHeaderFooterTexts(page.Sheet, page.Descriptor.SourcePageNumber, page.SheetPageCount, RenderResourceSession.Current?.HeaderFooterTimestamp) };
         var commands = new DrawCommandGeneratorPass().GeneratePage(built);
         ConversionMetrics.Report("renderCells", built.Cells.Count);
@@ -710,17 +700,61 @@ public static partial class ExcelConverter
 
     private sealed record SelectedSheet(int Index, ReportSheet Sheet);
 
-    private sealed record SheetPage(
-        ReportSheet Sheet,
-        RenderPageDescriptor Descriptor,
-        bool IsContinuous = false,
-        IReadOnlyList<PageSourceRegion>? Regions = null,
-        PageViewport? Viewport = null,
-        IReadOnlyList<ResolvedPdfHyperlink>? Links = null,
-        SheetLayoutPlan? Plan = null,
-        int PlanIndex = 0,
-        int SheetPageCount = 1,
-        ContinuousLayoutPlan? CanvasPlan = null);
+    private sealed record SheetPage
+    {
+        private SheetPage(ReportSheet sheet, RenderPageDescriptor descriptor, SheetLayoutPlan? plan, ContinuousLayoutPlan? canvasPlan, int planIndex, int sheetPageCount)
+        {
+            if (plan is not null && canvasPlan is not null)
+            {
+                throw new ArgumentException("A page cannot have both paginated and continuous plans.");
+            }
+
+            if (planIndex < 0 || (plan is not null ? planIndex >= plan.Pages.Count : planIndex != 0))
+            {
+                throw new ArgumentOutOfRangeException(nameof(planIndex));
+            }
+
+            if (sheetPageCount <= 0 || descriptor.SourcePageNumber <= 0 || descriptor.SourcePageNumber > sheetPageCount ||
+                (plan is null && (sheetPageCount != 1 || descriptor.SourcePageNumber != 1)))
+            {
+                throw new ArgumentOutOfRangeException(nameof(sheetPageCount));
+            }
+
+            Sheet = sheet;
+            Descriptor = descriptor;
+            Plan = plan;
+            CanvasPlan = canvasPlan;
+            PlanIndex = planIndex;
+            SheetPageCount = sheetPageCount;
+        }
+
+        public ReportSheet Sheet { get; }
+
+        public RenderPageDescriptor Descriptor { get; init; }
+
+        public bool IsContinuous => CanvasPlan is not null;
+
+        public IReadOnlyList<PageSourceRegion>? Regions { get; init; }
+
+        public PageViewport? Viewport { get; init; }
+
+        public IReadOnlyList<ResolvedPdfHyperlink>? Links { get; init; }
+
+        public SheetLayoutPlan? Plan { get; }
+
+        public int PlanIndex { get; }
+
+        public int SheetPageCount { get; }
+
+        public ContinuousLayoutPlan? CanvasPlan { get; }
+
+        public static SheetPage CreatePaginated(ReportSheet sheet, RenderPageDescriptor descriptor, SheetLayoutPlan plan, int planIndex, int sheetPageCount) => new(sheet, descriptor, plan ?? throw new ArgumentNullException(nameof(plan)), null, planIndex, sheetPageCount);
+
+        public static SheetPage CreateContinuous(ReportSheet sheet, RenderPageDescriptor descriptor, ContinuousLayoutPlan canvasPlan) =>
+            new(sheet, descriptor, null, canvasPlan ?? throw new ArgumentNullException(nameof(canvasPlan)), 0, 1) { Regions = canvasPlan.SourceRegions };
+
+        public static SheetPage CreateEmpty(ReportSheet sheet, RenderPageDescriptor descriptor) => new(sheet, descriptor, null, null, 0, 1);
+    }
 
     private sealed record PageRenderPayload(IEnumerable<DrawCommand> Commands, IReadOnlyList<PageSourceRegion> Regions);
 

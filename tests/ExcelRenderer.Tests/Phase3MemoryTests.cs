@@ -2,6 +2,7 @@ using System.IO.Compression;
 using ClosedXML.Excel;
 using ExcelRenderer.Abstractions;
 using ExcelRenderer.Drawing;
+using ExcelRenderer.Excel;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Model;
@@ -218,6 +219,157 @@ public sealed class Phase3MemoryTests
         }
     }
 
+    [Theory]
+    [InlineData(10, 10, false, false, false, false, true)]
+    [InlineData(20, 10, false, false, false, false, false)]
+    [InlineData(10, 20, false, false, false, false, false)]
+    [InlineData(5, 5, true, true, false, false, true)]
+    [InlineData(0, 10, true, true, false, false, false)]
+    [InlineData(5, 5, false, true, false, false, false)]
+    [InlineData(10, 0, false, false, false, true, true)]
+    [InlineData(0, 10, false, false, true, false, true)]
+    [InlineData(0, 0, false, false, true, true, true)]
+    public void Page_cell_selection_preserves_fixed_boundary_merge_and_title_cases(double x, double y, bool requested, bool merged, bool titleColumn, bool titleRow, bool expected)
+    {
+        var selection = new PageCellSelection(new(10, 20), new(10, 20), titleColumn ? [1] : [], titleRow ? [1] : [], 5, 5, requested);
+        Assert.Equal(expected, selection.Contains(new(1, 1), new(x, y, 10, 10), merged));
+    }
+
+    [Theory]
+    [InlineData(9.9999998, false)]
+    [InlineData(9.99999995, true)]
+    [InlineData(10, true)]
+    public void Page_title_repetition_preserves_epsilon_boundary(double start, bool expected)
+    {
+        var selection = new PageCellSelection(new(start, 20), new(start, 20), [1], [1], 10, 10, false);
+        Assert.Equal(expected, selection.RepeatColumns);
+        Assert.Equal(expected, selection.RepeatRows);
+        Assert.Equal(expected, selection.Contains(new(1, 1), new(0, 0, 5, 5), false));
+    }
+
+    [Fact]
+    public void Page_without_titles_retains_negative_infinity_repeat_flags_without_membership()
+    {
+        var selection = new PageCellSelection(new(10, 20), new(10, 20), [], [], double.NegativeInfinity, double.NegativeInfinity, false);
+        Assert.True(selection.RepeatColumns);
+        Assert.True(selection.RepeatRows);
+        Assert.False(selection.Contains(new(1, 1), new(0, 0, 5, 5), false));
+    }
+
+    [Theory]
+    [InlineData(OutputFormat.Pdf, ImageLayoutMode.Paginated, false)]
+    [InlineData(OutputFormat.Pdf, ImageLayoutMode.Paginated, true)]
+    [InlineData(OutputFormat.Png, ImageLayoutMode.Paginated, false)]
+    [InlineData(OutputFormat.Svg, ImageLayoutMode.Paginated, true)]
+    [InlineData(OutputFormat.Png, ImageLayoutMode.Continuous, false)]
+    [InlineData(OutputFormat.Svg, ImageLayoutMode.Continuous, true)]
+    public async Task Empty_and_header_only_pages_keep_source_number_and_canvas_metadata(OutputFormat format, ImageLayoutMode layout, bool header)
+    {
+        using var book = new XLWorkbook();
+        var sheet = book.AddWorksheet("Empty");
+        if (header)
+        {
+            sheet.PageSetup.Header.Left.AddText("header 1 / 1");
+        }
+
+        using var input = new MemoryStream();
+        book.SaveAs(input);
+        input.Position = 0;
+        var result = await ExcelConverter.RenderAsync(input, Request(format) with { ImageLayout = layout }, new ObservedSink());
+        var page = Assert.Single(result.Pages);
+        Assert.Equal(1, page.SourcePageNumber);
+        Assert.Equal(1, page.DocumentPageNumber);
+        Assert.Equal(1, page.OutputPageNumber);
+        if (layout == ImageLayoutMode.Continuous)
+        {
+            Assert.Equal(1, page.WidthPoints);
+            Assert.Equal(1, page.HeightPoints);
+        }
+        else
+        {
+            Assert.True(page.WidthPoints > 100);
+            Assert.True(page.HeightPoints > 100);
+        }
+    }
+
+    [Fact]
+    public async Task Paginated_merged_titles_match_public_layout_positions_borders_and_converter_pixels()
+    {
+        using var book = new XLWorkbook();
+        var worksheet = book.AddWorksheet("Titles");
+        worksheet.Style.Font.FontName = "Noto Sans JP";
+        worksheet.Column(1).Width = 12;
+        worksheet.Column(2).Width = 12;
+        worksheet.Rows(1, 80).Height = 25;
+        worksheet.Range("A1:B1").Merge().Value = "merged title";
+        worksheet.Range("A1:B1").Style.Border.OutsideBorder = XLBorderStyleValues.Double;
+        for (var row = 2; row <= 80; row++)
+        {
+            worksheet.Cell(row, 1).Value = "body " + row;
+        }
+
+        worksheet.PageSetup.SetRowsToRepeatAtTop(1, 1);
+        worksheet.PageSetup.PrintAreas.Add("A1:B40");
+        worksheet.PageSetup.PrintAreas.Add("A41:B80");
+        using var input = new MemoryStream();
+        book.SaveAs(input);
+        var manager = new FontManager(Request(OutputFormat.Png).FontOptions);
+        using var fonts = new ConversionFontResources();
+        input.Position = 0;
+        var sheet = Assert.Single(new ExcelReader(manager).Read(input).Sheets);
+        var document = new ReportLayoutEngine(new PdfSharpTextMeasurer(manager, cacheLayouts: true)).Layout(sheet);
+        Assert.True(document.Pages.Count > 2);
+        foreach (var page in document.Pages)
+        {
+            Assert.Equal(page.Cells.Count, page.Cells.Select(cell => cell.SourceAddress).Distinct().Count());
+            var title = Assert.Single(page.Cells, cell => cell.Cell.Text == "merged title");
+            Assert.NotEmpty(title.MergedBorders!);
+            Assert.True(title.Bounds.Y < page.Cells.First(cell => cell.Cell.Text!.StartsWith("body", StringComparison.Ordinal)).Bounds.Y);
+        }
+
+        var sink = new CapturedPageSink();
+        input.Position = 0;
+        var result = await ExcelConverter.RenderAsync(input, Request(OutputFormat.Png), sink);
+        Assert.Equal(document.Pages.Count, result.Pages.Count);
+        Assert.Equal(Enumerable.Range(1, document.Pages.Count), result.Pages.Select(page => page.SourcePageNumber));
+        var commands = new DrawCommandGeneratorPass().Generate(document);
+        for (var index = 0; index < document.Pages.Count; index++)
+        {
+            using var expected = new MemoryStream();
+            new PngRenderer(manager).RenderPage(commands.Where(command => command.PageNumber == index + 1).ToArray(), sheet.PageSettings, expected, Request(OutputFormat.Png).Dpi);
+            using var expectedBitmap = global::SkiaSharp.SKBitmap.Decode(expected.ToArray());
+            using var actualBitmap = global::SkiaSharp.SKBitmap.Decode(sink.Outputs[index].ToArray());
+            Assert.Equal(expectedBitmap.Pixels, actualBitmap.Pixels);
+        }
+    }
+
+    [Fact]
+    public void Continuous_layer_selection_measures_only_text_and_keeps_complete_empty_merged_cells()
+    {
+        var border = new BorderStyle(Top: new());
+        var cells = new Dictionary<CellAddress, ReportCell>
+        {
+            [new(1, 1)] = new("text", CellStyle.Default with { Background = new(255, 0, 0), Border = border }),
+            [new(2, 1)] = new("", CellStyle.Default, ColumnSpan: 2)
+            {
+                MergedBorders = [new(new(2, 1), border)],
+            },
+        };
+        var sheet = new ReportSheet("layers", cells, new Dictionary<int, ColumnDefinition>(), new Dictionary<int, RowDefinition>(), [], new());
+        var measurer = new CountingMeasurer();
+        var plan = new ContinuousLayoutPlan(sheet, measurer);
+        Assert.Single(plan.EnumerateLayerCells(measurer, DrawingLayer.Background));
+        Assert.Single(plan.EnumerateLayerCells(measurer, DrawingLayer.CellBorder));
+        Assert.Single(plan.EnumerateLayerCells(measurer, DrawingLayer.MergedBorder));
+        Assert.Equal(0, measurer.Measured);
+        Assert.Single(plan.EnumerateLayerCells(measurer, DrawingLayer.Text));
+        Assert.Equal(1, measurer.Measured);
+        var complete = plan.EnumerateCells(measurer).ToArray();
+        Assert.Equal(2, complete.Length);
+        Assert.Single(complete[1].MergedBorders!);
+        Assert.Throws<ArgumentOutOfRangeException>(() => plan.EnumerateLayerCells(measurer, (DrawingLayer)100));
+    }
+
     [Fact]
     public void Continuous_lazy_layers_match_materialized_canvas_pixels()
     {
@@ -226,7 +378,20 @@ public sealed class Phase3MemoryTests
             [new(1, 1)] = new("overflow text", CellStyle.Default with { Font = new("Noto Sans JP", 18), Background = new(255, 0, 0) }),
             [new(1, 2)] = new("B", CellStyle.Default with { Font = new("Noto Sans JP", 12), Background = new(0, 255, 0) }),
         };
-        var sheet = new ReportSheet("canvas", cells, new Dictionary<int, ColumnDefinition>(), new Dictionary<int, RowDefinition>(), [], new(200, 200));
+        var border = new BorderStyle(Top: new(2, new(0, 0, 255)));
+        cells.Add(new(2, 1), new("", CellStyle.Default, ColumnSpan: 2) { MergedBorders = [new(new(2, 1), border)] });
+        using var image = new global::SkiaSharp.SKBitmap(2, 2);
+        image.Erase(global::SkiaSharp.SKColors.Blue);
+        using var encoded = image.Encode(global::SkiaSharp.SKEncodedImageFormat.Png, 100);
+        var sheet = new ReportSheet("canvas", cells, new Dictionary<int, ColumnDefinition>(), new Dictionary<int, RowDefinition>(), [], new(200, 200))
+        {
+            Images = [new(new(1, 1), 10, 10, 30, 30, encoded.ToArray(), ZIndex: 1)],
+            Shapes =
+            [
+                new(new(1, 1), 5, 5, 30, 30, ShapeKind.Rectangle, new(new(255, 255, 0), null), null, 0, 0),
+                new(new(1, 1), 20, 20, 30, 30, ShapeKind.Rectangle, new(new(255, 0, 255), null), null, 0, 2),
+            ],
+        };
         using var fonts = new ConversionFontResources();
         var manager = new FontManager(Request(OutputFormat.Png).FontOptions);
         var measurer = new PdfSharpTextMeasurer(manager, cacheLayouts: true);
@@ -240,6 +405,13 @@ public sealed class Phase3MemoryTests
         using var lazyBitmap = global::SkiaSharp.SKBitmap.Decode(lazy.ToArray());
         using var fullBitmap = global::SkiaSharp.SKBitmap.Decode(full.ToArray());
         Assert.Equal(fullBitmap.Pixels, lazyBitmap.Pixels);
+        using var lazySvg = new MemoryStream();
+        using var fullSvg = new MemoryStream();
+        var svg = new SvgRenderer(manager);
+        svg.RenderCanvas(new DrawCommandGeneratorPass().GenerateContinuous(plan, measurer), plan.Width, plan.Height, lazySvg);
+        svg.RenderCanvas(new DrawCommandGeneratorPass().Generate(materialized.Document), materialized.Width, materialized.Height, fullSvg);
+        Assert.Equal(System.Xml.Linq.XDocument.Parse(System.Text.Encoding.UTF8.GetString(fullSvg.ToArray())).ToString(),
+            System.Xml.Linq.XDocument.Parse(System.Text.Encoding.UTF8.GetString(lazySvg.ToArray())).ToString());
     }
 
     [Fact]
@@ -597,6 +769,22 @@ public sealed class Phase3MemoryTests
         internal bool Disposed { get; private set; }
 
         public void Dispose() => Disposed = true;
+    }
+
+    private sealed class CapturedPageSink : IRenderOutputSink
+    {
+        internal List<MemoryStream> Outputs { get; } = [];
+
+        public ValueTask<Stream> OpenAsync(ArtifactDescriptor artifact, CancellationToken cancellationToken)
+        {
+            var stream = new MemoryStream();
+            Outputs.Add(stream);
+            return new(stream);
+        }
+
+        public ValueTask CompleteAsync(ArtifactDescriptor artifact, long byteLength, CancellationToken cancellationToken) => default;
+
+        public ValueTask AbortAsync(ArtifactDescriptor artifact, Exception error, CancellationToken cancellationToken) => default;
     }
 
     private sealed class ObservedSink : IRenderOutputSink

@@ -13,6 +13,12 @@ using PdfSharp.Pdf.IO;
 
 var command = args[0];
 var path = args[1];
+if (command == "direct-images")
+{
+    ImageRenderingBenchmark.Run(args);
+    return;
+}
+
 if (command == "generate")
 {
     var rows = int.Parse(args[2], System.Globalization.CultureInfo.InvariantCulture);

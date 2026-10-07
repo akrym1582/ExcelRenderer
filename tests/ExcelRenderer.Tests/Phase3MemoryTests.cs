@@ -301,15 +301,15 @@ public sealed class Phase3MemoryTests
         worksheet.Column(1).Width = 12;
         worksheet.Column(2).Width = 12;
         worksheet.Rows(1, 80).Height = 25;
-        worksheet.Range("A1:B1").Merge().Value = "merged title";
-        worksheet.Range("A1:B1").Style.Border.OutsideBorder = XLBorderStyleValues.Double;
-        for (var row = 2; row <= 80; row++)
+        worksheet.Range("A1:B2").Merge().Value = "merged title";
+        worksheet.Range("A1:B2").Style.Border.OutsideBorder = XLBorderStyleValues.Double;
+        for (var row = 3; row <= 80; row++)
         {
             worksheet.Cell(row, 1).Value = "body " + row;
         }
 
         worksheet.PageSetup.SetRowsToRepeatAtTop(1, 1);
-        worksheet.PageSetup.PrintAreas.Add("A1:B40");
+        worksheet.PageSetup.PrintAreas.Add("A2:B40");
         worksheet.PageSetup.PrintAreas.Add("A41:B80");
         using var input = new MemoryStream();
         book.SaveAs(input);

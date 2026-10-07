@@ -27,8 +27,6 @@ internal sealed class RenderPageBuilder
     private readonly Dictionary<CellAddress, int> _cellOrder;
     private readonly Dictionary<CellStyle, CellStyle> _scaledStyles = new();
     private readonly Dictionary<BorderStyle, BorderStyle> _scaledBorders = new();
-    private readonly BandIndex<int> _rowBands;
-    private readonly BandIndex<int> _columnBands;
 
     private readonly (ReportImage Image, ReportRect Bounds, ReportRect Visual)[] _images;
     private readonly (ReportShape Shape, ReportRect Bounds, ReportRect Visual)[] _shapes;
@@ -74,34 +72,11 @@ internal sealed class RenderPageBuilder
             (layout, layout.Bounds.Y, layout.Bounds.Y + Math.Max(layout.Bounds.Height, Epsilon))));
         _repeatedRows = context.CellLayouts.Values.Where(layout => _titleRowSet.Contains(layout.Address.Row)).ToArray();
         _cellOrder = context.CellLayouts.Keys.Select((address, order) => (address, order)).ToDictionary(pair => pair.address, pair => pair.order);
-        _rowBands = new(bodyRows.Select(row => (row, context.RowLayouts[row].Y, context.RowLayouts[row].Y + Epsilon)));
-        _columnBands = new(bodyColumns.Select(column => (column, context.ColumnLayouts[column].X, context.ColumnLayouts[column].X + Epsilon)));
-        var images = new List<(ReportImage Image, ReportRect Bounds, ReportRect Visual)>();
-        foreach (var image in context.Sheet.Images ?? [])
-        {
-            if (DrawingAnchorResolver.TryResolve(
-                context, image.Anchor, image.OffsetX, image.OffsetY, image.Width, image.Height, image.DrawingAnchor, out var bounds))
-            {
-                images.Add((image, bounds, ObjectGeometry.GetVisualBounds(bounds, image.Rotation)));
-            }
-        }
-
-        var shapes = new List<(ReportShape Shape, ReportRect Bounds, ReportRect Visual)>();
-        foreach (var shape in context.Sheet.Shapes ?? [])
-        {
-            if (DrawingAnchorResolver.TryResolve(
-                context, shape.Anchor, shape.OffsetX, shape.OffsetY, shape.Width, shape.Height, shape.DrawingAnchor, out var bounds))
-            {
-                shapes.Add((shape, bounds, context.Sheet.RequestedRange is null
-                    ? ObjectGeometry.GetVisualBounds(bounds, shape.Rotation)
-                    : ObjectGeometry.GetShapeVisualBounds(bounds, shape)));
-            }
-        }
-
-        _images = images.ToArray();
-        _shapes = shapes.ToArray();
-        _imageBands = new(_images.Select((image, index) => (index, image.Visual.Y, image.Visual.Y + image.Visual.Height)));
-        _shapeBands = new(_shapes.Select((shape, index) => (index, shape.Visual.Y, shape.Visual.Y + shape.Visual.Height)));
+        var objects = context.ObjectLayouts ?? new SheetObjectLayoutIndex(context);
+        _images = objects.Images;
+        _shapes = objects.Shapes;
+        _imageBands = objects.ImageBands;
+        _shapeBands = objects.ShapeBands;
     }
 
     /// <summary>
@@ -114,8 +89,9 @@ internal sealed class RenderPageBuilder
     /// <returns>An immutable page containing the selected and mapped objects.</returns>
     internal RenderPage Build(int pageNumber, PageBand horizontal, PageBand vertical)
     {
-        var repeatColumns = horizontal.Start >= _titleColumnEnd - Epsilon;
-        var repeatRows = vertical.Start >= _titleRowEnd - Epsilon;
+        var selection = new PageCellSelection(horizontal, vertical, _titleColumnSet, _titleRowSet, _titleColumnEnd, _titleRowEnd, _context.Sheet.RequestedRange is not null);
+        var repeatColumns = selection.RepeatColumns;
+        var repeatRows = selection.RepeatRows;
         var horizontalEnd = double.IsFinite(horizontal.End) ? horizontal.End : LastColumnEnd();
         var verticalEnd = double.IsFinite(vertical.End) ? vertical.End : LastRowEnd();
         var placement = new PagePlacement(
@@ -136,7 +112,7 @@ internal sealed class RenderPageBuilder
         }
 
         var cells = candidates.GroupBy(layout => layout.Address).Select(group => group.First())
-            .Where(layout => IsCellOnPage(layout, horizontal, vertical, repeatColumns, repeatRows))
+            .Where(layout => selection.Contains(layout.Address, layout.Bounds, _context.Sheet.Cells[layout.Address].ColumnSpan > 1 || _context.Sheet.Cells[layout.Address].RowSpan > 1))
             .OrderBy(layout => _cellOrder[layout.Address])
             .Select(layout => BuildCell(layout, placement, repeatColumns, repeatRows, regions))
             .ToArray();
@@ -146,6 +122,29 @@ internal sealed class RenderPageBuilder
         {
             SourceRegions = regions,
         };
+    }
+
+    private static IEnumerable<int> QueryStarts(IReadOnlyList<int> indices, Func<int, double> start, double minimum, double maximum)
+    {
+        var low = 0;
+        var high = indices.Count;
+        while (low < high)
+        {
+            var middle = low + ((high - low) / 2);
+            if (start(indices[middle]) < minimum)
+            {
+                low = middle + 1;
+            }
+            else
+            {
+                high = middle;
+            }
+        }
+
+        for (var index = low; index < indices.Count && start(indices[index]) < maximum; index++)
+        {
+            yield return indices[index];
+        }
     }
 
     private static ReportShape ScaleShape(ReportShape shape, double scale) => shape with
@@ -202,20 +201,6 @@ internal sealed class RenderPageBuilder
 
         return cell with { Style = style };
     }
-
-    private bool IsCellOnPage(
-        CellLayout layout,
-        PageBand horizontal,
-        PageBand vertical,
-        bool repeatColumns,
-        bool repeatRows) =>
-        (_context.Sheet.RequestedRange is not null &&
-            (_context.Sheet.Cells[layout.Address].ColumnSpan > 1 || _context.Sheet.Cells[layout.Address].RowSpan > 1) &&
-            Intersects(layout.Bounds, horizontal, vertical)) ||
-        (((layout.Bounds.X >= horizontal.Start && layout.Bounds.X < horizontal.End) ||
-            (repeatColumns && _titleColumnSet.Contains(layout.Address.Column))) &&
-        ((layout.Bounds.Y >= vertical.Start && layout.Bounds.Y < vertical.End) ||
-            (repeatRows && _titleRowSet.Contains(layout.Address.Row))));
 
     private RenderCell BuildCell(CellLayout layout, PagePlacement placement, bool repeatColumns, bool repeatRows, IReadOnlyList<PageSourceRegion> regions)
     {
@@ -315,8 +300,8 @@ internal sealed class RenderPageBuilder
         bool repeatColumns,
         bool repeatRows)
     {
-        var columns = _columnBands.QueryStarts(horizontal.Start, horizontal.End).ToArray();
-        var rows = _rowBands.QueryStarts(vertical.Start, vertical.End).ToArray();
+        var columns = QueryStarts(_bodyColumns, column => _context.ColumnLayouts[column].X, horizontal.Start, horizontal.End).ToArray();
+        var rows = QueryStarts(_bodyRows, row => _context.RowLayouts[row].Y, vertical.Start, vertical.End).ToArray();
         var regions = new List<PageSourceRegion>();
         Add(columns, rows, false, false);
         if (repeatColumns)

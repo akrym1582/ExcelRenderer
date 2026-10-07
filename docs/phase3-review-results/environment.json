@@ -1,0 +1,18 @@
+{
+  "Revisions": {
+    "before": "800e1f7738dd0ee61110312ff3e7b048d056d1b1",
+    "after": "4b6c477c6712a5de2189488ee73d4f38a9eda1cd"
+  },
+  "SDK": "10.0.401",
+  "Fontconfig": "/tmp/phase3-fontconfig.xml",
+  "Instrumentation": "Scratch-only text-measure calls and PDF document page count",
+  "Repeats": 3,
+  "Dpi": 24,
+  "Columns": 20,
+  "FixtureMode": "latin",
+  "OS": "Linux-6.18.44-x86_64-with-glibc2.41",
+  "Python": "3.12.14",
+  "Measurements": 36,
+  "LargeSvgIntermediateBytes": 2031067531,
+  "RuntimeAssetPolicy": "Linux x64 benchmark scratch copies retain only linux-x64 native assets for large SVG disk capacity"
+}

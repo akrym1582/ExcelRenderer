@@ -436,18 +436,61 @@ nativeフォント、行メトリクス、PDFフォントを変換内で再利�
 シート座標、ページ候補、結合セル検索は索引を使い、同じ変換済み書式を共有します。
 書式付き空セルは保持します。
 
-PDFsharpの文書リソース、シートモデル、全ページの描画コマンドは保持するため、
-定メモリのストリーミングではありません。
-合成入力の再現コマンド、測定結果、残る作業は[性能検証レポート](docs/pdf-performance.ja.md)を参照してください。
+converter は最初にページ band を計画し、元の文書順でページを選択します。
+選択した全ページの寸法・trim・リンク・診断ポリシーを出力 sink の Open 前に確認し、
+その後は1ページずつ生成・出力します。ページ別出力は事前確認と本描画の2周です。
+公開 `ReportLayoutEngine.Layout` は materialize する互換 API のままです。
+連続 PNG/SVG は描画層ごとにセルを再走査し、背景・罫線・文字・オブジェクトの順序を
+保ちながら全命令の保持を避けます。Markdown は既存経路を維持します。
 
-## PNG・SVG の性能
+選択外シートの本文モデルと描画範囲外のモデルを削減します。
+OS・追加ディレクトリのフォント走査では metadata のみを保持し、物理 face が初めて
+選択された時に bytes と SHA256 の識別子を1回読み込みます。
+明示 FontFiles・Registrations は即時に検証・snapshot し、任意 font pack のデータは
+必要時に読み込みます。OS フォントは初回選択前には完全な snapshot ではなく、
+読み込み前に消失・変更したファイルは明確な font load エラーになります。
+PDFsharp のプロセス寿命の resolved font bytes cache は維持します。
 
-PNG・SVG変換にも、上記の読み取り・レイアウトの索引と変換中のフォント共有が適用されます。
-`PngRenderer`・`SvgRenderer`を直接呼ぶ場合も、ページ間でnativeフォントを共有し、
-描画呼び出しの終了時に解放します。PNGはbitmapの画素を直接エンコードし、
-immutable画像へのコピーを省きます。SVGの寸法設定はXMLのストリーム処理を使い、
-ページ全体のXMLツリーを保持しません。SVGのbyteバッファとシート・ページ命令は保持します。
-測定結果と制限は[PNG・SVGの性能検証レポート](docs/image-performance.ja.md)を参照してください。
+PDFsharp の最終文書・リソースと、ClosedXML の全ブック読込は残ります。
+幾何索引と選択モデルもブックの大きさに依存するため、定メモリのストリーミングではありません。
+[フェーズ3測定](docs/phase3-performance.ja.md)、過去の[PDF測定](docs/pdf-performance.ja.md)と
+[画像測定](docs/image-performance.ja.md)を参照してください。
+
+## PNG・SVG の性能と buffer 設定
+
+PNG は既存 bitmap の画素を直接エンコードします。ページ別出力は現在ページの bitmap 1枚、
+連続 PNG は1シート＝1PNG・単一 bitmap のままであり、scanline・タイル分割ではありません。
+RGBA の画素だけで概ね `4 × 幅 × 高さ` bytes に加え、alignment・encoder overhead が必要です。
+直接 API も寸法・pixel limit を検証します。変換単位の画像 cache は decoded resource の
+推定量に対する64MiBの LRU 上限を持ち、単独で上限超過する画像は現在の描画中だけ所有します。
+PDFsharp が文書内で保持する画像リソースは、この推定上限とは別に残ります。
+
+SVG は Skia SVG canvas と XML のストリーム正規化を維持し、文字のパス・埋込画像・
+pt 寸法・viewBox を保持します。seekable 中間 buffer はメモリ capacity が閾値を超える前に
+一時ファイルへ移します。Skia 内部の native SVG buffer は残るため、閾値は変換全体の上限ではありません。
+
+`RenderRequest.Buffering`、`SvgExportOptions.Buffering`、および
+`SvgRenderer.Render`・`RenderPage`・`RenderCanvas` の overload で `RenderBufferOptions` を指定します。
+
+| 設定 | 既定 | 意味 |
+|---|---|---|
+| `MemoryThresholdBytes` | 8,388,608 | 中間 buffer のメモリ capacity 上限。単位は bytes。 |
+| `AllowTemporaryFiles` | `true` | 閾値超過時に一度だけ spill。false 時は超過を拒否。 |
+| `TemporaryDirectory` | `null` | OS 既定 temp、または指定した既存ディレクトリ。 |
+
+CLI の `render`・`svg` に `--buffer-memory-threshold`（bytes）、
+`--no-buffer-temp`、`--buffer-temp-directory` を追加しています。
+
+```bash
+excelrenderer render input.xlsx -o ./svg --format svg --buffer-memory-threshold 8388608
+excelrenderer svg input.xlsx -o ./svg --buffer-memory-threshold 1048576 --buffer-temp-directory ./existing-temp
+```
+
+PDF/PNG でも設定を渡せますが、適用先は SVG 中間 stream だけです。
+入力用 `WorkbookInputOptions` とは独立しており、入力側も自身の閾値・許可設定に従って
+seekable な一時ファイルへ spool します。reader は独立した cursor を使い、spool を byte[] へ戻しません。
+成功・キャンセル・失敗時に一時 buffer を cleanup し、caller 所有の入力・出力 stream は閉じません。
+重い単一 native 描画・encode・ClosedXML 読込は即時に中断できない制約が残ります。
 
 ## 開発
 

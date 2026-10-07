@@ -75,63 +75,59 @@ public static partial class ExcelConverter
         }).ToArray();
     }
 
-    private static IReadOnlyList<SheetPage> PrepareViewports(IReadOnlyList<SheetPage> pages, RenderRequest request, FontManager fonts, DiagnosticCollector diagnostics)
+    private static SheetPage PrepareViewport(SheetPage page, IEnumerable<DrawCommand> commands, RenderRequest request, FontManager fonts, DiagnosticCollector diagnostics)
     {
-        return pages.Select(page =>
+        var original = new ReportRect(0, 0, page.Descriptor.WidthPoints, page.Descriptor.HeightPoints);
+        var content = request.Trim.Enabled || page.Sheet.RequestedRange is not null || (commands is IReadOnlyCollection<DrawCommand> collection ? collection.Count == 0 : !commands.Any())
+            ? DrawCommandBounds.Get(commands, original, fonts) : original;
+        if (content is null)
         {
-            var original = new ReportRect(0, 0, page.Descriptor.WidthPoints, page.Descriptor.HeightPoints);
-            var content = request.Trim.Enabled || page.Sheet.RequestedRange is not null || page.Commands.Count == 0
-                ? DrawCommandBounds.Get(page.Commands, original, fonts) : original;
-            if (content is null)
-            {
-                diagnostics.Add(new(
-                    "EmptyContent",
-                    DiagnosticSeverity.Info,
-                    DiagnosticStage.Layout,
-                    "No visible drawing content remains on this page.",
-                    page.Sheet.Name));
-            }
+            diagnostics.Add(new(
+                "EmptyContent",
+                DiagnosticSeverity.Info,
+                DiagnosticStage.Layout,
+                "No visible drawing content remains on this page.",
+                page.Sheet.Name));
+        }
 
-            var viewport = new PageViewport(
-                original.Width,
-                original.Height,
-                request.Trim.Enabled ? content ?? new(0, 0, 1, 1) : original,
-                request.Trim.Enabled ? request.Trim.PaddingPoints : 0);
-            if (!double.IsFinite(viewport.Width) || !double.IsFinite(viewport.Height) || viewport.Width <= 0 || viewport.Height <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(request), "Output dimensions must be finite and positive.");
-            }
+        var viewport = new PageViewport(
+            original.Width,
+            original.Height,
+            request.Trim.Enabled ? content ?? new(0, 0, 1, 1) : original,
+            request.Trim.Enabled ? request.Trim.PaddingPoints : 0);
+        if (!double.IsFinite(viewport.Width) || !double.IsFinite(viewport.Height) || viewport.Width <= 0 || viewport.Height <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(request), "Output dimensions must be finite and positive.");
+        }
 
-            (int? Width, int? Height) pixels = request.OutputFormat == OutputFormat.Png
-                ? PngRenderer.GetPixelDimensions(viewport.Width, viewport.Height, request.Dpi, request.MaxPngPixels)
-                : GetContinuousPixelDimensions(viewport.Width, viewport.Height, request.Dpi);
-            return page with
+        (int? Width, int? Height) pixels = request.OutputFormat == OutputFormat.Png
+            ? PngRenderer.GetPixelDimensions(viewport.Width, viewport.Height, request.Dpi, request.MaxPngPixels)
+            : GetContinuousPixelDimensions(viewport.Width, viewport.Height, request.Dpi);
+        return page with
+        {
+            Viewport = viewport,
+            Descriptor = page.Descriptor with
             {
-                Viewport = viewport,
-                Commands = request.Trim.Enabled ? [viewport.Apply(page.Commands, page.Descriptor.SourcePageNumber)] : page.Commands,
-                Descriptor = page.Descriptor with
-                {
-                    WidthPoints = viewport.Width,
-                    HeightPoints = viewport.Height,
-                    PixelWidth = pixels.Width,
-                    PixelHeight = pixels.Height,
-                    OriginalWidthPoints = request.Trim.Enabled ? original.Width : null,
-                    OriginalHeightPoints = request.Trim.Enabled ? original.Height : null,
-                    CropBounds = request.Trim.Enabled ? viewport.Crop : null,
-                    PaddingPoints = request.Trim.Enabled ? viewport.Padding : null,
-                },
-            };
-        }).ToArray();
+                WidthPoints = viewport.Width,
+                HeightPoints = viewport.Height,
+                PixelWidth = pixels.Width,
+                PixelHeight = pixels.Height,
+                OriginalWidthPoints = request.Trim.Enabled ? original.Width : null,
+                OriginalHeightPoints = request.Trim.Enabled ? original.Height : null,
+                CropBounds = request.Trim.Enabled ? viewport.Crop : null,
+                PaddingPoints = request.Trim.Enabled ? viewport.Padding : null,
+            },
+        };
     }
 
-    private static IReadOnlyList<SheetPage> ResolvePdfLinks(IReadOnlyList<SheetPage> pages, ReportDocument document, DiagnosticCollector diagnostics)
+    private static IReadOnlyList<SheetPage> ResolvePdfLinks(IReadOnlyList<SheetPage> pages, WorkbookRenderMetadata metadata, DiagnosticCollector diagnostics)
     {
         return pages.Select(page =>
         {
             var links = new List<ResolvedPdfHyperlink>();
             foreach (var link in page.Sheet.Hyperlinks)
             {
-                var geometry = new SheetGeometry(page.Sheet);
+                var geometry = metadata.Geometry(page.Sheet.Name);
                 var merged = page.Sheet.MergedRanges.FirstOrDefault(m => m.Contains(link.SourceRange.First) && link.SourceRange.First == link.SourceRange.Last);
                 var source = RectangleGeometry.Bounds(geometry, merged == default ? link.SourceRange : merged);
                 var rectangles = (page.Regions ?? []).Select(region => RectangleGeometry.Intersect(source, region.SourceBounds) is { } clipped
@@ -159,9 +155,9 @@ public static partial class ExcelConverter
                 }
                 else if (code is null)
                 {
-                    if (HyperlinkPolicy.Internal(page.Sheet, link.Target, document.Sheets, out var targetSheet, out var address, out var failureCode))
+                    if (HyperlinkPolicy.Internal(page.Sheet, link.Target, metadata.Sheets, out var targetSheet, out var address, out var failureCode))
                     {
-                        var targetGeometry = new SheetGeometry(targetSheet!);
+                        var targetGeometry = metadata.Geometry(targetSheet!.Name);
                         var targetMerged = targetSheet!.MergedRanges.FirstOrDefault(m => m.Contains(address));
                         var targetBounds = RectangleGeometry.Bounds(targetGeometry, targetMerged == default ? new(address, address) : targetMerged);
                         var candidates = pages.Where(p => p.Sheet.Name == targetSheet.Name).SelectMany(p => (p.Regions ?? []).Select(region =>

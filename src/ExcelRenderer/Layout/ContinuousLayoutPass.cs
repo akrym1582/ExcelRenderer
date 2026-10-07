@@ -18,7 +18,17 @@ public sealed class ContinuousLayoutPass : IReportLayoutPass
                 MergedBorders = layout.MergedBorders,
                 TextLayout = context.TextLayouts.GetValueOrDefault(layout.Address),
             }).ToArray();
-        var images = (context.Sheet.Images ?? [])
+        var images = BuildImages(context);
+        var shapes = BuildShapes(context);
+        context.RenderDocument = new([new RenderPage(1, cells, images, Shapes: shapes)]);
+    }
+
+    /// <summary>Resolves images in continuous canvas coordinates.</summary>
+    /// <param name="context">The context used by this operation.</param>
+    /// <returns>The planned or generated result.</returns>
+    internal static IReadOnlyList<RenderImage> BuildImages(ReportLayoutContext context)
+    {
+        return (context.Sheet.Images ?? [])
             .Where(image => DrawingAnchorResolver.TryResolve(
                 context,
                 image.Anchor,
@@ -50,7 +60,14 @@ public sealed class ContinuousLayoutPass : IReportLayoutPass
                     FlipVertical = image.FlipVertical,
                 };
             }).ToArray();
-        var shapes = (context.Sheet.Shapes ?? [])
+    }
+
+    /// <summary>Resolves shapes in continuous canvas coordinates.</summary>
+    /// <param name="context">The context used by this operation.</param>
+    /// <returns>The planned or generated result.</returns>
+    internal static IReadOnlyList<RenderShape> BuildShapes(ReportLayoutContext context)
+    {
+        return (context.Sheet.Shapes ?? [])
             .Where(shape => DrawingAnchorResolver.TryResolve(
                 context,
                 shape.Anchor,
@@ -75,6 +92,5 @@ public sealed class ContinuousLayoutPass : IReportLayoutPass
                     bounds,
                     shape);
             }).ToArray();
-        context.RenderDocument = new([new RenderPage(1, cells, images, Shapes: shapes)]);
     }
 }

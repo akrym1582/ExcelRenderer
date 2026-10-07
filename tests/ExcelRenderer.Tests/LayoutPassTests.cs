@@ -1258,7 +1258,7 @@ public sealed class LayoutPassTests
     public void PdfSharpFontResolver_returns_the_configured_font_file()
     {
         var fontFilePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.ttf");
-        var fontData = new byte[] { 1, 2, 3 };
+        var fontData = File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf"));
         File.WriteAllBytes(fontFilePath, fontData);
 
         try

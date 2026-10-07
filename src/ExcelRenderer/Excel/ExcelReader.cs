@@ -60,13 +60,39 @@ public sealed class ExcelReader
     /// <returns>ブック内のワークシートを元の順序で格納したレンダリング用ドキュメントを返します。</returns>
     internal ReportDocument Read(byte[] workbookBytes, DiagnosticCollector? diagnostics)
     {
-        using var workbookStream = new MemoryStream(workbookBytes, writable: false);
-        using var drawingStream = new MemoryStream(workbookBytes, writable: false);
-        using var pictureMetadataStream = new MemoryStream(workbookBytes, writable: false);
-        using var metadataStream = new MemoryStream(workbookBytes, writable: false);
-        var hyperlinks = HyperlinkReader.Read(workbookBytes);
+        using var prepared = new SpillableBufferStream(new RenderBufferOptions());
+        prepared.Write(workbookBytes, 0, workbookBytes.Length);
+        using var owner = new PreparedWorkbook(prepared);
+        return Read(owner, diagnostics);
+    }
+
+    /// <summary>Reads workbook models with optional selected-sheet body projection.</summary>
+    /// <param name="source">The source used by this operation.</param>
+    /// <param name="diagnostics">The diagnostics used by this operation.</param>
+    /// <param name="selectedSheets">The selectedSheets used by this operation.</param>
+    /// <returns>The planned or generated result.</returns>
+    internal ReportDocument Read(PreparedWorkbook source, DiagnosticCollector? diagnostics, IReadOnlyList<string>? selectedSheets = null)
+    {
+        using var workbookStream = source.OpenRead();
+        using var drawingStream = source.OpenRead();
+        using var pictureMetadataStream = source.OpenRead();
+        using var metadataStream = source.OpenRead();
+        using var hyperlinkStream = source.OpenRead();
+        var hyperlinks = HyperlinkReader.Read(hyperlinkStream);
         using var workbook = ExcelRenderer.Rendering.ConversionMetrics.Measure("closedXml", () => new XLWorkbook(workbookStream));
-        var shapes = DrawingMLReader.Read(drawingStream, diagnostics);
+        if (selectedSheets is not null)
+        {
+            foreach (var name in selectedSheets)
+            {
+                if (string.IsNullOrEmpty(name) || !workbook.Worksheets.Any(sheet => sheet.Name == name))
+                {
+                    throw new ArgumentException($"Worksheet was not found: {name}", nameof(selectedSheets));
+                }
+            }
+        }
+
+        var unselectedGeometry = new Dictionary<string, IReadOnlyList<CellRange>>(StringComparer.Ordinal);
+        var shapes = DrawingMLReader.Read(drawingStream, diagnostics, selectedSheets, unselectedGeometry);
         var pictureMetadata = DrawingMLReader.ReadPictureMetadata(pictureMetadataStream);
         var pageSetups = WorkbookLayoutMetadataReader.ReadPageSetups(metadataStream);
         var styles = new StylePool();
@@ -81,7 +107,9 @@ public sealed class ExcelReader
             fontManager,
             maximumDigitWidths,
             hyperlinks.GetValueOrDefault(sheet.Name),
-            styles) with { SourceSheetIndex = index + 1 }).ToArray()));
+            styles,
+            selectedSheets is null || selectedSheets.Contains(sheet.Name, StringComparer.Ordinal),
+            unselectedGeometry.GetValueOrDefault(sheet.Name, [])) with { SourceSheetIndex = index + 1 }).ToArray()));
     }
 
     private static ReportSheet ReadSheet(
@@ -93,7 +121,9 @@ public sealed class ExcelReader
         IFontManager? fontManager,
         Dictionary<NormalFontMetadata, double> maximumDigitWidths,
         SheetHyperlinkMetadata? hyperlinks,
-        StylePool styles)
+        StylePool styles,
+        bool includeBody,
+        IReadOnlyList<CellRange> unselectedGeometry)
     {
         var cells = new Dictionary<CellAddress, ReportCell>();
         var columns = new Dictionary<int, ColumnDefinition>();
@@ -101,7 +131,7 @@ public sealed class ExcelReader
         var usedRange = worksheet.RangeUsed(XLCellsUsedOptions.All);
         if (usedRange is not null)
         {
-            foreach (var cell in usedRange.CellsUsed(XLCellsUsedOptions.All))
+            foreach (var cell in includeBody ? usedRange.CellsUsed(XLCellsUsedOptions.All) : Enumerable.Empty<IXLCell>())
             {
                 var address = new CellAddress(cell.Address.RowNumber, cell.Address.ColumnNumber);
                 if (hyperlinks is not null && !hyperlinks.OriginalCells.Contains(address) && hyperlinks.Links.Any(link => link.SourceRange.Contains(address)))
@@ -171,7 +201,11 @@ public sealed class ExcelReader
         var mergedRanges = worksheet.MergedRanges.Select(range => new CellRange(
             new(range.RangeAddress.FirstAddress.RowNumber, range.RangeAddress.FirstAddress.ColumnNumber),
             new(range.RangeAddress.LastAddress.RowNumber, range.RangeAddress.LastAddress.ColumnNumber))).ToArray();
-        cells = ApplyMergedSpans(cells, mergedRanges, styles);
+        if (includeBody)
+        {
+            cells = ApplyMergedSpans(cells, mergedRanges, styles);
+        }
+
         var printAreas = ReadPrintAreas(worksheet);
 
         foreach (var range in mergedRanges)
@@ -205,7 +239,8 @@ public sealed class ExcelReader
         var images = worksheet.Pictures.Select((picture, index) => ReadImage(
             picture,
             pictureMetadata.GetValueOrDefault(picture.Name),
-            index)).ToArray();
+            index,
+            includeBody)).ToArray();
         foreach (var image in images)
         {
             if (!columns.ContainsKey(image.Anchor.Column))
@@ -250,7 +285,7 @@ public sealed class ExcelReader
             }
         }
 
-        var geometryRanges = printAreas.Concat(mergedRanges)
+        var geometryRanges = printAreas.Concat(mergedRanges).Concat(unselectedGeometry)
             .Concat(images.SelectMany(image => GetAnchorRanges(image.Anchor, image.DrawingAnchor)))
             .Concat(shapes.SelectMany(shape => GetAnchorRanges(shape.Anchor, shape.DrawingAnchor)))
             .ToArray();
@@ -293,9 +328,9 @@ public sealed class ExcelReader
             mergedRanges,
             ReadPageSettings(worksheet, pageSetupMetadata, diagnostics),
             ReadPrintArea(worksheet),
-            images,
+            includeBody ? images : [],
             ReadHeaderFooter(worksheet),
-            shapes)
+            includeBody ? shapes : [])
         {
             DefaultColumnWidth = GetDefaultColumnWidth(
                 worksheet,
@@ -535,7 +570,8 @@ public sealed class ExcelReader
     private static ReportImage ReadImage(
         IXLPicture picture,
         DrawingPictureMetadata? metadata,
-        int zIndex)
+        int zIndex,
+        bool includeBytes)
     {
         var anchor = picture.TopLeftCell.Address;
         var offset = picture.GetOffset(XLMarkerPosition.TopLeft);
@@ -555,7 +591,7 @@ public sealed class ExcelReader
             offsetY,
             width,
             height,
-            picture.ImageStream.ToArray(),
+            includeBytes ? picture.ImageStream.ToArray() : [],
             metadata?.ZIndex ?? zIndex,
             picture.Name)
         {

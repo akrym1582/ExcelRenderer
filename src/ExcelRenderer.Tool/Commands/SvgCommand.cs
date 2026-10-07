@@ -14,13 +14,15 @@ public static class SvgCommand
         var output = CommandSupport.OutputOption("Directory for generated SVG files.");
         var sheet = new Option<string?>("--sheet") { Description = "Worksheet name to convert." };
         var fonts = CommandSupport.FontOptions();
+        var buffering = new BufferOptions();
         var command = new Command("svg", "Convert Excel worksheets to SVG files.") { input, output, sheet };
         CommandSupport.AddFontOptions(command, fonts);
+        buffering.AddTo(command);
         command.SetAction((parseResult, cancellationToken) => CommandSupport.RunAsync(() =>
             ExcelConverter.ConvertToSvgAsync(
                 parseResult.GetValue(input)!,
                 parseResult.GetValue(output)!,
-                new SvgExportOptions { SheetName = parseResult.GetValue(sheet), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
+                new SvgExportOptions { Buffering = buffering.Get(parseResult), SheetName = parseResult.GetValue(sheet), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
                 cancellationToken)));
         return command;
     }

@@ -9,11 +9,10 @@ namespace ExcelRenderer.Excel;
 internal static class HyperlinkReader
 {
     /// <summary>Reads definitions, scoped names and uncached literal display values.</summary>
-    /// <param name="bytes">The saved XLSX bytes.</param>
+    /// <param name="stream">The seekable XLSX stream.</param>
     /// <returns>Metadata by actual sheet name.</returns>
-    internal static IReadOnlyDictionary<string, SheetHyperlinkMetadata> Read(byte[] bytes)
+    internal static IReadOnlyDictionary<string, SheetHyperlinkMetadata> Read(Stream stream)
     {
-        using var stream = new MemoryStream(bytes, false);
         using var document = SpreadsheetDocument.Open(stream, false);
         var workbook = document.WorkbookPart!;
         var sheets = workbook.Workbook.Sheets!.Elements<Sheet>().ToArray();

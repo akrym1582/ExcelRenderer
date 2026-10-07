@@ -5,6 +5,9 @@ namespace ExcelRenderer.Rendering;
 /// <summary>ストリームを入力として実行する変換要求を記述します。</summary>
 public sealed record RenderRequest
 {
+    /// <summary>Gets the SVG intermediate buffer policy; it does not affect PDF or PNG buffers.</summary>
+    public ExcelRenderer.Rendering.RenderBufferOptions Buffering { get; init; } = new();
+
     /// <summary>Gets the content cropping options.</summary>
     public TrimOptions Trim { get; init; } = new();
 

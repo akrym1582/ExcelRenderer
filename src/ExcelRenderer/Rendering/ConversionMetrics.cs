@@ -17,7 +17,15 @@ internal static class ConversionMetrics
     /// <summary>Reports an aggregate counter or snapshot.</summary>
     /// <param name="name">The metric name.</param>
     /// <param name="value">The metric value.</param>
-    internal static void Report(string name, double value) => Observer?.Invoke(name, value);
+    internal static void Report(string name, double value)
+    {
+        if (name == "pagePayloadActive")
+        {
+            RenderResourceSession.Current?.RecordPayload((int)value);
+        }
+
+        Observer?.Invoke(name, value);
+    }
 
     /// <summary>Measures a synchronous phase only when instrumentation is enabled.</summary>
     /// <typeparam name="T">The result type.</typeparam>
@@ -39,6 +47,44 @@ internal static class ConversionMetrics
         finally
         {
             Report(name + ".ms", timer.Elapsed.TotalMilliseconds);
+        }
+    }
+
+    /// <summary>Measures deferred command generation separately from time spent consuming each command.</summary>
+    /// <param name="commands">The regenerable internal command source.</param>
+    /// <returns>A source with measured MoveNext calls when instrumentation is enabled.</returns>
+    internal static IEnumerable<ExcelRenderer.Drawing.DrawCommand> MeasureCommands(IEnumerable<ExcelRenderer.Drawing.DrawCommand> commands)
+    {
+        if (Observer is null)
+        {
+            return commands;
+        }
+
+        return MeasureCommandCore(commands);
+    }
+
+    private static IEnumerable<ExcelRenderer.Drawing.DrawCommand> MeasureCommandCore(IEnumerable<ExcelRenderer.Drawing.DrawCommand> commands)
+    {
+        using var iterator = commands.GetEnumerator();
+        long elapsed = 0;
+        try
+        {
+            while (true)
+            {
+                var start = Stopwatch.GetTimestamp();
+                var available = iterator.MoveNext();
+                elapsed += Stopwatch.GetTimestamp() - start;
+                if (!available)
+                {
+                    break;
+                }
+
+                yield return iterator.Current;
+            }
+        }
+        finally
+        {
+            Report("pageBuild.ms", elapsed * 1000d / Stopwatch.Frequency);
         }
     }
 }

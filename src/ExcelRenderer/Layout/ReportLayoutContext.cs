@@ -59,12 +59,12 @@ public sealed class ReportLayoutContext
     /// <summary>
     /// Gets the calculated column layouts. 列番号ごとに算出した水平位置と列幅を取得します。
     /// </summary>
-    public Dictionary<int, ColumnLayout> ColumnLayouts { get; } = [];
+    public Dictionary<int, ColumnLayout> ColumnLayouts { get; internal set; } = [];
 
     /// <summary>
     /// Gets the calculated row layouts. 行番号ごとに算出した垂直位置と行高を取得します。
     /// </summary>
-    public Dictionary<int, RowLayout> RowLayouts { get; } = [];
+    public Dictionary<int, RowLayout> RowLayouts { get; internal set; } = [];
 
     /// <summary>
     /// Gets the measured text sizes. セルアドレスごとに計測した文字列の幅と高さを取得します。
@@ -83,6 +83,19 @@ public sealed class ReportLayoutContext
     /// Gets or sets the rendered document. 全レイアウト工程から生成されたページ集合を取得または設定します。
     /// </summary>
     public RenderDocument? RenderDocument { get; set; }
+
+    /// <summary>Gets the print-area independent sheet-origin geometry.</summary>
+    internal IEnumerable<KeyValuePair<CellAddress, ReportCell>> CandidateCells => CandidateAddresses is null
+        ? Sheet.Cells : CandidateAddresses.Select(address => new KeyValuePair<CellAddress, ReportCell>(address, Sheet.Cells[address]));
+
+    /// <summary>Gets or sets the cancellation token for internal page-local layout work.</summary>
+    internal CancellationToken CancellationToken { get; set; }
+
+    /// <summary>Gets or sets the page-local cell addresses to measure.</summary>
+    internal IReadOnlyList<CellAddress>? CandidateAddresses { get; set; }
+
+    /// <summary>Gets or sets shared lightweight object geometry without retaining other page payloads.</summary>
+    internal SheetObjectLayoutIndex? ObjectLayouts { get; set; }
 
     /// <summary>Gets the print-area independent sheet-origin geometry.</summary>
     internal SheetGeometry Geometry => geometry ??= new(Sheet);

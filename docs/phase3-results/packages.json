@@ -1,0 +1,45 @@
+[
+  {
+    "Package": "ExcelRenderer.Tool.1.7.1.nupkg",
+    "NoticesAndLicenses": [
+      {
+        "Name": "THIRD-PARTY-NOTICES.md",
+        "SHA256": "0ecf762651d22b0bb78dd034143526c456802acc33b97f29f46ecd653a0c11bc"
+      }
+    ]
+  },
+  {
+    "Package": "ExcelRenderer.Fonts.1.7.1.nupkg",
+    "NoticesAndLicenses": [
+      {
+        "Name": "THIRD-PARTY-NOTICES.md",
+        "SHA256": "0ecf762651d22b0bb78dd034143526c456802acc33b97f29f46ecd653a0c11bc"
+      },
+      {
+        "Name": "licenses/IPAmjMincho/IPA_Font_License_Agreement_v1.0.txt",
+        "SHA256": "4c84dd528ec3044638ec346fc1ee27cd1eb95dfc04cbc6a881b3ca7a7f517e54"
+      },
+      {
+        "Name": "licenses/IPAmjMincho/Readme.txt",
+        "SHA256": "c4e00811e8a10572707535cf9edcf67e6bf15e229262c82062196efce452c57c"
+      },
+      {
+        "Name": "licenses/NotoColorEmoji/OFL.txt",
+        "SHA256": "500bb1ccf43df7bbb522112f9133a52b16e1c35e809632f5d8609b179152de5b"
+      },
+      {
+        "Name": "licenses/OFL.txt",
+        "SHA256": "babcfe66c8a098b2fa279bc724a3a342f8124f77ce18941fbcc1bbb39823cded"
+      }
+    ]
+  },
+  {
+    "Package": "ExcelRenderer.1.7.1.nupkg",
+    "NoticesAndLicenses": [
+      {
+        "Name": "THIRD-PARTY-NOTICES.md",
+        "SHA256": "0ecf762651d22b0bb78dd034143526c456802acc33b97f29f46ecd653a0c11bc"
+      }
+    ]
+  }
+]

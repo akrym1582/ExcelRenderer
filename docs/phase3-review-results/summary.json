@@ -1,0 +1,752 @@
+[
+  {
+    "Rows": 1000,
+    "Format": "pdf",
+    "Layout": "paginated",
+    "Results": {
+      "before": {
+        "TotalMs": {
+          "Median": 2379.6975,
+          "Min": 2350.4504,
+          "Max": 2742.7676
+        },
+        "PeakWorkingSet64": {
+          "Median": 153427968,
+          "Min": 152965120,
+          "Max": 153481216
+        },
+        "AllocatedBytes": {
+          "Median": 352751736,
+          "Min": 352744296,
+          "Max": 352891176
+        },
+        "Pages": {
+          "Median": 78,
+          "Min": 78,
+          "Max": 78
+        },
+        "OutputBytes": {
+          "Median": 557608,
+          "Min": 557608,
+          "Max": 557608
+        },
+        "Metrics": {
+          "pagePayloadMax": [
+            1,
+            1,
+            1
+          ],
+          "reviewTextMeasureCalls": [
+            40000,
+            40000,
+            40000
+          ],
+          "svgBufferMemoryPeakBytes": [
+            0,
+            0,
+            0
+          ],
+          "svg.spillCount": [
+            0,
+            0,
+            0
+          ],
+          "pdfSave": [
+            1,
+            1,
+            1
+          ],
+          "reviewPdfDocumentPages": [
+            78,
+            78,
+            78
+          ]
+        }
+      },
+      "after": {
+        "TotalMs": {
+          "Median": 2455.8085,
+          "Min": 2400.6805,
+          "Max": 2530.1208
+        },
+        "PeakWorkingSet64": {
+          "Median": 152584192,
+          "Min": 152223744,
+          "Max": 153284608
+        },
+        "AllocatedBytes": {
+          "Median": 352771960,
+          "Min": 352734808,
+          "Max": 352780112
+        },
+        "Pages": {
+          "Median": 78,
+          "Min": 78,
+          "Max": 78
+        },
+        "OutputBytes": {
+          "Median": 557608,
+          "Min": 557608,
+          "Max": 557608
+        },
+        "Metrics": {
+          "pagePayloadMax": [
+            1,
+            1,
+            1
+          ],
+          "reviewTextMeasureCalls": [
+            40000,
+            40000,
+            40000
+          ],
+          "svgBufferMemoryPeakBytes": [
+            0,
+            0,
+            0
+          ],
+          "svg.spillCount": [
+            0,
+            0,
+            0
+          ],
+          "pdfSave": [
+            1,
+            1,
+            1
+          ],
+          "reviewPdfDocumentPages": [
+            78,
+            78,
+            78
+          ]
+        }
+      }
+    }
+  },
+  {
+    "Rows": 1000,
+    "Format": "png",
+    "Layout": "paginated",
+    "Results": {
+      "before": {
+        "TotalMs": {
+          "Median": 2512.5218,
+          "Min": 2509.4762,
+          "Max": 2559.1384
+        },
+        "PeakWorkingSet64": {
+          "Median": 136183808,
+          "Min": 136126464,
+          "Max": 138080256
+        },
+        "AllocatedBytes": {
+          "Median": 273530272,
+          "Min": 273530272,
+          "Max": 273600032
+        },
+        "Pages": {
+          "Median": 78,
+          "Min": 78,
+          "Max": 78
+        },
+        "OutputBytes": {
+          "Median": 210047,
+          "Min": 210047,
+          "Max": 210047
+        },
+        "Metrics": {
+          "pagePayloadMax": [
+            1,
+            1,
+            1
+          ],
+          "reviewTextMeasureCalls": [
+            40000,
+            40000,
+            40000
+          ],
+          "svgBufferMemoryPeakBytes": [
+            0,
+            0,
+            0
+          ],
+          "svg.spillCount": [
+            0,
+            0,
+            0
+          ],
+          "pdfSave": [
+            0,
+            0,
+            0
+          ],
+          "reviewPdfDocumentPages": [
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "after": {
+        "TotalMs": {
+          "Median": 2535.6802,
+          "Min": 2496.5866,
+          "Max": 2562.156
+        },
+        "PeakWorkingSet64": {
+          "Median": 136245248,
+          "Min": 136142848,
+          "Max": 136269824
+        },
+        "AllocatedBytes": {
+          "Median": 273106104,
+          "Min": 272262184,
+          "Max": 273534800
+        },
+        "Pages": {
+          "Median": 78,
+          "Min": 78,
+          "Max": 78
+        },
+        "OutputBytes": {
+          "Median": 210047,
+          "Min": 210047,
+          "Max": 210047
+        },
+        "Metrics": {
+          "pagePayloadMax": [
+            1,
+            1,
+            1
+          ],
+          "reviewTextMeasureCalls": [
+            40000,
+            40000,
+            40000
+          ],
+          "svgBufferMemoryPeakBytes": [
+            0,
+            0,
+            0
+          ],
+          "svg.spillCount": [
+            0,
+            0,
+            0
+          ],
+          "pdfSave": [
+            0,
+            0,
+            0
+          ],
+          "reviewPdfDocumentPages": [
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    }
+  },
+  {
+    "Rows": 1000,
+    "Format": "svg",
+    "Layout": "paginated",
+    "Results": {
+      "before": {
+        "TotalMs": {
+          "Median": 9390.7882,
+          "Min": 9270.4218,
+          "Max": 9428.5268
+        },
+        "PeakWorkingSet64": {
+          "Median": 183377920,
+          "Min": 171663360,
+          "Max": 210968576
+        },
+        "AllocatedBytes": {
+          "Median": 1323617144,
+          "Min": 1323600344,
+          "Max": 1323739512
+        },
+        "Pages": {
+          "Median": 78,
+          "Min": 78,
+          "Max": 78
+        },
+        "OutputBytes": {
+          "Median": 202013286,
+          "Min": 202013286,
+          "Max": 202013286
+        },
+        "Metrics": {
+          "pagePayloadMax": [
+            1,
+            1,
+            1
+          ],
+          "reviewTextMeasureCalls": [
+            40000,
+            40000,
+            40000
+          ],
+          "svgBufferMemoryPeakBytes": [
+            4194304,
+            4194304,
+            4194304
+          ],
+          "svg.spillCount": [
+            0,
+            0,
+            0
+          ],
+          "pdfSave": [
+            0,
+            0,
+            0
+          ],
+          "reviewPdfDocumentPages": [
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "after": {
+        "TotalMs": {
+          "Median": 9481.9753,
+          "Min": 8839.1535,
+          "Max": 9606.5451
+        },
+        "PeakWorkingSet64": {
+          "Median": 181628928,
+          "Min": 172949504,
+          "Max": 192991232
+        },
+        "AllocatedBytes": {
+          "Median": 1323737640,
+          "Min": 1322636016,
+          "Max": 1323843976
+        },
+        "Pages": {
+          "Median": 78,
+          "Min": 78,
+          "Max": 78
+        },
+        "OutputBytes": {
+          "Median": 202013286,
+          "Min": 202013286,
+          "Max": 202013286
+        },
+        "Metrics": {
+          "pagePayloadMax": [
+            1,
+            1,
+            1
+          ],
+          "reviewTextMeasureCalls": [
+            40000,
+            40000,
+            40000
+          ],
+          "svgBufferMemoryPeakBytes": [
+            4194304,
+            4194304,
+            4194304
+          ],
+          "svg.spillCount": [
+            0,
+            0,
+            0
+          ],
+          "pdfSave": [
+            0,
+            0,
+            0
+          ],
+          "reviewPdfDocumentPages": [
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    }
+  },
+  {
+    "Rows": 1000,
+    "Format": "png",
+    "Layout": "continuous",
+    "Results": {
+      "before": {
+        "TotalMs": {
+          "Median": 2203.8703,
+          "Min": 2084.1978,
+          "Max": 2221.0973
+        },
+        "PeakWorkingSet64": {
+          "Median": 142282752,
+          "Min": 140591104,
+          "Max": 142385152
+        },
+        "AllocatedBytes": {
+          "Median": 206354336,
+          "Min": 205744864,
+          "Max": 206372168
+        },
+        "Pages": {
+          "Median": 1,
+          "Min": 1,
+          "Max": 1
+        },
+        "OutputBytes": {
+          "Median": 58048,
+          "Min": 58048,
+          "Max": 58048
+        },
+        "Metrics": {
+          "pagePayloadMax": [
+            1,
+            1,
+            1
+          ],
+          "reviewTextMeasureCalls": [
+            20000,
+            20000,
+            20000
+          ],
+          "svgBufferMemoryPeakBytes": [
+            0,
+            0,
+            0
+          ],
+          "svg.spillCount": [
+            0,
+            0,
+            0
+          ],
+          "pdfSave": [
+            0,
+            0,
+            0
+          ],
+          "reviewPdfDocumentPages": [
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "after": {
+        "TotalMs": {
+          "Median": 2036.2426,
+          "Min": 2020.5129,
+          "Max": 2087.674
+        },
+        "PeakWorkingSet64": {
+          "Median": 141221888,
+          "Min": 138387456,
+          "Max": 142876672
+        },
+        "AllocatedBytes": {
+          "Median": 204610448,
+          "Min": 204529432,
+          "Max": 206133048
+        },
+        "Pages": {
+          "Median": 1,
+          "Min": 1,
+          "Max": 1
+        },
+        "OutputBytes": {
+          "Median": 58048,
+          "Min": 58048,
+          "Max": 58048
+        },
+        "Metrics": {
+          "pagePayloadMax": [
+            1,
+            1,
+            1
+          ],
+          "reviewTextMeasureCalls": [
+            20000,
+            20000,
+            20000
+          ],
+          "svgBufferMemoryPeakBytes": [
+            0,
+            0,
+            0
+          ],
+          "svg.spillCount": [
+            0,
+            0,
+            0
+          ],
+          "pdfSave": [
+            0,
+            0,
+            0
+          ],
+          "reviewPdfDocumentPages": [
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    }
+  },
+  {
+    "Rows": 1000,
+    "Format": "svg",
+    "Layout": "continuous",
+    "Results": {
+      "before": {
+        "TotalMs": {
+          "Median": 9351.2709,
+          "Min": 9076.7195,
+          "Max": 9425.0442
+        },
+        "PeakWorkingSet64": {
+          "Median": 143892480,
+          "Min": 143691776,
+          "Max": 144400384
+        },
+        "AllocatedBytes": {
+          "Median": 627643696,
+          "Min": 625362104,
+          "Max": 627650176
+        },
+        "Pages": {
+          "Median": 1,
+          "Min": 1,
+          "Max": 1
+        },
+        "OutputBytes": {
+          "Median": 201874095,
+          "Min": 201874095,
+          "Max": 201874095
+        },
+        "Metrics": {
+          "pagePayloadMax": [
+            1,
+            1,
+            1
+          ],
+          "reviewTextMeasureCalls": [
+            20000,
+            20000,
+            20000
+          ],
+          "svgBufferMemoryPeakBytes": [
+            8388608,
+            8388608,
+            8388608
+          ],
+          "svg.spillCount": [
+            1,
+            1,
+            1
+          ],
+          "pdfSave": [
+            0,
+            0,
+            0
+          ],
+          "reviewPdfDocumentPages": [
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "after": {
+        "TotalMs": {
+          "Median": 9222.7204,
+          "Min": 9100.6975,
+          "Max": 9396.1042
+        },
+        "PeakWorkingSet64": {
+          "Median": 144236544,
+          "Min": 143912960,
+          "Max": 145338368
+        },
+        "AllocatedBytes": {
+          "Median": 627571336,
+          "Min": 625173928,
+          "Max": 627652272
+        },
+        "Pages": {
+          "Median": 1,
+          "Min": 1,
+          "Max": 1
+        },
+        "OutputBytes": {
+          "Median": 201874095,
+          "Min": 201874095,
+          "Max": 201874095
+        },
+        "Metrics": {
+          "pagePayloadMax": [
+            1,
+            1,
+            1
+          ],
+          "reviewTextMeasureCalls": [
+            20000,
+            20000,
+            20000
+          ],
+          "svgBufferMemoryPeakBytes": [
+            8388608,
+            8388608,
+            8388608
+          ],
+          "svg.spillCount": [
+            1,
+            1,
+            1
+          ],
+          "pdfSave": [
+            0,
+            0,
+            0
+          ],
+          "reviewPdfDocumentPages": [
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    }
+  },
+  {
+    "Rows": 10000,
+    "Format": "svg",
+    "Layout": "continuous",
+    "Results": {
+      "before": {
+        "TotalMs": {
+          "Median": 74707.1189,
+          "Min": 74436.9544,
+          "Max": 76054.42
+        },
+        "PeakWorkingSet64": {
+          "Median": 304181248,
+          "Min": 303857664,
+          "Max": 309747712
+        },
+        "AllocatedBytes": {
+          "Median": 5831463472,
+          "Min": 5830860336,
+          "Max": 5831795736
+        },
+        "Pages": {
+          "Median": 1,
+          "Min": 1,
+          "Max": 1
+        },
+        "OutputBytes": {
+          "Median": 2029847516,
+          "Min": 2029847516,
+          "Max": 2029847516
+        },
+        "Metrics": {
+          "pagePayloadMax": [
+            1,
+            1,
+            1
+          ],
+          "reviewTextMeasureCalls": [
+            200000,
+            200000,
+            200000
+          ],
+          "svgBufferMemoryPeakBytes": [
+            8388608,
+            8388608,
+            8388608
+          ],
+          "svg.spillCount": [
+            1,
+            1,
+            1
+          ],
+          "pdfSave": [
+            0,
+            0,
+            0
+          ],
+          "reviewPdfDocumentPages": [
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "after": {
+        "TotalMs": {
+          "Median": 75521.7613,
+          "Min": 74735.7586,
+          "Max": 76374.326
+        },
+        "PeakWorkingSet64": {
+          "Median": 304726016,
+          "Min": 301793280,
+          "Max": 328568832
+        },
+        "AllocatedBytes": {
+          "Median": 5832412968,
+          "Min": 5830897712,
+          "Max": 5832505816
+        },
+        "Pages": {
+          "Median": 1,
+          "Min": 1,
+          "Max": 1
+        },
+        "OutputBytes": {
+          "Median": 2029847516,
+          "Min": 2029847516,
+          "Max": 2029847516
+        },
+        "Metrics": {
+          "pagePayloadMax": [
+            1,
+            1,
+            1
+          ],
+          "reviewTextMeasureCalls": [
+            200000,
+            200000,
+            200000
+          ],
+          "svgBufferMemoryPeakBytes": [
+            8388608,
+            8388608,
+            8388608
+          ],
+          "svg.spillCount": [
+            1,
+            1,
+            1
+          ],
+          "pdfSave": [
+            0,
+            0,
+            0
+          ],
+          "reviewPdfDocumentPages": [
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    }
+  }
+]

@@ -10,13 +10,15 @@ internal static class HeaderFooterLayout
     /// <param name="sheet">The sheet value.</param>
     /// <param name="pageNumber">The pageNumber value.</param>
     /// <param name="pageCount">The pageCount value.</param>
-    internal static IReadOnlyList<RenderText> Create(ReportSheet sheet, int pageNumber, int pageCount)
+    /// <param name="timestamp">An optional conversion clock snapshot for repeatable date/time fields.</param>
+    internal static IReadOnlyList<RenderText> Create(ReportSheet sheet, int pageNumber, int pageCount, DateTime? timestamp = null)
     {
         if (sheet.HeaderFooter is not { } headerFooter)
         {
             return [];
         }
 
+        var clock = timestamp ?? DateTime.Now;
         var settings = sheet.PageSettings;
         var header = pageNumber == 1 && headerFooter.FirstPageHeader is not null
             ? headerFooter.FirstPageHeader
@@ -62,7 +64,7 @@ internal static class HeaderFooterLayout
             .Replace("&P", pageNumber.ToString(), StringComparison.OrdinalIgnoreCase)
             .Replace("&N", pageCount.ToString(), StringComparison.OrdinalIgnoreCase)
             .Replace("&A", sheet.Name, StringComparison.OrdinalIgnoreCase)
-            .Replace("&D", DateTime.Today.ToShortDateString(), StringComparison.OrdinalIgnoreCase)
-            .Replace("&T", DateTime.Now.ToShortTimeString(), StringComparison.OrdinalIgnoreCase);
+            .Replace("&D", clock.ToShortDateString(), StringComparison.OrdinalIgnoreCase)
+            .Replace("&T", clock.ToShortTimeString(), StringComparison.OrdinalIgnoreCase);
     }
 }

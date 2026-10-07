@@ -38,4 +38,7 @@ public sealed record ReportSheet(
 
     /// <summary>Gets the explicit selection applied by the rendering pipeline.</summary>
     internal CellRange? RequestedRange { get; init; }
+
+    /// <summary>Gets the automatic render range preserved before drawing projection.</summary>
+    internal CellRange? RenderUsedRange { get; init; }
 }

@@ -13,6 +13,18 @@ using PdfSharp.Pdf.IO;
 
 var command = args[0];
 var path = args[1];
+if (command == "input-spool")
+{
+    await InputSpoolBenchmark.RunAsync(args);
+    return;
+}
+
+if (command == "render-case")
+{
+    await RenderMemoryBenchmark.RunAsync(args);
+    return;
+}
+
 if (command == "direct-images")
 {
     ImageRenderingBenchmark.Run(args);
@@ -93,6 +105,15 @@ if (command == "generate")
         using var data = image.Encode(SkiaSharp.SKEncodedImageFormat.Png, 100);
         using var imageStream = new MemoryStream(data.ToArray());
         sheet.AddPicture(imageStream).MoveTo(sheet.Cell(35, 1)).WithSize(100, 250);
+    }
+
+    if (mode == "images")
+    {
+        using var bitmap = new SkiaSharp.SKBitmap(1024, 1024);
+        bitmap.Erase(SkiaSharp.SKColors.Blue);
+        using var data = bitmap.Encode(SkiaSharp.SKEncodedImageFormat.Png, 100);
+        using var stream = data.AsStream();
+        sheet.AddPicture(stream).MoveTo(sheet.Cell(1, 1)).WithSize(100, rows * 24);
     }
 
     workbook.SaveAs(path);

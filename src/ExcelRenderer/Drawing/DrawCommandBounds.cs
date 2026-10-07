@@ -13,7 +13,7 @@ internal static class DrawCommandBounds
     /// <param name="clip">The current page or content clip.</param>
     /// <param name="fonts">The font source for compatibility text.</param>
     /// <returns>The visible union, or null when nothing draws.</returns>
-    internal static ReportRect? Get(IReadOnlyList<DrawCommand> commands, ReportRect clip, IFontManager fonts)
+    internal static ReportRect? Get(IEnumerable<DrawCommand> commands, ReportRect clip, IFontManager fonts)
     {
         ReportRect? union = null;
         foreach (var command in commands)
@@ -145,7 +145,8 @@ internal static class DrawCommandBounds
                 }
 
                 using Stream stream = run.Run.Font.FontData is { } bytes ? new MemoryStream(bytes, false) : File.OpenRead(run.Run.Font.FilePath);
-                using var face = SKTypeface.FromStream(stream);
+                using var ownedFace = ConversionFontResources.Current is null ? SKTypeface.FromStream(stream) : null;
+                var face = ConversionFontResources.Current?.GetTypeface(run.Run.Font) ?? ownedFace;
                 using var font = new SKFont(face, (float)size);
                 font.MeasureText(run.Run.Text, out var ink);
                 using var glyphPath = run.Run.GlyphId is { } glyph ? font.GetGlyphPath(glyph) : null;

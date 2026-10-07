@@ -438,6 +438,20 @@ See [Architecture](docs/architecture.md) for the layout passes, drawing commands
   anchor behavior has not been verified against desktop Excel. Repeated titles do not repeat drawing objects.
 - Output can differ from Excel because font measurement and rendering engines differ.
 
+## PDF performance
+
+The stream converter draws all pages directly into one PDF document and saves once.
+Native font faces, line metrics and PDF fonts are reused within each conversion;
+native faces are disposed on success, cancellation and failure. Unused Skia font strikes
+are purged at conversion end to release retained native font data. Text caches are bounded.
+Sparse sheet coordinates, page candidates and merged-cell queries use indices, and equal
+converted styles share immutable values. Styled blank cells remain part of the model.
+
+PDFsharp still retains document resources until the final save, and the converter retains
+the sheet models and page commands. This is not constant-memory streaming.
+See the [measurement harness and results](docs/pdf-performance.ja.md) for reproducible
+synthetic workloads and remaining work.
+
 ## Development
 
 To try the CLI from source before publishing, create and install a local package:

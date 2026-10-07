@@ -18,7 +18,17 @@ public sealed class TextMeasurePass : IReportLayoutPass
     {
         foreach (var (address, cell) in context.Sheet.Cells)
         {
+            if (string.IsNullOrEmpty(cell.Text))
+            {
+                continue;
+            }
+
             if (!context.ColumnLayouts.TryGetValue(address.Column, out var column))
+            {
+                continue;
+            }
+
+            if (context.RowLayouts.Count > 0 && !context.RowLayouts.ContainsKey(address.Row))
             {
                 continue;
             }
@@ -37,7 +47,7 @@ public sealed class TextMeasurePass : IReportLayoutPass
                         layout with { EffectiveFontSize = cell.Style.Font.Size },
                         availableWidth / layout.Size.Width);
                 }
-                else
+                else if (!layout.HasExplicitEffectiveFontSize || layout.EffectiveFontSize != cell.Style.Font.Size)
                 {
                     layout = layout with { EffectiveFontSize = cell.Style.Font.Size };
                 }

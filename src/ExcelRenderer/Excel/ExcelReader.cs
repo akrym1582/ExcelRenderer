@@ -65,11 +65,12 @@ public sealed class ExcelReader
         using var pictureMetadataStream = new MemoryStream(workbookBytes, writable: false);
         using var metadataStream = new MemoryStream(workbookBytes, writable: false);
         var hyperlinks = HyperlinkReader.Read(workbookBytes);
-        using var workbook = new XLWorkbook(workbookStream);
+        using var workbook = ExcelRenderer.Rendering.ConversionMetrics.Measure("closedXml", () => new XLWorkbook(workbookStream));
         var shapes = DrawingMLReader.Read(drawingStream, diagnostics);
         var pictureMetadata = DrawingMLReader.ReadPictureMetadata(pictureMetadataStream);
         var pageSetups = WorkbookLayoutMetadataReader.ReadPageSetups(metadataStream);
-        return new(workbook.Worksheets.Select((sheet, index) => ReadSheet(
+        var styles = new StylePool();
+        return ExcelRenderer.Rendering.ConversionMetrics.Measure("model", () => new ReportDocument(workbook.Worksheets.Select((sheet, index) => ReadSheet(
             sheet,
             shapes.GetValueOrDefault(sheet.Name, Array.Empty<ReportShape>()),
             pictureMetadata.GetValueOrDefault(
@@ -79,7 +80,8 @@ public sealed class ExcelReader
             diagnostics,
             fontManager,
             maximumDigitWidths,
-            hyperlinks.GetValueOrDefault(sheet.Name)) with { SourceSheetIndex = index + 1 }).ToArray());
+            hyperlinks.GetValueOrDefault(sheet.Name),
+            styles) with { SourceSheetIndex = index + 1 }).ToArray()));
     }
 
     private static ReportSheet ReadSheet(
@@ -90,7 +92,8 @@ public sealed class ExcelReader
         DiagnosticCollector? diagnostics,
         IFontManager? fontManager,
         Dictionary<NormalFontMetadata, double> maximumDigitWidths,
-        SheetHyperlinkMetadata? hyperlinks)
+        SheetHyperlinkMetadata? hyperlinks,
+        StylePool styles)
     {
         var cells = new Dictionary<CellAddress, ReportCell>();
         var columns = new Dictionary<int, ColumnDefinition>();
@@ -108,7 +111,7 @@ public sealed class ExcelReader
 
                 cells[address] = new(
                     hyperlinks?.UncachedDisplays.GetValueOrDefault(address) ?? ReadDisplay(cell),
-                    ExcelStyleConverter.Convert(cell),
+                    styles.Intern(ExcelStyleConverter.Convert(cell)),
                     Formula: cell.HasFormula ? "=" + cell.FormulaA1 : null);
             }
 
@@ -168,7 +171,7 @@ public sealed class ExcelReader
         var mergedRanges = worksheet.MergedRanges.Select(range => new CellRange(
             new(range.RangeAddress.FirstAddress.RowNumber, range.RangeAddress.FirstAddress.ColumnNumber),
             new(range.RangeAddress.LastAddress.RowNumber, range.RangeAddress.LastAddress.ColumnNumber))).ToArray();
-        cells = ApplyMergedSpans(cells, mergedRanges);
+        cells = ApplyMergedSpans(cells, mergedRanges, styles);
         var printAreas = ReadPrintAreas(worksheet);
 
         foreach (var range in mergedRanges)
@@ -393,7 +396,8 @@ public sealed class ExcelReader
                     using Stream stream = resolved.FontData is null
                         ? File.OpenRead(resolved.FilePath)
                         : new MemoryStream(resolved.FontData, writable: false);
-                    using var typeface = SKTypeface.FromStream(stream) ??
+                    using var ownedTypeface = ConversionFontResources.Current is null ? SKTypeface.FromStream(stream) : null;
+                    var typeface = ConversionFontResources.Current?.GetTypeface(resolved) ?? ownedTypeface ??
                         throw new InvalidOperationException($"Font {resolved.Family} could not be loaded.");
                     using var font = new SKFont(typeface, (float)(normalFont.Size * 96 / 72));
                     cached = Math.Max(
@@ -569,10 +573,10 @@ public sealed class ExcelReader
 
     private static double ExcelColumnWidthToPoints(double value) => Math.Truncate((value * 7) + 5) * 72d / 96d;
 
-    private static IReadOnlyList<CellBorder> ReadMergedBorders(Dictionary<CellAddress, ReportCell> cells, CellRange range)
+    private static IReadOnlyList<CellBorder> ReadMergedBorders(IEnumerable<KeyValuePair<CellAddress, ReportCell>> entries, CellRange range, StylePool styles)
     {
         var borders = new List<CellBorder>();
-        foreach (var entry in cells.Where(entry => range.Contains(entry.Key)))
+        foreach (var entry in entries)
         {
             var source = entry.Value.Style.Border;
             if (source is null)
@@ -588,7 +592,7 @@ public sealed class ExcelReader
                 address.Row == range.Last.Row ? source.Bottom : null);
             if (border != new BorderStyle())
             {
-                borders.Add(new(address, border));
+                borders.Add(new(address, styles.Intern(border)));
             }
         }
 
@@ -597,19 +601,24 @@ public sealed class ExcelReader
 
     private static Dictionary<CellAddress, ReportCell> ApplyMergedSpans(
         Dictionary<CellAddress, ReportCell> cells,
-        IEnumerable<CellRange> ranges)
+        IEnumerable<CellRange> ranges,
+        StylePool styles)
     {
-        foreach (var range in ranges)
+        var merged = ranges.ToArray();
+        var index = new CellRangeIndex(cells.Keys.Concat(merged.Select(range => range.First)).Distinct());
+        foreach (var range in merged)
         {
+            var entries = index.Query(range).Where(cells.ContainsKey)
+                .Select(address => new KeyValuePair<CellAddress, ReportCell>(address, cells[address])).ToArray();
             var cell = cells.GetValueOrDefault(range.First, new(null, CellStyle.Default));
             cells[range.First] = cell with
             {
                 RowSpan = range.Last.Row - range.First.Row + 1,
                 ColumnSpan = range.Last.Column - range.First.Column + 1,
-                Style = cell.Style with { Border = null },
-                MergedBorders = ReadMergedBorders(cells, range),
+                Style = styles.Intern(cell.Style with { Border = null }),
+                MergedBorders = ReadMergedBorders(entries, range, styles),
             };
-            foreach (var address in cells.Keys.Where(range.Contains).Where(address => address != range.First).ToArray())
+            foreach (var address in entries.Select(entry => entry.Key).Where(address => address != range.First))
             {
                 cells.Remove(address);
             }

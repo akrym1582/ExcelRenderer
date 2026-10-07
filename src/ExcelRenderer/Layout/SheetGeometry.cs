@@ -47,12 +47,22 @@ internal sealed class SheetGeometry
     private sealed class Axis
     {
         private readonly double defaultSize;
-        private readonly SortedDictionary<int, double> overrides;
+        private readonly int[] indices;
+        private readonly double[] differences;
+        private readonly double[] ends;
 
         internal Axis(double defaultSize, IReadOnlyDictionary<int, double> overrides)
         {
             this.defaultSize = defaultSize;
-            this.overrides = new(overrides.Where(pair => pair.Key >= 1).ToDictionary(pair => pair.Key, pair => pair.Value));
+            var sorted = overrides.Where(pair => pair.Key >= 1).OrderBy(pair => pair.Key).ToArray();
+            indices = sorted.Select(pair => pair.Key).ToArray();
+            differences = new double[sorted.Length + 1];
+            ends = new double[sorted.Length];
+            for (var i = 0; i < sorted.Length; i++)
+            {
+                differences[i + 1] = differences[i] + sorted[i].Value - defaultSize;
+                ends[i] = (sorted[i].Key * defaultSize) + differences[i + 1];
+            }
         }
 
         internal double Start(int index)
@@ -62,18 +72,9 @@ internal sealed class SheetGeometry
                 return 0;
             }
 
-            var start = (index - 1) * defaultSize;
-            foreach (var pair in overrides)
-            {
-                if (pair.Key >= index)
-                {
-                    break;
-                }
-
-                start += pair.Value - defaultSize;
-            }
-
-            return start;
+            var count = Array.BinarySearch(indices, index);
+            count = count >= 0 ? count : ~count;
+            return ((index - 1) * defaultSize) + differences[count];
         }
 
         internal int IndexAt(double position)
@@ -83,25 +84,31 @@ internal sealed class SheetGeometry
                 return 1;
             }
 
-            var current = 1;
-            var origin = 0d;
-            foreach (var pair in overrides)
+            // Upper bound skips every zero-width interval at the boundary.
+            var low = 0;
+            var high = ends.Length;
+            while (low < high)
             {
-                var gap = pair.Key - current;
-                if (gap > 0 && defaultSize > 0 && position < origin + (gap * defaultSize))
+                var middle = low + ((high - low) / 2);
+                if (ends[middle] <= position)
                 {
-                    return current + (int)Math.Floor((position - origin) / defaultSize);
+                    low = middle + 1;
                 }
-
-                origin += gap * defaultSize;
-                current = pair.Key;
-                if (position < origin + pair.Value)
+                else
                 {
-                    return current;
+                    high = middle;
                 }
+            }
 
-                origin += pair.Value;
-                current++;
+            var current = low == 0 ? 1 : indices[low - 1] + 1;
+            var origin = low == 0 ? 0 : ends[low - 1];
+            if (low < indices.Length)
+            {
+                var gapEnd = ((indices[low] - 1) * defaultSize) + differences[low];
+                if (defaultSize <= 0 || position >= gapEnd)
+                {
+                    return indices[low];
+                }
             }
 
             return defaultSize > 0 ? current + (int)Math.Floor((position - origin) / defaultSize) : current;

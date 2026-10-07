@@ -31,6 +31,9 @@ public sealed class PdfSharpRenderer : IRenderer
     /// <summary>Gets the callback for image warnings, including decode failure details. Warnings are also written to trace listeners.</summary>
     public Action<ConversionDiagnostic>? DiagnosticHandler { get; init; }
 
+    /// <summary>Gets or sets the diagnostic context for the page being appended.</summary>
+    internal Action<ConversionDiagnostic>? PageDiagnosticHandler { get; set; }
+
     /// <summary>描画コマンドをページ番号ごとに描画し、すべてのページを含む PDF 文書を出力します。</summary>
     /// <param name="commands">背景、罫線、文字、画像、および図形をページ上へ配置する描画コマンドです。</param>
     /// <param name="pageSettings">各 PDF ページに適用する幅と高さを含むページ設定です。</param>
@@ -51,6 +54,13 @@ public sealed class PdfSharpRenderer : IRenderer
 
         document.Save(output, false);
     }
+
+    /// <summary>Appends exactly one page, including pages with no commands.</summary>
+    /// <param name="document">The final document owned by the caller.</param>
+    /// <param name="pageSettings">The output page dimensions.</param>
+    /// <param name="commands">The commands on this page.</param>
+    internal void AppendPage(PdfDocument document, PageSettings pageSettings, IEnumerable<DrawCommand> commands) =>
+        AddPage(document, pageSettings, commands);
 
     private static void DrawBorder(XGraphics graphics, DrawBorderCommand command)
     {
@@ -187,6 +197,7 @@ public sealed class PdfSharpRenderer : IRenderer
             SourcePageNumber: command.PageNumber);
         Trace.TraceWarning("{0}: {1}", diagnostic.Code, diagnostic.Message);
         DiagnosticHandler?.Invoke(diagnostic);
+        PageDiagnosticHandler?.Invoke(diagnostic);
     }
 
     private void AddPage(PdfDocument document, PageSettings pageSettings, IEnumerable<DrawCommand> commands)

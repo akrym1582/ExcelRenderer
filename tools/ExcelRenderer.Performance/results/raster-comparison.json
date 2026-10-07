@@ -1,0 +1,18 @@
+[
+  {
+    "Case": "text10",
+    "Dpi": 96,
+    "Pages": 3,
+    "DifferentPages": [],
+    "BeforeSha256": "073677d59c16b71bd04c2b69bac79629c57197a8662266d0e9a22e1e1fe1f6f6",
+    "AfterSha256": "cf2b1eb0b240e5940a0f5132392da10fa4049e117276971eaa7b1894f791af7b"
+  },
+  {
+    "Case": "empty1000",
+    "Dpi": 96,
+    "Pages": 78,
+    "DifferentPages": [],
+    "BeforeSha256": "0916622a49e3df6d0d68cb33ee44ce448bd9e883cf31d4fc24b8da6d39202a83",
+    "AfterSha256": "91bb1e158649f2c50935a7a21291a92135eaa7117c1cc3dd677a4d66693b744b"
+  }
+]

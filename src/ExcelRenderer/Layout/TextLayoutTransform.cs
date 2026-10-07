@@ -21,6 +21,13 @@ internal static class TextLayoutTransform
             throw new ArgumentOutOfRangeException(nameof(factor), "Scale must be finite and non-negative.");
         }
 
+        if (factor == 1 &&
+            layout.Lines is System.Collections.ObjectModel.ReadOnlyCollection<TextLayoutLine> &&
+            layout.Lines.All(line => line.Runs is System.Collections.ObjectModel.ReadOnlyCollection<TextLayoutRun>))
+        {
+            return layout;
+        }
+
         var scaled = new TextLayoutResult(
             new(layout.Size.Width * factor, layout.Size.Height * factor),
             layout.Lines.Select(line => line with

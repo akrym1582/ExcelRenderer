@@ -7,7 +7,10 @@ namespace ExcelRenderer.Fonts;
 /// <summary>登録済み、追加ディレクトリ、および許可されたシステムフォントを決定的に解決します。</summary>
 public sealed class FontManager : IFontManager
 {
+    private readonly Dictionary<(string Face, string Text), bool> _support = new();
+    private readonly Dictionary<(FontRequest Request, string Text), IReadOnlyList<TextRun>> _runs = new();
     private readonly FontOptions _options;
+
     private readonly List<FontFace> _faces = [];
     private readonly List<FontFace> _externalFaces = [];
     private readonly Dictionary<FontRequest, ResolvedFont> _cache = new();
@@ -37,6 +40,9 @@ public sealed class FontManager : IFontManager
         Scan();
     }
 
+    /// <summary>Gets the registration generation used by layout caches.</summary>
+    internal int RegistrationGeneration { get; private set; }
+
     /// <summary>フォントファイルを明示的に登録し、以後の解決対象に追加します。</summary>
     /// <param name="family">登録するフォントファミリー名です。</param>
     /// <param name="regular">通常体のフォントファイルパスです。</param>
@@ -55,6 +61,8 @@ public sealed class FontManager : IFontManager
         Add(family, 400, true, italic, 0);
         Add(family, 700, true, boldItalic, 0);
         _cache.Clear();
+        _runs.Clear();
+        RegistrationGeneration++;
     }
 
     /// <summary>要求されたファミリー名と書体属性に最も近い使用可能なフォントを解決します。</summary>
@@ -100,6 +108,12 @@ public sealed class FontManager : IFontManager
         if (string.IsNullOrEmpty(text))
         {
             return [];
+        }
+
+        var cacheKey = (request, text);
+        if (_runs.TryGetValue(cacheKey, out var cachedRuns))
+        {
+            return cachedRuns;
         }
 
         var runs = new List<TextRun>();
@@ -148,7 +162,18 @@ public sealed class FontManager : IFontManager
             }
         }
 
-        return runs;
+        var result = runs.AsReadOnly();
+        if (text.Length <= 2048)
+        {
+            if (_runs.Count >= 512)
+            {
+                _runs.Clear();
+            }
+
+            _runs[cacheKey] = result;
+        }
+
+        return result;
     }
 
     private static IEnumerable<(string Text, int Start, int BaseScalar, int? Selector)> EnumerateElements(string text)
@@ -184,13 +209,45 @@ public sealed class FontManager : IFontManager
         >= 0x20000 and <= 0x2FA1F or
         >= 0x30000 and <= 0x323AF;
 
-    private static bool Supports(ResolvedFont font, string text)
+    private static bool SupportsUncached(ResolvedFont font, string text)
     {
         using Stream stream = font.FontData is null
             ? File.OpenRead(font.FilePath)
             : new MemoryStream(font.FontData, writable: false);
         using var typeface = SKTypeface.FromStream(stream);
         return typeface is not null && typeface.GetGlyphs(text).All(glyph => glyph != 0);
+    }
+
+    private bool Supports(ResolvedFont font, string text)
+    {
+        var key = (font.FaceId, text);
+        ExcelRenderer.Rendering.ConversionMetrics.Report("supportChecks", 1);
+        if (_support.TryGetValue(key, out var supported))
+        {
+            ExcelRenderer.Rendering.ConversionMetrics.Report("supportCacheHits", 1);
+            return supported;
+        }
+
+        if (ConversionFontResources.Current is { } resources)
+        {
+            supported = resources.GetTypeface(font).GetGlyphs(text).All(glyph => glyph != 0);
+        }
+        else
+        {
+            supported = SupportsUncached(font, text);
+        }
+
+        if (_support.Count >= 8192)
+        {
+            _support.Clear();
+        }
+
+        if (text.Length <= 256)
+        {
+            _support[key] = supported;
+        }
+
+        return supported;
     }
 
     private ResolvedFont Select(IEnumerable<FontFace> candidates, FontRequest request)
@@ -346,8 +403,10 @@ public sealed class FontManager : IFontManager
             return null;
         }
 
+        var resolved = Select([emoji], request);
         using var stream = new MemoryStream(emoji.Data, writable: false);
-        using var typeface = SKTypeface.FromStream(stream);
+        using var ownedTypeface = ConversionFontResources.Current is null ? SKTypeface.FromStream(stream) : null;
+        var typeface = ConversionFontResources.Current?.GetTypeface(resolved) ?? ownedTypeface;
         using var font = typeface is null ? null : new SKFont(typeface);
         var glyph = font?.GetGlyph(scalar) ?? 0;
         return glyph == 0 ? null : (Select([emoji], request), glyph);

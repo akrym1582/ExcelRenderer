@@ -1,4 +1,5 @@
 using ExcelRenderer.Abstractions;
+using ExcelRenderer.Drawing;
 using ExcelRenderer.Model;
 
 namespace ExcelRenderer.Layout;
@@ -84,12 +85,26 @@ internal sealed class ContinuousLayoutPlan
     /// <summary>Gets the lightweight positioned shape references.</summary>
     internal IReadOnlyList<RenderShape> Shapes { get; }
 
-    /// <summary>Enumerates canvas cells with at most one measured cell layout alive.</summary>
-    /// <param name="measurer">The measurer used by this operation.</param>
-    /// <param name="measureText">The measureText used by this operation.</param>
-    /// <param name="layer">The requested drawing layer, or -1 for full materialization.</param>
-    /// <returns>Only current-layer cells, in original model order.</returns>
-    internal IEnumerable<RenderCell> Cells(ITextMeasurer measurer, bool measureText, int layer = -1)
+    /// <summary>Enumerates complete render cells for the materializing compatibility API.</summary>
+    /// <param name="measurer">The text measurer.</param>
+    /// <returns>Complete cells in original model order.</returns>
+    internal IEnumerable<RenderCell> EnumerateCells(ITextMeasurer measurer) => EnumerateCore(measurer, null);
+
+    /// <summary>Enumerates only cells needed by the specified layer, measuring text only for the text layer.</summary>
+    /// <param name="measurer">The text measurer.</param>
+    /// <param name="layer">The drawing layer.</param>
+    /// <returns>Current-layer cells in original model order.</returns>
+    internal IEnumerable<RenderCell> EnumerateLayerCells(ITextMeasurer measurer, DrawingLayer layer)
+    {
+        if (layer is not (DrawingLayer.Background or DrawingLayer.CellBorder or DrawingLayer.MergedBorder or DrawingLayer.Text))
+        {
+            throw new ArgumentOutOfRangeException(nameof(layer));
+        }
+
+        return EnumerateCore(measurer, layer);
+    }
+
+    private IEnumerable<RenderCell> EnumerateCore(ITextMeasurer measurer, DrawingLayer? layer)
     {
         var context = new ReportLayoutContext(sheet, measurer, geometry);
         context.ColumnLayouts = columns;
@@ -98,16 +113,16 @@ internal sealed class ContinuousLayoutPlan
         foreach (var address in sheet.Cells.Keys)
         {
             var source = sheet.Cells[address];
-            if ((layer == 0 && source.Style.Background is null) ||
-                (layer == 1 && source.Style.Border is null) ||
-                (layer == 2 && (source.MergedBorders?.Count ?? 0) == 0) ||
-                (layer == 3 && string.IsNullOrEmpty(source.Text)))
+            if ((layer == DrawingLayer.Background && source.Style.Background is null) ||
+                (layer == DrawingLayer.CellBorder && source.Style.Border is null) ||
+                (layer == DrawingLayer.MergedBorder && (source.MergedBorders?.Count ?? 0) == 0) ||
+                (layer == DrawingLayer.Text && string.IsNullOrEmpty(source.Text)))
             {
                 continue;
             }
 
             context.CandidateAddresses = [address];
-            if (layer is 0 or 1)
+            if (layer is DrawingLayer.Background or DrawingLayer.CellBorder)
             {
                 var (_, bounds) = CellBoundsPass.EnumerateBounds(context).FirstOrDefault();
                 if (bounds.Width > 0 && bounds.Height > 0 && (clip is null || RectangleGeometry.Intersect(bounds, clip.Value) is not null))
@@ -125,7 +140,7 @@ internal sealed class ContinuousLayoutPlan
             context.CellLayouts.Clear();
             context.TextLayouts.Clear();
             context.TextSizes.Clear();
-            if (measureText)
+            if (layer is null or DrawingLayer.Text)
             {
                 new TextMeasurePass().Execute(context);
             }

@@ -64,7 +64,7 @@ public sealed class ReportLayoutEngine
     public ContinuousRenderDocument LayoutContinuous(ReportSheet sheet)
     {
         var plan = new ContinuousLayoutPlan(sheet, TextMeasurer);
-        var page = new RenderPage(1, plan.Cells(TextMeasurer, measureText: true).ToArray(), plan.Images, Shapes: plan.Shapes)
+        var page = new RenderPage(1, plan.EnumerateCells(TextMeasurer).ToArray(), plan.Images, Shapes: plan.Shapes)
         {
             SourceRegions = plan.SourceRegions,
         };

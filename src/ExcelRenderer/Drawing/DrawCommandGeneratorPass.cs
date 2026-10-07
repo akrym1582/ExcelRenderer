@@ -8,6 +8,14 @@ namespace ExcelRenderer.Drawing;
 /// </summary>
 public sealed class DrawCommandGeneratorPass
 {
+    private static readonly IReadOnlyList<DrawingLayer> ContinuousLayerOrder = Array.AsReadOnly(new[]
+    {
+        DrawingLayer.Background,
+        DrawingLayer.CellBorder,
+        DrawingLayer.MergedBorder,
+        DrawingLayer.Text,
+    });
+
     /// <summary>
     /// 文書内の各ページを走査し、背景、枠線、文字列、画像、および図形の描画コマンドを生成します。
     /// </summary>
@@ -75,32 +83,42 @@ public sealed class DrawCommandGeneratorPass
     internal IEnumerable<DrawCommand> GenerateContinuous(ContinuousLayoutPlan plan, ExcelRenderer.Abstractions.ITextMeasurer measurer)
     {
         // Rescan cells by layer: later backgrounds must never cover earlier text.
-        for (var layer = 0; layer < 4; layer++)
+        foreach (var layer in ContinuousLayerOrder)
         {
-            foreach (var cell in plan.Cells(measurer, measureText: layer == 3, layer))
+            foreach (var cell in plan.EnumerateLayerCells(measurer, layer))
             {
-                if (layer == 0 && cell.Cell.Style.Background is { } background)
+                switch (layer)
                 {
-                    yield return Wrap(new FillRectangleCommand(1, cell.Bounds, background), cell.ClipBounds);
-                }
-                else if (layer == 1 && cell.Cell.Style.Border is { } border)
-                {
-                    yield return Wrap(new DrawBorderCommand(1, cell.Bounds, border), cell.ClipBounds);
-                }
-                else if (layer == 2)
-                {
-                    foreach (var merged in cell.MergedBorders ?? [])
-                    {
-                        yield return Wrap(new DrawBorderCommand(1, merged.Bounds, merged.Border), cell.ClipBounds);
-                    }
-                }
-                else if (layer == 3 && !string.IsNullOrEmpty(cell.Cell.Text))
-                {
-                    var text = new DrawTextCommand(1, GetContentBounds(cell), cell.Cell.Text!, cell.Cell.Style)
-                    {
-                        TextLayout = cell.TextLayout,
-                    };
-                    yield return Wrap(text, cell.ClipBounds);
+                    case DrawingLayer.Background:
+                        if (cell.Cell.Style.Background is { } background)
+                        {
+                            yield return Wrap(new FillRectangleCommand(1, cell.Bounds, background), cell.ClipBounds);
+                        }
+
+                        break;
+                    case DrawingLayer.CellBorder:
+                        if (cell.Cell.Style.Border is { } border)
+                        {
+                            yield return Wrap(new DrawBorderCommand(1, cell.Bounds, border), cell.ClipBounds);
+                        }
+
+                        break;
+                    case DrawingLayer.MergedBorder:
+                        foreach (var merged in cell.MergedBorders ?? [])
+                        {
+                            yield return Wrap(new DrawBorderCommand(1, merged.Bounds, merged.Border), cell.ClipBounds);
+                        }
+
+                        break;
+                    case DrawingLayer.Text:
+                        var text = new DrawTextCommand(1, GetContentBounds(cell), cell.Cell.Text!, cell.Cell.Style)
+                        {
+                            TextLayout = cell.TextLayout,
+                        };
+                        yield return Wrap(text, cell.ClipBounds);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(layer));
                 }
             }
         }

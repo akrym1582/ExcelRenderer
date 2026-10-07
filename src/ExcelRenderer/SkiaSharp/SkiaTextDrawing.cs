@@ -42,7 +42,8 @@ internal sealed class SkiaTextDrawing
             command.Style.Font.Bold ? 700 : 400,
             command.Style.Font.Italic);
         var resolved = _fontManager?.Resolve(request);
-        using var resolvedTypeface = resolved is null ? null : CreateTypeface(resolved);
+        using var resolvedLease = resolved is null ? (TypefaceLease?)null : LeaseTypeface(resolved);
+        var resolvedTypeface = resolvedLease?.Typeface;
         using var systemTypeface = resolvedTypeface is null
             ? _systemTypefaceSelector(command.Style.Font)
             : null;
@@ -128,7 +129,7 @@ internal sealed class SkiaTextDrawing
 
         using var paint = CreatePaint(command.Style.Font.Color ?? new(0, 0, 0), SKPaintStyle.Fill);
         paint.IsAntialias = true;
-        SKTypeface? selectedPrimaryTypeface = null;
+        TypefaceLease? selectedPrimaryTypeface = null;
         var primaryTypefaceSelected = false;
         canvas.Save();
         try
@@ -160,7 +161,7 @@ internal sealed class SkiaTextDrawing
                         canvas,
                         positioned.Line.Text,
                         request,
-                        selectedPrimaryTypeface ?? SKTypeface.Default,
+                        selectedPrimaryTypeface?.Typeface ?? SKTypeface.Default,
                         (float)effectiveFontSize,
                         (float)positioned.Left,
                         (float)positioned.Baseline,
@@ -200,13 +201,15 @@ internal sealed class SkiaTextDrawing
         }
     }
 
-    private static SKTypeface? CreateTypeface(ResolvedFont font)
+    private static TypefaceLease LeaseTypeface(ResolvedFont font)
     {
-        using Stream stream = font.FontData is null
-            ? File.OpenRead(font.FilePath)
-            : new MemoryStream(font.FontData, writable: false);
-        return SKTypeface.FromStream(stream)
-            ?? throw new InvalidDataException($"フォントデータから書体を生成できません: {font.Family}");
+        var lease = new TypefaceLease(font);
+        if (lease.Typeface is null)
+        {
+            throw new InvalidDataException($"フォントデータから書体を生成できません: {font.Family}");
+        }
+
+        return lease;
     }
 
     private static SKTypeface? CreateSystemTypeface(FontStyle style) =>
@@ -230,12 +233,12 @@ internal sealed class SkiaTextDrawing
         return widths.Length == 0 ? 0 : widths[0];
     }
 
-    private SKTypeface? SelectPrimaryTypeface(FontStyle style, FontRequest request)
+    private TypefaceLease SelectPrimaryTypeface(FontStyle style, FontRequest request)
     {
         var resolved = _fontManager?.Resolve(request);
         return resolved is null
-            ? _systemTypefaceSelector(style)
-            : CreateTypeface(resolved);
+            ? new TypefaceLease(_systemTypefaceSelector(style))
+            : LeaseTypeface(resolved);
     }
 
     private IReadOnlyList<string> WrapText(string text, FontRequest request, SKFont font, SKPaint paint, double width, bool wrap)
@@ -287,7 +290,8 @@ internal sealed class SkiaTextDrawing
         var width = 0f;
         foreach (var run in _fontManager.ResolveTextRuns(text, request))
         {
-            using var typeface = CreateTypeface(run.Font);
+            using var lease = LeaseTypeface(run.Font);
+            var typeface = lease.Typeface ?? throw new InvalidDataException($"フォントデータから書体を生成できません: {run.Font.Family}");
             using var font = new SKFont(typeface, defaultFont.Size);
             width += MeasureRun(font, run, paint);
         }
@@ -317,9 +321,10 @@ internal sealed class SkiaTextDrawing
         foreach (var run in runs)
         {
             DrawResolvedRun(canvas, run, size, x, y, paint, asPaths);
-            using var typeface = run.Font.FontData is null && string.IsNullOrEmpty(run.Font.FilePath)
-                ? null
-                : CreateTypeface(run.Font);
+            using var lease = run.Font.FontData is null && string.IsNullOrEmpty(run.Font.FilePath)
+                ? (TypefaceLease?)null
+                : LeaseTypeface(run.Font);
+            var typeface = lease?.Typeface;
             using var font = new SKFont(typeface ?? SKTypeface.Default, size);
             x += MeasureRun(font, run, paint);
         }
@@ -359,9 +364,10 @@ internal sealed class SkiaTextDrawing
         SKPaint paint,
         bool asPaths)
     {
-        using var typeface = run.Font.FontData is null && string.IsNullOrEmpty(run.Font.FilePath)
-            ? null
-            : CreateTypeface(run.Font);
+        using var lease = run.Font.FontData is null && string.IsNullOrEmpty(run.Font.FilePath)
+            ? (TypefaceLease?)null
+            : LeaseTypeface(run.Font);
+        var typeface = lease?.Typeface;
         using var font = new SKFont(typeface ?? SKTypeface.Default, size);
         if (run.ColorEmojiGlyphId is { } emojiGlyph)
         {

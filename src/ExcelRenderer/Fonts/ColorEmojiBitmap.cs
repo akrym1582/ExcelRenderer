@@ -27,8 +27,8 @@ internal sealed class ColorEmojiBitmap : IDisposable
     /// <returns>The rasterized color emoji.</returns>
     internal static ColorEmojiBitmap Create(ResolvedFont face, ushort glyphId, float size)
     {
-        using Stream stream = face.FontData is null ? File.OpenRead(face.FilePath) : new MemoryStream(face.FontData, false);
-        using var typeface = SKTypeface.FromStream(stream)
+        using var lease = new TypefaceLease(face);
+        var typeface = lease.Typeface
             ?? throw new InvalidOperationException($"Color emoji font {face.Family} cannot be loaded.");
         using var font = new SKFont(typeface, size);
         var metrics = font.Metrics;

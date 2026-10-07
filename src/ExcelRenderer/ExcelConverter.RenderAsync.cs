@@ -10,7 +10,6 @@ using ExcelRenderer.Rendering;
 using ExcelRenderer.SkiaSharp;
 using PdfSharp.Fonts;
 using PdfSharp.Pdf;
-using PdfSharp.Pdf.IO;
 
 namespace ExcelRenderer;
 
@@ -51,9 +50,19 @@ public static partial class ExcelConverter
         var artifacts = new List<ArtifactMetadata>();
         try
         {
+            using var fontResources = new ConversionFontResources();
+            var inputTimer = System.Diagnostics.Stopwatch.StartNew();
             var source = await WorkbookInputPreparer.ReadAsync(input, request.Input, cancellationToken).ConfigureAwait(false);
-            var fontManager = new FontManager(request.FontOptions);
-            var document = new ExcelReader(fontManager).Read(source, diagnostics);
+            ConversionMetrics.Report("input.ms", inputTimer.Elapsed.TotalMilliseconds);
+            var fontManager = ConversionMetrics.Measure("fonts", () => new FontManager(request.FontOptions));
+            var document = ConversionMetrics.Measure("reader", () => new ExcelReader(fontManager).Read(source, diagnostics));
+            if (ConversionMetrics.Observer is not null)
+            {
+                ConversionMetrics.Report("cells", document.Sheets.Sum(sheet => sheet.Cells.Count));
+                ConversionMetrics.Report("textCells", document.Sheets.Sum(sheet => sheet.Cells.Values.Count(cell => !string.IsNullOrEmpty(cell.Text))));
+                ConversionMetrics.Report("uniqueStyles", document.Sheets.SelectMany(sheet => sheet.Cells.Values).Select(cell => cell.Style).Distinct().Count());
+            }
+
             var sheets = ApplyRanges(SelectSheets(document, request.Selection.SheetNames), request.Selection, diagnostics);
             if (diagnostics.HasFailure)
             {
@@ -83,13 +92,19 @@ public static partial class ExcelConverter
                     diagnostics.ToArray());
             }
 
-            CollectMissingGlyphDiagnostics(sheets, fontManager, diagnostics);
+            ConversionMetrics.Measure("diagnostics", () =>
+            {
+                CollectMissingGlyphDiagnostics(sheets, fontManager, diagnostics);
+                return true;
+            });
             if (diagnostics.HasFailure)
             {
                 throw Failure("Conversion was stopped by diagnostic policy.", null, diagnostics, artifacts);
             }
 
+            var lockTimer = System.Diagnostics.Stopwatch.StartNew();
             await PdfSharpFontLock.WaitAsync(cancellationToken).ConfigureAwait(false);
+            ConversionMetrics.Report("fontLockWait.ms", lockTimer.Elapsed.TotalMilliseconds);
             try
             {
                 // PDFsharp caches resolved typefaces process-wide. Reset that cache while conversions are
@@ -100,10 +115,10 @@ public static partial class ExcelConverter
                 var pages = request.ImageLayout == ImageLayoutMode.Continuous
                     ? LayoutContinuous(sheets, request.Dpi, fontManager)
                     : LayoutPages(sheets, request.Dpi, fontManager);
-                var selectedPages = PrepareViewports(SelectPages(pages, request.Selection.Pages), request, fontManager, diagnostics);
+                var selectedPages = ConversionMetrics.Measure("viewports", () => PrepareViewports(SelectPages(pages, request.Selection.Pages), request, fontManager, diagnostics));
                 if (request.OutputFormat == OutputFormat.Pdf && request.Hyperlinks == HyperlinkMode.Preserve)
                 {
-                    selectedPages = ResolvePdfLinks(selectedPages, document, diagnostics);
+                    selectedPages = ConversionMetrics.Measure("links", () => ResolvePdfLinks(selectedPages, document, diagnostics));
                 }
 
                 if (diagnostics.HasFailure)
@@ -204,12 +219,23 @@ public static partial class ExcelConverter
         var documentPage = 0;
         foreach (var selected in sheets)
         {
-            var layout = new ReportLayoutEngine(new PdfSharpTextMeasurer(fontManager)).Layout(selected.Sheet);
-            var commands = new DrawCommandGeneratorPass().Generate(layout);
+            var layout = new ReportLayoutEngine(new PdfSharpTextMeasurer(fontManager, cacheLayouts: true)).Layout(selected.Sheet);
+            var commands = ConversionMetrics.Measure("commands", () => new DrawCommandGeneratorPass().Generate(layout));
+            ConversionMetrics.Report("commands", commands.Count);
+            if (ConversionMetrics.Observer is not null)
+            {
+                ConversionMetrics.Report("renderCells", layout.Pages.Sum(page => page.Cells.Count));
+                foreach (var group in commands.GroupBy(command => command.GetType().Name))
+                {
+                    ConversionMetrics.Report("commands." + group.Key, group.Count());
+                }
+            }
+
+            var byPage = commands.ToLookup(command => command.PageNumber);
             var groups = layout.Pages.Select(page => new
             {
                 Key = page.Number,
-                Commands = commands.Where(command => command.PageNumber == page.Number).ToArray(),
+                Commands = byPage[page.Number].ToArray(),
                 Regions = page.SourceRegions,
             }).ToArray();
             if (groups.Length == 0)
@@ -274,7 +300,7 @@ public static partial class ExcelConverter
         var documentPage = 0;
         foreach (var selected in sheets)
         {
-            var layout = new ReportLayoutEngine(new PdfSharpTextMeasurer(fontManager)).LayoutContinuous(selected.Sheet);
+            var layout = new ReportLayoutEngine(new PdfSharpTextMeasurer(fontManager, cacheLayouts: true)).LayoutContinuous(selected.Sheet);
             var width = layout.Width;
             var height = layout.Height;
             var (pixelWidth, pixelHeight) = GetContinuousPixelDimensions(width, height, dpi);
@@ -368,26 +394,27 @@ public static partial class ExcelConverter
             stream =>
             {
                 using var result = new PdfDocument();
+                var renderer = new PdfSharpRenderer(fontManager);
                 foreach (var page in pages)
                 {
-                    using var rendered = new MemoryStream();
-                    var renderer = new PdfSharpRenderer(fontManager)
+                    token.ThrowIfCancellationRequested();
+                    renderer.PageDiagnosticHandler = diagnostic => diagnostics.Add(diagnostic with
                     {
-                        DiagnosticHandler = diagnostic => diagnostics.Add(diagnostic with
-                        {
-                            SheetName = page.Sheet.Name,
-                            SourcePageNumber = page.Descriptor.SourcePageNumber,
-                        }),
-                    };
-                    renderer.Render(page.Commands, page.Sheet.PageSettings with { Width = page.Descriptor.WidthPoints, Height = page.Descriptor.HeightPoints }, rendered);
+                        SheetName = page.Sheet.Name,
+                        SourcePageNumber = page.Descriptor.SourcePageNumber,
+                    });
+                    ConversionMetrics.Measure("pdfPage", () =>
+                    {
+                        renderer.AppendPage(
+                            result,
+                            page.Sheet.PageSettings with { Width = page.Descriptor.WidthPoints, Height = page.Descriptor.HeightPoints },
+                            page.Commands);
+                        return true;
+                    });
                     if (diagnostics.HasFailure)
                     {
                         throw Failure("Conversion was stopped by diagnostic policy.", null, diagnostics, artifacts);
                     }
-
-                    rendered.Position = 0;
-                    using var source = PdfReader.Open(rendered, PdfDocumentOpenMode.Import);
-                    result.AddPage(source.Pages[0]);
                 }
 
                 foreach (var page in pages)
@@ -395,7 +422,13 @@ public static partial class ExcelConverter
                     PdfHyperlinkWriter.Write(result, page.Descriptor.OutputPageNumber!.Value, page.Descriptor.HeightPoints, page.Links ?? []);
                 }
 
-                result.Save(stream, false);
+                token.ThrowIfCancellationRequested();
+                ConversionMetrics.Measure("pdfFinalSave", () =>
+                {
+                    result.Save(stream, false);
+                    return true;
+                });
+                ConversionMetrics.Report("pdfSave", 1);
             },
             token).ConfigureAwait(false);
     }
@@ -483,7 +516,8 @@ public static partial class ExcelConverter
                 }
 
                 var request = new FontRequest(style.Family, style.Bold ? 700 : 400, style.Italic);
-                foreach (var run in fonts.ResolveTextRuns(text, request).Where(x => x.MissingIvsGlyph))
+                var runs = fonts.ResolveTextRuns(text, request);
+                foreach (var run in runs.Where(x => x.MissingIvsGlyph))
                 {
                     var sequence = string.Join(" ", ToScalars(run.SourceText).Select(x => $"U+{x:X4}"));
                     diagnostics.Add(new(
@@ -497,7 +531,7 @@ public static partial class ExcelConverter
                         UnicodeSequence: sequence));
                 }
 
-                foreach (var run in fonts.ResolveTextRuns(text, request).Where(x => x.MissingPrivateUseGlyph))
+                foreach (var run in runs.Where(x => x.MissingPrivateUseGlyph))
                 {
                     var sequence = string.Join(" ", ToScalars(run.SourceText).Select(x => $"U+{x:X4}"));
                     diagnostics.Add(new(

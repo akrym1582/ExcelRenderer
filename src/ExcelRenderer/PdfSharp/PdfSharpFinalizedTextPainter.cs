@@ -154,7 +154,8 @@ internal sealed class PdfSharpFinalizedTextPainter
 
         if (run.GlyphId is { } glyph || run.MissingPrivateUseGlyph)
         {
-            using var typeface = CreateTypeface(run.Font);
+            using var ownedTypeface = ConversionFontResources.Current is null ? CreateTypeface(run.Font) : null;
+            var typeface = ConversionFontResources.Current?.GetTypeface(run.Font) ?? ownedTypeface!;
             using var font = new SKFont(typeface, (float)size);
             glyph = run.GlyphId ?? font.GetGlyphs(run.Text)[0];
             using var path = font.GetGlyphPath(glyph)

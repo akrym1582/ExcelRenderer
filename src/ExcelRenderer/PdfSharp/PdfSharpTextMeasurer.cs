@@ -15,6 +15,7 @@ namespace ExcelRenderer.PdfSharp;
 public sealed class PdfSharpTextMeasurer : ITextMeasurer, ITextLayoutService
 {
     private readonly IFontManager? _fontManager;
+    private readonly Dictionary<(string Text, FontStyle Font, double Width, bool Wrap, int Generation), TextLayoutResult>? _layouts;
 
     /// <summary>Initializes a new instance of the <see cref="PdfSharpTextMeasurer"/> class.</summary>
     public PdfSharpTextMeasurer()
@@ -26,6 +27,15 @@ public sealed class PdfSharpTextMeasurer : ITextMeasurer, ITextLayoutService
     public PdfSharpTextMeasurer(IFontManager fontManager)
     {
         _fontManager = fontManager ?? throw new ArgumentNullException(nameof(fontManager));
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="PdfSharpTextMeasurer"/> class with a conversion-local cache.</summary>
+    /// <param name="fontManager">The conversion font manager.</param>
+    /// <param name="cacheLayouts">Whether to cache immutable finalized layouts.</param>
+    internal PdfSharpTextMeasurer(FontManager fontManager, bool cacheLayouts)
+        : this(fontManager)
+    {
+        _layouts = cacheLayouts ? new() : null;
     }
 
     /// <summary>指定したフォントで文字列を測定し、必要に応じて利用可能幅に収まる行数へ折り返した寸法を算出します。</summary>
@@ -45,6 +55,12 @@ public sealed class PdfSharpTextMeasurer : ITextMeasurer, ITextLayoutService
         if (string.IsNullOrEmpty(text))
         {
             return new(new(0, 0), []) { EffectiveFontSize = font.Size };
+        }
+
+        var key = (text, font, availableWidth, wrap, (_fontManager as FontManager)?.RegistrationGeneration ?? 0);
+        if (_layouts?.TryGetValue(key, out var cached) == true)
+        {
+            return cached;
         }
 
         using var graphics = XGraphics.CreateMeasureContext(new XSize(availableWidth, double.MaxValue), XGraphicsUnit.Point, XPageDirection.Downwards);
@@ -80,12 +96,23 @@ public sealed class PdfSharpTextMeasurer : ITextMeasurer, ITextLayoutService
         }
 
         var lines = lineTexts.Select(line => CreateLine(graphics, line.Text, line.ExplicitBreak, font, request)).ToArray();
-        return new(
+        var result = new TextLayoutResult(
             new(lines.Length == 0 ? 0 : lines.Max(line => line.Width), lines.Sum(line => line.Height)),
-            lines)
+            Array.AsReadOnly(lines))
         {
             EffectiveFontSize = font.Size,
         };
+        if (_layouts is not null && text.Length <= 2048)
+        {
+            if (_layouts.Count >= 512)
+            {
+                _layouts.Clear();
+            }
+
+            _layouts[key] = result;
+        }
+
+        return result;
     }
 
     /// <summary>レンダリング用フォント書式を、同じファミリー、サイズ、太字、斜体、および下線を持つ PDFsharp フォントへ変換します。</summary>
@@ -118,6 +145,7 @@ public sealed class PdfSharpTextMeasurer : ITextMeasurer, ITextLayoutService
     /// <param name="size">The font size in points.</param>
     /// <returns>A PDFsharp font that uses exactly the supplied face.</returns>
     internal static XFont CreateResolvedFont(ResolvedFont font, double size) =>
+        ConversionFontResources.Current?.GetPdfFont(font, size) ??
         new(PdfSharpFontResolver.RegisterResolvedFont(font), size, XFontStyleEx.Regular);
 
     private static double MeasureRun(XGraphics graphics, TextRun run, FontStyle style)
@@ -128,7 +156,8 @@ public sealed class PdfSharpTextMeasurer : ITextMeasurer, ITextLayoutService
         }
 
         using Stream stream = run.Font.FontData is null ? File.OpenRead(run.Font.FilePath) : new MemoryStream(run.Font.FontData, false);
-        using var typeface = SKTypeface.FromStream(stream) ?? throw new InvalidOperationException($"フォント {run.Font.Family} を読み込めません。");
+        using var ownedTypeface = ConversionFontResources.Current is null ? SKTypeface.FromStream(stream) : null;
+        var typeface = ConversionFontResources.Current?.GetTypeface(run.Font) ?? ownedTypeface ?? throw new InvalidOperationException($"フォント {run.Font.Family} を読み込めません。");
         using var skFont = new SKFont(typeface, (float)style.Size);
         glyph = run.GlyphId ?? run.ColorEmojiGlyphId ?? skFont.GetGlyphs(run.Text)[0];
         return skFont.GetGlyphWidths([glyph])[0];
@@ -136,6 +165,11 @@ public sealed class PdfSharpTextMeasurer : ITextMeasurer, ITextLayoutService
 
     private static (double Ascent, double Descent, double Leading) MeasureLineMetrics(ResolvedFont font, double size)
     {
+        if (ConversionFontResources.Current is { } resources)
+        {
+            return resources.GetMetrics(font, size);
+        }
+
         using Stream stream = font.FontData is null ? File.OpenRead(font.FilePath) : new MemoryStream(font.FontData, false);
         using var typeface = SKTypeface.FromStream(stream) ?? throw new InvalidOperationException($"フォント {font.Family} を読み込めません。");
         using var skFont = new SKFont(typeface, (float)size);
@@ -161,8 +195,10 @@ public sealed class PdfSharpTextMeasurer : ITextMeasurer, ITextLayoutService
         }
 
         var primary = _fontManager?.Resolve(request);
-        var metrics = resolvedRuns.Select(run => MeasureLineMetrics(run.Font, style.Size))
-            .Concat(primary is null ? [] : [MeasureLineMetrics(primary, style.Size)])
+        var metrics = resolvedRuns.Select(run => run.Font)
+            .Concat(primary is null ? [] : [primary])
+            .GroupBy(face => face.FaceId)
+            .Select(group => MeasureLineMetrics(group.First(), style.Size))
             .ToArray();
         var fallbackHeight = metrics.Length == 0 ? graphics.MeasureString("Ag", CreateFont(style)).Height : 0;
         var ascent = metrics.Length == 0 ? fallbackHeight * 0.8 : metrics.Max(item => item.Ascent);
@@ -170,7 +206,7 @@ public sealed class PdfSharpTextMeasurer : ITextMeasurer, ITextLayoutService
         var leading = metrics.Length == 0 ? 0 : metrics.Max(item => item.Leading);
         var height = ascent + descent + leading;
         var width = resolvedRuns.Count == 0 ? graphics.MeasureString(text, CreateFont(style)).Width : x;
-        return new(text, width, height, ascent, positionedRuns, explicitBreak)
+        return new(text, width, height, ascent, positionedRuns.AsReadOnly(), explicitBreak)
         {
             Ascent = ascent,
             Descent = descent,

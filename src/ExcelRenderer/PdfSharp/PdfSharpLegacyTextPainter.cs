@@ -212,7 +212,8 @@ internal sealed class PdfSharpLegacyTextPainter
             }
         }
 
-        using var metricsTypeface = CreateTypeface(_fontManager!.Resolve(request));
+        using var metricsLease = new TypefaceLease(_fontManager!.Resolve(request));
+        var metricsTypeface = metricsLease.Typeface ?? throw new InvalidOperationException($"フォント {_fontManager!.Resolve(request).Family} を読み込めません。");
         using var metricsFont = new SKFont(metricsTypeface, (float)size);
         var metrics = metricsFont.Metrics;
         var lineHeight = metrics.Descent - metrics.Ascent + metrics.Leading;
@@ -257,13 +258,15 @@ internal sealed class PdfSharpLegacyTextPainter
                                 y - metrics.Ascent + bitmap.Bounds.Top,
                                 bitmap.Bounds.Width,
                                 bitmap.Bounds.Height));
-                        using var emojiTypeface = CreateTypeface(run.Font);
+                        using var emojiLease = new TypefaceLease(run.Font);
+                        var emojiTypeface = emojiLease.Typeface ?? throw new InvalidOperationException($"フォント {run.Font.Family} を読み込めません。");
                         using var emojiFont = new SKFont(emojiTypeface, (float)size);
                         x += emojiFont.GetGlyphWidths([emojiGlyph])[0];
                     }
                     else if (run.GlyphId is { } glyph || run.MissingPrivateUseGlyph)
                     {
-                        using var typeface = CreateTypeface(run.Font);
+                        using var ownedTypeface = ConversionFontResources.Current is null ? CreateTypeface(run.Font) : null;
+                        var typeface = ConversionFontResources.Current?.GetTypeface(run.Font) ?? ownedTypeface!;
                         using var font = new SKFont(typeface, (float)size);
                         glyph = run.GlyphId ?? font.GetGlyphs(run.Text)[0];
                         using var path = font.GetGlyphPath(glyph)
@@ -337,7 +340,8 @@ internal sealed class PdfSharpLegacyTextPainter
         {
             if ((run.GlyphId ?? run.ColorEmojiGlyphId) is { } glyph || run.MissingPrivateUseGlyph)
             {
-                using var typeface = CreateTypeface(run.Font);
+                using var ownedTypeface = ConversionFontResources.Current is null ? CreateTypeface(run.Font) : null;
+                var typeface = ConversionFontResources.Current?.GetTypeface(run.Font) ?? ownedTypeface!;
                 using var font = new SKFont(typeface, (float)size);
                 glyph = run.GlyphId ?? run.ColorEmojiGlyphId ?? font.GetGlyphs(run.Text)[0];
                 width += font.GetGlyphWidths([glyph])[0];

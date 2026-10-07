@@ -1,0 +1,14 @@
+[
+  {
+    "Package": "ExcelRenderer.Tool.1.6.10.nupkg",
+    "FileCount": 78,
+    "Library": "tools/net10.0/any/ExcelRenderer.dll",
+    "LibrarySHA256": "f8537201ea620b530e865790c59e054bc9ea66304a517ba0c30394d4d5ed7507"
+  },
+  {
+    "Package": "ExcelRenderer.1.6.10.nupkg",
+    "FileCount": 8,
+    "Library": "lib/netstandard2.1/ExcelRenderer.dll",
+    "LibrarySHA256": "f8537201ea620b530e865790c59e054bc9ea66304a517ba0c30394d4d5ed7507"
+  }
+]

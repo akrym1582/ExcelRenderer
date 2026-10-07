@@ -40,9 +40,10 @@ public sealed class ReportLayoutEngine
         if (sheet.PrintAreas.Count > 1)
         {
             var pages = new List<RenderPage>();
+            var geometry = new SheetGeometry(sheet);
             foreach (var area in sheet.PrintAreas)
             {
-                var areaDocument = LayoutSingleArea(sheet with { PrintArea = area, PrintAreas = [] });
+                var areaDocument = LayoutSingleArea(sheet with { PrintArea = area, PrintAreas = [] }, geometry);
                 var offset = pages.Count;
                 pages.AddRange(areaDocument.Pages.Select(page => page with { Number = offset + page.Number }));
             }
@@ -134,12 +135,18 @@ public sealed class ReportLayoutEngine
         return new(document, width, height);
     }
 
-    private RenderDocument LayoutSingleArea(ReportSheet sheet)
+    private RenderDocument LayoutSingleArea(ReportSheet sheet, SheetGeometry? geometry = null)
     {
-        var context = new ReportLayoutContext(sheet, TextMeasurer);
+        var context = geometry is null
+            ? new ReportLayoutContext(sheet, TextMeasurer)
+            : new ReportLayoutContext(sheet, TextMeasurer, geometry);
         foreach (var pass in passes)
         {
-            pass.Execute(context);
+            ExcelRenderer.Rendering.ConversionMetrics.Measure(pass.GetType().Name, () =>
+            {
+                pass.Execute(context);
+                return true;
+            });
         }
 
         return context.RenderDocument ?? new RenderDocument([]);

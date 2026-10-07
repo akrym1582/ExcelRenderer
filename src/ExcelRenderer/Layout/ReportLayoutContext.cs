@@ -21,6 +21,16 @@ public sealed class ReportLayoutContext
         TextMeasurer = textMeasurer;
     }
 
+    /// <summary>Initializes a new instance of the <see cref="ReportLayoutContext"/> class with shared sheet geometry.</summary>
+    /// <param name="sheet">The source sheet with area-specific print settings.</param>
+    /// <param name="textMeasurer">The shared text measurer.</param>
+    /// <param name="sharedGeometry">The immutable sheet-origin geometry.</param>
+    internal ReportLayoutContext(ReportSheet sheet, ITextMeasurer textMeasurer, SheetGeometry sharedGeometry)
+        : this(sheet, textMeasurer)
+    {
+        geometry = sharedGeometry;
+    }
+
     /// <summary>
     /// Gets the source worksheet. レイアウト対象のシートを取得します。
     /// </summary>

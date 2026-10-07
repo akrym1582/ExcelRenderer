@@ -400,7 +400,7 @@ public sealed class RangeTrimHyperlinkTests
     }
 
     [Fact]
-    public void Viewport_restores_caller_canvas_after_drawing_failure()
+    public void Viewport_restores_caller_canvas_after_skipping_undecodable_image()
     {
         using var bitmap = new SKBitmap(20, 20);
         using var canvas = new SKCanvas(bitmap);
@@ -410,8 +410,8 @@ public sealed class RangeTrimHyperlinkTests
         var matrix = canvas.TotalMatrix;
         var clip = canvas.DeviceClipBounds;
         var viewport = new PageViewport(200, 150, new(40, 30, 100, 60), 2);
-        Assert.Throws<InvalidDataException>(() => new SkiaDrawingContext(false).Execute(canvas,
-            viewport.Apply([new DrawImageCommand(1, new(40, 30, 10, 10), [1, 2])], 1)));
+        new SkiaDrawingContext(false).Execute(canvas,
+            viewport.Apply([new DrawImageCommand(1, new(40, 30, 10, 10), [1, 2])], 1));
         Assert.Equal(savedCount, canvas.SaveCount);
         Assert.Equal(matrix, canvas.TotalMatrix);
         Assert.Equal(clip, canvas.DeviceClipBounds);

@@ -16,6 +16,8 @@ internal sealed class SheetLayoutPlan
     private readonly (CellAddress Address, ReportRect Bounds)[] cells;
     private readonly BandIndex<int> cellBands;
     private readonly int[] repeatedRows;
+    private readonly HashSet<int> titleRows;
+    private readonly HashSet<int> titleColumns;
     private readonly SheetObjectLayoutIndex? objects;
 
     /// <summary>Initializes a new instance of the <see cref="SheetLayoutPlan"/> class.</summary>
@@ -33,7 +35,8 @@ internal sealed class SheetLayoutPlan
         objects = (sheet.Images?.Count ?? 0) + (sheet.Shapes?.Count ?? 0) > 0 ? new(context) : null;
         cells = CellBoundsPass.EnumerateBounds(context).ToArray();
         cellBands = new(cells.Select((cell, index) => (index, cell.Bounds.Y, cell.Bounds.Y + cell.Bounds.Height)));
-        var titleRows = new HashSet<int>(Pages.FirstOrDefault()?.TitleRows ?? []);
+        titleRows = new(Pages.FirstOrDefault()?.TitleRows ?? []);
+        titleColumns = new(Pages.FirstOrDefault()?.TitleColumns ?? []);
         repeatedRows = Enumerable.Range(0, cells.Length).Where(index => titleRows.Contains(cells[index].Address.Row)).ToArray();
     }
 
@@ -63,12 +66,9 @@ internal sealed class SheetLayoutPlan
 
         if (plan.Horizontal is { } horizontal && plan.Vertical is { } vertical)
         {
-            var repeatColumns = horizontal.Start >= plan.TitleColumnEnd - 1e-7;
-            var repeatRows = vertical.Start >= plan.TitleRowEnd - 1e-7;
-            var titleColumns = new HashSet<int>(plan.TitleColumns);
-            var titleRows = new HashSet<int>(plan.TitleRows);
+            var selection = new PageCellSelection(horizontal, vertical, titleColumns, titleRows, plan.TitleColumnEnd, plan.TitleRowEnd, sheet.RequestedRange is not null);
             var candidates = cellBands.Query(vertical.Start, vertical.End);
-            if (repeatRows)
+            if (selection.RepeatRows)
             {
                 candidates = candidates.Concat(repeatedRows);
             }
@@ -77,11 +77,7 @@ internal sealed class SheetLayoutPlan
             {
                 var (address, bounds) = cells[i];
                 var cell = sheet.Cells[address];
-                return (sheet.RequestedRange is not null && (cell.ColumnSpan > 1 || cell.RowSpan > 1) &&
-                    bounds.X < horizontal.End && bounds.X + bounds.Width > horizontal.Start &&
-                    bounds.Y < vertical.End && bounds.Y + bounds.Height > vertical.Start) ||
-                    (((bounds.X >= horizontal.Start && bounds.X < horizontal.End) || (repeatColumns && titleColumns.Contains(address.Column))) &&
-                    ((bounds.Y >= vertical.Start && bounds.Y < vertical.End) || (repeatRows && titleRows.Contains(address.Row))));
+                return selection.Contains(address, bounds, cell.ColumnSpan > 1 || cell.RowSpan > 1);
             }).Select(i => cells[i].Address).ToArray();
         }
         else

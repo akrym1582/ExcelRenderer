@@ -89,8 +89,9 @@ internal sealed class RenderPageBuilder
     /// <returns>An immutable page containing the selected and mapped objects.</returns>
     internal RenderPage Build(int pageNumber, PageBand horizontal, PageBand vertical)
     {
-        var repeatColumns = horizontal.Start >= _titleColumnEnd - Epsilon;
-        var repeatRows = vertical.Start >= _titleRowEnd - Epsilon;
+        var selection = new PageCellSelection(horizontal, vertical, _titleColumnSet, _titleRowSet, _titleColumnEnd, _titleRowEnd, _context.Sheet.RequestedRange is not null);
+        var repeatColumns = selection.RepeatColumns;
+        var repeatRows = selection.RepeatRows;
         var horizontalEnd = double.IsFinite(horizontal.End) ? horizontal.End : LastColumnEnd();
         var verticalEnd = double.IsFinite(vertical.End) ? vertical.End : LastRowEnd();
         var placement = new PagePlacement(
@@ -111,7 +112,7 @@ internal sealed class RenderPageBuilder
         }
 
         var cells = candidates.GroupBy(layout => layout.Address).Select(group => group.First())
-            .Where(layout => IsCellOnPage(layout, horizontal, vertical, repeatColumns, repeatRows))
+            .Where(layout => selection.Contains(layout.Address, layout.Bounds, _context.Sheet.Cells[layout.Address].ColumnSpan > 1 || _context.Sheet.Cells[layout.Address].RowSpan > 1))
             .OrderBy(layout => _cellOrder[layout.Address])
             .Select(layout => BuildCell(layout, placement, repeatColumns, repeatRows, regions))
             .ToArray();
@@ -200,20 +201,6 @@ internal sealed class RenderPageBuilder
 
         return cell with { Style = style };
     }
-
-    private bool IsCellOnPage(
-        CellLayout layout,
-        PageBand horizontal,
-        PageBand vertical,
-        bool repeatColumns,
-        bool repeatRows) =>
-        (_context.Sheet.RequestedRange is not null &&
-            (_context.Sheet.Cells[layout.Address].ColumnSpan > 1 || _context.Sheet.Cells[layout.Address].RowSpan > 1) &&
-            Intersects(layout.Bounds, horizontal, vertical)) ||
-        (((layout.Bounds.X >= horizontal.Start && layout.Bounds.X < horizontal.End) ||
-            (repeatColumns && _titleColumnSet.Contains(layout.Address.Column))) &&
-        ((layout.Bounds.Y >= vertical.Start && layout.Bounds.Y < vertical.End) ||
-            (repeatRows && _titleRowSet.Contains(layout.Address.Row))));
 
     private RenderCell BuildCell(CellLayout layout, PagePlacement placement, bool repeatColumns, bool repeatRows, IReadOnlyList<PageSourceRegion> regions)
     {

@@ -73,6 +73,18 @@ internal sealed class SkiaDrawingContext
     private static SKRect ToRect(ReportRect rect) =>
         new((float)rect.X, (float)rect.Y, (float)(rect.X + rect.Width), (float)(rect.Y + rect.Height));
 
+    private static SKImage? DecodeImage(byte[] imageBytes)
+    {
+        try
+        {
+            return SKImage.FromEncodedData(imageBytes);
+        }
+        catch (Exception exception) when (exception is ArgumentException or InvalidOperationException or InvalidDataException)
+        {
+            return null;
+        }
+    }
+
     private void DrawShape(SKCanvas canvas, DrawShapeCommand command)
     {
         var b = ToRect(command.Bounds);
@@ -155,8 +167,12 @@ internal sealed class SkiaDrawingContext
 
     private void DrawImage(SKCanvas canvas, DrawImageCommand command)
     {
-        using var image = SKImage.FromEncodedData(command.ImageBytes)
-            ?? throw new InvalidDataException("画像データを読み込めません。");
+        using var image = DecodeImage(command.ImageBytes);
+        if (image is null)
+        {
+            return;
+        }
+
         var destination = ToRect(command.Bounds);
         var source = command.Crop is not { } crop
             ? new SKRect(0, 0, image.Width, image.Height)

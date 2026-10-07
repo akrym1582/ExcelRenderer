@@ -111,9 +111,9 @@ public sealed class SvgRendererTests
     public void Render_disposes_factory_stream_when_rendering_fails()
     {
         var output = new CaptureOnDisposeStream();
-        Assert.Throws<InvalidDataException>(() => new SvgRenderer().Render(
-            [new DrawImageCommand(1, new ReportRect(0, 0, 2, 2), [1, 2, 3])],
-            new PageSettings(10, 10),
+        Assert.Throws<ArgumentOutOfRangeException>(() => new SvgRenderer().Render(
+            [new FillRectangleCommand(1, new ReportRect(0, 0, 2, 2), new ReportColor(0, 0, 255))],
+            new PageSettings(double.NaN, 10),
             _ => output));
 
         Assert.True(output.WasDisposed);

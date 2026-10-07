@@ -1,0 +1,67 @@
+{
+  "png-shapes": {
+    "before": {
+      "medianMs": 207.51,
+      "medianAllocatedMiB": 3.273,
+      "peakMiB": 76.24
+    },
+    "after": {
+      "medianMs": 225.22,
+      "medianAllocatedMiB": 3.285,
+      "peakMiB": 71.46
+    },
+    "comparedOutputs": 9
+  },
+  "svg-shapes": {
+    "before": {
+      "medianMs": 259.2,
+      "medianAllocatedMiB": 26.293,
+      "peakMiB": 99.7
+    },
+    "after": {
+      "medianMs": 245.68,
+      "medianAllocatedMiB": 14.179,
+      "peakMiB": 90.12
+    },
+    "comparedOutputs": 9
+  },
+  "png-text": {
+    "before": {
+      "medianMs": 8529.61,
+      "medianAllocatedMiB": 0.449,
+      "peakMiB": 4000.82
+    },
+    "after": {
+      "medianMs": 289.42,
+      "medianAllocatedMiB": 0.069,
+      "peakMiB": 63.45
+    },
+    "comparedOutputs": 9
+  },
+  "svg-text": {
+    "before": {
+      "medianMs": 817.87,
+      "medianAllocatedMiB": 3.355,
+      "peakMiB": 4002.28
+    },
+    "after": {
+      "medianMs": 31.89,
+      "medianAllocatedMiB": 2.949,
+      "peakMiB": 65.18
+    },
+    "comparedOutputs": 9
+  },
+  "png-large": {
+    "before": {
+      "medianMs": 1859.23,
+      "medianAllocatedMiB": 0.005,
+      "peakMiB": 179.52
+    },
+    "after": {
+      "medianMs": 1839.09,
+      "medianAllocatedMiB": 0.031,
+      "peakMiB": 116.76
+    },
+    "comparedOutputs": 9
+  }
+}

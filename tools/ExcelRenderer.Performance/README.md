@@ -1,6 +1,25 @@
-# PDF performance harness
+# Rendering performance harness
 
 Requires .NET 10. Run from the repository root. The library remains netstandard2.1.
+
+For direct PNG/SVG rendering, use the same Release build with:
+
+```bash
+dotnet tools/ExcelRenderer.Performance/bin/Release/net10.0/ExcelRenderer.Performance.dll direct-images /tmp/image-results png text 3
+```
+
+Formats: `png`, `svg`. Workloads: `text` (20 repeated Japanese/Latin text commands per
+page), `shapes` (10,000 colored rectangles per page), `large` (4096×4096 PNG pixels).
+Each call renders three pages; the last argument repeats the call in one process.
+Text and shapes use 1200×1200 pixels/points at 72 DPI. The large workload is intended
+for PNG. Parsing and layout are excluded, fonts are explicitly registered and resolution
+is warmed before measurement. Reports include elapsed time, managed allocations,
+process lifetime peak working set, native face creation counts and per-page hashes.
+Peak working set includes initialization and grows across repeats; allocations are
+cumulative rather than peak memory. See [measurements and limitations](../../docs/image-performance.ja.md).
+
+The remaining instructions cover the XLSX-to-PDF benchmark.
+
 Generated worksheets contain synthetic labels only. Input preparation and PDF inspection
 are separate from conversion timing; JSON records conversion time and allocations,
 phase timings and end snapshots, GC generations, ZIP expansion and model counts,

@@ -1,7 +1,6 @@
 using System.Globalization;
 using System.Text;
 using System.Xml;
-using System.Xml.Linq;
 using ExcelRenderer.Drawing;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Model;
@@ -47,6 +46,7 @@ public sealed class SvgRenderer
             throw new ArgumentNullException(nameof(outputFactory));
         }
 
+        using var fontResources = ConversionFontResources.Current is null ? new ConversionFontResources() : null;
         var pages = commands.GroupBy(command => command.PageNumber).OrderBy(page => page.Key).ToArray();
         if (pages.Length == 0)
         {
@@ -94,6 +94,7 @@ public sealed class SvgRenderer
         ValidateDimension(pageSettings.Width, nameof(pageSettings.Width));
         ValidateDimension(pageSettings.Height, nameof(pageSettings.Height));
 
+        using var fontResources = ConversionFontResources.Current is null ? new ConversionFontResources() : null;
         using var buffer = new MemoryStream();
         using (var canvas = SKSvgCanvas.Create(
             SKRect.Create((float)pageSettings.Width, (float)pageSettings.Height),
@@ -113,19 +114,16 @@ public sealed class SvgRenderer
         {
             DtdProcessing = DtdProcessing.Prohibit,
             XmlResolver = null,
+            IgnoreWhitespace = true,
         };
-        XDocument document;
-        using (var reader = XmlReader.Create(buffer, readerSettings))
+        using var reader = XmlReader.Create(buffer, readerSettings);
+        if (reader.MoveToContent() != XmlNodeType.Element)
         {
-            document = XDocument.Load(reader, LoadOptions.None);
+            throw new InvalidDataException("SVG のルート要素がありません。");
         }
 
-        var root = document.Root ?? throw new InvalidDataException("SVG のルート要素がありません。");
         var width = Format(pageSettings.Width);
         var height = Format(pageSettings.Height);
-        root.SetAttributeValue("width", width + "pt");
-        root.SetAttributeValue("height", height + "pt");
-        root.SetAttributeValue("viewBox", $"0 0 {width} {height}");
 
         var writerSettings = new XmlWriterSettings
         {
@@ -134,7 +132,37 @@ public sealed class SvgRenderer
             Indent = false,
         };
         using var writer = XmlWriter.Create(output, writerSettings);
-        document.Save(writer);
+        writer.WriteStartDocument();
+        writer.WriteStartElement(reader.Prefix, reader.LocalName, reader.NamespaceURI);
+        if (reader.MoveToFirstAttribute())
+        {
+            do
+            {
+                if (reader.NamespaceURI.Length != 0 || reader.LocalName is not ("width" or "height" or "viewBox"))
+                {
+                    writer.WriteAttributeString(reader.Prefix, reader.LocalName, reader.NamespaceURI, reader.Value);
+                }
+            }
+            while (reader.MoveToNextAttribute());
+
+            reader.MoveToElement();
+        }
+
+        writer.WriteAttributeString("width", width + "pt");
+        writer.WriteAttributeString("height", height + "pt");
+        writer.WriteAttributeString("viewBox", $"0 0 {width} {height}");
+        if (!reader.IsEmptyElement)
+        {
+            reader.Read();
+            while (!reader.EOF && !(reader.NodeType == XmlNodeType.EndElement && reader.Depth == 0))
+            {
+                // Copy each subtree without retaining an XDocument for the whole page.
+                writer.WriteNode(reader, defattr: false);
+            }
+        }
+
+        writer.WriteEndElement();
+        writer.WriteEndDocument();
     }
 
     /// <summary>指定されたポイント寸法の単一キャンバスを SVG として出力します。</summary>

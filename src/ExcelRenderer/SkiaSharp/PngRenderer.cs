@@ -101,6 +101,7 @@ public sealed class PngRenderer
 
         ValidateDpi(dpi);
 
+        using var fontResources = ConversionFontResources.Current is null ? new ConversionFontResources() : null;
         var pages = commands.GroupBy(command => command.PageNumber).OrderBy(page => page.Key).ToArray();
         if (pages.Length == 0)
         {
@@ -144,6 +145,7 @@ public sealed class PngRenderer
 
         ValidateDpi(dpi);
 
+        using var fontResources = ConversionFontResources.Current is null ? new ConversionFontResources() : null;
         var scale = (float)(dpi / 72d);
         var width = Math.Max(1, (int)Math.Ceiling(pageSettings.Width * scale));
         var height = Math.Max(1, (int)Math.Ceiling(pageSettings.Height * scale));
@@ -158,9 +160,7 @@ public sealed class PngRenderer
             drawingContext.Execute(canvas, command);
         }
 
-        using var image = SKImage.FromBitmap(bitmap);
-        using var data = image.Encode(SKEncodedImageFormat.Png, 100);
-        data.SaveTo(output);
+        EncodeBitmap(bitmap, output);
     }
 
     /// <summary>指定されたポイント寸法の単一キャンバスを PNG として出力します。</summary>
@@ -195,6 +195,7 @@ public sealed class PngRenderer
         }
 
         var (width, height) = GetPixelDimensions(widthPoints, heightPoints, dpi, maxPixels);
+        using var fontResources = ConversionFontResources.Current is null ? new ConversionFontResources() : null;
         using var bitmap = new SKBitmap(width, height, SKColorType.Rgba8888, SKAlphaType.Premul);
         using var canvas = new SKCanvas(bitmap);
         canvas.Clear(SKColors.White);
@@ -205,9 +206,16 @@ public sealed class PngRenderer
             drawingContext.Execute(canvas, command);
         }
 
-        using var image = SKImage.FromBitmap(bitmap);
-        using var data = image.Encode(SKEncodedImageFormat.Png, 100);
-        data.SaveTo(output);
+        EncodeBitmap(bitmap, output);
+    }
+
+    private static void EncodeBitmap(SKBitmap bitmap, Stream output)
+    {
+        // Encode the existing pixel buffer directly instead of copying it into an immutable SKImage.
+        if (!bitmap.Encode(output, SKEncodedImageFormat.Png, 100))
+        {
+            throw new InvalidOperationException("PNG 画像をエンコードできません。");
+        }
     }
 
     private static void ValidateDpi(double dpi)

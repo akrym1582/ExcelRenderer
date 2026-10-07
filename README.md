@@ -452,6 +452,16 @@ the sheet models and page commands. This is not constant-memory streaming.
 See the [measurement harness and results](docs/pdf-performance.ja.md) for reproducible
 synthetic workloads and remaining work.
 
+## PNG and SVG performance
+
+PNG and SVG conversions share the indexed reader/layout and conversion-scoped font
+resources described above. Direct `PngRenderer` and `SvgRenderer` calls also share
+native font faces across their pages and release them when the rendering call ends.
+PNG encoding uses the existing bitmap pixels without an immutable image copy.
+SVG dimensions are rewritten with streaming XML processing, without retaining an XML
+tree for the page. The SVG byte buffer and sheet/page commands are still retained.
+See the [PNG/SVG measurements](docs/image-performance.ja.md) for results and limits.
+
 ## Development
 
 To try the CLI from source before publishing, create and install a local package:

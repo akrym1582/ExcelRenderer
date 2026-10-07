@@ -8,7 +8,7 @@ namespace ExcelRenderer.Layout;
 /// </summary>
 public sealed class ReportLayoutEngine
 {
-    private readonly IReadOnlyList<IReportLayoutPass> passes;
+    private readonly IReadOnlyList<IReportLayoutPass> geometryPasses;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ReportLayoutEngine"/> class. 文字列の寸法計測に使用する実装を指定して、レイアウトエンジンを初期化します。
@@ -16,11 +16,14 @@ public sealed class ReportLayoutEngine
     /// <param name="textMeasurer">セル文字列の描画幅と高さを計測する実装です。</param>
     public ReportLayoutEngine(ITextMeasurer textMeasurer)
     {
-        passes =
+        geometryPasses =
         [
-            new NormalizePass(), new ResolvePrintAreaPass(), new HiddenRowColumnPass(),
-            new ColumnLayoutPass(), new RowLayoutPass(), new ExplicitRangeGeometryPass(), new TextMeasurePass(),
-            new CellBoundsPass(), new PaginationPass()
+            new NormalizePass(),
+            new ResolvePrintAreaPass(),
+            new HiddenRowColumnPass(),
+            new ColumnLayoutPass(),
+            new RowLayoutPass(),
+            new ExplicitRangeGeometryPass(),
         ];
         TextMeasurer = textMeasurer;
     }
@@ -68,7 +71,7 @@ public sealed class ReportLayoutEngine
         return new(new([page]), plan.Width, plan.Height);
     }
 
-    /// <summary>Plans page bands without measuring cell text.</summary>
+    /// <summary>Prepares row, column, and selected-range geometry without measuring cell text, then plans page bands.</summary>
     /// <param name="sheet">The sheet used by this operation.</param>
     /// <returns>The planned or generated result.</returns>
     internal IReadOnlyList<SheetLayoutPlan> Plan(ReportSheet sheet)
@@ -78,7 +81,7 @@ public sealed class ReportLayoutEngine
         return areas.Select(area =>
         {
             var context = new ReportLayoutContext(area, TextMeasurer, geometry);
-            foreach (var pass in passes.Take(6))
+            foreach (var pass in geometryPasses)
             {
                 pass.Execute(context);
             }

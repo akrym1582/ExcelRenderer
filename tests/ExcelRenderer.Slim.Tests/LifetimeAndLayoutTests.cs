@@ -22,7 +22,7 @@ public sealed class LifetimeAndLayoutTests
         {
             Assert.True(entered.Wait(TimeSpan.FromSeconds(15)));
             using var input = TestSupport.Workbook(); using var output = new MemoryStream(); using var cancellation = new CancellationTokenSource();
-            var waiting = SlimExcelConverter.ConvertAsync(input, output, TestSupport.Options, cancellation.Token);
+            var waiting = ExcelConverter.ConvertAsync(input, output, TestSupport.Options, cancellation.Token);
             cancellation.Cancel();
             await Assert.ThrowsAnyAsync<OperationCanceledException>(() => waiting);
             Assert.Equal(0, output.Length);
@@ -43,7 +43,7 @@ public sealed class LifetimeAndLayoutTests
         {
             using var input = TestSupport.Workbook(); using var output = new MemoryStream();
             using var target = new TestStream(output, onWrite: () => { if (duringSave) cancellation.Cancel(); });
-            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => SlimExcelConverter.ConvertAsync(input, target, TestSupport.Options, cancellation.Token));
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => ExcelConverter.ConvertAsync(input, target, TestSupport.Options, cancellation.Token));
             if (duringSave) Assert.True(output.Length > 0);
         }
         finally { ConversionMetrics.Observer = null; }

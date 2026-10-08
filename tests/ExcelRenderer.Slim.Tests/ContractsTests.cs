@@ -10,12 +10,12 @@ public sealed class ContractsTests
     {
         using var input = TestSupport.Workbook();
         using var output = new MemoryStream();
-        await Assert.ThrowsAsync<ArgumentNullException>(() => SlimExcelConverter.ConvertAsync(null!, output, TestSupport.Options));
-        await Assert.ThrowsAsync<ArgumentNullException>(() => SlimExcelConverter.ConvertAsync(input, null!, TestSupport.Options));
-        await Assert.ThrowsAsync<ArgumentNullException>(() => SlimExcelConverter.ConvertAsync(input, output, null!));
-        await Assert.ThrowsAsync<ArgumentException>(() => SlimExcelConverter.ConvertAsync(input, output, new()));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => ExcelConverter.ConvertAsync(null!, output, TestSupport.Options));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => ExcelConverter.ConvertAsync(input, null!, TestSupport.Options));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => ExcelConverter.ConvertAsync(input, output, null!));
+        await Assert.ThrowsAsync<ArgumentException>(() => ExcelConverter.ConvertAsync(input, output, new()));
         input.Position = 0;
-        await Assert.ThrowsAsync<FileNotFoundException>(() => SlimExcelConverter.ConvertAsync(input, output, new() { FontFilePath = Path.Combine(Path.GetTempPath(), Guid.NewGuid()+".ttf") }));
+        await Assert.ThrowsAsync<FileNotFoundException>(() => ExcelConverter.ConvertAsync(input, output, new() { FontFilePath = Path.Combine(Path.GetTempPath(), Guid.NewGuid()+".ttf") }));
     }
 
     [Theory]
@@ -30,7 +30,7 @@ public sealed class ContractsTests
         if (nonempty) { destination.WriteByte(0); destination.Position = 0; }
         using var input = new TestStream(source, readable: readable);
         using var output = new TestStream(destination, writable: writable, seekable: seekable);
-        await Assert.ThrowsAsync<ArgumentException>(() => SlimExcelConverter.ConvertAsync(input, output, TestSupport.Options));
+        await Assert.ThrowsAsync<ArgumentException>(() => ExcelConverter.ConvertAsync(input, output, TestSupport.Options));
     }
 
     [Theory]
@@ -45,7 +45,7 @@ public sealed class ContractsTests
         {
             await File.WriteAllBytesAsync(path, System.Text.Encoding.ASCII.GetBytes(header.PadRight(32)));
             using var input = TestSupport.Workbook(); using var output = new MemoryStream();
-            await Assert.ThrowsAsync<InvalidDataException>(() => SlimExcelConverter.ConvertAsync(input, output, new() { FontFilePath = path }));
+            await Assert.ThrowsAsync<InvalidDataException>(() => ExcelConverter.ConvertAsync(input, output, new() { FontFilePath = path }));
             Assert.Equal(0, output.Length);
         }
         finally { File.Delete(path); }
@@ -67,7 +67,7 @@ public sealed class ContractsTests
         prefixed.Write(new byte[17]); workbook.CopyTo(prefixed); prefixed.Position = 17;
         using var target = new MemoryStream();
         var input = new TestStream(prefixed, seekable: seekable); var output = new TestStream(target);
-        var result = await SlimExcelConverter.ConvertAsync(input, output, TestSupport.Options);
+        var result = await ExcelConverter.ConvertAsync(input, output, TestSupport.Options);
         Assert.Equal(1, result.PageCount); Assert.False(input.Disposed); Assert.False(output.Disposed);
         using var pdf = TestSupport.Open(target.ToArray()); Assert.Single(pdf.Pages);
     }
@@ -81,10 +81,10 @@ public sealed class ContractsTests
     {
         var settings = limit switch
         {
-            "input" => new SlimInputOptions { MaxInputBytes = 1 },
-            "memory" => new SlimInputOptions { MemoryThresholdBytes = 1 },
-            "entry" => new SlimInputOptions { MaxZipEntryCount = 1 },
-            _ => new SlimInputOptions { MaxUncompressedZipBytes = 1 },
+            "input" => new WorkbookInputOptions { MaxInputBytes = 1 },
+            "memory" => new WorkbookInputOptions { MemoryThresholdBytes = 1 },
+            "entry" => new WorkbookInputOptions { MaxZipEntryCount = 1 },
+            _ => new WorkbookInputOptions { MaxUncompressedZipBytes = 1 },
         };
         await Assert.ThrowsAsync<InvalidDataException>(() => TestSupport.Convert(options: TestSupport.Options with { Input = settings }));
     }
@@ -100,7 +100,7 @@ public sealed class ContractsTests
             using var input = TestSupport.Workbook(); using var output = new MemoryStream();
             using var cancellation = new CancellationTokenSource(); var reads = 0;
             using var cancelInput = new TestStream(input, onRead: () => { if (++reads == 2) cancellation.Cancel(); });
-            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => SlimExcelConverter.ConvertAsync(cancelInput, output, options, cancellation.Token));
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => ExcelConverter.ConvertAsync(cancelInput, output, options, cancellation.Token));
             Assert.Empty(Directory.GetFiles(directory));
         }
         finally { Directory.Delete(directory, true); }
@@ -115,7 +115,7 @@ public sealed class ContractsTests
         {
             using var input = TestSupport.Workbook(); using var output = new MemoryStream();
             using var failing = new TestStream(output, onWrite: () => throw new IOException("write failed"));
-            await Assert.ThrowsAsync<IOException>(() => SlimExcelConverter.ConvertAsync(input, failing, TestSupport.Options));
+            await Assert.ThrowsAsync<IOException>(() => ExcelConverter.ConvertAsync(input, failing, TestSupport.Options));
             Assert.Equal(1, (await TestSupport.Convert()).Result.PageCount);
             Assert.Equal(2, created); Assert.Equal(created, disposed);
         }
@@ -144,17 +144,17 @@ public sealed class ContractsTests
     public async Task Invalid_workbook_and_pre_cancelled_request_leave_output_empty()
     {
         using var input = new MemoryStream(new byte[] { 1, 2, 3 }); using var output = new MemoryStream();
-        await Assert.ThrowsAsync<InvalidDataException>(() => SlimExcelConverter.ConvertAsync(input, output, TestSupport.Options));
+        await Assert.ThrowsAsync<InvalidDataException>(() => ExcelConverter.ConvertAsync(input, output, TestSupport.Options));
         using var workbook = TestSupport.Workbook(); using var cancellation = new CancellationTokenSource(); cancellation.Cancel();
-        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => SlimExcelConverter.ConvertAsync(workbook, output, TestSupport.Options, cancellation.Token));
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => ExcelConverter.ConvertAsync(workbook, output, TestSupport.Options, cancellation.Token));
         Assert.Equal(0, output.Length);
     }
 
     [Fact]
     public void Exported_types_and_dependencies_are_minimal()
     {
-        var assembly = typeof(SlimExcelConverter).Assembly;
-        Assert.Equal(new[] { "SlimDiagnostic", "SlimExcelConverter", "SlimInputOptions", "SlimPdfOptions", "SlimPdfResult" }, assembly.GetExportedTypes().Select(t => t.Name).Order().ToArray());
+        var assembly = typeof(ExcelConverter).Assembly;
+        Assert.Equal(new[] { "ConversionDiagnostic", "ConversionResult", "ExcelConverter", "PdfExportOptions", "WorkbookInputOptions" }, assembly.GetExportedTypes().Select(t => t.Name).Order().ToArray());
         Assert.DoesNotContain(assembly.GetReferencedAssemblies(), a => a.Name is "ExcelRenderer" or "ExcelRenderer.Fonts" or "ExcelRenderer.Tool");
     }
 }

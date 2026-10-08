@@ -10,6 +10,7 @@ using PdfSharp.Drawing;
 using PdfSharp.Fonts;
 using PdfSharp.Pdf;
 using SkiaSharp;
+using RenderingDiagnostic = ExcelRenderer.Slim.Rendering.ConversionDiagnostic;
 
 namespace ExcelRenderer.Slim.Pdf;
 
@@ -23,10 +24,10 @@ internal sealed class PdfSharpRenderer
     internal PdfSharpRenderer(SingleFontContext? context = null) => textPainter = context is null ? null : new(context);
 
     /// <summary>Gets the callback for image warnings, including decode failure details. Warnings are also written to trace listeners.</summary>
-    public Action<ConversionDiagnostic>? DiagnosticHandler { get; init; }
+    public Action<RenderingDiagnostic>? DiagnosticHandler { get; init; }
 
     /// <summary>Gets or sets the diagnostic context for the page being appended.</summary>
-    internal Action<ConversionDiagnostic>? PageDiagnosticHandler { get; set; }
+    internal Action<RenderingDiagnostic>? PageDiagnosticHandler { get; set; }
 
     /// <summary>Appends exactly one page, including pages with no commands.</summary>
     /// <param name="document">The final document owned by the caller.</param>
@@ -148,7 +149,7 @@ internal sealed class PdfSharpRenderer
         var bounds = command.Bounds;
         var location = string.Format(CultureInfo.InvariantCulture, "image@{0},{1},{2},{3}", bounds.X, bounds.Y, bounds.Width, bounds.Height);
         var header = BitConverter.ToString(command.ImageBytes, 0, Math.Min(16, command.ImageBytes.Length));
-        var diagnostic = new ConversionDiagnostic(
+        var diagnostic = new RenderingDiagnostic(
             "ImageDecodeFailed",
             DiagnosticSeverity.Warning,
             DiagnosticStage.Render,

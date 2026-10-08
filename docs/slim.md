@@ -2,6 +2,8 @@
 
 A standalone `netstandard2.1` source project for XLSX-to-PDF conversion, usable from .NET 8/10 through ProjectReference. No NuGet package, CLI, embedded-font DLL, or reference to ExcelRenderer/Fonts/Tool is provided.
 
+Public type names match the original library: `ExcelConverter`, `PdfExportOptions`, `WorkbookInputOptions`, `ConversionResult`, and `ConversionDiagnostic`. They are in the `ExcelRenderer.Slim` namespace; option and result members retain the Slim-specific scope. Update callers using the former `Slim`-prefixed names to these names.
+
 ```xml
 <ItemGroup>
   <ProjectReference Include="../ExcelRenderer/src/ExcelRenderer.Slim/ExcelRenderer.Slim.csproj" />
@@ -12,7 +14,7 @@ A standalone `netstandard2.1` source project for XLSX-to-PDF conversion, usable 
 using ExcelRenderer.Slim;
 using var xlsx = File.OpenRead("report.xlsx");
 using var pdf = new FileStream("report.pdf", FileMode.Create, FileAccess.ReadWrite);
-var result = await SlimExcelConverter.ConvertAsync(xlsx, pdf, new SlimPdfOptions
+var result = await ExcelConverter.ConvertAsync(xlsx, pdf, new PdfExportOptions
 {
     FontFilePath = "/fonts/NotoSansJP-Regular.ttf",
     SheetName = null,

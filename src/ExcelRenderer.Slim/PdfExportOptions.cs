@@ -1,7 +1,7 @@
 namespace ExcelRenderer.Slim;
 
 /// <summary>Options for a PDF-only, single-font conversion.</summary>
-public sealed record SlimPdfOptions
+public sealed record PdfExportOptions
 {
     /// <summary>Gets the required path to a single static TrueType font file.</summary>
     public string FontFilePath { get; init; } = string.Empty;
@@ -10,5 +10,5 @@ public sealed record SlimPdfOptions
     public string? SheetName { get; init; }
 
     /// <summary>Gets the input spool and ZIP limits.</summary>
-    public SlimInputOptions Input { get; init; } = new();
+    public WorkbookInputOptions Input { get; init; } = new();
 }

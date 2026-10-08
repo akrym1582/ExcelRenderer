@@ -182,7 +182,7 @@ public sealed class PdfTests
     public async Task Existing_samples_produce_readable_PDF(string name)
     {
         using var input = File.OpenRead(Path.Combine(AppContext.BaseDirectory, "SampleInputs", name)); using var output = new MemoryStream();
-        var result = await SlimExcelConverter.ConvertAsync(input, output, TestSupport.Options);
+        var result = await ExcelConverter.ConvertAsync(input, output, TestSupport.Options);
         using var document = TestSupport.Open(output.ToArray()); Assert.Equal(result.PageCount, document.PageCount); Assert.True(result.PageCount > 0);
         var directory = Path.Combine(AppContext.BaseDirectory, "SampleOutputs"); Directory.CreateDirectory(directory);
         await File.WriteAllBytesAsync(Path.Combine(directory, name.Replace(".xlsx", ".pdf")), output.ToArray());

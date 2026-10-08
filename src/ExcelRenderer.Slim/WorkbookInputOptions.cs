@@ -1,7 +1,7 @@
 namespace ExcelRenderer.Slim;
 
 /// <summary>変換元ブックを準備するときに使用する上限と方針です。</summary>
-public sealed record SlimInputOptions
+public sealed record WorkbookInputOptions
 {
     /// <summary>Gets the maximum number of bytes retained in memory. 入力をメモリ上に保持できる最大バイト数です。</summary>
     public long MemoryThresholdBytes { get; init; } = 16 * 1024 * 1024;

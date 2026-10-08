@@ -6,6 +6,15 @@
 - The rendering flow is `ExcelReader` → `ReportDocument` (`Model`) → `ReportLayoutEngine` (`Layout`) → `DrawCommandGeneratorPass` (`Drawing`) → `PdfSharpRenderer` or `PngRenderer`. Markdown export consumes `ReportDocument` through a separate path.
 - Keep parsing, layout, drawing commands, and output rendering in their respective layers. Add layout behavior as an `IReportLayoutPass` and place it deliberately in `ReportLayoutEngine`.
 
+## Maintaining the main library and Slim together
+
+- `src/ExcelRenderer.Slim` is an independent PDF-only library containing selected, modified copies of the main library's sources. Changes do not propagate automatically between the two projects. Both implementations must be maintained.
+- Before changing reader, model, layout, drawing, PDF, or input/resource code in either project, consult [the source correspondence table](docs/slim-source-map.md) and inspect the corresponding code in the other project. Apply shared bug fixes and behavior changes to both implementations in the same change.
+- Check applicability against [Slim's supported scope](docs/slim.md). Preserve intentional differences: one supplied regular font, IVS reduced to base characters, PDF-only output, and no shapes, link annotations, API range/page selection, or image transforms/splitting. Do not copy excluded features back into Slim or remove supported features from the main library to make the copies identical.
+- When a change applies to only one implementation, explain why the other implementation is unaffected in the PR description. Do not silently leave a shared defect unfixed in one project.
+- For shared fixes, add or update meaningful regression coverage in both test projects and run the solution tests. Run main/Slim PDF comparisons in separate processes because their PDFsharp global-font locks are independent.
+- Keep the source correspondence table and the Japanese guide's embedded table current when files are added, moved, or removed. Preserve Slim's independence: no references to the main library, Fonts, or Tool, and no linked compilation of their sources.
+
 ## Changes
 
 - Coordinates and dimensions in the model and drawing commands are PDF points. Convert to pixels only at PNG output using the requested DPI.

@@ -1,0 +1,8 @@
+{
+  "source_commit": "32e9165d145516dbd0bcb4c2ae31a78ce6774bce",
+  "os": "Linux-6.18.44-x86_64-with-glibc2.41",
+  "dotnet": "10.0.401",
+  "font_sha256": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec",
+  "renderer": "pdftoppm version 26.05.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC",
+  "dpi": 96
+}

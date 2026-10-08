@@ -511,3 +511,7 @@ ExcelRenderer は [MIT License](LICENSE) で提供されます。
 日本語フォントと Noto Color Emoji は任意の `ExcelRenderer.Fonts` パッケージに収録されます。ライブラリで使用する場合は `dotnet add package ExcelRenderer.Fonts` を追加してください。未導入の場合は登録済みまたはシステムのフォントを使います。CLI はフォントパッケージに依存します。Noto Sans JP と Noto Color Emoji には SIL Open Font License 1.1、IPAmj 明朝には IPA Font License Agreement v1.0 が適用されます。`FontOptions.ReplaceIvsWithBaseCharacter` を `true` にすると、IVS を異体字セレクターのない基底文字に置換して描画できます。詳細は[サードパーティ通知](THIRD-PARTY-NOTICES.md)を参照してください。
 
 PDF 出力に使用した確定フォントは、PDFsharp のグローバル resolver の寿命に合わせてスナップショットをプロセス寿命でキャッシュします。折返し計測時のフォントファイル読込みとハッシュの反復を避けるためであり、アプリケーションでは有限で安定したフォント face 群を使用してください。
+
+## PDF専用ソースプロジェクト
+
+[ExcelRenderer Slim](docs/slim.ja.md)は指定した1つの通常TrueTypeフォントでXLSXをPDFに変換します。`src/ExcelRenderer.Slim/ExcelRenderer.Slim.csproj`をProjectReferenceし、既存本体・Fontsを参照せず利用できます。NuGet化しません。IVSは異体字セレクターを除いた基底文字で表示します。印刷・stream契約・制限は利用文書を参照してください。

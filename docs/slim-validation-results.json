@@ -1,0 +1,1214 @@
+{
+  "os": "Linux-6.18.44-x86_64-with-glibc2.41",
+  "dotnet": "10.0.401",
+  "renderer": "pdftoppm version 26.05.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC",
+  "dpi": 96,
+  "font_sha256": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec",
+  "source_commit": "32e9165d145516dbd0bcb4c2ae31a78ce6774bce",
+  "visual": [
+    {
+      "page": "01-japanese-slim-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0
+    },
+    {
+      "page": "01-japanese-slim-2.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0
+    },
+    {
+      "page": "02-image-slim-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0
+    },
+    {
+      "page": "02-image-slim-2.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0
+    },
+    {
+      "page": "03-wrapped-text-slim-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0
+    },
+    {
+      "page": "04-text-decoration-slim-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0
+    },
+    {
+      "page": "05-borders-slim-1.png",
+      "mae_0_255": 0.0003622448865152939,
+      "changed_fraction": 5.7196561028760584e-05
+    },
+    {
+      "page": "05-borders-slim-2.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0
+    },
+    {
+      "page": "06-layout-and-pagination-slim-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0
+    },
+    {
+      "page": "06-layout-and-pagination-slim-2.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0
+    },
+    {
+      "page": "06-layout-and-pagination-slim-3.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0
+    },
+    {
+      "page": "06-layout-and-pagination-slim-4.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0
+    },
+    {
+      "page": "07-multiple-sheets-slim-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0
+    },
+    {
+      "page": "07-multiple-sheets-slim-2.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0
+    },
+    {
+      "page": "08-print-scaling-slim-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0
+    },
+    {
+      "page": "08-print-scaling-slim-2.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0
+    },
+    {
+      "page": "09-cell-border-slim-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0
+    }
+  ],
+  "performance": [
+    {
+      "mode": "text",
+      "rows": 1000,
+      "samples": {
+        "slim": [
+          {
+            "Iteration": 0,
+            "Milliseconds": 4725.8405,
+            "PeakRss": 268173312,
+            "Rss": 268173312,
+            "ManagedMax": 185014720,
+            "ManagedAfter": 169913584,
+            "Handles": 96,
+            "Pages": 25,
+            "PdfBytes": 44337
+          },
+          {
+            "Iteration": 0,
+            "Milliseconds": 4962.4803,
+            "PeakRss": 267583488,
+            "Rss": 267583488,
+            "ManagedMax": 184739200,
+            "ManagedAfter": 169725304,
+            "Handles": 96,
+            "Pages": 25,
+            "PdfBytes": 44337
+          },
+          {
+            "Iteration": 0,
+            "Milliseconds": 5384.9595,
+            "PeakRss": 268058624,
+            "Rss": 268058624,
+            "ManagedMax": 184800824,
+            "ManagedAfter": 169889288,
+            "Handles": 96,
+            "Pages": 25,
+            "PdfBytes": 44337
+          }
+        ],
+        "reference": [
+          {
+            "Iteration": 0,
+            "Milliseconds": 5174.6341,
+            "PeakRss": 285372416,
+            "Rss": 285372416,
+            "ManagedMax": 192840704,
+            "ManagedAfter": 193020984,
+            "Handles": 114,
+            "Pages": 25,
+            "PdfBytes": 43483
+          },
+          {
+            "Iteration": 0,
+            "Milliseconds": 5180.2148,
+            "PeakRss": 285265920,
+            "Rss": 285265920,
+            "ManagedMax": 193921896,
+            "ManagedAfter": 193009592,
+            "Handles": 114,
+            "Pages": 25,
+            "PdfBytes": 43483
+          },
+          {
+            "Iteration": 0,
+            "Milliseconds": 7362.1928,
+            "PeakRss": 285138944,
+            "Rss": 285138944,
+            "ManagedMax": 193022920,
+            "ManagedAfter": 193031144,
+            "Handles": 114,
+            "Pages": 25,
+            "PdfBytes": 43483
+          }
+        ]
+      },
+      "medians": {
+        "slim": {
+          "Milliseconds": 4962.4803,
+          "PeakRss": 268058624,
+          "ManagedMax": 184800824,
+          "Pages": 25,
+          "PdfBytes": 44337
+        },
+        "reference": {
+          "Milliseconds": 5180.2148,
+          "PeakRss": 285265920,
+          "ManagedMax": 193022920,
+          "Pages": 25,
+          "PdfBytes": 43483
+        }
+      },
+      "time_ratio": 0.957968055687575,
+      "rss_ratio": 0.9396798047239572
+    },
+    {
+      "mode": "text",
+      "rows": 5000,
+      "samples": {
+        "slim": [
+          {
+            "Iteration": 0,
+            "Milliseconds": 22964.3297,
+            "PeakRss": 890834944,
+            "Rss": 890834944,
+            "ManagedMax": 798572176,
+            "ManagedAfter": 783117928,
+            "Handles": 96,
+            "Pages": 122,
+            "PdfBytes": 129751
+          },
+          {
+            "Iteration": 0,
+            "Milliseconds": 26170.249,
+            "PeakRss": 889876480,
+            "Rss": 889876480,
+            "ManagedMax": 799924128,
+            "ManagedAfter": 783034328,
+            "Handles": 96,
+            "Pages": 122,
+            "PdfBytes": 129751
+          },
+          {
+            "Iteration": 0,
+            "Milliseconds": 24310.1883,
+            "PeakRss": 890175488,
+            "Rss": 890175488,
+            "ManagedMax": 799273168,
+            "ManagedAfter": 783078960,
+            "Handles": 96,
+            "Pages": 122,
+            "PdfBytes": 129751
+          }
+        ],
+        "reference": [
+          {
+            "Iteration": 0,
+            "Milliseconds": 25782.2641,
+            "PeakRss": 915382272,
+            "Rss": 915382272,
+            "ManagedMax": 812499392,
+            "ManagedAfter": 798096840,
+            "Handles": 114,
+            "Pages": 122,
+            "PdfBytes": 125594
+          },
+          {
+            "Iteration": 0,
+            "Milliseconds": 28879.9916,
+            "PeakRss": 914378752,
+            "Rss": 909701120,
+            "ManagedMax": 812762248,
+            "ManagedAfter": 798393880,
+            "Handles": 114,
+            "Pages": 122,
+            "PdfBytes": 125594
+          },
+          {
+            "Iteration": 0,
+            "Milliseconds": 27158.7292,
+            "PeakRss": 914489344,
+            "Rss": 909656064,
+            "ManagedMax": 812278720,
+            "ManagedAfter": 798389744,
+            "Handles": 114,
+            "Pages": 122,
+            "PdfBytes": 125594
+          }
+        ]
+      },
+      "medians": {
+        "slim": {
+          "Milliseconds": 24310.1883,
+          "PeakRss": 890175488,
+          "ManagedMax": 799273168,
+          "Pages": 122,
+          "PdfBytes": 129751
+        },
+        "reference": {
+          "Milliseconds": 27158.7292,
+          "PeakRss": 914489344,
+          "ManagedMax": 812499392,
+          "Pages": 122,
+          "PdfBytes": 125594
+        }
+      },
+      "time_ratio": 0.8951150888164532,
+      "rss_ratio": 0.973412641536477
+    },
+    {
+      "mode": "text",
+      "rows": 10000,
+      "samples": {
+        "slim": [
+          {
+            "Iteration": 0,
+            "Milliseconds": 70142.596,
+            "PeakRss": 1668448256,
+            "Rss": 1668448256,
+            "ManagedMax": 1565776176,
+            "ManagedAfter": 1547693984,
+            "Handles": 96,
+            "Pages": 244,
+            "PdfBytes": 237027
+          },
+          {
+            "Iteration": 0,
+            "Milliseconds": 65018.5685,
+            "PeakRss": 1666854912,
+            "Rss": 1666854912,
+            "ManagedMax": 1565105248,
+            "ManagedAfter": 1550754600,
+            "Handles": 96,
+            "Pages": 244,
+            "PdfBytes": 237027
+          },
+          {
+            "Iteration": 0,
+            "Milliseconds": 70265.4255,
+            "PeakRss": 1668845568,
+            "Rss": 1668845568,
+            "ManagedMax": 1565776720,
+            "ManagedAfter": 1548784352,
+            "Handles": 96,
+            "Pages": 244,
+            "PdfBytes": 237027
+          }
+        ],
+        "reference": [
+          {
+            "Iteration": 0,
+            "Milliseconds": 71044.1035,
+            "PeakRss": 1694375936,
+            "Rss": 1689538560,
+            "ManagedMax": 1581512736,
+            "ManagedAfter": 1579911320,
+            "Handles": 114,
+            "Pages": 244,
+            "PdfBytes": 228700
+          },
+          {
+            "Iteration": 0,
+            "Milliseconds": 70678.439,
+            "PeakRss": 1697296384,
+            "Rss": 1692565504,
+            "ManagedMax": 1580791016,
+            "ManagedAfter": 1577587504,
+            "Handles": 114,
+            "Pages": 244,
+            "PdfBytes": 228700
+          },
+          {
+            "Iteration": 0,
+            "Milliseconds": 69502.7191,
+            "PeakRss": 1697898496,
+            "Rss": 1689083904,
+            "ManagedMax": 1581386392,
+            "ManagedAfter": 1577373496,
+            "Handles": 114,
+            "Pages": 244,
+            "PdfBytes": 228700
+          }
+        ]
+      },
+      "medians": {
+        "slim": {
+          "Milliseconds": 70142.596,
+          "PeakRss": 1668448256,
+          "ManagedMax": 1565776176,
+          "Pages": 244,
+          "PdfBytes": 237027
+        },
+        "reference": {
+          "Milliseconds": 70678.439,
+          "PeakRss": 1697296384,
+          "ManagedMax": 1581386392,
+          "Pages": 244,
+          "PdfBytes": 228700
+        }
+      },
+      "time_ratio": 0.9924185790237955,
+      "rss_ratio": 0.983003482319326
+    },
+    {
+      "mode": "images",
+      "rows": 1000,
+      "samples": {
+        "slim": [
+          {
+            "Iteration": 0,
+            "Milliseconds": 5183.6402,
+            "PeakRss": 273891328,
+            "Rss": 273891328,
+            "ManagedMax": 182951720,
+            "ManagedAfter": 179674656,
+            "Handles": 100,
+            "Pages": 25,
+            "PdfBytes": 46193
+          },
+          {
+            "Iteration": 0,
+            "Milliseconds": 4887.9912,
+            "PeakRss": 273813504,
+            "Rss": 273813504,
+            "ManagedMax": 182879224,
+            "ManagedAfter": 179689232,
+            "Handles": 100,
+            "Pages": 25,
+            "PdfBytes": 46193
+          },
+          {
+            "Iteration": 0,
+            "Milliseconds": 5656.5713,
+            "PeakRss": 273612800,
+            "Rss": 273612800,
+            "ManagedMax": 187620360,
+            "ManagedAfter": 179726648,
+            "Handles": 100,
+            "Pages": 25,
+            "PdfBytes": 46193
+          }
+        ],
+        "reference": [
+          {
+            "Iteration": 0,
+            "Milliseconds": 5097.6784,
+            "PeakRss": 289390592,
+            "Rss": 284205056,
+            "ManagedMax": 197338744,
+            "ManagedAfter": 191756312,
+            "Handles": 114,
+            "Pages": 25,
+            "PdfBytes": 46134
+          },
+          {
+            "Iteration": 0,
+            "Milliseconds": 5404.6607,
+            "PeakRss": 289669120,
+            "Rss": 289669120,
+            "ManagedMax": 196362960,
+            "ManagedAfter": 191699080,
+            "Handles": 114,
+            "Pages": 25,
+            "PdfBytes": 46134
+          },
+          {
+            "Iteration": 0,
+            "Milliseconds": 5471.2832,
+            "PeakRss": 290562048,
+            "Rss": 290562048,
+            "ManagedMax": 197109808,
+            "ManagedAfter": 191650272,
+            "Handles": 114,
+            "Pages": 25,
+            "PdfBytes": 46134
+          }
+        ]
+      },
+      "medians": {
+        "slim": {
+          "Milliseconds": 5183.6402,
+          "PeakRss": 273813504,
+          "ManagedMax": 182951720,
+          "Pages": 25,
+          "PdfBytes": 46193
+        },
+        "reference": {
+          "Milliseconds": 5404.6607,
+          "PeakRss": 289669120,
+          "ManagedMax": 197109808,
+          "Pages": 25,
+          "PdfBytes": 46134
+        }
+      },
+      "time_ratio": 0.9591055734544075,
+      "rss_ratio": 0.9452630090497738
+    },
+    {
+      "mode": "images",
+      "rows": 5000,
+      "samples": {
+        "slim": [
+          {
+            "Iteration": 0,
+            "Milliseconds": 24802.2351,
+            "PeakRss": 897699840,
+            "Rss": 897699840,
+            "ManagedMax": 800045800,
+            "ManagedAfter": 791215032,
+            "Handles": 100,
+            "Pages": 122,
+            "PdfBytes": 138183
+          },
+          {
+            "Iteration": 0,
+            "Milliseconds": 23846.1554,
+            "PeakRss": 898015232,
+            "Rss": 898015232,
+            "ManagedMax": 800330968,
+            "ManagedAfter": 791211544,
+            "Handles": 100,
+            "Pages": 122,
+            "PdfBytes": 138183
+          },
+          {
+            "Iteration": 0,
+            "Milliseconds": 24987.1865,
+            "PeakRss": 901124096,
+            "Rss": 901124096,
+            "ManagedMax": 801042744,
+            "ManagedAfter": 791172592,
+            "Handles": 100,
+            "Pages": 122,
+            "PdfBytes": 138183
+          }
+        ],
+        "reference": [
+          {
+            "Iteration": 0,
+            "Milliseconds": 26051.7218,
+            "PeakRss": 918536192,
+            "Rss": 916586496,
+            "ManagedMax": 813676616,
+            "ManagedAfter": 808631728,
+            "Handles": 114,
+            "Pages": 122,
+            "PdfBytes": 137696
+          },
+          {
+            "Iteration": 0,
+            "Milliseconds": 26325.9159,
+            "PeakRss": 914370560,
+            "Rss": 909619200,
+            "ManagedMax": 813876744,
+            "ManagedAfter": 808592768,
+            "Handles": 114,
+            "Pages": 122,
+            "PdfBytes": 137696
+          },
+          {
+            "Iteration": 0,
+            "Milliseconds": 25413.0223,
+            "PeakRss": 914812928,
+            "Rss": 910118912,
+            "ManagedMax": 813030800,
+            "ManagedAfter": 808489264,
+            "Handles": 114,
+            "Pages": 122,
+            "PdfBytes": 137696
+          }
+        ]
+      },
+      "medians": {
+        "slim": {
+          "Milliseconds": 24802.2351,
+          "PeakRss": 898015232,
+          "ManagedMax": 800330968,
+          "Pages": 122,
+          "PdfBytes": 138183
+        },
+        "reference": {
+          "Milliseconds": 26051.7218,
+          "PeakRss": 914812928,
+          "ManagedMax": 813676616,
+          "Pages": 122,
+          "PdfBytes": 137696
+        }
+      },
+      "time_ratio": 0.9520382295806645,
+      "rss_ratio": 0.9816381082012868
+    },
+    {
+      "mode": "images",
+      "rows": 10000,
+      "samples": {
+        "slim": [
+          {
+            "Iteration": 0,
+            "Milliseconds": 71415.9318,
+            "PeakRss": 1685889024,
+            "Rss": 1685889024,
+            "ManagedMax": 1572708464,
+            "ManagedAfter": 1552351808,
+            "Handles": 100,
+            "Pages": 244,
+            "PdfBytes": 253699
+          },
+          {
+            "Iteration": 0,
+            "Milliseconds": 77361.4909,
+            "PeakRss": 1686564864,
+            "Rss": 1686564864,
+            "ManagedMax": 1573259304,
+            "ManagedAfter": 1552668288,
+            "Handles": 100,
+            "Pages": 244,
+            "PdfBytes": 253699
+          },
+          {
+            "Iteration": 0,
+            "Milliseconds": 72934.8497,
+            "PeakRss": 1686003712,
+            "Rss": 1686003712,
+            "ManagedMax": 1571317824,
+            "ManagedAfter": 1558201664,
+            "Handles": 100,
+            "Pages": 244,
+            "PdfBytes": 253699
+          }
+        ],
+        "reference": [
+          {
+            "Iteration": 0,
+            "Milliseconds": 69704.1561,
+            "PeakRss": 1699577856,
+            "Rss": 1694937088,
+            "ManagedMax": 1589097152,
+            "ManagedAfter": 1577120312,
+            "Handles": 114,
+            "Pages": 244,
+            "PdfBytes": 252686
+          },
+          {
+            "Iteration": 0,
+            "Milliseconds": 74402.2032,
+            "PeakRss": 1702723584,
+            "Rss": 1697820672,
+            "ManagedMax": 1588692496,
+            "ManagedAfter": 1575711760,
+            "Handles": 114,
+            "Pages": 244,
+            "PdfBytes": 252686
+          },
+          {
+            "Iteration": 0,
+            "Milliseconds": 71032.0063,
+            "PeakRss": 1705562112,
+            "Rss": 1700573184,
+            "ManagedMax": 1588028032,
+            "ManagedAfter": 1574667576,
+            "Handles": 114,
+            "Pages": 244,
+            "PdfBytes": 252686
+          }
+        ]
+      },
+      "medians": {
+        "slim": {
+          "Milliseconds": 72934.8497,
+          "PeakRss": 1686003712,
+          "ManagedMax": 1572708464,
+          "Pages": 244,
+          "PdfBytes": 253699
+        },
+        "reference": {
+          "Milliseconds": 71032.0063,
+          "PeakRss": 1702723584,
+          "ManagedMax": 1588692496,
+          "Pages": 244,
+          "PdfBytes": 252686
+        }
+      },
+      "time_ratio": 1.0267885351845962,
+      "rss_ratio": 0.9901805130573678
+    }
+  ],
+  "repeat_fixture_rows": 100,
+  "repeat50": [
+    {
+      "Iteration": 0,
+      "Milliseconds": 1885.3711,
+      "PeakRss": 125767680,
+      "Rss": 125767680,
+      "ManagedMax": 43911536,
+      "ManagedAfter": 44020136,
+      "Handles": 96,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 1,
+      "Milliseconds": 450.0789,
+      "PeakRss": 153866240,
+      "Rss": 148234240,
+      "ManagedMax": 63752848,
+      "ManagedAfter": 37994216,
+      "Handles": 96,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 2,
+      "Milliseconds": 415.8478,
+      "PeakRss": 166604800,
+      "Rss": 164847616,
+      "ManagedMax": 64957136,
+      "ManagedAfter": 42584344,
+      "Handles": 96,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 3,
+      "Milliseconds": 437.557,
+      "PeakRss": 171921408,
+      "Rss": 171921408,
+      "ManagedMax": 63456536,
+      "ManagedAfter": 62464432,
+      "Handles": 96,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 4,
+      "Milliseconds": 462.9717,
+      "PeakRss": 182251520,
+      "Rss": 174628864,
+      "ManagedMax": 69443216,
+      "ManagedAfter": 45408432,
+      "Handles": 96,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 5,
+      "Milliseconds": 439.121,
+      "PeakRss": 189607936,
+      "Rss": 178483200,
+      "ManagedMax": 65692272,
+      "ManagedAfter": 38635416,
+      "Handles": 96,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 6,
+      "Milliseconds": 361.3184,
+      "PeakRss": 197533696,
+      "Rss": 185233408,
+      "ManagedMax": 56078400,
+      "ManagedAfter": 46469712,
+      "Handles": 96,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 7,
+      "Milliseconds": 362.5131,
+      "PeakRss": 197533696,
+      "Rss": 182046720,
+      "ManagedMax": 46576352,
+      "ManagedAfter": 40836736,
+      "Handles": 98,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 8,
+      "Milliseconds": 346.4364,
+      "PeakRss": 200032256,
+      "Rss": 197586944,
+      "ManagedMax": 55049216,
+      "ManagedAfter": 44021488,
+      "Handles": 98,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 9,
+      "Milliseconds": 330.6979,
+      "PeakRss": 215527424,
+      "Rss": 215527424,
+      "ManagedMax": 68162752,
+      "ManagedAfter": 64031736,
+      "Handles": 98,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 10,
+      "Milliseconds": 319.8623,
+      "PeakRss": 225886208,
+      "Rss": 215584768,
+      "ManagedMax": 69619408,
+      "ManagedAfter": 47175544,
+      "Handles": 100,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 11,
+      "Milliseconds": 329.8706,
+      "PeakRss": 231796736,
+      "Rss": 218853376,
+      "ManagedMax": 62007648,
+      "ManagedAfter": 40258016,
+      "Handles": 100,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 12,
+      "Milliseconds": 362.3312,
+      "PeakRss": 238764032,
+      "Rss": 237805568,
+      "ManagedMax": 63029264,
+      "ManagedAfter": 45145280,
+      "Handles": 100,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 13,
+      "Milliseconds": 324.8016,
+      "PeakRss": 242696192,
+      "Rss": 240033792,
+      "ManagedMax": 67667080,
+      "ManagedAfter": 64202360,
+      "Handles": 100,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 14,
+      "Milliseconds": 329.31,
+      "PeakRss": 250302464,
+      "Rss": 239562752,
+      "ManagedMax": 64292552,
+      "ManagedAfter": 30868552,
+      "Handles": 100,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 15,
+      "Milliseconds": 318.2152,
+      "PeakRss": 250302464,
+      "Rss": 238100480,
+      "ManagedMax": 53286864,
+      "ManagedAfter": 40938128,
+      "Handles": 100,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 16,
+      "Milliseconds": 318.9021,
+      "PeakRss": 251052032,
+      "Rss": 246710272,
+      "ManagedMax": 51966352,
+      "ManagedAfter": 30960192,
+      "Handles": 100,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 17,
+      "Milliseconds": 300.3742,
+      "PeakRss": 265015296,
+      "Rss": 265015296,
+      "ManagedMax": 63920936,
+      "ManagedAfter": 64320520,
+      "Handles": 100,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 18,
+      "Milliseconds": 324.0022,
+      "PeakRss": 275132416,
+      "Rss": 268640256,
+      "ManagedMax": 68912080,
+      "ManagedAfter": 30998952,
+      "Handles": 100,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 19,
+      "Milliseconds": 429.0447,
+      "PeakRss": 281427968,
+      "Rss": 271118336,
+      "ManagedMax": 63035704,
+      "ManagedAfter": 40572464,
+      "Handles": 100,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 20,
+      "Milliseconds": 327.8531,
+      "PeakRss": 292970496,
+      "Rss": 282431488,
+      "ManagedMax": 64103024,
+      "ManagedAfter": 31261120,
+      "Handles": 100,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 21,
+      "Milliseconds": 311.6197,
+      "PeakRss": 294002688,
+      "Rss": 294002688,
+      "ManagedMax": 64349384,
+      "ManagedAfter": 64467864,
+      "Handles": 100,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 22,
+      "Milliseconds": 319.4875,
+      "PeakRss": 304308224,
+      "Rss": 292675584,
+      "ManagedMax": 64476088,
+      "ManagedAfter": 31238688,
+      "Handles": 100,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 23,
+      "Milliseconds": 310.6764,
+      "PeakRss": 304308224,
+      "Rss": 286683136,
+      "ManagedMax": 56103720,
+      "ManagedAfter": 41265456,
+      "Handles": 100,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 24,
+      "Milliseconds": 344.2263,
+      "PeakRss": 304308224,
+      "Rss": 299139072,
+      "ManagedMax": 55703912,
+      "ManagedAfter": 31275464,
+      "Handles": 100,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 25,
+      "Milliseconds": 312.754,
+      "PeakRss": 317317120,
+      "Rss": 317317120,
+      "ManagedMax": 64264248,
+      "ManagedAfter": 64578384,
+      "Handles": 100,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 26,
+      "Milliseconds": 307.8723,
+      "PeakRss": 325468160,
+      "Rss": 319074304,
+      "ManagedMax": 64586608,
+      "ManagedAfter": 31315728,
+      "Handles": 100,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 27,
+      "Milliseconds": 305.7296,
+      "PeakRss": 331579392,
+      "Rss": 315678720,
+      "ManagedMax": 64155576,
+      "ManagedAfter": 40903376,
+      "Handles": 100,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 28,
+      "Milliseconds": 316.3683,
+      "PeakRss": 334155776,
+      "Rss": 332300288,
+      "ManagedMax": 64436384,
+      "ManagedAfter": 31465736,
+      "Handles": 100,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 29,
+      "Milliseconds": 308.3497,
+      "PeakRss": 338440192,
+      "Rss": 338440192,
+      "ManagedMax": 65534800,
+      "ManagedAfter": 64728832,
+      "Handles": 100,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 30,
+      "Milliseconds": 313.7451,
+      "PeakRss": 348692480,
+      "Rss": 341897216,
+      "ManagedMax": 71000440,
+      "ManagedAfter": 31473128,
+      "Handles": 100,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 31,
+      "Milliseconds": 365.2227,
+      "PeakRss": 355131392,
+      "Rss": 337645568,
+      "ManagedMax": 65252088,
+      "ManagedAfter": 41065008,
+      "Handles": 104,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 32,
+      "Milliseconds": 344.7201,
+      "PeakRss": 356732928,
+      "Rss": 356007936,
+      "ManagedMax": 62656400,
+      "ManagedAfter": 31553408,
+      "Handles": 104,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 33,
+      "Milliseconds": 319.3095,
+      "PeakRss": 362528768,
+      "Rss": 362528768,
+      "ManagedMax": 67325896,
+      "ManagedAfter": 64837968,
+      "Handles": 104,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 34,
+      "Milliseconds": 355.0548,
+      "PeakRss": 369844224,
+      "Rss": 361947136,
+      "ManagedMax": 64846192,
+      "ManagedAfter": 31612792,
+      "Handles": 104,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 35,
+      "Milliseconds": 327.0896,
+      "PeakRss": 378728448,
+      "Rss": 364888064,
+      "ManagedMax": 62892560,
+      "ManagedAfter": 41218872,
+      "Handles": 104,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 36,
+      "Milliseconds": 339.4774,
+      "PeakRss": 378728448,
+      "Rss": 367144960,
+      "ManagedMax": 47121488,
+      "ManagedAfter": 32330192,
+      "Handles": 104,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 37,
+      "Milliseconds": 338.0471,
+      "PeakRss": 378728448,
+      "Rss": 367460352,
+      "ManagedMax": 62638104,
+      "ManagedAfter": 41819704,
+      "Handles": 104,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 38,
+      "Milliseconds": 363.4858,
+      "PeakRss": 378728448,
+      "Rss": 378490880,
+      "ManagedMax": 46515024,
+      "ManagedAfter": 31759224,
+      "Handles": 104,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 39,
+      "Milliseconds": 357.8314,
+      "PeakRss": 391700480,
+      "Rss": 377794560,
+      "ManagedMax": 60053368,
+      "ManagedAfter": 41380736,
+      "Handles": 104,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 40,
+      "Milliseconds": 344.8194,
+      "PeakRss": 391700480,
+      "Rss": 390082560,
+      "ManagedMax": 45110808,
+      "ManagedAfter": 32091424,
+      "Handles": 104,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 41,
+      "Milliseconds": 336.3663,
+      "PeakRss": 407470080,
+      "Rss": 388747264,
+      "ManagedMax": 65310432,
+      "ManagedAfter": 41463904,
+      "Handles": 104,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 42,
+      "Milliseconds": 347.455,
+      "PeakRss": 407965696,
+      "Rss": 398540800,
+      "ManagedMax": 55602384,
+      "ManagedAfter": 31937392,
+      "Handles": 104,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 43,
+      "Milliseconds": 327.4421,
+      "PeakRss": 407965696,
+      "Rss": 404725760,
+      "ManagedMax": 40726352,
+      "ManagedAfter": 41588792,
+      "Handles": 104,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 44,
+      "Milliseconds": 317.2096,
+      "PeakRss": 425189376,
+      "Rss": 425189376,
+      "ManagedMax": 67416424,
+      "ManagedAfter": 54371992,
+      "Handles": 104,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 45,
+      "Milliseconds": 326.6893,
+      "PeakRss": 435527680,
+      "Rss": 426987520,
+      "ManagedMax": 55781792,
+      "ManagedAfter": 41676112,
+      "Handles": 104,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 46,
+      "Milliseconds": 372.064,
+      "PeakRss": 441970688,
+      "Rss": 441970688,
+      "ManagedMax": 67461160,
+      "ManagedAfter": 54387744,
+      "Handles": 104,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 47,
+      "Milliseconds": 336.5851,
+      "PeakRss": 451043328,
+      "Rss": 429379584,
+      "ManagedMax": 74734048,
+      "ManagedAfter": 42269928,
+      "Handles": 104,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 48,
+      "Milliseconds": 351.8106,
+      "PeakRss": 451043328,
+      "Rss": 430555136,
+      "ManagedMax": 48599784,
+      "ManagedAfter": 32519832,
+      "Handles": 104,
+      "Pages": 3,
+      "PdfBytes": 25454
+    },
+    {
+      "Iteration": 49,
+      "Milliseconds": 318.6226,
+      "PeakRss": 452734976,
+      "Rss": 447041536,
+      "ManagedMax": 65081816,
+      "ManagedAfter": 41813680,
+      "Handles": 104,
+      "Pages": 3,
+      "PdfBytes": 25454
+    }
+  ]
+}

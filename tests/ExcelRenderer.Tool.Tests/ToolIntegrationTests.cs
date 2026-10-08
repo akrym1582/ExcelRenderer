@@ -9,8 +9,10 @@ namespace ExcelRenderer.Tool.Tests;
 /// </summary>
 public sealed class ToolIntegrationTests : IDisposable
 {
+    /// <summary>コマンドテストごとに作成する、一意の一時出力ディレクトリです。</summary>
     private readonly string _directory = Path.Combine(Path.GetTempPath(), "ExcelRenderer.Tool.Tests", Guid.NewGuid().ToString("N"));
 
+    /// <summary>コマンド変換の入力に使用する同梱サンプル XLSX のパスです。</summary>
     private static string Input => Path.Combine(AppContext.BaseDirectory, "SampleInputs", "sample.xlsx");
 
     /// <summary>
@@ -28,7 +30,7 @@ public sealed class ToolIntegrationTests : IDisposable
     /// PDF コマンドが Excel 入力から PDF ファイルを生成することを検証します。
     /// </summary>
     /// <returns>非同期の検証処理を表すタスク。</returns>
-    [Fact]
+    [Fact(DisplayName = "PDF コマンドが Excel 入力から PDF ファイルを生成する")]
     public async Task Pdf_command_creates_a_pdf()
     {
         var output = Path.Combine(_directory, "report.pdf");
@@ -41,7 +43,7 @@ public sealed class ToolIntegrationTests : IDisposable
     /// image コマンドが Excel 入力からページ単位の PNG ファイルを生成することを検証します。
     /// </summary>
     /// <returns>非同期の検証処理を表すタスク。</returns>
-    [Fact]
+    [Fact(DisplayName = "image コマンドが Excel 入力からページ単位の PNG ファイルを生成する")]
     public async Task Image_command_creates_png_files()
     {
         var output = Path.Combine(_directory, "images");
@@ -51,10 +53,10 @@ public sealed class ToolIntegrationTests : IDisposable
         Assert.Equal(new byte[] { 0x89, 0x50, 0x4e, 0x47 }, File.ReadAllBytes(png)[..4]);
     }
 
-    /// <summary>Both SVG entry points expose buffer limits and clean up spills on failure.</summary>
-    /// <param name="command">The CLI entry point.</param>
-    /// <returns>The asynchronous test completion.</returns>
-    [Theory]
+    /// <summary>svg と render の両コマンドでバッファ上限を指定でき、一時ファイル禁止時の失敗後も退避ファイルが残らないことを検証します。</summary>
+    /// <param name="command">検証する SVG 出力コマンド（svg または render）。</param>
+    /// <returns>コマンド実行と出力・一時ファイルの検証が完了するまでの非同期処理。</returns>
+    [Theory(DisplayName = "svg と render の両コマンドでバッファ上限を指定でき、一時ファイル禁止時の失敗後も退避ファイルが残らない")]
     [InlineData("svg")]
     [InlineData("render")]
     public async Task Svg_buffer_options_support_spill_and_no_temp_failure(string command)
@@ -81,7 +83,7 @@ public sealed class ToolIntegrationTests : IDisposable
 
     /// <summary>svg コマンドが Excel 入力からページ単位の SVG ファイルを生成することを検証します。</summary>
     /// <returns>非同期の検証処理を表すタスク。</returns>
-    [Fact]
+    [Fact(DisplayName = "svg コマンドが Excel 入力からページ単位の SVG ファイルを生成する")]
     public async Task Svg_command_creates_svg_files()
     {
         var output = Path.Combine(_directory, "svg");
@@ -93,7 +95,7 @@ public sealed class ToolIntegrationTests : IDisposable
 
     /// <summary>svg コマンドが PNG 専用の DPI オプションを受け付けないことを検証します。</summary>
     /// <returns>非同期の検証処理を表すタスク。</returns>
-    [Fact]
+    [Fact(DisplayName = "svg コマンドが PNG 専用の DPI オプションを受け付けない")]
     public async Task Svg_command_rejects_dpi()
     {
         var result = await RunAsync("svg", Input, "-o", Path.Combine(_directory, "svg"), "--dpi", "72");
@@ -104,7 +106,7 @@ public sealed class ToolIntegrationTests : IDisposable
     /// md エイリアスが Excel 入力から Markdown ファイルを生成することを検証します。
     /// </summary>
     /// <returns>非同期の検証処理を表すタスク。</returns>
-    [Fact]
+    [Fact(DisplayName = "md エイリアスが Excel 入力から Markdown ファイルを生成する")]
     public async Task Md_alias_creates_markdown()
     {
         var output = Path.Combine(_directory, "nested", "report.md");
@@ -115,7 +117,7 @@ public sealed class ToolIntegrationTests : IDisposable
 
     /// <summary>render コマンドが RenderAsync 経由で PDF とマニフェストを生成することを検証します。</summary>
     /// <returns>非同期の検証処理を表すタスク。</returns>
-    [Fact]
+    [Fact(DisplayName = "render コマンドが RenderAsync 経由で PDF とマニフェストを生成する")]
     public async Task Render_command_creates_pdf_and_manifest()
     {
         var output = Path.Combine(_directory, "rendered", "report.pdf");
@@ -128,7 +130,7 @@ public sealed class ToolIntegrationTests : IDisposable
 
     /// <summary>render コマンドがページごとの形式に出力ディレクトリを使用することを検証します。</summary>
     /// <returns>非同期の検証処理を表すタスク。</returns>
-    [Fact]
+    [Fact(DisplayName = "render コマンドがページごとの形式に出力ディレクトリを使用する")]
     public async Task Render_command_creates_svg_in_output_directory()
     {
         var output = Path.Combine(_directory, "rendered-svg");
@@ -138,7 +140,8 @@ public sealed class ToolIntegrationTests : IDisposable
     }
 
     /// <summary>render コマンドが TTE 拡張子の有効な外部フォントを受け付けます。</summary>
-    [Fact]
+    /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
+    [Fact(DisplayName = "render コマンドが TTE 拡張子の有効な外部フォントを受け付けます")]
     public async Task Render_command_accepts_explicit_tte_font_file()
     {
         Directory.CreateDirectory(_directory);
@@ -153,7 +156,8 @@ public sealed class ToolIntegrationTests : IDisposable
     }
 
     /// <summary>render コマンドが存在しない外部フォントを変換前に拒否します。</summary>
-    [Fact]
+    /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
+    [Fact(DisplayName = "render コマンドが存在しない外部フォントを変換前に拒否します")]
     public async Task Render_command_rejects_missing_explicit_font_file()
     {
         var result = await RunAsync("render", Input, "-o", Path.Combine(_directory, "font-svg"), "--format", "svg",
@@ -164,7 +168,9 @@ public sealed class ToolIntegrationTests : IDisposable
     }
 
     /// <summary>すべての変換コマンドが共通フォントオプションをヘルプに公開することを検証します。</summary>
-    [Theory]
+    /// <param name="command">実行するコマンド、または描画対象の文字命令。</param>
+    /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
+    [Theory(DisplayName = "すべての変換コマンドが共通フォントオプションをヘルプに公開する")]
     [InlineData("pdf")]
     [InlineData("image")]
     [InlineData("svg")]
@@ -184,7 +190,8 @@ public sealed class ToolIntegrationTests : IDisposable
     }
 
     /// <summary>繰り返した font-file が指定順を維持したまますべて渡されることを検証します。</summary>
-    [Fact]
+    /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
+    [Fact(DisplayName = "繰り返した font-file が指定順を維持したまますべて渡される")]
     public async Task Pdf_command_preserves_multiple_font_files_in_command_line_order()
     {
         Directory.CreateDirectory(_directory);
@@ -202,7 +209,9 @@ public sealed class ToolIntegrationTests : IDisposable
     }
 
     /// <summary>従来形式の描画コマンドにも明示フォントファイルが適用されることを検証します。</summary>
-    [Theory]
+    /// <param name="command">実行するコマンド、または描画対象の文字命令。</param>
+    /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
+    [Theory(DisplayName = "従来形式の描画コマンドにも明示フォントファイルが適用される")]
     [InlineData("pdf")]
     [InlineData("image")]
     [InlineData("svg")]
@@ -216,7 +225,8 @@ public sealed class ToolIntegrationTests : IDisposable
     }
 
     /// <summary>連続 SVG 出力がシートごとに 1 ファイルを生成することを検証します。</summary>
-    [Fact]
+    /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
+    [Fact(DisplayName = "連続 SVG 出力がシートごとに 1 ファイルを生成する")]
     public async Task Render_command_creates_continuous_svg()
     {
         var output = Path.Combine(_directory, "continuous-svg");
@@ -227,7 +237,8 @@ public sealed class ToolIntegrationTests : IDisposable
     }
 
     /// <summary>連続レイアウトでページ選択を指定すると説明的に失敗することを検証します。</summary>
-    [Fact]
+    /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
+    [Fact(DisplayName = "連続レイアウトでページ選択を指定すると説明的に失敗する")]
     public async Task Render_command_rejects_pages_with_continuous_layout()
     {
         var result = await RunAsync("render", Input, "-o", Path.Combine(_directory, "continuous-svg"), "--format", "svg", "--pages", "1", "--image-layout", "continuous");
@@ -241,7 +252,7 @@ public sealed class ToolIntegrationTests : IDisposable
     /// </summary>
     /// <param name="arguments">入力エラーを発生させるコマンドライン引数。</param>
     /// <returns>非同期の検証処理を表すタスク。</returns>
-    [Theory]
+    [Theory(DisplayName = "存在しない入力パスまたは未対応の拡張子に対してコマンドが失敗する")]
     [InlineData("md")]
     [InlineData("md", "not-found.xlsx", "-o", "output.md")]
     public async Task Invalid_input_fails(params string[] arguments) => Assert.NotEqual(0, (await RunAsync(arguments)).ExitCode);
@@ -250,7 +261,7 @@ public sealed class ToolIntegrationTests : IDisposable
     /// 範囲外の DPI がコマンドライン解析時に拒否されることを検証します。
     /// </summary>
     /// <returns>非同期の検証処理を表すタスク。</returns>
-    [Fact]
+    [Fact(DisplayName = "範囲外の DPI がコマンドライン解析時に拒否される")]
     public async Task Invalid_dpi_is_rejected_by_parser()
     {
         var result = await RunAsync("image", Input, "-o", Path.Combine(_directory, "images"), "--dpi", "0");
@@ -262,7 +273,7 @@ public sealed class ToolIntegrationTests : IDisposable
     /// 存在しないシート名を指定した場合、スタックトレースを出さずエラー終了することを検証します。
     /// </summary>
     /// <returns>非同期の検証処理を表すタスク。</returns>
-    [Fact]
+    [Fact(DisplayName = "存在しないシート名を指定した場合、スタックトレースを出さずエラー終了する")]
     public async Task Unknown_sheet_fails_without_a_stack_trace()
     {
         var result = await RunAsync("image", Input, "-o", Path.Combine(_directory, "images"), "--sheet", "UnknownSheet");
@@ -271,7 +282,9 @@ public sealed class ToolIntegrationTests : IDisposable
         Assert.DoesNotContain(" at ", result.Error);
     }
 
-    [Fact]
+    /// <summary>render コマンドに範囲・トリミング・リンク設定を指定して事前検証を行い、PDF が生成されることを検証します。</summary>
+    /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
+    [Fact(DisplayName = "render コマンドに範囲・トリミング・リンク設定を指定して事前検証を行い、PDF が生成される")]
     public async Task Render_range_trim_and_hyperlink_options_create_a_pdf_after_preflight()
     {
         var output = Path.Combine(_directory, "range.pdf");
@@ -281,7 +294,11 @@ public sealed class ToolIntegrationTests : IDisposable
         Assert.Equal("%PDF", Encoding.ASCII.GetString(File.ReadAllBytes(output), 0, 4));
     }
 
-    [Theory]
+    /// <summary>render コマンドの引数検証が失敗した場合、既存の PDF ファイルの内容が変更されないことを検証します。</summary>
+    /// <param name="option">不正値を指定して検証する CLI オプション名。</param>
+    /// <param name="value">長さ変更の指定値、または CLI に渡すオプション値。</param>
+    /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
+    [Theory(DisplayName = "render コマンドの引数検証が失敗した場合、既存の PDF ファイルの内容が変更されない")]
     [InlineData("--range", "B2:A1")]
     [InlineData("--trim-padding", "2")]
     [InlineData("--hyperlinks", "javascript")]
@@ -296,7 +313,9 @@ public sealed class ToolIntegrationTests : IDisposable
         Assert.Equal("sentinel", File.ReadAllText(output));
     }
 
-    [Fact]
+    /// <summary>render コマンドで重複範囲または入力と同じ出力パスを指定すると、書き込み前に拒否されることを検証します。</summary>
+    /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
+    [Fact(DisplayName = "render コマンドで重複範囲または入力と同じ出力パスを指定すると、書き込み前に拒否される")]
     public async Task Render_duplicate_ranges_and_same_input_output_are_rejected_before_write()
     {
         Directory.CreateDirectory(_directory);
@@ -314,6 +333,9 @@ public sealed class ToolIntegrationTests : IDisposable
         Assert.Equal(bytes, File.ReadAllBytes(copy));
     }
 
+    /// <summary>dotnet でツールを実行し、終了コードと標準出力・標準エラーを非同期に取得します。</summary>
+    /// <param name="arguments">ツールに渡すコマンドライン引数。</param>
+    /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
     private static async Task<Result> RunAsync(params string[] arguments)
     {
         var root = FindRepositoryRoot();
@@ -332,6 +354,8 @@ public sealed class ToolIntegrationTests : IDisposable
         return new(process.ExitCode, await output, await error);
     }
 
+    /// <summary>リポジトリ内の Debug、次いで Release の順に、ビルド済みツールの DLL を検索します。</summary>
+    /// <param name="repositoryRoot">ソリューションファイルがあるリポジトリルート。</param>
     private static string ResolveToolAssemblyPath(string repositoryRoot)
     {
         var debug = Path.Combine(repositoryRoot, "src", "ExcelRenderer.Tool", "bin", "Debug", "net10.0", "ExcelRenderer.Tool.dll");
@@ -350,6 +374,7 @@ public sealed class ToolIntegrationTests : IDisposable
             $"Tool assembly not found. Checked both Debug and Release outputs:{Environment.NewLine}{debug}{Environment.NewLine}{release}");
     }
 
+    /// <summary>実行ディレクトリから親をたどり、ExcelRenderer.slnx があるリポジトリルートを探します。</summary>
     private static string FindRepositoryRoot()
     {
         for (var directory = new DirectoryInfo(AppContext.BaseDirectory); directory is not null; directory = directory.Parent)
@@ -363,7 +388,10 @@ public sealed class ToolIntegrationTests : IDisposable
         throw new InvalidOperationException("Repository root was not found.");
     }
 
+    /// <summary>コマンドの終了コードがゼロであることを確認し、失敗時に標準出力と標準エラーを表示します。</summary>
+    /// <param name="result">終了コードと出力内容を確認するコマンド実行結果。</param>
     private static void AssertSuccess(Result result) => Assert.True(result.ExitCode == 0, result.Output + result.Error);
 
+    /// <summary>コマンドの終了コード、標準出力および標準エラーを保持します。</summary>
     private sealed record Result(int ExitCode, string Output, string Error);
 }

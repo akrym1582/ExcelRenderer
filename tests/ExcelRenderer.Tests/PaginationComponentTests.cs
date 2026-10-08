@@ -4,9 +4,11 @@ using ExcelRenderer.Model;
 using Xunit;
 namespace ExcelRenderer.Tests;
 
+/// <summary>ページ帯の分割境界と、繰り返しタイトル・本文の座標対応を検証します。</summary>
 public sealed class PaginationComponentTests
 {
-    [Fact]
+    /// <summary>手動改ページと繰り返しタイトルの占有幅を指定してページ帯を構築し、分割境界が 20 ポイントになることを検証します。</summary>
+    [Fact(DisplayName = "手動改ページと繰り返しタイトルの占有幅を指定してページ帯を構築し、分割境界が 20 ポイントになる")]
     public void PageBandBuilderPreservesManualBreaksAndRepeatedTitleCapacity()
     {
         var bands = PageBandBuilder.Create(
@@ -22,7 +24,8 @@ public sealed class PaginationComponentTests
         Assert.Equal([new PageBand(0, 20), new PageBand(20, double.PositiveInfinity)], bands);
     }
 
-    [Fact]
+    /// <summary>倍率 2 と余白を指定したページで、タイトルと本文を別の座標規則で配置し、本文クリップ領域も期待値に一致することを検証します。</summary>
+    [Fact(DisplayName = "倍率 2 と余白を指定したページで、タイトルと本文を別の座標規則で配置し、本文クリップ領域も期待値に一致する")]
     public void PagePlacementUsesDistinctTitleAndBodyMappings()
     {
         var settings = new PageSettings(100, 100)

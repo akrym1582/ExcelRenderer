@@ -5,11 +5,12 @@ using Xunit;
 
 namespace ExcelRenderer.Tests;
 
-/// <summary>Verifies the shared finalized-text scaling contract.</summary>
+/// <summary>確定済み文字の拡縮、実効フォントサイズの未指定状態、および不正倍率の拒否を検証します。</summary>
 public sealed class TextLayoutTransformTests
 {
-    /// <summary>Every geometric field and an explicit size scale without mutating the source graph.</summary>
-    [Theory]
+    /// <summary>確定済み文字を拡縮すると、すべての座標・寸法と明示したフォントサイズが倍率に従い、元の状態は変更されないことを検証します。</summary>
+    /// <param name="factor">文字の座標・寸法に適用する拡縮倍率。</param>
+    [Theory(DisplayName = "確定済み文字を拡縮すると、すべての座標・寸法と明示したフォントサイズが倍率に従い、元の状態は変更されない")]
     [InlineData(0)]
     [InlineData(0.5)]
     [InlineData(1)]
@@ -43,8 +44,8 @@ public sealed class TextLayoutTransformTests
         Assert.Equal(4, source.Lines[0].Runs[0].X);
     }
 
-    /// <summary>An unspecified size remains unspecified, including at zero scale, and chained scaling composes.</summary>
-    [Fact]
+    /// <summary>ゼロ倍率でも未指定の実効フォントサイズは未指定のままで、連続する拡縮の結果が倍率の積と一致することを検証します。</summary>
+    [Fact(DisplayName = "ゼロ倍率でも未指定の実効フォントサイズは未指定のままで、連続する拡縮の結果が倍率の積と一致する")]
     public void Scale_preserves_unspecified_size_and_composes()
     {
         var source = new TextLayoutResult(new(20, 10), [new("A", 20, 10, 8, [], false)]);
@@ -58,8 +59,9 @@ public sealed class TextLayoutTransformTests
         Assert.Equal(6, composed.Lines[0].Baseline);
     }
 
-    /// <summary>Invalid scale factors are rejected at the common boundary.</summary>
-    [Theory]
+    /// <summary>負数・NaN・無限大の拡縮倍率を渡すと、共通の文字レイアウト変換で拒否されることを検証します。</summary>
+    /// <param name="factor">文字の座標・寸法に適用する拡縮倍率。</param>
+    [Theory(DisplayName = "負数・NaN・無限大の拡縮倍率を渡すと、共通の文字レイアウト変換で拒否される")]
     [InlineData(-1)]
     [InlineData(double.NaN)]
     [InlineData(double.PositiveInfinity)]

@@ -7,9 +7,11 @@ using Xunit;
 
 namespace ExcelRenderer.Tests;
 
+/// <summary>DrawingML の画像アンカーを読み取り、印刷原点と倍率を反映した最終描画座標を検証します。</summary>
 public sealed class ReaderAnchorRegressionTests
 {
-    [Fact]
+    /// <summary>保存済み DrawingML の絶対・単一セル・二セルアンカーから、位置・寸法・オフセットと editAs を正しく読み取ることを検証します。</summary>
+    [Fact(DisplayName = "保存済み DrawingML の絶対・単一セル・二セルアンカーから、位置・寸法・オフセットと editAs を正しく読み取る")]
     public void Reader_preserves_drawingml_anchor_coordinates()
     {
         WithSheet(sheet =>
@@ -36,7 +38,10 @@ public sealed class ReaderAnchorRegressionTests
         });
     }
 
-    [Theory]
+    /// <summary>印刷範囲の原点と倍率を変更しても、読み取った画像アンカーが余白と倍率を一度だけ適用した描画命令座標に到達することを検証します。</summary>
+    /// <param name="shifted">印刷範囲の原点を C4 に移動するかどうか。</param>
+    /// <param name="scale">ページ座標と寸法に適用する倍率。</param>
+    [Theory(DisplayName = "印刷範囲の原点と倍率を変更しても、読み取った画像アンカーが余白と倍率を一度だけ適用した描画命令座標に到達する")]
     [InlineData(false, 1d)]
     [InlineData(false, 0.5d)]
     [InlineData(true, 1d)]
@@ -86,6 +91,8 @@ public sealed class ReaderAnchorRegressionTests
         });
     }
 
+    /// <summary>画像アンカーの一時ブックを読み取って検証処理に渡し、最後にファイルを削除します。</summary>
+    /// <param name="action">読み取ったシートに対して実行する検証処理。</param>
     private static void WithSheet(Action<ReportSheet> action)
     {
         var path = DrawingAnchorWorkbookFixture.Create();
@@ -93,9 +100,16 @@ public sealed class ReaderAnchorRegressionTests
         finally { File.Delete(path); }
     }
 
+    /// <summary>矩形の X・Y 座標と幅・高さを、それぞれ期待値と許容誤差内で比較します。</summary>
+    /// <param name="expected">判定または数値比較の期待値。</param>
+    /// <param name="actual">比較対象の実際値。</param>
     private static void Rect(ReportRect expected, ReportRect actual)
     {
         Near(expected.X, actual.X); Near(expected.Y, actual.Y); Near(expected.Width, actual.Width); Near(expected.Height, actual.Height);
     }
+
+    /// <summary>座標の実際値が期待値と許容誤差内で一致することを検証します。</summary>
+    /// <param name="expected">判定または数値比較の期待値。</param>
+    /// <param name="actual">比較対象の実際値。</param>
     private static void Near(double expected, double actual) => Assert.True(Math.Abs(expected - actual) <= 0.01, $"Expected {expected}, got {actual}");
 }

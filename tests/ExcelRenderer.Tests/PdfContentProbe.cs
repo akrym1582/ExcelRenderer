@@ -6,26 +6,52 @@ namespace ExcelRenderer.Tests;
 
 // Deliberately a strict probe for the operators emitted by these fixtures, not a general PDF renderer.
 // Unsupported operators or sequential text requiring font-dependent advancement fail with diagnostics.
+
+/// <summary>PDF 内容ストリームの変換行列を解釈し、文字・パス・クリップの実座標を記録します。</summary>
 internal sealed class PdfContentProbe
 {
+    /// <summary>PDF 出力から得た点の X・Y 座標をポイント単位で保持します。</summary>
     internal sealed record Point(double X, double Y);
+
+    /// <summary>PDF の文字描画原点、サイズ、符号化文字列およびフォント名を保持します。</summary>
     internal sealed record Text(Point Origin, double Size, string Encoded, string Font);
+
+    /// <summary>PDF のパス描画演算子、頂点および適用されたクリップ領域を保持します。</summary>
     internal sealed record Paint(string Operation, Point[] Points, Point[][] Clips);
+
+    /// <summary>PDF 演算子の解釈中に保存・復元する変換行列、書体、サイズとクリップを保持します。</summary>
     private sealed record State(Matrix Ctm, double FontSize, string Font, Point[][] Clips);
+
+    /// <summary>PDF の六要素のアフィン変換行列を表します。</summary>
     private readonly record struct Matrix(double A, double B, double C, double D, double E, double F)
     {
+        /// <summary>座標を変更しない単位変換行列を返します。</summary>
         internal static Matrix Identity => new(1, 0, 0, 1, 0, 0);
+
+        /// <summary>指定した X・Y 座標にアフィン変換行列を適用します。</summary>
+        /// <param name="x">描画位置または比較対象の X 座標。</param>
+        /// <param name="y">描画位置または比較対象の Y 座標。</param>
         internal Point Apply(double x, double y) => new(A * x + C * y + E, B * x + D * y + F);
+
+        /// <summary>二つのアフィン変換行列を乗算して、合成した変換を返します。</summary>
+        /// <param name="r">右側に乗算する変換行列。</param>
         internal Matrix Times(Matrix r) => new(
             A * r.A + C * r.B, B * r.A + D * r.B,
             A * r.C + C * r.D, B * r.C + D * r.D,
             A * r.E + C * r.F + E, B * r.E + D * r.F + F);
     }
 
+    /// <summary>PDF 内容ストリームで適用されたクリップ領域を記録します。</summary>
     internal List<Point[]> AppliedClips { get; } = [];
+
+    /// <summary>PDF 内容ストリームから解析した文字描画を出現順に保持します。</summary>
     internal List<Text> Texts { get; } = [];
+
+    /// <summary>PDF 内容ストリームから解析したパス描画を出現順に保持します。</summary>
     internal List<Paint> Paints { get; } = [];
 
+    /// <summary>PDF の先頭ページを開き、描画位置検証に使う内容ストリームを解析します。</summary>
+    /// <param name="bytes">解析対象の PDF データ。</param>
     internal static PdfContentProbe Read(byte[] bytes)
     {
         using var stream = new MemoryStream(bytes);
@@ -53,6 +79,8 @@ internal sealed class PdfContentProbe
         return result;
     }
 
+    /// <summary>PDF の整数または実数オブジェクトから数値を取得します。</summary>
+    /// <param name="value">長さ変更の指定値、または CLI に渡すオプション値。</param>
     private static double Number(CObject value) => value switch
     {
         CInteger integer => integer.Value,
@@ -60,6 +88,9 @@ internal sealed class PdfContentProbe
         _ => throw new InvalidDataException($"Expected PDF number, got {value.GetType().Name}: {value}"),
     };
 
+    /// <summary>PDF の演算子列から文字・パスを読み、ページ高を使って上端原点の座標へ変換します。</summary>
+    /// <param name="sequence">解析対象の PDF 演算子列。</param>
+    /// <param name="height">PDF 座標を上端原点へ変換するページ高（ポイント）。</param>
     private void Parse(CSequence sequence, double height)
     {
         var state = new State(Matrix.Identity, 0, string.Empty, []);

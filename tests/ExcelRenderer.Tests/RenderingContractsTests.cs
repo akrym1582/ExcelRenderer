@@ -3,11 +3,12 @@ using Xunit;
 
 namespace ExcelRenderer.Tests;
 
-/// <summary>Tests ownership and serialization guarantees of the stream rendering contracts.</summary>
+/// <summary>ストリーム出力の所有権と、マニフェストの相対名・JSON エスケープを検証します。</summary>
 public sealed class RenderingContractsTests
 {
-    /// <summary>Completing a single-stream sink does not close the caller-owned stream.</summary>
-    [Fact]
+    /// <summary>単一ストリーム出力の完了後も呼び出し元のストリームが開いたままで、書き込んだ 3 バイトが保持されることを検証します。</summary>
+    /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
+    [Fact(DisplayName = "単一ストリーム出力の完了後も呼び出し元のストリームが開いたままで、書き込んだ 3 バイトが保持される")]
     public async Task Single_stream_sink_leaves_caller_stream_open()
     {
         using var output = new MemoryStream();
@@ -22,8 +23,9 @@ public sealed class RenderingContractsTests
         Assert.Equal(3, output.Length);
     }
 
-    /// <summary>The manifest uses relative artifact names and valid escaped JSON strings.</summary>
-    [Fact]
+    /// <summary>マニフェストに成果物の相対ファイル名を記録し、診断メッセージ内の引用符を JSON 用にエスケープすることを検証します。</summary>
+    /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
+    [Fact(DisplayName = "マニフェストに成果物の相対ファイル名を記録し、診断メッセージ内の引用符を JSON 用にエスケープする")]
     public async Task Manifest_writes_relative_artifact_metadata()
     {
         var result = new ConversionResult(

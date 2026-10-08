@@ -9,10 +9,10 @@ using Xunit;
 
 namespace ExcelRenderer.Tests;
 
-/// <summary>Configures process-wide dependencies before any tests use PDFsharp.</summary>
+/// <summary>PDFsharp の初期化前にテスト用のフォントリゾルバーと Skia のキャッシュ上限を設定します。</summary>
 internal static class TestAssembly
 {
-    /// <summary>Installs the deterministic test font resolver before PDFsharp initializes its font cache.</summary>
+    /// <summary>Skia のフォントキャッシュを 16 MiB・32 項目に制限し、PDFsharp に同梱フォントを使用するテスト用リゾルバーを登録します。</summary>
     [ModuleInitializer]
     internal static void Initialize()
     {

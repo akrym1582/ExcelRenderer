@@ -13,7 +13,7 @@ namespace ExcelRenderer.Tests;
 public sealed class SvgRendererTests
 {
     /// <summary>正確なポイント寸法、白背景、パス化文字を持つ SVG を生成することを検証します。</summary>
-    [Fact]
+    [Fact(DisplayName = "正確なポイント寸法、白背景、パス化文字を持つ SVG を生成する")]
     public void RenderPage_writes_point_dimensions_and_outlined_text()
     {
         using var output = new MemoryStream();
@@ -36,7 +36,7 @@ public sealed class SvgRendererTests
     }
 
     /// <summary>画像が外部 URL ではなくデータ URI として SVG 内へ格納されることを検証します。</summary>
-    [Fact]
+    [Fact(DisplayName = "画像が外部 URL ではなくデータ URI として SVG 内へ格納される")]
     public void RenderPage_embeds_images()
     {
         using var bitmap = new SKBitmap(2, 2);
@@ -57,7 +57,7 @@ public sealed class SvgRendererTests
     }
 
     /// <summary>カラー絵文字を SVG に自己完結の画像として格納します。</summary>
-    [Fact]
+    [Fact(DisplayName = "カラー絵文字を SVG に自己完結の画像として格納します")]
     public void RenderPage_embeds_color_emoji()
     {
         var manager = new FontManager(new FontOptions { AllowSystemFonts = false, FallbackFamilies = [] });
@@ -74,7 +74,7 @@ public sealed class SvgRendererTests
     }
 
     /// <summary>seek 非対応の書き込み可能ストリームにも完全な SVG を出力できることを検証します。</summary>
-    [Fact]
+    [Fact(DisplayName = "seek 非対応の書き込み可能ストリームにも完全な SVG を出力できる")]
     public void RenderPage_supports_non_seekable_output()
     {
         using var output = new NonSeekableWriteStream();
@@ -84,7 +84,7 @@ public sealed class SvgRendererTests
     }
 
     /// <summary>複数ページ出力が factory のストリームをページごとに閉じることを検証します。</summary>
-    [Fact]
+    [Fact(DisplayName = "複数ページ出力が factory のストリームをページごとに閉じる")]
     public void Render_disposes_each_factory_stream()
     {
         var streams = new List<CaptureOnDisposeStream>();
@@ -107,7 +107,7 @@ public sealed class SvgRendererTests
     }
 
     /// <summary>ページ描画が失敗した場合も factory が返したストリームを閉じることを検証します。</summary>
-    [Fact]
+    [Fact(DisplayName = "ページ描画が失敗した場合も factory が返したストリームを閉じる")]
     public void Render_disposes_factory_stream_when_rendering_fails()
     {
         var output = new CaptureOnDisposeStream();
@@ -120,7 +120,7 @@ public sealed class SvgRendererTests
     }
 
     /// <summary>不正なページ寸法と書き込み不可ストリームを拒否することを検証します。</summary>
-    [Fact]
+    [Fact(DisplayName = "不正なページ寸法と書き込み不可ストリームを拒否する")]
     public void RenderPage_validates_dimensions_and_output()
     {
         using var writable = new MemoryStream();
@@ -131,12 +131,17 @@ public sealed class SvgRendererTests
             new SvgRenderer().RenderPage([], new PageSettings(10, 10), readOnly));
     }
 
+    /// <summary>終了時に出力データを保存し、描画処理がストリームを閉じたことを検証します。</summary>
     private sealed class CaptureOnDisposeStream : MemoryStream
     {
+        /// <summary>出力ストリームの終了処理が呼び出されたかどうかを保持します。</summary>
         public bool WasDisposed { get; private set; }
 
+        /// <summary>ストリーム終了時に保存した SVG のバイト列を保持します。</summary>
         public byte[] Bytes { get; private set; } = [];
 
+        /// <summary>終了時の出力バイト列を保存し、基底ストリームを閉じます。</summary>
+        /// <param name="disposing">マネージド資源も解放するかどうか。</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -149,32 +154,56 @@ public sealed class SvgRendererTests
         }
     }
 
+    /// <summary>シークを禁止しながらメモリに書き込み、SVG のストリーム出力契約を検証します。</summary>
     private sealed class NonSeekableWriteStream : Stream
     {
+        /// <summary>シーク非対応ストリームの書き込み内容を保持する内部バッファです。</summary>
         private readonly MemoryStream _inner = new();
 
+        /// <summary>内部バッファの内容を UTF-8 の SVG 文字列として返します。</summary>
         public string Text => System.Text.Encoding.UTF8.GetString(_inner.ToArray());
 
+        /// <summary>読み取りをサポートしないため、false を返します。</summary>
         public override bool CanRead => false;
 
+        /// <summary>この検証用ストリームはシークをサポートしないため、false を返します。</summary>
         public override bool CanSeek => false;
 
+        /// <summary>出力先として使用できるよう、書き込み対応を表す true を返します。</summary>
         public override bool CanWrite => true;
 
+        /// <summary>シーク非対応を再現するため、長さの取得で NotSupportedException を送出します。</summary>
         public override long Length => throw new NotSupportedException();
 
+        /// <summary>シーク非対応を再現するため、現在位置の取得と変更で NotSupportedException を送出します。</summary>
         public override long Position { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
 
+        /// <summary>内部バッファをフラッシュします。</summary>
         public override void Flush() => _inner.Flush();
 
+        /// <summary>読み取り非対応のため NotSupportedException を送出します。</summary>
+        /// <param name="buffer">読み書きに使用するバイト配列。</param>
+        /// <param name="offset">バッファ内の読み書き開始位置。</param>
+        /// <param name="count">バッファから読み書きする最大バイト数。</param>
         public override int Read(byte[] buffer, int offset, int count) => throw new NotSupportedException();
 
+        /// <summary>シーク非対応を再現するため、読み書き位置の移動で NotSupportedException を送出します。</summary>
+        /// <param name="offset">基準位置からの移動量（バイト）。</param>
+        /// <param name="origin">シークの基準位置。</param>
         public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
 
+        /// <summary>シーク非対応を再現するため、長さの変更で NotSupportedException を送出します。</summary>
+        /// <param name="value">設定するストリームの長さ（バイト）。</param>
         public override void SetLength(long value) => throw new NotSupportedException();
 
+        /// <summary>指定されたバッファの範囲を内部メモリストリームへ書き込みます。</summary>
+        /// <param name="buffer">読み書きに使用するバイト配列。</param>
+        /// <param name="offset">バッファ内の読み書き開始位置。</param>
+        /// <param name="count">バッファから読み書きする最大バイト数。</param>
         public override void Write(byte[] buffer, int offset, int count) => _inner.Write(buffer, offset, count);
 
+        /// <summary>内部メモリストリームと基底ストリームを閉じます。</summary>
+        /// <param name="disposing">マネージド資源も解放するかどうか。</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing)

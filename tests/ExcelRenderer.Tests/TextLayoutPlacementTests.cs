@@ -6,15 +6,15 @@ using Xunit;
 
 namespace ExcelRenderer.Tests;
 
-/// <summary>Verifies the renderer-independent finalized text placement contract.</summary>
+/// <summary>確定済み文字の行相対ベースラインと文字ランの横オフセットによる配置を検証します。</summary>
 public sealed class TextLayoutPlacementTests
 {
-    /// <summary>Line baselines and run offsets remain independent under every alignment.</summary>
-    /// <param name="horizontal">Horizontal alignment.</param>
-    /// <param name="expectedLeft">Expected first-line origin.</param>
-    /// <param name="vertical">Vertical alignment.</param>
-    /// <param name="expectedBaseline">Expected first baseline.</param>
-    [Theory]
+    /// <summary>水平・垂直配置を変更しても、行相対のベースラインと文字ランの横オフセットが独立して描画位置に反映されることを検証します。</summary>
+    /// <param name="horizontal">文字の水平配置。</param>
+    /// <param name="expectedLeft">先頭行の左端座標の期待値（ポイント）。</param>
+    /// <param name="vertical">文字の垂直配置。</param>
+    /// <param name="expectedBaseline">先頭行のベースライン座標の期待値（ポイント）。</param>
+    [Theory(DisplayName = "水平・垂直配置を変更しても、行相対のベースラインと文字ランの横オフセットが独立して描画位置に反映される")]
     [InlineData(HorizontalAlignment.Left, 10, VerticalAlignment.Top, 23)]
     [InlineData(HorizontalAlignment.Center, 40, VerticalAlignment.Center, 58)]
     [InlineData(HorizontalAlignment.Right, 70, VerticalAlignment.Bottom, 93)]

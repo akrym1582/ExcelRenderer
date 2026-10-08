@@ -11,7 +11,9 @@ namespace ExcelRenderer.Tests;
 public sealed class SkiaImageTests
 {
     /// <summary>空、破損、非対応の画像の後も正常な画像と図形が描画されることを検証します。</summary>
-    [Theory]
+    /// <param name="hex">解読不能な画像データの 16 進表記。</param>
+    /// <param name="svg">PNG の代わりに SVG 描画を検証するかどうか。</param>
+    [Theory(DisplayName = "空、破損、非対応の画像の後も正常な画像と図形が描画される")]
     [InlineData("", false)]
     [InlineData("", true)]
     [InlineData("0102030405", false)]

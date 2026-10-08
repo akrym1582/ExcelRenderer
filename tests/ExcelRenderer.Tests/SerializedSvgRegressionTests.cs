@@ -9,9 +9,19 @@ using Xunit;
 
 namespace ExcelRenderer.Tests;
 
+/// <summary>保存した SVG を再読込し、文字・回転・下線の描画位置を PNG と比較します。</summary>
 public sealed class SerializedSvgRegressionTests
 {
-    [Theory]
+    /// <summary>配置を変えた確定済み文字の SVG を再読込し、字形パスの座標とラスタ化した描画範囲が PNG に一致することを検証します。</summary>
+    /// <param name="horizontal">文字の水平配置。</param>
+    /// <param name="vertical">文字の垂直配置。</param>
+    /// <param name="ax">文字 A の X 座標の期待値（ポイント）。</param>
+    /// <param name="ay">文字 A のベースラインの期待値（ポイント）。</param>
+    /// <param name="bx">文字 B の X 座標の期待値（ポイント）。</param>
+    /// <param name="by">文字 B のベースラインの期待値（ポイント）。</param>
+    /// <param name="cx">文字 C の X 座標の期待値（ポイント）。</param>
+    /// <param name="cy">文字 C のベースラインの期待値（ポイント）。</param>
+    [Theory(DisplayName = "配置を変えた確定済み文字の SVG を再読込し、字形パスの座標とラスタ化した描画範囲が PNG に一致する")]
     [InlineData(HorizontalAlignment.Left, VerticalAlignment.Top, 10, 23, 35, 23, 17, 47)]
     [InlineData(HorizontalAlignment.Center, VerticalAlignment.Center, 40, 33, 65, 33, 57, 57)]
     [InlineData(HorizontalAlignment.Right, VerticalAlignment.Bottom, 70, 43, 95, 43, 97, 67)]
@@ -44,7 +54,11 @@ public sealed class SerializedSvgRegressionTests
         });
     }
 
-    [Theory]
+    /// <summary>従来形式の折り返し・縮小・水平配置を変えた SVG を再読込し、各行の描画範囲が PNG に一致することを検証します。</summary>
+    /// <param name="wrap">文字を利用可能な幅で折り返すかどうか。</param>
+    /// <param name="shrink">文字を領域内に収まるよう縮小するかどうか。</param>
+    /// <param name="alignment">検証する文字の水平配置。</param>
+    [Theory(DisplayName = "従来形式の折り返し・縮小・水平配置を変えた SVG を再読込し、各行の描画範囲が PNG に一致する")]
     [InlineData(true, false, HorizontalAlignment.Left)]
     [InlineData(false, true, HorizontalAlignment.Center)]
     [InlineData(false, true, HorizontalAlignment.Right)]
@@ -65,7 +79,8 @@ public sealed class SerializedSvgRegressionTests
         });
     }
 
-    [Fact]
+    /// <summary>30 度回転した文字の SVG を再読込しても、PNG と同じクリップ内に描画され、領域外に文字画素が出ないことを検証します。</summary>
+    [Fact(DisplayName = "30 度回転した文字の SVG を再読込しても、PNG と同じクリップ内に描画され、領域外に文字画素が出ない")]
     public void Svg_serialized_rotation_preserves_clip()
     {
         var command = new DrawTextCommand(1, new(25, 20, 55, 30), "WWWWWWWW\nWWWWWWWW", CellStyle.Default with
@@ -85,7 +100,8 @@ public sealed class SerializedSvgRegressionTests
         });
     }
 
-    [Fact]
+    /// <summary>確定済み文字の SVG に二行分の下線が保存済み位置で一度ずつ出力され、再描画した画素も PNG に一致することを検証します。</summary>
+    [Fact(DisplayName = "確定済み文字の SVG に二行分の下線が保存済み位置で一度ずつ出力され、再描画した画素も PNG に一致する")]
     public void Svg_serialized_finalized_underline_has_stored_position_and_count()
     {
         using var probe = new SerializedSvgProbe(OutputFixture.Artificial(underline: true));
@@ -115,6 +131,12 @@ public sealed class SerializedSvgRegressionTests
         });
     }
 
+    /// <summary>期待する字形を独立して描き、下線を除いた領域の文字画素と SVG・PNG の描画範囲を比較します。</summary>
+    /// <param name="probe">PNG と SVG の出力比較に使用する検証器。</param>
+    /// <param name="font">文字計測または参照描画に使うフォント設定。</param>
+    /// <param name="text">計測・描画または解析の対象となる文字列。</param>
+    /// <param name="x">描画位置または比較対象の X 座標。</param>
+    /// <param name="baseline">文字を描画するベースラインの Y 座標。</param>
     private static void CheckGlyph(SerializedSvgProbe probe, SKFont font, string text, float x, float baseline)
     {
         using var path = font.GetTextPath(text, new SKPoint(x, baseline));
@@ -139,6 +161,9 @@ public sealed class SerializedSvgRegressionTests
         BoundsMatch(probe, region);
     }
 
+    /// <summary>指定領域内の PNG と SVG 再描画の外接矩形を、各辺 1 画素以内の差で比較します。</summary>
+    /// <param name="probe">PNG と SVG の出力比較に使用する検証器。</param>
+    /// <param name="region">文字画素を検査する矩形領域。</param>
     private static void BoundsMatch(SerializedSvgProbe probe, SKRectI region)
     {
         var a = SerializedSvgProbe.InkBounds(probe.Png, region); var b = SerializedSvgProbe.InkBounds(probe.Raster, region);

@@ -9,11 +9,13 @@ using Xunit;
 
 namespace ExcelRenderer.Tests;
 
-/// <summary>Verifies native font sharing and lifetime for direct PNG and SVG callers.</summary>
+/// <summary>PNG・SVG の直接描画でネイティブ書体を共有し、正常終了と失敗時に適切に解放することを検証します。</summary>
 public sealed class ImagePerformanceRegressionTests
 {
-    /// <summary>All direct entry points share one native face and release it when rendering ends.</summary>
-    [Theory]
+    /// <summary>PNG・SVG の各直接描画 API でネイティブ書体を共有し、描画終了時に解放することを検証します。</summary>
+    /// <param name="svg">PNG の代わりに SVG 描画を検証するかどうか。</param>
+    /// <param name="entryPoint">呼び出す直接描画 API の名前。</param>
+    [Theory(DisplayName = "PNG・SVG の各直接描画 API でネイティブ書体を共有し、描画終了時に解放する")]
     [InlineData(false, "pages")]
     [InlineData(true, "pages")]
     [InlineData(false, "page")]
@@ -119,8 +121,9 @@ public sealed class ImagePerformanceRegressionTests
         }
     }
 
-    /// <summary>Rendering failures restore an existing conversion scope and keep its face alive.</summary>
-    [Theory]
+    /// <summary>描画が失敗しても外側の変換用フォント所有者を復元し、その書体を引き続き使用できることを検証します。</summary>
+    /// <param name="svg">PNG の代わりに SVG 描画を検証するかどうか。</param>
+    [Theory(DisplayName = "描画が失敗しても外側の変換用フォント所有者を復元し、その書体を引き続き使用できる")]
     [InlineData(false)]
     [InlineData(true)]
     public void Rendering_failure_preserves_outer_font_owner(bool svg)
@@ -152,8 +155,9 @@ public sealed class ImagePerformanceRegressionTests
         Assert.True(output.CanWrite);
     }
 
-    /// <summary>Failure while enumerating commands releases the renderer's own native face.</summary>
-    [Theory]
+    /// <summary>描画命令の列挙中に例外が発生した場合、描画処理自身が所有するネイティブ書体を解放することを検証します。</summary>
+    /// <param name="svg">PNG の代わりに SVG 描画を検証するかどうか。</param>
+    [Theory(DisplayName = "描画命令の列挙中に例外が発生した場合、描画処理自身が所有するネイティブ書体を解放する")]
     [InlineData(false)]
     [InlineData(true)]
     public void Rendering_failure_releases_owned_fonts(bool svg)

@@ -14,7 +14,7 @@ namespace ExcelRenderer.Tests;
 public sealed class PngRendererTests
 {
     /// <summary>二重線の 2 本の線と間の空白が PNG 上に残ることを検証します。</summary>
-    [Fact]
+    [Fact(DisplayName = "二重線の 2 本の線と間の空白が PNG 上に残る")]
     public void RenderPage_draws_two_separate_lines_for_double_border()
     {
         using var output = new MemoryStream();
@@ -36,7 +36,7 @@ public sealed class PngRendererTests
     /// <summary>
     /// 点線罫線を描画したとき、線分間の空白が塗りつぶされずに保持されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "点線罫線を描画したとき、線分間の空白が塗りつぶされずに保持される")]
     public void RenderPage_preserves_gaps_in_dotted_borders()
     {
         using var output = new MemoryStream();
@@ -60,7 +60,7 @@ public sealed class PngRendererTests
     /// <summary>
     /// 指定した DPI が PNG の解像度メタデータとピクセル寸法に反映されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "指定した DPI が PNG の解像度メタデータとピクセル寸法に反映される")]
     public void RenderPage_writes_png_at_requested_dpi()
     {
         var commands = new DrawCommand[]
@@ -86,7 +86,7 @@ public sealed class PngRendererTests
     /// <summary>
     /// 複数ページの描画結果がページごとに個別の PNG ファイルへ出力されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "複数ページの描画結果がページごとに個別の PNG ファイルへ出力される")]
     public void Render_writes_one_png_for_each_page()
     {
         var commands = new DrawCommand[]
@@ -111,7 +111,7 @@ public sealed class PngRendererTests
     /// <summary>
     /// ページ内の埋め込み画像が指定位置へ描画されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "ページ内の埋め込み画像が指定位置へ描画される")]
     public void RenderPage_renders_an_embedded_image()
     {
         using var sourceBitmap = new SKBitmap(2, 2);
@@ -129,7 +129,7 @@ public sealed class PngRendererTests
     }
 
     /// <summary>同梱フォントで解決した IVS の字形が PNG 上に描画されることを検証します。</summary>
-    [Fact]
+    [Fact(DisplayName = "同梱フォントで解決した IVS の字形が PNG 上に描画される")]
     public void RenderPage_renders_resolved_ivs_glyph()
     {
         var manager = new FontManager(new FontOptions
@@ -156,7 +156,7 @@ public sealed class PngRendererTests
     /// <summary>
     /// 描画命令がない文書でも空の先頭ページが PNG として出力されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "描画命令がない文書でも空の先頭ページが PNG として出力される")]
     public void Render_writes_a_blank_first_page_when_there_are_no_commands()
     {
         var pageNumber = 0;
@@ -175,7 +175,7 @@ public sealed class PngRendererTests
     /// <summary>
     /// ゼロ以下の DPI を指定した場合に引数エラーとなることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "ゼロ以下の DPI を指定した場合に引数エラーとなる")]
     public void RenderPage_rejects_non_positive_dpi()
     {
         using var output = new MemoryStream();
@@ -185,7 +185,7 @@ public sealed class PngRendererTests
     }
 
     /// <summary>連続キャンバスが bitmap を確保する前にピクセル上限を検証することを確認します。</summary>
-    [Fact]
+    [Fact(DisplayName = "連続キャンバスが bitmap を確保する前にピクセル上限を検証する")]
     public void RenderCanvas_rejects_canvas_exceeding_pixel_limit()
     {
         using var output = new MemoryStream();
@@ -196,10 +196,14 @@ public sealed class PngRendererTests
         Assert.Contains("Lower DPI", error.Message);
     }
 
+    /// <summary>終了時に出力データを保存し、描画処理がストリームを閉じたことを検証します。</summary>
     private sealed class CaptureOnDisposeStream : MemoryStream
     {
+        /// <summary>ストリーム終了時に保存した PNG のバイト列を保持します。</summary>
         public byte[] CapturedBytes { get; private set; } = [];
 
+        /// <summary>終了時の出力バイト列を保存し、基底ストリームを閉じます。</summary>
+        /// <param name="disposing">マネージド資源も解放するかどうか。</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing)

@@ -22,7 +22,7 @@ public sealed partial class MarkdownSampleOutputTests
     /// </summary>
     /// <param name="excelFileName">入力に使用するサンプル Excel ファイルの名前。</param>
     /// <returns>非同期の検証処理を表すタスク。</returns>
-    [Theory]
+    [Theory(DisplayName = "サンプル Excel ブックからシート構造と内容を保持した Markdown を生成できる")]
     [MemberData(nameof(Samples))]
     public async Task Generates_markdown_from_prebuilt_excel(string excelFileName)
     {
@@ -76,9 +76,11 @@ public sealed partial class MarkdownSampleOutputTests
         }
     }
 
+    /// <summary>Markdown のシート見出し行を数える正規表現を返します。</summary>
     [GeneratedRegex(@"(?m)^## Sheet: ")]
     private static partial Regex MyRegex();
 
+    /// <summary>Markdown の画像リンクから出力画像の相対パスを抽出する正規表現を返します。</summary>
     [GeneratedRegex(@"!\[Image at [^\]]+\]\(([^)]+)\)")]
     private static partial Regex MyRegex1();
 }

@@ -10,6 +10,7 @@ using ExcelRenderer.Slim.Rendering;
 using PdfSharp.Pdf;
 using Xunit;
 using A = DocumentFormat.OpenXml.Drawing;
+using RenderingDiagnostic = ExcelRenderer.Slim.Rendering.ConversionDiagnostic;
 using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 
 namespace ExcelRenderer.Slim.Tests;
@@ -128,7 +129,7 @@ public sealed class PageAndImageTests
             drawing.Save();
         }
         original.Position = 0; using var output = new MemoryStream();
-        var result = await SlimExcelConverter.ConvertAsync(original, output, TestSupport.Options);
+        var result = await ExcelConverter.ConvertAsync(original, output, TestSupport.Options);
         Assert.Equal(1, result.PageCount); Assert.DoesNotContain(result.Diagnostics, d => d.Code.Contains("Shape"));
         using var document = TestSupport.Open(output.ToArray());
         var images = document.Pages[0].Elements.GetDictionary("/Resources")!.Elements.GetDictionary("/XObject")!;
@@ -207,14 +208,14 @@ public sealed class PageAndImageTests
             using var image = part.GetStream(FileMode.Create, FileAccess.Write); image.Write(new byte[] { 1, 2, 3 });
         }
         input.Position = 0; using var output = new MemoryStream();
-        var result = await SlimExcelConverter.ConvertAsync(input, output, TestSupport.Options);
+        var result = await ExcelConverter.ConvertAsync(input, output, TestSupport.Options);
         Assert.Equal(1, result.PageCount); Assert.Contains(result.Diagnostics, d => d.Code == "ImageDecodeFailed");
     }
 
     [Fact]
     public void Corrupt_image_reports_diagnostic_and_next_page_still_renders()
     {
-        var diagnostics = new List<ConversionDiagnostic>();
+        var diagnostics = new List<RenderingDiagnostic>();
         using var images = new ImageResources(); using var document = new PdfDocument();
         var renderer = new PdfSharpRenderer { DiagnosticHandler = diagnostics.Add };
         renderer.AppendPage(document, new(100, 100), [new DrawImageCommand(1, new(0, 0, 10, 10), [1, 2, 3])]);

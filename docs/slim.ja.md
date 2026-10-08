@@ -2,6 +2,8 @@
 
 XLSXからPDFだけを生成する独立したソースプロジェクトです。`netstandard2.1`で、.NET 8/10からProjectReferenceできます。NuGetパッケージ、CLI、フォント入りDLLは作成しません。
 
+公開型名はオリジナル版と同じ `ExcelConverter`、`PdfExportOptions`、`WorkbookInputOptions`、`ConversionResult`、`ConversionDiagnostic` です。名前空間は `ExcelRenderer.Slim` で、設定や結果のメンバーはSlim版の対応範囲に合わせています。従来の `Slim` 接頭辞付きの型名を使用している呼び出し側は、これらの名前へ変更してください。
+
 ```xml
 <ItemGroup>
   <ProjectReference Include="../ExcelRenderer/src/ExcelRenderer.Slim/ExcelRenderer.Slim.csproj" />
@@ -13,7 +15,7 @@ using ExcelRenderer.Slim;
 
 using var xlsx = File.OpenRead("report.xlsx");
 using var pdf = new FileStream("report.pdf", FileMode.Create, FileAccess.ReadWrite);
-var result = await SlimExcelConverter.ConvertAsync(xlsx, pdf, new SlimPdfOptions
+var result = await ExcelConverter.ConvertAsync(xlsx, pdf, new PdfExportOptions
 {
     FontFilePath = "/fonts/NotoSansJP-Regular.ttf",
     SheetName = null,
@@ -176,11 +178,11 @@ Slim内のSemaphoreSlimでPDFsharpフォントresetから計測・描画・Save�
 | Rendering/DiagnosticSeverity.cs | Rendering/DiagnosticSeverity.cs |
 | Rendering/DiagnosticStage.cs | Rendering/DiagnosticStage.cs |
 | Rendering/ImageResources.cs | Rendering/ImageResources.cs |
-| Slim専用の新規実装 | SlimDiagnostic.cs |
-| Slim専用の新規実装 | SlimExcelConverter.cs |
-| Rendering/WorkbookInputOptions.cs | SlimInputOptions.cs |
-| Slim専用の新規実装 | SlimPdfOptions.cs |
-| Slim専用の新規実装 | SlimPdfResult.cs |
+| Slim専用の新規実装 | ConversionDiagnostic.cs |
+| Slim専用の新規実装 | ExcelConverter.cs |
+| Rendering/WorkbookInputOptions.cs | WorkbookInputOptions.cs |
+| Slim専用の新規実装 | PdfExportOptions.cs |
+| Slim専用の新規実装 | ConversionResult.cs |
 
 </details>
 

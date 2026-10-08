@@ -11,7 +11,7 @@ using PdfSharp.Pdf;
 namespace ExcelRenderer.Slim;
 
 /// <summary>Converts XLSX streams to one PDF using one caller-supplied font.</summary>
-public static class SlimExcelConverter
+public static class ExcelConverter
 {
     private static readonly SemaphoreSlim FontGate = new(1, 1);
 
@@ -21,7 +21,7 @@ public static class SlimExcelConverter
     /// <param name="options">The required font and optional sheet/input settings.</param>
     /// <param name="cancellationToken">The conversion cancellation token.</param>
     /// <returns>The page count and nonfatal diagnostics.</returns>
-    public static async Task<SlimPdfResult> ConvertAsync(Stream xlsx, Stream pdf, SlimPdfOptions options, CancellationToken cancellationToken = default)
+    public static async Task<ConversionResult> ConvertAsync(Stream xlsx, Stream pdf, PdfExportOptions options, CancellationToken cancellationToken = default)
     {
         if (xlsx is null)
         {
@@ -103,7 +103,7 @@ public static class SlimExcelConverter
                 using var destination = new CancellationWriteStream(pdf, cancellationToken);
                 document.Save(destination, false);
                 cancellationToken.ThrowIfCancellationRequested();
-                return new(number, diagnostics.ToArray().Select(item => new SlimDiagnostic(item.Code, item.Message, item.SheetName, item.SourcePageNumber)).ToArray());
+                return new(number, diagnostics.ToArray().Select(item => new ConversionDiagnostic(item.Code, item.Message, item.SheetName, item.SourcePageNumber)).ToArray());
             }
             finally
             {

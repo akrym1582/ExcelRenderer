@@ -16,7 +16,7 @@ internal static class TestSupport
 {
     internal static string JapaneseFont => Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf");
     internal static string MonoFont => Path.Combine(AppContext.BaseDirectory, "Fonts", "NotoSansMono-Regular.ttf");
-    internal static SlimPdfOptions Options => new() { FontFilePath = JapaneseFont };
+    internal static PdfExportOptions Options => new() { FontFilePath = JapaneseFont };
 
     internal static MemoryStream Workbook(Action<XLWorkbook>? configure = null)
     {
@@ -30,11 +30,11 @@ internal static class TestSupport
         return stream;
     }
 
-    internal static async Task<(SlimPdfResult Result, byte[] Pdf)> Convert(Action<XLWorkbook>? configure = null, SlimPdfOptions? options = null)
+    internal static async Task<(ConversionResult Result, byte[] Pdf)> Convert(Action<XLWorkbook>? configure = null, PdfExportOptions? options = null)
     {
         using var input = Workbook(configure);
         using var output = new MemoryStream();
-        var result = await SlimExcelConverter.ConvertAsync(input, output, options ?? Options);
+        var result = await ExcelConverter.ConvertAsync(input, output, options ?? Options);
         return (result, output.ToArray());
     }
 

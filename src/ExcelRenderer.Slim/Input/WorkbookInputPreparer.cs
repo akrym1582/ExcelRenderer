@@ -14,7 +14,7 @@ internal static class WorkbookInputPreparer
     /// <exception cref="ArgumentOutOfRangeException">入力上限のいずれかが無効な場合にスローされます。</exception>
     /// <exception cref="InvalidDataException">入力サイズまたは ZIP 展開サイズが上限を超える場合、あるいは入力が OOXML ZIP でない場合にスローされます。</exception>
     /// <exception cref="OperationCanceledException">読み込みがキャンセルされた場合にスローされます。</exception>
-    internal static async Task<PreparedWorkbook> ReadAsync(Stream input, SlimInputOptions options, CancellationToken cancellationToken)
+    internal static async Task<PreparedWorkbook> ReadAsync(Stream input, WorkbookInputOptions options, CancellationToken cancellationToken)
     {
         if (input is null)
         {
@@ -78,7 +78,7 @@ internal static class WorkbookInputPreparer
     /// <param name="bytes">検証するブックのストリームです。</param>
     /// <param name="options">ZIP の上限を指定する設定です。</param>
     /// <exception cref="InvalidDataException">入力が有効な ZIP でない場合、または上限を超える場合にスローされます。</exception>
-    private static void ValidateZip(Stream bytes, SlimInputOptions options)
+    private static void ValidateZip(Stream bytes, WorkbookInputOptions options)
     {
         try
         {

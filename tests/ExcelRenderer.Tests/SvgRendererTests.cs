@@ -17,7 +17,7 @@ public sealed class SvgRendererTests
     public void RenderPage_writes_point_dimensions_and_outlined_text()
     {
         using var output = new MemoryStream();
-        new SvgRenderer().RenderPage(
+        new SvgRenderer(new OutputFixture.FixedManager()).RenderPage(
             [new DrawTextCommand(1, new ReportRect(5, 5, 180, 40), "請求書 A  B", CellStyle.Default)],
             new PageSettings(595.276, 841.89),
             output);

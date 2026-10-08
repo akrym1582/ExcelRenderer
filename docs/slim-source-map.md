@@ -116,11 +116,11 @@ Source: main 1.7.2, commit `32e9165d145516dbd0bcb4c2ae31a78ce6774bce`. Every cop
 | Rendering/DiagnosticSeverity.cs | Rendering/DiagnosticSeverity.cs |
 | Rendering/DiagnosticStage.cs | Rendering/DiagnosticStage.cs |
 | Rendering/ImageResources.cs | Rendering/ImageResources.cs |
-| New Slim implementation | SlimDiagnostic.cs |
-| New Slim implementation | SlimExcelConverter.cs |
-| Rendering/WorkbookInputOptions.cs | SlimInputOptions.cs |
-| New Slim implementation | SlimPdfOptions.cs |
-| New Slim implementation | SlimPdfResult.cs |
+| New Slim implementation | ConversionDiagnostic.cs |
+| New Slim implementation | ExcelConverter.cs |
+| Rendering/WorkbookInputOptions.cs | WorkbookInputOptions.cs |
+| New Slim implementation | PdfExportOptions.cs |
+| New Slim implementation | ConversionResult.cs |
 
 FontManager, font runs/glyph special cases, shape/link models and renderers, API range/viewport/continuous layout, output sinks/formats, Markdown and Skia output renderers were not retained. DrawingMLReader retains only picture anchors and Z order. PdfSharpTextMeasurer and FinalizedTextPainter use one shared regular XFont per size; reader also supplies a SingleFontGraphicEngine to ClosedXML to avoid its default system-font lookup. InputBufferOptions contains only input spool controls.
 

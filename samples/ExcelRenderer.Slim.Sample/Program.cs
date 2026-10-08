@@ -10,11 +10,11 @@ var destination = Path.GetFullPath(args[1]);
 var temporary = Path.Combine(Path.GetDirectoryName(destination)!, $".{Path.GetFileName(destination)}.{Guid.NewGuid():N}.tmp");
 try
 {
-    SlimPdfResult result;
+    ConversionResult result;
     using (var input = File.OpenRead(args[0]))
     using (var output = new FileStream(temporary, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None))
     {
-        result = await SlimExcelConverter.ConvertAsync(input, output, new SlimPdfOptions
+        result = await ExcelConverter.ConvertAsync(input, output, new PdfExportOptions
         {
             FontFilePath = args[2],
             SheetName = args.Length == 4 ? args[3] : null,

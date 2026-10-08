@@ -130,7 +130,7 @@ for (var iteration = 0; iteration < repeats; iteration++)
     using (var input = File.OpenRead(args[1]))
     using (var output = new FileStream(args[2], FileMode.Create, FileAccess.ReadWrite))
     {
-        await SlimExcelConverter.ConvertAsync(input, output, new() { FontFilePath = args[3] });
+        await ExcelConverter.ConvertAsync(input, output, new() { FontFilePath = args[3] });
     }
 #endif
     clock.Stop();

@@ -542,3 +542,5 @@ The optional `ExcelRenderer.Fonts` package contains the Japanese fonts and their
 separate license texts; see [Third-party notices](THIRD-PARTY-NOTICES.md).
 
 Resolved fonts used by PDF output are snapshotted and cached for the process lifetime, matching PDFsharp's global resolver lifetime. This avoids repeated font-file reads and hashing during wrapped-text measurement; applications should therefore use a bounded, stable set of font faces.
+
+For the separate source-only project (not published on NuGet), see [ExcelRenderer Slim](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/slim.md).

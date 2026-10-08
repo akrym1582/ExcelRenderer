@@ -1,0 +1,6 @@
+namespace ExcelRenderer.Slim;
+
+/// <summary>The completed PDF conversion.</summary>
+/// <param name="PageCount">The number of PDF pages.</param>
+/// <param name="Diagnostics">Nonfatal conversion diagnostics.</param>
+public sealed record SlimPdfResult(int PageCount, IReadOnlyList<SlimDiagnostic> Diagnostics);

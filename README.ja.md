@@ -512,6 +512,4 @@ ExcelRenderer は [MIT License](LICENSE) で提供されます。
 
 PDF 出力に使用した確定フォントは、PDFsharp のグローバル resolver の寿命に合わせてスナップショットをプロセス寿命でキャッシュします。折返し計測時のフォントファイル読込みとハッシュの反復を避けるためであり、アプリケーションでは有限で安定したフォント face 群を使用してください。
 
-## PDF専用ソースプロジェクト
-
-[ExcelRenderer Slim](docs/slim.ja.md)は指定した1つの通常TrueTypeフォントでXLSXをPDFに変換します。`src/ExcelRenderer.Slim/ExcelRenderer.Slim.csproj`をProjectReferenceし、既存本体・Fontsを参照せず利用できます。NuGet化しません。IVSは異体字セレクターを除いた基底文字で表示します。印刷・stream契約・制限は利用文書を参照してください。
+ソース参照専用の別プロジェクトは[ExcelRenderer Slim](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/slim.ja.md)を参照してください（NuGet未公開）。

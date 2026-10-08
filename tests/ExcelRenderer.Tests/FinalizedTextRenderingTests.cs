@@ -88,15 +88,15 @@ public sealed class FinalizedTextRenderingTests
         AssertBitmapsEqual(expected, actual);
     }
 
-    /// <summary>フォント管理を省略した PNG 出力で、設定済みの汎用フォントを使って従来形式の文字を描画できることを検証します。</summary>
-    [Fact(DisplayName = "フォント管理を省略した PNG 出力で、設定済みの汎用フォントを使って従来形式の文字を描画できる")]
-    public void Png_without_font_manager_renders_legacy_text()
+    /// <summary>PNG 出力で、同梱の固定フォントを使って従来形式の文字を描画できることを検証します。</summary>
+    [Fact(DisplayName = "PNG 出力で、同梱の固定フォントを使って従来形式の文字を描画できる")]
+    public void Png_with_fixed_font_renders_legacy_text()
     {
         Assert.True(RenderInk(new DrawTextCommand(
             1,
             new(10, 20, 100, 40),
             "Legacy text",
-            CellStyle.Default with { Font = new("sans-serif", 18) })) > 0);
+            CellStyle.Default with { Font = new("Noto Sans JP", 18) })) > 0);
     }
 
     /// <summary>通常文字と空文字のレイアウト結果に、計測で確定した実効フォントサイズが記録されることを検証します。</summary>
@@ -382,12 +382,12 @@ public sealed class FinalizedTextRenderingTests
         }
     }
 
-    /// <summary>文字描画命令を PNG としてメモリストリームへ描画し、検証用の出力を返します。</summary>
+    /// <summary>文字描画命令を同梱の固定フォントで PNG としてメモリストリームへ描画し、検証用の出力を返します。</summary>
     /// <param name="command">実行するコマンド、または描画対象の文字命令。</param>
     private static MemoryStream Render(DrawTextCommand command)
     {
         var output = new MemoryStream();
-        new PngRenderer().RenderPage([command], Page, output, 72);
+        new PngRenderer(new OutputFixture.FixedManager()).RenderPage([command], Page, output, 72);
         output.Position = 0;
         return output;
     }

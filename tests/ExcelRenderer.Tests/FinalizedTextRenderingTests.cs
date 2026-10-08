@@ -13,17 +13,18 @@ using Xunit;
 
 namespace ExcelRenderer.Tests;
 
-/// <summary>Verifies finalized text state at the real PDF and Skia drawing boundaries.</summary>
+/// <summary>確定済み文字のサイズ・書体・配置と、PDF および Skia への反映を検証します。</summary>
 public sealed class FinalizedTextRenderingTests
 {
+    /// <summary>出力座標の検証に使う幅 120・高さ 80 ポイントのページ設定を保持します。</summary>
     private static readonly PageSettings Page = new(120, 80);
 
-    /// <summary>The no-manager compatibility boundary draws with the same selected face used for measurement.</summary>
-    /// <param name="bold">Whether the requested system face is bold.</param>
-    /// <param name="italic">Whether the requested system face is italic.</param>
-    /// <param name="shrink">Whether the measured face is shrunk and centered.</param>
-    /// <param name="asPaths">Whether the selected face is rendered through glyph paths.</param>
-    [Theory]
+    /// <summary>フォント管理を省略した Skia 描画で、太字・斜体・縮小・パス出力の各条件でも計測時と同じシステム書体を使うことを検証します。</summary>
+    /// <param name="bold">要求するシステム書体を太字にするかどうか。</param>
+    /// <param name="italic">要求するシステム書体を斜体にするかどうか。</param>
+    /// <param name="shrink">計測した文字を縮小して中央に配置するかどうか。</param>
+    /// <param name="asPaths">選択した書体を字形パスとして描画するかどうか。</param>
+    [Theory(DisplayName = "フォント管理を省略した Skia 描画で、太字・斜体・縮小・パス出力の各条件でも計測時と同じシステム書体を使う")]
     [InlineData(false, false, false, false)]
     [InlineData(true, false, false, false)]
     [InlineData(false, true, false, true)]
@@ -87,8 +88,8 @@ public sealed class FinalizedTextRenderingTests
         AssertBitmapsEqual(expected, actual);
     }
 
-    /// <summary>The public PNG compatibility path renders with the configured generic font without a font manager.</summary>
-    [Fact]
+    /// <summary>フォント管理を省略した PNG 出力で、設定済みの汎用フォントを使って従来形式の文字を描画できることを検証します。</summary>
+    [Fact(DisplayName = "フォント管理を省略した PNG 出力で、設定済みの汎用フォントを使って従来形式の文字を描画できる")]
     public void Png_without_font_manager_renders_legacy_text()
     {
         Assert.True(RenderInk(new DrawTextCommand(
@@ -98,8 +99,8 @@ public sealed class FinalizedTextRenderingTests
             CellStyle.Default with { Font = new("sans-serif", 18) })) > 0);
     }
 
-    /// <summary>The public layout result records its measured size, including for empty text.</summary>
-    [Fact]
+    /// <summary>通常文字と空文字のレイアウト結果に、計測で確定した実効フォントサイズが記録されることを検証します。</summary>
+    [Fact(DisplayName = "通常文字と空文字のレイアウト結果に、計測で確定した実効フォントサイズが記録される")]
     public void Layout_records_effective_font_size_for_text_and_empty_text()
     {
         var measurer = new PdfSharpTextMeasurer();
@@ -109,8 +110,8 @@ public sealed class FinalizedTextRenderingTests
         Assert.Equal(12, measurer.Layout(string.Empty, style, 100, false).EffectiveFontSize);
     }
 
-    /// <summary>A legacy unspecified size draws with the style size, while an explicit zero remains blank.</summary>
-    [Fact]
+    /// <summary>Skia 描画で、未指定の実効サイズにはスタイルのサイズを使い、明示したゼロサイズでは文字を描画しないことを検証します。</summary>
+    [Fact(DisplayName = "Skia 描画で、未指定の実効サイズにはスタイルのサイズを使い、明示したゼロサイズでは文字を描画しない")]
     public void Skia_distinguishes_legacy_unspecified_size_from_explicit_zero()
     {
         var line = new TextLayoutLine("ABC", 30, 14, 11, [], false);
@@ -121,8 +122,8 @@ public sealed class FinalizedTextRenderingTests
         Assert.Equal(0, RenderInk(CreateCommand(zero)));
     }
 
-    /// <summary>Explicit run X values and line-relative baselines reach the Skia canvas unchanged.</summary>
-    [Fact]
+    /// <summary>人工的に設定した文字ランの X 座標と行相対のベースラインが、Skia の描画位置にそのまま反映されることを検証します。</summary>
+    [Fact(DisplayName = "人工的に設定した文字ランの X 座標と行相対のベースラインが、Skia の描画位置にそのまま反映される")]
     public void Skia_draws_artificial_runs_at_finalized_offsets()
     {
         var font = MemoryFont();
@@ -145,8 +146,8 @@ public sealed class FinalizedTextRenderingTests
         Assert.False(HasInk(bitmap, 21, 31, 12, 26));
     }
 
-    /// <summary>Populated finalized runs never resolve the unrelated command-style primary face.</summary>
-    [Fact]
+    /// <summary>確定済みの文字ランがある場合、描画命令のスタイルに指定した未使用の主書体を Skia が解決しないことを検証します。</summary>
+    [Fact(DisplayName = "確定済みの文字ランがある場合、描画命令のスタイルに指定した未使用の主書体を Skia が解決しない")]
     public void Skia_finalized_runs_do_not_select_an_unused_primary_face()
     {
         var font = MemoryFont();
@@ -170,9 +171,9 @@ public sealed class FinalizedTextRenderingTests
         Assert.NotEqual(0, ink);
     }
 
-    /// <summary>Finalized Skia clipping and optional rotation restore the caller's canvas when glyph drawing fails.</summary>
-    /// <param name="rotation">The text rotation applied by the outer painter.</param>
-    [Theory]
+    /// <summary>確定済み文字の描画中に例外が発生しても、回転とクリップを適用する前の Skia キャンバス状態に戻ることを検証します。</summary>
+    /// <param name="rotation">文字描画の外側で適用する回転角度（度）。</param>
+    [Theory(DisplayName = "確定済み文字の描画中に例外が発生しても、回転とクリップを適用する前の Skia キャンバス状態に戻る")]
     [InlineData(0)]
     [InlineData(30)]
     public void Skia_restores_finalized_text_state_after_drawing_exception(int rotation)
@@ -208,8 +209,8 @@ public sealed class FinalizedTextRenderingTests
         Assert.Equal(SKColors.Red, bitmap.GetPixel(75, 55));
     }
 
-    /// <summary>Memory-only resolved fonts are accepted by both finalized backends and PDF text stays text.</summary>
-    [Fact]
+    /// <summary>メモリ上だけに存在するフォントを PDF と Skia が使用でき、通常の PDF 文字はテキストとして出力されることを検証します。</summary>
+    [Fact(DisplayName = "メモリ上だけに存在するフォントを PDF と Skia が使用でき、通常の PDF 文字はテキストとして出力される")]
     public void Resolved_memory_face_is_used_by_pdf_and_skia()
     {
         var font = MemoryFont();
@@ -231,8 +232,8 @@ public sealed class FinalizedTextRenderingTests
         Assert.True(RenderInk(command) > 0);
     }
 
-    /// <summary>Finalized PDF fonts disable automatic underline because the renderer draws one manual line.</summary>
-    [Fact]
+    /// <summary>確定済み PDF 文字の下線を手動で描く際に、フォント側の自動下線が無効になっていることを検証します。</summary>
+    [Fact(DisplayName = "確定済み PDF 文字の下線を手動で描く際に、フォント側の自動下線が無効になっている")]
     public void Finalized_pdf_font_does_not_enable_automatic_underline()
     {
         var font = PdfSharpTextMeasurer.CreateFont(
@@ -242,8 +243,8 @@ public sealed class FinalizedTextRenderingTests
         Assert.False(font.Style.HasFlag(XFontStyleEx.Underline));
     }
 
-    /// <summary>Internal PDF keys distinguish selected faces even when their family and path match.</summary>
-    [Fact]
+    /// <summary>ファミリ名とファイルパスが同じ書体でも、識別子とフォントデータの違いで PDF 用のキーを区別することを検証します。</summary>
+    [Fact(DisplayName = "ファミリ名とファイルパスが同じ書体でも、識別子とフォントデータの違いで PDF 用のキーを区別する")]
     public void Pdf_face_keys_include_identity_and_font_data()
     {
         var first = MemoryFont();
@@ -259,8 +260,8 @@ public sealed class FinalizedTextRenderingTests
         Assert.Equal(secondData, resolver.GetFont(secondKey));
     }
 
-    /// <summary>Registration snapshots mutable memory data and performs expensive work once under contention.</summary>
-    [Fact]
+    /// <summary>並行する PDF 書体登録が一度だけ実行され、登録後に元のバイト配列を変更しても保存済みデータが変わらないことを検証します。</summary>
+    [Fact(DisplayName = "並行する PDF 書体登録が一度だけ実行され、登録後に元のバイト配列を変更しても保存済みデータが変わらない")]
     public void Pdf_face_registration_is_atomic_cached_and_immutable()
     {
         var font = MemoryFont() with { FaceId = $"parallel-{Guid.NewGuid():N}" };
@@ -282,8 +283,8 @@ public sealed class FinalizedTextRenderingTests
         Assert.Equal(keys[0], PdfSharpFontResolver.RegisterResolvedFont(font));
     }
 
-    /// <summary>The real manager/layout path reuses the selected face registration across repeated wrapping probes.</summary>
-    [Fact]
+    /// <summary>フォント管理と文字計測を組み合わせた繰り返しの折り返し計測で、同じ PDF 書体登録を再利用することを検証します。</summary>
+    [Fact(DisplayName = "フォント管理と文字計測を組み合わせた繰り返しの折り返し計測で、同じ PDF 書体登録を再利用する")]
     public void Text_measurer_reuses_registration_from_font_manager()
     {
         var path = Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf");
@@ -305,8 +306,8 @@ public sealed class FinalizedTextRenderingTests
         Assert.Equal(middle, after);
     }
 
-    /// <summary>A file-backed face reads and hashes its immutable registration snapshot only once.</summary>
-    [Fact]
+    /// <summary>ファイル由来の PDF 書体を繰り返し登録しても、登録用データの読み込みとハッシュ計算が一度だけ行われることを検証します。</summary>
+    [Fact(DisplayName = "ファイル由来の PDF 書体を繰り返し登録しても、登録用データの読み込みとハッシュ計算が一度だけ行われる")]
     public void Pdf_file_face_registration_avoids_repeated_io_and_hashing()
     {
         var path = Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf");
@@ -325,8 +326,9 @@ public sealed class FinalizedTextRenderingTests
         Assert.Equal(before.Hashes + 1, after.Hashes);
     }
 
-    /// <summary>Invalid explicit effective sizes are rejected at the public state boundary.</summary>
-    [Theory]
+    /// <summary>負数・NaN・無限大の実効フォントサイズを指定すると、公開レイアウト状態の生成時に拒否されることを検証します。</summary>
+    /// <param name="size">検証する実効フォントサイズ（ポイント）。</param>
+    [Theory(DisplayName = "負数・NaN・無限大の実効フォントサイズを指定すると、公開レイアウト状態の生成時に拒否される")]
     [InlineData(-1)]
     [InlineData(double.NaN)]
     [InlineData(double.PositiveInfinity)]
@@ -336,6 +338,8 @@ public sealed class FinalizedTextRenderingTests
             new TextLayoutResult(new(0, 0), []) { EffectiveFontSize = size });
     }
 
+    /// <summary>指定した確定済み文字レイアウトを、固定の文字領域を持つ描画命令に設定します。</summary>
+    /// <param name="layout">検証する画像レイアウト、または確定済み文字レイアウト。</param>
     private static DrawTextCommand CreateCommand(TextLayoutResult layout) => new(
         1,
         new(10, 20, 100, 50),
@@ -345,6 +349,7 @@ public sealed class FinalizedTextRenderingTests
         TextLayout = layout,
     };
 
+    /// <summary>同梱の Noto Sans JP をバイト配列として持つ、ファイルパスに依存しない書体を作成します。</summary>
     private static ResolvedFont MemoryFont()
     {
         var data = File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf"));
@@ -355,6 +360,10 @@ public sealed class FinalizedTextRenderingTests
         };
     }
 
+    /// <summary>二つのビットマップの寸法と各画素の色成分を、指定した許容差で比較します。</summary>
+    /// <param name="expected">判定または数値比較の期待値。</param>
+    /// <param name="actual">比較対象の実際値。</param>
+    /// <param name="tolerance">色成分の比較で許容する差。</param>
     private static void AssertBitmapsEqual(SKBitmap expected, SKBitmap actual, int tolerance = 0)
     {
         Assert.Equal(expected.Width, actual.Width);
@@ -373,6 +382,8 @@ public sealed class FinalizedTextRenderingTests
         }
     }
 
+    /// <summary>文字描画命令を PNG としてメモリストリームへ描画し、検証用の出力を返します。</summary>
+    /// <param name="command">実行するコマンド、または描画対象の文字命令。</param>
     private static MemoryStream Render(DrawTextCommand command)
     {
         var output = new MemoryStream();
@@ -381,6 +392,8 @@ public sealed class FinalizedTextRenderingTests
         return output;
     }
 
+    /// <summary>文字描画命令を PNG に描画して、文字が描かれた画素数を返します。</summary>
+    /// <param name="command">実行するコマンド、または描画対象の文字命令。</param>
     private static int RenderInk(DrawTextCommand command)
     {
         using var output = Render(command);
@@ -389,6 +402,12 @@ public sealed class FinalizedTextRenderingTests
             Enumerable.Range(0, bitmap.Height).Count(y => bitmap.GetPixel(x, y) != SKColors.White));
     }
 
+    /// <summary>指定したビットマップ領域に文字の描画画素が存在するかを調べます。</summary>
+    /// <param name="bitmap">画素を検証または保存するビットマップ。</param>
+    /// <param name="left">検査領域の左端画素位置。</param>
+    /// <param name="right">検査領域の右端画素位置。</param>
+    /// <param name="top">検査領域の上端画素位置。</param>
+    /// <param name="bottom">検査領域の下端画素位置。</param>
     private static bool HasInk(SKBitmap bitmap, int left, int right, int top, int bottom) =>
         Enumerable.Range(left, right - left).Any(x =>
             Enumerable.Range(top, bottom - top).Any(y => bitmap.GetPixel(x, y) != SKColors.White));

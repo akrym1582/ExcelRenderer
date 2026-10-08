@@ -9,11 +9,12 @@ using Xunit;
 
 namespace ExcelRenderer.Tests;
 
-/// <summary>Tests recovery and diagnostics for images that Skia cannot decode.</summary>
+/// <summary>PDF 出力で解読不能な画像をスキップし、診断通知と後続の描画を継続することを検証します。</summary>
 public sealed class PdfSharpImageTests
 {
-    /// <summary>Invalid images are skipped while later valid images and pages are retained.</summary>
-    [Theory]
+    /// <summary>不正画像をスキップして診断を通知し、後続の正常画像とページが PDF に保持されることを検証します。</summary>
+    /// <param name="hex">解読不能な画像データの 16 進表記。</param>
+    [Theory(DisplayName = "不正画像をスキップして診断を通知し、後続の正常画像とページが PDF に保持される")]
     [InlineData("")]
     [InlineData("0102030405")]
     [InlineData("89504E470D0A1A0A")]
@@ -55,8 +56,8 @@ public sealed class PdfSharpImageTests
         Assert.NotNull(resources.Elements.GetDictionary("/XObject"));
     }
 
-    /// <summary>Direct callers do not need a diagnostic callback to recover.</summary>
-    [Fact]
+    /// <summary>診断コールバックを指定しなくても、不正画像をスキップして PDF の描画を継続することを検証します。</summary>
+    [Fact(DisplayName = "診断コールバックを指定しなくても、不正画像をスキップして PDF の描画を継続する")]
     public void Render_skips_invalid_image_without_callback()
     {
         using var output = new MemoryStream();

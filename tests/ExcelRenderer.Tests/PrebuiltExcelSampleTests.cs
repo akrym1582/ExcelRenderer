@@ -13,7 +13,7 @@ public sealed class PrebuiltExcelSampleTests
     /// <summary>
     /// 罫線サンプルから空セルと結合範囲外周の罫線断片が読み取られることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "罫線サンプルから空セルと結合範囲外周の罫線断片が読み取られる")]
     public void Cell_border_sample_preserves_empty_cells_and_merged_perimeter_fragments()
     {
         var sample = SampleOutputTestSupport.ReadAndLayout("09-cell-border.xlsx");
@@ -50,7 +50,7 @@ public sealed class PrebuiltExcelSampleTests
     /// <summary>
     /// 複数シートを持つブックの全シートが呼び出し側で選択できる状態で読み取られることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "複数シートを持つブックの全シートが呼び出し側で選択できる状態で読み取られる")]
     public void Excel_reader_preserves_multiple_sheets_for_caller_selection()
     {
         var path = Path.Combine(SampleOutputTestSupport.InputDirectory, "07-multiple-sheets.xlsx");
@@ -64,7 +64,7 @@ public sealed class PrebuiltExcelSampleTests
     /// <summary>
     /// 各サンプルブックから視覚検証に必要なセル、画像、図形などの要素が保持されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "各サンプルブックから視覚検証に必要なセル、画像、図形などの要素が保持される")]
     public void Prebuilt_excel_samples_preserve_the_visual_test_features()
     {
         var japanese = SampleOutputTestSupport.ReadAndLayout("01-japanese.xlsx");

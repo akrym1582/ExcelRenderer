@@ -23,7 +23,7 @@ public sealed class ShapeAndFontTests
     /// <summary>
     /// 埋め込みリソースがない場合に、ExcelRenderer.dll 配下の同名ファイルを読み込むことを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "埋め込みリソースがない場合に、ExcelRenderer.dll 配下の同名ファイルを読み込む")]
     public void OptionalFontPack_loads_missing_resource_from_ExcelRenderer_subdirectory()
     {
         var excelRendererDirectory = Path.GetDirectoryName(typeof(OptionalFontPack).Assembly.Location)!;
@@ -49,7 +49,7 @@ public sealed class ShapeAndFontTests
     /// ExcelRenderer.dll と同じディレクトリにある DLL から埋め込みフォントを読み込み、
     /// 読み込めない DLL があっても探索を継続することを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "ExcelRenderer.dll と同じディレクトリにある DLL から埋め込みフォントを読み込み、 読み込めない DLL があっても探索を継続する")]
     public void OptionalFontPack_loads_first_embedded_font_from_neighboring_dll_and_ignores_invalid_dll()
     {
         var excelRendererDirectory = Path.GetDirectoryName(typeof(OptionalFontPack).Assembly.Location)!;
@@ -71,7 +71,7 @@ public sealed class ShapeAndFontTests
     /// <summary>
     /// 対応する DrawingML 図形の位置、形状、書式を読み取り、未知のジオメトリを無視することを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "対応する DrawingML 図形の位置、形状、書式を読み取り、未知のジオメトリを無視する")]
     public void ExcelReader_reads_supported_DrawingML_shape_properties_and_skips_unknown_geometry()
     {
         var path = CreateWorkbookWithShapes();
@@ -102,7 +102,7 @@ public sealed class ShapeAndFontTests
     /// <summary>
     /// 画像と図形の描画命令が Z インデックス順に並ぶことを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "画像と図形の描画命令が Z インデックス順に並ぶ")]
     public void DrawCommandGenerator_orders_images_and_shapes_by_ZIndex()
     {
         var shapeA = CreateShape(1, new ReportColor(255, 0, 0));
@@ -121,7 +121,7 @@ public sealed class ShapeAndFontTests
     /// <summary>
     /// 図形の塗りつぶしと枠線が描画され、重なり順が維持されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "図形の塗りつぶしと枠線が描画され、重なり順が維持される")]
     public void PngRenderer_renders_shape_fill_border_and_Z_order()
     {
         var commands = new DrawCommand[]
@@ -143,7 +143,7 @@ public sealed class ShapeAndFontTests
     /// 各対応図形について、回転と日本語テキストを含む描画が成功することを検証します。
     /// </summary>
     /// <param name="kind">描画を検証する図形の種類。</param>
-    [Theory]
+    [Theory(DisplayName = "各対応図形について、回転と日本語テキストを含む描画が成功する")]
     [InlineData(ShapeKind.Rectangle)]
     [InlineData(ShapeKind.RoundedRectangle)]
     [InlineData(ShapeKind.Ellipse)]
@@ -181,7 +181,7 @@ public sealed class ShapeAndFontTests
     /// <summary>
     /// 標準、太字、斜体、太字斜体の要求が登録済みの各フォントフェイスへ解決されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "標準、太字、斜体、太字斜体の要求が登録済みの各フォントフェイスへ解決される")]
     public void FontManager_resolves_regular_bold_italic_and_boldItalic_to_registered_faces()
     {
         var files = Enumerable.Range(0, 4).Select(_ => CopyTestFont()).ToArray();
@@ -207,7 +207,8 @@ public sealed class ShapeAndFontTests
     /// <summary>
     /// 同じフォントデータを別名および別書体として登録しても、解決結果の登録属性が混同されないことを検証します。
     /// </summary>
-    [Theory]
+    /// <param name="resolveBoldAliasFirst">太字の別名を先に解決してキャッシュの順序依存を検証するかどうか。</param>
+    [Theory(DisplayName = "同じフォントデータを別名および別書体として登録しても、解決結果の登録属性が混同されない")]
     [InlineData(false)]
     [InlineData(true)]
     public void FontManager_keeps_alias_and_registered_style_in_resolved_cache(bool resolveBoldAliasFirst)
@@ -252,7 +253,7 @@ public sealed class ShapeAndFontTests
     }
 
     /// <summary>登録追加後に要求キャッシュを破棄し、新しく最適になった書体を選ぶことを検証します。</summary>
-    [Fact]
+    [Fact(DisplayName = "登録追加後に要求キャッシュを破棄し、新しく最適になった書体を選ぶ")]
     public void FontManager_reselects_after_registration_changes_candidates()
     {
         var path = CopyTestFont();
@@ -283,7 +284,7 @@ public sealed class ShapeAndFontTests
     /// <summary>
     /// 要求したファミリがない場合に設定済み代替ファミリと最も近いウェイトが選ばれることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "要求したファミリがない場合に設定済み代替ファミリと最も近いウェイトが選ばれる")]
     public void FontManager_uses_configured_family_fallback_and_nearest_weight()
     {
         var regular = CopyTestFont();
@@ -309,7 +310,7 @@ public sealed class ShapeAndFontTests
     /// <summary>
     /// ファイル名ではなくフォント内部のファミリ情報を使って登録されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "ファイル名ではなくフォント内部のファミリ情報を使って登録される")]
     public void FontManager_scans_family_metadata_instead_of_the_file_name()
     {
         var directory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
@@ -333,7 +334,7 @@ public sealed class ShapeAndFontTests
     }
 
     /// <summary>拡張子ではなく内容を検査し、TTE 名の外部ファイルを内部ファミリー名で登録します。</summary>
-    [Fact]
+    [Fact(DisplayName = "拡張子ではなく内容を検査し、TTE 名の外部ファイルを内部ファミリー名で登録します")]
     public void FontManager_registers_explicit_tte_by_its_internal_metadata()
     {
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.tte");
@@ -360,7 +361,7 @@ public sealed class ShapeAndFontTests
     }
 
     /// <summary>明示ファイルの欠落と不正な内容を入力エラーとして報告します。</summary>
-    [Fact]
+    [Fact(DisplayName = "明示ファイルの欠落と不正な内容を入力エラーとして報告します")]
     public void FontManager_rejects_missing_or_invalid_explicit_font_files()
     {
         var missing = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.tte");
@@ -384,7 +385,7 @@ public sealed class ShapeAndFontTests
     }
 
     /// <summary>外部ファイル指定時に未収録の BMP 私用文字を置換対象として保持します。</summary>
-    [Fact]
+    [Fact(DisplayName = "外部ファイル指定時に未収録の BMP 私用文字を置換対象として保持します")]
     public void FontManager_marks_missing_private_use_glyph_when_external_fonts_are_configured()
     {
         var path = CopyTestFont();
@@ -410,7 +411,7 @@ public sealed class ShapeAndFontTests
     }
 
     /// <summary>同梱フォントだけでも決定的なフェイス ID と Unicode テキスト要素単位のランを返すことを検証します。</summary>
-    [Fact]
+    [Fact(DisplayName = "同梱フォントだけでも決定的なフェイス ID と Unicode テキスト要素単位のランを返す")]
     public void FontManager_resolves_bundled_font_and_keeps_combining_text_together()
     {
         var manager = new FontManager(new FontOptions
@@ -434,7 +435,7 @@ public sealed class ShapeAndFontTests
 
 
     /// <summary>IVS を基底文字から分離せず、format 14 に登録された同梱フォントで解決することを検証します。</summary>
-    [Fact]
+    [Fact(DisplayName = "IVS を基底文字から分離せず、format 14 に登録された同梱フォントで解決する")]
     public void FontManager_resolves_registered_ivs_as_one_text_element()
     {
         var manager = new FontManager(new FontOptions { AllowSystemFonts = false, FontDirectories = [], FallbackFamilies = [] });
@@ -447,7 +448,7 @@ public sealed class ShapeAndFontTests
     }
 
     /// <summary>IVS を隣接する通常文字から分離し、選択したフォント固有の glyph ID を保持することを検証します。</summary>
-    [Fact]
+    [Fact(DisplayName = "IVS を隣接する通常文字から分離し、選択したフォント固有の glyph ID を保持する")]
     public void FontManager_keeps_resolved_ivs_glyph_separate_from_neighbors()
     {
         var manager = new FontManager(new FontOptions { AllowSystemFonts = false, FontDirectories = [], FallbackFamilies = [] });
@@ -462,7 +463,10 @@ public sealed class ShapeAndFontTests
     }
 
     /// <summary>同梱ゴシック体がない場合は、どちらの設定でも IPAmj 明朝で IVS を解決することを検証します。</summary>
-    [Theory]
+    /// <param name="style">フォントの解決に使用する書体設定。</param>
+    /// <param name="text">計測・描画または解析の対象となる文字列。</param>
+    /// <param name="expectedFamilyPart">解決後のファミリ名に含まれる文字列の期待値。</param>
+    [Theory(DisplayName = "同梱ゴシック体がない場合は、どちらの設定でも IPAmj 明朝で IVS を解決する")]
     [InlineData(IvsFontStyle.Gothic, "\u4FAE\uFE00", "IPAmjMincho")]
     [InlineData(IvsFontStyle.Mincho, "\u4FAE\uFE00", "IPAmjMincho")]
     public void FontManager_honors_selected_ivs_font_style(IvsFontStyle style, string text, string expectedFamilyPart)
@@ -482,7 +486,9 @@ public sealed class ShapeAndFontTests
     }
 
     /// <summary>IVS 置換を有効にすると異体字セレクターを除き、基底文字のみを描画することを検証します。</summary>
-    [Theory]
+    /// <param name="source">比較元の画像、または読み取り元のストリーム。</param>
+    /// <param name="expected">判定または数値比較の期待値。</param>
+    [Theory(DisplayName = "IVS 置換を有効にすると異体字セレクターを除き、基底文字のみを描画する")]
     [InlineData("A\u4FAE\uFE00B", "A\u4FAEB")]
     [InlineData("A\U00020000\U000E0100B", "A\U00020000B")]
     public void FontManager_can_replace_ivs_with_its_base_character(string source, string expected)
@@ -503,7 +509,7 @@ public sealed class ShapeAndFontTests
     }
 
     /// <summary>未登録 IVS はセレクターを黙って捨てず、元列と UTF-16 位置を保持して欠字化することを検証します。</summary>
-    [Fact]
+    [Fact(DisplayName = "未登録 IVS はセレクターを黙って捨てず、元列と UTF-16 位置を保持して欠字化する")]
     public void FontManager_marks_unsupported_supplementary_ivs_as_missing()
     {
         var manager = new FontManager(new FontOptions { AllowSystemFonts = false, FontDirectories = [], FallbackFamilies = [] });
@@ -517,7 +523,7 @@ public sealed class ShapeAndFontTests
     }
 
     /// <summary>絵文字の標準化異体字シーケンスを IVS 欠字として置換しないことを検証します。</summary>
-    [Fact]
+    [Fact(DisplayName = "絵文字の標準化異体字シーケンスを IVS 欠字として置換しない")]
     public void FontManager_preserves_non_ideographic_variation_sequences()
     {
         var manager = new FontManager(new FontOptions { AllowSystemFonts = false, FontDirectories = [], FallbackFamilies = [] });
@@ -531,7 +537,8 @@ public sealed class ShapeAndFontTests
     }
 
     /// <summary>通常の絵文字と VS16 付き絵文字を同梱カラー書体に解決します。</summary>
-    [Theory]
+    /// <param name="text">計測・描画または解析の対象となる文字列。</param>
+    [Theory(DisplayName = "通常の絵文字と VS16 付き絵文字を同梱カラー書体に解決します")]
     [InlineData("A😀B")]
     [InlineData("A❤️B")]
     public void FontManager_uses_color_emoji_font_for_simple_emoji(string text)
@@ -545,7 +552,7 @@ public sealed class ShapeAndFontTests
     }
 
     /// <summary>絵文字を日本語フォントの欠字ではなくカラー画素として PNG に描画します。</summary>
-    [Fact]
+    [Fact(DisplayName = "絵文字を日本語フォントの欠字ではなくカラー画素として PNG に描画します")]
     public void PngRenderer_draws_color_emoji_from_optional_font()
     {
         var manager = new FontManager(new FontOptions { AllowSystemFonts = false, FallbackFamilies = [] });
@@ -561,7 +568,7 @@ public sealed class ShapeAndFontTests
     }
 
     /// <summary>フォントパッケージを無効にした場合、システムフォントなしでは解決できません。</summary>
-    [Fact]
+    [Fact(DisplayName = "フォントパッケージを無効にした場合、システムフォントなしでは解決できません")]
     public void FontManager_without_font_pack_does_not_use_embedded_fonts()
     {
         var manager = new FontManager(new FontOptions
@@ -575,7 +582,7 @@ public sealed class ShapeAndFontTests
     }
 
     /// <summary>IVS 用の明朝体を任意パッケージから解決します。</summary>
-    [Fact]
+    [Fact(DisplayName = "IVS 用の明朝体を任意パッケージから解決します")]
     public void FontManager_resolves_optional_mincho_font()
     {
         var manager = new FontManager(new FontOptions { AllowSystemFonts = false, FallbackFamilies = [] });
@@ -584,7 +591,7 @@ public sealed class ShapeAndFontTests
     }
 
     /// <summary>明示登録を優先するポリシーが同梱フォントではなく登録済みファイルを選ぶことを検証します。</summary>
-    [Fact]
+    [Fact(DisplayName = "明示登録を優先するポリシーが同梱フォントではなく登録済みファイルを選ぶ")]
     public void FontManager_prefer_requested_uses_explicit_registration()
     {
         var path = CopyTestFont();
@@ -610,6 +617,9 @@ public sealed class ShapeAndFontTests
         }
     }
 
+    /// <summary>指定した重なり順と塗りつぶし色を持つ、図形描画用のモデルを作成します。</summary>
+    /// <param name="z">画像・図形の重なり順。</param>
+    /// <param name="fill">図形の塗りつぶし色。</param>
     private static ReportShape CreateShape(int z, ReportColor fill) => new(
         new(1, 1),
         0,
@@ -622,6 +632,7 @@ public sealed class ShapeAndFontTests
         0,
         z);
 
+    /// <summary>フォント登録の検証用に、同梱フォントを一時ファイルへコピーします。</summary>
     private static string CopyTestFont()
     {
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.otf");
@@ -629,6 +640,7 @@ public sealed class ShapeAndFontTests
         return path;
     }
 
+    /// <summary>対応する図形と未知の図形を含む DrawingML を持つ一時ブックを作成します。</summary>
     private static string CreateWorkbookWithShapes()
     {
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
@@ -660,6 +672,9 @@ public sealed class ShapeAndFontTests
         return path;
     }
 
+    /// <summary>指定した行列番号から DrawingML のアンカー始点または終点を構築します。</summary>
+    /// <param name="column">アンカーの列番号（0 始まり）。</param>
+    /// <param name="row">アンカーの行番号（0 始まり）。</param>
     private static T Marker<T>(int column, int row)
         where T : OpenXmlCompositeElement, new()
     {
@@ -672,6 +687,9 @@ public sealed class ShapeAndFontTests
         return marker;
     }
 
+    /// <summary>識別子と図形の種類を指定して、読み取り検証用の DrawingML 図形を作成します。</summary>
+    /// <param name="id">DrawingML 図形の識別番号。</param>
+    /// <param name="geometry">DrawingML に設定する図形の種類。</param>
     private static Xdr.Shape CreateOpenXmlShape(uint id, A.ShapeTypeValues geometry)
     {
         var properties = new Xdr.ShapeProperties(

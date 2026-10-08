@@ -12,7 +12,7 @@ public sealed class PngSampleOutputTests
     /// サンプル Excel ブックの全ページを PNG ファイルとして生成できることを検証します。
     /// </summary>
     /// <param name="excelFileName">入力に使用するサンプル Excel ファイルの名前。</param>
-    [Theory]
+    [Theory(DisplayName = "サンプル Excel ブックの全ページを PNG ファイルとして生成できる")]
     [MemberData(nameof(SampleOutputTestSupport.RenderSamples), MemberType = typeof(SampleOutputTestSupport))]
     public void Generates_pngs_from_prebuilt_excel(string excelFileName)
     {

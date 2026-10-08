@@ -10,11 +10,12 @@ using Xunit;
 
 namespace ExcelRenderer.Tests;
 
-/// <summary>Verifies optimized lookup boundaries, resource ownership and direct PDF assembly.</summary>
+/// <summary>疎なセルの検索、フォントキャッシュの所有権、および PDF の直接構築の回帰を検証します。</summary>
 public sealed class PerformanceRegressionTests
 {
-    /// <summary>Sparse geometry agrees with the original linear interpretation, including zero-size axes.</summary>
-    [Theory]
+    /// <summary>疎な行列と幅・高さがゼロの行列について、境界座標が従来の累積計算と一致することを検証します。</summary>
+    /// <param name="defaultSize">検証に使う既定のフォントサイズ。</param>
+    [Theory(DisplayName = "疎な行列と幅・高さがゼロの行列について、境界座標が従来の累積計算と一致する")]
     [InlineData(0)]
     [InlineData(15)]
     public void Sparse_geometry_preserves_boundaries(double defaultSize)
@@ -67,8 +68,8 @@ public sealed class PerformanceRegressionTests
         }
     }
 
-    /// <summary>A sparse merged interval is found even if its top-left lies before the page band.</summary>
-    [Fact]
+    /// <summary>結合セルの左上がページ帯より前にあっても交差する範囲を検索でき、終端だけ接する範囲は除くことを検証します。</summary>
+    [Fact(DisplayName = "結合セルの左上がページ帯より前にあっても交差する範囲を検索でき、終端だけ接する範囲は除く")]
     public void Band_index_preserves_half_open_intersections()
     {
         var index = new BandIndex<string>([("long", 1, 1000000), ("before", 0, 5), ("atEnd", 10, 11), ("inside", 7, 9)]);
@@ -77,8 +78,8 @@ public sealed class PerformanceRegressionTests
         Assert.Empty(index.Query(1000000, double.PositiveInfinity));
     }
 
-    /// <summary>Canonical styles retain data-dependent alignment while sharing equal values.</summary>
-    [Fact]
+    /// <summary>同値のセルスタイルを共有しつつ、標準配置の数値・文字列などの型別の配置を混同しないことを検証します。</summary>
+    [Fact(DisplayName = "同値のセルスタイルを共有しつつ、標準配置の数値・文字列などの型別の配置を混同しない")]
     public void Reader_shares_equal_styles_without_merging_general_alignment()
     {
         using var workbook = new XLWorkbook();
@@ -99,8 +100,8 @@ public sealed class PerformanceRegressionTests
         Assert.Same(first.Border, numeric.Border);
     }
 
-    /// <summary>Multiple print areas do not measure text from rows absent from their layout.</summary>
-    [Fact]
+    /// <summary>複数印刷範囲をレイアウトする際に、範囲外の行にある文字を計測しないことを検証します。</summary>
+    [Fact(DisplayName = "複数印刷範囲をレイアウトする際に、範囲外の行にある文字を計測しない")]
     public void Text_measurement_skips_rows_outside_layout()
     {
         var sheet = new ReportSheet("range", new Dictionary<CellAddress, ReportCell>
@@ -116,8 +117,8 @@ public sealed class PerformanceRegressionTests
         Assert.False(context.TextLayouts.ContainsKey(new(1000, 1)));
     }
 
-    /// <summary>Registration invalidates resolved text and layout caches while preserving UTF-16 source offsets.</summary>
-    [Fact]
+    /// <summary>フォント登録の変更で文字解決とレイアウトのキャッシュを無効化し、元文字列の UTF-16 位置を保持することを検証します。</summary>
+    [Fact(DisplayName = "フォント登録の変更で文字解決とレイアウトのキャッシュを無効化し、元文字列の UTF-16 位置を保持する")]
     public void Register_invalidates_text_and_layout_caches()
     {
         var manager = new FontManager(new()
@@ -143,8 +144,8 @@ public sealed class PerformanceRegressionTests
         Assert.Contains(runs, run => run.MissingIvsGlyph && run.Utf16Start == 1 && run.SourceText == "葛\U000E0100");
     }
 
-    /// <summary>A very large sparse rectangle searches only the existing row and column addresses.</summary>
-    [Fact]
+    /// <summary>非常に大きな疎なセル範囲でも、存在する行列アドレスにあるセルだけを検索して返すことを検証します。</summary>
+    [Fact(DisplayName = "非常に大きな疎なセル範囲でも、存在する行列アドレスにあるセルだけを検索して返す")]
     public void Sparse_range_index_returns_only_existing_cells()
     {
         CellAddress[] addresses = [new(1, 1), new(1, 500), new(900000, 3), new(1000000, 16000)];
@@ -153,8 +154,9 @@ public sealed class PerformanceRegressionTests
         Assert.Empty(index.Query(new(new(2, 1), new(899999, 16000))));
     }
 
-    /// <summary>Aliases share native resources; exceptions and cancellation restore the previous owner.</summary>
-    [Theory]
+    /// <summary>別名フォントがネイティブ書体を共有し、例外やキャンセル時には解放して元の所有者へ戻ることを検証します。</summary>
+    /// <param name="cancel">書き込み時にキャンセルを通知するトークン生成元。</param>
+    [Theory(DisplayName = "別名フォントがネイティブ書体を共有し、例外やキャンセル時には解放して元の所有者へ戻る")]
     [InlineData(false)]
     [InlineData(true)]
     public void Native_faces_are_released_on_unwind(bool cancel)
@@ -184,8 +186,8 @@ public sealed class PerformanceRegressionTests
         Assert.Null(ConversionFontResources.Current);
     }
 
-    /// <summary>Releasing conversion resources keeps a concurrently owned Skia font usable.</summary>
-    [Fact]
+    /// <summary>変換用フォントキャッシュを解放しても、別の所有者が使用中の Skia 書体は引き続き使えることを検証します。</summary>
+    [Fact(DisplayName = "変換用フォントキャッシュを解放しても、別の所有者が使用中の Skia 書体は引き続き使える")]
     public void Font_cache_cleanup_preserves_active_font()
     {
         using var face = OutputFixture.Typeface();
@@ -202,8 +204,9 @@ public sealed class PerformanceRegressionTests
         Assert.NotEqual(IntPtr.Zero, face.Handle);
     }
 
-    /// <summary>Direct assembly saves once, retains empty pages and shares one embedded font across pages.</summary>
-    [Fact]
+    /// <summary>複数ページを一つの PDF に直接構築すると、保存は一度だけ行われ、空ページを保持して埋め込みフォントを共有することを検証します。</summary>
+    /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
+    [Fact(DisplayName = "複数ページを一つの PDF に直接構築すると、保存は一度だけ行われ、空ページを保持して埋め込みフォントを共有する")]
     public async Task Converter_saves_once_and_reuses_font_stream()
     {
         using var workbook = new XLWorkbook();
@@ -250,8 +253,8 @@ public sealed class PerformanceRegressionTests
         Assert.Null(ConversionFontResources.Current);
     }
 
-    /// <summary>Empty descriptors remain present with distinct paper sizes in a shared document.</summary>
-    [Fact]
+    /// <summary>空ページを PDF に追加しても、異なる用紙寸法と MediaBox・CropBox の一致が保持されることを検証します。</summary>
+    [Fact(DisplayName = "空ページを PDF に追加しても、異なる用紙寸法と MediaBox・CropBox の一致が保持される")]
     public void Append_page_keeps_empty_pages_and_dimensions()
     {
         using var document = new global::PdfSharp.Pdf.PdfDocument();
@@ -264,8 +267,9 @@ public sealed class PerformanceRegressionTests
         Assert.Equal(document.Pages[1].MediaBox, document.Pages[1].CropBox);
     }
 
-    /// <summary>Cancellation between pages aborts the sink and releases resources without closing caller streams.</summary>
-    [Fact]
+    /// <summary>PDF のページ間でキャンセルすると出力先を中断し、入力・出力ストリームを閉じずに変換用資源を解放することを検証します。</summary>
+    /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
+    [Fact(DisplayName = "PDF のページ間でキャンセルすると出力先を中断し、入力・出力ストリームを閉じずに変換用資源を解放する")]
     public async Task Cancellation_between_pdf_pages_aborts_sink()
     {
         using var workbook = new XLWorkbook();
@@ -306,6 +310,7 @@ public sealed class PerformanceRegressionTests
         Assert.Null(ConversionFontResources.Current);
     }
 
+    /// <summary>出力形式とテスト用フォント設定を指定した変換要求を作成します。</summary>
     private static RenderRequest Request() => new()
     {
         OutputFormat = OutputFormat.Pdf,
@@ -317,20 +322,35 @@ public sealed class PerformanceRegressionTests
             FallbackFamilies = ["Noto Sans JP"],
         },
     };
+
+    /// <summary>出力先を開いた回数または完了・中断結果を記録するテスト用の出力先です。</summary>
     private sealed class ObservedSink(Stream output) : IRenderOutputSink
     {
+        /// <summary>出力中断時に通知された例外を保持します。</summary>
         internal Exception? Error { get; private set; }
 
+        /// <summary>出力完了の通知を受けたかどうかを保持します。</summary>
         internal bool Completed { get; private set; }
 
+        /// <summary>呼び出し元が所有する出力ストリームを、閉じずに返します。</summary>
+        /// <param name="artifact">開く、完了する、または中断する成果物の情報。</param>
+        /// <param name="cancellationToken">非同期処理を中断するためのトークン。</param>
         public ValueTask<Stream> OpenAsync(ArtifactDescriptor artifact, CancellationToken cancellationToken) => new(output);
 
+        /// <summary>出力完了フラグを立て、呼び出し元のストリームは開いたままにします。</summary>
+        /// <param name="artifact">開く、完了する、または中断する成果物の情報。</param>
+        /// <param name="byteLength">出力を完了した成果物のバイト数。</param>
+        /// <param name="cancellationToken">非同期処理を中断するためのトークン。</param>
         public ValueTask CompleteAsync(ArtifactDescriptor artifact, long byteLength, CancellationToken cancellationToken)
         {
             Completed = true;
             return default;
         }
 
+        /// <summary>中断時の例外を記録し、呼び出し元のストリームは開いたままにします。</summary>
+        /// <param name="artifact">開く、完了する、または中断する成果物の情報。</param>
+        /// <param name="error">出力中断時に通知された例外。</param>
+        /// <param name="cancellationToken">非同期処理を中断するためのトークン。</param>
         public ValueTask AbortAsync(ArtifactDescriptor artifact, Exception error, CancellationToken cancellationToken)
         {
             Error = error;

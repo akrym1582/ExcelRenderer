@@ -13,7 +13,7 @@ public sealed class MarkdownExporterTests
     /// 結合セル、数式表示値および外部ファイル化した画像が Markdown 出力に保持されることを検証します。
     /// </summary>
     /// <returns>非同期の検証処理を表すタスク。</returns>
-    [Fact]
+    [Fact(DisplayName = "結合セル、数式表示値および外部ファイル化した画像が Markdown 出力に保持される")]
     public async Task ExportAsync_PreservesMergedCellsFormulaAndImageAsExternalFile()
     {
         var cells = new Dictionary<CellAddress, ReportCell>
@@ -66,7 +66,7 @@ public sealed class MarkdownExporterTests
     /// <summary>
     /// レイアウト領域が左列から右列の順に読み順へ整列されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "レイアウト領域が左列から右列の順に読み順へ整列される")]
     public void LayoutSegmenter_OrdersLeftColumnBeforeRightColumn()
     {
         var style = CellStyle.Default;
@@ -86,7 +86,7 @@ public sealed class MarkdownExporterTests
     /// <summary>
     /// 離れた行の表示位置に途中の行高を累積したオフセットが使われることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "離れた行の表示位置に途中の行高を累積したオフセットが使われる")]
     public void VisualCellBuilder_UsesCumulativeOffsetsForDistantRows()
     {
         var cells = new Dictionary<CellAddress, ReportCell>
@@ -115,7 +115,7 @@ public sealed class MarkdownExporterTests
     /// 結合セルの前にある空列が Markdown 表の列配置に保持されることを検証します。
     /// </summary>
     /// <returns>非同期の検証処理を表すタスク。</returns>
-    [Fact]
+    [Fact(DisplayName = "結合セルの前にある空列が Markdown 表の列配置に保持される")]
     public async Task ExportAsync_PreservesBlankColumnsBeforeMergedCells()
     {
         var cells = new Dictionary<CellAddress, ReportCell>

@@ -16,6 +16,8 @@ internal static class SampleOutputTestSupport
     /// サンプル入力ディレクトリを基準にファイルパスを組み立てます。
     /// </summary>
     internal static readonly string InputDirectory = Path.Combine(AppContext.BaseDirectory, "SampleInputs");
+
+    /// <summary>サンプル変換結果を保存する、テスト実行ディレクトリ内の出力先です。</summary>
     private static readonly string OutputDirectory = Path.Combine(AppContext.BaseDirectory, "SampleOutputs");
 
     /// <summary>

@@ -23,7 +23,7 @@ namespace ExcelRenderer.Tests;
 public sealed class LayoutPassTests
 {
     /// <summary>連続レイアウトが印刷範囲とページ設定を無視し、元の座標を保持することを検証します。</summary>
-    [Fact]
+    [Fact(DisplayName = "連続レイアウトが印刷範囲とページ設定を無視し、元の座標を保持する")]
     public void LayoutContinuous_uses_used_range_without_print_scaling_or_margins()
     {
         var sheet = new ReportSheet(
@@ -50,7 +50,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// 各列の X 座標が先行列の幅を累積した位置に設定されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "各列の X 座標が先行列の幅を累積した位置に設定される")]
     public void ColumnLayoutPass_assigns_cumulative_positions()
     {
         var context = CreateContext(columns: new Dictionary<int, ColumnDefinition>
@@ -70,7 +70,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// 結合セルの境界が結合対象の全行列にまたがる寸法となることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "結合セルの境界が結合対象の全行列にまたがる寸法となる")]
     public void CellBoundsPass_uses_merged_cell_span()
     {
         var address = new CellAddress(1, 1);
@@ -92,7 +92,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// 横幅がページを超えるシートが列境界で分割されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "横幅がページを超えるシートが列境界で分割される")]
     public void PaginationPass_splits_wide_sheets_at_column_boundaries()
     {
         var context = CreateContext(
@@ -120,7 +120,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// 印刷倍率がページ分割とページ内コンテンツの寸法の両方に適用されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "印刷倍率がページ分割とページ内コンテンツの寸法の両方に適用される")]
     public void PaginationPass_applies_print_scale_to_content_and_pagination()
     {
         var context = CreateContext(
@@ -150,7 +150,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// 指定した横・縦ページ数に収まる倍率が計算されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "指定した横・縦ページ数に収まる倍率が計算される")]
     public void PaginationPass_fits_content_to_requested_page_count()
     {
         var context = CreateContext(
@@ -190,7 +190,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// ページ数への適合で既に収まっている内容が拡大されないことを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "ページ数への適合で既に収まっている内容が拡大されない")]
     public void PaginationPass_does_not_enlarge_content_when_fitting()
     {
         var context = CreateContext(
@@ -221,7 +221,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// 単一の巨大な列も指定ページ数へ収める倍率の判定対象になることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "単一の巨大な列も指定ページ数へ収める倍率の判定対象になる")]
     public void PaginationPass_fits_a_single_oversized_column()
     {
         var context = CreateContext(
@@ -251,7 +251,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// ページ倍率が図形の線幅、文字サイズ、および内側余白にも一貫して適用されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "ページ倍率が図形の線幅、文字サイズ、および内側余白にも一貫して適用される")]
     public void PaginationPass_scales_shape_lengths_with_shape_bounds()
     {
         var shape = new ReportShape(
@@ -290,7 +290,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// 結合セルが改ページ位置で分断されず同じページに配置されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "結合セルが改ページ位置で分断されず同じページに配置される")]
     public void PaginationPass_keeps_merged_cells_on_one_page()
     {
         var context = CreateContext(
@@ -318,7 +318,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// 行の途中では改ページされず、行全体がいずれかのページに配置されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "行の途中では改ページされず、行全体がいずれかのページに配置される")]
     public void PaginationPass_does_not_split_rows()
     {
         var cells = new Dictionary<CellAddress, ReportCell>
@@ -344,7 +344,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>明示倍率モードで保存された手動改ページが行バンドを分割することを検証します。</summary>
-    [Fact]
+    [Fact(DisplayName = "明示倍率モードで保存された手動改ページが行バンドを分割する")]
     public void PaginationPass_honors_manual_row_breaks_in_explicit_mode()
     {
         var context = CreateContext(
@@ -375,7 +375,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>離れた複数印刷範囲が外接矩形ではなく独立ページとして生成されることを検証します。</summary>
-    [Fact]
+    [Fact(DisplayName = "離れた複数印刷範囲が外接矩形ではなく独立ページとして生成される")]
     public void ReportLayoutEngine_paginates_multiple_print_areas_independently()
     {
         var sheet = new ReportSheet(
@@ -402,7 +402,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>複数ページを持つ印刷範囲を結合してもページ番号と内容が重複しないことを検証します。</summary>
-    [Fact]
+    [Fact(DisplayName = "複数ページを持つ印刷範囲を結合してもページ番号と内容が重複しない")]
     public void ReportLayoutEngine_numbers_all_pages_from_multiple_print_areas_sequentially()
     {
         var cells = Enumerable.Range(1, 4).ToDictionary(
@@ -434,7 +434,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// 印刷タイトルに指定した行と列が各ページで繰り返されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "印刷タイトルに指定した行と列が各ページで繰り返される")]
     public void PaginationPass_repeats_title_rows_and_columns_on_each_page()
     {
         var cells = new Dictionary<CellAddress, ReportCell>();
@@ -470,7 +470,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// ページ数に合わせる倍率計算で繰り返し印刷するタイトル領域が考慮されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "ページ数に合わせる倍率計算で繰り返し印刷するタイトル領域が考慮される")]
     public void PaginationPass_accounts_for_repeated_titles_when_fitting_page_counts()
     {
         var cells = new Dictionary<CellAddress, ReportCell>();
@@ -520,7 +520,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// 画像がアンカーセルを基準としたページ内座標へ配置されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "画像がアンカーセルを基準としたページ内座標へ配置される")]
     public void PaginationPass_positions_images_from_their_anchor_cell()
     {
         var imageBytes = CreateImageBytes();
@@ -543,7 +543,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>複数ページに交差する画像が各ページへ同じ倍率で配置されることを検証します。</summary>
-    [Fact]
+    [Fact(DisplayName = "複数ページに交差する画像が各ページへ同じ倍率で配置される")]
     public void PaginationPass_places_cross_page_images_on_each_intersecting_page()
     {
         var imageBytes = CreateImageBytes();
@@ -570,7 +570,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// ワークシートに埋め込まれた画像のデータ、位置および寸法が読み取られることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "ワークシートに埋め込まれた画像のデータ、位置および寸法が読み取られる")]
     public void ExcelReader_reads_worksheet_images()
     {
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
@@ -602,7 +602,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>DrawingML画像のアンカー、crop、および変換情報がモデルへ保持されることを検証します。</summary>
-    [Fact]
+    [Fact(DisplayName = "DrawingML画像のアンカー、crop、および変換情報がモデルへ保持される")]
     public void ExcelReader_preserves_picture_anchor_crop_and_transform()
     {
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
@@ -641,7 +641,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>確定した改行とfont runが描画命令まで共有されることを検証します。</summary>
-    [Fact]
+    [Fact(DisplayName = "確定した改行とfont runが描画命令まで共有される")]
     public void TextLayout_is_finalized_once_and_carried_to_draw_commands()
     {
         var fontManager = new MissingPrivateUseFontManager();
@@ -668,7 +668,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// ワークシートのヘッダーとフッターの各セクションが読み取られることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "ワークシートのヘッダーとフッターの各セクションが読み取られる")]
     public void ExcelReader_reads_worksheet_header_and_footer()
     {
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
@@ -701,7 +701,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// 通常ヘッダーとフッターが分割後のすべてのページに描画されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "通常ヘッダーとフッターが分割後のすべてのページに描画される")]
     public void ExcelReader_regular_header_and_footer_are_rendered_on_every_page()
     {
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
@@ -741,7 +741,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// 印刷設定が読み取られ、Excel の列幅が描画用の幅へ変換されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "印刷設定が読み取られ、Excel の列幅が描画用の幅へ変換される")]
     public void ExcelReader_reads_print_settings_and_converts_column_widths()
     {
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
@@ -774,7 +774,10 @@ public sealed class LayoutPassTests
     /// <summary>
     /// SpreadsheetML の raw 列幅が仕様の最大数字幅の式でポイントへ変換されることを検証します。
     /// </summary>
-    [Theory]
+    /// <param name="rawWidth">SpreadsheetML に保存された文字単位の列幅。</param>
+    /// <param name="mdw">標準書体の最大数字幅（ピクセル）。</param>
+    /// <param name="expected">判定または数値比較の期待値。</param>
+    [Theory(DisplayName = "SpreadsheetML の raw 列幅が仕様の最大数字幅の式でポイントへ変換される")]
     [InlineData(8.7109375, 7, 45.75)]
     [InlineData(0, 7, 0)]
     [InlineData(0.5, 7, 2.25)]
@@ -786,7 +789,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// Normal スタイルのテーマフォントを実フォントへ解決してMDWを計測することを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "Normal スタイルのテーマフォントを実フォントへ解決してMDWを計測する")]
     public void ExcelReader_measures_maximum_digit_width_from_normal_theme_font()
     {
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
@@ -817,7 +820,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// パーセント指定の印刷倍率がワークシートから読み取られることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "パーセント指定の印刷倍率がワークシートから読み取られる")]
     public void ExcelReader_reads_percentage_print_scale()
     {
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
@@ -846,7 +849,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// 繰り返し印刷するタイトル行とタイトル列の範囲が読み取られることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "繰り返し印刷するタイトル行とタイトル列の範囲が読み取られる")]
     public void ExcelReader_reads_print_title_rows_and_columns()
     {
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
@@ -875,7 +878,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// 指定ページ数に合わせる印刷設定が読み取られることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "指定ページ数に合わせる印刷設定が読み取られる")]
     public void ExcelReader_reads_fit_to_pages_print_scale()
     {
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
@@ -904,7 +907,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// raw XML の Fit モードが残存する明示倍率より優先されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "raw XML の Fit モードが残存する明示倍率より優先される")]
     public void ExcelReader_uses_raw_fit_mode_when_scale_is_also_present()
     {
         var path = CreateWorkbookWithPageSetup(fitToPage: true, scale: 75, fitToWidth: 1, fitToHeight: 0);
@@ -926,7 +929,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// raw XML で Fit が無効ならページ数属性があっても明示倍率を使用することを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "raw XML で Fit が無効ならページ数属性があっても明示倍率を使用する")]
     public void ExcelReader_uses_raw_explicit_scale_when_fit_mode_is_disabled()
     {
         var path = CreateWorkbookWithPageSetup(fitToPage: false, scale: 75, fitToWidth: 1, fitToHeight: 1);
@@ -948,7 +951,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// Fit のページ数属性が省略された場合にスキーマ既定値の各1ページを使用することを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "Fit のページ数属性が省略された場合にスキーマ既定値の各1ページを使用する")]
     public void ExcelReader_defaults_missing_fit_page_counts_to_one()
     {
         var path = CreateWorkbookWithPageSetup(fitToPage: true, scale: 75, fitToWidth: null, fitToHeight: null);
@@ -969,7 +972,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// 空の結合セル範囲が左上セルを基準とする一つのセルへ正規化されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "空の結合セル範囲が左上セルを基準とする一つのセルへ正規化される")]
     public void ExcelReader_normalizes_empty_merged_cells_to_the_top_left_cell()
     {
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
@@ -998,7 +1001,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// ページ番号などのフィールドを解決したヘッダー・フッターテキストがページに追加されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "ページ番号などのフィールドを解決したヘッダー・フッターテキストがページに追加される")]
     public void PaginationPass_adds_header_and_footer_texts_with_resolved_fields()
     {
         var context = CreateContext(
@@ -1028,7 +1031,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// 先頭ページ用と偶数ページ用のヘッダーが該当ページで選択されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "先頭ページ用と偶数ページ用のヘッダーが該当ページで選択される")]
     public void PaginationPass_uses_first_and_even_page_headers()
     {
         var context = CreateContext(
@@ -1056,7 +1059,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// セルがないシートでもヘッダーとフッターだけのページが生成されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "セルがないシートでもヘッダーとフッターだけのページが生成される")]
     public void PaginationPass_renders_header_and_footer_without_cells()
     {
         var context = CreateContext(
@@ -1072,7 +1075,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// セルの塗りつぶし、罫線、テキストの順に描画命令が生成されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "セルの塗りつぶし、罫線、テキストの順に描画命令が生成される")]
     public void DrawCommandGenerator_orders_fill_before_border_before_text()
     {
         var style = CellStyle.Default with
@@ -1097,7 +1100,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// セルテキストの描画領域が罫線から内側へ余白を取ることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "セルテキストの描画領域が罫線から内側へ余白を取る")]
     public void DrawCommandGenerator_insets_cell_text_from_borders()
     {
         var document = new RenderDocument(
@@ -1111,7 +1114,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>セルのインデントが文字の内容領域へ反映されることを検証します。</summary>
-    [Fact]
+    [Fact(DisplayName = "セルのインデントが文字の内容領域へ反映される")]
     public void DrawCommandGenerator_applies_cell_indent_to_content_bounds()
     {
         var style = CellStyle.Default with { Indent = 2 };
@@ -1128,7 +1131,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// 画像の描画命令がセル内容の描画命令より後に追加されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "画像の描画命令がセル内容の描画命令より後に追加される")]
     public void DrawCommandGenerator_adds_images_after_cell_content()
     {
         var imageBytes = CreateImageBytes();
@@ -1150,7 +1153,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// 描画文書が有効な PDF データとしてストリームへ書き込まれることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "描画文書が有効な PDF データとしてストリームへ書き込まれる")]
     public void PdfSharpRenderer_writes_a_pdf_document()
     {
         using var output = new MemoryStream();
@@ -1164,7 +1167,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// 埋め込み画像が PDF ページへ描画されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "埋め込み画像が PDF ページへ描画される")]
     public void PdfSharpRenderer_renders_an_image()
     {
         using var output = new MemoryStream();
@@ -1177,7 +1180,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>CBDT カラー絵文字を PDF に画像として描画できます。</summary>
-    [Fact]
+    [Fact(DisplayName = "CBDT カラー絵文字を PDF に画像として描画できます")]
     public void PdfSharpRenderer_renders_color_emoji()
     {
         var manager = new FontManager(new FontOptions { AllowSystemFonts = false, FallbackFamilies = [] });
@@ -1192,7 +1195,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>欠落した私用文字の置換を PDF の解決済みテキスト描画経路へ渡します。</summary>
-    [Fact]
+    [Fact(DisplayName = "欠落した私用文字の置換を PDF の解決済みテキスト描画経路へ渡します")]
     public void PdfSharpRenderer_uses_resolved_runs_for_missing_private_use_glyphs()
     {
         var manager = new MissingPrivateUseFontManager();
@@ -1222,7 +1225,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// 折り返し指定がテキスト描画命令のスタイルに保持されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "折り返し指定がテキスト描画命令のスタイルに保持される")]
     public void DrawCommandGenerator_preserves_wrapped_text_style()
     {
         var style = CellStyle.Default with { WrapText = true };
@@ -1238,7 +1241,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// 縮小表示指定がテキスト描画命令のスタイルに保持されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "縮小表示指定がテキスト描画命令のスタイルに保持される")]
     public void DrawCommandGenerator_preserves_shrink_to_fit_style()
     {
         var style = CellStyle.Default with { ShrinkToFit = true };
@@ -1254,7 +1257,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// 登録したフォントファミリに対して設定済みフォントファイルのバイト列が返されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "登録したフォントファミリに対して設定済みフォントファイルのバイト列が返される")]
     public void PdfSharpFontResolver_returns_the_configured_font_file()
     {
         var fontFilePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.ttf");
@@ -1284,7 +1287,7 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>既定のリゾルバーが NuGet アセンブリに内蔵した静的フォントを返すことを検証します。</summary>
-    [Fact]
+    [Fact(DisplayName = "既定のリゾルバーが NuGet アセンブリに内蔵した静的フォントを返す")]
     public void PdfSharpFontResolver_returns_bundled_regular_font()
     {
         var resolver = new PdfSharpFontResolver();
@@ -1302,7 +1305,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// 印刷範囲が結合セルの終端まで拡張されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "印刷範囲が結合セルの終端まで拡張される")]
     public void ResolvePrintAreaPass_expands_range_to_cover_merged_cell_spans()
     {
         var context = CreateContext(
@@ -1321,7 +1324,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// セルがなく画像だけのシートから描画ページが生成されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "セルがなく画像だけのシートから描画ページが生成される")]
     public void ReportLayoutEngine_renders_an_image_only_sheet()
     {
         var imageBytes = CreateImageBytes();
@@ -1344,7 +1347,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// セル範囲外にある画像を含むよう印刷範囲が拡張されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "セル範囲外にある画像を含むよう印刷範囲が拡張される")]
     public void ResolvePrintAreaPass_expands_range_to_cover_an_image_outside_cells()
     {
         var context = CreateContext(
@@ -1361,7 +1364,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// 図形だけのシートで図形アンカーから印刷範囲が決定されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "図形だけのシートで図形アンカーから印刷範囲が決定される")]
     public void ResolvePrintAreaPass_uses_shape_anchors_for_shape_only_sheets()
     {
         var shape = new ReportShape(
@@ -1389,7 +1392,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// セルと画像を含むシートから両方の描画命令が生成されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "セルと画像を含むシートから両方の描画命令が生成される")]
     public void ReportLayoutEngine_renders_cells_and_images()
     {
         var imageBytes = CreateImageBytes();
@@ -1411,7 +1414,7 @@ public sealed class LayoutPassTests
     /// <summary>
     /// 結合範囲の末端まで列定義と行定義が読み取られることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "結合範囲の末端まで列定義と行定義が読み取られる")]
     public void ExcelReader_reads_column_and_row_definitions_for_merged_range_extents()
     {
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
@@ -1436,8 +1439,8 @@ public sealed class LayoutPassTests
         }
     }
 
-    /// <summary>Empty leading rows and columns with XML dimensions remain part of sheet-origin geometry.</summary>
-    [Fact]
+    /// <summary>使用範囲と印刷範囲より前にある空行・空列でも、XML に保存された寸法がシート原点からの位置計算に保持されることを検証します。</summary>
+    [Fact(DisplayName = "使用範囲と印刷範囲より前にある空行・空列でも、XML に保存された寸法がシート原点からの位置計算に保持される")]
     public void ExcelReader_preserves_dimensions_before_used_and_printed_range()
     {
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
@@ -1471,8 +1474,8 @@ public sealed class LayoutPassTests
         }
     }
 
-    /// <summary>Reader dimensions participate in anchor resolution through final page coordinates.</summary>
-    [Fact]
+    /// <summary>先頭の空行・空列の寸法を読み取り、画像アンカーから最終ページ座標までの位置計算に反映することを検証します。</summary>
+    [Fact(DisplayName = "先頭の空行・空列の寸法を読み取り、画像アンカーから最終ページ座標までの位置計算に反映する")]
     public void ExcelReader_resolves_leading_dimensions_and_picture_to_page_coordinates()
     {
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
@@ -1509,6 +1512,14 @@ public sealed class LayoutPassTests
         }
     }
 
+    /// <summary>指定したセル・列・行とページ設定から、レイアウトパスの検証用コンテキストを作成します。</summary>
+    /// <param name="cells">レイアウト対象のセル辞書。</param>
+    /// <param name="columns">行列位置の計算に使用する列定義。</param>
+    /// <param name="rows">行列位置の計算に使用する行定義。</param>
+    /// <param name="pageSettings">用紙寸法・余白・倍率などのページ設定。</param>
+    /// <param name="images">シートに配置する画像モデル。</param>
+    /// <param name="headerFooter">読み取りまたはレイアウトに使用するヘッダー・フッター設定。</param>
+    /// <param name="shapes">シートに配置する図形モデル。</param>
     private static ReportLayoutContext CreateContext(
         IReadOnlyDictionary<CellAddress, ReportCell>? cells = null,
         IReadOnlyDictionary<int, ColumnDefinition>? columns = null,
@@ -1530,6 +1541,7 @@ public sealed class LayoutPassTests
                 Shapes: shapes),
             new FixedTextMeasurer());
 
+    /// <summary>画像描画の検証に使う小さな PNG のバイト列を作成します。</summary>
     private static byte[] CreateImageBytes()
     {
         using var bitmap = new SKBitmap(1, 1);
@@ -1539,6 +1551,11 @@ public sealed class LayoutPassTests
         return data.ToArray();
     }
 
+    /// <summary>ページ設定の XML を指定した内容に書き換えた一時 XLSX を作成します。</summary>
+    /// <param name="fitToPage">指定ページ数へ収める印刷モードを有効にするかどうか。</param>
+    /// <param name="scale">ページ座標と寸法に適用する倍率。</param>
+    /// <param name="fitToWidth">内容を収める横方向のページ数。</param>
+    /// <param name="fitToHeight">内容を収める縦方向のページ数。</param>
     private static string CreateWorkbookWithPageSetup(
         bool fitToPage,
         uint scale,
@@ -1574,15 +1591,24 @@ public sealed class LayoutPassTests
         return path;
     }
 
+    /// <summary>文字内容にかかわらず幅・高さを 10 ポイントとする、位置計算用の計測器です。</summary>
     private sealed class FixedTextMeasurer : ITextMeasurer
     {
+        /// <summary>文字計測の検証用に、固定の幅・高さ 10 ポイントを返します。</summary>
+        /// <param name="text">計測・描画または解析の対象となる文字列。</param>
+        /// <param name="font">文字計測または参照描画に使うフォント設定。</param>
+        /// <param name="availableWidth">折り返しや縮小に使用できる幅（ポイント）。</param>
+        /// <param name="wrap">文字を利用可能な幅で折り返すかどうか。</param>
         public TextSize Measure(string text, FontStyle font, double availableWidth, bool wrap) => new(10, 10);
     }
 
+    /// <summary>私用文字の欠字検証に使用する固定フォントを準備します。</summary>
     private sealed class MissingPrivateUseFontManager : IFontManager
     {
+        /// <summary>私用文字の欠字置換に使用する固定書体を保持します。</summary>
         private readonly ResolvedFont _font;
 
+        /// <summary>私用文字の欠字検証に使用する固定フォントを準備します。</summary>
         public MissingPrivateUseFontManager()
         {
             var path = Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf");
@@ -1593,10 +1619,16 @@ public sealed class LayoutPassTests
             };
         }
 
+        /// <summary>文字ランの解決が呼び出された回数を保持します。</summary>
         public int ResolveTextRunsCallCount { get; private set; }
 
+        /// <summary>書体要求に対して、このテストで設定した固定書体を返します。</summary>
+        /// <param name="request">解決を要求するフォントファミリと書体設定（固定書体のテスト実装では選択に使用しません）。</param>
         public ResolvedFont Resolve(FontRequest request) => _font;
 
+        /// <summary>呼び出し回数を増やし、元の入力文字列を保持した欠字フラグ付きの置換文字ランを返します。</summary>
+        /// <param name="text">計測・描画または解析の対象となる文字列。</param>
+        /// <param name="request">解決を要求するフォントファミリと書体設定（固定書体のテスト実装では選択に使用しません）。</param>
         public IReadOnlyList<TextRun> ResolveTextRuns(string text, FontRequest request)
         {
             ResolveTextRunsCallCount++;
@@ -1604,12 +1636,20 @@ public sealed class LayoutPassTests
         }
     }
 
+    /// <summary>書体解決の呼び出し数を記録して、計測処理の利用状況を検証します。</summary>
     private sealed class CountingFontResolver : IFontResolver
     {
+        /// <summary>PDFsharp の書体解決が呼び出された回数を保持します。</summary>
         public int ResolveTypefaceCallCount { get; private set; }
 
+        /// <summary>フォントデータを返さず、テスト対象の代替解決経路を使用させます。</summary>
+        /// <param name="faceName">PDFsharp が要求する書体識別名。</param>
         public byte[]? GetFont(string faceName) => null;
 
+        /// <summary>書体解決の呼び出し回数を増やし、未解決を表す null を返します。</summary>
+        /// <param name="familyName">解決を要求するフォントファミリ名。</param>
+        /// <param name="bold">太字書体を要求するかどうか。</param>
+        /// <param name="italic">斜体書体を要求するかどうか。</param>
         public FontResolverInfo? ResolveTypeface(string familyName, bool bold, bool italic)
         {
             ResolveTypefaceCallCount++;

@@ -6,15 +6,16 @@ using Xunit;
 
 namespace ExcelRenderer.Tests;
 
-/// <summary>Verifies shared sheet geometry, visual bounds, repeated titles, and body clipping.</summary>
+/// <summary>シート座標、回転後の外接領域、繰り返しタイトルおよび本文クリップの位置計算を検証します。</summary>
 public sealed class GeometryRegressionTests
 {
+    /// <summary>座標計算の比較で許容する絶対誤差 0.000001 ポイントです。</summary>
     private const double Tolerance = 1e-6;
 
-    /// <summary>Repeated title content rectangles keep their offset inside the rendered cell on later pages.</summary>
-    /// <param name="scale">The explicit page scale.</param>
-    /// <param name="centered">Whether the page is vertically centered.</param>
-    [Theory]
+    /// <summary>倍率と縦中央配置を変更しても、後続ページの繰り返しタイトル内で文字領域とセルの相対位置が保たれることを検証します。</summary>
+    /// <param name="scale">ページ座標と寸法に適用する印刷倍率。</param>
+    /// <param name="centered">ページ内容を縦方向の中央に配置するかどうか。</param>
+    [Theory(DisplayName = "倍率と縦中央配置を変更しても、後続ページの繰り返しタイトル内で文字領域とセルの相対位置が保たれる")]
     [InlineData(1d, false)]
     [InlineData(0.8d, false)]
     [InlineData(0.8d, true)]
@@ -50,8 +51,8 @@ public sealed class GeometryRegressionTests
         }
     }
 
-    /// <summary>An absolute anchor and a one-cell anchor resolve to the same page position under a C:D print area.</summary>
-    [Fact]
+    /// <summary>印刷範囲を C:D 列に設定した場合、絶対アンカーと単一セルアンカーが同じページ座標へ配置されることを検証します。</summary>
+    [Fact(DisplayName = "印刷範囲を C:D 列に設定した場合、絶対アンカーと単一セルアンカーが同じページ座標へ配置される")]
     public void Anchors_share_print_area_origin()
     {
         var absolute = new ReportImage(new(1, 1), 0, 0, 20, 20, [])
@@ -78,8 +79,8 @@ public sealed class GeometryRegressionTests
         Assert.Equal(40, page.Images[2].Bounds.Width, Tolerance);
     }
 
-    /// <summary>A sheet containing only an image uses the whole image as its automatic used range.</summary>
-    [Fact]
+    /// <summary>画像だけのシートで、画像全体を含む使用範囲とクリップ領域が自動的に設定されることを検証します。</summary>
+    [Fact(DisplayName = "画像だけのシートで、画像全体を含む使用範囲とクリップ領域が自動的に設定される")]
     public void Image_only_sheet_keeps_whole_image_inside_clip()
     {
         var image = new ReportImage(new(1, 1), 0, 0, 30, 100, []);
@@ -93,8 +94,8 @@ public sealed class GeometryRegressionTests
         Assert.True(clip.X + clip.Width >= renderImage.Bounds.X + renderImage.Bounds.Width - Tolerance);
     }
 
-    /// <summary>An explicit print area is never widened by an object; the object is only clipped.</summary>
-    [Fact]
+    /// <summary>明示した印刷範囲から画像がはみ出しても範囲を広げず、画像を範囲内にクリップすることを検証します。</summary>
+    [Fact(DisplayName = "明示した印刷範囲から画像がはみ出しても範囲を広げず、画像を範囲内にクリップする")]
     public void Explicit_print_area_is_not_widened_by_objects()
     {
         var image = new ReportImage(new(1, 1), 0, 0, 30, 100, []);
@@ -106,8 +107,8 @@ public sealed class GeometryRegressionTests
         Assert.Equal(15, renderImage.ClipBounds!.Value.Height, Tolerance);
     }
 
-    /// <summary>A twoCell anchor ending exactly on a cell boundary does not claim the next cell.</summary>
-    [Fact]
+    /// <summary>二つのセルを結ぶアンカーの終端がセル境界に一致する場合、次のセルを使用範囲に含めないことを検証します。</summary>
+    [Fact(DisplayName = "二つのセルを結ぶアンカーの終端がセル境界に一致する場合、次のセルを使用範囲に含めない")]
     public void TwoCell_end_on_boundary_is_half_open()
     {
         var image = new ReportImage(new(1, 1), 0, 0, 64, 15, [])
@@ -119,9 +120,9 @@ public sealed class GeometryRegressionTests
         Assert.Equal(new CellRange(new(1, 1), new(1, 1)), context.PrintArea);
     }
 
-    /// <summary>Body objects are clipped below repeated title rows and right of repeated title columns.</summary>
-    /// <param name="scale">The explicit page scale.</param>
-    [Theory]
+    /// <summary>倍率を変更しても、本文オブジェクトのクリップ領域から繰り返しタイトル行・列が除かれることを検証します。</summary>
+    /// <param name="scale">ページ座標と寸法に適用する印刷倍率。</param>
+    [Theory(DisplayName = "倍率を変更しても、本文オブジェクトのクリップ領域から繰り返しタイトル行・列が除かれる")]
     [InlineData(1d)]
     [InlineData(0.8d)]
     public void Body_clip_excludes_repeated_titles(double scale)
@@ -154,8 +155,8 @@ public sealed class GeometryRegressionTests
         }
     }
 
-    /// <summary>Continuous canvases include the rotated visual extent and translate negative coordinates.</summary>
-    [Fact]
+    /// <summary>連続キャンバスの寸法に回転後の外接領域を含め、負の座標をキャンバス内へ移動することを検証します。</summary>
+    [Fact(DisplayName = "連続キャンバスの寸法に回転後の外接領域を含め、負の座標をキャンバス内へ移動する")]
     public void Continuous_canvas_uses_rotated_visual_bounds()
     {
         var image = new ReportImage(new(1, 1), 0, 0, 100, 20, []) { Rotation = 90 };
@@ -169,8 +170,8 @@ public sealed class GeometryRegressionTests
         Assert.Equal(60, result.Width, Tolerance);
     }
 
-    /// <summary>A 45 degree rotation uses the actual centre-based visual rectangle.</summary>
-    [Fact]
+    /// <summary>45 度回転したオブジェクトの外接矩形が、中心を基準とした回転から求めた値と一致することを検証します。</summary>
+    [Fact(DisplayName = "45 度回転したオブジェクトの外接矩形が、中心を基準とした回転から求めた値と一致する")]
     public void Visual_bounds_match_rotation_about_centre()
     {
         var bounds = ObjectGeometry.GetVisualBounds(new(0, 0, 100, 20), 45);
@@ -183,8 +184,8 @@ public sealed class GeometryRegressionTests
         Assert.Equal(100, rotated90.Height, Tolerance);
     }
 
-    /// <summary>An image that rotates onto the next page band is selected for that page.</summary>
-    [Fact]
+    /// <summary>回転後の画像が隣のページに交差する場合、そのページの描画対象にも選ばれることを検証します。</summary>
+    [Fact(DisplayName = "回転後の画像が隣のページに交差する場合、そのページの描画対象にも選ばれる")]
     public void Rotated_object_is_selected_by_visual_bounds()
     {
         var cells = new Dictionary<CellAddress, ReportCell>
@@ -209,6 +210,9 @@ public sealed class GeometryRegressionTests
         Assert.True(pages[1].Images!.Count == 1);
     }
 
+    /// <summary>印刷範囲と画像を指定して、位置計算の検証に使用するシートモデルを作成します。</summary>
+    /// <param name="printArea">シートに設定する明示的な印刷範囲。</param>
+    /// <param name="images">シートに配置する画像モデル。</param>
     private static ReportSheet CreateSheet(CellRange? printArea, params ReportImage[] images) => new(
         "S",
         new Dictionary<CellAddress, ReportCell>(),
@@ -219,6 +223,9 @@ public sealed class GeometryRegressionTests
         printArea,
         images);
 
+    /// <summary>レイアウトパスを指定した位置まで順に実行し、途中の位置計算結果を返します。</summary>
+    /// <param name="sheet">解析するシート名の期待値、または検証対象のシートモデル。</param>
+    /// <param name="stop">実行を止めるレイアウトパスの位置。</param>
     private static ReportLayoutContext RunUpTo(ReportSheet sheet, int stop = int.MaxValue)
     {
         var context = new ReportLayoutContext(sheet, new PdfSharpTextMeasurer());

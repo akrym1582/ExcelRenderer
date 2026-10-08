@@ -8,12 +8,20 @@ using Xunit;
 
 namespace ExcelRenderer.Tests;
 
+/// <summary>文字命令を PNG・SVG に描画し、SVG の寸法を確認して比較用ビットマップを構築します。</summary>
 internal sealed class SerializedSvgProbe : IDisposable
 {
+    /// <summary>描画命令から出力した SVG のバイト列を保持します。</summary>
     internal byte[] Svg { get; }
+
+    /// <summary>直接 PNG 出力を復号した、比較基準のビットマップを保持します。</summary>
     internal SKBitmap Png { get; }
+
+    /// <summary>保存済み SVG を再読込して 120 × 80 画素に描画した結果を保持します。</summary>
     internal SKBitmap Raster { get; }
 
+    /// <summary>文字命令を PNG・SVG に描画し、SVG の寸法を確認して比較用ビットマップを構築します。</summary>
+    /// <param name="command">実行するコマンド、または描画対象の文字命令。</param>
     internal SerializedSvgProbe(DrawTextCommand command)
     {
         using var svgOutput = new MemoryStream();
@@ -38,9 +46,16 @@ internal sealed class SerializedSvgProbe : IDisposable
         canvas.DrawPicture(picture);
     }
 
+    /// <summary>指定画素の赤成分が 250 未満かどうかを調べ、白背景から文字画素を区別します。</summary>
+    /// <param name="bitmap">画素を検証または保存するビットマップ。</param>
+    /// <param name="x">描画位置または比較対象の X 座標。</param>
+    /// <param name="y">描画位置または比較対象の Y 座標。</param>
     internal static bool Ink(SKBitmap bitmap, int x, int y) =>
         bitmap.GetPixel(x, y).Red < 250; // Same opaque white background and monochrome text in both outputs.
 
+    /// <summary>PNG と SVG の再描画を双方向で比較し、追加検証の失敗時にも SVG・画像・差分を保存します。</summary>
+    /// <param name="name">比較失敗時の成果物を保存するサブディレクトリ名。</param>
+    /// <param name="extra">画素比較後に実行する追加の検証処理。</param>
     internal void Compare(string name, Action? extra = null)
     {
         try
@@ -69,6 +84,9 @@ internal sealed class SerializedSvgProbe : IDisposable
         }
     }
 
+    /// <summary>指定領域にある文字画素の外接矩形を求め、文字画素がない場合は検証を失敗させます。</summary>
+    /// <param name="bitmap">画素を検証または保存するビットマップ。</param>
+    /// <param name="region">文字画素を検査する矩形領域。</param>
     internal static SKRectI InkBounds(SKBitmap bitmap, SKRectI region)
     {
         var points = new List<SKPointI>();
@@ -81,6 +99,9 @@ internal sealed class SerializedSvgProbe : IDisposable
         return new(points.Min(p => p.X), points.Min(p => p.Y), points.Max(p => p.X) + 1, points.Max(p => p.Y) + 1);
     }
 
+    /// <summary>描画画素それぞれについて、比較対象の周囲 1 画素以内に対応する描画画素があることを検証します。</summary>
+    /// <param name="source">比較元の画像、または読み取り元のストリーム。</param>
+    /// <param name="target">検証するリンク先文字列、または比較先の画像。</param>
     private static void Match(SKBitmap source, SKBitmap target)
     {
         for (var y = 0; y < source.Height; y++)
@@ -98,6 +119,9 @@ internal sealed class SerializedSvgProbe : IDisposable
         }
     }
 
+    /// <summary>ビットマップを PNG として指定したパスに保存します。</summary>
+    /// <param name="bitmap">画素を検証または保存するビットマップ。</param>
+    /// <param name="path">読み書きに使用するファイルパス。</param>
     private static void Save(SKBitmap bitmap, string path)
     {
         using var image = SKImage.FromBitmap(bitmap);
@@ -105,5 +129,6 @@ internal sealed class SerializedSvgProbe : IDisposable
         File.WriteAllBytes(path, png.ToArray());
     }
 
+    /// <summary>比較用に保持している PNG と SVG 再描画のビットマップを解放します。</summary>
     public void Dispose() { Png.Dispose(); Raster.Dispose(); }
 }

@@ -21,9 +21,17 @@ using CellStyle = ExcelRenderer.Model.CellStyle;
 
 namespace ExcelRenderer.Tests;
 
+/// <summary>指定セル範囲、余白トリミングおよびリンクの読み取り・検証・各形式への出力を検証します。</summary>
 public sealed class RangeTrimHyperlinkTests
 {
-    [Theory]
+    /// <summary>単一セル・絶対参照・引用符付きシート名・最大セル番地を含む A1 表記を、シート名と矩形範囲へ正規化することを検証します。</summary>
+    /// <param name="text">計測・描画または解析の対象となる文字列。</param>
+    /// <param name="sheet">解析するシート名の期待値、または検証対象のシートモデル。</param>
+    /// <param name="row">アンカーやセル範囲の開始行番号。</param>
+    /// <param name="column">アンカーやセル範囲の開始列番号。</param>
+    /// <param name="lastRow">解析した範囲の最終行番号の期待値。</param>
+    /// <param name="lastColumn">解析した範囲の最終列番号の期待値。</param>
+    [Theory(DisplayName = "単一セル・絶対参照・引用符付きシート名・最大セル番地を含む A1 表記を、シート名と矩形範囲へ正規化する")]
     [InlineData("b2", null, 2, 2, 2, 2)]
     [InlineData(" $b$2:$f$40 ", null, 2, 2, 40, 6)]
     [InlineData("'売上 2026'!B2:F40", "売上 2026", 2, 2, 40, 6)]
@@ -36,7 +44,9 @@ public sealed class RangeTrimHyperlinkTests
         Assert.Equal(new CellRange(new(row, column), new(lastRow, lastColumn)), range);
     }
 
-    [Theory]
+    /// <summary>範囲外番地・逆順範囲・全行列指定・外部参照など、対応しない矩形表記を引数エラーとして拒否することを検証します。</summary>
+    /// <param name="text">計測・描画または解析の対象となる文字列。</param>
+    [Theory(DisplayName = "範囲外番地・逆順範囲・全行列指定・外部参照など、対応しない矩形表記を引数エラーとして拒否する")]
     [InlineData("")]
     [InlineData("A0")]
     [InlineData("A1048577")]
@@ -54,7 +64,10 @@ public sealed class RangeTrimHyperlinkTests
     [InlineData("A999999999999999999999")]
     public void Parser_rejects_non_rectangles(string text) => Assert.Throws<ArgumentException>(() => CellRangeParser.Parse(text, out _));
 
-    [Theory]
+    /// <summary>許可する外部リンクだけを受け付け、既存のパーセントエンコードを二重に変換しないことを検証します。</summary>
+    /// <param name="target">検証するリンク先文字列、または比較先の画像。</param>
+    /// <param name="accepted">外部リンクを受理するかどうかの期待値。</param>
+    [Theory(DisplayName = "許可する外部リンクだけを受け付け、既存のパーセントエンコードを二重に変換しない")]
     [InlineData("https://example.com/日本語?q=a%20b#part", true)]
     [InlineData("HTTPS://example.com/a", true)]
     [InlineData("mailto:test@example.com", true)]
@@ -73,7 +86,11 @@ public sealed class RangeTrimHyperlinkTests
         if (uri is not null) { Assert.DoesNotContain("%2520", uri); }
     }
 
-    [Theory]
+    /// <summary>文字列定数だけの HYPERLINK 数式を読み取り、式末尾への追加演算や余分な引数を未対応として判定することを検証します。</summary>
+    /// <param name="formula">解析対象の HYPERLINK 数式。</param>
+    /// <param name="supported">定数だけの対応数式として受理されるかどうかの期待値。</param>
+    /// <param name="label">数式から読み取る表示文字列の期待値。</param>
+    [Theory(DisplayName = "文字列定数だけの HYPERLINK 数式を読み取り、式末尾への追加演算や余分な引数を未対応として判定する")]
     [InlineData("=HYPERLINK(\"https://example.com\",\"A\"\"B\")", true, "A\"B")]
     [InlineData("_xlfn.hyperlink(\"#'売上 2026'!B2\")", true, null)]
     [InlineData("HYPERLINK(A1,\"x\")", false, null)]
@@ -85,7 +102,8 @@ public sealed class RangeTrimHyperlinkTests
         Assert.Equal(label, actual);
     }
 
-    [Fact]
+    /// <summary>既知の矩形からトリミング寸法・PNG 画素・PDF リンク領域と移動先座標を独立した数値で検証します。</summary>
+    [Fact(DisplayName = "既知の矩形からトリミング寸法・PNG 画素・PDF リンク領域と移動先座標を独立した数値で検証します")]
     public void Artificial_scene_trim_and_PDF_annotations_have_independent_numeric_expectations()
     {
         DrawCommand[] commands = [new FillRectangleCommand(1, new(40, 30, 100, 60), new(10, 20, 30))];
@@ -129,7 +147,8 @@ public sealed class RangeTrimHyperlinkTests
         Assert.Equal(0, ((PdfInteger)destination.Elements[4]).Value);
     }
 
-    [Fact]
+    /// <summary>保存済み XLSX の XML を読み取り、リンクの矩形範囲・空セルのリンク・定数数式の表示文字と対象 URL を保持することを検証します。</summary>
+    [Fact(DisplayName = "保存済み XLSX の XML を読み取り、リンクの矩形範囲・空セルのリンク・定数数式の表示文字と対象 URL を保持する")]
     public void Saved_xlsx_reader_keeps_xml_ranges_empty_links_and_literal_displays()
     {
         var bytes = Fixture();
@@ -143,7 +162,9 @@ public sealed class RangeTrimHyperlinkTests
         Assert.Equal("https://example.com/formula", sheet.Hyperlinks.Single(link => link.SourceRange.First == new CellAddress(6, 2)).Target);
     }
 
-    [Fact]
+    /// <summary>指定セル範囲で元の印刷範囲を置き換え、部分的に交差する結合セルの元の寸法と文字を保持してクリップ診断を出すことを検証します。</summary>
+    /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
+    [Fact(DisplayName = "指定セル範囲で元の印刷範囲を置き換え、部分的に交差する結合セルの元の寸法と文字を保持してクリップ診断を出す")]
     public async Task Generated_range_replaces_print_area_and_preserves_partial_merge_geometry()
     {
         var bytes = Fixture();
@@ -165,7 +186,10 @@ public sealed class RangeTrimHyperlinkTests
         Assert.Equal("merge label", merged.Cell.Text);
     }
 
-    [Theory]
+    /// <summary>トリミング後の PDF・PNG・SVG の実寸法が、最終ページのメタデータと一致することを検証します。</summary>
+    /// <param name="format">検証する出力形式。</param>
+    /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
+    [Theory(DisplayName = "トリミング後の PDF・PNG・SVG の実寸法が、最終ページのメタデータと一致する")]
     [InlineData(OutputFormat.Pdf)]
     [InlineData(OutputFormat.Png)]
     [InlineData(OutputFormat.Svg)]
@@ -204,7 +228,9 @@ public sealed class RangeTrimHyperlinkTests
         }
     }
 
-    [Fact]
+    /// <summary>PDF のページを選択して再番号付けした後、内部リンクが最終出力文書の正しいページを参照することを検証します。</summary>
+    /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
+    [Fact(DisplayName = "PDF のページを選択して再番号付けした後、内部リンクが最終出力文書の正しいページを参照する")]
     public async Task Generated_PDF_destination_references_final_selected_document_page()
     {
         var (result, bytes) = await Render(Fixture(multipleAreas: true), Request(OutputFormat.Pdf) with { Selection = new() { Pages = [1, 4, 5] } });
@@ -216,7 +242,9 @@ public sealed class RangeTrimHyperlinkTests
         Assert.Equal(2, result.Pages[1].OutputPageNumber);
     }
 
-    [Fact]
+    /// <summary>Markdown のリンク・内部アンカー・HTML 属性をエスケープし、リンク無効時にはリンク要素と関連診断を出さないことを検証します。</summary>
+    /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
+    [Fact(DisplayName = "Markdown のリンク・内部アンカー・HTML 属性をエスケープし、リンク無効時にはリンク要素と関連診断を出さない")]
     public async Task Markdown_links_anchors_lists_and_HTML_attributes_are_safe_and_None_is_plain()
     {
         var (_, bytes) = await Render(Fixture(), Request(OutputFormat.Markdown));
@@ -235,7 +263,9 @@ public sealed class RangeTrimHyperlinkTests
             MarkdownHyperlinks.Format("<&\"", "https://example.com/?a=\"x\"&b=2", true, false));
     }
 
-    [Fact]
+    /// <summary>厳格モードの診断エラーと不正な範囲・トリミング・リンク引数を、出力先を開く前に拒否することを検証します。</summary>
+    /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
+    [Fact(DisplayName = "厳格モードの診断エラーと不正な範囲・トリミング・リンク引数を、出力先を開く前に拒否する")]
     public async Task Strict_and_invalid_arguments_do_not_open_the_sink()
     {
         var request = Request(OutputFormat.Pdf) with { Selection = new() { Ranges = [new("Sheet1", new(new(2, 2), new(8, 4)))] }, DiagnosticOptions = new() { StrictMode = true } };
@@ -257,7 +287,9 @@ public sealed class RangeTrimHyperlinkTests
         }
     }
 
-    [Fact]
+    /// <summary>連続 PNG 出力の寸法が指定範囲の行列寸法に一致し、画像出力ではリンク用の診断を評価しないことを検証します。</summary>
+    /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
+    [Fact(DisplayName = "連続 PNG 出力の寸法が指定範囲の行列寸法に一致し、画像出力ではリンク用の診断を評価しない")]
     public async Task Continuous_range_has_fixed_dimensions_and_unsafe_link_diagnostics_are_not_evaluated_for_images()
     {
         var range = new CellRange(new(3, 2), new(8, 4));
@@ -273,7 +305,9 @@ public sealed class RangeTrimHyperlinkTests
         Assert.Equal(result.Pages[0].PixelWidth, bitmap.Width);
     }
 
-    [Theory]
+    /// <summary>明示範囲の本文セルと領域対応に、印刷倍率を一度だけ適用することを検証します。</summary>
+    /// <param name="scale">ページ座標と寸法に適用する倍率。</param>
+    [Theory(DisplayName = "明示範囲の本文セルと領域対応に、印刷倍率を一度だけ適用する")]
     [InlineData(0.5)]
     [InlineData(1.0)]
     public void Explicit_geometry_and_body_mapping_apply_scale_exactly_once(double scale)
@@ -300,7 +334,9 @@ public sealed class RangeTrimHyperlinkTests
         Assert.Equal(new ReportRect(10, 15, 60 * scale, 30 * scale), region.PageBounds);
     }
 
-    [Fact]
+    /// <summary>三種類の画像アンカーに回転・反転・切り抜きを加えても、指定範囲のキャンバスを拡張せず画像をクリップすることを検証します。</summary>
+    /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
+    [Fact(DisplayName = "三種類の画像アンカーに回転・反転・切り抜きを加えても、指定範囲のキャンバスを拡張せず画像をクリップする")]
     public async Task Existing_three_anchor_saved_fixture_is_clipped_without_canvas_expansion()
     {
         var path = DrawingAnchorWorkbookFixture.Create();
@@ -336,7 +372,11 @@ public sealed class RangeTrimHyperlinkTests
         finally { File.Delete(path); }
     }
 
-    [Theory]
+    /// <summary>非表示行だけを選択した場合も空ページを残し、トリミング余白と連続レイアウトの最小寸法を反映することを検証します。</summary>
+    /// <param name="padding">トリミング後の各辺に追加する余白（ポイント）。</param>
+    /// <param name="dimension">余白を含む空ページの幅・高さの期待値（ポイント）。</param>
+    /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
+    [Theory(DisplayName = "非表示行だけを選択した場合も空ページを残し、トリミング余白と連続レイアウトの最小寸法を反映する")]
     [InlineData(0, 1)]
     [InlineData(2, 5)]
     public async Task Hidden_only_selection_preserves_empty_trimmed_and_continuous_pages(double padding, double dimension)
@@ -358,7 +398,8 @@ public sealed class RangeTrimHyperlinkTests
         Assert.Equal(1, continuous.Pages[0].HeightPoints);
     }
 
-    [Fact]
+    /// <summary>トリミングの内容範囲に明示した白背景と線幅を含め、線のない空の罫線スタイルを含めないことを検証します。</summary>
+    [Fact(DisplayName = "トリミングの内容範囲に明示した白背景と線幅を含め、線のない空の罫線スタイルを含めない")]
     public void Trim_counts_explicit_white_fills_and_strokes_but_not_empty_styles()
     {
         var fonts = new OutputFixture.FixedManager();
@@ -370,7 +411,9 @@ public sealed class RangeTrimHyperlinkTests
         Assert.Equal(new ReportRect(39, 29, 102, 62), DrawCommandBounds.Get([new DrawShapeCommand(1, new(40, 30, 100, 50), callout)], page, fonts));
     }
 
-    [Fact]
+    /// <summary>リンク診断を非表示にしてもエラー扱いなら出力前に失敗し、選択対象外のリンクでは診断を出さないことを検証します。</summary>
+    /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
+    [Fact(DisplayName = "リンク診断を非表示にしてもエラー扱いなら出力前に失敗し、選択対象外のリンクでは診断を出さない")]
     public async Task Suppressed_hyperlink_failures_still_fail_before_open_and_excluded_sources_are_quiet()
     {
         var sink = new CaptureSink();
@@ -391,7 +434,9 @@ public sealed class RangeTrimHyperlinkTests
         Assert.DoesNotContain(omitted.Diagnostics, d => d.Message.Contains("private-report") || d.Message.Contains("example.com"));
     }
 
-    [Fact]
+    /// <summary>ページ単位の PNG が画素数上限を超える場合、出力先を開く前に失敗することを検証します。</summary>
+    /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
+    [Fact(DisplayName = "ページ単位の PNG が画素数上限を超える場合、出力先を開く前に失敗する")]
     public async Task Paginated_PNG_pixel_limit_fails_before_open()
     {
         var sink = new CaptureSink();
@@ -399,7 +444,8 @@ public sealed class RangeTrimHyperlinkTests
         Assert.Equal(0, sink.OpenCount);
     }
 
-    [Fact]
+    /// <summary>表示領域内の解読不能な画像をスキップしても、呼び出し元のキャンバスの変換・クリップ・保存数を復元することを検証します。</summary>
+    [Fact(DisplayName = "表示領域内の解読不能な画像をスキップしても、呼び出し元のキャンバスの変換・クリップ・保存数を復元する")]
     public void Viewport_restores_caller_canvas_after_skipping_undecodable_image()
     {
         using var bitmap = new SKBitmap(20, 20);
@@ -417,7 +463,9 @@ public sealed class RangeTrimHyperlinkTests
         Assert.Equal(clip, canvas.DeviceClipBounds);
     }
 
-    [Fact]
+    /// <summary>シート固有の名前定義を優先してリンク先を解決し、重複リンクと複雑な名前定義の診断を出力時に通知することを検証します。</summary>
+    /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
+    [Fact(DisplayName = "シート固有の名前定義を優先してリンク先を解決し、重複リンクと複雑な名前定義の診断を出力時に通知する")]
     public async Task Saved_scoped_names_and_overlapping_definitions_are_deferred_until_output()
     {
         var bytes = Fixture();
@@ -449,7 +497,9 @@ public sealed class RangeTrimHyperlinkTests
         Assert.Contains(result.Diagnostics, d => d.Code == "HyperlinkUnsupported");
     }
 
-    [Fact]
+    /// <summary>リンクだけの範囲では空セルを実体化せず、PDF 注釈と Markdown のリンク一覧にリンクを保持することを検証します。</summary>
+    /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
+    [Fact(DisplayName = "リンクだけの範囲では空セルを実体化せず、PDF 注釈と Markdown のリンク一覧にリンクを保持する")]
     public async Task Link_only_ranges_do_not_materialize_blank_cells_and_keep_output_links()
     {
         using var workbook = new XLWorkbook();
@@ -474,7 +524,9 @@ public sealed class RangeTrimHyperlinkTests
         Assert.Contains("Link at B2:D4", Encoding.UTF8.GetString(markdown));
     }
 
-    [Fact]
+    /// <summary>不正な参照範囲は出力時の診断に回し、存在しないリンク関連付けは出力先を開く前に失敗することを検証します。</summary>
+    /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
+    [Fact(DisplayName = "不正な参照範囲は出力時の診断に回し、存在しないリンク関連付けは出力先を開く前に失敗する")]
     public async Task Readable_invalid_ref_is_deferred_but_missing_relationship_is_fatal_before_open()
     {
         foreach (var missingRelationship in new[] { false, true })
@@ -503,7 +555,9 @@ public sealed class RangeTrimHyperlinkTests
         }
     }
 
-    [Fact]
+    /// <summary>範囲・トリミングのサンプルとマニフェストを保存し、再読込した SVG の描画がトリミング済み PNG の内容を保持することを検証します。</summary>
+    /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
+    [Fact(DisplayName = "範囲・トリミングのサンプルとマニフェストを保存し、再読込した SVG の描画がトリミング済み PNG の内容を保持する")]
     public async Task Samples_are_saved_and_serialized_SVG_matches_trimmed_PNG()
     {
         var folder = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../TestResults/RangeTrim"));
@@ -557,6 +611,8 @@ public sealed class RangeTrimHyperlinkTests
         Assert.True(ink > 50);
     }
 
+    /// <summary>結合セル、複数シート、定数数式と内部・外部リンクを持つ保存済み XLSX のデータを作成します。</summary>
+    /// <param name="multipleAreas">リンク先ページの検証用に複数の印刷範囲を設定するかどうか。</param>
     internal static byte[] Fixture(bool multipleAreas = false)
     {
         using var workbook = new XLWorkbook();
@@ -626,8 +682,14 @@ public sealed class RangeTrimHyperlinkTests
         return saved.ToArray();
     }
 
+    /// <summary>出力形式とテスト用フォント設定を指定した変換要求を作成します。</summary>
+    /// <param name="format">検証する出力形式。</param>
     private static RenderRequest Request(OutputFormat format) => new() { OutputFormat = format, FontOptions = new() { AllowSystemFonts = false } };
 
+    /// <summary>保存済み XLSX を指定した要求で変換し、変換結果と出力バイト列を返します。</summary>
+    /// <param name="input">変換する保存済み XLSX のバイト列。</param>
+    /// <param name="request">書体解決または変換に使用する要求設定。</param>
+    /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
     private static async Task<(ConversionResult Result, byte[] Bytes)> Render(byte[] input, RenderRequest request)
     {
         var sink = new CaptureSink();
@@ -635,12 +697,30 @@ public sealed class RangeTrimHyperlinkTests
         return (result, sink.Stream.ToArray());
     }
 
+    /// <summary>メモリ上に出力を保持し、事前検証が失敗した際の出力先の未使用を確認します。</summary>
     private sealed class CaptureSink : IRenderOutputSink
     {
+        /// <summary>変換処理が書き込んだ成果物を保持するメモリストリームです。</summary>
         internal MemoryStream Stream { get; } = new();
+
+        /// <summary>出力先のストリームを開いた回数を保持します。</summary>
         internal int OpenCount { get; private set; }
+
+        /// <summary>出力先を開いた回数を増やし、既存のバッファを空にして返します。</summary>
+        /// <param name="descriptor">出力対象の成果物情報。</param>
+        /// <param name="token">非同期出力のキャンセルトークン。</param>
         public ValueTask<Stream> OpenAsync(ArtifactDescriptor descriptor, CancellationToken token) { OpenCount++; Stream.SetLength(0); return new(Stream); }
+
+        /// <summary>出力内容の検証用にストリームを保持し、完了通知では追加処理を行いません。</summary>
+        /// <param name="descriptor">出力対象の成果物情報。</param>
+        /// <param name="length">完了通知で渡される出力バイト数。</param>
+        /// <param name="token">非同期出力のキャンセルトークン。</param>
         public ValueTask CompleteAsync(ArtifactDescriptor descriptor, long length, CancellationToken token) => default;
+
+        /// <summary>中断通知では追加処理を行わず、検証用の出力状態を保持します。</summary>
+        /// <param name="descriptor">出力対象の成果物情報。</param>
+        /// <param name="error">出力中断時に通知された例外。</param>
+        /// <param name="token">非同期出力のキャンセルトークン。</param>
         public ValueTask AbortAsync(ArtifactDescriptor descriptor, Exception error, CancellationToken token) => default;
     }
 }

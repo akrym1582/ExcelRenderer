@@ -7,9 +7,17 @@ using Xunit;
 
 namespace ExcelRenderer.Tests;
 
+/// <summary>Skia の従来文字と文字ランのない確定済み文字が、選択済み書体で計測・描画されることを検証します。</summary>
 public sealed class SkiaFontRegressionTests
 {
-    [Theory]
+    /// <summary>従来形式の Skia 文字を計測して描画する際に、選択済みの同じ書体を使うことを検証します。</summary>
+    /// <param name="bold">太字書体を要求するかどうか。</param>
+    /// <param name="italic">斜体書体を要求するかどうか。</param>
+    /// <param name="shrink">文字を領域内に収まるよう縮小するかどうか。</param>
+    /// <param name="paths">参照文字を字形パスとして描画するかどうか。</param>
+    /// <param name="wrap">文字を利用可能な幅で折り返すかどうか。</param>
+    /// <param name="alignment">検証する文字の水平配置。</param>
+    [Theory(DisplayName = "従来形式の Skia 文字を計測して描画する際に、選択済みの同じ書体を使う")]
     [InlineData(false, false, false, false, false, HorizontalAlignment.Left)]
     [InlineData(false, false, false, true, false, HorizontalAlignment.Left)]
     [InlineData(true, false, false, false, false, HorizontalAlignment.Left)]
@@ -54,7 +62,9 @@ public sealed class SkiaFontRegressionTests
         Assert.Equal(expected.Bytes, actual.Bytes);
     }
 
-    [Theory]
+    /// <summary>確定済みレイアウトに文字ランがない場合、Skia が選択済みの主書体を使って描画することを検証します。</summary>
+    /// <param name="paths">参照文字を字形パスとして描画するかどうか。</param>
+    [Theory(DisplayName = "確定済みレイアウトに文字ランがない場合、Skia が選択済みの主書体を使って描画する")]
     [InlineData(false)]
     [InlineData(true)]
     public void Skia_finalized_empty_runs_use_selected_primary_face(bool paths)
@@ -78,6 +88,10 @@ public sealed class SkiaFontRegressionTests
         Assert.Equal(expected.Bytes, actual.Bytes);
     }
 
+    /// <summary>指定した書体で文字を参照描画し、対象の Skia 描画結果と比較するビットマップを作成します。</summary>
+    /// <param name="command">実行するコマンド、または描画対象の文字命令。</param>
+    /// <param name="face">文字を参照描画するための選択済み書体。</param>
+    /// <param name="paths">参照文字を字形パスとして描画するかどうか。</param>
     private static SKBitmap Reference(DrawTextCommand command, SKTypeface face, bool paths)
     {
         var bitmap = new SKBitmap(120, 80);
@@ -127,6 +141,14 @@ public sealed class SkiaFontRegressionTests
         return bitmap;
     }
 
+    /// <summary>指定位置に通常の文字または字形パスを描き、参照画素を作成します。</summary>
+    /// <param name="canvas">文字の参照描画先となるキャンバス。</param>
+    /// <param name="text">計測・描画または解析の対象となる文字列。</param>
+    /// <param name="x">描画位置または比較対象の X 座標。</param>
+    /// <param name="y">描画位置または比較対象の Y 座標。</param>
+    /// <param name="font">文字計測または参照描画に使うフォント設定。</param>
+    /// <param name="paint">参照描画の色とアンチエイリアス設定。</param>
+    /// <param name="paths">参照文字を字形パスとして描画するかどうか。</param>
     private static void Draw(SKCanvas canvas, string text, float x, float y, SKFont font, SKPaint paint, bool paths)
     {
         if (paths)

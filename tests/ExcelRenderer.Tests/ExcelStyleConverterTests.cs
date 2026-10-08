@@ -14,7 +14,7 @@ public sealed class ExcelStyleConverterTests
     /// <param name="excelStyle">Excel の罫線スタイルです。</param>
     /// <param name="expectedStyle">変換後の線種です。</param>
     /// <param name="expectedWidth">変換後の線幅です。</param>
-    [Theory]
+    [Theory(DisplayName = "Excel の各罫線スタイルと太さが描画モデルへ保持される")]
     [InlineData(XLBorderStyleValues.Thin, BorderLineStyle.Solid, 0.5)]
     [InlineData(XLBorderStyleValues.Medium, BorderLineStyle.Solid, 1)]
     [InlineData(XLBorderStyleValues.Thick, BorderLineStyle.Solid, 2)]
@@ -43,7 +43,7 @@ public sealed class ExcelStyleConverterTests
     /// <summary>
     /// テーマ色、明暗補正および自動罫線色が具体的な描画色へ解決されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "テーマ色、明暗補正および自動罫線色が具体的な描画色へ解決される")]
     public void Convert_resolves_workbook_theme_colors_tints_and_automatic_border_color()
     {
         using var workbook = new XLWorkbook();
@@ -65,7 +65,7 @@ public sealed class ExcelStyleConverterTests
     /// <summary>
     /// セルの背景、罫線、配置およびフォント色が描画用スタイルへ変換されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "セルの背景、罫線、配置およびフォント色が描画用スタイルへ変換される")]
     public void Convert_maps_background_border_alignment_and_font_color()
     {
         using var workbook = new XLWorkbook();
@@ -95,7 +95,7 @@ public sealed class ExcelStyleConverterTests
     /// <summary>
     /// 既定スタイルのセルでは背景色と罫線が設定されないことを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "既定スタイルのセルでは背景色と罫線が設定されない")]
     public void Convert_returns_no_background_or_border_for_default_style()
     {
         using var workbook = new XLWorkbook();
@@ -112,7 +112,7 @@ public sealed class ExcelStyleConverterTests
     /// <summary>
     /// 標準配置の数値セルが右揃えとして解決されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "標準配置の数値セルが右揃えとして解決される")]
     public void Convert_resolves_general_alignment_right_for_numbers()
     {
         using var workbook = new XLWorkbook();
@@ -128,7 +128,7 @@ public sealed class ExcelStyleConverterTests
     /// <summary>
     /// 標準配置の真偽値セルが中央揃えとして解決されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "標準配置の真偽値セルが中央揃えとして解決される")]
     public void Convert_resolves_general_alignment_center_for_booleans()
     {
         using var workbook = new XLWorkbook();
@@ -144,7 +144,7 @@ public sealed class ExcelStyleConverterTests
     /// <summary>
     /// 標準配置の文字列セルが左揃えとして解決されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "標準配置の文字列セルが左揃えとして解決される")]
     public void Convert_resolves_general_alignment_left_for_text()
     {
         using var workbook = new XLWorkbook();
@@ -160,7 +160,7 @@ public sealed class ExcelStyleConverterTests
     /// <summary>
     /// セルの縮小表示設定が描画用スタイルへ反映されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "セルの縮小表示設定が描画用スタイルへ反映される")]
     public void Convert_reads_shrink_to_fit()
     {
         using var workbook = new XLWorkbook();
@@ -175,7 +175,7 @@ public sealed class ExcelStyleConverterTests
     /// <summary>
     /// テーマ色と明暗補正がセルの実際の色へ解決されることを検証します。
     /// </summary>
-    [Fact]
+    [Fact(DisplayName = "テーマ色と明暗補正がセルの実際の色へ解決される")]
     public void Convert_resolves_theme_colors_and_tints()
     {
         using var workbook = new XLWorkbook();

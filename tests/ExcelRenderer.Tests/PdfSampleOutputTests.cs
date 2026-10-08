@@ -12,7 +12,7 @@ public sealed class PdfSampleOutputTests
     /// サンプル Excel ブックをレイアウトし、内容を含む PDF を生成できることを検証します。
     /// </summary>
     /// <param name="excelFileName">入力に使用するサンプル Excel ファイルの名前。</param>
-    [Theory]
+    [Theory(DisplayName = "サンプル Excel ブックをレイアウトし、内容を含む PDF を生成できる")]
     [MemberData(nameof(SampleOutputTestSupport.RenderSamples), MemberType = typeof(SampleOutputTestSupport))]
     public void Generates_pdf_from_prebuilt_excel(string excelFileName)
     {

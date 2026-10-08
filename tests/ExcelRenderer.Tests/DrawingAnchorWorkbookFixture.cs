@@ -6,8 +6,10 @@ using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 
 namespace ExcelRenderer.Tests;
 
+/// <summary>絶対・単一セル・二セルの画像アンカーを持つ保存済み XLSX を作成します。</summary>
 internal static class DrawingAnchorWorkbookFixture
 {
+    /// <summary>不均等な行高・列幅と赤緑青の画像を持つブックを保存し、三種類の DrawingML アンカーへ書き換えます。</summary>
     internal static string Create()
     {
         var path = Path.Combine(Path.GetTempPath(), $"anchors-{Guid.NewGuid():N}.xlsx");
@@ -52,6 +54,11 @@ internal static class DrawingAnchorWorkbookFixture
         return path;
     }
 
+    /// <summary>指定した行列番号から DrawingML のアンカー始点または終点を構築します。</summary>
+    /// <param name="column">アンカーの列番号（0 始まり）。</param>
+    /// <param name="row">アンカーの行番号（0 始まり）。</param>
+    /// <param name="x">セル左端からの水平オフセット（EMU）。</param>
+    /// <param name="y">セル上端からの垂直オフセット（EMU）。</param>
     private static T Marker<T>(int column, int row, long x, long y) where T : OpenXmlCompositeElement, new()
     {
         var marker = new T();

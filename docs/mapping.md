@@ -11,6 +11,10 @@ Use it to keep the layout in Excel and supply the values from your application.
 The result is an ordinary XLSX workbook, which you can open in Excel or pass to
 ExcelRenderer for PDF, PNG, SVG or Markdown output.
 
+For the first run, follow [First workbook](#first-workbook-an-invoice).
+For template design, see [Specification reference](#specification-reference),
+[array blocks](#multiple-row-and-nested-arrays), and [page breaks](#page-breaks).
+
 ## Install
 
 For C# applications that only generate XLSX files, run this in the application
@@ -260,6 +264,55 @@ Invalid JSON and file access failures are separate exceptions, rather than
 `MappingException`. The file API validates and generates the workbook before
 opening the destination, so mapping errors leave an existing output file intact.
 
+## Specification reference
+
+| Cell text | Operation | Placement |
+| --- | --- | --- |
+| `**Customer.Name` | Replace the whole cell with a scalar value | Any text cell |
+| `**$.Customer.Name` | Resolve explicitly from the root | Any text cell |
+| `**Items[0].Name` | Read one array element; indices start at zero | Any text cell |
+| `**Items[*].Name` | Repeat the entire row for each array element | Outside explicit array blocks |
+| `**@start-array Items[*] as item` | Begin a repeated multi-row block | Dedicated unmerged row with one content cell |
+| `**@item.Name` | Read the element bound to an alias | Inside its block or a nested child |
+| `**@end-array` | End the matching block | Dedicated unmerged row with one content cell |
+| `**Price \| format("N2")` | Format a value as text | Scalar or wildcard expression |
+| `**IssuedAt \| date("yyyy/MM/dd")` | Explicitly convert/format a date as text | Scalar or wildcard expression |
+| `**@page-break` | Clear the cell and add breaks above/left of its final position | Ordinary row, including inside repeated regions |
+| `\**literal` | Remove one leading backslash and output literal text | Any text cell |
+
+### Recognition and evaluation rules
+
+Only text cells beginning with `**` or `\**` are interpreted. Do not add leading
+spaces or an Excel `=` before an expression. Formula cells, numeric cells and
+ordinary text remain workbook content. A replacement occupies the entire cell;
+string interpolation such as `Customer: **Customer` is not supported.
+
+Directive names are case-sensitive. Write `**@end-array` and `**@page-break`
+exactly, without trailing spaces or arguments. `**@page-break` has no direction,
+condition or page-count parameters. Formatting accepts one `format()` or
+`date()` function with one or two JSON string arguments; chaining functions is
+not supported. Arithmetic, conditions and calculations belong in the input data
+or ordinary Excel formulas.
+
+Mapping validates the structure and path syntax of every worksheet, then
+evaluates the instantiated rows before applying expansion. It is independent
+of rendering selections. Expressions in a block with no array elements are
+syntax-checked, but their data paths are not evaluated.
+
+### Missing, null and empty values
+
+| Input state | Scalar cell, such as `**Customer` | Repetition, such as `**Items[*].Name` |
+| --- | --- | --- |
+| Property missing | Error at the original template cell | Error at the original template cell |
+| Explicit `null` | Blank cell | Error: the repetition requires an array |
+| Empty array `[]` | Error: arrays are not scalar cell values | Delete the row or the entire explicit block |
+| Object or non-empty array | Error: select a scalar property or index | An array repeats in element order; a non-array object is an error |
+
+Missing properties inside an existing array element are errors too. A null element
+can map through a scalar path such as `**Items[*]`, but reading a property from
+that null element fails. Paths do not provide optional navigation or a default-value
+operator.
+
 ## Cell expressions
 
 A text cell starting with `**` is replaced as a whole. Formula cells are left as
@@ -362,10 +415,76 @@ break after row 9 and after column B. No break is added before row 1 or column A
 The cell's row remains in the output. Repeated directives apply at every expanded
 position; duplicate breaks are collapsed.
 
+### Choose the cell for the required direction
+
+| Directive position | Horizontal break | Vertical break |
+| --- | --- | --- |
+| A10 | After row 9 | None |
+| C1 | None | After column B |
+| C10 | After row 9 | After column B |
+| A1 | None | None |
+
+For a row-only break, reserve a cell in column A. For a column-only break, use
+row 1. Placing the directive in an interior cell creates **both** breaks; there
+are no separate row-only or column-only directive names.
+The breaks divide the worksheet across the whole print area, not just around
+the cell or its array block.
+
+Unlike start/end markers, a page-break directive does not require a dedicated
+row: other cells on that row can contain data or formulas. The directive cell
+becomes blank, while its style and row remain. To print the literal marker, enter
+`\**@page-break`; that does not create breaks.
+
+### Example: split into four printed regions
+
+Put these values in a small template, set the print area to A1:D3, and ensure
+that each resulting region fits on the paper at 100% scale:
+
+```text
+A1: Upper left
+D1: Upper right
+C2: **@page-break
+A3: Lower left
+D3: Lower right
+```
+
+Map it with an empty JSON object `{}`. The break after row 1 and the break after
+column B split the print area into two row bands and two column bands, producing
+four pages in paginated PDF, SVG or PNG output. Paper size, margins, scale and
+content size can produce additional automatic page breaks.
+
+### Example: begin each repeated item on a new page
+
+```text
+A1: **@start-array Items[*] as item
+A2: **@page-break
+B2: **@item.Name
+A3: **@end-array
+```
+
+The start/end rows disappear. For three items, the content rows end up at rows
+1, 2 and 3. The first directive is at A1, so it adds no break before the first
+row; the other directives add breaks after rows 1 and 2. No column breaks are
+added because the directives are in column A.
+
+Positions are determined **after expansion**, so a directive below an array
+moves with the rows inserted or deleted above it. A directive inside an empty
+array disappears with the block and does not add breaks or change print mode.
+
+### Print settings and output behavior
+
 Existing manual row breaks follow copied rows; column breaks are retained.
 A sheet with a page-break directive switches from fit-to-page to explicit scale
 mode (retaining a positive scale or using 100%). This makes manual breaks effective
 in Excel and in SVG/PNG/PDF output. Other sheets retain their original print mode.
+Even a surviving directive at A1 enables scale mode, although neither break is
+added there. A template that previously fitted to one page can therefore produce
+more pages after mapping.
+
+The mapped XLSX stores manual breaks for printing or print preview; it does not
+split the workbook into separate worksheets. Paginated rendering uses those
+breaks. Continuous image output and Markdown do not become paginated output
+because of this directive.
 
 ## Excel behavior and limitations
 

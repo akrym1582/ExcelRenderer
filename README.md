@@ -190,6 +190,13 @@ Property names are case-sensitive. Keep input and output paths different.
 See [the mapping guide](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/mapping.md) ([Japanese](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/mapping.ja.md)) for a
 complete invoice example, installation, array expansion, formatting and troubleshooting.
 
+For the complete directive list, see the
+[specification reference](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/mapping.md#specification-reference).
+`**@page-break` creates breaks above and left of its cell: A10 gives a row-only
+break, C1 a column-only break, and C10 both. The directive cell becomes blank.
+See [page breaks](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/mapping.md#page-breaks)
+for repeated blocks and the switch from fit-to-page to scale mode.
+
 ## Command-line usage
 
 ### Syntax and commands

@@ -176,6 +176,12 @@ ExcelTemplateMapper.Map("template.xlsx", "report.xlsx", new { Customer = "Alice"
 請求書テンプレートの作成からインストール、配列展開、書式指定、エラーの対処までの手順は
 [マッピングガイド](docs/mapping.ja.md)（[English](docs/mapping.md)）にあります。
 
+対応する構文は[仕様一覧](docs/mapping.ja.md#仕様一覧)にまとめています。
+`**@page-break` は指定セルの上と左に改ページを入れ、セル自体を空にします。
+A10 なら行方向のみ、C1 なら列方向のみ、C10 なら両方向です。
+繰り返し内での動作や、ページ数に合わせる設定から倍率指定への切り替えは
+[改ページ](docs/mapping.ja.md#改ページ)を参照してください。
+
 ## CLI の使い方
 
 ### 基本構文とコマンド

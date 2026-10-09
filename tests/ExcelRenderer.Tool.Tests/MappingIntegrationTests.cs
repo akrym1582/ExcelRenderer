@@ -77,8 +77,10 @@ public sealed partial class ToolIntegrationTests
         }
     }
 
-    [Fact]
-    public async Task Mapping_page_breaks_produce_four_svg_pages_even_with_fit_to_page_template()
+    [Theory]
+    [InlineData("png")]
+    [InlineData("svg")]
+    public async Task Mapping_page_breaks_produce_four_pages_even_with_fit_to_page_template(string format)
     {
         Directory.CreateDirectory(_directory);
         var template = Path.Combine(_directory, "breaks.xlsx");
@@ -98,8 +100,8 @@ public sealed partial class ToolIntegrationTests
 
         await File.WriteAllTextAsync(data, "{}");
         var output = Path.Combine(_directory, "pages");
-        AssertSuccess(await RunAsync("svg", template, "--data", data, "-o", output));
-        Assert.Equal(4, Directory.GetFiles(output, "*.svg").Length);
+        AssertSuccess(await RunAsync("render", template, "--data", data, "--format", format, "-o", output));
+        Assert.Equal(4, Directory.GetFiles(output, "*." + format).Length);
     }
 
     [Theory]

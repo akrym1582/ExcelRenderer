@@ -1,0 +1,76 @@
+{
+  "commit": "22a101fd39fa5eb515ff9b1b8ed3d967c5af74e6",
+  "profile": "temporary source overlays; timers use current-thread allocations; duplicate/delete are included in apply",
+  "productionCodeChanged": false,
+  "fixtureSource": "tools/ExcelRenderer.Performance/mapping-benchmark.py SOURCE",
+  "fixtureSha256": "c7ed7e6dd73938a19e59b634ce542f79ab13c47bc208e216793c43af2d5083e8",
+  "sourceHashes": {
+    "baseline": {
+      "CellExpression.cs": "6246a7184305e4d243029208ead0f132060114917bfc789cf8acdc1af50a1bb4",
+      "DataPath.cs": "b59f4c6b8356c48a0c075f082fab795645c613a9efe85d62f46cf42b1bcae829",
+      "ExcelTemplateMapper.cs": "c8776c8300b6874fe7a0d15e90d44cf93707bb728eea90a779ab96d90ab0987b",
+      "ExpansionNode.cs": "1652045bffbf6660d095ba6f5d4a0c8624912363e1bbe80dd554c74226b289ca",
+      "MappingException.cs": "89d8dc14d42305a9a65ae3e473b8d2208040b3a2824f67ed8e4238710512450a",
+      "MappingOptions.cs": "12c947be7197d1396f7d89727c758a5211ea456e687108a8926b002732e916cb",
+      "StudyMetrics.cs": "9525e6dbf4d1d1bf243d82fc41c2206b28566d95fa1281d83044275639f868b1",
+      "TemplateCell.cs": "1b30d412368c6c232f0d61463df8aad966b9a1daa3f9505d323f4922477ece0e",
+      "TemplateNode.cs": "bb346fa969ad402f660f09996ad98030c2db9d255b9de486b1017475b0a5d5a9",
+      "TemplateSheet.cs": "ca14eddb1a4bf2fa3eeabac5ae009049885ae593121f38bdb1803c8e62c9ac8c",
+      "WorksheetExpansion.cs": "fe8532364e68ec47833e5b99bbda518b2005a3353546a4eeb4f960f4a371a01d"
+    },
+    "prototype": {
+      "CellExpression.cs": "6246a7184305e4d243029208ead0f132060114917bfc789cf8acdc1af50a1bb4",
+      "DataPath.cs": "b59f4c6b8356c48a0c075f082fab795645c613a9efe85d62f46cf42b1bcae829",
+      "ExcelTemplateMapper.cs": "c8776c8300b6874fe7a0d15e90d44cf93707bb728eea90a779ab96d90ab0987b",
+      "ExpansionNode.cs": "1652045bffbf6660d095ba6f5d4a0c8624912363e1bbe80dd554c74226b289ca",
+      "MappingException.cs": "89d8dc14d42305a9a65ae3e473b8d2208040b3a2824f67ed8e4238710512450a",
+      "MappingOptions.cs": "12c947be7197d1396f7d89727c758a5211ea456e687108a8926b002732e916cb",
+      "StudyMetrics.cs": "9525e6dbf4d1d1bf243d82fc41c2206b28566d95fa1281d83044275639f868b1",
+      "TemplateCell.cs": "1b30d412368c6c232f0d61463df8aad966b9a1daa3f9505d323f4922477ece0e",
+      "TemplateNode.cs": "bb346fa969ad402f660f09996ad98030c2db9d255b9de486b1017475b0a5d5a9",
+      "TemplateSheet.cs": "88b71850e5d1b4ba3096e31fbaf23effa844d9e5d1187c7d0e0fa5c411922305",
+      "WorksheetExpansion.cs": "78958563f854e8fecf53692d91e21b0e6617eff7fbe45acee35830d79bb836c7"
+    },
+    "sparse": {
+      "CellExpression.cs": "6246a7184305e4d243029208ead0f132060114917bfc789cf8acdc1af50a1bb4",
+      "DataPath.cs": "b59f4c6b8356c48a0c075f082fab795645c613a9efe85d62f46cf42b1bcae829",
+      "ExcelTemplateMapper.cs": "c8776c8300b6874fe7a0d15e90d44cf93707bb728eea90a779ab96d90ab0987b",
+      "ExpansionNode.cs": "1652045bffbf6660d095ba6f5d4a0c8624912363e1bbe80dd554c74226b289ca",
+      "MappingException.cs": "89d8dc14d42305a9a65ae3e473b8d2208040b3a2824f67ed8e4238710512450a",
+      "MappingOptions.cs": "12c947be7197d1396f7d89727c758a5211ea456e687108a8926b002732e916cb",
+      "StudyMetrics.cs": "9525e6dbf4d1d1bf243d82fc41c2206b28566d95fa1281d83044275639f868b1",
+      "TemplateCell.cs": "1b30d412368c6c232f0d61463df8aad966b9a1daa3f9505d323f4922477ece0e",
+      "TemplateNode.cs": "bb346fa969ad402f660f09996ad98030c2db9d255b9de486b1017475b0a5d5a9",
+      "TemplateSheet.cs": "88b71850e5d1b4ba3096e31fbaf23effa844d9e5d1187c7d0e0fa5c411922305",
+      "WorksheetExpansion.cs": "6f959372c7c508100ff2fe7027669a6df01d8922e3dddd5b473f2290eaacf1af"
+    },
+    "guarded": {
+      "CellExpression.cs": "6246a7184305e4d243029208ead0f132060114917bfc789cf8acdc1af50a1bb4",
+      "DataPath.cs": "b59f4c6b8356c48a0c075f082fab795645c613a9efe85d62f46cf42b1bcae829",
+      "ExcelTemplateMapper.cs": "c8776c8300b6874fe7a0d15e90d44cf93707bb728eea90a779ab96d90ab0987b",
+      "ExpansionNode.cs": "1652045bffbf6660d095ba6f5d4a0c8624912363e1bbe80dd554c74226b289ca",
+      "MappingException.cs": "89d8dc14d42305a9a65ae3e473b8d2208040b3a2824f67ed8e4238710512450a",
+      "MappingOptions.cs": "12c947be7197d1396f7d89727c758a5211ea456e687108a8926b002732e916cb",
+      "StudyMetrics.cs": "9525e6dbf4d1d1bf243d82fc41c2206b28566d95fa1281d83044275639f868b1",
+      "TemplateCell.cs": "1b30d412368c6c232f0d61463df8aad966b9a1daa3f9505d323f4922477ece0e",
+      "TemplateNode.cs": "bb346fa969ad402f660f09996ad98030c2db9d255b9de486b1017475b0a5d5a9",
+      "TemplateSheet.cs": "88b71850e5d1b4ba3096e31fbaf23effa844d9e5d1187c7d0e0fa5c411922305",
+      "WorksheetExpansion.cs": "70528c7efc4952407e75e49e6ff92d0942d542a4c08fd2efdac099c24d1d147f"
+    },
+    "layout": {
+      "CellExpression.cs": "6246a7184305e4d243029208ead0f132060114917bfc789cf8acdc1af50a1bb4",
+      "DataPath.cs": "b59f4c6b8356c48a0c075f082fab795645c613a9efe85d62f46cf42b1bcae829",
+      "ExcelTemplateMapper.cs": "c8776c8300b6874fe7a0d15e90d44cf93707bb728eea90a779ab96d90ab0987b",
+      "ExpansionNode.cs": "1652045bffbf6660d095ba6f5d4a0c8624912363e1bbe80dd554c74226b289ca",
+      "MappingException.cs": "89d8dc14d42305a9a65ae3e473b8d2208040b3a2824f67ed8e4238710512450a",
+      "MappingOptions.cs": "12c947be7197d1396f7d89727c758a5211ea456e687108a8926b002732e916cb",
+      "StudyMetrics.cs": "9525e6dbf4d1d1bf243d82fc41c2206b28566d95fa1281d83044275639f868b1",
+      "TemplateCell.cs": "1b30d412368c6c232f0d61463df8aad966b9a1daa3f9505d323f4922477ece0e",
+      "TemplateNode.cs": "bb346fa969ad402f660f09996ad98030c2db9d255b9de486b1017475b0a5d5a9",
+      "TemplateSheet.cs": "88b71850e5d1b4ba3096e31fbaf23effa844d9e5d1187c7d0e0fa5c411922305",
+      "WorksheetExpansion.cs": "8fe09daa206848c5368be266ec72b7d533b3898b366d1bb3416cbf8960fdd55b"
+    }
+  },
+  "prototypeLimitations": "Isolated proof-of-concept only. No production changes. Layout fast path excludes workbooks with formulas or defined names; it does not implement the agreed outside-preservation contract. Timings are single fresh-process runs.",
+  "benchmarkRecords": 20
+}

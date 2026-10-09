@@ -1,0 +1,104 @@
+--- a/src/ExcelRenderer.Mapping/WorksheetExpansion.cs
++++ b/src/ExcelRenderer.Mapping/WorksheetExpansion.cs
+@@ -51,7 +51,15 @@
+     /// <summary>Applies the validated expansion to the worksheet.</summary>
+     internal void Apply()
+     {
+-        ApplyNodes(nodes, 1);
++        if (simpleMarkerRemoval && !template.Sheet.MergedRanges.Any() && !template.Sheet.SparklineGroups.Any() &&
++            !template.Sheet.CellsUsed().Any(cell => cell.HasComment || cell.HasHyperlink || cell.HasRichText))
++        {
++            ApplyFinalRows();
++        }
++        else
++        {
++            ApplyNodes(nodes, 1);
++        }
+         for (var i = 0; i < sourceRows.Count; i++)
+         {
+             if (originalRowBreaks.Contains(sourceRows[i]))
+@@ -86,6 +94,84 @@
+         {
+             // Fit-to-page mode ignores manual breaks in Excel and in the renderer.
+             setup.SetScale(setup.Scale > 0 ? setup.Scale : 100);
++        }
++    }
++
++    private void ApplyFinalRows()
++    {
++        var rows = new List<(TemplateNode Template, List<XLCellValue> Values)>();
++        Flatten(nodes, rows);
++        var sheet = template.Sheet;
++        var originals = Enumerable.Range(1, template.LastRow).Select(index =>
++        {
++            var source = sheet.Row(index);
++            return new
++            {
++                source.Height,
++                source.Style,
++                source.OutlineLevel,
++                source.IsHidden,
++                Cells = source.CellsUsed(XLCellsUsedOptions.All).Select(cell => new { Column = cell.Address.ColumnNumber, Value = cell.Value, Style = cell.Style }).ToArray(),
++            };
++        }).ToArray();
++        sheet.Range(1, 1, template.LastRow, template.LastColumn).Clear(XLClearOptions.All);
++        var delta = rows.Count - template.LastRow;
++        if (delta > 0)
++        {
++            sheet.Row(template.LastRow).InsertRowsBelow(delta);
++        }
++        else if (delta < 0)
++        {
++            sheet.Rows(rows.Count + 1, template.LastRow).Delete();
++        }
++
++        sourceRows.Clear();
++        for (var index = 0; index < rows.Count; index++)
++        {
++            cancellationToken.ThrowIfCancellationRequested();
++            var row = index + 1;
++            var planned = rows[index];
++            var original = originals[planned.Template.FirstRow - 1];
++            var target = sheet.Row(row);
++            target.Height = original.Height;
++            target.Style = original.Style;
++            target.OutlineLevel = original.OutlineLevel;
++            if (original.IsHidden) target.Hide(); else target.Unhide();
++            foreach (var cell in original.Cells)
++            {
++                var destination = sheet.Cell(row, cell.Column);
++                destination.Value = cell.Value;
++                destination.Style = cell.Style;
++            }
++
++            for (var i = 0; i < planned.Values.Count; i++)
++            {
++                var cell = planned.Template.Cells[i];
++                sheet.Cell(row, cell.Column).Value = planned.Values[i];
++                if (cell.Text == "**@page-break")
++                {
++                    explicitPageBreak = true;
++                    if (row > 1) rowBreaks.Add(row - 1);
++                    if (cell.Column > 1) columnBreaks.Add(cell.Column - 1);
++                }
++            }
++
++            sourceRows.Add(planned.Template.FirstRow);
++        }
++    }
++
++    private static void Flatten(List<ExpansionNode> nodes, List<(TemplateNode Template, List<XLCellValue> Values)> rows)
++    {
++        foreach (var node in nodes)
++        {
++            if (node.Template.IsBlock)
++            {
++                foreach (var block in node.Blocks) Flatten(block, rows);
++            }
++            else
++            {
++                foreach (var values in node.Rows) rows.Add((node.Template, values));
++            }
+         }
+     }
+ 

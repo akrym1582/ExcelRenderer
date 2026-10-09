@@ -36,7 +36,7 @@ values = {
 }
 for address, value in values.items():
     sheet[address] = value
-sheet["F10"] = "=D10*E10"
+sheet["F10"] = "**@item.lineTotal"
 for area in ("A1:F1", "B2:D2", "B3:D3", "B4:D4", "B5:D5", "B6:D6", "B8:C8", "B10:C10", "B11:D11", "A17:F17", "B18:C18", "B21:D21"):
     sheet.merge_cells(area)
 for row in (1, 8, 17):

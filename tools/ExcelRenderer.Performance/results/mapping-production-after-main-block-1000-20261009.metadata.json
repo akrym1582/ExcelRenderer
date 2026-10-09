@@ -1,0 +1,31 @@
+{
+  "commit": "e876ed6368cae198e5861f798575d9403b930d92",
+  "workingTreeDirty": true,
+  "sourceHashes": {
+    "CellExpression.cs": "6246a7184305e4d243029208ead0f132060114917bfc789cf8acdc1af50a1bb4",
+    "DataPath.cs": "b59f4c6b8356c48a0c075f082fab795645c613a9efe85d62f46cf42b1bcae829",
+    "ExcelTemplateMapper.cs": "c94277c0655aee587e9c8de7d32a256fb1cb6ea6739921e44d7beb92cd7dec29",
+    "ExpansionNode.cs": "1652045bffbf6660d095ba6f5d4a0c8624912363e1bbe80dd554c74226b289ca",
+    "MappingException.cs": "89d8dc14d42305a9a65ae3e473b8d2208040b3a2824f67ed8e4238710512450a",
+    "MappingOptions.cs": "12c947be7197d1396f7d89727c758a5211ea456e687108a8926b002732e916cb",
+    "TemplateCell.cs": "1b30d412368c6c232f0d61463df8aad966b9a1daa3f9505d323f4922477ece0e",
+    "TemplateNode.cs": "bb346fa969ad402f660f09996ad98030c2db9d255b9de486b1017475b0a5d5a9",
+    "TemplateSheet.cs": "f8c54e922af54cf87de91753ae5d75759c835bf326935a614227bc8e22f6b36c",
+    "WorksheetExpansion.cs": "989226e5252cb041ec6eb5f0d4e6ebafb3c734a5c157f55f5e695743d006b0d9"
+  },
+  "fixtureSha256": "a4517f30082a0b464fd0bb783083e87bc2e221836946135957d9c0c1344555d3",
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+  "dotnet": ".NET SDK:\n Version:           10.0.401\n Commit:            e34a38d2ae\n Workload version:  10.0.400-manifests.63b36e85\n MSBuild version:   18.9.11+e34a38d2a\n\nRuntime Environment:\n OS Name:     debian\n OS Version:  13\n OS Platform: Linux\n RID:         linux-x64\n Base Path:   /workspace/.tools/dotnet/sdk/10.0.401/\n\n.NET workloads installed:\nThere are no installed workloads to display.\nConfigured to use workload sets when installing new manifests.\nNo workload sets are installed. Run \"dotnet workload restore\" to install a workload set.\n\nHost:\n  Version:      10.0.12\n  Architecture: x64\n  Commit:       95017c711e\n\n.NET SDKs installed:\n  10.0.401 [/workspace/.tools/dotnet/sdk]\n\n.NET runtimes installed:\n  Microsoft.AspNetCore.App 10.0.12 [/workspace/.tools/dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.NETCore.App 10.0.12 [/workspace/.tools/dotnet/shared/Microsoft.NETCore.App]\n\nOther architectures found:\n  None\n\nEnvironment variables:\n  DOTNET_CLI_HOME                          [/workspace/.tools/dotnet-home]\n  DOTNET_ROOT                              [/workspace/.tools/dotnet]\n\nglobal.json file:\n  Not found\n\nLearn more:\n  https://aka.ms/dotnet/info\n\nDownload .NET:\n  https://aka.ms/dotnet/download\n",
+  "sampleIntervalMs": 10,
+  "timeoutSeconds": 90,
+  "runs": 3,
+  "cases": [
+    [
+      "block",
+      1000,
+      10
+    ]
+  ],
+  "cpu.max": "200000 100000",
+  "memory.max": "8589934592"
+}

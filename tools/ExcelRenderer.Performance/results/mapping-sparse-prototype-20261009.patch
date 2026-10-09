@@ -1,0 +1,36 @@
+--- a/src/ExcelRenderer.Mapping/WorksheetExpansion.cs
++++ b/src/ExcelRenderer.Mapping/WorksheetExpansion.cs
+@@ -237,6 +237,13 @@
+             throw new MappingException(template.Sheet.Name, location.Address, location.Text, "Intermediate expansion exceeds Excel's row limit.");
+         }
+ 
++        var sourceRange = template.Sheet.Range(start, 1, start + count - 1, template.LastColumn);
++        var sourceCells = sourceRange.CellsUsed(XLCellsUsedOptions.All).ToArray();
++        var simpleCopy = count == 1 && !template.Sheet.MergedRanges.Any() &&
++            !template.Sheet.ConditionalFormats.Any() && !template.Sheet.DataValidations.Any() &&
++            !template.Sheet.SparklineGroups.Any() &&
++            sourceCells.All(cell => !cell.HasFormula && !cell.HasComment && !cell.HasHyperlink && !cell.HasRichText);
++        var copiedCells = simpleCopy ? sourceCells.Select(cell => new { Column = cell.Address.ColumnNumber, Value = cell.Value, Style = cell.Style }).ToArray() : null;
+         var tags = sourceRows.GetRange(start - 1, count);
+         template.Sheet.Row(start + count - 1).InsertRowsBelow((int)added);
+         for (var copy = 1; copy < copies; copy++)
+@@ -260,7 +267,19 @@
+                 }
+             }
+ 
++            if (copiedCells is not null)
++            {
++                foreach (var copied in copiedCells)
++                {
++                    var target = template.Sheet.Cell(destination, copied.Column);
++                    target.Value = copied.Value;
++                    target.Style = copied.Style;
++                }
++            }
++            else
++            {
+             template.Sheet.Range(start, 1, start + count - 1, template.LastColumn).CopyTo(template.Sheet.Cell(destination, 1));
++            }
+             sourceRows.InsertRange(destination - 1, tags);
+         }
+     }

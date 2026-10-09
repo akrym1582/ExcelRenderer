@@ -15,7 +15,9 @@ internal sealed class TemplateSheet
     {
         Sheet = sheet;
         LastRow = sheet.LastRowUsed(XLCellsUsedOptions.All)?.RowNumber() ?? 0;
-        LastColumn = sheet.LastColumnUsed(XLCellsUsedOptions.All)?.ColumnNumber() ?? 1;
+        LastColumn = Math.Max(
+            sheet.LastColumnUsed(XLCellsUsedOptions.All)?.ColumnNumber() ?? 1,
+            sheet.MergedRanges.Select(range => range.RangeAddress.LastAddress.ColumnNumber).DefaultIfEmpty(1).Max());
         var row = 1;
         Nodes = Parse(ref row, new HashSet<string>(StringComparer.Ordinal), false);
     }
@@ -169,6 +171,25 @@ internal sealed class TemplateSheet
     {
         var first = node.IsBlock ? node.FirstRow + 1 : node.FirstRow;
         var last = node.IsBlock ? node.LastRow - 1 : node.LastRow;
+        if (first <= last)
+        {
+            var formula = Sheet.Rows(first, last).CellsUsed(XLCellsUsedOptions.Contents).FirstOrDefault(cell => cell.HasFormula);
+            if (formula is not null)
+            {
+                throw new MappingException(Sheet.Name, formula.Address.ToStringRelative(), "=" + formula.FormulaA1, "Formulas inside repeated regions are not supported; supply calculated values in the input.");
+            }
+        }
+
+        var names = Sheet.Workbook.DefinedNames.Concat(Sheet.Workbook.Worksheets.SelectMany(sheet => sheet.DefinedNames));
+        foreach (var name in names)
+        {
+            if (name.Ranges.Any(range => range.Worksheet == Sheet &&
+                range.RangeAddress.FirstAddress.RowNumber <= node.LastRow && range.RangeAddress.LastAddress.RowNumber >= node.FirstRow))
+            {
+                throw Error(node.Location, $"Defined name '{name.Name}' overlaps a repeated region ({name.RefersTo}).");
+            }
+        }
+
         foreach (var merged in Sheet.MergedRanges)
         {
             var range = merged.RangeAddress;

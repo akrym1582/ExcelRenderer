@@ -2,6 +2,39 @@
 
 Requires .NET 10. Run from the repository root. The library remains netstandard2.1.
 
+For XLSX template mapping, use the independent Linux harness:
+
+```bash
+python tools/ExcelRenderer.Performance/mapping-benchmark.py --output /tmp/mapping.jsonl --runs 1
+python tools/ExcelRenderer.Performance/mapping-benchmark.py --output /tmp/mapping-clr.jsonl --mode clr --rows 99998 --runs 3
+```
+
+It builds a temporary .NET 10 executable referencing `ExcelRenderer.Mapping`, then
+runs each case in a fresh process. Modes: `clr`, `json`, `dict`, `block`, `nested`,
+`merged`, `merged-contained`, `formula`. CLR fixtures have 10 properties; other modes accept
+`--columns`. Nested fixtures have 10 items per parent and require a row count
+divisible by 10. Templates contain a header and footer, shared cell formatting,
+and a custom row height. The 99,998-item case reaches the default 100,000-row
+limit; the 100,000-item case checks rejection without writing output.
+
+Mapping time includes template loading, expansion, formula evaluation, XLSX saving,
+and copying to the output stream. Input preparation and output validation are
+outside timing. The runner samples process RSS every 10 ms until mapping returns;
+this peak includes startup and input preparation. Managed allocation bytes are
+cumulative during mapping, not peak memory. Each output is reopened to check row
+count, every data cell's value/type, footer, row heights, formatting, and all merge
+addresses as applicable. `formula` checks rejection of formulas in repeated rows
+without writing output.
+Records append to the requested JSONL path; metadata is written alongside it.
+`--timeout` defaults to 90 seconds per process, including output validation.
+Timeouts and validation failures are recorded and make the runner exit nonzero.
+`merged` covers the fixed regression where a merge extends beyond the rightmost
+used cell. `merged-contained` adds a regular cell after the merge; both fixtures
+validate every merge.
+See [mapping measurements](../../docs/mapping-performance.ja.md).
+See [the improvement investigation and implementation plan](../../docs/mapping-performance-plan.ja.md)
+for phase profiles, isolated prototypes, compatibility limits, and failed-test fixes.
+
 For direct PNG/SVG rendering, use the same Release build with:
 
 ```bash

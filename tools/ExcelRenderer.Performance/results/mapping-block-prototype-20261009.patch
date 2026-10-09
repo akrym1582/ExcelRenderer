@@ -1,0 +1,37 @@
+--- a/src/ExcelRenderer.Mapping/TemplateSheet.cs
++++ b/src/ExcelRenderer.Mapping/TemplateSheet.cs
+@@ -15,7 +15,7 @@
+     {
+         Sheet = sheet;
+         LastRow = sheet.LastRowUsed(XLCellsUsedOptions.All)?.RowNumber() ?? 0;
+-        LastColumn = sheet.LastColumnUsed(XLCellsUsedOptions.All)?.ColumnNumber() ?? 1;
++        LastColumn = Math.Max(sheet.LastColumnUsed(XLCellsUsedOptions.All)?.ColumnNumber() ?? 1, sheet.MergedRanges.Select(range => range.RangeAddress.LastAddress.ColumnNumber).DefaultIfEmpty(1).Max());
+         var row = 1;
+         Nodes = Parse(ref row, new HashSet<string>(StringComparer.Ordinal), false);
+     }
+--- a/src/ExcelRenderer.Mapping/WorksheetExpansion.cs
++++ b/src/ExcelRenderer.Mapping/WorksheetExpansion.cs
+@@ -164,6 +164,23 @@
+                 continue;
+             }
+ 
++            if (node.Template.IsBlock && node.Template.Children!.All(child => !child.IsBlock))
++            {
++                DeleteRows(row + count - 1, 1);
++                DeleteRows(row, 1);
++                count -= 2;
++                if (count > 0)
++                {
++                    DuplicateRows(row, count, copies, node.Template.Location);
++                    foreach (var block in node.Blocks)
++                    {
++                        row += ApplyNodes(block, row);
++                    }
++                }
++
++                continue;
++            }
++
+             DuplicateRows(row, count, copies, node.Template.Location);
+             if (node.Template.IsBlock)
+             {

@@ -60,12 +60,12 @@ following values. Save it as `template.xlsx` in a working directory.
 | 2 | Customer | `**Customer` | | |
 | 3 | Issued | `**IssuedAt \| date("yyyy/MM/dd")` | | |
 | 4 | Item | Quantity | Unit price | Line total |
-| 5 | `**Items[*].Name` | `**Items[*].Quantity` | `**Items[*].Price` | `=B5*C5` |
+| 5 | `**Items[*].Name` | `**Items[*].Quantity` | `**Items[*].Price` | `**Items[*].LineTotal` |
 | 6 | Total | | | `**Total` |
 
-Enter the `**` expressions as cell text, without an initial `=`. D5 is an actual
-Excel formula. The backslash before the pipe in the Markdown table is only table
-escaping: B3 should contain `**IssuedAt | date("yyyy/MM/dd")`.
+Enter the `**` expressions as cell text, without an initial `=`. D5 receives
+the line total calculated in the input; formulas inside repeated rows are rejected.
+The backslash before the pipe in the Markdown table is only table escaping: B3 should contain `**IssuedAt | date("yyyy/MM/dd")`.
 Use ordinary cells, rather than an Excel Table, for row 5. You can set fonts,
 column widths, borders and number formats in Excel. Set C5, D5 and D6 to
 `#,##0.00` and the print area to A1:D6 for this example.
@@ -81,8 +81,8 @@ Save this as `data.json` alongside `template.xlsx`:
   "Customer": "Alice",
   "IssuedAt": "2026-10-09",
   "Items": [
-    { "Name": "Book", "Quantity": 2, "Price": 12.50 },
-    { "Name": "Pen", "Quantity": 3, "Price": 2.00 }
+    { "Name": "Book", "Quantity": 2, "Price": 12.50, "LineTotal": 25.00 },
+    { "Name": "Pen", "Quantity": 3, "Price": 2.00, "LineTotal": 6.00 }
   ],
   "Total": 31.00
 }
@@ -109,7 +109,7 @@ has expanded into two item rows:
 | 6 | Pen | 3 | 2.00 | 6.00 |
 | 7 | Total | | | 31.00 |
 
-The formula in D6 becomes `=B6*C6`. Row styles and the footer move with the
+D6 receives the second item's `LineTotal`. Row styles and the footer move with the
 expansion. `template.xlsx` and `data.json` remain the inputs for the next run.
 A successful `xlsx` run replaces an existing output XLSX; use a separate output
 path if you want to keep an earlier report. Mapping errors are detected before
@@ -174,8 +174,8 @@ ExcelTemplateMapper.Map("template.xlsx", "report.xlsx", new
     IssuedAt = new DateTime(2026, 10, 9),
     Items = new[]
     {
-        new { Name = "Book", Quantity = 2, Price = 12.50m },
-        new { Name = "Pen", Quantity = 3, Price = 2.00m },
+        new { Name = "Book", Quantity = 2, Price = 12.50m, LineTotal = 25.00m },
+        new { Name = "Pen", Quantity = 3, Price = 2.00m, LineTotal = 6.00m },
     },
     Total = 31.00m,
 });
@@ -320,7 +320,8 @@ operator.
 ## Cell expressions
 
 A text cell starting with `**` is replaced as a whole. Formula cells are left as
-formulas. Embedded expressions such as `Name: **name` are ordinary literal text.
+formulas outside repeated regions. Embedded expressions such as `Name: **name`
+are ordinary literal text.
 
 | Template text | Meaning |
 | --- | --- |
@@ -435,7 +436,7 @@ The breaks divide the worksheet across the whole print area, not just around
 the cell or its array block.
 
 Unlike start/end markers, a page-break directive does not require a dedicated
-row: other cells on that row can contain data or formulas. The directive cell
+row: other cells on that row can contain data, or formulas outside repeated regions. The directive cell
 becomes blank, while its style and row remain. To print the literal marker, enter
 `\**@page-break`; that does not create breaks.
 
@@ -492,13 +493,23 @@ because of this directive.
 
 ## Excel behavior and limitations
 
-Row expansion uses ClosedXML row insertion/deletion and range copying. It preserves
-cell styles, row height, hidden state, outline levels, relative formulas, ordinary
+Value/style-only regions use a final-row placement plan with one bulk resize per
+region. Templates with references or other Excel objects retain ClosedXML row
+insertion/deletion and range copying to preserve their existing behavior. Expansion
+preserves cell styles, row height, hidden state, outline levels, ordinary
 merged ranges, copied conditional formatting and data validation. Existing formula
 references, defined names and print areas follow ClosedXML's Excel row-operation
 semantics. Ranges ending exactly at a repeated region's boundary do not necessarily
 extend to all copies: design the template's totals accordingly or supply totals in
 the input data. References to deleted marker/empty-array rows can become `#REF!`.
+
+Formulas inside repeated rows/blocks and defined names whose ranges overlap them
+are rejected before evaluating data or writing output, even for empty arrays. This
+is a compatibility change: calculate repeated values in C#/JSON instead. Both
+workbook and worksheet names are checked, across all columns of the repeated rows,
+including marker rows. Outside formulas/names, including those below the repeated
+region, remain supported with the reference limitations above. Print areas and
+print titles are page settings and remain supported.
 
 Merges entirely inside a repeated block are supported. Merges crossing an array
 boundary, merged marker rows, Excel tables intersecting repeated regions, and
@@ -538,7 +549,7 @@ sheet.Cell("D4").Value = "Line total";
 sheet.Cell("A5").Value = "**Items[*].Name";
 sheet.Cell("B5").Value = "**Items[*].Quantity";
 sheet.Cell("C5").Value = "**Items[*].Price";
-sheet.Cell("D5").FormulaA1 = "B5*C5";
+sheet.Cell("D5").Value = "**Items[*].LineTotal";
 sheet.Cell("A6").Value = "Total";
 sheet.Cell("D6").Value = "**Total";
 sheet.Columns(1, 4).Width = 22;

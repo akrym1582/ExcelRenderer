@@ -1,0 +1,1 @@
+{"run": 0, "mode": "clr", "count": 100000, "columns": 10, "exitCode": 0, "timeout": false, "mappingPeakRssBytes": 149868544, "wallSeconds": 1.218501741000182, "records": [{"phase": "rejected", "mode": "clr", "count": 100000, "elapsedMs": 642.566, "outputBytes": 0, "message": "Template!J2 [**items[*].v9]: Expansion exceeds MaxOutputRows."}], "stderr": ""}

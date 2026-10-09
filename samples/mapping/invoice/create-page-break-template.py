@@ -32,7 +32,7 @@ sheet['B2'].font = copy(source['A1'].font)
 sheet['B2'].fill = copy(source['A1'].fill)
 sheet['B2'].alignment = Alignment(horizontal='center', vertical='center')
 sheet['A10'] = '**@start-array @page.items[*] as item'
-sheet['F11'] = '=D11*E11'
+sheet['F11'] = '**@item.lineTotal'
 sheet['A23'] = '**@end-array'
 for address, expression in [('F7', '**@page.totals.subtotal'), ('F14', '**@page.totals.subtotal'),
                             ('F15', '**@page.totals.tax'), ('F16', '**@page.totals.total'),

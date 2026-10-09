@@ -34,6 +34,7 @@
           "name": "設計・開発作業",
           "quantity": 2.5,
           "price": 12345.6,
+          "lineTotal": 30864,
           "taxRate": 0.1,
           "note": "要件整理と実装（2行で1明細）"
         },
@@ -42,6 +43,7 @@
           "name": "保守サービス",
           "quantity": 1,
           "price": 2000,
+          "lineTotal": 2000,
           "taxRate": 0.08,
           "note": null
         }
@@ -69,6 +71,7 @@
           "name": "値引き",
           "quantity": 1,
           "price": -500,
+          "lineTotal": -500,
           "taxRate": 0,
           "note": "調整額：負数・ゼロ税率を確認"
         }

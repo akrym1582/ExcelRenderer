@@ -10,6 +10,7 @@ namespace ExcelRenderer.Mapping;
 internal sealed class WorksheetExpansion
 {
     private readonly TemplateSheet template;
+    private readonly bool directPlacement;
     private readonly object? root;
     private readonly MappingOptions options;
     private readonly CancellationToken cancellationToken;
@@ -29,6 +30,19 @@ internal sealed class WorksheetExpansion
     internal WorksheetExpansion(TemplateSheet template, object? root, MappingOptions options, CancellationToken cancellationToken)
     {
         this.template = template;
+
+        // Retain the established row-operation order when references or workbook objects may depend on it.
+        directPlacement = template.Sheet.Workbook.Worksheets.All(sheet =>
+            !sheet.DefinedNames.Any() && !sheet.ConditionalFormats.Any() && !sheet.DataValidations.Any() &&
+            !sheet.CellsUsed(XLCellsUsedOptions.Contents).Any(cell => cell.HasFormula)) &&
+            !template.Sheet.Workbook.DefinedNames.Any() &&
+            !template.Sheet.MergedRanges.Any() && !template.Sheet.ConditionalFormats.Any() &&
+            !template.Sheet.DataValidations.Any() && !template.Sheet.SparklineGroups.Any() &&
+            !template.Sheet.Tables.Any() && !template.Sheet.PivotTables.Any() && !template.Sheet.Pictures.Any() &&
+            !template.Sheet.AutoFilter.IsEnabled &&
+            !template.Sheet.PageSetup.PrintAreas.Any() &&
+            template.Sheet.PageSetup.FirstRowToRepeatAtTop == 0 &&
+            !template.Sheet.CellsUsed(XLCellsUsedOptions.All).Any(cell => cell.HasComment || cell.HasHyperlink || cell.HasRichText);
         this.root = root;
         this.options = options;
         this.cancellationToken = cancellationToken;
@@ -82,6 +96,27 @@ internal sealed class WorksheetExpansion
         {
             // Fit-to-page mode ignores manual breaks in Excel and in the renderer.
             setup.SetScale(setup.Scale > 0 ? setup.Scale : 100);
+        }
+    }
+
+    private static void Flatten(ExpansionNode node, List<(TemplateNode Template, List<XLCellValue> Values)> rows)
+    {
+        if (node.Template.IsBlock)
+        {
+            foreach (var block in node.Blocks)
+            {
+                foreach (var child in block)
+                {
+                    Flatten(child, rows);
+                }
+            }
+        }
+        else
+        {
+            foreach (var values in node.Rows)
+            {
+                rows.Add((node.Template, values));
+            }
         }
     }
 
@@ -156,6 +191,12 @@ internal sealed class WorksheetExpansion
         foreach (var node in plan)
         {
             cancellationToken.ThrowIfCancellationRequested();
+            if (directPlacement && node.Template.Path is not null)
+            {
+                row += ApplyRegion(node, row);
+                continue;
+            }
+
             var count = node.Template.LastRow - node.Template.FirstRow + 1;
             var copies = node.Template.IsBlock ? node.Blocks.Count : node.Rows.Count;
             if (copies == 0)
@@ -179,31 +220,108 @@ internal sealed class WorksheetExpansion
             {
                 foreach (var values in node.Rows)
                 {
-                    for (var i = 0; i < values.Count; i++)
-                    {
-                        var cell = node.Template.Cells[i];
-                        template.Sheet.Cell(row, cell.Column).Value = values[i];
-                        if (cell.Text == "**@page-break")
-                        {
-                            explicitPageBreak = true;
-                            if (row > 1)
-                            {
-                                rowBreaks.Add(row - 1);
-                            }
-
-                            if (cell.Column > 1)
-                            {
-                                columnBreaks.Add(cell.Column - 1);
-                            }
-                        }
-                    }
-
+                    WriteValues(node.Template, values, row);
                     row++;
                 }
             }
         }
 
         return row - start;
+    }
+
+    private int ApplyRegion(ExpansionNode node, int start)
+    {
+        var rows = new List<(TemplateNode Template, List<XLCellValue> Values)>();
+        Flatten(node, rows);
+        var count = node.Template.LastRow - node.Template.FirstRow + 1;
+        if ((long)sourceRows.Count + rows.Count - count > 1_048_576)
+        {
+            throw new MappingException(template.Sheet.Name, node.Template.Location.Address, node.Template.Location.Text, "Intermediate expansion exceeds Excel's row limit.");
+        }
+
+        var sheet = template.Sheet;
+        var originals = Enumerable.Range(start, count).Select(index =>
+        {
+            var source = sheet.Row(index);
+            return new
+            {
+                source.Height,
+                source.Style,
+                source.OutlineLevel,
+                source.IsHidden,
+                Cells = source.CellsUsed(XLCellsUsedOptions.All).Select(cell => new
+                {
+                    Column = cell.Address.ColumnNumber,
+                    cell.Value,
+                    cell.Style,
+                }).ToArray(),
+            };
+        }).ToArray();
+        sheet.Range(start, 1, start + count - 1, template.LastColumn).Clear(XLClearOptions.All);
+        var delta = rows.Count - count;
+        if (delta > 0)
+        {
+            sheet.Row(start + count - 1).InsertRowsBelow(delta);
+        }
+        else if (delta < 0)
+        {
+            sheet.Rows(start + rows.Count, start + count - 1).Delete();
+        }
+
+        sourceRows.RemoveRange(start - 1, count);
+        sourceRows.InsertRange(start - 1, rows.Select(row => row.Template.FirstRow));
+        for (var index = 0; index < rows.Count; index++)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var row = start + index;
+            var planned = rows[index];
+            var original = originals[planned.Template.FirstRow - node.Template.FirstRow];
+            var target = sheet.Row(row);
+            target.Height = original.Height;
+            target.Style = original.Style;
+            target.OutlineLevel = original.OutlineLevel;
+            if (original.IsHidden)
+            {
+                target.Hide();
+            }
+            else
+            {
+                target.Unhide();
+            }
+
+            foreach (var cell in original.Cells)
+            {
+                var destination = sheet.Cell(row, cell.Column);
+                destination.Value = cell.Value;
+                destination.Style = cell.Style;
+            }
+
+            WriteValues(planned.Template, planned.Values, row);
+        }
+
+        return rows.Count;
+    }
+
+    private void WriteValues(TemplateNode node, List<XLCellValue> values, int row)
+    {
+        for (var i = 0; i < values.Count; i++)
+        {
+            var cell = node.Cells[i];
+            template.Sheet.Cell(row, cell.Column).Value = values[i];
+            if (cell.Text == "**@page-break")
+            {
+                explicitPageBreak = true;
+                if (row > 1)
+                {
+                    rowBreaks.Add(row - 1);
+                }
+
+                if (cell.Column > 1)
+                {
+                    columnBreaks.Add(cell.Column - 1);
+                }
+            }
+        }
     }
 
     private void DuplicateRows(int start, int count, int copies, TemplateCell location)

@@ -5,7 +5,7 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-    <Version>1.7.2</Version>
+    <Version>1.8.0</Version>
     <PackageId>ExcelRenderer.Mapping</PackageId>
     <Description>Map C# objects and JSON into Excel templates with nested row arrays.</Description>
     <Authors>akrym1582</Authors>

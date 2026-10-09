@@ -40,10 +40,23 @@ PDF / PNG / SVG
 - 印刷範囲に依存しないシート座標での図形・画像のアンカー解決（回転後の外接矩形によるページ判定・自動使用範囲・連続キャンバス寸法、反復タイトル領域を除いた本文クリップ）。非表示行列とアンカーの相互作用は Excel 実機で未検証です
 - PDFsharp による PDF 出力
 - SkiaSharp によるページごとの PNG 出力と画像のデコード
+- 独立したマッピングパッケージによる C# オブジェクト・JSON からの XLSX テンプレートへの値の設定
 
 ## インストール
 
-ライブラリ、任意のフォント、コマンドラインツールは別々の NuGet パッケージです。NuGet.org に公開された後、以下のコマンドでインストールできます。CLI はライブラリとフォントパッケージを依存関係としてインストールします。
+用途に合わせてパッケージを選びます。
+
+| パッケージ | 用途 | 必要な環境 |
+| --- | --- | --- |
+| `ExcelRenderer` | C# から既存の XLSX を PDF・PNG・SVG・Markdown に変換 | .NET Standard 2.1 と互換性のあるアプリケーション |
+| `ExcelRenderer.Mapping` | C# オブジェクト・JSON をテンプレートへ設定して XLSX を保存 | .NET Standard 2.1 と互換性のあるアプリケーション。描画・フォントは不要 |
+| `ExcelRenderer.Fonts` | 描画用の日本語・絵文字フォントを追加 | `ExcelRenderer` と併用 |
+| `ExcelRenderer.Tool` | コマンドラインでマッピング・変換 | .NET 10 SDK |
+
+以下のコマンドは NuGet.org を利用し、使いたい機能を含むバージョンが公開済みである
+ことを前提とします。公開前の機能を試す場合は[開発](#開発)を参照してください。
+.NET Standard 2.1 のライブラリは .NET 8・.NET 10 などで利用できます。
+.NET Framework には対応していません。
 
 ### ライブラリ（NuGet）
 
@@ -60,6 +73,19 @@ dotnet add package ExcelRenderer.Fonts  # 日本語フォントが必要な場�
 必須ではありません。フォントを再配布する場合は、それぞれのライセンスに従って
 ください。詳細は[サードパーティ通知](THIRD-PARTY-NOTICES.md)を参照してください。
 
+### テンプレートマッピングライブラリ（NuGet）
+
+描画せずに XLSX を生成する場合は、マッピングパッケージだけを追加します。
+
+```bash
+dotnet add package ExcelRenderer.Mapping
+```
+
+`ExcelRenderer.Mapping` 名前空間の `ExcelTemplateMapper` を使用します。
+マッピング後に C# から PDF などへ変換する場合は `ExcelRenderer` も追加し、
+必要に応じて `ExcelRenderer.Fonts` を併用してください。
+テンプレート・JSON・C# の具体例は[マッピングガイド](docs/mapping.ja.md)にあります。
+
 ### コマンドラインツール（dotnet tool）
 
 .NET 10 SDK をインストールし、NuGet.org からツールを取得します。
@@ -69,10 +95,10 @@ dotnet tool install --global ExcelRenderer.Tool
 excelrenderer --help
 ```
 
-パッケージ名は `ExcelRenderer.Tool`、実行コマンド名は `excelrenderer` です。CLI は
-`ExcelRenderer` と `ExcelRenderer.Fonts` に依存するため、これらを個別にインストールする
-必要はありません。これらのコマンドは、NuGet のパッケージソースで NuGet.org が有効に
-なっていることを前提とします。
+パッケージ名は `ExcelRenderer.Tool`、実行コマンド名は `excelrenderer` です。
+CLI は描画・マッピング・同梱フォントのライブラリを含むため、各 NuGet パッケージを
+個別にインストールする必要はありません。これらのコマンドは、NuGet の
+パッケージソースで NuGet.org が有効になっていることを前提とします。
 
 既にグローバルインストールしている場合は、次のコマンドで更新します。
 
@@ -113,6 +139,49 @@ await ExcelConverter.ConvertToPdfAsync("input.xlsx", "output.pdf");
 
 詳しくは [CLI の使い方](#cli-の使い方)、[C# API（高レベル）](#c-api高レベル)、[C# API（低レベル）](#c-api低レベル)を参照してください。
 
+## Excel テンプレートへのマッピング
+
+`ExcelRenderer.Mapping` は、C#オブジェクトまたはJSONをExcelテンプレートへ
+マッピングする独立した .NET Standard 2.1 パッケージです。描画・フォントパッケージには
+依存しません。`**` で始まるセルのパス、1行の配列展開、専用マーカー行
+`**@start-array` / `**@end-array` による複数行・入れ子の展開、C#の書式指定、
+手動改ページに対応します。
+
+まず Excel の B2 セルに `**Customer` と入力し、`template.xlsx` として保存します。
+同じディレクトリに次の `data.json` を作成してください。
+
+```json
+{ "Customer": "Alice" }
+```
+
+そのディレクトリで CLI を実行します。
+
+```sh
+excelrenderer xlsx template.xlsx --data data.json -o report.xlsx
+excelrenderer pdf template.xlsx --data data.json -o report.pdf
+excelrenderer render template.xlsx --data data.json --format png -o ./png-output
+```
+
+`report.xlsx` の B2 には `Alice` が入ります。`xlsx` はマッピング済みのワークブックを保存し、
+ほかのコマンドはマッピング後に描画します。C# で同じ処理をする場合は
+`ExcelRenderer.Mapping` を追加して、次のように呼び出します。
+
+```csharp
+using ExcelRenderer.Mapping;
+
+ExcelTemplateMapper.Map("template.xlsx", "report.xlsx", new { Customer = "Alice" });
+```
+
+プロパティ名は大文字・小文字を区別します。入力と出力には別のパスを指定してください。
+請求書テンプレートの作成からインストール、配列展開、書式指定、エラーの対処までの手順は
+[マッピングガイド](docs/mapping.ja.md)（[English](docs/mapping.md)）にあります。
+
+対応する構文は[仕様一覧](docs/mapping.ja.md#仕様一覧)にまとめています。
+`**@page-break` は指定セルの上と左に改ページを入れ、セル自体を空にします。
+A10 なら行方向のみ、C1 なら列方向のみ、C10 なら両方向です。
+繰り返し内での動作や、ページ数に合わせる設定から倍率指定への切り替えは
+[改ページ](docs/mapping.ja.md#改ページ)を参照してください。
+
 ## CLI の使い方
 
 ### 基本構文とコマンド
@@ -125,15 +194,20 @@ excelrenderer <command> <input.xlsx> --output <path> [options]
 
 | コマンド | 出力 | コマンド固有の主なオプション |
 | --- | --- | --- |
+| `xlsx` | マッピング済みの XLSX ファイル | `--data <data.json>`（必須） |
 | `pdf` | 1 個の PDF | `--sheet <シート名>` |
 | `image` | 印刷ページごとの PNG | `--sheet <シート名>`、`--dpi <数値>`（既定値 `144`） |
 | `svg` | 印刷ページごとの自己完結 SVG | `--sheet <シート名>` |
 | `markdown` / `md` | 1 個の Markdown と任意の抽出画像 | `--sheet`、`--image-dir`、`--[no-]images`、`--[no-]cell-addresses`、`--[no-]formulas`、`--[no-]layout-detection`、`--[no-]region-detection` |
 | `render` | PDF ファイル、または PNG/SVG/Markdown の出力ディレクトリ | `--format pdf\|png\|svg\|markdown` と選択、レイアウト、診断、マニフェスト、フォント方針の各オプション |
 
+描画コマンドはすべて `--data <data.json>` を指定すると、テンプレートへ値を設定してから
+変換します。省略時は従来どおり既存のワークブックを変換します。
+具体例は[Excel テンプレートへのマッピング](#excel-テンプレートへのマッピング)を参照してください。
+
 ### フォント指定
 
-すべてのコマンドで次のフォント指定を使用できます。
+描画コマンドで次のフォント指定を使用できます。`xlsx` にはフォントは不要です。
 
 | オプション | 説明 |
 | --- | --- |
@@ -500,9 +574,32 @@ seekable な一時ファイルへ spool します。reader は独立した curso
 dotnet test ExcelRenderer.slnx
 ```
 
-ソースコードは `src/ExcelRenderer`、テストコードは `tests/ExcelRenderer.Tests` にあります。
+各プロジェクトは `src/`、対応するテストプロジェクトは `tests/` にあります。
 
-詳細な設計資料は [アーキテクチャ](docs/architecture.ja.md)、[English](README.md) も参照してください。
+NuGet 公開前にマッピングライブラリを試す場合は、リポジトリのルートでパッケージを作成します。
+
+```bash
+dotnet pack src/ExcelRenderer.Mapping/ExcelRenderer.Mapping.csproj -c Release -o artifacts/packages
+```
+
+作成したパッケージのディレクトリを NuGet.org と併用するソースとして登録し、
+利用先のプロジェクトでパッケージを追加します。
+
+```bash
+dotnet nuget add source <artifacts/packagesの絶対パス> --name ExcelRendererLocal
+dotnet add package ExcelRenderer.Mapping
+```
+
+`<…>` は実際のディレクトリパスに置き換えます。ソースの登録済みの場合は
+登録コマンドを省略してください。ClosedXML などの依存関係のため NuGet.org も有効にします。
+CLI をソースから試す手順は [English README の Development](README.md#development) にあります。
+
+## ドキュメント
+
+- [マッピングの導入手順・構文・制約](docs/mapping.ja.md)（[English](docs/mapping.md)）
+- [アーキテクチャ](docs/architecture.ja.md)（[English](docs/architecture.md)）
+- [English README](README.md)
+- [AI coding agent guide](AGENTS.md)
 
 ## ライセンス
 
@@ -515,24 +612,3 @@ PDFの確定フォントは不変snapshotを使います。変換sessionが資�
 ソース参照専用の別プロジェクトは[ExcelRenderer Core](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/core.ja.md)を参照してください（NuGet未公開）。
 
 本体packageは同じbuildの `ExcelRenderer.Core.dll` を同梱します。Core単独ではソースProjectReferenceを利用してください。基本読取、幾何・ページlayout、command生成、PDF処理をCoreへ集約し、高機能部分は本体が拡張します。[2エンジン構成](docs/core-architecture.ja.md)と[検証結果](docs/core-refactor-validation.md)を参照してください。
-
-## Excelテンプレートへのマッピング
-
-`ExcelRenderer.Mapping` は、C#オブジェクトまたはJSONをExcelテンプレートへ
-マッピングする独立した .NET Standard 2.1 パッケージです。描画・フォントパッケージには
-依存しません。`**` で始まるセルのパス、1行の配列展開、専用マーカー行
-`**@start-array` / `**@end-array` による複数行・入れ子の展開、C#の書式指定、
-手動改ページに対応します。
-
-```sh
-excelrenderer xlsx template.xlsx --data data.json -o report.xlsx
-excelrenderer pdf template.xlsx --data data.json -o report.pdf
-excelrenderer render template.xlsx --data data.json --format png -o ./png-output
-```
-
-`xlsx` はマッピング済みExcelを保存します。既存の描画コマンドには任意の `--data` を追加しました。
-`**@page-break` は指定セルの上と左に改ページを入れ、該当シートを倍率指定へ切り替えます。
-日時文字列は `date("yyyy/MM/dd")` 指定時だけ変換し、書式適用後の値は文字列になります。
-空配列は対象行・ブロックを削除し、パス不存在は元セル位置付きのエラー、nullは空セルになります。
-
-API例・構文・Excel機能の対応範囲は[マッピングガイド](docs/mapping.md)を参照してください。

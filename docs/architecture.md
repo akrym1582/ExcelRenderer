@@ -6,6 +6,26 @@ This document describes ExcelRenderer's internal structure, layout passes, and e
 
 ## Processing flow
 
+### Optional template mapping before rendering
+
+`ExcelRenderer.Mapping` is an independent .NET Standard 2.1 NuGet package:
+
+```text
+XLSX template + C# object / JSON
+    -> ExcelTemplateMapper
+    -> mapped XLSX
+    -> ExcelReader -> existing rendering pipeline
+```
+
+It can stop at XLSX output without referencing the renderer or fonts. The CLI
+combines the packages: `xlsx --data` maps and saves; rendering commands with
+`--data` map to a temporary workbook before conversion. Mapping validates all
+worksheets before rendering applies sheet/range selection. Mapping does not add
+a layout pass or change the rendering models. See the
+[mapping guide](mapping.md) for installation, template syntax and limitations.
+
+### Rendering
+
 ```text
 Excel file
     │

@@ -36,6 +36,7 @@ This makes the rendering pipeline easier to test, understand, and extend with ne
 - Produces one PNG image per page with SkiaSharp
 - Produces one self-contained SVG per page with outlined text and embedded images
 - Exports AI-friendly Markdown with merged-cell HTML, layout-aware reading order, formulas, and external images
+- Populates XLSX templates from C# objects or JSON with the standalone mapping package
 
 ## Installation
 
@@ -43,7 +44,21 @@ This makes the rendering pipeline easier to test, understand, and extend with ne
 
 - .NET 10 SDK to build and test the repository
 - A target framework compatible with .NET Standard 2.1 to consume the library
-- Appropriate fonts installed or supplied through `PdfSharpFontResolver`
+- Appropriate fonts installed or supplied through `PdfSharpFontResolver` for rendering; mapping alone does not need fonts
+
+Choose the package for your task:
+
+| Package | Use it for | Requirements |
+| --- | --- | --- |
+| `ExcelRenderer` | Render existing XLSX files to PDF, PNG, SVG or Markdown from C# | .NET Standard 2.1-compatible application |
+| `ExcelRenderer.Mapping` | Populate XLSX templates from C# objects or JSON and save XLSX | .NET Standard 2.1-compatible application; no rendering or fonts required |
+| `ExcelRenderer.Fonts` | Add optional bundled Japanese and emoji fonts for rendering | Use alongside `ExcelRenderer` |
+| `ExcelRenderer.Tool` | Map and convert workbooks from the command line | .NET 10 SDK |
+
+The commands below use NuGet.org and require a published version containing the
+feature you need. To use a feature before its package is published, see
+[Development](#development). The .NET Standard 2.1 libraries support applications
+such as .NET 8 and .NET 10; .NET Framework is not supported.
 
 The optional `ExcelRenderer.Fonts` package contains Noto Sans JP Regular TTF for
 ordinary text, IPAmj Mincho for IVS rendering, and Noto Color Emoji. The `ExcelRenderer` library
@@ -57,8 +72,6 @@ IPAmj Mincho directly. See [third-party notices](THIRD-PARTY-NOTICES.md).
 Set `FontOptions.ReplaceIvsWithBaseCharacter` to `true` when the library should
 render an ideographic variation sequence as its base character without the
 variation selector instead of selecting its IVS glyph.
-
-The library, optional fonts, and command-line tool are separate NuGet packages. After the corresponding packages are published to NuGet.org, install them using the commands below. The tool installs its font dependency automatically.
 
 ### Library (NuGet)
 
@@ -75,6 +88,19 @@ to use the library API. The package includes Noto Sans JP Regular, IPAmj Mincho,
 and Noto Color Emoji under their respective licenses. See
 [third-party notices](THIRD-PARTY-NOTICES.md) for redistribution requirements.
 
+### Template mapping library (NuGet)
+
+To generate XLSX files without rendering, add only the mapping package:
+
+```bash
+dotnet add package ExcelRenderer.Mapping
+```
+
+Use `ExcelTemplateMapper` from the `ExcelRenderer.Mapping` namespace. To render
+the mapped workbook from C#, also add `ExcelRenderer` and, if needed,
+`ExcelRenderer.Fonts`. Start with the [mapping guide](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/mapping.md)
+([Japanese](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/mapping.ja.md)) for a complete template, JSON data and C# example.
+
 ### Command-line tool (dotnet tool)
 
 Install the .NET 10 SDK, then install the CLI from NuGet.org:
@@ -85,9 +111,9 @@ excelrenderer --help
 ```
 
 The package name is `ExcelRenderer.Tool`; the executable command is `excelrenderer`.
-The tool declares `ExcelRenderer` and `ExcelRenderer.Fonts` as dependencies, so
-you do not need to install either package separately to use the CLI. These
-commands assume NuGet.org is enabled in your NuGet sources.
+The tool includes the rendering, mapping and bundled font libraries. You do not
+need to install their NuGet packages separately to use the CLI. These commands
+assume NuGet.org is enabled in your NuGet sources.
 
 To update an existing global installation:
 
@@ -128,6 +154,49 @@ Example output:
 
 See [Command-line usage](#command-line-usage), [C# API (high-level)](#c-api-high-level), and [C# API (low-level)](#c-api-low-level) for details.
 
+## Excel template mapping
+
+`ExcelRenderer.Mapping` is a standalone .NET Standard 2.1 package for mapping C#
+objects or JSON into XLSX templates. It supports `**` cell paths, single-row arrays,
+nested `**@start-array` / `**@end-array` blocks, explicit CLR formatting and manual
+page breaks. It does not depend on rendering or font packages.
+
+For a first example, type `**Customer` into cell B2 in Excel and save the workbook
+as `template.xlsx`. Create `data.json` in the same directory:
+
+```json
+{ "Customer": "Alice" }
+```
+
+Run the CLI from that directory:
+
+```sh
+excelrenderer xlsx template.xlsx --data data.json -o report.xlsx
+excelrenderer pdf template.xlsx --data data.json -o report.pdf
+excelrenderer render template.xlsx --data data.json --format png -o ./png-output
+```
+
+`report.xlsx` contains `Alice` in B2. The `xlsx` command saves the mapped workbook;
+the other commands map it before rendering. To do the same from C#, add
+`ExcelRenderer.Mapping` and use:
+
+```csharp
+using ExcelRenderer.Mapping;
+
+ExcelTemplateMapper.Map("template.xlsx", "report.xlsx", new { Customer = "Alice" });
+```
+
+Property names are case-sensitive. Keep input and output paths different.
+See [the mapping guide](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/mapping.md) ([Japanese](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/mapping.ja.md)) for a
+complete invoice example, installation, array expansion, formatting and troubleshooting.
+
+For the complete directive list, see the
+[specification reference](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/mapping.md#specification-reference).
+`**@page-break` creates breaks above and left of its cell: A10 gives a row-only
+break, C1 a column-only break, and C10 both. The directive cell becomes blank.
+See [page breaks](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/mapping.md#page-breaks)
+for repeated blocks and the switch from fit-to-page to scale mode.
+
 ## Command-line usage
 
 ### Syntax and commands
@@ -149,15 +218,20 @@ excelrenderer md input.xlsx -o output.md
 
 | Command | Output | Command-specific options |
 | --- | --- | --- |
+| `xlsx` | One mapped XLSX file | `--data <data.json>` (required) |
 | `pdf` | One PDF file | `--sheet <name>` |
 | `image` | One paginated PNG per worksheet page | `--sheet <name>`, `--dpi <number>` (default: `144`) |
 | `svg` | One self-contained SVG per worksheet page | `--sheet <name>` |
 | `markdown` / `md` | One Markdown file and optional extracted images | `--sheet`, `--image-dir`, `--[no-]images`, `--[no-]cell-addresses`, `--[no-]formulas`, `--[no-]layout-detection`, `--[no-]region-detection` |
 | `render` | PDF file, or a PNG/SVG/Markdown output directory | `--format pdf\|png\|svg\|markdown` plus selection, layout, diagnostics, manifest, and font-policy options |
 
+All rendering commands also accept `--data <data.json>` to populate a template
+before conversion. Without it, they convert the existing workbook as before.
+See [Excel template mapping](#excel-template-mapping) for examples.
+
 ### Font options
 
-Every command accepts these font-source options:
+Every rendering command accepts these font-source options; `xlsx` does not need fonts:
 
 | Option | Meaning |
 | --- | --- |
@@ -516,6 +590,7 @@ To try the CLI from source before publishing, create and install a local package
 dotnet pack src/ExcelRenderer.Tool/ExcelRenderer.Tool.csproj -c Release -o artifacts/packages
 dotnet pack src/ExcelRenderer/ExcelRenderer.csproj -c Release -o artifacts/packages
 dotnet pack src/ExcelRenderer.Fonts/ExcelRenderer.Fonts.csproj -c Release -o artifacts/packages
+dotnet pack src/ExcelRenderer.Mapping/ExcelRenderer.Mapping.csproj -c Release -o artifacts/packages
 dotnet tool install --tool-path ./artifacts/tool-test --add-source ./artifacts/packages ExcelRenderer.Tool
 ./artifacts/tool-test/excelrenderer --help
 ```
@@ -526,11 +601,22 @@ Run the test suite from the repository root:
 dotnet test ExcelRenderer.slnx
 ```
 
-Production code is under `src/ExcelRenderer`, and tests are under `tests/ExcelRenderer.Tests`.
+Projects are under `src/`, and their corresponding test projects are under `tests/`.
+To try the mapping library from a local package, register the built package directory
+alongside NuGet.org, then add the package in your application project:
+
+```bash
+dotnet nuget add source <absolute-path-to-artifacts/packages> --name ExcelRendererLocal
+dotnet add package ExcelRenderer.Mapping
+```
+
+Replace the placeholder with the actual directory path. Skip source registration
+if it is already configured. Keep NuGet.org enabled for dependencies such as ClosedXML.
 
 ## Documentation
 
 - [Architecture](docs/architecture.md) ([Japanese](docs/architecture.ja.md))
+- [Excel template mapping: getting started and reference](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/mapping.md) ([Japanese](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/mapping.ja.md))
 - [Japanese README](README.ja.md)
 - [AI coding agent guide](AGENTS.md)
 
@@ -546,18 +632,3 @@ Resolved PDF fonts use immutable snapshots. A conversion owns its font resources
 For the separate source-only project (not published on NuGet), see [ExcelRenderer Core](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/core.md).
 
 The main package includes `ExcelRenderer.Core.dll` from the same build; Core is also available as a source ProjectReference. Basic reading, geometry/page layout, drawing and PDF operations are shared; advanced features remain in the main library. See [the two-engine architecture](docs/core-architecture.md) and [verification results](docs/core-refactor-validation.md).
-
-## Excel template mapping
-
-`ExcelRenderer.Mapping` is a standalone .NET Standard 2.1 package for mapping C#
-objects or JSON into XLSX templates. It supports `**` cell paths, single-row arrays,
-nested `**@start-array` / `**@end-array` blocks, explicit CLR formatting and manual
-page breaks. It does not depend on rendering or font packages.
-
-```sh
-excelrenderer xlsx template.xlsx --data data.json -o report.xlsx
-excelrenderer pdf template.xlsx --data data.json -o report.pdf
-excelrenderer render template.xlsx --data data.json --format png -o ./png-output
-```
-
-See [the mapping guide](docs/mapping.md) for API examples, syntax and limitations.

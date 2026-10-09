@@ -11,20 +11,14 @@ internal static class RectangleGeometry
     /// <returns>The positive visible intersection, or null.</returns>
     internal static ReportRect? Intersect(ReportRect a, ReportRect b)
     {
-        var x = Math.Max(a.X, b.X);
-        var y = Math.Max(a.Y, b.Y);
-        var width = Math.Min(a.X + a.Width, b.X + b.Width) - x;
-        var height = Math.Min(a.Y + a.Height, b.Y + b.Height) - y;
-        return width > 0 && height > 0 ? new(x, y, width, height) : null;
+        var intersection = Core.Layout.RectangleGeometry.Intersect(CoreIntegration.CoreModelAdapter.ToCore(a), CoreIntegration.CoreModelAdapter.ToCore(b));
+        return intersection is { } value ? CoreIntegration.CoreModelAdapter.ToPublic(value) : null;
     }
 
     /// <summary>Obtains a source rectangle from one-based cell boundaries.</summary>
     /// <param name="geometry">The original worksheet geometry.</param>
     /// <param name="range">The inclusive range.</param>
     /// <returns>The source rectangle, including zero-sized hidden rows and columns.</returns>
-    internal static ReportRect Bounds(SheetGeometry geometry, CellRange range) => new(
-        geometry.ColumnStart(range.First.Column),
-        geometry.RowStart(range.First.Row),
-        geometry.ColumnStart(range.Last.Column + 1) - geometry.ColumnStart(range.First.Column),
-        geometry.RowStart(range.Last.Row + 1) - geometry.RowStart(range.First.Row));
+    internal static ReportRect Bounds(SheetGeometry geometry, CellRange range) =>
+        CoreIntegration.CoreModelAdapter.ToPublic(Core.Layout.RectangleGeometry.Bounds(geometry.CoreGeometry, CoreIntegration.CoreModelAdapter.ToCore(range)));
 }

@@ -4,8 +4,7 @@ namespace ExcelRenderer.Rendering;
 internal sealed class DiagnosticCollector
 {
     private readonly DiagnosticOptions _options;
-    private readonly Dictionary<string, ConversionDiagnostic> _diagnostics = new(StringComparer.Ordinal);
-    private int _discarded;
+    private readonly Core.Rendering.DiagnosticStore<ConversionDiagnostic> store;
     private bool _failure;
 
     /// <summary>Initializes a new instance of the <see cref="DiagnosticCollector"/> class. 指定した診断方針を使用するコレクターを初期化します。</summary>
@@ -19,6 +18,8 @@ internal sealed class DiagnosticCollector
         {
             throw new ArgumentOutOfRangeException(nameof(options), "MaxDiagnostics must be positive.");
         }
+
+        store = new(options.MaxDiagnostics, (existing, diagnostic) => existing with { OccurrenceCount = existing.OccurrenceCount + diagnostic.OccurrenceCount });
     }
 
     /// <summary>Gets a value indicating whether a diagnostic should fail conversion. 診断方針により変換を失敗として扱うべき診断が存在するかどうかを取得します。</summary>
@@ -32,37 +33,22 @@ internal sealed class DiagnosticCollector
             (_options.StrictMode && diagnostic.Severity != DiagnosticSeverity.Info) ||
             _options.TreatAsErrors.Contains(diagnostic.Code, StringComparer.Ordinal);
         var key = string.Join("\u001f", diagnostic.Code, diagnostic.SheetName, diagnostic.CellRange, diagnostic.ObjectId, diagnostic.SourcePageNumber, diagnostic.UnicodeSequence);
-        if (_diagnostics.TryGetValue(key, out var existing))
-        {
-            _diagnostics[key] = existing with { OccurrenceCount = existing.OccurrenceCount + diagnostic.OccurrenceCount };
-            return;
-        }
-
-        if (_diagnostics.Count >= _options.MaxDiagnostics)
-        {
-            _discarded++;
-            return;
-        }
-
-        if (!_options.SuppressedCodes.Contains(diagnostic.Code, StringComparer.Ordinal))
-        {
-            _diagnostics.Add(key, diagnostic);
-        }
+        store.Add(key, diagnostic, _options.SuppressedCodes.Contains(diagnostic.Code, StringComparer.Ordinal));
     }
 
     /// <summary>保持した診断を一覧として取得します。</summary>
     /// <returns>重複を集約した診断の一覧を返します。上限超過時は末尾に切り捨て通知を含めます。</returns>
     public IReadOnlyList<ConversionDiagnostic> ToArray()
     {
-        var result = _diagnostics.Values.ToList();
-        if (_discarded > 0)
+        var result = store.Values.ToList();
+        if (store.Discarded > 0)
         {
             result.Add(new(
                 "DiagnosticsTruncated",
                 DiagnosticSeverity.Warning,
                 DiagnosticStage.Read,
-                $"Diagnostic collection reached its limit; {_discarded} additional diagnostics were discarded.",
-                OccurrenceCount: _discarded));
+                $"Diagnostic collection reached its limit; {store.Discarded} additional diagnostics were discarded.",
+                OccurrenceCount: store.Discarded));
         }
 
         return result;

@@ -37,6 +37,7 @@ internal sealed class ConversionFontResources : IDisposable
         foreach (var face in _faces.Values)
         {
             face.Dispose();
+            ConversionMetrics.Report("typefaceDisposed", 1);
         }
 
         if (_faces.Count > 0)

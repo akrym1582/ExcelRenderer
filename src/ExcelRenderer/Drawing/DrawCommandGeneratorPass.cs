@@ -37,43 +37,9 @@ public sealed class DrawCommandGeneratorPass
     /// <returns>The planned or generated result.</returns>
     internal IReadOnlyList<DrawCommand> GeneratePage(RenderPage page)
     {
-        var commands = new List<DrawCommand>();
-        commands.AddRange(page.Cells.Where(x => x.Cell.Style.Background is not null)
-            .Select(x => Wrap(new FillRectangleCommand(page.Number, x.Bounds, x.Cell.Style.Background!.Value), x.ClipBounds)));
-        commands.AddRange(page.Cells.Where(x => x.Cell.Style.Border is not null)
-            .Select(x => Wrap(new DrawBorderCommand(page.Number, x.Bounds, x.Cell.Style.Border!), x.ClipBounds)));
-        commands.AddRange(page.Cells.SelectMany(cell => (cell.MergedBorders ?? []).Select(border =>
-                Wrap(new DrawBorderCommand(page.Number, border.Bounds, border.Border), cell.ClipBounds))));
-        commands.AddRange(page.Cells.Where(x => !string.IsNullOrEmpty(x.Cell.Text))
-            .Select(x => Wrap(
-                new DrawTextCommand(
-                page.Number,
-                GetContentBounds(x),
-                x.Cell.Text!,
-                x.Cell.Style)
-            {
-                TextLayout = x.TextLayout,
-            },
-                x.ClipBounds)));
-        commands.AddRange((page.Images ?? []).Select(x => (Z: x.ZIndex,
-                Command: (DrawCommand)new DrawImageCommand(page.Number, x.Bounds, x.ImageBytes)
-                {
-                    Crop = x.Crop,
-                    Rotation = x.Rotation,
-                    FlipHorizontal = x.FlipHorizontal,
-                    FlipVertical = x.FlipVertical,
-                    ClipBounds = x.ClipBounds,
-                }))
-            .Concat((page.Shapes ?? []).Select(x => (Z: x.Shape.ZIndex,
-                Command: (DrawCommand)new DrawShapeCommand(page.Number, x.Bounds, x.Shape)
-                {
-                    ClipBounds = x.ClipBounds,
-                })))
-            .OrderBy(x => x.Z).Select(x => x.Command));
-        commands.AddRange((page.HeaderFooterTexts ?? [])
-            .Select(x => (DrawCommand)new DrawTextCommand(page.Number, x.Bounds, x.Text, x.Style)));
-
-        return commands;
+        var generator = new Core.Drawing.DrawCommandGeneratorPass();
+        return generator.GeneratePage(CoreIntegration.CorePageAdapter.ToCore(page), null, new CoreIntegration.FullDrawingExtension())
+            .Select(CoreIntegration.CoreCommandAdapter.CreatePublicProjection()).ToArray();
     }
 
     /// <summary>Rescans canvas cells by drawing layer without retaining all commands.</summary>
@@ -83,42 +49,22 @@ public sealed class DrawCommandGeneratorPass
     internal IEnumerable<DrawCommand> GenerateContinuous(ContinuousLayoutPlan plan, ExcelRenderer.Abstractions.ITextMeasurer measurer)
     {
         // Rescan cells by layer: later backgrounds must never cover earlier text.
+        var projection = CoreIntegration.CoreCommandAdapter.CreatePublicProjection();
         foreach (var layer in ContinuousLayerOrder)
         {
             foreach (var cell in plan.EnumerateLayerCells(measurer, layer))
             {
-                switch (layer)
+                var coreLayer = layer switch
                 {
-                    case DrawingLayer.Background:
-                        if (cell.Cell.Style.Background is { } background)
-                        {
-                            yield return Wrap(new FillRectangleCommand(1, cell.Bounds, background), cell.ClipBounds);
-                        }
-
-                        break;
-                    case DrawingLayer.CellBorder:
-                        if (cell.Cell.Style.Border is { } border)
-                        {
-                            yield return Wrap(new DrawBorderCommand(1, cell.Bounds, border), cell.ClipBounds);
-                        }
-
-                        break;
-                    case DrawingLayer.MergedBorder:
-                        foreach (var merged in cell.MergedBorders ?? [])
-                        {
-                            yield return Wrap(new DrawBorderCommand(1, merged.Bounds, merged.Border), cell.ClipBounds);
-                        }
-
-                        break;
-                    case DrawingLayer.Text:
-                        var text = new DrawTextCommand(1, GetContentBounds(cell), cell.Cell.Text!, cell.Cell.Style)
-                        {
-                            TextLayout = cell.TextLayout,
-                        };
-                        yield return Wrap(text, cell.ClipBounds);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(layer));
+                    DrawingLayer.Background => 0,
+                    DrawingLayer.CellBorder => 1,
+                    DrawingLayer.MergedBorder => 2,
+                    DrawingLayer.Text => 3,
+                    _ => throw new ArgumentOutOfRangeException(nameof(layer)),
+                };
+                foreach (var command in Core.Drawing.DrawCommandGeneratorPass.GenerateCellLayer(1, CoreIntegration.CorePageAdapter.ToCore(cell), coreLayer, false))
+                {
+                    yield return projection(command);
                 }
             }
         }
@@ -128,12 +74,4 @@ public sealed class DrawCommandGeneratorPass
             yield return command;
         }
     }
-
-    private static DrawCommand Wrap(DrawCommand command, ReportRect? clip) => clip is { } bounds
-        ? new DrawViewportCommand(command.PageNumber, [command], bounds, 0, 0) : command;
-
-    private static ReportRect GetContentBounds(RenderCell cell) =>
-        cell.ContentBounds.Width > 0 || cell.ContentBounds.Height > 0
-            ? cell.ContentBounds
-            : CellContentBounds.Calculate(cell.Bounds, cell.Cell.Style);
 }

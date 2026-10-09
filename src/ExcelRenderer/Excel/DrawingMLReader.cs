@@ -11,8 +11,6 @@ namespace ExcelRenderer.Excel;
 /// <summary>ClosedXML が公開していない DrawingML の機能を読み取ります。</summary>
 internal static class DrawingMLReader
 {
-    private const double EmusPerPoint = 914400d / 72d;
-
     /// <summary>Excel ファイル内の DrawingML を解析し、対応するオートシェイプをワークシート別に読み取ります。</summary>
     /// <param name="path">DrawingML を含む Excel ファイルのパスです。</param>
     /// <returns>ワークシート名をキーとし、描画順に並んだ対応図形を値とする読み取り専用辞書を返します。</returns>
@@ -132,8 +130,9 @@ internal static class DrawingMLReader
 
     /// <summary>Reads picture anchor, crop, transform, and drawing-order metadata.</summary>
     /// <param name="input">Workbook stream.</param>
+    /// <param name="basicMetadata">Previously read common anchors, when available.</param>
     /// <returns>Picture metadata keyed first by sheet and then by picture name.</returns>
-    internal static IReadOnlyDictionary<string, IReadOnlyDictionary<string, DrawingPictureMetadata>> ReadPictureMetadata(Stream input)
+    internal static IReadOnlyDictionary<string, IReadOnlyDictionary<string, DrawingPictureMetadata>> ReadPictureMetadata(Stream input, IReadOnlyDictionary<string, IReadOnlyDictionary<string, Core.Excel.DrawingPictureMetadata>>? basicMetadata = null)
     {
         using var document = SpreadsheetDocument.Open(input, false);
         var workbook = document.WorkbookPart;
@@ -167,13 +166,14 @@ internal static class DrawingMLReader
                             (source.Top?.Value ?? 0) / 100000d,
                             (source.Right?.Value ?? 0) / 100000d,
                             (source.Bottom?.Value ?? 0) / 100000d);
+                        var basic = basicMetadata?.GetValueOrDefault(sheet.Name?.Value ?? string.Empty)?.GetValueOrDefault(name);
                         pictures[name] = new(
-                            ReadAnchor(anchor),
+                            basic is null ? ReadAnchor(anchor) : CoreIntegration.CoreModelAdapter.ToPublic(basic.Anchor),
                             crop,
                             (transform?.Rotation?.Value ?? 0) / 60000d,
                             transform?.HorizontalFlip?.Value ?? false,
                             transform?.VerticalFlip?.Value ?? false,
-                            z);
+                            basic?.ZIndex ?? z);
                     }
 
                     z++;
@@ -256,57 +256,14 @@ internal static class DrawingMLReader
         };
     }
 
-    private static DrawingAnchor ReadAnchor(OpenXmlElement anchor)
-    {
-        var from = anchor.GetFirstChild<Xdr.FromMarker>();
-        var to = anchor.GetFirstChild<Xdr.ToMarker>();
-        var position = anchor.GetFirstChild<Xdr.Position>();
-        var extent = anchor.GetFirstChild<Xdr.Extent>();
-        var kind = anchor is Xdr.TwoCellAnchor ? DrawingAnchorKind.TwoCell
-            : anchor is Xdr.AbsoluteAnchor ? DrawingAnchorKind.Absolute : DrawingAnchorKind.OneCell;
-        return new(
-            kind,
-            ReadMarkerAddress(from),
-            ToPoints(from?.ColumnOffset?.Text is { } fromX ? long.Parse(fromX) : 0),
-            ToPoints(from?.RowOffset?.Text is { } fromY ? long.Parse(fromY) : 0),
-            ReadMarkerAddress(to),
-            ToPoints(to?.ColumnOffset?.Text is { } toX ? long.Parse(toX) : 0),
-            ToPoints(to?.RowOffset?.Text is { } toY ? long.Parse(toY) : 0),
-            ToPoints(position?.X?.Value ?? 0),
-            ToPoints(position?.Y?.Value ?? 0),
-            ToPoints(extent?.Cx?.Value ?? 0),
-            ToPoints(extent?.Cy?.Value ?? 0),
-            (anchor as Xdr.TwoCellAnchor)?.EditAs?.InnerText);
-    }
-
-    private static CellAddress? ReadMarkerAddress(OpenXmlCompositeElement? marker) => marker switch
-    {
-        Xdr.FromMarker from => new(
-            (int)(from.RowId?.Text is { } row ? uint.Parse(row) + 1 : 1),
-            (int)(from.ColumnId?.Text is { } column ? uint.Parse(column) + 1 : 1)),
-        Xdr.ToMarker to => new(
-            (int)(to.RowId?.Text is { } row ? uint.Parse(row) + 1 : 1),
-            (int)(to.ColumnId?.Text is { } column ? uint.Parse(column) + 1 : 1)),
-        _ => null,
-    };
+    private static DrawingAnchor ReadAnchor(OpenXmlElement anchor) =>
+        CoreIntegration.CoreModelAdapter.ToPublic(Core.Excel.DrawingMLReader.ReadAnchor(anchor));
 
     private static (CellAddress Cell, double X, double Y, double Width, double Height) GetBounds(OpenXmlElement anchor)
     {
-        var from = anchor.GetFirstChild<Xdr.FromMarker>();
-        var cell = from is null ? new CellAddress(1, 1) : new(
-            (int)(from.RowId?.Text is { } r ? uint.Parse(r) + 1 : 1),
-            (int)(from.ColumnId?.Text is { } c ? uint.Parse(c) + 1 : 1));
-        var x = ToPoints(from?.ColumnOffset?.Text is { } xo ? long.Parse(xo) : 0);
-        var y = ToPoints(from?.RowOffset?.Text is { } yo ? long.Parse(yo) : 0);
-        var extent = anchor.GetFirstChild<Xdr.Extent>();
-        var absolute = anchor.GetFirstChild<Xdr.Position>();
-        if (absolute is not null)
-        {
-            x = ToPoints(absolute.X?.Value ?? 0);
-            y = ToPoints(absolute.Y?.Value ?? 0);
-        }
-
-        return (cell, x, y, ToPoints(extent?.Cx?.Value ?? 0), ToPoints(extent?.Cy?.Value ?? 0));
+        var value = ReadAnchor(anchor);
+        var absolute = anchor.GetFirstChild<Xdr.Position>() is not null;
+        return (value.From ?? new CellAddress(1, 1), absolute ? value.PositionX : value.FromOffsetX, absolute ? value.PositionY : value.FromOffsetY, value.ExtentWidth, value.ExtentHeight);
     }
 
     private static ShapeText? ReadText(Xdr.TextBody? body, ThemeColorResolver theme)
@@ -354,7 +311,7 @@ internal static class DrawingMLReader
         return values is { Length: >= 2 } ? new(values[0] / 100000d, values[1] / 100000d) : null;
     }
 
-    private static double ToPoints(long emu) => emu / EmusPerPoint;
+    private static double ToPoints(long emu) => Core.Excel.DrawingMLReader.ToPoints(emu);
 
     private sealed class ThemeColorResolver
     {

@@ -449,7 +449,7 @@ OS・追加ディレクトリのフォント走査では metadata のみを保�
 明示 FontFiles・Registrations は即時に検証・snapshot し、任意 font pack のデータは
 必要時に読み込みます。OS フォントは初回選択前には完全な snapshot ではなく、
 読み込み前に消失・変更したファイルは明確な font load エラーになります。
-PDFsharp のプロセス寿命の resolved font bytes cache は維持します。
+PDFsharpの確定font bytesは所有元のfont/layoutの寿命に紐付け、グローバル登録は弱参照で保持します。
 
 PDFsharp の最終文書・リソースと、ClosedXML の全ブック読込は残ります。
 幾何索引と選択モデルもブックの大きさに依存するため、定メモリのストリーミングではありません。
@@ -510,6 +510,8 @@ ExcelRenderer は [MIT License](LICENSE) で提供されます。
 
 日本語フォントと Noto Color Emoji は任意の `ExcelRenderer.Fonts` パッケージに収録されます。ライブラリで使用する場合は `dotnet add package ExcelRenderer.Fonts` を追加してください。未導入の場合は登録済みまたはシステムのフォントを使います。CLI はフォントパッケージに依存します。Noto Sans JP と Noto Color Emoji には SIL Open Font License 1.1、IPAmj 明朝には IPA Font License Agreement v1.0 が適用されます。`FontOptions.ReplaceIvsWithBaseCharacter` を `true` にすると、IVS を異体字セレクターのない基底文字に置換して描画できます。詳細は[サードパーティ通知](THIRD-PARTY-NOTICES.md)を参照してください。
 
-PDF 出力に使用した確定フォントは、PDFsharp のグローバル resolver の寿命に合わせてスナップショットをプロセス寿命でキャッシュします。折返し計測時のフォントファイル読込みとハッシュの反復を避けるためであり、アプリケーションでは有限で安定したフォント face 群を使用してください。
+PDFの確定フォントは不変snapshotを使います。変換sessionが資源を所有し、公開layoutは必要なsnapshotを保持します。グローバルresolverの登録は弱参照とし、各変換後に期限切れ登録を整理します。
 
-ソース参照専用の別プロジェクトは[ExcelRenderer Slim](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/slim.ja.md)を参照してください（NuGet未公開）。
+ソース参照専用の別プロジェクトは[ExcelRenderer Core](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/core.ja.md)を参照してください（NuGet未公開）。
+
+本体packageは同じbuildの `ExcelRenderer.Core.dll` を同梱します。Core単独ではソースProjectReferenceを利用してください。基本読取、幾何・ページlayout、command生成、PDF処理をCoreへ集約し、高機能部分は本体が拡張します。[2エンジン構成](docs/core-architecture.ja.md)と[検証結果](docs/core-refactor-validation.md)を参照してください。

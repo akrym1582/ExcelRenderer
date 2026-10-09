@@ -23,33 +23,14 @@ internal static class PageBandBuilder
         double repeatedSize = 0,
         IReadOnlyCollection<int>? manualBreaks = null)
     {
-        var bands = new List<PageBand>();
-        for (var position = 0; position < indices.Count;)
-        {
-            var start = getStart(indices[position]);
-            var end = start;
-            var firstPosition = position;
-            var pageAvailableSize = availableSize - (start >= repeatedEnd - 1e-7 ? repeatedSize : 0);
-            while (position < indices.Count)
-            {
-                if (position > firstPosition && manualBreaks?.Contains(indices[position - 1]) == true)
-                {
-                    break;
-                }
-
-                var candidateEnd = getMergedEnd(indices[position], Math.Max(end, getEnd(indices[position])));
-                if (position > firstPosition && candidateEnd - start > pageAvailableSize + 1e-7)
-                {
-                    break;
-                }
-
-                end = candidateEnd;
-                position++;
-            }
-
-            bands.Add(new(start, position < indices.Count ? getStart(indices[position]) : double.PositiveInfinity));
-        }
-
-        return bands;
+        return Core.Layout.PageBandBuilder.Create(
+            indices,
+            getStart,
+            getEnd,
+            availableSize,
+            getMergedEnd,
+            repeatedEnd,
+            repeatedSize,
+            manualBreaks).Select(band => new PageBand(band.Start, band.End)).ToArray();
     }
 }

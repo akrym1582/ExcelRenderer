@@ -5,9 +5,7 @@ namespace ExcelRenderer.Layout;
 /// <summary>Contains the immutable coordinate transform and body clip for one output page.</summary>
 internal sealed class PagePlacement
 {
-    private readonly double _centerX;
-    private readonly double _centerY;
-    private readonly PageSettings _settings;
+    private readonly Core.Layout.PagePlacement inner;
 
     /// <summary>Initializes a new instance of the <see cref="PagePlacement"/> class.Provides the backend-specific pagination or text operation.</summary>
     /// <param name="settings">The settings value.</param>
@@ -28,23 +26,22 @@ internal sealed class PagePlacement
         double repeatedHeight,
         double scale)
     {
-        _settings = settings;
+        inner = new(
+            CoreIntegration.CoreModelAdapter.ToCore(settings),
+            new(horizontal.Start, horizontal.End),
+            new(vertical.Start, vertical.End),
+            horizontalEnd,
+            verticalEnd,
+            repeatedWidth,
+            repeatedHeight,
+            scale);
         Horizontal = horizontal;
         Vertical = vertical;
         RepeatedWidth = repeatedWidth;
         RepeatedHeight = repeatedHeight;
         Scale = scale;
-        var bodyWidth = settings.Width - settings.MarginLeft - settings.MarginRight;
-        var bodyHeight = settings.Height - settings.MarginTop - settings.MarginBottom;
-        var occupiedWidth = Math.Min(bodyWidth, ((horizontalEnd - horizontal.Start) + repeatedWidth) * scale);
-        var occupiedHeight = Math.Min(bodyHeight, ((verticalEnd - vertical.Start) + repeatedHeight) * scale);
-        _centerX = settings.HorizontalCentered ? Math.Max(0, (bodyWidth - occupiedWidth) / 2) : 0;
-        _centerY = settings.VerticalCentered ? Math.Max(0, (bodyHeight - occupiedHeight) / 2) : 0;
-        BodyClip = new(
-            settings.MarginLeft + _centerX + (repeatedWidth * scale),
-            settings.MarginTop + _centerY + (repeatedHeight * scale),
-            Math.Max(0, occupiedWidth - (repeatedWidth * scale)),
-            Math.Max(0, occupiedHeight - (repeatedHeight * scale)));
+        var clip = inner.BodyClip;
+        BodyClip = new(clip.X, clip.Y, clip.Width, clip.Height);
     }
 
     /// <summary>Gets provides the backend-specific pagination or text operation.</summary>
@@ -68,11 +65,11 @@ internal sealed class PagePlacement
     /// <summary>Provides the backend-specific pagination or text operation.</summary>
     /// <returns>The calculated value.</returns>
     /// <param name="bounds">The bounds value.</param>
-    internal ReportRect MapBodyObjectBounds(ReportRect bounds) => new(
-        ((bounds.X - Horizontal.Start + RepeatedWidth) * Scale) + _settings.MarginLeft + _centerX,
-        ((bounds.Y - Vertical.Start + RepeatedHeight) * Scale) + _settings.MarginTop + _centerY,
-        bounds.Width * Scale,
-        bounds.Height * Scale);
+    internal ReportRect MapBodyObjectBounds(ReportRect bounds)
+    {
+        var mapped = inner.MapBodyObjectBounds(new(bounds.X, bounds.Y, bounds.Width, bounds.Height));
+        return new(mapped.X, mapped.Y, mapped.Width, mapped.Height);
+    }
 
     /// <summary>Provides the backend-specific pagination or text operation.</summary>
     /// <returns>The calculated value.</returns>
@@ -81,8 +78,7 @@ internal sealed class PagePlacement
     /// <param name="isTitle">The isTitle value.</param>
     /// <param name="titleStart">The titleStart value.</param>
     internal double MapCellX(double x, bool repeatsTitles, bool isTitle, double titleStart) =>
-        (GetPosition(x, Horizontal.Start, repeatsTitles, isTitle, titleStart, RepeatedWidth) * Scale) +
-        _settings.MarginLeft + _centerX;
+        inner.MapCellX(x, repeatsTitles, isTitle, titleStart);
 
     /// <summary>Provides the backend-specific pagination or text operation.</summary>
     /// <returns>The calculated value.</returns>
@@ -91,22 +87,5 @@ internal sealed class PagePlacement
     /// <param name="isTitle">The isTitle value.</param>
     /// <param name="titleStart">The titleStart value.</param>
     internal double MapCellY(double y, bool repeatsTitles, bool isTitle, double titleStart) =>
-        (GetPosition(y, Vertical.Start, repeatsTitles, isTitle, titleStart, RepeatedHeight) * Scale) +
-        _settings.MarginTop + _centerY;
-
-    private static double GetPosition(
-        double position,
-        double bandStart,
-        bool repeatsTitles,
-        bool isTitle,
-        double titleStart,
-        double repeatedSize)
-    {
-        if (!repeatsTitles)
-        {
-            return position - bandStart;
-        }
-
-        return isTitle ? position - titleStart : position - bandStart + repeatedSize;
-    }
+        inner.MapCellY(y, repeatsTitles, isTitle, titleStart);
 }

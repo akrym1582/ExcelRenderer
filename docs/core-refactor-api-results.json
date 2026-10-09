@@ -1,0 +1,13 @@
+{
+  "checks": "public/protected types and members, flags/defaults, semantic nullable states and code-analysis/obsolete/params contracts",
+  "products": {
+    "main": {
+      "entries": 2174,
+      "difference_lines": 0
+    },
+    "core": {
+      "entries": 85,
+      "difference_lines": 0
+    }
+  }
+}

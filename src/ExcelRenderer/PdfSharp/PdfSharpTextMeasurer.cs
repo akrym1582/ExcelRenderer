@@ -52,6 +52,13 @@ public sealed class PdfSharpTextMeasurer : ITextMeasurer, ITextLayoutService
     /// <inheritdoc/>
     public TextLayoutResult Layout(string text, FontStyle font, double availableWidth, bool wrap)
     {
+        var callerOwnsFontSession = Rendering.RenderResourceSession.Current?.FontSession is not null;
+        using var fontSession = callerOwnsFontSession ? null : Core.Rendering.PdfSharpFontGate.Acquire();
+        if (!callerOwnsFontSession)
+        {
+            GlobalFontSettings.FontResolver ??= _fontManager is null ? new PdfSharpFontResolver() : new PdfSharpFontResolver(_fontManager);
+        }
+
         if (string.IsNullOrEmpty(text))
         {
             return new(new(0, 0), []) { EffectiveFontSize = font.Size };

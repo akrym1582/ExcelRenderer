@@ -541,6 +541,8 @@ ExcelRenderer is available under the [MIT License](LICENSE).
 The optional `ExcelRenderer.Fonts` package contains the Japanese fonts and their
 separate license texts; see [Third-party notices](THIRD-PARTY-NOTICES.md).
 
-Resolved fonts used by PDF output are snapshotted and cached for the process lifetime, matching PDFsharp's global resolver lifetime. This avoids repeated font-file reads and hashing during wrapped-text measurement; applications should therefore use a bounded, stable set of font faces.
+Resolved PDF fonts use immutable snapshots. A conversion owns its font resources; finalized public layouts retain the snapshots they need. Global resolver registrations use weak references and are cleaned after each conversion.
 
-For the separate source-only project (not published on NuGet), see [ExcelRenderer Slim](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/slim.md).
+For the separate source-only project (not published on NuGet), see [ExcelRenderer Core](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/core.md).
+
+The main package includes `ExcelRenderer.Core.dll` from the same build; Core is also available as a source ProjectReference. Basic reading, geometry/page layout, drawing and PDF operations are shared; advanced features remain in the main library. See [the two-engine architecture](docs/core-architecture.md) and [verification results](docs/core-refactor-validation.md).

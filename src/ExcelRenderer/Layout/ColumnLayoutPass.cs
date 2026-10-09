@@ -14,14 +14,11 @@ public sealed class ColumnLayoutPass : IReportLayoutPass
     /// <param name="context">入力シート、計測機能、および各工程の計算結果を保持するレイアウトコンテキストです。</param>
     public void Execute(ReportLayoutContext context)
     {
-        var x = 0d;
-        foreach (var column in context.VisibleColumns)
+        var core = CoreIntegration.CoreLayoutContextAdapter.CreateGeometry(context);
+        new Core.Layout.ColumnLayoutPass().Execute(core);
+        foreach (var column in core.ColumnLayouts)
         {
-            var width = context.Sheet.Columns.TryGetValue(column, out var definition)
-                ? definition.Width
-                : context.Sheet.DefaultColumnWidth;
-            context.ColumnLayouts[column] = new(column, context.Sheet.RequestedRange is null ? x : context.Geometry.ColumnStart(column), width);
-            x += width;
+            context.ColumnLayouts[column.Key] = new(column.Value.Column, column.Value.X, column.Value.Width);
         }
     }
 }

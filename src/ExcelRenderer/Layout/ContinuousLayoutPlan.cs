@@ -11,6 +11,7 @@ internal sealed class ContinuousLayoutPlan
     private readonly SheetGeometry geometry;
     private readonly Dictionary<int, ColumnLayout> columns;
     private readonly Dictionary<int, RowLayout> rows;
+    private readonly Core.Layout.ReportLayoutContext coreGeometry;
     private readonly ReportRect? clip;
     private readonly double shiftX;
     private readonly double shiftY;
@@ -31,6 +32,7 @@ internal sealed class ContinuousLayoutPlan
         geometry = context.Geometry;
         columns = context.ColumnLayouts;
         rows = context.RowLayouts;
+        coreGeometry = CoreIntegration.CoreLayoutContextAdapter.CreateGeometry(context);
         Images = ContinuousLayoutPass.BuildImages(context);
         Shapes = ContinuousLayoutPass.BuildShapes(context);
         if (sheet.RequestedRange is { } requested)
@@ -106,9 +108,12 @@ internal sealed class ContinuousLayoutPlan
 
     private IEnumerable<RenderCell> EnumerateCore(ITextMeasurer measurer, DrawingLayer? layer)
     {
-        var context = new ReportLayoutContext(sheet, measurer, geometry);
-        context.ColumnLayouts = columns;
-        context.RowLayouts = rows;
+        var context = new Core.Layout.ReportLayoutContext(coreGeometry.Sheet, CoreIntegration.CoreTextMeasurerAdapter.Create(measurer), coreGeometry.Geometry)
+        {
+            Policy = coreGeometry.Policy,
+            ColumnLayouts = coreGeometry.ColumnLayouts,
+            RowLayouts = coreGeometry.RowLayouts,
+        };
 
         foreach (var address in sheet.Cells.Keys)
         {
@@ -121,10 +126,12 @@ internal sealed class ContinuousLayoutPlan
                 continue;
             }
 
-            context.CandidateAddresses = [address];
+            var coreAddress = CoreIntegration.CoreModelAdapter.ToCore(address);
+            context.CandidateAddresses = [coreAddress];
             if (layer is DrawingLayer.Background or DrawingLayer.CellBorder)
             {
-                var (_, bounds) = CellBoundsPass.EnumerateBounds(context).FirstOrDefault();
+                var (_, coreBounds) = Core.Layout.CellBoundsPass.EnumerateBounds(context).FirstOrDefault();
+                var bounds = CoreIntegration.CoreModelAdapter.ToPublic(coreBounds);
                 if (bounds.Width > 0 && bounds.Height > 0 && (clip is null || RectangleGeometry.Intersect(bounds, clip.Value) is not null))
                 {
                     yield return new(source, Move(bounds))
@@ -142,22 +149,22 @@ internal sealed class ContinuousLayoutPlan
             context.TextSizes.Clear();
             if (layer is null or DrawingLayer.Text)
             {
-                new TextMeasurePass().Execute(context);
+                new Core.Layout.TextMeasurePass().Execute(context);
             }
 
-            new CellBoundsPass().Execute(context);
-            if (!context.CellLayouts.TryGetValue(address, out var cell) ||
-                (clip is { } selected && RectangleGeometry.Intersect(cell.Bounds, selected) is null))
+            new Core.Layout.CellBoundsPass().Execute(context);
+            if (!context.CellLayouts.TryGetValue(coreAddress, out var cell) ||
+                (clip is { } selected && RectangleGeometry.Intersect(CoreIntegration.CoreModelAdapter.ToPublic(cell.Bounds), selected) is null))
             {
                 continue;
             }
 
-            yield return new(sheet.Cells[address], Move(cell.Bounds))
+            yield return new(sheet.Cells[address], Move(CoreIntegration.CoreModelAdapter.ToPublic(cell.Bounds)))
             {
                 SourceAddress = address,
-                ContentBounds = Move(cell.ContentBounds),
-                TextLayout = context.TextLayouts.GetValueOrDefault(address),
-                MergedBorders = cell.MergedBorders?.Select(border => border with { Bounds = Move(border.Bounds) }).ToArray(),
+                ContentBounds = Move(CoreIntegration.CoreModelAdapter.ToPublic(cell.ContentBounds)),
+                TextLayout = context.TextLayouts.TryGetValue(coreAddress, out var text) ? CoreIntegration.CoreTextLayoutAdapter.ToPublic(text) : null,
+                MergedBorders = cell.MergedBorders?.Select(border => new RenderBorder(Move(CoreIntegration.CoreModelAdapter.ToPublic(border.Bounds)), CoreIntegration.CoreModelAdapter.ToPublic(border.Border))).ToArray(),
                 ClipBounds = clip is null ? null : Move(clip.Value),
             };
         }

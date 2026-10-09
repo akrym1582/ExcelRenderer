@@ -28,38 +28,14 @@ public sealed class ContinuousLayoutPass : IReportLayoutPass
     /// <returns>The planned or generated result.</returns>
     internal static IReadOnlyList<RenderImage> BuildImages(ReportLayoutContext context)
     {
-        return (context.Sheet.Images ?? [])
-            .Where(image => DrawingAnchorResolver.TryResolve(
-                context,
-                image.Anchor,
-                image.OffsetX,
-                image.OffsetY,
-                image.Width,
-                image.Height,
-                image.DrawingAnchor,
-                out _))
-            .Select(image =>
-            {
-                DrawingAnchorResolver.TryResolve(
-                    context,
-                    image.Anchor,
-                    image.OffsetX,
-                    image.OffsetY,
-                    image.Width,
-                    image.Height,
-                    image.DrawingAnchor,
-                    out var bounds);
-                return new RenderImage(
-                    bounds,
-                    image.ImageBytes,
-                    image.ZIndex)
-                {
-                    Crop = image.Crop,
-                    Rotation = image.Rotation,
-                    FlipHorizontal = image.FlipHorizontal,
-                    FlipVertical = image.FlipVertical,
-                };
-            }).ToArray();
+        context.ObjectLayouts ??= new SheetObjectLayoutIndex(context);
+        return context.ObjectLayouts.Images.Select(item => new RenderImage(item.Bounds, item.Image.ImageBytes, item.Image.ZIndex)
+        {
+            Crop = item.Image.Crop,
+            Rotation = item.Image.Rotation,
+            FlipHorizontal = item.Image.FlipHorizontal,
+            FlipVertical = item.Image.FlipVertical,
+        }).ToArray();
     }
 
     /// <summary>Resolves shapes in continuous canvas coordinates.</summary>
@@ -67,30 +43,7 @@ public sealed class ContinuousLayoutPass : IReportLayoutPass
     /// <returns>The planned or generated result.</returns>
     internal static IReadOnlyList<RenderShape> BuildShapes(ReportLayoutContext context)
     {
-        return (context.Sheet.Shapes ?? [])
-            .Where(shape => DrawingAnchorResolver.TryResolve(
-                context,
-                shape.Anchor,
-                shape.OffsetX,
-                shape.OffsetY,
-                shape.Width,
-                shape.Height,
-                shape.DrawingAnchor,
-                out _))
-            .Select(shape =>
-            {
-                DrawingAnchorResolver.TryResolve(
-                    context,
-                    shape.Anchor,
-                    shape.OffsetX,
-                    shape.OffsetY,
-                    shape.Width,
-                    shape.Height,
-                    shape.DrawingAnchor,
-                    out var bounds);
-                return new RenderShape(
-                    bounds,
-                    shape);
-            }).ToArray();
+        context.ObjectLayouts ??= new SheetObjectLayoutIndex(context);
+        return context.ObjectLayouts.Shapes.Select(item => new RenderShape(item.Bounds, item.Shape)).ToArray();
     }
 }

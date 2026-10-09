@@ -1,0 +1,43 @@
+using ExcelRenderer.Core.Abstractions;
+using ExcelRenderer.Core.Model;
+
+namespace ExcelRenderer.Core.Layout;
+
+/// <summary>
+/// 印刷範囲と印刷タイトルから、非表示設定を除いた描画対象の行および列を抽出します。
+/// </summary>
+internal sealed class HiddenRowColumnPass : IReportLayoutPass
+{
+    /// <summary>Gets a value indicating whether print titles are included in the visible range.</summary>
+    public bool IncludePrintTitles { get; init; } = true;
+
+    /// <summary>
+    /// 印刷範囲と印刷タイトルの行列から非表示項目を除外し、描画対象の行番号と列番号を確定します。
+    /// </summary>
+    /// <param name="context">入力シート、計測機能、および各工程の計算結果を保持するレイアウトコンテキストです。</param>
+    public void Execute(ReportLayoutContext context)
+    {
+        if (context.PrintArea is not { } area)
+        {
+            return;
+        }
+
+        var settings = context.Sheet.PageSettings;
+        var columns = Enumerable.Range(area.First.Column, area.Last.Column - area.First.Column + 1);
+        if (IncludePrintTitles && settings.TitleColumns is { } titleColumns)
+        {
+            columns = columns.Concat(Enumerable.Range(titleColumns.First, titleColumns.Last - titleColumns.First + 1));
+        }
+
+        context.VisibleColumns = columns.Distinct().OrderBy(column => column)
+            .Where(column => !context.Sheet.Columns.GetValueOrDefault(column, new()).IsHidden).ToArray();
+        var rows = Enumerable.Range(area.First.Row, area.Last.Row - area.First.Row + 1);
+        if (IncludePrintTitles && settings.TitleRows is { } titleRows)
+        {
+            rows = rows.Concat(Enumerable.Range(titleRows.First, titleRows.Last - titleRows.First + 1));
+        }
+
+        context.VisibleRows = rows.Distinct().OrderBy(row => row)
+            .Where(row => !context.Sheet.Rows.GetValueOrDefault(row, new()).IsHidden).ToArray();
+    }
+}

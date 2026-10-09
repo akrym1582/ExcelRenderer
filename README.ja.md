@@ -513,3 +513,25 @@ ExcelRenderer は [MIT License](LICENSE) で提供されます。
 PDF 出力に使用した確定フォントは、PDFsharp のグローバル resolver の寿命に合わせてスナップショットをプロセス寿命でキャッシュします。折返し計測時のフォントファイル読込みとハッシュの反復を避けるためであり、アプリケーションでは有限で安定したフォント face 群を使用してください。
 
 ソース参照専用の別プロジェクトは[ExcelRenderer Slim](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/slim.ja.md)を参照してください（NuGet未公開）。
+
+
+## Excelテンプレートへのマッピング
+
+`ExcelRenderer.Mapping` は、C#オブジェクトまたはJSONをExcelテンプレートへ
+マッピングする独立した .NET Standard 2.1 パッケージです。描画・フォントパッケージには
+依存しません。`**` で始まるセルのパス、1行の配列展開、専用マーカー行
+`**@start-array` / `**@end-array` による複数行・入れ子の展開、C#の書式指定、
+手動改ページに対応します。
+
+```sh
+excelrenderer xlsx template.xlsx --data data.json -o report.xlsx
+excelrenderer pdf template.xlsx --data data.json -o report.pdf
+excelrenderer render template.xlsx --data data.json --format png -o ./png-output
+```
+
+`xlsx` はマッピング済みExcelを保存します。既存の描画コマンドには任意の `--data` を追加しました。
+`**@page-break` は指定セルの上と左に改ページを入れ、該当シートを倍率指定へ切り替えます。
+日時文字列は `date("yyyy/MM/dd")` 指定時だけ変換し、書式適用後の値は文字列になります。
+空配列は対象行・ブロックを削除し、パス不存在は元セル位置付きのエラー、nullは空セルになります。
+
+API例・構文・Excel機能の対応範囲は[マッピングガイド](docs/mapping.md)を参照してください。

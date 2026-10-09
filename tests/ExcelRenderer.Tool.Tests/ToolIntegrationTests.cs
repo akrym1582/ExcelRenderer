@@ -7,7 +7,7 @@ namespace ExcelRenderer.Tool.Tests;
 /// <summary>
 /// コマンドラインツールの各変換コマンド、入力検証およびエラー表示を検証します。
 /// </summary>
-public sealed class ToolIntegrationTests : IDisposable
+public sealed partial class ToolIntegrationTests : IDisposable
 {
     /// <summary>コマンドテストごとに作成する、一意の一時出力ディレクトリです。</summary>
     private readonly string _directory = Path.Combine(Path.GetTempPath(), "ExcelRenderer.Tool.Tests", Guid.NewGuid().ToString("N"));

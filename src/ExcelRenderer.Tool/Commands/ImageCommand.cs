@@ -15,6 +15,7 @@ public static class ImageCommand
     public static Command Create()
     {
         var input = CommandSupport.InputArgument();
+        var data = MappingCommandSupport.DataOption();
         var output = CommandSupport.OutputOption("Directory for generated PNG files.");
         var sheet = new Option<string?>("--sheet") { Description = "Worksheet name to convert." };
         var dpi = new Option<int>("--dpi") { Description = "Output resolution in dots per inch.", DefaultValueFactory = _ => 144 };
@@ -27,13 +28,18 @@ public static class ImageCommand
             }
         });
         var command = new Command("image", "Convert Excel worksheets to paginated PNG images. Use 'render --format png --image-layout continuous' for continuous images.") { input, output, sheet, dpi };
+        command.Add(data);
         CommandSupport.AddFontOptions(command, fonts);
-        command.SetAction((parseResult, cancellationToken) => CommandSupport.RunAsync(() =>
-            ExcelConverter.ConvertToImagesAsync(
-                parseResult.GetValue(input)!,
+        command.SetAction((parseResult, cancellationToken) => CommandSupport.RunAsync(() => MappingCommandSupport.WithInputAsync(
+            parseResult.GetValue(input)!,
+            parseResult.GetValue(data),
+            parseResult.GetValue(output)!,
+            mappedInput => ExcelConverter.ConvertToImagesAsync(
+                mappedInput,
                 parseResult.GetValue(output)!,
                 new ImageExportOptions { SheetName = parseResult.GetValue(sheet), Dpi = parseResult.GetValue(dpi), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
-                cancellationToken)));
+                cancellationToken),
+            cancellationToken)));
         return command;
     }
 }

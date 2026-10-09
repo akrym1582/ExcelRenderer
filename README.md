@@ -544,3 +544,19 @@ separate license texts; see [Third-party notices](THIRD-PARTY-NOTICES.md).
 Resolved fonts used by PDF output are snapshotted and cached for the process lifetime, matching PDFsharp's global resolver lifetime. This avoids repeated font-file reads and hashing during wrapped-text measurement; applications should therefore use a bounded, stable set of font faces.
 
 For the separate source-only project (not published on NuGet), see [ExcelRenderer Slim](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/slim.md).
+
+
+## Excel template mapping
+
+`ExcelRenderer.Mapping` is a standalone .NET Standard 2.1 package for mapping C#
+objects or JSON into XLSX templates. It supports `**` cell paths, single-row arrays,
+nested `**@start-array` / `**@end-array` blocks, explicit CLR formatting and manual
+page breaks. It does not depend on rendering or font packages.
+
+```sh
+excelrenderer xlsx template.xlsx --data data.json -o report.xlsx
+excelrenderer pdf template.xlsx --data data.json -o report.pdf
+excelrenderer render template.xlsx --data data.json --format png -o ./png-output
+```
+
+See [the mapping guide](docs/mapping.md) for API examples, syntax and limitations.

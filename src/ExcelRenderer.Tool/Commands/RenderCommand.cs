@@ -15,6 +15,7 @@ public static class RenderCommand
     public static Command Create()
     {
         var input = CommandSupport.InputArgument();
+        var data = MappingCommandSupport.DataOption();
         var output = CommandSupport.OutputOption("Output file for PDF, or output directory for other formats.");
         var format = new Option<string>("--format") { Description = "Output format: pdf, png, svg, or markdown.", Required = true };
         format.Validators.Add(result =>
@@ -64,26 +65,32 @@ public static class RenderCommand
         {
             input, output, format, sheet, pages, imageLayout, ranges, maxRangeCells, trim, padding, hyperlinks, strict, warningsAsErrors, manifest,
         };
+        command.Add(data);
         CommandSupport.AddFontOptions(command, fonts);
         buffering.AddTo(command);
 
-        command.SetAction((result, cancellationToken) => CommandSupport.RunAsync(() => RenderAsync(
+        command.SetAction((result, cancellationToken) => CommandSupport.RunAsync(() => MappingCommandSupport.WithInputAsync(
             result.GetValue(input)!,
+            result.GetValue(data),
             result.GetValue(output)!,
-            result.GetValue(format)!,
-            result.GetValue(sheet),
-            result.GetValue(pages),
-            result.GetValue(imageLayout)!,
-            result.GetValue(ranges),
-            result.GetValue(maxRangeCells),
-            result.GetValue(trim),
-            result.GetValue(padding),
-            CommandSupport.GetHyperlinks(result.GetValue(hyperlinks)!),
-            result.GetValue(strict),
-            result.GetValue(warningsAsErrors),
-            result.GetValue(manifest),
-            CommandSupport.GetFontOptions(result, fonts),
-            buffering.Get(result),
+            mappedInput => RenderAsync(
+                mappedInput,
+                result.GetValue(output)!,
+                result.GetValue(format)!,
+                result.GetValue(sheet),
+                result.GetValue(pages),
+                result.GetValue(imageLayout)!,
+                result.GetValue(ranges),
+                result.GetValue(maxRangeCells),
+                result.GetValue(trim),
+                result.GetValue(padding),
+                CommandSupport.GetHyperlinks(result.GetValue(hyperlinks)!),
+                result.GetValue(strict),
+                result.GetValue(warningsAsErrors),
+                result.GetValue(manifest),
+                CommandSupport.GetFontOptions(result, fonts),
+                buffering.Get(result),
+                cancellationToken),
             cancellationToken)));
         return command;
     }

@@ -16,6 +16,7 @@ public static class MarkdownCommand
     public static Command Create()
     {
         var input = CommandSupport.InputArgument();
+        var data = MappingCommandSupport.DataOption();
         var output = CommandSupport.OutputOption("Path to the output Markdown file.");
         var sheet = new Option<string?>("--sheet") { Description = "Worksheet name to convert." };
         var images = Flag("--images", "Export embedded images.");
@@ -37,11 +38,15 @@ public static class MarkdownCommand
                 layout, noLayout, regions, noRegions, imageDir,
             };
         command.Add(hyperlinks);
+        command.Add(data);
         CommandSupport.AddFontOptions(command, fonts);
         command.Aliases.Add("md");
-        command.SetAction((result, cancellationToken) => CommandSupport.RunAsync(() =>
-            ExcelConverter.ConvertToMarkdownAsync(
-                result.GetValue(input)!,
+        command.SetAction((result, cancellationToken) => CommandSupport.RunAsync(() => MappingCommandSupport.WithInputAsync(
+            result.GetValue(input)!,
+            result.GetValue(data),
+            result.GetValue(output)!,
+            mappedInput => ExcelConverter.ConvertToMarkdownAsync(
+                mappedInput,
                 result.GetValue(output)!,
                 new MarkdownExportOptions
                 {
@@ -55,7 +60,8 @@ public static class MarkdownCommand
                     ImageDirectoryName = result.GetValue(imageDir)!,
                     FontOptions = CommandSupport.GetFontOptions(result, fonts),
                 },
-                cancellationToken)));
+                cancellationToken),
+            cancellationToken)));
         return command;
     }
 

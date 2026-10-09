@@ -43,6 +43,10 @@ These commands require NuGet.org as a package source and a published version
 containing mapping. Before publication, build a local package using the
 [source installation instructions](https://github.com/akrym1582/ExcelRenderer/blob/main/README.md#development).
 
+A runnable [invoice sample with two-row line items](../samples/mapping/invoice/README.md)
+includes the template, JSON data, generated XLSX/PNG/SVG, and integration tests for types,
+number formats, and JSONPath expressions.
+
 ## First workbook: an invoice
 
 ### 1. Create the template

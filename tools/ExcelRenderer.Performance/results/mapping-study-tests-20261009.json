@@ -1,0 +1,49 @@
+{
+  "suite": "32 existing mapping tests + 6 supplemental cases (final 38-case suite); isolated copies without repository StyleCop settings",
+  "productionCodeChanged": false,
+  "initial37CaseSuite": {
+    "baseline": {
+      "summary": "Failed!  - Failed:     3, Passed:    34, Skipped:     0, Total:    37, Duration: 1 s - ExcelRenderer.Mapping.Tests.dll (net10.0)",
+      "compilerWarnings": false,
+      "results": "37 = 32 existing mapping tests + 5 supplemental cases; baseline failures are 3 right-edge merge assertions"
+    },
+    "prototype": {
+      "summary": "Passed!  - Failed:     0, Passed:    37, Skipped:     0, Total:    37, Duration: 1 s - ExcelRenderer.Mapping.Tests.dll (net10.0)",
+      "compilerWarnings": false,
+      "results": "37 = 32 existing mapping tests + 5 supplemental cases; baseline failures are 3 right-edge merge assertions"
+    },
+    "sparse": {
+      "summary": "Passed!  - Failed:     0, Passed:    37, Skipped:     0, Total:    37, Duration: 1 s - ExcelRenderer.Mapping.Tests.dll (net10.0)",
+      "compilerWarnings": false,
+      "results": "37 = 32 existing mapping tests + 5 supplemental cases; baseline failures are 3 right-edge merge assertions"
+    }
+  },
+  "final38CaseSuite": {
+    "baseline": {
+      "summary": "Failed!  - Failed:     3, Passed:    35, Skipped:     0, Total:    38, Duration: 1 s - ExcelRenderer.Mapping.Tests.dll (net10.0)",
+      "compilerWarnings": false,
+      "supplementalTestSha256": "1f9495c13b487d31c1555b94fdb36ffdc86fa13998f806c822d80a1d7853cc3d"
+    },
+    "prototype": {
+      "summary": "Failed!  - Failed:     1, Passed:    37, Skipped:     0, Total:    38, Duration: 1 s - ExcelRenderer.Mapping.Tests.dll (net10.0)",
+      "compilerWarnings": false,
+      "supplementalTestSha256": "1f9495c13b487d31c1555b94fdb36ffdc86fa13998f806c822d80a1d7853cc3d"
+    },
+    "guarded": {
+      "summary": "Passed!  - Failed:     0, Passed:    38, Skipped:     0, Total:    38, Duration: 1 s - ExcelRenderer.Mapping.Tests.dll (net10.0)",
+      "compilerWarnings": false,
+      "supplementalTestSha256": "1f9495c13b487d31c1555b94fdb36ffdc86fa13998f806c822d80a1d7853cc3d"
+    },
+    "layout": {
+      "summary": "Passed!  - Failed:     0, Passed:    38, Skipped:     0, Total:    38, Duration: 1 s - ExcelRenderer.Mapping.Tests.dll (net10.0)",
+      "compilerWarnings": false,
+      "supplementalTestSha256": "1f9495c13b487d31c1555b94fdb36ffdc86fa13998f806c822d80a1d7853cc3d"
+    }
+  },
+  "failureInterpretation": {
+    "baseline": "3 right-edge merge failures",
+    "prototype": "1 relative formula regression inside repeated region; right-edge merges fixed",
+    "guarded": "All 38 passed by falling back for workbooks containing formulas/names; broader fallback than agreed production scope",
+    "layout": "All 38 passed; simple-workbook final placement only, existing fallback for formulas/names"
+  }
+}

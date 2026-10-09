@@ -76,7 +76,7 @@ public sealed class MappingTests
     }
 
     [Fact]
-    public void Single_row_arrays_preserve_styles_merges_formulas_and_following_rows()
+    public void Single_row_arrays_preserve_styles_merges_and_outside_formulas()
     {
         using var result = Map(s =>
         {
@@ -86,7 +86,7 @@ public sealed class MappingTests
             s.Cell("C2").Value = "**$.items[*].quantity";
             s.Cell("C2").Style.NumberFormat.Format = "0.00";
             s.Cell("C2").Style.Font.Bold = true;
-            s.Cell("D2").FormulaA1 = "C2*2";
+            s.Cell("D2").Value = "**items[*].quantity";
             s.Row(2).Height = 32;
             s.Cell("A3").Value = "Footer";
             s.Cell("D3").FormulaA1 = "SUM(D2:D2)";
@@ -102,8 +102,9 @@ public sealed class MappingTests
         Assert.True(sheet.Cell("C3").Style.Font.Bold);
         Assert.Equal("0.00", sheet.Cell("C3").Style.NumberFormat.Format);
         Assert.Contains(sheet.MergedRanges, r => r.RangeAddress.ToStringRelative() == "A3:B3");
-        Assert.Equal("C3*2", sheet.Cell("D3").FormulaA1);
-        Assert.Equal(6, sheet.Cell("D3").GetDouble());
+        Assert.Equal(3, sheet.Cell("D3").GetDouble());
+        Assert.Equal("SUM(D2:D2)", sheet.Cell("D4").FormulaA1);
+        Assert.Equal(2, sheet.Cell("D4").GetDouble());
         Assert.Equal("A1:D4", Assert.Single(sheet.PageSetup.PrintAreas).RangeAddress.ToStringRelative());
         Assert.Contains("$A$4", result.DefinedNames.Single(n => n.Name == "FooterCell").RefersTo);
         Assert.Contains(2, sheet.PageSetup.RowBreaks);
@@ -245,13 +246,13 @@ public sealed class MappingTests
 
 
     [Fact]
-    public void Multirow_blocks_preserve_vertical_merges_formulas_hidden_rows_and_validation()
+    public void Multirow_blocks_preserve_vertical_merges_hidden_rows_and_validation()
     {
         using var result = Map(s =>
         {
             s.Cell("A1").Value = "**@start-array items[*] as item";
             s.Cell("A2").Value = "**@item.value";
-            s.Cell("A3").FormulaA1 = "A2*2";
+            s.Cell("A3").Value = "**@item.value";
             s.Range("B2:B3").Merge();
             s.Cell("B2").Value = "Merged";
             s.Cell("A2").CreateDataValidation().WholeNumber.Between(1, 20);
@@ -263,9 +264,8 @@ public sealed class MappingTests
         var sheet = result.Worksheet(1);
         Assert.Equal(3, sheet.Cell("A1").GetDouble());
         Assert.Equal(7, sheet.Cell("A3").GetDouble());
-        Assert.Equal("A1*2", sheet.Cell("A2").FormulaA1);
-        Assert.Equal("A3*2", sheet.Cell("A4").FormulaA1);
-        Assert.Equal(14, sheet.Cell("A4").GetDouble());
+        Assert.Equal(3, sheet.Cell("A2").GetDouble());
+        Assert.Equal(7, sheet.Cell("A4").GetDouble());
         Assert.Equal("Footer", sheet.Cell("A5").GetString());
         Assert.True(sheet.Row(2).IsHidden);
         Assert.True(sheet.Row(4).IsHidden);

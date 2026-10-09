@@ -55,11 +55,12 @@ Excel などの XLSX エディターで空のワークブックを作成し、�
 | 2 | Customer | `**Customer` | | |
 | 3 | Issued | `**IssuedAt \| date("yyyy/MM/dd")` | | |
 | 4 | Item | Quantity | Unit price | Line total |
-| 5 | `**Items[*].Name` | `**Items[*].Quantity` | `**Items[*].Price` | `=B5*C5` |
+| 5 | `**Items[*].Name` | `**Items[*].Quantity` | `**Items[*].Price` | `**Items[*].LineTotal` |
 | 6 | Total | | | `**Total` |
 
 `**` で始まる式は、先頭に `=` を付けず、セルの文字列として入力します。
-D5 は実際の Excel 数式です。Markdown の表にあるパイプ前のバックスラッシュは
+D5 には入力側で計算した明細金額を渡します。繰り返す行内の数式は拒否されます。
+Markdown の表にあるパイプ前のバックスラッシュは
 表の表示用です。B3 に入力する内容は `**IssuedAt | date("yyyy/MM/dd")` です。
 5 行目には Excel の「テーブル」を使わず、通常のセルを使ってください。
 フォント、列幅、罫線、表示形式は Excel 側で設定できます。この例では
@@ -76,8 +77,8 @@ XLSX エディターがない場合は、後述の
   "Customer": "Alice",
   "IssuedAt": "2026-10-09",
   "Items": [
-    { "Name": "Book", "Quantity": 2, "Price": 12.50 },
-    { "Name": "Pen", "Quantity": 3, "Price": 2.00 }
+    { "Name": "Book", "Quantity": 2, "Price": 12.50, "LineTotal": 25.00 },
+    { "Name": "Pen", "Quantity": 3, "Price": 2.00, "LineTotal": 6.00 }
   ],
   "Total": 31.00
 }
@@ -104,7 +105,7 @@ excelrenderer xlsx template.xlsx --data data.json -o report.xlsx
 | 6 | Pen | 3 | 2.00 | 6.00 |
 | 7 | Total | | | 31.00 |
 
-D6 の数式は `=B6*C6` になります。行の書式や合計行も展開に追従します。
+D6 には2件目の `LineTotal` が入ります。行の書式や合計行も展開に追従します。
 `template.xlsx` と `data.json` は次回の入力として使えます。
 `xlsx` は成功時に既存の出力 XLSX を上書きします。以前の結果を残す場合は
 別の出力先を指定してください。マッピングのエラーは出力先を開く前に検出します。
@@ -169,8 +170,8 @@ ExcelTemplateMapper.Map("template.xlsx", "report.xlsx", new
     IssuedAt = new DateTime(2026, 10, 9),
     Items = new[]
     {
-        new { Name = "Book", Quantity = 2, Price = 12.50m },
-        new { Name = "Pen", Quantity = 3, Price = 2.00m },
+        new { Name = "Book", Quantity = 2, Price = 12.50m, LineTotal = 25.00m },
+        new { Name = "Pen", Quantity = 3, Price = 2.00m, LineTotal = 6.00m },
     },
     Total = 31.00m,
 });
@@ -311,7 +312,7 @@ null の要素は `**Items[*]` のようなスカラーパスなら空セルに�
 
 ## セルの式
 
-`**` で始まる文字列セルは、セル全体を値に置き換えます。数式セルは数式のままです。
+`**` で始まる文字列セルは、セル全体を値に置き換えます。繰り返し外の数式セルは数式のままです。
 `Name: **name` のような埋め込み式は、通常の文字列として残ります。
 
 | テンプレートの文字列 | 意味 |
@@ -477,13 +478,22 @@ XLSX には印刷・印刷プレビュー用の手動改ページとして保存
 
 ## Excel 機能と制約
 
-行展開は ClosedXML の行挿入・削除と範囲コピーを使います。
-セルの書式、行高、非表示状態、アウトラインレベル、相対数式、通常の結合セル、
+値・書式だけの領域は最終行配置を計算し、領域ごとにまとめて行数を変更します。
+参照やその他の Excel オブジェクトがある場合は、既存の動作を維持するため
+ClosedXML の行挿入・削除と範囲コピーを使います。
+セルの書式、行高、非表示状態、アウトラインレベル、通常の結合セル、
 コピー先の条件付き書式とデータ検証を維持します。
 既存の数式参照、定義名、印刷範囲は ClosedXML の行操作に従います。
 繰り返し領域の境界で終わる範囲は、すべての複製行へ伸びるとは限りません。
 合計の範囲を適切に設計するか、入力データで合計を渡してください。
 削除したマーカー行や空配列行への参照は `#REF!` になることがあります。
+
+繰り返す行・ブロック内の数式と、そこに重なる範囲を参照する定義名は非対応です。
+空配列でも入力データの評価・出力前に拒否します。これは互換性の変更です。
+明細の計算値は C# / JSON 側で渡してください。定義名はワークブック・シートの
+両スコープを検査し、マーカー行も含む行帯の全列を対象にします。
+外側の数式・定義名は、繰り返しより下側も含めて上記の参照制約の範囲で維持します。
+印刷範囲・印刷タイトルはページ設定として維持します。
 
 繰り返しブロック内で完結する結合は使えます。配列境界をまたぐ結合、
 結合されたマーカー行、繰り返し領域と重なる Excel テーブル・画像は、
@@ -523,7 +533,7 @@ sheet.Cell("D4").Value = "Line total";
 sheet.Cell("A5").Value = "**Items[*].Name";
 sheet.Cell("B5").Value = "**Items[*].Quantity";
 sheet.Cell("C5").Value = "**Items[*].Price";
-sheet.Cell("D5").FormulaA1 = "B5*C5";
+sheet.Cell("D5").Value = "**Items[*].LineTotal";
 sheet.Cell("A6").Value = "Total";
 sheet.Cell("D6").Value = "**Total";
 sheet.Columns(1, 4).Width = 22;

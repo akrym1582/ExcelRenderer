@@ -1,0 +1,152 @@
+{
+  "baseline": [
+    {
+      "count": 3,
+      "names": {
+        "Body": "Template!$A$2",
+        "Block": "Template!$A$1:$A$2"
+      },
+      "print": [
+        "A1:F5"
+      ],
+      "external": "SUM(Template!A2:A2)",
+      "formulas": {
+        "B2": {
+          "formula": "A5",
+          "value": "99"
+        },
+        "C2": {
+          "formula": "A1",
+          "value": "Header"
+        },
+        "D2": {
+          "formula": "$A$5",
+          "value": "99"
+        },
+        "E2": {
+          "formula": "SUM(A2:A2)",
+          "value": "1"
+        },
+        "F2": {
+          "formula": "Template!A5",
+          "value": "99"
+        },
+        "B3": {
+          "formula": "A8",
+          "value": "0"
+        },
+        "C3": {
+          "formula": "A2",
+          "value": "1"
+        },
+        "D3": {
+          "formula": "$A$5",
+          "value": "99"
+        },
+        "E3": {
+          "formula": "SUM(A3)",
+          "value": "2"
+        },
+        "F3": {
+          "formula": "Template!A8",
+          "value": "0"
+        },
+        "B4": {
+          "formula": "A11",
+          "value": "0"
+        },
+        "C4": {
+          "formula": "A3",
+          "value": "2"
+        },
+        "D4": {
+          "formula": "$A$5",
+          "value": "99"
+        },
+        "E4": {
+          "formula": "SUM(A4)",
+          "value": "3"
+        },
+        "F4": {
+          "formula": "Template!A11",
+          "value": "0"
+        }
+      }
+    }
+  ],
+  "prototype": [
+    {
+      "count": 3,
+      "names": {
+        "Body": "Template!$A$2",
+        "Block": "Template!$A$1:$A$2"
+      },
+      "print": [
+        "A1:F5"
+      ],
+      "external": "SUM(Template!A2:A2)",
+      "formulas": {
+        "B2": {
+          "formula": "A5",
+          "value": "99"
+        },
+        "C2": {
+          "formula": "A1",
+          "value": "Header"
+        },
+        "D2": {
+          "formula": "$A$5",
+          "value": "99"
+        },
+        "E2": {
+          "formula": "SUM(A2:A2)",
+          "value": "1"
+        },
+        "F2": {
+          "formula": "Template!A5",
+          "value": "99"
+        },
+        "B3": {
+          "formula": "A6",
+          "value": "77"
+        },
+        "C3": {
+          "formula": "A2",
+          "value": "1"
+        },
+        "D3": {
+          "formula": "$A$5",
+          "value": "99"
+        },
+        "E3": {
+          "formula": "SUM(A3)",
+          "value": "2"
+        },
+        "F3": {
+          "formula": "Template!A6",
+          "value": "77"
+        },
+        "B4": {
+          "formula": "A7",
+          "value": "0"
+        },
+        "C4": {
+          "formula": "A3",
+          "value": "2"
+        },
+        "D4": {
+          "formula": "$A$5",
+          "value": "99"
+        },
+        "E4": {
+          "formula": "SUM(A4)",
+          "value": "3"
+        },
+        "F4": {
+          "formula": "Template!A7",
+          "value": "0"
+        }
+      }
+    }
+  ]
+}

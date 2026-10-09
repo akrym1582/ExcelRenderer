@@ -31,11 +31,17 @@ jobs:
       - name: Verify fixed test font assets
         run: sha256sum -c tests/ExcelRenderer.Tests/Fonts/SHA256SUMS
 
+      - name: Verify Core dependency direction and migrated ownership
+        run: python3 scripts/check-core-dependencies.py
+
       - name: Restore dependencies
         run: dotnet restore ExcelRenderer.slnx --locked-mode
 
       - name: Check regression detection with temporary mutations
         run: python3 scripts/check-output-mutations.py
+
+      - name: Verify shared Core geometry regression detection
+        run: python3 scripts/check-core-shared-mutations.py
 
       - name: Rebuild solution
         run: dotnet build ExcelRenderer.slnx -t:Rebuild --configuration Release --no-restore
@@ -60,8 +66,8 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
-  slim:
-    name: Slim (${{ matrix.os }})
+  core:
+    name: Core (${{ matrix.os }})
     strategy:
       fail-fast: false
       matrix:
@@ -72,28 +78,28 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
-      - name: Restore Slim tests
-        run: dotnet restore tests/ExcelRenderer.Slim.Tests/ExcelRenderer.Slim.Tests.csproj --locked-mode
-      - name: Rebuild Slim tests
-        run: dotnet build tests/ExcelRenderer.Slim.Tests/ExcelRenderer.Slim.Tests.csproj -t:Rebuild -c Release --no-restore --verbosity:minimal
-      - name: Run Slim tests without OS font setup
-        run: dotnet test tests/ExcelRenderer.Slim.Tests/ExcelRenderer.Slim.Tests.csproj -c Release --no-build --logger "trx;LogFileName=slim.trx" --results-directory TestResults/Slim
-      - name: Verify Slim regression detection
+      - name: Restore Core tests
+        run: dotnet restore tests/ExcelRenderer.Core.Tests/ExcelRenderer.Core.Tests.csproj --locked-mode
+      - name: Rebuild Core tests
+        run: dotnet build tests/ExcelRenderer.Core.Tests/ExcelRenderer.Core.Tests.csproj -t:Rebuild -c Release --no-restore --verbosity:minimal
+      - name: Run Core tests without OS font setup
+        run: dotnet test tests/ExcelRenderer.Core.Tests/ExcelRenderer.Core.Tests.csproj -c Release --no-build --logger "trx;LogFileName=core.trx" --results-directory TestResults/Core
+      - name: Verify Core regression detection
         if: runner.os == 'Linux'
-        run: python3 scripts/check-slim-mutations.py
+        run: python3 scripts/check-core-mutations.py
       - name: Rasterize and compare on Linux
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y poppler-utils python3-pil
-          python3 scripts/validate-slim.py --visual-only
-      - name: Upload Slim results
+          python3 scripts/validate-core.py --visual-only
+      - name: Upload Core results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: slim-${{ matrix.os }}
+          name: core-${{ matrix.os }}
           path: |
-            TestResults/Slim/**
-            tests/ExcelRenderer.Slim.Tests/bin/Release/net10.0/SampleOutputs/**
+            TestResults/Core/**
+            tests/ExcelRenderer.Core.Tests/bin/Release/net10.0/SampleOutputs/**
           if-no-files-found: warn
           retention-days: 14

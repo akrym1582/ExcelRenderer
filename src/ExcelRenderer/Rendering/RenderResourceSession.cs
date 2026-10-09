@@ -10,6 +10,7 @@ internal sealed class RenderResourceSession : IDisposable
     private readonly RenderResourceSession? previous;
     private readonly ConversionFontResources fonts = new();
     private readonly ImageResources images = new();
+    private bool disposed;
     private int activePayloads;
     private int maximumPayloads;
 
@@ -26,12 +27,22 @@ internal sealed class RenderResourceSession : IDisposable
     /// <summary>Gets the clock snapshot shared by header/footer generation in both page passes.</summary>
     internal DateTime HeaderFooterTimestamp { get; } = DateTime.Now;
 
+    /// <summary>Gets or sets the borrowed font session owned by the converter.</summary>
+    internal Core.Rendering.PdfSharpFontGate.Lease? FontSession { get; set; }
+
     /// <summary>Gets or sets the conversion-local bounded text layout cache.</summary>
     internal PdfSharpTextMeasurer? TextMeasurer { get; set; }
 
     /// <inheritdoc/>
     public void Dispose()
     {
+        if (disposed)
+        {
+            return;
+        }
+
+        disposed = true;
+        TextMeasurer = null;
         try
         {
             images.Dispose();

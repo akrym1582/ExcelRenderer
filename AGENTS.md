@@ -6,14 +6,15 @@
 - The rendering flow is `ExcelReader` → `ReportDocument` (`Model`) → `ReportLayoutEngine` (`Layout`) → `DrawCommandGeneratorPass` (`Drawing`) → `PdfSharpRenderer` or `PngRenderer`. Markdown export consumes `ReportDocument` through a separate path.
 - Keep parsing, layout, drawing commands, and output rendering in their respective layers. Add layout behavior as an `IReportLayoutPass` and place it deliberately in `ReportLayoutEngine`.
 
-## Maintaining the main library and Slim together
+## Maintaining the main library and Core
 
-- `src/ExcelRenderer.Slim` is an independent PDF-only library containing selected, modified copies of the main library's sources. Changes do not propagate automatically between the two projects. Both implementations must be maintained.
-- Before changing reader, model, layout, drawing, PDF, or input/resource code in either project, consult [the source correspondence table](docs/slim-source-map.md) and inspect the corresponding code in the other project. Apply shared bug fixes and behavior changes to both implementations in the same change.
-- Check applicability against [Slim's supported scope](docs/slim.md). Preserve intentional differences: one supplied regular font, IVS reduced to base characters, PDF-only output, and no shapes, link annotations, API range/page selection, or image transforms/splitting. Do not copy excluded features back into Slim or remove supported features from the main library to make the copies identical.
-- When a change applies to only one implementation, explain why the other implementation is unaffected in the PR description. Do not silently leave a shared defect unfixed in one project.
-- For shared fixes, add or update meaningful regression coverage in both test projects and run the solution tests. Run main/Slim PDF comparisons in separate processes because their PDFsharp global-font locks are independent.
-- Keep the source correspondence table and the Japanese guide's embedded table current when files are added, moved, or removed. Preserve Slim's independence: no references to the main library, Fonts, or Tool, and no linked compilation of their sources.
+- `src/ExcelRenderer.Core` is the renamed PDF-only foundation. `ExcelRenderer` references Core; Core must never reference the main library, Fonts, or Tool. Keep Core nonpackable and ship its DLL/XML in the existing main package. Tool must include the same Core DLL.
+- Fix shared input, spool, image-resource, column-width, axis/band, placement, border, style interning/reading, common workbook/cell traversal, sheet/page layout, cell-layer drawing, diagnostic aggregation, and PDF drawing/saving algorithms in Core. Keep public main-library models and APIs in their existing assembly, using explicit adapters at the boundary.
+- Consult [the ownership and migration table](docs/core-source-map.md). Basic reader, geometry, page planning/building, cell-layer command generation and PDF operations belong to Core. FullLayoutPolicy/FullDrawingExtension/FullPdfRenderer supply product differences; do not restore algorithm copies in public facades.
+- Preserve [Core's supported scope](docs/core.md): one supplied regular font, variation selectors reduced to base characters, PDF only, no shapes, link annotations, range/page selection, or transformed/split images. Preserve the main library's complete feature set.
+- Run both regression suites for shared changes. The converters share Core's PDFsharp font gate in the same load context. Borrow the current conversion's font session in internal measurement/preflight paths; independent public measurement/rendering acquires its own session. Never acquire that gate twice in one path.
+- The gate does not synchronize unrelated PDFsharp users or independently loaded Core DLLs in other AssemblyLoadContexts. Do not retain conversion contexts in global resolver references after conversion.
+- Keep source ownership, English/Japanese migration guidance and validation reports accurate. Historical pre-migration validation is not evidence that this refactor has passed its acceptance criteria.
 
 ## Changes
 

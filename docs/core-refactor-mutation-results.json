@@ -1,0 +1,130 @@
+{
+  "shared_axis_mutation": {
+    "core_detected": true,
+    "main_detected": true,
+    "restored_tests_passed": true
+  },
+  "core_mutations": [
+    "baseline",
+    "underline",
+    "image-page",
+    "emu"
+  ],
+  "main_mutations": [
+    {
+      "mutation": "skia-drawing-face",
+      "test_filter": "Skia_legacy_uses_selected_face_for_measurement_and_drawing",
+      "detected": true,
+      "summary": "Failed!  - Failed:     8, Passed:     0, Skipped:     0, Total:     8, Duration: 120 ms - ExcelRenderer.Tests.dll (net10.0)"
+    },
+    {
+      "mutation": "pdf-run-x",
+      "test_filter": "Pdf_finalized_text_uses_stored_run_origins_and_font_size",
+      "detected": true,
+      "summary": "Failed!  - Failed:     3, Passed:     0, Skipped:     0, Total:     3, Duration: 262 ms - ExcelRenderer.Tests.dll (net10.0)"
+    },
+    {
+      "mutation": "pdf-baseline",
+      "test_filter": "Pdf_finalized_text_uses_stored_run_origins_and_font_size",
+      "detected": true,
+      "summary": "Failed!  - Failed:     3, Passed:     0, Skipped:     0, Total:     3, Duration: 166 ms - ExcelRenderer.Tests.dll (net10.0)"
+    },
+    {
+      "mutation": "pdf-double-underline",
+      "test_filter": "Pdf_finalized_underline_is_drawn_once_per_line_at_stored_baseline",
+      "detected": true,
+      "summary": "Failed!  - Failed:     4, Passed:     2, Skipped:     0, Total:     6, Duration: 290 ms - ExcelRenderer.Tests.dll (net10.0)"
+    },
+    {
+      "mutation": "svg-run-x",
+      "test_filter": "Svg_serialized_finalized_text_matches_png_geometry",
+      "detected": true,
+      "summary": "Failed!  - Failed:     3, Passed:     0, Skipped:     0, Total:     3, Duration: 311 ms - ExcelRenderer.Tests.dll (net10.0)"
+    },
+    {
+      "mutation": "reader-emu",
+      "test_filter": "Reader_preserves_drawingml_anchor_coordinates",
+      "detected": true,
+      "summary": "Failed!  - Failed:     1, Passed:     0, Skipped:     0, Total:     1, Duration: 808 ms - ExcelRenderer.Tests.dll (net10.0)"
+    },
+    {
+      "mutation": "reader-marker",
+      "test_filter": "Reader_preserves_drawingml_anchor_coordinates",
+      "detected": true,
+      "summary": "Failed!  - Failed:     1, Passed:     0, Skipped:     0, Total:     1, Duration: 890 ms - ExcelRenderer.Tests.dll (net10.0)"
+    },
+    {
+      "mutation": "skia-legacy-restore",
+      "test_filter": "Skia_legacy_restores_canvas_after_drawing_failure",
+      "detected": true,
+      "summary": "Failed!  - Failed:     4, Passed:     0, Skipped:     0, Total:     4, Duration: 82 ms - ExcelRenderer.Tests.dll (net10.0)"
+    },
+    {
+      "mutation": "skia-finalized-restore",
+      "test_filter": "Skia_finalized_restores_canvas_after_drawing_failure",
+      "detected": true,
+      "summary": "Failed!  - Failed:     4, Passed:     0, Skipped:     0, Total:     4, Duration: 67 ms - ExcelRenderer.Tests.dll (net10.0)"
+    },
+    {
+      "mutation": "skia-rotation-restore",
+      "test_filter": "Skia_legacy_restores_canvas_after_drawing_failure|Skia_finalized_restores_canvas_after_drawing_failure",
+      "detected": true,
+      "summary": "Failed!  - Failed:     4, Passed:     4, Skipped:     0, Total:     8, Duration: 123 ms - ExcelRenderer.Tests.dll (net10.0)"
+    },
+    {
+      "mutation": "pdf-finalized-restore",
+      "test_filter": "Pdf_finalized_restores_graphics_after_drawing_failure",
+      "detected": true,
+      "summary": "Failed!  - Failed:     2, Passed:     2, Skipped:     0, Total:     4, Duration: 159 ms - ExcelRenderer.Tests.dll (net10.0)"
+    },
+    {
+      "mutation": "pdf-legacy-resolved-restore",
+      "test_filter": "Pdf_legacy_restores_graphics_after_drawing_failure",
+      "detected": true,
+      "summary": "Failed!  - Failed:     2, Passed:     2, Skipped:     0, Total:     4, Duration: 192 ms - ExcelRenderer.Tests.dll (net10.0)"
+    },
+    {
+      "mutation": "pdf-legacy-ordinary-restore",
+      "test_filter": "Pdf_legacy_ordinary_text_preserves_caller_transform_and_clip",
+      "detected": true,
+      "summary": "Failed!  - Failed:     1, Passed:     1, Skipped:     0, Total:     2, Duration: 166 ms - ExcelRenderer.Tests.dll (net10.0)"
+    },
+    {
+      "mutation": "pdf-rotation-restore",
+      "test_filter": "Pdf_legacy_restores_graphics_after_drawing_failure|Pdf_finalized_restores_graphics_after_drawing_failure",
+      "detected": true,
+      "summary": "Failed!  - Failed:     4, Passed:     4, Skipped:     0, Total:     8, Duration: 213 ms - ExcelRenderer.Tests.dll (net10.0)"
+    },
+    {
+      "mutation": "trim-origin",
+      "test_filter": "Artificial_scene_trim_and_PDF_annotations_have_independent_numeric_expectations",
+      "detected": true,
+      "summary": "Failed!  - Failed:     1, Passed:     0, Skipped:     0, Total:     1, Duration: 56 ms - ExcelRenderer.Tests.dll (net10.0)"
+    },
+    {
+      "mutation": "pdf-link-y",
+      "test_filter": "Artificial_scene_trim_and_PDF_annotations_have_independent_numeric_expectations",
+      "detected": true,
+      "summary": "Failed!  - Failed:     1, Passed:     0, Skipped:     0, Total:     1, Duration: 86 ms - ExcelRenderer.Tests.dll (net10.0)"
+    },
+    {
+      "mutation": "pdf-destination-selection",
+      "test_filter": "Generated_PDF_destination_references_final_selected_document_page",
+      "detected": true,
+      "summary": "Failed!  - Failed:     1, Passed:     0, Skipped:     0, Total:     1, Duration: 1 s - ExcelRenderer.Tests.dll (net10.0)"
+    },
+    {
+      "mutation": "merged-source-outside-range",
+      "test_filter": "Generated_range_replaces_print_area_and_preserves_partial_merge_geometry",
+      "detected": true,
+      "summary": "Failed!  - Failed:     1, Passed:     0, Skipped:     0, Total:     1, Duration: 1 s - ExcelRenderer.Tests.dll (net10.0)"
+    },
+    {
+      "mutation": "markdown-href-escaping",
+      "test_filter": "Markdown_links_anchors_lists_and_HTML_attributes_are_safe_and_None_is_plain",
+      "detected": true,
+      "summary": "Failed!  - Failed:     1, Passed:     0, Skipped:     0, Total:     1, Duration: 1 s - ExcelRenderer.Tests.dll (net10.0)"
+    }
+  ],
+  "sources_restored": true
+}

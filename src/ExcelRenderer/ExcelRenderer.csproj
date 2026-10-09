@@ -6,6 +6,8 @@
     <Nullable>enable</Nullable>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
 
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeCoreBuildOutput</TargetsForTfmSpecificBuildOutput>
+
     <Version>1.7.2</Version>
     <PackageId>ExcelRenderer</PackageId>
     <Title>ExcelRenderer</Title>
@@ -25,10 +27,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../ExcelRenderer.Core/ExcelRenderer.Core.csproj" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.105.1" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="3.3.0" />
     <PackageReference Include="PDFsharp" Version="6.2.3" />
     <PackageReference Include="SkiaSharp" Version="4.151.0" />
     <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="4.151.0" />
   </ItemGroup>
+  <Target Name="IncludeCoreBuildOutput" DependsOnTargets="ResolveReferences">
+    <ItemGroup>
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths)" Condition="'%(ReferenceCopyLocalPaths.Filename)' == 'ExcelRenderer.Core' And '%(ReferenceCopyLocalPaths.Extension)' == '.dll'" />
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->'%(RootDir)%(Directory)ExcelRenderer.Core.xml')" Condition="'%(ReferenceCopyLocalPaths.Filename)' == 'ExcelRenderer.Core' And '%(ReferenceCopyLocalPaths.Extension)' == '.dll' And Exists('%(ReferenceCopyLocalPaths.RootDir)%(ReferenceCopyLocalPaths.Directory)ExcelRenderer.Core.xml')" />
+    </ItemGroup>
+  </Target>
 </Project>

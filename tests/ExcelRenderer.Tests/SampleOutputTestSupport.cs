@@ -45,7 +45,7 @@ internal static class SampleOutputTestSupport
         var excelPath = Path.Combine(InputDirectory, excelFileName);
         Assert.True(File.Exists(excelPath), $"入力 Excel ファイルが見つかりません: {excelPath}");
         var sheet = Assert.Single(new ExcelReader().Read(excelPath).Sheets);
-        var layout = new ReportLayoutEngine(new PdfSharpTextMeasurer()).Layout(sheet);
+        var layout = new ReportLayoutEngine(new PdfSharpTextMeasurer(new Fonts.FontManager(new Fonts.FontOptions { AllowSystemFonts = false }))).Layout(sheet);
         var commands = new DrawCommandGeneratorPass().Generate(layout);
         return new(sheet, layout, commands);
     }

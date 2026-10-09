@@ -139,13 +139,6 @@ public static partial class ExcelConverter
             cancellationToken).ConfigureAwait(false);
     }
 
-    private static IReadOnlyList<DrawCommand> CreateCommands(ReportSheet sheet)
-    {
-        GlobalFontSettings.FontResolver ??= new PdfSharpFontResolver();
-        var layout = new ReportLayoutEngine(new PdfSharpTextMeasurer()).Layout(sheet);
-        return new DrawCommandGeneratorPass().Generate(layout);
-    }
-
     private static RenderRequest CreateLegacyRequest(OutputFormat outputFormat, string? sheetName, double dpi = PngRenderer.DefaultDpi, FontOptions? fontOptions = null) =>
         new()
         {

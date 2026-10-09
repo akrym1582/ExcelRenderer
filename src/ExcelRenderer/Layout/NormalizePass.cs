@@ -14,7 +14,6 @@ public sealed class NormalizePass : IReportLayoutPass
     /// <param name="context">入力シート、計測機能、および各工程の計算結果を保持するレイアウトコンテキストです。</param>
     public void Execute(ReportLayoutContext context)
     {
-        // ExcelReader represents merged ranges on their top-left cell; this pass
-        // remains the explicit normalization boundary for additional input providers.
+        new Core.Layout.NormalizePass().Execute(CoreIntegration.CoreLayoutContextAdapter.CreateGeometry(context));
     }
 }

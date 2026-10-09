@@ -17,27 +17,9 @@ public sealed class HiddenRowColumnPass : IReportLayoutPass
     /// <param name="context">入力シート、計測機能、および各工程の計算結果を保持するレイアウトコンテキストです。</param>
     public void Execute(ReportLayoutContext context)
     {
-        if (context.PrintArea is not { } area)
-        {
-            return;
-        }
-
-        var settings = context.Sheet.PageSettings;
-        var columns = Enumerable.Range(area.First.Column, area.Last.Column - area.First.Column + 1);
-        if (IncludePrintTitles && settings.TitleColumns is { } titleColumns)
-        {
-            columns = columns.Concat(Enumerable.Range(titleColumns.First, titleColumns.Last - titleColumns.First + 1));
-        }
-
-        context.VisibleColumns = columns.Distinct().OrderBy(column => column)
-            .Where(column => !context.Sheet.Columns.GetValueOrDefault(column, new()).IsHidden).ToArray();
-        var rows = Enumerable.Range(area.First.Row, area.Last.Row - area.First.Row + 1);
-        if (IncludePrintTitles && settings.TitleRows is { } titleRows)
-        {
-            rows = rows.Concat(Enumerable.Range(titleRows.First, titleRows.Last - titleRows.First + 1));
-        }
-
-        context.VisibleRows = rows.Distinct().OrderBy(row => row)
-            .Where(row => !context.Sheet.Rows.GetValueOrDefault(row, new()).IsHidden).ToArray();
+        var core = CoreIntegration.CoreLayoutContextAdapter.CreateGeometry(context);
+        new Core.Layout.HiddenRowColumnPass { IncludePrintTitles = IncludePrintTitles }.Execute(core);
+        context.VisibleColumns = core.VisibleColumns;
+        context.VisibleRows = core.VisibleRows;
     }
 }

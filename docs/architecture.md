@@ -311,7 +311,7 @@ When adding a feature, prefer a new reader, layout pass, drawing command, render
 
 `TextLayoutTransform` is the single non-mutating operation for scaling finalized text geometry. It scales sizes, line metrics, run positions, and an explicitly supplied effective font size; an unspecified effective size remains unspecified. Shrink-to-fit first finalizes the source font size, while pagination deliberately preserves unspecified state.
 
-PDF resolved-face registrations are process-lifetime entries because PDFsharp owns a global resolver and can request font bytes after a page has been drawn. Registration snapshots caller-owned bytes, identifies the snapshot by its content digest as well as its face ID, and retains it for the process lifetime. Reusing a resolved face avoids repeated file reads and hashing; entries are not evicted or cleared after an individual output.
+PDF resolved-face registrations snapshot caller-owned bytes and identify the snapshot by content digest and face ID. Registration entries weakly reference immutable bytes; the original resolved font owns its snapshot. Public finalized layouts keep their fonts alive, while expired entries are removed after conversion. Reusing a live face avoids repeated reads and hashing. Main/Core operations share the font gate; see [the two-engine architecture](core-architecture.md).
 
 `FontManager` keeps byte identity separate from resolution identity. A face ID may be shared by aliases backed by identical bytes, but the resolved-result cache is keyed by the selected registration and requested style. This preserves the registered family and style diagnostics while still reusing repeated resolutions of the same registration.
 

@@ -11,13 +11,5 @@ internal static class TextLayoutFontSize
     /// <param name="style">The command font style used by the legacy fallback.</param>
     /// <returns>The size to pass to the drawing backend.</returns>
     internal static double Resolve(TextLayoutResult layout, FontStyle style)
-    {
-        var size = layout.HasExplicitEffectiveFontSize ? layout.EffectiveFontSize : style.Size;
-        if (!double.IsFinite(size) || size < 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(style), "Font size must be finite and non-negative.");
-        }
-
-        return size;
-    }
+        => Core.Drawing.TextLayoutFontSize.Resolve(layout.HasExplicitEffectiveFontSize, layout.EffectiveFontSize, style.Size);
 }

@@ -17,7 +17,7 @@ namespace ExcelRenderer.PdfSharp;
 public sealed class PdfSharpFontResolver : IFontResolver
 {
     private const string ResolvedFacePrefix = "excel-renderer-face:";
-    private static readonly ConcurrentDictionary<string, byte[]> ResolvedFontData = new();
+    private static readonly ConcurrentDictionary<string, WeakReference<byte[]>> ResolvedFontData = new();
     private static readonly ConditionalWeakTable<ResolvedFont, Lazy<RegisteredFont>> ResolvedFonts = new();
     private static int _resolvedFontHashCount;
     private static int _resolvedFontReadCount;
@@ -75,7 +75,7 @@ public sealed class PdfSharpFontResolver : IFontResolver
     {
         if (familyName.StartsWith(ResolvedFacePrefix, StringComparison.Ordinal))
         {
-            return ResolvedFontData.ContainsKey(familyName) ? new FontResolverInfo(familyName) : null;
+            return GetRegisteredData(familyName) is not null ? new FontResolverInfo(familyName) : null;
         }
 
         if (_legacyFace is not null)
@@ -99,7 +99,7 @@ public sealed class PdfSharpFontResolver : IFontResolver
     /// <param name="faceName"><see cref="ResolveTypeface"/> が返したフォントフェイス名です。</param>
     /// <returns>フォントファイルの全バイトを返します。フェイス名が未解決の場合は <see langword="null"/> を返します。</returns>
     public byte[]? GetFont(string faceName) =>
-        ResolvedFontData.GetValueOrDefault(faceName) ?? _fontData.GetValueOrDefault(faceName);
+        GetRegisteredData(faceName) ?? _fontData.GetValueOrDefault(faceName);
 
     /// <summary>Registers an already resolved physical face and returns its PDFsharp family key.</summary>
     /// <param name="font">The physical face selected during layout.</param>
@@ -117,6 +117,20 @@ public sealed class PdfSharpFontResolver : IFontResolver
                 () => RegisterCore(value),
                 LazyThreadSafetyMode.ExecutionAndPublication)).Value.Key;
     }
+
+    /// <summary>Removes weak registrations whose public font owners have expired.</summary>
+    internal static void RemoveExpiredRegistrations()
+    {
+        foreach (var pair in ResolvedFontData)
+        {
+            if (!pair.Value.TryGetTarget(out _))
+            {
+                ResolvedFontData.TryRemove(pair.Key, out _);
+            }
+        }
+    }
+
+    private static byte[]? GetRegisteredData(string key) => ResolvedFontData.TryGetValue(key, out var reference) && reference.TryGetTarget(out var bytes) ? bytes : null;
 
     private static RegisteredFont RegisterCore(ResolvedFont font)
     {
@@ -138,8 +152,8 @@ public sealed class PdfSharpFontResolver : IFontResolver
         using var sha256 = SHA256.Create();
         var digest = BitConverter.ToString(sha256.ComputeHash(snapshot)).Replace("-", string.Empty, StringComparison.Ordinal);
         var key = $"{ResolvedFacePrefix}{font.FaceId}:{digest}";
-        var registered = ResolvedFontData.GetOrAdd(key, snapshot);
-        return new(key, registered);
+        var reference = ResolvedFontData.AddOrUpdate(key, _ => new(snapshot), (registrationKey, existing) => existing.TryGetTarget(out _) ? existing : new(snapshot));
+        return new(key, reference.TryGetTarget(out var registered) ? registered : snapshot);
     }
 
     private sealed record RegisteredFont(string Key, byte[] Data);

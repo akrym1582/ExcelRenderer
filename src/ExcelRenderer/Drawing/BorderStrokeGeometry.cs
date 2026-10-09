@@ -22,81 +22,18 @@ internal static class BorderStrokeGeometry
         double y2,
         double inwardX = 0,
         double inwardY = 0)
-    {
-        if (side.LineStyle == BorderLineStyle.SlantDashDot)
+    => Core.Drawing.BorderStrokeGeometry.GetStrokes(
+        side.LineStyle switch
         {
-            return GetSlantedDashDots(side, x1, y1, x2, y2);
-        }
-
-        if (side.LineStyle != BorderLineStyle.Double)
-        {
-            return [(x1, y1, x2, y2)];
-        }
-
-        if (inwardX == 0 && inwardY == 0)
-        {
-            var length = Math.Sqrt(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2));
-            if (length == 0)
-            {
-                return [];
-            }
-
-            inwardX = -(y2 - y1) / length;
-            inwardY = (x2 - x1) / length;
-            var distance = Math.Max(side.Width, 0.25);
-            return [
-                (x1 - (inwardX * distance), y1 - (inwardY * distance), x2 - (inwardX * distance), y2 - (inwardY * distance)),
-                (x1 + (inwardX * distance), y1 + (inwardY * distance), x2 + (inwardX * distance), y2 + (inwardY * distance)),
-            ];
-        }
-
-        var width = Math.Max(side.Width, 0.25);
-        return [
-            (x1 + (inwardX * width * 0.5), y1 + (inwardY * width * 0.5), x2 + (inwardX * width * 0.5), y2 + (inwardY * width * 0.5)),
-            (x1 + (inwardX * width * 3.5), y1 + (inwardY * width * 3.5), x2 + (inwardX * width * 3.5), y2 + (inwardY * width * 3.5)),
-        ];
-    }
-
-    private static IReadOnlyList<(double X1, double Y1, double X2, double Y2)> GetSlantedDashDots(
-        BorderSide side,
-        double x1,
-        double y1,
-        double x2,
-        double y2)
-    {
-        var length = Math.Sqrt(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2));
-        if (length == 0)
-        {
-            return [];
-        }
-
-        var ux = (x2 - x1) / length;
-        var uy = (y2 - y1) / length;
-        var nx = -uy;
-        var ny = ux;
-        var unit = Math.Max(side.Width, 0.5);
-        var strokes = new List<(double X1, double Y1, double X2, double Y2)>();
-        for (var start = 0d; start < length; start += 9 * unit)
-        {
-            var dashEnd = Math.Min(start + (4 * unit), length);
-            strokes.Add((
-                x1 + (ux * start) - (nx * unit * 0.6),
-                y1 + (uy * start) - (ny * unit * 0.6),
-                x1 + (ux * dashEnd) + (nx * unit * 0.6),
-                y1 + (uy * dashEnd) + (ny * unit * 0.6)));
-
-            var dotStart = start + (6 * unit);
-            if (dotStart < length)
-            {
-                var dotEnd = Math.Min(dotStart + (0.5 * unit), length);
-                strokes.Add((
-                    x1 + (ux * dotStart),
-                    y1 + (uy * dotStart),
-                    x1 + (ux * dotEnd),
-                    y1 + (uy * dotEnd)));
-            }
-        }
-
-        return strokes;
-    }
+            BorderLineStyle.Double => Core.Model.BorderLineStyle.Double,
+            BorderLineStyle.SlantDashDot => Core.Model.BorderLineStyle.SlantDashDot,
+            _ => Core.Model.BorderLineStyle.Solid,
+        },
+        side.Width,
+        x1,
+        y1,
+        x2,
+        y2,
+        inwardX,
+        inwardY);
 }

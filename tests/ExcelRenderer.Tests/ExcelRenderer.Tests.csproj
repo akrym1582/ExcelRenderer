@@ -16,6 +16,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="../../src/ExcelRenderer.Core/ExcelRenderer.Core.csproj" />
     <ProjectReference Include="../../src/ExcelRenderer/ExcelRenderer.csproj" />
     <ProjectReference Include="../../src/ExcelRenderer.Fonts/ExcelRenderer.Fonts.csproj" />
   </ItemGroup>

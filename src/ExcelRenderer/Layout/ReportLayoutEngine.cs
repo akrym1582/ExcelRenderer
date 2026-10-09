@@ -8,7 +8,8 @@ namespace ExcelRenderer.Layout;
 /// </summary>
 public sealed class ReportLayoutEngine
 {
-    private readonly IReadOnlyList<IReportLayoutPass> geometryPasses;
+    private readonly Core.Layout.ReportLayoutEngine inner;
+    private readonly Core.Abstractions.ITextMeasurer coreMeasurer;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ReportLayoutEngine"/> class. 文字列の寸法計測に使用する実装を指定して、レイアウトエンジンを初期化します。
@@ -16,15 +17,9 @@ public sealed class ReportLayoutEngine
     /// <param name="textMeasurer">セル文字列の描画幅と高さを計測する実装です。</param>
     public ReportLayoutEngine(ITextMeasurer textMeasurer)
     {
-        geometryPasses =
-        [
-            new NormalizePass(),
-            new ResolvePrintAreaPass(),
-            new HiddenRowColumnPass(),
-            new ColumnLayoutPass(),
-            new RowLayoutPass(),
-            new ExplicitRangeGeometryPass(),
-        ];
+        var policy = new CoreIntegration.FullLayoutPolicy();
+        coreMeasurer = CoreIntegration.CoreTextMeasurerAdapter.Create(textMeasurer);
+        inner = new(coreMeasurer, policy, policy.GetGeometryPasses());
         TextMeasurer = textMeasurer;
     }
 
@@ -76,17 +71,6 @@ public sealed class ReportLayoutEngine
     /// <returns>The planned or generated result.</returns>
     internal IReadOnlyList<SheetLayoutPlan> Plan(ReportSheet sheet)
     {
-        var geometry = new SheetGeometry(sheet);
-        var areas = sheet.PrintAreas.Count > 1 ? sheet.PrintAreas.Select(area => sheet with { PrintArea = area, PrintAreas = [] }) : [sheet];
-        return areas.Select(area =>
-        {
-            var context = new ReportLayoutContext(area, TextMeasurer, geometry);
-            foreach (var pass in geometryPasses)
-            {
-                pass.Execute(context);
-            }
-
-            return new SheetLayoutPlan(context);
-        }).ToArray();
+        return inner.Plan(CoreIntegration.CoreModelAdapter.ToCore(sheet)).Select(plan => new SheetLayoutPlan(plan, sheet, TextMeasurer, coreMeasurer)).ToArray();
     }
 }

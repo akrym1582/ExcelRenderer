@@ -229,6 +229,16 @@
           "System.Formats.Asn1": "8.0.1",
           "System.Security.Cryptography.Cng": "5.0.0"
         }
+      },
+      "excelrenderer.core": {
+        "type": "Project",
+        "dependencies": {
+          "ClosedXML": "[0.105.1, )",
+          "DocumentFormat.OpenXml": "[3.3.0, )",
+          "PDFsharp": "[6.2.3, )",
+          "SkiaSharp": "[4.151.0, )",
+          "SkiaSharp.NativeAssets.Linux": "[4.151.0, )"
+        }
       }
     }
   }

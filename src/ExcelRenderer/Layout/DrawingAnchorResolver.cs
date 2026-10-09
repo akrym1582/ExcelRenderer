@@ -25,49 +25,8 @@ internal static class DrawingAnchorResolver
         DrawingAnchor? anchor,
         out ReportRect bounds)
     {
-        var rect = ObjectGeometry.GetSheetRect(
-            context.Geometry,
-            fallbackAnchor,
-            fallbackOffsetX,
-            fallbackOffsetY,
-            fallbackWidth,
-            fallbackHeight,
-            anchor);
-        if (context.VisibleColumns.Count == 0 || context.VisibleRows.Count == 0)
-        {
-            bounds = default;
-            return false;
-        }
-
-        bounds = new(
-            MapToLayout(rect.X, context.VisibleColumns, context.Geometry.ColumnStart, column => context.ColumnLayouts[column].X),
-            MapToLayout(rect.Y, context.VisibleRows, context.Geometry.RowStart, row => context.RowLayouts[row].Y),
-            rect.Width,
-            rect.Height);
-        return true;
-    }
-
-    /// <summary>
-    /// Converts a sheet-origin coordinate to layout coordinates by subtracting the true origin of the
-    /// nearest preceding visible column or row, so every anchor kind shares one origin.
-    /// </summary>
-    private static double MapToLayout(
-        double position,
-        IReadOnlyList<int> visible,
-        Func<int, double> sheetStart,
-        Func<int, double> layoutStart)
-    {
-        var reference = visible[0];
-        foreach (var index in visible)
-        {
-            if (sheetStart(index) > position)
-            {
-                break;
-            }
-
-            reference = index;
-        }
-
-        return layoutStart(reference) + (position - sheetStart(reference));
+        var result = Core.Layout.DrawingAnchorResolver.TryResolve(CoreIntegration.CoreLayoutContextAdapter.CreateGeometry(context), CoreIntegration.CoreModelAdapter.ToCore(fallbackAnchor), fallbackOffsetX, fallbackOffsetY, fallbackWidth, fallbackHeight, anchor is null ? null : CoreIntegration.CoreModelAdapter.ToCore(anchor), out var coreBounds);
+        bounds = CoreIntegration.CoreModelAdapter.ToPublic(coreBounds);
+        return result;
     }
 }

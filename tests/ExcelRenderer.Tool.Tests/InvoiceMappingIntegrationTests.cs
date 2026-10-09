@@ -59,8 +59,8 @@ public sealed partial class ToolIntegrationTests
                 Assert.Equal(XLDataType.Number, sheet.Cell(row, 4).DataType);
                 Assert.Equal((double)item["quantity"]!.GetValue<decimal>(), sheet.Cell(row, 4).GetDouble());
                 Assert.Equal((double)item["price"]!.GetValue<decimal>(), sheet.Cell(row, 5).GetDouble());
-                Assert.Equal($"D{row}*E{row}", sheet.Cell(row, 6).FormulaA1);
-                Assert.Equal((double)(item["quantity"]!.GetValue<decimal>() * item["price"]!.GetValue<decimal>()), sheet.Cell(row, 6).CachedValue.GetNumber());
+                Assert.False(sheet.Cell(row, 6).HasFormula);
+                Assert.Equal((double)(item["quantity"]!.GetValue<decimal>() * item["price"]!.GetValue<decimal>()), sheet.Cell(row, 6).GetDouble());
                 Assert.Equal("#,##0.00;[Red](#,##0.00);\"-\"", sheet.Cell(row, 4).Style.NumberFormat.Format);
                 Assert.Equal("\"¥\"#,##0.00;[Red]-\"¥\"#,##0.00;\"¥\"0.00", sheet.Cell(row, 6).Style.NumberFormat.Format);
                 Assert.Equal("0.0%", sheet.Cell(row + 1, 6).Style.NumberFormat.Format);

@@ -1,0 +1,42 @@
+[
+  {
+    "file": "samples/mapping/invoice/png/\u8acb\u6c42\u66f8-1.png",
+    "matchesPreviouslyReviewedSample": true,
+    "sha256": "48aa46334e0dfc540d8c507cbf93eae2ef4babd419fc33f0de55d8e84bc66322"
+  },
+  {
+    "file": "samples/mapping/invoice/svg/\u8acb\u6c42\u66f8-1.svg",
+    "matchesPreviouslyReviewedSample": true,
+    "sha256": "a44a0c7e0ee8fb71c9ba759712b0362c4b7e8d2dea8afe17810c2af57de84a1f"
+  },
+  {
+    "file": "samples/mapping/invoice/page-breaks/png/\u8acb\u6c42\u66f8-1.png",
+    "matchesPreviouslyReviewedSample": true,
+    "sha256": "cba23309d9373f1ed8f97a69f3da9f47ea43b939ff2d0ea1d596745d1b904da0"
+  },
+  {
+    "file": "samples/mapping/invoice/page-breaks/png/\u8acb\u6c42\u66f8-2.png",
+    "matchesPreviouslyReviewedSample": true,
+    "sha256": "a295b668fb0a805fd6e1645d8bd1a516bdcd9ed00bad72f9e7a651504f39963a"
+  },
+  {
+    "file": "samples/mapping/invoice/page-breaks/png/\u8acb\u6c42\u66f8-3.png",
+    "matchesPreviouslyReviewedSample": true,
+    "sha256": "a72bbdca5735c48dc515d6c54ef39110503d6a299b5bf15acd1178d9faf27f93"
+  },
+  {
+    "file": "samples/mapping/invoice/page-breaks/svg/\u8acb\u6c42\u66f8-1.svg",
+    "matchesPreviouslyReviewedSample": true,
+    "sha256": "93ff567902528498db9071ef0dfc5be8a581bbe0c42f4374794c8888033a7c10"
+  },
+  {
+    "file": "samples/mapping/invoice/page-breaks/svg/\u8acb\u6c42\u66f8-2.svg",
+    "matchesPreviouslyReviewedSample": true,
+    "sha256": "236f98f8ad50443d56e9745e7645802f9b397854683324763de315b7cc61f5e0"
+  },
+  {
+    "file": "samples/mapping/invoice/page-breaks/svg/\u8acb\u6c42\u66f8-3.svg",
+    "matchesPreviouslyReviewedSample": true,
+    "sha256": "f6b4b320cf43858e7b0770733c8b462758ec4261c768bc719742c750623c8db7"
+  }
+]

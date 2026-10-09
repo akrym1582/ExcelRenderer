@@ -29,13 +29,13 @@ XLSX の行改ページは 21 行目・38 行目の後です。空の内側配�
 含め、繰り返した全ページへ追従させています。
 
 [Integration tests](../../../../tests/ExcelRenderer.Tool.Tests/InvoicePageBreakIntegrationTests.cs)
-check 1 and 3 pages, mapped data on both detail rows, relative formulas and cached
-amounts, merges, footer positions, exact XLSX break positions, and PNG/SVG page counts.
+check 1 and 3 pages, mapped data on both detail rows, precomputed line totals and numeric
+types, merges, footer positions, exact XLSX break positions, and PNG/SVG page counts.
 Each output page must match the same page rendered in isolation byte for byte;
 this detects split details, misplaced totals, neighboring-page content, and extra pages.
 The existing four-quadrant break test also covers PNG and SVG.
 
-結合テストは 1 ページ・3 ページ、明細両行のデータ、相対数式とキャッシュ、結合セル、
+結合テストは 1 ページ・3 ページ、明細両行のデータ、計算済み明細金額と数値型、結合セル、
 合計欄、改ページ位置、PNG/SVG のページ数を検証します。各ページを単独で生成した結果とも
 バイト単位で比較し、明細の分断・合計の移動・隣ページの混入・余分なページを検出します。
 既存の上下左右 4 分割の改ページテストも PNG/SVG 両方を検証します。
@@ -67,7 +67,7 @@ dotnet src/ExcelRenderer.Tool/bin/Debug/net10.0/ExcelRenderer.Tool.dll svg \
 
 ## Validation / 検証結果（2026-10-09）
 
-- Rebuild: zero warnings and zero errors. All 569 solution tests passed.
+- Rebuild: zero warnings and zero errors. All 586 solution tests passed after the mapping performance changes.
 - All three saved PNG pages and all three SVG pages displayed in Chromium were
   inspected as images. Page 1 contains both complete two-row items; page 2 contains
   no items but retains its header and zero totals; page 3 contains the complete
@@ -81,3 +81,9 @@ dotnet src/ExcelRenderer.Tool/bin/Debug/net10.0/ExcelRenderer.Tool.dll svg \
 3 ページ目は値引きの明細両行・税率 0.0%・合計 -¥500.00 が揃っています。
 明細の分断、欠け、重なり、隣ページの混入、余分な先頭・末尾ページはありませんでした。
 全テスト成功後に、行位置が最もずれる 3 ページ目を再度画像で確認しています。
+
+Repeated cells do not support Excel formulas. Supply each `lineTotal` in the input;
+formulas and defined names outside repeated regions retain the documented reference behavior.
+
+繰り返すセルの Excel 数式は非対応です。各明細の `lineTotal` は入力側で計算して渡します。
+繰り返し外の数式・定義名にはガイド記載の参照制約が適用されます。

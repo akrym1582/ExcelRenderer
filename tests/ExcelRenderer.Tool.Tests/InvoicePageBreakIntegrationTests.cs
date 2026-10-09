@@ -48,8 +48,8 @@ public sealed partial class ToolIntegrationTests
                     Assert.Equal(item["name"]!.GetValue<string>(), sheet.Cell(row, 2).GetString());
                     Assert.Equal(item["note"]?.GetValue<string>() ?? string.Empty, sheet.Cell(row + 1, 2).GetString());
                     Assert.Equal((double)item["taxRate"]!.GetValue<decimal>(), sheet.Cell(row + 1, 6).GetDouble());
-                    Assert.Equal($"D{row}*E{row}", sheet.Cell(row, 6).FormulaA1);
-                    Assert.Equal((double)(item["quantity"]!.GetValue<decimal>() * item["price"]!.GetValue<decimal>()), sheet.Cell(row, 6).CachedValue.GetNumber());
+                    Assert.False(sheet.Cell(row, 6).HasFormula);
+                    Assert.Equal((double)(item["quantity"]!.GetValue<decimal>() * item["price"]!.GetValue<decimal>()), sheet.Cell(row, 6).GetDouble());
                     Assert.Contains(sheet.MergedRanges, range => range.RangeAddress.ToString() == $"B{row + 1}:D{row + 1}");
                 }
 

@@ -45,7 +45,7 @@ It is not required to run the .NET tests or render this sample.
 | Types / 型 | JSON string, number, boolean, null; CLR `DateTime`, `DateTimeOffset`, `TimeSpan`, `decimal` |
 | Excel formats / Excel 表示形式 | Currency / 通貨、小数、桁区切り、負数・赤字、ゼロ、`0.0%`, `0.00E+00`, `yyyy/mm/dd`, `[h]:mm:ss` |
 | Mapping formats / マッピング書式 | `format("0000")`, `format("N2", "de-DE")`, `format("C0", "ja-JP")`, `date("yyyy/MM/dd")`, `date("dd MMM yyyy", "en-US")` |
-| Structure / 構造 | Relative formulas and cached results, merged cells, borders, fills, row heights, footer position, print area / 相対数式とキャッシュ、結合セル、罫線、背景色、行高、合計行、印刷範囲 |
+| Structure / 構造 | Precomputed line totals and numeric types, merged cells, borders, fills, row heights, footer position, print area / 計算済み明細金額と数値型、結合セル、罫線、背景色、行高、合計行、印刷範囲 |
 
 JSON ISO date strings remain text unless `date()` is explicitly applied. CLR dates and
 elapsed time remain native Excel types; `[h]:mm:ss` displays times longer than 24 hours.
@@ -61,7 +61,7 @@ null の備考は空欄、文字列番号 `00123` は先頭のゼロを保持し
 
 The saved PNG and the SVG displayed in Chromium were both inspected as images.
 The three two-row details, blank second-item remarks, 10.0% / 8.0% / 0.0% tax rates,
-relative-formula amounts, total ¥35,610.40, Japanese text, and footer formats were
+precomputed line-item amounts, total ¥35,610.40, Japanese text, and footer formats were
 visible without clipping or overlapping. The direct mapping and staged XLSX renderings
 also match byte for byte in the tests at the same PNG resolution (96 DPI).
 The saved sample PNG uses 144 DPI.
@@ -96,3 +96,9 @@ an empty detail block, break positions after expansion, and no extra leading pag
 [改ページサンプル](page-breaks/README.md)には別テンプレート・JSON・生成済み XLSX と
 PNG/SVG 各 3 ページを保存しています。入れ子の 2 行明細、空の明細ブロック、
 展開後の改ページ位置、先頭に余分なページが出ないことを検証します。
+
+Repeated cells do not support Excel formulas. Supply each `lineTotal` in the input;
+formulas and defined names outside repeated regions retain the documented reference behavior.
+
+繰り返すセルの Excel 数式は非対応です。各明細の `lineTotal` は入力側で計算して渡します。
+繰り返し外の数式・定義名にはガイド記載の参照制約が適用されます。

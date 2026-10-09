@@ -436,7 +436,7 @@ The breaks divide the worksheet across the whole print area, not just around
 the cell or its array block.
 
 Unlike start/end markers, a page-break directive does not require a dedicated
-row: other cells on that row can contain data or formulas. The directive cell
+row: other cells on that row can contain data, or formulas outside repeated regions. The directive cell
 becomes blank, while its style and row remain. To print the literal marker, enter
 `\**@page-break`; that does not create breaks.
 

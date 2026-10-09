@@ -1,0 +1,12 @@
+{
+  "invoice": { "number": "INV-2026-0042", "issuedAt": "2026-10-09", "dueAt": "2026-11-30", "paid": false, "duration": "27:30" },
+  "customer": { "name": "株式会社サンプル 御中", "address.line": "東京都千代田区丸の内1-2-3", "contacts": [{ "name": "山田 太郎 様" }] },
+  "meta|info": { "currency": "JPY" },
+  "items": [
+    { "code": 7, "name": "設計・開発作業", "quantity": 2.5, "price": 12345.6, "taxRate": 0.1, "note": "要件整理と実装（2行で1明細）" },
+    { "code": 42, "name": "保守サービス", "quantity": 1, "price": 2000, "taxRate": 0.08, "note": null },
+    { "code": 105, "name": "値引き", "quantity": 1, "price": -500, "taxRate": 0, "note": "調整額：負数・ゼロ税率を確認" }
+  ],
+  "totals": { "subtotal": 32364, "tax": 3246.4, "total": 35610.4 },
+  "checks": { "zero": 0, "negative": -1234.5, "scientific": 1234567, "empty": null, "textCode": "00123" }
+}

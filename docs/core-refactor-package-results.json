@@ -1,0 +1,37 @@
+{
+  "packages": [
+    {
+      "package": "ExcelRenderer",
+      "core_files": [
+        "lib/netstandard2.1/ExcelRenderer.Core.dll",
+        "lib/netstandard2.1/ExcelRenderer.Core.xml"
+      ],
+      "dependencies": [
+        "ClosedXML",
+        "DocumentFormat.OpenXml",
+        "PDFsharp",
+        "SkiaSharp",
+        "SkiaSharp.NativeAssets.Linux"
+      ]
+    },
+    {
+      "package": "ExcelRenderer.Tool",
+      "core_files": [
+        "tools/net10.0/any/ExcelRenderer.Core.dll",
+        "tools/net10.0/any/ExcelRenderer.Core.xml"
+      ],
+      "dependencies": []
+    }
+  ],
+  "main_only_consumer_formats": [
+    "Pdf",
+    "Png",
+    "Svg",
+    "Markdown"
+  ],
+  "unchanged_old_consumer_sha256": "2b8cc610c6449584a92a009e546de3e4d91c7f4143782b357150d994a67d566f",
+  "old_binary_deployment": "new main/Core DLLs and updated consumer dependency manifest",
+  "isolated_tool_pdf": true,
+  "core_only_project_reference_pdf": true,
+  "core_consumer_fontconfig": "empty directories; supplied Noto Sans JP snapshot"
+}

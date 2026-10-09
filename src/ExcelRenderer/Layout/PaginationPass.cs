@@ -38,91 +38,7 @@ public sealed class PaginationPass : IReportLayoutPass
     /// <returns>The planned or generated result.</returns>
     internal static IReadOnlyList<PaginationPagePlan> Plan(ReportLayoutContext context)
     {
-        if (context.PrintArea is not { } ||
-            (context.Sheet.RequestedRange is null && context.Sheet.Hyperlinks.Count == 0 && !context.Sheet.Cells.Keys.Any(address => context.ColumnLayouts.ContainsKey(address.Column) && context.RowLayouts.ContainsKey(address.Row)) && (context.Sheet.Images?.Count ?? 0) == 0 && (context.Sheet.Shapes?.Count ?? 0) == 0))
-        {
-            return HeaderFooterLayout.Create(context.Sheet, 1, 1).Count == 0 ? [] : [new(null, null, [], [], [], [], 0, 0, 0, 0, 1)];
-        }
-
-        var settings = context.Sheet.PageSettings;
-        var area = context.PrintArea.Value;
-        var bodyColumns = context.VisibleColumns.Where(column => column >= area.First.Column && column <= area.Last.Column).ToArray();
-        var bodyRows = context.VisibleRows.Where(row => row >= area.First.Row && row <= area.Last.Row).ToArray();
-        var titleColumns = GetIndices(context.VisibleColumns, settings.TitleColumns);
-        var titleRows = GetIndices(context.VisibleRows, settings.TitleRows);
-        var titleWidth = GetSize(titleColumns, column => context.ColumnLayouts[column].Width);
-        var titleHeight = GetSize(titleRows, row => context.RowLayouts[row].Height);
-        var titleColumnEnd = titleColumns.Count == 0 ? double.NegativeInfinity
-            : context.ColumnLayouts[titleColumns[titleColumns.Count - 1]].X + context.ColumnLayouts[titleColumns[titleColumns.Count - 1]].Width;
-        var titleRowEnd = titleRows.Count == 0 ? double.NegativeInfinity
-            : context.RowLayouts[titleRows[titleRows.Count - 1]].Y + context.RowLayouts[titleRows[titleRows.Count - 1]].Height;
-        var columnEnds = new Dictionary<int, double>();
-        var rowEnds = new Dictionary<int, double>();
-        if (context.Sheet.RequestedRange is null)
-        {
-            foreach (var (address, cell) in context.Sheet.Cells)
-            {
-                if (context.ColumnLayouts.TryGetValue(address.Column + cell.ColumnSpan - 1, out var lastColumn))
-                {
-                    columnEnds[address.Column] = Math.Max(columnEnds.GetValueOrDefault(address.Column, double.NegativeInfinity), lastColumn.X + lastColumn.Width);
-                }
-
-                if (context.RowLayouts.TryGetValue(address.Row + cell.RowSpan - 1, out var lastRow))
-                {
-                    rowEnds[address.Row] = Math.Max(rowEnds.GetValueOrDefault(address.Row, double.NegativeInfinity), lastRow.Y + lastRow.Height);
-                }
-            }
-        }
-
-        double GetColumnEnd(int column, double end) => Math.Max(end, columnEnds.GetValueOrDefault(column, end));
-        double GetRowEnd(int row, double end) => Math.Max(end, rowEnds.GetValueOrDefault(row, end));
-        if (bodyColumns.Length == 0 || bodyRows.Length == 0)
-        {
-            return [new(null, null, [], [], [], [], 0, 0, 0, 0, 1)];
-        }
-
-        var scale = PrintScaleResolver.Resolve(
-            settings,
-            bodyColumns,
-            bodyRows,
-            column => context.ColumnLayouts[column].X,
-            column => context.ColumnLayouts[column].X + context.ColumnLayouts[column].Width,
-            GetColumnEnd,
-            row => context.RowLayouts[row].Y,
-            row => context.RowLayouts[row].Y + context.RowLayouts[row].Height,
-            GetRowEnd,
-            titleColumnEnd,
-            titleWidth,
-            titleRowEnd,
-            titleHeight);
-        var horizontalBands = PageBandBuilder.Create(
-            bodyColumns,
-            column => context.ColumnLayouts[column].X,
-            column => context.ColumnLayouts[column].X + context.ColumnLayouts[column].Width,
-            (settings.Width - settings.MarginLeft - settings.MarginRight) / scale,
-            GetColumnEnd,
-            titleColumnEnd,
-            titleWidth,
-            PrintScaleResolver.UsesFitMode(settings) ? null : settings.ManualColumnBreaks);
-        var verticalBands = PageBandBuilder.Create(
-            bodyRows,
-            row => context.RowLayouts[row].Y,
-            row => context.RowLayouts[row].Y + context.RowLayouts[row].Height,
-            (settings.Height - settings.MarginTop - settings.MarginBottom) / scale,
-            GetRowEnd,
-            titleRowEnd,
-            titleHeight,
-            PrintScaleResolver.UsesFitMode(settings) ? null : settings.ManualRowBreaks);
-
-        var bandPairs = settings.PageOrder == PrintPageOrder.DownThenOver
-            ? horizontalBands.SelectMany((horizontal, horizontalIndex) => verticalBands.Select(
-                (vertical, verticalIndex) => (Horizontal: horizontal, HorizontalIndex: horizontalIndex,
-                    Vertical: vertical, VerticalIndex: verticalIndex)))
-            : verticalBands.SelectMany((vertical, verticalIndex) => horizontalBands.Select(
-                (horizontal, horizontalIndex) => (Horizontal: horizontal, HorizontalIndex: horizontalIndex,
-                    Vertical: vertical, VerticalIndex: verticalIndex)));
-        return bandPairs.Select(pair => new PaginationPagePlan(
-            pair.Horizontal, pair.Vertical, bodyColumns, bodyRows, titleColumns, titleRows, titleColumnEnd, titleRowEnd, titleWidth, titleHeight, scale)).ToArray();
+        return Core.Layout.PaginationPass.Plan(CoreIntegration.CoreLayoutContextAdapter.CreateGeometry(context)).Select(CoreIntegration.CorePageAdapter.ToPublic).ToArray();
     }
 
     /// <summary>ページ番号を解決したヘッダーおよびフッターの配置を作成します。</summary>
@@ -136,9 +52,4 @@ public sealed class PaginationPass : IReportLayoutPass
         int pageNumber,
         int pageCount,
         DateTime? timestamp = null) => HeaderFooterLayout.Create(sheet, pageNumber, pageCount, timestamp);
-
-    private static IReadOnlyList<int> GetIndices(IReadOnlyList<int> visibleIndices, IndexRange? range) =>
-        range is not { } value ? [] : visibleIndices.Where(index => index >= value.First && index <= value.Last).ToArray();
-
-    private static double GetSize(IReadOnlyList<int> indices, Func<int, double> getSize) => indices.Sum(getSize);
 }

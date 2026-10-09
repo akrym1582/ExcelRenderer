@@ -20,10 +20,10 @@ public static partial class ExcelConverter
         }
 
         var settings = sheet.PageSettings;
-        bool Keep(CellAddress address, ReportCell cell)
+        bool Keep(CellAddress address, int rowSpan, int columnSpan)
         {
-            var lastRow = address.Row + cell.RowSpan - 1;
-            var lastColumn = address.Column + cell.ColumnSpan - 1;
+            var lastRow = address.Row + rowSpan - 1;
+            var lastColumn = address.Column + columnSpan - 1;
             var titleRow = request.ImageLayout != ImageLayoutMode.Continuous && settings.TitleRows is { } rows && address.Row >= rows.First && address.Row <= rows.Last;
             var titleColumn = request.ImageLayout != ImageLayoutMode.Continuous && settings.TitleColumns is { } columns && address.Column >= columns.First && address.Column <= columns.Last;
             return ranges.Any(range =>
@@ -41,7 +41,9 @@ public static partial class ExcelConverter
                 ObjectGeometry.GetSheetRect(geometry, image.Anchor, image.OffsetX, image.OffsetY, image.Width, image.Height, image.DrawingAnchor), image.Rotation))).ToArray(),
             Shapes = (sheet.Shapes ?? []).Where(shape => Intersects(ObjectGeometry.GetShapeVisualBounds(
                 ObjectGeometry.GetSheetRect(geometry, shape.Anchor, shape.OffsetX, shape.OffsetY, shape.Width, shape.Height, shape.DrawingAnchor), shape))).ToArray(),
-            Cells = sheet.Cells.Where(pair => Keep(pair.Key, pair.Value)).ToDictionary(pair => pair.Key, pair => pair.Value),
+            Cells = sheet.Cells is CoreIntegration.CoreDictionaryView<Core.Model.CellAddress, Core.Model.ReportCell, CellAddress, ReportCell> source
+                ? source.Filter((address, cell) => Keep(CoreIntegration.CoreModelAdapter.ToPublic(address), cell.RowSpan, cell.ColumnSpan))
+                : new CoreIntegration.FilteredDictionaryView<CellAddress, ReportCell>(sheet.Cells, (address, cell) => Keep(address, cell.RowSpan, cell.ColumnSpan)),
         };
     }
 }

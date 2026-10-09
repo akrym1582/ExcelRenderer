@@ -13,58 +13,16 @@ internal static class HeaderFooterLayout
     /// <param name="timestamp">An optional conversion clock snapshot for repeatable date/time fields.</param>
     internal static IReadOnlyList<RenderText> Create(ReportSheet sheet, int pageNumber, int pageCount, DateTime? timestamp = null)
     {
-        if (sheet.HeaderFooter is not { } headerFooter)
+        if (sheet.HeaderFooter is not { } header)
         {
             return [];
         }
 
-        var clock = timestamp ?? DateTime.Now;
-        var settings = sheet.PageSettings;
-        var header = pageNumber == 1 && headerFooter.FirstPageHeader is not null
-            ? headerFooter.FirstPageHeader
-            : pageNumber % 2 == 0 && headerFooter.EvenPageHeader is not null
-                ? headerFooter.EvenPageHeader
-                : headerFooter.Header;
-        var footer = pageNumber == 1 && headerFooter.FirstPageFooter is not null
-            ? headerFooter.FirstPageFooter
-            : pageNumber % 2 == 0 && headerFooter.EvenPageFooter is not null
-                ? headerFooter.EvenPageFooter
-                : headerFooter.Footer;
-        var width = settings.Width - settings.MarginLeft - settings.MarginRight;
-        return CreateSection(header, 0, settings.MarginTop)
-            .Concat(CreateSection(footer, settings.Height - settings.MarginBottom, settings.MarginBottom))
-            .ToArray();
-
-        IEnumerable<RenderText> CreateSection(HeaderFooterSection section, double y, double height)
+        var metadata = new Core.Model.ReportSheet(sheet.Name, new Dictionary<Core.Model.CellAddress, Core.Model.ReportCell>(), new Dictionary<int, Core.Model.ColumnDefinition>(), new Dictionary<int, Core.Model.RowDefinition>(), [], CoreIntegration.CoreModelAdapter.ToCore(sheet.PageSettings))
         {
-            var style = CellStyle.Default with { VerticalAlignment = VerticalAlignment.Center };
-            return new[]
-            {
-                new RenderText(new(settings.MarginLeft, y, width, height), ResolveFields(section.Left), style),
-                new RenderText(
-                    new(
-                        settings.MarginLeft,
-                        y,
-                        width,
-                        height),
-                    ResolveFields(section.Center),
-                    style with { HorizontalAlignment = HorizontalAlignment.Center }),
-                new RenderText(
-                    new(
-                        settings.MarginLeft,
-                        y,
-                        width,
-                        height),
-                    ResolveFields(section.Right),
-                    style with { HorizontalAlignment = HorizontalAlignment.Right }),
-            }.Where(text => !string.IsNullOrEmpty(text.Text));
-        }
-
-        string ResolveFields(string text) => text
-            .Replace("&P", pageNumber.ToString(), StringComparison.OrdinalIgnoreCase)
-            .Replace("&N", pageCount.ToString(), StringComparison.OrdinalIgnoreCase)
-            .Replace("&A", sheet.Name, StringComparison.OrdinalIgnoreCase)
-            .Replace("&D", clock.ToShortDateString(), StringComparison.OrdinalIgnoreCase)
-            .Replace("&T", clock.ToShortTimeString(), StringComparison.OrdinalIgnoreCase);
+            HeaderFooter = CoreIntegration.CoreModelAdapter.ToCoreHeader(header),
+        };
+        return Core.Layout.HeaderFooterLayout.Create(metadata, pageNumber, pageCount, timestamp, CoreIntegration.CoreModelAdapter.ToCore(CellStyle.Default))
+            .Select(text => new RenderText(CoreIntegration.CoreModelAdapter.ToPublic(text.Bounds), text.Text, CoreIntegration.CoreModelAdapter.ToPublic(text.Style))).ToArray();
     }
 }

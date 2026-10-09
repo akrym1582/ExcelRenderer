@@ -1,3 +1,4 @@
+using ImageResources = ExcelRenderer.Core.Rendering.ImageResources;
 using System.IO.Compression;
 using ClosedXML.Excel;
 using ExcelRenderer.Abstractions;

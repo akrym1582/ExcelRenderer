@@ -46,9 +46,9 @@ change('pdf-double-underline', pdf, underline, underline + '\n' + underline,
 change('svg-run-x', skia, '(float)(positioned.Left + run.X),',
        '(float)(positioned.Left + (_textAsPaths ? 0 : run.X)),',
        'Svg_serialized_finalized_text_matches_png_geometry')
-change('reader-emu', reader, 'emu / EmusPerPoint;', 'emu / (EmusPerPoint * 2);',
+change('reader-emu', 'src/ExcelRenderer.Core/Excel/DrawingMLReader.cs', 'emu / EmusPerPoint;', 'emu / (EmusPerPoint * 2);',
        'Reader_preserves_drawingml_anchor_coordinates')
-change('reader-marker', reader, 'uint.Parse(column) + 1', 'uint.Parse(column)',
+change('reader-marker', 'src/ExcelRenderer.Core/Excel/DrawingMLReader.cs', 'uint.Parse(column) + 1', 'uint.Parse(column)',
        'Reader_preserves_drawingml_anchor_coordinates')
 change('skia-legacy-restore', skia, '            canvas.Restore();', '            _ = canvas.SaveCount;',
        'Skia_legacy_restores_canvas_after_drawing_failure', 0)
@@ -74,8 +74,8 @@ change('pdf-link-y', 'src/ExcelRenderer/PdfSharp/PdfHyperlinkWriter.cs',
 change('pdf-destination-selection', 'src/ExcelRenderer/ExcelConverter.Viewports.cs',
        'targetPage?.Descriptor.OutputPageNumber', 'targetPage?.Descriptor.DocumentPageNumber',
        'Generated_PDF_destination_references_final_selected_document_page')
-change('merged-source-outside-range', 'src/ExcelRenderer/Layout/RenderPageBuilder.cs',
-       '_context.Sheet.RequestedRange is not null', '_context.Sheet.RequestedRange is null',
+change('merged-source-outside-range', 'src/ExcelRenderer/CoreIntegration/FullCellSelection.cs',
+       'requestedRange && isMerged', '!requestedRange && isMerged',
        'Generated_range_replaces_print_area_and_preserves_partial_merge_geometry')
 change('markdown-href-escaping', 'src/ExcelRenderer/Markdown/MarkdownHyperlinks.cs',
        'Html(uri)', 'uri', 'Markdown_links_anchors_lists_and_HTML_attributes_are_safe_and_None_is_plain')
@@ -94,7 +94,7 @@ try:
         try:
             (root / path).write_text(altered)
             proc = subprocess.run([args.dotnet, 'test', 'tests/ExcelRenderer.Tests', '--configuration', 'Release',
-                                   '--no-restore', '--filter', test], cwd=root, capture_output=True, text=True)
+                                   '--no-restore', '-m:1', '--filter', test], cwd=root, capture_output=True, text=True)
             output = proc.stdout + proc.stderr
             (logs / (name + '.log')).write_text(output)
             # A compiler error, crash or "no tests matched" is not a successful red detection.

@@ -1,0 +1,159 @@
+{
+  "baseline": "028b6214495eb6f6a30a29990d5b6f86f025c502",
+  "renderer": "pdftoppm 26.05.0, 96dpi",
+  "cases": [
+    {
+      "case": "01-japanese",
+      "pages": 2,
+      "max_pixel_mae": 0,
+      "structure_equal": true
+    },
+    {
+      "case": "02-image",
+      "pages": 2,
+      "max_pixel_mae": 0,
+      "structure_equal": true
+    },
+    {
+      "case": "03-wrapped-text",
+      "pages": 1,
+      "max_pixel_mae": 0,
+      "structure_equal": true
+    },
+    {
+      "case": "04-text-decoration",
+      "pages": 1,
+      "max_pixel_mae": 0,
+      "structure_equal": true
+    },
+    {
+      "case": "05-borders",
+      "pages": 2,
+      "max_pixel_mae": 0,
+      "structure_equal": true
+    },
+    {
+      "case": "06-layout-and-pagination",
+      "pages": 4,
+      "max_pixel_mae": 0,
+      "structure_equal": true
+    },
+    {
+      "case": "07-multiple-sheets",
+      "pages": 2,
+      "max_pixel_mae": 0,
+      "structure_equal": true
+    },
+    {
+      "case": "08-print-scaling",
+      "pages": 2,
+      "max_pixel_mae": 0,
+      "structure_equal": true
+    },
+    {
+      "case": "09-cell-border",
+      "pages": 1,
+      "max_pixel_mae": 0,
+      "structure_equal": true
+    },
+    {
+      "case": "full-shapes-links",
+      "pages": 20,
+      "max_pixel_mae": 0,
+      "structure_equal": true
+    },
+    {
+      "case": "full-range",
+      "pages": 2,
+      "max_pixel_mae": 0,
+      "structure_equal": true
+    },
+    {
+      "case": "full-trim-selection",
+      "pages": 2,
+      "max_pixel_mae": 0,
+      "structure_equal": true
+    },
+    {
+      "case": "png-paginated",
+      "files": 1,
+      "bytes_equal": true
+    },
+    {
+      "case": "svg-paginated",
+      "files": 1,
+      "bytes_equal": true
+    },
+    {
+      "case": "png-continuous",
+      "files": 1,
+      "bytes_equal": true
+    },
+    {
+      "case": "svg-continuous",
+      "files": 1,
+      "bytes_equal": true
+    },
+    {
+      "case": "markdown-paginated",
+      "files": 1,
+      "bytes_equal": true
+    }
+  ],
+  "core_comparison": [
+    {
+      "fixture": "01-japanese.xlsx",
+      "pages": 2,
+      "max_pixel_mae": 0,
+      "structure_equal": true
+    },
+    {
+      "fixture": "02-image.xlsx",
+      "pages": 2,
+      "max_pixel_mae": 0,
+      "structure_equal": true
+    },
+    {
+      "fixture": "03-wrapped-text.xlsx",
+      "pages": 1,
+      "max_pixel_mae": 0,
+      "structure_equal": true
+    },
+    {
+      "fixture": "04-text-decoration.xlsx",
+      "pages": 1,
+      "max_pixel_mae": 0,
+      "structure_equal": true
+    },
+    {
+      "fixture": "05-borders.xlsx",
+      "pages": 2,
+      "max_pixel_mae": 0,
+      "structure_equal": true
+    },
+    {
+      "fixture": "06-layout-and-pagination.xlsx",
+      "pages": 4,
+      "max_pixel_mae": 0,
+      "structure_equal": true
+    },
+    {
+      "fixture": "07-multiple-sheets.xlsx",
+      "pages": 2,
+      "max_pixel_mae": 0,
+      "structure_equal": true
+    },
+    {
+      "fixture": "08-print-scaling.xlsx",
+      "pages": 2,
+      "max_pixel_mae": 0,
+      "structure_equal": true
+    },
+    {
+      "fixture": "09-cell-border.xlsx",
+      "pages": 1,
+      "max_pixel_mae": 0,
+      "structure_equal": true
+    }
+  ]
+}

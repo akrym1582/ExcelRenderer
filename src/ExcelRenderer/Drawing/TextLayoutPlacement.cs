@@ -18,27 +18,12 @@ internal static class TextLayoutPlacement
         ReportRect bounds,
         HorizontalAlignment horizontal,
         VerticalAlignment vertical)
-    {
-        var top = vertical switch
-        {
-            VerticalAlignment.Center => bounds.Y + ((bounds.Height - layout.Size.Height) / 2),
-            VerticalAlignment.Bottom => bounds.Y + bounds.Height - layout.Size.Height,
-            _ => bounds.Y,
-        };
-        var result = new PositionedTextLine[layout.Lines.Count];
-        for (var index = 0; index < layout.Lines.Count; index++)
-        {
-            var line = layout.Lines[index];
-            var left = horizontal switch
-            {
-                HorizontalAlignment.Center => bounds.X + ((bounds.Width - line.Width) / 2),
-                HorizontalAlignment.Right => bounds.X + bounds.Width - line.Width,
-                _ => bounds.X,
-            };
-            result[index] = new(line, left, top + line.Baseline);
-            top += line.Height;
-        }
-
-        return result;
-    }
+    => Core.Drawing.TextLayoutPlacement.Place(
+        layout.Lines,
+        layout.Size.Height,
+        CoreIntegration.CoreCommandAdapter.ToCore(bounds),
+        CoreIntegration.CoreModelAdapter.ToCore(horizontal),
+        CoreIntegration.CoreModelAdapter.ToCore(vertical),
+        line => (line.Width, line.Height, line.Baseline),
+        (line, x, baseline) => new PositionedTextLine(line, x, baseline));
 }

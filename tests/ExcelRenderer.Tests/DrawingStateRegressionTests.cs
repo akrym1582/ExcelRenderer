@@ -5,6 +5,7 @@ using ExcelRenderer.Model;
 using ExcelRenderer.PdfSharp;
 using ExcelRenderer.SkiaSharp;
 using PdfSharp.Drawing;
+using PdfSharp.Fonts;
 using PdfSharp.Pdf;
 using SkiaSharp;
 using Xunit;
@@ -61,6 +62,8 @@ public sealed class DrawingStateRegressionTests
     [InlineData(30)]
     public void Pdf_legacy_ordinary_text_preserves_caller_transform_and_clip(int rotation)
     {
+        using var fontSession = Core.Rendering.PdfSharpFontGate.Acquire();
+        GlobalFontSettings.FontResolver ??= new PdfSharpFontResolver("Noto Sans JP", Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf"));
         using var document = new PdfDocument();
         var page = document.AddPage(); page.Width = XUnit.FromPoint(120); page.Height = XUnit.FromPoint(80);
         using (var graphics = XGraphics.FromPdfPage(page))
@@ -160,6 +163,8 @@ public sealed class DrawingStateRegressionTests
     /// <param name="callerState">呼び出し元で変換・クリップ状態を設定するかどうか。</param>
     private static void Pdf(bool finalized, int rotation, bool callerState)
     {
+        using var fontSession = Core.Rendering.PdfSharpFontGate.Acquire();
+        GlobalFontSettings.FontResolver ??= new PdfSharpFontResolver("Noto Sans JP", Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf"));
         using var document = new PdfDocument();
         var page = document.AddPage(); page.Width = XUnit.FromPoint(120); page.Height = XUnit.FromPoint(80);
         var manager = new DrawingFailureManager();

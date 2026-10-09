@@ -14,14 +14,11 @@ public sealed class RowLayoutPass : IReportLayoutPass
     /// <param name="context">入力シート、計測機能、および各工程の計算結果を保持するレイアウトコンテキストです。</param>
     public void Execute(ReportLayoutContext context)
     {
-        var y = 0d;
-        foreach (var row in context.VisibleRows)
+        var core = CoreIntegration.CoreLayoutContextAdapter.CreateGeometry(context);
+        new Core.Layout.RowLayoutPass().Execute(core);
+        foreach (var row in core.RowLayouts)
         {
-            var height = context.Sheet.Rows.TryGetValue(row, out var definition)
-                ? definition.Height
-                : context.Sheet.DefaultRowHeight;
-            context.RowLayouts[row] = new(row, context.Sheet.RequestedRange is null ? y : context.Geometry.RowStart(row), height);
-            y += height;
+            context.RowLayouts[row.Key] = new(row.Value.Row, row.Value.Y, row.Value.Height);
         }
     }
 }

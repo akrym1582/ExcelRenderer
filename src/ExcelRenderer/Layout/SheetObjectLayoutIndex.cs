@@ -9,33 +9,15 @@ internal sealed class SheetObjectLayoutIndex
     /// <param name="context">The planned geometry; the index does not retain the context.</param>
     internal SheetObjectLayoutIndex(ReportLayoutContext context)
     {
-        var images = new List<(ReportImage Image, ReportRect Bounds, ReportRect Visual)>();
-        foreach (var image in context.Sheet.Images ?? [])
-        {
-            if (DrawingAnchorResolver.TryResolve(
-                context, image.Anchor, image.OffsetX, image.OffsetY, image.Width, image.Height, image.DrawingAnchor, out var bounds))
-            {
-                images.Add((image, bounds, ObjectGeometry.GetVisualBounds(bounds, image.Rotation)));
-            }
-        }
-
-        var shapes = new List<(ReportShape Shape, ReportRect Bounds, ReportRect Visual)>();
-        foreach (var shape in context.Sheet.Shapes ?? [])
-        {
-            if (DrawingAnchorResolver.TryResolve(
-                context, shape.Anchor, shape.OffsetX, shape.OffsetY, shape.Width, shape.Height, shape.DrawingAnchor, out var bounds))
-            {
-                shapes.Add((shape, bounds, context.Sheet.RequestedRange is null
-                    ? ObjectGeometry.GetVisualBounds(bounds, shape.Rotation)
-                    : ObjectGeometry.GetShapeVisualBounds(bounds, shape)));
-            }
-        }
-
-        Images = images.ToArray();
-        Shapes = shapes.ToArray();
+        CoreIndex = new(CoreIntegration.CoreLayoutContextAdapter.CreateGeometry(context));
+        Images = CoreIndex.Objects.Where(item => item.Image is not null).Select(item => (CoreIntegration.CoreModelAdapter.ToPublicImage(item.Image!), CoreIntegration.CoreModelAdapter.ToPublic(item.Bounds), CoreIntegration.CoreModelAdapter.ToPublic(item.Visual))).ToArray();
+        Shapes = CoreIndex.Objects.Where(item => item.ExtensionData is CoreIntegration.FullShapeData).Select(item => (((CoreIntegration.FullShapeData)item.ExtensionData!).Shape, CoreIntegration.CoreModelAdapter.ToPublic(item.Bounds), CoreIntegration.CoreModelAdapter.ToPublic(item.Visual))).ToArray();
         ImageBands = new(Images.Select((image, index) => (index, image.Visual.Y, image.Visual.Y + image.Visual.Height)));
         ShapeBands = new(Shapes.Select((shape, index) => (index, shape.Visual.Y, shape.Visual.Y + shape.Visual.Height)));
     }
+
+    /// <summary>Gets the immutable common object index.</summary>
+    internal Core.Layout.SheetObjectLayoutIndex CoreIndex { get; }
 
     /// <summary>Gets immutable positioned source-image references in original order.</summary>
     internal (ReportImage Image, ReportRect Bounds, ReportRect Visual)[] Images { get; }

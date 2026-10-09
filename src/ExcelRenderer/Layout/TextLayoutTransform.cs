@@ -28,24 +28,6 @@ internal static class TextLayoutTransform
             return layout;
         }
 
-        var scaled = new TextLayoutResult(
-            new(layout.Size.Width * factor, layout.Size.Height * factor),
-            layout.Lines.Select(line => line with
-            {
-                Width = line.Width * factor,
-                Height = line.Height * factor,
-                Baseline = line.Baseline * factor,
-                Ascent = line.Ascent * factor,
-                Descent = line.Descent * factor,
-                Leading = line.Leading * factor,
-                Runs = line.Runs.Select(run => run with
-                {
-                    X = run.X * factor,
-                    Advance = run.Advance * factor,
-                }).ToArray(),
-            }).ToArray());
-        return layout.HasExplicitEffectiveFontSize
-            ? scaled with { EffectiveFontSize = layout.EffectiveFontSize * factor }
-            : scaled;
+        return CoreIntegration.CoreTextLayoutAdapter.ToPublic(Core.Layout.TextLayoutTransform.Scale(CoreIntegration.CoreTextLayoutAdapter.ToCore(layout), factor));
     }
 }

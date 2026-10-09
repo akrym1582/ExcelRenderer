@@ -16,8 +16,6 @@ namespace ExcelRenderer;
 /// <summary>Excel ブックをストリームから非同期に読み取り、指定された出力先へ変換します。</summary>
 public static partial class ExcelConverter
 {
-    private static readonly SemaphoreSlim PdfSharpFontLock = new(1, 1);
-
     /// <summary>現在位置から XLSX ストリームを読み取り、指定された出力シンクへ変換成果物を書き込みます。</summary>
     /// <param name="input">読み取り対象の XLSX データを含むストリームです。メソッドはこのストリームを閉じません。</param>
     /// <param name="request">出力形式、シート選択、解像度、および診断ポリシーを指定する変換設定です。</param>
@@ -56,7 +54,9 @@ public static partial class ExcelConverter
             ConversionMetrics.Report("input.ms", inputTimer.Elapsed.TotalMilliseconds);
             var fontManager = ConversionMetrics.Measure("fonts", () => new FontManager(request.FontOptions));
             resources.TextMeasurer = new PdfSharpTextMeasurer(fontManager, cacheLayouts: true);
-            var document = ConversionMetrics.Measure("reader", () => new ExcelReader(fontManager).Read(source, diagnostics, request.OutputFormat == OutputFormat.Markdown ? null : request.Selection.SheetNames));
+            var coreDocument = ConversionMetrics.Measure("reader", () => new ExcelReader(fontManager).ReadCore(source, diagnostics, request.OutputFormat == OutputFormat.Markdown ? null : request.Selection.SheetNames));
+            var publicStyles = new StylePool();
+            var document = new ReportDocument(coreDocument.Sheets.Select(sheet => CoreIntegration.CoreModelAdapter.ToPublic(sheet, publicStyles)).ToArray());
             source.Dispose();
             if (ConversionMetrics.Observer is not null)
             {
@@ -110,7 +110,8 @@ public static partial class ExcelConverter
             ConversionMetrics.Report("modelSelectedCells", sheets.Sum(selected => selected.Sheet.Cells.Count));
 
             var lockTimer = System.Diagnostics.Stopwatch.StartNew();
-            await PdfSharpFontLock.WaitAsync(cancellationToken).ConfigureAwait(false);
+            var fontSession = await Core.Rendering.PdfSharpFontGate.AcquireAsync(cancellationToken).ConfigureAwait(false);
+            resources.FontSession = fontSession;
             ConversionMetrics.Report("fontLockWait.ms", lockTimer.Elapsed.TotalMilliseconds);
             try
             {
@@ -153,7 +154,23 @@ public static partial class ExcelConverter
             }
             finally
             {
-                PdfSharpFontLock.Release();
+                try
+                {
+                    try
+                    {
+                        resources.Dispose();
+                    }
+                    finally
+                    {
+                        GlobalFontSettings.ResetFontManagement();
+                        PdfSharpFontResolver.RemoveExpiredRegistrations();
+                    }
+                }
+                finally
+                {
+                    resources.FontSession = null;
+                    fontSession.Dispose();
+                }
             }
         }
         catch (OperationCanceledException)
@@ -269,13 +286,18 @@ public static partial class ExcelConverter
         }
 
         var built = page.Plan is { } plan
-            ? plan.Build(page.PlanIndex, page.Descriptor.SourcePageNumber, page.SheetPageCount, measurer, token)
-            : new RenderPage(1, []);
-        built = built with { HeaderFooterTexts = PaginationPass.GetHeaderFooterTexts(page.Sheet, page.Descriptor.SourcePageNumber, page.SheetPageCount, RenderResourceSession.Current?.HeaderFooterTimestamp) };
-        var commands = new DrawCommandGeneratorPass().GeneratePage(built);
+            ? plan.BuildCore(page.PlanIndex, page.Descriptor.SourcePageNumber, page.SheetPageCount, measurer, token)
+            : new Core.Layout.RenderPage(1, []);
+        var headers = PaginationPass.GetHeaderFooterTexts(page.Sheet, page.Descriptor.SourcePageNumber, page.SheetPageCount, RenderResourceSession.Current?.HeaderFooterTimestamp);
+        built = built with
+        {
+            HeaderFooterTexts = headers.Select(text => new Core.Layout.RenderText(CoreIntegration.CoreModelAdapter.ToCore(text.Bounds), text.Text, CoreIntegration.CoreModelAdapter.ToCore(text.Style))).ToArray(),
+        };
+        var commands = new Core.Drawing.DrawCommandGeneratorPass().GeneratePage(built, null, new CoreIntegration.FullDrawingExtension())
+            .Select(CoreIntegration.CoreCommandAdapter.CreatePublicProjection()).ToArray();
         ConversionMetrics.Report("renderCells", built.Cells.Count);
-        ConversionMetrics.Report("commands", commands.Count);
-        return new(commands, built.SourceRegions);
+        ConversionMetrics.Report("commands", commands.Length);
+        return new(commands, (built.ExtensionData as CoreIntegration.FullPageData)?.Regions ?? []);
     }
 
     private static SheetPage PreflightPage(SheetPage page, RenderRequest request, FontManager fonts, DiagnosticCollector diagnostics, CancellationToken token)
@@ -419,9 +441,11 @@ public static partial class ExcelConverter
             {
                 using var result = new PdfDocument();
                 var renderer = new PdfSharpRenderer(fontManager);
+                var completedPages = new List<Action>();
                 foreach (var page in pages)
                 {
                     token.ThrowIfCancellationRequested();
+                    renderer.PageCompleted = _ => completedPages.Add(() => PdfHyperlinkWriter.Write(result, page.Descriptor.OutputPageNumber!.Value, page.Descriptor.HeightPoints, page.Links ?? []));
                     renderer.PageDiagnosticHandler = diagnostic => diagnostics.Add(diagnostic with
                     {
                         SheetName = page.Sheet.Name,
@@ -441,18 +465,17 @@ public static partial class ExcelConverter
                     }
                 }
 
-                foreach (var page in pages)
+                foreach (var complete in completedPages)
                 {
-                    PdfHyperlinkWriter.Write(result, page.Descriptor.OutputPageNumber!.Value, page.Descriptor.HeightPoints, page.Links ?? []);
+                    complete();
                 }
 
                 token.ThrowIfCancellationRequested();
                 ConversionMetrics.Measure("pdfFinalSave", () =>
                 {
-                    result.Save(stream, false);
+                    Core.Pdf.CorePdfRenderer.Save(result, stream);
                     return true;
                 });
-                ConversionMetrics.Report("pdfSave", 1);
             },
             token).ConfigureAwait(false);
     }

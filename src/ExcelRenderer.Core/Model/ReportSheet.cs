@@ -1,0 +1,40 @@
+namespace ExcelRenderer.Core.Model;
+
+/// <summary>
+/// 帳票の 1 ワークシートを構成するセル、行列、結合範囲、印刷設定、画像を表します。
+/// </summary>
+internal sealed record ReportSheet(
+    string Name,
+    IReadOnlyDictionary<CellAddress, ReportCell> Cells,
+    IReadOnlyDictionary<int, ColumnDefinition> Columns,
+    IReadOnlyDictionary<int, RowDefinition> Rows,
+    IReadOnlyList<CellRange> MergedRanges,
+    PageSettings PageSettings,
+    CellRange? PrintArea = null,
+    IReadOnlyList<ReportImage>? Images = null,
+    HeaderFooter? HeaderFooter = null)
+{
+    /// <summary>Gets the default width in points for columns without an explicit definition.</summary>
+    public double DefaultColumnWidth { get; init; } = 64;
+
+    /// <summary>Gets the default height in points for rows without an explicit definition.</summary>
+    public double DefaultRowHeight { get; init; } = 15;
+
+    /// <summary>
+    /// Gets the independently paginated print areas in workbook order. An empty collection uses
+    /// <see cref="PrintArea"/> or the automatically resolved used range.
+    /// </summary>
+    public IReadOnlyList<CellRange> PrintAreas { get; init; } = [];
+
+    /// <summary>Gets the original one-based workbook sheet index.</summary>
+    internal int SourceSheetIndex { get; init; }
+
+    /// <summary>Gets borrowed conversion-local product metadata.</summary>
+    internal Extensibility.ICoreExtensionData? ExtensionData { get; init; }
+
+    /// <summary>Gets the neutral requested source region, when a product supplies one.</summary>
+    internal CellRange? RequestedRange { get; init; }
+
+    /// <summary>Gets the automatic range preserved before model projection.</summary>
+    internal CellRange? RenderUsedRange { get; init; }
+}

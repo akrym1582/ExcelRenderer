@@ -10,30 +10,16 @@ internal sealed class ExplicitRangeGeometryPass : IReportLayoutPass
     /// <param name="context">The current layout.</param>
     public void Execute(ReportLayoutContext context)
     {
-        if (context.Sheet.RequestedRange is not { } selected)
+        var core = CoreIntegration.CoreLayoutContextAdapter.CreateGeometry(context);
+        new CoreIntegration.FullExplicitRangeGeometryPass().Execute(core);
+        foreach (var column in core.ColumnLayouts)
         {
-            return;
+            context.ColumnLayouts[column.Key] = new(column.Value.Column, column.Value.X, column.Value.Width);
         }
 
-        foreach (var range in context.Sheet.MergedRanges.Where(range =>
-            range.First.Row <= selected.Last.Row && range.Last.Row >= selected.First.Row &&
-            range.First.Column <= selected.Last.Column && range.Last.Column >= selected.First.Column))
+        foreach (var row in core.RowLayouts)
         {
-            for (var column = range.First.Column; column <= range.Last.Column; column++)
-            {
-                context.ColumnLayouts[column] = new(
-                    column,
-                    context.Geometry.ColumnStart(column),
-                    context.Geometry.ColumnStart(column + 1) - context.Geometry.ColumnStart(column));
-            }
-
-            for (var row = range.First.Row; row <= range.Last.Row; row++)
-            {
-                context.RowLayouts[row] = new(
-                    row,
-                    context.Geometry.RowStart(row),
-                    context.Geometry.RowStart(row + 1) - context.Geometry.RowStart(row));
-            }
+            context.RowLayouts[row.Key] = new(row.Value.Row, row.Value.Y, row.Value.Height);
         }
     }
 }

@@ -170,6 +170,13 @@
       },
       "excelrenderer.fonts": {
         "type": "Project"
+      },
+      "excelrenderer.mapping": {
+        "type": "Project",
+        "dependencies": {
+          "ClosedXML": "[0.105.1, )",
+          "DocumentFormat.OpenXml": "[3.3.0, )"
+        }
       }
     }
   }

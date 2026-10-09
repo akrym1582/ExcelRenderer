@@ -546,3 +546,18 @@ Resolved PDF fonts use immutable snapshots. A conversion owns its font resources
 For the separate source-only project (not published on NuGet), see [ExcelRenderer Core](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/core.md).
 
 The main package includes `ExcelRenderer.Core.dll` from the same build; Core is also available as a source ProjectReference. Basic reading, geometry/page layout, drawing and PDF operations are shared; advanced features remain in the main library. See [the two-engine architecture](docs/core-architecture.md) and [verification results](docs/core-refactor-validation.md).
+
+## Excel template mapping
+
+`ExcelRenderer.Mapping` is a standalone .NET Standard 2.1 package for mapping C#
+objects or JSON into XLSX templates. It supports `**` cell paths, single-row arrays,
+nested `**@start-array` / `**@end-array` blocks, explicit CLR formatting and manual
+page breaks. It does not depend on rendering or font packages.
+
+```sh
+excelrenderer xlsx template.xlsx --data data.json -o report.xlsx
+excelrenderer pdf template.xlsx --data data.json -o report.pdf
+excelrenderer render template.xlsx --data data.json --format png -o ./png-output
+```
+
+See [the mapping guide](docs/mapping.md) for API examples, syntax and limitations.

@@ -15,19 +15,25 @@ public static class PdfCommand
     public static Command Create()
     {
         var input = CommandSupport.InputArgument();
+        var data = MappingCommandSupport.DataOption();
         var output = CommandSupport.OutputOption("Path to the output PDF file.");
         var sheet = new Option<string?>("--sheet") { Description = "Worksheet name to convert." };
         var hyperlinks = CommandSupport.HyperlinksOption();
         var fonts = CommandSupport.FontOptions();
         var command = new Command("pdf", "Convert Excel worksheets to PDF.") { input, output, sheet };
         command.Add(hyperlinks);
+        command.Add(data);
         CommandSupport.AddFontOptions(command, fonts);
-        command.SetAction((parseResult, cancellationToken) => CommandSupport.RunAsync(() =>
-            ExcelConverter.ConvertToPdfAsync(
-                parseResult.GetValue(input)!,
+        command.SetAction((parseResult, cancellationToken) => CommandSupport.RunAsync(() => MappingCommandSupport.WithInputAsync(
+            parseResult.GetValue(input)!,
+            parseResult.GetValue(data),
+            parseResult.GetValue(output)!,
+            mappedInput => ExcelConverter.ConvertToPdfAsync(
+                mappedInput,
                 parseResult.GetValue(output)!,
                 new PdfExportOptions { Hyperlinks = CommandSupport.GetHyperlinks(parseResult.GetValue(hyperlinks)!), SheetName = parseResult.GetValue(sheet), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
-                cancellationToken)));
+                cancellationToken),
+            cancellationToken)));
         return command;
     }
 }

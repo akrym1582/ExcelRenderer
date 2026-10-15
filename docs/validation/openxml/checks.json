@@ -1,0 +1,47 @@
+{
+  "Build": {
+    "Command": "dotnet build ExcelRenderer.slnx -t:Rebuild --no-restore --verbosity:minimal",
+    "Warnings": 0,
+    "Errors": 0
+  },
+  "Tests": {
+    "Command": "dotnet test ExcelRenderer.slnx --no-restore",
+    "Passed": 754,
+    "Failed": 0,
+    "Skipped": 0,
+    "Projects": {
+      "ExcelRenderer.OpenXml.Tests.dll": 97,
+      "ExcelRenderer.Core.Tests.dll": 80,
+      "ExcelRenderer.Mapping.Tests.dll": 49,
+      "ExcelRenderer.Tests.dll": 466,
+      "ExcelRenderer.Tool.Tests.dll": 62
+    }
+  },
+  "LockedRestore": {
+    "Command": "dotnet restore ExcelRenderer.slnx --locked-mode",
+    "Status": "Passed"
+  },
+  "DependencyCheck": {
+    "Command": "python3 scripts/check-core-dependencies.py",
+    "Status": "Passed"
+  },
+  "ComparisonFailureGate": {
+    "Input": "Controlled malformed .xlsx under /tmp",
+    "ExitCode": 1,
+    "UnexplainedReadFailures": 1
+  },
+  "Packages": [
+    {
+      "Command": "dotnet pack src/ExcelRenderer/ExcelRenderer.csproj -c Release",
+      "Path": "src/ExcelRenderer/bin/Release/ExcelRenderer.1.8.0.nupkg",
+      "Status": "Passed",
+      "StandaloneReaderDllOrDependency": false
+    },
+    {
+      "Command": "dotnet pack src/ExcelRenderer.Tool/ExcelRenderer.Tool.csproj -c Release",
+      "Path": "src/ExcelRenderer.Tool/bin/Release/ExcelRenderer.Tool.1.8.0.nupkg",
+      "Status": "Passed",
+      "StandaloneReaderDllOrDependency": false
+    }
+  ]
+}

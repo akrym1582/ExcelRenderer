@@ -694,3 +694,5 @@ only chart sheets returns diagnostics and no artifacts. `RenderRequest.TextMeasu
 can supply a caller-owned legacy service. Without `IRichTextLayoutService`, rich cells
 use the cell font and emit opt-in `RichTextLayoutFallback` in preflight. The built-in
 service remains the default. No additional glyph measurement is done just for diagnostics.
+
+The independent, nonpackable Open XML reader and its supported scope are described in [the reader documentation](docs/openxml-reader.md). Existing conversion paths continue to use their existing readers.

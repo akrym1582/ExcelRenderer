@@ -668,3 +668,5 @@ enum／CLI の綴りは予約されていますが、現状は変換前に拒否
 診断のみを返し、成果物は作りません。`RenderRequest.TextMeasurer` で呼び出し元所有の旧計測サービスを
 指定できます。`IRichTextLayoutService` がなければセル書式へ縮退し、opt-in 時に preflight で
 `RichTextLayoutFallback` を出します。既定は組込みサービスで、診断だけの追加グリフ計測は行いません。
+
+独立した非配布 Open XML Reader の API と対応範囲は [Reader の説明](docs/openxml-reader.ja.md)を参照してください。既存の変換経路は従来の Reader を使用します。

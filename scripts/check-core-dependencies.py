@@ -66,3 +66,19 @@ assert 'ReadCore(' in normal and 'BuildCore(' in normal and 'Core.Drawing.DrawCo
 assert 'static readonly SemaphoreSlim' not in normal
 assert 'class FullLayoutPolicy : Core.Layout.CoreLayoutPolicy' in (ROOT / 'src/ExcelRenderer/CoreIntegration/FullLayoutPolicy.cs').read_text()
 print('Shared conversion pipeline and compatibility facade ownership passed')
+
+# The standalone input reader remains outside the existing product dependency graph.
+OPENXML = ROOT / 'src/ExcelRenderer.OpenXml'
+reader_project = ET.parse(OPENXML / 'ExcelRenderer.OpenXml.csproj').getroot()
+assert not reader_project.findall('.//ProjectReference'), 'OpenXml reader must have no project references'
+reader_packages = {p.attrib['Include'] for p in reader_project.findall('.//PackageReference')}
+assert reader_packages == {'DocumentFormat.OpenXml', 'ExcelNumberFormat'}, reader_packages
+for path in OPENXML.glob('*.cs'):
+    text = path.read_text()
+    code = re.sub(r'^\s*///.*$', '', text, flags=re.MULTILINE)
+    assert not re.search(r'\b(ClosedXML|PDFsharp|SkiaSharp)\b|ExcelRenderer\.(Core|Mapping|Fonts)', code), path
+    assert 'WorksheetPart.Worksheet' not in text and '.SharedStringTable' not in text.replace('.SharedStringTablePart', ''), path
+for path in (ROOT / 'src').glob('*/*.csproj'):
+    if path.parent != OPENXML:
+        assert 'ExcelRenderer.OpenXml' not in path.read_text(), f'{path}: standalone reader entered product graph'
+print('Standalone OpenXml reader dependency isolation passed')

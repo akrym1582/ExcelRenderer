@@ -11,6 +11,7 @@ exposed as incomplete public APIs. The original formula behavior remains intact.
 - Original local branch: `work`, clean, identical to fetched main (0/0 divergence).
 - Independent baseline worktree: `/tmp/excel-baseline`, detached at that SHA.
 - Debian 13 x64, .NET SDK 10.0.401, runtime 10.0.12.
+- Implementation commit: `232c4cd6a7277c2824593dd0ceded8c8caa7a7d9`.
 - Dependency versions and lock files are unchanged.
 
 The exact requested `dotnet restore ExcelRenderer.slnx` failed on the unmodified

@@ -140,23 +140,7 @@ internal static class XmlValues
     /// <summary>Decodes OOXML UTF-16 escapes once, preserving escaped literals.</summary>
     /// <returns>The resulting value.</returns>
     /// <param name="value">The value value.</param>
-    internal static string Decode(string value) => Regex.Replace(value, "_x([0-9a-fA-F]{4})_", m => ((char)int.Parse(m.Groups[1].Value, NumberStyles.HexNumber, CultureInfo.InvariantCulture)).ToString());
-
-    /// <summary>Checks the UTF-16 text budget before retaining a cell or string entry.</summary>
-    /// <param name="e">The e value.</param>
-    /// <param name="options">The options value.</param>
-    internal static void TextLimit(XElement e, OpenXmlReaderOptions options)
-    {
-        long count = 0;
-        foreach (var text in e.DescendantNodes().OfType<XText>())
-        {
-            count = checked(count + text.Value.Length);
-            if (count > options.MaxCellTextCharacters)
-            {
-                throw new InvalidDataException("MaxCellTextCharacters exceeded.");
-            }
-        }
-    }
+    internal static string Decode(string value) => value.IndexOf("_x", StringComparison.Ordinal) < 0 ? value : Regex.Replace(value, "_x([0-9a-fA-F]{4})_", m => ((char)int.Parse(m.Groups[1].Value, NumberStyles.HexNumber, CultureInfo.InvariantCulture)).ToString());
 
     private static XElement Project(OpenXmlElement element)
     {

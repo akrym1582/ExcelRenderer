@@ -31,11 +31,11 @@ foreach (var cell in reader.EnumerateCells(sheet.Index))
 
 ## 走査と保持メモリ
 
-Open はブック情報・書式・テーマを読みますが、シート本文と共有文字列は読みません。シートの初回要求ではメタデータを走査し、セル列挙では同じ part を再走査します。メタデータには行定義、正規化した列区間、結合、数式 master、array 数式の行区間索引を保持します。全セル辞書やシート全体の DOM は保持しません。セル列挙では SDK の1セルだけをロードし、独立した不変データに変換します。中断・例外・キャンセル時には part reader を閉じ、再列挙では先頭から読み直します。
+Open はブック情報・書式・テーマを読みますが、シート本文と共有文字列は読みません。シートの初回要求ではメタデータを走査し、セル列挙では同じ part を再走査します。メタデータには行定義、正規化した列区間、結合、数式 master、array 数式の行区間索引を保持します。全セル辞書やシート全体の DOM は保持しません。セル列挙では SDK の開始/終了イベントと leaf text を直接読み、セルや共有文字列 entry の DOM を作りません。数式・部分 run 書式・小さいメタデータだけを DOM に投影します。中断・例外・キャンセル時には part reader を閉じ、再列挙では先頭から読み直します。
 
 共有文字列は最初の `t=s` セルで、entry 単位で読みます。**共有文字列表は全体をメモリに保持します**。小さい選択シートだけでも、共有表を使えば全体のコストが発生します。ディスク索引、プロセス全体の intern/cache はありません。rich string の不変 run 配列は共有されます。run の null 属性は「セルのフォントから継承」を意味します。セルごとに基底フォントを解決してから、指定された run 属性だけを重ねてください。phonetic は表示本文に混ぜず、存在情報と保持コストを扱います。OOXML `_xHHHH_` は1回だけデコードし、`_x005F_x0041_` はリテラル `_x0041_` のままになります。
 
-メモリは共有文字列・書式・行列メタデータ・結合・数式グループに応じて増えます。**定メモリではなく**、次の上限もプロセス RSS の上限ではありません。2回のシート走査とセルごとの DOM/変換コストにより、密な表では ClosedXML より遅い場合があります。[実測記録](openxml-reader-validation.md)を参照してください。
+メモリは共有文字列・書式・行列メタデータ・結合・数式グループに応じて増えます。**定メモリではなく**、次の上限もプロセス RSS の上限ではありません。2回のシート走査とセルごとの DOM/変換コストにより、密な表では ClosedXML より遅い場合があります。[初回の実測記録](openxml-reader-validation.md)と[追加最適化の測定](openxml-reader-optimization.md)を参照してください。
 
 | Option | 既定値 | 意味 |
 | --- | ---: | --- |
@@ -45,13 +45,13 @@ Open はブック情報・書式・テーマを読みますが、シート本文
 | `MaxStyleRecords` | 100,000 | 書式の各表の件数 |
 | `MaxCellTextCharacters` | 1 Mi | 1セルまたは1共有文字列の元 UTF-16 本文。数式・phonetic も含む |
 
-上限は正数で指定します。超過は `InvalidDataException` となり、切り捨てや別 Reader への fallback は行いません。XML 構文・part 上限エラーは、元の例外を inner exception に残して `InvalidDataException` に統一します。キャンセルは走査ループと各 entry で確認します。SDK が1要素を同期ロードしている途中の即時停止は保証しません。Culture は Open 時の read-only snapshot、数値書式 cache は Reader ごとに最大8,192コードです。
+上限は正数で指定します。超過は `InvalidDataException` となり、切り捨てや別 Reader への fallback は行いません。XML 構文・part 上限エラーは、元の例外を inner exception に残して `InvalidDataException` に統一します。キャンセルは走査ループと各 entry で確認します。SDK が1つの leaf text やメタデータ要素を同期で読んでいる途中の即時停止は保証しません。Culture は Open 時の read-only snapshot、数値書式 cache は Reader ごとに最大8,192コードです。
 
 ## データと元の単位
 
 XML に存在する全 `c` を返します。書式だけの空セル、保存済み空文字、結合内のセルも保持します。欠落セルや結合の先頭セルを補完しません。`RawDimension` はヒントにとどめ、実範囲は実際の座標から計算します。省略された行・セル座標は XML 順に推定します。不整合・重複・逆順・範囲外は失敗します。`CellAddress.Parse` は通常座標、`CellRange.Parse` は `$` 付き絶対 A1 参照も受け付けます。
 
-`CellValue.Kind` は `Blank`、`String`、`Number`、`Boolean`、`Error`、`IsoDate` です。数値は有限の double と `CellRecord.RawValue` を別に保持します。boolean は0/1のみで、false は `FALSE` と表示します。ISO 日付は検証後もタイムゾーン表記を含め元の文字列を保持し、UTC/ローカルに変換しません。不正数値・共有文字列 index は空セル化せず失敗します。
+`CellValue.Type` は adapter の分岐に使える `CellValueType` enum です。既存の `Kind` 文字列も `Blank`、`String`、`Number`、`Boolean`、`Error`、`IsoDate` のまま維持します。数値は有限の double と `CellRecord.RawValue` を別に保持します。boolean は0/1のみで、false は `FALSE` と表示します。ISO 日付は検証後もタイムゾーン表記を含め元の文字列を保持し、UTC/ローカルに変換しません。不正数値・共有文字列 index は空セル化せず失敗します。
 
 | メタデータ | 単位・表現 |
 | --- | --- |
@@ -99,3 +99,39 @@ XML に存在する全 `c` を返します。書式だけの空セル、保存�
 | Core input preparer、Mapping | 代替なし | 入力検証・spool と編集・保存の責務を維持 |
 
 既存の公開 `ExcelStyleConverter.Convert(IXLCell)` は維持します。既存製品プロジェクトは新 Reader を参照せず、既存 NuGet パッケージにも含めません。実行コマンドと比較・測定方法は[検証ツール README](../tools/ExcelRenderer.OpenXml.Validation/README.md)を参照してください。
+
+## Core・本体向けの接続境界（未接続）
+
+`OpenXmlWorkbookReader` は `IWorkbookDataReader` を実装します。インターフェースには元データのスナップショットと保存値の表示処理を置き、計測用カウンターは具象 Reader に残します。`SelectedWorksheetIndices` は選択された worksheet の元 index をブック順で返し、chart sheet を除外します。`Sheets` には全シートが残ります。`SelectedWorksheetIndices` は本文の対象だけなので、将来の本体 adapter には元の RenderRequest の選択情報も渡して chart-only の診断を判断します。Core・本体にはまだ参照を追加していません。このインターフェースは将来の adapter の消費側境界であり、任意の第三者 backend を構築する API ではありません。スナップショットの constructor は internal のままです。
+
+```csharp
+IWorkbookDataReader source = reader;
+foreach (var index in source.SelectedWorksheetIndices)
+{
+    var geometry = source.ReadWorksheetInfo(index);
+    // ResolveStyle(int) は行・列の style と既定 style 0 にも利用できる。
+    foreach (var cell in source.EnumerateCells(index))
+    {
+        var style = source.ResolveStyle(cell.StyleIndex);
+        var display = source.FormatCell(cell);
+        var type = cell.Value.Type;
+        foreach (var run in cell.RichTextRuns)
+        {
+            var font = style.FontProperties.WithOverrides(run.FontProperties);
+            // フォント fallback・色・描画方針は将来の adapter で適用する。
+        }
+    }
+}
+```
+
+style の `FontProperties`、workbook の `DefaultFontProperties`、rich run の `FontProperties` は不変の `FontInfo` view です。名前・サイズ（pt）・bold/italic/strike・underline・vertical alignment・theme scheme・色は、未指定なら null のままです。元の `Font` / `Properties` メタデータも残します。`WithOverrides` は明示された属性だけを重ね、false や underline `none` も保持し、null は継承します。フォント計測・置換や表示文字列の正規化は行いません。合成結果は Reader 破棄後も利用できます。同じ run を異なるセル font で使えるよう、共有文字列表には合成済み font を保存しません。
+
+次工程では、次の責務分担を維持します。
+
+- Core に、この元データから内部 `ReportDocument` / `ReportSheet` / 書式へ変換する adapter を置きます。変換書式の cache は Reader session ごとに `(StyleIndex, CellValue.Type, product policy)` を key にします。General 配置と Core/本体の正規化方針が異なるため、style ID だけでは不十分です。run の合成もセルごとの基底 font に依存します。行・列・既定書式は、偽の `CellRecord` を作らず `ResolveStyle(int)` で解決します。
+- 入力検証・spool（`PreparedWorkbook`）、フォント計測、保存 Excel 列幅から pt への変換は Core に残します。行高は既に pt、余白は inch です。元の既定値・非表示区間・別々の印刷範囲、省略と0の区別を保持します。結合先頭の補完・描画モデルの全件化・描画判断は adapter/layout 層の責務です。
+- Core は従来の範囲で IVS/文字列を正規化し、本体は拡張方針とメタデータを維持します。`FontInfo` は最終描画フォントではなく元情報です。adapter が Normal/theme と呼び出し元フォントから fallback/既定値を選び、値の enum で General 配置を判断し、未解決色の診断を残しつつ resolved RGB を変換します。
+- `ReaderDiagnosticCodes` は既存の診断集約層へ変換し、数式 cache 欠落や未対応書式を隠しません。この backend は CachedValue 専用です。Legacy/Recalculate の経路選択は、後の製品層で明示的に扱います。
+- 本体の Drawing/画像/link Reader は prepared input から独立 cursor を開き、元の sheet index/name/address で関連付けます。このインターフェースに SDK package/part や製品固有 hook を持ち込みません。既存 `IXLCell` / `IXLWorksheet` hook の置換は接続工程で扱い、公開 `ExcelStyleConverter.Convert(IXLCell)` は維持します。
+
+今回は Core/本体の converter option や reader factory を追加しません。将来の接続では依存チェックを意図的に更新し、Core に adapter を一度だけ実装し、本体はそれを拡張して、セル走査やレイアウトを重複させない構成にします。

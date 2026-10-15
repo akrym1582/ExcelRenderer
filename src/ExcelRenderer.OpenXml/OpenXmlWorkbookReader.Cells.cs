@@ -50,6 +50,7 @@ public sealed partial class OpenXmlWorkbookReader
             var col = 0;
             var rowStyle = (int?)null;
             var columns = meta.Info.Columns;
+            var previousStyle = -1;
             while (XmlValues.Read(reader))
             {
                 EnsureAlive();
@@ -68,28 +69,31 @@ public sealed partial class OpenXmlWorkbookReader
                 }
                 else if (reader.ElementType == typeof(S.Cell))
                 {
-                    var e = XmlValues.Load(reader);
-                    XmlValues.TextLimit(e, options);
-                    var address = NextAddress(e, row, col);
+                    var source = ReadCell(reader, true, token);
+                    var address = NextAddress(source.Reference, row, col);
                     col = address.Column;
-                    var explicitStyle = XmlValues.Int(e, "s");
+                    var explicitStyle = source.StyleIndex;
                     var style = explicitStyle ?? rowStyle ?? ColumnStyle(columns, col) ?? 0;
-                    styles.Resolve(style);
-                    var v = e.Element(XmlValues.Spreadsheet + "v");
-                    var inline = e.Element(XmlValues.Spreadsheet + "is");
-                    var raw = v?.Value;
-                    var type = XmlValues.Attr(e, "t") ?? "n";
+                    if (style != previousStyle)
+                    {
+                        styles.Resolve(style);
+                        previousStyle = style;
+                    }
+
+                    var inline = source.Inline;
+                    var raw = source.RawValue;
+                    var type = source.DataType ?? "n";
                     var sstIndex = (int?)null;
                     var rich = StringEntry.Empty;
                     CellValue value;
                     if (type == "inlineStr")
                     {
-                        rich = inline == null ? StringEntry.Empty : ReadString(inline);
-                        value = new CellValue("String", rich.Text, null, null);
+                        rich = inline ?? StringEntry.Empty;
+                        value = new CellValue(CellValueType.String, rich.Text, null, null);
                     }
-                    else if (v == null)
+                    else if (!source.HasValue)
                     {
-                        value = new CellValue("Blank", null, null, null);
+                        value = new CellValue(CellValueType.Blank, null, null, null);
                     }
                     else if (type == "s")
                     {
@@ -106,7 +110,7 @@ public sealed partial class OpenXmlWorkbookReader
 
                         rich = strings[id];
                         sstIndex = id;
-                        value = new CellValue("String", rich.Text, null, null);
+                        value = new CellValue(CellValueType.String, rich.Text, null, null);
                     }
                     else if (type == "b")
                     {
@@ -115,7 +119,7 @@ public sealed partial class OpenXmlWorkbookReader
                             throw new InvalidDataException("Boolean cell must contain 0 or 1.");
                         }
 
-                        value = new CellValue("Boolean", null, null, raw == "1");
+                        value = new CellValue(CellValueType.Boolean, null, null, raw == "1");
                     }
                     else if (type == "str" || type == "e" || type == "d")
                     {
@@ -124,18 +128,18 @@ public sealed partial class OpenXmlWorkbookReader
                             throw new InvalidDataException("Invalid ISO date cell.");
                         }
 
-                        value = new CellValue(type == "e" ? "Error" : type == "d" ? "IsoDate" : "String", type == "str" ? XmlValues.Decode(raw!) : raw, null, null);
+                        value = new CellValue(type == "e" ? CellValueType.Error : type == "d" ? CellValueType.IsoDate : CellValueType.String, type == "str" ? XmlValues.Decode(raw!) : raw, null, null);
                     }
                     else if (type == "n")
                     {
-                        value = new CellValue("Number", null, XmlValues.Number(raw!), null);
+                        value = new CellValue(CellValueType.Number, null, XmlValues.Number(raw!), null);
                     }
                     else
                     {
                         throw new InvalidDataException("Unsupported cell value type.");
                     }
 
-                    var f = e.Element(XmlValues.Spreadsheet + "f");
+                    var f = source.Formula;
                     var formula = (FormulaInfo?)null;
                     FormulaMaster? master = null;
                     if (f != null)
@@ -151,11 +155,11 @@ public sealed partial class OpenXmlWorkbookReader
                             master = meta.Arrays?.Find(address);
                         }
 
-                        formula = new FormulaInfo(f.Value, kind, si, XmlValues.Attr(f, "ref"), v != null || inline != null, master?.Address, master?.Text, master?.Reference, XmlValues.Attributes(f));
+                        formula = new FormulaInfo(f.Value, kind, si, XmlValues.Attr(f, "ref"), source.HasValue || inline != null, master?.Address, master?.Text, master?.Reference, XmlValues.Attributes(f));
                     }
                     else if ((master = meta.Arrays?.Find(address)) != null)
                     {
-                        formula = new FormulaInfo(string.Empty, "array", null, null, v != null || inline != null, master.Address, master.Text, master.Reference, XmlValues.Attributes(XmlValues.Empty("f")));
+                        formula = new FormulaInfo(string.Empty, "array", null, null, source.HasValue || inline != null, master.Address, master.Text, master.Reference, XmlValues.Attributes(XmlValues.Empty("f")));
                     }
 
                     yield return new CellRecord(index, address, explicitStyle, style, value, raw, formula, sstIndex, rich.Runs, rich.HasPhonetic);
@@ -195,42 +199,217 @@ public sealed partial class OpenXmlWorkbookReader
                 throw new InvalidDataException("MaxSharedStringItems exceeded.");
             }
 
-            var e = XmlValues.Load(reader);
-            XmlValues.TextLimit(e, options);
-            foreach (var text in e.DescendantNodes().OfType<XText>())
-            {
-                chars = checked(chars + text.Value.Length);
-            }
-
+            var entry = ReadString(reader, token, out var characters);
+            chars = checked(chars + characters);
             if (chars > options.MaxSharedStringCharacters)
             {
                 throw new InvalidDataException("MaxSharedStringCharacters exceeded.");
             }
 
-            result.Add(ReadString(e));
+            result.Add(entry);
         }
 
         strings = result;
         sharedStringLoadTime = timer.Elapsed;
     }
 
-    private StringEntry ReadString(XElement e)
+    private StringEntry ReadString(OpenXmlReader reader, CancellationToken token, out long characters)
     {
-        var runs = new List<RichTextRunInfo>();
-        foreach (var child in e.Elements())
+        var depth = reader.Depth;
+        characters = 0;
+        List<RichTextRunInfo>? runs = null;
+        string? firstText = null;
+        var hasPhonetic = false;
+        var inRun = false;
+        ElementInfo? properties = null;
+        var runText = string.Empty;
+        while (XmlValues.Read(reader))
         {
-            if (child.Name == XmlValues.Spreadsheet + "t")
+            token.ThrowIfCancellationRequested();
+            if (reader.IsEndElement)
             {
-                runs.Add(new RichTextRunInfo(XmlValues.Decode(child.Value), null));
+                if (reader.Depth == depth)
+                {
+                    break;
+                }
+
+                if (reader.Depth == depth + 1 && reader.ElementType == typeof(S.Run))
+                {
+                    runs ??= new List<RichTextRunInfo>();
+                    if (firstText != null)
+                    {
+                        runs.Add(new RichTextRunInfo(firstText, null));
+                        firstText = null;
+                    }
+
+                    runs.Add(new RichTextRunInfo(runText, properties));
+                    inRun = false;
+                }
+
+                continue;
             }
-            else if (child.Name == XmlValues.Spreadsheet + "r")
+
+            if (!reader.IsStartElement)
             {
-                var properties = child.Element(XmlValues.Spreadsheet + "rPr");
-                runs.Add(new RichTextRunInfo(string.Concat(child.Elements(XmlValues.Spreadsheet + "t").Select(t => XmlValues.Decode(t.Value))), properties == null ? null : styles.ColorInfo(properties)));
+                continue;
+            }
+
+            if (reader.ElementType == typeof(S.Run) && reader.Depth == depth + 1)
+            {
+                inRun = true;
+                properties = null;
+                runText = string.Empty;
+            }
+            else if (reader.ElementType == typeof(S.RunProperties) && inRun)
+            {
+                var e = XmlValues.Load(reader);
+                AddTextCharacters(ref characters, e.Value.Length);
+                properties = styles.ColorInfo(e);
+            }
+            else
+            {
+                var text = reader.GetText();
+                AddTextCharacters(ref characters, text.Length);
+                if (reader.ElementType == typeof(S.Text) && (reader.Depth == depth + 1 || (inRun && reader.Depth == depth + 2)))
+                {
+                    text = XmlValues.Decode(text);
+                    if (inRun)
+                    {
+                        runText += text;
+                    }
+                    else if (runs != null)
+                    {
+                        runs.Add(new RichTextRunInfo(text, null));
+                    }
+                    else if (firstText == null)
+                    {
+                        firstText = text;
+                    }
+                    else
+                    {
+                        firstText += text;
+                    }
+                }
+
+                hasPhonetic |= reader.ElementType == typeof(S.PhoneticRun) || reader.ElementType == typeof(S.PhoneticProperties);
             }
         }
 
-        return new StringEntry(string.Concat(runs.Select(r => r.Text)), runs.AsReadOnly(), e.Elements().Any(c => c.Name.LocalName == "rPh" || c.Name.LocalName == "phoneticPr"));
+        if (runs == null)
+        {
+            var text = firstText ?? string.Empty;
+            return new StringEntry(text, text.Length == 0 && firstText == null ? Array.Empty<RichTextRunInfo>() : Array.AsReadOnly(new[] { new RichTextRunInfo(text, null) }), hasPhonetic);
+        }
+
+        return new StringEntry(string.Concat(runs.Select(r => r.Text)), runs.AsReadOnly(), hasPhonetic);
+    }
+
+    private CellSource ReadCell(OpenXmlReader reader, bool values, CancellationToken token)
+    {
+        var reference = (string?)null;
+        var style = (int?)null;
+        var type = (string?)null;
+        foreach (var attribute in reader.Attributes)
+        {
+            if (attribute.NamespaceUri.Length != 0)
+            {
+                continue;
+            }
+
+            switch (attribute.LocalName)
+            {
+                case "r": reference = attribute.Value; break;
+                case "s":
+                    if (!int.TryParse(attribute.Value, System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture, out var index))
+                    {
+                        throw new InvalidDataException("Invalid style index.");
+                    }
+
+                    style = index;
+                    break;
+                case "t": type = attribute.Value; break;
+            }
+        }
+
+        var depth = reader.Depth;
+        var raw = (string?)null;
+        var hasValue = false;
+        XElement? formula = null;
+        StringEntry? inline = null;
+        long characters = 0;
+        while (XmlValues.Read(reader))
+        {
+            token.ThrowIfCancellationRequested();
+            if (reader.IsEndElement && reader.Depth == depth)
+            {
+                break;
+            }
+
+            if (!reader.IsStartElement)
+            {
+                continue;
+            }
+
+            if (reader.ElementType == typeof(S.CellFormula) && reader.Depth == depth + 1)
+            {
+                formula = XmlValues.Load(reader);
+                AddTextCharacters(ref characters, formula.Value.Length);
+            }
+            else if (reader.ElementType == typeof(S.InlineString) && reader.Depth == depth + 1 && values)
+            {
+                inline = ReadString(reader, token, out var count);
+                AddTextCharacters(ref characters, count);
+            }
+            else
+            {
+                var text = reader.GetText();
+                AddTextCharacters(ref characters, text.Length);
+                if (reader.ElementType == typeof(S.CellValue) && reader.Depth == depth + 1)
+                {
+                    hasValue = true;
+                    raw = text;
+                }
+            }
+        }
+
+        return new CellSource(reference, style, type, raw, hasValue, formula, inline);
+    }
+
+    private void AddTextCharacters(ref long characters, long added)
+    {
+        characters = checked(characters + added);
+        if (characters > options.MaxCellTextCharacters)
+        {
+            throw new InvalidDataException("MaxCellTextCharacters exceeded.");
+        }
+    }
+
+    private readonly struct CellSource
+    {
+        internal CellSource(string? reference, int? styleIndex, string? dataType, string? rawValue, bool hasValue, XElement? formula, StringEntry? inline)
+        {
+            Reference = reference;
+            StyleIndex = styleIndex;
+            DataType = dataType;
+            RawValue = rawValue;
+            HasValue = hasValue;
+            Formula = formula;
+            Inline = inline;
+        }
+
+        internal string? Reference { get; }
+
+        internal int? StyleIndex { get; }
+
+        internal string? DataType { get; }
+
+        internal string? RawValue { get; }
+
+        internal bool HasValue { get; }
+
+        internal XElement? Formula { get; }
+
+        internal StringEntry? Inline { get; }
     }
 
     private sealed class StringEntry

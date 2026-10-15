@@ -1,5 +1,7 @@
 # Open XML Reader 実装・検証記録
 
+本書は初回実装時の記録です。その後の速度改善と接続境界の調整は[追加最適化の記録](openxml-reader-optimization.md)を参照してください。
+
 ## 実装の識別と基準
 
 - ブランチ: `feature/openxml-reader`。

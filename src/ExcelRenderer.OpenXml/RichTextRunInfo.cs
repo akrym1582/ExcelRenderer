@@ -12,6 +12,7 @@ public sealed class RichTextRunInfo
     {
         Text = text;
         Properties = properties;
+        FontProperties = properties == null ? null : FontInfo.FromElement(properties);
     }
 
     /// <summary>Gets the Text metadata.</summary>
@@ -19,4 +20,7 @@ public sealed class RichTextRunInfo
 
     /// <summary>Gets the Properties metadata.</summary>
     public ElementInfo? Properties { get; }
+
+    /// <summary>Gets the partial run font; null means inherit the entire cell font.</summary>
+    public FontInfo? FontProperties { get; }
 }

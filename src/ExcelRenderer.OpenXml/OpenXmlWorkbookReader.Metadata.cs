@@ -25,14 +25,13 @@ public sealed partial class OpenXmlWorkbookReader
         return row;
     }
 
-    private static CellAddress NextAddress(XElement cell, int row, int previousColumn)
+    private static CellAddress NextAddress(string? reference, int row, int previousColumn)
     {
         if (row < 1 || previousColumn >= 16384)
         {
             throw new InvalidDataException("Invalid cell position.");
         }
 
-        var reference = XmlValues.Attr(cell, "r");
         var address = reference == null ? new CellAddress(row, checked(previousColumn + 1)) : CellAddress.Parse(reference);
         if (address.Row != row || address.Column <= previousColumn)
         {
@@ -120,15 +119,14 @@ public sealed partial class OpenXmlWorkbookReader
                 }
                 else if (reader.ElementType == typeof(S.Cell))
                 {
-                    var cell = XmlValues.Load(reader);
-                    XmlValues.TextLimit(cell, options);
-                    var address = NextAddress(cell, row, col);
+                    var cell = ReadCell(reader, false, token);
+                    var address = NextAddress(cell.Reference, row, col);
                     col = address.Column;
                     minRow = Math.Min(minRow, row);
                     maxRow = Math.Max(maxRow, row);
                     minCol = Math.Min(minCol, col);
                     maxCol = Math.Max(maxCol, col);
-                    var formula = cell.Element(XmlValues.Spreadsheet + "f");
+                    var formula = cell.Formula;
                     if (formula != null)
                     {
                         var kind = XmlValues.Attr(formula, "t") ?? "normal";

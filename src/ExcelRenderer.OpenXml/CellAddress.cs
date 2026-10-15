@@ -1,7 +1,6 @@
 using System;
 using System.Globalization;
 using System.IO;
-using System.Text.RegularExpressions;
 
 namespace ExcelRenderer.OpenXml;
 
@@ -64,25 +63,60 @@ public readonly struct CellAddress : IEquatable<CellAddress>
     /// <param name="allowAbsolute">The allowAbsolute value.</param>
     internal static CellAddress ParseCore(string text, bool allowAbsolute)
     {
-        if (!Regex.IsMatch(text, allowAbsolute ? @"^\$?[A-Z]{1,3}\$?[1-9][0-9]{0,6}$" : @"^[A-Z]{1,3}[1-9][0-9]{0,6}$"))
+        if (string.IsNullOrEmpty(text))
         {
             throw new InvalidDataException("Invalid A1 coordinate.");
         }
 
-        var plain = text.Replace("$", string.Empty);
         var i = 0;
-        var col = 0;
-        while (i < plain.Length && plain[i] >= 'A' && plain[i] <= 'Z')
+        if (allowAbsolute && text[i] == '$')
         {
-            col = checked((col * 26) + plain[i++] - 'A' + 1);
+            i++;
         }
 
-        var row = int.Parse(plain.Substring(i), CultureInfo.InvariantCulture);
-        if (row > 1048576 || col > 16384)
+        var columnStart = i;
+        var column = 0;
+        while (i < text.Length && text[i] >= 'A' && text[i] <= 'Z')
+        {
+            if (i - columnStart == 3)
+            {
+                throw new InvalidDataException("Invalid A1 coordinate.");
+            }
+
+            column = (column * 26) + text[i++] - 'A' + 1;
+        }
+
+        if (column == 0 || column > 16384)
         {
             throw new InvalidDataException("Cell coordinate is outside the XLSX grid.");
         }
 
-        return new CellAddress(row, col);
+        if (allowAbsolute && i < text.Length && text[i] == '$')
+        {
+            i++;
+        }
+
+        if (i == text.Length || text[i] < '1' || text[i] > '9')
+        {
+            throw new InvalidDataException("Invalid A1 coordinate.");
+        }
+
+        var row = 0;
+        for (; i < text.Length; i++)
+        {
+            if (text[i] < '0' || text[i] > '9' || row > 1048576)
+            {
+                throw new InvalidDataException("Invalid A1 coordinate.");
+            }
+
+            row = (row * 10) + text[i] - '0';
+        }
+
+        if (row > 1048576)
+        {
+            throw new InvalidDataException("Cell coordinate is outside the XLSX grid.");
+        }
+
+        return new CellAddress(row, column);
     }
 }

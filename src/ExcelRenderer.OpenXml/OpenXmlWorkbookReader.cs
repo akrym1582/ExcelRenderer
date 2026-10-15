@@ -12,13 +12,14 @@ using S = DocumentFormat.OpenXml.Spreadsheet;
 namespace ExcelRenderer.OpenXml;
 
 /// <summary>Read-only streaming XLSX reader for rendering data. Does not calculate formulas.</summary>
-public sealed partial class OpenXmlWorkbookReader : IDisposable
+public sealed partial class OpenXmlWorkbookReader : IWorkbookDataReader
 {
     private readonly SpreadsheetDocument document;
     private readonly OpenXmlReaderOptions options;
     private readonly StyleTable styles;
     private readonly IReadOnlyList<SheetInfo> sheets;
     private readonly WorkbookInfo workbook;
+    private readonly IReadOnlyList<int> selectedWorksheetIndices;
     private readonly Dictionary<int, WorksheetPart> parts = new Dictionary<int, WorksheetPart>();
     private readonly HashSet<int> selected = new HashSet<int>();
     private readonly Dictionary<int, SheetMetadata> metadata = new Dictionary<int, SheetMetadata>();
@@ -85,6 +86,7 @@ public sealed partial class OpenXmlWorkbookReader : IDisposable
             selected.UnionWith(parts.Keys);
         }
 
+        selectedWorksheetIndices = list.Where(s => parts.ContainsKey(s.Index) && selected.Contains(s.Index)).Select(s => s.Index).ToList().AsReadOnly();
         styles = new StyleTable(part, options, token);
         workbook = new WorkbookInfo(date1904, names.AsReadOnly(), styles.DefaultFont, styles.Theme);
     }
@@ -106,6 +108,16 @@ public sealed partial class OpenXmlWorkbookReader : IDisposable
         {
             EnsureAlive();
             return sheets;
+        }
+    }
+
+    /// <summary>Gets selected worksheet positions in original workbook order, excluding chart sheets.</summary>
+    public IReadOnlyList<int> SelectedWorksheetIndices
+    {
+        get
+        {
+            EnsureAlive();
+            return selectedWorksheetIndices;
         }
     }
 
@@ -218,13 +230,22 @@ public sealed partial class OpenXmlWorkbookReader : IDisposable
         return EnumerateCore(sheetIndex, cancellationToken);
     }
 
+    /// <summary>Resolves a workbook-local style ID, including row/column styles without a cell snapshot.</summary>
+    /// <param name="styleIndex">Zero-based effective cell-XF index.</param>
+    /// <returns>Shared immutable source style metadata.</returns>
+    public CellStyleInfo ResolveStyle(int styleIndex)
+    {
+        EnsureAlive();
+        return styles.Resolve(styleIndex);
+    }
+
     /// <summary>Resolves a cell's effective style while this reader is alive.</summary>
     /// <returns>Shared immutable style metadata.</returns>
     /// <param name="cell">The cell value.</param>
     public CellStyleInfo ResolveStyle(CellRecord cell)
     {
         EnsureAlive();
-        return styles.Resolve(cell.StyleIndex);
+        return ResolveStyle(cell.StyleIndex);
     }
 
     /// <summary>Formats stored values without evaluating formulas or simulating column width.</summary>
@@ -233,37 +254,30 @@ public sealed partial class OpenXmlWorkbookReader : IDisposable
     public CellDisplayResult FormatCell(CellRecord cell)
     {
         EnsureAlive();
-        var diagnostics = new List<ReaderDiagnostic>();
-        void Report(string code, string message)
-        {
-            var diagnostic = new ReaderDiagnostic(code, "Warning", cell.SheetIndex, cell.Address, message);
-            diagnostics.Add(diagnostic);
-            options.DiagnosticSink?.Invoke(diagnostic);
-        }
-
+        List<ReaderDiagnostic>? diagnostics = null;
         if (cell.Formula != null && !cell.Formula.HasCachedResult)
         {
-            Report(ReaderDiagnosticCodes.FormulaCachedValueMissing, "Formula has no stored result; calculation is not supported.");
-            return new CellDisplayResult(string.Empty, diagnostics.AsReadOnly());
+            Report(cell, ref diagnostics, ReaderDiagnosticCodes.FormulaCachedValueMissing, "Formula has no stored result; calculation is not supported.");
+            return new CellDisplayResult(string.Empty, diagnostics == null ? Array.Empty<ReaderDiagnostic>() : diagnostics.AsReadOnly());
         }
 
         var value = cell.Value;
         var text = value.Text ?? string.Empty;
-        if (value.Kind == "Boolean")
+        if (value.Type == CellValueType.Boolean)
         {
             text = value.Boolean == true ? "TRUE" : "FALSE";
         }
-        else if (value.Kind == "Error" && cell.Formula != null)
+        else if (value.Type == CellValueType.Error && cell.Formula != null)
         {
-            Report(ReaderDiagnosticCodes.FormulaResultError, "Stored formula result is an Excel error.");
+            Report(cell, ref diagnostics, ReaderDiagnosticCodes.FormulaResultError, "Stored formula result is an Excel error.");
         }
-        else if (value.Kind == "Number" || value.Kind == "String")
+        else if (value.Type == CellValueType.Number || value.Type == CellValueType.String)
         {
             var style = ResolveStyle(cell);
             var code = style.NumberFormatCode;
-            if (code == null || code.IndexOf("[$", StringComparison.Ordinal) >= 0 || code.IndexOf("DBNum", StringComparison.OrdinalIgnoreCase) >= 0 || code.IndexOf("gg", StringComparison.OrdinalIgnoreCase) >= 0)
+            if (code == null || (code != "General" && (code.IndexOf("[$", StringComparison.Ordinal) >= 0 || code.IndexOf("DBNum", StringComparison.OrdinalIgnoreCase) >= 0 || code.IndexOf("gg", StringComparison.OrdinalIgnoreCase) >= 0)))
             {
-                Report(ReaderDiagnosticCodes.UnsupportedNumberFormat, "Number format is unsupported; General display is used.");
+                Report(cell, ref diagnostics, ReaderDiagnosticCodes.UnsupportedNumberFormat, "Number format is unsupported; General display is used.");
                 code = "General";
             }
 
@@ -278,14 +292,14 @@ public sealed partial class OpenXmlWorkbookReader : IDisposable
 
             if (!format.IsValid)
             {
-                Report(ReaderDiagnosticCodes.UnsupportedNumberFormat, "Number format is invalid; General display is used.");
+                Report(cell, ref diagnostics, ReaderDiagnosticCodes.UnsupportedNumberFormat, "Number format is invalid; General display is used.");
                 format = new NumberFormat("General");
             }
 
-            text = format.Format(value.Kind == "Number" ? (object)value.Number!.Value : text, options.Culture!, workbook.Date1904);
+            text = format.Format(value.Type == CellValueType.Number ? (object)value.Number!.Value : text, options.Culture!, workbook.Date1904);
         }
 
-        return new CellDisplayResult(text, diagnostics.AsReadOnly());
+        return new CellDisplayResult(text, diagnostics == null ? Array.Empty<ReaderDiagnostic>() : diagnostics.AsReadOnly());
     }
 
     /// <summary>Closes package resources while leaving the caller's input stream open.</summary>
@@ -298,6 +312,14 @@ public sealed partial class OpenXmlWorkbookReader : IDisposable
             activeReader = null;
             document.Dispose();
         }
+    }
+
+    private void Report(CellRecord cell, ref List<ReaderDiagnostic>? diagnostics, string code, string message)
+    {
+        var diagnostic = new ReaderDiagnostic(code, "Warning", cell.SheetIndex, cell.Address, message);
+        diagnostics ??= new List<ReaderDiagnostic>();
+        diagnostics.Add(diagnostic);
+        options.DiagnosticSink?.Invoke(diagnostic);
     }
 
     private WorksheetPart GetPart(int index)

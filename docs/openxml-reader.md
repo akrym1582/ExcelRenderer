@@ -31,11 +31,11 @@ Only one worksheet enumeration or metadata operation can be active per reader. A
 
 ## Traversal and retained memory
 
-Open reads workbook metadata, styles and theme, but no worksheet body or shared strings. A worksheet's first request performs a metadata pass, then enumeration reads the part again. Metadata holds row definitions, normalized column intervals, merges, formula masters and a row interval index for array formulas. It never holds a cell dictionary or a whole worksheet DOM. Enumeration loads one SDK cell at a time and projects it into independent immutable metadata. Breaking, errors and cancellation dispose the current part reader; re-enumeration starts from the beginning.
+Open reads workbook metadata, styles and theme, but no worksheet body or shared strings. A worksheet's first request performs a metadata pass, then enumeration reads the part again. Metadata holds row definitions, normalized column intervals, merges, formula masters and a row interval index for array formulas. It never holds a cell dictionary or a whole worksheet DOM. Enumeration reads SDK start/end events and leaf text directly without constructing cell or shared-string-item DOMs. Only formula elements, partial run properties and small metadata entries use DOM projection. Breaking, errors and cancellation dispose the current part reader; re-enumeration starts from the beginning.
 
 Shared strings load on the first `t=s` cell, entry by entry. **The complete shared-string table is retained**, even when only a small selected sheet uses it. There is no disk index or process-global intern/cache. A rich string's immutable runs are shared; null run properties mean “inherit this component from the cell font.” Resolve the cell's font independently before overlaying explicitly present run properties. Phonetics do not enter display text, but their presence and storage cost are recognized. OOXML `_xHHHH_` decoding is applied exactly once; `_x005F_x0041_` remains literal `_x0041_`.
 
-Memory therefore grows with shared strings, style tables, row/column metadata, merges and formula groups. It is **not constant memory** and the limits below are not a process RSS cap. Two worksheet passes and per-cell DOM/projection cost can make this implementation slower than ClosedXML for dense sheets. See the [measured validation](openxml-reader-validation.md).
+Memory therefore grows with shared strings, style tables, row/column metadata, merges and formula groups. It is **not constant memory** and the limits below are not a process RSS cap. Two worksheet passes and per-cell DOM/projection cost can make this implementation slower than ClosedXML for dense sheets. See the [initial validation](openxml-reader-validation.md) and the [subsequent optimization measurements](openxml-reader-optimization.md).
 
 | Option | Default | Meaning |
 | --- | ---: | --- |
@@ -45,13 +45,13 @@ Memory therefore grows with shared strings, style tables, row/column metadata, m
 | `MaxStyleRecords` | 100,000 | Entries in each style table |
 | `MaxCellTextCharacters` | 1 Mi | Source UTF-16 text in one cell or string entry, including formula/phonetic text |
 
-Limits must be positive. Exceeding a limit throws `InvalidDataException`; there is no truncation or fallback reader. XML parser/part-limit failures are wrapped in `InvalidDataException` with their inner exception. Cancellation tokens are checked in traversal loops and at each entry, not during the SDK's synchronous load of one element. Culture is a read-only snapshot taken at Open. The per-reader number-format cache retains at most 8,192 codes.
+Limits must be positive. Exceeding a limit throws `InvalidDataException`; there is no truncation or fallback reader. XML parser/part-limit failures are wrapped in `InvalidDataException` with their inner exception. Cancellation tokens are checked in traversal loops and at each entry, not during the SDK's synchronous reading of one leaf text or metadata element. Culture is a read-only snapshot taken at Open. The per-reader number-format cache retains at most 8,192 codes.
 
 ## Data and source units
 
 Every XML-present `c` is returned, including style-only cells, saved empty strings, and cells inside merges. No missing cells or merge anchors are synthesized. `RawDimension` is an untrusted hint; actual bounds come from coordinates. Missing row/cell coordinates are inferred in XML order. Conflicting, duplicate, reversed or out-of-grid coordinates fail. `CellAddress.Parse` accepts plain coordinates; `CellRange.Parse` additionally accepts dollar signs for absolute A1 references.
 
-`CellValue.Kind` is `Blank`, `String`, `Number`, `Boolean`, `Error`, or `IsoDate`. Numbers retain the finite double and `CellRecord.RawValue` separately. Boolean values must be 0/1; false displays `FALSE`. ISO date text is validated and retained with its original timezone spelling. No UTC/local conversion occurs. Invalid numbers/shared indexes fail rather than becoming blanks.
+`CellValue.Type` provides the `CellValueType` enum for adapter dispatch. The existing `Kind` string remains `Blank`, `String`, `Number`, `Boolean`, `Error`, or `IsoDate`. Numbers retain the finite double and `CellRecord.RawValue` separately. Boolean values must be 0/1; false displays `FALSE`. ISO date text is validated and retained with its original timezone spelling. No UTC/local conversion occurs. Invalid numbers/shared indexes fail rather than becoming blanks.
 
 | Metadata | Unit / representation |
 | --- | --- |
@@ -99,3 +99,39 @@ Diagnostic codes are defined in `ReaderDiagnosticCodes`. Diagnostics have code, 
 | Core input preparer; Mapping | No replacement | Preserve upload validation/spooling and editing/saving responsibilities |
 
 Existing public `ExcelStyleConverter.Convert(IXLCell)` is preserved. No existing product project references the new reader, and it is not included in existing NuGet packages. Validation commands and evidence are in [the validation tool README](../tools/ExcelRenderer.OpenXml.Validation/README.md).
+
+## Adapter boundary for Core and the full library (not connected)
+
+`OpenXmlWorkbookReader` implements `IWorkbookDataReader`. The interface exposes source snapshots and stored-value formatting; profiling counters stay on the concrete reader. `SelectedWorksheetIndices` supplies original workbook positions in workbook order and excludes chart sheets, while `Sheets` retains all sheets. The future full adapter must also receive the original RenderRequest selection to decide chart-only diagnostics; body indexes do not replace the product request. Neither Core nor the main library references this project yet. This is a consumer boundary for future adapters, not a general third-party backend construction API; snapshot constructors remain internal.
+
+```csharp
+IWorkbookDataReader source = reader;
+foreach (var index in source.SelectedWorksheetIndices)
+{
+    var geometry = source.ReadWorksheetInfo(index);
+    // ResolveStyle(int) also works for geometry.Rows/Columns styles and style zero.
+    foreach (var cell in source.EnumerateCells(index))
+    {
+        var style = source.ResolveStyle(cell.StyleIndex);
+        var display = source.FormatCell(cell);
+        var type = cell.Value.Type;
+        foreach (var run in cell.RichTextRuns)
+        {
+            var font = style.FontProperties.WithOverrides(run.FontProperties);
+            // A future adapter applies its own fallback, color and drawing policy here.
+        }
+    }
+}
+```
+
+`FontProperties` on a style, `DefaultFontProperties` on the workbook and `FontProperties` on each rich run are immutable `FontInfo` views. Name and size (pt), bold/italic/strike, underline, vertical alignment, theme scheme and color remain nullable when unspecified. The original `Font`/`Properties` metadata is also retained. `WithOverrides` changes only explicitly supplied fields: false and underline `none` override true/single; null inherits. It does not measure/substitute fonts or normalize text. The composed font survives reader disposal. Do not store a composed font in the shared-string table: the same run may be used with different cell fonts.
+
+The future connection should keep the following ownership boundaries:
+
+- Core owns the adapter from these source snapshots to its internal `ReportDocument`/`ReportSheet`/styles. Cache converted styles per reader session by `(StyleIndex, CellValue.Type, product policy)`, not by style ID alone: General alignment and Core/full normalization differ. Run font composition also depends on each base cell font. Resolve a row/column/default style through `ResolveStyle(int)` without synthesizing a `CellRecord`.
+- Core retains input validation/spooling (`PreparedWorkbook`), font measurement and Excel-width-to-point conversion. Row heights are already pt and margins remain inch. Keep all source defaults/hidden intervals and separate print areas; preserve absent values versus zero. Merge synthesis, model materialization and drawing decisions belong in the adapter/layout layer.
+- Core normalizes IVS/text according to its existing scope; the full library retains its richer policy and metadata. `FontInfo` is source information, not the final rendering font. The adapter selects fallback/defaults from source Normal/theme and the caller's supplied fonts, interprets General alignment using the typed value, and converts resolved RGB while retaining unresolved-color diagnostics.
+- Map `ReaderDiagnosticCodes` to the existing diagnostic aggregation layer. Keep formula-cache diagnostics and unsupported formats visible. This backend supports CachedValue only; Legacy/Recalculate routing must remain an explicit product-level decision in a later integration.
+- Full drawing/image/link readers may consume independent cursors from the prepared input and join by original sheet index/name/address. Do not expose SDK package/part objects through this interface or give this library product extension hooks. Replace existing `IXLCell`/`IXLWorksheet` hooks only in the future integration, while preserving the public `ExcelStyleConverter.Convert(IXLCell)` API.
+
+There is no new converter option or reader factory in Core/main in this change. A later connection must adjust dependency guards deliberately, add the Core adapter once, and let the full library extend that adapter rather than duplicating traversal and layout algorithms.

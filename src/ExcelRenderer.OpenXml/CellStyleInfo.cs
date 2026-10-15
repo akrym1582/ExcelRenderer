@@ -28,6 +28,7 @@ public sealed class CellStyleInfo
         XfId = xfId;
         NumberFormatCode = numberFormatCode;
         Font = font;
+        FontProperties = FontInfo.FromElement(font);
         Fill = fill;
         Border = border;
         Alignment = alignment;
@@ -69,4 +70,7 @@ public sealed class CellStyleInfo
 
     /// <summary>Gets the original cell-XF attributes, including apply flags and quotePrefix.</summary>
     public IReadOnlyDictionary<string, string> Attributes { get; }
+
+    /// <summary>Gets the saved font properties without applying product normalization or fallback.</summary>
+    public FontInfo FontProperties { get; }
 }

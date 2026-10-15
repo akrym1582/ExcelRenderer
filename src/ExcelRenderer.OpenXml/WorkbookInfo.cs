@@ -15,6 +15,7 @@ public sealed class WorkbookInfo
         Date1904 = date1904;
         DefinedNames = definedNames;
         DefaultFont = defaultFont;
+        DefaultFontProperties = FontInfo.FromElement(defaultFont);
         Theme = theme;
     }
 
@@ -29,4 +30,7 @@ public sealed class WorkbookInfo
 
     /// <summary>Gets the Theme metadata.</summary>
     public ElementInfo? Theme { get; }
+
+    /// <summary>Gets the source Normal font properties; absent components remain null.</summary>
+    public FontInfo DefaultFontProperties { get; }
 }

@@ -1,0 +1,46 @@
+{
+  "Build": {
+    "Command": "dotnet build ExcelRenderer.slnx -t:Rebuild --no-restore --verbosity:minimal",
+    "Warnings": 0,
+    "Errors": 0
+  },
+  "Tests": {
+    "Command": "dotnet test ExcelRenderer.slnx --no-restore",
+    "Passed": 778,
+    "Failed": 0,
+    "Skipped": 0,
+    "Projects": {
+      "ExcelRenderer.OpenXml.Tests.dll": 121,
+      "ExcelRenderer.Core.Tests.dll": 80,
+      "ExcelRenderer.Mapping.Tests.dll": 49,
+      "ExcelRenderer.Tests.dll": 466,
+      "ExcelRenderer.Tool.Tests.dll": 62
+    }
+  },
+  "LockedRestore": {
+    "Command": "dotnet restore ExcelRenderer.slnx --locked-mode",
+    "Status": "Passed"
+  },
+  "DependencyCheck": {
+    "Command": "python3 scripts/check-core-dependencies.py",
+    "Status": "Passed"
+  },
+  "Comparison": {
+    "Files": 15,
+    "Cells": 2396,
+    "UnexplainedDifferences": 0,
+    "ExplainedDifferences": 0
+  },
+  "ProductConnection": {
+    "CoreMainMappingToolSourcesChanged": false,
+    "ProductProjectReferencesChanged": false
+  },
+  "Benchmark": {
+    "BaselineCommit": "cbf5257bba8382e61794ef8ac1a20710a913b2f6",
+    "InputHashesCellCountsAndChecksumsMatchAcrossVersions": true,
+    "ReaderProjectionSummariesPerVersion": 24,
+    "SamplesPerSummary": 5,
+    "WarmupPerSummary": 1,
+    "IndependentProcessPerSample": true
+  }
+}

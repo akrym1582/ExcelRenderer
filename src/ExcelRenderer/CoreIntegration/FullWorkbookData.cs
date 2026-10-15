@@ -11,4 +11,8 @@ namespace ExcelRenderer.CoreIntegration;
 internal sealed record FullWorkbookData(
     IReadOnlyDictionary<string, IReadOnlyList<ReportShape>> Shapes,
     IReadOnlyDictionary<string, IReadOnlyDictionary<string, DrawingPictureMetadata>> Pictures,
-    IReadOnlyDictionary<string, SheetHyperlinkMetadata> Hyperlinks) : ICoreExtensionData;
+    IReadOnlyDictionary<string, SheetHyperlinkMetadata> Hyperlinks) : ICoreExtensionData
+{
+    /// <summary>Gets deferred chart candidates by original worksheet.</summary>
+    internal IReadOnlyDictionary<string, IReadOnlyList<UnsupportedFeature>> UnsupportedFeatures { get; init; } = new Dictionary<string, IReadOnlyList<UnsupportedFeature>>();
+}

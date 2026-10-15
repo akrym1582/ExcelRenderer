@@ -17,6 +17,9 @@ namespace ExcelRenderer;
 /// <summary>Excel ワークシートを PNG 画像へ出力するときの設定を表します。</summary>
 public sealed record ImageExportOptions
 {
+    /// <summary>Gets the workbook formula display policy.</summary>
+    public ExcelRenderer.Excel.ExcelReadOptions ReadOptions { get; init; } = new();
+
     /// <summary>Gets the worksheet name. 出力対象のワークシート名を取得します。<see langword="null"/> の場合はすべてのワークシートを出力します。</summary>
     public string? SheetName { get; init; }
 

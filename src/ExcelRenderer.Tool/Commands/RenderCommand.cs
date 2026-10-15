@@ -16,6 +16,7 @@ public static class RenderCommand
     {
         var input = CommandSupport.InputArgument();
         var data = MappingCommandSupport.DataOption();
+        var formulaMode = CommandSupport.FormulaModeOption();
         var output = CommandSupport.OutputOption("Output file for PDF, or output directory for other formats.");
         var format = new Option<string>("--format") { Description = "Output format: pdf, png, svg, or markdown.", Required = true };
         format.Validators.Add(result =>
@@ -52,6 +53,9 @@ public static class RenderCommand
         var trim = new Option<bool>("--trim") { Description = "Crop each page or canvas around visible drawing content." };
         var padding = new Option<double?>("--trim-padding") { Description = "Nonnegative crop padding in points (default: 2). Requires --trim." };
         var hyperlinks = CommandSupport.HyperlinksOption();
+        var layoutWarnings = new Option<bool>("--layout-warnings") { Description = "Report clipped or too-small finalized cell text." };
+        var minimumFontSize = new Option<double?>("--min-readable-font-size") { Description = "Minimum readable font size in points; requires --layout-warnings." };
+        var unsupported = new Option<bool>("--detect-unsupported-features") { Description = "Report unsupported conditional and partial text formatting." };
         var strict = new Option<bool>("--strict") { Description = "Treat all warnings and errors as conversion failures." };
         var warningsAsErrors = new Option<string[]>("--warnings-as-errors")
         {
@@ -66,6 +70,18 @@ public static class RenderCommand
             input, output, format, sheet, pages, imageLayout, ranges, maxRangeCells, trim, padding, hyperlinks, strict, warningsAsErrors, manifest,
         };
         command.Add(data);
+        command.Add(formulaMode);
+        command.Add(layoutWarnings);
+        command.Add(minimumFontSize);
+        command.Add(unsupported);
+        command.Validators.Add(result =>
+        {
+            if (result.GetValue(minimumFontSize) is { } minimum &&
+                (!result.GetValue(layoutWarnings) || !double.IsFinite(minimum) || minimum <= 0))
+            {
+                result.AddError("--min-readable-font-size requires --layout-warnings and a positive finite value.");
+            }
+        });
         CommandSupport.AddFontOptions(command, fonts);
         buffering.AddTo(command);
 
@@ -85,7 +101,11 @@ public static class RenderCommand
                 result.GetValue(trim),
                 result.GetValue(padding),
                 CommandSupport.GetHyperlinks(result.GetValue(hyperlinks)!),
+                CommandSupport.GetReadOptions(result.GetValue(formulaMode)!),
                 result.GetValue(strict),
+                result.GetValue(layoutWarnings),
+                result.GetValue(minimumFontSize) ?? 6,
+                result.GetValue(unsupported),
                 result.GetValue(warningsAsErrors),
                 result.GetValue(manifest),
                 CommandSupport.GetFontOptions(result, fonts),
@@ -107,7 +127,11 @@ public static class RenderCommand
         bool trim,
         double? padding,
         HyperlinkMode hyperlinks,
+        Excel.ExcelReadOptions readOptions,
         bool strict,
+        bool layoutWarnings,
+        double minimumFontSize,
+        bool unsupported,
         string[]? warningsAsErrors,
         string? manifestPath,
         FontOptions fontOptions,
@@ -161,6 +185,7 @@ public static class RenderCommand
             Buffering = buffering,
             Trim = new TrimOptions { Enabled = trim, PaddingPoints = padding ?? 2 },
             Hyperlinks = hyperlinks,
+            ReadOptions = readOptions,
             ImageLayout = imageLayout,
             Selection = new SelectionOptions
             {
@@ -172,6 +197,9 @@ public static class RenderCommand
             DiagnosticOptions = new DiagnosticOptions
             {
                 StrictMode = strict,
+                EnableLayoutWarnings = layoutWarnings,
+                MinimumReadableFontSize = minimumFontSize,
+                DetectUnsupportedFeatures = unsupported,
                 TreatAsErrors = warningsAsErrors is { Length: > 0 } ? warningsAsErrors : Array.Empty<string>(),
             },
             FontOptions = fontOptions,

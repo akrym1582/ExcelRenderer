@@ -118,7 +118,8 @@ internal static class DrawCommandBounds
 
     private static ReportRect? Text(DrawTextCommand command, IFontManager fonts)
     {
-        if (command.Style.Font.Color?.Alpha == 0)
+        if (command.Style.Font.Color?.Alpha == 0 &&
+            command.TextLayout?.Lines.SelectMany(line => line.Runs).Any(run => run.Font is { } font && font.Color?.Alpha != 0) != true)
         {
             return null;
         }
@@ -139,7 +140,7 @@ internal static class DrawCommandBounds
         {
             foreach (var run in positioned.Line.Runs)
             {
-                if (string.IsNullOrWhiteSpace(run.Run.Text))
+                if (string.IsNullOrWhiteSpace(run.Run.Text) || (run.Font ?? command.Style.Font).Color?.Alpha == 0)
                 {
                     continue;
                 }
@@ -147,7 +148,8 @@ internal static class DrawCommandBounds
                 using Stream stream = run.Run.Font.FontData is { } bytes ? new MemoryStream(bytes, false) : File.OpenRead(run.Run.Font.FilePath);
                 using var ownedFace = ConversionFontResources.Current is null ? SKTypeface.FromStream(stream) : null;
                 var face = ConversionFontResources.Current?.GetTypeface(run.Run.Font) ?? ownedFace;
-                using var font = new SKFont(face, (float)size);
+                var runSize = run.Font?.Size ?? size;
+                using var font = new SKFont(face, (float)runSize);
                 font.MeasureText(run.Run.Text, out var ink);
                 using var glyphPath = run.Run.GlyphId is { } glyph ? font.GetGlyphPath(glyph) : null;
                 if (glyphPath is not null && !glyphPath.Bounds.IsEmpty)
@@ -162,16 +164,20 @@ internal static class DrawCommandBounds
                 {
                     // Color and compatibility glyphs use their finalized logical placement as a safe fallback.
                     bounds = new(
-                        x - (size * .2),
+                        x - (runSize * .2),
                         baseline - positioned.Line.Ascent,
-                        Math.Max(run.Advance, size) + (size * .4),
+                        Math.Max(run.Advance, runSize) + (runSize * .4),
                         positioned.Line.Ascent + positioned.Line.Descent + positioned.Line.Leading);
                 }
 
                 result = Union(result, bounds);
+                if ((run.Font ?? command.Style.Font).Underline)
+                {
+                    result = Union(result, new ReportRect(x, baseline + .5, run.Advance, 1));
+                }
             }
 
-            if (command.Style.Font.Underline)
+            if (command.Style.Font.Underline && positioned.Line.Runs.Count == 0)
             {
                 result = Union(result, new ReportRect(positioned.Left, positioned.Baseline + .5, positioned.Line.Width, 1));
             }

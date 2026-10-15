@@ -5,6 +5,9 @@ namespace ExcelRenderer;
 /// <summary>SVG 出力の対象ワークシートを指定します。</summary>
 public sealed class SvgExportOptions
 {
+    /// <summary>Gets the workbook formula display policy.</summary>
+    public ExcelRenderer.Excel.ExcelReadOptions ReadOptions { get; init; } = new();
+
     /// <summary>Gets the SVG intermediate buffer policy; it does not affect PDF or PNG buffers.</summary>
     public ExcelRenderer.Rendering.RenderBufferOptions Buffering { get; init; } = new();
 

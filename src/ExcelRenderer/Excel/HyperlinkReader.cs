@@ -21,7 +21,11 @@ internal static class HyperlinkReader
         for (var sheetIndex = 0; sheetIndex < sheets.Length; sheetIndex++)
         {
             var sheet = sheets[sheetIndex];
-            var part = (WorksheetPart)workbook.GetPartById(sheet.Id!);
+            if (workbook.GetPartById(sheet.Id!) is not WorksheetPart part)
+            {
+                continue;
+            }
+
             var links = new List<ReportHyperlink>();
             var displays = new Dictionary<CellAddress, string>();
             var relationships = part.HyperlinkRelationships.ToDictionary(r => r.Id, StringComparer.Ordinal);

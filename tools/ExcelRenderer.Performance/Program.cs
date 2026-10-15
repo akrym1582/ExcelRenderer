@@ -13,6 +13,18 @@ using PdfSharp.Pdf.IO;
 
 var command = args[0];
 var path = args[1];
+if (command == "reader-fixtures")
+{
+    ReaderFixtures.Generate(path);
+    return;
+}
+
+if (command == "reader-case")
+{
+    ReaderBenchmark.Run(path);
+    return;
+}
+
 if (command == "input-spool")
 {
     await InputSpoolBenchmark.RunAsync(args);

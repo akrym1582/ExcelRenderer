@@ -5,7 +5,7 @@ using ExcelRenderer.Model;
 namespace ExcelRenderer.CoreIntegration;
 
 /// <summary>Bridges finalized full text geometry while keeping font runs outside Core.</summary>
-internal sealed class CoreTextLayoutAdapter : CoreTextMeasurerAdapter, Core.Abstractions.ITextLayoutService
+internal sealed class CoreTextLayoutAdapter : CoreTextMeasurerAdapter, Core.Abstractions.ITextLayoutService, Core.Abstractions.IExtendedTextLayoutService
 {
     private readonly ITextLayoutService layout;
     private readonly ConditionalWeakTable<TextLayoutResult, Core.Abstractions.TextLayoutResult> layouts = new();
@@ -21,6 +21,18 @@ internal sealed class CoreTextLayoutAdapter : CoreTextMeasurerAdapter, Core.Abst
     {
         var result = layout.Layout(text, ConvertFont(font), availableWidth, wrap);
         return IsImmutable(result) ? layouts.GetValue(result, ToCore) : ToCore(result);
+    }
+
+    /// <inheritdoc/>
+    public Core.Abstractions.TextLayoutResult? Layout(Core.Model.ReportCell cell, double availableWidth, bool wrap)
+    {
+        if (layout is not IRichTextLayoutService rich || cell.ExtensionData is not FullCellTextData data ||
+            cell.Style.TextRotation != 0 || cell.Style.TopToBottom)
+        {
+            return null;
+        }
+
+        return ToCore(rich.Layout(data.Runs, ConvertFont(cell.Style.Font), availableWidth, wrap));
     }
 
     /// <summary>Preserves all finalized metrics without measuring again.</summary>
@@ -97,7 +109,7 @@ internal sealed class CoreTextLayoutAdapter : CoreTextMeasurerAdapter, Core.Abst
     private static TextLayoutLine ConvertLine(Core.Abstractions.TextLayoutLine line)
     {
         var runs = line.ExtensionData is FullLineData data
-            ? line.ExtensionScale == 1 ? data.Runs : data.Runs.Select(run => run with { X = run.X * line.ExtensionScale, Advance = run.Advance * line.ExtensionScale }).ToArray()
+            ? line.ExtensionScale == 1 ? data.Runs : data.Runs.Select(run => run with { X = run.X * line.ExtensionScale, Advance = run.Advance * line.ExtensionScale, Font = run.Font is { } font ? font with { Size = font.Size * line.ExtensionScale } : null }).ToArray()
             : [];
         return new(line.Text, line.Width, line.Height, line.Baseline, runs, line.ExplicitBreak)
         {

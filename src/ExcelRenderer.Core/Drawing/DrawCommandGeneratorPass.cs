@@ -45,6 +45,7 @@ internal sealed class DrawCommandGeneratorPass
                 {
                     yield return new DrawTextCommand(pageNumber, GetContentBounds(cell), cell.Cell.Text!, cell.Cell.Style)
                     {
+                        SourceAddress = cell.SourceAddress,
                         TextLayout = cell.TextLayout ?? (requiresTextLayout ? throw new InvalidOperationException("Cell text layout is missing.") : null),
                         ClipBounds = clip,
                     };

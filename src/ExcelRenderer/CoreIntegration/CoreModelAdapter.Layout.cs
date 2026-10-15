@@ -12,6 +12,15 @@ internal static partial class CoreModelAdapter
     internal static Core.Model.ReportSheet ToCore(ReportSheet value)
     {
         var styles = new Dictionary<CellStyle, Core.Model.CellStyle>();
+        var richSnapshots = new Dictionary<ReportCell, FullCellTextData?>();
+        if (value.Cells is not CoreDictionaryView<Core.Model.CellAddress, Core.Model.ReportCell, CellAddress, ReportCell>)
+        {
+            foreach (var cell in value.Cells.Values.Where(cell => cell.RichTextRuns is not null))
+            {
+                richSnapshots[cell] = FullCellTextData.Create(cell);
+            }
+        }
+
         var sourceCells = value.Cells is CoreDictionaryView<Core.Model.CellAddress, Core.Model.ReportCell, CellAddress, ReportCell> cells
             ? cells.Source
             : new CoreDictionaryView<CellAddress, ReportCell, Core.Model.CellAddress, Core.Model.ReportCell>(value.Cells, ToCore, ToPublic, Cell);
@@ -32,7 +41,7 @@ internal static partial class CoreModelAdapter
             SourceSheetIndex = value.SourceSheetIndex,
             RequestedRange = value.RequestedRange is { } requested ? ToCore(requested) : null,
             RenderUsedRange = value.RenderUsedRange is { } used ? ToCore(used) : null,
-            ExtensionData = new FullSheetData(value.Shapes ?? [], new Excel.SheetHyperlinkMetadata(value.Hyperlinks, value.HyperlinkNames, new Dictionary<CellAddress, string>())),
+            ExtensionData = new FullSheetData(value.Shapes ?? [], new Excel.SheetHyperlinkMetadata(value.Hyperlinks, value.HyperlinkNames, new Dictionary<CellAddress, string>())) { UnsupportedFeatures = value.UnsupportedFeatures, CellReadDiagnostics = value.CellReadDiagnostics },
         };
 
         Core.Model.ReportCell Cell(ReportCell cell)
@@ -45,6 +54,7 @@ internal static partial class CoreModelAdapter
 
             return new(cell.Text, style, cell.RowSpan, cell.ColumnSpan, cell.Formula)
             {
+                ExtensionData = richSnapshots.GetValueOrDefault(cell),
                 MergedBorders = cell.MergedBorders?.Select(border => new Core.Model.CellBorder(ToCore(border.Address), ToCore(border.Border))).ToArray(),
             };
         }
@@ -99,6 +109,8 @@ internal static partial class CoreModelAdapter
     /// <returns>The public cell.</returns>
     internal static ReportCell ToPublic(Core.Model.ReportCell value, Excel.StylePool styles) => new(value.Text, styles.Intern(ToPublic(value.Style)), value.RowSpan, value.ColumnSpan, value.Formula)
     {
+        RichTextRuns = (value.ExtensionData as FullCellTextData)?.Runs,
+        UnsupportedRichTextFormatting = (value.ExtensionData as FullCellTextData)?.UnsupportedFormatting ?? false,
         MergedBorders = value.MergedBorders?.Select(border => new CellBorder(ToPublic(border.Address), styles.Intern(ToPublic(border.Border)))).ToArray(),
     };
 

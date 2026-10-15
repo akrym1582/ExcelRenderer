@@ -8,6 +8,9 @@ namespace ExcelRenderer.Markdown;
 /// </summary>
 public sealed record MarkdownExportOptions
 {
+    /// <summary>Gets the workbook formula display policy.</summary>
+    public ExcelRenderer.Excel.ExcelReadOptions ReadOptions { get; init; } = new();
+
     /// <summary>Gets the cell hyperlink preservation mode.</summary>
     public HyperlinkMode Hyperlinks { get; init; } = HyperlinkMode.Preserve;
 

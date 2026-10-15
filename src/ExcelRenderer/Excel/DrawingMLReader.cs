@@ -42,7 +42,8 @@ internal static class DrawingMLReader
     /// <returns>ワークシート名をキーとし、描画順に並んだ対応図形を値とする読み取り専用辞書を返します。</returns>
     /// <param name="selectedSheets">Sheet bodies to retain; diagnostics still cover every sheet.</param>
     /// <param name="unselectedGeometry">Optional lightweight anchor ranges for unselected-sheet dimension and diagnostic scans.</param>
-    internal static IReadOnlyDictionary<string, IReadOnlyList<ReportShape>> Read(Stream input, DiagnosticCollector? diagnostics, IReadOnlyList<string>? selectedSheets = null, IDictionary<string, IReadOnlyList<CellRange>>? unselectedGeometry = null)
+    /// <param name="unsupportedFeatures">Optional deferred chart candidates, replacing immediate chart diagnostics.</param>
+    internal static IReadOnlyDictionary<string, IReadOnlyList<ReportShape>> Read(Stream input, DiagnosticCollector? diagnostics, IReadOnlyList<string>? selectedSheets = null, IDictionary<string, IReadOnlyList<CellRange>>? unselectedGeometry = null, IDictionary<string, IReadOnlyList<CoreIntegration.UnsupportedFeature>>? unsupportedFeatures = null)
     {
         using var document = SpreadsheetDocument.Open(input, false);
         var workbook = document.WorkbookPart;
@@ -61,6 +62,7 @@ internal static class DrawingMLReader
             }
 
             var list = new List<ReportShape>();
+            var unsupported = new List<CoreIntegration.UnsupportedFeature>();
             var geometry = new List<CellRange>();
             var drawing = worksheet.DrawingsPart?.WorksheetDrawing;
             if (drawing is not null)
@@ -104,6 +106,18 @@ internal static class DrawingMLReader
 
                     foreach (var child in anchor.ChildElements.Where(x => x is Xdr.GraphicFrame or Xdr.GroupShape))
                     {
+                        if (unsupportedFeatures is not null && child.Descendants<DocumentFormat.OpenXml.Drawing.Charts.ChartReference>().Any())
+                        {
+                            if (selectedSheets is null || selectedSheets.Contains(sheet.Name?.Value, StringComparer.Ordinal))
+                            {
+                                var originalAnchor = ReadAnchor(anchor);
+                                var ranges = originalAnchor.From is { } from ? new[] { new CellRange(from, originalAnchor.To ?? from) } : Array.Empty<CellRange>();
+                                unsupported.Add(new("UnsupportedDrawingObject", "An anchored chart is not rendered.", "chart-" + (z + 1), ranges) { Anchor = originalAnchor });
+                            }
+
+                            continue;
+                        }
+
                         diagnostics?.Add(
                             new(
                                 "UnsupportedDrawingObject",
@@ -119,6 +133,11 @@ internal static class DrawingMLReader
 
             var name = sheet.Name?.Value ?? string.Empty;
             result[name] = list;
+            if (unsupportedFeatures is not null)
+            {
+                unsupportedFeatures[name] = unsupported;
+            }
+
             if (unselectedGeometry is not null)
             {
                 unselectedGeometry[name] = geometry;

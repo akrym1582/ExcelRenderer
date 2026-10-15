@@ -30,6 +30,12 @@ public sealed record ReportSheet(
     /// </summary>
     public IReadOnlyList<CellRange> PrintAreas { get; init; } = [];
 
+    /// <summary>Gets deferred formula display diagnostics.</summary>
+    internal IReadOnlyList<Rendering.ConversionDiagnostic> CellReadDiagnostics { get; init; } = [];
+
+    /// <summary>Gets deferred unsupported-feature candidates.</summary>
+    internal IReadOnlyList<CoreIntegration.UnsupportedFeature> UnsupportedFeatures { get; init; } = [];
+
     /// <summary>Gets workbook and worksheet scoped name definitions for internal hyperlinks.</summary>
     internal IReadOnlyDictionary<string, string> HyperlinkNames { get; init; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 

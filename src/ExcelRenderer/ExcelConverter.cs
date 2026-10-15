@@ -33,8 +33,9 @@ public static partial class ExcelConverter
         ValidateInput(inputPath);
         ValidateNewFile(outputPath);
         options ??= new PdfExportOptions();
+        (options.ReadOptions ?? throw new ArgumentException("ReadOptions are required.", nameof(options))).Validate();
         await using var input = File.OpenRead(inputPath);
-        await RenderAsync(input, CreateLegacyRequest(OutputFormat.Pdf, options.SheetName, fontOptions: options.FontOptions) with { Hyperlinks = options.Hyperlinks }, new NewFileOutputSink(outputPath), cancellationToken)
+        await RenderAsync(input, CreateLegacyRequest(OutputFormat.Pdf, options.SheetName, fontOptions: options.FontOptions) with { Hyperlinks = options.Hyperlinks, ReadOptions = options.ReadOptions }, new NewFileOutputSink(outputPath), cancellationToken)
             .ConfigureAwait(false);
     }
 
@@ -57,6 +58,7 @@ public static partial class ExcelConverter
         }
 
         options ??= new ImageExportOptions();
+        (options.ReadOptions ?? throw new ArgumentException("ReadOptions are required.", nameof(options))).Validate();
         if (options.Dpi <= 0)
         {
             throw new ArgumentOutOfRangeException(
@@ -73,7 +75,7 @@ public static partial class ExcelConverter
         await using var input = File.OpenRead(inputPath);
         await RenderAsync(
             input,
-            CreateLegacyRequest(OutputFormat.Png, options.SheetName, options.Dpi, options.FontOptions),
+            CreateLegacyRequest(OutputFormat.Png, options.SheetName, options.Dpi, options.FontOptions) with { ReadOptions = options.ReadOptions },
             new DirectoryOutputSink(outputDirectory),
             cancellationToken).ConfigureAwait(false);
     }
@@ -97,6 +99,7 @@ public static partial class ExcelConverter
         }
 
         options ??= new SvgExportOptions();
+        (options.ReadOptions ?? throw new ArgumentException("ReadOptions are required.", nameof(options))).Validate();
         if (Directory.Exists(outputDirectory) && Directory.EnumerateFileSystemEntries(outputDirectory).Any())
         {
             throw new IOException($"Output directory is not empty: {outputDirectory}");
@@ -105,7 +108,7 @@ public static partial class ExcelConverter
         await using var input = File.OpenRead(inputPath);
         await RenderAsync(
             input,
-            CreateLegacyRequest(OutputFormat.Svg, options.SheetName, fontOptions: options.FontOptions) with { Buffering = options.Buffering },
+            CreateLegacyRequest(OutputFormat.Svg, options.SheetName, fontOptions: options.FontOptions) with { Buffering = options.Buffering, ReadOptions = options.ReadOptions },
             new DirectoryOutputSink(outputDirectory),
             cancellationToken).ConfigureAwait(false);
     }
@@ -125,6 +128,7 @@ public static partial class ExcelConverter
         ValidateInput(inputPath);
         ValidateNewFile(outputPath);
         options ??= new MarkdownExportOptions();
+        (options.ReadOptions ?? throw new ArgumentException("ReadOptions are required.", nameof(options))).Validate();
         if (string.IsNullOrWhiteSpace(options.ImageDirectoryName) || Path.IsPathRooted(options.ImageDirectoryName) ||
             options.ImageDirectoryName.Split(new[] { '/', '\\' }).Any(part => part == ".."))
         {
@@ -134,7 +138,7 @@ public static partial class ExcelConverter
         await using var input = File.OpenRead(inputPath);
         await RenderAsync(
             input,
-            CreateLegacyRequest(OutputFormat.Markdown, options.SheetName, fontOptions: options.FontOptions) with { Hyperlinks = options.Hyperlinks },
+            CreateLegacyRequest(OutputFormat.Markdown, options.SheetName, fontOptions: options.FontOptions) with { Hyperlinks = options.Hyperlinks, ReadOptions = options.ReadOptions },
             new LegacyMarkdownOutputSink(outputPath, options, Path.GetFileName(inputPath)),
             cancellationToken).ConfigureAwait(false);
     }

@@ -632,3 +632,65 @@ Resolved PDF fonts use immutable snapshots. A conversion owns its font resources
 For the separate source-only project (not published on NuGet), see [ExcelRenderer Core](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/core.md).
 
 The main package includes `ExcelRenderer.Core.dll` from the same build; Core is also available as a source ProjectReference. Basic reading, geometry/page layout, drawing and PDF operations are shared; advanced features remain in the main library. See [the two-engine architecture](docs/core-architecture.md) and [verification results](docs/core-refactor-validation.md).
+
+### Partial cell formatting and optional diagnostics
+
+PDF, PNG and SVG preserve partial font family, size, bold, italic, color and single
+underline in ordinary string cells. `ReportCell.RichTextRuns` contains effective
+`CellTextRun` values; `Text` remains the complete plain string. Manual models must
+supply matching text and valid positive sizes. The built-in measurer implements
+`IRichTextLayoutService`; existing custom measurers keep working with a cell-font
+fallback. Core-only output keeps its single regular font. Markdown stays plain text.
+
+Partial formatting with rotated/vertical cell text falls back to the cell font.
+Strikethrough, superscript/subscript, double/accounting underlines and phonetics are
+not rendered. Enable additional detection to report unsupported partial formatting
+and conditional formatting. Anchored chart diagnostics retain the existing
+`UnsupportedDrawingObject` code and are filtered during selected-page preflight
+when additional detection is enabled. No chart or conditional-format rendering is added.
+
+```sh
+excelrenderer render input.xlsx -o output.pdf --format pdf \
+  --layout-warnings --min-readable-font-size 6 --detect-unsupported-features
+```
+
+`DiagnosticOptions.EnableLayoutWarnings` defaults to `false`.
+`MinimumReadableFontSize` defaults to 6pt and must be finite and positive; setting
+it alone does not enable warnings. The CLI requires `--layout-warnings` with
+`--min-readable-font-size`. `CellTextClipped` checks finalized logical line placement
+for horizontal wrapped/shrunk cells with a 0.25pt tolerance, not complete glyph ink
+bounds. `CellTextTooSmall` uses final scaled visible run sizes. These warnings do
+not resize cells and are not emitted for Markdown. New warnings run in preflight;
+diagnostic failure occurs before opening output sinks.
+
+Formula display defaults to `FormulaDisplayMode.Legacy`. Set
+`RenderRequest.ReadOptions = new ExcelReadOptions { FormulaDisplayMode = FormulaDisplayMode.CachedValue }`
+(types in `ExcelRenderer.Excel`) to use only results saved in the source XLSX.
+`ExcelReader.Read(path, options)` / `Read(stream, options)` and the PDF/image/SVG/Markdown
+export options expose the same policy. No Mapping save/calculation policy is changed.
+
+```sh
+excelrenderer pdf input.xlsx -o output.pdf --formula-mode cached
+excelrenderer render input.xlsx -o output --format markdown --formula-mode cached
+```
+
+All rendering commands (`pdf`, `image`, `svg`, `md`, `render`) accept `--formula-mode`;
+`xlsx` does not. Missing saved results produce empty text and
+`FormulaCachedValueMissing`; zero, false and saved empty strings are not missing.
+Existing literal HYPERLINK display recovery takes precedence. Saved Excel error values
+produce `FormulaResultError`. Cached mode neither evaluates formulas nor guarantees
+that saved results are fresh. Formula diagnostics are filtered to selected visible
+output and respect suppression and failure policies before opening the output sink.
+
+**Recalculate is not implemented under the required selected-root/dependency scope.**
+The enum/CLI spelling is reserved but currently rejects the request before conversion;
+it does not silently use caches or recalculate the whole workbook. See
+[the public-API reproductions and pending scope decision](docs/reader-richtext-validation.md).
+This PR remains incomplete until that contract is resolved.
+
+With `DetectUnsupportedFeatures`, chart sheets are reported at sheet level with unknown
+cell position using `UnsupportedDrawingObject`; they add no blank output page. Selecting
+only chart sheets returns diagnostics and no artifacts. `RenderRequest.TextMeasurer`
+can supply a caller-owned legacy service. Without `IRichTextLayoutService`, rich cells
+use the cell font and emit opt-in `RichTextLayoutFallback` in preflight. The built-in
+service remains the default. No additional glyph measurement is done just for diagnostics.

@@ -58,7 +58,7 @@ internal static class CoreCommandAdapter
             Core.Drawing.FillRectangleCommand fill => new FillRectangleCommand(fill.PageNumber, CoreModelAdapter.ToPublic(fill.Bounds), CoreModelAdapter.ToPublic(fill.Color)),
             Core.Drawing.DrawBorderCommand border => new DrawBorderCommand(border.PageNumber, CoreModelAdapter.ToPublic(border.Bounds), borderStyle(border.Border)),
             Core.Drawing.DrawLineCommand line => new DrawLineCommand(line.PageNumber, line.X1, line.Y1, line.X2, line.Y2, side(line.Style)),
-            Core.Drawing.DrawTextCommand text => new DrawTextCommand(text.PageNumber, CoreModelAdapter.ToPublic(text.Bounds), text.Text, style(text.Style)) { TextLayout = text.TextLayout is { } layout ? CoreTextLayoutAdapter.ToPublic(layout) : null },
+            Core.Drawing.DrawTextCommand text => new DrawTextCommand(text.PageNumber, CoreModelAdapter.ToPublic(text.Bounds), text.Text, style(text.Style)) { SourceAddress = text.SourceAddress is { } address ? CoreModelAdapter.ToPublic(address) : null, TextLayout = text.TextLayout is { } layout ? CoreTextLayoutAdapter.ToPublic(layout) : null },
             Core.Drawing.DrawImageCommand image => new DrawImageCommand(image.PageNumber, CoreModelAdapter.ToPublic(image.Bounds), image.ImageBytes),
             _ => throw new InvalidOperationException("Unknown internal drawing command."),
         };

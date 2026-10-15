@@ -641,6 +641,30 @@ ink bounds を完全に判定する機能ではありません。`CellTextTooSma
 可視 run サイズを使います。セルの寸法は変更せず、Markdown にはレイアウト診断を出しません。
 追加診断は preflight で収集し、診断による失敗は出力 sink を開く前に確定します。
 
-この変更で数式表示は従来の挙動を維持し、新しい数式表示モードは公開していません。
-ClosedXML の再計算範囲に関する障害と未完了の受け入れ検証は
-[実装・検証状況](docs/reader-richtext-validation.md) を参照してください。
+数式表示の既定値は `FormulaDisplayMode.Legacy` です。保存された結果だけを使う場合は
+`RenderRequest.ReadOptions = new ExcelReadOptions { FormulaDisplayMode = FormulaDisplayMode.CachedValue }`
+を指定します（型は `ExcelRenderer.Excel` 名前空間）。`ExcelReader.Read(path, options)`／
+`Read(stream, options)` と PDF・画像・SVG・Markdown の export options も同じ設定を持ちます。
+Mapping の保存・計算設定は変更しません。
+
+```sh
+excelrenderer pdf input.xlsx -o output.pdf --formula-mode cached
+excelrenderer render input.xlsx -o output --format markdown --formula-mode cached
+```
+
+全描画コマンド（`pdf`、`image`、`svg`、`md`、`render`）に対応し、`xlsx` は対象外です。
+保存結果の欠落は空表示と `FormulaCachedValueMissing` で通知します。0・false・保存された空文字は
+欠落と区別し、既存の HYPERLINK literal 表示復元を優先します。Excel エラー値は
+`FormulaResultError` で通知します。cached は数式を評価せず、保存結果の鮮度も保証しません。
+数式診断も選択された可視出力に絞り、抑制・失敗方針を適用して sink を開く前に判定します。
+
+**Recalculate は、要求された選択セルと依存先に限定する契約では未実装です。**
+enum／CLI の綴りは予約されていますが、現状は変換前に拒否します。cache 表示やブック全体の
+再計算へ黙って切り替えません。[公開 API の再現テストと未決事項](docs/reader-richtext-validation.md)
+を参照してください。この契約が解決するまで PR は未完了です。
+
+`DetectUnsupportedFeatures` 有効時、チャートシートは位置不明のシート単位診断
+`UnsupportedDrawingObject` を出し、空白ページは追加しません。チャートシートだけを選択した場合は
+診断のみを返し、成果物は作りません。`RenderRequest.TextMeasurer` で呼び出し元所有の旧計測サービスを
+指定できます。`IRichTextLayoutService` がなければセル書式へ縮退し、opt-in 時に preflight で
+`RichTextLayoutFallback` を出します。既定は組込みサービスで、診断だけの追加グリフ計測は行いません。

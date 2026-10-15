@@ -157,3 +157,14 @@ Fix basic algorithms in Core and run both product regressions. CoreLayoutPolicy/
 - Core `CellTextDiagnostics` owns the logical clipping calculation. Full selected-page
   preflight supplies source addresses and diagnostic policy; rendering does not re-emit
   these warnings. Full readers own unsupported DrawingML/partial-style/rule metadata.
+
+### Formula cache and deferred diagnostics
+
+`Core/Excel/FormulaCacheReader` owns streaming formula-only original-result metadata,
+including saved-result presence and date-system normalization. CoreExcelReader owns
+policy dispatch and read diagnostic candidates; ReaderSession owns scratch formatting.
+The main ExcelReadOptions/FormulaDisplayMode map to an independent internal Core enum.
+FullSheetData carries deferred candidates across adapters; final visible page/range
+filtering remains with the main converter, which owns selection. FullExcelReader adds
+chart-sheet metadata placeholders; the converter reports them without rendering pages.
+RenderRequest.TextMeasurer is an optional borrowed service, not a new DI/plugin layer.

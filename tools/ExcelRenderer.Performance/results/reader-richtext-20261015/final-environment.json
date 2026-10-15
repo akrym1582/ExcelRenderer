@@ -1,0 +1,24 @@
+{
+  "measurement_mode": "Legacy (default); no source or input changes during sampling",
+  "core_package_sha256": {
+    "ExcelRenderer": "2f2c7f018c40276e1657c4052c261f8cda071455f6b31837fee698ea1854982b",
+    "ExcelRenderer.Tool": "2f2c7f018c40276e1657c4052c261f8cda071455f6b31837fee698ea1854982b"
+  },
+  "security_dependencies": {
+    "System.Security.Cryptography.Pkcs": "8.0.2",
+    "System.Formats.Asn1": "8.0.2"
+  },
+  "sdk": "10.0.401",
+  "inputs": {
+    "representative.xlsx": "5e4032e814530d62db777ad76b8eae467c4f761696a2877e22ca41e2fbc37357",
+    "ordinary.xlsx": "9be7d0aa8087f62c775da82f2e69e989cf44317b389518ff46ecf3e91999b648",
+    "rich-unique.xlsx": "b583353d609280d7cb625e7dcd42b2c428dfcfbe1590fc23eb76ce2cbbd34514",
+    "rich-repeated.xlsx": "f6edb568477499f54df962dbf0937830e9f91283957c9de376fb2a339d33b215",
+    "unique.xlsx": "ea5b485755fa36bf33ff54f63a26c0e71cd9a6e679c79cb9ce9a1f7f3bd4b3ab",
+    "shared.xlsx": "18c4ee864e3d618a5e007d7bd54e768999bb16d721e8c900e75518d55e425e0f",
+    "hyperlinks.xlsx": "a0eab6ffc1ec471cd72bfa31f59691bed73e2cc2b6856f1534bcf889b06e0908"
+  },
+  "reader_implementation_commit": "8cc0dbb7db4957299cba4a2cc16f3ffa16224a87",
+  "full_render_implementation_commit": "85ea6264a2123a5346c61ffb24be88caa02716bb",
+  "package_validation_commit": "85ea6264a2123a5346c61ffb24be88caa02716bb"
+}

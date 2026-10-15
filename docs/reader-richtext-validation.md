@@ -1,8 +1,9 @@
 # Reader and partial-text implementation status
 
-This work is **not acceptance-complete for the four-item request**. Formula display
-modes are blocked by the required evaluation scope in ClosedXML 0.105.1 and are not
-exposed as incomplete public APIs. The original formula behavior remains intact.
+This work is **not acceptance-complete for the four-item request**. Recalculate is blocked by the required evaluation scope in ClosedXML 0.105.1.
+Legacy and CachedValue are implemented through Reader, API, CLI and all output paths.
+Recalculate is reserved but currently fails before conversion; it is not an implemented
+evaluation mode. No broader evaluation scope or always-cache fallback has been adopted.
 
 ## Baseline and environment
 
@@ -41,8 +42,8 @@ unselected circular cell. The public-API-only, fixed-package requirement therefo
 needs an agreed evaluation-scope design before the requested Recalculate contract
 can be claimed. No private reflection, custom formula interpreter, unconditional
 fallback implementation, or silent whole-workbook substitution was introduced.
-CachedValue mode and its complete API/CLI propagation remain unimplemented too;
-the formula-mode acceptance group has not passed.
+CachedValue and its complete API/CLI propagation are now implemented and tested.
+The formula-mode acceptance group remains incomplete specifically for Recalculate.
 
 ## Implemented paths and limitations
 
@@ -66,15 +67,16 @@ the formula-mode acceptance group has not passed.
 - Formula results remain plain strings; Markdown emits plain text; Core alone retains
   its regular single-font and base-character-only behavior.
 
-Remaining acceptance gaps include chartsheets without worksheet anchors, diagnostic
-reporting for caller-supplied legacy measurement-service fallback, the full formula
-fixture matrix, and exhaustive theme/inline-string/rotation/IVS/range-title combinations.
-These limitations must not be described as completed coverage.
+Chart-sheet diagnostics and legacy-measurer fallback diagnostics are now implemented.
+The follow-up test matrix covers shared/inline text, inheritance/theme tint, rotation,
+CRLF and variation-selector preservation, merged shrink, repeated titles, and range/trim
+in PDF/PNG/SVG. Recalculate failure/result/cache-fallback acceptance remains blocked by
+the unresolved scope contract. Excel application parity is intentionally unverified.
 
 ## Reproduction
 
 ```sh
-dotnet restore ExcelRenderer.slnx -p:NuGetAudit=false
+dotnet restore ExcelRenderer.slnx
 dotnet build ExcelRenderer.slnx -t:Rebuild --no-restore --verbosity:minimal
 dotnet test ExcelRenderer.slnx --no-restore
 python3 scripts/check-core-dependencies.py
@@ -123,7 +125,7 @@ rich text), not whole-sheet style assignments. The harness records model row and
 counts to make this scope visible. Preliminary whole-sheet-styled fixture measurements
 were discarded and are not included in the final performance tables.
 
-## Final measured performance
+## Initial measured performance
 
 All values below are medians of five measured iterations after one warmup.
 
@@ -207,3 +209,85 @@ A minimal possible contract change is to allow whole-workbook recalculation and 
 unrelated-sheet failures; another is an upstream public API supporting selected roots
 plus transitive dependencies. Neither alternative has been adopted. No scope guarantee
 is inferred from dependency-free formulas alone.
+
+## Follow-up: cached display and remaining diagnostic paths
+
+`ExcelReadOptions` / `FormulaDisplayMode` are in `ExcelRenderer.Excel`; RenderRequest,
+all four legacy export option types, and Reader path/stream overloads carry ReadOptions.
+All five rendering CLI commands accept `--formula-mode`; invalid text is rejected by
+command parsing before Mapping, input, or output. Mapping calculation options are untouched.
+The Recalculate enum value currently fails fast rather than violating the requested scope;
+this is an explicit unfinished contract, not a successful implementation of that mode.
+
+FormulaCacheReader uses OpenXmlReader and at most one cell DOM at a time, keeping only
+formula-cache metadata (including shared/array followers). Presence of the original
+result element distinguishes missing from zero, false, and saved empty text. Typed
+values are snapshotted before any read hooks can change values. Numeric date serials
+are formatted directly; the 1904 offset is applied once, avoiding ClosedXML's early-date
+load offset discrepancy. Existing scratch resources apply ClosedXML number formatting.
+
+Tests change a precedent after loading and mark the formula dirty: cached still shows
+the original 99 and leaves the formula dirty, whereas evaluation would give 52. Other
+cases cover zero/false/empty/error/missing, 1900/1904 dates, time, percent/custom format,
+external/unknown/dynamic hyperlink formulas, shared/array followers, literal HYPERLINK,
+hyperlink-preserve/none, selected diagnostics, and unchanged sinks on suppressed failures.
+
+Chart sheets are reported with the existing UnsupportedDrawingObject code and object
+ID chart-sheet, with no fabricated cell/page location. Metadata-only sheet placeholders
+allow explicit selection; they are excluded from output and do not add blank pages.
+Only-chart-sheet selection returns diagnostics with no artifacts. Explicit page selection
+excludes chart sheets because they have no output pages. A pre-existing worksheet cast
+in HyperlinkReader was fixed to skip non-worksheet parts.
+
+RenderRequest.TextMeasurer is an optional borrowed measurement service. Legacy services
+continue using the cell font; opt-in RichTextLayoutFallback is issued only in selected-page
+preflight, respects failure/suppression policy, and is counted once. Rotated unsupported
+rich formatting is diagnosed even without finalized horizontal layout. No new measurement
+is performed just to collect warnings. Additional tests exercise 0.25pt clipping tolerance,
+print-scale/rich-run/shrink/rotation small-font warnings, and hidden-row exclusion.
+
+## Final cached/diagnostic implementation validation
+
+Implementation commit: `85ea6264a2123a5346c61ffb24be88caa02716bb` (cached/diagnostic feature commit `8cc0dbb7db4957299cba4a2cc16f3ffa16224a87`).
+
+Normal restore and the required rebuild passed with zero warnings/errors. The full
+regression run passed 657 tests: main 466, Core 80, Mapping 49, Tool 62; zero failures
+or skips. Public old constructors/Deconstruct and legacy services remain exercised.
+Main and Tool Release packages were created; their bundled Core DLL hashes match.
+
+### Final performance recheck
+
+Same inputs, machine, SDK, Release configuration and fixed font as the original comparison.
+Each median excludes one warmup and uses five samples. Final reader samples precede the
+no-candidate diagnostic guard; that guard affects only full conversion, not Reader.
+The final dependency patch is recorded in final-environment.json.
+
+| Reader | ClosedXML ms | Model ms | Total ms | Allocated MiB | Sampled managed MiB | Peak RSS MiB |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| hyperlinks | 70.0 | 248.9 | 518.9 | 115.3 | 39.3 | 125.2 |
+| shared | 90.6 | 129.9 | 332.5 | 61.8 | 22.3 | 125.9 |
+| unique | 1713.9 | 83.4 | 2054.0 | 169.3 | 70.8 | 217.7 |
+| rich-repeated | 1054.8 | 167.8 | 1305.9 | 582.0 | 45.7 | 123.6 |
+| rich-unique | 230.2 | 23.7 | 284.1 | 67.1 | 21.6 | 100.4 |
+| ordinary | 97.7 | 146.9 | 386.1 | 61.8 | 22.4 | 126.8 |
+
+Final deterministic reader counters match the earlier table (one scratch for hyperlinks,
+three conversions and 9997 hits for mixed shared styles, maximum 8192 cache entries).
+
+| Tiering-disabled reader recheck | Baseline ms | Final ms | Difference |
+| --- | ---: | ---: | ---: |
+| shared | 211.2 | 226.8 | +7.4% |
+| ordinary | 215.3 | 220.1 | +2.2% |
+
+| Full PDF | Baseline ms | Final ms | Baseline allocated MiB | Final allocated MiB |
+| --- | ---: | ---: | ---: | ---: |
+| ordinary | 1408.8 | 1470.3 | 209.1 | 207.1 |
+| rich-repeated | 1638.0 | 1604.5 | 725.8 | 796.7 |
+| report | 57.5 | 50.9 | 23.0 | 23.0 |
+
+The final recheck initially exposed 585.9 MiB ordinary-PDF allocation: the new
+diagnostic path constructed SheetGeometry on every page even with no formula candidates.
+An early return for an empty candidate list fixed this regression; the bad samples are
+retained as diagnostic-geometry-regression.jsonl. Final ordinary allocation returns to
+the original level. Rich-text allocation retains the documented cost of effective run
+styles and snapshots. No timing ratio is asserted in CI.

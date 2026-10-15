@@ -663,6 +663,34 @@ bounds. `CellTextTooSmall` uses final scaled visible run sizes. These warnings d
 not resize cells and are not emitted for Markdown. New warnings run in preflight;
 diagnostic failure occurs before opening output sinks.
 
-Formula display remains the existing behavior in this change; new formula display
-modes are not exposed. See [the implementation and validation status](docs/reader-richtext-validation.md)
-for the ClosedXML evaluation-scope blocker and outstanding acceptance checks.
+Formula display defaults to `FormulaDisplayMode.Legacy`. Set
+`RenderRequest.ReadOptions = new ExcelReadOptions { FormulaDisplayMode = FormulaDisplayMode.CachedValue }`
+(types in `ExcelRenderer.Excel`) to use only results saved in the source XLSX.
+`ExcelReader.Read(path, options)` / `Read(stream, options)` and the PDF/image/SVG/Markdown
+export options expose the same policy. No Mapping save/calculation policy is changed.
+
+```sh
+excelrenderer pdf input.xlsx -o output.pdf --formula-mode cached
+excelrenderer render input.xlsx -o output --format markdown --formula-mode cached
+```
+
+All rendering commands (`pdf`, `image`, `svg`, `md`, `render`) accept `--formula-mode`;
+`xlsx` does not. Missing saved results produce empty text and
+`FormulaCachedValueMissing`; zero, false and saved empty strings are not missing.
+Existing literal HYPERLINK display recovery takes precedence. Saved Excel error values
+produce `FormulaResultError`. Cached mode neither evaluates formulas nor guarantees
+that saved results are fresh. Formula diagnostics are filtered to selected visible
+output and respect suppression and failure policies before opening the output sink.
+
+**Recalculate is not implemented under the required selected-root/dependency scope.**
+The enum/CLI spelling is reserved but currently rejects the request before conversion;
+it does not silently use caches or recalculate the whole workbook. See
+[the public-API reproductions and pending scope decision](docs/reader-richtext-validation.md).
+This PR remains incomplete until that contract is resolved.
+
+With `DetectUnsupportedFeatures`, chart sheets are reported at sheet level with unknown
+cell position using `UnsupportedDrawingObject`; they add no blank output page. Selecting
+only chart sheets returns diagnostics and no artifacts. `RenderRequest.TextMeasurer`
+can supply a caller-owned legacy service. Without `IRichTextLayoutService`, rich cells
+use the cell font and emit opt-in `RichTextLayoutFallback` in preflight. The built-in
+service remains the default. No additional glyph measurement is done just for diagnostics.

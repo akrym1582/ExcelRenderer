@@ -94,6 +94,11 @@ public static partial class ExcelConverter
 
     private static void CollectCellReadDiagnostics(ReportSheet sheet, IReadOnlyList<Layout.PageSourceRegion>? regions, int? pageNumber, DiagnosticCollector diagnostics)
     {
+        if (sheet.CellReadDiagnostics.Count == 0)
+        {
+            return;
+        }
+
         var geometry = new Layout.SheetGeometry(sheet);
         foreach (var diagnostic in sheet.CellReadDiagnostics)
         {

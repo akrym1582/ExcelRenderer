@@ -106,7 +106,8 @@ internal sealed class FullExcelReader : CoreExcelReader
         }
 
         runs.RemoveAll(run => run.Text.Length == 0);
-        unsupported |= runs.Count > 1 && (cell.Style.TextRotation != 0 || cell.Style.TopToBottom);
+        unsupported |= runs.Any(run => run.Font != CoreModelAdapter.ToPublic(cell.Style.Font)) &&
+            (cell.Style.TextRotation != 0 || cell.Style.TopToBottom);
         return cell with
         {
             Text = string.Concat(runs.Select(run => run.Text)),

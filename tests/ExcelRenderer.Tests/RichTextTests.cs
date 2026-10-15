@@ -31,6 +31,44 @@ public sealed class RichTextTests
         Assert.Equal(20, cell.RichTextRuns![1].Font.Size);
     }
 
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void SharedAndInlineStringsPreserveThemeColorNewlinesAndVariationSelectors(bool shared)
+    {
+        using var workbook = new XLWorkbook();
+        workbook.Theme.Accent1 = XLColor.Red;
+        var source = workbook.AddWorksheet("rich").Cell(1, 1);
+        source.ShareString = shared;
+        source.CreateRichText().AddText("漢\U000E0100\n").SetFontColor(XLColor.FromTheme(XLThemeColor.Accent1));
+        source.GetRichText().AddText("後").SetFontSize(20);
+        using var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        stream.Position = 0;
+        var cell = new ExcelReader().Read(stream).Sheets[0].Cells[new(1, 1)];
+        Assert.Equal("漢\U000E0100\n後", cell.Text);
+        Assert.Equal(cell.Text, string.Concat(cell.RichTextRuns!.Select(run => run.Text)));
+        Assert.Equal(new ReportColor(255, 0, 0), cell.RichTextRuns![0].Font.Color);
+        Assert.Equal(20, cell.RichTextRuns![1].Font.Size);
+    }
+
+    [Theory]
+    [InlineData(45)]
+    [InlineData(255)]
+    public void RotatedSingleDifferentlyStyledRunIsMarkedUnsupported(int rotation)
+    {
+        using var workbook = new XLWorkbook();
+        var source = workbook.AddWorksheet("rich").Cell(1, 1);
+        source.Style.Alignment.TextRotation = rotation;
+        source.CreateRichText().AddText("rotated").SetFontSize(20);
+        using var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        stream.Position = 0;
+        var cell = new ExcelReader().Read(stream).Sheets[0].Cells[new(1, 1)];
+        Assert.True(cell.UnsupportedRichTextFormatting);
+        Assert.Equal("rotated", cell.Text);
+    }
+
     [Fact]
     public void LayoutPreservesElementsAcrossFormattingBoundariesAndScalesEveryRun()
     {
@@ -38,7 +76,7 @@ public sealed class RichTextTests
         var measurer = new PdfSharpTextMeasurer(fonts);
         var small = new FontStyle(Size: 10, Color: new(255, 0, 0));
         var large = new FontStyle(Size: 20, Bold: true);
-        var layout = measurer.Layout([new("a", small), new("\u0301b\n\nC", large)], small, 1000, false);
+        var layout = measurer.Layout([new("a", small), new("\u0301b\r", large), new("\n\nC", large)], small, 1000, false);
         Assert.Equal(3, layout.Lines.Count);
         Assert.Equal("a\u0301b", layout.Lines[0].Text);
         Assert.Equal(small, layout.Lines[0].Runs[0].Font);
@@ -122,6 +160,30 @@ public sealed class RichTextTests
     }
 
     [Fact]
+    public void RepeatedTitlesRetainRunStylesAndApplyPrintScaleExactlyOnce()
+    {
+        var font = new FontStyle(Size: 12, Color: new(255, 0, 0));
+        var title = new ReportCell("AB", new(font))
+        {
+            RichTextRuns = [new("A", font), new("B", font with { Size = 20, Underline = true })],
+        };
+        var cells = Enumerable.Range(1, 8).ToDictionary(row => new CellAddress(row, 1), row => row == 1 ? title : new ReportCell("body", CellStyle.Default));
+        var sheet = new ReportSheet("titles", cells, new Dictionary<int, ColumnDefinition> { [1] = new(100) },
+            Enumerable.Range(1, 8).ToDictionary(row => row, row => new RowDefinition(40)), [],
+            new(200, 100, 0, 0, 0, 0, Scale: .5, TitleRows: new(1, 1)));
+        var pages = new ReportLayoutEngine(new PdfSharpTextMeasurer(new OutputFixture.FixedManager())).Layout(sheet).Pages;
+        Assert.True(pages.Count > 1);
+        foreach (var page in pages)
+        {
+            var cell = Assert.Single(page.Cells, cell => cell.SourceAddress == new CellAddress(1, 1));
+            var runs = cell.TextLayout!.Lines.SelectMany(line => line.Runs).ToArray();
+            Assert.Equal(new double[] { 6, 10 }, runs.Select(run => run.Font!.Size));
+            Assert.All(runs, run => Assert.Equal(font.Color, run.Font!.Color));
+            Assert.True(runs[1].Font!.Underline);
+        }
+    }
+
+    [Fact]
     public void ExistingConstructorsDeconstructorsAndLegacyLayoutServicesRemainUsable()
     {
         var cell = new ReportCell("AB", CellStyle.Default, 1, 1, null)
@@ -147,18 +209,6 @@ public sealed class RichTextTests
         Assert.Empty(page.Cells[0].TextLayout!.Lines[0].Runs);
     }
 
-    [Fact]
-    public void ClosedXmlDirtyDependencyEvaluationCanReachUnrelatedSheet()
-    {
-        using var workbook = new XLWorkbook();
-        var broken = workbook.AddWorksheet("unselected");
-        broken.Cell(1, 1).FormulaA1 = "A1+1";
-        var selected = workbook.AddWorksheet("selected");
-        selected.Cell(1, 1).Value = 4;
-        selected.Cell(1, 2).FormulaA1 = "A1+1";
-        selected.Cell(1, 2).InvalidateFormula();
-        Assert.Throws<InvalidOperationException>(() => selected.Evaluate("B1+1", "C1"));
-    }
     private sealed class LegacyLayout : ITextMeasurer, ITextLayoutService
     {
         public FontStyle? Font { get; private set; }

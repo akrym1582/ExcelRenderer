@@ -12,7 +12,8 @@ exposed as incomplete public APIs. The original formula behavior remains intact.
 - Independent baseline worktree: `/tmp/excel-baseline`, detached at that SHA.
 - Debian 13 x64, .NET SDK 10.0.401, runtime 10.0.12.
 - Implementation commit: `232c4cd6a7277c2824593dd0ceded8c8caa7a7d9`.
-- Dependency versions and lock files are unchanged.
+- Follow-up: Pkcs and its ASN.1 dependency were patched from 8.0.1 to 8.0.2;
+  ClosedXML 0.105.1 and PDFsharp 6.2.3 remain fixed.
 
 The exact requested `dotnet restore ExcelRenderer.slnx` failed on the unmodified
 baseline: NuGet audit reports NU1902/NU1903 for transitive
@@ -34,7 +35,7 @@ invokes `wb.CalcEngine.Recalculate(wb, null)` when a dirty cell's Value is read.
 Worksheet.Evaluate uses recursive evaluation, whose dirty dependencies read cell.Value.
 Thus it can reach an unrelated unselected sheet's circular formula.
 
-`RichTextTests.ClosedXmlDirtyDependencyEvaluationCanReachUnrelatedSheet` reproduces
+`FormulaEvaluationScopeTests.ClosedXmlDirtyDependencyEvaluationCanReachUnrelatedSheet` reproduces
 that behavior with a selected sheet containing an ordinary dependency and an
 unselected circular cell. The public-API-only, fixed-package requirement therefore
 needs an agreed evaluation-scope design before the requested Recalculate contract
@@ -165,3 +166,44 @@ This sensitivity to process/JIT warmup is why timing ratios are not CI assertion
 
 The repeated rich-text PDF case recorded 19999 layout-cache hits and 1 miss per conversion, including preflight and output drawing. No finished runs were rewrapped during painting.
 
+
+## Follow-up: security dependency and evaluation-scope evidence
+
+The initial NuGet blocker is now repaired without audit suppression. PDFsharp 6.2.3
+requires System.Security.Cryptography.Pkcs >= 8.0.1. Explicit Pkcs 8.0.2 references
+in both library projects ensure the dependency is also declared in the shipped main
+package (Core is bundled rather than a separate package). Pkcs pulls ASN.1 8.0.2.
+[Microsoft advisory](https://github.com/advisories/GHSA-846f-f764-76mx) identifies
+8.0.2 as the patched 8.x version. All affected lockfiles, including the separate
+Core Validation and Reference tools, were regenerated. The original image-comparison
+restore failure was reproduced locally and reported the same NU1902/NU1903 errors.
+
+Normal solution restore, locked restore, rebuild (zero warnings/errors), and the
+606-test suite passed with audit enabled after the dependency patch. Main and Tool
+Release packs succeeded; the main nuspec references Pkcs 8.0.2, both packages retain
+Core, and the Tool contains Pkcs. The Core visual script compared all 17 raster pages
+successfully without modifying reference images.
+
+Additional rich-text tests cover shared and inline strings, theme colors, retained
+variation selectors, CRLF across manual run boundaries, and single styled rotated
+runs. The latter exposed a missing unsupported-format marker, now fixed.
+
+Three tests in FormulaEvaluationScopeTests distinguish the exact public API limits:
+
+1. Evaluating an expression over ordinary cells succeeds without touching an unrelated
+   circular sheet; evaluating a dirty formula dependency triggers workbook evaluation.
+2. InvalidateFormula marks the selected formula dirty, but reading it or recursively
+   evaluating a dependent expression still reaches an unrelated circular sheet.
+3. Worksheet.RecalculateAllFormulas leaves a dirty cross-sheet dependency untouched,
+   yielding 1 from its blank cache where a full fresh evaluation yields 6.
+
+The upstream [XLCell implementation](https://github.com/ClosedXML/ClosedXML/blob/0.105.1/ClosedXML/Excel/Cells/XLCell.cs#L497-L530)
+sets Formula.IsDirty in InvalidateFormula and calls Recalculate(wb, null) in Evaluate.
+[CalcContext](https://github.com/ClosedXML/ClosedXML/blob/0.105.1/ClosedXML/Excel/CalcEngine/CalcContext.cs#L98-L125)
+returns other sheets' cached values during sheet-only calculation; its recursive path
+reads cell.Value. Dependency-tree traversal and the calculation chain are internal.
+
+A minimal possible contract change is to allow whole-workbook recalculation and report
+unrelated-sheet failures; another is an upstream public API supporting selected roots
+plus transitive dependencies. Neither alternative has been adopted. No scope guarantee
+is inferred from dependency-free formulas alone.

@@ -54,18 +54,24 @@ internal sealed class PdfSharpFinalizedTextPainter
                 {
                     foreach (var run in positioned.Line.Runs)
                     {
+                        var font = run.Font;
+                        var runBrush = font is null ? brush : new XSolidBrush(ToColor(font.Color ?? new(0, 0, 0)));
                         DrawFinalizedRun(
                             graphics,
                             run.Run,
-                            effectiveFontSize,
+                            font?.Size ?? effectiveFontSize,
                             positioned.Left + run.X,
                             positioned.Baseline,
-                            command.Style,
-                            brush);
+                            font is null ? command.Style : command.Style with { Font = font },
+                            runBrush);
+                        if (font?.Underline == true)
+                        {
+                            graphics.DrawLine(new XPen(runBrush.Color), positioned.Left + run.X, positioned.Baseline + 1, positioned.Left + run.X + run.Advance, positioned.Baseline + 1);
+                        }
                     }
                 }
 
-                if (command.Style.Font.Underline)
+                if (command.Style.Font.Underline && !positioned.Line.Runs.Any(run => run.Font is not null))
                 {
                     graphics.DrawLine(
                         new XPen(brush.Color),

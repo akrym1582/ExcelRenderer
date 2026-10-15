@@ -54,7 +54,7 @@ public static partial class ExcelConverter
             ConversionMetrics.Report("input.ms", inputTimer.Elapsed.TotalMilliseconds);
             var fontManager = ConversionMetrics.Measure("fonts", () => new FontManager(request.FontOptions));
             resources.TextMeasurer = new PdfSharpTextMeasurer(fontManager, cacheLayouts: true);
-            var coreDocument = ConversionMetrics.Measure("reader", () => new ExcelReader(fontManager).ReadCore(source, diagnostics, request.OutputFormat == OutputFormat.Markdown ? null : request.Selection.SheetNames));
+            var coreDocument = ConversionMetrics.Measure("reader", () => new ExcelReader(fontManager).ReadCore(source, diagnostics, request.Selection.SheetNames, request.DiagnosticOptions.DetectUnsupportedFeatures));
             var publicStyles = new StylePool();
             var document = new ReportDocument(coreDocument.Sheets.Select(sheet => CoreIntegration.CoreModelAdapter.ToPublic(sheet, publicStyles)).ToArray());
             source.Dispose();
@@ -78,6 +78,14 @@ public static partial class ExcelConverter
 
             if (request.OutputFormat == OutputFormat.Markdown)
             {
+                if (request.DiagnosticOptions.DetectUnsupportedFeatures)
+                {
+                    foreach (var selected in sheets)
+                    {
+                        CollectUnsupportedFeatures(selected.Sheet, null, null, diagnostics);
+                    }
+                }
+
                 _ = new MarkdownHyperlinks(new ReportDocument(sheets.Select(s => s.Sheet).ToArray()), request.Hyperlinks, diagnostics);
                 if (diagnostics.HasFailure)
                 {
@@ -199,6 +207,11 @@ public static partial class ExcelConverter
         }
 
         request.Buffering.Validate();
+        if (!double.IsFinite(request.DiagnosticOptions.MinimumReadableFontSize) || request.DiagnosticOptions.MinimumReadableFontSize <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(request), "Minimum readable font size must be positive and finite.");
+        }
+
         if (!Enum.IsDefined(typeof(OutputFormat), request.OutputFormat) || !Enum.IsDefined(typeof(ImageLayoutMode), request.ImageLayout) ||
             !Enum.IsDefined(typeof(HyperlinkMode), request.Hyperlinks))
         {
@@ -307,6 +320,19 @@ public static partial class ExcelConverter
         try
         {
             var payload = ConversionMetrics.Measure("pageBuild", () => BuildPage(page, fonts, token));
+            if (request.DiagnosticOptions.EnableLayoutWarnings || request.DiagnosticOptions.DetectUnsupportedFeatures)
+            {
+                foreach (var command in InspectCellText(page, payload.Commands, request.DiagnosticOptions, diagnostics))
+                {
+                    token.ThrowIfCancellationRequested();
+                }
+            }
+
+            if (request.DiagnosticOptions.DetectUnsupportedFeatures)
+            {
+                CollectUnsupportedFeatures(page.Sheet, payload.Regions, page.Descriptor.SourcePageNumber, diagnostics);
+            }
+
             var final = PrepareViewport(page with { Regions = payload.Regions }, WithCancellation(payload.Commands, token), request, fonts, diagnostics);
             return final with
             {

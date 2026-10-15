@@ -59,6 +59,8 @@ internal class CoreExcelReader
         var metadata = new CoreWorkbookMetadata(pictureMetadata, pageSetups);
         PrepareWorkbookMetadata(source, workbook, metadata, selectedSheets);
         var styles = new StylePool();
+        using var session = new ReaderSession(workbook.Use1904DateSystem, graphics);
+        metadata.ReaderSession = session;
         return ConversionMetrics.Measure("model", () => new ReportDocument(workbook.Worksheets
             .Select((sheet, index) => (Sheet: sheet, Index: index + 1))
             .Where(entry => metadata.IncludeUnselectedSheetGeometry || selectedSheets is null || selectedSheets.Contains(entry.Sheet.Name, StringComparer.Ordinal))
@@ -93,12 +95,19 @@ internal class CoreExcelReader
     /// <param name="cell">The source cell.</param>
     /// <param name="context">The sheet read context.</param>
     /// <returns>The original formatted display.</returns>
-    protected virtual string ReadDisplayText(IXLCell cell, CoreSheetReadContext context) => ReadDisplay(cell, fontMetrics.GraphicEngine);
+    protected virtual string ReadDisplayText(IXLCell cell, CoreSheetReadContext context) => ReadDisplay(cell, context.Metadata.ReaderSession!);
 
     /// <summary>Converts source styles before interning.</summary>
     /// <param name="cell">The source cell.</param>
     /// <returns>The product style.</returns>
     protected virtual CellStyle ConvertCellStyle(IXLCell cell) => ExcelStyleConverter.Convert(cell);
+
+    /// <summary>Attaches product cell metadata without another cell traversal.</summary>
+    /// <param name="source">The source cell.</param>
+    /// <param name="cell">The neutral cell.</param>
+    /// <param name="context">The read context.</param>
+    /// <returns>The enriched neutral cell.</returns>
+    protected virtual ReportCell CompleteCell(IXLCell source, ReportCell cell, CoreSheetReadContext context) => cell;
 
     /// <summary>Applies product text policy without altering the source value.</summary>
     /// <param name="text">The formatted text.</param>
@@ -112,18 +121,14 @@ internal class CoreExcelReader
     /// <returns>The completed model.</returns>
     protected virtual ReportSheet CompleteSheet(IXLWorksheet worksheet, ReportSheet sheet, CoreSheetReadContext context) => sheet;
 
-    private static string ReadDisplay(IXLCell cell, IXLGraphicEngine? graphics)
+    private static string ReadDisplay(IXLCell cell, ReaderSession session)
     {
         if (!cell.HasFormula || cell.FormulaA1.IndexOf("HYPERLINK", StringComparison.OrdinalIgnoreCase) < 0)
         {
             return cell.GetFormattedString();
         }
 
-        using var scratch = graphics is null ? new XLWorkbook() : new XLWorkbook(new LoadOptions { GraphicEngine = graphics });
-        var cached = scratch.AddWorksheet("cached").Cell(1, 1);
-        cached.Value = cell.CachedValue;
-        cached.Style = cell.Style;
-        return cached.GetFormattedString();
+        return session.Format(cell, cell.CachedValue);
     }
 
     private static CellRange? ReadPrintArea(IXLWorksheet worksheet)
@@ -314,10 +319,11 @@ internal class CoreExcelReader
                 }
 
                 var address = new CellAddress(cell.Address.RowNumber, cell.Address.ColumnNumber);
-                cells[address] = new(
+                var model = new ReportCell(
                     NormalizeDisplayText(ReadDisplayText(cell, context)),
-                    styles.Intern(ConvertCellStyle(cell)),
+                    styles.Intern(context.Metadata.ReaderSession!.ConvertStyle(cell, ConvertCellStyle)),
                     Formula: cell.HasFormula ? "=" + cell.FormulaA1 : null);
+                cells[address] = CompleteCell(cell, model, context);
             }
 
             for (var column = usedRange.RangeAddress.FirstAddress.ColumnNumber;

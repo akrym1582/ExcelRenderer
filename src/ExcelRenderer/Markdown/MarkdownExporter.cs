@@ -104,6 +104,11 @@ public sealed class MarkdownExporter
     /// <returns>The formatted Markdown.</returns>
     internal static string Build(ReportDocument document, string directory, string name, MarkdownExportOptions options)
     {
+        foreach (var cell in document.Sheets.SelectMany(sheet => sheet.Cells.Values).Where(cell => cell.RichTextRuns is not null))
+        {
+            _ = CoreIntegration.FullCellTextData.Create(cell);
+        }
+
         var hyperlinks = new MarkdownHyperlinks(document, options.Hyperlinks, null);
         var output = new StringBuilder().Append("# ").AppendLine(Escape(Path.GetFileName(name))).AppendLine();
         foreach (var sheet in document.Sheets)

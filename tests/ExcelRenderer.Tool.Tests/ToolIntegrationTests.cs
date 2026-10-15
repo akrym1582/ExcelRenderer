@@ -301,6 +301,7 @@ public sealed partial class ToolIntegrationTests : IDisposable
     [Theory(DisplayName = "render コマンドの引数検証が失敗した場合、既存の PDF ファイルの内容が変更されない")]
     [InlineData("--range", "B2:A1")]
     [InlineData("--trim-padding", "2")]
+    [InlineData("--min-readable-font-size", "6")]
     [InlineData("--hyperlinks", "javascript")]
     [InlineData("--max-range-cells", "0")]
     public async Task Render_argument_failures_preserve_existing_pdf(string option, string value)

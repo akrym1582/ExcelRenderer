@@ -3,6 +3,15 @@ namespace ExcelRenderer.Rendering;
 /// <summary>変換診断の収集方法と失敗判定を制御します。</summary>
 public sealed record DiagnosticOptions
 {
+    /// <summary>Gets a value indicating whether finalized cell clipping and small text are reported.</summary>
+    public bool EnableLayoutWarnings { get; init; }
+
+    /// <summary>Gets the positive finite minimum readable output font size in points.</summary>
+    public double MinimumReadableFontSize { get; init; } = 6;
+
+    /// <summary>Gets a value indicating whether additional unsupported features are reported.</summary>
+    public bool DetectUnsupportedFeatures { get; init; }
+
     /// <summary>Gets a value indicating whether non-information diagnostics are failures. 情報以外の診断を失敗として扱うかどうかを示します。</summary>
     public bool StrictMode { get; init; }
 

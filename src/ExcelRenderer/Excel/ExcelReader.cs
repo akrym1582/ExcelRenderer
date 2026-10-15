@@ -97,10 +97,11 @@ public sealed class ExcelReader
     /// <param name="diagnostics">The product collector.</param>
     /// <param name="selectedSheets">The optional selected bodies.</param>
     /// <returns>The neutral workbook with full typed metadata.</returns>
-    internal Core.Model.ReportDocument ReadCore(PreparedWorkbook source, DiagnosticCollector? diagnostics, IReadOnlyList<string>? selectedSheets = null)
+    /// <param name="detectUnsupportedFeatures">Whether to retain additional unsupported-feature candidates.</param>
+    internal Core.Model.ReportDocument ReadCore(PreparedWorkbook source, DiagnosticCollector? diagnostics, IReadOnlyList<string>? selectedSheets = null, bool detectUnsupportedFeatures = false)
     {
         var coreDiagnostics = diagnostics is null ? null : new Core.Rendering.DiagnosticCollector(diagnostic => diagnostics.Add(CoreIntegration.CoreDiagnosticAdapter.ToPublic(diagnostic)));
-        return new CoreIntegration.FullExcelReader(fontManager, diagnostics, maximumDigitWidths)
+        return new CoreIntegration.FullExcelReader(fontManager, diagnostics, maximumDigitWidths, detectUnsupportedFeatures)
             .Read(source.CoreWorkbook, coreDiagnostics, selectedSheets);
     }
 }

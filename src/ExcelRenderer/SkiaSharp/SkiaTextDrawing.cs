@@ -172,18 +172,29 @@ internal sealed class SkiaTextDrawing
                 {
                     foreach (var run in positioned.Line.Runs)
                     {
+                        var font = run.Font;
+                        using var runPaint = font is null ? null : CreatePaint(font.Color ?? new(0, 0, 0), SKPaintStyle.Fill);
+                        if (runPaint is not null)
+                        {
+                            runPaint.IsAntialias = true;
+                        }
+
                         DrawResolvedRun(
                             canvas,
                             run.Run,
-                            (float)effectiveFontSize,
+                            (float)(font?.Size ?? effectiveFontSize),
                             (float)(positioned.Left + run.X),
                             (float)positioned.Baseline,
-                            paint,
+                            runPaint ?? paint,
                             _textAsPaths);
+                        if (font?.Underline == true)
+                        {
+                            canvas.DrawLine((float)(positioned.Left + run.X), (float)(positioned.Baseline + 1), (float)(positioned.Left + run.X + run.Advance), (float)(positioned.Baseline + 1), runPaint ?? paint);
+                        }
                     }
                 }
 
-                if (command.Style.Font.Underline)
+                if (command.Style.Font.Underline && !positioned.Line.Runs.Any(run => run.Font is not null))
                 {
                     canvas.DrawLine(
                         (float)positioned.Left,

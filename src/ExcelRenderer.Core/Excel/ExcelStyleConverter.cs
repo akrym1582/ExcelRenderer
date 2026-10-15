@@ -54,6 +54,32 @@ internal static class ExcelStyleConverter
         };
     }
 
+    /// <summary>Resolves theme and tint colors for cell and partial font styles.</summary>
+    /// <param name="color">The source color.</param>
+    /// <param name="theme">The workbook theme.</param>
+    /// <returns>The resolved color.</returns>
+    internal static ReportColor? ToColor(XLColor color, IXLTheme theme)
+    {
+        if (!color.HasValue)
+        {
+            return null;
+        }
+
+        // Indexed 64/65 represent automatic foreground/background colors.
+        if (color.ColorType == XLColorType.Indexed && color.Indexed >= 64)
+        {
+            return color.Indexed == 65 ? new(255, 255, 255) : new(0, 0, 0);
+        }
+
+        var resolvedColor = color.ColorType == XLColorType.Theme
+            ? theme.ResolveThemeColor(color.ThemeColor).Color
+            : color.Color;
+        var tint = color.ColorType == XLColorType.Theme ? color.ThemeTint : 0;
+
+        var (red, green, blue) = ApplyTint(resolvedColor.R, resolvedColor.G, resolvedColor.B, tint);
+        return new ReportColor(red, green, blue, resolvedColor.A);
+    }
+
     private static HorizontalAlignment ResolveGeneralAlignment(IXLCell cell) =>
         cell.DataType is XLDataType.Number or XLDataType.DateTime or XLDataType.TimeSpan
             ? HorizontalAlignment.Right
@@ -99,28 +125,6 @@ internal static class ExcelStyleConverter
         XLBorderStyleValues.SlantDashDot => BorderLineStyle.SlantDashDot,
         _ => BorderLineStyle.Solid,
     };
-
-    private static ReportColor? ToColor(XLColor color, IXLTheme theme)
-    {
-        if (!color.HasValue)
-        {
-            return null;
-        }
-
-        // Indexed 64/65 represent automatic foreground/background colors.
-        if (color.ColorType == XLColorType.Indexed && color.Indexed >= 64)
-        {
-            return color.Indexed == 65 ? new(255, 255, 255) : new(0, 0, 0);
-        }
-
-        var resolvedColor = color.ColorType == XLColorType.Theme
-            ? theme.ResolveThemeColor(color.ThemeColor).Color
-            : color.Color;
-        var tint = color.ColorType == XLColorType.Theme ? color.ThemeTint : 0;
-
-        var (red, green, blue) = ApplyTint(resolvedColor.R, resolvedColor.G, resolvedColor.B, tint);
-        return new ReportColor(red, green, blue, resolvedColor.A);
-    }
 
     private static (byte Red, byte Green, byte Blue) ApplyTint(byte red, byte green, byte blue, double tint)
     {

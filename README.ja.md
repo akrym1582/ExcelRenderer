@@ -612,3 +612,35 @@ PDFの確定フォントは不変snapshotを使います。変換sessionが資�
 ソース参照専用の別プロジェクトは[ExcelRenderer Core](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/core.ja.md)を参照してください（NuGet未公開）。
 
 本体packageは同じbuildの `ExcelRenderer.Core.dll` を同梱します。Core単独ではソースProjectReferenceを利用してください。基本読取、幾何・ページlayout、command生成、PDF処理をCoreへ集約し、高機能部分は本体が拡張します。[2エンジン構成](docs/core-architecture.ja.md)と[検証結果](docs/core-refactor-validation.md)を参照してください。
+
+### セル内の部分書式と任意の診断
+
+PDF・PNG・SVG は、通常の文字列セルのフォント名・サイズ・太字・斜体・色・
+単一下線を部分書式として保持します。`ReportCell.RichTextRuns` は実効書式の
+`CellTextRun`、`Text` はプレーン全文です。手動モデルでは両者の全文が一致し、
+サイズが正の有限値である必要があります。組込み計測器は
+`IRichTextLayoutService` に対応し、従来のカスタム計測器はセル単一書式へ縮退します。
+Core 単独の通常フォント一つという仕様と、Markdown のプレーン出力は維持します。
+
+回転・縦書きとの併用はセル単一書式へ縮退します。取り消し線、上付き・下付き、
+二重・会計下線、ふりがなは描画しません。追加検出を有効にすると、未対応の部分書式と
+条件付き書式を診断します。anchor のあるグラフは既存の `UnsupportedDrawingObject`
+コードを維持し、追加検出時は選択ページの preflight で対象範囲へ絞り込みます。
+グラフや条件付き書式の描画は追加していません。
+
+```sh
+excelrenderer render input.xlsx -o output.pdf --format pdf \
+  --layout-warnings --min-readable-font-size 6 --detect-unsupported-features
+```
+
+`DiagnosticOptions.EnableLayoutWarnings` の既定値は `false` です。
+`MinimumReadableFontSize` は既定 6pt、正の有限値に限ります。値だけでは有効化されず、
+CLI では `--layout-warnings` との併用が必要です。`CellTextClipped` は横書きの折り返し・
+縮小セルを対象に、確定済みの論理行配置を 0.25pt の許容差で判定します。全グリフの
+ink bounds を完全に判定する機能ではありません。`CellTextTooSmall` は出力倍率適用後の
+可視 run サイズを使います。セルの寸法は変更せず、Markdown にはレイアウト診断を出しません。
+追加診断は preflight で収集し、診断による失敗は出力 sink を開く前に確定します。
+
+この変更で数式表示は従来の挙動を維持し、新しい数式表示モードは公開していません。
+ClosedXML の再計算範囲に関する障害と未完了の受け入れ検証は
+[実装・検証状況](docs/reader-richtext-validation.md) を参照してください。

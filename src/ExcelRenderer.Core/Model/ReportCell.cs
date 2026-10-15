@@ -14,4 +14,7 @@ internal sealed record ReportCell(
     /// Gets the merged-cell border fragments. 結合セルを構成する各セル位置の罫線情報を取得します。
     /// </summary>
     public IReadOnlyList<CellBorder>? MergedBorders { get; init; }
+
+    /// <summary>Gets neutral typed product metadata without interpreting partial formatting.</summary>
+    internal Extensibility.ICoreExtensionData? ExtensionData { get; init; }
 }

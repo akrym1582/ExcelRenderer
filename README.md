@@ -632,3 +632,37 @@ Resolved PDF fonts use immutable snapshots. A conversion owns its font resources
 For the separate source-only project (not published on NuGet), see [ExcelRenderer Core](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/core.md).
 
 The main package includes `ExcelRenderer.Core.dll` from the same build; Core is also available as a source ProjectReference. Basic reading, geometry/page layout, drawing and PDF operations are shared; advanced features remain in the main library. See [the two-engine architecture](docs/core-architecture.md) and [verification results](docs/core-refactor-validation.md).
+
+### Partial cell formatting and optional diagnostics
+
+PDF, PNG and SVG preserve partial font family, size, bold, italic, color and single
+underline in ordinary string cells. `ReportCell.RichTextRuns` contains effective
+`CellTextRun` values; `Text` remains the complete plain string. Manual models must
+supply matching text and valid positive sizes. The built-in measurer implements
+`IRichTextLayoutService`; existing custom measurers keep working with a cell-font
+fallback. Core-only output keeps its single regular font. Markdown stays plain text.
+
+Partial formatting with rotated/vertical cell text falls back to the cell font.
+Strikethrough, superscript/subscript, double/accounting underlines and phonetics are
+not rendered. Enable additional detection to report unsupported partial formatting
+and conditional formatting. Anchored chart diagnostics retain the existing
+`UnsupportedDrawingObject` code and are filtered during selected-page preflight
+when additional detection is enabled. No chart or conditional-format rendering is added.
+
+```sh
+excelrenderer render input.xlsx -o output.pdf --format pdf \
+  --layout-warnings --min-readable-font-size 6 --detect-unsupported-features
+```
+
+`DiagnosticOptions.EnableLayoutWarnings` defaults to `false`.
+`MinimumReadableFontSize` defaults to 6pt and must be finite and positive; setting
+it alone does not enable warnings. The CLI requires `--layout-warnings` with
+`--min-readable-font-size`. `CellTextClipped` checks finalized logical line placement
+for horizontal wrapped/shrunk cells with a 0.25pt tolerance, not complete glyph ink
+bounds. `CellTextTooSmall` uses final scaled visible run sizes. These warnings do
+not resize cells and are not emitted for Markdown. New warnings run in preflight;
+diagnostic failure occurs before opening output sinks.
+
+Formula display remains the existing behavior in this change; new formula display
+modes are not exposed. See [the implementation and validation status](docs/reader-richtext-validation.md)
+for the ClosedXML evaluation-scope blocker and outstanding acceptance checks.

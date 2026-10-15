@@ -45,7 +45,8 @@ internal sealed class TextMeasurePass : IReportLayoutPass
             if (context.TextMeasurer is ITextLayoutService layoutService)
             {
                 var text = context.Policy.PrepareMeasurementText(cell.Text ?? string.Empty, cell.Style);
-                var layout = layoutService.Layout(text, cell.Style.Font, availableWidth, cell.Style.WrapText);
+                var layout = (layoutService as IExtendedTextLayoutService)?.Layout(cell, availableWidth, cell.Style.WrapText) ??
+                    layoutService.Layout(text, cell.Style.Font, availableWidth, cell.Style.WrapText);
                 if (cell.Style.ShrinkToFit && !cell.Style.WrapText && layout.Size.Width > availableWidth &&
                     layout.Size.Width > 0)
                 {

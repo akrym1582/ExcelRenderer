@@ -6,4 +6,8 @@ namespace ExcelRenderer.Abstractions;
 /// <param name="Run">Resolved text and font information.</param>
 /// <param name="X">Horizontal offset from the line origin.</param>
 /// <param name="Advance">Logical run advance in points; this is not an ink bounding-box width.</param>
-public sealed record TextLayoutRun(TextRun Run, double X, double Advance);
+public sealed record TextLayoutRun(TextRun Run, double X, double Advance)
+{
+    /// <summary>Gets the finalized effective partial font, or null to use the cell font.</summary>
+    public Model.FontStyle? Font { get; init; }
+}

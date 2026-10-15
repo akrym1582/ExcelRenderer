@@ -12,7 +12,7 @@ using SkiaSharp;
 namespace ExcelRenderer.PdfSharp;
 
 /// <summary>PDFsharp のフォントメトリクスを使用して、レイアウトに必要な文字列の寸法を測定します。</summary>
-public sealed class PdfSharpTextMeasurer : ITextMeasurer, ITextLayoutService
+public sealed partial class PdfSharpTextMeasurer : ITextMeasurer, ITextLayoutService, IRichTextLayoutService
 {
     private readonly IFontManager? _fontManager;
     private readonly Dictionary<(string Text, FontStyle Font, double Width, bool Wrap, int Generation), TextLayoutResult>? _layouts;

@@ -139,3 +139,21 @@ Fix basic algorithms in Core and run both product regressions. CoreLayoutPolicy/
 - `FullPdfRenderer` paints full finalized/legacy runs, transformed images, shapes and viewports; its page-completion hook prepares annotations for execution after all destination pages exist. Core owns page append, basic paint, image decoding and final Save.
 - Normal conversion reads neutral cells directly. Public sheet views borrow those dictionaries, range filters preserve neutral values, and internal page building goes directly to common command generation. Public `ExcelReader.Read` materializes durable public dictionaries for its compatibility contract.
 - Typed payloads borrow image bytes, runs and metadata; conversion sessions own native resources. PDFsharp font snapshots use weak registration entries backed by the lifetime of their original resolved fonts, allowing public finalized runs to remain renderable without keeping every conversion's bytes globally.
+
+## Reader sessions and partial text extension
+
+- Core `ReaderSession` owns one lazy formatting workbook and the bounded 8192-entry
+  style conversion cache for a single read. Full and Core product policies never share
+  a session. Source styles remain read-only for the lifetime of their value-equality keys.
+- Core `ReportCell.ExtensionData` carries opaque cell metadata. Full `FullCellTextData`
+  owns effective partial fonts and immutable run snapshots; public model adapters retain
+  this payload through range views and merged-span updates.
+- Core `IExtendedTextLayoutService` delegates opaque text to the full adapter. Core's
+  `TextMeasurePass` still owns shrink-to-fit and normal measurement selection. Full
+  `IRichTextLayoutService` is an optional public capability; the old interface is unchanged.
+- Full `PdfSharpTextMeasurer.RichText` resolves physical runs, Unicode element wrapping
+  and shared baselines. Core's existing transform scales metrics/payload scale, and the
+  full adapter scales partial font sizes once when restoring finalized runs.
+- Core `CellTextDiagnostics` owns the logical clipping calculation. Full selected-page
+  preflight supplies source addresses and diagnostic policy; rendering does not re-emit
+  these warnings. Full readers own unsupported DrawingML/partial-style/rule metadata.

@@ -17,6 +17,9 @@ internal sealed class CoreWorkbookMetadata
         PageSetups = pageSetups;
     }
 
+    /// <summary>Gets or sets the resources owned by this read operation.</summary>
+    internal ReaderSession? ReaderSession { get; set; }
+
     /// <summary>Gets picture anchors and drawing order.</summary>
     internal IReadOnlyDictionary<string, IReadOnlyDictionary<string, DrawingPictureMetadata>> Pictures { get; }
 

@@ -30,6 +30,7 @@ internal static partial class CoreModelAdapter
             DefaultRowHeight = value.DefaultRowHeight,
             PrintAreas = value.PrintAreas.Select(ToPublic).ToArray(),
             SourceSheetIndex = value.SourceSheetIndex,
+            UnsupportedFeatures = data?.UnsupportedFeatures ?? [],
             Hyperlinks = data?.Hyperlinks?.Links ?? [],
             HyperlinkNames = data?.Hyperlinks?.Names ?? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase),
         };
@@ -44,6 +45,8 @@ internal static partial class CoreModelAdapter
 
             return new(cell.Text, style, cell.RowSpan, cell.ColumnSpan, cell.Formula)
             {
+                RichTextRuns = (cell.ExtensionData as FullCellTextData)?.Runs,
+                UnsupportedRichTextFormatting = (cell.ExtensionData as FullCellTextData)?.UnsupportedFormatting ?? false,
                 MergedBorders = cell.MergedBorders?.Select(border => new CellBorder(ToPublic(border.Address), ProjectBorder(border.Border))).ToArray(),
             };
         }

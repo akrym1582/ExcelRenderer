@@ -16,6 +16,7 @@ public static class RenderCommand
     {
         var input = CommandSupport.InputArgument();
         var data = MappingCommandSupport.DataOption();
+        var formulaMode = CommandSupport.FormulaModeOption();
         var output = CommandSupport.OutputOption("Output file for PDF, or output directory for other formats.");
         var format = new Option<string>("--format") { Description = "Output format: pdf, png, svg, or markdown.", Required = true };
         format.Validators.Add(result =>
@@ -69,6 +70,7 @@ public static class RenderCommand
             input, output, format, sheet, pages, imageLayout, ranges, maxRangeCells, trim, padding, hyperlinks, strict, warningsAsErrors, manifest,
         };
         command.Add(data);
+        command.Add(formulaMode);
         command.Add(layoutWarnings);
         command.Add(minimumFontSize);
         command.Add(unsupported);
@@ -99,6 +101,7 @@ public static class RenderCommand
                 result.GetValue(trim),
                 result.GetValue(padding),
                 CommandSupport.GetHyperlinks(result.GetValue(hyperlinks)!),
+                CommandSupport.GetReadOptions(result.GetValue(formulaMode)!),
                 result.GetValue(strict),
                 result.GetValue(layoutWarnings),
                 result.GetValue(minimumFontSize) ?? 6,
@@ -124,6 +127,7 @@ public static class RenderCommand
         bool trim,
         double? padding,
         HyperlinkMode hyperlinks,
+        Excel.ExcelReadOptions readOptions,
         bool strict,
         bool layoutWarnings,
         double minimumFontSize,
@@ -181,6 +185,7 @@ public static class RenderCommand
             Buffering = buffering,
             Trim = new TrimOptions { Enabled = trim, PaddingPoints = padding ?? 2 },
             Hyperlinks = hyperlinks,
+            ReadOptions = readOptions,
             ImageLayout = imageLayout,
             Selection = new SelectionOptions
             {

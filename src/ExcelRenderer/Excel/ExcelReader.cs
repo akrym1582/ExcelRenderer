@@ -25,22 +25,36 @@ public sealed class ExcelReader
     /// <summary>指定した Excel ファイルを読み取り、各ワークシートの内容をレンダリング用ドキュメントへ変換します。</summary>
     /// <param name="path">読み取る Excel ファイルのパスです。</param>
     /// <returns>ブック内のワークシートを元の順序で格納したレンダリング用ドキュメントを返します。</returns>
-    public ReportDocument Read(string path)
+    public ReportDocument Read(string path) => Read(path, new ExcelReadOptions());
+
+    /// <summary>Reads a file with an explicit formula display policy.</summary>
+    /// <param name="path">The workbook path.</param>
+    /// <param name="options">The read policy.</param>
+    /// <returns>The projected workbook.</returns>
+    public ReportDocument Read(string path, ExcelReadOptions options)
     {
+        (options ?? throw new ArgumentNullException(nameof(options))).Validate();
         if (path is null)
         {
             throw new ArgumentNullException(nameof(path));
         }
 
         using var input = File.OpenRead(path);
-        return Read(input);
+        return Read(input, options);
     }
 
     /// <summary>ストリームの現在位置からブックを読み取り、呼び出し元が所有するストリームを閉じずに処理します。</summary>
     /// <param name="input">読み取り対象の Excel データを含むストリームです。</param>
     /// <returns>ブック内のワークシートを元の順序で格納したレンダリング用ドキュメントを返します。</returns>
-    public ReportDocument Read(Stream input)
+    public ReportDocument Read(Stream input) => Read(input, new ExcelReadOptions());
+
+    /// <summary>Reads a borrowed stream with an explicit formula display policy.</summary>
+    /// <param name="input">The workbook stream.</param>
+    /// <param name="options">The read policy.</param>
+    /// <returns>The projected workbook.</returns>
+    public ReportDocument Read(Stream input, ExcelReadOptions options)
     {
+        (options ?? throw new ArgumentNullException(nameof(options))).Validate();
         if (input is null)
         {
             throw new ArgumentNullException(nameof(input));
@@ -56,7 +70,7 @@ public sealed class ExcelReader
                 MaxUncompressedZipBytes = long.MaxValue,
             },
             CancellationToken.None).GetAwaiter().GetResult();
-        return Read(prepared, null);
+        return Read(prepared, null, options: options);
     }
 
     /// <summary>読み取り時の診断情報を収集しながら、バイト配列の Excel ブックを読み取ります。</summary>
@@ -75,10 +89,11 @@ public sealed class ExcelReader
     /// <param name="source">The source used by this operation.</param>
     /// <param name="diagnostics">The diagnostics used by this operation.</param>
     /// <param name="selectedSheets">The selectedSheets used by this operation.</param>
+    /// <param name="options">The formula display policy.</param>
     /// <returns>The planned or generated result.</returns>
-    internal ReportDocument Read(PreparedWorkbook source, DiagnosticCollector? diagnostics, IReadOnlyList<string>? selectedSheets = null)
+    internal ReportDocument Read(PreparedWorkbook source, DiagnosticCollector? diagnostics, IReadOnlyList<string>? selectedSheets = null, ExcelReadOptions? options = null)
     {
-        var document = ReadCore(source, diagnostics, selectedSheets);
+        var document = ReadCore(source, diagnostics, selectedSheets, options: options);
         var styles = new StylePool();
         return ConversionMetrics.Measure("model", () => new ReportDocument(document.Sheets.Select(sheet =>
         {
@@ -98,10 +113,13 @@ public sealed class ExcelReader
     /// <param name="selectedSheets">The optional selected bodies.</param>
     /// <returns>The neutral workbook with full typed metadata.</returns>
     /// <param name="detectUnsupportedFeatures">Whether to retain additional unsupported-feature candidates.</param>
-    internal Core.Model.ReportDocument ReadCore(PreparedWorkbook source, DiagnosticCollector? diagnostics, IReadOnlyList<string>? selectedSheets = null, bool detectUnsupportedFeatures = false)
+    /// <param name="options">The formula display policy.</param>
+    /// <param name="cancellationToken">The read cancellation token.</param>
+    internal Core.Model.ReportDocument ReadCore(PreparedWorkbook source, DiagnosticCollector? diagnostics, IReadOnlyList<string>? selectedSheets = null, bool detectUnsupportedFeatures = false, ExcelReadOptions? options = null, CancellationToken cancellationToken = default)
     {
+        options?.Validate();
         var coreDiagnostics = diagnostics is null ? null : new Core.Rendering.DiagnosticCollector(diagnostic => diagnostics.Add(CoreIntegration.CoreDiagnosticAdapter.ToPublic(diagnostic)));
         return new CoreIntegration.FullExcelReader(fontManager, diagnostics, maximumDigitWidths, detectUnsupportedFeatures)
-            .Read(source.CoreWorkbook, coreDiagnostics, selectedSheets);
+            .Read(source.CoreWorkbook, coreDiagnostics, selectedSheets, cancellationToken, (Core.Excel.FormulaDisplayMode)(options?.FormulaDisplayMode ?? FormulaDisplayMode.Legacy));
     }
 }

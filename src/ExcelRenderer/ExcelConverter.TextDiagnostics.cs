@@ -23,6 +23,37 @@ public static partial class ExcelConverter
         {
             foreach (var (command, clipped) in Flatten(commands, false))
             {
+                if (options.DetectUnsupportedFeatures && command is DrawTextCommand { SourceAddress: { } unsupportedAddress } &&
+                    page.Sheet.Cells.TryGetValue(unsupportedAddress, out var unsupportedCell) && unsupportedCell.UnsupportedRichTextFormatting &&
+                    seen.Add((unsupportedAddress, "UnsupportedRichTextFormatting")))
+                {
+                    diagnostics.Add(new("UnsupportedRichTextFormatting", DiagnosticSeverity.Warning, DiagnosticStage.Layout, "Some partial text decorations or rotated formatting are not rendered.", page.Sheet.Name, Markdown.MarkdownExporter.Range(new(unsupportedAddress, unsupportedAddress)), SourcePageNumber: page.Descriptor.SourcePageNumber));
+                }
+
+                if (options.DetectUnsupportedFeatures && command is DrawTextCommand { SourceAddress: { } fallbackAddress } &&
+                    RenderResourceSession.Current?.TextMeasurer is not Abstractions.IRichTextLayoutService &&
+                    page.Sheet.Cells.TryGetValue(fallbackAddress, out var fallbackCell) && fallbackCell.RichTextRuns is { Count: > 0 } &&
+                    seen.Add((fallbackAddress, "RichTextLayoutFallback")))
+                {
+                    diagnostics.Add(new(
+                        "RichTextLayoutFallback",
+                        DiagnosticSeverity.Warning,
+                        DiagnosticStage.Layout,
+                        "The supplied measurement service has no partial-formatting capability; cell formatting is used for the complete text.",
+                        page.Sheet.Name,
+                        Markdown.MarkdownExporter.Range(new(fallbackAddress, fallbackAddress)),
+                        SourcePageNumber: page.Descriptor.SourcePageNumber));
+                }
+
+                if (options.EnableLayoutWarnings && command is DrawTextCommand { SourceAddress: { } unmeasuredAddress, TextLayout: null } unmeasured &&
+                    !string.IsNullOrWhiteSpace(unmeasured.Text) && unmeasured.Style.Font.Color?.Alpha != 0 &&
+                    unmeasured.Style.Font.Size > 0 && unmeasured.Style.Font.Size < options.MinimumReadableFontSize &&
+                    Layout.RectangleGeometry.Intersect(unmeasured.Bounds, new(0, 0, page.Descriptor.WidthPoints, page.Descriptor.HeightPoints)) is not null &&
+                    seen.Add((unmeasuredAddress, "CellTextTooSmall")))
+                {
+                    diagnostics.Add(new("CellTextTooSmall", DiagnosticSeverity.Warning, DiagnosticStage.Layout, "Visible cell text is smaller than the configured minimum output font size.", page.Sheet.Name, Markdown.MarkdownExporter.Range(new(unmeasuredAddress, unmeasuredAddress)), SourcePageNumber: page.Descriptor.SourcePageNumber));
+                }
+
                 if (command is DrawTextCommand { SourceAddress: { } address, TextLayout: { } layout } text)
                 {
                     if (options.EnableLayoutWarnings && !clipped && Core.Rendering.CellTextDiagnostics.IsClipped(
@@ -47,11 +78,6 @@ public static partial class ExcelConverter
                         Add("CellTextTooSmall", "A visible text run is smaller than the configured minimum output font size.");
                     }
 
-                    if (options.DetectUnsupportedFeatures && page.Sheet.Cells.TryGetValue(address, out var source) && source.UnsupportedRichTextFormatting)
-                    {
-                        Add("UnsupportedRichTextFormatting", "Some partial text decorations or rotated formatting are not rendered.");
-                    }
-
                     void Add(string code, string message)
                     {
                         if (seen.Add((address, code)))
@@ -66,11 +92,36 @@ public static partial class ExcelConverter
         }
     }
 
+    private static void CollectCellReadDiagnostics(ReportSheet sheet, IReadOnlyList<Layout.PageSourceRegion>? regions, int? pageNumber, DiagnosticCollector diagnostics)
+    {
+        var geometry = new Layout.SheetGeometry(sheet);
+        foreach (var diagnostic in sheet.CellReadDiagnostics)
+        {
+            var range = CellRangeParser.Parse(diagnostic.CellRange!, out _);
+            if (sheet.RequestedRange is { } requested && !requested.Contains(range.First))
+            {
+                continue;
+            }
+
+            var bounds = Layout.RectangleGeometry.Bounds(geometry, range);
+            if (bounds.Width > 0 && bounds.Height > 0 && (regions is null || regions.Any(region => Layout.RectangleGeometry.Intersect(bounds, region.SourceBounds) is not null)))
+            {
+                diagnostics.Add(diagnostic with { SourcePageNumber = pageNumber });
+            }
+        }
+    }
+
     private static void CollectUnsupportedFeatures(ReportSheet sheet, IReadOnlyList<Layout.PageSourceRegion>? regions, int? pageNumber, DiagnosticCollector diagnostics)
     {
         var geometry = new Layout.SheetGeometry(sheet);
         foreach (var feature in sheet.UnsupportedFeatures)
         {
+            if (feature.IsSheetLevel)
+            {
+                diagnostics.Add(new(feature.Code, DiagnosticSeverity.Warning, DiagnosticStage.Read, feature.Message, sheet.Name, ObjectId: feature.Id));
+                continue;
+            }
+
             if (feature.Anchor is { } anchor)
             {
                 var bounds = Layout.ObjectGeometry.GetSheetRect(geometry, anchor.From ?? new(1, 1), anchor.FromOffsetX, anchor.FromOffsetY, anchor.ExtentWidth, anchor.ExtentHeight, anchor);

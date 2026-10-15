@@ -20,11 +20,26 @@ internal sealed class CoreWorkbookMetadata
     /// <summary>Gets or sets the resources owned by this read operation.</summary>
     internal ReaderSession? ReaderSession { get; set; }
 
+    /// <summary>Gets or sets the requested formula display mode.</summary>
+    internal FormulaDisplayMode FormulaMode { get; set; }
+
+    /// <summary>Gets or sets the original sparse formula cache snapshot.</summary>
+    internal IReadOnlyDictionary<string, IReadOnlyDictionary<CellAddress, FormulaCache>> FormulaCaches { get; set; } = new Dictionary<string, IReadOnlyDictionary<CellAddress, FormulaCache>>();
+
+    /// <summary>Gets sparse cell diagnostics deferred until output selection.</summary>
+    internal Dictionary<string, List<Rendering.ConversionDiagnostic>> CellDiagnostics { get; } = new(StringComparer.Ordinal);
+
     /// <summary>Gets picture anchors and drawing order.</summary>
     internal IReadOnlyDictionary<string, IReadOnlyDictionary<string, DrawingPictureMetadata>> Pictures { get; }
 
     /// <summary>Gets workbook layout metadata.</summary>
     internal IReadOnlyDictionary<string, SheetPageSetupMetadata> PageSetups { get; }
+
+    /// <summary>Gets product-provided sheet placeholders for unsupported sheet kinds.</summary>
+    internal List<ReportSheet> AdditionalSheets { get; } = [];
+
+    /// <summary>Gets original workbook sheet positions when non-worksheet parts are present.</summary>
+    internal Dictionary<string, int> SourceSheetIndices { get; } = new(StringComparer.Ordinal);
 
     /// <summary>Gets additional neutral geometry before cell dimensions are materialized.</summary>
     internal Dictionary<string, IReadOnlyList<CellRange>> AdditionalGeometry { get; } = new(StringComparer.Ordinal);

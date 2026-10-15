@@ -31,6 +31,7 @@ internal static partial class CoreModelAdapter
             PrintAreas = value.PrintAreas.Select(ToPublic).ToArray(),
             SourceSheetIndex = value.SourceSheetIndex,
             UnsupportedFeatures = data?.UnsupportedFeatures ?? [],
+            CellReadDiagnostics = data?.CellReadDiagnostics ?? [],
             Hyperlinks = data?.Hyperlinks?.Links ?? [],
             HyperlinkNames = data?.Hyperlinks?.Names ?? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase),
         };

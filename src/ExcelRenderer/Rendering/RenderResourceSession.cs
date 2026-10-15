@@ -31,7 +31,7 @@ internal sealed class RenderResourceSession : IDisposable
     internal Core.Rendering.PdfSharpFontGate.Lease? FontSession { get; set; }
 
     /// <summary>Gets or sets the conversion-local bounded text layout cache.</summary>
-    internal PdfSharpTextMeasurer? TextMeasurer { get; set; }
+    internal Abstractions.ITextMeasurer? TextMeasurer { get; set; }
 
     /// <inheritdoc/>
     public void Dispose()

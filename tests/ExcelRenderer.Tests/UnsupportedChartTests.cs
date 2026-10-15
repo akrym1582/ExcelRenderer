@@ -42,6 +42,43 @@ public sealed class UnsupportedChartTests
         }
     }
 
+    [Theory]
+    [InlineData(true, null, 1)]
+    [InlineData(false, null, 0)]
+    [InlineData(true, "chart", 0)]
+    [InlineData(true, "chart-sheet", 1)]
+    public async Task ChartsheetHasSheetLevelDiagnosticWithoutInventedCellOrPage(bool detect, string? selected, int expected)
+    {
+        using var input = CreateChartWorkbook();
+        using (var document = SpreadsheetDocument.Open(input, true))
+        {
+            var workbook = document.WorkbookPart!;
+            var chartSheet = workbook.AddNewPart<ChartsheetPart>();
+            chartSheet.Chartsheet = new S.Chartsheet();
+            workbook.Workbook.Sheets!.Append(new S.Sheet { Name = "chart-sheet", SheetId = 2, Id = workbook.GetIdOfPart(chartSheet) });
+        }
+
+        input.Position = 0;
+        using var output = new MemoryStream();
+        var result = await ExcelConverter.RenderAsync(input, new()
+        {
+            OutputFormat = OutputFormat.Pdf,
+            Selection = new() { SheetNames = selected is null ? null : [selected] },
+            DiagnosticOptions = new() { DetectUnsupportedFeatures = detect },
+        }, new SingleStreamOutputSink(output));
+        var diagnostics = result.Diagnostics.Where(d => d.ObjectId == "chart-sheet").ToArray();
+        Assert.Equal(expected, diagnostics.Length);
+        if (expected == 1)
+        {
+            Assert.Equal("chart-sheet", diagnostics[0].SheetName);
+            Assert.Null(diagnostics[0].CellRange);
+            Assert.Null(diagnostics[0].SourcePageNumber);
+            Assert.Contains("unavailable", diagnostics[0].Message);
+        }
+
+        Assert.Equal(selected == "chart-sheet" ? 0 : 1, result.Pages.Count);
+    }
+
     private static MemoryStream CreateChartWorkbook()
     {
         var stream = new MemoryStream();

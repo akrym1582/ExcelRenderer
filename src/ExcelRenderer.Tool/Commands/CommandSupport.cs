@@ -159,6 +159,35 @@ internal static class CommandSupport
         _ => throw new ArgumentException("--hyperlinks must be preserve or none."),
     };
 
+    /// <summary>Creates the shared formula display option.</summary>
+    /// <returns>The validated mode option.</returns>
+    internal static Option<string> FormulaModeOption()
+    {
+        var option = new Option<string>("--formula-mode") { Description = "Formula display: legacy, cached, or recalculate.", DefaultValueFactory = _ => "legacy" };
+        option.Validators.Add(result =>
+        {
+            if (result.GetValueOrDefault<string>() is not ("legacy" or "cached" or "recalculate"))
+            {
+                result.AddError("--formula-mode must be legacy, cached, or recalculate.");
+            }
+        });
+        return option;
+    }
+
+    /// <summary>Maps a validated mode to workbook read settings.</summary>
+    /// <param name="value">The mode text.</param>
+    /// <returns>The requested read policy.</returns>
+    internal static Excel.ExcelReadOptions GetReadOptions(string value) => new()
+    {
+        FormulaDisplayMode = value switch
+        {
+            "legacy" => Excel.FormulaDisplayMode.Legacy,
+            "cached" => Excel.FormulaDisplayMode.CachedValue,
+            "recalculate" => Excel.FormulaDisplayMode.Recalculate,
+            _ => throw new ArgumentException("Invalid formula mode."),
+        },
+    };
+
     private static IReadOnlyList<string> NonEmpty(string[]? values) => values is { Length: > 0 } ? values : Array.Empty<string>();
 
     /// <summary>System.CommandLine のフォントオプション一式を保持します。</summary>

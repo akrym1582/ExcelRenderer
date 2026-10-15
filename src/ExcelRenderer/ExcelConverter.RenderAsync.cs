@@ -53,8 +53,8 @@ public static partial class ExcelConverter
             using var source = await WorkbookInputPreparer.ReadAsync(input, request.Input, cancellationToken).ConfigureAwait(false);
             ConversionMetrics.Report("input.ms", inputTimer.Elapsed.TotalMilliseconds);
             var fontManager = ConversionMetrics.Measure("fonts", () => new FontManager(request.FontOptions));
-            resources.TextMeasurer = new PdfSharpTextMeasurer(fontManager, cacheLayouts: true);
-            var coreDocument = ConversionMetrics.Measure("reader", () => new ExcelReader(fontManager).ReadCore(source, diagnostics, request.Selection.SheetNames, request.DiagnosticOptions.DetectUnsupportedFeatures));
+            resources.TextMeasurer = request.TextMeasurer ?? new PdfSharpTextMeasurer(fontManager, cacheLayouts: true);
+            var coreDocument = ConversionMetrics.Measure("reader", () => new ExcelReader(fontManager).ReadCore(source, diagnostics, request.Selection.SheetNames, request.DiagnosticOptions.DetectUnsupportedFeatures, request.ReadOptions, cancellationToken));
             var publicStyles = new StylePool();
             var document = new ReportDocument(coreDocument.Sheets.Select(sheet => CoreIntegration.CoreModelAdapter.ToPublic(sheet, publicStyles)).ToArray());
             source.Dispose();
@@ -66,9 +66,29 @@ public static partial class ExcelConverter
             }
 
             var sheets = ApplyRanges(SelectSheets(document, request.Selection.SheetNames), request.Selection, diagnostics);
+            if (request.DiagnosticOptions.DetectUnsupportedFeatures)
+            {
+                foreach (var selected in sheets.Where(selected => selected.Sheet.UnsupportedFeatures.Any(feature => feature.IsSheetLevel)))
+                {
+                    if (request.Selection.Pages is null)
+                    {
+                        CollectUnsupportedFeatures(selected.Sheet, [], null, diagnostics);
+                    }
+                }
+
+                // Unsupported chart sheets have no renderable cells or output pages. Retain their
+                // selection identity for diagnostics without adding blank pages to the conversion.
+                sheets = sheets.Where(selected => !selected.Sheet.UnsupportedFeatures.Any(feature => feature.IsSheetLevel)).ToArray();
+            }
+
             if (diagnostics.HasFailure)
             {
                 throw Failure("Conversion was stopped by diagnostic policy.", null, diagnostics, artifacts);
+            }
+
+            if (sheets.Count == 0 && request.Selection.Pages is null)
+            {
+                return new(ConversionManifest.SchemaVersion, "Completed", [], [], artifacts, diagnostics.ToArray());
             }
 
             if (request.OutputFormat == OutputFormat.Markdown && request.Selection.Pages is not null)
@@ -78,6 +98,11 @@ public static partial class ExcelConverter
 
             if (request.OutputFormat == OutputFormat.Markdown)
             {
+                foreach (var selected in sheets)
+                {
+                    CollectCellReadDiagnostics(selected.Sheet, null, null, diagnostics);
+                }
+
                 if (request.DiagnosticOptions.DetectUnsupportedFeatures)
                 {
                     foreach (var selected in sheets)
@@ -201,12 +226,13 @@ public static partial class ExcelConverter
 
     private static void ValidateRequest(RenderRequest request)
     {
-        if (request.Buffering is null || request.Selection is null || request.Trim is null || request.Input is null || request.FontOptions is null || request.DiagnosticOptions is null)
+        if (request.Buffering is null || request.Selection is null || request.Trim is null || request.Input is null || request.FontOptions is null || request.DiagnosticOptions is null || request.ReadOptions is null)
         {
             throw new ArgumentException("Required render options must not be null.", nameof(request));
         }
 
         request.Buffering.Validate();
+        request.ReadOptions.Validate();
         if (!double.IsFinite(request.DiagnosticOptions.MinimumReadableFontSize) || request.DiagnosticOptions.MinimumReadableFontSize <= 0)
         {
             throw new ArgumentOutOfRangeException(nameof(request), "Minimum readable font size must be positive and finite.");
@@ -328,6 +354,7 @@ public static partial class ExcelConverter
                 }
             }
 
+            CollectCellReadDiagnostics(page.Sheet, payload.Regions, page.Descriptor.SourcePageNumber, diagnostics);
             if (request.DiagnosticOptions.DetectUnsupportedFeatures)
             {
                 CollectUnsupportedFeatures(page.Sheet, payload.Regions, page.Descriptor.SourcePageNumber, diagnostics);

@@ -29,8 +29,9 @@ internal class CoreExcelReader
     /// <param name="diagnostics">The diagnostics used by this operation.</param>
     /// <param name="selectedSheets">The selectedSheets used by this operation.</param>
     /// <param name="cancellationToken">The reader cancellation token.</param>
+    /// <param name="formulaMode">The internal formula display policy.</param>
     /// <returns>The planned or generated result.</returns>
-    internal ReportDocument Read(PreparedWorkbook source, DiagnosticCollector? diagnostics, IReadOnlyList<string>? selectedSheets = null, CancellationToken cancellationToken = default)
+    internal ReportDocument Read(PreparedWorkbook source, DiagnosticCollector? diagnostics, IReadOnlyList<string>? selectedSheets = null, CancellationToken cancellationToken = default, FormulaDisplayMode formulaMode = FormulaDisplayMode.Legacy)
     {
         using var workbookStream = source.OpenRead();
         using var pictureSource = source.OpenRead();
@@ -43,21 +44,27 @@ internal class CoreExcelReader
             ? new XLWorkbook(cancelRead)
             : new XLWorkbook(cancelRead, new LoadOptions { GraphicEngine = graphics }));
         ConversionMetrics.Report("coreReaderWorkbook", 1);
+        var pictureMetadata = DrawingMLReader.ReadPictureMetadata(pictureMetadataStream);
+        var pageSetups = WorkbookLayoutMetadataReader.ReadPageSetups(metadataStream);
+        var metadata = new CoreWorkbookMetadata(pictureMetadata, pageSetups) { FormulaMode = formulaMode };
+        if (formulaMode != FormulaDisplayMode.Legacy)
+        {
+            using var formulaStream = source.OpenRead();
+            metadata.FormulaCaches = FormulaCacheReader.Read(formulaStream, workbook, cancellationToken);
+        }
+
+        PrepareWorkbookMetadata(source, workbook, metadata, selectedSheets);
         if (selectedSheets is not null)
         {
             foreach (var name in selectedSheets)
             {
-                if (string.IsNullOrEmpty(name) || !workbook.Worksheets.Any(sheet => sheet.Name == name))
+                if (string.IsNullOrEmpty(name) || (!workbook.Worksheets.Any(sheet => sheet.Name == name) && !metadata.AdditionalSheets.Any(sheet => sheet.Name == name)))
                 {
                     throw new ArgumentException($"Worksheet was not found: {name}", nameof(selectedSheets));
                 }
             }
         }
 
-        var pictureMetadata = DrawingMLReader.ReadPictureMetadata(pictureMetadataStream);
-        var pageSetups = WorkbookLayoutMetadataReader.ReadPageSetups(metadataStream);
-        var metadata = new CoreWorkbookMetadata(pictureMetadata, pageSetups);
-        PrepareWorkbookMetadata(source, workbook, metadata, selectedSheets);
         var styles = new StylePool();
         using var session = new ReaderSession(workbook.Use1904DateSystem, graphics);
         metadata.ReaderSession = session;
@@ -68,12 +75,14 @@ internal class CoreExcelReader
                 entry.Sheet,
                 new CoreSheetReadContext(
                     metadata,
-                    entry.Index,
+                    metadata.SourceSheetIndices.GetValueOrDefault(entry.Sheet.Name, entry.Index),
                     selectedSheets is null || selectedSheets.Contains(entry.Sheet.Name, StringComparer.Ordinal)),
                 diagnostics,
                 styles,
                 graphics,
-                cancellationToken)).ToArray()));
+                cancellationToken))
+            .Concat(metadata.AdditionalSheets.Where(sheet => selectedSheets is null || selectedSheets.Contains(sheet.Name, StringComparer.Ordinal)))
+            .OrderBy(sheet => sheet.SourceSheetIndex).ToArray()));
     }
 
     /// <summary>Adds product metadata after the single workbook load and basic XML reads.</summary>
@@ -95,7 +104,35 @@ internal class CoreExcelReader
     /// <param name="cell">The source cell.</param>
     /// <param name="context">The sheet read context.</param>
     /// <returns>The original formatted display.</returns>
-    protected virtual string ReadDisplayText(IXLCell cell, CoreSheetReadContext context) => ReadDisplay(cell, context.Metadata.ReaderSession!);
+    protected virtual string ReadDisplayText(IXLCell cell, CoreSheetReadContext context)
+    {
+        var metadata = context.Metadata;
+        if (!cell.HasFormula || metadata.FormulaMode == FormulaDisplayMode.Legacy)
+        {
+            var text = ReadDisplay(cell, metadata.ReaderSession!);
+            if (cell.HasFormula && cell.CachedValue.IsError)
+            {
+                AddFormulaDiagnostic(cell, metadata, "FormulaResultError", "The selected formula display value is an Excel error.");
+            }
+
+            return text;
+        }
+
+        var address = new CellAddress(cell.Address.RowNumber, cell.Address.ColumnNumber);
+        var cache = metadata.FormulaCaches.GetValueOrDefault(cell.Worksheet.Name)?.GetValueOrDefault(address);
+        if (cache?.HasValue != true)
+        {
+            AddFormulaDiagnostic(cell, metadata, "FormulaCachedValueMissing", "The formula has no saved result; an empty display is used.");
+            return string.Empty;
+        }
+
+        if (cache.Value.IsError)
+        {
+            AddFormulaDiagnostic(cell, metadata, "FormulaResultError", "The selected formula display value is an Excel error.");
+        }
+
+        return metadata.ReaderSession!.Format(cell, cache.Value);
+    }
 
     /// <summary>Converts source styles before interning.</summary>
     /// <param name="cell">The source cell.</param>
@@ -120,6 +157,17 @@ internal class CoreExcelReader
     /// <param name="context">The sheet context.</param>
     /// <returns>The completed model.</returns>
     protected virtual ReportSheet CompleteSheet(IXLWorksheet worksheet, ReportSheet sheet, CoreSheetReadContext context) => sheet;
+
+    private static void AddFormulaDiagnostic(IXLCell cell, CoreWorkbookMetadata metadata, string code, string message)
+    {
+        if (!metadata.CellDiagnostics.TryGetValue(cell.Worksheet.Name, out var diagnostics))
+        {
+            diagnostics = [];
+            metadata.CellDiagnostics[cell.Worksheet.Name] = diagnostics;
+        }
+
+        diagnostics.Add(new(code, DiagnosticSeverity.Warning, DiagnosticStage.Read, message, cell.Worksheet.Name, cell.Address.ToStringRelative()));
+    }
 
     private static string ReadDisplay(IXLCell cell, ReaderSession session)
     {

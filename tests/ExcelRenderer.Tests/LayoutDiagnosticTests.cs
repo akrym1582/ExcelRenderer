@@ -77,6 +77,40 @@ public sealed class LayoutDiagnosticTests
         Assert.DoesNotContain(result.Diagnostics, d => d.Code is "CellTextClipped" or "CellTextTooSmall" or "UnsupportedConditionalFormatting");
     }
 
+    [Fact]
+    public async Task FinalScaleRichRunsShrinkAndRotationProduceSmallTextWarnings()
+    {
+        using var workbook = new XLWorkbook();
+        var sheet = workbook.AddWorksheet("sizes");
+        sheet.PageSetup.Scale = 50;
+        sheet.PageSetup.PrintAreas.Add("A1:A5");
+        sheet.Column(1).Width = 12;
+        sheet.Cell(1, 1).Value = "scaled";
+        sheet.Cell(1, 1).Style.Font.FontSize = 10;
+        sheet.Cell(2, 1).CreateRichText().AddText("BIG").SetFontSize(20);
+        sheet.Cell(2, 1).GetRichText().AddText("small").SetFontSize(8);
+        sheet.Cell(3, 1).Value = "rotated";
+        sheet.Cell(3, 1).Style.Font.FontSize = 8;
+        sheet.Cell(3, 1).Style.Alignment.TextRotation = 45;
+        sheet.Cell(4, 1).Value = "a long string that must shrink into a narrow cell";
+        sheet.Cell(4, 1).Style.Font.FontSize = 20;
+        sheet.Cell(4, 1).Style.Alignment.ShrinkToFit = true;
+        sheet.Cell(5, 1).Value = "hidden";
+        sheet.Cell(5, 1).Style.Font.FontSize = 4;
+        sheet.Row(5).Hide();
+        using var input = new MemoryStream();
+        workbook.SaveAs(input);
+        input.Position = 0;
+        using var output = new MemoryStream();
+        var result = await ExcelConverter.RenderAsync(input, new()
+        {
+            OutputFormat = OutputFormat.Pdf,
+            DiagnosticOptions = new() { EnableLayoutWarnings = true },
+        }, new SingleStreamOutputSink(output));
+        Assert.Equal(new[] { "A1", "A2", "A3", "A4" }, result.Diagnostics.Where(d => d.Code == "CellTextTooSmall").Select(d => d.CellRange).Order());
+        Assert.All(result.Diagnostics.Where(d => d.Code == "CellTextTooSmall"), diagnostic => Assert.Equal(1, diagnostic.OccurrenceCount));
+    }
+
     private static MemoryStream CreateWorkbook()
     {
         using var workbook = new XLWorkbook();

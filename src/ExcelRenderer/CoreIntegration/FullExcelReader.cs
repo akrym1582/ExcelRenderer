@@ -1,4 +1,5 @@
 using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Packaging;
 using ExcelRenderer.Core.Excel;
 using ExcelRenderer.Core.Model;
 using ExcelRenderer.Fonts;
@@ -35,6 +36,32 @@ internal sealed class FullExcelReader : CoreExcelReader
         var shapes = Excel.DrawingMLReader.Read(drawingStream, diagnostics, selectedSheets, unselectedGeometry, detectUnsupportedFeatures ? unsupported : null);
         var pictures = Excel.DrawingMLReader.ReadPictureMetadata(pictureStream, metadata.Pictures);
         var hyperlinks = Excel.HyperlinkReader.Read(hyperlinkStream);
+        if (detectUnsupportedFeatures)
+        {
+            using var chartStream = source.OpenRead();
+            using var package = SpreadsheetDocument.Open(chartStream, false);
+            var workbookPart = package.WorkbookPart!;
+            var index = 0;
+            foreach (var sheet in workbookPart.Workbook.Sheets!.Elements<DocumentFormat.OpenXml.Spreadsheet.Sheet>())
+            {
+                var name = sheet.Name!.Value!;
+                metadata.SourceSheetIndices[name] = ++index;
+                if (workbookPart.GetPartById(sheet.Id!) is ChartsheetPart &&
+                    (sheet.State is null || sheet.State.Value == DocumentFormat.OpenXml.Spreadsheet.SheetStateValues.Visible) &&
+                    (selectedSheets is null || selectedSheets.Contains(name, StringComparer.Ordinal)))
+                {
+                    metadata.AdditionalSheets.Add(new(name, new Dictionary<CellAddress, ReportCell>(), new Dictionary<int, ColumnDefinition>(), new Dictionary<int, RowDefinition>(), [], new())
+                    {
+                        SourceSheetIndex = index,
+                        ExtensionData = new FullSheetData([], null)
+                        {
+                            UnsupportedFeatures = [new("UnsupportedDrawingObject", "A chart sheet is not rendered; cell position is unavailable.", "chart-sheet", []) { IsSheetLevel = true }],
+                        },
+                    });
+                }
+            }
+        }
+
         metadata.IncludeUnselectedSheetGeometry = true;
         metadata.ExtensionData = new FullWorkbookData(shapes, pictures, hyperlinks) { UnsupportedFeatures = unsupported };
         foreach (var sheet in workbook.Worksheets)
@@ -106,6 +133,15 @@ internal sealed class FullExcelReader : CoreExcelReader
         }
 
         runs.RemoveAll(run => run.Text.Length == 0);
+        for (var index = runs.Count - 1; index > 0; index--)
+        {
+            if (runs[index - 1].Font == runs[index].Font)
+            {
+                runs[index - 1] = runs[index - 1] with { Text = runs[index - 1].Text + runs[index].Text };
+                runs.RemoveAt(index);
+            }
+        }
+
         unsupported |= runs.Any(run => run.Font != CoreModelAdapter.ToPublic(cell.Style.Font)) &&
             (cell.Style.TextRotation != 0 || cell.Style.TopToBottom);
         return cell with
@@ -130,6 +166,7 @@ internal sealed class FullExcelReader : CoreExcelReader
                 ? image with { ExtensionData = new FullPictureData(picture) } : image).ToArray(),
             ExtensionData = new FullSheetData(context.IncludeBody ? data.Shapes.GetValueOrDefault(worksheet.Name, []) : [], data.Hyperlinks.GetValueOrDefault(worksheet.Name))
             {
+                CellReadDiagnostics = context.Metadata.CellDiagnostics.GetValueOrDefault(worksheet.Name, []).Select(CoreDiagnosticAdapter.ToPublic).ToArray(),
                 UnsupportedFeatures = context.IncludeBody && detectUnsupportedFeatures ? data.UnsupportedFeatures.GetValueOrDefault(worksheet.Name, []).Concat(worksheet.ConditionalFormats.Select((rule, index) => new UnsupportedFeature(
                     "UnsupportedConditionalFormatting",
                     "A conditional formatting rule exists but its visual effects are not rendered.",

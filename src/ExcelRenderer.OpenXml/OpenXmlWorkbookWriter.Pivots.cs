@@ -15,9 +15,50 @@ namespace ExcelRenderer.OpenXml;
 /// <summary>Rebuilds saved worksheet pivot source records without calculating pivot aggregates.</summary>
 public static partial class OpenXmlWorkbookWriter
 {
-    private static void RewritePivotCaches(WorkbookPart workbook, ZipArchive archive, Dictionary<string, SheetSource> sources, Dictionary<string, SpillableBufferStream> replacements, StructuralReferences references, InputBufferOptions buffers, CancellationToken token)
+    private enum PivotCacheChange
+    {
+        Unchanged,
+        SourceOnly,
+        RecordsOnly,
+        ItemsChanged,
+    }
+
+    private static Dictionary<Uri, PivotCacheUpdate> RewritePivotCaches(WorkbookPart workbook, ZipArchive archive, Dictionary<string, SheetSource> sources, Dictionary<string, SpillableBufferStream> replacements, StructuralReferences references, InputBufferOptions buffers, CancellationToken token)
     {
         var sheets = workbook.Workbook.Sheets!.Elements<S.Sheet>().ToDictionary(sheet => sheet.Name!.Value!, sheet => sources[workbook.GetPartById(sheet.Id!).Uri.ToString().TrimStart('/')], StringComparer.OrdinalIgnoreCase);
+        var updates = new Dictionary<Uri, PivotCacheUpdate>();
+        var indexedFields = new Dictionary<Uri, HashSet<int>>();
+        foreach (var pivot in workbook.WorksheetParts.SelectMany(part => part.PivotTableParts))
+        {
+            var cacheUri = pivot.PivotTableCacheDefinitionPart!.Uri;
+            if (!indexedFields.TryGetValue(cacheUri, out var indexed))
+            {
+                indexed = new HashSet<int>();
+                indexedFields.Add(cacheUri, indexed);
+            }
+
+            var fields = pivot.PivotTableDefinition.PivotFields;
+            if (fields != null)
+            {
+                foreach (var field in fields.Elements<S.PivotField>().Select((field, index) => (Field: field, Index: index)))
+                {
+                    if (field.Field.GetFirstChild<S.Items>() != null)
+                    {
+                        indexed.Add(field.Index);
+                    }
+                }
+            }
+
+            foreach (var data in pivot.PivotTableDefinition.DataFields?.Elements<S.DataField>() ?? Enumerable.Empty<S.DataField>())
+            {
+                var baseField = data.BaseField?.Value ?? 0;
+                if (baseField >= 0 && (data.BaseField != null || data.BaseItem != null || data.ShowDataAs?.InnerText is "difference" or "percent" or "percentDiff" or "runTotal"))
+                {
+                    indexed.Add(baseField);
+                }
+            }
+        }
+
         foreach (var cache in workbook.Parts.Select(pair => pair.OpenXmlPart).OfType<PivotTableCacheDefinitionPart>())
         {
             token.ThrowIfCancellationRequested();
@@ -31,6 +72,8 @@ public static partial class OpenXmlWorkbookWriter
                 throw new NotSupportedException("A pivot cache requires an explicit local worksheet rectangle.");
             }
 
+            var update = new PivotCacheUpdate();
+            updates.Add(cache.Uri, update);
             var range = CellRange.Parse(reference);
             RequireUniqueRows(source.Plan, range.First.Row, range.First.Row, "A pivot header intersects repeated or deleted rows.");
             var placements = StructuralReferences.Expand(reference, source.Plan);
@@ -52,12 +95,13 @@ public static partial class OpenXmlWorkbookWriter
             }
 
             var changed = occurrences.Any(row => row.Values.Any(edit => edit.Column >= range.First.Column && edit.Column <= range.Last.Column)) ||
-                occurrences.Count != range.Last.Row - range.First.Row || occurrences.Any(row => row.OccurrenceId != 0);
+                occurrences.Count != range.Last.Row - range.First.Row || occurrences.Where((row, index) => row.SourceRow != range.First.Row + index + 1).Any();
             if (!changed)
             {
                 var updated = references.Rewrite(reference, name);
                 if (updated != reference)
                 {
+                    update.Kind = PivotCacheChange.SourceOnly;
                     worksheet.SetAttributeValue("ref", updated);
                     Save(cache, definition);
                 }
@@ -66,8 +110,26 @@ public static partial class OpenXmlWorkbookWriter
             }
 
             var strings = ReadPivotStrings(workbook, source, occurrences, token);
-            var items = fields.Select(_ => new List<XElement>()).ToArray();
-            var indices = fields.Select(_ => new Dictionary<string, int>(StringComparer.Ordinal)).ToArray();
+
+            // Only unindexed measure dictionaries may be rebuilt. Every observable item ID
+            // is retained, including missing values, so pivot item positions never change.
+            var items = fields.Select((field, index) => indexedFields.TryGetValue(cache.Uri, out var indexed) && indexed.Contains(index) ?
+                field.Element(Ns + "sharedItems")?.Elements().Select(value => new XElement(value)).ToList() ?? new List<XElement>() : new List<XElement>()).ToArray();
+            var oldCounts = items.Select(values => values.Count).ToArray();
+            var indices = items.Select(values =>
+            {
+                var result = new Dictionary<(string Type, string Value), int>();
+                for (var index = 0; index < values.Count; index++)
+                {
+                    var key = PivotItemKey(values[index]);
+                    if (!result.ContainsKey(key))
+                    {
+                        result.Add(key, index);
+                    }
+                }
+
+                return result;
+            }).ToArray();
             var recordsPart = cache.PivotTableCacheRecordsPart ?? throw new NotSupportedException("A worksheet pivot cache requires an existing records part.");
             var recordBuffer = new SpillableBufferStream(buffers);
             replacements.Add(recordsPart.Uri.ToString().TrimStart('/'), recordBuffer);
@@ -94,7 +156,7 @@ public static partial class OpenXmlWorkbookWriter
                         var edit = occurrence.Values.FirstOrDefault(value => value.Column == column);
                         var cell = cells.GetValueOrDefault(column);
                         var value = edit == null ? PivotCell(cell, strings) : PivotValue(edit.Value, workbook.Workbook.WorkbookProperties?.Date1904?.Value == true);
-                        var key = value.ToString(SaveOptions.DisableFormatting);
+                        var key = PivotItemKey(value);
                         if (!indices[index].TryGetValue(key, out var item))
                         {
                             item = items[index].Count;
@@ -111,6 +173,8 @@ public static partial class OpenXmlWorkbookWriter
                 recordWriter.WriteEndElement();
             }
 
+            update.AddedItems = items.Select((values, index) => Enumerable.Range(oldCounts[index], values.Count - oldCounts[index]).ToArray()).ToArray();
+            update.Kind = update.AddedItems.Any(values => values.Length > 0) ? PivotCacheChange.ItemsChanged : PivotCacheChange.RecordsOnly;
             worksheet.SetAttributeValue("ref", references.Rewrite(reference, name));
             definition.Root.SetAttributeValue("refreshOnLoad", 1);
             definition.Root.SetAttributeValue("invalid", 1);
@@ -120,9 +184,13 @@ public static partial class OpenXmlWorkbookWriter
                 var values = items[index];
                 var shared = new XElement(Ns + "sharedItems", new XAttribute("count", values.Count), values);
                 var types = values.Select(value => value.Name.LocalName).Distinct().ToArray();
+                shared.SetAttributeValue("longText", values.Any(value => value.Name == Ns + "s" && ((string?)value.Attribute("v"))?.Length > 255) ? 1 : 0);
                 shared.SetAttributeValue("containsBlank", types.Contains("m") ? 1 : 0);
                 shared.SetAttributeValue("containsString", types.Contains("s") ? 1 : 0);
                 shared.SetAttributeValue("containsNumber", types.Contains("n") ? 1 : 0);
+                shared.SetAttributeValue("containsDate", types.Contains("d") ? 1 : 0);
+                shared.SetAttributeValue("containsNonDate", types.Any(type => type != "d") ? 1 : 0);
+                shared.SetAttributeValue("containsInteger", types.Contains("n") && values.Where(value => value.Name == Ns + "n").All(value => double.TryParse((string?)value.Attribute("v"), NumberStyles.Float, CultureInfo.InvariantCulture, out var number) && Math.Truncate(number) == number) ? 1 : 0);
                 shared.SetAttributeValue("containsMixedTypes", types.Length > 1 ? 1 : 0);
                 shared.SetAttributeValue("containsSemiMixedTypes", types.Any(type => type is "s" or "m") ? 1 : 0);
                 if (fields[index].Element(Ns + "sharedItems") is { } old)
@@ -138,12 +206,34 @@ public static partial class OpenXmlWorkbookWriter
             Save(cache, definition);
         }
 
+        return updates;
+
         void Save(OpenXmlPart part, XDocument xml)
         {
             var destination = new SpillableBufferStream(buffers);
             replacements.Add(part.Uri.ToString().TrimStart('/'), destination);
             xml.Save(destination);
         }
+    }
+
+    private static (string Type, string Value) PivotItemKey(XElement value)
+    {
+        var text = (string?)value.Attribute("v") ?? string.Empty;
+        var type = value.Name.LocalName;
+        if (type == "n" && double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out var number))
+        {
+            text = number.ToString("R", CultureInfo.InvariantCulture);
+        }
+        else if (type == "b")
+        {
+            text = text is "1" or "true" ? "1" : "0";
+        }
+        else if (type == "d" && DateTime.TryParse(text, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var date))
+        {
+            text = date.ToString("O", CultureInfo.InvariantCulture);
+        }
+
+        return (type, text);
     }
 
     private static IReadOnlyDictionary<int, string> ReadPivotStrings(WorkbookPart workbook, SheetSource source, IEnumerable<OutputRowOccurrence> occurrences, CancellationToken token)
@@ -228,5 +318,12 @@ public static partial class OpenXmlWorkbookWriter
 
         var number = value is DateTime date ? SerialDate(date, date1904) : value is TimeSpan time ? time.TotalDays : (double)value;
         return new XElement(Ns + "n", new XAttribute("v", number.ToString("R", CultureInfo.InvariantCulture)));
+    }
+
+    private sealed class PivotCacheUpdate
+    {
+        internal PivotCacheChange Kind { get; set; }
+
+        internal int[][] AddedItems { get; set; } = Array.Empty<int[]>();
     }
 }

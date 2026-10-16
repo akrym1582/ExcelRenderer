@@ -1,0 +1,93 @@
+{
+  "fullRemoval": true,
+  "projects": [
+    {
+      "project": "src/ExcelRenderer/ExcelRenderer.csproj",
+      "removedDependencies": []
+    },
+    {
+      "project": "src/ExcelRenderer.Core/ExcelRenderer.Core.csproj",
+      "removedDependencies": []
+    },
+    {
+      "project": "src/ExcelRenderer.Fonts/ExcelRenderer.Fonts.csproj",
+      "removedDependencies": []
+    },
+    {
+      "project": "src/ExcelRenderer.Mapping/ExcelRenderer.Mapping.csproj",
+      "removedDependencies": []
+    },
+    {
+      "project": "src/ExcelRenderer.OpenXml/ExcelRenderer.OpenXml.csproj",
+      "removedDependencies": []
+    },
+    {
+      "project": "src/ExcelRenderer.Tool/ExcelRenderer.Tool.csproj",
+      "removedDependencies": []
+    },
+    {
+      "project": "tests/ExcelRenderer.Core.Tests/ExcelRenderer.Core.Tests.csproj",
+      "removedDependencies": []
+    },
+    {
+      "project": "tests/ExcelRenderer.Mapping.Tests/ExcelRenderer.Mapping.Tests.csproj",
+      "removedDependencies": []
+    },
+    {
+      "project": "tests/ExcelRenderer.OpenXml.Tests/ExcelRenderer.OpenXml.Tests.csproj",
+      "removedDependencies": []
+    },
+    {
+      "project": "tests/ExcelRenderer.Tests/ExcelRenderer.Tests.csproj",
+      "removedDependencies": []
+    },
+    {
+      "project": "tests/ExcelRenderer.Tool.Tests/ExcelRenderer.Tool.Tests.csproj",
+      "removedDependencies": []
+    },
+    {
+      "project": "tools/ExcelRenderer.Core.Reference/ExcelRenderer.Core.Reference.csproj",
+      "removedDependencies": []
+    },
+    {
+      "project": "tools/ExcelRenderer.Core.Validation/ExcelRenderer.Core.Validation.csproj",
+      "removedDependencies": []
+    },
+    {
+      "project": "tools/ExcelRenderer.OpenXml.Validation/ExcelRenderer.OpenXml.Validation.csproj",
+      "removedDependencies": []
+    },
+    {
+      "project": "tools/ExcelRenderer.Performance/ExcelRenderer.Performance.csproj",
+      "removedDependencies": []
+    },
+    {
+      "project": "samples/ExcelRenderer.Core.Sample/ExcelRenderer.Core.Sample.csproj",
+      "removedDependencies": []
+    }
+  ],
+  "depsJsonChecked": [
+    "src/ExcelRenderer/bin/Release/netstandard2.1/ExcelRenderer.deps.json",
+    "src/ExcelRenderer/bin/Debug/netstandard2.1/ExcelRenderer.deps.json",
+    "src/ExcelRenderer.Core/bin/Release/netstandard2.1/ExcelRenderer.Core.deps.json",
+    "src/ExcelRenderer.Core/bin/Debug/netstandard2.1/ExcelRenderer.Core.deps.json",
+    "src/ExcelRenderer.Fonts/bin/Debug/netstandard2.1/ExcelRenderer.Fonts.deps.json",
+    "src/ExcelRenderer.Mapping/bin/Release/netstandard2.1/ExcelRenderer.Mapping.deps.json",
+    "src/ExcelRenderer.Mapping/bin/Debug/netstandard2.1/ExcelRenderer.Mapping.deps.json",
+    "src/ExcelRenderer.Tool/bin/Debug/net10.0/ExcelRenderer.Tool.deps.json",
+    "src/ExcelRenderer.OpenXml/bin/Release/netstandard2.1/ExcelRenderer.OpenXml.deps.json",
+    "src/ExcelRenderer.OpenXml/bin/Debug/netstandard2.1/ExcelRenderer.OpenXml.deps.json",
+    "tests/ExcelRenderer.Core.Tests/bin/Debug/net10.0/ExcelRenderer.Core.Tests.deps.json",
+    "tests/ExcelRenderer.Mapping.Tests/bin/Debug/net10.0/ExcelRenderer.Mapping.Tests.deps.json",
+    "tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.deps.json",
+    "tests/ExcelRenderer.Tool.Tests/bin/Debug/net10.0/ExcelRenderer.Tool.Tests.deps.json",
+    "tests/ExcelRenderer.Tool.Tests/bin/Debug/net10.0/ExcelRenderer.Tool.deps.json",
+    "tests/ExcelRenderer.OpenXml.Tests/bin/Debug/net10.0/ExcelRenderer.OpenXml.Tests.deps.json",
+    "tools/ExcelRenderer.Performance/bin/Release/net10.0/ExcelRenderer.Performance.deps.json",
+    "tools/ExcelRenderer.Performance/bin/Debug/net10.0/ExcelRenderer.Performance.deps.json",
+    "tools/ExcelRenderer.OpenXml.Validation/bin/Debug/net10.0/ExcelRenderer.OpenXml.Validation.deps.json",
+    "samples/ExcelRenderer.Core.Sample/bin/Debug/net10.0/ExcelRenderer.Core.Sample.deps.json"
+  ],
+  "packages": [],
+  "mainAndToolCoreDllSha256": null
+}

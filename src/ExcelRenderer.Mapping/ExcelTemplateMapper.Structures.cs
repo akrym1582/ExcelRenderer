@@ -27,14 +27,9 @@ public static partial class ExcelTemplateMapper
                 while (xml.Read())
                 {
                     token.ThrowIfCancellationRequested();
-                    if (xml.NodeType == System.Xml.XmlNodeType.Element && xml.LocalName is "formula" or "formula1" or "formula2")
+                    if (xml.NodeType == System.Xml.XmlNodeType.Element && StructuralReferences.ReadFormulaStore(xml) is { } formula && !StructuralReferences.CanRewrite(formula))
                     {
-                        using var formula = xml.ReadSubtree();
-                        formula.Read();
-                        if (!StructuralReferences.CanRewrite(formula.ReadElementContentAsString()))
-                        {
-                            throw new NotSupportedException("Structural formulas with external, structured, array or 3D references cannot move with repeated rows.");
-                        }
+                        throw new NotSupportedException("Structural formulas with external, structured, array or 3D references cannot move with repeated rows.");
                     }
                 }
             }

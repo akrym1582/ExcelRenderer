@@ -1,0 +1,449 @@
+  ExcelRenderer.OpenXml -> /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.OpenXml/bin/Debug/netstandard2.1/ExcelRenderer.OpenXml.dll
+  ExcelRenderer.Mapping -> /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/bin/Debug/netstandard2.1/ExcelRenderer.Mapping.dll
+  ExcelRenderer.Mapping.Tests -> /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/bin/Debug/net10.0/ExcelRenderer.Mapping.Tests.dll
+Test run for /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/bin/Debug/net10.0/ExcelRenderer.Mapping.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.73]     ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.DifferentStructuralOffsetsSplitAndRebaseRulesInBothDirections [FAIL]
+[xUnit.net 00:00:00.74]     ExcelRenderer.Mapping.Tests.PivotMappingReviewTests.SourceMovementKeepsEveryItemSelectionAxisAndFilter(count: 3) [FAIL]
+[xUnit.net 00:00:00.78]     ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.EveryStandardThresholdUsesFormulaStoresAndPreservesNumericThresholds(kind: "colorScale") [FAIL]
+[xUnit.net 00:00:00.81]     ExcelRenderer.Mapping.Tests.PivotMappingReviewTests.SourceMovementKeepsEveryItemSelectionAxisAndFilter(count: 0) [FAIL]
+[xUnit.net 00:00:00.82]     ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.EveryStandardThresholdUsesFormulaStoresAndPreservesNumericThresholds(kind: "dataBar") [FAIL]
+[xUnit.net 00:00:00.85]     ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.EveryStandardThresholdUsesFormulaStoresAndPreservesNumericThresholds(kind: "iconSet") [FAIL]
+[xUnit.net 00:00:00.87]     ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.UnsupportedThresholdFailsBeforeDataAndPreservesStreamAndFile(formula: "SUM(Table1[Value])") [FAIL]
+[xUnit.net 00:00:00.89]     ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.UnsupportedThresholdFailsBeforeDataAndPreservesStreamAndFile(formula: "SUM(Sheet1:Sheet3!A1)") [FAIL]
+  Failed ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.DifferentStructuralOffsetsSplitAndRebaseRulesInBothDirections [447 ms]
+  Error Message:
+   Assert.Equal() Failure: Strings differ
+                ↓ (pos 5)
+Expected: "AND(B7>0,$B7>0,B$5>0,$B$5>0)"
+Actual:   "AND(B5>0,$B5>0,B$5>0,$B$5>0)"
+                ↑ (pos 5)
+  Stack Trace:
+     at ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.DifferentStructuralOffsetsSplitAndRebaseRulesInBothDirections() in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/MappingReviewRegressionTests.cs:line 128
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed ExcelRenderer.Mapping.Tests.PivotMappingReviewTests.SourceMovementKeepsEveryItemSelectionAxisAndFilter(count: 3) [474 ms]
+  Error Message:
+   Assert.Equal() Failure: Strings differ
+           ↓ (pos 0)
+Expected: "Two"
+Actual:   "1"
+           ↑ (pos 0)
+  Stack Trace:
+     at ExcelRenderer.Mapping.Tests.PivotMappingReviewTests.AssertSettings(PivotTablePart pivot, PivotTableCacheDefinitionPart cache) in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/PivotMappingReviewTests.cs:line 165
+   at ExcelRenderer.Mapping.Tests.PivotMappingReviewTests.SourceMovementKeepsEveryItemSelectionAxisAndFilter(Int32 count) in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/PivotMappingReviewTests.cs:line 35
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.EveryStandardThresholdUsesFormulaStoresAndPreservesNumericThresholds(kind: "colorScale") [51 ms]
+  Error Message:
+   System.InvalidOperationException : Sequence contains more than one element
+  Stack Trace:
+     at System.Linq.ThrowHelper.ThrowMoreThanOneElementException()
+   at System.Linq.Enumerable.TryGetSingle[TSource](IEnumerable`1 source, Boolean& found)
+   at System.Linq.Enumerable.Single[TSource](IEnumerable`1 source)
+   at ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.EveryStandardThresholdUsesFormulaStoresAndPreservesNumericThresholds(String kind) in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/MappingReviewRegressionTests.cs:line 170
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed ExcelRenderer.Mapping.Tests.PivotMappingReviewTests.SourceMovementKeepsEveryItemSelectionAxisAndFilter(count: 0) [71 ms]
+  Error Message:
+   Assert.Equal() Failure: Strings differ
+           ↓ (pos 0)
+Expected: "Two"
+Actual:   "1"
+           ↑ (pos 0)
+  Stack Trace:
+     at ExcelRenderer.Mapping.Tests.PivotMappingReviewTests.AssertSettings(PivotTablePart pivot, PivotTableCacheDefinitionPart cache) in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/PivotMappingReviewTests.cs:line 165
+   at ExcelRenderer.Mapping.Tests.PivotMappingReviewTests.SourceMovementKeepsEveryItemSelectionAxisAndFilter(Int32 count) in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/PivotMappingReviewTests.cs:line 35
+   at InvokeStub_PivotMappingReviewTests.SourceMovementKeepsEveryItemSelectionAxisAndFilter(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.EveryStandardThresholdUsesFormulaStoresAndPreservesNumericThresholds(kind: "dataBar") [35 ms]
+  Error Message:
+   System.InvalidOperationException : Sequence contains more than one element
+  Stack Trace:
+     at System.Linq.ThrowHelper.ThrowMoreThanOneElementException()
+   at System.Linq.Enumerable.TryGetSingle[TSource](IEnumerable`1 source, Boolean& found)
+   at System.Linq.Enumerable.Single[TSource](IEnumerable`1 source)
+   at ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.EveryStandardThresholdUsesFormulaStoresAndPreservesNumericThresholds(String kind) in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/MappingReviewRegressionTests.cs:line 170
+   at InvokeStub_MappingReviewRegressionTests.EveryStandardThresholdUsesFormulaStoresAndPreservesNumericThresholds(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.EveryStandardThresholdUsesFormulaStoresAndPreservesNumericThresholds(kind: "iconSet") [32 ms]
+  Error Message:
+   System.InvalidOperationException : Sequence contains more than one element
+  Stack Trace:
+     at System.Linq.ThrowHelper.ThrowMoreThanOneElementException()
+   at System.Linq.Enumerable.TryGetSingle[TSource](IEnumerable`1 source, Boolean& found)
+   at System.Linq.Enumerable.Single[TSource](IEnumerable`1 source)
+   at ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.EveryStandardThresholdUsesFormulaStoresAndPreservesNumericThresholds(String kind) in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/MappingReviewRegressionTests.cs:line 170
+   at InvokeStub_MappingReviewRegressionTests.EveryStandardThresholdUsesFormulaStoresAndPreservesNumericThresholds(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.UnsupportedThresholdFailsBeforeDataAndPreservesStreamAndFile(formula: "SUM(Table1[Value])") [19 ms]
+  Error Message:
+   Assert.Throws() Failure: Exception type was not an exact match
+Expected: typeof(System.NotSupportedException)
+Actual:   typeof(ExcelRenderer.Mapping.MappingException)
+---- ExcelRenderer.Mapping.MappingException : data!A2 [**items[*]]: Exception has been thrown by the target of an invocation.
+-------- System.Reflection.TargetInvocationException : Exception has been thrown by the target of an invocation.
+------------ System.InvalidOperationException : Data must not be evaluated.
+  Stack Trace:
+     at ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.UnsupportedThresholdFailsBeforeDataAndPreservesStreamAndFile(String formula) in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/MappingReviewRegressionTests.cs:line 189
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+----- Inner Stack Trace -----
+   at ExcelRenderer.Mapping.TemplateSheet.At[T](TemplateSnapshot sheet, TemplateCell cell, Func`1 action) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/TemplateSheet.cs:line 48
+   at ExcelRenderer.Mapping.ExpansionPlan.Plan(List`1 templates, Dictionary`2 aliases) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/ExpansionPlan.cs:line 40
+   at ExcelRenderer.Mapping.ExpansionPlan..ctor(TemplateSheet template, Object root, MappingOptions options, CancellationToken cancellationToken) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/ExpansionPlan.cs:line 27
+   at ExcelRenderer.Mapping.ExcelTemplateMapper.<>c__DisplayClass3_0.<MapOpenXml>b__2(ValueTuple`2 item) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/ExcelTemplateMapper.OpenXml.cs:line 47
+   at System.Linq.Enumerable.ArraySelectIterator`2.Fill(ReadOnlySpan`1 source, Span`1 destination, Func`2 func)
+   at System.Linq.Enumerable.ArraySelectIterator`2.ToArray()
+   at System.Linq.Enumerable.ToArray[TSource](IEnumerable`1 source)
+   at ExcelRenderer.Mapping.ExcelTemplateMapper.MapOpenXml(PreparedWorkbook source, Stream output, Object data, MappingOptions options, CancellationToken token) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/ExcelTemplateMapper.OpenXml.cs:line 47
+   at ExcelRenderer.Mapping.ExcelTemplateMapper.Map(Stream template, Stream output, Object data, MappingOptions options, CancellationToken cancellationToken) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/ExcelTemplateMapper.cs:line 74
+   at ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.<>c__DisplayClass7_0.<UnsupportedThresholdFailsBeforeDataAndPreservesStreamAndFile>b__0() in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/MappingReviewRegressionTests.cs:line 189
+----- Inner Stack Trace -----
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at ExcelRenderer.Mapping.DataPath.Member(Object value, String name) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/DataPath.cs:line 282
+   at ExcelRenderer.Mapping.DataPath.ResolveCount(Object root, IReadOnlyDictionary`2 aliases, Int32 count, Object element, Boolean substituteWildcard) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/DataPath.cs:line 301
+   at ExcelRenderer.Mapping.DataPath.Array(Object root, IReadOnlyDictionary`2 aliases, Int32 limit) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/DataPath.cs:line 175
+   at ExcelRenderer.Mapping.ExpansionPlan.<>c__DisplayClass9_1.<Plan>b__0() in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/ExpansionPlan.cs:line 41
+   at ExcelRenderer.Mapping.TemplateSheet.At[T](TemplateSnapshot sheet, TemplateCell cell, Func`1 action) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/TemplateSheet.cs:line 44
+----- Inner Stack Trace -----
+   at ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.ThrowingData.get_items() in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/MappingReviewRegressionTests.cs:line 466
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.UnsupportedThresholdFailsBeforeDataAndPreservesStreamAndFile(formula: "SUM(Sheet1:Sheet3!A1)") [19 ms]
+  Error Message:
+   Assert.Throws() Failure: Exception type was not an exact match
+Expected: typeof(System.NotSupportedException)
+Actual:   typeof(ExcelRenderer.Mapping.MappingException)
+---- ExcelRenderer.Mapping.MappingException : data!A2 [**items[*]]: Exception has been thrown by the target of an invocation.
+-------- System.Reflection.TargetInvocationException : Exception has been thrown by the target of an invocation.
+------------ System.InvalidOperationException : Data must not be evaluated.
+  Stack Trace:
+     at ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.UnsupportedThresholdFailsBeforeDataAndPreservesStreamAndFile(String formula) in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/MappingReviewRegressionTests.cs:line 189
+   at InvokeStub_MappingReviewRegressionTests.UnsupportedThresholdFailsBeforeDataAndPreservesStreamAndFile(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+----- Inner Stack Trace -----
+   at ExcelRenderer.Mapping.TemplateSheet.At[T](TemplateSnapshot sheet, TemplateCell cell, Func`1 action) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/TemplateSheet.cs:line 48
+   at ExcelRenderer.Mapping.ExpansionPlan.Plan(List`1 templates, Dictionary`2 aliases) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/ExpansionPlan.cs:line 40
+   at ExcelRenderer.Mapping.ExpansionPlan..ctor(TemplateSheet template, Object root, MappingOptions options, CancellationToken cancellationToken) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/ExpansionPlan.cs:line 27
+   at ExcelRenderer.Mapping.ExcelTemplateMapper.<>c__DisplayClass3_0.<MapOpenXml>b__2(ValueTuple`2 item) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/ExcelTemplateMapper.OpenXml.cs:line 47
+   at System.Linq.Enumerable.ArraySelectIterator`2.Fill(ReadOnlySpan`1 source, Span`1 destination, Func`2 func)
+   at System.Linq.Enumerable.ArraySelectIterator`2.ToArray()
+   at System.Linq.Enumerable.ToArray[TSource](IEnumerable`1 source)
+   at ExcelRenderer.Mapping.ExcelTemplateMapper.MapOpenXml(PreparedWorkbook source, Stream output, Object data, MappingOptions options, CancellationToken token) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/ExcelTemplateMapper.OpenXml.cs:line 47
+   at ExcelRenderer.Mapping.ExcelTemplateMapper.Map(Stream template, Stream output, Object data, MappingOptions options, CancellationToken cancellationToken) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/ExcelTemplateMapper.cs:line 74
+   at ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.<>c__DisplayClass7_0.<UnsupportedThresholdFailsBeforeDataAndPreservesStreamAndFile>b__0() in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/MappingReviewRegressionTests.cs:line 189
+----- Inner Stack Trace -----
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at ExcelRenderer.Mapping.DataPath.Member(Object value, String name) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/DataPath.cs:line 282
+   at ExcelRenderer.Mapping.DataPath.ResolveCount(Object root, IReadOnlyDictionary`2 aliases, Int32 count, Object element, Boolean substituteWildcard) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/DataPath.cs:line 301
+   at ExcelRenderer.Mapping.DataPath.Array(Object root, IReadOnlyDictionary`2 aliases, Int32 limit) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/DataPath.cs:line 175
+   at ExcelRenderer.Mapping.ExpansionPlan.<>c__DisplayClass9_1.<Plan>b__0() in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/ExpansionPlan.cs:line 41
+   at ExcelRenderer.Mapping.TemplateSheet.At[T](TemplateSnapshot sheet, TemplateCell cell, Func`1 action) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/TemplateSheet.cs:line 44
+----- Inner Stack Trace -----
+   at ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.ThrowingData.get_items() in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/MappingReviewRegressionTests.cs:line 466
+   at InvokeStub_ThrowingData.get_items(Object, Object, IntPtr*)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:00.91]     ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.UnsupportedThresholdFailsBeforeDataAndPreservesStreamAndFile(formula: "A1#") [FAIL]
+[xUnit.net 00:00:00.91]     ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.UnsupportedThresholdFailsBeforeDataAndPreservesStreamAndFile(formula: "'[Book.xlsx]Other'!$A$1") [FAIL]
+[xUnit.net 00:00:00.94]     ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.RelativeListValidationKeepsItsRangeAndMessages(count: 0) [FAIL]
+[xUnit.net 00:00:00.96]     ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.RelativeListValidationKeepsItsRangeAndMessages(count: 3) [FAIL]
+[xUnit.net 00:00:00.99]     ExcelRenderer.Mapping.Tests.PivotMappingReviewTests.EquivalentNumericValuesReuseTheExistingSharedIdAndItsMetadata [FAIL]
+[xUnit.net 00:00:01.00]     ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.ThresholdAndElementFormulasUseIdenticalTransformationAndIdentityPreservesSettings [FAIL]
+[xUnit.net 00:00:01.03]     ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.FormulaThresholdMovesWithTheSameReferenceAsFormulaElements [FAIL]
+  Failed ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.UnsupportedThresholdFailsBeforeDataAndPreservesStreamAndFile(formula: "A1#") [13 ms]
+  Error Message:
+   Assert.Throws() Failure: Exception type was not an exact match
+Expected: typeof(System.NotSupportedException)
+Actual:   typeof(ExcelRenderer.Mapping.MappingException)
+---- ExcelRenderer.Mapping.MappingException : data!A2 [**items[*]]: Exception has been thrown by the target of an invocation.
+-------- System.Reflection.TargetInvocationException : Exception has been thrown by the target of an invocation.
+------------ System.InvalidOperationException : Data must not be evaluated.
+  Stack Trace:
+     at ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.UnsupportedThresholdFailsBeforeDataAndPreservesStreamAndFile(String formula) in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/MappingReviewRegressionTests.cs:line 189
+   at InvokeStub_MappingReviewRegressionTests.UnsupportedThresholdFailsBeforeDataAndPreservesStreamAndFile(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+----- Inner Stack Trace -----
+   at ExcelRenderer.Mapping.TemplateSheet.At[T](TemplateSnapshot sheet, TemplateCell cell, Func`1 action) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/TemplateSheet.cs:line 48
+   at ExcelRenderer.Mapping.ExpansionPlan.Plan(List`1 templates, Dictionary`2 aliases) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/ExpansionPlan.cs:line 40
+   at ExcelRenderer.Mapping.ExpansionPlan..ctor(TemplateSheet template, Object root, MappingOptions options, CancellationToken cancellationToken) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/ExpansionPlan.cs:line 27
+   at ExcelRenderer.Mapping.ExcelTemplateMapper.<>c__DisplayClass3_0.<MapOpenXml>b__2(ValueTuple`2 item) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/ExcelTemplateMapper.OpenXml.cs:line 47
+   at System.Linq.Enumerable.ArraySelectIterator`2.Fill(ReadOnlySpan`1 source, Span`1 destination, Func`2 func)
+   at System.Linq.Enumerable.ArraySelectIterator`2.ToArray()
+   at System.Linq.Enumerable.ToArray[TSource](IEnumerable`1 source)
+   at ExcelRenderer.Mapping.ExcelTemplateMapper.MapOpenXml(PreparedWorkbook source, Stream output, Object data, MappingOptions options, CancellationToken token) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/ExcelTemplateMapper.OpenXml.cs:line 47
+   at ExcelRenderer.Mapping.ExcelTemplateMapper.Map(Stream template, Stream output, Object data, MappingOptions options, CancellationToken cancellationToken) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/ExcelTemplateMapper.cs:line 74
+   at ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.<>c__DisplayClass7_0.<UnsupportedThresholdFailsBeforeDataAndPreservesStreamAndFile>b__0() in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/MappingReviewRegressionTests.cs:line 189
+----- Inner Stack Trace -----
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at ExcelRenderer.Mapping.DataPath.Member(Object value, String name) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/DataPath.cs:line 282
+   at ExcelRenderer.Mapping.DataPath.ResolveCount(Object root, IReadOnlyDictionary`2 aliases, Int32 count, Object element, Boolean substituteWildcard) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/DataPath.cs:line 301
+   at ExcelRenderer.Mapping.DataPath.Array(Object root, IReadOnlyDictionary`2 aliases, Int32 limit) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/DataPath.cs:line 175
+   at ExcelRenderer.Mapping.ExpansionPlan.<>c__DisplayClass9_1.<Plan>b__0() in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/ExpansionPlan.cs:line 41
+   at ExcelRenderer.Mapping.TemplateSheet.At[T](TemplateSnapshot sheet, TemplateCell cell, Func`1 action) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/TemplateSheet.cs:line 44
+----- Inner Stack Trace -----
+   at ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.ThrowingData.get_items() in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/MappingReviewRegressionTests.cs:line 466
+   at InvokeStub_ThrowingData.get_items(Object, Object, IntPtr*)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.UnsupportedThresholdFailsBeforeDataAndPreservesStreamAndFile(formula: "'[Book.xlsx]Other'!$A$1") [9 ms]
+  Error Message:
+   Assert.Throws() Failure: Exception type was not an exact match
+Expected: typeof(System.NotSupportedException)
+Actual:   typeof(ExcelRenderer.Mapping.MappingException)
+---- ExcelRenderer.Mapping.MappingException : data!A2 [**items[*]]: Exception has been thrown by the target of an invocation.
+-------- System.Reflection.TargetInvocationException : Exception has been thrown by the target of an invocation.
+------------ System.InvalidOperationException : Data must not be evaluated.
+  Stack Trace:
+     at ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.UnsupportedThresholdFailsBeforeDataAndPreservesStreamAndFile(String formula) in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/MappingReviewRegressionTests.cs:line 189
+   at InvokeStub_MappingReviewRegressionTests.UnsupportedThresholdFailsBeforeDataAndPreservesStreamAndFile(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+----- Inner Stack Trace -----
+   at ExcelRenderer.Mapping.TemplateSheet.At[T](TemplateSnapshot sheet, TemplateCell cell, Func`1 action) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/TemplateSheet.cs:line 48
+   at ExcelRenderer.Mapping.ExpansionPlan.Plan(List`1 templates, Dictionary`2 aliases) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/ExpansionPlan.cs:line 40
+   at ExcelRenderer.Mapping.ExpansionPlan..ctor(TemplateSheet template, Object root, MappingOptions options, CancellationToken cancellationToken) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/ExpansionPlan.cs:line 27
+   at ExcelRenderer.Mapping.ExcelTemplateMapper.<>c__DisplayClass3_0.<MapOpenXml>b__2(ValueTuple`2 item) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/ExcelTemplateMapper.OpenXml.cs:line 47
+   at System.Linq.Enumerable.ArraySelectIterator`2.Fill(ReadOnlySpan`1 source, Span`1 destination, Func`2 func)
+   at System.Linq.Enumerable.ArraySelectIterator`2.ToArray()
+   at System.Linq.Enumerable.ToArray[TSource](IEnumerable`1 source)
+   at ExcelRenderer.Mapping.ExcelTemplateMapper.MapOpenXml(PreparedWorkbook source, Stream output, Object data, MappingOptions options, CancellationToken token) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/ExcelTemplateMapper.OpenXml.cs:line 47
+   at ExcelRenderer.Mapping.ExcelTemplateMapper.Map(Stream template, Stream output, Object data, MappingOptions options, CancellationToken cancellationToken) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/ExcelTemplateMapper.cs:line 74
+   at ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.<>c__DisplayClass7_0.<UnsupportedThresholdFailsBeforeDataAndPreservesStreamAndFile>b__0() in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/MappingReviewRegressionTests.cs:line 189
+----- Inner Stack Trace -----
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at ExcelRenderer.Mapping.DataPath.Member(Object value, String name) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/DataPath.cs:line 282
+   at ExcelRenderer.Mapping.DataPath.ResolveCount(Object root, IReadOnlyDictionary`2 aliases, Int32 count, Object element, Boolean substituteWildcard) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/DataPath.cs:line 301
+   at ExcelRenderer.Mapping.DataPath.Array(Object root, IReadOnlyDictionary`2 aliases, Int32 limit) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/DataPath.cs:line 175
+   at ExcelRenderer.Mapping.ExpansionPlan.<>c__DisplayClass9_1.<Plan>b__0() in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/ExpansionPlan.cs:line 41
+   at ExcelRenderer.Mapping.TemplateSheet.At[T](TemplateSnapshot sheet, TemplateCell cell, Func`1 action) in /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/TemplateSheet.cs:line 44
+----- Inner Stack Trace -----
+   at ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.ThrowingData.get_items() in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/MappingReviewRegressionTests.cs:line 466
+   at InvokeStub_ThrowingData.get_items(Object, Object, IntPtr*)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.RelativeListValidationKeepsItsRangeAndMessages(count: 0) [31 ms]
+  Error Message:
+   System.InvalidOperationException : Sequence contains more than one element
+  Stack Trace:
+     at System.Linq.ThrowHelper.ThrowMoreThanOneElementException()
+   at System.Linq.Enumerable.TryGetSingle[TSource](IEnumerable`1 source, Boolean& found)
+   at System.Linq.Enumerable.Single[TSource](IEnumerable`1 source)
+   at ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.RelativeListValidationKeepsItsRangeAndMessages(Int32 count) in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/MappingReviewRegressionTests.cs:line 370
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.RelativeListValidationKeepsItsRangeAndMessages(count: 3) [19 ms]
+  Error Message:
+   System.InvalidOperationException : Sequence contains more than one element
+  Stack Trace:
+     at System.Linq.ThrowHelper.ThrowMoreThanOneElementException()
+   at System.Linq.Enumerable.TryGetSingle[TSource](IEnumerable`1 source, Boolean& found)
+   at System.Linq.Enumerable.Single[TSource](IEnumerable`1 source)
+   at ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.RelativeListValidationKeepsItsRangeAndMessages(Int32 count) in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/MappingReviewRegressionTests.cs:line 370
+   at InvokeStub_MappingReviewRegressionTests.RelativeListValidationKeepsItsRangeAndMessages(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed ExcelRenderer.Mapping.Tests.PivotMappingReviewTests.EquivalentNumericValuesReuseTheExistingSharedIdAndItsMetadata [100 ms]
+  Error Message:
+   System.NullReferenceException : Object reference not set to an instance of an object.
+  Stack Trace:
+     at ExcelRenderer.Mapping.Tests.PivotMappingReviewTests.EquivalentNumericValuesReuseTheExistingSharedIdAndItsMetadata() in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/PivotMappingReviewTests.cs:line 94
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.ThresholdAndElementFormulasUseIdenticalTransformationAndIdentityPreservesSettings [36 ms]
+  Error Message:
+   System.InvalidOperationException : Sequence contains more than one element
+  Stack Trace:
+     at System.Linq.ThrowHelper.ThrowMoreThanOneElementException()
+   at System.Linq.Enumerable.TryGetSingle[TSource](IEnumerable`1 source, Boolean& found)
+   at System.Linq.Enumerable.Single[TSource](IEnumerable`1 source)
+   at ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.ThresholdAndElementFormulasUseIdenticalTransformationAndIdentityPreservesSettings() in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/MappingReviewRegressionTests.cs:line 347
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.FormulaThresholdMovesWithTheSameReferenceAsFormulaElements [27 ms]
+  Error Message:
+   Assert.All() Failure: 2 out of 2 items in the collection did not pass.
+[0]: Item:  [···]
+     Error: Assert.Equal() Failure: Strings differ
+                          ↓ (pos 3)
+            Expected: "$A$5"
+            Actual:   "$A$3"
+                          ↑ (pos 3)
+[1]: Item:  [···]
+     Error: Assert.Equal() Failure: Strings differ
+                          ↓ (pos 3)
+            Expected: "$A$5"
+            Actual:   "$A$3"
+                          ↑ (pos 3)
+  Stack Trace:
+     at ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.FormulaThresholdMovesWithTheSameReferenceAsFormulaElements() in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/MappingReviewRegressionTests.cs:line 67
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:01.06]     ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.MixedRulesAndValidationKeepCellTargetsAfterInsertionOrDeletion(count: 0) [FAIL]
+[xUnit.net 00:00:01.07]     ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.MixedRulesAndValidationKeepCellTargetsAfterInsertionOrDeletion(count: 3) [FAIL]
+[xUnit.net 00:00:01.09]     ExcelRenderer.Mapping.Tests.PivotMappingReviewTests.DataChangesAppendTypedIdsAndKeepMissingItemsAndAllPivotPositions(reverse: False) [FAIL]
+[xUnit.net 00:00:01.09]     ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.PopulationThatCannotShareOneFormulaFailsWithoutPublishingStage [FAIL]
+[xUnit.net 00:00:01.13]     ExcelRenderer.Mapping.Tests.PivotMappingReviewTests.DataChangesAppendTypedIdsAndKeepMissingItemsAndAllPivotPositions(reverse: True) [FAIL]
+[xUnit.net 00:00:01.14]     ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.MinMaxPopulationIsNeverSplitAcrossOccurrences [FAIL]
+[xUnit.net 00:00:01.17]     ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.DirectWriterInspectsThresholdSyntaxBeforeCopyingStagedOutput [FAIL]
+  Failed ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.MixedRulesAndValidationKeepCellTargetsAfterInsertionOrDeletion(count: 0) [21 ms]
+  Error Message:
+   Assert.Equal() Failure: Strings differ
+               ↓ (pos 4)
+Expected: "AND(D2>0,$B2>0,D$2>0,$B$2>0,"A2"="A2",LOG"···
+Actual:   "AND(B2>0,$B2>0,B$2>0,$B$2>0,"A2"="A2",LOG"···
+               ↑ (pos 4)
+  Stack Trace:
+     at ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.MixedRulesAndValidationKeepCellTargetsAfterInsertionOrDeletion(Int32 count) in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/MappingReviewRegressionTests.cs:line 103
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.MixedRulesAndValidationKeepCellTargetsAfterInsertionOrDeletion(count: 3) [21 ms]
+  Error Message:
+   Assert.Equal() Failure: Strings differ
+               ↓ (pos 4)
+Expected: "AND(D5>0,$B5>0,D$5>0,$B$5>0,"A2"="A2",LOG"···
+Actual:   "AND(B5>0,$B5>0,B$5>0,$B$5>0,"A2"="A2",LOG"···
+               ↑ (pos 4)
+  Stack Trace:
+     at ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.MixedRulesAndValidationKeepCellTargetsAfterInsertionOrDeletion(Int32 count) in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/MappingReviewRegressionTests.cs:line 103
+   at InvokeStub_MappingReviewRegressionTests.MixedRulesAndValidationKeepCellTargetsAfterInsertionOrDeletion(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed ExcelRenderer.Mapping.Tests.PivotMappingReviewTests.DataChangesAppendTypedIdsAndKeepMissingItemsAndAllPivotPositions(reverse: False) [91 ms]
+  Error Message:
+   Assert.Equal() Failure: Collections differ
+                                                 ↓ (pos 0)
+Expected: string[]                              ["s:1", "s:Two", "n:1", "s:New"]
+Actual:   ArraySelectIterator<XElement, string> ["n:1", "s:New"]
+                                                 ↑ (pos 0)
+  Stack Trace:
+     at ExcelRenderer.Mapping.Tests.PivotMappingReviewTests.DataChangesAppendTypedIdsAndKeepMissingItemsAndAllPivotPositions(Boolean reverse) in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/PivotMappingReviewTests.cs:line 58
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.PopulationThatCannotShareOneFormulaFailsWithoutPublishingStage [17 ms]
+  Error Message:
+   Assert.Throws() Failure: No exception was thrown
+Expected: typeof(System.NotSupportedException)
+  Stack Trace:
+     at ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.PopulationThatCannotShareOneFormulaFailsWithoutPublishingStage() in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/MappingReviewRegressionTests.cs:line 295
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed ExcelRenderer.Mapping.Tests.PivotMappingReviewTests.DataChangesAppendTypedIdsAndKeepMissingItemsAndAllPivotPositions(reverse: True) [40 ms]
+  Error Message:
+   Assert.Equal() Failure: Collections differ
+                                                 ↓ (pos 0)
+Expected: string[]                              ["s:1", "s:Two", "s:New", "n:1"]
+Actual:   ArraySelectIterator<XElement, string> ["s:New", "n:1"]
+                                                 ↑ (pos 0)
+  Stack Trace:
+     at ExcelRenderer.Mapping.Tests.PivotMappingReviewTests.DataChangesAppendTypedIdsAndKeepMissingItemsAndAllPivotPositions(Boolean reverse) in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/PivotMappingReviewTests.cs:line 58
+   at InvokeStub_PivotMappingReviewTests.DataChangesAppendTypedIdsAndKeepMissingItemsAndAllPivotPositions(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.MinMaxPopulationIsNeverSplitAcrossOccurrences [19 ms]
+  Error Message:
+   System.InvalidOperationException : Sequence contains more than one element
+  Stack Trace:
+     at System.Linq.ThrowHelper.ThrowMoreThanOneElementException()
+   at System.Linq.Enumerable.TryGetSingle[TSource](IEnumerable`1 source, Boolean& found)
+   at System.Linq.Enumerable.Single[TSource](IEnumerable`1 source)
+   at ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.MinMaxPopulationIsNeverSplitAcrossOccurrences() in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/MappingReviewRegressionTests.cs:line 239
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.DirectWriterInspectsThresholdSyntaxBeforeCopyingStagedOutput [25 ms]
+  Error Message:
+   Assert.Throws() Failure: No exception was thrown
+Expected: typeof(System.NotSupportedException)
+  Stack Trace:
+     at ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.DirectWriterInspectsThresholdSyntaxBeforeCopyingStagedOutput() in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/MappingReviewRegressionTests.cs:line 315
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:01.21]     ExcelRenderer.Mapping.Tests.PivotMappingReviewTests.ImplicitBaseFieldKeepsSharedIdsEvenWithoutPivotItems [FAIL]
+[xUnit.net 00:00:01.29]     ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.MovedPivotKeepsHiddenItemsAndTheirOrder [FAIL]
+[xUnit.net 00:00:01.30]     ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.IdentityRulesKeepTheirSharedBaseAndApplicationSet(ranges: "B2:B3 D2:D3") [FAIL]
+[xUnit.net 00:00:01.32]     ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.IdentityRulesKeepTheirSharedBaseAndApplicationSet(ranges: "B2:B3 B6:B7") [FAIL]
+[xUnit.net 00:00:01.33]     ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.PopulationRulesKeepAllRangesAndRemoveDeletedApplications [FAIL]
+[xUnit.net 00:00:01.34]     ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.NestedOccurrencesResolveRelativeReferencesToTheirOwnParentRows [FAIL]
+[xUnit.net 00:00:01.37]     ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.MixedExpressionAndPopulationRulesCanKeepDifferentRangePartitions [FAIL]
+[xUnit.net 00:00:01.38]     ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.ImplicitTrailingRowsAreSplitWhereRelativeTargetsCrossExpandedRows [FAIL]
+  Failed ExcelRenderer.Mapping.Tests.PivotMappingReviewTests.ImplicitBaseFieldKeepsSharedIdsEvenWithoutPivotItems [36 ms]
+  Error Message:
+   Assert.Equal() Failure: Collections differ
+                                                          ↓ (pos 0)
+Expected: string[]                                       ["1", "Two", "New"]
+Actual:   IEnumerableWhereSelectIterator<object, string> ["New", "1"]
+                                                          ↑ (pos 0)
+  Stack Trace:
+     at ExcelRenderer.Mapping.Tests.PivotMappingReviewTests.ImplicitBaseFieldKeepsSharedIdsEvenWithoutPivotItems() in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/PivotMappingReviewTests.cs:line 125
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.MovedPivotKeepsHiddenItemsAndTheirOrder [122 ms]
+  Error Message:
+   Assert.Equal() Failure: Collections differ
+                                           ↓ (pos 0)
+Expected: uint[]                          [1, 0]
+Actual:   ArraySelectIterator<Item, uint> [0, 1]
+                                           ↑ (pos 0)
+  Stack Trace:
+     at ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.MovedPivotKeepsHiddenItemsAndTheirOrder() in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/MappingReviewRegressionTests.cs:line 36
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.IdentityRulesKeepTheirSharedBaseAndApplicationSet(ranges: "B2:B3 D2:D3") [15 ms]
+  Error Message:
+   Assert.Single() Failure: The collection contained 2 items
+Collection: [[···], [···]]
+  Stack Trace:
+     at ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.IdentityRulesKeepTheirSharedBaseAndApplicationSet(String ranges) in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/MappingReviewRegressionTests.cs:line 52
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.IdentityRulesKeepTheirSharedBaseAndApplicationSet(ranges: "B2:B3 B6:B7") [15 ms]
+  Error Message:
+   Assert.Single() Failure: The collection contained 2 items
+Collection: [[···], [···]]
+  Stack Trace:
+     at ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.IdentityRulesKeepTheirSharedBaseAndApplicationSet(String ranges) in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/MappingReviewRegressionTests.cs:line 52
+   at InvokeStub_MappingReviewRegressionTests.IdentityRulesKeepTheirSharedBaseAndApplicationSet(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.PopulationRulesKeepAllRangesAndRemoveDeletedApplications [14 ms]
+  Error Message:
+   Assert.Equal() Failure: Strings differ
+              ↓ (pos 3)
+Expected: "$A$2"
+Actual:   "$A$3"
+              ↑ (pos 3)
+  Stack Trace:
+     at ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.PopulationRulesKeepAllRangesAndRemoveDeletedApplications() in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/MappingReviewRegressionTests.cs:line 219
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.NestedOccurrencesResolveRelativeReferencesToTheirOwnParentRows [8 ms]
+  Error Message:
+   Assert.Equal() Failure: Strings differ
+                      ↓ (pos 11)
+Expected: "AND(B4>0,$A2>0)"
+Actual:   "AND(B4>0,$A3>0)"
+                      ↑ (pos 11)
+  Stack Trace:
+     at ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.NestedOccurrencesResolveRelativeReferencesToTheirOwnParentRows() in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/MappingReviewRegressionTests.cs:line 267
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.MixedExpressionAndPopulationRulesCanKeepDifferentRangePartitions [25 ms]
+  Error Message:
+   Assert.Single() Failure: The collection contained 2 matching items
+Expected:      (predicate expression)
+Collection:    [[···], [···]]
+Match indices: 0, 1
+  Stack Trace:
+     at ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.MixedExpressionAndPopulationRulesCanKeepDifferentRangePartitions() in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/MappingReviewRegressionTests.cs:line 417
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.ImplicitTrailingRowsAreSplitWhereRelativeTargetsCrossExpandedRows [13 ms]
+  Error Message:
+   Assert.Equal() Failure: Strings differ
+            ↓ (pos 1)
+Expected: "A5>0"
+Actual:   "A3>0"
+            ↑ (pos 1)
+  Stack Trace:
+     at ExcelRenderer.Mapping.Tests.MappingReviewRegressionTests.ImplicitTrailingRowsAreSplitWhereRelativeTargetsCrossExpandedRows() in /tmp/excelrenderer-mapping-baseline/tests/ExcelRenderer.Mapping.Tests/MappingReviewRegressionTests.cs:line 282
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+Failed!  - Failed:    30, Passed:     3, Skipped:     0, Total:    33, Duration: 1 s - ExcelRenderer.Mapping.Tests.dll (net10.0)

@@ -172,3 +172,145 @@ warnings/errors), all 1,002 tests (zero failures/skips), the three mutation
 harnesses and `validate-core.py --visual-only`. The dependency audit still passes
 for all 16 restored project graphs and 36 built dependency manifests; the retained
 XLSX files introduce no active dependency on the removed library.
+
+## Mapping structural-reference review — 2026-10-16
+
+Initial checkout: `work`, `06280e538df4ebc49989efcb3f239379ffa1e09b`, clean.
+Fetched and fast-forwarded to `origin/main`,
+`f3bab05dc2e6b7198063174321965aa487403e6d`; no rollback to an old review snapshot.
+Implementation: `fix/openxml-mapping-structural-references`,
+`3114b5fb0dd5d9838fdbe769ba5cb44f9cdf37ab`. This section and its evidence are
+specific to that implementation, independently of the historical 1,002-test run.
+Environment: Debian 13 linux-x64, .NET SDK 10.0.401/runtime 10.0.12.
+
+```bash
+dotnet restore ExcelRenderer.slnx
+dotnet build ExcelRenderer.slnx -t:Rebuild --no-restore --verbosity:minimal
+dotnet test ExcelRenderer.slnx
+dotnet build tools/ExcelRenderer.Performance -c Release --no-restore -m:1
+dotnet restore tools/ExcelRenderer.Core.Reference
+dotnet restore tools/ExcelRenderer.Core.Validation
+python scripts/check-closedxml-removal.py --output /tmp/mapping-review-dependencies.json
+```
+
+The solution Rebuild has **zero warnings and zero errors**. All **1,037 tests pass**,
+with no failures/skips: Core 80, Mapping 179, OpenXml 156, main 538, Tool 84.
+[Acceptance](validation/mapping-structural-references/acceptance.json),
+[Rebuild](validation/mapping-structural-references/rebuild.log),
+[tests](validation/mapping-structural-references/tests.log) and
+[dependency audit](validation/mapping-structural-references/dependencies.json)
+retain the results. All 16 restored project graphs and built dependency manifests
+remain free of ClosedXML. No public API, csproj or package-layout change was made;
+pack/consumer checks were not rerun.
+
+The 33 added Mapping cases run against unmodified main in a separate worktree:
+**30 fail and three pass**, with the expected nonzero test exit code
+([raw reproduction](validation/mapping-structural-references/baseline-regressions.log)).
+All 33 pass after the corrections. The two additional OpenXml cases independently
+check 500 distinct range intervals, non-monotonic repeats, deleted and implicit
+trailing rows, and empty plans against brute-force expected extents. They protect
+the range index, rather than claiming another original functional defect.
+
+`MappingReviewRegressionTests` covers multi-area identity rules, rebasing across
+both axes, mixed/absolute references, insertion/deletion, nested repeat parents,
+quoted other sheets, strings/functions, custom/list validation and messages,
+three standard threshold families, non-formula thresholds, empty applications,
+joint statistical populations, mixed rule types, identity thresholds, and file/
+stream protection for both preflight and staged failures. Expected per-cell
+references use a separate test copy helper, never the production transformer.
+
+`PivotMappingReviewTests` builds a small SDK fixture with two tables sharing one
+cache, reordered/hidden/captioned/collapsed items, row and column items, page
+selection, subtotal, filter and explicit/implicit base item references. Assertions
+resolve both pivot positions and shared IDs to actual logical values. Changed
+records exercise numeric 1 versus text "1", additions, disappearance, encounter
+order, caption-independent matching and retained missing-member settings.
+Source-only records and identity pivot parts retain their decompressed bytes.
+New clean SDK fixtures and their outputs have zero OpenXmlValidator errors;
+existing retained fixtures continue using the unchanged no-new-errors assertions.
+No baseline schema errors or existing assertions were waived.
+
+The reference basis was checked against ECMA-376-1:2016 §§18.3.1.11 (cfvo),
+18.3.1.18 (application ranges), 18.17.2.3 (relative/absolute/mixed references),
+and the pivot item/field descriptions. The inspected Part 1 PDF has SHA-256
+`7cccfd0ad0e2ef89316acece15e44a8a088d0603ce4bba4e7b0361b50d13a37d`
+([retained specification mirror](https://github.com/QtExcel/ecma-376-5th/tree/6c1a7f9cac8d3ca0a1713dcfbcb59de2a82bb3aa/ECMA-376)).
+Microsoft's [custom-format example](https://github.com/OfficeDev/office-js-docs-pr/blob/c3d3e33fbdb193d1e4cbd7028cce929b6740340c/docs/excel/excel-add-ins-conditional-formatting.md#custom)
+anchors B8:E13's relative formula at B8 and describes its translation at every
+application cell. The regression oracles apply that anchor/copy model to each
+area of the shared sqref, and rebase independent rules when their original area
+is split. Identity multi-area rules retain their original shared origin.
+
+### Performance measurement
+
+The checked-in runner uses identical SDK-generated inputs, isolated Release
+workers, en-US culture, one discarded warmup and three measured samples per case.
+Generation/build/tests are outside the timing. Raw samples, DLL/runner hashes and
+input hashes are in [performance.json](validation/mapping-structural-references/performance.json).
+Mapped cell addresses, styles and stored payloads must match main independently
+of the deliberately corrected CF XML. `ranges` uses 1,000/10,000 source rows and
+two mapped items; the other counts are repeated item counts.
+
+```bash
+python scripts/benchmark-mapping-structural-references.py \
+  --baseline /tmp/excelrenderer-mapping-baseline/tools/ExcelRenderer.Performance/bin/Release/net10.0/ExcelRenderer.Performance.dll \
+  --current /workspace/ExcelRenderer/tools/ExcelRenderer.Performance/bin/Release/net10.0/ExcelRenderer.Performance.dll \
+  --fixtures /tmp/mapping-review-benchmark-final \
+  --output /tmp/mapping-review-performance-latest.json
+```
+
+The final capture reused the six already completed main-baseline cases via
+`--reuse-baseline /tmp/mapping-review-performance-final.json`: DLL and input hashes
+are checked before reuse. Every implementation sample was rerun after the final
+Rebuild/tests; both new long-template baseline cases were measured afresh. The
+full reused baseline samples are included in the final JSON; the original
+[baseline capture](validation/mapping-structural-references/baseline-capture.json)
+and [baseline build](validation/mapping-structural-references/baseline-build.log)
+are retained too. Medians:
+
+| Input | Count | Main ms | Fixed ms | Main allocated MiB | Fixed allocated MiB |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| plain | 10,000 | 1061.5 | 1406.6 | 57.87 | 57.88 |
+| plain | 100,000 | 3925.3 | 4131.0 | 533.16 | 532.74 |
+| expression | 1,000 | 1700.5 | 623.7 | 19.83 | 18.74 |
+| expression | 10,000 | 3183.9 | 2024.8 | 140.52 | 136.59 |
+| population | 1,000 | 762.3 | 556.1 | 22.00 | 13.07 |
+| population | 10,000 | 3796.0 | 1149.0 | 174.54 | 78.37 |
+| ranges | 1,000 | 834.0 | 841.1 | 42.39 | 46.38 |
+| ranges | 10,000 | 2650.0 | 2904.3 | 369.91 | 409.40 |
+
+The 10,000-row long-template case uses about 10.7% more allocated memory and
+9.6% more elapsed time than main: preserving per-cell relative meaning adds work,
+even with indexed extent queries. The ordinary 10,000-item elapsed-time increase
+in this capture prompted a separate interleaved follow-up, rather than being
+explained away as an improvement. Old/new workers alternate order, with one
+warmup and five measured samples each. [Raw paired samples](validation/mapping-structural-references/plain-paired.json)
+and the [exact runner](validation/mapping-structural-references/plain-paired-runner.py)
+are retained. Allocations remain effectively unchanged; time medians are:
+
+| Plain item count | Main ms | Fixed ms | Change |
+| --- | ---: | ---: | ---: |
+| 10,000 | 1174.8 | 1165.8 | -0.8% |
+| 100,000 | 4051.6 | 4560.7 | +12.6% |
+
+The 10,000-item paired result is close, while 100,000 items remain 12.6% slower
+in this follow-up. Timing samples vary substantially on this host. No causal
+explanation for that ordinary-Mapping difference was established, and no general
+ordinary-Mapping speed improvement is claimed. These measured costs remain
+visible for draft-PR review; they are not covered by the CF improvements.
+
+These are synthetic local measurements, not universal speed or memory guarantees.
+One small baseline expression sample was unusually slow; all samples remain
+visible and no timing outliers were silently removed. Peak RSS includes process/
+JIT overhead. The range index avoids scanning the output plan for every distinct
+multirow formula interval; repeat grouping removes a separate quadratic scan.
+The copy-translation cache is limited to 1,024 entries per write.
+
+Excel/LibreOffice GUI opening and visual/pivot-refresh checks were **not run**.
+Automated checks do not depend on an external GUI or network. No formula or pivot
+aggregate evaluator was added: saved aggregates remain saved values until an
+external application refreshes them. Existing external/structured/3D/array/spill
+and unknown-extension restrictions remain. A population-dependent rule that
+cannot keep equivalent formulas in a single application set fails before stage
+publication. Missing pivot members retain their IDs/settings under the documented
+refresh policy; no claim is made about an external application's later refresh.

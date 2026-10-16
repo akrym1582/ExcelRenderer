@@ -1,6 +1,6 @@
 # 数式の計算
 
-[English](formulas.md) · [検証記録](formulas-validation.md) · [性能](formulas-performance.md) · [レビュー修正の検証](formulas-review-fixes-validation.md)
+[English](formulas.md) · [対応構文・サポート関数](formulas-reference.ja.md) · [検証記録](formulas-validation.md) · [性能](formulas-performance.md) · [レビュー修正の検証](formulas-review-fixes-validation.md)
 
 ExcelRenderer は明示指定で限定的な数式評価を行います。既定の `CachedValue` は変更せず、
 古い値も含めた保存結果を使います。`Recalculate` は OpenXml アダプターを通じて、BCL のみで
@@ -72,8 +72,9 @@ var result = session.EvaluateCell(new FormulaCellAddress("Invoice", 1, 3));
 共有してください。異なるブックやセッションに計算値を共有する static キャッシュはありません。
 A1 は絶対座標 A1 を表し、origin からのオフセットではありません。
 
-対応する19関数は SUM、COUNT、COUNTA、MIN、MAX、AVERAGE、IF、IFERROR、AND、OR、NOT、
-ROUND、ROUNDUP、ROUNDDOWN、ABS、INT、MOD、TRUE、FALSE です。符号・四則・べき乗・%・
+対応する19関数の引数数・例、構文、参照規則、型変換、エラー、資源上限は
+[数式リファレンス](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/formulas-reference.ja.md)
+にまとめています。符号・四則・べき乗・%・
 文字列連結・比較、A1 の相対／絶対／混合参照、矩形／全行／全列範囲、引用シート名と
 固定セル／矩形の名前を扱います。英語関数名・カンマ区切りを使い、巨大範囲は上限付きで走査します。
 

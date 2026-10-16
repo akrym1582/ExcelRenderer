@@ -1,6 +1,6 @@
 # Formula calculation
 
-[日本語](formulas.ja.md) · [validation](formulas-validation.md) · [performance](formulas-performance.md) · [review fixes](formulas-review-fixes-validation.md)
+[日本語](formulas.ja.md) · [Syntax and function reference](formulas-reference.md) · [validation](formulas-validation.md) · [performance](formulas-performance.md) · [review fixes](formulas-review-fixes-validation.md)
 
 ExcelRenderer has an opt-in, limited formula calculator. `CachedValue` remains the
 reader default and preserves saved values, including stale results. `Recalculate`
@@ -78,8 +78,9 @@ when calculating many cells from the same immutable snapshot. No result cache is
 shared between workbooks or sessions. A1 means coordinate A1, not an offset from
 the origin. The origin supplies the current sheet and diagnostic position.
 
-Supported functions are SUM, COUNT, COUNTA, MIN, MAX, AVERAGE, IF, IFERROR, AND, OR,
-NOT, ROUND, ROUNDUP, ROUNDDOWN, ABS, INT, MOD, TRUE and FALSE. Operators are unary
+The [formula support reference](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/formulas-reference.md)
+lists all 19 functions with argument counts and examples, syntax, reference rules,
+coercion, errors and resource limits. Operators are unary
 signs, arithmetic, left-associative power, percent, concatenation and comparisons.
 The parser accepts English function names, comma arguments, quoted strings and
 sheet names, A1 references with absolute/mixed flags, rectangular/whole-row/whole-column

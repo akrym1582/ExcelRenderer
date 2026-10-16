@@ -18,4 +18,4 @@ dotnet run --project samples/ExcelRenderer.Formulas.Sample -c Release -- /tmp/fo
 dotnet run --project samples/ExcelRenderer.Formulas.Sample -c Release -- /tmp/formula-invoice-4 4
 ```
 
-0・1・3・4 件の期待合計はそれぞれ 0・11・66・110 です。集計範囲には残存する見出し行も含め、全明細削除後も SUM の参照範囲が有効になるようにしています。対応関数と制限は[数式ガイド](../../docs/formulas.ja.md)を参照してください。Excel 実機との完全互換を証明するサンプルではありません。
+0・1・3・4 件の期待合計はそれぞれ 0・11・66・110 です。集計範囲には残存する見出し行も含め、全明細削除後も SUM の参照範囲が有効になるようにしています。対応関数と制限は[数式リファレンス](../../docs/formulas-reference.ja.md)、設定方法は[数式ガイド](../../docs/formulas.ja.md)を参照してください。Excel 実機との完全互換を証明するサンプルではありません。

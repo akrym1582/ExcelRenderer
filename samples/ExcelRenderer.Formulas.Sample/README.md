@@ -18,4 +18,4 @@ dotnet run --project samples/ExcelRenderer.Formulas.Sample -c Release -- /tmp/fo
 dotnet run --project samples/ExcelRenderer.Formulas.Sample -c Release -- /tmp/formula-invoice-4 4
 ```
 
-Expected totals are 0, 11, 66 and 110 for 0, 1, 3 and 4 lines. The named total range includes the surviving heading row, so deleting every detail row still gives SUM a valid empty numeric population. See [the formula guide](../../docs/formulas.md) for supported functions and compatibility limits; this is not an Excel interoperability certification.
+Expected totals are 0, 11, 66 and 110 for 0, 1, 3 and 4 lines. The named total range includes the surviving heading row, so deleting every detail row still gives SUM a valid empty numeric population. See the [syntax/function reference](../../docs/formulas-reference.md) for supported features and limits, and the [formula guide](../../docs/formulas.md) for configuration; this is not an Excel interoperability certification.

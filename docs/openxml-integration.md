@@ -1,5 +1,7 @@
 # Selecting the Open XML engines
 
+> Explicit recalculation is available. The [formula guide](formulas.md) defines its scope, cache invalidation and supported features. Saved-value/formula-rejection behavior below describes the default CachedValue mode unless stated otherwise.
+
 English | [日本語](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/openxml-integration.ja.md)
 
 The Reader in Core and the main library now uses OpenXml by default. Auto is an
@@ -36,9 +38,10 @@ carry `ExcelReadOptions` through their existing `ReadOptions` properties.
 | OpenXml (default) | CachedValue (default) | Streaming reader, with deferred source diagnostics |
 | Auto | CachedValue | Alias for OpenXml; no fallback |
 | ClosedXml | Any | NotSupportedException before input or output; use OpenXml or Auto |
-| Any | Legacy / Recalculate | Rejected before input or output |
+| OpenXml / Auto | Recalculate | Limited built-in engine; see formula guide |
+| Any | Legacy | Rejected before input or output |
 
-Every Reader uses only saved formula results. Stale results remain unchanged;
+In CachedValue mode the Reader uses only saved formula results. Stale results remain unchanged;
 there is no freshness or dependency check. Missing results display empty text with
 `FormulaCachedValueMissing`; saved zero, false and empty strings remain distinct.
 Saved errors display their error text with `FormulaResultError`. Literal HYPERLINK
@@ -159,9 +162,9 @@ markdown/md and render. `--mapping-backend` is available on all of them and xlsx
 explicit use requires `--data` and accepts `openxml|auto`. Both defaults are
 `openxml`. Explicit `closedxml` is rejected with a migration reason before opening
 input/data or creating output. `--verbose` writes engine decisions to stderr.
-`--formula-mode` supports only `cached`, which is also the default. Explicit
-`legacy` and `recalculate` are rejected on every backend before input processing
-or output creation.
+`--formula-mode` supports `cached` (default) and `recalculate`. The latter opts
+into the limited built-in engine. Explicit `legacy` is rejected on every backend
+before input processing or output creation.
 
 ## Ownership and verification
 

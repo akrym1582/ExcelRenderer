@@ -14,7 +14,7 @@ using S = DocumentFormat.OpenXml.Spreadsheet;
 
 namespace ExcelRenderer.OpenXml;
 
-/// <summary>Writes conservative formula-free workbook edits into a separate staged package.</summary>
+/// <summary>Writes conservative workbook edits into a separate staged package, with optional formula reference rewriting.</summary>
 public static partial class OpenXmlWorkbookWriter
 {
     private static readonly XNamespace Ns = XmlValues.Spreadsheet;
@@ -38,7 +38,7 @@ public static partial class OpenXmlWorkbookWriter
             throw new ArgumentException("Input and writable output must differ.");
         }
 
-        var reasons = WorkbookWriteCapabilities.Inspect(input, cancellationToken);
+        var reasons = WorkbookWriteCapabilities.Inspect(input, cancellationToken, plan.RewriteFormulas);
         if (reasons.Count != 0)
         {
             throw new NotSupportedException("OpenXml editing is unsupported: " + string.Join(", ", reasons));
@@ -92,6 +92,28 @@ public static partial class OpenXmlWorkbookWriter
             }
         }
 
+        var formulas = new Dictionary<(int Sheet, int Row, int Column), string>();
+        if (plan.RewriteFormulas)
+        {
+            input.Position = 0;
+            using var formulaReader = OpenXmlWorkbookReader.Open(input, cancellationToken: cancellationToken);
+            foreach (var sheet in formulaReader.SelectedWorksheetIndices)
+            {
+                foreach (var cell in formulaReader.EnumerateCells(sheet, cancellationToken))
+                {
+                    if (cell.Formula != null)
+                    {
+                        if (cell.HasCalculationMetadata || cell.Formula.Kind is not "normal" and not "shared" || !FormulaTextResolver.TryResolve(cell, out var text) || text == null)
+                        {
+                            throw new NotSupportedException("Unsupported formula " + (cell.HasCalculationMetadata ? "calculation metadata" : cell.Formula.Kind) + " at " + sheetNames[sheet] + "!" + cell.Address);
+                        }
+
+                        formulas.Add((sheet, cell.Address.Row, cell.Address.Column), text);
+                    }
+                }
+            }
+        }
+
         input.Position = 0;
         using var archive = new ZipArchive(new LeaveOpenStream(input), ZipArchiveMode.Read);
         using var stage = new SpillableBufferStream(buffers);
@@ -126,10 +148,10 @@ public static partial class OpenXmlWorkbookWriter
             try
             {
                 var references = new StructuralReferences(names);
-                RewriteStructures(input, archive, sources, replacements, references, buffers, cancellationToken);
+                RewriteStructures(input, archive, sources, replacements, references, buffers, cancellationToken, plan.RewriteFormulas);
                 foreach (var item in sources)
                 {
-                    if (!NeedsWorksheetEdit(item.Value.Plan) && !item.Value.Children.Any(child => child.Name.LocalName is "hyperlinks" or "conditionalFormatting" or "dataValidations"))
+                    if (!plan.RewriteFormulas && !NeedsWorksheetEdit(item.Value.Plan) && !item.Value.Children.Any(child => child.Name.LocalName is "hyperlinks" or "conditionalFormatting" or "dataValidations"))
                     {
                         using var unmodified = archive.GetEntry(item.Key)!.Open();
                         sharedReferences = checked(sharedReferences + CountSharedReferences(unmodified));
@@ -138,7 +160,7 @@ public static partial class OpenXmlWorkbookWriter
 
                     var destination = new SpillableBufferStream(buffers);
                     replacements.Add(item.Key, destination);
-                    sharedReferences = checked(sharedReferences + WriteSheet(item.Value, destination, styles, styleEdits, date1904, cancellationToken));
+                    sharedReferences = checked(sharedReferences + WriteSheet(item.Value, destination, styles, styleEdits, date1904, cancellationToken, plan.RewriteFormulas ? references : null, sheetNames[item.Value.Plan.SheetIndex], formulas));
                 }
 
                 using (var destination = new ZipArchive(stage, ZipArchiveMode.Create, leaveOpen: true))
@@ -158,7 +180,7 @@ public static partial class OpenXmlWorkbookWriter
                             var workbook = XDocument.Load(source);
                             if (sources.Values.Any(source => source.Plan.Rows.Count != source.Plan.SourceLastRow || source.Plan.Rows.Any(row => row.SourceRow != row.OutputRow)) && workbook.Root?.Element(Ns + "definedNames")?.HasElements == true)
                             {
-                                RewriteDefinedNames(workbook, references);
+                                RewriteDefinedNames(workbook, references, plan.RewriteFormulas);
                                 workbook.Save(target);
                             }
                             else
@@ -230,12 +252,28 @@ public static partial class OpenXmlWorkbookWriter
             }
 
             cancellationToken.ThrowIfCancellationRequested();
+            if (plan.RewriteFormulas)
+            {
+                stage.Position = 0;
+                using var formulaPackage = SpreadsheetDocument.Open(stage, true);
+                var workbookPart = formulaPackage.WorkbookPart!;
+                if (workbookPart.CalculationChainPart != null)
+                {
+                    workbookPart.DeletePart(workbookPart.CalculationChainPart);
+                }
+
+                workbookPart.Workbook.CalculationProperties ??= new S.CalculationProperties();
+                workbookPart.Workbook.CalculationProperties.FullCalculationOnLoad = true;
+                workbookPart.Workbook.CalculationProperties.ForceFullCalculation = true;
+                workbookPart.Workbook.Save();
+            }
+
             stage.Position = 0;
             using (var validation = OpenXmlWorkbookReader.Open(stage, cancellationToken: cancellationToken))
             {
                 foreach (var sheet in validation.SelectedWorksheetIndices)
                 {
-                    if (validation.ReadWorksheetInfo(sheet, cancellationToken).HasFormulas)
+                    if (!plan.RewriteFormulas && validation.ReadWorksheetInfo(sheet, cancellationToken).HasFormulas)
                     {
                         throw new InvalidDataException("Generated formula-free workbook contains a formula.");
                     }
@@ -328,7 +366,7 @@ public static partial class OpenXmlWorkbookWriter
         return result.ToString();
     }
 
-    private static long WriteSheet(SheetSource source, Stream output, XDocument? styles, Dictionary<(int Style, int Format), int> styleEdits, bool date1904, CancellationToken token)
+    private static long WriteSheet(SheetSource source, Stream output, XDocument? styles, Dictionary<(int Style, int Format), int> styleEdits, bool date1904, CancellationToken token, StructuralReferences? formulaReferences, string sheetName, Dictionary<(int Sheet, int Row, int Column), string> formulas)
     {
         var children = source.Children;
         var merges = RewriteMerges(source);
@@ -406,6 +444,12 @@ public static partial class OpenXmlWorkbookWriter
                         {
                             column = cell.Attribute("r") is { } address ? CellAddress.Parse(address.Value.Replace("$", string.Empty)).Column : column + 1;
                             cell.SetAttributeValue("r", new CellAddress(occurrence.OutputRow, column));
+                            if (formulaReferences != null && formulas.TryGetValue((source.Plan.SheetIndex, occurrence.SourceRow, column), out var formula))
+                            {
+                                cell.Elements().Where(element => element.Name.LocalName is "f" or "v" or "is").Remove();
+                                cell.Attribute("t")?.Remove();
+                                cell.Add(new XElement(Ns + "f", formulaReferences.RewriteFormula(formula, sheetName, occurrence, column)));
+                            }
                         }
 
                         foreach (var edit in occurrence.Values)

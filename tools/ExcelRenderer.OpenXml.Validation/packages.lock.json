@@ -42,11 +42,15 @@
         "resolved": "8.0.1",
         "contentHash": "KYkIOAvPexQOLDxPO2g0BVoWInnQhPpkFzRqvNrNrMhVT6kqhVr0zEb6KCHlptLFukxnZrjuMVAnxK7pOGUYrw=="
       },
+      "excelrenderer.formulas": {
+        "type": "Project"
+      },
       "excelrenderer.openxml": {
         "type": "Project",
         "dependencies": {
           "DocumentFormat.OpenXml": "[3.3.0, )",
-          "ExcelNumberFormat": "[1.1.0, )"
+          "ExcelNumberFormat": "[1.1.0, )",
+          "ExcelRenderer.Formulas": "[1.8.0, )"
         }
       }
     }

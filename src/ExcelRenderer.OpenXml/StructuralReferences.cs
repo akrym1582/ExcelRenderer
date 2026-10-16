@@ -9,7 +9,7 @@ using System.Xml.Linq;
 namespace ExcelRenderer.OpenXml;
 
 /// <summary>Rewrites A1 reference tokens using final row placements without evaluating expressions.</summary>
-internal sealed class StructuralReferences
+internal sealed partial class StructuralReferences
 {
     private const int TranslatedRuleCacheCapacity = 1024;
 

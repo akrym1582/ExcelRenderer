@@ -15,7 +15,7 @@ public static partial class ExcelTemplateMapper
     {
         using var input = source.OpenRead();
         using var reader = OpenXmlWorkbookReader.Open(input, cancellationToken: token);
-        var templates = reader.SelectedWorksheetIndices.Select(index => (Index: index, Template: new TemplateSheet(TemplateSnapshot.FromOpenXml(reader, index, token)))).ToArray();
+        var templates = reader.SelectedWorksheetIndices.Select(index => (Index: index, Template: new TemplateSheet(TemplateSnapshot.FromOpenXml(reader, index, token, options.FormulaCalculationMode == FormulaCalculationMode.Recalculate)))).ToArray();
         foreach (var item in templates)
         {
             item.Template.ValidateRepeatedRanges();
@@ -43,7 +43,7 @@ public static partial class ExcelTemplateMapper
             throw new NotSupportedException("OpenXml mapping is unsupported: " + string.Join(", ", reasons));
         }
 
-        ValidateStructures(source, templates.Select(item => item.Template).ToArray(), token);
+        ValidateStructures(source, templates.Select(item => item.Template).ToArray(), token, options.FormulaCalculationMode == FormulaCalculationMode.Recalculate);
         var plans = templates.Select(item => (item.Index, item.Template, Plan: new ExpansionPlan(item.Template, data, options, token))).ToArray();
         var sheets = new List<SheetEditPlan>();
         var nextOccurrence = 0;
@@ -105,7 +105,24 @@ public static partial class ExcelTemplateMapper
         input.Dispose();
         options.BackendSelected?.Invoke(new MappingBackendSelection(options.Backend, MappingBackend.OpenXml, Array.AsReadOnly(new[] { options.Backend == MappingBackend.Auto ? "AutoOpenXmlOnly" : "ExplicitOpenXml" })));
         using var writerInput = source.OpenRead();
-        OpenXmlWorkbookWriter.Write(writerInput, output, new WorkbookEditPlan(sheets.AsReadOnly()), options.Input, token);
+        if (options.FormulaCalculationMode == FormulaCalculationMode.Recalculate)
+        {
+            using var mapped = new SpillableBufferStream(new InputBufferOptions { MemoryThresholdBytes = options.Input.MemoryThresholdBytes, AllowTemporaryFiles = options.Input.AllowTemporaryFiles, TemporaryDirectory = options.Input.TemporaryDirectory });
+            OpenXmlWorkbookWriter.Write(writerInput, mapped, new WorkbookEditPlan(sheets.AsReadOnly(), rewriteFormulas: true), options.Input, token);
+            mapped.Position = 0;
+            if (options.RecalculateMappedWorkbook)
+            {
+                WorkbookRecalculator.Recalculate(mapped, output, options: options.FormulaEvaluationOptions, cancellationToken: token);
+            }
+            else
+            {
+                mapped.CopyTo(output);
+            }
+        }
+        else
+        {
+            OpenXmlWorkbookWriter.Write(writerInput, output, new WorkbookEditPlan(sheets.AsReadOnly()), options.Input, token);
+        }
     }
 
     private static IEnumerable<TemplateNode> Repeated(List<TemplateNode> nodes)

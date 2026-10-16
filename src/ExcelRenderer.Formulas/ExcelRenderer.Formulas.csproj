@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <IsPackable>true</IsPackable>
+    <Version>1.8.0</Version>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageId>ExcelRenderer.Formulas</PackageId>
+    <Description>BCL-only bounded formula parsing, evaluation, and reference transformation.</Description>
+    <Authors>akrym1582</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/akrym1582/ExcelRenderer</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="../../docs/formulas.md" Pack="true" PackagePath="/README.md" />
+  </ItemGroup>
+</Project>

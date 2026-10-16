@@ -1,0 +1,19 @@
+{"Environment":"Debian GNU/Linux 13 (trixie)","Runtime":".NET 10.0.12","ProcessorCount":4,"TieredCompilation":"0","Mode":"reader","Warmups":1,"Repeats":5}
+{"Name":"reader-cached","Count":1000,"Iteration":0,"Warmup":true,"Milliseconds":670.944,"AllocatedBytes":12147064,"ProcessPeakWorkingSetBytes":67338240,"Result":44000}
+{"Name":"reader-cached","Count":1000,"Iteration":1,"Warmup":false,"Milliseconds":29.5274,"AllocatedBytes":10416784,"ProcessPeakWorkingSetBytes":70533120,"Result":44000}
+{"Name":"reader-cached","Count":1000,"Iteration":2,"Warmup":false,"Milliseconds":25.8873,"AllocatedBytes":10416784,"ProcessPeakWorkingSetBytes":70729728,"Result":44000}
+{"Name":"reader-cached","Count":1000,"Iteration":3,"Warmup":false,"Milliseconds":25.9644,"AllocatedBytes":10416784,"ProcessPeakWorkingSetBytes":70729728,"Result":44000}
+{"Name":"reader-cached","Count":1000,"Iteration":4,"Warmup":false,"Milliseconds":26.0522,"AllocatedBytes":10416784,"ProcessPeakWorkingSetBytes":70729728,"Result":44000}
+{"Name":"reader-cached","Count":1000,"Iteration":5,"Warmup":false,"Milliseconds":26.6346,"AllocatedBytes":10416784,"ProcessPeakWorkingSetBytes":70729728,"Result":44000}
+{"Name":"reader-cached","Count":10000,"Iteration":0,"Warmup":true,"Milliseconds":470.5844,"AllocatedBytes":96721720,"ProcessPeakWorkingSetBytes":152391680,"Result":440000}
+{"Name":"reader-cached","Count":10000,"Iteration":1,"Warmup":false,"Milliseconds":267.0522,"AllocatedBytes":96099008,"ProcessPeakWorkingSetBytes":152678400,"Result":440000}
+{"Name":"reader-cached","Count":10000,"Iteration":2,"Warmup":false,"Milliseconds":266.2315,"AllocatedBytes":96099008,"ProcessPeakWorkingSetBytes":152678400,"Result":440000}
+{"Name":"reader-cached","Count":10000,"Iteration":3,"Warmup":false,"Milliseconds":268.3205,"AllocatedBytes":96099008,"ProcessPeakWorkingSetBytes":152678400,"Result":440000}
+{"Name":"reader-cached","Count":10000,"Iteration":4,"Warmup":false,"Milliseconds":266.6237,"AllocatedBytes":96099008,"ProcessPeakWorkingSetBytes":152678400,"Result":440000}
+{"Name":"reader-cached","Count":10000,"Iteration":5,"Warmup":false,"Milliseconds":264.2925,"AllocatedBytes":96099008,"ProcessPeakWorkingSetBytes":152678400,"Result":440000}
+{"Name":"reader-cached","Count":30000,"Iteration":0,"Warmup":true,"Milliseconds":955.3413,"AllocatedBytes":282573656,"ProcessPeakWorkingSetBytes":208445440,"Result":1320000}
+{"Name":"reader-cached","Count":30000,"Iteration":1,"Warmup":false,"Milliseconds":789.5126,"AllocatedBytes":282034200,"ProcessPeakWorkingSetBytes":213377024,"Result":1320000}
+{"Name":"reader-cached","Count":30000,"Iteration":2,"Warmup":false,"Milliseconds":770.7537,"AllocatedBytes":282034192,"ProcessPeakWorkingSetBytes":213475328,"Result":1320000}
+{"Name":"reader-cached","Count":30000,"Iteration":3,"Warmup":false,"Milliseconds":779.5727,"AllocatedBytes":282034192,"ProcessPeakWorkingSetBytes":213524480,"Result":1320000}
+{"Name":"reader-cached","Count":30000,"Iteration":4,"Warmup":false,"Milliseconds":787.5836,"AllocatedBytes":282034192,"ProcessPeakWorkingSetBytes":213557248,"Result":1320000}
+{"Name":"reader-cached","Count":30000,"Iteration":5,"Warmup":false,"Milliseconds":781.5676,"AllocatedBytes":282034192,"ProcessPeakWorkingSetBytes":213557248,"Result":1320000}

@@ -123,6 +123,9 @@ public sealed class ExcelReader
             .Read(source.CoreWorkbook, coreDiagnostics, selectedSheets, cancellationToken, new Core.ExcelReadOptions
             {
                 GetSelectedRange = options?.GetSelectedRange,
+                FormulaEvaluationOptions = options?.FormulaEvaluationOptions,
+                IgnoreFormulaPrintAreas = options?.IgnoreFormulaPrintAreas ?? false,
+                IsFormulaTarget = options?.IsFormulaTarget,
                 Backend = (Core.ReaderBackend)(options?.Backend ?? ReaderBackend.OpenXml),
                 FormulaDisplayMode = (Core.FormulaDisplayMode)(options?.FormulaDisplayMode ?? FormulaDisplayMode.CachedValue),
                 BackendSelected = options?.BackendSelected is { } callback ? selection => callback(new((ReaderBackend)selection.RequestedBackend, (ReaderBackend)selection.SelectedBackend, selection.ReasonCodes)) : null,

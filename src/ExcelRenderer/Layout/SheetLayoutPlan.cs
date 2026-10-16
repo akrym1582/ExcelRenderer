@@ -35,6 +35,11 @@ internal sealed class SheetLayoutPlan
     /// <summary>Gets the planned bands without render payloads.</summary>
     internal IReadOnlyList<PaginationPagePlan> Pages { get; }
 
+    /// <summary>Gets source cells selected by the geometry-only page plan.</summary>
+    /// <param name="index">The planned page index.</param>
+    /// <returns>The exact page candidates.</returns>
+    internal IReadOnlyList<CellAddress> GetCandidateAddresses(int index) => inner.GetCandidateAddresses(index).Select(CoreIntegration.CoreModelAdapter.ToPublic).ToArray();
+
     /// <summary>Builds one page using the common candidate, measurement and placement path.</summary>
     /// <param name="index">The source page index.</param>
     /// <param name="number">The page number.</param>

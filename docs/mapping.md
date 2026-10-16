@@ -1,5 +1,7 @@
 # Excel template mapping
 
+> Explicit recalculation is available. The [formula guide](formulas.md) defines its scope, cache invalidation and supported features. Saved-value/formula-rejection behavior below describes the default CachedValue mode unless stated otherwise.
+
 English | [日本語](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/mapping.ja.md)
 
 `ExcelRenderer.Mapping` is a standalone .NET Standard 2.1 package. It maps CLR
@@ -521,7 +523,7 @@ pictures intersecting repeated regions are rejected with template diagnostics.
 Unknown parts/extensions, macros, signatures and Strict packages are rejected.
 Use ordinary cell-based templates for repeated regions.
 
-Saving explicitly disables formula evaluation and preserves the original `calcPr`
+Default-mode saving disables formula evaluation and preserves the original `calcPr`
 (including absence), without adding recalculation requests. Strings beginning with
 `=` remain literal strings. Mapping's `**` expressions and format/date operations
 are separate from Excel formulas and remain supported.

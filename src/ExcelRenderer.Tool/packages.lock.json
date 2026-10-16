@@ -145,6 +145,9 @@
       "excelrenderer.fonts": {
         "type": "Project"
       },
+      "excelrenderer.formulas": {
+        "type": "Project"
+      },
       "excelrenderer.mapping": {
         "type": "Project",
         "dependencies": {
@@ -156,7 +159,8 @@
         "type": "Project",
         "dependencies": {
           "DocumentFormat.OpenXml": "[3.3.0, )",
-          "ExcelNumberFormat": "[1.1.0, )"
+          "ExcelNumberFormat": "[1.1.0, )",
+          "ExcelRenderer.Formulas": "[1.8.0, )"
         }
       }
     }

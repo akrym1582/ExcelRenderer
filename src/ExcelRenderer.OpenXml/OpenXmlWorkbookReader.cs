@@ -322,6 +322,17 @@ public sealed partial class OpenXmlWorkbookReader : IWorkbookDataReader
         }
     }
 
+    /// <summary>Enumerates dependency cells independently of rendering selection.</summary>
+    /// <param name="sheetIndex">Original worksheet position.</param>
+    /// <param name="cancellationToken">Cooperative cancellation.</param>
+    /// <returns>Immutable source snapshots.</returns>
+    internal IEnumerable<CellRecord> EnumerateCalculationCells(int sheetIndex, CancellationToken cancellationToken)
+    {
+        EnsureAlive();
+        GetPart(sheetIndex);
+        return EnumerateCore(sheetIndex, cancellationToken);
+    }
+
     private void Report(CellRecord cell, ref List<ReaderDiagnostic>? diagnostics, string code, string message)
     {
         var diagnostic = new ReaderDiagnostic(code, "Warning", cell.SheetIndex, cell.Address, message);

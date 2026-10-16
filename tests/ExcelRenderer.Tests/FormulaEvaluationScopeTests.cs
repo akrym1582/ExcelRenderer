@@ -4,12 +4,11 @@ using Xunit;
 
 namespace ExcelRenderer.Tests;
 
-/// <summary>The product rejects evaluation requests before reading input or opening output.</summary>
+/// <summary>The product rejects legacy requests before reading input or opening output.</summary>
 public sealed class FormulaEvaluationScopeTests
 {
     [Theory]
     [InlineData(FormulaDisplayMode.Legacy)]
-    [InlineData(FormulaDisplayMode.Recalculate)]
     public async Task AllBackendsRejectCalculationModesBeforeInputAndSink(FormulaDisplayMode mode)
     {
         foreach (var backend in Enum.GetValues<ReaderBackend>())

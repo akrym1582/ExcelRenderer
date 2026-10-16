@@ -13,8 +13,9 @@ public static class XlsxCommand
         var output = CommandSupport.OutputOption("Path to the mapped XLSX file.");
         var data = MappingCommandSupport.DataOption();
         data.Required = true;
-        var command = new Command("xlsx", "Map JSON into an Excel template and save XLSX without rendering.") { input, output, data };
-        var backends = new BackendOptions(command, data);
+        var formulaMode = CommandSupport.FormulaModeOption();
+        var command = new Command("xlsx", "Map JSON into an Excel template and save XLSX without rendering.") { input, output, data, formulaMode };
+        var backends = new BackendOptions(command, data, formulaMode, recalculateMappedWorkbook: true);
         command.SetAction((result, cancellationToken) => CommandSupport.RunAsync(() => MappingCommandSupport.MapAsync(
             result.GetValue(input)!,
             result.GetValue(data)!,

@@ -661,7 +661,7 @@ excelrenderer render input.xlsx -o output --format markdown --formula-mode cache
 **Recalculate は、要求された選択セルと依存先に限定する契約では未実装です。**
 enum／CLI の綴りは予約されていますが、現状は変換前に拒否します。cache 表示やブック全体の
 再計算へ黙って切り替えません。[公開 API の再現テストと未決事項](docs/reader-richtext-validation.md)
-を参照してください。この契約が解決するまで PR は未完了です。
+を参照してください。選択依存先の再計算は後続工程であり、backend 接続では拒否を維持します。
 
 `DetectUnsupportedFeatures` 有効時、チャートシートは位置不明のシート単位診断
 `UnsupportedDrawingObject` を出し、空白ページは追加しません。チャートシートだけを選択した場合は
@@ -669,4 +669,4 @@ enum／CLI の綴りは予約されていますが、現状は変換前に拒否
 指定できます。`IRichTextLayoutService` がなければセル書式へ縮退し、opt-in 時に preflight で
 `RichTextLayoutFallback` を出します。既定は組込みサービスで、診断だけの追加グリフ計測は行いません。
 
-独立した非配布 Open XML Reader の API と対応範囲は [Reader の説明](docs/openxml-reader.ja.md)を参照してください。既存の変換経路は従来の Reader を使用します。
+Reader・Mapping は ClosedXml（既定）/ OpenXml / Auto を明示選択できます。[backend API・CLI・対応範囲・stream 保証](docs/openxml-integration.ja.md)を参照してください。共有 `ExcelRenderer.OpenXml` は pack 可能です。互換経路の ClosedXML 依存は残ります。低レベル Reader API は [Reader の説明](docs/openxml-reader.ja.md)にまとめています。

@@ -686,7 +686,7 @@ output and respect suppression and failure policies before opening the output si
 The enum/CLI spelling is reserved but currently rejects the request before conversion;
 it does not silently use caches or recalculate the whole workbook. See
 [the public-API reproductions and pending scope decision](docs/reader-richtext-validation.md).
-This PR remains incomplete until that contract is resolved.
+Selected-root recalculation remains a later phase; backend integration retains this rejection.
 
 With `DetectUnsupportedFeatures`, chart sheets are reported at sheet level with unknown
 cell position using `UnsupportedDrawingObject`; they add no blank output page. Selecting
@@ -695,4 +695,4 @@ can supply a caller-owned legacy service. Without `IRichTextLayoutService`, rich
 use the cell font and emit opt-in `RichTextLayoutFallback` in preflight. The built-in
 service remains the default. No additional glyph measurement is done just for diagnostics.
 
-The independent, nonpackable Open XML reader and its supported scope are described in [the reader documentation](docs/openxml-reader.md). Existing conversion paths continue to use their existing readers.
+Reader and Mapping engines can be selected explicitly with ClosedXml (default), OpenXml, or Auto. See [backend APIs, CLI options, supported scope and stream guarantees](docs/openxml-integration.md). The shared `ExcelRenderer.OpenXml` package is packable; ClosedXML remains a dependency for compatibility. Low-level reader APIs are documented [separately](docs/openxml-reader.md).

@@ -74,3 +74,5 @@ Core内のSemaphoreSlimでPDFsharpフォントresetから計測・描画・Save�
 Full reader/layout/drawing/PDF adapterが高機能部分を拡張し、本体の公開APIは既存assemblyに維持します。[構成](core-architecture.ja.md)、[検証結果](core-refactor-validation.md)と[所有者表](core-source-map.md)を参照してください。
 
 同じload contextの同じCore DLLを利用する本体/Core converterは共有font gateを使います。外部PDFsharp利用者や別AssemblyLoadContextのCoreは同期対象外です。本体とCoreは同じbuildから配布してください。
+
+Core の Reader は `PdfExportOptions.ReadOptions` から選択できます。[エンジン選択](openxml-integration.ja.md)を参照してください。汎用の入力検査・spool は共有 OpenXml 依存に移管しています。

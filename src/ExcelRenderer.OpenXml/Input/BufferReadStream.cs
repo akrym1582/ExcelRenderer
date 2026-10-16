@@ -1,4 +1,9 @@
-namespace ExcelRenderer.Core.Input;
+using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ExcelRenderer.OpenXml.Input;
 
 /// <summary>An independent read cursor over an owner-held seekable buffer.</summary>
 internal sealed class BufferReadStream : Stream

@@ -26,7 +26,9 @@ public sealed class WorksheetInfo
     /// <param name="hasHyperlinks">The hasHyperlinks value.</param>
     /// <param name="hasConditionalFormatting">The hasConditionalFormatting value.</param>
     /// <param name="hasTables">The hasTables value.</param>
-    internal WorksheetInfo(SheetInfo sheet, string? rawDimension, CellRange? actualCellRange, IReadOnlyList<RowInfo> rows, IReadOnlyList<ColumnInfo> columns, IReadOnlyList<CellRange> mergedRanges, ElementInfo? sheetFormat, ElementInfo? pageSetup, ElementInfo? pageSetupProperties, ElementInfo? pageMargins, ElementInfo? printOptions, ElementInfo? headerFooter, IReadOnlyList<ElementInfo> rowBreaks, IReadOnlyList<ElementInfo> columnBreaks, IReadOnlyList<PrintReferenceInfo> printReferences, bool hasDrawings, bool hasHyperlinks, bool hasConditionalFormatting, bool hasTables)
+    /// <param name="conditionalFormattingRanges">Source rule ranges.</param>
+    /// <param name="hasFormulas">Whether any original cell has a formula element.</param>
+    internal WorksheetInfo(SheetInfo sheet, string? rawDimension, CellRange? actualCellRange, IReadOnlyList<RowInfo> rows, IReadOnlyList<ColumnInfo> columns, IReadOnlyList<CellRange> mergedRanges, ElementInfo? sheetFormat, ElementInfo? pageSetup, ElementInfo? pageSetupProperties, ElementInfo? pageMargins, ElementInfo? printOptions, ElementInfo? headerFooter, IReadOnlyList<ElementInfo> rowBreaks, IReadOnlyList<ElementInfo> columnBreaks, IReadOnlyList<PrintReferenceInfo> printReferences, bool hasDrawings, bool hasHyperlinks, bool hasConditionalFormatting, bool hasTables, IReadOnlyList<IReadOnlyList<CellRange>> conditionalFormattingRanges, bool hasFormulas)
     {
         Sheet = sheet;
         RawDimension = rawDimension;
@@ -47,6 +49,8 @@ public sealed class WorksheetInfo
         HasHyperlinks = hasHyperlinks;
         HasConditionalFormatting = hasConditionalFormatting;
         HasTables = hasTables;
+        ConditionalFormattingRanges = conditionalFormattingRanges;
+        HasFormulas = hasFormulas;
     }
 
     /// <summary>Gets the Sheet metadata.</summary>
@@ -105,6 +109,12 @@ public sealed class WorksheetInfo
 
     /// <summary>Gets a value indicating whether this flag is set.</summary>
     public bool HasTables { get; }
+
+    /// <summary>Gets a value indicating whether any source cell contains a formula element.</summary>
+    public bool HasFormulas { get; }
+
+    /// <summary>Gets original conditional-format rule source ranges, without retaining rule bodies.</summary>
+    public IReadOnlyList<IReadOnlyList<CellRange>> ConditionalFormattingRanges { get; }
 
     /// <summary>Gets the saved default row height in points, or the reader default of 15 when absent.</summary>
     public double DefaultRowHeightPt => SheetFormat != null && SheetFormat.Attributes.TryGetValue("defaultRowHeight", out var value) ? double.Parse(value, CultureInfo.InvariantCulture) : 15;

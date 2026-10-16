@@ -64,3 +64,5 @@ The main library delegates input preparation/spooling, image resources, workbook
 Full reader/layout/drawing/PDF adapters provide the advanced behavior. Public main APIs stay in their existing assembly. See [the architecture](core-architecture.md), [verification results](core-refactor-validation.md) and [source ownership](core-source-map.md).
 
 Main/Core converters share a font gate when using the same Core DLL in one load context. External PDFsharp users and separately loaded Core copies are outside that synchronization boundary. Distribute the main and Core DLLs from the same build.
+
+Core reader selection is available through `PdfExportOptions.ReadOptions`; see [engine selection](openxml-integration.md). Generic input/spool storage is shared through the OpenXml dependency.

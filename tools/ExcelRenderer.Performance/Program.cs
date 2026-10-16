@@ -13,6 +13,12 @@ using PdfSharp.Pdf.IO;
 
 var command = args[0];
 var path = args[1];
+if (command.StartsWith("integration-", StringComparison.Ordinal))
+{
+    await IntegrationBenchmark.RunAsync(args);
+    return;
+}
+
 if (command == "reader-fixtures")
 {
     ReaderFixtures.Generate(path);

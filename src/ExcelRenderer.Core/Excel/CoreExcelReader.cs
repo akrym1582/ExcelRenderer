@@ -9,7 +9,7 @@ using ExcelRenderer.Core.Rendering;
 namespace ExcelRenderer.Core.Excel;
 
 /// <summary>Excel ブックのワークシート、セル、印刷設定、画像をレンダリング用モデルとして読み込みます。</summary>
-internal class CoreExcelReader
+internal partial class CoreExcelReader
 {
     private readonly ICoreFontMetrics fontMetrics;
 
@@ -24,26 +24,62 @@ internal class CoreExcelReader
     /// <param name="fontMetrics">The product font metrics.</param>
     internal CoreExcelReader(ICoreFontMetrics fontMetrics) => this.fontMetrics = fontMetrics;
 
+    /// <summary>Gets a value indicating whether to capture original run metadata.</summary>
+    protected virtual bool CaptureRichText => false;
+
+    /// <summary>Gets a value indicating whether conditional rule ranges are needed.</summary>
+    protected virtual bool CaptureConditionalFormatting => false;
+
     /// <summary>Reads workbook models with optional selected-sheet body projection.</summary>
     /// <param name="source">The source used by this operation.</param>
     /// <param name="diagnostics">The diagnostics used by this operation.</param>
     /// <param name="selectedSheets">The selectedSheets used by this operation.</param>
     /// <param name="cancellationToken">The reader cancellation token.</param>
     /// <param name="formulaMode">The internal formula display policy.</param>
+    /// <param name="options">The engine selection and formula display policy.</param>
     /// <returns>The planned or generated result.</returns>
-    internal ReportDocument Read(PreparedWorkbook source, DiagnosticCollector? diagnostics, IReadOnlyList<string>? selectedSheets = null, CancellationToken cancellationToken = default, FormulaDisplayMode formulaMode = FormulaDisplayMode.Legacy)
+    internal ReportDocument Read(PreparedWorkbook source, DiagnosticCollector? diagnostics, IReadOnlyList<string>? selectedSheets = null, CancellationToken cancellationToken = default, FormulaDisplayMode formulaMode = FormulaDisplayMode.Legacy, ExcelReadOptions? options = null)
     {
+        options ??= new ExcelReadOptions { FormulaDisplayMode = (Core.FormulaDisplayMode)formulaMode };
+        options.Validate();
+        if (options.Backend != ReaderBackend.ClosedXml && options.FormulaDisplayMode == Core.FormulaDisplayMode.CachedValue)
+        {
+            var candidate = ReadOpenXml(source, diagnostics, selectedSheets, cancellationToken, options, out var reasons);
+            if (candidate is not null)
+            {
+                return candidate;
+            }
+
+            options.BackendSelected?.Invoke(new(options.Backend, ReaderBackend.ClosedXml, reasons));
+            return Read(source, diagnostics, selectedSheets, cancellationToken, FormulaDisplayMode.CachedValue, options with { Backend = ReaderBackend.ClosedXml, BackendSelected = null, InspectCandidate = null });
+        }
+
+        options.BackendSelected?.Invoke(new(options.Backend, ReaderBackend.ClosedXml, Array.AsReadOnly(new[] { options.Backend == ReaderBackend.Auto ? "LegacyFormulaMode" : "ExplicitClosedXml" })));
         using var workbookStream = source.OpenRead();
-        using var pictureSource = source.OpenRead();
-        using var pictureMetadataStream = new CancellationReadStream(pictureSource, cancellationToken);
-        using var metadataSource = source.OpenRead();
-        using var metadataStream = new CancellationReadStream(metadataSource, cancellationToken);
         using var cancelRead = new CancellationReadStream(workbookStream, cancellationToken);
-        var graphics = fontMetrics.GraphicEngine;
+        var graphics = (fontMetrics as IClosedXmlFontMetrics)?.GraphicEngine;
         using var workbook = ConversionMetrics.Measure("closedXml", () => graphics is null
             ? new XLWorkbook(cancelRead)
             : new XLWorkbook(cancelRead, new LoadOptions { GraphicEngine = graphics }));
         ConversionMetrics.Report("coreReaderWorkbook", 1);
+        return ReadClosedXmlWorkbook(source, workbook, diagnostics, selectedSheets, cancellationToken, formulaMode);
+    }
+
+    /// <summary>Adapts a caller-owned legacy workbook while caches are read from immutable original input.</summary>
+    /// <param name="source">Original validated bytes.</param>
+    /// <param name="workbook">Caller-owned loaded legacy workbook.</param>
+    /// <param name="diagnostics">Source diagnostics.</param>
+    /// <param name="selectedSheets">Optional selected bodies.</param>
+    /// <param name="cancellationToken">Cooperative cancellation.</param>
+    /// <param name="formulaMode">Stored display policy.</param>
+    /// <returns>The neutral rendering document.</returns>
+    internal ReportDocument ReadClosedXmlWorkbook(PreparedWorkbook source, XLWorkbook workbook, DiagnosticCollector? diagnostics, IReadOnlyList<string>? selectedSheets, CancellationToken cancellationToken, FormulaDisplayMode formulaMode)
+    {
+        using var pictureSource = source.OpenRead();
+        using var pictureMetadataStream = new CancellationReadStream(pictureSource, cancellationToken);
+        using var metadataSource = source.OpenRead();
+        using var metadataStream = new CancellationReadStream(metadataSource, cancellationToken);
+        var graphics = (fontMetrics as IClosedXmlFontMetrics)?.GraphicEngine;
         var pictureMetadata = DrawingMLReader.ReadPictureMetadata(pictureMetadataStream);
         var pageSetups = WorkbookLayoutMetadataReader.ReadPageSetups(metadataStream);
         var metadata = new CoreWorkbookMetadata(pictureMetadata, pageSetups) { FormulaMode = formulaMode };
@@ -53,7 +89,7 @@ internal class CoreExcelReader
             metadata.FormulaCaches = FormulaCacheReader.Read(formulaStream, workbook, cancellationToken);
         }
 
-        PrepareWorkbookMetadata(source, workbook, metadata, selectedSheets);
+        PrepareWorkbookMetadata(source, workbook.Worksheets.Select(sheet => sheet.Name).ToArray(), metadata, selectedSheets);
         if (selectedSheets is not null)
         {
             foreach (var name in selectedSheets)
@@ -87,10 +123,10 @@ internal class CoreExcelReader
 
     /// <summary>Adds product metadata after the single workbook load and basic XML reads.</summary>
     /// <param name="source">The prepared source with independent cursors.</param>
-    /// <param name="workbook">The loaded workbook.</param>
+    /// <param name="sheetNames">Original worksheet names.</param>
     /// <param name="metadata">The basic metadata to enrich.</param>
     /// <param name="selectedSheets">The requested sheet names.</param>
-    protected virtual void PrepareWorkbookMetadata(PreparedWorkbook source, XLWorkbook workbook, CoreWorkbookMetadata metadata, IReadOnlyList<string>? selectedSheets)
+    protected virtual void PrepareWorkbookMetadata(PreparedWorkbook source, IReadOnlyList<string> sheetNames, CoreWorkbookMetadata metadata, IReadOnlyList<string>? selectedSheets)
     {
     }
 
@@ -98,53 +134,20 @@ internal class CoreExcelReader
     /// <param name="cell">The source cell.</param>
     /// <param name="context">The sheet read context.</param>
     /// <returns>Whether to materialize the cell.</returns>
-    protected virtual bool ShouldReadCell(IXLCell cell, CoreSheetReadContext context) => true;
+    protected virtual bool ShouldReadCell(CellAddress cell, CoreSheetReadContext context) => true;
 
-    /// <summary>Reads display values before product normalization.</summary>
-    /// <param name="cell">The source cell.</param>
-    /// <param name="context">The sheet read context.</param>
-    /// <returns>The original formatted display.</returns>
-    protected virtual string ReadDisplayText(IXLCell cell, CoreSheetReadContext context)
-    {
-        var metadata = context.Metadata;
-        if (!cell.HasFormula || metadata.FormulaMode == FormulaDisplayMode.Legacy)
-        {
-            var text = ReadDisplay(cell, metadata.ReaderSession!);
-            if (cell.HasFormula && cell.CachedValue.IsError)
-            {
-                AddFormulaDiagnostic(cell, metadata, "FormulaResultError", "The selected formula display value is an Excel error.");
-            }
+    /// <summary>Restores source-independent product displays before cache diagnostics.</summary>
+    /// <param name="address">Original cell address.</param>
+    /// <param name="context">Original sheet context.</param>
+    /// <returns>A display override, or null to use the stored value.</returns>
+    protected virtual string? DisplayOverride(CellAddress address, CoreSheetReadContext context) => null;
 
-            return text;
-        }
-
-        var address = new CellAddress(cell.Address.RowNumber, cell.Address.ColumnNumber);
-        var cache = metadata.FormulaCaches.GetValueOrDefault(cell.Worksheet.Name)?.GetValueOrDefault(address);
-        if (cache?.HasValue != true)
-        {
-            AddFormulaDiagnostic(cell, metadata, "FormulaCachedValueMissing", "The formula has no saved result; an empty display is used.");
-            return string.Empty;
-        }
-
-        if (cache.Value.IsError)
-        {
-            AddFormulaDiagnostic(cell, metadata, "FormulaResultError", "The selected formula display value is an Excel error.");
-        }
-
-        return metadata.ReaderSession!.Format(cell, cache.Value);
-    }
-
-    /// <summary>Converts source styles before interning.</summary>
-    /// <param name="cell">The source cell.</param>
-    /// <returns>The product style.</returns>
-    protected virtual CellStyle ConvertCellStyle(IXLCell cell) => ExcelStyleConverter.Convert(cell);
-
-    /// <summary>Attaches product cell metadata without another cell traversal.</summary>
-    /// <param name="source">The source cell.</param>
+    /// <summary>Completes a cell from neutral original run data.</summary>
+    /// <param name="source">Optional original rich text.</param>
     /// <param name="cell">The neutral cell.</param>
-    /// <param name="context">The read context.</param>
-    /// <returns>The enriched neutral cell.</returns>
-    protected virtual ReportCell CompleteCell(IXLCell source, ReportCell cell, CoreSheetReadContext context) => cell;
+    /// <param name="context">Original sheet context.</param>
+    /// <returns>The product cell.</returns>
+    protected virtual ReportCell CompleteCell(SourceCellText? source, ReportCell cell, CoreSheetReadContext context) => cell;
 
     /// <summary>Applies product text policy without altering the source value.</summary>
     /// <param name="text">The formatted text.</param>
@@ -152,11 +155,11 @@ internal class CoreExcelReader
     protected virtual string NormalizeDisplayText(string text) => DisplayText.WithoutVariationSelectors(text);
 
     /// <summary>Attaches typed product metadata after basic materialization.</summary>
-    /// <param name="worksheet">The source sheet.</param>
+    /// <param name="sheetName">The original source sheet name.</param>
     /// <param name="sheet">The basic model.</param>
     /// <param name="context">The sheet context.</param>
     /// <returns>The completed model.</returns>
-    protected virtual ReportSheet CompleteSheet(IXLWorksheet worksheet, ReportSheet sheet, CoreSheetReadContext context) => sheet;
+    protected virtual ReportSheet CompleteSheet(string sheetName, ReportSheet sheet, CoreSheetReadContext context) => sheet;
 
     private static void AddFormulaDiagnostic(IXLCell cell, CoreWorkbookMetadata metadata, string code, string message)
     {
@@ -286,58 +289,62 @@ internal class CoreExcelReader
 
     private static double InchesToPoints(double value) => value * 72d;
 
-    private static IReadOnlyList<CellBorder> ReadMergedBorders(IEnumerable<KeyValuePair<CellAddress, ReportCell>> entries, CellRange range, StylePool styles)
+    private static SourceCellText? ReadLegacyCellText(IXLCell source)
     {
-        var borders = new List<CellBorder>();
-        foreach (var entry in entries)
+        if (source.HasFormula || !source.HasRichText)
         {
-            var source = entry.Value.Style.Border;
-            if (source is null)
-            {
-                continue;
-            }
-
-            var address = entry.Key;
-            var border = new BorderStyle(
-                address.Column == range.First.Column ? source.Left : null,
-                address.Row == range.First.Row ? source.Top : null,
-                address.Column == range.Last.Column ? source.Right : null,
-                address.Row == range.Last.Row ? source.Bottom : null);
-            if (border != new BorderStyle())
-            {
-                borders.Add(new(address, styles.Intern(border)));
-            }
+            return null;
         }
 
-        return borders;
+        var runs = new List<SourceTextRun>();
+        var unsupported = source.GetRichText().HasPhonetics;
+        foreach (var run in source.GetRichText())
+        {
+            unsupported |= run.Strikethrough || run.VerticalAlignment != XLFontVerticalTextAlignmentValues.Baseline ||
+                run.Underline is not (XLFontUnderlineValues.None or XLFontUnderlineValues.Single);
+            runs.Add(new(run.Text, new FontStyle(run.FontName, run.FontSize, run.Underline == XLFontUnderlineValues.Single, ExcelStyleConverter.ToColor(run.FontColor, source.Worksheet.Workbook.Theme))
+            {
+                Bold = run.Bold,
+                Italic = run.Italic,
+            }));
+        }
+
+        return new(runs.AsReadOnly(), unsupported);
     }
 
-    private static Dictionary<CellAddress, ReportCell> ApplyMergedSpans(
-        Dictionary<CellAddress, ReportCell> cells,
-        IEnumerable<CellRange> ranges,
-        StylePool styles)
+    private string ReadDisplayText(IXLCell cell, CoreSheetReadContext context)
     {
-        var merged = ranges.ToArray();
-        var index = new CellRangeIndex(cells.Keys.Concat(merged.Select(range => range.First)).Distinct());
-        foreach (var range in merged)
+        if (DisplayOverride(new(cell.Address.RowNumber, cell.Address.ColumnNumber), context) is { } original)
         {
-            var entries = index.Query(range).Where(cells.ContainsKey)
-                .Select(address => new KeyValuePair<CellAddress, ReportCell>(address, cells[address])).ToArray();
-            var cell = cells.GetValueOrDefault(range.First, new(null, CellStyle.Default));
-            cells[range.First] = cell with
-            {
-                RowSpan = range.Last.Row - range.First.Row + 1,
-                ColumnSpan = range.Last.Column - range.First.Column + 1,
-                Style = styles.Intern(cell.Style with { Border = null }),
-                MergedBorders = ReadMergedBorders(entries, range, styles),
-            };
-            foreach (var address in entries.Select(entry => entry.Key).Where(address => address != range.First))
-            {
-                cells.Remove(address);
-            }
+            return original;
         }
 
-        return cells;
+        var metadata = context.Metadata;
+        if (!cell.HasFormula || metadata.FormulaMode == FormulaDisplayMode.Legacy)
+        {
+            var text = ReadDisplay(cell, metadata.ReaderSession!);
+            if (cell.HasFormula && cell.CachedValue.IsError)
+            {
+                AddFormulaDiagnostic(cell, metadata, "FormulaResultError", "The selected formula display value is an Excel error.");
+            }
+
+            return text;
+        }
+
+        var address = new CellAddress(cell.Address.RowNumber, cell.Address.ColumnNumber);
+        var cache = metadata.FormulaCaches.GetValueOrDefault(cell.Worksheet.Name)?.GetValueOrDefault(address);
+        if (cache?.HasValue != true)
+        {
+            AddFormulaDiagnostic(cell, metadata, "FormulaCachedValueMissing", "The formula has no saved result; an empty display is used.");
+            return string.Empty;
+        }
+
+        if (cache.Value.IsError)
+        {
+            AddFormulaDiagnostic(cell, metadata, "FormulaResultError", "The selected formula display value is an Excel error.");
+        }
+
+        return metadata.ReaderSession!.Format(cell, cache.Value);
     }
 
     private ReportSheet ReadSheet(
@@ -348,6 +355,13 @@ internal class CoreExcelReader
         IXLGraphicEngine? graphics,
         CancellationToken cancellationToken)
     {
+        context = context with
+        {
+            SheetName = worksheet.Name,
+            ConditionalFormattingRanges = CaptureConditionalFormatting ? worksheet.ConditionalFormats.Select(rule => (IReadOnlyList<CellRange>)rule.Ranges.Select(range => new CellRange(
+                new(range.RangeAddress.FirstAddress.RowNumber, range.RangeAddress.FirstAddress.ColumnNumber),
+                new(range.RangeAddress.LastAddress.RowNumber, range.RangeAddress.LastAddress.ColumnNumber))).ToArray()).ToArray() : [],
+        };
         var pictureMetadata = context.Metadata.Pictures.GetValueOrDefault(
             worksheet.Name,
             new Dictionary<string, DrawingPictureMetadata>(StringComparer.Ordinal));
@@ -361,7 +375,7 @@ internal class CoreExcelReader
             foreach (var cell in context.IncludeBody ? usedRange.CellsUsed(XLCellsUsedOptions.All) : Enumerable.Empty<IXLCell>())
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                if (!ShouldReadCell(cell, context))
+                if (!ShouldReadCell(new(cell.Address.RowNumber, cell.Address.ColumnNumber), context))
                 {
                     continue;
                 }
@@ -369,9 +383,9 @@ internal class CoreExcelReader
                 var address = new CellAddress(cell.Address.RowNumber, cell.Address.ColumnNumber);
                 var model = new ReportCell(
                     NormalizeDisplayText(ReadDisplayText(cell, context)),
-                    styles.Intern(context.Metadata.ReaderSession!.ConvertStyle(cell, ConvertCellStyle)),
+                    styles.Intern(context.Metadata.ReaderSession!.ConvertStyle(cell, source => NormalizeCellStyle(ExcelStyleConverter.ConvertOriginal(source)))),
                     Formula: cell.HasFormula ? "=" + cell.FormulaA1 : null);
-                cells[address] = CompleteCell(cell, model, context);
+                cells[address] = CompleteCell(CaptureRichText ? ReadLegacyCellText(cell) : null, model, context);
             }
 
             for (var column = usedRange.RangeAddress.FirstAddress.ColumnNumber;
@@ -428,7 +442,7 @@ internal class CoreExcelReader
             new(range.RangeAddress.LastAddress.RowNumber, range.RangeAddress.LastAddress.ColumnNumber))).ToArray();
         if (context.IncludeBody)
         {
-            cells = ApplyMergedSpans(cells, mergedRanges, styles);
+            cells = WorkbookModelBuilder.ApplyMergedSpans(cells, mergedRanges, styles);
         }
 
         var printAreas = ReadPrintAreas(worksheet);
@@ -536,7 +550,7 @@ internal class CoreExcelReader
             PrintAreas = printAreas,
             SourceSheetIndex = context.SourceSheetIndex,
         };
-        return CompleteSheet(worksheet, sheet, context);
+        return CompleteSheet(worksheet.Name, sheet, context);
 
         static IEnumerable<CellRange> GetAnchorRanges(CellAddress fallback, DrawingAnchor? anchor)
         {
@@ -571,7 +585,7 @@ internal class CoreExcelReader
         SheetPageSetupMetadata? metadata,
         DiagnosticCollector? diagnostics)
     {
-        if (metadata is null && fontMetrics.DefaultColumnWidth(worksheet.ColumnWidth) is { } legacyWidth)
+        if (metadata is null && (fontMetrics as IClosedXmlFontMetrics)?.DefaultColumnWidth(worksheet.ColumnWidth) is { } legacyWidth)
         {
             return legacyWidth;
         }

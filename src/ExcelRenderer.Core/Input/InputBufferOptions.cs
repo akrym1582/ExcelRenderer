@@ -13,16 +13,14 @@ internal sealed record InputBufferOptions
     public string? TemporaryDirectory { get; init; }
 
     /// <summary>Validates the buffer threshold and the existing temporary directory.</summary>
-    internal void Validate()
-    {
-        if (MemoryThresholdBytes < 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(MemoryThresholdBytes));
-        }
+    internal void Validate() => ToShared().Validate();
 
-        if (TemporaryDirectory is not null && !Directory.Exists(TemporaryDirectory))
-        {
-            throw new DirectoryNotFoundException($"Temporary directory does not exist: {TemporaryDirectory}");
-        }
-    }
+    /// <summary>Adapts values to the generic spool owner.</summary>
+    /// <returns>The shared buffer settings.</returns>
+    internal OpenXml.Input.InputBufferOptions ToShared() => new()
+    {
+        MemoryThresholdBytes = MemoryThresholdBytes,
+        AllowTemporaryFiles = AllowTemporaryFiles,
+        TemporaryDirectory = TemporaryDirectory,
+    };
 }

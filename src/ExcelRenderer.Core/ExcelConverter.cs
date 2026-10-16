@@ -46,6 +46,7 @@ public static class ExcelConverter
             throw new ArgumentException("FontFilePath and Input are required.", nameof(options));
         }
 
+        (options.ReadOptions ?? throw new ArgumentException("ReadOptions is required.", nameof(options))).Validate();
         cancellationToken.ThrowIfCancellationRequested();
         using var prepared = await WorkbookInputPreparer.ReadAsync(xlsx, options.Input, cancellationToken).ConfigureAwait(false);
         var fontSession = await PdfSharpFontGate.AcquireAsync(cancellationToken).ConfigureAwait(false);
@@ -59,7 +60,7 @@ public static class ExcelConverter
                 font.ValidatePdfFont();
                 var diagnostics = new DiagnosticCollector();
                 var reader = new CoreExcelReader(font);
-                var report = reader.Read(prepared, diagnostics, options.SheetName is null ? null : new[] { options.SheetName }, cancellationToken);
+                var report = reader.Read(prepared, diagnostics, options.SheetName is null ? null : new[] { options.SheetName }, cancellationToken, (Excel.FormulaDisplayMode)options.ReadOptions.FormulaDisplayMode, options.ReadOptions);
                 cancellationToken.ThrowIfCancellationRequested();
                 var measurer = new PdfSharpTextMeasurer(font);
                 var engine = new ReportLayoutEngine(measurer);

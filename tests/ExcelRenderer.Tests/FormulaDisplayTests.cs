@@ -10,11 +10,13 @@ namespace ExcelRenderer.Tests;
 
 public sealed class FormulaDisplayTests
 {
-    [Fact]
-    public void CachedModeDistinguishesMissingZeroFalseEmptyTextAndErrorsWithoutEvaluating()
+    [Theory]
+    [InlineData(ReaderBackend.ClosedXml)]
+    [InlineData(ReaderBackend.OpenXml)]
+    public void CachedModeDistinguishesMissingZeroFalseEmptyTextAndErrorsWithoutEvaluating(ReaderBackend backend)
     {
         using var input = CreateWorkbook();
-        var sheet = new ExcelReader().Read(input, Cached()).Sheets[0];
+        var sheet = new ExcelReader().Read(input, Cached(backend)).Sheets[0];
         Assert.Equal("0", sheet.Cells[new(1, 1)].Text);
         Assert.Equal("FALSE", sheet.Cells[new(2, 1)].Text);
         Assert.Equal(string.Empty, sheet.Cells[new(3, 1)].Text);
@@ -32,12 +34,14 @@ public sealed class FormulaDisplayTests
     }
 
     [Theory]
-    [InlineData(false, "1900-01-02")]
-    [InlineData(true, "1904-01-03")]
-    public void OriginalDateSerialUsesWorkbookDateSystemOnce(bool use1904, string expected)
+    [InlineData(false, "1900-01-02", ReaderBackend.ClosedXml)]
+    [InlineData(false, "1900-01-02", ReaderBackend.OpenXml)]
+    [InlineData(true, "1904-01-03", ReaderBackend.ClosedXml)]
+    [InlineData(true, "1904-01-03", ReaderBackend.OpenXml)]
+    public void OriginalDateSerialUsesWorkbookDateSystemOnce(bool use1904, string expected, ReaderBackend backend)
     {
         using var input = CreateWorkbook(use1904);
-        var sheet = new ExcelReader().Read(input, Cached()).Sheets[0];
+        var sheet = new ExcelReader().Read(input, Cached(backend)).Sheets[0];
         Assert.Equal(expected, sheet.Cells[new(9, 1)].Text);
         Assert.Equal("25.00%", sheet.Cells[new(10, 1)].Text);
         Assert.Equal("012.50", sheet.Cells[new(11, 1)].Text);
@@ -45,9 +49,11 @@ public sealed class FormulaDisplayTests
     }
 
     [Theory]
-    [InlineData(OutputFormat.Pdf)]
-    [InlineData(OutputFormat.Markdown)]
-    public async Task MissingCacheDiagnosticIsSelectedAndFailsBeforeSink(OutputFormat format)
+    [InlineData(OutputFormat.Pdf, ReaderBackend.ClosedXml)]
+    [InlineData(OutputFormat.Pdf, ReaderBackend.OpenXml)]
+    [InlineData(OutputFormat.Markdown, ReaderBackend.ClosedXml)]
+    [InlineData(OutputFormat.Markdown, ReaderBackend.OpenXml)]
+    public async Task MissingCacheDiagnosticIsSelectedAndFailsBeforeSink(OutputFormat format, ReaderBackend backend)
     {
         using var input = CreateWorkbook();
         using var output = new MemoryStream();
@@ -55,7 +61,7 @@ public sealed class FormulaDisplayTests
         var request = new RenderRequest
         {
             OutputFormat = format,
-            ReadOptions = Cached(),
+            ReadOptions = Cached(backend),
             Selection = format == OutputFormat.Markdown ? new() : new() { Ranges = [new("formulas", new(new(4, 1), new(4, 1)))] },
             DiagnosticOptions = new() { TreatAsErrors = ["FormulaCachedValueMissing"], SuppressedCodes = ["FormulaCachedValueMissing"], MaxDiagnostics = 1 },
         };
@@ -170,36 +176,17 @@ public sealed class FormulaDisplayTests
 
         input.Position = 0;
         using var prepared = await Core.Input.WorkbookInputPreparer.ReadAsync(input, new(), CancellationToken.None);
-        var reader = new DirtyPrecedentReader();
-        var document = reader.Read(prepared, null, formulaMode: Core.Excel.FormulaDisplayMode.CachedValue);
+        using var original = prepared.OpenRead();
+        using var loaded = new XLWorkbook(original);
+        loaded.Worksheet(1).Cell("A1").Value = 50;
+        loaded.Worksheet(1).Cell("B1").InvalidateFormula();
+        var reader = new Core.Excel.CoreExcelReader(new CoreIntegration.FullFontMetrics(null, null, new()));
+        var document = reader.ReadClosedXmlWorkbook(prepared, loaded, null, null, CancellationToken.None, Core.Excel.FormulaDisplayMode.CachedValue);
         Assert.Equal("99", document.Sheets[0].Cells[new(1, 2)].Text);
-        Assert.True(reader.WasStillDirty);
+        Assert.True(loaded.Worksheet(1).Cell("B1").NeedsRecalculation);
     }
 
-    private sealed class DirtyPrecedentReader : Core.Excel.CoreExcelReader
-    {
-        internal DirtyPrecedentReader() : base(new CoreIntegration.FullFontMetrics(null, null, new())) { }
-
-        internal bool WasStillDirty { get; private set; }
-
-        protected override void PrepareWorkbookMetadata(Core.Input.PreparedWorkbook source, XLWorkbook workbook, Core.Excel.CoreWorkbookMetadata metadata, IReadOnlyList<string>? selectedSheets)
-        {
-            workbook.Worksheet(1).Cell("A1").Value = 50;
-            workbook.Worksheet(1).Cell("B1").InvalidateFormula();
-        }
-
-        protected override Core.Model.ReportCell CompleteCell(IXLCell source, Core.Model.ReportCell cell, Core.Excel.CoreSheetReadContext context)
-        {
-            if (source.Address.ColumnNumber == 2)
-            {
-                WasStillDirty = source.NeedsRecalculation;
-            }
-
-            return cell;
-        }
-    }
-
-    private static ExcelReadOptions Cached() => new() { FormulaDisplayMode = FormulaDisplayMode.CachedValue };
+    private static ExcelReadOptions Cached(ReaderBackend backend = ReaderBackend.ClosedXml) => new() { Backend = backend, FormulaDisplayMode = FormulaDisplayMode.CachedValue };
 
     private static MemoryStream CreateWorkbook(bool use1904 = false)
     {

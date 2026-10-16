@@ -136,6 +136,13 @@
         "type": "Transitive",
         "resolved": "4.6.3",
         "contentHash": "7sCiwilJLYbTZELaKnc7RecBBXWXA+xMLQWZKWawBxYjp6DBlSE3v9/UcvKBvr1vv2tTOhipiogM8rRmxlhrVA=="
+      },
+      "excelrenderer.openxml": {
+        "type": "Project",
+        "dependencies": {
+          "DocumentFormat.OpenXml": "[3.3.0, )",
+          "ExcelNumberFormat": "[1.1.0, )"
+        }
       }
     }
   }

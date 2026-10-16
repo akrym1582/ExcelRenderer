@@ -7,7 +7,7 @@ using SkiaSharp;
 namespace ExcelRenderer.CoreIntegration;
 
 /// <summary>Preserves full font discovery, compatibility fallback and MDW diagnostics.</summary>
-internal sealed class FullFontMetrics : ICoreFontMetrics
+internal sealed class FullFontMetrics : ICoreFontMetrics, IClosedXmlFontMetrics
 {
     private readonly IFontManager? fontManager;
     private readonly DiagnosticCollector? diagnostics;

@@ -54,7 +54,15 @@ public static partial class ExcelConverter
             ConversionMetrics.Report("input.ms", inputTimer.Elapsed.TotalMilliseconds);
             var fontManager = ConversionMetrics.Measure("fonts", () => new FontManager(request.FontOptions));
             resources.TextMeasurer = request.TextMeasurer ?? new PdfSharpTextMeasurer(fontManager, cacheLayouts: true);
-            var coreDocument = ConversionMetrics.Measure("reader", () => new ExcelReader(fontManager).ReadCore(source, diagnostics, request.Selection.SheetNames, request.DiagnosticOptions.DetectUnsupportedFeatures, request.ReadOptions, cancellationToken));
+            var readOptions = request.ReadOptions with
+            {
+                InspectCandidate = request.ReadOptions.Backend == Excel.ReaderBackend.Auto && request.Selection.Pages is not null
+                    ? candidate => InspectReaderCandidate(candidate, request, fontManager, resources, cancellationToken) : null,
+                GetSelectedRange = name => request.Selection.Ranges?.FirstOrDefault(range => range.SheetName == name)?.Range is { } selected
+                    ? (selected.First.Row, selected.First.Column, selected.Last.Row, selected.Last.Column) : null,
+                IsCellSelected = (name, row, column) => request.Selection.Ranges?.FirstOrDefault(range => range.SheetName == name) is not { } selected || selected.Range.Contains(new(row, column)),
+            };
+            var coreDocument = ConversionMetrics.Measure("reader", () => new ExcelReader(fontManager).ReadCore(source, diagnostics, request.Selection.SheetNames, request.DiagnosticOptions.DetectUnsupportedFeatures, readOptions, cancellationToken));
             var publicStyles = new StylePool();
             var document = new ReportDocument(coreDocument.Sheets.Select(sheet => CoreIntegration.CoreModelAdapter.ToPublic(sheet, publicStyles)).ToArray());
             source.Dispose();

@@ -9,6 +9,9 @@ public sealed record PdfExportOptions
     /// <summary>Gets the optional sheet name; null selects every sheet in workbook order.</summary>
     public string? SheetName { get; init; }
 
+    /// <summary>Gets the reader engine and stored-formula display policy.</summary>
+    public ExcelReadOptions ReadOptions { get; init; } = new();
+
     /// <summary>Gets the input spool and ZIP limits.</summary>
     public WorkbookInputOptions Input { get; init; } = new();
 }

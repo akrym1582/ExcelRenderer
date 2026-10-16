@@ -1,6 +1,6 @@
-# 独立した Open XML Reader
+# Open XML ソース Reader
 
-`ExcelRenderer.OpenXml` は、XLSX から描画用データを読む非配布の .NET Standard 2.1 ライブラリです。実行時の依存は DocumentFormat.OpenXml **3.3.0** と ExcelNumberFormat **1.1.0** のみです。ClosedXML、Core、Mapping、フォント、描画ライブラリは参照しません。既存の変換処理と CLI は従来の Reader を使います。新 Reader は比較検証と将来の接続用であり、ClosedXML の置換完了を意味しません。
+`ExcelRenderer.OpenXml` は pack 可能な .NET Standard 2.1 の共有 Reader/Writer です。実行時依存は DocumentFormat.OpenXml **3.3.0** と ExcelNumberFormat **1.1.0** のみで、Core・Mapping・ClosedXML・フォント・描画は参照しません。[製品接続・選択・限定 Writer](openxml-integration.ja.md)を参照してください。既定は従来の ClosedXML です。
 
 ## 使用方法と入力の所有権
 
@@ -23,7 +23,7 @@ foreach (var cell in reader.EnumerateCells(sheet.Index))
 }
 ```
 
-例では `ExcelRenderer.OpenXml`、`System.Globalization`、`System.Linq` を import します。この低レベル API は、上位層で検証済みの、読み取り・seek 可能で Position=0 の入力を要求します。アップロード・ZIP の検証と spool は上位層の責務であり、ここには複製しません。成功・失敗・列挙中断・Reader 破棄後も呼び出し元のストリームは開いたままです。Position の復元は保証しません。
+例では `ExcelRenderer.OpenXml`、`System.Globalization`、`System.Linq` を import します。この低レベル API は、上位層で検証済みの、読み取り・seek 可能で Position=0 の入力を要求します。製品 adapter は、共有 `Input` の検証・spool を通してからこの低レベル API を呼びます。成功・失敗・列挙中断・Reader 破棄後も呼び出し元のストリームは開いたままです。Position の復元は保証しません。
 
 シート index は **元のブック配列内の1始まり位置** で、sheetId や relationship ID とは異なります。`Sheets` には hidden/veryHidden と chart sheet も元の順序で残ります。chart sheet のセル・worksheet メタデータ取得は `NotSupportedException` です。選択名は大文字小文字を区別した Ordinal 一致です。null は全ワークシート、空リストは本文対象なし、重複名は排除、存在しない名前は Open 時に失敗します。選択外でも明示的な `ReadWorksheetInfo` は可能ですが、セル列挙はできません。
 
@@ -80,29 +80,31 @@ XML に存在する全 `c` を返します。書式だけの空セル、保存�
 
 ## 数式キャッシュ・診断・対象外機能
 
-保存済み結果だけを読みます。`FormulaInfo.HasCachedResult` は、欠落と保存済み0・false・空文字を区別します。結果がなければ空表示と `FormulaCachedValueMissing`、Excel エラーなら原文表示と `FormulaResultError` です。数式・外部リンクは評価しません。shared follower は自分の原文（空の場合あり）、si、master の address/text/ref を保持し、master が後に出現しても関連付けます。相対参照は書き換えません。array follower は、行区間索引で XML に実在するセルだけを関連付けます。dynamic/dataTable の元情報は残しますが、高度な spill 追跡は対象外です。
+保存済み結果だけを読みます。`FormulaInfo.HasCachedResult` は、欠落と保存済み0・false・空文字を区別します。結果がなければ空表示と `FormulaCachedValueMissing`、Excel エラーなら原文表示と `FormulaResultError` です。数式・外部リンクは評価しません。shared follower は自分の原文（空の場合あり）、si、master の address/text/ref を保持し、master が後に出現しても関連付けます。元 snapshot は書き換えず、製品の数式 metadata には `FormulaTextResolver.TryResolve` で対応する共有式 follower を展開します。array follower は、行区間索引で XML に実在するセルだけを関連付けます。dynamic/dataTable の元情報は残しますが、高度な spill 追跡は対象外です。
 
 診断コードは `ReaderDiagnosticCodes` で定義しています。Code、Severity、任意の元 sheet/address、セル内容や URI を含まない説明を返します。`DiagnosticSink` には通知しますが、Reader 内に全件蓄積しません。`FormatCell` はその呼び出しの少数の診断も返します。書式色の未解決診断は、書式の初回解決時に通知し、セルごとの表示で再通知しません。
 
-`HasDrawings`、`HasHyperlinks`、`HasConditionalFormatting`、`HasTables` は存在情報のみです。XML の検出は描画対応を意味しません。画像バイナリ、DrawingML 図形、ハイパーリンク解釈、条件付き書式評価、編集・行挿入・保存、汎用数式評価、PDF/PNG/SVG/Markdown 接続は対象外です。特に cache のない HYPERLINK 数式は空表示です。
+`HasDrawings`、`HasHyperlinks`、`HasConditionalFormatting`、`HasTables` は存在情報、
+`ConditionalFormattingRanges` は rule 本文を保持しない元の範囲です。条件付き書式は評価しません。
+`ReadImages` はバイト列を開かず、part/relationship 識別子・content type・anchor を返します。
+`OpenImageStream` の stream は呼び出し元で破棄し、Reader が生存する間だけ利用します。
+必要な内容は Reader 破棄前に移管してください。同じ part URI の bytes は name や配置と
+独立に共有できます。図形・リンク解釈と描画は製品側に置きます。低レベル `FormatCell` の
+uncached HYPERLINK は空のままで、製品 adapter が対応 literal を復元します。
+別の限定 Writer は数式なしの型付き計画を受け取り、一般数式は評価しません。
 
-## 次工程の責務と接続
+## 製品接続
 
-| 既存の所有者 | 新 Reader の対応部分 | 次工程 |
-| --- | --- | --- |
-| Core `CoreExcelReader`、`FormulaCacheReader` | `OpenXmlWorkbookReader`、`CellRecord`、`FormulaInfo` | 描画モデルへの逐次 adapter を作成後、重複 XML 読取を委譲/削除 |
-| Core `WorkbookLayoutMetadataReader` | `WorksheetInfo`、印刷参照 | 元単位・ページ情報の adapter を作り、移管後に全シート DOM 経路を削除 |
-| Core `ReaderSession` | 書式テーブル、`FormatCell` | 既存方針への診断・メタデータ変換 |
-| 公開/Core 書式 converter | `CellStyleInfo`、rich runs | 描画書式への変換とセル基底フォントごとの run 合成 |
-| Core 列幅・フォント計測 | 代替なし | Core で保存 Excel 列幅を計測して pt へ変換 |
-| Full reader 拡張点 | 代替なし | ClosedXML 依存の引数を別工程で再設計 |
-| Core input preparer、Mapping | 代替なし | 入力検証・spool と編集・保存の責務を維持 |
+Core が元情報の描画モデル変換・共通モデル組立・フォント計測・layout を所有し、
+本体の hook が run・図形・リンクを追加します。汎用入力検査・spool は OpenXml/Input、
+構文・評価・最終行配置は Mapping、型付き編集は限定 Writer の責務です。
+[エンジン選択](openxml-integration.ja.md)に現在の API と範囲をまとめています。
+互換 Reader の ClosedXML 専用 helper は残し、公開 `ExcelStyleConverter.Convert(IXLCell)`
+も維持します。
 
-既存の公開 `ExcelStyleConverter.Convert(IXLCell)` は維持します。既存製品プロジェクトは新 Reader を参照せず、既存 NuGet パッケージにも含めません。実行コマンドと比較・測定方法は[検証ツール README](../tools/ExcelRenderer.OpenXml.Validation/README.md)を参照してください。
+## Core・本体向けの接続境界
 
-## Core・本体向けの接続境界（未接続）
-
-`OpenXmlWorkbookReader` は `IWorkbookDataReader` を実装します。インターフェースには元データのスナップショットと保存値の表示処理を置き、計測用カウンターは具象 Reader に残します。`SelectedWorksheetIndices` は選択された worksheet の元 index をブック順で返し、chart sheet を除外します。`Sheets` には全シートが残ります。`SelectedWorksheetIndices` は本文の対象だけなので、将来の本体 adapter には元の RenderRequest の選択情報も渡して chart-only の診断を判断します。Core・本体にはまだ参照を追加していません。このインターフェースは将来の adapter の消費側境界であり、任意の第三者 backend を構築する API ではありません。スナップショットの constructor は internal のままです。
+`OpenXmlWorkbookReader` は `IWorkbookDataReader` を実装します。インターフェースには元データのスナップショットと保存値の表示処理を置き、計測用カウンターは具象 Reader に残します。`SelectedWorksheetIndices` は選択された worksheet の元 index をブック順で返し、chart sheet を除外します。`Sheets` には全シートが残ります。`SelectedWorksheetIndices` は本文の対象だけなので、本体 adapter には元の RenderRequest の選択情報も渡して chart-only の診断を判断します。Core・本体は streaming adapter からこの境界を利用します。このインターフェースはadapter の消費側境界であり、任意の第三者 backend を構築する API ではありません。スナップショットの constructor は internal のままです。
 
 ```csharp
 IWorkbookDataReader source = reader;
@@ -118,7 +120,7 @@ foreach (var index in source.SelectedWorksheetIndices)
         foreach (var run in cell.RichTextRuns)
         {
             var font = style.FontProperties.WithOverrides(run.FontProperties);
-            // フォント fallback・色・描画方針は将来の adapter で適用する。
+            // フォント fallback・色・描画方針は製品 adapter で適用する。
         }
     }
 }
@@ -126,12 +128,6 @@ foreach (var index in source.SelectedWorksheetIndices)
 
 style の `FontProperties`、workbook の `DefaultFontProperties`、rich run の `FontProperties` は不変の `FontInfo` view です。名前・サイズ（pt）・bold/italic/strike・underline・vertical alignment・theme scheme・色は、未指定なら null のままです。元の `Font` / `Properties` メタデータも残します。`WithOverrides` は明示された属性だけを重ね、false や underline `none` も保持し、null は継承します。フォント計測・置換や表示文字列の正規化は行いません。合成結果は Reader 破棄後も利用できます。同じ run を異なるセル font で使えるよう、共有文字列表には合成済み font を保存しません。
 
-次工程では、次の責務分担を維持します。
-
-- Core に、この元データから内部 `ReportDocument` / `ReportSheet` / 書式へ変換する adapter を置きます。変換書式の cache は Reader session ごとに `(StyleIndex, CellValue.Type, product policy)` を key にします。General 配置と Core/本体の正規化方針が異なるため、style ID だけでは不十分です。run の合成もセルごとの基底 font に依存します。行・列・既定書式は、偽の `CellRecord` を作らず `ResolveStyle(int)` で解決します。
-- 入力検証・spool（`PreparedWorkbook`）、フォント計測、保存 Excel 列幅から pt への変換は Core に残します。行高は既に pt、余白は inch です。元の既定値・非表示区間・別々の印刷範囲、省略と0の区別を保持します。結合先頭の補完・描画モデルの全件化・描画判断は adapter/layout 層の責務です。
-- Core は従来の範囲で IVS/文字列を正規化し、本体は拡張方針とメタデータを維持します。`FontInfo` は最終描画フォントではなく元情報です。adapter が Normal/theme と呼び出し元フォントから fallback/既定値を選び、値の enum で General 配置を判断し、未解決色の診断を残しつつ resolved RGB を変換します。
-- `ReaderDiagnosticCodes` は既存の診断集約層へ変換し、数式 cache 欠落や未対応書式を隠しません。この backend は CachedValue 専用です。Legacy/Recalculate の経路選択は、後の製品層で明示的に扱います。
-- 本体の Drawing/画像/link Reader は prepared input から独立 cursor を開き、元の sheet index/name/address で関連付けます。このインターフェースに SDK package/part や製品固有 hook を持ち込みません。既存 `IXLCell` / `IXLWorksheet` hook の置換は接続工程で扱い、公開 `ExcelStyleConverter.Convert(IXLCell)` は維持します。
-
-今回は Core/本体の converter option や reader factory を追加しません。将来の接続では依存チェックを意図的に更新し、Core に adapter を一度だけ実装し、本体はそれを拡張して、セル走査やレイアウトを重複させない構成にします。
+現在の責務・backend 選択・診断フィルター・Writer 保証は
+[接続ガイド](openxml-integration.ja.md)を参照してください。snapshot constructor は internal
+のままであり、第三者 backend を構築する API ではありません。

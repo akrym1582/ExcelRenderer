@@ -1,6 +1,6 @@
-# Standalone Open XML reader
+# Open XML source reader
 
-`ExcelRenderer.OpenXml` is a nonpackable .NET Standard 2.1 library for reading rendering data from XLSX files. Its runtime dependencies are DocumentFormat.OpenXml **3.3.0** and ExcelNumberFormat **1.1.0**. It has no dependency on ClosedXML, Core, Mapping, fonts, or rendering libraries. Existing converters and CLI options continue to use their existing readers. This is an independent reader for comparison and future integration, not a completed ClosedXML replacement.
+`ExcelRenderer.OpenXml` is a packable .NET Standard 2.1 shared reader/writer library. Runtime dependencies are DocumentFormat.OpenXml **3.3.0** and ExcelNumberFormat **1.1.0**; it has no Core, Mapping, ClosedXML, font or renderer dependency. Product integration, selection and the conservative writer are described in [engine selection](openxml-integration.md). ClosedXML remains the default engine.
 
 ## Usage and input ownership
 
@@ -23,7 +23,7 @@ foreach (var cell in reader.EnumerateCells(sheet.Index))
 }
 ```
 
-Import `ExcelRenderer.OpenXml`, `System.Globalization`, and `System.Linq` for this example. This low-level API requires an already validated, readable, seekable input at position zero. A higher layer must perform upload validation, ZIP validation and spooling; these are not duplicated here. The caller's stream stays open after success, failure, enumeration interruption and reader disposal. Stream position is not restored.
+Import `ExcelRenderer.OpenXml`, `System.Globalization`, and `System.Linq` for this example. This low-level API requires an already validated, readable, seekable input at position zero. Product adapters use the shared `Input` preparation/spool implementation before this low-level call. The caller's stream stays open after success, failure, enumeration interruption and reader disposal. Stream position is not restored.
 
 Sheet indexes are **original one-based workbook positions**, not sheet IDs or relationship IDs. `Sheets` includes hidden/veryHidden sheets and chart sheets without renumbering. Accessing chart-sheet cells or worksheet metadata throws `NotSupportedException`. Selection uses ordinal, case-sensitive names: null selects all worksheets, empty selects no bodies, duplicate names are deduplicated, and unknown names fail at Open. Explicit `ReadWorksheetInfo` is allowed for an unselected worksheet; enumeration is not.
 
@@ -80,29 +80,33 @@ Numeric serials are passed unmodified with the library's `isDate1904` argument. 
 
 ## Formula caches, diagnostics and feature boundaries
 
-Only saved results are read. `FormulaInfo.HasCachedResult` distinguishes missing results from saved zero, false and empty text. A missing result displays empty text with `FormulaCachedValueMissing`; an Excel error displays its original text with `FormulaResultError`. Neither formulas nor external links are evaluated. Shared followers keep their own original text (often empty), si and master address/text/ref, even when the master appears later. Relative references are not rewritten. Array followers are identified only for XML-present cells through a row interval index. Dynamic/data-table metadata remains raw; advanced spill tracking is outside this reader.
+Only saved results are read. `FormulaInfo.HasCachedResult` distinguishes missing results from saved zero, false and empty text. A missing result displays empty text with `FormulaCachedValueMissing`; an Excel error displays its original text with `FormulaResultError`. Neither formulas nor external links are evaluated. Shared followers keep their own original text (often empty), si and master address/text/ref, even when the master appears later. Raw snapshots are not rewritten; `FormulaTextResolver.TryResolve` separately expands supported shared followers for product formula metadata. Array followers are identified only for XML-present cells through a row interval index. Dynamic/data-table metadata remains raw; advanced spill tracking is outside this reader.
 
 Diagnostic codes are defined in `ReaderDiagnosticCodes`. Diagnostics have code, severity, optional original sheet/address and a description without cell contents or URIs. `DiagnosticSink` receives events without accumulating them inside the reader. `FormatCell` also returns its own small diagnostic list. Unresolved-style-color diagnostics are emitted when the style is first resolved; they are not replayed on every format call.
 
-`HasDrawings`, `HasHyperlinks`, `HasConditionalFormatting` and `HasTables` report presence only. Reading their XML does not imply rendering support. Image binaries, DrawingML shapes, hyperlink interpretation, conditional-format evaluation, editing/insertion/saving, general formula evaluation and PDF/PNG/SVG/Markdown integration are outside this implementation. In particular, a HYPERLINK formula without a cache remains blank.
+`HasDrawings`, `HasHyperlinks`, `HasConditionalFormatting` and `HasTables` report
+presence; `ConditionalFormattingRanges` retains rule source ranges without rule
+bodies. The reader does not evaluate conditional formatting. `ReadImages` returns
+part/relationship identity, content type and anchor metadata without loading bytes;
+`OpenImageStream` opens caller-disposed image data valid only while the reader is
+alive. Transfer required data before disposing the reader. Shared part URIs identify
+reused image bytes independently of names and placements. Shape/link interpretation
+and rendering remain product responsibilities. Low-level `FormatCell` still leaves
+uncached HYPERLINK text blank; the product adapter restores supported literals. The
+separate writer accepts typed formula-free plans, never general formula evaluation.
 
-## Future ownership and integration
+## Product integration
 
-| Existing owner | Standalone counterpart | Later integration work |
-| --- | --- | --- |
-| Core `CoreExcelReader`, `FormulaCacheReader` | `OpenXmlWorkbookReader`, `CellRecord`, `FormulaInfo` | Adapt streaming values to rendering models, then delegate/remove duplicated XML reading |
-| Core `WorkbookLayoutMetadataReader` | `WorksheetInfo`, print references | Adapt source dimensions and page metadata; remove old whole-sheet DOM path when migrated |
-| Core `ReaderSession` | Style table and `FormatCell` | Map diagnostics and metadata to existing policies |
-| Public/Core style converters | `CellStyleInfo`, rich runs | Build rendering-style adapter and apply run overrides with each cell's font |
-| Core column-width/font measurement | No replacement | Measure original Excel widths and convert to points in Core |
-| Full reader extension points | No replacement | Redesign ClosedXML-dependent hooks in a separate change |
-| Core input preparer; Mapping | No replacement | Preserve upload validation/spooling and editing/saving responsibilities |
+Core owns source-to-rendering adaptation, model assembly, fonts and layout. Full
+hooks add product runs, drawings and links. Generic input preparation/spooling is
+shared in OpenXml/Input. Mapping owns syntax/evaluation and sends final occurrences
+to the conservative writer. See [engine selection](openxml-integration.md) for
+current APIs and scope. The compatibility reader keeps its ClosedXML-only helpers.
+Public `ExcelStyleConverter.Convert(IXLCell)` remains available.
 
-Existing public `ExcelStyleConverter.Convert(IXLCell)` is preserved. No existing product project references the new reader, and it is not included in existing NuGet packages. Validation commands and evidence are in [the validation tool README](../tools/ExcelRenderer.OpenXml.Validation/README.md).
+## Adapter boundary for Core and the full library
 
-## Adapter boundary for Core and the full library (not connected)
-
-`OpenXmlWorkbookReader` implements `IWorkbookDataReader`. The interface exposes source snapshots and stored-value formatting; profiling counters stay on the concrete reader. `SelectedWorksheetIndices` supplies original workbook positions in workbook order and excludes chart sheets, while `Sheets` retains all sheets. The future full adapter must also receive the original RenderRequest selection to decide chart-only diagnostics; body indexes do not replace the product request. Neither Core nor the main library references this project yet. This is a consumer boundary for future adapters, not a general third-party backend construction API; snapshot constructors remain internal.
+`OpenXmlWorkbookReader` implements `IWorkbookDataReader`. The interface exposes source snapshots and stored-value formatting; profiling counters stay on the concrete reader. `SelectedWorksheetIndices` supplies original workbook positions in workbook order and excludes chart sheets, while `Sheets` retains all sheets. The full adapter also receives the original RenderRequest selection to decide chart-only diagnostics; body indexes do not replace the product request. Core and the full product consume this boundary through streaming adapters. This is a consumer boundary for consuming adapters, not a general third-party backend construction API; snapshot constructors remain internal.
 
 ```csharp
 IWorkbookDataReader source = reader;
@@ -118,7 +122,7 @@ foreach (var index in source.SelectedWorksheetIndices)
         foreach (var run in cell.RichTextRuns)
         {
             var font = style.FontProperties.WithOverrides(run.FontProperties);
-            // A future adapter applies its own fallback, color and drawing policy here.
+            // The product adapter applies its own fallback, color and drawing policy here.
         }
     }
 }
@@ -126,12 +130,6 @@ foreach (var index in source.SelectedWorksheetIndices)
 
 `FontProperties` on a style, `DefaultFontProperties` on the workbook and `FontProperties` on each rich run are immutable `FontInfo` views. Name and size (pt), bold/italic/strike, underline, vertical alignment, theme scheme and color remain nullable when unspecified. The original `Font`/`Properties` metadata is also retained. `WithOverrides` changes only explicitly supplied fields: false and underline `none` override true/single; null inherits. It does not measure/substitute fonts or normalize text. The composed font survives reader disposal. Do not store a composed font in the shared-string table: the same run may be used with different cell fonts.
 
-The future connection should keep the following ownership boundaries:
-
-- Core owns the adapter from these source snapshots to its internal `ReportDocument`/`ReportSheet`/styles. Cache converted styles per reader session by `(StyleIndex, CellValue.Type, product policy)`, not by style ID alone: General alignment and Core/full normalization differ. Run font composition also depends on each base cell font. Resolve a row/column/default style through `ResolveStyle(int)` without synthesizing a `CellRecord`.
-- Core retains input validation/spooling (`PreparedWorkbook`), font measurement and Excel-width-to-point conversion. Row heights are already pt and margins remain inch. Keep all source defaults/hidden intervals and separate print areas; preserve absent values versus zero. Merge synthesis, model materialization and drawing decisions belong in the adapter/layout layer.
-- Core normalizes IVS/text according to its existing scope; the full library retains its richer policy and metadata. `FontInfo` is source information, not the final rendering font. The adapter selects fallback/defaults from source Normal/theme and the caller's supplied fonts, interprets General alignment using the typed value, and converts resolved RGB while retaining unresolved-color diagnostics.
-- Map `ReaderDiagnosticCodes` to the existing diagnostic aggregation layer. Keep formula-cache diagnostics and unsupported formats visible. This backend supports CachedValue only; Legacy/Recalculate routing must remain an explicit product-level decision in a later integration.
-- Full drawing/image/link readers may consume independent cursors from the prepared input and join by original sheet index/name/address. Do not expose SDK package/part objects through this interface or give this library product extension hooks. Replace existing `IXLCell`/`IXLWorksheet` hooks only in the future integration, while preserving the public `ExcelStyleConverter.Convert(IXLCell)` API.
-
-There is no new converter option or reader factory in Core/main in this change. A later connection must adjust dependency guards deliberately, add the Core adapter once, and let the full library extend that adapter rather than duplicating traversal and layout algorithms.
+The current ownership, backend routing, diagnostic filtering and writer guarantees
+are described in [the integration guide](openxml-integration.md). Snapshot
+constructors remain internal; this is not a third-party backend-construction API.

@@ -2,7 +2,7 @@
 
 `ExcelRenderer.Core` is the renamed single-font PDF engine and the shared foundation.
 `ExcelRenderer` extends that engine and retains its original public assembly/types.
-Core is `netstandard2.1`, has no ProjectReference, and remains nonpackable. The existing
+Core is `netstandard2.1`, references only the shared `ExcelRenderer.OpenXml` project, and remains nonpackable. Generic workbook input validation/spooling belongs to OpenXml; Core keeps compatibility adapters. The existing
 ExcelRenderer and Tool packages ship the Core DLL from the same build.
 
 ```text
@@ -15,7 +15,7 @@ ExcelRenderer public APIs / multi-format orchestration
     PNG / SVG / Markdown / continuous / trim / link preflight remain in main
                          ↓
 ExcelRenderer.Core (also independently usable through ProjectReference)
-    input/spool → basic reader → geometry/pagination/placement → commands → PDF
+    OpenXml input/spool → selected reader → geometry/pagination/placement → commands → PDF
     regular single font; no shapes/annotations/selection or image splitting
 ```
 

@@ -119,7 +119,17 @@ public sealed class ExcelReader
     {
         options?.Validate();
         var coreDiagnostics = diagnostics is null ? null : new Core.Rendering.DiagnosticCollector(diagnostic => diagnostics.Add(CoreIntegration.CoreDiagnosticAdapter.ToPublic(diagnostic)));
-        return new CoreIntegration.FullExcelReader(fontManager, diagnostics, maximumDigitWidths, detectUnsupportedFeatures)
-            .Read(source.CoreWorkbook, coreDiagnostics, selectedSheets, cancellationToken, (Core.Excel.FormulaDisplayMode)(options?.FormulaDisplayMode ?? FormulaDisplayMode.Legacy));
+        var document = new CoreIntegration.FullExcelReader(fontManager, diagnostics, maximumDigitWidths, detectUnsupportedFeatures)
+            .Read(source.CoreWorkbook, coreDiagnostics, selectedSheets, cancellationToken, (Core.Excel.FormulaDisplayMode)(options?.FormulaDisplayMode ?? FormulaDisplayMode.Legacy), new Core.ExcelReadOptions
+            {
+                IsCellSelected = options?.IsCellSelected,
+                GetSelectedRange = options?.GetSelectedRange,
+                InspectCandidate = options?.InspectCandidate,
+                Backend = (Core.ReaderBackend)(options?.Backend ?? ReaderBackend.ClosedXml),
+                FormulaDisplayMode = (Core.FormulaDisplayMode)(options?.FormulaDisplayMode ?? FormulaDisplayMode.Legacy),
+                BackendSelected = options?.BackendSelected is { } callback ? selection => callback(new((ReaderBackend)selection.RequestedBackend, (ReaderBackend)selection.SelectedBackend, selection.ReasonCodes)) : null,
+            });
+        Core.Rendering.ConversionMetrics.Report("model.cells", document.Sheets.Sum(sheet => sheet.Cells.Count));
+        return document;
     }
 }

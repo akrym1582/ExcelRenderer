@@ -17,6 +17,9 @@ internal sealed class CoreWorkbookMetadata
         PageSetups = pageSetups;
     }
 
+    /// <summary>Gets a value indicating whether the source is XML-present streaming data.</summary>
+    internal bool IsStreamingSource { get; init; }
+
     /// <summary>Gets or sets the resources owned by this read operation.</summary>
     internal ReaderSession? ReaderSession { get; set; }
 

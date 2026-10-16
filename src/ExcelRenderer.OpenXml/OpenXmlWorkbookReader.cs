@@ -311,6 +311,14 @@ public sealed partial class OpenXmlWorkbookReader : IWorkbookDataReader
             activeReader?.Dispose();
             activeReader = null;
             document.Dispose();
+            strings = null;
+            metadata.Clear();
+            parts.Clear();
+            imageParts.Clear();
+            images.Clear();
+            numberFormats.Clear();
+            styles.Release();
+            options.DiagnosticSink = null;
         }
     }
 

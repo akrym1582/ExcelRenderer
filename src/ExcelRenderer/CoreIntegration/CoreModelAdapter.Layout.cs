@@ -37,6 +37,7 @@ internal static partial class CoreModelAdapter
         {
             DefaultColumnWidth = value.DefaultColumnWidth,
             DefaultRowHeight = value.DefaultRowHeight,
+            DefaultRowsHidden = value.DefaultRowsHidden,
             PrintAreas = value.PrintAreas.Select(ToCore).ToArray(),
             SourceSheetIndex = value.SourceSheetIndex,
             RequestedRange = value.RequestedRange is { } requested ? ToCore(requested) : null,

@@ -39,12 +39,12 @@ Source: main 1.7.2, commit `32e9165d145516dbd0bcb4c2ae31a78ce6774bce`. Every cop
 | New Core implementation | Fonts/SingleFontContext.cs | Core単独所有 | Complete; Core single-font product implementation |
 | New Core implementation | Fonts/SingleFontResolver.cs | Core単独所有 | Complete; Core single-font product implementation |
 | GlobalUsings.cs | GlobalUsings.cs | 本体専用差分 / Core内部型 | Public compatibility value/contracts stay in main; neutral internal equivalents stay in Core |
-| Rendering/BufferReadStream.cs | Input/BufferReadStream.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
+| Rendering/BufferReadStream.cs | ../ExcelRenderer.OpenXml/Input/BufferReadStream.cs | OpenXml所有 / Core・本体adapter | Generic implementation shared with Mapping; Core preserves input types and metrics |
 | Rendering/CancellationReadStream.cs | Input/CancellationReadStream.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
-| Rendering/RenderBufferOptions.cs | Input/InputBufferOptions.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
-| Rendering/PreparedWorkbook.cs | Input/PreparedWorkbook.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
-| Rendering/SpillableBufferStream.cs | Input/SpillableBufferStream.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
-| Rendering/WorkbookInputPreparer.cs | Input/WorkbookInputPreparer.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
+| Rendering/RenderBufferOptions.cs | ../ExcelRenderer.OpenXml/Input/InputBufferOptions.cs | OpenXml所有 / Core・本体adapter | Generic implementation shared with Mapping; Core preserves input types and metrics |
+| Rendering/PreparedWorkbook.cs | ../ExcelRenderer.OpenXml/Input/PreparedWorkbook.cs | OpenXml所有 / Core・本体adapter | Generic implementation shared with Mapping; Core preserves input types and metrics |
+| Rendering/SpillableBufferStream.cs | ../ExcelRenderer.OpenXml/Input/SpillableBufferStream.cs | OpenXml所有 / Core・本体adapter | Generic implementation shared with Mapping; Core preserves input types and metrics |
+| Rendering/WorkbookInputPreparer.cs | ../ExcelRenderer.OpenXml/Input/WorkbookInputPreparer.cs | OpenXml所有 / Core・本体adapter | Generic implementation shared with Mapping; Core preserves input types and metrics |
 | Layout/BandIndex.cs | Layout/BandIndex.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
 | Layout/CellBoundsPass.cs | Layout/CellBoundsPass.cs | Core単独所有 / 本体wrapper | Shared Core implementation; main delegates and maps only boundary state |
 | Layout/CellContentBounds.cs | Layout/CellContentBounds.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
@@ -168,3 +168,7 @@ FullSheetData carries deferred candidates across adapters; final visible page/ra
 filtering remains with the main converter, which owns selection. FullExcelReader adds
 chart-sheet metadata placeholders; the converter reports them without rendering pages.
 RenderRequest.TextMeasurer is an optional borrowed service, not a new DI/plugin layer.
+
+## Shared workbook input (OpenXml integration)
+
+`ExcelRenderer.OpenXml/Input` owns bounded workbook preparation, ZIP limits and the seekable memory/file spool. Core input types preserve existing callers through thin adapters; image-resource ownership and rendering policy remain in Core. OpenXml has no project references. Core, main and Mapping depend on OpenXml.

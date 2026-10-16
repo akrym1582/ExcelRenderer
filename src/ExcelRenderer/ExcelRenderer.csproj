@@ -44,4 +44,7 @@
       <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->'%(RootDir)%(Directory)ExcelRenderer.Core.xml')" Condition="'%(ReferenceCopyLocalPaths.Filename)' == 'ExcelRenderer.Core' And '%(ReferenceCopyLocalPaths.Extension)' == '.dll' And Exists('%(ReferenceCopyLocalPaths.RootDir)%(ReferenceCopyLocalPaths.Directory)ExcelRenderer.Core.xml')" />
     </ItemGroup>
   </Target>
+  <ItemGroup>
+    <ProjectReference Include="../ExcelRenderer.OpenXml/ExcelRenderer.OpenXml.csproj" />
+  </ItemGroup>
 </Project>

@@ -6,12 +6,14 @@ using System.Text.Json;
 using System.Threading;
 using ClosedXML.Excel;
 using DocumentFormat.OpenXml.Packaging;
+using ExcelRenderer.OpenXml;
+using ExcelRenderer.OpenXml.Input;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 
 namespace ExcelRenderer.Mapping;
 
 /// <summary>Maps CLR objects or JSON into XLSX templates independently of rendering.</summary>
-public static class ExcelTemplateMapper
+public static partial class ExcelTemplateMapper
 {
     /// <summary>Maps a template stream into an output stream, leaving both streams open.</summary>
     /// <param name="template">The readable XLSX template.</param>
@@ -32,18 +34,51 @@ public static class ExcelTemplateMapper
         }
 
         options ??= new MappingOptions();
-        if (options.MaxOutputRows < 1 || options.MaxOutputRows > 1_048_576 || options.Culture is null)
+        if (options.MaxOutputRows < 1 || options.MaxOutputRows > 1_048_576 || options.Culture is null || options.Input is null || !Enum.IsDefined(typeof(MappingBackend), options.Backend))
         {
             throw new ArgumentException("Specify a culture and MaxOutputRows between 1 and 1048576.", nameof(options));
         }
 
         cancellationToken.ThrowIfCancellationRequested();
-        using var workbook = new XLWorkbook(template);
-        var templates = workbook.Worksheets.Select(sheet => new TemplateSheet(sheet)).ToArray();
+        using var prepared = WorkbookInputPreparer.ReadAsync(template, options.Input, cancellationToken).GetAwaiter().GetResult();
+        if (options.Backend != MappingBackend.ClosedXml)
+        {
+            using var inspected = prepared.OpenRead();
+            var reasons = WorkbookWriteCapabilities.Inspect(inspected, cancellationToken);
+            if (reasons.Count == 0)
+            {
+                if (MapOpenXml(prepared, output, data, options, cancellationToken))
+                {
+                    return;
+                }
+            }
+            else if (options.Backend == MappingBackend.OpenXml)
+            {
+                throw new NotSupportedException("OpenXml mapping is unsupported: " + string.Join(", ", reasons));
+            }
+            else
+            {
+                options.BackendSelected?.Invoke(new MappingBackendSelection(options.Backend, MappingBackend.ClosedXml, reasons));
+            }
+        }
+        else
+        {
+            options.BackendSelected?.Invoke(new MappingBackendSelection(options.Backend, MappingBackend.ClosedXml, Array.AsReadOnly(new[] { "ExplicitClosedXml" })));
+        }
+
+        using var source = prepared.OpenRead();
+        OperationMetrics.Report("closedXml.workbooks", 1);
+        using var workbook = new XLWorkbook(source);
+        var templates = workbook.Worksheets.Select(sheet => new TemplateSheet(ClosedXmlTemplateAdapter.Create(sheet))).ToArray();
+        foreach (var sheet in templates)
+        {
+            sheet.ValidateRepeatedRanges();
+        }
+
         var plans = new List<WorksheetExpansion>();
         foreach (var sheet in templates)
         {
-            var expansion = new WorksheetExpansion(sheet, data, options, cancellationToken);
+            var expansion = new WorksheetExpansion(sheet, workbook.Worksheet(sheet.Sheet.Name), new ExpansionPlan(sheet, data, options, cancellationToken), cancellationToken);
             plans.Add(expansion);
         }
 
@@ -59,7 +94,12 @@ public static class ExcelTemplateMapper
 
         // ClosedXML evaluates supported formulas and writes error values for unsupported functions.
         // The original formulas are retained for recalculation by Excel.
-        using var result = new MemoryStream();
+        using var result = new SpillableBufferStream(new InputBufferOptions
+        {
+            MemoryThresholdBytes = options.Input.MemoryThresholdBytes,
+            AllowTemporaryFiles = options.Input.AllowTemporaryFiles,
+            TemporaryDirectory = options.Input.TemporaryDirectory,
+        });
         workbook.SaveAs(result, new SaveOptions { EvaluateFormulasBeforeSaving = true });
         NormalizePageBreakMode(result, plans);
         cancellationToken.ThrowIfCancellationRequested();
@@ -94,13 +134,35 @@ public static class ExcelTemplateMapper
         }
 
         using var template = File.OpenRead(templatePath);
-        using var result = new MemoryStream();
-        Map(template, result, data, options, cancellationToken);
-        var directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-        Directory.CreateDirectory(directory!);
-        using var output = File.Create(outputPath);
-        result.Position = 0;
-        result.CopyTo(output);
+        var path = Path.GetFullPath(outputPath);
+        var directory = Path.GetDirectoryName(path)!;
+        Directory.CreateDirectory(directory);
+        var temporary = Path.Combine(directory, ".excelrenderer-" + Guid.NewGuid().ToString("N") + ".tmp");
+        try
+        {
+            using (var result = new FileStream(temporary, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None))
+            {
+                Map(template, result, data, options, cancellationToken);
+                result.Flush();
+            }
+
+            cancellationToken.ThrowIfCancellationRequested();
+            if (File.Exists(path))
+            {
+                File.Replace(temporary, path, null);
+            }
+            else
+            {
+                File.Move(temporary, path);
+            }
+        }
+        finally
+        {
+            if (File.Exists(temporary))
+            {
+                File.Delete(temporary);
+            }
+        }
     }
 
     private static void NormalizePageBreakMode(Stream result, List<WorksheetExpansion> plans)

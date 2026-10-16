@@ -161,6 +161,8 @@ internal sealed class StyleTable
                     throw new InvalidDataException("Invalid color tint.");
                 }
 
+                color.SetAttributeValue("resolvedAlpha", (rgb.Length == 8 ? (value >> 24) : 255).ToString(CultureInfo.InvariantCulture));
+                color.SetAttributeValue("baseRgb", (value & 0xffffff).ToString("X6", CultureInfo.InvariantCulture));
                 color.SetAttributeValue("resolvedRgb", Tint(value & 0xffffff, tint));
             }
             else
@@ -170,6 +172,15 @@ internal sealed class StyleTable
         }
 
         return XmlValues.Info(e);
+    }
+
+    /// <summary>Releases parser-owned tables; previously returned immutable snapshots remain valid.</summary>
+    internal void Release()
+    {
+        tables.Clear();
+        resolved.Clear();
+        formats.Clear();
+        themeColors.Clear();
     }
 
     private static string? Indexed(int index)
@@ -190,6 +201,11 @@ internal sealed class StyleTable
 
     private static string Tint(uint rgb, double tint)
     {
+        if (tint == 0)
+        {
+            return rgb.ToString("X6", CultureInfo.InvariantCulture);
+        }
+
         var r = ((rgb >> 16) & 255) / 255.0;
         var g = ((rgb >> 8) & 255) / 255.0;
         var b = (rgb & 255) / 255.0;

@@ -287,13 +287,14 @@ internal sealed class DataPath
 
     private object? ResolveCount(object? root, IReadOnlyDictionary<string, object?> aliases, int count, object? element, bool substituteWildcard)
     {
-        var value = root;
-        if (Alias is not null && !aliases.TryGetValue(Alias, out value))
+        var start = substituteWildcard && WildcardIndex >= 0 ? WildcardIndex + 1 : 0;
+        var value = start > 0 ? element : root;
+        if (start == 0 && Alias is not null && !aliases.TryGetValue(Alias, out value))
         {
             throw new InvalidOperationException($"Array alias '{Alias}' is not in scope.");
         }
 
-        for (var i = 0; i < count; i++)
+        for (var i = start; i < count; i++)
         {
             if (tokens[i] is string name)
             {

@@ -10,50 +10,47 @@ namespace ExcelRenderer.Mapping;
 internal sealed class WorksheetExpansion
 {
     private readonly TemplateSheet template;
+    private readonly IXLWorksheet sheet;
     private readonly bool directPlacement;
-    private readonly object? root;
-    private readonly MappingOptions options;
     private readonly CancellationToken cancellationToken;
     private readonly List<ExpansionNode> nodes;
     private readonly List<int> sourceRows;
     private readonly HashSet<int> rowBreaks = new HashSet<int>();
     private readonly HashSet<int> columnBreaks;
     private readonly HashSet<int> originalRowBreaks;
-    private int outputRows;
     private bool explicitPageBreak;
 
     /// <summary>Initializes a new instance of the <see cref="WorksheetExpansion"/> class.</summary>
     /// <param name="template">The template.</param>
-    /// <param name="root">The root.</param>
-    /// <param name="options">The options.</param>
+    /// <param name="worksheet">The legacy executor worksheet.</param>
+    /// <param name="plan">The once-evaluated expansion.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    internal WorksheetExpansion(TemplateSheet template, object? root, MappingOptions options, CancellationToken cancellationToken)
+    internal WorksheetExpansion(TemplateSheet template, IXLWorksheet worksheet, ExpansionPlan plan, CancellationToken cancellationToken)
     {
         this.template = template;
+        sheet = worksheet;
 
         // Retain the established row-operation order when references or workbook objects may depend on it.
-        directPlacement = template.Sheet.Workbook.Worksheets.All(sheet =>
+        directPlacement = sheet.Workbook.Worksheets.All(sheet =>
             !sheet.DefinedNames.Any() && !sheet.ConditionalFormats.Any() && !sheet.DataValidations.Any() &&
             !sheet.CellsUsed(XLCellsUsedOptions.Contents).Any(cell => cell.HasFormula)) &&
-            !template.Sheet.Workbook.DefinedNames.Any() &&
-            !template.Sheet.MergedRanges.Any() && !template.Sheet.ConditionalFormats.Any() &&
-            !template.Sheet.DataValidations.Any() && !template.Sheet.SparklineGroups.Any() &&
-            !template.Sheet.Tables.Any() && !template.Sheet.PivotTables.Any() && !template.Sheet.Pictures.Any() &&
-            !template.Sheet.AutoFilter.IsEnabled &&
-            !template.Sheet.PageSetup.PrintAreas.Any() &&
-            template.Sheet.PageSetup.FirstRowToRepeatAtTop == 0 &&
-            !template.Sheet.CellsUsed(XLCellsUsedOptions.All).Any(cell => cell.HasComment || cell.HasHyperlink || cell.HasRichText);
-        this.root = root;
-        this.options = options;
+            !sheet.Workbook.DefinedNames.Any() &&
+            !sheet.MergedRanges.Any() && !sheet.ConditionalFormats.Any() &&
+            !sheet.DataValidations.Any() && !sheet.SparklineGroups.Any() &&
+            !sheet.Tables.Any() && !sheet.PivotTables.Any() && !sheet.Pictures.Any() &&
+            !sheet.AutoFilter.IsEnabled &&
+            !sheet.PageSetup.PrintAreas.Any() &&
+            sheet.PageSetup.FirstRowToRepeatAtTop == 0 &&
+            !sheet.CellsUsed(XLCellsUsedOptions.All).Any(cell => cell.HasComment || cell.HasHyperlink || cell.HasRichText);
         this.cancellationToken = cancellationToken;
-        nodes = Plan(template.Nodes, new Dictionary<string, object?>(StringComparer.Ordinal));
+        nodes = plan.Nodes;
         sourceRows = Enumerable.Range(1, template.LastRow).ToList();
-        originalRowBreaks = new HashSet<int>(template.Sheet.PageSetup.RowBreaks);
-        columnBreaks = new HashSet<int>(template.Sheet.PageSetup.ColumnBreaks);
+        originalRowBreaks = new HashSet<int>(sheet.PageSetup.RowBreaks);
+        columnBreaks = new HashSet<int>(sheet.PageSetup.ColumnBreaks);
     }
 
     /// <summary>Gets the expanded worksheet name.</summary>
-    internal string SheetName => template.Sheet.Name;
+    internal string SheetName => sheet.Name;
 
     /// <summary>Gets a value indicating whether template directives enabled manual page breaks.</summary>
     internal bool HasExplicitPageBreak => explicitPageBreak;
@@ -79,7 +76,7 @@ internal sealed class WorksheetExpansion
             }
         }
 
-        var setup = template.Sheet.PageSetup;
+        var setup = sheet.PageSetup;
         setup.RowBreaks.Clear();
         setup.ColumnBreaks.Clear();
         foreach (var row in rowBreaks.OrderBy(r => r))
@@ -99,7 +96,7 @@ internal sealed class WorksheetExpansion
         }
     }
 
-    private static void Flatten(ExpansionNode node, List<(TemplateNode Template, List<XLCellValue> Values)> rows)
+    private static void Flatten(ExpansionNode node, List<(TemplateNode Template, List<MappedValue> Values)> rows)
     {
         if (node.Template.IsBlock)
         {
@@ -118,71 +115,6 @@ internal sealed class WorksheetExpansion
                 rows.Add((node.Template, values));
             }
         }
-    }
-
-    private List<ExpansionNode> Plan(List<TemplateNode> templates, Dictionary<string, object?> aliases)
-    {
-        var result = new List<ExpansionNode>();
-        foreach (var node in templates)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            var planned = new ExpansionNode(node);
-            var items = node.Path is null ? new object?[] { null } :
-                TemplateSheet.At(template.Sheet, node.Location, () => node.Path.Array(root, aliases, options.MaxOutputRows));
-            foreach (var item in items)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                if (node.IsBlock)
-                {
-                    var nestedAliases = new Dictionary<string, object?>(aliases, StringComparer.Ordinal) { [node.Alias!] = item };
-                    planned.Blocks.Add(Plan(node.Children!, nestedAliases));
-                }
-                else
-                {
-                    outputRows++;
-                    if (outputRows > options.MaxOutputRows)
-                    {
-                        throw new MappingException(template.Sheet.Name, node.Location.Address, node.Location.Text, "Expansion exceeds MaxOutputRows.");
-                    }
-
-                    var values = new List<XLCellValue>();
-                    foreach (var cell in node.Cells)
-                    {
-                        values.Add(TemplateSheet.At(template.Sheet, cell, () => Value(cell, aliases, item, node.Path is not null)));
-                    }
-
-                    planned.Rows.Add(values);
-                }
-            }
-
-            result.Add(planned);
-        }
-
-        return result;
-    }
-
-    private XLCellValue Value(TemplateCell cell, IReadOnlyDictionary<string, object?> aliases, object? item, bool implicitArray)
-    {
-        if (cell.Expression is null)
-        {
-            return cell.Text == "**@page-break" ? Blank.Value : cell.Text.Substring(1);
-        }
-
-        var value = cell.Expression.Evaluate(root, aliases, options, item, implicitArray);
-        if (value is null)
-        {
-            return Blank.Value;
-        }
-
-        if (value is not string && value is not bool && value is not DateTime && value is not TimeSpan &&
-            value is not byte && value is not sbyte && value is not short && value is not ushort &&
-            value is not int && value is not uint && value is not long && value is not ulong &&
-            value is not float && value is not double && value is not decimal)
-        {
-            throw new InvalidOperationException("A cell requires a scalar Excel value; use format() for other IFormattable types.");
-        }
-
-        return XLCellValue.FromObject(value, options.Culture);
     }
 
     private int ApplyNodes(List<ExpansionNode> plan, int start)
@@ -231,15 +163,14 @@ internal sealed class WorksheetExpansion
 
     private int ApplyRegion(ExpansionNode node, int start)
     {
-        var rows = new List<(TemplateNode Template, List<XLCellValue> Values)>();
+        var rows = new List<(TemplateNode Template, List<MappedValue> Values)>();
         Flatten(node, rows);
         var count = node.Template.LastRow - node.Template.FirstRow + 1;
         if ((long)sourceRows.Count + rows.Count - count > 1_048_576)
         {
-            throw new MappingException(template.Sheet.Name, node.Template.Location.Address, node.Template.Location.Text, "Intermediate expansion exceeds Excel's row limit.");
+            throw new MappingException(sheet.Name, node.Template.Location.Address, node.Template.Location.Text, "Intermediate expansion exceeds Excel's row limit.");
         }
 
-        var sheet = template.Sheet;
         var originals = Enumerable.Range(start, count).Select(index =>
         {
             var source = sheet.Row(index);
@@ -302,12 +233,12 @@ internal sealed class WorksheetExpansion
         return rows.Count;
     }
 
-    private void WriteValues(TemplateNode node, List<XLCellValue> values, int row)
+    private void WriteValues(TemplateNode node, List<MappedValue> values, int row)
     {
         for (var i = 0; i < values.Count; i++)
         {
             var cell = node.Cells[i];
-            template.Sheet.Cell(row, cell.Column).Value = values[i];
+            sheet.Cell(row, cell.Column).Value = values[i].Value is { } value ? XLCellValue.FromObject(value) : Blank.Value;
             if (cell.Text == "**@page-break")
             {
                 explicitPageBreak = true;
@@ -334,19 +265,19 @@ internal sealed class WorksheetExpansion
         var added = (long)count * (copies - 1);
         if (sourceRows.Count + added > 1_048_576)
         {
-            throw new MappingException(template.Sheet.Name, location.Address, location.Text, "Intermediate expansion exceeds Excel's row limit.");
+            throw new MappingException(sheet.Name, location.Address, location.Text, "Intermediate expansion exceeds Excel's row limit.");
         }
 
         var tags = sourceRows.GetRange(start - 1, count);
-        template.Sheet.Row(start + count - 1).InsertRowsBelow((int)added);
+        sheet.Row(start + count - 1).InsertRowsBelow((int)added);
         for (var copy = 1; copy < copies; copy++)
         {
             cancellationToken.ThrowIfCancellationRequested();
             var destination = start + (count * copy);
             for (var offset = 0; offset < count; offset++)
             {
-                var source = template.Sheet.Row(start + offset);
-                var target = template.Sheet.Row(destination + offset);
+                var source = sheet.Row(start + offset);
+                var target = sheet.Row(destination + offset);
                 target.Height = source.Height;
                 target.Style = source.Style;
                 target.OutlineLevel = source.OutlineLevel;
@@ -360,14 +291,14 @@ internal sealed class WorksheetExpansion
                 }
             }
 
-            template.Sheet.Range(start, 1, start + count - 1, template.LastColumn).CopyTo(template.Sheet.Cell(destination, 1));
+            sheet.Range(start, 1, start + count - 1, template.LastColumn).CopyTo(sheet.Cell(destination, 1));
             sourceRows.InsertRange(destination - 1, tags);
         }
     }
 
     private void DeleteRows(int start, int count)
     {
-        template.Sheet.Rows(start, start + count - 1).Delete();
+        sheet.Rows(start, start + count - 1).Delete();
         sourceRows.RemoveRange(start - 1, count);
     }
 }

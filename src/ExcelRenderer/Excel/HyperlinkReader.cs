@@ -1,3 +1,4 @@
+using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using ExcelRenderer.Model;
@@ -10,8 +11,9 @@ internal static class HyperlinkReader
 {
     /// <summary>Reads definitions, scoped names and uncached literal display values.</summary>
     /// <param name="stream">The seekable XLSX stream.</param>
+    /// <param name="selectedSheets">Optional selected bodies; unselected sheets retain link metadata without cell text.</param>
     /// <returns>Metadata by actual sheet name.</returns>
-    internal static IReadOnlyDictionary<string, SheetHyperlinkMetadata> Read(Stream stream)
+    internal static IReadOnlyDictionary<string, SheetHyperlinkMetadata> Read(Stream stream, IReadOnlyList<string>? selectedSheets = null)
     {
         using var document = SpreadsheetDocument.Open(stream, false);
         var workbook = document.WorkbookPart!;
@@ -26,11 +28,12 @@ internal static class HyperlinkReader
                 continue;
             }
 
+            var includeBody = selectedSheets is null || selectedSheets.Contains(sheet.Name!.Value!, StringComparer.Ordinal);
             var links = new List<ReportHyperlink>();
             var displays = new Dictionary<CellAddress, string>();
             var relationships = part.HyperlinkRelationships.ToDictionary(r => r.Id, StringComparer.Ordinal);
             var definition = 0;
-            foreach (var raw in part.Worksheet.Elements<Hyperlinks>().SelectMany(h => h.Elements<Hyperlink>()))
+            foreach (var raw in ReadElements<Hyperlink>(part))
             {
                 CellRange range;
                 try
@@ -77,7 +80,7 @@ internal static class HyperlinkReader
                 });
             }
 
-            foreach (var cell in part.Worksheet.Descendants<Cell>().Where(c => c.CellFormula is not null))
+            foreach (var cell in (includeBody ? ReadElements<Cell>(part) : Enumerable.Empty<Cell>()).Where(c => c.CellFormula is not null))
             {
                 var formula = cell.CellFormula!.Text;
                 if (formula.IndexOf("HYPERLINK", StringComparison.OrdinalIgnoreCase) < 0)
@@ -117,12 +120,25 @@ internal static class HyperlinkReader
 
             result[sheet.Name!.Value!] = new(links, scoped, displays)
             {
-                OriginalCells = part.Worksheet.Descendants<Cell>().Where(cell => cell.CellReference is not null)
+                OriginalCells = (includeBody ? ReadElements<Cell>(part) : Enumerable.Empty<Cell>()).Where(cell => cell.CellReference is not null)
                     .Select(cell => CellRangeParser.Parse(cell.CellReference!.Value!, out _).First).ToHashSet(),
             };
         }
 
         return result;
+    }
+
+    private static IEnumerable<T> ReadElements<T>(WorksheetPart part)
+        where T : OpenXmlElement
+    {
+        using var reader = OpenXmlReader.Create(part);
+        while (reader.Read())
+        {
+            if (reader.IsStartElement && reader.ElementType == typeof(T))
+            {
+                yield return (T)reader.LoadCurrentElement()!;
+            }
+        }
     }
 
     private static bool Overlaps(CellRange a, CellRange b) =>

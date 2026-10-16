@@ -80,53 +80,13 @@ internal static class ExcelStyleConverter
         return new ReportColor(red, green, blue, resolvedColor.A);
     }
 
-    private static HorizontalAlignment ResolveGeneralAlignment(IXLCell cell) =>
-        cell.DataType is XLDataType.Number or XLDataType.DateTime or XLDataType.TimeSpan
-            ? HorizontalAlignment.Right
-            : cell.DataType is XLDataType.Boolean
-                ? HorizontalAlignment.Center
-                : HorizontalAlignment.Left;
-
-    private static ReportColor? ToBackground(IXLFill fill, IXLTheme theme) =>
-        fill.PatternType == XLFillPatternValues.None ? null : ToColor(fill.BackgroundColor, theme);
-
-    private static BorderStyle? ToBorder(IXLBorder border, IXLTheme theme)
-    {
-        var left = ToBorderSide(border.LeftBorder, border.LeftBorderColor, theme);
-        var top = ToBorderSide(border.TopBorder, border.TopBorderColor, theme);
-        var right = ToBorderSide(border.RightBorder, border.RightBorderColor, theme);
-        var bottom = ToBorderSide(border.BottomBorder, border.BottomBorderColor, theme);
-        return left is null && top is null && right is null && bottom is null
-            ? null
-            : new BorderStyle(left, top, right, bottom);
-    }
-
-    private static BorderSide? ToBorderSide(XLBorderStyleValues style, XLColor color, IXLTheme theme) =>
-        style == XLBorderStyleValues.None ? null : new BorderSide(ToBorderWidth(style), ToColor(color, theme), ToLineStyle(style));
-
-    private static double ToBorderWidth(XLBorderStyleValues style) => style switch
-    {
-        XLBorderStyleValues.Thick => 2,
-        XLBorderStyleValues.Medium or XLBorderStyleValues.MediumDashed or
-            XLBorderStyleValues.MediumDashDot or XLBorderStyleValues.MediumDashDotDot => 1,
-        XLBorderStyleValues.Double => 0.75,
-        XLBorderStyleValues.Hair => 0.25,
-        _ => 0.5,
-    };
-
-    private static BorderLineStyle ToLineStyle(XLBorderStyleValues style) => style switch
-    {
-        XLBorderStyleValues.Dotted => BorderLineStyle.Dotted,
-        XLBorderStyleValues.Dashed or XLBorderStyleValues.MediumDashed => BorderLineStyle.Dashed,
-        XLBorderStyleValues.DashDot or XLBorderStyleValues.MediumDashDot => BorderLineStyle.DashDot,
-        XLBorderStyleValues.DashDotDot or XLBorderStyleValues.MediumDashDotDot => BorderLineStyle.DashDotDot,
-        XLBorderStyleValues.Double => BorderLineStyle.Double,
-        XLBorderStyleValues.Hair => BorderLineStyle.Hair,
-        XLBorderStyleValues.SlantDashDot => BorderLineStyle.SlantDashDot,
-        _ => BorderLineStyle.Solid,
-    };
-
-    private static (byte Red, byte Green, byte Blue) ApplyTint(byte red, byte green, byte blue, double tint)
+    /// <summary>Applies the existing product tint arithmetic to source RGB.</summary>
+    /// <param name="red">Base red component.</param>
+    /// <param name="green">Base green component.</param>
+    /// <param name="blue">Base blue component.</param>
+    /// <param name="tint">Source theme tint.</param>
+    /// <returns>Product RGB components.</returns>
+    internal static (byte Red, byte Green, byte Blue) ApplyTint(byte red, byte green, byte blue, double tint)
     {
         if (tint == 0)
         {
@@ -177,6 +137,52 @@ internal static class ExcelStyleConverter
             ToByte(HueToRgb(first, second, hue)),
             ToByte(HueToRgb(first, second, hue - (1d / 3))));
     }
+
+    private static HorizontalAlignment ResolveGeneralAlignment(IXLCell cell) =>
+        cell.DataType is XLDataType.Number or XLDataType.DateTime or XLDataType.TimeSpan
+            ? HorizontalAlignment.Right
+            : cell.DataType is XLDataType.Boolean
+                ? HorizontalAlignment.Center
+                : HorizontalAlignment.Left;
+
+    private static ReportColor? ToBackground(IXLFill fill, IXLTheme theme) =>
+        fill.PatternType == XLFillPatternValues.None ? null : ToColor(fill.BackgroundColor, theme);
+
+    private static BorderStyle? ToBorder(IXLBorder border, IXLTheme theme)
+    {
+        var left = ToBorderSide(border.LeftBorder, border.LeftBorderColor, theme);
+        var top = ToBorderSide(border.TopBorder, border.TopBorderColor, theme);
+        var right = ToBorderSide(border.RightBorder, border.RightBorderColor, theme);
+        var bottom = ToBorderSide(border.BottomBorder, border.BottomBorderColor, theme);
+        return left is null && top is null && right is null && bottom is null
+            ? null
+            : new BorderStyle(left, top, right, bottom);
+    }
+
+    private static BorderSide? ToBorderSide(XLBorderStyleValues style, XLColor color, IXLTheme theme) =>
+        style == XLBorderStyleValues.None ? null : new BorderSide(ToBorderWidth(style), ToColor(color, theme), ToLineStyle(style));
+
+    private static double ToBorderWidth(XLBorderStyleValues style) => style switch
+    {
+        XLBorderStyleValues.Thick => 2,
+        XLBorderStyleValues.Medium or XLBorderStyleValues.MediumDashed or
+            XLBorderStyleValues.MediumDashDot or XLBorderStyleValues.MediumDashDotDot => 1,
+        XLBorderStyleValues.Double => 0.75,
+        XLBorderStyleValues.Hair => 0.25,
+        _ => 0.5,
+    };
+
+    private static BorderLineStyle ToLineStyle(XLBorderStyleValues style) => style switch
+    {
+        XLBorderStyleValues.Dotted => BorderLineStyle.Dotted,
+        XLBorderStyleValues.Dashed or XLBorderStyleValues.MediumDashed => BorderLineStyle.Dashed,
+        XLBorderStyleValues.DashDot or XLBorderStyleValues.MediumDashDot => BorderLineStyle.DashDot,
+        XLBorderStyleValues.DashDotDot or XLBorderStyleValues.MediumDashDotDot => BorderLineStyle.DashDotDot,
+        XLBorderStyleValues.Double => BorderLineStyle.Double,
+        XLBorderStyleValues.Hair => BorderLineStyle.Hair,
+        XLBorderStyleValues.SlantDashDot => BorderLineStyle.SlantDashDot,
+        _ => BorderLineStyle.Solid,
+    };
 
     private static double HueToRgb(double first, double second, double hue)
     {

@@ -5,7 +5,7 @@
 `netstandard2.1`の非packableプロジェクトで、本体・Fonts・Toolへの参照を持ちません。
 本体とToolの既存パッケージには、同じbuildのCore DLLを同梱します。
 
-共通input/spool、基本reader、style intern、列幅・行列座標、geometry、ページ計画、
+OpenXml に委譲する input/spool adapter、基本reader、style intern、列幅・行列座標、geometry、ページ計画、
 candidate抽出、セル配置、文字placement、背景・罫線・文字コマンド、画像decode、
 基本PDF描画・Save、診断集約、PDFsharp gateはCoreが所有します。
 
@@ -65,3 +65,5 @@ CoreExcelReader が表示ポリシーと診断候補を管理します。scratch
 本体の公開 ExcelReadOptions は独立した Core 内部設定へ写像します。可視範囲による診断の確定は
 選択機能を所有する本体 preflight が担当します。チャートシートはメタデータのみを保持し、
 診断のために空白ページを追加しません。旧計測器は任意の RenderRequest.TextMeasurer で借用します。
+
+汎用の入力検査・spool は `ExcelRenderer.OpenXml/Input` が所有します。Core は共有 OpenXml のみを ProjectReference し、本体・Mapping も同じ共有版を参照します。[エンジン選択](openxml-integration.ja.md)を参照してください。

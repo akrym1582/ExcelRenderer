@@ -28,6 +28,7 @@ internal static partial class CoreModelAdapter
         {
             DefaultColumnWidth = value.DefaultColumnWidth,
             DefaultRowHeight = value.DefaultRowHeight,
+            DefaultRowsHidden = value.DefaultRowsHidden,
             PrintAreas = value.PrintAreas.Select(ToPublic).ToArray(),
             SourceSheetIndex = value.SourceSheetIndex,
             UnsupportedFeatures = data?.UnsupportedFeatures ?? [],

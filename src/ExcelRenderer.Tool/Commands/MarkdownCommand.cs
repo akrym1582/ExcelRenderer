@@ -41,6 +41,7 @@ public static class MarkdownCommand
         command.Add(hyperlinks);
         command.Add(data);
         command.Add(formulaMode);
+        var backends = new BackendOptions(command, data, formulaMode);
         CommandSupport.AddFontOptions(command, fonts);
         command.Aliases.Add("md");
         command.SetAction((result, cancellationToken) => CommandSupport.RunAsync(() => MappingCommandSupport.WithInputAsync(
@@ -60,11 +61,12 @@ public static class MarkdownCommand
                     DetectLayout = Enabled(result, layout, noLayout, true),
                     DetectRegions = Enabled(result, regions, noRegions, true),
                     ImageDirectoryName = result.GetValue(imageDir)!,
-                    ReadOptions = CommandSupport.GetReadOptions(result.GetValue(formulaMode)!),
+                    ReadOptions = backends.GetRead(result, formulaMode),
                     FontOptions = CommandSupport.GetFontOptions(result, fonts),
                 },
                 cancellationToken),
-            cancellationToken)));
+            cancellationToken,
+            backends.GetMapping(result))));
         return command;
     }
 

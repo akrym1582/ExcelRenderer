@@ -20,6 +20,7 @@ public static class SvgCommand
         var command = new Command("svg", "Convert Excel worksheets to SVG files.") { input, output, sheet };
         command.Add(data);
         command.Add(formulaMode);
+        var backends = new BackendOptions(command, data, formulaMode);
         CommandSupport.AddFontOptions(command, fonts);
         buffering.AddTo(command);
         command.SetAction((parseResult, cancellationToken) => CommandSupport.RunAsync(() => MappingCommandSupport.WithInputAsync(
@@ -29,9 +30,10 @@ public static class SvgCommand
             mappedInput => ExcelConverter.ConvertToSvgAsync(
                 mappedInput,
                 parseResult.GetValue(output)!,
-                new SvgExportOptions { Buffering = buffering.Get(parseResult), SheetName = parseResult.GetValue(sheet), ReadOptions = CommandSupport.GetReadOptions(parseResult.GetValue(formulaMode)!), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
+                new SvgExportOptions { Buffering = buffering.Get(parseResult), SheetName = parseResult.GetValue(sheet), ReadOptions = backends.GetRead(parseResult, formulaMode), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
                 cancellationToken),
-            cancellationToken)));
+            cancellationToken,
+            backends.GetMapping(parseResult))));
         return command;
     }
 }

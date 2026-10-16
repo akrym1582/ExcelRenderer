@@ -1,0 +1,38 @@
+{
+  "validation_commit": "ec174461a17289dadda7c2d1d15432e3e6231318",
+  "passed": 1297,
+  "failed": 0,
+  "skipped": 0,
+  "projects": [
+    {
+      "project": "ExcelRenderer.Formulas.Tests",
+      "passed": 192,
+      "total": 192
+    },
+    {
+      "project": "ExcelRenderer.OpenXml.Tests",
+      "passed": 180,
+      "total": 180
+    },
+    {
+      "project": "ExcelRenderer.Core.Tests",
+      "passed": 82,
+      "total": 82
+    },
+    {
+      "project": "ExcelRenderer.Mapping.Tests",
+      "passed": 193,
+      "total": 193
+    },
+    {
+      "project": "ExcelRenderer.Tests",
+      "passed": 559,
+      "total": 559
+    },
+    {
+      "project": "ExcelRenderer.Tool.Tests",
+      "passed": 91,
+      "total": 91
+    }
+  ]
+}

@@ -102,7 +102,7 @@ ranges and fixed cell/rectangle names. Huge ranges are streamed subject to limit
   `ROUNDUP(0.07,2)=0.07`, and `ROUND(1.005,2)=1.01`. Adjacent doubles remain distinct;
   computed `0.30000000000000004` is not normalized to `0.3`. Nonfinite rounding
   results produce `#NUM!`. Existing signed-zero behavior is preserved, including
-  positive zero for places below -308. This profile does not emulate all Excel precision corrections.
+  positive zero from nonzero inputs for places below -308. This profile does not emulate all Excel precision corrections.
 - IF and IFERROR evaluate only the selected value branch, but every reached AST is
   statically validated. `IF(TRUE,1,UNKNOWN())` fails with UnsupportedFunction.
   IFERROR never hides an unsupported feature, cycle, limit or cancellation.

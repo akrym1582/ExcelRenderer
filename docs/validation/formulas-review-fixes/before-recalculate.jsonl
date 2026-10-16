@@ -1,0 +1,19 @@
+{"Environment":"Debian GNU/Linux 13 (trixie)","Runtime":".NET 10.0.12","ProcessorCount":4,"TieredCompilation":"0","Mode":"recalculate","Warmups":1,"Repeats":5}
+{"Name":"xlsx-recalculate-save","Count":1000,"Iteration":0,"Warmup":true,"Milliseconds":495.7254,"AllocatedBytes":13315952,"ProcessPeakWorkingSetBytes":63918080,"Result":22000}
+{"Name":"xlsx-recalculate-save","Count":1000,"Iteration":1,"Warmup":false,"Milliseconds":33.0918,"AllocatedBytes":11398944,"ProcessPeakWorkingSetBytes":67145728,"Result":22000}
+{"Name":"xlsx-recalculate-save","Count":1000,"Iteration":2,"Warmup":false,"Milliseconds":30.5465,"AllocatedBytes":11398944,"ProcessPeakWorkingSetBytes":67391488,"Result":22000}
+{"Name":"xlsx-recalculate-save","Count":1000,"Iteration":3,"Warmup":false,"Milliseconds":32.4662,"AllocatedBytes":11398944,"ProcessPeakWorkingSetBytes":67391488,"Result":22000}
+{"Name":"xlsx-recalculate-save","Count":1000,"Iteration":4,"Warmup":false,"Milliseconds":31.9579,"AllocatedBytes":11398944,"ProcessPeakWorkingSetBytes":67391488,"Result":22000}
+{"Name":"xlsx-recalculate-save","Count":1000,"Iteration":5,"Warmup":false,"Milliseconds":31.2085,"AllocatedBytes":11398944,"ProcessPeakWorkingSetBytes":67391488,"Result":22000}
+{"Name":"xlsx-recalculate-save","Count":10000,"Iteration":0,"Warmup":true,"Milliseconds":358.5703,"AllocatedBytes":109774752,"ProcessPeakWorkingSetBytes":96247808,"Result":220000}
+{"Name":"xlsx-recalculate-save","Count":10000,"Iteration":1,"Warmup":false,"Milliseconds":349.9482,"AllocatedBytes":109648832,"ProcessPeakWorkingSetBytes":95866880,"Result":220000}
+{"Name":"xlsx-recalculate-save","Count":10000,"Iteration":2,"Warmup":false,"Milliseconds":342.291,"AllocatedBytes":109648832,"ProcessPeakWorkingSetBytes":95866880,"Result":220000}
+{"Name":"xlsx-recalculate-save","Count":10000,"Iteration":3,"Warmup":false,"Milliseconds":349.9769,"AllocatedBytes":109646816,"ProcessPeakWorkingSetBytes":95866880,"Result":220000}
+{"Name":"xlsx-recalculate-save","Count":10000,"Iteration":4,"Warmup":false,"Milliseconds":360.3677,"AllocatedBytes":109648832,"ProcessPeakWorkingSetBytes":95866880,"Result":220000}
+{"Name":"xlsx-recalculate-save","Count":10000,"Iteration":5,"Warmup":false,"Milliseconds":355.8875,"AllocatedBytes":109646816,"ProcessPeakWorkingSetBytes":95866880,"Result":220000}
+{"Name":"xlsx-recalculate-save","Count":30000,"Iteration":0,"Warmup":true,"Milliseconds":1207.5394,"AllocatedBytes":323259856,"ProcessPeakWorkingSetBytes":180666368,"Result":660000}
+{"Name":"xlsx-recalculate-save","Count":30000,"Iteration":1,"Warmup":false,"Milliseconds":1217.5032,"AllocatedBytes":323117368,"ProcessPeakWorkingSetBytes":183418880,"Result":660000}
+{"Name":"xlsx-recalculate-save","Count":30000,"Iteration":2,"Warmup":false,"Milliseconds":1233.3816,"AllocatedBytes":323121520,"ProcessPeakWorkingSetBytes":183046144,"Result":660000}
+{"Name":"xlsx-recalculate-save","Count":30000,"Iteration":3,"Warmup":false,"Milliseconds":1150.0616,"AllocatedBytes":323117384,"ProcessPeakWorkingSetBytes":183595008,"Result":660000}
+{"Name":"xlsx-recalculate-save","Count":30000,"Iteration":4,"Warmup":false,"Milliseconds":1149.6768,"AllocatedBytes":323125240,"ProcessPeakWorkingSetBytes":183201792,"Result":660000}
+{"Name":"xlsx-recalculate-save","Count":30000,"Iteration":5,"Warmup":false,"Milliseconds":1167.5992,"AllocatedBytes":323117352,"ProcessPeakWorkingSetBytes":183599104,"Result":660000}

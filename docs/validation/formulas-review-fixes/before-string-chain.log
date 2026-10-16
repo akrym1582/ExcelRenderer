@@ -1,0 +1,2 @@
+492f07b: only 5 cells, requested MaxStringLength=8 and MaxCachedStringCharacters=16.
+Limits API present: False; Success=True; Text UTF-16 length=16; AllocatedBytes=6136.

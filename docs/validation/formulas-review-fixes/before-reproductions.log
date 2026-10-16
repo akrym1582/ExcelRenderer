@@ -1,0 +1,68 @@
+  ExcelRenderer.Formulas -> /workspace/ExcelRenderer/src/ExcelRenderer.Formulas/bin/Release/netstandard2.1/ExcelRenderer.Formulas.dll
+  ExcelRenderer.Formulas.Tests -> /workspace/ExcelRenderer/tests/ExcelRenderer.Formulas.Tests/bin/Release/net10.0/ExcelRenderer.Formulas.Tests.dll
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Formulas.Tests/bin/Release/net10.0/ExcelRenderer.Formulas.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.21]     ExcelRenderer.Formulas.Tests.ReviewRegressionTests.DecimalRoundingReproductions(formula: "ROUNDDOWN(0.29,2)", expected: 0.28999999999999998) [FAIL]
+[xUnit.net 00:00:00.21]     ExcelRenderer.Formulas.Tests.ReviewRegressionTests.DecimalRoundingReproductions(formula: "ROUND(1.005,2)", expected: 1.01) [FAIL]
+[xUnit.net 00:00:00.21]     ExcelRenderer.Formulas.Tests.ReviewRegressionTests.DecimalRoundingReproductions(formula: "ROUNDUP(0.07,2)", expected: 0.070000000000000007) [FAIL]
+[xUnit.net 00:00:00.21]     ExcelRenderer.Formulas.Tests.ReviewRegressionTests.QuotedSyntaxIsText(text: "+", kind: Text) [FAIL]
+[xUnit.net 00:00:00.21]     ExcelRenderer.Formulas.Tests.ReviewRegressionTests.QuotedSyntaxIsText(text: "(", kind: Text) [FAIL]
+[xUnit.net 00:00:00.22]     ExcelRenderer.Formulas.Tests.ReviewRegressionTests.QuotedSyntaxIsText(text: "-", kind: Text) [FAIL]
+[xUnit.net 00:00:00.22]     ExcelRenderer.Formulas.Tests.ReviewRegressionTests.StringLimitIsConfigurableBeforeEvaluatingDoublingChain [FAIL]
+  Failed ExcelRenderer.Formulas.Tests.ReviewRegressionTests.DecimalRoundingReproductions(formula: "ROUNDDOWN(0.29,2)", expected: 0.28999999999999998) [20 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: 0.28999999999999998
+Actual:   0.28000000000000003
+  Stack Trace:
+     at ExcelRenderer.Formulas.Tests.ReviewRegressionTests.DecimalRoundingReproductions(String formula, Double expected) in /workspace/ExcelRenderer/tests/ExcelRenderer.Formulas.Tests/ReviewRegressionTests.cs:line 30
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed ExcelRenderer.Formulas.Tests.ReviewRegressionTests.DecimalRoundingReproductions(formula: "ROUND(1.005,2)", expected: 1.01) [< 1 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: 1.01
+Actual:   1
+  Stack Trace:
+     at ExcelRenderer.Formulas.Tests.ReviewRegressionTests.DecimalRoundingReproductions(String formula, Double expected) in /workspace/ExcelRenderer/tests/ExcelRenderer.Formulas.Tests/ReviewRegressionTests.cs:line 30
+   at InvokeStub_ReviewRegressionTests.DecimalRoundingReproductions(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed ExcelRenderer.Formulas.Tests.ReviewRegressionTests.DecimalRoundingReproductions(formula: "ROUNDUP(0.07,2)", expected: 0.070000000000000007) [< 1 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: 0.070000000000000007
+Actual:   0.080000000000000002
+  Stack Trace:
+     at ExcelRenderer.Formulas.Tests.ReviewRegressionTests.DecimalRoundingReproductions(String formula, Double expected) in /workspace/ExcelRenderer/tests/ExcelRenderer.Formulas.Tests/ReviewRegressionTests.cs:line 30
+   at InvokeStub_ReviewRegressionTests.DecimalRoundingReproductions(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed ExcelRenderer.Formulas.Tests.ReviewRegressionTests.QuotedSyntaxIsText(text: "+", kind: Text) [1 ms]
+  Error Message:
+   SyntaxError:  Expected an expression.
+  Stack Trace:
+     at ExcelRenderer.Formulas.Tests.ReviewRegressionTests.QuotedSyntaxIsText(String text, FormulaNodeKind kind) in /workspace/ExcelRenderer/tests/ExcelRenderer.Formulas.Tests/ReviewRegressionTests.cs:line 16
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed ExcelRenderer.Formulas.Tests.ReviewRegressionTests.QuotedSyntaxIsText(text: "(", kind: Text) [< 1 ms]
+  Error Message:
+   SyntaxError:  Expected an expression.
+  Stack Trace:
+     at ExcelRenderer.Formulas.Tests.ReviewRegressionTests.QuotedSyntaxIsText(String text, FormulaNodeKind kind) in /workspace/ExcelRenderer/tests/ExcelRenderer.Formulas.Tests/ReviewRegressionTests.cs:line 16
+   at InvokeStub_ReviewRegressionTests.QuotedSyntaxIsText(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed ExcelRenderer.Formulas.Tests.ReviewRegressionTests.QuotedSyntaxIsText(text: "-", kind: Text) [< 1 ms]
+  Error Message:
+   SyntaxError:  Expected an expression.
+  Stack Trace:
+     at ExcelRenderer.Formulas.Tests.ReviewRegressionTests.QuotedSyntaxIsText(String text, FormulaNodeKind kind) in /workspace/ExcelRenderer/tests/ExcelRenderer.Formulas.Tests/ReviewRegressionTests.cs:line 16
+   at InvokeStub_ReviewRegressionTests.QuotedSyntaxIsText(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed ExcelRenderer.Formulas.Tests.ReviewRegressionTests.StringLimitIsConfigurableBeforeEvaluatingDoublingChain [< 1 ms]
+  Error Message:
+   Assert.NotNull() Failure: Value is null
+  Stack Trace:
+     at ExcelRenderer.Formulas.Tests.ReviewRegressionTests.StringLimitIsConfigurableBeforeEvaluatingDoublingChain() in /workspace/ExcelRenderer/tests/ExcelRenderer.Formulas.Tests/ReviewRegressionTests.cs:line 36
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+Failed!  - Failed:     7, Passed:     2, Skipped:     0, Total:     9, Duration: 25 ms - ExcelRenderer.Formulas.Tests.dll (net10.0)

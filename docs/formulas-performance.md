@@ -138,3 +138,18 @@ independent recalculation session per formula cell.
 Peak working-set values include process history and cannot be subtracted as
 incremental costs. No unbounded full-column materialization is part of these
 cases. Excel desktop was not used for these checks.
+
+
+## Review-fix comparison (2026-10-16)
+
+A separate [review-fix validation](formulas-review-fixes-validation.md#performance)
+compares freshly fetched main `492f07b` with `ec17446`, retaining the historical
+measurements above. It runs engine, XLSX recalculation/save, Mapping/recalculation/save
+and additional decimal ROUND/ROUNDUP/ROUNDDOWN cases at 1k/10k/30k, with the same
+warmup/five-sample method and per-result assertions. At 30k, XLSX time changed
+-0.4% and Mapping time +15.3%; allocations changed
++0.15% and +0.20%. Actual decimal rounding was
+2.72–2.93x slower, with approximately 1.76x allocations. The explicit
+shortest-decimal rounding profile adds conversion/BigInteger work; proven integer
+and no-change exits avoid it where rounding is unnecessary. All raw samples and
+all 24 median comparisons are retained under `docs/validation/formulas-review-fixes/`.

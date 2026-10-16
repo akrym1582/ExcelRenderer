@@ -1,0 +1,25 @@
++ dotnet restore --configfile /tmp/formulas-review-package-consumers-final-parser/NuGet.Config
+  Determining projects to restore...
+  Restored /tmp/formulas-review-package-consumers-final-parser/engine/consumer.csproj (in 255 ms).
++ dotnet run -c Release --no-restore -- /tmp/formulas-review-package-consumers-final-parser/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf
+engine passed
++ dotnet restore --configfile /tmp/formulas-review-package-consumers-final-parser/NuGet.Config
+  Determining projects to restore...
+  Restored /tmp/formulas-review-package-consumers-final-parser/adapter/consumer.csproj (in 633 ms).
++ dotnet run -c Release --no-restore -- /tmp/formulas-review-package-consumers-final-parser/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf
+adapter passed
++ dotnet restore --configfile /tmp/formulas-review-package-consumers-final-parser/NuGet.Config
+  Determining projects to restore...
+  Restored /tmp/formulas-review-package-consumers-final-parser/mapping/consumer.csproj (in 279 ms).
++ dotnet run -c Release --no-restore -- /tmp/formulas-review-package-consumers-final-parser/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf
+mapping passed
++ dotnet restore --configfile /tmp/formulas-review-package-consumers-final-parser/NuGet.Config
+  Determining projects to restore...
+  Restored /tmp/formulas-review-package-consumers-final-parser/main-core/consumer.csproj (in 1.79 sec).
++ dotnet run -c Release --no-restore -- /tmp/formulas-review-package-consumers-final-parser/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf
+main-core passed
++ dotnet tool install ExcelRenderer.Tool --version 1.9.0 --tool-path /tmp/formulas-review-package-consumers-final-parser/tool --configfile /tmp/formulas-review-package-consumers-final-parser/NuGet.Config
+You can invoke the tool using the following command: excelrenderer
+Tool 'excelrenderer.tool' (version '1.9.0') was successfully installed.
++ /tmp/formulas-review-package-consumers-final-parser/tool/excelrenderer md /tmp/formulas-review-package-consumers-final-parser/invoice.xlsx --formula-mode recalculate -o /tmp/formulas-review-package-consumers-final-parser/cli.md
+Five isolated package consumers passed

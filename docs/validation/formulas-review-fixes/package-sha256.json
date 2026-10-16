@@ -1,0 +1,8 @@
+{
+  "ExcelRenderer.1.9.0.nupkg": "ddc32be0ff1f51ef1d613aaaad183e06c46f0859bca067c0fa4191202cbed72b",
+  "ExcelRenderer.Fonts.1.9.0.nupkg": "1168c0b9a8d5892c98a3fba0cace755aae1e4e14cd1cf33a656f962d2b508f37",
+  "ExcelRenderer.Formulas.1.8.0.nupkg": "aa72cbc3235f87417a55021e782c5e734a2eb6669ee478b9f9423afe2f18fe47",
+  "ExcelRenderer.Mapping.1.9.0.nupkg": "5dce76670715d05e0f4da8e5901cd3af8195e042931f80abb2fae8cb6d56eac4",
+  "ExcelRenderer.OpenXml.1.8.0.nupkg": "49c8170ceaa0de21f9fc0a86a5b7db75f6301d8639c8dc9524febca6adce8c8e",
+  "ExcelRenderer.Tool.1.9.0.nupkg": "9853acc8938bb989e64c50e009a0015b9060d949c5eeeb948f5d90c908792476"
+}

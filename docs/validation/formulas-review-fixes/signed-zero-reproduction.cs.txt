@@ -1,0 +1,6 @@
+using ExcelRenderer.Formulas;
+var source = new InMemoryFormulaWorkbook.Builder().AddSheet("S").Build();
+foreach(string formula in new[]{"ROUND(-0.01,0)","ROUNDDOWN(-0.01,0)","ROUND(-1,-1)","ROUND(-1,-10000)","ROUND(-0,0)"}) {
+ var r = new FormulaEngine().Evaluate(FormulaParser.Parse(formula).Formula!,source,new("S",1,1));
+ Console.WriteLine($"{args[0]} {formula}: {r.Value}; bits={BitConverter.DoubleToInt64Bits(r.Value.Number):X16}");
+}

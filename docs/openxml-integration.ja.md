@@ -127,7 +127,7 @@ pdf / image / svg / markdown・md / render に `--reader-backend`、これらと
 Writer は型付き編集計画だけを受け取り、spill 可能な元行ストアから別 ZIP stage を生成し、
 関係 part・SST count を保って新 Reader で再読込します。元行の XML 原型はシートごとの LRU
 で最大64行、元 UTF-8 合計256 KiB、1行64 KiBまで保持します。これは元 XML サイズの
-制限であり、正確な heap サイズではありません。大きい行は保持せず、各出力行を deep copy
+制限であり、正確な heap サイズではありません。1回だけ使う行と大きい行は保持せず、各出力行を deep copy
 して編集するため、値や座標が次の occurrence へ漏れません。schema 検証と未変更 part の hash は
 別途テストします。実測・比較結果は接続検証記録を参照してください。先行 Reader 単体の
 過去の検証結果を接続済みの証拠にはしません。

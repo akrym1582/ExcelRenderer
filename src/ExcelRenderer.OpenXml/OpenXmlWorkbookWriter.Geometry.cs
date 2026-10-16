@@ -281,7 +281,8 @@ public static partial class OpenXmlWorkbookWriter
                 return new XElement(Ns + "row");
             }
 
-            if (prototypes.Clone(row) is { } cached)
+            var cacheable = location.Length <= RowPrototypeCache.MaximumRowBytes && Occurrences.TryGetValue(row, out var occurrences) && occurrences.Count > 1;
+            if (cacheable && prototypes.Clone(row) is { } cached)
             {
                 return cached;
             }
@@ -300,7 +301,8 @@ public static partial class OpenXmlWorkbookWriter
                 offset += read;
             }
 
-            return prototypes.Store(row, bytes.Length, XElement.Parse(Encoding.UTF8.GetString(bytes)));
+            var parsed = XElement.Parse(Encoding.UTF8.GetString(bytes));
+            return cacheable ? prototypes.Store(row, bytes.Length, parsed) : parsed;
         }
 
         internal int ColumnStyle(int column) => Children.Where(child => child.Name.LocalName == "cols").SelectMany(child => child.Elements()).LastOrDefault(child => (int)child.Attribute("min")! <= column && (int)child.Attribute("max")! >= column)?.Attribute("style") is { } style ? int.Parse(style.Value, CultureInfo.InvariantCulture) : 0;

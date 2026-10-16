@@ -6,6 +6,32 @@ namespace ExcelRenderer.OpenXml.Tests;
 public sealed class RowPrototypeCacheTests
 {
     [Fact]
+    public void WriterRetainsOnlyRepeatedRowsAndDoesNotLeakEditedValues()
+    {
+        using var input = Fixture.Create("<sheetData><row r='1'><c r='A1' t='inlineStr'><is><t>header</t></is></c></row><row r='2'><c r='A2' t='inlineStr'><is><t>detail</t></is></c></row><row r='3'><c r='A3' t='inlineStr'><is><t>footer</t></is></c></row></sheetData>");
+        using var output = new MemoryStream();
+        var rows = new[]
+        {
+            new OutputRowOccurrence(1, 1, 0, 0, []),
+            new OutputRowOccurrence(2, 2, 1, 0, [new CellValueEdit(1, "first")]),
+            new OutputRowOccurrence(2, 3, 2, 0, []),
+            new OutputRowOccurrence(3, 4, 0, 0, []),
+        };
+        var metrics = new Dictionary<string, long>();
+        OperationMetrics.Observer = (name, value) => metrics[name] = value;
+        try
+        {
+            OpenXmlWorkbookWriter.Write(input, output, new WorkbookEditPlan([new SheetEditPlan(1, 3, rows, [], [], false)]));
+        }
+        finally { OperationMetrics.Observer = null; }
+        Assert.Equal(1, metrics["writer.rowCacheEntries"]);
+        Assert.Equal(1, metrics["writer.rowCacheHits"]);
+        output.Position = 0;
+        using var reader = OpenXmlWorkbookReader.Open(output);
+        Assert.Equal(new[] { "header", "first", "detail", "footer" }, reader.EnumerateCells(1).Select(cell => cell.Value.Text));
+    }
+
+    [Fact]
     public void DeepCopiesProtectPrototypesAcrossInterleavedRepeatedRows()
     {
         var cache = new RowPrototypeCache();

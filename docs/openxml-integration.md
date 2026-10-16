@@ -56,7 +56,7 @@ engine.
 
 Regional or unresolved displays are not silently treated as equivalent:
 `UnsupportedNumberFormat`, `RegionalNumberFormat`, `IsoDateDisplay`,
-`UnresolvedColor`, `UnsupportedPrintReference` and `FormulaTextUnavailable` are
+`UnresolvedColor` and `UnsupportedPrintReference` are
 reported on the explicit path and participate in the existing strict and
 warnings-as-errors policy. In particular, built-in date format 14 retains the
 OOXML `mm-dd-yy` interpretation, and ISO date cells retain source text. Use an
@@ -154,7 +154,7 @@ stage, maintains package relationships and shared-string counts, then reads the
 stage through the streaming reader. Parsed source rows are reused through a
 per-sheet LRU cache: at most 64 prototypes, 256 KiB of original UTF-8 row XML in
 total, and 64 KiB per row. These are source-size limits, not a claim of exact heap
-size. Large rows bypass the cache; each output row edits a deep copy so values and
+size. Single-use and large rows bypass the cache; each output row edits a deep copy so values and
 coordinates cannot leak between occurrences. Schema validation and unmodified-part hashes
 are tested separately. See the integration validation record for measured evidence;
 historical reader-only reports do not establish rendering integration results.

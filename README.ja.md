@@ -492,19 +492,17 @@ Mapping も OpenXml が既定で、Auto は同じ Writer を使います。
 にまとめています。
 
 数式表示の既定値は Core・本体 Reader・各 export API・CLI ともに
-`FormulaDisplayMode.CachedValue`（`--formula-mode cached`）です。Reader／Mapping の
-backend 既定値はどちらも OpenXml です。読込・Mapping・保存のいずれも再計算しません。
-古い保存結果もそのまま使い、0・false・保存された空文字を保持します。欠落は空表示と
-`FormulaCachedValueMissing`、保存された Excel エラーは `FormulaResultError` です。
-HYPERLINK の friendly text で保存結果や空表示を補いません。診断は可視出力の選択と
-失敗方針を反映し、sink を開く前に判定します。
+`FormulaDisplayMode.CachedValue`（`--formula-mode cached`）です。古い保存結果もそのまま使い、
+欠落は `FormulaCachedValueMissing` として診断します。限定的な自作計算器を使う場合は
+`FormulaDisplayMode.Recalculate` または `--formula-mode recalculate` を明示してください。
+独立した BCL の計算コアは19関数に対応し、到達した未対応式を古い値で補いません。
+`Legacy` は引き続き非対応です。API・評価範囲・キャッシュ失効・制約・検証は
+[数式計算ガイド](docs/formulas.ja.md)を参照してください。
 
-明示 `Legacy` / `Recalculate` は全 backend で非対応とし、入力処理・出力前に拒否します。
-Mapping テンプレートの値の数式は、非表示シート・table 式・
-計算定義名も含めて禁止し、Auto もこの検査を回避しません。明細金額・税・合計は呼び出し元で
-計算し、値のプレースホルダーへ渡してください。`=` で始まる入力値は文字列のままです。
-静的定義名の限定文法と出力保証は[エンジン選択ガイド](docs/openxml-integration.ja.md)と
-[Mapping ガイド](docs/mapping.ja.md)を参照してください。
+Reader／Mapping の既定 backend は OpenXml です。既定の Mapping は数式を拒否します。
+`MappingOptions.FormulaCalculationMode = Recalculate` を明示すると対応する数式の
+AST 参照書換え・再計算を行います。`=` で始まる入力値は文字列のままです。
+[Mapping ガイド](docs/mapping.ja.md)も参照してください。
 
 ## フォント
 

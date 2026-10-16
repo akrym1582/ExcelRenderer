@@ -12,7 +12,7 @@ namespace ExcelRenderer.Mapping;
 /// <summary>Validates structural restrictions before evaluating any caller data.</summary>
 public static partial class ExcelTemplateMapper
 {
-    private static void ValidateStructures(PreparedWorkbook source, TemplateSheet[] templates, CancellationToken token)
+    private static void ValidateStructures(PreparedWorkbook source, TemplateSheet[] templates, CancellationToken token, bool allowFormulas = false)
     {
         using var input = source.OpenRead();
         using var document = SpreadsheetDocument.Open(input, false);
@@ -50,7 +50,7 @@ public static partial class ExcelTemplateMapper
                     }
 
                     var owner = name.LocalSheetId is { } scope ? sheets[(int)scope.Value].Name!.Value! : template.Sheet.Name;
-                    if (StructuralReferences.Rows(name.Text, template.Sheet.Name, owner).Any(range => range.First <= node.LastRow && range.Last >= node.FirstRow))
+                    if (!allowFormulas && StructuralReferences.Rows(name.Text, template.Sheet.Name, owner).Any(range => range.First <= node.LastRow && range.Last >= node.FirstRow))
                     {
                         Fail("Defined name '" + name.Name + "' overlaps a repeated region (" + name.Text + ").");
                     }

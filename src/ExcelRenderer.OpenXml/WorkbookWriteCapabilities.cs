@@ -9,7 +9,7 @@ using DocumentFormat.OpenXml.Packaging;
 
 namespace ExcelRenderer.OpenXml;
 
-/// <summary>Checks the conservative, formula-free workbook editing contract without evaluating mapping data.</summary>
+/// <summary>Checks the conservative workbook editing contract without evaluating mapping data.</summary>
 public static class WorkbookWriteCapabilities
 {
     private static readonly HashSet<string> WorkbookChildren = new HashSet<string>(StringComparer.Ordinal)
@@ -32,7 +32,14 @@ public static class WorkbookWriteCapabilities
     /// <param name="input">Validated seekable input at position zero; left open.</param>
     /// <param name="cancellationToken">Cooperative cancellation.</param>
     /// <returns>Every distinct unsupported feature reason, or an empty list.</returns>
-    public static IReadOnlyList<string> Inspect(Stream input, CancellationToken cancellationToken = default)
+    public static IReadOnlyList<string> Inspect(Stream input, CancellationToken cancellationToken = default) => Inspect(input, cancellationToken, false);
+
+    /// <summary>Inspects every sheet with an explicit formula rewriting policy.</summary>
+    /// <param name="input">Validated seekable input at position zero; left open.</param>
+    /// <param name="cancellationToken">Cooperative cancellation.</param>
+    /// <param name="allowFormulas">Whether ordinary formulas may be rewritten by the caller.</param>
+    /// <returns>Every distinct unsupported feature reason, or an empty list.</returns>
+    public static IReadOnlyList<string> Inspect(Stream input, CancellationToken cancellationToken, bool allowFormulas)
     {
         if (input == null)
         {
@@ -59,7 +66,7 @@ public static class WorkbookWriteCapabilities
                 continue;
             }
 
-            if (part is not WorkbookPart and not WorksheetPart and not WorkbookStylesPart and not SharedStringTablePart and not ThemePart and not CoreFilePropertiesPart and not ExtendedFilePropertiesPart and not CustomFilePropertiesPart and not DrawingsPart and not ImagePart and not WorksheetCommentsPart and not VmlDrawingPart and not TableDefinitionPart and not PivotTablePart and not PivotTableCacheDefinitionPart and not PivotTableCacheRecordsPart)
+            if (!(allowFormulas && part is CalculationChainPart) && part is not WorkbookPart and not WorksheetPart and not WorkbookStylesPart and not SharedStringTablePart and not ThemePart and not CoreFilePropertiesPart and not ExtendedFilePropertiesPart and not CustomFilePropertiesPart and not DrawingsPart and not ImagePart and not WorksheetCommentsPart and not VmlDrawingPart and not TableDefinitionPart and not PivotTablePart and not PivotTableCacheDefinitionPart and not PivotTableCacheRecordsPart)
             {
                 reasons.Add("UnsupportedPart:" + part.RelationshipType);
             }
@@ -159,7 +166,7 @@ public static class WorkbookWriteCapabilities
                         reasons.Add("UnsupportedExtension:" + xml.LocalName);
                     }
 
-                    if (xml.LocalName == "f" && xml.NamespaceURI == XmlValues.Spreadsheet.NamespaceName)
+                    if (!allowFormulas && xml.LocalName == "f" && xml.NamespaceURI == XmlValues.Spreadsheet.NamespaceName)
                     {
                         reasons.Add("FormulasPresent");
                     }
@@ -168,7 +175,7 @@ public static class WorkbookWriteCapabilities
         }
 
         input.Position = 0;
-        if (WorkbookFormulaInspection.Find(input, cancellationToken) is not null)
+        if (!allowFormulas && WorkbookFormulaInspection.Find(input, cancellationToken) is not null)
         {
             reasons.Add("FormulasOrUninspectableExtensionsPresent");
         }
@@ -204,7 +211,7 @@ public static class WorkbookWriteCapabilities
             foreach (var cell in reader.EnumerateCells(sheet.Index, cancellationToken))
             {
                 reader.ResolveStyle(cell);
-                if (cell.Formula != null)
+                if (!allowFormulas && cell.Formula != null)
                 {
                     reasons.Add("FormulasPresent");
                 }

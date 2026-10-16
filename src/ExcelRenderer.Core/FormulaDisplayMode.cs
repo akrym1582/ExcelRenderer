@@ -3,12 +3,12 @@ namespace ExcelRenderer.Core;
 /// <summary>Selects the source of formula display values.</summary>
 public enum FormulaDisplayMode
 {
-    /// <summary>Unsupported historical mode. Use CachedValue; formulas are never calculated.</summary>
+    /// <summary>Unsupported historical mode. Use CachedValue or Recalculate.</summary>
     Legacy = 0,
 
     /// <summary>Uses only results saved in the source workbook.</summary>
     CachedValue = 1,
 
-    /// <summary>Unsupported calculation request. Calculate values in the caller.</summary>
+    /// <summary>Evaluates selected formula cells and their dependencies using the limited built-in engine.</summary>
     Recalculate = 2,
 }

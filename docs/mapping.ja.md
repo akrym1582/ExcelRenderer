@@ -1,5 +1,7 @@
 # Excel テンプレートへのマッピング
 
+> 明示再計算モードを追加しました。[数式計算ガイド](formulas.ja.md)が評価範囲・キャッシュ失効・対応機能の現在の仕様です。以下の保存値／数式拒否の説明は、特記のない限り既定の CachedValue モードに適用します。
+
 [English](mapping.md) | 日本語
 
 `ExcelRenderer.Mapping` は独立した .NET Standard 2.1 のパッケージです。

@@ -13,8 +13,9 @@ internal sealed partial class TemplateSnapshot
     /// <param name="reader">The source reader.</param>
     /// <param name="sheetIndex">Original worksheet index.</param>
     /// <param name="cancellationToken">Cooperative cancellation.</param>
+    /// <param name="allowFormulas">Whether formula references will be rewritten after expansion.</param>
     /// <returns>Source locations and compiled-language inputs.</returns>
-    internal static TemplateSnapshot FromOpenXml(OpenXmlWorkbookReader reader, int sheetIndex, CancellationToken cancellationToken)
+    internal static TemplateSnapshot FromOpenXml(OpenXmlWorkbookReader reader, int sheetIndex, CancellationToken cancellationToken, bool allowFormulas = false)
     {
         var info = reader.ReadWorksheetInfo(sheetIndex, cancellationToken);
         var result = new TemplateSnapshot
@@ -63,7 +64,7 @@ internal sealed partial class TemplateSnapshot
             var first = node.IsBlock ? node.FirstRow + 1 : node.FirstRow;
             var last = node.IsBlock ? node.LastRow - 1 : node.LastRow;
             var formula = formulas.FirstOrDefault(cell => cell.Address.Row >= first && cell.Address.Row <= last);
-            if (formula != null)
+            if (formula != null && !allowFormulas)
             {
                 throw new MappingException(result.Name, formula.Address.ToString(), "=" + formula.Formula!.RawFormula, "Formulas inside repeated regions are not supported; supply calculated values in the input.");
             }

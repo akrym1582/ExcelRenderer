@@ -199,6 +199,7 @@ internal partial class CoreExcelReader
     {
         using var stream = source.OpenRead();
         using var reader = OpenXmlWorkbookReader.Open(stream, new() { SelectedSheetNames = selectedSheets, Culture = CultureInfo.CurrentCulture }, token);
+        var calculation = options.FormulaDisplayMode == FormulaDisplayMode.Recalculate ? WorkbookCalculationSession.Create(reader, options.FormulaEvaluationOptions, token) : null;
         ConversionMetrics.Report("openXmlReaderWorkbook", 1);
         var infos = reader.Sheets.Where(sheet => sheet.Kind == "Worksheet").Select(sheet => reader.ReadWorksheetInfo(sheet.Index, token)).ToArray();
         var metadata = new CoreWorkbookMetadata();
@@ -263,8 +264,24 @@ internal partial class CoreExcelReader
 
             var pendingLeaders = info.MergedRanges.Select(range => range.First).Distinct().OrderBy(address => address.Row).ThenBy(address => address.Column).ToArray();
             var leaderIndex = 0;
-            foreach (var cell in includeBody ? reader.EnumerateCells(info.Sheet.Index, token) : Enumerable.Empty<CellRecord>())
+            var selectedRegion = options.GetSelectedRange?.Invoke(info.Sheet.Name);
+            var mergeBands = calculation is null ? null : new Layout.BandIndex<OpenXml.CellRange>(info.MergedRanges.Select(range => (range, (double)range.First.Row, (double)range.Last.Row + 1)));
+            var titleRegions = calculation is null || options.IgnoreFormulaPrintAreas ? Array.Empty<PrintRangeInfo>() : info.PrintReferences.Where(reference => reference.Name == "_xlnm.Print_Titles").SelectMany(reference => reference.Ranges).ToArray();
+            var printRegions = calculation is null || options.IgnoreFormulaPrintAreas ? Array.Empty<PrintRangeInfo>() : info.PrintReferences.Where(reference => reference.Name == "_xlnm.Print_Area").SelectMany(reference => reference.Ranges).ToArray();
+            var hiddenRows = calculation is null ? null : info.Rows.Where(row => row.Hidden ?? info.DefaultRowsHidden).Select(row => row.Index).ToHashSet();
+            var visibleRows = calculation is null ? null : info.Rows.Where(row => row.Hidden == false).Select(row => row.Index).ToHashSet();
+            var hiddenColumns = calculation is null ? Array.Empty<bool>() : new bool[16385];
+            foreach (var column in calculation is null ? Enumerable.Empty<ColumnInfo>() : info.Columns)
             {
+                for (var index = column.Min; index <= column.Max; index++)
+                {
+                    hiddenColumns[index] = column.Hidden ?? false;
+                }
+            }
+
+            foreach (var sourceCell in includeBody ? reader.EnumerateCells(info.Sheet.Index, token) : Enumerable.Empty<CellRecord>())
+            {
+                var cell = calculation is not null && sourceCell.Formula is not null && IsCalculationTarget(sourceCell.Address) ? calculation.EvaluateCell(sourceCell) : sourceCell;
                 while (leaderIndex < pendingLeaders.Length && (pendingLeaders[leaderIndex].Row < cell.Address.Row ||
                     (pendingLeaders[leaderIndex].Row == cell.Address.Row && pendingLeaders[leaderIndex].Column < cell.Address.Column)))
                 {
@@ -374,6 +391,44 @@ internal partial class CoreExcelReader
                 SourceSheetIndex = info.Sheet.Index,
             };
             sheets.Add(CompleteSheet(info.Sheet.Name, sheet, context));
+
+            bool IsCalculationTarget(OpenXml.CellAddress address)
+            {
+                if (options.IsFormulaTarget is { } isTarget)
+                {
+                    return isTarget(info.Sheet.Name, address.Row, address.Column);
+                }
+
+                var mergedRange = mergeBands!.Query(address.Row, address.Row + 1).FirstOrDefault(range => address.Column >= range.First.Column && address.Column <= range.Last.Column);
+                if (mergedRange is not null && !address.Equals(mergedRange.First))
+                {
+                    return false;
+                }
+
+                var lastRow = mergedRange?.Last.Row ?? address.Row;
+                var lastColumn = mergedRange?.Last.Column ?? address.Column;
+                if (Enumerable.Range(address.Column, lastColumn - address.Column + 1).All(column => hiddenColumns[column]) ||
+                    Enumerable.Range(address.Row, lastRow - address.Row + 1).All(row => hiddenRows!.Contains(row) || (info.DefaultRowsHidden && !visibleRows!.Contains(row))))
+                {
+                    return false;
+                }
+
+                var titleRow = titleRegions.Any(range => range.Kind == "Rows" && address.Row >= range.FirstRow && address.Row <= range.LastRow);
+                var titleColumn = titleRegions.Any(range => range.Kind == "Columns" && address.Column >= range.FirstColumn && address.Column <= range.LastColumn);
+                if (selectedRegion is { } region)
+                {
+                    if ((!titleRow && (lastRow < region.FirstRow || address.Row > region.LastRow)) || (!titleColumn && (lastColumn < region.FirstColumn || address.Column > region.LastColumn)))
+                    {
+                        return false;
+                    }
+                }
+                else if (printRegions.Length > 0 && !printRegions.Any(range => (titleRow || (lastRow >= range.FirstRow && address.Row <= range.LastRow)) && (titleColumn || (lastColumn >= range.FirstColumn && address.Column <= range.LastColumn))))
+                {
+                    return false;
+                }
+
+                return true;
+            }
 
             void AddMissingLeader(OpenXml.CellAddress address)
             {

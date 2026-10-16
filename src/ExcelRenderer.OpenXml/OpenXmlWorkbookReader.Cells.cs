@@ -162,7 +162,7 @@ public sealed partial class OpenXmlWorkbookReader
                         formula = new FormulaInfo(string.Empty, "array", null, null, source.HasValue || inline != null, master.Address, master.Text, master.Reference, XmlValues.Attributes(XmlValues.Empty("f")));
                     }
 
-                    yield return new CellRecord(index, address, explicitStyle, style, value, raw, formula, sstIndex, rich.Runs, rich.HasPhonetic);
+                    yield return new CellRecord(index, address, explicitStyle, style, value, raw, formula, sstIndex, rich.Runs, rich.HasPhonetic, source.HasCalculationMetadata);
                     EnsureAlive();
                 }
             }
@@ -309,6 +309,7 @@ public sealed partial class OpenXmlWorkbookReader
         var reference = (string?)null;
         var style = (int?)null;
         var type = (string?)null;
+        var hasCalculationMetadata = false;
         foreach (var attribute in reader.Attributes)
         {
             if (attribute.NamespaceUri.Length != 0)
@@ -328,6 +329,7 @@ public sealed partial class OpenXmlWorkbookReader
                     style = index;
                     break;
                 case "t": type = attribute.Value; break;
+                case "cm": case "vm": hasCalculationMetadata = true; break;
             }
         }
 
@@ -372,7 +374,7 @@ public sealed partial class OpenXmlWorkbookReader
             }
         }
 
-        return new CellSource(reference, style, type, raw, hasValue, formula, inline);
+        return new CellSource(reference, style, type, raw, hasValue, formula, inline, hasCalculationMetadata);
     }
 
     private void AddTextCharacters(ref long characters, long added)
@@ -386,7 +388,7 @@ public sealed partial class OpenXmlWorkbookReader
 
     private readonly struct CellSource
     {
-        internal CellSource(string? reference, int? styleIndex, string? dataType, string? rawValue, bool hasValue, XElement? formula, StringEntry? inline)
+        internal CellSource(string? reference, int? styleIndex, string? dataType, string? rawValue, bool hasValue, XElement? formula, StringEntry? inline, bool hasCalculationMetadata)
         {
             Reference = reference;
             StyleIndex = styleIndex;
@@ -395,7 +397,10 @@ public sealed partial class OpenXmlWorkbookReader
             HasValue = hasValue;
             Formula = formula;
             Inline = inline;
+            HasCalculationMetadata = hasCalculationMetadata;
         }
+
+        internal bool HasCalculationMetadata { get; }
 
         internal string? Reference { get; }
 

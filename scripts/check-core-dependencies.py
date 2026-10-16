@@ -70,7 +70,7 @@ print('Shared conversion pipeline and compatibility facade ownership passed')
 # XML and bounded workbook input belong to the shared OpenXml project.
 OPENXML = ROOT / 'src/ExcelRenderer.OpenXml'
 reader_project = ET.parse(OPENXML / 'ExcelRenderer.OpenXml.csproj').getroot()
-assert not reader_project.findall('.//ProjectReference'), 'OpenXml reader must have no project references'
+assert {p.attrib['Include'] for p in reader_project.findall('.//ProjectReference')} == {'../ExcelRenderer.Formulas/ExcelRenderer.Formulas.csproj'}, 'OpenXml may reference only the BCL formula engine'
 reader_packages = {p.attrib['Include'] for p in reader_project.findall('.//PackageReference')}
 assert reader_packages == {'DocumentFormat.OpenXml', 'ExcelNumberFormat'}, reader_packages
 for path in OPENXML.rglob('*.cs'):

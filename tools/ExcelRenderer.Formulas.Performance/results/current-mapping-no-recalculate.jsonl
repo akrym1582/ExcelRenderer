@@ -1,0 +1,19 @@
+{"Environment":"Debian GNU/Linux 13 (trixie)","Runtime":".NET 10.0.12","ProcessorCount":4,"TieredCompilation":"0","Mode":"mapping-no-recalculate","Warmups":1,"Repeats":5}
+{"Name":"mapping-expand-invalidate-save","Count":1000,"Iteration":0,"Warmup":true,"Milliseconds":667.8602,"AllocatedBytes":13667224,"ProcessPeakWorkingSetBytes":66617344,"Result":22000}
+{"Name":"mapping-expand-invalidate-save","Count":1000,"Iteration":1,"Warmup":false,"Milliseconds":20.6721,"AllocatedBytes":11692048,"ProcessPeakWorkingSetBytes":70258688,"Result":22000}
+{"Name":"mapping-expand-invalidate-save","Count":1000,"Iteration":2,"Warmup":false,"Milliseconds":19.4158,"AllocatedBytes":11692048,"ProcessPeakWorkingSetBytes":70483968,"Result":22000}
+{"Name":"mapping-expand-invalidate-save","Count":1000,"Iteration":3,"Warmup":false,"Milliseconds":19.1926,"AllocatedBytes":11692048,"ProcessPeakWorkingSetBytes":70483968,"Result":22000}
+{"Name":"mapping-expand-invalidate-save","Count":1000,"Iteration":4,"Warmup":false,"Milliseconds":18.874,"AllocatedBytes":11692048,"ProcessPeakWorkingSetBytes":70483968,"Result":22000}
+{"Name":"mapping-expand-invalidate-save","Count":1000,"Iteration":5,"Warmup":false,"Milliseconds":18.989,"AllocatedBytes":11692048,"ProcessPeakWorkingSetBytes":70483968,"Result":22000}
+{"Name":"mapping-expand-invalidate-save","Count":10000,"Iteration":0,"Warmup":true,"Milliseconds":173.6106,"AllocatedBytes":93535488,"ProcessPeakWorkingSetBytes":109895680,"Result":220000}
+{"Name":"mapping-expand-invalidate-save","Count":10000,"Iteration":1,"Warmup":false,"Milliseconds":153.9224,"AllocatedBytes":93412512,"ProcessPeakWorkingSetBytes":110075904,"Result":220000}
+{"Name":"mapping-expand-invalidate-save","Count":10000,"Iteration":2,"Warmup":false,"Milliseconds":154.1612,"AllocatedBytes":93412512,"ProcessPeakWorkingSetBytes":110084096,"Result":220000}
+{"Name":"mapping-expand-invalidate-save","Count":10000,"Iteration":3,"Warmup":false,"Milliseconds":152.7711,"AllocatedBytes":93412512,"ProcessPeakWorkingSetBytes":110092288,"Result":220000}
+{"Name":"mapping-expand-invalidate-save","Count":10000,"Iteration":4,"Warmup":false,"Milliseconds":154.3051,"AllocatedBytes":93412512,"ProcessPeakWorkingSetBytes":110100480,"Result":220000}
+{"Name":"mapping-expand-invalidate-save","Count":10000,"Iteration":5,"Warmup":false,"Milliseconds":156.8922,"AllocatedBytes":93412512,"ProcessPeakWorkingSetBytes":110108672,"Result":220000}
+{"Name":"mapping-expand-invalidate-save","Count":30000,"Iteration":0,"Warmup":true,"Milliseconds":520.9104,"AllocatedBytes":268035536,"ProcessPeakWorkingSetBytes":213721088,"Result":660000}
+{"Name":"mapping-expand-invalidate-save","Count":30000,"Iteration":1,"Warmup":false,"Milliseconds":463.8419,"AllocatedBytes":267382160,"ProcessPeakWorkingSetBytes":213221376,"Result":660000}
+{"Name":"mapping-expand-invalidate-save","Count":30000,"Iteration":2,"Warmup":false,"Milliseconds":462.6972,"AllocatedBytes":267381760,"ProcessPeakWorkingSetBytes":213221376,"Result":660000}
+{"Name":"mapping-expand-invalidate-save","Count":30000,"Iteration":3,"Warmup":false,"Milliseconds":495.3476,"AllocatedBytes":267379488,"ProcessPeakWorkingSetBytes":213221376,"Result":660000}
+{"Name":"mapping-expand-invalidate-save","Count":30000,"Iteration":4,"Warmup":false,"Milliseconds":480.4582,"AllocatedBytes":267382624,"ProcessPeakWorkingSetBytes":213221376,"Result":660000}
+{"Name":"mapping-expand-invalidate-save","Count":30000,"Iteration":5,"Warmup":false,"Milliseconds":459.7433,"AllocatedBytes":267377688,"ProcessPeakWorkingSetBytes":213221376,"Result":660000}

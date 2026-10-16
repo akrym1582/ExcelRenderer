@@ -15,7 +15,7 @@ namespace ExcelRenderer.OpenXml;
 /// <summary>Updates workbook relationships and structural references from the same row plan.</summary>
 public static partial class OpenXmlWorkbookWriter
 {
-    private static void RewriteStructures(Stream input, ZipArchive archive, Dictionary<string, SheetSource> sources, Dictionary<string, SpillableBufferStream> replacements, StructuralReferences references, InputBufferOptions buffers, CancellationToken token)
+    private static void RewriteStructures(Stream input, ZipArchive archive, Dictionary<string, SheetSource> sources, Dictionary<string, SpillableBufferStream> replacements, StructuralReferences references, InputBufferOptions buffers, CancellationToken token, bool formulaAst = false)
     {
         input.Position = 0;
         using var document = SpreadsheetDocument.Open(new LeaveOpenStream(input), false);
@@ -23,7 +23,7 @@ public static partial class OpenXmlWorkbookWriter
         var sheetNames = workbook.Workbook.Sheets!.Elements<S.Sheet>().Select(sheet => sheet.Name!.Value!).ToArray();
         foreach (var definition in workbook.Workbook.DefinedNames?.Elements<S.DefinedName>() ?? Enumerable.Empty<S.DefinedName>())
         {
-            if (definition.Name!.Value is not "_xlnm.Print_Area" and not "_xlnm.Print_Titles")
+            if (!formulaAst && definition.Name!.Value is not "_xlnm.Print_Area" and not "_xlnm.Print_Titles")
             {
                 references.ValidateName(definition.Text, sheetNames[(int?)definition.LocalSheetId?.Value ?? 0]);
             }
@@ -392,7 +392,7 @@ public static partial class OpenXmlWorkbookWriter
         }
     }
 
-    private static void RewriteDefinedNames(XDocument workbook, StructuralReferences references)
+    private static void RewriteDefinedNames(XDocument workbook, StructuralReferences references, bool formulaAst = false)
     {
         var names = workbook.Root!.Element(Ns + "sheets")!.Elements().Select(sheet => (string)sheet.Attribute("name")!).ToArray();
         foreach (var definition in workbook.Root.Element(Ns + "definedNames")?.Elements().ToArray() ?? Enumerable.Empty<XElement>())
@@ -427,7 +427,7 @@ public static partial class OpenXmlWorkbookWriter
             }
             else
             {
-                definition.Value = references.Rewrite(definition.Value, names[scope]);
+                definition.Value = formulaAst ? references.RewriteFormula(definition.Value, names[scope]) : references.Rewrite(definition.Value, names[scope]);
             }
         }
     }

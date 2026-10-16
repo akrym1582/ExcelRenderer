@@ -52,7 +52,7 @@ Choose the package for your task:
 | --- | --- | --- |
 | `ExcelRenderer` | Render existing XLSX files to PDF, PNG, SVG or Markdown from C# | .NET Standard 2.1-compatible application |
 | `ExcelRenderer.Mapping` | Populate XLSX templates from C# objects or JSON and save XLSX | .NET Standard 2.1-compatible application; no rendering or fonts required |
-| `ExcelRenderer.OpenXml` | Read XLSX source records or write typed, formula-free workbook edits | .NET Standard 2.1-compatible application; low-level API |
+| `ExcelRenderer.OpenXml` | Read XLSX source records, write typed edits and adapt explicit formula calculation | .NET Standard 2.1-compatible application; low-level API |
 | `ExcelRenderer.Fonts` | Add optional bundled Japanese and emoji fonts for rendering | Use alongside `ExcelRenderer` |
 | `ExcelRenderer.Tool` | Map and convert workbooks from the command line | .NET 10 SDK |
 
@@ -498,22 +498,18 @@ API has changed to `ExcelStyleConverter.Convert(CellStyleInfo, CellValueType)`; 
 [OpenXml reader reference](docs/openxml-reader.md).
 
 Formula display defaults to `FormulaDisplayMode.CachedValue` in Core, the main
-Reader, export APIs and CLI (`--formula-mode cached`). Reader and Mapping backend
-defaults are both OpenXml. ExcelRenderer never recalculates formulas during
-reading, Mapping or saving. Saved results may be stale; zero, false and saved empty
-strings are preserved. Missing results display empty text with
-`FormulaCachedValueMissing`, and saved errors produce `FormulaResultError`.
-HYPERLINK friendly arguments never replace saved or missing results. Formula
-diagnostics follow visible output selection and failure policy before sink opening.
+Reader, export APIs and CLI (`--formula-mode cached`). Saved results may be stale;
+missing caches produce `FormulaCachedValueMissing`. Opt in to the limited built-in
+calculator with `FormulaDisplayMode.Recalculate` or `--formula-mode recalculate`.
+The independent BCL-only engine supports 19 functions and strict diagnostics;
+unsupported reached formulas never fall back to saved results. `Legacy` remains
+unsupported. See [formula calculation](docs/formulas.md) for API examples, selected
+source scope, cache invalidation, compatibility limits and validation.
 
-Explicit `Legacy` and `Recalculate` modes are unsupported on every backend and
-fail before input processing or output creation.
-All Mapping templates must be free of value-producing formulas, including hidden
-sheets, table formulas and calculated names; Auto cannot bypass this restriction.
-Compute line amounts, tax and totals in the caller and supply value placeholders.
-Mapped strings beginning with `=` stay strings. See the
-[backend guide](docs/openxml-integration.md) and
-[Mapping guide](docs/mapping.md) for the static-name grammar and output guarantees.
+Reader and Mapping backends default to OpenXml. Default Mapping still rejects value
+formulas; explicit `MappingOptions.FormulaCalculationMode = Recalculate` enables
+supported formulas with AST-based row-reference rewriting and recalculation.
+Mapped strings beginning with `=` remain strings. See the [Mapping guide](docs/mapping.md).
 
 ## Fonts
 

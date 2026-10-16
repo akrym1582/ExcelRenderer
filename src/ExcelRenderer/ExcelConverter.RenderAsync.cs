@@ -56,9 +56,11 @@ public static partial class ExcelConverter
             resources.TextMeasurer = request.TextMeasurer ?? new PdfSharpTextMeasurer(fontManager, cacheLayouts: true);
             var readOptions = request.ReadOptions with
             {
+                IgnoreFormulaPrintAreas = request.OutputFormat == OutputFormat.Markdown || request.ImageLayout == ImageLayoutMode.Continuous,
                 GetSelectedRange = name => request.Selection.Ranges?.FirstOrDefault(range => range.SheetName == name)?.Range is { } selected
                     ? (selected.First.Row, selected.First.Column, selected.Last.Row, selected.Last.Column) : null,
             };
+            readOptions = SelectFormulaPageTargets(source, request, readOptions, fontManager, cancellationToken);
             var coreDocument = ConversionMetrics.Measure("reader", () => new ExcelReader(fontManager).ReadCore(source, diagnostics, request.Selection.SheetNames, request.DiagnosticOptions.DetectUnsupportedFeatures, readOptions, cancellationToken));
             var publicStyles = new StylePool();
             var document = new ReportDocument(coreDocument.Sheets.Select(sheet => CoreIntegration.CoreModelAdapter.ToPublic(sheet, publicStyles)).ToArray());

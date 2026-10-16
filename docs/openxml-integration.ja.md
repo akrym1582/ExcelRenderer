@@ -1,5 +1,7 @@
 # Open XML エンジンの選択
 
+> 明示再計算モードを追加しました。[数式計算ガイド](formulas.ja.md)が評価範囲・キャッシュ失効・対応機能の現在の仕様です。以下の保存値／数式拒否の説明は、特記のない限り既定の CachedValue モードに適用します。
+
 [English](openxml-integration.md) | 日本語
 
 Core・本体の Reader は OpenXml が既定です。Auto は OpenXml の互換指定として受け付け、
@@ -36,7 +38,8 @@ Core は `PdfExportOptions.ReadOptions` に同等の
 | OpenXml（既定） | CachedValue（既定） | ストリーミング Reader。診断は出力選択後に集約 |
 | Auto | CachedValue | OpenXml の互換指定。fallback なし |
 | ClosedXml | 全指定 | 入出力前に NotSupportedException。OpenXml または Auto へ移行 |
-| 全エンジン | Legacy / Recalculate | 入力処理・出力開始前に拒否 |
+| OpenXml / Auto | Recalculate | 限定的な自作計算器。数式ガイド参照 |
+| 全エンジン | Legacy | 入力処理・出力開始前に拒否 |
 
 全 Reader が元 XLSX の保存結果だけを表示します。古い結果もそのまま使い、
 鮮度や依存関係は検査しません。欠落は空表示と `FormulaCachedValueMissing`、
@@ -140,7 +143,7 @@ pdf / image / svg / markdown・md / render に `--reader-backend`、これらと
 明示 `closedxml` は入力・データの読込や出力作成前に移行先を示して拒否します。
 `--mapping-backend` の明示指定には `--data` が必要です。`--verbose` の選択理由は stderr
 へ表示します。`--formula-mode` は `cached` のみ対応し、既定値も `cached` です。
-明示 `legacy` / `recalculate` は全 backend で入力処理・出力開始前に拒否します。
+明示 `legacy` は全 backend で拒否します。`recalculate` は限定的な自作計算器を使います。
 
 ## 所有権と検証
 

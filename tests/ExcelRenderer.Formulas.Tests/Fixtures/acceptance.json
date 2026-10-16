@@ -1,0 +1,12 @@
+[
+  {"formula":"-2^2","kind":"Number","number":4,"expectedSource":"specification","basis":"Adopted Excel unary precedence; unary minus binds before exponentiation."},
+  {"formula":"2^3^2","kind":"Number","number":64,"expectedSource":"specification","basis":"Equal precedence exponentiation is left associative."},
+  {"formula":"ROUND(125,-1)","kind":"Number","number":130,"expectedSource":"hand-calculated","basis":"125 rounds away from zero at tens midpoint."},
+  {"formula":"\"2\"=2","kind":"Boolean","boolean":false,"expectedSource":"v1-profile","basis":"Comparison does not coerce text to numbers."},
+  {"formula":"TRUE()>\"z\"","kind":"Boolean","boolean":true,"expectedSource":"v1-profile","basis":"Number < Text < Boolean type ordering."},
+  {"formula":"\"日本語\"&\"名\"","kind":"Text","text":"日本語名","expectedSource":"hand-calculated","basis":"Literal string concatenation."},
+  {"formula":"IF(FALSE,1)","kind":"Boolean","boolean":false,"expectedSource":"specification","basis":"An omitted IF false branch returns FALSE."},
+  {"formula":"IF(FALSE,1,)","kind":"Number","number":0,"expectedSource":"v1-profile","basis":"Explicit missing slot differs from absent argument."},
+  {"formula":"AND(FALSE,1/0)","kind":"Error","text":"#DIV/0!","expectedSource":"v1-profile","basis":"AND does not suppress later Excel errors."},
+  {"formula":"MOD(3,-2)","kind":"Number","number":-1,"expectedSource":"hand-calculated","basis":"3 - (-2)*floor(3/-2) = -1."}
+]

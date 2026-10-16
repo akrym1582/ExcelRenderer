@@ -34,6 +34,11 @@ public static partial class ExcelTemplateMapper
             throw new ArgumentException("Specify a culture and MaxOutputRows between 1 and 1048576.", nameof(options));
         }
 
+        if (!Enum.IsDefined(typeof(FormulaCalculationMode), options.FormulaCalculationMode))
+        {
+            throw new ArgumentOutOfRangeException(nameof(options.FormulaCalculationMode));
+        }
+
         if (!Enum.IsDefined(typeof(MappingBackend), options.Backend))
         {
             throw new ArgumentOutOfRangeException(nameof(options.Backend));
@@ -49,7 +54,7 @@ public static partial class ExcelTemplateMapper
         using (var formulaSource = prepared.OpenRead())
         {
             var formula = WorkbookFormulaInspection.Find(formulaSource, cancellationToken);
-            if (formula is not null)
+            if (formula is not null && options.FormulaCalculationMode == FormulaCalculationMode.CachedValue)
             {
                 throw new MappingException(
                     formula.Sheet,
@@ -64,7 +69,7 @@ public static partial class ExcelTemplateMapper
 
         using (var inspected = prepared.OpenRead())
         {
-            var reasons = WorkbookWriteCapabilities.Inspect(inspected, cancellationToken);
+            var reasons = WorkbookWriteCapabilities.Inspect(inspected, cancellationToken, options.FormulaCalculationMode == FormulaCalculationMode.Recalculate);
             if (reasons.Count != 0)
             {
                 throw new NotSupportedException("OpenXml mapping is unsupported: " + string.Join(", ", reasons));

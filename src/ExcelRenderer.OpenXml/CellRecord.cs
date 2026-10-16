@@ -16,7 +16,8 @@ public sealed class CellRecord
     /// <param name="sharedStringIndex">The sharedStringIndex value.</param>
     /// <param name="richTextRuns">The richTextRuns value.</param>
     /// <param name="hasPhonetic">The hasPhonetic value.</param>
-    internal CellRecord(int sheetIndex, CellAddress address, int? explicitStyleIndex, int styleIndex, CellValue value, string? rawValue, FormulaInfo? formula, int? sharedStringIndex, IReadOnlyList<RichTextRunInfo> richTextRuns, bool hasPhonetic)
+    /// <param name="hasCalculationMetadata">Whether cell or value metadata requires unsupported interpretation.</param>
+    internal CellRecord(int sheetIndex, CellAddress address, int? explicitStyleIndex, int styleIndex, CellValue value, string? rawValue, FormulaInfo? formula, int? sharedStringIndex, IReadOnlyList<RichTextRunInfo> richTextRuns, bool hasPhonetic, bool hasCalculationMetadata = false)
     {
         SheetIndex = sheetIndex;
         Address = address;
@@ -28,7 +29,11 @@ public sealed class CellRecord
         SharedStringIndex = sharedStringIndex;
         RichTextRuns = richTextRuns;
         HasPhonetic = hasPhonetic;
+        HasCalculationMetadata = hasCalculationMetadata;
     }
+
+    /// <summary>Gets a value indicating whether cell or value metadata requires unsupported calculation interpretation.</summary>
+    public bool HasCalculationMetadata { get; }
 
     /// <summary>Gets the original one-based sheet position, retaining non-worksheet positions.</summary>
     public int SheetIndex { get; }

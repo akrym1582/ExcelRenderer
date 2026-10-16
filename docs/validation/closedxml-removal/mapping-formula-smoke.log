@@ -1,0 +1,13 @@
+  Determining projects to restore...
+  Restored /tmp/mapping-perf-u751zbc4/MappingPerf.csproj (in 251 ms).
+  2 of 3 projects are up-to-date for restore.
+  ExcelRenderer.OpenXml -> /workspace/ExcelRenderer/src/ExcelRenderer.OpenXml/bin/Release/netstandard2.1/ExcelRenderer.OpenXml.dll
+  ExcelRenderer.Mapping -> /workspace/ExcelRenderer/src/ExcelRenderer.Mapping/bin/Release/netstandard2.1/ExcelRenderer.Mapping.dll
+  MappingPerf -> /tmp/mapping-perf-u751zbc4/bin/Release/net10.0/MappingPerf.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:01.66
+{"run": 0, "mode": "formula", "count": 1000, "columns": 10, "exitCode": 0, "timeout": false, "mappingPeakRssBytes": 47513600, "wallSeconds": 0.288630662000287, "records": [{"phase": "rejected", "mode": "formula", "count": 1000, "elapsedMs": 43.8387, "outputBytes": 0, "message": "Template!K2 []: MappingFormulaNotSupported: f. Calculate values in the caller and replace template formulas with value placeholders."}], "stderr": ""}

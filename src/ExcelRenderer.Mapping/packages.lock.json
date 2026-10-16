@@ -2,19 +2,6 @@
   "version": 1,
   "dependencies": {
     ".NETStandard,Version=v2.1": {
-      "ClosedXML": {
-        "type": "Direct",
-        "requested": "[0.105.1, )",
-        "resolved": "0.105.1",
-        "contentHash": "X1ruIP9h2FBEK7jmO0peq3s6/Zqt5ve5a9f9kn6WUjdsUWvGbQlqxuGLz822xuFLlmnSeAfWFTGeX/tZlmAt+g==",
-        "dependencies": {
-          "ClosedXML.Parser": "2.0.0",
-          "DocumentFormat.OpenXml": "[3.1.1, 4.0.0)",
-          "ExcelNumberFormat": "1.1.0",
-          "RBush.Signed": "4.0.0",
-          "SixLabors.Fonts": "[1.0.0, 3.0.0)"
-        }
-      },
       "DocumentFormat.OpenXml": {
         "type": "Direct",
         "requested": "[3.3.0, )",
@@ -48,11 +35,6 @@
           "System.Threading.Tasks.Extensions": "4.6.3"
         }
       },
-      "ClosedXML.Parser": {
-        "type": "Transitive",
-        "resolved": "2.0.0",
-        "contentHash": "ngTqjYreDYNytG1W5d3ewHsw0ukmmrgV7EKnS4/40rXoYZGt07jrBvo+N+GxT49rcageUMUiprV0jYT4nwVBHQ=="
-      },
       "DocumentFormat.OpenXml.Framework": {
         "type": "Transitive",
         "resolved": "3.3.0",
@@ -70,19 +52,6 @@
         "type": "Transitive",
         "resolved": "10.0.0",
         "contentHash": "vFuwSLj9QJBbNR0NeNO4YVASUbokxs+i/xbuu8B+Fs4FAZg5QaFa6eGrMaRqTzzNI5tAb97T7BhSxtLckFyiRA=="
-      },
-      "RBush.Signed": {
-        "type": "Transitive",
-        "resolved": "4.0.0",
-        "contentHash": "aP5KQxL5RnFNGW1f0euYVBfCatkLw5iEzMRJcXKq8LWWP4Cp3+qoSq1tDDL2vvJ2rM0ychmVMa2VaEKLS6uX4w=="
-      },
-      "SixLabors.Fonts": {
-        "type": "Transitive",
-        "resolved": "1.0.0",
-        "contentHash": "LFQsCZlV0xlUyXAOMUo5kkSl+8zAQXXbbdwWchtk0B4o7zotZhQsQOcJUELGHdfPfm/xDAsz6hONAuV25bJaAg==",
-        "dependencies": {
-          "System.Runtime.CompilerServices.Unsafe": "4.7.0"
-        }
       },
       "StyleCop.Analyzers.Unstable": {
         "type": "Transitive",
@@ -136,6 +105,13 @@
         "type": "Transitive",
         "resolved": "4.6.3",
         "contentHash": "7sCiwilJLYbTZELaKnc7RecBBXWXA+xMLQWZKWawBxYjp6DBlSE3v9/UcvKBvr1vv2tTOhipiogM8rRmxlhrVA=="
+      },
+      "excelrenderer.openxml": {
+        "type": "Project",
+        "dependencies": {
+          "DocumentFormat.OpenXml": "[3.3.0, )",
+          "ExcelNumberFormat": "[1.1.0, )"
+        }
       }
     }
   }

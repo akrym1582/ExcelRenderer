@@ -1,0 +1,44 @@
+{
+  "source_commit": "24c9dea4d67190951d152eef56f76abc943ef733",
+  "generator": "tools/ExcelRenderer.Core.Validation/Program.cs (normalize command, unmodified parent source)",
+  "generator_sha256": "357fe3a15100e19d2b3ee7f2a135529762f781aec1599c28379f688add93d2c8",
+  "dotnet": "10.0.401",
+  "files": {
+    "01-japanese.xlsx": {
+      "source_sha256": "6a89d390e07a60e919b7be2c5fa6af47721b0e9c5a4a0c325ae97174ff6386f0",
+      "normalized_sha256": "aa61d84a3a5eafe743dd49d2045b5904f4c671ed4e63181cf1b3c415bad269e6"
+    },
+    "02-image.xlsx": {
+      "source_sha256": "d54804111617065e59a4bbe4d5c2099b08efdea2f71d1676998bc836569de254",
+      "normalized_sha256": "81a3aaef224c01aa9dfc95665cc94078f475cbd9016b816540a668a02550418e"
+    },
+    "03-wrapped-text.xlsx": {
+      "source_sha256": "60421161d8ec36904befd41ecde57551ea7880a8ffda07925b38178fc747d990",
+      "normalized_sha256": "7f490d7d740f5e0f0ea14b6c27a599e4170ba7f9084eaa7ab4dc7ba0125b81e3"
+    },
+    "04-text-decoration.xlsx": {
+      "source_sha256": "c8ee629159de588541c6d08bce70cae9c0483ddcb21c3feef536102e1457cff1",
+      "normalized_sha256": "0456d19c460a691fd430402cdbcf9ca986c5b322be98b18194812252b199b084"
+    },
+    "05-borders.xlsx": {
+      "source_sha256": "074cfd50a3d4556380f462a69287d9b0254a71ebe412e267b395ca345a54eac2",
+      "normalized_sha256": "90515819a42849ff92838a4a4e190bfdaa6772e8c6f9ecbce0ffcd44126127e6"
+    },
+    "06-layout-and-pagination.xlsx": {
+      "source_sha256": "5870f080ac266568de200bf6955a617da452b14c103a30371889e8bee13b12e6",
+      "normalized_sha256": "d75792e8bf312eb3cecb0d7a420c48ff118d5929d98472892d5b7dbcbb141a79"
+    },
+    "07-multiple-sheets.xlsx": {
+      "source_sha256": "2da1636a03384c0aa0ecb14ec3183631f3c41a90f1348693e795c329c0cae20e",
+      "normalized_sha256": "5f168d40de2ab3421b41b8d619fc82e1d5dc0856fd4c2443d5b6fda744a0ebfc"
+    },
+    "08-print-scaling.xlsx": {
+      "source_sha256": "f9e5ffaa18c622d2820138d18c6aed07ae63b28da8fad1c71c4ffcbdd12a9fb7",
+      "normalized_sha256": "c6ae0dcb2ae314753fc1bd1ff1c19e3bc444c4c387736e11dc27226fe8535247"
+    },
+    "09-cell-border.xlsx": {
+      "source_sha256": "5655ee7b5407c1c9af6836ec65f573819b0265c833660210d04060ca8c368d70",
+      "normalized_sha256": "78080a6b375cc83af9a98bb222e80f91d150870bf988ad0865574d697384bfe4"
+    }
+  }
+}

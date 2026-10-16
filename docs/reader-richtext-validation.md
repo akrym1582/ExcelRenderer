@@ -1,5 +1,10 @@
 # Reader and partial-text implementation status
 
+> Historical record: formula evaluation/Legacy and outside-repeat formula permissions described
+> below have been superseded by the no-recalculation contract. See
+> [the current integration guide](openxml-integration.md). Original measurements and
+> acceptance records are preserved for their recorded commits.
+
 This work is **not acceptance-complete for the four-item request**. Recalculate is blocked by the required evaluation scope in ClosedXML 0.105.1.
 Legacy and CachedValue are implemented through Reader, API, CLI and all output paths.
 Recalculate is reserved but currently fails before conversion; it is not an implemented

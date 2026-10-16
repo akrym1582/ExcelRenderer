@@ -38,6 +38,6 @@ internal sealed class HiddenRowColumnPass : IReportLayoutPass
         }
 
         context.VisibleRows = rows.Distinct().OrderBy(row => row)
-            .Where(row => !context.Sheet.Rows.GetValueOrDefault(row, new()).IsHidden).ToArray();
+            .Where(row => !context.Sheet.Rows.GetValueOrDefault(row, new(context.Sheet.DefaultRowHeight, context.Sheet.DefaultRowsHidden)).IsHidden).ToArray();
     }
 }

@@ -28,7 +28,7 @@ PDF / PNG / SVG
 
 ### 主な機能
 
-- ClosedXML による `.xlsx` の読み込み
+- OpenXml（既定）・Auto を選択した `.xlsx` の読み込み
 - セル文字列、フォント、文字サイズ、配置、折り返しの読み込み
 - 結合セル、列幅、行高の読み込み
 - 非表示行・非表示列の除外
@@ -50,6 +50,7 @@ PDF / PNG / SVG
 | --- | --- | --- |
 | `ExcelRenderer` | C# から既存の XLSX を PDF・PNG・SVG・Markdown に変換 | .NET Standard 2.1 と互換性のあるアプリケーション |
 | `ExcelRenderer.Mapping` | C# オブジェクト・JSON をテンプレートへ設定して XLSX を保存 | .NET Standard 2.1 と互換性のあるアプリケーション。描画・フォントは不要 |
+| `ExcelRenderer.OpenXml` | XLSX の元データの読み込み、型付き計画による数式なしの編集 | .NET Standard 2.1 と互換性のあるアプリケーション。低レベル API |
 | `ExcelRenderer.Fonts` | 描画用の日本語・絵文字フォントを追加 | `ExcelRenderer` と併用 |
 | `ExcelRenderer.Tool` | コマンドラインでマッピング・変換 | .NET 10 SDK |
 
@@ -282,9 +283,9 @@ excelrenderer render input.xlsx -o markdown --format markdown --hyperlinks prese
 
 trimの対象は可視の塗り（明示白塗りも含む）、線、配置済み文字、画像、図形、ヘッダー／フッターです。取得可能な文字は字形境界を使い、絵文字・互換字形は確定配置の安全側の論理境界を使います。画像内の白／透明領域をピクセル解析して除去する処理ではありません。空のtrim結果は1×1ptに四辺paddingを加え（既定5×5pt）、`EmptyContent` Infoを記録します。PNGは最終pt寸法からceilでpx寸法を求め、ページ／連続の双方でbitmap確保前に `RenderRequest.MaxPngPixels` を適用します。
 
-PDF／Markdownは `http`、`https`、`mailto` と同一ブックのセルリンクを保持します。範囲ref、空セル、単純A1を参照するスコープ付き名前、定数文字列引数の `HYPERLINK` に対応します。XMLの明示定義を数式より優先し、cached表示を保持します。対応数式でcached値がなければliteralの表示名／リンク先を表示し、一般的な数式再計算は行いません。PDF注釈は最終結合文書へ付け、ページ選択・範囲・trimを反映します。Markdownは安定した `xl-sN-rN-cN` アンカーと、空セル／範囲refを表す明示一覧を使います。PNG／SVGはセルの見た目を保持し、クリック機能やリンク警告を追加しません。SVGリンクやリンクsidecarは生成しません。
+PDF／Markdownは `http`、`https`、`mailto` と同一ブックのセルリンクを保持します。範囲ref、空セル、単純A1を参照するスコープ付き名前、定数文字列引数の `HYPERLINK` に対応します。XMLの明示定義を数式より優先し、cached表示を保持します。cached値がなければ空表示と `FormulaCachedValueMissing` にし、literalの表示名／リンク先で補いません。PDF注釈は最終結合文書へ付け、ページ選択・範囲・trimを反映します。Markdownは安定した `xl-sN-rN-cN` アンカーと、空セル／範囲refを表す明示一覧を使います。PNG／SVGはセルの見た目を保持し、クリック機能やリンク警告を追加しません。SVGリンクやリンクsidecarは生成しません。
 
-ローカルファイル、相対パス、UNC、HTTP埋込み認証情報、制御文字、非対応schemeや競合定義は表示文字を残して `HyperlinkRejected`、動的数式等は `HyperlinkUnsupported` Warningになります。未存在／出力外の内部リンク先は `HyperlinkTargetOmitted`。出力外のリンク元にはリンク先欠落警告を出しません。診断にURL・宛先・query全文を載せません。読込可能な不正リンク定義はWarningですが、ClosedXMLが拒否する破損ブックは致命的入力エラーです。Strict／指定したwarnings-as-errorsはSink Open前に失敗します。PDF CLIは事前検証後に初めて作成・truncateし、入力と出力の同一パスは読込前に拒否します。
+ローカルファイル、相対パス、UNC、HTTP埋込み認証情報、制御文字、非対応schemeや競合定義は表示文字を残して `HyperlinkRejected`、動的数式等は `HyperlinkUnsupported` Warningになります。未存在／出力外の内部リンク先は `HyperlinkTargetOmitted`。出力外のリンク元にはリンク先欠落警告を出しません。診断にURL・宛先・query全文を載せません。読込可能な不正リンク定義はWarningですが、破損 package やリンク relationship の欠落は致命的入力エラーです。Strict／指定したwarnings-as-errorsはSink Open前に失敗します。PDF CLIは事前検証後に初めて作成・truncateし、入力と出力の同一パスは読込前に拒否します。
 
 APIでは `RenderRequest.Selection.Ranges` に `SheetRangeSelection`、`MaxRangeCells` に総上限、`RenderRequest.Trim` に `TrimOptions`、`Hyperlinks` に `HyperlinkMode` を指定します。
 
@@ -446,6 +447,65 @@ svgRenderer.Render(
     pageNumber => File.Create($"report-{pageNumber}.svg"));
 ```
 
+## セル内の部分書式と任意の診断
+
+PDF・PNG・SVG は、通常の文字列セルのフォント名・サイズ・太字・斜体・色・
+単一下線を部分書式として保持します。`ReportCell.RichTextRuns` は実効書式の
+`CellTextRun`、`Text` はプレーン全文です。手動モデルでは両者の全文が一致し、
+サイズが正の有限値である必要があります。組込み計測器は
+`IRichTextLayoutService` に対応し、従来のカスタム計測器はセル単一書式へ縮退します。
+Core 単独の通常フォント一つという仕様と、Markdown のプレーン出力は維持します。
+
+回転・縦書きとの併用はセル単一書式へ縮退します。取り消し線、上付き・下付き、
+二重・会計下線、ふりがなは描画しません。追加検出を有効にすると、未対応の部分書式と
+条件付き書式を診断します。anchor のあるグラフは既存の `UnsupportedDrawingObject`
+コードを維持し、追加検出時は選択ページの preflight で対象範囲へ絞り込みます。
+グラフや条件付き書式の描画は追加していません。
+
+```sh
+excelrenderer render input.xlsx -o output.pdf --format pdf \
+  --layout-warnings --min-readable-font-size 6 --detect-unsupported-features
+```
+
+`DiagnosticOptions.EnableLayoutWarnings` の既定値は `false` です。
+`MinimumReadableFontSize` は既定 6pt、正の有限値に限ります。値だけでは有効化されず、
+CLI では `--layout-warnings` との併用が必要です。`CellTextClipped` は横書きの折り返し・
+縮小セルを対象に、確定済みの論理行配置を 0.25pt の許容差で判定します。全グリフの
+ink bounds を完全に判定する機能ではありません。`CellTextTooSmall` は出力倍率適用後の
+可視 run サイズを使います。セルの寸法は変更せず、Markdown にはレイアウト診断を出しません。
+追加診断は preflight で収集し、診断による失敗は出力 sink を開く前に確定します。
+
+`DetectUnsupportedFeatures` 有効時、チャートシートは位置不明のシート単位診断
+`UnsupportedDrawingObject` を出し、空白ページは追加しません。チャートシートだけを選択した場合は
+診断のみを返し、成果物は作りません。`RenderRequest.TextMeasurer` で呼び出し元所有の旧計測サービスを
+指定できます。`IRichTextLayoutService` がなければセル書式へ縮退し、opt-in 時に preflight で
+`RichTextLayoutFallback` を出します。既定は組込みサービスで、診断だけの追加グリフ計測は行いません。
+
+## Reader の選択と数式の保存結果
+
+Reader は OpenXml が既定で、Auto も同じ経路を使います。明示 ClosedXml は入力前に拒否します。
+Mapping も OpenXml が既定で、Auto は同じ Writer を使います。
+[backend API・CLI・対応範囲・stream 保証](docs/openxml-integration.ja.md)を参照してください。
+`ExcelRenderer.OpenXml` は共通の Reader・Writer・入力処理を提供し、ClosedXML はライブラリ・CLI・テスト・ツールから撤去済みです。
+公開 style API は `ExcelStyleConverter.Convert(CellStyleInfo, CellValueType)` に変更しました。
+[破壊的変更と移行例](docs/closedxml-removal-compatibility.md)を参照してください。低レベル API は [OpenXml Reader リファレンス](docs/openxml-reader.ja.md)
+にまとめています。
+
+数式表示の既定値は Core・本体 Reader・各 export API・CLI ともに
+`FormulaDisplayMode.CachedValue`（`--formula-mode cached`）です。Reader／Mapping の
+backend 既定値はどちらも OpenXml です。読込・Mapping・保存のいずれも再計算しません。
+古い保存結果もそのまま使い、0・false・保存された空文字を保持します。欠落は空表示と
+`FormulaCachedValueMissing`、保存された Excel エラーは `FormulaResultError` です。
+HYPERLINK の friendly text で保存結果や空表示を補いません。診断は可視出力の選択と
+失敗方針を反映し、sink を開く前に判定します。
+
+明示 `Legacy` / `Recalculate` は全 backend で非対応とし、入力処理・出力前に拒否します。
+Mapping テンプレートの値の数式は、非表示シート・table 式・
+計算定義名も含めて禁止し、Auto もこの検査を回避しません。明細金額・税・合計は呼び出し元で
+計算し、値のプレースホルダーへ渡してください。`=` で始まる入力値は文字列のままです。
+静的定義名の限定文法と出力保証は[エンジン選択ガイド](docs/openxml-integration.ja.md)と
+[Mapping ガイド](docs/mapping.ja.md)を参照してください。
+
 ## フォント
 
 PDF と PNG の変換では、任意の `ExcelRenderer.Fonts` パッケージが導入されていれば、
@@ -480,6 +540,12 @@ GlobalFontSettings.FontResolver = new PdfSharpFontResolver(
 
 ## アーキテクチャ
 
+PDFの確定フォントは不変snapshotを使います。変換sessionが資源を所有し、公開layoutは必要なsnapshotを保持します。グローバルresolverの登録は弱参照とし、各変換後に期限切れ登録を整理します。
+
+PDF専用のソースプロジェクトは[ExcelRenderer Core](docs/core.ja.md)を参照してください（Core単独のNuGetパッケージはありません）。
+
+本体packageは同じbuildの `ExcelRenderer.Core.dll` を同梱します。Core単独ではソースProjectReferenceを利用してください。基本読取、幾何・ページlayout、command生成、PDF処理をCoreへ集約し、高機能部分は本体が拡張します。[2エンジン構成](docs/core-architecture.ja.md)と[検証結果](docs/core-refactor-validation.md)を参照してください。
+
 Excel を `ReportDocument`、`RenderDocument`、`DrawCommand` の順に変換し、PDF・PNG・SVG へ描画します。
 
 ```text
@@ -490,9 +556,9 @@ Excel (.xlsx) → ReportDocument → RenderDocument → DrawCommand → PDF / PN
 
 ## 制約
 
-- Excel の数式を完全には再現しません。
+- Excel 数式は保存結果だけを表示し、保存結果がなければ空表示にします。
 - Excel のグラフには対応していません。
-- 条件付き書式を完全には再現しません。
+- 条件付き書式は描画しません。
 - すべての用紙サイズには対応していません。
 - ヘッダー、フッターのすべての書式指定には対応していません。
 - ページ分割は行・列の境界で行い、結合セル、行、列の途中では分割しません。
@@ -525,7 +591,7 @@ OS・追加ディレクトリのフォント走査では metadata のみを保�
 読み込み前に消失・変更したファイルは明確な font load エラーになります。
 PDFsharpの確定font bytesは所有元のfont/layoutの寿命に紐付け、グローバル登録は弱参照で保持します。
 
-PDFsharp の最終文書・リソースと、ClosedXML の全ブック読込は残ります。
+PDFsharp の最終文書・リソースと、OpenXml Reader のスタイル・共有文字列は保持します。
 幾何索引と選択モデルもブックの大きさに依存するため、定メモリのストリーミングではありません。
 [フェーズ3測定](docs/phase3-performance.ja.md)、過去の[PDF測定](docs/pdf-performance.ja.md)と
 [画像測定](docs/image-performance.ja.md)を参照してください。
@@ -564,7 +630,7 @@ PDF/PNG でも設定を渡せますが、適用先は SVG 中間 stream だけ�
 入力用 `WorkbookInputOptions` とは独立しており、入力側も自身の閾値・許可設定に従って
 seekable な一時ファイルへ spool します。reader は独立した cursor を使い、spool を byte[] へ戻しません。
 成功・キャンセル・失敗時に一時 buffer を cleanup し、caller 所有の入力・出力 stream は閉じません。
-重い単一 native 描画・encode・ClosedXML 読込は即時に中断できない制約が残ります。
+重い単一 native 描画・encodeは即時に中断できない制約が残ります。
 
 ## 開発
 
@@ -579,6 +645,7 @@ dotnet test ExcelRenderer.slnx
 NuGet 公開前にマッピングライブラリを試す場合は、リポジトリのルートでパッケージを作成します。
 
 ```bash
+dotnet pack src/ExcelRenderer.OpenXml/ExcelRenderer.OpenXml.csproj -c Release -o artifacts/packages
 dotnet pack src/ExcelRenderer.Mapping/ExcelRenderer.Mapping.csproj -c Release -o artifacts/packages
 ```
 
@@ -591,82 +658,27 @@ dotnet add package ExcelRenderer.Mapping
 ```
 
 `<…>` は実際のディレクトリパスに置き換えます。ソースの登録済みの場合は
-登録コマンドを省略してください。ClosedXML などの依存関係のため NuGet.org も有効にします。
+登録コマンドを省略してください。DocumentFormat.OpenXml などの依存関係のため NuGet.org も有効にします。
 CLI をソースから試す手順は [English README の Development](README.md#development) にあります。
 
 ## ドキュメント
 
-- [マッピングの導入手順・構文・制約](docs/mapping.ja.md)（[English](docs/mapping.md)）
-- [アーキテクチャ](docs/architecture.ja.md)（[English](docs/architecture.md)）
-- [English README](README.md)
-- [AI coding agent guide](AGENTS.md)
+| 目的 | 資料 |
+| --- | --- |
+| Reader・Mapping の選択、数式の保存結果、CLI・stream の契約 | [エンジン選択](docs/openxml-integration.ja.md)（[English](docs/openxml-integration.md)） |
+| テンプレート構文、計算済み入力値、使用例 | [Mapping](docs/mapping.ja.md)（[English](docs/mapping.md)） |
+| PDF 専用ソース API とフォント要件 | [Core](docs/core.ja.md)（[English](docs/core.md)） |
+| 元データ、書式、低レベル Reader の上限 | [OpenXml Reader](docs/openxml-reader.ja.md)（[English](docs/openxml-reader.md)） |
+| 描画の各工程と拡張方法 | [アーキテクチャ](docs/architecture.ja.md)（[English](docs/architecture.md)） |
+| 共通実装と製品ごとの境界 | [Core の構成](docs/core-architecture.ja.md)（[English](docs/core-architecture.md)）、[所有者表](docs/core-source-map.md) |
+| コミットごとのテスト・配布・割当・CI の証拠 | [検証記録](docs/openxml-integration-validation.md) |
+
+検証報告は記載された対象コミットの動作を記録しています。現在の API・対応範囲は上記の
+利用ガイドを参照してください。リポジトリの開発者向けには
+[AI coding agent guide](AGENTS.md)もあります。
 
 ## ライセンス
 
 ExcelRenderer は [MIT License](LICENSE) で提供されます。
 
 日本語フォントと Noto Color Emoji は任意の `ExcelRenderer.Fonts` パッケージに収録されます。ライブラリで使用する場合は `dotnet add package ExcelRenderer.Fonts` を追加してください。未導入の場合は登録済みまたはシステムのフォントを使います。CLI はフォントパッケージに依存します。Noto Sans JP と Noto Color Emoji には SIL Open Font License 1.1、IPAmj 明朝には IPA Font License Agreement v1.0 が適用されます。`FontOptions.ReplaceIvsWithBaseCharacter` を `true` にすると、IVS を異体字セレクターのない基底文字に置換して描画できます。詳細は[サードパーティ通知](THIRD-PARTY-NOTICES.md)を参照してください。
-
-PDFの確定フォントは不変snapshotを使います。変換sessionが資源を所有し、公開layoutは必要なsnapshotを保持します。グローバルresolverの登録は弱参照とし、各変換後に期限切れ登録を整理します。
-
-ソース参照専用の別プロジェクトは[ExcelRenderer Core](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/core.ja.md)を参照してください（NuGet未公開）。
-
-本体packageは同じbuildの `ExcelRenderer.Core.dll` を同梱します。Core単独ではソースProjectReferenceを利用してください。基本読取、幾何・ページlayout、command生成、PDF処理をCoreへ集約し、高機能部分は本体が拡張します。[2エンジン構成](docs/core-architecture.ja.md)と[検証結果](docs/core-refactor-validation.md)を参照してください。
-
-### セル内の部分書式と任意の診断
-
-PDF・PNG・SVG は、通常の文字列セルのフォント名・サイズ・太字・斜体・色・
-単一下線を部分書式として保持します。`ReportCell.RichTextRuns` は実効書式の
-`CellTextRun`、`Text` はプレーン全文です。手動モデルでは両者の全文が一致し、
-サイズが正の有限値である必要があります。組込み計測器は
-`IRichTextLayoutService` に対応し、従来のカスタム計測器はセル単一書式へ縮退します。
-Core 単独の通常フォント一つという仕様と、Markdown のプレーン出力は維持します。
-
-回転・縦書きとの併用はセル単一書式へ縮退します。取り消し線、上付き・下付き、
-二重・会計下線、ふりがなは描画しません。追加検出を有効にすると、未対応の部分書式と
-条件付き書式を診断します。anchor のあるグラフは既存の `UnsupportedDrawingObject`
-コードを維持し、追加検出時は選択ページの preflight で対象範囲へ絞り込みます。
-グラフや条件付き書式の描画は追加していません。
-
-```sh
-excelrenderer render input.xlsx -o output.pdf --format pdf \
-  --layout-warnings --min-readable-font-size 6 --detect-unsupported-features
-```
-
-`DiagnosticOptions.EnableLayoutWarnings` の既定値は `false` です。
-`MinimumReadableFontSize` は既定 6pt、正の有限値に限ります。値だけでは有効化されず、
-CLI では `--layout-warnings` との併用が必要です。`CellTextClipped` は横書きの折り返し・
-縮小セルを対象に、確定済みの論理行配置を 0.25pt の許容差で判定します。全グリフの
-ink bounds を完全に判定する機能ではありません。`CellTextTooSmall` は出力倍率適用後の
-可視 run サイズを使います。セルの寸法は変更せず、Markdown にはレイアウト診断を出しません。
-追加診断は preflight で収集し、診断による失敗は出力 sink を開く前に確定します。
-
-数式表示の既定値は `FormulaDisplayMode.Legacy` です。保存された結果だけを使う場合は
-`RenderRequest.ReadOptions = new ExcelReadOptions { FormulaDisplayMode = FormulaDisplayMode.CachedValue }`
-を指定します（型は `ExcelRenderer.Excel` 名前空間）。`ExcelReader.Read(path, options)`／
-`Read(stream, options)` と PDF・画像・SVG・Markdown の export options も同じ設定を持ちます。
-Mapping の保存・計算設定は変更しません。
-
-```sh
-excelrenderer pdf input.xlsx -o output.pdf --formula-mode cached
-excelrenderer render input.xlsx -o output --format markdown --formula-mode cached
-```
-
-全描画コマンド（`pdf`、`image`、`svg`、`md`、`render`）に対応し、`xlsx` は対象外です。
-保存結果の欠落は空表示と `FormulaCachedValueMissing` で通知します。0・false・保存された空文字は
-欠落と区別し、既存の HYPERLINK literal 表示復元を優先します。Excel エラー値は
-`FormulaResultError` で通知します。cached は数式を評価せず、保存結果の鮮度も保証しません。
-数式診断も選択された可視出力に絞り、抑制・失敗方針を適用して sink を開く前に判定します。
-
-**Recalculate は、要求された選択セルと依存先に限定する契約では未実装です。**
-enum／CLI の綴りは予約されていますが、現状は変換前に拒否します。cache 表示やブック全体の
-再計算へ黙って切り替えません。[公開 API の再現テストと未決事項](docs/reader-richtext-validation.md)
-を参照してください。この契約が解決するまで PR は未完了です。
-
-`DetectUnsupportedFeatures` 有効時、チャートシートは位置不明のシート単位診断
-`UnsupportedDrawingObject` を出し、空白ページは追加しません。チャートシートだけを選択した場合は
-診断のみを返し、成果物は作りません。`RenderRequest.TextMeasurer` で呼び出し元所有の旧計測サービスを
-指定できます。`IRichTextLayoutService` がなければセル書式へ縮退し、opt-in 時に preflight で
-`RichTextLayoutFallback` を出します。既定は組込みサービスで、診断だけの追加グリフ計測は行いません。
-
-独立した非配布 Open XML Reader の API と対応範囲は [Reader の説明](docs/openxml-reader.ja.md)を参照してください。既存の変換経路は従来の Reader を使用します。

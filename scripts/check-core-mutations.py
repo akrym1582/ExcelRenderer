@@ -14,8 +14,9 @@ CASES = [
      'positioned.Baseline + 1', 'positioned.Baseline + 4', 'Finalized_baseline_and_underline'),
     ('image-page', 'Layout/CoreLayoutPolicy.cs',
      'item.Bounds.Y < context.Vertical.Start', 'item.Bounds.Y <= context.Vertical.Start', 'Image_is_drawn_only'),
-    ('emu', 'Excel/DrawingMLReader.cs',
-     'emu / EmusPerPoint', 'emu / (EmusPerPoint * 2)', 'DrawingML_anchors_preserve'),
+    # Pictures use the streaming snapshot parser; DrawingMLReader still handles full-only shapes.
+    ('emu', 'Excel/CoreExcelReader.OpenXml.cs',
+     'Number(position, "x", 0) / 12700', 'Number(position, "x", 0) / 25400', 'DrawingML_anchors_preserve'),
 ]
 
 

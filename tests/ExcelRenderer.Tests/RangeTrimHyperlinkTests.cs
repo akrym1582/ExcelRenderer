@@ -1,5 +1,5 @@
 using System.Text;
-using ClosedXML.Excel;
+using ExcelRenderer.TestFixtures;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using ExcelRenderer.Drawing;
@@ -147,9 +147,9 @@ public sealed class RangeTrimHyperlinkTests
         Assert.Equal(0, ((PdfInteger)destination.Elements[4]).Value);
     }
 
-    /// <summary>保存済み XLSX の XML を読み取り、リンクの矩形範囲・空セルのリンク・定数数式の表示文字と対象 URL を保持することを検証します。</summary>
-    [Fact(DisplayName = "保存済み XLSX の XML を読み取り、リンクの矩形範囲・空セルのリンク・定数数式の表示文字と対象 URL を保持する")]
-    public void Saved_xlsx_reader_keeps_xml_ranges_empty_links_and_literal_displays()
+    /// <summary>保存済み XLSX の XML を読み取り、リンクの矩形範囲・空セルのリンク・静的対象 URL を保持し欠落キャッシュを空表示にすることを検証します。</summary>
+    [Fact(DisplayName = "保存済み XLSX の XML を読み取り、リンクの矩形範囲・空セルのリンク・静的対象 URL を保持し欠落キャッシュを空表示にする")]
+    public void Saved_xlsx_reader_keeps_xml_links_and_reports_missing_formula_cache()
     {
         var bytes = Fixture();
         using var input = new MemoryStream(bytes);
@@ -158,7 +158,8 @@ public sealed class RangeTrimHyperlinkTests
         var sheet = document.Sheets[0];
         Assert.Contains(sheet.Hyperlinks, link => link.SourceRange == new CellRange(new(4, 2), new(4, 3)));
         Assert.Contains(sheet.Hyperlinks, link => link.SourceRange == new CellRange(new(5, 2), new(5, 2)));
-        Assert.Equal("literal label", sheet.Cells[new(6, 2)].Text);
+        Assert.Equal(string.Empty, sheet.Cells[new(6, 2)].Text);
+        Assert.Contains(sheet.CellReadDiagnostics, d => d.Code == "FormulaCachedValueMissing" && d.CellRange == "B6");
         Assert.Equal("https://example.com/formula", sheet.Hyperlinks.Single(link => link.SourceRange.First == new CellAddress(6, 2)).Target);
     }
 
@@ -381,12 +382,7 @@ public sealed class RangeTrimHyperlinkTests
     [InlineData(2, 5)]
     public async Task Hidden_only_selection_preserves_empty_trimmed_and_continuous_pages(double padding, double dimension)
     {
-        using var workbook = new XLWorkbook();
-        var sheet = workbook.AddWorksheet("hidden");
-        sheet.Rows(1, 3).Hide();
-        sheet.Columns(1, 3).Width = 10;
-        using var saved = new MemoryStream();
-        workbook.SaveAs(saved);
+        using var saved = RetainedWorkbook.Open("RangeTrimHyperlinkTests.Hidden_only_selection_preserves_empty_trimmed_and_continuous_pages.9415BE3E2E0D0106.xlsx");
         var selection = new SelectionOptions { Ranges = [new("hidden", new(new(1, 1), new(3, 3)))] };
         var (trimmed, _) = await Render(saved.ToArray(), Request(OutputFormat.Pdf) with { Selection = selection, Trim = new() { Enabled = true, PaddingPoints = padding } });
         Assert.Single(trimmed.Pages);
@@ -502,10 +498,7 @@ public sealed class RangeTrimHyperlinkTests
     [Fact(DisplayName = "リンクだけの範囲では空セルを実体化せず、PDF 注釈と Markdown のリンク一覧にリンクを保持する")]
     public async Task Link_only_ranges_do_not_materialize_blank_cells_and_keep_output_links()
     {
-        using var workbook = new XLWorkbook();
-        workbook.AddWorksheet("Sheet1");
-        using var saved = new MemoryStream();
-        workbook.SaveAs(saved);
+        using var saved = RetainedWorkbook.Open("RangeTrimHyperlinkTests.Link_only_ranges_do_not_materialize_blank_cells_and_keep_output_links.ABC50793D8F30865.xlsx");
         saved.Position = 0;
         using (var xml = SpreadsheetDocument.Open(saved, true))
         {
@@ -615,47 +608,7 @@ public sealed class RangeTrimHyperlinkTests
     /// <param name="multipleAreas">リンク先ページの検証用に複数の印刷範囲を設定するかどうか。</param>
     internal static byte[] Fixture(bool multipleAreas = false)
     {
-        using var workbook = new XLWorkbook();
-        foreach (var name in new[] { "Sheet1", "売上 2026", "O'Brien!Q" })
-        {
-            var sheet = workbook.AddWorksheet(name);
-            sheet.Style.Font.FontName = "Noto Sans JP";
-            sheet.Style.Font.FontSize = 10;
-            sheet.Columns(1, 8).Width = 10;
-            sheet.Rows(1, 15).Height = 20;
-            sheet.PageSetup.PaperSize = XLPaperSize.A4Paper;
-            sheet.PageSetup.Scale = 100;
-            sheet.PageSetup.Margins.Left = .5;
-            sheet.PageSetup.Margins.Top = .5;
-            sheet.PageSetup.Margins.Right = .5;
-            sheet.PageSetup.Margins.Bottom = .5;
-            sheet.PageSetup.PrintAreas.Add("A1:F10");
-            sheet.PageSetup.SetRowsToRepeatAtTop(1, 1);
-            sheet.PageSetup.Header.Center.AddText("Header");
-            sheet.PageSetup.Footer.Center.AddText("Footer");
-            sheet.Row(13).Hide();
-            sheet.Column(8).Hide();
-            sheet.Cell("B2").Value = "target";
-            sheet.Cell("B3").Value = "internal";
-            sheet.Cell("B4").Style.Fill.BackgroundColor = XLColor.White;
-            sheet.Cell("B5").Style.Border.BottomBorder = XLBorderStyleValues.Double;
-            sheet.Cell("B6").FormulaA1 = "HYPERLINK(\"https://example.com/formula\",\"literal label\")";
-            sheet.Cell("B7").FormulaA1 = "HYPERLINK(A1,\"dynamic\")";
-            sheet.Cell("B8").Value = "<&\"[]()|日本語";
-            sheet.Cell("B8").Style.Fill.BackgroundColor = XLColor.LightBlue;
-        }
-        workbook.Worksheet(1).Range("A2:C2").Merge().Value = "merge label";
-        using (var bitmap = new SKBitmap(4, 4))
-        {
-            bitmap.Erase(SKColors.Orange);
-            using var image = SKImage.FromBitmap(bitmap);
-            using var data = image.Encode(SKEncodedImageFormat.Png, 100);
-            using var picture = new MemoryStream(data.ToArray());
-            workbook.Worksheet(1).AddPicture(picture, "range-image").MoveTo(workbook.Worksheet(1).Cell("A9")).WithSize(160, 32);
-        }
-        if (multipleAreas) { workbook.Worksheet(1).PageSetup.PrintAreas.Add("H1:J10"); workbook.Worksheet(3).PageSetup.PrintAreas.Add("H1:J10"); }
-        using var saved = new MemoryStream();
-        workbook.SaveAs(saved);
+        using var saved = RetainedWorkbook.Open(multipleAreas ? "RangeTrimHyperlinkTests.Fixture.48A2341D71389879.xlsx" : "RangeTrimHyperlinkTests.Fixture.FB83DA40DBCCF2CE.xlsx");
         saved.Position = 0;
         using (var xml = SpreadsheetDocument.Open(saved, true))
         {

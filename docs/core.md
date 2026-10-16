@@ -1,8 +1,10 @@
 # ExcelRenderer Core
 
+English | [日本語](core.ja.md)
+
 A standalone `netstandard2.1` source project for XLSX-to-PDF conversion, usable from .NET 8/10 through ProjectReference. Core has no separate NuGet package or embedded-font DLL and does not reference ExcelRenderer/Fonts/Tool. The main ExcelRenderer package includes Core DLL/XML from the same build.
 
-Public type names match the original library: `ExcelConverter`, `PdfExportOptions`, `WorkbookInputOptions`, `ConversionResult`, and `ConversionDiagnostic`. They are in the `ExcelRenderer.Core` namespace; option and result members retain the Core-specific scope. When migrating from ExcelRenderer.Slim, change the ProjectReference and `using ExcelRenderer.Slim;` to Core. No Slim wrapper or old DLL is produced.
+Public types include `ExcelConverter`, `PdfExportOptions`, `WorkbookInputOptions`, `ConversionResult`, and `ConversionDiagnostic` in the `ExcelRenderer.Core` namespace. Options and results follow the Core-specific scope described below.
 
 ```xml
 <ItemGroup>
@@ -25,7 +27,7 @@ var result = await ExcelConverter.ConvertAsync(xlsx, pdf, new PdfExportOptions
 
 All sheets, including hidden sheets, print in workbook order unless one SheetName is supplied. Empty sheets produce one page. Workbook print areas (including multiple areas), paper, margins, scaling/FitToPages, page order, print titles, manual breaks, cells, merges, backgrounds, borders, alignment, wrapping, ShrinkToFit, and existing header/footer rules remain supported. Date/time fields share one conversion snapshot. Cell rotation is ignored.
 
-Pictures use their complete source image stretched into the placement rectangle. Position, size, and Z order remain supported. Only the page containing the picture's top-left point prints it; points outside the print area are omitted. Overflow is clipped at the PDF page boundary. Pictures are neither split nor repeated across pages or print titles. Each matching print area prints independently. Crop, rotation, and flips are ignored. Shapes, callouts, shape text, and PDF link annotations are omitted. Cell hyperlink display text remains; HYPERLINK formulas use CachedValue. General cells retain GetFormattedString behavior, without adding a formula engine or promising Excel recalculation equivalence. Image decode failures are returned as nonfatal diagnostics.
+Pictures use their complete source image stretched into the placement rectangle. Position, size, and Z order remain supported. Only the page containing the picture's top-left point prints it; points outside the print area are omitted. Overflow is clipped at the PDF page boundary. Pictures are neither split nor repeated across pages or print titles. Each matching print area prints independently. Crop, rotation, and flips are ignored. Shapes, callouts, shape text, and PDF link annotations are omitted. Cell hyperlink display text remains; HYPERLINK formulas use CachedValue. All formula displays use typed saved results from the original XML. OpenXml formats the immutable saved values directly. Missing caches display empty text with a diagnostic; Legacy/Recalculate are rejected before input processing. Non-formula cells retain ordinary formatting. Image decode failures are returned as nonfatal diagnostics.
 
 There is no format/range/page extraction/trim/continuous-image API and no PNG/SVG/Markdown renderer.
 
@@ -45,7 +47,7 @@ dotnet run --project samples/ExcelRenderer.Core.Sample -c Release -- input.xlsx 
 
 Defaults: input memory 16MiB, input limit 128MiB, ZIP entries 10,000, expanded ZIP limit 512MiB, temporary files disabled. Allowed temporary input spools are cleaned up on success/failure.
 
-One page payload is generated at a time, appended to one final PdfDocument, and saved once. Text layouts have a conversion-local cache limited to 512 entries and strings up to 2048 characters. Decoded-image estimates have a 64MiB cache with leases and disposal. ClosedXML and the final PDF document still retain their models/resources; PDFsharp document image retention is separate from the cache budget. Constant RSS or a memory reduction percentage is not guaranteed. SkiaSharp native libraries remain required for image decode, line metrics, and digit widths.
+One page payload is generated at a time, appended to one final PdfDocument, and saved once. Text layouts have a conversion-local cache limited to 512 entries and strings up to 2048 characters. Decoded-image estimates have a 64MiB cache with leases and disposal. OpenXml source styles/shared strings and the final PDF document retain their models/resources; PDFsharp document image retention is separate from the cache budget. Constant RSS or a memory reduction percentage is not guaranteed. SkiaSharp native libraries remain required for image decode, line metrics, and digit widths.
 
 Core and the main renderer share one cancellation-aware font gate for font reset, measurement, drawing, Save and disposal. Consecutive/concurrent calls with different fonts are supported in the same load context. Unrelated PDFsharp users and separately loaded Core DLLs are outside this guarantee. Reference comparisons use separate processes.
 
@@ -57,10 +59,12 @@ See [validation results and reproduction](core-validation.md). Linux results do 
 
 Header/footer handling inherits the existing field expansion and placement, without adding a parser for Excel formatting control codes. On Linux, Skia native initialization can access fontconfig. Rendering still selects only the supplied snapshot; absence of all native initialization accesses is not claimed.
 
-## Shared implementation and migration status
+## Shared implementation
 
 The main library delegates input preparation/spooling, image resources, workbook/cell traversal, style interning, geometry/page planning and building, text placement, cell-layer command generation, diagnostic aggregation and basic PDF drawing/saving to Core. The main assembly retains its public models, advanced font painters, image transforms, shapes, links, PNG/SVG/Markdown, selection/trim, and continuous orchestration.
 
 Full reader/layout/drawing/PDF adapters provide the advanced behavior. Public main APIs stay in their existing assembly. See [the architecture](core-architecture.md), [verification results](core-refactor-validation.md) and [source ownership](core-source-map.md).
 
 Main/Core converters share a font gate when using the same Core DLL in one load context. External PDFsharp users and separately loaded Core copies are outside that synchronization boundary. Distribute the main and Core DLLs from the same build.
+
+Core reader selection is available through `PdfExportOptions.ReadOptions`; see [engine selection](openxml-integration.md). Generic input/spool storage is shared through the OpenXml dependency.

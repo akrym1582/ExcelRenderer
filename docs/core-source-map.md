@@ -28,23 +28,23 @@ Source: main 1.7.2, commit `32e9165d145516dbd0bcb4c2ae31a78ce6774bce`. Every cop
 | Excel/DrawingMLReader.cs | Excel/DrawingMLReader.cs | Core単独所有 / 本体専用差分 | Shared anchor parsing; full reader enriches basic picture metadata with crop/rotation/flip and reads shapes |
 | Excel/DrawingPictureMetadata.cs | Excel/DrawingPictureMetadata.cs | 本体専用差分 / Core内部型 | Compatibility value types retained in main; neutral Core values and explicit adapters do not duplicate algorithms |
 | Excel/ExcelReader.cs | Excel/CoreExcelReader.cs | Core単独所有 / 本体wrapper | Common traversal and merged/dimension reading; full hooks retain style/shapes/links; public dictionary projection preserves source order |
-| Excel/ExcelStyleConverter.cs | Excel/ExcelStyleConverter.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
+| Excel/ExcelStyleConverter.cs | Excel/OpenXmlStyleConverter.cs and Excel/ColorConverter.cs | Core単独所有 / 本体wrapper | Neutral resolved-style conversion; public Convert(CellStyleInfo, CellValueType) adapts the result |
 | Excel/NormalFontMetadata.cs | Excel/NormalFontMetadata.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
 | Excel/RawColumnDefinition.cs | Excel/RawColumnDefinition.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
 | Excel/RawRowDefinition.cs | Excel/RawRowDefinition.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
 | Excel/SheetPageSetupMetadata.cs | Excel/SheetPageSetupMetadata.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
-| New Core implementation | Excel/SingleFontGraphicEngine.cs | Core単独所有 | Complete; Core single-font product implementation |
+| New Core implementation | Excel/SingleFontMetrics.cs | Core単独所有 | ICoreFontMetrics measures the supplied font; the legacy graphic engine was removed |
 | Excel/StylePool.cs | Excel/StylePool.cs | Core単独所有 / 本体wrapper | Shared Core implementation; main delegates and maps only boundary state |
 | Excel/WorkbookLayoutMetadataReader.cs | Excel/WorkbookLayoutMetadataReader.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
 | New Core implementation | Fonts/SingleFontContext.cs | Core単独所有 | Complete; Core single-font product implementation |
 | New Core implementation | Fonts/SingleFontResolver.cs | Core単独所有 | Complete; Core single-font product implementation |
 | GlobalUsings.cs | GlobalUsings.cs | 本体専用差分 / Core内部型 | Public compatibility value/contracts stay in main; neutral internal equivalents stay in Core |
-| Rendering/BufferReadStream.cs | Input/BufferReadStream.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
+| Rendering/BufferReadStream.cs | ../ExcelRenderer.OpenXml/Input/BufferReadStream.cs | OpenXml所有 / Core・本体adapter | Generic implementation shared with Mapping; Core preserves input types and metrics |
 | Rendering/CancellationReadStream.cs | Input/CancellationReadStream.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
-| Rendering/RenderBufferOptions.cs | Input/InputBufferOptions.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
-| Rendering/PreparedWorkbook.cs | Input/PreparedWorkbook.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
-| Rendering/SpillableBufferStream.cs | Input/SpillableBufferStream.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
-| Rendering/WorkbookInputPreparer.cs | Input/WorkbookInputPreparer.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
+| Rendering/RenderBufferOptions.cs | ../ExcelRenderer.OpenXml/Input/InputBufferOptions.cs | OpenXml所有 / Core・本体adapter | Generic implementation shared with Mapping; Core preserves input types and metrics |
+| Rendering/PreparedWorkbook.cs | ../ExcelRenderer.OpenXml/Input/PreparedWorkbook.cs | OpenXml所有 / Core・本体adapter | Generic implementation shared with Mapping; Core preserves input types and metrics |
+| Rendering/SpillableBufferStream.cs | ../ExcelRenderer.OpenXml/Input/SpillableBufferStream.cs | OpenXml所有 / Core・本体adapter | Generic implementation shared with Mapping; Core preserves input types and metrics |
+| Rendering/WorkbookInputPreparer.cs | ../ExcelRenderer.OpenXml/Input/WorkbookInputPreparer.cs | OpenXml所有 / Core・本体adapter | Generic implementation shared with Mapping; Core preserves input types and metrics |
 | Layout/BandIndex.cs | Layout/BandIndex.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
 | Layout/CellBoundsPass.cs | Layout/CellBoundsPass.cs | Core単独所有 / 本体wrapper | Shared Core implementation; main delegates and maps only boundary state |
 | Layout/CellContentBounds.cs | Layout/CellContentBounds.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
@@ -123,7 +123,7 @@ Source: main 1.7.2, commit `32e9165d145516dbd0bcb4c2ae31a78ce6774bce`. Every cop
 | New Core implementation | PdfExportOptions.cs | Core単独所有 | Complete; Core single-font product implementation |
 | New Core implementation | ConversionResult.cs | Core単独所有 | Complete; Core single-font product implementation |
 
-FontManager, font runs/glyph special cases, shape/link models and renderers, API range/viewport/continuous orchestration, output sinks/formats, Markdown and Skia output renderers remain main-only. Core DrawingMLReader owns picture anchors and Z order; main enriches those anchors with shape/theme/crop/rotation metadata. PdfSharpTextMeasurer and FinalizedTextPainter use one shared regular XFont per size; reader also supplies a SingleFontGraphicEngine to ClosedXML to avoid its default system-font lookup. InputBufferOptions contains only input spool controls.
+FontManager, font runs/glyph special cases, shape/link models and renderers, API range/viewport/continuous orchestration, output sinks/formats, Markdown and Skia output renderers remain main-only. Core DrawingMLReader owns picture anchors and Z order; main enriches those anchors with shape/theme/crop/rotation metadata. PdfSharpTextMeasurer and FinalizedTextPainter use one shared regular XFont per size; Reader uses ICoreFontMetrics with SingleFontContext and never constructs a legacy workbook. InputBufferOptions contains only input spool controls.
 
 Tests adapted from PdfContentProbe, DrawingAnchorWorkbookFixture and PaginationComponentTests; SampleInputs and Noto fixtures are reused without product embedding. Additional Core tests and validation harnesses are new.
 
@@ -140,11 +140,10 @@ Fix basic algorithms in Core and run both product regressions. CoreLayoutPolicy/
 - Normal conversion reads neutral cells directly. Public sheet views borrow those dictionaries, range filters preserve neutral values, and internal page building goes directly to common command generation. Public `ExcelReader.Read` materializes durable public dictionaries for its compatibility contract.
 - Typed payloads borrow image bytes, runs and metadata; conversion sessions own native resources. PDFsharp font snapshots use weak registration entries backed by the lifetime of their original resolved fonts, allowing public finalized runs to remain renderable without keeping every conversion's bytes globally.
 
-## Reader sessions and partial text extension
+## Reader style cache and partial text extension
 
-- Core `ReaderSession` owns one lazy formatting workbook and the bounded 8192-entry
-  style conversion cache for a single read. Full and Core product policies never share
-  a session. Source styles remain read-only for the lifetime of their value-equality keys.
+- CoreExcelReader owns the bounded 8192-entry style conversion cache for one read.
+  It converts immutable OpenXml snapshots directly, with no formatting workbook.
 - Core `ReportCell.ExtensionData` carries opaque cell metadata. Full `FullCellTextData`
   owns effective partial fonts and immutable run snapshots; public model adapters retain
   this payload through range views and merged-span updates.
@@ -160,11 +159,49 @@ Fix basic algorithms in Core and run both product regressions. CoreLayoutPolicy/
 
 ### Formula cache and deferred diagnostics
 
-`Core/Excel/FormulaCacheReader` owns streaming formula-only original-result metadata,
-including saved-result presence and date-system normalization. CoreExcelReader owns
-policy dispatch and read diagnostic candidates; ReaderSession owns scratch formatting.
-The main ExcelReadOptions/FormulaDisplayMode map to an independent internal Core enum.
+OpenXml source records retain original typed formula results and saved-result
+presence. CoreExcelReader dispatches CachedValue and deferred diagnostic candidates.
+Core and main retain their public formula enums at the adapter boundary.
 FullSheetData carries deferred candidates across adapters; final visible page/range
 filtering remains with the main converter, which owns selection. FullExcelReader adds
 chart-sheet metadata placeholders; the converter reports them without rendering pages.
 RenderRequest.TextMeasurer is an optional borrowed service, not a new DI/plugin layer.
+
+## Shared workbook input (OpenXml integration)
+
+`ExcelRenderer.OpenXml/Input` owns bounded workbook preparation, ZIP limits and the seekable memory/file spool. Core input types preserve existing callers through thin adapters; image-resource ownership and rendering policy remain in Core. OpenXml has no project references. Core, main and Mapping depend on OpenXml.
+
+## Saved results and Mapping formula preflight
+
+Core reads typed formula results from original OpenXml source records, including
+result presence and shared/array master metadata. No source formula is evaluated and follower text is not expanded. Core and full Reader options
+accept only CachedValue. OpenXml is the default and sole Reader, and Auto is an alias without fallback.
+
+OpenXml's internal `WorkbookFormulaInspection` class classifies source formulas and
+static defined names independently of Mapping. Mapping calls it immediately after
+input preparation, before backend capability checks, observers or data evaluation,
+and translates locations to `MappingFormulaNotSupported`. `WorkbookWriteCapabilities`
+classifies supported parts and structures before data evaluation. The OpenXml
+writer preserves original calculation properties and validates staged relationships.
+
+OpenXml Writer owns a per-sheet `RowPrototypeCache`, bounded by source UTF-8 bytes
+and entry count. Each output occurrence edits a deep copy. The spillable row store
+remains authoritative, and large rows bypass the cache.
+
+
+## Reader removal implementation (2026-10-16)
+
+CoreExcelReader reads OpenXml snapshots directly. ReaderSession, FormulaCacheReader,
+legacy style conversion and the graphic-engine interface have been removed. Core
+owns paper-ID conversion, tint arithmetic and materialization of the default row/
+column definitions required by public Reader dictionaries. Conversion paths keep
+sparse dimensions. Full hooks retain rich text, images, shapes, hyperlinks and
+output-selection diagnostics. SDK-based Core fixtures no longer depend on ClosedXML.
+
+Mapping owns syntax, structural preflight and once-only data evaluation. OpenXml
+owns StructuralReferences, row placement, related-part edits, pivot source records,
+relationship validation and staged writing. Legacy adapters and WorksheetExpansion
+have been removed. Tests use SDK fixtures and immutable parent-generated workbooks.
+All active project graphs are free of ClosedXML. See the
+[compatibility ledger](closedxml-removal-compatibility.md) and
+[validation record](closedxml-removal-validation.md).

@@ -1,0 +1,2042 @@
+{
+  "baselineCommit": "24c9dea4d67190951d152eef56f76abc943ef733",
+  "scope": "Debug builds, isolated processes, en-US, one warmup and three measurements. Fixture generation excluded. Peak RSS includes runtime startup. No general speed guarantee.",
+  "fontSha256": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec",
+  "mappingProjectionsMatch": true,
+  "results": [
+    {
+      "operation": "mapping",
+      "fixture": "plain-1000-template.xlsx",
+      "inputSha256": "a553ad69ea65fac299289b5b6553771ad071c61198a1531ba1551fe354190dd0",
+      "case": "parent-default",
+      "warmup": 1,
+      "measurements": 3,
+      "medians": {
+        "ElapsedMs": 740.7518,
+        "AllocatedBytes": 19944304,
+        "PeakRssBytes": 86822912
+      },
+      "samples": [
+        {
+          "Operation": "mapping",
+          "RequestedBackend": "closedxml",
+          "Rows": 1000,
+          "ElapsedMs": 740.7518,
+          "AllocatedBytes": 19944304,
+          "PeakRssBytes": 86745088,
+          "Cells": 0,
+          "Checksum": 0,
+          "MappingOutputBytes": 17108,
+          "ReaderSelection": null,
+          "MappingSelection": {
+            "RequestedBackend": 0,
+            "SelectedBackend": 0,
+            "ReasonCodes": [
+              "ExplicitClosedXml"
+            ]
+          },
+          "Metrics": {},
+          "IoMetrics": {
+            "closedXml.workbooks": 1
+          }
+        },
+        {
+          "Operation": "mapping",
+          "RequestedBackend": "closedxml",
+          "Rows": 1000,
+          "ElapsedMs": 743.2241,
+          "AllocatedBytes": 19944464,
+          "PeakRssBytes": 86822912,
+          "Cells": 0,
+          "Checksum": 0,
+          "MappingOutputBytes": 17108,
+          "ReaderSelection": null,
+          "MappingSelection": {
+            "RequestedBackend": 0,
+            "SelectedBackend": 0,
+            "ReasonCodes": [
+              "ExplicitClosedXml"
+            ]
+          },
+          "Metrics": {},
+          "IoMetrics": {
+            "closedXml.workbooks": 1
+          }
+        },
+        {
+          "Operation": "mapping",
+          "RequestedBackend": "closedxml",
+          "Rows": 1000,
+          "ElapsedMs": 734.3633,
+          "AllocatedBytes": 19944200,
+          "PeakRssBytes": 86855680,
+          "Cells": 0,
+          "Checksum": 0,
+          "MappingOutputBytes": 17108,
+          "ReaderSelection": null,
+          "MappingSelection": {
+            "RequestedBackend": 0,
+            "SelectedBackend": 0,
+            "ReasonCodes": [
+              "ExplicitClosedXml"
+            ]
+          },
+          "Metrics": {},
+          "IoMetrics": {
+            "closedXml.workbooks": 1
+          }
+        }
+      ],
+      "toolSha256": "8f8d7a18bd2b1143926fc2e4a9c8fa92f54d0f644648a7367dac478ca29c7195"
+    },
+    {
+      "operation": "mapping",
+      "fixture": "plain-1000-template.xlsx",
+      "inputSha256": "a553ad69ea65fac299289b5b6553771ad071c61198a1531ba1551fe354190dd0",
+      "case": "parent-openxml",
+      "warmup": 1,
+      "measurements": 3,
+      "medians": {
+        "ElapsedMs": 360.9007,
+        "AllocatedBytes": 13595272,
+        "PeakRssBytes": 63385600
+      },
+      "samples": [
+        {
+          "Operation": "mapping",
+          "RequestedBackend": "openxml",
+          "Rows": 1000,
+          "ElapsedMs": 356.3192,
+          "AllocatedBytes": 13595272,
+          "PeakRssBytes": 63385600,
+          "Cells": 0,
+          "Checksum": 0,
+          "MappingOutputBytes": 16761,
+          "ReaderSelection": null,
+          "MappingSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "Metrics": {},
+          "IoMetrics": {
+            "writer.rowStoreBytes": 405,
+            "writer.stageBytes": 16761,
+            "writer.rowCacheHits": 999,
+            "writer.rowCacheEntries": 1,
+            "writer.rowCacheSourceBytes": 147
+          }
+        },
+        {
+          "Operation": "mapping",
+          "RequestedBackend": "openxml",
+          "Rows": 1000,
+          "ElapsedMs": 360.9007,
+          "AllocatedBytes": 13570992,
+          "PeakRssBytes": 63397888,
+          "Cells": 0,
+          "Checksum": 0,
+          "MappingOutputBytes": 16761,
+          "ReaderSelection": null,
+          "MappingSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "Metrics": {},
+          "IoMetrics": {
+            "writer.rowStoreBytes": 405,
+            "writer.stageBytes": 16761,
+            "writer.rowCacheHits": 999,
+            "writer.rowCacheEntries": 1,
+            "writer.rowCacheSourceBytes": 147
+          }
+        },
+        {
+          "Operation": "mapping",
+          "RequestedBackend": "openxml",
+          "Rows": 1000,
+          "ElapsedMs": 379.0787,
+          "AllocatedBytes": 13595576,
+          "PeakRssBytes": 63320064,
+          "Cells": 0,
+          "Checksum": 0,
+          "MappingOutputBytes": 16761,
+          "ReaderSelection": null,
+          "MappingSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "Metrics": {},
+          "IoMetrics": {
+            "writer.rowStoreBytes": 405,
+            "writer.stageBytes": 16761,
+            "writer.rowCacheHits": 999,
+            "writer.rowCacheEntries": 1,
+            "writer.rowCacheSourceBytes": 147
+          }
+        }
+      ],
+      "toolSha256": "8f8d7a18bd2b1143926fc2e4a9c8fa92f54d0f644648a7367dac478ca29c7195"
+    },
+    {
+      "operation": "mapping",
+      "fixture": "plain-1000-template.xlsx",
+      "inputSha256": "a553ad69ea65fac299289b5b6553771ad071c61198a1531ba1551fe354190dd0",
+      "case": "removal",
+      "warmup": 1,
+      "measurements": 3,
+      "medians": {
+        "ElapsedMs": 392.5407,
+        "AllocatedBytes": 15621152,
+        "PeakRssBytes": 63811584
+      },
+      "samples": [
+        {
+          "Operation": "mapping",
+          "RequestedBackend": "openxml",
+          "Rows": 1000,
+          "ElapsedMs": 382.1874,
+          "AllocatedBytes": 15621152,
+          "PeakRssBytes": 63897600,
+          "Cells": 0,
+          "Checksum": 0,
+          "MappingOutputBytes": 16782,
+          "ReaderSelection": null,
+          "MappingSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "Metrics": {},
+          "IoMetrics": {
+            "writer.rowStoreBytes": 405,
+            "writer.stageBytes": 16782,
+            "writer.rowCacheHits": 999,
+            "writer.rowCacheEntries": 1,
+            "writer.rowCacheSourceBytes": 147
+          }
+        },
+        {
+          "Operation": "mapping",
+          "RequestedBackend": "openxml",
+          "Rows": 1000,
+          "ElapsedMs": 428.7705,
+          "AllocatedBytes": 15596504,
+          "PeakRssBytes": 63746048,
+          "Cells": 0,
+          "Checksum": 0,
+          "MappingOutputBytes": 16782,
+          "ReaderSelection": null,
+          "MappingSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "Metrics": {},
+          "IoMetrics": {
+            "writer.rowStoreBytes": 405,
+            "writer.stageBytes": 16782,
+            "writer.rowCacheHits": 999,
+            "writer.rowCacheEntries": 1,
+            "writer.rowCacheSourceBytes": 147
+          }
+        },
+        {
+          "Operation": "mapping",
+          "RequestedBackend": "openxml",
+          "Rows": 1000,
+          "ElapsedMs": 392.5407,
+          "AllocatedBytes": 15694768,
+          "PeakRssBytes": 63811584,
+          "Cells": 0,
+          "Checksum": 0,
+          "MappingOutputBytes": 16782,
+          "ReaderSelection": null,
+          "MappingSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "Metrics": {},
+          "IoMetrics": {
+            "writer.rowStoreBytes": 405,
+            "writer.stageBytes": 16782,
+            "writer.rowCacheHits": 999,
+            "writer.rowCacheEntries": 1,
+            "writer.rowCacheSourceBytes": 147
+          }
+        }
+      ],
+      "toolSha256": "f6fdbc6cee2fd779a25b131f579eb833ddf17a9c709da60f5ed7b4e2ff164e90"
+    },
+    {
+      "operation": "mapping",
+      "fixture": "nested-1000-template.xlsx",
+      "inputSha256": "fd517b7beae02908fdb3a6791e3b9ab550c7d26b02dedf7393fae1b225c5425f",
+      "case": "parent-default",
+      "warmup": 1,
+      "measurements": 3,
+      "medians": {
+        "ElapsedMs": 827.5074,
+        "AllocatedBytes": 20636696,
+        "PeakRssBytes": 86941696
+      },
+      "samples": [
+        {
+          "Operation": "mapping",
+          "RequestedBackend": "closedxml",
+          "Rows": 1000,
+          "ElapsedMs": 787.1807,
+          "AllocatedBytes": 20636216,
+          "PeakRssBytes": 86941696,
+          "Cells": 0,
+          "Checksum": 0,
+          "MappingOutputBytes": 15473,
+          "ReaderSelection": null,
+          "MappingSelection": {
+            "RequestedBackend": 0,
+            "SelectedBackend": 0,
+            "ReasonCodes": [
+              "ExplicitClosedXml"
+            ]
+          },
+          "Metrics": {},
+          "IoMetrics": {
+            "closedXml.workbooks": 1
+          }
+        },
+        {
+          "Operation": "mapping",
+          "RequestedBackend": "closedxml",
+          "Rows": 1000,
+          "ElapsedMs": 827.5074,
+          "AllocatedBytes": 20638680,
+          "PeakRssBytes": 86933504,
+          "Cells": 0,
+          "Checksum": 0,
+          "MappingOutputBytes": 15473,
+          "ReaderSelection": null,
+          "MappingSelection": {
+            "RequestedBackend": 0,
+            "SelectedBackend": 0,
+            "ReasonCodes": [
+              "ExplicitClosedXml"
+            ]
+          },
+          "Metrics": {},
+          "IoMetrics": {
+            "closedXml.workbooks": 1
+          }
+        },
+        {
+          "Operation": "mapping",
+          "RequestedBackend": "closedxml",
+          "Rows": 1000,
+          "ElapsedMs": 913.148,
+          "AllocatedBytes": 20636696,
+          "PeakRssBytes": 86958080,
+          "Cells": 0,
+          "Checksum": 0,
+          "MappingOutputBytes": 15473,
+          "ReaderSelection": null,
+          "MappingSelection": {
+            "RequestedBackend": 0,
+            "SelectedBackend": 0,
+            "ReasonCodes": [
+              "ExplicitClosedXml"
+            ]
+          },
+          "Metrics": {},
+          "IoMetrics": {
+            "closedXml.workbooks": 1
+          }
+        }
+      ],
+      "toolSha256": "8f8d7a18bd2b1143926fc2e4a9c8fa92f54d0f644648a7367dac478ca29c7195"
+    },
+    {
+      "operation": "mapping",
+      "fixture": "nested-1000-template.xlsx",
+      "inputSha256": "fd517b7beae02908fdb3a6791e3b9ab550c7d26b02dedf7393fae1b225c5425f",
+      "case": "parent-openxml",
+      "warmup": 1,
+      "measurements": 3,
+      "medians": {
+        "ElapsedMs": 381.0304,
+        "AllocatedBytes": 14307224,
+        "PeakRssBytes": 64364544
+      },
+      "samples": [
+        {
+          "Operation": "mapping",
+          "RequestedBackend": "openxml",
+          "Rows": 1000,
+          "ElapsedMs": 381.0304,
+          "AllocatedBytes": 14307096,
+          "PeakRssBytes": 64253952,
+          "Cells": 0,
+          "Checksum": 0,
+          "MappingOutputBytes": 14870,
+          "ReaderSelection": null,
+          "MappingSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "Metrics": {},
+          "IoMetrics": {
+            "writer.rowStoreBytes": 1050,
+            "writer.stageBytes": 14870,
+            "writer.rowCacheHits": 998,
+            "writer.rowCacheEntries": 2,
+            "writer.rowCacheSourceBytes": 276
+          }
+        },
+        {
+          "Operation": "mapping",
+          "RequestedBackend": "openxml",
+          "Rows": 1000,
+          "ElapsedMs": 386.0661,
+          "AllocatedBytes": 14307224,
+          "PeakRssBytes": 64413696,
+          "Cells": 0,
+          "Checksum": 0,
+          "MappingOutputBytes": 14870,
+          "ReaderSelection": null,
+          "MappingSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "Metrics": {},
+          "IoMetrics": {
+            "writer.rowStoreBytes": 1050,
+            "writer.stageBytes": 14870,
+            "writer.rowCacheHits": 998,
+            "writer.rowCacheEntries": 2,
+            "writer.rowCacheSourceBytes": 276
+          }
+        },
+        {
+          "Operation": "mapping",
+          "RequestedBackend": "openxml",
+          "Rows": 1000,
+          "ElapsedMs": 377.5861,
+          "AllocatedBytes": 14405584,
+          "PeakRssBytes": 64364544,
+          "Cells": 0,
+          "Checksum": 0,
+          "MappingOutputBytes": 14870,
+          "ReaderSelection": null,
+          "MappingSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "Metrics": {},
+          "IoMetrics": {
+            "writer.rowStoreBytes": 1050,
+            "writer.stageBytes": 14870,
+            "writer.rowCacheHits": 998,
+            "writer.rowCacheEntries": 2,
+            "writer.rowCacheSourceBytes": 276
+          }
+        }
+      ],
+      "toolSha256": "8f8d7a18bd2b1143926fc2e4a9c8fa92f54d0f644648a7367dac478ca29c7195"
+    },
+    {
+      "operation": "mapping",
+      "fixture": "nested-1000-template.xlsx",
+      "inputSha256": "fd517b7beae02908fdb3a6791e3b9ab550c7d26b02dedf7393fae1b225c5425f",
+      "case": "removal",
+      "warmup": 1,
+      "measurements": 3,
+      "medians": {
+        "ElapsedMs": 401.8912,
+        "AllocatedBytes": 16358240,
+        "PeakRssBytes": 64761856
+      },
+      "samples": [
+        {
+          "Operation": "mapping",
+          "RequestedBackend": "openxml",
+          "Rows": 1000,
+          "ElapsedMs": 440.882,
+          "AllocatedBytes": 16358240,
+          "PeakRssBytes": 64761856,
+          "Cells": 0,
+          "Checksum": 0,
+          "MappingOutputBytes": 14889,
+          "ReaderSelection": null,
+          "MappingSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "Metrics": {},
+          "IoMetrics": {
+            "writer.rowStoreBytes": 1050,
+            "writer.stageBytes": 14889,
+            "writer.rowCacheHits": 998,
+            "writer.rowCacheEntries": 2,
+            "writer.rowCacheSourceBytes": 276
+          }
+        },
+        {
+          "Operation": "mapping",
+          "RequestedBackend": "openxml",
+          "Rows": 1000,
+          "ElapsedMs": 381.0736,
+          "AllocatedBytes": 16358352,
+          "PeakRssBytes": 64557056,
+          "Cells": 0,
+          "Checksum": 0,
+          "MappingOutputBytes": 14889,
+          "ReaderSelection": null,
+          "MappingSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "Metrics": {},
+          "IoMetrics": {
+            "writer.rowStoreBytes": 1050,
+            "writer.stageBytes": 14889,
+            "writer.rowCacheHits": 998,
+            "writer.rowCacheEntries": 2,
+            "writer.rowCacheSourceBytes": 276
+          }
+        },
+        {
+          "Operation": "mapping",
+          "RequestedBackend": "openxml",
+          "Rows": 1000,
+          "ElapsedMs": 401.8912,
+          "AllocatedBytes": 16357800,
+          "PeakRssBytes": 64864256,
+          "Cells": 0,
+          "Checksum": 0,
+          "MappingOutputBytes": 14889,
+          "ReaderSelection": null,
+          "MappingSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "Metrics": {},
+          "IoMetrics": {
+            "writer.rowStoreBytes": 1050,
+            "writer.stageBytes": 14889,
+            "writer.rowCacheHits": 998,
+            "writer.rowCacheEntries": 2,
+            "writer.rowCacheSourceBytes": 276
+          }
+        }
+      ],
+      "toolSha256": "f6fdbc6cee2fd779a25b131f579eb833ddf17a9c709da60f5ed7b4e2ff164e90"
+    },
+    {
+      "operation": "mapping",
+      "fixture": "geometry-1000-template.xlsx",
+      "inputSha256": "c3afe3abf7e85288e9ab94a2cd40fa6c585033b1cfd44beebbaf5d80a6078cce",
+      "case": "parent-default",
+      "warmup": 1,
+      "measurements": 3,
+      "medians": {
+        "ElapsedMs": 1585.614,
+        "AllocatedBytes": 333288984,
+        "PeakRssBytes": 96251904
+      },
+      "samples": [
+        {
+          "Operation": "mapping",
+          "RequestedBackend": "closedxml",
+          "Rows": 1000,
+          "ElapsedMs": 1452.6964,
+          "AllocatedBytes": 321722496,
+          "PeakRssBytes": 96600064,
+          "Cells": 0,
+          "Checksum": 0,
+          "MappingOutputBytes": 26684,
+          "ReaderSelection": null,
+          "MappingSelection": {
+            "RequestedBackend": 0,
+            "SelectedBackend": 0,
+            "ReasonCodes": [
+              "ExplicitClosedXml"
+            ]
+          },
+          "Metrics": {},
+          "IoMetrics": {
+            "closedXml.workbooks": 1
+          }
+        },
+        {
+          "Operation": "mapping",
+          "RequestedBackend": "closedxml",
+          "Rows": 1000,
+          "ElapsedMs": 1656.1573,
+          "AllocatedBytes": 333288984,
+          "PeakRssBytes": 96034816,
+          "Cells": 0,
+          "Checksum": 0,
+          "MappingOutputBytes": 26684,
+          "ReaderSelection": null,
+          "MappingSelection": {
+            "RequestedBackend": 0,
+            "SelectedBackend": 0,
+            "ReasonCodes": [
+              "ExplicitClosedXml"
+            ]
+          },
+          "Metrics": {},
+          "IoMetrics": {
+            "closedXml.workbooks": 1
+          }
+        },
+        {
+          "Operation": "mapping",
+          "RequestedBackend": "closedxml",
+          "Rows": 1000,
+          "ElapsedMs": 1585.614,
+          "AllocatedBytes": 347576392,
+          "PeakRssBytes": 96251904,
+          "Cells": 0,
+          "Checksum": 0,
+          "MappingOutputBytes": 26684,
+          "ReaderSelection": null,
+          "MappingSelection": {
+            "RequestedBackend": 0,
+            "SelectedBackend": 0,
+            "ReasonCodes": [
+              "ExplicitClosedXml"
+            ]
+          },
+          "Metrics": {},
+          "IoMetrics": {
+            "closedXml.workbooks": 1
+          }
+        }
+      ],
+      "toolSha256": "8f8d7a18bd2b1143926fc2e4a9c8fa92f54d0f644648a7367dac478ca29c7195"
+    },
+    {
+      "operation": "mapping",
+      "fixture": "geometry-1000-template.xlsx",
+      "inputSha256": "c3afe3abf7e85288e9ab94a2cd40fa6c585033b1cfd44beebbaf5d80a6078cce",
+      "case": "parent-openxml",
+      "warmup": 1,
+      "measurements": 3,
+      "medians": {
+        "ElapsedMs": 426.5384,
+        "AllocatedBytes": 16801456,
+        "PeakRssBytes": 67321856
+      },
+      "samples": [
+        {
+          "Operation": "mapping",
+          "RequestedBackend": "openxml",
+          "Rows": 1000,
+          "ElapsedMs": 426.5384,
+          "AllocatedBytes": 16777656,
+          "PeakRssBytes": 67371008,
+          "Cells": 0,
+          "Checksum": 0,
+          "MappingOutputBytes": 26307,
+          "ReaderSelection": null,
+          "MappingSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "Metrics": {},
+          "IoMetrics": {
+            "writer.rowStoreBytes": 439,
+            "writer.stageBytes": 26307,
+            "writer.rowCacheHits": 999,
+            "writer.rowCacheEntries": 1,
+            "writer.rowCacheSourceBytes": 181
+          }
+        },
+        {
+          "Operation": "mapping",
+          "RequestedBackend": "openxml",
+          "Rows": 1000,
+          "ElapsedMs": 398.7275,
+          "AllocatedBytes": 16801456,
+          "PeakRssBytes": 67321856,
+          "Cells": 0,
+          "Checksum": 0,
+          "MappingOutputBytes": 26307,
+          "ReaderSelection": null,
+          "MappingSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "Metrics": {},
+          "IoMetrics": {
+            "writer.rowStoreBytes": 439,
+            "writer.stageBytes": 26307,
+            "writer.rowCacheHits": 999,
+            "writer.rowCacheEntries": 1,
+            "writer.rowCacheSourceBytes": 181
+          }
+        },
+        {
+          "Operation": "mapping",
+          "RequestedBackend": "openxml",
+          "Rows": 1000,
+          "ElapsedMs": 428.0897,
+          "AllocatedBytes": 16801552,
+          "PeakRssBytes": 67280896,
+          "Cells": 0,
+          "Checksum": 0,
+          "MappingOutputBytes": 26307,
+          "ReaderSelection": null,
+          "MappingSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "Metrics": {},
+          "IoMetrics": {
+            "writer.rowStoreBytes": 439,
+            "writer.stageBytes": 26307,
+            "writer.rowCacheHits": 999,
+            "writer.rowCacheEntries": 1,
+            "writer.rowCacheSourceBytes": 181
+          }
+        }
+      ],
+      "toolSha256": "8f8d7a18bd2b1143926fc2e4a9c8fa92f54d0f644648a7367dac478ca29c7195"
+    },
+    {
+      "operation": "mapping",
+      "fixture": "geometry-1000-template.xlsx",
+      "inputSha256": "c3afe3abf7e85288e9ab94a2cd40fa6c585033b1cfd44beebbaf5d80a6078cce",
+      "case": "removal",
+      "warmup": 1,
+      "measurements": 3,
+      "medians": {
+        "ElapsedMs": 424.3918,
+        "AllocatedBytes": 18866680,
+        "PeakRssBytes": 69361664
+      },
+      "samples": [
+        {
+          "Operation": "mapping",
+          "RequestedBackend": "openxml",
+          "Rows": 1000,
+          "ElapsedMs": 420.2641,
+          "AllocatedBytes": 18866680,
+          "PeakRssBytes": 69361664,
+          "Cells": 0,
+          "Checksum": 0,
+          "MappingOutputBytes": 26320,
+          "ReaderSelection": null,
+          "MappingSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "Metrics": {},
+          "IoMetrics": {
+            "writer.rowStoreBytes": 439,
+            "writer.stageBytes": 26320,
+            "writer.rowCacheHits": 999,
+            "writer.rowCacheEntries": 1,
+            "writer.rowCacheSourceBytes": 181
+          }
+        },
+        {
+          "Operation": "mapping",
+          "RequestedBackend": "openxml",
+          "Rows": 1000,
+          "ElapsedMs": 424.3918,
+          "AllocatedBytes": 18842576,
+          "PeakRssBytes": 69496832,
+          "Cells": 0,
+          "Checksum": 0,
+          "MappingOutputBytes": 26320,
+          "ReaderSelection": null,
+          "MappingSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "Metrics": {},
+          "IoMetrics": {
+            "writer.rowStoreBytes": 439,
+            "writer.stageBytes": 26320,
+            "writer.rowCacheHits": 999,
+            "writer.rowCacheEntries": 1,
+            "writer.rowCacheSourceBytes": 181
+          }
+        },
+        {
+          "Operation": "mapping",
+          "RequestedBackend": "openxml",
+          "Rows": 1000,
+          "ElapsedMs": 440.7038,
+          "AllocatedBytes": 18867200,
+          "PeakRssBytes": 69128192,
+          "Cells": 0,
+          "Checksum": 0,
+          "MappingOutputBytes": 26320,
+          "ReaderSelection": null,
+          "MappingSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "Metrics": {},
+          "IoMetrics": {
+            "writer.rowStoreBytes": 439,
+            "writer.stageBytes": 26320,
+            "writer.rowCacheHits": 999,
+            "writer.rowCacheEntries": 1,
+            "writer.rowCacheSourceBytes": 181
+          }
+        }
+      ],
+      "toolSha256": "f6fdbc6cee2fd779a25b131f579eb833ddf17a9c709da60f5ed7b4e2ff164e90"
+    },
+    {
+      "operation": "render",
+      "fixture": "geometry-100-values.xlsx",
+      "inputSha256": "bdc4b76af77800c21d2c184045d35cc0c113b496a975dc0523f72601873d1f31",
+      "case": "parent-default",
+      "warmup": 1,
+      "measurements": 3,
+      "medians": {
+        "ElapsedMs": 2086.0916,
+        "AllocatedBytes": 149936480,
+        "PeakRssBytes": 145264640
+      },
+      "samples": [
+        {
+          "Operation": "render",
+          "RequestedBackend": "closedxml",
+          "Rows": 100,
+          "ElapsedMs": 2101.5203,
+          "AllocatedBytes": 149890800,
+          "PeakRssBytes": 145326080,
+          "Cells": 302,
+          "Checksum": 102823,
+          "MappingOutputBytes": 0,
+          "ReaderSelection": {
+            "RequestedBackend": 0,
+            "SelectedBackend": 0,
+            "ReasonCodes": [
+              "ExplicitClosedXml"
+            ]
+          },
+          "MappingSelection": null,
+          "Metrics": {
+            "input.ms": 28.371,
+            "fontsBytesLoaded": 5472784,
+            "fonts.ms": 321.8443,
+            "closedXml.ms": 495.9531,
+            "coreReaderWorkbook": 1,
+            "typefaceCreated": 1,
+            "model.ms": 766.4635,
+            "readerScratchWorkbooks": 0,
+            "readerStyleConversions": 4,
+            "readerStyleCacheHits": 398,
+            "readerStyleCacheEntries": 4,
+            "model.cells": 302,
+            "reader.ms": 1452.0284,
+            "cells": 302,
+            "textCells": 202,
+            "uniqueStyles": 3,
+            "supportChecks": 210,
+            "supportCacheHits": 190,
+            "diagnostics.ms": 11.1826,
+            "modelSelectedCells": 302,
+            "fontLockWait.ms": 0.5515,
+            "coreGeometryPlan": 1,
+            "pagePayloadMax": 1,
+            "pagePayloadActive": 0,
+            "xFontCreated": 1,
+            "lineMetricsComputed": 1,
+            "corePageBuild": 6,
+            "coreCommandBuild": 6,
+            "renderCells": 608,
+            "commands": 608,
+            "pageBuild.ms": 97.8416,
+            "pagePreflight.ms": 101.18280000000001,
+            "links.ms": 1.7341,
+            "pdfPage.ms": 32.742399999999996,
+            "pdfSave": 1,
+            "pdfFinalSave.ms": 29.7202,
+            "typefaceDisposed": 1
+          },
+          "IoMetrics": {}
+        },
+        {
+          "Operation": "render",
+          "RequestedBackend": "closedxml",
+          "Rows": 100,
+          "ElapsedMs": 2081.2392,
+          "AllocatedBytes": 149949376,
+          "PeakRssBytes": 145264640,
+          "Cells": 302,
+          "Checksum": 102823,
+          "MappingOutputBytes": 0,
+          "ReaderSelection": {
+            "RequestedBackend": 0,
+            "SelectedBackend": 0,
+            "ReasonCodes": [
+              "ExplicitClosedXml"
+            ]
+          },
+          "MappingSelection": null,
+          "Metrics": {
+            "input.ms": 24.5236,
+            "fontsBytesLoaded": 5472784,
+            "fonts.ms": 318.5094,
+            "closedXml.ms": 488.9443,
+            "coreReaderWorkbook": 1,
+            "typefaceCreated": 1,
+            "model.ms": 751.2003,
+            "readerScratchWorkbooks": 0,
+            "readerStyleConversions": 4,
+            "readerStyleCacheHits": 398,
+            "readerStyleCacheEntries": 4,
+            "model.cells": 302,
+            "reader.ms": 1453.8918,
+            "cells": 302,
+            "textCells": 202,
+            "uniqueStyles": 3,
+            "supportChecks": 210,
+            "supportCacheHits": 190,
+            "diagnostics.ms": 9.693,
+            "modelSelectedCells": 302,
+            "fontLockWait.ms": 0.527,
+            "coreGeometryPlan": 1,
+            "pagePayloadMax": 1,
+            "pagePayloadActive": 0,
+            "xFontCreated": 1,
+            "lineMetricsComputed": 1,
+            "corePageBuild": 6,
+            "coreCommandBuild": 6,
+            "renderCells": 608,
+            "commands": 608,
+            "pageBuild.ms": 94.35009999999998,
+            "pagePreflight.ms": 97.2833,
+            "links.ms": 1.542,
+            "pdfPage.ms": 31.381500000000003,
+            "pdfSave": 1,
+            "pdfFinalSave.ms": 29.3749,
+            "typefaceDisposed": 1
+          },
+          "IoMetrics": {}
+        },
+        {
+          "Operation": "render",
+          "RequestedBackend": "closedxml",
+          "Rows": 100,
+          "ElapsedMs": 2086.0916,
+          "AllocatedBytes": 149936480,
+          "PeakRssBytes": 144920576,
+          "Cells": 302,
+          "Checksum": 102823,
+          "MappingOutputBytes": 0,
+          "ReaderSelection": {
+            "RequestedBackend": 0,
+            "SelectedBackend": 0,
+            "ReasonCodes": [
+              "ExplicitClosedXml"
+            ]
+          },
+          "MappingSelection": null,
+          "Metrics": {
+            "input.ms": 23.7178,
+            "fontsBytesLoaded": 5472784,
+            "fonts.ms": 321.5574,
+            "closedXml.ms": 505.3006,
+            "coreReaderWorkbook": 1,
+            "typefaceCreated": 1,
+            "model.ms": 729.113,
+            "readerScratchWorkbooks": 0,
+            "readerStyleConversions": 4,
+            "readerStyleCacheHits": 398,
+            "readerStyleCacheEntries": 4,
+            "model.cells": 302,
+            "reader.ms": 1450.8371,
+            "cells": 302,
+            "textCells": 202,
+            "uniqueStyles": 3,
+            "supportChecks": 210,
+            "supportCacheHits": 190,
+            "diagnostics.ms": 9.6071,
+            "modelSelectedCells": 302,
+            "fontLockWait.ms": 0.5423,
+            "coreGeometryPlan": 1,
+            "pagePayloadMax": 1,
+            "pagePayloadActive": 0,
+            "xFontCreated": 1,
+            "lineMetricsComputed": 1,
+            "corePageBuild": 6,
+            "coreCommandBuild": 6,
+            "renderCells": 608,
+            "commands": 608,
+            "pageBuild.ms": 93.4549,
+            "pagePreflight.ms": 96.2268,
+            "links.ms": 1.9063,
+            "pdfPage.ms": 32.260799999999996,
+            "pdfSave": 1,
+            "pdfFinalSave.ms": 29.7453,
+            "typefaceDisposed": 1
+          },
+          "IoMetrics": {}
+        }
+      ],
+      "toolSha256": "8f8d7a18bd2b1143926fc2e4a9c8fa92f54d0f644648a7367dac478ca29c7195"
+    },
+    {
+      "operation": "render",
+      "fixture": "geometry-100-values.xlsx",
+      "inputSha256": "bdc4b76af77800c21d2c184045d35cc0c113b496a975dc0523f72601873d1f31",
+      "case": "parent-openxml",
+      "warmup": 1,
+      "measurements": 3,
+      "medians": {
+        "ElapsedMs": 1126.1224,
+        "AllocatedBytes": 33322608,
+        "PeakRssBytes": 108937216
+      },
+      "samples": [
+        {
+          "Operation": "render",
+          "RequestedBackend": "openxml",
+          "Rows": 100,
+          "ElapsedMs": 1130.5722,
+          "AllocatedBytes": 33297280,
+          "PeakRssBytes": 108998656,
+          "Cells": 302,
+          "Checksum": 102823,
+          "MappingOutputBytes": 0,
+          "ReaderSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "MappingSelection": null,
+          "Metrics": {
+            "input.ms": 23.4467,
+            "fontsBytesLoaded": 5472784,
+            "fonts.ms": 369.8343,
+            "typefaceCreated": 1,
+            "model.cells": 302,
+            "reader.ms": 410.4484,
+            "cells": 302,
+            "textCells": 202,
+            "uniqueStyles": 3,
+            "supportChecks": 210,
+            "supportCacheHits": 190,
+            "diagnostics.ms": 11.9707,
+            "modelSelectedCells": 302,
+            "fontLockWait.ms": 0.5524,
+            "coreGeometryPlan": 1,
+            "pagePayloadMax": 1,
+            "pagePayloadActive": 0,
+            "xFontCreated": 1,
+            "lineMetricsComputed": 1,
+            "corePageBuild": 6,
+            "coreCommandBuild": 6,
+            "renderCells": 608,
+            "commands": 608,
+            "pageBuild.ms": 100.3737,
+            "pagePreflight.ms": 104.2864,
+            "links.ms": 4.5861,
+            "pdfPage.ms": 34.606,
+            "pdfSave": 1,
+            "pdfFinalSave.ms": 39.0951,
+            "typefaceDisposed": 1
+          },
+          "IoMetrics": {}
+        },
+        {
+          "Operation": "render",
+          "RequestedBackend": "openxml",
+          "Rows": 100,
+          "ElapsedMs": 1126.1224,
+          "AllocatedBytes": 33322608,
+          "PeakRssBytes": 108888064,
+          "Cells": 302,
+          "Checksum": 102823,
+          "MappingOutputBytes": 0,
+          "ReaderSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "MappingSelection": null,
+          "Metrics": {
+            "input.ms": 36.0073,
+            "fontsBytesLoaded": 5472784,
+            "fonts.ms": 327.1568,
+            "typefaceCreated": 1,
+            "model.cells": 302,
+            "reader.ms": 447.0987,
+            "cells": 302,
+            "textCells": 202,
+            "uniqueStyles": 3,
+            "supportChecks": 210,
+            "supportCacheHits": 190,
+            "diagnostics.ms": 10.7531,
+            "modelSelectedCells": 302,
+            "fontLockWait.ms": 0.5249,
+            "coreGeometryPlan": 1,
+            "pagePayloadMax": 1,
+            "pagePayloadActive": 0,
+            "xFontCreated": 1,
+            "lineMetricsComputed": 1,
+            "corePageBuild": 6,
+            "coreCommandBuild": 6,
+            "renderCells": 608,
+            "commands": 608,
+            "pageBuild.ms": 105.652,
+            "pagePreflight.ms": 109.5138,
+            "links.ms": 1.7239,
+            "pdfPage.ms": 34.8426,
+            "pdfSave": 1,
+            "pdfFinalSave.ms": 34.148,
+            "typefaceDisposed": 1
+          },
+          "IoMetrics": {}
+        },
+        {
+          "Operation": "render",
+          "RequestedBackend": "openxml",
+          "Rows": 100,
+          "ElapsedMs": 1002.1307,
+          "AllocatedBytes": 33322768,
+          "PeakRssBytes": 108937216,
+          "Cells": 302,
+          "Checksum": 102823,
+          "MappingOutputBytes": 0,
+          "ReaderSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "MappingSelection": null,
+          "Metrics": {
+            "input.ms": 27.8997,
+            "fontsBytesLoaded": 5472784,
+            "fonts.ms": 315.0418,
+            "typefaceCreated": 1,
+            "model.cells": 302,
+            "reader.ms": 375.3162,
+            "cells": 302,
+            "textCells": 202,
+            "uniqueStyles": 3,
+            "supportChecks": 210,
+            "supportCacheHits": 190,
+            "diagnostics.ms": 10.2401,
+            "modelSelectedCells": 302,
+            "fontLockWait.ms": 0.5979,
+            "coreGeometryPlan": 1,
+            "pagePayloadMax": 1,
+            "pagePayloadActive": 0,
+            "xFontCreated": 1,
+            "lineMetricsComputed": 1,
+            "corePageBuild": 6,
+            "coreCommandBuild": 6,
+            "renderCells": 608,
+            "commands": 608,
+            "pageBuild.ms": 94.25470000000001,
+            "pagePreflight.ms": 97.5183,
+            "links.ms": 1.6283,
+            "pdfPage.ms": 32.2757,
+            "pdfSave": 1,
+            "pdfFinalSave.ms": 31.0326,
+            "typefaceDisposed": 1
+          },
+          "IoMetrics": {}
+        }
+      ],
+      "toolSha256": "8f8d7a18bd2b1143926fc2e4a9c8fa92f54d0f644648a7367dac478ca29c7195"
+    },
+    {
+      "operation": "render",
+      "fixture": "geometry-100-values.xlsx",
+      "inputSha256": "bdc4b76af77800c21d2c184045d35cc0c113b496a975dc0523f72601873d1f31",
+      "case": "removal",
+      "warmup": 1,
+      "measurements": 3,
+      "medians": {
+        "ElapsedMs": 988.0864,
+        "AllocatedBytes": 33005168,
+        "PeakRssBytes": 106733568
+      },
+      "samples": [
+        {
+          "Operation": "render",
+          "RequestedBackend": "openxml",
+          "Rows": 100,
+          "ElapsedMs": 993.3471,
+          "AllocatedBytes": 33005168,
+          "PeakRssBytes": 107188224,
+          "Cells": 302,
+          "Checksum": 102823,
+          "MappingOutputBytes": 0,
+          "ReaderSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "MappingSelection": null,
+          "Metrics": {
+            "input.ms": 10.2219,
+            "fontsBytesLoaded": 5472784,
+            "fonts.ms": 342.04,
+            "openXmlReaderWorkbook": 1,
+            "typefaceCreated": 1,
+            "readerStyleConversions": 3,
+            "readerStyleCacheHits": 299,
+            "readerStyleCacheEntries": 5,
+            "model.cells": 302,
+            "reader.ms": 349.2831,
+            "cells": 302,
+            "textCells": 202,
+            "uniqueStyles": 3,
+            "supportChecks": 210,
+            "supportCacheHits": 190,
+            "diagnostics.ms": 9.457,
+            "modelSelectedCells": 302,
+            "fontLockWait.ms": 0.5767,
+            "coreGeometryPlan": 1,
+            "pagePayloadMax": 1,
+            "pagePayloadActive": 0,
+            "xFontCreated": 1,
+            "lineMetricsComputed": 1,
+            "corePageBuild": 6,
+            "coreCommandBuild": 6,
+            "renderCells": 608,
+            "commands": 608,
+            "pageBuild.ms": 95.71589999999998,
+            "pagePreflight.ms": 99.176,
+            "links.ms": 1.5884,
+            "pdfPage.ms": 34.677,
+            "pdfSave": 1,
+            "pdfFinalSave.ms": 29.8804,
+            "typefaceDisposed": 1
+          },
+          "IoMetrics": {}
+        },
+        {
+          "Operation": "render",
+          "RequestedBackend": "openxml",
+          "Rows": 100,
+          "ElapsedMs": 988.0864,
+          "AllocatedBytes": 33004184,
+          "PeakRssBytes": 106549248,
+          "Cells": 302,
+          "Checksum": 102823,
+          "MappingOutputBytes": 0,
+          "ReaderSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "MappingSelection": null,
+          "Metrics": {
+            "input.ms": 9.7026,
+            "fontsBytesLoaded": 5472784,
+            "fonts.ms": 328.4227,
+            "openXmlReaderWorkbook": 1,
+            "typefaceCreated": 1,
+            "readerStyleConversions": 3,
+            "readerStyleCacheHits": 299,
+            "readerStyleCacheEntries": 5,
+            "model.cells": 302,
+            "reader.ms": 357.321,
+            "cells": 302,
+            "textCells": 202,
+            "uniqueStyles": 3,
+            "supportChecks": 210,
+            "supportCacheHits": 190,
+            "diagnostics.ms": 9.3751,
+            "modelSelectedCells": 302,
+            "fontLockWait.ms": 0.5347,
+            "coreGeometryPlan": 1,
+            "pagePayloadMax": 1,
+            "pagePayloadActive": 0,
+            "xFontCreated": 1,
+            "lineMetricsComputed": 1,
+            "corePageBuild": 6,
+            "coreCommandBuild": 6,
+            "renderCells": 608,
+            "commands": 608,
+            "pageBuild.ms": 96.61449999999999,
+            "pagePreflight.ms": 99.51689999999999,
+            "links.ms": 1.6184,
+            "pdfPage.ms": 34.8921,
+            "pdfSave": 1,
+            "pdfFinalSave.ms": 31.4064,
+            "typefaceDisposed": 1
+          },
+          "IoMetrics": {}
+        },
+        {
+          "Operation": "render",
+          "RequestedBackend": "openxml",
+          "Rows": 100,
+          "ElapsedMs": 984.743,
+          "AllocatedBytes": 33028808,
+          "PeakRssBytes": 106733568,
+          "Cells": 302,
+          "Checksum": 102823,
+          "MappingOutputBytes": 0,
+          "ReaderSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "MappingSelection": null,
+          "Metrics": {
+            "input.ms": 9.1965,
+            "fontsBytesLoaded": 5472784,
+            "fonts.ms": 350.7465,
+            "openXmlReaderWorkbook": 1,
+            "typefaceCreated": 1,
+            "readerStyleConversions": 3,
+            "readerStyleCacheHits": 299,
+            "readerStyleCacheEntries": 5,
+            "model.cells": 302,
+            "reader.ms": 343.6248,
+            "cells": 302,
+            "textCells": 202,
+            "uniqueStyles": 3,
+            "supportChecks": 210,
+            "supportCacheHits": 190,
+            "diagnostics.ms": 9.6624,
+            "modelSelectedCells": 302,
+            "fontLockWait.ms": 0.495,
+            "coreGeometryPlan": 1,
+            "pagePayloadMax": 1,
+            "pagePayloadActive": 0,
+            "xFontCreated": 1,
+            "lineMetricsComputed": 1,
+            "corePageBuild": 6,
+            "coreCommandBuild": 6,
+            "renderCells": 608,
+            "commands": 608,
+            "pageBuild.ms": 92.30740000000002,
+            "pagePreflight.ms": 94.80669999999999,
+            "links.ms": 1.6726,
+            "pdfPage.ms": 33.2012,
+            "pdfSave": 1,
+            "pdfFinalSave.ms": 31.3901,
+            "typefaceDisposed": 1
+          },
+          "IoMetrics": {}
+        }
+      ],
+      "toolSha256": "f6fdbc6cee2fd779a25b131f579eb833ddf17a9c709da60f5ed7b4e2ff164e90"
+    },
+    {
+      "operation": "mapping-render",
+      "fixture": "geometry-100-template.xlsx",
+      "inputSha256": "8946c55e8226bed281ec4db0d8375aa326260e9075469211af3a6d4cac8bff6d",
+      "case": "parent-default",
+      "warmup": 1,
+      "measurements": 3,
+      "medians": {
+        "ElapsedMs": 3013.1683,
+        "AllocatedBytes": 169133224,
+        "PeakRssBytes": 154464256
+      },
+      "samples": [
+        {
+          "Operation": "mapping-render",
+          "RequestedBackend": "closedxml",
+          "Rows": 100,
+          "ElapsedMs": 3013.1683,
+          "AllocatedBytes": 169071904,
+          "PeakRssBytes": 154464256,
+          "Cells": 302,
+          "Checksum": 102823,
+          "MappingOutputBytes": 8657,
+          "ReaderSelection": {
+            "RequestedBackend": 0,
+            "SelectedBackend": 0,
+            "ReasonCodes": [
+              "ExplicitClosedXml"
+            ]
+          },
+          "MappingSelection": {
+            "RequestedBackend": 0,
+            "SelectedBackend": 0,
+            "ReasonCodes": [
+              "ExplicitClosedXml"
+            ]
+          },
+          "Metrics": {
+            "input.ms": 2.0782,
+            "fontsBytesLoaded": 5472784,
+            "fonts.ms": 340.1487,
+            "closedXml.ms": 13.2151,
+            "coreReaderWorkbook": 1,
+            "typefaceCreated": 1,
+            "model.ms": 1260.8712,
+            "readerScratchWorkbooks": 0,
+            "readerStyleConversions": 4,
+            "readerStyleCacheHits": 398,
+            "readerStyleCacheEntries": 4,
+            "model.cells": 302,
+            "reader.ms": 1489.2245,
+            "cells": 302,
+            "textCells": 202,
+            "uniqueStyles": 3,
+            "supportChecks": 210,
+            "supportCacheHits": 190,
+            "diagnostics.ms": 12.194,
+            "modelSelectedCells": 302,
+            "fontLockWait.ms": 1.1195,
+            "coreGeometryPlan": 1,
+            "pagePayloadMax": 1,
+            "pagePayloadActive": 0,
+            "xFontCreated": 1,
+            "lineMetricsComputed": 1,
+            "corePageBuild": 6,
+            "coreCommandBuild": 6,
+            "renderCells": 608,
+            "commands": 608,
+            "pageBuild.ms": 101.9516,
+            "pagePreflight.ms": 105.38069999999999,
+            "links.ms": 1.6845,
+            "pdfPage.ms": 35.436,
+            "pdfSave": 1,
+            "pdfFinalSave.ms": 31.583,
+            "typefaceDisposed": 1
+          },
+          "IoMetrics": {
+            "closedXml.workbooks": 1
+          }
+        },
+        {
+          "Operation": "mapping-render",
+          "RequestedBackend": "closedxml",
+          "Rows": 100,
+          "ElapsedMs": 2952.281,
+          "AllocatedBytes": 169133224,
+          "PeakRssBytes": 151367680,
+          "Cells": 302,
+          "Checksum": 102823,
+          "MappingOutputBytes": 8657,
+          "ReaderSelection": {
+            "RequestedBackend": 0,
+            "SelectedBackend": 0,
+            "ReasonCodes": [
+              "ExplicitClosedXml"
+            ]
+          },
+          "MappingSelection": {
+            "RequestedBackend": 0,
+            "SelectedBackend": 0,
+            "ReasonCodes": [
+              "ExplicitClosedXml"
+            ]
+          },
+          "Metrics": {
+            "input.ms": 1.4915,
+            "fontsBytesLoaded": 5472784,
+            "fonts.ms": 342.5664,
+            "closedXml.ms": 11.4211,
+            "coreReaderWorkbook": 1,
+            "typefaceCreated": 1,
+            "model.ms": 1281.9797,
+            "readerScratchWorkbooks": 0,
+            "readerStyleConversions": 4,
+            "readerStyleCacheHits": 398,
+            "readerStyleCacheEntries": 4,
+            "model.cells": 302,
+            "reader.ms": 1499.0008,
+            "cells": 302,
+            "textCells": 202,
+            "uniqueStyles": 3,
+            "supportChecks": 210,
+            "supportCacheHits": 190,
+            "diagnostics.ms": 9.3532,
+            "modelSelectedCells": 302,
+            "fontLockWait.ms": 0.4977,
+            "coreGeometryPlan": 1,
+            "pagePayloadMax": 1,
+            "pagePayloadActive": 0,
+            "xFontCreated": 1,
+            "lineMetricsComputed": 1,
+            "corePageBuild": 6,
+            "coreCommandBuild": 6,
+            "renderCells": 608,
+            "commands": 608,
+            "pageBuild.ms": 92.1157,
+            "pagePreflight.ms": 93.6649,
+            "links.ms": 1.5165,
+            "pdfPage.ms": 33.8737,
+            "pdfSave": 1,
+            "pdfFinalSave.ms": 48.8558,
+            "typefaceDisposed": 1
+          },
+          "IoMetrics": {
+            "closedXml.workbooks": 1
+          }
+        },
+        {
+          "Operation": "mapping-render",
+          "RequestedBackend": "closedxml",
+          "Rows": 100,
+          "ElapsedMs": 3021.0465,
+          "AllocatedBytes": 169193600,
+          "PeakRssBytes": 155316224,
+          "Cells": 302,
+          "Checksum": 102823,
+          "MappingOutputBytes": 8657,
+          "ReaderSelection": {
+            "RequestedBackend": 0,
+            "SelectedBackend": 0,
+            "ReasonCodes": [
+              "ExplicitClosedXml"
+            ]
+          },
+          "MappingSelection": {
+            "RequestedBackend": 0,
+            "SelectedBackend": 0,
+            "ReasonCodes": [
+              "ExplicitClosedXml"
+            ]
+          },
+          "Metrics": {
+            "input.ms": 1.5278,
+            "fontsBytesLoaded": 5472784,
+            "fonts.ms": 328.0523,
+            "closedXml.ms": 19.5437,
+            "coreReaderWorkbook": 1,
+            "typefaceCreated": 1,
+            "model.ms": 1296.2588,
+            "readerScratchWorkbooks": 0,
+            "readerStyleConversions": 4,
+            "readerStyleCacheHits": 398,
+            "readerStyleCacheEntries": 4,
+            "model.cells": 302,
+            "reader.ms": 1551.9132,
+            "cells": 302,
+            "textCells": 202,
+            "uniqueStyles": 3,
+            "supportChecks": 210,
+            "supportCacheHits": 190,
+            "diagnostics.ms": 10.2022,
+            "modelSelectedCells": 302,
+            "fontLockWait.ms": 0.5589,
+            "coreGeometryPlan": 1,
+            "pagePayloadMax": 1,
+            "pagePayloadActive": 0,
+            "xFontCreated": 1,
+            "lineMetricsComputed": 1,
+            "corePageBuild": 6,
+            "coreCommandBuild": 6,
+            "renderCells": 608,
+            "commands": 608,
+            "pageBuild.ms": 101.1184,
+            "pagePreflight.ms": 104.0403,
+            "links.ms": 1.7624,
+            "pdfPage.ms": 34.7922,
+            "pdfSave": 1,
+            "pdfFinalSave.ms": 30.8223,
+            "typefaceDisposed": 1
+          },
+          "IoMetrics": {
+            "closedXml.workbooks": 1
+          }
+        }
+      ],
+      "toolSha256": "8f8d7a18bd2b1143926fc2e4a9c8fa92f54d0f644648a7367dac478ca29c7195"
+    },
+    {
+      "operation": "mapping-render",
+      "fixture": "geometry-100-template.xlsx",
+      "inputSha256": "8946c55e8226bed281ec4db0d8375aa326260e9075469211af3a6d4cac8bff6d",
+      "case": "parent-openxml",
+      "warmup": 1,
+      "measurements": 3,
+      "medians": {
+        "ElapsedMs": 1182.2822,
+        "AllocatedBytes": 38479168,
+        "PeakRssBytes": 109420544
+      },
+      "samples": [
+        {
+          "Operation": "mapping-render",
+          "RequestedBackend": "openxml",
+          "Rows": 100,
+          "ElapsedMs": 1171.0792,
+          "AllocatedBytes": 38527112,
+          "PeakRssBytes": 109793280,
+          "Cells": 302,
+          "Checksum": 102823,
+          "MappingOutputBytes": 8067,
+          "ReaderSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "MappingSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "Metrics": {
+            "input.ms": 1.5496,
+            "fontsBytesLoaded": 5472784,
+            "fonts.ms": 346.0412,
+            "typefaceCreated": 1,
+            "model.cells": 302,
+            "reader.ms": 130.4565,
+            "cells": 302,
+            "textCells": 202,
+            "uniqueStyles": 3,
+            "supportChecks": 210,
+            "supportCacheHits": 190,
+            "diagnostics.ms": 11.7834,
+            "modelSelectedCells": 302,
+            "fontLockWait.ms": 0.5254,
+            "coreGeometryPlan": 1,
+            "pagePayloadMax": 1,
+            "pagePayloadActive": 0,
+            "xFontCreated": 1,
+            "lineMetricsComputed": 1,
+            "corePageBuild": 6,
+            "coreCommandBuild": 6,
+            "renderCells": 608,
+            "commands": 608,
+            "pageBuild.ms": 105.0179,
+            "pagePreflight.ms": 107.8191,
+            "links.ms": 1.5575,
+            "pdfPage.ms": 35.57560000000001,
+            "pdfSave": 1,
+            "pdfFinalSave.ms": 31.2313,
+            "typefaceDisposed": 1
+          },
+          "IoMetrics": {
+            "writer.rowStoreBytes": 439,
+            "writer.stageBytes": 8067,
+            "writer.rowCacheHits": 99,
+            "writer.rowCacheEntries": 1,
+            "writer.rowCacheSourceBytes": 181
+          }
+        },
+        {
+          "Operation": "mapping-render",
+          "RequestedBackend": "openxml",
+          "Rows": 100,
+          "ElapsedMs": 1182.2822,
+          "AllocatedBytes": 38429416,
+          "PeakRssBytes": 109420544,
+          "Cells": 302,
+          "Checksum": 102823,
+          "MappingOutputBytes": 8067,
+          "ReaderSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "MappingSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "Metrics": {
+            "input.ms": 1.8492,
+            "fontsBytesLoaded": 5472784,
+            "fonts.ms": 352.1786,
+            "typefaceCreated": 1,
+            "model.cells": 302,
+            "reader.ms": 115.9328,
+            "cells": 302,
+            "textCells": 202,
+            "uniqueStyles": 3,
+            "supportChecks": 210,
+            "supportCacheHits": 190,
+            "diagnostics.ms": 9.8662,
+            "modelSelectedCells": 302,
+            "fontLockWait.ms": 0.5304,
+            "coreGeometryPlan": 1,
+            "pagePayloadMax": 1,
+            "pagePayloadActive": 0,
+            "xFontCreated": 1,
+            "lineMetricsComputed": 1,
+            "corePageBuild": 6,
+            "coreCommandBuild": 6,
+            "renderCells": 608,
+            "commands": 608,
+            "pageBuild.ms": 110.7822,
+            "pagePreflight.ms": 114.64519999999999,
+            "links.ms": 1.9184,
+            "pdfPage.ms": 38.948499999999996,
+            "pdfSave": 1,
+            "pdfFinalSave.ms": 34.1638,
+            "typefaceDisposed": 1
+          },
+          "IoMetrics": {
+            "writer.rowStoreBytes": 439,
+            "writer.stageBytes": 8067,
+            "writer.rowCacheHits": 99,
+            "writer.rowCacheEntries": 1,
+            "writer.rowCacheSourceBytes": 181
+          }
+        },
+        {
+          "Operation": "mapping-render",
+          "RequestedBackend": "openxml",
+          "Rows": 100,
+          "ElapsedMs": 1205.4927,
+          "AllocatedBytes": 38479168,
+          "PeakRssBytes": 109342720,
+          "Cells": 302,
+          "Checksum": 102823,
+          "MappingOutputBytes": 8067,
+          "ReaderSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "MappingSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "Metrics": {
+            "input.ms": 1.4797,
+            "fontsBytesLoaded": 5472784,
+            "fonts.ms": 365.6117,
+            "typefaceCreated": 1,
+            "model.cells": 302,
+            "reader.ms": 130.7018,
+            "cells": 302,
+            "textCells": 202,
+            "uniqueStyles": 3,
+            "supportChecks": 210,
+            "supportCacheHits": 190,
+            "diagnostics.ms": 10.2008,
+            "modelSelectedCells": 302,
+            "fontLockWait.ms": 0.5206,
+            "coreGeometryPlan": 1,
+            "pagePayloadMax": 1,
+            "pagePayloadActive": 0,
+            "xFontCreated": 1,
+            "lineMetricsComputed": 1,
+            "corePageBuild": 6,
+            "coreCommandBuild": 6,
+            "renderCells": 608,
+            "commands": 608,
+            "pageBuild.ms": 103.80919999999998,
+            "pagePreflight.ms": 107.0625,
+            "links.ms": 1.7397,
+            "pdfPage.ms": 32.3431,
+            "pdfSave": 1,
+            "pdfFinalSave.ms": 32.1739,
+            "typefaceDisposed": 1
+          },
+          "IoMetrics": {
+            "writer.rowStoreBytes": 439,
+            "writer.stageBytes": 8067,
+            "writer.rowCacheHits": 99,
+            "writer.rowCacheEntries": 1,
+            "writer.rowCacheSourceBytes": 181
+          }
+        }
+      ],
+      "toolSha256": "8f8d7a18bd2b1143926fc2e4a9c8fa92f54d0f644648a7367dac478ca29c7195"
+    },
+    {
+      "operation": "mapping-render",
+      "fixture": "geometry-100-template.xlsx",
+      "inputSha256": "8946c55e8226bed281ec4db0d8375aa326260e9075469211af3a6d4cac8bff6d",
+      "case": "removal",
+      "warmup": 1,
+      "measurements": 3,
+      "medians": {
+        "ElapsedMs": 1252.5499,
+        "AllocatedBytes": 40049344,
+        "PeakRssBytes": 109027328
+      },
+      "samples": [
+        {
+          "Operation": "mapping-render",
+          "RequestedBackend": "openxml",
+          "Rows": 100,
+          "ElapsedMs": 1252.5499,
+          "AllocatedBytes": 39951088,
+          "PeakRssBytes": 109027328,
+          "Cells": 302,
+          "Checksum": 102823,
+          "MappingOutputBytes": 8075,
+          "ReaderSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "MappingSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "Metrics": {
+            "input.ms": 1.772,
+            "fontsBytesLoaded": 5472784,
+            "fonts.ms": 340.6132,
+            "openXmlReaderWorkbook": 1,
+            "typefaceCreated": 1,
+            "readerStyleConversions": 3,
+            "readerStyleCacheHits": 299,
+            "readerStyleCacheEntries": 5,
+            "model.cells": 302,
+            "reader.ms": 148.0602,
+            "cells": 302,
+            "textCells": 202,
+            "uniqueStyles": 3,
+            "supportChecks": 210,
+            "supportCacheHits": 190,
+            "diagnostics.ms": 11.2815,
+            "modelSelectedCells": 302,
+            "fontLockWait.ms": 0.4871,
+            "coreGeometryPlan": 1,
+            "pagePayloadMax": 1,
+            "pagePayloadActive": 0,
+            "xFontCreated": 1,
+            "lineMetricsComputed": 1,
+            "corePageBuild": 6,
+            "coreCommandBuild": 6,
+            "renderCells": 608,
+            "commands": 608,
+            "pageBuild.ms": 103.5982,
+            "pagePreflight.ms": 106.70360000000001,
+            "links.ms": 1.6518,
+            "pdfPage.ms": 39.30309999999999,
+            "pdfSave": 1,
+            "pdfFinalSave.ms": 33.4936,
+            "typefaceDisposed": 1
+          },
+          "IoMetrics": {
+            "writer.rowStoreBytes": 439,
+            "writer.stageBytes": 8075,
+            "writer.rowCacheHits": 99,
+            "writer.rowCacheEntries": 1,
+            "writer.rowCacheSourceBytes": 181
+          }
+        },
+        {
+          "Operation": "mapping-render",
+          "RequestedBackend": "openxml",
+          "Rows": 100,
+          "ElapsedMs": 1251.3448,
+          "AllocatedBytes": 40050064,
+          "PeakRssBytes": 109035520,
+          "Cells": 302,
+          "Checksum": 102823,
+          "MappingOutputBytes": 8075,
+          "ReaderSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "MappingSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "Metrics": {
+            "input.ms": 1.69,
+            "fontsBytesLoaded": 5472784,
+            "fonts.ms": 374.8688,
+            "openXmlReaderWorkbook": 1,
+            "typefaceCreated": 1,
+            "readerStyleConversions": 3,
+            "readerStyleCacheHits": 299,
+            "readerStyleCacheEntries": 5,
+            "model.cells": 302,
+            "reader.ms": 131.9689,
+            "cells": 302,
+            "textCells": 202,
+            "uniqueStyles": 3,
+            "supportChecks": 210,
+            "supportCacheHits": 190,
+            "diagnostics.ms": 11.0229,
+            "modelSelectedCells": 302,
+            "fontLockWait.ms": 0.5086,
+            "coreGeometryPlan": 1,
+            "pagePayloadMax": 1,
+            "pagePayloadActive": 0,
+            "xFontCreated": 1,
+            "lineMetricsComputed": 1,
+            "corePageBuild": 6,
+            "coreCommandBuild": 6,
+            "renderCells": 608,
+            "commands": 608,
+            "pageBuild.ms": 100.69009999999999,
+            "pagePreflight.ms": 103.8937,
+            "links.ms": 1.616,
+            "pdfPage.ms": 33.1835,
+            "pdfSave": 1,
+            "pdfFinalSave.ms": 32.5231,
+            "typefaceDisposed": 1
+          },
+          "IoMetrics": {
+            "writer.rowStoreBytes": 439,
+            "writer.stageBytes": 8075,
+            "writer.rowCacheHits": 99,
+            "writer.rowCacheEntries": 1,
+            "writer.rowCacheSourceBytes": 181
+          }
+        },
+        {
+          "Operation": "mapping-render",
+          "RequestedBackend": "openxml",
+          "Rows": 100,
+          "ElapsedMs": 1291.1705,
+          "AllocatedBytes": 40049344,
+          "PeakRssBytes": 108830720,
+          "Cells": 302,
+          "Checksum": 102823,
+          "MappingOutputBytes": 8075,
+          "ReaderSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "MappingSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "Metrics": {
+            "input.ms": 1.6486,
+            "fontsBytesLoaded": 5472784,
+            "fonts.ms": 369.6783,
+            "openXmlReaderWorkbook": 1,
+            "typefaceCreated": 1,
+            "readerStyleConversions": 3,
+            "readerStyleCacheHits": 299,
+            "readerStyleCacheEntries": 5,
+            "model.cells": 302,
+            "reader.ms": 152.5184,
+            "cells": 302,
+            "textCells": 202,
+            "uniqueStyles": 3,
+            "supportChecks": 210,
+            "supportCacheHits": 190,
+            "diagnostics.ms": 13.851,
+            "modelSelectedCells": 302,
+            "fontLockWait.ms": 0.4703,
+            "coreGeometryPlan": 1,
+            "pagePayloadMax": 1,
+            "pagePayloadActive": 0,
+            "xFontCreated": 1,
+            "lineMetricsComputed": 1,
+            "corePageBuild": 6,
+            "coreCommandBuild": 6,
+            "renderCells": 608,
+            "commands": 608,
+            "pageBuild.ms": 103.0673,
+            "pagePreflight.ms": 106.53559999999999,
+            "links.ms": 1.7261,
+            "pdfPage.ms": 36.464000000000006,
+            "pdfSave": 1,
+            "pdfFinalSave.ms": 38.1197,
+            "typefaceDisposed": 1
+          },
+          "IoMetrics": {
+            "writer.rowStoreBytes": 439,
+            "writer.stageBytes": 8075,
+            "writer.rowCacheHits": 99,
+            "writer.rowCacheEntries": 1,
+            "writer.rowCacheSourceBytes": 181
+          }
+        }
+      ],
+      "toolSha256": "f6fdbc6cee2fd779a25b131f579eb833ddf17a9c709da60f5ed7b4e2ff164e90"
+    }
+  ],
+  "implementationWorkingTreeDirty": true,
+  "implementationBaseCommit": "24c9dea4d67190951d152eef56f76abc943ef733",
+  "sourceInventory": "source-inventory.json"
+}

@@ -1,0 +1,29 @@
+{
+  "baselineCommit": "24c9dea4d67190951d152eef56f76abc943ef733",
+  "culture": "InvariantCulture",
+  "runtime": "10.0.12",
+  "sdk": "10.0.401",
+  "os": "Linux-6.18.44-x86_64-with-glibc2.41",
+  "font": {
+    "path": "third_party/NotoSansJP/NotoSansJP-Regular.ttf",
+    "sha256": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec"
+  },
+  "inputs": {
+    "samples/excel/japanese-grid-report.xlsx": "4907d79963eb8267eab4230c7aad9bbd0d580238d3d42f402b34fb4c0ff217a1",
+    "samples/mapping/invoice/invoice.xlsx": "1eafc42149f48770c131f836883ffb6ac2714215d4ebe2db5352e1dee66011a5",
+    "samples/mapping/invoice/page-breaks/invoice.xlsx": "fe9e74bb06481aa86d2dcf14268c94ca95844b5a2a3b3693b7c98996fa2e8d93",
+    "samples/mapping/invoice/page-breaks/template.xlsx": "4b3599f12fb192099459888091f4f6fe0de6e6198b7a40a0ea2d9c394aa846be",
+    "samples/mapping/invoice/template.xlsx": "8158ffcc92c5f5d0f71a951c4fe38cd3cb87415312f11e827cf69aaa2e5455eb",
+    "tests/ExcelRenderer.Tests/SampleInputs/01-japanese.xlsx": "6a89d390e07a60e919b7be2c5fa6af47721b0e9c5a4a0c325ae97174ff6386f0",
+    "tests/ExcelRenderer.Tests/SampleInputs/02-image.xlsx": "d54804111617065e59a4bbe4d5c2099b08efdea2f71d1676998bc836569de254",
+    "tests/ExcelRenderer.Tests/SampleInputs/03-wrapped-text.xlsx": "60421161d8ec36904befd41ecde57551ea7880a8ffda07925b38178fc747d990",
+    "tests/ExcelRenderer.Tests/SampleInputs/04-text-decoration.xlsx": "c8ee629159de588541c6d08bce70cae9c0483ddcb21c3feef536102e1457cff1",
+    "tests/ExcelRenderer.Tests/SampleInputs/05-borders.xlsx": "074cfd50a3d4556380f462a69287d9b0254a71ebe412e267b395ca345a54eac2",
+    "tests/ExcelRenderer.Tests/SampleInputs/06-layout-and-pagination.xlsx": "5870f080ac266568de200bf6955a617da452b14c103a30371889e8bee13b12e6",
+    "tests/ExcelRenderer.Tests/SampleInputs/07-multiple-sheets.xlsx": "2da1636a03384c0aa0ecb14ec3183631f3c41a90f1348693e795c329c0cae20e",
+    "tests/ExcelRenderer.Tests/SampleInputs/08-print-scaling.xlsx": "f9e5ffaa18c622d2820138d18c6aed07ae63b28da8fad1c71c4ffcbdd12a9fb7",
+    "tests/ExcelRenderer.Tests/SampleInputs/09-cell-border.xlsx": "5655ee7b5407c1c9af6836ec65f573819b0265c833660210d04060ca8c368d70",
+    "tests/ExcelRenderer.Tests/SampleInputs/ReaderRichText/representative.xlsx": "5e4032e814530d62db777ad76b8eae467c4f761696a2877e22ca41e2fbc37357"
+  },
+  "projectionSha256": "6844868e2e1e32175cdb2f7939670f8181b09bef44d98fd28ff59c216013611c"
+}

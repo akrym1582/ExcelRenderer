@@ -1,0 +1,123 @@
++ dotnet restore --configfile /tmp/excel-openxml-package-consumers-final/NuGet.Config
+  Determining projects to restore...
+  All projects are up-to-date for restore.
++ dotnet build --no-restore -p:UseSharedCompilation=false
+  consumer -> /tmp/excel-openxml-package-consumers-final/reader/bin/Debug/net10.0/consumer.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:02.35
++ dotnet run --no-build -- /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/SampleInputs/01-japanese.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf
+Standalone OpenXml reader passed
++ dotnet restore --configfile /tmp/excel-openxml-package-consumers-final/NuGet.Config
+  Determining projects to restore...
+  All projects are up-to-date for restore.
++ dotnet build --no-restore -p:UseSharedCompilation=false
+  consumer -> /tmp/excel-openxml-package-consumers-final/mapping/bin/Debug/net10.0/consumer.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:02.62
++ dotnet run --no-build -- /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/SampleInputs/01-japanese.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf
+Standalone Mapping passed
++ dotnet restore --configfile /tmp/excel-openxml-package-consumers-final/NuGet.Config
+  Determining projects to restore...
+  All projects are up-to-date for restore.
++ dotnet build --no-restore -p:UseSharedCompilation=false
+  consumer -> /tmp/excel-openxml-package-consumers-final/main-core/bin/Debug/net10.0/consumer.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:02.47
++ dotnet run --no-build -- /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/SampleInputs/01-japanese.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Main package and bundled Core passed
++ dotnet tool uninstall ExcelRenderer.Tool --tool-path /tmp/excel-openxml-package-consumers-final/tool
+Tool 'excelrenderer.tool' (version '1.8.0') was successfully uninstalled.
++ dotnet tool install ExcelRenderer.Tool --version 1.8.0 --tool-path /tmp/excel-openxml-package-consumers-final/tool --configfile /tmp/excel-openxml-package-consumers-final/NuGet.Config
+You can invoke the tool using the following command: excelrenderer
+Tool 'excelrenderer.tool' (version '1.8.0') was successfully installed.
++ /tmp/excel-openxml-package-consumers-final/tool/excelrenderer --help
+Description:
+  Convert Excel files to PDF, PNG, SVG and Markdown.
+
+Usage:
+  ExcelRenderer.Tool [command] [options]
+
+Options:
+  -?, -h, --help  Show help and usage information
+  --version       Show version information
+
+Commands:
+  xlsx <input>          Map JSON into an Excel template and save XLSX without rendering.
+  pdf <input>           Convert Excel worksheets to PDF.
+  image <input>         Convert Excel worksheets to paginated PNG images. Use 'render --format png --image-layout continuous' for continuous images.
+  svg <input>           Convert Excel worksheets to SVG files.
+  markdown, md <input>  Convert an Excel workbook to Markdown.
+  render <input>        Render an Excel workbook using the unified rendering API.
+
++ /tmp/excel-openxml-package-consumers-final/tool/excelrenderer md /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/SampleInputs/01-japanese.xlsx --reader-backend openxml --formula-mode cached -o /tmp/excel-openxml-package-consumers-final/tool.md
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+All package consumers passed

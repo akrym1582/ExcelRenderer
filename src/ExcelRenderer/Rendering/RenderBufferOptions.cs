@@ -13,16 +13,10 @@ public sealed record RenderBufferOptions
     public string? TemporaryDirectory { get; init; }
 
     /// <summary>Validates the buffer threshold and the existing temporary directory.</summary>
-    internal void Validate()
+    internal void Validate() => new Core.Input.InputBufferOptions
     {
-        if (MemoryThresholdBytes < 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(MemoryThresholdBytes));
-        }
-
-        if (TemporaryDirectory is not null && !Directory.Exists(TemporaryDirectory))
-        {
-            throw new DirectoryNotFoundException($"Temporary directory does not exist: {TemporaryDirectory}");
-        }
-    }
+        MemoryThresholdBytes = MemoryThresholdBytes,
+        AllowTemporaryFiles = AllowTemporaryFiles,
+        TemporaryDirectory = TemporaryDirectory,
+    }.Validate();
 }

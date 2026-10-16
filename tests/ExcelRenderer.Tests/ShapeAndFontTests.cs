@@ -1,4 +1,4 @@
-using ClosedXML.Excel;
+using ExcelRenderer.TestFixtures;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using ExcelRenderer.Drawing;
@@ -644,11 +644,7 @@ public sealed class ShapeAndFontTests
     private static string CreateWorkbookWithShapes()
     {
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
-        using (var workbook = new XLWorkbook())
-        {
-            workbook.AddWorksheet("Shapes").Cell("A1").Value = "anchor";
-            workbook.SaveAs(path);
-        }
+        RetainedWorkbook.Copy("ShapeAndFontTests.CreateWorkbookWithShapes.C704163BF33ECFBD.xlsx", path);
 
         using var document = SpreadsheetDocument.Open(path, true);
         var worksheetPart = document.WorkbookPart!.WorksheetParts.Single();

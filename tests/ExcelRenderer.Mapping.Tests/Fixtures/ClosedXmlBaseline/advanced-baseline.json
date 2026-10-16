@@ -1,0 +1,35 @@
+{
+  "BaselineCommit": "24c9dea4d67190951d152eef56f76abc943ef733",
+  "Results": [
+    {
+      "Feature": "pivot",
+      "Count": 0,
+      "Error": null
+    },
+    {
+      "Feature": "pivot",
+      "Count": 3,
+      "Error": null
+    },
+    {
+      "Feature": "pivot-values",
+      "Count": 0,
+      "Error": null
+    },
+    {
+      "Feature": "pivot-values",
+      "Count": 3,
+      "Error": null
+    },
+    {
+      "Feature": "sparkline",
+      "Count": 0,
+      "Error": "MappingException: Template! []: MappingFormulaNotSupported: extLst. Calculate values in the caller and replace template formulas with value placeholders."
+    },
+    {
+      "Feature": "sparkline",
+      "Count": 3,
+      "Error": "MappingException: Template! []: MappingFormulaNotSupported: extLst. Calculate values in the caller and replace template formulas with value placeholders."
+    }
+  ]
+}

@@ -9,6 +9,21 @@ namespace ExcelRenderer.Tests;
 /// </summary>
 public sealed class MarkdownExporterTests
 {
+    [Fact]
+    public void SparseAxisDefinitionsUseSharedDefaultGeometryAndVisibility()
+    {
+        var sheet = new ReportSheet("sparse", new Dictionary<CellAddress, ReportCell> { [new(3, 3)] = new("value", CellStyle.Default) },
+            new Dictionary<int, ColumnDefinition> { [1] = new(30), [2] = new(100, true) },
+            new Dictionary<int, RowDefinition> { [1] = new(100, true) }, [], new())
+        { DefaultColumnWidth = 40, DefaultRowHeight = 20 };
+        var cell = Assert.Single(new VisualCellBuilder().Build(sheet));
+        Assert.Equal(30, cell.X);
+        Assert.Equal(20, cell.Y);
+        Assert.Equal(40, cell.Width);
+        Assert.Equal(20, cell.Height);
+        Assert.Empty(new VisualCellBuilder().Build(sheet with { DefaultRowsHidden = true }));
+    }
+
     /// <summary>
     /// 結合セル、数式表示値および外部ファイル化した画像が Markdown 出力に保持されることを検証します。
     /// </summary>

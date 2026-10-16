@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using ClosedXML.Excel;
 
 namespace ExcelRenderer.Mapping;
 
@@ -11,19 +10,17 @@ internal sealed class TemplateSheet
 {
     /// <summary>Initializes a new instance of the <see cref="TemplateSheet"/> class.</summary>
     /// <param name="sheet">The sheet.</param>
-    internal TemplateSheet(IXLWorksheet sheet)
+    internal TemplateSheet(TemplateSnapshot sheet)
     {
         Sheet = sheet;
-        LastRow = sheet.LastRowUsed(XLCellsUsedOptions.All)?.RowNumber() ?? 0;
-        LastColumn = Math.Max(
-            sheet.LastColumnUsed(XLCellsUsedOptions.All)?.ColumnNumber() ?? 1,
-            sheet.MergedRanges.Select(range => range.RangeAddress.LastAddress.ColumnNumber).DefaultIfEmpty(1).Max());
+        LastRow = sheet.LastRow;
+        LastColumn = sheet.LastColumn;
         var row = 1;
         Nodes = Parse(ref row, new HashSet<string>(StringComparer.Ordinal), false);
     }
 
     /// <summary>Gets the template worksheet.</summary>
-    internal IXLWorksheet Sheet { get; }
+    internal TemplateSnapshot Sheet { get; }
 
     /// <summary>Gets the last used template row.</summary>
     internal int LastRow { get; }
@@ -40,7 +37,7 @@ internal sealed class TemplateSheet
     /// <param name="cell">The original cell.</param>
     /// <param name="action">The cell operation.</param>
     /// <returns>The operation result.</returns>
-    internal static T At<T>(IXLWorksheet sheet, TemplateCell cell, Func<T> action)
+    internal static T At<T>(TemplateSnapshot sheet, TemplateCell cell, Func<T> action)
     {
         try
         {
@@ -52,18 +49,20 @@ internal sealed class TemplateSheet
         }
     }
 
+    /// <summary>Validates repeated-region restrictions after every sheet has compiled its syntax.</summary>
+    internal void ValidateRepeatedRanges() => Validate(Nodes);
+
     private List<TemplateNode> Parse(ref int row, HashSet<string> aliases, bool insideArray)
     {
         var nodes = new List<TemplateNode>();
         while (row <= LastRow)
         {
             var sourceRow = row;
-            var cells = Sheet.Row(row).CellsUsed(XLCellsUsedOptions.Contents).Where(c => !c.HasFormula && c.DataType == XLDataType.Text)
-                .Select(c => new TemplateCell(c.Address.ToStringRelative(), c.Address.ColumnNumber, c.GetString())).ToArray();
+            var cells = Sheet.TextCells.TryGetValue(row, out var sourceCells) ? sourceCells : Array.Empty<TemplateCell>();
             var marker = cells.FirstOrDefault(c => c.Text.StartsWith("**@start-array", StringComparison.Ordinal) || c.Text.StartsWith("**@end-array", StringComparison.Ordinal));
             if (marker is not null)
             {
-                if (Sheet.Row(row).CellsUsed(XLCellsUsedOptions.Contents).Count() != 1 || Sheet.MergedRanges.Any(r => r.RangeAddress.FirstAddress.RowNumber <= sourceRow && r.RangeAddress.LastAddress.RowNumber >= sourceRow))
+                if (Sheet.ContentCounts[sourceRow] != 1 || Sheet.MergedRanges.Any(r => r.First.Row <= sourceRow && r.Last.Row >= sourceRow))
                 {
                     throw Error(marker, "An array marker requires a dedicated, unmerged row with no other content.");
                 }
@@ -106,7 +105,6 @@ internal sealed class TemplateSheet
                 }
 
                 var node = new TemplateNode(sourceRow, row, marker, path, alias, children);
-                ValidateRepeatedRange(node);
                 nodes.Add(node);
                 row++;
                 continue;
@@ -147,11 +145,6 @@ internal sealed class TemplateSheet
                 }
             }
 
-            if (ordinary.Path is not null)
-            {
-                ValidateRepeatedRange(ordinary);
-            }
-
             nodes.Add(ordinary);
             row++;
         }
@@ -167,47 +160,19 @@ internal sealed class TemplateSheet
         }
     }
 
-    private void ValidateRepeatedRange(TemplateNode node)
+    private void Validate(List<TemplateNode> nodes)
     {
-        var first = node.IsBlock ? node.FirstRow + 1 : node.FirstRow;
-        var last = node.IsBlock ? node.LastRow - 1 : node.LastRow;
-        if (first <= last)
+        foreach (var node in nodes)
         {
-            var formula = Sheet.Rows(first, last).CellsUsed(XLCellsUsedOptions.Contents).FirstOrDefault(cell => cell.HasFormula);
-            if (formula is not null)
+            if (node.Path is not null)
             {
-                throw new MappingException(Sheet.Name, formula.Address.ToStringRelative(), "=" + formula.FormulaA1, "Formulas inside repeated regions are not supported; supply calculated values in the input.");
+                Sheet.ValidateRepeatedRange(node);
             }
-        }
 
-        var names = Sheet.Workbook.DefinedNames.Concat(Sheet.Workbook.Worksheets.SelectMany(sheet => sheet.DefinedNames));
-        foreach (var name in names)
-        {
-            if (name.Ranges.Any(range => range.Worksheet == Sheet &&
-                range.RangeAddress.FirstAddress.RowNumber <= node.LastRow && range.RangeAddress.LastAddress.RowNumber >= node.FirstRow))
+            if (node.Children is not null)
             {
-                throw Error(node.Location, $"Defined name '{name.Name}' overlaps a repeated region ({name.RefersTo}).");
+                Validate(node.Children);
             }
-        }
-
-        foreach (var merged in Sheet.MergedRanges)
-        {
-            var range = merged.RangeAddress;
-            if (range.FirstAddress.RowNumber <= last && range.LastAddress.RowNumber >= first &&
-                (range.FirstAddress.RowNumber < first || range.LastAddress.RowNumber > last))
-            {
-                throw Error(node.Location, "A merged range crosses a repeated region boundary.");
-            }
-        }
-
-        if (Sheet.Tables.Any(t => t.RangeAddress.FirstAddress.RowNumber <= node.LastRow && t.RangeAddress.LastAddress.RowNumber >= node.FirstRow))
-        {
-            throw Error(node.Location, "Excel tables overlapping repeated regions are not supported; use ordinary cells.");
-        }
-
-        if (Sheet.Pictures.Any(p => p.TopLeftCell.Address.RowNumber <= node.LastRow && p.BottomRightCell.Address.RowNumber >= node.FirstRow))
-        {
-            throw Error(node.Location, "Pictures overlapping repeated regions are not supported.");
         }
     }
 

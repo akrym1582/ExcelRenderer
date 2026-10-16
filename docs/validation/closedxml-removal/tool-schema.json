@@ -1,0 +1,69 @@
+{
+  "Failures": 0,
+  "Files": [
+    {
+      "File": "/tmp/removal-tool-fixtures/images.xlsx",
+      "Errors": []
+    },
+    {
+      "File": "/tmp/removal-tool-fixtures/mixed.xlsx",
+      "Errors": []
+    },
+    {
+      "File": "/tmp/removal-tool-fixtures/wrap.xlsx",
+      "Errors": []
+    },
+    {
+      "File": "/tmp/removal-tool-fixtures/far.xlsx",
+      "Errors": []
+    },
+    {
+      "File": "/tmp/removal-tool-fixtures/merges.xlsx",
+      "Errors": []
+    },
+    {
+      "File": "/tmp/removal-tool-fixtures/rowstyle.xlsx",
+      "Errors": []
+    },
+    {
+      "File": "/tmp/removal-tool-fixtures/bold.xlsx",
+      "Errors": []
+    },
+    {
+      "File": "/tmp/removal-tool-fixtures/latin.xlsx",
+      "Errors": []
+    },
+    {
+      "File": "/tmp/removal-tool-fixtures/empty.xlsx",
+      "Errors": []
+    },
+    {
+      "File": "/tmp/removal-tool-fixtures/reader/representative.xlsx",
+      "Errors": []
+    },
+    {
+      "File": "/tmp/removal-tool-fixtures/reader/ordinary.xlsx",
+      "Errors": []
+    },
+    {
+      "File": "/tmp/removal-tool-fixtures/reader/rich-unique.xlsx",
+      "Errors": []
+    },
+    {
+      "File": "/tmp/removal-tool-fixtures/reader/rich-repeated.xlsx",
+      "Errors": []
+    },
+    {
+      "File": "/tmp/removal-tool-fixtures/reader/unique.xlsx",
+      "Errors": []
+    },
+    {
+      "File": "/tmp/removal-tool-fixtures/reader/shared.xlsx",
+      "Errors": []
+    },
+    {
+      "File": "/tmp/removal-tool-fixtures/reader/hyperlinks.xlsx",
+      "Errors": []
+    }
+  ]
+}

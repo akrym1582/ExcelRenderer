@@ -1,0 +1,39 @@
+{
+  "Outputs": {
+    "Pdf": 29532,
+    "Png": 31828,
+    "Svg": 87692,
+    "Markdown": 283,
+    "CorePdf": 29589
+  },
+  "References": {
+    "ExcelRenderer": [
+      "DocumentFormat.OpenXml",
+      "DocumentFormat.OpenXml.Framework",
+      "ExcelRenderer.Core",
+      "ExcelRenderer.OpenXml",
+      "netstandard",
+      "PdfSharp",
+      "SkiaSharp"
+    ],
+    "ExcelRenderer.Core": [
+      "DocumentFormat.OpenXml",
+      "DocumentFormat.OpenXml.Framework",
+      "ExcelRenderer.OpenXml",
+      "netstandard",
+      "PdfSharp",
+      "SkiaSharp"
+    ],
+    "ExcelRenderer.OpenXml": [
+      "DocumentFormat.OpenXml",
+      "DocumentFormat.OpenXml.Framework",
+      "ExcelNumberFormat",
+      "netstandard"
+    ]
+  },
+  "ClosedXmlAssemblyLoaded": false,
+  "FixtureValidation": {
+    "normalized.xlsx": 0,
+    "images.xlsx": 0
+  }
+}

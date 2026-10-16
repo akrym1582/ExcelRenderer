@@ -3,7 +3,6 @@ using System.Globalization;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text.Json;
-using ClosedXML.Excel;
 using ExcelRenderer.OpenXml;
 
 /// <summary>Isolates each reader and repetition so RSS peaks never contaminate other samples.</summary>
@@ -20,7 +19,7 @@ internal static class Benchmarks
         {
             foreach (var mode in new[] { "format", "parse-only" })
             {
-                foreach (var reader in new[] { "openxml", "closedxml" })
+                foreach (var reader in new[] { "openxml" })
                 {
                     _ = Worker(path, reader, mode);
                     var samples = Enumerable.Range(0, 5).Select(_ => Worker(path, reader, mode)).ToArray();
@@ -80,11 +79,16 @@ internal static class Benchmarks
 
     /// <summary>Measures one reader in the current fresh worker process.</summary>
     /// <param name="path">Controlled XLSX path.</param>
-    /// <param name="reader">openxml or closedxml.</param>
+    /// <param name="reader">openxml. Historical engines must run from their original checkout.</param>
     /// <param name="mode">format or parse-only.</param>
     /// <returns>Timing, allocation, GC and RSS evidence.</returns>
     internal static object Measure(string path, string reader, string mode)
     {
+        if (reader != "openxml")
+        {
+            throw new ArgumentException("Only openxml is available. Run historical benchmarks from their original checkout.", nameof(reader));
+        }
+
         GC.Collect();
         GC.WaitForPendingFinalizers();
         var allocated = GC.GetTotalAllocatedBytes(true);
@@ -128,21 +132,6 @@ internal static class Benchmarks
                 sharedItems = wb.LoadedSharedStringCount;
                 styles = wb.StyleRecordCount;
                 sst = wb.SharedStringLoadTime.TotalMilliseconds;
-            }
-            else
-            {
-                using var wb = new XLWorkbook(stream);
-                open = timer.Elapsed.TotalMilliseconds;
-                var selected = Path.GetFileNameWithoutExtension(path) == "selection" ? "Small" : "Data";
-                foreach (var cell in wb.Worksheet(selected).CellsUsed(XLCellsUsedOptions.All))
-                {
-                    count++;
-                    Add(new ExcelRenderer.OpenXml.CellAddress(cell.Address.RowNumber, cell.Address.ColumnNumber).ToString());
-                    var value = cell.CachedValue;
-                    Add(mode == "format" ? cell.GetFormattedString(CultureInfo.CurrentCulture) : value.IsBlank ? "Blank" : value.IsNumber ? "Number" : value.IsText ? "String" : value.Type.ToString());
-                }
-
-                enumeration = timer.Elapsed.TotalMilliseconds - open;
             }
         }
 

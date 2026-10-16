@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using ClosedXML.Excel;
 
 namespace ExcelRenderer.Mapping;
 
@@ -20,5 +19,5 @@ internal sealed class ExpansionNode
     internal List<List<ExpansionNode>> Blocks { get; } = new List<List<ExpansionNode>>();
 
     /// <summary>Gets the evaluated copies of a single row.</summary>
-    internal List<List<XLCellValue>> Rows { get; } = new List<List<XLCellValue>>();
+    internal List<List<MappedValue>> Rows { get; } = new List<List<MappedValue>>();
 }

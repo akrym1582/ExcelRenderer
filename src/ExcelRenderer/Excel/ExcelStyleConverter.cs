@@ -1,14 +1,29 @@
-using ClosedXML.Excel;
 using ExcelRenderer.Model;
+using ExcelRenderer.OpenXml;
 
 namespace ExcelRenderer.Excel;
 
-/// <summary>ClosedXML のセル書式をレンダリング用の書式モデルへ変換します。</summary>
+/// <summary>Converts resolved Open XML styles to rendering styles.</summary>
 public static class ExcelStyleConverter
 {
-    /// <summary>セルのフォント、塗りつぶし、罫線、配置、および文字表示設定をレンダリング用書式へ変換します。</summary>
-    /// <param name="cell">書式とデータ型を読み取る ClosedXML のセルです。</param>
-    /// <returns>テーマ色を実色へ解決し、標準配置をセルのデータ型に応じて確定したセル書式を返します。</returns>
-    public static CellStyle Convert(IXLCell cell) =>
-        CoreIntegration.CoreModelAdapter.ToPublic(Core.Excel.ExcelStyleConverter.ConvertOriginal(cell));
+    /// <summary>Converts font, fill, borders and alignment without reading or calculating a cell.</summary>
+    /// <param name="style">The resolved style returned by OpenXmlWorkbookReader.ResolveStyle.</param>
+    /// <param name="valueType">The stored value type, including a formula's cached result type, used to resolve General alignment.</param>
+    /// <returns>The original source appearance with General alignment resolved.</returns>
+    /// <exception cref="ArgumentNullException">The style is null.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The value type is unknown.</exception>
+    public static CellStyle Convert(CellStyleInfo style, CellValueType valueType)
+    {
+        if (style is null)
+        {
+            throw new ArgumentNullException(nameof(style));
+        }
+
+        if (!Enum.IsDefined(typeof(CellValueType), valueType))
+        {
+            throw new ArgumentOutOfRangeException(nameof(valueType));
+        }
+
+        return CoreIntegration.CoreModelAdapter.ToPublic(Core.Excel.OpenXmlStyleConverter.Convert(style, valueType));
+    }
 }

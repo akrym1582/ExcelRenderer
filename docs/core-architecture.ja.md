@@ -1,11 +1,12 @@
 # 本体＋Coreの2エンジン構成
 
-旧Slimを`ExcelRenderer.Core`へ改名し、共通の基盤と単一通常フォントのPDF製品を
-同じプロジェクトに置きます。本体`ExcelRenderer`だけがCoreを参照します。Coreは
-`netstandard2.1`の非packableプロジェクトで、本体・Fonts・Toolへの参照を持ちません。
+`ExcelRenderer.Core`は、共通の基盤と単一通常フォントのPDF製品を
+同じプロジェクトに置きます。本体`ExcelRenderer`はCoreを参照します。Coreは
+`netstandard2.1`の非packableプロジェクトで、共有`ExcelRenderer.OpenXml`だけをProjectReferenceし、
+本体・Fonts・Toolへの参照を持ちません。
 本体とToolの既存パッケージには、同じbuildのCore DLLを同梱します。
 
-共通input/spool、基本reader、style intern、列幅・行列座標、geometry、ページ計画、
+OpenXml に委譲する input/spool adapter、基本reader、style intern、列幅・行列座標、geometry、ページ計画、
 candidate抽出、セル配置、文字placement、背景・罫線・文字コマンド、画像decode、
 基本PDF描画・Save、診断集約、PDFsharp gateはCoreが所有します。
 
@@ -37,7 +38,7 @@ converter内はsessionを借用し、独立した公開measurer/rendererは自�
 別AssemblyLoadContextは同期対象外です。公開runが所有するfont snapshotはreset後も保持し、
 所有者のなくなったsnapshotはweak登録により回収できます。
 
-[最終所有者表](core-source-map.md)、[利用側の移行](core.ja.md)、[実行済み検証](core-refactor-validation.md)
+[所有者表](core-source-map.md)、[Coreの利用方法と対応範囲](core.ja.md)、[実行済み検証](core-refactor-validation.md)
 を参照してください。Ubuntu/WindowsのCIを維持しますが、Linuxでのローカル結果を
 Windowsでも成功した結果として扱いません。
 
@@ -45,7 +46,7 @@ Windowsでも成功した結果として扱いません。
 
 `ReaderSession` は Core の読み込み 1 回につき最大 1 個の表示用 workbook と、
 上限 8,192 件の書式変換 cache を所有します。Core／本体の変換方針は別 session であり、
-元の ClosedXML セル書式を変更しません。
+読み込んだ不変のセル書式を変更しません。
 
 セルの部分書式は本体の `FullCellTextData` として Core の typed payload に保持します。
 Core は run のフォントを解釈せず、`IExtendedTextLayoutService` 経由で本体へ計測を委譲します。
@@ -55,8 +56,8 @@ Core は run のフォントを解釈せず、`IExtendedTextLayoutService` 経�
 IVS 基底文字化・PDF の製品範囲は変更しません。
 
 追加の文字切れ判定は Core の `CellTextDiagnostics`、診断方針・選択ページへの絞り込みは
-本体 preflight が担当します。実装状況と数式表示モードの未解決事項は
-[検証報告](reader-richtext-validation.md) を参照してください。
+本体 preflight が担当します。現在の数式表示と診断の契約は
+[エンジン選択](openxml-integration.ja.md)を参照してください。
 
 ### 数式キャッシュと読取診断
 
@@ -65,3 +66,5 @@ CoreExcelReader が表示ポリシーと診断候補を管理します。scratch
 本体の公開 ExcelReadOptions は独立した Core 内部設定へ写像します。可視範囲による診断の確定は
 選択機能を所有する本体 preflight が担当します。チャートシートはメタデータのみを保持し、
 診断のために空白ページを追加しません。旧計測器は任意の RenderRequest.TextMeasurer で借用します。
+
+汎用の入力検査・spool は `ExcelRenderer.OpenXml/Input` が所有します。Core は共有 OpenXml のみを ProjectReference し、本体・Mapping も同じ共有版を参照します。[エンジン選択](openxml-integration.ja.md)を参照してください。

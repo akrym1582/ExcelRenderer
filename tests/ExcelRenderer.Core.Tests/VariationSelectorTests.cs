@@ -1,3 +1,5 @@
+using ExcelRenderer.TestFixtures;
+using S = DocumentFormat.OpenXml.Spreadsheet;
 using ExcelRenderer.Core.Model;
 using ExcelRenderer.Core.Pdf;
 using Xunit;
@@ -25,9 +27,9 @@ public sealed class VariationSelectorTests
     {
         using var input = TestSupport.Workbook(workbook =>
         {
-            var sheet = workbook.Worksheet(1);
-            sheet.Cell(1, 1).Value = "葛\U000E0100飾\uFE00";
-            sheet.PageSetup.Header.Center.AddText("辻\U000E01EF");
+            var sheet = TestSupport.Sheet(workbook);
+            sheet.Descendants<S.Text>().Single().Text = "葛\U000E0100飾\uFE00";
+            sheet.Append(new S.HeaderFooter(new S.OddHeader("&C辻\U000E01EF")));
         });
         await TestSupport.WithSheet(input, (sheet, font) =>
         {
@@ -51,13 +53,11 @@ public sealed class VariationSelectorTests
         {
             var conversion = await TestSupport.Convert(workbook =>
             {
-                var sheet = workbook.Worksheet(1);
-                sheet.Column(1).Width = 8;
-                sheet.Cell(1, 1).Value = selectors ? "葛\U000E0100飾\U000E01EF区\uFE00の帳票" : "葛飾区の帳票";
-                sheet.Cell(1, 1).Style.Alignment.WrapText = !shrink;
-                sheet.Cell(1, 1).Style.Alignment.ShrinkToFit = shrink;
-                sheet.PageSetup.Header.Center.AddText(selectors ? "辻\U000E0100" : "辻");
-                sheet.PageSetup.Footer.Center.AddText(selectors ? "葛\uFE00" : "葛");
+                var sheet = TestSupport.Sheet(workbook);
+                sheet.InsertAt(new S.Columns(new S.Column { Min = 1, Max = 1, Width = 8.710625, CustomWidth = true }), 0);
+                sheet.Descendants<S.Text>().Single().Text = selectors ? "葛\U000E0100飾\U000E01EF区\uFE00の帳票" : "葛飾区の帳票";
+                workbook.WorkbookStylesPart!.Stylesheet.CellFormats!.GetFirstChild<S.CellFormat>()!.Alignment = new S.Alignment { WrapText = !shrink, ShrinkToFit = shrink };
+                sheet.Append(new S.HeaderFooter(new S.OddHeader("&C" + (selectors ? "辻\U000E0100" : "辻")), new S.OddFooter("&C" + (selectors ? "葛\uFE00" : "葛"))));
             });
             return conversion.Pdf;
         }

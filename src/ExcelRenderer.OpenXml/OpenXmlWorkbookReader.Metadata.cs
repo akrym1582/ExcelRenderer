@@ -96,6 +96,8 @@ public sealed partial class OpenXmlWorkbookReader
         var drawing = false;
         var links = false;
         var conditional = false;
+        var hasFormulas = false;
+        var conditionalRanges = new List<IReadOnlyList<CellRange>>();
         var tables = false;
         var breakKind = string.Empty;
         using (var reader = XmlValues.CreateReader(part))
@@ -129,6 +131,7 @@ public sealed partial class OpenXmlWorkbookReader
                     var formula = cell.Formula;
                     if (formula != null)
                     {
+                        hasFormulas = true;
                         var kind = XmlValues.Attr(formula, "t") ?? "normal";
                         var si = XmlValues.Int(formula, "si");
                         var reference = XmlValues.Attr(formula, "ref");
@@ -146,6 +149,12 @@ public sealed partial class OpenXmlWorkbookReader
                             arrays.Add(new FormulaMaster(address, formula.Value, reference, CellRange.Parse(reference)));
                         }
                     }
+                }
+                else if (reader.ElementType == typeof(S.ConditionalFormatting))
+                {
+                    conditional = true;
+                    var reference = XmlValues.Attr(AttributesElement(reader), "sqref") ?? string.Empty;
+                    conditionalRanges.Add(reference.Split(new[] { ' ', '\t', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Select(CellRange.Parse).ToArray());
                 }
                 else if (reader.ElementType == typeof(S.Column))
                 {
@@ -213,7 +222,7 @@ public sealed partial class OpenXmlWorkbookReader
         ElementInfo? Find(string name) => elements.TryGetValue(name, out var e) ? e : null;
         var print = workbook.DefinedNames.Where(n => n.LocalSheetId == index - 1 && (n.Name == "_xlnm.Print_Area" || n.Name == "_xlnm.Print_Titles")).Select(n => PrintReferences.Parse(n, sheets[index - 1], options.DiagnosticSink)).ToList().AsReadOnly();
         var actual = maxRow == 0 ? null : new CellRange(new CellAddress(minRow, minCol), new CellAddress(maxRow, maxCol));
-        var info = new WorksheetInfo(sheets[index - 1], dimension, actual, rows.AsReadOnly(), columns.AsReadOnly(), merges.AsReadOnly(), Find("sheetFormatPr"), Find("pageSetup"), Find("pageSetUpPr"), Find("pageMargins"), Find("printOptions"), Find("headerFooter"), rowBreaks.AsReadOnly(), columnBreaks.AsReadOnly(), print, drawing, links, conditional, tables);
+        var info = new WorksheetInfo(sheets[index - 1], dimension, actual, rows.AsReadOnly(), columns.AsReadOnly(), merges.AsReadOnly(), Find("sheetFormatPr"), Find("pageSetup"), Find("pageSetUpPr"), Find("pageMargins"), Find("printOptions"), Find("headerFooter"), rowBreaks.AsReadOnly(), columnBreaks.AsReadOnly(), print, drawing, links, conditional, tables, conditionalRanges.AsReadOnly(), hasFormulas);
         cached = new SheetMetadata(info, shared, FormulaIndex.Build(arrays));
         metadata.Add(index, cached);
         return cached;

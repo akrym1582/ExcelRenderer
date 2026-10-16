@@ -1,0 +1,198 @@
+{
+  "scope": "Phase B Reader removal; complete repository removal is NOT finished. Mapping, remaining fixtures and tools retain ClosedXML.",
+  "head": "24c9dea4d67190951d152eef56f76abc943ef733",
+  "projects": [
+    {
+      "project": "samples/ExcelRenderer.Core.Sample/ExcelRenderer.Core.Sample.csproj",
+      "closedXml": [],
+      "closedXmlParser": []
+    },
+    {
+      "project": "src/ExcelRenderer/ExcelRenderer.csproj",
+      "closedXml": [],
+      "closedXmlParser": []
+    },
+    {
+      "project": "src/ExcelRenderer.Core/ExcelRenderer.Core.csproj",
+      "closedXml": [],
+      "closedXmlParser": []
+    },
+    {
+      "project": "src/ExcelRenderer.Fonts/ExcelRenderer.Fonts.csproj",
+      "closedXml": [],
+      "closedXmlParser": []
+    },
+    {
+      "project": "src/ExcelRenderer.Mapping/ExcelRenderer.Mapping.csproj",
+      "closedXml": [
+        "ClosedXML/0.105.1"
+      ],
+      "closedXmlParser": [
+        "ClosedXML.Parser/2.0.0"
+      ]
+    },
+    {
+      "project": "src/ExcelRenderer.OpenXml/ExcelRenderer.OpenXml.csproj",
+      "closedXml": [],
+      "closedXmlParser": []
+    },
+    {
+      "project": "src/ExcelRenderer.Tool/ExcelRenderer.Tool.csproj",
+      "closedXml": [
+        "ClosedXML/0.105.1"
+      ],
+      "closedXmlParser": [
+        "ClosedXML.Parser/2.0.0"
+      ]
+    },
+    {
+      "project": "tests/ExcelRenderer.Core.Tests/ExcelRenderer.Core.Tests.csproj",
+      "closedXml": [],
+      "closedXmlParser": []
+    },
+    {
+      "project": "tests/ExcelRenderer.Mapping.Tests/ExcelRenderer.Mapping.Tests.csproj",
+      "closedXml": [
+        "ClosedXML/0.105.1"
+      ],
+      "closedXmlParser": [
+        "ClosedXML.Parser/2.0.0"
+      ]
+    },
+    {
+      "project": "tests/ExcelRenderer.OpenXml.Tests/ExcelRenderer.OpenXml.Tests.csproj",
+      "closedXml": [],
+      "closedXmlParser": []
+    },
+    {
+      "project": "tests/ExcelRenderer.Tests/ExcelRenderer.Tests.csproj",
+      "closedXml": [
+        "ClosedXML/0.105.1"
+      ],
+      "closedXmlParser": [
+        "ClosedXML.Parser/2.0.0"
+      ]
+    },
+    {
+      "project": "tests/ExcelRenderer.Tool.Tests/ExcelRenderer.Tool.Tests.csproj",
+      "closedXml": [
+        "ClosedXML/0.105.1"
+      ],
+      "closedXmlParser": [
+        "ClosedXML.Parser/2.0.0"
+      ]
+    },
+    {
+      "project": "tools/ExcelRenderer.Core.Reference/ExcelRenderer.Core.Reference.csproj",
+      "closedXml": [],
+      "closedXmlParser": []
+    },
+    {
+      "project": "tools/ExcelRenderer.Core.Validation/ExcelRenderer.Core.Validation.csproj",
+      "closedXml": [],
+      "closedXmlParser": []
+    },
+    {
+      "project": "tools/ExcelRenderer.OpenXml.Validation/ExcelRenderer.OpenXml.Validation.csproj",
+      "closedXml": [
+        "ClosedXML/0.105.1"
+      ],
+      "closedXmlParser": [
+        "ClosedXML.Parser/2.0.0"
+      ]
+    },
+    {
+      "project": "tools/ExcelRenderer.Performance/ExcelRenderer.Performance.csproj",
+      "closedXml": [
+        "ClosedXML/0.105.1"
+      ],
+      "closedXmlParser": [
+        "ClosedXML.Parser/2.0.0"
+      ]
+    }
+  ],
+  "packages": [
+    {
+      "package": "ExcelRenderer.1.8.0.nupkg",
+      "sha256": "06e38abeefa52296ebd8f6c6fa076100dfae68092e908444a80641ca5927660f",
+      "dependencies": [
+        {
+          "id": "ExcelRenderer.OpenXml",
+          "version": "1.8.0",
+          "exclude": "Build,Analyzers"
+        },
+        {
+          "id": "DocumentFormat.OpenXml",
+          "version": "3.3.0",
+          "exclude": "Build,Analyzers"
+        },
+        {
+          "id": "PDFsharp",
+          "version": "6.2.3",
+          "exclude": "Build,Analyzers"
+        },
+        {
+          "id": "SkiaSharp",
+          "version": "4.151.0",
+          "exclude": "Build,Analyzers"
+        },
+        {
+          "id": "SkiaSharp.NativeAssets.Linux",
+          "version": "4.151.0",
+          "exclude": "Build,Analyzers"
+        },
+        {
+          "id": "System.Security.Cryptography.Pkcs",
+          "version": "8.0.2",
+          "exclude": "Build,Analyzers"
+        }
+      ],
+      "coreDllEntries": [
+        "lib/netstandard2.1/ExcelRenderer.Core.dll"
+      ],
+      "coreXmlEntries": [
+        "lib/netstandard2.1/ExcelRenderer.Core.xml"
+      ],
+      "closedXmlEntries": []
+    },
+    {
+      "package": "ExcelRenderer.OpenXml.1.8.0.nupkg",
+      "sha256": "6f81e38bd5bd90931caa3b9cf1433146472e767e542a672931158f73765dd0a6",
+      "dependencies": [
+        {
+          "id": "DocumentFormat.OpenXml",
+          "version": "3.3.0",
+          "exclude": "Build,Analyzers"
+        },
+        {
+          "id": "ExcelNumberFormat",
+          "version": "1.1.0",
+          "exclude": "Build,Analyzers"
+        }
+      ],
+      "coreDllEntries": [],
+      "coreXmlEntries": [],
+      "closedXmlEntries": []
+    },
+    {
+      "package": "ExcelRenderer.Tool.1.8.0.nupkg",
+      "sha256": "49b2f9673ca5786a9746a9bd5e7aba3362ab0ab92855b1686f290bd878fc8942",
+      "dependencies": [],
+      "coreDllEntries": [
+        "tools/net10.0/any/ExcelRenderer.Core.dll"
+      ],
+      "coreXmlEntries": [
+        "tools/net10.0/any/ExcelRenderer.Core.xml"
+      ],
+      "closedXmlEntries": [
+        "tools/net10.0/any/ClosedXML.Parser.dll",
+        "tools/net10.0/any/ClosedXML.dll"
+      ]
+    }
+  ],
+  "packagedCoreDllSha256": {
+    "ExcelRenderer.1.8.0.nupkg": "f1c9c778007857d1946a5c833d85a540fc3384c8da4bdc823391f0eda40673d1",
+    "ExcelRenderer.Tool.1.8.0.nupkg": "f1c9c778007857d1946a5c833d85a540fc3384c8da4bdc823391f0eda40673d1"
+  },
+  "coreRemainsNonpackable": true
+}

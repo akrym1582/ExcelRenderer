@@ -1,4 +1,6 @@
-using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Packaging;
+using ExcelRenderer.TestFixtures;
+using S = DocumentFormat.OpenXml.Spreadsheet;
 using ExcelRenderer.Core.Excel;
 using ExcelRenderer.Core.Fonts;
 using ExcelRenderer.Core.Model;
@@ -18,19 +20,52 @@ internal static class TestSupport
     internal static string MonoFont => Path.Combine(AppContext.BaseDirectory, "Fonts", "NotoSansMono-Regular.ttf");
     internal static PdfExportOptions Options => new() { FontFilePath = JapaneseFont };
 
-    internal static MemoryStream Workbook(Action<XLWorkbook>? configure = null)
+    internal static MemoryStream Workbook(Action<WorkbookPart>? configure = null)
     {
-        using var workbook = new XLWorkbook();
-        var sheet = workbook.AddWorksheet("First");
-        sheet.Cell(1, 1).Value = "帳票 日本語 abc 123";
-        configure?.Invoke(workbook);
-        var stream = new MemoryStream();
-        workbook.SaveAs(stream);
+        var stream = SdkWorkbook.Create(new S.Worksheet(new S.SheetData(new S.Row(SdkWorkbook.Text("A1", "帳票 日本語 abc 123")) { RowIndex = 1 })), SdkWorkbook.Styles(), name: "First");
+        if (configure is not null)
+        {
+            using var document = SpreadsheetDocument.Open(stream, true);
+            configure(document.WorkbookPart!);
+        }
         stream.Position = 0;
         return stream;
     }
 
-    internal static async Task<(ConversionResult Result, byte[] Pdf)> Convert(Action<XLWorkbook>? configure = null, PdfExportOptions? options = null)
+    internal static S.Worksheet Sheet(WorkbookPart workbook) => workbook.WorksheetParts.First().Worksheet;
+
+    internal static void Print(WorkbookPart workbook, string reference, string name = "_xlnm.Print_Area")
+    {
+        workbook.Workbook.DefinedNames ??= new S.DefinedNames();
+        workbook.Workbook.DefinedNames.Append(new S.DefinedName(reference) { Name = name, LocalSheetId = 0 });
+    }
+
+    internal static void MergeDoubleBorder(WorkbookPart workbook)
+    {
+        var sheet = Sheet(workbook);
+        sheet.Append(new S.MergeCells(new S.MergeCell { Reference = "A1:B2" }));
+        var data = sheet.GetFirstChild<S.SheetData>()!;
+        var first = data.Elements<S.Row>().Single();
+        first.Append(new S.Cell { CellReference = "B1" });
+        data.Append(new S.Row(new S.Cell { CellReference = "A2" }, new S.Cell { CellReference = "B2" }) { RowIndex = 2 });
+        var styles = workbook.WorkbookStylesPart!.Stylesheet;
+        foreach (var cell in data.Descendants<S.Cell>())
+        {
+            var address = cell.CellReference!.Value!;
+            var border = new S.Border();
+            if (address.StartsWith("A")) border.LeftBorder = new S.LeftBorder { Style = S.BorderStyleValues.Double };
+            if (address.EndsWith("1")) border.TopBorder = new S.TopBorder { Style = S.BorderStyleValues.Double };
+            if (address.StartsWith("B")) border.RightBorder = new S.RightBorder { Style = S.BorderStyleValues.Double };
+            if (address.EndsWith("2")) border.BottomBorder = new S.BottomBorder { Style = S.BorderStyleValues.Double };
+            var format = (S.CellFormat)styles.CellFormats!.FirstChild!.CloneNode(true);
+            format.BorderId = (uint)styles.Borders!.ChildElements.Count;
+            styles.Borders.Append(border);
+            cell.StyleIndex = (uint)styles.CellFormats.ChildElements.Count;
+            styles.CellFormats.Append(format);
+        }
+    }
+
+    internal static async Task<(ConversionResult Result, byte[] Pdf)> Convert(Action<WorkbookPart>? configure = null, PdfExportOptions? options = null)
     {
         using var input = Workbook(configure);
         using var output = new MemoryStream();

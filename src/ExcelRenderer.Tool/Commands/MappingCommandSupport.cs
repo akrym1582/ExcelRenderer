@@ -16,12 +16,13 @@ internal static class MappingCommandSupport
     /// <param name="data">The JSON path.</param>
     /// <param name="output">The destination path.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
+    /// <param name="mappingOptions">Optional engine policy.</param>
     /// <returns>The mapping task.</returns>
-    internal static async Task MapAsync(string input, string data, string output, CancellationToken cancellationToken)
+    internal static async Task MapAsync(string input, string data, string output, CancellationToken cancellationToken, MappingOptions? mappingOptions = null)
     {
         CheckPaths(input, data, output);
         using var json = JsonDocument.Parse(await File.ReadAllTextAsync(data, cancellationToken).ConfigureAwait(false));
-        ExcelTemplateMapper.Map(input, output, json.RootElement, cancellationToken: cancellationToken);
+        ExcelTemplateMapper.Map(input, output, json.RootElement, mappingOptions, cancellationToken);
     }
 
     /// <summary>Runs an output operation with an optional mapped temporary workbook.</summary>
@@ -30,8 +31,9 @@ internal static class MappingCommandSupport
     /// <param name="output">The requested output path.</param>
     /// <param name="action">The operation receiving the prepared input path.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
+    /// <param name="mappingOptions">Optional engine policy.</param>
     /// <returns>The output task.</returns>
-    internal static async Task WithInputAsync(string input, string? data, string output, Func<string, Task> action, CancellationToken cancellationToken)
+    internal static async Task WithInputAsync(string input, string? data, string output, Func<string, Task> action, CancellationToken cancellationToken, MappingOptions? mappingOptions = null)
     {
         if (data is null)
         {
@@ -45,7 +47,7 @@ internal static class MappingCommandSupport
         var temporary = Path.Combine(directory, Path.GetFileName(input));
         try
         {
-            await MapAsync(input, data, temporary, cancellationToken).ConfigureAwait(false);
+            await MapAsync(input, data, temporary, cancellationToken, mappingOptions).ConfigureAwait(false);
             await action(temporary).ConfigureAwait(false);
         }
         finally

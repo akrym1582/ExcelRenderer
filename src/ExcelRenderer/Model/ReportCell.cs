@@ -10,6 +10,12 @@ public sealed record ReportCell(
     int ColumnSpan = 1,
     string? Formula = null)
 {
+    /// <summary>Gets the original shared formula index, without expanding follower text.</summary>
+    public int? FormulaSharedIndex { get; init; }
+
+    /// <summary>Gets the original shared or array formula master coordinate.</summary>
+    public CellAddress? FormulaMasterAddress { get; init; }
+
     /// <summary>Gets optional effective partial text formatting; concatenation must equal Text.</summary>
     public IReadOnlyList<CellTextRun>? RichTextRuns { get; init; }
 

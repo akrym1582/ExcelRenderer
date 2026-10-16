@@ -1,0 +1,15 @@
+mapping plain parent-default {'ElapsedMs': 740.7518, 'AllocatedBytes': 19944304, 'PeakRssBytes': 86822912}
+mapping plain parent-openxml {'ElapsedMs': 360.9007, 'AllocatedBytes': 13595272, 'PeakRssBytes': 63385600}
+mapping plain removal {'ElapsedMs': 392.5407, 'AllocatedBytes': 15621152, 'PeakRssBytes': 63811584}
+mapping nested parent-default {'ElapsedMs': 827.5074, 'AllocatedBytes': 20636696, 'PeakRssBytes': 86941696}
+mapping nested parent-openxml {'ElapsedMs': 381.0304, 'AllocatedBytes': 14307224, 'PeakRssBytes': 64364544}
+mapping nested removal {'ElapsedMs': 401.8912, 'AllocatedBytes': 16358240, 'PeakRssBytes': 64761856}
+mapping geometry parent-default {'ElapsedMs': 1585.614, 'AllocatedBytes': 333288984, 'PeakRssBytes': 96251904}
+mapping geometry parent-openxml {'ElapsedMs': 426.5384, 'AllocatedBytes': 16801456, 'PeakRssBytes': 67321856}
+mapping geometry removal {'ElapsedMs': 424.3918, 'AllocatedBytes': 18866680, 'PeakRssBytes': 69361664}
+render geometry parent-default {'ElapsedMs': 2086.0916, 'AllocatedBytes': 149936480, 'PeakRssBytes': 145264640}
+render geometry parent-openxml {'ElapsedMs': 1126.1224, 'AllocatedBytes': 33322608, 'PeakRssBytes': 108937216}
+render geometry removal {'ElapsedMs': 988.0864, 'AllocatedBytes': 33005168, 'PeakRssBytes': 106733568}
+mapping-render geometry parent-default {'ElapsedMs': 3013.1683, 'AllocatedBytes': 169133224, 'PeakRssBytes': 154464256}
+mapping-render geometry parent-openxml {'ElapsedMs': 1182.2822, 'AllocatedBytes': 38479168, 'PeakRssBytes': 109420544}
+mapping-render geometry removal {'ElapsedMs': 1252.5499, 'AllocatedBytes': 40049344, 'PeakRssBytes': 109027328}

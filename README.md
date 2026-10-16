@@ -25,7 +25,7 @@ This makes the rendering pipeline easier to test, understand, and extend with ne
 
 ### Features
 
-- Reads `.xlsx` workbooks with ClosedXML
+- Reads `.xlsx` workbooks with OpenXml (default) or Auto
 - Supports cell text, fonts, alignment, wrapping, fills, and borders
 - Handles merged cells, hidden rows and columns, column widths, and row heights
 - Honors print areas, page size, orientation, margins, and scaling settings
@@ -52,6 +52,7 @@ Choose the package for your task:
 | --- | --- | --- |
 | `ExcelRenderer` | Render existing XLSX files to PDF, PNG, SVG or Markdown from C# | .NET Standard 2.1-compatible application |
 | `ExcelRenderer.Mapping` | Populate XLSX templates from C# objects or JSON and save XLSX | .NET Standard 2.1-compatible application; no rendering or fonts required |
+| `ExcelRenderer.OpenXml` | Read XLSX source records or write typed, formula-free workbook edits | .NET Standard 2.1-compatible application; low-level API |
 | `ExcelRenderer.Fonts` | Add optional bundled Japanese and emoji fonts for rendering | Use alongside `ExcelRenderer` |
 | `ExcelRenderer.Tool` | Map and convert workbooks from the command line | .NET 10 SDK |
 
@@ -291,9 +292,9 @@ A range replaces that sheet's print areas, preserves paper, margins, scaling and
 
 Trimming includes visible fills (including explicitly white fills), strokes, positioned text, images, shapes and headers/footers. Font glyph bounds are used where available; emoji and compatibility glyphs use conservative finalized logical bounds. This is drawing-bound cropping, not pixel-based removal of white or transparent areas inside images. An empty trimmed page remains 1×1pt plus padding (5×5pt by default), with `EmptyContent` information. PNG dimensions use ceiling at the requested DPI, and `RenderRequest.MaxPngPixels` applies to both page and continuous output before bitmap allocation.
 
-PDF and Markdown preserve `http`, `https`, `mailto` and same-workbook cell links, including range references, empty source cells, simple scoped A1 names, and literal-string `HYPERLINK` formulas. Explicit XML definitions take precedence over formulas. Cached displays are retained; uncached supported formulas use the literal friendly name or location without general formula recalculation. PDF annotations are attached to the final merged document and follow page selection and trimming. Markdown uses stable `xl-sN-rN-cN` anchors and explicit target/source lists where a blank cell or source range cannot carry a natural label. PNG and SVG retain cell appearance without clickable links or hyperlink warnings. SVG links and link sidecars are not generated.
+PDF and Markdown preserve `http`, `https`, `mailto` and same-workbook cell links, including range references, empty source cells, simple scoped A1 names, and literal-string `HYPERLINK` formulas. Explicit XML definitions take precedence over formulas. Only saved displays are used; uncached formulas display empty text and report `FormulaCachedValueMissing`. PDF annotations are attached to the final merged document and follow page selection and trimming. Markdown uses stable `xl-sN-rN-cN` anchors and explicit target/source lists where a blank cell or source range cannot carry a natural label. PNG and SVG retain cell appearance without clickable links or hyperlink warnings. SVG links and link sidecars are not generated.
 
-Unsafe URIs (including local files, relative paths, UNC, embedded HTTP credentials, control characters and unsupported schemes), conflicting definitions and unsupported dynamic formulas retain display text and yield `HyperlinkRejected`/`HyperlinkUnsupported` warnings. Missing or omitted internal destinations yield `HyperlinkTargetOmitted`; excluded sources do not produce destination warnings. Diagnostics omit URI/recipient/query contents. Readable invalid link definitions are warnings; a corrupt workbook rejected by ClosedXML remains a fatal input error. Strict mode or matching `--warnings-as-errors` stops output before the sink opens. The PDF CLI creates/truncates its file only after preflight; identical input/output paths are rejected before reading.
+Unsafe URIs (including local files, relative paths, UNC, embedded HTTP credentials, control characters and unsupported schemes), conflicting definitions and unsupported dynamic formulas retain display text and yield `HyperlinkRejected`/`HyperlinkUnsupported` warnings. Missing or omitted internal destinations yield `HyperlinkTargetOmitted`; excluded sources do not produce destination warnings. Diagnostics omit URI/recipient/query contents. Readable invalid link definitions are warnings; corrupt packages and missing hyperlink relationships are fatal input errors. Strict mode or matching `--warnings-as-errors` stops output before the sink opens. The PDF CLI creates/truncates its file only after preflight; identical input/output paths are rejected before reading.
 
 The stream API exposes the same options without changing existing positional constructors:
 
@@ -448,6 +449,72 @@ This creates `output/sample.md` and image files under `output/images`. Use
 nearby image text, layout analysis, and image export. Markdown export consumes the
 same `ReportDocument` model as the renderers and does not alter the PDF/PNG pipeline.
 
+## Partial cell formatting and optional diagnostics
+
+PDF, PNG and SVG preserve partial font family, size, bold, italic, color and single
+underline in ordinary string cells. `ReportCell.RichTextRuns` contains effective
+`CellTextRun` values; `Text` remains the complete plain string. Manual models must
+supply matching text and valid positive sizes. The built-in measurer implements
+`IRichTextLayoutService`; existing custom measurers keep working with a cell-font
+fallback. Core-only output keeps its single regular font. Markdown stays plain text.
+
+Partial formatting with rotated/vertical cell text falls back to the cell font.
+Strikethrough, superscript/subscript, double/accounting underlines and phonetics are
+not rendered. Enable additional detection to report unsupported partial formatting
+and conditional formatting. Anchored chart diagnostics retain the existing
+`UnsupportedDrawingObject` code and are filtered during selected-page preflight
+when additional detection is enabled. No chart or conditional-format rendering is added.
+
+```sh
+excelrenderer render input.xlsx -o output.pdf --format pdf \
+  --layout-warnings --min-readable-font-size 6 --detect-unsupported-features
+```
+
+`DiagnosticOptions.EnableLayoutWarnings` defaults to `false`.
+`MinimumReadableFontSize` defaults to 6pt and must be finite and positive; setting
+it alone does not enable warnings. The CLI requires `--layout-warnings` with
+`--min-readable-font-size`. `CellTextClipped` checks finalized logical line placement
+for horizontal wrapped/shrunk cells with a 0.25pt tolerance, not complete glyph ink
+bounds. `CellTextTooSmall` uses final scaled visible run sizes. These warnings do
+not resize cells and are not emitted for Markdown. New warnings run in preflight;
+diagnostic failure occurs before opening output sinks.
+
+With `DetectUnsupportedFeatures`, chart sheets are reported at sheet level with unknown
+cell position using `UnsupportedDrawingObject`; they add no blank output page. Selecting
+only chart sheets returns diagnostics and no artifacts. `RenderRequest.TextMeasurer`
+can supply a caller-owned legacy service. Without `IRichTextLayoutService`, rich cells
+use the cell font and emit opt-in `RichTextLayoutFallback` in preflight. The built-in
+service remains the default. No additional glyph measurement is done just for diagnostics.
+
+## Reader backends and formula results
+
+Reader defaults to OpenXml; Auto is an alias without fallback, and explicit
+ClosedXml Reader requests fail before input processing. Mapping also defaults to OpenXml; Auto uses the same writer. See
+[backend APIs, CLI options, supported scope and stream guarantees](docs/openxml-integration.md).
+`ExcelRenderer.OpenXml` provides the shared reader, writer and input handling;
+ClosedXML has been removed from the libraries, CLI, tests and tools. The Reader style
+API has changed to `ExcelStyleConverter.Convert(CellStyleInfo, CellValueType)`; see
+[breaking changes and migration](docs/closedxml-removal-compatibility.md). Low-level APIs are documented in the
+[OpenXml reader reference](docs/openxml-reader.md).
+
+Formula display defaults to `FormulaDisplayMode.CachedValue` in Core, the main
+Reader, export APIs and CLI (`--formula-mode cached`). Reader and Mapping backend
+defaults are both OpenXml. ExcelRenderer never recalculates formulas during
+reading, Mapping or saving. Saved results may be stale; zero, false and saved empty
+strings are preserved. Missing results display empty text with
+`FormulaCachedValueMissing`, and saved errors produce `FormulaResultError`.
+HYPERLINK friendly arguments never replace saved or missing results. Formula
+diagnostics follow visible output selection and failure policy before sink opening.
+
+Explicit `Legacy` and `Recalculate` modes are unsupported on every backend and
+fail before input processing or output creation.
+All Mapping templates must be free of value-producing formulas, including hidden
+sheets, table formulas and calculated names; Auto cannot bypass this restriction.
+Compute line amounts, tax and totals in the caller and supply value placeholders.
+Mapped strings beginning with `=` stay strings. See the
+[backend guide](docs/openxml-integration.md) and
+[Mapping guide](docs/mapping.md) for the static-name grammar and output guarantees.
+
 ## Fonts
 
 When loading the optional bundled fonts, ExcelRenderer looks for each expected
@@ -491,6 +558,12 @@ sequences are not split.
 
 ## Architecture
 
+Resolved PDF fonts use immutable snapshots. A conversion owns its font resources; finalized public layouts retain the snapshots they need. Global resolver registrations use weak references and are cleaned after each conversion.
+
+For the PDF-only source project (no separate NuGet package), see [ExcelRenderer Core](docs/core.md).
+
+The main package includes `ExcelRenderer.Core.dll` from the same build; Core is also available as a source ProjectReference. Basic reading, geometry/page layout, drawing and PDF operations are shared; advanced features remain in the main library. See [the two-engine architecture](docs/core-architecture.md) and [verification results](docs/core-refactor-validation.md).
+
 ExcelRenderer converts a workbook to `ReportDocument`, `RenderDocument`, and `DrawCommand`, then renders PDF, PNG, or SVG.
 
 ```text
@@ -502,7 +575,7 @@ See [Architecture](docs/architecture.md) for the layout passes, drawing commands
 ## Current limitations
 
 - Charts are not supported.
-- Formula behavior and conditional formatting are not reproduced completely.
+- Formulas use saved results only; missing results display empty text. Conditional formatting is not rendered.
 - Not every paper size or header/footer formatting code is supported.
 - Page breaks occur only at row and column boundaries.
 - Japanese top-to-bottom mode stacks Unicode text elements; it does not yet select full
@@ -537,7 +610,7 @@ disappears before that read raises a font load error. PDFsharp's process-wide re
 font-byte cache remains in place.
 
 PDFsharp still retains its final document and resources until the single save.
-ClosedXML still reads the whole workbook. Layout geometry and selected models also
+The OpenXml Reader retains source styles and shared strings. Layout geometry and selected models also
 scale with workbook size. This is not constant-memory streaming.
 See the [phase 3 measurements](docs/phase3-performance.ja.md) and the historical
 [PDF](docs/pdf-performance.ja.md) and [image](docs/image-performance.ja.md) reports.
@@ -579,18 +652,18 @@ They are independent of `WorkbookInputOptions`: input buffering now spools to a 
 temporary file when its own threshold is exceeded and temporary files are allowed.
 Readers use independent cursors without converting the spool back to a byte array.
 Temporary buffers are cleaned up on success, cancellation, and failures; caller-owned
-input and output streams stay open. Heavy native drawing, encoding, and ClosedXML load
-operations cannot be interrupted immediately.
+input and output streams stay open. Heavy native drawing and encoding operations cannot be interrupted immediately.
 
 ## Development
 
 To try the CLI from source before publishing, create and install a local package:
 
 ```bash
-dotnet pack src/ExcelRenderer.Tool/ExcelRenderer.Tool.csproj -c Release -o artifacts/packages
+dotnet pack src/ExcelRenderer.OpenXml/ExcelRenderer.OpenXml.csproj -c Release -o artifacts/packages
 dotnet pack src/ExcelRenderer/ExcelRenderer.csproj -c Release -o artifacts/packages
-dotnet pack src/ExcelRenderer.Fonts/ExcelRenderer.Fonts.csproj -c Release -o artifacts/packages
 dotnet pack src/ExcelRenderer.Mapping/ExcelRenderer.Mapping.csproj -c Release -o artifacts/packages
+dotnet pack src/ExcelRenderer.Fonts/ExcelRenderer.Fonts.csproj -c Release -o artifacts/packages
+dotnet pack src/ExcelRenderer.Tool/ExcelRenderer.Tool.csproj -c Release -o artifacts/packages
 dotnet tool install --tool-path ./artifacts/tool-test --add-source ./artifacts/packages ExcelRenderer.Tool
 ./artifacts/tool-test/excelrenderer --help
 ```
@@ -611,14 +684,23 @@ dotnet add package ExcelRenderer.Mapping
 ```
 
 Replace the placeholder with the actual directory path. Skip source registration
-if it is already configured. Keep NuGet.org enabled for dependencies such as ClosedXML.
+if it is already configured. Keep NuGet.org enabled for dependencies such as DocumentFormat.OpenXml.
 
 ## Documentation
 
-- [Architecture](docs/architecture.md) ([Japanese](docs/architecture.ja.md))
-- [Excel template mapping: getting started and reference](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/mapping.md) ([Japanese](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/mapping.ja.md))
-- [Japanese README](README.ja.md)
-- [AI coding agent guide](AGENTS.md)
+| Topic | Guide |
+| --- | --- |
+| Reader/Mapping backends, formula results, CLI and stream contracts | [Engine selection](docs/openxml-integration.md) ([日本語](docs/openxml-integration.ja.md)) |
+| Template syntax, calculated input values and examples | [Mapping](docs/mapping.md) ([日本語](docs/mapping.ja.md)) |
+| PDF-only source API and font requirements | [Core](docs/core.md) ([日本語](docs/core.ja.md)) |
+| Source records, formatting and low-level reader limits | [OpenXml reader](docs/openxml-reader.md) ([日本語](docs/openxml-reader.ja.md)) |
+| Rendering stages and extension points | [Architecture](docs/architecture.md) ([日本語](docs/architecture.ja.md)) |
+| Shared implementation and product boundaries | [Core architecture](docs/core-architecture.md) ([日本語](docs/core-architecture.ja.md)), [source ownership](docs/core-source-map.md) |
+| Test, package, allocation and CI evidence by commit | [Validation record](docs/openxml-integration-validation.md) |
+
+Validation reports record behavior at their stated commits. Use the guides above
+for current APIs and supported behavior. Repository contributors should also read
+the [AI coding agent guide](AGENTS.md).
 
 ## License
 
@@ -626,73 +708,3 @@ ExcelRenderer is available under the [MIT License](LICENSE).
 
 The optional `ExcelRenderer.Fonts` package contains the Japanese fonts and their
 separate license texts; see [Third-party notices](THIRD-PARTY-NOTICES.md).
-
-Resolved PDF fonts use immutable snapshots. A conversion owns its font resources; finalized public layouts retain the snapshots they need. Global resolver registrations use weak references and are cleaned after each conversion.
-
-For the separate source-only project (not published on NuGet), see [ExcelRenderer Core](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/core.md).
-
-The main package includes `ExcelRenderer.Core.dll` from the same build; Core is also available as a source ProjectReference. Basic reading, geometry/page layout, drawing and PDF operations are shared; advanced features remain in the main library. See [the two-engine architecture](docs/core-architecture.md) and [verification results](docs/core-refactor-validation.md).
-
-### Partial cell formatting and optional diagnostics
-
-PDF, PNG and SVG preserve partial font family, size, bold, italic, color and single
-underline in ordinary string cells. `ReportCell.RichTextRuns` contains effective
-`CellTextRun` values; `Text` remains the complete plain string. Manual models must
-supply matching text and valid positive sizes. The built-in measurer implements
-`IRichTextLayoutService`; existing custom measurers keep working with a cell-font
-fallback. Core-only output keeps its single regular font. Markdown stays plain text.
-
-Partial formatting with rotated/vertical cell text falls back to the cell font.
-Strikethrough, superscript/subscript, double/accounting underlines and phonetics are
-not rendered. Enable additional detection to report unsupported partial formatting
-and conditional formatting. Anchored chart diagnostics retain the existing
-`UnsupportedDrawingObject` code and are filtered during selected-page preflight
-when additional detection is enabled. No chart or conditional-format rendering is added.
-
-```sh
-excelrenderer render input.xlsx -o output.pdf --format pdf \
-  --layout-warnings --min-readable-font-size 6 --detect-unsupported-features
-```
-
-`DiagnosticOptions.EnableLayoutWarnings` defaults to `false`.
-`MinimumReadableFontSize` defaults to 6pt and must be finite and positive; setting
-it alone does not enable warnings. The CLI requires `--layout-warnings` with
-`--min-readable-font-size`. `CellTextClipped` checks finalized logical line placement
-for horizontal wrapped/shrunk cells with a 0.25pt tolerance, not complete glyph ink
-bounds. `CellTextTooSmall` uses final scaled visible run sizes. These warnings do
-not resize cells and are not emitted for Markdown. New warnings run in preflight;
-diagnostic failure occurs before opening output sinks.
-
-Formula display defaults to `FormulaDisplayMode.Legacy`. Set
-`RenderRequest.ReadOptions = new ExcelReadOptions { FormulaDisplayMode = FormulaDisplayMode.CachedValue }`
-(types in `ExcelRenderer.Excel`) to use only results saved in the source XLSX.
-`ExcelReader.Read(path, options)` / `Read(stream, options)` and the PDF/image/SVG/Markdown
-export options expose the same policy. No Mapping save/calculation policy is changed.
-
-```sh
-excelrenderer pdf input.xlsx -o output.pdf --formula-mode cached
-excelrenderer render input.xlsx -o output --format markdown --formula-mode cached
-```
-
-All rendering commands (`pdf`, `image`, `svg`, `md`, `render`) accept `--formula-mode`;
-`xlsx` does not. Missing saved results produce empty text and
-`FormulaCachedValueMissing`; zero, false and saved empty strings are not missing.
-Existing literal HYPERLINK display recovery takes precedence. Saved Excel error values
-produce `FormulaResultError`. Cached mode neither evaluates formulas nor guarantees
-that saved results are fresh. Formula diagnostics are filtered to selected visible
-output and respect suppression and failure policies before opening the output sink.
-
-**Recalculate is not implemented under the required selected-root/dependency scope.**
-The enum/CLI spelling is reserved but currently rejects the request before conversion;
-it does not silently use caches or recalculate the whole workbook. See
-[the public-API reproductions and pending scope decision](docs/reader-richtext-validation.md).
-This PR remains incomplete until that contract is resolved.
-
-With `DetectUnsupportedFeatures`, chart sheets are reported at sheet level with unknown
-cell position using `UnsupportedDrawingObject`; they add no blank output page. Selecting
-only chart sheets returns diagnostics and no artifacts. `RenderRequest.TextMeasurer`
-can supply a caller-owned legacy service. Without `IRichTextLayoutService`, rich cells
-use the cell font and emit opt-in `RichTextLayoutFallback` in preflight. The built-in
-service remains the default. No additional glyph measurement is done just for diagnostics.
-
-The independent, nonpackable Open XML reader and its supported scope are described in [the reader documentation](docs/openxml-reader.md). Existing conversion paths continue to use their existing readers.

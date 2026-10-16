@@ -14,11 +14,13 @@ public static class XlsxCommand
         var data = MappingCommandSupport.DataOption();
         data.Required = true;
         var command = new Command("xlsx", "Map JSON into an Excel template and save XLSX without rendering.") { input, output, data };
+        var backends = new BackendOptions(command, data);
         command.SetAction((result, cancellationToken) => CommandSupport.RunAsync(() => MappingCommandSupport.MapAsync(
             result.GetValue(input)!,
             result.GetValue(data)!,
             result.GetValue(output)!,
-            cancellationToken)));
+            cancellationToken,
+            backends.GetMapping(result))));
         return command;
     }
 }

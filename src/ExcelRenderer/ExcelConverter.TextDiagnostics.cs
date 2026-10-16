@@ -102,6 +102,12 @@ public static partial class ExcelConverter
         var geometry = new Layout.SheetGeometry(sheet);
         foreach (var diagnostic in sheet.CellReadDiagnostics)
         {
+            if (diagnostic.CellRange is null)
+            {
+                diagnostics.Add(diagnostic with { SourcePageNumber = pageNumber });
+                continue;
+            }
+
             var range = CellRangeParser.Parse(diagnostic.CellRange!, out _);
             if (sheet.RequestedRange is { } requested && !requested.Contains(range.First))
             {

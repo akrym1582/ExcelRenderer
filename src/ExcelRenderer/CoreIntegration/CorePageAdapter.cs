@@ -33,7 +33,11 @@ internal static class CorePageAdapter
     /// <param name="cell">The placed public cell.</param>
     /// <returns>The neutral placed cell.</returns>
     internal static Core.Layout.RenderCell ToCore(RenderCell cell) => new(
-        new Core.Model.ReportCell(cell.Cell.Text, CoreModelAdapter.ToCore(cell.Cell.Style), cell.Cell.RowSpan, cell.Cell.ColumnSpan, cell.Cell.Formula),
+        new Core.Model.ReportCell(cell.Cell.Text, CoreModelAdapter.ToCore(cell.Cell.Style), cell.Cell.RowSpan, cell.Cell.ColumnSpan, cell.Cell.Formula)
+        {
+            FormulaSharedIndex = cell.Cell.FormulaSharedIndex,
+            FormulaMasterAddress = cell.Cell.FormulaMasterAddress is { } master ? CoreModelAdapter.ToCore(master) : null,
+        },
         CoreModelAdapter.ToCore(cell.Bounds))
     {
         ContentBounds = CoreModelAdapter.ToCore(cell.ContentBounds),

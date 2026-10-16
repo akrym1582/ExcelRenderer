@@ -1,9 +1,11 @@
 # Core refactor verification — 2026-10-08
 
+> Historical verification of the 2026-10-08 refactor. For current APIs, see [Core usage](core.md) and [backend selection](openxml-integration.md); subsequent verification is recorded in the [OpenXml validation report](openxml-integration-validation.md).
+
 Baseline: `028b6214495eb6f6a30a29990d5b6f86f025c502`, retained in a detached worktree.
 Work branch: `refactor/core-engine`. No commit, tag, push or publication was performed.
 
-## Architecture and migration
+## Architecture
 
 The conversion engines are `ExcelRenderer` and `ExcelRenderer.Core`; the existing Fonts,
 Tool, samples and two engine test projects remain. There is no compatibility Slim DLL
@@ -34,21 +36,6 @@ session. Native resources are disposed before resolver cleanup and gate release,
 failure/cancellation. Font snapshots are owned by resolved fonts/public finalized layouts;
 global registrations hold weak references and expired entries are cleaned. This does
 not synchronize unrelated PDFsharp clients or independent AssemblyLoadContexts.
-
-To migrate a former Slim source consumer:
-
-```xml
-<ProjectReference Include="../src/ExcelRenderer.Core/ExcelRenderer.Core.csproj" />
-```
-
-```csharp
-using ExcelRenderer.Core;
-```
-
-Type simple names, signatures and stream/exception contracts are retained. Old Slim
-binary compatibility is intentionally not provided. Main NuGet consumers install only
-`ExcelRenderer`; its package includes the same-build Core DLL/XML. Do not mix DLLs
-from different builds. The optional Fonts package and Tool keep their existing roles.
 
 ## Executed checks
 

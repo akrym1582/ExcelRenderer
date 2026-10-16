@@ -1,4 +1,4 @@
-using ClosedXML.Excel;
+using ExcelRenderer.TestFixtures;
 using ExcelRenderer.Excel;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
@@ -82,14 +82,7 @@ public sealed class PerformanceRegressionTests
     [Fact(DisplayName = "同値のセルスタイルを共有しつつ、標準配置の数値・文字列などの型別の配置を混同しない")]
     public void Reader_shares_equal_styles_without_merging_general_alignment()
     {
-        using var workbook = new XLWorkbook();
-        var sheet = workbook.AddWorksheet("styles");
-        sheet.Cell("A1").Value = "text";
-        sheet.Cell("A2").Value = "other";
-        sheet.Cell("A3").Value = 42;
-        sheet.Range("A1:A3").Style.Border.BottomBorder = XLBorderStyleValues.Double;
-        using var input = new MemoryStream();
-        workbook.SaveAs(input);
+        using var input = RetainedWorkbook.Open("PerformanceRegressionTests.Reader_shares_equal_styles_without_merging_general_alignment.487AE4C84FBF0D94.xlsx");
         var model = new ExcelReader().Read(input.ToArray(), null).Sheets[0];
         var first = model.Cells[new(1, 1)].Style;
         var second = model.Cells[new(2, 1)].Style;
@@ -209,18 +202,7 @@ public sealed class PerformanceRegressionTests
     [Fact(DisplayName = "複数ページを一つの PDF に直接構築すると、保存は一度だけ行われ、空ページを保持して埋め込みフォントを共有する")]
     public async Task Converter_saves_once_and_reuses_font_stream()
     {
-        using var workbook = new XLWorkbook();
-        var sheet = workbook.AddWorksheet("pages");
-        for (var row = 1; row <= 120; row++)
-        {
-            sheet.Cell(row, 1).Value = "共通 ABC";
-        }
-
-        sheet.Style.Font.FontName = "Noto Sans JP";
-        sheet.Rows(1, 120).Height = 30;
-        sheet.PageSetup.PrintAreas.Add("A1:A120");
-        using var input = new MemoryStream();
-        workbook.SaveAs(input);
+        using var input = RetainedWorkbook.Open("PerformanceRegressionTests.Converter_saves_once_and_reuses_font_stream.4D9656D3E4D069A8.xlsx");
         input.Position = 0;
         using var output = new MemoryStream();
         var metrics = new Dictionary<string, double>();
@@ -272,15 +254,7 @@ public sealed class PerformanceRegressionTests
     [Fact(DisplayName = "PDF のページ間でキャンセルすると出力先を中断し、入力・出力ストリームを閉じずに変換用資源を解放する")]
     public async Task Cancellation_between_pdf_pages_aborts_sink()
     {
-        using var workbook = new XLWorkbook();
-        var sheet = workbook.AddWorksheet("cancel");
-        sheet.Cell("A1").Value = "first";
-        sheet.Cell("A120").Value = "last";
-        sheet.Style.Font.FontName = "Noto Sans JP";
-        sheet.Rows(1, 120).Height = 30;
-        sheet.PageSetup.PrintAreas.Add("A1:A120");
-        using var input = new MemoryStream();
-        workbook.SaveAs(input);
+        using var input = RetainedWorkbook.Open("PerformanceRegressionTests.Cancellation_between_pdf_pages_aborts_sink.0F31ACBA8F4FE03F.xlsx");
         input.Position = 0;
         using var output = new MemoryStream();
         using var cancellation = new CancellationTokenSource();

@@ -1,0 +1,306 @@
+{
+  "baselineCommit": "24c9dea4d67190951d152eef56f76abc943ef733",
+  "scope": "Reader after full dependency removal; Debug build, fresh processes, 1000-row Latin fixture, one warmup + three measured samples. Not a general performance guarantee.",
+  "fixtureSha256": "ed9b2e5f61647c31cbc37b69514f791f2609df994fe36336a1f32821ecc1966b",
+  "fontSha256": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec",
+  "culture": "en-US",
+  "results": [
+    {
+      "case": "parent-default",
+      "warmup": 1,
+      "measurements": 3,
+      "medians": {
+        "ElapsedMs": 2393.5949,
+        "AllocatedBytes": 150944192,
+        "PeakRssBytes": 131981312
+      },
+      "samples": [
+        {
+          "Operation": "reader",
+          "RequestedBackend": "closedxml",
+          "Rows": 1000,
+          "ElapsedMs": 2351.1112,
+          "AllocatedBytes": 150943416,
+          "PeakRssBytes": 131981312,
+          "Cells": 20000,
+          "Checksum": 280000,
+          "MappingOutputBytes": 0,
+          "ReaderSelection": {
+            "RequestedBackend": 0,
+            "SelectedBackend": 0,
+            "ReasonCodes": [
+              "ExplicitClosedXml"
+            ]
+          },
+          "MappingSelection": null,
+          "Metrics": {
+            "fontsBytesLoaded": 5472784,
+            "closedXml.ms": 690.2887,
+            "coreReaderWorkbook": 1,
+            "model.ms": 338.48760000000004,
+            "readerScratchWorkbooks": 0,
+            "readerStyleConversions": 9,
+            "readerStyleCacheHits": 19991,
+            "readerStyleCacheEntries": 9,
+            "model.cells": 20000
+          },
+          "IoMetrics": {}
+        },
+        {
+          "Operation": "reader",
+          "RequestedBackend": "closedxml",
+          "Rows": 1000,
+          "ElapsedMs": 2393.5949,
+          "AllocatedBytes": 151064016,
+          "PeakRssBytes": 132038656,
+          "Cells": 20000,
+          "Checksum": 280000,
+          "MappingOutputBytes": 0,
+          "ReaderSelection": {
+            "RequestedBackend": 0,
+            "SelectedBackend": 0,
+            "ReasonCodes": [
+              "ExplicitClosedXml"
+            ]
+          },
+          "MappingSelection": null,
+          "Metrics": {
+            "fontsBytesLoaded": 5472784,
+            "closedXml.ms": 731.2766,
+            "coreReaderWorkbook": 1,
+            "model.ms": 373.06789999999995,
+            "readerScratchWorkbooks": 0,
+            "readerStyleConversions": 9,
+            "readerStyleCacheHits": 19991,
+            "readerStyleCacheEntries": 9,
+            "model.cells": 20000
+          },
+          "IoMetrics": {}
+        },
+        {
+          "Operation": "reader",
+          "RequestedBackend": "closedxml",
+          "Rows": 1000,
+          "ElapsedMs": 2432.4498,
+          "AllocatedBytes": 150944192,
+          "PeakRssBytes": 131600384,
+          "Cells": 20000,
+          "Checksum": 280000,
+          "MappingOutputBytes": 0,
+          "ReaderSelection": {
+            "RequestedBackend": 0,
+            "SelectedBackend": 0,
+            "ReasonCodes": [
+              "ExplicitClosedXml"
+            ]
+          },
+          "MappingSelection": null,
+          "Metrics": {
+            "fontsBytesLoaded": 5472784,
+            "closedXml.ms": 742.3541,
+            "coreReaderWorkbook": 1,
+            "model.ms": 373.8593,
+            "readerScratchWorkbooks": 0,
+            "readerStyleConversions": 9,
+            "readerStyleCacheHits": 19991,
+            "readerStyleCacheEntries": 9,
+            "model.cells": 20000
+          },
+          "IoMetrics": {}
+        }
+      ],
+      "toolSha256": "8f8d7a18bd2b1143926fc2e4a9c8fa92f54d0f644648a7367dac478ca29c7195"
+    },
+    {
+      "case": "parent-openxml",
+      "warmup": 1,
+      "measurements": 3,
+      "medians": {
+        "ElapsedMs": 1554.3176,
+        "AllocatedBytes": 109266792,
+        "PeakRssBytes": 101404672
+      },
+      "samples": [
+        {
+          "Operation": "reader",
+          "RequestedBackend": "openxml",
+          "Rows": 1000,
+          "ElapsedMs": 1554.3176,
+          "AllocatedBytes": 109266792,
+          "PeakRssBytes": 100999168,
+          "Cells": 20000,
+          "Checksum": 280000,
+          "MappingOutputBytes": 0,
+          "ReaderSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "MappingSelection": null,
+          "Metrics": {
+            "fontsBytesLoaded": 5472784,
+            "model.cells": 20000,
+            "model.ms": 51.6383
+          },
+          "IoMetrics": {}
+        },
+        {
+          "Operation": "reader",
+          "RequestedBackend": "openxml",
+          "Rows": 1000,
+          "ElapsedMs": 1599.8678,
+          "AllocatedBytes": 109290384,
+          "PeakRssBytes": 101404672,
+          "Cells": 20000,
+          "Checksum": 280000,
+          "MappingOutputBytes": 0,
+          "ReaderSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "MappingSelection": null,
+          "Metrics": {
+            "fontsBytesLoaded": 5472784,
+            "model.cells": 20000,
+            "model.ms": 36.9308
+          },
+          "IoMetrics": {}
+        },
+        {
+          "Operation": "reader",
+          "RequestedBackend": "openxml",
+          "Rows": 1000,
+          "ElapsedMs": 1497.4697,
+          "AllocatedBytes": 109266680,
+          "PeakRssBytes": 104644608,
+          "Cells": 20000,
+          "Checksum": 280000,
+          "MappingOutputBytes": 0,
+          "ReaderSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "MappingSelection": null,
+          "Metrics": {
+            "fontsBytesLoaded": 5472784,
+            "model.cells": 20000,
+            "model.ms": 38.0434
+          },
+          "IoMetrics": {}
+        }
+      ],
+      "toolSha256": "8f8d7a18bd2b1143926fc2e4a9c8fa92f54d0f644648a7367dac478ca29c7195"
+    },
+    {
+      "case": "reader-removal",
+      "warmup": 1,
+      "measurements": 3,
+      "medians": {
+        "ElapsedMs": 1373.8874,
+        "AllocatedBytes": 95946632,
+        "PeakRssBytes": 100769792
+      },
+      "samples": [
+        {
+          "Operation": "reader",
+          "RequestedBackend": "openxml",
+          "Rows": 1000,
+          "ElapsedMs": 1308.3976,
+          "AllocatedBytes": 95964728,
+          "PeakRssBytes": 100151296,
+          "Cells": 20000,
+          "Checksum": 280000,
+          "MappingOutputBytes": 0,
+          "ReaderSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "MappingSelection": null,
+          "Metrics": {
+            "fontsBytesLoaded": 5472784,
+            "openXmlReaderWorkbook": 1,
+            "readerStyleConversions": 9,
+            "readerStyleCacheHits": 19991,
+            "readerStyleCacheEntries": 10,
+            "model.cells": 20000,
+            "model.ms": 48.4746
+          },
+          "IoMetrics": {}
+        },
+        {
+          "Operation": "reader",
+          "RequestedBackend": "openxml",
+          "Rows": 1000,
+          "ElapsedMs": 1373.8874,
+          "AllocatedBytes": 95946632,
+          "PeakRssBytes": 100769792,
+          "Cells": 20000,
+          "Checksum": 280000,
+          "MappingOutputBytes": 0,
+          "ReaderSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "MappingSelection": null,
+          "Metrics": {
+            "fontsBytesLoaded": 5472784,
+            "openXmlReaderWorkbook": 1,
+            "readerStyleConversions": 9,
+            "readerStyleCacheHits": 19991,
+            "readerStyleCacheEntries": 10,
+            "model.cells": 20000,
+            "model.ms": 53.7791
+          },
+          "IoMetrics": {}
+        },
+        {
+          "Operation": "reader",
+          "RequestedBackend": "openxml",
+          "Rows": 1000,
+          "ElapsedMs": 1401.2792,
+          "AllocatedBytes": 95946240,
+          "PeakRssBytes": 100990976,
+          "Cells": 20000,
+          "Checksum": 280000,
+          "MappingOutputBytes": 0,
+          "ReaderSelection": {
+            "RequestedBackend": 1,
+            "SelectedBackend": 1,
+            "ReasonCodes": [
+              "ExplicitOpenXml"
+            ]
+          },
+          "MappingSelection": null,
+          "Metrics": {
+            "fontsBytesLoaded": 5472784,
+            "openXmlReaderWorkbook": 1,
+            "readerStyleConversions": 9,
+            "readerStyleCacheHits": 19991,
+            "readerStyleCacheEntries": 10,
+            "model.cells": 20000,
+            "model.ms": 56.6066
+          },
+          "IoMetrics": {}
+        }
+      ],
+      "toolSha256": "f6fdbc6cee2fd779a25b131f579eb833ddf17a9c709da60f5ed7b4e2ff164e90"
+    }
+  ],
+  "implementationWorkingTreeDirty": true,
+  "implementationBaseCommit": "24c9dea4d67190951d152eef56f76abc943ef733",
+  "sourceInventory": "source-inventory.json"
+}

@@ -1,0 +1,1578 @@
+{
+  "BaselineCommit": "24c9dea4d67190951d152eef56f76abc943ef733",
+  "Culture": "InvariantCulture",
+  "Results": [
+    {
+      "Feature": "print-area",
+      "Count": 0,
+      "InputSha256": "15981AB74D7AC63080F68069C8320DBE787FAE7C173D00848A2AE50226955B7F",
+      "CapabilityReasons": [],
+      "LegacyError": null,
+      "OpenXmlError": null,
+      "Expected": {
+        "Cells": [
+          {
+            "Address": "A1",
+            "Type": "s",
+            "Value": "Header"
+          },
+          {
+            "Address": "A2",
+            "Type": "s",
+            "Value": "Footer"
+          },
+          {
+            "Address": "A5",
+            "Type": "s",
+            "Value": "Fixed"
+          },
+          {
+            "Address": "B5",
+            "Type": "s",
+            "Value": "Value"
+          },
+          {
+            "Address": "A6",
+            "Type": "s",
+            "Value": "Data"
+          },
+          {
+            "Address": "B6",
+            "Type": "n",
+            "Value": "7"
+          }
+        ],
+        "Names": [
+          {
+            "Name": "_xlnm.Print_Area",
+            "Value": "Template!$A$1:$C$7",
+            "Scope": 0
+          }
+        ],
+        "Links": [],
+        "Tables": [],
+        "Filter": null,
+        "Conditional": [],
+        "Validation": [],
+        "Comments": null,
+        "DrawingRows": null,
+        "Images": null
+      }
+    },
+    {
+      "Feature": "print-area",
+      "Count": 3,
+      "InputSha256": "15981AB74D7AC63080F68069C8320DBE787FAE7C173D00848A2AE50226955B7F",
+      "CapabilityReasons": [],
+      "LegacyError": null,
+      "OpenXmlError": null,
+      "Expected": {
+        "Cells": [
+          {
+            "Address": "A1",
+            "Type": "s",
+            "Value": "Header"
+          },
+          {
+            "Address": "A2",
+            "Type": "s",
+            "Value": "Item 1"
+          },
+          {
+            "Address": "B2",
+            "Type": "n",
+            "Value": "10"
+          },
+          {
+            "Address": "A3",
+            "Type": "s",
+            "Value": "Item 2"
+          },
+          {
+            "Address": "B3",
+            "Type": "n",
+            "Value": "20"
+          },
+          {
+            "Address": "A4",
+            "Type": "s",
+            "Value": "Item 3"
+          },
+          {
+            "Address": "B4",
+            "Type": "n",
+            "Value": "30"
+          },
+          {
+            "Address": "A5",
+            "Type": "s",
+            "Value": "Footer"
+          },
+          {
+            "Address": "A8",
+            "Type": "s",
+            "Value": "Fixed"
+          },
+          {
+            "Address": "B8",
+            "Type": "s",
+            "Value": "Value"
+          },
+          {
+            "Address": "A9",
+            "Type": "s",
+            "Value": "Data"
+          },
+          {
+            "Address": "B9",
+            "Type": "n",
+            "Value": "7"
+          }
+        ],
+        "Names": [
+          {
+            "Name": "_xlnm.Print_Area",
+            "Value": "Template!$A$1:$C$10",
+            "Scope": 0
+          }
+        ],
+        "Links": [],
+        "Tables": [],
+        "Filter": null,
+        "Conditional": [],
+        "Validation": [],
+        "Comments": null,
+        "DrawingRows": null,
+        "Images": null
+      }
+    },
+    {
+      "Feature": "static-name",
+      "Count": 0,
+      "InputSha256": "DFD844A2FFD3BF379EFC928FE45A86CB840164770D4FFB7215A552509201B088",
+      "CapabilityReasons": [
+        "GeneralDefinedNames"
+      ],
+      "LegacyError": null,
+      "OpenXmlError": "NotSupportedException: OpenXml mapping is unsupported: GeneralDefinedNames",
+      "Expected": {
+        "Cells": [
+          {
+            "Address": "A1",
+            "Type": "s",
+            "Value": "Header"
+          },
+          {
+            "Address": "A2",
+            "Type": "s",
+            "Value": "Footer"
+          },
+          {
+            "Address": "A5",
+            "Type": "s",
+            "Value": "Fixed"
+          },
+          {
+            "Address": "B5",
+            "Type": "s",
+            "Value": "Value"
+          },
+          {
+            "Address": "A6",
+            "Type": "s",
+            "Value": "Data"
+          },
+          {
+            "Address": "B6",
+            "Type": "n",
+            "Value": "7"
+          }
+        ],
+        "Names": [
+          {
+            "Name": "_xlnm.Print_Area",
+            "Value": "Template!$A$1:$C$7",
+            "Scope": 0
+          },
+          {
+            "Name": "FooterValue",
+            "Value": "Template!$A$2",
+            "Scope": null
+          }
+        ],
+        "Links": [],
+        "Tables": [],
+        "Filter": null,
+        "Conditional": [],
+        "Validation": [],
+        "Comments": null,
+        "DrawingRows": null,
+        "Images": null
+      }
+    },
+    {
+      "Feature": "static-name",
+      "Count": 3,
+      "InputSha256": "DFD844A2FFD3BF379EFC928FE45A86CB840164770D4FFB7215A552509201B088",
+      "CapabilityReasons": [
+        "GeneralDefinedNames"
+      ],
+      "LegacyError": null,
+      "OpenXmlError": "NotSupportedException: OpenXml mapping is unsupported: GeneralDefinedNames",
+      "Expected": {
+        "Cells": [
+          {
+            "Address": "A1",
+            "Type": "s",
+            "Value": "Header"
+          },
+          {
+            "Address": "A2",
+            "Type": "s",
+            "Value": "Item 1"
+          },
+          {
+            "Address": "B2",
+            "Type": "n",
+            "Value": "10"
+          },
+          {
+            "Address": "A3",
+            "Type": "s",
+            "Value": "Item 2"
+          },
+          {
+            "Address": "B3",
+            "Type": "n",
+            "Value": "20"
+          },
+          {
+            "Address": "A4",
+            "Type": "s",
+            "Value": "Item 3"
+          },
+          {
+            "Address": "B4",
+            "Type": "n",
+            "Value": "30"
+          },
+          {
+            "Address": "A5",
+            "Type": "s",
+            "Value": "Footer"
+          },
+          {
+            "Address": "A8",
+            "Type": "s",
+            "Value": "Fixed"
+          },
+          {
+            "Address": "B8",
+            "Type": "s",
+            "Value": "Value"
+          },
+          {
+            "Address": "A9",
+            "Type": "s",
+            "Value": "Data"
+          },
+          {
+            "Address": "B9",
+            "Type": "n",
+            "Value": "7"
+          }
+        ],
+        "Names": [
+          {
+            "Name": "_xlnm.Print_Area",
+            "Value": "Template!$A$1:$C$10",
+            "Scope": 0
+          },
+          {
+            "Name": "FooterValue",
+            "Value": "Template!$A$5",
+            "Scope": null
+          }
+        ],
+        "Links": [],
+        "Tables": [],
+        "Filter": null,
+        "Conditional": [],
+        "Validation": [],
+        "Comments": null,
+        "DrawingRows": null,
+        "Images": null
+      }
+    },
+    {
+      "Feature": "external-link",
+      "Count": 0,
+      "InputSha256": "6C5B54E0EA9C2E4B591A2931C7E1C2F6224B481AB1C72B3ABD9427F1891F93CD",
+      "CapabilityReasons": [
+        "ExternalOrDataRelationship",
+        "UnsupportedWorksheetChild:hyperlinks"
+      ],
+      "LegacyError": null,
+      "OpenXmlError": "NotSupportedException: OpenXml mapping is unsupported: ExternalOrDataRelationship, UnsupportedWorksheetChild:hyperlinks",
+      "Expected": {
+        "Cells": [
+          {
+            "Address": "A1",
+            "Type": "s",
+            "Value": "Header"
+          },
+          {
+            "Address": "A2",
+            "Type": "s",
+            "Value": "Footer"
+          },
+          {
+            "Address": "A5",
+            "Type": "s",
+            "Value": "Fixed"
+          },
+          {
+            "Address": "B5",
+            "Type": "s",
+            "Value": "Value"
+          },
+          {
+            "Address": "A6",
+            "Type": "s",
+            "Value": "Data"
+          },
+          {
+            "Address": "B6",
+            "Type": "n",
+            "Value": "7"
+          }
+        ],
+        "Names": [
+          {
+            "Name": "_xlnm.Print_Area",
+            "Value": "Template!$A$1:$C$7",
+            "Scope": 0
+          }
+        ],
+        "Links": [],
+        "Tables": [],
+        "Filter": null,
+        "Conditional": [],
+        "Validation": [],
+        "Comments": null,
+        "DrawingRows": null,
+        "Images": null
+      }
+    },
+    {
+      "Feature": "external-link",
+      "Count": 3,
+      "InputSha256": "6C5B54E0EA9C2E4B591A2931C7E1C2F6224B481AB1C72B3ABD9427F1891F93CD",
+      "CapabilityReasons": [
+        "ExternalOrDataRelationship",
+        "UnsupportedWorksheetChild:hyperlinks"
+      ],
+      "LegacyError": null,
+      "OpenXmlError": "NotSupportedException: OpenXml mapping is unsupported: ExternalOrDataRelationship, UnsupportedWorksheetChild:hyperlinks",
+      "Expected": {
+        "Cells": [
+          {
+            "Address": "A1",
+            "Type": "s",
+            "Value": "Header"
+          },
+          {
+            "Address": "A2",
+            "Type": "s",
+            "Value": "Item 1"
+          },
+          {
+            "Address": "B2",
+            "Type": "n",
+            "Value": "10"
+          },
+          {
+            "Address": "A3",
+            "Type": "s",
+            "Value": "Item 2"
+          },
+          {
+            "Address": "B3",
+            "Type": "n",
+            "Value": "20"
+          },
+          {
+            "Address": "A4",
+            "Type": "s",
+            "Value": "Item 3"
+          },
+          {
+            "Address": "B4",
+            "Type": "n",
+            "Value": "30"
+          },
+          {
+            "Address": "A5",
+            "Type": "s",
+            "Value": "Footer"
+          },
+          {
+            "Address": "A8",
+            "Type": "s",
+            "Value": "Fixed"
+          },
+          {
+            "Address": "B8",
+            "Type": "s",
+            "Value": "Value"
+          },
+          {
+            "Address": "A9",
+            "Type": "s",
+            "Value": "Data"
+          },
+          {
+            "Address": "B9",
+            "Type": "n",
+            "Value": "7"
+          }
+        ],
+        "Names": [
+          {
+            "Name": "_xlnm.Print_Area",
+            "Value": "Template!$A$1:$C$10",
+            "Scope": 0
+          }
+        ],
+        "Links": [
+          {
+            "Source": "A2",
+            "Location": null,
+            "External": "https://example.invalid/items"
+          },
+          {
+            "Source": "A3",
+            "Location": null,
+            "External": "https://example.invalid/items"
+          },
+          {
+            "Source": "A4",
+            "Location": null,
+            "External": "https://example.invalid/items"
+          }
+        ],
+        "Tables": [],
+        "Filter": null,
+        "Conditional": [],
+        "Validation": [],
+        "Comments": null,
+        "DrawingRows": null,
+        "Images": null
+      }
+    },
+    {
+      "Feature": "internal-link",
+      "Count": 0,
+      "InputSha256": "3D3A0DE03A4AA021FCCFBCC8587D031FB7B7C0A1B48872577A0293FC1FB10579",
+      "CapabilityReasons": [
+        "UnsupportedWorksheetChild:hyperlinks"
+      ],
+      "LegacyError": null,
+      "OpenXmlError": "NotSupportedException: OpenXml mapping is unsupported: UnsupportedWorksheetChild:hyperlinks",
+      "Expected": {
+        "Cells": [
+          {
+            "Address": "A1",
+            "Type": "s",
+            "Value": "Header"
+          },
+          {
+            "Address": "A2",
+            "Type": "s",
+            "Value": "Footer"
+          },
+          {
+            "Address": "A5",
+            "Type": "s",
+            "Value": "Fixed"
+          },
+          {
+            "Address": "B5",
+            "Type": "s",
+            "Value": "Value"
+          },
+          {
+            "Address": "A6",
+            "Type": "s",
+            "Value": "Data"
+          },
+          {
+            "Address": "B6",
+            "Type": "n",
+            "Value": "7"
+          }
+        ],
+        "Names": [
+          {
+            "Name": "_xlnm.Print_Area",
+            "Value": "Template!$A$1:$C$7",
+            "Scope": 0
+          }
+        ],
+        "Links": [],
+        "Tables": [],
+        "Filter": null,
+        "Conditional": [],
+        "Validation": [],
+        "Comments": null,
+        "DrawingRows": null,
+        "Images": null
+      }
+    },
+    {
+      "Feature": "internal-link",
+      "Count": 3,
+      "InputSha256": "3D3A0DE03A4AA021FCCFBCC8587D031FB7B7C0A1B48872577A0293FC1FB10579",
+      "CapabilityReasons": [
+        "UnsupportedWorksheetChild:hyperlinks"
+      ],
+      "LegacyError": null,
+      "OpenXmlError": "NotSupportedException: OpenXml mapping is unsupported: UnsupportedWorksheetChild:hyperlinks",
+      "Expected": {
+        "Cells": [
+          {
+            "Address": "A1",
+            "Type": "s",
+            "Value": "Header"
+          },
+          {
+            "Address": "A2",
+            "Type": "s",
+            "Value": "Item 1"
+          },
+          {
+            "Address": "B2",
+            "Type": "n",
+            "Value": "10"
+          },
+          {
+            "Address": "A3",
+            "Type": "s",
+            "Value": "Item 2"
+          },
+          {
+            "Address": "B3",
+            "Type": "n",
+            "Value": "20"
+          },
+          {
+            "Address": "A4",
+            "Type": "s",
+            "Value": "Item 3"
+          },
+          {
+            "Address": "B4",
+            "Type": "n",
+            "Value": "30"
+          },
+          {
+            "Address": "A5",
+            "Type": "s",
+            "Value": "Footer"
+          },
+          {
+            "Address": "A8",
+            "Type": "s",
+            "Value": "Fixed"
+          },
+          {
+            "Address": "B8",
+            "Type": "s",
+            "Value": "Value"
+          },
+          {
+            "Address": "A9",
+            "Type": "s",
+            "Value": "Data"
+          },
+          {
+            "Address": "B9",
+            "Type": "n",
+            "Value": "7"
+          }
+        ],
+        "Names": [
+          {
+            "Name": "_xlnm.Print_Area",
+            "Value": "Template!$A$1:$C$10",
+            "Scope": 0
+          }
+        ],
+        "Links": [
+          {
+            "Source": "A2",
+            "Location": "Template!A3",
+            "External": null
+          },
+          {
+            "Source": "A3",
+            "Location": "Template!A3",
+            "External": null
+          },
+          {
+            "Source": "A4",
+            "Location": "Template!A3",
+            "External": null
+          }
+        ],
+        "Tables": [],
+        "Filter": null,
+        "Conditional": [],
+        "Validation": [],
+        "Comments": null,
+        "DrawingRows": null,
+        "Images": null
+      }
+    },
+    {
+      "Feature": "picture",
+      "Count": 0,
+      "InputSha256": "80EFE7B6BE29F50F6AE93A7C4F56AB67831ADF24C36730DFBB801A37038D27A0",
+      "CapabilityReasons": [
+        "UnsupportedPart:http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing",
+        "UnsupportedPart:http://schemas.openxmlformats.org/officeDocument/2006/relationships/image",
+        "UnsupportedWorksheetChild:drawing"
+      ],
+      "LegacyError": null,
+      "OpenXmlError": "NotSupportedException: OpenXml mapping is unsupported: UnsupportedPart:http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing, UnsupportedPart:http://schemas.openxmlformats.org/officeDocument/2006/relationships/image, UnsupportedWorksheetChild:drawing",
+      "Expected": {
+        "Cells": [
+          {
+            "Address": "A1",
+            "Type": "s",
+            "Value": "Header"
+          },
+          {
+            "Address": "A2",
+            "Type": "s",
+            "Value": "Footer"
+          },
+          {
+            "Address": "A5",
+            "Type": "s",
+            "Value": "Fixed"
+          },
+          {
+            "Address": "B5",
+            "Type": "s",
+            "Value": "Value"
+          },
+          {
+            "Address": "A6",
+            "Type": "s",
+            "Value": "Data"
+          },
+          {
+            "Address": "B6",
+            "Type": "n",
+            "Value": "7"
+          }
+        ],
+        "Names": [
+          {
+            "Name": "_xlnm.Print_Area",
+            "Value": "Template!$A$1:$C$7",
+            "Scope": 0
+          }
+        ],
+        "Links": [],
+        "Tables": [],
+        "Filter": null,
+        "Conditional": [],
+        "Validation": [],
+        "Comments": null,
+        "DrawingRows": [
+          "4"
+        ],
+        "Images": [
+          "3E2488B3B51D699B19B8CE3D4F49C07BD0C3370569FAD904B62B856C216E81EE"
+        ]
+      }
+    },
+    {
+      "Feature": "picture",
+      "Count": 3,
+      "InputSha256": "80EFE7B6BE29F50F6AE93A7C4F56AB67831ADF24C36730DFBB801A37038D27A0",
+      "CapabilityReasons": [
+        "UnsupportedPart:http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing",
+        "UnsupportedPart:http://schemas.openxmlformats.org/officeDocument/2006/relationships/image",
+        "UnsupportedWorksheetChild:drawing"
+      ],
+      "LegacyError": null,
+      "OpenXmlError": "NotSupportedException: OpenXml mapping is unsupported: UnsupportedPart:http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing, UnsupportedPart:http://schemas.openxmlformats.org/officeDocument/2006/relationships/image, UnsupportedWorksheetChild:drawing",
+      "Expected": {
+        "Cells": [
+          {
+            "Address": "A1",
+            "Type": "s",
+            "Value": "Header"
+          },
+          {
+            "Address": "A2",
+            "Type": "s",
+            "Value": "Item 1"
+          },
+          {
+            "Address": "B2",
+            "Type": "n",
+            "Value": "10"
+          },
+          {
+            "Address": "A3",
+            "Type": "s",
+            "Value": "Item 2"
+          },
+          {
+            "Address": "B3",
+            "Type": "n",
+            "Value": "20"
+          },
+          {
+            "Address": "A4",
+            "Type": "s",
+            "Value": "Item 3"
+          },
+          {
+            "Address": "B4",
+            "Type": "n",
+            "Value": "30"
+          },
+          {
+            "Address": "A5",
+            "Type": "s",
+            "Value": "Footer"
+          },
+          {
+            "Address": "A8",
+            "Type": "s",
+            "Value": "Fixed"
+          },
+          {
+            "Address": "B8",
+            "Type": "s",
+            "Value": "Value"
+          },
+          {
+            "Address": "A9",
+            "Type": "s",
+            "Value": "Data"
+          },
+          {
+            "Address": "B9",
+            "Type": "n",
+            "Value": "7"
+          }
+        ],
+        "Names": [
+          {
+            "Name": "_xlnm.Print_Area",
+            "Value": "Template!$A$1:$C$10",
+            "Scope": 0
+          }
+        ],
+        "Links": [],
+        "Tables": [],
+        "Filter": null,
+        "Conditional": [],
+        "Validation": [],
+        "Comments": null,
+        "DrawingRows": [
+          "7"
+        ],
+        "Images": [
+          "3E2488B3B51D699B19B8CE3D4F49C07BD0C3370569FAD904B62B856C216E81EE"
+        ]
+      }
+    },
+    {
+      "Feature": "comment",
+      "Count": 0,
+      "InputSha256": "358750DF3C9B10E6BE3D10069A1DE9EE675CA2B88A403F3281B46987881DF417",
+      "CapabilityReasons": [
+        "UnsupportedPart:http://schemas.openxmlformats.org/officeDocument/2006/relationships/comments",
+        "UnsupportedPart:http://schemas.openxmlformats.org/officeDocument/2006/relationships/vmlDrawing",
+        "UnsupportedWorksheetChild:legacyDrawing"
+      ],
+      "LegacyError": null,
+      "OpenXmlError": "NotSupportedException: OpenXml mapping is unsupported: UnsupportedPart:http://schemas.openxmlformats.org/officeDocument/2006/relationships/comments, UnsupportedPart:http://schemas.openxmlformats.org/officeDocument/2006/relationships/vmlDrawing, UnsupportedWorksheetChild:legacyDrawing",
+      "Expected": {
+        "Cells": [
+          {
+            "Address": "A1",
+            "Type": "s",
+            "Value": "Header"
+          },
+          {
+            "Address": "A2",
+            "Type": "s",
+            "Value": "Footer"
+          },
+          {
+            "Address": "A5",
+            "Type": "s",
+            "Value": "Fixed"
+          },
+          {
+            "Address": "B5",
+            "Type": "s",
+            "Value": "Value"
+          },
+          {
+            "Address": "A6",
+            "Type": "s",
+            "Value": "Data"
+          },
+          {
+            "Address": "B6",
+            "Type": "n",
+            "Value": "7"
+          }
+        ],
+        "Names": [
+          {
+            "Name": "_xlnm.Print_Area",
+            "Value": "Template!$A$1:$C$7",
+            "Scope": 0
+          }
+        ],
+        "Links": [],
+        "Tables": [],
+        "Filter": null,
+        "Conditional": [],
+        "Validation": [],
+        "Comments": null,
+        "DrawingRows": null,
+        "Images": null
+      }
+    },
+    {
+      "Feature": "comment",
+      "Count": 3,
+      "InputSha256": "358750DF3C9B10E6BE3D10069A1DE9EE675CA2B88A403F3281B46987881DF417",
+      "CapabilityReasons": [
+        "UnsupportedPart:http://schemas.openxmlformats.org/officeDocument/2006/relationships/comments",
+        "UnsupportedPart:http://schemas.openxmlformats.org/officeDocument/2006/relationships/vmlDrawing",
+        "UnsupportedWorksheetChild:legacyDrawing"
+      ],
+      "LegacyError": null,
+      "OpenXmlError": "NotSupportedException: OpenXml mapping is unsupported: UnsupportedPart:http://schemas.openxmlformats.org/officeDocument/2006/relationships/comments, UnsupportedPart:http://schemas.openxmlformats.org/officeDocument/2006/relationships/vmlDrawing, UnsupportedWorksheetChild:legacyDrawing",
+      "Expected": {
+        "Cells": [
+          {
+            "Address": "A1",
+            "Type": "s",
+            "Value": "Header"
+          },
+          {
+            "Address": "A2",
+            "Type": "s",
+            "Value": "Item 1"
+          },
+          {
+            "Address": "B2",
+            "Type": "n",
+            "Value": "10"
+          },
+          {
+            "Address": "A3",
+            "Type": "s",
+            "Value": "Item 2"
+          },
+          {
+            "Address": "B3",
+            "Type": "n",
+            "Value": "20"
+          },
+          {
+            "Address": "A4",
+            "Type": "s",
+            "Value": "Item 3"
+          },
+          {
+            "Address": "B4",
+            "Type": "n",
+            "Value": "30"
+          },
+          {
+            "Address": "A5",
+            "Type": "s",
+            "Value": "Footer"
+          },
+          {
+            "Address": "A8",
+            "Type": "s",
+            "Value": "Fixed"
+          },
+          {
+            "Address": "B8",
+            "Type": "s",
+            "Value": "Value"
+          },
+          {
+            "Address": "A9",
+            "Type": "s",
+            "Value": "Data"
+          },
+          {
+            "Address": "B9",
+            "Type": "n",
+            "Value": "7"
+          }
+        ],
+        "Names": [
+          {
+            "Name": "_xlnm.Print_Area",
+            "Value": "Template!$A$1:$C$10",
+            "Scope": 0
+          }
+        ],
+        "Links": [],
+        "Tables": [],
+        "Filter": null,
+        "Conditional": [],
+        "Validation": [],
+        "Comments": [
+          {
+            "Reference": "A2",
+            "Text": "Repeated comment"
+          },
+          {
+            "Reference": "A3",
+            "Text": "Repeated comment"
+          },
+          {
+            "Reference": "A4",
+            "Text": "Repeated comment"
+          }
+        ],
+        "DrawingRows": null,
+        "Images": null
+      }
+    },
+    {
+      "Feature": "table",
+      "Count": 0,
+      "InputSha256": "755403464B658F2D9766B1D2944AE65C9CD35F0A6CA8C19BB2556BB760621493",
+      "CapabilityReasons": [
+        "TablesPresent",
+        "UnsupportedPart:http://schemas.openxmlformats.org/officeDocument/2006/relationships/table"
+      ],
+      "LegacyError": null,
+      "OpenXmlError": "NotSupportedException: OpenXml mapping is unsupported: TablesPresent, UnsupportedPart:http://schemas.openxmlformats.org/officeDocument/2006/relationships/table",
+      "Expected": {
+        "Cells": [
+          {
+            "Address": "A1",
+            "Type": "s",
+            "Value": "Header"
+          },
+          {
+            "Address": "A2",
+            "Type": "s",
+            "Value": "Footer"
+          },
+          {
+            "Address": "A5",
+            "Type": "s",
+            "Value": "Fixed"
+          },
+          {
+            "Address": "B5",
+            "Type": "s",
+            "Value": "Value"
+          },
+          {
+            "Address": "A6",
+            "Type": "s",
+            "Value": "Data"
+          },
+          {
+            "Address": "B6",
+            "Type": "n",
+            "Value": "7"
+          }
+        ],
+        "Names": [
+          {
+            "Name": "_xlnm.Print_Area",
+            "Value": "Template!$A$1:$C$7",
+            "Scope": 0
+          }
+        ],
+        "Links": [],
+        "Tables": [
+          "A5:B6"
+        ],
+        "Filter": null,
+        "Conditional": [],
+        "Validation": [],
+        "Comments": null,
+        "DrawingRows": null,
+        "Images": null
+      }
+    },
+    {
+      "Feature": "table",
+      "Count": 3,
+      "InputSha256": "755403464B658F2D9766B1D2944AE65C9CD35F0A6CA8C19BB2556BB760621493",
+      "CapabilityReasons": [
+        "TablesPresent",
+        "UnsupportedPart:http://schemas.openxmlformats.org/officeDocument/2006/relationships/table"
+      ],
+      "LegacyError": null,
+      "OpenXmlError": "NotSupportedException: OpenXml mapping is unsupported: TablesPresent, UnsupportedPart:http://schemas.openxmlformats.org/officeDocument/2006/relationships/table",
+      "Expected": {
+        "Cells": [
+          {
+            "Address": "A1",
+            "Type": "s",
+            "Value": "Header"
+          },
+          {
+            "Address": "A2",
+            "Type": "s",
+            "Value": "Item 1"
+          },
+          {
+            "Address": "B2",
+            "Type": "n",
+            "Value": "10"
+          },
+          {
+            "Address": "A3",
+            "Type": "s",
+            "Value": "Item 2"
+          },
+          {
+            "Address": "B3",
+            "Type": "n",
+            "Value": "20"
+          },
+          {
+            "Address": "A4",
+            "Type": "s",
+            "Value": "Item 3"
+          },
+          {
+            "Address": "B4",
+            "Type": "n",
+            "Value": "30"
+          },
+          {
+            "Address": "A5",
+            "Type": "s",
+            "Value": "Footer"
+          },
+          {
+            "Address": "A8",
+            "Type": "s",
+            "Value": "Fixed"
+          },
+          {
+            "Address": "B8",
+            "Type": "s",
+            "Value": "Value"
+          },
+          {
+            "Address": "A9",
+            "Type": "s",
+            "Value": "Data"
+          },
+          {
+            "Address": "B9",
+            "Type": "n",
+            "Value": "7"
+          }
+        ],
+        "Names": [
+          {
+            "Name": "_xlnm.Print_Area",
+            "Value": "Template!$A$1:$C$10",
+            "Scope": 0
+          }
+        ],
+        "Links": [],
+        "Tables": [
+          "A8:B9"
+        ],
+        "Filter": null,
+        "Conditional": [],
+        "Validation": [],
+        "Comments": null,
+        "DrawingRows": null,
+        "Images": null
+      }
+    },
+    {
+      "Feature": "filter",
+      "Count": 0,
+      "InputSha256": "A901C59C0829FC4C58B20F1B55D990BBB596C1A39ED61585E08BDFC460880E26",
+      "CapabilityReasons": [
+        "GeneralDefinedNames",
+        "UnsupportedWorksheetChild:autoFilter"
+      ],
+      "LegacyError": null,
+      "OpenXmlError": "NotSupportedException: OpenXml mapping is unsupported: GeneralDefinedNames, UnsupportedWorksheetChild:autoFilter",
+      "Expected": {
+        "Cells": [
+          {
+            "Address": "A1",
+            "Type": "s",
+            "Value": "Header"
+          },
+          {
+            "Address": "A2",
+            "Type": "s",
+            "Value": "Footer"
+          },
+          {
+            "Address": "A5",
+            "Type": "s",
+            "Value": "Fixed"
+          },
+          {
+            "Address": "B5",
+            "Type": "s",
+            "Value": "Value"
+          },
+          {
+            "Address": "A6",
+            "Type": "s",
+            "Value": "Data"
+          },
+          {
+            "Address": "B6",
+            "Type": "n",
+            "Value": "7"
+          }
+        ],
+        "Names": [
+          {
+            "Name": "_xlnm.Print_Area",
+            "Value": "Template!$A$1:$C$7",
+            "Scope": 0
+          },
+          {
+            "Name": "_xlnm._FilterDatabase",
+            "Value": "Template!$A$5:$B$6",
+            "Scope": 0
+          }
+        ],
+        "Links": [],
+        "Tables": [],
+        "Filter": "A5:B6",
+        "Conditional": [],
+        "Validation": [],
+        "Comments": null,
+        "DrawingRows": null,
+        "Images": null
+      }
+    },
+    {
+      "Feature": "filter",
+      "Count": 3,
+      "InputSha256": "A901C59C0829FC4C58B20F1B55D990BBB596C1A39ED61585E08BDFC460880E26",
+      "CapabilityReasons": [
+        "GeneralDefinedNames",
+        "UnsupportedWorksheetChild:autoFilter"
+      ],
+      "LegacyError": null,
+      "OpenXmlError": "NotSupportedException: OpenXml mapping is unsupported: GeneralDefinedNames, UnsupportedWorksheetChild:autoFilter",
+      "Expected": {
+        "Cells": [
+          {
+            "Address": "A1",
+            "Type": "s",
+            "Value": "Header"
+          },
+          {
+            "Address": "A2",
+            "Type": "s",
+            "Value": "Item 1"
+          },
+          {
+            "Address": "B2",
+            "Type": "n",
+            "Value": "10"
+          },
+          {
+            "Address": "A3",
+            "Type": "s",
+            "Value": "Item 2"
+          },
+          {
+            "Address": "B3",
+            "Type": "n",
+            "Value": "20"
+          },
+          {
+            "Address": "A4",
+            "Type": "s",
+            "Value": "Item 3"
+          },
+          {
+            "Address": "B4",
+            "Type": "n",
+            "Value": "30"
+          },
+          {
+            "Address": "A5",
+            "Type": "s",
+            "Value": "Footer"
+          },
+          {
+            "Address": "A8",
+            "Type": "s",
+            "Value": "Fixed"
+          },
+          {
+            "Address": "B8",
+            "Type": "s",
+            "Value": "Value"
+          },
+          {
+            "Address": "A9",
+            "Type": "s",
+            "Value": "Data"
+          },
+          {
+            "Address": "B9",
+            "Type": "n",
+            "Value": "7"
+          }
+        ],
+        "Names": [
+          {
+            "Name": "_xlnm.Print_Area",
+            "Value": "Template!$A$1:$C$10",
+            "Scope": 0
+          },
+          {
+            "Name": "_xlnm._FilterDatabase",
+            "Value": "Template!$A$8:$B$9",
+            "Scope": 0
+          }
+        ],
+        "Links": [],
+        "Tables": [],
+        "Filter": "A8:B9",
+        "Conditional": [],
+        "Validation": [],
+        "Comments": null,
+        "DrawingRows": null,
+        "Images": null
+      }
+    },
+    {
+      "Feature": "conditional",
+      "Count": 0,
+      "InputSha256": "6ED50E12228FA14D70F614A8906B329602DFFBB7F6D615C5540FACDF26D889F7",
+      "CapabilityReasons": [
+        "UnsupportedWorksheetChild:conditionalFormatting"
+      ],
+      "LegacyError": null,
+      "OpenXmlError": "NotSupportedException: OpenXml mapping is unsupported: UnsupportedWorksheetChild:conditionalFormatting",
+      "Expected": {
+        "Cells": [
+          {
+            "Address": "A1",
+            "Type": "s",
+            "Value": "Header"
+          },
+          {
+            "Address": "A2",
+            "Type": "s",
+            "Value": "Footer"
+          },
+          {
+            "Address": "A5",
+            "Type": "s",
+            "Value": "Fixed"
+          },
+          {
+            "Address": "B5",
+            "Type": "s",
+            "Value": "Value"
+          },
+          {
+            "Address": "A6",
+            "Type": "s",
+            "Value": "Data"
+          },
+          {
+            "Address": "B6",
+            "Type": "n",
+            "Value": "7"
+          }
+        ],
+        "Names": [
+          {
+            "Name": "_xlnm.Print_Area",
+            "Value": "Template!$A$1:$C$7",
+            "Scope": 0
+          }
+        ],
+        "Links": [],
+        "Tables": [],
+        "Filter": null,
+        "Conditional": [],
+        "Validation": [],
+        "Comments": null,
+        "DrawingRows": null,
+        "Images": null
+      }
+    },
+    {
+      "Feature": "conditional",
+      "Count": 3,
+      "InputSha256": "6ED50E12228FA14D70F614A8906B329602DFFBB7F6D615C5540FACDF26D889F7",
+      "CapabilityReasons": [
+        "UnsupportedWorksheetChild:conditionalFormatting"
+      ],
+      "LegacyError": null,
+      "OpenXmlError": "NotSupportedException: OpenXml mapping is unsupported: UnsupportedWorksheetChild:conditionalFormatting",
+      "Expected": {
+        "Cells": [
+          {
+            "Address": "A1",
+            "Type": "s",
+            "Value": "Header"
+          },
+          {
+            "Address": "A2",
+            "Type": "s",
+            "Value": "Item 1"
+          },
+          {
+            "Address": "B2",
+            "Type": "n",
+            "Value": "10"
+          },
+          {
+            "Address": "A3",
+            "Type": "s",
+            "Value": "Item 2"
+          },
+          {
+            "Address": "B3",
+            "Type": "n",
+            "Value": "20"
+          },
+          {
+            "Address": "A4",
+            "Type": "s",
+            "Value": "Item 3"
+          },
+          {
+            "Address": "B4",
+            "Type": "n",
+            "Value": "30"
+          },
+          {
+            "Address": "A5",
+            "Type": "s",
+            "Value": "Footer"
+          },
+          {
+            "Address": "A8",
+            "Type": "s",
+            "Value": "Fixed"
+          },
+          {
+            "Address": "B8",
+            "Type": "s",
+            "Value": "Value"
+          },
+          {
+            "Address": "A9",
+            "Type": "s",
+            "Value": "Data"
+          },
+          {
+            "Address": "B9",
+            "Type": "n",
+            "Value": "7"
+          }
+        ],
+        "Names": [
+          {
+            "Name": "_xlnm.Print_Area",
+            "Value": "Template!$A$1:$C$10",
+            "Scope": 0
+          }
+        ],
+        "Links": [],
+        "Tables": [],
+        "Filter": null,
+        "Conditional": [
+          "A3:B4",
+          "A2:B2"
+        ],
+        "Validation": [],
+        "Comments": null,
+        "DrawingRows": null,
+        "Images": null
+      }
+    },
+    {
+      "Feature": "validation",
+      "Count": 0,
+      "InputSha256": "52041089659FDF8C5F367882675B52800CAA23D63117E84501DA937F3709A5DA",
+      "CapabilityReasons": [
+        "UnsupportedWorksheetChild:dataValidations"
+      ],
+      "LegacyError": null,
+      "OpenXmlError": "NotSupportedException: OpenXml mapping is unsupported: UnsupportedWorksheetChild:dataValidations",
+      "Expected": {
+        "Cells": [
+          {
+            "Address": "A1",
+            "Type": "s",
+            "Value": "Header"
+          },
+          {
+            "Address": "A2",
+            "Type": "s",
+            "Value": "Footer"
+          },
+          {
+            "Address": "A5",
+            "Type": "s",
+            "Value": "Fixed"
+          },
+          {
+            "Address": "B5",
+            "Type": "s",
+            "Value": "Value"
+          },
+          {
+            "Address": "A6",
+            "Type": "s",
+            "Value": "Data"
+          },
+          {
+            "Address": "B6",
+            "Type": "n",
+            "Value": "7"
+          }
+        ],
+        "Names": [
+          {
+            "Name": "_xlnm.Print_Area",
+            "Value": "Template!$A$1:$C$7",
+            "Scope": 0
+          }
+        ],
+        "Links": [],
+        "Tables": [],
+        "Filter": null,
+        "Conditional": [],
+        "Validation": [],
+        "Comments": null,
+        "DrawingRows": null,
+        "Images": null
+      }
+    },
+    {
+      "Feature": "validation",
+      "Count": 3,
+      "InputSha256": "52041089659FDF8C5F367882675B52800CAA23D63117E84501DA937F3709A5DA",
+      "CapabilityReasons": [
+        "UnsupportedWorksheetChild:dataValidations"
+      ],
+      "LegacyError": null,
+      "OpenXmlError": "NotSupportedException: OpenXml mapping is unsupported: UnsupportedWorksheetChild:dataValidations",
+      "Expected": {
+        "Cells": [
+          {
+            "Address": "A1",
+            "Type": "s",
+            "Value": "Header"
+          },
+          {
+            "Address": "A2",
+            "Type": "s",
+            "Value": "Item 1"
+          },
+          {
+            "Address": "B2",
+            "Type": "n",
+            "Value": "10"
+          },
+          {
+            "Address": "A3",
+            "Type": "s",
+            "Value": "Item 2"
+          },
+          {
+            "Address": "B3",
+            "Type": "n",
+            "Value": "20"
+          },
+          {
+            "Address": "A4",
+            "Type": "s",
+            "Value": "Item 3"
+          },
+          {
+            "Address": "B4",
+            "Type": "n",
+            "Value": "30"
+          },
+          {
+            "Address": "A5",
+            "Type": "s",
+            "Value": "Footer"
+          },
+          {
+            "Address": "A8",
+            "Type": "s",
+            "Value": "Fixed"
+          },
+          {
+            "Address": "B8",
+            "Type": "s",
+            "Value": "Value"
+          },
+          {
+            "Address": "A9",
+            "Type": "s",
+            "Value": "Data"
+          },
+          {
+            "Address": "B9",
+            "Type": "n",
+            "Value": "7"
+          }
+        ],
+        "Names": [
+          {
+            "Name": "_xlnm.Print_Area",
+            "Value": "Template!$A$1:$C$10",
+            "Scope": 0
+          }
+        ],
+        "Links": [],
+        "Tables": [],
+        "Filter": null,
+        "Conditional": [],
+        "Validation": [
+          "B2:B4"
+        ],
+        "Comments": null,
+        "DrawingRows": null,
+        "Images": null
+      }
+    }
+  ]
+}

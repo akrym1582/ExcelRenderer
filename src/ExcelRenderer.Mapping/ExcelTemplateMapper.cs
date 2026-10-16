@@ -1,17 +1,14 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.Json;
 using System.Threading;
-using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Packaging;
-using S = DocumentFormat.OpenXml.Spreadsheet;
+using ExcelRenderer.OpenXml;
+using ExcelRenderer.OpenXml.Input;
 
 namespace ExcelRenderer.Mapping;
 
 /// <summary>Maps CLR objects or JSON into XLSX templates independently of rendering.</summary>
-public static class ExcelTemplateMapper
+public static partial class ExcelTemplateMapper
 {
     /// <summary>Maps a template stream into an output stream, leaving both streams open.</summary>
     /// <param name="template">The readable XLSX template.</param>
@@ -32,39 +29,49 @@ public static class ExcelTemplateMapper
         }
 
         options ??= new MappingOptions();
-        if (options.MaxOutputRows < 1 || options.MaxOutputRows > 1_048_576 || options.Culture is null)
+        if (options.MaxOutputRows < 1 || options.MaxOutputRows > 1_048_576 || options.Culture is null || options.Input is null)
         {
             throw new ArgumentException("Specify a culture and MaxOutputRows between 1 and 1048576.", nameof(options));
         }
 
-        cancellationToken.ThrowIfCancellationRequested();
-        using var workbook = new XLWorkbook(template);
-        var templates = workbook.Worksheets.Select(sheet => new TemplateSheet(sheet)).ToArray();
-        var plans = new List<WorksheetExpansion>();
-        foreach (var sheet in templates)
+        if (!Enum.IsDefined(typeof(MappingBackend), options.Backend))
         {
-            var expansion = new WorksheetExpansion(sheet, data, options, cancellationToken);
-            plans.Add(expansion);
+            throw new ArgumentOutOfRangeException(nameof(options.Backend));
         }
 
-        foreach (var expansion in plans)
+        if (options.Backend == (MappingBackend)0)
         {
-            expansion.Apply();
+            throw new NotSupportedException("The ClosedXml mapping backend has been removed. Use OpenXml or Auto.");
         }
 
-        workbook.CalculateMode = XLCalculateMode.Auto;
-        workbook.FullCalculationOnLoad = true;
-        workbook.ForceFullCalculation = true;
         cancellationToken.ThrowIfCancellationRequested();
+        using var prepared = WorkbookInputPreparer.ReadAsync(template, options.Input, cancellationToken).GetAwaiter().GetResult();
+        using (var formulaSource = prepared.OpenRead())
+        {
+            var formula = WorkbookFormulaInspection.Find(formulaSource, cancellationToken);
+            if (formula is not null)
+            {
+                throw new MappingException(
+                    formula.Sheet,
+                    formula.Cell,
+                    formula.Name,
+                    "MappingFormulaNotSupported: " + formula.Kind + ". Calculate values in the caller and replace template formulas with value placeholders.")
+                {
+                    ReasonCode = "MappingFormulaNotSupported",
+                };
+            }
+        }
 
-        // ClosedXML evaluates supported formulas and writes error values for unsupported functions.
-        // The original formulas are retained for recalculation by Excel.
-        using var result = new MemoryStream();
-        workbook.SaveAs(result, new SaveOptions { EvaluateFormulasBeforeSaving = true });
-        NormalizePageBreakMode(result, plans);
-        cancellationToken.ThrowIfCancellationRequested();
-        result.Position = 0;
-        result.CopyTo(output);
+        using (var inspected = prepared.OpenRead())
+        {
+            var reasons = WorkbookWriteCapabilities.Inspect(inspected, cancellationToken);
+            if (reasons.Count != 0)
+            {
+                throw new NotSupportedException("OpenXml mapping is unsupported: " + string.Join(", ", reasons));
+            }
+        }
+
+        MapOpenXml(prepared, output, data, options, cancellationToken);
     }
 
     /// <summary>Maps JSON text into an XLSX template, leaving streams open.</summary>
@@ -94,40 +101,34 @@ public static class ExcelTemplateMapper
         }
 
         using var template = File.OpenRead(templatePath);
-        using var result = new MemoryStream();
-        Map(template, result, data, options, cancellationToken);
-        var directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-        Directory.CreateDirectory(directory!);
-        using var output = File.Create(outputPath);
-        result.Position = 0;
-        result.CopyTo(output);
-    }
-
-    private static void NormalizePageBreakMode(Stream result, List<WorksheetExpansion> plans)
-    {
-        var names = new HashSet<string>(plans.Where(p => p.HasExplicitPageBreak).Select(p => p.SheetName), StringComparer.Ordinal);
-        if (names.Count == 0)
+        var path = Path.GetFullPath(outputPath);
+        var directory = Path.GetDirectoryName(path)!;
+        Directory.CreateDirectory(directory);
+        var temporary = Path.Combine(directory, ".excelrenderer-" + Guid.NewGuid().ToString("N") + ".tmp");
+        try
         {
-            return;
-        }
-
-        result.Position = 0;
-        using var document = SpreadsheetDocument.Open(result, true);
-        var workbook = document.WorkbookPart!;
-        foreach (var sheet in workbook.Workbook.Sheets!.Elements<S.Sheet>())
-        {
-            if (!names.Contains(sheet.Name!.Value!))
+            using (var result = new FileStream(temporary, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None))
             {
-                continue;
+                Map(template, result, data, options, cancellationToken);
+                result.Flush();
             }
 
-            var worksheet = ((WorksheetPart)workbook.GetPartById(sheet.Id!.Value!)).Worksheet;
-            worksheet.SheetProperties ??= new S.SheetProperties();
-            worksheet.SheetProperties.PageSetupProperties ??= new S.PageSetupProperties();
-
-            // ClosedXML retains the loaded fitToPage flag even after SetScale().
-            worksheet.SheetProperties.PageSetupProperties.FitToPage = false;
-            worksheet.Save();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (File.Exists(path))
+            {
+                File.Replace(temporary, path, null);
+            }
+            else
+            {
+                File.Move(temporary, path);
+            }
+        }
+        finally
+        {
+            if (File.Exists(temporary))
+            {
+                File.Delete(temporary);
+            }
         }
     }
 }

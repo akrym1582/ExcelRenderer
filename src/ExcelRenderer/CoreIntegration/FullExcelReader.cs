@@ -1,4 +1,3 @@
-using ClosedXML.Excel;
 using DocumentFormat.OpenXml.Packaging;
 using ExcelRenderer.Core.Excel;
 using ExcelRenderer.Core.Model;
@@ -8,7 +7,7 @@ using ExcelRenderer.Rendering;
 namespace ExcelRenderer.CoreIntegration;
 
 /// <summary>Extends the common reader with full style, drawings and hyperlink metadata.</summary>
-internal sealed class FullExcelReader : CoreExcelReader
+internal sealed partial class FullExcelReader : CoreExcelReader
 {
     private readonly DiagnosticCollector? diagnostics;
     private readonly bool detectUnsupportedFeatures;
@@ -26,16 +25,20 @@ internal sealed class FullExcelReader : CoreExcelReader
     }
 
     /// <inheritdoc/>
-    protected override void PrepareWorkbookMetadata(Core.Input.PreparedWorkbook source, XLWorkbook workbook, CoreWorkbookMetadata metadata, IReadOnlyList<string>? selectedSheets)
+    protected override bool CaptureRichText => true;
+
+    /// <inheritdoc/>
+    protected override bool CaptureConditionalFormatting => detectUnsupportedFeatures;
+
+    /// <inheritdoc/>
+    protected override void PrepareWorkbookMetadata(Core.Input.PreparedWorkbook source, IReadOnlyList<string> sheetNames, CoreWorkbookMetadata metadata, IReadOnlyList<string>? selectedSheets)
     {
         using var drawingStream = source.OpenRead();
-        using var pictureStream = source.OpenRead();
         using var hyperlinkStream = source.OpenRead();
         var unselectedGeometry = new Dictionary<string, IReadOnlyList<Model.CellRange>>(StringComparer.Ordinal);
         var unsupported = new Dictionary<string, IReadOnlyList<UnsupportedFeature>>(StringComparer.Ordinal);
         var shapes = Excel.DrawingMLReader.Read(drawingStream, diagnostics, selectedSheets, unselectedGeometry, detectUnsupportedFeatures ? unsupported : null);
-        var pictures = Excel.DrawingMLReader.ReadPictureMetadata(pictureStream, metadata.Pictures);
-        var hyperlinks = Excel.HyperlinkReader.Read(hyperlinkStream);
+        var hyperlinks = Excel.HyperlinkReader.Read(hyperlinkStream, selectedSheets);
         if (detectUnsupportedFeatures)
         {
             using var chartStream = source.OpenRead();
@@ -63,63 +66,25 @@ internal sealed class FullExcelReader : CoreExcelReader
         }
 
         metadata.IncludeUnselectedSheetGeometry = true;
-        metadata.ExtensionData = new FullWorkbookData(shapes, pictures, hyperlinks) { UnsupportedFeatures = unsupported };
-        foreach (var sheet in workbook.Worksheets)
+        metadata.ExtensionData = new FullWorkbookData(shapes, hyperlinks) { UnsupportedFeatures = unsupported };
+        foreach (var name in sheetNames)
         {
-            metadata.AdditionalGeometry[sheet.Name] = unselectedGeometry.GetValueOrDefault(sheet.Name, [])
-                .Concat(shapes.GetValueOrDefault(sheet.Name, []).SelectMany(shape => AnchorRanges(shape.Anchor, shape.DrawingAnchor)))
-                .Concat(unsupported.GetValueOrDefault(sheet.Name, []).SelectMany(feature => feature.Ranges))
+            metadata.AdditionalGeometry[name] = unselectedGeometry.GetValueOrDefault(name, [])
+                .Concat(shapes.GetValueOrDefault(name, []).SelectMany(shape => AnchorRanges(shape.Anchor, shape.DrawingAnchor)))
+                .Concat(unsupported.GetValueOrDefault(name, []).SelectMany(feature => feature.Ranges))
                 .Select(CoreModelAdapter.ToCore).ToArray();
         }
     }
 
     /// <inheritdoc/>
-    protected override bool ShouldReadCell(IXLCell cell, CoreSheetReadContext context)
+    protected override ReportCell CompleteCell(SourceCellText? source, ReportCell cell, CoreSheetReadContext context) => source is null ? cell :
+        CompleteRichText(cell, source.Runs.Select(run => new Model.CellTextRun(run.Text, CoreModelAdapter.ToPublic(run.Font))).ToList(), source.UnsupportedFormatting);
+
+    /// <inheritdoc/>
+    protected override string NormalizeDisplayText(string text) => text;
+
+    private static ReportCell CompleteRichText(ReportCell cell, List<Model.CellTextRun> runs, bool unsupported)
     {
-        var metadata = GetHyperlinks(cell.Worksheet.Name, context);
-        var address = new Model.CellAddress(cell.Address.RowNumber, cell.Address.ColumnNumber);
-        return metadata is null || metadata.OriginalCells.Contains(address) || !metadata.Links.Any(link => link.SourceRange.Contains(address));
-    }
-
-    /// <inheritdoc/>
-    protected override string ReadDisplayText(IXLCell cell, CoreSheetReadContext context) =>
-        GetHyperlinks(cell.Worksheet.Name, context)?.UncachedDisplays.GetValueOrDefault(new Model.CellAddress(cell.Address.RowNumber, cell.Address.ColumnNumber)) ?? base.ReadDisplayText(cell, context);
-
-    /// <inheritdoc/>
-    protected override CellStyle ConvertCellStyle(IXLCell cell) => Core.Excel.ExcelStyleConverter.ConvertOriginal(cell);
-
-    /// <inheritdoc/>
-    protected override ReportCell CompleteCell(IXLCell source, ReportCell cell, CoreSheetReadContext context)
-    {
-        if (source.HasFormula || !source.HasRichText)
-        {
-            return cell;
-        }
-
-        var runs = new List<Model.CellTextRun>();
-        var unsupported = source.GetRichText().HasPhonetics;
-        foreach (var run in source.GetRichText())
-        {
-            unsupported |= run.Strikethrough || run.VerticalAlignment != XLFontVerticalTextAlignmentValues.Baseline ||
-                run.Underline is not (XLFontUnderlineValues.None or XLFontUnderlineValues.Single);
-            var text = run.Text;
-            if (text.Length == 0)
-            {
-                continue;
-            }
-
-            var color = Core.Excel.ExcelStyleConverter.ToColor(run.FontColor, source.Worksheet.Workbook.Theme);
-            var font = new Model.FontStyle(run.FontName, run.FontSize, run.Bold, run.Italic, run.Underline == XLFontUnderlineValues.Single, color is { } value ? CoreModelAdapter.ToPublic(value) : null);
-            if (runs.Count > 0 && runs[runs.Count - 1].Font == font)
-            {
-                runs[runs.Count - 1] = runs[runs.Count - 1] with { Text = runs[runs.Count - 1].Text + text };
-            }
-            else
-            {
-                runs.Add(new(text, font));
-            }
-        }
-
         for (var index = 0; index < runs.Count; index++)
         {
             var text = runs[index].Text.Replace("\r\n", "\n", StringComparison.Ordinal);
@@ -151,33 +116,6 @@ internal sealed class FullExcelReader : CoreExcelReader
                 ? null : new FullCellTextData(runs.AsReadOnly()) { UnsupportedFormatting = unsupported },
         };
     }
-
-    /// <inheritdoc/>
-    protected override string NormalizeDisplayText(string text) => text;
-
-    /// <inheritdoc/>
-    protected override ReportSheet CompleteSheet(IXLWorksheet worksheet, ReportSheet sheet, CoreSheetReadContext context)
-    {
-        var data = (FullWorkbookData)context.Metadata.ExtensionData!;
-        var pictures = data.Pictures.GetValueOrDefault(worksheet.Name);
-        return sheet with
-        {
-            Images = sheet.Images?.Select(image => image.Name is { } name && pictures?.GetValueOrDefault(name) is { } picture
-                ? image with { ExtensionData = new FullPictureData(picture) } : image).ToArray(),
-            ExtensionData = new FullSheetData(context.IncludeBody ? data.Shapes.GetValueOrDefault(worksheet.Name, []) : [], data.Hyperlinks.GetValueOrDefault(worksheet.Name))
-            {
-                CellReadDiagnostics = context.Metadata.CellDiagnostics.GetValueOrDefault(worksheet.Name, []).Select(CoreDiagnosticAdapter.ToPublic).ToArray(),
-                UnsupportedFeatures = context.IncludeBody && detectUnsupportedFeatures ? data.UnsupportedFeatures.GetValueOrDefault(worksheet.Name, []).Concat(worksheet.ConditionalFormats.Select((rule, index) => new UnsupportedFeature(
-                    "UnsupportedConditionalFormatting",
-                    "A conditional formatting rule exists but its visual effects are not rendered.",
-                    "conditional-format-" + (index + 1),
-                    rule.Ranges.Select(range => new Model.CellRange(new(range.RangeAddress.FirstAddress.RowNumber, range.RangeAddress.FirstAddress.ColumnNumber), new(range.RangeAddress.LastAddress.RowNumber, range.RangeAddress.LastAddress.ColumnNumber))).ToArray()))).ToArray() : [],
-            },
-        };
-    }
-
-    private static Excel.SheetHyperlinkMetadata? GetHyperlinks(string sheetName, CoreSheetReadContext context) =>
-        ((FullWorkbookData)context.Metadata.ExtensionData!).Hyperlinks.GetValueOrDefault(sheetName);
 
     private static IEnumerable<Model.CellRange> AnchorRanges(Model.CellAddress fallback, Model.DrawingAnchor? anchor)
     {

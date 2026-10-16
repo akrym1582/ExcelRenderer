@@ -1,0 +1,157 @@
+{
+  "commands": [
+    {
+      "args": [
+        "xlsx",
+        "/workspace/ExcelRenderer/samples/mapping/invoice/template.xlsx",
+        "--data",
+        "/workspace/ExcelRenderer/samples/mapping/invoice/data.json",
+        "-o",
+        "/tmp/excelrenderer-removal-cli-final/mapped.xlsx",
+        "--mapping-backend",
+        "auto",
+        "--verbose"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": "Mapping: OpenXml (AutoOpenXmlOnly)\n"
+    },
+    {
+      "args": [
+        "render",
+        "/workspace/ExcelRenderer/samples/mapping/invoice/template.xlsx",
+        "--data",
+        "/workspace/ExcelRenderer/samples/mapping/invoice/data.json",
+        "--format",
+        "pdf",
+        "-o",
+        "/tmp/excelrenderer-removal-cli-final/render.pdf",
+        "--reader-backend",
+        "auto",
+        "--mapping-backend",
+        "auto",
+        "--font-file",
+        "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf",
+        "--font-policy",
+        "requested",
+        "--verbose"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": "Mapping: OpenXml (AutoOpenXmlOnly)\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nReader: OpenXml (AutoOpenXmlOnly)\n"
+    },
+    {
+      "args": [
+        "render",
+        "/workspace/ExcelRenderer/samples/mapping/invoice/template.xlsx",
+        "--data",
+        "/workspace/ExcelRenderer/samples/mapping/invoice/data.json",
+        "--format",
+        "png",
+        "-o",
+        "/tmp/excelrenderer-removal-cli-final/render-png",
+        "--reader-backend",
+        "auto",
+        "--mapping-backend",
+        "auto",
+        "--font-file",
+        "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf",
+        "--font-policy",
+        "requested",
+        "--verbose"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": "Mapping: OpenXml (AutoOpenXmlOnly)\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nReader: OpenXml (AutoOpenXmlOnly)\n"
+    },
+    {
+      "args": [
+        "render",
+        "/workspace/ExcelRenderer/samples/mapping/invoice/template.xlsx",
+        "--data",
+        "/workspace/ExcelRenderer/samples/mapping/invoice/data.json",
+        "--format",
+        "svg",
+        "-o",
+        "/tmp/excelrenderer-removal-cli-final/render-svg",
+        "--reader-backend",
+        "auto",
+        "--mapping-backend",
+        "auto",
+        "--font-file",
+        "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf",
+        "--font-policy",
+        "requested",
+        "--verbose"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": "Mapping: OpenXml (AutoOpenXmlOnly)\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nReader: OpenXml (AutoOpenXmlOnly)\n"
+    },
+    {
+      "args": [
+        "render",
+        "/workspace/ExcelRenderer/samples/mapping/invoice/template.xlsx",
+        "--data",
+        "/workspace/ExcelRenderer/samples/mapping/invoice/data.json",
+        "--format",
+        "markdown",
+        "-o",
+        "/tmp/excelrenderer-removal-cli-final/render.markdown",
+        "--reader-backend",
+        "auto",
+        "--mapping-backend",
+        "auto",
+        "--font-file",
+        "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf",
+        "--font-policy",
+        "requested",
+        "--verbose"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": "Mapping: OpenXml (AutoOpenXmlOnly)\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nFontconfig error: No writable cache directories\nReader: OpenXml (AutoOpenXmlOnly)\n"
+    },
+    {
+      "removedBackend": "reader",
+      "exitCode": 1,
+      "stderr": "--reader-backend: ClosedXML has been removed; use openxml or auto.\n\n",
+      "outputPreserved": true
+    },
+    {
+      "removedBackend": "mapping",
+      "exitCode": 1,
+      "stderr": "--mapping-backend: ClosedXML has been removed; use openxml or auto.\n\n",
+      "outputPreserved": true
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "mapped.xlsx",
+      "bytes": 7074,
+      "sha256": "70753519b636daf6075c8492db979ef61d2e4d58c3bc34d276c22ed3035e6a22"
+    },
+    {
+      "file": "render-png/\u8acb\u6c42\u66f8-1.png",
+      "bytes": 97102,
+      "sha256": "da096e0f44d9e27a9f88bdf412d8cd7ad06c142d17d6b397667ea7fb5ec6a484"
+    },
+    {
+      "file": "render-svg/\u8acb\u6c42\u66f8-1.svg",
+      "bytes": 524082,
+      "sha256": "a44a0c7e0ee8fb71c9ba759712b0362c4b7e8d2dea8afe17810c2af57de84a1f"
+    },
+    {
+      "file": "render.markdown/workbook.md",
+      "bytes": 2568,
+      "sha256": "5c476f0626def6a30001e7ff6fc910ff3d6e75d146ff7daa0f009f5438131303"
+    },
+    {
+      "file": "render.pdf",
+      "bytes": 123952,
+      "sha256": "02f6b229885d9877d349775fdb03776a4f5c10df58732007656897af85f043f7"
+    }
+  ],
+  "installedOpenXmlSha256": "ff876eb5912b9d54f3f7a561c391ee31a75d07ba7d2636944a7a6a5460fac286",
+  "installedPackageMatches": true
+}

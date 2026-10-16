@@ -17,7 +17,7 @@ internal sealed class SheetGeometry
     internal SheetGeometry(ReportSheet sheet)
         : this(
             sheet.DefaultColumnWidth,
-            sheet.DefaultRowHeight,
+            sheet.DefaultRowsHidden ? 0 : sheet.DefaultRowHeight,
             sheet.Columns.Select(pair => new KeyValuePair<int, double>(pair.Key, pair.Value.IsHidden ? 0 : pair.Value.Width)),
             sheet.Rows.Select(pair => new KeyValuePair<int, double>(pair.Key, pair.Value.IsHidden ? 0 : pair.Value.Height)))
     {

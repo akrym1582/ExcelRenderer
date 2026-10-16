@@ -19,6 +19,9 @@ public sealed class MappingException : Exception
         Expression = expression;
     }
 
+    /// <summary>Gets a stable reason code when the failure has a classified cause.</summary>
+    public string? ReasonCode { get; internal set; }
+
     /// <summary>Gets the original worksheet name.</summary>
     public string SheetName { get; }
 

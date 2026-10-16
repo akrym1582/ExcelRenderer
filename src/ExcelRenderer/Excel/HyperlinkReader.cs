@@ -6,7 +6,7 @@ using ExcelRenderer.Rendering;
 
 namespace ExcelRenderer.Excel;
 
-/// <summary>Reads original hyperlink XML and constant formulas before ClosedXML display access.</summary>
+/// <summary>Reads original hyperlink XML and constant formula targets without evaluating cells.</summary>
 internal static class HyperlinkReader
 {
     /// <summary>Reads definitions, scoped names without deriving display values from formulas.</summary>
@@ -34,6 +34,12 @@ internal static class HyperlinkReader
             var definition = 0;
             foreach (var raw in ReadElements<Hyperlink>(part))
             {
+                var id = raw.Id?.Value;
+                if (id is not null && !relationships.ContainsKey(id))
+                {
+                    throw new InvalidDataException("Hyperlink relationship is missing: " + id);
+                }
+
                 CellRange range;
                 try
                 {
@@ -52,13 +58,13 @@ internal static class HyperlinkReader
                     continue;
                 }
 
-                var id = raw.Id?.Value;
                 var target = raw.Location?.Value ?? string.Empty;
                 string? issue = null;
                 var external = id is not null;
                 if (id is not null)
                 {
-                    if (relationships.TryGetValue(id, out var relationship) && relationship.IsExternal)
+                    var relationship = relationships[id];
+                    if (relationship.IsExternal)
                     {
                         target = relationship.Uri.OriginalString;
                     }
@@ -112,11 +118,7 @@ internal static class HyperlinkReader
                 scoped[name.Name!.Value!] = name.Text;
             }
 
-            result[sheet.Name!.Value!] = new(links, scoped)
-            {
-                OriginalCells = (includeBody ? ReadElements<Cell>(part) : Enumerable.Empty<Cell>()).Where(cell => cell.CellReference is not null)
-                    .Select(cell => CellRangeParser.Parse(cell.CellReference!.Value!, out _).First).ToHashSet(),
-            };
+            result[sheet.Name!.Value!] = new(links, scoped);
         }
 
         return result;

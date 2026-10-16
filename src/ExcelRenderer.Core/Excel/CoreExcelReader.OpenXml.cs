@@ -72,7 +72,7 @@ internal partial class CoreExcelReader
     private static PageSettings OpenXmlPageSettings(WorksheetInfo info)
     {
         var fit = Boolean(info.PageSetupProperties, "fitToPage");
-        var (width, height) = GetPaperSize((ClosedXML.Excel.XLPaperSize)(int)Number(info.PageSetup, "paperSize", 1));
+        var (width, height) = PaperSizeConverter.ToPoints((int)Number(info.PageSetup, "paperSize", 1));
         if (Attribute(info.PageSetup, "orientation") == "landscape")
         {
             (width, height) = (height, width);
@@ -195,60 +195,13 @@ internal partial class CoreExcelReader
         }
     }
 
-    private ReportDocument? ReadOpenXml(PreparedWorkbook source, DiagnosticCollector? diagnostics, IReadOnlyList<string>? selectedSheets, CancellationToken token, ExcelReadOptions options, out IReadOnlyList<string> unsupportedReasons)
+    private ReportDocument ReadOpenXml(PreparedWorkbook source, DiagnosticCollector? diagnostics, IReadOnlyList<string>? selectedSheets, CancellationToken token, ExcelReadOptions options)
     {
-        unsupportedReasons = Array.Empty<string>();
         using var stream = source.OpenRead();
-        using var reader = OpenXmlWorkbookReader.Open(stream, new() { SelectedSheetNames = selectedSheets }, token);
+        using var reader = OpenXmlWorkbookReader.Open(stream, new() { SelectedSheetNames = selectedSheets, Culture = CultureInfo.CurrentCulture }, token);
+        ConversionMetrics.Report("openXmlReaderWorkbook", 1);
         var infos = reader.Sheets.Where(sheet => sheet.Kind == "Worksheet").Select(sheet => reader.ReadWorksheetInfo(sheet.Index, token)).ToArray();
-        if (options.Backend == ReaderBackend.Auto && options.InspectCandidate is null)
-        {
-            var reasons = new HashSet<string>(StringComparer.Ordinal);
-            foreach (var info in infos.Where(info => reader.SelectedWorksheetIndices.Contains(info.Sheet.Index)))
-            {
-                if (info.PrintReferences.Any(reference => reference.Ranges.Count == 0))
-                {
-                    reasons.Add("UnsupportedPrintReference");
-                }
-
-                var hiddenRows = info.Rows.Where(row => row.Hidden ?? info.DefaultRowsHidden).Select(row => row.Index).ToHashSet();
-                var hiddenColumns = new HashSet<int>();
-                foreach (var column in info.Columns.Where(column => column.Hidden == true))
-                {
-                    for (var index = column.Min; index <= column.Max; index++)
-                    {
-                        hiddenColumns.Add(index);
-                    }
-                }
-
-                foreach (var cell in reader.EnumerateCells(info.Sheet.Index, token))
-                {
-                    if (options.IsCellSelected?.Invoke(info.Sheet.Name, cell.Address.Row, cell.Address.Column) == false || hiddenRows.Contains(cell.Address.Row) ||
-                        hiddenColumns.Contains(cell.Address.Column))
-                    {
-                        continue;
-                    }
-
-                    foreach (var diagnostic in reader.FormatCell(cell).Diagnostics.Where(diagnostic => diagnostic.Code is not "FormulaCachedValueMissing" and not "FormulaResultError"))
-                    {
-                        reasons.Add(diagnostic.Code);
-                    }
-
-                    foreach (var issue in CompatibilityIssues(cell, reader.ResolveStyle(cell)))
-                    {
-                        reasons.Add(issue.Code);
-                    }
-                }
-            }
-
-            if (reasons.Count > 0)
-            {
-                unsupportedReasons = Array.AsReadOnly(reasons.OrderBy(reason => reason, StringComparer.Ordinal).ToArray());
-                return null;
-            }
-        }
-
-        var metadata = new CoreWorkbookMetadata(new Dictionary<string, IReadOnlyDictionary<string, DrawingPictureMetadata>>(), new Dictionary<string, SheetPageSetupMetadata>()) { IsStreamingSource = true };
+        var metadata = new CoreWorkbookMetadata();
         foreach (var original in reader.Sheets)
         {
             metadata.SourceSheetIndices[original.Name] = original.Index;
@@ -266,6 +219,8 @@ internal partial class CoreExcelReader
         var images = infos.Where(info => reader.SelectedWorksheetIndices.Contains(info.Sheet.Index)).ToDictionary(info => info.Sheet.Index, info => reader.ReadImages(info.Sheet.Index, token));
         var styles = new StylePool();
         var styleCache = new Dictionary<(int Index, CellValueType Type), CellStyle>();
+        long styleConversions = 0;
+        long styleHits = 0;
         var bytes = new Dictionary<string, byte[]>(StringComparer.Ordinal);
         var sheets = new List<ReportSheet>();
         foreach (var info in infos.Where(info => metadata.IncludeUnselectedSheetGeometry || reader.SelectedWorksheetIndices.Contains(info.Sheet.Index)))
@@ -283,6 +238,17 @@ internal partial class CoreExcelReader
             foreach (var reference in info.PrintReferences.Where(reference => reference.Ranges.Count == 0))
             {
                 cellDiagnostics.Add(new("UnsupportedPrintReference", DiagnosticSeverity.Warning, DiagnosticStage.Read, "The saved print definition is outside the supported grammar: " + reference.RawText, info.Sheet.Name));
+            }
+
+            var paperSize = (int)Number(info.PageSetup, "paperSize", 1);
+            if (!PaperSizeConverter.IsSupported(paperSize))
+            {
+                cellDiagnostics.Add(new("UnsupportedPaperSize", DiagnosticSeverity.Warning, DiagnosticStage.Read, "The saved paper size is unsupported; A4 dimensions are used.", info.Sheet.Name));
+            }
+
+            if (Attribute(info.PageSetup, "paperWidth") is not null || Attribute(info.PageSetup, "paperHeight") is not null)
+            {
+                cellDiagnostics.Add(new("UnsupportedPaperDimensions", DiagnosticSeverity.Warning, DiagnosticStage.Read, "Explicit paperWidth/paperHeight lengths are not interpreted; the paperSize dimensions are used.", info.Sheet.Name));
             }
 
             var rowDefaults = info.Rows.Where(row => row.CustomFormat == true && row.StyleIndex is not null).ToDictionary(row => row.Index, row => row.StyleIndex!.Value);
@@ -310,11 +276,16 @@ internal partial class CoreExcelReader
                 var originalStyle = reader.ResolveStyle(cell);
                 if (!styleCache.TryGetValue((cell.StyleIndex, cell.Value.Type), out var style))
                 {
+                    styleConversions++;
                     style = styles.Intern(NormalizeCellStyle(OpenXmlStyleConverter.Convert(originalStyle, cell.Value.Type)));
                     if (styleCache.Count < 8192)
                     {
                         styleCache.Add((cell.StyleIndex, cell.Value.Type), style);
                     }
+                }
+                else
+                {
+                    styleHits++;
                 }
 
                 if (cell.Value.Type == CellValueType.Blank && cell.Formula is null && cell.StyleIndex == 0 && style.Background is null && style.Border is null && !isLeader &&
@@ -435,17 +406,11 @@ internal partial class CoreExcelReader
             }
         }
 
+        ConversionMetrics.Report("readerStyleConversions", styleConversions);
+        ConversionMetrics.Report("readerStyleCacheHits", styleHits);
+        ConversionMetrics.Report("readerStyleCacheEntries", styleCache.Count);
         var document = new ReportDocument(sheets.Concat(metadata.AdditionalSheets).OrderBy(sheet => sheet.SourceSheetIndex).ToArray());
-        if (options.Backend == ReaderBackend.Auto && options.InspectCandidate is not null)
-        {
-            unsupportedReasons = options.InspectCandidate(document);
-            if (unsupportedReasons.Count > 0)
-            {
-                return null;
-            }
-        }
-
-        options.BackendSelected?.Invoke(new(options.Backend, ReaderBackend.OpenXml, Array.AsReadOnly(new[] { options.Backend == ReaderBackend.Auto ? "CapabilitiesSupported" : "ExplicitOpenXml" })));
+        options.BackendSelected?.Invoke(new(options.Backend, ReaderBackend.OpenXml, Array.AsReadOnly(new[] { options.Backend == ReaderBackend.Auto ? "AutoOpenXmlOnly" : "ExplicitOpenXml" })));
         return document;
     }
 }

@@ -1,0 +1,3372 @@
+{
+  "scope": "Active C# source, projects/locks, tests and immutable XLSX fixtures, scripts, samples and current documentation. Generated bin/obj, historical results and validation evidence are excluded.",
+  "baseCommit": "24c9dea4d67190951d152eef56f76abc943ef733",
+  "branch": "feature/remove-closedxml",
+  "workingTreeDirty": true,
+  "files": [
+    {
+      "file": "AGENTS.md",
+      "sha256": "18835366e450d07372a2721b05656e77f531fbd32720271548b19a47f78fc66e"
+    },
+    {
+      "file": "Directory.Build.props",
+      "sha256": "93641b7e4985f585b3fe7f8d8397101366b58fb949202539764b410f5462b2de"
+    },
+    {
+      "file": "ExcelRenderer.slnx",
+      "sha256": "27a054681495d8dfefc9bff41f51424a0b48a7d6b9d8e4e34cb7487f76b7bb8a"
+    },
+    {
+      "file": "README.ja.md",
+      "sha256": "9959c058beb527e09c7b1ea301a8ab27f6cdac35e1e2208b41b9a7cbd89400df"
+    },
+    {
+      "file": "README.md",
+      "sha256": "9db39a3392c91ba4b7f4755e32c96623495fe68162fb6b2254e18fc6f2b9aa82"
+    },
+    {
+      "file": "THIRD-PARTY-NOTICES.md",
+      "sha256": "0ecf762651d22b0bb78dd034143526c456802acc33b97f29f46ecd653a0c11bc"
+    },
+    {
+      "file": "docs/architecture.ja.md",
+      "sha256": "2690eb36704269245bbb6ddd49e1795100e118e92c7342f40eec2255ef4b5194"
+    },
+    {
+      "file": "docs/architecture.md",
+      "sha256": "c244f3bda771a82e3c9d743b242ec61e433b862ecdfc23ba030bfdd6f9b352cf"
+    },
+    {
+      "file": "docs/closedxml-removal-compatibility.md",
+      "sha256": "20eacffb4e497cfdc5a6d3428290fdcb5f0cc0b12f785bcbd2a47bc027b5cd16"
+    },
+    {
+      "file": "docs/closedxml-removal-validation.md",
+      "sha256": "c5ad1b0465f6245cf34e5534f75acba69808f7370249f09f4dd03a08a996ae37"
+    },
+    {
+      "file": "docs/core-architecture.ja.md",
+      "sha256": "7cfee884df1032a8aefc042a4eab7e3c63830478d054b94f34102dd1ce332685"
+    },
+    {
+      "file": "docs/core-architecture.md",
+      "sha256": "0823ee20a6d9728f016dcd4769a25e067c37e5b0665b2cb66ab8844f9cf85284"
+    },
+    {
+      "file": "docs/core-refactor-validation.md",
+      "sha256": "839d892147f63977591410ee735889de97d959fb745ddc720d9e164634f24ce3"
+    },
+    {
+      "file": "docs/core-source-map.md",
+      "sha256": "f0b44413dd837ba8bd72afc2a2c5564bda415886ae132a96a4a9d43d9fdda81b"
+    },
+    {
+      "file": "docs/core-validation.md",
+      "sha256": "3e06e7fe6ff863e856dd87569d199f1e6d75d5f2196bbeae12b51fa01fe53850"
+    },
+    {
+      "file": "docs/core.ja.md",
+      "sha256": "7d624ab8fabbe49ea0afbc80f6c58fc66d30960193b53b20d23c8957c4e71bde"
+    },
+    {
+      "file": "docs/core.md",
+      "sha256": "07e896967d3b23428679f53afb2238042679e1e612823658d11f87a406c9717e"
+    },
+    {
+      "file": "docs/image-performance.ja.md",
+      "sha256": "9d5757dc8d096b67c518ecbd62d4ff5561edfcc269a442474834bbf28ea0488f"
+    },
+    {
+      "file": "docs/mapping-performance-plan.ja.md",
+      "sha256": "39c555190e35c64afc29a2c2ccd7df47382cce11480aac1c27cfc05ce31e1239"
+    },
+    {
+      "file": "docs/mapping-performance-validation.ja.md",
+      "sha256": "5e0c32fe320de97b4bbceaeb8c49d2fe109db3d19dfe3f25624cceebab5dff5f"
+    },
+    {
+      "file": "docs/mapping-performance.ja.md",
+      "sha256": "2529155c3c7b09f5e63c2889c6a29f8f485c1b6d5d66ab562c5315f8f2656d63"
+    },
+    {
+      "file": "docs/mapping.ja.md",
+      "sha256": "9e8ebfa06e52eae68e9335cd804c3392e86c4edfbfac53fa9109bd76f98012a3"
+    },
+    {
+      "file": "docs/mapping.md",
+      "sha256": "3a5c417d8de5d996c4fbab7ad490e52a67adf3eddfd2e79664a458ff6b275c25"
+    },
+    {
+      "file": "docs/openxml-integration-validation.md",
+      "sha256": "12b5b4fb4858410cf1baa8974d3cb60bda2fcbf523794ca61948fc1cf5a9f4e4"
+    },
+    {
+      "file": "docs/openxml-integration.ja.md",
+      "sha256": "87e2b30a25126c67624b30c3b44b3ddd14ebb05c5d68ad0e29ad58b4533d5e2a"
+    },
+    {
+      "file": "docs/openxml-integration.md",
+      "sha256": "941570b4ab1906ae586c59c34cfbb47dd6cff1487e7a664b96b22860ed7933e2"
+    },
+    {
+      "file": "docs/openxml-reader-optimization.md",
+      "sha256": "e2ab2357db22934fd7aff5ad9f844b042c4e3796c387b688130e66fa0bd39d78"
+    },
+    {
+      "file": "docs/openxml-reader-validation.md",
+      "sha256": "b1c943e5eb88c22ce28ff2e3edea4e5e64a6344a368f4d535733d93abc559dfa"
+    },
+    {
+      "file": "docs/openxml-reader.ja.md",
+      "sha256": "702a30a7972bcec1323a9ebb6da06cff67bff974b8c03f2dfe60a605128ac2e0"
+    },
+    {
+      "file": "docs/openxml-reader.md",
+      "sha256": "42fa618b99216d426c36cc325bfd982c4ae278b14a9a3ffa4c55a8f177c29b10"
+    },
+    {
+      "file": "docs/output-validation.md",
+      "sha256": "2a04128d9fe08a24c543364eb72cf56fae13a4ba959eeba5904f12c9e89eeaeb"
+    },
+    {
+      "file": "docs/pdf-performance.ja.md",
+      "sha256": "0fac5de57f649abafeca675ec84b3d6ebf33320d0f40b115f2a470995e588395"
+    },
+    {
+      "file": "docs/phase3-performance.ja.md",
+      "sha256": "119b8830bc69787af347511af5e839ed8de4fc8eb4fa862df48f63ca017d501a"
+    },
+    {
+      "file": "docs/phase3-review-refactoring.ja.md",
+      "sha256": "4544b25696607e6a1e12b1f1bac869a6cf21761a021c702907a32fbc044d297d"
+    },
+    {
+      "file": "docs/ranges-trim-hyperlinks-pr.md",
+      "sha256": "12a1126572b410adc204996a4208ba3280f020afe61b068ef1410ab16a50ce3a"
+    },
+    {
+      "file": "docs/ranges-trim-hyperlinks-validation.ja.md",
+      "sha256": "55d16b82012011fff46134eb204b9c79f43227eecd8568b0d9bbca18a588a13b"
+    },
+    {
+      "file": "docs/reader-richtext-validation.md",
+      "sha256": "ff7d8c529060ea22341c98c96caad0ec4e10a48228aea857e91e19dc78621de7"
+    },
+    {
+      "file": "samples/ExcelRenderer.Core.Sample/ExcelRenderer.Core.Sample.csproj",
+      "sha256": "71abd6a5e6877bbc338f7c0a3a56608c2fa87d02fbdc0d22765b7cc84a002960"
+    },
+    {
+      "file": "samples/ExcelRenderer.Core.Sample/Program.cs",
+      "sha256": "a3bcea07a33a25c9ab30067b3b56ef7c3d86a33bbb79e722557029ab3b58bffa"
+    },
+    {
+      "file": "samples/ExcelRenderer.Core.Sample/packages.lock.json",
+      "sha256": "f4c5f71c2f7b59598899e34da8a82135b915defa324be161507260731439f71b"
+    },
+    {
+      "file": "samples/excel/japanese-grid-report.xlsx",
+      "sha256": "4907d79963eb8267eab4230c7aad9bbd0d580238d3d42f402b34fb4c0ff217a1"
+    },
+    {
+      "file": "samples/mapping/invoice/README.md",
+      "sha256": "722b38494fbc57ee3acf4bc7893940cd77714e51deb50f8bd92a0ef88e5117b9"
+    },
+    {
+      "file": "samples/mapping/invoice/create-page-break-template.py",
+      "sha256": "41d1a678559ba6c1acdfae3e19220de4adde22af35c75aba5cc77952e757b564"
+    },
+    {
+      "file": "samples/mapping/invoice/create-template.py",
+      "sha256": "71053cca5f7dc29c09fc252d8bf9fe1cd3c4563795561973f3783c0dfc5380d4"
+    },
+    {
+      "file": "samples/mapping/invoice/data.json",
+      "sha256": "d7051a543438ef757460a13849352ef59a5b6e561312535f3f7f99b270b8512e"
+    },
+    {
+      "file": "samples/mapping/invoice/invoice.xlsx",
+      "sha256": "1eafc42149f48770c131f836883ffb6ac2714215d4ebe2db5352e1dee66011a5"
+    },
+    {
+      "file": "samples/mapping/invoice/page-breaks/README.md",
+      "sha256": "8c5f9d76fc5dab4c5351356bbc7bcbcd0a5b418476d306676676cc2cf4dce4d2"
+    },
+    {
+      "file": "samples/mapping/invoice/page-breaks/data.json",
+      "sha256": "48edfc63a958d17d8571cccb91eca9c2a91c666822c5612c6c501598f10d5fc2"
+    },
+    {
+      "file": "samples/mapping/invoice/page-breaks/invoice.xlsx",
+      "sha256": "fe9e74bb06481aa86d2dcf14268c94ca95844b5a2a3b3693b7c98996fa2e8d93"
+    },
+    {
+      "file": "samples/mapping/invoice/page-breaks/template.xlsx",
+      "sha256": "4b3599f12fb192099459888091f4f6fe0de6e6198b7a40a0ea2d9c394aa846be"
+    },
+    {
+      "file": "samples/mapping/invoice/template.xlsx",
+      "sha256": "8158ffcc92c5f5d0f71a951c4fe38cd3cb87415312f11e827cf69aaa2e5455eb"
+    },
+    {
+      "file": "scripts/benchmark-openxml-integration.py",
+      "sha256": "0f9c55e3cf2a5971d4bfde869625c352685858a86a8c4482279e5aea31f285b6"
+    },
+    {
+      "file": "scripts/check-closedxml-removal.py",
+      "sha256": "3767e1bbc83459db38f408fb1b1d19e7d95293f90d44aceaf44bf42df1e468d6"
+    },
+    {
+      "file": "scripts/check-core-dependencies.py",
+      "sha256": "0b3d4aba5682b41d28cfe99200260f3ade0a078ead7080244cca517d916141d5"
+    },
+    {
+      "file": "scripts/check-core-mutations.py",
+      "sha256": "719d005f8e7b9e286944bce28dcab9ad925daf68f81825ffca42b0178d6e50c1"
+    },
+    {
+      "file": "scripts/check-core-shared-mutations.py",
+      "sha256": "aebb661012163e259edfce085aad240635dbb2a24167269a1d5814774a7f9c72"
+    },
+    {
+      "file": "scripts/check-output-mutations.py",
+      "sha256": "201c93c8aca8b2b7da64c5d6efa2fa8ab976dd1706ac28a4113b6bb021dd7c04"
+    },
+    {
+      "file": "scripts/compare-core-api.py",
+      "sha256": "c4195c9ea43cb57c3207011b70063b6d7be5dbcdc1e22d211bcf6ed3e36b7632"
+    },
+    {
+      "file": "scripts/compare-core-output.py",
+      "sha256": "1be64bb12d5fee222e4456fe3ab81953ecfaa83111cccbb06c24bd09f0fa9767"
+    },
+    {
+      "file": "scripts/compare-core-performance.py",
+      "sha256": "33e499761495c248cc73cf78c74fe1b11b557391bd2b9ce5c9c6d5c58c7a3049"
+    },
+    {
+      "file": "scripts/compare-openxml-outputs.py",
+      "sha256": "7bcfd8d6a601f491b3074b33b6e20097225dec7bca0015d2155511754be7718f"
+    },
+    {
+      "file": "scripts/profile-mapping-allocations.py",
+      "sha256": "6745fc4fc4e32f9b4488a3fe872f9c9a0dd0e5ce1e9724a9ecba74c4702065eb"
+    },
+    {
+      "file": "scripts/validate-core.py",
+      "sha256": "1a8741bcc1e7ec24c81f9eec71f8ff7d787bec22a182a903064f0a0a0bbbddf8"
+    },
+    {
+      "file": "scripts/validate-openxml-packages.py",
+      "sha256": "b0c84be902188e84b908dc95e82abb61c0a5caddb7ffface99d99a99199e1773"
+    },
+    {
+      "file": "src/ExcelRenderer/Abstractions/IRenderer.cs",
+      "sha256": "812f7e59ca064ed68d4431ea268c0a7c2d308d24a47aeeaecfe05fb4e3017277"
+    },
+    {
+      "file": "src/ExcelRenderer/Abstractions/IReportLayoutPass.cs",
+      "sha256": "b5cfd46870bd3ddc021448043f8764251273dd4f55af415fe16bb996e3fba0de"
+    },
+    {
+      "file": "src/ExcelRenderer/Abstractions/IRichTextLayoutService.cs",
+      "sha256": "571afd4f0fa6c4988a229441f68ef49e5e1319a5c495f43eb2523ceb2589b1ef"
+    },
+    {
+      "file": "src/ExcelRenderer/Abstractions/ITextLayoutService.cs",
+      "sha256": "2408838f3aadaa457c219fee731f14aec13db50fd7de96dcc704419f33583c24"
+    },
+    {
+      "file": "src/ExcelRenderer/Abstractions/ITextMeasurer.cs",
+      "sha256": "31667a6332f318625d299a65ee7a893549731510fb89a306d50a0032fb28cab8"
+    },
+    {
+      "file": "src/ExcelRenderer/Abstractions/TextLayoutLine.cs",
+      "sha256": "9fe4beecad7928bdbe75d40442d3cb394568efeb38a961f433d1b847fdbdc80d"
+    },
+    {
+      "file": "src/ExcelRenderer/Abstractions/TextLayoutResult.cs",
+      "sha256": "1154f1e21f35ec30c905f2936d408542b024d71d713591d5713deb37280aecf2"
+    },
+    {
+      "file": "src/ExcelRenderer/Abstractions/TextLayoutRun.cs",
+      "sha256": "f9da43bf11d3925437599bedaa091190478977ecb8cd490941d6aee4a7face7e"
+    },
+    {
+      "file": "src/ExcelRenderer/Abstractions/TextSize.cs",
+      "sha256": "fd335e61a3754412b30a9d23b7d03a52be01f8adac76504f9e1b244ab5a1c1a4"
+    },
+    {
+      "file": "src/ExcelRenderer/Compatibility/IsExternalInit.cs",
+      "sha256": "72a843245c137ae7aac352c9526d03cb153ce240e5736c8fa2001e3f7e422aa2"
+    },
+    {
+      "file": "src/ExcelRenderer/CoreIntegration/CoreCommandAdapter.cs",
+      "sha256": "cb6e3b3c082407effdaf51c1fc708b32ab5c10e35050e1722e8d5dd51d7ac9a7"
+    },
+    {
+      "file": "src/ExcelRenderer/CoreIntegration/CoreDiagnosticAdapter.cs",
+      "sha256": "21e6b9550a78bc2eb83b47d2b65a5ae1dc11c28b62b4d62d973fe1172bd980d0"
+    },
+    {
+      "file": "src/ExcelRenderer/CoreIntegration/CoreDictionaryView.cs",
+      "sha256": "98a9576a51bf6b68ea63b73bdab4880b9f9426156e34b89264b581e7798e33b8"
+    },
+    {
+      "file": "src/ExcelRenderer/CoreIntegration/CoreLayoutContextAdapter.cs",
+      "sha256": "3609201082a15dacad08d6f53daf27293e2b7c42347ab356c0fcedc942b3fefb"
+    },
+    {
+      "file": "src/ExcelRenderer/CoreIntegration/CoreModelAdapter.Layout.cs",
+      "sha256": "0c167a0ba9bcf6653bbaae6d6dc061b588b4d79c0b403c68d1acbdae766d17f1"
+    },
+    {
+      "file": "src/ExcelRenderer/CoreIntegration/CoreModelAdapter.Reader.cs",
+      "sha256": "706096497561fa4bd7463ff32ed08154d391b39af10fc500f4d51f028bd0eff6"
+    },
+    {
+      "file": "src/ExcelRenderer/CoreIntegration/CoreModelAdapter.cs",
+      "sha256": "0c77679dd91ae737de27fa0d84d6608f4821d6f2e9bef0dc6c72e3d4102403bf"
+    },
+    {
+      "file": "src/ExcelRenderer/CoreIntegration/CorePageAdapter.cs",
+      "sha256": "8755c5643f09a11a2c8a468c820fe5da3886e15101d8cd72d226649825693080"
+    },
+    {
+      "file": "src/ExcelRenderer/CoreIntegration/CoreTextLayoutAdapter.cs",
+      "sha256": "e12303d72d2d416befc950731bec67d6903cb2bb112160335baf86b171db8c63"
+    },
+    {
+      "file": "src/ExcelRenderer/CoreIntegration/CoreTextMeasurerAdapter.cs",
+      "sha256": "692e66f71203b9a853450cbf9c740b0f464e9d817706f088fda5306deff3fca2"
+    },
+    {
+      "file": "src/ExcelRenderer/CoreIntegration/FilteredDictionaryView.cs",
+      "sha256": "173b1c5b629ca5c6091a2fd2194c85d67808c9755c21db2ba406043d522280f9"
+    },
+    {
+      "file": "src/ExcelRenderer/CoreIntegration/FullCellSelection.cs",
+      "sha256": "e542faf835718bc5027a7a2710b19e58b3ffe3b30dad5b05a1203755772cd223"
+    },
+    {
+      "file": "src/ExcelRenderer/CoreIntegration/FullCellTextData.cs",
+      "sha256": "adec08c6d4c47a03b9464a199106a01c8de34ce246b5de09b92f0cef304d3421"
+    },
+    {
+      "file": "src/ExcelRenderer/CoreIntegration/FullDrawingExtension.cs",
+      "sha256": "f3591a175b6bd93504e6ca7d02ccc6588cbfcde3ce272c68824a86bc8b337a94"
+    },
+    {
+      "file": "src/ExcelRenderer/CoreIntegration/FullExcelReader.OpenXml.cs",
+      "sha256": "ef22f9655ba520026ec1004bd705bd61e4b910c5c91ae44c1c9784ceb02eed40"
+    },
+    {
+      "file": "src/ExcelRenderer/CoreIntegration/FullExcelReader.cs",
+      "sha256": "34c1f90394877a479f2e4c0f92d0cab56ea380c37f7843ae886614f39e34f2f3"
+    },
+    {
+      "file": "src/ExcelRenderer/CoreIntegration/FullExplicitRangeGeometryPass.cs",
+      "sha256": "2f6550d8f3e7b3d618092bc8bd69343731acbdcf78ff8158db68c06d66ec7b72"
+    },
+    {
+      "file": "src/ExcelRenderer/CoreIntegration/FullFontMetrics.cs",
+      "sha256": "e0aadb9502d9ea0f892508889785fd7f42e2d4a81a4b623614863c0d254844a3"
+    },
+    {
+      "file": "src/ExcelRenderer/CoreIntegration/FullImageData.cs",
+      "sha256": "79fcae116aa8baa2c6847ee0ebbd6f962c7ea24b2f2dffd6d0314db667996a51"
+    },
+    {
+      "file": "src/ExcelRenderer/CoreIntegration/FullLayoutPolicy.cs",
+      "sha256": "fe7e51f1fdb4e42c034820989d1471a9f01f8636eb53aa540ac268272b59897b"
+    },
+    {
+      "file": "src/ExcelRenderer/CoreIntegration/FullLineData.cs",
+      "sha256": "aa62c976b11cc3d7a1bc2eb29d0b8d79fbd8a1f43eef21560c60fc4551d13020"
+    },
+    {
+      "file": "src/ExcelRenderer/CoreIntegration/FullPageData.cs",
+      "sha256": "f80b6ccfcb7a5290d2dd60acee6b48b323c43c27f513013ca550c1e31eb8200f"
+    },
+    {
+      "file": "src/ExcelRenderer/CoreIntegration/FullPdfRenderer.cs",
+      "sha256": "5d17ab5cc3f55f49c9b8dc4dfd5a9c9bbc99e3c4d0f8ffa7d9fc6d34ae4bf9d2"
+    },
+    {
+      "file": "src/ExcelRenderer/CoreIntegration/FullPictureData.cs",
+      "sha256": "8da338399f27d39acf4ad4df1bd1d8b500f07723c7fbe25a1f94e710b06f73ba"
+    },
+    {
+      "file": "src/ExcelRenderer/CoreIntegration/FullRenderImageData.cs",
+      "sha256": "4de7ea7132f1bff41fb3f2884217b11db3fb4a8e05dc31cd6873bba37a760de3"
+    },
+    {
+      "file": "src/ExcelRenderer/CoreIntegration/FullShapeData.cs",
+      "sha256": "3cb1993fc08f1b7d2c405dbc3aeacfd1d9f46c5933d030f223f25f19a071b48e"
+    },
+    {
+      "file": "src/ExcelRenderer/CoreIntegration/FullSheetData.cs",
+      "sha256": "504503014108a22f36c927f8c0510b516bafbced01c6706addc9bd52fffdbf4a"
+    },
+    {
+      "file": "src/ExcelRenderer/CoreIntegration/FullTextLayoutData.cs",
+      "sha256": "146a52f56b27cdea20d8266d3eac8c0dde8f8a2d78fd87041d46285644f04797"
+    },
+    {
+      "file": "src/ExcelRenderer/CoreIntegration/FullWorkbookData.cs",
+      "sha256": "84b01706ac345ace8e2570b5381f2f491eed9eb543c9c6404b183707f06e50aa"
+    },
+    {
+      "file": "src/ExcelRenderer/CoreIntegration/UnsupportedFeature.cs",
+      "sha256": "c0c2cdad34a20f1c37129f61e3bfed1855d440f66801d9b0b1c2baa79c3691ea"
+    },
+    {
+      "file": "src/ExcelRenderer/Drawing/BorderStrokeGeometry.cs",
+      "sha256": "8a07c4772b3c5b10181c89e6fde23ce820119c02d031338d3a7e76d1613d691d"
+    },
+    {
+      "file": "src/ExcelRenderer/Drawing/DrawBorderCommand.cs",
+      "sha256": "7db3c3b437bed0caa50fe2633deb7cf22129d1a14f29400f20282359d2bdd882"
+    },
+    {
+      "file": "src/ExcelRenderer/Drawing/DrawCommand.cs",
+      "sha256": "cae51c783358ee2a852ae6f8d6d887e51a605373f71d86be0f010382fa25a921"
+    },
+    {
+      "file": "src/ExcelRenderer/Drawing/DrawCommandBounds.cs",
+      "sha256": "28f8b662e579786ed6ca020bbdb6e6342241bcfbb0c425e24f96df9b37aa3439"
+    },
+    {
+      "file": "src/ExcelRenderer/Drawing/DrawCommandGeneratorPass.cs",
+      "sha256": "5bb81d39fb155271f3a8433b1b8381e25343d5f91b8839d6eb865969e334d302"
+    },
+    {
+      "file": "src/ExcelRenderer/Drawing/DrawImageCommand.cs",
+      "sha256": "316f145befcf62d52a879b818585b6e1305766a6d4191bbe516856ef184d0caa"
+    },
+    {
+      "file": "src/ExcelRenderer/Drawing/DrawLineCommand.cs",
+      "sha256": "3dbf8d861084177404e3bafaa6f32eabda7855a234a5146b76a024df65a48213"
+    },
+    {
+      "file": "src/ExcelRenderer/Drawing/DrawShapeCommand.cs",
+      "sha256": "b5912051bd6cf380e8a0d8d4423e201a694d8bc85a2da5302638146ddfb67a95"
+    },
+    {
+      "file": "src/ExcelRenderer/Drawing/DrawTextCommand.cs",
+      "sha256": "2624578d6024b641acd72d4d58b5cc7ce11f2fb30ba32a50fa0a8be3aad1f49a"
+    },
+    {
+      "file": "src/ExcelRenderer/Drawing/DrawViewportCommand.cs",
+      "sha256": "ce1a57bb453c9eb8b686873f81bd8a5a2c65d016968ef03a94769ec1d19c5ffb"
+    },
+    {
+      "file": "src/ExcelRenderer/Drawing/DrawingLayer.cs",
+      "sha256": "820df29ed92c7f802bb136e1268fb5f490e916f3649fcc7745d773f61c22b504"
+    },
+    {
+      "file": "src/ExcelRenderer/Drawing/FillRectangleCommand.cs",
+      "sha256": "8cacabf2fc9e0a23e7f3aa7d59d564ea012cbe1959806f6f313393f61d41ba60"
+    },
+    {
+      "file": "src/ExcelRenderer/Drawing/PositionedTextLine.cs",
+      "sha256": "ab109187d3851ecd5d6007854e8146b956e02277e91b86e3eee7f8f22611cdc4"
+    },
+    {
+      "file": "src/ExcelRenderer/Drawing/TextLayoutFontSize.cs",
+      "sha256": "4a96714ed81ef87d3f165acf3f7ff3fc22b1139742c8edafe4880e8e0d57daf2"
+    },
+    {
+      "file": "src/ExcelRenderer/Drawing/TextLayoutPlacement.cs",
+      "sha256": "51f0b2dd43241555874200efc3d5d92355575d4c65288d86ec212c5efa66a964"
+    },
+    {
+      "file": "src/ExcelRenderer/Excel/CellRangeIndex.cs",
+      "sha256": "880d11b209a01d5daad3668fa4d27c2d2cf7c183d55a6a14a21d0263a198a3fc"
+    },
+    {
+      "file": "src/ExcelRenderer/Excel/ColumnWidthCalculator.cs",
+      "sha256": "a4710e64cd5e182d8d9b0baa4565417f5db7d703121f57fd13462969e05dc2fa"
+    },
+    {
+      "file": "src/ExcelRenderer/Excel/DrawingMLReader.cs",
+      "sha256": "a739e785e3898e0320d14614cad36693a71b9512a185c0b308cf217b665a6106"
+    },
+    {
+      "file": "src/ExcelRenderer/Excel/DrawingPictureMetadata.cs",
+      "sha256": "4fc5eb3a46cfb8fd64cf715e61d4c59d33918e8912497c329aba5f53fd6112da"
+    },
+    {
+      "file": "src/ExcelRenderer/Excel/ExcelReadOptions.cs",
+      "sha256": "c77726c77cdc59e17a2dd5d2bb01a3a00e1e3e9e61a76363b36aca0694a014e3"
+    },
+    {
+      "file": "src/ExcelRenderer/Excel/ExcelReader.cs",
+      "sha256": "d772c67ff6631745acabf2d276728c81f426c1c0564db38531ac3da68c20e376"
+    },
+    {
+      "file": "src/ExcelRenderer/Excel/ExcelStyleConverter.cs",
+      "sha256": "a655848d483434092e81f1ab9c901771d621f59d360f15d8029da864bb6d30c3"
+    },
+    {
+      "file": "src/ExcelRenderer/Excel/FormulaDisplayMode.cs",
+      "sha256": "6e9623c6fe12bcd285c730c05afce9b7e6c4419939eb6d6a214a8f64bdbb6c7c"
+    },
+    {
+      "file": "src/ExcelRenderer/Excel/HyperlinkReader.cs",
+      "sha256": "5975b39154f5e2c115d469e7ea029d72f4cc2bfe00c2715df78fce14cc9c08db"
+    },
+    {
+      "file": "src/ExcelRenderer/Excel/LiteralHyperlinkFormula.cs",
+      "sha256": "b5966e7cf9c3b2aca397702f00d5f4fbcf695961a95da4fd796f52b2682f0455"
+    },
+    {
+      "file": "src/ExcelRenderer/Excel/ReaderBackend.cs",
+      "sha256": "b9409d9e9e95f96e52e56a35ed7d5425e4de09906899cad5627c46fc8766d206"
+    },
+    {
+      "file": "src/ExcelRenderer/Excel/ReaderBackendSelection.cs",
+      "sha256": "9f67a85405a879c4622ba1f222997a36a32231e51a5ed4fd450738ab54ecb266"
+    },
+    {
+      "file": "src/ExcelRenderer/Excel/SheetHyperlinkMetadata.cs",
+      "sha256": "670df39c6882f400938db8637b2591ab3d631cae72bb73210f65e14aee1cc190"
+    },
+    {
+      "file": "src/ExcelRenderer/Excel/SheetPageSetupMetadata.cs",
+      "sha256": "dc88c65e96ed50c1f45e79c844132cc6636f1be3c772f44c7f248ea1ee53251e"
+    },
+    {
+      "file": "src/ExcelRenderer/Excel/StylePool.cs",
+      "sha256": "68fe695db2d8d2e5140fa69334cf854706230763612d2d766ce45669b5763e1d"
+    },
+    {
+      "file": "src/ExcelRenderer/Excel/WorkbookLayoutMetadataReader.cs",
+      "sha256": "7acaff749b036d5da8b2fdaccac6aa2001c9c4777a623151e9721ca6e0332ed9"
+    },
+    {
+      "file": "src/ExcelRenderer/ExcelConverter.Projection.cs",
+      "sha256": "58ba1aac2ac9e8ea0512bc4bd8f88b8b974d7ae85d5a851cab46ad7d25ad6c60"
+    },
+    {
+      "file": "src/ExcelRenderer/ExcelConverter.RenderAsync.cs",
+      "sha256": "7940172414c005cdfde650bb56b15c314861011951ba16f8ef7f8f49eaa8bc83"
+    },
+    {
+      "file": "src/ExcelRenderer/ExcelConverter.TextDiagnostics.cs",
+      "sha256": "050277d33f547e631ec597257be456c566f4ede7e2fe38c434584d2af2082166"
+    },
+    {
+      "file": "src/ExcelRenderer/ExcelConverter.Viewports.cs",
+      "sha256": "e8c73380c9c669adf277a2a236ed7a38d09aa8b1cd7687ba466fae378174b006"
+    },
+    {
+      "file": "src/ExcelRenderer/ExcelConverter.cs",
+      "sha256": "f5ff6aa5d98ee671d62fdfc06f73c194cb89704b5076d9f8f3a59a71af101bc1"
+    },
+    {
+      "file": "src/ExcelRenderer/ExcelRenderer.csproj",
+      "sha256": "70a81d792a4e63fb783749db8b6a42987743459a1c2120c9e259081cb9c5cc39"
+    },
+    {
+      "file": "src/ExcelRenderer/Fonts/ColorEmojiBitmap.cs",
+      "sha256": "964beb487370dfad6f504e8b45e1264c0d43e5d2180d306bfafe190cbac6481f"
+    },
+    {
+      "file": "src/ExcelRenderer/Fonts/ConversionFontResources.cs",
+      "sha256": "4a60d36018192d92cb3ba6c6a5702200c9f488736577df2b443da21b7166de2e"
+    },
+    {
+      "file": "src/ExcelRenderer/Fonts/FontManager.cs",
+      "sha256": "35b1c14aa2b1c0341ebe5fbd77ad92c88be1ca43231509ed07c1ab2eb10ba568"
+    },
+    {
+      "file": "src/ExcelRenderer/Fonts/FontOptions.cs",
+      "sha256": "042c7b5c283c4ddc3a71fb62e667c2b3cd16535590c749fc0f48bffba06926d0"
+    },
+    {
+      "file": "src/ExcelRenderer/Fonts/FontPolicy.cs",
+      "sha256": "2cae42994e5232adf48488f9ca12dde10fa773a20ce5a9fe70e3ed535c632e3e"
+    },
+    {
+      "file": "src/ExcelRenderer/Fonts/FontRegistration.cs",
+      "sha256": "9e869d08c42bdc24bd581984217170b1d4d6ccf1b64ab138f39df7392bc8b26f"
+    },
+    {
+      "file": "src/ExcelRenderer/Fonts/FontRequest.cs",
+      "sha256": "8e1f4e788e8944f7effbfa74b971ae73a5dda30cba4168150e4a3ff1710fcbef"
+    },
+    {
+      "file": "src/ExcelRenderer/Fonts/IFontManager.cs",
+      "sha256": "2da3c9faa1852c3d3a369580613e05c1f2c2743cf91b32cca0b62c1493c4c30d"
+    },
+    {
+      "file": "src/ExcelRenderer/Fonts/IvsFontStyle.cs",
+      "sha256": "19fae82278fdb861ad4949a3229ae1d89bc4d50c36ef321e2f7514e3deb7e0f0"
+    },
+    {
+      "file": "src/ExcelRenderer/Fonts/OpenTypeVariationSequences.cs",
+      "sha256": "26e58a5d585cd66610e880906ed989806ffb1816dd9eaafd16c3a2a7e8e6175c"
+    },
+    {
+      "file": "src/ExcelRenderer/Fonts/OptionalFontPack.cs",
+      "sha256": "e8dae6cbf75e6fcf7b7c0e919945d4115767ed0e7919990becb4982b4bde1434"
+    },
+    {
+      "file": "src/ExcelRenderer/Fonts/ResolvedFont.cs",
+      "sha256": "1fa5687ecd59d8e045efc19f064086d98b8dc2ae7c64f4f4e7445a61f85dff70"
+    },
+    {
+      "file": "src/ExcelRenderer/Fonts/TextRun.cs",
+      "sha256": "d760eea684bd53b8bc4f3fe5633e708bb082d50b7d66124e276d54ec3de44ec7"
+    },
+    {
+      "file": "src/ExcelRenderer/Fonts/TypefaceLease.cs",
+      "sha256": "195e364cd0d932de0a612fed7f2802c807f27bd2042c6f69186bd6286c73fc01"
+    },
+    {
+      "file": "src/ExcelRenderer/GlobalUsings.cs",
+      "sha256": "300631d3b0950433c3b657aec3d68c9141c39512fd4d1fdfd5580b7c69898c4e"
+    },
+    {
+      "file": "src/ExcelRenderer/ImageExportOptions.cs",
+      "sha256": "7dc3c1e079f3af13e5d50b3e5e9a01d51ef335463a745cebe6576c9ef8513220"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/BandIndex.cs",
+      "sha256": "ce1b5aee02d17c3fafc8279708c84c46230b57fc58aca2eb94dad73732dcd41a"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/CellBoundsPass.cs",
+      "sha256": "c3360736a21622477d3a78cd284bbcbaae9e4ffc83f9554ec1c9782a3d00bbd8"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/CellContentBounds.cs",
+      "sha256": "726a533ffb61bf19fb6e9a5e71eb1757daf9303ffabc2b5aacbcac84aec57f28"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/CellLayout.cs",
+      "sha256": "ec6dd6cd2ad27e72b06b779ad5e1913b74499361ed791ef55c33ae038cd304dc"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/ColumnLayout.cs",
+      "sha256": "47d115b3ef4a7856270781ec38b2dac6c21bf2520c5edccddf52765698e9cb9c"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/ColumnLayoutPass.cs",
+      "sha256": "73dc351f13113a663928a6021b3eb67074060c3c7cfb90334f3ca573e8c94739"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/ContinuousLayoutPass.cs",
+      "sha256": "c5ee673dc74f0aaff7da750aa1a5524f9cae1f706611d57a3e78c947c72d7792"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/ContinuousLayoutPlan.cs",
+      "sha256": "15c0b3f467a7d45f7525f808841dfb0a250a888e1009d0b660466875ed62e155"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/ContinuousRenderDocument.cs",
+      "sha256": "a0c411fa1194c4025e1f0f77f6491169a4dc2dbbba00a32985691557bee6de19"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/DrawingAnchorResolver.cs",
+      "sha256": "6577314d802e2c86b0a2154eba0a0af583c66901d5f7abb12ddf966346c57947"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/ExplicitRangeGeometryPass.cs",
+      "sha256": "fb5a48ec446fde6dbef77cd73ab1e1ebf31a88e4af1cd9cff1cae2e1a8baec33"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/HeaderFooterLayout.cs",
+      "sha256": "2359bfea8f6c1ce9b6459c114e01e0946b12bf60e3a83aa200e41d2cd1f96b69"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/HiddenRowColumnPass.cs",
+      "sha256": "7fbae637ddeef2270089acab943602660d4e93c39f38deaa9e4b8f972dad3f14"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/NormalizePass.cs",
+      "sha256": "5d0db52745232f431e43a9efd44b98191833097dbac34cd7220140030efb609f"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/ObjectGeometry.cs",
+      "sha256": "1c42eaa60d787df859bc0d2a2d41097d5ebf0b0c73ec38dfbf906822daa3bbd8"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/PageBand.cs",
+      "sha256": "d885c5679b4a5d83e7cc2917e19fefe544eaf5c218836d3fed526402bada78e6"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/PageBandBuilder.cs",
+      "sha256": "40aa4702d82d60b3cc3877e5a1ff41e1ea31253c8e716bd47dbe5fafb8566f25"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/PageCellSelection.cs",
+      "sha256": "4b49e987e3f09b29e45c5f4fafc4573fab962033ed93be84670798eb799ddae0"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/PagePlacement.cs",
+      "sha256": "30a59e176c2b43bdfa3cb0dcfac10b8092feeb99da0923124f2f0235ade73ad0"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/PageSourceRegion.cs",
+      "sha256": "06c8bbaa74ece75db3304884a4cbffe980abcdffaa312949104af431ca3c570c"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/PaginationPagePlan.cs",
+      "sha256": "5775115f430f1a7ab09922c24158c93a888ab1a194f2c9f466d1adab30a795d2"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/PaginationPass.cs",
+      "sha256": "3b1bde1b9684a6044e9b77a33c87b2e4c92f205416985864e08bbcdf27b115aa"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/PrintScaleResolver.cs",
+      "sha256": "778869a9d11093b31789598c4d37226298ff30b163cd339b3039137690b89586"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/RectangleGeometry.cs",
+      "sha256": "852d1d5d792a8fe9bf47ec6bf8089696af33192381143e59952c2cedc09bebf0"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/RenderBorder.cs",
+      "sha256": "025ae2c3839e81725e34fc999e2210bd43a16975d46baa8df79c9073be7c4fcc"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/RenderCell.cs",
+      "sha256": "be87f44615feb40d5eadea62d4dfb21a8e6098799029a88d514a67d6d91a71e4"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/RenderDocument.cs",
+      "sha256": "c50863e85f076576a125c62d5b9d1e3584efff7ac8ca225c9ee797dd4858a294"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/RenderImage.cs",
+      "sha256": "055586b2c558e7bd325d665b4f6a071738f17cb2a08220ddc507fe6dabd8599d"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/RenderPage.cs",
+      "sha256": "4fd1b2da0986bf45d4d8bfa762a1c5b4d39ccc3a3effd2fa3012d10b9df1f29d"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/RenderPageBuilder.cs",
+      "sha256": "2c2f66ead5b22ad5acbb9c40e95eba683e5824b79d5e7f2632bc0f8a9cd9ad69"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/RenderShape.cs",
+      "sha256": "cc09fb8ac0f419f817468ff519c51c234a9fd13a5c1cebbfd607aff251aaae67"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/RenderText.cs",
+      "sha256": "af0d222f1539a3637b15ee9ee8eb6a1ffe84c7d3468793680d7352c84226e9ea"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/ReportLayoutContext.cs",
+      "sha256": "3487c8bd273a3000979eea0b8a3a080bade88851753fd9e96ca726b44d8ecf2b"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/ReportLayoutEngine.cs",
+      "sha256": "563510d7c6cc78a63f789006c804eaeadb788bf06ce83587c3a1775f3d843e04"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/ReportRect.cs",
+      "sha256": "c39966d12244cec95a31d9fdec3b824ca4e3287e1f141caaabe7b8840d7d78db"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/ResolvePrintAreaPass.cs",
+      "sha256": "0236d1f9ead5d2fc5c7f226f1b9c8529a3ed69b56177b70642725e727cb0e3f8"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/RowLayout.cs",
+      "sha256": "e67b089eadfa2a2fd531c43485519c96687c3266c756c7d69cca2fd624e56790"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/RowLayoutPass.cs",
+      "sha256": "b09ec7896add130297f03e63d7d107afcd2cc4198871e4ac83b02591948409d6"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/SheetGeometry.cs",
+      "sha256": "7443c881c8ed7d30e6bf032bb242be895175ececd102138259dd0bbf6b3a8366"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/SheetLayoutPlan.cs",
+      "sha256": "f39f475c664445d7aa1e96c3b9b3a34a3ac8b90cc87c3f81e7f61510f371a566"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/SheetObjectLayoutIndex.cs",
+      "sha256": "e3ec8260f010e3db15523e7b19039802a68c75a4f80df463fd6ed262267a5650"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/TextLayoutTransform.cs",
+      "sha256": "186c18d689d1be6d27775c148a532a663f981471e022a3142baf2172bde0a3a0"
+    },
+    {
+      "file": "src/ExcelRenderer/Layout/TextMeasurePass.cs",
+      "sha256": "b02a7c784db657de658aa74f2ae841482ed21c3d0699fafac1a82ddf17ad2802"
+    },
+    {
+      "file": "src/ExcelRenderer/Markdown/ExcelMarkdownConverter.cs",
+      "sha256": "932a98cefae0be4075bed72d45302d1f51f509f17e352b5b31c7575c8341a9a3"
+    },
+    {
+      "file": "src/ExcelRenderer/Markdown/LayoutNode.cs",
+      "sha256": "f1f67be9ce774735f05f5155ea1cda34037bc3bf1e455fa300d8799b326b581b"
+    },
+    {
+      "file": "src/ExcelRenderer/Markdown/LayoutRect.cs",
+      "sha256": "901433afc48236dc4caad1ca40b3e4962f5f1f36b7ab7ce41eeb6cd9015463af"
+    },
+    {
+      "file": "src/ExcelRenderer/Markdown/LayoutSegmenter.cs",
+      "sha256": "d66cb8400283d0079b033c181d1b44000142db299f9e468877a774fa0ea3695a"
+    },
+    {
+      "file": "src/ExcelRenderer/Markdown/LayoutSplitDirection.cs",
+      "sha256": "a64813b1e939f1bd3b0e420a1da3ddf0e1263ffe492f47a9dec78f0cdd1e0fc9"
+    },
+    {
+      "file": "src/ExcelRenderer/Markdown/MarkdownExportOptions.cs",
+      "sha256": "32e24d19a1817dbc766d92fce78b6db75beb21d289d94e0c494b7d3b92601326"
+    },
+    {
+      "file": "src/ExcelRenderer/Markdown/MarkdownExporter.cs",
+      "sha256": "2afb7ad3a6e32001783efe17aae868bfb526ee22dd9156fa1b0e993f109656bb"
+    },
+    {
+      "file": "src/ExcelRenderer/Markdown/MarkdownHyperlinks.cs",
+      "sha256": "0bdd4fc38231ec7a0123a1b13db5407c7a3590e5c7a4d66ee9a2ea9392a4e565"
+    },
+    {
+      "file": "src/ExcelRenderer/Markdown/RegionClassifier.cs",
+      "sha256": "e4447470ff5ec1fba5cb9c242f7db2e8c8164da2cd23368bf192998c3e21c3ae"
+    },
+    {
+      "file": "src/ExcelRenderer/Markdown/RegionDetector.cs",
+      "sha256": "37ec9c432772a3e09bfd8f1528f96602ea823fcd73e3f66ff202e1b2cf976877"
+    },
+    {
+      "file": "src/ExcelRenderer/Markdown/RegionType.cs",
+      "sha256": "866bf571a7e8b247c3370ae410491957cda37dc910531ddeae5aba0c7286b607"
+    },
+    {
+      "file": "src/ExcelRenderer/Markdown/SheetRegion.cs",
+      "sha256": "f0b2b7261c4763fe0b5e0a936e9b19c6bcaa29f5f94c7c2353fa9a2e50d870a2"
+    },
+    {
+      "file": "src/ExcelRenderer/Markdown/VisualCell.cs",
+      "sha256": "5860a8d8b32e42a55b5c1a5e8d97a90c0fe74782e489676c415a206e43a638ac"
+    },
+    {
+      "file": "src/ExcelRenderer/Markdown/VisualCellBuilder.cs",
+      "sha256": "35c8dcc3475ab5e7a821eb83cceb23c865b819cc3962bb426f52628258ed4956"
+    },
+    {
+      "file": "src/ExcelRenderer/Model/BorderLineStyle.cs",
+      "sha256": "aa6b1209c565656e52d8ed4d03a154f500733b95d5399f54b8161f5b93bfb7bb"
+    },
+    {
+      "file": "src/ExcelRenderer/Model/BorderSide.cs",
+      "sha256": "ae191d973526712c4028874439e039460c7802727345d4487593026c95d2c2bc"
+    },
+    {
+      "file": "src/ExcelRenderer/Model/BorderStyle.cs",
+      "sha256": "5a06da134539edca82d490b07783c702630c907c5ffe7a7cd26d02dd046bf0f5"
+    },
+    {
+      "file": "src/ExcelRenderer/Model/CellAddress.cs",
+      "sha256": "caac1435feea4756378ca52d1f723adfc3a29048e96506333dd30a969f81bd6c"
+    },
+    {
+      "file": "src/ExcelRenderer/Model/CellBorder.cs",
+      "sha256": "7a57444419a3219feb3fe0a45391368cf513ebb50dde7ce69aeed50d2f584361"
+    },
+    {
+      "file": "src/ExcelRenderer/Model/CellRange.cs",
+      "sha256": "94b0f17ed95f09550798d745b524a14844d9aa5ab5d16e582a84e22c1c02ccb4"
+    },
+    {
+      "file": "src/ExcelRenderer/Model/CellStyle.cs",
+      "sha256": "98d68063b17f53ac9be511317d05351c0cf1832df3bd18e51208b2620c12dd27"
+    },
+    {
+      "file": "src/ExcelRenderer/Model/CellTextRun.cs",
+      "sha256": "1739b06bc68086fbfa45a650d34ee5faee1aef0214b4723c28f2b749c1bca2de"
+    },
+    {
+      "file": "src/ExcelRenderer/Model/ColumnDefinition.cs",
+      "sha256": "3c875de5b73a5a323c9395967cad864caaa4ca939e97b35ab216fffa80d930b5"
+    },
+    {
+      "file": "src/ExcelRenderer/Model/DrawingAnchor.cs",
+      "sha256": "28bfe6c84a6d27f1173dc5eece72d8c0a56aa4f480fb629ba4e3f99bf1a46af5"
+    },
+    {
+      "file": "src/ExcelRenderer/Model/FontStyle.cs",
+      "sha256": "b478de0aab5fe740f92f749212c03e9c558d7203812bd4df769640be328f9d00"
+    },
+    {
+      "file": "src/ExcelRenderer/Model/HeaderFooter.cs",
+      "sha256": "e0f614ffe784d1cae1b9a79c4464264c8d926210988d47e1bac7214596e45576"
+    },
+    {
+      "file": "src/ExcelRenderer/Model/HeaderFooterSection.cs",
+      "sha256": "0d35e33ba5ee1e23e3cd5a7c40b1922c07caeb5c6895f11d76a68f20b5a1df39"
+    },
+    {
+      "file": "src/ExcelRenderer/Model/HorizontalAlignment.cs",
+      "sha256": "c257b9ac2a73d8cd452ec1994e47e3c37fc490f687f473264975c73a3a1a739b"
+    },
+    {
+      "file": "src/ExcelRenderer/Model/ImageCrop.cs",
+      "sha256": "1ebaa274d6057fd32defa076a5979a992d923a6781ea9cf1351cad167edf2aa5"
+    },
+    {
+      "file": "src/ExcelRenderer/Model/IndexRange.cs",
+      "sha256": "002b5e3dedb17a4861ee0c1d84eca779f379c3705e70c9728a31b9c49763a392"
+    },
+    {
+      "file": "src/ExcelRenderer/Model/PageSettings.cs",
+      "sha256": "043df3549c56c385daf15533bfa422631200bebe54914d40752946a24d0a8378"
+    },
+    {
+      "file": "src/ExcelRenderer/Model/PrintPageOrder.cs",
+      "sha256": "b6b2ceab18dfb68d04f1819a8fbda7133f6df882b9c0c118ef52c818e88ec209"
+    },
+    {
+      "file": "src/ExcelRenderer/Model/PrintScaleMode.cs",
+      "sha256": "16f33b4913b6c73efdb63367249ad9a6624967532961c915886506c3ae3de791"
+    },
+    {
+      "file": "src/ExcelRenderer/Model/ReportCell.cs",
+      "sha256": "1a50d1763ad186e8e25bdb339579b5276277a04ee1210ba010a9fcd781d23acd"
+    },
+    {
+      "file": "src/ExcelRenderer/Model/ReportColor.cs",
+      "sha256": "6205d3b8c854fb781b337be27a185e134382a21026d04ffa3fd790d2fc031478"
+    },
+    {
+      "file": "src/ExcelRenderer/Model/ReportDocument.cs",
+      "sha256": "39d8e2a01c9831d2b8f2056b28cbbea85c11b517721a76a2edb3a9db12255627"
+    },
+    {
+      "file": "src/ExcelRenderer/Model/ReportHyperlink.cs",
+      "sha256": "db6861a68989aeeb2d611513e1e7421f4232df5ca7fdf6a7bbedacce5821c2c5"
+    },
+    {
+      "file": "src/ExcelRenderer/Model/ReportImage.cs",
+      "sha256": "4fc8aa1871dc1c553d210fa4f62f22151074731a52b48c42c48b78e3faccea28"
+    },
+    {
+      "file": "src/ExcelRenderer/Model/ReportShape.cs",
+      "sha256": "6870f6a0feb06569f2eda1d744e0c3ee4e3cd2a81d23d2608d10cf413897c8f4"
+    },
+    {
+      "file": "src/ExcelRenderer/Model/ReportSheet.cs",
+      "sha256": "6a204159b62d61226f8151ef13ce8795c3f7fa85d2ad1f2cd330da19cff7736f"
+    },
+    {
+      "file": "src/ExcelRenderer/Model/RowDefinition.cs",
+      "sha256": "6d8275f114067f2b62a0bf20dcc613190969ff9b768e3823bb9e770766ca5d3b"
+    },
+    {
+      "file": "src/ExcelRenderer/Model/ShapeAdjustment.cs",
+      "sha256": "6ee1287b6f4dc783a618f79b9ca996b5c5eb34d216f62dfa69489185ae6f1de6"
+    },
+    {
+      "file": "src/ExcelRenderer/Model/ShapeKind.cs",
+      "sha256": "8bdbcf9381b9d221db23224aaafe000a4f2a98069579aa5ea3075d2838353142"
+    },
+    {
+      "file": "src/ExcelRenderer/Model/ShapeStyle.cs",
+      "sha256": "a7fed4dbc14470a41397f84fbf2ffb821ce4a96a912b11b7bc483f0c0161736b"
+    },
+    {
+      "file": "src/ExcelRenderer/Model/ShapeText.cs",
+      "sha256": "f531733e69bf0e8ab08f72c17d29fbeffb089314306f0d60f382d499f84870c2"
+    },
+    {
+      "file": "src/ExcelRenderer/Model/VerticalAlignment.cs",
+      "sha256": "45d7b0ffe92f66e651aa412d37fc81b85bc71748a70eaf026d740f819bd0f02d"
+    },
+    {
+      "file": "src/ExcelRenderer/PdfExportOptions.cs",
+      "sha256": "c515c74d1befa875100809654aab7104ac753963d7eff2788f2b3e86f5341e2b"
+    },
+    {
+      "file": "src/ExcelRenderer/PdfSharp/PdfHyperlinkWriter.cs",
+      "sha256": "ac5b5ec8c60fc48e8cb0f04866fdab86e2bac4bbd99f4971ef10c1590604e73b"
+    },
+    {
+      "file": "src/ExcelRenderer/PdfSharp/PdfSharpFinalizedTextPainter.cs",
+      "sha256": "b93087bdc000e722914e254cb479184490478a2e348302e5e9c6bf539b765bc2"
+    },
+    {
+      "file": "src/ExcelRenderer/PdfSharp/PdfSharpFontResolver.cs",
+      "sha256": "bda859ac247cf6b47219cc28a6659cfa506689e8d7dd5390b9f9ba932be09d66"
+    },
+    {
+      "file": "src/ExcelRenderer/PdfSharp/PdfSharpLegacyTextPainter.cs",
+      "sha256": "3a37747e54742f8254d8409009a2fd16c073a4d57dc7faf8182ce8242774a827"
+    },
+    {
+      "file": "src/ExcelRenderer/PdfSharp/PdfSharpRenderer.cs",
+      "sha256": "e752ed8e5b1710490f213faf4231cfb19deb2dc5155f5f393ecef626b8200a69"
+    },
+    {
+      "file": "src/ExcelRenderer/PdfSharp/PdfSharpTextMeasurer.RichText.cs",
+      "sha256": "71cb9f3460e54d92830eb692e7801cb924816529c22c694c9770c1d6f48fb088"
+    },
+    {
+      "file": "src/ExcelRenderer/PdfSharp/PdfSharpTextMeasurer.cs",
+      "sha256": "a48f5a52a15cc4c54f5ff2a96457d07df23ebd80dfc5ca8012012b83cb6d1302"
+    },
+    {
+      "file": "src/ExcelRenderer/PdfSharp/PdfSharpTextPainter.cs",
+      "sha256": "dd54e85a055b66653fef74773c4809aadf4d8d53aeb60e701565f131bca17f7d"
+    },
+    {
+      "file": "src/ExcelRenderer/PdfSharp/RichTextLayoutKey.cs",
+      "sha256": "2837609e83c3c94e679f21ca79110c140182015e2dd5acc99b1ac7e3d36b1fd4"
+    },
+    {
+      "file": "src/ExcelRenderer/Properties/AssemblyInfo.cs",
+      "sha256": "8d17d01d7d2f182a31f05244733f0944913fd612df63bc5817a0cb542c9a1cd9"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/ArtifactDescriptor.cs",
+      "sha256": "208be797748db2f2104b12f61aca0e77811d5e31bb643e0de6f114ed19d556cd"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/ArtifactMetadata.cs",
+      "sha256": "f556fd78f046ca69664acd16839ca31f5022ab9ae1fc250245ee437b7b83d017"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/CellRangeParser.cs",
+      "sha256": "a748677432b56c13972453a92d6d8208daf4c76de1ebfeee30b7650e6c29df0b"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/ConversionDiagnostic.cs",
+      "sha256": "f0329622e420b3733feb19738ca36b64b4d0d3df801b5c39d27e7931b2375a27"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/ConversionException.cs",
+      "sha256": "6289b511531820df230ef426a0c1aa2dbb555c45db8ce3c8216cd59800719f46"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/ConversionManifest.cs",
+      "sha256": "cff09d2848534cf888726abacb2c5471532aaa0dd4d21fe6e34e164f684a9995"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/ConversionMetrics.cs",
+      "sha256": "598e4b2d1ce74146e5bf5851b3b7586629a44b7e9211c475638bd2afaec7f616"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/ConversionResult.cs",
+      "sha256": "3027c9041d2872a5b7e98d8b5e83981b025fb648e37dc8c4551b25d7ba61b200"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/DiagnosticCollector.cs",
+      "sha256": "c00bcb79c378b2ffa90ab1072b3432ad557e87f55fa18bca67e7cd7c6b9d4d84"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/DiagnosticOptions.cs",
+      "sha256": "4ed8d0dd072e95394578f8a6f055c52ad767d05092e53397a318ac03085aaf40"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/DiagnosticSeverity.cs",
+      "sha256": "961c718edc98e449c9c79cf88240722395ca184aa49ae3063c7c5ec3c02c353c"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/DiagnosticStage.cs",
+      "sha256": "555bc13597b72ee60be495e7daafa7c8425b020170f92f987d67888976ac61c0"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/DirectoryOutputSink.cs",
+      "sha256": "8cc799688018df9269cca7ddc2deabd915957058adef9fc3ee4c98e53721d8c9"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/HyperlinkMode.cs",
+      "sha256": "c3f3f0e5ae5297413ae84acb0f682f2993858b76e9ae2d9248373ca0a89c2052"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/HyperlinkPolicy.cs",
+      "sha256": "91f7050e79b97f988074b0c2055eddcf70a1fb8801c4a098f8950eeeda94dabc"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/IMarkdownDocumentOutputSink.cs",
+      "sha256": "bb534a14569301955a65f19e1143e7bc9c849db0cb172c007cca8dbd193433dd"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/IRenderOutputSink.cs",
+      "sha256": "ea1b9953a9dbd1ac046fc1db5bad5b00bce39419026bee114cd5aea5c29e3b7c"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/ImageLayoutMode.cs",
+      "sha256": "85007619eb352e56ca2d14c856d413cc8617f6e93e767d7ebdfb2c924023b091"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/LegacyMarkdownOutputSink.cs",
+      "sha256": "bb3284f607589e71fa714fb12ef06d3e8457c43820c2fac0c5a99f9b27e26a63"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/NativeWriteStream.cs",
+      "sha256": "44de01212fef4c2931b142dabf9b59e9970007e05f598e5001104501956a1e2d"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/NewFileOutputSink.cs",
+      "sha256": "43da446d2303bb50c06e4e81d0323ab940b34eee728bd5f9ca4ac7f63236d206"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/OutputFormat.cs",
+      "sha256": "4f0e19ac5f08cd5de02195e43fed4105ab303bf3a79224d3f1ae7483e22dc126"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/PageViewport.cs",
+      "sha256": "5a1e10bb5dbd6c09c30aa721cf2d762b99d7eb5a64e9f5da614b0d0a331ec620"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/PreparedWorkbook.cs",
+      "sha256": "41c1405d870325185fc01f2e0e027361e66635c48bbb3f8205d5b2e5584e0fb9"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/RenderBufferOptions.cs",
+      "sha256": "ff90705987ffa8a35d858484c043a3398b2bfa9bef28b946ea9cad796a0a2d73"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/RenderPageDescriptor.cs",
+      "sha256": "c43b964a6d5c7fc4e65871b12773e8a672a1cadfd848ecf7389371bbad434685"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/RenderRequest.cs",
+      "sha256": "110ac7fc279e0ad02bf952d89030e5b9976eb2bb3f9cc8c902c925584382a768"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/RenderResourceSession.cs",
+      "sha256": "f242feef0cf47b8b8f161e04256a1ee3f6555080a95e526f812f4a8357f05d90"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/ResolvedPdfHyperlink.cs",
+      "sha256": "1d393eaf9683be140fa697b67bec98112fff48253c42431b4f28a98cf44100ff"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/SelectionOptions.cs",
+      "sha256": "d63604537745008155dce6ea03854324ceb6275b6b82fc6c76f295374d4abea0"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/SheetRangeSelection.cs",
+      "sha256": "c2c71282ae64b1728db573709fad8965ac7966ebedfac90eefe2b035b2e62099"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/SingleStreamOutputSink.cs",
+      "sha256": "f5d2288b3d9bbe3639ba3423d0fdfaa3b2c05d21339fce59e0ba85eedcb2cb0f"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/SpillableBufferStream.cs",
+      "sha256": "4ffa2c76aff8227e33dcdda6ea684260748987f13d8aaec5e38225d9fe93fd06"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/TrimOptions.cs",
+      "sha256": "0b932beaaed1baafd3cef80bd4f2c8f9fa5b44b23c1c1870c37afcfcccb6ca53"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/WorkbookInputOptions.cs",
+      "sha256": "c0f09c03e37ae6eb39783f245bb4f16a69b6ffbb8a969aca70f5a934dfbb0abe"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/WorkbookInputPreparer.cs",
+      "sha256": "6b587be3623374829876f2f040af73ff3bf7b7db65b4bde652bd93d8f0d6dd41"
+    },
+    {
+      "file": "src/ExcelRenderer/Rendering/WorkbookRenderMetadata.cs",
+      "sha256": "c7b7a2ef584e393aa907ae294e9a021a8f8bce02d22d763efc4da89290ad5bcb"
+    },
+    {
+      "file": "src/ExcelRenderer/SkiaSharp/PngRenderer.cs",
+      "sha256": "a2eea17c979072df2dc67878127ebcb0509ba6586041ee2f132f4f714e2e0cb5"
+    },
+    {
+      "file": "src/ExcelRenderer/SkiaSharp/SkiaDrawingContext.cs",
+      "sha256": "822a9651a91cf1fd925f36a0a4e52bd518fd8c155aa4cdbe09030a8165aa86c8"
+    },
+    {
+      "file": "src/ExcelRenderer/SkiaSharp/SkiaFinalizedTextPainter.cs",
+      "sha256": "890bedcd606de5287de7fd11921a335b12e4d679569c78ebeef90b41f3c67a8f"
+    },
+    {
+      "file": "src/ExcelRenderer/SkiaSharp/SkiaLegacyTextPainter.cs",
+      "sha256": "bd42091bb97e5407c4b8acd48a2883a27f91e5b08c3f041e6a0a3f99b68a00de"
+    },
+    {
+      "file": "src/ExcelRenderer/SkiaSharp/SkiaTextDrawing.cs",
+      "sha256": "4057df116776081d89e3a92ca3375ff48dcb49c23c5a931ad00b0db4466b3182"
+    },
+    {
+      "file": "src/ExcelRenderer/SkiaSharp/SkiaTextPainter.cs",
+      "sha256": "985bd8c6703d77869dc644174fba7b239234880f4f6434cea0ed4808fb371cf2"
+    },
+    {
+      "file": "src/ExcelRenderer/SkiaSharp/SvgRenderer.cs",
+      "sha256": "d380edb9e9cf83f9168ab1f4b0ec36e1291019051836b68b3801545bdba807fe"
+    },
+    {
+      "file": "src/ExcelRenderer/SvgExportOptions.cs",
+      "sha256": "d9098b1eefcaf7146398a39adfbfd4c7f51f92423881ce2cb83c5b059a7e0074"
+    },
+    {
+      "file": "src/ExcelRenderer/packages.lock.json",
+      "sha256": "cdbc391aee9dd2b474bfc010a5b8beee4d300fc82c8f3b95b7a8df496b756c79"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Abstractions/IExtendedTextLayoutService.cs",
+      "sha256": "4f29d7e82df88cd19d64cf9d5cb62ab6afb1fc90a6f46e468e4a2f87f6079126"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Abstractions/IReportLayoutPass.cs",
+      "sha256": "b5864b02fb50770c6e8ac137705cd88128a0dd1718d218279cbde745fca7ca94"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Abstractions/ITextLayoutService.cs",
+      "sha256": "745c69b88ea2bd44b69815da3028c02b3c20abda62fafe611394d53eb59885b7"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Abstractions/ITextMeasurer.cs",
+      "sha256": "8aba909271d396fcdb5e70c8728afdbea8ca66f16089c8b34e682f9d853162b4"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Abstractions/TextLayoutLine.cs",
+      "sha256": "d422057f84234dc0f3d0d0d03eac1bd3c63054c1ffabb9073cfc7252c75e36ca"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Abstractions/TextLayoutResult.cs",
+      "sha256": "bbc5e30801d60bca8d122cfe813eca9e7282ed10bdb4f6bbee764b7a6bc5479a"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Abstractions/TextSize.cs",
+      "sha256": "6cd93dd75569e830812f8a1467c91614065cb7b703fa9170b495073ac23b30bb"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Compatibility/IsExternalInit.cs",
+      "sha256": "72a843245c137ae7aac352c9526d03cb153ce240e5736c8fa2001e3f7e422aa2"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/ConversionDiagnostic.cs",
+      "sha256": "dc7ac8eeb4c7cda733cc0e466c45978ee73bcf1603871e3e8916f19e7f6d8452"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/ConversionResult.cs",
+      "sha256": "6cf23c8fb15a2928c92ebed907259694599beae0772e9417e7d63f14de748f9d"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Drawing/BorderStrokeGeometry.cs",
+      "sha256": "1e1cf8ddad36b7c69a51519b651cb7154d1495865ec228cb1ccdd3476e7fb668"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Drawing/CoreExtensionCommand.cs",
+      "sha256": "4cdf1dc5d65a4c4a5b6085593e6918197117ae08855368ee62e8e4552650837d"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Drawing/DrawBorderCommand.cs",
+      "sha256": "aec3aa8b76e1767554ff051f04688419d93080a8ae73378a264a50b90cdfd536"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Drawing/DrawCommand.cs",
+      "sha256": "fc98ceeae1876a2a1230551d25567b180d0f63c84814cf01d73535944a74f856"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Drawing/DrawCommandGeneratorPass.cs",
+      "sha256": "3339f3c788dd3314e967917150ec4181f9e3c50160a81b0264a2752ff913f018"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Drawing/DrawImageCommand.cs",
+      "sha256": "f72886c9ae5ea72a7988bd7a15ef01f970f084ff7c4cfbb8d6810f6ed285f6a0"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Drawing/DrawLineCommand.cs",
+      "sha256": "25ab877ff44abe60b8a27f9f0707b104c9eace033349e75bf4f822a3d6772424"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Drawing/DrawTextCommand.cs",
+      "sha256": "b380aa0f11c8a455265b4b49c37d18c72115d9252eed1be5e7952cb48cdfd4ce"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Drawing/FillRectangleCommand.cs",
+      "sha256": "7f313f1b5539fb7fede9e4aac29835e83a86fcf7d8988b26841231f45e7fa439"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Drawing/PositionedTextLine.cs",
+      "sha256": "25e7e8477db2ee84dd4da7d628414cdca89c6df80e287166e619d61038d847e9"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Drawing/TextLayoutFontSize.cs",
+      "sha256": "17aaa969d99444505ec87e8564d7d4f9bba589a8b32968e8a54b4f5bf7a4e0a7"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Drawing/TextLayoutPlacement.cs",
+      "sha256": "70983914db7cbda96572966b97061959a06af9c18c26808c4297596b4bfdbf5c"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Excel/CellRangeIndex.cs",
+      "sha256": "b9037f7b783d7f8a874ce5404caf7c6552a14edc95be4a7e2c750f060ff1b77c"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Excel/ColorConverter.cs",
+      "sha256": "6750c17f4e5c46b4494dcd4c25110016276410e8a32a035f936fd298520a3940"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Excel/ColumnWidthCalculator.cs",
+      "sha256": "aa31f30a3b85c722d267e5acaa9e25715ecdb2952c5a667a3645b7bde0d8cbb8"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Excel/CoreCellRangeIndex.cs",
+      "sha256": "da167afa4e9c5b91a02dfbada6c16538a303b6a5ad9ab977c6b7bfca5a06cb0b"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Excel/CoreExcelReader.OpenXml.cs",
+      "sha256": "999e0d66a3a2fdeac2d893f2a352ca755388c39f148418dbb739fe7fe1b2b94b"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Excel/CoreExcelReader.cs",
+      "sha256": "77f5a3610126c72a9278dc1c501120ce4318b376c087a7fd5b017e18e5d1bc8b"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Excel/CoreSheetReadContext.cs",
+      "sha256": "5db5aec0c933093e4e57a58a9520c3bd34ed9391638bdc431e6e9afbf21c5d5b"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Excel/CoreWorkbookMetadata.cs",
+      "sha256": "81be94c06ded1f35501c8d1db6e51ed21ac4e38f04b398ba62e72c01d9521b9b"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Excel/DrawingMLReader.cs",
+      "sha256": "aaa631b0a43b6132583a898de81f05af20a43898c43c3530993298148f0d90dd"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Excel/DrawingPictureMetadata.cs",
+      "sha256": "e749190689ba7c6fc472455937e2cf42fc09056bd28d6a371f614e4e617afeb9"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Excel/ICoreFontMetrics.cs",
+      "sha256": "c2ad438987aa29f0ce990f8588c8f0485dcb283ab0e4c64c856801d50ebe7e42"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Excel/NormalFontMetadata.cs",
+      "sha256": "a62e830e689e61afb5eab9d32ba6dd8bc3a777908855ed6994b3a92208d06edf"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Excel/OpenXmlStyleConverter.cs",
+      "sha256": "fd1367b6a9c252d9cf1debc9f451142ed74899dca384e5a5983d4e1a3c6b6f14"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Excel/PaperSizeConverter.cs",
+      "sha256": "2ea04bc425500837af8b7aa8aadbb44dec0c14f5288ebdf9c75643e0d7c38565"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Excel/RawColumnDefinition.cs",
+      "sha256": "f17e90e83f0949d331a4dfb9016aae5c7844167c1a054ebc1c73149144b45d33"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Excel/RawRowDefinition.cs",
+      "sha256": "c60ec72c208c5ec166a15b842d0bf72e374dcbe8cddb6c891aed44a1bc5cf2c4"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Excel/SheetPageSetupMetadata.cs",
+      "sha256": "9588f95c973105f0f93334ae90e8b6b669c87f610315b91096c23546e4adf16c"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Excel/SingleFontMetrics.cs",
+      "sha256": "89848f476dbb61797b7b7f30ed4ee363196d20b0e3a8841d01c3603586006678"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Excel/SourceCellText.cs",
+      "sha256": "f1280d50bf9f47ea5e0f8963008a82fd37a171b64ec228b9e3a375a28336f508"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Excel/SourceTextRun.cs",
+      "sha256": "68a4aabd19de9e0564b618ec712041cccc1fa7643316fba3892620e9b1ff147a"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Excel/StyleInternPool.cs",
+      "sha256": "22b39472ec282213d084e0f93b3a550fabd5edba9efa6f3dea67e82d1696409e"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Excel/StylePool.cs",
+      "sha256": "55eba2493cd118d95865832701c1a32e8d3bbc160e7d329c0f236b48c3a49706"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Excel/WorkbookLayoutMetadataReader.cs",
+      "sha256": "08fc1525f349c2a3237526e36724057678ae7d78d5b0a5dc021cd7e8826f0728"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Excel/WorkbookModelBuilder.cs",
+      "sha256": "68f38cc6e7ac4327981186497816e562f97bb218c68c797f5e2e9f4b450eaa39"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/ExcelConverter.cs",
+      "sha256": "ec8092be61c67616652e4977c372124c46451bce618e87edb04f0f007797b013"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/ExcelReadOptions.cs",
+      "sha256": "f1d5e02e21478f52549fef55915d38dc574cb927212b07577e7073d79ec4e054"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/ExcelRenderer.Core.csproj",
+      "sha256": "17d5a14f3854453f2a2f8b8a3a00bc34611d36c3a94a0ec2fabc47a0beeb168a"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Extensibility/ICoreDrawingExtension.cs",
+      "sha256": "fa0ec27e21a346b809cfd428b0a5688978bde684d6d75870a54c7fb5b38863a2"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Extensibility/ICoreExtensionData.cs",
+      "sha256": "51e9398bbc3f7867174ffc28c10c41caf53d990aebceacfb530df615e480ee7d"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Extensibility/ICorePdfTextPainter.cs",
+      "sha256": "0d49e4ccb8c2e905793fb1cd7a60b2baec49e7613361e56c20a0ee8a4cad85e7"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Fonts/SingleFontContext.cs",
+      "sha256": "9baa591baaaeece88ec8b7f722f76d8853ed6af8fb31596a463c5fe01e156f4f"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Fonts/SingleFontResolver.cs",
+      "sha256": "cc2db2d03bb7db93e2d263c79dadbbb93d9241fa374d70240e73c5330399caa7"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/FormulaDisplayMode.cs",
+      "sha256": "5e6156d4d0d68334c11ff2c8a56e740cf153dc57ba666c88d2c734da54edff03"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/GlobalUsings.cs",
+      "sha256": "1722fce7429bf6a97267a9630d97326c94eb1eb1a16667d8c9d7884ac983e398"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Input/CancellationReadStream.cs",
+      "sha256": "74fa4abefd76cf15aff0208327bb809e406923e1e8b3d5f4bc8bfae34d163a38"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Input/InputBufferOptions.cs",
+      "sha256": "b1c6393c349034362384c1e7f7eccc87ba05b6f2852c6a8e5c2430a2fce66baf"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Input/PreparedWorkbook.cs",
+      "sha256": "127b8a78cbfcc9ff0139239bddc349ae099de8a205fa520def55e2b27b954073"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Input/SpillableBufferStream.cs",
+      "sha256": "ea8db1044facd723940f7484da90af4ea54bd80e72a660b4faf7c5292ac142af"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Input/WorkbookInputPreparer.cs",
+      "sha256": "75260baa3f4cd7f932c413d1431e32e31a2554e0ce7d27c9bf0308bf56a6c210"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/BandIndex.cs",
+      "sha256": "11537548d27c86120c5f0c909392588fd725312c4ba622d4c9dbc634c93b074a"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/CellBoundsPass.cs",
+      "sha256": "486e5b6f2466a614852100d64f65a4a01884bdbafa0957aa4f94341c49d5c969"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/CellContentBounds.cs",
+      "sha256": "d4db6767023ca3af2d6f881520eedbe656476a33c21787e531837ac836239996"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/CellLayout.cs",
+      "sha256": "5440a8003cd491857493b781e1adf1e53d5269e9dc48d4c7e5ae1f6449ef5d16"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/ColumnLayout.cs",
+      "sha256": "0ef0f3946f4f25606e13326315cae07908ad50cf9a1b89333f5f58edfe9676b0"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/ColumnLayoutPass.cs",
+      "sha256": "d0479c071368bc68e9598c4301de4c2222ff91bb35b3edd5cd20aa9871da1f67"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/CoreLayoutPolicy.cs",
+      "sha256": "b025048cff24f1bdf453542a0493527e0946b285680cb7af0e0d545f2aace7ea"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/CoreObjectGeometry.cs",
+      "sha256": "34aa954e2f6412ea50f80a139af4dc0676fdffc24d25bb990405909e1353a0ec"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/CorePageBuildContext.cs",
+      "sha256": "eaabfc2c8ec6ffdb726647ad99bafbe4624358f64c8016591f09c314b7945de8"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/DrawingAnchorResolver.cs",
+      "sha256": "a98a00017f0d5d202d0c36aa0b6a176fd2bf1f427c3b31d681a01187b3e7bd1f"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/HeaderFooterLayout.cs",
+      "sha256": "44dcb074fe631702c0792e6fd6bb2eb99d3eedd52ed9b1d9c3701587d0096371"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/HiddenRowColumnPass.cs",
+      "sha256": "c3b19b409011cb9b6e1c2db7db7121ad30194a15b3c31d9fb3b4ef7fc5da43e4"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/NormalizePass.cs",
+      "sha256": "cca7e7ba487a2c446a8f1569a12fe98338d8717466eab5bdb4d9de449659a529"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/ObjectGeometry.cs",
+      "sha256": "5b583a6c42a044355548d47e675624b97d6c380324421a6fb83aea21e158e7ac"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/PageBand.cs",
+      "sha256": "56450b6050fb666546a9bbd2097b3157748bd68d5ddde937f93fa77084974af7"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/PageBandBuilder.cs",
+      "sha256": "e90b45dd8b51dd80d979284b15ace86fde132ed5c978b29ff90c0e2e64dc8bea"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/PageCellSelection.cs",
+      "sha256": "1c66bac96d9112cf063fcebdc70424979859d88bc48c622b51be8f61b998c21b"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/PagePlacement.cs",
+      "sha256": "4b022a49c83a0cc86cddeb27da28ce8826a675b700133d3d40aaea58d84724ef"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/PaginationPagePlan.cs",
+      "sha256": "39e8f38d454518c97d5448bdea26229a95e491e04b5ebff88e359d5e2e315429"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/PaginationPass.cs",
+      "sha256": "3daf7fc0ba3a4f32e65c9842e47d7cf21d546c19ccf9bfdc14107ee9d24c29f8"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/PrintScaleResolver.cs",
+      "sha256": "36c0a36d941c83c75d209cef7c1bd6be564875bcbe945e5b848d272f0f2e43d8"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/RangeOnlyMeasurer.cs",
+      "sha256": "73330cc13d7da541e3641602a08aae3fba351644437e2863c4911e63649abe64"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/RectangleGeometry.cs",
+      "sha256": "6e10c26b50b565ad247747514d0a5fa5b0bb6a29c188d81b29be9d1941fcbe5a"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/RenderBorder.cs",
+      "sha256": "389a83a899dd600e820afa5564abe5d4c4da838c88178e31ffae0cae589e6892"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/RenderCell.cs",
+      "sha256": "4ba40f093dbfeb0a4ac2cb9645ee3340ee0ac5078ba5b26568c34048bec60d0d"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/RenderImage.cs",
+      "sha256": "0bb35b0b571818721db37f09720d3c18bfc139551d277329b0b2175aad9bfde2"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/RenderPage.cs",
+      "sha256": "e54eb3081d82b2bcc5231fb7301b8dc4b1509795e93c9d13baa4f9340f881939"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/RenderPageBuilder.cs",
+      "sha256": "0ce4a0f198541afc6fbc97977354fbc61cc63b43ba02ca41a8dd315af3bf2c49"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/RenderText.cs",
+      "sha256": "9d2f6dc297cc487e7f3431b7675c91d5e77156e61b2387270c618e4aca17c388"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/ReportLayoutContext.cs",
+      "sha256": "07c9be06697596fd6c17ab84d4929332849c8a258169870f1d4af25be4faf41a"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/ReportLayoutEngine.cs",
+      "sha256": "084ab099acb774f4cc3e044a0c53121420e645f0459562c345d290a892a92aa0"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/ReportRect.cs",
+      "sha256": "74e2f3f73dd1f65542811f957027238de0a2dae018a6a56a73ad9368dd968433"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/ResolvePrintAreaPass.cs",
+      "sha256": "f74b41860e05e8e5022b2e5b5ac3630bedb61f9cc875da86d40a7c227c19278a"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/RowLayout.cs",
+      "sha256": "e8ee857b91972b2738921571e08083d7ad16e556133ab620dc4ba55bdc1bdc5d"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/RowLayoutPass.cs",
+      "sha256": "e7a958b77e6ed293c4aef3968576dc2f4c08a2f338d75b77d60d04a91feacd93"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/SheetGeometry.cs",
+      "sha256": "295190a31001f2cfed5acaa18a87c8111907517bb62c6f370efe8de66b7e844b"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/SheetLayoutPlan.cs",
+      "sha256": "537f2eb455d6321b939c9eefc4e3ba433aa95a7f928b3d851213fe793d79279f"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/SheetObjectLayoutIndex.cs",
+      "sha256": "d1a1f4f969bb24f303d278ed18ab18ac55e51cc91063c3c0104011bf2dd5b65a"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/TextLayoutTransform.cs",
+      "sha256": "eeaca4379f6086b96ba98b09745a90a4953ba0e8ff93cbd4b3be16b8eb6ccfa5"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Layout/TextMeasurePass.cs",
+      "sha256": "bfed31d8af9e5bd34684bed0f258ccff7ea571539dab9979e52847eaf4cd5552"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Model/BorderLineStyle.cs",
+      "sha256": "112f68e1bd47696745635418e28b742fc8cd44114b19dd03fc41ed8caeeb0828"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Model/BorderSide.cs",
+      "sha256": "14564769a8bb19302eb44706b45f05fa41a4671bf4db64db9e2ad40d4dd58538"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Model/BorderStyle.cs",
+      "sha256": "235dcd1d20aa281d16b4b73df2a0c3d1a16544acef3799f57f31967795cd6d62"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Model/CellAddress.cs",
+      "sha256": "cf72e39c0fb3df33d072e6c9aac96d1d8b66184895a43e180bdf53d8c3cd6481"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Model/CellBorder.cs",
+      "sha256": "6d6a8fd1497dba3851ca03bcb42a76cea9b40ec31dc331cab61744689f861bb1"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Model/CellRange.cs",
+      "sha256": "1023e9f66b04adceb5f0d338a9d8418160650974d3c146f1ff44b5429b3bee3e"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Model/CellStyle.cs",
+      "sha256": "f28d92782ea5a6398106085e084b8fc06b40ea0b18ca75922aa35bd9cc505d32"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Model/ColumnDefinition.cs",
+      "sha256": "f558a0ade282269d6c4c9343184093a9bc52d06008cb0137bc46150be2dcb5c5"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Model/DisplayText.cs",
+      "sha256": "6caf0bd973a1efae5ec9c1a0e6b518ce08d112ac68f9cc81a79efcc060f04449"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Model/DrawingAnchor.cs",
+      "sha256": "f6dd1a25419cbe47f40c51fcadf66de1ed8df849f092bf312f8c8189d5e6c505"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Model/FontStyle.cs",
+      "sha256": "f023c197dbae770aa27850a0fc083f3935fc8504702fee90fdf1963608a2a791"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Model/HeaderFooter.cs",
+      "sha256": "b9a452d022f40b19c464c311f7cacff56a965e984970cfad438cc78c72c15fc4"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Model/HeaderFooterSection.cs",
+      "sha256": "b5ecce0473fd3eea67bfb2661ba9d5a9148bda54bb270571ee720395ed1615ff"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Model/HorizontalAlignment.cs",
+      "sha256": "1c2760be60322774712513ec67de599b76ee68be0fcf7511ce0b5c8b4544bf66"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Model/IndexRange.cs",
+      "sha256": "2b3a113c025ee0617247c267e81df511f633f2288671676c3ae002ea7ca90df1"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Model/PageSettings.cs",
+      "sha256": "1d61091143969e3e842580972e2155eb759dad1945bb8b3c8b181c102f922681"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Model/PrintPageOrder.cs",
+      "sha256": "9028577eb97496b4b0d4c42362b51404e76419b52f60d23334b49983b83183d5"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Model/PrintScaleMode.cs",
+      "sha256": "25fea2d64f244b6abd0faea34bccf9c4005da523cb8604712aa19fd6f67aacf7"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Model/ReportCell.cs",
+      "sha256": "dc54983b3a318131b9312186565d534cc82756783363f44d867af82a4598d1d3"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Model/ReportColor.cs",
+      "sha256": "49f6de36ea39ff0d817a962a03a686cf325027f2f17b95da122f8b2544827620"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Model/ReportDocument.cs",
+      "sha256": "ac62046547bcb64ebf89ab42b09dc34f84d9904e011bccb29d7ab6b9fad632ea"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Model/ReportImage.cs",
+      "sha256": "7960da7aa8e5dd04f3052e4cb73f7a327a26d10af55295bce22ebc47cf6fb302"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Model/ReportSheet.cs",
+      "sha256": "4b44f4b14851ce7d0770c1bbc6cb7e141f633364db4e2223882b1c8c4dd88600"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Model/RowDefinition.cs",
+      "sha256": "6825cea5093aca31cd4341d8db77311345341c7dfb7a1030c623c01e53f3b7f2"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Model/VerticalAlignment.cs",
+      "sha256": "cb9e4774bc053ac7d501b854bd2f8160b1803b3106ca9f47b250d6dcee11e9ff"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Pdf/CorePdfRenderer.cs",
+      "sha256": "bbc73ec0e8f8f5a446840bce481fdf8557554533f388374aa047ad335d2dbf24"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Pdf/PdfSharpFinalizedTextPainter.cs",
+      "sha256": "c98ff7fc6e4a3f198daf134dd797f3618c3835b931b1a72197d6a9432d256355"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Pdf/PdfSharpTextMeasurer.cs",
+      "sha256": "a13975a7571e39ad2646c48f067bb088767bf6c023392809498337bbdb3d56d4"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/PdfExportOptions.cs",
+      "sha256": "30c6918d7d1c17c0edfdccf031e01a3546bf6639c34200c0b3f4ba3490ad37d3"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Properties/AssemblyInfo.cs",
+      "sha256": "b128deab15f568aca43532a3735735ee1db44474aa214f2a2cd0eb04ccca5fe3"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/ReaderBackend.cs",
+      "sha256": "75345f5023556a3c612b0d7c01c6708639ec70d6de66c2498e68947d449186fa"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/ReaderBackendSelection.cs",
+      "sha256": "145045403b144839349a03f19e57a158c12e7d19b1414d4c66cde3e8289e84ad"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Rendering/CancellationWriteStream.cs",
+      "sha256": "0285f50c9d8b1edc9545445bbcf665e7526d1812b3ca69156fc57c79b4c2a7ea"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Rendering/CellTextDiagnostics.cs",
+      "sha256": "7732bf50dea72599f2ce76a5c8858d43c5d0c67b861c4d48222956a2694be1ee"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Rendering/ConversionDiagnostic.cs",
+      "sha256": "8b4730a12744a4d453c80da53984e50ccfc1a98de44f1fb76cfe73972cbfa30f"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Rendering/ConversionMetrics.cs",
+      "sha256": "5b65babb49d8784b400e7c8c51a282bf94e0a08cfebfa18fb63a6842112966ca"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Rendering/DiagnosticCollector.cs",
+      "sha256": "1df27f4741343c7aa54fde073a3bb78eb66162ff5fc18ab97d6536170cf00659"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Rendering/DiagnosticSeverity.cs",
+      "sha256": "929a20ddf2758e0d8bf114a9519f38ec8aa6355a3005bbbd454b7c644e6b0c2c"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Rendering/DiagnosticStage.cs",
+      "sha256": "b2b338bfc591f5676c92b44ca96bdc70af52f3c7be404924175592660684312e"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Rendering/DiagnosticStore.cs",
+      "sha256": "16161e3c1ffe736fb2db7a85e4fbad10828fc9fd9a1b8a974ed2643937190950"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Rendering/ImageResources.cs",
+      "sha256": "5561c75ca53ec98d4d905df40556cdb50a6a064c794af5e9c560521f8d7384c2"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/Rendering/PdfSharpFontGate.cs",
+      "sha256": "bf8b7e88b1a4f662c74d8978c0b431a977c41183886ba091fb4b868ffed76bc7"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/WorkbookInputOptions.cs",
+      "sha256": "037a90451d2e31d71f9dac52934f073a51f83e6bc7680b5f918dcde05cb96510"
+    },
+    {
+      "file": "src/ExcelRenderer.Core/packages.lock.json",
+      "sha256": "445885d2d11f1d6ad923d232c9bd6b85d540c592b755435225507f353bb22d35"
+    },
+    {
+      "file": "src/ExcelRenderer.Fonts/ExcelRenderer.Fonts.csproj",
+      "sha256": "51ab1448effd0d4c689b2ba85df7ce6deb38239eb127634ffb7a25a249713fb3"
+    },
+    {
+      "file": "src/ExcelRenderer.Fonts/FontPack.cs",
+      "sha256": "e87ef7709dec168d28b4fee778442c7819602868c5e768a34882712994e667b0"
+    },
+    {
+      "file": "src/ExcelRenderer.Mapping/CellExpression.cs",
+      "sha256": "6246a7184305e4d243029208ead0f132060114917bfc789cf8acdc1af50a1bb4"
+    },
+    {
+      "file": "src/ExcelRenderer.Mapping/DataPath.cs",
+      "sha256": "a5b63a19f78ab3190b2b8219bb46d8203d1168d47fe9641debc9051ea8a63f5a"
+    },
+    {
+      "file": "src/ExcelRenderer.Mapping/ExcelRenderer.Mapping.csproj",
+      "sha256": "dc9483d22646eee19ad88a5d031b3ef4e88c9fd1a526bb03d49923e19c1a4884"
+    },
+    {
+      "file": "src/ExcelRenderer.Mapping/ExcelTemplateMapper.OpenXml.cs",
+      "sha256": "df6b37ceac082eec2556de35e23e357e6454de94b37889b216adc284cea968c7"
+    },
+    {
+      "file": "src/ExcelRenderer.Mapping/ExcelTemplateMapper.Structures.cs",
+      "sha256": "bf145869d57a1afb3c871391e521fdab11e7db0c0e3f3e1d014614e790840fa4"
+    },
+    {
+      "file": "src/ExcelRenderer.Mapping/ExcelTemplateMapper.cs",
+      "sha256": "73f7999dc340386420b02c024825a325740f24a747c9104eaf6c04d0a2af6d20"
+    },
+    {
+      "file": "src/ExcelRenderer.Mapping/ExpansionNode.cs",
+      "sha256": "836685bd605231adbb77309f93be27f085679f786cbd81a4d44555395aaf6e35"
+    },
+    {
+      "file": "src/ExcelRenderer.Mapping/ExpansionPlan.cs",
+      "sha256": "86d0cc2a8417f0a852b110c2851da11f59eca4bfbbf461cb90e47328f00173b3"
+    },
+    {
+      "file": "src/ExcelRenderer.Mapping/MappedValue.cs",
+      "sha256": "6b05d433ebaaf285bd63fb57d8e2284c1f390f7cfea60b1180904b592fb8eed8"
+    },
+    {
+      "file": "src/ExcelRenderer.Mapping/MappedValueKind.cs",
+      "sha256": "f8e9433f79be2d9253179f8e2a90086ec992cbd79f0cd0eb03aa8e4981d0bc67"
+    },
+    {
+      "file": "src/ExcelRenderer.Mapping/MappingBackend.cs",
+      "sha256": "9336760e8e51967a7ba2fef70e2eacf831239078f57c2181eb4e438664515117"
+    },
+    {
+      "file": "src/ExcelRenderer.Mapping/MappingBackendSelection.cs",
+      "sha256": "a6caa7e01780877177f7d78226b85ace527da7aea1ae0f848b2d2e192325d9c8"
+    },
+    {
+      "file": "src/ExcelRenderer.Mapping/MappingException.cs",
+      "sha256": "0cba76fff131fc1048beb138a34b383840dd904a9afb762ab6bdcd59705f292c"
+    },
+    {
+      "file": "src/ExcelRenderer.Mapping/MappingOptions.cs",
+      "sha256": "885a4bd6ea6a3c8635d8adb57aac8857466a351b958357e9f98a9a95d654dd37"
+    },
+    {
+      "file": "src/ExcelRenderer.Mapping/TemplateCell.cs",
+      "sha256": "1b30d412368c6c232f0d61463df8aad966b9a1daa3f9505d323f4922477ece0e"
+    },
+    {
+      "file": "src/ExcelRenderer.Mapping/TemplateNode.cs",
+      "sha256": "bb346fa969ad402f660f09996ad98030c2db9d255b9de486b1017475b0a5d5a9"
+    },
+    {
+      "file": "src/ExcelRenderer.Mapping/TemplateSheet.cs",
+      "sha256": "7b0b1bc280c185bf56fad02a51b576481aa216749127f388b2550a58306218bd"
+    },
+    {
+      "file": "src/ExcelRenderer.Mapping/TemplateSnapshot.OpenXml.cs",
+      "sha256": "ac46229cf2616293953e3012dc32db0ae4f111166ba83d199bcb32c4b2d2f740"
+    },
+    {
+      "file": "src/ExcelRenderer.Mapping/TemplateSnapshot.cs",
+      "sha256": "6c9a9568c03ef17d0196ab48b4da78424575e6f1a0e346d4097f1070854f6a0c"
+    },
+    {
+      "file": "src/ExcelRenderer.Mapping/packages.lock.json",
+      "sha256": "1c9c6815aaa522a99660cca2df003cb3e4673c9a20c8e097f83dcfb79633c1c2"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/CellAddress.cs",
+      "sha256": "10ff8115998856cd20bb86c94d7f82e7dc148b48855d3b1877676f692c9297c5"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/CellDisplayResult.cs",
+      "sha256": "0870b1d37079995926de816cc09b612d2d46bc6dd02b3b2f17a241f88c60b97f"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/CellRange.cs",
+      "sha256": "9c8a4ff339fa30f6fb362f91d2089084fa8481cd2653b314f86a17acf73d0733"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/CellRecord.cs",
+      "sha256": "4aea6071ee813fc20b283d0e910f5eee038e9c490e38ffd3e936787735b6cf2b"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/CellStyleInfo.cs",
+      "sha256": "5450218e951830d9ae8a34b46492e4fb5f41d8b4cdefd0a0c7d427e721dcad60"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/CellValue.cs",
+      "sha256": "6af34d696fa512a6a42a4c9d594dbec2cee14871ba905216003913b5b6894e83"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/CellValueEdit.cs",
+      "sha256": "4ccfcc4aceb715961f80d1ece4fbef6c8be30f5f54bbd55fef11875cf5a7572a"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/CellValueType.cs",
+      "sha256": "4aceeda52c007515c2755c1ab49ae5b72f521c719f637120a740d8543db228df"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/ColumnInfo.cs",
+      "sha256": "a4688c650e4fd9d22e96d2816c72375c0bcc5fb8184aedee0b53008a8478a02c"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/DefinedNameInfo.cs",
+      "sha256": "468fdc99c7d6ba9e9f98ada744fbcba4e4f183a3febe8df05c7a04c43baa0bdb"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/ElementInfo.cs",
+      "sha256": "e51b6732f87e2b8e9883ec02548a25751ad9e898c29925c887c3d376f2b99fcd"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/ExcelRenderer.OpenXml.csproj",
+      "sha256": "27257dc78f37a118c456faccda7c29a0add75e05c94e07828c4739b98c662358"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/FontInfo.cs",
+      "sha256": "7b44bdfeae46b79ac717ddcfe83fd892d4046d743eb2ae438194a70dc6fb6511"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/FormulaInfo.cs",
+      "sha256": "805b6329fdf6de62d59bb3bddbc124cb18a333387d2fc9dc58e83de3ecf861df"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/FormulaTextResolver.cs",
+      "sha256": "f0528851b2d739e2e062a663b4081a7082c8d34863092094c4dc10d96c80c5e2"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/IWorkbookDataReader.cs",
+      "sha256": "f78ccaae8c080ca00fd20d1923805474fc2ad4c40423b63e2560efeaa34ede55"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/ImageInfo.cs",
+      "sha256": "cb7adce0f90b25cb08509e9bd91e11656876fcd4e6ea949954f5958abe893a83"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/Input/BufferReadStream.cs",
+      "sha256": "a4247b06a5094325fa65dba2e0431a328147a6d631fd68e03b00e12180874a84"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/Input/InputBufferOptions.cs",
+      "sha256": "5d684daf5f4c496fc6948f9da9a3914d26b21f7f9691bc29bc26aad630b8eef5"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/Input/PreparedWorkbook.cs",
+      "sha256": "e450c2d243145eec772c77ab92e617680ed23032987c97b3c4d00848acafc906"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/Input/SpillableBufferStream.cs",
+      "sha256": "a3c16e905be4bf69b84b567ed7edefff7137986dd3690a0a0cccee0128cae2e6"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/Input/WorkbookInputOptions.cs",
+      "sha256": "eae38eb404cb07452a03de480f358729243bd703155727b7bc6a4beb21f411a7"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/Input/WorkbookInputPreparer.cs",
+      "sha256": "da8bcbeca0807bbe89e9cb12b0a678d6bd8a193fe71ef7717b5997e3824ddbdb"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/LeaveOpenStream.cs",
+      "sha256": "d7c6c7e2dfd5bb7241760fed62d11982994a6b8777e53fc97ebcb6680955283e"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/NumberFormats.cs",
+      "sha256": "612dd68d72c5f3346ce4c847b400ebda67f0f42c87d979d630f51679c8a76f85"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/OpenXmlReaderOptions.cs",
+      "sha256": "5329e44f55490839d27e2076af76ff9b9680fb8643eed27e662424637b110981"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/OpenXmlWorkbookReader.Cells.cs",
+      "sha256": "096aeb60c30f3cf808acdfae11d1f0cf8fa43b50fe217d7e567943e777c616d4"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/OpenXmlWorkbookReader.Images.cs",
+      "sha256": "a3302de61b1efba2db6a5df6260e09be0a022a0ab34518c6dcc925319504bcdc"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/OpenXmlWorkbookReader.Metadata.cs",
+      "sha256": "f4567c4cf572aae25fb8494ff33097db2095b95489ae265f6739af41442af357"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/OpenXmlWorkbookReader.cs",
+      "sha256": "61725fdbe5cd93bdfc86580894d77fcab3a7bbbc758fa6095175413e20fe54b0"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/OpenXmlWorkbookWriter.Geometry.cs",
+      "sha256": "4e196ecc0ad416ec651ccc9f2c53a4f66318395abc18011b4ca446b66a8acfa6"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/OpenXmlWorkbookWriter.Pivots.cs",
+      "sha256": "5e932d22128012d31d9efeaae66eeb6b0ec9a850be35a74533f2a5effacae9fd"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/OpenXmlWorkbookWriter.Structures.cs",
+      "sha256": "6ec7e555ede31fcf6a56c927dc732211d0d8cd390d39cc5b53ee92899fdc5e79"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/OpenXmlWorkbookWriter.cs",
+      "sha256": "1f0309fd56d2efb797b33ef179b5ece5367b6fc4531cecbc79a3e8166d0f0b60"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/OperationMetrics.cs",
+      "sha256": "8ab9dc2da42059264ef09c5462b03b0d1ce41bae5a14efe4792b81e0d4a11f83"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/OutputRowOccurrence.cs",
+      "sha256": "fc5856d7a1e2676043e69422e3eda6688c2e706f2e7f15361b3e75c9f0000d6f"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/PrintRangeInfo.cs",
+      "sha256": "236a2a79db13294486e68551078a354e69426130c1e8cebe72d0ace877c331a4"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/PrintReferenceInfo.cs",
+      "sha256": "038d2805068a9cb141245dedc8cabd997540099bb29f6c1818643a4d849066d7"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/PrintReferences.cs",
+      "sha256": "a6918b46b276efe44aeb2a863a8ef3f9478602a2491280feaeb813e0e96979aa"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/Properties/AssemblyInfo.cs",
+      "sha256": "b8c74e83e05980b90f14d07d039328680709e5dea7a791eee46df5352635e849"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/ReaderDiagnostic.cs",
+      "sha256": "0a16a90b090fe7b55a6b87c6485cbb86667a73f7e61be44bfc6a16fb682d8e9c"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/ReaderDiagnosticCodes.cs",
+      "sha256": "20c7c4d21598ef69229c5e5c341c499feb38a0352f1d7e201c34ba51a6d12a03"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/RichTextRunInfo.cs",
+      "sha256": "1bd59f5a2f6f9877b04090b5a722713dc50b03bae8a624eb2c7cb3b86fd38e9d"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/RowInfo.cs",
+      "sha256": "d66e1b316693053ac5d08d46404691cb0fe7dcb0a7300226070b81a967ff34b4"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/RowPrototypeCache.cs",
+      "sha256": "f733f08e18826b542a505e16335e18efe8a2ca3822994ad8e6b901ebc9d278e0"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/SheetEditPlan.cs",
+      "sha256": "fad93c3e7863d3e6788330b8faf53bf3dd8b08084e7f2c610ad0d684a4d15578"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/SheetInfo.cs",
+      "sha256": "893471256ea21cf366f33d92e6d9fd13fbb0e0b1d9f2118725771b3116a1e839"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/StructuralReferences.cs",
+      "sha256": "7eb3b74c7c1bc0b583d074800393ba66060ed8d88ddc2aa4bc7d621e9c991589"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/StyleTable.cs",
+      "sha256": "7fca3a662c11a25e079cf858161673bba0dad1df5c014edd85ee61c1dc1f5214"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/WorkbookEditPlan.cs",
+      "sha256": "9ac8b35004cf82a7839c5736fc5b83c34cdf9d86401e5c95e5afcd608ed7a182"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/WorkbookFormulaInspection.cs",
+      "sha256": "0663fa0101c85e6978cf652d019766c9ba51c60144d83fe2d97836d405c067c9"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/WorkbookInfo.cs",
+      "sha256": "855fabdc104a9641a02a5afc6a1217a79d8cb6fce0599ffdfc00ed3d3df50774"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/WorkbookRelationships.cs",
+      "sha256": "ce0b7f4db96ea0d4f13b49b21fd6842533fe578165270bff36b8257d67c285aa"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/WorkbookWriteCapabilities.cs",
+      "sha256": "2df07470776e24872e9a4bb40ccbb2cad302e07616a8409bcb650e2cd097233d"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/WorksheetInfo.cs",
+      "sha256": "65cc9a2b8f7a92827e713ebe00061470a871a9344c0750bbb387f19ec11e5dbe"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/XmlValues.cs",
+      "sha256": "889152af7a5f089bee06d03a294b55dc2fae8e77917f56df8a2854b20353864b"
+    },
+    {
+      "file": "src/ExcelRenderer.OpenXml/packages.lock.json",
+      "sha256": "0ac16ec74cabf7df08b90ab4e66beb9291adbdbacbbc6ea06f8341f178c3818c"
+    },
+    {
+      "file": "src/ExcelRenderer.Tool/Commands/BackendOptions.cs",
+      "sha256": "f50410b43873a8f22e0ea70432266832a771ce229415da0742362d0163e23ffc"
+    },
+    {
+      "file": "src/ExcelRenderer.Tool/Commands/BufferOptions.cs",
+      "sha256": "aac826d1f5f1f78264c63354ee8c521e6a865708ec9ce51258388ac45b1c031d"
+    },
+    {
+      "file": "src/ExcelRenderer.Tool/Commands/CommandSupport.cs",
+      "sha256": "dceb1cdc256155ff54d5fc436245bdb51eb76edbf83c75ff38ca02f557630681"
+    },
+    {
+      "file": "src/ExcelRenderer.Tool/Commands/FileOutputSink.cs",
+      "sha256": "57f7dad8c841dcf3c5c80d1986aaed7fdca16dbe4017dde84aa399140b8c52d5"
+    },
+    {
+      "file": "src/ExcelRenderer.Tool/Commands/ImageCommand.cs",
+      "sha256": "5b9feceb818b17a3cd00488eb9b696f104b68b0cbc9f09d7ba90c10240f31cd2"
+    },
+    {
+      "file": "src/ExcelRenderer.Tool/Commands/MappingCommandSupport.cs",
+      "sha256": "f9c3dcd6a9cf97bbedc31107e17b40030691692cb78365d691bbe210d0fd70d7"
+    },
+    {
+      "file": "src/ExcelRenderer.Tool/Commands/MarkdownCommand.cs",
+      "sha256": "dbbfbc97b1fc6ae6f020b9c8b08729ea390e3df57bf48071eb0ad06586b28a88"
+    },
+    {
+      "file": "src/ExcelRenderer.Tool/Commands/PdfCommand.cs",
+      "sha256": "3c162f3b2d19d888a34f6049b61b122fb38d518177957603e7c429b455e8e441"
+    },
+    {
+      "file": "src/ExcelRenderer.Tool/Commands/RenderCommand.cs",
+      "sha256": "228ad8e77b94ac97807482f826178ee7f323e8b4d92b76019155883d7382e4c7"
+    },
+    {
+      "file": "src/ExcelRenderer.Tool/Commands/SvgCommand.cs",
+      "sha256": "bf21ad81b5cd7005acc21b6fee457ae1f788f64f34116be9d59621cf81edd8ab"
+    },
+    {
+      "file": "src/ExcelRenderer.Tool/Commands/XlsxCommand.cs",
+      "sha256": "6604ea49aff6f0dc0282e959570df20aaefd5e4045c27008eddd4c22b2fee5de"
+    },
+    {
+      "file": "src/ExcelRenderer.Tool/ExcelRenderer.Tool.csproj",
+      "sha256": "ce24cca8d8b52c18c151afbb604892eda719fa210464070f308b92dceee92aee"
+    },
+    {
+      "file": "src/ExcelRenderer.Tool/Program.cs",
+      "sha256": "b507b6add510c9fe1a18f8e2215cfba615bf6a4a4c1555826b769365d98dc3e6"
+    },
+    {
+      "file": "src/ExcelRenderer.Tool/packages.lock.json",
+      "sha256": "256ed562504e8bc39094ffad4ea767f20986566a651921b0085a2197f9bb038e"
+    },
+    {
+      "file": "tests/ExcelRenderer.Core.Tests/Baselines/provenance.json",
+      "sha256": "861876d885025df69e25606073df3c6b83abda15237a37ffea534655b6169108"
+    },
+    {
+      "file": "tests/ExcelRenderer.Core.Tests/CellTextDiagnosticTests.cs",
+      "sha256": "3e51ee8a570fd69421943a77d76c0ea45119c899b9189125eb86b90d77dcff66"
+    },
+    {
+      "file": "tests/ExcelRenderer.Core.Tests/ContractsTests.cs",
+      "sha256": "b9607c11a55861685ef59aed62d6f8d6ffd3c7a146f7fa8a3f388c8e3c58a946"
+    },
+    {
+      "file": "tests/ExcelRenderer.Core.Tests/DrawingAnchorWorkbookFixture.cs",
+      "sha256": "5bdd0641d3693d4df1b446621b4bfc74a3b35fef994546e530c75c84ec4536c6"
+    },
+    {
+      "file": "tests/ExcelRenderer.Core.Tests/ExcelRenderer.Core.Tests.csproj",
+      "sha256": "be78a8ebe7f088829227080d4c2836b1ba2994fd8fcbcc7255891476759520ec"
+    },
+    {
+      "file": "tests/ExcelRenderer.Core.Tests/LifetimeAndLayoutTests.cs",
+      "sha256": "824d17c88dc3c56588b7227315d35b24df79e04319359fa883083a9981e726ab"
+    },
+    {
+      "file": "tests/ExcelRenderer.Core.Tests/PageAndImageTests.cs",
+      "sha256": "b0b9186a0b5ef7227a259363c6c76f51a9340cc784b7b55878152c0a14e323a1"
+    },
+    {
+      "file": "tests/ExcelRenderer.Core.Tests/PaginationComponentTests.cs",
+      "sha256": "a46a04a8dc4f335310181cdd47df3d80d5c3dd140e30393521b26cf19c5764e7"
+    },
+    {
+      "file": "tests/ExcelRenderer.Core.Tests/PdfContentProbe.cs",
+      "sha256": "49e89f8c0f500594cf050c34881fbba123c43f9d412825a01b605e445433a47e"
+    },
+    {
+      "file": "tests/ExcelRenderer.Core.Tests/PdfTests.cs",
+      "sha256": "279b9dc84e784d8543dcf1c7acdc8c511b681d81fad58482d8e513f5b9c633db"
+    },
+    {
+      "file": "tests/ExcelRenderer.Core.Tests/TestAssembly.cs",
+      "sha256": "3f7edd72eac91614fcf49f709dd4e560c74ebef8da68a53a02947e5611cd1869"
+    },
+    {
+      "file": "tests/ExcelRenderer.Core.Tests/TestSupport.cs",
+      "sha256": "50148158c37fb6475fe3e9a58ceb69c8c5e898e9924348b1c85a2bfa2fb32b07"
+    },
+    {
+      "file": "tests/ExcelRenderer.Core.Tests/VariationSelectorTests.cs",
+      "sha256": "064f6a063413deaa9119458e1c09e941b8f90882d2120ecbe8010a06bcbe39a2"
+    },
+    {
+      "file": "tests/ExcelRenderer.Core.Tests/packages.lock.json",
+      "sha256": "2c0652b771652805665a6e3ee72e27a4b7919ad818d1990b064ed89b9197e96d"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/ExcelRenderer.Mapping.Tests.csproj",
+      "sha256": "b6de09b34896117003bc90388e0e5a508efe5ff0e9f918db1daba9446b6fe914"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/README.md",
+      "sha256": "f37b2b5c52f15c16b28edee45d346d7fb0c39e871c9bd3e788284ef6f98f625a"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/advanced-baseline.json",
+      "sha256": "068153793102b47721ff2107c29f6d4f7fc111c4ef462a25d0899e28bebdefd8"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/baseline.json",
+      "sha256": "1bfed56ea9c84c8ef86e727a065633782c01061060be5772ac0a590c150c02b9"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/comment-expected-0.xlsx",
+      "sha256": "4b2d4698e1edb74695ebf36b4770968c997be2619957d7ce4edc4489820efb7b"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/comment-expected-3.xlsx",
+      "sha256": "2fbb87bc3f6fe5bcb316e97a435a9e00ebdaf86a041bf87f4f099a7fc7803337"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/comment.xlsx",
+      "sha256": "358750df3c9b10e6be3d10069a1de9ee675ca2b88a403f3281b46987881df417"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/conditional-expected-0.xlsx",
+      "sha256": "aa59905c62676a2c4f2013d97773538053aa7ac07937e849d82eb63554e7d5b5"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/conditional-expected-3.xlsx",
+      "sha256": "12b28674745a79b538da730050370731f4b1cb3d65dd506bb0801d2dbf16e1f7"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/conditional.xlsx",
+      "sha256": "6ed50e12228fa14d70f614a8906b329602dffbb7f6d615c5540facdf26d889f7"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/external-link-expected-0.xlsx",
+      "sha256": "4fbd5fab5534fa76959898ff5ff1fbb01c755846ff4661964b2216c43e40ff56"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/external-link-expected-3.xlsx",
+      "sha256": "fcd281cab5e247659cf1701546b8e9c9cce94eec378a173c3b162e720a90ecc2"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/external-link.xlsx",
+      "sha256": "6c5b54e0ea9c2e4b591a2931c7e1c2f6224b481ab1c72b3abd9427f1891f93cd"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/filter-expected-0.xlsx",
+      "sha256": "e06136c7988d41a5346f445fa2cc6cbda83626086222e95bd6b7fb608611be99"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/filter-expected-3.xlsx",
+      "sha256": "f1867391e07f6cc4e984856807ef901a01754a213224de02e905c26d46cd6136"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/filter.xlsx",
+      "sha256": "a901c59c0829fc4c58b20f1b55d990bbb596c1a39ed61585e08bdfc460880e26"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/internal-link-expected-0.xlsx",
+      "sha256": "a97a495ff490495317faad22e623a48d790d1f8bcbb1a2bb8b6240ca79535976"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/internal-link-expected-3.xlsx",
+      "sha256": "9c7d0134e26ea75e5b2efd14cbb09f104f13eeadfdcb407c91bfd502acd715a1"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/internal-link.xlsx",
+      "sha256": "3d3a0de03a4aa021fccfbcc8587d031fb7b7c0a1b48872577a0293fc1fb10579"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/picture-expected-0.xlsx",
+      "sha256": "5eb0925d6103bfa306787784ba5d493d4cc4693df736bd4d6b5038ef9049b2b6"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/picture-expected-3.xlsx",
+      "sha256": "94682c03d6edf21ae6ef5cbc3e8d4476df987b884c4d60864b422f1d2c67ba79"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/picture.xlsx",
+      "sha256": "80efe7b6be29f50f6ae93a7c4f56ab67831adf24c36730dfbb801a37038d27a0"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/pivot-expected-0.xlsx",
+      "sha256": "c51d5c36072a8d1814341ec5cefca776f2e6a3aeb26ee5f18646285721cd46e1"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/pivot-expected-3.xlsx",
+      "sha256": "f281e82ad2394281c0938f6ac8b1b61cefac869e4594d60a2c417da3511af7e9"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/pivot-values-expected-0.xlsx",
+      "sha256": "3168cbf1ac6741b22c9aa2b6f45c4be079d0338f030a247deed5105f7d0ff9a6"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/pivot-values-expected-3.xlsx",
+      "sha256": "b800d2136c05f938f5d5fc2ae3b667fcbbc99f29b907b14080163e028acbe895"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/pivot-values.xlsx",
+      "sha256": "665fd79499565ca21404f7cb8f7e0056b82dbf268187b04a869fa687d9e92e2f"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/pivot.xlsx",
+      "sha256": "6e709e4b233868a2bac57b2fc2beb24693e5931ac34598d73334624944914ed0"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/print-area-expected-0.xlsx",
+      "sha256": "915266723b7fee60762cfcaf56ff2780d3e971bbb51e5cd3e4749316d1d02df9"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/print-area-expected-3.xlsx",
+      "sha256": "0e7809ab5a68a2c3079621bfefdd35833c275b0d8e498bfe84a18c13789d228a"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/print-area.xlsx",
+      "sha256": "15981ab74d7ac63080f68069c8320dbe787fae7c173d00848a2ae50226955b7f"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/sparkline.xlsx",
+      "sha256": "33885fbcd417b776c68d7f22f827c4e9433fec2c205aa8c91de7ed1f9fdcba02"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/static-name-expected-0.xlsx",
+      "sha256": "60d618de5f906e207bfaa913cbd0a763bd3768ad7d4406d3d8b4d60ff50243c6"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/static-name-expected-3.xlsx",
+      "sha256": "734a8268b484e175ae49701b09a2c0ff1a43709dee38ddef4269cbcabfb9ce85"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/static-name.xlsx",
+      "sha256": "dfd844a2ffd3bf379efc928fe45a86cb840164770d4ffb7215a552509201b088"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/table-expected-0.xlsx",
+      "sha256": "96a2cfd15b8da0b4709fdc576705f257d2b3417500b5b9e0621180877de18571"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/table-expected-3.xlsx",
+      "sha256": "6a58a7dadaec9fd4eeb405626a6cc545a461dba46e8ae201555825ab8b3670e4"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/table.xlsx",
+      "sha256": "755403464b658f2d9766b1d2944ae65c9cd35f0a6ca8c19bb2556bb760621493"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/validation-expected-0.xlsx",
+      "sha256": "4e4fd77ae0396831322d3e53f0f070a06c801ebc079ed5284c45eccb46971740"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/validation-expected-3.xlsx",
+      "sha256": "e4c56140b4e6003a23e16bc7ec6d9ed5689012454fbf4fd1f9d016334c240eaa"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/Fixtures/ClosedXmlBaseline/validation.xlsx",
+      "sha256": "52041089659fdf8c5f367882675b52800caa23d63117e84501da937f3709a5da"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/FormulaPreflightTests.cs",
+      "sha256": "ab42aeae88509feacd96347f01cbadfb5056c9822e166589a572910d31f7bf8d"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/MappingExpansionTests.cs",
+      "sha256": "64c5873481a9a79e4c6a3c89e4dfe9779ae83d9dc4138d762adabe706eac25e8"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/MappingFixture.cs",
+      "sha256": "1f1e2d3ab2b4d8b288ba809a2d2357ebc8163c2804cfacbc9a4bdea885931881"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/MappingTests.cs",
+      "sha256": "2c04b6bccefa23077a0df46d641eb7035867bf50e2aa46c8e78106c73793e9bd"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/OpenXmlMappingTests.cs",
+      "sha256": "ab2639647f91343bcbb8ed66b671f39a51e271c37f90f86bcea97df360465bfd"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/StructuralMappingTests.cs",
+      "sha256": "bb21337ae61258c32b8d8edecb81317eb087fc2d03e39d3e70ff5e9d6247b539"
+    },
+    {
+      "file": "tests/ExcelRenderer.Mapping.Tests/packages.lock.json",
+      "sha256": "f42f2fb25834756f3f6009db78d52d5d258006a7d55eb8f97955a5fa5a3ef3b2"
+    },
+    {
+      "file": "tests/ExcelRenderer.OpenXml.Tests/AdapterContractTests.cs",
+      "sha256": "7423b752e7faadc55644802459c21dc3d5cb8e532435c0444d2f094a4861fa00"
+    },
+    {
+      "file": "tests/ExcelRenderer.OpenXml.Tests/AdditionalContractsTests.cs",
+      "sha256": "7dbc7b925b9ec3210e03e8013366e01778936e0a08700d8281e3e6d321c48044"
+    },
+    {
+      "file": "tests/ExcelRenderer.OpenXml.Tests/ExcelRenderer.OpenXml.Tests.csproj",
+      "sha256": "b58eb849f937daa2ab30630f446472f016468d5933adec614d3920e3ef26ee40"
+    },
+    {
+      "file": "tests/ExcelRenderer.OpenXml.Tests/Fixture.cs",
+      "sha256": "fe273e17a89a4bd479c4465da67abf88465249a1280ccd9c998352a4750f0938"
+    },
+    {
+      "file": "tests/ExcelRenderer.OpenXml.Tests/FormattingAndMetadataTests.cs",
+      "sha256": "b606a4c9c89aa0951e6e8562644704d61af5470a8a69cd31d35e1a081363ae7c"
+    },
+    {
+      "file": "tests/ExcelRenderer.OpenXml.Tests/IntegrationBoundaryTests.cs",
+      "sha256": "319dcf2e233f98dc9a2abe29181f1b9fc4cbe2409f4f280b5a1d00ca571288b4"
+    },
+    {
+      "file": "tests/ExcelRenderer.OpenXml.Tests/ReaderTests.cs",
+      "sha256": "0354455588b5ca0a932241d7a9c8391cc5466c89891de5ac7e29e954194a19dc"
+    },
+    {
+      "file": "tests/ExcelRenderer.OpenXml.Tests/RowPrototypeCacheTests.cs",
+      "sha256": "448438c0a92f1909dbad97811d5cbaf9aecf1f547682e39411490c3b7025b90b"
+    },
+    {
+      "file": "tests/ExcelRenderer.OpenXml.Tests/StaticDefinitionTests.cs",
+      "sha256": "0f97a67b4ff53b02d4415f0c68d2bb6f6219384a797dc9da8d12e9386fb16098"
+    },
+    {
+      "file": "tests/ExcelRenderer.OpenXml.Tests/packages.lock.json",
+      "sha256": "0c285ab0e4932be626b7fe11132c71c9a311869eb856c317dff65b9787c04fe5"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/CoreIntegrationTests.cs",
+      "sha256": "64a1eb0ec4cf2eeb9fce074e1a94fa92617daa6babf6d902328bc96bc423611e"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/DrawingAnchorWorkbookFixture.cs",
+      "sha256": "c690d554a9a230b982426a0ce95f22f87287bf24d0f6b984c6962adf86fa2aba"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/DrawingStateRegressionTests.cs",
+      "sha256": "611682140bb5f3f9d121e9ed4b6ed5e64ae145b2fcdc1d920420094b0c1cb67a"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/ExcelRenderer.Tests.csproj",
+      "sha256": "1b57a548d33c22d31cdaed6f404a967b82d96fe3298b460a16e1f14b857db639"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/ExcelStyleConverterTests.cs",
+      "sha256": "2b803e362f88bd2b8af5527884369c15bf1b7e3a5bf332d5cb8a16ff85ed7dfd"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/FinalizedTextRenderingTests.cs",
+      "sha256": "638d5654fd3270e2c74724d81863288d372bf4d50121c5a50034944135b514cc"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/Fonts/README.md",
+      "sha256": "d96593932222b6a4a76f85ec2f7f5570f06296b92beb8e13d33e44b65819d0d3"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/FormulaDisplayTests.cs",
+      "sha256": "ebbaad788ed544db77d0f977f36922052ffd045ca4297fd7a830f36f748cbe31"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/FormulaEvaluationScopeTests.cs",
+      "sha256": "2ca7ce224efead1d07e2b36679d6a90ad90435f8c02d85637c836628b36bf042"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/GeometryRegressionTests.cs",
+      "sha256": "b44ff89ebfdddcce42cebf5cabb5fbcad399f2b94b4d1d5fe897c75c4ecc9a9c"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/ImagePerformanceRegressionTests.cs",
+      "sha256": "f1b6d3d5cd3c048c437d6b58752528eee28f7cd02499ccde7e4513ab1d9d2cd0"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/LayoutDiagnosticTests.cs",
+      "sha256": "279b62914e76bdc528d1907c68e80b3dc39eb3dd943cb9d57710daf7b3f0cc90"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/LayoutPassTests.cs",
+      "sha256": "1de06c400aef3aa4642e66a3db914f002c0bac72467f616619cb53db3fef204e"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/MarkdownExporterTests.cs",
+      "sha256": "1da36f90a633020dcfa2f546cb8f2495cb8cd7debb2896ecd1c436f9fc6e0912"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/MarkdownSampleOutputTests.cs",
+      "sha256": "704b977dd4defbe0d24d556798a373ae57365484fe871566316c0fc2132649fc"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/OpenXmlEndToEndTests.cs",
+      "sha256": "1c046f2811d07d5e1d50a1b54269ed472fe9d24a082c2f1888a7e1fb926c2af0"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/OpenXmlIntegrationTests.cs",
+      "sha256": "bc13a50dc6ef4d30763ba8a8e2a4705e827e0b875585948bf946e17dda81e421"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/OutputFixture.cs",
+      "sha256": "6ed2f3d5d574c9b035553f72dc618d481555eb7459cc702467c3d7eae6bd78b4"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/PaginationComponentTests.cs",
+      "sha256": "094fc942cbcfa6d882abdad00fa9cde0e5605ca08cb898a6723e4b2cd6135db2"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/PdfContentProbe.cs",
+      "sha256": "3bb39280793775e7321828dfc0e64958ea191aa4ef4fbc2d2266fcb5a5670a3e"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/PdfOutputRegressionTests.cs",
+      "sha256": "f56325bc58b59e8d26f31ba3d4a1caa47f755bcd521900613d1e4a74c3340bf4"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/PdfSampleOutputTests.cs",
+      "sha256": "0623ffd27985f1cfde3d87e3ff31b30c393b01dd1f1a5cb8da493d55908c1f73"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/PdfSharpImageTests.cs",
+      "sha256": "a9b57a3ea8cd1ce78898cb6444578439a7e7e68769cbb005db2e3f07bba09f11"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/PerformanceRegressionTests.cs",
+      "sha256": "15884b1d68b94b7a38bbe301906f60813d4a6c9629c627dc1759b1c33ab4a64d"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/Phase3MemoryTests.cs",
+      "sha256": "b8da82e2c827b2b6e81c771233d5fb567178bd0f11a7845f02e5bae0fe0f0544"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/PngRendererTests.cs",
+      "sha256": "ea4ee89f0dcec682cd6fb395a1af6c00cc5a4bc6bc6e66186f6225567a8fa1b7"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/PngSampleOutputTests.cs",
+      "sha256": "b24827eef67dbbce6749eb9f0523c9752e75a3145369f68ad8d547306093ad88"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/PrebuiltExcelSampleTests.cs",
+      "sha256": "a73e9a5b1ee91f2653d08fee6e124e3905693f970ef57d529984339264f3d128"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/RangeTrimHyperlinkTests.cs",
+      "sha256": "9776e74f8a419fd4400aa5972aad4243a6239321e6b6f31f4893b7cdeb6ad865"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/ReaderAnchorRegressionTests.cs",
+      "sha256": "c16914e53d8cf4c342993f2dd707e9a65a1353c8c51b3097df44a6d91c99c010"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/ReaderBackendContractTests.cs",
+      "sha256": "21d6d26a0dba3c355d508fe985442e93f62ee42b54fdade6e17d25d3d25a18e0"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/ReaderGolden/59FA7B292F89B226C0006E3C4643F6312A6D702B583336D913BDFF5BD382F1CA.json",
+      "sha256": "216be3f99c4738109a8756ee53ec2a8ff6f06d7e1837b181c6c0d88d58260b99"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/ReaderGolden/629EAAF1584012051290ABBFA5D2D3630DC05F3E76D6EA6AA81E864DBB4E0D67.json",
+      "sha256": "eba63f1e590850c132b89aab6acffacdc4a9e5eb28f0c0e92e4617a4fbd7bf3a"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/ReaderGolden/645DDA4195F954D80B718F8D0BD5D84B65D79A275536510789D850AC41316E36.json",
+      "sha256": "310f1b507586fa0654cf8d879f557603a09a2594c9cbe7233cd2f12de029441f"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/ReaderGolden/6523AE4DA92F8819A4C8227B7301FD154DC9FC1B2A4F49A34629507224F8DC40.json",
+      "sha256": "62e36664d8da81773b96a8aeee1e734a868e81a13bcbb56d24ee1b2d79ef6362"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/ReaderGolden/77917AA9B28BF3958FC5C2E29060047F1B4255E1DC00B09575148166ED698C12.json",
+      "sha256": "07e087b62c2d31982cccb163e67aafc21a7c6d6c348d1448c80b5ed2aeb04606"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/ReaderGolden/9292F416B0EA35BC65B654D89D31E61D850293F92766E1898A6B206F006D2556.json",
+      "sha256": "044e8ca949a231c64bc749d17918530490a9eb783c383e31e6813ede7bfc9f89"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/ReaderGolden/95247E8AA3484BFD5DA23F4C7FB9BFEFCECEAFF3DD11E0544406C7B5504BA2B0.json",
+      "sha256": "ee8eca81711818bc0a008eaedca2295b5827eaad47496418d969d0f9423cdbb6"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/ReaderGolden/9E1351B8E2FA98EB3BC5E79B48BBD84E91B660FBA52DF068534C97C888C66D17.json",
+      "sha256": "524b13ae8a73352e489617cb68d2e21a3ef3ef9fd5f610bc672b3f73e5bbdc79"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/ReaderGolden/A890CA66D5104CFD4B8C5C94B66A81AAC06D0ADF87C89DB5D57BF7D823CD1D61.json",
+      "sha256": "8b04197e49305e37b049deac4f76d89c46a214638c5cce9397c6423d9f8eba8b"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/ReaderGolden/AB1DCB44F0A63C657BB5DE08BC003F261B8C75F85A0D07CEDF05FB694FD5E033.json",
+      "sha256": "f2e275a00fdb2fc0170896dd30f308d2be905f298742665d83575363a66d5a94"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/ReaderGolden/AC600AA80947C63792FB93745F058A4CDFE777B87B9E785D76E06B7F2F87763E.json",
+      "sha256": "b8cbecd3153180743c5585a678bf6d41a5d77624af4fd92b61ef80d440bc8781"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/ReaderGolden/C63CF2F8A79109CFFA1B18D0713B16B50CE3927B8BD6A9F80A0B6B0B635E9DA2.json",
+      "sha256": "8eabae497f82567f8a543764e472a9aaee975b1cc68b6b64fc06bd6e7bf27b98"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/ReaderGolden/EF6ED0C97D5CAA24B7FE637E20F37F00501418B406105A67FD3111DF47FF7274.json",
+      "sha256": "9391fc51433f744c9b5b7bc0990ceea46ef10a4be8bda67ae0c47443d8c70dc2"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/ReaderGolden/F411A03D09224A61635104571EE865CEBCF770875E9E848B11E0371E29B18FD2.json",
+      "sha256": "2ffe360cd0ab47658e93b5e8f54aa76b459c71e737342499c435ce2193e4920c"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/ReaderGolden/FEBAA5F9A40CF2DE266C57DE4AFF3BBAD1FE90DC6B1FCDC96797703CF51953CD.json",
+      "sha256": "e2dd7101824cc31bb26613febb18e322c56b7edd4b237fee6ca20cf5dd59c5dd"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/ReaderGolden/README.md",
+      "sha256": "0ed5fe301670029cfab480c9019c56c2c82001d353dd711835e590ee23a33996"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/ReaderGolden/artifacts.json",
+      "sha256": "ce52341d3043931b1fac7c38fcc61af83bd7f238bce880cfa7c4318f92df3784"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/ReaderOptimizationTests.cs",
+      "sha256": "c078088951070f479117046b10cebf0d227fea414e5875f5bb3375f20722f209"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/RenderingContractsTests.cs",
+      "sha256": "fd745d29bedd274b2eb9536238ebb9f748bfe975908ca8e3f57559b2d0b689d5"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/RichTextAcceptanceTests.cs",
+      "sha256": "17dcc828d30f6a5a3ed01be0070634d768ad073b1841c8d7201856db07ff2317"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/RichTextFallbackTests.cs",
+      "sha256": "e69c1758a5dbb1c45cc369f077f901ac778ae3d602ad74636b6c99d315e39265"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/RichTextTests.cs",
+      "sha256": "2e7b1243cab40c37166da058eb724abfd2111feab17b4e1024d85d729ff78558"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/SampleInputs/01-japanese.xlsx",
+      "sha256": "6a89d390e07a60e919b7be2c5fa6af47721b0e9c5a4a0c325ae97174ff6386f0"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/SampleInputs/02-image.xlsx",
+      "sha256": "d54804111617065e59a4bbe4d5c2099b08efdea2f71d1676998bc836569de254"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/SampleInputs/03-wrapped-text.xlsx",
+      "sha256": "60421161d8ec36904befd41ecde57551ea7880a8ffda07925b38178fc747d990"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/SampleInputs/04-text-decoration.xlsx",
+      "sha256": "c8ee629159de588541c6d08bce70cae9c0483ddcb21c3feef536102e1457cff1"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/SampleInputs/05-borders.xlsx",
+      "sha256": "074cfd50a3d4556380f462a69287d9b0254a71ebe412e267b395ca345a54eac2"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/SampleInputs/06-layout-and-pagination.xlsx",
+      "sha256": "5870f080ac266568de200bf6955a617da452b14c103a30371889e8bee13b12e6"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/SampleInputs/07-multiple-sheets.xlsx",
+      "sha256": "2da1636a03384c0aa0ecb14ec3183631f3c41a90f1348693e795c329c0cae20e"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/SampleInputs/08-print-scaling.xlsx",
+      "sha256": "f9e5ffaa18c622d2820138d18c6aed07ae63b28da8fad1c71c4ffcbdd12a9fb7"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/SampleInputs/09-cell-border.xlsx",
+      "sha256": "5655ee7b5407c1c9af6836ec65f573819b0265c833660210d04060ca8c368d70"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/SampleInputs/ReaderRichText/README.md",
+      "sha256": "25353ab4430f01753669f1965636e202e688fb66fdf35f3f11ef7d31d07baa5b"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/SampleInputs/ReaderRichText/representative.xlsx",
+      "sha256": "5e4032e814530d62db777ad76b8eae467c4f761696a2877e22ca41e2fbc37357"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/SampleOutputTestSupport.cs",
+      "sha256": "c3778fb3526c44d17624b35ea756aaac0142920d47062008ebbbdd5362ef1bd3"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/SerializedSvgProbe.cs",
+      "sha256": "3c5dada5b613b97111ffa952e2e85f16ab5dc60920989736ff788290e1719e68"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/SerializedSvgRegressionTests.cs",
+      "sha256": "15605244dd5367153b51187bdb515650b2d79375c800dec4aec3678da4f38037"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/ShapeAndFontTests.cs",
+      "sha256": "17d07faa61c5ee8238a4d9fdda0eb36663b06ed0e8a229145b470f6249302d01"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/SkiaFontRegressionTests.cs",
+      "sha256": "fdac349620a090bb06108b5f7dcf1cce4e2cd1d9484da11cd6c09d088fd2b9af"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/SkiaImageTests.cs",
+      "sha256": "f59c12356c0f2509b3ab942bddd3a994680fbe0ae6ea3bcdfa46cd7aa591c980"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/SvgRendererTests.cs",
+      "sha256": "921bce8ffc00023e68ae3263946a663f39ead225669cb50e82c6173a0e166ba7"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/TestAssembly.cs",
+      "sha256": "1258b0e44073defff0fe10d3e61806ea94655b14af98a84b139435f7c6aec24a"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/TextLayoutPlacementTests.cs",
+      "sha256": "412a987ac242100a0fa33488cff69c47d7dd2b0a22c391756dedc68fb1611857"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/TextLayoutTransformTests.cs",
+      "sha256": "3f2a1be2f8d0c4ab522c82ff4cd73b27f18918378d821bf71a2cfd0954d24758"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/UnsupportedChartTests.cs",
+      "sha256": "82fd3a846d7c977d3186cd54a6c7bf9b70c414013f27bdab014561b7a097b96e"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/packages.lock.json",
+      "sha256": "340fec471c2d8bb14914587b7ce9591eef5e17ba5d79859f8c07a09895a42e51"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tool.Tests/BackendIntegrationTests.cs",
+      "sha256": "9ef0303c6582f6bee5d56a6d8f488bf55bb40b1566d52ba2f937eb6fd472be0e"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tool.Tests/ExcelRenderer.Tool.Tests.csproj",
+      "sha256": "f38a73df894ed746c2abbe05bbf1938c97f44b95302db0f2568b63049ea40255"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tool.Tests/FormulaModeIntegrationTests.cs",
+      "sha256": "43ba894376d6a4f355126121e8fe3bff4665a75a9f22be98992a307377c7497f"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tool.Tests/InvoiceMappingIntegrationTests.cs",
+      "sha256": "6b63e2186457346ac0971977f8717f29991fbacd3682f97e6096304f3b16ecc0"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tool.Tests/InvoicePageBreakIntegrationTests.cs",
+      "sha256": "0ea6e5bdfe098c4e7f2fbff1897c78ad883d766ec7469a2b18c7111ef7f94741"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tool.Tests/MappingIntegrationTests.cs",
+      "sha256": "27f736f0ab5783c97a173583073d66b1cd4b3a64f71b71c5ac6ca41da9d9ad04"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tool.Tests/ToolIntegrationTests.cs",
+      "sha256": "26d685cffaca85b2a1717c973a314183ff1ad5f02a872afd42b1f5fdaefb1d50"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tool.Tests/packages.lock.json",
+      "sha256": "f42f2fb25834756f3f6009db78d52d5d258006a7d55eb8f97955a5fa5a3ef3b2"
+    },
+    {
+      "file": "tests/Shared/ReaderSnapshot.cs",
+      "sha256": "6844868e2e1e32175cdb2f7939670f8181b09bef44d98fd28ff59c216013611c"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbook.cs",
+      "sha256": "bc6995b67967308c54182f33b621aeee2376a48894c1232ac2261225454512ee"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/BackendIntegrationTests.ExplicitOpenXmlMappingAndReaderReachAllCommands.68C70801705FC28D.xlsx",
+      "sha256": "232b0993f4312ac733851807cac7140d5827aa35bcdad553d1165ab5c595e1d8"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/CoreIntegrationTests.Reader_hooks_share_traversal_and_preserve_product_style_policies.15C35DA96C969E4D.xlsx",
+      "sha256": "50a0bfaa3669a9eb5d9af02314de52d5d9888002fb2590c93f9b7543c91ca0fa"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/CoreIntegrationTests.Workbook.19FB7DA79FD114EF.xlsx",
+      "sha256": "e88b963bf827e9d55617c85258e18aadcb0252c2484cbf5f1e3fb9da099751c6"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/CoreIntegrationTests.Workbook.370047313DCF4EC6.xlsx",
+      "sha256": "4bcb68632e73669c2b8f4d208121756cd7993f8735d60507ac053650f2bd80bf"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/DrawingAnchorWorkbookFixture.Create.0F858476D16CBFD1.xlsx",
+      "sha256": "f2f5be00a29835fa4cf6f541bb94f4672f438e85c8ae22cd64920fe950af47f0"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/FormulaModeIntegrationTests.RenderingCommandsAcceptSavedFormulaDisplay.F08CB6342C0F4ADB.xlsx",
+      "sha256": "5c250ce6dd5a1019f6aa67fd50913ea0482f2863a783e056fdb3ab17a5bf8078"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/FormulaPreflightTests.AllValueFormulaKindsFailBeforeBackendGetterEnumerationAndSink.EECE108D361084C8.xlsx",
+      "sha256": "0d51a56cb893e57722a1fb1ba9c12522b7c58e53138a9a76f6f4fa5b8a20ec78"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/LayoutDiagnosticTests.CreateWorkbook.93443D6A03DCB00F.xlsx",
+      "sha256": "d0e09b4ad10c45bc38e9677d60ee7e944c297e78d005a4fded9c6f1cf46dbfa1"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/LayoutDiagnosticTests.FinalScaleRichRunsShrinkAndRotationProduceSmallTextWarnings.2EB6E81F998F9353.xlsx",
+      "sha256": "89228fdf17c5fedddf707ab9193959030474d49b693e37cf6183776313343a4f"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/LayoutPassTests.CreateWorkbookWithPageSetup.051601891C1CEAAE.xlsx",
+      "sha256": "37e72dbec8e9c19f3605c6fc46dfc5536ca1ea6f81eabe94a99727aab917591e"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/LayoutPassTests.ExcelReader_measures_maximum_digit_width_from_normal_theme_font.5BB01D7D4CAC75E5.xlsx",
+      "sha256": "774dd3a3c7c46aa48c48d2147120cfd8bfecf1c35d39d5fdabe57f1abee184f1"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/LayoutPassTests.ExcelReader_normalizes_empty_merged_cells_to_the_top_left_cell.A73342F646ED8F70.xlsx",
+      "sha256": "d120ac2290658fc0834e5d20fadf18332b1a32ea3ffbb4fce4408d4d711661ee"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/LayoutPassTests.ExcelReader_preserves_dimensions_before_used_and_printed_range.CA3208C32E3F5551.xlsx",
+      "sha256": "3766972fd9963974e0547b2948172eff87306ac04ec9232101311b98f6ff14d1"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/LayoutPassTests.ExcelReader_preserves_picture_anchor_crop_and_transform.7F9B1506D1CCAB03.xlsx",
+      "sha256": "cdbdadebc8a76486831aafcf585b22632f6bff3dd8165339c9b5295a461c8c3c"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/LayoutPassTests.ExcelReader_reads_column_and_row_definitions_for_merged_range_extents.79CE238A61256981.xlsx",
+      "sha256": "10d9e8e8d940aec0d660d1e1ceb8480d388fe47d562f5bb1c9c78e19a32ba834"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/LayoutPassTests.ExcelReader_reads_fit_to_pages_print_scale.B76072CCF8BACC36.xlsx",
+      "sha256": "dd95805df7cf3f699c03facfe12cdc9ae6719b525d2297c5b38d083b9216d72f"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/LayoutPassTests.ExcelReader_reads_percentage_print_scale.36A44899161E81EF.xlsx",
+      "sha256": "0624c343087ea3434396fc433268e68a1fcb55123f3a2843fe0a00860e555d7a"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/LayoutPassTests.ExcelReader_reads_print_settings_and_converts_column_widths.E75FF45871D7487A.xlsx",
+      "sha256": "b0fcfe9320481927c512b68deef525f568c3fe24432cd7975614b215b8a90c76"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/LayoutPassTests.ExcelReader_reads_print_title_rows_and_columns.E5ED40D09A8140F1.xlsx",
+      "sha256": "c51329b30844d92fb84d076f2ba0616a5e10afdd2157abb11d4d5acbd4861309"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/LayoutPassTests.ExcelReader_reads_worksheet_header_and_footer.1A25B17C5123DEF2.xlsx",
+      "sha256": "38791d1ddad856c1fc31ae6d078efe1cf5dcde7be9a5851f67acf09d5befe090"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/LayoutPassTests.ExcelReader_reads_worksheet_images.7F9B1506D1CCAB03.xlsx",
+      "sha256": "85ce921c3b7b60e29e4be90cef402e4793740ebfee71a55b1024256ba5e0dba7"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/LayoutPassTests.ExcelReader_regular_header_and_footer_are_rendered_on_every_page.D8BE652BA5A65450.xlsx",
+      "sha256": "a3b63fab9a304d9ae7e76a162692da962e6a1468a2ec44b2277fd4befc1007e3"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/LayoutPassTests.ExcelReader_resolves_leading_dimensions_and_picture_to_page_coordinates.4C616EFC418E8EE6.xlsx",
+      "sha256": "c6fca05e6de5e2aa12c41cd5608e211de6291e93a1aeab2f3ba920f132eaa798"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingExpansionTests.Caller_values_static_names_and_print_settings_remain_supported.E8B80A493050EA6C.xlsx",
+      "sha256": "ebbdd6f1395b2f4b3e2c8b3e19825554104c8964a673ff6398c20bcf7b2f5b11"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingExpansionTests.Direct_regions_preserve_all_nested_rows_styles_breaks_and_following_regions.0CFC84347E6072A5.xlsx",
+      "sha256": "1e3043770da83727f4804e0fd5860508d8953abf9e6c6d880497df1a7741945f"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingExpansionTests.Marker_names_are_rejected_and_names_on_other_sheets_are_allowed.D9157E4BD6C4B236.xlsx",
+      "sha256": "92a47eda58962cd20c7990b47f05ebd3aceb00dcb711f54d651e951392a4e242"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingExpansionTests.Marker_names_are_rejected_and_names_on_other_sheets_are_allowed.DA6DFB580126AEEB.xlsx",
+      "sha256": "99629297e3ec272ef5867f42c79c29662393292c19e08c6e3c8de8af5328bf44"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingExpansionTests.Overlapping_names_in_both_scopes_are_rejected.6F66ECE7358D905C.xlsx",
+      "sha256": "f6df9e25a4d256a31afbc2b9dc1ef817230e87f87d3a5ea13638454bd2ab5710"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingExpansionTests.Overlapping_names_in_both_scopes_are_rejected.76FC9370F37AAFCD.xlsx",
+      "sha256": "120ca40be6ed84285da034d1308c01a135c8724640ffca2649ad50a5d74ce5c3"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingExpansionTests.Repeated_formulas_are_rejected_before_touching_output.8CAF258AAC33A01F.xlsx",
+      "sha256": "57715a8a86f73a692754acd944da7bea9889fc03e06d0995347c4b784a598d25"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingExpansionTests.Repeated_formulas_are_rejected_before_touching_output.BA1ABA05D8C21D92.xlsx",
+      "sha256": "88794c1d716380eaed46b60c744525a1704ce249d679c9a4ae8b62e07491f421"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingExpansionTests.Right_edge_merges_are_copied_without_a_dummy_cell.7382150770CCC8FE.xlsx",
+      "sha256": "5cdb9a7c09d841e5d6743282e279686509c0a871b3579402331207932a5421b4"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingExpansionTests.Right_edge_merges_are_copied_without_a_dummy_cell.782E8DF66C6E29BE.xlsx",
+      "sha256": "f5305ca7072ca1cbf0410179c4176d47c804824ae081ddc051de1a0aacd5d8f1"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingIntegrationTests.Json_mapping_completes_for_xlsx_and_all_render_commands.9FE6386EC61B8529.xlsx",
+      "sha256": "15141d75db2a450fad68730122d7410a8c5643712b882c6f33a3ddf25bb9ce35"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingIntegrationTests.Mapping_errors_preserve_existing_output_and_reject_input_overwrite.EC5FB52BE1BA9B5B.xlsx",
+      "sha256": "7a212b4c3d66d4d9d3571f918d5d5312a83622ddf7d8680fe081f701359f461f"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingIntegrationTests.Mapping_page_breaks_produce_four_pages_even_with_fit_to_page_template.B8BA09212B263103.xlsx",
+      "sha256": "48bdab04bd4f53320ce82873ba4616675258b355c6d27180396b9ba20819439c"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingTests.Clr_objects_keep_dates_decimals_and_dictionary_keys.FB58BB844F1CF45D.xlsx",
+      "sha256": "ef6397e6ba5479ebe84127db115afbf3655c6be88be161163231040aaa810c76"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingTests.Dictionary_paths_remain_case_sensitive_even_with_insensitive_comparer.DC1490280402EA16.xlsx",
+      "sha256": "92019a329e3eeab1c452146335409c3ebf5026287fb36f85b3fc7c3ec2e1c6e6"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingTests.Different_arrays_and_cross_boundary_merges_are_rejected.18E0B653B73072A9.xlsx",
+      "sha256": "50e67d208b9f757d6a3f36132a4a539558a75259ff61545359bce4dc94ff1a2e"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingTests.Different_arrays_and_cross_boundary_merges_are_rejected.E0F7FAF29B3848CD.xlsx",
+      "sha256": "ae6b0656cd7ebc6b569ad0c76862b6d63f4b6b1e507856189421912368a13c09"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingTests.Empty_arrays_delete_single_rows_and_blocks.90C9053C46D167E5.xlsx",
+      "sha256": "b35f0b0f6b0d07fc382c51b3bc9a62275fe1b9df7c0fd44c2d6d642c35b912f4"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingTests.Expansion_limit_and_cancellation_leave_destination_untouched.4DE02E339C54AF2E.xlsx",
+      "sha256": "cc99254af58ef4fc05db0e719e0c312ddb21d111f445e543034b4c8c5b22b2c0"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingTests.Invalid_mappings_report_original_cell_and_preserve_output.3FB64B7E410B7995.xlsx",
+      "sha256": "63746160053c57eeb48b567ec97f007f2ca6e99d379e66a31e20e9f41974425b"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingTests.Iso_offsets_are_preserved_and_date_conversion_is_explicit.2EDEC375BAE461EA.xlsx",
+      "sha256": "d3f9e827b3fea098c7d6d7fef1b059d207d29d2b4814e01c3d1cdd3ae7aed955"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingTests.Marker_content_alias_shadowing_nonarrays_and_objects_are_rejected.4DE02E339C54AF2E.xlsx",
+      "sha256": "cb644d6f8ff24fd10ac44521ff518cc6464ae7cb0b7d4b31248f7a3a743da04f"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingTests.Marker_content_alias_shadowing_nonarrays_and_objects_are_rejected.99F0B5FA999D0F59.xlsx",
+      "sha256": "13d51d3e5d7bb2c075e75cb42e74ed6832c92951cccbacf86d7ba0cb5c5e55a2"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingTests.Marker_content_alias_shadowing_nonarrays_and_objects_are_rejected.ACABF8133EACAA76.xlsx",
+      "sha256": "78029ea4cadfc9f4dd530719ca7629ee215868cde3b700d870d4509bd0e95acf"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingTests.Marker_content_alias_shadowing_nonarrays_and_objects_are_rejected.DC9781F92BC9F1E0.xlsx",
+      "sha256": "37d3fb01c97c83b7770723ffa6230a5072ab7c3dea917414569b619bba201c0d"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingTests.Marker_errors_are_validated_even_for_empty_arrays.025127A42AD0C8D1.xlsx",
+      "sha256": "3dce376072329efeb23a9ea86a8f7010b4192c3a4bc7f83c846705fef1916e00"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingTests.Multirow_blocks_preserve_vertical_merges_hidden_rows_and_validation.79AF609BD99610AB.xlsx",
+      "sha256": "f005c424b05cce6435ff22e8d5e606f5ba0bc391900d8bd88de8b09a346defc9"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingTests.Nested_blocks_expand_parent_aliases_empty_children_and_multiple_sheets.C94729B31B111424.xlsx",
+      "sha256": "6ea0b474f567e4971ec945528906ca1439f337ab153a735c87ad3f072b47a2b8"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingTests.Page_breaks_follow_expansion_and_override_fit_mode.5AA3B127EF880B40.xlsx",
+      "sha256": "f0092750c09ebdd903d5332bf7405ac00b3e3a71aac3c1e07b56cec8125ba4d0"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingTests.Root_paths_and_optional_prefixes.5800487B05250F82.xlsx",
+      "sha256": "90add6f7d2acb986207f10c83bed447db7662b65d0cf7fa43885551462971241"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingTests.Root_scalar_array_indices_and_readonly_dictionaries_are_supported.1AFA118344DFB67D.xlsx",
+      "sha256": "39845fab57d956fc5998a8451c3200d78908430ab05971863928cbbef9fd3869"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingTests.Root_scalar_array_indices_and_readonly_dictionaries_are_supported.3D6A9CD927BB6096.xlsx",
+      "sha256": "4637703330006950cf6a2148d0dafa40afa8bc6fad3a99d311f1c632caa27d5b"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingTests.Root_scalar_array_indices_and_readonly_dictionaries_are_supported.5CB53AA5441CBC44.xlsx",
+      "sha256": "b8c726939532d5a7a96cc66117212ad7818b44dee065a8e78c2723cdcd479bcd"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingTests.Single_row_arrays_preserve_styles_merges_and_caller_totals.CEE3D6B7D3B87850.xlsx",
+      "sha256": "22619d4ab3e9ba7a7ac29c960dc8af75b1c43ac692873e9069d838afdea7f00a"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/MappingTests.Typed_values_formatting_dates_nulls_and_escaped_markers.F3A9C970DD8BC8EC.xlsx",
+      "sha256": "246414dba32277878ec0b9a031fd4aa4394402caa585058311e3aca0b5ea5687"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/OpenXmlEndToEndTests.AutoKeepsOpenXmlAndFiltersDiagnosticsBySelectedPages.A0268BF491EE7720.xlsx",
+      "sha256": "bcdeb1bcc43bcd7d1b5a75049a0ddce7b821c81874aa7a5b9f621f1f85b96590"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/OpenXmlEndToEndTests.CallerCalculatedMappingAutoValuesReachStreamingMarkdown.29D1CBEC155574A1.xlsx",
+      "sha256": "e421657c929b0a4656a3fcd0765176bf7c70b7a45451e65563b082f7a455b4ad"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/OpenXmlEndToEndTests.MappedFormulaFreeWorkbookRendersThroughStreamingReader.3D5603D2784D3681.xlsx",
+      "sha256": "bdc5293b57dc72bfe0e53c50982caa8fde349f593c41d1e89dda6f7532aa00d5"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/OpenXmlEndToEndTests.SingleFontCoreUsesStreamingReaderWithoutLoadingClosedXml.795F3BEBD5ACE77C.xlsx",
+      "sha256": "367845e5b4217975e5f5f321c33d765b23abd615e4d0fecd5ab15c6df9fea479"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/OpenXmlIntegrationTests.ExplicitReaderPreservesValuesStylesMergesAndPrintGeometry.472BF0D35AAF49AE.xlsx",
+      "sha256": "8a7eb074dd0b47461f6a076abf1072f081fdadb89e1582e792f3ddd1bd5bfcd5"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/OpenXmlIntegrationTests.PaintedRowAndColumnDefaultsUseFinitePrintBoundsAndCellOverrides.41F43953BE61398E.xlsx",
+      "sha256": "11ac6a49de3e7707f777325d8651b558bcb6728bce4bec1b33d210dd17ab95d7"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/OpenXmlMappingTests.AutoUsesOpenXmlForSupportedTemplatesAndInputRemainsOpen.A0D4070563D586B5.xlsx",
+      "sha256": "1281f676f28fe309421f75ec3f2c7d23ceb3d927da0d362066d30b11541cb4b9"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/OpenXmlMappingTests.EveryBackendRejectsHiddenFormulasBeforeSelectionDataOrOutput.65D762ED24172607.xlsx",
+      "sha256": "9030ee4f76ba0ae53adb50c6d423818745b2361f9980729a3c17eede646fe8be"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/OpenXmlMappingTests.InlineStringsUseSpreadsheetEscapesAndRoundTripThroughOpenXmlReader.5CB53AA5441CBC44.xlsx",
+      "sha256": "7359bc0ddaf8dc0692534ddbf418ab45b536c2bece6805cd88b7445a818ab52f"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/OpenXmlMappingTests.NestedOccurrencesPreserveTypesStylesMergesAndFinalPrintRange.CE8E0A6842FA3CE1.xlsx",
+      "sha256": "34dec6aba626cd2116c0a6111fb54a72a552865188eaf3ca8e1106afabd4b1ca"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/OpenXmlMappingTests.RowMetadataOutsideTheTemplateBodyMovesWithExpansion.4A91E93E0C468279.xlsx",
+      "sha256": "53f5fb4fc5839cf4bcaeac67c6598abc08e53fd43e0c9ab3055699dea8713e54"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/OpenXmlMappingTests.ScalarStringsMatchLegacyValueAndQuotePrefix.5CB53AA5441CBC44.xlsx",
+      "sha256": "f802085990e39497cf62c4a952c3eaedbb3755f4d9fdf303771e1e6c80d3862f"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/OpenXmlMappingTests.SpilledMappingCleansTemporaryFilesAndAtomicFailuresKeepDestination.2B595009BB2DBE6B.xlsx",
+      "sha256": "8c6671299c907e26b5f7f21df0761e9ead585584c3c32989d79724f9d71fd941"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/OpenXmlMappingTests.SpilledMappingCleansTemporaryFilesAndAtomicFailuresKeepDestination.5CB53AA5441CBC44.xlsx",
+      "sha256": "d5adc2d6d505cd4e02a3354ee05594ec1d5f38ef10e60f6328dda323ad79b7ed"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/OpenXmlMappingTests.TypedValuesDatesDurationsNullAndFormulaLookingStringsAreLiteral.083C24FB574DA086.xlsx",
+      "sha256": "34940400b79fedc27ab713277d85369be71b129061e56551fc773602f35fd80f"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/OpenXmlMappingTests.TypedValuesDatesDurationsNullAndFormulaLookingStringsAreLiteral.45F98FAF61363AE0.xlsx",
+      "sha256": "e1b2f518dce92bcaf49b5cb228599dd8e3f5241c1323ff60c2fe46bfc3bc9ea0"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/OpenXmlMappingTests.UneditedSheetsAndPackagePartsKeepTheirDecompressedBytes.9283BC6394252C4C.xlsx",
+      "sha256": "b7da9d00388cbcebf89cf89198e749a670a31344fbcbb0f37c9402549d6e3062"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/OpenXmlMappingTests.UnsupportedPackageFeaturesAreRejectedBeforeDataAccess.4F15FC761A9AA40F.xlsx",
+      "sha256": "75e983cc631c0d593875ccde1d44447a0f8fc85fb94992b94c57f56137620e2a"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/OpenXmlMappingTests.UnsupportedPackageFeaturesAreRejectedBeforeDataAccess.58F412687F575416.xlsx",
+      "sha256": "3bb5e1cceba8d39624cdd44a504888b95faf5cd4ac2b5004baa6a0d2c4243156"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/OpenXmlMappingTests.UnsupportedPackageFeaturesAreRejectedBeforeDataAccess.B592A7ABAC00FAE5.xlsx",
+      "sha256": "801119ad401eb119bc057f45b1abcd5f517e7eefe0fb525e585b61715ff2ff2c"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/PerformanceRegressionTests.Cancellation_between_pdf_pages_aborts_sink.0F31ACBA8F4FE03F.xlsx",
+      "sha256": "b61144de91a11b6a095dfa07aba07893fe188d4c9438746c5a062747ef8a7307"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/PerformanceRegressionTests.Converter_saves_once_and_reuses_font_stream.4D9656D3E4D069A8.xlsx",
+      "sha256": "58f2ca2bdecd99384a5af3c62908be63d75732326df56198af226455027984f4"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/PerformanceRegressionTests.Reader_shares_equal_styles_without_merging_general_alignment.487AE4C84FBF0D94.xlsx",
+      "sha256": "16bc18dcdab3dff9002a9b2ccfc71c3e0dc380610f72ef0a9d22aca6531b1c85"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/Phase3MemoryTests.Empty_and_header_only_pages_keep_source_number_and_canvas_metadata.18C8C32EE4E5280F.xlsx",
+      "sha256": "d29cc9aaea5c6c85201e9c2e09e01e8afa4315e42da2378c01e216b54a1925fd"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/Phase3MemoryTests.Empty_and_header_only_pages_keep_source_number_and_canvas_metadata.4920C6318C32A590.xlsx",
+      "sha256": "174cab47bd49354f2a7ceacc476236649c4177b18f105fbc2ca98746a79d74a1"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/Phase3MemoryTests.Paginated_merged_titles_match_public_layout_positions_borders_and_converter_pixels.1A1D28D97B1934B0.xlsx",
+      "sha256": "997675e9765ccd73515e9b23aae0f46ece223828f86994006daa58c300400258"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/Phase3MemoryTests.Reader_projection_preserves_original_indices_names_and_unselected_geometry.856463F792FD616F.xlsx",
+      "sha256": "0a4d354225853dfe5dd1797c1cc625f538d88f7f505d4930d8403a1c1ab53c2e"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/Phase3MemoryTests.Selected_pages_preflight_and_render_with_one_active_payload.0BA00D47150071DC.xlsx",
+      "sha256": "f1e90ae0a17742405a4e10f990077ad9b2c21a76c7356e73fb71c46325cb09ac"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/README.md",
+      "sha256": "3567c194e92e563f9855480e3c5163ff170cdb97231502176c27c6ff72e1924d"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/RangeTrimHyperlinkTests.Fixture.48A2341D71389879.xlsx",
+      "sha256": "c495bc1762d66c922278abdccbeec517ec8fc694481de1b2c00ee53b1e4a798e"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/RangeTrimHyperlinkTests.Fixture.FB83DA40DBCCF2CE.xlsx",
+      "sha256": "7f88b3d533e833498cb42b4b4d493741987160545196eedc606aa91830f9e17e"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/RangeTrimHyperlinkTests.Hidden_only_selection_preserves_empty_trimmed_and_continuous_pages.9415BE3E2E0D0106.xlsx",
+      "sha256": "3bbdd599f5fa93b879f81109eaacfcbf84b44cd2cca6392da77c72ea229d053a"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/RangeTrimHyperlinkTests.Link_only_ranges_do_not_materialize_blank_cells_and_keep_output_links.ABC50793D8F30865.xlsx",
+      "sha256": "8ab03c76b6f44cf32643a91fb394502c6fc89a5966f09ccc42863fba63a5b01b"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/RichTextAcceptanceTests.RangeTrimAndMergedCellRetainRichTextInAllOutputFormats.79F50EFE1F4F079D.xlsx",
+      "sha256": "e558cd35f95b7d0fc240a5b79120a149f56665b55fbdf1e2fb424c3e38c10b31"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/RichTextAcceptanceTests.ThemeTintAndInheritedRunAttributesAreEffective.A180499274FB08F0.xlsx",
+      "sha256": "5da6c1d6f92feeb1a1953843029418194cbfce9e6e9883b0de0e009466e2a769"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/RichTextAcceptanceTests.UnsupportedDecorationAndRotationPreserveTextAndReportOnce.563CAA2392F8DB3A.xlsx",
+      "sha256": "8203d0c222f3923c5eddc5edd4e9d3a3f0e700764cab0a7187b35fe0382eea07"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/RichTextAcceptanceTests.UnsupportedDecorationAndRotationPreserveTextAndReportOnce.74E94B16747ABDC2.xlsx",
+      "sha256": "3b42540ed48ed13826656af639cb9cd026ec9f9aa9e667ceac1b67a5d06fff6e"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/RichTextAcceptanceTests.UnsupportedDecorationAndRotationPreserveTextAndReportOnce.E0C296B57F2AD1C4.xlsx",
+      "sha256": "f4a5218010ee93695fd4942b1f8ee506fb5e54abdb16050459ab8ea07d8c4297"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/RichTextAcceptanceTests.XmlCarriageReturnAndLineFeedAcrossRunsNormalizeTogether.04EA663787218ADE.xlsx",
+      "sha256": "29ac938c9628a07d820a23d2069b436008184282165859ba0bc1c90381427285"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/RichTextAcceptanceTests.XmlCarriageReturnAndLineFeedAcrossRunsNormalizeTogether.32DBF92F9E80356F.xlsx",
+      "sha256": "81f73950c59940284d8b1f4329daad63ce006679c92da61fe4c8c3e949379e5f"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/RichTextFallbackTests.LegacyMeasurerFallbackIsOptInAndFailsBeforeOutput.8956CC99987D66F6.xlsx",
+      "sha256": "06e69274bbc7a5abf3acc58bc4f37c826849926ce44abc286ddd96e259fce5c3"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/RichTextTests.ReaderPreservesEffectiveRunsAndPlainText.A4BF65835E997858.xlsx",
+      "sha256": "89d4d5b4d6bb35d023fe0c7227da137dddd88a659124fe67db70e4067e9008de"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/RichTextTests.RotatedSingleDifferentlyStyledRunIsMarkedUnsupported.0F5B7F13737B81A7.xlsx",
+      "sha256": "1d6f894fea320399b9b305f6781b392f3b8c9fcfead7de48cc8667be1dccea34"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/RichTextTests.RotatedSingleDifferentlyStyledRunIsMarkedUnsupported.80CF2266E5A4DA38.xlsx",
+      "sha256": "8fa917308f421bb9417c1c3334b6a8de84b837b08da04a6e047bfdac211a6014"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/RichTextTests.SharedAndInlineStringsPreserveThemeColorNewlinesAndVariationSelectors.7AB65A77BFBD1A92.xlsx",
+      "sha256": "6053f91c2500a6f07229413bbf6fa25509dda3becda2f78f74c9777ebb7c6783"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/RichTextTests.SharedAndInlineStringsPreserveThemeColorNewlinesAndVariationSelectors.EC937F47E279F52B.xlsx",
+      "sha256": "98063a8441d245130c884c14e970f27ebaf887e1d0ba0750a6d747a77334747d"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/ShapeAndFontTests.CreateWorkbookWithShapes.C704163BF33ECFBD.xlsx",
+      "sha256": "e7728f9ef142f30d94490295705d8d55557556f0902d2e6a2a95960b987eb57c"
+    },
+    {
+      "file": "tests/Shared/RetainedWorkbooks/UnsupportedChartTests.CreateChartWorkbook.77A571B9C9986FD3.xlsx",
+      "sha256": "33a67fadeb9a8c46c6b6fe145335fc9dd96dc7be171056f769609cb1fd9ce63d"
+    },
+    {
+      "file": "tests/Shared/SdkWorkbook.cs",
+      "sha256": "5e6e7c25ba33f81b1c360cc7cc0020875d5c99cc4bec47aa006885caae52a319"
+    },
+    {
+      "file": "tests/Shared/WorkbookAssertions.cs",
+      "sha256": "a808180b5f6aad8c9d894ba0a9deb57a4cb5cc121fad588a620a4fc5ba68418b"
+    },
+    {
+      "file": "tools/ExcelRenderer.Core.Reference/ExcelRenderer.Core.Reference.csproj",
+      "sha256": "6b610a36c340150a4a848eccc92fbce92c2a729e32bcbf6faad7fb5f773fb407"
+    },
+    {
+      "file": "tools/ExcelRenderer.Core.Reference/packages.lock.json",
+      "sha256": "793367ed389865ca84d54014a3ed4b564072bde9e5dc7f7baffd28b8209c1231"
+    },
+    {
+      "file": "tools/ExcelRenderer.Core.Validation/ExcelRenderer.Core.Validation.csproj",
+      "sha256": "71abd6a5e6877bbc338f7c0a3a56608c2fa87d02fbdc0d22765b7cc84a002960"
+    },
+    {
+      "file": "tools/ExcelRenderer.Core.Validation/InterlockedExtensions.cs",
+      "sha256": "9e1fbb413522de928b3b235eff79bd8ef1cd117ec378e087c91e8c856fec4e67"
+    },
+    {
+      "file": "tools/ExcelRenderer.Core.Validation/Program.cs",
+      "sha256": "8b345824ff4d5707ece865b40f9ff55f632925a0d432d78a1bc76285ead1d767"
+    },
+    {
+      "file": "tools/ExcelRenderer.Core.Validation/packages.lock.json",
+      "sha256": "f4c5f71c2f7b59598899e34da8a82135b915defa324be161507260731439f71b"
+    },
+    {
+      "file": "tools/ExcelRenderer.OpenXml.Validation/Benchmarks.cs",
+      "sha256": "5a0e261c0e3a8b32a5674fe7338a283cacda98c520573656819f5c543ee08eb9"
+    },
+    {
+      "file": "tools/ExcelRenderer.OpenXml.Validation/Comparison.cs",
+      "sha256": "9307a26a90e9385b3f0cc3d7e377a7682cb51f50ce8855b4cc8e472157b36fc8"
+    },
+    {
+      "file": "tools/ExcelRenderer.OpenXml.Validation/Evidence.cs",
+      "sha256": "f8e0deed94f89a6edcc6ccb2fc702375de81cc1556c409767676b96e1fb1f966"
+    },
+    {
+      "file": "tools/ExcelRenderer.OpenXml.Validation/ExcelRenderer.OpenXml.Validation.csproj",
+      "sha256": "d301826acfb99168641721c9487504a045c9931229b60d5c8fd5217f6d2bf4ed"
+    },
+    {
+      "file": "tools/ExcelRenderer.OpenXml.Validation/FixtureGenerator.cs",
+      "sha256": "b13f0c9fda1828a2eb2d4cf630a1dd161e2d9a4826f627caedea5b13e912150c"
+    },
+    {
+      "file": "tools/ExcelRenderer.OpenXml.Validation/Program.cs",
+      "sha256": "ff03ace2936effb8ccaf8af1a371525317711e957fa5c5e8a49872e14df5738a"
+    },
+    {
+      "file": "tools/ExcelRenderer.OpenXml.Validation/README.md",
+      "sha256": "7e96fb89fe189f97fa517548ae21b08f4802fe9bbff1a80bbde798c9c1010c99"
+    },
+    {
+      "file": "tools/ExcelRenderer.OpenXml.Validation/packages.lock.json",
+      "sha256": "e55f0b9e49efde80249fbe2c5475cf06c90b2272b66b7be09a57329ced95dd88"
+    },
+    {
+      "file": "tools/ExcelRenderer.Performance/ExcelRenderer.Performance.csproj",
+      "sha256": "914c43687bc4bb3628a3e0d62f10678d40d2d15e8a5a28b7ae3f447c79f1c1d6"
+    },
+    {
+      "file": "tools/ExcelRenderer.Performance/FixtureWorkbook.cs",
+      "sha256": "eee94290be4f0e9558b075301bb2f21a908e5c193003eff6a4589565a3d98a7d"
+    },
+    {
+      "file": "tools/ExcelRenderer.Performance/ImageRenderingBenchmark.cs",
+      "sha256": "bfaa78e47a61f54641b4aa2f6e33951d6ead16ac27a741e7f8f71e83ee622ecb"
+    },
+    {
+      "file": "tools/ExcelRenderer.Performance/InputSpoolBenchmark.cs",
+      "sha256": "ceb70c55297654cd17c9115f4639392984c8e12a96563da0fe5b8003864057b1"
+    },
+    {
+      "file": "tools/ExcelRenderer.Performance/IntegrationBenchmark.cs",
+      "sha256": "742008979caa7c51802985c04263ca16346499e302ec41468e240da2212803e3"
+    },
+    {
+      "file": "tools/ExcelRenderer.Performance/PerformanceFixtureGenerator.cs",
+      "sha256": "14f047c8a717c4a1713dad45a2f2c776bac0c356bbc82eee5a93c04ca8510c31"
+    },
+    {
+      "file": "tools/ExcelRenderer.Performance/Program.cs",
+      "sha256": "541e6d6c33b7a32f941ce61368411307216ce585194caac2256199046ddcf2d9"
+    },
+    {
+      "file": "tools/ExcelRenderer.Performance/README.md",
+      "sha256": "bf8ffec3131b39ba00d199457b6918b5c593788156adca07f5853c7c70744480"
+    },
+    {
+      "file": "tools/ExcelRenderer.Performance/ReaderBenchmark.cs",
+      "sha256": "6796306c579d3fdc3caadf2391af1ba9ec2e79a3aebd63a1b1fe2e9b6f4dd4f7"
+    },
+    {
+      "file": "tools/ExcelRenderer.Performance/ReaderFixtures.cs",
+      "sha256": "84c95345d5e44a99c5effb7ef3c5751cc2ef495130e38412e18ef9a2681e8922"
+    },
+    {
+      "file": "tools/ExcelRenderer.Performance/RenderMemoryBenchmark.cs",
+      "sha256": "9803aeba8dae2cd0200ec9b0008e568ebf42a53a005cfd18d9f64d5002c151ef"
+    },
+    {
+      "file": "tools/ExcelRenderer.Performance/compare-pdf.py",
+      "sha256": "dd244de86ed3f258395495cc3256b5f8ded5efef127f9b939991252d031e4ec1"
+    },
+    {
+      "file": "tools/ExcelRenderer.Performance/compare_phase3.py",
+      "sha256": "278120475611d064cd13e95357afab77e93ba7b3409a28d212c9a8cde576cc19"
+    },
+    {
+      "file": "tools/ExcelRenderer.Performance/compare_phase3_review.py",
+      "sha256": "28d6915f5070dbfb4b0203a0bc60e317f1400829f617326ce789ccf025245f9d"
+    },
+    {
+      "file": "tools/ExcelRenderer.Performance/compare_phase3_supplement.py",
+      "sha256": "8a0c1a454911b7abd9b8eb756fc6c82ff15dd9df03b96b9c8014f2cc59825198"
+    },
+    {
+      "file": "tools/ExcelRenderer.Performance/mapping-benchmark.py",
+      "sha256": "424b09757261f0094dabaf01d21dbdddcba1e954766f0d5781362c1a34a39bc1"
+    },
+    {
+      "file": "tools/ExcelRenderer.Performance/packages.lock.json",
+      "sha256": "dda6915b0c6c45905d36f76938f77065c73db917cd40b651cdac0f3e7166b684"
+    },
+    {
+      "file": "tools/ExcelRenderer.Performance/prepare-baseline.py",
+      "sha256": "3673d56f037e37e7aad885baa35ed76c2fea5aa28ab6b51e6786e1da81bb4de7"
+    },
+    {
+      "file": "tools/ExcelRenderer.Performance/run.py",
+      "sha256": "7a546f3312fa266b004326ea563f1d880d01ba6f48193cd6d77df83cdccd5550"
+    },
+    {
+      "file": "tools/ExcelRenderer.Performance/summarize_phase3.py",
+      "sha256": "0c4f86a40226d8171757db30c8b6bcf815a05aa6aa1978c24349cd59198e2a93"
+    }
+  ]
+}

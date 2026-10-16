@@ -2,10 +2,13 @@
 
 [English](openxml-integration.md) | 日本語
 
-Reader・Mapping の既定 backend は ClosedXml です。OpenXml を明示するか、
-Auto で対応機能に基づいて選択できます。`ExcelRenderer.OpenXml` は Core・本体・Mapping
-が使う共通の Reader・Writer・入力処理を提供します。描画・Mapping 言語・フォント・
-ClosedXML は参照しません。
+Core・本体の Reader は OpenXml が既定です。Auto は OpenXml の互換指定として受け付け、
+別エンジンへ戻りません。Reader の明示 ClosedXml は入力処理前に移行先を示して拒否します。
+enum の数値は変更しません。Mapping も OpenXml が既定で、Auto は同じ Writer を使います。
+Mapping の明示 ClosedXml も入力処理前に拒否します。
+[撤去の互換性](closedxml-removal-compatibility.md)を参照してください。
+`ExcelRenderer.OpenXml` は共通の Reader・Writer・入力処理を提供し、描画・Mapping 言語・
+フォント・ClosedXML を参照しません。
 
 ```csharp
 var document = new ExcelRenderer.Excel.ExcelReader().Read(input,
@@ -30,9 +33,9 @@ Core は `PdfExportOptions.ReadOptions` に同等の
 
 | Reader 指定 | 数式指定 | 動作 |
 | --- | --- | --- |
-| ClosedXml（既定） | CachedValue（既定） | 元 XML の保存結果を既存 formatter で書式化 |
-| OpenXml | CachedValue | ストリーミング Reader。診断は出力選択後に集約 |
-| Auto | CachedValue | 表示能力で選択。保存結果のみを使用 |
+| OpenXml（既定） | CachedValue（既定） | ストリーミング Reader。診断は出力選択後に集約 |
+| Auto | CachedValue | OpenXml の互換指定。fallback なし |
+| ClosedXml | 全指定 | 入出力前に NotSupportedException。OpenXml または Auto へ移行 |
 | 全エンジン | Legacy / Recalculate | 入力処理・出力開始前に拒否 |
 
 全 Reader が元 XLSX の保存結果だけを表示します。古い結果もそのまま使い、
@@ -48,24 +51,36 @@ Markdown の `VisualCell` にも伝播します。描画用の式展開はせず
 ことだけで Auto を切り替えません。低レベル公開 `FormulaTextResolver` は既存利用者向けに
 残しますが、描画経路では利用しません。
 
-Auto の表示能力検査にはシート、明示範囲、hidden を反映します。ページ指定では
-通常の layout と source region による preflight を行い、対象外の警告だけで
-ClosedXml 経路へ切り替えません。この場合は候補モデルの構築とフォント gate 内の
-レイアウト検査が必要です。ClosedXml Reader を選ぶ場合は候補を解放してからロードします。
-この追加処理も Auto のコストに含まれます。入力破損・上限超過・キャンセル・
-実行時エラーを捕まえて別エンジンで再試行しません。
+Reader の Auto も OpenXml モデルを一度だけ構築します。診断にはシート・明示範囲・hidden・
+ページ指定を従来どおり反映します。互換性走査、候補の破棄、別実装による再読込はありません。
+成功時の BackendSelected は一度だけ呼び、SelectedBackend は OpenXml、理由コードは
+ExplicitOpenXml または AutoOpenXmlOnly です。無効な指定や入力破損では成功通知しません。
+未知の enum 値は ArgumentOutOfRangeException です。入力破損・上限超過・キャンセル・
+実行時エラーを別実装で再試行しません。
+
+表示 culture は読込開始時の CurrentCulture を低レベル Reader へ明示して渡し、
+セッション用のコピーを保持します。
 
 地域依存・未解決の表示は同等とみなしません。`UnsupportedNumberFormat`、
 `RegionalNumberFormat`、`IsoDateDisplay`、`UnresolvedColor`、
-`UnsupportedPrintReference` は明示 OpenXml で既存の
+`UnsupportedPrintReference` は OpenXml／Auto ともに既存の
 strict / warnings-as-errors に従います。組み込み日付形式14は保存された
 `mm-dd-yy`、ISO 日付セルは元テキストを表示します。地域ごとの日付表記を固定する場合は
 テンプレートに明示した custom number format を使ってください。数式 cache の欠落や
 エラーは診断であり、Reader を再試行する理由にはしません。
 
+対応する paperSize の数値 ID とポイント寸法は B4/B5 を含め維持し、landscape では縦横を交換します。
+未対応 ID は UnsupportedPaperSize と A4 寸法を使用します。paperWidth／paperHeight の単位付き長さは
+旧 Reader と同様に解釈せず、UnsupportedPaperDimensions を通知し paperSize に従います。
+これらをポイント値として扱うことはありません。
+
+公開 `ExcelStyleConverter.Convert(IXLCell)` は削除し、
+`Convert(CellStyleInfo style, CellValueType valueType)` に置き換えました。破壊的 API 変更です。
+null 検証、General 配置、数式キャッシュの値型は[移行例](closedxml-removal-compatibility.md#public-style-api-migration)を参照してください。
+
 ## 数式なしの Mapping
 
-構文解析・CLR/JSON 評価・評価済み展開計画を両 Writer で共有します。スカラー、
+既存の構文解析・CLR/JSON 評価・評価済み展開計画を維持します。スカラー、
 escape、format/date、null、1行配列、入れ子、空配列、書式だけのセル、行列情報、
 対応可能な結合、印刷範囲・タイトル、既存改ページ・directive を処理します。
 新文字列は inlineStr、未変更の rich/shared string は保持します。`=SUM(...)` で
@@ -84,19 +99,22 @@ calculated/totals 式・集計関数、計算を伴う定義名を拒否しま�
 渡してください。静的定義名は文字列・数値・真偽値の定数、既知シートの有限 A1 参照の
 union（全行・全列・引用シート名を含む）だけを許容します。関数・演算・動的参照・外部参照・
 3D 参照・名前の別名・未知文法は拒否します。繰り返し領域と重なる定義名の既存制限は維持し、
-静的な印刷範囲・印刷タイトルは継続します。条件付き書式・入力規則の式は既存 ClosedXML の
-構造調整範囲で保持しますが、評価や条件による描画は追加しません。
+静的な印刷範囲・印刷タイトルは継続します。条件付き書式・入力規則の式は構造メタデータとして
+対応する A1 参照を移動します。文字列リテラル・関数名は変更せず、式評価や条件による描画も追加しません。
 
-合格後の能力検査では、静的な一般定義名、条件付き書式、入力規則、table/pivot/filter/
-sparkline、描画・コメント・リンク等を構造上の理由として Auto がClosedXml 経路を選べます。
-数式を許可する fallback はありません。OpenXml Writer の対応範囲は拡張しません。
-保存時評価を無効にし、元の `calcPr`（存在しない場合も含む）を保持します。
-再計算要求は新規に追加しません。
+構造上の非対応は getter・列挙前に検査します。元行から出力先への対応に従って、静的定義名、
+通常リンクの ref・内部 location、コメントと VML 表示アンカー、繰り返し外の画像、
+数式なし table/filter、条件付き書式・入力規則を更新します。別シートからの参照も対象です。
+画像バイト列と relationship 先は保持します。通常の worksheet を参照するピボットは参照と出力位置を
+移動し、元データが変わる場合は source records と shared items を更新して refresh を指定します。
+ピボット集計セルの再計算は行いません。グループ化・計算・外部・解決できない名前付きピボット元、
+chart cache、threaded comment、マクロ・署名・Strict・未知の拡張や part は拒否します。
+スパークライン拡張は既存の共通数式検査による拒否を維持します。fallback や再試行はありません。
+元の `calcPr`（存在しない場合も含む）を保持し、数式の再計算要求を追加しません。
 
-Auto は印刷範囲と展開領域が交差すると `PrintAreaExpansionCompatibility` でClosedXml 経路を
-選びます。明示 OpenXml の印刷範囲は全出力 occurrence を含むように拡張し、全行削除の
-area は除去します。繰り返し・削除に交差する行タイトルは対象外です。固定タイトル、
-一意に移動する行タイトル、列タイトルは保持します。
+印刷範囲は全出力 occurrence を含み、完全に削除された area は除去します。
+繰り返し・削除に交差する行タイトルは対象外です。固定タイトル、一意に移動する行タイトル、
+列タイトルは保持します。
 
 出力に残る `**@page-break` は A1 でも倍率指定を有効にします。正の元 scale を保持し、
 なければ100です。空配列で消えた directive は倍率に影響しません。元行改ページは各出力
@@ -118,7 +136,8 @@ excelrenderer render template.xlsx --data data.json --format svg -o output --map
 ```
 
 pdf / image / svg / markdown・md / render に `--reader-backend`、これらと xlsx に
-`--mapping-backend` を指定できます。値は `closedxml|openxml|auto`。
+`--mapping-backend` を指定できます。どちらも値は `openxml|auto`、既定は `openxml` です。
+明示 `closedxml` は入力・データの読込や出力作成前に移行先を示して拒否します。
 `--mapping-backend` の明示指定には `--data` が必要です。`--verbose` の選択理由は stderr
 へ表示します。`--formula-mode` は `cached` のみ対応し、既定値も `cached` です。
 明示 `legacy` / `recalculate` は全 backend で入力処理・出力開始前に拒否します。
@@ -139,4 +158,4 @@ Writer は型付き編集計画だけを受け取り、spill 可能な元行ス�
 SpreadsheetML の escape 規則で保存し、新 Reader で元の文字列へ復元します。
 ClosedXML 0.105.1 は plain inlineStr の escape を復号しないため、これらの特殊値を
 同ライブラリだけで再読込すると escape 表記が残ります。通常文字列と先頭アポストロフィ
-（quotePrefix）は ClosedXml backend と一致します。
+（quotePrefix）は従来の値の意味を保持します。

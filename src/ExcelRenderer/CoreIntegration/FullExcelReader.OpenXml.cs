@@ -17,14 +17,14 @@ internal sealed partial class FullExcelReader
     protected override ReportSheet CompleteSheet(string sheetName, ReportSheet sheet, CoreSheetReadContext context)
     {
         var data = (FullWorkbookData)context.Metadata.ExtensionData!;
-        var pictures = data.Pictures.GetValueOrDefault(sheet.Name);
         return sheet with
         {
             Images = sheet.Images?.Select(image => image.SourceImage is { } source
                 ? image with { ExtensionData = new FullPictureData(Picture(source, image.DrawingAnchor!)), SourceImage = null }
-                : image.Name is { } name && pictures?.GetValueOrDefault(name) is { } picture ? image with { ExtensionData = new FullPictureData(picture) } : image).ToArray(),
+                : image).ToArray(),
             ExtensionData = new FullSheetData(context.IncludeBody ? data.Shapes.GetValueOrDefault(sheet.Name, []) : [], data.Hyperlinks.GetValueOrDefault(sheet.Name))
             {
+                DimensionRanges = context.Metadata.AdditionalGeometry.GetValueOrDefault(sheet.Name, []),
                 CellReadDiagnostics = context.Metadata.CellDiagnostics.GetValueOrDefault(sheet.Name, []).Select(CoreDiagnosticAdapter.ToPublic).ToArray(),
                 UnsupportedFeatures = context.IncludeBody && detectUnsupportedFeatures ? data.UnsupportedFeatures.GetValueOrDefault(sheet.Name, []).Concat(context.ConditionalFormattingRanges.Select((ranges, index) => new UnsupportedFeature(
                     "UnsupportedConditionalFormatting",

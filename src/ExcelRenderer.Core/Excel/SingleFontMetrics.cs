@@ -1,14 +1,12 @@
-using ClosedXML.Graphics;
 using ExcelRenderer.Core.Fonts;
 
 namespace ExcelRenderer.Core.Excel;
 
 /// <summary>Uses only the caller-supplied regular font for Core workbook metrics.</summary>
-internal sealed class SingleFontMetrics : ICoreFontMetrics, IClosedXmlFontMetrics
+internal sealed class SingleFontMetrics : ICoreFontMetrics
 {
     private readonly SingleFontContext context;
     private readonly Dictionary<NormalFontMetadata, double> widths = new();
-    private IXLGraphicEngine? graphicEngine;
 
     /// <summary>Initializes a new instance of the <see cref="SingleFontMetrics"/> class.</summary>
     /// <param name="context">The conversion-owned font.</param>
@@ -16,9 +14,6 @@ internal sealed class SingleFontMetrics : ICoreFontMetrics, IClosedXmlFontMetric
     {
         this.context = context;
     }
-
-    /// <inheritdoc/>
-    public IXLGraphicEngine GraphicEngine => graphicEngine ??= new SingleFontGraphicEngine(context);
 
     /// <inheritdoc/>
     public NormalFontMetadata DefaultFont => new(SingleFontContext.Family, 11);
@@ -35,7 +30,4 @@ internal sealed class SingleFontMetrics : ICoreFontMetrics, IClosedXmlFontMetric
 
         return width;
     }
-
-    /// <inheritdoc/>
-    public double? DefaultColumnWidth(double width) => null;
 }

@@ -1,6 +1,9 @@
 using System.Globalization;
 using System.Text.Json;
-using ClosedXML.Excel;
+using ExcelRenderer.OpenXml;
+using ExcelRenderer.TestFixtures;
+using static ExcelRenderer.TestFixtures.WorkbookAssertions;
+using static ExcelRenderer.Mapping.Tests.MappingFixture;
 using ExcelRenderer.Mapping;
 using Xunit;
 
@@ -15,49 +18,32 @@ public sealed class MappingTests
     [InlineData("**$['name'][\"value\"]")]
     public void Root_paths_and_optional_prefixes(string expression)
     {
-        using var result = Map(s => s.Cell("A1").Value = expression, """{"name":{"value":"Alice"}}""");
-        Assert.Equal("Alice", result.Worksheet(1).Cell("A1").GetString());
+        using var result = Map(Fixture("MappingTests.Root_paths_and_optional_prefixes.5800487B05250F82.xlsx" , ("A1", expression)), """{"name":{"value":"Alice"}}""");
+        Assert.Equal("Alice", Text(result, "A1"));
     }
 
     [Fact]
     public void Typed_values_formatting_dates_nulls_and_escaped_markers()
     {
-        using var result = Map(s =>
-        {
-            s.Cell("A1").Value = "**amount";
-            s.Cell("A1").Style.NumberFormat.Format = "0.000";
-            s.Cell("A2").Value = "**amount | format(\"N2\", \"en-US\")";
-            s.Cell("A3").Value = "**date";
-            s.Cell("A4").Value = "**date | date(\"yyyy/MM/dd\")";
-            s.Cell("A5").Value = "**enabled";
-            s.Cell("A6").Value = "**nothing";
-            s.Cell("A7").Value = "\\**literal";
-            s.Cell("A8").Value = "prefix **amount";
-            s.Cell("A9").Value = "**$['key|with.pipe'] | format(\"000\")";
-        }, """{"amount":1234.5,"date":"2026-10-09","enabled":true,"nothing":null,"key|with.pipe":7}""");
-        var sheet = result.Worksheet(1);
-        Assert.Equal(XLDataType.Number, sheet.Cell("A1").DataType);
-        Assert.Equal(1234.5, sheet.Cell("A1").GetDouble());
-        Assert.Equal("0.000", sheet.Cell("A1").Style.NumberFormat.Format);
-        Assert.Equal("1,234.50", sheet.Cell("A2").GetString());
-        Assert.Equal("2026-10-09", sheet.Cell("A3").GetString());
-        Assert.Equal("2026/10/09", sheet.Cell("A4").GetString());
-        Assert.True(sheet.Cell("A5").GetBoolean());
-        Assert.True(sheet.Cell("A6").IsEmpty());
-        Assert.Equal("**literal", sheet.Cell("A7").GetString());
-        Assert.Equal("prefix **amount", sheet.Cell("A8").GetString());
-        Assert.Equal("007", sheet.Cell("A9").GetString());
+        using var result = Map(Fixture("MappingTests.Typed_values_formatting_dates_nulls_and_escaped_markers.F3A9C970DD8BC8EC.xlsx"), """{"amount":1234.5,"date":"2026-10-09","enabled":true,"nothing":null,"key|with.pipe":7}""");
+        var sheet = result;
+        Assert.Equal(CellValueType.Number, Cell(sheet, "A1").Value.Type);
+        Assert.Equal(1234.5, Number(sheet, "A1"));
+        Assert.Equal("0.000", Style(sheet, "A1").NumberFormatCode);
+        Assert.Equal("1,234.50", Text(sheet, "A2"));
+        Assert.Equal("2026-10-09", Text(sheet, "A3"));
+        Assert.Equal("2026/10/09", Text(sheet, "A4"));
+        Assert.True(Cell(sheet, "A5").Value.Boolean == true);
+        Assert.True(Cell(sheet, "A6").Value.Type == CellValueType.Blank);
+        Assert.Equal("**literal", Text(sheet, "A7"));
+        Assert.Equal("prefix **amount", Text(sheet, "A8"));
+        Assert.Equal("007", Text(sheet, "A9"));
     }
 
     [Fact]
     public void Clr_objects_keep_dates_decimals_and_dictionary_keys()
     {
-        using var input = Template(s =>
-        {
-            s.Cell("A1").Value = "**Date";
-            s.Cell("A2").Value = "**Amount | format(\"F2\")";
-            s.Cell("A3").Value = "**Map['a.b'][0]";
-        });
+        using var input = Fixture("MappingTests.Clr_objects_keep_dates_decimals_and_dictionary_keys.FB58BB844F1CF45D.xlsx");
         using var output = new MemoryStream();
         ExcelTemplateMapper.Map(input, output, new
         {
@@ -66,11 +52,12 @@ public sealed class MappingTests
             Map = new Dictionary<string, int[]> { ["a.b"] = [42] },
         });
         output.Position = 0;
-        using var result = new XLWorkbook(output);
-        Assert.Equal(XLDataType.DateTime, result.Worksheet(1).Cell("A1").DataType);
-        Assert.Equal(new DateTime(2026, 10, 9), result.Worksheet(1).Cell("A1").GetDateTime());
-        Assert.Equal("12.35", result.Worksheet(1).Cell("A2").GetString());
-        Assert.Equal(42, result.Worksheet(1).Cell("A3").GetDouble());
+        using var result = WorkbookProbe.Open(output);
+        Assert.Equal(CellValueType.Number, Cell(result, "A1").Value.Type);
+        Assert.Equal(14, Style(result, "A1").NumberFormatId);
+        Assert.Equal(new DateTime(2026, 10, 9), Date(result, "A1"));
+        Assert.Equal("12.35", Text(result, "A2"));
+        Assert.Equal(42, Number(result, "A3"));
         Assert.True(input.CanRead);
         Assert.True(output.CanWrite);
     }
@@ -78,98 +65,56 @@ public sealed class MappingTests
     [Fact]
     public void Single_row_arrays_preserve_styles_merges_and_caller_totals()
     {
-        using var result = Map(s =>
-        {
-            s.Cell("A1").Value = "Header";
-            s.Cell("A2").Value = "**items[*].name";
-            s.Range("A2:B2").Merge();
-            s.Cell("C2").Value = "**$.items[*].quantity";
-            s.Cell("C2").Style.NumberFormat.Format = "0.00";
-            s.Cell("C2").Style.Font.Bold = true;
-            s.Cell("D2").Value = "**items[*].quantity";
-            s.Row(2).Height = 32;
-            s.Cell("A3").Value = "Footer";
-            s.Cell("D3").Value = "**total";
-            s.PageSetup.PrintAreas.Add("A1:D3");
-            s.PageSetup.AddHorizontalPageBreak(2);
-            s.Workbook.DefinedNames.Add("FooterCell", "'Template'!$A$3");
-        }, """{"items":[{"name":"A","quantity":2},{"name":"B","quantity":3}],"total":5}""");
-        var sheet = result.Worksheet(1);
-        Assert.Equal("A", sheet.Cell("A2").GetString());
-        Assert.Equal("B", sheet.Cell("A3").GetString());
-        Assert.Equal("Footer", sheet.Cell("A4").GetString());
-        Assert.Equal(32, sheet.Row(3).Height);
-        Assert.True(sheet.Cell("C3").Style.Font.Bold);
-        Assert.Equal("0.00", sheet.Cell("C3").Style.NumberFormat.Format);
-        Assert.Contains(sheet.MergedRanges, r => r.RangeAddress.ToStringRelative() == "A3:B3");
-        Assert.Equal(3, sheet.Cell("D3").GetDouble());
-        Assert.False(sheet.Cell("D4").HasFormula);
-        Assert.Equal(5, sheet.Cell("D4").GetDouble());
-        Assert.Equal("A1:D4", Assert.Single(sheet.PageSetup.PrintAreas).RangeAddress.ToStringRelative());
-        Assert.Contains("$A$4", result.DefinedNames.Single(n => n.Name == "FooterCell").RefersTo);
-        Assert.Contains(2, sheet.PageSetup.RowBreaks);
-        Assert.Contains(3, sheet.PageSetup.RowBreaks);
+        using var result = Map(Fixture("MappingTests.Single_row_arrays_preserve_styles_merges_and_caller_totals.CEE3D6B7D3B87850.xlsx"), """{"items":[{"name":"A","quantity":2},{"name":"B","quantity":3}],"total":5}""");
+        var sheet = result;
+        Assert.Equal("A", Text(sheet, "A2"));
+        Assert.Equal("B", Text(sheet, "A3"));
+        Assert.Equal("Footer", Text(sheet, "A4"));
+        Assert.Equal(32, Row(sheet, 3).HeightPt);
+        Assert.True(Style(sheet, "C3").FontProperties.Bold == true);
+        Assert.Equal("0.00", Style(sheet, "C3").NumberFormatCode);
+        Assert.Contains(Info(sheet).MergedRanges, r => r.ToString() == "A3:B3");
+        Assert.Equal(3, Number(sheet, "D3"));
+        Assert.False(Cell(sheet, "D4").Formula != null);
+        Assert.Equal(5, Number(sheet, "D4"));
+        Assert.Equal("A1:D4", PrintArea(sheet));
+        Assert.Contains("$A$4", Names(result).Single(n => n.Name == "FooterCell").RawText);
+        Assert.Contains(2, Breaks(sheet));
+        Assert.Contains(3, Breaks(sheet));
     }
 
     [Fact]
     public void Nested_blocks_expand_parent_aliases_empty_children_and_multiple_sheets()
     {
-        using var result = Map(s =>
-        {
-            s.Cell("A1").Value = "**@start-array $.orders[*] as order";
-            s.Cell("A2").Value = "**@order.number";
-            s.Cell("A3").Value = "**@start-array @order.lines[*] as line";
-            s.Cell("A4").Value = "**@line.name";
-            s.Cell("B4").Value = "**@order.number";
-            s.Cell("C4").Value = "**title";
-            s.Cell("A5").Value = "**@end-array";
-            s.Cell("A6").Value = "**@order.total";
-            s.Cell("A7").Value = "**@end-array";
-            s.Cell("A8").Value = "Footer";
-            s.Workbook.AddWorksheet("Other").Cell("A1").Value = "**title";
-        }, """{"title":"Root","orders":[{"number":"O1","total":10,"lines":[{"name":"A"},{"name":"B"}]},{"number":"O2","total":0,"lines":[]}]}""");
-        var s = result.Worksheet(1);
-        Assert.Equal(new[] { "O1", "A", "B", "10", "O2", "0", "Footer" }, Enumerable.Range(1, 7).Select(r => s.Cell(r, 1).GetFormattedString()).ToArray());
-        Assert.Equal("O1", s.Cell("B3").GetString());
-        Assert.Equal("Root", s.Cell("C3").GetString());
-        Assert.Equal("Root", result.Worksheet("Other").Cell("A1").GetString());
-        Assert.DoesNotContain(s.CellsUsed(), c => c.DataType == XLDataType.Text && c.GetString().StartsWith("**"));
+        using var result = Map(Fixture("MappingTests.Nested_blocks_expand_parent_aliases_empty_children_and_multiple_sheets.C94729B31B111424.xlsx"), """{"title":"Root","orders":[{"number":"O1","total":10,"lines":[{"name":"A"},{"name":"B"}]},{"number":"O2","total":0,"lines":[]}]}""");
+        var s = result;
+        Assert.Equal(new[] { "O1", "A", "B", "10", "O2", "0", "Footer" }, Enumerable.Range(1, 7).Select(r => Display(s, r, 1)).ToArray());
+        Assert.Equal("O1", Text(s, "B3"));
+        Assert.Equal("Root", Text(s, "C3"));
+        Assert.Equal("Root", Text(result, "A1", 2));
+        Assert.DoesNotContain(Cells(s), c => c.Value.Type == CellValueType.String && c.Value.Text!.StartsWith("**"));
     }
 
     [Fact]
     public void Empty_arrays_delete_single_rows_and_blocks()
     {
-        using var result = Map(s =>
-        {
-            s.Cell("A1").Value = "Header";
-            s.Cell("A2").Value = "**items[*].name";
-            s.Cell("A3").Value = "**@start-array items[*] as item";
-            s.Cell("A4").Value = "**@item.name";
-            s.Cell("A5").Value = "**@end-array";
-            s.Cell("A6").Value = "Footer";
-        }, """{"items":[]}""");
-        Assert.Equal("Header", result.Worksheet(1).Cell("A1").GetString());
-        Assert.Equal("Footer", result.Worksheet(1).Cell("A2").GetString());
-        Assert.Equal(2, result.Worksheet(1).LastRowUsed()!.RowNumber());
+        using var result = Map(Fixture("MappingTests.Empty_arrays_delete_single_rows_and_blocks.90C9053C46D167E5.xlsx"), """{"items":[]}""");
+        Assert.Equal("Header", Text(result, "A1"));
+        Assert.Equal("Footer", Text(result, "A2"));
+        Assert.Equal(2, LastContentRow(result));
     }
 
     [Fact]
     public void Page_breaks_follow_expansion_and_override_fit_mode()
     {
-        using var result = Map(s =>
-        {
-            s.Cell("A1").Value = "**items[*]";
-            s.Cell("C2").Value = "**@page-break";
-            s.Cell("A3").Value = "After";
-            s.PageSetup.FitToPages(1, 1);
-        }, """{"items":[1,2,3]}""");
-        var s = result.Worksheet(1);
-        Assert.Contains(3, s.PageSetup.RowBreaks);
-        Assert.Contains(2, s.PageSetup.ColumnBreaks);
-        Assert.True(s.Cell("C4").IsEmpty());
-        Assert.Equal(100, s.PageSetup.Scale);
-        Assert.Equal(0, s.PageSetup.PagesWide);
-        Assert.Equal(0, s.PageSetup.PagesTall);
+        using var result = Map(Fixture("MappingTests.Page_breaks_follow_expansion_and_override_fit_mode.5AA3B127EF880B40.xlsx"), """{"items":[1,2,3]}""");
+        var s = result;
+        Assert.Contains(3, Breaks(s));
+        Assert.Contains(2, Breaks(s, true));
+        Assert.True(Cell(s, "C4").Value.Type == CellValueType.Blank);
+        Assert.Equal(100, int.Parse(Info(s).PageSetup!.Attributes["scale"]));
+        Assert.Equal("0", Info(s).PageSetup!.Attributes.GetValueOrDefault("fitToWidth", "0"));
+        Assert.Equal("0", Info(s).PageSetup!.Attributes.GetValueOrDefault("fitToHeight", "0"));
     }
 
     [Theory]
@@ -185,7 +130,7 @@ public sealed class MappingTests
     [InlineData("**@unknown.name", "not in scope")]
     public void Invalid_mappings_report_original_cell_and_preserve_output(string expression, string message)
     {
-        using var input = Template(s => s.Cell("B7").Value = expression);
+        using var input = Fixture("MappingTests.Invalid_mappings_report_original_cell_and_preserve_output.3FB64B7E410B7995.xlsx" , ("B7", expression));
         using var output = new MemoryStream(new byte[] { 1, 2, 3 }, true);
         var exception = Assert.Throws<MappingException>(() => ExcelTemplateMapper.MapJson(input, output, """{"name":"Alice","items":[]}"""));
         Assert.Equal("Template", exception.SheetName);
@@ -203,12 +148,7 @@ public sealed class MappingTests
     [InlineData("**@start-array items[*]", "", "**@end-array", "Expected")]
     public void Marker_errors_are_validated_even_for_empty_arrays(string first, string body, string last, string message)
     {
-        using var input = Template(s =>
-        {
-            s.Cell("A1").Value = first;
-            s.Cell("A2").Value = body;
-            s.Cell("A3").Value = last;
-        });
+        using var input = Fixture("MappingTests.Marker_errors_are_validated_even_for_empty_arrays.025127A42AD0C8D1.xlsx" , ("A1", first), ("A2", body), ("A3", last));
         using var output = new MemoryStream();
         var error = Assert.Throws<MappingException>(() => ExcelTemplateMapper.MapJson(input, output, """{"items":[]}"""));
         Assert.Contains(message, error.Message, StringComparison.OrdinalIgnoreCase);
@@ -218,25 +158,17 @@ public sealed class MappingTests
     [Fact]
     public void Different_arrays_and_cross_boundary_merges_are_rejected()
     {
-        using var input = Template(s =>
-        {
-            s.Cell("A1").Value = "**first[*]";
-            s.Cell("B1").Value = "**second[*]";
-        });
+        using var input = Fixture("MappingTests.Different_arrays_and_cross_boundary_merges_are_rejected.E0F7FAF29B3848CD.xlsx");
         using var output = new MemoryStream();
         Assert.Contains("same array", Assert.Throws<MappingException>(() => ExcelTemplateMapper.MapJson(input, output, "{}" )).Message);
-        using var merged = Template(s =>
-        {
-            s.Cell("A1").Value = "**items[*]";
-            s.Range("A1:A2").Merge();
-        });
+        using var merged = Fixture("MappingTests.Different_arrays_and_cross_boundary_merges_are_rejected.18E0B653B73072A9.xlsx");
         Assert.Contains("boundary", Assert.Throws<MappingException>(() => ExcelTemplateMapper.MapJson(merged, output, "{}" )).Message);
     }
 
     [Fact]
     public void Expansion_limit_and_cancellation_leave_destination_untouched()
     {
-        using var input = Template(s => s.Cell("A1").Value = "**items[*]");
+        using var input = Fixture("MappingTests.Expansion_limit_and_cancellation_leave_destination_untouched.4DE02E339C54AF2E.xlsx");
         using var output = new MemoryStream();
         Assert.Contains("MaxOutputRows", Assert.Throws<MappingException>(() => ExcelTemplateMapper.MapJson(input, output, """{"items":[1,2,3]}""", new MappingOptions { MaxOutputRows = 2 })).Message);
         Assert.Empty(output.ToArray());
@@ -248,112 +180,73 @@ public sealed class MappingTests
     [Fact]
     public void Multirow_blocks_preserve_vertical_merges_hidden_rows_and_validation()
     {
-        using var result = Map(s =>
-        {
-            s.Cell("A1").Value = "**@start-array items[*] as item";
-            s.Cell("A2").Value = "**@item.value";
-            s.Cell("A3").Value = "**@item.value";
-            s.Range("B2:B3").Merge();
-            s.Cell("B2").Value = "Merged";
-            s.Cell("A2").CreateDataValidation().WholeNumber.Between(1, 20);
-            s.Cell("A2").AddConditionalFormat().WhenGreaterThan(5).Fill.SetBackgroundColor(XLColor.Red);
-            s.Row(3).Hide();
-            s.Cell("A4").Value = "**@end-array";
-            s.Cell("A5").Value = "Footer";
-        }, """{"items":[{"value":3},{"value":7}]}""");
-        var sheet = result.Worksheet(1);
-        Assert.Equal(3, sheet.Cell("A1").GetDouble());
-        Assert.Equal(7, sheet.Cell("A3").GetDouble());
-        Assert.Equal(3, sheet.Cell("A2").GetDouble());
-        Assert.Equal(7, sheet.Cell("A4").GetDouble());
-        Assert.Equal("Footer", sheet.Cell("A5").GetString());
-        Assert.True(sheet.Row(2).IsHidden);
-        Assert.True(sheet.Row(4).IsHidden);
-        Assert.Contains(sheet.MergedRanges, r => r.RangeAddress.ToStringRelative() == "B1:B2");
-        Assert.Contains(sheet.MergedRanges, r => r.RangeAddress.ToStringRelative() == "B3:B4");
-        Assert.Contains(sheet.DataValidations, v => v.Ranges.Any(r => r.Contains(sheet.Cell("A3"))));
-        Assert.Contains(sheet.ConditionalFormats, v => v.Ranges.Any(r => r.Contains(sheet.Cell("A3"))));
+        using var result = Map(Fixture("MappingTests.Multirow_blocks_preserve_vertical_merges_hidden_rows_and_validation.79AF609BD99610AB.xlsx"), """{"items":[{"value":3},{"value":7}]}""");
+        var sheet = result;
+        Assert.Equal(3, Number(sheet, "A1"));
+        Assert.Equal(7, Number(sheet, "A3"));
+        Assert.Equal(3, Number(sheet, "A2"));
+        Assert.Equal(7, Number(sheet, "A4"));
+        Assert.Equal("Footer", Text(sheet, "A5"));
+        Assert.True(Row(sheet, 2).Hidden == true);
+        Assert.True(Row(sheet, 4).Hidden == true);
+        Assert.Contains(Info(sheet).MergedRanges, r => r.ToString() == "B1:B2");
+        Assert.Contains(Info(sheet).MergedRanges, r => r.ToString() == "B3:B4");
+        Assert.Contains(Xml(sheet).Descendants<DocumentFormat.OpenXml.Spreadsheet.DataValidation>(), v => v.SequenceOfReferences!.InnerText!.Split(' ').Any(r => r == "A3" || r == "A3:A3"));
+        Assert.Contains(Info(sheet).ConditionalFormattingRanges.SelectMany(ranges => ranges), range => range.First.Row <= 3 && range.Last.Row >= 3);
     }
 
     [Fact]
     public void Marker_content_alias_shadowing_nonarrays_and_objects_are_rejected()
     {
-        using var marker = Template(s =>
-        {
-            s.Cell("A1").Value = "**@start-array items[*] as item";
-            s.Cell("B1").Value = "Would disappear";
-            s.Cell("A2").Value = "**@end-array";
-        });
+        using var marker = Fixture("MappingTests.Marker_content_alias_shadowing_nonarrays_and_objects_are_rejected.ACABF8133EACAA76.xlsx");
         using var output = new MemoryStream();
         Assert.Contains("dedicated", Assert.Throws<MappingException>(() => ExcelTemplateMapper.MapJson(marker, output, "{}" )).Message);
-        using var shadow = Template(s =>
-        {
-            s.Cell("A1").Value = "**@start-array items[*] as item";
-            s.Cell("A2").Value = "**@start-array @item.lines[*] as item";
-            s.Cell("A3").Value = "**@end-array";
-            s.Cell("A4").Value = "**@end-array";
-        });
+        using var shadow = Fixture("MappingTests.Marker_content_alias_shadowing_nonarrays_and_objects_are_rejected.DC9781F92BC9F1E0.xlsx");
         Assert.Contains("shadow", Assert.Throws<MappingException>(() => ExcelTemplateMapper.MapJson(shadow, output, "{}" )).Message);
-        using var array = Template(s => s.Cell("A1").Value = "**items[*]");
+        using var array = Fixture("MappingTests.Marker_content_alias_shadowing_nonarrays_and_objects_are_rejected.4DE02E339C54AF2E.xlsx");
         Assert.Contains("array", Assert.Throws<MappingException>(() => ExcelTemplateMapper.MapJson(array, output, """{"items":null}""" )).Message);
-        using var value = Template(s => s.Cell("A1").Value = "**items");
+        using var value = Fixture("MappingTests.Marker_content_alias_shadowing_nonarrays_and_objects_are_rejected.99F0B5FA999D0F59.xlsx");
         Assert.Contains("scalar", Assert.Throws<MappingException>(() => ExcelTemplateMapper.MapJson(value, output, """{"items":{}}""" )).Message);
     }
 
     [Fact]
     public void Root_scalar_array_indices_and_readonly_dictionaries_are_supported()
     {
-        using var json = Map(s => s.Cell("A1").Value = "**items[1]", """{"items":[1,2]}""");
-        Assert.Equal(2, json.Worksheet(1).Cell("A1").GetDouble());
-        using var scalar = Map(s => s.Cell("A1").Value = "**$", "42");
-        Assert.Equal(42, scalar.Worksheet(1).Cell("A1").GetDouble());
-        using var input = Template(s => s.Cell("A1").Value = "**value");
+        using var json = Map(Fixture("MappingTests.Root_scalar_array_indices_and_readonly_dictionaries_are_supported.3D6A9CD927BB6096.xlsx"), """{"items":[1,2]}""");
+        Assert.Equal(2, Number(json, "A1"));
+        using var scalar = Map(Fixture("MappingTests.Root_scalar_array_indices_and_readonly_dictionaries_are_supported.1AFA118344DFB67D.xlsx"), "42");
+        Assert.Equal(42, Number(scalar, "A1"));
+        using var input = Fixture("MappingTests.Root_scalar_array_indices_and_readonly_dictionaries_are_supported.5CB53AA5441CBC44.xlsx");
         using var output = new MemoryStream();
         ExcelTemplateMapper.Map(input, output, new System.Collections.ObjectModel.ReadOnlyDictionary<string, int>(new Dictionary<string, int> { ["value"] = 7 }));
         output.Position = 0;
-        using var mapped = new XLWorkbook(output);
-        Assert.Equal(7, mapped.Worksheet(1).Cell("A1").GetDouble());
+        using var mapped = WorkbookProbe.Open(output);
+        Assert.Equal(7, Number(mapped, "A1"));
     }
 
 
     [Fact]
     public void Iso_offsets_are_preserved_and_date_conversion_is_explicit()
     {
-        using var result = Map(s =>
-        {
-            s.Cell("A1").Value = "**date | date(\"yyyy-MM-dd HH:mm zzz\")";
-            s.Cell("A2").Value = "**date";
-        }, """{"date":"2026-10-09T01:02:03+09:00"}""");
-        Assert.Equal("2026-10-09 01:02 +09:00", result.Worksheet(1).Cell("A1").GetString());
-        Assert.Equal("2026-10-09T01:02:03+09:00", result.Worksheet(1).Cell("A2").GetString());
+        using var result = Map(Fixture("MappingTests.Iso_offsets_are_preserved_and_date_conversion_is_explicit.2EDEC375BAE461EA.xlsx"), """{"date":"2026-10-09T01:02:03+09:00"}""");
+        Assert.Equal("2026-10-09 01:02 +09:00", Text(result, "A1"));
+        Assert.Equal("2026-10-09T01:02:03+09:00", Text(result, "A2"));
     }
 
     [Fact]
     public void Dictionary_paths_remain_case_sensitive_even_with_insensitive_comparer()
     {
-        using var input = Template(s => s.Cell("A1").Value = "**Name");
+        using var input = Fixture("MappingTests.Dictionary_paths_remain_case_sensitive_even_with_insensitive_comparer.DC1490280402EA16.xlsx");
         using var output = new MemoryStream();
         var data = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase) { ["name"] = 42 };
         Assert.Throws<MappingException>(() => ExcelTemplateMapper.Map(input, output, data));
     }
 
-    private static MemoryStream Template(Action<IXLWorksheet> arrange)
+    private static WorkbookProbe Map(Stream input, string json)
     {
-        using var workbook = new XLWorkbook();
-        var sheet = workbook.AddWorksheet("Template");
-        arrange(sheet);
-        var result = new MemoryStream();
-        workbook.SaveAs(result);
-        result.Position = 0;
-        return result;
-    }
-
-    private static XLWorkbook Map(Action<IXLWorksheet> arrange, string json)
-    {
-        using var input = Template(arrange);
         using var output = new MemoryStream();
         ExcelTemplateMapper.MapJson(input, output, json);
         output.Position = 0;
-        return new XLWorkbook(output);
+        return WorkbookProbe.Open(output);
     }
 }

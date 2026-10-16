@@ -1,14 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.Json;
 using System.Threading;
-using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Packaging;
 using ExcelRenderer.OpenXml;
 using ExcelRenderer.OpenXml.Input;
-using S = DocumentFormat.OpenXml.Spreadsheet;
 
 namespace ExcelRenderer.Mapping;
 
@@ -34,9 +29,19 @@ public static partial class ExcelTemplateMapper
         }
 
         options ??= new MappingOptions();
-        if (options.MaxOutputRows < 1 || options.MaxOutputRows > 1_048_576 || options.Culture is null || options.Input is null || !Enum.IsDefined(typeof(MappingBackend), options.Backend))
+        if (options.MaxOutputRows < 1 || options.MaxOutputRows > 1_048_576 || options.Culture is null || options.Input is null)
         {
             throw new ArgumentException("Specify a culture and MaxOutputRows between 1 and 1048576.", nameof(options));
+        }
+
+        if (!Enum.IsDefined(typeof(MappingBackend), options.Backend))
+        {
+            throw new ArgumentOutOfRangeException(nameof(options.Backend));
+        }
+
+        if (options.Backend == (MappingBackend)0)
+        {
+            throw new NotSupportedException("The ClosedXml mapping backend has been removed. Use OpenXml or Auto.");
         }
 
         cancellationToken.ThrowIfCancellationRequested();
@@ -57,67 +62,16 @@ public static partial class ExcelTemplateMapper
             }
         }
 
-        if (options.Backend != MappingBackend.ClosedXml)
+        using (var inspected = prepared.OpenRead())
         {
-            using var inspected = prepared.OpenRead();
             var reasons = WorkbookWriteCapabilities.Inspect(inspected, cancellationToken);
-            if (reasons.Count == 0)
-            {
-                if (MapOpenXml(prepared, output, data, options, cancellationToken))
-                {
-                    return;
-                }
-            }
-            else if (options.Backend == MappingBackend.OpenXml)
+            if (reasons.Count != 0)
             {
                 throw new NotSupportedException("OpenXml mapping is unsupported: " + string.Join(", ", reasons));
             }
-            else
-            {
-                options.BackendSelected?.Invoke(new MappingBackendSelection(options.Backend, MappingBackend.ClosedXml, reasons));
-            }
-        }
-        else
-        {
-            options.BackendSelected?.Invoke(new MappingBackendSelection(options.Backend, MappingBackend.ClosedXml, Array.AsReadOnly(new[] { "ExplicitClosedXml" })));
         }
 
-        using var source = prepared.OpenRead();
-        OperationMetrics.Report("closedXml.workbooks", 1);
-        using var workbook = new XLWorkbook(source);
-        var templates = workbook.Worksheets.Select(sheet => new TemplateSheet(ClosedXmlTemplateAdapter.Create(sheet))).ToArray();
-        foreach (var sheet in templates)
-        {
-            sheet.ValidateRepeatedRanges();
-        }
-
-        var plans = new List<WorksheetExpansion>();
-        foreach (var sheet in templates)
-        {
-            var expansion = new WorksheetExpansion(sheet, workbook.Worksheet(sheet.Sheet.Name), new ExpansionPlan(sheet, data, options, cancellationToken), cancellationToken);
-            plans.Add(expansion);
-        }
-
-        foreach (var expansion in plans)
-        {
-            expansion.Apply();
-        }
-
-        cancellationToken.ThrowIfCancellationRequested();
-
-        // Only caller-supplied values are saved; do not evaluate formulas or request recalculation.
-        using var result = new SpillableBufferStream(new InputBufferOptions
-        {
-            MemoryThresholdBytes = options.Input.MemoryThresholdBytes,
-            AllowTemporaryFiles = options.Input.AllowTemporaryFiles,
-            TemporaryDirectory = options.Input.TemporaryDirectory,
-        });
-        workbook.SaveAs(result, new SaveOptions { EvaluateFormulasBeforeSaving = false });
-        RestoreCalculationProperties(prepared, result);
-        NormalizePageBreakMode(result, plans);
-        cancellationToken.ThrowIfCancellationRequested();
-        result.Position = 0;
-        result.CopyTo(output);
+        MapOpenXml(prepared, output, data, options, cancellationToken);
     }
 
     /// <summary>Maps JSON text into an XLSX template, leaving streams open.</summary>
@@ -175,46 +129,6 @@ public static partial class ExcelTemplateMapper
             {
                 File.Delete(temporary);
             }
-        }
-    }
-
-    private static void RestoreCalculationProperties(PreparedWorkbook source, Stream result)
-    {
-        using var input = source.OpenRead();
-        using var original = SpreadsheetDocument.Open(input, false);
-        var properties = original.WorkbookPart!.Workbook.CalculationProperties;
-        result.Position = 0;
-        using var output = SpreadsheetDocument.Open(result, true);
-        var workbook = output.WorkbookPart!.Workbook;
-        workbook.CalculationProperties = properties is null ? null : (S.CalculationProperties)properties.CloneNode(true);
-        workbook.Save();
-    }
-
-    private static void NormalizePageBreakMode(Stream result, List<WorksheetExpansion> plans)
-    {
-        var names = new HashSet<string>(plans.Where(p => p.HasExplicitPageBreak).Select(p => p.SheetName), StringComparer.Ordinal);
-        if (names.Count == 0)
-        {
-            return;
-        }
-
-        result.Position = 0;
-        using var document = SpreadsheetDocument.Open(result, true);
-        var workbook = document.WorkbookPart!;
-        foreach (var sheet in workbook.Workbook.Sheets!.Elements<S.Sheet>())
-        {
-            if (!names.Contains(sheet.Name!.Value!))
-            {
-                continue;
-            }
-
-            var worksheet = ((WorksheetPart)workbook.GetPartById(sheet.Id!.Value!)).Worksheet;
-            worksheet.SheetProperties ??= new S.SheetProperties();
-            worksheet.SheetProperties.PageSetupProperties ??= new S.PageSetupProperties();
-
-            // ClosedXML retains the loaded fitToPage flag even after SetScale().
-            worksheet.SheetProperties.PageSetupProperties.FitToPage = false;
-            worksheet.Save();
         }
     }
 }

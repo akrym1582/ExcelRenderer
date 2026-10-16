@@ -1,6 +1,6 @@
 using ImageResources = ExcelRenderer.Core.Rendering.ImageResources;
 using System.IO.Compression;
-using ClosedXML.Excel;
+using ExcelRenderer.TestFixtures;
 using ExcelRenderer.Abstractions;
 using ExcelRenderer.Drawing;
 using ExcelRenderer.Excel;
@@ -26,18 +26,7 @@ public sealed class Phase3MemoryTests
     [InlineData(OutputFormat.Svg)]
     public async Task Selected_pages_preflight_and_render_with_one_active_payload(OutputFormat format)
     {
-        using var book = new XLWorkbook();
-        var sheet = book.AddWorksheet("Pages");
-        sheet.Style.Font.FontName = "Noto Sans JP";
-        for (var row = 1; row <= 100; row++)
-        {
-            sheet.Cell(row, 1).Value = "page " + row;
-        }
-
-        sheet.Rows().Height = 40;
-        sheet.PageSetup.PrintAreas.Add("A1:A100");
-        using var input = new MemoryStream();
-        book.SaveAs(input);
+        using var input = RetainedWorkbook.Open("Phase3MemoryTests.Selected_pages_preflight_and_render_with_one_active_payload.0BA00D47150071DC.xlsx");
         input.Position = 0;
         var sink = new ObservedSink();
         var active = 0d;
@@ -293,15 +282,7 @@ public sealed class Phase3MemoryTests
     [InlineData(OutputFormat.Svg, ImageLayoutMode.Continuous, true)]
     public async Task Empty_and_header_only_pages_keep_source_number_and_canvas_metadata(OutputFormat format, ImageLayoutMode layout, bool header)
     {
-        using var book = new XLWorkbook();
-        var sheet = book.AddWorksheet("Empty");
-        if (header)
-        {
-            sheet.PageSetup.Header.Left.AddText("header 1 / 1");
-        }
-
-        using var input = new MemoryStream();
-        book.SaveAs(input);
+        using var input = RetainedWorkbook.Open(header ? "Phase3MemoryTests.Empty_and_header_only_pages_keep_source_number_and_canvas_metadata.4920C6318C32A590.xlsx" : "Phase3MemoryTests.Empty_and_header_only_pages_keep_source_number_and_canvas_metadata.18C8C32EE4E5280F.xlsx");
         input.Position = 0;
         var result = await ExcelConverter.RenderAsync(input, Request(format) with { ImageLayout = layout }, new ObservedSink());
         var page = Assert.Single(result.Pages);
@@ -325,24 +306,7 @@ public sealed class Phase3MemoryTests
     [Fact(DisplayName = "複数印刷範囲で結合タイトルを繰り返してもセルを重複させず、位置・罫線と変換後の PNG 画素が公開レイアウトの結果に一致する")]
     public async Task Paginated_merged_titles_match_public_layout_positions_borders_and_converter_pixels()
     {
-        using var book = new XLWorkbook();
-        var worksheet = book.AddWorksheet("Titles");
-        worksheet.Style.Font.FontName = "Noto Sans JP";
-        worksheet.Column(1).Width = 12;
-        worksheet.Column(2).Width = 12;
-        worksheet.Rows(1, 80).Height = 25;
-        worksheet.Range("A1:B2").Merge().Value = "merged title";
-        worksheet.Range("A1:B2").Style.Border.OutsideBorder = XLBorderStyleValues.Double;
-        for (var row = 3; row <= 80; row++)
-        {
-            worksheet.Cell(row, 1).Value = "body " + row;
-        }
-
-        worksheet.PageSetup.SetRowsToRepeatAtTop(1, 1);
-        worksheet.PageSetup.PrintAreas.Add("A2:B40");
-        worksheet.PageSetup.PrintAreas.Add("A41:B80");
-        using var input = new MemoryStream();
-        book.SaveAs(input);
+        using var input = RetainedWorkbook.Open("Phase3MemoryTests.Paginated_merged_titles_match_public_layout_positions_borders_and_converter_pixels.1A1D28D97B1934B0.xlsx");
         var manager = new FontManager(Request(OutputFormat.Png).FontOptions);
         using var fonts = new ConversionFontResources();
         input.Position = 0;
@@ -518,15 +482,7 @@ public sealed class Phase3MemoryTests
     [Fact(DisplayName = "読み取り対象のシートを絞っても元のシート番号・名前と、選択範囲外の位置計算に必要な寸法を保持する")]
     public async Task Reader_projection_preserves_original_indices_names_and_unselected_geometry()
     {
-        using var book = new XLWorkbook();
-        var first = book.AddWorksheet("Ignored");
-        first.Cell("C5").Value = "unselected body";
-        first.Range("C5:D6").Merge();
-        first.Row(2).Height = 37;
-        var selected = book.AddWorksheet("Selected");
-        selected.Cell("A1").Value = "selected body";
-        using var input = new MemoryStream();
-        book.SaveAs(input);
+        using var input = RetainedWorkbook.Open("Phase3MemoryTests.Reader_projection_preserves_original_indices_names_and_unselected_geometry.856463F792FD616F.xlsx");
         input.Position = 0;
         using var owner = await WorkbookInputPreparer.ReadAsync(input, new(), default);
         var document = new ExcelRenderer.Excel.ExcelReader().Read(owner, null, ["Selected"]);

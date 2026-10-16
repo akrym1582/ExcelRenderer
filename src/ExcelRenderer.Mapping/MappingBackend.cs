@@ -1,14 +1,17 @@
+using System;
+
 namespace ExcelRenderer.Mapping;
 
 /// <summary>Selects the workbook editing engine before evaluating input data.</summary>
 public enum MappingBackend
 {
-    /// <summary>Uses the compatibility writer.</summary>
-    ClosedXml,
+    /// <summary>Identifies the removed compatibility writer.</summary>
+    [Obsolete("The ClosedXml mapping backend has been removed. Use OpenXml or Auto.")]
+    ClosedXml = 0,
 
     /// <summary>Uses the formula-free Open XML writer without fallback.</summary>
-    OpenXml,
+    OpenXml = 1,
 
-    /// <summary>Checks template capabilities before choosing an engine.</summary>
-    Auto,
+    /// <summary>Uses the Open XML writer after template preflight.</summary>
+    Auto = 2,
 }

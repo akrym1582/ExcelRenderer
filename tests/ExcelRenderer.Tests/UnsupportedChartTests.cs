@@ -1,4 +1,4 @@
-using ClosedXML.Excel;
+using ExcelRenderer.TestFixtures;
 using DocumentFormat.OpenXml.Packaging;
 using ExcelRenderer.Model;
 using ExcelRenderer.Rendering;
@@ -82,14 +82,7 @@ public sealed class UnsupportedChartTests
     private static MemoryStream CreateChartWorkbook()
     {
         var stream = new MemoryStream();
-        using (var workbook = new XLWorkbook())
-        {
-            var sheet = workbook.AddWorksheet("chart");
-            sheet.Cell(1, 1).Value = "synthetic";
-            sheet.Cell(2, 4).Value = "outside";
-            sheet.PageSetup.PrintAreas.Add("A1:D8");
-            workbook.SaveAs(stream);
-        }
+        RetainedWorkbook.Copy("UnsupportedChartTests.CreateChartWorkbook.77A571B9C9986FD3.xlsx", stream);
 
         stream.Position = 0;
         using (var document = SpreadsheetDocument.Open(stream, true))

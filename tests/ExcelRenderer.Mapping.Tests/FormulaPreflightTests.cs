@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Text;
-using ClosedXML.Excel;
+using ExcelRenderer.TestFixtures;
 using DocumentFormat.OpenXml.Packaging;
 using Xunit;
 using S = DocumentFormat.OpenXml.Spreadsheet;
@@ -23,7 +23,7 @@ public sealed class FormulaPreflightTests
     [InlineData("extension")]
     public void AllValueFormulaKindsFailBeforeBackendGetterEnumerationAndSink(string kind)
     {
-        foreach (var backend in Enum.GetValues<MappingBackend>())
+        foreach (var backend in new[] { MappingBackend.OpenXml, MappingBackend.Auto })
         {
             using var input = Template();
             using (var package = SpreadsheetDocument.Open(input, true))
@@ -80,7 +80,7 @@ public sealed class FormulaPreflightTests
     [InlineData("auto")]
     public void SavingPreservesOriginalCalculationPropertiesWithoutAddingRequests(string? mode)
     {
-        foreach (var backend in Enum.GetValues<MappingBackend>())
+        foreach (var backend in new[] { MappingBackend.OpenXml, MappingBackend.Auto })
         {
             using var input = Template();
             string? expected;
@@ -107,7 +107,7 @@ public sealed class FormulaPreflightTests
     [Fact]
     public void ConditionalAndValidationFormulasRemainStructuralCompatibilityMetadata()
     {
-        foreach (var backend in new[] { MappingBackend.ClosedXml, MappingBackend.Auto })
+        foreach (var backend in new[] { MappingBackend.OpenXml, MappingBackend.Auto })
         {
             using var input = Template();
             using (var package = SpreadsheetDocument.Open(input, true))
@@ -127,7 +127,7 @@ public sealed class FormulaPreflightTests
             using var output = new MemoryStream();
             MappingBackendSelection? selected = null;
             ExcelTemplateMapper.Map(input, output, new { Items = new[] { 42 } }, new() { Backend = backend, BackendSelected = value => selected = value });
-            Assert.Equal(MappingBackend.ClosedXml, selected!.SelectedBackend);
+            Assert.Equal(MappingBackend.OpenXml, selected!.SelectedBackend);
             output.Position = 0;
             using var actual = SpreadsheetDocument.Open(output, false);
             var result = actual.WorkbookPart!.WorksheetParts.Single().Worksheet;
@@ -152,7 +152,7 @@ public sealed class FormulaPreflightTests
                 File.WriteAllBytes(source, input.ToArray());
             }
             File.WriteAllBytes(destination, [5, 6, 7]);
-            foreach (var backend in Enum.GetValues<MappingBackend>())
+            foreach (var backend in new[] { MappingBackend.OpenXml, MappingBackend.Auto })
             {
                 Assert.Throws<MappingException>(() => ExcelTemplateMapper.Map(source, destination, new ThrowingData(), new() { Backend = backend }));
                 Assert.Equal(new byte[] { 5, 6, 7 }, File.ReadAllBytes(destination));
@@ -166,14 +166,9 @@ public sealed class FormulaPreflightTests
 
     private static MemoryStream Template()
     {
+        using var source = RetainedWorkbook.Open("FormulaPreflightTests.AllValueFormulaKindsFailBeforeBackendGetterEnumerationAndSink.EECE108D361084C8.xlsx");
         var stream = new MemoryStream();
-        using (var workbook = new XLWorkbook())
-        {
-            var sheet = workbook.AddWorksheet("Data");
-            sheet.Cell("A1").Value = "**Items[*]";
-            sheet.Cell("B2").Value = "deleted or hidden formula";
-            workbook.SaveAs(stream);
-        }
+        source.CopyTo(stream);
         stream.Position = 0;
         return stream;
     }

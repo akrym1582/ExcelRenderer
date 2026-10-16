@@ -1,4 +1,4 @@
-using ClosedXML.Excel;
+using ExcelRenderer.TestFixtures;
 using ExcelRenderer.Abstractions;
 using ExcelRenderer.CoreIntegration;
 using ExcelRenderer.Excel;
@@ -15,12 +15,7 @@ public sealed class RichTextTests
     [Fact]
     public void ReaderPreservesEffectiveRunsAndPlainText()
     {
-        using var workbook = new XLWorkbook();
-        var source = workbook.AddWorksheet("rich").Cell(1, 1);
-        source.CreateRichText().AddText("first").SetBold().SetFontColor(XLColor.Red);
-        source.GetRichText().AddText("second").SetItalic().SetFontSize(20);
-        using var stream = new MemoryStream();
-        workbook.SaveAs(stream);
+        using var stream = RetainedWorkbook.Open("RichTextTests.ReaderPreservesEffectiveRunsAndPlainText.A4BF65835E997858.xlsx");
         stream.Position = 0;
         var cell = new ExcelReader().Read(stream).Sheets[0].Cells[new(1, 1)];
         Assert.Equal("firstsecond", cell.Text);
@@ -36,14 +31,7 @@ public sealed class RichTextTests
     [InlineData(false)]
     public void SharedAndInlineStringsPreserveThemeColorNewlinesAndVariationSelectors(bool shared)
     {
-        using var workbook = new XLWorkbook();
-        workbook.Theme.Accent1 = XLColor.Red;
-        var source = workbook.AddWorksheet("rich").Cell(1, 1);
-        source.ShareString = shared;
-        source.CreateRichText().AddText("漢\U000E0100\n").SetFontColor(XLColor.FromTheme(XLThemeColor.Accent1));
-        source.GetRichText().AddText("後").SetFontSize(20);
-        using var stream = new MemoryStream();
-        workbook.SaveAs(stream);
+        using var stream = RetainedWorkbook.Open(shared ? "RichTextTests.SharedAndInlineStringsPreserveThemeColorNewlinesAndVariationSelectors.7AB65A77BFBD1A92.xlsx" : "RichTextTests.SharedAndInlineStringsPreserveThemeColorNewlinesAndVariationSelectors.EC937F47E279F52B.xlsx");
         stream.Position = 0;
         var cell = new ExcelReader().Read(stream).Sheets[0].Cells[new(1, 1)];
         Assert.Equal("漢\U000E0100\n後", cell.Text);
@@ -57,12 +45,7 @@ public sealed class RichTextTests
     [InlineData(255)]
     public void RotatedSingleDifferentlyStyledRunIsMarkedUnsupported(int rotation)
     {
-        using var workbook = new XLWorkbook();
-        var source = workbook.AddWorksheet("rich").Cell(1, 1);
-        source.Style.Alignment.TextRotation = rotation;
-        source.CreateRichText().AddText("rotated").SetFontSize(20);
-        using var stream = new MemoryStream();
-        workbook.SaveAs(stream);
+        using var stream = RetainedWorkbook.Open(rotation switch { 45 => "RichTextTests.RotatedSingleDifferentlyStyledRunIsMarkedUnsupported.0F5B7F13737B81A7.xlsx", 255 => "RichTextTests.RotatedSingleDifferentlyStyledRunIsMarkedUnsupported.80CF2266E5A4DA38.xlsx", _ => throw new InvalidOperationException() });
         stream.Position = 0;
         var cell = new ExcelReader().Read(stream).Sheets[0].Cells[new(1, 1)];
         Assert.True(cell.UnsupportedRichTextFormatting);

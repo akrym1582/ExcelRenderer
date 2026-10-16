@@ -1,13 +1,15 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.Text.Json;
-using ClosedXML.Excel;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
 using ExcelRenderer;
 using ExcelRenderer.Excel;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Mapping;
 using ExcelRenderer.OpenXml;
 using ExcelRenderer.Rendering;
+using S = DocumentFormat.OpenXml.Spreadsheet;
 
 /// <summary>Generates integration inputs and measures one operation in an isolated process.</summary>
 internal static class IntegrationBenchmark
@@ -29,13 +31,18 @@ internal static class IntegrationBenchmark
         var operation = args[2];
         var backend = args[3];
         var count = int.Parse(args[4], CultureInfo.InvariantCulture);
+        if (backend is not ("openxml" or "auto"))
+        {
+            throw new ArgumentException("The available backends are openxml and auto.", nameof(args));
+        }
+
         var data = Data(path.Contains("nested", StringComparison.Ordinal), count);
         var metrics = new Dictionary<string, double>();
         var io = new Dictionary<string, long>();
         ConversionMetrics.Observer = (name, value) => metrics[name] = metrics.GetValueOrDefault(name) + value;
         OperationMetrics.Observer = (name, value) => io[name] = io.GetValueOrDefault(name) + value;
-        var readerBackend = backend == "closedxml" ? ReaderBackend.ClosedXml : backend == "openxml" ? ReaderBackend.OpenXml : ReaderBackend.Auto;
-        var mappingBackend = backend == "closedxml" ? MappingBackend.ClosedXml : backend == "openxml" ? MappingBackend.OpenXml : MappingBackend.Auto;
+        var readerBackend = backend == "openxml" ? ReaderBackend.OpenXml : ReaderBackend.Auto;
+        var mappingBackend = backend == "openxml" ? MappingBackend.OpenXml : MappingBackend.Auto;
         ReaderBackendSelection? readerSelection = null;
         MappingBackendSelection? mappingSelection = null;
         var fonts = new FontOptions { AllowSystemFonts = false, FontFiles = [Path.GetFullPath("third_party/NotoSansJP/NotoSansJP-Regular.ttf")] };
@@ -126,38 +133,27 @@ internal static class IntegrationBenchmark
         Directory.CreateDirectory(directory);
         foreach (var kind in new[] { "plain", "nested", "geometry" })
         {
-            using var workbook = new XLWorkbook();
-            var sheet = workbook.AddWorksheet("report");
-            sheet.Style.Font.FontName = "Noto Sans JP";
-            sheet.Cell("A1").Value = "Header";
-            if (kind == "nested")
+            using (var package = SpreadsheetDocument.Create(Path.Combine(directory, $"{kind}-{count}-template.xlsx"), SpreadsheetDocumentType.Workbook))
             {
-                sheet.Cell("A2").Value = "**@start-array groups[*] as group";
-                sheet.Cell("A3").Value = "**@group.id";
-                sheet.Cell("A4").Value = "**@start-array @group.items[*] as item";
-                sheet.Cell("A5").Value = "**@item";
-                sheet.Cell("B5").Style.Fill.BackgroundColor = XLColor.LightGray;
-                sheet.Cell("A6").Value = "**@end-array";
-                sheet.Cell("A7").Value = "**@end-array";
-                sheet.Cell("A8").Value = "Footer";
-            }
-            else
-            {
-                sheet.Cell("A2").Value = "**items[*]";
-                sheet.Cell("B2").Style.Fill.BackgroundColor = XLColor.LightGray;
-                sheet.Cell("A3").Value = "Footer";
-            }
+                var workbook = package.AddWorkbookPart();
+                workbook.Workbook = new S.Workbook(new S.Sheets());
+                workbook.AddNewPart<WorkbookStylesPart>().Stylesheet = FixtureWorkbook.Styles();
+                var values = kind == "nested" ? new[] { "Header", "**@start-array groups[*] as group", "**@group.id", "**@start-array @group.items[*] as item", "**@item", "**@end-array", "**@end-array", "Footer" } : new[] { "Header", "**items[*]", "Footer" };
+                var data = new S.SheetData(values.Select((value, index) => new S.Row(FixtureWorkbook.Text(index + 1, 1, value)) { RowIndex = (uint)index + 1 }));
+                var repeated = kind == "nested" ? 5 : 2;
+                data.Elements<S.Row>().ElementAt(repeated - 1).Append(new S.Cell { CellReference = "B" + repeated, StyleIndex = 1 });
+                var worksheet = new S.Worksheet(data);
+                if (kind == "geometry")
+                {
+                    data.Elements<S.Row>().ElementAt(1).Append(FixtureWorkbook.Text(2, 3, "merged"));
+                    worksheet.Append(new S.MergeCells(new S.MergeCell { Reference = "C2:D2" }));
+                    workbook.Workbook.DefinedNames = new S.DefinedNames(new S.DefinedName("'report'!$A$1:$D$3") { Name = "_xlnm.Print_Area", LocalSheetId = 0 }, new S.DefinedName("'report'!$1:$1") { Name = "_xlnm.Print_Titles", LocalSheetId = 0 });
+                }
 
-            if (kind == "geometry")
-            {
-                sheet.Range("C2:D2").Merge();
-                sheet.Cell("C2").Value = "merged";
-                sheet.PageSetup.PrintAreas.Add("A1:D3");
-                sheet.PageSetup.SetRowsToRepeatAtTop(1, 1);
+                FixtureWorkbook.Sheet(workbook, "report", worksheet);
             }
 
             var path = Path.Combine(directory, $"{kind}-{count}-template.xlsx");
-            workbook.SaveAs(path);
             ExcelTemplateMapper.Map(path, Path.Combine(directory, $"{kind}-{count}-values.xlsx"), Data(kind == "nested", count), new MappingOptions
             {
                 Backend = MappingBackend.OpenXml,

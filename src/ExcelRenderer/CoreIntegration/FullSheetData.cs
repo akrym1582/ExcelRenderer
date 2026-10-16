@@ -9,6 +9,9 @@ namespace ExcelRenderer.CoreIntegration;
 /// <param name="Hyperlinks">Original hyperlink definitions and display metadata.</param>
 internal sealed record FullSheetData(IReadOnlyList<ReportShape> Shapes, SheetHyperlinkMetadata? Hyperlinks) : ICoreExtensionData
 {
+    /// <summary>Gets finite object bounds for durable public Reader dimension dictionaries.</summary>
+    internal IReadOnlyList<Core.Model.CellRange> DimensionRanges { get; init; } = [];
+
     /// <summary>Gets deferred formula display diagnostics.</summary>
     internal IReadOnlyList<Rendering.ConversionDiagnostic> CellReadDiagnostics { get; init; } = [];
 

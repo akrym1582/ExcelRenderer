@@ -9,6 +9,5 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../../src/ExcelRenderer.OpenXml/ExcelRenderer.OpenXml.csproj" />
-    <PackageReference Include="ClosedXML" Version="0.105.1" />
   </ItemGroup>
 </Project>

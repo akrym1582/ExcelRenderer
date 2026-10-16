@@ -25,7 +25,7 @@ This makes the rendering pipeline easier to test, understand, and extend with ne
 
 ### Features
 
-- Reads `.xlsx` workbooks with ClosedXml (default), OpenXml or Auto
+- Reads `.xlsx` workbooks with OpenXml (default) or Auto
 - Supports cell text, fonts, alignment, wrapping, fills, and borders
 - Handles merged cells, hidden rows and columns, column widths, and row heights
 - Honors print areas, page size, orientation, margins, and scaling settings
@@ -294,7 +294,7 @@ Trimming includes visible fills (including explicitly white fills), strokes, pos
 
 PDF and Markdown preserve `http`, `https`, `mailto` and same-workbook cell links, including range references, empty source cells, simple scoped A1 names, and literal-string `HYPERLINK` formulas. Explicit XML definitions take precedence over formulas. Only saved displays are used; uncached formulas display empty text and report `FormulaCachedValueMissing`. PDF annotations are attached to the final merged document and follow page selection and trimming. Markdown uses stable `xl-sN-rN-cN` anchors and explicit target/source lists where a blank cell or source range cannot carry a natural label. PNG and SVG retain cell appearance without clickable links or hyperlink warnings. SVG links and link sidecars are not generated.
 
-Unsafe URIs (including local files, relative paths, UNC, embedded HTTP credentials, control characters and unsupported schemes), conflicting definitions and unsupported dynamic formulas retain display text and yield `HyperlinkRejected`/`HyperlinkUnsupported` warnings. Missing or omitted internal destinations yield `HyperlinkTargetOmitted`; excluded sources do not produce destination warnings. Diagnostics omit URI/recipient/query contents. Readable invalid link definitions are warnings; a corrupt workbook rejected by ClosedXML remains a fatal input error. Strict mode or matching `--warnings-as-errors` stops output before the sink opens. The PDF CLI creates/truncates its file only after preflight; identical input/output paths are rejected before reading.
+Unsafe URIs (including local files, relative paths, UNC, embedded HTTP credentials, control characters and unsupported schemes), conflicting definitions and unsupported dynamic formulas retain display text and yield `HyperlinkRejected`/`HyperlinkUnsupported` warnings. Missing or omitted internal destinations yield `HyperlinkTargetOmitted`; excluded sources do not produce destination warnings. Diagnostics omit URI/recipient/query contents. Readable invalid link definitions are warnings; corrupt packages and missing hyperlink relationships are fatal input errors. Strict mode or matching `--warnings-as-errors` stops output before the sink opens. The PDF CLI creates/truncates its file only after preflight; identical input/output paths are rejected before reading.
 
 The stream API exposes the same options without changing existing positional constructors:
 
@@ -488,15 +488,18 @@ service remains the default. No additional glyph measurement is done just for di
 
 ## Reader backends and formula results
 
-Reader and Mapping backends are ClosedXml (default), OpenXml and Auto. See
+Reader defaults to OpenXml; Auto is an alias without fallback, and explicit
+ClosedXml Reader requests fail before input processing. Mapping also defaults to OpenXml; Auto uses the same writer. See
 [backend APIs, CLI options, supported scope and stream guarantees](docs/openxml-integration.md).
 `ExcelRenderer.OpenXml` provides the shared reader, writer and input handling;
-ClosedXML is used by the ClosedXml backend. Low-level APIs are documented in the
+ClosedXML has been removed from the libraries, CLI, tests and tools. The Reader style
+API has changed to `ExcelStyleConverter.Convert(CellStyleInfo, CellValueType)`; see
+[breaking changes and migration](docs/closedxml-removal-compatibility.md). Low-level APIs are documented in the
 [OpenXml reader reference](docs/openxml-reader.md).
 
 Formula display defaults to `FormulaDisplayMode.CachedValue` in Core, the main
 Reader, export APIs and CLI (`--formula-mode cached`). Reader and Mapping backend
-defaults remain ClosedXml. ExcelRenderer never recalculates formulas during
+defaults are both OpenXml. ExcelRenderer never recalculates formulas during
 reading, Mapping or saving. Saved results may be stale; zero, false and saved empty
 strings are preserved. Missing results display empty text with
 `FormulaCachedValueMissing`, and saved errors produce `FormulaResultError`.
@@ -607,7 +610,7 @@ disappears before that read raises a font load error. PDFsharp's process-wide re
 font-byte cache remains in place.
 
 PDFsharp still retains its final document and resources until the single save.
-ClosedXML still reads the whole workbook. Layout geometry and selected models also
+The OpenXml Reader retains source styles and shared strings. Layout geometry and selected models also
 scale with workbook size. This is not constant-memory streaming.
 See the [phase 3 measurements](docs/phase3-performance.ja.md) and the historical
 [PDF](docs/pdf-performance.ja.md) and [image](docs/image-performance.ja.md) reports.
@@ -649,8 +652,7 @@ They are independent of `WorkbookInputOptions`: input buffering now spools to a 
 temporary file when its own threshold is exceeded and temporary files are allowed.
 Readers use independent cursors without converting the spool back to a byte array.
 Temporary buffers are cleaned up on success, cancellation, and failures; caller-owned
-input and output streams stay open. Heavy native drawing, encoding, and ClosedXML load
-operations cannot be interrupted immediately.
+input and output streams stay open. Heavy native drawing and encoding operations cannot be interrupted immediately.
 
 ## Development
 
@@ -682,7 +684,7 @@ dotnet add package ExcelRenderer.Mapping
 ```
 
 Replace the placeholder with the actual directory path. Skip source registration
-if it is already configured. Keep NuGet.org enabled for dependencies such as ClosedXML.
+if it is already configured. Keep NuGet.org enabled for dependencies such as DocumentFormat.OpenXml.
 
 ## Documentation
 

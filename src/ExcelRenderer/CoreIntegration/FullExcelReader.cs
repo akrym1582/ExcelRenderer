@@ -38,14 +38,7 @@ internal sealed partial class FullExcelReader : CoreExcelReader
         var unselectedGeometry = new Dictionary<string, IReadOnlyList<Model.CellRange>>(StringComparer.Ordinal);
         var unsupported = new Dictionary<string, IReadOnlyList<UnsupportedFeature>>(StringComparer.Ordinal);
         var shapes = Excel.DrawingMLReader.Read(drawingStream, diagnostics, selectedSheets, unselectedGeometry, detectUnsupportedFeatures ? unsupported : null);
-        IReadOnlyDictionary<string, IReadOnlyDictionary<string, Excel.DrawingPictureMetadata>> pictures = new Dictionary<string, IReadOnlyDictionary<string, Excel.DrawingPictureMetadata>>(StringComparer.Ordinal);
-        if (!metadata.IsStreamingSource)
-        {
-            using var pictureStream = source.OpenRead();
-            pictures = Excel.DrawingMLReader.ReadPictureMetadata(pictureStream, metadata.Pictures);
-        }
-
-        var hyperlinks = Excel.HyperlinkReader.Read(hyperlinkStream, metadata.IsStreamingSource ? selectedSheets : null);
+        var hyperlinks = Excel.HyperlinkReader.Read(hyperlinkStream, selectedSheets);
         if (detectUnsupportedFeatures)
         {
             using var chartStream = source.OpenRead();
@@ -73,7 +66,7 @@ internal sealed partial class FullExcelReader : CoreExcelReader
         }
 
         metadata.IncludeUnselectedSheetGeometry = true;
-        metadata.ExtensionData = new FullWorkbookData(shapes, pictures, hyperlinks) { UnsupportedFeatures = unsupported };
+        metadata.ExtensionData = new FullWorkbookData(shapes, hyperlinks) { UnsupportedFeatures = unsupported };
         foreach (var name in sheetNames)
         {
             metadata.AdditionalGeometry[name] = unselectedGeometry.GetValueOrDefault(name, [])
@@ -81,14 +74,6 @@ internal sealed partial class FullExcelReader : CoreExcelReader
                 .Concat(unsupported.GetValueOrDefault(name, []).SelectMany(feature => feature.Ranges))
                 .Select(CoreModelAdapter.ToCore).ToArray();
         }
-    }
-
-    /// <inheritdoc/>
-    protected override bool ShouldReadCell(CellAddress cell, CoreSheetReadContext context)
-    {
-        var metadata = GetHyperlinks(context.SheetName, context);
-        var address = CoreModelAdapter.ToPublic(cell);
-        return context.Metadata.IsStreamingSource || metadata is null || metadata.OriginalCells.Contains(address) || !metadata.Links.Any(link => link.SourceRange.Contains(address));
     }
 
     /// <inheritdoc/>
@@ -131,9 +116,6 @@ internal sealed partial class FullExcelReader : CoreExcelReader
                 ? null : new FullCellTextData(runs.AsReadOnly()) { UnsupportedFormatting = unsupported },
         };
     }
-
-    private static Excel.SheetHyperlinkMetadata? GetHyperlinks(string sheetName, CoreSheetReadContext context) =>
-        ((FullWorkbookData)context.Metadata.ExtensionData!).Hyperlinks.GetValueOrDefault(sheetName);
 
     private static IEnumerable<Model.CellRange> AnchorRanges(Model.CellAddress fallback, Model.DrawingAnchor? anchor)
     {

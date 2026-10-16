@@ -1,6 +1,6 @@
 using System.IO.Compression;
 using System.Xml.Linq;
-using ClosedXML.Excel;
+using ExcelRenderer.TestFixtures;
 using Xunit;
 
 namespace ExcelRenderer.Tool.Tests;
@@ -42,11 +42,7 @@ public sealed partial class ToolIntegrationTests
     {
         Directory.CreateDirectory(_directory);
         var input = Path.Combine(_directory, "formula.xlsx");
-        using (var workbook = new XLWorkbook())
-        {
-            workbook.AddWorksheet("formula").Cell(1, 1).FormulaA1 = "1+1";
-            workbook.SaveAs(input);
-        }
+        RetainedWorkbook.Copy("FormulaModeIntegrationTests.RenderingCommandsAcceptSavedFormulaDisplay.F08CB6342C0F4ADB.xlsx", input);
 
         using (var zip = ZipFile.Open(input, ZipArchiveMode.Update))
         {

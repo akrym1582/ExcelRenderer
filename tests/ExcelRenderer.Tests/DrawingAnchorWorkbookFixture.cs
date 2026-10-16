@@ -1,4 +1,4 @@
-using ClosedXML.Excel;
+using ExcelRenderer.TestFixtures;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using SkiaSharp;
@@ -13,27 +13,7 @@ internal static class DrawingAnchorWorkbookFixture
     internal static string Create()
     {
         var path = Path.Combine(Path.GetTempPath(), $"anchors-{Guid.NewGuid():N}.xlsx");
-        using (var workbook = new XLWorkbook())
-        {
-            var sheet = workbook.AddWorksheet("Anchors");
-            for (var column = 1; column <= 8; column++) { sheet.Column(column).Width = 1 + (column % 3) * 0.25; }
-            for (var row = 1; row <= 10; row++)
-            {
-                sheet.Row(row).Height = 8 + row;
-                for (var column = 1; column <= 8; column++) { sheet.Cell(row, column).Value = "x"; }
-            }
-            var names = new[] { "absolute", "one", "two" };
-            var colors = new[] { SKColors.Red, SKColors.Green, SKColors.Blue };
-            for (var i = 0; i < names.Length; i++)
-            {
-                using var bitmap = new SKBitmap(2, 2); bitmap.Erase(colors[i]);
-                using var image = SKImage.FromBitmap(bitmap);
-                using var data = image.Encode(SKEncodedImageFormat.Png, 100);
-                using var stream = new MemoryStream(data.ToArray());
-                sheet.AddPicture(stream, names[i]).MoveTo(sheet.Cell(4, 3));
-            }
-            workbook.SaveAs(path);
-        }
+        RetainedWorkbook.Copy("DrawingAnchorWorkbookFixture.Create.0F858476D16CBFD1.xlsx", path);
         using (var document = SpreadsheetDocument.Open(path, true))
         {
             var drawing = document.WorkbookPart!.WorksheetParts.Single().DrawingsPart!.WorksheetDrawing!;

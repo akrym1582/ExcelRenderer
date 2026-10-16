@@ -1,5 +1,7 @@
 using System.Text;
-using ClosedXML.Excel;
+using ExcelRenderer.TestFixtures;
+using ExcelRenderer.OpenXml;
+using static ExcelRenderer.TestFixtures.WorkbookAssertions;
 using Xunit;
 
 namespace ExcelRenderer.Tool.Tests;
@@ -20,18 +22,7 @@ public sealed partial class ToolIntegrationTests
         Directory.CreateDirectory(_directory);
         var template = Path.Combine(_directory, "template.xlsx");
         var data = Path.Combine(_directory, "data.json");
-        using (var workbook = new XLWorkbook())
-        {
-            var sheet = workbook.AddWorksheet("Mapped");
-            sheet.Cell("A1").Value = "**title";
-            sheet.Cell("A2").Value = "**@start-array items[*] as item";
-            sheet.Cell("A3").Value = "**@item.name";
-            sheet.Cell("B3").Value = "**@item.value | format(\"N2\")";
-            sheet.Cell("A4").Value = "**@end-array";
-            sheet.Column(1).Width = 25;
-            sheet.PageSetup.PrintAreas.Add("A1:B4");
-            workbook.SaveAs(template);
-        }
+        RetainedWorkbook.Copy("MappingIntegrationTests.Json_mapping_completes_for_xlsx_and_all_render_commands.9FE6386EC61B8529.xlsx", template);
 
         await File.WriteAllTextAsync(data, """{"title":"MAPPED_VALUE","items":[{"name":"First","value":12.5},{"name":"Second","value":23}]}""");
         var outputFormat = format ?? (command == "image" ? "png" : command);
@@ -51,12 +42,12 @@ public sealed partial class ToolIntegrationTests
         switch (outputFormat)
         {
             case "xlsx":
-                using (var workbook = new XLWorkbook(output))
+                using (var workbook = WorkbookProbe.Open(output))
                 {
-                    var sheet = workbook.Worksheet(1);
-                    Assert.Equal("MAPPED_VALUE", sheet.Cell("A1").GetString());
-                    Assert.Equal("Second", sheet.Cell("A3").GetString());
-                    Assert.Equal("12.50", sheet.Cell("B2").GetString());
+                    var sheet = workbook;
+                    Assert.Equal("MAPPED_VALUE", Text(sheet, "A1"));
+                    Assert.Equal("Second", Text(sheet, "A3"));
+                    Assert.Equal("12.50", Text(sheet, "B2"));
                 }
 
                 break;
@@ -85,18 +76,7 @@ public sealed partial class ToolIntegrationTests
         Directory.CreateDirectory(_directory);
         var template = Path.Combine(_directory, "breaks.xlsx");
         var data = Path.Combine(_directory, "data.json");
-        using (var workbook = new XLWorkbook())
-        {
-            var sheet = workbook.AddWorksheet("Breaks");
-            sheet.Cell("A1").Value = "Upper left";
-            sheet.Cell("D1").Value = "Upper right";
-            sheet.Cell("C2").Value = "**@page-break";
-            sheet.Cell("A3").Value = "Lower left";
-            sheet.Cell("D3").Value = "Lower right";
-            sheet.PageSetup.PrintAreas.Add("A1:D3");
-            sheet.PageSetup.FitToPages(1, 1);
-            workbook.SaveAs(template);
-        }
+        RetainedWorkbook.Copy("MappingIntegrationTests.Mapping_page_breaks_produce_four_pages_even_with_fit_to_page_template.B8BA09212B263103.xlsx", template);
 
         await File.WriteAllTextAsync(data, "{}");
         var output = Path.Combine(_directory, "pages");
@@ -113,11 +93,7 @@ public sealed partial class ToolIntegrationTests
         Directory.CreateDirectory(_directory);
         var template = Path.Combine(_directory, "invalid.xlsx");
         var data = Path.Combine(_directory, "data.json");
-        using (var workbook = new XLWorkbook())
-        {
-            workbook.AddWorksheet("Invalid").Cell("B4").Value = "**missing";
-            workbook.SaveAs(template);
-        }
+        RetainedWorkbook.Copy("MappingIntegrationTests.Mapping_errors_preserve_existing_output_and_reject_input_overwrite.EC5FB52BE1BA9B5B.xlsx", template);
 
         await File.WriteAllTextAsync(data, "{}");
         var output = Path.Combine(_directory, "preserve.xlsx");

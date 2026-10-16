@@ -71,87 +71,6 @@ public static partial class OpenXmlWorkbookWriter
         }
     }
 
-    private static void RewritePrintDefinitions(XDocument workbook, Dictionary<int, SheetSource> sources)
-    {
-        var sheetNames = workbook.Root!.Element(Ns + "sheets")!.Elements().Select(sheet => (string)sheet.Attribute("name")!).ToArray();
-        foreach (var definition in workbook.Root.Element(Ns + "definedNames")?.Elements().ToArray() ?? Array.Empty<XElement>())
-        {
-            var index = (int?)definition.Attribute("localSheetId");
-            if (index == null)
-            {
-                throw new NotSupportedException("Print definitions must have a worksheet-local scope.");
-            }
-
-            if (!sources.TryGetValue(index.Value + 1, out var source))
-            {
-                continue;
-            }
-
-            var name = (string)definition.Attribute("name")!;
-            var sheetName = sheetNames[index.Value];
-            var parsed = PrintReferences.Parse(new DefinedNameInfo(name, definition.Value, index), new SheetInfo(index.Value + 1, 1, sheetName, "Worksheet", "visible"), null);
-            if (parsed.Ranges.Count == 0)
-            {
-                throw new NotSupportedException("Unresolved print definition.");
-            }
-
-            var prefix = "'" + sheetName.Replace("'", "''") + "'!";
-            var values = new List<string>();
-            foreach (var range in parsed.Ranges)
-            {
-                if (name == "_xlnm.Print_Titles" && range.Kind == "Columns")
-                {
-                    values.Add(prefix + Column(range.FirstColumn) + ":" + Column(range.LastColumn));
-                    continue;
-                }
-
-                var rows = source.Plan.Rows.Where(row => row.SourceRow >= range.FirstRow && row.SourceRow <= range.LastRow).ToArray();
-                var minimum = rows.Select(row => row.OutputRow).DefaultIfEmpty(int.MaxValue).Min();
-                var maximum = rows.Select(row => row.OutputRow).DefaultIfEmpty(0).Max();
-                if (range.LastRow > source.Plan.SourceLastRow)
-                {
-                    minimum = Math.Min(minimum, Math.Max(range.FirstRow, source.Plan.SourceLastRow + 1) + source.Plan.Rows.Count - source.Plan.SourceLastRow);
-                    maximum = Math.Min(1048576, range.LastRow + source.Plan.Rows.Count - source.Plan.SourceLastRow);
-                }
-
-                if (maximum < minimum)
-                {
-                    continue;
-                }
-
-                if (name == "_xlnm.Print_Titles")
-                {
-                    var represented = Math.Max(0, Math.Min(source.Plan.SourceLastRow, range.LastRow) - range.FirstRow + 1);
-                    if (rows.Length != represented || rows.Select(row => row.SourceRow).Distinct().Count() != represented || maximum - minimum != range.LastRow - range.FirstRow)
-                    {
-                        throw new NotSupportedException("Repeated or deleted title rows are unsupported.");
-                    }
-
-                    values.Add(prefix + "$" + minimum.ToString(CultureInfo.InvariantCulture) + ":$" + maximum.ToString(CultureInfo.InvariantCulture));
-                }
-                else
-                {
-                    values.Add(prefix + Column(range.FirstColumn) + "$" + minimum.ToString(CultureInfo.InvariantCulture) + ":" + Column(range.LastColumn) + "$" + maximum.ToString(CultureInfo.InvariantCulture));
-                }
-            }
-
-            if (values.Count == 0)
-            {
-                definition.Remove();
-            }
-            else
-            {
-                definition.Value = string.Join(",", values);
-            }
-        }
-
-        static string Column(int column)
-        {
-            var address = new CellAddress(1, column).ToString();
-            return "$" + address.Substring(0, address.Length - 1);
-        }
-    }
-
     private sealed class SheetSource : IDisposable
     {
         private readonly SpillableBufferStream rows;
@@ -214,6 +133,7 @@ public static partial class OpenXmlWorkbookWriter
                     reader.ReadEndElement();
                 }
 
+                LastColumn = Math.Max(LastColumn, plan.Rows.SelectMany(row => row.Values).Select(edit => edit.Column).DefaultIfEmpty(0).Max());
                 OperationMetrics.Report("writer.rowStoreBytes", rows.Length);
                 foreach (var occurrence in plan.Rows)
                 {

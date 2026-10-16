@@ -17,7 +17,7 @@ for relative, owner in {
     'Excel/CellRangeIndex.cs': 'Core.Excel.CoreCellRangeIndex',
     'Drawing/TextLayoutFontSize.cs': 'Core.Drawing.TextLayoutFontSize',
     'Excel/ColumnWidthCalculator.cs': 'Core.Excel.ColumnWidthCalculator',
-    'Excel/ExcelStyleConverter.cs': 'Core.Excel.ExcelStyleConverter',
+    'Excel/ExcelStyleConverter.cs': 'Core.Excel.OpenXmlStyleConverter',
     'Excel/WorkbookLayoutMetadataReader.cs': 'Core.Excel.WorkbookLayoutMetadataReader',
     'Layout/BandIndex.cs': 'Core.Layout.BandIndex',
     'Layout/SheetGeometry.cs': 'Core.Layout.SheetGeometry',

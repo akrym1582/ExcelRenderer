@@ -5,6 +5,45 @@ namespace ExcelRenderer.Core.Excel;
 /// <summary>Shared model assembly algorithms for both workbook adapters.</summary>
 internal static class WorkbookModelBuilder
 {
+    /// <summary>Materializes default dimensions for the durable public Reader dictionaries.</summary>
+    /// <param name="sheet">The sparse source model.</param>
+    /// <param name="additionalGeometry">Product object anchors and other finite source regions.</param>
+    /// <returns>A model with dimensions through each used or geometrical range.</returns>
+    internal static ReportSheet WithMaterializedDimensions(ReportSheet sheet, IReadOnlyList<CellRange>? additionalGeometry = null)
+    {
+        var ranges = sheet.MergedRanges.Concat(sheet.PrintAreas).Concat(sheet.Cells.Keys.Select(address => new CellRange(address, address)))
+            .Concat((sheet.Images ?? []).Select(image => new CellRange(
+                image.DrawingAnchor?.From ?? image.Anchor,
+                image.DrawingAnchor?.To ?? image.DrawingAnchor?.From ?? image.Anchor)))
+            .Concat(additionalGeometry ?? []).ToArray();
+        var columns = sheet.Columns.ToDictionary(pair => pair.Key, pair => pair.Value);
+        var rows = sheet.Rows.ToDictionary(pair => pair.Key, pair => pair.Value);
+        if (ranges.Length > 0)
+        {
+            var firstColumn = ranges.Min(range => Math.Min(range.First.Column, range.Last.Column));
+            var lastColumn = ranges.Max(range => Math.Max(range.First.Column, range.Last.Column));
+            var firstRow = ranges.Min(range => Math.Min(range.First.Row, range.Last.Row));
+            var lastRow = ranges.Max(range => Math.Max(range.First.Row, range.Last.Row));
+            for (var column = firstColumn; column <= lastColumn; column++)
+            {
+                if (!columns.ContainsKey(column))
+                {
+                    columns[column] = new(sheet.DefaultColumnWidth);
+                }
+            }
+
+            for (var row = firstRow; row <= lastRow; row++)
+            {
+                if (!rows.ContainsKey(row))
+                {
+                    rows[row] = new(sheet.DefaultRowHeight, sheet.DefaultRowsHidden);
+                }
+            }
+        }
+
+        return sheet with { Columns = columns, Rows = rows };
+    }
+
     /// <summary>Completes merged leaders and gathers visible perimeter borders from the shared model.</summary>
     /// <param name="cells">The sparse neutral cell model.</param>
     /// <param name="ranges">Source merge geometry.</param>

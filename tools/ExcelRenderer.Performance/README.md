@@ -69,7 +69,7 @@ Generator modes: `text`, `empty`, `latin`, `bold`, `wrap`, `merges`, `far`,
 `mixed` adds repeated titles, multiple print areas, a second paper size, an internal
 hyperlink, and an image crossing a page boundary. `far` preserves a distant styled
 blank cell and a row-height override outside the explicit print area.
-`rowstyle` applies whole-row/column formatting; ClosedXML may expand many cells.
+`rowstyle` applies whole-row/column formatting without expanding the complete grid.
 
 The Linux Python runner launches three fresh processes by default and samples RSS
 and private resident memory every 10 ms. It saves JSONL, stderr phase snapshots,

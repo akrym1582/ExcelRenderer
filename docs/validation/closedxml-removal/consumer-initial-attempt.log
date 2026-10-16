@@ -1,0 +1,42 @@
+  Determining projects to restore...
+  Restored /tmp/excelrenderer-reader-consumer/consumer.csproj (in 246 ms).
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Unhandled exception. ExcelRenderer.Rendering.ConversionException: Conversion failed.
+ ---> System.InvalidOperationException: A single-stream sink accepts exactly one artifact.
+   at ExcelRenderer.Rendering.SingleStreamOutputSink.OpenAsync(ArtifactDescriptor artifact, CancellationToken cancellationToken)
+   at ExcelRenderer.ExcelConverter.WriteArtifactAsync(IRenderOutputSink sink, ArtifactDescriptor descriptor, List`1 artifacts, Action`1 write, CancellationToken token)
+   at ExcelRenderer.ExcelConverter.WriteArtifactAsync(IRenderOutputSink sink, ArtifactDescriptor descriptor, List`1 artifacts, Action`1 write, CancellationToken token)
+   at ExcelRenderer.ExcelConverter.WritePageArtifactsAsync(IReadOnlyList`1 pages, RenderRequest request, FontManager fontManager, IRenderOutputSink sink, List`1 artifacts, CancellationToken token)
+   at ExcelRenderer.ExcelConverter.RenderAsync(Stream input, RenderRequest request, IRenderOutputSink sink, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at ExcelRenderer.ExcelConverter.RenderAsync(Stream input, RenderRequest request, IRenderOutputSink sink, CancellationToken cancellationToken)
+   at Program.<Main>$(String[] args) in /tmp/excelrenderer-reader-consumer/Program.cs:line 17
+   at Program.<Main>(String[] args)

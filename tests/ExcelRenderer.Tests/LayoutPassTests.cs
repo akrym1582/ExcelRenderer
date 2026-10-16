@@ -1,4 +1,4 @@
-using ClosedXML.Excel;
+using ExcelRenderer.TestFixtures;
 using DocumentFormat.OpenXml.Packaging;
 using ExcelRenderer.Abstractions;
 using ExcelRenderer.Drawing;
@@ -578,12 +578,7 @@ public sealed class LayoutPassTests
 
         try
         {
-            using (var workbook = new XLWorkbook())
-            {
-                var worksheet = workbook.AddWorksheet("Sheet1");
-                worksheet.Pictures.Add(new MemoryStream(imageBytes)).MoveTo(worksheet.Cell(2, 3), 4, 5);
-                workbook.SaveAs(path);
-            }
+            RetainedWorkbook.Copy("LayoutPassTests.ExcelReader_reads_worksheet_images.7F9B1506D1CCAB03.xlsx", path);
 
             var sheet = new ExcelReader().Read(path).Sheets[0];
             var image = Assert.Single(sheet.Images!);
@@ -608,12 +603,7 @@ public sealed class LayoutPassTests
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
         try
         {
-            using (var workbook = new XLWorkbook())
-            {
-                var worksheet = workbook.AddWorksheet("Sheet1");
-                worksheet.Pictures.Add(new MemoryStream(CreateImageBytes())).MoveTo(worksheet.Cell(2, 3), 4, 5);
-                workbook.SaveAs(path);
-            }
+            RetainedWorkbook.Copy("LayoutPassTests.ExcelReader_preserves_picture_anchor_crop_and_transform.7F9B1506D1CCAB03.xlsx", path);
 
             using (var document = SpreadsheetDocument.Open(path, true))
             {
@@ -675,13 +665,7 @@ public sealed class LayoutPassTests
 
         try
         {
-            using (var workbook = new XLWorkbook())
-            {
-                var worksheet = workbook.AddWorksheet("Sheet1");
-                worksheet.PageSetup.Header.Left.AddText("ヘッダー");
-                worksheet.PageSetup.Footer.Center.AddText("ページ &P / &N");
-                workbook.SaveAs(path);
-            }
+            RetainedWorkbook.Copy("LayoutPassTests.ExcelReader_reads_worksheet_header_and_footer.1A25B17C5123DEF2.xlsx", path);
 
             var headerFooter = new ExcelReader().Read(path).Sheets[0].HeaderFooter!;
 
@@ -707,20 +691,7 @@ public sealed class LayoutPassTests
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
         try
         {
-            using (var workbook = new XLWorkbook())
-            {
-                var worksheet = workbook.AddWorksheet("Sheet1");
-                worksheet.Cell(1, 1).Value = "one";
-                worksheet.Cell(2, 1).Value = "two";
-                worksheet.Row(1).Height = 40;
-                worksheet.Row(2).Height = 40;
-                worksheet.PageSetup.PaperSize = XLPaperSize.LetterPaper;
-                worksheet.PageSetup.Margins.Top = 0.1;
-                worksheet.PageSetup.Margins.Bottom = 0.1;
-                worksheet.PageSetup.Header.Center.AddText("ページ &P / &N");
-                worksheet.PageSetup.Footer.Center.AddText("フッター &P / &N");
-                workbook.SaveAs(path);
-            }
+            RetainedWorkbook.Copy("LayoutPassTests.ExcelReader_regular_header_and_footer_are_rendered_on_every_page.D8BE652BA5A65450.xlsx", path);
 
             var sheet = new ExcelReader().Read(path).Sheets[0] with
             {
@@ -747,16 +718,7 @@ public sealed class LayoutPassTests
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
         try
         {
-            using (var workbook = new XLWorkbook())
-            {
-                var worksheet = workbook.AddWorksheet("Sheet1");
-                worksheet.Cell(2, 3).Value = "text";
-                worksheet.PageSetup.PrintAreas.Add(2, 3, 4, 5);
-                worksheet.PageSetup.PaperSize = XLPaperSize.A4Paper;
-                worksheet.PageSetup.PageOrientation = XLPageOrientation.Landscape;
-                worksheet.PageSetup.Margins.Left = 0.5;
-                workbook.SaveAs(path);
-            }
+            RetainedWorkbook.Copy("LayoutPassTests.ExcelReader_reads_print_settings_and_converts_column_widths.E75FF45871D7487A.xlsx", path);
 
             var sheet = new ExcelReader().Read(path).Sheets[0];
 
@@ -795,13 +757,7 @@ public sealed class LayoutPassTests
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
         try
         {
-            using (var workbook = new XLWorkbook())
-            {
-                var worksheet = workbook.AddWorksheet("Sheet1");
-                worksheet.Cell(1, 1).Value = "value";
-                worksheet.Column(1).Width = 8;
-                workbook.SaveAs(path);
-            }
+            RetainedWorkbook.Copy("LayoutPassTests.ExcelReader_measures_maximum_digit_width_from_normal_theme_font.5BB01D7D4CAC75E5.xlsx", path);
 
             var diagnostics = new DiagnosticCollector(new DiagnosticOptions());
             var document = new ExcelReader(new MissingPrivateUseFontManager())
@@ -826,13 +782,7 @@ public sealed class LayoutPassTests
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
         try
         {
-            using (var workbook = new XLWorkbook())
-            {
-                var worksheet = workbook.AddWorksheet("Sheet1");
-                worksheet.Cell(1, 1).Value = "scaled";
-                worksheet.PageSetup.AdjustTo(75);
-                workbook.SaveAs(path);
-            }
+            RetainedWorkbook.Copy("LayoutPassTests.ExcelReader_reads_percentage_print_scale.36A44899161E81EF.xlsx", path);
 
             var settings = new ExcelReader().Read(path).Sheets[0].PageSettings;
 
@@ -855,14 +805,7 @@ public sealed class LayoutPassTests
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
         try
         {
-            using (var workbook = new XLWorkbook())
-            {
-                var worksheet = workbook.AddWorksheet("Sheet1");
-                worksheet.Cell(1, 1).Value = "title";
-                worksheet.PageSetup.SetRowsToRepeatAtTop(1, 2);
-                worksheet.PageSetup.SetColumnsToRepeatAtLeft(1, 3);
-                workbook.SaveAs(path);
-            }
+            RetainedWorkbook.Copy("LayoutPassTests.ExcelReader_reads_print_title_rows_and_columns.E5ED40D09A8140F1.xlsx", path);
 
             var settings = new ExcelReader().Read(path).Sheets[0].PageSettings;
 
@@ -884,13 +827,7 @@ public sealed class LayoutPassTests
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
         try
         {
-            using (var workbook = new XLWorkbook())
-            {
-                var worksheet = workbook.AddWorksheet("Sheet1");
-                worksheet.Cell(1, 1).Value = "fitted";
-                worksheet.PageSetup.FitToPages(1, 2);
-                workbook.SaveAs(path);
-            }
+            RetainedWorkbook.Copy("LayoutPassTests.ExcelReader_reads_fit_to_pages_print_scale.B76072CCF8BACC36.xlsx", path);
 
             var settings = new ExcelReader().Read(path).Sheets[0].PageSettings;
 
@@ -978,12 +915,7 @@ public sealed class LayoutPassTests
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
         try
         {
-            using (var workbook = new XLWorkbook())
-            {
-                var worksheet = workbook.AddWorksheet("Sheet1");
-                worksheet.Range(1, 1, 2, 2).Merge();
-                workbook.SaveAs(path);
-            }
+            RetainedWorkbook.Copy("LayoutPassTests.ExcelReader_normalizes_empty_merged_cells_to_the_top_left_cell.A73342F646ED8F70.xlsx", path);
 
             var sheet = new ExcelReader().Read(path).Sheets[0];
 
@@ -1420,13 +1352,7 @@ public sealed class LayoutPassTests
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
         try
         {
-            using (var workbook = new XLWorkbook())
-            {
-                var worksheet = workbook.AddWorksheet("Sheet1");
-                worksheet.Cell(1, 1).Value = "merged";
-                worksheet.Range(1, 1, 1, 3).Merge();
-                workbook.SaveAs(path);
-            }
+            RetainedWorkbook.Copy("LayoutPassTests.ExcelReader_reads_column_and_row_definitions_for_merged_range_extents.79CE238A61256981.xlsx", path);
 
             var sheet = new ExcelReader().Read(path).Sheets[0];
 
@@ -1446,17 +1372,7 @@ public sealed class LayoutPassTests
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
         try
         {
-            using (var workbook = new XLWorkbook())
-            {
-                var worksheet = workbook.AddWorksheet("Sheet1");
-                worksheet.Column(1).Width = 20;
-                worksheet.Column(2).Hide();
-                worksheet.Row(1).Height = 31;
-                worksheet.Row(2).Hide();
-                worksheet.Cell(3, 3).Value = "used";
-                worksheet.PageSetup.PrintAreas.Add("C3:C3");
-                workbook.SaveAs(path);
-            }
+            RetainedWorkbook.Copy("LayoutPassTests.ExcelReader_preserves_dimensions_before_used_and_printed_range.CA3208C32E3F5551.xlsx", path);
 
             var sheet = Assert.Single(new ExcelReader().Read(path).Sheets);
             var geometry = new SheetGeometry(sheet);
@@ -1481,18 +1397,7 @@ public sealed class LayoutPassTests
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
         try
         {
-            using (var workbook = new XLWorkbook())
-            {
-                var worksheet = workbook.AddWorksheet("Sheet1");
-                worksheet.Column(1).Width = 20;
-                worksheet.Column(2).Hide();
-                worksheet.Row(1).Height = 31;
-                worksheet.Row(2).Hide();
-                worksheet.Cell(3, 3).Value = "used";
-                worksheet.PageSetup.PrintAreas.Add("C3:D4");
-                worksheet.Pictures.Add(new MemoryStream(CreateImageBytes())).MoveTo(worksheet.Cell(3, 3), 4, 5);
-                workbook.SaveAs(path);
-            }
+            RetainedWorkbook.Copy("LayoutPassTests.ExcelReader_resolves_leading_dimensions_and_picture_to_page_coordinates.4C616EFC418E8EE6.xlsx", path);
 
             var sheet = Assert.Single(new ExcelReader().Read(path).Sheets);
             var geometry = new SheetGeometry(sheet);
@@ -1563,12 +1468,7 @@ public sealed class LayoutPassTests
         uint? fitToHeight)
     {
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
-        using (var workbook = new XLWorkbook())
-        {
-            var worksheet = workbook.AddWorksheet("Sheet1");
-            worksheet.Cell(1, 1).Value = "value";
-            workbook.SaveAs(path);
-        }
+        RetainedWorkbook.Copy("LayoutPassTests.CreateWorkbookWithPageSetup.051601891C1CEAAE.xlsx", path);
 
         using (var document = SpreadsheetDocument.Open(path, true))
         {

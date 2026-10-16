@@ -3,8 +3,8 @@
 English | [日本語](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/mapping.ja.md)
 
 `ExcelRenderer.Mapping` is a standalone .NET Standard 2.1 package. It maps CLR
-objects or JSON into a formula-free XLSX template. Backends are ClosedXml
-(default, using ClosedXML 0.105.1), OpenXml and Auto; see
+objects or JSON into a formula-free XLSX template. OpenXml is the default and sole writer; Auto is an alias without fallback.
+The obsolete ClosedXml enum value is rejected before input processing; see
 [backend selection](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/openxml-integration.md). It does not depend
 on the renderer, fonts, PDFsharp or SkiaSharp. The CLI references both the mapping
 and rendering packages.
@@ -239,8 +239,8 @@ Rendering needs suitable fonts; see the
 `MappingOptions.Culture` defaults to `InvariantCulture`. `MaxOutputRows` defaults
 to 100,000 per worksheet and may be set up to Excel's 1,048,576-row limit. Nested
 expansion and ordinary template rows count toward the limit. Cancellation is checked during planning and
-expansion; ClosedXML's synchronous load/save operations cannot be interrupted.
-The workbook and expansion plans are held in memory. CLI mapping uses the default
+expansion, row replay and staged validation. Expansion plans remain in memory;
+source row XML and the output stage can spill to temporary files. CLI mapping uses the default
 options; configure options through the C# API when needed.
 
 ```csharp
@@ -492,17 +492,16 @@ because of this directive.
 
 ## Excel behavior and limitations
 
-On the ClosedXml backend, value/style-only regions use a final-row placement plan
-with one bulk resize per region. Templates with references or other Excel objects retain ClosedXML row
-insertion/deletion and range copying to preserve their existing behavior. Expansion
-preserves cell styles, row height, hidden state, outline levels, ordinary
-merged ranges, copied conditional formatting and data validation. Static defined names and print areas follow ClosedXML row-operation semantics.
-References to removed marker/empty-array rows can become `#REF!`; names overlapping
-repeat regions remain unsupported. Static print areas/titles remain supported.
-
-The OpenXml backend applies typed edits to staged XML parts. Its supported structures,
-Auto selection and output guarantees are described in
-[engine selection](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/openxml-integration.md).
+The OpenXml writer applies a final source-to-output row plan to staged package
+parts. It preserves styles, row heights, hidden state, outline levels, merges,
+manual breaks, static names, hyperlinks, comments, pictures, tables/filters,
+conditional formatting and data validation. Internal hyperlink destinations move
+with their referenced rows, including references from another sheet. Names,
+tables and pictures intersecting repeated regions remain unsupported.
+Print areas include every output occurrence; deleted areas are removed. Repeated
+or deleted print-title rows are rejected. See
+[engine selection](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/openxml-integration.md)
+for supported part types, pivot caches and staged output guarantees.
 
 All Mapping backends reject cell formulas anywhere in the workbook, table
 calculated/totals formulas, non-none totals functions and calculated defined names before backend selection,
@@ -513,14 +512,14 @@ or JSON and value placeholders. Static names accept only literal constants and f
 reference unions; functions, arithmetic, dynamic/external/3D references, aliases and
 unknown grammar are rejected. Unknown workbook/worksheet/table extension payloads
 are rejected when the absence of value formulas cannot be established. Conditional
-formatting and validation formulas remain structural metadata on the existing
-ClosedXML path; they are not evaluated or rendered conditionally.
+formatting and validation formulas remain structural metadata. Their supported A1
+references move without evaluating formulas or rendering conditional styles.
 
 Merges entirely inside a repeated block are supported. Merges crossing an array
 boundary, merged marker rows, Excel tables intersecting repeated regions, and
 pictures intersecting repeated regions are rejected with template diagnostics.
-Other unsupported workbook features depend on ClosedXML's load/save support;
-use ordinary cell-based templates for the repeated regions.
+Unknown parts/extensions, macros, signatures and Strict packages are rejected.
+Use ordinary cell-based templates for repeated regions.
 
 Saving explicitly disables formula evaluation and preserves the original `calcPr`
 (including absence), without adding recalculation requests. Strings beginning with
@@ -535,34 +534,45 @@ the original cell, defined name or table when available.
 
 You can also generate the same invoice template from C#. In the console project
 with `ExcelRenderer.Mapping` installed, replace `Program.cs` with this code and
-run `dotnet run` once. ClosedXML is supplied by the mapping package's dependencies.
+run `dotnet run` once. This example uses the Open XML SDK supplied transitively
+by the mapping package.
 Then replace `Program.cs` with a mapping example above, or use the CLI.
 
 ```csharp
-using ClosedXML.Excel;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using S = DocumentFormat.OpenXml.Spreadsheet;
 
-using var workbook = new XLWorkbook();
-var sheet = workbook.AddWorksheet("Invoice");
-sheet.Cell("A1").Value = "Invoice";
-sheet.Cell("A2").Value = "Customer";
-sheet.Cell("B2").Value = "**Customer";
-sheet.Cell("A3").Value = "Issued";
-sheet.Cell("B3").Value = "**IssuedAt | date(\"yyyy/MM/dd\")";
-sheet.Cell("A4").Value = "Item";
-sheet.Cell("B4").Value = "Quantity";
-sheet.Cell("C4").Value = "Unit price";
-sheet.Cell("D4").Value = "Line total";
-sheet.Cell("A5").Value = "**Items[*].Name";
-sheet.Cell("B5").Value = "**Items[*].Quantity";
-sheet.Cell("C5").Value = "**Items[*].Price";
-sheet.Cell("D5").Value = "**Items[*].LineTotal";
-sheet.Cell("A6").Value = "Total";
-sheet.Cell("D6").Value = "**Total";
-sheet.Columns(1, 4).Width = 22;
-sheet.Range("A4:D4").Style.Font.Bold = true;
-sheet.Range("C5:D6").Style.NumberFormat.Format = "#,##0.00";
-sheet.PageSetup.PrintAreas.Add("A1:D6");
-workbook.SaveAs("template.xlsx");
+using var package = SpreadsheetDocument.Create("template.xlsx", SpreadsheetDocumentType.Workbook);
+var workbook = package.AddWorkbookPart();
+workbook.Workbook = new S.Workbook(new S.Sheets());
+var sheet = workbook.AddNewPart<WorksheetPart>();
+workbook.Workbook.Sheets!.Append(new S.Sheet { Id = workbook.GetIdOfPart(sheet), SheetId = 1, Name = "Invoice" });
+var rows = new[]
+{
+    new[] { "Invoice" },
+    new[] { "Customer", "**Customer" },
+    new[] { "Issued", "**IssuedAt | date(\"yyyy/MM/dd\")" },
+    new[] { "Item", "Quantity", "Unit price", "Line total" },
+    new[] { "**Items[*].Name", "**Items[*].Quantity", "**Items[*].Price", "**Items[*].LineTotal" },
+    new[] { "Total", "", "", "**Total" },
+};
+var data = new S.SheetData();
+for (var row = 0; row < rows.Length; row++)
+{
+    var record = new S.Row { RowIndex = (uint)row + 1 };
+    for (var column = 0; column < rows[row].Length; column++)
+    {
+        record.Append(new S.Cell(new S.InlineString(new S.Text(rows[row][column])))
+        {
+            CellReference = $"{(char)('A' + column)}{row + 1}",
+            DataType = S.CellValues.InlineString,
+        });
+    }
+    data.Append(record);
+}
+sheet.Worksheet = new S.Worksheet(new S.Columns(new S.Column { Min = 1, Max = 4, Width = 22, CustomWidth = true }), data);
+workbook.Workbook.DefinedNames = new S.DefinedNames(new S.DefinedName("'Invoice'!$A$1:$D$6") { Name = "_xlnm.Print_Area", LocalSheetId = 0 });
 ```
 
 ## Troubleshooting

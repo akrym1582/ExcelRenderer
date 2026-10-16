@@ -6,7 +6,7 @@ using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 
 namespace ExcelRenderer.Core.Excel;
 
-/// <summary>ClosedXML が公開していない DrawingML の機能を読み取ります。</summary>
+/// <summary>DrawingML のアンカーと描画メタデータを読み取ります。</summary>
 internal static class DrawingMLReader
 {
     private const double EmusPerPoint = 914400d / 72d;

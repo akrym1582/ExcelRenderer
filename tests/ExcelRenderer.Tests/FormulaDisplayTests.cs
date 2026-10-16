@@ -1,4 +1,4 @@
-using ClosedXML.Excel;
+using ExcelRenderer.TestFixtures;
 using DocumentFormat.OpenXml.Packaging;
 using ExcelRenderer.Excel;
 using ExcelRenderer.Model;
@@ -11,7 +11,6 @@ namespace ExcelRenderer.Tests;
 public sealed class FormulaDisplayTests
 {
     [Theory]
-    [InlineData(ReaderBackend.ClosedXml)]
     [InlineData(ReaderBackend.OpenXml)]
     [InlineData(ReaderBackend.Auto)]
     public void CachedModeDistinguishesMissingZeroFalseEmptyTextAndErrorsWithoutEvaluating(ReaderBackend backend)
@@ -35,9 +34,7 @@ public sealed class FormulaDisplayTests
     }
 
     [Theory]
-    [InlineData(false, "1900-01-02", ReaderBackend.ClosedXml)]
     [InlineData(false, "1900-01-02", ReaderBackend.OpenXml)]
-    [InlineData(true, "1904-01-03", ReaderBackend.ClosedXml)]
     [InlineData(true, "1904-01-03", ReaderBackend.OpenXml)]
     public void OriginalDateSerialUsesWorkbookDateSystemOnce(bool use1904, string expected, ReaderBackend backend)
     {
@@ -50,7 +47,6 @@ public sealed class FormulaDisplayTests
     }
 
     [Theory]
-    [InlineData(ReaderBackend.ClosedXml)]
     [InlineData(ReaderBackend.OpenXml)]
     [InlineData(ReaderBackend.Auto)]
     public void CachedDurationsDoNotAcquireThe1904DateOffset(ReaderBackend backend)
@@ -71,9 +67,7 @@ public sealed class FormulaDisplayTests
     }
 
     [Theory]
-    [InlineData(OutputFormat.Pdf, ReaderBackend.ClosedXml)]
     [InlineData(OutputFormat.Pdf, ReaderBackend.OpenXml)]
-    [InlineData(OutputFormat.Markdown, ReaderBackend.ClosedXml)]
     [InlineData(OutputFormat.Markdown, ReaderBackend.OpenXml)]
     public async Task MissingCacheDiagnosticIsSelectedAndFailsBeforeSink(OutputFormat format, ReaderBackend backend)
     {
@@ -104,7 +98,6 @@ public sealed class FormulaDisplayTests
     }
 
     [Theory]
-    [InlineData(ReaderBackend.ClosedXml)]
     [InlineData(ReaderBackend.OpenXml)]
     [InlineData(ReaderBackend.Auto)]
     public void SharedAndArrayFormulaFollowersUseTheirOwnOriginalCaches(ReaderBackend backend)
@@ -181,7 +174,6 @@ public sealed class FormulaDisplayTests
     }
 
     [Theory]
-    [InlineData(ReaderBackend.ClosedXml)]
     [InlineData(ReaderBackend.OpenXml)]
     [InlineData(ReaderBackend.Auto)]
     public void DefaultsKeepStaleCachesAndOriginalInputIncludingHyperlinkLabel(ReaderBackend backend)
@@ -234,14 +226,9 @@ public sealed class FormulaDisplayTests
     [Fact]
     public async Task CachedModeDoesNotReadValueEvenWhenPrecedentWasChangedAfterLoading()
     {
-        using var input = new MemoryStream();
-        using (var workbook = new XLWorkbook())
-        {
-            var sheet = workbook.AddWorksheet("dirty");
-            sheet.Cell("A1").Value = 40;
-            sheet.Cell("B1").FormulaA1 = "SUM(A1,2)";
-            workbook.SaveAs(input);
-        }
+        using var input = SdkWorkbook.Create(new S.Worksheet(new S.SheetData(new S.Row(
+            SdkWorkbook.Number("A1", "40"),
+            new S.Cell(new S.CellFormula("SUM(A1,2)")) { CellReference = "B1" }) { RowIndex = 1 })), name: "dirty");
 
         input.Position = 0;
         using (var package = SpreadsheetDocument.Open(input, true))
@@ -251,36 +238,36 @@ public sealed class FormulaDisplayTests
 
         input.Position = 0;
         using var prepared = await Core.Input.WorkbookInputPreparer.ReadAsync(input, new(), CancellationToken.None);
-        using var original = prepared.OpenRead();
-        using var loaded = new XLWorkbook(original);
-        loaded.Worksheet(1).Cell("A1").Value = 50;
-        loaded.Worksheet(1).Cell("B1").InvalidateFormula();
+        using (var package = SpreadsheetDocument.Open(input, true))
+        {
+            package.WorkbookPart!.WorksheetParts.Single().Worksheet.Descendants<S.Cell>().Single(cell => cell.CellReference == "A1").CellValue = new S.CellValue("50");
+        }
         var reader = new Core.Excel.CoreExcelReader(new CoreIntegration.FullFontMetrics(null, null, new()));
-        var document = reader.ReadClosedXmlWorkbook(prepared, loaded, null, null, CancellationToken.None, Core.Excel.FormulaDisplayMode.CachedValue);
+        var document = reader.Read(prepared, null);
+        Assert.Equal("40", document.Sheets[0].Cells[new(1, 1)].Text);
         Assert.Equal("99", document.Sheets[0].Cells[new(1, 2)].Text);
-        Assert.True(loaded.Worksheet(1).Cell("B1").NeedsRecalculation);
     }
 
-    private static ExcelReadOptions Cached(ReaderBackend backend = ReaderBackend.ClosedXml) => new() { Backend = backend, FormulaDisplayMode = FormulaDisplayMode.CachedValue };
+    private static ExcelReadOptions Cached(ReaderBackend backend = ReaderBackend.OpenXml) => new() { Backend = backend, FormulaDisplayMode = FormulaDisplayMode.CachedValue };
 
     private static MemoryStream CreateWorkbook(bool use1904 = false)
     {
-        var stream = new MemoryStream();
-        using (var workbook = new XLWorkbook())
+        var styles = SdkWorkbook.Styles(new S.CellFormat(), new S.CellFormat { NumberFormatId = 200 },
+            new S.CellFormat { NumberFormatId = 201 }, new S.CellFormat { NumberFormatId = 202 }, new S.CellFormat { NumberFormatId = 203 });
+        styles.InsertAt(new S.NumberingFormats(
+            new S.NumberingFormat { NumberFormatId = 200, FormatCode = "yyyy-mm-dd" },
+            new S.NumberingFormat { NumberFormatId = 201, FormatCode = "0.00%" },
+            new S.NumberingFormat { NumberFormatId = 202, FormatCode = "000.00" },
+            new S.NumberingFormat { NumberFormatId = 203, FormatCode = "hh:mm" }), 0);
+        var rows = new S.SheetData();
+        for (var row = 1; row <= 12; row++)
         {
-            workbook.Use1904DateSystem = use1904;
-            var sheet = workbook.AddWorksheet("formulas");
-            for (var row = 1; row <= 12; row++)
+            rows.Append(new S.Row(new S.Cell(new S.CellFormula("A1+1"))
             {
-                sheet.Cell(row, 1).FormulaA1 = "A1+1";
-            }
-
-            sheet.Cell(9, 1).Style.NumberFormat.Format = "yyyy-mm-dd";
-            sheet.Cell(10, 1).Style.NumberFormat.Format = "0.00%";
-            sheet.Cell(11, 1).Style.NumberFormat.Format = "000.00";
-            sheet.Cell(12, 1).Style.NumberFormat.Format = "hh:mm";
-            workbook.SaveAs(stream);
+                CellReference = "A" + row, StyleIndex = row >= 9 ? (uint)(row - 8) : 0,
+            }) { RowIndex = (uint)row });
         }
+        var stream = SdkWorkbook.Create(new S.Worksheet(rows), styles, use1904, "formulas");
 
         stream.Position = 0;
         using (var document = SpreadsheetDocument.Open(stream, true))

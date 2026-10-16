@@ -1,5 +1,8 @@
 # Mapping の大量データ性能確認
 
+> この文書は記載された旧コミットの検証記録です。現在の依存撤去・既定値・検証結果は
+> [ClosedXML 撤去の検証](closedxml-removal-validation.md)を参照してください。
+
 > Historical record: formula evaluation/Legacy and outside-repeat formula permissions described
 > below have been superseded by the no-recalculation contract. See
 > [the current integration guide](openxml-integration.md). Original measurements and

@@ -1,7 +1,7 @@
 namespace ExcelRenderer.Excel;
 
 /// <summary>
-/// ClosedXML による正規化前のワークブックレイアウト情報を読み取ります。
+/// 元 OOXML のワークブックレイアウト情報を読み取ります。
 /// </summary>
 internal static class WorkbookLayoutMetadataReader
 {

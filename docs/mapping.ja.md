@@ -4,7 +4,8 @@
 
 `ExcelRenderer.Mapping` は独立した .NET Standard 2.1 のパッケージです。
 C# オブジェクトや JSON の値を、数式のない XLSX テンプレートへ設定します。
-backend は ClosedXml（既定、ClosedXML 0.105.1 を使用）・OpenXml・Auto から選択できます。
+OpenXml が既定かつ唯一の Writer で、Auto も同じ経路を使います。
+廃止された ClosedXml enum 値は入力処理前に拒否します。
 詳細は[エンジン選択](openxml-integration.ja.md)を参照してください。
 描画ライブラリ、フォント、PDFsharp、SkiaSharp には依存しません。
 CLI はマッピングと描画のライブラリを組み合わせて使用します。
@@ -237,8 +238,8 @@ await ExcelConverter.ConvertToPdfAsync("report.xlsx", "report.pdf");
 `MappingOptions.Culture` の既定値は `InvariantCulture` です。
 `MaxOutputRows` の既定値はシートごとに 100,000 行で、Excel の上限である
 1,048,576 行まで設定できます。入れ子の展開と通常のテンプレート行も数えます。
-キャンセルは計画・展開中に確認しますが、ClosedXML の同期的な読み込み・保存処理は
-途中で中断できません。ワークブックと展開計画はメモリ上に保持します。
+キャンセルは計画・展開・行の書き出し・stage 検証中に確認します。展開計画はメモリに保持し、
+元行の XML と出力 stage は設定に従って一時ファイルへ退避できます。
 CLI では既定値を使用します。変更が必要な場合は C# API を使ってください。
 
 ```csharp
@@ -483,17 +484,14 @@ XLSX には印刷・印刷プレビュー用の手動改ページとして保存
 
 ## Excel 機能と制約
 
-ClosedXml backend では、値・書式だけの領域の最終行配置を計算し、領域ごとにまとめて行数を変更します。
-参照やその他の Excel オブジェクトがある場合は、既存の動作を維持するため
-ClosedXML の行挿入・削除と範囲コピーを使います。
-セルの書式、行高、非表示状態、アウトラインレベル、通常の結合セル、
-コピー先の条件付き書式とデータ検証を維持します。
-静的な定義名・印刷範囲は ClosedXML の行操作に従います。削除するマーカー行や空配列行への
-参照は `#REF!` になることがあり、繰り返し領域と重なる定義名は非対応です。
-静的な印刷範囲・印刷タイトルは継続します。
-
-OpenXml backend は一時出力の XML part に型付き編集を適用します。対応する構造、Auto の選択と
-出力保証は[エンジン選択](openxml-integration.ja.md)を参照してください。
+OpenXml Writer は元行から出力行への配置計画に従って stage 内のパーツを編集します。
+書式・行高・非表示・アウトライン・結合・改ページ・静的定義名・リンク・コメント・
+繰り返し外の画像・テーブル・フィルター・条件付き書式・入力規則を保持します。
+内部リンク先も別シートを含めて行移動に追従します。繰り返しと重なる名前・テーブル・画像は
+従来どおり拒否します。印刷範囲は全出力 occurrence を含み、完全に削除された範囲を除去します。
+繰り返し・削除と交差する印刷タイトル行は非対応です。
+[エンジン選択](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/openxml-integration.ja.md)
+に、対応 part・ピボットキャッシュ・stage 出力の保証を記載しています。
 
 全 Mapping backend で、ブック内の全セル数式、table の calculated/totals 式・集計関数、計算定義名を、
 backend 選択・データ評価・出力の前に `MappingFormulaNotSupported` で拒否します。
@@ -501,13 +499,13 @@ backend 選択・データ評価・出力の前に `MappingFormulaNotSupported` 
 確定値を C# オブジェクトや JSON から値のプレースホルダーへ渡してください。
 静的定義名は定数と有限 A1 参照の union に限定し、関数・演算・動的／外部／3D 参照・
 別名・未知文法は拒否します。未知の workbook／worksheet／table extension も、値の数式が
-ないと確認できない場合は拒否します。条件付き書式・入力規則の式は既存 ClosedXML 経路の
-構造調整として保持しますが、評価や条件による描画は追加しません。
+ないと確認できない場合は拒否します。条件付き書式・入力規則の式は構造メタデータとして、
+対応する A1 参照を移動します。式評価や条件による描画は追加しません。
 
 繰り返しブロック内で完結する結合は使えます。配列境界をまたぐ結合、
 結合されたマーカー行、繰り返し領域と重なる Excel テーブル・画像は、
 元テンプレートのセル位置を示すエラーになります。
-その他のワークブック機能は ClosedXML の読み込み・保存の対応範囲に依存します。
+未知の part・拡張、マクロ・署名・Strict パッケージは拒否します。
 繰り返し領域には通常のセルを使ってください。
 
 保存時評価は明示的に無効にし、元の `calcPr`（不存在も含む）を保持します。
@@ -523,34 +521,44 @@ Mapping の `**` 構文・format/date は Excel 数式とは別の処理とし�
 同じ請求書テンプレートを C# で生成することもできます。
 `ExcelRenderer.Mapping` を追加したコンソールプロジェクトで、
 `Program.cs` を次のコードに置き換え、`dotnet run` を 1 回実行してください。
-ClosedXML はマッピングパッケージの依存関係として導入されます。
+この例では、マッピングパッケージから間接参照される Open XML SDK を使います。
 その後、`Program.cs` を前述のマッピング例に置き換えるか、CLI を使います。
 
 ```csharp
-using ClosedXML.Excel;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using S = DocumentFormat.OpenXml.Spreadsheet;
 
-using var workbook = new XLWorkbook();
-var sheet = workbook.AddWorksheet("Invoice");
-sheet.Cell("A1").Value = "Invoice";
-sheet.Cell("A2").Value = "Customer";
-sheet.Cell("B2").Value = "**Customer";
-sheet.Cell("A3").Value = "Issued";
-sheet.Cell("B3").Value = "**IssuedAt | date(\"yyyy/MM/dd\")";
-sheet.Cell("A4").Value = "Item";
-sheet.Cell("B4").Value = "Quantity";
-sheet.Cell("C4").Value = "Unit price";
-sheet.Cell("D4").Value = "Line total";
-sheet.Cell("A5").Value = "**Items[*].Name";
-sheet.Cell("B5").Value = "**Items[*].Quantity";
-sheet.Cell("C5").Value = "**Items[*].Price";
-sheet.Cell("D5").Value = "**Items[*].LineTotal";
-sheet.Cell("A6").Value = "Total";
-sheet.Cell("D6").Value = "**Total";
-sheet.Columns(1, 4).Width = 22;
-sheet.Range("A4:D4").Style.Font.Bold = true;
-sheet.Range("C5:D6").Style.NumberFormat.Format = "#,##0.00";
-sheet.PageSetup.PrintAreas.Add("A1:D6");
-workbook.SaveAs("template.xlsx");
+using var package = SpreadsheetDocument.Create("template.xlsx", SpreadsheetDocumentType.Workbook);
+var workbook = package.AddWorkbookPart();
+workbook.Workbook = new S.Workbook(new S.Sheets());
+var sheet = workbook.AddNewPart<WorksheetPart>();
+workbook.Workbook.Sheets!.Append(new S.Sheet { Id = workbook.GetIdOfPart(sheet), SheetId = 1, Name = "Invoice" });
+var rows = new[]
+{
+    new[] { "Invoice" },
+    new[] { "Customer", "**Customer" },
+    new[] { "Issued", "**IssuedAt | date(\"yyyy/MM/dd\")" },
+    new[] { "Item", "Quantity", "Unit price", "Line total" },
+    new[] { "**Items[*].Name", "**Items[*].Quantity", "**Items[*].Price", "**Items[*].LineTotal" },
+    new[] { "Total", "", "", "**Total" },
+};
+var data = new S.SheetData();
+for (var row = 0; row < rows.Length; row++)
+{
+    var record = new S.Row { RowIndex = (uint)row + 1 };
+    for (var column = 0; column < rows[row].Length; column++)
+    {
+        record.Append(new S.Cell(new S.InlineString(new S.Text(rows[row][column])))
+        {
+            CellReference = $"{(char)('A' + column)}{row + 1}",
+            DataType = S.CellValues.InlineString,
+        });
+    }
+    data.Append(record);
+}
+sheet.Worksheet = new S.Worksheet(new S.Columns(new S.Column { Min = 1, Max = 4, Width = 22, CustomWidth = true }), data);
+workbook.Workbook.DefinedNames = new S.DefinedNames(new S.DefinedName("'Invoice'!$A$1:$D$6") { Name = "_xlnm.Print_Area", LocalSheetId = 0 });
 ```
 
 ## よくある問題と対処

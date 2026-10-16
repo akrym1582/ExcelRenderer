@@ -97,7 +97,7 @@ public sealed class ExcelReader
         var styles = new StylePool();
         return ConversionMetrics.Measure("model", () => new ReportDocument(document.Sheets.Select(sheet =>
         {
-            var view = CoreIntegration.CoreModelAdapter.ToPublic(sheet, styles);
+            var view = CoreIntegration.CoreModelAdapter.ToPublic(Core.Excel.WorkbookModelBuilder.WithMaterializedDimensions(sheet, (sheet.ExtensionData as CoreIntegration.FullSheetData)?.DimensionRanges), styles);
             return view with
             {
                 Cells = view.Cells.ToDictionary(pair => pair.Key, pair => pair.Value),
@@ -120,12 +120,10 @@ public sealed class ExcelReader
         options?.Validate();
         var coreDiagnostics = diagnostics is null ? null : new Core.Rendering.DiagnosticCollector(diagnostic => diagnostics.Add(CoreIntegration.CoreDiagnosticAdapter.ToPublic(diagnostic)));
         var document = new CoreIntegration.FullExcelReader(fontManager, diagnostics, maximumDigitWidths, detectUnsupportedFeatures)
-            .Read(source.CoreWorkbook, coreDiagnostics, selectedSheets, cancellationToken, (Core.Excel.FormulaDisplayMode)(options?.FormulaDisplayMode ?? FormulaDisplayMode.CachedValue), new Core.ExcelReadOptions
+            .Read(source.CoreWorkbook, coreDiagnostics, selectedSheets, cancellationToken, new Core.ExcelReadOptions
             {
-                IsCellSelected = options?.IsCellSelected,
                 GetSelectedRange = options?.GetSelectedRange,
-                InspectCandidate = options?.InspectCandidate,
-                Backend = (Core.ReaderBackend)(options?.Backend ?? ReaderBackend.ClosedXml),
+                Backend = (Core.ReaderBackend)(options?.Backend ?? ReaderBackend.OpenXml),
                 FormulaDisplayMode = (Core.FormulaDisplayMode)(options?.FormulaDisplayMode ?? FormulaDisplayMode.CachedValue),
                 BackendSelected = options?.BackendSelected is { } callback ? selection => callback(new((ReaderBackend)selection.RequestedBackend, (ReaderBackend)selection.SelectedBackend, selection.ReasonCodes)) : null,
             });

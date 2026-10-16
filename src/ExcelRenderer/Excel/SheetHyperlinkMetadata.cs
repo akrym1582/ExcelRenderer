@@ -7,8 +7,4 @@ namespace ExcelRenderer.Excel;
 /// <param name="Names">Scoped names.</param>
 internal sealed record SheetHyperlinkMetadata(
     IReadOnlyList<ReportHyperlink> Links,
-    IReadOnlyDictionary<string, string> Names)
-{
-    /// <summary>Gets addresses actually serialized as worksheet cells.</summary>
-    internal IReadOnlyCollection<CellAddress> OriginalCells { get; init; } = [];
-}
+    IReadOnlyDictionary<string, string> Names);

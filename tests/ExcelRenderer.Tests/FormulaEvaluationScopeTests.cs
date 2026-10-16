@@ -58,6 +58,6 @@ public sealed class FormulaEvaluationScopeTests
             }.Validate());
         }
         Assert.Equal(Core.FormulaDisplayMode.CachedValue, new Core.ExcelReadOptions().FormulaDisplayMode);
-        Assert.Equal(Core.ReaderBackend.ClosedXml, new Core.ExcelReadOptions().Backend);
+        Assert.Equal(Core.ReaderBackend.OpenXml, new Core.ExcelReadOptions().Backend);
     }
 }

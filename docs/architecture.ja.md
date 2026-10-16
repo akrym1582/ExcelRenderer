@@ -78,7 +78,7 @@ Markdown は `ReportDocument` を別経路で読み取って出力します。
 
 ## 1. Excel ファイルの読み込み
 
-`ExcelReader` が ClosedXml（既定）・OpenXml・Auto の選択に従って Excel ワークブックを読み込み、
+`ExcelReader` が OpenXml（既定）・Auto の選択に従って Excel ワークブックを読み込み、
 ライブラリ独自のモデルである `ReportDocument` を生成します。両 Reader とも数式は保存結果だけを
 使い、結果がなければ空表示と診断を返します。能力検査とオプションは
 [エンジン選択](openxml-integration.ja.md)を参照してください。

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ExcelRenderer.OpenXml.Input;
 
-/// <summary>ClosedXML が読み込む前に、入力サイズと OOXML ZIP の安全性を検証します。</summary>
+/// <summary>ワークブックを読み込む前に、入力サイズと OOXML ZIP の安全性を検証します。</summary>
 internal static class WorkbookInputPreparer
 {
     /// <summary>入力ストリームを読み込み、上限を検証したブックの再読込可能な所有者を返します。</summary>

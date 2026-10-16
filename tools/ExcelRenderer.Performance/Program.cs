@@ -4,7 +4,6 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text.Json;
 using System.Xml.Linq;
-using ClosedXML.Excel;
 using ExcelRenderer;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Rendering;
@@ -51,90 +50,7 @@ if (command == "direct-images")
 
 if (command == "generate")
 {
-    var rows = int.Parse(args[2], System.Globalization.CultureInfo.InvariantCulture);
-    var mode = args.Length > 3 ? args[3] : "text";
-    using var workbook = new XLWorkbook();
-    var sheet = workbook.AddWorksheet("Synthetic");
-    var range = sheet.Range(1, 1, rows, 20);
-    range.Style.Font.FontName = "Noto Sans JP";
-    range.Style.Font.FontSize = 10;
-    range.Style.Fill.BackgroundColor = XLColor.LightGray;
-    range.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
-    range.Style.Border.OutsideBorder = XLBorderStyleValues.Double;
-    sheet.Columns(1, 20).Width = 10;
-    sheet.Rows(1, rows).Height = 18;
-    if (mode != "empty")
-    {
-        for (var row = 1; row <= rows; row++)
-        {
-            for (var column = 1; column <= 20; column++)
-            {
-                sheet.Cell(row, column).Value = mode == "latin" ? "Report ABC 123" : "帳票 ABC 123";
-            }
-        }
-    }
-
-    if (mode == "bold")
-    {
-        range.Style.Font.Bold = true;
-    }
-
-    if (mode == "rowstyle")
-    {
-        sheet.Row(rows + 10000).Style.Fill.BackgroundColor = XLColor.Yellow;
-        sheet.Column(30).Style.Fill.BackgroundColor = XLColor.LightBlue;
-    }
-
-    if (mode == "merges")
-    {
-        for (var row = 1; row <= rows; row += 2)
-        {
-            sheet.Range(row, 1, Math.Min(row + 1, rows), 2).Merge();
-        }
-
-        sheet.PageSetup.SetRowsToRepeatAtTop(1, 2);
-    }
-
-    if (mode == "far")
-    {
-        sheet.Cell(rows + 10000, 30).Style.Fill.BackgroundColor = XLColor.Red;
-        sheet.Row(rows + 20000).Height = 25;
-    }
-
-    if (mode == "wrap")
-    {
-        range.Style.Alignment.WrapText = true;
-        sheet.Cell(1, 1).Value = string.Concat(Enumerable.Repeat("折り返し ABC e\u0301 葛\U000E0100 ", 30));
-    }
-
-    sheet.PageSetup.PrintAreas.Add(range.RangeAddress.ToString());
-    if (mode == "mixed")
-    {
-        sheet.PageSetup.SetRowsToRepeatAtTop(1, 2);
-        sheet.PageSetup.PrintAreas.Add("A1:D10");
-        sheet.Cell(1, 1).SetHyperlink(new XLHyperlink("#Other!A1"));
-        var other = workbook.AddWorksheet("Other");
-        other.Cell("A1").Value = "リンク先";
-        other.Style.Font.FontName = "Noto Sans JP";
-        other.PageSetup.PaperSize = XLPaperSize.A3Paper;
-        using var bitmap = new SkiaSharp.SKBitmap(20, 20);
-        bitmap.Erase(SkiaSharp.SKColors.Blue);
-        using var image = SkiaSharp.SKImage.FromBitmap(bitmap);
-        using var data = image.Encode(SkiaSharp.SKEncodedImageFormat.Png, 100);
-        using var imageStream = new MemoryStream(data.ToArray());
-        sheet.AddPicture(imageStream).MoveTo(sheet.Cell(35, 1)).WithSize(100, 250);
-    }
-
-    if (mode == "images")
-    {
-        using var bitmap = new SkiaSharp.SKBitmap(1024, 1024);
-        bitmap.Erase(SkiaSharp.SKColors.Blue);
-        using var data = bitmap.Encode(SkiaSharp.SKEncodedImageFormat.Png, 100);
-        using var stream = data.AsStream();
-        sheet.AddPicture(stream).MoveTo(sheet.Cell(1, 1)).WithSize(100, rows * 24);
-    }
-
-    workbook.SaveAs(path);
+    PerformanceFixtureGenerator.Generate(path, int.Parse(args[2], System.Globalization.CultureInfo.InvariantCulture), args.Length > 3 ? args[3] : "text");
     return;
 }
 

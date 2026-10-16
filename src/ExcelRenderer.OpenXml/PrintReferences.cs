@@ -19,7 +19,7 @@ internal static class PrintReferences
         var ranges = new List<PrintRangeInfo>();
         try
         {
-            foreach (var item in Tokens(name.RawText))
+            foreach (var item in Split(name.RawText))
             {
                 var token = item.Trim();
                 var bang = token.LastIndexOf('!');
@@ -79,7 +79,10 @@ internal static class PrintReferences
         return new PrintReferenceInfo(name.Name, name.RawText, ranges.AsReadOnly());
     }
 
-    private static IEnumerable<string> Tokens(string text)
+    /// <summary>Splits an A1 union outside quoted worksheet names.</summary>
+    /// <param name="text">Saved reference union.</param>
+    /// <returns>The unchanged reference tokens.</returns>
+    internal static IEnumerable<string> Split(string text)
     {
         var quoted = false;
         var start = 0;

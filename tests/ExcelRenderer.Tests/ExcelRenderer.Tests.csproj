@@ -31,8 +31,19 @@
     <None Update="Fonts/**/*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="ReaderGolden/**/*.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="SampleInputs/**/*.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="../Shared/ReaderSnapshot.cs" Link="Fixtures/ReaderSnapshot.cs" />
+    <Compile Include="../Shared/SdkWorkbook.cs" Link="Fixtures/SdkWorkbook.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="../Shared/RetainedWorkbook.cs" Link="Fixtures/RetainedWorkbook.cs" />
+    <None Include="../Shared/RetainedWorkbooks/*.xlsx" Link="RetainedWorkbooks/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

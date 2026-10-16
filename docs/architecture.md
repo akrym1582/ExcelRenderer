@@ -76,8 +76,7 @@ Markdown export consumes `ReportDocument` through a separate path.
 
 ## 1. Reading the Excel file
 
-`ExcelReader` reads a workbook through the selected ClosedXml (default), OpenXml
-or Auto backend and builds the library's own model, `ReportDocument`. Both readers
+`ExcelReader` reads a workbook through the selected OpenXml (default) or Auto backend and builds the library's own model, `ReportDocument`. Both readers
 use only saved formula results; missing results stay empty with diagnostics.
 See [engine selection](openxml-integration.md) for capability checks and options.
 

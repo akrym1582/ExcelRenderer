@@ -1,0 +1,12 @@
+  ExcelRenderer.Fonts -> /workspace/ExcelRenderer/src/ExcelRenderer.Fonts/bin/Release/netstandard2.1/ExcelRenderer.Fonts.dll
+  ExcelRenderer.OpenXml -> /workspace/ExcelRenderer/src/ExcelRenderer.OpenXml/bin/Release/netstandard2.1/ExcelRenderer.OpenXml.dll
+  ExcelRenderer.Mapping -> /workspace/ExcelRenderer/src/ExcelRenderer.Mapping/bin/Release/netstandard2.1/ExcelRenderer.Mapping.dll
+  Successfully created package '/tmp/excelrenderer-removal-packages/ExcelRenderer.Mapping.1.8.0.nupkg'.
+  Successfully created package '/tmp/excelrenderer-removal-packages/ExcelRenderer.OpenXml.1.8.0.nupkg'.
+  ExcelRenderer.Core -> /workspace/ExcelRenderer/src/ExcelRenderer.Core/bin/Release/netstandard2.1/ExcelRenderer.Core.dll
+  ExcelRenderer -> /workspace/ExcelRenderer/src/ExcelRenderer/bin/Release/netstandard2.1/ExcelRenderer.dll
+  ExcelRenderer.Tool -> /workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll
+  ExcelRenderer.Tool -> /workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll
+  ExcelRenderer.Tool -> /workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/publish/
+  Successfully created package '/tmp/excelrenderer-removal-packages/ExcelRenderer.Tool.1.8.0.nupkg'.
+  Successfully created package '/tmp/excelrenderer-removal-packages/ExcelRenderer.1.8.0.nupkg'.

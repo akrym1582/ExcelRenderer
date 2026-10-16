@@ -1,4 +1,5 @@
-using ClosedXML.Excel;
+using ExcelRenderer.TestFixtures;
+using S = DocumentFormat.OpenXml.Spreadsheet;
 using ExcelRenderer.Core.Fonts;
 using ExcelRenderer.Core.Layout;
 using ExcelRenderer.Core.Model;
@@ -38,10 +39,9 @@ public sealed class PdfTests
     {
         using var input = TestSupport.Workbook(workbook =>
         {
-            var cell = workbook.Worksheet(1).Cell(1, 1);
-            cell.Style.Font.FontName = "unavailable font"; cell.Style.Font.Bold = true; cell.Style.Font.Italic = true;
-            cell.Style.Font.FontSize = 18; cell.Style.Font.FontColor = XLColor.Red;
-            cell.Style.Font.Underline = XLFontUnderlineValues.Single; cell.Style.Alignment.TextRotation = 40;
+            var styles = workbook.WorkbookStylesPart!.Stylesheet;
+            styles.Fonts!.ReplaceChild(new S.Font(new S.Bold(), new S.Italic(), new S.Underline(), new S.FontSize { Val = 18 }, new S.Color { Rgb = "FFFF0000" }, new S.FontName { Val = "unavailable font" }), styles.Fonts.FirstChild!);
+            styles.CellFormats!.GetFirstChild<S.CellFormat>()!.Alignment = new S.Alignment { TextRotation = 40 };
         });
         await TestSupport.WithSheet(input, (sheet, context) =>
         {
@@ -118,10 +118,11 @@ public sealed class PdfTests
         {
             var (_, bytes) = await TestSupport.Convert(workbook =>
             {
-                var sheet = workbook.Worksheet(1); sheet.Cell(1, 1).Value = "abcdefghijklmnopqrstuv";
-                sheet.Column(1).Width = 4; sheet.Cell(1, 1).Style.Font.FontSize = 20;
-                sheet.Cell(1, 1).Style.Alignment.TextRotation = rotation;
-                sheet.Cell(1, 1).Style.Alignment.ShrinkToFit = shrink;
+                var sheet = TestSupport.Sheet(workbook);
+                sheet.GetFirstChild<S.SheetData>()!.GetFirstChild<S.Row>()!.ReplaceChild(SdkWorkbook.Text("A1", "abcdefghijklmnopqrstuv"), sheet.Descendants<S.Cell>().Single());
+                sheet.InsertAt(new S.Columns(new S.Column { Min = 1, Max = 1, Width = 4.710625, CustomWidth = true }), 0);
+                workbook.WorkbookStylesPart!.Stylesheet.Fonts!.GetFirstChild<S.Font>()!.FontSize = new S.FontSize { Val = 20 };
+                workbook.WorkbookStylesPart.Stylesheet.CellFormats!.GetFirstChild<S.CellFormat>()!.Alignment = new S.Alignment { TextRotation = (uint)rotation, ShrinkToFit = shrink };
             }); return bytes;
         }
         var normal = PdfContentProbe.Read(await Pdf(0, false));
@@ -137,10 +138,13 @@ public sealed class PdfTests
     {
         var (result, bytes) = await TestSupport.Convert(workbook =>
         {
-            var sheet = workbook.Worksheet(1); sheet.Cell(1, 1).Value = "日本語\nabc😀"; sheet.Range("A1:B2").Merge();
-            sheet.Cell(1, 1).Style.Alignment.WrapText = true; sheet.Column(1).Width = 4; sheet.Column(2).Width = 4;
-            sheet.Cell(1, 1).Style.Fill.BackgroundColor = XLColor.Yellow;
-            sheet.Range("A1:B2").Style.Border.OutsideBorder = XLBorderStyleValues.Double;
+            var sheet = TestSupport.Sheet(workbook);
+            sheet.Descendants<S.Text>().Single().Text = "日本語\nabc😀";
+            sheet.InsertAt(new S.Columns(new S.Column { Min = 1, Max = 2, Width = 4.710625, CustomWidth = true }), 0);
+            var styles = workbook.WorkbookStylesPart!.Stylesheet;
+            styles.Fills!.ReplaceChild(new S.Fill(new S.PatternFill(new S.ForegroundColor { Rgb = "FFFFFF00" }) { PatternType = S.PatternValues.Solid }), styles.Fills.FirstChild!);
+            styles.CellFormats!.GetFirstChild<S.CellFormat>()!.Alignment = new S.Alignment { WrapText = true };
+            TestSupport.MergeDoubleBorder(workbook);
         });
         Assert.Equal(1, result.PageCount); Assert.True(PdfContentProbe.Read(bytes).Texts.Count >= 2);
     }
@@ -160,8 +164,9 @@ public sealed class PdfTests
         {
             var (result, _) = await TestSupport.Convert(workbook =>
             {
-                var sheet = workbook.Worksheet(1);
-                for (var i = 1; i <= 200; i++) sheet.Cell(i, 1).Value = "行 " + i;
+                var data = TestSupport.Sheet(workbook).GetFirstChild<S.SheetData>()!;
+                data.RemoveAllChildren();
+                for (var i = 1; i <= 200; i++) data.Append(new S.Row(SdkWorkbook.Text("A" + i, "行 " + i)) { RowIndex = (uint)i });
             });
             Assert.True(result.PageCount > 1); Assert.Equal(1, max); Assert.Equal(0, active);
             Assert.Equal(1, saves); Assert.Equal(1, created); Assert.Equal(created, disposed);

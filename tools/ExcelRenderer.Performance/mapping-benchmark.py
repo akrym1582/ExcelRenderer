@@ -13,7 +13,10 @@ from xml.sax.saxutils import escape
 SOURCE = r'''
 using System.Diagnostics;
 using System.Text.Json;
-using ClosedXML.Excel;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using ExcelRenderer.OpenXml;
+using S = DocumentFormat.OpenXml.Spreadsheet;
 using ExcelRenderer.Mapping;
 
 string mode = args[0];
@@ -23,30 +26,42 @@ var data = new { items = Enumerable.Range(0, mode == "clr" ? 0 : count).Select(i
 object? root = data;
 if (mode == "nested") root = new { groups = Enumerable.Range(0, count / 10).Select(g => new { items = data.items.Skip(g * 10).Take(10).ToArray() }).ToArray() };
 using var template = new MemoryStream();
-using (var book = new XLWorkbook())
+using (var package = SpreadsheetDocument.Create(template, SpreadsheetDocumentType.Workbook, true))
 {
-    var s = book.AddWorksheet("Template");
-    int row = 2;
-    s.Cell(1, 1).Value = "Header";
-    if (mode == "block" || mode == "nested")
+    var workbook = package.AddWorkbookPart();
+    workbook.Workbook = new S.Workbook(new S.Sheets());
+    var part = workbook.AddNewPart<WorksheetPart>();
+    workbook.Workbook.Sheets!.Append(new S.Sheet { Id = workbook.GetIdOfPart(part), SheetId = 1, Name = "Template" });
+    var dataRows = new S.SheetData();part.Worksheet = new S.Worksheet(dataRows);
+    workbook.AddNewPart<WorkbookStylesPart>().Stylesheet = new S.Stylesheet(
+        new S.Fonts(new S.Font(new S.FontSize { Val = 11 }, new S.FontName { Val = "Calibri" })),
+        new S.Fills(new S.Fill(new S.PatternFill { PatternType = S.PatternValues.None }),new S.Fill(new S.PatternFill { PatternType = S.PatternValues.Gray125 }),new S.Fill(new S.PatternFill(new S.ForegroundColor { Rgb = "FFADD8E6" }) { PatternType = S.PatternValues.Solid })),
+        new S.Borders(new S.Border()),new S.CellStyleFormats(new S.CellFormat()),new S.CellFormats(new S.CellFormat(),new S.CellFormat { FillId = 2,ApplyFill = true }),new S.CellStyles(new S.CellStyle { Name = "Normal",FormatId = 0,BuiltinId = 0 }));
+    void Text(int row,int column,string text,uint style = 0)
     {
-        s.Cell(row++, 1).Value = mode == "nested" ? "**@start-array groups[*] as group" : "**@start-array items[*] as item";
-        if (mode == "nested") s.Cell(row++, 1).Value = "**@start-array @group.items[*] as item";
+        var record = dataRows.Elements<S.Row>().SingleOrDefault(item=>item.RowIndex?.Value==(uint)row);
+        if(record is null){record = new S.Row { RowIndex = (uint)row };dataRows.Append(record);}
+        record.Append(new S.Cell(new S.InlineString(new S.Text(text))) { CellReference = new CellAddress(row,column).ToString(),DataType = S.CellValues.InlineString,StyleIndex = style });
     }
-    for (int c = 0; c < columns; c++) s.Cell(row, c + 1).Value = (mode == "block" || mode == "nested" ? "**@item." : "**items[*].") + "v" + c;
-    s.Range(row, 1, row, columns).Style.Fill.BackgroundColor = XLColor.LightBlue;
-    s.Row(row).Height = 22;
-    if (mode == "merged" || mode == "merged-contained")
+    int row = 2;Text(1,1,"Header");
+    if(mode is "block" or "nested")
     {
-        s.Range(row, columns + 1, row, columns + 2).Merge().FirstCell().Value = "Merged";
-        if (mode == "merged-contained") s.Cell(row, columns + 3).Value = "After merge";
+        Text(row++,1,mode == "nested" ? "**@start-array groups[*] as group" : "**@start-array items[*] as item");
+        if(mode == "nested")Text(row++,1,"**@start-array @group.items[*] as item");
     }
-    if (mode == "formula") s.Cell(row, columns + 1).FormulaA1 = "B" + row + "*2";
+    for(int column = 0;column < columns;column++)Text(row,column+1,(mode is "block" or "nested" ? "**@item." : "**items[*].")+"v"+column,1);
+    var repeated = dataRows.Elements<S.Row>().Single(item=>item.RowIndex?.Value==(uint)row);repeated.Height = 22;repeated.CustomHeight = true;
+    if(mode is "merged" or "merged-contained")
+    {
+        Text(row,columns+1,"Merged");
+        part.Worksheet.Append(new S.MergeCells(new S.MergeCell { Reference = new CellAddress(row,columns+1)+":"+new CellAddress(row,columns+2) }));
+        if(mode == "merged-contained")Text(row,columns+3,"After merge");
+    }
+    if(mode == "formula")repeated.Append(new S.Cell(new S.CellFormula("B"+row+"*2")) { CellReference = new CellAddress(row,columns+1).ToString() });
     row++;
-    if (mode == "block" || mode == "nested") s.Cell(row++, 1).Value = "**@end-array";
-    if (mode == "nested") s.Cell(row++, 1).Value = "**@end-array";
-    s.Cell(row, 1).Value = "Footer";
-    book.SaveAs(template);
+    if(mode is "block" or "nested")Text(row++,1,"**@end-array");
+    if(mode == "nested")Text(row++,1,"**@end-array");
+    Text(row,1,"Footer");
 }
 string? json = mode == "json" ? JsonSerializer.Serialize(data) : null;
 if (mode == "json") { root = null; data = null!; }
@@ -65,20 +80,22 @@ try
     Console.WriteLine(JsonSerializer.Serialize(new { phase = "mapped", mode, count, columns, elapsedMs = sw.Elapsed.TotalMilliseconds, allocatedBytes = allocated, outputBytes = output.Length, peakWorkingSetBytes = Process.GetCurrentProcess().PeakWorkingSet64 }));
     Console.Out.Flush();
     output.Position = 0;
-    using var result = new XLWorkbook(output);
-    var s = result.Worksheet(1);
-    if (s.LastRowUsed()!.RowNumber() != count + 2 || s.Cell(2, 1).GetString() != "item-0" || s.Cell(count + 1, 1).GetString() != "item-" + (count - 1) || s.Cell(count + 2, 1).GetString() != "Footer" || s.Cell(count + 1, 2).GetDouble() != count || s.Row(count + 1).Height != 22 || s.Cell(count + 1, 1).Style.Fill.BackgroundColor != XLColor.LightBlue) throw new Exception("Output mismatch");
-    if ((mode == "merged" || mode == "merged-contained") && s.MergedRanges.Count() != count) throw new Exception($"Merge mismatch: expected {count}, got {s.MergedRanges.Count()}");
-    if (mode == "formula") throw new Exception("A formula inside a repeated row should have been rejected");
-    var merges = s.MergedRanges.Select(range => (range.RangeAddress.FirstAddress.RowNumber, range.RangeAddress.LastAddress.RowNumber, range.RangeAddress.FirstAddress.ColumnNumber, range.RangeAddress.LastAddress.ColumnNumber)).ToHashSet();
-    for (int item = 0; item < count; item++)
+    using var reader = OpenXmlWorkbookReader.Open(output);
+    var cells = reader.EnumerateCells(1).ToDictionary(cell=>cell.Address);
+    var info = reader.ReadWorksheetInfo(1);
+    if(info.ActualCellRange!.Last.Row != count+2 || cells[new(2,1)].Value.Text != "item-0" || cells[new(count+1,1)].Value.Text != "item-"+(count-1) || cells[new(count+2,1)].Value.Text != "Footer")throw new Exception("Output mismatch");
+    if(mode == "formula")throw new Exception("Repeated formulas should have been rejected");
+    if((mode is "merged" or "merged-contained") && info.MergedRanges.Count != count)throw new Exception("Merge mismatch");
+    var rows = info.Rows.ToDictionary(row=>row.Index);
+    var merges = info.MergedRanges.Select(range=>(range.First.Row,range.Last.Row,range.First.Column,range.Last.Column)).ToHashSet();
+    for(int item=0;item<count;item++)
     {
-        int row = item + 2;
-        if (s.Cell(row, 1).DataType != XLDataType.Text || s.Cell(row, 1).GetString() != "item-" + item) throw new Exception($"Value mismatch at A{row}");
-        for (int column = 2; column <= columns; column++)
-            if (s.Cell(row, column).DataType != XLDataType.Number || s.Cell(row, column).GetDouble() != item + column - 1) throw new Exception($"Numeric value mismatch at row {row}, column {column}");
-        if (s.Row(row).Height != 22 || s.Cell(row, 1).Style.Fill.BackgroundColor != XLColor.LightBlue) throw new Exception($"Style mismatch at row {row}");
-        if ((mode == "merged" || mode == "merged-contained") && !merges.Contains((row, row, columns + 1, columns + 2))) throw new Exception($"Merge mismatch at row {row}");
+        int row=item+2;var first=cells[new(row,1)];
+        if(first.Value.Type != CellValueType.String || first.Value.Text != "item-"+item)throw new Exception("Text mismatch");
+        for(int column=2;column<=columns;column++)if(cells[new(row,column)].Value.Type != CellValueType.Number || cells[new(row,column)].Value.Number != item+column-1)throw new Exception("Number mismatch");
+        var fill=reader.ResolveStyle(first).Fill.Children.Single().Children.Single().Attributes["rgb"];
+        if(rows[row].HeightPt!=22 || fill!="FFADD8E6")throw new Exception("Style mismatch");
+        if((mode is "merged" or "merged-contained") && !merges.Contains((row,row,columns+1,columns+2)))throw new Exception("Merge mismatch");
     }
     Console.WriteLine(JsonSerializer.Serialize(new { phase = "verified", mode, count }));
 }
@@ -86,7 +103,7 @@ catch (MappingException ex)
 {
     sw.Stop();
     Console.WriteLine(JsonSerializer.Serialize(new { phase = "rejected", mode, count, elapsedMs = sw.Elapsed.TotalMilliseconds, outputBytes = output.Length, message = ex.Message }));
-    bool expected = mode == "formula" ? ex.Message.Contains("Formulas inside repeated") : count >= 100000 && ex.Message.Contains("MaxOutputRows");
+    bool expected = mode == "formula" ? ex.ReasonCode == "MappingFormulaNotSupported" : count >= 100000 && ex.Message.Contains("MaxOutputRows");
     if (!expected || output.Length != 0) throw;
 }
 catch (Exception ex)

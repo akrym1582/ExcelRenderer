@@ -7,8 +7,8 @@ namespace ExcelRenderer.Mapping;
 /// <summary>Controls formatting and the maximum expanded worksheet size.</summary>
 public sealed class MappingOptions
 {
-    /// <summary>Gets or sets the editing engine. Existing callers use ClosedXML.</summary>
-    public MappingBackend Backend { get; set; } = MappingBackend.ClosedXml;
+    /// <summary>Gets or sets the editing engine. The default is OpenXml.</summary>
+    public MappingBackend Backend { get; set; } = MappingBackend.OpenXml;
 
     /// <summary>Gets or sets an optional preflight engine-selection callback.</summary>
     public Action<MappingBackendSelection>? BackendSelected { get; set; }

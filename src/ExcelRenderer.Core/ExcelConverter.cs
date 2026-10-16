@@ -60,7 +60,7 @@ public static class ExcelConverter
                 font.ValidatePdfFont();
                 var diagnostics = new DiagnosticCollector();
                 var reader = new CoreExcelReader(font);
-                var report = reader.Read(prepared, diagnostics, options.SheetName is null ? null : new[] { options.SheetName }, cancellationToken, (Excel.FormulaDisplayMode)options.ReadOptions.FormulaDisplayMode, options.ReadOptions);
+                var report = reader.Read(prepared, diagnostics, options.SheetName is null ? null : new[] { options.SheetName }, cancellationToken, options.ReadOptions);
                 cancellationToken.ThrowIfCancellationRequested();
                 var measurer = new PdfSharpTextMeasurer(font);
                 var engine = new ReportLayoutEngine(measurer);

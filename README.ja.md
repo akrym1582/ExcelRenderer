@@ -28,7 +28,7 @@ PDF / PNG / SVG
 
 ### 主な機能
 
-- ClosedXml（既定）・OpenXml・Auto を選択した `.xlsx` の読み込み
+- OpenXml（既定）・Auto を選択した `.xlsx` の読み込み
 - セル文字列、フォント、文字サイズ、配置、折り返しの読み込み
 - 結合セル、列幅、行高の読み込み
 - 非表示行・非表示列の除外
@@ -285,7 +285,7 @@ trimの対象は可視の塗り（明示白塗りも含む）、線、配置済�
 
 PDF／Markdownは `http`、`https`、`mailto` と同一ブックのセルリンクを保持します。範囲ref、空セル、単純A1を参照するスコープ付き名前、定数文字列引数の `HYPERLINK` に対応します。XMLの明示定義を数式より優先し、cached表示を保持します。cached値がなければ空表示と `FormulaCachedValueMissing` にし、literalの表示名／リンク先で補いません。PDF注釈は最終結合文書へ付け、ページ選択・範囲・trimを反映します。Markdownは安定した `xl-sN-rN-cN` アンカーと、空セル／範囲refを表す明示一覧を使います。PNG／SVGはセルの見た目を保持し、クリック機能やリンク警告を追加しません。SVGリンクやリンクsidecarは生成しません。
 
-ローカルファイル、相対パス、UNC、HTTP埋込み認証情報、制御文字、非対応schemeや競合定義は表示文字を残して `HyperlinkRejected`、動的数式等は `HyperlinkUnsupported` Warningになります。未存在／出力外の内部リンク先は `HyperlinkTargetOmitted`。出力外のリンク元にはリンク先欠落警告を出しません。診断にURL・宛先・query全文を載せません。読込可能な不正リンク定義はWarningですが、ClosedXMLが拒否する破損ブックは致命的入力エラーです。Strict／指定したwarnings-as-errorsはSink Open前に失敗します。PDF CLIは事前検証後に初めて作成・truncateし、入力と出力の同一パスは読込前に拒否します。
+ローカルファイル、相対パス、UNC、HTTP埋込み認証情報、制御文字、非対応schemeや競合定義は表示文字を残して `HyperlinkRejected`、動的数式等は `HyperlinkUnsupported` Warningになります。未存在／出力外の内部リンク先は `HyperlinkTargetOmitted`。出力外のリンク元にはリンク先欠落警告を出しません。診断にURL・宛先・query全文を載せません。読込可能な不正リンク定義はWarningですが、破損 package やリンク relationship の欠落は致命的入力エラーです。Strict／指定したwarnings-as-errorsはSink Open前に失敗します。PDF CLIは事前検証後に初めて作成・truncateし、入力と出力の同一パスは読込前に拒否します。
 
 APIでは `RenderRequest.Selection.Ranges` に `SheetRangeSelection`、`MaxRangeCells` に総上限、`RenderRequest.Trim` に `TrimOptions`、`Hyperlinks` に `HyperlinkMode` を指定します。
 
@@ -483,15 +483,17 @@ ink bounds を完全に判定する機能ではありません。`CellTextTooSma
 
 ## Reader の選択と数式の保存結果
 
-Reader・Mapping は ClosedXml（既定）/ OpenXml / Auto を選択できます。
+Reader は OpenXml が既定で、Auto も同じ経路を使います。明示 ClosedXml は入力前に拒否します。
+Mapping も OpenXml が既定で、Auto は同じ Writer を使います。
 [backend API・CLI・対応範囲・stream 保証](docs/openxml-integration.ja.md)を参照してください。
-`ExcelRenderer.OpenXml` は共通の Reader・Writer・入力処理を提供し、ClosedXml backend は
-ClosedXML を使います。低レベル API は [OpenXml Reader リファレンス](docs/openxml-reader.ja.md)
+`ExcelRenderer.OpenXml` は共通の Reader・Writer・入力処理を提供し、ClosedXML はライブラリ・CLI・テスト・ツールから撤去済みです。
+公開 style API は `ExcelStyleConverter.Convert(CellStyleInfo, CellValueType)` に変更しました。
+[破壊的変更と移行例](docs/closedxml-removal-compatibility.md)を参照してください。低レベル API は [OpenXml Reader リファレンス](docs/openxml-reader.ja.md)
 にまとめています。
 
 数式表示の既定値は Core・本体 Reader・各 export API・CLI ともに
 `FormulaDisplayMode.CachedValue`（`--formula-mode cached`）です。Reader／Mapping の
-backend 既定値は ClosedXml を維持します。読込・Mapping・保存のいずれも再計算しません。
+backend 既定値はどちらも OpenXml です。読込・Mapping・保存のいずれも再計算しません。
 古い保存結果もそのまま使い、0・false・保存された空文字を保持します。欠落は空表示と
 `FormulaCachedValueMissing`、保存された Excel エラーは `FormulaResultError` です。
 HYPERLINK の friendly text で保存結果や空表示を補いません。診断は可視出力の選択と
@@ -589,7 +591,7 @@ OS・追加ディレクトリのフォント走査では metadata のみを保�
 読み込み前に消失・変更したファイルは明確な font load エラーになります。
 PDFsharpの確定font bytesは所有元のfont/layoutの寿命に紐付け、グローバル登録は弱参照で保持します。
 
-PDFsharp の最終文書・リソースと、ClosedXML の全ブック読込は残ります。
+PDFsharp の最終文書・リソースと、OpenXml Reader のスタイル・共有文字列は保持します。
 幾何索引と選択モデルもブックの大きさに依存するため、定メモリのストリーミングではありません。
 [フェーズ3測定](docs/phase3-performance.ja.md)、過去の[PDF測定](docs/pdf-performance.ja.md)と
 [画像測定](docs/image-performance.ja.md)を参照してください。
@@ -628,7 +630,7 @@ PDF/PNG でも設定を渡せますが、適用先は SVG 中間 stream だけ�
 入力用 `WorkbookInputOptions` とは独立しており、入力側も自身の閾値・許可設定に従って
 seekable な一時ファイルへ spool します。reader は独立した cursor を使い、spool を byte[] へ戻しません。
 成功・キャンセル・失敗時に一時 buffer を cleanup し、caller 所有の入力・出力 stream は閉じません。
-重い単一 native 描画・encode・ClosedXML 読込は即時に中断できない制約が残ります。
+重い単一 native 描画・encodeは即時に中断できない制約が残ります。
 
 ## 開発
 
@@ -656,7 +658,7 @@ dotnet add package ExcelRenderer.Mapping
 ```
 
 `<…>` は実際のディレクトリパスに置き換えます。ソースの登録済みの場合は
-登録コマンドを省略してください。ClosedXML などの依存関係のため NuGet.org も有効にします。
+登録コマンドを省略してください。DocumentFormat.OpenXml などの依存関係のため NuGet.org も有効にします。
 CLI をソースから試す手順は [English README の Development](README.md#development) にあります。
 
 ## ドキュメント

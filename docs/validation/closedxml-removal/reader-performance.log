@@ -1,0 +1,3 @@
+parent-default {'ElapsedMs': 2393.5949, 'AllocatedBytes': 150944192, 'PeakRssBytes': 131981312}
+parent-openxml {'ElapsedMs': 1554.3176, 'AllocatedBytes': 109266792, 'PeakRssBytes': 101404672}
+reader-removal {'ElapsedMs': 1373.8874, 'AllocatedBytes': 95946632, 'PeakRssBytes': 100769792}

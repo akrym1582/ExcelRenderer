@@ -1,4 +1,5 @@
-using ClosedXML.Excel;
+using ExcelRenderer.TestFixtures;
+using S = DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using SkiaSharp;
@@ -11,26 +12,22 @@ internal static class DrawingAnchorWorkbookFixture
     internal static string Create()
     {
         var path = Path.Combine(Path.GetTempPath(), $"anchors-{Guid.NewGuid():N}.xlsx");
-        using (var workbook = new XLWorkbook())
+        var rows = new S.SheetData();
+        var columns = new S.Columns();
+        for (var column = 1; column <= 8; column++) columns.Append(new S.Column { Min = (uint)column, Max = (uint)column, Width = 1.710625 + (column % 3) * 0.25, CustomWidth = true });
+        for (var row = 1; row <= 10; row++)
         {
-            var sheet = workbook.AddWorksheet("Anchors");
-            for (var column = 1; column <= 8; column++) { sheet.Column(column).Width = 1 + (column % 3) * 0.25; }
-            for (var row = 1; row <= 10; row++)
+            rows.Append(new S.Row(Enumerable.Range(1, 8).Select(column => SdkWorkbook.Text(((char)('A' + column - 1)).ToString() + row, "x"))) { RowIndex = (uint)row, Height = 8 + row, CustomHeight = true });
+        }
+        using (var input = SdkWorkbook.Create(new S.Worksheet(columns, rows), SdkWorkbook.Styles(), name: "Anchors"))
+        {
+            using (var document = SpreadsheetDocument.Open(input, true))
             {
-                sheet.Row(row).Height = 8 + row;
-                for (var column = 1; column <= 8; column++) { sheet.Cell(row, column).Value = "x"; }
+                var names = new[] { "absolute", "one", "two" };
+                var colors = new[] { SKColors.Red, SKColors.Green, SKColors.Blue };
+                for (var index = 0; index < names.Length; index++) SdkWorkbook.Image(document.WorkbookPart!.WorksheetParts.Single(), TestSupport.Png(colors[index]), names[index], 3, 2);
             }
-            var names = new[] { "absolute", "one", "two" };
-            var colors = new[] { SKColors.Red, SKColors.Green, SKColors.Blue };
-            for (var i = 0; i < names.Length; i++)
-            {
-                using var bitmap = new SKBitmap(2, 2); bitmap.Erase(colors[i]);
-                using var image = SKImage.FromBitmap(bitmap);
-                using var data = image.Encode(SKEncodedImageFormat.Png, 100);
-                using var stream = new MemoryStream(data.ToArray());
-                sheet.AddPicture(stream, names[i]).MoveTo(sheet.Cell(4, 3));
-            }
-            workbook.SaveAs(path);
+            File.WriteAllBytes(path, input.ToArray());
         }
         using (var document = SpreadsheetDocument.Open(path, true))
         {

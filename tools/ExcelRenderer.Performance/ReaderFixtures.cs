@@ -1,8 +1,9 @@
-using System.IO.Compression;
-using System.Xml.Linq;
-using ClosedXML.Excel;
+using System.Globalization;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using S = DocumentFormat.OpenXml.Spreadsheet;
 
-/// <summary>Creates content-free reproducible reader and partial-format fixtures.</summary>
+/// <summary>Creates reproducible reader and partial-format fixtures using SDK elements.</summary>
 internal static class ReaderFixtures
 {
     /// <summary>Writes all six benchmark cases and a small visual specimen.</summary>
@@ -12,61 +13,69 @@ internal static class ReaderFixtures
         Directory.CreateDirectory(directory);
         foreach (var name in new[] { "hyperlinks", "shared", "unique", "rich-repeated", "rich-unique", "ordinary", "representative" })
         {
-            using var workbook = new XLWorkbook();
-            var sheet = workbook.AddWorksheet("Synthetic");
-            sheet.Column(1).Width = 35;
-            sheet.RowHeight = 30;
-            var rows = name == "representative" ? 8 : name == "rich-unique" ? 1000 : 10000;
-            sheet.Range(1, 1, rows, 1).Style.Font.FontName = "Noto Sans JP";
-            sheet.Range(1, 1, rows, 1).Style.Font.FontSize = 10;
-            for (var row = 1; row <= rows; row++)
+            using var package = SpreadsheetDocument.Create(Path.Combine(directory, name + ".xlsx"), SpreadsheetDocumentType.Workbook);
+            var workbook = package.AddWorkbookPart();
+            workbook.Workbook = new S.Workbook(new S.Sheets());
+            var styles = FixtureWorkbook.Styles();
+            workbook.AddNewPart<WorkbookStylesPart>().Stylesheet = styles;
+            var strings = workbook.AddNewPart<SharedStringTablePart>();
+            strings.SharedStringTable = new S.SharedStringTable();
+            var count = name == "representative" ? 8 : name == "rich-unique" ? 1000 : 10000;
+            if (name is "shared" or "ordinary" or "unique")
             {
-                var cell = sheet.Cell(row, 1);
+                strings.SharedStringTable.Append(new S.SharedStringItem(new S.Text("Report ABC 123")));
+            }
+            else if (name is "rich-repeated" or "representative")
+            {
+                strings.SharedStringTable.Append(Rich("日本語 "));
+            }
+
+            var data = new S.SheetData();
+            for (var row = 1; row <= count; row++)
+            {
+                var cell = new S.Cell { CellReference = "A" + row, StyleIndex = 0 };
                 if (name == "hyperlinks")
                 {
-                    cell.FormulaA1 = "HYPERLINK(\"https://example.invalid/\",42)";
+                    cell.CellFormula = new S.CellFormula("HYPERLINK(\"https://example.invalid/\",42)");
+                    cell.CellValue = new S.CellValue("42");
                 }
                 else if (name.StartsWith("rich-", StringComparison.Ordinal) || name == "representative")
                 {
-                    var rich = cell.CreateRichText();
-                    rich.AddText("Alpha ").SetFontColor(XLColor.Red).SetBold();
-                    rich.AddText(name == "rich-unique" ? row.ToString(System.Globalization.CultureInfo.InvariantCulture) : "日本語 ").SetFontSize(16).SetItalic();
-                    rich.AddText("e\u0301 end").SetUnderline(XLFontUnderlineValues.Single).SetFontColor(XLColor.Blue);
-                    cell.Style.Alignment.WrapText = true;
+                    cell.DataType = S.CellValues.SharedString;
+                    cell.StyleIndex = 1;
+                    styles.CellFormats!.Elements<S.CellFormat>().ElementAt(1).Alignment!.WrapText = true;
+                    if (name == "rich-unique")
+                    {
+                        cell.CellValue = new S.CellValue(strings.SharedStringTable.ChildElements.Count.ToString(CultureInfo.InvariantCulture));
+                        strings.SharedStringTable.Append(Rich(row.ToString(CultureInfo.InvariantCulture)));
+                    }
+                    else
+                    {
+                        cell.CellValue = new S.CellValue("0");
+                    }
                 }
                 else
                 {
-                    cell.Value = (row % 3) switch { 0 => (XLCellValue)42, 1 => "Report ABC 123", _ => false };
+                    cell.DataType = row % 3 == 1 ? S.CellValues.SharedString : row % 3 == 2 ? S.CellValues.Boolean : S.CellValues.Number;
+                    cell.CellValue = new S.CellValue(row % 3 == 0 ? "42" : "0");
                     if (name == "unique")
                     {
-                        cell.Style.NumberFormat.Format = "0\"-" + row + "\"";
+                        styles.NumberingFormats ??= styles.InsertAt(new S.NumberingFormats(), 0);
+                        styles.NumberingFormats.Append(new S.NumberingFormat { NumberFormatId = (uint)row + 164, FormatCode = "0\"-" + row + "\"" });
+                        styles.CellFormats!.Append(new S.CellFormat { NumberFormatId = (uint)row + 164, ApplyNumberFormat = true });
+                        cell.StyleIndex = (uint)styles.CellFormats.ChildElements.Count - 1;
                     }
                 }
+
+                data.Append(new S.Row(cell) { RowIndex = (uint)row });
             }
 
-            var path = Path.Combine(directory, name + ".xlsx");
-            workbook.SaveAs(path);
-            if (name == "hyperlinks")
-            {
-                using var zip = ZipFile.Open(path, ZipArchiveMode.Update);
-                var entry = zip.GetEntry("xl/worksheets/sheet1.xml")!;
-                XDocument document;
-                using (var stream = entry.Open())
-                {
-                    document = XDocument.Load(stream);
-                }
-
-                XNamespace ns = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
-                foreach (var cell in document.Descendants(ns + "c"))
-                {
-                    cell.Element(ns + "v")?.Remove();
-                    cell.Add(new XElement(ns + "v", "42"));
-                }
-
-                entry.Delete();
-                using var output = zip.CreateEntry("xl/worksheets/sheet1.xml").Open();
-                document.Save(output);
-            }
+            FixtureWorkbook.Sheet(workbook, "Synthetic", new S.Worksheet(new S.SheetFormatProperties { DefaultRowHeight = 30 }, new S.Columns(new S.Column { Min = 1, Max = 1, Width = 35.710625, CustomWidth = true }), data));
         }
     }
+
+    private static S.SharedStringItem Rich(string middle) => new(
+        new S.Run(new S.RunProperties(new S.Bold(), new S.Color { Rgb = "FFFF0000" }), new S.Text("Alpha ") { Space = SpaceProcessingModeValues.Preserve }),
+        new S.Run(new S.RunProperties(new S.Italic(), new S.FontSize { Val = 16 }), new S.Text(middle) { Space = SpaceProcessingModeValues.Preserve }),
+        new S.Run(new S.RunProperties(new S.Underline { Val = S.UnderlineValues.Single }, new S.Color { Rgb = "FF0000FF" }), new S.Text("e\u0301 end")));
 }

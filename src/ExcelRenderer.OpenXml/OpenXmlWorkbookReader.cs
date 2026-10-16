@@ -77,7 +77,7 @@ public sealed partial class OpenXmlWorkbookReader : IWorkbookDataReader
         {
             foreach (var name in options.SelectedSheetNames)
             {
-                var sheet = list.FirstOrDefault(s => string.Equals(s.Name, name, StringComparison.Ordinal)) ?? throw new ArgumentException("Selected sheet name does not exist.", nameof(options));
+                var sheet = list.FirstOrDefault(s => string.Equals(s.Name, name, StringComparison.Ordinal)) ?? throw new ArgumentException("Worksheet was not found: " + name, nameof(options));
                 selected.Add(sheet.Index);
             }
         }

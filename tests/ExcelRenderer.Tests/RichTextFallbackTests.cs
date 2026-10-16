@@ -1,4 +1,4 @@
-using ClosedXML.Excel;
+using ExcelRenderer.TestFixtures;
 using ExcelRenderer.Abstractions;
 using ExcelRenderer.Model;
 using ExcelRenderer.Rendering;
@@ -13,12 +13,7 @@ public sealed class RichTextFallbackTests
     [InlineData(true)]
     public async Task LegacyMeasurerFallbackIsOptInAndFailsBeforeOutput(bool detect)
     {
-        using var workbook = new XLWorkbook();
-        var sheet = workbook.AddWorksheet("rich");
-        sheet.Cell(1, 1).CreateRichText().AddText("secret").SetFontColor(XLColor.Red);
-        sheet.Cell(1, 1).GetRichText().AddText(" text").SetFontSize(20);
-        using var input = new MemoryStream();
-        workbook.SaveAs(input);
+        using var input = RetainedWorkbook.Open("RichTextFallbackTests.LegacyMeasurerFallbackIsOptInAndFailsBeforeOutput.8956CC99987D66F6.xlsx");
         input.Position = 0;
         using var output = new MemoryStream();
         var measurer = new LegacyMeasurer();

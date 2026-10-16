@@ -19,7 +19,8 @@ logs.mkdir(parents=True, exist_ok=True)
 
 skia = 'src/ExcelRenderer/SkiaSharp/SkiaTextDrawing.cs'
 pdf = 'src/ExcelRenderer/PdfSharp/PdfSharpFinalizedTextPainter.cs'
-reader = 'src/ExcelRenderer/Excel/DrawingMLReader.cs'
+# Pictures use the shared streaming snapshot parser after ClosedXML removal.
+reader = 'src/ExcelRenderer.Core/Excel/CoreExcelReader.OpenXml.cs'
 mutations = []
 
 def change(name, path, old, new, test, occurrence=0):
@@ -46,9 +47,9 @@ change('pdf-double-underline', pdf, underline, underline + '\n' + underline,
 change('svg-run-x', skia, '(float)(positioned.Left + run.X),',
        '(float)(positioned.Left + (_textAsPaths ? 0 : run.X)),',
        'Svg_serialized_finalized_text_matches_png_geometry')
-change('reader-emu', 'src/ExcelRenderer.Core/Excel/DrawingMLReader.cs', 'emu / EmusPerPoint;', 'emu / (EmusPerPoint * 2);',
+change('reader-emu', reader, 'Number(position, "x", 0) / 12700', 'Number(position, "x", 0) / 25400',
        'Reader_preserves_drawingml_anchor_coordinates')
-change('reader-marker', 'src/ExcelRenderer.Core/Excel/DrawingMLReader.cs', 'uint.Parse(column) + 1', 'uint.Parse(column)',
+change('reader-marker', reader, '(int)Coordinate(element, "col", false) + 1', '(int)Coordinate(element, "col", false)',
        'Reader_preserves_drawingml_anchor_coordinates')
 change('skia-legacy-restore', skia, '            canvas.Restore();', '            _ = canvas.SaveCount;',
        'Skia_legacy_restores_canvas_after_drawing_failure', 0)

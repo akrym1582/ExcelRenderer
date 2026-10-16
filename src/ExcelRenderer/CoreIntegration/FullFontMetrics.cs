@@ -1,4 +1,3 @@
-using ClosedXML.Graphics;
 using ExcelRenderer.Core.Excel;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Rendering;
@@ -7,7 +6,7 @@ using SkiaSharp;
 namespace ExcelRenderer.CoreIntegration;
 
 /// <summary>Preserves full font discovery, compatibility fallback and MDW diagnostics.</summary>
-internal sealed class FullFontMetrics : ICoreFontMetrics, IClosedXmlFontMetrics
+internal sealed class FullFontMetrics : ICoreFontMetrics
 {
     private readonly IFontManager? fontManager;
     private readonly DiagnosticCollector? diagnostics;
@@ -25,13 +24,7 @@ internal sealed class FullFontMetrics : ICoreFontMetrics, IClosedXmlFontMetrics
     }
 
     /// <inheritdoc/>
-    public IXLGraphicEngine? GraphicEngine => null;
-
-    /// <inheritdoc/>
     public NormalFontMetadata DefaultFont => new("Calibri", 11);
-
-    /// <inheritdoc/>
-    public double? DefaultColumnWidth(double width) => Math.Truncate((width * 7) + 5) * 72d / 96d;
 
     /// <inheritdoc/>
     public double MaximumDigitWidth(NormalFontMetadata? normalFont, string sheetName)

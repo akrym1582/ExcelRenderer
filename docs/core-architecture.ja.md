@@ -46,7 +46,7 @@ Windowsでも成功した結果として扱いません。
 
 `ReaderSession` は Core の読み込み 1 回につき最大 1 個の表示用 workbook と、
 上限 8,192 件の書式変換 cache を所有します。Core／本体の変換方針は別 session であり、
-元の ClosedXML セル書式を変更しません。
+読み込んだ不変のセル書式を変更しません。
 
 セルの部分書式は本体の `FullCellTextData` として Core の typed payload に保持します。
 Core は run のフォントを解釈せず、`IExtendedTextLayoutService` 経由で本体へ計測を委譲します。

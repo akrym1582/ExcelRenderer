@@ -1,0 +1,11 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  ExcelRenderer.OpenXml -> /workspace/ExcelRenderer/src/ExcelRenderer.OpenXml/bin/Debug/netstandard2.1/ExcelRenderer.OpenXml.dll
+  ExcelRenderer.Core -> /workspace/ExcelRenderer/src/ExcelRenderer.Core/bin/Debug/netstandard2.1/ExcelRenderer.Core.dll
+  ExcelRenderer.Core.Validation -> /workspace/ExcelRenderer/tools/ExcelRenderer.Core.Validation/bin/Debug/net10.0/ExcelRenderer.Core.Validation.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:02.36

@@ -7,8 +7,8 @@ namespace ExcelRenderer.Tool.Commands;
 /// <summary>Shares backend parsing, validation and optional stderr decisions across commands.</summary>
 internal sealed class BackendOptions
 {
-    private readonly Option<string?> mapping = new("--mapping-backend") { Description = "Mapping engine: closedxml, openxml, or auto. Requires --data." };
-    private readonly Option<string> reader = new("--reader-backend") { Description = "Reader engine: closedxml, openxml, or auto.", DefaultValueFactory = _ => "closedxml" };
+    private readonly Option<string?> mapping = new("--mapping-backend") { Description = "Mapping engine: openxml or auto. Requires --data." };
+    private readonly Option<string> reader = new("--reader-backend") { Description = "Reader engine: openxml or auto.", DefaultValueFactory = _ => "openxml" };
     private readonly Option<bool> verbose = new("--verbose") { Description = "Write backend selection and reasons to stderr." };
 
     /// <summary>Initializes a new instance of the <see cref="BackendOptions"/> class.</summary>
@@ -28,9 +28,9 @@ internal sealed class BackendOptions
         {
             if (result.GetValue(mapping) is { } mapped)
             {
-                if (mapped is not ("closedxml" or "openxml" or "auto"))
+                if (mapped is not ("openxml" or "auto"))
                 {
-                    result.AddError("--mapping-backend must be closedxml, openxml, or auto.");
+                    result.AddError(mapped == "closedxml" ? "--mapping-backend: ClosedXML has been removed; use openxml or auto." : "--mapping-backend must be openxml or auto.");
                 }
 
                 if (result.GetValue(data) is null)
@@ -41,10 +41,10 @@ internal sealed class BackendOptions
 
             if (formulaMode is not null)
             {
-                var selected = result.GetValue(reader) ?? "closedxml";
-                if (selected is not ("closedxml" or "openxml" or "auto"))
+                var selected = result.GetValue(reader) ?? "openxml";
+                if (selected is not ("openxml" or "auto"))
                 {
-                    result.AddError("--reader-backend must be closedxml, openxml, or auto.");
+                    result.AddError(selected == "closedxml" ? "--reader-backend: ClosedXML has been removed; use openxml or auto." : "--reader-backend must be openxml or auto.");
                 }
             }
         });
@@ -56,7 +56,7 @@ internal sealed class BackendOptions
     /// <returns>Product read settings.</returns>
     internal ExcelReadOptions GetRead(ParseResult result, Option<string> formulaMode) => CommandSupport.GetReadOptions(result.GetValue(formulaMode)!) with
     {
-        Backend = result.GetValue(reader) switch { "openxml" => ReaderBackend.OpenXml, "auto" => ReaderBackend.Auto, _ => ReaderBackend.ClosedXml },
+        Backend = result.GetValue(reader) switch { "openxml" => ReaderBackend.OpenXml, "auto" => ReaderBackend.Auto, _ => ReaderBackend.OpenXml },
         BackendSelected = result.GetValue(verbose) ? selection => Console.Error.WriteLine($"Reader: {selection.SelectedBackend} ({string.Join(", ", selection.ReasonCodes)})") : null,
     };
 
@@ -65,7 +65,7 @@ internal sealed class BackendOptions
     /// <returns>Product mapping settings.</returns>
     internal MappingOptions GetMapping(ParseResult result) => new()
     {
-        Backend = result.GetValue(mapping) switch { "openxml" => MappingBackend.OpenXml, "auto" => MappingBackend.Auto, _ => MappingBackend.ClosedXml },
+        Backend = result.GetValue(mapping) switch { "openxml" => MappingBackend.OpenXml, "auto" => MappingBackend.Auto, _ => MappingBackend.OpenXml },
         BackendSelected = result.GetValue(verbose) ? selection => Console.Error.WriteLine($"Mapping: {selection.SelectedBackend} ({string.Join(", ", selection.ReasonCodes)})") : null,
     };
 }

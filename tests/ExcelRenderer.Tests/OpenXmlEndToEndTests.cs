@@ -1,4 +1,4 @@
-using ClosedXML.Excel;
+using ExcelRenderer.TestFixtures;
 using ExcelRenderer.Excel;
 using ExcelRenderer.Mapping;
 using ExcelRenderer.Rendering;
@@ -10,19 +10,10 @@ public sealed class OpenXmlEndToEndTests
 {
     [Theory]
     [InlineData(1, ReaderBackend.OpenXml)]
-    [InlineData(2, ReaderBackend.ClosedXml)]
-    public async Task AutoCapabilitiesUseSelectedPagesBeforeChoosingReader(int page, ReaderBackend expected)
+    [InlineData(2, ReaderBackend.OpenXml)]
+    public async Task AutoKeepsOpenXmlAndFiltersDiagnosticsBySelectedPages(int page, ReaderBackend expected)
     {
-        using var workbook = new XLWorkbook();
-        var sheet = workbook.AddWorksheet("data");
-        sheet.Cell("A1").Value = "visible";
-        sheet.Cell("A10").Value = new DateTime(2026, 10, 16);
-        sheet.Cell("A10").Style.NumberFormat.NumberFormatId = 14;
-        sheet.PageSetup.PrintAreas.Add("A1:A10");
-        sheet.PageSetup.SetScale(100);
-        sheet.PageSetup.AddHorizontalPageBreak(1);
-        using var input = new MemoryStream();
-        workbook.SaveAs(input);
+        using var input = RetainedWorkbook.Open("OpenXmlEndToEndTests.AutoKeepsOpenXmlAndFiltersDiagnosticsBySelectedPages.A0268BF491EE7720.xlsx");
         input.Position = 0;
         using var output = new MemoryStream();
         ReaderBackendSelection? selection = null;
@@ -34,8 +25,8 @@ public sealed class OpenXmlEndToEndTests
         }, new SingleStreamOutputSink(output));
         Assert.Equal(expected, selection!.SelectedBackend);
         Assert.Single(result.Pages);
-        Assert.DoesNotContain(result.Diagnostics, diagnostic => diagnostic.Code == "RegionalNumberFormat");
-        if (page == 2) Assert.Contains("RegionalNumberFormat", selection.ReasonCodes);
+        Assert.Contains("AutoOpenXmlOnly", selection.ReasonCodes);
+        Assert.Equal(page == 2, result.Diagnostics.Any(diagnostic => diagnostic.Code == "RegionalNumberFormat"));
     }
 
     [Theory]
@@ -45,19 +36,12 @@ public sealed class OpenXmlEndToEndTests
     [InlineData(OutputFormat.Markdown)]
     public async Task MappedFormulaFreeWorkbookRendersThroughStreamingReader(OutputFormat format)
     {
-        using var workbook = new XLWorkbook();
-        var sheet = workbook.AddWorksheet("invoice");
-        sheet.Cell("A1").Value = "商品";
-        sheet.Cell("A2").Value = "**items[*].name";
-        sheet.Cell("B2").Value = "**items[*].price";
-        sheet.Cell("B2").Style.NumberFormat.Format = "#,##0";
-        using var source = new MemoryStream();
-        workbook.SaveAs(source);
+        using var source = RetainedWorkbook.Open("OpenXmlEndToEndTests.MappedFormulaFreeWorkbookRendersThroughStreamingReader.3D5603D2784D3681.xlsx");
         source.Position = 0;
         using var mapped = new MemoryStream();
         ExcelTemplateMapper.Map(source, mapped, new { items = new[] { new { name = "日本語の商品", price = 1234 } } }, new() { Backend = MappingBackend.OpenXml });
         var results = new List<byte[]>();
-        foreach (var backend in new[] { ReaderBackend.ClosedXml, ReaderBackend.OpenXml })
+        foreach (var backend in new[] { ReaderBackend.Auto, ReaderBackend.OpenXml })
         {
             mapped.Position = 0;
             using var output = new MemoryStream();
@@ -86,12 +70,7 @@ public sealed class OpenXmlEndToEndTests
     [Fact]
     public async Task CallerCalculatedMappingAutoValuesReachStreamingMarkdown()
     {
-        using var workbook = new XLWorkbook();
-        var sheet = workbook.AddWorksheet("calculation");
-        sheet.Cell("A1").Value = "**amount";
-        sheet.Cell("B1").Value = "**doubled";
-        using var template = new MemoryStream();
-        workbook.SaveAs(template);
+        using var template = RetainedWorkbook.Open("OpenXmlEndToEndTests.CallerCalculatedMappingAutoValuesReachStreamingMarkdown.29D1CBEC155574A1.xlsx");
         var rendered = new List<byte[]>();
         foreach (var amount in new[] { 7, 13 })
         {
@@ -126,10 +105,7 @@ public sealed class OpenXmlEndToEndTests
     [InlineData(Core.ReaderBackend.Auto)]
     public async Task SingleFontCoreUsesStreamingReaderWithoutLoadingClosedXml(Core.ReaderBackend backend)
     {
-        using var workbook = new XLWorkbook();
-        workbook.AddWorksheet("report").Cell("A1").Value = "漢字\uFE00";
-        using var input = new MemoryStream();
-        workbook.SaveAs(input);
+        using var input = RetainedWorkbook.Open("OpenXmlEndToEndTests.SingleFontCoreUsesStreamingReaderWithoutLoadingClosedXml.795F3BEBD5ACE77C.xlsx");
         input.Position = 0;
         using var output = new MemoryStream();
         var loads = 0;

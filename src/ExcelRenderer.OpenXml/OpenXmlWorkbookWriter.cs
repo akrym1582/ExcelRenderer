@@ -51,6 +51,8 @@ public static partial class OpenXmlWorkbookWriter
         string? stringsPath;
         string workbookPath;
         bool date1904;
+        var names = new Dictionary<string, SheetEditPlan>(StringComparer.OrdinalIgnoreCase);
+        var sheetNames = new Dictionary<int, string>();
         input.Position = 0;
         using (var package = SpreadsheetDocument.Open(new LeaveOpenStream(input), false))
         {
@@ -63,6 +65,7 @@ public static partial class OpenXmlWorkbookWriter
             foreach (var sheet in workbook.Workbook.Sheets!.Elements<S.Sheet>())
             {
                 paths.Add(++index, workbook.GetPartById(sheet.Id!.Value!).Uri.ToString().TrimStart('/'));
+                sheetNames.Add(index, sheet.Name!.Value!);
             }
         }
 
@@ -73,6 +76,12 @@ public static partial class OpenXmlWorkbookWriter
 
         foreach (var sheet in plan.Sheets)
         {
+            names.Add(sheetNames[sheet.SheetIndex], sheet);
+            if (sheet.SourceLastRow is < 0 or > 1048576)
+            {
+                throw new ArgumentException("Invalid source row extent.", nameof(plan));
+            }
+
             for (var index = 0; index < sheet.Rows.Count; index++)
             {
                 var row = sheet.Rows[index];
@@ -89,7 +98,7 @@ public static partial class OpenXmlWorkbookWriter
         var sources = new Dictionary<string, SheetSource>(StringComparer.Ordinal);
         try
         {
-            foreach (var sheet in plan.Sheets.Where(NeedsWorksheetEdit))
+            foreach (var sheet in plan.Sheets)
             {
                 var path = paths[sheet.SheetIndex];
                 using var source = archive.GetEntry(path)!.Open();
@@ -113,17 +122,20 @@ public static partial class OpenXmlWorkbookWriter
             var workbookRelationshipsPath = stylesDirectory + "_rels/" + workbookPath.Substring(stylesDirectory.Length) + ".rels";
             var styleEdits = new Dictionary<(int Style, int Format), int>();
             long sharedReferences = 0;
-            foreach (var sheet in plan.Sheets.Where(sheet => !NeedsWorksheetEdit(sheet)))
-            {
-                using var unmodified = archive.GetEntry(paths[sheet.SheetIndex])!.Open();
-                sharedReferences = checked(sharedReferences + CountSharedReferences(unmodified));
-            }
-
             var replacements = new Dictionary<string, SpillableBufferStream>(StringComparer.Ordinal);
             try
             {
+                var references = new StructuralReferences(names);
+                RewriteStructures(input, archive, sources, replacements, references, buffers, cancellationToken);
                 foreach (var item in sources)
                 {
+                    if (!NeedsWorksheetEdit(item.Value.Plan) && !item.Value.Children.Any(child => child.Name.LocalName is "hyperlinks" or "conditionalFormatting" or "dataValidations"))
+                    {
+                        using var unmodified = archive.GetEntry(item.Key)!.Open();
+                        sharedReferences = checked(sharedReferences + CountSharedReferences(unmodified));
+                        continue;
+                    }
+
                     var destination = new SpillableBufferStream(buffers);
                     replacements.Add(item.Key, destination);
                     sharedReferences = checked(sharedReferences + WriteSheet(item.Value, destination, styles, styleEdits, date1904, cancellationToken));
@@ -146,7 +158,7 @@ public static partial class OpenXmlWorkbookWriter
                             var workbook = XDocument.Load(source);
                             if (sources.Values.Any(source => source.Plan.Rows.Count != source.Plan.SourceLastRow || source.Plan.Rows.Any(row => row.SourceRow != row.OutputRow)) && workbook.Root?.Element(Ns + "definedNames")?.HasElements == true)
                             {
-                                RewritePrintDefinitions(workbook, sources.Values.ToDictionary(source => source.Plan.SheetIndex));
+                                RewriteDefinedNames(workbook, references);
                                 workbook.Save(target);
                             }
                             else
@@ -228,6 +240,12 @@ public static partial class OpenXmlWorkbookWriter
                         throw new InvalidDataException("Generated formula-free workbook contains a formula.");
                     }
                 }
+            }
+
+            stage.Position = 0;
+            using (var package = SpreadsheetDocument.Open(new LeaveOpenStream(stage), false))
+            {
+                WorkbookRelationships.Validate(package, cancellationToken);
             }
 
             OperationMetrics.Report("writer.stageBytes", stage.Length);
@@ -339,19 +357,28 @@ public static partial class OpenXmlWorkbookWriter
 
         if (source.Plan.ExplicitPageBreak && children.All(child => child.Name.LocalName != "pageSetup"))
         {
-            var position = children.FindIndex(child => child.Name.LocalName is "headerFooter" or "rowBreaks" or "colBreaks" or "tableParts");
+            var position = children.FindIndex(child => child.Name.LocalName is "headerFooter" or "rowBreaks" or "colBreaks" or "customProperties" or "cellWatches" or "ignoredErrors" or "drawing" or "legacyDrawing" or "tableParts");
             children.Insert(position < 0 ? children.Count : position, new XElement(Ns + "pageSetup", new XAttribute("scale", 100)));
         }
 
         long sharedReferences = 0;
+        var breaksWritten = false;
         foreach (var original in children)
         {
             token.ThrowIfCancellationRequested();
             var child = new XElement(original);
+            if (!breaksWritten && child.Name.LocalName is "rowBreaks" or "colBreaks" or "customProperties" or "cellWatches" or "ignoredErrors" or "smartTags" or "drawing" or "legacyDrawing" or "legacyDrawingHF" or "picture" or "oleObjects" or "controls" or "webPublishItems" or "tableParts" or "extLst")
+            {
+                WriteBreaks(xml, "rowBreaks", rowBreaks, 16383);
+                WriteBreaks(xml, "colBreaks", columnBreaks, 1048575);
+                breaksWritten = true;
+            }
+
             switch (child.Name.LocalName)
             {
                 case "dimension":
-                    child.SetAttributeValue("ref", source.Plan.Rows.Count == 0 ? "A1" : "A1:" + new CellAddress(source.Plan.Rows.Count, Math.Max(1, lastColumn)));
+                    var lastRow = source.OutputRows().Select(row => row.OutputRow).DefaultIfEmpty(0).Max();
+                    child.SetAttributeValue("ref", lastRow == 0 ? "A1" : "A1:" + new CellAddress(lastRow, Math.Max(1, lastColumn)));
                     break;
                 case "sheetPr":
                     if (source.Plan.ExplicitPageBreak)
@@ -418,7 +445,6 @@ public static partial class OpenXmlWorkbookWriter
 
                     child = new XElement(Ns + "mergeCells", new XAttribute("count", merges.Count), merges.Select(range => new XElement(Ns + "mergeCell", new XAttribute("ref", range))));
                     break;
-                case "tableParts":
                 case "rowBreaks":
                 case "colBreaks":
                     continue;
@@ -441,8 +467,12 @@ public static partial class OpenXmlWorkbookWriter
             new XElement(Ns + "pageSetup", new XAttribute("scale", 100)).WriteTo(xml);
         }
 
-        WriteBreaks(xml, "rowBreaks", rowBreaks, 16383);
-        WriteBreaks(xml, "colBreaks", columnBreaks, 1048575);
+        if (!breaksWritten)
+        {
+            WriteBreaks(xml, "rowBreaks", rowBreaks, 16383);
+            WriteBreaks(xml, "colBreaks", columnBreaks, 1048575);
+        }
+
         xml.WriteEndElement();
         xml.WriteEndDocument();
         return sharedReferences;
@@ -500,7 +530,7 @@ public static partial class OpenXmlWorkbookWriter
 
         if (value is DateTime date)
         {
-            number = date1904 ? (date - new DateTime(1904, 1, 1)).TotalDays : (date - new DateTime(1899, 12, 31)).TotalDays + (date >= new DateTime(1900, 3, 1) ? 1 : 0);
+            number = SerialDate(date, date1904);
         }
         else if (value is TimeSpan duration)
         {
@@ -546,6 +576,9 @@ public static partial class OpenXmlWorkbookWriter
 
         cell.Add(new XElement(Ns + "v", number.ToString("R", CultureInfo.InvariantCulture)));
     }
+
+    private static double SerialDate(DateTime date, bool date1904) => date1904 ? (date - new DateTime(1904, 1, 1)).TotalDays :
+        (date - new DateTime(1899, 12, 31)).TotalDays + (date >= new DateTime(1900, 3, 1) ? 1 : 0);
 
     private static void RewriteSharedStringCount(Stream input, Stream output, long count)
     {

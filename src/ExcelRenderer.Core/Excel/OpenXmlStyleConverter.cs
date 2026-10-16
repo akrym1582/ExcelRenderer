@@ -4,7 +4,7 @@ using ExcelRenderer.OpenXml;
 
 namespace ExcelRenderer.Core.Excel;
 
-/// <summary>Converts source snapshots without creating ClosedXML style or cell objects.</summary>
+/// <summary>Converts source snapshots to the shared rendering style.</summary>
 internal static class OpenXmlStyleConverter
 {
     /// <summary>Reads the original cell appearance.</summary>
@@ -65,7 +65,7 @@ internal static class OpenXmlStyleConverter
         }
 
         var rgb = uint.Parse(text, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
-        var (red, green, blue) = ExcelStyleConverter.ApplyTint((byte)(rgb >> 16), (byte)(rgb >> 8), (byte)rgb, Attribute(element, "theme") is not null ? Number(element, "tint", 0) : 0);
+        var (red, green, blue) = ColorConverter.ApplyTint((byte)(rgb >> 16), (byte)(rgb >> 8), (byte)rgb, Attribute(element, "theme") is not null ? Number(element, "tint", 0) : 0);
         return new(red, green, blue, Attribute(element, "resolvedAlpha") is { } alpha ? byte.Parse(alpha, CultureInfo.InvariantCulture) : text.Length == 8 ? (byte)(rgb >> 24) : (byte)255);
     }
 

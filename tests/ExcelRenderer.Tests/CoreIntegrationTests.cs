@@ -1,4 +1,4 @@
-using ClosedXML.Excel;
+using ExcelRenderer.TestFixtures;
 using ExcelRenderer.Core.Rendering;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Rendering;
@@ -13,21 +13,12 @@ public sealed class CoreIntegrationTests
     [Fact]
     public async Task Reader_hooks_share_traversal_and_preserve_product_style_policies()
     {
-        using var workbook = new XLWorkbook();
-        workbook.AddWorksheet("excluded").Cell(1, 1).Value = "not selected";
-        var source = workbook.AddWorksheet("selected").Cell(1, 1);
-        source.Value = "漢\uFE00";
-        source.Style.Font.FontName = "Original family";
-        source.Style.Font.Bold = true;
-        source.Style.Font.Italic = true;
-        source.Style.Alignment.TextRotation = 30;
-        using var input = new MemoryStream();
-        workbook.SaveAs(input);
+        using var input = RetainedWorkbook.Open("CoreIntegrationTests.Reader_hooks_share_traversal_and_preserve_product_style_policies.15C35DA96C969E4D.xlsx");
         input.Position = 0;
         using var prepared = await Core.Input.WorkbookInputPreparer.ReadAsync(input, new Core.WorkbookInputOptions(), CancellationToken.None);
         using var font = new Core.Fonts.SingleFontContext(CoreOptions().FontFilePath);
         var reads = 0;
-        Core.Rendering.ConversionMetrics.Observer = (name, value) => { if (name == "coreReaderWorkbook") reads += (int)value; };
+        Core.Rendering.ConversionMetrics.Observer = (name, value) => { if (name == "openXmlReaderWorkbook") reads += (int)value; };
         try
         {
             var basic = new Core.Excel.CoreExcelReader(font).Read(prepared, null, ["selected"]);
@@ -294,22 +285,7 @@ public sealed class CoreIntegrationTests
 
     private static byte[] Workbook(bool images = false)
     {
-        using var book = new XLWorkbook();
-        var sheet = book.AddWorksheet("Report");
-        sheet.Cell(1, 1).Value = "日本語 ABC";
-        sheet.Cell(1, 1).Style.Border.OutsideBorder = XLBorderStyleValues.Double;
-        sheet.Style.Font.FontName = "Noto Sans JP";
-        if (images)
-        {
-            using var bitmap = new global::SkiaSharp.SKBitmap(4, 4);
-            bitmap.Erase(global::SkiaSharp.SKColors.Blue);
-            using var png = bitmap.Encode(global::SkiaSharp.SKEncodedImageFormat.Png, 100);
-            using var picture = png.AsStream();
-            sheet.AddPicture(picture).MoveTo(sheet.Cell(1, 1));
-        }
-
-        using var input = new MemoryStream();
-        book.SaveAs(input);
+        using var input = RetainedWorkbook.Open(images ? "CoreIntegrationTests.Workbook.19FB7DA79FD114EF.xlsx" : "CoreIntegrationTests.Workbook.370047313DCF4EC6.xlsx");
         return input.ToArray();
     }
 

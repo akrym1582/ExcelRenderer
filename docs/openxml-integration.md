@@ -2,10 +2,13 @@
 
 English | [日本語](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/openxml-integration.ja.md)
 
-The default Reader and Mapping backend is ClosedXml. Choose OpenXml explicitly
-or use Auto for capability-based selection. `ExcelRenderer.OpenXml` provides the
-shared reader, writer and input handling used by Core, the main library and Mapping.
-It has no rendering, Mapping-language, font or ClosedXML dependency.
+The Reader in Core and the main library now uses OpenXml by default. Auto is an
+alias for OpenXml and never falls back. Explicit ClosedXml Reader requests fail
+before input processing with a migration error. The enum numbers are unchanged.
+Mapping also defaults to OpenXml; Auto uses that same writer. ClosedXml Mapping
+requests fail before input processing; see the [removal compatibility ledger](closedxml-removal-compatibility.md).
+`ExcelRenderer.OpenXml` supplies the shared reader, writer and input handling. It
+has no rendering, Mapping-language, font or ClosedXML dependency.
 
 ```csharp
 var document = new ExcelRenderer.Excel.ExcelReader().Read(input,
@@ -30,9 +33,9 @@ carry `ExcelReadOptions` through their existing `ReadOptions` properties.
 
 | Reader policy | Formula policy | Selection |
 | --- | --- | --- |
-| ClosedXml (default) | CachedValue (default) | Compatibility reader using original XML caches |
-| OpenXml | CachedValue | Streaming reader, with deferred source diagnostics |
-| Auto | CachedValue | Chooses by display capability; always uses saved results |
+| OpenXml (default) | CachedValue (default) | Streaming reader, with deferred source diagnostics |
+| Auto | CachedValue | Alias for OpenXml; no fallback |
+| ClosedXml | Any | NotSupportedException before input or output; use OpenXml or Auto |
 | Any | Legacy / Recalculate | Rejected before input or output |
 
 Every Reader uses only saved formula results. Stale results remain unchanged;
@@ -48,28 +51,41 @@ and Markdown `VisualCell`. Drawing does not expand formulas or fall back because
 formula text cannot be expanded. The standalone low-level `FormulaTextResolver`
 remains available to existing callers; it is not used by rendering.
 
-Reader Auto uses the selected sheets, explicit rectangles and hidden dimensions
-for display capability checks. Page selection uses the same layout and source
-regions as normal diagnostic filtering. That case builds a candidate model and
-performs a font-gated layout preflight; an unsupported candidate is released
-before loading ClosedXML. This extra work is part of Auto's cost. Input corruption,
-limits, cancellation and execution errors propagate without a retry in another
-engine.
+Reader Auto builds one OpenXml model. Source diagnostics continue to use the
+selected sheets, rectangles, hidden dimensions and output pages. There is no
+compatibility scan, discarded candidate or second workbook load. The successful
+selection callback fires once with SelectedBackend OpenXml and reason
+ExplicitOpenXml or AutoOpenXmlOnly. Invalid policies and corrupt inputs do not
+notify a successful selection. Unknown enum values throw ArgumentOutOfRangeException.
+Input corruption, limits, cancellation and execution errors propagate without retry.
+
+Display culture is captured from CurrentCulture when opening the source. It is
+passed explicitly to the low-level reader, which clones it for the read session.
 
 Regional or unresolved displays are not silently treated as equivalent:
 `UnsupportedNumberFormat`, `RegionalNumberFormat`, `IsoDateDisplay`,
 `UnresolvedColor` and `UnsupportedPrintReference` are
-reported on the explicit path and participate in the existing strict and
+reported on both supported policies and participate in the existing strict and
 warnings-as-errors policy. In particular, built-in date format 14 retains the
 OOXML `mm-dd-yy` interpretation, and ISO date cells retain source text. Use an
 explicit custom number format when an exact localized date presentation is
 required. Formula-cache errors and missing caches are diagnostics rather than
 reasons to retry another reader.
 
+The supported paper IDs retain the established point dimensions, including B4/B5;
+landscape swaps width and height. Other paper IDs use A4 with UnsupportedPaperSize.
+Explicit paperWidth/paperHeight lengths were not interpreted by the old Reader and
+remain unused, with UnsupportedPaperDimensions; paperSize controls dimensions.
+The values are never treated as raw PDF points.
+
+`ExcelStyleConverter.Convert(IXLCell)` has been removed. Its replacement is
+`Convert(CellStyleInfo style, CellValueType valueType)`. This is a breaking API
+change: see the [migration example and value-type rules](closedxml-removal-compatibility.md#public-style-api-migration).
+
 ## Formula-free Mapping
 
 OpenXml Mapping shares the existing expression parser, CLR/JSON evaluation and
-once-evaluated expansion plan with the compatibility writer. It supports scalar
+once-evaluated expansion plan. It supports scalar
 values, escape and format/date expressions, null, single-row arrays, nested
 blocks, empty arrays, style-only cells, row/column metadata, compatible merges,
 print areas/titles and manual/directive page breaks. New strings use inline
@@ -92,23 +108,28 @@ constants and finite A1 reference unions (including whole rows/columns and quote
 known sheet names). Functions, arithmetic, dynamic/external/3D references, name
 aliases and unrecognized grammar are rejected. Names overlapping repeat regions
 remain unsupported. Static print areas/titles remain supported. Conditional
-formatting and validation formulas are retained through existing ClosedXML
-structure handling, without evaluation or new conditional rendering.
+formatting and validation formulas are structural metadata. Their A1 references
+move with rows and duplicated rules while string literals and function names stay
+unchanged; no formula evaluation or new conditional rendering is performed.
 
-After this common preflight, explicit OpenXml reports structural capability
-failures before output; Auto may choose ClosedXML for static general names,
-conditional formatting, validation, tables/pivots/filters/sparklines,
-drawings/comments/links, external data and other unsupported structures.
-Formulas never cause a permissive fallback. The OpenXml Writer scope is unchanged.
-Mapping saves with formula evaluation disabled and restores the original `calcPr`
-(including its absence), without adding recalculation requests.
+After this common preflight, both supported policies validate structures before
+getters or enumeration. Names, tables and picture anchors intersecting repeated
+regions remain unsupported. References on other sheets are included. Names,
+ordinary hyperlinks (including internal locations), comment cells and VML anchors,
+pictures outside repeats, formula-free tables/filters, conditional formatting and
+validation use final row occurrences. Media bytes and relationship targets are
+preserved. Static worksheet pivot sources and output locations move; changed
+source records and shared items are rebuilt and marked for refresh. Pivot aggregate
+cells are not recalculated. Grouped/calculated/external or unresolved named pivot
+sources, chart caches, threaded comments, macros, signatures, Strict packages and
+unknown extensions/parts are rejected. Sparkline worksheet extensions retain the
+existing formula-preflight rejection. There is no fallback or retry.
 
-Mapping Auto also uses `PrintAreaExpansionCompatibility` when a print area
-intersects an expandable region, until that geometry pattern is proven equivalent
-to ClosedXML. OpenXml's explicit rule extends each area over all its output row
-occurrences and removes fully deleted areas. Title rows intersecting repeated or
-deleted regions are unsupported. Fixed title rows and uniquely shifted title
-bands are retained. Column titles remain unchanged.
+Mapping preserves the original `calcPr` (including its absence) without adding
+formula recalculation requests. Print areas include all surviving output
+occurrences and fully deleted areas are removed. Title rows intersecting repeated
+or deleted regions are unsupported. Fixed or uniquely shifted titles are retained;
+column titles remain unchanged.
 
 A surviving `**@page-break` enables explicit scaling even at A1. Positive source
 scale is retained, otherwise 100 is used. Empty arrays that remove a directive do
@@ -133,9 +154,11 @@ excelrenderer xlsx template.xlsx --data data.json -o result.xlsx --mapping-backe
 excelrenderer render template.xlsx --data data.json --format svg -o output --mapping-backend openxml --reader-backend openxml --formula-mode cached
 ```
 
-`--reader-backend closedxml|openxml|auto` is available on pdf, image, svg,
+`--reader-backend openxml|auto` is available on pdf, image, svg,
 markdown/md and render. `--mapping-backend` is available on all of them and xlsx;
-explicit use requires `--data`. `--verbose` writes engine decisions to stderr.
+explicit use requires `--data` and accepts `openxml|auto`. Both defaults are
+`openxml`. Explicit `closedxml` is rejected with a migration reason before opening
+input/data or creating output. `--verbose` writes engine decisions to stderr.
 `--formula-mode` supports only `cached`, which is also the default. Explicit
 `legacy` and `recalculate` are rejected on every backend before input processing
 or output creation.
@@ -164,5 +187,5 @@ for test commands, measured allocation costs and results at each recorded commit
 Literal `_xHHHH_` sequences and XML 1.0 control characters use SpreadsheetML escapes
 and round-trip through the new reader. ClosedXML 0.105.1 does not decode these escapes
 in plain inline strings; reopening these special values with that library exposes the
-escaped spelling. Ordinary strings and leading-apostrophe quotePrefix behavior match
-the ClosedXml backend.
+escaped spelling. Ordinary strings and leading-apostrophe quotePrefix behavior preserve their
+established value semantics.

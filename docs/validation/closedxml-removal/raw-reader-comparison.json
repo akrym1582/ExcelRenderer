@@ -1,0 +1,96 @@
+{
+  "Baseline": "/workspace/ExcelRenderer/docs/validation/closedxml-removal/raw-reader-baseline.json",
+  "UnexplainedDifferences": 0,
+  "Files": [
+    {
+      "File": "samples/excel/japanese-grid-report.xlsx",
+      "Sha256": "4907D79963EB8267EAB4230C7AAD9BBD0D580238D3D42F402B34FB4C0FF217A1",
+      "Match": true,
+      "Actual": null
+    },
+    {
+      "File": "samples/mapping/invoice/invoice.xlsx",
+      "Sha256": "1EAFC42149F48770C131F836883FFB6AC2714215D4EBE2DB5352E1DEE66011A5",
+      "Match": true,
+      "Actual": null
+    },
+    {
+      "File": "samples/mapping/invoice/page-breaks/invoice.xlsx",
+      "Sha256": "FE9E74BB06481AA86D2DCF14268C94CA95844B5A2A3B3693B7C98996FA2E8D93",
+      "Match": true,
+      "Actual": null
+    },
+    {
+      "File": "samples/mapping/invoice/page-breaks/template.xlsx",
+      "Sha256": "4B3599F12FB192099459888091F4F6FE0DE6E6198B7A40A0EA2D9C394AA846BE",
+      "Match": true,
+      "Actual": null
+    },
+    {
+      "File": "samples/mapping/invoice/template.xlsx",
+      "Sha256": "8158FFCC92C5F5D0F71A951C4FE38CD3CB87415312F11E827CF69AAA2E5455EB",
+      "Match": true,
+      "Actual": null
+    },
+    {
+      "File": "tests/ExcelRenderer.Tests/SampleInputs/01-japanese.xlsx",
+      "Sha256": "6A89D390E07A60E919B7BE2C5FA6AF47721B0E9C5A4A0C325AE97174FF6386F0",
+      "Match": true,
+      "Actual": null
+    },
+    {
+      "File": "tests/ExcelRenderer.Tests/SampleInputs/02-image.xlsx",
+      "Sha256": "D54804111617065E59A4BBE4D5C2099B08EFDEA2F71D1676998BC836569DE254",
+      "Match": true,
+      "Actual": null
+    },
+    {
+      "File": "tests/ExcelRenderer.Tests/SampleInputs/03-wrapped-text.xlsx",
+      "Sha256": "60421161D8EC36904BEFD41ECDE57551EA7880A8FFDA07925B38178FC747D990",
+      "Match": true,
+      "Actual": null
+    },
+    {
+      "File": "tests/ExcelRenderer.Tests/SampleInputs/04-text-decoration.xlsx",
+      "Sha256": "C8EE629159DE588541C6D08BCE70CAE9C0483DDCB21C3FEEF536102E1457CFF1",
+      "Match": true,
+      "Actual": null
+    },
+    {
+      "File": "tests/ExcelRenderer.Tests/SampleInputs/05-borders.xlsx",
+      "Sha256": "074CFD50A3D4556380F462A69287D9B0254A71EBE412E267B395CA345A54EAC2",
+      "Match": true,
+      "Actual": null
+    },
+    {
+      "File": "tests/ExcelRenderer.Tests/SampleInputs/06-layout-and-pagination.xlsx",
+      "Sha256": "5870F080AC266568DE200BF6955A617DA452B14C103A30371889E8BEE13B12E6",
+      "Match": true,
+      "Actual": null
+    },
+    {
+      "File": "tests/ExcelRenderer.Tests/SampleInputs/07-multiple-sheets.xlsx",
+      "Sha256": "2DA1636A03384C0AA0ECB14EC3183631F3C41A90F1348693E795C329C0CAE20E",
+      "Match": true,
+      "Actual": null
+    },
+    {
+      "File": "tests/ExcelRenderer.Tests/SampleInputs/08-print-scaling.xlsx",
+      "Sha256": "F9E5FFAA18C622D2820138D18C6AED07AE63B28DA8FAD1C71C4FFCBDD12A9FB7",
+      "Match": true,
+      "Actual": null
+    },
+    {
+      "File": "tests/ExcelRenderer.Tests/SampleInputs/09-cell-border.xlsx",
+      "Sha256": "5655EE7B5407C1C9AF6836EC65F573819B0265C833660210D04060CA8C368D70",
+      "Match": true,
+      "Actual": null
+    },
+    {
+      "File": "tests/ExcelRenderer.Tests/SampleInputs/ReaderRichText/representative.xlsx",
+      "Sha256": "5E4032E814530D62DB777AD76B8EAE467C4F761696A2877E22CA41E2FBC37357",
+      "Match": true,
+      "Actual": null
+    }
+  ]
+}

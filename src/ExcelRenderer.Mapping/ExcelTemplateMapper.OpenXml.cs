@@ -11,7 +11,7 @@ namespace ExcelRenderer.Mapping;
 /// <summary>Connects the common language plan to the source-neutral workbook writer.</summary>
 public static partial class ExcelTemplateMapper
 {
-    private static bool MapOpenXml(PreparedWorkbook source, System.IO.Stream output, object? data, MappingOptions options, CancellationToken token)
+    private static void MapOpenXml(PreparedWorkbook source, System.IO.Stream output, object? data, MappingOptions options, CancellationToken token)
     {
         using var input = source.OpenRead();
         using var reader = OpenXmlWorkbookReader.Open(input, cancellationToken: token);
@@ -35,25 +35,15 @@ public static partial class ExcelTemplateMapper
                 {
                     reasons.Add("TitleRowsIntersectRepeat");
                 }
-
-                if (options.Backend == MappingBackend.Auto && reference.Name == "_xlnm.Print_Area" && reference.Ranges.Any(range => repeated.Any(node => node.FirstRow <= range.LastRow && node.LastRow >= range.FirstRow)))
-                {
-                    reasons.Add("PrintAreaExpansionCompatibility");
-                }
             }
         }
 
         if (reasons.Count > 0)
         {
-            if (options.Backend == MappingBackend.OpenXml)
-            {
-                throw new NotSupportedException("OpenXml mapping is unsupported: " + string.Join(", ", reasons));
-            }
-
-            options.BackendSelected?.Invoke(new MappingBackendSelection(options.Backend, MappingBackend.ClosedXml, Array.AsReadOnly(reasons.OrderBy(reason => reason, StringComparer.Ordinal).ToArray())));
-            return false;
+            throw new NotSupportedException("OpenXml mapping is unsupported: " + string.Join(", ", reasons));
         }
 
+        ValidateStructures(source, templates.Select(item => item.Template).ToArray(), token);
         var plans = templates.Select(item => (item.Index, item.Template, Plan: new ExpansionPlan(item.Template, data, options, token))).ToArray();
         var sheets = new List<SheetEditPlan>();
         var nextOccurrence = 0;
@@ -113,10 +103,9 @@ public static partial class ExcelTemplateMapper
 
         reader.Dispose();
         input.Dispose();
-        options.BackendSelected?.Invoke(new MappingBackendSelection(options.Backend, MappingBackend.OpenXml, Array.AsReadOnly(new[] { options.Backend == MappingBackend.Auto ? "CapabilitiesSupported" : "ExplicitOpenXml" })));
+        options.BackendSelected?.Invoke(new MappingBackendSelection(options.Backend, MappingBackend.OpenXml, Array.AsReadOnly(new[] { options.Backend == MappingBackend.Auto ? "AutoOpenXmlOnly" : "ExplicitOpenXml" })));
         using var writerInput = source.OpenRead();
         OpenXmlWorkbookWriter.Write(writerInput, output, new WorkbookEditPlan(sheets.AsReadOnly()), options.Input, token);
-        return true;
     }
 
     private static IEnumerable<TemplateNode> Repeated(List<TemplateNode> nodes)

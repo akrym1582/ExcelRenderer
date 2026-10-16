@@ -8,7 +8,7 @@ using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 
 namespace ExcelRenderer.Excel;
 
-/// <summary>ClosedXML が公開していない DrawingML の機能を読み取ります。</summary>
+/// <summary>DrawingML のアンカーと描画メタデータを読み取ります。</summary>
 internal static class DrawingMLReader
 {
     /// <summary>Excel ファイル内の DrawingML を解析し、対応するオートシェイプをワークシート別に読み取ります。</summary>

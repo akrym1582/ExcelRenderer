@@ -14,7 +14,7 @@ public static class WorkbookWriteCapabilities
 {
     private static readonly HashSet<string> WorkbookChildren = new HashSet<string>(StringComparer.Ordinal)
     {
-        "fileVersion", "fileSharing", "workbookPr", "workbookProtection", "bookViews", "sheets", "definedNames", "calcPr",
+        "fileVersion", "fileSharing", "workbookPr", "workbookProtection", "bookViews", "sheets", "definedNames", "calcPr", "pivotCaches",
     };
 
     private static readonly HashSet<string> StyleChildren = new HashSet<string>(StringComparer.Ordinal)
@@ -25,7 +25,7 @@ public static class WorkbookWriteCapabilities
     private static readonly HashSet<string> WorksheetChildren = new HashSet<string>(StringComparer.Ordinal)
     {
         "sheetPr", "dimension", "sheetViews", "sheetFormatPr", "cols", "sheetData", "mergeCells",
-        "printOptions", "pageMargins", "pageSetup", "headerFooter", "rowBreaks", "colBreaks", "sheetCalcPr", "phoneticPr", "tableParts",
+        "printOptions", "pageMargins", "pageSetup", "headerFooter", "rowBreaks", "colBreaks", "sheetCalcPr", "phoneticPr", "tableParts", "hyperlinks", "drawing", "legacyDrawing", "autoFilter", "sortState", "conditionalFormatting", "dataValidations", "sheetProtection", "protectedRanges", "ignoredErrors", "pivotTableParts",
     };
 
     /// <summary>Inspects every sheet and relationship before selecting the editing engine.</summary>
@@ -42,6 +42,7 @@ public static class WorkbookWriteCapabilities
         cancellationToken.ThrowIfCancellationRequested();
         var reasons = new HashSet<string>(StringComparer.Ordinal);
         using var document = SpreadsheetDocument.Open(new LeaveOpenStream(input), false);
+        WorkbookRelationships.Validate(document, cancellationToken);
         if (document.DocumentType != SpreadsheetDocumentType.Workbook)
         {
             reasons.Add("UnsupportedPackageType");
@@ -58,12 +59,12 @@ public static class WorkbookWriteCapabilities
                 continue;
             }
 
-            if (part is not WorkbookPart and not WorksheetPart and not WorkbookStylesPart and not SharedStringTablePart and not ThemePart and not CoreFilePropertiesPart and not ExtendedFilePropertiesPart and not CustomFilePropertiesPart)
+            if (part is not WorkbookPart and not WorksheetPart and not WorkbookStylesPart and not SharedStringTablePart and not ThemePart and not CoreFilePropertiesPart and not ExtendedFilePropertiesPart and not CustomFilePropertiesPart and not DrawingsPart and not ImagePart and not WorksheetCommentsPart and not VmlDrawingPart and not TableDefinitionPart and not PivotTablePart and not PivotTableCacheDefinitionPart and not PivotTableCacheRecordsPart)
             {
                 reasons.Add("UnsupportedPart:" + part.RelationshipType);
             }
 
-            if (part.ExternalRelationships.Any() || part.HyperlinkRelationships.Any() || part.DataPartReferenceRelationships.Any())
+            if (part.ExternalRelationships.Any() || part.DataPartReferenceRelationships.Any())
             {
                 reasons.Add("ExternalOrDataRelationship");
             }
@@ -71,6 +72,62 @@ public static class WorkbookWriteCapabilities
             foreach (var child in part.Parts)
             {
                 pending.Push(child.OpenXmlPart);
+            }
+
+            if (part is DrawingsPart or WorksheetCommentsPart or VmlDrawingPart or PivotTableCacheRecordsPart)
+            {
+                using var source = part.GetStream(FileMode.Open, FileAccess.Read);
+                using var xml = XmlReader.Create(source, new XmlReaderSettings { DtdProcessing = DtdProcessing.Prohibit, XmlResolver = null });
+                while (xml.Read())
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    if (xml.NodeType == XmlNodeType.Element && xml.LocalName is "extLst" or "AlternateContent")
+                    {
+                        reasons.Add("UnsupportedRelatedExtension:" + part.RelationshipType);
+                    }
+
+                    if (part is DrawingsPart && xml.NodeType == XmlNodeType.Element && xml.Depth == 1 && xml.LocalName is not "oneCellAnchor" and not "twoCellAnchor" and not "absoluteAnchor")
+                    {
+                        reasons.Add("UnsupportedDrawingAnchor:" + xml.LocalName);
+                    }
+
+                    if (part is VmlDrawingPart && xml.NodeType == XmlNodeType.Element && xml.LocalName == "ClientData" && xml.GetAttribute("ObjectType") != "Note")
+                    {
+                        reasons.Add("UnsupportedVmlObject");
+                    }
+                }
+            }
+
+            if (part is PivotTablePart or PivotTableCacheDefinitionPart)
+            {
+                using var source = part.GetStream(FileMode.Open, FileAccess.Read);
+                var root = System.Xml.Linq.XElement.Load(source);
+                if (root.Descendants().Any(element => element.Name.LocalName is "fieldGroup" or "calculatedItems" or "calculatedMembers" || element.Attribute("formula") != null))
+                {
+                    reasons.Add("CalculatedOrGroupedPivotCache");
+                }
+
+                if (part is PivotTableCacheDefinitionPart && root.Descendants(XmlValues.Spreadsheet + "cacheSource").Any(element => (string?)element.Attribute("type") != "worksheet"))
+                {
+                    reasons.Add("ExternalPivotCache");
+                }
+
+                if (part is PivotTableCacheDefinitionPart cache)
+                {
+                    var worksheet = root.Descendants(XmlValues.Spreadsheet + "worksheetSource").SingleOrDefault();
+                    if (worksheet?.Attribute("sheet") == null || worksheet.Attribute("ref") == null || cache.PivotTableCacheRecordsPart == null)
+                    {
+                        reasons.Add("UnsupportedPivotSource");
+                    }
+                }
+
+                foreach (var extension in root.Descendants().Where(element => element.Name.LocalName == "ext"))
+                {
+                    if ((string?)extension.Attribute("uri") != "{962EF5D1-5CA2-4c93-8EF4-DBF5C05439D2}" || extension.Elements().Any(element => element.Name != System.Xml.Linq.XName.Get("pivotTableDefinition", "http://schemas.microsoft.com/office/spreadsheetml/2009/9/main")))
+                    {
+                        reasons.Add("UnsupportedPivotExtension");
+                    }
+                }
             }
 
             if (part is WorksheetPart or WorkbookPart or WorkbookStylesPart)
@@ -102,11 +159,6 @@ public static class WorkbookWriteCapabilities
                         reasons.Add("UnsupportedExtension:" + xml.LocalName);
                     }
 
-                    if (xml.LocalName == "tablePart")
-                    {
-                        reasons.Add("TablesPresent");
-                    }
-
                     if (xml.LocalName == "f" && xml.NamespaceURI == XmlValues.Spreadsheet.NamespaceName)
                     {
                         reasons.Add("FormulasPresent");
@@ -116,12 +168,13 @@ public static class WorkbookWriteCapabilities
         }
 
         input.Position = 0;
-        using var reader = OpenXmlWorkbookReader.Open(input, cancellationToken: cancellationToken);
-        if (reader.Workbook.DefinedNames.Any(name => name.Name is not "_xlnm.Print_Area" and not "_xlnm.Print_Titles"))
+        if (WorkbookFormulaInspection.Find(input, cancellationToken) is not null)
         {
-            reasons.Add("GeneralDefinedNames");
+            reasons.Add("FormulasOrUninspectableExtensionsPresent");
         }
 
+        input.Position = 0;
+        using var reader = OpenXmlWorkbookReader.Open(input, cancellationToken: cancellationToken);
         if (reader.Workbook.DefinedNames.Any(name => name.Name is "_xlnm.Print_Area" or "_xlnm.Print_Titles" && name.LocalSheetId == null))
         {
             reasons.Add("UnscopedPrintDefinition");

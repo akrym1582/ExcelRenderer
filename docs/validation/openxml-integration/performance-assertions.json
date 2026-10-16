@@ -1,0 +1,12 @@
+{
+  "matrixCases": 32,
+  "supplementalCases": 3,
+  "processes": 210,
+  "warmups": 35,
+  "measuredSamples": 175,
+  "readerCellCountsAndChecksumsEqual": true,
+  "expectedBackendWorkbookCountsVerified": true,
+  "allInputChecksumsVerified": true,
+  "allMediansRecomputed": true,
+  "runnerChecksumVerified": true
+}

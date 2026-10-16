@@ -84,3 +84,96 @@ Reader の地域依存形式・未解決色・未知共有式には理由を残�
 `Cells` は保持した ReportCell の個数であり、描画モデルを作らない Mapping 単体では0。
 Mapping は評価計画・出力行の値を保持するが、元 worksheet のセル DOM を保持しない。
 Writer は1行分の XML と spill 可能な行ストア、出力 ZIP stage を使う。
+
+
+## 性能計測の条件
+
+測定した C# 実装は `767f4e2f4754067332e9b20c6fef55a5f520bc50`。
+Release、en-US、同じ NotoSansJP-Regular.ttf、独立プロセスで warmup 1回・測定5回の中央値を使う。
+Reader 単体、PDF 描画全体、Mapping 単体、Mapping→PDF を分ける。
+時間には各 backend の入力準備・Auto 能力検査を含め、入力データ配列の生成は含めない。
+入力ファイルとフォント、Python runner の SHA-256 を JSON に記録する。
+
+通常の32比較は1万・10万明細行の plain / nested / geometry-header を使う。
+plain と nested は明細に書式付き空セルを持つ。geometry-header は結合したヘッダー、
+展開する印刷範囲、繰り返しタイトルを追加する。Auto は後者を
+`PrintAreaExpansionCompatibility` で旧経路へ送るため、新経路の成功として数えない。
+
+生成器の worksheet 全体へのフォント指定は全16384列の style として保存される。
+通常比較は ZIP の列定義を実際に使う2列または4列までに限定した `bounded/` 入力を使う。
+実際のセル値・明示書式・行高・列幅・印刷設定は両 backend で同一。
+全列 style 版の中間測定は通常比較に混ぜない。
+
+行ごとに結合を複製する1万行の補足比較は
+`benchmark-repeated-merges.json` に、旧経路・明示新経路・Auto の各6プロセスを保存する。
+この補足は元の全列フォント定義を持つ入力であり、通常比較と直接速度比を作らない。
+各行結合の10万行ファイルの生成も明示 OpenXml Writer で成功しているが、
+これを旧経路との10万行性能比較として報告しない。
+
+再現手順:
+
+```sh
+dotnet build ExcelRenderer.slnx -c Release --no-restore -m:1 -p:UseSharedCompilation=false
+dotnet tools/ExcelRenderer.Performance/bin/Release/net10.0/ExcelRenderer.Performance.dll integration-generate artifacts/integration-fixtures/10000 10000
+dotnet tools/ExcelRenderer.Performance/bin/Release/net10.0/ExcelRenderer.Performance.dll integration-generate artifacts/integration-fixtures/100000 100000
+python scripts/benchmark-openxml-integration.py --fixtures artifacts/integration-fixtures --output artifacts/integration-benchmark.json
+python scripts/compare-openxml-outputs.py --work artifacts/backend-output-comparison --output artifacts/backend-output-comparison.json
+python scripts/validate-openxml-packages.py --packages artifacts/integration-packages --work /tmp/excelrenderer-package-consumers
+```
+
+ローカル consumer は専用 NuGet package directory と package source mapping を使い、
+OpenXml 単独、Mapping 単独、本体と同梱 Core を復元・build・実行した。
+Tool もローカル NuGet から install し、shim 起動と明示 OpenXml の Markdown 出力を確認した。
+SDK が wrapper 配下にある環境では、installed runtime の場所から `DOTNET_ROOT` を指定する。
+本体・Mapping の nuspec は OpenXml 1.8.0 に依存し同 DLL を重複同梱せず、
+Core DLL は本体に同梱、Tool は OpenXml/Core/Mapping を各1個含むことを検査した。
+公開・タグ作成・push は行っていない。
+
+
+## 性能結果と受入記録
+
+通常32組＋補足3組、**210独立プロセス**（warmup35 / 測定175）を完了。
+各 median を生データから再計算し、入力・runner の checksum、Reader の保持セル数・表示テキスト checksum、
+backend ごとの XLWorkbook 生成回数を検査した。
+[全結果の集計表](validation/openxml-integration/performance.md)と
+[通常比較の生データ](validation/openxml-integration/benchmark.json)、
+[補足比較](validation/openxml-integration/benchmark-repeated-merges.json)、
+[検査結果](validation/openxml-integration/performance-assertions.json)を参照。
+
+10万行の中央値（秒）:
+
+| 処理 | ClosedXml | OpenXml | Auto |
+| --- | ---: | ---: | ---: |
+| Mapping plain | 3.63 | 4.01 | 4.43 |
+| Mapping 結合ヘッダー・印刷 | 12.98 | 3.91 | 12.80（旧経路） |
+| Reader 単体 | 6.87 | 4.90 | 5.87 |
+| PDF 全体 | 11.88 | 10.08 | — |
+| Mapping→PDF | 16.64 | 13.17 | — |
+
+OpenXml はすべてのケースで速いわけではない。plain 10万行では累積 managed allocation が
+ClosedXml 約515.5MiBに対して OpenXml 約1658.9MiBに増え、Peak RSS は約291.1MiBから
+約271.7MiBへ下がった。結合ヘッダー・印刷では時間・割当量・Peak RSS が改善した。
+割当量を保持メモリと取り違えず、速度比を CI 閾値にしない。
+
+Reader は両サイズとも旧・新・Auto でセル数と表示テキスト checksum が一致。
+10万行は **200,002 ReportCells**。明示新経路、能力が対応する Reader Auto / Mapping Auto は
+全測定で **XLWorkbook 生成0**。Mapping→PDF の旧経路は2、旧 Reader は1。
+印刷ケースの Auto は旧経路1であり、明示新経路の実績に含めていない。
+今回の圧縮済み入力・ZIP stage は閾値内に収まり、実測 spool file bytes は0だった。
+強制 spill と成功・失敗・キャンセル時の cleanup は機能テストで別に確認した。
+
+[最終テストログ](validation/openxml-integration/tests.log)、
+[Rebuild](validation/openxml-integration/rebuild.log)、
+[出力比較](validation/openxml-integration/output-comparison.json)、
+[package consumer](validation/openxml-integration/consumers.log)、
+[package inventory](validation/openxml-integration/package-inventory.json)を保存した。
+全列フォントの中間測定、同じ出力先の build/test を重ねた中間実行、
+Auto で旧経路に fallback したケースを新経路の成功へ混ぜていない。
+
+残る製品上の制約は接続ガイドに記載する。OpenXml Mapping は数式なしの保守的な編集に限定し、
+複雑な part、数式、展開と交差するタイトルなどを拒否する。Auto は理由付きで旧経路を選ぶ。
+Reader は CachedValue 専用で、地域依存形式・不明な共有式等は診断または Auto 旧経路となる。
+特殊文字 inlineStr の ClosedXML 0.105.1 復号制約も日英ガイドに明記している。
+
+consumer の stderr には sandbox の Fontconfig cache 書込不可メッセージが残る。
+consumer build は警告0・エラー0、installed Tool は終了0と Markdown artifact の生成で確認した。

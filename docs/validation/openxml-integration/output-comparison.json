@@ -1,0 +1,215 @@
+[
+  {
+    "fixture": "samples/excel/japanese-grid-report.xlsx",
+    "comparison": {
+      "textSha256": "f845a8f75da1b3c9c045dab23aa4711950eaf36f48366feb7ca093d541ea3ec1",
+      "geometry": [
+        "Pages:           1",
+        "Page size:       595.276 x 841.89 pts (A4)"
+      ],
+      "markdownArtifacts": {
+        "report.md": "668bc086830c5f7921e1f8c2d1a5708a7b2f4fd8eabaf0b0df7befc876a1fc7c"
+      }
+    },
+    "equal": true
+  },
+  {
+    "fixture": "samples/mapping/invoice/invoice.xlsx",
+    "comparison": {
+      "textSha256": "5359621a86221fa0758525176f2be73941822b4053de98353a3326eb9e72376e",
+      "geometry": [
+        "Pages:           1",
+        "Page size:       595.276 x 841.89 pts (A4)"
+      ],
+      "markdownArtifacts": {
+        "report.md": "9a4d87324ded3d0565091e8fa880b880c0c1198d3027203dcbdbe75ad0f37cf3"
+      }
+    },
+    "equal": true
+  },
+  {
+    "fixture": "samples/mapping/invoice/page-breaks/invoice.xlsx",
+    "comparison": {
+      "textSha256": "9231c553f69f4be2a3f56df5707c36064c2cd0dd4468d42387ab17378e08a7bc",
+      "geometry": [
+        "Pages:           3",
+        "Page size:       595.276 x 841.89 pts (A4)"
+      ],
+      "markdownArtifacts": {
+        "report.md": "d49768b48396f4b934ebdcd042aecb087308f3339a134f818e34a1c02c9780a6"
+      }
+    },
+    "equal": true
+  },
+  {
+    "fixture": "samples/mapping/invoice/page-breaks/template.xlsx",
+    "comparison": {
+      "textSha256": "a31d9923a817e99abd64962fa8384a08ccf10c31421af3feca78d17002ab7cd3",
+      "geometry": [
+        "Pages:           1",
+        "Page size:       595.276 x 841.89 pts (A4)"
+      ],
+      "markdownArtifacts": {
+        "report.md": "e2fcea619f18097f76f357c47998f1fb54b9a19d28bddb81d8b053dd6204baa0"
+      }
+    },
+    "equal": true
+  },
+  {
+    "fixture": "samples/mapping/invoice/template.xlsx",
+    "comparison": {
+      "textSha256": "7a0556fd0e54713f2328b0c2c1647465ceb085c411859e84aed7b09f8b9df81d",
+      "geometry": [
+        "Pages:           1",
+        "Page size:       595.276 x 841.89 pts (A4)"
+      ],
+      "markdownArtifacts": {
+        "report.md": "2e8a37f64a4648b5cead0aeac5cf4a2a8beacaf00c4d9a32e898884bf3f0ff7e"
+      }
+    },
+    "equal": true
+  },
+  {
+    "fixture": "tests/ExcelRenderer.Tests/SampleInputs/01-japanese.xlsx",
+    "comparison": {
+      "textSha256": "77a4623b03f9a87997e8da4d00552504a93fb9da76777f33a1cc25ee4950a837",
+      "geometry": [
+        "Pages:           2",
+        "Page size:       595.276 x 841.89 pts (A4)"
+      ],
+      "markdownArtifacts": {
+        "report.md": "1727e8bf4098e0a28c616aa3bbf391b1d66632fa25fddbb198cdb8e2fb582a07"
+      }
+    },
+    "equal": true
+  },
+  {
+    "fixture": "tests/ExcelRenderer.Tests/SampleInputs/02-image.xlsx",
+    "comparison": {
+      "textSha256": "c015824de94266ceeb180e0884fc77db337479525e6b83e2e26940252e884d2d",
+      "geometry": [
+        "Pages:           2",
+        "Page size:       595.276 x 841.89 pts (A4)"
+      ],
+      "markdownArtifacts": {
+        "report.md": "d0f13662121c18cfafc21a771e1e4e82a96f49e01dbaf5799ae34f975c91edcd",
+        "images/画像_img_001.png": "dcbd233ad60e261fe88025b32f99c3ddd8f49662e4fda2284456f3803462af16",
+        "images/画像_img_002.jpg": "969b41a57dfbc5c133f2dedc4fa0c51320c1a8463aa6246c8a8473b554441e3a"
+      }
+    },
+    "equal": true
+  },
+  {
+    "fixture": "tests/ExcelRenderer.Tests/SampleInputs/03-wrapped-text.xlsx",
+    "comparison": {
+      "textSha256": "8fb683dfc65fa4f8fefe2e573de5c3523153cac1bafd85eb50a06d837f2fe300",
+      "geometry": [
+        "Pages:           1",
+        "Page size:       595.276 x 841.89 pts (A4)"
+      ],
+      "markdownArtifacts": {
+        "report.md": "c128424b8bf39b0a03334e8559f18bf5cdf66e711bbb18a1e9933519d6d0743d"
+      }
+    },
+    "equal": true
+  },
+  {
+    "fixture": "tests/ExcelRenderer.Tests/SampleInputs/04-text-decoration.xlsx",
+    "comparison": {
+      "textSha256": "9b183bcf0dd68c42cc4e688fc163a962bce1394c452a09bbf6e96887242bc68c",
+      "geometry": [
+        "Pages:           1",
+        "Page size:       595.276 x 841.89 pts (A4)"
+      ],
+      "markdownArtifacts": {
+        "report.md": "a92c7f0adf9b87098bbc5a467a70444b1564a72a9c0aff502839f4170417f4ee"
+      }
+    },
+    "equal": true
+  },
+  {
+    "fixture": "tests/ExcelRenderer.Tests/SampleInputs/05-borders.xlsx",
+    "comparison": {
+      "textSha256": "5266e916d9eb9ada23f7785d752e93c734e8f7c85926fe0a7003462857512f25",
+      "geometry": [
+        "Pages:           2",
+        "Page size:       595.276 x 841.89 pts (A4)"
+      ],
+      "markdownArtifacts": {
+        "report.md": "cb94551e1108225a1d1f9f7543125314807fee9e25fa5a8c967d3df0821eba1b"
+      }
+    },
+    "equal": true
+  },
+  {
+    "fixture": "tests/ExcelRenderer.Tests/SampleInputs/06-layout-and-pagination.xlsx",
+    "comparison": {
+      "textSha256": "2c4cd200b19c9dffc15e039acffb0ff7f3fd18dbac3ba82958a446947e79c9e6",
+      "geometry": [
+        "Pages:           4",
+        "Page size:       595.28 x 419.53 pts"
+      ],
+      "markdownArtifacts": {
+        "report.md": "b62e1b8987bf9b2ad3c5bdaef3eec02b7b83da42775516b92880e18c4a60b1ba"
+      }
+    },
+    "equal": true
+  },
+  {
+    "fixture": "tests/ExcelRenderer.Tests/SampleInputs/07-multiple-sheets.xlsx",
+    "comparison": {
+      "textSha256": "58368886ba53bbef998c50226f345f49931dcddbbb4acf659c7e2437ee9a256c",
+      "geometry": [
+        "Pages:           2",
+        "Page size:       612 x 792 pts (letter)"
+      ],
+      "markdownArtifacts": {
+        "report.md": "300f04529ccd620910c0109139e352d361e7e16c64688e86d85aa4e1fcf962a7"
+      }
+    },
+    "equal": true
+  },
+  {
+    "fixture": "tests/ExcelRenderer.Tests/SampleInputs/08-print-scaling.xlsx",
+    "comparison": {
+      "textSha256": "cb190d2adfe8f5497364623da4677b8c728813752c483139e596c063202f7796",
+      "geometry": [
+        "Pages:           2",
+        "Page size:       595.276 x 841.89 pts (A4)"
+      ],
+      "markdownArtifacts": {
+        "report.md": "ac06421a2309476a6df2b19a832003b95c0e6fb88d6c44b0eac3f9b3e359fec7"
+      }
+    },
+    "equal": true
+  },
+  {
+    "fixture": "tests/ExcelRenderer.Tests/SampleInputs/09-cell-border.xlsx",
+    "comparison": {
+      "textSha256": "59b7c73aa6687ef408039c2c71d71697df39797225df6203ff78d4b971b6fc58",
+      "geometry": [
+        "Pages:           1",
+        "Page size:       595.276 x 841.89 pts (A4)"
+      ],
+      "markdownArtifacts": {
+        "report.md": "712901ecdf8c0737c87ff58bc5f4afefb5c517ea86bc9e4c9112696a15ab5e63",
+        "images/Sheet1_img_001.png": "a4bd51a351a99b252eb1c575a3b67e8e47c100ec5c1effcfa800272e01e3c4ba"
+      }
+    },
+    "equal": true
+  },
+  {
+    "fixture": "tests/ExcelRenderer.Tests/SampleInputs/ReaderRichText/representative.xlsx",
+    "comparison": {
+      "textSha256": "96eebaef397de80bf3584cc8c79e15f44e991299ed3847c1a77c941782b1c807",
+      "geometry": [
+        "Pages:           1",
+        "Page size:       612 x 792 pts (letter)"
+      ],
+      "markdownArtifacts": {
+        "report.md": "6f0f1ec9952389a1cc8112fbadb1d4993444284fb62ae9abdf97541fa01a8bc8"
+      }
+    },
+    "equal": true
+  }
+]

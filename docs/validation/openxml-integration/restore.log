@@ -1,0 +1,15 @@
+  Determining projects to restore...
+  Restored /workspace/ExcelRenderer/src/ExcelRenderer.Fonts/ExcelRenderer.Fonts.csproj (in 1 sec).
+  Restored /workspace/ExcelRenderer/samples/ExcelRenderer.Core.Sample/ExcelRenderer.Core.Sample.csproj (in 1.01 sec).
+  Restored /workspace/ExcelRenderer/src/ExcelRenderer.Core/ExcelRenderer.Core.csproj (in 1.03 sec).
+  Restored /workspace/ExcelRenderer/tests/ExcelRenderer.OpenXml.Tests/ExcelRenderer.OpenXml.Tests.csproj (in 1.02 sec).
+  Restored /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/ExcelRenderer.Tool.Tests.csproj (in 25 ms).
+  Restored /workspace/ExcelRenderer/tools/ExcelRenderer.OpenXml.Validation/ExcelRenderer.OpenXml.Validation.csproj (in 65 ms).
+  Restored /workspace/ExcelRenderer/tests/ExcelRenderer.Mapping.Tests/ExcelRenderer.Mapping.Tests.csproj (in 10 ms).
+  Restored /workspace/ExcelRenderer/tools/ExcelRenderer.Performance/ExcelRenderer.Performance.csproj (in 67 ms).
+  Restored /workspace/ExcelRenderer/src/ExcelRenderer/ExcelRenderer.csproj (in 27 ms).
+  Restored /workspace/ExcelRenderer/tests/ExcelRenderer.Core.Tests/ExcelRenderer.Core.Tests.csproj (in 31 ms).
+  Restored /workspace/ExcelRenderer/src/ExcelRenderer.OpenXml/ExcelRenderer.OpenXml.csproj (in 26 ms).
+  Restored /workspace/ExcelRenderer/src/ExcelRenderer.Mapping/ExcelRenderer.Mapping.csproj (in 33 ms).
+  Restored /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/ExcelRenderer.Tests.csproj (in 169 ms).
+  Restored /workspace/ExcelRenderer/src/ExcelRenderer.Tool/ExcelRenderer.Tool.csproj (in 73 ms).

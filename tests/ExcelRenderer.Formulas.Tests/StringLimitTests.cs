@@ -141,6 +141,24 @@ public sealed class StringLimitTests
         Assert.Throws<OperationCanceledException>(() => cancelled.Evaluate(FormulaParser.Parse("\"x\"&\"x\"").Formula!, Origin));
     }
 
+    [Fact]
+    public void RejectedConcatenationDoesNotAllocateTheCombinedString()
+    {
+        // An 8192-unit concatenation alone allocates over 16 KiB. Prepare the
+        // 4096-unit operand, AST and cell cache before measuring a warmed failure.
+        var source = new InMemoryFormulaWorkbook.Builder().AddSheet("S")
+            .SetValue(new("S", 1, 1), FormulaValue.FromText(new string('x', 4096))).Build();
+        var session = new FormulaEngine().CreateSession(source, new() { MaxStringLength = 4096 });
+        var parsed = FormulaParser.Parse("A1&A1").Formula!;
+        Assert.True(session.EvaluateCell(new("S", 1, 1)).Success);
+        Assert.False(session.Evaluate(parsed, Origin).Success);
+        long before = GC.GetAllocatedBytesForCurrentThread();
+        var result = session.Evaluate(parsed, Origin);
+        long allocated = GC.GetAllocatedBytesForCurrentThread() - before;
+        AssertLimit(result, "MaxStringLength", Origin);
+        Assert.True(allocated < 8192, $"Rejected concatenation allocated {allocated} bytes.");
+    }
+
     private static void AssertLimit(FormulaEvaluationResult result, string limit, FormulaCellAddress cell)
     {
         Assert.False(result.Success);

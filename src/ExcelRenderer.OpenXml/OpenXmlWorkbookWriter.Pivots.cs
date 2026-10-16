@@ -51,7 +51,8 @@ public static partial class OpenXmlWorkbookWriter
 
             foreach (var data in pivot.PivotTableDefinition.DataFields?.Elements<S.DataField>() ?? Enumerable.Empty<S.DataField>())
             {
-                if (data.BaseField?.Value is { } baseField && baseField >= 0)
+                var baseField = data.BaseField?.Value ?? 0;
+                if (baseField >= 0 && (data.BaseField != null || data.BaseItem != null || data.ShowDataAs?.InnerText is "difference" or "percent" or "percentDiff" or "runTotal"))
                 {
                     indexed.Add(baseField);
                 }

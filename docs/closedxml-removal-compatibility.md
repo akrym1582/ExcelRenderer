@@ -48,14 +48,14 @@ changes. Source-only movement leaves records, shared items and all pivot setting
 untouched; only worksheet source and output location addresses move. Pivot filter
 AutoFilter rectangles are internal filter coordinates and remain unchanged.
 
-For fields with pivot items, or used as a data field's base field, existing shared
+For fields with pivot items, or used as a data field's explicit/implicit base field, existing shared
 IDs are retained by type and value. Numeric `1` and text `"1"` remain distinct;
 member captions and other saved metadata do not participate in identity. New IDs
 and pivot items append after all existing entries, including subtotal entries.
 Missing members remain in these dictionaries with their original settings, so
 row/column item positions, page selections, filter/pivot-area references and base
 items keep their meaning across every table sharing the cache. Existing missing
-item retention/refresh settings remain unchanged. Unindexed measure-only
+item retention/refresh settings remain unchanged. Unindexed
 shared dictionaries may be rebuilt because no pivot item/base-item references
 observe their IDs. Changed records request refresh; saved aggregate cells are
 not recalculated.
@@ -63,7 +63,7 @@ not recalculated.
 CF/DV formulas use the original sqref base, translate relative source rows/columns,
 then follow structural row placement and the matching repeat/parent occurrence.
 Absolute rows follow structural movement but do not acquire copy offsets. String
-literals, function names and quoted sheet names survive. Equivalent applications
+literals, function names and quoted sheet names survive. Equivalent applications within a repeat context
 share one sqref; independently rebased per-cell rules retain priority, stopIfTrue
 and validation messages. Different rules in one CF block can use different range
 partitions. Color scales, data bars, icon sets, ranking, average and duplicate/unique

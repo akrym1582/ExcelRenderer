@@ -96,6 +96,43 @@ public sealed class PivotMappingReviewTests
     }
 
     [Fact]
+    public void ImplicitBaseFieldKeepsSharedIdsEvenWithoutPivotItems()
+    {
+        using var input = Fixture();
+        using (var package = SpreadsheetDocument.Open(input, true))
+        {
+            foreach (var pivot in package.WorkbookPart!.WorksheetParts.Single().PivotTableParts)
+            {
+                var root = pivot.PivotTableDefinition;
+                var field = root.PivotFields!.Elements<S.PivotField>().First();
+                field.RemoveAllChildren();
+                field.Axis = null;
+                root.RowFields!.Remove();
+                root.RowItems!.Remove();
+                var data = root.DataFields!.Elements<S.DataField>().Single();
+                data.BaseField = null;
+                data.ShowDataAs = S.ShowDataAsValues.Difference;
+            }
+        }
+        input.Position = 0;
+        var rows = Enumerable.Range(1, 6).Select(row => new OutputRowOccurrence(row, row, 0, 0,
+            row >= 5 ? new[] { new CellValueEdit(1, row == 5 ? "New" : "1") } : Array.Empty<CellValueEdit>())).ToArray();
+        using var output = new MemoryStream();
+        OpenXmlWorkbookWriter.Write(input, output, new WorkbookEditPlan([new SheetEditPlan(1, 6, rows, [], [], false)]));
+        output.Position = 0;
+        using var actual = SpreadsheetDocument.Open(output, false);
+        var shared = actual.WorkbookPart!.PivotTableCacheDefinitionParts.Single().PivotCacheDefinition.CacheFields!.First().GetFirstChild<S.SharedItems>()!;
+        Assert.Equal(new[] { "1", "Two", "New" }, shared.Elements<S.StringItem>().Select(value => value.Val!.Value));
+        Assert.All(actual.WorkbookPart.WorksheetParts.Single().PivotTableParts, pivot =>
+        {
+            var data = pivot.PivotTableDefinition.DataFields!.Elements<S.DataField>().Single();
+            Assert.Null(data.BaseField);
+            Assert.Equal(1u, data.BaseItem!.Value);
+        });
+        Assert.Empty(new OpenXmlValidator().Validate(actual).Select(error => error.Description));
+    }
+
+    [Fact]
     public void IdentityEditPreservesCleanPivotPartsByteForByte()
     {
         using var input = Fixture();

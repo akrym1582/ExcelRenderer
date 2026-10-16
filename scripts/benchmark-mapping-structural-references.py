@@ -16,11 +16,14 @@ parser.add_argument('--current', required=True, type=pathlib.Path)
 parser.add_argument('--fixtures', required=True, type=pathlib.Path)
 parser.add_argument('--output', required=True, type=pathlib.Path)
 parser.add_argument('--samples', type=int, default=3)
+parser.add_argument('--reuse-baseline', type=pathlib.Path, help='Reuse captured baseline samples with the same binaries and existing fixture/output files.')
 args = parser.parse_args()
 root = pathlib.Path(__file__).resolve().parents[1]
 ns = 'http://schemas.openxmlformats.org/spreadsheetml/2006/main'
 args.fixtures.mkdir(parents=True, exist_ok=True)
-subprocess.run(['dotnet', str(args.current), 'integration-generate', str(args.fixtures), '1'], cwd=root, check=True)
+previous = json.loads(args.reuse_baseline.read_text()) if args.reuse_baseline else None
+if previous is None:
+    subprocess.run(['dotnet', str(args.current), 'integration-generate', str(args.fixtures), '1'], cwd=root, check=True)
 plain = args.fixtures / 'plain-1-template.xlsx'
 for kind in ['expression', 'population']:
     with zipfile.ZipFile(plain) as source, zipfile.ZipFile(args.fixtures / f'{kind}.xlsx', 'w', zipfile.ZIP_DEFLATED) as target:
@@ -48,11 +51,21 @@ report['binaries'] = {label: {name: hashlib.sha256((binary.parent / name).read_b
                       for label, binary in [('baseline', args.baseline), ('current', args.current)]}
 report['baselineCommit'] = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=args.baseline.parents[5], text=True).strip()
 report['currentHead'] = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True).strip()
+if previous is not None:
+    assert previous['binaries']['baseline'] == report['binaries']['baseline']
+    assert previous['samples'] == args.samples
+    report['baselineCaptureSha256'] = hashlib.sha256(args.reuse_baseline.read_bytes()).hexdigest()
 report['currentSourceDiffSha256'] = hashlib.sha256(subprocess.check_output(['git', 'diff', 'HEAD', '--', 'src'], cwd=root)).hexdigest()
 for kind, rows in [('plain', 10000), ('plain', 100000), ('expression', 1000), ('expression', 10000), ('population', 1000), ('population', 10000)]:
     path = plain if kind == 'plain' else args.fixtures / f'{kind}.xlsx'
     case = {'kind': kind, 'rows': rows, 'inputSha256': hashlib.sha256(path.read_bytes()).hexdigest(), 'runs': {}}
     for label, binary in [('baseline', args.baseline), ('current', args.current)]:
+        if label == 'baseline' and previous is not None:
+            prior = next(item for item in previous['cases'] if (item['kind'], item['rows']) == (kind, rows))
+            assert prior['inputSha256'] == case['inputSha256']
+            case['runs'][label] = prior['runs'][label]
+            print(f'{kind} {rows} baseline: reuse identical-input capture', flush=True)
+            continue
         samples = []
         for iteration in range(args.samples + 1):
             output = args.fixtures / f'{kind}-{rows}-{label}.xlsx'

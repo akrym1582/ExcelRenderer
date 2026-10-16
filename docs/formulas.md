@@ -95,7 +95,13 @@ ranges and fixed cell/rectangle names. Huge ranges are streamed subject to limit
 - Text comparison is ordinal, ignoring case. Different types order as
   Number < Text < Boolean. Concatenation formats numbers with invariant G15.
 - ROUND ties away from zero; ROUNDUP moves away from zero, ROUNDDOWN toward zero.
-  Floating-point boundary behavior is not Excel precision emulation.
+  Only rounding uses the input double's shortest invariant round-trip decimal
+  representation (`ToString("R", InvariantCulture)`). Its integer coefficient and
+  exponent are rounded with integer quotient/remainder arithmetic, then converted
+  back to double. `num_digits` truncates toward zero. Thus `ROUNDDOWN(0.29,2)=0.29`,
+  `ROUNDUP(0.07,2)=0.07`, and `ROUND(1.005,2)=1.01`. Adjacent doubles remain distinct;
+  computed `0.30000000000000004` is not normalized to `0.3`. Nonfinite rounding
+  results produce `#NUM!`. This profile does not emulate all Excel precision corrections.
 - IF and IFERROR evaluate only the selected value branch, but every reached AST is
   statically validated. `IF(TRUE,1,UNKNOWN())` fails with UnsupportedFunction.
   IFERROR never hides an unsupported feature, cycle, limit or cancellation.
@@ -113,6 +119,44 @@ Default limits are 8,192 formula UTF-16 characters, 16,384 AST nodes, syntax dep
 128, dependency depth 256, 100,000 formula cells, 1,000,000 cell visits and 2,000,000
 evaluation steps. `FormulaEvaluationOptions` exposes explicit limits. Cancellation
 uses `OperationCanceledException`. Cycles include their dependency path.
+
+## Text resource limits
+
+```csharp
+var limits = new FormulaEvaluationOptions
+{
+    MaxStringLength = 32767,
+    MaxCachedStringCharacters = 16777216L,
+};
+var bounded = new FormulaEngine().CreateSession(source, limits);
+// WorkbookRecalculator.Recalculate(input, output, options: limits);
+// MappingOptions.FormulaEvaluationOptions and Reader options accept these limits too.
+```
+
+Both defaults are library resource limits measured in **UTF-16 code units**, not
+Unicode scalar values or a guarantee of Excel's Unicode length rules. A surrogate
+pair uses two units. Negative limits throw `ArgumentOutOfRangeException` when a
+session is created. Zero permits only empty Text for the one-value limit, or only
+empty cached Text for the cache budget. Options are copied into the
+session, so later changes do not affect it. `FormulaValue.FromText` remains a
+storage factory without session limits.
+
+`MaxStringLength` applies to evaluated literals, source cell Text, selected IF
+results and temporary concatenations. Concatenation checks the combined lengths
+using `long` **before** allocating the resulting string. Unselected IF branches
+are not evaluated; existing static function validation still applies.
+`MaxCachedStringCharacters` budgets the sum of Text lengths retained in the
+session's cell-value cache. Each distinct cell counts, including two cells sharing
+the same string instance. Repeated reads and the result dictionary do not count
+a second time. Unretained direct `Evaluate(parsed)` results do not consume this
+cumulative budget; one-value limits still apply.
+
+Exceeding either budget produces `ResourceLimitExceeded`, with the formula cell,
+source span and limit name in `Feature` and `Message`, without the full string.
+It is an engine failure that IFERROR cannot catch. Failed cells do not retain a
+partial successful result. OpenXml and Mapping calculation failures leave the
+destination unchanged before the final output copy. The budget does not bound
+caller-owned source data, OpenXml snapshots, total process memory or post-GC RSS.
 
 ## Distribution and validation
 

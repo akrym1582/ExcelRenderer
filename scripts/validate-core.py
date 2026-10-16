@@ -5,6 +5,7 @@ import hashlib
 import json
 import pathlib
 import platform
+import shutil
 import statistics
 import subprocess
 from PIL import Image, ImageChops, ImageStat
@@ -49,11 +50,23 @@ def main():
         'visual': [], 'performance': [],
     }
     baselines = ROOT / 'tests/ExcelRenderer.Core.Tests/Baselines'
+    inputs = baselines / 'Inputs'
+    provenance = json.loads((inputs / 'provenance.json').read_text())
+    sources = sorted((ROOT / 'tests/ExcelRenderer.Tests/SampleInputs').glob('*.xlsx'))
+    if {source.name for source in sources} != set(provenance['files']):
+        raise AssertionError('Visual input inventory differs from the captured parent inputs')
     if args.accept_baseline:
         baselines.mkdir(parents=True, exist_ok=True)
-    for source in sorted((ROOT / 'tests/ExcelRenderer.Tests/SampleInputs').glob('*.xlsx')):
+    for source in sources:
+        captured = inputs / source.name
+        recorded = provenance['files'][source.name]
+        if hashlib.sha256(source.read_bytes()).hexdigest() != recorded['source_sha256']:
+            raise AssertionError(f'Visual source changed: {source.name}')
+        if hashlib.sha256(captured.read_bytes()).hexdigest() != recorded['normalized_sha256']:
+            raise AssertionError(f'Captured visual input changed: {source.name}')
         normalized = OUT / source.name
-        run('dotnet', CORE, 'normalize', source, normalized)
+        # Keep the exact parent normalization input used for the existing golden rasters.
+        shutil.copyfile(captured, normalized)
         full_pdf, core_pdf = OUT / (source.stem + '-reference.pdf'), OUT / (source.stem + '-core.pdf')
         full, core = render(REFERENCE, normalized, full_pdf), render(CORE, normalized, core_pdf)
         if full[0]['Pages'] != core[0]['Pages']:

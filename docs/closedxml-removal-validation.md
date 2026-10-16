@@ -7,9 +7,9 @@ obsolete and produces an early migration error. The public style converter API
 changes to `Convert(CellStyleInfo, CellValueType)`.
 
 Baseline: `feature/openxml-integration`, commit
-`24c9dea4d67190951d152eef56f76abc943ef733`. Implementation is the uncommitted
-`feature/remove-closedxml` working tree. No remote push, release or package
-publication was performed. Source/fixture hashes are recorded in
+`24c9dea4d67190951d152eef56f76abc943ef733`. The initial validation below used the
+uncommitted `feature/remove-closedxml` working tree, before any remote push,
+release or package publication. Source/fixture hashes for that snapshot are recorded in
 [the source inventory](validation/closedxml-removal/source-inventory.json).
 Environment: Debian 13 linux-x64, .NET SDK 10.0.401, runtime 10.0.12.
 
@@ -147,3 +147,28 @@ styles and merges; formula rejection verifies zero output bytes.
 Historical `reader-phase-ab-*` files retain the earlier partial migration evidence.
 They do not describe final dependency/package acceptance. Parent logs and generator
 sources remain historical provenance and are excluded from active project graphs.
+
+## CI follow-up — 2026-10-16
+
+The first PR run stopped in the mutation checks: the EMU and marker mutations
+still targeted the DOM picture parser, while the existing anchor tests now read
+pictures through `CoreExcelReader.OpenXml.cs`. Both mutation harnesses now alter
+that active shared parser. The original numeric expectations remain unchanged.
+All 19 output mutations, four Core mutations and two shared geometry mutations
+are detected, and the harnesses restore the original source bytes.
+
+The subsequent visual check exposed a changed comparison input. The SDK
+normalizer does not reproduce incidental ClosedXML save changes, including
+literal header/footer font-control strings. Nine normalized inputs were captured
+with the unmodified parent validation tool and retained in
+[Baselines/Inputs](../tests/ExcelRenderer.Core.Tests/Baselines/Inputs/README.md),
+with original sample, generator source and captured input hashes. The visual
+harness validates both input hashes before rendering the fixed inputs. All 17
+pages match the existing golden rasters exactly (maximum baseline MAE 0); the
+maximum Core/main MAE is 0.000362245. No golden image or threshold was changed.
+
+Follow-up verification used locked solution restore, a Release Rebuild (zero
+warnings/errors), all 1,002 tests (zero failures/skips), the three mutation
+harnesses and `validate-core.py --visual-only`. The dependency audit still passes
+for all 16 restored project graphs and 36 built dependency manifests; the retained
+XLSX files introduce no active dependency on the removed library.

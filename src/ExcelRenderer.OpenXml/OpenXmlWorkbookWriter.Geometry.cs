@@ -155,6 +155,7 @@ public static partial class OpenXmlWorkbookWriter
     private sealed class SheetSource : IDisposable
     {
         private readonly SpillableBufferStream rows;
+        private readonly RowPrototypeCache prototypes = new RowPrototypeCache();
         private readonly Dictionary<int, (long Offset, int Length)> locations = new Dictionary<int, (long Offset, int Length)>();
 
         internal SheetSource(Stream input, SheetEditPlan plan, InputBufferOptions buffers, CancellationToken token)
@@ -245,7 +246,13 @@ public static partial class OpenXmlWorkbookWriter
 
         internal int LastColumn { get; }
 
-        public void Dispose() => rows.Dispose();
+        public void Dispose()
+        {
+            rows.Dispose();
+            OperationMetrics.Report("writer.rowCacheHits", prototypes.Hits);
+            OperationMetrics.Report("writer.rowCacheEntries", prototypes.Count);
+            OperationMetrics.Report("writer.rowCacheSourceBytes", prototypes.SourceBytes);
+        }
 
         internal IEnumerable<OutputRowOccurrence> OutputRows()
         {
@@ -274,6 +281,11 @@ public static partial class OpenXmlWorkbookWriter
                 return new XElement(Ns + "row");
             }
 
+            if (prototypes.Clone(row) is { } cached)
+            {
+                return cached;
+            }
+
             rows.Position = location.Offset;
             var bytes = new byte[location.Length];
             var offset = 0;
@@ -288,7 +300,7 @@ public static partial class OpenXmlWorkbookWriter
                 offset += read;
             }
 
-            return XElement.Parse(Encoding.UTF8.GetString(bytes));
+            return prototypes.Store(row, bytes.Length, XElement.Parse(Encoding.UTF8.GetString(bytes)));
         }
 
         internal int ColumnStyle(int column) => Children.Where(child => child.Name.LocalName == "cols").SelectMany(child => child.Elements()).LastOrDefault(child => (int)child.Attribute("min")! <= column && (int)child.Attribute("max")! >= column)?.Attribute("style") is { } style ? int.Parse(style.Value, CultureInfo.InvariantCulture) : 0;

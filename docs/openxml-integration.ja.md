@@ -72,7 +72,7 @@ escape、format/date、null、1行配列、入れ子、空配列、書式だけ�
 
 全 Mapping バックエンドで、選択通知・getter・IEnumerable 列挙・展開計画の前に、
 ブック全体のセル数式（本文のない共有式、配列式、data table を含む）、table の
-calculated/totals 式、計算を伴う定義名を拒否します。非表示・非対象シート、空配列で
+calculated/totals 式・集計関数、計算を伴う定義名を拒否します。非表示・非対象シート、空配列で
 削除予定の行も対象です。`MappingException.ReasonCode` は
 `MappingFormulaNotSupported`、可能な範囲で元シート・セル・定義名・table 名を示します。
 未知の workbook・worksheet・table extension は、値の数式がないと確認できないため

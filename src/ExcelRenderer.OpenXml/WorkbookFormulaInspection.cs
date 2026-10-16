@@ -103,6 +103,11 @@ internal static class WorkbookFormulaInspection
                     table = xml.GetAttribute("displayName") ?? xml.GetAttribute("name") ?? string.Empty;
                 }
 
+                if (xml.LocalName == "tableColumn" && xml.GetAttribute("totalsRowFunction") is { } function && function != "none")
+                {
+                    return new FormulaLocation(sheet, string.Empty, table, "TotalsRowFunction");
+                }
+
                 if ((xml.LocalName == "f") ||
                     xml.LocalName is "calculatedColumnFormula" or "totalsRowFormula" or "extLst" or "AlternateContent")
                 {

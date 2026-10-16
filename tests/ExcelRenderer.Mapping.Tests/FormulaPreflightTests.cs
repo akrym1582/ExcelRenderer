@@ -18,6 +18,7 @@ public sealed class FormulaPreflightTests
     [InlineData("dynamic")]
     [InlineData("table-calculated")]
     [InlineData("table-total")]
+    [InlineData("table-total-function")]
     [InlineData("name")]
     [InlineData("extension")]
     public void AllValueFormulaKindsFailBeforeBackendGetterEnumerationAndSink(string kind)
@@ -35,7 +36,15 @@ public sealed class FormulaPreflightTests
                 {
                     var part = sheet.AddNewPart<TableDefinitionPart>();
                     using var text = new MemoryStream(Encoding.UTF8.GetBytes($"<table xmlns='{Ns}' name='Amounts' displayName='Amounts'><tableColumns><tableColumn id='1' name='Amount'><{(kind == "table-total" ? "totalsRowFormula" : "calculatedColumnFormula")}>1+1</{(kind == "table-total" ? "totalsRowFormula" : "calculatedColumnFormula")}></tableColumn></tableColumns></table>"));
-                    part.FeedData(text);
+                    if (kind == "table-total-function")
+                    {
+                        using var totals = new MemoryStream(Encoding.UTF8.GetBytes($"<table xmlns='{Ns}' name='Amounts' displayName='Amounts'><tableColumns><tableColumn id='1' name='Amount' totalsRowFunction='sum'/></tableColumns></table>"));
+                        part.FeedData(totals);
+                    }
+                    else
+                    {
+                        part.FeedData(text);
+                    }
                 }
                 else if (kind == "extension") sheet.Worksheet.Append(new S.ExtensionList());
                 else

@@ -490,7 +490,7 @@ ClosedXML の行挿入・削除と範囲コピーを使います。
 参照は `#REF!` になることがあり、繰り返し領域と重なる定義名は非対応です。
 静的な印刷範囲・印刷タイトルは継続します。
 
-全 Mapping backend で、ブック内の全セル数式、table の calculated/totals 式、計算定義名を、
+全 Mapping backend で、ブック内の全セル数式、table の calculated/totals 式・集計関数、計算定義名を、
 backend 選択・データ評価・出力の前に `MappingFormulaNotSupported` で拒否します。
 外側・非表示シートの数式も含みます。これは動作互換性の変更です。金額・税・合計は
 C# / JSON の呼び出し元で計算し、値のプレースホルダーへ置き換えてください。

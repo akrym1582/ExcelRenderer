@@ -499,7 +499,7 @@ References to removed marker/empty-array rows can become `#REF!`; names overlapp
 repeat regions remain unsupported. Static print areas/titles remain supported.
 
 All Mapping backends reject cell formulas anywhere in the workbook, table
-calculated/totals formulas and calculated defined names before backend selection,
+calculated/totals formulas, non-none totals functions and calculated defined names before backend selection,
 data evaluation or output. The reason code is `MappingFormulaNotSupported`.
 Calculate amounts, tax and totals in C#/JSON and replace formulas with value
 placeholders, including formulas outside repeats and on hidden sheets. This is a

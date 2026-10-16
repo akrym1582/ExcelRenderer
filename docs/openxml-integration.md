@@ -77,7 +77,7 @@ receive default date/time formats only when the source format is General.
 
 Before backend selection, CLR getters, enumeration or expansion planning, every
 Mapping backend scans the whole workbook for cell formulas (including empty
-shared followers, arrays and data tables), table calculated/totals formulas, and
+shared followers, arrays and data tables), table calculated/totals formulas and non-none totals functions, and
 calculated defined names. Hidden/unselected sheets and rows removed by empty
 arrays are included. Failure is `MappingException` with reason code
 `MappingFormulaNotSupported` and source location when available. Unknown workbook,

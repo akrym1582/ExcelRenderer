@@ -50,7 +50,7 @@ internal static class DecimalRounding
         {
             if (mode != "ROUNDUP")
             {
-                return 0;
+                return digits < -308 ? 0 : Math.Sign(number) * 0d;
             }
 
             if (digits < -308)
@@ -73,7 +73,9 @@ internal static class DecimalRounding
 
         if (rounded.IsZero)
         {
-            return 0;
+            // Keep the existing signed-zero convention; the old extreme-place
+            // shortcut returned positive zero below -308 places.
+            return digits < -308 ? 0 : Math.Sign(number) * 0d;
         }
 
         string result = rounded.ToString(CultureInfo.InvariantCulture) + "E" + (-digits).ToString("0", CultureInfo.InvariantCulture);

@@ -1,6 +1,6 @@
 # 数式の計算
 
-[English](formulas.md) · [検証記録](formulas-validation.md) · [性能](formulas-performance.md)
+[English](formulas.md) · [検証記録](formulas-validation.md) · [性能](formulas-performance.md) · [レビュー修正の検証](formulas-review-fixes-validation.md)
 
 ExcelRenderer は明示指定で限定的な数式評価を行います。既定の `CachedValue` は変更せず、
 古い値も含めた保存結果を使います。`Recalculate` は OpenXml アダプターを通じて、BCL のみで
@@ -90,7 +90,8 @@ ROUND、ROUNDUP、ROUNDDOWN、ABS、INT、MOD、TRUE、FALSE です。符号・�
   丸めて double に戻します。num_digits は0方向へ整数化します。
   `ROUNDDOWN(0.29,2)=0.29`、`ROUNDUP(0.07,2)=0.07`、`ROUND(1.005,2)=1.01`。
   隣接 double を区別し、計算で生じた `0.30000000000000004` を `0.3` に正規化しません。
-  丸め結果が非有限なら `#NUM!`。Excel 内部の精度補正を完全再現する仕様ではありません。
+  丸め結果が非有限なら `#NUM!`。桁数が -308 未満の場合の正の0を含め、既存の0の符号を維持します。
+  Excel 内部の精度補正を完全再現する仕様ではありません。
 - IF/IFERROR は選択分岐だけ評価しますが、到達した AST 全体を事前検査します。
   `IF(TRUE,1,UNKNOWN())` は UnsupportedFunction です。エンジン失敗を IFERROR で隠しません。
 - AND/OR は後続エラーを短絡で消しません。COUNT は通常の Excel エラーを数えず、COUNTA は数えます。

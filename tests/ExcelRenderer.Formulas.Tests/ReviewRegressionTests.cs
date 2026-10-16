@@ -165,6 +165,20 @@ public sealed class ReviewRegressionTests
         Assert.Equal(expected, result.Value.Number);
     }
 
+    [Theory]
+    [InlineData("ROUND(-0.01,0)", true)]
+    [InlineData("ROUNDDOWN(-0.01,0)", true)]
+    [InlineData("ROUND(-1,-1)", true)]
+    [InlineData("ROUND(-1,-10000)", false)]
+    [InlineData("ROUND(-0,0)", true)]
+    public void RoundingPreservesExistingSignedZeroConvention(string formula, bool negative)
+    {
+        var result = Evaluate(formula);
+        Assert.True(result.Success);
+        Assert.Equal(FormulaValueKind.Number, result.Value.Kind);
+        Assert.Equal(negative ? long.MinValue : 0L, BitConverter.DoubleToInt64Bits(result.Value.Number));
+    }
+
     private static FormulaEvaluationResult Evaluate(string formula)
     {
         var parsed = FormulaParser.Parse(formula);

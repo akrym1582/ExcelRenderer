@@ -11,7 +11,26 @@ internal static class EngineBenchmark
     /// <param name="bytes">Prepared OOXML fixture.</param>
     internal static void Run(string mode, int count, byte[] bytes)
     {
-        if (mode == "engine")
+        if (mode == "rounding")
+        {
+            var workbook = new InMemoryFormulaWorkbook.Builder().AddSheet("Data").Build();
+            foreach (var (formula, expected) in new[] { ("ROUND(12.345,2)", 12.35), ("ROUNDUP(12.341,2)", 12.35), ("ROUNDDOWN(12.349,2)", 12.34) })
+            {
+                var parsed = FormulaParser.Parse(formula).Formula!;
+                Benchmark.Measure("engine-decimal-" + parsed.Root.Text.ToLowerInvariant(), count, () =>
+                {
+                    var session = new FormulaEngine().CreateSession(workbook);
+                    double sum = 0;
+                    for (var iteration = 0; iteration < count; iteration++)
+                    {
+                        sum += Number(session.Evaluate(parsed, new FormulaCellAddress("Data", 1, 1)), expected);
+                    }
+
+                    return sum;
+                });
+            }
+        }
+        else if (mode == "engine")
         {
             var constantWorkbook = new InMemoryFormulaWorkbook.Builder().AddSheet("Data").Build();
             var parsed = FormulaParser.Parse("ROUND(2*10*1.1,2)").Formula!;

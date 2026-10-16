@@ -19,17 +19,19 @@ config = work / 'NuGet.Config'
 config.write_text(f'<configuration><packageSources><clear/><add key="local" value="{packages}"/><add key="nuget" value="https://api.nuget.org/v3/index.json"/></packageSources><packageSourceMapping><packageSource key="local"><package pattern="ExcelRenderer*"/></packageSource><packageSource key="nuget"><package pattern="*"/></packageSource></packageSourceMapping></configuration>')
 ns = {'n': 'http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd'}
 inventory = {}
-for package in ['ExcelRenderer.Formulas', 'ExcelRenderer.OpenXml', 'ExcelRenderer.Mapping', 'ExcelRenderer', 'ExcelRenderer.Tool']:
-    with zipfile.ZipFile(packages / f'{package}.1.8.0.nupkg') as z:
+package_names = ['ExcelRenderer.Formulas', 'ExcelRenderer.OpenXml', 'ExcelRenderer.Mapping', 'ExcelRenderer', 'ExcelRenderer.Tool']
+versions = {name: ET.parse(root / 'src' / name / f'{name}.csproj').findtext('./PropertyGroup/Version') for name in package_names}
+for package in package_names:
+    with zipfile.ZipFile(packages / f'{package}.{versions[package]}.nupkg') as z:
         spec = ET.fromstring(z.read(next(n for n in z.namelist() if n.endswith('.nuspec'))))
         deps = {n.attrib['id']: n.attrib['version'] for n in spec.findall('.//n:dependency', ns)}
         dlls = [n for n in z.namelist() if n.endswith('.dll')]
-        inventory[package] = {'dependencies': deps, 'dlls': dlls}
+        inventory[package] = {'version': versions[package], 'dependencies': deps, 'dlls': dlls}
         assert not any(n.startswith(('ClosedXML', 'NPOI', 'Antlr')) for n in deps)
         if package == 'ExcelRenderer.Formulas':
             assert not deps, deps
         if package == 'ExcelRenderer.OpenXml':
-            assert deps['ExcelRenderer.Formulas'] == '1.8.0', deps
+            assert deps['ExcelRenderer.Formulas'] == versions['ExcelRenderer.Formulas'], deps
         if package == 'ExcelRenderer':
             assert any(n.endswith('/ExcelRenderer.Core.dll') for n in dlls)
         if package == 'ExcelRenderer.Tool':
@@ -65,6 +67,15 @@ var source = new ExcelRenderer.Formulas.InMemoryFormulaWorkbook.Builder().AddShe
 var ast = ExcelRenderer.Formulas.FormulaParser.Parse("SUM(2,3)*4").Formula!;
 var r = new ExcelRenderer.Formulas.FormulaEngine().Evaluate(ast, source, new("S",1,1));
 if (!r.Success || r.Value.Number != 20) throw new Exception("Engine package failure");
+foreach (var (formula, expected) in new[] { ("ROUNDDOWN(0.29,2)", 0.29), ("ROUNDUP(0.07,2)", 0.07), ("ROUND(1.005,2)", 1.01) }) {
+    var result = new ExcelRenderer.Formulas.FormulaEngine().Evaluate(ExcelRenderer.Formulas.FormulaParser.Parse(formula).Formula!, source, new("S",1,1));
+    if (!result.Success || result.Value.Number != expected) throw new Exception("Decimal rounding package failure");
+}
+var limited = new ExcelRenderer.Formulas.FormulaEngine().CreateSession(source, new() { MaxStringLength = 8, MaxCachedStringCharacters = 8 });
+var text = ExcelRenderer.Formulas.FormulaParser.Parse("IF(TRUE,\\\"-\\\",\\\"\\\")");
+if (!text.Success || limited.Evaluate(text.Formula!, new("S",1,1)).Value.Text != "-") throw new Exception("Literal token package failure");
+var tooLong = limited.Evaluate(ExcelRenderer.Formulas.FormulaParser.Parse("\\\"12345\\\"&\\\"6789\\\"").Formula!, new("S",1,1));
+if (tooLong.Success || tooLong.Diagnostics[0].Code != "ResourceLimitExceeded") throw new Exception("String limit package failure");
 '''),
  'adapter': (['ExcelRenderer.OpenXml'], fixture + '''
 using var output = new MemoryStream();
@@ -96,7 +107,7 @@ fixture_path=work/'invoice.xlsx'
 font=root/'third_party/NotoSansJP/NotoSansJP-Regular.ttf'
 for name,(refs,code) in programs.items():
     directory=work/name;directory.mkdir(exist_ok=True)
-    references=''.join(f'<PackageReference Include="{ref}" Version="1.8.0"/>' for ref in refs)
+    references=''.join(f'<PackageReference Include="{ref}" Version="{versions[ref]}"/>' for ref in refs)
     (directory/'consumer.csproj').write_text(f'<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable></PropertyGroup><ItemGroup>{references}</ItemGroup></Project>')
     (directory/'Program.cs').write_text(code+'\nConsole.WriteLine("'+name+' passed");\n')
     run('dotnet','restore','--configfile',config,cwd=directory)
@@ -105,7 +116,7 @@ tool=work/'tool'
 if (tool/'excelrenderer').exists():
     run('dotnet','tool','uninstall','ExcelRenderer.Tool','--tool-path',tool)
 (work/'cli.md').unlink(missing_ok=True)
-run('dotnet','tool','install','ExcelRenderer.Tool','--version','1.8.0','--tool-path',tool,'--configfile',config)
+run('dotnet','tool','install','ExcelRenderer.Tool','--version',versions['ExcelRenderer.Tool'],'--tool-path',tool,'--configfile',config)
 run(tool/'excelrenderer','md',fixture_path,'--formula-mode','recalculate','-o',work/'cli.md')
 assert '413' in (work/'cli.md').read_text()
 print('Five isolated package consumers passed')

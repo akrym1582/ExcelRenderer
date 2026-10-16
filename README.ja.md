@@ -41,6 +41,7 @@ PDF / PNG / SVG
 - PDFsharp による PDF 出力
 - SkiaSharp によるページごとの PNG 出力と画像のデコード
 - 独立したマッピングパッケージによる C# オブジェクト・JSON からの XLSX テンプレートへの値の設定
+- 明示的な数式再計算。[対応構文・19関数・制約](docs/formulas-reference.ja.md)は専用リファレンスを参照
 
 ## インストール
 
@@ -497,7 +498,9 @@ Mapping も OpenXml が既定で、Auto は同じ Writer を使います。
 欠落は `FormulaCachedValueMissing` として診断します。限定的な自作計算器を使う場合は
 `FormulaDisplayMode.Recalculate` または `--formula-mode recalculate` を明示してください。
 独立した BCL の計算コアは19関数に対応し、到達した未対応式を古い値で補いません。
-`Legacy` は引き続き非対応です。API・評価範囲・キャッシュ失効・制約・検証は
+`Legacy` は引き続き非対応です。関数ごとの引数数・例、構文、エラー、上限は
+[数式の対応範囲・サポート関数](docs/formulas-reference.ja.md)にまとめています。
+API・評価範囲・キャッシュ失効・制約・検証は
 [数式計算ガイド](docs/formulas.ja.md)を参照してください。
 
 Reader／Mapping の既定 backend は OpenXml です。既定の Mapping は数式を拒否します。
@@ -555,7 +558,7 @@ Excel (.xlsx) → ReportDocument → RenderDocument → DrawCommand → PDF / PN
 
 ## 制約
 
-- Excel 数式は保存結果だけを表示し、保存結果がなければ空表示にします。
+- 数式表示の既定値は保存結果です。明示再計算は[対応構文・19関数](docs/formulas-reference.ja.md)を扱い、Excel の計算機能すべてとの互換性は保証しません。
 - Excel のグラフには対応していません。
 - 条件付き書式は描画しません。
 - すべての用紙サイズには対応していません。
@@ -665,6 +668,8 @@ CLI をソースから試す手順は [English README の Development](README.md
 | 目的 | 資料 |
 | --- | --- |
 | Reader・Mapping の選択、数式の保存結果、CLI・stream の契約 | [エンジン選択](docs/openxml-integration.ja.md)（[English](docs/openxml-integration.md)） |
+| 数式の対応構文、サポート関数、型変換、エラー、資源上限 | [数式リファレンス](docs/formulas-reference.ja.md)（[English](docs/formulas-reference.md)） |
+| 明示再計算、型付きキャッシュ、保存 API | [数式計算ガイド](docs/formulas.ja.md)（[English](docs/formulas.md)） |
 | テンプレート構文、計算済み入力値、使用例 | [Mapping](docs/mapping.ja.md)（[English](docs/mapping.md)） |
 | PDF 専用ソース API とフォント要件 | [Core](docs/core.ja.md)（[English](docs/core.md)） |
 | 元データ、書式、低レベル Reader の上限 | [OpenXml Reader](docs/openxml-reader.ja.md)（[English](docs/openxml-reader.md)） |

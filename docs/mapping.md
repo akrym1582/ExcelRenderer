@@ -1,6 +1,6 @@
 # Excel template mapping
 
-> Explicit recalculation is available. The [formula guide](formulas.md) defines its scope, cache invalidation and supported features. Saved-value/formula-rejection behavior below describes the default CachedValue mode unless stated otherwise.
+> Explicit recalculation is available. The [formula guide](formulas.md) defines its scope, cache invalidation and supported features. The [support reference](formulas-reference.md) lists syntax and all 19 functions. Saved-value/formula-rejection behavior below describes the default CachedValue mode unless stated otherwise.
 
 English | [日本語](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/mapping.ja.md)
 

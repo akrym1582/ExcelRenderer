@@ -1,0 +1,7 @@
+  Determining projects to restore...
+  Restored /workspace/ExcelRenderer/src/ExcelRenderer.Core/ExcelRenderer.Core.csproj (in 282 ms).
+  Restored /workspace/ExcelRenderer/tools/ExcelRenderer.Formulas.Performance/ExcelRenderer.Formulas.Performance.csproj (in 277 ms).
+  Restored /workspace/ExcelRenderer/src/ExcelRenderer.OpenXml/ExcelRenderer.OpenXml.csproj (in 274 ms).
+  Restored /workspace/ExcelRenderer/src/ExcelRenderer.Mapping/ExcelRenderer.Mapping.csproj (in 270 ms).
+  Restored /workspace/ExcelRenderer/src/ExcelRenderer.Formulas/ExcelRenderer.Formulas.csproj (in 2 ms).
+  13 of 18 projects are up-to-date for restore.

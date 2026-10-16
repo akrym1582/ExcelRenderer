@@ -1,6 +1,6 @@
 # 数式の計算
 
-[English](formulas.md) · [検証記録](formulas-validation.md) · [性能](formulas-performance.md)
+[English](formulas.md) · [対応構文・サポート関数](formulas-reference.ja.md) · [検証記録](formulas-validation.md) · [性能](formulas-performance.md) · [レビュー修正の検証](formulas-review-fixes-validation.md)
 
 ExcelRenderer は明示指定で限定的な数式評価を行います。既定の `CachedValue` は変更せず、
 古い値も含めた保存結果を使います。`Recalculate` は OpenXml アダプターを通じて、BCL のみで
@@ -72,8 +72,9 @@ var result = session.EvaluateCell(new FormulaCellAddress("Invoice", 1, 3));
 共有してください。異なるブックやセッションに計算値を共有する static キャッシュはありません。
 A1 は絶対座標 A1 を表し、origin からのオフセットではありません。
 
-対応する19関数は SUM、COUNT、COUNTA、MIN、MAX、AVERAGE、IF、IFERROR、AND、OR、NOT、
-ROUND、ROUNDUP、ROUNDDOWN、ABS、INT、MOD、TRUE、FALSE です。符号・四則・べき乗・%・
+対応する19関数の引数数・例、構文、参照規則、型変換、エラー、資源上限は
+[数式リファレンス](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/formulas-reference.ja.md)
+にまとめています。符号・四則・べき乗・%・
 文字列連結・比較、A1 の相対／絶対／混合参照、矩形／全行／全列範囲、引用シート名と
 固定セル／矩形の名前を扱います。英語関数名・カンマ区切りを使い、巨大範囲は上限付きで走査します。
 
@@ -85,6 +86,13 @@ ROUND、ROUNDUP、ROUNDDOWN、ABS、INT、MOD、TRUE、FALSE です。符号・�
   Blank・空文字・省略引数を区別します。
 - 文字比較は OrdinalIgnoreCase、異型は Number < Text < Boolean。連結の数値は invariant G15。
 - ROUND の中間値は0から遠く、ROUNDUP は0から遠く、ROUNDDOWN は0へ丸めます。
+  丸めの桁処理だけで、入力 double の invariant 最短ラウンドトリップ十進表現
+  (`ToString("R", InvariantCulture)`) を整数係数と指数に分解し、整数の商・余りで
+  丸めて double に戻します。num_digits は0方向へ整数化します。
+  `ROUNDDOWN(0.29,2)=0.29`、`ROUNDUP(0.07,2)=0.07`、`ROUND(1.005,2)=1.01`。
+  隣接 double を区別し、計算で生じた `0.30000000000000004` を `0.3` に正規化しません。
+  丸め結果が非有限なら `#NUM!`。非ゼロ入力で桁数が -308 未満の場合の正の0を含め、既存の0の符号を維持します。
+  Excel 内部の精度補正を完全再現する仕様ではありません。
 - IF/IFERROR は選択分岐だけ評価しますが、到達した AST 全体を事前検査します。
   `IF(TRUE,1,UNKNOWN())` は UnsupportedFunction です。エンジン失敗を IFERROR で隠しません。
 - AND/OR は後続エラーを短絡で消しません。COUNT は通常の Excel エラーを数えず、COUNTA は数えます。
@@ -97,6 +105,40 @@ ROUND、ROUNDUP、ROUNDDOWN、ABS、INT、MOD、TRUE、FALSE です。符号・�
 既定上限は式長8192文字、AST 16384ノード、構文深さ128、依存深さ256、数式100000セル、
 セル訪問1000000回、評価2000000ステップです。`FormulaEvaluationOptions` で明示変更できます。
 取消しは `OperationCanceledException`、循環は依存経路付きの診断です。
+
+## 文字列の資源制限
+
+```csharp
+var limits = new FormulaEvaluationOptions
+{
+    MaxStringLength = 32767,
+    MaxCachedStringCharacters = 16777216L,
+};
+var bounded = new FormulaEngine().CreateSession(source, limits);
+// WorkbookRecalculator.Recalculate(input, output, options: limits);
+// MappingOptions.FormulaEvaluationOptions と Reader の設定にも指定できます。
+```
+
+既定値は本ライブラリの資源制限で、単位は **UTF-16 コード単位** です。
+Unicode の文字数や Excel のすべての Unicode 長さ規則との互換保証ではありません。
+surrogate pair は2単位です。負数はセッション生成時に `ArgumentOutOfRangeException`、
+0は一値上限では空の Text だけ、キャッシュ予算では空の保持 Text だけを許可します。
+設定は生成時にコピーし、後の Options 変更は影響しません。
+保存用の `FormulaValue.FromText` 自体にはセッション制限を持ち込みません。
+
+`MaxStringLength` は評価した文字列リテラル、入力セルの Text、IF の選択結果、
+一時的な連結結果に適用します。連結は長さの合計を long で検査し、上限内の場合だけ
+結果文字列を確保します。IF の未選択分岐は評価せず、既存の静的な関数検査は維持します。
+`MaxCachedStringCharacters` はセッションのセル値キャッシュに保持する Text の長さの合計です。
+同一セルの再読取や results 辞書への登録は二重計上せず、同じ文字列インスタンスでも
+異なるセルなら各セル分を計上します。セッションが保持しない `Evaluate(parsed)` の返却値は
+累積予算に加えませんが、一値上限は適用します。
+
+超過時は `ResourceLimitExceeded` とし、数式セル、元の Span、上限名を Feature／Message に
+含めます。全文字列値は診断に含めず、IFERROR でも捕捉できません。失敗セルに未完成の
+成功結果を残しません。OpenXml／Mapping の計算失敗は最終コピー前の出力先を変更しません。
+呼出し元の入力データ、OpenXml スナップショット、プロセス全体のメモリや GC 後の RSS を
+制限する予算ではありません。
 
 ## 配布と検証
 

@@ -8,6 +8,22 @@ namespace ExcelRenderer.Formulas;
 /// <summary>Parses the supported invariant A1 formula language.</summary>
 public static class FormulaParser
 {
+    private enum TokenKind
+    {
+        End,
+        Number,
+        Identifier,
+        StringLiteral,
+        QuotedSheetName,
+        ErrorLiteral,
+        Operator,
+        LeftParen,
+        RightParen,
+        Comma,
+        Colon,
+        Bang,
+    }
+
     /// <summary>Parses a formula, preserving its source positions.</summary>
     /// <param name="formula">Formula text, optionally beginning with equals.</param>
     /// <param name="options">Resource limits.</param>
@@ -36,6 +52,22 @@ public static class FormulaParser
         }
     }
 
+    private readonly struct Token
+    {
+        internal Token(TokenKind kind, string value, SourceSpan span)
+        {
+            Kind = kind;
+            Value = value;
+            Span = span;
+        }
+
+        internal TokenKind Kind { get; }
+
+        internal string Value { get; }
+
+        internal SourceSpan Span { get; }
+    }
+
     private sealed class ParseFailure : Exception
     {
         internal ParseFailure(FormulaDiagnostic diagnostic)
@@ -54,11 +86,9 @@ public static class FormulaParser
         private int position;
         private int nodes;
         private int depth;
-        private string token = string.Empty;
+        private Token token;
         private int start;
         private int end;
-        private bool quoted;
-        private bool literal;
 
         internal Parser(string source, FormulaEvaluationOptions options)
         {
@@ -71,7 +101,7 @@ public static class FormulaParser
         internal FormulaNode Parse()
         {
             var result = Expression(0);
-            if (token.Length != 0)
+            if (token.Kind != TokenKind.End)
             {
                 Fail("UnsupportedSyntax", "Unexpected trailing token or reference operator.");
             }
@@ -134,7 +164,7 @@ public static class FormulaParser
             var left = Primary();
             while (true)
             {
-                if (token == "%" && minimum <= 7)
+                if (token.Kind == TokenKind.Operator && token.Value == "%" && minimum <= 7)
                 {
                     var last = end;
                     Next();
@@ -142,13 +172,13 @@ public static class FormulaParser
                     continue;
                 }
 
-                int precedence = Precedence(token);
+                int precedence = token.Kind == TokenKind.Operator ? Precedence(token.Value) : -1;
                 if (precedence < minimum)
                 {
                     break;
                 }
 
-                string op = token;
+                string op = token.Value;
                 Next();
                 var right = Expression(precedence + 1);
                 left = Node(FormulaNodeKind.Binary, left.Span.Start, right.Span.Start + right.Span.Length, op, children: new[] { left, right });
@@ -160,50 +190,49 @@ public static class FormulaParser
 
         private FormulaNode Primary()
         {
-            int first = start;
-            if (token == "+" || token == "-")
+            int first = token.Span.Start;
+            if (token.Kind == TokenKind.Operator && (token.Value == "+" || token.Value == "-"))
             {
-                string op = token;
+                string op = token.Value;
                 Next();
                 var child = Expression(8);
                 return Node(FormulaNodeKind.Unary, first, child.Span.Start + child.Span.Length, op, children: new[] { child });
             }
 
-            if (token == "(")
+            if (token.Kind == TokenKind.LeftParen)
             {
                 Next();
                 var child = Expression(0);
-                Require(")");
+                Require(TokenKind.RightParen);
                 int last = end;
                 Next();
                 return Node(FormulaNodeKind.Parenthesized, first, last, children: new[] { child });
             }
 
-            string text = token;
-            bool wasQuoted = quoted;
-            bool wasLiteral = literal;
-            int tokenEnd = end;
-            if (text.Length == 0 && !wasLiteral)
+            string text = token.Value;
+            var kind = token.Kind;
+            int tokenEnd = token.Span.Start + token.Span.Length;
+            if (kind == TokenKind.End || (kind == TokenKind.QuotedSheetName && text.Length == 0))
             {
                 Fail("SyntaxError", "Expected an expression.");
             }
 
             Next();
-            if (wasLiteral)
+            if (kind == TokenKind.StringLiteral)
             {
                 return Node(FormulaNodeKind.Text, first, tokenEnd, text);
             }
 
-            if (token == "(" && !wasQuoted && IsIdentifier(text))
+            if (token.Kind == TokenKind.LeftParen && kind == TokenKind.Identifier)
             {
                 Next();
                 var args = new List<FormulaNode>();
-                if (token != ")")
+                if (token.Kind != TokenKind.RightParen)
                 {
                     while (true)
                     {
-                        args.Add(token == "," || token == ")" ? Node(FormulaNodeKind.Missing, start, start) : Expression(0));
-                        if (token != ",")
+                        args.Add(token.Kind == TokenKind.Comma || token.Kind == TokenKind.RightParen ? Node(FormulaNodeKind.Missing, start, start) : Expression(0));
+                        if (token.Kind != TokenKind.Comma)
                         {
                             break;
                         }
@@ -212,50 +241,56 @@ public static class FormulaParser
                     }
                 }
 
-                Require(")");
+                Require(TokenKind.RightParen);
                 int last = end;
                 Next();
                 return Node(FormulaNodeKind.Function, first, last, text, children: args);
             }
 
             string? sheet = null;
-            if (token == "!")
+            if (token.Kind == TokenKind.Bang && (kind == TokenKind.Identifier || kind == TokenKind.Number || kind == TokenKind.QuotedSheetName))
             {
                 sheet = text;
                 Next();
-                text = token;
+                text = token.Value;
+                kind = token.Kind;
                 tokenEnd = end;
-                if (quoted || literal || text.Length == 0)
+                if (kind != TokenKind.Identifier && kind != TokenKind.Number)
                 {
                     Fail("SyntaxError", "Expected a reference after sheet qualifier.");
                 }
 
                 Next();
             }
-            else if (wasQuoted)
+            else if (kind == TokenKind.QuotedSheetName)
             {
                 Fail("SyntaxError", "Quoted sheet name requires an exclamation mark.");
             }
 
             // An exact RnCn token is unambiguously R1C1 syntax. RC1 remains
             // a valid A1 address, and functions and sheet names were handled above.
-            if (IsR1C1Reference(text))
+            if (kind == TokenKind.Identifier && IsR1C1Reference(text))
             {
                 throw new ParseFailure(new FormulaDiagnostic("UnsupportedSyntax", "R1C1 references are unsupported.", new SourceSpan(first, tokenEnd - first), feature: "R1C1"));
             }
 
-            if (TryAddress(text, token == ":", out int row, out int column, out bool absoluteRow, out bool absoluteColumn))
+            if ((kind == TokenKind.Identifier || kind == TokenKind.Number) && TryAddress(text, token.Kind == TokenKind.Colon, out int row, out int column, out bool absoluteRow, out bool absoluteColumn))
             {
                 var left = Node(FormulaNodeKind.Cell, first, tokenEnd, text, sheet: sheet, row: row, column: column, absoluteRow: absoluteRow, absoluteColumn: absoluteColumn);
-                if (token != ":")
+                if (token.Kind != TokenKind.Colon)
                 {
                     return left;
                 }
 
                 Next();
                 int rightStart = start;
-                string rightText = token;
+                string rightText = token.Value;
                 int rightEnd = end;
+                if (token.Kind != TokenKind.Identifier && token.Kind != TokenKind.Number)
+                {
+                    Fail("UnsupportedSyntax", "Expected a range endpoint reference.");
+                }
+
                 if (!TryAddress(rightText, true, out int rightRow, out int rightColumn, out bool rightAbsoluteRow, out bool rightAbsoluteColumn) || (row == 0) != (rightRow == 0) || (column == 0) != (rightColumn == 0))
                 {
                     Fail("UnsupportedSyntax", "Range endpoints must have matching coordinate types on one sheet.");
@@ -273,7 +308,7 @@ public static class FormulaParser
 
             if (sheet != null)
             {
-                if (!IsIdentifier(text))
+                if (kind != TokenKind.Identifier || !IsIdentifier(text))
                 {
                     Fail("InvalidReference", "A sheet qualifier requires a cell, range or name.");
                 }
@@ -281,7 +316,7 @@ public static class FormulaParser
                 return Node(FormulaNodeKind.Name, first, tokenEnd, text, sheet: sheet);
             }
 
-            if (double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out double number))
+            if (kind == TokenKind.Number && double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out double number))
             {
                 if (double.IsInfinity(number) || double.IsNaN(number))
                 {
@@ -291,17 +326,17 @@ public static class FormulaParser
                 return Node(FormulaNodeKind.Number, first, tokenEnd, text, number: number);
             }
 
-            if (string.Equals(text, "TRUE", StringComparison.OrdinalIgnoreCase) || string.Equals(text, "FALSE", StringComparison.OrdinalIgnoreCase))
+            if (kind == TokenKind.Identifier && (string.Equals(text, "TRUE", StringComparison.OrdinalIgnoreCase) || string.Equals(text, "FALSE", StringComparison.OrdinalIgnoreCase)))
             {
                 return Node(FormulaNodeKind.Boolean, first, tokenEnd, text, boolean: string.Equals(text, "TRUE", StringComparison.OrdinalIgnoreCase));
             }
 
-            if (text.StartsWith("#", StringComparison.Ordinal))
+            if (kind == TokenKind.ErrorLiteral)
             {
                 return Node(FormulaNodeKind.Error, first, tokenEnd, text);
             }
 
-            if (!IsIdentifier(text))
+            if (kind != TokenKind.Identifier || !IsIdentifier(text))
             {
                 Fail("UnsupportedSyntax", "Unsupported expression syntax.");
             }
@@ -394,11 +429,11 @@ public static class FormulaParser
             }
 
             start = position;
-            quoted = false;
-            literal = false;
+            var kind = TokenKind.End;
+            string valueText;
             if (position == source.Length)
             {
-                token = string.Empty;
+                token = new Token(TokenKind.End, string.Empty, new SourceSpan(start, 0));
                 end = position;
                 return;
             }
@@ -406,8 +441,7 @@ public static class FormulaParser
             char current = source[position++];
             if (current == '"' || current == '\'')
             {
-                quoted = current == '\'';
-                literal = !quoted;
+                kind = current == '\'' ? TokenKind.QuotedSheetName : TokenKind.StringLiteral;
                 var builder = new System.Text.StringBuilder();
                 bool closed = false;
                 while (position < source.Length)
@@ -434,29 +468,31 @@ public static class FormulaParser
                     Fail("SyntaxError", "Unterminated quoted text.");
                 }
 
-                token = builder.ToString();
+                valueText = builder.ToString();
             }
             else if (current == '#')
             {
+                kind = TokenKind.ErrorLiteral;
                 string[] errors = { "#NULL!", "#DIV/0!", "#VALUE!", "#REF!", "#NAME?", "#NUM!", "#N/A" };
-                token = "#";
+                valueText = "#";
                 foreach (string error in errors)
                 {
                     if (source.Length - start >= error.Length && string.Compare(source, start, error, 0, error.Length, StringComparison.OrdinalIgnoreCase) == 0)
                     {
-                        token = error;
+                        valueText = error;
                         position = start + error.Length;
                         break;
                     }
                 }
 
-                if (token == "#")
+                if (valueText == "#")
                 {
                     Fail("UnsupportedSyntax", "Unsupported error or spill operator.");
                 }
             }
             else if (char.IsDigit(current) || (current == '.' && position < source.Length && char.IsDigit(source[position])))
             {
+                kind = TokenKind.Number;
                 while (position < source.Length && (char.IsDigit(source[position]) || source[position] == '.'))
                 {
                     position++;
@@ -476,23 +512,25 @@ public static class FormulaParser
                     }
                 }
 
-                token = source.Substring(start, position - start);
+                valueText = source.Substring(start, position - start);
             }
             else if (char.IsLetter(current) || current == '_' || current == '\\' || current == '$')
             {
+                kind = TokenKind.Identifier;
                 while (position < source.Length && (char.IsLetterOrDigit(source[position]) || source[position] == '_' || source[position] == '.' || source[position] == '$' || source[position] == '\\'))
                 {
                     position++;
                 }
 
-                token = source.Substring(start, position - start);
+                valueText = source.Substring(start, position - start);
             }
             else
             {
-                token = current.ToString();
+                kind = current == '(' ? TokenKind.LeftParen : current == ')' ? TokenKind.RightParen : current == ',' ? TokenKind.Comma : current == ':' ? TokenKind.Colon : current == '!' ? TokenKind.Bang : TokenKind.Operator;
+                valueText = current.ToString();
                 if ((current == '<' || current == '>') && position < source.Length && (source[position] == '=' || (current == '<' && source[position] == '>')))
                 {
-                    token += source[position++];
+                    valueText += source[position++];
                 }
 
                 if ("+-*/^%&=<>():,!".IndexOf(current) < 0)
@@ -502,11 +540,12 @@ public static class FormulaParser
             }
 
             end = position;
+            token = new Token(kind, valueText, new SourceSpan(start, end - start));
         }
 
-        private void Require(string expected)
+        private void Require(TokenKind expected)
         {
-            if (token != expected)
+            if (token.Kind != expected)
             {
                 Fail("SyntaxError", "Expected " + expected + ".");
             }
@@ -514,7 +553,7 @@ public static class FormulaParser
 
         private void Fail(string code, string message)
         {
-            throw new ParseFailure(new FormulaDiagnostic(code, message, new SourceSpan(start, Math.Max(1, position - start)), feature: token));
+            throw new ParseFailure(new FormulaDiagnostic(code, message, new SourceSpan(start, Math.Max(1, position - start)), feature: token.Value));
         }
     }
 }

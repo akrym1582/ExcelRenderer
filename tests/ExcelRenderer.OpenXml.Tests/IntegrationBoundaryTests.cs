@@ -10,6 +10,7 @@ public sealed class IntegrationBoundaryTests
     [InlineData("1E10+2.5E-3+A1", "1E10+2.5E-3+B3")]
     [InlineData("SUM(A:C,$D:$E,1:3,$4:$5)", "SUM(B:D,$D:$E,3:5,$4:$5)")]
     [InlineData("SUM(A1:B2)+Sheet1!A1", "SUM(B3:C4)+Sheet1!B3")]
+    [InlineData("IF('O''Brien'!A1=0,\"-\",\"(\"&A1&\")\")", "IF('O''Brien'!B3=0,\"-\",\"(\"&B3&\")\")")]
     public void SharedFormulaReferencesAreTranslatedWithoutChangingLiteralsOrNames(string master, string expected)
     {
         using var input = Fixture.Create($"<sheetData><row r=\"1\"><c r=\"A1\"><f t=\"shared\" si=\"0\" ref=\"A1:B3\">{System.Security.SecurityElement.Escape(master)}</f><v>1</v></c></row><row r=\"3\"><c r=\"B3\"><f t=\"shared\" si=\"0\"/><v>2</v></c></row></sheetData>");

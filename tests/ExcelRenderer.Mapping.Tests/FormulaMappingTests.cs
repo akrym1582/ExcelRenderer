@@ -117,6 +117,29 @@ public sealed class FormulaMappingTests
         Assert.Equal(new byte[] { 1, 2, 3 }, output.ToArray());
     }
 
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    public void String_limit_failure_during_mapping_preserves_destination(bool defaults, bool cacheBudget)
+    {
+        using var input = Invoice();
+        using (var document = SpreadsheetDocument.Open(input, true))
+            document.WorkbookPart!.WorksheetParts.First().Worksheet.Descendants<S.Cell>().Single(c => c.CellReference == "C2").CellFormula!.Text = "A2&A2";
+        input.Position = 0;
+        using var output = new MemoryStream();
+        output.Write(new byte[] { 1, 2, 3 });
+        var options = new MappingOptions
+        {
+            FormulaCalculationMode = FormulaCalculationMode.Recalculate,
+            FormulaEvaluationOptions = defaults ? new() : new() { MaxStringLength = cacheBudget ? 100 : 8, MaxCachedStringCharacters = cacheBudget ? 8 : 100 },
+        };
+        string text = new('x', defaults ? 16384 : 5);
+        var exception = Assert.Throws<FormulaCalculationException>(() => ExcelTemplateMapper.Map(input, output, new { items = new[] { new { quantity = text, price = 10 } } }, options));
+        Assert.Equal("ResourceLimitExceeded", Assert.Single(exception.Diagnostics).Code);
+        Assert.Equal(new byte[] { 1, 2, 3 }, output.ToArray());
+    }
+
     private static MemoryStream Invoice()
     {
         var input = SdkWorkbook.Create(new S.Worksheet(new S.SheetData(

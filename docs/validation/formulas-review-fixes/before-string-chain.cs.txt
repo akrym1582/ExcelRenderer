@@ -1,0 +1,17 @@
+using ExcelRenderer.Formulas;
+var builder = new InMemoryFormulaWorkbook.Builder().AddSheet("S").SetValue(new("S",1,1),FormulaValue.FromText("x"));
+for(int row=2;row<=5;row++) builder.SetFormula(new("S",row,1),$"A{row-1}&A{row-1}");
+var source = builder.Build();
+var options = new FormulaEvaluationOptions();
+var singleLimit = typeof(FormulaEvaluationOptions).GetProperty("MaxStringLength");
+var cacheLimit = typeof(FormulaEvaluationOptions).GetProperty("MaxCachedStringCharacters");
+singleLimit?.SetValue(options, 8);
+cacheLimit?.SetValue(options, 16L);
+new FormulaEngine().EvaluateCell(new("S",5,1),source,options); // warmup
+long before = GC.GetAllocatedBytesForCurrentThread();
+var result = new FormulaEngine().EvaluateCell(new("S",5,1),source,options);
+long allocated = GC.GetAllocatedBytesForCurrentThread() - before;
+Console.WriteLine($"{args[0]}: only 5 cells, requested MaxStringLength=8 and MaxCachedStringCharacters=16.");
+Console.WriteLine($"Limits API present: {singleLimit != null && cacheLimit != null}; Success={result.Success}; Text UTF-16 length={result.Value.Text.Length}; AllocatedBytes={allocated}.");
+foreach (var d in result.Diagnostics) Console.WriteLine($"{d.Code}; {d.Feature}; {d.Cell}; span {d.Span.Start}:{d.Span.Length}");
+if (singleLimit != null && (result.Success || result.Diagnostics[0].Code != "ResourceLimitExceeded")) throw new Exception("Expected the bounded failure");

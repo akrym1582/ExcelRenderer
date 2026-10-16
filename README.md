@@ -37,6 +37,7 @@ This makes the rendering pipeline easier to test, understand, and extend with ne
 - Produces one self-contained SVG per page with outlined text and embedded images
 - Exports AI-friendly Markdown with merged-cell HTML, layout-aware reading order, formulas, and external images
 - Populates XLSX templates from C# objects or JSON with the standalone mapping package
+- Recalculates a limited formula language on request; see [supported syntax and 19 functions](docs/formulas-reference.md)
 
 ## Installation
 
@@ -504,7 +505,9 @@ missing caches produce `FormulaCachedValueMissing`. Opt in to the limited built-
 calculator with `FormulaDisplayMode.Recalculate` or `--formula-mode recalculate`.
 The independent BCL-only engine supports 19 functions and strict diagnostics;
 unsupported reached formulas never fall back to saved results. `Legacy` remains
-unsupported. See [formula calculation](docs/formulas.md) for API examples, selected
+unsupported. The [formula support reference](docs/formulas-reference.md) lists every
+function with argument counts and examples, supported syntax, errors and limits.
+See [formula calculation](docs/formulas.md) for API examples, selected
 source scope, cache invalidation, compatibility limits and validation.
 
 Reader and Mapping backends default to OpenXml. Default Mapping still rejects value
@@ -572,7 +575,9 @@ See [Architecture](docs/architecture.md) for the layout passes, drawing commands
 ## Current limitations
 
 - Charts are not supported.
-- Formulas use saved results only; missing results display empty text. Conditional formatting is not rendered.
+- Formula display uses saved results by default; explicit recalculation supports the
+  [documented syntax and 19 functions](docs/formulas-reference.md). Full Excel calculation compatibility is not guaranteed.
+- Conditional formatting is not rendered.
 - Not every paper size or header/footer formatting code is supported.
 - Page breaks occur only at row and column boundaries.
 - Japanese top-to-bottom mode stacks Unicode text elements; it does not yet select full
@@ -688,6 +693,8 @@ if it is already configured. Keep NuGet.org enabled for dependencies such as Doc
 | Topic | Guide |
 | --- | --- |
 | Reader/Mapping backends, formula results, CLI and stream contracts | [Engine selection](docs/openxml-integration.md) ([日本語](docs/openxml-integration.ja.md)) |
+| Formula syntax, supported functions, coercion, errors and limits | [Formula support reference](docs/formulas-reference.md) ([日本語](docs/formulas-reference.ja.md)) |
+| Explicit recalculation, typed caches and saving APIs | [Formula calculation](docs/formulas.md) ([日本語](docs/formulas.ja.md)) |
 | Template syntax, calculated input values and examples | [Mapping](docs/mapping.md) ([日本語](docs/mapping.ja.md)) |
 | PDF-only source API and font requirements | [Core](docs/core.md) ([日本語](docs/core.ja.md)) |
 | Source records, formatting and low-level reader limits | [OpenXml reader](docs/openxml-reader.md) ([日本語](docs/openxml-reader.ja.md)) |

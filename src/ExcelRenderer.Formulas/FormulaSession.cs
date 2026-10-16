@@ -19,6 +19,7 @@ namespace ExcelRenderer.Formulas
         private int visits;
         private int steps;
         private int formulas;
+        private long cachedStringCharacters;
 
         /// <summary>Initializes a new instance of the <see cref="FormulaSession"/> class.</summary>
         /// <param name="source">The source.</param>
@@ -27,6 +28,16 @@ namespace ExcelRenderer.Formulas
         internal FormulaSession(IFormulaDataSource source, FormulaEvaluationOptions options, CancellationToken cancellation)
         {
             this.source = source ?? throw new ArgumentNullException(nameof(source));
+            if (options.MaxStringLength < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(options.MaxStringLength));
+            }
+
+            if (options.MaxCachedStringCharacters < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(options.MaxCachedStringCharacters));
+            }
+
             this.options = new FormulaEvaluationOptions
             {
                 MaxFormulaLength = options.MaxFormulaLength,
@@ -36,6 +47,8 @@ namespace ExcelRenderer.Formulas
                 MaxFormulaCells = options.MaxFormulaCells,
                 MaxCellVisits = options.MaxCellVisits,
                 MaxEvaluationSteps = options.MaxEvaluationSteps,
+                MaxStringLength = options.MaxStringLength,
+                MaxCachedStringCharacters = options.MaxCachedStringCharacters,
             };
             this.cancellation = cancellation;
             EvaluatedCells = new ReadOnlyDictionary<FormulaCellAddress, FormulaEvaluationResult>(results);
@@ -141,35 +154,28 @@ namespace ExcelRenderer.Formulas
 
         private static FormulaValue Zero(FormulaValueKind kind) => kind == FormulaValueKind.Text ? FormulaValue.FromText(string.Empty) : kind == FormulaValueKind.Boolean ? FormulaValue.FromBoolean(false) : Number(0);
 
-        private static FormulaValue Round(double number, double digits, string mode)
+        private void CheckStringLength(long length, FormulaCellAddress origin, SourceSpan span)
         {
-            if (number == 0 || digits > 323)
+            if (length > options.MaxStringLength)
             {
-                return Number(number);
+                Fail("ResourceLimitExceeded", "MaxStringLength limit exceeded.", origin, span, nameof(options.MaxStringLength));
+            }
+        }
+
+        private void Cache(FormulaCellAddress address, FormulaValue value, FormulaCellAddress origin, SourceSpan span)
+        {
+            if (value.Kind == FormulaValueKind.Text)
+            {
+                CheckStringLength(value.Text.Length, origin, span);
+                if (value.Text.Length > options.MaxCachedStringCharacters - cachedStringCharacters)
+                {
+                    Fail("ResourceLimitExceeded", "MaxCachedStringCharacters limit exceeded.", origin, span, nameof(options.MaxCachedStringCharacters));
+                }
+
+                cachedStringCharacters += value.Text.Length;
             }
 
-            if (digits < -308)
-            {
-                return mode == "ROUNDUP" ? FormulaValue.FromError("#NUM!") : Number(0);
-            }
-
-            // Split powers beyond 308 to round subnormal numbers without an infinite scale.
-            var scale = Math.Pow(10, Math.Min(308, Math.Abs(digits)));
-            var extraScale = digits > 308 ? Math.Pow(10, digits - 308) : 1;
-            var scaled = digits >= 0 ? (number * extraScale) * scale : number / scale;
-            if (double.IsInfinity(scaled))
-            {
-                return Number(number);
-            }
-
-            // Division can underflow even though rounding away from zero has a finite result.
-            if (scaled == 0 && mode == "ROUNDUP")
-            {
-                return Number(Math.Sign(number) * scale);
-            }
-
-            var rounded = mode == "ROUNDUP" ? Math.Sign(scaled) * Math.Ceiling(Math.Abs(scaled)) : mode == "ROUNDDOWN" ? Math.Truncate(scaled) : Math.Round(scaled, MidpointRounding.AwayFromZero);
-            return Number(digits >= 0 ? (rounded / scale) / extraScale : rounded * scale);
+            values.Add(address, value);
         }
 
         private void Tick(FormulaCellAddress origin, SourceSpan span = default)
@@ -183,7 +189,7 @@ namespace ExcelRenderer.Formulas
 
         private void Fail(string code, string message, FormulaCellAddress origin, SourceSpan span = default, string? feature = null) => throw new Failure(new FormulaDiagnostic(code, message, span, origin, feature, path.ToArray()));
 
-        private FormulaValue Read(FormulaCellAddress address)
+        private FormulaValue Read(FormulaCellAddress address, FormulaCellAddress? origin = null, SourceSpan span = default)
         {
             Tick(address);
             if (++visits > options.MaxCellVisits)
@@ -224,7 +230,7 @@ namespace ExcelRenderer.Formulas
 
             if (cell.Formula == null)
             {
-                values[address] = cell.Value;
+                Cache(address, cell.Value, origin ?? address, span);
                 return cell.Value;
             }
 
@@ -251,7 +257,7 @@ namespace ExcelRenderer.Formulas
                     value = Number(0);
                 }
 
-                values[address] = value;
+                Cache(address, value, address, parsed.Formula.Root.Span);
                 results[address] = new FormulaEvaluationResult(value.Kind == FormulaValueKind.Blank ? FormulaValue.FromNumber(0) : value);
                 return value;
             }
@@ -330,7 +336,9 @@ namespace ExcelRenderer.Formulas
             switch (node.Kind)
             {
                 case FormulaNodeKind.Number: return new Item(Number(node.Number));
-                case FormulaNodeKind.Text: return new Item(FormulaValue.FromText(node.Text));
+                case FormulaNodeKind.Text:
+                    CheckStringLength(node.Text.Length, origin, node.Span);
+                    return new Item(FormulaValue.FromText(node.Text));
                 case FormulaNodeKind.Boolean: return new Item(FormulaValue.FromBoolean(node.Boolean));
                 case FormulaNodeKind.Error: return new Item(FormulaValue.FromError(node.Text));
                 case FormulaNodeKind.Missing: return new Item(Number(0));
@@ -355,7 +363,7 @@ namespace ExcelRenderer.Formulas
                         return default;
                     }
 
-                    return new Item(named);
+                    return new Item(named, node.Span);
                 case FormulaNodeKind.Unary:
                 case FormulaNodeKind.Percent:
                     var unary = Numeric(Scalar(Eval(node.Children[0], origin), origin));
@@ -396,7 +404,7 @@ namespace ExcelRenderer.Formulas
                 }
             }
 
-            return new Item(new FormulaRange(id, first.Row == 0 ? 1 : first.Row, first.Column == 0 ? 1 : first.Column, last.Row == 0 ? 1048576 : last.Row, last.Column == 0 ? 16384 : last.Column));
+            return new Item(new FormulaRange(id, first.Row == 0 ? 1 : first.Row, first.Column == 0 ? 1 : first.Column, last.Row == 0 ? 1048576 : last.Row, last.Column == 0 ? 16384 : last.Column), node.Span);
         }
 
         private FormulaValue Scalar(Item item, FormulaCellAddress origin)
@@ -412,7 +420,7 @@ namespace ExcelRenderer.Formulas
                 Fail("UnsupportedArrayEvaluation", "A multi-cell range cannot be returned as a scalar.", origin);
             }
 
-            return Read(new FormulaCellAddress(r.SheetId, r.FirstRow, r.FirstColumn));
+            return Read(new FormulaCellAddress(r.SheetId, r.FirstRow, r.FirstColumn), origin, item.Span);
         }
 
         private IEnumerable<FormulaValue> Enumerate(Item item, FormulaCellAddress origin)
@@ -429,7 +437,7 @@ namespace ExcelRenderer.Formulas
                 for (var col = r.FirstColumn; col <= r.LastColumn; col++)
                 {
                     cancellation.ThrowIfCancellationRequested();
-                    yield return Read(new FormulaCellAddress(r.SheetId, row, col));
+                    yield return Read(new FormulaCellAddress(r.SheetId, row, col), origin, item.Span);
                 }
             }
         }
@@ -456,7 +464,11 @@ namespace ExcelRenderer.Formulas
 
             if (node.Text == "&")
             {
-                return FormulaValue.FromText(left.ToString() + right.ToString());
+                string leftText = left.ToString();
+                string rightText = right.ToString();
+                var operatorSpan = new SourceSpan(node.Children[0].Span.Start + node.Children[0].Span.Length, node.Children[1].Span.Start - node.Children[0].Span.Start - node.Children[0].Span.Length);
+                CheckStringLength((long)leftText.Length + rightText.Length, origin, operatorSpan);
+                return FormulaValue.FromText(string.Concat(leftText, rightText));
             }
 
             if (node.Text == "=" || node.Text == "<>" || node.Text == "<" || node.Text == "<=" || node.Text == ">" || node.Text == ">=")
@@ -560,7 +572,7 @@ namespace ExcelRenderer.Formulas
                 return new Item(second.Number == 0 ? FormulaValue.FromError("#DIV/0!") : Number(value.Number - (second.Number * Math.Floor(value.Number / second.Number))));
             }
 
-            return new Item(Round(value.Number, Math.Truncate(second.Number), name));
+            return new Item(Number(DecimalRounding.Round(value.Number, second.Number, name)));
         }
 
         private FormulaValue Aggregate(string name, IReadOnlyList<FormulaNode> args, FormulaCellAddress origin)
@@ -676,16 +688,19 @@ namespace ExcelRenderer.Formulas
                 Value = value;
                 Range = default;
                 IsReference = false;
+                Span = default;
             }
 
             /// <summary>Initializes a new instance of the <see cref="Item"/> struct.</summary>
             /// <param name="range">The range.</param>
+            /// <param name="span">The reference source span.</param>
             /// <returns>The resulting value.</returns>
-            public Item(FormulaRange range)
+            public Item(FormulaRange range, SourceSpan span)
             {
                 Range = range;
                 Value = default;
                 IsReference = true;
+                Span = span;
             }
 
             /// <summary>Gets value.</summary>
@@ -696,6 +711,9 @@ namespace ExcelRenderer.Formulas
 
             /// <summary>Gets a value indicating whether this is a reference.</summary>
             public bool IsReference { get; }
+
+            /// <summary>Gets the reference source span.</summary>
+            public SourceSpan Span { get; }
         }
 
         private sealed class Failure : Exception

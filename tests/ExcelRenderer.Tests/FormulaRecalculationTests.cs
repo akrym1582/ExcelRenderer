@@ -181,6 +181,28 @@ public sealed class FormulaRecalculationTests
         Assert.DoesNotContain("999", measurer.Texts);
     }
 
+    [Theory]
+    [InlineData("ROUNDDOWN(0.29,2)", "0.29")]
+    [InlineData("ROUNDUP(0.07,2)", "0.07")]
+    [InlineData("ROUND(1.005,2)", "1.01")]
+    [InlineData("IF(TRUE,\"-\",\"\")", "-")]
+    public async Task CorrectedValuesReachMarkdownRendering(string formula, string expected)
+    {
+        using var input = CreateWorkbook();
+        using (var package = SpreadsheetDocument.Open(input, true))
+            package.WorkbookPart!.WorksheetParts.Single().Worksheet.Descendants<S.Cell>().First().CellFormula = new(formula);
+        input.Position = 0;
+        using var output = new MemoryStream();
+        await ExcelConverter.RenderAsync(input, new()
+        {
+            OutputFormat = OutputFormat.Markdown,
+            ReadOptions = new() { FormulaDisplayMode = FormulaDisplayMode.Recalculate },
+        }, new SingleStreamOutputSink(output));
+        string text = System.Text.Encoding.UTF8.GetString(output.ToArray());
+        Assert.Contains(expected, text);
+        Assert.DoesNotContain("999", text);
+    }
+
     private sealed class RecordingMeasurer : Abstractions.ITextMeasurer
     {
         internal List<string> Texts { get; } = [];

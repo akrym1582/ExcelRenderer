@@ -194,5 +194,59 @@ public sealed class RecalculationTests
         Assert.Empty(output.ToArray());
     }
 
+    [Theory]
+    [InlineData("ROUNDDOWN(0.29,2)", 0.29)]
+    [InlineData("ROUNDUP(0.07,2)", 0.07)]
+    [InlineData("ROUND(1.005,2)", 1.01)]
+    [InlineData("ROUND(-1.005,2)", -1.01)]
+    public void DecimalRoundingPersistsNumericCaches(string formula, double expected)
+    {
+        using var input = Fixture.Create(Fixture.Cells("<c r=\"A1\"><f>" + formula + "</f><v>99</v></c>"));
+        using var output = new MemoryStream();
+        WorkbookRecalculator.Recalculate(input, output);
+        output.Position = 0;
+        using var reader = OpenXmlWorkbookReader.Open(output);
+        var cell = Assert.Single(reader.EnumerateCells(1));
+        Assert.Equal(CellValueType.Number, cell.Value.Type);
+        Assert.True(cell.Formula!.HasCachedResult);
+        Assert.Equal(expected, cell.Value.Number);
+    }
+
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    public void StringLimitFailureLeavesDestinationUntouched(bool defaults, bool cacheBudget)
+    {
+        string text = new('x', defaults ? 16384 : 5);
+        string body = "<c r=\"A1\" t=\"inlineStr\"><is><t>" + text + "</t></is></c><c r=\"B1\"><f>A1&amp;A1</f><v>99</v></c>";
+        using var input = Fixture.Create(Fixture.Cells(body));
+        using var output = new MemoryStream();
+        output.WriteByte(91);
+        var options = defaults ? null : new FormulaEvaluationOptions { MaxStringLength = cacheBudget ? 100 : 8, MaxCachedStringCharacters = cacheBudget ? 8 : 100 };
+        var exception = Assert.Throws<FormulaCalculationException>(() => WorkbookRecalculator.Recalculate(input, output, options: options));
+        var diagnostic = Assert.Single(exception.Diagnostics);
+        Assert.Equal("ResourceLimitExceeded", diagnostic.Code);
+        Assert.Equal(cacheBudget ? "MaxCachedStringCharacters" : "MaxStringLength", diagnostic.Feature);
+        Assert.Equal(Target(2), diagnostic.Cell);
+        Assert.Equal(new byte[] { 91 }, output.ToArray());
+    }
+
+    [Fact]
+    public void SharedFormulaRecalculationPreservesQuotedSheetsAndSyntaxStrings()
+    {
+        using var input = Fixture.Create("""
+            <sheetData><row r="1"><c r="A1"><v>12</v></c><c r="B1"><f t="shared" si="0" ref="B1:B2">IF('Second'!A1=0,"-","("&amp;A1&amp;")")</f><v>99</v></c></row>
+            <row r="2"><c r="A2"><v>34</v></c><c r="B2"><f t="shared" si="0"/><v>99</v></c></row></sheetData>
+            """, secondBody: """
+            <sheetData><row r="1"><c r="A1"><v>0</v></c></row><row r="2"><c r="A2"><v>1</v></c></row></sheetData>
+            """);
+        using var output = new MemoryStream();
+        WorkbookRecalculator.Recalculate(input, output);
+        output.Position = 0;
+        using var reader = OpenXmlWorkbookReader.Open(output);
+        Assert.Equal(new[] { "-", "(34)" }, reader.EnumerateCells(1).Where(cell => cell.Formula != null).Select(cell => cell.Value.Text));
+    }
+
     private static FormulaCellAddress Target(int column) => new FormulaCellAddress("Sheet1", 1, column);
 }

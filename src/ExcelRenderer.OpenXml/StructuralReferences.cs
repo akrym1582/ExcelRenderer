@@ -20,6 +20,7 @@ internal sealed class StructuralReferences
     private readonly IReadOnlyDictionary<string, SheetEditPlan> sheets;
     private readonly Dictionary<(string Text, int Row, int Column), string> translatedRules = new Dictionary<(string Text, int Row, int Column), string>();
     private readonly Dictionary<SheetEditPlan, Dictionary<(int Context, int Row), int>> contextRows = new Dictionary<SheetEditPlan, Dictionary<(int Context, int Row), int>>();
+    private readonly Dictionary<SheetEditPlan, RowRangeIndex> rangeIndexes = new Dictionary<SheetEditPlan, RowRangeIndex>();
     private readonly Dictionary<SheetEditPlan, Dictionary<int, int>> parents = new Dictionary<SheetEditPlan, Dictionary<int, int>>();
     private readonly Dictionary<SheetEditPlan, Dictionary<int, (int First, int Last)>> firstRows = new Dictionary<SheetEditPlan, Dictionary<int, (int First, int Last)>>();
     private readonly Dictionary<(SheetEditPlan Plan, int First, int Last), (int First, int Last)?> ranges = new Dictionary<(SheetEditPlan Plan, int First, int Last), (int First, int Last)?>();
@@ -535,9 +536,14 @@ internal sealed class StructuralReferences
             return point;
         }
 
-        var rows = plan.Rows.Where(row => row.SourceRow >= first && row.SourceRow <= last).Select(row => row.OutputRow).ToArray();
-        var minimum = rows.DefaultIfEmpty(int.MaxValue).Min();
-        var maximum = rows.DefaultIfEmpty(0).Max();
+        if (!rangeIndexes.TryGetValue(plan, out var index))
+        {
+            FirstRow(plan, 1);
+            index = new RowRangeIndex(firstRows.TryGetValue(plan, out var placements) ? placements : new Dictionary<int, (int First, int Last)>());
+            rangeIndexes.Add(plan, index);
+        }
+
+        var (minimum, maximum) = index.Find(first, last);
         if (last > plan.SourceLastRow)
         {
             minimum = Math.Min(minimum, Point(plan, Math.Max(first, plan.SourceLastRow + 1))!.Value);
@@ -547,5 +553,68 @@ internal sealed class StructuralReferences
         (int First, int Last)? result = maximum < minimum ? null : (minimum, maximum);
         ranges.Add(key, result);
         return result;
+    }
+
+    private sealed class RowRangeIndex
+    {
+        private readonly int[] sourceRows;
+        private readonly int[] minimum;
+        private readonly int[] maximum;
+        private readonly int leafCount;
+
+        internal RowRangeIndex(Dictionary<int, (int First, int Last)> rows)
+        {
+            var entries = rows.OrderBy(row => row.Key).ToArray();
+            sourceRows = entries.Select(row => row.Key).ToArray();
+            leafCount = 1;
+            while (leafCount < entries.Length)
+            {
+                leafCount *= 2;
+            }
+
+            minimum = new int[leafCount * 2];
+            maximum = new int[leafCount * 2];
+            Array.Fill(minimum, int.MaxValue);
+            for (var index = 0; index < entries.Length; index++)
+            {
+                minimum[leafCount + index] = entries[index].Value.First;
+                maximum[leafCount + index] = entries[index].Value.Last;
+            }
+
+            for (var index = leafCount - 1; index > 0; index--)
+            {
+                minimum[index] = Math.Min(minimum[index * 2], minimum[(index * 2) + 1]);
+                maximum[index] = Math.Max(maximum[index * 2], maximum[(index * 2) + 1]);
+            }
+        }
+
+        internal (int Minimum, int Maximum) Find(int first, int last)
+        {
+            var left = Array.BinarySearch(sourceRows, first);
+            var right = Array.BinarySearch(sourceRows, last + 1);
+            left = (left < 0 ? ~left : left) + leafCount;
+            right = (right < 0 ? ~right : right) + leafCount;
+            var min = int.MaxValue;
+            var max = 0;
+            while (left < right)
+            {
+                if ((left & 1) != 0)
+                {
+                    min = Math.Min(min, minimum[left]);
+                    max = Math.Max(max, maximum[left++]);
+                }
+
+                if ((right & 1) != 0)
+                {
+                    min = Math.Min(min, minimum[--right]);
+                    max = Math.Max(max, maximum[right]);
+                }
+
+                left /= 2;
+                right /= 2;
+            }
+
+            return (min, max);
+        }
     }
 }

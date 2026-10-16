@@ -77,7 +77,9 @@ External/structured/3D/array/spill syntax retains the existing conservative
 restriction, including early rejection before data access for repeated templates.
 Unknown x14 worksheet extensions remain unsupported. No expression evaluator was
 added. Formula copy translations have a per-write 1,024-entry cache; occurrence
-lookups use per-write indexes and do not retain caller data after writing.
+lookups use per-write indexes. Distinct multirow reference extents use a range
+index with logarithmic queries instead of rescanning all output occurrences. These
+indexes do not retain caller data after writing.
 
 ## Public style API migration
 

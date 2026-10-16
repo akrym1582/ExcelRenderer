@@ -44,6 +44,25 @@ for kind in ['expression', 'population']:
                 content = ET.tostring(sheet, encoding='utf-8', xml_declaration=True)
             target.writestr(entry, content)
 
+# A longer template exercises many distinct relative range queries after one insertion.
+for count in [1000, 10000]:
+    with zipfile.ZipFile(plain) as source, zipfile.ZipFile(args.fixtures / f'ranges-{count}.xlsx', 'w', zipfile.ZIP_DEFLATED) as target:
+        for entry in source.infolist():
+            content = source.read(entry.filename)
+            if entry.filename == 'xl/worksheets/sheet1.xml':
+                sheet = ET.fromstring(content)
+                data = sheet.find(f'{{{ns}}}sheetData')
+                data.remove(list(data)[-1])
+                for row in range(3, count + 3):
+                    record = ET.SubElement(data, f'{{{ns}}}row', r=str(row))
+                    cell = ET.SubElement(record, f'{{{ns}}}c', r=f'A{row}')
+                    ET.SubElement(cell, f'{{{ns}}}v').text = str(row)
+                cf = ET.SubElement(sheet, f'{{{ns}}}conditionalFormatting', sqref=f'B3:B{count + 2}')
+                rule = ET.SubElement(cf, f'{{{ns}}}cfRule', type='expression', priority='1')
+                ET.SubElement(rule, f'{{{ns}}}formula').text = 'SUM(A3:A4)>0'
+                content = ET.tostring(sheet, encoding='utf-8', xml_declaration=True)
+            target.writestr(entry, content)
+
 report = {'configuration': 'Release', 'warmups': 1, 'samples': args.samples, 'environment': platform.platform(), 'cases': []}
 report['runnerSha256'] = hashlib.sha256(pathlib.Path(__file__).read_bytes()).hexdigest()
 report['binaries'] = {label: {name: hashlib.sha256((binary.parent / name).read_bytes()).hexdigest()
@@ -56,20 +75,21 @@ if previous is not None:
     assert previous['samples'] == args.samples
     report['baselineCaptureSha256'] = hashlib.sha256(args.reuse_baseline.read_bytes()).hexdigest()
 report['currentSourceDiffSha256'] = hashlib.sha256(subprocess.check_output(['git', 'diff', 'HEAD', '--', 'src'], cwd=root)).hexdigest()
-for kind, rows in [('plain', 10000), ('plain', 100000), ('expression', 1000), ('expression', 10000), ('population', 1000), ('population', 10000)]:
-    path = plain if kind == 'plain' else args.fixtures / f'{kind}.xlsx'
+for kind, rows in [('plain', 10000), ('plain', 100000), ('expression', 1000), ('expression', 10000), ('population', 1000), ('population', 10000), ('ranges', 1000), ('ranges', 10000)]:
+    path = plain if kind == 'plain' else args.fixtures / (f'ranges-{rows}.xlsx' if kind == 'ranges' else f'{kind}.xlsx')
     case = {'kind': kind, 'rows': rows, 'inputSha256': hashlib.sha256(path.read_bytes()).hexdigest(), 'runs': {}}
     for label, binary in [('baseline', args.baseline), ('current', args.current)]:
         if label == 'baseline' and previous is not None:
-            prior = next(item for item in previous['cases'] if (item['kind'], item['rows']) == (kind, rows))
-            assert prior['inputSha256'] == case['inputSha256']
-            case['runs'][label] = prior['runs'][label]
-            print(f'{kind} {rows} baseline: reuse identical-input capture', flush=True)
-            continue
+            prior = next((item for item in previous['cases'] if (item['kind'], item['rows']) == (kind, rows)), None)
+            if prior is not None:
+                assert prior['inputSha256'] == case['inputSha256']
+                case['runs'][label] = prior['runs'][label]
+                print(f'{kind} {rows} baseline: reuse identical-input capture', flush=True)
+                continue
         samples = []
         for iteration in range(args.samples + 1):
             output = args.fixtures / f'{kind}-{rows}-{label}.xlsx'
-            worker = subprocess.run(['dotnet', str(binary), 'integration-worker', str(path), 'mapping', 'openxml', str(rows), str(output)], cwd=root, check=True, text=True, capture_output=True)
+            worker = subprocess.run(['dotnet', str(binary), 'integration-worker', str(path), 'mapping', 'openxml', str(2 if kind == 'ranges' else rows), str(output)], cwd=root, check=True, text=True, capture_output=True)
             sample = json.loads(worker.stdout.strip().splitlines()[-1])
             sample['warmup'] = iteration == 0
             samples.append(sample)

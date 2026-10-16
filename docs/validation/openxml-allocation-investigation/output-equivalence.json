@@ -1,0 +1,45 @@
+{
+  "allDecompressedPartsEqual": true,
+  "parts": {
+    "xl/workbook.xml": {
+      "baseline": "de6b88e004655fbecd45903e7bd6e665be5924e190b64987256bd1a79ac57a9d",
+      "cached": "de6b88e004655fbecd45903e7bd6e665be5924e190b64987256bd1a79ac57a9d"
+    },
+    "docProps/app.xml": {
+      "baseline": "216c9ad52fbc2ff82682e1fc14a314909a3c8d2c9c340b30ff669c04c5be2b70",
+      "cached": "216c9ad52fbc2ff82682e1fc14a314909a3c8d2c9c340b30ff669c04c5be2b70"
+    },
+    "xl/sharedStrings.xml": {
+      "baseline": "eca2865a35bed9e2474ef095b2c7d5b7686c8670193d21746f76ea6af80e26b2",
+      "cached": "eca2865a35bed9e2474ef095b2c7d5b7686c8670193d21746f76ea6af80e26b2"
+    },
+    "xl/styles.xml": {
+      "baseline": "8d6b18f81bd93e2b20cd96891ed548e58dadbcdc6839b9812602ebd24f060d48",
+      "cached": "8d6b18f81bd93e2b20cd96891ed548e58dadbcdc6839b9812602ebd24f060d48"
+    },
+    "xl/worksheets/sheet1.xml": {
+      "baseline": "3e5c2a7a626a04e5ae79428a4438b8347f33f838384165d4267b238c26e9c753",
+      "cached": "3e5c2a7a626a04e5ae79428a4438b8347f33f838384165d4267b238c26e9c753"
+    },
+    "xl/theme/theme1.xml": {
+      "baseline": "7b6fe2fa569d58d754f94573c372e5cb9a4522847d5531b18b975f9afe1271c7",
+      "cached": "7b6fe2fa569d58d754f94573c372e5cb9a4522847d5531b18b975f9afe1271c7"
+    },
+    "package/services/metadata/core-properties/4f05f2e31bdc4e8ca715937ee3f3b8a9.psmdcp": {
+      "baseline": "ab2f4d1603f4b0ad4bcd96878e24001f8e09ca126ffb73aaff91dc662af2c420",
+      "cached": "ab2f4d1603f4b0ad4bcd96878e24001f8e09ca126ffb73aaff91dc662af2c420"
+    },
+    "_rels/.rels": {
+      "baseline": "2b508c515fc81cbb98c7111b23e46d3f0f739e01db7fbe3696f2c531a195f938",
+      "cached": "2b508c515fc81cbb98c7111b23e46d3f0f739e01db7fbe3696f2c531a195f938"
+    },
+    "xl/_rels/workbook.xml.rels": {
+      "baseline": "06a37e0ec982611a28edd66575f6ed89425617cd695031b33689e80fcb66c9bf",
+      "cached": "06a37e0ec982611a28edd66575f6ed89425617cd695031b33689e80fcb66c9bf"
+    },
+    "[Content_Types].xml": {
+      "baseline": "7bfded20cf207d3691ef0f9a14a1b30d6a4cdc8e86c5564a089aa84272bc9c46",
+      "cached": "7bfded20cf207d3691ef0f9a14a1b30d6a4cdc8e86c5564a089aa84272bc9c46"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "sourceCommit": "cc7043fcf1bbe8da1acf56c4798315be8dbea547",
+  "warmupsPerVariant": 1,
+  "measuredSamplesPerVariant": 5,
+  "inputMatchesOriginalBenchmark": true,
+  "allMediansRecomputed": true,
+  "allTenDecompressedPartsEqual": true,
+  "prototypeRebuildWarnings": 0,
+  "prototypeRebuildErrors": 0,
+  "prototypeTestsPassed": 865,
+  "productionCSharpUnchanged": true,
+  "allocationReductionPercent": 69.68328658208847
+}

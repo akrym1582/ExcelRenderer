@@ -1,0 +1,79 @@
+diff --git a/src/ExcelRenderer.Mapping/ExcelTemplateMapper.OpenXml.cs b/src/ExcelRenderer.Mapping/ExcelTemplateMapper.OpenXml.cs
+index cd0c8b4..f9e412e 100644
+--- a/src/ExcelRenderer.Mapping/ExcelTemplateMapper.OpenXml.cs
++++ b/src/ExcelRenderer.Mapping/ExcelTemplateMapper.OpenXml.cs
+@@ -15,0 +16 @@ public static partial class ExcelTemplateMapper
++        var allocationTemplate = System.GC.GetAllocatedBytesForCurrentThread();
+@@ -56,0 +58,2 @@ public static partial class ExcelTemplateMapper
++        OperationMetrics.Report("allocation.mapping.template", System.GC.GetAllocatedBytesForCurrentThread() - allocationTemplate);
++        var allocationEvaluate = System.GC.GetAllocatedBytesForCurrentThread();
+@@ -57,0 +61,2 @@ public static partial class ExcelTemplateMapper
++        OperationMetrics.Report("allocation.mapping.evaluate", System.GC.GetAllocatedBytesForCurrentThread() - allocationEvaluate);
++        var allocationFlatten = System.GC.GetAllocatedBytesForCurrentThread();
+@@ -113,0 +119 @@ public static partial class ExcelTemplateMapper
++        OperationMetrics.Report("allocation.mapping.flatten", System.GC.GetAllocatedBytesForCurrentThread() - allocationFlatten);
+diff --git a/src/ExcelRenderer.OpenXml/OpenXmlWorkbookWriter.Geometry.cs b/src/ExcelRenderer.OpenXml/OpenXmlWorkbookWriter.Geometry.cs
+index 78bd450..9443c71 100644
+--- a/src/ExcelRenderer.OpenXml/OpenXmlWorkbookWriter.Geometry.cs
++++ b/src/ExcelRenderer.OpenXml/OpenXmlWorkbookWriter.Geometry.cs
+@@ -276,0 +277 @@ public static partial class OpenXmlWorkbookWriter
++            var allocationBuffer = System.GC.GetAllocatedBytesForCurrentThread();
+@@ -291 +292,8 @@ public static partial class OpenXmlWorkbookWriter
+-            return XElement.Parse(Encoding.UTF8.GetString(bytes));
++            OperationMetrics.Report("allocation.writer.readRow.buffer", System.GC.GetAllocatedBytesForCurrentThread() - allocationBuffer);
++            var allocationDecode = System.GC.GetAllocatedBytesForCurrentThread();
++            var text = Encoding.UTF8.GetString(bytes);
++            OperationMetrics.Report("allocation.writer.readRow.decode", System.GC.GetAllocatedBytesForCurrentThread() - allocationDecode);
++            var allocationParse = System.GC.GetAllocatedBytesForCurrentThread();
++            var parsed = XElement.Parse(text);
++            OperationMetrics.Report("allocation.writer.readRow.parse", System.GC.GetAllocatedBytesForCurrentThread() - allocationParse);
++            return parsed;
+diff --git a/src/ExcelRenderer.OpenXml/OpenXmlWorkbookWriter.cs b/src/ExcelRenderer.OpenXml/OpenXmlWorkbookWriter.cs
+index 81dfef7..e838aca 100644
+--- a/src/ExcelRenderer.OpenXml/OpenXmlWorkbookWriter.cs
++++ b/src/ExcelRenderer.OpenXml/OpenXmlWorkbookWriter.cs
+@@ -40,0 +41 @@ public static partial class OpenXmlWorkbookWriter
++        var allocationCapability = System.GC.GetAllocatedBytesForCurrentThread();
+@@ -46,0 +48,2 @@ public static partial class OpenXmlWorkbookWriter
++        OperationMetrics.Report("allocation.writer.capability", System.GC.GetAllocatedBytesForCurrentThread() - allocationCapability);
++        var allocationSetup = System.GC.GetAllocatedBytesForCurrentThread();
+@@ -121,0 +125 @@ public static partial class OpenXmlWorkbookWriter
++            OperationMetrics.Report("allocation.writer.setup", System.GC.GetAllocatedBytesForCurrentThread() - allocationSetup);
+@@ -128,0 +133 @@ public static partial class OpenXmlWorkbookWriter
++                    var allocationSheet = System.GC.GetAllocatedBytesForCurrentThread();
+@@ -129,0 +135 @@ public static partial class OpenXmlWorkbookWriter
++                    OperationMetrics.Report("allocation.writer.sheet", System.GC.GetAllocatedBytesForCurrentThread() - allocationSheet);
+@@ -131,0 +138 @@ public static partial class OpenXmlWorkbookWriter
++                var allocationZip = System.GC.GetAllocatedBytesForCurrentThread();
+@@ -210,0 +218,2 @@ public static partial class OpenXmlWorkbookWriter
++
++                OperationMetrics.Report("allocation.writer.zip", System.GC.GetAllocatedBytesForCurrentThread() - allocationZip);
+@@ -221,0 +231 @@ public static partial class OpenXmlWorkbookWriter
++            var allocationValidation = System.GC.GetAllocatedBytesForCurrentThread();
+@@ -232,0 +243 @@ public static partial class OpenXmlWorkbookWriter
++            OperationMetrics.Report("allocation.writer.validation", System.GC.GetAllocatedBytesForCurrentThread() - allocationValidation);
+@@ -233,0 +245 @@ public static partial class OpenXmlWorkbookWriter
++            var allocationCopy = System.GC.GetAllocatedBytesForCurrentThread();
+@@ -235,0 +248 @@ public static partial class OpenXmlWorkbookWriter
++            OperationMetrics.Report("allocation.writer.copy", System.GC.GetAllocatedBytesForCurrentThread() - allocationCopy);
+@@ -374,0 +388 @@ public static partial class OpenXmlWorkbookWriter
++                        var allocationReadRow = System.GC.GetAllocatedBytesForCurrentThread();
+@@ -375,0 +390,2 @@ public static partial class OpenXmlWorkbookWriter
++                        OperationMetrics.Report("allocation.writer.readRow", System.GC.GetAllocatedBytesForCurrentThread() - allocationReadRow);
++                        var allocationEditRow = System.GC.GetAllocatedBytesForCurrentThread();
+@@ -407,0 +424,2 @@ public static partial class OpenXmlWorkbookWriter
++                        OperationMetrics.Report("allocation.writer.editRow", System.GC.GetAllocatedBytesForCurrentThread() - allocationEditRow);
++                        var allocationSerializeRow = System.GC.GetAllocatedBytesForCurrentThread();
+@@ -408,0 +427 @@ public static partial class OpenXmlWorkbookWriter
++                        OperationMetrics.Report("allocation.writer.serializeRow", System.GC.GetAllocatedBytesForCurrentThread() - allocationSerializeRow);
+diff --git a/tools/ExcelRenderer.Performance/IntegrationBenchmark.cs b/tools/ExcelRenderer.Performance/IntegrationBenchmark.cs
+index 97bf1dd..2f64bc0 100644
+--- a/tools/ExcelRenderer.Performance/IntegrationBenchmark.cs
++++ b/tools/ExcelRenderer.Performance/IntegrationBenchmark.cs
+@@ -99,0 +100,6 @@ internal static class IntegrationBenchmark
++            if (args.Length > 5)
++            {
++                using var capture = File.Create(args[5]);
++                mapped.Position = 0;
++                mapped.CopyTo(capture);
++            }

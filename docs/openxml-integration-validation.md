@@ -177,3 +177,83 @@ Reader は CachedValue 専用で、地域依存形式・不明な共有式等は
 
 consumer の stderr には sandbox の Fontconfig cache 書込不可メッセージが残る。
 consumer build は警告0・エラー0、installed Tool は終了0と Markdown artifact の生成で確認した。
+
+
+## plain 10万行の累積割当を追加調査
+
+対象は `cc7043fcf1bbe8da1acf56c4798315be8dbea547` の製品コード。
+計測用の別 worktree `/tmp/excel-allocation-investigation` にだけ区間計測と試験変更を加えた。
+製品側の C# は変更していない。元の実装でも約1657MiBを再現した。
+同一入力・Release・en-US・独立プロセス warmup1回＋測定5回で比較した。
+
+**主因は `SheetSource.ReadRow` が同じ明細行の XML を10万回再解析することだった。**
+[`ReadRow`](../src/ExcelRenderer.OpenXml/OpenXmlWorkbookWriter.Geometry.cs) は出力行ごとに
+row store から byte array を作り、UTF-8文字列化し、`XElement.Parse` している。
+今回のテンプレートは Header / 明細 / Footer の3行だが、出力時に100,002回これを繰り返す。
+同じ約160バイトの行 XML に対し、Parse 区間だけで1回平均約12,349バイトを割り当てていた。
+XML reader・解析バッファ等を毎回構築する処理が、反復行数に比例して積み上がる。
+ここでいう Parse 区間は parser 内部と生成 XElement を合わせた値で、型別の配賦ではない。
+
+計測版の区間中央値:
+
+| 区間 | 累積 managed allocation (MiB) |
+| --- | ---: |
+| `XElement.Parse` | **1177.7** |
+| row store の byte array / UTF-8文字列 | 47.3 |
+| セル参照・値・spans の編集 | 105.8 |
+| 行 XML 書出し | 44.6 |
+| 完成 ZIP の Reader 再検証 | 175.6 |
+| 共通評価計画 | 29.9 |
+| 出力行・編集値への展開 | 21.8 |
+| Writer 準備・配置 index | 45.5 |
+
+総割当は全スレッドの `GC.GetTotalAllocatedBytes(true)`、区間は同期 Mapping 呼出し中の
+`GC.GetAllocatedBytesForCurrentThread()` を使用した。表は子区間を抜き出しており、
+生データの `writer.sheet` / `writer.readRow` とその子区間を二重合算しない。
+独立した区間中央値・バックグラウンド割当・小さな準備処理のため、表の和は総量と一致しない。
+
+反証実験として、直前の元行1件だけを保持し、編集前に `new XElement(prototype)` で複製した。
+元 XML が64KiBを超える行は cache しない。全テンプレートの DOM を保持する方式にはしていない。
+
+| 100,000明細行 | 総割当 MiB | Peak RSS MiB | 参考時間 秒 |
+| --- | ---: | ---: | ---: |
+| ClosedXml 再測定 | 512.6 | 301.2 | 3.60 |
+| OpenXml 区間計測版 | 1660.0 | 270.8 | 3.94 |
+| OpenXml 直前1行 cache 試験版 | **503.3** | 270.3 | 3.67 |
+
+総割当は **69.7%減**、行復元区間は1225.0MiBから67.2MiBへ低下した。
+Parse 区間は1177.7MiBから約0.035MiBへ下がり、代わりに行の複製が約67.1MiBとなった。
+Peak RSS はほぼ同じであり、一時割当とGC負荷を大きく減らす改善である。
+時間は区間計測を含む参考値で、製品版の正式な速度比較とは区別する。
+
+生成した10万行 XLSX は **全10 ZIP part の展開後 bytes が完全一致**した。
+比較対象は前回報告のとおり B列に書式付き空セルを持つ同じ bounded plain 入力。
+複数行の明細や大きな行では単一行 cache の hit率が下がるため、一般化する場合は
+総容量上限付きの小さな cache と、巨大行・非反復行の fallback を設計する必要がある。
+再検証 Reader の175.6MiBは残る次の改善候補だが、今回そこは省略・変更していない。
+
+再現用に [実行スクリプト](../scripts/profile-mapping-allocations.py)、
+[区間計測 patch](validation/openxml-allocation-investigation/instrumentation-detailed.patch)、
+[試験 cache patch](validation/openxml-allocation-investigation/cache-prototype.patch)、
+[元経路の生データ](validation/openxml-allocation-investigation/baseline-detailed.json)、
+[試験版の生データ](validation/openxml-allocation-investigation/cached-row.json)、
+[ClosedXml 再測定](validation/openxml-allocation-investigation/closedxml.json)、
+[全 part の比較結果](validation/openxml-allocation-investigation/output-equivalence.json)を保存した。
+patch は **調査専用**であり、製品へ適用済みの修正ではない。
+
+再現する場合は対象 commit の別 worktree に区間計測 patch を適用し、Performance project を
+Release build して以下を実行する。baseline 採取後に cache patch を適用して再 build する。
+再現には元の integration fixture を生成して bounded 入力を準備しておく。
+
+```sh
+python scripts/profile-mapping-allocations.py --worker /tmp/excel-allocation-investigation/tools/ExcelRenderer.Performance/bin/Release/net10.0/ExcelRenderer.Performance.dll --input artifacts/integration-fixtures/bounded/100000/plain-100000-template.xlsx --output artifacts/allocation-baseline.json --capture artifacts/allocation-baseline.xlsx --variant baseline
+```
+
+試験版は solution Rebuild 警告0・エラー0、全865テスト成功（skip0）。
+[試験版ログ](validation/openxml-allocation-investigation/prototype-tests.log)と
+[調査の検査結果](validation/openxml-allocation-investigation/assertions.json)を保存した。
+旧経路はこの plain 条件で直配置の `ApplyRegion` を使え、元行の値・書式を一度取り出して再利用する構造である。
+
+保存した patch は空 context 行を含まない zero-context 形式で、適用時は
+`git apply --unidiff-zero <patch>` を使う。cache patch は区間計測 patch の後に適用する。
+両 patch の再構成と試験版ソースへの一致を確認した。

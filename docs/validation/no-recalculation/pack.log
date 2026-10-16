@@ -1,0 +1,5 @@
+  Successfully created package '/workspace/ExcelRenderer/artifacts/no-recalculation-packages/ExcelRenderer.OpenXml.1.8.0.nupkg'.
+  Successfully created package '/workspace/ExcelRenderer/artifacts/no-recalculation-packages/ExcelRenderer.Mapping.1.8.0.nupkg'.
+  Successfully created package '/workspace/ExcelRenderer/artifacts/no-recalculation-packages/ExcelRenderer.1.8.0.nupkg'.
+  ExcelRenderer.Tool -> /workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/publish/
+  Successfully created package '/workspace/ExcelRenderer/artifacts/no-recalculation-packages/ExcelRenderer.Tool.1.8.0.nupkg'.

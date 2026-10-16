@@ -17,23 +17,6 @@
         "resolved": "2.0.11",
         "contentHash": "Pmg3/T0M37ZS3ovwPHtfBNTCdqNpnxo+tnZMg8JDHVR0qD8KwcPUKlheEiZysb1En8IyH7yDoa9QDq97Ny/vhQ=="
       },
-      "ClosedXML": {
-        "type": "Transitive",
-        "resolved": "0.105.1",
-        "contentHash": "X1ruIP9h2FBEK7jmO0peq3s6/Zqt5ve5a9f9kn6WUjdsUWvGbQlqxuGLz822xuFLlmnSeAfWFTGeX/tZlmAt+g==",
-        "dependencies": {
-          "ClosedXML.Parser": "2.0.0",
-          "DocumentFormat.OpenXml": "[3.1.1, 4.0.0)",
-          "ExcelNumberFormat": "1.1.0",
-          "RBush.Signed": "4.0.0",
-          "SixLabors.Fonts": "[1.0.0, 3.0.0)"
-        }
-      },
-      "ClosedXML.Parser": {
-        "type": "Transitive",
-        "resolved": "2.0.0",
-        "contentHash": "ngTqjYreDYNytG1W5d3ewHsw0ukmmrgV7EKnS4/40rXoYZGt07jrBvo+N+GxT49rcageUMUiprV0jYT4nwVBHQ=="
-      },
       "DocumentFormat.OpenXml": {
         "type": "Transitive",
         "resolved": "3.3.0",
@@ -109,16 +92,6 @@
           "System.Security.Cryptography.Pkcs": "8.0.1"
         }
       },
-      "RBush.Signed": {
-        "type": "Transitive",
-        "resolved": "4.0.0",
-        "contentHash": "aP5KQxL5RnFNGW1f0euYVBfCatkLw5iEzMRJcXKq8LWWP4Cp3+qoSq1tDDL2vvJ2rM0ychmVMa2VaEKLS6uX4w=="
-      },
-      "SixLabors.Fonts": {
-        "type": "Transitive",
-        "resolved": "1.0.0",
-        "contentHash": "LFQsCZlV0xlUyXAOMUo5kkSl+8zAQXXbbdwWchtk0B4o7zotZhQsQOcJUELGHdfPfm/xDAsz6hONAuV25bJaAg=="
-      },
       "SkiaSharp": {
         "type": "Transitive",
         "resolved": "4.151.0",
@@ -161,8 +134,8 @@
       "excelrenderer": {
         "type": "Project",
         "dependencies": {
-          "ClosedXML": "[0.105.1, )",
           "DocumentFormat.OpenXml": "[3.3.0, )",
+          "ExcelRenderer.OpenXml": "[1.8.0, )",
           "PDFsharp": "[6.2.3, )",
           "SkiaSharp": "[4.151.0, )",
           "SkiaSharp.NativeAssets.Linux": "[4.151.0, )",
@@ -175,8 +148,15 @@
       "excelrenderer.mapping": {
         "type": "Project",
         "dependencies": {
-          "ClosedXML": "[0.105.1, )",
-          "DocumentFormat.OpenXml": "[3.3.0, )"
+          "DocumentFormat.OpenXml": "[3.3.0, )",
+          "ExcelRenderer.OpenXml": "[1.8.0, )"
+        }
+      },
+      "excelrenderer.openxml": {
+        "type": "Project",
+        "dependencies": {
+          "DocumentFormat.OpenXml": "[3.3.0, )",
+          "ExcelNumberFormat": "[1.1.0, )"
         }
       }
     }

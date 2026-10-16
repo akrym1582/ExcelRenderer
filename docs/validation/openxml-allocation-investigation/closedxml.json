@@ -1,0 +1,164 @@
+{
+  "variant": "closedxml",
+  "rows": 100000,
+  "backend": "closedxml",
+  "input": "/workspace/ExcelRenderer/artifacts/integration-fixtures/bounded/100000/plain-100000-template.xlsx",
+  "inputSha256": "ff6522bad6ed50c69718189a0e3a45cee7dea0a5726308a98d145fec3f3b0def",
+  "worker": "/tmp/excel-allocation-investigation/tools/ExcelRenderer.Performance/bin/Release/net10.0/ExcelRenderer.Performance.dll",
+  "workerSha256": "1b4aae9d36bb87c234cf1d4f81bb0fc086bc5526ff25d312af18785b1fb8653a",
+  "allocationCounter": "GC.GetTotalAllocatedBytes(true); phases use GC.GetAllocatedBytesForCurrentThread",
+  "warmups": 1,
+  "samples": 5,
+  "median": {
+    "AllocatedBytes": 537543120,
+    "ElapsedMs": 3597.1436,
+    "PeakRssBytes": 315830272
+  },
+  "phaseMedianBytes": {},
+  "raw": [
+    {
+      "Operation": "mapping",
+      "RequestedBackend": "closedxml",
+      "Rows": 100000,
+      "ElapsedMs": 3345.1669,
+      "AllocatedBytes": 549726056,
+      "PeakRssBytes": 316157952,
+      "Cells": 0,
+      "Checksum": 0,
+      "MappingOutputBytes": 1065321,
+      "ReaderSelection": null,
+      "MappingSelection": {
+        "RequestedBackend": 0,
+        "SelectedBackend": 0,
+        "ReasonCodes": [
+          "ExplicitClosedXml"
+        ]
+      },
+      "Metrics": {},
+      "IoMetrics": {
+        "closedXml.workbooks": 1
+      },
+      "warmup": true
+    },
+    {
+      "Operation": "mapping",
+      "RequestedBackend": "closedxml",
+      "Rows": 100000,
+      "ElapsedMs": 3363.3692,
+      "AllocatedBytes": 541371104,
+      "PeakRssBytes": 304017408,
+      "Cells": 0,
+      "Checksum": 0,
+      "MappingOutputBytes": 1065321,
+      "ReaderSelection": null,
+      "MappingSelection": {
+        "RequestedBackend": 0,
+        "SelectedBackend": 0,
+        "ReasonCodes": [
+          "ExplicitClosedXml"
+        ]
+      },
+      "Metrics": {},
+      "IoMetrics": {
+        "closedXml.workbooks": 1
+      },
+      "warmup": false
+    },
+    {
+      "Operation": "mapping",
+      "RequestedBackend": "closedxml",
+      "Rows": 100000,
+      "ElapsedMs": 3378.8314,
+      "AllocatedBytes": 541268064,
+      "PeakRssBytes": 316194816,
+      "Cells": 0,
+      "Checksum": 0,
+      "MappingOutputBytes": 1065321,
+      "ReaderSelection": null,
+      "MappingSelection": {
+        "RequestedBackend": 0,
+        "SelectedBackend": 0,
+        "ReasonCodes": [
+          "ExplicitClosedXml"
+        ]
+      },
+      "Metrics": {},
+      "IoMetrics": {
+        "closedXml.workbooks": 1
+      },
+      "warmup": false
+    },
+    {
+      "Operation": "mapping",
+      "RequestedBackend": "closedxml",
+      "Rows": 100000,
+      "ElapsedMs": 3597.1436,
+      "AllocatedBytes": 537543120,
+      "PeakRssBytes": 316817408,
+      "Cells": 0,
+      "Checksum": 0,
+      "MappingOutputBytes": 1065321,
+      "ReaderSelection": null,
+      "MappingSelection": {
+        "RequestedBackend": 0,
+        "SelectedBackend": 0,
+        "ReasonCodes": [
+          "ExplicitClosedXml"
+        ]
+      },
+      "Metrics": {},
+      "IoMetrics": {
+        "closedXml.workbooks": 1
+      },
+      "warmup": false
+    },
+    {
+      "Operation": "mapping",
+      "RequestedBackend": "closedxml",
+      "Rows": 100000,
+      "ElapsedMs": 4286.037,
+      "AllocatedBytes": 528224960,
+      "PeakRssBytes": 315830272,
+      "Cells": 0,
+      "Checksum": 0,
+      "MappingOutputBytes": 1065321,
+      "ReaderSelection": null,
+      "MappingSelection": {
+        "RequestedBackend": 0,
+        "SelectedBackend": 0,
+        "ReasonCodes": [
+          "ExplicitClosedXml"
+        ]
+      },
+      "Metrics": {},
+      "IoMetrics": {
+        "closedXml.workbooks": 1
+      },
+      "warmup": false
+    },
+    {
+      "Operation": "mapping",
+      "RequestedBackend": "closedxml",
+      "Rows": 100000,
+      "ElapsedMs": 4392.5849,
+      "AllocatedBytes": 524914760,
+      "PeakRssBytes": 313704448,
+      "Cells": 0,
+      "Checksum": 0,
+      "MappingOutputBytes": 1065321,
+      "ReaderSelection": null,
+      "MappingSelection": {
+        "RequestedBackend": 0,
+        "SelectedBackend": 0,
+        "ReasonCodes": [
+          "ExplicitClosedXml"
+        ]
+      },
+      "Metrics": {},
+      "IoMetrics": {
+        "closedXml.workbooks": 1
+      },
+      "warmup": false
+    }
+  ]
+}

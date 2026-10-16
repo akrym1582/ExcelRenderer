@@ -1,4 +1,5 @@
-using ClosedXML.Excel;
+using ExcelRenderer.TestFixtures;
+using S = DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Packaging;
 using ExcelRenderer.Core.Drawing;
 using ExcelRenderer.Core.Excel;
@@ -22,14 +23,14 @@ public sealed class PageAndImageTests
     {
         var (result, bytes) = await TestSupport.Convert(workbook =>
         {
-            workbook.Worksheet(1).PageSetup.PaperSize = XLPaperSize.A3Paper;
-            var hidden = workbook.AddWorksheet("Hidden"); hidden.Cell(1, 1).Value = "hidden"; hidden.Hide(); hidden.PageSetup.PaperSize = XLPaperSize.LetterPaper;
-            workbook.AddWorksheet("Empty").PageSetup.PaperSize = XLPaperSize.A4Paper;
+            TestSupport.Sheet(workbook).Append(new S.PageSetup { PaperSize = 8 });
+            SdkWorkbook.AddSheet(workbook, new S.Worksheet(new S.SheetData(new S.Row(SdkWorkbook.Text("A1", "hidden")) { RowIndex = 1 }), new S.PageSetup { PaperSize = 1 }), "Hidden", S.SheetStateValues.Hidden);
+            SdkWorkbook.AddSheet(workbook, new S.Worksheet(new S.SheetData(), new S.PageSetup { PaperSize = 9 }), "Empty");
         });
         Assert.Equal(3, result.PageCount); using var document = TestSupport.Open(bytes);
         TestSupport.Near(841.89, document.Pages[0].Width.Point); TestSupport.Near(612, document.Pages[1].Width.Point);
         TestSupport.Near(595.276, document.Pages[2].Width.Point);
-        var selected = await TestSupport.Convert(workbook => workbook.AddWorksheet("Empty"), TestSupport.Options with { SheetName = "Empty" }); Assert.Equal(1, selected.Result.PageCount);
+        var selected = await TestSupport.Convert(workbook => SdkWorkbook.AddSheet(workbook, new S.Worksheet(new S.SheetData()), "Empty"), TestSupport.Options with { SheetName = "Empty" }); Assert.Equal(1, selected.Result.PageCount);
     }
 
     [Fact]
@@ -37,8 +38,8 @@ public sealed class PageAndImageTests
     {
         var (result, _) = await TestSupport.Convert(workbook =>
         {
-            var sheet = workbook.Worksheet(1); sheet.Cell(20, 3).Value = "second area";
-            sheet.PageSetup.PrintAreas.Add("A1:B2"); sheet.PageSetup.PrintAreas.Add("C20:D21");
+            TestSupport.Sheet(workbook).GetFirstChild<S.SheetData>()!.Append(new S.Row(SdkWorkbook.Text("C20", "second area")) { RowIndex = 20 });
+            TestSupport.Print(workbook, "First!$A$1:$B$2,First!$C$20:$D$21");
         }); Assert.Equal(2, result.PageCount);
     }
 
@@ -47,7 +48,8 @@ public sealed class PageAndImageTests
     {
         var (result, _) = await TestSupport.Convert(workbook =>
         {
-            var sheet = workbook.Worksheet(1); sheet.Clear(); sheet.PageSetup.PrintAreas.Add("A1:B2");
+            TestSupport.Sheet(workbook).GetFirstChild<S.SheetData>()!.RemoveAllChildren();
+            TestSupport.Print(workbook, "First!$A$1:$B$2");
         }); Assert.Equal(1, result.PageCount);
     }
 
@@ -58,9 +60,10 @@ public sealed class PageAndImageTests
     {
         var (result, _) = await TestSupport.Convert(workbook =>
         {
-            var sheet = workbook.Worksheet(1); sheet.Clear();
-            sheet.PageSetup.PrintAreas.Add("A1:B2"); sheet.PageSetup.PrintAreas.Add("D4:E5");
-            if (withHeader) sheet.PageSetup.Header.Center.AddText("header");
+            var sheet = TestSupport.Sheet(workbook);
+            sheet.GetFirstChild<S.SheetData>()!.RemoveAllChildren();
+            TestSupport.Print(workbook, "First!$A$1:$B$2,First!$D$4:$E$5");
+            if (withHeader) sheet.Append(new S.HeaderFooter(new S.OddHeader("&Cheader")));
         });
         Assert.Equal(expected, result.PageCount);
     }
@@ -70,15 +73,20 @@ public sealed class PageAndImageTests
     {
         var (result, bytes) = await TestSupport.Convert(workbook =>
         {
-            var sheet = workbook.Worksheet(1); sheet.Cell(10, 1).Value = "last"; sheet.PageSetup.PrintAreas.Add("A1:B10");
-            sheet.PageSetup.AddHorizontalPageBreak(5); sheet.PageSetup.SetRowsToRepeatAtTop(1, 1);
-            sheet.PageSetup.PageOrientation = XLPageOrientation.Landscape; sheet.PageSetup.PaperSize = XLPaperSize.LetterPaper;
+            var sheet = TestSupport.Sheet(workbook);
+            sheet.GetFirstChild<S.SheetData>()!.Append(new S.Row(SdkWorkbook.Text("A10", "last")) { RowIndex = 10 });
+            TestSupport.Print(workbook, "First!$A$1:$B$10");
+            TestSupport.Print(workbook, "First!$1:$1", "_xlnm.Print_Titles");
+            sheet.Append(new S.PageSetup { PaperSize = 1, Orientation = S.OrientationValues.Landscape }, new S.RowBreaks(new S.Break { Id = 5, Min = 0, Max = 16383, ManualPageBreak = true }));
         });
         Assert.Equal(2, result.PageCount); using var document = TestSupport.Open(bytes);
         TestSupport.Near(792, document.Pages[0].Width.Point); TestSupport.Near(612, document.Pages[0].Height.Point);
         var (fit, _) = await TestSupport.Convert(workbook =>
         {
-            var sheet = workbook.Worksheet(1); sheet.Cell(300, 1).Value = "last"; sheet.PageSetup.FitToPages(1, 1);
+            var sheet = TestSupport.Sheet(workbook);
+            sheet.InsertAt(new S.SheetProperties(new S.PageSetupProperties { FitToPage = true }), 0);
+            sheet.GetFirstChild<S.SheetData>()!.Append(new S.Row(SdkWorkbook.Text("A300", "last")) { RowIndex = 300 });
+            sheet.Append(new S.PageSetup { FitToWidth = 1, FitToHeight = 1 });
         }); Assert.Equal(1, fit.PageCount);
     }
 
@@ -112,8 +120,7 @@ public sealed class PageAndImageTests
     {
         using var original = TestSupport.Workbook(workbook =>
         {
-            var sheet = workbook.Worksheet(1);
-            using var image = new MemoryStream(TestSupport.Png()); sheet.AddPicture(image, "logo").MoveTo(sheet.Cell(1, 1));
+            SdkWorkbook.Image(workbook.WorksheetParts.Single(), TestSupport.Png(), "logo");
         });
         using (var package = SpreadsheetDocument.Open(original, true))
         {
@@ -141,9 +148,12 @@ public sealed class PageAndImageTests
     {
         var (_, bytes) = await TestSupport.Convert(workbook =>
         {
-            var sheet = workbook.Worksheet(1); sheet.Cell(1, 1).Value = "external";
-            sheet.Cell(1, 1).SetHyperlink(new XLHyperlink("https://example.com"));
-            sheet.Cell(2, 1).Value = "internal"; sheet.Cell(2, 1).SetHyperlink(new XLHyperlink("First!A1"));
+            var part = workbook.WorksheetParts.Single();
+            var data = part.Worksheet.GetFirstChild<S.SheetData>()!;
+            data.Descendants<S.Text>().Single().Text = "external";
+            data.Append(new S.Row(SdkWorkbook.Text("A2", "internal")) { RowIndex = 2 });
+            var relationship = part.AddHyperlinkRelationship(new Uri("https://example.com"), true);
+            part.Worksheet.Append(new S.Hyperlinks(new S.Hyperlink { Reference = "A1", Id = relationship.Id }, new S.Hyperlink { Reference = "A2", Location = "First!A1" }));
         });
         using var document = TestSupport.Open(bytes); Assert.False(document.Pages[0].Elements.ContainsKey("/Annots"));
         Assert.Equal(2, PdfContentProbe.Read(bytes).Texts.Count);
@@ -152,7 +162,11 @@ public sealed class PageAndImageTests
     [Fact]
     public async Task MDW_uses_snapshot_and_Normal_size()
     {
-        using var input = TestSupport.Workbook(workbook => { workbook.Style.Font.FontSize = 20; workbook.Style.Font.FontName = "Missing"; workbook.Worksheet(1).Column(1).Width = 10; });
+        using var input = TestSupport.Workbook(workbook =>
+        {
+            workbook.WorkbookStylesPart!.Stylesheet.Fonts!.GetFirstChild<S.Font>()!.FontSize = new S.FontSize { Val = 20 };
+            TestSupport.Sheet(workbook).InsertAt(new S.Columns(new S.Column { Min = 1, Max = 1, Width = 10, CustomWidth = true }), 0);
+        });
         using (var package = SpreadsheetDocument.Open(input, true))
         {
             var styles = package.WorkbookPart!.WorkbookStylesPart!.Stylesheet;
@@ -199,8 +213,7 @@ public sealed class PageAndImageTests
     {
         using var input = TestSupport.Workbook(workbook =>
         {
-            using var image = new MemoryStream(TestSupport.Png());
-            workbook.Worksheet(1).AddPicture(image).MoveTo(workbook.Worksheet(1).Cell(1, 1));
+            SdkWorkbook.Image(workbook.WorksheetParts.Single(), TestSupport.Png());
         });
         using (var package = SpreadsheetDocument.Open(input, true))
         {
@@ -246,8 +259,7 @@ public sealed class PageAndImageTests
     {
         using var input = TestSupport.Workbook(workbook =>
         {
-            var sheet = workbook.Worksheet(1); sheet.Range("A1:B2").Merge();
-            sheet.Range("A1:B2").Style.Border.OutsideBorder = XLBorderStyleValues.Double;
+            TestSupport.MergeDoubleBorder(workbook);
         });
         await TestSupport.WithSheet(input, (sheet, _) =>
         {

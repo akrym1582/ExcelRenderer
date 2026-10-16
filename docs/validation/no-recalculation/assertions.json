@@ -1,0 +1,20 @@
+{
+  "sourceCommit": "7baa87db8841428637c8f544aabe6c6b4c08a113",
+  "branch": "feature/openxml-integration",
+  "testCounts": {
+    "Core": 80,
+    "Mapping": 86,
+    "OpenXml": 154,
+    "Main": 524,
+    "Tool": 73
+  },
+  "totalPassed": 917,
+  "failed": 0,
+  "skipped": 0,
+  "debugRebuildWarnings": 0,
+  "releaseRebuildWarnings": 0,
+  "packageConsumersPassed": true,
+  "packageCount": 4,
+  "allTenDecompressedOutputPartsEqual": true,
+  "sourceHashesVerified": true
+}

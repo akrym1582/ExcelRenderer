@@ -13,7 +13,7 @@
     <Title>ExcelRenderer</Title>
     <Description>Render Excel XLSX files to PDF, PNG, SVG and AI-friendly Markdown.</Description>
     <Authors>akrym1582</Authors>
-    <PackageTags>excel xlsx pdf png svg markdown closedxml pdfsharp skia</PackageTags>
+    <PackageTags>excel xlsx pdf png svg markdown openxml pdfsharp skia</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/akrym1582/ExcelRenderer</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -31,7 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ClosedXML" Version="0.105.1" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="3.3.0" />
     <PackageReference Include="PDFsharp" Version="6.2.3" />
     <PackageReference Include="System.Security.Cryptography.Pkcs" Version="8.0.2" />
@@ -44,4 +43,7 @@
       <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->'%(RootDir)%(Directory)ExcelRenderer.Core.xml')" Condition="'%(ReferenceCopyLocalPaths.Filename)' == 'ExcelRenderer.Core' And '%(ReferenceCopyLocalPaths.Extension)' == '.dll' And Exists('%(ReferenceCopyLocalPaths.RootDir)%(ReferenceCopyLocalPaths.Directory)ExcelRenderer.Core.xml')" />
     </ItemGroup>
   </Target>
+  <ItemGroup>
+    <ProjectReference Include="../ExcelRenderer.OpenXml/ExcelRenderer.OpenXml.csproj" />
+  </ItemGroup>
 </Project>

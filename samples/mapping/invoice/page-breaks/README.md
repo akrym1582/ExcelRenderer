@@ -82,8 +82,10 @@ dotnet src/ExcelRenderer.Tool/bin/Debug/net10.0/ExcelRenderer.Tool.dll svg \
 明細の分断、欠け、重なり、隣ページの混入、余分な先頭・末尾ページはありませんでした。
 全テスト成功後に、行位置が最もずれる 3 ページ目を再度画像で確認しています。
 
-Repeated cells do not support Excel formulas. Supply each `lineTotal` in the input;
-formulas and defined names outside repeated regions retain the documented reference behavior.
+Excel formulas are prohibited throughout Mapping templates, including hidden sheets.
+Compute each `lineTotal`, subtotal, tax and total in the caller; the JSON examples
+contain those finalized values. Static names retain the documented restrictions.
 
-繰り返すセルの Excel 数式は非対応です。各明細の `lineTotal` は入力側で計算して渡します。
-繰り返し外の数式・定義名にはガイド記載の参照制約が適用されます。
+全セルの Excel 数式は非対応です（繰り返し外・非表示シートも含む）。各明細の `lineTotal`、
+`totals.subtotal`・`tax`・`total` は呼び出し元で計算して渡します。JSON も計算済みの例です。
+税率と丸め方針は呼び出し元が決めます。静的定義名にはガイド記載の参照制約が適用されます。

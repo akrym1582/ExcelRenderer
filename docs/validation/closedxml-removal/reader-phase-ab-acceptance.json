@@ -1,0 +1,41 @@
+{
+  "scope": "Phase A/B only",
+  "fullClosedXmlRemovalComplete": false,
+  "tests": {
+    "Core": 80,
+    "Mapping": 86,
+    "OpenXml": 154,
+    "Full": 538,
+    "Tool": 78,
+    "total": 936,
+    "failed": 0,
+    "skipped": 0
+  },
+  "rebuildWarnings": 0,
+  "rebuildErrors": 0,
+  "localPackagesVerified": [
+    "ExcelRenderer",
+    "ExcelRenderer.OpenXml",
+    "ExcelRenderer.Tool"
+  ],
+  "mainPackageConsumerFormats": [
+    "Pdf",
+    "Png",
+    "Svg",
+    "Markdown",
+    "CorePdf"
+  ],
+  "consumerClosedXmlAssemblyLoaded": false,
+  "coreToolGeneratedWorkbookSchemaErrors": {
+    "normalized.xlsx": 0,
+    "images.xlsx": 0
+  },
+  "readerGoldenWorkbooks": 15,
+  "legacyMappingBaselineCases": 20,
+  "legacyOnlyMappingCases": 18,
+  "pending": [
+    "Mapping structural edits and Writer replacement (Phase C)",
+    "Remaining tests/tools/Mapping dependency removal (Phase D)",
+    "Full dependency-free package and consumer acceptance (Phase D/final gate)"
+  ]
+}

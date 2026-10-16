@@ -1,0 +1,25 @@
+--- a/src/ExcelRenderer.OpenXml/OpenXmlWorkbookWriter.Geometry.cs
++++ b/src/ExcelRenderer.OpenXml/OpenXmlWorkbookWriter.Geometry.cs
+@@ -159,0 +160,3 @@
++        private int cachedRowIndex;
++        private XElement? cachedRow;
++
+@@ -276,0 +280,8 @@
++            if (cachedRowIndex == row && cachedRow != null)
++            {
++                var allocationClone = System.GC.GetAllocatedBytesForCurrentThread();
++                var clone = new XElement(cachedRow);
++                OperationMetrics.Report("allocation.writer.readRow.clone", System.GC.GetAllocatedBytesForCurrentThread() - allocationClone);
++                return clone;
++            }
++
+@@ -298,0 +310,9 @@
++            if (location.Length <= 65536)
++            {
++                cachedRowIndex = row;
++                cachedRow = parsed;
++                return new XElement(parsed);
++            }
++
++            cachedRowIndex = 0;
++            cachedRow = null;

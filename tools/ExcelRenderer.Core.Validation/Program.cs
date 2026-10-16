@@ -1,11 +1,14 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.Text.Json;
-using ClosedXML.Excel;
 using CoreValidation;
+using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using PdfSharp.Pdf.IO;
 using SkiaSharp;
+using A = DocumentFormat.OpenXml.Drawing;
+using S = DocumentFormat.OpenXml.Spreadsheet;
+using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 #if REFERENCE
 using ExcelRenderer;
 using ExcelRenderer.Fonts;
@@ -16,19 +19,29 @@ using ExcelRenderer.Core;
 
 if (args[0] == "generate")
 {
-    using var workbook = new XLWorkbook();
-    var sheet = workbook.AddWorksheet("Report");
+    using var document = SpreadsheetDocument.Create(args[1], SpreadsheetDocumentType.Workbook);
+    var workbook = document.AddWorkbookPart();
+    workbook.Workbook = new S.Workbook(new S.Sheets());
+    var part = workbook.AddNewPart<WorksheetPart>();
     var rows = int.Parse(args[2], CultureInfo.InvariantCulture);
-    workbook.Style.Font.FontName = "Noto Sans JP";
-    sheet.Style.Font.FontName = "Noto Sans JP";
-    sheet.Columns(1, 2).Width = 16;
-    sheet.Rows(1, rows).Height = 18;
+    var data = new S.SheetData();
+    part.Worksheet = new S.Worksheet(new S.Columns(new S.Column { Min = 1, Max = 2, Width = 16.710625, CustomWidth = true }), data, new S.PageSetup { PaperSize = 9 });
+    workbook.Workbook.Sheets!.Append(new S.Sheet { Id = workbook.GetIdOfPart(part), SheetId = 1, Name = "Report" });
+    workbook.Workbook.DefinedNames = new S.DefinedNames(new S.DefinedName("'Report'!$A$1:$B$" + rows) { Name = "_xlnm.Print_Area", LocalSheetId = 0 });
+    workbook.AddNewPart<WorkbookStylesPart>().Stylesheet = new S.Stylesheet(
+        new S.Fonts(new S.Font(new S.FontSize { Val = 11 }, new S.FontName { Val = "Noto Sans JP" })),
+        new S.Fills(new S.Fill(new S.PatternFill { PatternType = S.PatternValues.None }), new S.Fill(new S.PatternFill { PatternType = S.PatternValues.Gray125 })),
+        new S.Borders(new S.Border()),
+        new S.CellStyleFormats(new S.CellFormat()),
+        new S.CellFormats(new S.CellFormat()),
+        new S.CellStyles(new S.CellStyle { Name = "Normal", FormatId = 0, BuiltinId = 0 }));
     for (var row = 1; row <= rows; row++)
     {
-        for (var column = 1; column <= 2; column++)
+        data.Append(new S.Row(Enumerable.Range(1, 2).Select(column => new S.Cell(new S.InlineString(new S.Text($"帳票 ABC {row}")))
         {
-            sheet.Cell(row, column).Value = $"帳票 ABC {row}";
-        }
+            CellReference = (column == 1 ? "A" : "B") + row,
+            DataType = S.CellValues.InlineString,
+        })) { RowIndex = (uint)row, Height = 18, CustomHeight = true });
     }
 
     if (args.Length > 3 && args[3] == "images")
@@ -39,40 +52,33 @@ if (args[0] == "generate")
         using var bytes = image.Encode(SKEncodedImageFormat.Png, 100);
         for (var row = 1; row <= rows; row += 10)
         {
-            using var stream = bytes.AsStream();
-            sheet.AddPicture(stream).MoveTo(sheet.Cell(row, 2));
+            AddFixtureImage(part, bytes.ToArray(), row - 1);
         }
     }
 
-    sheet.PageSetup.PaperSize = XLPaperSize.A4Paper;
-    sheet.PageSetup.PrintAreas.Add(sheet.Range(1, 1, rows, 2).RangeAddress.ToString());
-    workbook.SaveAs(args[1]);
     return;
 }
 
 if (args[0] == "normalize")
 {
-    using (var workbook = new XLWorkbook(args[1]))
+    File.Copy(args[1], args[2], overwrite: true);
+    using var package = SpreadsheetDocument.Open(args[2], true);
+    var styles = package.WorkbookPart!.WorkbookStylesPart?.Stylesheet;
+    foreach (var font in styles?.Fonts?.Elements<S.Font>() ?? [])
     {
-        workbook.Style.Font.FontName = "Noto Sans JP";
-        foreach (var sheet in workbook.Worksheets)
-        {
-            sheet.Style.Font.FontName = "Noto Sans JP";
-            sheet.Style.Font.Bold = false;
-            sheet.Style.Font.Italic = false;
-            foreach (var cell in sheet.CellsUsed(XLCellsUsedOptions.All))
-            {
-                cell.Style.Font.FontName = "Noto Sans JP";
-                cell.Style.Font.Bold = false;
-                cell.Style.Font.Italic = false;
-                cell.Style.Alignment.TextRotation = 0;
-            }
-        }
-
-        workbook.SaveAs(args[2]);
+        font.FontName = new S.FontName { Val = "Noto Sans JP" };
+        font.Bold = null;
+        font.Italic = null;
     }
 
-    using var package = SpreadsheetDocument.Open(args[2], true);
+    foreach (var format in styles?.CellFormats?.Elements<S.CellFormat>() ?? [])
+    {
+        if (format.Alignment is { } alignment)
+        {
+            alignment.TextRotation = 0;
+        }
+    }
+
     foreach (var part in package.WorkbookPart!.WorksheetParts)
     {
         part.Worksheet.RemoveAllChildren<DocumentFormat.OpenXml.Spreadsheet.Hyperlinks>();
@@ -153,3 +159,29 @@ for (var iteration = 0; iteration < repeats; iteration++)
 }
 
 Console.WriteLine(JsonSerializer.Serialize(samples));
+
+static void AddFixtureImage(WorksheetPart worksheet, byte[] bytes, int row)
+{
+    var drawing = worksheet.DrawingsPart ?? worksheet.AddNewPart<DrawingsPart>();
+    drawing.WorksheetDrawing ??= new Xdr.WorksheetDrawing();
+    if (worksheet.Worksheet.GetFirstChild<S.Drawing>() is null)
+    {
+        worksheet.Worksheet.Append(new S.Drawing { Id = worksheet.GetIdOfPart(drawing) });
+    }
+
+    var image = drawing.AddImagePart(ImagePartType.Png);
+    using (var source = new MemoryStream(bytes))
+    {
+        image.FeedData(source);
+    }
+
+    var picture = new Xdr.Picture(
+        new Xdr.NonVisualPictureProperties(new Xdr.NonVisualDrawingProperties { Id = (uint)row + 1, Name = "image-" + row }, new Xdr.NonVisualPictureDrawingProperties()),
+        new Xdr.BlipFill(new A.Blip { Embed = drawing.GetIdOfPart(image) }, new A.Stretch(new A.FillRectangle())),
+        new Xdr.ShapeProperties(new A.Transform2D(new A.Offset { X = 0, Y = 0 }, new A.Extents { Cx = 609600, Cy = 228600 }), new A.PresetGeometry(new A.AdjustValueList()) { Preset = A.ShapeTypeValues.Rectangle }));
+    drawing.WorksheetDrawing.Append(new Xdr.OneCellAnchor(
+        new Xdr.FromMarker(new Xdr.ColumnId("1"), new Xdr.ColumnOffset("0"), new Xdr.RowId(row.ToString(CultureInfo.InvariantCulture)), new Xdr.RowOffset("0")),
+        new Xdr.Extent { Cx = 609600, Cy = 228600 },
+        picture,
+        new Xdr.ClientData()));
+}

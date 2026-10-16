@@ -21,6 +21,9 @@ public sealed record ReportSheet(
     /// <summary>Gets the default width in points for columns without an explicit definition.</summary>
     public double DefaultColumnWidth { get; init; } = 64;
 
+    /// <summary>Gets a value indicating whether rows without explicit definitions are hidden.</summary>
+    public bool DefaultRowsHidden { get; init; }
+
     /// <summary>Gets the default height in points for rows without an explicit definition.</summary>
     public double DefaultRowHeight { get; init; } = 15;
 

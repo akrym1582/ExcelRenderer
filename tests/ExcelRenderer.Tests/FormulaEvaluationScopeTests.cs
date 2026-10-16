@@ -1,49 +1,63 @@
-using ClosedXML.Excel;
+using ExcelRenderer.Excel;
+using ExcelRenderer.Rendering;
 using Xunit;
 
 namespace ExcelRenderer.Tests;
 
-/// <summary>Executable limits of the pinned dependency's public recalculation APIs.</summary>
+/// <summary>The product rejects evaluation requests before reading input or opening output.</summary>
 public sealed class FormulaEvaluationScopeTests
 {
-    [Fact]
-    public void ClosedXmlDirtyDependencyEvaluationCanReachUnrelatedSheet()
+    [Theory]
+    [InlineData(FormulaDisplayMode.Legacy)]
+    [InlineData(FormulaDisplayMode.Recalculate)]
+    public async Task AllBackendsRejectCalculationModesBeforeInputAndSink(FormulaDisplayMode mode)
     {
-        using var workbook = new XLWorkbook();
-        var broken = workbook.AddWorksheet("unselected");
-        broken.Cell(1, 1).FormulaA1 = "A1+1";
-        var selected = workbook.AddWorksheet("selected");
-        selected.Cell(1, 1).Value = 4;
-        selected.Cell(1, 2).FormulaA1 = "A1+1";
-        selected.Cell(1, 2).InvalidateFormula();
-        Assert.Throws<InvalidOperationException>(() => selected.Evaluate("B1+1", "C1"));
-    }
-    [Fact]
-    public void WorksheetRecalculationUsesStaleCrossSheetDependencyCache()
-    {
-        using var workbook = new XLWorkbook();
-        var dependency = workbook.AddWorksheet("dependency").Cell(1, 1);
-        dependency.FormulaA1 = "4+1";
-        var selected = workbook.AddWorksheet("selected");
-        selected.Cell(1, 1).FormulaA1 = "dependency!A1+1";
-        selected.RecalculateAllFormulas();
-        Assert.True(dependency.NeedsRecalculation);
-        Assert.Equal(1, selected.Cell(1, 1).CachedValue.GetNumber());
-        workbook.RecalculateAllFormulas();
-        Assert.Equal(6, selected.Cell(1, 1).CachedValue.GetNumber());
+        foreach (var backend in Enum.GetValues<ReaderBackend>())
+        {
+            var options = new ExcelReadOptions { Backend = backend, FormulaDisplayMode = mode };
+            Assert.Throws<NotSupportedException>(() => new ExcelReader().Read("missing.xlsx", options));
+            foreach (var format in Enum.GetValues<OutputFormat>())
+            {
+                using var input = new MemoryStream([1, 2, 3]);
+                using var output = new MemoryStream();
+                await Assert.ThrowsAsync<NotSupportedException>(() => ExcelConverter.RenderAsync(input,
+                    new() { OutputFormat = format, ReadOptions = options }, new SingleStreamOutputSink(output)));
+                Assert.Equal(0, input.Position);
+                Assert.Empty(output.ToArray());
+            }
+
+            await Assert.ThrowsAsync<NotSupportedException>(() => ExcelConverter.ConvertToPdfAsync("missing.xlsx", "unused.pdf", new() { ReadOptions = options }));
+            await Assert.ThrowsAsync<NotSupportedException>(() => ExcelConverter.ConvertToImagesAsync("missing.xlsx", "unused-images", new() { ReadOptions = options }));
+            await Assert.ThrowsAsync<NotSupportedException>(() => ExcelConverter.ConvertToSvgAsync("missing.xlsx", "unused-svg", new() { ReadOptions = options }));
+            await Assert.ThrowsAsync<NotSupportedException>(() => ExcelConverter.ConvertToMarkdownAsync("missing.xlsx", "unused.md", new() { ReadOptions = options }));
+
+            using var coreInput = new MemoryStream([1, 2, 3]);
+            using var coreOutput = new MemoryStream();
+            await Assert.ThrowsAsync<NotSupportedException>(() => Core.ExcelConverter.ConvertAsync(coreInput, coreOutput, new()
+            {
+                FontFilePath = "not-opened.ttf",
+                ReadOptions = new() { Backend = (Core.ReaderBackend)backend, FormulaDisplayMode = (Core.FormulaDisplayMode)mode },
+            }));
+            Assert.Equal(0, coreInput.Position);
+            Assert.Empty(coreOutput.ToArray());
+        }
     }
 
     [Fact]
-    public void EvaluatingDirectExpressionWorksUntilADirtyFormulaDependencyIsRead()
+    public void UnknownEnumsAreRejectedBeforeUnsupportedModePolicy()
     {
-        using var workbook = new XLWorkbook();
-        workbook.AddWorksheet("unrelated").Cell(1, 1).FormulaA1 = "A1+1";
-        var selected = workbook.AddWorksheet("selected");
-        selected.Cell(1, 1).Value = 4;
-        selected.Cell(1, 2).FormulaA1 = "A1+1";
-        Assert.Equal(5, selected.Evaluate(selected.Cell(1, 2).FormulaA1, "B1").GetNumber());
-        Assert.True(selected.Cell(1, 2).NeedsRecalculation);
-        selected.Cell(1, 3).FormulaA1 = "B1+1";
-        Assert.Throws<InvalidOperationException>(() => selected.Evaluate(selected.Cell(1, 3).FormulaA1, "C1"));
+        foreach (var backend in Enum.GetValues<ReaderBackend>())
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() => new ExcelReader().Read("missing.xlsx", new()
+            {
+                Backend = backend, FormulaDisplayMode = (FormulaDisplayMode)93,
+            }));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Core.ExcelReadOptions
+            {
+                Backend = (Core.ReaderBackend)backend, FormulaDisplayMode = (Core.FormulaDisplayMode)93,
+            }.Validate());
+        }
+        Assert.Equal(Core.FormulaDisplayMode.CachedValue, new Core.ExcelReadOptions().FormulaDisplayMode);
+        Assert.Equal(Core.ReaderBackend.OpenXml, new Core.ExcelReadOptions().Backend);
     }
 }

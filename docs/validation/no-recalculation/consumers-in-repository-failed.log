@@ -1,0 +1,21 @@
++ dotnet restore --configfile /workspace/ExcelRenderer/artifacts/no-recalculation-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/ExcelRenderer/artifacts/no-recalculation-consumers/reader/consumer.csproj (in 4.49 sec).
++ dotnet build --no-restore -p:UseSharedCompilation=false
+/workspace/ExcelRenderer/artifacts/no-recalculation-consumers/reader/Program.cs(3,38): error SA1503: Braces should not be omitted (https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/documentation/SA1503.md) [/workspace/ExcelRenderer/artifacts/no-recalculation-consumers/reader/consumer.csproj]
+
+Build FAILED.
+
+/workspace/ExcelRenderer/artifacts/no-recalculation-consumers/reader/Program.cs(3,38): error SA1503: Braces should not be omitted (https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/documentation/SA1503.md) [/workspace/ExcelRenderer/artifacts/no-recalculation-consumers/reader/consumer.csproj]
+    0 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:02.98
+Traceback (most recent call last):
+  File "/workspace/ExcelRenderer/scripts/validate-openxml-packages.py", line 89, in <module>
+    run('dotnet', 'build', '--no-restore', '-p:UseSharedCompilation=false', cwd=directory)
+  File "/workspace/ExcelRenderer/scripts/validate-openxml-packages.py", line 48, in run
+    subprocess.run(list(map(str, command)), cwd=cwd, env=environment, check=True)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['dotnet', 'build', '--no-restore', '-p:UseSharedCompilation=false']' returned non-zero exit status 1.

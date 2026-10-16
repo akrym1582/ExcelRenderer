@@ -12,4 +12,11 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" PrivateAssets="all" />
     <ProjectReference Include="../../src/ExcelRenderer.Mapping/ExcelRenderer.Mapping.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="../Shared/SdkWorkbook.cs" Link="Fixtures/SdkWorkbook.cs" />
+    <None Update="Fixtures/**/*.xlsx" CopyToOutputDirectory="PreserveNewest" />
+    <Compile Include="../Shared/WorkbookAssertions.cs" Link="Fixtures/WorkbookAssertions.cs" />
+    <Compile Include="../Shared/RetainedWorkbook.cs" Link="Fixtures/RetainedWorkbook.cs" />
+    <None Include="../Shared/RetainedWorkbooks/*.xlsx" Link="RetainedWorkbooks/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

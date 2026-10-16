@@ -1,0 +1,15 @@
+samples/excel/japanese-grid-report.xlsx: PDF text/pages/size and Markdown/image artifacts equal
+samples/mapping/invoice/invoice.xlsx: PDF text/pages/size and Markdown/image artifacts equal
+samples/mapping/invoice/page-breaks/invoice.xlsx: PDF text/pages/size and Markdown/image artifacts equal
+samples/mapping/invoice/page-breaks/template.xlsx: PDF text/pages/size and Markdown/image artifacts equal
+samples/mapping/invoice/template.xlsx: PDF text/pages/size and Markdown/image artifacts equal
+tests/ExcelRenderer.Tests/SampleInputs/01-japanese.xlsx: PDF text/pages/size and Markdown/image artifacts equal
+tests/ExcelRenderer.Tests/SampleInputs/02-image.xlsx: PDF text/pages/size and Markdown/image artifacts equal
+tests/ExcelRenderer.Tests/SampleInputs/03-wrapped-text.xlsx: PDF text/pages/size and Markdown/image artifacts equal
+tests/ExcelRenderer.Tests/SampleInputs/04-text-decoration.xlsx: PDF text/pages/size and Markdown/image artifacts equal
+tests/ExcelRenderer.Tests/SampleInputs/05-borders.xlsx: PDF text/pages/size and Markdown/image artifacts equal
+tests/ExcelRenderer.Tests/SampleInputs/06-layout-and-pagination.xlsx: PDF text/pages/size and Markdown/image artifacts equal
+tests/ExcelRenderer.Tests/SampleInputs/07-multiple-sheets.xlsx: PDF text/pages/size and Markdown/image artifacts equal
+tests/ExcelRenderer.Tests/SampleInputs/08-print-scaling.xlsx: PDF text/pages/size and Markdown/image artifacts equal
+tests/ExcelRenderer.Tests/SampleInputs/09-cell-border.xlsx: PDF text/pages/size and Markdown/image artifacts equal
+tests/ExcelRenderer.Tests/SampleInputs/ReaderRichText/representative.xlsx: PDF text/pages/size and Markdown/image artifacts equal

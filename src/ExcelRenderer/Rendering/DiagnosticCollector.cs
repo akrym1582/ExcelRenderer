@@ -4,15 +4,18 @@ namespace ExcelRenderer.Rendering;
 internal sealed class DiagnosticCollector
 {
     private readonly DiagnosticOptions _options;
+    private readonly Action<ConversionDiagnostic>? observed;
     private readonly Core.Rendering.DiagnosticStore<ConversionDiagnostic> store;
     private bool _failure;
 
     /// <summary>Initializes a new instance of the <see cref="DiagnosticCollector"/> class. 指定した診断方針を使用するコレクターを初期化します。</summary>
     /// <param name="options">診断の上限、抑制、および失敗判定を指定する設定です。</param>
+    /// <param name="observed">Optional internal observer before aggregation limits.</param>
     /// <exception cref="ArgumentNullException"><paramref name="options"/> が <see langword="null"/> の場合にスローされます。</exception>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="options"/> の診断上限が正でない場合にスローされます。</exception>
-    public DiagnosticCollector(DiagnosticOptions options)
+    public DiagnosticCollector(DiagnosticOptions options, Action<ConversionDiagnostic>? observed = null)
     {
+        this.observed = observed;
         _options = options ?? throw new ArgumentNullException(nameof(options));
         if (options.MaxDiagnostics <= 0)
         {
@@ -29,6 +32,7 @@ internal sealed class DiagnosticCollector
     /// <param name="diagnostic">追加する診断です。</param>
     public void Add(ConversionDiagnostic diagnostic)
     {
+        observed?.Invoke(diagnostic);
         _failure |= diagnostic.Severity == DiagnosticSeverity.Error ||
             (_options.StrictMode && diagnostic.Severity != DiagnosticSeverity.Info) ||
             _options.TreatAsErrors.Contains(diagnostic.Code, StringComparer.Ordinal);

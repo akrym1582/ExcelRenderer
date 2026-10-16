@@ -1,0 +1,188 @@
+{
+  "variant": "production-repeated-row-cache-and-preflight",
+  "rows": 100000,
+  "backend": "openxml",
+  "input": "/workspace/ExcelRenderer/artifacts/integration-fixtures/bounded/100000/plain-100000-template.xlsx",
+  "inputSha256": "ff6522bad6ed50c69718189a0e3a45cee7dea0a5726308a98d145fec3f3b0def",
+  "worker": "/workspace/ExcelRenderer/tools/ExcelRenderer.Performance/bin/Release/net10.0/ExcelRenderer.Performance.dll",
+  "workerSha256": "26ae848ba1f783270128b7dbd02fbcdb5238ee834215be7a7257abbd4f32b62a",
+  "allocationCounter": "GC.GetTotalAllocatedBytes(true); phases use GC.GetAllocatedBytesForCurrentThread",
+  "warmups": 1,
+  "samples": 5,
+  "median": {
+    "AllocatedBytes": 527182232,
+    "ElapsedMs": 4148.0605,
+    "PeakRssBytes": 283787264
+  },
+  "phaseMedianBytes": {},
+  "raw": [
+    {
+      "Operation": "mapping",
+      "RequestedBackend": "openxml",
+      "Rows": 100000,
+      "ElapsedMs": 4560.889,
+      "AllocatedBytes": 526763312,
+      "PeakRssBytes": 283684864,
+      "Cells": 0,
+      "Checksum": 0,
+      "MappingOutputBytes": 1082402,
+      "ReaderSelection": null,
+      "MappingSelection": {
+        "RequestedBackend": 1,
+        "SelectedBackend": 1,
+        "ReasonCodes": [
+          "ExplicitOpenXml"
+        ]
+      },
+      "Metrics": {},
+      "IoMetrics": {
+        "writer.rowStoreBytes": 405,
+        "writer.stageBytes": 1082402,
+        "writer.rowCacheHits": 99999,
+        "writer.rowCacheEntries": 1,
+        "writer.rowCacheSourceBytes": 147
+      },
+      "warmup": true
+    },
+    {
+      "Operation": "mapping",
+      "RequestedBackend": "openxml",
+      "Rows": 100000,
+      "ElapsedMs": 4148.0605,
+      "AllocatedBytes": 527182232,
+      "PeakRssBytes": 283787264,
+      "Cells": 0,
+      "Checksum": 0,
+      "MappingOutputBytes": 1082402,
+      "ReaderSelection": null,
+      "MappingSelection": {
+        "RequestedBackend": 1,
+        "SelectedBackend": 1,
+        "ReasonCodes": [
+          "ExplicitOpenXml"
+        ]
+      },
+      "Metrics": {},
+      "IoMetrics": {
+        "writer.rowStoreBytes": 405,
+        "writer.stageBytes": 1082402,
+        "writer.rowCacheHits": 99999,
+        "writer.rowCacheEntries": 1,
+        "writer.rowCacheSourceBytes": 147
+      },
+      "warmup": false
+    },
+    {
+      "Operation": "mapping",
+      "RequestedBackend": "openxml",
+      "Rows": 100000,
+      "ElapsedMs": 3661.0447,
+      "AllocatedBytes": 528503744,
+      "PeakRssBytes": 283463680,
+      "Cells": 0,
+      "Checksum": 0,
+      "MappingOutputBytes": 1082402,
+      "ReaderSelection": null,
+      "MappingSelection": {
+        "RequestedBackend": 1,
+        "SelectedBackend": 1,
+        "ReasonCodes": [
+          "ExplicitOpenXml"
+        ]
+      },
+      "Metrics": {},
+      "IoMetrics": {
+        "writer.rowStoreBytes": 405,
+        "writer.stageBytes": 1082402,
+        "writer.rowCacheHits": 99999,
+        "writer.rowCacheEntries": 1,
+        "writer.rowCacheSourceBytes": 147
+      },
+      "warmup": false
+    },
+    {
+      "Operation": "mapping",
+      "RequestedBackend": "openxml",
+      "Rows": 100000,
+      "ElapsedMs": 4482.3999,
+      "AllocatedBytes": 526742376,
+      "PeakRssBytes": 283492352,
+      "Cells": 0,
+      "Checksum": 0,
+      "MappingOutputBytes": 1082402,
+      "ReaderSelection": null,
+      "MappingSelection": {
+        "RequestedBackend": 1,
+        "SelectedBackend": 1,
+        "ReasonCodes": [
+          "ExplicitOpenXml"
+        ]
+      },
+      "Metrics": {},
+      "IoMetrics": {
+        "writer.rowStoreBytes": 405,
+        "writer.stageBytes": 1082402,
+        "writer.rowCacheHits": 99999,
+        "writer.rowCacheEntries": 1,
+        "writer.rowCacheSourceBytes": 147
+      },
+      "warmup": false
+    },
+    {
+      "Operation": "mapping",
+      "RequestedBackend": "openxml",
+      "Rows": 100000,
+      "ElapsedMs": 4281.2534,
+      "AllocatedBytes": 526168728,
+      "PeakRssBytes": 283840512,
+      "Cells": 0,
+      "Checksum": 0,
+      "MappingOutputBytes": 1082402,
+      "ReaderSelection": null,
+      "MappingSelection": {
+        "RequestedBackend": 1,
+        "SelectedBackend": 1,
+        "ReasonCodes": [
+          "ExplicitOpenXml"
+        ]
+      },
+      "Metrics": {},
+      "IoMetrics": {
+        "writer.rowStoreBytes": 405,
+        "writer.stageBytes": 1082402,
+        "writer.rowCacheHits": 99999,
+        "writer.rowCacheEntries": 1,
+        "writer.rowCacheSourceBytes": 147
+      },
+      "warmup": false
+    },
+    {
+      "Operation": "mapping",
+      "RequestedBackend": "openxml",
+      "Rows": 100000,
+      "ElapsedMs": 3720.8828,
+      "AllocatedBytes": 528399760,
+      "PeakRssBytes": 287440896,
+      "Cells": 0,
+      "Checksum": 0,
+      "MappingOutputBytes": 1082402,
+      "ReaderSelection": null,
+      "MappingSelection": {
+        "RequestedBackend": 1,
+        "SelectedBackend": 1,
+        "ReasonCodes": [
+          "ExplicitOpenXml"
+        ]
+      },
+      "Metrics": {},
+      "IoMetrics": {
+        "writer.rowStoreBytes": 405,
+        "writer.stageBytes": 1082402,
+        "writer.rowCacheHits": 99999,
+        "writer.rowCacheEntries": 1,
+        "writer.rowCacheSourceBytes": 147
+      },
+      "warmup": false
+    }
+  ]
+}

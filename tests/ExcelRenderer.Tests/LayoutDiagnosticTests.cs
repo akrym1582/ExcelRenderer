@@ -1,4 +1,4 @@
-using ClosedXML.Excel;
+using ExcelRenderer.TestFixtures;
 using ExcelRenderer.Rendering;
 using Xunit;
 
@@ -80,26 +80,7 @@ public sealed class LayoutDiagnosticTests
     [Fact]
     public async Task FinalScaleRichRunsShrinkAndRotationProduceSmallTextWarnings()
     {
-        using var workbook = new XLWorkbook();
-        var sheet = workbook.AddWorksheet("sizes");
-        sheet.PageSetup.Scale = 50;
-        sheet.PageSetup.PrintAreas.Add("A1:A5");
-        sheet.Column(1).Width = 12;
-        sheet.Cell(1, 1).Value = "scaled";
-        sheet.Cell(1, 1).Style.Font.FontSize = 10;
-        sheet.Cell(2, 1).CreateRichText().AddText("BIG").SetFontSize(20);
-        sheet.Cell(2, 1).GetRichText().AddText("small").SetFontSize(8);
-        sheet.Cell(3, 1).Value = "rotated";
-        sheet.Cell(3, 1).Style.Font.FontSize = 8;
-        sheet.Cell(3, 1).Style.Alignment.TextRotation = 45;
-        sheet.Cell(4, 1).Value = "a long string that must shrink into a narrow cell";
-        sheet.Cell(4, 1).Style.Font.FontSize = 20;
-        sheet.Cell(4, 1).Style.Alignment.ShrinkToFit = true;
-        sheet.Cell(5, 1).Value = "hidden";
-        sheet.Cell(5, 1).Style.Font.FontSize = 4;
-        sheet.Row(5).Hide();
-        using var input = new MemoryStream();
-        workbook.SaveAs(input);
+        using var input = RetainedWorkbook.Open("LayoutDiagnosticTests.FinalScaleRichRunsShrinkAndRotationProduceSmallTextWarnings.2EB6E81F998F9353.xlsx");
         input.Position = 0;
         using var output = new MemoryStream();
         var result = await ExcelConverter.RenderAsync(input, new()
@@ -113,21 +94,7 @@ public sealed class LayoutDiagnosticTests
 
     private static MemoryStream CreateWorkbook()
     {
-        using var workbook = new XLWorkbook();
-        var sheet = workbook.AddWorksheet("diagnostics");
-        sheet.Cell(1, 1).Value = "sensitive\nsecond\nthird";
-        sheet.Cell(1, 1).Style.Alignment.WrapText = true;
-        sheet.Row(1).Height = 10;
-        sheet.Cell(2, 1).Value = "tiny";
-        sheet.Cell(2, 1).Style.Font.FontSize = 4;
-        sheet.Row(2).Height = 20;
-        sheet.Cell(3, 1).Value = "hidden";
-        sheet.Cell(3, 1).Style.Font.FontSize = 4;
-        sheet.Row(3).Hide();
-        sheet.Range("A1:A2").AddConditionalFormat().WhenNotBlank().Fill.SetBackgroundColor(XLColor.Red);
-        workbook.AddWorksheet("other").Cell(1, 1).Value = "normal";
-        var input = new MemoryStream();
-        workbook.SaveAs(input);
+        var input = RetainedWorkbook.Open("LayoutDiagnosticTests.CreateWorkbook.93443D6A03DCB00F.xlsx");
         input.Position = 0;
         return input;
     }

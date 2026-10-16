@@ -3,7 +3,10 @@
 [English](mapping.md) | 日本語
 
 `ExcelRenderer.Mapping` は独立した .NET Standard 2.1 のパッケージです。
-ClosedXML 0.105.1 を使い、C# オブジェクトや JSON の値を XLSX テンプレートへ設定します。
+C# オブジェクトや JSON の値を、数式のない XLSX テンプレートへ設定します。
+OpenXml が既定かつ唯一の Writer で、Auto も同じ経路を使います。
+廃止された ClosedXml enum 値は入力処理前に拒否します。
+詳細は[エンジン選択](openxml-integration.ja.md)を参照してください。
 描画ライブラリ、フォント、PDFsharp、SkiaSharp には依存しません。
 CLI はマッピングと描画のライブラリを組み合わせて使用します。
 
@@ -62,7 +65,7 @@ Excel などの XLSX エディターで空のワークブックを作成し、�
 | 6 | Total | | | `**Total` |
 
 `**` で始まる式は、先頭に `=` を付けず、セルの文字列として入力します。
-D5 には入力側で計算した明細金額を渡します。繰り返す行内の数式は拒否されます。
+D5 には入力側で計算した明細金額を渡します。全領域の数式は拒否されます。
 Markdown の表にあるパイプ前のバックスラッシュは
 表の表示用です。B3 に入力する内容は `**IssuedAt | date("yyyy/MM/dd")` です。
 5 行目には Excel の「テーブル」を使わず、通常のセルを使ってください。
@@ -235,8 +238,8 @@ await ExcelConverter.ConvertToPdfAsync("report.xlsx", "report.pdf");
 `MappingOptions.Culture` の既定値は `InvariantCulture` です。
 `MaxOutputRows` の既定値はシートごとに 100,000 行で、Excel の上限である
 1,048,576 行まで設定できます。入れ子の展開と通常のテンプレート行も数えます。
-キャンセルは計画・展開中に確認しますが、ClosedXML の同期的な読み込み・保存処理は
-途中で中断できません。ワークブックと展開計画はメモリ上に保持します。
+キャンセルは計画・展開・行の書き出し・stage 検証中に確認します。展開計画はメモリに保持し、
+元行の XML と出力 stage は設定に従って一時ファイルへ退避できます。
 CLI では既定値を使用します。変更が必要な場合は C# API を使ってください。
 
 ```csharp
@@ -285,7 +288,7 @@ catch (MappingException error)
 ### 式の認識と評価
 
 `**` または `\**` で始まる文字列セルだけを解釈します。
-式の前に空白や Excel の `=` を付けないでください。数式セル・数値セル・通常の文字列は
+式の前に空白や Excel の `=` を付けないでください。数式セルは拒否し、数値セル・通常の文字列は
 ワークブックの内容として維持します。セル全体を置き換えるため、
 `Customer: **Customer` のような文字列への埋め込みには対応しません。
 
@@ -293,7 +296,7 @@ catch (MappingException error)
 `**@end-array` と `**@page-break` は、末尾の空白や引数を付けず、そのまま入力します。
 `**@page-break` に方向・条件・ページ数を指定する引数はありません。
 書式指定は `format()` または `date()` の 1 つで、引数は 1～2 個の JSON 文字列です。
-関数の連結には対応しません。算術・条件分岐・計算は入力データ側や通常の Excel 数式で行います。
+関数の連結には対応しません。算術・条件分岐・計算は呼び出し元で行います。Mapping テンプレートの Excel 数式は禁止です。
 
 マッピングでは全シートの構造とパス構文を検証し、実際に出力する行を評価した後で展開します。
 描画対象の選択とは独立しています。要素がないブロック内の式は構文検証だけを行い、
@@ -315,7 +318,7 @@ null の要素は `**Items[*]` のようなスカラーパスなら空セルに�
 
 ## セルの式
 
-`**` で始まる文字列セルは、セル全体を値に置き換えます。繰り返し外の数式セルは数式のままです。
+`**` で始まる文字列セルは、セル全体を値に置き換えます。繰り返し外も含め、数式セルは拒否します。
 `Name: **name` のような埋め込み式は、通常の文字列として残ります。
 
 | テンプレートの文字列 | 意味 |
@@ -351,7 +354,7 @@ Excel の数値は浮動小数点なので、大きな整数や高精度の deci
 `format(format[, culture])` は値の CLR 型の `IFormattable.ToString` を呼び出します。
 省略可能な culture は `MappingOptions.Culture` を上書きします。
 引数は JSON の文字列リテラルです。引用符付きキー内のパイプは式の区切りになりません。
-書式指定後は Excel の **文字列セル**になります。数式に使う数値を維持するには、
+書式指定後は Excel の **文字列セル**になります。入力の数値型を維持するには、
 `format()` を付けず、テンプレート側の Excel の表示形式を設定します。
 
 `date(format[, culture])` は CLR の `DateTime`・`DateTimeOffset` を書式化するか、
@@ -428,7 +431,7 @@ C10 なら 9 行目の後と B 列の後です。1 行目や A 列の前には�
 改ページはセルや配列ブロックの周囲だけではなく、印刷範囲全体を行・列の境界で分割します。
 
 開始・終了マーカーとは異なり、改ページに専用行は不要です。同じ行のほかのセルに
-データを置けます。繰り返し外なら数式も置けます。指定セルは空になりますが、その書式と行は残ります。
+データを置けます。Excel 数式は全領域で禁止です。指定セルは空になりますが、その書式と行は残ります。
 文字列としてマーカーを表示する場合は `\**@page-break` と入力します。この場合は改ページしません。
 
 ### 例：印刷範囲を 4 ページに分割する
@@ -481,69 +484,81 @@ XLSX には印刷・印刷プレビュー用の手動改ページとして保存
 
 ## Excel 機能と制約
 
-値・書式だけの領域は最終行配置を計算し、領域ごとにまとめて行数を変更します。
-参照やその他の Excel オブジェクトがある場合は、既存の動作を維持するため
-ClosedXML の行挿入・削除と範囲コピーを使います。
-セルの書式、行高、非表示状態、アウトラインレベル、通常の結合セル、
-コピー先の条件付き書式とデータ検証を維持します。
-既存の数式参照、定義名、印刷範囲は ClosedXML の行操作に従います。
-繰り返し領域の境界で終わる範囲は、すべての複製行へ伸びるとは限りません。
-合計の範囲を適切に設計するか、入力データで合計を渡してください。
-削除したマーカー行や空配列行への参照は `#REF!` になることがあります。
+OpenXml Writer は元行から出力行への配置計画に従って stage 内のパーツを編集します。
+書式・行高・非表示・アウトライン・結合・改ページ・静的定義名・リンク・コメント・
+繰り返し外の画像・テーブル・フィルター・条件付き書式・入力規則を保持します。
+内部リンク先も別シートを含めて行移動に追従します。繰り返しと重なる名前・テーブル・画像は
+従来どおり拒否します。印刷範囲は全出力 occurrence を含み、完全に削除された範囲を除去します。
+繰り返し・削除と交差する印刷タイトル行は非対応です。
+[エンジン選択](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/openxml-integration.ja.md)
+に、対応 part・ピボットキャッシュ・stage 出力の保証を記載しています。
 
-繰り返す行・ブロック内の数式と、そこに重なる範囲を参照する定義名は非対応です。
-空配列でも入力データの評価・出力前に拒否します。これは互換性の変更です。
-明細の計算値は C# / JSON 側で渡してください。定義名はワークブック・シートの
-両スコープを検査し、マーカー行も含む行帯の全列を対象にします。
-外側の数式・定義名は、繰り返しより下側も含めて上記の参照制約の範囲で維持します。
-印刷範囲・印刷タイトルはページ設定として維持します。
+全 Mapping backend で、ブック内の全セル数式、table の calculated/totals 式・集計関数、計算定義名を、
+backend 選択・データ評価・出力の前に `MappingFormulaNotSupported` で拒否します。
+繰り返し領域の外側・非表示シートの数式も含みます。金額・税・合計は呼び出し元で計算し、
+確定値を C# オブジェクトや JSON から値のプレースホルダーへ渡してください。
+静的定義名は定数と有限 A1 参照の union に限定し、関数・演算・動的／外部／3D 参照・
+別名・未知文法は拒否します。未知の workbook／worksheet／table extension も、値の数式が
+ないと確認できない場合は拒否します。条件付き書式・入力規則の式は構造メタデータとして、
+対応する A1 参照を移動します。式評価や条件による描画は追加しません。
 
 繰り返しブロック内で完結する結合は使えます。配列境界をまたぐ結合、
 結合されたマーカー行、繰り返し領域と重なる Excel テーブル・画像は、
 元テンプレートのセル位置を示すエラーになります。
-その他のワークブック機能は ClosedXML の読み込み・保存の対応範囲に依存します。
+未知の part・拡張、マクロ・署名・Strict パッケージは拒否します。
 繰り返し領域には通常のセルを使ってください。
 
-対応する数式は保存前に評価し、元の数式を維持して Excel の自動再計算を要求します。
-非対応の関数はキャッシュに Excel のエラー値が入る場合があるため、直後の描画には
-利用できません。その値は C# や JSON 側で計算して渡してください。
+保存時評価は明示的に無効にし、元の `calcPr`（不存在も含む）を保持します。
+再計算要求は新規に追加しません。`=` で始まる入力は文字列のままです。
+Mapping の `**` 構文・format/date は Excel 数式とは別の処理として継続します。
 
-`MappingException` の `SheetName`・`CellAddress`・`Expression` は、
-入れ子の展開後でも元のテンプレートを示します。
+`MappingException` の `SheetName`・`CellAddress`・`Expression` と任意の安定した `ReasonCode` は、
+元テンプレートの位置・原因を示します。数式拒否には元セル・定義名・table 名を可能な範囲で
+含めます。
 
 ## Excel を使わずにサンプルテンプレートを作成する
 
 同じ請求書テンプレートを C# で生成することもできます。
 `ExcelRenderer.Mapping` を追加したコンソールプロジェクトで、
 `Program.cs` を次のコードに置き換え、`dotnet run` を 1 回実行してください。
-ClosedXML はマッピングパッケージの依存関係として導入されます。
+この例では、マッピングパッケージから間接参照される Open XML SDK を使います。
 その後、`Program.cs` を前述のマッピング例に置き換えるか、CLI を使います。
 
 ```csharp
-using ClosedXML.Excel;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using S = DocumentFormat.OpenXml.Spreadsheet;
 
-using var workbook = new XLWorkbook();
-var sheet = workbook.AddWorksheet("Invoice");
-sheet.Cell("A1").Value = "Invoice";
-sheet.Cell("A2").Value = "Customer";
-sheet.Cell("B2").Value = "**Customer";
-sheet.Cell("A3").Value = "Issued";
-sheet.Cell("B3").Value = "**IssuedAt | date(\"yyyy/MM/dd\")";
-sheet.Cell("A4").Value = "Item";
-sheet.Cell("B4").Value = "Quantity";
-sheet.Cell("C4").Value = "Unit price";
-sheet.Cell("D4").Value = "Line total";
-sheet.Cell("A5").Value = "**Items[*].Name";
-sheet.Cell("B5").Value = "**Items[*].Quantity";
-sheet.Cell("C5").Value = "**Items[*].Price";
-sheet.Cell("D5").Value = "**Items[*].LineTotal";
-sheet.Cell("A6").Value = "Total";
-sheet.Cell("D6").Value = "**Total";
-sheet.Columns(1, 4).Width = 22;
-sheet.Range("A4:D4").Style.Font.Bold = true;
-sheet.Range("C5:D6").Style.NumberFormat.Format = "#,##0.00";
-sheet.PageSetup.PrintAreas.Add("A1:D6");
-workbook.SaveAs("template.xlsx");
+using var package = SpreadsheetDocument.Create("template.xlsx", SpreadsheetDocumentType.Workbook);
+var workbook = package.AddWorkbookPart();
+workbook.Workbook = new S.Workbook(new S.Sheets());
+var sheet = workbook.AddNewPart<WorksheetPart>();
+workbook.Workbook.Sheets!.Append(new S.Sheet { Id = workbook.GetIdOfPart(sheet), SheetId = 1, Name = "Invoice" });
+var rows = new[]
+{
+    new[] { "Invoice" },
+    new[] { "Customer", "**Customer" },
+    new[] { "Issued", "**IssuedAt | date(\"yyyy/MM/dd\")" },
+    new[] { "Item", "Quantity", "Unit price", "Line total" },
+    new[] { "**Items[*].Name", "**Items[*].Quantity", "**Items[*].Price", "**Items[*].LineTotal" },
+    new[] { "Total", "", "", "**Total" },
+};
+var data = new S.SheetData();
+for (var row = 0; row < rows.Length; row++)
+{
+    var record = new S.Row { RowIndex = (uint)row + 1 };
+    for (var column = 0; column < rows[row].Length; column++)
+    {
+        record.Append(new S.Cell(new S.InlineString(new S.Text(rows[row][column])))
+        {
+            CellReference = $"{(char)('A' + column)}{row + 1}",
+            DataType = S.CellValues.InlineString,
+        });
+    }
+    data.Append(record);
+}
+sheet.Worksheet = new S.Worksheet(new S.Columns(new S.Column { Min = 1, Max = 4, Width = 22, CustomWidth = true }), data);
+workbook.Workbook.DefinedNames = new S.DefinedNames(new S.DefinedName("'Invoice'!$A$1:$D$6") { Name = "_xlnm.Print_Area", LocalSheetId = 0 });
 ```
 
 ## よくある問題と対処
@@ -555,12 +570,12 @@ workbook.SaveAs("template.xlsx");
 | 式が文字列のまま残る | 文字列セルの先頭が `**` である必要があります。`Customer: **Customer` は通常の文字列です。ラベルと式を別セルにします。 |
 | `Property '…' was not found` | プロパティ名の大文字・小文字を一致させます。欠落や範囲外のインデックスはエラーで、明示的な `null` は空セルです。 |
 | スカラー値が必要というエラー | `**Customer.Name` のようなプロパティ、インデックス、配列展開を使います。オブジェクトや配列全体はスカラーセルに入れられません。 |
-| `format()` が失敗する／数値が数式で使えない | 書式指定は `IFormattable` の値を文字列にします。数式に使う値には Excel の表示形式を設定します。JSON の数値には、整数専用の CLR 書式 `D4` などではなく `0000`・`N2` などを使います。 |
+| `format()` が失敗する／数値が文字列になる | 書式指定は `IFormattable` の値を文字列にします。数値型を維持するには Excel の表示形式を設定します。JSON の数値には、整数専用の CLR 書式 `D4` などではなく `0000`・`N2` などを使います。 |
 | 日付が ISO 文字列のまま | `date("yyyy/MM/dd")` を明示します。文字列は日付へ自動変換されません。 |
 | 繰り返し行が消える | 空配列は行やブロックを削除します。データ行が必要なら少なくとも 1 要素を渡します。 |
 | マーカーの専用行／エイリアスのエラー | 開始・終了をそれぞれ結合のない専用行に置き、対応する組にします。エイリアスはそのブロック内で使います。 |
 | `MaxOutputRows` を超える | データを減らすか、C# で `MappingOptions.MaxOutputRows` を設定します。通常の行も数えます。CLI の既定値は 100,000 行です。 |
-| 合計が最初の要素だけ／数式が `#REF!` になる | 範囲は ClosedXML の行操作に従います。合計は入力で渡し、マーカー行や空配列で削除する行への参照を避けます。 |
-| 描画結果の数式が `#NAME?` | ClosedXML はすべての Excel 関数を評価できません。入力側で値を計算します。直後の描画では、Excel を開いた後の再計算は使えません。 |
+| 静的定義名が `#REF!` になる | マーカー行や空配列で削除する行への参照を避け、合計は入力で渡します。 |
+| `MappingFormulaNotSupported` | 呼び出し元で計算し、数式を値プレースホルダーへ置き換えます。全 backend・全シートが検査対象です。 |
 | 描画先が既に存在するというエラー | 新しいファイルや空のディレクトリを指定します。描画とは異なり、成功時の `xlsx` マッピングは既存の出力 XLSX を上書きします。 |
 | 描画対象外のシートでマッピングエラー | 描画対象を選ぶ前に全シートを評価します。式を修正するか、そのシートをテンプレートから除きます。 |

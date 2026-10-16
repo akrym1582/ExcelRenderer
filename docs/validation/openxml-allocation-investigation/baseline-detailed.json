@@ -1,0 +1,276 @@
+{
+  "variant": "baseline-detailed",
+  "rows": 100000,
+  "backend": "openxml",
+  "input": "/workspace/ExcelRenderer/artifacts/integration-fixtures/bounded/100000/plain-100000-template.xlsx",
+  "inputSha256": "ff6522bad6ed50c69718189a0e3a45cee7dea0a5726308a98d145fec3f3b0def",
+  "worker": "/tmp/excel-allocation-investigation/tools/ExcelRenderer.Performance/bin/Release/net10.0/ExcelRenderer.Performance.dll",
+  "workerSha256": "c3dbcf305880e2538d98a9078e20c2469098fc6822269c8b5fe6e95495eda771",
+  "allocationCounter": "GC.GetTotalAllocatedBytes(true); phases use GC.GetAllocatedBytesForCurrentThread",
+  "warmups": 1,
+  "samples": 5,
+  "median": {
+    "AllocatedBytes": 1740650976,
+    "ElapsedMs": 3935.7707,
+    "PeakRssBytes": 283963392
+  },
+  "phaseMedianBytes": {
+    "allocation.mapping.evaluate": 31397968,
+    "allocation.mapping.flatten": 22898408,
+    "allocation.mapping.template": 633520,
+    "allocation.writer.capability": 964120,
+    "allocation.writer.copy": 2621584,
+    "allocation.writer.editRow": 110932136,
+    "allocation.writer.readRow": 1284479144,
+    "allocation.writer.readRow.buffer": 17600320,
+    "allocation.writer.readRow.decode": 32000560,
+    "allocation.writer.readRow.parse": 1234877736,
+    "allocation.writer.serializeRow": 46737304,
+    "allocation.writer.setup": 47748344,
+    "allocation.writer.sheet": 1442167560,
+    "allocation.writer.validation": 184122792,
+    "allocation.writer.zip": 2816056
+  },
+  "raw": [
+    {
+      "Operation": "mapping",
+      "RequestedBackend": "openxml",
+      "Rows": 100000,
+      "ElapsedMs": 4093.8498,
+      "AllocatedBytes": 1741040272,
+      "PeakRssBytes": 283942912,
+      "Cells": 0,
+      "Checksum": 0,
+      "MappingOutputBytes": 1082402,
+      "ReaderSelection": null,
+      "MappingSelection": {
+        "RequestedBackend": 1,
+        "SelectedBackend": 1,
+        "ReasonCodes": [
+          "ExplicitOpenXml"
+        ]
+      },
+      "Metrics": {},
+      "IoMetrics": {
+        "allocation.mapping.template": 633520,
+        "allocation.mapping.evaluate": 31397968,
+        "allocation.mapping.flatten": 22898408,
+        "allocation.writer.capability": 988768,
+        "writer.rowStoreBytes": 405,
+        "allocation.writer.setup": 47846696,
+        "allocation.writer.readRow.buffer": 17600320,
+        "allocation.writer.readRow.decode": 32000560,
+        "allocation.writer.readRow.parse": 1235123736,
+        "allocation.writer.readRow": 1284725144,
+        "allocation.writer.editRow": 110932136,
+        "allocation.writer.serializeRow": 46737304,
+        "allocation.writer.sheet": 1442410952,
+        "allocation.writer.zip": 2816056,
+        "allocation.writer.validation": 184215848,
+        "writer.stageBytes": 1082402,
+        "allocation.writer.copy": 2621584
+      },
+      "warmup": true
+    },
+    {
+      "Operation": "mapping",
+      "RequestedBackend": "openxml",
+      "Rows": 100000,
+      "ElapsedMs": 4247.0994,
+      "AllocatedBytes": 1740650976,
+      "PeakRssBytes": 283963392,
+      "Cells": 0,
+      "Checksum": 0,
+      "MappingOutputBytes": 1082402,
+      "ReaderSelection": null,
+      "MappingSelection": {
+        "RequestedBackend": 1,
+        "SelectedBackend": 1,
+        "ReasonCodes": [
+          "ExplicitOpenXml"
+        ]
+      },
+      "Metrics": {},
+      "IoMetrics": {
+        "allocation.mapping.template": 633520,
+        "allocation.mapping.evaluate": 31397968,
+        "allocation.mapping.flatten": 22898408,
+        "allocation.writer.capability": 988992,
+        "writer.rowStoreBytes": 405,
+        "allocation.writer.setup": 47748344,
+        "allocation.writer.readRow.buffer": 17600320,
+        "allocation.writer.readRow.decode": 32000688,
+        "allocation.writer.readRow.parse": 1235022656,
+        "allocation.writer.readRow": 1284624192,
+        "allocation.writer.editRow": 110932136,
+        "allocation.writer.serializeRow": 46737304,
+        "allocation.writer.sheet": 1442310384,
+        "allocation.writer.zip": 2816056,
+        "allocation.writer.validation": 184025480,
+        "writer.stageBytes": 1082402,
+        "allocation.writer.copy": 2621584
+      },
+      "warmup": false
+    },
+    {
+      "Operation": "mapping",
+      "RequestedBackend": "openxml",
+      "Rows": 100000,
+      "ElapsedMs": 4128.1525,
+      "AllocatedBytes": 1740534192,
+      "PeakRssBytes": 283668480,
+      "Cells": 0,
+      "Checksum": 0,
+      "MappingOutputBytes": 1082402,
+      "ReaderSelection": null,
+      "MappingSelection": {
+        "RequestedBackend": 1,
+        "SelectedBackend": 1,
+        "ReasonCodes": [
+          "ExplicitOpenXml"
+        ]
+      },
+      "Metrics": {},
+      "IoMetrics": {
+        "allocation.mapping.template": 633520,
+        "allocation.mapping.evaluate": 31397968,
+        "allocation.mapping.flatten": 22898400,
+        "allocation.writer.capability": 964792,
+        "writer.rowStoreBytes": 405,
+        "allocation.writer.setup": 47748344,
+        "allocation.writer.readRow.buffer": 17600320,
+        "allocation.writer.readRow.decode": 32000560,
+        "allocation.writer.readRow.parse": 1234832360,
+        "allocation.writer.readRow": 1284433768,
+        "allocation.writer.editRow": 110932136,
+        "allocation.writer.serializeRow": 46737304,
+        "allocation.writer.sheet": 1442120680,
+        "allocation.writer.zip": 2816056,
+        "allocation.writer.validation": 184122792,
+        "writer.stageBytes": 1082402,
+        "allocation.writer.copy": 2621584
+      },
+      "warmup": false
+    },
+    {
+      "Operation": "mapping",
+      "RequestedBackend": "openxml",
+      "Rows": 100000,
+      "ElapsedMs": 3874.0982,
+      "AllocatedBytes": 1740209256,
+      "PeakRssBytes": 286040064,
+      "Cells": 0,
+      "Checksum": 0,
+      "MappingOutputBytes": 1082402,
+      "ReaderSelection": null,
+      "MappingSelection": {
+        "RequestedBackend": 1,
+        "SelectedBackend": 1,
+        "ReasonCodes": [
+          "ExplicitOpenXml"
+        ]
+      },
+      "Metrics": {},
+      "IoMetrics": {
+        "allocation.mapping.template": 633520,
+        "allocation.mapping.evaluate": 31397968,
+        "allocation.mapping.flatten": 22898424,
+        "allocation.writer.capability": 964120,
+        "writer.rowStoreBytes": 405,
+        "allocation.writer.setup": 47748344,
+        "allocation.writer.readRow.buffer": 17600320,
+        "allocation.writer.readRow.decode": 32000560,
+        "allocation.writer.readRow.parse": 1234652672,
+        "allocation.writer.readRow": 1284254080,
+        "allocation.writer.editRow": 110932136,
+        "allocation.writer.serializeRow": 46737304,
+        "allocation.writer.sheet": 1441942288,
+        "allocation.writer.zip": 2816056,
+        "allocation.writer.validation": 183952280,
+        "writer.stageBytes": 1082402,
+        "allocation.writer.copy": 2621584
+      },
+      "warmup": false
+    },
+    {
+      "Operation": "mapping",
+      "RequestedBackend": "openxml",
+      "Rows": 100000,
+      "ElapsedMs": 3843.7614,
+      "AllocatedBytes": 1740854560,
+      "PeakRssBytes": 283860992,
+      "Cells": 0,
+      "Checksum": 0,
+      "MappingOutputBytes": 1082402,
+      "ReaderSelection": null,
+      "MappingSelection": {
+        "RequestedBackend": 1,
+        "SelectedBackend": 1,
+        "ReasonCodes": [
+          "ExplicitOpenXml"
+        ]
+      },
+      "Metrics": {},
+      "IoMetrics": {
+        "allocation.mapping.template": 633520,
+        "allocation.mapping.evaluate": 31397968,
+        "allocation.mapping.flatten": 22898432,
+        "allocation.writer.capability": 964120,
+        "writer.rowStoreBytes": 405,
+        "allocation.writer.setup": 47748344,
+        "allocation.writer.readRow.buffer": 17600320,
+        "allocation.writer.readRow.decode": 32000560,
+        "allocation.writer.readRow.parse": 1235029112,
+        "allocation.writer.readRow": 1284630520,
+        "allocation.writer.editRow": 110932136,
+        "allocation.writer.serializeRow": 46737304,
+        "allocation.writer.sheet": 1442318936,
+        "allocation.writer.zip": 2816056,
+        "allocation.writer.validation": 184220880,
+        "writer.stageBytes": 1082402,
+        "allocation.writer.copy": 2621584
+      },
+      "warmup": false
+    },
+    {
+      "Operation": "mapping",
+      "RequestedBackend": "openxml",
+      "Rows": 100000,
+      "ElapsedMs": 3935.7707,
+      "AllocatedBytes": 1741008824,
+      "PeakRssBytes": 286076928,
+      "Cells": 0,
+      "Checksum": 0,
+      "MappingOutputBytes": 1082402,
+      "ReaderSelection": null,
+      "MappingSelection": {
+        "RequestedBackend": 1,
+        "SelectedBackend": 1,
+        "ReasonCodes": [
+          "ExplicitOpenXml"
+        ]
+      },
+      "Metrics": {},
+      "IoMetrics": {
+        "allocation.mapping.template": 633520,
+        "allocation.mapping.evaluate": 31397968,
+        "allocation.mapping.flatten": 22898408,
+        "allocation.writer.capability": 964120,
+        "writer.rowStoreBytes": 405,
+        "allocation.writer.setup": 47748344,
+        "allocation.writer.readRow.buffer": 17600320,
+        "allocation.writer.readRow.decode": 32000560,
+        "allocation.writer.readRow.parse": 1234877736,
+        "allocation.writer.readRow": 1284479144,
+        "allocation.writer.editRow": 110932136,
+        "allocation.writer.serializeRow": 46737304,
+        "allocation.writer.sheet": 1442167560,
+        "allocation.writer.zip": 2816056,
+        "allocation.writer.validation": 184427984,
+        "writer.stageBytes": 1082402,
+        "allocation.writer.copy": 2621584
+      },
+      "warmup": false
+    }
+  ]
+}

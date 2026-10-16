@@ -3,7 +3,9 @@
 English | [日本語](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/mapping.ja.md)
 
 `ExcelRenderer.Mapping` is a standalone .NET Standard 2.1 package. It maps CLR
-objects or JSON into an XLSX template using ClosedXML 0.105.1. It does not depend
+objects or JSON into a formula-free XLSX template. OpenXml is the default and sole writer; Auto is an alias without fallback.
+The obsolete ClosedXml enum value is rejected before input processing; see
+[backend selection](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/openxml-integration.md). It does not depend
 on the renderer, fonts, PDFsharp or SkiaSharp. The CLI references both the mapping
 and rendering packages.
 
@@ -64,7 +66,7 @@ following values. Save it as `template.xlsx` in a working directory.
 | 6 | Total | | | `**Total` |
 
 Enter the `**` expressions as cell text, without an initial `=`. D5 receives
-the line total calculated in the input; formulas inside repeated rows are rejected.
+the line total calculated in the input; formulas anywhere in Mapping templates are rejected.
 The backslash before the pipe in the Markdown table is only table escaping: B3 should contain `**IssuedAt | date("yyyy/MM/dd")`.
 Use ordinary cells, rather than an Excel Table, for row 5. You can set fonts,
 column widths, borders and number formats in Excel. Set C5, D5 and D6 to
@@ -237,8 +239,8 @@ Rendering needs suitable fonts; see the
 `MappingOptions.Culture` defaults to `InvariantCulture`. `MaxOutputRows` defaults
 to 100,000 per worksheet and may be set up to Excel's 1,048,576-row limit. Nested
 expansion and ordinary template rows count toward the limit. Cancellation is checked during planning and
-expansion; ClosedXML's synchronous load/save operations cannot be interrupted.
-The workbook and expansion plans are held in memory. CLI mapping uses the default
+expansion, row replay and staged validation. Expansion plans remain in memory;
+source row XML and the output stage can spill to temporary files. CLI mapping uses the default
 options; configure options through the C# API when needed.
 
 ```csharp
@@ -287,16 +289,14 @@ opening the destination, so mapping errors leave an existing output file intact.
 ### Recognition and evaluation rules
 
 Only text cells beginning with `**` or `\**` are interpreted. Do not add leading
-spaces or an Excel `=` before an expression. Formula cells, numeric cells and
-ordinary text remain workbook content. A replacement occupies the entire cell;
+spaces or an Excel `=` before an expression. Numeric cells and ordinary text remain workbook content; formula cells are rejected. A replacement occupies the entire cell;
 string interpolation such as `Customer: **Customer` is not supported.
 
 Directive names are case-sensitive. Write `**@end-array` and `**@page-break`
 exactly, without trailing spaces or arguments. `**@page-break` has no direction,
 condition or page-count parameters. Formatting accepts one `format()` or
 `date()` function with one or two JSON string arguments; chaining functions is
-not supported. Arithmetic, conditions and calculations belong in the input data
-or ordinary Excel formulas.
+not supported. Arithmetic, conditions and calculations belong in the caller, not Excel formulas.
 
 Mapping validates the structure and path syntax of every worksheet, then
 evaluates the instantiated rows before applying expansion. It is independent
@@ -319,8 +319,7 @@ operator.
 
 ## Cell expressions
 
-A text cell starting with `**` is replaced as a whole. Formula cells are left as
-formulas outside repeated regions. Embedded expressions such as `Name: **name`
+A text cell starting with `**` is replaced as a whole. Formula cells anywhere in the template are rejected. Embedded expressions such as `Name: **name`
 are ordinary literal text.
 
 | Template text | Meaning |
@@ -357,7 +356,7 @@ to Excel's precision limits. Use formatting to preserve their textual representa
 The optional culture overrides `MappingOptions.Culture`. Arguments are JSON string
 literals; pipe characters within quoted path keys do not split the expression.
 Formatting produces an Excel **text** cell. Without formatting, the template's
-Excel number format controls presentation and numbers remain usable in formulas.
+Excel number format controls presentation and numeric types remain intact.
 
 `date(format[, culture])` formats a CLR `DateTime`/`DateTimeOffset`, or converts an
 ISO 8601 JSON string only when explicitly requested. Accepted strings are
@@ -436,7 +435,7 @@ The breaks divide the worksheet across the whole print area, not just around
 the cell or its array block.
 
 Unlike start/end markers, a page-break directive does not require a dedicated
-row: other cells on that row can contain data, or formulas outside repeated regions. The directive cell
+row: other cells on that row can contain data; Excel formulas are prohibited. The directive cell
 becomes blank, while its style and row remain. To print the literal marker, enter
 `\**@page-break`; that does not create breaks.
 
@@ -493,70 +492,87 @@ because of this directive.
 
 ## Excel behavior and limitations
 
-Value/style-only regions use a final-row placement plan with one bulk resize per
-region. Templates with references or other Excel objects retain ClosedXML row
-insertion/deletion and range copying to preserve their existing behavior. Expansion
-preserves cell styles, row height, hidden state, outline levels, ordinary
-merged ranges, copied conditional formatting and data validation. Existing formula
-references, defined names and print areas follow ClosedXML's Excel row-operation
-semantics. Ranges ending exactly at a repeated region's boundary do not necessarily
-extend to all copies: design the template's totals accordingly or supply totals in
-the input data. References to deleted marker/empty-array rows can become `#REF!`.
+The OpenXml writer applies a final source-to-output row plan to staged package
+parts. It preserves styles, row heights, hidden state, outline levels, merges,
+manual breaks, static names, hyperlinks, comments, pictures, tables/filters,
+conditional formatting and data validation. Internal hyperlink destinations move
+with their referenced rows, including references from another sheet. Names,
+tables and pictures intersecting repeated regions remain unsupported.
+Print areas include every output occurrence; deleted areas are removed. Repeated
+or deleted print-title rows are rejected. See
+[engine selection](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/openxml-integration.md)
+for supported part types, pivot caches and staged output guarantees.
 
-Formulas inside repeated rows/blocks and defined names whose ranges overlap them
-are rejected before evaluating data or writing output, even for empty arrays. This
-is a compatibility change: calculate repeated values in C#/JSON instead. Both
-workbook and worksheet names are checked, across all columns of the repeated rows,
-including marker rows. Outside formulas/names, including those below the repeated
-region, remain supported with the reference limitations above. Print areas and
-print titles are page settings and remain supported.
+All Mapping backends reject cell formulas anywhere in the workbook, table
+calculated/totals formulas, non-none totals functions and calculated defined names before backend selection,
+data evaluation or output. The reason code is `MappingFormulaNotSupported`.
+This includes formulas outside repeats and on hidden sheets. Calculate amounts,
+tax and totals in the caller and supply the resulting values through C# objects
+or JSON and value placeholders. Static names accept only literal constants and finite A1
+reference unions; functions, arithmetic, dynamic/external/3D references, aliases and
+unknown grammar are rejected. Unknown workbook/worksheet/table extension payloads
+are rejected when the absence of value formulas cannot be established. Conditional
+formatting and validation formulas remain structural metadata. Their supported A1
+references move without evaluating formulas or rendering conditional styles.
 
 Merges entirely inside a repeated block are supported. Merges crossing an array
 boundary, merged marker rows, Excel tables intersecting repeated regions, and
 pictures intersecting repeated regions are rejected with template diagnostics.
-Other unsupported workbook features depend on ClosedXML's load/save support;
-use ordinary cell-based templates for the repeated regions.
+Unknown parts/extensions, macros, signatures and Strict packages are rejected.
+Use ordinary cell-based templates for repeated regions.
 
-Supported formulas are evaluated before saving; formulas are retained and automatic
-recalculation is requested for Excel. Unsupported functions may produce Excel error
-values in the cached output and therefore cannot be relied upon for immediate
-rendering. Compute those values in C#/JSON instead.
+Saving explicitly disables formula evaluation and preserves the original `calcPr`
+(including absence), without adding recalculation requests. Strings beginning with
+`=` remain literal strings. Mapping's `**` expressions and format/date operations
+are separate from Excel formulas and remain supported.
 
-`MappingException` exposes `SheetName`, `CellAddress` and `Expression` referring to
-the original template, including errors encountered after nested expansion.
+`MappingException` exposes `SheetName`, `CellAddress`, `Expression` and optional
+stable `ReasonCode`, referring to the original template. Formula failures identify
+the original cell, defined name or table when available.
 
 ## Create the example template without Excel
 
 You can also generate the same invoice template from C#. In the console project
 with `ExcelRenderer.Mapping` installed, replace `Program.cs` with this code and
-run `dotnet run` once. ClosedXML is supplied by the mapping package's dependencies.
+run `dotnet run` once. This example uses the Open XML SDK supplied transitively
+by the mapping package.
 Then replace `Program.cs` with a mapping example above, or use the CLI.
 
 ```csharp
-using ClosedXML.Excel;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using S = DocumentFormat.OpenXml.Spreadsheet;
 
-using var workbook = new XLWorkbook();
-var sheet = workbook.AddWorksheet("Invoice");
-sheet.Cell("A1").Value = "Invoice";
-sheet.Cell("A2").Value = "Customer";
-sheet.Cell("B2").Value = "**Customer";
-sheet.Cell("A3").Value = "Issued";
-sheet.Cell("B3").Value = "**IssuedAt | date(\"yyyy/MM/dd\")";
-sheet.Cell("A4").Value = "Item";
-sheet.Cell("B4").Value = "Quantity";
-sheet.Cell("C4").Value = "Unit price";
-sheet.Cell("D4").Value = "Line total";
-sheet.Cell("A5").Value = "**Items[*].Name";
-sheet.Cell("B5").Value = "**Items[*].Quantity";
-sheet.Cell("C5").Value = "**Items[*].Price";
-sheet.Cell("D5").Value = "**Items[*].LineTotal";
-sheet.Cell("A6").Value = "Total";
-sheet.Cell("D6").Value = "**Total";
-sheet.Columns(1, 4).Width = 22;
-sheet.Range("A4:D4").Style.Font.Bold = true;
-sheet.Range("C5:D6").Style.NumberFormat.Format = "#,##0.00";
-sheet.PageSetup.PrintAreas.Add("A1:D6");
-workbook.SaveAs("template.xlsx");
+using var package = SpreadsheetDocument.Create("template.xlsx", SpreadsheetDocumentType.Workbook);
+var workbook = package.AddWorkbookPart();
+workbook.Workbook = new S.Workbook(new S.Sheets());
+var sheet = workbook.AddNewPart<WorksheetPart>();
+workbook.Workbook.Sheets!.Append(new S.Sheet { Id = workbook.GetIdOfPart(sheet), SheetId = 1, Name = "Invoice" });
+var rows = new[]
+{
+    new[] { "Invoice" },
+    new[] { "Customer", "**Customer" },
+    new[] { "Issued", "**IssuedAt | date(\"yyyy/MM/dd\")" },
+    new[] { "Item", "Quantity", "Unit price", "Line total" },
+    new[] { "**Items[*].Name", "**Items[*].Quantity", "**Items[*].Price", "**Items[*].LineTotal" },
+    new[] { "Total", "", "", "**Total" },
+};
+var data = new S.SheetData();
+for (var row = 0; row < rows.Length; row++)
+{
+    var record = new S.Row { RowIndex = (uint)row + 1 };
+    for (var column = 0; column < rows[row].Length; column++)
+    {
+        record.Append(new S.Cell(new S.InlineString(new S.Text(rows[row][column])))
+        {
+            CellReference = $"{(char)('A' + column)}{row + 1}",
+            DataType = S.CellValues.InlineString,
+        });
+    }
+    data.Append(record);
+}
+sheet.Worksheet = new S.Worksheet(new S.Columns(new S.Column { Min = 1, Max = 4, Width = 22, CustomWidth = true }), data);
+workbook.Workbook.DefinedNames = new S.DefinedNames(new S.DefinedName("'Invoice'!$A$1:$D$6") { Name = "_xlnm.Print_Area", LocalSheetId = 0 });
 ```
 
 ## Troubleshooting
@@ -568,12 +584,12 @@ workbook.SaveAs("template.xlsx");
 | An expression remains as text | It must start at the beginning of a text cell. `Customer: **Customer` is literal text; put the label and expression in separate cells. |
 | `Property '…' was not found` | Match property names and capitalization exactly. Missing properties and out-of-range indices are errors; explicit `null` gives a blank cell. |
 | A cell requires a scalar value | Select a property such as `**Customer.Name`, an index, or use an array repetition. An entire object or array cannot occupy a scalar cell. |
-| `format()` fails or numbers stop working in formulas | Formatting requires an `IFormattable` value and creates text. For numeric formulas, keep the value unformatted and set the Excel cell's number format. For JSON numbers, use formats such as `0000` or `N2` rather than integer-only CLR formats such as `D4`. |
+| `format()` fails or changes a number to text | Formatting requires an `IFormattable` value and creates text. To retain numeric types, keep the value unformatted and set the Excel cell's number format. For JSON numbers, use formats such as `0000` or `N2` rather than integer-only CLR formats such as `D4`. |
 | A date stays as an ISO string | Use `date("yyyy/MM/dd")` explicitly. Strings are not automatically converted to dates. |
 | A repeated row disappears | An empty array deletes its row or block. Pass at least one element if you want a data row. |
 | Markers report a dedicated-row or alias error | Put each start/end marker on its own unmerged row. Use a matching pair and refer to aliases only inside their block. |
 | Expansion exceeds `MaxOutputRows` | Reduce the data size or set a suitable `MappingOptions.MaxOutputRows` through C#. Ordinary rows also count. The CLI uses the 100,000-row default. |
-| A total only includes the first item, or a formula becomes `#REF!` | Formula ranges follow ClosedXML row operations. Supply totals in the input, and avoid referencing marker rows or rows deleted by empty arrays. |
-| A formula shows `#NAME?` in rendered output | ClosedXML cannot evaluate every Excel function. Compute the value in the input; Excel recalculation after opening is not available during immediate rendering. |
+| Static names become `#REF!` | Avoid references to marker rows or rows deleted by empty arrays. Supply totals in the input. |
+| `MappingFormulaNotSupported` | Calculate the value in the caller and replace the formula with a value placeholder. The check covers every backend and all sheets. |
 | Rendering reports that output already exists | Use a fresh output file or an empty output directory. Successful `xlsx` mapping, unlike rendering, replaces an existing output XLSX. |
 | An unselected worksheet causes a mapping error | Mapping evaluates all worksheets before rendering selection. Fix its expressions or remove that worksheet from the template. |

@@ -1,0 +1,635 @@
+{
+  "Environment": {
+    "ImplementationBaseSha": "cbf5257bba8382e61794ef8ac1a20710a913b2f6",
+    "WorkingTreeChanges": true,
+    "ValidationSourceSha256": "204039243FA6EB5220966F8DDA29F4F8DCBD0BFA856C03802FDA87449729EF6D",
+    "OS": "Debian GNU/Linux 13 (trixie)",
+    "Runtime": ".NET 10.0.12",
+    "Sdk": "10.0.401",
+    "Culture": "en-US"
+  },
+  "Culture": "en-US",
+  "Files": [
+    {
+      "File": "samples/excel/japanese-grid-report.xlsx",
+      "Sha256": "4907D79963EB8267EAB4230C7AAD9BBD0D580238D3D42F402B34FB4C0FF217A1",
+      "Cells": 1328,
+      "Status": "Read"
+    },
+    {
+      "File": "samples/mapping/invoice/invoice.xlsx",
+      "Sha256": "1EAFC42149F48770C131F836883FFB6AC2714215D4EBE2DB5352E1DEE66011A5",
+      "Cells": 120,
+      "Status": "Read"
+    },
+    {
+      "File": "samples/mapping/invoice/page-breaks/invoice.xlsx",
+      "Sha256": "FE9E74BB06481AA86D2DCF14268C94CA95844B5A2A3B3693B7C98996FA2E8D93",
+      "Cells": 237,
+      "Status": "Read"
+    },
+    {
+      "File": "samples/mapping/invoice/page-breaks/template.xlsx",
+      "Sha256": "4B3599F12FB192099459888091F4F6FE0DE6E6198B7A40A0EA2D9C394AA846BE",
+      "Cells": 89,
+      "Status": "Read"
+    },
+    {
+      "File": "samples/mapping/invoice/template.xlsx",
+      "Sha256": "8158FFCC92C5F5D0F71A951C4FE38CD3CB87415312F11E827CF69AAA2E5455EB",
+      "Cells": 104,
+      "Status": "Read"
+    },
+    {
+      "File": "tests/ExcelRenderer.Tests/SampleInputs/01-japanese.xlsx",
+      "Sha256": "6A89D390E07A60E919B7BE2C5FA6AF47721B0E9C5A4A0C325AE97174FF6386F0",
+      "Cells": 8,
+      "Status": "Read"
+    },
+    {
+      "File": "tests/ExcelRenderer.Tests/SampleInputs/02-image.xlsx",
+      "Sha256": "D54804111617065E59A4BBE4D5C2099B08EFDEA2F71D1676998BC836569DE254",
+      "Cells": 4,
+      "Status": "Read"
+    },
+    {
+      "File": "tests/ExcelRenderer.Tests/SampleInputs/03-wrapped-text.xlsx",
+      "Sha256": "60421161D8EC36904BEFD41ECDE57551EA7880A8FFDA07925B38178FC747D990",
+      "Cells": 2,
+      "Status": "Read"
+    },
+    {
+      "File": "tests/ExcelRenderer.Tests/SampleInputs/04-text-decoration.xlsx",
+      "Sha256": "C8EE629159DE588541C6D08BCE70CAE9C0483DDCB21C3FEEF536102E1457CFF1",
+      "Cells": 7,
+      "Status": "Read"
+    },
+    {
+      "File": "tests/ExcelRenderer.Tests/SampleInputs/05-borders.xlsx",
+      "Sha256": "074CFD50A3D4556380F462A69287D9B0254A71EBE412E267B395CA345A54EAC2",
+      "Cells": 12,
+      "Status": "Read"
+    },
+    {
+      "File": "tests/ExcelRenderer.Tests/SampleInputs/06-layout-and-pagination.xlsx",
+      "Sha256": "5870F080AC266568DE200BF6955A617DA452B14C103A30371889E8BEE13B12E6",
+      "Cells": 50,
+      "Status": "Read"
+    },
+    {
+      "File": "tests/ExcelRenderer.Tests/SampleInputs/07-multiple-sheets.xlsx",
+      "Sha256": "2DA1636A03384C0AA0ECB14EC3183631F3C41A90F1348693E795C329C0CAE20E",
+      "Cells": 2,
+      "Status": "Read"
+    },
+    {
+      "File": "tests/ExcelRenderer.Tests/SampleInputs/08-print-scaling.xlsx",
+      "Sha256": "F9E5FFAA18C622D2820138D18C6AED07AE63B28DA8FAD1C71C4FFCBDD12A9FB7",
+      "Cells": 128,
+      "Status": "Read"
+    },
+    {
+      "File": "tests/ExcelRenderer.Tests/SampleInputs/09-cell-border.xlsx",
+      "Sha256": "5655EE7B5407C1C9AF6836EC65F573819B0265C833660210D04060CA8C368D70",
+      "Cells": 297,
+      "Status": "Read"
+    },
+    {
+      "File": "tests/ExcelRenderer.Tests/SampleInputs/ReaderRichText/representative.xlsx",
+      "Sha256": "5E4032E814530D62DB777AD76B8EAE467C4F761696A2877E22CA41E2FBC37357",
+      "Cells": 8,
+      "Status": "Read"
+    }
+  ],
+  "Differences": [],
+  "UnexplainedDifferences": 0,
+  "Diagnostics": [
+    {
+      "Code": "FormulaCachedValueMissing",
+      "Severity": "Warning",
+      "SheetIndex": 1,
+      "Address": {
+        "Row": 5,
+        "Column": 7
+      },
+      "Message": "Formula has no stored result; calculation is not supported."
+    },
+    {
+      "Code": "FormulaCachedValueMissing",
+      "Severity": "Warning",
+      "SheetIndex": 1,
+      "Address": {
+        "Row": 6,
+        "Column": 7
+      },
+      "Message": "Formula has no stored result; calculation is not supported."
+    },
+    {
+      "Code": "FormulaCachedValueMissing",
+      "Severity": "Warning",
+      "SheetIndex": 1,
+      "Address": {
+        "Row": 7,
+        "Column": 7
+      },
+      "Message": "Formula has no stored result; calculation is not supported."
+    },
+    {
+      "Code": "FormulaCachedValueMissing",
+      "Severity": "Warning",
+      "SheetIndex": 1,
+      "Address": {
+        "Row": 8,
+        "Column": 7
+      },
+      "Message": "Formula has no stored result; calculation is not supported."
+    },
+    {
+      "Code": "FormulaCachedValueMissing",
+      "Severity": "Warning",
+      "SheetIndex": 1,
+      "Address": {
+        "Row": 9,
+        "Column": 7
+      },
+      "Message": "Formula has no stored result; calculation is not supported."
+    },
+    {
+      "Code": "FormulaCachedValueMissing",
+      "Severity": "Warning",
+      "SheetIndex": 1,
+      "Address": {
+        "Row": 10,
+        "Column": 7
+      },
+      "Message": "Formula has no stored result; calculation is not supported."
+    },
+    {
+      "Code": "FormulaCachedValueMissing",
+      "Severity": "Warning",
+      "SheetIndex": 1,
+      "Address": {
+        "Row": 11,
+        "Column": 7
+      },
+      "Message": "Formula has no stored result; calculation is not supported."
+    },
+    {
+      "Code": "FormulaCachedValueMissing",
+      "Severity": "Warning",
+      "SheetIndex": 1,
+      "Address": {
+        "Row": 12,
+        "Column": 7
+      },
+      "Message": "Formula has no stored result; calculation is not supported."
+    },
+    {
+      "Code": "FormulaCachedValueMissing",
+      "Severity": "Warning",
+      "SheetIndex": 1,
+      "Address": {
+        "Row": 13,
+        "Column": 7
+      },
+      "Message": "Formula has no stored result; calculation is not supported."
+    },
+    {
+      "Code": "FormulaCachedValueMissing",
+      "Severity": "Warning",
+      "SheetIndex": 1,
+      "Address": {
+        "Row": 14,
+        "Column": 7
+      },
+      "Message": "Formula has no stored result; calculation is not supported."
+    },
+    {
+      "Code": "FormulaCachedValueMissing",
+      "Severity": "Warning",
+      "SheetIndex": 1,
+      "Address": {
+        "Row": 15,
+        "Column": 7
+      },
+      "Message": "Formula has no stored result; calculation is not supported."
+    },
+    {
+      "Code": "FormulaCachedValueMissing",
+      "Severity": "Warning",
+      "SheetIndex": 1,
+      "Address": {
+        "Row": 16,
+        "Column": 7
+      },
+      "Message": "Formula has no stored result; calculation is not supported."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    },
+    {
+      "Code": "UnresolvedColor",
+      "Severity": "Warning",
+      "SheetIndex": null,
+      "Address": null,
+      "Message": "Color cannot be resolved; original attributes are retained."
+    }
+  ],
+  "FormulaPolicy": "Original XML cache; no formula evaluation or shared-reference rewriting."
+}

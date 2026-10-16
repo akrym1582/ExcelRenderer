@@ -31,6 +31,7 @@ public static class ImageCommand
         var command = new Command("image", "Convert Excel worksheets to paginated PNG images. Use 'render --format png --image-layout continuous' for continuous images.") { input, output, sheet, dpi };
         command.Add(data);
         command.Add(formulaMode);
+        var backends = new BackendOptions(command, data, formulaMode);
         CommandSupport.AddFontOptions(command, fonts);
         command.SetAction((parseResult, cancellationToken) => CommandSupport.RunAsync(() => MappingCommandSupport.WithInputAsync(
             parseResult.GetValue(input)!,
@@ -39,9 +40,10 @@ public static class ImageCommand
             mappedInput => ExcelConverter.ConvertToImagesAsync(
                 mappedInput,
                 parseResult.GetValue(output)!,
-                new ImageExportOptions { SheetName = parseResult.GetValue(sheet), Dpi = parseResult.GetValue(dpi), ReadOptions = CommandSupport.GetReadOptions(parseResult.GetValue(formulaMode)!), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
+                new ImageExportOptions { SheetName = parseResult.GetValue(sheet), Dpi = parseResult.GetValue(dpi), ReadOptions = backends.GetRead(parseResult, formulaMode), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
                 cancellationToken),
-            cancellationToken)));
+            cancellationToken,
+            backends.GetMapping(parseResult))));
         return command;
     }
 }

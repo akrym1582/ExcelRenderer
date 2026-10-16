@@ -3,7 +3,9 @@ using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Xml.Linq;
-using ClosedXML.Excel;
+using ExcelRenderer.TestFixtures;
+using ExcelRenderer.OpenXml;
+using static ExcelRenderer.TestFixtures.WorkbookAssertions;
 using ExcelRenderer.Mapping;
 using Xunit;
 
@@ -36,70 +38,70 @@ public sealed partial class ToolIntegrationTests
         var originalJson = await File.ReadAllBytesAsync(json);
         var mapped = Path.Combine(_directory, "invoice.xlsx");
         AssertSuccess(await RunAsync("xlsx", template, "--data", json, "-o", mapped));
-        using (var workbook = new XLWorkbook(mapped))
+        using (var workbook = WorkbookProbe.Open(mapped))
         {
-            var sheet = workbook.Worksheet("請求書");
-            Assert.Equal("株式会社サンプル 御中", sheet.Cell("B2").GetString());
-            Assert.Equal("東京都千代田区丸の内1-2-3", sheet.Cell("B3").GetString());
-            Assert.Equal("山田 太郎 様", sheet.Cell("B4").GetString());
-            Assert.Equal("JPY", sheet.Cell("F4").GetString());
-            Assert.Equal("2026/10/09", sheet.Cell("F3").GetString());
-            Assert.Equal(XLDataType.Text, sheet.Cell("B5").DataType);
-            Assert.Equal("2026-10-09", sheet.Cell("B5").GetString());
-            Assert.Equal(XLDataType.Boolean, sheet.Cell("F5").DataType);
-            Assert.False(sheet.Cell("F5").GetBoolean());
-            Assert.Equal("27:30", sheet.Cell("B6").GetString());
+            var sheet = workbook;
+            Assert.Equal("株式会社サンプル 御中", Text(sheet, "B2"));
+            Assert.Equal("東京都千代田区丸の内1-2-3", Text(sheet, "B3"));
+            Assert.Equal("山田 太郎 様", Text(sheet, "B4"));
+            Assert.Equal("JPY", Text(sheet, "F4"));
+            Assert.Equal("2026/10/09", Text(sheet, "F3"));
+            Assert.Equal(CellValueType.String, Cell(sheet, "B5").Value.Type);
+            Assert.Equal("2026-10-09", Text(sheet, "B5"));
+            Assert.Equal(CellValueType.Boolean, Cell(sheet, "F5").Value.Type);
+            Assert.False(Cell(sheet, "F5").Value.Boolean == true);
+            Assert.Equal("27:30", Text(sheet, "B6"));
             for (var index = 0; index < itemCount; index++)
             {
                 var row = 9 + (2 * index);
                 var item = items[index]!;
-                Assert.Equal(XLDataType.Text, sheet.Cell(row, 1).DataType);
-                Assert.Equal(item["code"]!.GetValue<int>().ToString("0000", CultureInfo.InvariantCulture), sheet.Cell(row, 1).GetString());
-                Assert.Equal(item["name"]!.GetValue<string>(), sheet.Cell(row, 2).GetString());
-                Assert.Equal(XLDataType.Number, sheet.Cell(row, 4).DataType);
-                Assert.Equal((double)item["quantity"]!.GetValue<decimal>(), sheet.Cell(row, 4).GetDouble());
-                Assert.Equal((double)item["price"]!.GetValue<decimal>(), sheet.Cell(row, 5).GetDouble());
-                Assert.False(sheet.Cell(row, 6).HasFormula);
-                Assert.Equal((double)(item["quantity"]!.GetValue<decimal>() * item["price"]!.GetValue<decimal>()), sheet.Cell(row, 6).GetDouble());
-                Assert.Equal("#,##0.00;[Red](#,##0.00);\"-\"", sheet.Cell(row, 4).Style.NumberFormat.Format);
-                Assert.Equal("\"¥\"#,##0.00;[Red]-\"¥\"#,##0.00;\"¥\"0.00", sheet.Cell(row, 6).Style.NumberFormat.Format);
-                Assert.Equal("0.0%", sheet.Cell(row + 1, 6).Style.NumberFormat.Format);
-                Assert.Equal((double)item["taxRate"]!.GetValue<decimal>(), sheet.Cell(row + 1, 6).GetDouble());
-                Assert.Equal(item["note"]?.GetValue<string>() ?? string.Empty, sheet.Cell(row + 1, 2).GetString());
-                Assert.Equal(item["note"] is null, sheet.Cell(row + 1, 2).IsEmpty());
-                Assert.Equal(28, sheet.Row(row).Height);
-                Assert.Equal(24, sheet.Row(row + 1).Height);
-                Assert.Contains(sheet.MergedRanges, range => range.RangeAddress.ToString() == $"B{row}:C{row}");
-                Assert.Contains(sheet.MergedRanges, range => range.RangeAddress.ToString() == $"B{row + 1}:D{row + 1}");
-                Assert.Equal(XLBorderStyleValues.Thin, sheet.Cell(row, 6).Style.Border.BottomBorder);
-                Assert.Equal("FFF1F5F9", sheet.Cell(row + 1, 1).Style.Fill.BackgroundColor.Color.ToArgb().ToString("X8", CultureInfo.InvariantCulture));
+                Assert.Equal(CellValueType.String, Cell(sheet, row, 1).Value.Type);
+                Assert.Equal(item["code"]!.GetValue<int>().ToString("0000", CultureInfo.InvariantCulture), Text(sheet, row, 1));
+                Assert.Equal(item["name"]!.GetValue<string>(), Text(sheet, row, 2));
+                Assert.Equal(CellValueType.Number, Cell(sheet, row, 4).Value.Type);
+                Assert.Equal((double)item["quantity"]!.GetValue<decimal>(), Number(sheet, row, 4));
+                Assert.Equal((double)item["price"]!.GetValue<decimal>(), Number(sheet, row, 5));
+                Assert.False(Cell(sheet, row, 6).Formula != null);
+                Assert.Equal((double)(item["quantity"]!.GetValue<decimal>() * item["price"]!.GetValue<decimal>()), Number(sheet, row, 6));
+                Assert.Equal("#,##0.00;[Red](#,##0.00);\"-\"", Style(sheet, row, 4).NumberFormatCode);
+                Assert.Equal("\"¥\"#,##0.00;[Red]-\"¥\"#,##0.00;\"¥\"0.00", Style(sheet, row, 6).NumberFormatCode);
+                Assert.Equal("0.0%", Style(sheet, row + 1, 6).NumberFormatCode);
+                Assert.Equal((double)item["taxRate"]!.GetValue<decimal>(), Number(sheet, row + 1, 6));
+                Assert.Equal(item["note"]?.GetValue<string>() ?? string.Empty, Text(sheet, row + 1, 2));
+                Assert.Equal(item["note"] is null, Cell(sheet, row + 1, 2).Value.Type == CellValueType.Blank);
+                Assert.Equal(28, Row(sheet, row).HeightPt);
+                Assert.Equal(24, Row(sheet, row + 1).HeightPt);
+                Assert.Contains(Info(sheet).MergedRanges, range => range.ToString() == $"B{row}:C{row}");
+                Assert.Contains(Info(sheet).MergedRanges, range => range.ToString() == $"B{row + 1}:D{row + 1}");
+                Assert.Equal("thin", Style(sheet, row, 6).Border.Children.Single(element => element.Name == "bottom").Attributes["style"]);
+                Assert.Equal("FFF1F5F9", Fill(sheet, row + 1, 1));
             }
 
             var footer = 9 + (2 * itemCount);
-            Assert.Equal("小計", sheet.Cell(footer, 5).GetString());
-            Assert.Equal((double)subtotal, sheet.Cell(footer, 6).GetDouble());
-            Assert.Equal((double)tax, sheet.Cell(footer + 1, 6).GetDouble());
-            Assert.Equal(XLDataType.Number, sheet.Cell(footer + 2, 6).DataType);
-            Assert.Equal((double)(subtotal + tax), sheet.Cell(footer + 2, 6).GetDouble());
-            Assert.True(sheet.Cell(footer + 2, 6).Style.Font.Bold);
-            Assert.Equal((subtotal + tax).ToString("N2", CultureInfo.GetCultureInfo("de-DE")), sheet.Cell(footer + 5, 2).GetString());
-            Assert.Equal("30 Nov 2026", sheet.Cell(footer + 5, 6).GetString());
-            Assert.Equal(0, sheet.Cell(footer + 6, 2).GetDouble());
-            Assert.Equal(1234567, sheet.Cell(footer + 6, 6).GetDouble());
-            Assert.Equal(11, sheet.Cell(footer + 6, 6).Style.NumberFormat.NumberFormatId);
-            Assert.Equal("**literal", sheet.Cell(footer + 7, 1).GetString());
-            Assert.Equal(-1234.5, sheet.Cell(footer + 7, 2).GetDouble());
-            Assert.True(sheet.Cell(footer + 7, 6).IsEmpty());
-            Assert.Equal((subtotal + tax).ToString("C0", CultureInfo.GetCultureInfo("ja-JP")), sheet.Cell(footer + 8, 2).GetString());
-            Assert.Equal(XLDataType.Text, sheet.Cell(footer + 8, 6).DataType);
-            Assert.Equal("00123", sheet.Cell(footer + 8, 6).GetString());
-            Assert.Equal(footer + 8, sheet.LastRowUsed()!.RowNumber());
-            var printArea = Assert.Single(sheet.PageSetup.PrintAreas).RangeAddress;
-            Assert.Equal(1, printArea.FirstAddress.RowNumber);
-            Assert.Equal(1, printArea.FirstAddress.ColumnNumber);
-            Assert.Equal(footer + 8, printArea.LastAddress.RowNumber);
-            Assert.Equal(6, printArea.LastAddress.ColumnNumber);
-            Assert.DoesNotContain(sheet.CellsUsed(), cell => cell.GetString().StartsWith("**@", StringComparison.Ordinal));
+            Assert.Equal("小計", Text(sheet, footer, 5));
+            Assert.Equal((double)subtotal, Number(sheet, footer, 6));
+            Assert.Equal((double)tax, Number(sheet, footer + 1, 6));
+            Assert.Equal(CellValueType.Number, Cell(sheet, footer + 2, 6).Value.Type);
+            Assert.Equal((double)(subtotal + tax), Number(sheet, footer + 2, 6));
+            Assert.True(Style(sheet, footer + 2, 6).FontProperties.Bold == true);
+            Assert.Equal((subtotal + tax).ToString("N2", CultureInfo.GetCultureInfo("de-DE")), Text(sheet, footer + 5, 2));
+            Assert.Equal("30 Nov 2026", Text(sheet, footer + 5, 6));
+            Assert.Equal(0, Number(sheet, footer + 6, 2));
+            Assert.Equal(1234567, Number(sheet, footer + 6, 6));
+            Assert.Equal(11, Style(sheet, footer + 6, 6).NumberFormatId);
+            Assert.Equal("**literal", Text(sheet, footer + 7, 1));
+            Assert.Equal(-1234.5, Number(sheet, footer + 7, 2));
+            Assert.True(Cell(sheet, footer + 7, 6).Value.Type == CellValueType.Blank);
+            Assert.Equal((subtotal + tax).ToString("C0", CultureInfo.GetCultureInfo("ja-JP")), Text(sheet, footer + 8, 2));
+            Assert.Equal(CellValueType.String, Cell(sheet, footer + 8, 6).Value.Type);
+            Assert.Equal("00123", Text(sheet, footer + 8, 6));
+            Assert.Equal(footer + 8, LastContentRow(sheet));
+            var printArea = Info(sheet).PrintReferences.Single(item => item.Name == "_xlnm.Print_Area").Ranges.Single();
+            Assert.Equal(1, printArea.FirstRow);
+            Assert.Equal(1, printArea.FirstColumn);
+            Assert.Equal(footer + 8, printArea.LastRow);
+            Assert.Equal(6, printArea.LastColumn);
+            Assert.DoesNotContain(Cells(sheet), cell => cell.Value.Text?.StartsWith("**@", StringComparison.Ordinal) == true);
         }
 
         await AssertInvoiceRenderingsAsync(template, json, mapped);
@@ -125,16 +127,16 @@ public sealed partial class ToolIntegrationTests
         data["totals"] = new { subtotal = 32364m, tax = 3246.4m, total = 35610.4m };
         var mapped = Path.Combine(_directory, "clr-invoice.xlsx");
         ExcelTemplateMapper.Map(Path.Combine(sample, "template.xlsx"), mapped, data);
-        using (var workbook = new XLWorkbook(mapped))
+        using (var workbook = WorkbookProbe.Open(mapped))
         {
-            var sheet = workbook.Worksheet(1);
-            Assert.Equal(XLDataType.DateTime, sheet.Cell("B5").DataType);
-            Assert.Equal(new DateTime(2026, 10, 9), sheet.Cell("B5").GetDateTime());
-            Assert.Equal(XLDataType.TimeSpan, sheet.Cell("B6").DataType);
-            Assert.Equal(TimeSpan.FromHours(27), sheet.Cell("B6").GetTimeSpan());
-            Assert.True(sheet.Cell("F5").GetBoolean());
-            Assert.Equal(35610.4, sheet.Cell("F17").GetDouble());
-            Assert.Equal("30 Nov 2026", sheet.Cell("F20").GetString());
+            var sheet = workbook;
+            Assert.Equal(CellValueType.Number, Cell(sheet, "B5").Value.Type);
+            Assert.Equal(new DateTime(2026, 10, 9), Date(sheet, "B5"));
+            Assert.Equal(CellValueType.Number, Cell(sheet, "B6").Value.Type);
+            Assert.Equal(TimeSpan.FromHours(27), Duration(sheet, "B6"));
+            Assert.True(Cell(sheet, "F5").Value.Boolean == true);
+            Assert.Equal(35610.4, Number(sheet, "F17"));
+            Assert.Equal("30 Nov 2026", Text(sheet, "F20"));
         }
 
         var markdown = Path.Combine(_directory, "clr.md");

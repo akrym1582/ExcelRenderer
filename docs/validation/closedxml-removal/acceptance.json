@@ -1,0 +1,61 @@
+{
+  "scope": "Full ClosedXML runtime/dependency removal",
+  "fullClosedXmlRemovalComplete": true,
+  "baselineCommit": "24c9dea4d67190951d152eef56f76abc943ef733",
+  "branch": "feature/remove-closedxml",
+  "workingTreeDirty": true,
+  "tests": {
+    "Core": 80,
+    "Mapping": 146,
+    "OpenXml": 154,
+    "Full": 538,
+    "Tool": 84,
+    "total": 1002,
+    "failed": 0,
+    "skipped": 0
+  },
+  "rebuildWarnings": 0,
+  "rebuildErrors": 0,
+  "restoredProjectGraphs": 16,
+  "dependencyManifestsChecked": 25,
+  "localPackagesVerified": [
+    "ExcelRenderer.1.8.0.nupkg",
+    "ExcelRenderer.Fonts.1.8.0.nupkg",
+    "ExcelRenderer.Mapping.1.8.0.nupkg",
+    "ExcelRenderer.OpenXml.1.8.0.nupkg",
+    "ExcelRenderer.Tool.1.8.0.nupkg"
+  ],
+  "consumerFormats": [
+    "Pdf",
+    "Png",
+    "Svg",
+    "Markdown",
+    "CorePdf",
+    "MappedPdf",
+    "MappedPng",
+    "MappedSvg",
+    "MappedMarkdown"
+  ],
+  "consumerClosedXmlAssemblyLoaded": false,
+  "installedCliPackageMatches": true,
+  "sdkGeneratedWorkbookSchemaErrors": 0,
+  "sdkGeneratedWorkbooks": 16,
+  "invoiceInheritedSchemaErrors": {
+    "mapped.xlsx": 6
+  },
+  "invoiceNewSchemaErrors": 0,
+  "readerGoldenWorkbooks": 15,
+  "rawReaderBaselineWorkbooks": 15,
+  "mappingParentFeatureCases": 40,
+  "mappingParentPivotCases": 4,
+  "sparklineParentRejectionRetained": true,
+  "mappingProjectionsMatchAcrossBenchmarks": true,
+  "performanceWarmups": 1,
+  "performanceMeasurements": 3,
+  "formulaEvaluationAdded": false,
+  "coreRemainsNonpackable": true,
+  "coreDllMatchesMainAndTool": true,
+  "pending": [],
+  "published": false,
+  "pushed": false
+}

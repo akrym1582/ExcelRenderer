@@ -7,17 +7,17 @@ import xml.etree.ElementTree as ET
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 CORE = ROOT / 'src/ExcelRenderer.Core'
 project = ET.parse(CORE / 'ExcelRenderer.Core.csproj').getroot()
-assert not project.findall('.//ProjectReference'), 'Core must have no project references'
+assert {p.attrib['Include'] for p in project.findall('.//ProjectReference')} == {'../ExcelRenderer.OpenXml/ExcelRenderer.OpenXml.csproj'}, 'Core may reference only shared OpenXml'
 for path in CORE.rglob('*.cs'):
     if {'bin', 'obj'} & set(path.parts):
         continue
     for name in re.findall(r'\bExcelRenderer\.[A-Za-z0-9_.]+', path.read_text()):
-        assert name.startswith('ExcelRenderer.Core') or name == 'ExcelRenderer.Tests', f'{path}: forbidden main namespace {name}'
+        assert name.startswith('ExcelRenderer.Core') or name.startswith('ExcelRenderer.OpenXml') or name == 'ExcelRenderer.Tests', f'{path}: forbidden main namespace {name}'
 for relative, owner in {
     'Excel/CellRangeIndex.cs': 'Core.Excel.CoreCellRangeIndex',
     'Drawing/TextLayoutFontSize.cs': 'Core.Drawing.TextLayoutFontSize',
     'Excel/ColumnWidthCalculator.cs': 'Core.Excel.ColumnWidthCalculator',
-    'Excel/ExcelStyleConverter.cs': 'Core.Excel.ExcelStyleConverter',
+    'Excel/ExcelStyleConverter.cs': 'Core.Excel.OpenXmlStyleConverter',
     'Excel/WorkbookLayoutMetadataReader.cs': 'Core.Excel.WorkbookLayoutMetadataReader',
     'Layout/BandIndex.cs': 'Core.Layout.BandIndex',
     'Layout/SheetGeometry.cs': 'Core.Layout.SheetGeometry',
@@ -66,3 +66,39 @@ assert 'ReadCore(' in normal and 'BuildCore(' in normal and 'Core.Drawing.DrawCo
 assert 'static readonly SemaphoreSlim' not in normal
 assert 'class FullLayoutPolicy : Core.Layout.CoreLayoutPolicy' in (ROOT / 'src/ExcelRenderer/CoreIntegration/FullLayoutPolicy.cs').read_text()
 print('Shared conversion pipeline and compatibility facade ownership passed')
+
+# XML and bounded workbook input belong to the shared OpenXml project.
+OPENXML = ROOT / 'src/ExcelRenderer.OpenXml'
+reader_project = ET.parse(OPENXML / 'ExcelRenderer.OpenXml.csproj').getroot()
+assert not reader_project.findall('.//ProjectReference'), 'OpenXml reader must have no project references'
+reader_packages = {p.attrib['Include'] for p in reader_project.findall('.//PackageReference')}
+assert reader_packages == {'DocumentFormat.OpenXml', 'ExcelNumberFormat'}, reader_packages
+for path in OPENXML.rglob('*.cs'):
+    if {'bin', 'obj'} & set(path.parts):
+        continue
+    text = path.read_text()
+    code = re.sub(r'^\s*///.*$', '', text, flags=re.MULTILINE)
+    if path.name == 'AssemblyInfo.cs':
+        code = re.sub(r'^\[assembly: InternalsVisibleTo\(.*$', '', code, flags=re.MULTILINE)
+    assert not re.search(r'\b(ClosedXML|PDFsharp|SkiaSharp)\b|ExcelRenderer\.(Core|Mapping|Fonts)', code), path
+    assert 'WorksheetPart.Worksheet' not in text and '.SharedStringTable' not in text.replace('.SharedStringTablePart', ''), path
+for name in ('ExcelRenderer.Core', 'ExcelRenderer', 'ExcelRenderer.Mapping'):
+    path = ROOT / 'src' / name / (name + '.csproj')
+    assert 'ExcelRenderer.OpenXml' in path.read_text(), f'{path}: shared OpenXml reference missing'
+for relative in ('Input/SpillableBufferStream.cs', 'Input/WorkbookInputPreparer.cs'):
+    text = (CORE / relative).read_text()
+    assert 'OpenXml.Input.' in text, f'{relative}: shared input delegation missing'
+    assert not re.search(r'\b(for|foreach|while)\s*\(', text), f'{relative}: duplicate input algorithm'
+print('Shared OpenXml dependency direction and input ownership passed')
+
+# Product enrichment hooks and the shared mapping language must remain source-neutral.
+for path in (ROOT / 'src/ExcelRenderer/CoreIntegration').glob('FullExcelReader*.cs'):
+    assert not re.search(r'\b(IXL\w*|XLWorkbook)\b|using ClosedXML', path.read_text()), f'{path}: legacy type returned to product hooks'
+assert 'ClosedXML' not in (CORE / 'Excel/ICoreFontMetrics.cs').read_text(), 'Neutral metrics include legacy engine types'
+for name in ('TemplateSheet', 'TemplateNode', 'ExpansionNode', 'ExpansionPlan', 'MappedValue', 'MappedValueKind', 'TemplateSnapshot', 'CellExpression', 'DataPath'):
+    path = ROOT / 'src/ExcelRenderer.Mapping' / (name + '.cs')
+    assert not re.search(r'\b(IXL\w*|XLCellValue|XLWorkbook)\b|using ClosedXML', path.read_text()), f'{path}: language depends on legacy cells'
+print('Source-neutral reader hooks and shared mapping language passed')
+
+markdown_geometry = (ROOT / "src/ExcelRenderer/Markdown/VisualCellBuilder.cs").read_text()
+assert "Layout.SheetGeometry" in markdown_geometry and "PrefixSums" not in markdown_geometry, "Markdown geometry must delegate sparse defaults and hidden axes to Core"

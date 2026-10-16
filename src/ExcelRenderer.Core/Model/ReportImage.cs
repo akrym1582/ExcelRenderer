@@ -18,6 +18,9 @@ internal sealed record ReportImage(
     /// <summary>Gets the original DrawingML anchor metadata when available.</summary>
     public DrawingAnchor? DrawingAnchor { get; init; }
 
+    /// <summary>Gets independent source picture metadata for full-product enrichment.</summary>
+    internal OpenXml.ImageInfo? SourceImage { get; init; }
+
     /// <summary>Gets borrowed product image metadata.</summary>
     internal Extensibility.ICoreExtensionData? ExtensionData { get; init; }
 }

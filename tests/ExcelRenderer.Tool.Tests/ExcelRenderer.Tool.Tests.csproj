@@ -16,4 +16,9 @@
     <ProjectReference Include="../../src/ExcelRenderer.Tool/ExcelRenderer.Tool.csproj" ReferenceOutputAssembly="false" />
     <None Include="../ExcelRenderer.Tests/SampleInputs/03-wrapped-text.xlsx" Link="SampleInputs/sample.xlsx" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="../Shared/WorkbookAssertions.cs" Link="Fixtures/WorkbookAssertions.cs" />
+    <Compile Include="../Shared/RetainedWorkbook.cs" Link="Fixtures/RetainedWorkbook.cs" />
+    <None Include="../Shared/RetainedWorkbooks/*.xlsx" Link="RetainedWorkbooks/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

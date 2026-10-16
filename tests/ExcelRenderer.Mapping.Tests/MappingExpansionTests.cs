@@ -1,4 +1,7 @@
-using ClosedXML.Excel;
+using ExcelRenderer.OpenXml;
+using ExcelRenderer.TestFixtures;
+using static ExcelRenderer.TestFixtures.WorkbookAssertions;
+using static ExcelRenderer.Mapping.Tests.MappingFixture;
 using ExcelRenderer.Mapping;
 using Xunit;
 
@@ -15,20 +18,13 @@ public sealed class MappingExpansionTests
     [InlineData(true, 3)]
     public void Repeated_formulas_are_rejected_before_touching_output(bool block, int count)
     {
-        using var input = Template(s =>
-        {
-            if (block) s.Cell("A1").Value = "**@start-array items[*] as item";
-            var row = block ? 2 : 1;
-            s.Cell(row, 1).Value = block ? "**@item" : "**items[*]";
-            s.Cell(row, 20).FormulaA1 = "1+1";
-            if (block) s.Cell("A3").Value = "**@end-array";
-        });
+        using var input = Fixture(block ? "MappingExpansionTests.Repeated_formulas_are_rejected_before_touching_output.8CAF258AAC33A01F.xlsx" : "MappingExpansionTests.Repeated_formulas_are_rejected_before_touching_output.BA1ABA05D8C21D92.xlsx");
         using var output = new MemoryStream();
         output.Write([7, 8, 9]);
         var error = Assert.Throws<MappingException>(() => ExcelTemplateMapper.Map(input, output, new { items = Enumerable.Range(0, count).ToArray() }));
         Assert.Equal(block ? "T2" : "T1", error.CellAddress);
-        Assert.Equal("=1+1", error.Expression);
-        Assert.Contains("Formulas inside repeated", error.Message);
+        Assert.Equal("MappingFormulaNotSupported", error.ReasonCode);
+        Assert.Contains("Calculate values in the caller", error.Message);
         Assert.Equal(new byte[] { 7, 8, 9 }, output.ToArray());
     }
 
@@ -39,12 +35,7 @@ public sealed class MappingExpansionTests
     [InlineData(true, 3)]
     public void Overlapping_names_in_both_scopes_are_rejected(bool local, int count)
     {
-        using var input = Template(s =>
-        {
-            s.Cell("A1").Value = "**items[*]";
-            var names = local ? s.DefinedNames : s.Workbook.DefinedNames;
-            names.Add("RepeatedValue", "'Template'!$Z$1");
-        });
+        using var input = Fixture(local ? "MappingExpansionTests.Overlapping_names_in_both_scopes_are_rejected.6F66ECE7358D905C.xlsx" : "MappingExpansionTests.Overlapping_names_in_both_scopes_are_rejected.76FC9370F37AAFCD.xlsx");
         using var output = new MemoryStream();
         var error = Assert.Throws<MappingException>(() => ExcelTemplateMapper.Map(input, output, new { items = Enumerable.Range(0, count).ToArray() }));
         Assert.Contains("RepeatedValue", error.Message);
@@ -56,159 +47,93 @@ public sealed class MappingExpansionTests
     [InlineData(true)]
     public void Right_edge_merges_are_copied_without_a_dummy_cell(bool block)
     {
-        using var input = Template(s =>
-        {
-            if (block) s.Cell("A1").Value = "**@start-array items[*] as item";
-            var row = block ? 2 : 1;
-            s.Cell(row, 1).Value = block ? "**@item" : "**items[*]";
-            s.Range(row, 2, row, 3).Merge();
-            s.Cell(row, 2).Value = "Merged";
-            s.Cell(row, 2).Style.Font.Bold = true;
-            if (block) s.Cell("A3").Value = "**@end-array";
-        });
+        using var input = Fixture(block ? "MappingExpansionTests.Right_edge_merges_are_copied_without_a_dummy_cell.782E8DF66C6E29BE.xlsx" : "MappingExpansionTests.Right_edge_merges_are_copied_without_a_dummy_cell.7382150770CCC8FE.xlsx");
         using var result = Map(input, new { items = new[] { 10, 20, 30 } });
-        var sheet = result.Worksheet(1);
-        Assert.Equal(new[] { "B1:C1", "B2:C2", "B3:C3" }, sheet.MergedRanges.Select(r => r.RangeAddress.ToStringRelative()).OrderBy(x => x).ToArray());
+        var sheet = result;
+        Assert.Equal(new[] { "B1:C1", "B2:C2", "B3:C3" }, Info(sheet).MergedRanges.Select(r => r.ToString()).OrderBy(x => x).ToArray());
         for (var row = 1; row <= 3; row++)
         {
-            Assert.Equal(row * 10, sheet.Cell(row, 1).GetDouble());
-            Assert.Equal("Merged", sheet.Cell(row, 2).GetString());
-            Assert.True(sheet.Cell(row, 2).Style.Font.Bold);
+            Assert.Equal(row * 10, Number(sheet, row, 1));
+            Assert.Equal("Merged", Text(sheet, row, 2));
+            Assert.True(Style(sheet, row, 2).FontProperties.Bold == true);
         }
     }
 
     [Fact]
     public void Direct_regions_preserve_all_nested_rows_styles_breaks_and_following_regions()
     {
-        using var input = Template(s =>
-        {
-            s.Cell("A1").Value = "Header";
-            s.Cell("A2").Value = "**@start-array groups[*] as group";
-            s.Cell("A3").Value = "**@group.id";
-            s.Cell("A4").Value = "**@start-array @group.items[*] as item";
-            s.Cell("A5").Value = "**@item";
-            s.Cell("B5").Value = "**@group.id";
-            s.Cell("C5").Value = "**@page-break";
-            s.Row(5).Height = 27;
-            s.Row(5).Hide();
-            s.Row(5).OutlineLevel = 1;
-            s.Cell("A5").Style.NumberFormat.Format = "0.00";
-            s.Cell("Z5").Style.Fill.BackgroundColor = XLColor.Red;
-            s.Cell("A6").Value = "**@end-array";
-            s.Cell("A7").Value = "**@end-array";
-            s.Cell("A8").Value = "Separator";
-            s.Cell("A9").Value = "**tail[*]";
-            s.Cell("A10").Value = "Footer";
-            s.PageSetup.AddHorizontalPageBreak(5);
-            s.PageSetup.AddVerticalPageBreak(3);
-        });
+        using var input = Fixture("MappingExpansionTests.Direct_regions_preserve_all_nested_rows_styles_breaks_and_following_regions.0CFC84347E6072A5.xlsx");
         var groups = Enumerable.Range(0, 120).Select(id => new { id, items = id % 3 == 0 ? Array.Empty<int>() : Enumerable.Range(id * 10, 10).ToArray() }).ToArray();
         using var result = Map(input, new { groups, tail = new[] { 9001, 9002 } });
-        var sheet = result.Worksheet(1);
+        var sheet = result;
         var row = 2;
         foreach (var group in groups)
         {
-            Assert.Equal(group.id, sheet.Cell(row++, 1).GetDouble());
+            Assert.Equal(group.id, Number(sheet, row++, 1));
             foreach (var value in group.items)
             {
-                Assert.Equal(value, sheet.Cell(row, 1).GetDouble());
-                Assert.Equal(group.id, sheet.Cell(row, 2).GetDouble());
-                Assert.Equal(27, sheet.Row(row).Height);
-                Assert.Equal(1, sheet.Row(row).OutlineLevel);
-                Assert.True(sheet.Row(row).IsHidden);
-                Assert.Equal("0.00", sheet.Cell(row, 1).Style.NumberFormat.Format);
-                Assert.Equal(XLColor.Red, sheet.Cell(row, 26).Style.Fill.BackgroundColor);
-                Assert.True(sheet.Cell(row, 3).IsEmpty());
-                Assert.Contains(row, sheet.PageSetup.RowBreaks);
-                Assert.Contains(row - 1, sheet.PageSetup.RowBreaks);
+                Assert.Equal(value, Number(sheet, row, 1));
+                Assert.Equal(group.id, Number(sheet, row, 2));
+                Assert.Equal(27, Row(sheet, row).HeightPt);
+                Assert.Equal(1, Row(sheet, row).OutlineLevel);
+                Assert.True(Row(sheet, row).Hidden == true);
+                Assert.Equal("0.00", Style(sheet, row, 1).NumberFormatCode);
+                Assert.Equal("FFFF0000", Fill(sheet, row, 26));
+                Assert.True(Cell(sheet, row, 3).Value.Type == CellValueType.Blank);
+                Assert.Contains(row, Breaks(sheet));
+                Assert.Contains(row - 1, Breaks(sheet));
                 row++;
             }
         }
-        Assert.Equal("Separator", sheet.Cell(row++, 1).GetString());
-        Assert.Equal(9001, sheet.Cell(row++, 1).GetDouble());
-        Assert.Equal(9002, sheet.Cell(row++, 1).GetDouble());
-        Assert.Equal("Footer", sheet.Cell(row, 1).GetString());
-        Assert.Equal(row, sheet.LastRowUsed()!.RowNumber());
-        Assert.Contains(2, sheet.PageSetup.ColumnBreaks);
-        Assert.Contains(3, sheet.PageSetup.ColumnBreaks);
+        Assert.Equal("Separator", Text(sheet, row++, 1));
+        Assert.Equal(9001, Number(sheet, row++, 1));
+        Assert.Equal(9002, Number(sheet, row++, 1));
+        Assert.Equal("Footer", Text(sheet, row, 1));
+        Assert.Equal(row, LastContentRow(sheet));
+        Assert.Contains(2, Breaks(sheet, true));
+        Assert.Contains(3, Breaks(sheet, true));
     }
 
     [Theory]
     [InlineData(0)]
     [InlineData(1)]
     [InlineData(3)]
-    public void Outside_formulas_names_and_print_settings_remain_supported(int count)
+    public void Caller_values_static_names_and_print_settings_remain_supported(int count)
     {
-        using var input = Template(s =>
-        {
-            s.Cell("A1").FormulaA1 = "A5";
-            s.Cell("A2").Value = "**@start-array items[*] as item";
-            s.Cell("A3").Value = "**@item";
-            s.Cell("A4").Value = "**@end-array";
-            s.Cell("A5").Value = 99;
-            s.Cell("B5").FormulaA1 = "FooterValue*2";
-            s.Workbook.DefinedNames.Add("FooterValue", "'Template'!$A$5");
-            s.DefinedNames.Add("LocalFooter", "'Template'!$A$5");
-            s.PageSetup.PrintAreas.Add("A1:B5");
-            s.PageSetup.SetRowsToRepeatAtTop(1, 1);
-            s.Workbook.AddWorksheet("Other").Cell("A1").FormulaA1 = "Template!A5";
-        });
-        using var result = Map(input, new { items = Enumerable.Range(1, count).ToArray() });
-        var sheet = result.Worksheet(1);
+        using var input = Fixture("MappingExpansionTests.Caller_values_static_names_and_print_settings_remain_supported.E8B80A493050EA6C.xlsx");
+        using var result = Map(input, new { items = Enumerable.Range(1, count).ToArray(), first = 99, doubled = 198 });
+        var sheet = result;
         var footer = count + 2;
-        Assert.Equal(99, sheet.Cell("A1").GetDouble());
-        Assert.Equal(99, sheet.Cell(footer, 1).GetDouble());
-        Assert.Equal(198, sheet.Cell(footer, 2).GetDouble());
-        Assert.Equal(99, result.Worksheet("Other").Cell("A1").GetDouble());
-        Assert.Equal($"Template!$A${footer}", result.DefinedNames.Single(n => n.Name == "FooterValue").RefersTo);
-        Assert.Equal($"Template!$A${footer}", sheet.DefinedNames.Single(n => n.Name == "LocalFooter").RefersTo);
-        Assert.Equal($"A1:B{footer}", Assert.Single(sheet.PageSetup.PrintAreas).RangeAddress.ToStringRelative());
-        Assert.Equal(1, sheet.PageSetup.FirstRowToRepeatAtTop);
+        Assert.Equal(99, Number(sheet, "A1"));
+        Assert.Equal(99, Number(sheet, footer, 1));
+        Assert.Equal(198, Number(sheet, footer, 2));
+        Assert.Equal(99, Number(result, "A1", 2));
+        Assert.Equal($"Template!$A${footer}", Names(result).Single(n => n.Name == "FooterValue").RawText.Replace("'Template'!", "Template!"));
+        Assert.Equal($"Template!$A${footer}", Names(sheet).Single(n => n.Name == "LocalFooter").RawText.Replace("'Template'!", "Template!"));
+        Assert.Equal($"A1:B{footer}", PrintArea(sheet));
+        Assert.Equal(1, Info(sheet).PrintReferences.Single(item => item.Name == "_xlnm.Print_Titles").Ranges.Single().FirstRow);
     }
 
     [Fact]
     public void Marker_names_are_rejected_and_names_on_other_sheets_are_allowed()
     {
-        using var invalid = Template(s =>
-        {
-            s.Cell("A1").Value = "**@start-array items[*] as item";
-            s.Cell("A2").Value = "**@item";
-            s.Cell("A3").Value = "**@end-array";
-            s.Workbook.AddWorksheet("Other").DefinedNames.Add("MarkerName", "Template!$A$3");
-        });
+        using var invalid = Fixture("MappingExpansionTests.Marker_names_are_rejected_and_names_on_other_sheets_are_allowed.DA6DFB580126AEEB.xlsx");
         using var output = new MemoryStream();
         Assert.Contains("MarkerName", Assert.Throws<MappingException>(() => ExcelTemplateMapper.Map(invalid, output, new { items = Array.Empty<int>() })).Message);
         Assert.Empty(output.ToArray());
 
-        using var valid = Template(s =>
-        {
-            s.Cell("A1").Value = "**items[*]";
-            var other = s.Workbook.AddWorksheet("Other");
-            other.Cell("Z1").Value = 42;
-            other.DefinedNames.Add("OtherValue", "Other!$Z$1");
-            s.Workbook.DefinedNames.Add("ConstantValue", "123");
-        });
+        using var valid = Fixture("MappingExpansionTests.Marker_names_are_rejected_and_names_on_other_sheets_are_allowed.D9157E4BD6C4B236.xlsx");
         using var result = Map(valid, new { items = new[] { 1, 2 } });
-        Assert.Equal(42, result.Worksheet("Other").Cell("Z1").GetDouble());
-        Assert.Equal("123", result.DefinedNames.Single(n => n.Name == "ConstantValue").RefersTo);
-        Assert.Equal("Other!$Z$1", result.Worksheet("Other").DefinedNames.Single().RefersTo);
+        Assert.Equal(42, Number(result, "Z1", 2));
+        Assert.Equal("123", Names(result).Single(n => n.Name == "ConstantValue").RawText.Replace("'Template'!", "Template!"));
+        Assert.Equal("Other!$Z$1", Names(result).Single(name => name.LocalSheetId == 1).RawText.Replace("'Template'!", "Template!"));
     }
 
-    private static MemoryStream Template(Action<IXLWorksheet> arrange)
-    {
-        using var workbook = new XLWorkbook();
-        arrange(workbook.AddWorksheet("Template"));
-        var stream = new MemoryStream();
-        workbook.SaveAs(stream);
-        stream.Position = 0;
-        return stream;
-    }
-
-    private static XLWorkbook Map(Stream input, object data)
+    private static WorkbookProbe Map(Stream input, object data)
     {
         using var output = new MemoryStream();
         ExcelTemplateMapper.Map(input, output, data);
         output.Position = 0;
-        return new XLWorkbook(output);
+        return WorkbookProbe.Open(output);
     }
 }

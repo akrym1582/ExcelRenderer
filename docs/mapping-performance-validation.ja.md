@@ -1,5 +1,10 @@
 # Mapping 性能改善の実装・検証
 
+> Historical record: formula evaluation/Legacy and outside-repeat formula permissions described
+> below have been superseded by the no-recalculation contract. See
+> [the current integration guide](openxml-integration.md). Original measurements and
+> acceptance records are preserved for their recorded commits.
+
 2026-10-09。[調査と実装計画](mapping-performance-plan.ja.md)に基づく本体変更。
 
 ## 実装した範囲

@@ -71,6 +71,7 @@ public static class RenderCommand
         };
         command.Add(data);
         command.Add(formulaMode);
+        var backends = new BackendOptions(command, data, formulaMode);
         command.Add(layoutWarnings);
         command.Add(minimumFontSize);
         command.Add(unsupported);
@@ -101,7 +102,7 @@ public static class RenderCommand
                 result.GetValue(trim),
                 result.GetValue(padding),
                 CommandSupport.GetHyperlinks(result.GetValue(hyperlinks)!),
-                CommandSupport.GetReadOptions(result.GetValue(formulaMode)!),
+                backends.GetRead(result, formulaMode),
                 result.GetValue(strict),
                 result.GetValue(layoutWarnings),
                 result.GetValue(minimumFontSize) ?? 6,
@@ -111,7 +112,8 @@ public static class RenderCommand
                 CommandSupport.GetFontOptions(result, fonts),
                 buffering.Get(result),
                 cancellationToken),
-            cancellationToken)));
+            cancellationToken,
+            backends.GetMapping(result))));
         return command;
     }
 

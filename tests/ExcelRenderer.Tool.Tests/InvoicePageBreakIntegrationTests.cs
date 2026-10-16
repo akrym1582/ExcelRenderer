@@ -1,5 +1,7 @@
 using System.Text.Json.Nodes;
-using ClosedXML.Excel;
+using ExcelRenderer.TestFixtures;
+using ExcelRenderer.OpenXml;
+using static ExcelRenderer.TestFixtures.WorkbookAssertions;
 using Xunit;
 
 namespace ExcelRenderer.Tool.Tests;
@@ -26,9 +28,9 @@ public sealed partial class ToolIntegrationTests
         await File.WriteAllTextAsync(json, data.ToJsonString());
         var mapped = Path.Combine(_directory, "pages.xlsx");
         AssertSuccess(await RunAsync("xlsx", template, "--data", json, "-o", mapped));
-        using (var workbook = new XLWorkbook(mapped))
+        using (var workbook = WorkbookProbe.Open(mapped))
         {
-            var sheet = workbook.Worksheet("請求書");
+            var sheet = workbook;
             var nextRow = 1;
             var expectedBreaks = new List<int>();
             foreach (var page in pages)
@@ -38,36 +40,36 @@ public sealed partial class ToolIntegrationTests
                     expectedBreaks.Add(nextRow - 1);
                 }
 
-                Assert.True(sheet.Cell(nextRow, 1).IsEmpty());
-                Assert.Equal(page!["title"]!.GetValue<string>(), sheet.Cell(nextRow, 2).GetString());
+                Assert.True(Cell(sheet, nextRow, 1).Value.Type == CellValueType.Blank);
+                Assert.Equal(page!["title"]!.GetValue<string>(), Text(sheet, nextRow, 2));
                 var items = page["items"]!.AsArray();
                 for (var index = 0; index < items.Count; index++)
                 {
                     var row = nextRow + 8 + (2 * index);
                     var item = items[index]!;
-                    Assert.Equal(item["name"]!.GetValue<string>(), sheet.Cell(row, 2).GetString());
-                    Assert.Equal(item["note"]?.GetValue<string>() ?? string.Empty, sheet.Cell(row + 1, 2).GetString());
-                    Assert.Equal((double)item["taxRate"]!.GetValue<decimal>(), sheet.Cell(row + 1, 6).GetDouble());
-                    Assert.False(sheet.Cell(row, 6).HasFormula);
-                    Assert.Equal((double)(item["quantity"]!.GetValue<decimal>() * item["price"]!.GetValue<decimal>()), sheet.Cell(row, 6).GetDouble());
-                    Assert.Contains(sheet.MergedRanges, range => range.RangeAddress.ToString() == $"B{row + 1}:D{row + 1}");
+                    Assert.Equal(item["name"]!.GetValue<string>(), Text(sheet, row, 2));
+                    Assert.Equal(item["note"]?.GetValue<string>() ?? string.Empty, Text(sheet, row + 1, 2));
+                    Assert.Equal((double)item["taxRate"]!.GetValue<decimal>(), Number(sheet, row + 1, 6));
+                    Assert.False(Cell(sheet, row, 6).Formula != null);
+                    Assert.Equal((double)(item["quantity"]!.GetValue<decimal>() * item["price"]!.GetValue<decimal>()), Number(sheet, row, 6));
+                    Assert.Contains(Info(sheet).MergedRanges, range => range.ToString() == $"B{row + 1}:D{row + 1}");
                 }
 
                 var footer = nextRow + 8 + (2 * items.Count);
-                Assert.Equal("小計", sheet.Cell(footer, 5).GetString());
-                Assert.Equal((double)page["totals"]!["subtotal"]!.GetValue<decimal>(), sheet.Cell(footer, 6).GetDouble());
-                Assert.Equal((double)page["totals"]!["total"]!.GetValue<decimal>(), sheet.Cell(footer + 2, 6).GetDouble());
+                Assert.Equal("小計", Text(sheet, footer, 5));
+                Assert.Equal((double)page["totals"]!["subtotal"]!.GetValue<decimal>(), Number(sheet, footer, 6));
+                Assert.Equal((double)page["totals"]!["total"]!.GetValue<decimal>(), Number(sheet, footer + 2, 6));
                 nextRow += 17 + (2 * items.Count);
             }
 
-            Assert.Equal(expectedBreaks, sheet.PageSetup.RowBreaks.Order().ToList());
-            Assert.Empty(sheet.PageSetup.ColumnBreaks);
-            Assert.Equal(100, sheet.PageSetup.Scale);
-            Assert.Equal(0, sheet.PageSetup.PagesWide);
-            Assert.Equal(0, sheet.PageSetup.PagesTall);
-            Assert.Equal(nextRow - 1, sheet.LastRowUsed()!.RowNumber());
-            Assert.Equal(nextRow, Assert.Single(sheet.PageSetup.PrintAreas).RangeAddress.LastAddress.RowNumber);
-            Assert.DoesNotContain(sheet.CellsUsed(), cell => cell.GetString().StartsWith("**@", StringComparison.Ordinal));
+            Assert.Equal(expectedBreaks, Breaks(sheet).Order().ToList());
+            Assert.Empty(Breaks(sheet, true));
+            Assert.Equal(100, int.Parse(Info(sheet).PageSetup!.Attributes["scale"]));
+            Assert.Equal("0", Info(sheet).PageSetup!.Attributes.GetValueOrDefault("fitToWidth", "0"));
+            Assert.Equal("0", Info(sheet).PageSetup!.Attributes.GetValueOrDefault("fitToHeight", "0"));
+            Assert.Equal(nextRow - 1, LastContentRow(sheet));
+            Assert.Equal(nextRow, Info(sheet).PrintReferences.Single(item => item.Name == "_xlnm.Print_Area").Ranges.Single().LastRow);
+            Assert.DoesNotContain(Cells(sheet), cell => cell.Value.Text?.StartsWith("**@", StringComparison.Ordinal) == true);
         }
 
         foreach (var format in new[] { "png", "svg" })

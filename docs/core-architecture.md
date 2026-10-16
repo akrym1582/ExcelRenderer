@@ -1,8 +1,8 @@
 # Two-engine architecture
 
-`ExcelRenderer.Core` is the renamed single-font PDF engine and the shared foundation.
+`ExcelRenderer.Core` is the single-font PDF engine and the shared foundation.
 `ExcelRenderer` extends that engine and retains its original public assembly/types.
-Core is `netstandard2.1`, has no ProjectReference, and remains nonpackable. The existing
+Core is `netstandard2.1`, references only the shared `ExcelRenderer.OpenXml` project, and remains nonpackable. Generic workbook input validation/spooling belongs to OpenXml; Core keeps compatibility adapters. The existing
 ExcelRenderer and Tool packages ship the Core DLL from the same build.
 
 ```text
@@ -15,7 +15,7 @@ ExcelRenderer public APIs / multi-format orchestration
     PNG / SVG / Markdown / continuous / trim / link preflight remain in main
                          ↓
 ExcelRenderer.Core (also independently usable through ProjectReference)
-    input/spool → basic reader → geometry/pagination/placement → commands → PDF
+    OpenXml input/spool → selected reader → geometry/pagination/placement → commands → PDF
     regular single font; no shapes/annotations/selection or image splitting
 ```
 
@@ -44,6 +44,6 @@ with the same Core DLL in one load context. Unrelated external PDFsharp users an
 AssemblyLoadContexts do not share the gate. Public resolved font owners retain immutable
 snapshots across resets; expired snapshots have weak process registrations.
 
-See [final source ownership](core-source-map.md), [migration instructions](core.md), and
+See [source ownership](core-source-map.md), [Core usage and supported scope](core.md), and
 [executed verification](core-refactor-validation.md). Windows execution is left to the
 retained Ubuntu/Windows CI matrix; local Linux results are not presented as Windows results.

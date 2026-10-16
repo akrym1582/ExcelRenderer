@@ -1,0 +1,16 @@
+[
+  {
+    "fixture": "tests/ExcelRenderer.Tests/SampleInputs/08-print-scaling.xlsx",
+    "comparison": {
+      "textSha256": "cb190d2adfe8f5497364623da4677b8c728813752c483139e596c063202f7796",
+      "geometry": [
+        "Pages:           2",
+        "Page size:       595.276 x 841.89 pts (A4)"
+      ],
+      "markdownArtifacts": {
+        "report.md": "ac06421a2309476a6df2b19a832003b95c0e6fb88d6c44b0eac3f9b3e359fec7"
+      }
+    },
+    "equal": true
+  }
+]

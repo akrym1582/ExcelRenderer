@@ -1,5 +1,5 @@
 using System.IO.Compression;
-using ClosedXML.Excel;
+using ExcelRenderer.TestFixtures;
 using ExcelRenderer.Excel;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Model;
@@ -43,14 +43,7 @@ public sealed class RichTextAcceptanceTests
     [InlineData(false)]
     public void XmlCarriageReturnAndLineFeedAcrossRunsNormalizeTogether(bool shared)
     {
-        using var workbook = new XLWorkbook();
-        var source = workbook.AddWorksheet("newlines").Cell(1, 1);
-        source.ShareString = shared;
-        source.CreateRichText().AddText("BEFORECR").SetFontColor(XLColor.Red);
-        source.GetRichText().AddText("AFTERLF").SetFontColor(XLColor.Blue);
-        source.GetRichText().AddText("tail").SetFontColor(XLColor.Red);
-        using var input = new MemoryStream();
-        workbook.SaveAs(input);
+        using var input = RetainedWorkbook.Open(shared ? "RichTextAcceptanceTests.XmlCarriageReturnAndLineFeedAcrossRunsNormalizeTogether.32DBF92F9E80356F.xlsx" : "RichTextAcceptanceTests.XmlCarriageReturnAndLineFeedAcrossRunsNormalizeTogether.04EA663787218ADE.xlsx");
         input.Position = 0;
         using (var archive = new ZipArchive(input, ZipArchiveMode.Update, true))
         {
@@ -74,15 +67,7 @@ public sealed class RichTextAcceptanceTests
     [Fact]
     public void ThemeTintAndInheritedRunAttributesAreEffective()
     {
-        using var workbook = new XLWorkbook();
-        workbook.Theme.Accent1 = XLColor.Red;
-        var source = workbook.AddWorksheet("theme").Cell(1, 1);
-        source.Style.Font.FontName = "Noto Sans JP";
-        source.Style.Font.FontSize = 22;
-        source.Style.Font.Bold = true;
-        source.CreateRichText().AddText("inherited").SetFontColor(XLColor.FromTheme(XLThemeColor.Accent1, .5));
-        using var input = new MemoryStream();
-        workbook.SaveAs(input);
+        using var input = RetainedWorkbook.Open("RichTextAcceptanceTests.ThemeTintAndInheritedRunAttributesAreEffective.A180499274FB08F0.xlsx");
         input.Position = 0;
         var cell = new ExcelReader().Read(input).Sheets[0].Cells[new(1, 1)];
         var run = Assert.Single(cell.RichTextRuns!);
@@ -98,13 +83,7 @@ public sealed class RichTextAcceptanceTests
     [InlineData(OutputFormat.Svg)]
     public async Task RangeTrimAndMergedCellRetainRichTextInAllOutputFormats(OutputFormat format)
     {
-        using var workbook = new XLWorkbook();
-        var sheet = workbook.AddWorksheet("rich");
-        sheet.Range("A1:B2").Merge();
-        sheet.Cell(1, 1).CreateRichText().AddText("Red").SetFontColor(XLColor.Red).SetFontSize(14);
-        sheet.Cell(1, 1).GetRichText().AddText("Blue").SetFontColor(XLColor.Blue).SetFontSize(20).SetUnderline();
-        using var input = new MemoryStream();
-        workbook.SaveAs(input);
+        using var input = RetainedWorkbook.Open("RichTextAcceptanceTests.RangeTrimAndMergedCellRetainRichTextInAllOutputFormats.79F50EFE1F4F079D.xlsx");
         input.Position = 0;
         using var output = new MemoryStream();
         var result = await ExcelConverter.RenderAsync(input, new()
@@ -145,13 +124,7 @@ public sealed class RichTextAcceptanceTests
     [InlineData(255)]
     public async Task UnsupportedDecorationAndRotationPreserveTextAndReportOnce(int rotation)
     {
-        using var workbook = new XLWorkbook();
-        var cell = workbook.AddWorksheet("rich").Cell(1, 1);
-        cell.Style.Alignment.TextRotation = rotation;
-        cell.CreateRichText().AddText("preserved").SetStrikethrough();
-        cell.GetRichText().AddText(" text").SetFontSize(20);
-        using var input = new MemoryStream();
-        workbook.SaveAs(input);
+        using var input = RetainedWorkbook.Open(rotation switch { 0 => "RichTextAcceptanceTests.UnsupportedDecorationAndRotationPreserveTextAndReportOnce.563CAA2392F8DB3A.xlsx", 45 => "RichTextAcceptanceTests.UnsupportedDecorationAndRotationPreserveTextAndReportOnce.74E94B16747ABDC2.xlsx", 255 => "RichTextAcceptanceTests.UnsupportedDecorationAndRotationPreserveTextAndReportOnce.E0C296B57F2AD1C4.xlsx", _ => throw new InvalidOperationException() });
         input.Position = 0;
         var model = new ExcelReader().Read(input).Sheets[0].Cells[new(1, 1)];
         Assert.Equal("preserved text", model.Text);

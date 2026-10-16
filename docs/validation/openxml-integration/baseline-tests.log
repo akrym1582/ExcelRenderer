@@ -1,0 +1,297 @@
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Core.Tests/bin/Debug/net10.0/ExcelRenderer.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:    80, Skipped:     0, Total:    80, Duration: 6 s - ExcelRenderer.Core.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Mapping.Tests/bin/Debug/net10.0/ExcelRenderer.Mapping.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:    49, Skipped:     0, Total:    49, Duration: 2 s - ExcelRenderer.Mapping.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.OpenXml.Tests/bin/Debug/net10.0/ExcelRenderer.OpenXml.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:   121, Skipped:     0, Total:   121, Duration: 1 s - ExcelRenderer.OpenXml.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:15.38]     範囲・トリミングのサンプルとマニフェストを保存し、再読込した SVG の描画がトリミング済み PNG の内容を保持する [FAIL]
+  Failed 範囲・トリミングのサンプルとマニフェストを保存し、再読込した SVG の描画がトリミング済み PNG の内容を保持する [1 ms]
+  Error Message:
+   System.IO.FileNotFoundException : Could not load file or assembly 'Svg.Skia, Version=5.2.3.0, Culture=neutral, PublicKeyToken=dafe96fe6c845a74'. The system cannot find the file specified.
+
+  Stack Trace:
+     at ExcelRenderer.Tests.RangeTrimHyperlinkTests.Samples_are_saved_and_serialized_SVG_matches_trimmed_PNG()
+   at ExcelRenderer.Tests.RangeTrimHyperlinkTests.Samples_are_saved_and_serialized_SVG_matches_trimmed_PNG()
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:17.99]     トリミング後の PDF・PNG・SVG の実寸法が、最終ページのメタデータと一致する(format: Pdf) [FAIL]
+[xUnit.net 00:00:18.00]     トリミング後の PDF・PNG・SVG の実寸法が、最終ページのメタデータと一致する(format: Svg) [FAIL]
+[xUnit.net 00:00:18.00]     トリミング後の PDF・PNG・SVG の実寸法が、最終ページのメタデータと一致する(format: Png) [FAIL]
+  Failed トリミング後の PDF・PNG・SVG の実寸法が、最終ページのメタデータと一致する(format: Pdf) [< 1 ms]
+  Error Message:
+   System.IO.FileNotFoundException : Could not load file or assembly 'Svg.Skia, Version=5.2.3.0, Culture=neutral, PublicKeyToken=dafe96fe6c845a74'. The system cannot find the file specified.
+
+  Stack Trace:
+     at ExcelRenderer.Tests.RangeTrimHyperlinkTests.Generated_trim_uses_final_dimensions_in_actual_outputs(OutputFormat format)
+   at ExcelRenderer.Tests.RangeTrimHyperlinkTests.Generated_trim_uses_final_dimensions_in_actual_outputs(OutputFormat format)
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed トリミング後の PDF・PNG・SVG の実寸法が、最終ページのメタデータと一致する(format: Svg) [< 1 ms]
+  Error Message:
+   System.IO.FileNotFoundException : Could not load file or assembly 'Svg.Skia, Version=5.2.3.0, Culture=neutral, PublicKeyToken=dafe96fe6c845a74'. The system cannot find the file specified.
+
+  Stack Trace:
+     at ExcelRenderer.Tests.RangeTrimHyperlinkTests.Generated_trim_uses_final_dimensions_in_actual_outputs(OutputFormat format)
+   at ExcelRenderer.Tests.RangeTrimHyperlinkTests.Generated_trim_uses_final_dimensions_in_actual_outputs(OutputFormat format)
+   at InvokeStub_RangeTrimHyperlinkTests.Generated_trim_uses_final_dimensions_in_actual_outputs(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed トリミング後の PDF・PNG・SVG の実寸法が、最終ページのメタデータと一致する(format: Png) [< 1 ms]
+  Error Message:
+   System.IO.FileNotFoundException : Could not load file or assembly 'Svg.Skia, Version=5.2.3.0, Culture=neutral, PublicKeyToken=dafe96fe6c845a74'. The system cannot find the file specified.
+
+  Stack Trace:
+     at ExcelRenderer.Tests.RangeTrimHyperlinkTests.Generated_trim_uses_final_dimensions_in_actual_outputs(OutputFormat format)
+   at ExcelRenderer.Tests.RangeTrimHyperlinkTests.Generated_trim_uses_final_dimensions_in_actual_outputs(OutputFormat format)
+   at InvokeStub_RangeTrimHyperlinkTests.Generated_trim_uses_final_dimensions_in_actual_outputs(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:20.32]     ExcelRenderer.Tests.RichTextAcceptanceTests.MergedShrunkMixedRunsKeepSizeRatiosAndAlignment(horizontal: Left, vertical: Top) [FAIL]
+[xUnit.net 00:00:20.33]     ExcelRenderer.Tests.RichTextAcceptanceTests.MergedShrunkMixedRunsKeepSizeRatiosAndAlignment(horizontal: Center, vertical: Center) [FAIL]
+[xUnit.net 00:00:20.33]     ExcelRenderer.Tests.RichTextAcceptanceTests.MergedShrunkMixedRunsKeepSizeRatiosAndAlignment(horizontal: Right, vertical: Bottom) [FAIL]
+  Failed ExcelRenderer.Tests.RichTextAcceptanceTests.MergedShrunkMixedRunsKeepSizeRatiosAndAlignment(horizontal: Left, vertical: Top) [6 ms]
+  Error Message:
+   System.IO.FileNotFoundException : Could not find file '/workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/NotoSansJP-Regular.ttf'.
+  Stack Trace:
+     at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at System.IO.File.ReadAllBytes(String path)
+   at ExcelRenderer.Tests.OutputFixture.get_Face()
+   at ExcelRenderer.Tests.OutputFixture.FixedManager.ResolveTextRuns(String text, FontRequest request)
+   at ExcelRenderer.PdfSharp.PdfSharpTextMeasurer.CreateLine(XGraphics graphics, String text, Boolean explicitBreak, FontStyle style, FontRequest request)
+   at ExcelRenderer.PdfSharp.PdfSharpTextMeasurer.CreateRichLine(XGraphics graphics, IReadOnlyList`1 elements, FontStyle emptyFont, Boolean explicitBreak)
+   at ExcelRenderer.PdfSharp.PdfSharpTextMeasurer.Layout(IReadOnlyList`1 runs, FontStyle font, Double availableWidth, Boolean wrap)
+   at ExcelRenderer.CoreIntegration.CoreTextLayoutAdapter.Layout(ReportCell cell, Double availableWidth, Boolean wrap)
+   at ExcelRenderer.Core.Layout.TextMeasurePass.Execute(ReportLayoutContext context)
+   at ExcelRenderer.Core.Layout.SheetLayoutPlan.Build(Int32 index, Int32 number, Int32 count, ITextMeasurer measurer, CancellationToken cancellationToken)
+   at ExcelRenderer.Layout.SheetLayoutPlan.BuildCore(Int32 index, Int32 number, Int32 count, ITextMeasurer measurer, CancellationToken cancellationToken)
+   at ExcelRenderer.Layout.SheetLayoutPlan.Build(Int32 index, Int32 number, Int32 count, ITextMeasurer measurer, CancellationToken cancellationToken)
+   at ExcelRenderer.Layout.ReportLayoutEngine.Layout(ReportSheet sheet)
+   at ExcelRenderer.Tests.RichTextAcceptanceTests.MergedShrunkMixedRunsKeepSizeRatiosAndAlignment(HorizontalAlignment horizontal, VerticalAlignment vertical)
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed ExcelRenderer.Tests.RichTextAcceptanceTests.MergedShrunkMixedRunsKeepSizeRatiosAndAlignment(horizontal: Center, vertical: Center) [< 1 ms]
+  Error Message:
+   System.IO.FileNotFoundException : Could not find file '/workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/NotoSansJP-Regular.ttf'.
+  Stack Trace:
+     at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at System.IO.File.ReadAllBytes(String path)
+   at ExcelRenderer.Tests.OutputFixture.get_Face()
+   at ExcelRenderer.Tests.OutputFixture.FixedManager.ResolveTextRuns(String text, FontRequest request)
+   at ExcelRenderer.PdfSharp.PdfSharpTextMeasurer.CreateLine(XGraphics graphics, String text, Boolean explicitBreak, FontStyle style, FontRequest request)
+   at ExcelRenderer.PdfSharp.PdfSharpTextMeasurer.CreateRichLine(XGraphics graphics, IReadOnlyList`1 elements, FontStyle emptyFont, Boolean explicitBreak)
+   at ExcelRenderer.PdfSharp.PdfSharpTextMeasurer.Layout(IReadOnlyList`1 runs, FontStyle font, Double availableWidth, Boolean wrap)
+   at ExcelRenderer.CoreIntegration.CoreTextLayoutAdapter.Layout(ReportCell cell, Double availableWidth, Boolean wrap)
+   at ExcelRenderer.Core.Layout.TextMeasurePass.Execute(ReportLayoutContext context)
+   at ExcelRenderer.Core.Layout.SheetLayoutPlan.Build(Int32 index, Int32 number, Int32 count, ITextMeasurer measurer, CancellationToken cancellationToken)
+   at ExcelRenderer.Layout.SheetLayoutPlan.BuildCore(Int32 index, Int32 number, Int32 count, ITextMeasurer measurer, CancellationToken cancellationToken)
+   at ExcelRenderer.Layout.SheetLayoutPlan.Build(Int32 index, Int32 number, Int32 count, ITextMeasurer measurer, CancellationToken cancellationToken)
+   at ExcelRenderer.Layout.ReportLayoutEngine.Layout(ReportSheet sheet)
+   at ExcelRenderer.Tests.RichTextAcceptanceTests.MergedShrunkMixedRunsKeepSizeRatiosAndAlignment(HorizontalAlignment horizontal, VerticalAlignment vertical)
+   at InvokeStub_RichTextAcceptanceTests.MergedShrunkMixedRunsKeepSizeRatiosAndAlignment(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed ExcelRenderer.Tests.RichTextAcceptanceTests.MergedShrunkMixedRunsKeepSizeRatiosAndAlignment(horizontal: Right, vertical: Bottom) [< 1 ms]
+  Error Message:
+   System.IO.FileNotFoundException : Could not find file '/workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/NotoSansJP-Regular.ttf'.
+  Stack Trace:
+     at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at System.IO.File.ReadAllBytes(String path)
+   at ExcelRenderer.Tests.OutputFixture.get_Face()
+   at ExcelRenderer.Tests.OutputFixture.FixedManager.ResolveTextRuns(String text, FontRequest request)
+   at ExcelRenderer.PdfSharp.PdfSharpTextMeasurer.CreateLine(XGraphics graphics, String text, Boolean explicitBreak, FontStyle style, FontRequest request)
+   at ExcelRenderer.PdfSharp.PdfSharpTextMeasurer.CreateRichLine(XGraphics graphics, IReadOnlyList`1 elements, FontStyle emptyFont, Boolean explicitBreak)
+   at ExcelRenderer.PdfSharp.PdfSharpTextMeasurer.Layout(IReadOnlyList`1 runs, FontStyle font, Double availableWidth, Boolean wrap)
+   at ExcelRenderer.CoreIntegration.CoreTextLayoutAdapter.Layout(ReportCell cell, Double availableWidth, Boolean wrap)
+   at ExcelRenderer.Core.Layout.TextMeasurePass.Execute(ReportLayoutContext context)
+   at ExcelRenderer.Core.Layout.SheetLayoutPlan.Build(Int32 index, Int32 number, Int32 count, ITextMeasurer measurer, CancellationToken cancellationToken)
+   at ExcelRenderer.Layout.SheetLayoutPlan.BuildCore(Int32 index, Int32 number, Int32 count, ITextMeasurer measurer, CancellationToken cancellationToken)
+   at ExcelRenderer.Layout.SheetLayoutPlan.Build(Int32 index, Int32 number, Int32 count, ITextMeasurer measurer, CancellationToken cancellationToken)
+   at ExcelRenderer.Layout.ReportLayoutEngine.Layout(ReportSheet sheet)
+   at ExcelRenderer.Tests.RichTextAcceptanceTests.MergedShrunkMixedRunsKeepSizeRatiosAndAlignment(HorizontalAlignment horizontal, VerticalAlignment vertical)
+   at InvokeStub_RichTextAcceptanceTests.MergedShrunkMixedRunsKeepSizeRatiosAndAlignment(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:20.85]     ExcelRenderer.Tests.RichTextAcceptanceTests.RangeTrimAndMergedCellRetainRichTextInAllOutputFormats(format: Svg) [FAIL]
+  Failed ExcelRenderer.Tests.RichTextAcceptanceTests.RangeTrimAndMergedCellRetainRichTextInAllOutputFormats(format: Svg) [78 ms]
+  Error Message:
+   System.IO.FileNotFoundException : Could not load file or assembly 'Svg.Skia, Version=5.2.3.0, Culture=neutral, PublicKeyToken=dafe96fe6c845a74'. The system cannot find the file specified.
+
+  Stack Trace:
+     at ExcelRenderer.Tests.RichTextAcceptanceTests.<RangeTrimAndMergedCellRetainRichTextInAllOutputFormats>g__RasterSvg|3_2(Byte[] bytes)
+   at ExcelRenderer.Tests.RichTextAcceptanceTests.RangeTrimAndMergedCellRetainRichTextInAllOutputFormats(OutputFormat format)
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:27.93]     従来形式の折り返し・縮小・水平配置を変えた SVG を再読込し、各行の描画範囲が PNG に一致する(wrap: False, shrink: True, alignment: Right) [FAIL]
+[xUnit.net 00:00:27.93]     従来形式の折り返し・縮小・水平配置を変えた SVG を再読込し、各行の描画範囲が PNG に一致する(wrap: True, shrink: False, alignment: Left) [FAIL]
+[xUnit.net 00:00:27.93]     従来形式の折り返し・縮小・水平配置を変えた SVG を再読込し、各行の描画範囲が PNG に一致する(wrap: False, shrink: True, alignment: Center) [FAIL]
+[xUnit.net 00:00:27.94]     確定済み文字の SVG に二行分の下線が保存済み位置で一度ずつ出力され、再描画した画素も PNG に一致する [FAIL]
+[xUnit.net 00:00:27.94]     30 度回転した文字の SVG を再読込しても、PNG と同じクリップ内に描画され、領域外に文字画素が出ない [FAIL]
+[xUnit.net 00:00:27.94]     配置を変えた確定済み文字の SVG を再読込し、字形パスの座標とラスタ化した描画範囲が PNG に一致する(horizontal: Center, vertical: Center, ax: 40, ay: 33, bx: 65, by: 33, cx: 57, cy: 57) [FAIL]
+[xUnit.net 00:00:27.94]     配置を変えた確定済み文字の SVG を再読込し、字形パスの座標とラスタ化した描画範囲が PNG に一致する(horizontal: Right, vertical: Bottom, ax: 70, ay: 43, bx: 95, by: 43, cx: 97, cy: 67) [FAIL]
+[xUnit.net 00:00:27.95]     配置を変えた確定済み文字の SVG を再読込し、字形パスの座標とラスタ化した描画範囲が PNG に一致する(horizontal: Left, vertical: Top, ax: 10, ay: 23, bx: 35, by: 23, cx: 17, cy: 47) [FAIL]
+[xUnit.net 00:00:27.95]     空、破損、非対応の画像の後も正常な画像と図形が描画される(hex: "", svg: True) [FAIL]
+  Failed 従来形式の折り返し・縮小・水平配置を変えた SVG を再読込し、各行の描画範囲が PNG に一致する(wrap: False, shrink: True, alignment: Right) [< 1 ms]
+  Error Message:
+   System.IO.FileNotFoundException : Could not load file or assembly 'Svg.Skia, Version=5.2.3.0, Culture=neutral, PublicKeyToken=dafe96fe6c845a74'. The system cannot find the file specified.
+
+  Stack Trace:
+     at ExcelRenderer.Tests.SerializedSvgProbe..ctor(DrawTextCommand command)
+   at ExcelRenderer.Tests.SerializedSvgRegressionTests.Svg_serialized_legacy_text_matches_png_geometry(Boolean wrap, Boolean shrink, HorizontalAlignment alignment)
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed 従来形式の折り返し・縮小・水平配置を変えた SVG を再読込し、各行の描画範囲が PNG に一致する(wrap: True, shrink: False, alignment: Left) [< 1 ms]
+  Error Message:
+   System.IO.FileNotFoundException : Could not load file or assembly 'Svg.Skia, Version=5.2.3.0, Culture=neutral, PublicKeyToken=dafe96fe6c845a74'. The system cannot find the file specified.
+
+  Stack Trace:
+     at ExcelRenderer.Tests.SerializedSvgProbe..ctor(DrawTextCommand command)
+   at ExcelRenderer.Tests.SerializedSvgRegressionTests.Svg_serialized_legacy_text_matches_png_geometry(Boolean wrap, Boolean shrink, HorizontalAlignment alignment)
+   at InvokeStub_SerializedSvgRegressionTests.Svg_serialized_legacy_text_matches_png_geometry(Object, Span`1)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed 従来形式の折り返し・縮小・水平配置を変えた SVG を再読込し、各行の描画範囲が PNG に一致する(wrap: False, shrink: True, alignment: Center) [< 1 ms]
+  Error Message:
+   System.IO.FileNotFoundException : Could not load file or assembly 'Svg.Skia, Version=5.2.3.0, Culture=neutral, PublicKeyToken=dafe96fe6c845a74'. The system cannot find the file specified.
+
+  Stack Trace:
+     at ExcelRenderer.Tests.SerializedSvgProbe..ctor(DrawTextCommand command)
+   at ExcelRenderer.Tests.SerializedSvgRegressionTests.Svg_serialized_legacy_text_matches_png_geometry(Boolean wrap, Boolean shrink, HorizontalAlignment alignment)
+   at InvokeStub_SerializedSvgRegressionTests.Svg_serialized_legacy_text_matches_png_geometry(Object, Span`1)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed 確定済み文字の SVG に二行分の下線が保存済み位置で一度ずつ出力され、再描画した画素も PNG に一致する [2 ms]
+  Error Message:
+   System.IO.FileNotFoundException : Could not load file or assembly 'Svg.Skia, Version=5.2.3.0, Culture=neutral, PublicKeyToken=dafe96fe6c845a74'. The system cannot find the file specified.
+
+  Stack Trace:
+     at ExcelRenderer.Tests.SerializedSvgProbe..ctor(DrawTextCommand command)
+   at ExcelRenderer.Tests.SerializedSvgRegressionTests.Svg_serialized_finalized_underline_has_stored_position_and_count()
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed 30 度回転した文字の SVG を再読込しても、PNG と同じクリップ内に描画され、領域外に文字画素が出ない [< 1 ms]
+  Error Message:
+   System.IO.FileNotFoundException : Could not load file or assembly 'Svg.Skia, Version=5.2.3.0, Culture=neutral, PublicKeyToken=dafe96fe6c845a74'. The system cannot find the file specified.
+
+  Stack Trace:
+     at ExcelRenderer.Tests.SerializedSvgProbe..ctor(DrawTextCommand command)
+   at ExcelRenderer.Tests.SerializedSvgRegressionTests.Svg_serialized_rotation_preserves_clip()
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed 配置を変えた確定済み文字の SVG を再読込し、字形パスの座標とラスタ化した描画範囲が PNG に一致する(horizontal: Center, vertical: Center, ax: 40, ay: 33, bx: 65, by: 33, cx: 57, cy: 57) [2 ms]
+  Error Message:
+   System.IO.FileNotFoundException : Could not load file or assembly 'Svg.Skia, Version=5.2.3.0, Culture=neutral, PublicKeyToken=dafe96fe6c845a74'. The system cannot find the file specified.
+
+  Stack Trace:
+     at ExcelRenderer.Tests.SerializedSvgProbe..ctor(DrawTextCommand command)
+   at ExcelRenderer.Tests.SerializedSvgRegressionTests.Svg_serialized_finalized_text_matches_png_geometry(HorizontalAlignment horizontal, VerticalAlignment vertical, Single ax, Single ay, Single bx, Single by, Single cx, Single cy)
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed 配置を変えた確定済み文字の SVG を再読込し、字形パスの座標とラスタ化した描画範囲が PNG に一致する(horizontal: Right, vertical: Bottom, ax: 70, ay: 43, bx: 95, by: 43, cx: 97, cy: 67) [2 ms]
+  Error Message:
+   System.IO.FileNotFoundException : Could not load file or assembly 'Svg.Skia, Version=5.2.3.0, Culture=neutral, PublicKeyToken=dafe96fe6c845a74'. The system cannot find the file specified.
+
+  Stack Trace:
+     at ExcelRenderer.Tests.SerializedSvgProbe..ctor(DrawTextCommand command)
+   at ExcelRenderer.Tests.SerializedSvgRegressionTests.Svg_serialized_finalized_text_matches_png_geometry(HorizontalAlignment horizontal, VerticalAlignment vertical, Single ax, Single ay, Single bx, Single by, Single cx, Single cy)
+   at InvokeStub_SerializedSvgRegressionTests.Svg_serialized_finalized_text_matches_png_geometry(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed 配置を変えた確定済み文字の SVG を再読込し、字形パスの座標とラスタ化した描画範囲が PNG に一致する(horizontal: Left, vertical: Top, ax: 10, ay: 23, bx: 35, by: 23, cx: 17, cy: 47) [2 ms]
+  Error Message:
+   System.IO.FileNotFoundException : Could not load file or assembly 'Svg.Skia, Version=5.2.3.0, Culture=neutral, PublicKeyToken=dafe96fe6c845a74'. The system cannot find the file specified.
+
+  Stack Trace:
+     at ExcelRenderer.Tests.SerializedSvgProbe..ctor(DrawTextCommand command)
+   at ExcelRenderer.Tests.SerializedSvgRegressionTests.Svg_serialized_finalized_text_matches_png_geometry(HorizontalAlignment horizontal, VerticalAlignment vertical, Single ax, Single ay, Single bx, Single by, Single cx, Single cy)
+   at InvokeStub_SerializedSvgRegressionTests.Svg_serialized_finalized_text_matches_png_geometry(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed 空、破損、非対応の画像の後も正常な画像と図形が描画される(hex: "", svg: True) [< 1 ms]
+  Error Message:
+   System.IO.FileNotFoundException : Could not load file or assembly 'Svg.Skia, Version=5.2.3.0, Culture=neutral, PublicKeyToken=dafe96fe6c845a74'. The system cannot find the file specified.
+
+  Stack Trace:
+     at ExcelRenderer.Tests.SkiaImageTests.RenderPage_skips_undecodable_images_and_continues_drawing(String hex, Boolean svg)
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:27.95]     空、破損、非対応の画像の後も正常な画像と図形が描画される(hex: "0102030405", svg: True) [FAIL]
+[xUnit.net 00:00:27.95]     空、破損、非対応の画像の後も正常な画像と図形が描画される(hex: "89504E470D0A1A0A", svg: False) [FAIL]
+[xUnit.net 00:00:27.95]     空、破損、非対応の画像の後も正常な画像と図形が描画される(hex: "3C73766720786D6C6E733D22687474703A2F2F7777772E7733"···, svg: False) [FAIL]
+[xUnit.net 00:00:27.95]     空、破損、非対応の画像の後も正常な画像と図形が描画される(hex: "3C73766720786D6C6E733D22687474703A2F2F7777772E7733"···, svg: True) [FAIL]
+[xUnit.net 00:00:27.95]     空、破損、非対応の画像の後も正常な画像と図形が描画される(hex: "", svg: False) [FAIL]
+[xUnit.net 00:00:27.95]     空、破損、非対応の画像の後も正常な画像と図形が描画される(hex: "0102030405", svg: False) [FAIL]
+[xUnit.net 00:00:27.95]     空、破損、非対応の画像の後も正常な画像と図形が描画される(hex: "89504E470D0A1A0A", svg: True) [FAIL]
+  Failed 空、破損、非対応の画像の後も正常な画像と図形が描画される(hex: "0102030405", svg: True) [< 1 ms]
+  Error Message:
+   System.IO.FileNotFoundException : Could not load file or assembly 'Svg.Skia, Version=5.2.3.0, Culture=neutral, PublicKeyToken=dafe96fe6c845a74'. The system cannot find the file specified.
+
+  Stack Trace:
+     at ExcelRenderer.Tests.SkiaImageTests.RenderPage_skips_undecodable_images_and_continues_drawing(String hex, Boolean svg)
+   at InvokeStub_SkiaImageTests.RenderPage_skips_undecodable_images_and_continues_drawing(Object, Span`1)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed 空、破損、非対応の画像の後も正常な画像と図形が描画される(hex: "89504E470D0A1A0A", svg: False) [< 1 ms]
+  Error Message:
+   System.IO.FileNotFoundException : Could not load file or assembly 'Svg.Skia, Version=5.2.3.0, Culture=neutral, PublicKeyToken=dafe96fe6c845a74'. The system cannot find the file specified.
+
+  Stack Trace:
+     at ExcelRenderer.Tests.SkiaImageTests.RenderPage_skips_undecodable_images_and_continues_drawing(String hex, Boolean svg)
+   at InvokeStub_SkiaImageTests.RenderPage_skips_undecodable_images_and_continues_drawing(Object, Span`1)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed 空、破損、非対応の画像の後も正常な画像と図形が描画される(hex: "3C73766720786D6C6E733D22687474703A2F2F7777772E7733"···, svg: False) [< 1 ms]
+  Error Message:
+   System.IO.FileNotFoundException : Could not load file or assembly 'Svg.Skia, Version=5.2.3.0, Culture=neutral, PublicKeyToken=dafe96fe6c845a74'. The system cannot find the file specified.
+
+  Stack Trace:
+     at ExcelRenderer.Tests.SkiaImageTests.RenderPage_skips_undecodable_images_and_continues_drawing(String hex, Boolean svg)
+   at InvokeStub_SkiaImageTests.RenderPage_skips_undecodable_images_and_continues_drawing(Object, Span`1)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed 空、破損、非対応の画像の後も正常な画像と図形が描画される(hex: "3C73766720786D6C6E733D22687474703A2F2F7777772E7733"···, svg: True) [< 1 ms]
+  Error Message:
+   System.IO.FileNotFoundException : Could not load file or assembly 'Svg.Skia, Version=5.2.3.0, Culture=neutral, PublicKeyToken=dafe96fe6c845a74'. The system cannot find the file specified.
+
+  Stack Trace:
+     at ExcelRenderer.Tests.SkiaImageTests.RenderPage_skips_undecodable_images_and_continues_drawing(String hex, Boolean svg)
+   at InvokeStub_SkiaImageTests.RenderPage_skips_undecodable_images_and_continues_drawing(Object, Span`1)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed 空、破損、非対応の画像の後も正常な画像と図形が描画される(hex: "", svg: False) [< 1 ms]
+  Error Message:
+   System.IO.FileNotFoundException : Could not load file or assembly 'Svg.Skia, Version=5.2.3.0, Culture=neutral, PublicKeyToken=dafe96fe6c845a74'. The system cannot find the file specified.
+
+  Stack Trace:
+     at ExcelRenderer.Tests.SkiaImageTests.RenderPage_skips_undecodable_images_and_continues_drawing(String hex, Boolean svg)
+   at InvokeStub_SkiaImageTests.RenderPage_skips_undecodable_images_and_continues_drawing(Object, Span`1)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed 空、破損、非対応の画像の後も正常な画像と図形が描画される(hex: "0102030405", svg: False) [< 1 ms]
+  Error Message:
+   System.IO.FileNotFoundException : Could not load file or assembly 'Svg.Skia, Version=5.2.3.0, Culture=neutral, PublicKeyToken=dafe96fe6c845a74'. The system cannot find the file specified.
+
+  Stack Trace:
+     at ExcelRenderer.Tests.SkiaImageTests.RenderPage_skips_undecodable_images_and_continues_drawing(String hex, Boolean svg)
+   at InvokeStub_SkiaImageTests.RenderPage_skips_undecodable_images_and_continues_drawing(Object, Span`1)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed 空、破損、非対応の画像の後も正常な画像と図形が描画される(hex: "89504E470D0A1A0A", svg: True) [< 1 ms]
+  Error Message:
+   System.IO.FileNotFoundException : Could not load file or assembly 'Svg.Skia, Version=5.2.3.0, Culture=neutral, PublicKeyToken=dafe96fe6c845a74'. The system cannot find the file specified.
+
+  Stack Trace:
+     at ExcelRenderer.Tests.SkiaImageTests.RenderPage_skips_undecodable_images_and_continues_drawing(String hex, Boolean svg)
+   at InvokeStub_SkiaImageTests.RenderPage_skips_undecodable_images_and_continues_drawing(Object, Span`1)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)

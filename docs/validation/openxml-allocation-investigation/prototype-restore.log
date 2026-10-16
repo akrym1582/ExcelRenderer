@@ -1,0 +1,11 @@
+  Determining projects to restore...
+  Restored /tmp/excel-allocation-investigation/src/ExcelRenderer.Fonts/ExcelRenderer.Fonts.csproj (in 264 ms).
+  Restored /tmp/excel-allocation-investigation/tests/ExcelRenderer.Tool.Tests/ExcelRenderer.Tool.Tests.csproj (in 211 ms).
+  Restored /tmp/excel-allocation-investigation/samples/ExcelRenderer.Core.Sample/ExcelRenderer.Core.Sample.csproj (in 214 ms).
+  Restored /tmp/excel-allocation-investigation/src/ExcelRenderer.Tool/ExcelRenderer.Tool.csproj (in 279 ms).
+  Restored /tmp/excel-allocation-investigation/tests/ExcelRenderer.OpenXml.Tests/ExcelRenderer.OpenXml.Tests.csproj (in 4 ms).
+  Restored /tmp/excel-allocation-investigation/tests/ExcelRenderer.Mapping.Tests/ExcelRenderer.Mapping.Tests.csproj (in 3 ms).
+  Restored /tmp/excel-allocation-investigation/tools/ExcelRenderer.OpenXml.Validation/ExcelRenderer.OpenXml.Validation.csproj (in 4 ms).
+  Restored /tmp/excel-allocation-investigation/tests/ExcelRenderer.Core.Tests/ExcelRenderer.Core.Tests.csproj (in 5 ms).
+  Restored /tmp/excel-allocation-investigation/tests/ExcelRenderer.Tests/ExcelRenderer.Tests.csproj (in 22 ms).
+  5 of 14 projects are up-to-date for restore.

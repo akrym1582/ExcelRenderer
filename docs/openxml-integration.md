@@ -28,20 +28,23 @@ carry `ExcelReadOptions` through their existing `ReadOptions` properties.
 
 | Reader policy | Formula policy | Selection |
 | --- | --- | --- |
-| ClosedXml (default) | Legacy / CachedValue | Compatibility reader |
+| ClosedXml (default) | CachedValue (default) | Compatibility reader using original XML caches |
 | OpenXml | CachedValue | Streaming reader, with deferred source diagnostics |
-| OpenXml | Legacy / Recalculate | Fails before output |
-| Auto | Legacy | ClosedXML, `LegacyFormulaMode` |
-| Auto | CachedValue | Inspects source capabilities before choosing |
-| Any | Recalculate | Remains unsupported |
+| Auto | CachedValue | Chooses by display capability; always uses saved results |
+| Any | Legacy / Recalculate | Rejected before input or output |
 
-OpenXml preserves saved formula results and never evaluates formulas. Literal
-HYPERLINK labels are restored before missing-cache diagnostics. Shared-formula
-followers translate relative, absolute and mixed A1 references, ranges, complete
-row/column references, literals, sheet names and functions. Unsupported shared
-formula grammar (including structured/external or 3D references) is diagnosed as
-`FormulaTextUnavailable`; Auto selects the compatibility reader when it affects
-the output. This tokenizer does not edit Mapping formulas.
+Every Reader uses only saved formula results. Stale results remain unchanged;
+there is no freshness or dependency check. Missing results display empty text with
+`FormulaCachedValueMissing`; saved zero, false and empty strings remain distinct.
+Saved errors display their error text with `FormulaResultError`. Literal HYPERLINK
+arguments may supply a static target, but never replace a saved or missing display.
+
+Formula text is separate metadata. `ReportCell.Formula` contains only the original
+nonempty body with a leading equals sign. Shared/array followers without a body
+have null text and retain `FormulaSharedIndex` / `FormulaMasterAddress` on the cell
+and Markdown `VisualCell`. Drawing does not expand formulas or fall back because
+formula text cannot be expanded. The standalone low-level `FormulaTextResolver`
+remains available to existing callers; it is not used by rendering.
 
 Reader Auto uses the selected sheets, explicit rectangles and hidden dimensions
 for display capability checks. Page selection uses the same layout and source
@@ -72,14 +75,31 @@ strings; unchanged rich/shared strings remain intact. Formula-looking mapped
 strings remain strings. Date/time values preserve existing number formats and
 receive default date/time formats only when the source format is General.
 
-Capability inspection covers the whole workbook before input data is evaluated.
-Explicit OpenXml reports every unsupported reason and fails before output. Auto
-uses ClosedXML for formulas on any sheet, general defined names, conditional
-formatting, validation, tables/pivots/filters/sparklines, drawings/comments/links,
-external data, macros/signatures/Strict OOXML, and unknown worksheet elements,
-extensions or relationship parts. Empty `tableParts` emitted by ClosedXML are
-accepted; actual table references are rejected. Repeated-region formula/name/
-merge/table/picture restrictions still apply on the compatibility path.
+Before backend selection, CLR getters, enumeration or expansion planning, every
+Mapping backend scans the whole workbook for cell formulas (including empty
+shared followers, arrays and data tables), table calculated/totals formulas, and
+calculated defined names. Hidden/unselected sheets and rows removed by empty
+arrays are included. Failure is `MappingException` with reason code
+`MappingFormulaNotSupported` and source location when available. Unknown workbook,
+worksheet or table extensions are conservatively rejected because absence of
+value formulas cannot be established.
+
+Calculate amounts, tax and totals in the caller and replace template formulas
+with `**` value placeholders. Static names accept only string/numeric/Boolean
+constants and finite A1 reference unions (including whole rows/columns and quoted
+known sheet names). Functions, arithmetic, dynamic/external/3D references, name
+aliases and unrecognized grammar are rejected. Names overlapping repeat regions
+remain unsupported. Static print areas/titles remain supported. Conditional
+formatting and validation formulas are retained through existing ClosedXML
+structure handling, without evaluation or new conditional rendering.
+
+After this common preflight, explicit OpenXml reports structural capability
+failures before output; Auto may choose ClosedXML for static general names,
+conditional formatting, validation, tables/pivots/filters/sparklines,
+drawings/comments/links, external data and other unsupported structures.
+Formulas never cause a permissive fallback. The OpenXml Writer scope is unchanged.
+Mapping saves with formula evaluation disabled and restores the original `calcPr`
+(including its absence), without adding recalculation requests.
 
 Mapping Auto also uses `PrintAreaExpansionCompatibility` when a print area
 intersects an expandable region, until that geometry pattern is proven equivalent
@@ -114,7 +134,10 @@ excelrenderer render template.xlsx --data data.json --format svg -o output --map
 `--reader-backend closedxml|openxml|auto` is available on pdf, image, svg,
 markdown/md and render. `--mapping-backend` is available on all of them and xlsx;
 explicit use requires `--data`. `--verbose` writes engine decisions to stderr.
-OpenXml plus Legacy is rejected rather than silently changing formula policy.
+`--formula-mode` defaults to `cached`. Explicit `legacy` and `recalculate` fail
+with migration guidance on every backend; they are never silently converted.
+This default change, Legacy rejection and Mapping formula prohibition affect
+compatibility with earlier releases.
 
 ## Ownership and verification
 
@@ -128,7 +151,11 @@ rendering cells rather than retaining a second complete cell-record collection.
 
 The writer replays original rows from a spillable row store, writes a separate ZIP
 stage, maintains package relationships and shared-string counts, then reads the
-stage through the streaming reader. Schema validation and unmodified-part hashes
+stage through the streaming reader. Parsed source rows are reused through a
+per-sheet LRU cache: at most 64 prototypes, 256 KiB of original UTF-8 row XML in
+total, and 64 KiB per row. These are source-size limits, not a claim of exact heap
+size. Large rows bypass the cache; each output row edits a deep copy so values and
+coordinates cannot leak between occurrences. Schema validation and unmodified-part hashes
 are tested separately. See the integration validation record for measured evidence;
 historical reader-only reports do not establish rendering integration results.
 

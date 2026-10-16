@@ -238,11 +238,6 @@ internal partial class CoreExcelReader
                     {
                         reasons.Add(issue.Code);
                     }
-
-                    if (!FormulaTextResolver.TryResolve(cell, out _))
-                    {
-                        reasons.Add("FormulaTextUnavailable");
-                    }
                 }
             }
 
@@ -253,7 +248,7 @@ internal partial class CoreExcelReader
             }
         }
 
-        var metadata = new CoreWorkbookMetadata(new Dictionary<string, IReadOnlyDictionary<string, DrawingPictureMetadata>>(), new Dictionary<string, SheetPageSetupMetadata>()) { FormulaMode = FormulaDisplayMode.CachedValue, IsStreamingSource = true };
+        var metadata = new CoreWorkbookMetadata(new Dictionary<string, IReadOnlyDictionary<string, DrawingPictureMetadata>>(), new Dictionary<string, SheetPageSetupMetadata>()) { IsStreamingSource = true };
         foreach (var original in reader.Sheets)
         {
             metadata.SourceSheetIndices[original.Name] = original.Index;
@@ -333,19 +328,17 @@ internal partial class CoreExcelReader
                     cellDiagnostics.Add(new(issue.Code, DiagnosticSeverity.Warning, DiagnosticStage.Read, issue.Message, info.Sheet.Name, cell.Address.ToString()));
                 }
 
-                var displayOverride = DisplayOverride(new(cell.Address.Row, cell.Address.Column), context);
-                var display = displayOverride is null ? reader.FormatCell(cell) : null;
-                foreach (var diagnostic in display?.Diagnostics ?? Array.Empty<ReaderDiagnostic>())
+                var display = reader.FormatCell(cell);
+                foreach (var diagnostic in display.Diagnostics)
                 {
                     cellDiagnostics.Add(new(diagnostic.Code, DiagnosticSeverity.Warning, DiagnosticStage.Read, diagnostic.Message, info.Sheet.Name, cell.Address.ToString()));
                 }
 
-                if (!FormulaTextResolver.TryResolve(cell, out var formula))
+                var model = new ReportCell(NormalizeDisplayText(display.Text), style, Formula: cell.Formula?.RawFormula is { Length: > 0 } formula ? "=" + formula : null)
                 {
-                    cellDiagnostics.Add(new("FormulaTextUnavailable", DiagnosticSeverity.Warning, DiagnosticStage.Read, "The saved formula syntax cannot be expanded faithfully.", info.Sheet.Name, cell.Address.ToString()));
-                }
-
-                var model = new ReportCell(NormalizeDisplayText(displayOverride ?? display!.Text), style, Formula: formula is null ? null : "=" + formula);
+                    FormulaSharedIndex = cell.Formula?.SharedIndex,
+                    FormulaMasterAddress = cell.Formula?.MasterAddress is { } master ? new(master.Row, master.Column) : null,
+                };
                 cells.Add(new(cell.Address.Row, cell.Address.Column), CompleteCell(CaptureRichText ? ReadOpenXmlCellText(cell, originalStyle) : null, model, context));
             }
 

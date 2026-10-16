@@ -9,7 +9,7 @@ namespace ExcelRenderer.Excel;
 /// <summary>Reads original hyperlink XML and constant formulas before ClosedXML display access.</summary>
 internal static class HyperlinkReader
 {
-    /// <summary>Reads definitions, scoped names and uncached literal display values.</summary>
+    /// <summary>Reads definitions, scoped names without deriving display values from formulas.</summary>
     /// <param name="stream">The seekable XLSX stream.</param>
     /// <param name="selectedSheets">Optional selected bodies; unselected sheets retain link metadata without cell text.</param>
     /// <returns>Metadata by actual sheet name.</returns>
@@ -30,7 +30,6 @@ internal static class HyperlinkReader
 
             var includeBody = selectedSheets is null || selectedSheets.Contains(sheet.Name!.Value!, StringComparer.Ordinal);
             var links = new List<ReportHyperlink>();
-            var displays = new Dictionary<CellAddress, string>();
             var relationships = part.HyperlinkRelationships.ToDictionary(r => r.Id, StringComparer.Ordinal);
             var definition = 0;
             foreach (var raw in ReadElements<Hyperlink>(part))
@@ -89,12 +88,7 @@ internal static class HyperlinkReader
                 }
 
                 var range = CellRangeParser.Parse(cell.CellReference!.Value!, out _);
-                var supported = LiteralHyperlinkFormula.TryRead(formula, out var target, out var label);
-                if (supported && cell.CellValue is null)
-                {
-                    displays[range.First] = label ?? target;
-                }
-
+                var supported = LiteralHyperlinkFormula.TryRead(formula, out var target, out _);
                 if (links.Any(link => link.SourceRange.Contains(range.First)))
                 {
                     continue;
@@ -118,7 +112,7 @@ internal static class HyperlinkReader
                 scoped[name.Name!.Value!] = name.Text;
             }
 
-            result[sheet.Name!.Value!] = new(links, scoped, displays)
+            result[sheet.Name!.Value!] = new(links, scoped)
             {
                 OriginalCells = (includeBody ? ReadElements<Cell>(part) : Enumerable.Empty<Cell>()).Where(cell => cell.CellReference is not null)
                     .Select(cell => CellRangeParser.Parse(cell.CellReference!.Value!, out _).First).ToHashSet(),

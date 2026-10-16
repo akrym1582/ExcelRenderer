@@ -42,7 +42,7 @@ internal static partial class CoreModelAdapter
             SourceSheetIndex = value.SourceSheetIndex,
             RequestedRange = value.RequestedRange is { } requested ? ToCore(requested) : null,
             RenderUsedRange = value.RenderUsedRange is { } used ? ToCore(used) : null,
-            ExtensionData = new FullSheetData(value.Shapes ?? [], new Excel.SheetHyperlinkMetadata(value.Hyperlinks, value.HyperlinkNames, new Dictionary<CellAddress, string>())) { UnsupportedFeatures = value.UnsupportedFeatures, CellReadDiagnostics = value.CellReadDiagnostics },
+            ExtensionData = new FullSheetData(value.Shapes ?? [], new Excel.SheetHyperlinkMetadata(value.Hyperlinks, value.HyperlinkNames)) { UnsupportedFeatures = value.UnsupportedFeatures, CellReadDiagnostics = value.CellReadDiagnostics },
         };
 
         Core.Model.ReportCell Cell(ReportCell cell)
@@ -55,6 +55,8 @@ internal static partial class CoreModelAdapter
 
             return new(cell.Text, style, cell.RowSpan, cell.ColumnSpan, cell.Formula)
             {
+                FormulaSharedIndex = cell.FormulaSharedIndex,
+                FormulaMasterAddress = cell.FormulaMasterAddress is { } master ? ToCore(master) : null,
                 ExtensionData = richSnapshots.GetValueOrDefault(cell),
                 MergedBorders = cell.MergedBorders?.Select(border => new Core.Model.CellBorder(ToCore(border.Address), ToCore(border.Border))).ToArray(),
             };
@@ -110,6 +112,8 @@ internal static partial class CoreModelAdapter
     /// <returns>The public cell.</returns>
     internal static ReportCell ToPublic(Core.Model.ReportCell value, Excel.StylePool styles) => new(value.Text, styles.Intern(ToPublic(value.Style)), value.RowSpan, value.ColumnSpan, value.Formula)
     {
+        FormulaSharedIndex = value.FormulaSharedIndex,
+        FormulaMasterAddress = value.FormulaMasterAddress is { } master ? ToPublic(master) : null,
         RichTextRuns = (value.ExtensionData as FullCellTextData)?.Runs,
         UnsupportedRichTextFormatting = (value.ExtensionData as FullCellTextData)?.UnsupportedFormatting ?? false,
         MergedBorders = value.MergedBorders?.Select(border => new CellBorder(ToPublic(border.Address), styles.Intern(ToPublic(border.Border)))).ToArray(),

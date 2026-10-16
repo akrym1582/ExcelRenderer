@@ -291,7 +291,7 @@ A range replaces that sheet's print areas, preserves paper, margins, scaling and
 
 Trimming includes visible fills (including explicitly white fills), strokes, positioned text, images, shapes and headers/footers. Font glyph bounds are used where available; emoji and compatibility glyphs use conservative finalized logical bounds. This is drawing-bound cropping, not pixel-based removal of white or transparent areas inside images. An empty trimmed page remains 1×1pt plus padding (5×5pt by default), with `EmptyContent` information. PNG dimensions use ceiling at the requested DPI, and `RenderRequest.MaxPngPixels` applies to both page and continuous output before bitmap allocation.
 
-PDF and Markdown preserve `http`, `https`, `mailto` and same-workbook cell links, including range references, empty source cells, simple scoped A1 names, and literal-string `HYPERLINK` formulas. Explicit XML definitions take precedence over formulas. Cached displays are retained; uncached supported formulas use the literal friendly name or location without general formula recalculation. PDF annotations are attached to the final merged document and follow page selection and trimming. Markdown uses stable `xl-sN-rN-cN` anchors and explicit target/source lists where a blank cell or source range cannot carry a natural label. PNG and SVG retain cell appearance without clickable links or hyperlink warnings. SVG links and link sidecars are not generated.
+PDF and Markdown preserve `http`, `https`, `mailto` and same-workbook cell links, including range references, empty source cells, simple scoped A1 names, and literal-string `HYPERLINK` formulas. Explicit XML definitions take precedence over formulas. Only saved displays are used; uncached formulas display empty text and report `FormulaCachedValueMissing`. PDF annotations are attached to the final merged document and follow page selection and trimming. Markdown uses stable `xl-sN-rN-cN` anchors and explicit target/source lists where a blank cell or source range cannot carry a natural label. PNG and SVG retain cell appearance without clickable links or hyperlink warnings. SVG links and link sidecars are not generated.
 
 Unsafe URIs (including local files, relative paths, UNC, embedded HTTP credentials, control characters and unsupported schemes), conflicting definitions and unsupported dynamic formulas retain display text and yield `HyperlinkRejected`/`HyperlinkUnsupported` warnings. Missing or omitted internal destinations yield `HyperlinkTargetOmitted`; excluded sources do not produce destination warnings. Diagnostics omit URI/recipient/query contents. Readable invalid link definitions are warnings; a corrupt workbook rejected by ClosedXML remains a fatal input error. Strict mode or matching `--warnings-as-errors` stops output before the sink opens. The PDF CLI creates/truncates its file only after preflight; identical input/output paths are rejected before reading.
 
@@ -663,30 +663,23 @@ bounds. `CellTextTooSmall` uses final scaled visible run sizes. These warnings d
 not resize cells and are not emitted for Markdown. New warnings run in preflight;
 diagnostic failure occurs before opening output sinks.
 
-Formula display defaults to `FormulaDisplayMode.Legacy`. Set
-`RenderRequest.ReadOptions = new ExcelReadOptions { FormulaDisplayMode = FormulaDisplayMode.CachedValue }`
-(types in `ExcelRenderer.Excel`) to use only results saved in the source XLSX.
-`ExcelReader.Read(path, options)` / `Read(stream, options)` and the PDF/image/SVG/Markdown
-export options expose the same policy. No Mapping save/calculation policy is changed.
+Formula display defaults to `FormulaDisplayMode.CachedValue` in Core, the main
+Reader, export APIs and CLI (`--formula-mode cached`). Reader and Mapping backend
+defaults remain ClosedXml. ExcelRenderer never recalculates formulas during
+reading, Mapping or saving. Saved results may be stale; zero, false and saved empty
+strings are preserved. Missing results display empty text with
+`FormulaCachedValueMissing`, and saved errors produce `FormulaResultError`.
+HYPERLINK friendly arguments never replace saved or missing results. Formula
+diagnostics follow visible output selection and failure policy before sink opening.
 
-```sh
-excelrenderer pdf input.xlsx -o output.pdf --formula-mode cached
-excelrenderer render input.xlsx -o output --format markdown --formula-mode cached
-```
-
-All rendering commands (`pdf`, `image`, `svg`, `md`, `render`) accept `--formula-mode`;
-`xlsx` does not. Missing saved results produce empty text and
-`FormulaCachedValueMissing`; zero, false and saved empty strings are not missing.
-Existing literal HYPERLINK display recovery takes precedence. Saved Excel error values
-produce `FormulaResultError`. Cached mode neither evaluates formulas nor guarantees
-that saved results are fresh. Formula diagnostics are filtered to selected visible
-output and respect suppression and failure policies before opening the output sink.
-
-**Recalculate is not implemented under the required selected-root/dependency scope.**
-The enum/CLI spelling is reserved but currently rejects the request before conversion;
-it does not silently use caches or recalculate the whole workbook. See
-[the public-API reproductions and pending scope decision](docs/reader-richtext-validation.md).
-Selected-root recalculation remains a later phase; backend integration retains this rejection.
+Explicit `Legacy` and `Recalculate` modes are unsupported on every backend and
+fail before input processing or output creation. This is a compatibility change.
+All Mapping templates must be free of value-producing formulas, including hidden
+sheets, table formulas and calculated names; Auto cannot bypass this restriction.
+Compute line amounts, tax and totals in the caller and supply value placeholders.
+Mapped strings beginning with `=` stay strings. See the
+[backend and migration guide](docs/openxml-integration.md) and
+[Mapping guide](docs/mapping.md) for the static-name grammar and output guarantees.
 
 With `DetectUnsupportedFeatures`, chart sheets are reported at sheet level with unknown
 cell position using `UnsupportedDrawingObject`; they add no blank output page. Selecting

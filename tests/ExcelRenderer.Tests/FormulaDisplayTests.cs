@@ -13,6 +13,7 @@ public sealed class FormulaDisplayTests
     [Theory]
     [InlineData(ReaderBackend.ClosedXml)]
     [InlineData(ReaderBackend.OpenXml)]
+    [InlineData(ReaderBackend.Auto)]
     public void CachedModeDistinguishesMissingZeroFalseEmptyTextAndErrorsWithoutEvaluating(ReaderBackend backend)
     {
         using var input = CreateWorkbook();
@@ -26,11 +27,11 @@ public sealed class FormulaDisplayTests
         Assert.Equal(HorizontalAlignment.Right, sheet.Cells[new(1, 1)].Style.HorizontalAlignment);
         Assert.Equal(HorizontalAlignment.Center, sheet.Cells[new(2, 1)].Style.HorizontalAlignment);
         Assert.Equal(HorizontalAlignment.Left, sheet.Cells[new(5, 1)].Style.HorizontalAlignment);
-        Assert.Equal("A4", Assert.Single(sheet.CellReadDiagnostics, d => d.Code == "FormulaCachedValueMissing").CellRange);
+        Assert.Equal("A4", Assert.Single(sheet.CellReadDiagnostics, d => d.Code == "FormulaCachedValueMissing" && d.CellRange == "A4").CellRange);
         Assert.Equal("A6", Assert.Single(sheet.CellReadDiagnostics, d => d.Code == "FormulaResultError").CellRange);
         Assert.Equal("99", sheet.Cells[new(7, 1)].Text);
-        Assert.Equal("friendly", sheet.Cells[new(8, 1)].Text);
-        Assert.DoesNotContain(sheet.CellReadDiagnostics, d => d.CellRange == "A8");
+        Assert.Equal(string.Empty, sheet.Cells[new(8, 1)].Text);
+        Assert.Contains(sheet.CellReadDiagnostics, d => d.Code == "FormulaCachedValueMissing" && d.CellRange == "A8");
     }
 
     [Theory]
@@ -46,6 +47,27 @@ public sealed class FormulaDisplayTests
         Assert.Equal("25.00%", sheet.Cells[new(10, 1)].Text);
         Assert.Equal("012.50", sheet.Cells[new(11, 1)].Text);
         Assert.Equal("12:00", sheet.Cells[new(12, 1)].Text);
+    }
+
+    [Theory]
+    [InlineData(ReaderBackend.ClosedXml)]
+    [InlineData(ReaderBackend.OpenXml)]
+    [InlineData(ReaderBackend.Auto)]
+    public void CachedDurationsDoNotAcquireThe1904DateOffset(ReaderBackend backend)
+    {
+        using var input = CreateWorkbook(true);
+        using (var package = SpreadsheetDocument.Open(input, true))
+        {
+            var sheet = package.WorkbookPart!.WorksheetParts.Single().Worksheet;
+            var cell = sheet.Descendants<S.Cell>().Single(c => c.CellReference == "A12");
+            var styles = package.WorkbookPart.WorkbookStylesPart!.Stylesheet;
+            styles.NumberingFormats!.Append(new S.NumberingFormat { NumberFormatId = 250, FormatCode = "[h]:mm" });
+            styles.CellFormats!.Append(new S.CellFormat { NumberFormatId = 250, ApplyNumberFormat = true });
+            cell.StyleIndex = (uint)(styles.CellFormats.ChildElements.Count - 1);
+            cell.CellValue = new("1.5");
+        }
+        input.Position = 0;
+        Assert.Equal("36:00", new ExcelReader().Read(input, new() { Backend = backend }).Sheets[0].Cells[new(12, 1)].Text);
     }
 
     [Theory]
@@ -81,8 +103,11 @@ public sealed class FormulaDisplayTests
         Assert.DoesNotContain(result.Diagnostics, d => d.Code.StartsWith("Formula", StringComparison.Ordinal));
     }
 
-    [Fact]
-    public void SharedAndArrayFormulaFollowersUseTheirOwnOriginalCaches()
+    [Theory]
+    [InlineData(ReaderBackend.ClosedXml)]
+    [InlineData(ReaderBackend.OpenXml)]
+    [InlineData(ReaderBackend.Auto)]
+    public void SharedAndArrayFormulaFollowersUseTheirOwnOriginalCaches(ReaderBackend backend)
     {
         using var input = CreateWorkbook();
         using (var package = SpreadsheetDocument.Open(input, true))
@@ -100,14 +125,17 @@ public sealed class FormulaDisplayTests
         }
 
         input.Position = 0;
-        var sheet = new ExcelReader().Read(input, Cached()).Sheets[0];
+        var sheet = new ExcelReader().Read(input, Cached(backend)).Sheets[0];
         for (var row = 1; row <= 4; row++)
         {
             Assert.Equal((89 + row).ToString(System.Globalization.CultureInfo.InvariantCulture), sheet.Cells[new(row, 1)].Text);
-            Assert.NotNull(sheet.Cells[new(row, 1)].Formula);
+            Assert.Equal(row is 1 or 3, sheet.Cells[new(row, 1)].Formula is not null);
         }
 
-        Assert.DoesNotContain(sheet.CellReadDiagnostics, d => d.Code == "FormulaCachedValueMissing");
+        Assert.Equal(0, sheet.Cells[new(2, 1)].FormulaSharedIndex);
+        Assert.Equal(new CellAddress(1, 1), sheet.Cells[new(2, 1)].FormulaMasterAddress);
+        Assert.Equal(new CellAddress(3, 1), sheet.Cells[new(4, 1)].FormulaMasterAddress);
+        Assert.DoesNotContain(sheet.CellReadDiagnostics, d => d.Code == "FormulaCachedValueMissing" && d.CellRange != "A8");
     }
 
     [Fact]
@@ -145,9 +173,56 @@ public sealed class FormulaDisplayTests
             Hyperlinks = hyperlinks,
         }, new SingleStreamOutputSink(output));
         var text = System.Text.Encoding.UTF8.GetString(output.ToArray());
-        Assert.Contains("friendly", text);
+        // Formula metadata may contain the original friendly argument; cell display remains empty.
+        input.Position = 0;
+        Assert.Equal(string.Empty, new ExcelReader().Read(input).Sheets[0].Cells[new(8, 1)].Text);
         Assert.Contains("99", text);
-        Assert.DoesNotContain(result.Diagnostics, d => d.Code == "FormulaCachedValueMissing" && d.CellRange == "A8");
+        Assert.Contains(result.Diagnostics, d => d.Code == "FormulaCachedValueMissing" && d.CellRange == "A8");
+    }
+
+    [Theory]
+    [InlineData(ReaderBackend.ClosedXml)]
+    [InlineData(ReaderBackend.OpenXml)]
+    [InlineData(ReaderBackend.Auto)]
+    public void DefaultsKeepStaleCachesAndOriginalInputIncludingHyperlinkLabel(ReaderBackend backend)
+    {
+        using var input = CreateWorkbook();
+        using (var package = SpreadsheetDocument.Open(input, true))
+        {
+            var cell = package.WorkbookPart!.WorksheetParts.Single().Worksheet.Descendants<S.Cell>().Single(c => c.CellReference == "A8");
+            cell.DataType = S.CellValues.String;
+            cell.CellValue = new("saved link result");
+        }
+        input.Position = 0;
+        var before = System.Security.Cryptography.SHA256.HashData(input.ToArray());
+        var sheet = new ExcelReader().Read(input, new() { Backend = backend }).Sheets[0];
+        Assert.Equal("99", sheet.Cells[new(7, 1)].Text);
+        Assert.Equal("=SUM(50,2)", sheet.Cells[new(7, 1)].Formula);
+        Assert.Equal("saved link result", sheet.Cells[new(8, 1)].Text);
+        Assert.Equal(before, System.Security.Cryptography.SHA256.HashData(input.ToArray()));
+    }
+
+    [Fact]
+    public void UnknownSharedSyntaxDoesNotCauseAutoFallbackOrFormulaExpansion()
+    {
+        using var input = CreateWorkbook();
+        using (var package = SpreadsheetDocument.Open(input, true))
+        {
+            var cells = package.WorkbookPart!.WorksheetParts.Single().Worksheet.Descendants<S.Cell>().ToArray();
+            cells[0].CellFormula = new S.CellFormula("_xlfn.FUTURE(A1#)") { FormulaType = S.CellFormulaValues.Shared, SharedIndex = 9, Reference = "A1:A2" };
+            cells[1].CellFormula = new S.CellFormula { FormulaType = S.CellFormulaValues.Shared, SharedIndex = 9 };
+        }
+        input.Position = 0;
+        ReaderBackendSelection? selected = null;
+        var sheet = new ExcelReader().Read(input, new() { Backend = ReaderBackend.Auto, BackendSelected = value => selected = value }).Sheets[0];
+        Assert.Equal(ReaderBackend.OpenXml, selected!.SelectedBackend);
+        Assert.Equal("0", sheet.Cells[new(1, 1)].Text);
+        Assert.Equal("FALSE", sheet.Cells[new(2, 1)].Text);
+        Assert.Null(sheet.Cells[new(2, 1)].Formula);
+        var visual = new Markdown.VisualCellBuilder().Build(sheet).Single(cell => cell.Range.First == new CellAddress(2, 1));
+        Assert.Equal(9, visual.FormulaSharedIndex);
+        Assert.Equal(new CellAddress(1, 1), visual.FormulaMasterAddress);
+        Assert.DoesNotContain(sheet.CellReadDiagnostics, d => d.Code == "FormulaTextUnavailable");
     }
 
     [Fact]
@@ -218,7 +293,7 @@ public sealed class FormulaDisplayTests
                 cells[index].CellValue = values[index] is { } value ? new S.CellValue(value) : null;
             }
 
-            cells[6].CellFormula = new S.CellFormula("SUM(40,2)");
+            cells[6].CellFormula = new S.CellFormula("SUM(50,2)");
             cells[7].CellFormula = new S.CellFormula("HYPERLINK(\"https://example.invalid\",\"friendly\")");
         }
 

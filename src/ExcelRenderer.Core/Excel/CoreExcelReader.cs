@@ -38,11 +38,11 @@ internal partial class CoreExcelReader
     /// <param name="formulaMode">The internal formula display policy.</param>
     /// <param name="options">The engine selection and formula display policy.</param>
     /// <returns>The planned or generated result.</returns>
-    internal ReportDocument Read(PreparedWorkbook source, DiagnosticCollector? diagnostics, IReadOnlyList<string>? selectedSheets = null, CancellationToken cancellationToken = default, FormulaDisplayMode formulaMode = FormulaDisplayMode.Legacy, ExcelReadOptions? options = null)
+    internal ReportDocument Read(PreparedWorkbook source, DiagnosticCollector? diagnostics, IReadOnlyList<string>? selectedSheets = null, CancellationToken cancellationToken = default, FormulaDisplayMode formulaMode = FormulaDisplayMode.CachedValue, ExcelReadOptions? options = null)
     {
         options ??= new ExcelReadOptions { FormulaDisplayMode = (Core.FormulaDisplayMode)formulaMode };
         options.Validate();
-        if (options.Backend != ReaderBackend.ClosedXml && options.FormulaDisplayMode == Core.FormulaDisplayMode.CachedValue)
+        if (options.Backend != ReaderBackend.ClosedXml)
         {
             var candidate = ReadOpenXml(source, diagnostics, selectedSheets, cancellationToken, options, out var reasons);
             if (candidate is not null)
@@ -54,7 +54,7 @@ internal partial class CoreExcelReader
             return Read(source, diagnostics, selectedSheets, cancellationToken, FormulaDisplayMode.CachedValue, options with { Backend = ReaderBackend.ClosedXml, BackendSelected = null, InspectCandidate = null });
         }
 
-        options.BackendSelected?.Invoke(new(options.Backend, ReaderBackend.ClosedXml, Array.AsReadOnly(new[] { options.Backend == ReaderBackend.Auto ? "LegacyFormulaMode" : "ExplicitClosedXml" })));
+        options.BackendSelected?.Invoke(new(options.Backend, ReaderBackend.ClosedXml, Array.AsReadOnly(new[] { "ExplicitClosedXml" })));
         using var workbookStream = source.OpenRead();
         using var cancelRead = new CancellationReadStream(workbookStream, cancellationToken);
         var graphics = (fontMetrics as IClosedXmlFontMetrics)?.GraphicEngine;
@@ -75,6 +75,7 @@ internal partial class CoreExcelReader
     /// <returns>The neutral rendering document.</returns>
     internal ReportDocument ReadClosedXmlWorkbook(PreparedWorkbook source, XLWorkbook workbook, DiagnosticCollector? diagnostics, IReadOnlyList<string>? selectedSheets, CancellationToken cancellationToken, FormulaDisplayMode formulaMode)
     {
+        new ExcelReadOptions { FormulaDisplayMode = (Core.FormulaDisplayMode)formulaMode }.Validate();
         using var pictureSource = source.OpenRead();
         using var pictureMetadataStream = new CancellationReadStream(pictureSource, cancellationToken);
         using var metadataSource = source.OpenRead();
@@ -82,11 +83,10 @@ internal partial class CoreExcelReader
         var graphics = (fontMetrics as IClosedXmlFontMetrics)?.GraphicEngine;
         var pictureMetadata = DrawingMLReader.ReadPictureMetadata(pictureMetadataStream);
         var pageSetups = WorkbookLayoutMetadataReader.ReadPageSetups(metadataStream);
-        var metadata = new CoreWorkbookMetadata(pictureMetadata, pageSetups) { FormulaMode = formulaMode };
-        if (formulaMode != FormulaDisplayMode.Legacy)
+        var metadata = new CoreWorkbookMetadata(pictureMetadata, pageSetups);
+        using (var formulaStream = source.OpenRead())
         {
-            using var formulaStream = source.OpenRead();
-            metadata.FormulaCaches = FormulaCacheReader.Read(formulaStream, workbook, cancellationToken);
+            metadata.FormulaCaches = FormulaCacheReader.Read(formulaStream, cancellationToken);
         }
 
         PrepareWorkbookMetadata(source, workbook.Worksheets.Select(sheet => sheet.Name).ToArray(), metadata, selectedSheets);
@@ -136,12 +136,6 @@ internal partial class CoreExcelReader
     /// <returns>Whether to materialize the cell.</returns>
     protected virtual bool ShouldReadCell(CellAddress cell, CoreSheetReadContext context) => true;
 
-    /// <summary>Restores source-independent product displays before cache diagnostics.</summary>
-    /// <param name="address">Original cell address.</param>
-    /// <param name="context">Original sheet context.</param>
-    /// <returns>A display override, or null to use the stored value.</returns>
-    protected virtual string? DisplayOverride(CellAddress address, CoreSheetReadContext context) => null;
-
     /// <summary>Completes a cell from neutral original run data.</summary>
     /// <param name="source">Optional original rich text.</param>
     /// <param name="cell">The neutral cell.</param>
@@ -170,16 +164,6 @@ internal partial class CoreExcelReader
         }
 
         diagnostics.Add(new(code, DiagnosticSeverity.Warning, DiagnosticStage.Read, message, cell.Worksheet.Name, cell.Address.ToStringRelative()));
-    }
-
-    private static string ReadDisplay(IXLCell cell, ReaderSession session)
-    {
-        if (!cell.HasFormula || cell.FormulaA1.IndexOf("HYPERLINK", StringComparison.OrdinalIgnoreCase) < 0)
-        {
-            return cell.GetFormattedString();
-        }
-
-        return session.Format(cell, cell.CachedValue);
     }
 
     private static CellRange? ReadPrintArea(IXLWorksheet worksheet)
@@ -314,34 +298,24 @@ internal partial class CoreExcelReader
 
     private string ReadDisplayText(IXLCell cell, CoreSheetReadContext context)
     {
-        if (DisplayOverride(new(cell.Address.RowNumber, cell.Address.ColumnNumber), context) is { } original)
-        {
-            return original;
-        }
-
         var metadata = context.Metadata;
-        if (!cell.HasFormula || metadata.FormulaMode == FormulaDisplayMode.Legacy)
-        {
-            var text = ReadDisplay(cell, metadata.ReaderSession!);
-            if (cell.HasFormula && cell.CachedValue.IsError)
-            {
-                AddFormulaDiagnostic(cell, metadata, "FormulaResultError", "The selected formula display value is an Excel error.");
-            }
-
-            return text;
-        }
-
         var address = new CellAddress(cell.Address.RowNumber, cell.Address.ColumnNumber);
         var cache = metadata.FormulaCaches.GetValueOrDefault(cell.Worksheet.Name)?.GetValueOrDefault(address);
+        if (cache is null)
+        {
+            return cell.HasFormula ? string.Empty : cell.GetFormattedString();
+        }
+
         if (cache?.HasValue != true)
         {
             AddFormulaDiagnostic(cell, metadata, "FormulaCachedValueMissing", "The formula has no saved result; an empty display is used.");
             return string.Empty;
         }
 
-        if (cache.Value.IsError)
+        if (cache.IsError)
         {
             AddFormulaDiagnostic(cell, metadata, "FormulaResultError", "The selected formula display value is an Excel error.");
+            return cache.Value.GetText();
         }
 
         return metadata.ReaderSession!.Format(cell, cache.Value);
@@ -381,10 +355,15 @@ internal partial class CoreExcelReader
                 }
 
                 var address = new CellAddress(cell.Address.RowNumber, cell.Address.ColumnNumber);
+                var formulaCache = context.Metadata.FormulaCaches.GetValueOrDefault(worksheet.Name)?.GetValueOrDefault(address);
                 var model = new ReportCell(
                     NormalizeDisplayText(ReadDisplayText(cell, context)),
                     styles.Intern(context.Metadata.ReaderSession!.ConvertStyle(cell, source => NormalizeCellStyle(ExcelStyleConverter.ConvertOriginal(source)))),
-                    Formula: cell.HasFormula ? "=" + cell.FormulaA1 : null);
+                    Formula: formulaCache?.Formula.RawFormula is { Length: > 0 } rawFormula ? "=" + rawFormula : null)
+                {
+                    FormulaSharedIndex = formulaCache?.Formula.SharedIndex,
+                    FormulaMasterAddress = formulaCache?.Formula.MasterAddress is { } master ? new(master.Row, master.Column) : null,
+                };
                 cells[address] = CompleteCell(CaptureRichText ? ReadLegacyCellText(cell) : null, model, context);
             }
 

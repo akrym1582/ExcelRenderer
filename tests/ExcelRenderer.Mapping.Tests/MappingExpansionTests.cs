@@ -27,8 +27,8 @@ public sealed class MappingExpansionTests
         output.Write([7, 8, 9]);
         var error = Assert.Throws<MappingException>(() => ExcelTemplateMapper.Map(input, output, new { items = Enumerable.Range(0, count).ToArray() }));
         Assert.Equal(block ? "T2" : "T1", error.CellAddress);
-        Assert.Equal("=1+1", error.Expression);
-        Assert.Contains("Formulas inside repeated", error.Message);
+        Assert.Equal("MappingFormulaNotSupported", error.ReasonCode);
+        Assert.Contains("Calculate values in the caller", error.Message);
         Assert.Equal(new byte[] { 7, 8, 9 }, output.ToArray());
     }
 
@@ -137,23 +137,23 @@ public sealed class MappingExpansionTests
     [InlineData(0)]
     [InlineData(1)]
     [InlineData(3)]
-    public void Outside_formulas_names_and_print_settings_remain_supported(int count)
+    public void Caller_values_static_names_and_print_settings_remain_supported(int count)
     {
         using var input = Template(s =>
         {
-            s.Cell("A1").FormulaA1 = "A5";
+            s.Cell("A1").Value = "**first";
             s.Cell("A2").Value = "**@start-array items[*] as item";
             s.Cell("A3").Value = "**@item";
             s.Cell("A4").Value = "**@end-array";
             s.Cell("A5").Value = 99;
-            s.Cell("B5").FormulaA1 = "FooterValue*2";
+            s.Cell("B5").Value = "**doubled";
             s.Workbook.DefinedNames.Add("FooterValue", "'Template'!$A$5");
             s.DefinedNames.Add("LocalFooter", "'Template'!$A$5");
             s.PageSetup.PrintAreas.Add("A1:B5");
             s.PageSetup.SetRowsToRepeatAtTop(1, 1);
-            s.Workbook.AddWorksheet("Other").Cell("A1").FormulaA1 = "Template!A5";
+            s.Workbook.AddWorksheet("Other").Cell("A1").Value = "**first";
         });
-        using var result = Map(input, new { items = Enumerable.Range(1, count).ToArray() });
+        using var result = Map(input, new { items = Enumerable.Range(1, count).ToArray(), first = 99, doubled = 198 });
         var sheet = result.Worksheet(1);
         var footer = count + 2;
         Assert.Equal(99, sheet.Cell("A1").GetDouble());

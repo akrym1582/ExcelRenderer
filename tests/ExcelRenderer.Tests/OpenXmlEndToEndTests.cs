@@ -84,12 +84,12 @@ public sealed class OpenXmlEndToEndTests
     }
 
     [Fact]
-    public async Task FormulaMappingAutoRecalculatesCacheBeforeStreamingMarkdown()
+    public async Task CallerCalculatedMappingAutoValuesReachStreamingMarkdown()
     {
         using var workbook = new XLWorkbook();
         var sheet = workbook.AddWorksheet("calculation");
         sheet.Cell("A1").Value = "**amount";
-        sheet.Cell("B1").FormulaA1 = "A1*2";
+        sheet.Cell("B1").Value = "**doubled";
         using var template = new MemoryStream();
         workbook.SaveAs(template);
         var rendered = new List<byte[]>();
@@ -98,9 +98,9 @@ public sealed class OpenXmlEndToEndTests
             template.Position = 0;
             using var mapped = new MemoryStream();
             MappingBackendSelection? selection = null;
-            ExcelTemplateMapper.Map(template, mapped, new { amount }, new() { Backend = MappingBackend.Auto, BackendSelected = value => selection = value });
-            Assert.Equal(MappingBackend.ClosedXml, selection!.SelectedBackend);
-            Assert.Contains("FormulasPresent", selection.ReasonCodes);
+            ExcelTemplateMapper.Map(template, mapped, new { amount, doubled = amount * 2 }, new() { Backend = MappingBackend.Auto, BackendSelected = value => selection = value });
+            Assert.Equal(MappingBackend.OpenXml, selection!.SelectedBackend);
+            Assert.DoesNotContain("FormulasPresent", selection.ReasonCodes);
             mapped.Position = 0;
             using (var reader = OpenXml.OpenXmlWorkbookReader.Open(mapped))
             {

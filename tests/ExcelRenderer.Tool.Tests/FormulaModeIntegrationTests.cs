@@ -18,12 +18,18 @@ public sealed partial class ToolIntegrationTests
         Directory.CreateDirectory(_directory);
         var output = Path.Combine(_directory, "sentinel");
         File.WriteAllText(output, "unchanged");
-        var args = new List<string> { command, "does-not-exist.xlsx", "-o", output, "--formula-mode", "invalid" };
-        if (command == "render") args.AddRange(["--format", "pdf"]);
-        var result = await RunAsync(args.ToArray());
-        Assert.NotEqual(0, result.ExitCode);
-        Assert.Contains("--formula-mode", result.Error + result.Output);
-        Assert.Equal("unchanged", File.ReadAllText(output));
+        foreach (var mode in new[] { "invalid", "legacy", "recalculate" })
+        {
+            foreach (var backend in new[] { "closedxml", "openxml", "auto" })
+            {
+                var args = new List<string> { command, "does-not-exist.xlsx", "-o", output, "--formula-mode", mode, "--reader-backend", backend };
+                if (command == "render") args.AddRange(["--format", "pdf"]);
+                var result = await RunAsync(args.ToArray());
+                Assert.NotEqual(0, result.ExitCode);
+                Assert.Contains("--formula-mode", result.Error + result.Output);
+                Assert.Equal("unchanged", File.ReadAllText(output));
+            }
+        }
     }
 
     [Theory]
@@ -58,7 +64,7 @@ public sealed partial class ToolIntegrationTests
         }
 
         var path = Path.Combine(_directory, command == "md" ? "result.md" : command == "pdf" ? "result.pdf" : "result");
-        var args = new List<string> { command, input, "-o", path, "--formula-mode", "cached" };
+        var args = new List<string> { command, input, "-o", path };
         if (command == "render") args.AddRange(["--format", "markdown"]);
         AssertSuccess(await RunAsync(args.ToArray()));
         if (command == "md") Assert.Contains("SAVEDRESULT", File.ReadAllText(path));

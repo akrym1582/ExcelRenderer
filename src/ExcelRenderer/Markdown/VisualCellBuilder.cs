@@ -36,7 +36,11 @@ public sealed class VisualCellBuilder
                 metrics.ColumnStart(range.Last.Column + 1) - metrics.ColumnStart(range.First.Column),
                 metrics.RowStart(range.Last.Row + 1) - metrics.RowStart(range.First.Row),
                 cell.Style,
-                cell.Formula));
+                cell.Formula)
+            {
+                FormulaSharedIndex = cell.FormulaSharedIndex,
+                FormulaMasterAddress = cell.FormulaMasterAddress,
+            });
         }
 
         return result;

@@ -11,7 +11,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--worker', required=True, type=pathlib.Path)
 parser.add_argument('--input', required=True, type=pathlib.Path)
 parser.add_argument('--output', required=True, type=pathlib.Path)
-parser.add_argument('--capture', type=pathlib.Path, help='Save the final sample workbook; requires the investigation capture patch.')
+parser.add_argument('--capture', type=pathlib.Path, help='Save the final sample workbook after the measured operation.')
 parser.add_argument('--backend', default='openxml', choices=['closedxml', 'openxml', 'auto'])
 parser.add_argument('--rows', type=int, default=100000)
 parser.add_argument('--variant', required=True)
@@ -33,7 +33,7 @@ for index in range(6):
     samples.append(sample)
     print(f'{args.variant} {index}/5: {sample["AllocatedBytes"] / 1048576:.2f} MiB', flush=True)
 if args.capture and not args.capture.is_file():
-    parser.error('The worker did not save the capture; apply the investigation capture patch first.')
+    parser.error('The worker did not save the capture; rebuild a worker supporting the capture argument.')
 measured = samples[1:]
 summary = {key: statistics.median(sample[key] for sample in measured) for key in ['AllocatedBytes', 'ElapsedMs', 'PeakRssBytes']}
 keys = sorted({key for sample in samples for key in sample['IoMetrics'] if key.startswith('allocation.')})

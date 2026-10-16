@@ -147,9 +147,9 @@ public sealed class RangeTrimHyperlinkTests
         Assert.Equal(0, ((PdfInteger)destination.Elements[4]).Value);
     }
 
-    /// <summary>保存済み XLSX の XML を読み取り、リンクの矩形範囲・空セルのリンク・定数数式の表示文字と対象 URL を保持することを検証します。</summary>
-    [Fact(DisplayName = "保存済み XLSX の XML を読み取り、リンクの矩形範囲・空セルのリンク・定数数式の表示文字と対象 URL を保持する")]
-    public void Saved_xlsx_reader_keeps_xml_ranges_empty_links_and_literal_displays()
+    /// <summary>保存済み XLSX の XML を読み取り、リンクの矩形範囲・空セルのリンク・静的対象 URL を保持し欠落キャッシュを空表示にすることを検証します。</summary>
+    [Fact(DisplayName = "保存済み XLSX の XML を読み取り、リンクの矩形範囲・空セルのリンク・静的対象 URL を保持し欠落キャッシュを空表示にする")]
+    public void Saved_xlsx_reader_keeps_xml_links_and_reports_missing_formula_cache()
     {
         var bytes = Fixture();
         using var input = new MemoryStream(bytes);
@@ -158,7 +158,8 @@ public sealed class RangeTrimHyperlinkTests
         var sheet = document.Sheets[0];
         Assert.Contains(sheet.Hyperlinks, link => link.SourceRange == new CellRange(new(4, 2), new(4, 3)));
         Assert.Contains(sheet.Hyperlinks, link => link.SourceRange == new CellRange(new(5, 2), new(5, 2)));
-        Assert.Equal("literal label", sheet.Cells[new(6, 2)].Text);
+        Assert.Equal(string.Empty, sheet.Cells[new(6, 2)].Text);
+        Assert.Contains(sheet.CellReadDiagnostics, d => d.Code == "FormulaCachedValueMissing" && d.CellRange == "B6");
         Assert.Equal("https://example.com/formula", sheet.Hyperlinks.Single(link => link.SourceRange.First == new CellAddress(6, 2)).Target);
     }
 

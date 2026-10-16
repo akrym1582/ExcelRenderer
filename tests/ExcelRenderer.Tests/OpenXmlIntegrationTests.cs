@@ -191,7 +191,7 @@ public sealed class OpenXmlIntegrationTests
     }
 
     [Fact]
-    public void DefaultAndAutoLegacyRetainCompatibilityEngine()
+    public void DefaultRetainsClosedXmlAndAutoUsesCachedOpenXml()
     {
         using var workbook = new XLWorkbook();
         workbook.AddWorksheet("data").Cell("A1").Value = "hello";
@@ -200,9 +200,11 @@ public sealed class OpenXmlIntegrationTests
         input.Position = 0;
         ReaderBackendSelection? selected = null;
         new ExcelReader().Read(input, new() { Backend = ReaderBackend.Auto, BackendSelected = value => selected = value });
-        Assert.Equal(ReaderBackend.ClosedXml, selected!.SelectedBackend);
-        Assert.Contains("LegacyFormulaMode", selected.ReasonCodes);
-        Assert.Throws<NotSupportedException>(() => new ExcelReader().Read(input, new() { Backend = ReaderBackend.OpenXml }));
+        Assert.Equal(ReaderBackend.OpenXml, selected!.SelectedBackend);
+        Assert.Equal(FormulaDisplayMode.CachedValue, new ExcelReadOptions().FormulaDisplayMode);
+        Assert.Equal(ReaderBackend.ClosedXml, new ExcelReadOptions().Backend);
+        input.Position = 0;
+        Assert.Equal("hello", new ExcelReader().Read(input, new() { Backend = ReaderBackend.OpenXml }).Sheets[0].Cells[new(1, 1)].Text);
     }
     private static string CanonicalSvg(byte[] bytes)
     {

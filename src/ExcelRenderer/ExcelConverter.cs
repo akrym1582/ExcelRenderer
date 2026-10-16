@@ -30,10 +30,10 @@ public static partial class ExcelConverter
         PdfExportOptions? options = null,
         CancellationToken cancellationToken = default)
     {
-        ValidateInput(inputPath);
-        ValidateNewFile(outputPath);
         options ??= new PdfExportOptions();
         (options.ReadOptions ?? throw new ArgumentException("ReadOptions are required.", nameof(options))).Validate();
+        ValidateInput(inputPath);
+        ValidateNewFile(outputPath);
         await using var input = File.OpenRead(inputPath);
         await RenderAsync(input, CreateLegacyRequest(OutputFormat.Pdf, options.SheetName, fontOptions: options.FontOptions) with { Hyperlinks = options.Hyperlinks, ReadOptions = options.ReadOptions }, new NewFileOutputSink(outputPath), cancellationToken)
             .ConfigureAwait(false);
@@ -51,14 +51,14 @@ public static partial class ExcelConverter
         ImageExportOptions? options = null,
         CancellationToken cancellationToken = default)
     {
+        options ??= new ImageExportOptions();
+        (options.ReadOptions ?? throw new ArgumentException("ReadOptions are required.", nameof(options))).Validate();
         ValidateInput(inputPath);
         if (string.IsNullOrWhiteSpace(outputDirectory))
         {
             throw new ArgumentException("An output directory is required.", nameof(outputDirectory));
         }
 
-        options ??= new ImageExportOptions();
-        (options.ReadOptions ?? throw new ArgumentException("ReadOptions are required.", nameof(options))).Validate();
         if (options.Dpi <= 0)
         {
             throw new ArgumentOutOfRangeException(
@@ -92,14 +92,14 @@ public static partial class ExcelConverter
         SvgExportOptions? options = null,
         CancellationToken cancellationToken = default)
     {
+        options ??= new SvgExportOptions();
+        (options.ReadOptions ?? throw new ArgumentException("ReadOptions are required.", nameof(options))).Validate();
         ValidateInput(inputPath);
         if (string.IsNullOrWhiteSpace(outputDirectory))
         {
             throw new ArgumentException("An output directory is required.", nameof(outputDirectory));
         }
 
-        options ??= new SvgExportOptions();
-        (options.ReadOptions ?? throw new ArgumentException("ReadOptions are required.", nameof(options))).Validate();
         if (Directory.Exists(outputDirectory) && Directory.EnumerateFileSystemEntries(outputDirectory).Any())
         {
             throw new IOException($"Output directory is not empty: {outputDirectory}");
@@ -125,10 +125,10 @@ public static partial class ExcelConverter
         MarkdownExportOptions? options = null,
         CancellationToken cancellationToken = default)
     {
-        ValidateInput(inputPath);
-        ValidateNewFile(outputPath);
         options ??= new MarkdownExportOptions();
         (options.ReadOptions ?? throw new ArgumentException("ReadOptions are required.", nameof(options))).Validate();
+        ValidateInput(inputPath);
+        ValidateNewFile(outputPath);
         if (string.IsNullOrWhiteSpace(options.ImageDirectoryName) || Path.IsPathRooted(options.ImageDirectoryName) ||
             options.ImageDirectoryName.Split(new[] { '/', '\\' }).Any(part => part == ".."))
         {

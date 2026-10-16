@@ -92,10 +92,6 @@ internal sealed partial class FullExcelReader : CoreExcelReader
     }
 
     /// <inheritdoc/>
-    protected override string? DisplayOverride(CellAddress cell, CoreSheetReadContext context) =>
-        GetHyperlinks(context.SheetName, context)?.UncachedDisplays.GetValueOrDefault(CoreModelAdapter.ToPublic(cell));
-
-    /// <inheritdoc/>
     protected override ReportCell CompleteCell(SourceCellText? source, ReportCell cell, CoreSheetReadContext context) => source is null ? cell :
         CompleteRichText(cell, source.Runs.Select(run => new Model.CellTextRun(run.Text, CoreModelAdapter.ToPublic(run.Font))).ToList(), source.UnsupportedFormatting);
 

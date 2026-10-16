@@ -10,7 +10,7 @@ public sealed record ExcelReadOptions
     public Action<ReaderBackendSelection>? BackendSelected { get; init; }
 
     /// <summary>Gets the formula display policy.</summary>
-    public FormulaDisplayMode FormulaDisplayMode { get; init; } = FormulaDisplayMode.Legacy;
+    public FormulaDisplayMode FormulaDisplayMode { get; init; } = FormulaDisplayMode.CachedValue;
 
     /// <summary>Gets the conversion's source-cell visibility predicate for capability inspection.</summary>
     internal Func<string, int, int, bool>? IsCellSelected { get; init; }
@@ -29,19 +29,14 @@ public sealed record ExcelReadOptions
             throw new ArgumentOutOfRangeException(nameof(Backend));
         }
 
-        if (Backend == ReaderBackend.OpenXml && FormulaDisplayMode != FormulaDisplayMode.CachedValue)
-        {
-            throw new NotSupportedException("OpenXml requires CachedValue formula display.");
-        }
-
         if (!Enum.IsDefined(typeof(FormulaDisplayMode), FormulaDisplayMode))
         {
             throw new ArgumentOutOfRangeException(nameof(FormulaDisplayMode));
         }
 
-        if (FormulaDisplayMode == FormulaDisplayMode.Recalculate)
+        if (FormulaDisplayMode != FormulaDisplayMode.CachedValue)
         {
-            throw new NotSupportedException("Selected-root formula recalculation is not supported by the pinned ClosedXML public API.");
+            throw new NotSupportedException("ExcelRenderer does not calculate formulas. Use CachedValue to display saved results; calculate Mapping values in the caller.");
         }
     }
 }

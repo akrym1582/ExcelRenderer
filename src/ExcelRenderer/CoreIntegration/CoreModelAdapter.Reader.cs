@@ -47,6 +47,8 @@ internal static partial class CoreModelAdapter
 
             return new(cell.Text, style, cell.RowSpan, cell.ColumnSpan, cell.Formula)
             {
+                FormulaSharedIndex = cell.FormulaSharedIndex,
+                FormulaMasterAddress = cell.FormulaMasterAddress is { } master ? ToPublic(master) : null,
                 RichTextRuns = (cell.ExtensionData as FullCellTextData)?.Runs,
                 UnsupportedRichTextFormatting = (cell.ExtensionData as FullCellTextData)?.UnsupportedFormatting ?? false,
                 MergedBorders = cell.MergedBorders?.Select(border => new CellBorder(ToPublic(border.Address), ProjectBorder(border.Border))).ToArray(),

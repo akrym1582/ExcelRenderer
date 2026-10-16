@@ -54,7 +54,7 @@ Null remarks leave a blank merged remarks area. `00123` remains a string, retain
 
 JSON の日付文字列は `date()` がないセルでは文字列のままです。CLR の日付と経過時間は
 Excel の型を維持し、`[h]:mm:ss` は 24 時間を超える時間を表示します。
-`format()` は文字列化しますが、Excel の表示形式なら数式に使用する数値を維持します。
+`format()` は文字列化しますが、Excel の表示形式なら入力の数値型を維持します。
 null の備考は空欄、文字列番号 `00123` は先頭のゼロを保持します。
 
 ## Visual review / 目視確認（2026-10-09）
@@ -97,8 +97,30 @@ an empty detail block, break positions after expansion, and no extra leading pag
 PNG/SVG 各 3 ページを保存しています。入れ子の 2 行明細、空の明細ブロック、
 展開後の改ページ位置、先頭に余分なページが出ないことを検証します。
 
-Repeated cells do not support Excel formulas. Supply each `lineTotal` in the input;
-formulas and defined names outside repeated regions retain the documented reference behavior.
+Excel formulas are prohibited throughout Mapping templates, including hidden sheets.
+Compute each `lineTotal`, subtotal, tax and total in the caller; the JSON examples
+contain those finalized values. Static names retain the documented restrictions.
 
-繰り返すセルの Excel 数式は非対応です。各明細の `lineTotal` は入力側で計算して渡します。
-繰り返し外の数式・定義名にはガイド記載の参照制約が適用されます。
+呼び出し元での計算例です。`sourceItems` は数量・単価・税率等を持つ入力です。
+この例では税を全明細の合算後に小数2桁・AwayFromZeroで丸めます。
+実際の業務の税率・端数処理へ置き換えてください。
+
+```csharp
+var items = sourceItems.Select(item => new
+{
+    item.code, item.name, item.quantity, item.price, item.taxRate, item.note,
+    lineTotal = item.quantity * item.price, // decimal の確定値
+}).ToArray();
+var subtotal = items.Sum(item => item.lineTotal);
+var tax = decimal.Round(items.Sum(item => item.lineTotal * item.taxRate),
+    2, MidpointRounding.AwayFromZero);
+var totals = new { subtotal, tax, total = subtotal + tax };
+// invoice / customer / meta|info / checks とともに items と totals を Map へ渡す。
+```
+
+[計算済み JSON](data.json) の `lineTotal` と `totals` も同じ役割です。
+数量や単価を変更した場合は、Map を呼ぶ前にこれらも更新してください。
+
+全セルの Excel 数式は非対応です（繰り返し外・非表示シートも含む）。各明細の `lineTotal`、
+`totals.subtotal`・`tax`・`total` は呼び出し元で計算して渡します。JSON も計算済みの例です。
+税率と丸め方針は呼び出し元が決めます。静的定義名にはガイド記載の参照制約が適用されます。

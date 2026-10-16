@@ -59,6 +59,14 @@ internal static class IntegrationBenchmark
         long checksum = 0;
         try
         {
+            if (operation == "formula-preflight")
+            {
+                if (WorkbookFormulaInspection.Find(input, CancellationToken.None) is not null)
+                {
+                    throw new InvalidOperationException("The benchmark input contains a formula.");
+                }
+            }
+
             if (operation is "mapping" or "mapping-render")
             {
                 ExcelTemplateMapper.Map(input, mapped, data, maps);
@@ -97,6 +105,10 @@ internal static class IntegrationBenchmark
                 Metrics = metrics,
                 IoMetrics = io,
             }));
+            if (args.Length > 5 && operation == "mapping")
+            {
+                File.WriteAllBytes(args[5], mapped.ToArray());
+            }
         }
         finally
         {

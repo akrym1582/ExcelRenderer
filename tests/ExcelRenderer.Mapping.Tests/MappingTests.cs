@@ -76,7 +76,7 @@ public sealed class MappingTests
     }
 
     [Fact]
-    public void Single_row_arrays_preserve_styles_merges_and_outside_formulas()
+    public void Single_row_arrays_preserve_styles_merges_and_caller_totals()
     {
         using var result = Map(s =>
         {
@@ -89,11 +89,11 @@ public sealed class MappingTests
             s.Cell("D2").Value = "**items[*].quantity";
             s.Row(2).Height = 32;
             s.Cell("A3").Value = "Footer";
-            s.Cell("D3").FormulaA1 = "SUM(D2:D2)";
+            s.Cell("D3").Value = "**total";
             s.PageSetup.PrintAreas.Add("A1:D3");
             s.PageSetup.AddHorizontalPageBreak(2);
             s.Workbook.DefinedNames.Add("FooterCell", "'Template'!$A$3");
-        }, """{"items":[{"name":"A","quantity":2},{"name":"B","quantity":3}]}""");
+        }, """{"items":[{"name":"A","quantity":2},{"name":"B","quantity":3}],"total":5}""");
         var sheet = result.Worksheet(1);
         Assert.Equal("A", sheet.Cell("A2").GetString());
         Assert.Equal("B", sheet.Cell("A3").GetString());
@@ -103,8 +103,8 @@ public sealed class MappingTests
         Assert.Equal("0.00", sheet.Cell("C3").Style.NumberFormat.Format);
         Assert.Contains(sheet.MergedRanges, r => r.RangeAddress.ToStringRelative() == "A3:B3");
         Assert.Equal(3, sheet.Cell("D3").GetDouble());
-        Assert.Equal("SUM(D2:D2)", sheet.Cell("D4").FormulaA1);
-        Assert.Equal(2, sheet.Cell("D4").GetDouble());
+        Assert.False(sheet.Cell("D4").HasFormula);
+        Assert.Equal(5, sheet.Cell("D4").GetDouble());
         Assert.Equal("A1:D4", Assert.Single(sheet.PageSetup.PrintAreas).RangeAddress.ToStringRelative());
         Assert.Contains("$A$4", result.DefinedNames.Single(n => n.Name == "FooterCell").RefersTo);
         Assert.Contains(2, sheet.PageSetup.RowBreaks);

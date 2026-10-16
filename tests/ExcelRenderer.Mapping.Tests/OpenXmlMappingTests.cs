@@ -175,27 +175,32 @@ public sealed class OpenXmlMappingTests
         }
     }
 
-    [Fact]
-    public void AutoChecksEverySheetWithoutEvaluatingDataTwiceAndExplicitFailurePreservesOutput()
+    [Theory]
+    [InlineData(MappingBackend.ClosedXml)]
+    [InlineData(MappingBackend.OpenXml)]
+    [InlineData(MappingBackend.Auto)]
+    public void EveryBackendRejectsHiddenFormulasBeforeSelectionDataOrOutput(MappingBackend backend)
     {
         using var template = Template(sheet =>
         {
             sheet.Cell("A1").Value = "**Items[*]";
-            sheet.Workbook.AddWorksheet("formula").Cell("A1").FormulaA1 = "1+1";
+            var hidden = sheet.Workbook.AddWorksheet("formula");
+            hidden.Cell("A1").FormulaA1 = "1+1";
+            hidden.Visibility = XLWorksheetVisibility.VeryHidden;
         });
         using var output = new MemoryStream();
         output.Write([7, 8, 9]);
-        Assert.Throws<NotSupportedException>(() => ExcelTemplateMapper.Map(template, output, new { Items = new[] { 1 } }, new() { Backend = MappingBackend.OpenXml }));
-        Assert.Equal(new byte[] { 7, 8, 9 }, output.ToArray());
-        template.Position = 0;
-        output.SetLength(0);
         var data = new OnceData();
-        MappingBackendSelection? selected = null;
-        ExcelTemplateMapper.Map(template, output, data, new() { Backend = MappingBackend.Auto, BackendSelected = selection => selected = selection });
-        Assert.Equal(MappingBackend.ClosedXml, selected!.SelectedBackend);
-        Assert.Contains("FormulasPresent", selected.ReasonCodes);
-        Assert.Equal(1, data.ReadCount);
-        Assert.Equal(1, data.Values.EnumerationCount);
+        var selected = false;
+        var error = Assert.Throws<MappingException>(() => ExcelTemplateMapper.Map(template, output, data,
+            new() { Backend = backend, BackendSelected = _ => selected = true }));
+        Assert.Equal("MappingFormulaNotSupported", error.ReasonCode);
+        Assert.Equal("formula", error.SheetName);
+        Assert.Equal("A1", error.CellAddress);
+        Assert.False(selected);
+        Assert.Equal(0, data.ReadCount);
+        Assert.Equal(0, data.Values.EnumerationCount);
+        Assert.Equal(new byte[] { 7, 8, 9 }, output.ToArray());
     }
 
     [Fact]

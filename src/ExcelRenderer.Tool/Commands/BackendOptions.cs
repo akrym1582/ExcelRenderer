@@ -46,11 +46,6 @@ internal sealed class BackendOptions
                 {
                     result.AddError("--reader-backend must be closedxml, openxml, or auto.");
                 }
-
-                if (selected == "openxml" && result.GetValue(formulaMode) != "cached")
-                {
-                    result.AddError("--reader-backend openxml requires --formula-mode cached.");
-                }
             }
         });
     }

@@ -14,7 +14,7 @@ public sealed partial class ToolIntegrationTests
     public async Task BackendOptionsRejectMissingDataAndIncompatibleFormulaMode(string command)
     {
         Directory.CreateDirectory(_directory);
-        foreach (var options in new[] { new[] { "--mapping-backend", "closedxml" }, new[] { "--reader-backend", "openxml" } })
+        foreach (var options in new[] { new[] { "--mapping-backend", "closedxml" }, new[] { "--reader-backend", "invalid" } })
         {
             var args = new List<string> { command, "does-not-exist.xlsx", "-o", Path.Combine(_directory, "untouched") };
             args.AddRange(options);
@@ -47,7 +47,7 @@ public sealed partial class ToolIntegrationTests
         await File.WriteAllTextAsync(data, """{"message":"OPENXML_VALUE"}""");
         var output = Path.Combine(_directory, "result");
         var args = new List<string> { command, template, "-o", output, "--data", data, "--mapping-backend", "openxml", "--verbose" };
-        if (command != "xlsx") args.AddRange(["--reader-backend", "openxml", "--formula-mode", "cached"]);
+        if (command != "xlsx") args.AddRange(["--reader-backend", "openxml"]);
         if (command == "render") args.AddRange(["--format", "markdown"]);
         var result = await RunAsync(args.ToArray());
         AssertSuccess(result);

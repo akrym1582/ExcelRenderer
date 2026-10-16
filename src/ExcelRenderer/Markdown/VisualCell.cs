@@ -15,6 +15,12 @@ public sealed record VisualCell(
     CellStyle Style,
     string? Formula = null)
 {
+    /// <summary>Gets the original shared formula index, without expanding follower text.</summary>
+    public int? FormulaSharedIndex { get; init; }
+
+    /// <summary>Gets the original shared or array formula master coordinate.</summary>
+    public CellAddress? FormulaMasterAddress { get; init; }
+
     /// <summary>
     /// Gets the cell bounds. セルが占める表示領域を取得します。
     /// </summary>

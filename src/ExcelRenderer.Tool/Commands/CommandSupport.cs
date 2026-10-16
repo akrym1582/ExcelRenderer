@@ -163,12 +163,16 @@ internal static class CommandSupport
     /// <returns>The validated mode option.</returns>
     internal static Option<string> FormulaModeOption()
     {
-        var option = new Option<string>("--formula-mode") { Description = "Formula display: legacy, cached, or recalculate.", DefaultValueFactory = _ => "legacy" };
+        var option = new Option<string>("--formula-mode") { Description = "Formula display: cached (saved results only; no calculation).", DefaultValueFactory = _ => "cached" };
         option.Validators.Add(result =>
         {
-            if (result.GetValueOrDefault<string>() is not ("legacy" or "cached" or "recalculate"))
+            if (result.GetValueOrDefault<string>() is "legacy" or "recalculate")
             {
-                result.AddError("--formula-mode must be legacy, cached, or recalculate.");
+                result.AddError("ExcelRenderer does not calculate formulas. Use --formula-mode cached for saved results and calculate Mapping values in the caller.");
+            }
+            else if (result.GetValueOrDefault<string>() != "cached")
+            {
+                result.AddError("--formula-mode must be cached.");
             }
         });
         return option;
@@ -181,9 +185,7 @@ internal static class CommandSupport
     {
         FormulaDisplayMode = value switch
         {
-            "legacy" => Excel.FormulaDisplayMode.Legacy,
             "cached" => Excel.FormulaDisplayMode.CachedValue,
-            "recalculate" => Excel.FormulaDisplayMode.Recalculate,
             _ => throw new ArgumentException("Invalid formula mode."),
         },
     };

@@ -282,7 +282,7 @@ excelrenderer render input.xlsx -o markdown --format markdown --hyperlinks prese
 
 trimの対象は可視の塗り（明示白塗りも含む）、線、配置済み文字、画像、図形、ヘッダー／フッターです。取得可能な文字は字形境界を使い、絵文字・互換字形は確定配置の安全側の論理境界を使います。画像内の白／透明領域をピクセル解析して除去する処理ではありません。空のtrim結果は1×1ptに四辺paddingを加え（既定5×5pt）、`EmptyContent` Infoを記録します。PNGは最終pt寸法からceilでpx寸法を求め、ページ／連続の双方でbitmap確保前に `RenderRequest.MaxPngPixels` を適用します。
 
-PDF／Markdownは `http`、`https`、`mailto` と同一ブックのセルリンクを保持します。範囲ref、空セル、単純A1を参照するスコープ付き名前、定数文字列引数の `HYPERLINK` に対応します。XMLの明示定義を数式より優先し、cached表示を保持します。対応数式でcached値がなければliteralの表示名／リンク先を表示し、一般的な数式再計算は行いません。PDF注釈は最終結合文書へ付け、ページ選択・範囲・trimを反映します。Markdownは安定した `xl-sN-rN-cN` アンカーと、空セル／範囲refを表す明示一覧を使います。PNG／SVGはセルの見た目を保持し、クリック機能やリンク警告を追加しません。SVGリンクやリンクsidecarは生成しません。
+PDF／Markdownは `http`、`https`、`mailto` と同一ブックのセルリンクを保持します。範囲ref、空セル、単純A1を参照するスコープ付き名前、定数文字列引数の `HYPERLINK` に対応します。XMLの明示定義を数式より優先し、cached表示を保持します。cached値がなければ空表示と `FormulaCachedValueMissing` にし、literalの表示名／リンク先で補いません。PDF注釈は最終結合文書へ付け、ページ選択・範囲・trimを反映します。Markdownは安定した `xl-sN-rN-cN` アンカーと、空セル／範囲refを表す明示一覧を使います。PNG／SVGはセルの見た目を保持し、クリック機能やリンク警告を追加しません。SVGリンクやリンクsidecarは生成しません。
 
 ローカルファイル、相対パス、UNC、HTTP埋込み認証情報、制御文字、非対応schemeや競合定義は表示文字を残して `HyperlinkRejected`、動的数式等は `HyperlinkUnsupported` Warningになります。未存在／出力外の内部リンク先は `HyperlinkTargetOmitted`。出力外のリンク元にはリンク先欠落警告を出しません。診断にURL・宛先・query全文を載せません。読込可能な不正リンク定義はWarningですが、ClosedXMLが拒否する破損ブックは致命的入力エラーです。Strict／指定したwarnings-as-errorsはSink Open前に失敗します。PDF CLIは事前検証後に初めて作成・truncateし、入力と出力の同一パスは読込前に拒否します。
 
@@ -641,27 +641,20 @@ ink bounds を完全に判定する機能ではありません。`CellTextTooSma
 可視 run サイズを使います。セルの寸法は変更せず、Markdown にはレイアウト診断を出しません。
 追加診断は preflight で収集し、診断による失敗は出力 sink を開く前に確定します。
 
-数式表示の既定値は `FormulaDisplayMode.Legacy` です。保存された結果だけを使う場合は
-`RenderRequest.ReadOptions = new ExcelReadOptions { FormulaDisplayMode = FormulaDisplayMode.CachedValue }`
-を指定します（型は `ExcelRenderer.Excel` 名前空間）。`ExcelReader.Read(path, options)`／
-`Read(stream, options)` と PDF・画像・SVG・Markdown の export options も同じ設定を持ちます。
-Mapping の保存・計算設定は変更しません。
+数式表示の既定値は Core・本体 Reader・各 export API・CLI ともに
+`FormulaDisplayMode.CachedValue`（`--formula-mode cached`）です。Reader／Mapping の
+backend 既定値は ClosedXml を維持します。読込・Mapping・保存のいずれも再計算しません。
+古い保存結果もそのまま使い、0・false・保存された空文字を保持します。欠落は空表示と
+`FormulaCachedValueMissing`、保存された Excel エラーは `FormulaResultError` です。
+HYPERLINK の friendly text で保存結果や空表示を補いません。診断は可視出力の選択と
+失敗方針を反映し、sink を開く前に判定します。
 
-```sh
-excelrenderer pdf input.xlsx -o output.pdf --formula-mode cached
-excelrenderer render input.xlsx -o output --format markdown --formula-mode cached
-```
-
-全描画コマンド（`pdf`、`image`、`svg`、`md`、`render`）に対応し、`xlsx` は対象外です。
-保存結果の欠落は空表示と `FormulaCachedValueMissing` で通知します。0・false・保存された空文字は
-欠落と区別し、既存の HYPERLINK literal 表示復元を優先します。Excel エラー値は
-`FormulaResultError` で通知します。cached は数式を評価せず、保存結果の鮮度も保証しません。
-数式診断も選択された可視出力に絞り、抑制・失敗方針を適用して sink を開く前に判定します。
-
-**Recalculate は、要求された選択セルと依存先に限定する契約では未実装です。**
-enum／CLI の綴りは予約されていますが、現状は変換前に拒否します。cache 表示やブック全体の
-再計算へ黙って切り替えません。[公開 API の再現テストと未決事項](docs/reader-richtext-validation.md)
-を参照してください。選択依存先の再計算は後続工程であり、backend 接続では拒否を維持します。
+明示 `Legacy` / `Recalculate` は全 backend で非対応とし、入力処理・出力前に拒否します。
+これは動作互換性の変更です。Mapping テンプレートの値の数式は、非表示シート・table 式・
+計算定義名も含めて禁止し、Auto もこの検査を回避しません。明細金額・税・合計は呼び出し元で
+計算し、値のプレースホルダーへ渡してください。`=` で始まる入力値は文字列のままです。
+静的定義名の限定文法と移行方法は[接続ガイド](docs/openxml-integration.ja.md)と
+[Mapping ガイド](docs/mapping.ja.md)を参照してください。
 
 `DetectUnsupportedFeatures` 有効時、チャートシートは位置不明のシート単位診断
 `UnsupportedDrawingObject` を出し、空白ページは追加しません。チャートシートだけを選択した場合は

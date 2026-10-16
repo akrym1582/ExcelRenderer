@@ -64,7 +64,7 @@ following values. Save it as `template.xlsx` in a working directory.
 | 6 | Total | | | `**Total` |
 
 Enter the `**` expressions as cell text, without an initial `=`. D5 receives
-the line total calculated in the input; formulas inside repeated rows are rejected.
+the line total calculated in the input; formulas anywhere in Mapping templates are rejected.
 The backslash before the pipe in the Markdown table is only table escaping: B3 should contain `**IssuedAt | date("yyyy/MM/dd")`.
 Use ordinary cells, rather than an Excel Table, for row 5. You can set fonts,
 column widths, borders and number formats in Excel. Set C5, D5 and D6 to
@@ -287,16 +287,14 @@ opening the destination, so mapping errors leave an existing output file intact.
 ### Recognition and evaluation rules
 
 Only text cells beginning with `**` or `\**` are interpreted. Do not add leading
-spaces or an Excel `=` before an expression. Formula cells, numeric cells and
-ordinary text remain workbook content. A replacement occupies the entire cell;
+spaces or an Excel `=` before an expression. Numeric cells and ordinary text remain workbook content; formula cells are rejected. A replacement occupies the entire cell;
 string interpolation such as `Customer: **Customer` is not supported.
 
 Directive names are case-sensitive. Write `**@end-array` and `**@page-break`
 exactly, without trailing spaces or arguments. `**@page-break` has no direction,
 condition or page-count parameters. Formatting accepts one `format()` or
 `date()` function with one or two JSON string arguments; chaining functions is
-not supported. Arithmetic, conditions and calculations belong in the input data
-or ordinary Excel formulas.
+not supported. Arithmetic, conditions and calculations belong in the caller, not Excel formulas.
 
 Mapping validates the structure and path syntax of every worksheet, then
 evaluates the instantiated rows before applying expansion. It is independent
@@ -319,8 +317,7 @@ operator.
 
 ## Cell expressions
 
-A text cell starting with `**` is replaced as a whole. Formula cells are left as
-formulas outside repeated regions. Embedded expressions such as `Name: **name`
+A text cell starting with `**` is replaced as a whole. Formula cells anywhere in the template are rejected. Embedded expressions such as `Name: **name`
 are ordinary literal text.
 
 | Template text | Meaning |
@@ -357,7 +354,7 @@ to Excel's precision limits. Use formatting to preserve their textual representa
 The optional culture overrides `MappingOptions.Culture`. Arguments are JSON string
 literals; pipe characters within quoted path keys do not split the expression.
 Formatting produces an Excel **text** cell. Without formatting, the template's
-Excel number format controls presentation and numbers remain usable in formulas.
+Excel number format controls presentation and numeric types remain intact.
 
 `date(format[, culture])` formats a CLR `DateTime`/`DateTimeOffset`, or converts an
 ISO 8601 JSON string only when explicitly requested. Accepted strings are
@@ -436,7 +433,7 @@ The breaks divide the worksheet across the whole print area, not just around
 the cell or its array block.
 
 Unlike start/end markers, a page-break directive does not require a dedicated
-row: other cells on that row can contain data, or formulas outside repeated regions. The directive cell
+row: other cells on that row can contain data; Excel formulas are prohibited. The directive cell
 becomes blank, while its style and row remain. To print the literal marker, enter
 `\**@page-break`; that does not create breaks.
 
@@ -497,19 +494,21 @@ Value/style-only regions use a final-row placement plan with one bulk resize per
 region. Templates with references or other Excel objects retain ClosedXML row
 insertion/deletion and range copying to preserve their existing behavior. Expansion
 preserves cell styles, row height, hidden state, outline levels, ordinary
-merged ranges, copied conditional formatting and data validation. Existing formula
-references, defined names and print areas follow ClosedXML's Excel row-operation
-semantics. Ranges ending exactly at a repeated region's boundary do not necessarily
-extend to all copies: design the template's totals accordingly or supply totals in
-the input data. References to deleted marker/empty-array rows can become `#REF!`.
+merged ranges, copied conditional formatting and data validation. Static defined names and print areas follow ClosedXML row-operation semantics.
+References to removed marker/empty-array rows can become `#REF!`; names overlapping
+repeat regions remain unsupported. Static print areas/titles remain supported.
 
-Formulas inside repeated rows/blocks and defined names whose ranges overlap them
-are rejected before evaluating data or writing output, even for empty arrays. This
-is a compatibility change: calculate repeated values in C#/JSON instead. Both
-workbook and worksheet names are checked, across all columns of the repeated rows,
-including marker rows. Outside formulas/names, including those below the repeated
-region, remain supported with the reference limitations above. Print areas and
-print titles are page settings and remain supported.
+All Mapping backends reject cell formulas anywhere in the workbook, table
+calculated/totals formulas and calculated defined names before backend selection,
+data evaluation or output. The reason code is `MappingFormulaNotSupported`.
+Calculate amounts, tax and totals in C#/JSON and replace formulas with value
+placeholders, including formulas outside repeats and on hidden sheets. This is a
+compatibility change. Static names accept only literal constants and finite A1
+reference unions; functions, arithmetic, dynamic/external/3D references, aliases and
+unknown grammar are rejected. Unknown workbook/worksheet/table extension payloads
+are rejected when the absence of value formulas cannot be established. Conditional
+formatting and validation formulas remain structural metadata on the existing
+ClosedXML path; they are not evaluated or rendered conditionally.
 
 Merges entirely inside a repeated block are supported. Merges crossing an array
 boundary, merged marker rows, Excel tables intersecting repeated regions, and
@@ -517,13 +516,14 @@ pictures intersecting repeated regions are rejected with template diagnostics.
 Other unsupported workbook features depend on ClosedXML's load/save support;
 use ordinary cell-based templates for the repeated regions.
 
-Supported formulas are evaluated before saving; formulas are retained and automatic
-recalculation is requested for Excel. Unsupported functions may produce Excel error
-values in the cached output and therefore cannot be relied upon for immediate
-rendering. Compute those values in C#/JSON instead.
+Saving explicitly disables formula evaluation and preserves the original `calcPr`
+(including absence), without adding recalculation requests. Strings beginning with
+`=` remain literal strings. Mapping's `**` expressions and format/date operations
+are separate from Excel formulas and remain supported.
 
-`MappingException` exposes `SheetName`, `CellAddress` and `Expression` referring to
-the original template, including errors encountered after nested expansion.
+`MappingException` exposes `SheetName`, `CellAddress`, `Expression` and optional
+stable `ReasonCode`, referring to the original template. Formula failures identify
+the original cell, defined name or table when available and describe migration.
 
 ## Create the example template without Excel
 
@@ -568,12 +568,12 @@ workbook.SaveAs("template.xlsx");
 | An expression remains as text | It must start at the beginning of a text cell. `Customer: **Customer` is literal text; put the label and expression in separate cells. |
 | `Property '…' was not found` | Match property names and capitalization exactly. Missing properties and out-of-range indices are errors; explicit `null` gives a blank cell. |
 | A cell requires a scalar value | Select a property such as `**Customer.Name`, an index, or use an array repetition. An entire object or array cannot occupy a scalar cell. |
-| `format()` fails or numbers stop working in formulas | Formatting requires an `IFormattable` value and creates text. For numeric formulas, keep the value unformatted and set the Excel cell's number format. For JSON numbers, use formats such as `0000` or `N2` rather than integer-only CLR formats such as `D4`. |
+| `format()` fails or changes a number to text | Formatting requires an `IFormattable` value and creates text. To retain numeric types, keep the value unformatted and set the Excel cell's number format. For JSON numbers, use formats such as `0000` or `N2` rather than integer-only CLR formats such as `D4`. |
 | A date stays as an ISO string | Use `date("yyyy/MM/dd")` explicitly. Strings are not automatically converted to dates. |
 | A repeated row disappears | An empty array deletes its row or block. Pass at least one element if you want a data row. |
 | Markers report a dedicated-row or alias error | Put each start/end marker on its own unmerged row. Use a matching pair and refer to aliases only inside their block. |
 | Expansion exceeds `MaxOutputRows` | Reduce the data size or set a suitable `MappingOptions.MaxOutputRows` through C#. Ordinary rows also count. The CLI uses the 100,000-row default. |
-| A total only includes the first item, or a formula becomes `#REF!` | Formula ranges follow ClosedXML row operations. Supply totals in the input, and avoid referencing marker rows or rows deleted by empty arrays. |
-| A formula shows `#NAME?` in rendered output | ClosedXML cannot evaluate every Excel function. Compute the value in the input; Excel recalculation after opening is not available during immediate rendering. |
+| Static names become `#REF!` | Avoid references to marker rows or rows deleted by empty arrays. Supply totals in the input. |
+| `MappingFormulaNotSupported` | Calculate the value in the caller and replace the formula with a value placeholder. The check covers every backend and all sheets. |
 | Rendering reports that output already exists | Use a fresh output file or an empty output directory. Successful `xlsx` mapping, unlike rendering, replaces an existing output XLSX. |
 | An unselected worksheet causes a mapping error | Mapping evaluates all worksheets before rendering selection. Fix its expressions or remove that worksheet from the template. |

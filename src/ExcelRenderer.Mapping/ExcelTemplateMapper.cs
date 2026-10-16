@@ -41,6 +41,22 @@ public static partial class ExcelTemplateMapper
 
         cancellationToken.ThrowIfCancellationRequested();
         using var prepared = WorkbookInputPreparer.ReadAsync(template, options.Input, cancellationToken).GetAwaiter().GetResult();
+        using (var formulaSource = prepared.OpenRead())
+        {
+            var formula = WorkbookFormulaInspection.Find(formulaSource, cancellationToken);
+            if (formula is not null)
+            {
+                throw new MappingException(
+                    formula.Sheet,
+                    formula.Cell,
+                    formula.Name,
+                    "MappingFormulaNotSupported: " + formula.Kind + ". Calculate values in the caller and replace template formulas with value placeholders.")
+                {
+                    ReasonCode = "MappingFormulaNotSupported",
+                };
+            }
+        }
+
         if (options.Backend != MappingBackend.ClosedXml)
         {
             using var inspected = prepared.OpenRead();
@@ -87,20 +103,17 @@ public static partial class ExcelTemplateMapper
             expansion.Apply();
         }
 
-        workbook.CalculateMode = XLCalculateMode.Auto;
-        workbook.FullCalculationOnLoad = true;
-        workbook.ForceFullCalculation = true;
         cancellationToken.ThrowIfCancellationRequested();
 
-        // ClosedXML evaluates supported formulas and writes error values for unsupported functions.
-        // The original formulas are retained for recalculation by Excel.
+        // Only caller-supplied values are saved; do not evaluate formulas or request recalculation.
         using var result = new SpillableBufferStream(new InputBufferOptions
         {
             MemoryThresholdBytes = options.Input.MemoryThresholdBytes,
             AllowTemporaryFiles = options.Input.AllowTemporaryFiles,
             TemporaryDirectory = options.Input.TemporaryDirectory,
         });
-        workbook.SaveAs(result, new SaveOptions { EvaluateFormulasBeforeSaving = true });
+        workbook.SaveAs(result, new SaveOptions { EvaluateFormulasBeforeSaving = false });
+        RestoreCalculationProperties(prepared, result);
         NormalizePageBreakMode(result, plans);
         cancellationToken.ThrowIfCancellationRequested();
         result.Position = 0;
@@ -163,6 +176,18 @@ public static partial class ExcelTemplateMapper
                 File.Delete(temporary);
             }
         }
+    }
+
+    private static void RestoreCalculationProperties(PreparedWorkbook source, Stream result)
+    {
+        using var input = source.OpenRead();
+        using var original = SpreadsheetDocument.Open(input, false);
+        var properties = original.WorkbookPart!.Workbook.CalculationProperties;
+        result.Position = 0;
+        using var output = SpreadsheetDocument.Open(result, true);
+        var workbook = output.WorkbookPart!.Workbook;
+        workbook.CalculationProperties = properties is null ? null : (S.CalculationProperties)properties.CloneNode(true);
+        workbook.Save();
     }
 
     private static void NormalizePageBreakMode(Stream result, List<WorksheetExpansion> plans)

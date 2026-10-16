@@ -23,9 +23,6 @@ internal sealed class CoreWorkbookMetadata
     /// <summary>Gets or sets the resources owned by this read operation.</summary>
     internal ReaderSession? ReaderSession { get; set; }
 
-    /// <summary>Gets or sets the requested formula display mode.</summary>
-    internal FormulaDisplayMode FormulaMode { get; set; }
-
     /// <summary>Gets or sets the original sparse formula cache snapshot.</summary>
     internal IReadOnlyDictionary<string, IReadOnlyDictionary<CellAddress, FormulaCache>> FormulaCaches { get; set; } = new Dictionary<string, IReadOnlyDictionary<CellAddress, FormulaCache>>();
 

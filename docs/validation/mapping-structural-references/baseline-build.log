@@ -1,0 +1,16 @@
+  Determining projects to restore...
+  Restored /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer/ExcelRenderer.csproj (in 353 ms).
+  Restored /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Core/ExcelRenderer.Core.csproj (in 425 ms).
+  Restored /tmp/excelrenderer-mapping-baseline/tools/ExcelRenderer.Performance/ExcelRenderer.Performance.csproj (in 425 ms).
+  2 of 5 projects are up-to-date for restore.
+  ExcelRenderer.OpenXml -> /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.OpenXml/bin/Release/netstandard2.1/ExcelRenderer.OpenXml.dll
+  ExcelRenderer.Mapping -> /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Mapping/bin/Release/netstandard2.1/ExcelRenderer.Mapping.dll
+  ExcelRenderer.Core -> /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer.Core/bin/Release/netstandard2.1/ExcelRenderer.Core.dll
+  ExcelRenderer -> /tmp/excelrenderer-mapping-baseline/src/ExcelRenderer/bin/Release/netstandard2.1/ExcelRenderer.dll
+  ExcelRenderer.Performance -> /tmp/excelrenderer-mapping-baseline/tools/ExcelRenderer.Performance/bin/Release/net10.0/ExcelRenderer.Performance.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:06.23

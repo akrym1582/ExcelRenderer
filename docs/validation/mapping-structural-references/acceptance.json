@@ -1,0 +1,40 @@
+{
+  "initialCheckout": "06280e538df4ebc49989efcb3f239379ffa1e09b",
+  "base": "f3bab05dc2e6b7198063174321965aa487403e6d",
+  "implementation": "3114b5fb0dd5d9838fdbe769ba5cb44f9cdf37ab",
+  "rebuild": {
+    "warnings": 0,
+    "errors": 0
+  },
+  "tests": {
+    "passed": 1037,
+    "failed": 0,
+    "skipped": 0,
+    "projects": {
+      "Core": 80,
+      "Mapping": 179,
+      "OpenXml": 156,
+      "Main": 538,
+      "Tool": 84
+    }
+  },
+  "addedTests": {
+    "Mapping": 33,
+    "OpenXml": 2
+  },
+  "baselineMappingRegressions": {
+    "failed": 30,
+    "passed": 3,
+    "skipped": 0,
+    "expectedExitCode": 1
+  },
+  "commands": [
+    "dotnet restore ExcelRenderer.slnx",
+    "dotnet build ExcelRenderer.slnx -t:Rebuild --no-restore --verbosity:minimal",
+    "dotnet test ExcelRenderer.slnx",
+    "dotnet build tools/ExcelRenderer.Performance -c Release --no-restore -m:1",
+    "python scripts/check-closedxml-removal.py --output /tmp/mapping-review-dependencies.json"
+  ],
+  "manualExcelCheck": "not run",
+  "packageConsumerCheck": "not rerun; no public API, project or package layout change"
+}

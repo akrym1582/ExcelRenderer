@@ -31,23 +31,23 @@ public static partial class OpenXmlWorkbookWriter
 
         if (sources.Values.Any(source => source.Plan.Rows.Count != source.Plan.SourceLastRow || source.Plan.Rows.Any(row => row.SourceRow != row.OutputRow)))
         {
-            foreach (var formula in sources.Values.SelectMany(source => source.Children).SelectMany(element => element.DescendantsAndSelf()).Where(element => element.Name.LocalName is "formula" or "formula1" or "formula2"))
+            foreach (var formula in sources.Values.SelectMany(source => source.Children).SelectMany(StructuralReferences.FormulaStores))
             {
-                if (!StructuralReferences.CanRewrite(formula.Value))
+                if (!StructuralReferences.CanRewrite(StructuralReferences.FormulaText(formula)))
                 {
                     throw new NotSupportedException("A structural formula uses unsupported reference syntax.");
                 }
             }
         }
 
-        RewritePivotCaches(workbook, archive, sources, replacements, references, buffers, token);
+        var cacheUpdates = RewritePivotCaches(workbook, archive, sources, replacements, references, buffers, token);
         foreach (var sheet in workbook.Workbook.Sheets!.Elements<S.Sheet>())
         {
             token.ThrowIfCancellationRequested();
             var part = (WorksheetPart)workbook.GetPartById(sheet.Id!);
             var source = sources[part.Uri.ToString().TrimStart('/')];
             var name = sheet.Name!.Value!;
-            RewriteSheetStructures(source, references, name);
+            RewriteSheetStructures(source, references, name, token);
             foreach (var pivot in part.PivotTableParts)
             {
                 EditPart(pivot, root =>
@@ -56,21 +56,19 @@ public static partial class OpenXmlWorkbookWriter
                     {
                         var range = CellRange.Parse((string)location.Attribute("ref")!);
                         RequireUniqueRows(source.Plan, range.First.Row, range.Last.Row, "A pivot output intersects repeated or deleted rows.");
+                        RewriteAttributes(location, source.Plan, references, name);
                     }
 
-                    RewriteAttributes(root, source.Plan, references, name);
                     var cache = pivot.PivotTableCacheDefinitionPart;
-                    if (cache != null && replacements.TryGetValue(cache.Uri.ToString().TrimStart('/'), out var cacheStream))
+                    if (cache != null && cacheUpdates.TryGetValue(cache.Uri, out var update) && update.Kind == PivotCacheChange.ItemsChanged)
                     {
-                        cacheStream.Position = 0;
-                        var fields = XDocument.Load(cacheStream).Root!.Element(Ns + "cacheFields")!.Elements().ToArray();
                         foreach (var field in root.Element(Ns + "pivotFields")?.Elements().Select((element, index) => (Element: element, Index: index)) ?? Enumerable.Empty<(XElement Element, int Index)>())
                         {
-                            if (field.Element.Element(Ns + "items") is { } items)
+                            if (field.Element.Element(Ns + "items") is { } items && update.AddedItems[field.Index].Length > 0)
                             {
-                                var totals = items.Elements().Where(item => item.Attribute("x") == null).Select(item => new XElement(item)).ToArray();
-                                var count = fields[field.Index].Element(Ns + "sharedItems")!.Elements().Count();
-                                items.ReplaceNodes(Enumerable.Range(0, count).Select(index => new XElement(Ns + "item", new XAttribute("x", index))), totals);
+                                // Append after existing items (including subtotals). Their positions
+                                // are referenced by rowItems, colItems, pageFields and pivot areas.
+                                items.Add(update.AddedItems[field.Index].Select(index => new XElement(Ns + "item", new XAttribute("x", index))));
                                 items.SetAttributeValue("count", items.Elements().Count());
                             }
                         }
@@ -188,28 +186,20 @@ public static partial class OpenXmlWorkbookWriter
         }
     }
 
-    private static void RewriteSheetStructures(SheetSource source, StructuralReferences references, string name)
+    private static void RewriteSheetStructures(SheetSource source, StructuralReferences references, string name, CancellationToken token)
     {
         for (var index = 0; index < source.Children.Count; index++)
         {
             var element = source.Children[index];
             if (element.Name.LocalName == "conditionalFormatting")
             {
-                var clones = StructuralReferences.Expand((string)element.Attribute("sqref")!, source.Plan).Select(item =>
-                {
-                    var clone = new XElement(element);
-                    clone.SetAttributeValue("sqref", item.Reference);
-                    var delta = item.OutputRow - (references.FirstRow(source.Plan, item.SourceRow) ?? item.OutputRow);
-                    foreach (var formula in clone.Descendants(Ns + "formula"))
-                    {
-                        formula.Value = references.Rewrite(formula.Value, name, delta);
-                    }
-
-                    return clone;
-                }).ToArray();
+                var rules = element.Elements(Ns + "cfRule").ToArray();
+                var clones = references.HasRowChanges && rules.Length > 1 ?
+                    rules.SelectMany(rule => RewriteRule(new XElement(element.Name, element.Attributes(), new XElement(rule)), source.Plan, references, name, token, RequiresPopulation(rule))).ToArray() :
+                    RewriteRule(element, source.Plan, references, name, token, rules.Any(RequiresPopulation));
                 source.Children.RemoveAt(index);
                 source.Children.InsertRange(index, clones);
-                index += clones.Length - 1;
+                index += clones.Count - 1;
                 continue;
             }
 
@@ -217,24 +207,24 @@ public static partial class OpenXmlWorkbookWriter
             {
                 foreach (var child in element.Elements().ToArray())
                 {
-                    var attribute = child.Name.LocalName == "hyperlink" ? "ref" : "sqref";
-                    child.ReplaceWith(StructuralReferences.Expand((string)child.Attribute(attribute)!, source.Plan).Select(item =>
+                    if (element.Name.LocalName == "dataValidations")
                     {
-                        var clone = new XElement(child);
-                        clone.SetAttributeValue(attribute, item.Reference);
-                        if (clone.Attribute("location") is { } location)
+                        child.ReplaceWith(RewriteRule(child, source.Plan, references, name, token, preservePopulation: false));
+                    }
+                    else
+                    {
+                        child.ReplaceWith(StructuralReferences.Expand((string)child.Attribute("ref")!, source.Plan).Select(item =>
                         {
-                            location.Value = references.Rewrite(location.Value, name);
-                        }
+                            var clone = new XElement(child);
+                            clone.SetAttributeValue("ref", item.Reference);
+                            if (clone.Attribute("location") is { } location)
+                            {
+                                location.Value = references.Rewrite(location.Value, name);
+                            }
 
-                        var delta = item.OutputRow - (references.FirstRow(source.Plan, item.SourceRow) ?? item.OutputRow);
-                        foreach (var formula in clone.Elements().Where(value => value.Name.LocalName is "formula1" or "formula2"))
-                        {
-                            formula.Value = references.Rewrite(formula.Value, name, delta);
-                        }
-
-                        return clone;
-                    }).ToArray());
+                            return clone;
+                        }).ToArray());
+                    }
                 }
 
                 if (element.Name.LocalName == "dataValidations")
@@ -259,6 +249,93 @@ public static partial class OpenXmlWorkbookWriter
                 }
             }
         }
+    }
+
+    private static bool RequiresPopulation(XElement rule) => (string?)rule.Attribute("type") is "colorScale" or "dataBar" or "iconSet" or "top10" or "aboveAverage" or "duplicateValues" or "uniqueValues";
+
+    private static IReadOnlyList<XElement> RewriteRule(XElement rule, SheetEditPlan plan, StructuralReferences references, string owner, CancellationToken token, bool preservePopulation)
+    {
+        if (!references.HasRowChanges)
+        {
+            return new[] { new XElement(rule) };
+        }
+
+        var reference = (string)rule.Attribute("sqref")!;
+        var inputRanges = reference.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(value => CellRange.Parse(value.Replace("$", string.Empty))).ToArray();
+        var originalBase = inputRanges[0].First;
+        var formulas = StructuralReferences.FormulaStores(rule).Select(StructuralReferences.FormulaText).ToArray();
+        if (formulas.Length == 0)
+        {
+            var ranges = StructuralReferences.Expand(reference, plan);
+            if (ranges.Count == 0)
+            {
+                return Array.Empty<XElement>();
+            }
+
+            var clone = new XElement(rule);
+            clone.SetAttributeValue("sqref", string.Join(" ", ranges.Select(range => range.Reference)));
+            return new[] { clone };
+        }
+
+        var tailBoundary = formulas.Max(formula => references.RuleTailBoundary(formula, owner, originalBase));
+        var groups = new Dictionary<(int Context, string Key), RuleGroup>();
+        foreach (var range in inputRanges)
+        {
+            foreach (var row in plan.Rows.Where(row => row.SourceRow >= range.First.Row && row.SourceRow <= range.Last.Row))
+            {
+                Add(row.SourceRow, row.OutputRow, row.OutputRow, row.OccurrenceId);
+            }
+
+            // Keep implicit trailing rows as one interval, including full-column rules.
+            if (range.Last.Row > plan.SourceLastRow)
+            {
+                var first = Math.Max(range.First.Row, plan.SourceLastRow + 1);
+                for (; first <= Math.Min(range.Last.Row, tailBoundary); first++)
+                {
+                    var output = references.FirstRow(plan, first)!.Value;
+                    Add(first, output, output, 0);
+                }
+
+                if (first <= range.Last.Row)
+                {
+                    Add(first, references.FirstRow(plan, first)!.Value, references.FirstRow(plan, range.Last.Row)!.Value, 0);
+                }
+            }
+
+            void Add(int sourceRow, int outputRow, int lastRow, int context)
+            {
+                token.ThrowIfCancellationRequested();
+                var source = new CellAddress(sourceRow, range.First.Column);
+                var output = new CellAddress(outputRow, range.First.Column);
+                var updated = formulas.Select(formula => references.RewriteRule(formula, owner, originalBase, source, output, context)).ToArray();
+                var key = string.Join("\0", updated.Select(formula => StructuralReferences.RuleKey(formula, output)));
+                var groupKey = (preservePopulation ? 0 : references.RuleContext(plan, sourceRow, context), key);
+                if (!groups.TryGetValue(groupKey, out var group))
+                {
+                    if (preservePopulation && groups.Count > 0)
+                    {
+                        throw new NotSupportedException("A population-dependent conditional format cannot preserve its formula references in one application set after row expansion.");
+                    }
+
+                    group = new RuleGroup(new XElement(rule));
+                    var stores = StructuralReferences.FormulaStores(group.Element).ToArray();
+                    for (var index = 0; index < stores.Length; index++)
+                    {
+                        StructuralReferences.SetFormulaText(stores[index], updated[index]);
+                    }
+
+                    groups.Add(groupKey, group);
+                }
+
+                group.Add(output, new CellAddress(lastRow, range.Last.Column));
+            }
+        }
+
+        return groups.Values.Select(group =>
+        {
+            group.Element.SetAttributeValue("sqref", string.Join(" ", group.Ranges.Select(range => range.First.Equals(range.Last) ? range.First.ToString() : range.First + ":" + range.Last)));
+            return group.Element;
+        }).ToArray();
     }
 
     private static void RewriteAttributes(XElement root, SheetEditPlan plan, StructuralReferences references, string owner)
@@ -352,6 +429,33 @@ public static partial class OpenXmlWorkbookWriter
             {
                 definition.Value = references.Rewrite(definition.Value, names[scope]);
             }
+        }
+    }
+
+    private sealed class RuleGroup
+    {
+        internal RuleGroup(XElement element)
+        {
+            Element = element;
+        }
+
+        internal XElement Element { get; }
+
+        internal List<(CellAddress First, CellAddress Last)> Ranges { get; } = new List<(CellAddress First, CellAddress Last)>();
+
+        internal void Add(CellAddress first, CellAddress last)
+        {
+            if (Ranges.Count > 0)
+            {
+                var previous = Ranges[Ranges.Count - 1];
+                if (previous.First.Column == first.Column && previous.Last.Column == last.Column && previous.Last.Row + 1 == first.Row)
+                {
+                    Ranges[Ranges.Count - 1] = (previous.First, last);
+                    return;
+                }
+            }
+
+            Ranges.Add((first, last));
         }
     }
 }

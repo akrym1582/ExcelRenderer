@@ -1,5 +1,8 @@
 # OpenXml 接続の実装・検証記録
 
+> 現在の仕様・最新の受入結果は末尾の「2026-10-16 追記：行 cache の本体適用と再計算なし契約」を参照。
+> それ以前の節は各対象コミット時点の履歴であり、現行の数式契約の説明ではない。
+
 ## 基点
 
 - 派生元: `origin/feature/openxml-reader`
@@ -257,3 +260,127 @@ python scripts/profile-mapping-allocations.py --worker /tmp/excel-allocation-inv
 保存した patch は空 context 行を含まない zero-context 形式で、適用時は
 `git apply --unidiff-zero <patch>` を使う。cache patch は区間計測 patch の後に適用する。
 両 patch の再構成と試験版ソースへの一致を確認した。
+
+## 2026-10-16 追記：行 cache の本体適用と再計算なし契約
+
+今回の基点は `82f6317fef3da90b3207f82de6867420e1b35db0`。
+同じ `feature/openxml-integration` を継続し、fetch 後の remote とローカルの先端一致を確認した。
+新ブランチ・reset・rebase・既存コミットの取り込み直しは行っていない。
+
+対象実装は次のコミット。最終 C# 対象 SHA は
+`7baa87db8841428637c8f544aabe6c6b4c08a113`。後続の検証記録・補助スクリプト・文書の更新は C# の動作を変更しない。
+
+- `5322d81`: 容量制限付き元行原型 cache。
+- `4601fda`: 全 Reader の保存結果専用化、Mapping 共通数式検査と保存変更。
+- `ccd250f`: 非反復行を cache せず不要なコピーを避ける。
+- `7baa87d`: セル f がなくても table の集計関数を拒否する。
+
+以前の節と `validation/openxml-integration/`・`validation/openxml-allocation-investigation/` は、
+各節の当時の実装・調査記録として残す。数式 Mapping の Auto→旧評価経路、Legacy、HYPERLINK
+表示復元、描画用共有式展開、cache 未適用という記述は**現仕様ではない**。
+現在の仕様は[接続ガイド](openxml-integration.ja.md)と今回の追記を参照する。
+
+### 変更した契約
+
+- Reader／Mapping backend の既定は ClosedXml のまま、数式表示の既定は CachedValue。
+  全 backend の Legacy／Recalculate と未知 enum は入力読込・出力前に拒否する。
+- ClosedXML 側も型付き保存値と存在情報を元 XML から取得し、数式のない scratch cell で書式化する。
+  元数式セルの Value／GetFormattedString は読まない。1900／1904と経過時間を区別する。
+- HYPERLINK の静的リンク先は維持できるが、friendly text で表示や欠落 cache を補わない。
+  本文のない共有式・配列式 follower の Formula は null。共有 index／master 座標をモデルと
+  Markdown VisualCell へ伝播し、描画では式を展開しない。未知の共有式文法だけで Auto は切り替えない。
+- Mapping は PreparedWorkbook の直後に全シート・table の式／集計関数・定義名を検査し、
+  `MappingFormulaNotSupported` で backend 選択通知・getter・列挙・展開計画より前に失敗する。
+  空 f、共有式、配列／data table、hidden、空配列で削除予定の式も対象。
+  未知の workbook／worksheet／table extension は保守的に拒否する。
+- 静的定義名は定数と有限 A1 参照 union だけを許容。関数・演算・動的参照・未知文法は通さない。
+  条件付き書式・入力規則の標準式は構造 metadata として旧経路で保持する。
+- 保存時評価を false にし、元 calcPr（不存在・元の属性を含む）を戻す。
+  新たな計算モード・再計算要求を設定しない。stage／原子的ファイル置換は維持する。
+- `=` で始まる入力は文字列、Mapping の format/date は継続。請求書サンプルの JSON は
+  既に計算済みの lineTotal／totals を持ち、呼び出し元の計算と丸め方針の例を追記した。
+
+### 今回の機能・配布検証
+
+今回の証拠は [validation/no-recalculation/](validation/no-recalculation/) に保存する。
+過去の865件の結果を今回の合格証拠には流用していない。
+
+| コマンド／検査 | 今回の結果 |
+| --- | --- |
+| `dotnet restore ExcelRenderer.slnx --locked-mode --verbosity:minimal` | 成功 |
+| `dotnet build ExcelRenderer.slnx -t:Rebuild --no-restore --verbosity:minimal -m:1` | 警告0・エラー0 |
+| 上記 Rebuild の `-c Release` 実行 | 警告0・エラー0 |
+| `dotnet test ExcelRenderer.slnx --no-restore --no-build --verbosity:minimal -m:1` | **917成功、失敗0、skip0**（Core80 / Mapping86 / OpenXml154 / Main524 / Tool73） |
+| `python scripts/check-core-dependencies.py` | 依存方向・共有所有権検査成功 |
+| 各4 csproj の `dotnet pack -c Release --no-build --no-restore -p:BuildProjectReferences=false -o artifacts/no-recalculation-packages` | 全4パッケージ成功 |
+| `python scripts/validate-openxml-packages.py --packages artifacts/no-recalculation-packages --work /workspace/.no-recalculation-consumers-7baa87d` | 独立 OpenXml／Mapping／本体＋同梱Core／インストール済みToolが成功。数式モード省略も確認 |
+| `python scripts/compare-openxml-outputs.py --fixture tests/ExcelRenderer.Tests/SampleInputs/08-print-scaling.xlsx --work artifacts/no-recalculation-output-comparison --output docs/validation/no-recalculation/formula-fixture-comparison.json` | PDF・Markdown比較成功 |
+
+配布物の inventory／SHA256、ソース SHA256、機械検査の assertions JSON も同じ証拠ディレクトリに保存した。
+
+主な新契約の検証：実計算52・保存99の表示と入力 SHA256 不変、0／false／空文字／欠落、
+型・日付書式・1904／経過時間、保存エラー、HYPERLINK、共有／配列 follower、未知共有式文法、
+選択と warnings-as-errors による sink 前の失敗、全 backend の明示モード拒否、全コマンド既定 cached。
+通常／共有空 f／配列／data table／動的配列 master／table式／計算定義名・table の集計関数を共通理由で拒否し、
+getter・列挙・選択通知が0で既存 stream bytes／出力ファイルが不変なことを確認した。
+条件付き書式・入力規則の式の保持、元 calcPr の不存在・manual／autoと false 属性の保持、
+先頭 `=` の literal 保存、計算済み値の Map→各描画経路も検証した。
+
+tracked XLSX の数式存在走査では `08-print-scaling.xlsx` の12セルだけが該当した。
+`compare-openxml-outputs.py --fixture` でその対象に限定して PDF 抽出テキスト・ページ数・サイズと
+Markdown／画像 artifacts の両 Reader 一致を確認した。モデル・PNG／SVG 等の既存15 fixture 回帰は
+solution test の一部として今回のコードでも通過した。全過去比較データの再生成は行っていない。
+
+最初に consumer の作業先を repository 内 artifacts に置いた実行は、親の StyleCop 設定が
+独立 consumer の短い生成コードへ適用され SA1503 で失敗した。
+[失敗ログ](validation/no-recalculation/consumers-in-repository-failed.log)を残し、従来の分離方針どおり
+repository 外の独立環境へ移して、analyzer 抑制なしで全 consumer を再検証した。
+その後の検証では `/tmp` の容量が尽き、CLI と consumer が ENOSPC で失敗したため、
+[テスト失敗ログ](validation/no-recalculation/tests-tmp-capacity-failed.log)と
+[consumer 失敗ログ](validation/no-recalculation/consumers-tmp-capacity-failed.log)を保存した。
+検証済みの一時 consumer 環境を削除し、最終 consumer を空き容量のある
+`/workspace/.no-recalculation-consumers-7baa87d` で構築した。最終テストは整理後に再実行した。
+フォント利用時に Fontconfig の cache-directory メッセージが出る実行環境だが、consumer build は
+警告0・エラー0、Core／本体／Tool は終了0と成果物を確認した。
+
+### cache の効果と preflight のコスト
+
+試験の「直前1行」を、シート単位の LRU 原型 cache に一般化した。
+上限は64行・元 UTF-8 合計256 KiB・1行64 KiB。これはソース XML サイズの制限であり、
+heap 実バイト数の保証ではない。反復しない行と大きな行は非保持、cache する occurrence は deep copy で編集する。
+複数行の交互反復による編集漏れ、LRU eviction、行／合計 bytes／件数上限をテストした。
+
+同じ bounded 入力 SHA256、Release・en-US・独立プロセス、warmup1回＋計測5回の中央値。
+製品に区間 allocation の計測 patch は入れていない。総量は `GC.GetTotalAllocatedBytes(true)`。
+最終対象 SHA を Release rebuild した worker で測定し、worker 自体の SHA256 と生値も保存している。
+
+| 条件 | 累積 managed allocation | Peak RSS | 参考時間 |
+| --- | ---: | ---: | ---: |
+| 過去の OpenXml plain10万行（未 cache） | 1658.9 MiB | 271.7 MiB | 4.01秒 |
+| 今回の本体適用 plain10万行・共通 preflight 込み | 502.76 MiB | 270.6 MiB | 4.148秒 |
+| 今回の nested10万行・共通 preflight 込み | 561.27 MiB | 306.2 MiB | 4.083秒 |
+| preflight 単体：plain 元テンプレート3行 | 0.94 MiB | 43.3 MiB | 0.186秒 |
+| preflight 単体：plain10万明細・約20万セルの値ブック | 26.22 MiB | 74.2 MiB | 0.541秒 |
+
+plain の累積 allocation は従来比 **約69.7%減**。
+cache hit は99,999回、保持1行／147 source bytes。
+nested は99,998 hit、保持2行／276 source bytes。
+Reader による完成 ZIP の再検証は省略していない。
+全10パートの展開後 bytes は過去 baseline の hash と完全一致した。
+
+時間は独立プロセス内の初回読込・JIT・package 初期化を含む参考値で、preflight 単体の初回処理時間を
+そのまま旧 Mapping への純追加時間とみなさない。同時に他の検証が動く環境であり、速度の閾値は設けない。
+preflight は worksheet／table を逐次走査し、全セル DOM を保持しない。大きい入力の累積 allocation
+とプロセス Peak RSS を混同しない。今回の追加計測は4ケース計24プロセスで、過去210実行とは別記録。
+
+再現例（fixture は前節の生成・bounded 化手順を再利用）：
+
+```sh
+python scripts/profile-mapping-allocations.py --worker tools/ExcelRenderer.Performance/bin/Release/net10.0/ExcelRenderer.Performance.dll --input artifacts/integration-fixtures/bounded/100000/plain-100000-template.xlsx --output artifacts/plain-allocation.json --capture artifacts/plain.xlsx --variant production
+# 以下の各 worker を別プロセスで6回実行し、先頭を warmup として除外。
+dotnet tools/ExcelRenderer.Performance/bin/Release/net10.0/ExcelRenderer.Performance.dll integration-worker artifacts/integration-fixtures/bounded/100000/plain-100000-values.xlsx formula-preflight openxml 100000
+dotnet tools/ExcelRenderer.Performance/bin/Release/net10.0/ExcelRenderer.Performance.dll integration-worker artifacts/integration-fixtures/bounded/100000/nested-100000-template.xlsx mapping openxml 100000
+```
+
+全性能 matrix の再測定、NuGet 公開、タグ、main への merge は今回行っていない。
+Reader の地域依存形式等、OpenXml Writer の保守的な構造制限は接続ガイドに記載したままである。

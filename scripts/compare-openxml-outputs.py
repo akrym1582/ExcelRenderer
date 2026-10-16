@@ -7,6 +7,7 @@ import pathlib
 import subprocess
 
 parser = argparse.ArgumentParser()
+parser.add_argument('--fixture', action='append', help='Limit comparison to these tracked XLSX paths; repeatable.')
 parser.add_argument('--work', required=True, type=pathlib.Path)
 parser.add_argument('--output', required=True, type=pathlib.Path)
 args = parser.parse_args()
@@ -14,6 +15,9 @@ root = pathlib.Path(__file__).resolve().parents[1]
 cli = root / 'src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll'
 font = root / 'third_party/NotoSansJP/NotoSansJP-Regular.ttf'
 tracked = subprocess.check_output(['git', 'ls-files', '*.xlsx'], cwd=root, text=True).splitlines()
+if args.fixture:
+    assert set(args.fixture) <= set(tracked), 'Every selected fixture must be a tracked XLSX path.'
+    tracked = args.fixture
 results = []
 for index, relative in enumerate(tracked):
     fixture = root / relative

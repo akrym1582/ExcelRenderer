@@ -172,3 +172,21 @@ RenderRequest.TextMeasurer is an optional borrowed service, not a new DI/plugin 
 ## Shared workbook input (OpenXml integration)
 
 `ExcelRenderer.OpenXml/Input` owns bounded workbook preparation, ZIP limits and the seekable memory/file spool. Core input types preserve existing callers through thin adapters; image-resource ownership and rendering policy remain in Core. OpenXml has no project references. Core, main and Mapping depend on OpenXml.
+
+## Saved results and Mapping formula preflight
+
+Core reads typed formula results from original OpenXml source records, including
+result presence and shared/array master metadata. Scratch formatting never reads
+a source formula's Value or expands follower text. Core and full Reader options
+accept only CachedValue; display capability fallback preserves that contract.
+
+OpenXml's internal `WorkbookFormulaInspection` class classifies source formulas and
+static defined names independently of Mapping. Mapping calls it immediately after
+input preparation, before backend capability checks, observers or data evaluation,
+and translates locations to `MappingFormulaNotSupported`. `WorkbookWriteCapabilities`
+continues to classify the conservative Writer's structural editing scope. ClosedXML
+saving disables evaluation and restores the original calculation properties.
+
+OpenXml Writer owns a per-sheet `RowPrototypeCache`, bounded by source UTF-8 bytes
+and entry count. Each output occurrence edits a deep copy. The spillable row store
+remains authoritative, and large rows bypass the cache.

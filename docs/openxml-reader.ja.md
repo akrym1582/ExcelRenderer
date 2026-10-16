@@ -90,7 +90,7 @@ XML に存在する全 `c` を返します。書式だけの空セル、保存�
 `OpenImageStream` の stream は呼び出し元で破棄し、Reader が生存する間だけ利用します。
 必要な内容は Reader 破棄前に移管してください。同じ part URI の bytes は name や配置と
 独立に共有できます。図形・リンク解釈と描画は製品側に置きます。低レベル `FormatCell` の
-uncached HYPERLINK は空のままで、製品 adapter が対応 literal を復元します。
+uncached HYPERLINK は空のままで、製品 adapter も保存結果だけを表示します。
 別の限定 Writer は数式なしの型付き計画を受け取り、一般数式は評価しません。
 
 ## 製品接続

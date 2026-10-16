@@ -1,0 +1,1 @@
+src/ExcelRenderer.Mapping/ExcelTemplateMapper.cs:115:        workbook.SaveAs(result, new SaveOptions { EvaluateFormulasBeforeSaving = false });

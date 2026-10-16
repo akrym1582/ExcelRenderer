@@ -1,0 +1,1574 @@
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Core.Tests/bin/Debug/net10.0/ExcelRenderer.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:    80, Skipped:     0, Total:    80, Duration: 6 s - ExcelRenderer.Core.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Mapping.Tests/bin/Debug/net10.0/ExcelRenderer.Mapping.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:    85, Skipped:     0, Total:    85, Duration: 2 s - ExcelRenderer.Mapping.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.OpenXml.Tests/bin/Debug/net10.0/ExcelRenderer.OpenXml.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:   154, Skipped:     0, Total:   154, Duration: 552 ms - ExcelRenderer.OpenXml.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:01:30.45]     非表示行だけを選択した場合も空ページを残し、トリミング余白と連続レイアウトの最小寸法を反映する(padding: 2, dimension: 5) [FAIL]
+[xUnit.net 00:01:30.46]     非表示行だけを選択した場合も空ページを残し、トリミング余白と連続レイアウトの最小寸法を反映する(padding: 0, dimension: 1) [FAIL]
+[xUnit.net 00:01:30.47]     リンク診断を非表示にしてもエラー扱いなら出力前に失敗し、選択対象外のリンクでは診断を出さない [FAIL]
+  Failed 非表示行だけを選択した場合も空ページを残し、トリミング余白と連続レイアウトの最小寸法を反映する(padding: 2, dimension: 5) [166 ms]
+  Error Message:
+   ExcelRenderer.Rendering.ConversionException : Conversion failed.
+---- System.IO.IOException : No space left on device : '/tmp/tmpBVOIxD.tmp'
+  Stack Trace:
+     at ExcelRenderer.ExcelConverter.RenderAsync(Stream input, RenderRequest request, IRenderOutputSink sink, CancellationToken cancellationToken) in /workspace/ExcelRenderer/src/ExcelRenderer/ExcelConverter.RenderAsync.cs:line 231
+   at ExcelRenderer.Tests.RangeTrimHyperlinkTests.Render(Byte[] input, RenderRequest request) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/RangeTrimHyperlinkTests.cs:line 697
+   at ExcelRenderer.Tests.RangeTrimHyperlinkTests.Hidden_only_selection_preserves_empty_trimmed_and_continuous_pages(Double padding, Double dimension) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/RangeTrimHyperlinkTests.cs:line 397
+--- End of stack trace from previous location ---
+----- Inner Stack Trace -----
+   at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Stream.CopyTo(Stream destination, Int32 bufferSize)
+   at DocumentFormat.OpenXml.Packaging.WriteableStreamExtensions.EnableWriteableStream(IFeatureCollection features)
+   at DocumentFormat.OpenXml.Packaging.PackageUriHandlingExtensions.EnableUriHandling(IFeatureCollection features)
+   at DocumentFormat.OpenXml.Builder.OpenXmlPackageBuilderExtensions.<>c__10`1.<UseDefaultBehaviorAndLockBuilder>b__10_0(TPackage package, PackageDelegate`1 next)
+   at DocumentFormat.OpenXml.Builder.OpenXmlPackageBuilder`1.Factory.Create(IPackageInitializer initializer)
+   at ClosedXML.Excel.XLWorkbook..ctor(Stream stream)
+   at ExcelRenderer.Core.Excel.CoreExcelReader.<>c__DisplayClass7_0.<Read>b__0() in /workspace/ExcelRenderer/src/ExcelRenderer.Core/Excel/CoreExcelReader.cs:line 61
+   at ExcelRenderer.Core.Rendering.ConversionMetrics.Measure[T](String name, Func`1 action) in /workspace/ExcelRenderer/src/ExcelRenderer.Core/Rendering/ConversionMetrics.cs:line 34
+   at ExcelRenderer.Core.Excel.CoreExcelReader.Read(PreparedWorkbook source, DiagnosticCollector diagnostics, IReadOnlyList`1 selectedSheets, CancellationToken cancellationToken, FormulaDisplayMode formulaMode, ExcelReadOptions options) in /workspace/ExcelRenderer/src/ExcelRenderer.Core/Excel/CoreExcelReader.cs:line 61
+   at ExcelRenderer.Excel.ExcelReader.ReadCore(PreparedWorkbook source, DiagnosticCollector diagnostics, IReadOnlyList`1 selectedSheets, Boolean detectUnsupportedFeatures, ExcelReadOptions options, CancellationToken cancellationToken) in /workspace/ExcelRenderer/src/ExcelRenderer/Excel/ExcelReader.cs:line 122
+   at ExcelRenderer.ExcelConverter.<>c__DisplayClass13_1.<RenderAsync>b__1() in /workspace/ExcelRenderer/src/ExcelRenderer/ExcelConverter.RenderAsync.cs:line 65
+   at ExcelRenderer.Core.Rendering.ConversionMetrics.Measure[T](String name, Func`1 action) in /workspace/ExcelRenderer/src/ExcelRenderer.Core/Rendering/ConversionMetrics.cs:line 34
+   at ExcelRenderer.Rendering.ConversionMetrics.Measure[T](String name, Func`1 action) in /workspace/ExcelRenderer/src/ExcelRenderer/Rendering/ConversionMetrics.cs:line 33
+   at ExcelRenderer.ExcelConverter.RenderAsync(Stream input, RenderRequest request, IRenderOutputSink sink, CancellationToken cancellationToken) in /workspace/ExcelRenderer/src/ExcelRenderer/ExcelConverter.RenderAsync.cs:line 65
+  Failed 非表示行だけを選択した場合も空ページを残し、トリミング余白と連続レイアウトの最小寸法を反映する(padding: 0, dimension: 1) [7 ms]
+  Error Message:
+   ExcelRenderer.Rendering.ConversionException : Conversion failed.
+---- System.IO.IOException : No space left on device : '/tmp/tmpRyf1zk.tmp'
+  Stack Trace:
+     at ExcelRenderer.ExcelConverter.RenderAsync(Stream input, RenderRequest request, IRenderOutputSink sink, CancellationToken cancellationToken) in /workspace/ExcelRenderer/src/ExcelRenderer/ExcelConverter.RenderAsync.cs:line 231
+   at ExcelRenderer.Tests.RangeTrimHyperlinkTests.Render(Byte[] input, RenderRequest request) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/RangeTrimHyperlinkTests.cs:line 697
+   at ExcelRenderer.Tests.RangeTrimHyperlinkTests.Hidden_only_selection_preserves_empty_trimmed_and_continuous_pages(Double padding, Double dimension) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/RangeTrimHyperlinkTests.cs:line 392
+--- End of stack trace from previous location ---
+----- Inner Stack Trace -----
+   at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Stream.CopyTo(Stream destination, Int32 bufferSize)
+   at DocumentFormat.OpenXml.Packaging.WriteableStreamExtensions.EnableWriteableStream(IFeatureCollection features)
+   at DocumentFormat.OpenXml.Packaging.PackageUriHandlingExtensions.EnableUriHandling(IFeatureCollection features)
+   at DocumentFormat.OpenXml.Builder.OpenXmlPackageBuilderExtensions.<>c__10`1.<UseDefaultBehaviorAndLockBuilder>b__10_0(TPackage package, PackageDelegate`1 next)
+   at DocumentFormat.OpenXml.Builder.OpenXmlPackageBuilder`1.Factory.Create(IPackageInitializer initializer)
+   at ClosedXML.Excel.XLWorkbook..ctor(Stream stream)
+   at ExcelRenderer.Core.Excel.CoreExcelReader.<>c__DisplayClass7_0.<Read>b__0() in /workspace/ExcelRenderer/src/ExcelRenderer.Core/Excel/CoreExcelReader.cs:line 61
+   at ExcelRenderer.Core.Rendering.ConversionMetrics.Measure[T](String name, Func`1 action) in /workspace/ExcelRenderer/src/ExcelRenderer.Core/Rendering/ConversionMetrics.cs:line 34
+   at ExcelRenderer.Core.Excel.CoreExcelReader.Read(PreparedWorkbook source, DiagnosticCollector diagnostics, IReadOnlyList`1 selectedSheets, CancellationToken cancellationToken, FormulaDisplayMode formulaMode, ExcelReadOptions options) in /workspace/ExcelRenderer/src/ExcelRenderer.Core/Excel/CoreExcelReader.cs:line 61
+   at ExcelRenderer.Excel.ExcelReader.ReadCore(PreparedWorkbook source, DiagnosticCollector diagnostics, IReadOnlyList`1 selectedSheets, Boolean detectUnsupportedFeatures, ExcelReadOptions options, CancellationToken cancellationToken) in /workspace/ExcelRenderer/src/ExcelRenderer/Excel/ExcelReader.cs:line 122
+   at ExcelRenderer.ExcelConverter.<>c__DisplayClass13_1.<RenderAsync>b__1() in /workspace/ExcelRenderer/src/ExcelRenderer/ExcelConverter.RenderAsync.cs:line 65
+   at ExcelRenderer.Core.Rendering.ConversionMetrics.Measure[T](String name, Func`1 action) in /workspace/ExcelRenderer/src/ExcelRenderer.Core/Rendering/ConversionMetrics.cs:line 34
+   at ExcelRenderer.Rendering.ConversionMetrics.Measure[T](String name, Func`1 action) in /workspace/ExcelRenderer/src/ExcelRenderer/Rendering/ConversionMetrics.cs:line 33
+   at ExcelRenderer.ExcelConverter.RenderAsync(Stream input, RenderRequest request, IRenderOutputSink sink, CancellationToken cancellationToken) in /workspace/ExcelRenderer/src/ExcelRenderer/ExcelConverter.RenderAsync.cs:line 65
+  Failed リンク診断を非表示にしてもエラー扱いなら出力前に失敗し、選択対象外のリンクでは診断を出さない [15 ms]
+  Error Message:
+   ExcelRenderer.Rendering.ConversionException : Conversion failed.
+---- System.IO.IOException : No space left on device : '/tmp/tmpvVT0Bi.tmp'
+  Stack Trace:
+     at ExcelRenderer.ExcelConverter.RenderAsync(Stream input, RenderRequest request, IRenderOutputSink sink, CancellationToken cancellationToken) in /workspace/ExcelRenderer/src/ExcelRenderer/ExcelConverter.RenderAsync.cs:line 231
+   at ExcelRenderer.Tests.RangeTrimHyperlinkTests.Render(Byte[] input, RenderRequest request) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/RangeTrimHyperlinkTests.cs:line 697
+   at ExcelRenderer.Tests.RangeTrimHyperlinkTests.Suppressed_hyperlink_failures_still_fail_before_open_and_excluded_sources_are_quiet() in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/RangeTrimHyperlinkTests.cs:line 428
+--- End of stack trace from previous location ---
+----- Inner Stack Trace -----
+   at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Stream.CopyTo(Stream destination, Int32 bufferSize)
+   at DocumentFormat.OpenXml.Packaging.WriteableStreamExtensions.EnableWriteableStream(IFeatureCollection features)
+   at DocumentFormat.OpenXml.Packaging.PackageUriHandlingExtensions.EnableUriHandling(IFeatureCollection features)
+   at DocumentFormat.OpenXml.Builder.OpenXmlPackageBuilderExtensions.<>c__10`1.<UseDefaultBehaviorAndLockBuilder>b__10_0(TPackage package, PackageDelegate`1 next)
+   at DocumentFormat.OpenXml.Builder.OpenXmlPackageBuilder`1.Factory.Create(IPackageInitializer initializer)
+   at ClosedXML.Excel.XLWorkbook..ctor(Stream stream)
+   at ExcelRenderer.Core.Excel.CoreExcelReader.<>c__DisplayClass7_0.<Read>b__0() in /workspace/ExcelRenderer/src/ExcelRenderer.Core/Excel/CoreExcelReader.cs:line 61
+   at ExcelRenderer.Core.Rendering.ConversionMetrics.Measure[T](String name, Func`1 action) in /workspace/ExcelRenderer/src/ExcelRenderer.Core/Rendering/ConversionMetrics.cs:line 34
+   at ExcelRenderer.Core.Excel.CoreExcelReader.Read(PreparedWorkbook source, DiagnosticCollector diagnostics, IReadOnlyList`1 selectedSheets, CancellationToken cancellationToken, FormulaDisplayMode formulaMode, ExcelReadOptions options) in /workspace/ExcelRenderer/src/ExcelRenderer.Core/Excel/CoreExcelReader.cs:line 61
+   at ExcelRenderer.Excel.ExcelReader.ReadCore(PreparedWorkbook source, DiagnosticCollector diagnostics, IReadOnlyList`1 selectedSheets, Boolean detectUnsupportedFeatures, ExcelReadOptions options, CancellationToken cancellationToken) in /workspace/ExcelRenderer/src/ExcelRenderer/Excel/ExcelReader.cs:line 122
+   at ExcelRenderer.ExcelConverter.<>c__DisplayClass13_1.<RenderAsync>b__1() in /workspace/ExcelRenderer/src/ExcelRenderer/ExcelConverter.RenderAsync.cs:line 65
+   at ExcelRenderer.Core.Rendering.ConversionMetrics.Measure[T](String name, Func`1 action) in /workspace/ExcelRenderer/src/ExcelRenderer.Core/Rendering/ConversionMetrics.cs:line 34
+   at ExcelRenderer.Rendering.ConversionMetrics.Measure[T](String name, Func`1 action) in /workspace/ExcelRenderer/src/ExcelRenderer/Rendering/ConversionMetrics.cs:line 33
+   at ExcelRenderer.ExcelConverter.RenderAsync(Stream input, RenderRequest request, IRenderOutputSink sink, CancellationToken cancellationToken) in /workspace/ExcelRenderer/src/ExcelRenderer/ExcelConverter.RenderAsync.cs:line 65
+[xUnit.net 00:01:30.48]     連続 PNG 出力の寸法が指定範囲の行列寸法に一致し、画像出力ではリンク用の診断を評価しない [FAIL]
+[xUnit.net 00:01:30.49]     三種類の画像アンカーに回転・反転・切り抜きを加えても、指定範囲のキャンバスを拡張せず画像をクリップする [FAIL]
+[xUnit.net 00:01:30.50]     ページ単位の PNG が画素数上限を超える場合、出力先を開く前に失敗する [FAIL]
+[xUnit.net 00:01:30.50]     不正な参照範囲は出力時の診断に回し、存在しないリンク関連付けは出力先を開く前に失敗する [FAIL]
+  Failed 連続 PNG 出力の寸法が指定範囲の行列寸法に一致し、画像出力ではリンク用の診断を評価しない [5 ms]
+  Error Message:
+   ExcelRenderer.Rendering.ConversionException : Conversion failed.
+---- System.IO.IOException : No space left on device : '/tmp/tmpC7pc95.tmp'
+  Stack Trace:
+     at ExcelRenderer.ExcelConverter.RenderAsync(Stream input, RenderRequest request, IRenderOutputSink sink, CancellationToken cancellationToken) in /workspace/ExcelRenderer/src/ExcelRenderer/ExcelConverter.RenderAsync.cs:line 231
+   at ExcelRenderer.Tests.RangeTrimHyperlinkTests.Render(Byte[] input, RenderRequest request) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/RangeTrimHyperlinkTests.cs:line 697
+   at ExcelRenderer.Tests.RangeTrimHyperlinkTests.Continuous_range_has_fixed_dimensions_and_unsafe_link_diagnostics_are_not_evaluated_for_images() in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/RangeTrimHyperlinkTests.cs:line 298
+--- End of stack trace from previous location ---
+----- Inner Stack Trace -----
+   at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Stream.CopyTo(Stream destination, Int32 bufferSize)
+   at DocumentFormat.OpenXml.Packaging.WriteableStreamExtensions.EnableWriteableStream(IFeatureCollection features)
+   at DocumentFormat.OpenXml.Packaging.PackageUriHandlingExtensions.EnableUriHandling(IFeatureCollection features)
+   at DocumentFormat.OpenXml.Builder.OpenXmlPackageBuilderExtensions.<>c__10`1.<UseDefaultBehaviorAndLockBuilder>b__10_0(TPackage package, PackageDelegate`1 next)
+   at DocumentFormat.OpenXml.Builder.OpenXmlPackageBuilder`1.Factory.Create(IPackageInitializer initializer)
+   at ClosedXML.Excel.XLWorkbook..ctor(Stream stream)
+   at ExcelRenderer.Core.Excel.CoreExcelReader.<>c__DisplayClass7_0.<Read>b__0() in /workspace/ExcelRenderer/src/ExcelRenderer.Core/Excel/CoreExcelReader.cs:line 61
+   at ExcelRenderer.Core.Rendering.ConversionMetrics.Measure[T](String name, Func`1 action) in /workspace/ExcelRenderer/src/ExcelRenderer.Core/Rendering/ConversionMetrics.cs:line 34
+   at ExcelRenderer.Core.Excel.CoreExcelReader.Read(PreparedWorkbook source, DiagnosticCollector diagnostics, IReadOnlyList`1 selectedSheets, CancellationToken cancellationToken, FormulaDisplayMode formulaMode, ExcelReadOptions options) in /workspace/ExcelRenderer/src/ExcelRenderer.Core/Excel/CoreExcelReader.cs:line 61
+   at ExcelRenderer.Excel.ExcelReader.ReadCore(PreparedWorkbook source, DiagnosticCollector diagnostics, IReadOnlyList`1 selectedSheets, Boolean detectUnsupportedFeatures, ExcelReadOptions options, CancellationToken cancellationToken) in /workspace/ExcelRenderer/src/ExcelRenderer/Excel/ExcelReader.cs:line 122
+   at ExcelRenderer.ExcelConverter.<>c__DisplayClass13_1.<RenderAsync>b__1() in /workspace/ExcelRenderer/src/ExcelRenderer/ExcelConverter.RenderAsync.cs:line 65
+   at ExcelRenderer.Core.Rendering.ConversionMetrics.Measure[T](String name, Func`1 action) in /workspace/ExcelRenderer/src/ExcelRenderer.Core/Rendering/ConversionMetrics.cs:line 34
+   at ExcelRenderer.Rendering.ConversionMetrics.Measure[T](String name, Func`1 action) in /workspace/ExcelRenderer/src/ExcelRenderer/Rendering/ConversionMetrics.cs:line 33
+   at ExcelRenderer.ExcelConverter.RenderAsync(Stream input, RenderRequest request, IRenderOutputSink sink, CancellationToken cancellationToken) in /workspace/ExcelRenderer/src/ExcelRenderer/ExcelConverter.RenderAsync.cs:line 65
+  Failed 三種類の画像アンカーに回転・反転・切り抜きを加えても、指定範囲のキャンバスを拡張せず画像をクリップする [3 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/anchors-e8b903362eaa4edd90903614476bf261.xlsx'
+  Stack Trace:
+     at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Strategies.BufferedFileStreamStrategy.FlushWrite()
+   at System.IO.FileStream.Seek(Int64 offset, SeekOrigin origin)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeader(Boolean zip64HeaderUsed)
+   at System.IO.Compression.ZipArchiveEntry.WriteLocalFileHeaderAndDataIfNeeded(Boolean forceWrite)
+   at System.IO.Compression.ZipArchiveEntry.WriteLocalFileHeaderAndDataIfNeeded(Boolean forceWrite)
+   at System.IO.Compression.ZipArchive.WriteFile()
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose()
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, Boolean validate, Boolean evaluateFormulae)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file)
+   at ExcelRenderer.Tests.DrawingAnchorWorkbookFixture.Create() in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/DrawingAnchorWorkbookFixture.cs:line 35
+   at ExcelRenderer.Tests.RangeTrimHyperlinkTests.Existing_three_anchor_saved_fixture_is_clipped_without_canvas_expansion() in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/RangeTrimHyperlinkTests.cs:line 343
+--- End of stack trace from previous location ---
+  Failed ページ単位の PNG が画素数上限を超える場合、出力先を開く前に失敗する [7 ms]
+  Error Message:
+   Assert.Throws() Failure: Exception type was not an exact match
+Expected: typeof(System.ArgumentOutOfRangeException)
+Actual:   typeof(ExcelRenderer.Rendering.ConversionException)
+---- ExcelRenderer.Rendering.ConversionException : Conversion failed.
+-------- System.IO.IOException : No space left on device : '/tmp/tmpNT5VZV.tmp'
+  Stack Trace:
+     at ExcelRenderer.Tests.RangeTrimHyperlinkTests.Paginated_PNG_pixel_limit_fails_before_open() in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/RangeTrimHyperlinkTests.cs:line 444
+--- End of stack trace from previous location ---
+----- Inner Stack Trace -----
+   at ExcelRenderer.ExcelConverter.RenderAsync(Stream input, RenderRequest request, IRenderOutputSink sink, CancellationToken cancellationToken) in /workspace/ExcelRenderer/src/ExcelRenderer/ExcelConverter.RenderAsync.cs:line 231
+----- Inner Stack Trace -----
+   at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Stream.CopyTo(Stream destination, Int32 bufferSize)
+   at DocumentFormat.OpenXml.Packaging.WriteableStreamExtensions.EnableWriteableStream(IFeatureCollection features)
+   at DocumentFormat.OpenXml.Packaging.PackageUriHandlingExtensions.EnableUriHandling(IFeatureCollection features)
+   at DocumentFormat.OpenXml.Builder.OpenXmlPackageBuilderExtensions.<>c__10`1.<UseDefaultBehaviorAndLockBuilder>b__10_0(TPackage package, PackageDelegate`1 next)
+   at DocumentFormat.OpenXml.Builder.OpenXmlPackageBuilder`1.Factory.Create(IPackageInitializer initializer)
+   at ClosedXML.Excel.XLWorkbook..ctor(Stream stream)
+   at ExcelRenderer.Core.Excel.CoreExcelReader.<>c__DisplayClass7_0.<Read>b__0() in /workspace/ExcelRenderer/src/ExcelRenderer.Core/Excel/CoreExcelReader.cs:line 61
+   at ExcelRenderer.Core.Rendering.ConversionMetrics.Measure[T](String name, Func`1 action) in /workspace/ExcelRenderer/src/ExcelRenderer.Core/Rendering/ConversionMetrics.cs:line 34
+   at ExcelRenderer.Core.Excel.CoreExcelReader.Read(PreparedWorkbook source, DiagnosticCollector diagnostics, IReadOnlyList`1 selectedSheets, CancellationToken cancellationToken, FormulaDisplayMode formulaMode, ExcelReadOptions options) in /workspace/ExcelRenderer/src/ExcelRenderer.Core/Excel/CoreExcelReader.cs:line 61
+   at ExcelRenderer.Excel.ExcelReader.ReadCore(PreparedWorkbook source, DiagnosticCollector diagnostics, IReadOnlyList`1 selectedSheets, Boolean detectUnsupportedFeatures, ExcelReadOptions options, CancellationToken cancellationToken) in /workspace/ExcelRenderer/src/ExcelRenderer/Excel/ExcelReader.cs:line 122
+   at ExcelRenderer.ExcelConverter.<>c__DisplayClass13_1.<RenderAsync>b__1() in /workspace/ExcelRenderer/src/ExcelRenderer/ExcelConverter.RenderAsync.cs:line 65
+   at ExcelRenderer.Core.Rendering.ConversionMetrics.Measure[T](String name, Func`1 action) in /workspace/ExcelRenderer/src/ExcelRenderer.Core/Rendering/ConversionMetrics.cs:line 34
+   at ExcelRenderer.Rendering.ConversionMetrics.Measure[T](String name, Func`1 action) in /workspace/ExcelRenderer/src/ExcelRenderer/Rendering/ConversionMetrics.cs:line 33
+   at ExcelRenderer.ExcelConverter.RenderAsync(Stream input, RenderRequest request, IRenderOutputSink sink, CancellationToken cancellationToken) in /workspace/ExcelRenderer/src/ExcelRenderer/ExcelConverter.RenderAsync.cs:line 65
+  Failed 不正な参照範囲は出力時の診断に回し、存在しないリンク関連付けは出力先を開く前に失敗する [6 ms]
+  Error Message:
+   ExcelRenderer.Rendering.ConversionException : Conversion failed.
+---- System.IO.IOException : No space left on device : '/tmp/tmpXGI8Hr.tmp'
+  Stack Trace:
+     at ExcelRenderer.ExcelConverter.RenderAsync(Stream input, RenderRequest request, IRenderOutputSink sink, CancellationToken cancellationToken) in /workspace/ExcelRenderer/src/ExcelRenderer/ExcelConverter.RenderAsync.cs:line 231
+   at ExcelRenderer.Tests.RangeTrimHyperlinkTests.Render(Byte[] input, RenderRequest request) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/RangeTrimHyperlinkTests.cs:line 697
+   at ExcelRenderer.Tests.RangeTrimHyperlinkTests.Readable_invalid_ref_is_deferred_but_missing_relationship_is_fatal_before_open() in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/RangeTrimHyperlinkTests.cs:line 553
+--- End of stack trace from previous location ---
+----- Inner Stack Trace -----
+   at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Stream.CopyTo(Stream destination, Int32 bufferSize)
+   at DocumentFormat.OpenXml.Packaging.WriteableStreamExtensions.EnableWriteableStream(IFeatureCollection features)
+   at DocumentFormat.OpenXml.Packaging.PackageUriHandlingExtensions.EnableUriHandling(IFeatureCollection features)
+   at DocumentFormat.OpenXml.Builder.OpenXmlPackageBuilderExtensions.<>c__10`1.<UseDefaultBehaviorAndLockBuilder>b__10_0(TPackage package, PackageDelegate`1 next)
+   at DocumentFormat.OpenXml.Builder.OpenXmlPackageBuilder`1.Factory.Create(IPackageInitializer initializer)
+   at ClosedXML.Excel.XLWorkbook..ctor(Stream stream)
+   at ExcelRenderer.Core.Excel.CoreExcelReader.<>c__DisplayClass7_0.<Read>b__0() in /workspace/ExcelRenderer/src/ExcelRenderer.Core/Excel/CoreExcelReader.cs:line 61
+   at ExcelRenderer.Core.Rendering.ConversionMetrics.Measure[T](String name, Func`1 action) in /workspace/ExcelRenderer/src/ExcelRenderer.Core/Rendering/ConversionMetrics.cs:line 34
+   at ExcelRenderer.Core.Excel.CoreExcelReader.Read(PreparedWorkbook source, DiagnosticCollector diagnostics, IReadOnlyList`1 selectedSheets, CancellationToken cancellationToken, FormulaDisplayMode formulaMode, ExcelReadOptions options) in /workspace/ExcelRenderer/src/ExcelRenderer.Core/Excel/CoreExcelReader.cs:line 61
+   at ExcelRenderer.Excel.ExcelReader.ReadCore(PreparedWorkbook source, DiagnosticCollector diagnostics, IReadOnlyList`1 selectedSheets, Boolean detectUnsupportedFeatures, ExcelReadOptions options, CancellationToken cancellationToken) in /workspace/ExcelRenderer/src/ExcelRenderer/Excel/ExcelReader.cs:line 122
+   at ExcelRenderer.ExcelConverter.<>c__DisplayClass13_1.<RenderAsync>b__1() in /workspace/ExcelRenderer/src/ExcelRenderer/ExcelConverter.RenderAsync.cs:line 65
+   at ExcelRenderer.Core.Rendering.ConversionMetrics.Measure[T](String name, Func`1 action) in /workspace/ExcelRenderer/src/ExcelRenderer.Core/Rendering/ConversionMetrics.cs:line 34
+   at ExcelRenderer.Rendering.ConversionMetrics.Measure[T](String name, Func`1 action) in /workspace/ExcelRenderer/src/ExcelRenderer/Rendering/ConversionMetrics.cs:line 33
+   at ExcelRenderer.ExcelConverter.RenderAsync(Stream input, RenderRequest request, IRenderOutputSink sink, CancellationToken cancellationToken) in /workspace/ExcelRenderer/src/ExcelRenderer/ExcelConverter.RenderAsync.cs:line 65
+[xUnit.net 00:01:36.31]     罫線サンプルから空セルと結合範囲外周の罫線断片が読み取られる [FAIL]
+[xUnit.net 00:01:36.31]     各サンプルブックから視覚検証に必要なセル、画像、図形などの要素が保持される [FAIL]
+  Failed 罫線サンプルから空セルと結合範囲外周の罫線断片が読み取られる [2 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/tmptrepBs.tmp'
+  Stack Trace:
+     at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Stream.CopyTo(Stream destination, Int32 bufferSize)
+   at DocumentFormat.OpenXml.Packaging.WriteableStreamExtensions.EnableWriteableStream(IFeatureCollection features)
+   at DocumentFormat.OpenXml.Packaging.PackageUriHandlingExtensions.EnableUriHandling(IFeatureCollection features)
+   at DocumentFormat.OpenXml.Builder.OpenXmlPackageBuilderExtensions.<>c__10`1.<UseDefaultBehaviorAndLockBuilder>b__10_0(TPackage package, PackageDelegate`1 next)
+   at DocumentFormat.OpenXml.Builder.OpenXmlPackageBuilder`1.Factory.Create(IPackageInitializer initializer)
+   at ClosedXML.Excel.XLWorkbook..ctor(Stream stream)
+   at ExcelRenderer.Core.Excel.CoreExcelReader.<>c__DisplayClass7_0.<Read>b__0() in /workspace/ExcelRenderer/src/ExcelRenderer.Core/Excel/CoreExcelReader.cs:line 61
+   at ExcelRenderer.Core.Rendering.ConversionMetrics.Measure[T](String name, Func`1 action) in /workspace/ExcelRenderer/src/ExcelRenderer.Core/Rendering/ConversionMetrics.cs:line 34
+   at ExcelRenderer.Core.Excel.CoreExcelReader.Read(PreparedWorkbook source, DiagnosticCollector diagnostics, IReadOnlyList`1 selectedSheets, CancellationToken cancellationToken, FormulaDisplayMode formulaMode, ExcelReadOptions options) in /workspace/ExcelRenderer/src/ExcelRenderer.Core/Excel/CoreExcelReader.cs:line 61
+   at ExcelRenderer.Excel.ExcelReader.ReadCore(PreparedWorkbook source, DiagnosticCollector diagnostics, IReadOnlyList`1 selectedSheets, Boolean detectUnsupportedFeatures, ExcelReadOptions options, CancellationToken cancellationToken) in /workspace/ExcelRenderer/src/ExcelRenderer/Excel/ExcelReader.cs:line 122
+   at ExcelRenderer.Excel.ExcelReader.Read(PreparedWorkbook source, DiagnosticCollector diagnostics, IReadOnlyList`1 selectedSheets, ExcelReadOptions options) in /workspace/ExcelRenderer/src/ExcelRenderer/Excel/ExcelReader.cs:line 96
+   at ExcelRenderer.Excel.ExcelReader.Read(Stream input, ExcelReadOptions options) in /workspace/ExcelRenderer/src/ExcelRenderer/Excel/ExcelReader.cs:line 73
+   at ExcelRenderer.Excel.ExcelReader.Read(String path, ExcelReadOptions options) in /workspace/ExcelRenderer/src/ExcelRenderer/Excel/ExcelReader.cs:line 43
+   at ExcelRenderer.Excel.ExcelReader.Read(String path) in /workspace/ExcelRenderer/src/ExcelRenderer/Excel/ExcelReader.cs:line 28
+   at ExcelRenderer.Tests.SampleOutputTestSupport.ReadAndLayout(String excelFileName) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/SampleOutputTestSupport.cs:line 47
+   at ExcelRenderer.Tests.PrebuiltExcelSampleTests.Cell_border_sample_preserves_empty_cells_and_merged_perimeter_fragments() in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PrebuiltExcelSampleTests.cs:line 19
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed 各サンプルブックから視覚検証に必要なセル、画像、図形などの要素が保持される [2 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/tmpSIWm4v.tmp'
+  Stack Trace:
+     at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Stream.CopyTo(Stream destination, Int32 bufferSize)
+   at DocumentFormat.OpenXml.Packaging.WriteableStreamExtensions.EnableWriteableStream(IFeatureCollection features)
+   at DocumentFormat.OpenXml.Packaging.PackageUriHandlingExtensions.EnableUriHandling(IFeatureCollection features)
+   at DocumentFormat.OpenXml.Builder.OpenXmlPackageBuilderExtensions.<>c__10`1.<UseDefaultBehaviorAndLockBuilder>b__10_0(TPackage package, PackageDelegate`1 next)
+   at DocumentFormat.OpenXml.Builder.OpenXmlPackageBuilder`1.Factory.Create(IPackageInitializer initializer)
+   at ClosedXML.Excel.XLWorkbook..ctor(Stream stream)
+   at ExcelRenderer.Core.Excel.CoreExcelReader.<>c__DisplayClass7_0.<Read>b__0() in /workspace/ExcelRenderer/src/ExcelRenderer.Core/Excel/CoreExcelReader.cs:line 61
+   at ExcelRenderer.Core.Rendering.ConversionMetrics.Measure[T](String name, Func`1 action) in /workspace/ExcelRenderer/src/ExcelRenderer.Core/Rendering/ConversionMetrics.cs:line 34
+   at ExcelRenderer.Core.Excel.CoreExcelReader.Read(PreparedWorkbook source, DiagnosticCollector diagnostics, IReadOnlyList`1 selectedSheets, CancellationToken cancellationToken, FormulaDisplayMode formulaMode, ExcelReadOptions options) in /workspace/ExcelRenderer/src/ExcelRenderer.Core/Excel/CoreExcelReader.cs:line 61
+   at ExcelRenderer.Excel.ExcelReader.ReadCore(PreparedWorkbook source, DiagnosticCollector diagnostics, IReadOnlyList`1 selectedSheets, Boolean detectUnsupportedFeatures, ExcelReadOptions options, CancellationToken cancellationToken) in /workspace/ExcelRenderer/src/ExcelRenderer/Excel/ExcelReader.cs:line 122
+   at ExcelRenderer.Excel.ExcelReader.Read(PreparedWorkbook source, DiagnosticCollector diagnostics, IReadOnlyList`1 selectedSheets, ExcelReadOptions options) in /workspace/ExcelRenderer/src/ExcelRenderer/Excel/ExcelReader.cs:line 96
+   at ExcelRenderer.Excel.ExcelReader.Read(Stream input, ExcelReadOptions options) in /workspace/ExcelRenderer/src/ExcelRenderer/Excel/ExcelReader.cs:line 73
+   at ExcelRenderer.Excel.ExcelReader.Read(String path, ExcelReadOptions options) in /workspace/ExcelRenderer/src/ExcelRenderer/Excel/ExcelReader.cs:line 43
+   at ExcelRenderer.Excel.ExcelReader.Read(String path) in /workspace/ExcelRenderer/src/ExcelRenderer/Excel/ExcelReader.cs:line 28
+   at ExcelRenderer.Tests.SampleOutputTestSupport.ReadAndLayout(String excelFileName) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/SampleOutputTestSupport.cs:line 47
+   at ExcelRenderer.Tests.PrebuiltExcelSampleTests.Prebuilt_excel_samples_preserve_the_visual_test_features() in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PrebuiltExcelSampleTests.cs:line 70
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+Failed!  - Failed:     9, Passed:   515, Skipped:     0, Total:   524, Duration: 1 m 35 s - ExcelRenderer.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/bin/Debug/net10.0/ExcelRenderer.Tool.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:01.02]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.RenderingCommandsAcceptSavedFormulaDisplay(command: "md") [FAIL]
+[xUnit.net 00:00:01.03]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.RenderingCommandsAcceptSavedFormulaDisplay(command: "render") [FAIL]
+[xUnit.net 00:00:01.04]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.RenderingCommandsAcceptSavedFormulaDisplay(command: "pdf") [FAIL]
+[xUnit.net 00:00:01.04]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.RenderingCommandsAcceptSavedFormulaDisplay(command: "svg") [FAIL]
+[xUnit.net 00:00:01.05]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.RenderingCommandsAcceptSavedFormulaDisplay(command: "image") [FAIL]
+[xUnit.net 00:00:01.15]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.Json_mapping_completes_for_xlsx_and_all_render_commands(command: "markdown", format: null) [FAIL]
+[xUnit.net 00:00:01.16]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.Json_mapping_completes_for_xlsx_and_all_render_commands(command: "xlsx", format: null) [FAIL]
+[xUnit.net 00:00:01.16]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.Json_mapping_completes_for_xlsx_and_all_render_commands(command: "pdf", format: null) [FAIL]
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.RenderingCommandsAcceptSavedFormulaDisplay(command: "md") [660 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/dde5dde9602846209cfd61e1d7f99cb1/formula.xlsx'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Strategies.BufferedFileStreamStrategy.Seek(Int64 offset, SeekOrigin origin)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeaderPrepareFor32bitValuesWriting(Boolean pretendStreaming, Span`1 writeBuffer, UInt32 compressedSizeTruncated, UInt32 uncompressedSizeTruncated)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeader(Boolean zip64HeaderUsed)
+   at System.IO.Compression.ZipArchiveEntry.DirectToArchiveWriterStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Compression.ZipArchiveEntry.WriteLocalFileHeaderAndDataIfNeeded(Boolean forceWrite)
+   at System.IO.Compression.ZipArchive.WriteFile()
+   at System.IO.Compression.ZipArchive.Dispose(Boolean disposing)
+   at System.IO.Packaging.ZipPackage.Dispose(Boolean disposing)
+   at System.IO.Packaging.Package.System.IDisposable.Dispose()
+   at System.IO.Packaging.Package.Close()
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.PackageFeatureCollection.DocumentFormat.OpenXml.Features.IContainerDisposableFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose()
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, Boolean validate, Boolean evaluateFormulae)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.RenderingCommandsAcceptSavedFormulaDisplay(String command) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/FormulaModeIntegrationTests.cs:line 48
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.RenderingCommandsAcceptSavedFormulaDisplay(command: "render") [14 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/fc7a4016d7be407d86a7e224b38cf5bf/formula.xlsx'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Strategies.BufferedFileStreamStrategy.Seek(Int64 offset, SeekOrigin origin)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeaderPrepareFor32bitValuesWriting(Boolean pretendStreaming, Span`1 writeBuffer, UInt32 compressedSizeTruncated, UInt32 uncompressedSizeTruncated)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeader(Boolean zip64HeaderUsed)
+   at System.IO.Compression.ZipArchiveEntry.DirectToArchiveWriterStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Compression.ZipArchiveEntry.WriteLocalFileHeaderAndDataIfNeeded(Boolean forceWrite)
+   at System.IO.Compression.ZipArchive.WriteFile()
+   at System.IO.Compression.ZipArchive.Dispose(Boolean disposing)
+   at System.IO.Packaging.ZipPackage.Dispose(Boolean disposing)
+   at System.IO.Packaging.Package.System.IDisposable.Dispose()
+   at System.IO.Packaging.Package.Close()
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.PackageFeatureCollection.DocumentFormat.OpenXml.Features.IContainerDisposableFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose()
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, Boolean validate, Boolean evaluateFormulae)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.RenderingCommandsAcceptSavedFormulaDisplay(String command) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/FormulaModeIntegrationTests.cs:line 48
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.RenderingCommandsAcceptSavedFormulaDisplay(command: "pdf") [4 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/8706dccc789549e7b32f25d5ded2bf39/formula.xlsx'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Strategies.BufferedFileStreamStrategy.Seek(Int64 offset, SeekOrigin origin)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeaderPrepareFor32bitValuesWriting(Boolean pretendStreaming, Span`1 writeBuffer, UInt32 compressedSizeTruncated, UInt32 uncompressedSizeTruncated)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeader(Boolean zip64HeaderUsed)
+   at System.IO.Compression.ZipArchiveEntry.DirectToArchiveWriterStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Compression.ZipArchiveEntry.WriteLocalFileHeaderAndDataIfNeeded(Boolean forceWrite)
+   at System.IO.Compression.ZipArchive.WriteFile()
+   at System.IO.Compression.ZipArchive.Dispose(Boolean disposing)
+   at System.IO.Packaging.ZipPackage.Dispose(Boolean disposing)
+   at System.IO.Packaging.Package.System.IDisposable.Dispose()
+   at System.IO.Packaging.Package.Close()
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.PackageFeatureCollection.DocumentFormat.OpenXml.Features.IContainerDisposableFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose()
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, Boolean validate, Boolean evaluateFormulae)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.RenderingCommandsAcceptSavedFormulaDisplay(String command) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/FormulaModeIntegrationTests.cs:line 48
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.RenderingCommandsAcceptSavedFormulaDisplay(command: "svg") [4 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/49c227cb2a7a41b2b2db6a67819fc3e3/formula.xlsx'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Strategies.BufferedFileStreamStrategy.Seek(Int64 offset, SeekOrigin origin)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeaderPrepareFor32bitValuesWriting(Boolean pretendStreaming, Span`1 writeBuffer, UInt32 compressedSizeTruncated, UInt32 uncompressedSizeTruncated)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeader(Boolean zip64HeaderUsed)
+   at System.IO.Compression.ZipArchiveEntry.DirectToArchiveWriterStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Compression.ZipArchiveEntry.WriteLocalFileHeaderAndDataIfNeeded(Boolean forceWrite)
+   at System.IO.Compression.ZipArchive.WriteFile()
+   at System.IO.Compression.ZipArchive.Dispose(Boolean disposing)
+   at System.IO.Packaging.ZipPackage.Dispose(Boolean disposing)
+   at System.IO.Packaging.Package.System.IDisposable.Dispose()
+   at System.IO.Packaging.Package.Close()
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.PackageFeatureCollection.DocumentFormat.OpenXml.Features.IContainerDisposableFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose()
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, Boolean validate, Boolean evaluateFormulae)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.RenderingCommandsAcceptSavedFormulaDisplay(String command) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/FormulaModeIntegrationTests.cs:line 48
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.RenderingCommandsAcceptSavedFormulaDisplay(command: "image") [6 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/eee2995dd34f410796479f466585ec1f/formula.xlsx'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Strategies.BufferedFileStreamStrategy.Seek(Int64 offset, SeekOrigin origin)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeaderPrepareFor32bitValuesWriting(Boolean pretendStreaming, Span`1 writeBuffer, UInt32 compressedSizeTruncated, UInt32 uncompressedSizeTruncated)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeader(Boolean zip64HeaderUsed)
+   at System.IO.Compression.ZipArchiveEntry.DirectToArchiveWriterStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Compression.ZipArchiveEntry.WriteLocalFileHeaderAndDataIfNeeded(Boolean forceWrite)
+   at System.IO.Compression.ZipArchive.WriteFile()
+   at System.IO.Compression.ZipArchive.Dispose(Boolean disposing)
+   at System.IO.Packaging.ZipPackage.Dispose(Boolean disposing)
+   at System.IO.Packaging.Package.System.IDisposable.Dispose()
+   at System.IO.Packaging.Package.Close()
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.PackageFeatureCollection.DocumentFormat.OpenXml.Features.IContainerDisposableFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose()
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, Boolean validate, Boolean evaluateFormulae)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.RenderingCommandsAcceptSavedFormulaDisplay(String command) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/FormulaModeIntegrationTests.cs:line 48
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.Json_mapping_completes_for_xlsx_and_all_render_commands(command: "markdown", format: null) [98 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/3ffc4a62ec964730b6acc7992c2e1376/template.xlsx'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Strategies.BufferedFileStreamStrategy.Seek(Int64 offset, SeekOrigin origin)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeaderPrepareFor32bitValuesWriting(Boolean pretendStreaming, Span`1 writeBuffer, UInt32 compressedSizeTruncated, UInt32 uncompressedSizeTruncated)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeader(Boolean zip64HeaderUsed)
+   at System.IO.Compression.ZipArchiveEntry.DirectToArchiveWriterStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Compression.ZipArchiveEntry.WriteLocalFileHeaderAndDataIfNeeded(Boolean forceWrite)
+   at System.IO.Compression.ZipArchive.WriteFile()
+   at System.IO.Compression.ZipArchive.Dispose(Boolean disposing)
+   at System.IO.Packaging.ZipPackage.Dispose(Boolean disposing)
+   at System.IO.Packaging.Package.System.IDisposable.Dispose()
+   at System.IO.Packaging.Package.Close()
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.PackageFeatureCollection.DocumentFormat.OpenXml.Features.IContainerDisposableFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose()
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, Boolean validate, Boolean evaluateFormulae)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Json_mapping_completes_for_xlsx_and_all_render_commands(String command, String format) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/MappingIntegrationTests.cs:line 33
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.Json_mapping_completes_for_xlsx_and_all_render_commands(command: "xlsx", format: null) [5 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/76f0a2e04f8d48e6be85336108215126/template.xlsx'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Strategies.BufferedFileStreamStrategy.Seek(Int64 offset, SeekOrigin origin)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeaderPrepareFor32bitValuesWriting(Boolean pretendStreaming, Span`1 writeBuffer, UInt32 compressedSizeTruncated, UInt32 uncompressedSizeTruncated)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeader(Boolean zip64HeaderUsed)
+   at System.IO.Compression.ZipArchiveEntry.DirectToArchiveWriterStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Compression.ZipArchiveEntry.WriteLocalFileHeaderAndDataIfNeeded(Boolean forceWrite)
+   at System.IO.Compression.ZipArchive.WriteFile()
+   at System.IO.Compression.ZipArchive.Dispose(Boolean disposing)
+   at System.IO.Packaging.ZipPackage.Dispose(Boolean disposing)
+   at System.IO.Packaging.Package.System.IDisposable.Dispose()
+   at System.IO.Packaging.Package.Close()
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.PackageFeatureCollection.DocumentFormat.OpenXml.Features.IContainerDisposableFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose()
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, Boolean validate, Boolean evaluateFormulae)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Json_mapping_completes_for_xlsx_and_all_render_commands(String command, String format) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/MappingIntegrationTests.cs:line 33
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.Json_mapping_completes_for_xlsx_and_all_render_commands(command: "pdf", format: null) [6 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/a5abdfc6438a4d518a33abb4060313a6/template.xlsx'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Strategies.BufferedFileStreamStrategy.Seek(Int64 offset, SeekOrigin origin)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeaderPrepareFor32bitValuesWriting(Boolean pretendStreaming, Span`1 writeBuffer, UInt32 compressedSizeTruncated, UInt32 uncompressedSizeTruncated)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeader(Boolean zip64HeaderUsed)
+   at System.IO.Compression.ZipArchiveEntry.DirectToArchiveWriterStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Compression.ZipArchiveEntry.WriteLocalFileHeaderAndDataIfNeeded(Boolean forceWrite)
+   at System.IO.Compression.ZipArchive.WriteFile()
+   at System.IO.Compression.ZipArchive.Dispose(Boolean disposing)
+   at System.IO.Packaging.ZipPackage.Dispose(Boolean disposing)
+   at System.IO.Packaging.Package.System.IDisposable.Dispose()
+   at System.IO.Packaging.Package.Close()
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.PackageFeatureCollection.DocumentFormat.OpenXml.Features.IContainerDisposableFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose()
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, Boolean validate, Boolean evaluateFormulae)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Json_mapping_completes_for_xlsx_and_all_render_commands(String command, String format) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/MappingIntegrationTests.cs:line 33
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:01.18]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.Json_mapping_completes_for_xlsx_and_all_render_commands(command: "render", format: "svg") [FAIL]
+[xUnit.net 00:00:01.18]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.Json_mapping_completes_for_xlsx_and_all_render_commands(command: "render", format: "png") [FAIL]
+[xUnit.net 00:00:01.18]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.Json_mapping_completes_for_xlsx_and_all_render_commands(command: "svg", format: null) [FAIL]
+[xUnit.net 00:00:01.19]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.Json_mapping_completes_for_xlsx_and_all_render_commands(command: "image", format: null) [FAIL]
+[xUnit.net 00:00:01.19]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.Json_mapping_completes_for_xlsx_and_all_render_commands(command: "render", format: "pdf") [FAIL]
+[xUnit.net 00:00:01.20]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.Mapping_errors_preserve_existing_output_and_reject_input_overwrite(command: "xlsx") [FAIL]
+[xUnit.net 00:00:01.20]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.Mapping_errors_preserve_existing_output_and_reject_input_overwrite(command: "pdf") [FAIL]
+[xUnit.net 00:00:01.21]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.Mapping_errors_preserve_existing_output_and_reject_input_overwrite(command: "render") [FAIL]
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.Json_mapping_completes_for_xlsx_and_all_render_commands(command: "render", format: "svg") [6 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/7caa6b643d744a8cac9aa3cd48b34071/template.xlsx'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Strategies.BufferedFileStreamStrategy.Seek(Int64 offset, SeekOrigin origin)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeaderPrepareFor32bitValuesWriting(Boolean pretendStreaming, Span`1 writeBuffer, UInt32 compressedSizeTruncated, UInt32 uncompressedSizeTruncated)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeader(Boolean zip64HeaderUsed)
+   at System.IO.Compression.ZipArchiveEntry.DirectToArchiveWriterStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Compression.ZipArchiveEntry.WriteLocalFileHeaderAndDataIfNeeded(Boolean forceWrite)
+   at System.IO.Compression.ZipArchive.WriteFile()
+   at System.IO.Compression.ZipArchive.Dispose(Boolean disposing)
+   at System.IO.Packaging.ZipPackage.Dispose(Boolean disposing)
+   at System.IO.Packaging.Package.System.IDisposable.Dispose()
+   at System.IO.Packaging.Package.Close()
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.PackageFeatureCollection.DocumentFormat.OpenXml.Features.IContainerDisposableFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose()
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, Boolean validate, Boolean evaluateFormulae)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Json_mapping_completes_for_xlsx_and_all_render_commands(String command, String format) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/MappingIntegrationTests.cs:line 33
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.Json_mapping_completes_for_xlsx_and_all_render_commands(command: "render", format: "png") [5 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/722d910d6a104168a0d25804366d08b2/template.xlsx'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Strategies.BufferedFileStreamStrategy.Seek(Int64 offset, SeekOrigin origin)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeaderPrepareFor32bitValuesWriting(Boolean pretendStreaming, Span`1 writeBuffer, UInt32 compressedSizeTruncated, UInt32 uncompressedSizeTruncated)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeader(Boolean zip64HeaderUsed)
+   at System.IO.Compression.ZipArchiveEntry.DirectToArchiveWriterStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Compression.ZipArchiveEntry.WriteLocalFileHeaderAndDataIfNeeded(Boolean forceWrite)
+   at System.IO.Compression.ZipArchive.WriteFile()
+   at System.IO.Compression.ZipArchive.Dispose(Boolean disposing)
+   at System.IO.Packaging.ZipPackage.Dispose(Boolean disposing)
+   at System.IO.Packaging.Package.System.IDisposable.Dispose()
+   at System.IO.Packaging.Package.Close()
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.PackageFeatureCollection.DocumentFormat.OpenXml.Features.IContainerDisposableFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose()
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, Boolean validate, Boolean evaluateFormulae)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Json_mapping_completes_for_xlsx_and_all_render_commands(String command, String format) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/MappingIntegrationTests.cs:line 33
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.Json_mapping_completes_for_xlsx_and_all_render_commands(command: "svg", format: null) [5 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/821573778a3e438990f55be006046c60/template.xlsx'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Strategies.BufferedFileStreamStrategy.Seek(Int64 offset, SeekOrigin origin)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeaderPrepareFor32bitValuesWriting(Boolean pretendStreaming, Span`1 writeBuffer, UInt32 compressedSizeTruncated, UInt32 uncompressedSizeTruncated)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeader(Boolean zip64HeaderUsed)
+   at System.IO.Compression.ZipArchiveEntry.DirectToArchiveWriterStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Compression.ZipArchiveEntry.WriteLocalFileHeaderAndDataIfNeeded(Boolean forceWrite)
+   at System.IO.Compression.ZipArchive.WriteFile()
+   at System.IO.Compression.ZipArchive.Dispose(Boolean disposing)
+   at System.IO.Packaging.ZipPackage.Dispose(Boolean disposing)
+   at System.IO.Packaging.Package.System.IDisposable.Dispose()
+   at System.IO.Packaging.Package.Close()
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.PackageFeatureCollection.DocumentFormat.OpenXml.Features.IContainerDisposableFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose()
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, Boolean validate, Boolean evaluateFormulae)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Json_mapping_completes_for_xlsx_and_all_render_commands(String command, String format) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/MappingIntegrationTests.cs:line 33
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.Json_mapping_completes_for_xlsx_and_all_render_commands(command: "image", format: null) [3 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/2e721e29a7e443a4b70829fcc09aa1ca/template.xlsx'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Strategies.BufferedFileStreamStrategy.Seek(Int64 offset, SeekOrigin origin)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeaderPrepareFor32bitValuesWriting(Boolean pretendStreaming, Span`1 writeBuffer, UInt32 compressedSizeTruncated, UInt32 uncompressedSizeTruncated)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeader(Boolean zip64HeaderUsed)
+   at System.IO.Compression.ZipArchiveEntry.DirectToArchiveWriterStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Compression.ZipArchiveEntry.WriteLocalFileHeaderAndDataIfNeeded(Boolean forceWrite)
+   at System.IO.Compression.ZipArchive.WriteFile()
+   at System.IO.Compression.ZipArchive.Dispose(Boolean disposing)
+   at System.IO.Packaging.ZipPackage.Dispose(Boolean disposing)
+   at System.IO.Packaging.Package.System.IDisposable.Dispose()
+   at System.IO.Packaging.Package.Close()
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.PackageFeatureCollection.DocumentFormat.OpenXml.Features.IContainerDisposableFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose()
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, Boolean validate, Boolean evaluateFormulae)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Json_mapping_completes_for_xlsx_and_all_render_commands(String command, String format) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/MappingIntegrationTests.cs:line 33
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.Json_mapping_completes_for_xlsx_and_all_render_commands(command: "render", format: "pdf") [3 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/db241d0f90854bedb2d3dbb480455b33/template.xlsx'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Strategies.BufferedFileStreamStrategy.Seek(Int64 offset, SeekOrigin origin)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeaderPrepareFor32bitValuesWriting(Boolean pretendStreaming, Span`1 writeBuffer, UInt32 compressedSizeTruncated, UInt32 uncompressedSizeTruncated)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeader(Boolean zip64HeaderUsed)
+   at System.IO.Compression.ZipArchiveEntry.DirectToArchiveWriterStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Compression.ZipArchiveEntry.WriteLocalFileHeaderAndDataIfNeeded(Boolean forceWrite)
+   at System.IO.Compression.ZipArchive.WriteFile()
+   at System.IO.Compression.ZipArchive.Dispose(Boolean disposing)
+   at System.IO.Packaging.ZipPackage.Dispose(Boolean disposing)
+   at System.IO.Packaging.Package.System.IDisposable.Dispose()
+   at System.IO.Packaging.Package.Close()
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.PackageFeatureCollection.DocumentFormat.OpenXml.Features.IContainerDisposableFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose()
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, Boolean validate, Boolean evaluateFormulae)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Json_mapping_completes_for_xlsx_and_all_render_commands(String command, String format) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/MappingIntegrationTests.cs:line 33
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.Mapping_errors_preserve_existing_output_and_reject_input_overwrite(command: "xlsx") [5 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/1fa04a29b3994c5d93427a0b7b9684c7/invalid.xlsx'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Strategies.BufferedFileStreamStrategy.Seek(Int64 offset, SeekOrigin origin)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeaderPrepareFor32bitValuesWriting(Boolean pretendStreaming, Span`1 writeBuffer, UInt32 compressedSizeTruncated, UInt32 uncompressedSizeTruncated)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeader(Boolean zip64HeaderUsed)
+   at System.IO.Compression.ZipArchiveEntry.DirectToArchiveWriterStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Compression.ZipArchiveEntry.WriteLocalFileHeaderAndDataIfNeeded(Boolean forceWrite)
+   at System.IO.Compression.ZipArchive.WriteFile()
+   at System.IO.Compression.ZipArchive.Dispose(Boolean disposing)
+   at System.IO.Packaging.ZipPackage.Dispose(Boolean disposing)
+   at System.IO.Packaging.Package.System.IDisposable.Dispose()
+   at System.IO.Packaging.Package.Close()
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.PackageFeatureCollection.DocumentFormat.OpenXml.Features.IContainerDisposableFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose()
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, Boolean validate, Boolean evaluateFormulae)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Mapping_errors_preserve_existing_output_and_reject_input_overwrite(String command) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/MappingIntegrationTests.cs:line 119
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.Mapping_errors_preserve_existing_output_and_reject_input_overwrite(command: "pdf") [3 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/8f706e0570314f4b9d896b980c60720d/invalid.xlsx'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Strategies.BufferedFileStreamStrategy.Seek(Int64 offset, SeekOrigin origin)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeaderPrepareFor32bitValuesWriting(Boolean pretendStreaming, Span`1 writeBuffer, UInt32 compressedSizeTruncated, UInt32 uncompressedSizeTruncated)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeader(Boolean zip64HeaderUsed)
+   at System.IO.Compression.ZipArchiveEntry.DirectToArchiveWriterStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Compression.ZipArchiveEntry.WriteLocalFileHeaderAndDataIfNeeded(Boolean forceWrite)
+   at System.IO.Compression.ZipArchive.WriteFile()
+   at System.IO.Compression.ZipArchive.Dispose(Boolean disposing)
+   at System.IO.Packaging.ZipPackage.Dispose(Boolean disposing)
+   at System.IO.Packaging.Package.System.IDisposable.Dispose()
+   at System.IO.Packaging.Package.Close()
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.PackageFeatureCollection.DocumentFormat.OpenXml.Features.IContainerDisposableFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose()
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, Boolean validate, Boolean evaluateFormulae)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Mapping_errors_preserve_existing_output_and_reject_input_overwrite(String command) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/MappingIntegrationTests.cs:line 119
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.Mapping_errors_preserve_existing_output_and_reject_input_overwrite(command: "render") [4 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/5b7808c109e64a31a3c3b9bcbfc81c30/invalid.xlsx'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Strategies.BufferedFileStreamStrategy.Seek(Int64 offset, SeekOrigin origin)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeaderPrepareFor32bitValuesWriting(Boolean pretendStreaming, Span`1 writeBuffer, UInt32 compressedSizeTruncated, UInt32 uncompressedSizeTruncated)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeader(Boolean zip64HeaderUsed)
+   at System.IO.Compression.ZipArchiveEntry.DirectToArchiveWriterStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Compression.ZipArchiveEntry.WriteLocalFileHeaderAndDataIfNeeded(Boolean forceWrite)
+   at System.IO.Compression.ZipArchive.WriteFile()
+   at System.IO.Compression.ZipArchive.Dispose(Boolean disposing)
+   at System.IO.Packaging.ZipPackage.Dispose(Boolean disposing)
+   at System.IO.Packaging.Package.System.IDisposable.Dispose()
+   at System.IO.Packaging.Package.Close()
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.PackageFeatureCollection.DocumentFormat.OpenXml.Features.IContainerDisposableFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose()
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, Boolean validate, Boolean evaluateFormulae)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Mapping_errors_preserve_existing_output_and_reject_input_overwrite(String command) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/MappingIntegrationTests.cs:line 119
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:02.46]     render コマンドがページごとの形式に出力ディレクトリを使用する [FAIL]
+  Failed render コマンドがページごとの形式に出力ディレクトリを使用する [759 ms]
+  Error Message:
+   Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Error: Conversion failed.
+No space left on device : '/tmp/tmppvvIU4.tmp'
+
+  Stack Trace:
+     at ExcelRenderer.Tool.Tests.ToolIntegrationTests.AssertSuccess(Result result) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/ToolIntegrationTests.cs:line 394
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Render_command_creates_svg_in_output_directory() in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/ToolIntegrationTests.cs:line 138
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:03.16]     render コマンドが RenderAsync 経由で PDF とマニフェストを生成する [FAIL]
+[xUnit.net 00:00:03.17]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.Invoice_page_breaks_follow_nested_two_row_details_without_splitting_them(pageCount: 3) [FAIL]
+[xUnit.net 00:00:03.18]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.Invoice_page_breaks_follow_nested_two_row_details_without_splitting_them(pageCount: 1) [FAIL]
+[xUnit.net 00:00:03.56]     render コマンドの引数検証が失敗した場合、既存の PDF ファイルの内容が変更されない(option: "--min-readable-font-size", value: "6") [FAIL]
+[xUnit.net 00:00:03.56]     render コマンドの引数検証が失敗した場合、既存の PDF ファイルの内容が変更されない(option: "--trim-padding", value: "2") [FAIL]
+[xUnit.net 00:00:03.56]     render コマンドの引数検証が失敗した場合、既存の PDF ファイルの内容が変更されない(option: "--range", value: "B2:A1") [FAIL]
+  Failed render コマンドが RenderAsync 経由で PDF とマニフェストを生成する [692 ms]
+  Error Message:
+   Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Error: Conversion failed.
+No space left on device : '/tmp/tmpSEV2fM.tmp'
+
+  Stack Trace:
+     at ExcelRenderer.Tool.Tests.ToolIntegrationTests.AssertSuccess(Result result) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/ToolIntegrationTests.cs:line 394
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Render_command_creates_pdf_and_manifest() in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/ToolIntegrationTests.cs:line 126
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.Invoice_page_breaks_follow_nested_two_row_details_without_splitting_them(pageCount: 3) [11 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/cc1b4712ecc04dc193ee657780f1aa30/pages.json'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.ThreadPoolValueTaskSource.ExecuteInternal()
+--- End of stack trace from previous location ---
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.ThreadPoolValueTaskSource.GetResult(Int16 token)
+   at System.IO.File.WriteToFileAsync(String path, FileMode mode, ReadOnlyMemory`1 contents, Encoding encoding, CancellationToken cancellationToken)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Invoice_page_breaks_follow_nested_two_row_details_without_splitting_them(Int32 pageCount) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/InvoicePageBreakIntegrationTests.cs:line 26
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.Invoice_page_breaks_follow_nested_two_row_details_without_splitting_them(pageCount: 1) [2 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/22e070ab1dbf475aad9e28219d3f12ef/pages.json'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.ThreadPoolValueTaskSource.ExecuteInternal()
+--- End of stack trace from previous location ---
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.ThreadPoolValueTaskSource.GetResult(Int16 token)
+   at System.IO.File.WriteToFileAsync(String path, FileMode mode, ReadOnlyMemory`1 contents, Encoding encoding, CancellationToken cancellationToken)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Invoice_page_breaks_follow_nested_two_row_details_without_splitting_them(Int32 pageCount) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/InvoicePageBreakIntegrationTests.cs:line 26
+--- End of stack trace from previous location ---
+  Failed render コマンドの引数検証が失敗した場合、既存の PDF ファイルの内容が変更されない(option: "--min-readable-font-size", value: "6") [1 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/f7e2a81f651241a48626c01637f74e11/preserved.pdf'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.File.WriteToFile(String path, FileMode mode, ReadOnlySpan`1 contents, Encoding encoding)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Render_argument_failures_preserve_existing_pdf(String option, String value) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/ToolIntegrationTests.cs:line 311
+--- End of stack trace from previous location ---
+  Failed render コマンドの引数検証が失敗した場合、既存の PDF ファイルの内容が変更されない(option: "--trim-padding", value: "2") [< 1 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/89dde1928b7f43eebb7c0b7403146d1f/preserved.pdf'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.File.WriteToFile(String path, FileMode mode, ReadOnlySpan`1 contents, Encoding encoding)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Render_argument_failures_preserve_existing_pdf(String option, String value) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/ToolIntegrationTests.cs:line 311
+--- End of stack trace from previous location ---
+  Failed render コマンドの引数検証が失敗した場合、既存の PDF ファイルの内容が変更されない(option: "--range", value: "B2:A1") [< 1 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/3b780e9345904356a9a6a60718897dd2/preserved.pdf'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.File.WriteToFile(String path, FileMode mode, ReadOnlySpan`1 contents, Encoding encoding)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Render_argument_failures_preserve_existing_pdf(String option, String value) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/ToolIntegrationTests.cs:line 311
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:03.56]     render コマンドの引数検証が失敗した場合、既存の PDF ファイルの内容が変更されない(option: "--hyperlinks", value: "javascript") [FAIL]
+[xUnit.net 00:00:03.56]     render コマンドの引数検証が失敗した場合、既存の PDF ファイルの内容が変更されない(option: "--max-range-cells", value: "0") [FAIL]
+  Failed render コマンドの引数検証が失敗した場合、既存の PDF ファイルの内容が変更されない(option: "--hyperlinks", value: "javascript") [< 1 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/d5c62fe24292489da988b11764a36da8/preserved.pdf'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.File.WriteToFile(String path, FileMode mode, ReadOnlySpan`1 contents, Encoding encoding)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Render_argument_failures_preserve_existing_pdf(String option, String value) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/ToolIntegrationTests.cs:line 311
+--- End of stack trace from previous location ---
+  Failed render コマンドの引数検証が失敗した場合、既存の PDF ファイルの内容が変更されない(option: "--max-range-cells", value: "0") [< 1 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/2f0045b697ae4d6d8d3d71ae1ab2c141/preserved.pdf'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.File.WriteToFile(String path, FileMode mode, ReadOnlySpan`1 contents, Encoding encoding)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Render_argument_failures_preserve_existing_pdf(String option, String value) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/ToolIntegrationTests.cs:line 311
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:05.71]     svg と render の両コマンドでバッファ上限を指定でき、一時ファイル禁止時の失敗後も退避ファイルが残らない(command: "render") [FAIL]
+[xUnit.net 00:00:06.41]     svg と render の両コマンドでバッファ上限を指定でき、一時ファイル禁止時の失敗後も退避ファイルが残らない(command: "svg") [FAIL]
+[xUnit.net 00:00:06.42]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.Mapping_page_breaks_produce_four_pages_even_with_fit_to_page_template(format: "svg") [FAIL]
+[xUnit.net 00:00:06.42]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.Mapping_page_breaks_produce_four_pages_even_with_fit_to_page_template(format: "png") [FAIL]
+[xUnit.net 00:00:06.43]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.ExplicitOpenXmlMappingAndReaderReachAllCommands(command: "xlsx") [FAIL]
+[xUnit.net 00:00:06.43]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.ExplicitOpenXmlMappingAndReaderReachAllCommands(command: "render") [FAIL]
+[xUnit.net 00:00:06.44]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.ExplicitOpenXmlMappingAndReaderReachAllCommands(command: "image") [FAIL]
+[xUnit.net 00:00:06.44]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.ExplicitOpenXmlMappingAndReaderReachAllCommands(command: "svg") [FAIL]
+[xUnit.net 00:00:06.44]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.ExplicitOpenXmlMappingAndReaderReachAllCommands(command: "pdf") [FAIL]
+  Failed svg と render の両コマンドでバッファ上限を指定でき、一時ファイル禁止時の失敗後も退避ファイルが残らない(command: "render") [730 ms]
+  Error Message:
+   Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Error: Conversion failed.
+No space left on device : '/tmp/tmpI6p4KI.tmp'
+
+  Stack Trace:
+     at ExcelRenderer.Tool.Tests.ToolIntegrationTests.AssertSuccess(Result result) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/ToolIntegrationTests.cs:line 394
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Svg_buffer_options_support_spill_and_no_temp_failure(String command) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/ToolIntegrationTests.cs:line 74
+--- End of stack trace from previous location ---
+  Failed svg と render の両コマンドでバッファ上限を指定でき、一時ファイル禁止時の失敗後も退避ファイルが残らない(command: "svg") [692 ms]
+  Error Message:
+   Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Error: Conversion failed.
+No space left on device : '/tmp/tmpRXDuY2.tmp'
+
+  Stack Trace:
+     at ExcelRenderer.Tool.Tests.ToolIntegrationTests.AssertSuccess(Result result) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/ToolIntegrationTests.cs:line 394
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Svg_buffer_options_support_spill_and_no_temp_failure(String command) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/ToolIntegrationTests.cs:line 74
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.Mapping_page_breaks_produce_four_pages_even_with_fit_to_page_template(format: "svg") [8 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/8135def51808460da1758170cc07b1f4/breaks.xlsx'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Strategies.BufferedFileStreamStrategy.Seek(Int64 offset, SeekOrigin origin)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeaderPrepareFor32bitValuesWriting(Boolean pretendStreaming, Span`1 writeBuffer, UInt32 compressedSizeTruncated, UInt32 uncompressedSizeTruncated)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeader(Boolean zip64HeaderUsed)
+   at System.IO.Compression.ZipArchiveEntry.DirectToArchiveWriterStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Compression.ZipArchiveEntry.WriteLocalFileHeaderAndDataIfNeeded(Boolean forceWrite)
+   at System.IO.Compression.ZipArchive.WriteFile()
+   at System.IO.Compression.ZipArchive.Dispose(Boolean disposing)
+   at System.IO.Packaging.ZipPackage.Dispose(Boolean disposing)
+   at System.IO.Packaging.Package.System.IDisposable.Dispose()
+   at System.IO.Packaging.Package.Close()
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.PackageFeatureCollection.DocumentFormat.OpenXml.Features.IContainerDisposableFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose()
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, Boolean validate, Boolean evaluateFormulae)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Mapping_page_breaks_produce_four_pages_even_with_fit_to_page_template(String format) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/MappingIntegrationTests.cs:line 98
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.Mapping_page_breaks_produce_four_pages_even_with_fit_to_page_template(format: "png") [4 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/80a99fde442349fabd109898af4832d1/breaks.xlsx'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Strategies.BufferedFileStreamStrategy.Seek(Int64 offset, SeekOrigin origin)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeaderPrepareFor32bitValuesWriting(Boolean pretendStreaming, Span`1 writeBuffer, UInt32 compressedSizeTruncated, UInt32 uncompressedSizeTruncated)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeader(Boolean zip64HeaderUsed)
+   at System.IO.Compression.ZipArchiveEntry.DirectToArchiveWriterStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Compression.ZipArchiveEntry.WriteLocalFileHeaderAndDataIfNeeded(Boolean forceWrite)
+   at System.IO.Compression.ZipArchive.WriteFile()
+   at System.IO.Compression.ZipArchive.Dispose(Boolean disposing)
+   at System.IO.Packaging.ZipPackage.Dispose(Boolean disposing)
+   at System.IO.Packaging.Package.System.IDisposable.Dispose()
+   at System.IO.Packaging.Package.Close()
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.PackageFeatureCollection.DocumentFormat.OpenXml.Features.IContainerDisposableFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose()
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, Boolean validate, Boolean evaluateFormulae)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Mapping_page_breaks_produce_four_pages_even_with_fit_to_page_template(String format) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/MappingIntegrationTests.cs:line 98
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.ExplicitOpenXmlMappingAndReaderReachAllCommands(command: "xlsx") [5 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/a936efe1c2b54a608c1bb71230adc9ee/template.xlsx'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Strategies.BufferedFileStreamStrategy.Seek(Int64 offset, SeekOrigin origin)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeaderPrepareFor32bitValuesWriting(Boolean pretendStreaming, Span`1 writeBuffer, UInt32 compressedSizeTruncated, UInt32 uncompressedSizeTruncated)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeader(Boolean zip64HeaderUsed)
+   at System.IO.Compression.ZipArchiveEntry.DirectToArchiveWriterStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Compression.ZipArchiveEntry.WriteLocalFileHeaderAndDataIfNeeded(Boolean forceWrite)
+   at System.IO.Compression.ZipArchive.WriteFile()
+   at System.IO.Compression.ZipArchive.Dispose(Boolean disposing)
+   at System.IO.Packaging.ZipPackage.Dispose(Boolean disposing)
+   at System.IO.Packaging.Package.System.IDisposable.Dispose()
+   at System.IO.Packaging.Package.Close()
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.PackageFeatureCollection.DocumentFormat.OpenXml.Features.IContainerDisposableFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose()
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, Boolean validate, Boolean evaluateFormulae)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.ExplicitOpenXmlMappingAndReaderReachAllCommands(String command) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/BackendIntegrationTests.cs:line 43
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.ExplicitOpenXmlMappingAndReaderReachAllCommands(command: "render") [3 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/4b7e7d79ed934002bd2989bd7343d8ec/template.xlsx'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Strategies.BufferedFileStreamStrategy.Seek(Int64 offset, SeekOrigin origin)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeaderPrepareFor32bitValuesWriting(Boolean pretendStreaming, Span`1 writeBuffer, UInt32 compressedSizeTruncated, UInt32 uncompressedSizeTruncated)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeader(Boolean zip64HeaderUsed)
+   at System.IO.Compression.ZipArchiveEntry.DirectToArchiveWriterStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Compression.ZipArchiveEntry.WriteLocalFileHeaderAndDataIfNeeded(Boolean forceWrite)
+   at System.IO.Compression.ZipArchive.WriteFile()
+   at System.IO.Compression.ZipArchive.Dispose(Boolean disposing)
+   at System.IO.Packaging.ZipPackage.Dispose(Boolean disposing)
+   at System.IO.Packaging.Package.System.IDisposable.Dispose()
+   at System.IO.Packaging.Package.Close()
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.PackageFeatureCollection.DocumentFormat.OpenXml.Features.IContainerDisposableFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose()
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, Boolean validate, Boolean evaluateFormulae)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.ExplicitOpenXmlMappingAndReaderReachAllCommands(String command) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/BackendIntegrationTests.cs:line 43
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.ExplicitOpenXmlMappingAndReaderReachAllCommands(command: "image") [3 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/100fcaea0aea4a87bb04b8e0114b35aa/template.xlsx'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Strategies.BufferedFileStreamStrategy.Seek(Int64 offset, SeekOrigin origin)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeaderPrepareFor32bitValuesWriting(Boolean pretendStreaming, Span`1 writeBuffer, UInt32 compressedSizeTruncated, UInt32 uncompressedSizeTruncated)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeader(Boolean zip64HeaderUsed)
+   at System.IO.Compression.ZipArchiveEntry.DirectToArchiveWriterStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Compression.ZipArchiveEntry.WriteLocalFileHeaderAndDataIfNeeded(Boolean forceWrite)
+   at System.IO.Compression.ZipArchive.WriteFile()
+   at System.IO.Compression.ZipArchive.Dispose(Boolean disposing)
+   at System.IO.Packaging.ZipPackage.Dispose(Boolean disposing)
+   at System.IO.Packaging.Package.System.IDisposable.Dispose()
+   at System.IO.Packaging.Package.Close()
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.PackageFeatureCollection.DocumentFormat.OpenXml.Features.IContainerDisposableFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose()
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, Boolean validate, Boolean evaluateFormulae)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.ExplicitOpenXmlMappingAndReaderReachAllCommands(String command) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/BackendIntegrationTests.cs:line 43
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.ExplicitOpenXmlMappingAndReaderReachAllCommands(command: "svg") [3 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/45e7a418cb694d3bb5fefd720d27784a/template.xlsx'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Strategies.BufferedFileStreamStrategy.Seek(Int64 offset, SeekOrigin origin)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeaderPrepareFor32bitValuesWriting(Boolean pretendStreaming, Span`1 writeBuffer, UInt32 compressedSizeTruncated, UInt32 uncompressedSizeTruncated)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeader(Boolean zip64HeaderUsed)
+   at System.IO.Compression.ZipArchiveEntry.DirectToArchiveWriterStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Compression.ZipArchiveEntry.WriteLocalFileHeaderAndDataIfNeeded(Boolean forceWrite)
+   at System.IO.Compression.ZipArchive.WriteFile()
+   at System.IO.Compression.ZipArchive.Dispose(Boolean disposing)
+   at System.IO.Packaging.ZipPackage.Dispose(Boolean disposing)
+   at System.IO.Packaging.Package.System.IDisposable.Dispose()
+   at System.IO.Packaging.Package.Close()
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.PackageFeatureCollection.DocumentFormat.OpenXml.Features.IContainerDisposableFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose()
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, Boolean validate, Boolean evaluateFormulae)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.ExplicitOpenXmlMappingAndReaderReachAllCommands(String command) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/BackendIntegrationTests.cs:line 43
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.ExplicitOpenXmlMappingAndReaderReachAllCommands(command: "pdf") [3 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/0912d3d3e10a4886ac269b46aa873a62/template.xlsx'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Strategies.BufferedFileStreamStrategy.Seek(Int64 offset, SeekOrigin origin)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeaderPrepareFor32bitValuesWriting(Boolean pretendStreaming, Span`1 writeBuffer, UInt32 compressedSizeTruncated, UInt32 uncompressedSizeTruncated)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeader(Boolean zip64HeaderUsed)
+   at System.IO.Compression.ZipArchiveEntry.DirectToArchiveWriterStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Compression.ZipArchiveEntry.WriteLocalFileHeaderAndDataIfNeeded(Boolean forceWrite)
+   at System.IO.Compression.ZipArchive.WriteFile()
+   at System.IO.Compression.ZipArchive.Dispose(Boolean disposing)
+   at System.IO.Packaging.ZipPackage.Dispose(Boolean disposing)
+   at System.IO.Packaging.Package.System.IDisposable.Dispose()
+   at System.IO.Packaging.Package.Close()
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.PackageFeatureCollection.DocumentFormat.OpenXml.Features.IContainerDisposableFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose()
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, Boolean validate, Boolean evaluateFormulae)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.ExplicitOpenXmlMappingAndReaderReachAllCommands(String command) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/BackendIntegrationTests.cs:line 43
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:06.45]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.ExplicitOpenXmlMappingAndReaderReachAllCommands(command: "md") [FAIL]
+[xUnit.net 00:00:07.10]     md エイリアスが Excel 入力から Markdown ファイルを生成する [FAIL]
+[xUnit.net 00:00:07.11]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.FormulaModeIsValidatedBeforeInputAndOutput(command: "pdf") [FAIL]
+[xUnit.net 00:00:07.11]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.FormulaModeIsValidatedBeforeInputAndOutput(command: "render") [FAIL]
+[xUnit.net 00:00:07.11]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.FormulaModeIsValidatedBeforeInputAndOutput(command: "svg") [FAIL]
+[xUnit.net 00:00:07.11]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.FormulaModeIsValidatedBeforeInputAndOutput(command: "image") [FAIL]
+[xUnit.net 00:00:07.11]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.FormulaModeIsValidatedBeforeInputAndOutput(command: "md") [FAIL]
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.ExplicitOpenXmlMappingAndReaderReachAllCommands(command: "md") [3 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/b84ea8141cab4503b39fab48122c6582/template.xlsx'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Strategies.BufferedFileStreamStrategy.Seek(Int64 offset, SeekOrigin origin)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeaderPrepareFor32bitValuesWriting(Boolean pretendStreaming, Span`1 writeBuffer, UInt32 compressedSizeTruncated, UInt32 uncompressedSizeTruncated)
+   at System.IO.Compression.ZipArchiveEntry.WriteCrcAndSizesInLocalHeader(Boolean zip64HeaderUsed)
+   at System.IO.Compression.ZipArchiveEntry.DirectToArchiveWriterStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Compression.ZipArchiveEntry.WriteLocalFileHeaderAndDataIfNeeded(Boolean forceWrite)
+   at System.IO.Compression.ZipArchive.WriteFile()
+   at System.IO.Compression.ZipArchive.Dispose(Boolean disposing)
+   at System.IO.Packaging.ZipPackage.Dispose(Boolean disposing)
+   at System.IO.Packaging.Package.System.IDisposable.Dispose()
+   at System.IO.Packaging.Package.Close()
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Features.StreamPackageFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.PackageFeatureCollection.DocumentFormat.OpenXml.Features.IContainerDisposableFeature.Dispose()
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose(Boolean disposing)
+   at DocumentFormat.OpenXml.Packaging.OpenXmlPackage.Dispose()
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, Boolean validate, Boolean evaluateFormulae)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.ExplicitOpenXmlMappingAndReaderReachAllCommands(String command) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/BackendIntegrationTests.cs:line 43
+--- End of stack trace from previous location ---
+  Failed md エイリアスが Excel 入力から Markdown ファイルを生成する [656 ms]
+  Error Message:
+   Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Error: Conversion failed.
+No space left on device : '/tmp/tmpdR4U8w.tmp'
+
+  Stack Trace:
+     at ExcelRenderer.Tool.Tests.ToolIntegrationTests.AssertSuccess(Result result) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/ToolIntegrationTests.cs:line 394
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Md_alias_creates_markdown() in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/ToolIntegrationTests.cs:line 114
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.FormulaModeIsValidatedBeforeInputAndOutput(command: "pdf") [2 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/8213e77f71a64bf1adde20792c402970/sentinel'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.File.WriteToFile(String path, FileMode mode, ReadOnlySpan`1 contents, Encoding encoding)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.FormulaModeIsValidatedBeforeInputAndOutput(String command) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/FormulaModeIntegrationTests.cs:line 20
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.FormulaModeIsValidatedBeforeInputAndOutput(command: "render") [< 1 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/965777498ebe4518b7fe7d46cacc2285/sentinel'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.File.WriteToFile(String path, FileMode mode, ReadOnlySpan`1 contents, Encoding encoding)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.FormulaModeIsValidatedBeforeInputAndOutput(String command) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/FormulaModeIntegrationTests.cs:line 20
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.FormulaModeIsValidatedBeforeInputAndOutput(command: "svg") [< 1 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/9da5ebbb4369488184af8976574292dc/sentinel'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.File.WriteToFile(String path, FileMode mode, ReadOnlySpan`1 contents, Encoding encoding)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.FormulaModeIsValidatedBeforeInputAndOutput(String command) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/FormulaModeIntegrationTests.cs:line 20
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.FormulaModeIsValidatedBeforeInputAndOutput(command: "image") [< 1 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/22b9dea138e949d0894328e9ac581576/sentinel'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.File.WriteToFile(String path, FileMode mode, ReadOnlySpan`1 contents, Encoding encoding)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.FormulaModeIsValidatedBeforeInputAndOutput(String command) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/FormulaModeIntegrationTests.cs:line 20
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.FormulaModeIsValidatedBeforeInputAndOutput(command: "md") [< 1 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/d0b4ae82c5b440da86472ff50039ac41/sentinel'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.File.WriteToFile(String path, FileMode mode, ReadOnlySpan`1 contents, Encoding encoding)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.FormulaModeIsValidatedBeforeInputAndOutput(String command) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/FormulaModeIntegrationTests.cs:line 20
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:08.37]     PDF コマンドが Excel 入力から PDF ファイルを生成する [FAIL]
+[xUnit.net 00:00:08.38]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.Invoice_json_mapping_preserves_two_row_details_and_renders_xlsx_png_svg(itemCount: 3) [FAIL]
+[xUnit.net 00:00:08.38]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.Invoice_json_mapping_preserves_two_row_details_and_renders_xlsx_png_svg(itemCount: 1) [FAIL]
+[xUnit.net 00:00:08.38]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.Invoice_json_mapping_preserves_two_row_details_and_renders_xlsx_png_svg(itemCount: 0) [FAIL]
+  Failed PDF コマンドが Excel 入力から PDF ファイルを生成する [672 ms]
+  Error Message:
+   Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Error: Conversion failed.
+No space left on device : '/tmp/tmpMou5Mn.tmp'
+
+  Stack Trace:
+     at ExcelRenderer.Tool.Tests.ToolIntegrationTests.AssertSuccess(Result result) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/ToolIntegrationTests.cs:line 394
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Pdf_command_creates_a_pdf() in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/ToolIntegrationTests.cs:line 38
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.Invoice_json_mapping_preserves_two_row_details_and_renders_xlsx_png_svg(itemCount: 3) [9 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/f18e1cf6d8b84322bcdc76d7d45d624a/data.json'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.ThreadPoolValueTaskSource.ExecuteInternal()
+--- End of stack trace from previous location ---
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.ThreadPoolValueTaskSource.GetResult(Int16 token)
+   at System.IO.File.WriteToFileAsync(String path, FileMode mode, ReadOnlyMemory`1 contents, Encoding encoding, CancellationToken cancellationToken)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Invoice_json_mapping_preserves_two_row_details_and_renders_xlsx_png_svg(Int32 itemCount) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/InvoiceMappingIntegrationTests.cs:line 35
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.Invoice_json_mapping_preserves_two_row_details_and_renders_xlsx_png_svg(itemCount: 1) [1 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/aeae33b3da5b4162a5d79b6335ea0afc/data.json'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.ThreadPoolValueTaskSource.ExecuteInternal()
+--- End of stack trace from previous location ---
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.ThreadPoolValueTaskSource.GetResult(Int16 token)
+   at System.IO.File.WriteToFileAsync(String path, FileMode mode, ReadOnlyMemory`1 contents, Encoding encoding, CancellationToken cancellationToken)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Invoice_json_mapping_preserves_two_row_details_and_renders_xlsx_png_svg(Int32 itemCount) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/InvoiceMappingIntegrationTests.cs:line 35
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.Invoice_json_mapping_preserves_two_row_details_and_renders_xlsx_png_svg(itemCount: 0) [1 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/c8df35a571b84ae6b629fde7c31468a2/data.json'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.ThreadPoolValueTaskSource.ExecuteInternal()
+--- End of stack trace from previous location ---
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.ThreadPoolValueTaskSource.GetResult(Int16 token)
+   at System.IO.File.WriteToFileAsync(String path, FileMode mode, ReadOnlyMemory`1 contents, Encoding encoding, CancellationToken cancellationToken)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Invoice_json_mapping_preserves_two_row_details_and_renders_xlsx_png_svg(Int32 itemCount) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/InvoiceMappingIntegrationTests.cs:line 35
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:09.07]     存在しないシート名を指定した場合、スタックトレースを出さずエラー終了する [FAIL]
+[xUnit.net 00:00:09.07]     render コマンドで重複範囲または入力と同じ出力パスを指定すると、書き込み前に拒否される [FAIL]
+[xUnit.net 00:00:09.83]     image コマンドが Excel 入力からページ単位の PNG ファイルを生成する [FAIL]
+  Failed 存在しないシート名を指定した場合、スタックトレースを出さずエラー終了する [690 ms]
+  Error Message:
+   Assert.Contains() Failure: Sub-string not found
+String:    "Fontconfig error: No writable cache direc"···
+Not found: "Worksheet was not found"
+  Stack Trace:
+     at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Unknown_sheet_fails_without_a_stack_trace() in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/ToolIntegrationTests.cs:line 281
+--- End of stack trace from previous location ---
+  Failed render コマンドで重複範囲または入力と同じ出力パスを指定すると、書き込み前に拒否される [1 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/ExcelRenderer.Tool.Tests/7ce5c74fd1024369b5f5d38de27b9f99/preserved.pdf'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.File.WriteToFile(String path, FileMode mode, ReadOnlySpan`1 contents, Encoding encoding)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Render_duplicate_ranges_and_same_input_output_are_rejected_before_write() in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/ToolIntegrationTests.cs:line 324
+--- End of stack trace from previous location ---
+  Failed image コマンドが Excel 入力からページ単位の PNG ファイルを生成する [752 ms]
+  Error Message:
+   Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Error: Conversion failed.
+No space left on device : '/tmp/tmpZ76dvV.tmp'
+
+  Stack Trace:
+     at ExcelRenderer.Tool.Tests.ToolIntegrationTests.AssertSuccess(Result result) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/ToolIntegrationTests.cs:line 394
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Image_command_creates_png_files() in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/ToolIntegrationTests.cs:line 51
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:10.59]     svg コマンドが Excel 入力からページ単位の SVG ファイルを生成する [FAIL]
+[xUnit.net 00:00:10.59]     繰り返した font-file が指定順を維持したまますべて渡される [FAIL]
+[xUnit.net 00:00:10.59]     render コマンドが TTE 拡張子の有効な外部フォントを受け付けます [FAIL]
+[xUnit.net 00:00:11.26]     連続 SVG 出力がシートごとに 1 ファイルを生成する [FAIL]
+[xUnit.net 00:00:11.28]     ExcelRenderer.Tool.Tests.ToolIntegrationTests.Invoice_clr_mapping_keeps_native_dates_times_and_decimals_for_rendering [FAIL]
+  Failed svg コマンドが Excel 入力からページ単位の SVG ファイルを生成する [763 ms]
+  Error Message:
+   Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Error: Conversion failed.
+No space left on device : '/tmp/tmp0VbKQh.tmp'
+
+  Stack Trace:
+     at ExcelRenderer.Tool.Tests.ToolIntegrationTests.AssertSuccess(Result result) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/ToolIntegrationTests.cs:line 394
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Svg_command_creates_svg_files() in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/ToolIntegrationTests.cs:line 91
+--- End of stack trace from previous location ---
+  Failed 繰り返した font-file が指定順を維持したまますべて渡される [1 ms]
+  Error Message:
+   System.IO.IOException : No space left on device
+  Stack Trace:
+     at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at System.IO.FileSystem.CopyFile(String sourceFullPath, String destFullPath, Boolean overwrite)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Pdf_command_preserves_multiple_font_files_in_command_line_order() in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/ToolIntegrationTests.cs:line 200
+--- End of stack trace from previous location ---
+  Failed render コマンドが TTE 拡張子の有効な外部フォントを受け付けます [< 1 ms]
+  Error Message:
+   System.IO.IOException : No space left on device
+  Stack Trace:
+     at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at System.IO.FileSystem.CopyFile(String sourceFullPath, String destFullPath, Boolean overwrite)
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Render_command_accepts_explicit_tte_font_file() in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/ToolIntegrationTests.cs:line 149
+--- End of stack trace from previous location ---
+  Failed 連続 SVG 出力がシートごとに 1 ファイルを生成する [663 ms]
+  Error Message:
+   Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Error: Conversion failed.
+No space left on device : '/tmp/tmpueEdRI.tmp'
+
+  Stack Trace:
+     at ExcelRenderer.Tool.Tests.ToolIntegrationTests.AssertSuccess(Result result) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/ToolIntegrationTests.cs:line 394
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Render_command_creates_continuous_svg() in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/ToolIntegrationTests.cs:line 235
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tool.Tests.ToolIntegrationTests.Invoice_clr_mapping_keeps_native_dates_times_and_decimals_for_rendering [18 ms]
+  Error Message:
+   System.IO.IOException : No space left on device : '/tmp/tmpJFkaYL.tmp'
+  Stack Trace:
+     at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at System.IO.Stream.CopyTo(Stream destination, Int32 bufferSize)
+   at DocumentFormat.OpenXml.Packaging.WriteableStreamExtensions.EnableWriteableStream(IFeatureCollection features)
+   at DocumentFormat.OpenXml.Packaging.PackageUriHandlingExtensions.EnableUriHandling(IFeatureCollection features)
+   at DocumentFormat.OpenXml.Packaging.PackageUriHandlingExtensions.EnableUriHandling(OpenXmlPackage package)
+   at DocumentFormat.OpenXml.Builder.OpenXmlPackageBuilderExtensions.<>c__10`1.<UseDefaultBehaviorAndLockBuilder>b__10_0(TPackage package, PackageDelegate`1 next)
+   at DocumentFormat.OpenXml.Builder.OpenXmlPackageBuilderExtensions.<>c__DisplayClass8_1`1.<Use>b__1(TPackage package)
+   at DocumentFormat.OpenXml.Builder.OpenXmlPackageBuilder`1.Factory.Create(IPackageInitializer initializer)
+   at DocumentFormat.OpenXml.Builder.OpenXmlPackageBuilderExtensions.Open[TPackage](IPackageFactory`1 builder, Stream stream, PackageOpenMode mode)
+   at DocumentFormat.OpenXml.Builder.OpenXmlPackageBuilderExtensions.Open[TPackage](IPackageFactory`1 builder, Stream stream, Boolean isEditing)
+   at DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Open(Stream stream, Boolean isEditable, OpenSettings openSettings)
+   at DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Open(Stream stream, Boolean isEditable)
+   at ExcelRenderer.OpenXml.WorkbookFormulaInspection.Find(Stream input, CancellationToken token) in /workspace/ExcelRenderer/src/ExcelRenderer.OpenXml/WorkbookFormulaInspection.cs:line 27
+   at ExcelRenderer.Mapping.ExcelTemplateMapper.Map(Stream template, Stream output, Object data, MappingOptions options, CancellationToken cancellationToken) in /workspace/ExcelRenderer/src/ExcelRenderer.Mapping/ExcelTemplateMapper.cs:line 46
+   at ExcelRenderer.Mapping.ExcelTemplateMapper.Map(String templatePath, String outputPath, Object data, MappingOptions options, CancellationToken cancellationToken) in /workspace/ExcelRenderer/src/ExcelRenderer.Mapping/ExcelTemplateMapper.cs:line 158
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Invoice_clr_mapping_keeps_native_dates_times_and_decimals_for_rendering() in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/InvoiceMappingIntegrationTests.cs:line 127
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:11.97]     render コマンドに範囲・トリミング・リンク設定を指定して事前検証を行い、PDF が生成される [FAIL]
+  Failed render コマンドに範囲・トリミング・リンク設定を指定して事前検証を行い、PDF が生成される [688 ms]
+  Error Message:
+   Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Error: Conversion failed.
+No space left on device : '/tmp/tmpZ6sSur.tmp'
+
+  Stack Trace:
+     at ExcelRenderer.Tool.Tests.ToolIntegrationTests.AssertSuccess(Result result) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/ToolIntegrationTests.cs:line 394
+   at ExcelRenderer.Tool.Tests.ToolIntegrationTests.Render_range_trim_and_hyperlink_options_create_a_pdf_after_preflight() in /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/ToolIntegrationTests.cs:line 293
+--- End of stack trace from previous location ---
+
+Failed!  - Failed:    54, Passed:    19, Skipped:     0, Total:    73, Duration: 11 s - ExcelRenderer.Tool.Tests.dll (net10.0)

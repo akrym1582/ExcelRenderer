@@ -1,0 +1,20 @@
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Core.Tests/bin/Debug/net10.0/ExcelRenderer.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:    80, Skipped:     0, Total:    80, Duration: 5 s - ExcelRenderer.Core.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Mapping.Tests/bin/Debug/net10.0/ExcelRenderer.Mapping.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:    86, Skipped:     0, Total:    86, Duration: 2 s - ExcelRenderer.Mapping.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.OpenXml.Tests/bin/Debug/net10.0/ExcelRenderer.OpenXml.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:   154, Skipped:     0, Total:   154, Duration: 727 ms - ExcelRenderer.OpenXml.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:   524, Skipped:     0, Total:   524, Duration: 1 m 30 s - ExcelRenderer.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/bin/Debug/net10.0/ExcelRenderer.Tool.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:    73, Skipped:     0, Total:    73, Duration: 2 m 33 s - ExcelRenderer.Tool.Tests.dll (net10.0)

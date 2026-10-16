@@ -92,7 +92,7 @@ part/relationship identity, content type and anchor metadata without loading byt
 alive. Transfer required data before disposing the reader. Shared part URIs identify
 reused image bytes independently of names and placements. Shape/link interpretation
 and rendering remain product responsibilities. Low-level `FormatCell` still leaves
-uncached HYPERLINK text blank; the product adapter restores supported literals. The
+uncached HYPERLINK text blank; product adapters also use saved results only. The
 separate writer accepts typed formula-free plans, never general formula evaluation.
 
 ## Product integration

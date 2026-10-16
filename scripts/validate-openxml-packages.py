@@ -67,13 +67,13 @@ Console.WriteLine("Standalone Mapping passed");'''),
 using var output = new MemoryStream();
 var result = await ExcelRenderer.Core.ExcelConverter.ConvertAsync(input, output, new() {
     FontFilePath = args[1],
-    ReadOptions = new() { Backend = ExcelRenderer.Core.ReaderBackend.OpenXml, FormulaDisplayMode = ExcelRenderer.Core.FormulaDisplayMode.CachedValue }
+    ReadOptions = new() { Backend = ExcelRenderer.Core.ReaderBackend.OpenXml }
 });
 if (result.PageCount < 1 || output.Length == 0) throw new Exception("Core failed");
 input.Position = 0; output.SetLength(0);
 await ExcelRenderer.ExcelConverter.RenderAsync(input, new ExcelRenderer.Rendering.RenderRequest {
     OutputFormat = ExcelRenderer.Rendering.OutputFormat.Markdown,
-    ReadOptions = new() { Backend = ExcelRenderer.Excel.ReaderBackend.OpenXml, FormulaDisplayMode = ExcelRenderer.Excel.FormulaDisplayMode.CachedValue },
+    ReadOptions = new() { Backend = ExcelRenderer.Excel.ReaderBackend.OpenXml },
     FontOptions = new() { FontFiles = new[] { args[1] }, AllowSystemFonts = false }
 }, new ExcelRenderer.Rendering.SingleStreamOutputSink(output));
 if (output.Length == 0) throw new Exception("Main failed");
@@ -94,6 +94,6 @@ if (tool / 'excelrenderer').exists():
 (work / 'tool.md').unlink(missing_ok=True)
 run('dotnet', 'tool', 'install', 'ExcelRenderer.Tool', '--version', '1.8.0', '--tool-path', tool, '--configfile', config)
 run(tool / 'excelrenderer', '--help')
-run(tool / 'excelrenderer', 'md', fixture, '--reader-backend', 'openxml', '--formula-mode', 'cached', '-o', work / 'tool.md')
+run(tool / 'excelrenderer', 'md', fixture, '--reader-backend', 'openxml', '-o', work / 'tool.md')
 assert (work / 'tool.md').stat().st_size > 0
 print('All package consumers passed', flush=True)

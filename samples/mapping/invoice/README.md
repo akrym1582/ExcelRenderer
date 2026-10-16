@@ -49,7 +49,7 @@ It is not required to run the .NET tests or render this sample.
 
 JSON ISO date strings remain text unless `date()` is explicitly applied. CLR dates and
 elapsed time remain native Excel types; `[h]:mm:ss` displays times longer than 24 hours.
-`format()` produces text, while Excel number formats preserve numeric cells for formulas.
+`format()` produces text, while Excel number formats preserve numeric cell values.
 Null remarks leave a blank merged remarks area. `00123` remains a string, retaining its zeros.
 
 JSON の日付文字列は `date()` がないセルでは文字列のままです。CLR の日付と経過時間は

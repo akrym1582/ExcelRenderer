@@ -76,7 +76,10 @@ Markdown export consumes `ReportDocument` through a separate path.
 
 ## 1. Reading the Excel file
 
-`ExcelReader` reads a workbook with ClosedXML and builds the library's own model, `ReportDocument`.
+`ExcelReader` reads a workbook through the selected ClosedXml (default), OpenXml
+or Auto backend and builds the library's own model, `ReportDocument`. Both readers
+use only saved formula results; missing results stay empty with diagnostics.
+See [engine selection](openxml-integration.md) for capability checks and options.
 
 ```text
 Excel Workbook
@@ -298,6 +301,13 @@ Text measurement is isolated behind `ITextMeasurer`. Implementations can target 
 - Keep PDFsharp-specific code in `PdfSharpRenderer` and the `ExcelRenderer.PdfSharp` namespace.
 
 ## Source layout
+
+The tree below shows the main library's public surface and product adapters.
+Shared reading, layout, drawing and PDF algorithms live in `ExcelRenderer.Core`;
+low-level XLSX input, source records and typed edits live in `ExcelRenderer.OpenXml`.
+`ExcelRenderer.Mapping` owns template syntax, data evaluation and expansion plans.
+See [Core architecture](core-architecture.md) and [source ownership](core-source-map.md)
+for the implementation boundaries.
 
 ```text
 src/ExcelRenderer

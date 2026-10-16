@@ -3,7 +3,9 @@
 [English](mapping.md) | 日本語
 
 `ExcelRenderer.Mapping` は独立した .NET Standard 2.1 のパッケージです。
-ClosedXML 0.105.1 を使い、C# オブジェクトや JSON の値を XLSX テンプレートへ設定します。
+C# オブジェクトや JSON の値を、数式のない XLSX テンプレートへ設定します。
+backend は ClosedXml（既定、ClosedXML 0.105.1 を使用）・OpenXml・Auto から選択できます。
+詳細は[エンジン選択](openxml-integration.ja.md)を参照してください。
 描画ライブラリ、フォント、PDFsharp、SkiaSharp には依存しません。
 CLI はマッピングと描画のライブラリを組み合わせて使用します。
 
@@ -481,7 +483,7 @@ XLSX には印刷・印刷プレビュー用の手動改ページとして保存
 
 ## Excel 機能と制約
 
-値・書式だけの領域は最終行配置を計算し、領域ごとにまとめて行数を変更します。
+ClosedXml backend では、値・書式だけの領域の最終行配置を計算し、領域ごとにまとめて行数を変更します。
 参照やその他の Excel オブジェクトがある場合は、既存の動作を維持するため
 ClosedXML の行挿入・削除と範囲コピーを使います。
 セルの書式、行高、非表示状態、アウトラインレベル、通常の結合セル、
@@ -490,10 +492,13 @@ ClosedXML の行挿入・削除と範囲コピーを使います。
 参照は `#REF!` になることがあり、繰り返し領域と重なる定義名は非対応です。
 静的な印刷範囲・印刷タイトルは継続します。
 
+OpenXml backend は一時出力の XML part に型付き編集を適用します。対応する構造、Auto の選択と
+出力保証は[エンジン選択](openxml-integration.ja.md)を参照してください。
+
 全 Mapping backend で、ブック内の全セル数式、table の calculated/totals 式・集計関数、計算定義名を、
 backend 選択・データ評価・出力の前に `MappingFormulaNotSupported` で拒否します。
-外側・非表示シートの数式も含みます。これは動作互換性の変更です。金額・税・合計は
-C# / JSON の呼び出し元で計算し、値のプレースホルダーへ置き換えてください。
+繰り返し領域の外側・非表示シートの数式も含みます。金額・税・合計は呼び出し元で計算し、
+確定値を C# オブジェクトや JSON から値のプレースホルダーへ渡してください。
 静的定義名は定数と有限 A1 参照の union に限定し、関数・演算・動的／外部／3D 参照・
 別名・未知文法は拒否します。未知の workbook／worksheet／table extension も、値の数式が
 ないと確認できない場合は拒否します。条件付き書式・入力規則の式は既存 ClosedXML 経路の
@@ -511,7 +516,7 @@ Mapping の `**` 構文・format/date は Excel 数式とは別の処理とし�
 
 `MappingException` の `SheetName`・`CellAddress`・`Expression` と任意の安定した `ReasonCode` は、
 元テンプレートの位置・原因を示します。数式拒否には元セル・定義名・table 名を可能な範囲で
-含め、呼び出し元計算と値プレースホルダーへの移行を案内します。
+含めます。
 
 ## Excel を使わずにサンプルテンプレートを作成する
 

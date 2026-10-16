@@ -1,9 +1,11 @@
 # Open XML エンジンの選択
 
-Reader・Mapping の既定は従来どおり ClosedXML です。
-`ExcelRenderer.OpenXml` を pack 可能な共通パッケージとし、Core・本体・Mapping
-が参照します。OpenXml 自体は描画・Mapping 言語・フォント・ClosedXML を参照しません。
-NuGet 公開は実装・ローカル pack と別の作業です。
+[English](openxml-integration.md) | 日本語
+
+Reader・Mapping の既定 backend は ClosedXml です。OpenXml を明示するか、
+Auto で対応機能に基づいて選択できます。`ExcelRenderer.OpenXml` は Core・本体・Mapping
+が使う共通の Reader・Writer・入力処理を提供します。描画・Mapping 言語・フォント・
+ClosedXML は参照しません。
 
 ```csharp
 var document = new ExcelRenderer.Excel.ExcelReader().Read(input,
@@ -29,7 +31,7 @@ Core は `PdfExportOptions.ReadOptions` に同等の
 | Reader 指定 | 数式指定 | 動作 |
 | --- | --- | --- |
 | ClosedXml（既定） | CachedValue（既定） | 元 XML の保存結果を既存 formatter で書式化 |
-| OpenXml | CachedValue | 新 Reader。診断は出力選択後に集約 |
+| OpenXml | CachedValue | ストリーミング Reader。診断は出力選択後に集約 |
 | Auto | CachedValue | 表示能力で選択。保存結果のみを使用 |
 | 全エンジン | Legacy / Recalculate | 入力処理・出力開始前に拒否 |
 
@@ -48,8 +50,8 @@ Markdown の `VisualCell` にも伝播します。描画用の式展開はせず
 
 Auto の表示能力検査にはシート、明示範囲、hidden を反映します。ページ指定では
 通常の layout と source region による preflight を行い、対象外の警告だけで
-旧経路へ切り替えません。この場合は候補モデルの構築とフォント gate 内の
-レイアウト検査が必要です。旧 Reader を選ぶ場合は候補を解放してからロードします。
+ClosedXml 経路へ切り替えません。この場合は候補モデルの構築とフォント gate 内の
+レイアウト検査が必要です。ClosedXml Reader を選ぶ場合は候補を解放してからロードします。
 この追加処理も Auto のコストに含まれます。入力破損・上限超過・キャンセル・
 実行時エラーを捕まえて別エンジンで再試行しません。
 
@@ -78,20 +80,20 @@ calculated/totals 式・集計関数、計算を伴う定義名を拒否しま�
 未知の workbook・worksheet・table extension は、値の数式がないと確認できないため
 保守的に拒否します。
 
-明細金額・税・合計は呼び出し元で計算し、テンプレートを `**` の値プレースホルダーへ
-置き換えてください。静的定義名は文字列・数値・真偽値の定数、既知シートの有限 A1 参照の
+明細金額・税・合計は呼び出し元で計算し、`**` の値プレースホルダーへ
+渡してください。静的定義名は文字列・数値・真偽値の定数、既知シートの有限 A1 参照の
 union（全行・全列・引用シート名を含む）だけを許容します。関数・演算・動的参照・外部参照・
 3D 参照・名前の別名・未知文法は拒否します。繰り返し領域と重なる定義名の既存制限は維持し、
 静的な印刷範囲・印刷タイトルは継続します。条件付き書式・入力規則の式は既存 ClosedXML の
 構造調整範囲で保持しますが、評価や条件による描画は追加しません。
 
 合格後の能力検査では、静的な一般定義名、条件付き書式、入力規則、table/pivot/filter/
-sparkline、描画・コメント・リンク等を構造上の理由として Auto が旧経路を選べます。
+sparkline、描画・コメント・リンク等を構造上の理由として Auto がClosedXml 経路を選べます。
 数式を許可する fallback はありません。OpenXml Writer の対応範囲は拡張しません。
 保存時評価を無効にし、元の `calcPr`（存在しない場合も含む）を保持します。
 再計算要求は新規に追加しません。
 
-Auto は印刷範囲と展開領域が交差すると `PrintAreaExpansionCompatibility` で旧経路を
+Auto は印刷範囲と展開領域が交差すると `PrintAreaExpansionCompatibility` でClosedXml 経路を
 選びます。明示 OpenXml の印刷範囲は全出力 occurrence を含むように拡張し、全行削除の
 area は除去します。繰り返し・削除に交差する行タイトルは対象外です。固定タイトル、
 一意に移動する行タイトル、列タイトルは保持します。
@@ -116,11 +118,12 @@ excelrenderer render template.xlsx --data data.json --format svg -o output --map
 ```
 
 pdf / image / svg / markdown・md / render に `--reader-backend`、これらと xlsx に
-`--mapping-backend` を追加しました。値は `closedxml|openxml|auto`。
+`--mapping-backend` を指定できます。値は `closedxml|openxml|auto`。
 `--mapping-backend` の明示指定には `--data` が必要です。`--verbose` の選択理由は stderr
-へ表示します。`--formula-mode` の既定は `cached` です。全 backend で明示 `legacy` /
-`recalculate` を移行方法付きで拒否し、暗黙の読み替えはしません。
-既定数式モードの変更、Legacy 拒否、Mapping 数式禁止は動作互換性に影響します。
+へ表示します。`--formula-mode` は `cached` のみ対応し、既定値も `cached` です。
+明示 `legacy` / `recalculate` は全 backend で入力処理・出力開始前に拒否します。
+
+## 所有権と検証
 
 汎用入力検査・spool は OpenXml/Input、描画モデルの共通処理・結合・layout は Core、
 製品固有の run・図形・リンクは本体、テンプレート言語と最終行配置は Mapping が所有します。
@@ -129,11 +132,11 @@ Writer は型付き編集計画だけを受け取り、spill 可能な元行ス�
 で最大64行、元 UTF-8 合計256 KiB、1行64 KiBまで保持します。これは元 XML サイズの
 制限であり、正確な heap サイズではありません。1回だけ使う行と大きい行は保持せず、各出力行を deep copy
 して編集するため、値や座標が次の occurrence へ漏れません。schema 検証と未変更 part の hash は
-別途テストします。実測・比較結果は接続検証記録を参照してください。先行 Reader 単体の
-過去の検証結果を接続済みの証拠にはしません。
+別途テストします。コマンド、割当の実測値、対象コミットごとの結果は
+[検証記録](openxml-integration-validation.md)を参照してください。
 
 文字列中の `_xHHHH_` というリテラルと XML 1.0 で直接書けない制御文字は、
 SpreadsheetML の escape 規則で保存し、新 Reader で元の文字列へ復元します。
 ClosedXML 0.105.1 は plain inlineStr の escape を復号しないため、これらの特殊値を
 同ライブラリだけで再読込すると escape 表記が残ります。通常文字列と先頭アポストロフィ
-（quotePrefix）は旧 Mapping と一致させています。
+（quotePrefix）は ClosedXml backend と一致します。

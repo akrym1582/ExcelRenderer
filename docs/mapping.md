@@ -3,7 +3,9 @@
 English | [日本語](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/mapping.ja.md)
 
 `ExcelRenderer.Mapping` is a standalone .NET Standard 2.1 package. It maps CLR
-objects or JSON into an XLSX template using ClosedXML 0.105.1. It does not depend
+objects or JSON into a formula-free XLSX template. Backends are ClosedXml
+(default, using ClosedXML 0.105.1), OpenXml and Auto; see
+[backend selection](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/openxml-integration.md). It does not depend
 on the renderer, fonts, PDFsharp or SkiaSharp. The CLI references both the mapping
 and rendering packages.
 
@@ -490,20 +492,24 @@ because of this directive.
 
 ## Excel behavior and limitations
 
-Value/style-only regions use a final-row placement plan with one bulk resize per
-region. Templates with references or other Excel objects retain ClosedXML row
+On the ClosedXml backend, value/style-only regions use a final-row placement plan
+with one bulk resize per region. Templates with references or other Excel objects retain ClosedXML row
 insertion/deletion and range copying to preserve their existing behavior. Expansion
 preserves cell styles, row height, hidden state, outline levels, ordinary
 merged ranges, copied conditional formatting and data validation. Static defined names and print areas follow ClosedXML row-operation semantics.
 References to removed marker/empty-array rows can become `#REF!`; names overlapping
 repeat regions remain unsupported. Static print areas/titles remain supported.
 
+The OpenXml backend applies typed edits to staged XML parts. Its supported structures,
+Auto selection and output guarantees are described in
+[engine selection](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/openxml-integration.md).
+
 All Mapping backends reject cell formulas anywhere in the workbook, table
 calculated/totals formulas, non-none totals functions and calculated defined names before backend selection,
 data evaluation or output. The reason code is `MappingFormulaNotSupported`.
-Calculate amounts, tax and totals in C#/JSON and replace formulas with value
-placeholders, including formulas outside repeats and on hidden sheets. This is a
-compatibility change. Static names accept only literal constants and finite A1
+This includes formulas outside repeats and on hidden sheets. Calculate amounts,
+tax and totals in the caller and supply the resulting values through C# objects
+or JSON and value placeholders. Static names accept only literal constants and finite A1
 reference unions; functions, arithmetic, dynamic/external/3D references, aliases and
 unknown grammar are rejected. Unknown workbook/worksheet/table extension payloads
 are rejected when the absence of value formulas cannot be established. Conditional
@@ -523,7 +529,7 @@ are separate from Excel formulas and remain supported.
 
 `MappingException` exposes `SheetName`, `CellAddress`, `Expression` and optional
 stable `ReasonCode`, referring to the original template. Formula failures identify
-the original cell, defined name or table when available and describe migration.
+the original cell, defined name or table when available.
 
 ## Create the example template without Excel
 

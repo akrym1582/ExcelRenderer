@@ -61,10 +61,10 @@ DrawCommandGeneratorPass
     └─ DrawImageCommand
     │
     ▼
-PdfSharpRenderer / PngRenderer
+PdfSharpRenderer / PngRenderer / SvgRenderer
     │
     ▼
-PDF / PNG
+PDF / PNG / SVG
 ```
 
 処理は大きく次の 4 段階に分かれています。
@@ -72,11 +72,16 @@ PDF / PNG
 1. Excel ファイルの読み込み
 2. レイアウト計算
 3. 描画コマンドの生成
-4. PDF または PNG への描画
+4. PDF・PNG・SVG への描画
+
+Markdown は `ReportDocument` を別経路で読み取って出力します。
 
 ## 1. Excel ファイルの読み込み
 
-`ExcelReader` が ClosedXML を使用して Excel ワークブックを読み込み、ライブラリ独自のモデルである `ReportDocument` を生成します。
+`ExcelReader` が ClosedXml（既定）・OpenXml・Auto の選択に従って Excel ワークブックを読み込み、
+ライブラリ独自のモデルである `ReportDocument` を生成します。両 Reader とも数式は保存結果だけを
+使い、結果がなければ空表示と診断を返します。能力検査とオプションは
+[エンジン選択](openxml-integration.ja.md)を参照してください。
 
 ```text
 Excel Workbook
@@ -95,7 +100,8 @@ ReportDocument
 
 `ReportDocument` は複数の `ReportSheet` を保持します。この段階では Excel から取得した情報を保持しますが、PDF 上の具体的な座標やページ番号はまだ決定しません。
 
-読み込み処理とレイアウト処理を分離しているため、将来的には ClosedXML 以外の入力元を追加することも可能です。同じ `ReportDocument` を生成できれば、CSV、JSON、データベース、独自帳票定義、他の Excel 読み込みライブラリなどにも対応できます。
+読み込み処理とレイアウト処理は分離しています。Reader は共通モデルを生成し、
+レイアウト以降は選択した XLSX backend に依存しません。
 
 ## 2. レイアウト計算
 
@@ -314,6 +320,11 @@ DrawCommand
 - PDFsharp 固有の処理は `PdfSharpRenderer` や `ExcelRenderer.PdfSharp` 名前空間内に閉じ込めます。
 
 ## ソースコード構成
+
+以下は本体の公開 API と製品固有 adapter の構成です。共通の読取・layout・描画・PDF 処理は
+`ExcelRenderer.Core`、低レベル XLSX 入力・元データ・型付き編集は `ExcelRenderer.OpenXml`、
+テンプレート構文・データ評価・展開計画は `ExcelRenderer.Mapping` が所有します。
+実装の境界は [Core の構成](core-architecture.ja.md)と[所有者表](core-source-map.md)を参照してください。
 
 ```text
 src/ExcelRenderer

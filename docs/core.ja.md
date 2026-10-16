@@ -1,8 +1,10 @@
 # ExcelRenderer Core
 
-XLSXからPDFだけを生成する独立したソースプロジェクトです。`netstandard2.1`で、.NET 8/10からProjectReferenceできます。NuGetパッケージ、CLI、フォント入りDLLは作成しません。
+[English](core.md) | 日本語
 
-公開型名はオリジナル版と同じ `ExcelConverter`、`PdfExportOptions`、`WorkbookInputOptions`、`ConversionResult`、`ConversionDiagnostic` です。名前空間は `ExcelRenderer.Core` で、設定や結果のメンバーはCore版の対応範囲に合わせています。従来の `Core` 接頭辞付きの型名を使用している呼び出し側は、これらの名前へ変更してください。
+XLSXからPDFだけを生成する独立したソースプロジェクトです。`netstandard2.1`で、.NET 8/10からProjectReferenceできます。Core単独のNuGetパッケージ、CLI、フォント入りDLLは作成しません。本体パッケージには同じbuildのCore DLL/XMLを同梱します。
+
+公開型には `ExcelConverter`、`PdfExportOptions`、`WorkbookInputOptions`、`ConversionResult`、`ConversionDiagnostic` があります。名前空間は `ExcelRenderer.Core` で、設定や結果のメンバーは以下に示すCore版の対応範囲に合わせています。
 
 ```xml
 <ItemGroup>
@@ -35,7 +37,7 @@ nullのSheetNameは非表示状態でも追加フィルターせず、ブック�
 
 画像は元画像全体を配置枠へ伸縮し、位置・サイズ・Z順を維持します。開始点が所属する印刷領域のページにだけ出力し、はみ出しはPDFページ境界で切れます。開始点が印刷範囲外なら省略します。後続ページへの複製・分割、繰返し行列由来の画像複製、crop・回転・反転を行いません。同じ開始点を含む複数印刷範囲では領域ごとに印刷します。
 
-図形・吹き出し・図形内文字・クリック可能なPDFリンクは生成しません。リンク付きセルの表示文字とHYPERLINK式のCachedValueは保持します。一般セルは既存と同じGetFormattedString方針で、数式エンジンは追加せず、Excel再計算との同一結果は保証しません。仕様上無視する図形や画像加工ごとの大量警告は作りません。画像decode失敗などの非致命的な診断はresult.Diagnosticsで取得できます。
+図形・吹き出し・図形内文字・クリック可能なPDFリンクは生成しません。リンク付きセルの表示文字を保持し、HYPERLINKを含む数式は元XMLの型付き保存結果だけを表示します。ClosedXml経路では数式のないscratch cellで書式化します。保存結果がなければ空表示と診断を返し、friendly textでは補いません。数式モードの既定はCachedValueで、Legacy/Recalculateは入力処理前に拒否します。通常セルは通常の書式処理に従います。仕様上無視する図形や画像加工ごとの大量警告は作りません。画像decode失敗などの非致命的な診断はresult.Diagnosticsで取得できます。
 
 APIのセル範囲、ページ抽出、trim、連続画像、PNG/SVG/Markdownはありません。
 
@@ -65,9 +67,7 @@ Core内のSemaphoreSlimでPDFsharpフォントresetから計測・描画・Save�
 
 ヘッダー/フッターは既存のフィールド置換・配置を継承します。Excel独自の書式制御コードを新たに解析する処理は追加していません。LinuxのSkia native層は初期化時にfontconfigへアクセスする場合があります。指定フォント以外のfaceは選択しませんが、native層の初期化アクセスが皆無とは主張しません。
 
-## 改名と共通化の状態
-
-旧 `ExcelRenderer.Slim` の利用側はProjectReferenceを `src/ExcelRenderer.Core/ExcelRenderer.Core.csproj` へ、usingを `ExcelRenderer.Core` へ変更してください。旧namespaceのwrapperや旧DLLは作成しません。Core単独のNuGet packageは公開せず、本体nupkgに同じbuildのCore DLL/XMLを同梱します。
+## 共通実装
 
 入力準備/spool、画像資源、workbook/cell走査、style intern、幾何・ページ計画/構築、文字placement、セルcommand生成、診断集計、基本PDF描画/SaveはCoreへ集約しています。本体の公開型、完全font painter、画像変形、図形、リンク、PNG/SVG/Markdown、選択/trim、連続出力は本体に残ります。
 

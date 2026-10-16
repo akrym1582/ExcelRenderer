@@ -1,9 +1,11 @@
 # Selecting the Open XML engines
 
-The default reader and mapper remain ClosedXML. `ExcelRenderer.OpenXml` is now a
-packable shared dependency of Core, the main library and Mapping. It contains no
-rendering, Mapping-language, font, or ClosedXML dependency. NuGet publication is a
-separate operation.
+English | [日本語](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/openxml-integration.ja.md)
+
+The default Reader and Mapping backend is ClosedXml. Choose OpenXml explicitly
+or use Auto for capability-based selection. `ExcelRenderer.OpenXml` provides the
+shared reader, writer and input handling used by Core, the main library and Mapping.
+It has no rendering, Mapping-language, font or ClosedXML dependency.
 
 ```csharp
 var document = new ExcelRenderer.Excel.ExcelReader().Read(input,
@@ -84,8 +86,8 @@ arrays are included. Failure is `MappingException` with reason code
 worksheet or table extensions are conservatively rejected because absence of
 value formulas cannot be established.
 
-Calculate amounts, tax and totals in the caller and replace template formulas
-with `**` value placeholders. Static names accept only string/numeric/Boolean
+Calculate amounts, tax and totals in the caller and supply them through `**` value
+placeholders. Static names accept only string/numeric/Boolean
 constants and finite A1 reference unions (including whole rows/columns and quoted
 known sheet names). Functions, arithmetic, dynamic/external/3D references, name
 aliases and unrecognized grammar are rejected. Names overlapping repeat regions
@@ -134,10 +136,9 @@ excelrenderer render template.xlsx --data data.json --format svg -o output --map
 `--reader-backend closedxml|openxml|auto` is available on pdf, image, svg,
 markdown/md and render. `--mapping-backend` is available on all of them and xlsx;
 explicit use requires `--data`. `--verbose` writes engine decisions to stderr.
-`--formula-mode` defaults to `cached`. Explicit `legacy` and `recalculate` fail
-with migration guidance on every backend; they are never silently converted.
-This default change, Legacy rejection and Mapping formula prohibition affect
-compatibility with earlier releases.
+`--formula-mode` supports only `cached`, which is also the default. Explicit
+`legacy` and `recalculate` are rejected on every backend before input processing
+or output creation.
 
 ## Ownership and verification
 
@@ -156,11 +157,12 @@ per-sheet LRU cache: at most 64 prototypes, 256 KiB of original UTF-8 row XML in
 total, and 64 KiB per row. These are source-size limits, not a claim of exact heap
 size. Single-use and large rows bypass the cache; each output row edits a deep copy so values and
 coordinates cannot leak between occurrences. Schema validation and unmodified-part hashes
-are tested separately. See the integration validation record for measured evidence;
-historical reader-only reports do not establish rendering integration results.
+are tested separately. See the
+[validation record](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/openxml-integration-validation.md)
+for test commands, measured allocation costs and results at each recorded commit.
 
 Literal `_xHHHH_` sequences and XML 1.0 control characters use SpreadsheetML escapes
 and round-trip through the new reader. ClosedXML 0.105.1 does not decode these escapes
 in plain inline strings; reopening these special values with that library exposes the
 escaped spelling. Ordinary strings and leading-apostrophe quotePrefix behavior match
-the legacy mapper.
+the ClosedXml backend.

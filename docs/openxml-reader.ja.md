@@ -1,6 +1,8 @@
 # Open XML ソース Reader
 
-`ExcelRenderer.OpenXml` は pack 可能な .NET Standard 2.1 の共有 Reader/Writer です。実行時依存は DocumentFormat.OpenXml **3.3.0** と ExcelNumberFormat **1.1.0** のみで、Core・Mapping・ClosedXML・フォント・描画は参照しません。[製品接続・選択・限定 Writer](openxml-integration.ja.md)を参照してください。既定は従来の ClosedXML です。
+[English](openxml-reader.md) | 日本語
+
+`ExcelRenderer.OpenXml` は .NET Standard 2.1 の共有 Reader/Writer です。実行時依存は DocumentFormat.OpenXml **3.3.0** と ExcelNumberFormat **1.1.0** のみで、Core・Mapping・ClosedXML・フォント・描画は参照しません。この資料は低レベルの元データ API を説明します。描画や Mapping には[エンジン選択](openxml-integration.ja.md)を参照してください。これらの API の既定 backend は ClosedXml です。
 
 ## 使用方法と入力の所有権
 
@@ -35,7 +37,7 @@ Open はブック情報・書式・テーマを読みますが、シート本文
 
 共有文字列は最初の `t=s` セルで、entry 単位で読みます。**共有文字列表は全体をメモリに保持します**。小さい選択シートだけでも、共有表を使えば全体のコストが発生します。ディスク索引、プロセス全体の intern/cache はありません。rich string の不変 run 配列は共有されます。run の null 属性は「セルのフォントから継承」を意味します。セルごとに基底フォントを解決してから、指定された run 属性だけを重ねてください。phonetic は表示本文に混ぜず、存在情報と保持コストを扱います。OOXML `_xHHHH_` は1回だけデコードし、`_x005F_x0041_` はリテラル `_x0041_` のままになります。
 
-メモリは共有文字列・書式・行列メタデータ・結合・数式グループに応じて増えます。**定メモリではなく**、次の上限もプロセス RSS の上限ではありません。2回のシート走査とセルごとの DOM/変換コストにより、密な表では ClosedXML より遅い場合があります。[初回の実測記録](openxml-reader-validation.md)と[追加最適化の測定](openxml-reader-optimization.md)を参照してください。
+メモリは共有文字列・書式・行列メタデータ・結合・数式グループに応じて増えます。**定メモリではなく**、次の上限もプロセス RSS の上限ではありません。2回のシート走査、セルレコードの生成、書式処理がコストになり、性能はブックと選択した backend に依存します。対象コミットごとの計測は[初回の実測記録](openxml-reader-validation.md)、[追加最適化の測定](openxml-reader-optimization.md)、[製品接続後の検証](openxml-integration-validation.md)を参照してください。
 
 | Option | 既定値 | 意味 |
 | --- | ---: | --- |
@@ -70,7 +72,7 @@ XML に存在する全 `c` を返します。書式だけの空セル、保存�
 
 ## 書式と表示文字列
 
-書式の優先順は、明示 cell `s`（0を含む）、`customFormat=true` の row `s`、column style、cell-XF 0 です。`apply*=false` だけを理由に保存成分を破棄しません。欠落成分は `xfId`、次に既定値へ fallback します。apply 属性と quotePrefix は `CellStyleInfo.Attributes` に残します。Normal フォントは表示名ではなく builtinId=0 と style-XF から選びます。styles.xml がない場合は暗黙の General を許容し、元のフォント情報がない部分は将来の adapter で解決します。
+書式の優先順は、明示 cell `s`（0を含む）、`customFormat=true` の row `s`、column style、cell-XF 0 です。`apply*=false` だけを理由に保存成分を破棄しません。欠落成分は `xfId`、次に既定値へ fallback します。apply 属性と quotePrefix は `CellStyleInfo.Attributes` に残します。Normal フォントは表示名ではなく builtinId=0 と style-XF から選びます。styles.xml がない場合は暗黙の General を許容し、元のフォント情報がない部分は利用側の adapter で解決します。
 
 フォント・塗り・上下左右/斜め罫線・配置・rotation 255・wrap・shrink・indent の情報を保持します。テーマの major/minor、Latin/EastAsia/script 別フォントは `Workbook.Theme` で取得できますが、フォント fallback エンジンではありません。色は RGB/indexed/theme/auto の元属性を残します。解決可能なら theme/indexed と HLS 輝度 tint による `resolvedRgb` を追加します。未解決色は黒に置換せず、元情報と診断を返します。
 
@@ -80,7 +82,7 @@ XML に存在する全 `c` を返します。書式だけの空セル、保存�
 
 ## 数式キャッシュ・診断・対象外機能
 
-保存済み結果だけを読みます。`FormulaInfo.HasCachedResult` は、欠落と保存済み0・false・空文字を区別します。結果がなければ空表示と `FormulaCachedValueMissing`、Excel エラーなら原文表示と `FormulaResultError` です。数式・外部リンクは評価しません。shared follower は自分の原文（空の場合あり）、si、master の address/text/ref を保持し、master が後に出現しても関連付けます。元 snapshot は書き換えず、製品の数式 metadata には `FormulaTextResolver.TryResolve` で対応する共有式 follower を展開します。array follower は、行区間索引で XML に実在するセルだけを関連付けます。dynamic/dataTable の元情報は残しますが、高度な spill 追跡は対象外です。
+保存済み結果だけを読みます。`FormulaInfo.HasCachedResult` は、欠落と保存済み0・false・空文字を区別します。結果がなければ空表示と `FormulaCachedValueMissing`、Excel エラーなら原文表示と `FormulaResultError` です。数式・外部リンクは評価しません。shared follower は自分の原文（空の場合あり）、si、master の address/text/ref を保持し、master が後に出現しても関連付けます。元 snapshot は書き換えません。製品 adapter は元の数式本文がある場合だけ保持し、本文のない follower は `ReportCell.Formula` を null として `FormulaSharedIndex` / `FormulaMasterAddress` を保持します。描画では `FormulaTextResolver.TryResolve` を呼びません。この独立した低レベル API は、式文字列が必要な呼び出し元向けに対応する共有式を展開できます。array follower は、行区間索引で XML に実在するセルだけを関連付けます。dynamic/dataTable の元情報は残しますが、高度な spill 追跡は対象外です。
 
 診断コードは `ReaderDiagnosticCodes` で定義しています。Code、Severity、任意の元 sheet/address、セル内容や URI を含まない説明を返します。`DiagnosticSink` には通知しますが、Reader 内に全件蓄積しません。`FormatCell` はその呼び出しの少数の診断も返します。書式色の未解決診断は、書式の初回解決時に通知し、セルごとの表示で再通知しません。
 

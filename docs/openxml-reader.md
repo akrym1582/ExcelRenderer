@@ -1,6 +1,8 @@
 # Open XML source reader
 
-`ExcelRenderer.OpenXml` is a packable .NET Standard 2.1 shared reader/writer library. Runtime dependencies are DocumentFormat.OpenXml **3.3.0** and ExcelNumberFormat **1.1.0**; it has no Core, Mapping, ClosedXML, font or renderer dependency. Product integration, selection and the conservative writer are described in [engine selection](openxml-integration.md). ClosedXML remains the default engine.
+English | [日本語](openxml-reader.ja.md)
+
+`ExcelRenderer.OpenXml` is a .NET Standard 2.1 shared reader/writer library. Runtime dependencies are DocumentFormat.OpenXml **3.3.0** and ExcelNumberFormat **1.1.0**; it has no Core, Mapping, ClosedXML, font or renderer dependency. This document covers its low-level source API. For rendering or Mapping, see [engine selection](openxml-integration.md); those APIs default to ClosedXml.
 
 ## Usage and input ownership
 
@@ -35,7 +37,7 @@ Open reads workbook metadata, styles and theme, but no worksheet body or shared 
 
 Shared strings load on the first `t=s` cell, entry by entry. **The complete shared-string table is retained**, even when only a small selected sheet uses it. There is no disk index or process-global intern/cache. A rich string's immutable runs are shared; null run properties mean “inherit this component from the cell font.” Resolve the cell's font independently before overlaying explicitly present run properties. Phonetics do not enter display text, but their presence and storage cost are recognized. OOXML `_xHHHH_` decoding is applied exactly once; `_x005F_x0041_` remains literal `_x0041_`.
 
-Memory therefore grows with shared strings, style tables, row/column metadata, merges and formula groups. It is **not constant memory** and the limits below are not a process RSS cap. Two worksheet passes and per-cell DOM/projection cost can make this implementation slower than ClosedXML for dense sheets. See the [initial validation](openxml-reader-validation.md) and the [subsequent optimization measurements](openxml-reader-optimization.md).
+Memory therefore grows with shared strings, style tables, row/column metadata, merges and formula groups. It is **not constant memory** and the limits below are not a process RSS cap. Two worksheet passes, cell-record creation and formatting contribute to processing costs; performance depends on the workbook and selected backend. See the [initial validation](openxml-reader-validation.md), [subsequent optimization measurements](openxml-reader-optimization.md) and [product integration validation](openxml-integration-validation.md) for measurements at their stated commits.
 
 | Option | Default | Meaning |
 | --- | ---: | --- |
@@ -70,7 +72,7 @@ Print definitions retain raw text and original zero-based `localSheetId`. The pa
 
 ## Styles and display
 
-Style precedence is explicit cell `s` (including zero), row `s` when `customFormat=true`, column style, then cell-XF zero. Saved components are used even with `apply*=false`; omitted components fall back through `xfId`, then defaults. Original apply flags and quotePrefix remain in `CellStyleInfo.Attributes`. Normal font selection uses builtinId zero and its style-XF, not a localized style name. Missing styles.xml permits an implicit General style; absent font information remains absent for a future adapter to resolve.
+Style precedence is explicit cell `s` (including zero), row `s` when `customFormat=true`, column style, then cell-XF zero. Saved components are used even with `apply*=false`; omitted components fall back through `xfId`, then defaults. Original apply flags and quotePrefix remain in `CellStyleInfo.Attributes`. Normal font selection uses builtinId zero and its style-XF, not a localized style name. Missing styles.xml permits an implicit General style; absent font information remains absent for the consuming adapter to resolve.
 
 Font, fill, border (including diagonals), alignment, rotation 255, wrap, shrink and indentation metadata are retained. Theme major/minor Latin, East Asia and script font information is exposed through `Workbook.Theme`; it is not a font fallback engine. Colors preserve RGB/indexed/theme/auto attributes. Where possible a color adds `resolvedRgb`, using theme/indexed lookup and HLS luminance tint. Unresolved colors retain their source and emit a diagnostic rather than becoming black.
 
@@ -80,7 +82,7 @@ Numeric serials are passed unmodified with the library's `isDate1904` argument. 
 
 ## Formula caches, diagnostics and feature boundaries
 
-Only saved results are read. `FormulaInfo.HasCachedResult` distinguishes missing results from saved zero, false and empty text. A missing result displays empty text with `FormulaCachedValueMissing`; an Excel error displays its original text with `FormulaResultError`. Neither formulas nor external links are evaluated. Shared followers keep their own original text (often empty), si and master address/text/ref, even when the master appears later. Raw snapshots are not rewritten; `FormulaTextResolver.TryResolve` separately expands supported shared followers for product formula metadata. Array followers are identified only for XML-present cells through a row interval index. Dynamic/data-table metadata remains raw; advanced spill tracking is outside this reader.
+Only saved results are read. `FormulaInfo.HasCachedResult` distinguishes missing results from saved zero, false and empty text. A missing result displays empty text with `FormulaCachedValueMissing`; an Excel error displays its original text with `FormulaResultError`. Neither formulas nor external links are evaluated. Shared followers keep their own original text (often empty), si and master address/text/ref, even when the master appears later. Raw snapshots are not rewritten. Product adapters preserve only nonempty original formula text; followers without a body expose null `ReportCell.Formula` with `FormulaSharedIndex` / `FormulaMasterAddress` metadata. Rendering does not call `FormulaTextResolver.TryResolve`; that separate low-level API can expand supported shared formulas for callers that need it. Array followers are identified only for XML-present cells through a row interval index. Dynamic/data-table metadata remains raw; advanced spill tracking is outside this reader.
 
 Diagnostic codes are defined in `ReaderDiagnosticCodes`. Diagnostics have code, severity, optional original sheet/address and a description without cell contents or URIs. `DiagnosticSink` receives events without accumulating them inside the reader. `FormatCell` also returns its own small diagnostic list. Unresolved-style-color diagnostics are emitted when the style is first resolved; they are not replayed on every format call.
 

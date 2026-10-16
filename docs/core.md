@@ -1,8 +1,10 @@
 # ExcelRenderer Core
 
+English | [日本語](core.ja.md)
+
 A standalone `netstandard2.1` source project for XLSX-to-PDF conversion, usable from .NET 8/10 through ProjectReference. Core has no separate NuGet package or embedded-font DLL and does not reference ExcelRenderer/Fonts/Tool. The main ExcelRenderer package includes Core DLL/XML from the same build.
 
-Public type names match the original library: `ExcelConverter`, `PdfExportOptions`, `WorkbookInputOptions`, `ConversionResult`, and `ConversionDiagnostic`. They are in the `ExcelRenderer.Core` namespace; option and result members retain the Core-specific scope. When migrating from ExcelRenderer.Slim, change the ProjectReference and `using ExcelRenderer.Slim;` to Core. No Slim wrapper or old DLL is produced.
+Public types include `ExcelConverter`, `PdfExportOptions`, `WorkbookInputOptions`, `ConversionResult`, and `ConversionDiagnostic` in the `ExcelRenderer.Core` namespace. Options and results follow the Core-specific scope described below.
 
 ```xml
 <ItemGroup>
@@ -25,7 +27,7 @@ var result = await ExcelConverter.ConvertAsync(xlsx, pdf, new PdfExportOptions
 
 All sheets, including hidden sheets, print in workbook order unless one SheetName is supplied. Empty sheets produce one page. Workbook print areas (including multiple areas), paper, margins, scaling/FitToPages, page order, print titles, manual breaks, cells, merges, backgrounds, borders, alignment, wrapping, ShrinkToFit, and existing header/footer rules remain supported. Date/time fields share one conversion snapshot. Cell rotation is ignored.
 
-Pictures use their complete source image stretched into the placement rectangle. Position, size, and Z order remain supported. Only the page containing the picture's top-left point prints it; points outside the print area are omitted. Overflow is clipped at the PDF page boundary. Pictures are neither split nor repeated across pages or print titles. Each matching print area prints independently. Crop, rotation, and flips are ignored. Shapes, callouts, shape text, and PDF link annotations are omitted. Cell hyperlink display text remains; HYPERLINK formulas use CachedValue. All formula displays use typed saved results from the original XML, formatted in a formula-free scratch cell. Missing caches display empty text with a diagnostic; Legacy/Recalculate are rejected before input processing. Non-formula cells retain ordinary formatting. Image decode failures are returned as nonfatal diagnostics.
+Pictures use their complete source image stretched into the placement rectangle. Position, size, and Z order remain supported. Only the page containing the picture's top-left point prints it; points outside the print area are omitted. Overflow is clipped at the PDF page boundary. Pictures are neither split nor repeated across pages or print titles. Each matching print area prints independently. Crop, rotation, and flips are ignored. Shapes, callouts, shape text, and PDF link annotations are omitted. Cell hyperlink display text remains; HYPERLINK formulas use CachedValue. All formula displays use typed saved results from the original XML. The ClosedXml backend formats them in a formula-free scratch cell. Missing caches display empty text with a diagnostic; Legacy/Recalculate are rejected before input processing. Non-formula cells retain ordinary formatting. Image decode failures are returned as nonfatal diagnostics.
 
 There is no format/range/page extraction/trim/continuous-image API and no PNG/SVG/Markdown renderer.
 
@@ -57,7 +59,7 @@ See [validation results and reproduction](core-validation.md). Linux results do 
 
 Header/footer handling inherits the existing field expansion and placement, without adding a parser for Excel formatting control codes. On Linux, Skia native initialization can access fontconfig. Rendering still selects only the supplied snapshot; absence of all native initialization accesses is not claimed.
 
-## Shared implementation and migration status
+## Shared implementation
 
 The main library delegates input preparation/spooling, image resources, workbook/cell traversal, style interning, geometry/page planning and building, text placement, cell-layer command generation, diagnostic aggregation and basic PDF drawing/saving to Core. The main assembly retains its public models, advanced font painters, image transforms, shapes, links, PNG/SVG/Markdown, selection/trim, and continuous orchestration.
 

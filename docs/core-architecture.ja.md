@@ -1,8 +1,9 @@
 # 本体＋Coreの2エンジン構成
 
-旧Slimを`ExcelRenderer.Core`へ改名し、共通の基盤と単一通常フォントのPDF製品を
-同じプロジェクトに置きます。本体`ExcelRenderer`だけがCoreを参照します。Coreは
-`netstandard2.1`の非packableプロジェクトで、本体・Fonts・Toolへの参照を持ちません。
+`ExcelRenderer.Core`は、共通の基盤と単一通常フォントのPDF製品を
+同じプロジェクトに置きます。本体`ExcelRenderer`はCoreを参照します。Coreは
+`netstandard2.1`の非packableプロジェクトで、共有`ExcelRenderer.OpenXml`だけをProjectReferenceし、
+本体・Fonts・Toolへの参照を持ちません。
 本体とToolの既存パッケージには、同じbuildのCore DLLを同梱します。
 
 OpenXml に委譲する input/spool adapter、基本reader、style intern、列幅・行列座標、geometry、ページ計画、
@@ -37,7 +38,7 @@ converter内はsessionを借用し、独立した公開measurer/rendererは自�
 別AssemblyLoadContextは同期対象外です。公開runが所有するfont snapshotはreset後も保持し、
 所有者のなくなったsnapshotはweak登録により回収できます。
 
-[最終所有者表](core-source-map.md)、[利用側の移行](core.ja.md)、[実行済み検証](core-refactor-validation.md)
+[所有者表](core-source-map.md)、[Coreの利用方法と対応範囲](core.ja.md)、[実行済み検証](core-refactor-validation.md)
 を参照してください。Ubuntu/WindowsのCIを維持しますが、Linuxでのローカル結果を
 Windowsでも成功した結果として扱いません。
 
@@ -55,8 +56,8 @@ Core は run のフォントを解釈せず、`IExtendedTextLayoutService` 経�
 IVS 基底文字化・PDF の製品範囲は変更しません。
 
 追加の文字切れ判定は Core の `CellTextDiagnostics`、診断方針・選択ページへの絞り込みは
-本体 preflight が担当します。実装状況と数式表示モードの未解決事項は
-[検証報告](reader-richtext-validation.md) を参照してください。
+本体 preflight が担当します。現在の数式表示と診断の契約は
+[エンジン選択](openxml-integration.ja.md)を参照してください。
 
 ### 数式キャッシュと読取診断
 

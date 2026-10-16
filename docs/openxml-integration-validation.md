@@ -1,7 +1,9 @@
 # OpenXml 接続の実装・検証記録
 
-> 現在の仕様・最新の受入結果は末尾の「2026-10-16 追記：行 cache の本体適用と再計算なし契約」を参照。
-> それ以前の節は各対象コミット時点の履歴であり、現行の数式契約の説明ではない。
+> 現在の仕様は[エンジン選択ガイド](openxml-integration.ja.md)を参照。
+> この文書は対象コミットごとの検証履歴であり、過去の結果を現在の仕様へ読み替えない。
+> 再計算なし契約の検証は「2026-10-16 追記：行 cache の本体適用と再計算なし契約」、
+> 後続の CI 修正と結果は「2026-10-16 追記：CI の Core 比較ゲート修正」に記録する。
 
 ## 基点
 
@@ -405,3 +407,7 @@ Core 80テスト・mutation 検査の後、比較用 Validation project の lock
 ローカルで solution の locked restore が成功し、CI と同じ
 `python3 scripts/validate-core.py --visual-only` も **17ページすべて成功**した。
 この修正では製品・テスト・比較ツールの C# 動作や NuGet package の選択バージョンを変更していない。
+
+対象 `8de2f593a8f791cb300ea7a867a72fc00549cb38` の
+[GitHub Actions](https://github.com/akrym1582/ExcelRenderer/actions/runs/38850105197) は
+通常テスト・Core Ubuntu・Core Windows の全3ジョブが成功した。

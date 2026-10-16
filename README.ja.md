@@ -50,7 +50,8 @@ PDF / PNG / SVG
 | --- | --- | --- |
 | `ExcelRenderer` | C# から既存の XLSX を PDF・PNG・SVG・Markdown に変換 | .NET Standard 2.1 と互換性のあるアプリケーション |
 | `ExcelRenderer.Mapping` | C# オブジェクト・JSON をテンプレートへ設定して XLSX を保存 | .NET Standard 2.1 と互換性のあるアプリケーション。描画・フォントは不要 |
-| `ExcelRenderer.OpenXml` | XLSX の元データの読み込み、型付き計画による数式なしの編集 | .NET Standard 2.1 と互換性のあるアプリケーション。低レベル API |
+| `ExcelRenderer.OpenXml` | XLSX の元データの読み込み、型付き編集、明示再計算の接続 | .NET Standard 2.1 と互換性のあるアプリケーション。低レベル API |
+| `ExcelRenderer.Formulas` | インメモリデータの限定的な数式評価 | .NET Standard 2.1 互換。BCL のみで XLSX・描画依存なし |
 | `ExcelRenderer.Fonts` | 描画用の日本語・絵文字フォントを追加 | `ExcelRenderer` と併用 |
 | `ExcelRenderer.Tool` | コマンドラインでマッピング・変換 | .NET 10 SDK |
 

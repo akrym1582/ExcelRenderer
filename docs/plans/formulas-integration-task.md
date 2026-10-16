@@ -22,11 +22,11 @@ Render only selected/drawn formula cells and reached dependencies; unrelated cyc
 - [x] All existing output formats and Core regression tests; transactional failure behavior.
 - [x] Locked restore, Release Rebuild zero warnings/errors, all tests, package contents/consumer test.
 - [x] Existing mutation checks and image comparisons retain original thresholds.
-- [ ] Windows/Linux standalone CI, dependency direction check.
+- [x] Windows/Linux standalone CI, dependency direction check.
 - [x] Reproducible executable samples; English/Japanese docs; precise limitations and unverified Excel compatibility.
 - [x] Benchmark baseline CachedValue versus changed CachedValue, recalculation off/on, 1k/10k/practical larger rows, independent/shared dependencies/aggregate/Mapping growth; at least 10000 formulas and 100000 SUM cells; warmup/repeats/allocations/environment/counts/correctness.
-- [ ] Push branch, create draft PR, wait for latest-head CI and fix task-caused failures.
-- [ ] Final report PR URL, base/head SHA, capabilities/limitations, numerical checks, performance, latest CI, unverified work.
+- [x] Push branch, create draft PR, wait for latest-head CI and fix task-caused failures.
+- [x] Final report PR URL, base/head SHA, capabilities/limitations, numerical checks, performance, latest CI, unverified work.
 
 ## Environment observations
 
@@ -116,3 +116,7 @@ Do not label skeletons complete. Report implementation, unsupported features, ac
 ### 13. Sources
 
 Reference repository/AGENTS at d7c08f464a2be2b1d8f20d71607b6e0f04c1cfc4. Microsoft Excel operator precedence: https://support.microsoft.com/ja-jp/excel/calculation-operators-and-precedence-in-excel ; SUM direct/reference behavior: https://learn.microsoft.com/en-us/office/vba/api/excel.worksheetfunction.sum ; COUNT/COUNTA/AVERAGE/ROUND Microsoft support function pages; floating point: https://learn.microsoft.com/en-us/troubleshoot/microsoft-365-apps/excel/floating-point-arithmetic-inaccurate-result . VBA documentation informs SUM coercion only, never operator precedence. The v1 compatibility profile and limits are independently chosen product specifications.
+
+## Delivery record
+
+Draft PR: https://github.com/akrym1582/ExcelRenderer/pull/80 . Local and remote validation, exact tested SHAs and limitations are recorded in ../formulas-validation.md; performance raw data and methodology are in ../formulas-performance.md. GitHub Actions run 38900325144 passed all five Windows/Linux/integration jobs at 81a211be9bc4047d29cf9084b11e8d092344e39a. Final documentation-only head is rechecked before the delivery message. No ready transition, merge or release.

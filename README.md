@@ -53,6 +53,7 @@ Choose the package for your task:
 | `ExcelRenderer` | Render existing XLSX files to PDF, PNG, SVG or Markdown from C# | .NET Standard 2.1-compatible application |
 | `ExcelRenderer.Mapping` | Populate XLSX templates from C# objects or JSON and save XLSX | .NET Standard 2.1-compatible application; no rendering or fonts required |
 | `ExcelRenderer.OpenXml` | Read XLSX source records, write typed edits and adapt explicit formula calculation | .NET Standard 2.1-compatible application; low-level API |
+| `ExcelRenderer.Formulas` | Evaluate the limited formula language over in-memory data | .NET Standard 2.1-compatible application; BCL only, no XLSX or rendering dependency |
 | `ExcelRenderer.Fonts` | Add optional bundled Japanese and emoji fonts for rendering | Use alongside `ExcelRenderer` |
 | `ExcelRenderer.Tool` | Map and convert workbooks from the command line | .NET 10 SDK |
 

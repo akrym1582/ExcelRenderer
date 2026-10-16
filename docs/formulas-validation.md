@@ -76,8 +76,15 @@ The first no-build pack required the repository's established
 `BuildProjectReferences=false` switch. An isolated tool check also required setting
 `DOTNET_ROOT` from the installed runtime, now handled in the reproducible script.
 
-Remote Windows/Linux CI and PR status are recorded after the draft is created; local
-Linux evidence is not a claim of a completed Windows run.
+Draft PR: https://github.com/akrym1582/ExcelRenderer/pull/80 .
+GitHub Actions run [38900325144](https://github.com/akrym1582/ExcelRenderer/actions/runs/38900325144)
+passed all five jobs at head `81a211be9bc4047d29cf9084b11e8d092344e39a`:
+full integration/mutation/pack-consumer validation, Core on Windows/Linux and
+isolated Formulas on Windows/Linux. The source is unchanged from the local
+implementation SHA above. This subsequent report/package-table update changes
+documentation only. The final delivery head is checked again; its authoritative
+status is available in [PR checks](https://github.com/akrym1582/ExcelRenderer/pull/80/checks).
+The PR remains a draft; nothing has been merged, marked ready or released.
 
 ## Performance
 

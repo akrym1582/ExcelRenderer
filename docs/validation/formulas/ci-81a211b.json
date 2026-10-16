@@ -1,0 +1,293 @@
+{
+  "head": "81a211be9bc4047d29cf9084b11e8d092344e39a",
+  "url": "https://github.com/akrym1582/ExcelRenderer/actions/runs/38900325144",
+  "jobs": [
+    {
+      "name": "Run unit tests",
+      "id": 116970689065,
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check out source",
+          "conclusion": "success"
+        },
+        {
+          "name": "Set up .NET",
+          "conclusion": "success"
+        },
+        {
+          "name": "Set up fixed fonts for public renderer smoke tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify fixed test font assets",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify Core dependency direction and migrated ownership",
+          "conclusion": "success"
+        },
+        {
+          "name": "Restore dependencies",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check regression detection with temporary mutations",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify shared Core geometry regression detection",
+          "conclusion": "success"
+        },
+        {
+          "name": "Rebuild solution",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run unit tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Pack integrated calculation dependencies",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify isolated formula package consumers",
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload test output",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Set up .NET",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Check out source",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "name": "Core (windows-latest)",
+      "id": 116970689331,
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-dotnet@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Restore Core tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Rebuild Core tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run Core tests without OS font setup",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify Core regression detection",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Rasterize and compare on Linux",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Upload Core results",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-dotnet@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "name": "Formulas (windows-latest)",
+      "id": 116970689421,
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-dotnet@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify calculation engine dependency isolation",
+          "conclusion": "success"
+        },
+        {
+          "name": "Restore isolated engine tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Rebuild isolated engine tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run isolated engine tests without font or rendering setup",
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload formula test results",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-dotnet@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "name": "Core (ubuntu-latest)",
+      "id": 116970689428,
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-dotnet@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Restore Core tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Rebuild Core tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run Core tests without OS font setup",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify Core regression detection",
+          "conclusion": "success"
+        },
+        {
+          "name": "Rasterize and compare on Linux",
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload Core results",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-dotnet@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "name": "Formulas (ubuntu-latest)",
+      "id": 116970689453,
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-dotnet@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify calculation engine dependency isolation",
+          "conclusion": "success"
+        },
+        {
+          "name": "Restore isolated engine tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Rebuild isolated engine tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run isolated engine tests without font or rendering setup",
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload formula test results",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-dotnet@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ]
+}

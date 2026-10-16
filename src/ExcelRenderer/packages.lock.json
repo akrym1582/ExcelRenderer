@@ -236,7 +236,7 @@
         "dependencies": {
           "ClosedXML": "[0.105.1, )",
           "DocumentFormat.OpenXml": "[3.3.0, )",
-          "ExcelRenderer.OpenXml": "[1.0.0, )",
+          "ExcelRenderer.OpenXml": "[1.8.0, )",
           "PDFsharp": "[6.2.3, )",
           "SkiaSharp": "[4.151.0, )",
           "SkiaSharp.NativeAssets.Linux": "[4.151.0, )",

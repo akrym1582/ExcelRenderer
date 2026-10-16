@@ -18,7 +18,11 @@ DPI = 96
 
 
 def run(*args):
-    return subprocess.check_output([str(a) for a in args], cwd=ROOT, text=True, stderr=subprocess.STDOUT)
+    try:
+        return subprocess.check_output([str(a) for a in args], cwd=ROOT, text=True, stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError as error:
+        print(error.output, end='', flush=True)
+        raise
 
 
 def render(executable, source, output, repeats=1):

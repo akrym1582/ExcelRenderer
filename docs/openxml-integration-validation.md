@@ -384,3 +384,24 @@ dotnet tools/ExcelRenderer.Performance/bin/Release/net10.0/ExcelRenderer.Perform
 
 全性能 matrix の再測定、NuGet 公開、タグ、main への merge は今回行っていない。
 Reader の地域依存形式等、OpenXml Writer の保守的な構造制限は接続ガイドに記載したままである。
+
+
+## 2026-10-16 追記：CI の Core 比較ゲート修正
+
+[失敗ジョブ](https://github.com/akrym1582/ExcelRenderer/actions/runs/38849005377/job/116805835386)は
+Core 80テスト・mutation 検査の後、比較用 Validation project の locked restore で失敗した。
+比較用2 project は solution 外のため、通常の solution restore だけでは不足していた。
+`ExcelRenderer.OpenXml` の project node がない `NU1004` をローカルでも再現した。
+
+- 比較用 Validation／Reference の lock と、残っていた project dependency のバージョン表記を更新した。
+  変更した8 lock の既存 NuGet package version／contentHash はすべて不変で、Project graph だけを補正した。
+- `validate-core.py` の subprocess 失敗時に、捕捉していた restore／build 等の stdout/stderr を表示する。
+- restore 後の比較で、保存結果のない数式 `G5:G16` を持つ印刷倍率サンプルの旧画像期待値を検出した。
+  CachedValue の既定化により売上欄が空になるのが新契約である。Core と参照画像が完全一致し、
+  旧期待値との差分は売上の数値文字だけ（794×1123画像の矩形546,142–590,374）と確認した。
+  目視確認後に `08-print-scaling-core-2.png` の1ページだけを更新し、hash・理由・生成条件を
+  baseline provenance の overrides に保存した。入力 XLSX、比較閾値、残りの期待画像は変更していない。
+
+ローカルで solution の locked restore が成功し、CI と同じ
+`python3 scripts/validate-core.py --visual-only` も **17ページすべて成功**した。
+この修正では製品・テスト・比較ツールの C# 動作や NuGet package の選択バージョンを変更していない。

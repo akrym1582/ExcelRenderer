@@ -212,7 +212,7 @@ public static class FormulaParser
             string text = token.Value;
             var kind = token.Kind;
             int tokenEnd = token.Span.Start + token.Span.Length;
-            if (kind == TokenKind.End)
+            if (kind == TokenKind.End || (kind == TokenKind.QuotedSheetName && text.Length == 0))
             {
                 Fail("SyntaxError", "Expected an expression.");
             }

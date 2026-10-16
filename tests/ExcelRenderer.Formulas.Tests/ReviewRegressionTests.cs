@@ -53,6 +53,8 @@ public sealed class ReviewRegressionTests
         Assert.False(FormulaParser.Parse("=A1:\"B2\"").Success);
         Assert.False(FormulaParser.Parse("=\"A1\":B2").Success);
         Assert.False(FormulaParser.Parse("=A1 \"\"").Success);
+        Assert.False(FormulaParser.Parse("=''!A1").Success);
+        Assert.True(FormulaParser.Parse("=123!A1").Success);
         var missing = FormulaParser.Parse("=SUM(,1,)").Formula!.Root.Children;
         Assert.Equal(new[] { FormulaNodeKind.Missing, FormulaNodeKind.Number, FormulaNodeKind.Missing }, missing.Select(n => n.Kind));
         Assert.Equal(1, Evaluate("SUM(,1,)").Value.Number);

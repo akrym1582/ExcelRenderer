@@ -1,0 +1,7 @@
+  Successfully created package '/workspace/ExcelRenderer/artifacts/formulas-packages/ExcelRenderer.Formulas.1.8.0.nupkg'.
+  Successfully created package '/workspace/ExcelRenderer/artifacts/formulas-packages/ExcelRenderer.OpenXml.1.8.0.nupkg'.
+  Successfully created package '/workspace/ExcelRenderer/artifacts/formulas-packages/ExcelRenderer.Mapping.1.8.0.nupkg'.
+  Successfully created package '/workspace/ExcelRenderer/artifacts/formulas-packages/ExcelRenderer.1.8.0.nupkg'.
+  Successfully created package '/workspace/ExcelRenderer/artifacts/formulas-packages/ExcelRenderer.Fonts.1.8.0.nupkg'.
+  ExcelRenderer.Tool -> /workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/publish/
+  Successfully created package '/workspace/ExcelRenderer/artifacts/formulas-packages/ExcelRenderer.Tool.1.8.0.nupkg'.

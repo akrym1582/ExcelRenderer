@@ -1,7 +1,7 @@
 {"Environment":"Debian GNU/Linux 13 (trixie)","Runtime":".NET 10.0.12","ProcessorCount":4,"TieredCompilation":"0","Mode":"sum","Warmups":1,"Repeats":5}
-{"Name":"engine-sum","Count":100000,"Iteration":0,"Warmup":true,"Milliseconds":67.3143,"AllocatedBytes":15700416,"ProcessPeakWorkingSetBytes":77877248,"Result":200000}
-{"Name":"engine-sum","Count":100000,"Iteration":1,"Warmup":false,"Milliseconds":12.75,"AllocatedBytes":15700512,"ProcessPeakWorkingSetBytes":78209024,"Result":200000}
-{"Name":"engine-sum","Count":100000,"Iteration":2,"Warmup":false,"Milliseconds":13.4727,"AllocatedBytes":15700512,"ProcessPeakWorkingSetBytes":78209024,"Result":200000}
-{"Name":"engine-sum","Count":100000,"Iteration":3,"Warmup":false,"Milliseconds":12.2332,"AllocatedBytes":15700512,"ProcessPeakWorkingSetBytes":78209024,"Result":200000}
-{"Name":"engine-sum","Count":100000,"Iteration":4,"Warmup":false,"Milliseconds":12.5356,"AllocatedBytes":15700512,"ProcessPeakWorkingSetBytes":78209024,"Result":200000}
-{"Name":"engine-sum","Count":100000,"Iteration":5,"Warmup":false,"Milliseconds":17.5449,"AllocatedBytes":15700512,"ProcessPeakWorkingSetBytes":78209024,"Result":200000}
+{"Name":"engine-sum","Count":100000,"Iteration":0,"Warmup":true,"Milliseconds":55.129,"AllocatedBytes":15700464,"ProcessPeakWorkingSetBytes":77926400,"Result":200000}
+{"Name":"engine-sum","Count":100000,"Iteration":1,"Warmup":false,"Milliseconds":15.9003,"AllocatedBytes":15700560,"ProcessPeakWorkingSetBytes":77959168,"Result":200000}
+{"Name":"engine-sum","Count":100000,"Iteration":2,"Warmup":false,"Milliseconds":14.2147,"AllocatedBytes":15700560,"ProcessPeakWorkingSetBytes":77959168,"Result":200000}
+{"Name":"engine-sum","Count":100000,"Iteration":3,"Warmup":false,"Milliseconds":13.4679,"AllocatedBytes":15700560,"ProcessPeakWorkingSetBytes":77959168,"Result":200000}
+{"Name":"engine-sum","Count":100000,"Iteration":4,"Warmup":false,"Milliseconds":15.1143,"AllocatedBytes":15700560,"ProcessPeakWorkingSetBytes":77959168,"Result":200000}
+{"Name":"engine-sum","Count":100000,"Iteration":5,"Warmup":false,"Milliseconds":14.2657,"AllocatedBytes":15700560,"ProcessPeakWorkingSetBytes":77959168,"Result":200000}

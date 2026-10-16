@@ -162,9 +162,9 @@ markdown/md and render. `--mapping-backend` is available on all of them and xlsx
 explicit use requires `--data` and accepts `openxml|auto`. Both defaults are
 `openxml`. Explicit `closedxml` is rejected with a migration reason before opening
 input/data or creating output. `--verbose` writes engine decisions to stderr.
-`--formula-mode` supports only `cached`, which is also the default. Explicit
-`legacy` is rejected on every backend before input processing; `recalculate` opts into the limited built-in engine
-or output creation.
+`--formula-mode` supports `cached` (default) and `recalculate`. The latter opts
+into the limited built-in engine. Explicit `legacy` is rejected on every backend
+before input processing or output creation.
 
 ## Ownership and verification
 

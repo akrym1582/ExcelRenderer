@@ -13,24 +13,24 @@ Render only selected/drawn formula cells and reached dependencies; unrelated cyc
 ## Completion checklist
 
 - [x] Fetch origin/main; inspect current AGENTS; record base and SDK; create fresh branch without overwriting existing work.
-- [ ] Independent immutable AST, parser, spans, reference flags, typed values/data source, evaluation session and 19 functions.
-- [ ] Strict unsupported features, circularity, bounded resource use, cancellation and independent session cache lifetime.
-- [ ] Main/Core/OpenXml/Mapping/CLI explicit recalculation, retained CachedValue default.
-- [ ] Mapping 0/1/multiple/more-than-template lines, formula copy versus insertion semantics, cross-sheet and named ranges.
-- [ ] Restore shared formulas via safe syntax processing; persist typed caches; invalidate uncomputed caches; reload and render.
-- [ ] Reject unsupported arrays/dynamic arrays/external/structured references with feature and cell diagnostic; never silently reuse stale caches.
-- [ ] All existing output formats and Core regression tests; transactional failure behavior.
-- [ ] Locked restore, Release Rebuild zero warnings/errors, all tests, package contents/consumer test.
-- [ ] Existing mutation checks and image comparisons retain original thresholds.
+- [x] Independent immutable AST, parser, spans, reference flags, typed values/data source, evaluation session and 19 functions.
+- [x] Strict unsupported features, circularity, bounded resource use, cancellation and independent session cache lifetime.
+- [x] Main/Core/OpenXml/Mapping/CLI explicit recalculation, retained CachedValue default.
+- [x] Mapping 0/1/multiple/more-than-template lines, formula copy versus insertion semantics, cross-sheet and named ranges.
+- [x] Restore shared formulas via safe syntax processing; persist typed caches; invalidate uncomputed caches; reload and render.
+- [x] Reject unsupported arrays/dynamic arrays/external/structured references with feature and cell diagnostic; never silently reuse stale caches.
+- [x] All existing output formats and Core regression tests; transactional failure behavior.
+- [x] Locked restore, Release Rebuild zero warnings/errors, all tests, package contents/consumer test.
+- [x] Existing mutation checks and image comparisons retain original thresholds.
 - [ ] Windows/Linux standalone CI, dependency direction check.
-- [ ] Reproducible executable samples; English/Japanese docs; precise limitations and unverified Excel compatibility.
-- [ ] Benchmark baseline CachedValue versus changed CachedValue, recalculation off/on, 1k/10k/practical larger rows, independent/shared dependencies/aggregate/Mapping growth; at least 10000 formulas and 100000 SUM cells; warmup/repeats/allocations/environment/counts/correctness.
+- [x] Reproducible executable samples; English/Japanese docs; precise limitations and unverified Excel compatibility.
+- [x] Benchmark baseline CachedValue versus changed CachedValue, recalculation off/on, 1k/10k/practical larger rows, independent/shared dependencies/aggregate/Mapping growth; at least 10000 formulas and 100000 SUM cells; warmup/repeats/allocations/environment/counts/correctness.
 - [ ] Push branch, create draft PR, wait for latest-head CI and fix task-caused failures.
 - [ ] Final report PR URL, base/head SHA, capabilities/limitations, numerical checks, performance, latest CI, unverified work.
 
 ## Environment observations
 
-`gh auth status`: GH_TOKEN invalid. `gh api repos/akrym1582/ExcelRenderer`: Forbidden. Read-only git fetch and ls-remote worked. This blocks remote PR/CI through gh unless another authorized connector works; local implementation continues.
+`gh auth status`: GH_TOKEN invalid. `gh api repos/akrym1582/ExcelRenderer`: Forbidden. Read-only git fetch and ls-remote worked. The authorized GitHub connector successfully read latest main, and git push dry-run succeeded. PR/CI operations can use the connector; no token changes were made.
 
 ## Attached standalone plan contract (retained implementation specification)
 

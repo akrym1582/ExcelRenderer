@@ -41,7 +41,7 @@ Core は `PdfExportOptions.ReadOptions` に同等の
 | OpenXml / Auto | Recalculate | 限定的な自作計算器。数式ガイド参照 |
 | 全エンジン | Legacy | 入力処理・出力開始前に拒否 |
 
-全 Reader が元 XLSX の保存結果だけを表示します。古い結果もそのまま使い、
+CachedValue モードの Reader は元 XLSX の保存結果だけを表示します。古い結果もそのまま使い、
 鮮度や依存関係は検査しません。欠落は空表示と `FormulaCachedValueMissing`、
 Excel エラーはその文字列と `FormulaResultError` です。0・false・保存された空文字は
 欠落と区別します。HYPERLINK の定数から静的なリンク先を抽出することはありますが、
@@ -113,7 +113,7 @@ union（全行・全列・引用シート名を含む）だけを許容します
 ピボット集計セルの再計算は行いません。グループ化・計算・外部・解決できない名前付きピボット元、
 chart cache、threaded comment、マクロ・署名・Strict・未知の拡張や part は拒否します。
 スパークライン拡張は既存の共通数式検査による拒否を維持します。fallback や再試行はありません。
-元の `calcPr`（存在しない場合も含む）を保持し、数式の再計算要求を追加しません。
+既定モードは元の `calcPr`（不存在も含む）を保持します。明示再計算では数式ガイドに従ってキャッシュと計算フラグを更新します。
 
 印刷範囲は全出力 occurrence を含み、完全に削除された area は除去します。
 繰り返し・削除に交差する行タイトルは対象外です。固定タイトル、一意に移動する行タイトル、
@@ -142,7 +142,7 @@ pdf / image / svg / markdown・md / render に `--reader-backend`、これらと
 `--mapping-backend` を指定できます。どちらも値は `openxml|auto`、既定は `openxml` です。
 明示 `closedxml` は入力・データの読込や出力作成前に移行先を示して拒否します。
 `--mapping-backend` の明示指定には `--data` が必要です。`--verbose` の選択理由は stderr
-へ表示します。`--formula-mode` は `cached` のみ対応し、既定値も `cached` です。
+へ表示します。`--formula-mode` は `cached`（既定値）と `recalculate` に対応します。
 明示 `legacy` は全 backend で拒否します。`recalculate` は限定的な自作計算器を使います。
 
 ## 所有権と検証

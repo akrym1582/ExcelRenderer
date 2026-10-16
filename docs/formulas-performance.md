@@ -68,57 +68,73 @@ The captured run used Debian GNU/Linux 13 (trixie), .NET SDK 10.0.401,
 .NET runtime 10.0.12, and four reported processors on 2026-10-16.
 Raw records are under `tools/ExcelRenderer.Formulas.Performance/results/`.
 The table reports medians of the five non-warmup samples. Baseline and current
-runs share the same fixture and assertions. The current result was measured from
-the working implementation; the final PR commit identifies the delivered source.
-Other repository builds/tests shared this container, so wall-time variation is
-not evidence of an implementation speedup. Allocation trends are more stable.
+runs share the same fixture and assertions. The measured implementation is commit
+`56d7eb575c90fb0575e86174055ceb02a6d42b48`; subsequent documentation commits
+record this evidence. The baseline is `d7c08f464a2be2b1d8f20d71607b6e0f04c1cfc4`.
+All cases were repeated sequentially in a reserved measurement window after
+local builds, tests, mutation checks and packaging had completed. No concurrent
+repository build or test ran during this final capture. Timing remains specific
+to this container and fixture; these measurements do not establish a speedup for
+other workbooks. All 28 cases completed six validated executions (168 total,
+including 140 measured repetitions).
 
 | Run | Case | Count | Median ms | Median allocated MiB | Max process peak MiB |
 |---|---|---:|---:|---:|---:|
-| baseline-d7c08f4-reader | reader-cached | 1000 | 27.55 | 9.93 | 67.31 |
-| baseline-d7c08f4-reader | reader-cached | 10000 | 318.83 | 91.65 | 145.36 |
-| baseline-d7c08f4-reader | reader-cached | 30000 | 808.87 | 268.97 | 203.42 |
-| current-engine | engine-constant-repeated | 1000 | 1.02 | 0.14 | 29.90 |
-| current-engine | engine-independent | 1000 | 6.35 | 2.53 | 32.12 |
-| current-engine | engine-common-dependency | 1000 | 1.96 | 1.28 | 32.35 |
-| current-engine | engine-constant-repeated | 10000 | 10.19 | 1.37 | 33.92 |
-| current-engine | engine-independent | 10000 | 74.22 | 25.03 | 59.10 |
-| current-engine | engine-common-dependency | 10000 | 57.38 | 12.51 | 59.69 |
-| current-engine | engine-constant-repeated | 30000 | 68.24 | 4.12 | 59.69 |
-| current-engine | engine-independent | 30000 | 464.68 | 72.48 | 112.51 |
-| current-engine | engine-common-dependency | 30000 | 64.42 | 34.94 | 117.37 |
-| current-mapping-no-recalculate | mapping-expand-invalidate-save | 1000 | 19.19 | 11.15 | 67.22 |
-| current-mapping-no-recalculate | mapping-expand-invalidate-save | 10000 | 154.16 | 89.09 | 105.01 |
-| current-mapping-no-recalculate | mapping-expand-invalidate-save | 30000 | 463.84 | 255.00 | 203.34 |
-| current-mapping | mapping-expand-recalculate-save | 1000 | 51.94 | 22.56 | 78.63 |
-| current-mapping | mapping-expand-recalculate-save | 10000 | 617.41 | 199.25 | 198.17 |
-| current-mapping | mapping-expand-recalculate-save | 30000 | 2548.30 | 579.35 | 250.58 |
-| current-reader-recalculate | reader-recalculate | 1000 | 38.96 | 15.92 | 73.93 |
-| current-reader-recalculate | reader-recalculate | 10000 | 408.22 | 150.52 | 155.54 |
-| current-reader-recalculate | reader-recalculate | 30000 | 2967.37 | 439.64 | 238.00 |
-| current-reader | reader-cached | 1000 | 26.36 | 9.93 | 67.96 |
-| current-reader | reader-cached | 10000 | 285.76 | 91.65 | 146.11 |
-| current-reader | reader-cached | 30000 | 814.60 | 268.97 | 204.16 |
-| current-recalculate | xlsx-recalculate-save | 1000 | 61.25 | 10.87 | 64.52 |
-| current-recalculate | xlsx-recalculate-save | 10000 | 365.94 | 104.57 | 117.82 |
-| current-recalculate | xlsx-recalculate-save | 30000 | 1117.63 | 308.15 | 203.36 |
-| current-sum | engine-sum | 100000 | 12.75 | 14.97 | 74.59 |
+| baseline-d7c08f4-reader | reader-cached | 1000 | 26.05 | 9.93 | 67.45 |
+| baseline-d7c08f4-reader | reader-cached | 10000 | 266.62 | 91.65 | 145.61 |
+| baseline-d7c08f4-reader | reader-cached | 30000 | 781.57 | 268.97 | 203.66 |
+| current-engine | engine-constant-repeated | 1000 | 1.10 | 0.35 | 30.51 |
+| current-engine | engine-independent | 1000 | 2.71 | 2.53 | 32.43 |
+| current-engine | engine-common-dependency | 1000 | 1.13 | 1.28 | 32.66 |
+| current-engine | engine-constant-repeated | 10000 | 10.24 | 3.43 | 34.20 |
+| current-engine | engine-independent | 10000 | 28.14 | 25.03 | 59.19 |
+| current-engine | engine-common-dependency | 10000 | 11.47 | 12.51 | 59.69 |
+| current-engine | engine-constant-repeated | 30000 | 30.40 | 10.30 | 59.69 |
+| current-engine | engine-independent | 30000 | 87.34 | 72.48 | 112.64 |
+| current-engine | engine-common-dependency | 30000 | 35.42 | 34.94 | 117.51 |
+| current-mapping-no-recalculate | mapping-expand-invalidate-save | 1000 | 20.93 | 11.15 | 66.98 |
+| current-mapping-no-recalculate | mapping-expand-invalidate-save | 10000 | 166.51 | 89.08 | 104.79 |
+| current-mapping-no-recalculate | mapping-expand-invalidate-save | 30000 | 497.84 | 254.99 | 202.99 |
+| current-mapping | mapping-expand-recalculate-save | 1000 | 52.44 | 22.56 | 78.54 |
+| current-mapping | mapping-expand-recalculate-save | 10000 | 540.13 | 199.24 | 198.07 |
+| current-mapping | mapping-expand-recalculate-save | 30000 | 1620.81 | 579.35 | 220.83 |
+| current-reader-recalculate | reader-recalculate | 1000 | 36.56 | 16.23 | 74.55 |
+| current-reader-recalculate | reader-recalculate | 10000 | 394.22 | 153.57 | 156.46 |
+| current-reader-recalculate | reader-recalculate | 30000 | 1307.53 | 448.80 | 234.12 |
+| current-reader | reader-cached | 1000 | 24.78 | 9.93 | 68.06 |
+| current-reader | reader-cached | 10000 | 265.42 | 91.65 | 146.21 |
+| current-reader | reader-cached | 30000 | 775.70 | 268.97 | 204.26 |
+| current-recalculate | xlsx-recalculate-save | 1000 | 32.59 | 10.87 | 64.48 |
+| current-recalculate | xlsx-recalculate-save | 10000 | 343.38 | 104.57 | 117.59 |
+| current-recalculate | xlsx-recalculate-save | 30000 | 1164.93 | 308.15 | 203.14 |
+| current-sum | engine-sum | 100000 | 14.27 | 14.97 | 74.35 |
 
 At 30,000 rows the CachedValue path allocated the same approximately 269 MiB
-on baseline and current implementation; measured medians were 808.87 ms and
-814.60 ms respectively. This supports no material allocation regression in this
-workload, not a general performance guarantee. Mapping expansion without
-recalculation allocated 11.15 / 89.09 / 255.00 MiB for 1k / 10k / 30k rows;
-with recalculation it allocated 22.56 / 199.25 / 579.35 MiB. Both paths checked all
-formula cells. The 100,000-cell SUM returned exactly 200,000, at 12.75 ms and
-14.97 MiB allocated. All 30,000 independent/common-dependent formulas returned
-22, with checksums 660,000. Bounded session caching avoids repeatedly evaluating
-the shared dependency; no per-cell independent recalculation loop is used.
+on baseline and current implementation; measured medians were 781.57 ms and
+775.70 ms respectively (current/baseline 0.9925). At 1,000 and 10,000 rows the
+time ratios were 0.951 and 0.996, also with unchanged allocations to the table's
+precision. These observations support no material regression in this fixture;
+the small differences do not establish a general speedup.
 
-Time scaling in this shared-container run is noisy (including concurrent
-compilation). A quiet repeat is needed before interpreting the large-case timing
-ratios. The recorded allocations increase roughly with workload size, and no
-unbounded full-column materialization is part of these cases. Peak working-set
-values include process history and cannot be subtracted as incremental costs.
-Excel desktop was not used for these checks.
+Mapping expansion without recalculation allocated 11.15 / 89.08 / 254.99 MiB
+for 1k / 10k / 30k rows; with recalculation it allocated
+22.56 / 199.24 / 579.35 MiB. Both paths checked all formula cells, including
+absence of unevaluated caches in the no-recalculation case and numeric cache
+types in the recalculation case. The 100,000-cell SUM returned exactly 200,000,
+at 14.27 ms and 14.97 MiB allocated. All 30,000 independent/common-dependent
+formulas returned 22, with checksums 660,000.
 
+For the 10k to 30k increase (3x workload), elapsed-time ratios were 3.10x for
+independent formulas, 3.09x for common dependencies, 3.00x for Mapping with
+recalculation, 2.99x for Mapping without recalculation, 3.32x for the recalculating
+reader, and 3.39x for XLSX recalculation/save. The corresponding allocation ratios
+were approximately 2.90x, 2.79x, 2.91x, 2.86x, 2.92x, and 2.95x. These measurements
+show roughly linear scaling across the measured range, rather than the 9x cost
+expected of a quadratic algorithm for a 3x workload. They do not prove asymptotic
+complexity for all formulas or workbooks. Bounded shared-session evaluation avoids
+repeatedly evaluating the common dependency; the harness never performs a new
+independent recalculation session per formula cell.
+
+Peak working-set values include process history and cannot be subtracted as
+incremental costs. No unbounded full-column materialization is part of these
+cases. Excel desktop was not used for these checks.

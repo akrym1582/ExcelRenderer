@@ -523,7 +523,7 @@ pictures intersecting repeated regions are rejected with template diagnostics.
 Unknown parts/extensions, macros, signatures and Strict packages are rejected.
 Use ordinary cell-based templates for repeated regions.
 
-Saving explicitly disables formula evaluation and preserves the original `calcPr`
+Default-mode saving disables formula evaluation and preserves the original `calcPr`
 (including absence), without adding recalculation requests. Strings beginning with
 `=` remain literal strings. Mapping's `**` expressions and format/date operations
 are separate from Excel formulas and remain supported.

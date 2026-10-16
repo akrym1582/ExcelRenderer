@@ -1,0 +1,30 @@
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Core.Tests/bin/Release/net10.0/ExcelRenderer.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Formulas.Tests/bin/Release/net10.0/ExcelRenderer.Formulas.Tests.dll (.NETCoreApp,Version=v10.0)
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Mapping.Tests/bin/Release/net10.0/ExcelRenderer.Mapping.Tests.dll (.NETCoreApp,Version=v10.0)
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.OpenXml.Tests/bin/Release/net10.0/ExcelRenderer.OpenXml.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+A total of 1 test files matched the specified pattern.
+A total of 1 test files matched the specified pattern.
+A total of 1 test files matched the specified pattern.
+Results File: /tmp/formulas-validation/verified-tests/_1d0b9fdb9d8f_2026-10-16_12_19_57_net10.0.trx
+
+Passed!  - Failed:     0, Passed:   110, Skipped:     0, Total:   110, Duration: 135 ms - ExcelRenderer.Formulas.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Release/net10.0/ExcelRenderer.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /tmp/formulas-validation/verified-tests/_1d0b9fdb9d8f_2026-10-16_12_19_57_net10.0[1].trx
+
+Passed!  - Failed:     0, Passed:   171, Skipped:     0, Total:   171, Duration: 1 s - ExcelRenderer.OpenXml.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/bin/Release/net10.0/ExcelRenderer.Tool.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /tmp/formulas-validation/verified-tests/_1d0b9fdb9d8f_2026-10-16_12_19_57_net10.0[2].trx
+
+Passed!  - Failed:     0, Passed:   190, Skipped:     0, Total:   190, Duration: 6 s - ExcelRenderer.Mapping.Tests.dll (net10.0)
+Results File: /tmp/formulas-validation/verified-tests/_1d0b9fdb9d8f_2026-10-16_12_19_58_net10.0.trx
+
+Passed!  - Failed:     0, Passed:    82, Skipped:     0, Total:    82, Duration: 7 s - ExcelRenderer.Core.Tests.dll (net10.0)
+Results File: /tmp/formulas-validation/verified-tests/_1d0b9fdb9d8f_2026-10-16_12_20_02_net10.0.trx
+
+Passed!  - Failed:     0, Passed:   555, Skipped:     0, Total:   555, Duration: 31 s - ExcelRenderer.Tests.dll (net10.0)
+Results File: /tmp/formulas-validation/verified-tests/_1d0b9fdb9d8f_2026-10-16_12_20_02_net10.0[1].trx
+
+Passed!  - Failed:     0, Passed:    91, Skipped:     0, Total:    91, Duration: 1 m 14 s - ExcelRenderer.Tool.Tests.dll (net10.0)

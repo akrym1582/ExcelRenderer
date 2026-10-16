@@ -1,0 +1,93 @@
+{
+  "ExcelRenderer.Formulas": {
+    "dependencies": {},
+    "dlls": [
+      "lib/netstandard2.1/ExcelRenderer.Formulas.dll"
+    ]
+  },
+  "ExcelRenderer.OpenXml": {
+    "dependencies": {
+      "ExcelRenderer.Formulas": "1.8.0",
+      "DocumentFormat.OpenXml": "3.3.0",
+      "ExcelNumberFormat": "1.1.0"
+    },
+    "dlls": [
+      "lib/netstandard2.1/ExcelRenderer.OpenXml.dll"
+    ]
+  },
+  "ExcelRenderer.Mapping": {
+    "dependencies": {
+      "ExcelRenderer.OpenXml": "1.8.0",
+      "DocumentFormat.OpenXml": "3.3.0",
+      "System.Text.Json": "10.0.0"
+    },
+    "dlls": [
+      "lib/netstandard2.1/ExcelRenderer.Mapping.dll"
+    ]
+  },
+  "ExcelRenderer": {
+    "dependencies": {
+      "ExcelRenderer.OpenXml": "1.8.0",
+      "DocumentFormat.OpenXml": "3.3.0",
+      "PDFsharp": "6.2.3",
+      "SkiaSharp": "4.151.0",
+      "SkiaSharp.NativeAssets.Linux": "4.151.0",
+      "System.Security.Cryptography.Pkcs": "8.0.2"
+    },
+    "dlls": [
+      "lib/netstandard2.1/ExcelRenderer.Core.dll",
+      "lib/netstandard2.1/ExcelRenderer.dll"
+    ]
+  },
+  "ExcelRenderer.Tool": {
+    "dependencies": {},
+    "dlls": [
+      "tools/net10.0/any/DocumentFormat.OpenXml.Framework.dll",
+      "tools/net10.0/any/DocumentFormat.OpenXml.dll",
+      "tools/net10.0/any/ExcelNumberFormat.dll",
+      "tools/net10.0/any/ExcelRenderer.Core.dll",
+      "tools/net10.0/any/ExcelRenderer.Fonts.dll",
+      "tools/net10.0/any/ExcelRenderer.Formulas.dll",
+      "tools/net10.0/any/ExcelRenderer.Mapping.dll",
+      "tools/net10.0/any/ExcelRenderer.OpenXml.dll",
+      "tools/net10.0/any/ExcelRenderer.Tool.dll",
+      "tools/net10.0/any/ExcelRenderer.dll",
+      "tools/net10.0/any/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+      "tools/net10.0/any/Microsoft.Extensions.DependencyInjection.dll",
+      "tools/net10.0/any/Microsoft.Extensions.Logging.Abstractions.dll",
+      "tools/net10.0/any/Microsoft.Extensions.Logging.dll",
+      "tools/net10.0/any/Microsoft.Extensions.Options.dll",
+      "tools/net10.0/any/Microsoft.Extensions.Primitives.dll",
+      "tools/net10.0/any/PdfSharp.BarCodes.dll",
+      "tools/net10.0/any/PdfSharp.Charting.dll",
+      "tools/net10.0/any/PdfSharp.Cryptography.dll",
+      "tools/net10.0/any/PdfSharp.Quality.dll",
+      "tools/net10.0/any/PdfSharp.Shared.dll",
+      "tools/net10.0/any/PdfSharp.Snippets.dll",
+      "tools/net10.0/any/PdfSharp.System.dll",
+      "tools/net10.0/any/PdfSharp.WPFonts.dll",
+      "tools/net10.0/any/PdfSharp.dll",
+      "tools/net10.0/any/SkiaSharp.dll",
+      "tools/net10.0/any/System.CommandLine.dll",
+      "tools/net10.0/any/System.IO.Packaging.dll",
+      "tools/net10.0/any/System.Security.Cryptography.Pkcs.dll",
+      "tools/net10.0/any/cs/System.CommandLine.resources.dll",
+      "tools/net10.0/any/de/System.CommandLine.resources.dll",
+      "tools/net10.0/any/es/System.CommandLine.resources.dll",
+      "tools/net10.0/any/fr/System.CommandLine.resources.dll",
+      "tools/net10.0/any/it/System.CommandLine.resources.dll",
+      "tools/net10.0/any/ja/System.CommandLine.resources.dll",
+      "tools/net10.0/any/ko/System.CommandLine.resources.dll",
+      "tools/net10.0/any/pl/System.CommandLine.resources.dll",
+      "tools/net10.0/any/pt-BR/System.CommandLine.resources.dll",
+      "tools/net10.0/any/ru/System.CommandLine.resources.dll",
+      "tools/net10.0/any/runtimes/win-arm64/native/libSkiaSharp.dll",
+      "tools/net10.0/any/runtimes/win-x64/native/libSkiaSharp.dll",
+      "tools/net10.0/any/runtimes/win-x86/native/libSkiaSharp.dll",
+      "tools/net10.0/any/runtimes/win/lib/net8.0/System.Security.Cryptography.Pkcs.dll",
+      "tools/net10.0/any/tr/System.CommandLine.resources.dll",
+      "tools/net10.0/any/zh-Hans/System.CommandLine.resources.dll",
+      "tools/net10.0/any/zh-Hant/System.CommandLine.resources.dll"
+    ]
+  }
+}

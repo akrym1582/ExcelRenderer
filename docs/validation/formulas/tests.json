@@ -1,0 +1,54 @@
+{
+  "source_commit": "56d7eb575c90fb0575e86174055ceb02a6d42b48",
+  "projects": [
+    {
+      "project": "ExcelRenderer.Formulas.Tests.dll",
+      "passed": 110,
+      "failed": 0,
+      "skipped": 0,
+      "total": 110,
+      "duration": "135 ms"
+    },
+    {
+      "project": "ExcelRenderer.OpenXml.Tests.dll",
+      "passed": 171,
+      "failed": 0,
+      "skipped": 0,
+      "total": 171,
+      "duration": "1 s"
+    },
+    {
+      "project": "ExcelRenderer.Mapping.Tests.dll",
+      "passed": 190,
+      "failed": 0,
+      "skipped": 0,
+      "total": 190,
+      "duration": "6 s"
+    },
+    {
+      "project": "ExcelRenderer.Core.Tests.dll",
+      "passed": 82,
+      "failed": 0,
+      "skipped": 0,
+      "total": 82,
+      "duration": "7 s"
+    },
+    {
+      "project": "ExcelRenderer.Tests.dll",
+      "passed": 555,
+      "failed": 0,
+      "skipped": 0,
+      "total": 555,
+      "duration": "31 s"
+    },
+    {
+      "project": "ExcelRenderer.Tool.Tests.dll",
+      "passed": 91,
+      "failed": 0,
+      "skipped": 0,
+      "total": 91,
+      "duration": "1 m 14 s"
+    }
+  ],
+  "total": 1199
+}

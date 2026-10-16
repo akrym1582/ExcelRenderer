@@ -1,7 +1,8 @@
 # Formula integration validation
 
-Status: implementation and verification in progress; this record is updated before
-final commit. Base `origin/main`: `d7c08f464a2be2b1d8f20d71607b6e0f04c1cfc4`,
+Local verification completed against implementation commit
+`56d7eb575c90fb0575e86174055ceb02a6d42b48`; subsequent changes are documentation
+and recorded measurements. Base `origin/main`: `d7c08f464a2be2b1d8f20d71607b6e0f04c1cfc4`,
 fetched 2026-10-16. Branch: `feature/formulas-integration-main-20261016`.
 .NET SDK 10.0.401, runtime 10.0.12, Debian GNU/Linux 13, x64.
 
@@ -38,8 +39,45 @@ The source fixture uses the Open XML SDK, never ClosedXML.
 
 ## Final checks
 
-Final command results, counts and artifact paths will be entered here after the
-last source changes settle. Prior intermediate green runs do not certify later edits.
+| Check | Result |
+| --- | --- |
+| `dotnet restore ExcelRenderer.slnx --locked-mode` | Passed |
+| `dotnet build ExcelRenderer.slnx -t:Rebuild -c Release --no-restore --verbosity:minimal` | Passed, 0 warnings, 0 errors |
+| `dotnet test ExcelRenderer.slnx -c Release --no-build` | 1,199 passed, 0 failed, 0 skipped |
+| Formulas / OpenXml / Mapping | 110 / 171 / 190 passed |
+| Core / main / CLI | 82 / 555 / 91 passed |
+| Both dependency scripts | Passed |
+| `check-output-mutations.py` | 19/19 detected; all source hashes restored |
+| `check-core-shared-mutations.py` | 2/2 detected; restored tests passed |
+| `check-core-mutations.py` | 4/4 detected |
+| `validate-core.py --visual-only` | 17 raster pages, maximum baseline MAE 0.0 (unchanged threshold 0.25) |
+| `dotnet pack ExcelRenderer.slnx -c Release --no-build --no-restore -p:BuildProjectReferences=false` | Six product/tool packages created locally |
+| `validate-formulas-packages.py` in a fresh directory | Five isolated consumer scenarios passed, including main and bundled Core |
+| Invoice sample, 0/1/3/4 lines | Saved totals 0/11/66/110; PDF, PNG, SVG, Markdown generated for each |
+
+Logs, test-count JSON, restored-source mutation hashes, package inventory and visual
+report are retained under [validation/formulas/](validation/formulas/).
+The visual report's historical `source_commit` identifies golden-image provenance;
+its `validation_commit` identifies this implementation. No baseline images changed.
+
+The last 3 OpenXml tests specifically preserve diagnostic path/span/feature and
+empty-string/false/zero cache types. The fixture suite also runs 2,000 deterministic
+malformed inputs. Exact page selection tests exclude cycles and unknown functions
+on unrendered pages, and measure actual calculated repeated-title values.
+
+The two Core visual helper projects are outside the solution. Their lockfiles were
+also updated for the new project dependency and then successfully restored in locked
+mode by the visual script. Existing external package lock entries were not changed.
+An initial locked restore caught these omitted helper lock updates; they were fixed,
+not bypassed. Parallel development initially raced Rebuild output deletion, and an
+intermediate CLI Mapping/Markdown test exposed a print-area selection mismatch;
+the final ordinary parallel solution Rebuild and full suite above both passed.
+The first no-build pack required the repository's established
+`BuildProjectReferences=false` switch. An isolated tool check also required setting
+`DOTNET_ROOT` from the installed runtime, now handled in the reproducible script.
+
+Remote Windows/Linux CI and PR status are recorded after the draft is created; local
+Linux evidence is not a claim of a completed Windows run.
 
 ## Performance
 

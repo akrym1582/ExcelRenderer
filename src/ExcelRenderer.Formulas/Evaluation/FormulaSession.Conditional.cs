@@ -1,7 +1,11 @@
 using System;
 using System.Collections.Generic;
+using ExcelRenderer.Formulas.Criteria;
+using ExcelRenderer.Formulas.References;
+using ExcelRenderer.Formulas.Syntax;
+using ExcelRenderer.Formulas.Values;
 
-namespace ExcelRenderer.Formulas
+namespace ExcelRenderer.Formulas.Evaluation
 {
     /// <summary>Implements bounded session evaluation for this function family.</summary>
     public sealed partial class FormulaSession

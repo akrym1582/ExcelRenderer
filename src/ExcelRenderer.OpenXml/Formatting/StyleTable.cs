@@ -7,8 +7,13 @@ using System.Threading;
 using System.Xml.Linq;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
+using ExcelRenderer.OpenXml.Diagnostics;
+using ExcelRenderer.OpenXml.Infrastructure;
+using ExcelRenderer.OpenXml.Model.Styles;
+using ExcelRenderer.OpenXml.Model.Workbook;
+using ExcelRenderer.OpenXml.Reading;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Formatting;
 
 /// <summary>Provides StyleTable metadata.</summary>
 internal sealed class StyleTable

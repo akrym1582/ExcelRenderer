@@ -1,6 +1,9 @@
 using System.Threading;
+using ExcelRenderer.Formulas.Data;
+using ExcelRenderer.Formulas.References;
+using ExcelRenderer.Formulas.Syntax;
 
-namespace ExcelRenderer.Formulas
+namespace ExcelRenderer.Formulas.Evaluation
 {
     /// <summary>Creates isolated formula evaluation sessions.</summary>
     public sealed class FormulaEngine

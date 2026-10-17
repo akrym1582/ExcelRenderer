@@ -1,7 +1,12 @@
 using System.Globalization;
 using System.Text.Json;
-using ExcelRenderer.Formulas;
-using ExcelRenderer.OpenXml;
+using ExcelRenderer.Formulas.Data;
+using ExcelRenderer.Formulas.Evaluation;
+using ExcelRenderer.Formulas.References;
+using ExcelRenderer.Formulas.Values;
+using ExcelRenderer.OpenXml.Calculation;
+using ExcelRenderer.OpenXml.Model.Cells;
+using ExcelRenderer.OpenXml.Reading;
 
 var mapping = args.Length > 0 && args[0] == "--mapping";
 if (mapping)

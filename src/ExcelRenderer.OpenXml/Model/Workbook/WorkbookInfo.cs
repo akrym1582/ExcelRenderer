@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using ExcelRenderer.OpenXml.Model.Styles;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Model.Workbook;
 
 /// <summary>Immutable WorkbookInfo snapshot. XML attribute names and source units are preserved.</summary>
 public sealed class WorkbookInfo

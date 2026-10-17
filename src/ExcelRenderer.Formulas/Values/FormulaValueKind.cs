@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace ExcelRenderer.Formulas
+namespace ExcelRenderer.Formulas.Values
 {
     /// <summary>Initializes a new instance of the <see cref="FormulaValueKind"/> class.</summary>
     public enum FormulaValueKind

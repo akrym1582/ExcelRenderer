@@ -1,10 +1,10 @@
-using ExcelRenderer.TestFixtures;
 using ExcelRenderer.Excel;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Model;
 using ExcelRenderer.PdfSharp;
 using ExcelRenderer.Rendering;
+using ExcelRenderer.TestFixtures;
 using PdfSharp.Pdf.IO;
 using Xunit;
 

@@ -1,4 +1,3 @@
-using ExcelRenderer.TestFixtures;
 using DocumentFormat.OpenXml.Packaging;
 using ExcelRenderer.Abstractions;
 using ExcelRenderer.Drawing;
@@ -8,6 +7,7 @@ using ExcelRenderer.Layout;
 using ExcelRenderer.Model;
 using ExcelRenderer.PdfSharp;
 using ExcelRenderer.Rendering;
+using ExcelRenderer.TestFixtures;
 using PdfSharp.Fonts;
 using SkiaSharp;
 using A = DocumentFormat.OpenXml.Drawing;

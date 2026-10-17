@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace ExcelRenderer.Formulas
+namespace ExcelRenderer.Formulas.References
 {
     /// <summary>Identifies a normalized inclusive rectangular reference.</summary>
     public readonly struct FormulaRange

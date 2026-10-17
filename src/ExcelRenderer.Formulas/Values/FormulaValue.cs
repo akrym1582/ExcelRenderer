@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace ExcelRenderer.Formulas
+namespace ExcelRenderer.Formulas.Values
 {
     /// <summary>Stores a blank, finite number, text, Boolean or Excel error.</summary>
     public readonly struct FormulaValue

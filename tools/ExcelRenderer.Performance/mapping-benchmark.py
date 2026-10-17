@@ -15,7 +15,8 @@ using System.Diagnostics;
 using System.Text.Json;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
-using ExcelRenderer.OpenXml;
+using ExcelRenderer.OpenXml.Model.Cells;
+using ExcelRenderer.OpenXml.Reading;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 using ExcelRenderer.Mapping;
 
@@ -169,7 +170,8 @@ with tempfile.TemporaryDirectory(prefix="mapping-perf-") as tmp:
         '<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType>'
         '<TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings>'
         '<Nullable>enable</Nullable></PropertyGroup><ItemGroup><ProjectReference Include="'
-        + escape(str(project), {'"': '&quot;'}) + '" /></ItemGroup></Project>')
+        + escape(str(project), {'"': '&quot;'}) + '" /><ProjectReference Include="'
+        + escape(str(repo / 'src/ExcelRenderer.OpenXml/ExcelRenderer.OpenXml.csproj'), {'"': '&quot;'}) + '" /></ItemGroup></Project>')
     subprocess.run(["dotnet", "build", str(directory / "MappingPerf.csproj"), "-c", "Release", "--verbosity", "minimal"], check=True)
     dll = directory / "bin/Release/net10.0/MappingPerf.dll"
     failures = 0

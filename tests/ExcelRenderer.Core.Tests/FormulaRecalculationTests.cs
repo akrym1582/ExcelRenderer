@@ -32,7 +32,7 @@ public sealed class FormulaRecalculationTests
             cell.CellValue = new("999");
         });
         using var output = new MemoryStream();
-        await Assert.ThrowsAsync<OpenXml.FormulaCalculationException>(() => ExcelConverter.ConvertAsync(input, output,
+        await Assert.ThrowsAsync<OpenXml.Calculation.FormulaCalculationException>(() => ExcelConverter.ConvertAsync(input, output,
             TestSupport.Options with { ReadOptions = new() { FormulaDisplayMode = FormulaDisplayMode.Recalculate } }));
         Assert.Empty(output.ToArray());
     }

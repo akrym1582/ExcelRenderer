@@ -1,8 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using ExcelRenderer.OpenXml.Formatting;
+using ExcelRenderer.OpenXml.Model.Cells;
+using ExcelRenderer.OpenXml.Model.Styles;
+using ExcelRenderer.OpenXml.Model.Workbook;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Reading;
 
 /// <summary>Source-data boundary for future rendering adapters, with no SDK or rendering model types.</summary>
 public interface IWorkbookDataReader : IDisposable

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
-using ExcelRenderer.Formulas;
+using ExcelRenderer.Formulas.References;
+using ExcelRenderer.Formulas.Syntax;
 using Xunit;
 
 namespace ExcelRenderer.Formulas.Tests;

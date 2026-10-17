@@ -1,5 +1,5 @@
-using ExcelRenderer.TestFixtures;
 using ExcelRenderer.Rendering;
+using ExcelRenderer.TestFixtures;
 using Xunit;
 
 namespace ExcelRenderer.Tests;

@@ -1,4 +1,4 @@
-namespace ExcelRenderer.Formulas
+namespace ExcelRenderer.Formulas.Evaluation
 {
     /// <summary>Identifies the workbook's Excel date epoch.</summary>
     public enum FormulaDateSystem

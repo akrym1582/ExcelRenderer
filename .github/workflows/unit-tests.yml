@@ -34,6 +34,9 @@ jobs:
       - name: Verify Core dependency direction and migrated ownership
         run: python3 scripts/check-core-dependencies.py
 
+      - name: Verify source folder namespaces
+        run: python3 scripts/check-source-namespaces.py
+
       - name: Verify NuGet publication allowlist
         run: python3 scripts/package_distribution.py
 

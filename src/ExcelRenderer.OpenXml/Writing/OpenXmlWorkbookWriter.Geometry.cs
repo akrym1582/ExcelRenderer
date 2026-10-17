@@ -7,9 +7,12 @@ using System.Text;
 using System.Threading;
 using System.Xml;
 using System.Xml.Linq;
+using ExcelRenderer.OpenXml.Diagnostics;
 using ExcelRenderer.OpenXml.Input;
+using ExcelRenderer.OpenXml.Model.Cells;
+using ExcelRenderer.OpenXml.Writing.Plans;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Writing;
 
 /// <summary>Transforms geometry using explicit one-to-many row occurrences.</summary>
 public static partial class OpenXmlWorkbookWriter

@@ -4,9 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using DocumentFormat.OpenXml.Packaging;
+using ExcelRenderer.OpenXml.Infrastructure;
+using ExcelRenderer.OpenXml.Model.Drawing;
 using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Reading;
 
 /// <summary>Streams image identities and opens package-owned image data.</summary>
 public sealed partial class OpenXmlWorkbookReader

@@ -2,8 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using ExcelRenderer.Formulas.Functions.Dates;
+using ExcelRenderer.Formulas.Functions.Numeric;
+using ExcelRenderer.Formulas.References;
+using ExcelRenderer.Formulas.Syntax;
+using ExcelRenderer.Formulas.Values;
 
-namespace ExcelRenderer.Formulas
+namespace ExcelRenderer.Formulas.Evaluation
 {
     /// <summary>Implements bounded session evaluation for this function family.</summary>
     public sealed partial class FormulaSession

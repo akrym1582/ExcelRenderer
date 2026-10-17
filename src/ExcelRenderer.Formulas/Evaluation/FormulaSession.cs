@@ -3,8 +3,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Threading;
+using ExcelRenderer.Formulas.Data;
+using ExcelRenderer.Formulas.Diagnostics;
+using ExcelRenderer.Formulas.Functions;
+using ExcelRenderer.Formulas.References;
+using ExcelRenderer.Formulas.Syntax;
+using ExcelRenderer.Formulas.Values;
 
-namespace ExcelRenderer.Formulas
+namespace ExcelRenderer.Formulas.Evaluation
 {
     /// <summary>Evaluates reachable dependencies with session-local memoization over an immutable data source. Instances are not thread safe.</summary>
     public sealed partial class FormulaSession

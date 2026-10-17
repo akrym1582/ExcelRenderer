@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using ExcelRenderer.OpenXml.Diagnostics;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Reading;
 
 /// <summary>Limits and selection for a prevalidated, seekable XLSX input.</summary>
 public sealed class OpenXmlReaderOptions

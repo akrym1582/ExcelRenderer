@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using System.IO;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Model.Cells;
 
 /// <summary>A validated one-based XLSX cell coordinate.</summary>
 public readonly struct CellAddress : IEquatable<CellAddress>

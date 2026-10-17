@@ -1,6 +1,5 @@
 using System.Text;
 using ExcelRenderer.TestFixtures;
-using ExcelRenderer.OpenXml;
 using static ExcelRenderer.TestFixtures.WorkbookAssertions;
 using Xunit;
 

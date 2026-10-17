@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace ExcelRenderer.Formulas
+namespace ExcelRenderer.Formulas.References
 {
     /// <summary>Identifies a one-based cell coordinate in a workbook sheet.</summary>
     public readonly struct FormulaCellAddress : IEquatable<FormulaCellAddress>

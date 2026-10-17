@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace ExcelRenderer.Formulas
+namespace ExcelRenderer.Formulas.Values
 {
     /// <summary>Contains either a constant value or formula text without a saved cache.</summary>
     public readonly struct FormulaCellData

@@ -1,6 +1,6 @@
 using System.Text.Json.Nodes;
+using ExcelRenderer.OpenXml.Model.Cells;
 using ExcelRenderer.TestFixtures;
-using ExcelRenderer.OpenXml;
 using static ExcelRenderer.TestFixtures.WorkbookAssertions;
 using Xunit;
 

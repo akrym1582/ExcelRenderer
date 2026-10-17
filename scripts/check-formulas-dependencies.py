@@ -24,4 +24,10 @@ for path in (ROOT / 'src').glob('*/*.csproj'):
     for ref in xml.findall('.//ProjectReference'):
         if 'ExcelRenderer.Formulas' in ref.attrib['Include']:
             assert path.parent.name in {'ExcelRenderer.OpenXml', 'ExcelRenderer.Mapping', 'ExcelRenderer.Core', 'ExcelRenderer'}, path
-print('BCL formula engine, embedded distribution and adapter direction passed')
+registered = set(re.findall(r'"([A-Z]+)"', (ENGINE / 'Functions/FunctionRegistry.cs').read_text()))
+for language in ['', '.ja']:
+    reference = ROOT / f'docs/formulas-reference{language}.md'
+    documented = re.findall(r'^\| `([A-Z]+)` \|', reference.read_text(encoding='utf-8'), re.MULTILINE)
+    assert len(documented) == len(set(documented)), (reference, 'Duplicate function rows')
+    assert set(documented) == registered, (reference, registered - set(documented), set(documented) - registered)
+print(f'BCL formula engine, embedded distribution, adapter direction and {len(registered)} documented functions passed')

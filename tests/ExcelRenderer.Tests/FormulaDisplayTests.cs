@@ -1,8 +1,8 @@
-using ExcelRenderer.TestFixtures;
 using DocumentFormat.OpenXml.Packaging;
 using ExcelRenderer.Excel;
 using ExcelRenderer.Model;
 using ExcelRenderer.Rendering;
+using ExcelRenderer.TestFixtures;
 using Xunit;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 

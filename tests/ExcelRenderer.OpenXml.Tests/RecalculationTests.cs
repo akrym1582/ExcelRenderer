@@ -1,4 +1,8 @@
-using ExcelRenderer.Formulas;
+using ExcelRenderer.Formulas.Evaluation;
+using ExcelRenderer.Formulas.References;
+using ExcelRenderer.OpenXml.Calculation;
+using ExcelRenderer.OpenXml.Model.Cells;
+using ExcelRenderer.OpenXml.Reading;
 using Xunit;
 
 namespace ExcelRenderer.OpenXml.Tests;

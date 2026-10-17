@@ -1,6 +1,6 @@
 using System.Globalization;
 using System.Text.Json;
-using ExcelRenderer.OpenXml;
+using ExcelRenderer.OpenXml.Model.Cells;
 using ExcelRenderer.TestFixtures;
 using static ExcelRenderer.TestFixtures.WorkbookAssertions;
 using static ExcelRenderer.Mapping.Tests.MappingFixture;

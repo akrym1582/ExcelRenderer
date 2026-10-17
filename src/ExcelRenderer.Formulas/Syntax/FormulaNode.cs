@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ExcelRenderer.Formulas;
+namespace ExcelRenderer.Formulas.Syntax;
 
 /// <summary>An immutable formula syntax node.</summary>
 public sealed class FormulaNode

@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using System.Numerics;
 
-namespace ExcelRenderer.Formulas;
+namespace ExcelRenderer.Formulas.Functions.Numeric;
 
 /// <summary>Rounds the shortest round-trip decimal representation of a finite double.</summary>
 internal static class DecimalRounding

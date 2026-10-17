@@ -1,4 +1,4 @@
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Model.Cells;
 
 /// <summary>Stored cell value categories for adapter dispatch and style cache keys.</summary>
 public enum CellValueType

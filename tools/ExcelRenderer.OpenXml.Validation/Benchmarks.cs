@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text.Json;
-using ExcelRenderer.OpenXml;
+using ExcelRenderer.OpenXml.Reading;
 
 /// <summary>Isolates each reader and repetition so RSS peaks never contaminate other samples.</summary>
 internal static class Benchmarks

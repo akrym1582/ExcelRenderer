@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ExcelRenderer.Formulas
+namespace ExcelRenderer.Formulas.Criteria
 {
     /// <summary>Compiles wildcard tokens for bounded, nonrecursive matching.</summary>
     internal sealed class WildcardMatcher

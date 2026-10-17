@@ -18,4 +18,8 @@
     <ProjectReference Include="../../src/ExcelRenderer.Formulas/ExcelRenderer.Formulas.csproj" />
   </ItemGroup>
   <ItemGroup><None Update="Fixtures/Oracle/*.json" CopyToOutputDirectory="PreserveNewest" /><None Update="Fixtures/acceptance.json" CopyToOutputDirectory="PreserveNewest" /></ItemGroup>
+  <ItemGroup>
+    <None Include="../../docs/formulas-reference.md" Link="Documentation/formulas-reference.md" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../docs/formulas-reference.ja.md" Link="Documentation/formulas-reference.ja.md" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

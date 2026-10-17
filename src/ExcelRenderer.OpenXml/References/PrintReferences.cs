@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
+using ExcelRenderer.OpenXml.Diagnostics;
+using ExcelRenderer.OpenXml.Model.Cells;
+using ExcelRenderer.OpenXml.Model.Printing;
+using ExcelRenderer.OpenXml.Model.Workbook;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.References;
 
 /// <summary>Provides PrintReferences metadata.</summary>
 internal static class PrintReferences

@@ -1,7 +1,9 @@
 using System;
 using System.IO;
+using ExcelRenderer.OpenXml.Infrastructure;
+using ExcelRenderer.OpenXml.Model.Workbook;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Model.Styles;
 
 /// <summary>Immutable source font properties; null means unspecified and can inherit from a base font.</summary>
 public sealed class FontInfo

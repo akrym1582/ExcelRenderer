@@ -636,6 +636,10 @@ seekable な一時ファイルへ spool します。reader は独立した curso
 
 ## 開発
 
+Formulas／OpenXmlの公開APIのnamespaceはフォルダ構成に一致させました。
+更新するusingと型の配置は[namespace移行ガイド](docs/namespace-migration.md)を参照してください。
+
+
 NuGet 公開対象は `ExcelRenderer`・`ExcelRenderer.Mapping`・`ExcelRenderer.Tool`・
 `ExcelRenderer.Fonts` の4つです。Core・OpenXml・Formulas は公開パッケージへ DLL を
 同梱するソースプロジェクトで、個別公開しません。詳しくは[配布構成](docs/package-distribution.md)を参照してください。

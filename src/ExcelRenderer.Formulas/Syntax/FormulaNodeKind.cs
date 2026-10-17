@@ -1,4 +1,4 @@
-namespace ExcelRenderer.Formulas;
+namespace ExcelRenderer.Formulas.Syntax;
 
 /// <summary>Identifies a formula syntax node.</summary>
 public enum FormulaNodeKind

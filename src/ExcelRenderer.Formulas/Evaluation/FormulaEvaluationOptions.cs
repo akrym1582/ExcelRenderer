@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace ExcelRenderer.Formulas
+namespace ExcelRenderer.Formulas.Evaluation
 {
     /// <summary>Configures bounded parsing and session-wide evaluation work.</summary>
     public sealed class FormulaEvaluationOptions

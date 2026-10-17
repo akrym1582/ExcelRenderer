@@ -1,13 +1,13 @@
 using System.IO.Compression;
-using ExcelRenderer.TestFixtures;
 using ExcelRenderer.Excel;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Model;
 using ExcelRenderer.PdfSharp;
 using ExcelRenderer.Rendering;
-using Xunit;
+using ExcelRenderer.TestFixtures;
 using SkiaSharp;
 using Svg.Skia;
+using Xunit;
 
 namespace ExcelRenderer.Tests;
 

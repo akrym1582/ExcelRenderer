@@ -1,6 +1,7 @@
 using System;
+using ExcelRenderer.Formulas.Evaluation;
 
-namespace ExcelRenderer.Formulas
+namespace ExcelRenderer.Formulas.Functions.Dates
 {
     /// <summary>Represents calendar components, including the fictitious 1900 leap day and day zero.</summary>
     internal readonly struct ExcelDate

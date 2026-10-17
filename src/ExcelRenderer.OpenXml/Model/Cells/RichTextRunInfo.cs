@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using ExcelRenderer.OpenXml.Model.Styles;
+using ExcelRenderer.OpenXml.Model.Workbook;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Model.Cells;
 
 /// <summary>Immutable RichTextRunInfo snapshot. XML attribute names and source units are preserved.</summary>
 public sealed class RichTextRunInfo

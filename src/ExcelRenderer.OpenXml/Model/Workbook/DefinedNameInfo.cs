@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Model.Workbook;
 
 /// <summary>Immutable DefinedNameInfo snapshot. XML attribute names and source units are preserved.</summary>
 public sealed class DefinedNameInfo

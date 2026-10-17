@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using ExcelRenderer.Formulas.References;
+using ExcelRenderer.Formulas.Values;
 
-namespace ExcelRenderer.Formulas
+namespace ExcelRenderer.Formulas.Data
 {
     /// <summary>Provides workbook data that must remain immutable throughout an evaluation session.</summary>
     public interface IFormulaDataSource

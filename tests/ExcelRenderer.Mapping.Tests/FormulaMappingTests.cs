@@ -1,5 +1,5 @@
 using DocumentFormat.OpenXml.Packaging;
-using ExcelRenderer.OpenXml;
+using ExcelRenderer.OpenXml.Calculation;
 using ExcelRenderer.TestFixtures;
 using Xunit;
 using S = DocumentFormat.OpenXml.Spreadsheet;

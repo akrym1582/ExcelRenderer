@@ -84,7 +84,7 @@ indexes do not retain caller data after writing.
 ## Public style API migration
 
 ```csharp
-using var reader = ExcelRenderer.OpenXml.OpenXmlWorkbookReader.Open(input);
+using var reader = ExcelRenderer.OpenXml.Reading.OpenXmlWorkbookReader.Open(input);
 var cell = reader.EnumerateCells(reader.SelectedWorksheetIndices[0]).First();
 var style = ExcelRenderer.Excel.ExcelStyleConverter.Convert(
     reader.ResolveStyle(cell), cell.Value.Type);

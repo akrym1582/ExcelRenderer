@@ -8,9 +8,12 @@ using System.Threading;
 using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using ExcelRenderer.OpenXml.Input;
+using ExcelRenderer.OpenXml.Model.Cells;
+using ExcelRenderer.OpenXml.References;
+using ExcelRenderer.OpenXml.Writing.Plans;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Writing;
 
 /// <summary>Rebuilds saved worksheet pivot source records without calculating pivot aggregates.</summary>
 public static partial class OpenXmlWorkbookWriter

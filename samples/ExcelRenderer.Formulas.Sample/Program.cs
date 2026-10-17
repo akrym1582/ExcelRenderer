@@ -6,7 +6,8 @@ using ExcelRenderer.Excel;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Mapping;
 using ExcelRenderer.Markdown;
-using ExcelRenderer.OpenXml;
+using ExcelRenderer.OpenXml.Calculation;
+using ExcelRenderer.OpenXml.Reading;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 
 if (args.Length > 3)

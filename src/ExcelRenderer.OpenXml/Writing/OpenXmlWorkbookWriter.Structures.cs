@@ -7,10 +7,14 @@ using System.Linq;
 using System.Threading;
 using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
+using ExcelRenderer.OpenXml.Infrastructure;
 using ExcelRenderer.OpenXml.Input;
+using ExcelRenderer.OpenXml.Model.Cells;
+using ExcelRenderer.OpenXml.References;
+using ExcelRenderer.OpenXml.Writing.Plans;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Writing;
 
 /// <summary>Updates workbook relationships and structural references from the same row plan.</summary>
 public static partial class OpenXmlWorkbookWriter

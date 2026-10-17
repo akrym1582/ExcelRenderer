@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using ExcelRenderer.Formulas.Diagnostics;
+using ExcelRenderer.Formulas.Evaluation;
 
-namespace ExcelRenderer.Formulas;
+namespace ExcelRenderer.Formulas.Syntax;
 
 /// <summary>Parses the supported invariant A1 formula language.</summary>
 public static class FormulaParser

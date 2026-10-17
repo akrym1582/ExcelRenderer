@@ -6,7 +6,7 @@ using System.Threading;
 using System.Xml;
 using DocumentFormat.OpenXml.Packaging;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Infrastructure;
 
 /// <summary>Checks relationship references before editing and before publishing a staged package.</summary>
 internal static class WorkbookRelationships

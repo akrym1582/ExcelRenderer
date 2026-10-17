@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using System.Globalization;
+using ExcelRenderer.OpenXml.Model.Cells;
+using ExcelRenderer.OpenXml.Model.Printing;
+using ExcelRenderer.OpenXml.References;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Model.Workbook;
 
 /// <summary>Immutable WorksheetInfo snapshot. XML attribute names and source units are preserved.</summary>
 public sealed class WorksheetInfo

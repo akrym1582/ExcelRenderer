@@ -1,7 +1,11 @@
 using System;
 using System.Collections.Generic;
+using ExcelRenderer.Formulas.Criteria;
+using ExcelRenderer.Formulas.Functions.Lookup;
+using ExcelRenderer.Formulas.References;
+using ExcelRenderer.Formulas.Values;
 
-namespace ExcelRenderer.Formulas
+namespace ExcelRenderer.Formulas.Evaluation
 {
     /// <summary>Maintains bounded, incremental lookup indexes without evaluating future rows.</summary>
     public sealed partial class FormulaSession

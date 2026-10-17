@@ -50,3 +50,12 @@ python3 scripts/validate-formulas-packages.py --packages artifacts/namespace-ali
 python3 scripts/validate-core.py --visual-only
 dotnet run --project samples/ExcelRenderer.Formulas.Sample -c Release --no-build -- /tmp/excel-namespace-invoice-3 3
 ```
+
+## Windows line-ending follow-up
+
+[初回Windows CI](https://github.com/akrym1582/ExcelRenderer/actions/runs/39002421424/job/117307965041)
+では、追加した掲載例テストがCRLFのMarkdownからデータを抽出できず失敗しました。
+読み込み時にLFへ正規化し、コピー済みの日英ファイルを実際にCRLFへ変えて92例すべてが
+成功することを確認しました。検証後は元のファイルへ戻しています。
+
+この追補後もRelease Rebuildの警告・エラー0件、全1,939テスト成功を確認しました。

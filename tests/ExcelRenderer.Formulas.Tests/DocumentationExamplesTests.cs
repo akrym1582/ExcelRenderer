@@ -16,7 +16,7 @@ public sealed class DocumentationExamplesTests
     {
         foreach (var document in new[] { "formulas-reference.md", "formulas-reference.ja.md" })
         {
-            var text = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "Documentation", document));
+            var text = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "Documentation", document)).ReplaceLineEndings("\n");
             var functions = Regex.Matches(text, "^\\| `(?<name>[A-Z]+)` \\|.*\\| `=(?<formula>[^`]+)` → (?<expected>[^|]+)\\|$", RegexOptions.Multiline);
             foreach (Match match in functions)
             {

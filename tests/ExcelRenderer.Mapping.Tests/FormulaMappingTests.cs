@@ -1,4 +1,5 @@
 using DocumentFormat.OpenXml.Packaging;
+using ExcelRenderer.Mapping.Configuration;
 using ExcelRenderer.OpenXml.Calculation;
 using ExcelRenderer.TestFixtures;
 using Xunit;

@@ -4,6 +4,7 @@ using System.Xml.Linq;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Validation;
+using ExcelRenderer.Mapping.Diagnostics;
 using ExcelRenderer.OpenXml.Model.Cells;
 using ExcelRenderer.OpenXml.Writing;
 using ExcelRenderer.OpenXml.Writing.Plans;

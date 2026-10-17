@@ -32,7 +32,7 @@ Core では `PdfExportOptions.ReadOptions` の
 
 ```csharp
 ExcelRenderer.Mapping.ExcelTemplateMapper.Map(template, output, data,
-    new ExcelRenderer.Mapping.MappingOptions
+    new ExcelRenderer.Mapping.Configuration.MappingOptions
     {
         FormulaCalculationMode = ExcelRenderer.OpenXml.Calculation.FormulaCalculationMode.Recalculate,
     });

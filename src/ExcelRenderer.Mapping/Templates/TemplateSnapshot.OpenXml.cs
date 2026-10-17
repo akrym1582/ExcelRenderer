@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using ExcelRenderer.Mapping.Diagnostics;
 using ExcelRenderer.OpenXml.Model.Cells;
 using ExcelRenderer.OpenXml.Reading;
 
-namespace ExcelRenderer.Mapping;
+namespace ExcelRenderer.Mapping.Templates;
 
 /// <summary>Captures only syntax inputs from the streaming source.</summary>
 internal sealed partial class TemplateSnapshot

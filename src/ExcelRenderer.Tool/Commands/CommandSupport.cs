@@ -195,7 +195,7 @@ internal static class CommandSupport
     /// <param name="value">The mode text.</param>
     /// <param name="recalculateMappedWorkbook">Whether to calculate all saved XLSX results before returning.</param>
     /// <returns>The requested calculation policy.</returns>
-    internal static Mapping.MappingOptions GetMappingOptions(string value, bool recalculateMappedWorkbook = false) => new()
+    internal static Mapping.Configuration.MappingOptions GetMappingOptions(string value, bool recalculateMappedWorkbook = false) => new()
     {
         FormulaCalculationMode = value switch
         {

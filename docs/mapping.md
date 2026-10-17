@@ -160,6 +160,12 @@ selects a single sheet with `--sheet`. Quote paths that contain spaces.
 
 ## C# API
 
+| Type | Namespace |
+| --- | --- |
+| `ExcelTemplateMapper` | `ExcelRenderer.Mapping` |
+| `MappingOptions` | `ExcelRenderer.Mapping.Configuration` |
+| `MappingException` | `ExcelRenderer.Mapping.Diagnostics` |
+
 The examples below use the invoice template above. Run them in the directory
 containing `template.xlsx` and `data.json`. For a new application, create a
 console project with `dotnet new console -n MappingDemo`, enter its directory,
@@ -250,6 +256,8 @@ using System.Globalization;
 using System.IO;
 using System.Text.Json;
 using ExcelRenderer.Mapping;
+using ExcelRenderer.Mapping.Configuration;
+using ExcelRenderer.Mapping.Diagnostics;
 
 using var document = JsonDocument.Parse(File.ReadAllText("data.json"));
 var options = new MappingOptions

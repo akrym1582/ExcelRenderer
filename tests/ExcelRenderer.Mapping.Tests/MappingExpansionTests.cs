@@ -1,9 +1,10 @@
+using ExcelRenderer.Mapping;
+using ExcelRenderer.Mapping.Diagnostics;
 using ExcelRenderer.OpenXml.Model.Cells;
 using ExcelRenderer.TestFixtures;
+using Xunit;
 using static ExcelRenderer.TestFixtures.WorkbookAssertions;
 using static ExcelRenderer.Mapping.Tests.MappingFixture;
-using ExcelRenderer.Mapping;
-using Xunit;
 
 namespace ExcelRenderer.Mapping.Tests;
 

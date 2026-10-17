@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Text;
 using DocumentFormat.OpenXml.Packaging;
+using ExcelRenderer.Mapping.Diagnostics;
 using ExcelRenderer.TestFixtures;
 using Xunit;
 using S = DocumentFormat.OpenXml.Spreadsheet;

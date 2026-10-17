@@ -1,4 +1,6 @@
-namespace ExcelRenderer.Mapping;
+using ExcelRenderer.Mapping.Expressions;
+
+namespace ExcelRenderer.Mapping.Templates;
 
 /// <summary>An original cell location and its optional compiled expression.</summary>
 internal sealed class TemplateCell

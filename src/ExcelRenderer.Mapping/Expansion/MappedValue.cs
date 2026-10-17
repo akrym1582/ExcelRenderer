@@ -1,6 +1,6 @@
 using System;
 
-namespace ExcelRenderer.Mapping;
+namespace ExcelRenderer.Mapping.Expansion;
 
 /// <summary>A scalar evaluated once by the common language planner.</summary>
 internal readonly struct MappedValue

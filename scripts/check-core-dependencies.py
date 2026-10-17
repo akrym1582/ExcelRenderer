@@ -95,9 +95,11 @@ print('Shared OpenXml dependency direction and input ownership passed')
 for path in (ROOT / 'src/ExcelRenderer/CoreIntegration').glob('FullExcelReader*.cs'):
     assert not re.search(r'\b(IXL\w*|XLWorkbook)\b|using ClosedXML', path.read_text()), f'{path}: legacy type returned to product hooks'
 assert 'ClosedXML' not in (CORE / 'Excel/ICoreFontMetrics.cs').read_text(), 'Neutral metrics include legacy engine types'
-for name in ('TemplateSheet', 'TemplateNode', 'ExpansionNode', 'ExpansionPlan', 'MappedValue', 'MappedValueKind', 'TemplateSnapshot', 'CellExpression', 'DataPath'):
-    path = ROOT / 'src/ExcelRenderer.Mapping' / (name + '.cs')
-    assert not re.search(r'\b(IXL\w*|XLCellValue|XLWorkbook)\b|using ClosedXML', path.read_text()), f'{path}: language depends on legacy cells'
+for folder in ('Templates', 'Expansion', 'Expressions'):
+    paths = list((ROOT / 'src/ExcelRenderer.Mapping' / folder).glob('*.cs'))
+    assert paths, f'{folder}: shared mapping language sources missing'
+    for path in paths:
+        assert not re.search(r'\b(IXL\w*|XLCellValue|XLWorkbook)\b|using ClosedXML', path.read_text()), f'{path}: language depends on legacy cells'
 print('Source-neutral reader hooks and shared mapping language passed')
 
 markdown_geometry = (ROOT / "src/ExcelRenderer/Markdown/VisualCellBuilder.cs").read_text()

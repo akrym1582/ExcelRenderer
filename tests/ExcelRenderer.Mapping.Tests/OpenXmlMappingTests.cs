@@ -1,13 +1,15 @@
 using System.Collections;
 using System.IO.Compression;
 using System.Security.Cryptography;
-using ExcelRenderer.OpenXml.Model.Cells;
-using ExcelRenderer.TestFixtures;
-using static ExcelRenderer.TestFixtures.WorkbookAssertions;
-using static ExcelRenderer.Mapping.Tests.MappingFixture;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Validation;
+using ExcelRenderer.Mapping.Configuration;
+using ExcelRenderer.Mapping.Diagnostics;
+using ExcelRenderer.OpenXml.Model.Cells;
+using ExcelRenderer.TestFixtures;
 using Xunit;
+using static ExcelRenderer.TestFixtures.WorkbookAssertions;
+using static ExcelRenderer.Mapping.Tests.MappingFixture;
 
 namespace ExcelRenderer.Mapping.Tests;
 

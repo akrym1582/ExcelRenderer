@@ -18,6 +18,9 @@ CLI オプションはありません。既存コードの更新は[エンジン
 フォント・ClosedXML を参照しません。
 
 ```csharp
+using ExcelRenderer.Mapping;
+using ExcelRenderer.Mapping.Configuration;
+
 var document = new ExcelRenderer.Excel.ExcelReader().Read(input,
     new ExcelRenderer.Excel.ExcelReadOptions
     {

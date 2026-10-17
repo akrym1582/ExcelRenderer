@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using ExcelRenderer.OpenXml.Model.Cells;
 
-namespace ExcelRenderer.Mapping;
+namespace ExcelRenderer.Mapping.Templates;
 
 /// <summary>Source template structure independent of the expansion language and writer.</summary>
 internal sealed partial class TemplateSnapshot

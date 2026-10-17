@@ -32,7 +32,7 @@ existing `ReadOptions`. CLI rendering commands accept `--formula-mode recalculat
 
 ```csharp
 ExcelRenderer.Mapping.ExcelTemplateMapper.Map(template, output, data,
-    new ExcelRenderer.Mapping.MappingOptions
+    new ExcelRenderer.Mapping.Configuration.MappingOptions
     {
         FormulaCalculationMode = ExcelRenderer.OpenXml.Calculation.FormulaCalculationMode.Recalculate,
     });

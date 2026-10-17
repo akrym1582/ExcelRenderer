@@ -2,6 +2,8 @@ using System;
 using System.IO;
 using System.Text.Json;
 using System.Threading;
+using ExcelRenderer.Mapping.Configuration;
+using ExcelRenderer.Mapping.Diagnostics;
 using ExcelRenderer.OpenXml.Calculation;
 using ExcelRenderer.OpenXml.Input;
 using ExcelRenderer.OpenXml.Writing;

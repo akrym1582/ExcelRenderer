@@ -2,6 +2,8 @@ using System;
 using System.Linq;
 using System.Threading;
 using DocumentFormat.OpenXml.Packaging;
+using ExcelRenderer.Mapping.Diagnostics;
+using ExcelRenderer.Mapping.Templates;
 using ExcelRenderer.OpenXml.Input;
 using ExcelRenderer.OpenXml.Model.Cells;
 using ExcelRenderer.OpenXml.References;

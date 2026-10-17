@@ -1,6 +1,6 @@
 using System;
 
-namespace ExcelRenderer.Mapping;
+namespace ExcelRenderer.Mapping.Diagnostics;
 
 /// <summary>Identifies a mapping failure in the original template.</summary>
 public sealed class MappingException : Exception

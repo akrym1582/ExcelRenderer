@@ -1,4 +1,4 @@
-namespace ExcelRenderer.Mapping;
+namespace ExcelRenderer.Mapping.Expansion;
 
 /// <summary>Scalar categories shared by both mapping executors.</summary>
 internal enum MappedValueKind

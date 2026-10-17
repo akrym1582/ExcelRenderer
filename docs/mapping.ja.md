@@ -159,6 +159,12 @@ excelrenderer render template.xlsx --data data.json --format png -o ./png-output
 
 ## C# API
 
+| 型 | 名前空間 |
+| --- | --- |
+| `ExcelTemplateMapper` | `ExcelRenderer.Mapping` |
+| `MappingOptions` | `ExcelRenderer.Mapping.Configuration` |
+| `MappingException` | `ExcelRenderer.Mapping.Diagnostics` |
+
 以下は前述の請求書テンプレートを使う例です。`template.xlsx` と `data.json` を
 置いたディレクトリで実行します。新しいアプリケーションで試す場合は、
 `dotnet new console -n MappingDemo` で作成し、そのディレクトリへ移動して
@@ -248,6 +254,8 @@ using System.Globalization;
 using System.IO;
 using System.Text.Json;
 using ExcelRenderer.Mapping;
+using ExcelRenderer.Mapping.Configuration;
+using ExcelRenderer.Mapping.Diagnostics;
 
 using var document = JsonDocument.Parse(File.ReadAllText("data.json"));
 var options = new MappingOptions

@@ -19,6 +19,7 @@ using ExcelRenderer.OpenXml.Model.Cells;
 using ExcelRenderer.OpenXml.Reading;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 using ExcelRenderer.Mapping;
+using ExcelRenderer.Mapping.Diagnostics;
 
 string mode = args[0];
 int count = int.Parse(args[1]);
@@ -152,7 +153,11 @@ args.output.parent.mkdir(parents=True, exist_ok=True)
 metadata = {
     "commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo, text=True).strip(),
     "workingTreeDirty": bool(subprocess.check_output(["git", "status", "--porcelain"], cwd=repo, text=True).strip()),
-    "sourceHashes": {path.name: hashlib.sha256(path.read_bytes()).hexdigest() for path in sorted(project.parent.glob("*.cs"))},
+    "sourceHashes": {
+        path.relative_to(project.parent).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in sorted(project.parent.rglob("*.cs"))
+        if not {"obj", "bin"}.intersection(path.relative_to(project.parent).parts)
+    },
     "fixtureSha256": hashlib.sha256(SOURCE.encode()).hexdigest(),
     "platform": platform.platform(),
     "dotnet": subprocess.check_output(["dotnet", "--info"], text=True),

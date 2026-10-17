@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using ExcelRenderer.Mapping.Configuration;
 
-namespace ExcelRenderer.Mapping;
+namespace ExcelRenderer.Mapping.Expressions;
 
 /// <summary>Separates data paths from explicit CLR formatting instructions.</summary>
 internal sealed class CellExpression

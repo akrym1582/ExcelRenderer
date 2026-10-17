@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using ExcelRenderer.Mapping.Configuration;
+using ExcelRenderer.Mapping.Diagnostics;
+using ExcelRenderer.Mapping.Templates;
 
-namespace ExcelRenderer.Mapping;
+namespace ExcelRenderer.Mapping.Expansion;
 
 /// <summary>Evaluates the template language once, independently of output storage.</summary>
 internal sealed class ExpansionPlan

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using ExcelRenderer.Mapping.Templates;
 
-namespace ExcelRenderer.Mapping;
+namespace ExcelRenderer.Mapping.Expansion;
 
 /// <summary>A validated node with evaluated child blocks or cell values for every copy.</summary>
 internal sealed class ExpansionNode

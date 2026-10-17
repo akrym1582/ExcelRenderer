@@ -4,7 +4,7 @@ using ExcelRenderer.Formulas.Evaluation;
 using ExcelRenderer.OpenXml.Calculation;
 using ExcelRenderer.OpenXml.Input;
 
-namespace ExcelRenderer.Mapping;
+namespace ExcelRenderer.Mapping.Configuration;
 
 /// <summary>Controls formatting and the maximum expanded worksheet size.</summary>
 public sealed class MappingOptions

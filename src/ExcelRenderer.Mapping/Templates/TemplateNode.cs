@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using ExcelRenderer.Mapping.Expressions;
 
-namespace ExcelRenderer.Mapping;
+namespace ExcelRenderer.Mapping.Templates;
 
 /// <summary>A template row or an explicitly delimited array block.</summary>
 internal sealed class TemplateNode

@@ -149,6 +149,7 @@ use `ExcelRenderer.Formulas.Evaluation`.
 
 ```csharp
 using ExcelRenderer.Mapping;
+using ExcelRenderer.Mapping.Configuration;
 using ExcelRenderer.OpenXml.Calculation;
 using ExcelRenderer.OpenXml.Reading;
 
@@ -166,7 +167,7 @@ under `ExcelRenderer.OpenXml.Model.Cells`; edit plans under
 `ExcelRenderer.OpenXml.Writing.Plans`. Fully qualified references such as
 `ExcelRenderer.OpenXml.Calculation.FormulaCalculationMode.Recalculate` are useful
 when a caller has a property with the same name. Main/Core rendering models,
-Mapping types and CLI command namespaces keep their existing names.
+the Mapping entry point and CLI command namespaces keep their existing names.
 
 ## Source layout rules
 

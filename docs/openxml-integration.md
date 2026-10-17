@@ -18,6 +18,9 @@ selection API or CLI switch. For existing callers, see the
 has no rendering, Mapping-language, font or ClosedXML dependency.
 
 ```csharp
+using ExcelRenderer.Mapping;
+using ExcelRenderer.Mapping.Configuration;
+
 var document = new ExcelRenderer.Excel.ExcelReader().Read(input,
     new ExcelRenderer.Excel.ExcelReadOptions
     {

@@ -1,6 +1,7 @@
 using System.CommandLine;
 using System.Text.Json;
 using ExcelRenderer.Mapping;
+using ExcelRenderer.Mapping.Configuration;
 
 namespace ExcelRenderer.Tool.Commands;
 

@@ -24,6 +24,18 @@ CLI は各パッケージを組み合わせ、`xlsx --data` ではマッピン�
 マッピングはレイアウト Pass を追加せず、描画モデルも変更しません。
 導入手順・構文・制約は[マッピングガイド](mapping.ja.md)を参照してください。
 
+`src/ExcelRenderer.Mapping` 配下のソースは役割ごとに分類し、
+各フォルダと名前空間を対応させています。
+
+| フォルダ | 名前空間 | 型と役割 |
+| --- | --- | --- |
+| プロジェクト直下 | `ExcelRenderer.Mapping` | `ExcelTemplateMapper` の partial ファイル群: 公開 API の入口、ワークブックの書き込み、構造の検証 |
+| `Configuration` | `ExcelRenderer.Mapping.Configuration` | `MappingOptions`: カルチャと出力行数の上限 |
+| `Diagnostics` | `ExcelRenderer.Mapping.Diagnostics` | `MappingException`: 元のテンプレート位置を含むエラー |
+| `Expressions` | `ExcelRenderer.Mapping.Expressions` | `CellExpression`、`DataPath`: パスの解析、値の解決、書式適用 |
+| `Templates` | `ExcelRenderer.Mapping.Templates` | `TemplateCell`、`TemplateNode`、`TemplateSheet`、`TemplateSnapshot` の partial ファイル群: テンプレートの取得・構造、マーカーの検証、式のコンパイル |
+| `Expansion` | `ExcelRenderer.Mapping.Expansion` | `ExpansionNode`、`ExpansionPlan`、`MappedValue`、`MappedValueKind`: 展開計画と型付きの出力値 |
+
 ### 描画
 
 ライブラリ内部では、次の順番で処理します。

@@ -36,6 +36,7 @@ problems rather than an engine-selection notification.
 ```csharp
 using ExcelRenderer.Excel;
 using ExcelRenderer.Mapping;
+using ExcelRenderer.Mapping.Configuration;
 using ExcelRenderer.OpenXml.Calculation;
 
 // No Backend or BackendSelected is needed.

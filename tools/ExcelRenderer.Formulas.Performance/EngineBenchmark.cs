@@ -4,6 +4,7 @@ using ExcelRenderer.Formulas.References;
 using ExcelRenderer.Formulas.Syntax;
 using ExcelRenderer.Formulas.Values;
 using ExcelRenderer.Mapping;
+using ExcelRenderer.Mapping.Configuration;
 using ExcelRenderer.OpenXml.Calculation;
 
 /// <summary>Measures formula sessions and transactional workbook integration.</summary>

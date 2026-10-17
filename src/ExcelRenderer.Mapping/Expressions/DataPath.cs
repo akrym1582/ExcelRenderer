@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 
-namespace ExcelRenderer.Mapping;
+namespace ExcelRenderer.Mapping.Expressions;
 
 /// <summary>Parses the supported JSONPath subset without losing CLR value types.</summary>
 internal sealed class DataPath

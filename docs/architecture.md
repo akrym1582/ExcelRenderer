@@ -24,6 +24,18 @@ worksheets before rendering applies sheet/range selection. Mapping does not add
 a layout pass or change the rendering models. See the
 [mapping guide](mapping.md) for installation, template syntax and limitations.
 
+Mapping sources under `src/ExcelRenderer.Mapping` are grouped by responsibility.
+Each folder uses the matching namespace:
+
+| Folder | Namespace | Types and responsibility |
+| --- | --- | --- |
+| Project root | `ExcelRenderer.Mapping` | `ExcelTemplateMapper` partial files: public entry point, workbook writing and structural validation |
+| `Configuration` | `ExcelRenderer.Mapping.Configuration` | `MappingOptions`: culture and output row limits |
+| `Diagnostics` | `ExcelRenderer.Mapping.Diagnostics` | `MappingException`: failures with original template locations |
+| `Expressions` | `ExcelRenderer.Mapping.Expressions` | `CellExpression`, `DataPath`: path parsing, value resolution and formatting |
+| `Templates` | `ExcelRenderer.Mapping.Templates` | `TemplateCell`, `TemplateNode`, `TemplateSheet`, `TemplateSnapshot` partial files: template capture, structure, marker validation and expression compilation |
+| `Expansion` | `ExcelRenderer.Mapping.Expansion` | `ExpansionNode`, `ExpansionPlan`, `MappedValue`, `MappedValueKind`: expansion planning and typed output values |
+
 ### Rendering
 
 ```text

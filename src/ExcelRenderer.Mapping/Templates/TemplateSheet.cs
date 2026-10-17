@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using ExcelRenderer.Mapping.Diagnostics;
+using ExcelRenderer.Mapping.Expressions;
 
-namespace ExcelRenderer.Mapping;
+namespace ExcelRenderer.Mapping.Templates;
 
 /// <summary>Validates marker structure and compiles all template expressions before expansion.</summary>
 internal sealed class TemplateSheet

@@ -1,4 +1,4 @@
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Diagnostics;
 
 /// <summary>Stable diagnostic codes emitted by the standalone reader.</summary>
 public static class ReaderDiagnosticCodes

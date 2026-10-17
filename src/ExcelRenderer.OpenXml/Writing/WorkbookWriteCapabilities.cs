@@ -6,8 +6,11 @@ using System.Threading;
 using System.Xml;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
+using ExcelRenderer.OpenXml.Calculation;
+using ExcelRenderer.OpenXml.Infrastructure;
+using ExcelRenderer.OpenXml.Reading;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Writing;
 
 /// <summary>Checks the conservative workbook editing contract without evaluating mapping data.</summary>
 public static class WorkbookWriteCapabilities

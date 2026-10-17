@@ -1,4 +1,4 @@
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Calculation;
 
 /// <summary>Controls whether saved values or explicitly recalculated formula values are used.</summary>
 public enum FormulaCalculationMode

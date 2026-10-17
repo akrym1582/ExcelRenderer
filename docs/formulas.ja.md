@@ -31,7 +31,7 @@ Core では `PdfExportOptions.ReadOptions` の
 ExcelRenderer.Mapping.ExcelTemplateMapper.Map(template, output, data,
     new ExcelRenderer.Mapping.MappingOptions
     {
-        FormulaCalculationMode = ExcelRenderer.OpenXml.FormulaCalculationMode.Recalculate,
+        FormulaCalculationMode = ExcelRenderer.OpenXml.Calculation.FormulaCalculationMode.Recalculate,
     });
 ```
 
@@ -39,7 +39,7 @@ ExcelRenderer.Mapping.ExcelTemplateMapper.Map(template, output, data,
 既定の Mapping は従来どおり値の数式を拒否します。明示的な再計算指定で対応するセル数式を
 利用できます。入力値の先頭が `=` でも文字列として扱います。
 
-既存 XLSX は `ExcelRenderer.OpenXml.WorkbookRecalculator.Recalculate(input, output)`
+既存 XLSX は `ExcelRenderer.OpenXml.Calculation.WorkbookRecalculator.Recalculate(input, output)`
 で全数式を計算できます。対象 `FormulaCellAddress` の列挙を渡すと、そのセルと到達依存だけを
 計算します。一つのセッション内で依存結果を再利用します。入力スナップショットは不変です。
 入力更新・行展開後は新しいセッションを作り、以前の計算結果を流用しません。
@@ -60,7 +60,10 @@ ExcelRenderer.Mapping.ExcelTemplateMapper.Map(template, output, data,
 ## 単独エンジン
 
 ```csharp
-using ExcelRenderer.Formulas;
+using ExcelRenderer.Formulas.Data;
+using ExcelRenderer.Formulas.Evaluation;
+using ExcelRenderer.Formulas.References;
+using ExcelRenderer.Formulas.Values;
 
 var builder = new InMemoryFormulaWorkbook.Builder().AddSheet("Invoice");
 builder.SetValue(new FormulaCellAddress("Invoice", 1, 1), FormulaValue.FromNumber(3));
@@ -146,10 +149,11 @@ surrogate pair は2単位です。負数はセッション生成時に `Argument
 
 ## 配布と検証
 
-Formulas は .NET Standard 2.1 の独立パッケージとし、OpenXml が依存します。
-既存の本体・Mapping・CLI 利用者に必要な DLL を届けるため、添付の単独段階にあった
-非 pack 方針を統合段階で変更しています。ローカル pack は公開やリリースを意味しません。
-計算コアには project/runtime package 依存がなく、Analyzer だけは既存の開発依存を継承します。
+FormulasはBCLだけに依存する.NET Standard 2.1の非公開ソースプロジェクトです。
+OpenXml・Coreとともに必要なDLLを本体／Mapping／Toolへ同梱します。NuGet公開は
+本体・Mapping・Tool・Fontsの4つだけです。[配布構成](package-distribution.md)と
+[namespace移行ガイド](namespace-migration.md)を参照してください。
+計算コアにproject/runtime package依存はなく、Analyzerは開発時だけの依存です。
 
 実行した件数・コマンド・性能・未完事項は検証記録を参照してください。
 Excel 実機照合は未実施です。二進丸め境界、Unicode 照合、極端な数の G15 表現、
@@ -171,7 +175,7 @@ false にすると参照書換えと全数式キャッシュ失効までを行�
 
 OOXML の `cm` / `vm` 計算メタデータも、動的配列・rich value を誤ってスカラーとして扱わないため、到達時は保守的に拒否します。
 
-実行可能な [請求書サンプル](../samples/ExcelRenderer.Formulas.Sample/README.ja.md) は XLSX を生成し、0/1/3/4明細の計算とPDF・PNG・SVG・Markdown出力を検証できます。
+実行可能な [請求書サンプル](../samples/ExcelRenderer.Formulas.Sample/README.ja.md) は XLSX を生成し、0/1/3/70明細の計算とPDF・PNG・SVG・Markdown出力を検証できます。
 
 ## 帳票関数の追加
 

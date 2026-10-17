@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Diagnostics;
 
 /// <summary>Conversion-local aggregate instrumentation for workbook storage validation.</summary>
 internal static class OperationMetrics

@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using ExcelRenderer.Formulas.References;
+using ExcelRenderer.Formulas.Syntax;
 
-namespace ExcelRenderer.Formulas
+namespace ExcelRenderer.Formulas.Diagnostics
 {
     /// <summary>Describes an engine failure separately from an Excel error value.</summary>
     public sealed class FormulaDiagnostic

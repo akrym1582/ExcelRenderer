@@ -1,0 +1,5 @@
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Formulas.Tests/bin/Release/net10.0/ExcelRenderer.Formulas.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:    92, Skipped:     0, Total:    92, Duration: 66 ms - ExcelRenderer.Formulas.Tests.dll (net10.0)
+Both documentation files passed all 92 examples with CRLF line endings; originals restored

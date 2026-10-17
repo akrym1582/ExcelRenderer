@@ -658,6 +658,10 @@ input and output streams stay open. Heavy native drawing and encoding operations
 
 ## Development
 
+The Formulas/OpenXml API namespaces now follow their source folders. See the
+[namespace migration guide](docs/namespace-migration.md) for updated imports and public type locations.
+
+
 NuGet publication is limited to `ExcelRenderer`, `ExcelRenderer.Mapping`,
 `ExcelRenderer.Tool` and `ExcelRenderer.Fonts`. Core, OpenXml and Formulas are
 source projects whose assemblies ship inside those packages; they are not published

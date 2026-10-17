@@ -31,7 +31,7 @@ existing `ReadOptions`. CLI rendering commands accept `--formula-mode recalculat
 ExcelRenderer.Mapping.ExcelTemplateMapper.Map(template, output, data,
     new ExcelRenderer.Mapping.MappingOptions
     {
-        FormulaCalculationMode = ExcelRenderer.OpenXml.FormulaCalculationMode.Recalculate,
+        FormulaCalculationMode = ExcelRenderer.OpenXml.Calculation.FormulaCalculationMode.Recalculate,
     });
 ```
 
@@ -64,7 +64,10 @@ names retain their name identity; their fixed referenced regions move with rows.
 ## Standalone engine
 
 ```csharp
-using ExcelRenderer.Formulas;
+using ExcelRenderer.Formulas.Data;
+using ExcelRenderer.Formulas.Evaluation;
+using ExcelRenderer.Formulas.References;
+using ExcelRenderer.Formulas.Values;
 
 var builder = new InMemoryFormulaWorkbook.Builder().AddSheet("Invoice");
 builder.SetValue(new FormulaCellAddress("Invoice", 1, 1), FormulaValue.FromNumber(3));
@@ -166,12 +169,12 @@ caller-owned source data, OpenXml snapshots, total process memory or post-GC RSS
 
 ## Distribution and validation
 
-Formulas is a separate packable .NET Standard 2.1 library. OpenXml depends on it;
-Mapping/main consume the adapter, and the CLI includes the transitive assembly.
-This replaces the original standalone plan's nonpackable restriction because a
-public OpenXml package cannot depend on an unpublished, omitted runtime DLL.
-Creating local packages does not publish or release them. The calculation core
-has no project or runtime package dependencies; inherited analyzers are build-only.
+Formulas is a nonpackable, BCL-only .NET Standard 2.1 source project. Its DLL
+ships with the OpenXml adapter in the main and Mapping packages; the CLI bundles
+these assemblies as well. NuGet publishes only the main, Mapping, Tool and Fonts
+packages. See [package distribution](package-distribution.md) and
+[namespace migration](namespace-migration.md). The calculation core has no project
+or runtime package dependencies; inherited analyzers are build-only.
 
 See the validation and performance records for executed checks and remaining gaps.
 Excel desktop comparison has not been performed. Unicode collation, floating-point
@@ -197,7 +200,7 @@ and the matching Reader property configure resource limits.
 
 OOXML `cm`/`vm` calculation metadata is conservatively rejected when reached, so metadata-backed dynamic arrays or rich values are never assumed to be ordinary scalars.
 
-The executable [invoice sample](../samples/ExcelRenderer.Formulas.Sample/README.md) creates XLSX and verifies 0/1/3/4-line totals and PDF, PNG, SVG and Markdown output.
+The executable [invoice sample](../samples/ExcelRenderer.Formulas.Sample/README.md) creates XLSX and verifies 0/1/3/70-line totals and PDF, PNG, SVG and Markdown output.
 
 ## Expanded report functions
 

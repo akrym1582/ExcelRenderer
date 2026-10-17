@@ -16,7 +16,7 @@ public sealed record ExcelReadOptions
     public FormulaDisplayMode FormulaDisplayMode { get; init; } = FormulaDisplayMode.CachedValue;
 
     /// <summary>Gets optional limits for the limited formula calculation session.</summary>
-    public Formulas.FormulaEvaluationOptions? FormulaEvaluationOptions { get; init; }
+    public Formulas.Evaluation.FormulaEvaluationOptions? FormulaEvaluationOptions { get; init; }
 
     /// <summary>Gets the conversion's explicit finite source region for default-style materialization.</summary>
     internal Func<string, (int FirstRow, int FirstColumn, int LastRow, int LastColumn)?>? GetSelectedRange { get; init; }

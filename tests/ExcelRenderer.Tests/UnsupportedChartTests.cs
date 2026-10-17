@@ -1,7 +1,7 @@
-using ExcelRenderer.TestFixtures;
 using DocumentFormat.OpenXml.Packaging;
 using ExcelRenderer.Model;
 using ExcelRenderer.Rendering;
+using ExcelRenderer.TestFixtures;
 using Xunit;
 using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;

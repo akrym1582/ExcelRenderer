@@ -44,39 +44,39 @@ input.Position=0;
 '''
 programs = {
  'engine': (['ExcelRenderer.Mapping'], '''
-var source = new ExcelRenderer.Formulas.InMemoryFormulaWorkbook.Builder().AddSheet("S").Build();
-var ast = ExcelRenderer.Formulas.FormulaParser.Parse("SUM(2,3)*4").Formula!;
-var r = new ExcelRenderer.Formulas.FormulaEngine().Evaluate(ast, source, new("S",1,1));
+var source = new ExcelRenderer.Formulas.Data.InMemoryFormulaWorkbook.Builder().AddSheet("S").Build();
+var ast = ExcelRenderer.Formulas.Syntax.FormulaParser.Parse("SUM(2,3)*4").Formula!;
+var r = new ExcelRenderer.Formulas.Evaluation.FormulaEngine().Evaluate(ast, source, new("S",1,1));
 if (!r.Success || r.Value.Number != 20) throw new Exception("Engine package failure");
 foreach (var (formula, expected) in new[] { ("ROUNDDOWN(0.29,2)", 0.29), ("ROUNDUP(0.07,2)", 0.07), ("ROUND(1.005,2)", 1.01) }) {
-    var result = new ExcelRenderer.Formulas.FormulaEngine().Evaluate(ExcelRenderer.Formulas.FormulaParser.Parse(formula).Formula!, source, new("S",1,1));
+    var result = new ExcelRenderer.Formulas.Evaluation.FormulaEngine().Evaluate(ExcelRenderer.Formulas.Syntax.FormulaParser.Parse(formula).Formula!, source, new("S",1,1));
     if (!result.Success || result.Value.Number != expected) throw new Exception("Decimal rounding package failure");
 }
-var reportDate = ExcelRenderer.Formulas.FormulaParser.Parse("""TEXT(EOMONTH(DATE(2026,1,31),1),"yyyy-mm-dd")""").Formula!;
-var dateResult = new ExcelRenderer.Formulas.FormulaEngine().Evaluate(reportDate, source, new("S",1,1));
+var reportDate = ExcelRenderer.Formulas.Syntax.FormulaParser.Parse("""TEXT(EOMONTH(DATE(2026,1,31),1),"yyyy-mm-dd")""").Formula!;
+var dateResult = new ExcelRenderer.Formulas.Evaluation.FormulaEngine().Evaluate(reportDate, source, new("S",1,1));
 if (!dateResult.Success || dateResult.Value.Text != "2026-02-28") throw new Exception("Expanded date/text package failure");
-var blanks = ExcelRenderer.Formulas.FormulaParser.Parse("""COUNTIF(A:A,"")""").Formula!;
-var blankResult = new ExcelRenderer.Formulas.FormulaEngine().Evaluate(blanks, source, new("S",1,2));
+var blanks = ExcelRenderer.Formulas.Syntax.FormulaParser.Parse("""COUNTIF(A:A,"")""").Formula!;
+var blankResult = new ExcelRenderer.Formulas.Evaluation.FormulaEngine().Evaluate(blanks, source, new("S",1,2));
 if (!blankResult.Success || blankResult.Value.Number != 1048576) throw new Exception("Sparse aggregate package failure");
-var limited = new ExcelRenderer.Formulas.FormulaEngine().CreateSession(source, new() { MaxStringLength = 8, MaxCachedStringCharacters = 8 });
-var text = ExcelRenderer.Formulas.FormulaParser.Parse("IF(TRUE,\\\"-\\\",\\\"\\\")");
+var limited = new ExcelRenderer.Formulas.Evaluation.FormulaEngine().CreateSession(source, new() { MaxStringLength = 8, MaxCachedStringCharacters = 8 });
+var text = ExcelRenderer.Formulas.Syntax.FormulaParser.Parse("IF(TRUE,\\\"-\\\",\\\"\\\")");
 if (!text.Success || limited.Evaluate(text.Formula!, new("S",1,1)).Value.Text != "-") throw new Exception("Literal token package failure");
-var tooLong = limited.Evaluate(ExcelRenderer.Formulas.FormulaParser.Parse("\\\"12345\\\"&\\\"6789\\\"").Formula!, new("S",1,1));
+var tooLong = limited.Evaluate(ExcelRenderer.Formulas.Syntax.FormulaParser.Parse("\\\"12345\\\"&\\\"6789\\\"").Formula!, new("S",1,1));
 if (tooLong.Success || tooLong.Diagnostics[0].Code != "ResourceLimitExceeded") throw new Exception("String limit package failure");
 '''),
  'adapter': (['ExcelRenderer.Mapping'], fixture + '''
 using var output = new MemoryStream();
-ExcelRenderer.OpenXml.WorkbookRecalculator.Recalculate(input,output);
+ExcelRenderer.OpenXml.Calculation.WorkbookRecalculator.Recalculate(input,output);
 output.Position=0;
-using var reader=ExcelRenderer.OpenXml.OpenXmlWorkbookReader.Open(output);
+using var reader=ExcelRenderer.OpenXml.Reading.OpenXmlWorkbookReader.Open(output);
 if(reader.EnumerateCells(1).Single(c=>c.Address.Column==3).Value.Number!=413) throw new Exception("Typed cache failure");
 File.WriteAllBytes(args[0],output.ToArray());
 '''),
  'mapping': (['ExcelRenderer.Mapping'], fixture + '''
 using var output=new MemoryStream();
-ExcelRenderer.Mapping.ExcelTemplateMapper.Map(input,output,new {},new(){FormulaCalculationMode=ExcelRenderer.OpenXml.FormulaCalculationMode.Recalculate});
+ExcelRenderer.Mapping.ExcelTemplateMapper.Map(input,output,new {},new(){FormulaCalculationMode=ExcelRenderer.OpenXml.Calculation.FormulaCalculationMode.Recalculate});
 output.Position=0;
-using var reader=ExcelRenderer.OpenXml.OpenXmlWorkbookReader.Open(output);
+using var reader=ExcelRenderer.OpenXml.Reading.OpenXmlWorkbookReader.Open(output);
 if(reader.EnumerateCells(1).Single(c=>c.Address.Column==3).Value.Number!=413) throw new Exception("Mapping package failure");
 '''),
  'main-core': (['ExcelRenderer'], fixture + '''
@@ -94,10 +94,10 @@ programs['combined'] = (['ExcelRenderer', 'ExcelRenderer.Mapping'], programs['ma
 input.Position = 0;
 using var mappedOutput = new MemoryStream();
 ExcelRenderer.Mapping.ExcelTemplateMapper.Map(input, mappedOutput, new {}, new() {
-    FormulaCalculationMode = ExcelRenderer.OpenXml.FormulaCalculationMode.Recalculate
+    FormulaCalculationMode = ExcelRenderer.OpenXml.Calculation.FormulaCalculationMode.Recalculate
 });
 mappedOutput.Position = 0;
-using var mappedReader = ExcelRenderer.OpenXml.OpenXmlWorkbookReader.Open(mappedOutput);
+using var mappedReader = ExcelRenderer.OpenXml.Reading.OpenXmlWorkbookReader.Open(mappedOutput);
 if (mappedReader.EnumerateCells(1).Single(c => c.Address.Column == 3).Value.Number != 413)
     throw new Exception("Combined package failure");
 """)

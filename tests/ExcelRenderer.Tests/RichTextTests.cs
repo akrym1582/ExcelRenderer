@@ -1,4 +1,3 @@
-using ExcelRenderer.TestFixtures;
 using ExcelRenderer.Abstractions;
 using ExcelRenderer.CoreIntegration;
 using ExcelRenderer.Excel;
@@ -6,6 +5,7 @@ using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Model;
 using ExcelRenderer.PdfSharp;
+using ExcelRenderer.TestFixtures;
 using Xunit;
 
 namespace ExcelRenderer.Tests;

@@ -7,7 +7,8 @@ using ExcelRenderer;
 using ExcelRenderer.Excel;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Mapping;
-using ExcelRenderer.OpenXml;
+using ExcelRenderer.OpenXml.Calculation;
+using ExcelRenderer.OpenXml.Diagnostics;
 using ExcelRenderer.Rendering;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 

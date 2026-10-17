@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Model.Cells;
 
 /// <summary>Immutable FormulaInfo snapshot. XML attribute names and source units are preserved.</summary>
 public sealed class FormulaInfo

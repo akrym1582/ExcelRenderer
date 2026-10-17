@@ -1,92 +1,53 @@
 # Source organization
 
-Public namespaces, type names and assembly boundaries are unchanged. Input/ and Properties/ retain their existing roles. Historical validation inventories describe their recorded SHA and are not rewritten.
+Source namespaces match project root plus physical folders. Public namespace
+changes are listed in [the migration guide](namespace-migration.md). Simple type names and
+assembly names are unchanged. Historical
+validation reports preserve their recorded paths and contracts.
 
-| Previous file | Current file |
-| --- | --- |
-| `src/ExcelRenderer.Formulas/DecimalRounding.cs` | `src/ExcelRenderer.Formulas/Functions/Numeric/DecimalRounding.cs` |
-| `src/ExcelRenderer.Formulas/FormulaCellAddress.cs` | `src/ExcelRenderer.Formulas/References/FormulaCellAddress.cs` |
-| `src/ExcelRenderer.Formulas/FormulaCellData.cs` | `src/ExcelRenderer.Formulas/Values/FormulaCellData.cs` |
-| `src/ExcelRenderer.Formulas/FormulaDiagnostic.cs` | `src/ExcelRenderer.Formulas/Diagnostics/FormulaDiagnostic.cs` |
-| `src/ExcelRenderer.Formulas/FormulaEngine.cs` | `src/ExcelRenderer.Formulas/Evaluation/FormulaEngine.cs` |
-| `src/ExcelRenderer.Formulas/FormulaEvaluationOptions.cs` | `src/ExcelRenderer.Formulas/Evaluation/FormulaEvaluationOptions.cs` |
-| `src/ExcelRenderer.Formulas/FormulaEvaluationResult.cs` | `src/ExcelRenderer.Formulas/Evaluation/FormulaEvaluationResult.cs` |
-| `src/ExcelRenderer.Formulas/FormulaNode.cs` | `src/ExcelRenderer.Formulas/Syntax/FormulaNode.cs` |
-| `src/ExcelRenderer.Formulas/FormulaNodeKind.cs` | `src/ExcelRenderer.Formulas/Syntax/FormulaNodeKind.cs` |
-| `src/ExcelRenderer.Formulas/FormulaParseResult.cs` | `src/ExcelRenderer.Formulas/Syntax/FormulaParseResult.cs` |
-| `src/ExcelRenderer.Formulas/FormulaParser.cs` | `src/ExcelRenderer.Formulas/Syntax/FormulaParser.cs` |
-| `src/ExcelRenderer.Formulas/FormulaRange.cs` | `src/ExcelRenderer.Formulas/References/FormulaRange.cs` |
-| `src/ExcelRenderer.Formulas/FormulaRewriter.cs` | `src/ExcelRenderer.Formulas/References/FormulaRewriter.cs` |
-| `src/ExcelRenderer.Formulas/FormulaSession.cs` | `src/ExcelRenderer.Formulas/Evaluation/FormulaSession.cs` |
-| `src/ExcelRenderer.Formulas/FormulaValue.cs` | `src/ExcelRenderer.Formulas/Values/FormulaValue.cs` |
-| `src/ExcelRenderer.Formulas/FormulaValueKind.cs` | `src/ExcelRenderer.Formulas/Values/FormulaValueKind.cs` |
-| `src/ExcelRenderer.Formulas/IFormulaDataSource.cs` | `src/ExcelRenderer.Formulas/Data/IFormulaDataSource.cs` |
-| `src/ExcelRenderer.Formulas/InMemoryFormulaWorkbook.cs` | `src/ExcelRenderer.Formulas/Data/InMemoryFormulaWorkbook.cs` |
-| `src/ExcelRenderer.Formulas/ParsedFormula.cs` | `src/ExcelRenderer.Formulas/Syntax/ParsedFormula.cs` |
-| `src/ExcelRenderer.Formulas/SourceSpan.cs` | `src/ExcelRenderer.Formulas/Syntax/SourceSpan.cs` |
-| `src/ExcelRenderer.OpenXml/CellAddress.cs` | `src/ExcelRenderer.OpenXml/Model/Cells/CellAddress.cs` |
-| `src/ExcelRenderer.OpenXml/CellDisplayResult.cs` | `src/ExcelRenderer.OpenXml/Formatting/CellDisplayResult.cs` |
-| `src/ExcelRenderer.OpenXml/CellRange.cs` | `src/ExcelRenderer.OpenXml/Model/Cells/CellRange.cs` |
-| `src/ExcelRenderer.OpenXml/CellRecord.cs` | `src/ExcelRenderer.OpenXml/Model/Cells/CellRecord.cs` |
-| `src/ExcelRenderer.OpenXml/CellStyleInfo.cs` | `src/ExcelRenderer.OpenXml/Model/Styles/CellStyleInfo.cs` |
-| `src/ExcelRenderer.OpenXml/CellValue.cs` | `src/ExcelRenderer.OpenXml/Model/Cells/CellValue.cs` |
-| `src/ExcelRenderer.OpenXml/CellValueEdit.cs` | `src/ExcelRenderer.OpenXml/Writing/Plans/CellValueEdit.cs` |
-| `src/ExcelRenderer.OpenXml/CellValueType.cs` | `src/ExcelRenderer.OpenXml/Model/Cells/CellValueType.cs` |
-| `src/ExcelRenderer.OpenXml/ColumnInfo.cs` | `src/ExcelRenderer.OpenXml/Model/Workbook/ColumnInfo.cs` |
-| `src/ExcelRenderer.OpenXml/DefinedNameInfo.cs` | `src/ExcelRenderer.OpenXml/Model/Workbook/DefinedNameInfo.cs` |
-| `src/ExcelRenderer.OpenXml/ElementInfo.cs` | `src/ExcelRenderer.OpenXml/Model/Workbook/ElementInfo.cs` |
-| `src/ExcelRenderer.OpenXml/FontInfo.cs` | `src/ExcelRenderer.OpenXml/Model/Styles/FontInfo.cs` |
-| `src/ExcelRenderer.OpenXml/FormulaCalculationException.cs` | `src/ExcelRenderer.OpenXml/Calculation/FormulaCalculationException.cs` |
-| `src/ExcelRenderer.OpenXml/FormulaCalculationMode.cs` | `src/ExcelRenderer.OpenXml/Calculation/FormulaCalculationMode.cs` |
-| `src/ExcelRenderer.OpenXml/FormulaInfo.cs` | `src/ExcelRenderer.OpenXml/Model/Cells/FormulaInfo.cs` |
-| `src/ExcelRenderer.OpenXml/FormulaTextResolver.cs` | `src/ExcelRenderer.OpenXml/Calculation/FormulaTextResolver.cs` |
-| `src/ExcelRenderer.OpenXml/IWorkbookDataReader.cs` | `src/ExcelRenderer.OpenXml/Reading/IWorkbookDataReader.cs` |
-| `src/ExcelRenderer.OpenXml/ImageInfo.cs` | `src/ExcelRenderer.OpenXml/Model/Drawing/ImageInfo.cs` |
-| `src/ExcelRenderer.OpenXml/LeaveOpenStream.cs` | `src/ExcelRenderer.OpenXml/Infrastructure/LeaveOpenStream.cs` |
-| `src/ExcelRenderer.OpenXml/NumberFormats.cs` | `src/ExcelRenderer.OpenXml/Formatting/NumberFormats.cs` |
-| `src/ExcelRenderer.OpenXml/OpenXmlReaderOptions.cs` | `src/ExcelRenderer.OpenXml/Reading/OpenXmlReaderOptions.cs` |
-| `src/ExcelRenderer.OpenXml/OpenXmlWorkbookReader.Cells.cs` | `src/ExcelRenderer.OpenXml/Reading/OpenXmlWorkbookReader.Cells.cs` |
-| `src/ExcelRenderer.OpenXml/OpenXmlWorkbookReader.Images.cs` | `src/ExcelRenderer.OpenXml/Reading/OpenXmlWorkbookReader.Images.cs` |
-| `src/ExcelRenderer.OpenXml/OpenXmlWorkbookReader.Metadata.cs` | `src/ExcelRenderer.OpenXml/Reading/OpenXmlWorkbookReader.Metadata.cs` |
-| `src/ExcelRenderer.OpenXml/OpenXmlWorkbookReader.cs` | `src/ExcelRenderer.OpenXml/Reading/OpenXmlWorkbookReader.cs` |
-| `src/ExcelRenderer.OpenXml/OpenXmlWorkbookWriter.Geometry.cs` | `src/ExcelRenderer.OpenXml/Writing/OpenXmlWorkbookWriter.Geometry.cs` |
-| `src/ExcelRenderer.OpenXml/OpenXmlWorkbookWriter.Pivots.cs` | `src/ExcelRenderer.OpenXml/Writing/OpenXmlWorkbookWriter.Pivots.cs` |
-| `src/ExcelRenderer.OpenXml/OpenXmlWorkbookWriter.Structures.cs` | `src/ExcelRenderer.OpenXml/Writing/OpenXmlWorkbookWriter.Structures.cs` |
-| `src/ExcelRenderer.OpenXml/OpenXmlWorkbookWriter.cs` | `src/ExcelRenderer.OpenXml/Writing/OpenXmlWorkbookWriter.cs` |
-| `src/ExcelRenderer.OpenXml/OperationMetrics.cs` | `src/ExcelRenderer.OpenXml/Diagnostics/OperationMetrics.cs` |
-| `src/ExcelRenderer.OpenXml/OutputRowOccurrence.cs` | `src/ExcelRenderer.OpenXml/Writing/Plans/OutputRowOccurrence.cs` |
-| `src/ExcelRenderer.OpenXml/PrintRangeInfo.cs` | `src/ExcelRenderer.OpenXml/Model/Printing/PrintRangeInfo.cs` |
-| `src/ExcelRenderer.OpenXml/PrintReferenceInfo.cs` | `src/ExcelRenderer.OpenXml/Model/Printing/PrintReferenceInfo.cs` |
-| `src/ExcelRenderer.OpenXml/PrintReferences.cs` | `src/ExcelRenderer.OpenXml/References/PrintReferences.cs` |
-| `src/ExcelRenderer.OpenXml/ReaderDiagnostic.cs` | `src/ExcelRenderer.OpenXml/Diagnostics/ReaderDiagnostic.cs` |
-| `src/ExcelRenderer.OpenXml/ReaderDiagnosticCodes.cs` | `src/ExcelRenderer.OpenXml/Diagnostics/ReaderDiagnosticCodes.cs` |
-| `src/ExcelRenderer.OpenXml/RichTextRunInfo.cs` | `src/ExcelRenderer.OpenXml/Model/Cells/RichTextRunInfo.cs` |
-| `src/ExcelRenderer.OpenXml/RowInfo.cs` | `src/ExcelRenderer.OpenXml/Model/Workbook/RowInfo.cs` |
-| `src/ExcelRenderer.OpenXml/RowPrototypeCache.cs` | `src/ExcelRenderer.OpenXml/Writing/RowPrototypeCache.cs` |
-| `src/ExcelRenderer.OpenXml/SheetEditPlan.cs` | `src/ExcelRenderer.OpenXml/Writing/Plans/SheetEditPlan.cs` |
-| `src/ExcelRenderer.OpenXml/SheetInfo.cs` | `src/ExcelRenderer.OpenXml/Model/Workbook/SheetInfo.cs` |
-| `src/ExcelRenderer.OpenXml/StructuralReferences.Formulas.cs` | `src/ExcelRenderer.OpenXml/References/StructuralReferences.Formulas.cs` |
-| `src/ExcelRenderer.OpenXml/StructuralReferences.cs` | `src/ExcelRenderer.OpenXml/References/StructuralReferences.cs` |
-| `src/ExcelRenderer.OpenXml/StyleTable.cs` | `src/ExcelRenderer.OpenXml/Formatting/StyleTable.cs` |
-| `src/ExcelRenderer.OpenXml/WorkbookCalculationSession.cs` | `src/ExcelRenderer.OpenXml/Calculation/WorkbookCalculationSession.cs` |
-| `src/ExcelRenderer.OpenXml/WorkbookEditPlan.cs` | `src/ExcelRenderer.OpenXml/Writing/Plans/WorkbookEditPlan.cs` |
-| `src/ExcelRenderer.OpenXml/WorkbookFormulaInspection.cs` | `src/ExcelRenderer.OpenXml/Calculation/WorkbookFormulaInspection.cs` |
-| `src/ExcelRenderer.OpenXml/WorkbookInfo.cs` | `src/ExcelRenderer.OpenXml/Model/Workbook/WorkbookInfo.cs` |
-| `src/ExcelRenderer.OpenXml/WorkbookRecalculator.cs` | `src/ExcelRenderer.OpenXml/Calculation/WorkbookRecalculator.cs` |
-| `src/ExcelRenderer.OpenXml/WorkbookRelationships.cs` | `src/ExcelRenderer.OpenXml/Infrastructure/WorkbookRelationships.cs` |
-| `src/ExcelRenderer.OpenXml/WorkbookWriteCapabilities.cs` | `src/ExcelRenderer.OpenXml/Writing/WorkbookWriteCapabilities.cs` |
-| `src/ExcelRenderer.OpenXml/WorksheetInfo.cs` | `src/ExcelRenderer.OpenXml/Model/Workbook/WorksheetInfo.cs` |
-| `src/ExcelRenderer.OpenXml/XmlValues.cs` | `src/ExcelRenderer.OpenXml/Infrastructure/XmlValues.cs` |
+| Project / folder | Namespace | Responsibility |
+| --- | --- | --- |
+| Formulas / Data | `ExcelRenderer.Formulas.Data` | Dense/sparse source contracts, immutable workbook and coordinate index |
+| Formulas / Evaluation | `ExcelRenderer.Formulas.Evaluation` | Engine, all FormulaSession partials, options, date system and statistics |
+| Formulas / Syntax | `ExcelRenderer.Formulas.Syntax` | Parser, AST, parse results and UTF-16 source spans |
+| Formulas / References | `ExcelRenderer.Formulas.References` | Addresses, ranges and reference rewriting |
+| Formulas / Values | `ExcelRenderer.Formulas.Values` | Typed cell data and formula values |
+| Formulas / Diagnostics | `ExcelRenderer.Formulas.Diagnostics` | Calculation diagnostics |
+| Formulas / Criteria | `ExcelRenderer.Formulas.Criteria` | Compiled criteria and bounded wildcard matching |
+| Formulas / Functions | `ExcelRenderer.Formulas.Functions` | Single function registry and dispatch families |
+| Formulas / Functions / Numeric | `ExcelRenderer.Formulas.Functions.Numeric` | Decimal rounding helper |
+| Formulas / Functions / Dates | `ExcelRenderer.Formulas.Functions.Dates` | Excel calendar/serial helper |
+| Formulas / Functions / Lookup | `ExcelRenderer.Formulas.Functions.Lookup` | Bounded session-local lookup index |
+| OpenXml / Calculation | `ExcelRenderer.OpenXml.Calculation` | Workbook calculation, date adaptation, formula inspection and recalc/save APIs |
+| OpenXml / Reading | `ExcelRenderer.OpenXml.Reading` | Streaming reader and reader configuration |
+| OpenXml / Writing | `ExcelRenderer.OpenXml.Writing` | Staged writer, capability checks and row prototype cache |
+| OpenXml / Writing / Plans | `ExcelRenderer.OpenXml.Writing.Plans` | Typed cell, sheet, workbook and row occurrence edits |
+| OpenXml / Model / Cells | `ExcelRenderer.OpenXml.Model.Cells` | Cell addresses, ranges, values, records, runs and formula metadata |
+| OpenXml / Model / Styles | `ExcelRenderer.OpenXml.Model.Styles` | Font and cell style metadata |
+| OpenXml / Model / Workbook | `ExcelRenderer.OpenXml.Model.Workbook` | Workbook, sheet, row, column, name and XML element metadata |
+| OpenXml / Model / Drawing | `ExcelRenderer.OpenXml.Model.Drawing` | Neutral image metadata |
+| OpenXml / Model / Printing | `ExcelRenderer.OpenXml.Model.Printing` | Print range/reference metadata |
+| OpenXml / Formatting | `ExcelRenderer.OpenXml.Formatting` | Number formatting, display results and style reading |
+| OpenXml / References | `ExcelRenderer.OpenXml.References` | Structural, formula and print-reference transformations |
+| OpenXml / Diagnostics | `ExcelRenderer.OpenXml.Diagnostics` | Reader diagnostics and operation metrics |
+| OpenXml / Infrastructure | `ExcelRenderer.OpenXml.Infrastructure` | ZIP relationships, XML values and stream helpers |
+| OpenXml / Input | `ExcelRenderer.OpenXml.Input` | Generic input validation and seekable memory/file spool |
 
-## Added implementation files
+Formula function families remain separate `FormulaSession.*.cs` files, with all
+partial declarations in the same `Evaluation` namespace and folder. Private
+session control, lazy branches, bounded cursors and retention limits stay shared.
+Function helpers remain internal, and Formulas has only BCL runtime dependencies.
 
-| Folder | Added responsibilities |
-| --- | --- |
-| Formulas/Data | ISparseFormulaDataSource and FormulaRangeIndex, with validated dense-coverage hints; the original three-method data source remains unchanged. |
-| Formulas/Evaluation | Function dispatch, checked range cursors and session-local statistics. |
-| Formulas/Functions | One registry; Numeric, Aggregation, Logical, Lookup, DateTime and Text partial implementations preserve private session control; bounded LookupIndex keeps typed first positions and ordered text positions. |
-| Formulas/Criteria | Compiled criteria/coercion profile and bounded wildcard tokens. |
-| OpenXml/Calculation | Sparse snapshot and workbook date-system/ISO adaptation in WorkbookCalculationSession. |
-| tools/ExcelRenderer.Formulas.Oracle | Development-only typed input generator, Excel cache extractor, provenance comparer and engine/OpenXml/Mapping runner. |
+Core owns rendering geometry, shared traversal and PDF drawing. Main and Mapping
+adapt their public models to OpenXml; OpenXml never references rendering, Mapping,
+Core or font libraries. See [Core ownership](core-source-map.md).
 
-No runtime package was added to Formulas. Active scripts/project paths were searched after moving; historical SHA inventories and logs remain unchanged.
+Development-only Oracle and benchmark tools remain nonpackable. The shared Core
+validation helper follows its physical `ExcelRenderer.Core.Validation` namespace
+when compiled by both validation executables. NuGet publishes only the
+[four distribution packages](package-distribution.md).
+
+The namespace check covers source, tests, samples and tools. The only declared
+namespace exceptions are the two compiler-required IsExternalInit shims documented
+in the migration guide. Assemblies with only attributes and top-level programs
+need no namespace declaration.

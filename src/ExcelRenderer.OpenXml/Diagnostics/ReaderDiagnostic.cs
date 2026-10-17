@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using ExcelRenderer.OpenXml.Model.Cells;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Diagnostics;
 
 /// <summary>Immutable ReaderDiagnostic snapshot. XML attribute names and source units are preserved.</summary>
 public sealed class ReaderDiagnostic

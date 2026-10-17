@@ -1,3 +1,4 @@
+using ExcelRenderer.OpenXml.Calculation;
 using Xunit;
 
 namespace ExcelRenderer.OpenXml.Tests;

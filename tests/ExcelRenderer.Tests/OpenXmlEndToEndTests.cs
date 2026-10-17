@@ -1,7 +1,7 @@
-using ExcelRenderer.TestFixtures;
 using ExcelRenderer.Excel;
 using ExcelRenderer.Mapping;
 using ExcelRenderer.Rendering;
+using ExcelRenderer.TestFixtures;
 using Xunit;
 
 namespace ExcelRenderer.Tests;
@@ -81,7 +81,7 @@ public sealed class OpenXmlEndToEndTests
             Assert.Equal(MappingBackend.OpenXml, selection!.SelectedBackend);
             Assert.DoesNotContain("FormulasPresent", selection.ReasonCodes);
             mapped.Position = 0;
-            using (var reader = OpenXml.OpenXmlWorkbookReader.Open(mapped))
+            using (var reader = OpenXml.Reading.OpenXmlWorkbookReader.Open(mapped))
             {
                 Assert.Equal(amount * 2d, reader.EnumerateCells(1).Single(cell => cell.Address.Column == 2).Value.Number);
             }

@@ -19,7 +19,7 @@ internal sealed record ReportImage(
     public DrawingAnchor? DrawingAnchor { get; init; }
 
     /// <summary>Gets independent source picture metadata for full-product enrichment.</summary>
-    internal OpenXml.ImageInfo? SourceImage { get; init; }
+    internal OpenXml.Model.Drawing.ImageInfo? SourceImage { get; init; }
 
     /// <summary>Gets borrowed product image metadata.</summary>
     internal Extensibility.ICoreExtensionData? ExtensionData { get; init; }

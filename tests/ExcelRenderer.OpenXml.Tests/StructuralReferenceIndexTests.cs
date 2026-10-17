@@ -1,4 +1,5 @@
-using ExcelRenderer.OpenXml;
+using ExcelRenderer.OpenXml.References;
+using ExcelRenderer.OpenXml.Writing.Plans;
 using Xunit;
 
 namespace ExcelRenderer.OpenXml.Tests;

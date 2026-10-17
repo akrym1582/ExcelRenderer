@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using ExcelRenderer.OpenXml.Diagnostics;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Formatting;
 
 /// <summary>Immutable CellDisplayResult snapshot. XML attribute names and source units are preserved.</summary>
 public sealed class CellDisplayResult

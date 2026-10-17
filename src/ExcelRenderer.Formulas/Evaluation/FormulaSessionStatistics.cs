@@ -1,4 +1,4 @@
-namespace ExcelRenderer.Formulas
+namespace ExcelRenderer.Formulas.Evaluation
 {
     /// <summary>Contains session-local work counters; missing blank intervals require no cell reads.</summary>
     public readonly struct FormulaSessionStatistics

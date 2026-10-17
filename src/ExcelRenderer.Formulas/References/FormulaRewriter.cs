@@ -1,8 +1,9 @@
 using System;
 using System.Globalization;
 using System.Linq;
+using ExcelRenderer.Formulas.Syntax;
 
-namespace ExcelRenderer.Formulas;
+namespace ExcelRenderer.Formulas.References;
 
 /// <summary>Safely serializes and transforms parsed references without modifying string literals.</summary>
 public static class FormulaRewriter

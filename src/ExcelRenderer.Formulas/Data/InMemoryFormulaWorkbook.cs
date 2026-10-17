@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
+using ExcelRenderer.Formulas.References;
+using ExcelRenderer.Formulas.Values;
 
-namespace ExcelRenderer.Formulas
+namespace ExcelRenderer.Formulas.Data
 {
     /// <summary>Provides an immutable sparse workbook snapshot.</summary>
     public sealed class InMemoryFormulaWorkbook : ISparseFormulaDataSource

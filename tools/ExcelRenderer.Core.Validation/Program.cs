@@ -1,9 +1,9 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.Text.Json;
-using CoreValidation;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
+using ExcelRenderer.Core.Validation;
 using PdfSharp.Pdf.IO;
 using SkiaSharp;
 using A = DocumentFormat.OpenXml.Drawing;

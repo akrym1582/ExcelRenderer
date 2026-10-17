@@ -1,7 +1,8 @@
 using DocumentFormat.OpenXml.Packaging;
 using ExcelRenderer.Excel;
 using ExcelRenderer.Model;
-using ExcelRenderer.OpenXml;
+using ExcelRenderer.OpenXml.Model.Cells;
+using ExcelRenderer.OpenXml.Reading;
 using ExcelRenderer.TestFixtures;
 using Xunit;
 using S = DocumentFormat.OpenXml.Spreadsheet;

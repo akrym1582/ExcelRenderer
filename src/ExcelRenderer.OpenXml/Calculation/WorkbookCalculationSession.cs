@@ -3,9 +3,16 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
-using ExcelRenderer.Formulas;
+using ExcelRenderer.Formulas.Data;
+using ExcelRenderer.Formulas.Evaluation;
+using ExcelRenderer.Formulas.References;
+using ExcelRenderer.Formulas.Syntax;
+using ExcelRenderer.Formulas.Values;
+using ExcelRenderer.OpenXml.Model.Cells;
+using ExcelRenderer.OpenXml.Model.Workbook;
+using ExcelRenderer.OpenXml.Reading;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Calculation;
 
 /// <summary>Evaluates reached cells against one immutable workbook snapshot.</summary>
 public sealed class WorkbookCalculationSession

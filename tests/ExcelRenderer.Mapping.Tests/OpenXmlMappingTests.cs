@@ -1,7 +1,7 @@
 using System.Collections;
 using System.IO.Compression;
 using System.Security.Cryptography;
-using ExcelRenderer.OpenXml;
+using ExcelRenderer.OpenXml.Model.Cells;
 using ExcelRenderer.TestFixtures;
 using static ExcelRenderer.TestFixtures.WorkbookAssertions;
 using static ExcelRenderer.Mapping.Tests.MappingFixture;
@@ -103,7 +103,7 @@ public sealed class OpenXmlMappingTests
         }
 
         output.Position = 0;
-        using var reader = ExcelRenderer.OpenXml.OpenXmlWorkbookReader.Open(output);
+        using var reader = ExcelRenderer.OpenXml.Reading.OpenXmlWorkbookReader.Open(output);
         Assert.Equal(value, Assert.Single(reader.EnumerateCells(1)).Value.Text);
     }
 

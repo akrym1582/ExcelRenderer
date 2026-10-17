@@ -1,0 +1,27 @@
+  ExcelRenderer.Formulas -> /workspace/ExcelRenderer/src/ExcelRenderer.Formulas/bin/Release/netstandard2.1/ExcelRenderer.Formulas.dll
+  ExcelRenderer.OpenXml -> /workspace/ExcelRenderer/src/ExcelRenderer.OpenXml/bin/Release/netstandard2.1/ExcelRenderer.OpenXml.dll
+  ExcelRenderer.Core -> /workspace/ExcelRenderer/src/ExcelRenderer.Core/bin/Release/netstandard2.1/ExcelRenderer.Core.dll
+  ExcelRenderer.Core.Sample -> /workspace/ExcelRenderer/samples/ExcelRenderer.Core.Sample/bin/Release/net10.0/ExcelRenderer.Core.Sample.dll
+  ExcelRenderer.Mapping -> /workspace/ExcelRenderer/src/ExcelRenderer.Mapping/bin/Release/netstandard2.1/ExcelRenderer.Mapping.dll
+  ExcelRenderer -> /workspace/ExcelRenderer/src/ExcelRenderer/bin/Release/netstandard2.1/ExcelRenderer.dll
+  ExcelRenderer.Formulas.Sample -> /workspace/ExcelRenderer/samples/ExcelRenderer.Formulas.Sample/bin/Release/net10.0/ExcelRenderer.Formulas.Sample.dll
+  ExcelRenderer.Fonts -> /workspace/ExcelRenderer/src/ExcelRenderer.Fonts/bin/Release/netstandard2.1/ExcelRenderer.Fonts.dll
+  ExcelRenderer.Tool -> /workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll
+  ExcelRenderer.Core.Tests -> /workspace/ExcelRenderer/tests/ExcelRenderer.Core.Tests/bin/Release/net10.0/ExcelRenderer.Core.Tests.dll
+  ExcelRenderer.Formulas.Tests -> /workspace/ExcelRenderer/tests/ExcelRenderer.Formulas.Tests/bin/Release/net10.0/ExcelRenderer.Formulas.Tests.dll
+  ExcelRenderer.Mapping.Tests -> /workspace/ExcelRenderer/tests/ExcelRenderer.Mapping.Tests/bin/Release/net10.0/ExcelRenderer.Mapping.Tests.dll
+  ExcelRenderer.OpenXml.Tests -> /workspace/ExcelRenderer/tests/ExcelRenderer.OpenXml.Tests/bin/Release/net10.0/ExcelRenderer.OpenXml.Tests.dll
+  ExcelRenderer.Tests -> /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Release/net10.0/ExcelRenderer.Tests.dll
+  ExcelRenderer.Tool.Tests -> /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/bin/Release/net10.0/ExcelRenderer.Tool.Tests.dll
+  ExcelRenderer.Core.Reference -> /workspace/ExcelRenderer/tools/ExcelRenderer.Core.Reference/bin/Release/net10.0/ExcelRenderer.Core.Reference.dll
+  ExcelRenderer.Core.Validation -> /workspace/ExcelRenderer/tools/ExcelRenderer.Core.Validation/bin/Release/net10.0/ExcelRenderer.Core.Validation.dll
+  ExcelRenderer.Formulas.Oracle -> /workspace/ExcelRenderer/tools/ExcelRenderer.Formulas.Oracle/bin/Release/net10.0/ExcelRenderer.Formulas.Oracle.dll
+  ExcelRenderer.Formulas.Performance -> /workspace/ExcelRenderer/tools/ExcelRenderer.Formulas.Performance/bin/Release/net10.0/ExcelRenderer.Formulas.Performance.dll
+  ExcelRenderer.OpenXml.Validation -> /workspace/ExcelRenderer/tools/ExcelRenderer.OpenXml.Validation/bin/Release/net10.0/ExcelRenderer.OpenXml.Validation.dll
+  ExcelRenderer.Performance -> /workspace/ExcelRenderer/tools/ExcelRenderer.Performance/bin/Release/net10.0/ExcelRenderer.Performance.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:09.79

@@ -2,7 +2,13 @@ using System.Globalization;
 using ExcelRenderer.Core.Input;
 using ExcelRenderer.Core.Model;
 using ExcelRenderer.Core.Rendering;
-using ExcelRenderer.OpenXml;
+using ExcelRenderer.OpenXml.Calculation;
+using ExcelRenderer.OpenXml.Model.Cells;
+using ExcelRenderer.OpenXml.Model.Drawing;
+using ExcelRenderer.OpenXml.Model.Printing;
+using ExcelRenderer.OpenXml.Model.Styles;
+using ExcelRenderer.OpenXml.Model.Workbook;
+using ExcelRenderer.OpenXml.Reading;
 using static ExcelRenderer.Core.Excel.OpenXmlStyleConverter;
 using CellAddress = ExcelRenderer.Core.Model.CellAddress;
 using CellRange = ExcelRenderer.Core.Model.CellRange;
@@ -67,7 +73,7 @@ internal partial class CoreExcelReader
                 Attribute(element, "auto") is not "1" and not "true" && Attribute(element, "indexed") is not "64" and not "65") || element.Children.Any(Unresolved);
     }
 
-    private static CellRange ToRange(OpenXml.CellRange range) => new(new(range.First.Row, range.First.Column), new(range.Last.Row, range.Last.Column));
+    private static CellRange ToRange(OpenXml.Model.Cells.CellRange range) => new(new(range.First.Row, range.First.Column), new(range.Last.Row, range.Last.Column));
 
     private static PageSettings OpenXmlPageSettings(WorksheetInfo info)
     {
@@ -265,7 +271,7 @@ internal partial class CoreExcelReader
             var pendingLeaders = info.MergedRanges.Select(range => range.First).Distinct().OrderBy(address => address.Row).ThenBy(address => address.Column).ToArray();
             var leaderIndex = 0;
             var selectedRegion = options.GetSelectedRange?.Invoke(info.Sheet.Name);
-            var mergeBands = calculation is null ? null : new Layout.BandIndex<OpenXml.CellRange>(info.MergedRanges.Select(range => (range, (double)range.First.Row, (double)range.Last.Row + 1)));
+            var mergeBands = calculation is null ? null : new Layout.BandIndex<OpenXml.Model.Cells.CellRange>(info.MergedRanges.Select(range => (range, (double)range.First.Row, (double)range.Last.Row + 1)));
             var titleRegions = calculation is null || options.IgnoreFormulaPrintAreas ? Array.Empty<PrintRangeInfo>() : info.PrintReferences.Where(reference => reference.Name == "_xlnm.Print_Titles").SelectMany(reference => reference.Ranges).ToArray();
             var printRegions = calculation is null || options.IgnoreFormulaPrintAreas ? Array.Empty<PrintRangeInfo>() : info.PrintReferences.Where(reference => reference.Name == "_xlnm.Print_Area").SelectMany(reference => reference.Ranges).ToArray();
             var hiddenRows = calculation is null ? null : info.Rows.Where(row => row.Hidden ?? info.DefaultRowsHidden).Select(row => row.Index).ToHashSet();
@@ -392,7 +398,7 @@ internal partial class CoreExcelReader
             };
             sheets.Add(CompleteSheet(info.Sheet.Name, sheet, context));
 
-            bool IsCalculationTarget(OpenXml.CellAddress address)
+            bool IsCalculationTarget(OpenXml.Model.Cells.CellAddress address)
             {
                 if (options.IsFormulaTarget is { } isTarget)
                 {
@@ -430,7 +436,7 @@ internal partial class CoreExcelReader
                 return true;
             }
 
-            void AddMissingLeader(OpenXml.CellAddress address)
+            void AddMissingLeader(OpenXml.Model.Cells.CellAddress address)
             {
                 var index = rowDefaults.TryGetValue(address.Row, out var rowStyle) ? rowStyle : columnDefaults[address.Column] ?? 0;
                 cells.Add(new(address.Row, address.Column), new(string.Empty, BlankStyle(index)));

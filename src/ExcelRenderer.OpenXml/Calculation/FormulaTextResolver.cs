@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ExcelRenderer.Formulas;
+using ExcelRenderer.Formulas.References;
+using ExcelRenderer.Formulas.Syntax;
+using ExcelRenderer.OpenXml.Model.Cells;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Calculation;
 
 /// <summary>Expands saved shared-formula references without evaluating any formula.</summary>
 public static class FormulaTextResolver

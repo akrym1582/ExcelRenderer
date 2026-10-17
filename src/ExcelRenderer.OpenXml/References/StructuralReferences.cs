@@ -5,8 +5,11 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
+using ExcelRenderer.OpenXml.Infrastructure;
+using ExcelRenderer.OpenXml.Model.Cells;
+using ExcelRenderer.OpenXml.Writing.Plans;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.References;
 
 /// <summary>Rewrites A1 reference tokens using final row placements without evaluating expressions.</summary>
 internal sealed partial class StructuralReferences

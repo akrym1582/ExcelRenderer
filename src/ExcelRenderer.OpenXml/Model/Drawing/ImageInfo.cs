@@ -1,4 +1,6 @@
-namespace ExcelRenderer.OpenXml;
+using ExcelRenderer.OpenXml.Model.Workbook;
+
+namespace ExcelRenderer.OpenXml.Model.Drawing;
 
 /// <summary>A picture placement with package identity and source DrawingML anchor units.</summary>
 public sealed class ImageInfo

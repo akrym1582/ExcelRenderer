@@ -7,9 +7,15 @@ using System.Threading;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using ExcelNumberFormat;
+using ExcelRenderer.OpenXml.Diagnostics;
+using ExcelRenderer.OpenXml.Formatting;
+using ExcelRenderer.OpenXml.Infrastructure;
+using ExcelRenderer.OpenXml.Model.Cells;
+using ExcelRenderer.OpenXml.Model.Styles;
+using ExcelRenderer.OpenXml.Model.Workbook;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Reading;
 
 /// <summary>Read-only streaming XLSX reader for rendering data. Does not calculate formulas.</summary>
 public sealed partial class OpenXmlWorkbookReader : IWorkbookDataReader

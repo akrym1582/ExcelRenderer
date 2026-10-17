@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Formatting;
 
 /// <summary>Provides NumberFormats metadata.</summary>
 internal static class NumberFormats

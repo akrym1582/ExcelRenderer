@@ -1,0 +1,35 @@
+{
+  "implementation_commit": "2f70f8d929676dfc59146f863cf9a48b2dd1c4ac",
+  "base_main": "dbb187c",
+  "validated_before_commit": true,
+  "dotnet_sdk": "10.0.401",
+  "tests_passed": 1939,
+  "documentation_examples": 92,
+  "namespace_declarations": 601,
+  "required_compiler_shims": 2,
+  "oracle_case_sha256": "34357f1dcc586e3de777a820dfb3491cd960b775946e1b267d48baa3f9bd206b",
+  "oracle_profile_checks": {
+    "matched": 1494,
+    "mismatch": 0
+  },
+  "excel_observed_cases": 0,
+  "package_consumer_scenarios": 6,
+  "evidence_sha256": {
+    "consumers.log": "703d582e978170028eca93380bd28c2205d3cd43f4f8517b4221f1206933af91",
+    "crlf-documentation.log": "9a40e78b7d7587189af2293830a75013132b21afbdfdef5c3f1fb70e59b55ea8",
+    "crlf-rebuild.log": "9e16239e396e5a498df31f28ff164d89c5cd65000893d394f7dd65b294b18bcb",
+    "crlf-tests.log": "0de811caf0fc7b7816bd4434e369a1072fb7edf4388e7bcdf6eb06d8c979fee9",
+    "distribution.log": "315c198f46252c8a89be4f7ec955f00ba56f22465f4399ce129dc39995f3692a",
+    "invoice.log": "e60d893f242c7ff42158133c73a7b60b03cc92a90215c1ddc2fe4161d54bdd28",
+    "mapping-smoke.log": "b5a7ecabf4b62379b9089b555df190c3985709da307ea71f7e98084cd935551e",
+    "oracle-python.log": "fc216958a87d4ac5ea804bef681d4c3236ab98547df98c7cdcc53d2bdb0a7a8a",
+    "pack.log": "cbc5c327069ed200fecca5ce9812d15f662267a1ded68dfe18f11bdad9c6ce82",
+    "package-inventory.json": "dab81fed80deca5c69dc214725173de074bcef1efff255d8c2b3ca1a2233def8",
+    "rebuild.log": "ff1b5f03d3c16f85cacc1490fe29708028a38b2fda3df84844125729ba8f9b4c",
+    "restore.log": "40d104602671164ab3958225da3e1c8cabd55f0251d6df6bc911d9d5a24f44ce",
+    "tests.log": "8da25dd130865f32f43400b90ad166622c82aa8453353d3d720d16d321c7b702",
+    "visual.log": "f4f3504a62904007c5e394561300a240979801a6faf1f2a27ecf1b1f60fb3217"
+  },
+  "crlf_documentation_examples_passed": 92,
+  "crlf_follow_up_tests_passed": 1939
+}

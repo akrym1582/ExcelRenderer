@@ -9,8 +9,9 @@ using System.Xml;
 using System.Xml.Linq;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
+using ExcelRenderer.OpenXml.Model.Workbook;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Infrastructure;
 
 /// <summary>Provides XmlValues metadata.</summary>
 internal static class XmlValues

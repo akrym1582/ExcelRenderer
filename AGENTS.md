@@ -20,6 +20,8 @@
 
 ## Changes
 
+- Match declared namespaces to project roots and source folders. Keep partial declarations together. Run `python3 scripts/check-source-namespaces.py`; only the two compiler-required IsExternalInit shims are exempt. See [namespace migration](docs/namespace-migration.md).
+
 - Coordinates and dimensions in the model and drawing commands are PDF points. Convert to pixels only at PNG output using the requested DPI.
 - Merged ranges use their top-left cell for `RowSpan` and `ColumnSpan`; avoid drawing the remaining cells again.
 - When a drawing command or style changes, check both PDFsharp and SkiaSharp renderers. Preserve Excel line style and width separately when converting borders.

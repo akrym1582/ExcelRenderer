@@ -1,4 +1,4 @@
-namespace CoreValidation;
+namespace ExcelRenderer.Core.Validation;
 
 /// <summary>Updates aggregate memory observations without forcing collection.</summary>
 internal static class InterlockedExtensions

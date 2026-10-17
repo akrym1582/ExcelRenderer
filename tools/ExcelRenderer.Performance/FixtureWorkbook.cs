@@ -1,6 +1,6 @@
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
-using ExcelRenderer.OpenXml;
+using ExcelRenderer.OpenXml.Model.Cells;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 
 /// <summary>Creates explicit SDK elements for deterministic benchmark inputs.</summary>

@@ -1,0 +1,30 @@
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Core.Tests/bin/Release/net10.0/ExcelRenderer.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /workspace/ExcelRenderer/TestResults/NamespaceAlignment/_6ae4c763e685_2026-10-17_04_18_23_net10.0.trx
+
+Passed!  - Failed:     0, Passed:    82, Skipped:     0, Total:    82, Duration: 2 s - ExcelRenderer.Core.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Formulas.Tests/bin/Release/net10.0/ExcelRenderer.Formulas.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /workspace/ExcelRenderer/TestResults/NamespaceAlignment/_6ae4c763e685_2026-10-17_04_18_26_net10.0.trx
+
+Passed!  - Failed:     0, Passed:   818, Skipped:     0, Total:   818, Duration: 310 ms - ExcelRenderer.Formulas.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Mapping.Tests/bin/Release/net10.0/ExcelRenderer.Mapping.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /workspace/ExcelRenderer/TestResults/NamespaceAlignment/_6ae4c763e685_2026-10-17_04_18_27_net10.0.trx
+
+Passed!  - Failed:     0, Passed:   197, Skipped:     0, Total:   197, Duration: 3 s - ExcelRenderer.Mapping.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.OpenXml.Tests/bin/Release/net10.0/ExcelRenderer.OpenXml.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /workspace/ExcelRenderer/TestResults/NamespaceAlignment/_6ae4c763e685_2026-10-17_04_18_30_net10.0.trx
+
+Passed!  - Failed:     0, Passed:   188, Skipped:     0, Total:   188, Duration: 394 ms - ExcelRenderer.OpenXml.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Release/net10.0/ExcelRenderer.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /workspace/ExcelRenderer/TestResults/NamespaceAlignment/_6ae4c763e685_2026-10-17_04_18_32_net10.0.trx
+
+Passed!  - Failed:     0, Passed:   563, Skipped:     0, Total:   563, Duration: 23 s - ExcelRenderer.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/bin/Release/net10.0/ExcelRenderer.Tool.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /workspace/ExcelRenderer/TestResults/NamespaceAlignment/_6ae4c763e685_2026-10-17_04_18_57_net10.0.trx
+
+Passed!  - Failed:     0, Passed:    91, Skipped:     0, Total:    91, Duration: 1 m 2 s - ExcelRenderer.Tool.Tests.dll (net10.0)

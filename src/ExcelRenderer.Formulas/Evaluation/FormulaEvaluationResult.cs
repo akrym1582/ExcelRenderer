@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using ExcelRenderer.Formulas.Diagnostics;
+using ExcelRenderer.Formulas.Values;
 
-namespace ExcelRenderer.Formulas
+namespace ExcelRenderer.Formulas.Evaluation
 {
     /// <summary>Contains a typed result or an engine failure diagnostic.</summary>
     public sealed class FormulaEvaluationResult

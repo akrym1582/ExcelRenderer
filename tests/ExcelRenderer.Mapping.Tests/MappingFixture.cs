@@ -1,5 +1,4 @@
 using DocumentFormat.OpenXml.Packaging;
-using ExcelRenderer.OpenXml;
 using ExcelRenderer.TestFixtures;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 

@@ -1,6 +1,10 @@
 using System.Diagnostics;
 using System.Text.Json;
-using ExcelRenderer.Formulas;
+using ExcelRenderer.Formulas.Data;
+using ExcelRenderer.Formulas.Evaluation;
+using ExcelRenderer.Formulas.References;
+using ExcelRenderer.Formulas.Syntax;
+using ExcelRenderer.Formulas.Values;
 
 /// <summary>Measures identical expanded workloads against the baseline and current engine.</summary>
 internal static class ExpansionBenchmark

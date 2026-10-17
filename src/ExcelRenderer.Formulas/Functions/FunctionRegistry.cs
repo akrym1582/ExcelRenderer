@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ExcelRenderer.Formulas
+namespace ExcelRenderer.Formulas.Functions
 {
     /// <summary>Defines the runtime evaluation strategy, including delayed and reference arguments.</summary>
     internal enum FunctionFamily

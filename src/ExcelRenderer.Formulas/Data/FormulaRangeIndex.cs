@@ -2,8 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using ExcelRenderer.Formulas.References;
 
-namespace ExcelRenderer.Formulas
+namespace ExcelRenderer.Formulas.Data
 {
     /// <summary>Indexes immutable stored coordinates by sheet, sorted row and sorted column.</summary>
     public sealed class FormulaRangeIndex

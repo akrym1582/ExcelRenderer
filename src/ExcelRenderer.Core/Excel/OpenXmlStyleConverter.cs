@@ -1,6 +1,8 @@
 using System.Globalization;
 using ExcelRenderer.Core.Model;
-using ExcelRenderer.OpenXml;
+using ExcelRenderer.OpenXml.Model.Cells;
+using ExcelRenderer.OpenXml.Model.Styles;
+using ExcelRenderer.OpenXml.Model.Workbook;
 
 namespace ExcelRenderer.Core.Excel;
 
@@ -86,7 +88,7 @@ internal static class OpenXmlStyleConverter
     /// <param name="name">Attribute name.</param>
     /// <param name="fallback">Value for an omitted attribute.</param>
     /// <returns>The saved number.</returns>
-    internal static double Number(ElementInfo? element, string name, double fallback) => Attribute(element, name) is { } value ? OpenXml.XmlValues.Number(value) : fallback;
+    internal static double Number(ElementInfo? element, string name, double fallback) => Attribute(element, name) is { } value ? OpenXml.Infrastructure.XmlValues.Number(value) : fallback;
 
     /// <summary>Reads a boolean source attribute.</summary>
     /// <param name="element">The source element.</param>

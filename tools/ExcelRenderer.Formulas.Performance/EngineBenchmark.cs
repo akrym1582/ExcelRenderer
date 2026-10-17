@@ -1,6 +1,10 @@
-using ExcelRenderer.Formulas;
+using ExcelRenderer.Formulas.Data;
+using ExcelRenderer.Formulas.Evaluation;
+using ExcelRenderer.Formulas.References;
+using ExcelRenderer.Formulas.Syntax;
+using ExcelRenderer.Formulas.Values;
 using ExcelRenderer.Mapping;
-using ExcelRenderer.OpenXml;
+using ExcelRenderer.OpenXml.Calculation;
 
 /// <summary>Measures formula sessions and transactional workbook integration.</summary>
 internal static class EngineBenchmark

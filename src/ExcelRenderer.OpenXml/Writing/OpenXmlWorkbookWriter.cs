@@ -9,10 +9,17 @@ using System.Threading;
 using System.Xml;
 using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
+using ExcelRenderer.OpenXml.Calculation;
+using ExcelRenderer.OpenXml.Diagnostics;
+using ExcelRenderer.OpenXml.Infrastructure;
 using ExcelRenderer.OpenXml.Input;
+using ExcelRenderer.OpenXml.Model.Cells;
+using ExcelRenderer.OpenXml.Reading;
+using ExcelRenderer.OpenXml.References;
+using ExcelRenderer.OpenXml.Writing.Plans;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Writing;
 
 /// <summary>Writes conservative workbook edits into a separate staged package, with optional formula reference rewriting.</summary>
 public static partial class OpenXmlWorkbookWriter

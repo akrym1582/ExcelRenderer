@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Writing;
 
 /// <summary>Bounds retained row XML by source bytes and entry count; callers always edit deep copies.</summary>
 internal sealed class RowPrototypeCache

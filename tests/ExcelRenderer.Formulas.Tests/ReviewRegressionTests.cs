@@ -1,4 +1,9 @@
 using System.Globalization;
+using ExcelRenderer.Formulas.Data;
+using ExcelRenderer.Formulas.Evaluation;
+using ExcelRenderer.Formulas.References;
+using ExcelRenderer.Formulas.Syntax;
+using ExcelRenderer.Formulas.Values;
 using Xunit;
 
 namespace ExcelRenderer.Formulas.Tests;

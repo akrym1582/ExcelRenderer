@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Writing.Plans;
 
 /// <summary>A typed, evaluated editing plan; contains no template language.</summary>
 public sealed class SheetEditPlan

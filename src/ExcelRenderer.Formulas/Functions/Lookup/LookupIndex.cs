@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using ExcelRenderer.Formulas.References;
+using ExcelRenderer.Formulas.Values;
 
-namespace ExcelRenderer.Formulas
+namespace ExcelRenderer.Formulas.Functions.Lookup
 {
     /// <summary>Retains only the evaluated prefix of one lookup vector; no enumerator survives a call.</summary>
     internal sealed class LookupIndex

@@ -5,11 +5,15 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using DocumentFormat.OpenXml.Packaging;
-using ExcelRenderer.Formulas;
+using ExcelRenderer.Formulas.Evaluation;
+using ExcelRenderer.Formulas.References;
+using ExcelRenderer.Formulas.Values;
 using ExcelRenderer.OpenXml.Input;
+using ExcelRenderer.OpenXml.Model.Cells;
+using ExcelRenderer.OpenXml.Reading;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Calculation;
 
 /// <summary>Stages explicit calculation and persists typed caches without modifying the input.</summary>
 public static class WorkbookRecalculator

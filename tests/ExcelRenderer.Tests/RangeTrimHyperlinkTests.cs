@@ -1,5 +1,4 @@
 using System.Text;
-using ExcelRenderer.TestFixtures;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using ExcelRenderer.Drawing;
@@ -11,6 +10,7 @@ using ExcelRenderer.Model;
 using ExcelRenderer.PdfSharp;
 using ExcelRenderer.Rendering;
 using ExcelRenderer.SkiaSharp;
+using ExcelRenderer.TestFixtures;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;

@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Infrastructure;
 
 /// <summary>Provides Stream metadata.</summary>
 internal sealed class LeaveOpenStream : Stream

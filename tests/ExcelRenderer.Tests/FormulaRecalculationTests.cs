@@ -109,7 +109,7 @@ public sealed class FormulaRecalculationTests
         output.Write([1, 2, 3]);
         var exception = await Assert.ThrowsAsync<ConversionException>(() => ExcelConverter.RenderAsync(input,
             new() { OutputFormat = OutputFormat.Svg, ReadOptions = new() { FormulaDisplayMode = FormulaDisplayMode.Recalculate } }, new SingleStreamOutputSink(output)));
-        Assert.IsType<OpenXml.FormulaCalculationException>(exception.InnerException);
+        Assert.IsType<OpenXml.Calculation.FormulaCalculationException>(exception.InnerException);
         Assert.Contains("A1", exception.InnerException!.Message);
         Assert.Equal(new byte[] { 1, 2, 3 }, output.ToArray());
     }

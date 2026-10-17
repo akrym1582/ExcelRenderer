@@ -5,9 +5,12 @@ using System.Linq;
 using System.Threading;
 using System.Xml.Linq;
 using DocumentFormat.OpenXml;
+using ExcelRenderer.OpenXml.Infrastructure;
+using ExcelRenderer.OpenXml.Model.Cells;
+using ExcelRenderer.OpenXml.Model.Workbook;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Reading;
 
 /// <summary>Streams worksheet cells and sparse metadata.</summary>
 public sealed partial class OpenXmlWorkbookReader

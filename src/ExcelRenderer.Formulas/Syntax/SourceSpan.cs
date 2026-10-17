@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace ExcelRenderer.Formulas
+namespace ExcelRenderer.Formulas.Syntax
 {
     /// <summary>Identifies a UTF-16 span in the original formula string.</summary>
     public readonly struct SourceSpan

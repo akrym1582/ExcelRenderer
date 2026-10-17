@@ -57,7 +57,7 @@ public sealed class ReaderOptimizationTests
     public void ResolvedStylesHaveValueEqualityAndConvertingDoesNotMutateSource()
     {
         using var input = SdkWorkbook.Create(new S.Worksheet(new S.SheetData(new S.Row(SdkWorkbook.Text("A1", "one"), SdkWorkbook.Text("B1", "two")) { RowIndex = 1 })), SdkWorkbook.Styles());
-        using var reader = OpenXml.OpenXmlWorkbookReader.Open(input);
+        using var reader = OpenXml.Reading.OpenXmlWorkbookReader.Open(input);
         var cells = reader.EnumerateCells(1).ToArray();
         var first = reader.ResolveStyle(cells[0]);
         var before = first.FontProperties;

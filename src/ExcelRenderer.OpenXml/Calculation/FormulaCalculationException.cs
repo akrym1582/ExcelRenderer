@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using ExcelRenderer.Formulas;
+using ExcelRenderer.Formulas.Diagnostics;
+using ExcelRenderer.Formulas.References;
+using ExcelRenderer.OpenXml.Model.Cells;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Calculation;
 
 /// <summary>Reports a formula that could not safely be recalculated.</summary>
 public sealed class FormulaCalculationException : InvalidOperationException

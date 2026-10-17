@@ -70,7 +70,7 @@ internal sealed class BackendOptions
     /// <returns>Product mapping settings.</returns>
     internal MappingOptions GetMapping(ParseResult result) => new()
     {
-        FormulaCalculationMode = calculationMode is not null && result.GetValue(calculationMode) == "recalculate" ? OpenXml.FormulaCalculationMode.Recalculate : OpenXml.FormulaCalculationMode.CachedValue,
+        FormulaCalculationMode = calculationMode is not null && result.GetValue(calculationMode) == "recalculate" ? OpenXml.Calculation.FormulaCalculationMode.Recalculate : OpenXml.Calculation.FormulaCalculationMode.CachedValue,
         RecalculateMappedWorkbook = recalculateMappedWorkbook,
         Backend = result.GetValue(mapping) switch { "openxml" => MappingBackend.OpenXml, "auto" => MappingBackend.Auto, _ => MappingBackend.OpenXml },
         BackendSelected = result.GetValue(verbose) ? selection => Console.Error.WriteLine($"Mapping: {selection.SelectedBackend} ({string.Join(", ", selection.ReasonCodes)})") : null,

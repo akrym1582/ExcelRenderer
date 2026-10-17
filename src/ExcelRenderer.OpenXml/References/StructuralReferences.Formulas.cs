@@ -1,8 +1,11 @@
 using System;
 using System.Linq;
-using ExcelRenderer.Formulas;
+using ExcelRenderer.Formulas.References;
+using ExcelRenderer.Formulas.Syntax;
+using ExcelRenderer.OpenXml.Model.Cells;
+using ExcelRenderer.OpenXml.Writing.Plans;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.References;
 
 /// <summary>Transforms formula AST references using the indexed final row placement.</summary>
 internal sealed partial class StructuralReferences

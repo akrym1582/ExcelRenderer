@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
-using ExcelRenderer.Formulas;
-using ExcelRenderer.OpenXml;
+using ExcelRenderer.Formulas.Evaluation;
+using ExcelRenderer.OpenXml.Calculation;
 using ExcelRenderer.OpenXml.Input;
 
 namespace ExcelRenderer.Mapping;

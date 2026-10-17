@@ -1,7 +1,7 @@
-using ExcelRenderer.TestFixtures;
 using ExcelRenderer.Core.Rendering;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Rendering;
+using ExcelRenderer.TestFixtures;
 using PdfSharp.Fonts;
 using PdfSharp.Pdf.IO;
 using Xunit;

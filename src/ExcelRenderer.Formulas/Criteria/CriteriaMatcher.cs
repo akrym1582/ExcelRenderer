@@ -1,7 +1,8 @@
 using System;
 using System.Globalization;
+using ExcelRenderer.Formulas.Values;
 
-namespace ExcelRenderer.Formulas
+namespace ExcelRenderer.Formulas.Criteria
 {
     // These coercions form an explicit profile until the case matrix is observed in Excel.
 

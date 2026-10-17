@@ -1,4 +1,8 @@
 using System.Xml.Linq;
+using ExcelRenderer.OpenXml.Diagnostics;
+using ExcelRenderer.OpenXml.Reading;
+using ExcelRenderer.OpenXml.Writing;
+using ExcelRenderer.OpenXml.Writing.Plans;
 using Xunit;
 
 namespace ExcelRenderer.OpenXml.Tests;

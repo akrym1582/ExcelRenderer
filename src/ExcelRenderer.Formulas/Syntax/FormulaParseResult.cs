@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using ExcelRenderer.Formulas.Diagnostics;
 
-namespace ExcelRenderer.Formulas;
+namespace ExcelRenderer.Formulas.Syntax;
 
 /// <summary>A syntax tree or explicit parser diagnostics.</summary>
 public sealed class FormulaParseResult

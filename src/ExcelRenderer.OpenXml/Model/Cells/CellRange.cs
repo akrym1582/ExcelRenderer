@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Model.Cells;
 
 /// <summary>A rectangular cell range with inclusive endpoints.</summary>
 public sealed class CellRange

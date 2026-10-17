@@ -1,4 +1,4 @@
-namespace ExcelRenderer.Formulas;
+namespace ExcelRenderer.Formulas.Syntax;
 
 /// <summary>An immutable parsed formula.</summary>
 public sealed class ParsedFormula

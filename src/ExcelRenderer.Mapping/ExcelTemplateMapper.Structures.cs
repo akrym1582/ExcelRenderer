@@ -2,8 +2,9 @@ using System;
 using System.Linq;
 using System.Threading;
 using DocumentFormat.OpenXml.Packaging;
-using ExcelRenderer.OpenXml;
 using ExcelRenderer.OpenXml.Input;
+using ExcelRenderer.OpenXml.Model.Cells;
+using ExcelRenderer.OpenXml.References;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 

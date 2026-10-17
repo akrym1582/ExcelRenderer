@@ -1,6 +1,6 @@
 using System;
 
-namespace ExcelRenderer.OpenXml;
+namespace ExcelRenderer.OpenXml.Writing.Plans;
 
 /// <summary>A typed cell replacement; strings are never interpreted as formulas.</summary>
 public sealed class CellValueEdit

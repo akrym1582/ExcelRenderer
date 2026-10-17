@@ -9,7 +9,7 @@
 
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeCoreBuildOutput</TargetsForTfmSpecificBuildOutput>
 
-    <Version>1.9.0</Version>
+    <Version>1.9.1</Version>
     <PackageId>ExcelRenderer</PackageId>
     <Title>ExcelRenderer</Title>
     <Description>Render Excel XLSX files to PDF, PNG, SVG and AI-friendly Markdown.</Description>

@@ -12,6 +12,40 @@ public sealed class FormulaMappingTests
     [Theory]
     [InlineData(0)]
     [InlineData(1)]
+    [InlineData(3)]
+    [InlineData(70)]
+    public void Expanded_invoice_functions_use_the_same_cache_free_mapping_input(int count)
+    {
+        using var input = Invoice();
+        using (var document = SpreadsheetDocument.Open(input, true))
+        {
+            var workbook = document.WorkbookPart!;
+            var cells = workbook.WorksheetParts.First().Worksheet.Descendants<S.Cell>().ToDictionary(c => c.CellReference!.Value!);
+            cells["C2"].CellFormula!.Text = "A2*VLOOKUP(B2,Master!$A$1:$B$1,2,FALSE)";
+            cells["D3"].CellFormula!.Text = "SUMIFS(Amounts,Amounts,\">0\")";
+            cells["F2"].CellFormula!.Text = "TEXT(EOMONTH(DATE(2026,1,1),1),\"yyyy-mm-dd\")";
+            SdkWorkbook.AddSheet(workbook, new S.Worksheet(new S.SheetData(new S.Row(SdkWorkbook.Number("A1", "10"), SdkWorkbook.Number("B1", "10")) { RowIndex = 1 })), "Master");
+        }
+        input.Position = 0;
+        using var mapped = new MemoryStream();
+        ExcelTemplateMapper.Map(input, mapped, new { items = Enumerable.Range(1, count).Select(quantity => new { quantity, price = 10 }).ToArray() }, new MappingOptions { FormulaCalculationMode = FormulaCalculationMode.Recalculate, RecalculateMappedWorkbook = false });
+        using (var book = WorkbookProbe.Open(mapped))
+        {
+            foreach (var sheet in book.Reader.SelectedWorksheetIndices)
+                Assert.All(book.Reader.EnumerateCells(sheet).Where(c => c.Formula != null), cell => Assert.False(cell.Formula!.HasCachedResult));
+            if (count > 0) Assert.Equal($"(A{count + 1}*VLOOKUP(B{count + 1},'Master'!$A$1:$B$1,2,FALSE))", Cell(book, count + 1, 3).Formula!.RawFormula);
+        }
+        mapped.Position = 0;
+        using var output = new MemoryStream();
+        WorkbookRecalculator.Recalculate(mapped, output);
+        using var calculated = WorkbookProbe.Open(output);
+        Assert.Equal(count * (count + 1) / 2 * 11, Number(calculated, count + 2, 4));
+        for (int row = 2; row <= count + 1; row++) Assert.Equal("2026-02-28", Text(calculated, row, 6));
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
     [InlineData(4)]
     public void Invoice_expands_references_and_recalculates_saved_caches(int count)
     {

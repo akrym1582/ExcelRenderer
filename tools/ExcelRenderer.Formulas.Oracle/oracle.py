@@ -182,7 +182,8 @@ def compare(args):
     observed = {o['id']: o for o in data['observations']}
     actual = {(r['id'], r['pipeline']): r['actual'] for r in json.loads(args.actual.read_text(encoding='utf-8'))}
     exceptions = {e['id']: e for e in json.loads(args.exceptions.read_text(encoding='utf-8'))}
-    counts, profiles, rows, categories = Counter(), Counter(), [], set()
+    counts = Counter({status: 0 for status in ('matched', 'mismatch', 'unsupported', 'known-difference', 'not-observed')})
+    profiles, rows, categories = Counter(matched=0, mismatch=0), [], set()
     for c in cases:
         for pipeline in (('mapping', 'roundtrip') if c.get('workbook') else ('engine', 'openxml', 'roundtrip')):
             a = actual.get((c['id'], pipeline))

@@ -10,6 +10,34 @@ namespace ExcelRenderer.Tests;
 public sealed class FormulaRecalculationTests
 {
     [Theory]
+    [InlineData(OutputFormat.Pdf)]
+    [InlineData(OutputFormat.Png)]
+    [InlineData(OutputFormat.Svg)]
+    [InlineData(OutputFormat.Markdown)]
+    public async Task ExpandedFunctionsRenderThroughEveryOutput(OutputFormat format)
+    {
+        using var input = CreateWorkbook();
+        using (var package = SpreadsheetDocument.Open(input, true))
+        {
+            var cells = package.WorkbookPart!.WorksheetParts.Single().Worksheet.Descendants<S.Cell>().ToArray();
+            cells[0].CellFormula = new("COUNTIF(B1:B3,\"\")");
+            cells[1].CellFormula = new("LEN(TEXT(DATE(2026,10,17),\"yyyy-mm-dd\"))");
+            cells[2].CellFormula = new("TEXT(EOMONTH(DATE(2026,1,31),1),\"yyyy-mm-dd\")");
+            cells[3].CellFormula = new("SUMIF(B1:B3,0)");
+        }
+        input.Position = 0;
+        var sheet = new ExcelReader().Read(input, new() { FormulaDisplayMode = FormulaDisplayMode.Recalculate }).Sheets[0];
+        Assert.Equal("3", sheet.Cells[new(1, 1)].Text);
+        Assert.Equal("10", sheet.Cells[new(2, 1)].Text);
+        Assert.Equal("2026-02-28", sheet.Cells[new(3, 1)].Text);
+        input.Position = 0;
+        using var output = new MemoryStream();
+        await ExcelConverter.RenderAsync(input, new() { OutputFormat = format, ReadOptions = new() { FormulaDisplayMode = FormulaDisplayMode.Recalculate } }, new SingleStreamOutputSink(output));
+        Assert.NotEmpty(output.ToArray());
+        if (format == OutputFormat.Markdown) Assert.Contains("2026-02-28", System.Text.Encoding.UTF8.GetString(output.ToArray()));
+    }
+
+    [Theory]
     [InlineData(ReaderBackend.OpenXml)]
     [InlineData(ReaderBackend.Auto)]
     public void RecalculationReplacesStaleCacheBeforeFormatting(ReaderBackend backend)

@@ -42,7 +42,7 @@ class OracleToolTests(unittest.TestCase):
                 self.assertEqual(1, oracle.compare(args))
             report = json.loads(args.output.read_text())
             self.assertEqual(0, report['excelObservedCases'])
-            self.assertNotIn('matched', report['counts'])
+            self.assertEqual(0, report['counts']['matched'])
             self.assertTrue(report['missingRequiredCategories'])
 
     def test_extract_rejects_non_excel_provenance(self):

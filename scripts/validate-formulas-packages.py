@@ -55,7 +55,7 @@ using (var doc = DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Create(inp
         new DocumentFormat.OpenXml.Spreadsheet.Row(
             new DocumentFormat.OpenXml.Spreadsheet.Cell { CellReference="A1", CellValue=new("3") },
             new DocumentFormat.OpenXml.Spreadsheet.Cell { CellReference="B1", CellValue=new("125") },
-            new DocumentFormat.OpenXml.Spreadsheet.Cell { CellReference="C1", CellFormula=new("ROUND(A1*B1*1.1,0)"), CellValue=new("999") }) { RowIndex=1 }));
+            new DocumentFormat.OpenXml.Spreadsheet.Cell { CellReference="C1", CellFormula=new("ROUND(SUMIF(A1:A1,3)*VLOOKUP(3,A1:B1,2,FALSE)*1.1,0)"), CellValue=new("999") }) { RowIndex=1 }));
     wb.Workbook.Append(new DocumentFormat.OpenXml.Spreadsheet.Sheets(new DocumentFormat.OpenXml.Spreadsheet.Sheet { Name="Invoice", SheetId=1, Id=wb.GetIdOfPart(ws) }));
     wb.Workbook.Save();
 }
@@ -71,6 +71,12 @@ foreach (var (formula, expected) in new[] { ("ROUNDDOWN(0.29,2)", 0.29), ("ROUND
     var result = new ExcelRenderer.Formulas.FormulaEngine().Evaluate(ExcelRenderer.Formulas.FormulaParser.Parse(formula).Formula!, source, new("S",1,1));
     if (!result.Success || result.Value.Number != expected) throw new Exception("Decimal rounding package failure");
 }
+var reportDate = ExcelRenderer.Formulas.FormulaParser.Parse("""TEXT(EOMONTH(DATE(2026,1,31),1),"yyyy-mm-dd")""").Formula!;
+var dateResult = new ExcelRenderer.Formulas.FormulaEngine().Evaluate(reportDate, source, new("S",1,1));
+if (!dateResult.Success || dateResult.Value.Text != "2026-02-28") throw new Exception("Expanded date/text package failure");
+var blanks = ExcelRenderer.Formulas.FormulaParser.Parse("""COUNTIF(A:A,"")""").Formula!;
+var blankResult = new ExcelRenderer.Formulas.FormulaEngine().Evaluate(blanks, source, new("S",1,2));
+if (!blankResult.Success || blankResult.Value.Number != 1048576) throw new Exception("Sparse aggregate package failure");
 var limited = new ExcelRenderer.Formulas.FormulaEngine().CreateSession(source, new() { MaxStringLength = 8, MaxCachedStringCharacters = 8 });
 var text = ExcelRenderer.Formulas.FormulaParser.Parse("IF(TRUE,\\\"-\\\",\\\"\\\")");
 if (!text.Success || limited.Evaluate(text.Formula!, new("S",1,1)).Value.Text != "-") throw new Exception("Literal token package failure");

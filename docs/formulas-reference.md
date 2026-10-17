@@ -263,3 +263,9 @@ units per session; reaching a limit uses bounded streaming fallback. No cursor
 is retained between calls. Wildcard queries search the bounded prefix with the
 same work budget before extending it. Sparse row/column indexes use flat arrays
 to avoid one allocation per row.
+
+Built-in coordinate indexes prove fully stored column intervals before selecting
+a direct traversal for a dense rectangle. This never reads holes or uses a
+metadata-only UsedRange as evidence. Sparse/custom cursors still validate ordered,
+unique coordinates. Cursor progress and its cell read consume one step together;
+aggregation and criterion matching consume their own steps.

@@ -1,7 +1,7 @@
 {
   "baselineRevision": "b2d42c9c17293085e29f2f6fde50f9bcea9fa7dc",
-  "implementationRevision": "52fd14433a5c1d92516c4c9afbf2913b1b281f70",
-  "recordedAt": "2026-10-17T00:35:10.652394+00:00",
+  "implementationRevision": "c1ddcbf9ed8374f14fdeb6681f439cd8cb583d60",
+  "recordedAt": "2026-10-17T00:57:48.964192+00:00",
   "warmups": 1,
   "measuredRepeats": 5,
   "harnessSha256": {
@@ -13,18 +13,18 @@
     "ExcelRenderer.Formulas.Performance.csproj": "1ce8f80e216c50945fa6994cf68537c095a46e401964f4d96e56d36efe117953"
   },
   "rawSha256": {
-    "baseline-expansion-lookup-varied.jsonl": "69a37322ad4639f6f83276f59346e7973541e989dd4f8a2e4090e256c2eab9c6",
-    "baseline-expansion-lookup.jsonl": "a0e4e39da8ce4b691180f0f23df0e1e39f35e868c16aef9d868198635a017952",
-    "baseline-expansion-mixed.jsonl": "9d3401b7ac7069d8fd7fb9e68984e1bb8d8a14791136d29e81e98c012d8e527f",
-    "baseline-expansion-sparse.jsonl": "1abce97c1fbfc1f31cc3b7220aaaa045186245dbd1b47ee4e5649c12618082d2",
-    "baseline-expansion-text-date.jsonl": "37e26c8a655a67436a847fe8156586aab8068e2040e6baa700baeaa0a7abe1d6",
-    "baseline-sum.jsonl": "c10f0c5e39e8e1002cc8ff88be8d31624b3db3d7dadd57d957a6029b15693620",
-    "current-expansion-lookup-varied.jsonl": "3f895bf91c44a9d9aacbdebe78ccbfa02e0276d35a2f0bab5a7ce78a5e0ae73a",
-    "current-expansion-lookup.jsonl": "0af1f34ff19ff0c6c1f9c41b9bf9a38ca91992011a6cd2c96b355a8a7f81faa6",
-    "current-expansion-mixed.jsonl": "a5a5f3c886a080399131e19f816b8ff788a48c4adebc100900f58282fb6ca720",
-    "current-expansion-sparse.jsonl": "ac752b5ae5a058e0ef587b2860b38b7d16c4378158683a3060ad2786fa10b453",
-    "current-expansion-text-date.jsonl": "4ad3da899acc21f4c769b92ded282189cfce59bdad306b6a85ceee8ea63f653e",
-    "current-sum.jsonl": "ce228fdf8b9d8d2a8dd745740bcba42d1a658ed371644eb8bd48b4af2ee27e3b"
+    "baseline-expansion-lookup-varied.jsonl": "b7be2982c3250a22eb04d2bfac403f2c91b15340c38e50a40a725dc5d53d2640",
+    "baseline-expansion-lookup.jsonl": "523d760f4f4930f48e54309d3d4808ead91f8b708e4b1901a0af1fe17fde11e0",
+    "baseline-expansion-mixed.jsonl": "a85038d0470b7d1f4fd536fd9ff0a60b442a60999d2181400f11224fb15d5449",
+    "baseline-expansion-sparse.jsonl": "223a0d4907c97fc04633a376b28ea9ba99e771e62bef32a84855a67e1eeb4841",
+    "baseline-expansion-text-date.jsonl": "65b62d9fecd678a0e10009420c95885f60add2d7e3e4e014d3557715b9a2d5f7",
+    "baseline-sum.jsonl": "62d5633d82102d8ff07d401605ebcec0af9e60cb19e0cbeded584677f05707d2",
+    "current-expansion-lookup-varied.jsonl": "192a7ef7d3559a67f533fa7122cd01e8d7cd613271a5fa7263525902fa010ef2",
+    "current-expansion-lookup.jsonl": "1f42854860ef1894e5316bd4679c141e8a56e346a33410ea69b237a5aa590635",
+    "current-expansion-mixed.jsonl": "0ee383ce5699eca0116fe1b3441a1e3756a61b8d3799137372ec49eff798b5e3",
+    "current-expansion-sparse.jsonl": "b6933db40d74c7896d48741dc9dda60cebd5829b1b44c970d78e5e66360cf108",
+    "current-expansion-text-date.jsonl": "0493a4f7259ca54066423d170659ae1a13b1a77aff6cd814e2fc4ba7cf1a6ebf",
+    "current-sum.jsonl": "d261024b7d73db4f89b1fbc3feb8f085b23cc2413f4efdcf75155b5864c235b3"
   },
   "notes": [
     "Baseline uses the identical harness with EXPANSION_BASELINE only to omit statistics unavailable in that API.",
@@ -40,7 +40,7 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0349,
+      "medianMilliseconds": 0.0254,
       "medianAllocatedBytes": 4496,
       "gc": [
         0,
@@ -56,7 +56,7 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0328,
+      "medianMilliseconds": 0.023,
       "medianAllocatedBytes": 4496,
       "gc": [
         0,
@@ -72,7 +72,7 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0326,
+      "medianMilliseconds": 0.0227,
       "medianAllocatedBytes": 4496,
       "gc": [
         0,
@@ -88,7 +88,7 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0354,
+      "medianMilliseconds": 0.026,
       "medianAllocatedBytes": 4496,
       "gc": [
         0,
@@ -104,7 +104,7 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0345,
+      "medianMilliseconds": 0.0249,
       "medianAllocatedBytes": 4496,
       "gc": [
         0,
@@ -120,7 +120,7 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0339,
+      "medianMilliseconds": 0.0255,
       "medianAllocatedBytes": 4496,
       "gc": [
         0,
@@ -136,7 +136,7 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0363,
+      "medianMilliseconds": 0.0268,
       "medianAllocatedBytes": 4496,
       "gc": [
         0,
@@ -152,7 +152,7 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0351,
+      "medianMilliseconds": 0.0271,
       "medianAllocatedBytes": 4496,
       "gc": [
         0,
@@ -168,7 +168,7 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0354,
+      "medianMilliseconds": 0.0277,
       "medianAllocatedBytes": 4496,
       "gc": [
         0,
@@ -184,7 +184,7 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0197,
+      "medianMilliseconds": 0.014,
       "medianAllocatedBytes": 2264,
       "gc": [
         0,
@@ -200,7 +200,7 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0183,
+      "medianMilliseconds": 0.0126,
       "medianAllocatedBytes": 2264,
       "gc": [
         0,
@@ -216,7 +216,7 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0178,
+      "medianMilliseconds": 0.0121,
       "medianAllocatedBytes": 2264,
       "gc": [
         0,
@@ -232,8 +232,8 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0201,
-      "medianAllocatedBytes": 1928,
+      "medianMilliseconds": 0.0149,
+      "medianAllocatedBytes": 2264,
       "gc": [
         0,
         0,
@@ -248,8 +248,8 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0198,
-      "medianAllocatedBytes": 1880,
+      "medianMilliseconds": 0.0145,
+      "medianAllocatedBytes": 1592,
       "gc": [
         0,
         0,
@@ -264,8 +264,8 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0192,
-      "medianAllocatedBytes": 1928,
+      "medianMilliseconds": 0.0147,
+      "medianAllocatedBytes": 1880,
       "gc": [
         0,
         0,
@@ -280,7 +280,7 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0207,
+      "medianMilliseconds": 0.0153,
       "medianAllocatedBytes": 1880,
       "gc": [
         0,
@@ -296,8 +296,8 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0209,
-      "medianAllocatedBytes": 1928,
+      "medianMilliseconds": 0.0155,
+      "medianAllocatedBytes": 1880,
       "gc": [
         0,
         0,
@@ -312,8 +312,8 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0202,
-      "medianAllocatedBytes": 1880,
+      "medianMilliseconds": 0.0161,
+      "medianAllocatedBytes": 1928,
       "gc": [
         0,
         0,
@@ -328,7 +328,7 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0163,
+      "medianMilliseconds": 0.0167,
       "medianAllocatedBytes": 3400,
       "gc": [
         0,
@@ -344,7 +344,7 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0168,
+      "medianMilliseconds": 0.0161,
       "medianAllocatedBytes": 3400,
       "gc": [
         0,
@@ -360,7 +360,7 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0316,
+      "medianMilliseconds": 0.0459,
       "medianAllocatedBytes": 3400,
       "gc": [
         0,
@@ -376,7 +376,7 @@
       "success": true,
       "diagnostic": null,
       "checksum": 10,
-      "medianMilliseconds": 0.0054,
+      "medianMilliseconds": 0.0059,
       "medianAllocatedBytes": 3392,
       "gc": [
         0,
@@ -392,7 +392,7 @@
       "success": false,
       "diagnostic": "ResourceLimitExceeded",
       "checksum": null,
-      "medianMilliseconds": 98.96,
+      "medianMilliseconds": 123.7639,
       "medianAllocatedBytes": 140111416,
       "gc": [
         0,
@@ -408,7 +408,7 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0156,
+      "medianMilliseconds": 0.0168,
       "medianAllocatedBytes": 2264,
       "gc": [
         0,
@@ -424,7 +424,7 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0145,
+      "medianMilliseconds": 0.0142,
       "medianAllocatedBytes": 2264,
       "gc": [
         0,
@@ -440,7 +440,7 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0148,
+      "medianMilliseconds": 0.0149,
       "medianAllocatedBytes": 2296,
       "gc": [
         0,
@@ -456,7 +456,7 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0172,
+      "medianMilliseconds": 0.0153,
       "medianAllocatedBytes": 2640,
       "gc": [
         0,
@@ -472,7 +472,7 @@
       "success": true,
       "diagnostic": null,
       "checksum": 1000,
-      "medianMilliseconds": 0.0462,
+      "medianMilliseconds": 0.0534,
       "medianAllocatedBytes": 142328,
       "gc": [
         0,
@@ -488,7 +488,7 @@
       "success": false,
       "diagnostic": "ResourceLimitExceeded",
       "checksum": null,
-      "medianMilliseconds": 123.4104,
+      "medianMilliseconds": 95.3381,
       "medianAllocatedBytes": 140111752,
       "gc": [
         0,
@@ -504,7 +504,7 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0163,
+      "medianMilliseconds": 0.0155,
       "medianAllocatedBytes": 2600,
       "gc": [
         0,
@@ -520,7 +520,7 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0136,
+      "medianMilliseconds": 0.013,
       "medianAllocatedBytes": 2600,
       "gc": [
         0,
@@ -536,7 +536,7 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0137,
+      "medianMilliseconds": 0.0132,
       "medianAllocatedBytes": 2632,
       "gc": [
         0,
@@ -552,7 +552,7 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0133,
+      "medianMilliseconds": 0.0126,
       "medianAllocatedBytes": 2640,
       "gc": [
         0,
@@ -568,7 +568,7 @@
       "success": true,
       "diagnostic": null,
       "checksum": 100000,
-      "medianMilliseconds": 4.5393,
+      "medianMilliseconds": 4.9106,
       "medianAllocatedBytes": 13520768,
       "gc": [
         0,
@@ -584,7 +584,7 @@
       "success": false,
       "diagnostic": "ResourceLimitExceeded",
       "checksum": null,
-      "medianMilliseconds": 183.8527,
+      "medianMilliseconds": 165.2771,
       "medianAllocatedBytes": 140111752,
       "gc": [
         0,
@@ -600,7 +600,7 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0348,
+      "medianMilliseconds": 0.034,
       "medianAllocatedBytes": 2576,
       "gc": [
         0,
@@ -616,7 +616,7 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0282,
+      "medianMilliseconds": 0.0287,
       "medianAllocatedBytes": 2576,
       "gc": [
         0,
@@ -632,7 +632,7 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0219,
+      "medianMilliseconds": 0.0227,
       "medianAllocatedBytes": 2608,
       "gc": [
         0,
@@ -648,7 +648,7 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0236,
+      "medianMilliseconds": 0.0215,
       "medianAllocatedBytes": 2616,
       "gc": [
         0,
@@ -664,7 +664,7 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0154,
+      "medianMilliseconds": 0.0135,
       "medianAllocatedBytes": 2656,
       "gc": [
         0,
@@ -680,7 +680,7 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.013,
+      "medianMilliseconds": 0.0118,
       "medianAllocatedBytes": 2656,
       "gc": [
         0,
@@ -696,7 +696,7 @@
       "success": false,
       "diagnostic": "UnsupportedFunction",
       "checksum": null,
-      "medianMilliseconds": 0.0499,
+      "medianMilliseconds": 0.037,
       "medianAllocatedBytes": 2656,
       "gc": [
         0,
@@ -712,8 +712,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 20,
-      "medianMilliseconds": 0.0236,
-      "medianAllocatedBytes": 5816,
+      "medianMilliseconds": 0.024,
+      "medianAllocatedBytes": 5144,
       "gc": null,
       "statistics": null
     },
@@ -724,7 +724,7 @@
       "success": true,
       "diagnostic": null,
       "checksum": 2000,
-      "medianMilliseconds": 0.4405,
+      "medianMilliseconds": 0.4701,
       "medianAllocatedBytes": 193536,
       "gc": null,
       "statistics": null
@@ -736,7 +736,7 @@
       "success": true,
       "diagnostic": null,
       "checksum": 200000,
-      "medianMilliseconds": 11.0625,
+      "medianMilliseconds": 13.8898,
       "medianAllocatedBytes": 15700672,
       "gc": null,
       "statistics": null
@@ -748,8 +748,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 2,
-      "medianMilliseconds": 0.6984,
-      "medianAllocatedBytes": 354312,
+      "medianMilliseconds": 0.636,
+      "medianAllocatedBytes": 354376,
       "gc": [
         0,
         0,
@@ -763,7 +763,7 @@
         "BulkBlankCells": 1047576,
         "CachedValues": 1001,
         "CellVisits": 1001,
-        "EvaluationSteps": 3015
+        "EvaluationSteps": 2015
       }
     },
     {
@@ -773,8 +773,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 20,
-      "medianMilliseconds": 1.0615,
-      "medianAllocatedBytes": 378008,
+      "medianMilliseconds": 0.9723,
+      "medianAllocatedBytes": 378072,
       "gc": [
         0,
         0,
@@ -788,7 +788,7 @@
         "BulkBlankCells": 1047576,
         "CachedValues": 1010,
         "CellVisits": 1010,
-        "EvaluationSteps": 3141
+        "EvaluationSteps": 2141
       }
     },
     {
@@ -798,8 +798,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 200,
-      "medianMilliseconds": 1.5803,
-      "medianAllocatedBytes": 614808,
+      "medianMilliseconds": 1.5741,
+      "medianAllocatedBytes": 614200,
       "gc": [
         0,
         0,
@@ -813,7 +813,7 @@
         "BulkBlankCells": 1047576,
         "CachedValues": 1100,
         "CellVisits": 1100,
-        "EvaluationSteps": 4401
+        "EvaluationSteps": 3401
       }
     },
     {
@@ -823,8 +823,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 2,
-      "medianMilliseconds": 6.8203,
-      "medianAllocatedBytes": 3233376,
+      "medianMilliseconds": 5.6699,
+      "medianAllocatedBytes": 3233440,
       "gc": [
         0,
         0,
@@ -838,7 +838,7 @@
         "BulkBlankCells": 1038576,
         "CachedValues": 10001,
         "CellVisits": 10001,
-        "EvaluationSteps": 30015
+        "EvaluationSteps": 20015
       }
     },
     {
@@ -848,8 +848,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 20,
-      "medianMilliseconds": 3.6356,
-      "medianAllocatedBytes": 3257208,
+      "medianMilliseconds": 5.7687,
+      "medianAllocatedBytes": 3257272,
       "gc": [
         0,
         0,
@@ -863,7 +863,7 @@
         "BulkBlankCells": 1038576,
         "CachedValues": 10010,
         "CellVisits": 10010,
-        "EvaluationSteps": 30141
+        "EvaluationSteps": 20141
       }
     },
     {
@@ -873,8 +873,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 200,
-      "medianMilliseconds": 3.9854,
-      "medianAllocatedBytes": 3495408,
+      "medianMilliseconds": 6.841,
+      "medianAllocatedBytes": 3495472,
       "gc": [
         0,
         0,
@@ -888,7 +888,7 @@
         "BulkBlankCells": 1038576,
         "CachedValues": 10100,
         "CellVisits": 10100,
-        "EvaluationSteps": 31401
+        "EvaluationSteps": 21401
       }
     },
     {
@@ -898,8 +898,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 2,
-      "medianMilliseconds": 6.8204,
-      "medianAllocatedBytes": 6723368,
+      "medianMilliseconds": 16.533,
+      "medianAllocatedBytes": 6723432,
       "gc": [
         0,
         0,
@@ -913,7 +913,7 @@
         "BulkBlankCells": 1018576,
         "CachedValues": 30001,
         "CellVisits": 30001,
-        "EvaluationSteps": 90015
+        "EvaluationSteps": 60015
       }
     },
     {
@@ -923,8 +923,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 20,
-      "medianMilliseconds": 4.3133,
-      "medianAllocatedBytes": 6747200,
+      "medianMilliseconds": 20.5304,
+      "medianAllocatedBytes": 6747264,
       "gc": [
         0,
         0,
@@ -938,7 +938,7 @@
         "BulkBlankCells": 1018576,
         "CachedValues": 30010,
         "CellVisits": 30010,
-        "EvaluationSteps": 90141
+        "EvaluationSteps": 60141
       }
     },
     {
@@ -948,8 +948,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 200,
-      "medianMilliseconds": 5.3244,
-      "medianAllocatedBytes": 6985520,
+      "medianMilliseconds": 21.6679,
+      "medianAllocatedBytes": 6985584,
       "gc": [
         0,
         0,
@@ -963,7 +963,7 @@
         "BulkBlankCells": 1018576,
         "CachedValues": 30100,
         "CellVisits": 30100,
-        "EvaluationSteps": 91401
+        "EvaluationSteps": 61401
       }
     },
     {
@@ -973,8 +973,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 2,
-      "medianMilliseconds": 0.7194,
-      "medianAllocatedBytes": 352072,
+      "medianMilliseconds": 0.675,
+      "medianAllocatedBytes": 352136,
       "gc": [
         0,
         0,
@@ -988,7 +988,7 @@
         "BulkBlankCells": 1047576,
         "CachedValues": 1001,
         "CellVisits": 1001,
-        "EvaluationSteps": 3015
+        "EvaluationSteps": 2015
       }
     },
     {
@@ -998,8 +998,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 20,
-      "medianMilliseconds": 0.946,
-      "medianAllocatedBytes": 355744,
+      "medianMilliseconds": 0.8957,
+      "medianAllocatedBytes": 355808,
       "gc": [
         0,
         0,
@@ -1013,7 +1013,7 @@
         "BulkBlankCells": 1047576,
         "CachedValues": 1001,
         "CellVisits": 1010,
-        "EvaluationSteps": 3141
+        "EvaluationSteps": 2141
       }
     },
     {
@@ -1023,8 +1023,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 200,
-      "medianMilliseconds": 1.1947,
-      "medianAllocatedBytes": 392464,
+      "medianMilliseconds": 1.1487,
+      "medianAllocatedBytes": 392528,
       "gc": [
         0,
         0,
@@ -1038,7 +1038,7 @@
         "BulkBlankCells": 1047576,
         "CachedValues": 1001,
         "CellVisits": 1100,
-        "EvaluationSteps": 4401
+        "EvaluationSteps": 3401
       }
     },
     {
@@ -1048,8 +1048,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 2,
-      "medianMilliseconds": 6.165,
-      "medianAllocatedBytes": 3231136,
+      "medianMilliseconds": 6.1765,
+      "medianAllocatedBytes": 3231200,
       "gc": [
         0,
         0,
@@ -1063,7 +1063,7 @@
         "BulkBlankCells": 1038576,
         "CachedValues": 10001,
         "CellVisits": 10001,
-        "EvaluationSteps": 30015
+        "EvaluationSteps": 20015
       }
     },
     {
@@ -1073,8 +1073,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 20,
-      "medianMilliseconds": 5.989,
-      "medianAllocatedBytes": 3234808,
+      "medianMilliseconds": 5.5873,
+      "medianAllocatedBytes": 3234872,
       "gc": [
         0,
         0,
@@ -1088,7 +1088,7 @@
         "BulkBlankCells": 1038576,
         "CachedValues": 10001,
         "CellVisits": 10010,
-        "EvaluationSteps": 30141
+        "EvaluationSteps": 20141
       }
     },
     {
@@ -1098,8 +1098,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 200,
-      "medianMilliseconds": 6.3235,
-      "medianAllocatedBytes": 3271528,
+      "medianMilliseconds": 6.0502,
+      "medianAllocatedBytes": 3271592,
       "gc": [
         0,
         0,
@@ -1113,7 +1113,7 @@
         "BulkBlankCells": 1038576,
         "CachedValues": 10001,
         "CellVisits": 10100,
-        "EvaluationSteps": 31401
+        "EvaluationSteps": 21401
       }
     },
     {
@@ -1123,8 +1123,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 2,
-      "medianMilliseconds": 5.8937,
-      "medianAllocatedBytes": 6721128,
+      "medianMilliseconds": 13.4321,
+      "medianAllocatedBytes": 6721192,
       "gc": [
         0,
         0,
@@ -1138,7 +1138,7 @@
         "BulkBlankCells": 1018576,
         "CachedValues": 30001,
         "CellVisits": 30001,
-        "EvaluationSteps": 90015
+        "EvaluationSteps": 60015
       }
     },
     {
@@ -1148,8 +1148,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 20,
-      "medianMilliseconds": 5.3693,
-      "medianAllocatedBytes": 6724800,
+      "medianMilliseconds": 6.7005,
+      "medianAllocatedBytes": 6724864,
       "gc": [
         0,
         0,
@@ -1163,7 +1163,7 @@
         "BulkBlankCells": 1018576,
         "CachedValues": 30001,
         "CellVisits": 30010,
-        "EvaluationSteps": 90141
+        "EvaluationSteps": 60141
       }
     },
     {
@@ -1173,8 +1173,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 200,
-      "medianMilliseconds": 4.9745,
-      "medianAllocatedBytes": 6761520,
+      "medianMilliseconds": 7.2752,
+      "medianAllocatedBytes": 6761584,
       "gc": [
         0,
         0,
@@ -1188,7 +1188,7 @@
         "BulkBlankCells": 1018576,
         "CachedValues": 30001,
         "CellVisits": 30100,
-        "EvaluationSteps": 91401
+        "EvaluationSteps": 61401
       }
     },
     {
@@ -1198,8 +1198,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 32,
-      "medianMilliseconds": 0.0544,
-      "medianAllocatedBytes": 11184,
+      "medianMilliseconds": 0.0568,
+      "medianAllocatedBytes": 11376,
       "gc": [
         0,
         0,
@@ -1213,7 +1213,7 @@
         "BulkBlankCells": 2097132,
         "CachedValues": 20,
         "CellVisits": 31,
-        "EvaluationSteps": 195
+        "EvaluationSteps": 165
       }
     },
     {
@@ -1223,8 +1223,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 2012,
-      "medianMilliseconds": 1.894,
-      "medianAllocatedBytes": 566416,
+      "medianMilliseconds": 1.7716,
+      "medianAllocatedBytes": 566608,
       "gc": [
         0,
         0,
@@ -1238,7 +1238,7 @@
         "BulkBlankCells": 2095152,
         "CachedValues": 2000,
         "CellVisits": 3001,
-        "EvaluationSteps": 13065
+        "EvaluationSteps": 10065
       }
     },
     {
@@ -1248,8 +1248,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 200012,
-      "medianMilliseconds": 56.1418,
-      "medianAllocatedBytes": 38972528,
+      "medianMilliseconds": 58.5894,
+      "medianAllocatedBytes": 38972720,
       "gc": [
         0,
         0,
@@ -1263,7 +1263,7 @@
         "BulkBlankCells": 1897152,
         "CachedValues": 200000,
         "CellVisits": 300001,
-        "EvaluationSteps": 1300065
+        "EvaluationSteps": 1000065
       }
     },
     {
@@ -1273,8 +1273,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 10,
-      "medianMilliseconds": 0.0142,
-      "medianAllocatedBytes": 5728,
+      "medianMilliseconds": 0.0156,
+      "medianAllocatedBytes": 5976,
       "gc": [
         0,
         0,
@@ -1298,8 +1298,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 55,
-      "medianMilliseconds": 0.0183,
-      "medianAllocatedBytes": 3864,
+      "medianMilliseconds": 0.0181,
+      "medianAllocatedBytes": 3704,
       "gc": [
         0,
         0,
@@ -1313,7 +1313,7 @@
         "BulkBlankCells": 0,
         "CachedValues": 10,
         "CellVisits": 10,
-        "EvaluationSteps": 37
+        "EvaluationSteps": 27
       }
     },
     {
@@ -1323,8 +1323,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 1000,
-      "medianMilliseconds": 0.0125,
-      "medianAllocatedBytes": 2680,
+      "medianMilliseconds": 0.0132,
+      "medianAllocatedBytes": 2744,
       "gc": [
         0,
         0,
@@ -1348,8 +1348,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 1048576,
-      "medianMilliseconds": 0.0108,
-      "medianAllocatedBytes": 2680,
+      "medianMilliseconds": 0.011,
+      "medianAllocatedBytes": 2744,
       "gc": [
         0,
         0,
@@ -1373,8 +1373,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 20,
-      "medianMilliseconds": 0.0255,
-      "medianAllocatedBytes": 6640,
+      "medianMilliseconds": 0.026,
+      "medianAllocatedBytes": 6768,
       "gc": [
         0,
         0,
@@ -1388,7 +1388,7 @@
         "BulkBlankCells": 1048566,
         "CachedValues": 20,
         "CellVisits": 20,
-        "EvaluationSteps": 118
+        "EvaluationSteps": 98
       }
     },
     {
@@ -1398,8 +1398,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 999999,
-      "medianMilliseconds": 0.012,
-      "medianAllocatedBytes": 3552,
+      "medianMilliseconds": 0.0133,
+      "medianAllocatedBytes": 3680,
       "gc": [
         0,
         0,
@@ -1423,8 +1423,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 1000,
-      "medianMilliseconds": 0.4782,
-      "medianAllocatedBytes": 217240,
+      "medianMilliseconds": 0.5945,
+      "medianAllocatedBytes": 217488,
       "gc": [
         0,
         0,
@@ -1448,8 +1448,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 500500,
-      "medianMilliseconds": 0.5784,
-      "medianAllocatedBytes": 191920,
+      "medianMilliseconds": 0.5094,
+      "medianAllocatedBytes": 191760,
       "gc": [
         0,
         0,
@@ -1463,7 +1463,7 @@
         "BulkBlankCells": 0,
         "CachedValues": 1000,
         "CellVisits": 1000,
-        "EvaluationSteps": 3007
+        "EvaluationSteps": 2007
       }
     },
     {
@@ -1473,8 +1473,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 1000,
-      "medianMilliseconds": 0.0118,
-      "medianAllocatedBytes": 3016,
+      "medianMilliseconds": 0.0119,
+      "medianAllocatedBytes": 3080,
       "gc": [
         0,
         0,
@@ -1498,8 +1498,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 1048576,
-      "medianMilliseconds": 0.0108,
-      "medianAllocatedBytes": 3016,
+      "medianMilliseconds": 0.0117,
+      "medianAllocatedBytes": 3080,
       "gc": [
         0,
         0,
@@ -1523,8 +1523,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 2000,
-      "medianMilliseconds": 1.368,
-      "medianAllocatedBytes": 403320,
+      "medianMilliseconds": 1.2827,
+      "medianAllocatedBytes": 403448,
       "gc": [
         0,
         0,
@@ -1538,7 +1538,7 @@
         "BulkBlankCells": 1047576,
         "CachedValues": 2000,
         "CellVisits": 2000,
-        "EvaluationSteps": 10018
+        "EvaluationSteps": 8018
       }
     },
     {
@@ -1548,8 +1548,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 999999,
-      "medianMilliseconds": 0.0114,
-      "medianAllocatedBytes": 2544,
+      "medianMilliseconds": 0.0135,
+      "medianAllocatedBytes": 3680,
       "gc": [
         0,
         0,
@@ -1573,8 +1573,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 100000,
-      "medianMilliseconds": 15.8865,
-      "medianAllocatedBytes": 22213480,
+      "medianMilliseconds": 20.6997,
+      "medianAllocatedBytes": 22214736,
       "gc": [
         0,
         0,
@@ -1598,8 +1598,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 5000050000,
-      "medianMilliseconds": 19.0787,
-      "medianAllocatedBytes": 15698040,
+      "medianMilliseconds": 21.2852,
+      "medianAllocatedBytes": 15698888,
       "gc": [
         0,
         0,
@@ -1613,7 +1613,7 @@
         "BulkBlankCells": 0,
         "CachedValues": 100000,
         "CellVisits": 100000,
-        "EvaluationSteps": 300007
+        "EvaluationSteps": 200007
       }
     },
     {
@@ -1623,8 +1623,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 1000,
-      "medianMilliseconds": 0.0489,
-      "medianAllocatedBytes": 2008,
+      "medianMilliseconds": 0.167,
+      "medianAllocatedBytes": 3080,
       "gc": [
         0,
         0,
@@ -1648,8 +1648,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 1048576,
-      "medianMilliseconds": 0.0484,
-      "medianAllocatedBytes": 2008,
+      "medianMilliseconds": 0.0975,
+      "medianAllocatedBytes": 3080,
       "gc": [
         0,
         0,
@@ -1673,8 +1673,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 200000,
-      "medianMilliseconds": 45.191,
-      "medianAllocatedBytes": 32570240,
+      "medianMilliseconds": 71.3728,
+      "medianAllocatedBytes": 32571376,
       "gc": [
         0,
         0,
@@ -1688,7 +1688,7 @@
         "BulkBlankCells": 948576,
         "CachedValues": 200000,
         "CellVisits": 200000,
-        "EvaluationSteps": 1000018
+        "EvaluationSteps": 800018
       }
     },
     {
@@ -1698,8 +1698,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 999999,
-      "medianMilliseconds": 0.0691,
-      "medianAllocatedBytes": 2544,
+      "medianMilliseconds": 0.1829,
+      "medianAllocatedBytes": 3680,
       "gc": [
         0,
         0,
@@ -1723,7 +1723,7 @@
       "success": true,
       "diagnostic": null,
       "checksum": 10000,
-      "medianMilliseconds": 6.4959,
+      "medianMilliseconds": 6.2839,
       "medianAllocatedBytes": 1809784,
       "gc": [
         0,
@@ -1748,7 +1748,7 @@
       "success": true,
       "diagnostic": null,
       "checksum": 10000,
-      "medianMilliseconds": 6.5517,
+      "medianMilliseconds": 6.2698,
       "medianAllocatedBytes": 1809784,
       "gc": [
         0,
@@ -1773,7 +1773,7 @@
       "success": true,
       "diagnostic": null,
       "checksum": 10000,
-      "medianMilliseconds": 7.5712,
+      "medianMilliseconds": 7.6018,
       "medianAllocatedBytes": 1809784,
       "gc": [
         0,
@@ -1798,8 +1798,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 20,
-      "medianMilliseconds": 0.0274,
-      "medianAllocatedBytes": 6256,
+      "medianMilliseconds": 0.0537,
+      "medianAllocatedBytes": 5936,
       "gc": null,
       "statistics": null
     },
@@ -1810,8 +1810,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 2000,
-      "medianMilliseconds": 0.6404,
-      "medianAllocatedBytes": 193976,
+      "medianMilliseconds": 0.4212,
+      "medianAllocatedBytes": 193656,
       "gc": null,
       "statistics": null
     },
@@ -1822,8 +1822,8 @@
       "success": true,
       "diagnostic": null,
       "checksum": 200000,
-      "medianMilliseconds": 12.8026,
-      "medianAllocatedBytes": 15701112,
+      "medianMilliseconds": 11.5834,
+      "medianAllocatedBytes": 15700792,
       "gc": null,
       "statistics": null
     }

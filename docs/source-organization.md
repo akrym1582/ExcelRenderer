@@ -82,7 +82,7 @@ Public namespaces, type names and assembly boundaries are unchanged. Input/ and 
 
 | Folder | Added responsibilities |
 | --- | --- |
-| Formulas/Data | ISparseFormulaDataSource and FormulaRangeIndex; the original three-method data source remains unchanged. |
+| Formulas/Data | ISparseFormulaDataSource and FormulaRangeIndex, with validated dense-coverage hints; the original three-method data source remains unchanged. |
 | Formulas/Evaluation | Function dispatch, checked range cursors and session-local statistics. |
 | Formulas/Functions | One registry; Numeric, Aggregation, Logical, Lookup, DateTime and Text partial implementations preserve private session control; bounded LookupIndex keeps typed first positions and ordered text positions. |
 | Formulas/Criteria | Compiled criteria/coercion profile and bounded wildcard tokens. |

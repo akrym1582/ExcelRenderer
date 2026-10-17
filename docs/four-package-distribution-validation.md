@@ -44,3 +44,20 @@ python3 scripts/check-core-dependencies.py
 
 `tests.log` は6テスト群すべての結果を保持します。同一のTRXファイル名を指定したため、
 作業ディレクトリのTRX単体は最後のToolテスト群の結果だけを含みます。
+
+## CI lockfile follow-up
+
+[Core Linux CI](https://github.com/akrym1582/ExcelRenderer/actions/runs/38990564084/job/117271821069)
+の画像比較開始時に、`ExcelRenderer.Core.Reference` のlocked restoreが`NU1004`で失敗しました。
+配布設定変更後の参照グラフがそのlockfileに反映されていませんでした。通常のソリューションに
+検証用2プロジェクトが含まれていなかったため、ソリューションのrestoreで検出できなかったものです。
+
+`Core.Reference/packages.lock.json` を更新し、Core.ReferenceとCore.Validationを
+`ExcelRenderer.slnx`に追加しました。全21件が通常のrestore/build対象となり、lockfileの
+整合性検証を無効にせずに、以後の依存関係変更を早い段階で検出できます。
+
+修正後、全21件のlocked restore、警告・エラー0件のRelease Rebuild、CIと同じ
+`python3 scripts/validate-core.py --visual-only`（17ページ）を確認しました。
+
+全1,847テストとsolution packも再実行して成功しました。生成nupkgは指定の4ファイルだけで、
+未公開パッケージへの依存なし・同梱DLL/XMLのハッシュ一致も再確認しています。

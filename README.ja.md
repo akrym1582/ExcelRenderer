@@ -41,7 +41,7 @@ PDF / PNG / SVG
 - PDFsharp による PDF 出力
 - SkiaSharp によるページごとの PNG 出力と画像のデコード
 - 独立したマッピングパッケージによる C# オブジェクト・JSON からの XLSX テンプレートへの値の設定
-- 明示的な数式再計算。[対応構文・19関数・制約](docs/formulas-reference.ja.md)は専用リファレンスを参照
+- 明示的な数式再計算。[対応構文・40関数・制約](docs/formulas-reference.ja.md)は専用リファレンスを参照
 
 ## インストール
 
@@ -497,7 +497,7 @@ Mapping も OpenXml が既定で、Auto は同じ Writer を使います。
 `FormulaDisplayMode.CachedValue`（`--formula-mode cached`）です。古い保存結果もそのまま使い、
 欠落は `FormulaCachedValueMissing` として診断します。限定的な自作計算器を使う場合は
 `FormulaDisplayMode.Recalculate` または `--formula-mode recalculate` を明示してください。
-独立した BCL の計算コアは19関数に対応し、到達した未対応式を古い値で補いません。
+独立した BCL の計算コアは40関数に対応し、到達した未対応式を古い値で補いません。
 `Legacy` は引き続き非対応です。関数ごとの引数数・例、構文、エラー、上限は
 [数式の対応範囲・サポート関数](docs/formulas-reference.ja.md)にまとめています。
 API・評価範囲・キャッシュ失効・制約・検証は
@@ -558,7 +558,7 @@ Excel (.xlsx) → ReportDocument → RenderDocument → DrawCommand → PDF / PN
 
 ## 制約
 
-- 数式表示の既定値は保存結果です。明示再計算は[対応構文・19関数](docs/formulas-reference.ja.md)を扱い、Excel の計算機能すべてとの互換性は保証しません。
+- 数式表示の既定値は保存結果です。明示再計算は[対応構文・40関数](docs/formulas-reference.ja.md)を扱い、Excel の計算機能すべてとの互換性は保証しません。
 - Excel のグラフには対応していません。
 - 条件付き書式は描画しません。
 - すべての用紙サイズには対応していません。
@@ -636,6 +636,11 @@ seekable な一時ファイルへ spool します。reader は独立した curso
 
 ## 開発
 
+NuGet 公開対象は `ExcelRenderer`・`ExcelRenderer.Mapping`・`ExcelRenderer.Tool`・
+`ExcelRenderer.Fonts` の4つです。Core・OpenXml・Formulas は公開パッケージへ DLL を
+同梱するソースプロジェクトで、個別公開しません。詳しくは[配布構成](docs/package-distribution.md)を参照してください。
+
+
 必要な SDK は .NET 10 です。テストはリポジトリのルートで実行します。
 
 ```bash
@@ -647,7 +652,6 @@ dotnet test ExcelRenderer.slnx
 NuGet 公開前にマッピングライブラリを試す場合は、リポジトリのルートでパッケージを作成します。
 
 ```bash
-dotnet pack src/ExcelRenderer.OpenXml/ExcelRenderer.OpenXml.csproj -c Release -o artifacts/packages
 dotnet pack src/ExcelRenderer.Mapping/ExcelRenderer.Mapping.csproj -c Release -o artifacts/packages
 ```
 

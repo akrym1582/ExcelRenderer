@@ -7,9 +7,11 @@
     <IsPackable>false</IsPackable>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <RepositoryRoot Condition="'$(RepositoryRoot)' == ''">../..</RepositoryRoot>
+    <DefineConstants Condition="'$(ExpansionBaseline)' == 'true'">$(DefineConstants);EXPANSION_BASELINE</DefineConstants>
     <DefineConstants Condition="'$(Baseline)' == 'true'">$(DefineConstants);BASELINE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="$(RepositoryRoot)/src/ExcelRenderer.OpenXml/ExcelRenderer.OpenXml.csproj" />
     <ProjectReference Include="$(RepositoryRoot)/src/ExcelRenderer/ExcelRenderer.csproj" />
     <ProjectReference Include="$(RepositoryRoot)/src/ExcelRenderer.Mapping/ExcelRenderer.Mapping.csproj" />
   </ItemGroup>

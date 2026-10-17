@@ -7,7 +7,7 @@ using System.Threading;
 namespace ExcelRenderer.Formulas
 {
     /// <summary>Evaluates reachable dependencies with session-local memoization over an immutable data source. Instances are not thread safe.</summary>
-    public sealed class FormulaSession
+    public sealed partial class FormulaSession
     {
         private readonly IFormulaDataSource source;
         private readonly FormulaEvaluationOptions options;
@@ -20,6 +20,9 @@ namespace ExcelRenderer.Formulas
         private int steps;
         private int formulas;
         private long cachedStringCharacters;
+        private long sourceReads;
+        private long rangeCandidates;
+        private long bulkBlankCells;
 
         /// <summary>Initializes a new instance of the <see cref="FormulaSession"/> class.</summary>
         /// <param name="source">The source.</param>
@@ -38,8 +41,14 @@ namespace ExcelRenderer.Formulas
                 throw new ArgumentOutOfRangeException(nameof(options.MaxCachedStringCharacters));
             }
 
+            if (options.DateSystem != FormulaDateSystem.Excel1900 && options.DateSystem != FormulaDateSystem.Excel1904)
+            {
+                throw new ArgumentOutOfRangeException(nameof(options.DateSystem));
+            }
+
             this.options = new FormulaEvaluationOptions
             {
+                DateSystem = options.DateSystem,
                 MaxFormulaLength = options.MaxFormulaLength,
                 MaxAstNodes = options.MaxAstNodes,
                 MaxSyntaxDepth = options.MaxSyntaxDepth,
@@ -96,6 +105,10 @@ namespace ExcelRenderer.Formulas
                 return new FormulaEvaluationResult(failure.Diagnostic);
             }
         }
+
+        /// <summary>Gets a snapshot of deterministic work counters for this session.</summary>
+        /// <returns>Read, candidate, blank and cache counts.</returns>
+        public FormulaSessionStatistics GetStatistics() => new FormulaSessionStatistics(sourceReads, rangeCandidates, bulkBlankCells, values.Count, visits, steps, lookupIndexedValues, lookupIndexes.Count);
 
         private static FormulaValue Numeric(FormulaValue value)
         {
@@ -175,7 +188,10 @@ namespace ExcelRenderer.Formulas
                 cachedStringCharacters += value.Text.Length;
             }
 
-            values.Add(address, value);
+            if (value.Kind != FormulaValueKind.Blank)
+            {
+                values.Add(address, value);
+            }
         }
 
         private void Tick(FormulaCellAddress origin, SourceSpan span = default)
@@ -192,6 +208,11 @@ namespace ExcelRenderer.Formulas
         private FormulaValue Read(FormulaCellAddress address, FormulaCellAddress? origin = null, SourceSpan span = default)
         {
             Tick(address);
+            return ReadCore(address, origin, span);
+        }
+
+        private FormulaValue ReadCore(FormulaCellAddress address, FormulaCellAddress? origin = null, SourceSpan span = default)
+        {
             if (++visits > options.MaxCellVisits)
             {
                 Fail("ResourceLimitExceeded", "Cell visit limit exceeded.", address);
@@ -216,6 +237,7 @@ namespace ExcelRenderer.Formulas
             FormulaCellData cell;
             try
             {
+                sourceReads++;
                 cell = source.GetCell(address);
             }
             catch (OperationCanceledException)
@@ -305,20 +327,12 @@ namespace ExcelRenderer.Formulas
             if (node.Kind == FormulaNodeKind.Function)
             {
                 var name = node.Text.ToUpperInvariant();
-                int min;
-                int max;
-                switch (name)
+                if (!FunctionRegistry.TryGet(name, out var definition))
                 {
-                    case "SUM": case "COUNT": case "COUNTA": min = 0; max = 255; break;
-                    case "MIN": case "MAX": case "AVERAGE": case "AND": case "OR": min = 1; max = 255; break;
-                    case "IF": min = 2; max = 3; break;
-                    case "IFERROR": case "MOD": case "ROUND": case "ROUNDUP": case "ROUNDDOWN": min = max = 2; break;
-                    case "NOT": case "ABS": case "INT": min = max = 1; break;
-                    case "TRUE": case "FALSE": min = max = 0; break;
-                    default: Fail("UnsupportedFunction", "Unsupported function: " + node.Text, origin, node.Span, node.Text); return;
+                    Fail("UnsupportedFunction", "Unsupported function: " + node.Text, origin, node.Span, node.Text);
                 }
 
-                if (node.Children.Count < min || node.Children.Count > max)
+                if (!definition.Accepts(node.Children.Count))
                 {
                     Fail("InvalidArgumentCount", "Invalid argument count for " + name, origin, node.Span, name);
                 }
@@ -423,25 +437,6 @@ namespace ExcelRenderer.Formulas
             return Read(new FormulaCellAddress(r.SheetId, r.FirstRow, r.FirstColumn), origin, item.Span);
         }
 
-        private IEnumerable<FormulaValue> Enumerate(Item item, FormulaCellAddress origin)
-        {
-            if (!item.IsReference)
-            {
-                yield return item.Value;
-                yield break;
-            }
-
-            var r = item.Range;
-            for (var row = r.FirstRow; row <= r.LastRow; row++)
-            {
-                for (var col = r.FirstColumn; col <= r.LastColumn; col++)
-                {
-                    cancellation.ThrowIfCancellationRequested();
-                    yield return Read(new FormulaCellAddress(r.SheetId, row, col), origin, item.Span);
-                }
-            }
-        }
-
         private FormulaValue Binary(FormulaNode node, FormulaCellAddress origin)
         {
             var left = Scalar(Eval(node.Children[0], origin), origin);
@@ -500,182 +495,6 @@ namespace ExcelRenderer.Formulas
                 case "^": return a == 0 && b == 0 ? FormulaValue.FromError("#NUM!") : a == 0 && b < 0 ? FormulaValue.FromError("#DIV/0!") : Number(Math.Pow(a, b));
                 default: return FormulaValue.FromError("#VALUE!");
             }
-        }
-
-        private Item Function(FormulaNode node, FormulaCellAddress origin)
-        {
-            var name = node.Text.ToUpperInvariant();
-            var args = node.Children;
-            if (name == "TRUE" || name == "FALSE")
-            {
-                return new Item(FormulaValue.FromBoolean(name == "TRUE"));
-            }
-
-            if (name == "IF")
-            {
-                var condition = Logical(Scalar(Eval(args[0], origin), origin));
-                if (condition.Kind == FormulaValueKind.Error)
-                {
-                    return new Item(condition);
-                }
-
-                return condition.Boolean ? Eval(args[1], origin) : args.Count == 3 ? Eval(args[2], origin) : new Item(FormulaValue.FromBoolean(false));
-            }
-
-            if (name == "IFERROR")
-            {
-                var first = Eval(args[0], origin);
-                if (first.IsReference && (first.Range.FirstRow != first.Range.LastRow || first.Range.FirstColumn != first.Range.LastColumn))
-                {
-                    Fail("UnsupportedArrayEvaluation", "IFERROR requires a scalar first argument.", origin, args[0].Span, "IFERROR");
-                }
-
-                return Scalar(first, origin).Kind == FormulaValueKind.Error ? Eval(args[1], origin) : first;
-            }
-
-            if (name == "SUM" || name == "COUNT" || name == "COUNTA" || name == "MIN" || name == "MAX" || name == "AVERAGE" || name == "AND" || name == "OR")
-            {
-                return new Item(Aggregate(name, args, origin));
-            }
-
-            var value = Scalar(Eval(args[0], origin), origin);
-            if (name == "NOT")
-            {
-                value = Logical(value);
-                return new Item(value.Kind == FormulaValueKind.Error ? value : FormulaValue.FromBoolean(!value.Boolean));
-            }
-
-            value = Numeric(value);
-            if (value.Kind == FormulaValueKind.Error)
-            {
-                return new Item(value);
-            }
-
-            if (name == "ABS")
-            {
-                return new Item(Number(Math.Abs(value.Number)));
-            }
-
-            if (name == "INT")
-            {
-                return new Item(Number(Math.Floor(value.Number)));
-            }
-
-            var second = Numeric(Scalar(Eval(args[1], origin), origin));
-            if (second.Kind == FormulaValueKind.Error)
-            {
-                return new Item(second);
-            }
-
-            if (name == "MOD")
-            {
-                return new Item(second.Number == 0 ? FormulaValue.FromError("#DIV/0!") : Number(value.Number - (second.Number * Math.Floor(value.Number / second.Number))));
-            }
-
-            return new Item(Number(DecimalRounding.Round(value.Number, second.Number, name)));
-        }
-
-        private FormulaValue Aggregate(string name, IReadOnlyList<FormulaNode> args, FormulaCellAddress origin)
-        {
-            double sum = 0;
-            double extreme = 0;
-            int count = 0;
-            bool logical = name == "AND";
-            FormulaValue? error = null;
-            foreach (var arg in args)
-            {
-                var item = Eval(arg, origin);
-                foreach (var raw in Enumerate(item, origin))
-                {
-                    Tick(origin, arg.Span);
-                    if (name == "COUNTA")
-                    {
-                        if (raw.Kind != FormulaValueKind.Blank)
-                        {
-                            count++;
-                        }
-
-                        continue;
-                    }
-
-                    if (name == "COUNT")
-                    {
-                        if (raw.Kind == FormulaValueKind.Number || (!item.IsReference && Numeric(raw).Kind == FormulaValueKind.Number && raw.Kind != FormulaValueKind.Blank))
-                        {
-                            count++;
-                        }
-
-                        continue;
-                    }
-
-                    if (raw.Kind == FormulaValueKind.Error)
-                    {
-                        error ??= raw;
-                        continue;
-                    }
-
-                    if (name == "AND" || name == "OR")
-                    {
-                        if (item.IsReference && (raw.Kind == FormulaValueKind.Text || raw.Kind == FormulaValueKind.Blank))
-                        {
-                            continue;
-                        }
-
-                        var boolean = Logical(raw);
-                        if (boolean.Kind == FormulaValueKind.Error)
-                        {
-                            error ??= boolean;
-                            continue;
-                        }
-
-                        logical = name == "AND" ? logical && boolean.Boolean : logical || boolean.Boolean;
-                        count++;
-                        continue;
-                    }
-
-                    if (item.IsReference && raw.Kind != FormulaValueKind.Number)
-                    {
-                        continue;
-                    }
-
-                    var value = Numeric(raw);
-                    if (value.Kind == FormulaValueKind.Error)
-                    {
-                        error ??= value;
-                        continue;
-                    }
-
-                    sum += value.Number;
-                    if (count == 0 || (name == "MIN" && value.Number < extreme) || (name == "MAX" && value.Number > extreme))
-                    {
-                        extreme = value.Number;
-                    }
-
-                    count++;
-                }
-            }
-
-            if (error.HasValue)
-            {
-                return error.Value;
-            }
-
-            if (name == "COUNT" || name == "COUNTA")
-            {
-                return Number(count);
-            }
-
-            if (name == "AND" || name == "OR")
-            {
-                return count == 0 ? FormulaValue.FromError("#VALUE!") : FormulaValue.FromBoolean(logical);
-            }
-
-            if (name == "AVERAGE")
-            {
-                return count == 0 ? FormulaValue.FromError("#DIV/0!") : Number(sum / count);
-            }
-
-            return Number(name == "MIN" || name == "MAX" ? extreme : sum);
         }
 
         private readonly struct Item

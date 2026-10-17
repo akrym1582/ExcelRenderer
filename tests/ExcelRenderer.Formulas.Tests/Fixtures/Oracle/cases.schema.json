@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Formula oracle cases v1",
+  "type": "array",
+  "minItems": 200,
+  "items": {
+    "type": "object",
+    "required": [
+      "id",
+      "category",
+      "formula",
+      "target",
+      "dateSystem",
+      "inputs",
+      "expected",
+      "expectedSource",
+      "basis"
+    ],
+    "properties": {
+      "id": {
+        "type": "string",
+        "pattern": "^[a-z0-9-]+$"
+      },
+      "category": {
+        "type": "string"
+      },
+      "formula": {
+        "type": "string"
+      },
+      "target": {
+        "type": "string",
+        "pattern": "^[A-Z]{1,3}[1-9][0-9]*$"
+      },
+      "dateSystem": {
+        "enum": [
+          "Excel1900",
+          "Excel1904"
+        ]
+      },
+      "inputs": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "address",
+            "kind",
+            "value"
+          ],
+          "properties": {
+            "address": {
+              "type": "string",
+              "pattern": "^[A-Z]{1,3}[1-9][0-9]*$"
+            },
+            "kind": {
+              "enum": [
+                "Blank",
+                "Number",
+                "Text",
+                "Boolean",
+                "Error",
+                "Formula"
+              ]
+            },
+            "value": {
+              "type": [
+                "null",
+                "number",
+                "string",
+                "boolean"
+              ]
+            }
+          }
+        }
+      },
+      "expected": {
+        "type": "object",
+        "required": [
+          "kind",
+          "value"
+        ],
+        "properties": {
+          "kind": {
+            "enum": [
+              "Blank",
+              "Number",
+              "Text",
+              "Boolean",
+              "Error",
+              "Diagnostic"
+            ]
+          },
+          "value": {
+            "type": [
+              "null",
+              "number",
+              "string",
+              "boolean"
+            ]
+          }
+        }
+      },
+      "expectedSource": {
+        "enum": [
+          "specification",
+          "hand-calculated",
+          "profile"
+        ]
+      },
+      "basis": {
+        "type": "string"
+      },
+      "absTolerance": {
+        "type": "number",
+        "minimum": 0
+      },
+      "relTolerance": {
+        "type": "number",
+        "minimum": 0
+      }
+    }
+  }
+}

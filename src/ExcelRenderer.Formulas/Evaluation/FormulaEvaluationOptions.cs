@@ -7,6 +7,9 @@ namespace ExcelRenderer.Formulas
     /// <summary>Configures bounded parsing and session-wide evaluation work.</summary>
     public sealed class FormulaEvaluationOptions
     {
+        /// <summary>Gets or sets the date epoch, fixed when a session is created.</summary>
+        public FormulaDateSystem DateSystem { get; set; } = FormulaDateSystem.Excel1900;
+
         /// <summary>Gets or sets the maximum formula length in UTF-16 code units.</summary>
         public int MaxFormulaLength { get; set; } = 8192;
 

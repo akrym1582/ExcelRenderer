@@ -10,7 +10,7 @@ project = ET.parse(ENGINE / 'ExcelRenderer.Formulas.csproj').getroot()
 assert not project.findall('.//ProjectReference'), 'Formulas must not depend on product adapters'
 assert not project.findall('.//PackageReference'), 'Formulas runtime must use only the BCL'
 assert project.findtext('.//TargetFramework') == 'netstandard2.1'
-assert project.findtext('.//IsPackable') == 'true', 'Integrated packages must resolve Formulas through its package'
+assert project.findtext('.//IsPackable') == 'false', 'Formulas ships as an assembly in the published product packages'
 for path in ENGINE.rglob('*.cs'):
     if {'bin', 'obj'} & set(path.parts):
         continue
@@ -24,4 +24,4 @@ for path in (ROOT / 'src').glob('*/*.csproj'):
     for ref in xml.findall('.//ProjectReference'):
         if 'ExcelRenderer.Formulas' in ref.attrib['Include']:
             assert path.parent.name in {'ExcelRenderer.OpenXml', 'ExcelRenderer.Mapping', 'ExcelRenderer.Core', 'ExcelRenderer'}, path
-print('BCL formula engine, integrated package dependency and adapter direction passed')
+print('BCL formula engine, embedded distribution and adapter direction passed')

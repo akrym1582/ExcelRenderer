@@ -1,0 +1,20 @@
+  Determining projects to restore...
+  Restored /workspace/ExcelRenderer/src/ExcelRenderer.Formulas/ExcelRenderer.Formulas.csproj (in 238 ms).
+  Restored /workspace/ExcelRenderer/src/ExcelRenderer/ExcelRenderer.csproj (in 248 ms).
+  Restored /workspace/ExcelRenderer/tools/ExcelRenderer.OpenXml.Validation/ExcelRenderer.OpenXml.Validation.csproj (in 237 ms).
+  Restored /workspace/ExcelRenderer/tools/ExcelRenderer.Performance/ExcelRenderer.Performance.csproj (in 240 ms).
+  Restored /workspace/ExcelRenderer/tools/ExcelRenderer.Formulas.Performance/ExcelRenderer.Formulas.Performance.csproj (in 27 ms).
+  Restored /workspace/ExcelRenderer/tools/ExcelRenderer.Formulas.Oracle/ExcelRenderer.Formulas.Oracle.csproj (in 29 ms).
+  Restored /workspace/ExcelRenderer/tests/ExcelRenderer.Mapping.Tests/ExcelRenderer.Mapping.Tests.csproj (in 8 ms).
+  Restored /workspace/ExcelRenderer/tests/ExcelRenderer.OpenXml.Tests/ExcelRenderer.OpenXml.Tests.csproj (in 12 ms).
+  Restored /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/ExcelRenderer.Tool.Tests.csproj (in 20 ms).
+  Restored /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/ExcelRenderer.Tests.csproj (in 43 ms).
+  Restored /workspace/ExcelRenderer/tests/ExcelRenderer.Formulas.Tests/ExcelRenderer.Formulas.Tests.csproj (in 5 ms).
+  Restored /workspace/ExcelRenderer/src/ExcelRenderer.OpenXml/ExcelRenderer.OpenXml.csproj (in 4 ms).
+  Restored /workspace/ExcelRenderer/src/ExcelRenderer.Tool/ExcelRenderer.Tool.csproj (in 5 ms).
+  Restored /workspace/ExcelRenderer/tests/ExcelRenderer.Core.Tests/ExcelRenderer.Core.Tests.csproj (in 4 ms).
+  Restored /workspace/ExcelRenderer/src/ExcelRenderer.Core/ExcelRenderer.Core.csproj (in 3 ms).
+  Restored /workspace/ExcelRenderer/src/ExcelRenderer.Fonts/ExcelRenderer.Fonts.csproj (in 5 ms).
+  Restored /workspace/ExcelRenderer/src/ExcelRenderer.Mapping/ExcelRenderer.Mapping.csproj (in 5 ms).
+  Restored /workspace/ExcelRenderer/samples/ExcelRenderer.Formulas.Sample/ExcelRenderer.Formulas.Sample.csproj (in 13 ms).
+  Restored /workspace/ExcelRenderer/samples/ExcelRenderer.Core.Sample/ExcelRenderer.Core.Sample.csproj (in 12 ms).

@@ -1,0 +1,19 @@
+{"Environment":"Debian GNU/Linux 13 (trixie)","Runtime":".NET 10.0.12","ProcessorCount":4,"TieredCompilation":"default","Mode":"sum","Warmups":1,"Repeats":5}
+{"Name":"engine-sum","Count":10,"Iteration":0,"Warmup":true,"Milliseconds":15.4909,"AllocatedBytes":5808,"ProcessPeakWorkingSetBytes":28987392,"Result":20}
+{"Name":"engine-sum","Count":10,"Iteration":1,"Warmup":false,"Milliseconds":0.0981,"AllocatedBytes":5096,"ProcessPeakWorkingSetBytes":29544448,"Result":20}
+{"Name":"engine-sum","Count":10,"Iteration":2,"Warmup":false,"Milliseconds":0.0339,"AllocatedBytes":5816,"ProcessPeakWorkingSetBytes":29593600,"Result":20}
+{"Name":"engine-sum","Count":10,"Iteration":3,"Warmup":false,"Milliseconds":0.0233,"AllocatedBytes":5816,"ProcessPeakWorkingSetBytes":29601792,"Result":20}
+{"Name":"engine-sum","Count":10,"Iteration":4,"Warmup":false,"Milliseconds":0.024,"AllocatedBytes":4808,"ProcessPeakWorkingSetBytes":29642752,"Result":20}
+{"Name":"engine-sum","Count":10,"Iteration":5,"Warmup":false,"Milliseconds":0.0226,"AllocatedBytes":5144,"ProcessPeakWorkingSetBytes":29655040,"Result":20}
+{"Name":"engine-sum","Count":1000,"Iteration":0,"Warmup":true,"Milliseconds":0.4873,"AllocatedBytes":193536,"ProcessPeakWorkingSetBytes":30453760,"Result":2000}
+{"Name":"engine-sum","Count":1000,"Iteration":1,"Warmup":false,"Milliseconds":0.4968,"AllocatedBytes":193536,"ProcessPeakWorkingSetBytes":30584832,"Result":2000}
+{"Name":"engine-sum","Count":1000,"Iteration":2,"Warmup":false,"Milliseconds":0.4519,"AllocatedBytes":193536,"ProcessPeakWorkingSetBytes":30629888,"Result":2000}
+{"Name":"engine-sum","Count":1000,"Iteration":3,"Warmup":false,"Milliseconds":0.4601,"AllocatedBytes":193536,"ProcessPeakWorkingSetBytes":30638080,"Result":2000}
+{"Name":"engine-sum","Count":1000,"Iteration":4,"Warmup":false,"Milliseconds":0.4701,"AllocatedBytes":193536,"ProcessPeakWorkingSetBytes":30285824,"Result":2000}
+{"Name":"engine-sum","Count":1000,"Iteration":5,"Warmup":false,"Milliseconds":0.4944,"AllocatedBytes":193536,"ProcessPeakWorkingSetBytes":30285824,"Result":2000}
+{"Name":"engine-sum","Count":100000,"Iteration":0,"Warmup":true,"Milliseconds":41.2731,"AllocatedBytes":15700672,"ProcessPeakWorkingSetBytes":79417344,"Result":200000}
+{"Name":"engine-sum","Count":100000,"Iteration":1,"Warmup":false,"Milliseconds":17.8941,"AllocatedBytes":15700672,"ProcessPeakWorkingSetBytes":79790080,"Result":200000}
+{"Name":"engine-sum","Count":100000,"Iteration":2,"Warmup":false,"Milliseconds":12.7509,"AllocatedBytes":15700672,"ProcessPeakWorkingSetBytes":79921152,"Result":200000}
+{"Name":"engine-sum","Count":100000,"Iteration":3,"Warmup":false,"Milliseconds":12.6846,"AllocatedBytes":15700672,"ProcessPeakWorkingSetBytes":80322560,"Result":200000}
+{"Name":"engine-sum","Count":100000,"Iteration":4,"Warmup":false,"Milliseconds":13.8898,"AllocatedBytes":15700672,"ProcessPeakWorkingSetBytes":80330752,"Result":200000}
+{"Name":"engine-sum","Count":100000,"Iteration":5,"Warmup":false,"Milliseconds":14.6412,"AllocatedBytes":15700672,"ProcessPeakWorkingSetBytes":80330752,"Result":200000}

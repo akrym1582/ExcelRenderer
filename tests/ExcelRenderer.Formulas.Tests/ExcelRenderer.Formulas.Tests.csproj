@@ -17,5 +17,5 @@
   <ItemGroup>
     <ProjectReference Include="../../src/ExcelRenderer.Formulas/ExcelRenderer.Formulas.csproj" />
   </ItemGroup>
-  <ItemGroup><None Update="Fixtures/acceptance.json" CopyToOutputDirectory="PreserveNewest" /></ItemGroup>
+  <ItemGroup><None Update="Fixtures/Oracle/*.json" CopyToOutputDirectory="PreserveNewest" /><None Update="Fixtures/acceptance.json" CopyToOutputDirectory="PreserveNewest" /></ItemGroup>
 </Project>

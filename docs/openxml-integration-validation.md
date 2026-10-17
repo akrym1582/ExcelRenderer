@@ -195,7 +195,7 @@ consumer build は警告0・エラー0、installed Tool は終了0と Markdown a
 同一入力・Release・en-US・独立プロセス warmup1回＋測定5回で比較した。
 
 **主因は `SheetSource.ReadRow` が同じ明細行の XML を10万回再解析することだった。**
-[`ReadRow`](../src/ExcelRenderer.OpenXml/OpenXmlWorkbookWriter.Geometry.cs) は出力行ごとに
+[`ReadRow`](../src/ExcelRenderer.OpenXml/Writing/OpenXmlWorkbookWriter.Geometry.cs) は出力行ごとに
 row store から byte array を作り、UTF-8文字列化し、`XElement.Parse` している。
 今回のテンプレートは Header / 明細 / Footer の3行だが、出力時に100,002回これを繰り返す。
 同じ約160バイトの行 XML に対し、Parse 区間だけで1回平均約12,349バイトを割り当てていた。

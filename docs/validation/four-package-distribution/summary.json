@@ -1,0 +1,43 @@
+{
+  "implementation_commit": "08d6134567a481cb72a149f06fe332994ab310bd",
+  "validated_before_commit": true,
+  "dotnet_sdk": "10.0.401",
+  "tests_passed": 1847,
+  "tests_by_suite": {
+    "Core": 82,
+    "Formulas": 726,
+    "Mapping": 197,
+    "OpenXml": 188,
+    "Main": 563,
+    "Tool": 91
+  },
+  "consumer_scenarios": 6,
+  "packages": {
+    "ExcelRenderer.1.9.0.nupkg": {
+      "bytes": 590910,
+      "sha256": "09ebd19b8d7acbe7155a3e61c4534056fb407bce8a6773d11fefcce669f2875a"
+    },
+    "ExcelRenderer.Fonts.1.9.0.nupkg": {
+      "bytes": 44522529,
+      "sha256": "b539ed389f0061561c82900ae0ca5d044e8924da2aee665afa2707c97da8656d"
+    },
+    "ExcelRenderer.Mapping.1.9.0.nupkg": {
+      "bytes": 183406,
+      "sha256": "84819db743f6f51d9d12ca91a644d62c132adfddac9b346b21d95042ecca6c50"
+    },
+    "ExcelRenderer.Tool.1.9.0.nupkg": {
+      "bytes": 197844823,
+      "sha256": "6284c17c3401054f80caaae55e08f4ab92c35cbafed9d9a51d39f21bceaaab8f"
+    }
+  },
+  "evidence_sha256": {
+    "consumer-inventory.json": "f4ab1d917400fd0f0e7497d530627693fde94c46d28ffcd628f8e73624b3b700",
+    "consumers.log": "434a276a50b6510748a1feb4f4a75996aaf9e61827a21fe839b4f26d79d07021",
+    "inventory.json": "fc578992b86b473fc01d9e0979d211430cf2a0942ad5886b4bbffaa7a53ec88a",
+    "locked-restore.log": "9dddd45c98b287d49127069e45112b2204fd91ec921e9e5b1b3457e821be44e2",
+    "pack.log": "5ca1a2adccc039a15eb4f09f5b6c87b1c0d4d8c0d1984bcb1e1e32e01f56604d",
+    "rebuild.log": "992748fed52b757deca8f093bb4f71925828f8fb007ae26ef02b811cece2f94f",
+    "restore.log": "7d26ee2f181eb6ef5d24edb04c9ffcd7188196778d9a11b0878f1f517f5d7003",
+    "tests.log": "116b04609bfbfbd45af133d7a1fb1cd0811467075aebbff977cbee1b4e52d810"
+  }
+}

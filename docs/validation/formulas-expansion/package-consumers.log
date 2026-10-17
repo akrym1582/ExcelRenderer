@@ -1,0 +1,25 @@
++ dotnet restore --configfile /tmp/excel-c1-consumers/NuGet.Config
+  Determining projects to restore...
+  All projects are up-to-date for restore.
++ dotnet run -c Release --no-restore -- /tmp/excel-c1-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf
+engine passed
++ dotnet restore --configfile /tmp/excel-c1-consumers/NuGet.Config
+  Determining projects to restore...
+  All projects are up-to-date for restore.
++ dotnet run -c Release --no-restore -- /tmp/excel-c1-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf
+adapter passed
++ dotnet restore --configfile /tmp/excel-c1-consumers/NuGet.Config
+  Determining projects to restore...
+  All projects are up-to-date for restore.
++ dotnet run -c Release --no-restore -- /tmp/excel-c1-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf
+mapping passed
++ dotnet restore --configfile /tmp/excel-c1-consumers/NuGet.Config
+  Determining projects to restore...
+  All projects are up-to-date for restore.
++ dotnet run -c Release --no-restore -- /tmp/excel-c1-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf
+main-core passed
++ dotnet tool install ExcelRenderer.Tool --version 1.9.0 --tool-path /tmp/excel-c1-consumers/tool --configfile /tmp/excel-c1-consumers/NuGet.Config
+You can invoke the tool using the following command: excelrenderer
+Tool 'excelrenderer.tool' (version '1.9.0') was successfully installed.
++ /tmp/excel-c1-consumers/tool/excelrenderer md /tmp/excel-c1-consumers/invoice.xlsx --formula-mode recalculate -o /tmp/excel-c1-consumers/cli.md
+Five isolated package consumers passed

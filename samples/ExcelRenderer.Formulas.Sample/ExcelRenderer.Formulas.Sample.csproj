@@ -8,6 +8,7 @@
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="../../src/ExcelRenderer.OpenXml/ExcelRenderer.OpenXml.csproj" />
     <ProjectReference Include="../../src/ExcelRenderer.Mapping/ExcelRenderer.Mapping.csproj" />
     <ProjectReference Include="../../src/ExcelRenderer/ExcelRenderer.csproj" />
   </ItemGroup>

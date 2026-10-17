@@ -1,5 +1,9 @@
 # Formula calculation
 
+NuGet distribution contains only the main, Mapping, Tool and Fonts packages.
+Formulas and OpenXml assemblies are bundled in the main and Mapping packages;
+there are no separate packages for them. See [package distribution](package-distribution.md).
+
 [日本語](formulas.ja.md) · [Syntax and function reference](formulas-reference.md) · [validation](formulas-validation.md) · [performance](formulas-performance.md) · [review fixes](formulas-review-fixes-validation.md)
 
 ExcelRenderer has an opt-in, limited formula calculator. `CachedValue` remains the
@@ -79,12 +83,12 @@ shared between workbooks or sessions. A1 means coordinate A1, not an offset from
 the origin. The origin supplies the current sheet and diagnostic position.
 
 The [formula support reference](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/formulas-reference.md)
-lists all 19 functions with argument counts and examples, syntax, reference rules,
+lists all 40 functions with argument counts and examples, syntax, reference rules,
 coercion, errors and resource limits. Operators are unary
 signs, arithmetic, left-associative power, percent, concatenation and comparisons.
 The parser accepts English function names, comma arguments, quoted strings and
 sheet names, A1 references with absolute/mixed flags, rectangular/whole-row/whole-column
-ranges and fixed cell/rectangle names. Huge ranges are streamed subject to limits.
+ranges and fixed cell/rectangle names. Built-in sparse sources enumerate stored coordinates within resource limits; external dense sources retain bounded scanning.
 
 ## Explicit compatibility profile
 
@@ -112,7 +116,7 @@ ranges and fixed cell/rectangle names. Huge ranges are streamed subject to limit
 
 Unsupported features include arrays/dynamic arrays/spills, external/3D/structured
 references, implicit intersection, reference unions/intersections, R1C1, formula or
-relative names, lookups/date/string functions, INDIRECT/OFFSET, LET/LAMBDA,
+relative names, approximate lookups, INDIRECT/OFFSET, LET/LAMBDA,
 volatile functions, UDF/VBA and iterative calculation. Unsupported reached cells
 fail with diagnostics instead of falling back to saved caches. A range cannot be
 returned as a scalar by silently choosing its top-left cell.
@@ -194,3 +198,13 @@ and the matching Reader property configure resource limits.
 OOXML `cm`/`vm` calculation metadata is conservatively rejected when reached, so metadata-backed dynamic arrays or rich values are never assumed to be ordinary scalars.
 
 The executable [invoice sample](../samples/ExcelRenderer.Formulas.Sample/README.md) creates XLSX and verifies 0/1/3/4-line totals and PDF, PNG, SVG and Markdown output.
+
+## Expanded report functions
+
+The calculator supports 40 functions, including conditional aggregates, exact
+lookups, six date functions and eight text functions. See the updated function
+reference and [oracle provenance and capture instructions](formulas-oracle.md).
+Built-in sources use indexed sparse ranges; external data sources remain compatible.
+DateSystem follows the workbook, and UTF-16 v1/text resource limits remain explicit.
+Excel desktop validation is pending; specification/profile checks are reported
+separately in [the expansion validation record](formulas-expansion-validation.md).

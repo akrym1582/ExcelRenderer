@@ -11,6 +11,12 @@
           "DocumentFormat.OpenXml.Framework": "3.3.0"
         }
       },
+      "ExcelNumberFormat": {
+        "type": "Direct",
+        "requested": "[1.1.0, )",
+        "resolved": "1.1.0",
+        "contentHash": "R3BVHPs9O+RkExbZYTGT0+9HLbi8ZrNij1Yziyw6znd3J7P3uoIR07uwTLGOogtz1p6+0sna66eBoXu7tBiVQA=="
+      },
       "PDFsharp": {
         "type": "Direct",
         "requested": "[6.2.3, )",
@@ -64,11 +70,6 @@
         "dependencies": {
           "System.IO.Packaging": "8.0.1"
         }
-      },
-      "ExcelNumberFormat": {
-        "type": "Transitive",
-        "resolved": "1.1.0",
-        "contentHash": "R3BVHPs9O+RkExbZYTGT0+9HLbi8ZrNij1Yziyw6znd3J7P3uoIR07uwTLGOogtz1p6+0sna66eBoXu7tBiVQA=="
       },
       "Microsoft.Extensions.DependencyInjection": {
         "type": "Transitive",

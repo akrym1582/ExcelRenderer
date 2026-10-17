@@ -1,0 +1,17 @@
+<Project>
+  <PropertyGroup>
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeOpenXmlBuildOutput</TargetsForTfmSpecificBuildOutput>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- PrivateAssets hides the source project dependency. Export its runtime
+         package dependency explicitly; DocumentFormat.OpenXml is already direct. -->
+    <PackageReference Include="ExcelNumberFormat" Version="1.1.0" />
+  </ItemGroup>
+  <Target Name="IncludeOpenXmlBuildOutput" DependsOnTargets="ResolveReferences">
+    <ItemGroup>
+      <_EmbeddedOpenXmlAssembly Include="@(ReferenceCopyLocalPaths)" Condition="('%(ReferenceCopyLocalPaths.Filename)' == 'ExcelRenderer.OpenXml' Or '%(ReferenceCopyLocalPaths.Filename)' == 'ExcelRenderer.Formulas') And '%(ReferenceCopyLocalPaths.Extension)' == '.dll'" />
+      <BuildOutputInPackage Include="@(_EmbeddedOpenXmlAssembly)" />
+      <BuildOutputInPackage Include="@(_EmbeddedOpenXmlAssembly->'%(RootDir)%(Directory)%(Filename).xml')" Condition="Exists('%(_EmbeddedOpenXmlAssembly.RootDir)%(_EmbeddedOpenXmlAssembly.Directory)%(_EmbeddedOpenXmlAssembly.Filename).xml')" />
+    </ItemGroup>
+  </Target>
+</Project>

@@ -37,7 +37,7 @@ This makes the rendering pipeline easier to test, understand, and extend with ne
 - Produces one self-contained SVG per page with outlined text and embedded images
 - Exports AI-friendly Markdown with merged-cell HTML, layout-aware reading order, formulas, and external images
 - Populates XLSX templates from C# objects or JSON with the standalone mapping package
-- Recalculates a limited formula language on request; see [supported syntax and 19 functions](docs/formulas-reference.md)
+- Recalculates a limited formula language on request; see [supported syntax and 40 functions](docs/formulas-reference.md)
 
 ## Installation
 
@@ -503,7 +503,7 @@ Formula display defaults to `FormulaDisplayMode.CachedValue` in Core, the main
 Reader, export APIs and CLI (`--formula-mode cached`). Saved results may be stale;
 missing caches produce `FormulaCachedValueMissing`. Opt in to the limited built-in
 calculator with `FormulaDisplayMode.Recalculate` or `--formula-mode recalculate`.
-The independent BCL-only engine supports 19 functions and strict diagnostics;
+The independent BCL-only engine supports 40 functions and strict diagnostics;
 unsupported reached formulas never fall back to saved results. `Legacy` remains
 unsupported. The [formula support reference](docs/formulas-reference.md) lists every
 function with argument counts and examples, supported syntax, errors and limits.
@@ -576,7 +576,7 @@ See [Architecture](docs/architecture.md) for the layout passes, drawing commands
 
 - Charts are not supported.
 - Formula display uses saved results by default; explicit recalculation supports the
-  [documented syntax and 19 functions](docs/formulas-reference.md). Full Excel calculation compatibility is not guaranteed.
+  [documented syntax and 40 functions](docs/formulas-reference.md). Full Excel calculation compatibility is not guaranteed.
 - Conditional formatting is not rendered.
 - Not every paper size or header/footer formatting code is supported.
 - Page breaks occur only at row and column boundaries.
@@ -658,10 +658,15 @@ input and output streams stay open. Heavy native drawing and encoding operations
 
 ## Development
 
+NuGet publication is limited to `ExcelRenderer`, `ExcelRenderer.Mapping`,
+`ExcelRenderer.Tool` and `ExcelRenderer.Fonts`. Core, OpenXml and Formulas are
+source projects whose assemblies ship inside those packages; they are not published
+separately. See [package distribution](docs/package-distribution.md).
+
+
 To try the CLI from source before publishing, create and install a local package:
 
 ```bash
-dotnet pack src/ExcelRenderer.OpenXml/ExcelRenderer.OpenXml.csproj -c Release -o artifacts/packages
 dotnet pack src/ExcelRenderer/ExcelRenderer.csproj -c Release -o artifacts/packages
 dotnet pack src/ExcelRenderer.Mapping/ExcelRenderer.Mapping.csproj -c Release -o artifacts/packages
 dotnet pack src/ExcelRenderer.Fonts/ExcelRenderer.Fonts.csproj -c Release -o artifacts/packages

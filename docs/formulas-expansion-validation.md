@@ -1,5 +1,9 @@
 # Formula expansion validation — 2026-10-17
 
+配布構成は追加要件により本体・Mapping・Tool・Fontsの4パッケージへ変更しました。
+この文書に記録した旧構成の検証結果は当時の証拠です。現在の構成と再検証は
+[配布構成](package-distribution.md)・[4パッケージ検証](four-package-distribution-validation.md)を参照してください。
+
 Implementation and local validation are complete. Excel desktop comparison is
 unobserved and is **not** reported as passed. Windows execution is delegated to
 the configured CI matrix; this session ran Linux/.NET 10 only.

@@ -1,0 +1,30 @@
++ dotnet restore --configfile /tmp/excel-four-package-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /tmp/excel-four-package-consumers/engine/consumer.csproj (in 8.36 sec).
++ dotnet run -c Release --no-restore -- /tmp/excel-four-package-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf
+engine passed
++ dotnet restore --configfile /tmp/excel-four-package-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /tmp/excel-four-package-consumers/adapter/consumer.csproj (in 239 ms).
++ dotnet run -c Release --no-restore -- /tmp/excel-four-package-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf
+adapter passed
++ dotnet restore --configfile /tmp/excel-four-package-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /tmp/excel-four-package-consumers/mapping/consumer.csproj (in 228 ms).
++ dotnet run -c Release --no-restore -- /tmp/excel-four-package-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf
+mapping passed
++ dotnet restore --configfile /tmp/excel-four-package-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /tmp/excel-four-package-consumers/main-core/consumer.csproj (in 14.16 sec).
++ dotnet run -c Release --no-restore -- /tmp/excel-four-package-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf
+main-core passed
++ dotnet restore --configfile /tmp/excel-four-package-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /tmp/excel-four-package-consumers/combined/consumer.csproj (in 231 ms).
++ dotnet run -c Release --no-restore -- /tmp/excel-four-package-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf
+combined passed
++ dotnet tool install ExcelRenderer.Tool --version 1.9.0 --tool-path /tmp/excel-four-package-consumers/tool --configfile /tmp/excel-four-package-consumers/NuGet.Config
+You can invoke the tool using the following command: excelrenderer
+Tool 'excelrenderer.tool' (version '1.9.0') was successfully installed.
++ /tmp/excel-four-package-consumers/tool/excelrenderer md /tmp/excel-four-package-consumers/invoice.xlsx --formula-mode recalculate -o /tmp/excel-four-package-consumers/cli.md
+Six isolated package consumers passed (engine, adapter, Mapping, main+Core, combined, installed CLI)

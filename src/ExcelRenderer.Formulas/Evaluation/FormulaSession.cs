@@ -208,6 +208,11 @@ namespace ExcelRenderer.Formulas
         private FormulaValue Read(FormulaCellAddress address, FormulaCellAddress? origin = null, SourceSpan span = default)
         {
             Tick(address);
+            return ReadCore(address, origin, span);
+        }
+
+        private FormulaValue ReadCore(FormulaCellAddress address, FormulaCellAddress? origin = null, SourceSpan span = default)
+        {
             if (++visits > options.MaxCellVisits)
             {
                 Fail("ResourceLimitExceeded", "Cell visit limit exceeded.", address);
@@ -430,20 +435,6 @@ namespace ExcelRenderer.Formulas
             }
 
             return Read(new FormulaCellAddress(r.SheetId, r.FirstRow, r.FirstColumn), origin, item.Span);
-        }
-
-        private IEnumerable<FormulaValue> Enumerate(Item item, FormulaCellAddress origin)
-        {
-            if (!item.IsReference)
-            {
-                yield return item.Value;
-                yield break;
-            }
-
-            foreach (var address in Coordinates(item.Range, origin, item.Span))
-            {
-                yield return Read(address, origin, item.Span);
-            }
         }
 
         private FormulaValue Binary(FormulaNode node, FormulaCellAddress origin)

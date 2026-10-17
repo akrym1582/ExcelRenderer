@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -39,6 +40,7 @@ namespace ExcelRenderer.Formulas
                 var rows = new List<int>();
                 var offsets = new List<int>();
                 var columns = new List<int>(sheet.Value.Count);
+                var coverage = new Dictionary<int, (int First, int Last, int Count)>();
                 int lastRow = -1;
                 int lastColumn = -1;
                 foreach (var coordinate in sheet.Value)
@@ -54,6 +56,8 @@ namespace ExcelRenderer.Formulas
                     if (coordinate.Row != lastRow || coordinate.Column != lastColumn)
                     {
                         columns.Add(coordinate.Column);
+                        coverage.TryGetValue(coordinate.Column, out var previous);
+                        coverage[coordinate.Column] = (previous.Count == 0 ? coordinate.Row : previous.First, coordinate.Row, previous.Count + 1);
                     }
 
                     lastRow = coordinate.Row;
@@ -61,7 +65,7 @@ namespace ExcelRenderer.Formulas
                 }
 
                 offsets.Add(columns.Count);
-                sheets.Add(sheet.Key, new SheetIndex(rows.ToArray(), offsets.ToArray(), columns.ToArray()));
+                sheets.Add(sheet.Key, new SheetIndex(rows.ToArray(), offsets.ToArray(), columns.ToArray(), coverage));
             }
         }
 
@@ -69,7 +73,34 @@ namespace ExcelRenderer.Formulas
         /// <param name="range">Inclusive rectangle.</param>
         /// <param name="cancellationToken">Cooperative cancellation.</param>
         /// <returns>Stored coordinates in row order.</returns>
-        public IEnumerable<FormulaCellAddress> Enumerate(FormulaRange range, CancellationToken cancellationToken = default)
+        public IEnumerable<FormulaCellAddress> Enumerate(FormulaRange range, CancellationToken cancellationToken = default) => new Query(this, range, cancellationToken);
+
+        private static int LowerBound(int[] values, int target)
+        {
+            var position = Array.BinarySearch(values, target);
+            return position < 0 ? ~position : position;
+        }
+
+        private bool CoversDensely(FormulaRange range, CancellationToken cancellationToken)
+        {
+            if (!sheets.TryGetValue(range.SheetId, out var sheet))
+            {
+                return false;
+            }
+
+            for (int column = range.FirstColumn; column <= range.LastColumn; column++)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                if (!sheet.Coverage.TryGetValue(column, out var coverage) || coverage.Count != coverage.Last - coverage.First + 1 || range.FirstRow < coverage.First || range.LastRow > coverage.Last)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private IEnumerable<FormulaCellAddress> EnumerateCore(FormulaRange range, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (!sheets.TryGetValue(range.SheetId, out var sheet))
@@ -82,7 +113,7 @@ namespace ExcelRenderer.Formulas
                 cancellationToken.ThrowIfCancellationRequested();
                 var start = sheet.Offsets[i];
                 var end = sheet.Offsets[i + 1];
-                var found = Array.BinarySearch(sheet.Columns, start, end - start, range.FirstColumn);
+                var found = sheet.Columns[start] >= range.FirstColumn ? start : Array.BinarySearch(sheet.Columns, start, end - start, range.FirstColumn);
                 for (var j = found < 0 ? ~found : found; j < end && sheet.Columns[j] <= range.LastColumn; j++)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
@@ -91,19 +122,44 @@ namespace ExcelRenderer.Formulas
             }
         }
 
-        private static int LowerBound(int[] values, int target)
+        /// <summary>Identifies a checked index query without trusting arbitrary sparse enumerables.</summary>
+        internal sealed class Query : IEnumerable<FormulaCellAddress>
         {
-            var position = Array.BinarySearch(values, target);
-            return position < 0 ? ~position : position;
+            private readonly FormulaRangeIndex owner;
+            private readonly FormulaRange range;
+            private readonly CancellationToken cancellation;
+
+            /// <summary>Initializes a new instance of the <see cref="Query"/> class.</summary>
+            /// <param name="owner">Validated coordinate index.</param>
+            /// <param name="range">Requested rectangle.</param>
+            /// <param name="cancellation">Cooperative cancellation.</param>
+            internal Query(FormulaRangeIndex owner, FormulaRange range, CancellationToken cancellation)
+            {
+                this.owner = owner;
+                this.range = range;
+                this.cancellation = cancellation;
+            }
+
+            /// <inheritdoc/>
+            public IEnumerator<FormulaCellAddress> GetEnumerator() => owner.EnumerateCore(range, cancellation).GetEnumerator();
+
+            /// <inheritdoc/>
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+            /// <summary>Proves all coordinates exist for exactly the requested rectangle.</summary>
+            /// <param name="requested">Session request, which must match the query.</param>
+            /// <returns>Whether direct coordinate iteration is equivalent.</returns>
+            internal bool CoversDensely(FormulaRange requested) => StringComparer.OrdinalIgnoreCase.Equals(range.SheetId, requested.SheetId) && range.FirstRow == requested.FirstRow && range.FirstColumn == requested.FirstColumn && range.LastRow == requested.LastRow && range.LastColumn == requested.LastColumn && owner.CoversDensely(range, cancellation);
         }
 
         private sealed class SheetIndex
         {
-            internal SheetIndex(int[] rows, int[] offsets, int[] columns)
+            internal SheetIndex(int[] rows, int[] offsets, int[] columns, Dictionary<int, (int First, int Last, int Count)> coverage)
             {
                 Rows = rows;
                 Offsets = offsets;
                 Columns = columns;
+                Coverage = coverage;
             }
 
             internal int[] Rows { get; }
@@ -111,6 +167,8 @@ namespace ExcelRenderer.Formulas
             internal int[] Offsets { get; }
 
             internal int[] Columns { get; }
+
+            internal Dictionary<int, (int First, int Last, int Count)> Coverage { get; }
         }
     }
 }

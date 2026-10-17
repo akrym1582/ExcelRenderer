@@ -16,73 +16,79 @@ namespace ExcelRenderer.Formulas
             foreach (var arg in args)
             {
                 var item = Eval(arg, origin);
-                foreach (var raw in Enumerate(item, origin))
+                using (var cursor = item.IsReference ? Coordinates(item.Range, origin, item.Span).GetEnumerator() : null)
                 {
-                    Tick(origin, arg.Span);
-                    if (name == "COUNTA")
+                    bool scalar = !item.IsReference;
+                    while (scalar || (cursor != null && cursor.MoveNext()))
                     {
-                        if (raw.Kind != FormulaValueKind.Blank)
+                        var raw = scalar ? item.Value : ReadCore(cursor!.Current, origin, item.Span);
+                        scalar = false;
+                        Tick(origin, arg.Span);
+                        if (name == "COUNTA")
                         {
-                            count++;
+                            if (raw.Kind != FormulaValueKind.Blank)
+                            {
+                                count++;
+                            }
+
+                            continue;
                         }
 
-                        continue;
-                    }
-
-                    if (name == "COUNT")
-                    {
-                        if (raw.Kind == FormulaValueKind.Number || (!item.IsReference && Numeric(raw).Kind == FormulaValueKind.Number && raw.Kind != FormulaValueKind.Blank))
+                        if (name == "COUNT")
                         {
-                            count++;
+                            if (raw.Kind == FormulaValueKind.Number || (!item.IsReference && Numeric(raw).Kind == FormulaValueKind.Number && raw.Kind != FormulaValueKind.Blank))
+                            {
+                                count++;
+                            }
+
+                            continue;
                         }
 
-                        continue;
-                    }
+                        if (raw.Kind == FormulaValueKind.Error)
+                        {
+                            error ??= raw;
+                            continue;
+                        }
 
-                    if (raw.Kind == FormulaValueKind.Error)
-                    {
-                        error ??= raw;
-                        continue;
-                    }
+                        if (name == "AND" || name == "OR")
+                        {
+                            if (item.IsReference && (raw.Kind == FormulaValueKind.Text || raw.Kind == FormulaValueKind.Blank))
+                            {
+                                continue;
+                            }
 
-                    if (name == "AND" || name == "OR")
-                    {
-                        if (item.IsReference && (raw.Kind == FormulaValueKind.Text || raw.Kind == FormulaValueKind.Blank))
+                            var boolean = Logical(raw);
+                            if (boolean.Kind == FormulaValueKind.Error)
+                            {
+                                error ??= boolean;
+                                continue;
+                            }
+
+                            logical = name == "AND" ? logical && boolean.Boolean : logical || boolean.Boolean;
+                            count++;
+                            continue;
+                        }
+
+                        if (item.IsReference && raw.Kind != FormulaValueKind.Number)
                         {
                             continue;
                         }
 
-                        var boolean = Logical(raw);
-                        if (boolean.Kind == FormulaValueKind.Error)
+                        var value = Numeric(raw);
+                        if (value.Kind == FormulaValueKind.Error)
                         {
-                            error ??= boolean;
+                            error ??= value;
                             continue;
                         }
 
-                        logical = name == "AND" ? logical && boolean.Boolean : logical || boolean.Boolean;
+                        sum += value.Number;
+                        if (count == 0 || (name == "MIN" && value.Number < extreme) || (name == "MAX" && value.Number > extreme))
+                        {
+                            extreme = value.Number;
+                        }
+
                         count++;
-                        continue;
                     }
-
-                    if (item.IsReference && raw.Kind != FormulaValueKind.Number)
-                    {
-                        continue;
-                    }
-
-                    var value = Numeric(raw);
-                    if (value.Kind == FormulaValueKind.Error)
-                    {
-                        error ??= value;
-                        continue;
-                    }
-
-                    sum += value.Number;
-                    if (count == 0 || (name == "MIN" && value.Number < extreme) || (name == "MAX" && value.Number > extreme))
-                    {
-                        extreme = value.Number;
-                    }
-
-                    count++;
                 }
             }
 

@@ -129,7 +129,7 @@ namespace ExcelRenderer.Formulas
                     }
                 }
 
-                var value = Read(address, origin, node.Span);
+                var value = ReadCore(address, origin, node.Span);
                 if (value.Kind == FormulaValueKind.Error)
                 {
                     if (index != null)

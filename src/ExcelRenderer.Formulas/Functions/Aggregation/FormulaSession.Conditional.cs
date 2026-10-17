@@ -138,7 +138,7 @@ namespace ExcelRenderer.Formulas
                     // Read every criteria candidate even after a mismatch: engine failures are never hidden.
                     for (var i = 0; i < conditions.Count; i++)
                     {
-                        var value = positions[i] == position ? Read(cursors[i].Current, origin, node.Span) : FormulaValue.Blank;
+                        var value = positions[i] == position ? ReadCore(cursors[i].Current, origin, node.Span) : FormulaValue.Blank;
                         match &= conditions[i].Matches(value, tick);
                     }
 
@@ -147,7 +147,7 @@ namespace ExcelRenderer.Formulas
                         if (sum)
                         {
                             var i = ranges.Count - 1;
-                            var value = positions[i] == position ? Read(cursors[i].Current, origin, node.Span) : FormulaValue.Blank;
+                            var value = positions[i] == position ? ReadCore(cursors[i].Current, origin, node.Span) : FormulaValue.Blank;
                             if (value.Kind == FormulaValueKind.Number)
                             {
                                 result += value.Number;

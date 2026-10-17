@@ -14,29 +14,55 @@ namespace ExcelRenderer.Formulas
 
         private static FormulaCellAddress Address(FormulaRange range, long position) => new FormulaCellAddress(range.SheetId, range.FirstRow + (int)(position / Width(range)), range.FirstColumn + (int)(position % Width(range)));
 
+        private IEnumerable<FormulaCellAddress> DenseCoordinates(FormulaRange range, FormulaCellAddress origin, SourceSpan span)
+        {
+            for (var row = range.FirstRow; row <= range.LastRow; row++)
+            {
+                for (var col = range.FirstColumn; col <= range.LastColumn; col++)
+                {
+                    Tick(origin, span);
+                    rangeCandidates++;
+                    yield return new FormulaCellAddress(range.SheetId, row, col);
+                }
+            }
+        }
+
         private IEnumerable<FormulaCellAddress> Coordinates(FormulaRange range, FormulaCellAddress origin, SourceSpan span)
         {
             if (!(source is ISparseFormulaDataSource sparse))
             {
-                for (var row = range.FirstRow; row <= range.LastRow; row++)
-                {
-                    for (var col = range.FirstColumn; col <= range.LastColumn; col++)
-                    {
-                        Tick(origin, span);
-                        rangeCandidates++;
-                        yield return new FormulaCellAddress(range.SheetId, row, col);
-                    }
-                }
-
-                yield break;
+                return DenseCoordinates(range, origin, span);
             }
 
+            try
+            {
+                var coordinates = sparse.EnumerateStoredCells(range, cancellation);
+                if (coordinates is FormulaRangeIndex.Query indexed && indexed.CoversDensely(range))
+                {
+                    return DenseCoordinates(range, origin, span);
+                }
+
+                return CheckedCoordinates(coordinates, range, origin, span);
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Fail("DataSourceFailure", ex.Message, origin, span);
+                return Array.Empty<FormulaCellAddress>();
+            }
+        }
+
+        private IEnumerable<FormulaCellAddress> CheckedCoordinates(IEnumerable<FormulaCellAddress> coordinates, FormulaRange range, FormulaCellAddress origin, SourceSpan span)
+        {
             IEnumerator<FormulaCellAddress>? cursor = null;
             try
             {
                 try
                 {
-                    cursor = sparse.EnumerateStoredCells(range, cancellation).GetEnumerator();
+                    cursor = coordinates.GetEnumerator();
                 }
                 catch (OperationCanceledException)
                 {

@@ -23,6 +23,44 @@ public sealed class SparseRangeTests
     }
 
     [Fact]
+    public void IndexedDensityNeverTreatsHolesAsStoredCells()
+    {
+        var source = new InMemoryFormulaWorkbook.Builder().AddSheet("S")
+            .SetValue(new("S", 1, 1), FormulaValue.FromNumber(1))
+            .SetValue(new("S", 3, 1), FormulaValue.FromNumber(3)).Build();
+        var session = new FormulaEngine().CreateSession(source, new() { MaxCellVisits = 2 });
+        var result = session.Evaluate(FormulaParser.Parse("SUM(A1:A3)").Formula!, new("S", 1, 2));
+        Assert.True(result.Success);
+        Assert.Equal(4, result.Value.Number);
+        Assert.Equal(2, session.GetStatistics().CellVisits);
+    }
+
+    [Fact]
+    public void IndexedQueryForTheWrongRangeIsStillValidated()
+    {
+        var result = new FormulaEngine().Evaluate(FormulaParser.Parse("SUM(A1:A1)").Formula!, new WrongIndexedQuerySource(), new("S", 1, 3));
+        Assert.False(result.Success);
+        Assert.Equal("DataSourceFailure", result.Diagnostics[0].Code);
+    }
+
+    [Fact]
+    public void RangeAdvancementChargesEachCoordinateWithoutDoubleChargingItsRead()
+    {
+        var builder = new InMemoryFormulaWorkbook.Builder().AddSheet("S");
+        for (int i = 1; i <= 100; i++) builder.SetValue(new("S", i, 1), FormulaValue.FromNumber(1));
+        var source = builder.Build();
+        foreach (var data in new IFormulaDataSource[] { source, new DenseFormulaSource(source) })
+        {
+            var parsed = FormulaParser.Parse("SUM(A1:A100)").Formula!;
+            var result = new FormulaEngine().Evaluate(parsed, data, new("S", 1, 2), new() { MaxEvaluationSteps = 250 });
+            Assert.True(result.Success);
+            Assert.Equal(100, result.Value.Number);
+            result = new FormulaEngine().Evaluate(parsed, data, new("S", 1, 2), new() { MaxEvaluationSteps = 100 });
+            Assert.Equal("ResourceLimitExceeded", result.Diagnostics[0].Code);
+        }
+    }
+
+    [Fact]
     public void FullSheetBlanksUseLongArithmeticAndNoValueCache()
     {
         var session = new FormulaEngine().CreateSession(new InMemoryFormulaWorkbook.Builder().AddSheet("S").Build());
@@ -119,6 +157,15 @@ public sealed class SparseRangeTests
             parsed = FormulaParser.Parse("COUNTIFS(A2,2,B2,0)").Formula!;
             Assert.Equal("CircularReference", new FormulaEngine().Evaluate(parsed, data, new("S", 1, 26)).Diagnostics[0].Code);
         }
+    }
+
+    private sealed class WrongIndexedQuerySource : ISparseFormulaDataSource
+    {
+        private readonly FormulaRangeIndex index = new(new[] { new FormulaCellAddress("S", 1, 1), new FormulaCellAddress("S", 1, 2) });
+        public IEnumerable<FormulaCellAddress> EnumerateStoredCells(FormulaRange range, CancellationToken cancellationToken) => index.Enumerate(new("S", 1, 2, 1, 2), cancellationToken);
+        public FormulaCellData GetCell(FormulaCellAddress address) => FormulaCellData.FromValue(FormulaValue.FromNumber(1));
+        public bool TryResolveSheet(string name, out string id) { id = name; return true; }
+        public bool TryResolveName(string? sheet, string name, string current, out FormulaRange range) { range = default; return false; }
     }
 
     private sealed class MalformedSource(string mode) : ISparseFormulaDataSource

@@ -153,3 +153,11 @@ warmup/five-sample method and per-result assertions. At 30k, XLSX time changed
 shortest-decimal rounding profile adds conversion/BigInteger work; proven integer
 and no-change exits avoid it where rounding is unnecessary. All raw samples and
 all 24 median comparisons are retained under `docs/validation/formulas-review-fixes/`.
+
+## 2026-10-17 report functions and sparse evaluation
+
+The [expansion validation](formulas-expansion-validation.md#performance-acceptance)
+records new sparse ranges, conditional aggregates, bounded incremental exact
+lookup indexes, date/text and mixed-report workloads. It includes baseline failures,
+managed allocation/GC, deterministic visits and the bounded dense-range overhead.
+Historical results above remain evidence only for their original revisions.

@@ -84,7 +84,7 @@ Public namespaces, type names and assembly boundaries are unchanged. Input/ and 
 | --- | --- |
 | Formulas/Data | ISparseFormulaDataSource and FormulaRangeIndex; the original three-method data source remains unchanged. |
 | Formulas/Evaluation | Function dispatch, checked range cursors and session-local statistics. |
-| Formulas/Functions | One registry; Numeric, Aggregation, Logical, Lookup, DateTime and Text partial implementations preserve private session control. |
+| Formulas/Functions | One registry; Numeric, Aggregation, Logical, Lookup, DateTime and Text partial implementations preserve private session control; bounded LookupIndex keeps typed first positions and ordered text positions. |
 | Formulas/Criteria | Compiled criteria/coercion profile and bounded wildcard tokens. |
 | OpenXml/Calculation | Sparse snapshot and workbook date-system/ISO adaptation in WorkbookCalculationSession. |
 | tools/ExcelRenderer.Formulas.Oracle | Development-only typed input generator, Excel cache extractor, provenance comparer and engine/OpenXml/Mapping runner. |

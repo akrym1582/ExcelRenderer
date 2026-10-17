@@ -1,0 +1,111 @@
+{
+  "caseSha256": "023a162796a3d2cc28bab81fc137f99d52c7ffaedc83eb8b4a7353095d6fa65c",
+  "capturedAt": "2026-10-17T00:32:55.908337+00:00",
+  "excelObservedCases": 0,
+  "notObservedCases": 4,
+  "counts": {
+    "matched": 0,
+    "mismatch": 0,
+    "unsupported": 0,
+    "known-difference": 0,
+    "not-observed": 8
+  },
+  "profileChecks": {
+    "matched": 8,
+    "mismatch": 0
+  },
+  "missingRequiredCategories": [
+    "mapping"
+  ],
+  "strict": false,
+  "rows": [
+    {
+      "id": "mapping-0",
+      "category": "mapping",
+      "pipeline": "mapping",
+      "status": "not-observed",
+      "actual": {
+        "kind": "Number",
+        "value": 0
+      },
+      "observed": null
+    },
+    {
+      "id": "mapping-0",
+      "category": "mapping",
+      "pipeline": "roundtrip",
+      "status": "not-observed",
+      "actual": {
+        "kind": "Number",
+        "value": 0
+      },
+      "observed": null
+    },
+    {
+      "id": "mapping-1",
+      "category": "mapping",
+      "pipeline": "mapping",
+      "status": "not-observed",
+      "actual": {
+        "kind": "Number",
+        "value": 11
+      },
+      "observed": null
+    },
+    {
+      "id": "mapping-1",
+      "category": "mapping",
+      "pipeline": "roundtrip",
+      "status": "not-observed",
+      "actual": {
+        "kind": "Number",
+        "value": 11
+      },
+      "observed": null
+    },
+    {
+      "id": "mapping-3",
+      "category": "mapping",
+      "pipeline": "mapping",
+      "status": "not-observed",
+      "actual": {
+        "kind": "Number",
+        "value": 66
+      },
+      "observed": null
+    },
+    {
+      "id": "mapping-3",
+      "category": "mapping",
+      "pipeline": "roundtrip",
+      "status": "not-observed",
+      "actual": {
+        "kind": "Number",
+        "value": 66
+      },
+      "observed": null
+    },
+    {
+      "id": "mapping-70",
+      "category": "mapping",
+      "pipeline": "mapping",
+      "status": "not-observed",
+      "actual": {
+        "kind": "Number",
+        "value": 27335
+      },
+      "observed": null
+    },
+    {
+      "id": "mapping-70",
+      "category": "mapping",
+      "pipeline": "roundtrip",
+      "status": "not-observed",
+      "actual": {
+        "kind": "Number",
+        "value": 27335
+      },
+      "observed": null
+    }
+  ]
+}

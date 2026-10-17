@@ -1,0 +1,62 @@
+[
+  {
+    "id": "mapping-0",
+    "category": "mapping",
+    "formula": "SUM(Amounts)",
+    "target": "D2",
+    "workbook": true,
+    "dateSystem": "Excel1900",
+    "inputs": [],
+    "expected": {
+      "kind": "Number",
+      "value": 0
+    },
+    "expectedSource": "hand-calculated",
+    "basis": "Invoice quantities 1..n, master price 10, tax 10%; identical cache-free file for both calculators"
+  },
+  {
+    "id": "mapping-1",
+    "category": "mapping",
+    "formula": "SUM(Amounts)",
+    "target": "D3",
+    "workbook": true,
+    "dateSystem": "Excel1900",
+    "inputs": [],
+    "expected": {
+      "kind": "Number",
+      "value": 11
+    },
+    "expectedSource": "hand-calculated",
+    "basis": "Invoice quantities 1..n, master price 10, tax 10%; identical cache-free file for both calculators"
+  },
+  {
+    "id": "mapping-3",
+    "category": "mapping",
+    "formula": "SUM(Amounts)",
+    "target": "D5",
+    "workbook": true,
+    "dateSystem": "Excel1900",
+    "inputs": [],
+    "expected": {
+      "kind": "Number",
+      "value": 66
+    },
+    "expectedSource": "hand-calculated",
+    "basis": "Invoice quantities 1..n, master price 10, tax 10%; identical cache-free file for both calculators"
+  },
+  {
+    "id": "mapping-70",
+    "category": "mapping",
+    "formula": "SUM(Amounts)",
+    "target": "D72",
+    "workbook": true,
+    "dateSystem": "Excel1900",
+    "inputs": [],
+    "expected": {
+      "kind": "Number",
+      "value": 27335
+    },
+    "expectedSource": "hand-calculated",
+    "basis": "Invoice quantities 1..n, master price 10, tax 10%; identical cache-free file for both calculators"
+  }
+]

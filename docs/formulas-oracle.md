@@ -95,3 +95,8 @@ Primary contracts: [SUMIF](https://support.microsoft.com/en-us/excel/functions/s
 [compatibility versions](https://support.microsoft.com/en-gb/excel/compatibility-versions),
 [CalculateFullRebuild](https://learn.microsoft.com/en-us/office/vba/api/excel.application.calculatefullrebuild).
 These sources do not settle every matrix boundary; those remain explicitly unobserved.
+
+The exact cache-free Mapping workbooks from the recorded Linux run are retained in
+[Fixtures/Oracle/Mapping](../tests/ExcelRenderer.Formulas.Tests/Fixtures/Oracle/Mapping/)
+with cases and input SHA256 metadata. Use `--cases` with that collection and the
+runner's `--mapping` mode; it is separate from the 498-case engine collection.

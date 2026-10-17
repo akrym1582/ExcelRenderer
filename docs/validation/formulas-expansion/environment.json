@@ -1,0 +1,19 @@
+{
+  "baselineRevision": "b2d42c9c17293085e29f2f6fde50f9bcea9fa7dc",
+  "implementationRevision": "52fd14433a5c1d92516c4c9afbf2913b1b281f70",
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+  "sdk": "10.0.401",
+  "excelDesktopAvailable": false,
+  "excelObservedCases": 0,
+  "caseSha256": "34357f1dcc586e3de777a820dfb3491cd960b775946e1b267d48baa3f9bd206b",
+  "windowsExecution": "Not available locally; Windows/Linux formula CI matrix retained and extended.",
+  "captureScripts": "PowerShell syntax parsed on Linux; Windows Excel execution not performed.",
+  "dotnetTests": 1843,
+  "oracleToolTests": 5,
+  "oraclePipelineChecks": 1494,
+  "mappingPipelineChecks": 8,
+  "excelNotObservedCases": 498,
+  "mappingExcelNotObservedCases": 4,
+  "measurementPolicy": "Final baseline then current runs, one warmup and five measured repeats; see performance-summary.json",
+  "suppliedPlanSha256": "20352fc63ced8ea176d32205f1efbd7b785e47684584e66772aa5aea8a9abba7"
+}

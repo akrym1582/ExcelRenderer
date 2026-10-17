@@ -1,0 +1,25 @@
++ dotnet restore --configfile /tmp/excel-formula-expansion-final-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /tmp/excel-formula-expansion-final-consumers/engine/consumer.csproj (in 4.79 sec).
++ dotnet run -c Release --no-restore -- /tmp/excel-formula-expansion-final-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf
+engine passed
++ dotnet restore --configfile /tmp/excel-formula-expansion-final-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /tmp/excel-formula-expansion-final-consumers/adapter/consumer.csproj (in 9.27 sec).
++ dotnet run -c Release --no-restore -- /tmp/excel-formula-expansion-final-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf
+adapter passed
++ dotnet restore --configfile /tmp/excel-formula-expansion-final-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /tmp/excel-formula-expansion-final-consumers/mapping/consumer.csproj (in 258 ms).
++ dotnet run -c Release --no-restore -- /tmp/excel-formula-expansion-final-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf
+mapping passed
++ dotnet restore --configfile /tmp/excel-formula-expansion-final-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /tmp/excel-formula-expansion-final-consumers/main-core/consumer.csproj (in 12.81 sec).
++ dotnet run -c Release --no-restore -- /tmp/excel-formula-expansion-final-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf
+main-core passed
++ dotnet tool install ExcelRenderer.Tool --version 1.9.0 --tool-path /tmp/excel-formula-expansion-final-consumers/tool --configfile /tmp/excel-formula-expansion-final-consumers/NuGet.Config
+You can invoke the tool using the following command: excelrenderer
+Tool 'excelrenderer.tool' (version '1.9.0') was successfully installed.
++ /tmp/excel-formula-expansion-final-consumers/tool/excelrenderer md /tmp/excel-formula-expansion-final-consumers/invoice.xlsx --formula-mode recalculate -o /tmp/excel-formula-expansion-final-consumers/cli.md
+Five isolated package consumers passed

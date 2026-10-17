@@ -1,0 +1,1831 @@
+{
+  "baselineRevision": "b2d42c9c17293085e29f2f6fde50f9bcea9fa7dc",
+  "implementationRevision": "52fd14433a5c1d92516c4c9afbf2913b1b281f70",
+  "recordedAt": "2026-10-17T00:35:10.652394+00:00",
+  "warmups": 1,
+  "measuredRepeats": 5,
+  "harnessSha256": {
+    "ExpansionBenchmark.cs": "c322ef2658f50eab7539cacadec857a8bcc0bc18410a2333ded7c801eacf3b2f",
+    "Program.cs": "26a63d8147db169489b8b372e05e6ba4b0b68ca1147dd44a87786792a3af260e",
+    "Benchmark.cs": "87de7f25e5d4b2b71bd5bb5396e91cfb19c2a21f831acd8c9ff43e3aa3a1c7dd",
+    "EngineBenchmark.cs": "63559b884ed4d1aeb4889c87f11600cf218ffcd6c28a766034cf487fbc3c39b3",
+    "WorkbookFixture.cs": "894601eefa7be54728e91771cdf0cd4312533a34b8d760bd9cc7b9a34408e4f4",
+    "ExcelRenderer.Formulas.Performance.csproj": "1ce8f80e216c50945fa6994cf68537c095a46e401964f4d96e56d36efe117953"
+  },
+  "rawSha256": {
+    "baseline-expansion-lookup-varied.jsonl": "69a37322ad4639f6f83276f59346e7973541e989dd4f8a2e4090e256c2eab9c6",
+    "baseline-expansion-lookup.jsonl": "a0e4e39da8ce4b691180f0f23df0e1e39f35e868c16aef9d868198635a017952",
+    "baseline-expansion-mixed.jsonl": "9d3401b7ac7069d8fd7fb9e68984e1bb8d8a14791136d29e81e98c012d8e527f",
+    "baseline-expansion-sparse.jsonl": "1abce97c1fbfc1f31cc3b7220aaaa045186245dbd1b47ee4e5649c12618082d2",
+    "baseline-expansion-text-date.jsonl": "37e26c8a655a67436a847fe8156586aab8068e2040e6baa700baeaa0a7abe1d6",
+    "baseline-sum.jsonl": "c10f0c5e39e8e1002cc8ff88be8d31624b3db3d7dadd57d957a6029b15693620",
+    "current-expansion-lookup-varied.jsonl": "3f895bf91c44a9d9aacbdebe78ccbfa02e0276d35a2f0bab5a7ce78a5e0ae73a",
+    "current-expansion-lookup.jsonl": "0af1f34ff19ff0c6c1f9c41b9bf9a38ca91992011a6cd2c96b355a8a7f81faa6",
+    "current-expansion-mixed.jsonl": "a5a5f3c886a080399131e19f816b8ff788a48c4adebc100900f58282fb6ca720",
+    "current-expansion-sparse.jsonl": "ac752b5ae5a058e0ef587b2860b38b7d16c4378158683a3060ad2786fa10b453",
+    "current-expansion-text-date.jsonl": "4ad3da899acc21f4c769b92ded282189cfce59bdad306b6a85ceee8ea63f653e",
+    "current-sum.jsonl": "ce228fdf8b9d8d2a8dd745740bcba42d1a658ed371644eb8bd48b4af2ee27e3b"
+  },
+  "notes": [
+    "Baseline uses the identical harness with EXPANSION_BASELINE only to omit statistics unavailable in that API.",
+    "Baseline unsupported/limit failures are retained; they are not speed comparisons.",
+    "Allocated bytes are total managed allocation, not retained memory or peak RSS.",
+    "Exact lookup indexes are session-local and bounded; varied keys are measured separately."
+  ],
+  "series": [
+    {
+      "file": "baseline-expansion-lookup-varied.jsonl",
+      "name": "VLOOKUP(1000,Data!A:B,2,FALSE) varied x1",
+      "count": 1000,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0349,
+      "medianAllocatedBytes": 4496,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-lookup-varied.jsonl",
+      "name": "VLOOKUP(1000,Data!A:B,2,FALSE) varied x10",
+      "count": 1000,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0328,
+      "medianAllocatedBytes": 4496,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-lookup-varied.jsonl",
+      "name": "VLOOKUP(1000,Data!A:B,2,FALSE) varied x100",
+      "count": 1000,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0326,
+      "medianAllocatedBytes": 4496,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-lookup-varied.jsonl",
+      "name": "VLOOKUP(10000,Data!A:B,2,FALSE) varied x1",
+      "count": 10000,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0354,
+      "medianAllocatedBytes": 4496,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-lookup-varied.jsonl",
+      "name": "VLOOKUP(10000,Data!A:B,2,FALSE) varied x10",
+      "count": 10000,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0345,
+      "medianAllocatedBytes": 4496,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-lookup-varied.jsonl",
+      "name": "VLOOKUP(10000,Data!A:B,2,FALSE) varied x100",
+      "count": 10000,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0339,
+      "medianAllocatedBytes": 4496,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-lookup-varied.jsonl",
+      "name": "VLOOKUP(30000,Data!A:B,2,FALSE) varied x1",
+      "count": 30000,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0363,
+      "medianAllocatedBytes": 4496,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-lookup-varied.jsonl",
+      "name": "VLOOKUP(30000,Data!A:B,2,FALSE) varied x10",
+      "count": 30000,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0351,
+      "medianAllocatedBytes": 4496,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-lookup-varied.jsonl",
+      "name": "VLOOKUP(30000,Data!A:B,2,FALSE) varied x100",
+      "count": 30000,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0354,
+      "medianAllocatedBytes": 4496,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-lookup.jsonl",
+      "name": "VLOOKUP(1000,Data!A:B,2,FALSE) x1",
+      "count": 1000,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0197,
+      "medianAllocatedBytes": 2264,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-lookup.jsonl",
+      "name": "VLOOKUP(1000,Data!A:B,2,FALSE) x10",
+      "count": 1000,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0183,
+      "medianAllocatedBytes": 2264,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-lookup.jsonl",
+      "name": "VLOOKUP(1000,Data!A:B,2,FALSE) x100",
+      "count": 1000,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0178,
+      "medianAllocatedBytes": 2264,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-lookup.jsonl",
+      "name": "VLOOKUP(10000,Data!A:B,2,FALSE) x1",
+      "count": 10000,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0201,
+      "medianAllocatedBytes": 1928,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-lookup.jsonl",
+      "name": "VLOOKUP(10000,Data!A:B,2,FALSE) x10",
+      "count": 10000,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0198,
+      "medianAllocatedBytes": 1880,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-lookup.jsonl",
+      "name": "VLOOKUP(10000,Data!A:B,2,FALSE) x100",
+      "count": 10000,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0192,
+      "medianAllocatedBytes": 1928,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-lookup.jsonl",
+      "name": "VLOOKUP(30000,Data!A:B,2,FALSE) x1",
+      "count": 30000,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0207,
+      "medianAllocatedBytes": 1880,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-lookup.jsonl",
+      "name": "VLOOKUP(30000,Data!A:B,2,FALSE) x10",
+      "count": 30000,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0209,
+      "medianAllocatedBytes": 1928,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-lookup.jsonl",
+      "name": "VLOOKUP(30000,Data!A:B,2,FALSE) x100",
+      "count": 30000,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0202,
+      "medianAllocatedBytes": 1880,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-mixed.jsonl",
+      "name": "SUMIFS(Data!B:B,Data!A:A,\">0\")+LEN(TEXT(EOMONTH(DATE(2026,1,31),1),\"yyyy-mm-dd\"))+VLOOKUP(10,Data!A:B,2,FALSE) x1",
+      "count": 10,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0163,
+      "medianAllocatedBytes": 3400,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-mixed.jsonl",
+      "name": "SUMIFS(Data!B:B,Data!A:A,\">0\")+LEN(TEXT(EOMONTH(DATE(2026,1,31),1),\"yyyy-mm-dd\"))+VLOOKUP(1000,Data!A:B,2,FALSE) x1",
+      "count": 1000,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0168,
+      "medianAllocatedBytes": 3400,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-mixed.jsonl",
+      "name": "SUMIFS(Data!B:B,Data!A:A,\">0\")+LEN(TEXT(EOMONTH(DATE(2026,1,31),1),\"yyyy-mm-dd\"))+VLOOKUP(100000,Data!A:B,2,FALSE) x1",
+      "count": 100000,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0316,
+      "medianAllocatedBytes": 3400,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-sparse.jsonl",
+      "name": "index-build",
+      "count": 10,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 10,
+      "medianMilliseconds": 0.0054,
+      "medianAllocatedBytes": 3392,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-sparse.jsonl",
+      "name": "SUM(Data!A:A) x1",
+      "count": 10,
+      "success": false,
+      "diagnostic": "ResourceLimitExceeded",
+      "checksum": null,
+      "medianMilliseconds": 98.96,
+      "medianAllocatedBytes": 140111416,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-sparse.jsonl",
+      "name": "COUNTIF(Empty!A1:A1000,\"\") x1",
+      "count": 10,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0156,
+      "medianAllocatedBytes": 2264,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-sparse.jsonl",
+      "name": "COUNTIF(Empty!A:A,\"\") x1",
+      "count": 10,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0145,
+      "medianAllocatedBytes": 2264,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-sparse.jsonl",
+      "name": "SUMIFS(Data!B:B,Data!A:A,\">0\") x1",
+      "count": 10,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0148,
+      "medianAllocatedBytes": 2296,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-sparse.jsonl",
+      "name": "COUNTIFS(Empty!A2:A1000000,\"\",Empty!B9:B1000007,\"\") x1",
+      "count": 10,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0172,
+      "medianAllocatedBytes": 2640,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-sparse.jsonl",
+      "name": "index-build",
+      "count": 1000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 1000,
+      "medianMilliseconds": 0.0462,
+      "medianAllocatedBytes": 142328,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-sparse.jsonl",
+      "name": "SUM(Data!A:A) x1",
+      "count": 1000,
+      "success": false,
+      "diagnostic": "ResourceLimitExceeded",
+      "checksum": null,
+      "medianMilliseconds": 123.4104,
+      "medianAllocatedBytes": 140111752,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-sparse.jsonl",
+      "name": "COUNTIF(Empty!A1:A1000,\"\") x1",
+      "count": 1000,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0163,
+      "medianAllocatedBytes": 2600,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-sparse.jsonl",
+      "name": "COUNTIF(Empty!A:A,\"\") x1",
+      "count": 1000,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0136,
+      "medianAllocatedBytes": 2600,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-sparse.jsonl",
+      "name": "SUMIFS(Data!B:B,Data!A:A,\">0\") x1",
+      "count": 1000,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0137,
+      "medianAllocatedBytes": 2632,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-sparse.jsonl",
+      "name": "COUNTIFS(Empty!A2:A1000000,\"\",Empty!B9:B1000007,\"\") x1",
+      "count": 1000,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0133,
+      "medianAllocatedBytes": 2640,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-sparse.jsonl",
+      "name": "index-build",
+      "count": 100000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 100000,
+      "medianMilliseconds": 4.5393,
+      "medianAllocatedBytes": 13520768,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-sparse.jsonl",
+      "name": "SUM(Data!A:A) x1",
+      "count": 100000,
+      "success": false,
+      "diagnostic": "ResourceLimitExceeded",
+      "checksum": null,
+      "medianMilliseconds": 183.8527,
+      "medianAllocatedBytes": 140111752,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-sparse.jsonl",
+      "name": "COUNTIF(Empty!A1:A1000,\"\") x1",
+      "count": 100000,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0348,
+      "medianAllocatedBytes": 2576,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-sparse.jsonl",
+      "name": "COUNTIF(Empty!A:A,\"\") x1",
+      "count": 100000,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0282,
+      "medianAllocatedBytes": 2576,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-sparse.jsonl",
+      "name": "SUMIFS(Data!B:B,Data!A:A,\">0\") x1",
+      "count": 100000,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0219,
+      "medianAllocatedBytes": 2608,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-sparse.jsonl",
+      "name": "COUNTIFS(Empty!A2:A1000000,\"\",Empty!B9:B1000007,\"\") x1",
+      "count": 100000,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0236,
+      "medianAllocatedBytes": 2616,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-text-date.jsonl",
+      "name": "LEN(TEXT(EOMONTH(DATE(2026,1,31),1),\"yyyy-mm-dd\")) x1000",
+      "count": 10,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0154,
+      "medianAllocatedBytes": 2656,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-text-date.jsonl",
+      "name": "LEN(TEXT(EOMONTH(DATE(2026,1,31),1),\"yyyy-mm-dd\")) x1000",
+      "count": 1000,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.013,
+      "medianAllocatedBytes": 2656,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-expansion-text-date.jsonl",
+      "name": "LEN(TEXT(EOMONTH(DATE(2026,1,31),1),\"yyyy-mm-dd\")) x1000",
+      "count": 100000,
+      "success": false,
+      "diagnostic": "UnsupportedFunction",
+      "checksum": null,
+      "medianMilliseconds": 0.0499,
+      "medianAllocatedBytes": 2656,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": null
+    },
+    {
+      "file": "baseline-sum.jsonl",
+      "name": "engine-sum",
+      "count": 10,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 20,
+      "medianMilliseconds": 0.0236,
+      "medianAllocatedBytes": 5816,
+      "gc": null,
+      "statistics": null
+    },
+    {
+      "file": "baseline-sum.jsonl",
+      "name": "engine-sum",
+      "count": 1000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 2000,
+      "medianMilliseconds": 0.4405,
+      "medianAllocatedBytes": 193536,
+      "gc": null,
+      "statistics": null
+    },
+    {
+      "file": "baseline-sum.jsonl",
+      "name": "engine-sum",
+      "count": 100000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 200000,
+      "medianMilliseconds": 11.0625,
+      "medianAllocatedBytes": 15700672,
+      "gc": null,
+      "statistics": null
+    },
+    {
+      "file": "current-expansion-lookup-varied.jsonl",
+      "name": "VLOOKUP(1000,Data!A:B,2,FALSE) varied x1",
+      "count": 1000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 2,
+      "medianMilliseconds": 0.6984,
+      "medianAllocatedBytes": 354312,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 1001,
+        "LookupIndexedRanges": 1,
+        "SourceReads": 1001,
+        "RangeCandidates": 1000,
+        "BulkBlankCells": 1047576,
+        "CachedValues": 1001,
+        "CellVisits": 1001,
+        "EvaluationSteps": 3015
+      }
+    },
+    {
+      "file": "current-expansion-lookup-varied.jsonl",
+      "name": "VLOOKUP(1000,Data!A:B,2,FALSE) varied x10",
+      "count": 1000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 20,
+      "medianMilliseconds": 1.0615,
+      "medianAllocatedBytes": 378008,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 1001,
+        "LookupIndexedRanges": 1,
+        "SourceReads": 1010,
+        "RangeCandidates": 1000,
+        "BulkBlankCells": 1047576,
+        "CachedValues": 1010,
+        "CellVisits": 1010,
+        "EvaluationSteps": 3141
+      }
+    },
+    {
+      "file": "current-expansion-lookup-varied.jsonl",
+      "name": "VLOOKUP(1000,Data!A:B,2,FALSE) varied x100",
+      "count": 1000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 200,
+      "medianMilliseconds": 1.5803,
+      "medianAllocatedBytes": 614808,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 1001,
+        "LookupIndexedRanges": 1,
+        "SourceReads": 1100,
+        "RangeCandidates": 1000,
+        "BulkBlankCells": 1047576,
+        "CachedValues": 1100,
+        "CellVisits": 1100,
+        "EvaluationSteps": 4401
+      }
+    },
+    {
+      "file": "current-expansion-lookup-varied.jsonl",
+      "name": "VLOOKUP(10000,Data!A:B,2,FALSE) varied x1",
+      "count": 10000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 2,
+      "medianMilliseconds": 6.8203,
+      "medianAllocatedBytes": 3233376,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 10001,
+        "LookupIndexedRanges": 1,
+        "SourceReads": 10001,
+        "RangeCandidates": 10000,
+        "BulkBlankCells": 1038576,
+        "CachedValues": 10001,
+        "CellVisits": 10001,
+        "EvaluationSteps": 30015
+      }
+    },
+    {
+      "file": "current-expansion-lookup-varied.jsonl",
+      "name": "VLOOKUP(10000,Data!A:B,2,FALSE) varied x10",
+      "count": 10000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 20,
+      "medianMilliseconds": 3.6356,
+      "medianAllocatedBytes": 3257208,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 10001,
+        "LookupIndexedRanges": 1,
+        "SourceReads": 10010,
+        "RangeCandidates": 10000,
+        "BulkBlankCells": 1038576,
+        "CachedValues": 10010,
+        "CellVisits": 10010,
+        "EvaluationSteps": 30141
+      }
+    },
+    {
+      "file": "current-expansion-lookup-varied.jsonl",
+      "name": "VLOOKUP(10000,Data!A:B,2,FALSE) varied x100",
+      "count": 10000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 200,
+      "medianMilliseconds": 3.9854,
+      "medianAllocatedBytes": 3495408,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 10001,
+        "LookupIndexedRanges": 1,
+        "SourceReads": 10100,
+        "RangeCandidates": 10000,
+        "BulkBlankCells": 1038576,
+        "CachedValues": 10100,
+        "CellVisits": 10100,
+        "EvaluationSteps": 31401
+      }
+    },
+    {
+      "file": "current-expansion-lookup-varied.jsonl",
+      "name": "VLOOKUP(30000,Data!A:B,2,FALSE) varied x1",
+      "count": 30000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 2,
+      "medianMilliseconds": 6.8204,
+      "medianAllocatedBytes": 6723368,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 30001,
+        "LookupIndexedRanges": 1,
+        "SourceReads": 30001,
+        "RangeCandidates": 30000,
+        "BulkBlankCells": 1018576,
+        "CachedValues": 30001,
+        "CellVisits": 30001,
+        "EvaluationSteps": 90015
+      }
+    },
+    {
+      "file": "current-expansion-lookup-varied.jsonl",
+      "name": "VLOOKUP(30000,Data!A:B,2,FALSE) varied x10",
+      "count": 30000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 20,
+      "medianMilliseconds": 4.3133,
+      "medianAllocatedBytes": 6747200,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 30001,
+        "LookupIndexedRanges": 1,
+        "SourceReads": 30010,
+        "RangeCandidates": 30000,
+        "BulkBlankCells": 1018576,
+        "CachedValues": 30010,
+        "CellVisits": 30010,
+        "EvaluationSteps": 90141
+      }
+    },
+    {
+      "file": "current-expansion-lookup-varied.jsonl",
+      "name": "VLOOKUP(30000,Data!A:B,2,FALSE) varied x100",
+      "count": 30000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 200,
+      "medianMilliseconds": 5.3244,
+      "medianAllocatedBytes": 6985520,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 30001,
+        "LookupIndexedRanges": 1,
+        "SourceReads": 30100,
+        "RangeCandidates": 30000,
+        "BulkBlankCells": 1018576,
+        "CachedValues": 30100,
+        "CellVisits": 30100,
+        "EvaluationSteps": 91401
+      }
+    },
+    {
+      "file": "current-expansion-lookup.jsonl",
+      "name": "VLOOKUP(1000,Data!A:B,2,FALSE) x1",
+      "count": 1000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 2,
+      "medianMilliseconds": 0.7194,
+      "medianAllocatedBytes": 352072,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 1001,
+        "LookupIndexedRanges": 1,
+        "SourceReads": 1001,
+        "RangeCandidates": 1000,
+        "BulkBlankCells": 1047576,
+        "CachedValues": 1001,
+        "CellVisits": 1001,
+        "EvaluationSteps": 3015
+      }
+    },
+    {
+      "file": "current-expansion-lookup.jsonl",
+      "name": "VLOOKUP(1000,Data!A:B,2,FALSE) x10",
+      "count": 1000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 20,
+      "medianMilliseconds": 0.946,
+      "medianAllocatedBytes": 355744,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 1001,
+        "LookupIndexedRanges": 1,
+        "SourceReads": 1001,
+        "RangeCandidates": 1000,
+        "BulkBlankCells": 1047576,
+        "CachedValues": 1001,
+        "CellVisits": 1010,
+        "EvaluationSteps": 3141
+      }
+    },
+    {
+      "file": "current-expansion-lookup.jsonl",
+      "name": "VLOOKUP(1000,Data!A:B,2,FALSE) x100",
+      "count": 1000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 200,
+      "medianMilliseconds": 1.1947,
+      "medianAllocatedBytes": 392464,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 1001,
+        "LookupIndexedRanges": 1,
+        "SourceReads": 1001,
+        "RangeCandidates": 1000,
+        "BulkBlankCells": 1047576,
+        "CachedValues": 1001,
+        "CellVisits": 1100,
+        "EvaluationSteps": 4401
+      }
+    },
+    {
+      "file": "current-expansion-lookup.jsonl",
+      "name": "VLOOKUP(10000,Data!A:B,2,FALSE) x1",
+      "count": 10000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 2,
+      "medianMilliseconds": 6.165,
+      "medianAllocatedBytes": 3231136,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 10001,
+        "LookupIndexedRanges": 1,
+        "SourceReads": 10001,
+        "RangeCandidates": 10000,
+        "BulkBlankCells": 1038576,
+        "CachedValues": 10001,
+        "CellVisits": 10001,
+        "EvaluationSteps": 30015
+      }
+    },
+    {
+      "file": "current-expansion-lookup.jsonl",
+      "name": "VLOOKUP(10000,Data!A:B,2,FALSE) x10",
+      "count": 10000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 20,
+      "medianMilliseconds": 5.989,
+      "medianAllocatedBytes": 3234808,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 10001,
+        "LookupIndexedRanges": 1,
+        "SourceReads": 10001,
+        "RangeCandidates": 10000,
+        "BulkBlankCells": 1038576,
+        "CachedValues": 10001,
+        "CellVisits": 10010,
+        "EvaluationSteps": 30141
+      }
+    },
+    {
+      "file": "current-expansion-lookup.jsonl",
+      "name": "VLOOKUP(10000,Data!A:B,2,FALSE) x100",
+      "count": 10000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 200,
+      "medianMilliseconds": 6.3235,
+      "medianAllocatedBytes": 3271528,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 10001,
+        "LookupIndexedRanges": 1,
+        "SourceReads": 10001,
+        "RangeCandidates": 10000,
+        "BulkBlankCells": 1038576,
+        "CachedValues": 10001,
+        "CellVisits": 10100,
+        "EvaluationSteps": 31401
+      }
+    },
+    {
+      "file": "current-expansion-lookup.jsonl",
+      "name": "VLOOKUP(30000,Data!A:B,2,FALSE) x1",
+      "count": 30000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 2,
+      "medianMilliseconds": 5.8937,
+      "medianAllocatedBytes": 6721128,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 30001,
+        "LookupIndexedRanges": 1,
+        "SourceReads": 30001,
+        "RangeCandidates": 30000,
+        "BulkBlankCells": 1018576,
+        "CachedValues": 30001,
+        "CellVisits": 30001,
+        "EvaluationSteps": 90015
+      }
+    },
+    {
+      "file": "current-expansion-lookup.jsonl",
+      "name": "VLOOKUP(30000,Data!A:B,2,FALSE) x10",
+      "count": 30000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 20,
+      "medianMilliseconds": 5.3693,
+      "medianAllocatedBytes": 6724800,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 30001,
+        "LookupIndexedRanges": 1,
+        "SourceReads": 30001,
+        "RangeCandidates": 30000,
+        "BulkBlankCells": 1018576,
+        "CachedValues": 30001,
+        "CellVisits": 30010,
+        "EvaluationSteps": 90141
+      }
+    },
+    {
+      "file": "current-expansion-lookup.jsonl",
+      "name": "VLOOKUP(30000,Data!A:B,2,FALSE) x100",
+      "count": 30000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 200,
+      "medianMilliseconds": 4.9745,
+      "medianAllocatedBytes": 6761520,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 30001,
+        "LookupIndexedRanges": 1,
+        "SourceReads": 30001,
+        "RangeCandidates": 30000,
+        "BulkBlankCells": 1018576,
+        "CachedValues": 30001,
+        "CellVisits": 30100,
+        "EvaluationSteps": 91401
+      }
+    },
+    {
+      "file": "current-expansion-mixed.jsonl",
+      "name": "SUMIFS(Data!B:B,Data!A:A,\">0\")+LEN(TEXT(EOMONTH(DATE(2026,1,31),1),\"yyyy-mm-dd\"))+VLOOKUP(10,Data!A:B,2,FALSE) x1",
+      "count": 10,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 32,
+      "medianMilliseconds": 0.0544,
+      "medianAllocatedBytes": 11184,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 11,
+        "LookupIndexedRanges": 1,
+        "SourceReads": 20,
+        "RangeCandidates": 30,
+        "BulkBlankCells": 2097132,
+        "CachedValues": 20,
+        "CellVisits": 31,
+        "EvaluationSteps": 195
+      }
+    },
+    {
+      "file": "current-expansion-mixed.jsonl",
+      "name": "SUMIFS(Data!B:B,Data!A:A,\">0\")+LEN(TEXT(EOMONTH(DATE(2026,1,31),1),\"yyyy-mm-dd\"))+VLOOKUP(1000,Data!A:B,2,FALSE) x1",
+      "count": 1000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 2012,
+      "medianMilliseconds": 1.894,
+      "medianAllocatedBytes": 566416,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 1001,
+        "LookupIndexedRanges": 1,
+        "SourceReads": 2000,
+        "RangeCandidates": 3000,
+        "BulkBlankCells": 2095152,
+        "CachedValues": 2000,
+        "CellVisits": 3001,
+        "EvaluationSteps": 13065
+      }
+    },
+    {
+      "file": "current-expansion-mixed.jsonl",
+      "name": "SUMIFS(Data!B:B,Data!A:A,\">0\")+LEN(TEXT(EOMONTH(DATE(2026,1,31),1),\"yyyy-mm-dd\"))+VLOOKUP(100000,Data!A:B,2,FALSE) x1",
+      "count": 100000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 200012,
+      "medianMilliseconds": 56.1418,
+      "medianAllocatedBytes": 38972528,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 65536,
+        "LookupIndexedRanges": 1,
+        "SourceReads": 200000,
+        "RangeCandidates": 300000,
+        "BulkBlankCells": 1897152,
+        "CachedValues": 200000,
+        "CellVisits": 300001,
+        "EvaluationSteps": 1300065
+      }
+    },
+    {
+      "file": "current-expansion-sparse.jsonl",
+      "name": "index-build",
+      "count": 10,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 10,
+      "medianMilliseconds": 0.0142,
+      "medianAllocatedBytes": 5728,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 0,
+        "LookupIndexedRanges": 0,
+        "SourceReads": 1,
+        "RangeCandidates": 0,
+        "BulkBlankCells": 0,
+        "CachedValues": 1,
+        "CellVisits": 1,
+        "EvaluationSteps": 1
+      }
+    },
+    {
+      "file": "current-expansion-sparse.jsonl",
+      "name": "SUM(Data!A:A) x1",
+      "count": 10,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 55,
+      "medianMilliseconds": 0.0183,
+      "medianAllocatedBytes": 3864,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 0,
+        "LookupIndexedRanges": 0,
+        "SourceReads": 10,
+        "RangeCandidates": 10,
+        "BulkBlankCells": 0,
+        "CachedValues": 10,
+        "CellVisits": 10,
+        "EvaluationSteps": 37
+      }
+    },
+    {
+      "file": "current-expansion-sparse.jsonl",
+      "name": "COUNTIF(Empty!A1:A1000,\"\") x1",
+      "count": 10,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 1000,
+      "medianMilliseconds": 0.0125,
+      "medianAllocatedBytes": 2680,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 0,
+        "LookupIndexedRanges": 0,
+        "SourceReads": 0,
+        "RangeCandidates": 0,
+        "BulkBlankCells": 1000,
+        "CachedValues": 0,
+        "CellVisits": 0,
+        "EvaluationSteps": 12
+      }
+    },
+    {
+      "file": "current-expansion-sparse.jsonl",
+      "name": "COUNTIF(Empty!A:A,\"\") x1",
+      "count": 10,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 1048576,
+      "medianMilliseconds": 0.0108,
+      "medianAllocatedBytes": 2680,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 0,
+        "LookupIndexedRanges": 0,
+        "SourceReads": 0,
+        "RangeCandidates": 0,
+        "BulkBlankCells": 1048576,
+        "CachedValues": 0,
+        "CellVisits": 0,
+        "EvaluationSteps": 12
+      }
+    },
+    {
+      "file": "current-expansion-sparse.jsonl",
+      "name": "SUMIFS(Data!B:B,Data!A:A,\">0\") x1",
+      "count": 10,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 20,
+      "medianMilliseconds": 0.0255,
+      "medianAllocatedBytes": 6640,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 0,
+        "LookupIndexedRanges": 0,
+        "SourceReads": 20,
+        "RangeCandidates": 20,
+        "BulkBlankCells": 1048566,
+        "CachedValues": 20,
+        "CellVisits": 20,
+        "EvaluationSteps": 118
+      }
+    },
+    {
+      "file": "current-expansion-sparse.jsonl",
+      "name": "COUNTIFS(Empty!A2:A1000000,\"\",Empty!B9:B1000007,\"\") x1",
+      "count": 10,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 999999,
+      "medianMilliseconds": 0.012,
+      "medianAllocatedBytes": 3552,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 0,
+        "LookupIndexedRanges": 0,
+        "SourceReads": 0,
+        "RangeCandidates": 0,
+        "BulkBlankCells": 999999,
+        "CachedValues": 0,
+        "CellVisits": 0,
+        "EvaluationSteps": 21
+      }
+    },
+    {
+      "file": "current-expansion-sparse.jsonl",
+      "name": "index-build",
+      "count": 1000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 1000,
+      "medianMilliseconds": 0.4782,
+      "medianAllocatedBytes": 217240,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 0,
+        "LookupIndexedRanges": 0,
+        "SourceReads": 1,
+        "RangeCandidates": 0,
+        "BulkBlankCells": 0,
+        "CachedValues": 1,
+        "CellVisits": 1,
+        "EvaluationSteps": 1
+      }
+    },
+    {
+      "file": "current-expansion-sparse.jsonl",
+      "name": "SUM(Data!A:A) x1",
+      "count": 1000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 500500,
+      "medianMilliseconds": 0.5784,
+      "medianAllocatedBytes": 191920,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 0,
+        "LookupIndexedRanges": 0,
+        "SourceReads": 1000,
+        "RangeCandidates": 1000,
+        "BulkBlankCells": 0,
+        "CachedValues": 1000,
+        "CellVisits": 1000,
+        "EvaluationSteps": 3007
+      }
+    },
+    {
+      "file": "current-expansion-sparse.jsonl",
+      "name": "COUNTIF(Empty!A1:A1000,\"\") x1",
+      "count": 1000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 1000,
+      "medianMilliseconds": 0.0118,
+      "medianAllocatedBytes": 3016,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 0,
+        "LookupIndexedRanges": 0,
+        "SourceReads": 0,
+        "RangeCandidates": 0,
+        "BulkBlankCells": 1000,
+        "CachedValues": 0,
+        "CellVisits": 0,
+        "EvaluationSteps": 12
+      }
+    },
+    {
+      "file": "current-expansion-sparse.jsonl",
+      "name": "COUNTIF(Empty!A:A,\"\") x1",
+      "count": 1000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 1048576,
+      "medianMilliseconds": 0.0108,
+      "medianAllocatedBytes": 3016,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 0,
+        "LookupIndexedRanges": 0,
+        "SourceReads": 0,
+        "RangeCandidates": 0,
+        "BulkBlankCells": 1048576,
+        "CachedValues": 0,
+        "CellVisits": 0,
+        "EvaluationSteps": 12
+      }
+    },
+    {
+      "file": "current-expansion-sparse.jsonl",
+      "name": "SUMIFS(Data!B:B,Data!A:A,\">0\") x1",
+      "count": 1000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 2000,
+      "medianMilliseconds": 1.368,
+      "medianAllocatedBytes": 403320,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 0,
+        "LookupIndexedRanges": 0,
+        "SourceReads": 2000,
+        "RangeCandidates": 2000,
+        "BulkBlankCells": 1047576,
+        "CachedValues": 2000,
+        "CellVisits": 2000,
+        "EvaluationSteps": 10018
+      }
+    },
+    {
+      "file": "current-expansion-sparse.jsonl",
+      "name": "COUNTIFS(Empty!A2:A1000000,\"\",Empty!B9:B1000007,\"\") x1",
+      "count": 1000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 999999,
+      "medianMilliseconds": 0.0114,
+      "medianAllocatedBytes": 2544,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 0,
+        "LookupIndexedRanges": 0,
+        "SourceReads": 0,
+        "RangeCandidates": 0,
+        "BulkBlankCells": 999999,
+        "CachedValues": 0,
+        "CellVisits": 0,
+        "EvaluationSteps": 21
+      }
+    },
+    {
+      "file": "current-expansion-sparse.jsonl",
+      "name": "index-build",
+      "count": 100000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 100000,
+      "medianMilliseconds": 15.8865,
+      "medianAllocatedBytes": 22213480,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 0,
+        "LookupIndexedRanges": 0,
+        "SourceReads": 1,
+        "RangeCandidates": 0,
+        "BulkBlankCells": 0,
+        "CachedValues": 1,
+        "CellVisits": 1,
+        "EvaluationSteps": 1
+      }
+    },
+    {
+      "file": "current-expansion-sparse.jsonl",
+      "name": "SUM(Data!A:A) x1",
+      "count": 100000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 5000050000,
+      "medianMilliseconds": 19.0787,
+      "medianAllocatedBytes": 15698040,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 0,
+        "LookupIndexedRanges": 0,
+        "SourceReads": 100000,
+        "RangeCandidates": 100000,
+        "BulkBlankCells": 0,
+        "CachedValues": 100000,
+        "CellVisits": 100000,
+        "EvaluationSteps": 300007
+      }
+    },
+    {
+      "file": "current-expansion-sparse.jsonl",
+      "name": "COUNTIF(Empty!A1:A1000,\"\") x1",
+      "count": 100000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 1000,
+      "medianMilliseconds": 0.0489,
+      "medianAllocatedBytes": 2008,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 0,
+        "LookupIndexedRanges": 0,
+        "SourceReads": 0,
+        "RangeCandidates": 0,
+        "BulkBlankCells": 1000,
+        "CachedValues": 0,
+        "CellVisits": 0,
+        "EvaluationSteps": 12
+      }
+    },
+    {
+      "file": "current-expansion-sparse.jsonl",
+      "name": "COUNTIF(Empty!A:A,\"\") x1",
+      "count": 100000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 1048576,
+      "medianMilliseconds": 0.0484,
+      "medianAllocatedBytes": 2008,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 0,
+        "LookupIndexedRanges": 0,
+        "SourceReads": 0,
+        "RangeCandidates": 0,
+        "BulkBlankCells": 1048576,
+        "CachedValues": 0,
+        "CellVisits": 0,
+        "EvaluationSteps": 12
+      }
+    },
+    {
+      "file": "current-expansion-sparse.jsonl",
+      "name": "SUMIFS(Data!B:B,Data!A:A,\">0\") x1",
+      "count": 100000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 200000,
+      "medianMilliseconds": 45.191,
+      "medianAllocatedBytes": 32570240,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 0,
+        "LookupIndexedRanges": 0,
+        "SourceReads": 200000,
+        "RangeCandidates": 200000,
+        "BulkBlankCells": 948576,
+        "CachedValues": 200000,
+        "CellVisits": 200000,
+        "EvaluationSteps": 1000018
+      }
+    },
+    {
+      "file": "current-expansion-sparse.jsonl",
+      "name": "COUNTIFS(Empty!A2:A1000000,\"\",Empty!B9:B1000007,\"\") x1",
+      "count": 100000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 999999,
+      "medianMilliseconds": 0.0691,
+      "medianAllocatedBytes": 2544,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 0,
+        "LookupIndexedRanges": 0,
+        "SourceReads": 0,
+        "RangeCandidates": 0,
+        "BulkBlankCells": 999999,
+        "CachedValues": 0,
+        "CellVisits": 0,
+        "EvaluationSteps": 21
+      }
+    },
+    {
+      "file": "current-expansion-text-date.jsonl",
+      "name": "LEN(TEXT(EOMONTH(DATE(2026,1,31),1),\"yyyy-mm-dd\")) x1000",
+      "count": 10,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 10000,
+      "medianMilliseconds": 6.4959,
+      "medianAllocatedBytes": 1809784,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 0,
+        "LookupIndexedRanges": 0,
+        "SourceReads": 0,
+        "RangeCandidates": 0,
+        "BulkBlankCells": 0,
+        "CachedValues": 0,
+        "CellVisits": 0,
+        "EvaluationSteps": 28000
+      }
+    },
+    {
+      "file": "current-expansion-text-date.jsonl",
+      "name": "LEN(TEXT(EOMONTH(DATE(2026,1,31),1),\"yyyy-mm-dd\")) x1000",
+      "count": 1000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 10000,
+      "medianMilliseconds": 6.5517,
+      "medianAllocatedBytes": 1809784,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 0,
+        "LookupIndexedRanges": 0,
+        "SourceReads": 0,
+        "RangeCandidates": 0,
+        "BulkBlankCells": 0,
+        "CachedValues": 0,
+        "CellVisits": 0,
+        "EvaluationSteps": 28000
+      }
+    },
+    {
+      "file": "current-expansion-text-date.jsonl",
+      "name": "LEN(TEXT(EOMONTH(DATE(2026,1,31),1),\"yyyy-mm-dd\")) x1000",
+      "count": 100000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 10000,
+      "medianMilliseconds": 7.5712,
+      "medianAllocatedBytes": 1809784,
+      "gc": [
+        0,
+        0,
+        0
+      ],
+      "statistics": {
+        "LookupIndexedValues": 0,
+        "LookupIndexedRanges": 0,
+        "SourceReads": 0,
+        "RangeCandidates": 0,
+        "BulkBlankCells": 0,
+        "CachedValues": 0,
+        "CellVisits": 0,
+        "EvaluationSteps": 28000
+      }
+    },
+    {
+      "file": "current-sum.jsonl",
+      "name": "engine-sum",
+      "count": 10,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 20,
+      "medianMilliseconds": 0.0274,
+      "medianAllocatedBytes": 6256,
+      "gc": null,
+      "statistics": null
+    },
+    {
+      "file": "current-sum.jsonl",
+      "name": "engine-sum",
+      "count": 1000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 2000,
+      "medianMilliseconds": 0.6404,
+      "medianAllocatedBytes": 193976,
+      "gc": null,
+      "statistics": null
+    },
+    {
+      "file": "current-sum.jsonl",
+      "name": "engine-sum",
+      "count": 100000,
+      "success": true,
+      "diagnostic": null,
+      "checksum": 200000,
+      "medianMilliseconds": 12.8026,
+      "medianAllocatedBytes": 15701112,
+      "gc": null,
+      "statistics": null
+    }
+  ]
+}

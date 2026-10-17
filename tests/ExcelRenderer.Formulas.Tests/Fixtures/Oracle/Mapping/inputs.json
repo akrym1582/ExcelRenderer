@@ -1,0 +1,29 @@
+{
+  "caseSha256": "023a162796a3d2cc28bab81fc137f99d52c7ffaedc83eb8b4a7353095d6fa65c",
+  "files": [
+    {
+      "id": "mapping-0",
+      "file": "mapping-0.xlsx",
+      "inputSha256": "9ee21ed3d77e79d1302b7878d56483bf9b85db732e21dff896335fe784f03057",
+      "date1904": false
+    },
+    {
+      "id": "mapping-1",
+      "file": "mapping-1.xlsx",
+      "inputSha256": "3a25af4d5a29bc4eb2e0a5a61416e3573d8b676c27e1c7a9f68e490bfbdeab01",
+      "date1904": false
+    },
+    {
+      "id": "mapping-3",
+      "file": "mapping-3.xlsx",
+      "inputSha256": "2348ff0a13533f4879c68b7f3fe71e115faaf081c219b81b58cb64f94d9767f6",
+      "date1904": false
+    },
+    {
+      "id": "mapping-70",
+      "file": "mapping-70.xlsx",
+      "inputSha256": "150df2a798f44c5ef01f51795ada1615ec4caae63f7a6c054302305d7a2390e7",
+      "date1904": false
+    }
+  ]
+}

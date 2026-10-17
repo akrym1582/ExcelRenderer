@@ -34,7 +34,7 @@ for path in sorted(a.directory.glob('*.jsonl')):
                            diagnostic=measured[0].get('Diagnostic'), checksum=checksum,
                            medianMilliseconds=statistics.median(r['Milliseconds'] for r in measured),
                            medianAllocatedBytes=statistics.median(r['AllocatedBytes'] for r in measured),
-                           gc=[statistics.median(r.get(g, 0) for r in measured) for g in ('Gen0', 'Gen1', 'Gen2')],
+                           gc=[statistics.median(r[g] for r in measured) for g in ('Gen0', 'Gen1', 'Gen2')] if all(g in measured[0] for g in ('Gen0', 'Gen1', 'Gen2')) else None,
                            statistics=measured[0].get('Statistics')))
 root = Path(__file__).resolve().parents[2]
 harness = Path(__file__).resolve().parent

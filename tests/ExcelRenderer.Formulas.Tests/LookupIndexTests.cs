@@ -5,6 +5,17 @@ namespace ExcelRenderer.Formulas.Tests;
 public sealed class LookupIndexTests
 {
     [Fact]
+    public void HorizontalIncrementalIndexesPreservePositionsAsTheirSuffixShrinks()
+    {
+        var builder = new InMemoryFormulaWorkbook.Builder().AddSheet("S");
+        for (int i = 1; i <= 1000; i++) builder.SetValue(new("S", 2, i), FormulaValue.FromNumber(i));
+        var session = new FormulaEngine().CreateSession(builder.Build());
+        for (int i = 1; i <= 1000; i++) Assert.Equal(i, session.Evaluate(FormulaParser.Parse($"MATCH({i},A2:ALL2,0)").Formula!, new("S", 3, 1)).Value.Number);
+        Assert.Equal(1000, session.GetStatistics().RangeCandidates);
+        Assert.Equal(1000, session.GetStatistics().SourceReads);
+    }
+
+    [Fact]
     public void EarlyWildcardMatchesDoNotScanTheWholeCachedTextIndex()
     {
         var builder = new InMemoryFormulaWorkbook.Builder().AddSheet("S");

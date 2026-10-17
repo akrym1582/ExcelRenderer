@@ -88,6 +88,19 @@ namespace ExcelRenderer.Formulas
                 return false;
             }
 
+            if (range.FirstRow == range.LastRow && range.FirstColumn != range.LastColumn)
+            {
+                var row = Array.BinarySearch(sheet.Rows, range.FirstRow);
+                if (row < 0)
+                {
+                    return false;
+                }
+
+                int start = sheet.Offsets[row];
+                int end = sheet.Offsets[row + 1];
+                return end - start == sheet.Columns[end - 1] - sheet.Columns[start] + 1 && range.FirstColumn >= sheet.Columns[start] && range.LastColumn <= sheet.Columns[end - 1];
+            }
+
             for (int column = range.FirstColumn; column <= range.LastColumn; column++)
             {
                 cancellationToken.ThrowIfCancellationRequested();

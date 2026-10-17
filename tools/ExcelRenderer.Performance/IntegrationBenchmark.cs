@@ -16,7 +16,7 @@ using S = DocumentFormat.OpenXml.Spreadsheet;
 internal static class IntegrationBenchmark
 {
     /// <summary>Runs a fixture generator or a single timed worker.</summary>
-    /// <param name="args">Command, path, operation, backend, and output-row count.</param>
+    /// <param name="args">Command, path, operation, output-row count, and optional capture path.</param>
     /// <returns>The completed operation.</returns>
     internal static async Task RunAsync(string[] args)
     {
@@ -30,29 +30,18 @@ internal static class IntegrationBenchmark
 
         var path = args[1];
         var operation = args[2];
-        var backend = args[3];
-        var count = int.Parse(args[4], CultureInfo.InvariantCulture);
-        if (backend is not ("openxml" or "auto"))
-        {
-            throw new ArgumentException("The available backends are openxml and auto.", nameof(args));
-        }
+        var count = int.Parse(args[3], CultureInfo.InvariantCulture);
 
         var data = Data(path.Contains("nested", StringComparison.Ordinal), count);
         var metrics = new Dictionary<string, double>();
         var io = new Dictionary<string, long>();
         ConversionMetrics.Observer = (name, value) => metrics[name] = metrics.GetValueOrDefault(name) + value;
         OperationMetrics.Observer = (name, value) => io[name] = io.GetValueOrDefault(name) + value;
-        var readerBackend = backend == "openxml" ? ReaderBackend.OpenXml : ReaderBackend.Auto;
-        var mappingBackend = backend == "openxml" ? MappingBackend.OpenXml : MappingBackend.Auto;
-        ReaderBackendSelection? readerSelection = null;
-        MappingBackendSelection? mappingSelection = null;
         var fonts = new FontOptions { AllowSystemFonts = false, FontFiles = [Path.GetFullPath("third_party/NotoSansJP/NotoSansJP-Regular.ttf")] };
-        var reads = new ExcelReadOptions { Backend = readerBackend, FormulaDisplayMode = FormulaDisplayMode.CachedValue, BackendSelected = selection => readerSelection = selection };
+        var reads = new ExcelReadOptions { FormulaDisplayMode = FormulaDisplayMode.CachedValue };
         var maps = new MappingOptions
         {
-            Backend = mappingBackend,
             MaxOutputRows = 1048576,
-            BackendSelected = selection => mappingSelection = selection,
             Input = new() { AllowTemporaryFiles = true },
         };
         GC.Collect();
@@ -100,7 +89,6 @@ internal static class IntegrationBenchmark
             Console.WriteLine(JsonSerializer.Serialize(new
             {
                 Operation = operation,
-                RequestedBackend = backend,
                 Rows = count,
                 ElapsedMs = timer.Elapsed.TotalMilliseconds,
                 AllocatedBytes = GC.GetTotalAllocatedBytes(true) - allocated,
@@ -108,14 +96,12 @@ internal static class IntegrationBenchmark
                 Cells = cells == 0 ? (int)metrics.GetValueOrDefault("model.cells") : cells,
                 Checksum = checksum,
                 MappingOutputBytes = mapped.Length,
-                ReaderSelection = readerSelection,
-                MappingSelection = mappingSelection,
                 Metrics = metrics,
                 IoMetrics = io,
             }));
-            if (args.Length > 5 && operation == "mapping")
+            if (args.Length > 4 && operation == "mapping")
             {
-                File.WriteAllBytes(args[5], mapped.ToArray());
+                File.WriteAllBytes(args[4], mapped.ToArray());
             }
         }
         finally
@@ -157,7 +143,6 @@ internal static class IntegrationBenchmark
             var path = Path.Combine(directory, $"{kind}-{count}-template.xlsx");
             ExcelTemplateMapper.Map(path, Path.Combine(directory, $"{kind}-{count}-values.xlsx"), Data(kind == "nested", count), new MappingOptions
             {
-                Backend = MappingBackend.OpenXml,
                 MaxOutputRows = 1048576,
                 Input = new() { AllowTemporaryFiles = true },
             });

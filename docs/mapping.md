@@ -1,13 +1,13 @@
 # Excel template mapping
 
-> Explicit recalculation is available. The [formula guide](formulas.md) defines its scope, cache invalidation and supported features. The [support reference](formulas-reference.md) lists syntax and all 19 functions. Saved-value/formula-rejection behavior below describes the default CachedValue mode unless stated otherwise.
+> Explicit recalculation is available. The [formula guide](formulas.md) defines its scope, cache invalidation and supported features. The [support reference](formulas-reference.md) lists syntax and all 40 functions. Saved-value/formula-rejection behavior below describes the default CachedValue mode unless stated otherwise.
 
 English | [日本語](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/mapping.ja.md)
 
 `ExcelRenderer.Mapping` is a standalone .NET Standard 2.1 package. It maps CLR
-objects or JSON into a formula-free XLSX template. OpenXml is the default and sole writer; Auto is an alias without fallback.
-The obsolete ClosedXml enum value is rejected before input processing; see
-[backend selection](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/openxml-integration.md). It does not depend
+objects or JSON into an XLSX template using OpenXml as its sole writer. See
+[OpenXml integration](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/openxml-integration.md)
+and the [engine-selection migration](engine-selection-removal.md). It does not depend
 on the renderer, fonts, PDFsharp or SkiaSharp. The CLI references both the mapping
 and rendering packages.
 
@@ -502,12 +502,11 @@ with their referenced rows, including references from another sheet. Names,
 tables and pictures intersecting repeated regions remain unsupported.
 Print areas include every output occurrence; deleted areas are removed. Repeated
 or deleted print-title rows are rejected. See
-[engine selection](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/openxml-integration.md)
+[OpenXml integration](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/openxml-integration.md)
 for supported part types, pivot caches and staged output guarantees.
 
-All Mapping backends reject cell formulas anywhere in the workbook, table
-calculated/totals formulas, non-none totals functions and calculated defined names before backend selection,
-data evaluation or output. The reason code is `MappingFormulaNotSupported`.
+In default CachedValue mode, Mapping rejects cell formulas anywhere in the workbook, table
+calculated/totals formulas, non-none totals functions and calculated defined names before data evaluation or output. The reason code is `MappingFormulaNotSupported`.
 This includes formulas outside repeats and on hidden sheets. Calculate amounts,
 tax and totals in the caller and supply the resulting values through C# objects
 or JSON and value placeholders. Static names accept only literal constants and finite A1
@@ -592,6 +591,6 @@ workbook.Workbook.DefinedNames = new S.DefinedNames(new S.DefinedName("'Invoice'
 | Markers report a dedicated-row or alias error | Put each start/end marker on its own unmerged row. Use a matching pair and refer to aliases only inside their block. |
 | Expansion exceeds `MaxOutputRows` | Reduce the data size or set a suitable `MappingOptions.MaxOutputRows` through C#. Ordinary rows also count. The CLI uses the 100,000-row default. |
 | Static names become `#REF!` | Avoid references to marker rows or rows deleted by empty arrays. Supply totals in the input. |
-| `MappingFormulaNotSupported` | Calculate the value in the caller and replace the formula with a value placeholder. The check covers every backend and all sheets. |
+| `MappingFormulaNotSupported` | Calculate the value in the caller and replace the formula with a value placeholder. The check covers all sheets. |
 | Rendering reports that output already exists | Use a fresh output file or an empty output directory. Successful `xlsx` mapping, unlike rendering, replaces an existing output XLSX. |
 | An unselected worksheet causes a mapping error | Mapping evaluates all worksheets before rendering selection. Fix its expressions or remove that worksheet from the template. |

@@ -1,4 +1,4 @@
-# Open XML エンジンの選択
+# OpenXml によるワークブックの読み込みとマッピング
 
 NuGet 配布は本体・Mapping・Tool・Fonts の4つです。Formulas と OpenXml は
 本体と Mapping に同梱される DLL で、個別パッケージは公開しません。
@@ -11,11 +11,9 @@ NuGet 配布は本体・Mapping・Tool・Fonts の4つです。Formulas と Open
 
 [English](openxml-integration.md) | 日本語
 
-Core・本体の Reader は OpenXml が既定です。Auto は OpenXml の互換指定として受け付け、
-別エンジンへ戻りません。Reader の明示 ClosedXml は入力処理前に移行先を示して拒否します。
-enum の数値は変更しません。Mapping も OpenXml が既定で、Auto は同じ Writer を使います。
-Mapping の明示 ClosedXml も入力処理前に拒否します。
-[撤去の互換性](closedxml-removal-compatibility.md)を参照してください。
+Core・本体の Reader と Mapping は常に OpenXml を使います。エンジンを選ぶ API や
+CLI オプションはありません。既存コードの更新は[エンジン選択の廃止と移行](engine-selection-removal.md)
+を参照してください。
 `ExcelRenderer.OpenXml` は共通の Reader・Writer・入力処理を提供し、描画・Mapping 言語・
 フォント・ClosedXML を参照しません。
 
@@ -23,30 +21,24 @@ Mapping の明示 ClosedXml も入力処理前に拒否します。
 var document = new ExcelRenderer.Excel.ExcelReader().Read(input,
     new ExcelRenderer.Excel.ExcelReadOptions
     {
-        Backend = ExcelRenderer.Excel.ReaderBackend.OpenXml,
         FormulaDisplayMode = ExcelRenderer.Excel.FormulaDisplayMode.CachedValue,
-        BackendSelected = selection => Observe(selection.SelectedBackend, selection.ReasonCodes),
     });
 
 ExcelTemplateMapper.Map(template, output, data, new MappingOptions
 {
-    Backend = MappingBackend.Auto,
     Input = new() { AllowTemporaryFiles = true },
-    BackendSelected = selection => Observe(selection.SelectedBackend, selection.ReasonCodes),
 });
 ```
 
 Core は `PdfExportOptions.ReadOptions` に同等の
 `ExcelRenderer.Core.ExcelReadOptions` を持ちます。本体の各変換 API は既存の
-`ReadOptions` から選択を伝播します。
+`ReadOptions` から数式の表示方法を設定します。
 
-| Reader 指定 | 数式指定 | 動作 |
-| --- | --- | --- |
-| OpenXml（既定） | CachedValue（既定） | ストリーミング Reader。診断は出力選択後に集約 |
-| Auto | CachedValue | OpenXml の互換指定。fallback なし |
-| ClosedXml | 全指定 | 入出力前に NotSupportedException。OpenXml または Auto へ移行 |
-| OpenXml / Auto | Recalculate | 限定的な自作計算器。数式ガイド参照 |
-| 全エンジン | Legacy | 入力処理・出力開始前に拒否 |
+| 数式指定 | 動作 |
+| --- | --- |
+| CachedValue（既定） | ストリーミング Reader が保存結果を表示。診断は出力選択後に集約 |
+| Recalculate | 限定的な自作計算器。数式ガイド参照 |
+| Legacy | 入力処理・出力開始前に拒否 |
 
 CachedValue モードの Reader は元 XLSX の保存結果だけを表示します。古い結果もそのまま使い、
 鮮度や依存関係は検査しません。欠落は空表示と `FormulaCachedValueMissing`、
@@ -57,23 +49,19 @@ friendly text で保存結果や空表示を上書きしません。
 式文字列は表示結果とは別のメタデータです。`ReportCell.Formula` は元の本文が
 ある場合だけ先頭に `=` を付けて保持します。本文のない共有式・配列式 follower は null、
 `FormulaSharedIndex` / `FormulaMasterAddress` に共有 index と master 位置を保持します。
-Markdown の `VisualCell` にも伝播します。描画用の式展開はせず、式文字列が展開できない
-ことだけで Auto を切り替えません。低レベル公開 `FormulaTextResolver` は既存利用者向けに
+Markdown の `VisualCell` にも伝播します。描画用の式展開は行いません。低レベル公開 `FormulaTextResolver` は既存利用者向けに
 残しますが、描画経路では利用しません。
 
-Reader の Auto も OpenXml モデルを一度だけ構築します。診断にはシート・明示範囲・hidden・
-ページ指定を従来どおり反映します。互換性走査、候補の破棄、別実装による再読込はありません。
-成功時の BackendSelected は一度だけ呼び、SelectedBackend は OpenXml、理由コードは
-ExplicitOpenXml または AutoOpenXmlOnly です。無効な指定や入力破損では成功通知しません。
-未知の enum 値は ArgumentOutOfRangeException です。入力破損・上限超過・キャンセル・
-実行時エラーを別実装で再試行しません。
+Reader は OpenXml モデルを一度だけ構築します。診断にはシート・明示範囲・hidden・
+ページ指定を従来どおり反映します。入力破損・上限超過・キャンセル・実行時エラーは
+呼び出し元へ返します。
 
 表示 culture は読込開始時の CurrentCulture を低レベル Reader へ明示して渡し、
 セッション用のコピーを保持します。
 
 地域依存・未解決の表示は同等とみなしません。`UnsupportedNumberFormat`、
 `RegionalNumberFormat`、`IsoDateDisplay`、`UnresolvedColor`、
-`UnsupportedPrintReference` は OpenXml／Auto ともに既存の
+`UnsupportedPrintReference` は Reader で既存の
 strict / warnings-as-errors に従います。組み込み日付形式14は保存された
 `mm-dd-yy`、ISO 日付セルは元テキストを表示します。地域ごとの日付表記を固定する場合は
 テンプレートに明示した custom number format を使ってください。数式 cache の欠落や
@@ -97,7 +85,7 @@ escape、format/date、null、1行配列、入れ子、空配列、書式だけ�
 始まる値も文字列です。DateTime/TimeSpan は元の表示形式を保ち、General の場合だけ
 既定の日付・時間形式を追加します。
 
-全 Mapping バックエンドで、選択通知・getter・IEnumerable 列挙・展開計画の前に、
+既定の CachedValue モードでは、getter・IEnumerable 列挙・展開計画の前に、
 ブック全体のセル数式（本文のない共有式、配列式、data table を含む）、table の
 calculated/totals 式・集計関数、計算を伴う定義名を拒否します。非表示・非対象シート、空配列で
 削除予定の行も対象です。`MappingException.ReasonCode` は
@@ -140,17 +128,14 @@ directory の一時ファイルを完成させて置換します。データ評�
 ## CLI
 
 ```console
-excelrenderer pdf input.xlsx -o result.pdf --reader-backend openxml --formula-mode cached
-excelrenderer xlsx template.xlsx --data data.json -o result.xlsx --mapping-backend auto --verbose
-excelrenderer render template.xlsx --data data.json --format svg -o output --mapping-backend openxml --reader-backend openxml --formula-mode cached
+excelrenderer pdf input.xlsx -o result.pdf --formula-mode cached
+excelrenderer xlsx template.xlsx --data data.json -o result.xlsx
+excelrenderer render template.xlsx --data data.json --format svg -o output --formula-mode cached
 ```
 
-pdf / image / svg / markdown・md / render に `--reader-backend`、これらと xlsx に
-`--mapping-backend` を指定できます。どちらも値は `openxml|auto`、既定は `openxml` です。
-明示 `closedxml` は入力・データの読込や出力作成前に移行先を示して拒否します。
-`--mapping-backend` の明示指定には `--data` が必要です。`--verbose` の選択理由は stderr
-へ表示します。`--formula-mode` は `cached`（既定値）と `recalculate` に対応します。
-明示 `legacy` は全 backend で拒否します。`recalculate` は限定的な自作計算器を使います。
+すべてのコマンドが自動的に OpenXml を使います。マッピングには `--data` を指定します
+（`xlsx` では必須）。`--formula-mode` は `cached`（既定値）と `recalculate` に対応します。
+明示 `legacy` は入力処理前に拒否します。`recalculate` は限定的な自作計算器を使います。
 
 ## 所有権と検証
 

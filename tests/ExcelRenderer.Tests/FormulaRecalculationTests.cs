@@ -37,13 +37,11 @@ public sealed class FormulaRecalculationTests
         if (format == OutputFormat.Markdown) Assert.Contains("2026-02-28", System.Text.Encoding.UTF8.GetString(output.ToArray()));
     }
 
-    [Theory]
-    [InlineData(ReaderBackend.OpenXml)]
-    [InlineData(ReaderBackend.Auto)]
-    public void RecalculationReplacesStaleCacheBeforeFormatting(ReaderBackend backend)
+    [Fact]
+    public void RecalculationReplacesStaleCacheBeforeFormatting()
     {
         using var input = CreateWorkbook();
-        var sheet = new ExcelReader().Read(input, new() { Backend = backend, FormulaDisplayMode = FormulaDisplayMode.Recalculate }).Sheets[0];
+        var sheet = new ExcelReader().Read(input, new() { FormulaDisplayMode = FormulaDisplayMode.Recalculate }).Sheets[0];
         Assert.Equal("6", sheet.Cells[new(1, 1)].Text);
         Assert.Equal("TRUE", sheet.Cells[new(2, 1)].Text);
         Assert.Equal("done", sheet.Cells[new(3, 1)].Text);

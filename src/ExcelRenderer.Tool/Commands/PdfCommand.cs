@@ -25,7 +25,6 @@ public static class PdfCommand
         command.Add(hyperlinks);
         command.Add(data);
         command.Add(formulaMode);
-        var backends = new BackendOptions(command, data, formulaMode);
         CommandSupport.AddFontOptions(command, fonts);
         command.SetAction((parseResult, cancellationToken) => CommandSupport.RunAsync(() => MappingCommandSupport.WithInputAsync(
             parseResult.GetValue(input)!,
@@ -34,10 +33,10 @@ public static class PdfCommand
             mappedInput => ExcelConverter.ConvertToPdfAsync(
                 mappedInput,
                 parseResult.GetValue(output)!,
-                new PdfExportOptions { Hyperlinks = CommandSupport.GetHyperlinks(parseResult.GetValue(hyperlinks)!), SheetName = parseResult.GetValue(sheet), ReadOptions = backends.GetRead(parseResult, formulaMode), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
+                new PdfExportOptions { Hyperlinks = CommandSupport.GetHyperlinks(parseResult.GetValue(hyperlinks)!), SheetName = parseResult.GetValue(sheet), ReadOptions = CommandSupport.GetReadOptions(parseResult.GetValue(formulaMode)!), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
                 cancellationToken),
             cancellationToken,
-            backends.GetMapping(parseResult))));
+            CommandSupport.GetMappingOptions(parseResult.GetValue(formulaMode)!))));
         return command;
     }
 }

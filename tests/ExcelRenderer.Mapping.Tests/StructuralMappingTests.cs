@@ -23,17 +23,16 @@ public sealed class StructuralMappingTests
     {
         foreach (var feature in new[] { "print-area", "static-name", "external-link", "internal-link", "picture", "comment", "table", "filter", "conditional", "validation" })
         foreach (var count in new[] { 0, 3 })
-        foreach (var backend in new[] { MappingBackend.OpenXml, MappingBackend.Auto })
-            yield return [feature, count, backend];
+            yield return [feature, count];
     }
 
     [Theory]
     [MemberData(nameof(Features))]
-    public void ParentFixturesRetainValuesReferencesAndRelatedParts(string feature, int count, MappingBackend backend)
+    public void ParentFixturesRetainValuesReferencesAndRelatedParts(string feature, int count)
     {
         using var input = File.OpenRead(FixturePath(feature));
         using var output = new MemoryStream();
-        ExcelTemplateMapper.Map(input, output, new { items = Enumerable.Range(1, count).Select(index => new { name = "Item " + index, amount = index * 10 }).ToArray() }, new() { Backend = backend });
+        ExcelTemplateMapper.Map(input, output, new { items = Enumerable.Range(1, count).Select(index => new { name = "Item " + index, amount = index * 10 }).ToArray() });
         using var actual = WorkbookProbe.Open(output);
         using var expected = WorkbookProbe.Open(FixturePath(feature + "-expected-" + count));
         Assert.Equal(Values(expected), Values(actual));
@@ -128,7 +127,7 @@ public sealed class StructuralMappingTests
     [InlineData("table")]
     [InlineData("picture")]
     [InlineData("static-name")]
-    public void RepeatedStructuresFailBeforeGetterSelectionAndOutput(string feature)
+    public void RepeatedStructuresFailBeforeGetterAndOutput(string feature)
     {
         using var input = new MemoryStream();using(var file=File.OpenRead(FixturePath(feature)))file.CopyTo(input);
         input.Position=0;
@@ -139,22 +138,9 @@ public sealed class StructuralMappingTests
             if(feature=="picture")sheet.DrawingsPart!.WorksheetDrawing.Descendants<Xdr.RowId>().First().Text="1";
             if(feature=="static-name")workbook.Workbook.DefinedNames!.Elements<S.DefinedName>().Single(name=>name.Name=="FooterValue").Text="'Template'!$A$2";
         }
-        input.Position=0;using var output=new MemoryStream();output.Write([4,5]);var selected=false;
-        Assert.Throws<MappingException>(()=>ExcelTemplateMapper.Map(input,output,new ThrowingData(),new(){BackendSelected=_=>selected=true}));
-        Assert.False(selected);Assert.Equal(new byte[]{4,5},output.ToArray());
-    }
-
-    [Theory]
-    [InlineData(0, typeof(NotSupportedException))]
-    [InlineData(-1, typeof(ArgumentOutOfRangeException))]
-    [InlineData(99, typeof(ArgumentOutOfRangeException))]
-    public void RemovedAndUnknownBackendsFailBeforeReadingInput(int backend, Type error)
-    {
-        using var input=new UnreadableStream();using var output=new MemoryStream();output.Write([9]);
-        var actual=Record.Exception(()=>ExcelTemplateMapper.Map(input,output,new ThrowingData(),new(){Backend=(MappingBackend)backend}));
-        Assert.IsType(error,actual);Assert.Equal(new byte[]{9},output.ToArray());
-        if(backend==0)Assert.Contains("OpenXml or Auto",actual!.Message);
-        Assert.Equal(MappingBackend.OpenXml,new MappingOptions().Backend);
+        input.Position=0;using var output=new MemoryStream();output.Write([4,5]);
+        Assert.Throws<MappingException>(()=>ExcelTemplateMapper.Map(input,output,new ThrowingData()));
+        Assert.Equal(new byte[]{4,5},output.ToArray());
     }
 
     [Fact]
@@ -248,14 +234,6 @@ public sealed class StructuralMappingTests
             using var source=entry.Open();using var actual=after.GetEntry(entry.FullName)!.Open();
             Assert.Equal(SHA256.HashData(source),SHA256.HashData(actual));
         }
-    }
-
-    [Fact]
-    public void MappingRemovedEnumRetainsItsNumberAndObsoleteMetadata()
-    {
-        Assert.Equal(0,(int)Enum.Parse<MappingBackend>("ClosedXml"));
-        Assert.Equal(1,(int)MappingBackend.OpenXml);Assert.Equal(2,(int)MappingBackend.Auto);
-        Assert.NotNull(typeof(MappingBackend).GetField("ClosedXml")!.GetCustomAttributes(typeof(ObsoleteAttribute),false).SingleOrDefault());
     }
 
     private static (string Address,string Kind,string Value)[] Values(WorkbookProbe book)=>book.Reader.EnumerateCells(1).Where(cell=>cell.Value.Type!=CellValueType.Blank).Select(cell=>(cell.Address.ToString(),cell.Value.Kind,cell.Value.Text??cell.Value.Number?.ToString("R",CultureInfo.InvariantCulture)??cell.Value.Boolean?.ToString()??string.Empty)).ToArray();

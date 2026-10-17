@@ -28,7 +28,7 @@ PDF / PNG / SVG
 
 ### 主な機能
 
-- OpenXml（既定）・Auto を選択した `.xlsx` の読み込み
+- OpenXml ストリーミング Reader による `.xlsx` の読み込み
 - セル文字列、フォント、文字サイズ、配置、折り返しの読み込み
 - 結合セル、列幅、行高の読み込み
 - 非表示行・非表示列の除外
@@ -528,11 +528,11 @@ ink bounds を完全に判定する機能ではありません。`CellTextTooSma
 指定できます。`IRichTextLayoutService` がなければセル書式へ縮退し、opt-in 時に preflight で
 `RichTextLayoutFallback` を出します。既定は組込みサービスで、診断だけの追加グリフ計測は行いません。
 
-## Reader の選択と数式の保存結果
+## ワークブックの読み込みと数式の保存結果
 
-Reader は OpenXml が既定で、Auto も同じ経路を使います。明示 ClosedXml は入力前に拒否します。
-Mapping も OpenXml が既定で、Auto は同じ Writer を使います。
-[backend API・CLI・対応範囲・stream 保証](docs/openxml-integration.ja.md)を参照してください。
+Reader と Mapping は常に OpenXml を使います。
+[ワークブック API・CLI・対応範囲・stream 保証](docs/openxml-integration.ja.md)と、
+既存コード向けの[エンジン選択の廃止と移行](docs/engine-selection-removal.md)を参照してください。
 `ExcelRenderer.OpenXml` は共通の Reader・Writer・入力処理を提供し、ClosedXML はライブラリ・CLI・テスト・ツールから撤去済みです。
 公開 style API は `ExcelStyleConverter.Convert(CellStyleInfo, CellValueType)` に変更しました。
 [破壊的変更と移行例](docs/closedxml-removal-compatibility.md)を参照してください。低レベル API は [OpenXml Reader リファレンス](docs/openxml-reader.ja.md)
@@ -548,7 +548,7 @@ Mapping も OpenXml が既定で、Auto は同じ Writer を使います。
 API・評価範囲・キャッシュ失効・制約・検証は
 [数式計算ガイド](docs/formulas.ja.md)を参照してください。
 
-Reader／Mapping の既定 backend は OpenXml です。既定の Mapping は数式を拒否します。
+既定の Mapping は数式を拒否します。
 `MappingOptions.FormulaCalculationMode = Recalculate` を明示すると対応する数式の
 AST 参照書換え・再計算を行います。`=` で始まる入力値は文字列のままです。
 [Mapping ガイド](docs/mapping.ja.md)も参照してください。
@@ -591,7 +591,7 @@ PDFの確定フォントは不変snapshotを使います。変換sessionが資�
 
 PDF専用のソースプロジェクトは[ExcelRenderer Core](docs/core.ja.md)を参照してください（Core単独のNuGetパッケージはありません）。
 
-本体packageは同じbuildの `ExcelRenderer.Core.dll` を同梱します。Core単独ではソースProjectReferenceを利用してください。基本読取、幾何・ページlayout、command生成、PDF処理をCoreへ集約し、高機能部分は本体が拡張します。[2エンジン構成](docs/core-architecture.ja.md)と[検証結果](docs/core-refactor-validation.md)を参照してください。
+本体packageは同じbuildの `ExcelRenderer.Core.dll` を同梱します。Core単独ではソースProjectReferenceを利用してください。基本読取、幾何・ページlayout、command生成、PDF処理をCoreへ集約し、高機能部分は本体が拡張します。[Core と本体の共通構成](docs/core-architecture.ja.md)と[検証結果](docs/core-refactor-validation.md)を参照してください。
 
 Excel を `ReportDocument`、`RenderDocument`、`DrawCommand` の順に変換し、PDF・PNG・SVG へ描画します。
 
@@ -720,7 +720,7 @@ CLI をソースから試す手順は [English README の Development](README.md
 
 | 目的 | 資料 |
 | --- | --- |
-| Reader・Mapping の選択、数式の保存結果、CLI・stream の契約 | [エンジン選択](docs/openxml-integration.ja.md)（[English](docs/openxml-integration.md)） |
+| Reader・Mapping の選択、数式の保存結果、CLI・stream の契約 | [OpenXml の統合](docs/openxml-integration.ja.md)（[English](docs/openxml-integration.md)） |
 | 数式の対応構文、サポート関数、型変換、エラー、資源上限 | [数式リファレンス](docs/formulas-reference.ja.md)（[English](docs/formulas-reference.md)） |
 | 明示再計算、型付きキャッシュ、保存 API | [数式計算ガイド](docs/formulas.ja.md)（[English](docs/formulas.md)） |
 | テンプレート構文、計算済み入力値、使用例 | [Mapping](docs/mapping.ja.md)（[English](docs/mapping.md)） |

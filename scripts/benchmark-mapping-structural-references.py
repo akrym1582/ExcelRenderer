@@ -16,6 +16,7 @@ parser.add_argument('--current', required=True, type=pathlib.Path)
 parser.add_argument('--fixtures', required=True, type=pathlib.Path)
 parser.add_argument('--output', required=True, type=pathlib.Path)
 parser.add_argument('--samples', type=int, default=3)
+parser.add_argument('--baseline-legacy-arguments', action='store_true', help='Use the pre-removal worker argument format for the baseline binary only.')
 parser.add_argument('--reuse-baseline', type=pathlib.Path, help='Reuse captured baseline samples with the same binaries and existing fixture/output files.')
 args = parser.parse_args()
 root = pathlib.Path(__file__).resolve().parents[1]
@@ -89,7 +90,8 @@ for kind, rows in [('plain', 10000), ('plain', 100000), ('expression', 1000), ('
         samples = []
         for iteration in range(args.samples + 1):
             output = args.fixtures / f'{kind}-{rows}-{label}.xlsx'
-            worker = subprocess.run(['dotnet', str(binary), 'integration-worker', str(path), 'mapping', 'openxml', str(2 if kind == 'ranges' else rows), str(output)], cwd=root, check=True, text=True, capture_output=True)
+            legacy = ['openxml'] if label == 'baseline' and args.baseline_legacy_arguments else []
+            worker = subprocess.run(['dotnet', str(binary), 'integration-worker', str(path), 'mapping', *legacy, str(2 if kind == 'ranges' else rows), str(output)], cwd=root, check=True, text=True, capture_output=True)
             sample = json.loads(worker.stdout.strip().splitlines()[-1])
             sample['warmup'] = iteration == 0
             samples.append(sample)

@@ -21,57 +21,52 @@ public sealed class FormulaPreflightTests
     [InlineData("table-total-function")]
     [InlineData("name")]
     [InlineData("extension")]
-    public void AllValueFormulaKindsFailBeforeBackendGetterEnumerationAndSink(string kind)
+    public void AllValueFormulaKindsFailBeforeGetterEnumerationAndSink(string kind)
     {
-        foreach (var backend in new[] { MappingBackend.OpenXml, MappingBackend.Auto })
+        using var input = Template();
+        using (var package = SpreadsheetDocument.Open(input, true))
         {
-            using var input = Template();
-            using (var package = SpreadsheetDocument.Open(input, true))
+            var workbook = package.WorkbookPart!;
+            var sheet = workbook.WorksheetParts.Single();
+            var cell = sheet.Worksheet.Descendants<S.Cell>().Single(c => c.CellReference == "B2");
+            if (kind == "name") workbook.Workbook.DefinedNames = new S.DefinedNames(new S.DefinedName("SUM(1,2)") { Name = "Computed" });
+            else if (kind.StartsWith("table-", StringComparison.Ordinal))
             {
-                var workbook = package.WorkbookPart!;
-                var sheet = workbook.WorksheetParts.Single();
-                var cell = sheet.Worksheet.Descendants<S.Cell>().Single(c => c.CellReference == "B2");
-                if (kind == "name") workbook.Workbook.DefinedNames = new S.DefinedNames(new S.DefinedName("SUM(1,2)") { Name = "Computed" });
-                else if (kind.StartsWith("table-", StringComparison.Ordinal))
+                var part = sheet.AddNewPart<TableDefinitionPart>();
+                using var text = new MemoryStream(Encoding.UTF8.GetBytes($"<table xmlns='{Ns}' name='Amounts' displayName='Amounts'><tableColumns><tableColumn id='1' name='Amount'><{(kind == "table-total" ? "totalsRowFormula" : "calculatedColumnFormula")}>1+1</{(kind == "table-total" ? "totalsRowFormula" : "calculatedColumnFormula")}></tableColumn></tableColumns></table>"));
+                if (kind == "table-total-function")
                 {
-                    var part = sheet.AddNewPart<TableDefinitionPart>();
-                    using var text = new MemoryStream(Encoding.UTF8.GetBytes($"<table xmlns='{Ns}' name='Amounts' displayName='Amounts'><tableColumns><tableColumn id='1' name='Amount'><{(kind == "table-total" ? "totalsRowFormula" : "calculatedColumnFormula")}>1+1</{(kind == "table-total" ? "totalsRowFormula" : "calculatedColumnFormula")}></tableColumn></tableColumns></table>"));
-                    if (kind == "table-total-function")
-                    {
-                        using var totals = new MemoryStream(Encoding.UTF8.GetBytes($"<table xmlns='{Ns}' name='Amounts' displayName='Amounts'><tableColumns><tableColumn id='1' name='Amount' totalsRowFunction='sum'/></tableColumns></table>"));
-                        part.FeedData(totals);
-                    }
-                    else
-                    {
-                        part.FeedData(text);
-                    }
+                    using var totals = new MemoryStream(Encoding.UTF8.GetBytes($"<table xmlns='{Ns}' name='Amounts' displayName='Amounts'><tableColumns><tableColumn id='1' name='Amount' totalsRowFunction='sum'/></tableColumns></table>"));
+                    part.FeedData(totals);
                 }
-                else if (kind == "extension") sheet.Worksheet.Append(new S.ExtensionList());
                 else
                 {
-                    cell.CellFormula = kind switch
-                    {
-                        "shared-master" => new S.CellFormula("1+1") { FormulaType = S.CellFormulaValues.Shared, SharedIndex = 7, Reference = "B2:B3" },
-                        "shared-follower" => new S.CellFormula { FormulaType = S.CellFormulaValues.Shared, SharedIndex = 7 },
-                        "array" or "dynamic" => new S.CellFormula("_xlfn.SEQUENCE(2)") { FormulaType = S.CellFormulaValues.Array, Reference = "B2:B3" },
-                        "dataTable" => new S.CellFormula { FormulaType = S.CellFormulaValues.DataTable, Reference = "B2:B3" },
-                        _ => new S.CellFormula("1+1"),
-                    };
+                    part.FeedData(text);
                 }
             }
-            input.Position = 0;
-            using var output = new MemoryStream();
-            output.Write([2, 7, 1]);
-            var data = new ThrowingData();
-            var selected = false;
-            var error = Assert.Throws<MappingException>(() => ExcelTemplateMapper.Map(input, output, data, new() { Backend = backend, BackendSelected = _ => selected = true }));
-            Assert.Equal("MappingFormulaNotSupported", error.ReasonCode);
-            Assert.Contains("replace template formulas with value placeholders", error.Message);
-            Assert.Equal(kind == "name" ? "Computed" : kind.StartsWith("table-", StringComparison.Ordinal) ? "Amounts" : string.Empty, error.Expression);
-            Assert.False(selected);
-            Assert.Equal(0, data.Reads);
-            Assert.Equal(new byte[] { 2, 7, 1 }, output.ToArray());
+            else if (kind == "extension") sheet.Worksheet.Append(new S.ExtensionList());
+            else
+            {
+                cell.CellFormula = kind switch
+                {
+                    "shared-master" => new S.CellFormula("1+1") { FormulaType = S.CellFormulaValues.Shared, SharedIndex = 7, Reference = "B2:B3" },
+                    "shared-follower" => new S.CellFormula { FormulaType = S.CellFormulaValues.Shared, SharedIndex = 7 },
+                    "array" or "dynamic" => new S.CellFormula("_xlfn.SEQUENCE(2)") { FormulaType = S.CellFormulaValues.Array, Reference = "B2:B3" },
+                    "dataTable" => new S.CellFormula { FormulaType = S.CellFormulaValues.DataTable, Reference = "B2:B3" },
+                    _ => new S.CellFormula("1+1"),
+                };
+            }
         }
+        input.Position = 0;
+        using var output = new MemoryStream();
+        output.Write([2, 7, 1]);
+        var data = new ThrowingData();
+        var error = Assert.Throws<MappingException>(() => ExcelTemplateMapper.Map(input, output, data));
+        Assert.Equal("MappingFormulaNotSupported", error.ReasonCode);
+        Assert.Contains("replace template formulas with value placeholders", error.Message);
+        Assert.Equal(kind == "name" ? "Computed" : kind.StartsWith("table-", StringComparison.Ordinal) ? "Amounts" : string.Empty, error.Expression);
+        Assert.Equal(0, data.Reads);
+        Assert.Equal(new byte[] { 2, 7, 1 }, output.ToArray());
     }
 
     [Theory]
@@ -80,61 +75,53 @@ public sealed class FormulaPreflightTests
     [InlineData("auto")]
     public void SavingPreservesOriginalCalculationPropertiesWithoutAddingRequests(string? mode)
     {
-        foreach (var backend in new[] { MappingBackend.OpenXml, MappingBackend.Auto })
+        using var input = Template();
+        string? expected;
+        using (var package = SpreadsheetDocument.Open(input, true))
         {
-            using var input = Template();
-            string? expected;
-            using (var package = SpreadsheetDocument.Open(input, true))
+            package.WorkbookPart!.Workbook.CalculationProperties = mode is null ? null : new S.CalculationProperties
             {
-                package.WorkbookPart!.Workbook.CalculationProperties = mode is null ? null : new S.CalculationProperties
-                {
-                    CalculationMode = mode == "manual" ? S.CalculateModeValues.Manual : S.CalculateModeValues.Auto,
-                    FullCalculationOnLoad = false,
-                    ForceFullCalculation = false,
-                };
-                expected = package.WorkbookPart.Workbook.CalculationProperties?.OuterXml;
-            }
-            input.Position = 0;
-            using var output = new MemoryStream();
-            ExcelTemplateMapper.Map(input, output, new { Items = new[] { "=SUM(1,2)" } }, new() { Backend = backend });
-            output.Position = 0;
-            using var actual = SpreadsheetDocument.Open(output, false);
-            Assert.Equal(expected, actual.WorkbookPart!.Workbook.CalculationProperties?.OuterXml);
-            Assert.Empty(actual.WorkbookPart.WorksheetParts.Single().Worksheet.Descendants<S.CellFormula>());
+                CalculationMode = mode == "manual" ? S.CalculateModeValues.Manual : S.CalculateModeValues.Auto,
+                FullCalculationOnLoad = false,
+                ForceFullCalculation = false,
+            };
+            expected = package.WorkbookPart.Workbook.CalculationProperties?.OuterXml;
         }
+        input.Position = 0;
+        using var output = new MemoryStream();
+        ExcelTemplateMapper.Map(input, output, new { Items = new[] { "=SUM(1,2)" } });
+        output.Position = 0;
+        using var actual = SpreadsheetDocument.Open(output, false);
+        Assert.Equal(expected, actual.WorkbookPart!.Workbook.CalculationProperties?.OuterXml);
+        Assert.Empty(actual.WorkbookPart.WorksheetParts.Single().Worksheet.Descendants<S.CellFormula>());
     }
 
     [Fact]
     public void ConditionalAndValidationFormulasRemainStructuralCompatibilityMetadata()
     {
-        foreach (var backend in new[] { MappingBackend.OpenXml, MappingBackend.Auto })
+        using var input = Template();
+        using (var package = SpreadsheetDocument.Open(input, true))
         {
-            using var input = Template();
-            using (var package = SpreadsheetDocument.Open(input, true))
+            var sheet = package.WorkbookPart!.WorksheetParts.Single().Worksheet;
+            sheet.Append(new S.ConditionalFormatting(new S.ConditionalFormattingRule(new S.Formula("A1>0"))
             {
-                var sheet = package.WorkbookPart!.WorksheetParts.Single().Worksheet;
-                sheet.Append(new S.ConditionalFormatting(new S.ConditionalFormattingRule(new S.Formula("A1>0"))
-                {
-                    Type = S.ConditionalFormatValues.Expression, Priority = 1,
-                }) { SequenceOfReferences = new DocumentFormat.OpenXml.ListValue<DocumentFormat.OpenXml.StringValue> { InnerText = "A1" } });
-                sheet.Append(new S.DataValidations(new S.DataValidation(new S.Formula1("A1>0"))
-                {
-                    Type = S.DataValidationValues.Custom,
-                    SequenceOfReferences = new DocumentFormat.OpenXml.ListValue<DocumentFormat.OpenXml.StringValue> { InnerText = "A1" },
-                }));
-            }
-            input.Position = 0;
-            using var output = new MemoryStream();
-            MappingBackendSelection? selected = null;
-            ExcelTemplateMapper.Map(input, output, new { Items = new[] { 42 } }, new() { Backend = backend, BackendSelected = value => selected = value });
-            Assert.Equal(MappingBackend.OpenXml, selected!.SelectedBackend);
-            output.Position = 0;
-            using var actual = SpreadsheetDocument.Open(output, false);
-            var result = actual.WorkbookPart!.WorksheetParts.Single().Worksheet;
-            Assert.Empty(result.Descendants<S.CellFormula>());
-            Assert.Equal("A1>0", Assert.Single(result.Descendants<S.Formula>()).Text);
-            Assert.Equal("A1>0", Assert.Single(result.Descendants<S.Formula1>()).Text);
+                Type = S.ConditionalFormatValues.Expression, Priority = 1,
+            }) { SequenceOfReferences = new DocumentFormat.OpenXml.ListValue<DocumentFormat.OpenXml.StringValue> { InnerText = "A1" } });
+            sheet.Append(new S.DataValidations(new S.DataValidation(new S.Formula1("A1>0"))
+            {
+                Type = S.DataValidationValues.Custom,
+                SequenceOfReferences = new DocumentFormat.OpenXml.ListValue<DocumentFormat.OpenXml.StringValue> { InnerText = "A1" },
+            }));
         }
+        input.Position = 0;
+        using var output = new MemoryStream();
+        ExcelTemplateMapper.Map(input, output, new { Items = new[] { 42 } });
+        output.Position = 0;
+        using var actual = SpreadsheetDocument.Open(output, false);
+        var result = actual.WorkbookPart!.WorksheetParts.Single().Worksheet;
+        Assert.Empty(result.Descendants<S.CellFormula>());
+        Assert.Equal("A1>0", Assert.Single(result.Descendants<S.Formula>()).Text);
+        Assert.Equal("A1>0", Assert.Single(result.Descendants<S.Formula1>()).Text);
     }
 
     [Fact]
@@ -152,12 +139,9 @@ public sealed class FormulaPreflightTests
                 File.WriteAllBytes(source, input.ToArray());
             }
             File.WriteAllBytes(destination, [5, 6, 7]);
-            foreach (var backend in new[] { MappingBackend.OpenXml, MappingBackend.Auto })
-            {
-                Assert.Throws<MappingException>(() => ExcelTemplateMapper.Map(source, destination, new ThrowingData(), new() { Backend = backend }));
-                Assert.Equal(new byte[] { 5, 6, 7 }, File.ReadAllBytes(destination));
-                Assert.Empty(Directory.GetFiles(directory, ".excelrenderer-*.tmp"));
-            }
+            Assert.Throws<MappingException>(() => ExcelTemplateMapper.Map(source, destination, new ThrowingData()));
+            Assert.Equal(new byte[] { 5, 6, 7 }, File.ReadAllBytes(destination));
+            Assert.Empty(Directory.GetFiles(directory, ".excelrenderer-*.tmp"));
         }
         finally { Directory.Delete(directory, true); }
     }

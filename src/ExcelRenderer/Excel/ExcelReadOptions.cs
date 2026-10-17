@@ -3,15 +3,6 @@ namespace ExcelRenderer.Excel;
 /// <summary>Controls conversion of workbook cells to display text.</summary>
 public sealed record ExcelReadOptions
 {
-    // Keep the serialized legacy value recognizable without using the deprecated API.
-    private const ReaderBackend RemovedBackend = (ReaderBackend)0;
-
-    /// <summary>Gets the reader policy. OpenXml is the only implementation.</summary>
-    public ReaderBackend Backend { get; init; } = ReaderBackend.OpenXml;
-
-    /// <summary>Gets an optional callback for the preflight engine selection.</summary>
-    public Action<ReaderBackendSelection>? BackendSelected { get; init; }
-
     /// <summary>Gets the formula display policy.</summary>
     public FormulaDisplayMode FormulaDisplayMode { get; init; } = FormulaDisplayMode.CachedValue;
 
@@ -30,19 +21,9 @@ public sealed record ExcelReadOptions
     /// <summary>Validates the policy before opening input or output.</summary>
     internal void Validate()
     {
-        if (!Enum.IsDefined(typeof(ReaderBackend), Backend))
-        {
-            throw new ArgumentOutOfRangeException(nameof(Backend));
-        }
-
         if (!Enum.IsDefined(typeof(FormulaDisplayMode), FormulaDisplayMode))
         {
             throw new ArgumentOutOfRangeException(nameof(FormulaDisplayMode));
-        }
-
-        if (Backend == RemovedBackend)
-        {
-            throw new NotSupportedException("The ClosedXml backend has been removed. Use OpenXml or Auto.");
         }
 
         if (FormulaDisplayMode == FormulaDisplayMode.Legacy)

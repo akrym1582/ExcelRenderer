@@ -116,3 +116,8 @@ PDF structure and hyperlinks are checked separately by the .NET regression suite
 ```bash
 python tools/ExcelRenderer.Performance/compare-pdf.py /tmp/results/baseline-0.pdf /tmp/results/final-0.pdf
 ```
+
+The integration worker always uses OpenXml. Its current invocation is
+`integration-worker <input.xlsx> <operation> <row-count> [mapping-capture.xlsx]`;
+there is no backend argument. See the [migration guide](../../docs/engine-selection-removal.md)
+for the updated benchmark/profiling scripts and baseline CLI output comparison.

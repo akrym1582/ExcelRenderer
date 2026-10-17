@@ -106,7 +106,6 @@ public static partial class ExcelTemplateMapper
 
         reader.Dispose();
         input.Dispose();
-        options.BackendSelected?.Invoke(new MappingBackendSelection(options.Backend, MappingBackend.OpenXml, Array.AsReadOnly(new[] { options.Backend == MappingBackend.Auto ? "AutoOpenXmlOnly" : "ExplicitOpenXml" })));
         using var writerInput = source.OpenRead();
         if (options.FormulaCalculationMode == FormulaCalculationMode.Recalculate)
         {

@@ -4,6 +4,11 @@ Baseline: `feature/openxml-integration`, `24c9dea4d67190951d152eef56f76abc943ef7
 Implementation: `feature/remove-closedxml` working tree. This includes breaking API
 changes; no release, package publication or remote push is included.
 
+This is a historical ledger for the recorded implementation. Engine-selection
+enums, options and callbacks described below have since been removed; see the
+[current migration guide](engine-selection-removal.md). Formula handling is
+documented in the [current formula guide](formulas.md).
+
 | Contract | Implemented behavior | Evidence |
 | --- | --- | --- |
 | Reader / Mapping default | OpenXml | ReaderBackendContractTests, StructuralMappingTests |

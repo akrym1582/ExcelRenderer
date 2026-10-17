@@ -154,7 +154,7 @@ public sealed class ContractsTests
     public void Exported_types_and_dependencies_are_minimal()
     {
         var assembly = typeof(ExcelConverter).Assembly;
-        Assert.Equal(new[] { "ConversionDiagnostic", "ConversionResult", "ExcelConverter", "ExcelReadOptions", "FormulaDisplayMode", "PdfExportOptions", "ReaderBackend", "ReaderBackendSelection", "WorkbookInputOptions" }, assembly.GetExportedTypes().Select(t => t.Name).Order().ToArray());
+        Assert.Equal(new[] { "ConversionDiagnostic", "ConversionResult", "ExcelConverter", "ExcelReadOptions", "FormulaDisplayMode", "PdfExportOptions", "WorkbookInputOptions" }, assembly.GetExportedTypes().Select(t => t.Name).Order().ToArray());
         Assert.DoesNotContain(assembly.GetReferencedAssemblies(), a => a.Name is "ExcelRenderer" or "ExcelRenderer.Fonts" or "ExcelRenderer.Tool");
     }
 }

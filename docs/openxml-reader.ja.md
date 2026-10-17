@@ -2,7 +2,7 @@
 
 [English](openxml-reader.md) | 日本語
 
-`ExcelRenderer.OpenXml` は .NET Standard 2.1 の共有 Reader/Writer です。実行時依存は DocumentFormat.OpenXml **3.3.0** と ExcelNumberFormat **1.1.0** のみで、Core・Mapping・ClosedXML・フォント・描画は参照しません。この資料は低レベルの元データ API を説明します。描画や Mapping には[エンジン選択](openxml-integration.ja.md)を参照してください。これらの API の既定 backend は ClosedXml です。
+`ExcelRenderer.OpenXml` は .NET Standard 2.1 の共有 Reader/Writer です。実行時依存は DocumentFormat.OpenXml **3.3.0** と ExcelNumberFormat **1.1.0** のみで、Core・Mapping・ClosedXML・フォント・描画は参照しません。この資料は低レベルの元データ API を説明します。描画や Mapping には[OpenXml の統合](openxml-integration.ja.md)を参照してください。これらの API も常に OpenXml を使います。
 
 ## 使用方法と入力の所有権
 
@@ -37,7 +37,7 @@ Open はブック情報・書式・テーマを読みますが、シート本文
 
 共有文字列は最初の `t=s` セルで、entry 単位で読みます。**共有文字列表は全体をメモリに保持します**。小さい選択シートだけでも、共有表を使えば全体のコストが発生します。ディスク索引、プロセス全体の intern/cache はありません。rich string の不変 run 配列は共有されます。run の null 属性は「セルのフォントから継承」を意味します。セルごとに基底フォントを解決してから、指定された run 属性だけを重ねてください。phonetic は表示本文に混ぜず、存在情報と保持コストを扱います。OOXML `_xHHHH_` は1回だけデコードし、`_x005F_x0041_` はリテラル `_x0041_` のままになります。
 
-メモリは共有文字列・書式・行列メタデータ・結合・数式グループに応じて増えます。**定メモリではなく**、次の上限もプロセス RSS の上限ではありません。2回のシート走査、セルレコードの生成、書式処理がコストになり、性能はブックと選択した backend に依存します。対象コミットごとの計測は[初回の実測記録](openxml-reader-validation.md)、[追加最適化の測定](openxml-reader-optimization.md)、[製品接続後の検証](openxml-integration-validation.md)を参照してください。
+メモリは共有文字列・書式・行列メタデータ・結合・数式グループに応じて増えます。**定メモリではなく**、次の上限もプロセス RSS の上限ではありません。2回のシート走査、セルレコードの生成、書式処理がコストになり、性能はブックの構造とデータ量に依存します。対象コミットごとの計測は[初回の実測記録](openxml-reader-validation.md)、[追加最適化の測定](openxml-reader-optimization.md)、[製品接続後の検証](openxml-integration-validation.md)を参照してください。
 
 | Option | 既定値 | 意味 |
 | --- | ---: | --- |
@@ -100,7 +100,7 @@ uncached HYPERLINK は空のままで、製品 adapter も保存結果だけを�
 Core が元情報の描画モデル変換・共通モデル組立・フォント計測・layout を所有し、
 本体の hook が run・図形・リンクを追加します。汎用入力検査・spool は OpenXml/Input、
 構文・評価・最終行配置は Mapping、型付き編集は限定 Writer の責務です。
-[エンジン選択](openxml-integration.ja.md)に現在の API と範囲をまとめています。
+[OpenXml の統合](openxml-integration.ja.md)に現在の API と範囲をまとめています。
 互換 Reader の ClosedXML 専用 helper は残し、公開 `ExcelStyleConverter.Convert(IXLCell)`
 も維持します。
 
@@ -130,6 +130,6 @@ foreach (var index in source.SelectedWorksheetIndices)
 
 style の `FontProperties`、workbook の `DefaultFontProperties`、rich run の `FontProperties` は不変の `FontInfo` view です。名前・サイズ（pt）・bold/italic/strike・underline・vertical alignment・theme scheme・色は、未指定なら null のままです。元の `Font` / `Properties` メタデータも残します。`WithOverrides` は明示された属性だけを重ね、false や underline `none` も保持し、null は継承します。フォント計測・置換や表示文字列の正規化は行いません。合成結果は Reader 破棄後も利用できます。同じ run を異なるセル font で使えるよう、共有文字列表には合成済み font を保存しません。
 
-現在の責務・backend 選択・診断フィルター・Writer 保証は
+現在の責務・読み込み経路・診断フィルター・Writer 保証は
 [接続ガイド](openxml-integration.ja.md)を参照してください。snapshot constructor は internal
 のままであり、第三者 backend を構築する API ではありません。

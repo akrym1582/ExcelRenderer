@@ -1,0 +1,70 @@
+{
+  "base_commit": "e0e32004009ba2e71318036ac3c6f195eb192986",
+  "baseline": "Preserved pre-change CLI build; compared PDF text/page geometry and Markdown/image artifacts",
+  "exported_type_changes": {
+    "ExcelRenderer": {
+      "removed": [
+        "ExcelRenderer.Excel.ReaderBackend",
+        "ExcelRenderer.Excel.ReaderBackendSelection"
+      ],
+      "added": []
+    },
+    "ExcelRenderer.Core": {
+      "removed": [
+        "ExcelRenderer.Core.ReaderBackend",
+        "ExcelRenderer.Core.ReaderBackendSelection"
+      ],
+      "added": []
+    },
+    "ExcelRenderer.Mapping": {
+      "removed": [
+        "ExcelRenderer.Mapping.MappingBackend",
+        "ExcelRenderer.Mapping.MappingBackendSelection"
+      ],
+      "added": []
+    }
+  },
+  "output_comparison": [
+    {
+      "fixture": "tests/ExcelRenderer.Tests/SampleInputs/01-japanese.xlsx",
+      "comparison": {
+        "textSha256": "77a4623b03f9a87997e8da4d00552504a93fb9da76777f33a1cc25ee4950a837",
+        "geometry": [
+          "Pages:           2",
+          "Page size:       595.276 x 841.89 pts (A4)"
+        ],
+        "markdownArtifacts": {
+          "report.md": "1727e8bf4098e0a28c616aa3bbf391b1d66632fa25fddbb198cdb8e2fb582a07"
+        }
+      },
+      "equal": true
+    },
+    {
+      "fixture": "samples/mapping/invoice/template.xlsx",
+      "comparison": {
+        "textSha256": "7a0556fd0e54713f2328b0c2c1647465ceb085c411859e84aed7b09f8b9df81d",
+        "geometry": [
+          "Pages:           1",
+          "Page size:       595.276 x 841.89 pts (A4)"
+        ],
+        "markdownArtifacts": {
+          "report.md": "2e8a37f64a4648b5cead0aeac5cf4a2a8beacaf00c4d9a32e898884bf3f0ff7e"
+        }
+      },
+      "equal": true
+    }
+  ],
+  "solution_tests": {
+    "passed": 1928,
+    "failed": 0,
+    "skipped": 0
+  },
+  "release_rebuild": {
+    "warnings": 0,
+    "errors": 0
+  },
+  "distribution": {
+    "packages": 4,
+    "isolated_consumers_passed": 9
+  }
+}

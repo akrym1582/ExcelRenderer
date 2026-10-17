@@ -25,7 +25,7 @@ This makes the rendering pipeline easier to test, understand, and extend with ne
 
 ### Features
 
-- Reads `.xlsx` workbooks with OpenXml (default) or Auto
+- Reads `.xlsx` workbooks with the streaming OpenXml reader
 - Supports cell text, fonts, alignment, wrapping, fills, and borders
 - Handles merged cells, hidden rows and columns, column widths, and row heights
 - Honors print areas, page size, orientation, margins, and scaling settings
@@ -533,11 +533,11 @@ can supply a caller-owned legacy service. Without `IRichTextLayoutService`, rich
 use the cell font and emit opt-in `RichTextLayoutFallback` in preflight. The built-in
 service remains the default. No additional glyph measurement is done just for diagnostics.
 
-## Reader backends and formula results
+## Workbook reading and formula results
 
-Reader defaults to OpenXml; Auto is an alias without fallback, and explicit
-ClosedXml Reader requests fail before input processing. Mapping also defaults to OpenXml; Auto uses the same writer. See
-[backend APIs, CLI options, supported scope and stream guarantees](docs/openxml-integration.md).
+Reader and Mapping always use OpenXml. See
+[workbook APIs, CLI usage, supported scope and stream guarantees](docs/openxml-integration.md).
+Existing callers can follow the [engine-selection migration](docs/engine-selection-removal.md).
 `ExcelRenderer.OpenXml` provides the shared reader, writer and input handling;
 ClosedXML has been removed from the libraries, CLI, tests and tools. The Reader style
 API has changed to `ExcelStyleConverter.Convert(CellStyleInfo, CellValueType)`; see
@@ -555,7 +555,7 @@ function with argument counts and examples, supported syntax, errors and limits.
 See [formula calculation](docs/formulas.md) for API examples, selected
 source scope, cache invalidation, compatibility limits and validation.
 
-Reader and Mapping backends default to OpenXml. Default Mapping still rejects value
+Default Mapping rejects value
 formulas; explicit `MappingOptions.FormulaCalculationMode = Recalculate` enables
 supported formulas with AST-based row-reference rewriting and recalculation.
 Mapped strings beginning with `=` remain strings. See the [Mapping guide](docs/mapping.md).
@@ -607,7 +607,7 @@ Resolved PDF fonts use immutable snapshots. A conversion owns its font resources
 
 For the PDF-only source project (no separate NuGet package), see [ExcelRenderer Core](docs/core.md).
 
-The main package includes `ExcelRenderer.Core.dll` from the same build; Core is also available as a source ProjectReference. Basic reading, geometry/page layout, drawing and PDF operations are shared; advanced features remain in the main library. See [the two-engine architecture](docs/core-architecture.md) and [verification results](docs/core-refactor-validation.md).
+The main package includes `ExcelRenderer.Core.dll` from the same build; Core is also available as a source ProjectReference. Basic reading, geometry/page layout, drawing and PDF operations are shared; advanced features remain in the main library. See [the shared Core architecture](docs/core-architecture.md) and [verification results](docs/core-refactor-validation.md).
 
 ExcelRenderer converts a workbook to `ReportDocument`, `RenderDocument`, and `DrawCommand`, then renders PDF, PNG, or SVG.
 
@@ -746,7 +746,7 @@ if it is already configured. Keep NuGet.org enabled for dependencies such as Doc
 
 | Topic | Guide |
 | --- | --- |
-| Reader/Mapping backends, formula results, CLI and stream contracts | [Engine selection](docs/openxml-integration.md) ([日本語](docs/openxml-integration.ja.md)) |
+| Workbook reading/mapping, formula results, CLI and stream contracts | [OpenXml integration](docs/openxml-integration.md) ([日本語](docs/openxml-integration.ja.md)) |
 | Formula syntax, supported functions, coercion, errors and limits | [Formula support reference](docs/formulas-reference.md) ([日本語](docs/formulas-reference.ja.md)) |
 | Explicit recalculation, typed caches and saving APIs | [Formula calculation](docs/formulas.md) ([日本語](docs/formulas.ja.md)) |
 | Template syntax, calculated input values and examples | [Mapping](docs/mapping.md) ([日本語](docs/mapping.ja.md)) |

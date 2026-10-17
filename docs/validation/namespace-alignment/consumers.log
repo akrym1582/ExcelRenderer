@@ -1,0 +1,30 @@
++ dotnet restore --configfile /workspace/.namespace-package-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/.namespace-package-consumers/engine/consumer.csproj (in 9.6 sec).
++ dotnet run -c Release --no-restore -- /workspace/.namespace-package-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf
+engine passed
++ dotnet restore --configfile /workspace/.namespace-package-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/.namespace-package-consumers/adapter/consumer.csproj (in 230 ms).
++ dotnet run -c Release --no-restore -- /workspace/.namespace-package-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf
+adapter passed
++ dotnet restore --configfile /workspace/.namespace-package-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/.namespace-package-consumers/mapping/consumer.csproj (in 225 ms).
++ dotnet run -c Release --no-restore -- /workspace/.namespace-package-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf
+mapping passed
++ dotnet restore --configfile /workspace/.namespace-package-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/.namespace-package-consumers/main-core/consumer.csproj (in 11.73 sec).
++ dotnet run -c Release --no-restore -- /workspace/.namespace-package-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf
+main-core passed
++ dotnet restore --configfile /workspace/.namespace-package-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/.namespace-package-consumers/combined/consumer.csproj (in 239 ms).
++ dotnet run -c Release --no-restore -- /workspace/.namespace-package-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf
+combined passed
++ dotnet tool install ExcelRenderer.Tool --version 1.9.0 --tool-path /workspace/.namespace-package-consumers/tool --configfile /workspace/.namespace-package-consumers/NuGet.Config
+You can invoke the tool using the following command: excelrenderer
+Tool 'excelrenderer.tool' (version '1.9.0') was successfully installed.
++ /workspace/.namespace-package-consumers/tool/excelrenderer md /workspace/.namespace-package-consumers/invoice.xlsx --formula-mode recalculate -o /workspace/.namespace-package-consumers/cli.md
+Six isolated package consumers passed (engine, adapter, Mapping, main+Core, combined, installed CLI)

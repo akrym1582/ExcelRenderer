@@ -1,0 +1,2 @@
+Verified 21 projects: only ExcelRenderer, ExcelRenderer.Fonts, ExcelRenderer.Mapping, ExcelRenderer.Tool are packable
+Exactly four packages; no unpublished dependencies; shared DLL/XML hashes match

@@ -1,5 +1,10 @@
 # 数式付き請求書サンプル
 
+このサンプルはリポジトリ内の ProjectReference を使います。公開済みの Mapping／本体の1.9.1を
+使う独立した例は[パッケージAPIサンプル](../namespace-migration/README.md)を参照してください。
+Formulas／OpenXml は同梱DLLで、個別の NuGet パッケージではありません。
+[名前空間移行ガイド](../../docs/namespace-migration.md)も参照してください。
+
 .NET 10 を使い、リポジトリのルートで実行します。
 
 ```sh

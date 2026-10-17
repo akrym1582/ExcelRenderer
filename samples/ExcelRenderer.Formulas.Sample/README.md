@@ -1,5 +1,10 @@
 # Formula invoice sample
 
+This repository sample uses source ProjectReferences. For an isolated example
+using published `ExcelRenderer.Mapping`/`ExcelRenderer` 1.9.1 packages, see the
+[package API sample](../namespace-migration/README.md). Formulas/OpenXml are bundled
+assemblies, not separate NuGet packages; see the [namespace migration](../../docs/namespace-migration.md).
+
 Run from the repository root with .NET 10:
 
 ```sh

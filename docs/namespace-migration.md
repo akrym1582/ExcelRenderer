@@ -1,6 +1,7 @@
 # Namespace migration
 
-Formulas and OpenXml now use namespaces matching their physical source folders.
+In **1.9.1**, Formulas and OpenXml use namespaces matching their physical source folders
+([PR #83](https://github.com/akrym1582/ExcelRenderer/pull/83)).
 This is a **source and binary breaking API change**: update imports and qualified
 type names, then rebuild dependent applications. Assemblies and package IDs retain
 their names; NuGet publication remains limited to the main, Mapping, Tool and Fonts
@@ -11,17 +12,86 @@ the new namespace.
 更新し、利用側を再ビルドしてください。リフレクションなどに保存した型名も更新が必要です。
 パッケージの公開対象は本体・Mapping・Tool・Fontsの4つです。
 
-The type names in each row are unchanged. Their old namespace was the project root
-shown in the table heading. Types already under `ExcelRenderer.OpenXml.Input`
-retain that namespace.
+The tables below list types present in the **released 1.9.0 CLI DLLs**, not just
+the parent commit of PR #83. Their simple names are unchanged; their old namespace
+was the project root shown in the table heading. There are **56 moved public types**:
+20 Formulas types (including the nested `InMemoryFormulaWorkbook.Builder`) and
+36 OpenXml types. `ExcelRenderer.OpenXml.Input.WorkbookInputOptions` retains its
+namespace. Four newly added Formulas types are listed separately below.
+
+公開済み 1.9.0 DLL と比較すると、移動した公開型は入れ子の Builder を含めて56個です。
+新規追加の4型は移動対象と区別しています。**1.9.1 はパッチ番号の更新でも破壊的変更です。**
+通常のパッチ更新として扱わず、以下の手順で移行してください。
+
+## Upgrade steps / 更新手順
+
+1. Install **either** `ExcelRenderer.Mapping` 1.9.1 (no rendering required) or
+   `ExcelRenderer` 1.9.1. Both bundle `ExcelRenderer.Formulas.dll` and
+   `ExcelRenderer.OpenXml.dll` and expose their public APIs. If using both
+   packages, align their versions. Do not add PackageReferences for unpublished
+   Formulas/OpenXml package IDs; remove old direct references or private-feed
+   copies that would conflict with the bundled DLLs.
+2. Update `using` directives, aliases and fully qualified names using the tables.
+   Adding only `using ExcelRenderer.Formulas;` or `using ExcelRenderer.OpenXml;`
+   does not import child namespaces. Update type names saved in reflection,
+   dependency-injection configuration or serialization metadata as applicable.
+3. Rebuild every dependent library/plugin and application, then test deployment.
+   Replacing DLLs alone fails CLR type resolution. Old and new Formulas/OpenXml
+   assemblies both identify themselves as **1.8.0.0**; this does not preserve the
+   missing old type identities. Assembly binding redirects cannot rename types.
+
+本体または Mapping の1.9.1を参照し、未公開の Formulas／OpenXml への直接参照を整理します。
+using・完全修飾名・保存済み型名を更新し、依存するライブラリやプラグインも含めて再ビルドします。
+ルート名前空間の using だけでは子名前空間は取り込めません。DLL の置き換えやバインドリダイレクト
+だけでは移行できません。
+
+```bash
+dotnet add package ExcelRenderer.Mapping --version 1.9.1
+```
+
+**1.9.0 restore caveat:** the published main and Mapping packages depend on
+`ExcelRenderer.OpenXml >= 1.8.0`, which is unavailable from NuGet.org. They do not
+bundle Formulas/OpenXml DLLs. A clean NuGet.org-only restore fails with NU1101;
+do not mistake this packaging defect for a compiler namespace failure. The old
+API can be examined in the published 1.9.0 CLI payload or an existing deployment.
+The [validation report](namespace-migration-validation.md) distinguishes that
+released-DLL baseline from a normal package consumer.
+
+1.9.0 の本体・Mapping は NuGet.org に存在しない OpenXml パッケージに依存し、クリーンな復元は
+NU1101 で失敗します。旧APIの検証には公開済み1.9.0 CLI内のDLLを使い、通常のパッケージ復元の
+成功とは区別しています。1.9.1 では両DLLを同梱するため、この未公開依存は解消されています。
+
+## Versioning risk / バージョニング上のリスク
+
+**High for callers of the moved APIs.** A 1.x patch update is expected to preserve
+public compatibility under Semantic Versioning; these namespace renames require
+a major version unless the old API identities and signatures are preserved.
+There are no old-namespace compatibility types or type forwarders in the released
+1.9.1 DLLs. Consumers using reflection, serialized type identities or precompiled
+plugins can fail even when the application itself compiles. For example,
+`MappingOptions.FormulaCalculationMode` still exists, but its public enum type
+has moved to `ExcelRenderer.OpenXml.Calculation`.
+
+This documentation correction cannot repair an already published binary. For a
+future release, either preserve and verify the old API with compatibility facades,
+or ship the breaking API under a major version with explicit release notes.
+`TypeForwardedTo` alone cannot fix a renamed namespace: forwarding preserves a
+type's full name. Do not overwrite 1.9.1 artifacts or treat a later version bump
+as retroactively making 1.9.1 compatible. NuGet's embedded README also requires a
+new package release to reflect documentation corrections.
+
+影響するAPIを使う利用側のリスクは高く、SemVer上は互換性維持またはメジャーバージョン更新が
+必要な変更です。このPRの文書修正だけで公開済み1.9.1のバイナリ互換性は回復しません。
+今後は旧APIを保持した互換ファサードを検証するか、破壊的変更をメジャー版とリリースノートで
+明示する必要があります。型転送だけでは名前空間の変更は吸収できません。
 
 ## From `ExcelRenderer.Formulas`
 
 | New namespace | Public types |
 | --- | --- |
-| `ExcelRenderer.Formulas.Data` | `FormulaRangeIndex`, `IFormulaDataSource`, `ISparseFormulaDataSource`, `InMemoryFormulaWorkbook` |
+| `ExcelRenderer.Formulas.Data` | `IFormulaDataSource`, `InMemoryFormulaWorkbook`, `InMemoryFormulaWorkbook.Builder` |
 | `ExcelRenderer.Formulas.Diagnostics` | `FormulaDiagnostic` |
-| `ExcelRenderer.Formulas.Evaluation` | `FormulaDateSystem`, `FormulaEngine`, `FormulaEvaluationOptions`, `FormulaEvaluationResult`, `FormulaSession`, `FormulaSessionStatistics` |
+| `ExcelRenderer.Formulas.Evaluation` | `FormulaEngine`, `FormulaEvaluationOptions`, `FormulaEvaluationResult`, `FormulaSession` |
 | `ExcelRenderer.Formulas.References` | `FormulaCellAddress`, `FormulaRange`, `FormulaRewriter` |
 | `ExcelRenderer.Formulas.Syntax` | `FormulaNode`, `FormulaNodeKind`, `FormulaParseResult`, `FormulaParser`, `ParsedFormula`, `SourceSpan` |
 | `ExcelRenderer.Formulas.Values` | `FormulaCellData`, `FormulaValue`, `FormulaValueKind` |
@@ -42,7 +112,21 @@ retain that namespace.
 | `ExcelRenderer.OpenXml.Writing` | `OpenXmlWorkbookWriter`, `WorkbookWriteCapabilities` |
 | `ExcelRenderer.OpenXml.Writing.Plans` | `CellValueEdit`, `OutputRowOccurrence`, `SheetEditPlan`, `WorkbookEditPlan` |
 
+## New public types in 1.9.1 / 新規追加の公開型
+
+These types were absent from the released 1.9.0 Formulas DLL. They do not require
+an old-to-new namespace replacement:
+
+| Namespace | Added public types |
+| --- | --- |
+| `ExcelRenderer.Formulas.Data` | `FormulaRangeIndex`, `ISparseFormulaDataSource` |
+| `ExcelRenderer.Formulas.Evaluation` | `FormulaDateSystem`, `FormulaSessionStatistics` |
+
 ## Calculation engine example
+
+The following APIs are available after installing either published library
+package above. See the [complete runnable sample](../samples/namespace-migration/README.md)
+for both engine and XLSX reader calls and the [distribution contract](package-distribution.md).
 
 ```csharp
 using ExcelRenderer.Formulas.Data;

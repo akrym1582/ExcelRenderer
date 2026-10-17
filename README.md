@@ -53,10 +53,19 @@ Choose the package for your task:
 | --- | --- | --- |
 | `ExcelRenderer` | Render existing XLSX files to PDF, PNG, SVG or Markdown from C# | .NET Standard 2.1-compatible application |
 | `ExcelRenderer.Mapping` | Populate XLSX templates from C# objects or JSON and save XLSX | .NET Standard 2.1-compatible application; no rendering or fonts required |
-| `ExcelRenderer.OpenXml` | Read XLSX source records, write typed edits and adapt explicit formula calculation | .NET Standard 2.1-compatible application; low-level API |
-| `ExcelRenderer.Formulas` | Evaluate the limited formula language over in-memory data | .NET Standard 2.1-compatible application; BCL only, no XLSX or rendering dependency |
 | `ExcelRenderer.Fonts` | Add optional bundled Japanese and emoji fonts for rendering | Use alongside `ExcelRenderer` |
 | `ExcelRenderer.Tool` | Map and convert workbooks from the command line | .NET 10 SDK |
+
+These are the four published NuGet packages. `ExcelRenderer.Formulas` and
+`ExcelRenderer.OpenXml` are separate assemblies bundled in both `ExcelRenderer`
+and `ExcelRenderer.Mapping`, not installable package IDs. For their APIs, install
+either package as shown [below](#formula-and-low-level-xlsx-apis).
+
+> [!WARNING]
+> Upgrading from 1.9.0 to 1.9.1 changes public Formulas/OpenXml namespaces and breaks
+> source and binary compatibility. Update imports and stored type names, and rebuild
+> all dependent libraries and applications. See the [migration guide](docs/namespace-migration.md)
+> for the affected types, package restore caveat and reproduced failures.
 
 The commands below use NuGet.org and require a published version containing the
 feature you need. To use a feature before its package is published, see
@@ -103,6 +112,42 @@ Use `ExcelTemplateMapper` from the `ExcelRenderer.Mapping` namespace. To render
 the mapped workbook from C#, also add `ExcelRenderer` and, if needed,
 `ExcelRenderer.Fonts`. Start with the [mapping guide](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/mapping.md)
 ([Japanese](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/mapping.ja.md)) for a complete template, JSON data and C# example.
+
+### Formula and low-level XLSX APIs
+
+For in-memory formula evaluation or low-level XLSX reading/writing without
+rendering, install the published Mapping package:
+
+```bash
+dotnet add package ExcelRenderer.Mapping --version 1.9.1
+```
+
+If your application already references `ExcelRenderer` 1.9.1, it provides the same
+Formulas/OpenXml APIs; no additional package is needed. When using both main and
+Mapping, keep their versions aligned. Fonts are unnecessary for these APIs.
+
+```csharp
+using ExcelRenderer.Formulas.Data;
+using ExcelRenderer.Formulas.Evaluation;
+using ExcelRenderer.Formulas.References;
+using ExcelRenderer.Formulas.Syntax;
+using ExcelRenderer.OpenXml.Reading;
+
+var source = new InMemoryFormulaWorkbook.Builder().AddSheet("Invoice").Build();
+var result = new FormulaEngine().Evaluate(
+    FormulaParser.Parse("SUM(2,3)*4").Formula!,
+    source, new FormulaCellAddress("Invoice", 1, 1));
+// result.Success == true; result.Value.Number == 20
+
+using var input = File.OpenRead("input.xlsx");
+using var reader = OpenXmlWorkbookReader.Open(input);
+var cells = reader.EnumerateCells(reader.SelectedWorksheetIndices[0]).ToArray();
+```
+
+The Formulas assembly itself uses only the BCL; the installed Mapping package
+also brings its XLSX and JSON dependencies. See the [runnable package sample](samples/namespace-migration/README.md),
+[formula guide](docs/formulas.md), [OpenXml guide](docs/openxml-integration.md)
+and [distribution contract](docs/package-distribution.md).
 
 ### Command-line tool (dotnet tool)
 

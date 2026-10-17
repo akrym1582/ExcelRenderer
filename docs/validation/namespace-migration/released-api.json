@@ -1,0 +1,311 @@
+{
+  "feed": "https://api.nuget.org/v3/index.json",
+  "packages": {
+    "ExcelRenderer/1.9.0": {
+      "sha256": "50ad52a9eacd2969b24224dd9da24a49cb42faa72735cf0d943a83e646400a84",
+      "dependencies": {
+        "ExcelRenderer.OpenXml": "1.8.0",
+        "DocumentFormat.OpenXml": "3.3.0",
+        "PDFsharp": "6.2.3",
+        "SkiaSharp": "4.151.0",
+        "SkiaSharp.NativeAssets.Linux": "4.151.0",
+        "System.Security.Cryptography.Pkcs": "8.0.2"
+      },
+      "files": {
+        "ExcelRenderer.Core.dll": "ba34a3e4491fe05497c9c1aecd7eb098683f4211b5c72cafde9f5dbaeba3c47a",
+        "ExcelRenderer.Core.xml": "460eac8f2d622d9bdc8e7ccde2730ee4beddd56d8542d7e3a5d7f2d353b26db7",
+        "ExcelRenderer.dll": "24a83b7aa2ffa258a6d40c1c249b1da8290ac839e841b437c653b980ebb24751",
+        "ExcelRenderer.xml": "5006813de58afc38adda32c1d66d284d17066415afb2eb0603adba15c4ecd7ab"
+      }
+    },
+    "ExcelRenderer.Mapping/1.9.0": {
+      "sha256": "1a69acb55862322c9f033eb392957afa8a41949c4729d409f660dbd0d0fba480",
+      "dependencies": {
+        "ExcelRenderer.OpenXml": "1.8.0",
+        "DocumentFormat.OpenXml": "3.3.0",
+        "System.Text.Json": "10.0.0"
+      },
+      "files": {
+        "ExcelRenderer.Mapping.dll": "5fbf5d92a3a8876bbe0e2304aad8d315dbdf86bfe55d098422423ad219671759",
+        "ExcelRenderer.Mapping.xml": "0eddb4c7c0673c4f9fe1f68486cf197d08fd23ffa684719bbe2b9825a7ed7da8"
+      }
+    },
+    "ExcelRenderer.Tool/1.9.0": {
+      "sha256": "ec78b41460f4ed3b6255f716730a33378c29cac6f9dcae94318e049682532741",
+      "dependencies": {},
+      "files": {
+        "ExcelRenderer.Core.dll": "ba34a3e4491fe05497c9c1aecd7eb098683f4211b5c72cafde9f5dbaeba3c47a",
+        "ExcelRenderer.Core.xml": "460eac8f2d622d9bdc8e7ccde2730ee4beddd56d8542d7e3a5d7f2d353b26db7",
+        "ExcelRenderer.Fonts.dll": "282ffc9bd27c245e0996b52e23647d4612cb72e2dfef059861a2bb2a843fa982",
+        "ExcelRenderer.Fonts.xml": "34d63fbcca731d243af98d46ea1eacce258e7372ed9fbea6b38054f76a14fa77",
+        "ExcelRenderer.Formulas.dll": "785b574d8dd6df1be7ed174096443488d46e2e0b183271a6eb4e62d18bad7f09",
+        "ExcelRenderer.Formulas.xml": "f7e4840db8695a9db65c0a2fd14fe31d4bd355fd9c8342b078fb0574982be4bf",
+        "ExcelRenderer.Mapping.dll": "5fbf5d92a3a8876bbe0e2304aad8d315dbdf86bfe55d098422423ad219671759",
+        "ExcelRenderer.Mapping.xml": "0eddb4c7c0673c4f9fe1f68486cf197d08fd23ffa684719bbe2b9825a7ed7da8",
+        "ExcelRenderer.OpenXml.dll": "e7e70764a2a4605eb3a5c0f0c0cf23776d24db9330dc995a7a15310bf82f7622",
+        "ExcelRenderer.OpenXml.xml": "4f635de39cdcd0cde6f70e3b5302b162902d3c67b2dc165d16d87432bff480fc",
+        "ExcelRenderer.Tool.dll": "3ccfcd8fdc2b7fb77aa5d33749304c9b3a9b33e0401a42320bd5c73758976472",
+        "ExcelRenderer.Tool.xml": "afacdc9d36b39e37a57909d2a46c8fc0b7fffe9ebe7444a44cb6c778e392aa87",
+        "ExcelRenderer.dll": "24a83b7aa2ffa258a6d40c1c249b1da8290ac839e841b437c653b980ebb24751",
+        "ExcelRenderer.xml": "5006813de58afc38adda32c1d66d284d17066415afb2eb0603adba15c4ecd7ab"
+      }
+    },
+    "ExcelRenderer/1.9.1": {
+      "sha256": "d96814cce744bed3a33ddc0e51639383db1ae686bfbcd5f43e02c5ccce7019e9",
+      "dependencies": {
+        "DocumentFormat.OpenXml": "3.3.0",
+        "ExcelNumberFormat": "1.1.0",
+        "PDFsharp": "6.2.3",
+        "SkiaSharp": "4.151.0",
+        "SkiaSharp.NativeAssets.Linux": "4.151.0",
+        "System.Security.Cryptography.Pkcs": "8.0.2"
+      },
+      "files": {
+        "ExcelRenderer.Core.dll": "8b23f218d154910efb0561ce8b6982179ffb2dc80b71d9b1489949e88fb686ea",
+        "ExcelRenderer.Core.xml": "27ea95823bfe20445113548cd9e74e6cf73641e217b8f52c2ef3d0e63fb7f0df",
+        "ExcelRenderer.Formulas.dll": "e108fc1798b7258d77850abad132a0cc61a4a9271953f51583ab666927571592",
+        "ExcelRenderer.Formulas.xml": "a0e619141a7caccf6c838678e07a018cd206f7ee6b0a2f5a9e79d0e3aff0e665",
+        "ExcelRenderer.OpenXml.dll": "f2123ae30ded133d40491c5eceb509ab8184a55f9b3387a259aec77210f014c8",
+        "ExcelRenderer.OpenXml.xml": "562fc153568c80e9577c12a3cc6f74709363fbbe727f967863fe8f7155d86701",
+        "ExcelRenderer.dll": "b014b4ad68edb37e725792a7f0db33f823669604f5e59f63a3c9fde7e38b9814",
+        "ExcelRenderer.xml": "e6492bd7786f29433cc1d509bd2250591696b5bffb47acf7812c301ae3f66fc4"
+      }
+    },
+    "ExcelRenderer.Mapping/1.9.1": {
+      "sha256": "e89e4380512b6f4fe10db13da576c4ec85da9b09cf2e0a24fe8cedf2e9e5798b",
+      "dependencies": {
+        "DocumentFormat.OpenXml": "3.3.0",
+        "ExcelNumberFormat": "1.1.0",
+        "System.Text.Json": "10.0.0"
+      },
+      "files": {
+        "ExcelRenderer.Formulas.dll": "e108fc1798b7258d77850abad132a0cc61a4a9271953f51583ab666927571592",
+        "ExcelRenderer.Formulas.xml": "a0e619141a7caccf6c838678e07a018cd206f7ee6b0a2f5a9e79d0e3aff0e665",
+        "ExcelRenderer.Mapping.dll": "5b556c387ff67ae2716dc421dde962b9a828dc3718a7ad8fa94ec7fa4b714809",
+        "ExcelRenderer.Mapping.xml": "cfb198d973cbec531775c2cd0ac0638aaa3c3812f198b72404fcf9c6a36873b3",
+        "ExcelRenderer.OpenXml.dll": "f2123ae30ded133d40491c5eceb509ab8184a55f9b3387a259aec77210f014c8",
+        "ExcelRenderer.OpenXml.xml": "562fc153568c80e9577c12a3cc6f74709363fbbe727f967863fe8f7155d86701"
+      }
+    },
+    "ExcelRenderer.Tool/1.9.1": {
+      "sha256": "e964d11f007b823a76492a825e28d9f543dab92ff0bb118a02caad5eab390234",
+      "dependencies": {},
+      "files": {
+        "ExcelRenderer.Core.dll": "8b23f218d154910efb0561ce8b6982179ffb2dc80b71d9b1489949e88fb686ea",
+        "ExcelRenderer.Core.xml": "27ea95823bfe20445113548cd9e74e6cf73641e217b8f52c2ef3d0e63fb7f0df",
+        "ExcelRenderer.Fonts.dll": "768667d78509bbcbfbd6949d37789bb54733807af47057f55792f7e605c105e8",
+        "ExcelRenderer.Fonts.xml": "34d63fbcca731d243af98d46ea1eacce258e7372ed9fbea6b38054f76a14fa77",
+        "ExcelRenderer.Formulas.dll": "e108fc1798b7258d77850abad132a0cc61a4a9271953f51583ab666927571592",
+        "ExcelRenderer.Formulas.xml": "a0e619141a7caccf6c838678e07a018cd206f7ee6b0a2f5a9e79d0e3aff0e665",
+        "ExcelRenderer.Mapping.dll": "5b556c387ff67ae2716dc421dde962b9a828dc3718a7ad8fa94ec7fa4b714809",
+        "ExcelRenderer.Mapping.xml": "cfb198d973cbec531775c2cd0ac0638aaa3c3812f198b72404fcf9c6a36873b3",
+        "ExcelRenderer.OpenXml.dll": "f2123ae30ded133d40491c5eceb509ab8184a55f9b3387a259aec77210f014c8",
+        "ExcelRenderer.OpenXml.xml": "562fc153568c80e9577c12a3cc6f74709363fbbe727f967863fe8f7155d86701",
+        "ExcelRenderer.Tool.dll": "eec88a83d999fd5c65b9c8fa4641c8267fabb6bd20e03e485b8df7aae2485e37",
+        "ExcelRenderer.Tool.xml": "afacdc9d36b39e37a57909d2a46c8fc0b7fffe9ebe7444a44cb6c778e392aa87",
+        "ExcelRenderer.dll": "b014b4ad68edb37e725792a7f0db33f823669604f5e59f63a3c9fde7e38b9814",
+        "ExcelRenderer.xml": "e6492bd7786f29433cc1d509bd2250591696b5bffb47acf7812c301ae3f66fc4"
+      }
+    }
+  },
+  "namespace_moves": {
+    "ExcelRenderer.Formulas": {
+      "ExcelRenderer.Formulas.FormulaCellAddress": "ExcelRenderer.Formulas.References.FormulaCellAddress",
+      "ExcelRenderer.Formulas.FormulaCellData": "ExcelRenderer.Formulas.Values.FormulaCellData",
+      "ExcelRenderer.Formulas.FormulaDiagnostic": "ExcelRenderer.Formulas.Diagnostics.FormulaDiagnostic",
+      "ExcelRenderer.Formulas.FormulaEngine": "ExcelRenderer.Formulas.Evaluation.FormulaEngine",
+      "ExcelRenderer.Formulas.FormulaEvaluationOptions": "ExcelRenderer.Formulas.Evaluation.FormulaEvaluationOptions",
+      "ExcelRenderer.Formulas.FormulaEvaluationResult": "ExcelRenderer.Formulas.Evaluation.FormulaEvaluationResult",
+      "ExcelRenderer.Formulas.FormulaNode": "ExcelRenderer.Formulas.Syntax.FormulaNode",
+      "ExcelRenderer.Formulas.FormulaNodeKind": "ExcelRenderer.Formulas.Syntax.FormulaNodeKind",
+      "ExcelRenderer.Formulas.FormulaParseResult": "ExcelRenderer.Formulas.Syntax.FormulaParseResult",
+      "ExcelRenderer.Formulas.FormulaParser": "ExcelRenderer.Formulas.Syntax.FormulaParser",
+      "ExcelRenderer.Formulas.FormulaRange": "ExcelRenderer.Formulas.References.FormulaRange",
+      "ExcelRenderer.Formulas.FormulaRewriter": "ExcelRenderer.Formulas.References.FormulaRewriter",
+      "ExcelRenderer.Formulas.FormulaSession": "ExcelRenderer.Formulas.Evaluation.FormulaSession",
+      "ExcelRenderer.Formulas.FormulaValue": "ExcelRenderer.Formulas.Values.FormulaValue",
+      "ExcelRenderer.Formulas.FormulaValueKind": "ExcelRenderer.Formulas.Values.FormulaValueKind",
+      "ExcelRenderer.Formulas.IFormulaDataSource": "ExcelRenderer.Formulas.Data.IFormulaDataSource",
+      "ExcelRenderer.Formulas.InMemoryFormulaWorkbook": "ExcelRenderer.Formulas.Data.InMemoryFormulaWorkbook",
+      "ExcelRenderer.Formulas.InMemoryFormulaWorkbook+Builder": "ExcelRenderer.Formulas.Data.InMemoryFormulaWorkbook+Builder",
+      "ExcelRenderer.Formulas.ParsedFormula": "ExcelRenderer.Formulas.Syntax.ParsedFormula",
+      "ExcelRenderer.Formulas.SourceSpan": "ExcelRenderer.Formulas.Syntax.SourceSpan"
+    },
+    "ExcelRenderer.OpenXml": {
+      "ExcelRenderer.OpenXml.CellAddress": "ExcelRenderer.OpenXml.Model.Cells.CellAddress",
+      "ExcelRenderer.OpenXml.CellDisplayResult": "ExcelRenderer.OpenXml.Formatting.CellDisplayResult",
+      "ExcelRenderer.OpenXml.CellRange": "ExcelRenderer.OpenXml.Model.Cells.CellRange",
+      "ExcelRenderer.OpenXml.CellRecord": "ExcelRenderer.OpenXml.Model.Cells.CellRecord",
+      "ExcelRenderer.OpenXml.CellStyleInfo": "ExcelRenderer.OpenXml.Model.Styles.CellStyleInfo",
+      "ExcelRenderer.OpenXml.CellValue": "ExcelRenderer.OpenXml.Model.Cells.CellValue",
+      "ExcelRenderer.OpenXml.CellValueEdit": "ExcelRenderer.OpenXml.Writing.Plans.CellValueEdit",
+      "ExcelRenderer.OpenXml.CellValueType": "ExcelRenderer.OpenXml.Model.Cells.CellValueType",
+      "ExcelRenderer.OpenXml.ColumnInfo": "ExcelRenderer.OpenXml.Model.Workbook.ColumnInfo",
+      "ExcelRenderer.OpenXml.DefinedNameInfo": "ExcelRenderer.OpenXml.Model.Workbook.DefinedNameInfo",
+      "ExcelRenderer.OpenXml.ElementInfo": "ExcelRenderer.OpenXml.Model.Workbook.ElementInfo",
+      "ExcelRenderer.OpenXml.FontInfo": "ExcelRenderer.OpenXml.Model.Styles.FontInfo",
+      "ExcelRenderer.OpenXml.FormulaCalculationException": "ExcelRenderer.OpenXml.Calculation.FormulaCalculationException",
+      "ExcelRenderer.OpenXml.FormulaCalculationMode": "ExcelRenderer.OpenXml.Calculation.FormulaCalculationMode",
+      "ExcelRenderer.OpenXml.FormulaInfo": "ExcelRenderer.OpenXml.Model.Cells.FormulaInfo",
+      "ExcelRenderer.OpenXml.FormulaTextResolver": "ExcelRenderer.OpenXml.Calculation.FormulaTextResolver",
+      "ExcelRenderer.OpenXml.IWorkbookDataReader": "ExcelRenderer.OpenXml.Reading.IWorkbookDataReader",
+      "ExcelRenderer.OpenXml.ImageInfo": "ExcelRenderer.OpenXml.Model.Drawing.ImageInfo",
+      "ExcelRenderer.OpenXml.OpenXmlReaderOptions": "ExcelRenderer.OpenXml.Reading.OpenXmlReaderOptions",
+      "ExcelRenderer.OpenXml.OpenXmlWorkbookReader": "ExcelRenderer.OpenXml.Reading.OpenXmlWorkbookReader",
+      "ExcelRenderer.OpenXml.OpenXmlWorkbookWriter": "ExcelRenderer.OpenXml.Writing.OpenXmlWorkbookWriter",
+      "ExcelRenderer.OpenXml.OutputRowOccurrence": "ExcelRenderer.OpenXml.Writing.Plans.OutputRowOccurrence",
+      "ExcelRenderer.OpenXml.PrintRangeInfo": "ExcelRenderer.OpenXml.Model.Printing.PrintRangeInfo",
+      "ExcelRenderer.OpenXml.PrintReferenceInfo": "ExcelRenderer.OpenXml.Model.Printing.PrintReferenceInfo",
+      "ExcelRenderer.OpenXml.ReaderDiagnostic": "ExcelRenderer.OpenXml.Diagnostics.ReaderDiagnostic",
+      "ExcelRenderer.OpenXml.ReaderDiagnosticCodes": "ExcelRenderer.OpenXml.Diagnostics.ReaderDiagnosticCodes",
+      "ExcelRenderer.OpenXml.RichTextRunInfo": "ExcelRenderer.OpenXml.Model.Cells.RichTextRunInfo",
+      "ExcelRenderer.OpenXml.RowInfo": "ExcelRenderer.OpenXml.Model.Workbook.RowInfo",
+      "ExcelRenderer.OpenXml.SheetEditPlan": "ExcelRenderer.OpenXml.Writing.Plans.SheetEditPlan",
+      "ExcelRenderer.OpenXml.SheetInfo": "ExcelRenderer.OpenXml.Model.Workbook.SheetInfo",
+      "ExcelRenderer.OpenXml.WorkbookCalculationSession": "ExcelRenderer.OpenXml.Calculation.WorkbookCalculationSession",
+      "ExcelRenderer.OpenXml.WorkbookEditPlan": "ExcelRenderer.OpenXml.Writing.Plans.WorkbookEditPlan",
+      "ExcelRenderer.OpenXml.WorkbookInfo": "ExcelRenderer.OpenXml.Model.Workbook.WorkbookInfo",
+      "ExcelRenderer.OpenXml.WorkbookRecalculator": "ExcelRenderer.OpenXml.Calculation.WorkbookRecalculator",
+      "ExcelRenderer.OpenXml.WorkbookWriteCapabilities": "ExcelRenderer.OpenXml.Writing.WorkbookWriteCapabilities",
+      "ExcelRenderer.OpenXml.WorksheetInfo": "ExcelRenderer.OpenXml.Model.Workbook.WorksheetInfo"
+    }
+  },
+  "new_types": {
+    "ExcelRenderer.Formulas": [
+      "ExcelRenderer.Formulas.Data.FormulaRangeIndex",
+      "ExcelRenderer.Formulas.Data.ISparseFormulaDataSource",
+      "ExcelRenderer.Formulas.Evaluation.FormulaDateSystem",
+      "ExcelRenderer.Formulas.Evaluation.FormulaSessionStatistics"
+    ],
+    "ExcelRenderer.OpenXml": []
+  },
+  "assembly_versions": {
+    "1.9.0": {
+      "ExcelRenderer.Core": "1.0.0.0",
+      "ExcelRenderer.Fonts": "1.9.0.0",
+      "ExcelRenderer.Formulas": "1.8.0.0",
+      "ExcelRenderer.Mapping": "1.9.0.0",
+      "ExcelRenderer.OpenXml": "1.8.0.0",
+      "ExcelRenderer.Tool": "1.9.0.0",
+      "ExcelRenderer": "1.9.0.0"
+    },
+    "1.9.1": {
+      "ExcelRenderer.Core": "1.0.0.0",
+      "ExcelRenderer.Fonts": "1.9.1.0",
+      "ExcelRenderer.Formulas": "1.8.0.0",
+      "ExcelRenderer.Mapping": "1.9.1.0",
+      "ExcelRenderer.OpenXml": "1.8.0.0",
+      "ExcelRenderer.Tool": "1.9.1.0",
+      "ExcelRenderer": "1.9.1.0"
+    }
+  },
+  "checks": {
+    "inspector-build": {
+      "exit_code": 0,
+      "log": "inspector-build.log"
+    },
+    "api-1.9.0": {
+      "exit_code": 0,
+      "log": "api-1.9.0.log"
+    },
+    "api-1.9.1": {
+      "exit_code": 0,
+      "log": "api-1.9.1.log"
+    },
+    "migration-table": {
+      "moved_public_types": 56
+    },
+    "readme-package-tables": {
+      "published_package_count": 4
+    },
+    "restore-old-ExcelRenderer": {
+      "exit_code": 1,
+      "log": "restore-old-ExcelRenderer.log"
+    },
+    "restore-old-ExcelRenderer.Mapping": {
+      "exit_code": 1,
+      "log": "restore-old-ExcelRenderer.Mapping.log"
+    },
+    "legacy-build": {
+      "exit_code": 0,
+      "log": "legacy-build.log"
+    },
+    "legacy-engine": {
+      "exit_code": 0,
+      "log": "legacy-engine.log"
+    },
+    "legacy-reader": {
+      "exit_code": 0,
+      "log": "legacy-reader.log"
+    },
+    "main-old-source": {
+      "exit_code": 1,
+      "log": "main-old-source.log"
+    },
+    "main-migrated-build": {
+      "exit_code": 0,
+      "log": "main-migrated-build.log"
+    },
+    "main-migrated-run": {
+      "exit_code": 0,
+      "log": "main-migrated-run.log"
+    },
+    "main-unchanged-binary": {
+      "consumer_sha256": "6da41ae13bd6ade5bbb2aeebbbf34bf259a65a80201907d7156a97651c2133ef"
+    },
+    "main-binary-engine": {
+      "exit_code": -6,
+      "log": "main-binary-engine.log"
+    },
+    "main-binary-reader": {
+      "exit_code": -6,
+      "log": "main-binary-reader.log"
+    },
+    "mapping-old-source": {
+      "exit_code": 1,
+      "log": "mapping-old-source.log"
+    },
+    "mapping-migrated-build": {
+      "exit_code": 0,
+      "log": "mapping-migrated-build.log"
+    },
+    "mapping-migrated-run": {
+      "exit_code": 0,
+      "log": "mapping-migrated-run.log"
+    },
+    "mapping-unchanged-binary": {
+      "consumer_sha256": "6da41ae13bd6ade5bbb2aeebbbf34bf259a65a80201907d7156a97651c2133ef"
+    },
+    "mapping-binary-engine": {
+      "exit_code": -6,
+      "log": "mapping-binary-engine.log"
+    },
+    "mapping-binary-reader": {
+      "exit_code": -6,
+      "log": "mapping-binary-reader.log"
+    },
+    "combined-old-source": {
+      "exit_code": 1,
+      "log": "combined-old-source.log"
+    },
+    "combined-migrated-build": {
+      "exit_code": 0,
+      "log": "combined-migrated-build.log"
+    },
+    "combined-migrated-run": {
+      "exit_code": 0,
+      "log": "combined-migrated-run.log"
+    },
+    "combined-unchanged-binary": {
+      "consumer_sha256": "6da41ae13bd6ade5bbb2aeebbbf34bf259a65a80201907d7156a97651c2133ef"
+    },
+    "combined-binary-engine": {
+      "exit_code": -6,
+      "log": "combined-binary-engine.log"
+    },
+    "combined-binary-reader": {
+      "exit_code": -6,
+      "log": "combined-binary-reader.log"
+    }
+  }
+}

@@ -28,6 +28,34 @@ references use `PrivateAssets="all"`, so source projects that directly use OpenX
 or Formulas APIs must declare their own project reference. Package consumers get
 these APIs from the DLLs in the published main or Mapping package.
 
+## Consuming the public Formulas/OpenXml APIs
+
+For **1.9.1**, install `ExcelRenderer.Mapping` for calculation and XLSX reading/writing
+without rendering, or use the same APIs from `ExcelRenderer` if rendering is already
+needed. For example:
+
+```bash
+dotnet add package ExcelRenderer.Mapping --version 1.9.1
+```
+
+No Formulas/OpenXml PackageReference, manual DLL reference or font package is
+required. The Mapping package also installs its XLSX/JSON dependencies; only the
+Formulas assembly itself is BCL-only. `ExcelRenderer.Tool` is a CLI installation,
+not the supported way to reference these library APIs. See the
+[package-only sample](../samples/namespace-migration/README.md) and
+[1.9.0 → 1.9.1 migration](namespace-migration.md).
+
+This is the **1.9.1/current** distribution contract. The released 1.9.0 main and
+Mapping nupkgs instead depend on unpublished `ExcelRenderer.OpenXml >= 1.8.0`
+and omit both shared DLLs. Clean NuGet.org-only restores fail with NU1101.
+The 1.9.0 CLI does contain both DLLs and is the baseline for the
+[released-API comparison](namespace-migration-validation.md). Do not apply the
+current package inventory rules to that historical layout.
+
+1.9.1 の API 利用には本体または Mapping のどちらかを追加します。Formulas／OpenXml の
+個別パッケージや手動 DLL 参照は不要です。1.9.0 は配布構成が異なり、未公開 OpenXml 依存で
+NuGet.org のみからの復元が失敗します。名前空間変更に対しては別途、using の更新と再ビルドが必要です。
+
 From the repository root, after a Release build:
 
 ```bash
@@ -40,9 +68,10 @@ python3 scripts/validate-formulas-packages.py --packages artifacts/packages --wo
 Use an empty package output directory. Checks evaluate `IsPackable`, `PackageId`
 and `Version` with MSBuild for every csproj, require exactly four nupkg files,
 reject unpublished package dependencies, and verify shared DLL/XML hashes.
-Independent consumers exercise the calculation engine, OpenXml adapter, Mapping,
-main plus Core, main plus Mapping, and the installed CLI using only the generated
-packages. `validate-openxml-packages.py` delegates to this current validation.
+Nine independent consumers exercise the calculation engine, OpenXml adapter, Mapping,
+main plus Core, main plus Mapping, the namespace migration sample with main/Mapping/both,
+and the installed CLI using only the generated packages.
+`validate-openxml-packages.py` delegates to this current validation.
 
 PR CI and the release workflow both enforce this contract. Release verification
 runs before uploading packages or creating the release commit/tag. Historical

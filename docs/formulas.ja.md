@@ -72,7 +72,7 @@ var result = session.EvaluateCell(new FormulaCellAddress("Invoice", 1, 3));
 共有してください。異なるブックやセッションに計算値を共有する static キャッシュはありません。
 A1 は絶対座標 A1 を表し、origin からのオフセットではありません。
 
-対応する19関数の引数数・例、構文、参照規則、型変換、エラー、資源上限は
+対応する40関数の引数数・例、構文、参照規則、型変換、エラー、資源上限は
 [数式リファレンス](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/formulas-reference.ja.md)
 にまとめています。符号・四則・べき乗・%・
 文字列連結・比較、A1 の相対／絶対／混合参照、矩形／全行／全列範囲、引用シート名と
@@ -98,7 +98,7 @@ A1 は絶対座標 A1 を表し、origin からのオフセットではありま
 - AND/OR は後続エラーを短絡で消しません。COUNT は通常の Excel エラーを数えず、COUNTA は数えます。
 
 配列・動的配列・スピル、外部／3D／構造化参照、暗黙の交差、参照の和集合／交差、R1C1、
-式名・相対名、検索／日付／文字列関数、INDIRECT/OFFSET、LET/LAMBDA、揮発性関数、VBA/UDF、
+式名・相対名、近似検索、INDIRECT/OFFSET、LET/LAMBDA、揮発性関数、VBA/UDF、
 反復計算などは未対応です。到達した未対応式は診断で失敗し、保存キャッシュへフォールバックしません。
 複数セル範囲の結果を黙って左上の値に変えません。
 
@@ -168,3 +168,11 @@ false にすると参照書換えと全数式キャッシュ失効までを行�
 OOXML の `cm` / `vm` 計算メタデータも、動的配列・rich value を誤ってスカラーとして扱わないため、到達時は保守的に拒否します。
 
 実行可能な [請求書サンプル](../samples/ExcelRenderer.Formulas.Sample/README.ja.md) は XLSX を生成し、0/1/3/4明細の計算とPDF・PNG・SVG・Markdown出力を検証できます。
+
+## 帳票関数の追加
+
+対応は条件集計・完全一致検索・日付6関数・文字列8関数を含む40関数です。
+組込みDataSourceは索引付きの疎範囲を使い、既存の外部DataSourceも継続利用できます。
+日付系はブックに従い、UTF-16 v1と既存の文字列資源制限を維持します。
+Excel実機比較は未実施です。[正解の出典と一括取得手順](formulas-oracle.md)、
+[今回の検証記録](formulas-expansion-validation.md)を参照してください。

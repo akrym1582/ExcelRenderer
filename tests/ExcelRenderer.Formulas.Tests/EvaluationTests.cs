@@ -128,7 +128,7 @@ public sealed class EvaluationTests
     {
         var data = new InMemoryFormulaWorkbook.Builder().AddSheet("Sheet1").Build();
         var parsed = FormulaParser.Parse("SUM(A:A)").Formula!;
-        var result = new FormulaEngine().Evaluate(parsed, data, Origin, new() { MaxCellVisits = 100 });
+        var result = new FormulaEngine().Evaluate(parsed, new DenseFormulaSource(data), Origin, new() { MaxCellVisits = 100 });
         Assert.Equal("ResourceLimitExceeded", result.Diagnostics[0].Code);
         using var cancellation = new CancellationTokenSource();
         cancellation.Cancel();

@@ -3,7 +3,7 @@
 [日本語](formulas-reference.ja.md) · [Usage and API guide](formulas.md) · [README](../README.md)
 
 This reference describes the built-in `ExcelRenderer.Formulas` calculator used by
-explicit `Recalculate` mode. It supports the **19 functions listed below** and a
+explicit `Recalculate` mode. It supports the **40 functions listed below** and a
 bounded subset of Excel syntax. It does not promise full Excel compatibility.
 `CachedValue` remains the default: it displays saved results without evaluating
 functions, including formulas outside this calculator's supported set.
@@ -29,7 +29,7 @@ argument separators are unsupported.
 | Cell references | `=A1`, `=$A$1`, `=$A1`, `=A$1` | A1 notation, rows 1–1048576 and columns A–XFD. `$` controls copy displacement. |
 | Other sheets | `=Rates!B1`, `='Tax Rates'!B1`, `='O''Brien'!A1` | Single quotes quote sheet names; doubled apostrophes escape an apostrophe. Empty quoted sheet names are invalid. |
 | Rectangular ranges | `=SUM(A1:C10)`, `=SUM(Rates!A1:B3)` | Both endpoints must describe the same coordinate type on one sheet. A quoted string cannot be an endpoint. |
-| Whole rows/columns | `=SUM(1:10)`, `=SUM(A:C)`, `=SUM($A:$C)` | Iterated under resource limits. A full column can exceed the default cell-visit budget; prefer bounded ranges. |
+| Whole rows/columns | `=SUM(1:10)`, `=SUM(A:C)`, `=SUM($A:$C)` | Built-in sources use sparse indexes; empty positions are processed in bulk. External dense sources remain subject to cell-visit limits. |
 | Fixed defined names | `=SUM(Amounts)`, `=Rates!TaxRate` | Fixed cell/rectangular ranges; see the name rules below. |
 | Omitted arguments | `=SUM(,1,)`, `=IF(FALSE,1,)` | Actual empty argument positions evaluate as numeric zero. An empty text argument remains Text. |
 | Shared formulas | Saved shared-formula master/follower cells | The OpenXml adapter restores supported references before evaluation or Mapping row rewriting. Text literals are preserved. |
@@ -93,6 +93,25 @@ that the evaluator supports it.
 | `MOD` | 2 | `number - divisor * floor(number / divisor)`; zero divisor produces `#DIV/0!`. | `=MOD(-3,2)` → 1 |
 | `TRUE` | 0 | Boolean true. | `=TRUE()` → TRUE |
 | `FALSE` | 0 | Boolean false. | `=FALSE()` → FALSE |
+| `SUMIF` | 2–3 | One criterion; optional sum range resizes from its top-left. | `=SUMIF(...)` |
+| `SUMIFS` | 3–255, pairs | Sum same-shaped aligned ranges matching all criteria. | `=SUMIFS(...)` |
+| `COUNTIF` | 2 | Count positions matching one criterion, including blank runs. | `=COUNTIF(...)` |
+| `COUNTIFS` | 2–254, pairs | 1–127 condition pairs, equal range dimensions. | `=COUNTIFS(...)` |
+| `VLOOKUP` | 3–4 | Exact mode FALSE/0 required; first matching row. | `=VLOOKUP(...)` |
+| `MATCH` | 2–3 | Mode 0 required; row or column vector, one-based position. | `=MATCH(...)` |
+| `INDEX` | 2–3 | Single-cell reference; vector index omission supported. | `=INDEX(...)` |
+| `DATE` | 3 | Normalize year/month/day in the session date system. | `=DATE(...)` |
+| `YEAR / MONTH / DAY` | 1 each | Calendar components; serial 60 remains 1900-02-29. | `=YEAR(...)` |
+| `EDATE` | 2 | Shift months, clamping to month end. | `=EDATE(...)` |
+| `EOMONTH` | 2 | Last day of the shifted month. | `=EOMONTH(...)` |
+| `LEFT / RIGHT` | 1–2 each | UTF-16 prefix/suffix; default length 1. | `=LEFT(...)` |
+| `MID` | 3 | One-based UTF-16 substring. | `=MID(...)` |
+| `LEN` | 1 | UTF-16 code units (compatibility v1 profile). | `=LEN(...)` |
+| `TRIM` | 1 | Trim/collapse ASCII U+0020 only. | `=TRIM(...)` |
+| `SUBSTITUTE` | 3–4 | Case-sensitive nonoverlapping replacement; optional occurrence. | `=SUBSTITUTE(...)` |
+| `CONCATENATE` | 1–255 | Single values, with no range expansion. | `=CONCATENATE(...)` |
+| `TEXT` | 2 | Bounded invariant numeric/date formatting. | `=TEXT(...)` |
+
 
 ### Coercion and evaluation
 
@@ -140,7 +159,7 @@ unsupported function is an engine failure.
 | Engine failure | Typical trigger |
 | --- | --- |
 | `SyntaxError`, `UnsupportedSyntax`, `InvalidReference` | Malformed syntax, unsupported reference grammar or an out-of-bounds address. |
-| `UnsupportedFunction` | A function outside the 19-name table. |
+| `UnsupportedFunction` | A function outside the 40-name table. |
 | `InvalidArgumentCount` | A supported function receives the wrong number of arguments. |
 | `UnsupportedArrayEvaluation` | A multi-cell range is used where a scalar is required. |
 | `CircularReference` | A reached dependency cycle; diagnostics include the dependency path. |
@@ -187,11 +206,11 @@ and the full retention contract are in [the guide](formulas.md#text-resource-lim
 
 | Area | Examples |
 | --- | --- |
-| Other functions | SUMIF/SUMIFS, COUNTIF/COUNTIFS, XLOOKUP/VLOOKUP, INDEX/MATCH, TEXT/LEFT/CONCAT, DATE/TODAY/NOW, financial functions and every name outside the table. |
+| Other functions | XLOOKUP, CONCAT, TODAY/NOW, financial functions and every name outside the table. |
 | Array calculation | Array constants, legacy array formulas, dynamic arrays/spills and array-returning evaluation. Reached XLSX data-table formulas and calculation metadata are also rejected. |
 | Reference grammar | External workbooks, 3D and structured/table references, R1C1, implicit intersection (`@`), spill (`#`), reference unions/intersections. |
 | Names and execution | Formula/relative/multi-area names, INDIRECT/OFFSET, LET/LAMBDA, volatile execution, UDF/VBA and iterative/circular calculation. |
-| Locale/date semantics | Localized formula syntax, locale-aware text collation, date-string or XLSX ISO-date cell coercion; numeric serial dates are ordinary numbers to the calculator. |
+| Locale/date semantics | Localized formula syntax, locale-aware text collation, locale date strings or timezone-bearing ISO dates; numeric serial dates are ordinary numbers to the calculator. |
 
 Literal HYPERLINK metadata extraction in cached-value rendering is a separate
 feature; HYPERLINK is not a supported calculator function. Conditional-formatting
@@ -203,3 +222,44 @@ The function and syntax tables describe implemented behavior, not an Excel deskt
 compatibility certification. See [validation](formulas-validation.md),
 [review-fix validation](formulas-review-fixes-validation.md) and
 [performance](formulas-performance.md) for the tested SHAs and remaining gaps.
+
+## Expanded function profile
+
+Built-in workbooks implement `ISparseFormulaDataSource`; external implementations
+can keep `IFormulaDataSource` unchanged and use dense bounded fallback. The sparse
+contract requires complete, unique row-major coordinates, including formula empty
+strings/zeros/errors and calculation metadata. Missing cells are not cached.
+`FormulaSession.GetStatistics()` reports actual source reads, cursor candidates,
+bulk blank positions, cell visits, steps and retained values. Criteria ranges join
+by relative position with a k-way cursor merge; no full-column arrays are allocated.
+
+Numeric text, booleans, empty text and errors in criteria use the provisional
+[oracle matrix](formulas-oracle.md). Wildcards `*`, `?`, `~` use bounded matching and
+OrdinalIgnoreCase. Lookup shares wildcard syntax, but keeps exact typed equality;
+numeric text never equals a number. Fractional indices truncate toward zero.
+Approximate modes, INDEX zero-index arrays and multi-cell scalar arguments produce
+engine diagnostics. Only selected lookup return cells are read.
+
+`FormulaEvaluationOptions.DateSystem` defaults to Excel1900. OpenXml always uses
+WorkbookInfo.Date1904 without modifying caller options. ISO dates without timezone
+are converted explicitly and preserve time fractions. The 1900 profile retains
+serial 0 as 1900/1/0 and serial 60 as 1900/2/29. Negative/out-of-range serials yield
+#NUM!; locale date strings are not parsed. EDATE/EOMONTH truncate month offsets.
+
+TEXT accepts zero padding (`0`, `00000`), decimal zero placeholders (`0.00`),
+grouping (`#,##0`, `#,##0.00`), optional percent, quoted prefix/suffix literals,
+and yyyy/m/mm/d/dd calendar tokens (`yyyy-mm-dd`, `yyyy/mm/dd`, `yyyymmdd`,
+`yyyy年m月d日`, `yyyy年mm月`). English token case is ignored. Decimal point and
+group separator remain `.` and `,`; display rounding uses DecimalRounding.
+Time, weekdays/month names, locale codes, eras, colors, conditional sections,
+scientific/fraction/accounting formats produce UnsupportedFeature. Output length
+is checked before allocation; all results use the existing cumulative text budget.
+
+Exact lookups build only the evaluated prefix of a session-local vector index.
+Repeated exact keys, including different keys already in that prefix, avoid
+rescanning rows. First duplicate, typed equality, error order and lazy evaluation
+are preserved. Limits are 16 vectors, 65536 typed values and 131072 indexed text
+units per session; reaching a limit uses bounded streaming fallback. No cursor
+is retained between calls. Wildcard queries search the bounded prefix with the
+same work budget before extending it. Sparse row/column indexes use flat arrays
+to avoid one allocation per row.

@@ -130,6 +130,16 @@ jobs:
         run: dotnet build tests/ExcelRenderer.Formulas.Tests/ExcelRenderer.Formulas.Tests.csproj -t:Rebuild -c Release --no-restore --verbosity:minimal
       - name: Run isolated engine tests without font or rendering setup
         run: dotnet test tests/ExcelRenderer.Formulas.Tests/ExcelRenderer.Formulas.Tests.csproj -c Release --no-build --logger "trx;LogFileName=formulas.trx" --results-directory TestResults/Formulas
+      - name: Verify oracle tooling and all non-Excel pipelines
+        shell: bash
+        run: |
+          python tools/ExcelRenderer.Formulas.Oracle/test_oracle.py
+          dotnet restore tools/ExcelRenderer.Formulas.Oracle --locked-mode
+          dotnet build tools/ExcelRenderer.Formulas.Oracle -c Release --no-restore -m:1
+          python tools/ExcelRenderer.Formulas.Oracle/oracle.py generate TestResults/Formulas/inputs
+          dotnet run --project tools/ExcelRenderer.Formulas.Oracle -c Release --no-build -- tests/ExcelRenderer.Formulas.Tests/Fixtures/Oracle/cases.json TestResults/Formulas/actual.json TestResults/Formulas/inputs TestResults/Formulas/roundtrip
+          python tools/ExcelRenderer.Formulas.Oracle/oracle.py compare TestResults/Formulas/actual.json --require-roundtrip --output TestResults/Formulas/oracle-report.json
+
       - name: Upload formula test results
         if: always()
         uses: actions/upload-artifact@v4

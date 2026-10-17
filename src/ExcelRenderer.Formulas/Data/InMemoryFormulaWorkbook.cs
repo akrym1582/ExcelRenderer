@@ -1,21 +1,39 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading;
 
 namespace ExcelRenderer.Formulas
 {
     /// <summary>Provides an immutable sparse workbook snapshot.</summary>
-    public sealed class InMemoryFormulaWorkbook : IFormulaDataSource
+    public sealed class InMemoryFormulaWorkbook : ISparseFormulaDataSource
     {
         private readonly Dictionary<string, string> sheets;
         private readonly Dictionary<FormulaCellAddress, FormulaCellData> cells;
         private readonly Dictionary<string, FormulaRange> names;
+        private readonly FormulaRangeIndex index;
 
         private InMemoryFormulaWorkbook(Builder builder)
         {
             sheets = new Dictionary<string, string>(builder.Sheets, StringComparer.OrdinalIgnoreCase);
             cells = new Dictionary<FormulaCellAddress, FormulaCellData>(builder.Cells);
             names = new Dictionary<string, FormulaRange>(builder.Names, StringComparer.OrdinalIgnoreCase);
+            index = new FormulaRangeIndex(cells.Where(pair => pair.Value.Formula != null || pair.Value.Value.Kind != FormulaValueKind.Blank).Select(pair => pair.Key));
+        }
+
+        /// <summary>Enumerates all stored values and formulas in row order.</summary>
+        /// <param name="range">Inclusive rectangle.</param>
+        /// <param name="cancellationToken">Cooperative cancellation.</param>
+        /// <returns>Stored coordinates.</returns>
+        public IEnumerable<FormulaCellAddress> EnumerateStoredCells(FormulaRange range, CancellationToken cancellationToken)
+        {
+            if (!sheets.ContainsKey(range.SheetId))
+            {
+                throw new ArgumentException("Unknown stable sheet identifier: " + range.SheetId, nameof(range));
+            }
+
+            return index.Enumerate(range, cancellationToken);
         }
 
         /// <summary>Resolves a display name to a stable sheet identifier.</summary>

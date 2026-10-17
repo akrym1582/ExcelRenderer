@@ -77,3 +77,16 @@ Public namespaces, type names and assembly boundaries are unchanged. Input/ and 
 | `src/ExcelRenderer.OpenXml/WorkbookWriteCapabilities.cs` | `src/ExcelRenderer.OpenXml/Writing/WorkbookWriteCapabilities.cs` |
 | `src/ExcelRenderer.OpenXml/WorksheetInfo.cs` | `src/ExcelRenderer.OpenXml/Model/Workbook/WorksheetInfo.cs` |
 | `src/ExcelRenderer.OpenXml/XmlValues.cs` | `src/ExcelRenderer.OpenXml/Infrastructure/XmlValues.cs` |
+
+## Added implementation files
+
+| Folder | Added responsibilities |
+| --- | --- |
+| Formulas/Data | ISparseFormulaDataSource and FormulaRangeIndex; the original three-method data source remains unchanged. |
+| Formulas/Evaluation | Function dispatch, checked range cursors and session-local statistics. |
+| Formulas/Functions | One registry; Numeric, Aggregation, Logical, Lookup, DateTime and Text partial implementations preserve private session control. |
+| Formulas/Criteria | Compiled criteria/coercion profile and bounded wildcard tokens. |
+| OpenXml/Calculation | Sparse snapshot and workbook date-system/ISO adaptation in WorkbookCalculationSession. |
+| tools/ExcelRenderer.Formulas.Oracle | Development-only typed input generator, Excel cache extractor, provenance comparer and engine/OpenXml/Mapping runner. |
+
+No runtime package was added to Formulas. Active scripts/project paths were searched after moving; historical SHA inventories and logs remain unchanged.

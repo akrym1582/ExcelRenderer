@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using ExcelRenderer.Formulas;
@@ -15,7 +16,21 @@ public sealed class WorkbookCalculationSession
     private WorkbookCalculationSession(Snapshot source, FormulaEvaluationOptions? options, CancellationToken token)
     {
         this.source = source;
-        session = new FormulaEngine().CreateSession(source, options, token);
+        options ??= new FormulaEvaluationOptions();
+        var effective = new FormulaEvaluationOptions
+        {
+            DateSystem = source.DateSystem,
+            MaxFormulaLength = options.MaxFormulaLength,
+            MaxAstNodes = options.MaxAstNodes,
+            MaxSyntaxDepth = options.MaxSyntaxDepth,
+            MaxDependencyDepth = options.MaxDependencyDepth,
+            MaxFormulaCells = options.MaxFormulaCells,
+            MaxCellVisits = options.MaxCellVisits,
+            MaxEvaluationSteps = options.MaxEvaluationSteps,
+            MaxStringLength = options.MaxStringLength,
+            MaxCachedStringCharacters = options.MaxCachedStringCharacters,
+        };
+        session = new FormulaEngine().CreateSession(source, effective, token);
     }
 
     /// <summary>Gets successful or failed cells reached by this session.</summary>
@@ -85,14 +100,16 @@ public sealed class WorkbookCalculationSession
         _ => new CellValue(CellValueType.Blank, null, null, null),
     };
 
-    private sealed class Snapshot : IFormulaDataSource
+    private sealed class Snapshot : ISparseFormulaDataSource
     {
         private readonly Dictionary<string, string> sheets = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         private readonly IReadOnlyList<DefinedNameInfo> names;
+        private readonly FormulaRangeIndex index;
 
         internal Snapshot(IWorkbookDataReader reader, CancellationToken token)
         {
             names = reader.Workbook.DefinedNames;
+            DateSystem = reader.Workbook.Date1904 ? FormulaDateSystem.Excel1904 : FormulaDateSystem.Excel1900;
             foreach (var sheet in reader.Sheets.Where(sheet => sheet.Kind == "Worksheet"))
             {
                 sheets.Add(sheet.Name, sheet.Name);
@@ -102,11 +119,17 @@ public sealed class WorkbookCalculationSession
                     Cells.Add(new FormulaCellAddress(sheet.Name, cell.Address.Row, cell.Address.Column), cell);
                 }
             }
+
+            index = new FormulaRangeIndex(Cells.Where(pair => pair.Value.Formula != null || pair.Value.HasCalculationMetadata || pair.Value.Value.Type != CellValueType.Blank).Select(pair => pair.Key), token);
         }
+
+        internal FormulaDateSystem DateSystem { get; }
 
         internal Dictionary<int, string> SheetNames { get; } = new Dictionary<int, string>();
 
         internal Dictionary<FormulaCellAddress, CellRecord> Cells { get; } = new Dictionary<FormulaCellAddress, CellRecord>();
+
+        public IEnumerable<FormulaCellAddress> EnumerateStoredCells(FormulaRange range, CancellationToken cancellationToken) => index.Enumerate(range, cancellationToken);
 
         public bool TryResolveSheet(string name, out string sheetId) => sheets.TryGetValue(name, out sheetId!);
 
@@ -143,7 +166,7 @@ public sealed class WorkbookCalculationSession
                 CellValueType.String => FormulaValue.FromText(cell.Value.Text ?? string.Empty),
                 CellValueType.Boolean => FormulaValue.FromBoolean(cell.Value.Boolean!.Value),
                 CellValueType.Error => FormulaValue.FromError(cell.Value.Text!),
-                CellValueType.IsoDate => throw new FormulaCalculationException(address.SheetId + "!" + cell.Address + ": UnsupportedSyntax: ISO date coercion."),
+                CellValueType.IsoDate => ConvertIsoDate(cell.Value.Text, address),
                 _ => FormulaValue.Blank,
             });
         }
@@ -175,6 +198,24 @@ public sealed class WorkbookCalculationSession
 
             range = new FormulaRange(sheet, Math.Min(first.Row, last.Row), Math.Min(first.Column, last.Column), Math.Max(first.Row, last.Row), Math.Max(first.Column, last.Column));
             return true;
+        }
+
+        private FormulaValue ConvertIsoDate(string? text, FormulaCellAddress address)
+        {
+            var formats = new[] { "yyyy-MM-dd", "yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.FFFFFFF" };
+            if (!DateTime.TryParseExact(text, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
+            {
+                throw new FormulaCalculationException(address + ": UnsupportedSyntax: expected an ISO date without timezone.");
+            }
+
+            var epoch = DateSystem == FormulaDateSystem.Excel1904 ? new DateTime(1904, 1, 1) : new DateTime(1899, 12, 31);
+            var serial = (date - epoch).TotalDays;
+            if (DateSystem == FormulaDateSystem.Excel1900 && date >= new DateTime(1900, 3, 1))
+            {
+                serial++;
+            }
+
+            return serial < 0 ? FormulaValue.FromError("#NUM!") : FormulaValue.FromNumber(serial);
         }
     }
 }

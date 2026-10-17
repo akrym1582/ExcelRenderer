@@ -28,6 +28,7 @@ namespace ExcelRenderer.Formulas.Evaluation
         private long cachedStringCharacters;
         private long sourceReads;
         private long rangeCandidates;
+        private long indexWork;
         private long bulkBlankCells;
 
         /// <summary>Initializes a new instance of the <see cref="FormulaSession"/> class.</summary>
@@ -114,7 +115,7 @@ namespace ExcelRenderer.Formulas.Evaluation
 
         /// <summary>Gets a snapshot of deterministic work counters for this session.</summary>
         /// <returns>Read, candidate, blank and cache counts.</returns>
-        public FormulaSessionStatistics GetStatistics() => new FormulaSessionStatistics(sourceReads, rangeCandidates, bulkBlankCells, values.Count, visits, steps, lookupIndexedValues, lookupIndexes.Count);
+        public FormulaSessionStatistics GetStatistics() => new FormulaSessionStatistics(sourceReads, rangeCandidates, bulkBlankCells, values.Count, visits, steps, lookupIndexedValues, lookupIndexes.Count, indexWork);
 
         private static FormulaValue Numeric(FormulaValue value)
         {

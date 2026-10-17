@@ -37,7 +37,19 @@ def load_cases(path):
             raise ValueError('unsafe case ID')
         if c['expectedSource'] not in ('specification', 'profile', 'hand-calculated'):
             raise ValueError('input expectations cannot claim Excel observations')
+        target = c['target']
+        validate_address(c['id'], target)
+        for entry in c['inputs']:
+            validate_address(c['id'], entry['address'])
+            if entry['address'] == target:
+                raise ValueError(f"Case '{c['id']}', target '{target}' overlaps inputs")
     return cases
+
+
+def validate_address(case_id, address):
+    match = re.fullmatch(r'([A-Z]{1,3})([1-9][0-9]{0,6})', address)
+    if not match or column(address) > 16384 or int(match[2]) > 1048576:
+        raise ValueError(f"Case '{case_id}': invalid target/address '{address}'")
 
 
 def cell(address, kind, value):
@@ -182,7 +194,12 @@ def compare(args):
     if data.get('observations') and data.get('caseSha256', '').lower() != sha(args.cases):
         raise ValueError('observations belong to a different input case definition')
     observed = {o['id']: o for o in data['observations']}
-    actual = {(r['id'], r['pipeline']): r['actual'] for r in json.loads(args.actual.read_text(encoding='utf-8'))}
+    actual = {}
+    for result in json.loads(args.actual.read_text(encoding='utf-8')):
+        key = (result['id'], result['pipeline'])
+        if key in actual:
+            raise ValueError(f"Duplicate actual result: case '{key[0]}', pipeline '{key[1]}'")
+        actual[key] = result['actual']
     exceptions = {e['id']: e for e in json.loads(args.exceptions.read_text(encoding='utf-8'))}
     counts = Counter({status: 0 for status in ('matched', 'mismatch', 'unsupported', 'known-difference', 'not-observed')})
     profiles, rows, categories = Counter(matched=0, mismatch=0), [], set()

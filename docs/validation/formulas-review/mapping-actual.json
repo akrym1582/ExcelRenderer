@@ -1,0 +1,66 @@
+[
+  {
+    "id": "mapping-0",
+    "pipeline": "mapping",
+    "actual": {
+      "kind": "Number",
+      "value": 0
+    }
+  },
+  {
+    "id": "mapping-0",
+    "pipeline": "roundtrip",
+    "actual": {
+      "kind": "Number",
+      "value": 0
+    }
+  },
+  {
+    "id": "mapping-1",
+    "pipeline": "mapping",
+    "actual": {
+      "kind": "Number",
+      "value": 11
+    }
+  },
+  {
+    "id": "mapping-1",
+    "pipeline": "roundtrip",
+    "actual": {
+      "kind": "Number",
+      "value": 11
+    }
+  },
+  {
+    "id": "mapping-3",
+    "pipeline": "mapping",
+    "actual": {
+      "kind": "Number",
+      "value": 66
+    }
+  },
+  {
+    "id": "mapping-3",
+    "pipeline": "roundtrip",
+    "actual": {
+      "kind": "Number",
+      "value": 66
+    }
+  },
+  {
+    "id": "mapping-70",
+    "pipeline": "mapping",
+    "actual": {
+      "kind": "Number",
+      "value": 27335
+    }
+  },
+  {
+    "id": "mapping-70",
+    "pipeline": "roundtrip",
+    "actual": {
+      "kind": "Number",
+      "value": 27335
+    }
+  }
+]

@@ -1,0 +1,3005 @@
+{
+  "caseSha256": "dfeb13a039d109033d37ec0354090f63d84f25811800a92f37f914bf887fca35",
+  "files": [
+    {
+      "id": "existing-sum",
+      "file": "existing-sum.xlsx",
+      "inputSha256": "0f395e5bae0491203f404ba5ccadcaf6eac0b2c2183ac985f3e02c7c3b01ada4",
+      "date1904": false
+    },
+    {
+      "id": "existing-count",
+      "file": "existing-count.xlsx",
+      "inputSha256": "c64e2706871d4b80f0ac703fb8fb8883b2c1604fb49a076ac2c2bfa7c6700e01",
+      "date1904": false
+    },
+    {
+      "id": "existing-counta",
+      "file": "existing-counta.xlsx",
+      "inputSha256": "cda0180e7a9146960f7fcf9aa857913f9f030345135102b544967f2292b3f597",
+      "date1904": false
+    },
+    {
+      "id": "existing-min",
+      "file": "existing-min.xlsx",
+      "inputSha256": "c6c1d79d06cb001b1bbaede6e0f0d9a643d56a0af6b134223bb7456676dbbfd9",
+      "date1904": false
+    },
+    {
+      "id": "existing-max",
+      "file": "existing-max.xlsx",
+      "inputSha256": "2e151ebc6b5880b902c15f577e0bde2c30d314e85bf2150342e9a578055d0d3f",
+      "date1904": false
+    },
+    {
+      "id": "existing-average",
+      "file": "existing-average.xlsx",
+      "inputSha256": "897ae1bfef0051dd6534cf2f5a240f765bdf63be8048b14a463da5a5202511b4",
+      "date1904": false
+    },
+    {
+      "id": "existing-if",
+      "file": "existing-if.xlsx",
+      "inputSha256": "9fcaa87913d5b2f43c762a26e0a005205c78e3022d4cd8eee50035cb13e14662",
+      "date1904": false
+    },
+    {
+      "id": "existing-iferror",
+      "file": "existing-iferror.xlsx",
+      "inputSha256": "6feefb94314c17160a62dfb0d0ebf4d4342235a5fa779730f819919c435c4452",
+      "date1904": false
+    },
+    {
+      "id": "existing-and",
+      "file": "existing-and.xlsx",
+      "inputSha256": "a7dddf94cdb46ef43b0143afb43f870e812dadcdcdb15930a1de761818ed8830",
+      "date1904": false
+    },
+    {
+      "id": "existing-or",
+      "file": "existing-or.xlsx",
+      "inputSha256": "0054cc95f589ff6b7f90e17c1707beb43a1a5568a76461abcc47206db3aaddf0",
+      "date1904": false
+    },
+    {
+      "id": "existing-not",
+      "file": "existing-not.xlsx",
+      "inputSha256": "205c05af8172c42c835a57a408c4c340ef464fd1e6b5685bd0c836d186f701b0",
+      "date1904": false
+    },
+    {
+      "id": "existing-round",
+      "file": "existing-round.xlsx",
+      "inputSha256": "d2431b2a4e3c704f13a974f011db4d3bbbff56353634249fe084b4642b3a86db",
+      "date1904": false
+    },
+    {
+      "id": "existing-roundup",
+      "file": "existing-roundup.xlsx",
+      "inputSha256": "051787c4c104af9dcae53e973898a7447983e871e8d7856b265e4aa59cdae31e",
+      "date1904": false
+    },
+    {
+      "id": "existing-rounddown",
+      "file": "existing-rounddown.xlsx",
+      "inputSha256": "63caf9a06518e567b972acbb5aff6b8242aadb51fad7316396835732c665dac6",
+      "date1904": false
+    },
+    {
+      "id": "existing-abs",
+      "file": "existing-abs.xlsx",
+      "inputSha256": "4444450a5ecfc3e81e27f085f18f65fb8314e46a0f76f1399e9073cff7801a02",
+      "date1904": false
+    },
+    {
+      "id": "existing-int",
+      "file": "existing-int.xlsx",
+      "inputSha256": "07360a831d9eb425d3e373e71080dbb5d589459c4c71e39a25e3c74f2f71c59d",
+      "date1904": false
+    },
+    {
+      "id": "existing-mod",
+      "file": "existing-mod.xlsx",
+      "inputSha256": "051af382f7d47dc4496506939eecc84b9f2ef01a91af8890fb6acc4f92bb2271",
+      "date1904": false
+    },
+    {
+      "id": "existing-true",
+      "file": "existing-true.xlsx",
+      "inputSha256": "af2e7f347d7cc36ba9155273b60784e80c15d68332d645d0c986fa55ad9f93cc",
+      "date1904": false
+    },
+    {
+      "id": "existing-false",
+      "file": "existing-false.xlsx",
+      "inputSha256": "2bac9781287eeb845919eba75bb3abce513cb635285b403b902ba51d121284cf",
+      "date1904": false
+    },
+    {
+      "id": "existing-operator-string",
+      "file": "existing-operator-string.xlsx",
+      "inputSha256": "529abf8726a9c368091a5c125f2327648872385f08887a75b0169fac13503ba6",
+      "date1904": false
+    },
+    {
+      "id": "existing-parenthesis-string",
+      "file": "existing-parenthesis-string.xlsx",
+      "inputSha256": "7a08d744725b193761aab9a5255314a5b49c11fee173497ab7eeadaa026215c3",
+      "date1904": false
+    },
+    {
+      "id": "existing-round-negative",
+      "file": "existing-round-negative.xlsx",
+      "inputSha256": "fa50dde0e7748156bc059f1b9b7e9aa654946c4f74375703d8144c5be65b4efd",
+      "date1904": false
+    },
+    {
+      "id": "criteria-missing-zero",
+      "file": "criteria-missing-zero.xlsx",
+      "inputSha256": "b705b8798ccfb252eb2c258b83452ef845cd8247d9024d9858cc0f118545b664",
+      "date1904": false
+    },
+    {
+      "id": "criteria-missing-zero-text",
+      "file": "criteria-missing-zero-text.xlsx",
+      "inputSha256": "c86acaafce9bc9f511b2199eb910c081fa8c891b8063f302f3be78b931e67021",
+      "date1904": false
+    },
+    {
+      "id": "criteria-missing-empty",
+      "file": "criteria-missing-empty.xlsx",
+      "inputSha256": "009b3c6c621d884820f7731152d2a9453cafb8d0bc5b685cdf230e57a61d69fe",
+      "date1904": false
+    },
+    {
+      "id": "criteria-missing-equal",
+      "file": "criteria-missing-equal.xlsx",
+      "inputSha256": "72eb75b34bb70400717c0adc0dc842ae45bc585359f6a8d5887e40ead6cfc807",
+      "date1904": false
+    },
+    {
+      "id": "criteria-missing-nonempty",
+      "file": "criteria-missing-nonempty.xlsx",
+      "inputSha256": "ccd0cc3cea999520bff4a06ed50039998bd96aae37ab0bae3a24686aa6d08c19",
+      "date1904": false
+    },
+    {
+      "id": "criteria-missing-positive",
+      "file": "criteria-missing-positive.xlsx",
+      "inputSha256": "6eed880f3d4a5aa6ac302eba30b10a99d7c0e23f45ca108c374036f233b8c522",
+      "date1904": false
+    },
+    {
+      "id": "criteria-missing-nonzero",
+      "file": "criteria-missing-nonzero.xlsx",
+      "inputSha256": "f2ea281badda9eed0e87878694343f256b64d5c096770f378da24b9f9b23ea19",
+      "date1904": false
+    },
+    {
+      "id": "criteria-missing-boolean",
+      "file": "criteria-missing-boolean.xlsx",
+      "inputSha256": "845f9b9c3984d41d870cbfdb3d8c4d15b2b9c4facb5226c5e0f39ba53043373e",
+      "date1904": false
+    },
+    {
+      "id": "criteria-missing-boolean-text",
+      "file": "criteria-missing-boolean-text.xlsx",
+      "inputSha256": "3bed41ebaf05ff5664cbf2e26f6a5ea33163cdb2a5446b0277c16cb52b1223de",
+      "date1904": false
+    },
+    {
+      "id": "criteria-missing-star",
+      "file": "criteria-missing-star.xlsx",
+      "inputSha256": "137dbd78ef8ce12a796bb064e8ee0ecb8275bb5eef1a2197eca6e7a2692c380d",
+      "date1904": false
+    },
+    {
+      "id": "criteria-missing-question",
+      "file": "criteria-missing-question.xlsx",
+      "inputSha256": "b8306a315f7c61e9806ccace3b30e28dc2187b9ea3b15571bcd1590521d4e25d",
+      "date1904": false
+    },
+    {
+      "id": "criteria-missing-literal-star",
+      "file": "criteria-missing-literal-star.xlsx",
+      "inputSha256": "8d78d89df98fb0bcb815beb808dd8dbb00e1a09277e4fddf582d1a0b18902b29",
+      "date1904": false
+    },
+    {
+      "id": "criteria-missing-literal-question",
+      "file": "criteria-missing-literal-question.xlsx",
+      "inputSha256": "0b36b6ef029b1873abc82ad431125c6245861ff6a5f1ae3c28a4fd403ec0ee4b",
+      "date1904": false
+    },
+    {
+      "id": "criteria-missing-literal-tilde",
+      "file": "criteria-missing-literal-tilde.xlsx",
+      "inputSha256": "bb809e8f8bf16bd089de2e6956e5942f67341338c70a980be7254d9769bf98f3",
+      "date1904": false
+    },
+    {
+      "id": "criteria-missing-error-text",
+      "file": "criteria-missing-error-text.xlsx",
+      "inputSha256": "3670eb212c1bb7350e0593f66d50ba9b1daa17305e2493fa2f784e58fbb376dd",
+      "date1904": false
+    },
+    {
+      "id": "criteria-missing-blank-reference",
+      "file": "criteria-missing-blank-reference.xlsx",
+      "inputSha256": "f4d98aed89e6cc3fecb4d73625815855498a13906e152c33d138bddf8898de9f",
+      "date1904": false
+    },
+    {
+      "id": "criteria-missing-le",
+      "file": "criteria-missing-le.xlsx",
+      "inputSha256": "cd5cb667c948c26dbb8c8158d8b5603efbed8f4bb1e21453b0b86af5e0d9caee",
+      "date1904": false
+    },
+    {
+      "id": "criteria-missing-ge",
+      "file": "criteria-missing-ge.xlsx",
+      "inputSha256": "26cd9c588e41ecc83daa99a361c1d7729792863db0296be0fec3e58e5b867f06",
+      "date1904": false
+    },
+    {
+      "id": "criteria-blank-zero",
+      "file": "criteria-blank-zero.xlsx",
+      "inputSha256": "7dad376eaa4567bf86dce53dbedc5d348b0eff7e7a71435e6b2c2707299714b4",
+      "date1904": false
+    },
+    {
+      "id": "criteria-blank-zero-text",
+      "file": "criteria-blank-zero-text.xlsx",
+      "inputSha256": "02671026388f1561519be957869b0aa3f5180226b52facb5b95c605554fd189e",
+      "date1904": false
+    },
+    {
+      "id": "criteria-blank-empty",
+      "file": "criteria-blank-empty.xlsx",
+      "inputSha256": "22df58a951e57e2eec69438150e1dc68533bcd320c57647234b3309f3a6a040c",
+      "date1904": false
+    },
+    {
+      "id": "criteria-blank-equal",
+      "file": "criteria-blank-equal.xlsx",
+      "inputSha256": "accc9c709df0afd2890f348c6b21c3ddb8b896c3d94630ad123686119e200bbf",
+      "date1904": false
+    },
+    {
+      "id": "criteria-blank-nonempty",
+      "file": "criteria-blank-nonempty.xlsx",
+      "inputSha256": "483091d5be16e9912d62c38ab7c71b5dc419006cd52a01c882369cd16717d1ab",
+      "date1904": false
+    },
+    {
+      "id": "criteria-blank-positive",
+      "file": "criteria-blank-positive.xlsx",
+      "inputSha256": "0ae7d6f89d564037377f90fc4d2032124c2ef6f03048b797a7d196f27d52e400",
+      "date1904": false
+    },
+    {
+      "id": "criteria-blank-nonzero",
+      "file": "criteria-blank-nonzero.xlsx",
+      "inputSha256": "f9629090b785036f82f4e83068c4409a154f51397b5ec2876cd9260bb1bf1989",
+      "date1904": false
+    },
+    {
+      "id": "criteria-blank-boolean",
+      "file": "criteria-blank-boolean.xlsx",
+      "inputSha256": "7c1186fbcdce2bb96bbbc973edcd0b945ce0606609d84835118270cd8d994bea",
+      "date1904": false
+    },
+    {
+      "id": "criteria-blank-boolean-text",
+      "file": "criteria-blank-boolean-text.xlsx",
+      "inputSha256": "0244182c135042db00904ff0074548b2e6b3ebd0a7eb37c123b49a806ec36eb0",
+      "date1904": false
+    },
+    {
+      "id": "criteria-blank-star",
+      "file": "criteria-blank-star.xlsx",
+      "inputSha256": "f15173e98d1f838e6b28c05646cf36d0c2efee3f52eec09f4c9e5a938082776c",
+      "date1904": false
+    },
+    {
+      "id": "criteria-blank-question",
+      "file": "criteria-blank-question.xlsx",
+      "inputSha256": "f832308bd2df654403366b93313a24390fa4c2a6ebe662039de7123383208f1e",
+      "date1904": false
+    },
+    {
+      "id": "criteria-blank-literal-star",
+      "file": "criteria-blank-literal-star.xlsx",
+      "inputSha256": "26456e59a57fcf91412c7cfe2c030ff534afbfc64752d2cd12bf8c72d1f3e0f1",
+      "date1904": false
+    },
+    {
+      "id": "criteria-blank-literal-question",
+      "file": "criteria-blank-literal-question.xlsx",
+      "inputSha256": "a8e3e37b9b0f744786e82d1452dc5aeb7d4e0ba0d46351b445c5b9f3c0f5cb3d",
+      "date1904": false
+    },
+    {
+      "id": "criteria-blank-literal-tilde",
+      "file": "criteria-blank-literal-tilde.xlsx",
+      "inputSha256": "0c7bda9f7874690468209531f2533c8077a7f4074fbb6171fdfb1c806aa7aac6",
+      "date1904": false
+    },
+    {
+      "id": "criteria-blank-error-text",
+      "file": "criteria-blank-error-text.xlsx",
+      "inputSha256": "f211744d7ea9b0bc91e617a207aafc8cd027878b3cbc6413134a715f00333918",
+      "date1904": false
+    },
+    {
+      "id": "criteria-blank-blank-reference",
+      "file": "criteria-blank-blank-reference.xlsx",
+      "inputSha256": "c5d6e5fcfe342958250b96b34873c838b44dd4b2fbf9c0cd0bb876736ef662ea",
+      "date1904": false
+    },
+    {
+      "id": "criteria-blank-le",
+      "file": "criteria-blank-le.xlsx",
+      "inputSha256": "ac19a4940182c4cc4c4bca20e6f4420b768adbbd4497384cf18cfc5e99bebeed",
+      "date1904": false
+    },
+    {
+      "id": "criteria-blank-ge",
+      "file": "criteria-blank-ge.xlsx",
+      "inputSha256": "dd3acc99a32d01b4d1deb635a9d0e471978afff1107543ed09516072d8cd3655",
+      "date1904": false
+    },
+    {
+      "id": "criteria-empty-formula-zero",
+      "file": "criteria-empty-formula-zero.xlsx",
+      "inputSha256": "495d79402aa0179879f019dcd6372f8db55959e09d1a9c991d97975887e12a3d",
+      "date1904": false
+    },
+    {
+      "id": "criteria-empty-formula-zero-text",
+      "file": "criteria-empty-formula-zero-text.xlsx",
+      "inputSha256": "24179ca59dc06a83bda8a0393536d3b4ce7c2dabdbc8dc25e638f71dd86aaab7",
+      "date1904": false
+    },
+    {
+      "id": "criteria-empty-formula-empty",
+      "file": "criteria-empty-formula-empty.xlsx",
+      "inputSha256": "b719d35531cf82ce376360ef17eff9bed0764a2a76c777059048ed40aaceb5b5",
+      "date1904": false
+    },
+    {
+      "id": "criteria-empty-formula-equal",
+      "file": "criteria-empty-formula-equal.xlsx",
+      "inputSha256": "7a5e46b3455c23e8363858df14b3fd216eafec2d7598e915847bc0c2c097946a",
+      "date1904": false
+    },
+    {
+      "id": "criteria-empty-formula-nonempty",
+      "file": "criteria-empty-formula-nonempty.xlsx",
+      "inputSha256": "66af94e1c2cde9145281d69c777200048c2abc5a65562075ef423069418280da",
+      "date1904": false
+    },
+    {
+      "id": "criteria-empty-formula-positive",
+      "file": "criteria-empty-formula-positive.xlsx",
+      "inputSha256": "9208dcfdcaa6c04abf43bb093851b07c0e2d853c19c2b8ae18bea3f58c988e4c",
+      "date1904": false
+    },
+    {
+      "id": "criteria-empty-formula-nonzero",
+      "file": "criteria-empty-formula-nonzero.xlsx",
+      "inputSha256": "464576af021694b1a7297fa4cff3ac865cd7e925305c67cbf1adbc0c1ed0c41f",
+      "date1904": false
+    },
+    {
+      "id": "criteria-empty-formula-boolean",
+      "file": "criteria-empty-formula-boolean.xlsx",
+      "inputSha256": "9f5a42d5620e66793b32d3241e425a4028c3ae30a53346cdf9955067d93415e0",
+      "date1904": false
+    },
+    {
+      "id": "criteria-empty-formula-boolean-text",
+      "file": "criteria-empty-formula-boolean-text.xlsx",
+      "inputSha256": "c497a4e77dd45b441a53aa89bf0281c1285bc1b5064ae251822a683044304730",
+      "date1904": false
+    },
+    {
+      "id": "criteria-empty-formula-star",
+      "file": "criteria-empty-formula-star.xlsx",
+      "inputSha256": "f873f57b778529e096c252b6bb2784d2f76b1556caac6323ffd088a95904867f",
+      "date1904": false
+    },
+    {
+      "id": "criteria-empty-formula-question",
+      "file": "criteria-empty-formula-question.xlsx",
+      "inputSha256": "23d6efd3faa6e54cb48c19f4735eb3d09416dc32a8f1985271dc8eaca630cb74",
+      "date1904": false
+    },
+    {
+      "id": "criteria-empty-formula-literal-star",
+      "file": "criteria-empty-formula-literal-star.xlsx",
+      "inputSha256": "a5cbc00e0a0e44aec2d45a9b1e32958e6786abf0716b2457059ef5864e90e034",
+      "date1904": false
+    },
+    {
+      "id": "criteria-empty-formula-literal-question",
+      "file": "criteria-empty-formula-literal-question.xlsx",
+      "inputSha256": "e29395ff76d5fc7feaececaa63d6bc5f96d2f937640ea689352fa198528abb8c",
+      "date1904": false
+    },
+    {
+      "id": "criteria-empty-formula-literal-tilde",
+      "file": "criteria-empty-formula-literal-tilde.xlsx",
+      "inputSha256": "3a6029b279ce6f8e050649dbc9839c0363e9bd8205f20791981a2ea84e46523e",
+      "date1904": false
+    },
+    {
+      "id": "criteria-empty-formula-error-text",
+      "file": "criteria-empty-formula-error-text.xlsx",
+      "inputSha256": "98c92bb9c062767cb7b775ea19faa85454fd7eab73c97e8e5909eaea1968029b",
+      "date1904": false
+    },
+    {
+      "id": "criteria-empty-formula-blank-reference",
+      "file": "criteria-empty-formula-blank-reference.xlsx",
+      "inputSha256": "9997e9e3227455019ea6ce09f1a201b55ea540e1ef9ac45228531c8c2f0b3a04",
+      "date1904": false
+    },
+    {
+      "id": "criteria-empty-formula-le",
+      "file": "criteria-empty-formula-le.xlsx",
+      "inputSha256": "2b4592f51182c4e127468c5b014f901cc03ae6048166b73a367944e341ff9e52",
+      "date1904": false
+    },
+    {
+      "id": "criteria-empty-formula-ge",
+      "file": "criteria-empty-formula-ge.xlsx",
+      "inputSha256": "3c18480dc23a1ba978728255d269c57dd7d5abd417c2f8b1968b037fd92fe534",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-zero",
+      "file": "criteria-zero-zero.xlsx",
+      "inputSha256": "63a902d013ecda54ba7ee35316bd832392a1bd2c5013b7df2c4693874d755e52",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-zero-text",
+      "file": "criteria-zero-zero-text.xlsx",
+      "inputSha256": "4e26d2f20e73a3bb887adc4b4071275c6751fd4c36246b92625a391db11e09e7",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-empty",
+      "file": "criteria-zero-empty.xlsx",
+      "inputSha256": "7004884af22cce9d3497ac9a24b78bf0c3fd613cfe22c66dffb61326d8b6039a",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-equal",
+      "file": "criteria-zero-equal.xlsx",
+      "inputSha256": "1da0fd501046b7b2555efa2730dcffec44e6a82994f9bf725c0f26b43db91701",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-nonempty",
+      "file": "criteria-zero-nonempty.xlsx",
+      "inputSha256": "20557dbc26069a9cfb375383a79f512355196add46b6bbeb6e761091015059ae",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-positive",
+      "file": "criteria-zero-positive.xlsx",
+      "inputSha256": "bc9554ac607bf712b1790aa4163d056789609696221c410f49375eaec29f8b8d",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-nonzero",
+      "file": "criteria-zero-nonzero.xlsx",
+      "inputSha256": "48070af5d8402186a9ad4dcc8b1ddb9e853a81bb28fbb2889a2ed2a894176ebd",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-boolean",
+      "file": "criteria-zero-boolean.xlsx",
+      "inputSha256": "07e6c28522f6b10a0b26b9d00a20ab6af40bc07be09b64c7e6a5956011d131a9",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-boolean-text",
+      "file": "criteria-zero-boolean-text.xlsx",
+      "inputSha256": "fafd0f5c6d40e1bdb5c66a2f001e4cb3bd1e89e5248b8e25ba3c28412cd09fa9",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-star",
+      "file": "criteria-zero-star.xlsx",
+      "inputSha256": "b26dbb058eae21cdb0d5c77ae7c9e7b4b954c67fc276d0e0d6e1f95b9b6420a9",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-question",
+      "file": "criteria-zero-question.xlsx",
+      "inputSha256": "80d19cf919e9f2233e0c8dc21dc920da6e01c1b5f7f6349ce0b545822adbf701",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-literal-star",
+      "file": "criteria-zero-literal-star.xlsx",
+      "inputSha256": "c53fef18fb080cb90ea27d3d9f9cc62a32c102084dcd4deaeb406489bc847bf3",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-literal-question",
+      "file": "criteria-zero-literal-question.xlsx",
+      "inputSha256": "4cf486b375928e6ec831da87d8bf77c483276a334cc3d14996e06237ace628c0",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-literal-tilde",
+      "file": "criteria-zero-literal-tilde.xlsx",
+      "inputSha256": "f0f47f6f27a91250cb35d3cd6208c39ef582de6a44c87bacb3a04ba3eb56d3f1",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-error-text",
+      "file": "criteria-zero-error-text.xlsx",
+      "inputSha256": "142c0c505372bbc49d4ccb7facc0fa2a9883ea88f070c9351655916f94f75d94",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-blank-reference",
+      "file": "criteria-zero-blank-reference.xlsx",
+      "inputSha256": "cfede94c5260e6c595b08f844e151219bfb81c0c39d985aa5f24a8e75fad9b2c",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-le",
+      "file": "criteria-zero-le.xlsx",
+      "inputSha256": "c5a070b7a34397e8b73077512e91ec509380cb92f0b578a3d8242bff804f5ea3",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-ge",
+      "file": "criteria-zero-ge.xlsx",
+      "inputSha256": "255a6a6394cff4bea2e489c170ec194aaddd29962b35e2b4da393f3c8dadbc7c",
+      "date1904": false
+    },
+    {
+      "id": "criteria-number-zero",
+      "file": "criteria-number-zero.xlsx",
+      "inputSha256": "b87c6a4f2144709c0211204115278c00583434d66c4dab81f5f79f23c043a9c3",
+      "date1904": false
+    },
+    {
+      "id": "criteria-number-zero-text",
+      "file": "criteria-number-zero-text.xlsx",
+      "inputSha256": "4a73e972990353cc08e2c2e398ee9657cf735a83199542c60bcf4fa9daf48764",
+      "date1904": false
+    },
+    {
+      "id": "criteria-number-empty",
+      "file": "criteria-number-empty.xlsx",
+      "inputSha256": "265060c66c621f3aee1bfa8adb9a3fe43e4b9590c4f2069615b546e17e6de088",
+      "date1904": false
+    },
+    {
+      "id": "criteria-number-equal",
+      "file": "criteria-number-equal.xlsx",
+      "inputSha256": "0c5f97826d9af8364a7cac2a33da6868eba3cdd67d7b7699185b560b09ddf844",
+      "date1904": false
+    },
+    {
+      "id": "criteria-number-nonempty",
+      "file": "criteria-number-nonempty.xlsx",
+      "inputSha256": "bfbdc6797d58aa0a9d38b9b3c8a83161dabd30c6b3126d0633b77f910298ca2b",
+      "date1904": false
+    },
+    {
+      "id": "criteria-number-positive",
+      "file": "criteria-number-positive.xlsx",
+      "inputSha256": "bc27c01b16ec2d1cca3d218c0ff6329d9242c49ab6c9019898369ce3d73ce6cd",
+      "date1904": false
+    },
+    {
+      "id": "criteria-number-nonzero",
+      "file": "criteria-number-nonzero.xlsx",
+      "inputSha256": "9e149fde938dcb1bed9c684e78e3227833d70d1ecb341e8cce294eeb5e546b42",
+      "date1904": false
+    },
+    {
+      "id": "criteria-number-boolean",
+      "file": "criteria-number-boolean.xlsx",
+      "inputSha256": "18fec6a0cbbcaf6e58e612dffa38422b7230554331403797dd0217d523636518",
+      "date1904": false
+    },
+    {
+      "id": "criteria-number-boolean-text",
+      "file": "criteria-number-boolean-text.xlsx",
+      "inputSha256": "bcabd38cb4d8b7860732eee7855232f399c03aed6f4b5eb809769656b4996560",
+      "date1904": false
+    },
+    {
+      "id": "criteria-number-star",
+      "file": "criteria-number-star.xlsx",
+      "inputSha256": "47aec24406369442afc1e70427c27462d678b6e882c8a6034f1ad3b37253b649",
+      "date1904": false
+    },
+    {
+      "id": "criteria-number-question",
+      "file": "criteria-number-question.xlsx",
+      "inputSha256": "5f24a20caea8cc40c1faa0d39b1dd70fc45e84f562a5b6001c5886270f18eb08",
+      "date1904": false
+    },
+    {
+      "id": "criteria-number-literal-star",
+      "file": "criteria-number-literal-star.xlsx",
+      "inputSha256": "1818b6c483f5e0bbd1ab37693b7e541e547a9ea13ff8637e4d44ba3ccd28260c",
+      "date1904": false
+    },
+    {
+      "id": "criteria-number-literal-question",
+      "file": "criteria-number-literal-question.xlsx",
+      "inputSha256": "ce202f1231e6812b05631a5702d2ed777d0c265bbf4bb48447e260df643a07cc",
+      "date1904": false
+    },
+    {
+      "id": "criteria-number-literal-tilde",
+      "file": "criteria-number-literal-tilde.xlsx",
+      "inputSha256": "053c7a88a21701a6891d72553fc78253a1394769a5059cbea8478a6904a79aae",
+      "date1904": false
+    },
+    {
+      "id": "criteria-number-error-text",
+      "file": "criteria-number-error-text.xlsx",
+      "inputSha256": "75b14bebe843ecd8793fbb0499c2255840e5ea645d1a99d8c3701bb1e530badc",
+      "date1904": false
+    },
+    {
+      "id": "criteria-number-blank-reference",
+      "file": "criteria-number-blank-reference.xlsx",
+      "inputSha256": "c4ea3a42a291a6eb9fb7f03066b4445e302d0fa3e60e6b13e108f7f5db477086",
+      "date1904": false
+    },
+    {
+      "id": "criteria-number-le",
+      "file": "criteria-number-le.xlsx",
+      "inputSha256": "fc4dd48d9fec03451ccdaf1e2eaeb16ae4b099f690f6ca4c9a8d8c273953b5b6",
+      "date1904": false
+    },
+    {
+      "id": "criteria-number-ge",
+      "file": "criteria-number-ge.xlsx",
+      "inputSha256": "ce637aeb43d149466b856e39a25401ee42255eb45672531f9952040744363773",
+      "date1904": false
+    },
+    {
+      "id": "criteria-numeric-text-zero",
+      "file": "criteria-numeric-text-zero.xlsx",
+      "inputSha256": "a49eceb96ea801ad9fb46759de41613effb20360fe8bbddd74f82041a1698713",
+      "date1904": false
+    },
+    {
+      "id": "criteria-numeric-text-zero-text",
+      "file": "criteria-numeric-text-zero-text.xlsx",
+      "inputSha256": "36428792b5bb5d1bcf1f828bd25d0e85e4bfc2467c9223527f0841d52796e545",
+      "date1904": false
+    },
+    {
+      "id": "criteria-numeric-text-empty",
+      "file": "criteria-numeric-text-empty.xlsx",
+      "inputSha256": "eac3df87876950de4a4cf3bb9b7eae14e5a0c8fa0ce145d16cb7f5aa3a702023",
+      "date1904": false
+    },
+    {
+      "id": "criteria-numeric-text-equal",
+      "file": "criteria-numeric-text-equal.xlsx",
+      "inputSha256": "50fbaf20f8cfe239142cbb9844ee204deb02c69c7485462449b0ff5adc62aa61",
+      "date1904": false
+    },
+    {
+      "id": "criteria-numeric-text-nonempty",
+      "file": "criteria-numeric-text-nonempty.xlsx",
+      "inputSha256": "1f2650729072b28008070cd6c905dcf448f4d76714ca5db822e8294e62e6d28d",
+      "date1904": false
+    },
+    {
+      "id": "criteria-numeric-text-positive",
+      "file": "criteria-numeric-text-positive.xlsx",
+      "inputSha256": "fb295a99af51f09e4222a47675e2fe39fcc93dbba8ea137fccc5c3182e3493fa",
+      "date1904": false
+    },
+    {
+      "id": "criteria-numeric-text-nonzero",
+      "file": "criteria-numeric-text-nonzero.xlsx",
+      "inputSha256": "ecdbf3cdca377681ede20c8c02fffd8b31660aec9c02b0e8c22634aaa3fcccef",
+      "date1904": false
+    },
+    {
+      "id": "criteria-numeric-text-boolean",
+      "file": "criteria-numeric-text-boolean.xlsx",
+      "inputSha256": "1f46e68cedce1037a4d59ea8f3be0c28ac9500c5ea16528ff7887154e23a0090",
+      "date1904": false
+    },
+    {
+      "id": "criteria-numeric-text-boolean-text",
+      "file": "criteria-numeric-text-boolean-text.xlsx",
+      "inputSha256": "3bb1a6bf97eb225b40ba2e0189797d3747274fe6f5d2e7942082fb01721c4e34",
+      "date1904": false
+    },
+    {
+      "id": "criteria-numeric-text-star",
+      "file": "criteria-numeric-text-star.xlsx",
+      "inputSha256": "891f59ee6ed522080eec70b5acf87f674860b62462cab1e4fc3682d0a66c83d0",
+      "date1904": false
+    },
+    {
+      "id": "criteria-numeric-text-question",
+      "file": "criteria-numeric-text-question.xlsx",
+      "inputSha256": "19d256be4c4df2e7faab5b72c0f542886810bfead189f04c2d570fe60985dd47",
+      "date1904": false
+    },
+    {
+      "id": "criteria-numeric-text-literal-star",
+      "file": "criteria-numeric-text-literal-star.xlsx",
+      "inputSha256": "ac6e20dae9b7aa10b761cdec33555cfed9a1c442b3c68c68b45260ce18f28c2d",
+      "date1904": false
+    },
+    {
+      "id": "criteria-numeric-text-literal-question",
+      "file": "criteria-numeric-text-literal-question.xlsx",
+      "inputSha256": "5c1d519a25527fec58620a35b8b361dc2848bda3b3c8daf16879661e20a766ee",
+      "date1904": false
+    },
+    {
+      "id": "criteria-numeric-text-literal-tilde",
+      "file": "criteria-numeric-text-literal-tilde.xlsx",
+      "inputSha256": "09da7b93381e9cbf58db10404917c4d76e43cd2d5e7fa3a6453840a2996650ea",
+      "date1904": false
+    },
+    {
+      "id": "criteria-numeric-text-error-text",
+      "file": "criteria-numeric-text-error-text.xlsx",
+      "inputSha256": "1331f1d16ff3ce25523fa447476ed4aa06e056deab3e0c4bd8a68886a25c05c2",
+      "date1904": false
+    },
+    {
+      "id": "criteria-numeric-text-blank-reference",
+      "file": "criteria-numeric-text-blank-reference.xlsx",
+      "inputSha256": "5d2570a12ce6e9be8ed07a9b499ca97a8c29d7d719e9d0dff9f6df2401a1e8c2",
+      "date1904": false
+    },
+    {
+      "id": "criteria-numeric-text-le",
+      "file": "criteria-numeric-text-le.xlsx",
+      "inputSha256": "9452d75654984f4ba7d4048e84ee4f97c49dd2a45d11a75066bb91ec8e8cdaa7",
+      "date1904": false
+    },
+    {
+      "id": "criteria-numeric-text-ge",
+      "file": "criteria-numeric-text-ge.xlsx",
+      "inputSha256": "7ccbd8ceb3586f58daa8a6862a932003fd3fff6bf13a3996869b37a2913d82cf",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-text-zero",
+      "file": "criteria-zero-text-zero.xlsx",
+      "inputSha256": "f3ed7d87fb98f23b7d2696f4f40aa1b45de10c4d75c00bde0d2c993c14184204",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-text-zero-text",
+      "file": "criteria-zero-text-zero-text.xlsx",
+      "inputSha256": "afbe55b092d20207a5932b451534ebc934041d1647dea6bf2c1ed3d5206cf822",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-text-empty",
+      "file": "criteria-zero-text-empty.xlsx",
+      "inputSha256": "5d9d856dcd77fdf731ce773d69798e664a07818cb83ea2475425226afc1f2c06",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-text-equal",
+      "file": "criteria-zero-text-equal.xlsx",
+      "inputSha256": "d4e8dcba94b976d7996f4c439bb76533a17144b42ff8e46029604c9ff6d57968",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-text-nonempty",
+      "file": "criteria-zero-text-nonempty.xlsx",
+      "inputSha256": "ef50f1cf27bb6f519b30d676e9bba575ee71b682a693b0f391f56027a2fa2f71",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-text-positive",
+      "file": "criteria-zero-text-positive.xlsx",
+      "inputSha256": "f00d854c83849a674822493caa3a13371bb58b0b1f8549fd9b166de389f4382b",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-text-nonzero",
+      "file": "criteria-zero-text-nonzero.xlsx",
+      "inputSha256": "9ade93b1643a7579d6d3256a13ba59b49248eb1046aa7aa3e9097d68b411b5e5",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-text-boolean",
+      "file": "criteria-zero-text-boolean.xlsx",
+      "inputSha256": "f850961765cf2b988365ff0935fd5ad51aaa33fb2bafa13a970570201430bd6a",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-text-boolean-text",
+      "file": "criteria-zero-text-boolean-text.xlsx",
+      "inputSha256": "0dfa7bb5deb9dc9347c6de132b8cb71c7ca7823122112fea682bbae4dfd7c9a5",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-text-star",
+      "file": "criteria-zero-text-star.xlsx",
+      "inputSha256": "4df13b9e7dbf8929e4dbfbc2a287d5c1a558360716489a6a403244883ae608bf",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-text-question",
+      "file": "criteria-zero-text-question.xlsx",
+      "inputSha256": "a48220e03d93546d54975a3a62b260dc5ef856430a078f07ad9be387eb105a0d",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-text-literal-star",
+      "file": "criteria-zero-text-literal-star.xlsx",
+      "inputSha256": "e5a77ee653397f20de242973fdaeaca40c980e4975d1c301cedd4554179706c4",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-text-literal-question",
+      "file": "criteria-zero-text-literal-question.xlsx",
+      "inputSha256": "abaf6be2e92bfc6a16900f7585c815409681e43c39f7e5f84928352b416e7764",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-text-literal-tilde",
+      "file": "criteria-zero-text-literal-tilde.xlsx",
+      "inputSha256": "46ae7f2fe5b9bd3bc21676b4ee7cd95df6a69db9a1a26476d420300ad62af3ce",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-text-error-text",
+      "file": "criteria-zero-text-error-text.xlsx",
+      "inputSha256": "01cb14726c218d981100de541c9ee505b45c40063f822c996f81483234f5d23a",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-text-blank-reference",
+      "file": "criteria-zero-text-blank-reference.xlsx",
+      "inputSha256": "1a5a46923d435ebc384f90d32ab4ac2f7c4802429d54ce6806dce01fa312259b",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-text-le",
+      "file": "criteria-zero-text-le.xlsx",
+      "inputSha256": "e2b703bd7d2886866ae5e361fa990a395abbd29c2c3e360aee790a57716f4a5a",
+      "date1904": false
+    },
+    {
+      "id": "criteria-zero-text-ge",
+      "file": "criteria-zero-text-ge.xlsx",
+      "inputSha256": "3ed4480b4be58dbb6d05e41e8c50f341833422279bf1fbdd3ec8783e6f1ae1b0",
+      "date1904": false
+    },
+    {
+      "id": "criteria-text-zero",
+      "file": "criteria-text-zero.xlsx",
+      "inputSha256": "c3e7ca398b1068afd41d118610bc4c8487a381aca35dd7c9b01ccbe0797a17ad",
+      "date1904": false
+    },
+    {
+      "id": "criteria-text-zero-text",
+      "file": "criteria-text-zero-text.xlsx",
+      "inputSha256": "fef60d4d962e55d6e1feecbc13a4c6b57294c6748fb1df182800b14e3c18ab86",
+      "date1904": false
+    },
+    {
+      "id": "criteria-text-empty",
+      "file": "criteria-text-empty.xlsx",
+      "inputSha256": "79b31f0d778bd3bb309b15382df073823296413203ef01fdae21620e96b46ac7",
+      "date1904": false
+    },
+    {
+      "id": "criteria-text-equal",
+      "file": "criteria-text-equal.xlsx",
+      "inputSha256": "a8e92dc3fb68dcfab680aeeb25602abbcc6ed98f19a6ca291b7289b2a6e46375",
+      "date1904": false
+    },
+    {
+      "id": "criteria-text-nonempty",
+      "file": "criteria-text-nonempty.xlsx",
+      "inputSha256": "89de036219352f1dcdde7e954b9ee1a13484ea3c8ad3b862c28e4ee0481a28a0",
+      "date1904": false
+    },
+    {
+      "id": "criteria-text-positive",
+      "file": "criteria-text-positive.xlsx",
+      "inputSha256": "e868a3cb850bd7f83838923b4ec485069d89ed8858273f1c411102b82a7e0ac7",
+      "date1904": false
+    },
+    {
+      "id": "criteria-text-nonzero",
+      "file": "criteria-text-nonzero.xlsx",
+      "inputSha256": "6928276b83d4f6267637cc09005db0e3c18bb12d7ae5fd104567bd9a3be4a961",
+      "date1904": false
+    },
+    {
+      "id": "criteria-text-boolean",
+      "file": "criteria-text-boolean.xlsx",
+      "inputSha256": "f39146ed0a25aef600078f212075556790cdfc0e07bde721bd80f5af9019ca91",
+      "date1904": false
+    },
+    {
+      "id": "criteria-text-boolean-text",
+      "file": "criteria-text-boolean-text.xlsx",
+      "inputSha256": "588e25e8721a6d93d8fad8451e73d3e5c849dd4c25745368a33a39020a752322",
+      "date1904": false
+    },
+    {
+      "id": "criteria-text-star",
+      "file": "criteria-text-star.xlsx",
+      "inputSha256": "d5122e5108ecb1b8fee5f73a5740e46d911ec47adfb1120700b14b7a276a51ab",
+      "date1904": false
+    },
+    {
+      "id": "criteria-text-question",
+      "file": "criteria-text-question.xlsx",
+      "inputSha256": "d88b7d7d22469d99d31301f4fd4d899edd19718085567c7932c8b5eb6397d1f0",
+      "date1904": false
+    },
+    {
+      "id": "criteria-text-literal-star",
+      "file": "criteria-text-literal-star.xlsx",
+      "inputSha256": "83d4a2076f5d90d9c83114d572856a70e434d33b75d091f9f37c5069d5483873",
+      "date1904": false
+    },
+    {
+      "id": "criteria-text-literal-question",
+      "file": "criteria-text-literal-question.xlsx",
+      "inputSha256": "809a1a29a68529c63b37fe1d5a9f30a6f7b153eefbd885e66c2341645398a17e",
+      "date1904": false
+    },
+    {
+      "id": "criteria-text-literal-tilde",
+      "file": "criteria-text-literal-tilde.xlsx",
+      "inputSha256": "f128ffa0d64477386e37a22e64b7815db2be9ae23a0173bf38b039507617398c",
+      "date1904": false
+    },
+    {
+      "id": "criteria-text-error-text",
+      "file": "criteria-text-error-text.xlsx",
+      "inputSha256": "5619fe50c4f949c6b12690ae81acf29f0c73082dfe17e3a4ae17d1a935a0ddbe",
+      "date1904": false
+    },
+    {
+      "id": "criteria-text-blank-reference",
+      "file": "criteria-text-blank-reference.xlsx",
+      "inputSha256": "382ab62a4b0dab0e1826b399b7c6d0786603cd54f4fd83c64451fd99a414d947",
+      "date1904": false
+    },
+    {
+      "id": "criteria-text-le",
+      "file": "criteria-text-le.xlsx",
+      "inputSha256": "e0dd9e21e99f942e3f8df915a7baadc47dd872861f78391c928c6e390a8d9a21",
+      "date1904": false
+    },
+    {
+      "id": "criteria-text-ge",
+      "file": "criteria-text-ge.xlsx",
+      "inputSha256": "9fade7bae5bb832cf17378b5a5c877fa9be28949332cec9571bd7a2185468fa3",
+      "date1904": false
+    },
+    {
+      "id": "criteria-boolean-zero",
+      "file": "criteria-boolean-zero.xlsx",
+      "inputSha256": "e81ad25c458fbd03d3ad00061149f169530f0d80107187657c3ff034c2cf8e68",
+      "date1904": false
+    },
+    {
+      "id": "criteria-boolean-zero-text",
+      "file": "criteria-boolean-zero-text.xlsx",
+      "inputSha256": "1fc4b0c7e4e57b319ee050ce8f8340a06517fa235f8d1225d96c864b62e62249",
+      "date1904": false
+    },
+    {
+      "id": "criteria-boolean-empty",
+      "file": "criteria-boolean-empty.xlsx",
+      "inputSha256": "381d604449d349d9f02e1b0f6a7397ba1fbb6d322358cae6fd37a04c93a76526",
+      "date1904": false
+    },
+    {
+      "id": "criteria-boolean-equal",
+      "file": "criteria-boolean-equal.xlsx",
+      "inputSha256": "8ddff363f079c25fef4d489c8ee7c79b224f5dba95e9ab3b9b0e95c67406f49c",
+      "date1904": false
+    },
+    {
+      "id": "criteria-boolean-nonempty",
+      "file": "criteria-boolean-nonempty.xlsx",
+      "inputSha256": "5f55b2cff5876d5e7123d10b085c6273f28397377f6163b59cdd6f926ba0478b",
+      "date1904": false
+    },
+    {
+      "id": "criteria-boolean-positive",
+      "file": "criteria-boolean-positive.xlsx",
+      "inputSha256": "4eec6207758b04abc8a315006b232691949c4b95b76d81e97895ae38f6255e7a",
+      "date1904": false
+    },
+    {
+      "id": "criteria-boolean-nonzero",
+      "file": "criteria-boolean-nonzero.xlsx",
+      "inputSha256": "3adb6fc21023b3b3d4861863c9200a414e251b26b9fd8c39360cc6361b051b3d",
+      "date1904": false
+    },
+    {
+      "id": "criteria-boolean-boolean",
+      "file": "criteria-boolean-boolean.xlsx",
+      "inputSha256": "b4f459c78e90f4367f89fca64e38ec89240d48ef62232e7eb445062e94880d2d",
+      "date1904": false
+    },
+    {
+      "id": "criteria-boolean-boolean-text",
+      "file": "criteria-boolean-boolean-text.xlsx",
+      "inputSha256": "e886610a62e3b5fe32500d65a93dc5ee97f66d9f6b9fbdcdf2d0d600611dd224",
+      "date1904": false
+    },
+    {
+      "id": "criteria-boolean-star",
+      "file": "criteria-boolean-star.xlsx",
+      "inputSha256": "56fed3324f686ef8e572e062fb700119ced5624dbbaf629fd74fa3c1bd853929",
+      "date1904": false
+    },
+    {
+      "id": "criteria-boolean-question",
+      "file": "criteria-boolean-question.xlsx",
+      "inputSha256": "d266e9f1e9e07f1f9884518927b0cbd310cea98e978ea3095b33dd581cd5001e",
+      "date1904": false
+    },
+    {
+      "id": "criteria-boolean-literal-star",
+      "file": "criteria-boolean-literal-star.xlsx",
+      "inputSha256": "b9abf8b3e07452de77f73d34a619a529c27fc6a12a643b0177177351d93adfa5",
+      "date1904": false
+    },
+    {
+      "id": "criteria-boolean-literal-question",
+      "file": "criteria-boolean-literal-question.xlsx",
+      "inputSha256": "1926a59051496376f56c94abdef95a1a726bd8a29f2ebfc1cb353214646de940",
+      "date1904": false
+    },
+    {
+      "id": "criteria-boolean-literal-tilde",
+      "file": "criteria-boolean-literal-tilde.xlsx",
+      "inputSha256": "77b2dec0c463ee429b7cb97c23efc93ae50f42aa431c3a351a27183c555f5874",
+      "date1904": false
+    },
+    {
+      "id": "criteria-boolean-error-text",
+      "file": "criteria-boolean-error-text.xlsx",
+      "inputSha256": "48ec6e4cb537956be7619cc32d282e28d783792c4e4481da1d770f0ec0559650",
+      "date1904": false
+    },
+    {
+      "id": "criteria-boolean-blank-reference",
+      "file": "criteria-boolean-blank-reference.xlsx",
+      "inputSha256": "04ddfe2b2559b9b2e4ce2d8a84be0641b760ddc20b349d1283428ea95c81b89e",
+      "date1904": false
+    },
+    {
+      "id": "criteria-boolean-le",
+      "file": "criteria-boolean-le.xlsx",
+      "inputSha256": "856ee3c06139efbe8e8b508dc0af6cbe1aa1b09fe512b177240ceff6ec235629",
+      "date1904": false
+    },
+    {
+      "id": "criteria-boolean-ge",
+      "file": "criteria-boolean-ge.xlsx",
+      "inputSha256": "2262fe5d425ea0a0f0db1aa83c8dc102dab800ca4f35756cf5afc7ceefea20d0",
+      "date1904": false
+    },
+    {
+      "id": "criteria-star-zero",
+      "file": "criteria-star-zero.xlsx",
+      "inputSha256": "7272127fd7a8f69bd574250877c12dad51445f31ba088bce36133db60378c215",
+      "date1904": false
+    },
+    {
+      "id": "criteria-star-zero-text",
+      "file": "criteria-star-zero-text.xlsx",
+      "inputSha256": "e38b58e237b63c31267ad04012cb1e19623539929cca9b36e6b3d98f0f3dad28",
+      "date1904": false
+    },
+    {
+      "id": "criteria-star-empty",
+      "file": "criteria-star-empty.xlsx",
+      "inputSha256": "a327a65d619f4ca9a94a96e15c5e40215bf37a459b8bdf540ec814bd7e9b6c8b",
+      "date1904": false
+    },
+    {
+      "id": "criteria-star-equal",
+      "file": "criteria-star-equal.xlsx",
+      "inputSha256": "33696b00d9ace5ab8236f4d8218d92a67cb46c1ee4e1cd0c8fc3572d211c5cbc",
+      "date1904": false
+    },
+    {
+      "id": "criteria-star-nonempty",
+      "file": "criteria-star-nonempty.xlsx",
+      "inputSha256": "1553ec4a371aafc94ea41e08b8efc17492055614a027dc6ef0565142874d8e15",
+      "date1904": false
+    },
+    {
+      "id": "criteria-star-positive",
+      "file": "criteria-star-positive.xlsx",
+      "inputSha256": "1de1306820c0dd86df92c57e4faefbd689759c1573841bcf9fbb805ca275e754",
+      "date1904": false
+    },
+    {
+      "id": "criteria-star-nonzero",
+      "file": "criteria-star-nonzero.xlsx",
+      "inputSha256": "c025053095f43e98d3aa68124bf42d720a41e3ae6c5c2bdd57b3dad32291f81a",
+      "date1904": false
+    },
+    {
+      "id": "criteria-star-boolean",
+      "file": "criteria-star-boolean.xlsx",
+      "inputSha256": "ac39fce0a576fd93f83c3ffc7cc34bc89ee772257e98fb105cded7c5b603c64e",
+      "date1904": false
+    },
+    {
+      "id": "criteria-star-boolean-text",
+      "file": "criteria-star-boolean-text.xlsx",
+      "inputSha256": "d27c4f1725894b2d48310f0aad1cb1863719407643c35ca321024ef78ddbc86a",
+      "date1904": false
+    },
+    {
+      "id": "criteria-star-star",
+      "file": "criteria-star-star.xlsx",
+      "inputSha256": "b0d6049c2feaff12b0ea4570341033a69d2e27056ca9d2ef7b4f3000b3a0f643",
+      "date1904": false
+    },
+    {
+      "id": "criteria-star-question",
+      "file": "criteria-star-question.xlsx",
+      "inputSha256": "3698950b111ef4f8214d7e1d59d7a55e50b4b58e3bb7f745b8aedefbdd023fa6",
+      "date1904": false
+    },
+    {
+      "id": "criteria-star-literal-star",
+      "file": "criteria-star-literal-star.xlsx",
+      "inputSha256": "7fc10d7c4b2073089a74b7274189399f8b078d5be5a7382dd1493044b2ef83b1",
+      "date1904": false
+    },
+    {
+      "id": "criteria-star-literal-question",
+      "file": "criteria-star-literal-question.xlsx",
+      "inputSha256": "f95973c7955f2ce96136e60e5da488e0ccf60017ae4c715a1ef25c5a99ca0535",
+      "date1904": false
+    },
+    {
+      "id": "criteria-star-literal-tilde",
+      "file": "criteria-star-literal-tilde.xlsx",
+      "inputSha256": "0a102e51c3412db05f95c4bb5be1df82a2c19919d6f5525b16dc7be7620b9c53",
+      "date1904": false
+    },
+    {
+      "id": "criteria-star-error-text",
+      "file": "criteria-star-error-text.xlsx",
+      "inputSha256": "3f9caa4bcae8f9759d48725dffddaf163d2d1fd724f0d8f53aa286378e2615bd",
+      "date1904": false
+    },
+    {
+      "id": "criteria-star-blank-reference",
+      "file": "criteria-star-blank-reference.xlsx",
+      "inputSha256": "42a63d2f2d8ba524b3c94ba47956de84bf32121476f76af8559eba52bd76dac2",
+      "date1904": false
+    },
+    {
+      "id": "criteria-star-le",
+      "file": "criteria-star-le.xlsx",
+      "inputSha256": "4794865eccf5ba3532e4c734d1b99b6d579a219c363b621f7be980a2ed57104a",
+      "date1904": false
+    },
+    {
+      "id": "criteria-star-ge",
+      "file": "criteria-star-ge.xlsx",
+      "inputSha256": "1a50dfe07103605e9349225a7b108d0358711a7219fbe37b201d71bbc5473fda",
+      "date1904": false
+    },
+    {
+      "id": "criteria-question-zero",
+      "file": "criteria-question-zero.xlsx",
+      "inputSha256": "493a48d3226db6d0e55aa635e82a10a644739df9efa358e5db6931d937b01531",
+      "date1904": false
+    },
+    {
+      "id": "criteria-question-zero-text",
+      "file": "criteria-question-zero-text.xlsx",
+      "inputSha256": "1a7a84b278c27a20031f035c3c6ed2d5bd85e0d545575d62259c9588be30e3df",
+      "date1904": false
+    },
+    {
+      "id": "criteria-question-empty",
+      "file": "criteria-question-empty.xlsx",
+      "inputSha256": "0edc80fdd56dbaa50d2bf621240eafcda3211b7daaf433e0aca206c2d75da5bd",
+      "date1904": false
+    },
+    {
+      "id": "criteria-question-equal",
+      "file": "criteria-question-equal.xlsx",
+      "inputSha256": "a249bebb97a19dc6ae262eb7857047c1fac909a54ecb058b43372abe174287d7",
+      "date1904": false
+    },
+    {
+      "id": "criteria-question-nonempty",
+      "file": "criteria-question-nonempty.xlsx",
+      "inputSha256": "640df68277560f5849fcc1ea8e03551a4881c4dec7bdad432e7e2f5453ba734d",
+      "date1904": false
+    },
+    {
+      "id": "criteria-question-positive",
+      "file": "criteria-question-positive.xlsx",
+      "inputSha256": "7d1b8623d059bc8adcc65ec6214c2fe27bbda371a62f77d191b40206a74119d6",
+      "date1904": false
+    },
+    {
+      "id": "criteria-question-nonzero",
+      "file": "criteria-question-nonzero.xlsx",
+      "inputSha256": "622120f32e3c72c76bee99784f127e67aebfbb28e01ac5a7efa9dc76b0740821",
+      "date1904": false
+    },
+    {
+      "id": "criteria-question-boolean",
+      "file": "criteria-question-boolean.xlsx",
+      "inputSha256": "27fa3cb8a1f34af657d6ae56a35b4f169c90abaca6510085527512585255c565",
+      "date1904": false
+    },
+    {
+      "id": "criteria-question-boolean-text",
+      "file": "criteria-question-boolean-text.xlsx",
+      "inputSha256": "f0831661cf724d9c7fc9d3d987054f20e9f93b060a6479ed1dabfa145cc54b8d",
+      "date1904": false
+    },
+    {
+      "id": "criteria-question-star",
+      "file": "criteria-question-star.xlsx",
+      "inputSha256": "5228e3534320512bbda56f18f2aba50f19081566d5befee2bf3f4452c0189e71",
+      "date1904": false
+    },
+    {
+      "id": "criteria-question-question",
+      "file": "criteria-question-question.xlsx",
+      "inputSha256": "df11a52aaf00b4cff69195f0978b6f8b8281e04f56b3ec8003a290de076f9cbb",
+      "date1904": false
+    },
+    {
+      "id": "criteria-question-literal-star",
+      "file": "criteria-question-literal-star.xlsx",
+      "inputSha256": "b84de73da89762c41cd2e5d3af58b084181406f07095fbd71a04ce1085781efe",
+      "date1904": false
+    },
+    {
+      "id": "criteria-question-literal-question",
+      "file": "criteria-question-literal-question.xlsx",
+      "inputSha256": "32178331c98bc4ceff684fa4647a1ddc86b5ca0317a644bb2f6baa1cb3c06c94",
+      "date1904": false
+    },
+    {
+      "id": "criteria-question-literal-tilde",
+      "file": "criteria-question-literal-tilde.xlsx",
+      "inputSha256": "f3bc9aa91d5927f65fa4b73364053e885fa0e3cec9ceb041e957af34e70cd604",
+      "date1904": false
+    },
+    {
+      "id": "criteria-question-error-text",
+      "file": "criteria-question-error-text.xlsx",
+      "inputSha256": "0e6757b2079eafbf5a1a1feb751872fceaaa1cb2b6dd2f0e23790329201b2196",
+      "date1904": false
+    },
+    {
+      "id": "criteria-question-blank-reference",
+      "file": "criteria-question-blank-reference.xlsx",
+      "inputSha256": "db82b19a1efbd7bd0b4a4f789c609a93ef6c7b8fc977f714882aa3249fac03b4",
+      "date1904": false
+    },
+    {
+      "id": "criteria-question-le",
+      "file": "criteria-question-le.xlsx",
+      "inputSha256": "ddcaa7d95d45ab9ea89f6bba01d2b3cf0eb79dab8f9b9320c0e8e4cc3dc2d0a3",
+      "date1904": false
+    },
+    {
+      "id": "criteria-question-ge",
+      "file": "criteria-question-ge.xlsx",
+      "inputSha256": "d749644457dfc8dbcd7e81a7c53235904709ef2ce98ff8a8dba4b3126c5bb827",
+      "date1904": false
+    },
+    {
+      "id": "criteria-tilde-zero",
+      "file": "criteria-tilde-zero.xlsx",
+      "inputSha256": "aa384625f51932fa8190d9019643d421568b79426731fc110a4ffdf0e332dc05",
+      "date1904": false
+    },
+    {
+      "id": "criteria-tilde-zero-text",
+      "file": "criteria-tilde-zero-text.xlsx",
+      "inputSha256": "ea20faa7071b20d79a797262b5efa12f8b634df4ed4031540749c7933de1d91d",
+      "date1904": false
+    },
+    {
+      "id": "criteria-tilde-empty",
+      "file": "criteria-tilde-empty.xlsx",
+      "inputSha256": "54d85ad891e93c89e8d43d011d58b16dbbfe34ecfd9b1eb741031a02b180a1fe",
+      "date1904": false
+    },
+    {
+      "id": "criteria-tilde-equal",
+      "file": "criteria-tilde-equal.xlsx",
+      "inputSha256": "7470474cfc61db952ec40ff3febc0093a0e4b7f8f68ee2d3fb96d2727abbc40c",
+      "date1904": false
+    },
+    {
+      "id": "criteria-tilde-nonempty",
+      "file": "criteria-tilde-nonempty.xlsx",
+      "inputSha256": "7cd2fcf09af6fa53d449e2a7de40971711a3231bf7373f308a54455629451948",
+      "date1904": false
+    },
+    {
+      "id": "criteria-tilde-positive",
+      "file": "criteria-tilde-positive.xlsx",
+      "inputSha256": "b93cefbe62555756afbea413caef5a76f9d291f77c98f91feb44c2007aa5d0d4",
+      "date1904": false
+    },
+    {
+      "id": "criteria-tilde-nonzero",
+      "file": "criteria-tilde-nonzero.xlsx",
+      "inputSha256": "79a37472e43a4c38c90692b958f445ddc1b936f96d245aa974d0b3a78811e711",
+      "date1904": false
+    },
+    {
+      "id": "criteria-tilde-boolean",
+      "file": "criteria-tilde-boolean.xlsx",
+      "inputSha256": "c5f2db25628b1955939632a460ea8931e3c11c145d5a0eb39cddab407f88274e",
+      "date1904": false
+    },
+    {
+      "id": "criteria-tilde-boolean-text",
+      "file": "criteria-tilde-boolean-text.xlsx",
+      "inputSha256": "b418ea713d74376e406b0c4b487770edcab93b03b9bf3f009f3762b16e320c53",
+      "date1904": false
+    },
+    {
+      "id": "criteria-tilde-star",
+      "file": "criteria-tilde-star.xlsx",
+      "inputSha256": "23fab3ee3ae9ab65708fe3fc52d558cdbb9232193c863b71520ff391b4eedb17",
+      "date1904": false
+    },
+    {
+      "id": "criteria-tilde-question",
+      "file": "criteria-tilde-question.xlsx",
+      "inputSha256": "3456ec0d7826219b8f37bdbcb732563c378e24a95b8161fe83649a55b44025f9",
+      "date1904": false
+    },
+    {
+      "id": "criteria-tilde-literal-star",
+      "file": "criteria-tilde-literal-star.xlsx",
+      "inputSha256": "b4735f6deb1b78210a0cd40cd2a3fec6a3e2d4b095e4d0b79d9f4f711ab6b83a",
+      "date1904": false
+    },
+    {
+      "id": "criteria-tilde-literal-question",
+      "file": "criteria-tilde-literal-question.xlsx",
+      "inputSha256": "6b3db528d70dfe481ddb457d368e10371b6e4ef67db8d40b3e2a98d79d2b3c47",
+      "date1904": false
+    },
+    {
+      "id": "criteria-tilde-literal-tilde",
+      "file": "criteria-tilde-literal-tilde.xlsx",
+      "inputSha256": "d81cc02afda22707397f2109d1b14c7f4206934dfd888f5d5f968db5ecf019cb",
+      "date1904": false
+    },
+    {
+      "id": "criteria-tilde-error-text",
+      "file": "criteria-tilde-error-text.xlsx",
+      "inputSha256": "09308c63aaf1d0c23f25463e84c24976a98e4c1944e7a6699d3556897bda5e8e",
+      "date1904": false
+    },
+    {
+      "id": "criteria-tilde-blank-reference",
+      "file": "criteria-tilde-blank-reference.xlsx",
+      "inputSha256": "1fd00fc22a3fe8d3e1c46f1f64013c38c7a0c5588fe0e7ac5a08723b26ecd4df",
+      "date1904": false
+    },
+    {
+      "id": "criteria-tilde-le",
+      "file": "criteria-tilde-le.xlsx",
+      "inputSha256": "0b9dfeed16b4d0c05bab333ef9e998e8e3427ade7550663fe01e5d9c7a4d03b0",
+      "date1904": false
+    },
+    {
+      "id": "criteria-tilde-ge",
+      "file": "criteria-tilde-ge.xlsx",
+      "inputSha256": "733fbfc9a3200fd3302f97e35f32b1a6f9e102fd68934cf7ce6b054b11b537a9",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-0-zero",
+      "file": "criteria-error-0-zero.xlsx",
+      "inputSha256": "027e84f8efd05717932d55f275004b7aefc7930dd0c112fe62abd2ed3c3f7163",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-0-zero-text",
+      "file": "criteria-error-0-zero-text.xlsx",
+      "inputSha256": "b91a0ffa4db0ed93ff513eaab7c0eded25163bbb5d6c84f088012d27f77cd88a",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-0-empty",
+      "file": "criteria-error-0-empty.xlsx",
+      "inputSha256": "4d68ddfb493ef27f5acfab8140a695dc93c223facd1b843d3c43043ee186f4d4",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-0-equal",
+      "file": "criteria-error-0-equal.xlsx",
+      "inputSha256": "cc91a01aa84488b1fd02ff16ee5e79d8efc9ede0799cea433daebfab6fb9ec3c",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-0-nonempty",
+      "file": "criteria-error-0-nonempty.xlsx",
+      "inputSha256": "7d8d766e8674c6bb6a8094aece8021e70671f702e9eeff9147bc5cfb80475ac1",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-0-positive",
+      "file": "criteria-error-0-positive.xlsx",
+      "inputSha256": "cc2d125d4beedf6b7a1e69de6db93eccc630b49badd8799b27bf026fa7cbd556",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-0-nonzero",
+      "file": "criteria-error-0-nonzero.xlsx",
+      "inputSha256": "151827f9a7f2a7163c8f333375671ba8af83ed5d35d2bc33501c4186f1a404ad",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-0-boolean",
+      "file": "criteria-error-0-boolean.xlsx",
+      "inputSha256": "6a0ac9cd4ddabc17e01cd408d1db775b01deb22eeb55112a440bbded5b52f460",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-0-boolean-text",
+      "file": "criteria-error-0-boolean-text.xlsx",
+      "inputSha256": "0f862678434de69d6aa910372035f272d99401f22dbaeeee17bff7e7b550e3db",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-0-star",
+      "file": "criteria-error-0-star.xlsx",
+      "inputSha256": "a4acf773fd901c84eaa4c30ef4eff273e1c3f12714f3fcedb84aa6ee3e9afa7a",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-0-question",
+      "file": "criteria-error-0-question.xlsx",
+      "inputSha256": "029cfbb45e31472417b502cd83fc97ebde542f7831531c8157311f5ea25664a0",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-0-literal-star",
+      "file": "criteria-error-0-literal-star.xlsx",
+      "inputSha256": "55b133f69f6c413e8185980ad5818a54cb046876b8be9b44d7aa147f03d51581",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-0-literal-question",
+      "file": "criteria-error-0-literal-question.xlsx",
+      "inputSha256": "9a69f7a2f61df7b6ee884ab8dffebeae386b7eec1a957457a5f25d944a1053df",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-0-literal-tilde",
+      "file": "criteria-error-0-literal-tilde.xlsx",
+      "inputSha256": "cde1c70dd1f4cb21d96c2953aa0056829977a309edbe6da8be7682a7649f5c62",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-0-error-text",
+      "file": "criteria-error-0-error-text.xlsx",
+      "inputSha256": "a8a21bf3868f7921252381321679581884a9c987a902cc54070a2944bf681066",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-0-blank-reference",
+      "file": "criteria-error-0-blank-reference.xlsx",
+      "inputSha256": "0e1bf43ac464403b51daadd85e4f3e45d03bf3a5a2c7d88fc46eceb355eda6cd",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-0-le",
+      "file": "criteria-error-0-le.xlsx",
+      "inputSha256": "9f3b1514d2c9e47cf546de2744810c8806d8dcff0bfadab7d4729a3378dc3dd8",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-0-ge",
+      "file": "criteria-error-0-ge.xlsx",
+      "inputSha256": "ede058c42ed5b769dbb7e83787e459f35193c6efb1036121178c8e9310bb5c45",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-1-zero",
+      "file": "criteria-error-1-zero.xlsx",
+      "inputSha256": "8eae659d4fac62319efb1f7ce987af69ffea014db0599ac504380ff2923b5281",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-1-zero-text",
+      "file": "criteria-error-1-zero-text.xlsx",
+      "inputSha256": "26fc59a90129f1d96820a4268a7a8ef8f3606ec2d9d7335b1b9b83719b829e79",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-1-empty",
+      "file": "criteria-error-1-empty.xlsx",
+      "inputSha256": "f432865fb242f11d7c8501aea7c12fbe7ab2f2e481f85760f25889cb720f21be",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-1-equal",
+      "file": "criteria-error-1-equal.xlsx",
+      "inputSha256": "a56fa620b28edf10175248ddabc6d8f6ff478db0f4d82f658bab95a1ca1fa782",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-1-nonempty",
+      "file": "criteria-error-1-nonempty.xlsx",
+      "inputSha256": "037b29f1958b47000ece7d45b06b8d2b885b517924ee0bdc2d812f00c67f9eb9",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-1-positive",
+      "file": "criteria-error-1-positive.xlsx",
+      "inputSha256": "942fc1ca6b0c45b3caa95f778279e07e8edb214fd37c032a307c5edcb7c4d20f",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-1-nonzero",
+      "file": "criteria-error-1-nonzero.xlsx",
+      "inputSha256": "612b552ffde72ae1f9384e35fde302d669517e3c27d2d0f2940353dd1966ac5b",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-1-boolean",
+      "file": "criteria-error-1-boolean.xlsx",
+      "inputSha256": "a8d57e867369d6c7dadddab11451f61f2f30c311169a91041edd8fe60dbb6f48",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-1-boolean-text",
+      "file": "criteria-error-1-boolean-text.xlsx",
+      "inputSha256": "006df75f624223b6d116dff531eafa61a61cd684e6063b47332e64ccbcb5a672",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-1-star",
+      "file": "criteria-error-1-star.xlsx",
+      "inputSha256": "6577a64f100ae1ed0ff4850e7bbf7043e8510f6be932eb4b141cd8bb4a9a5a6e",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-1-question",
+      "file": "criteria-error-1-question.xlsx",
+      "inputSha256": "5b5786715566ac154484419eb72dc507ef299cd65fc8c5d431d16818721b8388",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-1-literal-star",
+      "file": "criteria-error-1-literal-star.xlsx",
+      "inputSha256": "48ede5cb418a1468fcdff99010282bd284a2295000d50efbee3eb0ca0577c411",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-1-literal-question",
+      "file": "criteria-error-1-literal-question.xlsx",
+      "inputSha256": "fc502251e0e8dc2fc27c1cce958e99885f5c24ca76df55b2b0920daafc8abd93",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-1-literal-tilde",
+      "file": "criteria-error-1-literal-tilde.xlsx",
+      "inputSha256": "04cae0daf9817a5e31ffec7d2c2e8a0c0c1aa40f0b05689f4f1ca03400dd258c",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-1-error-text",
+      "file": "criteria-error-1-error-text.xlsx",
+      "inputSha256": "93dd5226a172ff3ca350dadb85d77ebbf8de484c45d1ea5faab8c31db2d493d6",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-1-blank-reference",
+      "file": "criteria-error-1-blank-reference.xlsx",
+      "inputSha256": "4c3c70698fd29e3fefbda54870da1daf45584b04ae1ad0786f89b809260d5605",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-1-le",
+      "file": "criteria-error-1-le.xlsx",
+      "inputSha256": "e981369aace6279100d8f4880214aba6a997ea723f8ef31e4c2355e2ef1c2d87",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-1-ge",
+      "file": "criteria-error-1-ge.xlsx",
+      "inputSha256": "4f3428cbccd2227b27ab15f82e596b6ebe32c17680ecd874a7a9ae14b3baf7d9",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-2-zero",
+      "file": "criteria-error-2-zero.xlsx",
+      "inputSha256": "e889abc30075c13232ab52f294d89632c0f7346d3c471cc8116a573d497f7377",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-2-zero-text",
+      "file": "criteria-error-2-zero-text.xlsx",
+      "inputSha256": "38ea5bf8309cb4e488c4f27a06dc1e2106450e40a9665a32797a769837eb42bb",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-2-empty",
+      "file": "criteria-error-2-empty.xlsx",
+      "inputSha256": "935816214585792b2e9060d4d01cf22abc605b28776a81894ea86072c566fb4c",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-2-equal",
+      "file": "criteria-error-2-equal.xlsx",
+      "inputSha256": "6a2da2c758326b72653014ac37cbd51518e11e4e26c084f57f9109958e6db9a3",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-2-nonempty",
+      "file": "criteria-error-2-nonempty.xlsx",
+      "inputSha256": "a184e130f6e9a3850aeaa20bd6dcdaa685c6422329f92b996004582d439621e0",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-2-positive",
+      "file": "criteria-error-2-positive.xlsx",
+      "inputSha256": "36db42faaf7d5a2aa6fb82add5e9c0749c6286bf53d73ebc61cb264690c4365a",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-2-nonzero",
+      "file": "criteria-error-2-nonzero.xlsx",
+      "inputSha256": "dff4892d1270c2adcdb2b59490c0130beaf390f06a43b5a13729425a23b0ea98",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-2-boolean",
+      "file": "criteria-error-2-boolean.xlsx",
+      "inputSha256": "9032ed004dea14585079c700884a19004f6d57cb28bbff9e02630163df799cff",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-2-boolean-text",
+      "file": "criteria-error-2-boolean-text.xlsx",
+      "inputSha256": "c7d8bb4a72205100a6180e4f916a4fd04b3100c4a5535b245d0f6a3febeb05e8",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-2-star",
+      "file": "criteria-error-2-star.xlsx",
+      "inputSha256": "cea656c644b64defe0f45df97c276e0722a9eafb61f1f2b7b09385fede10e0b4",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-2-question",
+      "file": "criteria-error-2-question.xlsx",
+      "inputSha256": "9a2128665c8cc9f0c9829af3fadf359e7c4989e344452e43395b364c12a75c1f",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-2-literal-star",
+      "file": "criteria-error-2-literal-star.xlsx",
+      "inputSha256": "ce334d689db73ae17bbf9c9e6f54255cd382a030eea826ae8fbad2193890e656",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-2-literal-question",
+      "file": "criteria-error-2-literal-question.xlsx",
+      "inputSha256": "06c92de9ca05b36001f4d37a437e2e4fe91559f9159068689c7effd4fd24cc6f",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-2-literal-tilde",
+      "file": "criteria-error-2-literal-tilde.xlsx",
+      "inputSha256": "1d704160f5699fa9cd47c9b53df33f86086c63c53fe4114a1cc966c5a17b6b89",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-2-error-text",
+      "file": "criteria-error-2-error-text.xlsx",
+      "inputSha256": "bb4b3f78c1f3bb2cc5f0fc97ee7fb0f29e40bb959d1de11095826041d96ff2bd",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-2-blank-reference",
+      "file": "criteria-error-2-blank-reference.xlsx",
+      "inputSha256": "7427dfc2e0c93ba3e9d21f3a919c88654de3c3da2525563c08c45d89892041bf",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-2-le",
+      "file": "criteria-error-2-le.xlsx",
+      "inputSha256": "9ede24f550a96a3035ca9d28a3eed164a4db407f2cf729411513a9a84b766e7b",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-2-ge",
+      "file": "criteria-error-2-ge.xlsx",
+      "inputSha256": "e7f4a605b378400532daf178c2246e91e9e0e04f6498803d94ad500bcd184bae",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-3-zero",
+      "file": "criteria-error-3-zero.xlsx",
+      "inputSha256": "b3409da6b65fa1c026fd5214aea4e910701895eff19c6db26d0638b6ee7f95e5",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-3-zero-text",
+      "file": "criteria-error-3-zero-text.xlsx",
+      "inputSha256": "8ffdbc4abed40df5cdd7868a284945bf081336b2cbda1aa3b2e1e86e43034ba3",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-3-empty",
+      "file": "criteria-error-3-empty.xlsx",
+      "inputSha256": "c07973bf539c483dcb35768296d69886f983445eb8f20d07a01fcb8c01e5e944",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-3-equal",
+      "file": "criteria-error-3-equal.xlsx",
+      "inputSha256": "e97c564ecdc75cf80c7b1f452cf1ce11cc937930992304c8ec6b8ead01383c09",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-3-nonempty",
+      "file": "criteria-error-3-nonempty.xlsx",
+      "inputSha256": "36dd32183859f134b39521e9921732962bb955f5e947f50ec0ce3222ffea8442",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-3-positive",
+      "file": "criteria-error-3-positive.xlsx",
+      "inputSha256": "f76224a1d451a584345cccaf3bff16e036a52c213aa29679e10ed070afb4338b",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-3-nonzero",
+      "file": "criteria-error-3-nonzero.xlsx",
+      "inputSha256": "8c193c3101b28c80a91a652911060774a16350280008d5fdbbbb9d96b4ce556c",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-3-boolean",
+      "file": "criteria-error-3-boolean.xlsx",
+      "inputSha256": "533a7a493b5adbf3fa5df60465696ec2a60f3f0471cc378125c095061df1c4c2",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-3-boolean-text",
+      "file": "criteria-error-3-boolean-text.xlsx",
+      "inputSha256": "dbbc474ab002f1e35205007c61586a23273ce671a115c3bc061ddaafc30a6439",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-3-star",
+      "file": "criteria-error-3-star.xlsx",
+      "inputSha256": "a6e0ec2f7c6f90aa558611ed92e38ba921b6b0141eda95c399ad1159efcdf6cf",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-3-question",
+      "file": "criteria-error-3-question.xlsx",
+      "inputSha256": "8aea0d479cacd0535a89623473834c18e33dbb8d41eefc82e2a75dd511ff6d63",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-3-literal-star",
+      "file": "criteria-error-3-literal-star.xlsx",
+      "inputSha256": "edf6952b7d8112de56fe61819d52c744d77d80c7e3407922f7049ce5a722370d",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-3-literal-question",
+      "file": "criteria-error-3-literal-question.xlsx",
+      "inputSha256": "3ffda4ff636e6fcd58c47d31bd4f05a4c37e688a4166b2d385b4bd0ccf2c178a",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-3-literal-tilde",
+      "file": "criteria-error-3-literal-tilde.xlsx",
+      "inputSha256": "c56196b0a6a060ab31d573e019b817ff9284a1fcfdac84ea9c35e3f92ca40633",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-3-error-text",
+      "file": "criteria-error-3-error-text.xlsx",
+      "inputSha256": "59b6c0963bd51e14f0d7f5fcfbf0e7a6efd121bfca98bc544228bb3d10ea5383",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-3-blank-reference",
+      "file": "criteria-error-3-blank-reference.xlsx",
+      "inputSha256": "0af697b3c8aad4798cafc90b07aee63a3e70fa79ddf00735c20bdc0dc71de702",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-3-le",
+      "file": "criteria-error-3-le.xlsx",
+      "inputSha256": "9cff6901ebfd1e38328e61b45ef525ea23e1d7072b48aa19933ba59e12452002",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-3-ge",
+      "file": "criteria-error-3-ge.xlsx",
+      "inputSha256": "06741e7f9c705dc1d2d96951ffa4ccbe7144e339b3cd21fdcb6b62e2979d2a42",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-4-zero",
+      "file": "criteria-error-4-zero.xlsx",
+      "inputSha256": "f0d0d78df92326b2e89cc7f9712e0cd31c7b37eef9d12412c6a7c022b1fc1000",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-4-zero-text",
+      "file": "criteria-error-4-zero-text.xlsx",
+      "inputSha256": "d6e08cc994b5e75daa712e7b7bc5e65c52b8fd9722790d3096e560361473d734",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-4-empty",
+      "file": "criteria-error-4-empty.xlsx",
+      "inputSha256": "5cfc00860e9ce5f95e1e92e6c2dc0a243a16d3124871859212c88fde90f003e8",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-4-equal",
+      "file": "criteria-error-4-equal.xlsx",
+      "inputSha256": "3f0379040c15856f601f9604c350d6106136bdb89706650b6c18b313e258c6bf",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-4-nonempty",
+      "file": "criteria-error-4-nonempty.xlsx",
+      "inputSha256": "12e27fe27c676f3bb0ed5e9040efe9196e190422830ce074092f8fe8d09b688d",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-4-positive",
+      "file": "criteria-error-4-positive.xlsx",
+      "inputSha256": "bf9a79b8ab82b449bc7b8ae39c51f0755d888382b41c7f624ea567fe12e0625a",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-4-nonzero",
+      "file": "criteria-error-4-nonzero.xlsx",
+      "inputSha256": "4fa668d00b3cd07326995a7dfff932055bf55a67035f9c5889cdc160d1a1b63a",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-4-boolean",
+      "file": "criteria-error-4-boolean.xlsx",
+      "inputSha256": "99acbbf567adc7d3d97fc02992b930dc6e18626707f0d407ab3eec9d3d53cc80",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-4-boolean-text",
+      "file": "criteria-error-4-boolean-text.xlsx",
+      "inputSha256": "34ad24375ee346ea649cdee3517777247844bb47c80edaa170318e668736a3cb",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-4-star",
+      "file": "criteria-error-4-star.xlsx",
+      "inputSha256": "e257296843c12dd34188112e1481a564bd2b44e2a5d48bdd117c70793d051a95",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-4-question",
+      "file": "criteria-error-4-question.xlsx",
+      "inputSha256": "73420bcc6bbc0daed8e67986c142710c8859e8f5e576e9939c69ab96fdd57f9b",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-4-literal-star",
+      "file": "criteria-error-4-literal-star.xlsx",
+      "inputSha256": "4e1d0222665b2f29d12711a6b1c9eefecd75d944ee7439a7f1c240907ad8f0c7",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-4-literal-question",
+      "file": "criteria-error-4-literal-question.xlsx",
+      "inputSha256": "866336dd7f9fde2ab7021638fd3cbec7ee11f9e5c74e522f6ff5810dfd697f6c",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-4-literal-tilde",
+      "file": "criteria-error-4-literal-tilde.xlsx",
+      "inputSha256": "c446c184da0c1fbda8079217b1ae109765bb73a1392c7a37ec36075e424982ed",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-4-error-text",
+      "file": "criteria-error-4-error-text.xlsx",
+      "inputSha256": "fd268159ae43f6b5a4328492cf6c7d3387c9a375e464cced46eccdb6d7f5494f",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-4-blank-reference",
+      "file": "criteria-error-4-blank-reference.xlsx",
+      "inputSha256": "ab685f7ad42aa657c5c539f8290d592eebac27e6286bc8faa5a40898063cc73c",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-4-le",
+      "file": "criteria-error-4-le.xlsx",
+      "inputSha256": "3a66619430c438c8d8fe3ab28622e648b5e1d6bfe0f7d3518f6ef9158b5b5d20",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-4-ge",
+      "file": "criteria-error-4-ge.xlsx",
+      "inputSha256": "449c6fd635fd380f5744102a075ccd322ae456b01222c64d9c2643667f4349e6",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-5-zero",
+      "file": "criteria-error-5-zero.xlsx",
+      "inputSha256": "f326edc1f6a911815fdffe1398ce1638bd8f5bc6cc986a07c4aecb83c743bf23",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-5-zero-text",
+      "file": "criteria-error-5-zero-text.xlsx",
+      "inputSha256": "3291b6b40d40a49860b3e41dbf8365782758761d2977e8dde86c04be8b01cd22",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-5-empty",
+      "file": "criteria-error-5-empty.xlsx",
+      "inputSha256": "b2ffc3a950377e2a1403e490cc45d3d4aa38519677446a4cd28a95736536fdca",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-5-equal",
+      "file": "criteria-error-5-equal.xlsx",
+      "inputSha256": "2fb7f912f0a7429f05d92808d68cc396552a8a02e640426f94ca2303b91b18b9",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-5-nonempty",
+      "file": "criteria-error-5-nonempty.xlsx",
+      "inputSha256": "6c1df3f45fd85778450ee86b7842871dc02a4c6df83a92c53851721bff493602",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-5-positive",
+      "file": "criteria-error-5-positive.xlsx",
+      "inputSha256": "4b65baf147c5a9020142bce3171121da9f7fa128b7a50badbed9b1a39790eeb6",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-5-nonzero",
+      "file": "criteria-error-5-nonzero.xlsx",
+      "inputSha256": "2114b0402b66c389bfc7b219f2bb97b9620518403605e6a53e885906e1fec548",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-5-boolean",
+      "file": "criteria-error-5-boolean.xlsx",
+      "inputSha256": "8f6d177bb947a4e5e91d1aeada76960376559f026cceb9e7aa811a6b40320fa4",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-5-boolean-text",
+      "file": "criteria-error-5-boolean-text.xlsx",
+      "inputSha256": "0102af22664cf6b8307ad4acf9146ef93e5b463f162a0cd5906cbedeb7fe7a3c",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-5-star",
+      "file": "criteria-error-5-star.xlsx",
+      "inputSha256": "8bc34ad0ce0ef0cb7aa7117e6b24f039ae18277013f9f1c2c7dc103e99f44b60",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-5-question",
+      "file": "criteria-error-5-question.xlsx",
+      "inputSha256": "5b04f2b0e98d223023c5929f33cf1a0f555ebab13e1ed26bed47afdf350b37b7",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-5-literal-star",
+      "file": "criteria-error-5-literal-star.xlsx",
+      "inputSha256": "50f0d72e2993dbc0cb97bb598d3d770a27b9f2841d1cbd36b747ea75893957fa",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-5-literal-question",
+      "file": "criteria-error-5-literal-question.xlsx",
+      "inputSha256": "e0c6f8e2f2268f90f6866b1593dac5d956ad7688ab48f37a387897efff5445bd",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-5-literal-tilde",
+      "file": "criteria-error-5-literal-tilde.xlsx",
+      "inputSha256": "5272c46b4c5e4bada7f5634730e1b28cdf2d25ce084aaf33ff288e3f85a63312",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-5-error-text",
+      "file": "criteria-error-5-error-text.xlsx",
+      "inputSha256": "1b1d6edb346776a73b16a45530b3b8a8d50e0ceec11d2b68f84b5c1e1c9e5714",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-5-blank-reference",
+      "file": "criteria-error-5-blank-reference.xlsx",
+      "inputSha256": "80970ee329671951b5da6b677331ad3f66ece4276acd18175ed313ff6cf3c98d",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-5-le",
+      "file": "criteria-error-5-le.xlsx",
+      "inputSha256": "0584ec757e66601fe1d711a89a173e6226e077362614f0ac9296e44bb731a280",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-5-ge",
+      "file": "criteria-error-5-ge.xlsx",
+      "inputSha256": "7cc6dfcc4b07ee69b18bfeea255783dac65ebf1c611b02751a73151f73262d46",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-6-zero",
+      "file": "criteria-error-6-zero.xlsx",
+      "inputSha256": "6866a74b2dd67e0b5bca39acf8a425e4a4a9759d41dfa3ab58e3691cb9f36c9f",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-6-zero-text",
+      "file": "criteria-error-6-zero-text.xlsx",
+      "inputSha256": "9169b92bf974e44e99b95847a82e303779fbea5bd438ce48c14fcb884b7d2cbd",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-6-empty",
+      "file": "criteria-error-6-empty.xlsx",
+      "inputSha256": "2581f42637cbbc0d9119a0903a949921bedc6fe81d2ed1c7a33353cd512e6309",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-6-equal",
+      "file": "criteria-error-6-equal.xlsx",
+      "inputSha256": "f8e6fcf733e0e45ce5d17a3b81f3089e7cd0207d66a463b1eb5a6ffe8008943e",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-6-nonempty",
+      "file": "criteria-error-6-nonempty.xlsx",
+      "inputSha256": "34ec3f16d86c34bfbc5a21c9f69e1655c17f50b2725984225dfc7eaa89477c7f",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-6-positive",
+      "file": "criteria-error-6-positive.xlsx",
+      "inputSha256": "49b64ff35ad54c5aff1a9f9e57efdb789869b0426553b2bda8a251bba717b8de",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-6-nonzero",
+      "file": "criteria-error-6-nonzero.xlsx",
+      "inputSha256": "de6e97e0d84eec0f29ccd675c29cc3a232674d29a74e35328543bc3a49bfaffb",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-6-boolean",
+      "file": "criteria-error-6-boolean.xlsx",
+      "inputSha256": "43a3fb5da9e4f2d29a2dcccac297e0217be1a93f7cef2840789f9169de61dac7",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-6-boolean-text",
+      "file": "criteria-error-6-boolean-text.xlsx",
+      "inputSha256": "45b93ca839eb5ad7df4dd01514750f9dfd7c70e68a2920e59a85f3bb0640cf01",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-6-star",
+      "file": "criteria-error-6-star.xlsx",
+      "inputSha256": "8d2dc60812be80a2becff0e30bc0f3fbe3de4badb6e59d2d66ffd78bad8181c1",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-6-question",
+      "file": "criteria-error-6-question.xlsx",
+      "inputSha256": "468a5e1aee4b84fa71cdeaa5eab3e52962b5f2c434e27a43a16f11540474568e",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-6-literal-star",
+      "file": "criteria-error-6-literal-star.xlsx",
+      "inputSha256": "17329fb92aec55a8f6d8c9818543b0170a722874d5df0513c87974c979ce75e5",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-6-literal-question",
+      "file": "criteria-error-6-literal-question.xlsx",
+      "inputSha256": "9374d6a6474da5cb503384035f025aea411d9fc92b6ffb37d2e1841c93403932",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-6-literal-tilde",
+      "file": "criteria-error-6-literal-tilde.xlsx",
+      "inputSha256": "9311a986344389ba0d2fbf6ebc351d3a01e53a8694de0d1f2688db27b3e97e53",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-6-error-text",
+      "file": "criteria-error-6-error-text.xlsx",
+      "inputSha256": "5fda1d542d5294c20b01b3f8ccd4488721c399f784475311dedaf138a99dc48a",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-6-blank-reference",
+      "file": "criteria-error-6-blank-reference.xlsx",
+      "inputSha256": "f66cfb6da9ad167e3b8d36a86c7e040511896ec22653de3f4b416bb2e10e0cbc",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-6-le",
+      "file": "criteria-error-6-le.xlsx",
+      "inputSha256": "85746a2bf73a70a9e8128d6abd9a0b76fa6ac5d38316492bf29dabedc8ca9c07",
+      "date1904": false
+    },
+    {
+      "id": "criteria-error-6-ge",
+      "file": "criteria-error-6-ge.xlsx",
+      "inputSha256": "8d0a748e8ea0299069567c9ea4d0eeaac18f495cd45f5f7d9d7ea0edbe810f03",
+      "date1904": false
+    },
+    {
+      "id": "conditional-empty-column",
+      "file": "conditional-empty-column.xlsx",
+      "inputSha256": "2c44a0589eb53fab1bc77adaaaa2011199ce7fea0806b3d17e9d1407513cb5c7",
+      "date1904": false
+    },
+    {
+      "id": "conditional-column-tail",
+      "file": "conditional-column-tail.xlsx",
+      "inputSha256": "4c6d0978e951d1836cad8192569754fa45feb7ce197f1b019bf285ac83bab72b",
+      "date1904": false
+    },
+    {
+      "id": "conditional-shifted",
+      "file": "conditional-shifted.xlsx",
+      "inputSha256": "daba793bdaf2c97391784c8e45471503f8e01c398390c661fba891bc4edd29d0",
+      "date1904": false
+    },
+    {
+      "id": "conditional-all-blank",
+      "file": "conditional-all-blank.xlsx",
+      "inputSha256": "facd1e8b9997386833eaa54233161bb71caecdc970b7fa5dec1b88784bd66cd9",
+      "date1904": false
+    },
+    {
+      "id": "conditional-sum-only",
+      "file": "conditional-sum-only.xlsx",
+      "inputSha256": "3d2702c541a0d8b60c17cfbb82203dec5447a1fc42c448b1f2e3c3cfa1c6d6c0",
+      "date1904": false
+    },
+    {
+      "id": "conditional-sumif-expand",
+      "file": "conditional-sumif-expand.xlsx",
+      "inputSha256": "42e5357f88efc99b94199248c735176d5c44180689ac1ec1f04b0dc45f18ee91",
+      "date1904": false
+    },
+    {
+      "id": "conditional-sumif-outside",
+      "file": "conditional-sumif-outside.xlsx",
+      "inputSha256": "52c48b949e00693e33ddee524265ebcca40e2a60d0653efd24d286498324c6d7",
+      "date1904": false
+    },
+    {
+      "id": "conditional-sumifs-shape",
+      "file": "conditional-sumifs-shape.xlsx",
+      "inputSha256": "ccedd5be7c6d60c4d0a8baf9a3ff275edca811f75c4577eb8bf6c871f842e51b",
+      "date1904": false
+    },
+    {
+      "id": "conditional-countifs-shape",
+      "file": "conditional-countifs-shape.xlsx",
+      "inputSha256": "bd70f2d527c12ca5699342021d0b551bb56bb0f08fa978c1d87b882ac651a5ae",
+      "date1904": false
+    },
+    {
+      "id": "conditional-selected-error",
+      "file": "conditional-selected-error.xlsx",
+      "inputSha256": "d5f4bbc5c7c294adb06def682c948086975d7f3750586a57de968a9fc99128d4",
+      "date1904": false
+    },
+    {
+      "id": "conditional-unselected-error",
+      "file": "conditional-unselected-error.xlsx",
+      "inputSha256": "3233eccab30d5c075925327f2f4ac47caaafd2fc3ffbe0183a60d4938d75cbf1",
+      "date1904": false
+    },
+    {
+      "id": "conditional-criterion-error",
+      "file": "conditional-criterion-error.xlsx",
+      "inputSha256": "45a90ba020f2241eb422359fafa640c18bc596005219b71dbfea0b1bfd69fbbc",
+      "date1904": false
+    },
+    {
+      "id": "conditional-later-error",
+      "file": "conditional-later-error.xlsx",
+      "inputSha256": "4361601560c98f5c7241f8ea719b8f8b0746f750106aa6c62713d5282cde4269",
+      "date1904": false
+    },
+    {
+      "id": "lookup-first",
+      "file": "lookup-first.xlsx",
+      "inputSha256": "3389bd244710b2e50804e7dc0201fa4b9095da1a479db6a59819b1a4c6904847",
+      "date1904": false
+    },
+    {
+      "id": "lookup-text",
+      "file": "lookup-text.xlsx",
+      "inputSha256": "23423623d97de0137344b176779a71bc5963938557082a23db6d4b38bdf39202",
+      "date1904": false
+    },
+    {
+      "id": "lookup-case",
+      "file": "lookup-case.xlsx",
+      "inputSha256": "b309c49229025347f29c2458f9e68668659bb1e8710a38749f7ff6300455769c",
+      "date1904": false
+    },
+    {
+      "id": "lookup-wildcard",
+      "file": "lookup-wildcard.xlsx",
+      "inputSha256": "850d2c3c7fbe9d4db15e850c4cce2b0aca5a0eb308a55cef0a92c25cdf71fc35",
+      "date1904": false
+    },
+    {
+      "id": "lookup-numeric-text",
+      "file": "lookup-numeric-text.xlsx",
+      "inputSha256": "cb7c982b9be8a38ee54e19ece4eb863b0eb641636425a59fcca35774c20a21ba",
+      "date1904": false
+    },
+    {
+      "id": "lookup-not-found",
+      "file": "lookup-not-found.xlsx",
+      "inputSha256": "0387bb1142783e460099bc0357d85e7b12885654e5a3f1aba2a2e3ed1d7eeca3",
+      "date1904": false
+    },
+    {
+      "id": "lookup-wide",
+      "file": "lookup-wide.xlsx",
+      "inputSha256": "a9c29f219008b30bbc287de2471f0c124c4b9ec39c214327f8af32979a810054",
+      "date1904": false
+    },
+    {
+      "id": "lookup-zero-col",
+      "file": "lookup-zero-col.xlsx",
+      "inputSha256": "8701b613415bb131d7c8bfd59be7a7d09739728819bef48be161f4971db72af9",
+      "date1904": false
+    },
+    {
+      "id": "lookup-fraction-col",
+      "file": "lookup-fraction-col.xlsx",
+      "inputSha256": "8935efe7e3b683f7d85cbe3762331c68403aecc1d858a2b3a5f7bcb5088f1082",
+      "date1904": false
+    },
+    {
+      "id": "lookup-index",
+      "file": "lookup-index.xlsx",
+      "inputSha256": "4f3f0f5ec90d4cdaf61459876ae67d4bd520ffe8d0474fe7953a14cd63c8e487",
+      "date1904": false
+    },
+    {
+      "id": "lookup-index-row",
+      "file": "lookup-index-row.xlsx",
+      "inputSha256": "2082a840191b4b51a096878189d800cfbaf24f1156aec5bab71d6aac5fc76f54",
+      "date1904": false
+    },
+    {
+      "id": "lookup-index-col",
+      "file": "lookup-index-col.xlsx",
+      "inputSha256": "8e1eeb1462cde6d63d583c1856eeb1e8999cc432c8081be4feb81721bb10a117",
+      "date1904": false
+    },
+    {
+      "id": "lookup-index-ref",
+      "file": "lookup-index-ref.xlsx",
+      "inputSha256": "eddd0e5bf37c5ac2dc28e6cfcc92d86ffbbc3c1df4f57f7b5d70c3ff1915fc43",
+      "date1904": false
+    },
+    {
+      "id": "lookup-index-over",
+      "file": "lookup-index-over.xlsx",
+      "inputSha256": "62f84dd7eaea00c7051e63d5266ec8aad6849cb64c141147215ef6673d6c5ae3",
+      "date1904": false
+    },
+    {
+      "id": "lookup-blank-key",
+      "file": "lookup-blank-key.xlsx",
+      "inputSha256": "7850b07ed4fb1fd2dc51bf232cae356c7bd1e33e893aa5e580e8cb267ae891e8",
+      "date1904": false
+    },
+    {
+      "id": "lookup-blank-return",
+      "file": "lookup-blank-return.xlsx",
+      "inputSha256": "be7674de97bc02c072c5759a2dadfb989c0aa6fb26c214754ad4e49b6fdf857e",
+      "date1904": false
+    },
+    {
+      "id": "date-excel1900-0-year",
+      "file": "date-excel1900-0-year.xlsx",
+      "inputSha256": "b52d2773407e969db0e2e161ce198cc281775304348558495ac3c56ebca896bd",
+      "date1904": false
+    },
+    {
+      "id": "date-excel1900-0-month",
+      "file": "date-excel1900-0-month.xlsx",
+      "inputSha256": "321b5d0a86ae86f36babec90ed469893d6c66c7772f4b6be30c013881c6f1876",
+      "date1904": false
+    },
+    {
+      "id": "date-excel1900-0-day",
+      "file": "date-excel1900-0-day.xlsx",
+      "inputSha256": "a4d6c2645cd021226b78f151497b40cef18c3d01520e12f91fcf18c50d229052",
+      "date1904": false
+    },
+    {
+      "id": "date-excel1900-59-year",
+      "file": "date-excel1900-59-year.xlsx",
+      "inputSha256": "ede9aa53642884d3c852d3be705fc9287917e23e5fbc09c66a77999847aca939",
+      "date1904": false
+    },
+    {
+      "id": "date-excel1900-59-month",
+      "file": "date-excel1900-59-month.xlsx",
+      "inputSha256": "751ad6158cf6ae6ea83bdbe0a82ca7feb886bb744d72f026e20db9df3fdc0894",
+      "date1904": false
+    },
+    {
+      "id": "date-excel1900-59-day",
+      "file": "date-excel1900-59-day.xlsx",
+      "inputSha256": "d57190ef7734a79652c1f319554d585e8e8e1657dab7f4cad70c752130fbef01",
+      "date1904": false
+    },
+    {
+      "id": "date-excel1900-60-year",
+      "file": "date-excel1900-60-year.xlsx",
+      "inputSha256": "2ff402f3e7123aca906153b2f210990c011ac208d19455cba382929705066397",
+      "date1904": false
+    },
+    {
+      "id": "date-excel1900-60-month",
+      "file": "date-excel1900-60-month.xlsx",
+      "inputSha256": "017ef58172081c307dd37888577b1a7777097ec662fd88f5de7dc81eddbe80d8",
+      "date1904": false
+    },
+    {
+      "id": "date-excel1900-60-day",
+      "file": "date-excel1900-60-day.xlsx",
+      "inputSha256": "ea0cd47f5ad79f2abb1109c52de5ab9b64c4261c9697daed390381af6a9f12c1",
+      "date1904": false
+    },
+    {
+      "id": "date-excel1900-61-year",
+      "file": "date-excel1900-61-year.xlsx",
+      "inputSha256": "440dd9ae0f04e89f229cd37f37645ae99a412109aad8a4f5a539a26fd19411d6",
+      "date1904": false
+    },
+    {
+      "id": "date-excel1900-61-month",
+      "file": "date-excel1900-61-month.xlsx",
+      "inputSha256": "6852b24c9d8244f4d81ed68d4dec136642e5394bf9e82d6255b8e8ebb3fd600b",
+      "date1904": false
+    },
+    {
+      "id": "date-excel1900-61-day",
+      "file": "date-excel1900-61-day.xlsx",
+      "inputSha256": "71de9b660dc909f9246d46925705dd231a6c27fa10869085b3cbeb74bd3f1066",
+      "date1904": false
+    },
+    {
+      "id": "date-excel1900-2958465-year",
+      "file": "date-excel1900-2958465-year.xlsx",
+      "inputSha256": "3ff85c05a8d4c899715b1e1905aaba0f264b46a77ca95cf463e594b8c6666308",
+      "date1904": false
+    },
+    {
+      "id": "date-excel1900-2958465-month",
+      "file": "date-excel1900-2958465-month.xlsx",
+      "inputSha256": "1ed408a306955aa6f0da757b0d979a186e2552c3a874d72ff8b9fec24374103e",
+      "date1904": false
+    },
+    {
+      "id": "date-excel1900-2958465-day",
+      "file": "date-excel1900-2958465-day.xlsx",
+      "inputSha256": "cfda065114c63e52e41e8befad3ef367147ac6f0a4d8444ab55072bca97255a0",
+      "date1904": false
+    },
+    {
+      "id": "date-excel1900-epoch",
+      "file": "date-excel1900-epoch.xlsx",
+      "inputSha256": "709011162756f8836c15dae3934b4df4a7586df05cbe6ae161e1a493a7bfd2c4",
+      "date1904": false
+    },
+    {
+      "id": "date-excel1900-year-adjust",
+      "file": "date-excel1900-year-adjust.xlsx",
+      "inputSha256": "59ff3f37cd29639688f84a2fc93a0209c3167e060e5545d3b2efbd8aea821204",
+      "date1904": false
+    },
+    {
+      "id": "date-excel1900-normalize",
+      "file": "date-excel1900-normalize.xlsx",
+      "inputSha256": "593cdf5c0e2a7d847ee54d1c98fb291afea44367561d3a150e1b96db0bb08e74",
+      "date1904": false
+    },
+    {
+      "id": "date-excel1900-normalize-day",
+      "file": "date-excel1900-normalize-day.xlsx",
+      "inputSha256": "ccad480e995ab7267bf226a2f72682ab93d75129a3519ef62b70288544c0860b",
+      "date1904": false
+    },
+    {
+      "id": "date-excel1900-edate-leap",
+      "file": "date-excel1900-edate-leap.xlsx",
+      "inputSha256": "418a8eeb0c2c124b493edc3e4950241eb12540bb3b31b1e7ac5a13cefb8e1643",
+      "date1904": false
+    },
+    {
+      "id": "date-excel1900-edate-common",
+      "file": "date-excel1900-edate-common.xlsx",
+      "inputSha256": "5d186bfb83241fa2b3981a25be5952e81c530346b875e23246e6a418928813d7",
+      "date1904": false
+    },
+    {
+      "id": "date-excel1900-edate-fraction",
+      "file": "date-excel1900-edate-fraction.xlsx",
+      "inputSha256": "ab2778331ddb96599be4db929a8efad3659188abc8a725ad6c109bd4afe26864",
+      "date1904": false
+    },
+    {
+      "id": "date-excel1900-eomonth",
+      "file": "date-excel1900-eomonth.xlsx",
+      "inputSha256": "42b0d47b23e58ad13b71269a5fe6db0338ce7fbb2497fa7ecb1bdf4e7c771b59",
+      "date1904": false
+    },
+    {
+      "id": "date-excel1900-negative",
+      "file": "date-excel1900-negative.xlsx",
+      "inputSha256": "d604e4708b30f8895779cc6650cc05fde43e77d82e047c445b76336bd167bbae",
+      "date1904": false
+    },
+    {
+      "id": "date-excel1900-large",
+      "file": "date-excel1900-large.xlsx",
+      "inputSha256": "5d2997796234048bfedda8ec2aad375fccd80566a3bffaa7d7f83b34153e3209",
+      "date1904": false
+    },
+    {
+      "id": "date-excel1900-max-year",
+      "file": "date-excel1900-max-year.xlsx",
+      "inputSha256": "908d3ba8d264f070dfc123d5c8e9f21aae752355c76e54f313eaccc7a69c7a1a",
+      "date1904": false
+    },
+    {
+      "id": "date-excel1900-bad-text",
+      "file": "date-excel1900-bad-text.xlsx",
+      "inputSha256": "6930b58353aa1e3627ff1f06061f085e5363f680a8c0704fe2f9ff8dd6f4f0cb",
+      "date1904": false
+    },
+    {
+      "id": "date-excel1900-time",
+      "file": "date-excel1900-time.xlsx",
+      "inputSha256": "d6f7b21339ce05ec56f8ea5fb4689740e501769363d632317692e9128d5666e8",
+      "date1904": false
+    },
+    {
+      "id": "date-excel1904-0-year",
+      "file": "date-excel1904-0-year.xlsx",
+      "inputSha256": "a926d0206aff2c97ac0d0a574cab048ae89ee4663f49ff7a4341119a7a6584e1",
+      "date1904": true
+    },
+    {
+      "id": "date-excel1904-0-month",
+      "file": "date-excel1904-0-month.xlsx",
+      "inputSha256": "7bea618418229f5499f24ea32ff847954ead44b44327e3f94106a283f80892c1",
+      "date1904": true
+    },
+    {
+      "id": "date-excel1904-0-day",
+      "file": "date-excel1904-0-day.xlsx",
+      "inputSha256": "d9ba18ef3d8c0112062fa1519cd1bcf705a289d9cd64defecbbf4917fcf3a9fd",
+      "date1904": true
+    },
+    {
+      "id": "date-excel1904-59-year",
+      "file": "date-excel1904-59-year.xlsx",
+      "inputSha256": "d2b243a98404d7ef568631a9f5abfa7eca81000ec609203234ca9e229c8fd125",
+      "date1904": true
+    },
+    {
+      "id": "date-excel1904-59-month",
+      "file": "date-excel1904-59-month.xlsx",
+      "inputSha256": "c44740c525643c871e80dbc6552efb7fe8c29d842d27f48412191bcc94e744e7",
+      "date1904": true
+    },
+    {
+      "id": "date-excel1904-59-day",
+      "file": "date-excel1904-59-day.xlsx",
+      "inputSha256": "c8324d0daed107e0d9d34a8f9c945e791609daef5890f703955453a9e56d8c0d",
+      "date1904": true
+    },
+    {
+      "id": "date-excel1904-60-year",
+      "file": "date-excel1904-60-year.xlsx",
+      "inputSha256": "caad83ca6fa465db35784e0ffb9b59841af5c3e79593b69c9fb8ee209637ccaf",
+      "date1904": true
+    },
+    {
+      "id": "date-excel1904-60-month",
+      "file": "date-excel1904-60-month.xlsx",
+      "inputSha256": "aa40b379852558b55fcec7668c118c9605eee42163c6035b6c70ee42a567a69e",
+      "date1904": true
+    },
+    {
+      "id": "date-excel1904-60-day",
+      "file": "date-excel1904-60-day.xlsx",
+      "inputSha256": "792ee59a47a92c507f597101c88daf1d3c4febd52ad18e1c9d33e5c9fdfeeac5",
+      "date1904": true
+    },
+    {
+      "id": "date-excel1904-61-year",
+      "file": "date-excel1904-61-year.xlsx",
+      "inputSha256": "cccb4bb9906f38f69107de5aef8c52c445503bac512e529adb6c0140c4e1c89d",
+      "date1904": true
+    },
+    {
+      "id": "date-excel1904-61-month",
+      "file": "date-excel1904-61-month.xlsx",
+      "inputSha256": "e937fc04fcd919368c7214f06c9e360769eeaa65ae81f32667717e8d2361da60",
+      "date1904": true
+    },
+    {
+      "id": "date-excel1904-61-day",
+      "file": "date-excel1904-61-day.xlsx",
+      "inputSha256": "80083dac63bd2b1d9dd4d4902fc3217382a187961650811834697e8f07a466a3",
+      "date1904": true
+    },
+    {
+      "id": "date-excel1904-2957003-year",
+      "file": "date-excel1904-2957003-year.xlsx",
+      "inputSha256": "3a2a57c9037fb890cec2373dd0cc2fe560e06999f3e002204599008632734c4e",
+      "date1904": true
+    },
+    {
+      "id": "date-excel1904-2957003-month",
+      "file": "date-excel1904-2957003-month.xlsx",
+      "inputSha256": "c57fe0a7e1ec1d392703f13fa9f4e1044a72264152464192d6e97d29c7b4710b",
+      "date1904": true
+    },
+    {
+      "id": "date-excel1904-2957003-day",
+      "file": "date-excel1904-2957003-day.xlsx",
+      "inputSha256": "37d537b9e463a204dd43182e3969525f4ddd54319158b20eb747721712331e90",
+      "date1904": true
+    },
+    {
+      "id": "date-excel1904-epoch",
+      "file": "date-excel1904-epoch.xlsx",
+      "inputSha256": "ec523ffc25827b8733d3837aca631082193e64148a7dfcc5e6a54cab37025b31",
+      "date1904": true
+    },
+    {
+      "id": "date-excel1904-year-adjust",
+      "file": "date-excel1904-year-adjust.xlsx",
+      "inputSha256": "47e50f8f511e86553c10c9c6cf48739495d6a177abba55400c159f9461cf5c2b",
+      "date1904": true
+    },
+    {
+      "id": "date-excel1904-normalize",
+      "file": "date-excel1904-normalize.xlsx",
+      "inputSha256": "da37b7d20582a40397aa9d35ec0105f4c8b0b386532979b25a1ecb3e410e086c",
+      "date1904": true
+    },
+    {
+      "id": "date-excel1904-normalize-day",
+      "file": "date-excel1904-normalize-day.xlsx",
+      "inputSha256": "7904095392bf1f525df92392d441f68f0ea0c48de7041975ced47d568146b11f",
+      "date1904": true
+    },
+    {
+      "id": "date-excel1904-edate-leap",
+      "file": "date-excel1904-edate-leap.xlsx",
+      "inputSha256": "7e5c0b6abfeca1fd6ee13d2c172a2298b6ec54a5c65ecbe5e68920f4683d02d7",
+      "date1904": true
+    },
+    {
+      "id": "date-excel1904-edate-common",
+      "file": "date-excel1904-edate-common.xlsx",
+      "inputSha256": "1850f81cf47cadc5ac4f0b17cc6e4b206dd206ea3b83be1b09db02b35835fcaf",
+      "date1904": true
+    },
+    {
+      "id": "date-excel1904-edate-fraction",
+      "file": "date-excel1904-edate-fraction.xlsx",
+      "inputSha256": "c50a2ecc2fe66fb320e37544c04bd4adb91be16df029812a0916d7897d440eac",
+      "date1904": true
+    },
+    {
+      "id": "date-excel1904-eomonth",
+      "file": "date-excel1904-eomonth.xlsx",
+      "inputSha256": "768f6ff99f12b057876041ac99bb97eac0ffce220d50be30cc499c7ae9672ec4",
+      "date1904": true
+    },
+    {
+      "id": "date-excel1904-negative",
+      "file": "date-excel1904-negative.xlsx",
+      "inputSha256": "3670867dff3478cfa94e8f50b41a2796604c98cd4e7957206f22beba6f3c1b18",
+      "date1904": true
+    },
+    {
+      "id": "date-excel1904-large",
+      "file": "date-excel1904-large.xlsx",
+      "inputSha256": "0ac76d43b67e95322c44b280513e748d64ef7791739f06919e4005465e522e0c",
+      "date1904": true
+    },
+    {
+      "id": "date-excel1904-max-year",
+      "file": "date-excel1904-max-year.xlsx",
+      "inputSha256": "eca624119dd6f07ce134a0d97e934b2ddc818c20dea3317d8ef23af7b4779080",
+      "date1904": true
+    },
+    {
+      "id": "date-excel1904-bad-text",
+      "file": "date-excel1904-bad-text.xlsx",
+      "inputSha256": "ae85cef814a104407a541344d339a7ecb41cc4fd9c266677afc1543ae276e73a",
+      "date1904": true
+    },
+    {
+      "id": "date-excel1904-time",
+      "file": "date-excel1904-time.xlsx",
+      "inputSha256": "5870d93eeca7e1b7bff5abee0cf909b1190a0c50d16b48614f422459d3cd60eb",
+      "date1904": true
+    },
+    {
+      "id": "text-left-default",
+      "file": "text-left-default.xlsx",
+      "inputSha256": "5069889c53ea9786a41b90376ce43324262cf0b1ee2fd2b43ec68a73205f5599",
+      "date1904": false
+    },
+    {
+      "id": "text-right-default",
+      "file": "text-right-default.xlsx",
+      "inputSha256": "09640077f153ded0578f818d22d88850d258760a8bea45753fccee2d1b46d14f",
+      "date1904": false
+    },
+    {
+      "id": "text-left-zero",
+      "file": "text-left-zero.xlsx",
+      "inputSha256": "cec6763e392fab6f62e757440e5cc9ca854d6fde97e4883f4427b21e117770a6",
+      "date1904": false
+    },
+    {
+      "id": "text-left-fraction",
+      "file": "text-left-fraction.xlsx",
+      "inputSha256": "1de6acf14b9c8773a348449e80228d5e469b77ada2b26f4191de3f09d6198b2c",
+      "date1904": false
+    },
+    {
+      "id": "text-right-long",
+      "file": "text-right-long.xlsx",
+      "inputSha256": "d1e8b592768fd5386c99698de3a588bc3a559590c6c856f5b260e58ad6ff0e37",
+      "date1904": false
+    },
+    {
+      "id": "text-left-negative",
+      "file": "text-left-negative.xlsx",
+      "inputSha256": "3caad177488c8778f4392bb6dea0b50298649239ab92a3964da11806a99d9ee7",
+      "date1904": false
+    },
+    {
+      "id": "text-mid",
+      "file": "text-mid.xlsx",
+      "inputSha256": "d0ed334607621ab0741b02d780a52a61a2515d4a9c95a47ef7bab87a2390faac",
+      "date1904": false
+    },
+    {
+      "id": "text-mid-after",
+      "file": "text-mid-after.xlsx",
+      "inputSha256": "57b9eee2045d450274e9a05ca14e70638393b18e8e01179ccbea3b745885da95",
+      "date1904": false
+    },
+    {
+      "id": "text-mid-zero",
+      "file": "text-mid-zero.xlsx",
+      "inputSha256": "7898158c9f98a9ac396392920c2d61ab12f79d342c3471bad95eee5406e5c7e0",
+      "date1904": false
+    },
+    {
+      "id": "text-mid-negative",
+      "file": "text-mid-negative.xlsx",
+      "inputSha256": "6bde7e83b6114058469177b3d56bc0b747f885b1f2770e0b03d7111360d9f9ca",
+      "date1904": false
+    },
+    {
+      "id": "text-len-v1",
+      "file": "text-len-v1.xlsx",
+      "inputSha256": "ed0ee9de3134031384ab420a2a16f2dcf871990a7b1a5b174bfd24280931ee02",
+      "date1904": false
+    },
+    {
+      "id": "text-len-number",
+      "file": "text-len-number.xlsx",
+      "inputSha256": "d2366b0eb4acdfed3256cff30f284e8d3e60589b80217afed3cb4a1f84e45a39",
+      "date1904": false
+    },
+    {
+      "id": "text-trim",
+      "file": "text-trim.xlsx",
+      "inputSha256": "9f8c4224b10f24c62c4293e1a57b6ab67d1f5fa4e2e4e785de104b8cabe1149f",
+      "date1904": false
+    },
+    {
+      "id": "text-trim-special",
+      "file": "text-trim-special.xlsx",
+      "inputSha256": "d874a1cb4148d80c4b4802bb0d0ec2fa5b226126839931d55dc4391d9c30dd00",
+      "date1904": false
+    },
+    {
+      "id": "text-substitute",
+      "file": "text-substitute.xlsx",
+      "inputSha256": "af6925ac9e3c1ee5f56bb611bfa0c9510160c0a9262615b98ba4b78616ef9177",
+      "date1904": false
+    },
+    {
+      "id": "text-substitute-nth",
+      "file": "text-substitute-nth.xlsx",
+      "inputSha256": "bb0f1bb6086ff3957b287be81e4899ec9bdba38fba0e9b242bd46105038ee6d2",
+      "date1904": false
+    },
+    {
+      "id": "text-substitute-empty",
+      "file": "text-substitute-empty.xlsx",
+      "inputSha256": "25aff447e5a7afa329393b0187d544f1486bdc950bef664d4e8ce2adec90a89e",
+      "date1904": false
+    },
+    {
+      "id": "text-substitute-zero",
+      "file": "text-substitute-zero.xlsx",
+      "inputSha256": "83ab70837f964f25a97d9f8cdbff1b7d3ad6f0ca42e7613b52d924ae33ed6d92",
+      "date1904": false
+    },
+    {
+      "id": "text-concatenate",
+      "file": "text-concatenate.xlsx",
+      "inputSha256": "8c752a29be0eb1aaee2799abc26e28124f8d4f113f84ffb00239c3fcb47f98ba",
+      "date1904": false
+    },
+    {
+      "id": "text-text-fixed",
+      "file": "text-text-fixed.xlsx",
+      "inputSha256": "07a28b3bf63c0c5c0a01e57098ba0da14c6b2aab0f1295ded3f11ac7917f96da",
+      "date1904": false
+    },
+    {
+      "id": "text-text-zero",
+      "file": "text-text-zero.xlsx",
+      "inputSha256": "e09a53eb8fd90f34ce8ecd39d88ce5fe9b03bc954bae8b1a7ed2b725437c332a",
+      "date1904": false
+    },
+    {
+      "id": "text-text-group",
+      "file": "text-text-group.xlsx",
+      "inputSha256": "9ce355b163c19071c8d82589684691a857e916f6b824a716fc79df6f82831b6e",
+      "date1904": false
+    },
+    {
+      "id": "text-text-percent",
+      "file": "text-text-percent.xlsx",
+      "inputSha256": "074fa257abd453eefdb33e82af9d979af61ec65a480280f7dbd0288ff212e96b",
+      "date1904": false
+    },
+    {
+      "id": "text-text-negative",
+      "file": "text-text-negative.xlsx",
+      "inputSha256": "c10d3ff6427d0ddbe218664f8a6e92277374165312e78ddd0d21b304f3c56f32",
+      "date1904": false
+    },
+    {
+      "id": "text-text-date",
+      "file": "text-text-date.xlsx",
+      "inputSha256": "b0870047f51457729a3a5f1a9275d3772526185bf57e1c2606d8e1500a70018d",
+      "date1904": false
+    },
+    {
+      "id": "text-text-japanese",
+      "file": "text-text-japanese.xlsx",
+      "inputSha256": "407251c90d4acfea3a880a2578cd04e14d7d4c7ab58a82f58a7ab8d1e9babd04",
+      "date1904": false
+    },
+    {
+      "id": "text-text-month",
+      "file": "text-text-month.xlsx",
+      "inputSha256": "3f94dd248dc8a3a9a86651971060362c94038291f0abec120c72e6a9bcc9d91a",
+      "date1904": false
+    },
+    {
+      "id": "text-text-compact",
+      "file": "text-text-compact.xlsx",
+      "inputSha256": "32f17be338e448932ae54f2a8bdd985fc5fe15a80e892774a78e966ccbada6d1",
+      "date1904": false
+    },
+    {
+      "id": "text-text-slash",
+      "file": "text-text-slash.xlsx",
+      "inputSha256": "e8f2a65d052d1441d6cc49fdc51eb7c198bb6784c81b453e89de797275ca081a",
+      "date1904": false
+    },
+    {
+      "id": "text-text-literal",
+      "file": "text-text-literal.xlsx",
+      "inputSha256": "6a0cb889e6b7435f730e8c9ee4d04f1922f5ea0886bd50c08621ffcf0a5fcb2a",
+      "date1904": false
+    },
+    {
+      "id": "unsupported-approx-vlookup",
+      "file": "unsupported-approx-vlookup.xlsx",
+      "inputSha256": "bd883c9730c3ffb9afaaecf86468ae24b107c88a1604b4a7e7001bd8fef77fc1",
+      "date1904": false
+    },
+    {
+      "id": "unsupported-approx-match",
+      "file": "unsupported-approx-match.xlsx",
+      "inputSha256": "ff791e9cbab5a97ee6f22e2b879b11eb6ae5a66cdd529a4cf90c2871acaf29cd",
+      "date1904": false
+    },
+    {
+      "id": "unsupported-index-zero",
+      "file": "unsupported-index-zero.xlsx",
+      "inputSha256": "a19c62a227447cf3d98a3282bb4152eaa0211721be4f6aca3a1d26a06c92e300",
+      "date1904": false
+    },
+    {
+      "id": "unsupported-text-time",
+      "file": "unsupported-text-time.xlsx",
+      "inputSha256": "119d8797226789baee0d75e64013c6a4a297e6cd7886425e26ece6f2c687db07",
+      "date1904": false
+    },
+    {
+      "id": "unsupported-text-color",
+      "file": "unsupported-text-color.xlsx",
+      "inputSha256": "2a039d69482c96219f45d841fdbfe02c68f65ec58239d668653f68361acc6d78",
+      "date1904": false
+    },
+    {
+      "id": "unsupported-array-criterion",
+      "file": "unsupported-array-criterion.xlsx",
+      "inputSha256": "15b915dd45e2a76f6f6f0aaeaccafb1962f58e93ccbb3fff960b63b2a97221d2",
+      "date1904": false
+    },
+    {
+      "id": "unsupported-concatenate-range",
+      "file": "unsupported-concatenate-range.xlsx",
+      "inputSha256": "48dee5cc440fadd0e09a0280999ebd00df7d5a2dc162897f3899f98f58657a54",
+      "date1904": false
+    },
+    {
+      "id": "date-fake-edate-next",
+      "file": "date-fake-edate-next.xlsx",
+      "inputSha256": "9b81bb969b8e3e49db894f1044da9477300b5f6eaa603a114ebc2dee161e4027",
+      "date1904": false
+    },
+    {
+      "id": "date-fake-edate-previous",
+      "file": "date-fake-edate-previous.xlsx",
+      "inputSha256": "f6df30590aa3c88bd8c607c87be1654a2879eb3c7a9c1ebe07c1c21714f458ef",
+      "date1904": false
+    },
+    {
+      "id": "date-fake-edate-same",
+      "file": "date-fake-edate-same.xlsx",
+      "inputSha256": "0c9318cfd1de296ad6895b71af3d1a15a4c121521c327da4c97a1d4e06b5e2d9",
+      "date1904": false
+    },
+    {
+      "id": "date-fake-eomonth",
+      "file": "date-fake-eomonth.xlsx",
+      "inputSha256": "70d62a1973de05b039c9a415a7e2e03cb176f7d39760c0969c6609340410ffa3",
+      "date1904": false
+    },
+    {
+      "id": "date-feb-eomonth",
+      "file": "date-feb-eomonth.xlsx",
+      "inputSha256": "a69a01c4d7cafb36bb2410842d9a348ac332d5c0d1fe729cf606c71e0c4ababd",
+      "date1904": false
+    },
+    {
+      "id": "date-march-eomonth",
+      "file": "date-march-eomonth.xlsx",
+      "inputSha256": "2737c96258216c56bad0644e25a8978cc3d49c00aff438ea518b48d97317ad7d",
+      "date1904": false
+    },
+    {
+      "id": "lookup-horizontal",
+      "file": "lookup-horizontal.xlsx",
+      "inputSha256": "0b66a36699035ae528a25b76c50f1edf7359afa6f39fbbb0ba7c29b6867cc1dd",
+      "date1904": false
+    },
+    {
+      "id": "lookup-empty-formula",
+      "file": "lookup-empty-formula.xlsx",
+      "inputSha256": "002af041bc5eb9cfaa3d6ee3ff831fdd7c2f188f51bf1e0d10de6043a7d07efb",
+      "date1904": false
+    },
+    {
+      "id": "lookup-empty-missing",
+      "file": "lookup-empty-missing.xlsx",
+      "inputSha256": "678f49c6f4960da0b5cd23f709906441b25bb7df32ff440f918d99fa76216a45",
+      "date1904": false
+    },
+    {
+      "id": "lookup-error-before-match",
+      "file": "lookup-error-before-match.xlsx",
+      "inputSha256": "6afc0c258580bd774ec87a945d08837fede3da6a0bd681c9047865c263c9a0c5",
+      "date1904": false
+    },
+    {
+      "id": "lookup-index-missing-column",
+      "file": "lookup-index-missing-column.xlsx",
+      "inputSha256": "5e3f95bf8cc4373eb50be500e309024489c3ff4d1be4466d0803869492097a37",
+      "date1904": false
+    },
+    {
+      "id": "text-max-cell-length",
+      "file": "text-max-cell-length.xlsx",
+      "inputSha256": "6ca36c2e4cd8bf9a5b248e40c100f24c716f4d20a2c3ff2ed348b668b8fb6789",
+      "date1904": false
+    },
+    {
+      "id": "target-c5",
+      "file": "target-c5.xlsx",
+      "inputSha256": "2bc9d4a7885241c9b421e75b6592f6c5c40ee1818fdef417d9fb4261f5b7a3b4",
+      "date1904": false
+    },
+    {
+      "id": "target-aa10",
+      "file": "target-aa10.xlsx",
+      "inputSha256": "aa7997bda09d05ed2541c63960049a6e80b80119ebb04f260564823841233dd6",
+      "date1904": false
+    }
+  ]
+}

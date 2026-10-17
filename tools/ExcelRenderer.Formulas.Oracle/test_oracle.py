@@ -6,6 +6,8 @@ import io
 import json
 from pathlib import Path
 import tempfile
+import subprocess
+import sys
 import unittest
 import zipfile
 import oracle
@@ -44,6 +46,42 @@ class OracleToolTests(unittest.TestCase):
             self.assertEqual(0, report['excelObservedCases'])
             self.assertEqual(0, report['counts']['matched'])
             self.assertTrue(report['missingRequiredCategories'])
+
+    def test_actual_duplicate_keys_fail_cli_even_for_equal_values(self):
+        case = oracle.load_cases(oracle.FIXTURES/'cases.json')[0]
+        for payload in (case['expected'], {'kind': 'Number', 'value': -999}):
+            with self.subTest(payload=payload), tempfile.TemporaryDirectory() as tmp:
+                actual = Path(tmp)/'actual.json'
+                actual.write_text(json.dumps([
+                    dict(id=case['id'], pipeline='engine', actual=case['expected']),
+                    dict(id=case['id'], pipeline='engine', actual=payload)]))
+                result = subprocess.run([sys.executable, str(Path(oracle.__file__)), 'compare', str(actual), '--output', str(Path(tmp)/'report.json')], capture_output=True, text=True)
+                self.assertNotEqual(0, result.returncode)
+                self.assertIn(case['id'], result.stderr)
+                self.assertIn('engine', result.stderr)
+                self.assertIn('Duplicate actual', result.stderr)
+
+    def test_same_case_different_pipelines_are_accepted(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            case = oracle.load_cases(oracle.FIXTURES/'cases.json')[0]
+            cases = Path(tmp)/'cases.json'
+            cases.write_text(json.dumps([case]))
+            actual = Path(tmp)/'actual.json'
+            actual.write_text(json.dumps([dict(id=case['id'], pipeline=p, actual=case['expected']) for p in ('engine', 'openxml', 'roundtrip')]))
+            args = argparse.Namespace(cases=cases, observed=oracle.FIXTURES/'excel-observed.json', actual=actual, exceptions=oracle.FIXTURES/'compatibility-exceptions.json', output=Path(tmp)/'report.json', strict=False, require_roundtrip=True)
+            with contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(0, oracle.compare(args))
+            self.assertEqual({'matched': 3, 'mismatch': 0}, json.loads(args.output.read_text())['profileChecks'])
+
+    def test_invalid_and_overlapping_targets_are_rejected_before_generation(self):
+        for target in ('A0', 'XFE1', 'A1048577', 'Case!C5', 'A1'):
+            with self.subTest(target=target), tempfile.TemporaryDirectory() as tmp:
+                case = dict(id='target-case', expectedSource='hand-calculated', target=target, inputs=[dict(address='A1', kind='Number', value=2)])
+                cases = Path(tmp)/'cases.json'
+                cases.write_text(json.dumps([case]))
+                with self.assertRaisesRegex(ValueError, f"target-case.*{target}"):
+                    oracle.generate(argparse.Namespace(cases=cases, directory=Path(tmp)/'inputs'))
+                self.assertEqual([], list((Path(tmp)/'inputs').glob('*.xlsx')))
 
     def test_shared_string_cache_ignores_phonetic_and_xml_indentation(self):
         with tempfile.TemporaryDirectory() as tmp:

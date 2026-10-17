@@ -1,0 +1,51 @@
+Generated 500 typed input workbooks; no observed expectations were changed.
+Evaluated 1500 pipeline cases. Excel observations are compared separately.
+{
+  "caseSha256": "dfeb13a039d109033d37ec0354090f63d84f25811800a92f37f914bf887fca35",
+  "capturedAt": "2026-10-17T04:57:53.404126+00:00",
+  "excelObservedCases": 0,
+  "notObservedCases": 500,
+  "counts": {
+    "matched": 0,
+    "mismatch": 0,
+    "unsupported": 24,
+    "known-difference": 0,
+    "not-observed": 1476
+  },
+  "profileChecks": {
+    "matched": 1500,
+    "mismatch": 0
+  },
+  "missingRequiredCategories": [
+    "arithmetic",
+    "conditional",
+    "criteria",
+    "date",
+    "existing",
+    "lookup",
+    "text"
+  ],
+  "strict": false
+}
+Evaluated 8 pipeline cases. Excel observations are compared separately.
+{
+  "caseSha256": "023a162796a3d2cc28bab81fc137f99d52c7ffaedc83eb8b4a7353095d6fa65c",
+  "capturedAt": "2026-10-17T04:57:54.464965+00:00",
+  "excelObservedCases": 0,
+  "notObservedCases": 4,
+  "counts": {
+    "matched": 0,
+    "mismatch": 0,
+    "unsupported": 0,
+    "known-difference": 0,
+    "not-observed": 8
+  },
+  "profileChecks": {
+    "matched": 8,
+    "mismatch": 0
+  },
+  "missingRequiredCategories": [
+    "mapping"
+  ],
+  "strict": false
+}

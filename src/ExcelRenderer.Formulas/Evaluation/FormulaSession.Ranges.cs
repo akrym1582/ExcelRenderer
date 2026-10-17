@@ -40,14 +40,28 @@ namespace ExcelRenderer.Formulas.Evaluation
             try
             {
                 var coordinates = sparse.EnumerateStoredCells(range, cancellation);
-                if (coordinates is FormulaRangeIndex.Query indexed && indexed.CoversDensely(range))
+                if (coordinates is FormulaRangeIndex.Query indexed)
                 {
-                    return DenseCoordinates(range, origin, span);
+                    indexed = indexed.WithWork(() =>
+                    {
+                        indexWork++;
+                        Tick(origin, span);
+                    });
+                    if (indexed.CoversDensely(range))
+                    {
+                        return DenseCoordinates(range, origin, span);
+                    }
+
+                    coordinates = indexed;
                 }
 
                 return CheckedCoordinates(coordinates, range, origin, span);
             }
             catch (OperationCanceledException)
+            {
+                throw;
+            }
+            catch (Failure)
             {
                 throw;
             }
@@ -91,6 +105,10 @@ namespace ExcelRenderer.Formulas.Evaluation
                         }
                     }
                     catch (OperationCanceledException)
+                    {
+                        throw;
+                    }
+                    catch (Failure)
                     {
                         throw;
                     }

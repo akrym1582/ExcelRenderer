@@ -1,0 +1,44 @@
+[
+  {
+    "suite": "ExcelRenderer.Core.Tests",
+    "total": 82,
+    "passed": 82,
+    "failed": 0,
+    "trxSha256": "1efed1642d721e4b99acce8d639246f53a80efd70b7f7c214be6b5ec4ffd3062"
+  },
+  {
+    "suite": "ExcelRenderer.Formulas.Tests",
+    "total": 833,
+    "passed": 833,
+    "failed": 0,
+    "trxSha256": "c0943bd054257ecb68ea4c9a45f9d0bdbe4312c38c3b79032e238be0069a8331"
+  },
+  {
+    "suite": "ExcelRenderer.Mapping.Tests",
+    "total": 197,
+    "passed": 197,
+    "failed": 0,
+    "trxSha256": "7c11390dd2e236215c0482338a8082dabdab5310d8fbf60b38f2a2a0763ec240"
+  },
+  {
+    "suite": "ExcelRenderer.OpenXml.Tests",
+    "total": 206,
+    "passed": 206,
+    "failed": 0,
+    "trxSha256": "e975c3eac4b603a7b21f8078784ab17859ee756a99e86d63efbca1d567ea7ced"
+  },
+  {
+    "suite": "ExcelRenderer.Tests",
+    "total": 563,
+    "passed": 563,
+    "failed": 0,
+    "trxSha256": "6772948ac928ba68e2d25214d02d661a90fab22ad44536a07a7d562de57f0240"
+  },
+  {
+    "suite": "ExcelRenderer.Tool.Tests",
+    "total": 91,
+    "passed": 91,
+    "failed": 0,
+    "trxSha256": "9d98b7204f7fd404bc968d450e17e74111f22b40e7940a5debbd56b733dacd5a"
+  }
+]

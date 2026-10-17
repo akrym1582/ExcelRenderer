@@ -10657,5 +10657,65 @@
     "basis": "Explicit profile pending Excel observation; implementation plan sections 7–9",
     "absTolerance": 0,
     "relTolerance": 0
+  },
+  {
+    "id": "target-c5",
+    "category": "arithmetic",
+    "formula": "A1+B1",
+    "target": "C5",
+    "dateSystem": "Excel1900",
+    "inputs": [
+      {
+        "address": "A1",
+        "kind": "Number",
+        "value": 2
+      },
+      {
+        "address": "B1",
+        "kind": "Number",
+        "value": 3
+      },
+      {
+        "address": "Z1",
+        "kind": "Number",
+        "value": 999
+      }
+    ],
+    "expected": {
+      "kind": "Number",
+      "value": 5
+    },
+    "expectedSource": "hand-calculated",
+    "basis": "2 + 3 = 5 at the specified target; Z1 is an unrelated constant"
+  },
+  {
+    "id": "target-aa10",
+    "category": "arithmetic",
+    "formula": "A1+B1",
+    "target": "AA10",
+    "dateSystem": "Excel1900",
+    "inputs": [
+      {
+        "address": "A1",
+        "kind": "Number",
+        "value": 2
+      },
+      {
+        "address": "B1",
+        "kind": "Number",
+        "value": 3
+      },
+      {
+        "address": "Z1",
+        "kind": "Number",
+        "value": 999
+      }
+    ],
+    "expected": {
+      "kind": "Number",
+      "value": 5
+    },
+    "expectedSource": "hand-calculated",
+    "basis": "2 + 3 = 5 at the specified target; Z1 is an unrelated constant"
   }
 ]

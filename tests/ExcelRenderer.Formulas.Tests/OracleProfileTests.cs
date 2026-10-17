@@ -41,7 +41,7 @@ public sealed class OracleProfileTests
         var formula = item.GetProperty("formula").GetString()!;
         var parsed = FormulaParser.Parse(formula);
         Assert.True(parsed.Success, id + ": " + formula);
-        var result = new FormulaEngine().Evaluate(parsed.Formula!, builder.Build(), new("Case", 1, 26), new() { DateSystem = Enum.Parse<FormulaDateSystem>(item.GetProperty("dateSystem").GetString()!) });
+        var result = new FormulaEngine().Evaluate(parsed.Formula!, builder.Build(), ParseAddress(item.GetProperty("target").GetString()!), new() { DateSystem = Enum.Parse<FormulaDateSystem>(item.GetProperty("dateSystem").GetString()!) });
         var expected = item.GetProperty("expected");
         if (expected.GetProperty("kind").GetString() == "Diagnostic")
         {

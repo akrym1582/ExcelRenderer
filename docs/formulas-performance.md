@@ -161,3 +161,11 @@ records new sparse ranges, conditional aggregates, bounded incremental exact
 lookup indexes, date/text and mixed-report workloads. It includes baseline failures,
 managed allocation/GC, deterministic visits and the bounded dense-range overhead.
 Historical results above remain evidence only for their original revisions.
+
+## Single-column index review fixes
+
+The [review validation](validation/formulas-review/README.md) separates index
+construction from evaluation at 100000 and 1000000 unrelated rows. It records
+time, allocated bytes and internal `IndexWork` for empty/sparse columns, dense
+SUM/SUMIFS and early MATCH/VLOOKUP, with the same harness on the base and updated
+engines. Elapsed times are measurements, not CI thresholds.

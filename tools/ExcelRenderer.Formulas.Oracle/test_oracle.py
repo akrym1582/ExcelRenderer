@@ -45,6 +45,14 @@ class OracleToolTests(unittest.TestCase):
             self.assertEqual(0, report['counts']['matched'])
             self.assertTrue(report['missingRequiredCategories'])
 
+    def test_shared_string_cache_ignores_phonetic_and_xml_indentation(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp)/'synthetic-cache.xlsx'
+            with zipfile.ZipFile(path, 'w') as archive:
+                archive.writestr('xl/worksheets/sheet1.xml', f'<worksheet xmlns="{oracle.NS}"><sheetData><row><c r="Z1" t="s"><f>"日本語"</f><v>0</v></c></row></sheetData></worksheet>')
+                archive.writestr('xl/sharedStrings.xml', f'<sst xmlns="{oracle.NS}"><si>\n<r><t>日本</t></r>\n<r><t>語</t></r><rPh sb="0" eb="2"><t>にほん</t></rPh>\n</si></sst>')
+            self.assertEqual({'kind': 'Text', 'value': '日本語'}, oracle.cached(path, 'Z1'))
+
     def test_extract_rejects_non_excel_provenance(self):
         with tempfile.TemporaryDirectory() as tmp:
             directory = Path(tmp)

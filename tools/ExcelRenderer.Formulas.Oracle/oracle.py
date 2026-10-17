@@ -134,7 +134,9 @@ def cached(path, target):
             return {'kind': 'Text', 'value': text}
         if kind == 's':
             strings = ET.fromstring(archive.read('xl/sharedStrings.xml'))
-            return {'kind': 'Text', 'value': ''.join(strings[int(text)].itertext())}
+            entry = strings[int(text)]
+            runs = [child if child.tag == f'{{{NS}}}t' else child.find(f'{{{NS}}}t') for child in entry if child.tag in (f'{{{NS}}}t', f'{{{NS}}}r')]
+            return {'kind': 'Text', 'value': ''.join(run.text or '' for run in runs if run is not None)}
         if kind != 'n' or not text:
             raise ValueError(f'{path}: unexpected formula cache type {kind}')
         return {'kind': 'Number', 'value': float(text)}

@@ -26,17 +26,16 @@ namespace ExcelRenderer.Formulas
                 return index.FirstPositions.TryGetValue(FormulaValue.FromText(literal), out var position) ? position : -1;
             }
 
-            long first = long.MaxValue;
-            foreach (var pair in index.FirstPositions)
+            foreach (var pair in index.TextPositions)
             {
                 tick();
-                if (pair.Key.Kind == FormulaValueKind.Text && pair.Value < first && wildcard.Matches(pair.Key.Text, tick))
+                if (wildcard.Matches(pair.Text, tick))
                 {
-                    first = pair.Value;
+                    return pair.Position;
                 }
             }
 
-            return first == long.MaxValue ? -1 : first;
+            return -1;
         }
 
         private LookupIndex? LookupIndexFor(FormulaRange range)
@@ -70,6 +69,11 @@ namespace ExcelRenderer.Formulas
             }
 
             index.FirstPositions.Add(value, position);
+            if (value.Kind == FormulaValueKind.Text)
+            {
+                index.TextPositions.Add((position, value.Text));
+            }
+
             lookupIndexedValues++;
             lookupIndexedTextCharacters += textLength;
         }

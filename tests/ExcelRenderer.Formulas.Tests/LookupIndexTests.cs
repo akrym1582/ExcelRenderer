@@ -5,6 +5,21 @@ namespace ExcelRenderer.Formulas.Tests;
 public sealed class LookupIndexTests
 {
     [Fact]
+    public void EarlyWildcardMatchesDoNotScanTheWholeCachedTextIndex()
+    {
+        var builder = new InMemoryFormulaWorkbook.Builder().AddSheet("S");
+        for (int i = 1; i <= 10000; i++) builder.SetValue(new("S", i, 1), FormulaValue.FromText($"item{i}"));
+        var session = new FormulaEngine().CreateSession(builder.Build());
+        Assert.Equal("#N/A", Evaluate(session, "MATCH(0,A1:A10000,0)").Value.Error);
+        var before = session.GetStatistics();
+        Assert.Equal(1, Evaluate(session, "MATCH(\"item*\",A1:A10000,0)").Value.Number);
+        var after = session.GetStatistics();
+        Assert.True(after.EvaluationSteps - before.EvaluationSteps < 100);
+        Assert.Equal(before.SourceReads, after.SourceReads);
+        Assert.Equal(before.RangeCandidates, after.RangeCandidates);
+    }
+
+    [Fact]
     public void DifferentExactKeysShareOneIncrementalIndex()
     {
         const int count = 30000;

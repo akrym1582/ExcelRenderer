@@ -9,6 +9,9 @@ namespace ExcelRenderer.Formulas
         /// <summary>Gets the first position of each typed value in the evaluated prefix.</summary>
         internal Dictionary<FormulaValue, long> FirstPositions { get; } = new Dictionary<FormulaValue, long>(new ValueComparer());
 
+        /// <summary>Gets first distinct text values in source order for early wildcard matches.</summary>
+        internal List<(long Position, string Text)> TextPositions { get; } = new List<(long Position, string Text)>();
+
         /// <summary>Gets or sets the first unexamined relative position.</summary>
         internal long Next { get; set; }
 

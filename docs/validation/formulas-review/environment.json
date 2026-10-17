@@ -1,0 +1,13 @@
+{
+  "baseSha": "b5539b2802e6b2417035313cafffc5dd53529c25",
+  "implementation": "working tree on fix/formula-oracle-range-review",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "caseSha256": "dfeb13a039d109033d37ec0354090f63d84f25811800a92f37f914bf887fca35",
+  "harnessSha256": "13ead3e699db2009c99f12ad23a2e17a113ab5647a3748b7f0dd59d023669e7a",
+  "baselineHarnessSha256": "13ead3e699db2009c99f12ad23a2e17a113ab5647a3748b7f0dd59d023669e7a",
+  "timing": "one warmup plus five measured repetitions, baseline then current, after tests, no concurrent benchmark runs",
+  "rawSha256": {
+    "baseline-range-index.jsonl": "065f8d59a8c73456b206b8e640e83f27db7aad1a09f0b8e4f7dad7b55e1e6ff9",
+    "current-range-index.jsonl": "fd61fb0bba0784270fa33ed474f51474c5e7bf02ddfaa013b621b77b0b8b6104"
+  }
+}

@@ -11,6 +11,12 @@ var sizes = args.Length > 1 ? args[1].Split(',').Select(int.Parse).ToArray() : n
 Console.WriteLine(JsonSerializer.Serialize(new { Environment = RuntimeInformation.OSDescription, Runtime = RuntimeInformation.FrameworkDescription, ProcessorCount = Environment.ProcessorCount, TieredCompilation = Environment.GetEnvironmentVariable("DOTNET_TieredCompilation") ?? "default", Mode = mode, Warmups = 1, Repeats = 5 }));
 foreach (var count in sizes)
 {
+    if (mode == "range-index")
+    {
+        RangeIndexBenchmark.Run(count);
+        continue;
+    }
+
     if (mode.StartsWith("expansion-", StringComparison.Ordinal))
     {
         ExpansionBenchmark.Run(mode, count);

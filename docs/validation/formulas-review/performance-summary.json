@@ -1,0 +1,1442 @@
+[
+  {
+    "variant": "baseline",
+    "count": 100000,
+    "stored": 0,
+    "name": "index-build",
+    "medianMs": 13.0368,
+    "medianAllocatedBytes": 5797224,
+    "statistics": null
+  },
+  {
+    "variant": "baseline",
+    "count": 100000,
+    "stored": 0,
+    "name": "COUNTIF(B:B,\"\")",
+    "medianMs": 0.8252,
+    "medianAllocatedBytes": 2816,
+    "statistics": {
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 0,
+      "RangeCandidates": 0,
+      "BulkBlankCells": 1048576,
+      "CachedValues": 0,
+      "CellVisits": 0,
+      "EvaluationSteps": 12
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 100000,
+    "stored": 0,
+    "name": "SUM(B:B)",
+    "medianMs": 0.7717,
+    "medianAllocatedBytes": 2216,
+    "statistics": {
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 0,
+      "RangeCandidates": 0,
+      "BulkBlankCells": 0,
+      "CachedValues": 0,
+      "CellVisits": 0,
+      "EvaluationSteps": 7
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 100000,
+    "stored": 0,
+    "name": "SUM(A1:A100000)",
+    "medianMs": 29.1885,
+    "medianAllocatedBytes": 15699112,
+    "statistics": {
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 100000,
+      "RangeCandidates": 100000,
+      "BulkBlankCells": 0,
+      "CachedValues": 100000,
+      "CellVisits": 100000,
+      "EvaluationSteps": 200006
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 100000,
+    "stored": 0,
+    "name": "SUMIFS(A1:A100000,A1:A100000,\">0\")",
+    "medianMs": 29.2938,
+    "medianAllocatedBytes": 15700040,
+    "statistics": {
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 100000,
+      "RangeCandidates": 200000,
+      "BulkBlankCells": 0,
+      "CachedValues": 100000,
+      "CellVisits": 200000,
+      "EvaluationSteps": 800016
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 100000,
+    "stored": 0,
+    "name": "MATCH(7,A:A,0)",
+    "medianMs": 0.0187,
+    "medianAllocatedBytes": 3088,
+    "statistics": {
+      "LookupIndexedValues": 1,
+      "LookupIndexedRanges": 1,
+      "SourceReads": 1,
+      "RangeCandidates": 1,
+      "BulkBlankCells": 0,
+      "CachedValues": 1,
+      "CellVisits": 1,
+      "EvaluationSteps": 13
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 100000,
+    "stored": 0,
+    "name": "VLOOKUP(7,A:B,1,FALSE)",
+    "medianMs": 0.0296,
+    "medianAllocatedBytes": 3088,
+    "statistics": {
+      "LookupIndexedValues": 1,
+      "LookupIndexedRanges": 1,
+      "SourceReads": 1,
+      "RangeCandidates": 1,
+      "BulkBlankCells": 0,
+      "CachedValues": 1,
+      "CellVisits": 2,
+      "EvaluationSteps": 16
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 100000,
+    "stored": 1,
+    "name": "index-build",
+    "medianMs": 14.3555,
+    "medianAllocatedBytes": 5797584,
+    "statistics": null
+  },
+  {
+    "variant": "baseline",
+    "count": 100000,
+    "stored": 1,
+    "name": "COUNTIF(B:B,\"\")",
+    "medianMs": 0.8333,
+    "medianAllocatedBytes": 3360,
+    "statistics": {
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 1,
+      "RangeCandidates": 1,
+      "BulkBlankCells": 1048575,
+      "CachedValues": 1,
+      "CellVisits": 1,
+      "EvaluationSteps": 17
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 100000,
+    "stored": 1,
+    "name": "SUM(B:B)",
+    "medianMs": 0.849,
+    "medianAllocatedBytes": 2760,
+    "statistics": {
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 1,
+      "RangeCandidates": 1,
+      "BulkBlankCells": 0,
+      "CachedValues": 1,
+      "CellVisits": 1,
+      "EvaluationSteps": 9
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 100000,
+    "stored": 1,
+    "name": "SUM(A1:A100000)",
+    "medianMs": 8.2289,
+    "medianAllocatedBytes": 15698800,
+    "statistics": {
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 100000,
+      "RangeCandidates": 100000,
+      "BulkBlankCells": 0,
+      "CachedValues": 100000,
+      "CellVisits": 100000,
+      "EvaluationSteps": 200006
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 100000,
+    "stored": 1,
+    "name": "SUMIFS(A1:A100000,A1:A100000,\">0\")",
+    "medianMs": 27.343,
+    "medianAllocatedBytes": 15699728,
+    "statistics": {
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 100000,
+      "RangeCandidates": 200000,
+      "BulkBlankCells": 0,
+      "CachedValues": 100000,
+      "CellVisits": 200000,
+      "EvaluationSteps": 800016
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 100000,
+    "stored": 1,
+    "name": "MATCH(7,A:A,0)",
+    "medianMs": 0.0174,
+    "medianAllocatedBytes": 3424,
+    "statistics": {
+      "LookupIndexedValues": 1,
+      "LookupIndexedRanges": 1,
+      "SourceReads": 1,
+      "RangeCandidates": 1,
+      "BulkBlankCells": 0,
+      "CachedValues": 1,
+      "CellVisits": 1,
+      "EvaluationSteps": 13
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 100000,
+    "stored": 1,
+    "name": "VLOOKUP(7,A:B,1,FALSE)",
+    "medianMs": 0.0192,
+    "medianAllocatedBytes": 3424,
+    "statistics": {
+      "LookupIndexedValues": 1,
+      "LookupIndexedRanges": 1,
+      "SourceReads": 1,
+      "RangeCandidates": 1,
+      "BulkBlankCells": 0,
+      "CachedValues": 1,
+      "CellVisits": 2,
+      "EvaluationSteps": 16
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 100000,
+    "stored": 3,
+    "name": "index-build",
+    "medianMs": 72.4926,
+    "medianAllocatedBytes": 5797608,
+    "statistics": null
+  },
+  {
+    "variant": "baseline",
+    "count": 100000,
+    "stored": 3,
+    "name": "COUNTIF(B:B,\"\")",
+    "medianMs": 2.1094,
+    "medianAllocatedBytes": 3360,
+    "statistics": {
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 3,
+      "RangeCandidates": 3,
+      "BulkBlankCells": 1048573,
+      "CachedValues": 3,
+      "CellVisits": 3,
+      "EvaluationSteps": 27
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 100000,
+    "stored": 3,
+    "name": "SUM(B:B)",
+    "medianMs": 2.6742,
+    "medianAllocatedBytes": 2760,
+    "statistics": {
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 3,
+      "RangeCandidates": 3,
+      "BulkBlankCells": 0,
+      "CachedValues": 3,
+      "CellVisits": 3,
+      "EvaluationSteps": 13
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 100000,
+    "stored": 3,
+    "name": "SUM(A1:A100000)",
+    "medianMs": 8.5362,
+    "medianAllocatedBytes": 15698800,
+    "statistics": {
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 100000,
+      "RangeCandidates": 100000,
+      "BulkBlankCells": 0,
+      "CachedValues": 100000,
+      "CellVisits": 100000,
+      "EvaluationSteps": 200006
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 100000,
+    "stored": 3,
+    "name": "SUMIFS(A1:A100000,A1:A100000,\">0\")",
+    "medianMs": 15.7765,
+    "medianAllocatedBytes": 15699728,
+    "statistics": {
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 100000,
+      "RangeCandidates": 200000,
+      "BulkBlankCells": 0,
+      "CachedValues": 100000,
+      "CellVisits": 200000,
+      "EvaluationSteps": 800016
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 100000,
+    "stored": 3,
+    "name": "MATCH(7,A:A,0)",
+    "medianMs": 0.0124,
+    "medianAllocatedBytes": 3424,
+    "statistics": {
+      "LookupIndexedValues": 1,
+      "LookupIndexedRanges": 1,
+      "SourceReads": 1,
+      "RangeCandidates": 1,
+      "BulkBlankCells": 0,
+      "CachedValues": 1,
+      "CellVisits": 1,
+      "EvaluationSteps": 13
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 100000,
+    "stored": 3,
+    "name": "VLOOKUP(7,A:B,1,FALSE)",
+    "medianMs": 0.0127,
+    "medianAllocatedBytes": 3424,
+    "statistics": {
+      "LookupIndexedValues": 1,
+      "LookupIndexedRanges": 1,
+      "SourceReads": 1,
+      "RangeCandidates": 1,
+      "BulkBlankCells": 0,
+      "CachedValues": 1,
+      "CellVisits": 2,
+      "EvaluationSteps": 16
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 1000000,
+    "stored": 0,
+    "name": "index-build",
+    "medianMs": 43.7094,
+    "medianAllocatedBytes": 49557904,
+    "statistics": null
+  },
+  {
+    "variant": "baseline",
+    "count": 1000000,
+    "stored": 0,
+    "name": "COUNTIF(B:B,\"\")",
+    "medianMs": 6.7351,
+    "medianAllocatedBytes": 3128,
+    "statistics": {
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 0,
+      "RangeCandidates": 0,
+      "BulkBlankCells": 1048576,
+      "CachedValues": 0,
+      "CellVisits": 0,
+      "EvaluationSteps": 12
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 1000000,
+    "stored": 0,
+    "name": "SUM(B:B)",
+    "medianMs": 6.8136,
+    "medianAllocatedBytes": 2528,
+    "statistics": {
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 0,
+      "RangeCandidates": 0,
+      "BulkBlankCells": 0,
+      "CachedValues": 0,
+      "CellVisits": 0,
+      "EvaluationSteps": 7
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 1000000,
+    "stored": 0,
+    "name": "SUM(A1:A1000000)",
+    "medianMs": 128.8532,
+    "medianAllocatedBytes": 140111944,
+    "statistics": {
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 1000000,
+      "RangeCandidates": 1000000,
+      "BulkBlankCells": 0,
+      "CachedValues": 1000000,
+      "CellVisits": 1000000,
+      "EvaluationSteps": 2000006
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 1000000,
+    "stored": 0,
+    "name": "SUMIFS(A1:A1000000,A1:A1000000,\">0\")",
+    "medianMs": 189.482,
+    "medianAllocatedBytes": 140112872,
+    "statistics": {
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 1000000,
+      "RangeCandidates": 2000000,
+      "BulkBlankCells": 0,
+      "CachedValues": 1000000,
+      "CellVisits": 2000000,
+      "EvaluationSteps": 8000016
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 1000000,
+    "stored": 0,
+    "name": "MATCH(7,A:A,0)",
+    "medianMs": 0.0196,
+    "medianAllocatedBytes": 3400,
+    "statistics": {
+      "LookupIndexedValues": 1,
+      "LookupIndexedRanges": 1,
+      "SourceReads": 1,
+      "RangeCandidates": 1,
+      "BulkBlankCells": 0,
+      "CachedValues": 1,
+      "CellVisits": 1,
+      "EvaluationSteps": 13
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 1000000,
+    "stored": 0,
+    "name": "VLOOKUP(7,A:B,1,FALSE)",
+    "medianMs": 0.0163,
+    "medianAllocatedBytes": 2680,
+    "statistics": {
+      "LookupIndexedValues": 1,
+      "LookupIndexedRanges": 1,
+      "SourceReads": 1,
+      "RangeCandidates": 1,
+      "BulkBlankCells": 0,
+      "CachedValues": 1,
+      "CellVisits": 2,
+      "EvaluationSteps": 16
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 1000000,
+    "stored": 1,
+    "name": "index-build",
+    "medianMs": 49.0211,
+    "medianAllocatedBytes": 49557920,
+    "statistics": null
+  },
+  {
+    "variant": "baseline",
+    "count": 1000000,
+    "stored": 1,
+    "name": "COUNTIF(B:B,\"\")",
+    "medianMs": 6.5046,
+    "medianAllocatedBytes": 3336,
+    "statistics": {
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 1,
+      "RangeCandidates": 1,
+      "BulkBlankCells": 1048575,
+      "CachedValues": 1,
+      "CellVisits": 1,
+      "EvaluationSteps": 17
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 1000000,
+    "stored": 1,
+    "name": "SUM(B:B)",
+    "medianMs": 7.4085,
+    "medianAllocatedBytes": 2736,
+    "statistics": {
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 1,
+      "RangeCandidates": 1,
+      "BulkBlankCells": 0,
+      "CachedValues": 1,
+      "CellVisits": 1,
+      "EvaluationSteps": 9
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 1000000,
+    "stored": 1,
+    "name": "SUM(A1:A1000000)",
+    "medianMs": 104.034,
+    "medianAllocatedBytes": 140110960,
+    "statistics": {
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 1000000,
+      "RangeCandidates": 1000000,
+      "BulkBlankCells": 0,
+      "CachedValues": 1000000,
+      "CellVisits": 1000000,
+      "EvaluationSteps": 2000006
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 1000000,
+    "stored": 1,
+    "name": "SUMIFS(A1:A1000000,A1:A1000000,\">0\")",
+    "medianMs": 177.4067,
+    "medianAllocatedBytes": 140111888,
+    "statistics": {
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 1000000,
+      "RangeCandidates": 2000000,
+      "BulkBlankCells": 0,
+      "CachedValues": 1000000,
+      "CellVisits": 2000000,
+      "EvaluationSteps": 8000016
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 1000000,
+    "stored": 1,
+    "name": "MATCH(7,A:A,0)",
+    "medianMs": 0.0293,
+    "medianAllocatedBytes": 3400,
+    "statistics": {
+      "LookupIndexedValues": 1,
+      "LookupIndexedRanges": 1,
+      "SourceReads": 1,
+      "RangeCandidates": 1,
+      "BulkBlankCells": 0,
+      "CachedValues": 1,
+      "CellVisits": 1,
+      "EvaluationSteps": 13
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 1000000,
+    "stored": 1,
+    "name": "VLOOKUP(7,A:B,1,FALSE)",
+    "medianMs": 0.0269,
+    "medianAllocatedBytes": 3400,
+    "statistics": {
+      "LookupIndexedValues": 1,
+      "LookupIndexedRanges": 1,
+      "SourceReads": 1,
+      "RangeCandidates": 1,
+      "BulkBlankCells": 0,
+      "CachedValues": 1,
+      "CellVisits": 2,
+      "EvaluationSteps": 16
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 1000000,
+    "stored": 3,
+    "name": "index-build",
+    "medianMs": 56.4191,
+    "medianAllocatedBytes": 49557944,
+    "statistics": null
+  },
+  {
+    "variant": "baseline",
+    "count": 1000000,
+    "stored": 3,
+    "name": "COUNTIF(B:B,\"\")",
+    "medianMs": 6.8951,
+    "medianAllocatedBytes": 3336,
+    "statistics": {
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 3,
+      "RangeCandidates": 3,
+      "BulkBlankCells": 1048573,
+      "CachedValues": 3,
+      "CellVisits": 3,
+      "EvaluationSteps": 27
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 1000000,
+    "stored": 3,
+    "name": "SUM(B:B)",
+    "medianMs": 6.5231,
+    "medianAllocatedBytes": 2736,
+    "statistics": {
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 3,
+      "RangeCandidates": 3,
+      "BulkBlankCells": 0,
+      "CachedValues": 3,
+      "CellVisits": 3,
+      "EvaluationSteps": 13
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 1000000,
+    "stored": 3,
+    "name": "SUM(A1:A1000000)",
+    "medianMs": 96.8177,
+    "medianAllocatedBytes": 140110960,
+    "statistics": {
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 1000000,
+      "RangeCandidates": 1000000,
+      "BulkBlankCells": 0,
+      "CachedValues": 1000000,
+      "CellVisits": 1000000,
+      "EvaluationSteps": 2000006
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 1000000,
+    "stored": 3,
+    "name": "SUMIFS(A1:A1000000,A1:A1000000,\">0\")",
+    "medianMs": 171.3175,
+    "medianAllocatedBytes": 140111816,
+    "statistics": {
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 1000000,
+      "RangeCandidates": 2000000,
+      "BulkBlankCells": 0,
+      "CachedValues": 1000000,
+      "CellVisits": 2000000,
+      "EvaluationSteps": 8000016
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 1000000,
+    "stored": 3,
+    "name": "MATCH(7,A:A,0)",
+    "medianMs": 0.0339,
+    "medianAllocatedBytes": 3400,
+    "statistics": {
+      "LookupIndexedValues": 1,
+      "LookupIndexedRanges": 1,
+      "SourceReads": 1,
+      "RangeCandidates": 1,
+      "BulkBlankCells": 0,
+      "CachedValues": 1,
+      "CellVisits": 1,
+      "EvaluationSteps": 13
+    }
+  },
+  {
+    "variant": "baseline",
+    "count": 1000000,
+    "stored": 3,
+    "name": "VLOOKUP(7,A:B,1,FALSE)",
+    "medianMs": 0.0298,
+    "medianAllocatedBytes": 3400,
+    "statistics": {
+      "LookupIndexedValues": 1,
+      "LookupIndexedRanges": 1,
+      "SourceReads": 1,
+      "RangeCandidates": 1,
+      "BulkBlankCells": 0,
+      "CachedValues": 1,
+      "CellVisits": 2,
+      "EvaluationSteps": 16
+    }
+  },
+  {
+    "variant": "current",
+    "count": 100000,
+    "stored": 0,
+    "name": "index-build",
+    "medianMs": 15.2112,
+    "medianAllocatedBytes": 7246672,
+    "statistics": null
+  },
+  {
+    "variant": "current",
+    "count": 100000,
+    "stored": 0,
+    "name": "COUNTIF(B:B,\"\")",
+    "medianMs": 0.0161,
+    "medianAllocatedBytes": 3040,
+    "statistics": {
+      "IndexWork": 4,
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 0,
+      "RangeCandidates": 0,
+      "BulkBlankCells": 1048576,
+      "CachedValues": 0,
+      "CellVisits": 0,
+      "EvaluationSteps": 16
+    }
+  },
+  {
+    "variant": "current",
+    "count": 100000,
+    "stored": 0,
+    "name": "SUM(B:B)",
+    "medianMs": 0.0117,
+    "medianAllocatedBytes": 2104,
+    "statistics": {
+      "IndexWork": 4,
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 0,
+      "RangeCandidates": 0,
+      "BulkBlankCells": 0,
+      "CachedValues": 0,
+      "CellVisits": 0,
+      "EvaluationSteps": 11
+    }
+  },
+  {
+    "variant": "current",
+    "count": 100000,
+    "stored": 0,
+    "name": "SUM(A1:A100000)",
+    "medianMs": 29.0457,
+    "medianAllocatedBytes": 15699312,
+    "statistics": {
+      "IndexWork": 2,
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 100000,
+      "RangeCandidates": 100000,
+      "BulkBlankCells": 0,
+      "CachedValues": 100000,
+      "CellVisits": 100000,
+      "EvaluationSteps": 200008
+    }
+  },
+  {
+    "variant": "current",
+    "count": 100000,
+    "stored": 0,
+    "name": "SUMIFS(A1:A100000,A1:A100000,\">0\")",
+    "medianMs": 27.2779,
+    "medianAllocatedBytes": 15700424,
+    "statistics": {
+      "IndexWork": 4,
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 100000,
+      "RangeCandidates": 200000,
+      "BulkBlankCells": 0,
+      "CachedValues": 100000,
+      "CellVisits": 200000,
+      "EvaluationSteps": 800020
+    }
+  },
+  {
+    "variant": "current",
+    "count": 100000,
+    "stored": 0,
+    "name": "MATCH(7,A:A,0)",
+    "medianMs": 0.025,
+    "medianAllocatedBytes": 2976,
+    "statistics": {
+      "IndexWork": 22,
+      "LookupIndexedValues": 1,
+      "LookupIndexedRanges": 1,
+      "SourceReads": 1,
+      "RangeCandidates": 1,
+      "BulkBlankCells": 0,
+      "CachedValues": 1,
+      "CellVisits": 1,
+      "EvaluationSteps": 35
+    }
+  },
+  {
+    "variant": "current",
+    "count": 100000,
+    "stored": 0,
+    "name": "VLOOKUP(7,A:B,1,FALSE)",
+    "medianMs": 0.024,
+    "medianAllocatedBytes": 3312,
+    "statistics": {
+      "IndexWork": 22,
+      "LookupIndexedValues": 1,
+      "LookupIndexedRanges": 1,
+      "SourceReads": 1,
+      "RangeCandidates": 1,
+      "BulkBlankCells": 0,
+      "CachedValues": 1,
+      "CellVisits": 2,
+      "EvaluationSteps": 38
+    }
+  },
+  {
+    "variant": "current",
+    "count": 100000,
+    "stored": 1,
+    "name": "index-build",
+    "medianMs": 15.1314,
+    "medianAllocatedBytes": 7247136,
+    "statistics": null
+  },
+  {
+    "variant": "current",
+    "count": 100000,
+    "stored": 1,
+    "name": "COUNTIF(B:B,\"\")",
+    "medianMs": 0.028,
+    "medianAllocatedBytes": 3536,
+    "statistics": {
+      "IndexWork": 6,
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 1,
+      "RangeCandidates": 1,
+      "BulkBlankCells": 1048575,
+      "CachedValues": 1,
+      "CellVisits": 1,
+      "EvaluationSteps": 23
+    }
+  },
+  {
+    "variant": "current",
+    "count": 100000,
+    "stored": 1,
+    "name": "SUM(B:B)",
+    "medianMs": 0.0176,
+    "medianAllocatedBytes": 2984,
+    "statistics": {
+      "IndexWork": 6,
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 1,
+      "RangeCandidates": 1,
+      "BulkBlankCells": 0,
+      "CachedValues": 1,
+      "CellVisits": 1,
+      "EvaluationSteps": 15
+    }
+  },
+  {
+    "variant": "current",
+    "count": 100000,
+    "stored": 1,
+    "name": "SUM(A1:A100000)",
+    "medianMs": 8.5434,
+    "medianAllocatedBytes": 15699000,
+    "statistics": {
+      "IndexWork": 2,
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 100000,
+      "RangeCandidates": 100000,
+      "BulkBlankCells": 0,
+      "CachedValues": 100000,
+      "CellVisits": 100000,
+      "EvaluationSteps": 200008
+    }
+  },
+  {
+    "variant": "current",
+    "count": 100000,
+    "stored": 1,
+    "name": "SUMIFS(A1:A100000,A1:A100000,\">0\")",
+    "medianMs": 31.5788,
+    "medianAllocatedBytes": 15700112,
+    "statistics": {
+      "IndexWork": 4,
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 100000,
+      "RangeCandidates": 200000,
+      "BulkBlankCells": 0,
+      "CachedValues": 100000,
+      "CellVisits": 200000,
+      "EvaluationSteps": 800020
+    }
+  },
+  {
+    "variant": "current",
+    "count": 100000,
+    "stored": 1,
+    "name": "MATCH(7,A:A,0)",
+    "medianMs": 0.0237,
+    "medianAllocatedBytes": 3648,
+    "statistics": {
+      "IndexWork": 22,
+      "LookupIndexedValues": 1,
+      "LookupIndexedRanges": 1,
+      "SourceReads": 1,
+      "RangeCandidates": 1,
+      "BulkBlankCells": 0,
+      "CachedValues": 1,
+      "CellVisits": 1,
+      "EvaluationSteps": 35
+    }
+  },
+  {
+    "variant": "current",
+    "count": 100000,
+    "stored": 1,
+    "name": "VLOOKUP(7,A:B,1,FALSE)",
+    "medianMs": 0.0244,
+    "medianAllocatedBytes": 3264,
+    "statistics": {
+      "IndexWork": 22,
+      "LookupIndexedValues": 1,
+      "LookupIndexedRanges": 1,
+      "SourceReads": 1,
+      "RangeCandidates": 1,
+      "BulkBlankCells": 0,
+      "CachedValues": 1,
+      "CellVisits": 2,
+      "EvaluationSteps": 38
+    }
+  },
+  {
+    "variant": "current",
+    "count": 100000,
+    "stored": 3,
+    "name": "index-build",
+    "medianMs": 18.9079,
+    "medianAllocatedBytes": 7247168,
+    "statistics": null
+  },
+  {
+    "variant": "current",
+    "count": 100000,
+    "stored": 3,
+    "name": "COUNTIF(B:B,\"\")",
+    "medianMs": 0.0251,
+    "medianAllocatedBytes": 3584,
+    "statistics": {
+      "IndexWork": 9,
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 3,
+      "RangeCandidates": 3,
+      "BulkBlankCells": 1048573,
+      "CachedValues": 3,
+      "CellVisits": 3,
+      "EvaluationSteps": 36
+    }
+  },
+  {
+    "variant": "current",
+    "count": 100000,
+    "stored": 3,
+    "name": "SUM(B:B)",
+    "medianMs": 0.0182,
+    "medianAllocatedBytes": 2264,
+    "statistics": {
+      "IndexWork": 9,
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 3,
+      "RangeCandidates": 3,
+      "BulkBlankCells": 0,
+      "CachedValues": 3,
+      "CellVisits": 3,
+      "EvaluationSteps": 22
+    }
+  },
+  {
+    "variant": "current",
+    "count": 100000,
+    "stored": 3,
+    "name": "SUM(A1:A100000)",
+    "medianMs": 9.0275,
+    "medianAllocatedBytes": 15699000,
+    "statistics": {
+      "IndexWork": 2,
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 100000,
+      "RangeCandidates": 100000,
+      "BulkBlankCells": 0,
+      "CachedValues": 100000,
+      "CellVisits": 100000,
+      "EvaluationSteps": 200008
+    }
+  },
+  {
+    "variant": "current",
+    "count": 100000,
+    "stored": 3,
+    "name": "SUMIFS(A1:A100000,A1:A100000,\">0\")",
+    "medianMs": 26.6338,
+    "medianAllocatedBytes": 15700112,
+    "statistics": {
+      "IndexWork": 4,
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 100000,
+      "RangeCandidates": 200000,
+      "BulkBlankCells": 0,
+      "CachedValues": 100000,
+      "CellVisits": 200000,
+      "EvaluationSteps": 800020
+    }
+  },
+  {
+    "variant": "current",
+    "count": 100000,
+    "stored": 3,
+    "name": "MATCH(7,A:A,0)",
+    "medianMs": 0.0212,
+    "medianAllocatedBytes": 2928,
+    "statistics": {
+      "IndexWork": 22,
+      "LookupIndexedValues": 1,
+      "LookupIndexedRanges": 1,
+      "SourceReads": 1,
+      "RangeCandidates": 1,
+      "BulkBlankCells": 0,
+      "CachedValues": 1,
+      "CellVisits": 1,
+      "EvaluationSteps": 35
+    }
+  },
+  {
+    "variant": "current",
+    "count": 100000,
+    "stored": 3,
+    "name": "VLOOKUP(7,A:B,1,FALSE)",
+    "medianMs": 0.0234,
+    "medianAllocatedBytes": 3648,
+    "statistics": {
+      "IndexWork": 22,
+      "LookupIndexedValues": 1,
+      "LookupIndexedRanges": 1,
+      "SourceReads": 1,
+      "RangeCandidates": 1,
+      "BulkBlankCells": 0,
+      "CachedValues": 1,
+      "CellVisits": 2,
+      "EvaluationSteps": 38
+    }
+  },
+  {
+    "variant": "current",
+    "count": 1000000,
+    "stored": 0,
+    "name": "index-build",
+    "medianMs": 49.2401,
+    "medianAllocatedBytes": 61947456,
+    "statistics": null
+  },
+  {
+    "variant": "current",
+    "count": 1000000,
+    "stored": 0,
+    "name": "COUNTIF(B:B,\"\")",
+    "medianMs": 0.0205,
+    "medianAllocatedBytes": 3376,
+    "statistics": {
+      "IndexWork": 4,
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 0,
+      "RangeCandidates": 0,
+      "BulkBlankCells": 1048576,
+      "CachedValues": 0,
+      "CellVisits": 0,
+      "EvaluationSteps": 16
+    }
+  },
+  {
+    "variant": "current",
+    "count": 1000000,
+    "stored": 0,
+    "name": "SUM(B:B)",
+    "medianMs": 0.0258,
+    "medianAllocatedBytes": 2776,
+    "statistics": {
+      "IndexWork": 4,
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 0,
+      "RangeCandidates": 0,
+      "BulkBlankCells": 0,
+      "CachedValues": 0,
+      "CellVisits": 0,
+      "EvaluationSteps": 11
+    }
+  },
+  {
+    "variant": "current",
+    "count": 1000000,
+    "stored": 0,
+    "name": "SUM(A1:A1000000)",
+    "medianMs": 104.3389,
+    "medianAllocatedBytes": 140112168,
+    "statistics": {
+      "IndexWork": 2,
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 1000000,
+      "RangeCandidates": 1000000,
+      "BulkBlankCells": 0,
+      "CachedValues": 1000000,
+      "CellVisits": 1000000,
+      "EvaluationSteps": 2000008
+    }
+  },
+  {
+    "variant": "current",
+    "count": 1000000,
+    "stored": 0,
+    "name": "SUMIFS(A1:A1000000,A1:A1000000,\">0\")",
+    "medianMs": 178.2371,
+    "medianAllocatedBytes": 140113280,
+    "statistics": {
+      "IndexWork": 4,
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 1000000,
+      "RangeCandidates": 2000000,
+      "BulkBlankCells": 0,
+      "CachedValues": 1000000,
+      "CellVisits": 2000000,
+      "EvaluationSteps": 8000020
+    }
+  },
+  {
+    "variant": "current",
+    "count": 1000000,
+    "stored": 0,
+    "name": "MATCH(7,A:A,0)",
+    "medianMs": 0.032,
+    "medianAllocatedBytes": 3648,
+    "statistics": {
+      "IndexWork": 25,
+      "LookupIndexedValues": 1,
+      "LookupIndexedRanges": 1,
+      "SourceReads": 1,
+      "RangeCandidates": 1,
+      "BulkBlankCells": 0,
+      "CachedValues": 1,
+      "CellVisits": 1,
+      "EvaluationSteps": 38
+    }
+  },
+  {
+    "variant": "current",
+    "count": 1000000,
+    "stored": 0,
+    "name": "VLOOKUP(7,A:B,1,FALSE)",
+    "medianMs": 0.0377,
+    "medianAllocatedBytes": 3648,
+    "statistics": {
+      "IndexWork": 25,
+      "LookupIndexedValues": 1,
+      "LookupIndexedRanges": 1,
+      "SourceReads": 1,
+      "RangeCandidates": 1,
+      "BulkBlankCells": 0,
+      "CachedValues": 1,
+      "CellVisits": 2,
+      "EvaluationSteps": 41
+    }
+  },
+  {
+    "variant": "current",
+    "count": 1000000,
+    "stored": 1,
+    "name": "index-build",
+    "medianMs": 56.7994,
+    "medianAllocatedBytes": 61947576,
+    "statistics": null
+  },
+  {
+    "variant": "current",
+    "count": 1000000,
+    "stored": 1,
+    "name": "COUNTIF(B:B,\"\")",
+    "medianMs": 0.0364,
+    "medianAllocatedBytes": 3560,
+    "statistics": {
+      "IndexWork": 6,
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 1,
+      "RangeCandidates": 1,
+      "BulkBlankCells": 1048575,
+      "CachedValues": 1,
+      "CellVisits": 1,
+      "EvaluationSteps": 23
+    }
+  },
+  {
+    "variant": "current",
+    "count": 1000000,
+    "stored": 1,
+    "name": "SUM(B:B)",
+    "medianMs": 0.0224,
+    "medianAllocatedBytes": 1952,
+    "statistics": {
+      "IndexWork": 6,
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 1,
+      "RangeCandidates": 1,
+      "BulkBlankCells": 0,
+      "CachedValues": 1,
+      "CellVisits": 1,
+      "EvaluationSteps": 15
+    }
+  },
+  {
+    "variant": "current",
+    "count": 1000000,
+    "stored": 1,
+    "name": "SUM(A1:A1000000)",
+    "medianMs": 88.2206,
+    "medianAllocatedBytes": 140111160,
+    "statistics": {
+      "IndexWork": 2,
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 1000000,
+      "RangeCandidates": 1000000,
+      "BulkBlankCells": 0,
+      "CachedValues": 1000000,
+      "CellVisits": 1000000,
+      "EvaluationSteps": 2000008
+    }
+  },
+  {
+    "variant": "current",
+    "count": 1000000,
+    "stored": 1,
+    "name": "SUMIFS(A1:A1000000,A1:A1000000,\">0\")",
+    "medianMs": 167.6111,
+    "medianAllocatedBytes": 140112272,
+    "statistics": {
+      "IndexWork": 4,
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 1000000,
+      "RangeCandidates": 2000000,
+      "BulkBlankCells": 0,
+      "CachedValues": 1000000,
+      "CellVisits": 2000000,
+      "EvaluationSteps": 8000020
+    }
+  },
+  {
+    "variant": "current",
+    "count": 1000000,
+    "stored": 1,
+    "name": "MATCH(7,A:A,0)",
+    "medianMs": 0.0429,
+    "medianAllocatedBytes": 3624,
+    "statistics": {
+      "IndexWork": 25,
+      "LookupIndexedValues": 1,
+      "LookupIndexedRanges": 1,
+      "SourceReads": 1,
+      "RangeCandidates": 1,
+      "BulkBlankCells": 0,
+      "CachedValues": 1,
+      "CellVisits": 1,
+      "EvaluationSteps": 38
+    }
+  },
+  {
+    "variant": "current",
+    "count": 1000000,
+    "stored": 1,
+    "name": "VLOOKUP(7,A:B,1,FALSE)",
+    "medianMs": 0.0306,
+    "medianAllocatedBytes": 3624,
+    "statistics": {
+      "IndexWork": 25,
+      "LookupIndexedValues": 1,
+      "LookupIndexedRanges": 1,
+      "SourceReads": 1,
+      "RangeCandidates": 1,
+      "BulkBlankCells": 0,
+      "CachedValues": 1,
+      "CellVisits": 2,
+      "EvaluationSteps": 41
+    }
+  },
+  {
+    "variant": "current",
+    "count": 1000000,
+    "stored": 3,
+    "name": "index-build",
+    "medianMs": 67.1458,
+    "medianAllocatedBytes": 61947608,
+    "statistics": null
+  },
+  {
+    "variant": "current",
+    "count": 1000000,
+    "stored": 3,
+    "name": "COUNTIF(B:B,\"\")",
+    "medianMs": 0.0334,
+    "medianAllocatedBytes": 3560,
+    "statistics": {
+      "IndexWork": 9,
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 3,
+      "RangeCandidates": 3,
+      "BulkBlankCells": 1048573,
+      "CachedValues": 3,
+      "CellVisits": 3,
+      "EvaluationSteps": 36
+    }
+  },
+  {
+    "variant": "current",
+    "count": 1000000,
+    "stored": 3,
+    "name": "SUM(B:B)",
+    "medianMs": 0.0215,
+    "medianAllocatedBytes": 2240,
+    "statistics": {
+      "IndexWork": 9,
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 3,
+      "RangeCandidates": 3,
+      "BulkBlankCells": 0,
+      "CachedValues": 3,
+      "CellVisits": 3,
+      "EvaluationSteps": 22
+    }
+  },
+  {
+    "variant": "current",
+    "count": 1000000,
+    "stored": 3,
+    "name": "SUM(A1:A1000000)",
+    "medianMs": 91.3415,
+    "medianAllocatedBytes": 140111160,
+    "statistics": {
+      "IndexWork": 2,
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 1000000,
+      "RangeCandidates": 1000000,
+      "BulkBlankCells": 0,
+      "CachedValues": 1000000,
+      "CellVisits": 1000000,
+      "EvaluationSteps": 2000008
+    }
+  },
+  {
+    "variant": "current",
+    "count": 1000000,
+    "stored": 3,
+    "name": "SUMIFS(A1:A1000000,A1:A1000000,\">0\")",
+    "medianMs": 171.1197,
+    "medianAllocatedBytes": 140112200,
+    "statistics": {
+      "IndexWork": 4,
+      "LookupIndexedValues": 0,
+      "LookupIndexedRanges": 0,
+      "SourceReads": 1000000,
+      "RangeCandidates": 2000000,
+      "BulkBlankCells": 0,
+      "CachedValues": 1000000,
+      "CellVisits": 2000000,
+      "EvaluationSteps": 8000020
+    }
+  },
+  {
+    "variant": "current",
+    "count": 1000000,
+    "stored": 3,
+    "name": "MATCH(7,A:A,0)",
+    "medianMs": 0.0395,
+    "medianAllocatedBytes": 3624,
+    "statistics": {
+      "IndexWork": 25,
+      "LookupIndexedValues": 1,
+      "LookupIndexedRanges": 1,
+      "SourceReads": 1,
+      "RangeCandidates": 1,
+      "BulkBlankCells": 0,
+      "CachedValues": 1,
+      "CellVisits": 1,
+      "EvaluationSteps": 38
+    }
+  },
+  {
+    "variant": "current",
+    "count": 1000000,
+    "stored": 3,
+    "name": "VLOOKUP(7,A:B,1,FALSE)",
+    "medianMs": 0.0285,
+    "medianAllocatedBytes": 3624,
+    "statistics": {
+      "IndexWork": 25,
+      "LookupIndexedValues": 1,
+      "LookupIndexedRanges": 1,
+      "SourceReads": 1,
+      "RangeCandidates": 1,
+      "BulkBlankCells": 0,
+      "CachedValues": 1,
+      "CellVisits": 2,
+      "EvaluationSteps": 41
+    }
+  }
+]

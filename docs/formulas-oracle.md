@@ -1,6 +1,6 @@
 # Formula oracle and compatibility profiles
 
-The checked-in `Fixtures/Oracle/cases.json` contains 498 independent cases. Its
+The checked-in `Fixtures/Oracle/cases.json` contains 500 independent cases. Its
 expectations identify `specification`, `hand-calculated` or provisional `profile`
 provenance. **Excel desktop observations: 0.** Passing these cases is not an Excel
 compatibility certification. Historical validation documents retain their own SHAs.
@@ -99,4 +99,23 @@ These sources do not settle every matrix boundary; those remain explicitly unobs
 The exact cache-free Mapping workbooks from the recorded Linux run are retained in
 [Fixtures/Oracle/Mapping](../tests/ExcelRenderer.Formulas.Tests/Fixtures/Oracle/Mapping/)
 with cases and input SHA256 metadata. Use `--cases` with that collection and the
-runner's `--mapping` mode; it is separate from the 498-case engine collection.
+runner's `--mapping` mode; it is separate from the 500-case engine collection.
+
+## Pipeline isolation and target validation
+
+Each requested pipeline executes independently and records exactly one result.
+An OpenXml evaluation failure does not substitute for a roundtrip measurement;
+a roundtrip failure leaves the prior OpenXml result intact. Formula calculation
+exceptions become diagnostics for that stage. Other failures terminate with the
+case ID and pipeline, preserving the original exception. The comparator rejects
+all duplicate `(id, pipeline)` entries, including identical values.
+
+Every normal pipeline uses the case's `target` (unqualified uppercase A1 address,
+within A1:XFD1048576); it is parsed once per case. Inputs overlapping that target
+are rejected by both generation and execution. Missing workbook targets identify
+the case and address. The C5 and AA10 fixtures are hand-calculated, with Z1=999
+as an unrelated input; their expected Number 5 is not an Excel observation.
+Mapping still evaluates the target on its original first worksheet.
+
+See [the three-fix validation report](validation/formulas-review/README.md) for
+the current case hash, test totals, profile comparisons and index measurements.

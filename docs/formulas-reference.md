@@ -390,6 +390,20 @@ dense rectangle requires a coordinate-index proof that every position is stored;
 a metadata-only UsedRange is insufficient. Sparse/custom cursors still validate
 ordered, unique coordinates.
 
+Single-column queries use a column-to-sorted-rows coordinate index: an absent
+column returns immediately; a populated column takes O(log Ncol + K) work for
+Ncol stored cells and K returned coordinates, independent of other columns.
+Multi-column queries retain row-major indexing. Added retained coordinate memory
+is O(stored cells); values and evaluation results are not duplicated.
+
+`IndexWork` additionally counts built-in index dictionary probes, binary-search
+comparisons, inspected rows and coordinates, including density proofs. Each unit
+also consumes one evaluation step and checks cancellation, even inside a
+`MoveNext` that returns no candidate. There is no batching delay. `SourceReads`
+and `RangeCandidates` retain their previous meanings. This internal-work guarantee
+applies to built-in `FormulaRangeIndex.Query` scans; arbitrary external iterator
+code cannot be interrupted while it remains inside its own `MoveNext`.
+
 Exact lookups retain only the evaluated prefix of a session-local vector index.
 Repeated keys avoid rescanning that prefix while preserving first duplicates,
 typed equality, error order and lazy return evaluation. Limits are 16 vectors,

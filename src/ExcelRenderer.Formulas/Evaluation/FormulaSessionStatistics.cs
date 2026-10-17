@@ -12,8 +12,10 @@ namespace ExcelRenderer.Formulas.Evaluation
         /// <param name="steps">Budgeted steps.</param>
         /// <param name="lookupValues">Typed lookup entries.</param>
         /// <param name="lookupRanges">Indexed lookup vectors.</param>
-        internal FormulaSessionStatistics(long reads, long candidates, long blanks, int cache, int visits, int steps, int lookupValues, int lookupRanges)
+        /// <param name="indexWork">Built-in coordinate index operations.</param>
+        internal FormulaSessionStatistics(long reads, long candidates, long blanks, int cache, int visits, int steps, int lookupValues, int lookupRanges, long indexWork)
         {
+            IndexWork = indexWork;
             SourceReads = reads;
             RangeCandidates = candidates;
             BulkBlankCells = blanks;
@@ -23,6 +25,9 @@ namespace ExcelRenderer.Formulas.Evaluation
             LookupIndexedValues = lookupValues;
             LookupIndexedRanges = lookupRanges;
         }
+
+        /// <summary>Gets built-in index dictionary probes, binary-search comparisons and inspected rows or coordinates, including dense coverage checks.</summary>
+        public long IndexWork { get; }
 
         /// <summary>Gets retained typed lookup entries, limited to 65536 per session.</summary>
         public int LookupIndexedValues { get; }

@@ -51,10 +51,19 @@ PDF / PNG / SVG
 | --- | --- | --- |
 | `ExcelRenderer` | C# から既存の XLSX を PDF・PNG・SVG・Markdown に変換 | .NET Standard 2.1 と互換性のあるアプリケーション |
 | `ExcelRenderer.Mapping` | C# オブジェクト・JSON をテンプレートへ設定して XLSX を保存 | .NET Standard 2.1 と互換性のあるアプリケーション。描画・フォントは不要 |
-| `ExcelRenderer.OpenXml` | XLSX の元データの読み込み、型付き編集、明示再計算の接続 | .NET Standard 2.1 と互換性のあるアプリケーション。低レベル API |
-| `ExcelRenderer.Formulas` | インメモリデータの限定的な数式評価 | .NET Standard 2.1 互換。BCL のみで XLSX・描画依存なし |
 | `ExcelRenderer.Fonts` | 描画用の日本語・絵文字フォントを追加 | `ExcelRenderer` と併用 |
 | `ExcelRenderer.Tool` | コマンドラインでマッピング・変換 | .NET 10 SDK |
+
+NuGet 公開対象はこの4つです。`ExcelRenderer.Formulas` と `ExcelRenderer.OpenXml` は
+本体と Mapping の両方に同梱される独立したアセンブリであり、インストールする
+パッケージ ID ではありません。API の利用には[後述の手順](#数式と低レベル-xlsx-api)で
+本体または Mapping のどちらかを追加します。
+
+> [!WARNING]
+> 1.9.0 から 1.9.1 への更新では Formulas／OpenXml の公開名前空間が変わり、
+> ソース互換性とバイナリ互換性が失われます。using・保存済み型名を更新し、依存する
+> ライブラリとアプリケーションをすべて再ビルドしてください。影響する型、旧版の
+> 復元上の注意点、再現結果は[移行ガイド](docs/namespace-migration.md)を参照してください。
 
 以下のコマンドは NuGet.org を利用し、使いたい機能を含むバージョンが公開済みである
 ことを前提とします。公開前の機能を試す場合は[開発](#開発)を参照してください。
@@ -88,6 +97,42 @@ dotnet add package ExcelRenderer.Mapping
 マッピング後に C# から PDF などへ変換する場合は `ExcelRenderer` も追加し、
 必要に応じて `ExcelRenderer.Fonts` を併用してください。
 テンプレート・JSON・C# の具体例は[マッピングガイド](docs/mapping.ja.md)にあります。
+
+### 数式と低レベル XLSX API
+
+描画なしでインメモリの数式評価や低レベルの XLSX 読み書きを使う場合は、公開済みの
+Mapping パッケージを追加します。
+
+```bash
+dotnet add package ExcelRenderer.Mapping --version 1.9.1
+```
+
+既に `ExcelRenderer` 1.9.1 を参照していれば、同じ Formulas／OpenXml API を利用でき、
+パッケージの追加は不要です。本体と Mapping を併用する場合はバージョンを揃えてください。
+これらの API にフォントは必要ありません。
+
+```csharp
+using ExcelRenderer.Formulas.Data;
+using ExcelRenderer.Formulas.Evaluation;
+using ExcelRenderer.Formulas.References;
+using ExcelRenderer.Formulas.Syntax;
+using ExcelRenderer.OpenXml.Reading;
+
+var source = new InMemoryFormulaWorkbook.Builder().AddSheet("Invoice").Build();
+var result = new FormulaEngine().Evaluate(
+    FormulaParser.Parse("SUM(2,3)*4").Formula!,
+    source, new FormulaCellAddress("Invoice", 1, 1));
+// result.Success == true; result.Value.Number == 20
+
+using var input = File.OpenRead("input.xlsx");
+using var reader = OpenXmlWorkbookReader.Open(input);
+var cells = reader.EnumerateCells(reader.SelectedWorksheetIndices[0]).ToArray();
+```
+
+Formulas アセンブリ自体は BCL のみに依存しますが、インストールする Mapping パッケージは
+XLSX・JSON の依存パッケージも取得します。[実行できるパッケージ利用サンプル](samples/namespace-migration/README.md)、
+[数式ガイド](docs/formulas.ja.md)、[OpenXml ガイド](docs/openxml-integration.ja.md)、
+[配布仕様](docs/package-distribution.md)も参照してください。
 
 ### コマンドラインツール（dotnet tool）
 

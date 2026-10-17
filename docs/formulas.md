@@ -3,6 +3,9 @@
 NuGet distribution contains only the main, Mapping, Tool and Fonts packages.
 Formulas and OpenXml assemblies are bundled in the main and Mapping packages;
 there are no separate packages for them. See [package distribution](package-distribution.md).
+Install `ExcelRenderer.Mapping` 1.9.1 for these APIs without rendering, or use an
+existing `ExcelRenderer` 1.9.1 reference. See the [namespace migration](namespace-migration.md)
+before upgrading from 1.9.0 and the [package-only sample](../samples/namespace-migration/README.md).
 
 [日本語](formulas.ja.md) · [Syntax and function reference](formulas-reference.md) · [validation](formulas-validation.md) · [performance](formulas-performance.md) · [review fixes](formulas-review-fixes-validation.md)
 
@@ -41,7 +44,7 @@ value-producing formulas, preserving the existing contract. Explicit recalculati
 enables supported cell formulas. Values beginning with `=` remain literal text.
 
 For an existing workbook, `WorkbookRecalculator.Recalculate(input, output)` in
-`ExcelRenderer.OpenXml` recalculates all formula cells. An optional collection of
+`ExcelRenderer.OpenXml.Calculation` recalculates all formula cells. An optional collection of
 `FormulaCellAddress` targets selects only those cells and reached dependencies.
 A single session reuses dependency results. The source snapshot is immutable;
 after changing inputs or expanding rows, create a new session.

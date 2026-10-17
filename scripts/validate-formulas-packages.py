@@ -101,6 +101,12 @@ using var mappedReader = ExcelRenderer.OpenXml.Reading.OpenXmlWorkbookReader.Ope
 if (mappedReader.EnumerateCells(1).Single(c => c.Address.Column == 3).Value.Number != 413)
     throw new Exception("Combined package failure");
 """)
+# Keep the documented low-level sample executable against each supported package
+# choice, rather than relying only on source-project references.
+namespace_sample = (root / 'samples/namespace-migration/Program.cs').read_text()
+programs['namespace-main'] = (['ExcelRenderer'], namespace_sample)
+programs['namespace-mapping'] = (['ExcelRenderer.Mapping'], namespace_sample)
+programs['namespace-combined'] = (['ExcelRenderer', 'ExcelRenderer.Mapping'], namespace_sample)
 fixture_path=work/'invoice.xlsx'
 font=root/'third_party/NotoSansJP/NotoSansJP-Regular.ttf'
 for name,(refs,code) in programs.items():
@@ -109,7 +115,8 @@ for name,(refs,code) in programs.items():
     (directory/'consumer.csproj').write_text(f'<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable></PropertyGroup><ItemGroup>{references}</ItemGroup></Project>')
     (directory/'Program.cs').write_text(code+'\nConsole.WriteLine("'+name+' passed");\n')
     run('dotnet','restore','--configfile',config,cwd=directory)
-    run('dotnet','run','-c','Release','--no-restore','--',fixture_path,font,cwd=directory)
+    arguments = [] if name.startswith('namespace-') else [fixture_path, font]
+    run('dotnet','run','-c','Release','--no-restore','--',*arguments,cwd=directory)
 tool=work/'tool'
 if (tool/'excelrenderer').exists():
     run('dotnet','tool','uninstall','ExcelRenderer.Tool','--tool-path',tool)
@@ -117,4 +124,4 @@ if (tool/'excelrenderer').exists():
 run('dotnet','tool','install','ExcelRenderer.Tool','--version',versions['ExcelRenderer.Tool'],'--tool-path',tool,'--configfile',config)
 run(tool/'excelrenderer','md',fixture_path,'--formula-mode','recalculate','-o',work/'cli.md')
 assert '413' in (work/'cli.md').read_text()
-print('Six isolated package consumers passed (engine, adapter, Mapping, main+Core, combined, installed CLI)')
+print('Nine isolated package consumers passed (engine, adapter, Mapping, main+Core, combined, three namespace samples, installed CLI)')

@@ -3,6 +3,9 @@
 NuGet distribution contains only the main, Mapping, Tool and Fonts packages.
 Formulas and OpenXml assemblies are bundled in the main and Mapping packages;
 there are no separate packages for them. See [package distribution](package-distribution.md).
+Install `ExcelRenderer.Mapping` 1.9.1 (or use `ExcelRenderer` 1.9.1) and import
+`ExcelRenderer.OpenXml.Reading` for `OpenXmlWorkbookReader`. See the
+[namespace migration](namespace-migration.md) and [package-only sample](../samples/namespace-migration/README.md).
 
 > Explicit recalculation is available. The [formula guide](formulas.md) defines its scope, cache invalidation and supported features. The [support reference](formulas-reference.md) lists syntax and all 40 functions. Saved-value/formula-rejection behavior below describes the default CachedValue mode unless stated otherwise.
 

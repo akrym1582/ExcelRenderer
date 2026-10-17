@@ -3,6 +3,9 @@
 NuGet 配布は本体・Mapping・Tool・Fonts の4つです。Formulas と OpenXml は
 本体と Mapping に同梱される DLL で、個別パッケージは公開しません。
 [配布構成](package-distribution.md)を参照してください。
+`ExcelRenderer.Mapping` 1.9.1、または本体の1.9.1を参照すれば利用できます。
+`OpenXmlWorkbookReader` の using は `ExcelRenderer.OpenXml.Reading` です。
+[名前空間移行ガイド](namespace-migration.md)と[パッケージのみを使うサンプル](../samples/namespace-migration/README.md)も参照してください。
 
 > 明示再計算モードを追加しました。[数式計算ガイド](formulas.ja.md)が評価範囲・キャッシュ失効・対応機能の現在の仕様です。[対応範囲・40関数](formulas-reference.ja.md)も参照してください。以下の保存値／数式拒否の説明は、特記のない限り既定の CachedValue モードに適用します。
 

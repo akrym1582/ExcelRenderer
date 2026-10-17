@@ -3,6 +3,9 @@
 NuGet 配布は本体・Mapping・Tool・Fonts の4つです。Formulas と OpenXml は
 本体と Mapping に同梱される DLL で、個別パッケージは公開しません。
 [配布構成](package-distribution.md)を参照してください。
+描画なしで使う場合は `ExcelRenderer.Mapping` 1.9.1 を追加します。既に本体の1.9.1を参照して
+いれば追加は不要です。1.9.0 からの更新前に[名前空間移行ガイド](namespace-migration.md)を確認し、
+[パッケージのみを使うサンプル](../samples/namespace-migration/README.md)も参照してください。
 
 [English](formulas.md) · [対応構文・サポート関数](formulas-reference.ja.md) · [検証記録](formulas-validation.md) · [性能](formulas-performance.md) · [レビュー修正の検証](formulas-review-fixes-validation.md)
 

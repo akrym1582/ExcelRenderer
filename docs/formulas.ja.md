@@ -1,5 +1,9 @@
 # 数式の計算
 
+NuGet 配布は本体・Mapping・Tool・Fonts の4つです。Formulas と OpenXml は
+本体と Mapping に同梱される DLL で、個別パッケージは公開しません。
+[配布構成](package-distribution.md)を参照してください。
+
 [English](formulas.md) · [対応構文・サポート関数](formulas-reference.ja.md) · [検証記録](formulas-validation.md) · [性能](formulas-performance.md) · [レビュー修正の検証](formulas-review-fixes-validation.md)
 
 ExcelRenderer は明示指定で限定的な数式評価を行います。既定の `CachedValue` は変更せず、

@@ -8,6 +8,7 @@
 
 ## Maintaining the main library and Core
 
+- Only ExcelRenderer, ExcelRenderer.Mapping, ExcelRenderer.Tool and ExcelRenderer.Fonts publish NuGet packages. Keep all other projects nonpackable. Main and Mapping bundle identical OpenXml/Formulas DLL/XML files via `build/EmbeddedOpenXml.targets`; Tool includes one copy of each assembly. Run `scripts/package_distribution.py` and isolated package consumers after distribution changes. See [the distribution contract](docs/package-distribution.md).
 - `src/ExcelRenderer.Core` is the renamed PDF-only foundation. `ExcelRenderer` references Core; Core must never reference the main library, Fonts, or Tool. Keep Core nonpackable and ship its DLL/XML in the existing main package. Tool must include the same Core DLL.
 - Workbook input validation and generic seekable spool algorithms belong to `ExcelRenderer.OpenXml/Input`. Core retains thin compatibility and metrics adapters. OpenXml must not reference Core, Mapping, rendering, ClosedXML, or font libraries. Core, main, and Mapping may reference OpenXml.
 - Fix shared image-resource, column-width, axis/band, placement, border, style interning/reading, common workbook/cell traversal, sheet/page layout, cell-layer drawing, diagnostic aggregation, and PDF drawing/saving algorithms in Core. Keep public main-library models and APIs in their existing assembly, using explicit adapters at the boundary.

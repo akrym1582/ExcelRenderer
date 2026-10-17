@@ -636,6 +636,11 @@ seekable な一時ファイルへ spool します。reader は独立した curso
 
 ## 開発
 
+NuGet 公開対象は `ExcelRenderer`・`ExcelRenderer.Mapping`・`ExcelRenderer.Tool`・
+`ExcelRenderer.Fonts` の4つです。Core・OpenXml・Formulas は公開パッケージへ DLL を
+同梱するソースプロジェクトで、個別公開しません。詳しくは[配布構成](docs/package-distribution.md)を参照してください。
+
+
 必要な SDK は .NET 10 です。テストはリポジトリのルートで実行します。
 
 ```bash
@@ -647,7 +652,6 @@ dotnet test ExcelRenderer.slnx
 NuGet 公開前にマッピングライブラリを試す場合は、リポジトリのルートでパッケージを作成します。
 
 ```bash
-dotnet pack src/ExcelRenderer.OpenXml/ExcelRenderer.OpenXml.csproj -c Release -o artifacts/packages
 dotnet pack src/ExcelRenderer.Mapping/ExcelRenderer.Mapping.csproj -c Release -o artifacts/packages
 ```
 

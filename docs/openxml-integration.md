@@ -1,6 +1,10 @@
 # Selecting the Open XML engines
 
-> Explicit recalculation is available. The [formula guide](formulas.md) defines its scope, cache invalidation and supported features. The [support reference](formulas-reference.md) lists syntax and all 19 functions. Saved-value/formula-rejection behavior below describes the default CachedValue mode unless stated otherwise.
+NuGet distribution contains only the main, Mapping, Tool and Fonts packages.
+Formulas and OpenXml assemblies are bundled in the main and Mapping packages;
+there are no separate packages for them. See [package distribution](package-distribution.md).
+
+> Explicit recalculation is available. The [formula guide](formulas.md) defines its scope, cache invalidation and supported features. The [support reference](formulas-reference.md) lists syntax and all 40 functions. Saved-value/formula-rejection behavior below describes the default CachedValue mode unless stated otherwise.
 
 English | [日本語](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/openxml-integration.ja.md)
 

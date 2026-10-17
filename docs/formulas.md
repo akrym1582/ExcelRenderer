@@ -1,5 +1,9 @@
 # Formula calculation
 
+NuGet distribution contains only the main, Mapping, Tool and Fonts packages.
+Formulas and OpenXml assemblies are bundled in the main and Mapping packages;
+there are no separate packages for them. See [package distribution](package-distribution.md).
+
 [日本語](formulas.ja.md) · [Syntax and function reference](formulas-reference.md) · [validation](formulas-validation.md) · [performance](formulas-performance.md) · [review fixes](formulas-review-fixes-validation.md)
 
 ExcelRenderer has an opt-in, limited formula calculator. `CachedValue` remains the

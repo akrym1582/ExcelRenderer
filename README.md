@@ -658,10 +658,15 @@ input and output streams stay open. Heavy native drawing and encoding operations
 
 ## Development
 
+NuGet publication is limited to `ExcelRenderer`, `ExcelRenderer.Mapping`,
+`ExcelRenderer.Tool` and `ExcelRenderer.Fonts`. Core, OpenXml and Formulas are
+source projects whose assemblies ship inside those packages; they are not published
+separately. See [package distribution](docs/package-distribution.md).
+
+
 To try the CLI from source before publishing, create and install a local package:
 
 ```bash
-dotnet pack src/ExcelRenderer.OpenXml/ExcelRenderer.OpenXml.csproj -c Release -o artifacts/packages
 dotnet pack src/ExcelRenderer/ExcelRenderer.csproj -c Release -o artifacts/packages
 dotnet pack src/ExcelRenderer.Mapping/ExcelRenderer.Mapping.csproj -c Release -o artifacts/packages
 dotnet pack src/ExcelRenderer.Fonts/ExcelRenderer.Fonts.csproj -c Release -o artifacts/packages

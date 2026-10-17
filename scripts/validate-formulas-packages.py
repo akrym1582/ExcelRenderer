@@ -5,8 +5,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
-import xml.etree.ElementTree as ET
-import zipfile
+from package_distribution import check_packages
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--packages', required=True, type=Path)
@@ -17,26 +16,8 @@ packages, work = a.packages.resolve(), a.work.resolve()
 work.mkdir(parents=True, exist_ok=True)
 config = work / 'NuGet.Config'
 config.write_text(f'<configuration><packageSources><clear/><add key="local" value="{packages}"/><add key="nuget" value="https://api.nuget.org/v3/index.json"/></packageSources><packageSourceMapping><packageSource key="local"><package pattern="ExcelRenderer*"/></packageSource><packageSource key="nuget"><package pattern="*"/></packageSource></packageSourceMapping></configuration>')
-ns = {'n': 'http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd'}
-inventory = {}
-package_names = ['ExcelRenderer.Formulas', 'ExcelRenderer.OpenXml', 'ExcelRenderer.Mapping', 'ExcelRenderer', 'ExcelRenderer.Tool']
-versions = {name: ET.parse(root / 'src' / name / f'{name}.csproj').findtext('./PropertyGroup/Version') for name in package_names}
-for package in package_names:
-    with zipfile.ZipFile(packages / f'{package}.{versions[package]}.nupkg') as z:
-        spec = ET.fromstring(z.read(next(n for n in z.namelist() if n.endswith('.nuspec'))))
-        deps = {n.attrib['id']: n.attrib['version'] for n in spec.findall('.//n:dependency', ns)}
-        dlls = [n for n in z.namelist() if n.endswith('.dll')]
-        inventory[package] = {'version': versions[package], 'dependencies': deps, 'dlls': dlls}
-        assert not any(n.startswith(('ClosedXML', 'NPOI', 'Antlr')) for n in deps)
-        if package == 'ExcelRenderer.Formulas':
-            assert not deps, deps
-        if package == 'ExcelRenderer.OpenXml':
-            assert deps['ExcelRenderer.Formulas'] == versions['ExcelRenderer.Formulas'], deps
-        if package == 'ExcelRenderer':
-            assert any(n.endswith('/ExcelRenderer.Core.dll') for n in dlls)
-        if package == 'ExcelRenderer.Tool':
-            for name in ['Formulas', 'OpenXml', 'Core', 'Mapping']:
-                assert sum(n.endswith(f'/ExcelRenderer.{name}.dll') for n in dlls) == 1
+inventory = check_packages(packages)
+versions = {name: record['version'] for name, record in inventory.items()}
 (work / 'inventory.json').write_text(json.dumps(inventory, indent=2) + '\n')
 runtime_lines = subprocess.check_output(['dotnet', '--list-runtimes'], text=True).splitlines()
 runtime_path = next(line.rsplit('[', 1)[1].rstrip(']') for line in runtime_lines if line.startswith('Microsoft.NETCore.App 10.'))
@@ -62,7 +43,7 @@ using (var doc = DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Create(inp
 input.Position=0;
 '''
 programs = {
- 'engine': (['ExcelRenderer.Formulas'], '''
+ 'engine': (['ExcelRenderer.Mapping'], '''
 var source = new ExcelRenderer.Formulas.InMemoryFormulaWorkbook.Builder().AddSheet("S").Build();
 var ast = ExcelRenderer.Formulas.FormulaParser.Parse("SUM(2,3)*4").Formula!;
 var r = new ExcelRenderer.Formulas.FormulaEngine().Evaluate(ast, source, new("S",1,1));
@@ -83,7 +64,7 @@ if (!text.Success || limited.Evaluate(text.Formula!, new("S",1,1)).Value.Text !=
 var tooLong = limited.Evaluate(ExcelRenderer.Formulas.FormulaParser.Parse("\\\"12345\\\"&\\\"6789\\\"").Formula!, new("S",1,1));
 if (tooLong.Success || tooLong.Diagnostics[0].Code != "ResourceLimitExceeded") throw new Exception("String limit package failure");
 '''),
- 'adapter': (['ExcelRenderer.OpenXml'], fixture + '''
+ 'adapter': (['ExcelRenderer.Mapping'], fixture + '''
 using var output = new MemoryStream();
 ExcelRenderer.OpenXml.WorkbookRecalculator.Recalculate(input,output);
 output.Position=0;
@@ -109,6 +90,17 @@ ReadOptions=new(){FormulaDisplayMode=ExcelRenderer.Excel.FormulaDisplayMode.Reca
 FontOptions=new(){FontFiles=new[]{args[1]},AllowSystemFonts=false}},new ExcelRenderer.Rendering.SingleStreamOutputSink(output));
 if(!System.Text.Encoding.UTF8.GetString(output.ToArray()).Contains("413")) throw new Exception("Main recalc failure");
 ''')}
+programs['combined'] = (['ExcelRenderer', 'ExcelRenderer.Mapping'], programs['main-core'][1] + """
+input.Position = 0;
+using var mappedOutput = new MemoryStream();
+ExcelRenderer.Mapping.ExcelTemplateMapper.Map(input, mappedOutput, new {}, new() {
+    FormulaCalculationMode = ExcelRenderer.OpenXml.FormulaCalculationMode.Recalculate
+});
+mappedOutput.Position = 0;
+using var mappedReader = ExcelRenderer.OpenXml.OpenXmlWorkbookReader.Open(mappedOutput);
+if (mappedReader.EnumerateCells(1).Single(c => c.Address.Column == 3).Value.Number != 413)
+    throw new Exception("Combined package failure");
+""")
 fixture_path=work/'invoice.xlsx'
 font=root/'third_party/NotoSansJP/NotoSansJP-Regular.ttf'
 for name,(refs,code) in programs.items():
@@ -125,4 +117,4 @@ if (tool/'excelrenderer').exists():
 run('dotnet','tool','install','ExcelRenderer.Tool','--version',versions['ExcelRenderer.Tool'],'--tool-path',tool,'--configfile',config)
 run(tool/'excelrenderer','md',fixture_path,'--formula-mode','recalculate','-o',work/'cli.md')
 assert '413' in (work/'cli.md').read_text()
-print('Five isolated package consumers passed')
+print('Six isolated package consumers passed (engine, adapter, Mapping, main+Core, combined, installed CLI)')

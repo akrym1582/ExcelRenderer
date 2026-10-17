@@ -84,6 +84,9 @@ jobs:
           "tag=v$next" >> $env:GITHUB_OUTPUT
           Write-Host "Version: $current -> $next"
 
+      - name: Verify NuGet publication allowlist
+        run: python3 scripts/package_distribution.py
+
       - name: Restore dependencies
         run: dotnet restore ExcelRenderer.slnx
 
@@ -117,6 +120,11 @@ jobs:
           --configuration Release
           --no-restore
           --output artifacts/packages
+
+      - name: Verify package contents and isolated consumers
+        run: |
+          python3 scripts/package_distribution.py --packages artifacts/packages
+          python3 scripts/validate-formulas-packages.py --packages artifacts/packages --work "$RUNNER_TEMP/release-package-consumers"
 
       - name: Upload package artifact
         uses: actions/upload-artifact@v4

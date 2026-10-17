@@ -1,14 +1,13 @@
 # Excel テンプレートへのマッピング
 
-> 明示再計算モードを追加しました。[数式計算ガイド](formulas.ja.md)が評価範囲・キャッシュ失効・対応機能の現在の仕様です。[対応範囲・19関数](formulas-reference.ja.md)も参照してください。以下の保存値／数式拒否の説明は、特記のない限り既定の CachedValue モードに適用します。
+> 明示再計算モードを追加しました。[数式計算ガイド](formulas.ja.md)が評価範囲・キャッシュ失効・対応機能の現在の仕様です。[対応範囲・40関数](formulas-reference.ja.md)も参照してください。以下の保存値／数式拒否の説明は、特記のない限り既定の CachedValue モードに適用します。
 
 [English](mapping.md) | 日本語
 
 `ExcelRenderer.Mapping` は独立した .NET Standard 2.1 のパッケージです。
 C# オブジェクトや JSON の値を、数式のない XLSX テンプレートへ設定します。
-OpenXml が既定かつ唯一の Writer で、Auto も同じ経路を使います。
-廃止された ClosedXml enum 値は入力処理前に拒否します。
-詳細は[エンジン選択](openxml-integration.ja.md)を参照してください。
+Writer は常に OpenXml を使います。詳細は[OpenXml の統合](openxml-integration.ja.md)と
+[エンジン選択の廃止と移行](engine-selection-removal.md)を参照してください。
 描画ライブラリ、フォント、PDFsharp、SkiaSharp には依存しません。
 CLI はマッピングと描画のライブラリを組み合わせて使用します。
 
@@ -492,11 +491,11 @@ OpenXml Writer は元行から出力行への配置計画に従って stage 内�
 内部リンク先も別シートを含めて行移動に追従します。繰り返しと重なる名前・テーブル・画像は
 従来どおり拒否します。印刷範囲は全出力 occurrence を含み、完全に削除された範囲を除去します。
 繰り返し・削除と交差する印刷タイトル行は非対応です。
-[エンジン選択](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/openxml-integration.ja.md)
+[OpenXml の統合](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/openxml-integration.ja.md)
 に、対応 part・ピボットキャッシュ・stage 出力の保証を記載しています。
 
-全 Mapping backend で、ブック内の全セル数式、table の calculated/totals 式・集計関数、計算定義名を、
-backend 選択・データ評価・出力の前に `MappingFormulaNotSupported` で拒否します。
+既定の CachedValue モードでは、ブック内の全セル数式、table の calculated/totals 式・集計関数、計算定義名を、
+データ評価・出力の前に `MappingFormulaNotSupported` で拒否します。
 繰り返し領域の外側・非表示シートの数式も含みます。金額・税・合計は呼び出し元で計算し、
 確定値を C# オブジェクトや JSON から値のプレースホルダーへ渡してください。
 静的定義名は定数と有限 A1 参照の union に限定し、関数・演算・動的／外部／3D 参照・
@@ -578,6 +577,6 @@ workbook.Workbook.DefinedNames = new S.DefinedNames(new S.DefinedName("'Invoice'
 | マーカーの専用行／エイリアスのエラー | 開始・終了をそれぞれ結合のない専用行に置き、対応する組にします。エイリアスはそのブロック内で使います。 |
 | `MaxOutputRows` を超える | データを減らすか、C# で `MappingOptions.MaxOutputRows` を設定します。通常の行も数えます。CLI の既定値は 100,000 行です。 |
 | 静的定義名が `#REF!` になる | マーカー行や空配列で削除する行への参照を避け、合計は入力で渡します。 |
-| `MappingFormulaNotSupported` | 呼び出し元で計算し、数式を値プレースホルダーへ置き換えます。全 backend・全シートが検査対象です。 |
+| `MappingFormulaNotSupported` | 呼び出し元で計算し、数式を値プレースホルダーへ置き換えます。全シートが検査対象です。 |
 | 描画先が既に存在するというエラー | 新しいファイルや空のディレクトリを指定します。描画とは異なり、成功時の `xlsx` マッピングは既存の出力 XLSX を上書きします。 |
 | 描画対象外のシートでマッピングエラー | 描画対象を選ぶ前に全シートを評価します。式を修正するか、そのシートをテンプレートから除きます。 |

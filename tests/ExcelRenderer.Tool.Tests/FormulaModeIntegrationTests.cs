@@ -89,15 +89,12 @@ public sealed partial class ToolIntegrationTests
         File.WriteAllText(output, "unchanged");
         foreach (var mode in new[] { "invalid", "legacy" })
         {
-            foreach (var backend in new[] { "closedxml", "openxml", "auto" })
-            {
-                var args = new List<string> { command, "does-not-exist.xlsx", "-o", output, "--formula-mode", mode, "--reader-backend", backend };
-                if (command == "render") args.AddRange(["--format", "pdf"]);
-                var result = await RunAsync(args.ToArray());
-                Assert.NotEqual(0, result.ExitCode);
-                Assert.Contains("--formula-mode", result.Error + result.Output);
-                Assert.Equal("unchanged", File.ReadAllText(output));
-            }
+            var args = new List<string> { command, "does-not-exist.xlsx", "-o", output, "--formula-mode", mode };
+            if (command == "render") args.AddRange(["--format", "pdf"]);
+            var result = await RunAsync(args.ToArray());
+            Assert.NotEqual(0, result.ExitCode);
+            Assert.Contains("--formula-mode", result.Error + result.Output);
+            Assert.Equal("unchanged", File.ReadAllText(output));
         }
     }
 

@@ -18,12 +18,6 @@ public sealed class MappingOptions
     /// <summary>Gets or sets a value indicating whether Recalculate mode evaluates all mapped formulas before saving. Set false when a subsequent renderer evaluates selected cells; all saved caches are invalidated.</summary>
     public bool RecalculateMappedWorkbook { get; set; } = true;
 
-    /// <summary>Gets or sets the editing engine. The default is OpenXml.</summary>
-    public MappingBackend Backend { get; set; } = MappingBackend.OpenXml;
-
-    /// <summary>Gets or sets an optional preflight engine-selection callback.</summary>
-    public Action<MappingBackendSelection>? BackendSelected { get; set; }
-
     /// <summary>Gets or sets input limits and shared stage buffering settings.</summary>
     public WorkbookInputOptions Input { get; set; } = new WorkbookInputOptions();
 

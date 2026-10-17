@@ -40,16 +40,6 @@ public static partial class ExcelTemplateMapper
             throw new ArgumentOutOfRangeException(nameof(options.FormulaCalculationMode));
         }
 
-        if (!Enum.IsDefined(typeof(MappingBackend), options.Backend))
-        {
-            throw new ArgumentOutOfRangeException(nameof(options.Backend));
-        }
-
-        if (options.Backend == (MappingBackend)0)
-        {
-            throw new NotSupportedException("The ClosedXml mapping backend has been removed. Use OpenXml or Auto.");
-        }
-
         cancellationToken.ThrowIfCancellationRequested();
         using var prepared = WorkbookInputPreparer.ReadAsync(template, options.Input, cancellationToken).GetAwaiter().GetResult();
         using (var formulaSource = prepared.OpenRead())

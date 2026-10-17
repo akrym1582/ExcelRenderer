@@ -191,6 +191,21 @@ internal static class CommandSupport
         },
     };
 
+    /// <summary>Maps a validated formula mode to template mapping settings.</summary>
+    /// <param name="value">The mode text.</param>
+    /// <param name="recalculateMappedWorkbook">Whether to calculate all saved XLSX results before returning.</param>
+    /// <returns>The requested calculation policy.</returns>
+    internal static Mapping.MappingOptions GetMappingOptions(string value, bool recalculateMappedWorkbook = false) => new()
+    {
+        FormulaCalculationMode = value switch
+        {
+            "cached" => OpenXml.Calculation.FormulaCalculationMode.CachedValue,
+            "recalculate" => OpenXml.Calculation.FormulaCalculationMode.Recalculate,
+            _ => throw new ArgumentException("Invalid formula mode."),
+        },
+        RecalculateMappedWorkbook = recalculateMappedWorkbook,
+    };
+
     private static IReadOnlyList<string> NonEmpty(string[]? values) => values is { Length: > 0 } ? values : Array.Empty<string>();
 
     /// <summary>System.CommandLine のフォントオプション一式を保持します。</summary>

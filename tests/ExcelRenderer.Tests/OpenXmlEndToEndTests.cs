@@ -9,23 +9,20 @@ namespace ExcelRenderer.Tests;
 public sealed class OpenXmlEndToEndTests
 {
     [Theory]
-    [InlineData(1, ReaderBackend.OpenXml)]
-    [InlineData(2, ReaderBackend.OpenXml)]
-    public async Task AutoKeepsOpenXmlAndFiltersDiagnosticsBySelectedPages(int page, ReaderBackend expected)
+    [InlineData(1)]
+    [InlineData(2)]
+    public async Task ReaderFiltersDiagnosticsBySelectedPages(int page)
     {
         using var input = RetainedWorkbook.Open("OpenXmlEndToEndTests.AutoKeepsOpenXmlAndFiltersDiagnosticsBySelectedPages.A0268BF491EE7720.xlsx");
         input.Position = 0;
         using var output = new MemoryStream();
-        ReaderBackendSelection? selection = null;
         var result = await ExcelConverter.RenderAsync(input, new RenderRequest
         {
             OutputFormat = OutputFormat.Pdf,
             Selection = new() { Pages = [page] },
-            ReadOptions = new() { Backend = ReaderBackend.Auto, FormulaDisplayMode = FormulaDisplayMode.CachedValue, BackendSelected = value => selection = value },
+            ReadOptions = new() { FormulaDisplayMode = FormulaDisplayMode.CachedValue },
         }, new SingleStreamOutputSink(output));
-        Assert.Equal(expected, selection!.SelectedBackend);
         Assert.Single(result.Pages);
-        Assert.Contains("AutoOpenXmlOnly", selection.ReasonCodes);
         Assert.Equal(page == 2, result.Diagnostics.Any(diagnostic => diagnostic.Code == "RegionalNumberFormat"));
     }
 
@@ -39,36 +36,26 @@ public sealed class OpenXmlEndToEndTests
         using var source = RetainedWorkbook.Open("OpenXmlEndToEndTests.MappedFormulaFreeWorkbookRendersThroughStreamingReader.3D5603D2784D3681.xlsx");
         source.Position = 0;
         using var mapped = new MemoryStream();
-        ExcelTemplateMapper.Map(source, mapped, new { items = new[] { new { name = "日本語の商品", price = 1234 } } }, new() { Backend = MappingBackend.OpenXml });
-        var results = new List<byte[]>();
-        foreach (var backend in new[] { ReaderBackend.Auto, ReaderBackend.OpenXml })
+        ExcelTemplateMapper.Map(source, mapped, new { items = new[] { new { name = "日本語の商品", price = 1234 } } });
+        mapped.Position = 0;
+        using var output = new MemoryStream();
+        var result = await ExcelConverter.RenderAsync(mapped, new RenderRequest
         {
-            mapped.Position = 0;
-            using var output = new MemoryStream();
-            var result = await ExcelConverter.RenderAsync(mapped, new RenderRequest
-            {
-                OutputFormat = format,
-                ReadOptions = new() { Backend = backend, FormulaDisplayMode = FormulaDisplayMode.CachedValue },
-            }, new SingleStreamOutputSink(output));
-            Assert.Equal("Completed", result.CompletionStatus);
-            Assert.NotEmpty(output.ToArray());
-            results.Add(output.ToArray());
-            if (format == OutputFormat.Pdf)
-            {
-                output.Position = 0;
-                using var pdf = global::PdfSharp.Pdf.IO.PdfReader.Open(output, global::PdfSharp.Pdf.IO.PdfDocumentOpenMode.Import);
-                Assert.Equal(1, pdf.PageCount);
-            }
-        }
-
-        if (format != OutputFormat.Pdf)
+            OutputFormat = format,
+            ReadOptions = new() { FormulaDisplayMode = FormulaDisplayMode.CachedValue },
+        }, new SingleStreamOutputSink(output));
+        Assert.Equal("Completed", result.CompletionStatus);
+        Assert.NotEmpty(output.ToArray());
+        if (format == OutputFormat.Pdf)
         {
-            Assert.Equal(results[0], results[1]);
+            output.Position = 0;
+            using var pdf = global::PdfSharp.Pdf.IO.PdfReader.Open(output, global::PdfSharp.Pdf.IO.PdfDocumentOpenMode.Import);
+            Assert.Equal(1, pdf.PageCount);
         }
     }
 
     [Fact]
-    public async Task CallerCalculatedMappingAutoValuesReachStreamingMarkdown()
+    public async Task CallerCalculatedMappingValuesReachStreamingMarkdown()
     {
         using var template = RetainedWorkbook.Open("OpenXmlEndToEndTests.CallerCalculatedMappingAutoValuesReachStreamingMarkdown.29D1CBEC155574A1.xlsx");
         var rendered = new List<byte[]>();
@@ -76,10 +63,7 @@ public sealed class OpenXmlEndToEndTests
         {
             template.Position = 0;
             using var mapped = new MemoryStream();
-            MappingBackendSelection? selection = null;
-            ExcelTemplateMapper.Map(template, mapped, new { amount, doubled = amount * 2 }, new() { Backend = MappingBackend.Auto, BackendSelected = value => selection = value });
-            Assert.Equal(MappingBackend.OpenXml, selection!.SelectedBackend);
-            Assert.DoesNotContain("FormulasPresent", selection.ReasonCodes);
+            ExcelTemplateMapper.Map(template, mapped, new { amount, doubled = amount * 2 });
             mapped.Position = 0;
             using (var reader = OpenXml.Reading.OpenXmlWorkbookReader.Open(mapped))
             {
@@ -91,7 +75,7 @@ public sealed class OpenXmlEndToEndTests
             await ExcelConverter.RenderAsync(mapped, new RenderRequest
             {
                 OutputFormat = OutputFormat.Markdown,
-                ReadOptions = new() { Backend = ReaderBackend.OpenXml, FormulaDisplayMode = FormulaDisplayMode.CachedValue },
+                ReadOptions = new() { FormulaDisplayMode = FormulaDisplayMode.CachedValue },
             }, new SingleStreamOutputSink(output));
             Assert.Contains((amount * 2).ToString(), System.Text.Encoding.UTF8.GetString(output.ToArray()));
             rendered.Add(output.ToArray());
@@ -100,10 +84,8 @@ public sealed class OpenXmlEndToEndTests
         Assert.False(rendered[0].SequenceEqual(rendered[1]));
     }
 
-    [Theory]
-    [InlineData(Core.ReaderBackend.OpenXml)]
-    [InlineData(Core.ReaderBackend.Auto)]
-    public async Task SingleFontCoreUsesStreamingReaderWithoutLoadingClosedXml(Core.ReaderBackend backend)
+    [Fact]
+    public async Task SingleFontCoreUsesStreamingReaderWithoutLoadingClosedXml()
     {
         using var input = RetainedWorkbook.Open("OpenXmlEndToEndTests.SingleFontCoreUsesStreamingReaderWithoutLoadingClosedXml.795F3BEBD5ACE77C.xlsx");
         input.Position = 0;
@@ -115,7 +97,7 @@ public sealed class OpenXmlEndToEndTests
             var result = await Core.ExcelConverter.ConvertAsync(input, output, new()
             {
                 FontFilePath = Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf"),
-                ReadOptions = new() { Backend = backend, FormulaDisplayMode = Core.FormulaDisplayMode.CachedValue },
+                ReadOptions = new() { FormulaDisplayMode = Core.FormulaDisplayMode.CachedValue },
             });
             Assert.Equal(1, result.PageCount);
             Assert.Equal(0, loads);

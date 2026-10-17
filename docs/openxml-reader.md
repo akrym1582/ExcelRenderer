@@ -2,7 +2,7 @@
 
 English | [日本語](openxml-reader.ja.md)
 
-`ExcelRenderer.OpenXml` is a .NET Standard 2.1 shared reader/writer library. Runtime dependencies are DocumentFormat.OpenXml **3.3.0** and ExcelNumberFormat **1.1.0**; it has no Core, Mapping, ClosedXML, font or renderer dependency. This document covers its low-level source API. For rendering or Mapping, see [engine selection](openxml-integration.md); those APIs default to ClosedXml.
+`ExcelRenderer.OpenXml` is a .NET Standard 2.1 shared reader/writer library. Runtime dependencies are DocumentFormat.OpenXml **3.3.0** and ExcelNumberFormat **1.1.0**; it has no Core, Mapping, ClosedXML, font or renderer dependency. This document covers its low-level source API. For rendering or Mapping, see [OpenXml integration](openxml-integration.md); those APIs always use OpenXml.
 
 ## Usage and input ownership
 
@@ -37,7 +37,7 @@ Open reads workbook metadata, styles and theme, but no worksheet body or shared 
 
 Shared strings load on the first `t=s` cell, entry by entry. **The complete shared-string table is retained**, even when only a small selected sheet uses it. There is no disk index or process-global intern/cache. A rich string's immutable runs are shared; null run properties mean “inherit this component from the cell font.” Resolve the cell's font independently before overlaying explicitly present run properties. Phonetics do not enter display text, but their presence and storage cost are recognized. OOXML `_xHHHH_` decoding is applied exactly once; `_x005F_x0041_` remains literal `_x0041_`.
 
-Memory therefore grows with shared strings, style tables, row/column metadata, merges and formula groups. It is **not constant memory** and the limits below are not a process RSS cap. Two worksheet passes, cell-record creation and formatting contribute to processing costs; performance depends on the workbook and selected backend. See the [initial validation](openxml-reader-validation.md), [subsequent optimization measurements](openxml-reader-optimization.md) and [product integration validation](openxml-integration-validation.md) for measurements at their stated commits.
+Memory therefore grows with shared strings, style tables, row/column metadata, merges and formula groups. It is **not constant memory** and the limits below are not a process RSS cap. Two worksheet passes, cell-record creation and formatting contribute to processing costs; performance depends on workbook structure and data volume. See the [initial validation](openxml-reader-validation.md), [subsequent optimization measurements](openxml-reader-optimization.md) and [product integration validation](openxml-integration-validation.md) for measurements at their stated commits.
 
 | Option | Default | Meaning |
 | --- | ---: | --- |
@@ -102,7 +102,7 @@ separate writer accepts typed formula-free plans, never general formula evaluati
 Core owns source-to-rendering adaptation, model assembly, fonts and layout. Full
 hooks add product runs, drawings and links. Generic input preparation/spooling is
 shared in OpenXml/Input. Mapping owns syntax/evaluation and sends final occurrences
-to the conservative writer. See [engine selection](openxml-integration.md) for
+to the conservative writer. See [OpenXml integration](openxml-integration.md) for
 current APIs and scope. The compatibility reader keeps its ClosedXML-only helpers.
 Public `ExcelStyleConverter.Convert(IXLCell)` remains available.
 
@@ -132,6 +132,6 @@ foreach (var index in source.SelectedWorksheetIndices)
 
 `FontProperties` on a style, `DefaultFontProperties` on the workbook and `FontProperties` on each rich run are immutable `FontInfo` views. Name and size (pt), bold/italic/strike, underline, vertical alignment, theme scheme and color remain nullable when unspecified. The original `Font`/`Properties` metadata is also retained. `WithOverrides` changes only explicitly supplied fields: false and underline `none` override true/single; null inherits. It does not measure/substitute fonts or normalize text. The composed font survives reader disposal. Do not store a composed font in the shared-string table: the same run may be used with different cell fonts.
 
-The current ownership, backend routing, diagnostic filtering and writer guarantees
+The current ownership, reading path, diagnostic filtering and writer guarantees
 are described in [the integration guide](openxml-integration.md). Snapshot
 constructors remain internal; this is not a third-party backend-construction API.

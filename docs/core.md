@@ -69,4 +69,4 @@ Full reader/layout/drawing/PDF adapters provide the advanced behavior. Public ma
 
 Main/Core converters share a font gate when using the same Core DLL in one load context. External PDFsharp users and separately loaded Core copies are outside that synchronization boundary. Distribute the main and Core DLLs from the same build.
 
-Core reader selection is available through `PdfExportOptions.ReadOptions`; see [engine selection](openxml-integration.md). Generic input/spool storage is shared through the OpenXml dependency.
+Core always uses OpenXml. `PdfExportOptions.ReadOptions` configures formula handling; see [OpenXml integration](openxml-integration.md) and [migration](engine-selection-removal.md). Generic input/spool storage is shared through the OpenXml dependency.

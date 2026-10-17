@@ -78,10 +78,10 @@ Markdown は `ReportDocument` を別経路で読み取って出力します。
 
 ## 1. Excel ファイルの読み込み
 
-`ExcelReader` が OpenXml（既定）・Auto の選択に従って Excel ワークブックを読み込み、
-ライブラリ独自のモデルである `ReportDocument` を生成します。両 Reader とも数式は保存結果だけを
-使い、結果がなければ空表示と診断を返します。能力検査とオプションは
-[エンジン選択](openxml-integration.ja.md)を参照してください。
+`ExcelReader` が OpenXml で Excel ワークブックを読み込み、
+ライブラリ独自のモデルである `ReportDocument` を生成します。数式は既定で保存結果を使い、
+結果がなければ空表示と診断を返します。明示再計算には限定的な数式計算器を使います。能力検査とオプションは
+[OpenXml の統合](openxml-integration.ja.md)を参照してください。
 
 ```text
 Excel Workbook
@@ -101,7 +101,7 @@ ReportDocument
 `ReportDocument` は複数の `ReportSheet` を保持します。この段階では Excel から取得した情報を保持しますが、PDF 上の具体的な座標やページ番号はまだ決定しません。
 
 読み込み処理とレイアウト処理は分離しています。Reader は共通モデルを生成し、
-レイアウト以降は選択した XLSX backend に依存しません。
+レイアウト以降は XLSX の読み込み処理に依存しません。
 
 ## 2. レイアウト計算
 

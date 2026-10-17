@@ -18,7 +18,7 @@ public static partial class ExcelConverter
         // Saved values are read only to create a geometry model. Pagination uses source
         // addresses, saved row/column dimensions and object bounds, never cell text.
         // The real read below calculates the exact candidates before formatting them.
-        var geometryDocument = new ExcelReader(fonts).ReadCore(source, null, request.Selection.SheetNames, request.DiagnosticOptions.DetectUnsupportedFeatures, options with { FormulaDisplayMode = FormulaDisplayMode.CachedValue, BackendSelected = null }, token);
+        var geometryDocument = new ExcelReader(fonts).ReadCore(source, null, request.Selection.SheetNames, request.DiagnosticOptions.DetectUnsupportedFeatures, options with { FormulaDisplayMode = FormulaDisplayMode.CachedValue }, token);
         var styles = new StylePool();
         var document = new ReportDocument(geometryDocument.Sheets.Select(sheet => CoreIntegration.CoreModelAdapter.ToPublic(sheet, styles)).ToArray());
         var geometryDiagnostics = new DiagnosticCollector(request.DiagnosticOptions);

@@ -21,9 +21,7 @@ public sealed class OpenXmlMappingTests
     {
         using var template = Fixture("OpenXmlMappingTests.NestedOccurrencesPreserveTypesStylesMergesAndFinalPrintRange.CE8E0A6842FA3CE1.xlsx");
         using var output = new MemoryStream();
-        MappingBackendSelection? selected = null;
-        ExcelTemplateMapper.Map(template, output, new { groups = Enumerable.Range(1, count).Select(index => new { name = "Group " + index, items = new[] { index, index + 10 } }).ToArray() }, new() { Backend = MappingBackend.OpenXml, BackendSelected = value => selected = value });
-        Assert.Equal(MappingBackend.OpenXml, selected!.SelectedBackend);
+        ExcelTemplateMapper.Map(template, output, new { groups = Enumerable.Range(1, count).Select(index => new { name = "Group " + index, items = new[] { index, index + 10 } }).ToArray() });
         output.Position = 0;
         using var result = WorkbookProbe.Open(output);
         var sheet = result;
@@ -54,7 +52,7 @@ public sealed class OpenXmlMappingTests
         using var template = Fixture(date1904 ? "OpenXmlMappingTests.TypedValuesDatesDurationsNullAndFormulaLookingStringsAreLiteral.45F98FAF61363AE0.xlsx" : "OpenXmlMappingTests.TypedValuesDatesDurationsNullAndFormulaLookingStringsAreLiteral.083C24FB574DA086.xlsx");
         using var output = new MemoryStream();
         var date = new DateTime(2026, 10, 16, 12, 30, 0);
-        ExcelTemplateMapper.Map(template, output, new { Date = date, Duration = TimeSpan.FromHours(27.5), Text = "=SUM(A1:A2)", Nothing = (object?)null }, new() { Backend = MappingBackend.OpenXml });
+        ExcelTemplateMapper.Map(template, output, new { Date = date, Duration = TimeSpan.FromHours(27.5), Text = "=SUM(A1:A2)", Nothing = (object?)null });
         output.Position = 0;
         using var result = WorkbookProbe.Open(output);
         var sheet = result;
@@ -75,18 +73,15 @@ public sealed class OpenXmlMappingTests
     {
         using var template = Fixture("OpenXmlMappingTests.ScalarStringsMatchLegacyValueAndQuotePrefix.5CB53AA5441CBC44.xlsx");
         var expected = (value.StartsWith("'", StringComparison.Ordinal) ? value[1..] : value, CellValueType.String, value.StartsWith("'", StringComparison.Ordinal));
-        foreach (var backend in new[] { MappingBackend.OpenXml, MappingBackend.Auto })
-        {
-            template.Position = 0;
-            using var output = new MemoryStream();
-            ExcelTemplateMapper.Map(template, output, new { value }, new() { Backend = backend });
-            output.Position = 0;
-            using var workbook = WorkbookProbe.Open(output);
-            var cell = Cell(workbook, "A1");
-            var actual = (cell.Value.Text ?? string.Empty, cell.Value.Type, Style(workbook, "A1").Attributes.GetValueOrDefault("quotePrefix") is "1" or "true");
-            Assert.Equal(expected, actual);
-            Assert.Null(cell.Formula);
-        }
+        template.Position = 0;
+        using var output = new MemoryStream();
+        ExcelTemplateMapper.Map(template, output, new { value });
+        output.Position = 0;
+        using var workbook = WorkbookProbe.Open(output);
+        var cell = Cell(workbook, "A1");
+        var actual = (cell.Value.Text ?? string.Empty, cell.Value.Type, Style(workbook, "A1").Attributes.GetValueOrDefault("quotePrefix") is "1" or "true");
+        Assert.Equal(expected, actual);
+        Assert.Null(cell.Formula);
     }
 
     [Fact]
@@ -95,7 +90,7 @@ public sealed class OpenXmlMappingTests
         const string value = "_x0041_\u0001";
         using var template = Fixture("OpenXmlMappingTests.InlineStringsUseSpreadsheetEscapesAndRoundTripThroughOpenXmlReader.5CB53AA5441CBC44.xlsx");
         using var output = new MemoryStream();
-        ExcelTemplateMapper.Map(template, output, new { value }, new() { Backend = MappingBackend.OpenXml });
+        ExcelTemplateMapper.Map(template, output, new { value });
         output.Position = 0;
         using (var package = SpreadsheetDocument.Open(output, false))
         {
@@ -112,7 +107,7 @@ public sealed class OpenXmlMappingTests
     {
         using var template = Fixture("OpenXmlMappingTests.UneditedSheetsAndPackagePartsKeepTheirDecompressedBytes.9283BC6394252C4C.xlsx");
         using var output = new MemoryStream();
-        ExcelTemplateMapper.Map(template, output, null, new() { Backend = MappingBackend.OpenXml });
+        ExcelTemplateMapper.Map(template, output, null);
         AssertUnchangedParts(template, output, Array.Empty<string>());
     }
 
@@ -120,57 +115,37 @@ public sealed class OpenXmlMappingTests
     public void RowMetadataOutsideTheTemplateBodyMovesWithExpansion()
     {
         using var template = Fixture("OpenXmlMappingTests.RowMetadataOutsideTheTemplateBodyMovesWithExpansion.4A91E93E0C468279.xlsx");
-        var outputs = new List<MemoryStream>();
-        try
-        {
-            foreach (var backend in new[] { MappingBackend.OpenXml, MappingBackend.Auto })
-            {
-                template.Position = 0;
-                var output = new MemoryStream();
-                outputs.Add(output);
-                ExcelTemplateMapper.Map(template, output, new { items = new[] { 1, 2, 3 } }, new() { Backend = backend });
-                output.Position = 0;
-                using var workbook = WorkbookProbe.Open(output);
-                Assert.Equal(32, Row(workbook, 22).HeightPt);
-                Assert.True(Row(workbook, 22).Hidden == true);
-            }
-        }
-        finally
-        {
-            foreach (var output in outputs) output.Dispose();
-        }
+        using var output = new MemoryStream();
+        ExcelTemplateMapper.Map(template, output, new { items = new[] { 1, 2, 3 } });
+        output.Position = 0;
+        using var workbook = WorkbookProbe.Open(output);
+        Assert.Equal(32, Row(workbook, 22).HeightPt);
+        Assert.True(Row(workbook, 22).Hidden == true);
     }
 
-    [Theory]
-    [InlineData(MappingBackend.OpenXml)]
-    [InlineData(MappingBackend.Auto)]
-    public void EveryBackendRejectsHiddenFormulasBeforeSelectionDataOrOutput(MappingBackend backend)
+    [Fact]
+    public void HiddenFormulasFailBeforeDataOrOutput()
     {
         using var template = Fixture("OpenXmlMappingTests.EveryBackendRejectsHiddenFormulasBeforeSelectionDataOrOutput.65D762ED24172607.xlsx");
         using var output = new MemoryStream();
         output.Write([7, 8, 9]);
         var data = new OnceData();
-        var selected = false;
-        var error = Assert.Throws<MappingException>(() => ExcelTemplateMapper.Map(template, output, data,
-            new() { Backend = backend, BackendSelected = _ => selected = true }));
+        var error = Assert.Throws<MappingException>(() => ExcelTemplateMapper.Map(template, output, data));
         Assert.Equal("MappingFormulaNotSupported", error.ReasonCode);
         Assert.Equal("formula", error.SheetName);
         Assert.Equal("A1", error.CellAddress);
-        Assert.False(selected);
         Assert.Equal(0, data.ReadCount);
         Assert.Equal(0, data.Values.EnumerationCount);
         Assert.Equal(new byte[] { 7, 8, 9 }, output.ToArray());
     }
 
     [Fact]
-    public void AutoUsesOpenXmlForSupportedTemplatesAndInputRemainsOpen()
+    public void MappingEvaluatesDataOnceAndLeavesStreamsOpen()
     {
         using var template = Fixture("OpenXmlMappingTests.AutoUsesOpenXmlForSupportedTemplatesAndInputRemainsOpen.A0D4070563D586B5.xlsx");
         using var output = new MemoryStream();
         var data = new OnceData();
-        MappingBackendSelection? selected = null;
-        ExcelTemplateMapper.Map(template, output, data, new() { Backend = MappingBackend.Auto, BackendSelected = selection => selected = selection });
-        Assert.Equal(MappingBackend.OpenXml, selected!.SelectedBackend);
+        ExcelTemplateMapper.Map(template, output, data);
         Assert.Equal(1, data.ReadCount);
         Assert.Equal(1, data.Values.EnumerationCount);
         Assert.True(template.CanRead);
@@ -212,7 +187,7 @@ public sealed class OpenXmlMappingTests
             using (var file = File.Create(templatePath)) template.CopyTo(file);
             var outputPath = Path.Combine(directory, "output.xlsx");
             File.WriteAllBytes(outputPath, [9, 8, 7]);
-            var options = new MappingOptions { Backend = MappingBackend.OpenXml, Input = new() { MemoryThresholdBytes = 1, AllowTemporaryFiles = true, TemporaryDirectory = directory } };
+            var options = new MappingOptions { Input = new() { MemoryThresholdBytes = 1, AllowTemporaryFiles = true, TemporaryDirectory = directory } };
             if (fail)
             {
                 Assert.Throws<MappingException>(() => ExcelTemplateMapper.Map(templatePath, outputPath, new { value = "result" }, options));

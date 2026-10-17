@@ -1,80 +1,27 @@
 using ExcelRenderer.Excel;
-using ExcelRenderer.Rendering;
 using ExcelRenderer.TestFixtures;
 using Xunit;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 
 namespace ExcelRenderer.Tests;
 
-public sealed class ReaderBackendContractTests
+public sealed class WorkbookReadingContractTests
 {
-    [Theory]
-    [InlineData(ReaderBackend.OpenXml, "ExplicitOpenXml")]
-    [InlineData(ReaderBackend.Auto, "AutoOpenXmlOnly")]
-    public void SelectionNotifiesExactlyOnceAfterSuccessfulRead(ReaderBackend backend, string reason)
+    [Fact]
+    public void ReaderPreservesRegionalDiagnosticsAndLeavesInputOpen()
     {
         using var input = SdkWorkbook.Create(new S.Worksheet(new S.SheetData(new S.Row(SdkWorkbook.Number("A1", "2", 0)) { RowIndex = 1 })), SdkWorkbook.Styles(new S.CellFormat { NumberFormatId = 14 }));
-        var selections = new List<ReaderBackendSelection>();
-        var sheet = new ExcelReader().Read(input, new() { Backend = backend, BackendSelected = selections.Add }).Sheets.Single();
-        Assert.Equal(ReaderBackend.OpenXml, Assert.Single(selections).SelectedBackend);
-        Assert.Equal(new[] { reason }, selections[0].ReasonCodes);
+        var sheet = new ExcelReader().Read(input).Sheets.Single();
         Assert.Contains(sheet.CellReadDiagnostics, diagnostic => diagnostic.Code == "RegionalNumberFormat");
         Assert.Equal("01-02-00", sheet.Cells[new(1, 1)].Text);
         Assert.True(input.CanRead);
     }
 
     [Fact]
-    public async Task RemovedAndUnknownBackendsFailBeforeInputAndOutputAndDoNotNotify()
+    public void BrokenInputIsRejected()
     {
-        foreach (var backend in new[] { (ReaderBackend)0, (ReaderBackend)999 })
-        {
-            var notifications = 0;
-            var options = new ExcelReadOptions { Backend = backend, BackendSelected = _ => notifications++ };
-            var error = Record.Exception(() => new ExcelReader().Read("does-not-exist.xlsx", options));
-            if (backend == (ReaderBackend)0)
-            {
-                Assert.IsType<NotSupportedException>(error);
-                Assert.Contains("OpenXml or Auto", error.Message);
-            }
-            else Assert.IsType<ArgumentOutOfRangeException>(error);
-            foreach (var format in Enum.GetValues<OutputFormat>())
-            {
-                using var input = new MemoryStream([1, 2, 3]);
-                using var output = new MemoryStream();
-                output.Write([7, 8, 9]);
-                var failure = await Record.ExceptionAsync(() => ExcelConverter.RenderAsync(input, new() { OutputFormat = format, ReadOptions = options }, new SingleStreamOutputSink(output)));
-                Assert.Equal(error!.GetType(), failure!.GetType());
-                Assert.Equal(0, input.Position);
-                Assert.Equal(new byte[] { 7, 8, 9 }, output.ToArray());
-            }
-            using var coreInput = new MemoryStream([1, 2, 3]);
-            using var coreOutput = new MemoryStream();
-            var coreFailure = await Record.ExceptionAsync(() => Core.ExcelConverter.ConvertAsync(coreInput, coreOutput, new()
-            {
-                FontFilePath = "does-not-exist.ttf",
-                ReadOptions = new() { Backend = (Core.ReaderBackend)backend, BackendSelected = _ => notifications++ },
-            }));
-            Assert.Equal(error!.GetType(), coreFailure!.GetType());
-            Assert.Equal(0, coreInput.Position);
-            Assert.Empty(coreOutput.ToArray());
-            Assert.Equal(0, notifications);
-        }
-        var removed = typeof(ReaderBackend).GetField("ClosedXml")!;
-        Assert.Equal(0, (int)(ReaderBackend)removed.GetValue(null)!);
-        Assert.NotNull(Attribute.GetCustomAttribute(removed, typeof(ObsoleteAttribute)));
-        Assert.Equal(1, (int)ReaderBackend.OpenXml);
-        Assert.Equal(2, (int)ReaderBackend.Auto);
-    }
-
-    [Theory]
-    [InlineData(ReaderBackend.OpenXml)]
-    [InlineData(ReaderBackend.Auto)]
-    public void BrokenInputDoesNotNotifySuccessfulSelection(ReaderBackend backend)
-    {
-        var selections = new List<ReaderBackendSelection>();
         using var input = new MemoryStream([1, 2, 3]);
-        Assert.ThrowsAny<Exception>(() => new ExcelReader().Read(input, new() { Backend = backend, BackendSelected = selections.Add }));
-        Assert.Empty(selections);
+        Assert.ThrowsAny<Exception>(() => new ExcelReader().Read(input));
     }
 
     [Theory]

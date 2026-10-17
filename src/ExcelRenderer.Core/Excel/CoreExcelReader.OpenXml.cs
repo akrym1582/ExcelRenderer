@@ -471,7 +471,6 @@ internal partial class CoreExcelReader
         ConversionMetrics.Report("readerStyleCacheHits", styleHits);
         ConversionMetrics.Report("readerStyleCacheEntries", styleCache.Count);
         var document = new ReportDocument(sheets.Concat(metadata.AdditionalSheets).OrderBy(sheet => sheet.SourceSheetIndex).ToArray());
-        options.BackendSelected?.Invoke(new(options.Backend, ReaderBackend.OpenXml, Array.AsReadOnly(new[] { options.Backend == ReaderBackend.Auto ? "AutoOpenXmlOnly" : "ExplicitOpenXml" })));
         return document;
     }
 }

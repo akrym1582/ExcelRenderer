@@ -126,9 +126,7 @@ public sealed class ExcelReader
                 FormulaEvaluationOptions = options?.FormulaEvaluationOptions,
                 IgnoreFormulaPrintAreas = options?.IgnoreFormulaPrintAreas ?? false,
                 IsFormulaTarget = options?.IsFormulaTarget,
-                Backend = (Core.ReaderBackend)(options?.Backend ?? ReaderBackend.OpenXml),
                 FormulaDisplayMode = (Core.FormulaDisplayMode)(options?.FormulaDisplayMode ?? FormulaDisplayMode.CachedValue),
-                BackendSelected = options?.BackendSelected is { } callback ? selection => callback(new((ReaderBackend)selection.RequestedBackend, (ReaderBackend)selection.SelectedBackend, selection.ReasonCodes)) : null,
             });
         Core.Rendering.ConversionMetrics.Report("model.cells", document.Sheets.Sum(sheet => sheet.Cells.Count));
         return document;

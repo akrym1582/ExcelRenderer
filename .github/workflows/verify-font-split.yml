@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - '.github/workflows/verify-font-split.yml'
+      - 'scripts/validate-font-packages.py'
+      - 'scripts/package_distribution.py'
 
 permissions:
   contents: read
@@ -17,14 +19,6 @@ jobs:
         with:
           dotnet-version: 10.0.x
       - run: python scripts/build-harfbuzz-subset.py
-      - name: Read current package version
-        run: |
-          python3 - <<'PYTHON'
-          import os, xml.etree.ElementTree as ET
-          version = ET.parse('src/ExcelRenderer/ExcelRenderer.csproj').getroot().find('.//Version').text
-          with open(os.environ['GITHUB_ENV'], 'a') as output:
-              output.write('PACKAGE_VERSION=' + version + '\n')
-          PYTHON
       - name: Restore all projects for the dependency audit
         run: dotnet restore ExcelRenderer.slnx --locked-mode
       - name: Rebuild all projects, including samples and audit tools
@@ -35,46 +29,5 @@ jobs:
       - run: python scripts/check-no-pdfsharp.py --packages artifacts/packages
       - name: Verify the package distribution contract
         run: python scripts/package_distribution.py --packages artifacts/packages
-      - name: Verify package sizes and bundled tool fonts
-        run: |
-          python3 - <<'PY'
-          import glob, json, os, zipfile
-          files = {os.path.basename(p).removesuffix('.' + os.environ['PACKAGE_VERSION'] + '.nupkg'): p for p in glob.glob('artifacts/packages/*.nupkg')}
-          for name, path in files.items():
-              print(name, os.path.getsize(path))
-          assert os.path.getsize(files['ExcelRenderer']) < 3_000_000
-          assert os.path.getsize(files['ExcelRenderer.Fonts']) > 20_000_000
-          with zipfile.ZipFile(files['ExcelRenderer.Fonts']) as fonts, zipfile.ZipFile(files['ExcelRenderer.Tool']) as tool:
-              font_dll = next(name for name in fonts.namelist() if name.endswith('/ExcelRenderer.Fonts.dll'))
-              tool_fonts = [name for name in tool.namelist() if name.endswith('/ExcelRenderer.Fonts.dll')]
-              assert len(tool_fonts) == 1, tool_fonts
-              assert fonts.read(font_dll) == tool.read(tool_fonts[0]), 'CLI must bundle the same Fonts assembly'
-              deps = json.loads(tool.read(next(name for name in tool.namelist() if name.endswith('/ExcelRenderer.Tool.deps.json'))))
-              assert any(name.split('/')[0] == 'ExcelRenderer.Fonts' for name in deps['libraries']), deps['libraries']
-          PY
-      - name: Verify library without font pack
-        run: |
-          dotnet new console -n WithoutFonts -o /tmp/without-fonts --framework net10.0
-          dotnet add /tmp/without-fonts/WithoutFonts.csproj package ExcelRenderer --version "${{ env.PACKAGE_VERSION }}" --source "$PWD/artifacts/packages"
-          cat > /tmp/without-fonts/Program.cs <<'CS'
-          using ExcelRenderer.Fonts;
-          var manager = new FontManager(new FontOptions { AllowSystemFonts = false, FallbackFamilies = [] });
-          try { manager.Resolve(new FontRequest("Noto Sans JP")); throw new Exception("Unexpected bundled font"); }
-          catch (InvalidOperationException ex) when (ex.Message.StartsWith("No usable font")) { }
-          CS
-          dotnet run --project /tmp/without-fonts/WithoutFonts.csproj
-      - name: Verify library with font pack
-        run: |
-          dotnet add /tmp/without-fonts/WithoutFonts.csproj package ExcelRenderer.Fonts --version "${{ env.PACKAGE_VERSION }}" --source "$PWD/artifacts/packages"
-          cat > /tmp/without-fonts/Program.cs <<'CS'
-          using ExcelRenderer.Fonts;
-          var manager = new FontManager(new FontOptions { AllowSystemFonts = false, FallbackFamilies = [] });
-          foreach (var family in new[] { "Noto Sans JP", "Noto Serif CJK JP", "IPAmjMincho" })
-              if (manager.Resolve(new FontRequest(family)).FontData is not { Length: > 0 })
-                  throw new Exception($"Missing {family}");
-          CS
-          dotnet run --project /tmp/without-fonts/WithoutFonts.csproj
-      - name: Verify local CLI installation
-        run: |
-          dotnet tool install --tool-path /tmp/excelrenderer-cli --add-source "$PWD/artifacts/packages" ExcelRenderer.Tool --version "${{ env.PACKAGE_VERSION }}"
-          /tmp/excelrenderer-cli/excelrenderer --help
+      - name: Verify optional fonts and installed CLI with shared PR checks
+        run: python3 scripts/validate-font-packages.py --packages artifacts/packages --work "$RUNNER_TEMP/font-package-consumers"

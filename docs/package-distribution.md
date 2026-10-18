@@ -84,7 +84,16 @@ required by that audit. It packs all four packages and checks the CLI's bundled
 Fonts DLL against the optional font package and its runtime dependency graph;
 dotnet tool dependencies are bundled in the tool, rather than listed as ordinary
 NuGet dependencies in its nuspec. Library consumers are checked with and without
-the optional font package.
+the optional font package, resolving its current Noto Sans JP, Noto Color Emoji
+and IPAmj Mincho families.
+
+`scripts/validate-font-packages.py` owns the font package checks for both the
+standalone font-split workflow and the normal PR unit-test job. Every PR therefore
+checks the same package-only consumers, with separate output directories and a
+fresh NuGet cache so a previously cached package cannot hide a regression. This
+also prevents the font list and tool-bundling checks from drifting between CI
+workflows. Run it locally after packing with `--packages <pack-output>` and
+`--work <temporary-directory-outside-the-repository>`.
 
 NuGet 公開対象は本体・Mapping・Tool・Fonts の4つだけです。Core・OpenXml・Formulas は
 非公開のソースプロジェクトとし、必要な DLL/XML を公開パッケージに同梱します。

@@ -4,6 +4,9 @@
 
 ExcelRenderer の内部構造、レイアウト Pass、拡張方法をまとめた資料です。インストールと利用方法は [README](../README.ja.md) を参照してください。
 
+SkiaSharp への統一、任意フォントパッケージ、PDF subset、資源の寿命、画像処理、CI の関係は
+[Skia 描画・フォント設計](skia-rendering.ja.md)にまとめています。
+
 ## 全体の処理フロー
 
 ### 描画前の任意のテンプレートマッピング
@@ -73,7 +76,7 @@ DrawCommandGeneratorPass
     └─ DrawImageCommand
     │
     ▼
-PdfSharpRenderer / PngRenderer / SvgRenderer
+PdfRenderer / PngRenderer / SvgRenderer
     │
     ▼
 PDF / PNG / SVG
@@ -196,12 +199,11 @@ Excel の列幅と PDF 上のポイント値は単位が異なるため、描画
 
 各セルの文字列を描画した場合に必要となるサイズを、`ITextMeasurer` で計測して `TextSizes` に保存します。主にフォントファミリー、フォントサイズ、太字などのスタイル、折り返し、セル幅、改行を考慮します。
 
-PDFsharp を使用する場合は `PdfSharpTextMeasurer` を指定します。計測をインターフェースとして分離しているため、PDFsharp 以外の計測方法にも差し替えられます。
+既定は SkiaSharp を使う `SkiaTextMeasurer` です。計測をインターフェースとして分離しているため、独自の計測方法にも差し替えられます。
 
 `ITextLayoutService`ではbaseline、runのX/advance、選択済み実face、明示的な実効サイズも確定します。
-旧結果のサイズ未指定と明示0はページ倍率変換後も区別します。PDFsharpは選択済みデータに対応する内部face
-キーを計測と描画で共有し、Skiaもメモリ上のフォントデータを使用します。確定下線は手動で一度だけ描き、
-PDFフォント自身の下線属性は併用しません。
+旧結果のサイズ未指定と明示0はページ倍率変換後も区別します。計測と描画は不変の物理font snapshotと
+確定したglyph選択を共有します。確定下線は線の幾何として一度だけ描きます。
 
 ### CellBoundsPass
 
@@ -215,7 +217,7 @@ PDFフォント自身の下線属性は併用しません。
 
 ## 3. 描画コマンドの生成
 
-レイアウト計算後の `RenderDocument` は、まだ PDFsharp に直接依存していません。`DrawCommandGeneratorPass` が `RenderDocument` を読み取り、描画内容を `DrawCommand` に変換します。
+レイアウト計算後の `RenderDocument` は、出力 API に依存しません。`DrawCommandGeneratorPass` が `RenderDocument` を読み取り、描画内容を `DrawCommand` に変換します。
 
 ページごとに、おおむね次の順番でコマンドを生成します。
 
@@ -236,16 +238,18 @@ PDFフォント自身の下線属性は併用しません。
 
 ## 4. PDF / PNG / SVG への描画
 
-`PdfSharpRenderer` は生成された `DrawCommand` を順番に処理して PDF を作成します。
+`PdfRenderer` は確定済みコマンドを `SkiaPdfDocumentWriter` へ渡し、Core の共通 PDF 文書、
+font subset、画像資源、構造保存を利用して PDF を作成します。
 
-| 描画コマンド | PDFsharp での処理 |
+| 描画コマンド | Skia PDF での処理 |
 | --- | --- |
 | `FillRectangleCommand` | 矩形の塗りつぶし |
 | `DrawBorderCommand` | 線の描画 |
 | `DrawTextCommand` | 文字列の描画 |
 | `DrawImageCommand` | 画像の描画 |
 
-`PdfSharpRenderer` の責務は、抽象的な描画コマンドを PDFsharp の API 呼び出しへ変換することです。画像データは SkiaSharp でデコードしてから PDF へ描画します。
+画像は SkiaSharp による完全な画素デコードの成功を確認してから描画します。PDF／PNG／SVG は
+画像検証と Skia 描画処理を共有し、PDF 固有の後処理で用紙 box、画像補間、リンク注釈を反映します。
 
 `PngRenderer` は同じ `DrawCommand` を SkiaSharp で描画し、各ページを独立した PNG にします。用紙寸法と描画座標はポイント単位のまま受け取り、既定の 96 DPI（または指定した DPI）でピクセルへ変換します。PNG は複数ページを格納できないため、複数ページの出力にはページ番号を受け取る出力ストリームファクトリを使用します。
 
@@ -260,7 +264,7 @@ Excel から PDF や PNG を生成する処理を 1 つの巨大な変換処理�
 
 - レイアウト計算は複数の Pass に分割し、各 Pass は基本的に 1 つの目的だけを持つ
 - Pass 間の情報は `ReportLayoutContext` を介して受け渡す
-- `ReportLayoutEngine` は PDFsharp を直接操作せず、`RenderDocument` と `DrawCommand` を生成する
+- `ReportLayoutEngine` は native の出力 API を直接操作せず、`RenderDocument` と `DrawCommand` を生成する
 - 描画内容をコマンドとして表現し、単体テスト、描画順序の変更、別レンダラー、デバッグ出力を容易にする
 
 ## 拡張方法
@@ -296,9 +300,9 @@ new PaginationPass()
 
 1. 新しい `DrawCommand` を定義する
 2. `DrawCommandGeneratorPass` でコマンドを生成する
-3. `PdfSharpRenderer` でコマンドを描画する
+3. 各レンダラー（`PdfRenderer`、`PngRenderer`、`SvgRenderer`）でコマンドを描画する
 
-例えば透かしは、`Watermark` 情報から `DrawWatermarkCommand` を生成し、`PdfSharpRenderer` で描画する構成にできます。
+例えば透かしは、`Watermark` 情報から `DrawWatermarkCommand` を生成し、`PdfRenderer` で描画する構成にできます。
 
 ### 新しい出力形式を追加する
 
@@ -306,7 +310,7 @@ new PaginationPass()
 
 ```text
 DrawCommand
-    ├─ PdfSharpRenderer
+    ├─ PdfRenderer
     ├─ PngRenderer
     ├─ SvgRenderer
     ├─ CanvasRenderer
@@ -315,7 +319,7 @@ DrawCommand
 
 ### 文字列計測方法を差し替える
 
-文字列計測は `ITextMeasurer` として分離されています。PDFsharp、SkiaSharp、ブラウザー相当、テスト用の固定サイズなど、用途に応じた実装を追加できます。
+文字列計測は `ITextMeasurer` として分離されています。SkiaSharp、ブラウザー相当、テスト用の固定サイズなど、用途に応じた実装を追加できます。
 
 ## 拡張例
 
@@ -329,7 +333,7 @@ DrawCommand
 - Pass の順序には依存関係があります。`CellBoundsPass` は `ColumnLayouts` と `RowLayouts` を使用するため、レイアウト Pass より前には実行できません。
 - 新しい Pass では、必要なプロパティが設定済みであることを前提にしすぎず、必要に応じて未設定状態を検証します。
 - `DrawCommand` の順番はそのまま描画順序になります。新しいコマンドをどの要素の前後に配置するかを明確にします。
-- PDFsharp 固有の処理は `PdfSharpRenderer` や `ExcelRenderer.PdfSharp` 名前空間内に閉じ込めます。
+- 共通の Skia／PDF アルゴリズムは Core、製品固有の方針は本体 adapter に置きます。native 資源には変換ごとの所有者を決めます。
 
 ## ソースコード構成
 
@@ -356,12 +360,17 @@ src/ExcelRenderer
 │  ├─ ReportDocument
 │  ├─ ReportSheet
 │  └─ RenderDocument
-├─ PdfSharp
-│  ├─ PdfSharpRenderer
-│  ├─ PdfSharpTextMeasurer
-│  └─ PdfSharpFontResolver
+├─ Fonts
+│  ├─ FontManager
+│  └─ ConversionFontResources
+├─ Pdf
+│  ├─ PdfRenderer
+│  └─ PdfCommandFinalizer
 └─ SkiaSharp
-   └─ PngRenderer
+   ├─ SkiaTextMeasurer
+   ├─ SkiaPdfDocumentWriter
+   ├─ PngRenderer
+   └─ SvgRenderer
 ```
 
 機能を追加する際は、既存クラスへ複数の責務を追加するのではなく、新しい読み込み処理、新しいレイアウト Pass、新しい描画コマンド、新しいレンダラー、または新しい抽象インターフェースとして分離することを基本方針とします。
@@ -370,18 +379,19 @@ src/ExcelRenderer
 
 `TextLayoutTransform` は確定テキストの幾何を破壊せずに拡縮する単一の処理です。全体寸法、行メトリクス、run 位置、明示された有効フォントサイズを同じ倍率で変換し、未指定の有効サイズは未指定のまま保持します。Shrink-to-fit は元サイズを先に確定し、ページ倍率は未指定状態を意図的に保持します。
 
-PDFの確定faceは呼出し側のbytesをsnapshotし、face IDと内容digestで識別します。登録は不変bytesへの弱参照とし、元の解決済みfontがsnapshotを所有します。公開layoutは必要なfontを保持し、期限切れ登録は変換後に整理します。同じ有効faceの再利用では読込み・ハッシュを繰り返しません。本体/Coreはfont gateを共有します。[2エンジン構成](core-architecture.ja.md)を参照してください。
+解決済みfaceは呼出し側のbytesをsnapshotし、face IDと内容digestで識別します。確定layoutは不変bytesとglyph情報を保持し、native handleを持ちません。native face・font・subsetは変換scopeが所有し、独立した変換を共有font gateで直列化しません。同じsnapshotの再利用では読込み・ハッシュを繰り返しません。[本体とCoreの構成](core-architecture.ja.md)と[フォント・資源設計](skia-rendering.ja.md)を参照してください。
 
 `FontManager` はフォントデータの同一性と解決結果の同一性を分けます。同じ byte 列を使う別名登録では face ID を共有できますが、解決結果は選択された登録と要求書体でキャッシュします。これにより、同じ登録の反復解決を再利用しつつ、登録上の family、weight、italic と近似診断を保持します。
 
 ## 確定レイアウト経路と互換文字描画経路
 
-PDFsharp と Skia では、文字の振り分けを図形・罫線・画像の描画から分離しています。各バックエンドの
-`TextPainter` が縦書き正規化、ページ座標のクリップ、回転、Save/Restore の均衡を所有し、その後に
-経路を一つだけ選択します。確定レイアウト経路は保存済みの baseline、run の X 位置、実効サイズ、
-解決済み face を使用し、再折返しや再縮小を行いません。レイアウトを持たないコマンドは互換経路へ進み、
-従来の折返し、ShrinkToFit、フォールバック、IVS、絵文字処理を維持します。バックエンド固有オブジェクトは
-各名前空間内に閉じ、共通の配置・実効サイズ helper は PDFsharp/Skia に依存しません。
+`SkiaTextPainter` は文字の振り分けを図形・罫線・画像の描画から分離し、縦書き正規化、
+ページ座標のクリップ、回転、Save/Restore の均衡を所有します。その後に経路を一つだけ選択します。
+確定レイアウト経路は保存済みの baseline、run の X 位置、実効サイズ、解決済み face を使用し、
+再折返しや再縮小を行いません。PNG／SVG のレイアウトを持たないコマンドは互換経路へ進み、
+従来の折返し、ShrinkToFit、フォールバック、IVS、絵文字処理を維持します。PDF は確定レイアウトを
+必須とし、それを持たない文字コマンドを拒否します。共通の配置・実効サイズ helper は
+native の描画 API に依存しません。
 
 ## ページ計画
 
@@ -399,4 +409,4 @@ PDFsharp と Skia では、文字の振り分けを図形・罫線・画像の�
 
 描画コマンドは確定文字レイアウトを保持し、セルごとのclipと元の回転オブジェクトのclipを適用します。`DrawCommandBounds` がclip後の可視境界をunionし、`PageViewport` が確定シーンを平行移動してPDF／PNG／SVGとdescriptorへ最終寸法を供給します。viewportのSaveはfinallyでRestoreし、PNG上限は事前検証します。元セル領域・要求範囲・元寸法・crop・paddingはSchema 1の任意metadataです。
 
-`HyperlinkReader` はXML定義・relationship・名前スコープ・literal HYPERLINKを読み、リンク先の取得や数式評価をしません。問題は元定義に保持し、PDF／Markdownでリンク元が出力される場合に確定します。`HyperlinkPolicy` はURI方針と単純内部参照解決を共用します。PDFは選択後の最終ページと元領域で解決し、`PdfHyperlinkWriter` はImport完了後の最終文書に注釈を追加して、上端基準ptをPDF座標に変換します。Markdownはplain textとリンク先を分離し、全表示経路で共通formatterを使用し、必要な安定アンカーと空／範囲リンクの明示一覧を出力します。Noneと画像出力ではリンク診断を評価しません。
+`HyperlinkReader` はXML定義・relationship・名前スコープ・literal HYPERLINKを読み、リンク先の取得や数式評価をしません。問題は元定義に保持し、PDF／Markdownでリンク元が出力される場合に確定します。`HyperlinkPolicy` はURI方針と単純内部参照解決を共用します。PDFは選択後の最終ページと元領域で解決し、`GeneratedPdfFinalizer` はSkiaが生成文書をcloseした後に解決済み注釈を反映し、上端基準ptをPDF座標に変換します。Markdownはplain textとリンク先を分離し、全表示経路で共通formatterを使用し、必要な安定アンカーと空／範囲リンクの明示一覧を出力します。Noneと画像出力ではリンク診断を評価しません。

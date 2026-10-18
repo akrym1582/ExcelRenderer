@@ -763,6 +763,7 @@ if it is already configured. Keep NuGet.org enabled for dependencies such as Doc
 | PDF-only source API and font requirements | [Core](docs/core.md) ([日本語](docs/core.ja.md)) |
 | Source records, formatting and low-level reader limits | [OpenXml reader](docs/openxml-reader.md) ([日本語](docs/openxml-reader.ja.md)) |
 | Rendering stages and extension points | [Architecture](docs/architecture.md) ([日本語](docs/architecture.ja.md)) |
+| Skia foundation, optional fonts, PDF subsets, image handling and resource lifetime | [Skia rendering and font design](docs/skia-rendering.md) ([日本語](docs/skia-rendering.ja.md)) |
 | Shared implementation and product boundaries | [Core architecture](docs/core-architecture.md) ([日本語](docs/core-architecture.ja.md)), [source ownership](docs/core-source-map.md) |
 | Test, package, allocation and CI evidence by commit | [Validation record](docs/openxml-integration-validation.md) |
 

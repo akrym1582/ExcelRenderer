@@ -736,6 +736,7 @@ CLI をソースから試す手順は [English README の Development](README.md
 | PDF 専用ソース API とフォント要件 | [Core](docs/core.ja.md)（[English](docs/core.md)） |
 | 元データ、書式、低レベル Reader の上限 | [OpenXml Reader](docs/openxml-reader.ja.md)（[English](docs/openxml-reader.md)） |
 | 描画の各工程と拡張方法 | [アーキテクチャ](docs/architecture.ja.md)（[English](docs/architecture.md)） |
+| Skia 共通基盤、フォント分離・subset、画像処理、資源の寿命 | [Skia 描画・フォント設計](docs/skia-rendering.ja.md)（[English](docs/skia-rendering.md)） |
 | 共通実装と製品ごとの境界 | [Core の構成](docs/core-architecture.ja.md)（[English](docs/core-architecture.md)）、[所有者表](docs/core-source-map.md) |
 | コミットごとのテスト・配布・割当・CI の証拠 | [検証記録](docs/openxml-integration-validation.md) |
 

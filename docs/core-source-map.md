@@ -1,5 +1,8 @@
 # Core source provenance and final ownership
 
+For the current Skia pipeline, optional fonts, subsets and resource ownership, see
+[Skia rendering and font design](skia-rendering.md) ([日本語](skia-rendering.ja.md)).
+
 Basic algorithms are owned by Core. Public main types remain in ExcelRenderer; the retained implementation column distinguishes compatibility mapping from product policy.
 Source: main 1.7.2, commit `32e9165d145516dbd0bcb4c2ae31a78ce6774bce`. Every copied type is internal; namespaces are under ExcelRenderer.Core. This table describes lineage, not identical copies.
 

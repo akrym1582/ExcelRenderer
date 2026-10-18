@@ -1,7 +1,7 @@
 {
   "baseCommit": "71deba48ea4a397641c9ad155bc1c8b3ddf8b5d9",
-  "sourceState": "final working tree before commit; source hashes identify validated implementation independently of documentation commits",
-  "sourceDigest": "ef22fd67021509af46d208499a22730e6c1844531402a9113c2b7b5c757dbeb4",
+  "sourceState": "Committed optimized implementation; final functional/distribution/measurement evidence uses these source hashes",
+  "sourceDigest": "98d67ea53e370786a41bd80b391ae16e2fb21518a8941b92db634dabaa928b76",
   "sourceFiles": {
     "build/EmbeddedOpenXml.targets": "ff07e4f0a2f4632dd83d9fdf07ba24e07dc8caf4adc39d4739f091fb97ed85b6",
     "build/HarfBuzzSubset.targets": "9af6b784fcbfdfb37b7b0d4eadc1775d8933ab7d59217d8c9d2a9a6e903cebfb",
@@ -537,8 +537,8 @@
     "src/ExcelRenderer/SkiaSharp/SkiaPdfDocumentWriter.cs": "7b8fb3170de13a8d35d0a92c0ee0a2b4e22156d9672b95eca9c156dc168159cb",
     "src/ExcelRenderer/SkiaSharp/SkiaPdfFonts.cs": "b35ae0b2affdbc5326734f41ec3991924d3a9727060165385dd442e3f2853317",
     "src/ExcelRenderer/SkiaSharp/SkiaTextDrawing.cs": "5d462f4b1bd72b841d43f83ee584a421a6214aa25ece1291444b5a4183a1b1d7",
-    "src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.RichText.cs": "329348d282dbf2f3506497f9f16a4e415bbcb3b8969a14fdeec877dfebb7db9e",
-    "src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.cs": "66bd2064af9b7a83dd37a794ad0f927a1e2bfb1b77491e98611ef54640c5791e",
+    "src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.RichText.cs": "fd6dc1234a1efcdd9bf6d9dce18c66916f5dd9251c6ca883e1abff7d09525686",
+    "src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.cs": "78e8ba80a70d8fcd0f2a0a64b9e868e00c80da31ee5b89ca38c19cc67178c3d1",
     "src/ExcelRenderer/SkiaSharp/SkiaTextPainter.cs": "71b4845d892804dd516959459fcd84d62ee0f83ecf8ae15ae40094a6193a637d",
     "src/ExcelRenderer/SkiaSharp/SvgRenderer.cs": "d380edb9e9cf83f9168ab1f4b0ec36e1291019051836b68b3801545bdba807fe",
     "src/ExcelRenderer/SvgExportOptions.cs": "d9098b1eefcaf7146398a39adfbfd4c7f51f92423881ce2cb83c5b059a7e0074",
@@ -564,7 +564,8 @@
     "platform": "Linux-6.18.55-x86_64-with-glibc2.41"
   },
   "assemblies": {
-    "main": "94b5ba920dcda694a0ceecd8d44b48f9fb30366099b641365c78a2b126860367",
-    "core": "9ceecc55af371ca7631c643d851fb0d4158993a6dd3aa1ce493321fb769cb5be"
-  }
+    "main": "65d2528bb2509d2dca4a22471a62bb2fde5f185f0f7bff1cfb4a6afa7af84573",
+    "core": "7d3ee4b93319739bb0d155ac3057737abb6efcb26e92f4e05cf1238c38a1207d"
+  },
+  "implementationCommit": "0996eb0df27da636cbe70cd5238d49965c3f11e4"
 }

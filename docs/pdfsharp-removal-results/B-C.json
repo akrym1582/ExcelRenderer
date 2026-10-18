@@ -2335,7 +2335,7 @@
             ],
             "numericMetadataDifferences": [
               {
-                "field": "F7/FontMatrix",
+                "field": "F6/FontMatrix",
                 "maxDelta": 1.8729999999968563e-08
               },
               {
@@ -2347,7 +2347,7 @@
                 "maxDelta": 1.8729999999968563e-08
               },
               {
-                "field": "F6/FontMatrix",
+                "field": "F7/FontMatrix",
                 "maxDelta": 1.8729999999968563e-08
               },
               {

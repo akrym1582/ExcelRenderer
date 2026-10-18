@@ -3,6 +3,7 @@
 This report describes the work on `feature/remove-pdfsharp`, based on
 `71deba48ea4a397641c9ad155bc1c8b3ddf8b5d9`. The first-stage draft PR #89 is
 unmerged; fetched main remains `8d23c0725f60126f5e38c9a9e9a612a6d276b93a`.
+The final product implementation is commit `0996eb0` (following `3510acc`).
 No main update was missing from that base. This stage is an unreleased breaking
 change. See [migration](pdfsharp-migration.md) and [inventory](pdfsharp-removal-inventory.md).
 
@@ -39,12 +40,12 @@ python3 scripts/compare-core-removal-baselines.py
 python3 scripts/check-core-mutations.py
 python3 scripts/check-output-mutations.py
 python3 scripts/check-core-shared-mutations.py
-dotnet pack ExcelRenderer.slnx -c Release --no-build --no-restore -m:1 -p:BuildProjectReferences=false -o artifacts/pdf-removal-packages
-dotnet publish src/ExcelRenderer.Tool -c Release --no-build --no-restore -o artifacts/pdf-removal-publish
-python3 scripts/package_distribution.py --packages artifacts/pdf-removal-packages --output artifacts/pdf-removal-inventory.json
-python3 scripts/check-no-pdfsharp.py --packages artifacts/pdf-removal-packages --publish artifacts/pdf-removal-publish
+dotnet pack ExcelRenderer.slnx -c Release --no-build --no-restore -m:1 -p:BuildProjectReferences=false -o artifacts/pdf-removal-optimized-packages
+dotnet publish src/ExcelRenderer.Tool -c Release --no-build --no-restore -o artifacts/pdf-removal-optimized-publish
+python3 scripts/package_distribution.py --packages artifacts/pdf-removal-optimized-packages --output artifacts/pdf-removal-optimized-inventory.json
+python3 scripts/check-no-pdfsharp.py --packages artifacts/pdf-removal-optimized-packages --publish artifacts/pdf-removal-optimized-publish
 python3 scripts/check-no-pdfsharp-mutations.py
-python3 scripts/validate-formulas-packages.py --packages artifacts/pdf-removal-packages --work /tmp/pdf-removal-consumers
+python3 scripts/validate-formulas-packages.py --packages artifacts/pdf-removal-optimized-packages --work /workspace/pdf-removal-consumers-final
 ```
 
 Do not run mutation scripts concurrently with builds, comparisons, audits or each
@@ -149,14 +150,94 @@ measurement wrapper delegates all three layout interfaces in both harnesses;
 old product DLL hashes are verified. `TotalMs` excludes harness startup but includes
 conversion setup; lifetime peak RSS includes warm-ups. Managed allocation is
 cumulative during the measured conversion. No builds/consumers/comparisons run
-alongside formal performance samples. An initial five-condition measurement was
+alongside formal performance samples. A lightweight local commit was created
+during the initial matrix. An initial five-condition measurement was
 interrupted after an independent-renderer scope issue was found in review; those
 rows remain preliminary and are excluded from final results.
 
 ```bash
-python3 scripts/benchmark-pdf-backends.py --no-build --baseline-assembly /tmp/excelrenderer-stage1-benchmark-bin/ExcelRenderer.Performance.dll --output artifacts/pdf-removal-benchmark
+python3 scripts/benchmark-pdf-backends.py --no-build --baseline-assembly /tmp/excelrenderer-stage1-benchmark-bin/ExcelRenderer.Performance.dll --inputs artifacts/pdf-removal-benchmark --output artifacts/pdf-removal-benchmark-final
 dotnet tools/ExcelRenderer.Performance/bin/Release/net10.0/ExcelRenderer.Performance.dll render-case samples/mapping/invoice/invoice.xlsx pdf paginated 100 --font-pack --measure-text --pdf-backend skiasharp
 ```
+
+The initial A/B/C matrix retains all 1,365 measured process records (5,460
+conversions including warm-up). Nineteen conditions met the initial B-relative
+time/RSS target. The grouped-stage run exceeded time at 200 pages/concurrency 1
+(1.335) and rich text/concurrency 1 (1.599); no memory condition exceeded 1.25.
+Those records are preserved in `benchmark-initial*`, including the failed targets.
+After that run, the 8.8GiB tmpfs was found full from repeated isolated-consumer
+package caches; only regenerable caches were removed. A measurement-only CPU/GC
+harness, using unchanged product DLLs and alternating stage order, gave time
+ratios 0.923 / 1.028 for those two fixtures, with matching GC collection counts.
+This demonstrates material environment/order variability; it does not prove the
+full initial delta came from one cause.
+
+A normal-harness alternating rerun passed 200 pages at 0.979 time / 0.972 RSS,
+but rich text still exceeded time at 1.297. Candidate-line allocation was removed,
+then conversion-local prefix-width and finalized-line caches were added. They
+retain exact width arithmetic and wrap boundaries, include style/registration
+generation, apply only to the built-in manager and each bound entries/text at
+512/2048. Finalized runs still retain immutable glyph/source data. The focused
+rich fixture reached 1.108 time / 0.733 RSS, with measurement median 91.887ms
+versus B 112.075ms. The complete optimized B/C matrix is recorded separately;
+no initial sample was removed and no target was relaxed.
+
+The final matrix alternates B/C forward and reverse order by round and reuses
+identical XLSX bytes. All **21 median time/RSS conditions pass 1.25** across
+910 process measurements (3,640 conversions including warm-up). The worst median
+time is 1.238 (rich text / 1); the worst median RSS is 1.135 (grid / 4).
+
+| Workload | Parallelism | Median time C/B | Median peak RSS C/B |
+| --- | ---: | ---: | ---: |
+| invoice | 1 | 0.551 | 0.863 |
+| invoice | 4 | 0.763 | 0.867 |
+| invoice | 8 | 0.760 | 0.886 |
+| grid | 1 | 0.885 | 0.935 |
+| grid | 4 | 0.895 | 1.135 |
+| grid | 8 | 1.032 | 1.134 |
+| images | 1 | 0.969 | 0.955 |
+| images | 4 | 0.824 | 0.949 |
+| images | 8 | 0.953 | 0.973 |
+| 50-pages | 1 | 0.884 | 0.970 |
+| 50-pages | 4 | 0.967 | 0.956 |
+| 50-pages | 8 | 0.989 | 0.983 |
+| 200-pages | 1 | 0.967 | 0.963 |
+| 200-pages | 4 | 0.899 | 0.990 |
+| 200-pages | 8 | 0.944 | 0.996 |
+| rich-text | 1 | 1.238 | 0.700 |
+| rich-text | 4 | 0.761 | 0.711 |
+| rich-text | 8 | 0.579 | 0.701 |
+| borders | 1 | 0.804 | 0.852 |
+| borders | 4 | 0.769 | 0.954 |
+| borders | 8 | 0.766 | 0.970 |
+
+The maximum sample ratios are also reported, rather than discarded: invoice / 4
+has a maximum-time ratio of 1.983 and rich text / 1 is 1.402; other maximum-time
+ratios and all maximum-RSS ratios are within 1.25 (worst maximum RSS 1.060).
+Thus these data satisfy the median target, not a guarantee of every individual
+tail time. Total time, measurement/subset/page/save phase medians and maxima,
+managed allocations, output sizes, original samples and conditions are retained
+in [the evidence directory](pdfsharp-removal-results/README.md).
+
+![Final B/C time and RSS ratios](pdfsharp-removal-results/benchmark-final.svg)
+
+The final same-process 100-conversion test balances all created/disposed
+resources: 100 typefaces, 400 PDF fonts and 100 subset typefaces. A further
+200-conversion run balances 200 / 800 / 200, respectively. After-GC managed bytes
+settle near 12.82MiB: in the 200-run last half, min/max are 13,443,840 /
+13,452,064 bytes. Native memory retains a high-water mark; private-memory window
+medians are 220.25MiB (iterations 100–119), 220.44MiB (150–169) and 221.21MiB
+(180–199), with working set 172.57 / 174.57 / 176.36MiB. These bounded-run data
+do not prove an infinite-duration flat RSS. They show balanced ownership and no
+per-conversion retained font-byte growth. Raw per-iteration observations are
+included, with no forced native allocator release claimed.
+
+![200-conversion memory observations](pdfsharp-removal-results/retention-200.svg)
+
+The CLI 50-/200-page files contain one font object each (135,533 / 529,932 bytes).
+The current one-page invoice is 33,386 bytes; small fixture sizes and embedded
+font/image stream details are included in the comparison evidence. Multi-page
+font reuse is measured separately from the image-heavy incremental-stream cost.
 
 Resource tests cover nested/exceptional AsyncLocal restoration, caller ownership,
 snapshot replay after the source font is deleted, simultaneous Core/main jobs at
@@ -197,9 +278,12 @@ hairlines, clipped/rotated images and header/footer positions. Expected Unicode,
 dimensions and link targets are in each fixture's frozen `expected.json`.
 Automated checks do not substitute for those viewer checks.
 
-Until the Windows/native gate and any failed numerical performance target are
-resolved, this report does not claim that every completion condition is satisfied.
-Remote draft-PR work follows the user's earlier explicit request to complete
-implementation and create a draft PR, carried forward to this continuation.
-The plan's §0 alone is not the authorization. Merge and package publication remain
-separate release work.
+The mandatory Windows/native gate remains outstanding, so this report does not
+claim that every completion condition is satisfied. The attempted push of
+`feature/remove-pdfsharp` was rejected before execution by automatic approval
+review: the removal plan §0 explicitly excludes remote push and PR publication,
+and the earlier first-stage draft-PR instruction was judged insufficient for this
+stage. No remote branch or second-stage PR has been created. Explicit fresh
+user authorization is required before pushing this branch, opening its draft PR
+and running the remote Windows workflow. No alternate publication route is used.
+Merge and package publication remain separate release work.

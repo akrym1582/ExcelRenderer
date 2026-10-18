@@ -96,6 +96,21 @@ def main():
             colored = int(np.count_nonzero(pixels.max(axis=1) - pixels.min(axis=1) > 20))
             assert colored > 100, (name, colored)
             results['colorPixels144dpi'] = colored
+    # Existing API tests export standalone COLR and color TTC PDFs. Requiring
+    # independently rendered colored pixels catches missing layer/paint GIDs.
+    test_output = ROOT / 'tests/ExcelRenderer.Tests/bin/Release/net10.0/SampleOutputs'
+    color_paths = [test_output / 'PdfFormats' / name for name in ['colr.ttf.pdf', 'colr-v1.ttf.pdf']]
+    color_paths += [test_output / 'ManagedTrueType' / f'collection-{index}.pdf' for index in [3, 4]]
+    results['colorFormats'] = []
+    for path in color_paths:
+        if not path.is_file():
+            raise RuntimeError(f'Run PdfBackendTests and FontCollectionTests before independent validation: {path}')
+        with fitz.open(path) as document:
+            pix = document[0].get_pixmap(dpi=144, alpha=False)
+            pixels = np.frombuffer(pix.samples, dtype=np.uint8).reshape(-1, 3).astype(np.int16)
+            colored = int(np.count_nonzero(pixels.max(axis=1) - pixels.min(axis=1) > 20))
+            assert colored > 100, (path, colored)
+            results['colorFormats'].append({'file': path.name, 'pages': len(document), 'coloredPixels144dpi': colored, 'bytes': path.stat().st_size})
     if args.baseline:
         for index in range(1, 5):
             before = args.baseline / f'commands-{index}' / 'skiasharp.pdf'

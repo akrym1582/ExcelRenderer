@@ -29,7 +29,7 @@ Console.WriteLine(result.PageCount);
 
 ## フォントと表示
 
-呼出し側が指定する静的TrueTypeアウトラインの単一sfntを使います。拡張子では判定しません。テーブル範囲・必須テーブル・可変/CFF形式を検証し、SkiaSharpで読込みを確認してからページを生成します。TTC/OTC、CFF OTF、可変フォント、WOFF/TTEは対象外です。破損・未対応形式は`InvalidDataException`、不存在は`FileNotFoundException`です。
+呼出し側が指定する単体の固定 TrueType sfnt、または TTC/OTC 内の選択 face を使います。FontCollectionIndex（0始まり、既定0）で選び、計測・描画前に同じ単体 face へ正規化します。既存の非可変カラー face は共通 Skia カラー経路を使います。拡張子では判定しません。CFF/CFF2・可変・WOFF/WOFF2・旧 true/typ1 は PDF 対象外です。破損・未対応形式は InvalidDataException、不存在は FileNotFoundException、不正 index は引数エラーです。[形式の契約](managed-truetype-subset.ja.md)を参照してください。
 
 フォントbytesは変換ごとに一度読み、同じsnapshotで列幅・行高・文字幅・PDF描画を処理します。セルとヘッダー/フッターは通常書体に統一します。太字・斜体の疑似描画、フォント探索・fallback、IVSの異体字形の再現、外字・カラー絵文字の特別処理はありません。セルとヘッダー/フッターの異体字セレクター（U+FE00–U+FE0F、U+E0100–U+E01EF）は計測・描画前に除去し、基底文字を表示します。例えば「葛」＋IVSは「葛」として表示し、セレクター由来の追加の豆腐や文字幅は生成しません。基底文字自体が指定フォントに未収録の場合の表示は保証しません。サイズ・色・下線を維持します。未収録文字は指定フォント/Skiaの欠字表示に従い、すべてのUnicode文字の表示は保証しません。フォント置換によりExcel原本と列幅や折返しが変わることがあります。
 

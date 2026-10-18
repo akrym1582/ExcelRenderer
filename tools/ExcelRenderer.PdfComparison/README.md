@@ -81,6 +81,7 @@ Managed font evidence (three warmups, five samples, subset sfnt files, full/subs
 PDF pairs, metrics and table sizes):
 
 ```bash
+dotnet test tests/ExcelRenderer.Tests -c Release --filter "FullyQualifiedName~PdfBackendTests|FullyQualifiedName~FontCollectionTests"
 dotnet run --project tools/ExcelRenderer.PdfComparison -c Release -- --managed-fonts artifacts/managed-fonts
 python3 scripts/validate-managed-fonts.py --evidence artifacts/managed-fonts
 ```

@@ -781,7 +781,7 @@ separate license texts; see [Third-party notices](THIRD-PARTY-NOTICES.md).
 ### PDF engine and migration
 
 PDF output and default PDF/PNG/SVG measurement use SkiaSharp. The main and Core
-products share native font/subset/document primitives. There is no PDFsharp dependency,
+products share font snapshots, managed outline subsets and Skia document primitives. There is no PDFsharp dependency,
 resolver or process-wide conversion gate. This removes the old low-level public APIs;
 see the [breaking-change migration table](docs/pdfsharp-migration.md).
 

@@ -78,6 +78,14 @@ runs before uploading packages or creating the release commit/tag. Historical
 validation reports describe their recorded package layout; this contract replaces
 their earlier standalone OpenXml/Formulas package assumptions.
 
+The font-split workflow restores and rebuilds the entire solution before the
+dependency audit. `dotnet test` alone does not build every sample and audit tool
+required by that audit. It packs all four packages and checks the CLI's bundled
+Fonts DLL against the optional font package and its runtime dependency graph;
+dotnet tool dependencies are bundled in the tool, rather than listed as ordinary
+NuGet dependencies in its nuspec. Library consumers are checked with and without
+the optional font package.
+
 NuGet 公開対象は本体・Mapping・Tool・Fonts の4つだけです。Core・OpenXml・Formulas は
 非公開のソースプロジェクトとし、必要な DLL/XML を公開パッケージに同梱します。
 テスト・サンプル・検証・性能測定の各 csproj も公開しません。新規プロジェクトも既定で

@@ -25,23 +25,32 @@ jobs:
           with open(os.environ['GITHUB_ENV'], 'a') as output:
               output.write('PACKAGE_VERSION=' + version + '\n')
           PYTHON
-      - run: dotnet test ExcelRenderer.slnx --configuration Release -m:1
-      - run: dotnet pack src/ExcelRenderer/ExcelRenderer.csproj -c Release -o artifacts/packages
-      - run: dotnet pack src/ExcelRenderer.Fonts/ExcelRenderer.Fonts.csproj -c Release -o artifacts/packages
-      - run: dotnet pack src/ExcelRenderer.Tool/ExcelRenderer.Tool.csproj -c Release -o artifacts/packages
+      - name: Restore all projects for the dependency audit
+        run: dotnet restore ExcelRenderer.slnx --locked-mode
+      - name: Rebuild all projects, including samples and audit tools
+        run: dotnet build ExcelRenderer.slnx -c Release -t:Rebuild --no-restore --verbosity:minimal -m:1
+      - run: dotnet test ExcelRenderer.slnx --configuration Release --no-build --no-restore -m:1
+      - name: Pack all four distribution packages from the verified build
+        run: dotnet pack ExcelRenderer.slnx -c Release --no-build --no-restore -m:1 -p:BuildProjectReferences=false -o artifacts/packages
       - run: python scripts/check-no-pdfsharp.py --packages artifacts/packages
-      - name: Verify package sizes and tool dependency
+      - name: Verify the package distribution contract
+        run: python scripts/package_distribution.py --packages artifacts/packages
+      - name: Verify package sizes and bundled tool fonts
         run: |
           python3 - <<'PY'
-          import glob, os, zipfile
+          import glob, json, os, zipfile
           files = {os.path.basename(p).removesuffix('.' + os.environ['PACKAGE_VERSION'] + '.nupkg'): p for p in glob.glob('artifacts/packages/*.nupkg')}
           for name, path in files.items():
               print(name, os.path.getsize(path))
           assert os.path.getsize(files['ExcelRenderer']) < 3_000_000
           assert os.path.getsize(files['ExcelRenderer.Fonts']) > 20_000_000
-          with zipfile.ZipFile(files['ExcelRenderer.Tool']) as z:
-              nuspec = z.read('ExcelRenderer.Tool.nuspec').decode()
-              assert 'ExcelRenderer.Fonts' in nuspec, nuspec
+          with zipfile.ZipFile(files['ExcelRenderer.Fonts']) as fonts, zipfile.ZipFile(files['ExcelRenderer.Tool']) as tool:
+              font_dll = next(name for name in fonts.namelist() if name.endswith('/ExcelRenderer.Fonts.dll'))
+              tool_fonts = [name for name in tool.namelist() if name.endswith('/ExcelRenderer.Fonts.dll')]
+              assert len(tool_fonts) == 1, tool_fonts
+              assert fonts.read(font_dll) == tool.read(tool_fonts[0]), 'CLI must bundle the same Fonts assembly'
+              deps = json.loads(tool.read(next(name for name in tool.namelist() if name.endswith('/ExcelRenderer.Tool.deps.json'))))
+              assert any(name.split('/')[0] == 'ExcelRenderer.Fonts' for name in deps['libraries']), deps['libraries']
           PY
       - name: Verify library without font pack
         run: |

@@ -7,6 +7,44 @@ namespace ExcelRenderer.Core.Pdf;
 /// <summary>Shares cell backgrounds and styled border strokes across every Skia output.</summary>
 internal static class SkiaDrawingPrimitives
 {
+    /// <summary>Paints PDF images while retaining full source pixels at cropped interpolation edges.</summary>
+    /// <param name="canvas">The target PDF canvas.</param>
+    /// <param name="image">The validated source image.</param>
+    /// <param name="source">The source crop in image pixels.</param>
+    /// <param name="destination">The destination in points.</param>
+    internal static void DrawPdfImage(SKCanvas canvas, SKImage image, SKRect source, SKRect destination)
+    {
+        var sampling = new SKSamplingOptions(SKFilterMode.Linear);
+        if (source == new SKRect(0, 0, image.Width, image.Height))
+        {
+            canvas.DrawImage(image, source, destination, sampling);
+            return;
+        }
+
+        if (source.Width <= 0 || source.Height <= 0)
+        {
+            return;
+        }
+
+        // A raster image permits Skia's PDF writer to trim to integer pixel bounds,
+        // changing edge interpolation compared with its original encoded-image path.
+        // Clip the mapped full image instead, without a second decode or new bitmap.
+        canvas.Save();
+        canvas.ClipRect(destination);
+        var scaleX = destination.Width / source.Width;
+        var scaleY = destination.Height / source.Height;
+        canvas.Concat(new SKMatrix
+        {
+            ScaleX = scaleX,
+            ScaleY = scaleY,
+            TransX = destination.Left - (source.Left * scaleX),
+            TransY = destination.Top - (source.Top * scaleY),
+            Persp2 = 1,
+        });
+        canvas.DrawImage(image, 0, 0, sampling);
+        canvas.Restore();
+    }
+
     /// <summary>Paints all styled cell edges through shared stroke geometry.</summary>
     /// <param name="canvas">The target canvas.</param>
     /// <param name="command">The border command.</param>

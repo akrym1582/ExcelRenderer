@@ -6,10 +6,10 @@ using ExcelRenderer.Core.Pdf.Structure;
 
 namespace ExcelRenderer.Core.Pdf;
 
-/// <summary>Appends bounded structural corrections to a PDF produced by the pinned Skia backend.</summary>
+/// <summary>Writes bounded structural corrections to a PDF produced by the pinned Skia backend.</summary>
 internal static class GeneratedPdfFinalizer
 {
-    /// <summary>Preserves original bytes and appends dictionary revisions with a classic incremental xref.</summary>
+    /// <summary>Writes each active object and encoded stream once with corrected dictionaries and a classic xref.</summary>
     /// <param name="source">The complete generated spool.</param>
     /// <param name="output">The caller-owned destination.</param>
     /// <param name="pages">Exact page dimensions and resolved links.</param>
@@ -129,9 +129,10 @@ internal static class GeneratedPdfFinalizer
         {
             var entries = new Dictionary<string, PdfValue>(((PdfMap)image.Value).Entries, StringComparer.Ordinal) { ["/Interpolate"] = new PdfLiteral("true") };
 
-            // Incremental syntax requires repeating the image's encoded stream in its new
-            // revision. Copy those bytes exactly; never decode, recompress or resample them.
-            revisions.Add(image.Reference, (new PdfMap(entries), image));
+            if (((PdfMap)image.Value).Get("/Interpolate") is not PdfLiteral { Value: "true" })
+            {
+                revisions.Add(image.Reference, (new PdfMap(entries), image));
+            }
         }
 
         long written = 0;
@@ -143,26 +144,24 @@ internal static class GeneratedPdfFinalizer
             written += bytes.Length;
         }
 
-        source.Position = 0;
+        // Retain object identities and all active streams, but discard obsolete revisions.
+        // The parser records stream ranges only; no payload is decoded or gathered in memory.
+        WriteText(pdf.Header + "\n%\u00e2\u00e3\u00cf\u00d3\n");
         var buffer = new byte[81920];
-        int read;
-        while ((read = source.Read(buffer, 0, buffer.Length)) > 0)
+        var offsets = new List<(PdfReference Reference, long Offset)>();
+        var references = pdf.References.Concat(revisions.Keys).Distinct().OrderBy(reference => reference.Number);
+        foreach (var reference in references)
         {
             token.ThrowIfCancellationRequested();
-            output.Write(buffer, 0, read);
-            written += read;
-        }
-
-        WriteText("\n");
-        var offsets = new List<(PdfReference Reference, long Offset)>();
-        foreach (var revision in revisions.OrderBy(entry => entry.Key.Number))
-        {
-            offsets.Add((revision.Key, written));
-            WriteText(revision.Key.Number.ToString(CultureInfo.InvariantCulture) + " " + revision.Key.Generation.ToString(CultureInfo.InvariantCulture) + " obj\n" + revision.Value.Value.Serialize() + "\n");
-            if (revision.Value.Stream is { } stream)
+            var original = reference.Number < pdf.Size ? pdf.Read(reference) : null;
+            var value = revisions.TryGetValue(reference, out var revision) ? revision.Value : original!.Value;
+            var stream = revision.Stream ?? original;
+            offsets.Add((reference, written));
+            WriteText(reference.Number.ToString(CultureInfo.InvariantCulture) + " " + reference.Generation.ToString(CultureInfo.InvariantCulture) + " obj\n" + value.Serialize() + "\n");
+            if (stream is { StreamOffset: > 0 })
             {
                 WriteText("stream\n");
-                pdf.CopyStream(stream, output, token);
+                pdf.CopyStream(stream, output, token, buffer);
                 written += stream.StreamLength;
                 WriteText("\nendstream\n");
             }
@@ -171,7 +170,7 @@ internal static class GeneratedPdfFinalizer
         }
 
         var xref = written;
-        WriteText("xref\n");
+        WriteText("xref\n0 1\n0000000000 65535 f \n");
         foreach (var item in offsets)
         {
             if (item.Offset > 9999999999)
@@ -185,8 +184,8 @@ internal static class GeneratedPdfFinalizer
         var trailer = new Dictionary<string, PdfValue>(pdf.Trailer.Entries, StringComparer.Ordinal)
         {
             ["/Size"] = new PdfNumber(next),
-            ["/Prev"] = new PdfNumber(pdf.StartXref),
         };
+        trailer.Remove("/Prev");
         WriteText("trailer\n" + new PdfMap(trailer).Serialize() + "\nstartxref\n" + xref.ToString(CultureInfo.InvariantCulture) + "\n%%EOF\n");
         Rendering.ConversionMetrics.Report("pdfSave", 1);
     }

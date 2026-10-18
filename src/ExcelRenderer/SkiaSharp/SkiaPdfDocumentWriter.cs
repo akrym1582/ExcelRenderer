@@ -34,7 +34,7 @@ internal sealed class SkiaPdfDocumentWriter : IPdfDocumentWriter
         document.BeforeFinalize = source => PdfRenderObserver.NativePdf?.Invoke(source);
         _token = token;
         _fonts = new(token, fullEmbed);
-        _drawing = new(false, fonts, _fonts);
+        _drawing = new(false, fonts, _fonts, token);
     }
 
     /// <inheritdoc/>

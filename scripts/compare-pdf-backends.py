@@ -72,7 +72,7 @@ def main():
             if native_evidence is not None:
                 page_record["nativePrecisionEvidence"] = native_evidence
                 if not native_evidence["passed"]:
-                    fail(page_number, "native-preservation", "native-preservation", native_evidence, "Native B/C content or raw C prefix changed")
+                    fail(page_number, "native-preservation", "native-preservation", native_evidence, "Native B/C content, encoded streams or object identities changed")
             page_record["sourceFontEvidence"] = {"reference": verify_outlines(lp), "skiasharp": verify_outlines(rp)}
             if name == "images":
                 page_record["cropEvidence"] = image_crop_evidence(rp)

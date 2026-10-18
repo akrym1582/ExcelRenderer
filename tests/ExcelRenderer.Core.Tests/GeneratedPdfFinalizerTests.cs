@@ -15,7 +15,7 @@ public sealed class GeneratedPdfFinalizerTests
     [InlineData("\r", false)]
     [InlineData("\n", true)]
     [InlineData("\r\n", true)]
-    public void Incremental_update_preserves_original_bytes_streams_generations_and_metadata(string newline, bool escapedNames)
+    public void Structural_save_preserves_streams_generations_and_metadata(string newline, bool escapedNames)
     {
         var sourceBytes = Fixture(newline, escapedNames);
         using var source = new MemoryStream(sourceBytes);
@@ -23,7 +23,8 @@ public sealed class GeneratedPdfFinalizerTests
         GeneratedPdfFinalizer.Write(source, output, [new(100.123, 99.456,
             [new(new(10, 20, 30, 10), "https://example.com?q=日本", null, null, null, "説明\n"),
              new(new(50, 20, 30, 10), null, 1, 12, 34, null)])], default);
-        Assert.Equal(sourceBytes, output.ToArray().Take(sourceBytes.Length));
+        Assert.NotEqual(sourceBytes, output.ToArray());
+        Assert.DoesNotContain("/Prev", Encoding.Latin1.GetString(output.ToArray()));
         var updated = new GeneratedPdfFile(new MemoryStream(output.ToArray()));
         Assert.Equal(new PdfReference(3, 2), Assert.Single(updated.Pages));
         Assert.Equal(9, updated.Size);

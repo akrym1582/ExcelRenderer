@@ -13,15 +13,20 @@ internal sealed class SkiaDrawingContext
 {
     private readonly SkiaTextPainter _textPainter;
     private readonly SkiaPdfFonts? _pdfFonts;
+    private readonly bool textAsPaths;
+    private readonly CancellationToken cancellationToken;
 
     /// <summary>Initializes a new instance of the <see cref="SkiaDrawingContext"/> class. PNG または SVG の描画先へコマンドを実行するコンテキストを初期化します。</summary>
     /// <param name="textAsPaths">true の場合は文字をパスとして描画します。</param>
     /// <param name="pdfFonts">Optional document-scoped PDF Unicode and font resources.</param>
+    /// <param name="cancellationToken">The rendering cancellation token.</param>
     /// <param name="fontManager">文字の描画に使用するフォントを解決するマネージャーです。指定しない場合は Skia のシステムフォント選択を使用します。</param>
-    internal SkiaDrawingContext(bool textAsPaths, IFontManager? fontManager = null, SkiaPdfFonts? pdfFonts = null)
+    internal SkiaDrawingContext(bool textAsPaths, IFontManager? fontManager = null, SkiaPdfFonts? pdfFonts = null, CancellationToken cancellationToken = default)
     {
         _textPainter = new(textAsPaths, fontManager, pdfFonts: pdfFonts);
         _pdfFonts = pdfFonts;
+        this.textAsPaths = textAsPaths;
+        this.cancellationToken = cancellationToken;
     }
 
     /// <summary>Gets or sets the optional PDF page diagnostic callback.</summary>
@@ -173,19 +178,18 @@ internal sealed class SkiaDrawingContext
     private void DrawImage(SKCanvas canvas, DrawImageCommand command)
     {
         using var ownedResources = ImageResources.Current is null ? new ImageResources() : null;
-        using var lease = ImageResources.Current!.Acquire(command.ImageBytes, () =>
-        {
-            var decoded = Core.Rendering.ImageDecoder.Decode(command.ImageBytes);
-            return (decoded, decoded is null ? 0 : Math.Max((long)decoded.Width * 4, decoded.Info.RowBytes) * decoded.Height);
-        });
-        var image = lease?.Value;
+        cancellationToken.ThrowIfCancellationRequested();
+        using var lease = ImageResources.Current!.AcquireImage(command.ImageBytes, out var failure);
+        cancellationToken.ThrowIfCancellationRequested();
+        _pdfFonts?.CheckCancellation();
+        var image = _pdfFonts is not null ? lease?.Value.PdfImage : textAsPaths ? lease?.Value.SvgImage : lease?.Value.Raster;
         if (image is null)
         {
             if (DiagnosticHandler is { } diagnostic)
             {
                 var warning = CoreIntegration.CoreDiagnosticAdapter.ToPublic(Core.Pdf.CorePdfRenderer.CreateImageFailureDiagnostic(
                     (Core.Drawing.DrawImageCommand)CoreIntegration.CoreCommandAdapter.ToCore(command),
-                    Core.Rendering.ImageDecoder.DescribeFailure(command.ImageBytes)));
+                    failure!));
                 System.Diagnostics.Trace.TraceWarning("{0}: {1}", warning.Code, warning.Message);
                 diagnostic(warning);
             }
@@ -213,10 +217,15 @@ internal sealed class SkiaDrawingContext
             command.FlipVertical ? -1 : 1,
             destination.MidX,
             destination.MidY);
-        var sampling = _pdfFonts is null
-            ? new SKSamplingOptions(SKCubicResampler.Mitchell)
-            : new SKSamplingOptions(SKFilterMode.Linear);
-        canvas.DrawImage(image, source, destination, sampling);
+        if (_pdfFonts is not null)
+        {
+            Core.Pdf.SkiaDrawingPrimitives.DrawPdfImage(canvas, image, source, destination);
+        }
+        else
+        {
+            canvas.DrawImage(image, source, destination, new SKSamplingOptions(SKCubicResampler.Mitchell));
+        }
+
         canvas.Restore();
     }
 

@@ -37,5 +37,6 @@
     <Compile Include="../Shared/PdfTestFile.cs" Link="Fixtures/PdfTestFile.cs" />
     <Compile Include="../Shared/PdfTestContent.cs" Link="Fixtures/PdfTestContent.cs" />
     <Compile Include="../Shared/SdkWorkbook.cs" Link="Fixtures/SdkWorkbook.cs" />
+    <Compile Include="../Shared/ImageReviewFixture.cs" Link="Fixtures/ImageReviewFixture.cs" />
   </ItemGroup>
 </Project>

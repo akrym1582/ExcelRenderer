@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 namespace ExcelRenderer.Core.Rendering;
 
 /// <summary>Conversion-owned native image resources, bounded by decoded pixel estimates.</summary>
@@ -11,6 +13,8 @@ internal sealed class ImageResources : IDisposable
     private readonly Dictionary<(byte[] Bytes, Type Kind), Entry> entries = new();
     private readonly LinkedList<Entry> lru = new();
     private long estimatedBytes;
+    private ConditionalWeakTable<byte[], DecodeFailure> failures = new();
+    private int failureCount;
 
     /// <summary>Initializes a new instance of the <see cref="ImageResources"/> class.</summary>
     /// <param name="limit">The limit used by this operation.</param>
@@ -39,7 +43,43 @@ internal sealed class ImageResources : IDisposable
         entries.Clear();
         lru.Clear();
         estimatedBytes = 0;
+        failures = new();
+        failureCount = 0;
         CurrentSlot.Value = previous;
+    }
+
+    /// <summary>Shares one complete pixel decode and its actual failure across drawing passes.</summary>
+    /// <param name="bytes">The borrowed encoded image.</param>
+    /// <param name="failure">The original failure. Callers still report each location.</param>
+    /// <returns>A bounded lease of the validated raster/vector representations.</returns>
+    internal Lease<DecodedImage>? AcquireImage(byte[] bytes, out string? failure)
+    {
+        if (failures.TryGetValue(bytes, out var cached))
+        {
+            failure = cached.Reason;
+            return null;
+        }
+
+        string? reason = null;
+        var lease = Acquire(bytes, () =>
+        {
+            var image = ImageDecoder.Decode(bytes, out reason);
+            return (image, image?.EstimatedBytes ?? 0);
+        });
+        failure = reason;
+        if (lease is null)
+        {
+            if (failureCount >= 512)
+            {
+                failures = new();
+                failureCount = 0;
+            }
+
+            failures.Add(bytes, new(reason ?? "Image decoder returned no pixels."));
+            failureCount++;
+        }
+
+        return lease;
     }
 
     /// <summary>Acquires a lease from the bounded native image cache.</summary>
@@ -64,7 +104,7 @@ internal sealed class ImageResources : IDisposable
         var (value, size) = create();
         if (value is null)
         {
-            // Do not cache failures: each occurrence retains the existing diagnostic behavior.
+            // The image-specific wrapper caches only reasons; each caller reports its own location.
             return null;
         }
 
@@ -132,6 +172,8 @@ internal sealed class ImageResources : IDisposable
         /// <inheritdoc/>
         public void Dispose() => Interlocked.Exchange(ref release, null)?.Invoke();
     }
+
+    private sealed record DecodeFailure(string Reason);
 
     private sealed class Entry
     {

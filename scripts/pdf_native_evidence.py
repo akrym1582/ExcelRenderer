@@ -62,11 +62,24 @@ def evidence(directory):
     expected_hash = manifest['files'][directory.name + '/skiasharp.pdf']
     if hashlib.sha256(baseline.read_bytes()).hexdigest() != expected_hash:
         errors.append('Frozen B PDF differs from its recorded hash')
-    raw_bytes = raw_path.read_bytes()
-    with current.open('rb') as stream:
-        if stream.read(len(raw_bytes)) != raw_bytes:
-            errors.append('Incremental output did not preserve the complete original native byte prefix')
     old, new, raw = fitz.open(baseline), fitz.open(current), fitz.open(raw_path)
+    # A single-revision structural save replaces the original native-prefix contract.
+    # Preserve every encoded stream at its original object identity, exactly once.
+    raw_streams = {xref: hashlib.sha256(raw.xref_stream_raw(xref)).hexdigest()
+                   for xref in range(1, raw.xref_length()) if raw.xref_is_stream(xref)}
+    new_streams = {xref: hashlib.sha256(new.xref_stream_raw(xref)).hexdigest()
+                   for xref in range(1, new.xref_length()) if new.xref_is_stream(xref)}
+    if raw_streams != new_streams:
+        errors.append('Structural save changed encoded streams or their object identities')
+    final_bytes = current.read_bytes()
+    payload_counts = []
+    for xref in raw_streams:
+        payload = raw.xref_stream_raw(xref)
+        if len(payload) > 65536 and raw.xref_get_key(xref, 'Subtype')[1] == '/Image':
+            count = final_bytes.count(payload)
+            payload_counts.append({'xref': xref, 'sha256': raw_streams[xref], 'occurrences': count})
+            if count != 1:
+                errors.append(f'Image {xref}: encoded payload occurs {count} times in output bytes')
     if len(old) != len(new) or len(raw) != len(new):
         errors.append('Page count changed')
     content_hashes = []
@@ -106,9 +119,9 @@ def evidence(directory):
             for key in ('CA', 'ca', 'LW', 'ML'):
                 metadata_difference(old.xref_get_key(states[0][name], key)[1], new.xref_get_key(states[1][name], key)[1], f'{name}/{key}', changes, errors)
     if resource_digests(raw) != resource_digests(new):
-        errors.append('Incremental correction changed encoded font or image streams')
+        errors.append('Structural correction changed encoded font or image streams')
     if resource_digests(old) != resource_digests(new):
         errors.append('Frozen B and C font/image resource streams differ')
-    return {'passed': not errors, 'errors': errors, 'originalNativePrefixPreserved': not any('prefix' in error for error in errors),
+    return {'passed': not errors, 'errors': errors, 'encodedStreamsPreserved': raw_streams == new_streams, 'imagePayloadOccurrences': payload_counts,
             'contentHashes': content_hashes, 'numericMetadataDifferences': changes,
             'maxMetadataDelta': max((row['maxDelta'] for row in changes), default=0)}

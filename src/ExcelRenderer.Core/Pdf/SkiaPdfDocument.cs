@@ -70,7 +70,7 @@ internal sealed class SkiaPdfDocument : IDisposable
         pages.Add(page);
     }
 
-    /// <summary>Closes native output and appends the shared structural corrections.</summary>
+    /// <summary>Closes native output and writes each corrected object and encoded stream once.</summary>
     /// <param name="output">The caller-owned destination.</param>
     internal void Complete(Stream output)
     {

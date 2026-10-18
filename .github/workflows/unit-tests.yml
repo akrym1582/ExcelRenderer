@@ -82,6 +82,9 @@ jobs:
       - name: Compare frozen Core output independently
         run: python scripts/compare-core-removal-baselines.py
 
+      - name: Validate image payload storage and corrected appearance
+        run: python scripts/validate-image-review.py
+
       - name: Verify independent font format extraction
         run: |
           python - <<'PY'
@@ -118,6 +121,7 @@ jobs:
             TestResults/Mutations/**
             tests/ExcelRenderer.Tests/bin/Release/net10.0/SampleOutputs/**
             artifacts/pdf-comparison/**
+            artifacts/pr90-image-review/independent.json
           if-no-files-found: warn
           retention-days: 14
 

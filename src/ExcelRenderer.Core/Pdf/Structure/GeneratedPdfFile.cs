@@ -26,7 +26,8 @@ internal sealed class GeneratedPdfFile
         input.Position = 0;
         var header = new byte[8];
         ReadExactly(input, header);
-        if (!Encoding.ASCII.GetString(header).StartsWith("%PDF-1.", StringComparison.Ordinal))
+        Header = Encoding.ASCII.GetString(header);
+        if (!Header.StartsWith("%PDF-1.", StringComparison.Ordinal))
         {
             throw new InvalidDataException("Unexpected generated PDF header.");
         }
@@ -117,6 +118,9 @@ internal sealed class GeneratedPdfFile
         WalkPages(root.Get("/Pages"), new HashSet<int>(), pages);
         Pages = pages;
     }
+
+    /// <summary>Gets the original generated PDF version header.</summary>
+    internal string Header { get; }
 
     /// <summary>Gets the newest xref byte offset.</summary>
     internal long StartXref { get; }
@@ -213,15 +217,21 @@ internal sealed class GeneratedPdfFile
         }
     }
 
-    /// <summary>Copies an existing stream byte-for-byte into an incremental object revision.</summary>
+    /// <summary>Copies an existing stream byte-for-byte into its single output object.</summary>
     /// <param name="record">The original object.</param>
     /// <param name="output">The destination.</param>
     /// <param name="token">The cancellation token.</param>
-    internal void CopyStream(ObjectRecord record, Stream output, CancellationToken token)
+    /// <param name="buffer">An optional shared transfer buffer.</param>
+    internal void CopyStream(ObjectRecord record, Stream output, CancellationToken token, byte[]? buffer = null)
     {
         input.Position = record.StreamOffset;
         var remaining = record.StreamLength;
-        var buffer = new byte[81920];
+        buffer ??= new byte[81920];
+        if (buffer.Length == 0)
+        {
+            throw new ArgumentException("A nonempty transfer buffer is required.", nameof(buffer));
+        }
+
         while (remaining > 0)
         {
             token.ThrowIfCancellationRequested();

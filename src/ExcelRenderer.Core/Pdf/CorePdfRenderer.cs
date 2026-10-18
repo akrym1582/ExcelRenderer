@@ -133,14 +133,11 @@ internal sealed class CorePdfRenderer : IDisposable
     private void DrawImage(SKCanvas canvas, DrawImageCommand command)
     {
         using var ownedResources = ImageResources.Current is null ? new ImageResources() : null;
-        using var lease = ImageResources.Current!.Acquire<SKImage>(command.ImageBytes, () =>
+        using var lease = ImageResources.Current!.AcquireImage(command.ImageBytes, out var failure);
+        token.ThrowIfCancellationRequested();
+        if (lease?.Value.PdfImage is not { } decoded)
         {
-            var image = ImageDecoder.Decode(command.ImageBytes);
-            return (image, image is null ? 0 : (long)image.Width * image.Height * 4);
-        });
-        if (lease?.Value is not { } decoded)
-        {
-            var diagnostic = CreateImageFailureDiagnostic(command, ImageDecoder.DescribeFailure(command.ImageBytes));
+            var diagnostic = CreateImageFailureDiagnostic(command, failure!);
             Trace.TraceWarning("{0}: {1}", diagnostic.Code, diagnostic.Message);
             DiagnosticHandler?.Invoke(diagnostic);
             PageDiagnosticHandler?.Invoke(diagnostic);
@@ -148,6 +145,6 @@ internal sealed class CorePdfRenderer : IDisposable
         }
 
         var b = command.Bounds;
-        canvas.DrawImage(decoded, new SKRect((float)b.X, (float)b.Y, (float)(b.X + b.Width), (float)(b.Y + b.Height)), new SKSamplingOptions(SKFilterMode.Linear));
+        SkiaDrawingPrimitives.DrawPdfImage(canvas, decoded, new(0, 0, decoded.Width, decoded.Height), new((float)b.X, (float)b.Y, (float)(b.X + b.Width), (float)(b.Y + b.Height)));
     }
 }

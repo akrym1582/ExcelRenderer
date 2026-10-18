@@ -18,7 +18,6 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
-      - run: python scripts/build-harfbuzz-subset.py
       - name: Restore all projects for the dependency audit
         run: dotnet restore ExcelRenderer.slnx --locked-mode
       - name: Rebuild all projects, including samples and audit tools

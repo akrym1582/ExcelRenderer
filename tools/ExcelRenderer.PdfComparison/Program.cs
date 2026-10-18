@@ -10,6 +10,12 @@ using ExcelRenderer.Pdf;
 using ExcelRenderer.Rendering;
 using ExcelRenderer.SkiaSharp;
 
+if (args.Length == 2 && args[0] == "--managed-fonts")
+{
+    ExcelRenderer.PdfComparison.ManagedFontEvidence.Run(args[1]);
+    return;
+}
+
 if (args.Length == 3 && args[0] == "--api-diff")
 {
     ExcelRenderer.PdfComparison.ApiSurfaceAudit.Compare(args[1], args[2]);

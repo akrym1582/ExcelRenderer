@@ -1,5 +1,9 @@
 # PR #90 image decode and PDF storage fixes
 
+> Historical validation for the commit recorded below, using the former native subset adapter.
+> Current builds use [managed TrueType subsetting](managed-truetype-subset.md);
+> the old adapter build steps and results below do not establish current validation.
+
 This report records the 2026-10-18 review follow-up to
 `fdeff40890f7927ed5239b285e9853026dec3728` on `feature/remove-pdfsharp`.
 Earlier [removal validation](pdfsharp-removal-validation.md) and

@@ -65,12 +65,11 @@ variants are parse errors. Explicit backend options on PNG/SVG/Markdown remain p
 
 ## Runtime and ownership
 
-- Main/Core PDF require the pinned HarfBuzz subset adapter and SkiaSharp native assets.
-  Source builds run `python scripts/build-harfbuzz-subset.py` before build/pack.
+- Main/Core PDF require SkiaSharp native assets. Static TrueType subsets and TTC face extraction use Core C#; see [supported formats](managed-truetype-subset.md).
   Published applications need no Python, PDF reader, Ghostscript, Node or server.
-- Missing subset assets fail with a concrete diagnostic and abort the artifact. They
+- Unsupported PDF fonts or subset failures report a concrete diagnostic and abort the artifact. They
   do not select another engine or embed complete outline fonts. PNG/SVG/Markdown
-  do not invoke the PDF subset adapter.
+  do not invoke the PDF outline subsetter.
 - Independent public `SkiaTextMeasurer` calls own/restore native scopes and serialize
   access to their own manager/cache. Conversion-local instances and a supplied Skia service invoked by its conversion borrow that scope. Independent PdfRenderer calls always own/restore a separate session, including calls that inherit another session through ExecutionContext.
   There is no process-wide conversion lock. Conversion-local caches are limited to

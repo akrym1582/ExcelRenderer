@@ -7,6 +7,9 @@ namespace ExcelRenderer.Fonts;
 /// <param name="FilePath">フォントデータを格納するファイルのパスです。</param>
 public sealed record ResolvedFont(string Family, int Weight, bool Italic, string FilePath)
 {
+    /// <summary>Gets the zero-based collection face index; standalone fonts require zero.</summary>
+    public int FontCollectionIndex { get; init; }
+
     /// <summary>Gets a stable identifier for the selected font data. 選択されたフォントデータを識別する安定した ID を取得します。</summary>
     public string FaceId { get; init; } = FilePath;
 
@@ -15,6 +18,15 @@ public sealed record ResolvedFont(string Family, int Weight, bool Italic, string
 
     /// <summary>Gets the font bytes when the face is supplied from memory. メモリから供給された書体のフォントデータを取得します。ファイル由来の場合は <see langword="null"/> です。</summary>
     public byte[]? FontData { get; init; }
+
+    /// <summary>Gets a value indicating whether FontData has already been normalized internally.</summary>
+    internal bool FontDataIsStandalone => ReferenceEquals(FontData, StandaloneData) && FontCollectionIndex == StandaloneCollectionIndex;
+
+    /// <summary>Gets the exact internally normalized data reference.</summary>
+    internal byte[]? StandaloneData { get; init; }
+
+    /// <summary>Gets the source index associated with the normalized data reference.</summary>
+    internal int StandaloneCollectionIndex { get; init; }
 
     /// <summary>Gets the internal immutable snapshot used by finalized layouts, without exposing its bytes to callers.</summary>
     internal byte[]? SnapshotData { get; init; }

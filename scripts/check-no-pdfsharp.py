@@ -17,8 +17,8 @@ ALLOWED_LINES = {
     ".github/workflows/unit-tests.yml": {
         'run: python scripts/check-no-pdfsharp.py --packages artifacts/formulas-packages',
         'run: python scripts/check-no-pdfsharp-mutations.py'},
-    ".github/workflows/pdf-native-build.yml": {
-        '- run: python scripts/check-no-pdfsharp.py --packages artifacts/pdf-native-packages --publish artifacts/pdf-native-publish'},
+    ".github/workflows/pdf-build-distribution.yml": {
+        '- run: python scripts/check-no-pdfsharp.py --packages artifacts/pdf-packages --publish artifacts/pdf-publish'},
     ".github/workflows/verify-font-split.yml": {
         '- run: python scripts/check-no-pdfsharp.py --packages artifacts/packages'},
     "src/ExcelRenderer/PdfBackend.cs": {

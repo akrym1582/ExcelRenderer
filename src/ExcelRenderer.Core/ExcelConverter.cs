@@ -44,10 +44,15 @@ public static class ExcelConverter
             throw new ArgumentException("FontFilePath and Input are required.", nameof(options));
         }
 
+        if (options.FontCollectionIndex < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(options), "FontCollectionIndex must be nonnegative.");
+        }
+
         (options.ReadOptions ?? throw new ArgumentException("ReadOptions is required.", nameof(options))).Validate();
         cancellationToken.ThrowIfCancellationRequested();
         using var prepared = await WorkbookInputPreparer.ReadAsync(xlsx, options.Input, cancellationToken).ConfigureAwait(false);
-        using var font = new SingleFontContext(options.FontFilePath);
+        using var font = new SingleFontContext(options.FontFilePath, options.FontCollectionIndex, cancellationToken);
         var diagnostics = new DiagnosticCollector();
         var reader = new CoreExcelReader(font);
         var report = reader.Read(prepared, diagnostics, options.SheetName is null ? null : new[] { options.SheetName }, cancellationToken, options.ReadOptions);

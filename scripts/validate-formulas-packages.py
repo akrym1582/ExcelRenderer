@@ -127,6 +127,43 @@ using var mappedReader = ExcelRenderer.OpenXml.Reading.OpenXmlWorkbookReader.Ope
 if (mappedReader.EnumerateCells(1).Single(c => c.Address.Column == 3).Value.Number != 413)
     throw new Exception("Combined package failure");
 """)
+# Exercise Japanese/IVS/color and a nonzero TTC face from package assemblies only.
+programs['managed-fonts'] = (['ExcelRenderer', 'ExcelRenderer.Fonts'], fixture + '''
+_ = typeof(ExcelRenderer.Fonts.FontPack);
+using (var doc = DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Open(input, true)) {
+    var cell = doc.WorkbookPart!.WorksheetParts.First().Worksheet.Descendants<DocumentFormat.OpenXml.Spreadsheet.Cell>().First();
+    cell.RemoveAllChildren();
+    cell.DataType = DocumentFormat.OpenXml.Spreadsheet.CellValues.InlineString;
+    cell.InlineString = new(new DocumentFormat.OpenXml.Spreadsheet.Text("日本語 辻󠄂辻󠄃葛󠄂 😀"));
+}
+input.Position = 0;
+using (var pdf = new MemoryStream()) {
+    await ExcelRenderer.ExcelConverter.RenderAsync(input, new() {
+        OutputFormat = ExcelRenderer.Rendering.OutputFormat.Pdf,
+        FontOptions = new() { AllowSystemFonts = false, IvsFontStyle = ExcelRenderer.Fonts.IvsFontStyle.Mincho }
+    }, new ExcelRenderer.Rendering.SingleStreamOutputSink(pdf));
+    File.WriteAllBytes("japanese-ivs-color.pdf", pdf.ToArray());
+}
+using (var doc = DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Open(input, true)) {
+    var cell = doc.WorkbookPart!.WorksheetParts.First().Worksheet.Descendants<DocumentFormat.OpenXml.Spreadsheet.Cell>().First();
+    cell.InlineString = new(new DocumentFormat.OpenXml.Spreadsheet.Text("A B"));
+}
+input.Position = 0;
+using (var pdf = new MemoryStream()) {
+    await ExcelRenderer.ExcelConverter.RenderAsync(input, new() {
+        OutputFormat = ExcelRenderer.Rendering.OutputFormat.Pdf,
+        FontOptions = new() { AllowSystemFonts = false, UseFontPack = false,
+            FontFiles = new[] { args[2] }, FontFileCollectionIndex = 1,
+            FallbackFamilies = new[] { "PDF Format Fixture" } }
+    }, new ExcelRenderer.Rendering.SingleStreamOutputSink(pdf));
+    File.WriteAllBytes("collection-face-1.pdf", pdf.ToArray());
+}
+input.Position = 0;
+using (var pdf = new MemoryStream()) {
+    await ExcelRenderer.Core.ExcelConverter.ConvertAsync(input, pdf, new() { FontFilePath = args[2], FontCollectionIndex = 1 });
+    File.WriteAllBytes("core-collection-face-1.pdf", pdf.ToArray());
+}
+''')
 # Keep the documented low-level sample executable against each supported package
 # choice, rather than relying only on source-project references.
 namespace_sample = (root / 'samples/namespace-migration/Program.cs').read_text()
@@ -141,7 +178,7 @@ for name,(refs,code) in programs.items():
     (directory/'consumer.csproj').write_text(f'<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable></PropertyGroup><ItemGroup>{references}</ItemGroup></Project>')
     (directory/'Program.cs').write_text(code+'\nConsole.WriteLine("'+name+' passed");\n')
     run('dotnet','restore','--configfile',config,cwd=directory)
-    arguments = [] if name.startswith('namespace-') else [fixture_path, font]
+    arguments = [] if name.startswith('namespace-') else [fixture_path, font, root / 'tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc']
     run('dotnet','run','-c','Release','--no-restore','--',*arguments,cwd=directory)
     audit_consumer(directory)
     # Every consumer copied all native RIDs (including large debug symbols).
@@ -164,32 +201,17 @@ for command in ('pdf', 'render'):
     run(tool_command, command, fixture_path, '-o', destination, '--pdf-backend', 'skiasharp', *extra)
     assert destination.read_bytes().startswith(b'%PDF')
 
-# The adapter must be a real packaged runtime dependency, with a concrete failure
-# when absent. Removing it from this disposable installation cannot affect repo/bin.
-native_name = 'ExcelRenderer.HarfBuzzSubset.dll' if os.name == 'nt' else ('libExcelRenderer.HarfBuzzSubset.dylib' if sys.platform == 'darwin' else 'libExcelRenderer.HarfBuzzSubset.so')
-native_assets = list(tool.rglob(native_name))
-assert len(native_assets) == 1, native_assets
-native_asset = native_assets[0]
-backup = native_asset.with_suffix(native_asset.suffix + '.test-backup')
-native_asset.rename(backup)
-try:
-    missing_output = work / 'cli-missing-subset.pdf'
-    missing_output.unlink(missing_ok=True)
-    missing = subprocess.run([str(tool_command), 'pdf', str(fixture_path), '-o', str(missing_output), '--pdf-backend', 'skiasharp'], env=env, text=True, capture_output=True)
-    assert missing.returncode != 0 and 'HarfBuzzSubset' in missing.stderr, (missing.returncode, missing.stderr)
-    assert not missing_output.exists(), 'Failed native conversion left a completed file'
-    default_output = work / 'cli-default-without-subset.pdf'
-    default_output.unlink(missing_ok=True)
-    missing_default = subprocess.run([str(tool_command), 'pdf', str(fixture_path), '-o', str(default_output)], env=env, text=True, capture_output=True)
-    assert missing_default.returncode != 0 and 'HarfBuzzSubset' in missing_default.stderr
-    assert not default_output.exists()
-    markdown_without_native = work / 'cli-markdown-without-subset.md'
-    markdown_without_native.unlink(missing_ok=True)
-    run(tool_command, 'md', fixture_path, '-o', markdown_without_native)
-    assert markdown_without_native.exists()
-finally:
-    backup.rename(native_asset)
+# The custom native subset adapter is absent; default PDF must still succeed.
+assert not list(tool.rglob('*HarfBuzzSubset*'))
+default_output = work / 'cli-default-without-subset.pdf'
+default_output.unlink(missing_ok=True)
 run(tool_command, 'pdf', fixture_path, '-o', default_output)
 assert default_output.read_bytes().startswith(b'%PDF')
 audit_consumer(tool)
-print('Nine isolated package consumers passed (engine, adapter, Mapping, main+Core, combined, three namespace samples, installed CLI)')
+print('Ten isolated package consumers passed (engine, adapter, Mapping, main+Core, combined, managed fonts, three namespace samples, installed CLI)')
+
+collection_output = work / 'cli-collection-face-1.pdf'
+run(tool_command, 'pdf', fixture_path, '-o', collection_output,
+    '--font-file', root / 'tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc',
+    '--font-face-index', '1', '--fallback-font', 'PDF Format Fixture', '--no-system-fonts')
+assert collection_output.read_bytes().startswith(b'%PDF')

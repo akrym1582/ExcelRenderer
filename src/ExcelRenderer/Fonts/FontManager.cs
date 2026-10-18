@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Security.Cryptography;
+using ExcelRenderer.Core.Fonts.TrueType;
 using SkiaSharp;
 
 namespace ExcelRenderer.Fonts;
@@ -11,7 +12,8 @@ public sealed class FontManager : IFontManager
     private readonly Dictionary<(FontRequest Request, string Text), IReadOnlyList<TextRun>> _runs = new();
     private readonly FontOptions _options;
 
-    private readonly Dictionary<(string Path, long Length, long Modified), Lazy<FontSnapshot>> _snapshots = new();
+    private readonly Dictionary<(string Path, long Length, long Modified, int Index), Lazy<FontSnapshot>> _snapshots = new();
+    private readonly Dictionary<(string Path, long Length, long Modified), Lazy<byte[]>> _containers = new();
     private readonly List<FontFace> _faces = [];
     private readonly List<FontFace> _externalFaces = [];
     private readonly Dictionary<FontRequest, ResolvedFont> _cache = new();
@@ -23,9 +25,14 @@ public sealed class FontManager : IFontManager
     public FontManager(FontOptions? options = null)
     {
         _options = options ?? new();
+        if (_options.FontFileCollectionIndex is { } index && (index < 0 || _options.FontFiles.Count != 1))
+        {
+            throw new ArgumentException("FontFileCollectionIndex requires exactly one FontFiles entry and a nonnegative index.", nameof(options));
+        }
+
         foreach (var registration in _options.Registrations)
         {
-            Register(registration.Family, registration.Regular, registration.Bold, registration.Italic, registration.BoldItalic);
+            Register(registration);
         }
 
         for (var i = 0; i < _options.FontFiles.Count; i++)
@@ -50,17 +57,27 @@ public sealed class FontManager : IFontManager
     /// <param name="bold">太字体のフォントファイルパスです。指定しない場合は通常体が候補になります。</param>
     /// <param name="italic">斜体のフォントファイルパスです。指定しない場合は通常体が候補になります。</param>
     /// <param name="boldItalic">太字斜体のフォントファイルパスです。指定しない場合は通常体が候補になります。</param>
-    public void Register(string family, string regular, string? bold = null, string? italic = null, string? boldItalic = null)
+    public void Register(string family, string regular, string? bold = null, string? italic = null, string? boldItalic = null) =>
+        Register(new FontRegistration(family, regular, bold, italic, boldItalic));
+
+    /// <summary>Registers style-specific files and collection face indices.</summary>
+    /// <param name="registration">The family, paths and zero-based collection indices.</param>
+    public void Register(FontRegistration registration)
     {
-        if (string.IsNullOrWhiteSpace(family))
+        if (string.IsNullOrWhiteSpace(registration.Family))
         {
-            throw new ArgumentException("Font family is required.", nameof(family));
+            throw new ArgumentException("Font family is required.", nameof(registration));
         }
 
-        Add(family, 400, false, regular, 0);
-        Add(family, 700, false, bold, 0);
-        Add(family, 400, true, italic, 0);
-        Add(family, 700, true, boldItalic, 0);
+        if (new[] { registration.RegularCollectionIndex, registration.BoldCollectionIndex, registration.ItalicCollectionIndex, registration.BoldItalicCollectionIndex }.Any(index => index < 0))
+        {
+            throw new ArgumentOutOfRangeException(nameof(registration), "Collection face indices must be nonnegative.");
+        }
+
+        Add(registration.Family, 400, false, registration.Regular, 0, registration.RegularCollectionIndex);
+        Add(registration.Family, 700, false, registration.Bold, 0, registration.BoldCollectionIndex);
+        Add(registration.Family, 400, true, registration.Italic, 0, registration.ItalicCollectionIndex);
+        Add(registration.Family, 700, true, registration.BoldItalic, 0, registration.BoldItalicCollectionIndex);
         _cache.Clear();
         _runs.Clear();
         RegistrationGeneration++;
@@ -166,7 +183,7 @@ public sealed class FontManager : IFontManager
         return result;
     }
 
-    private static FontSnapshot LoadSnapshot(string path, long expectedLength, long expectedModified)
+    private static byte[] LoadContainer(string path, long expectedLength, long expectedModified)
     {
         try
         {
@@ -177,7 +194,7 @@ public sealed class FontManager : IFontManager
             }
 
             var bytes = File.ReadAllBytes(path);
-            return Snapshot(bytes);
+            return bytes;
         }
         catch (Exception error) when (error is IOException or UnauthorizedAccessException)
         {
@@ -185,8 +202,9 @@ public sealed class FontManager : IFontManager
         }
     }
 
-    private static FontSnapshot Snapshot(byte[] bytes)
+    private static FontSnapshot Snapshot(byte[] bytes, int collectionIndex = 0)
     {
+        bytes = FontFaceExtractor.Extract(bytes, collectionIndex, ConversionFontResources.Current?.Token ?? default);
         using var stream = new MemoryStream(bytes, writable: false);
         using var face = SKTypeface.FromStream(stream);
         if (face is null)
@@ -234,9 +252,10 @@ public sealed class FontManager : IFontManager
 
     private static bool SupportsUncached(ResolvedFont font, string text)
     {
-        using Stream stream = font.FontData is null
-            ? File.OpenRead(font.FilePath)
-            : new MemoryStream(font.FontData, writable: false);
+        var bytes = font.SnapshotData ?? (font.FontDataIsStandalone
+            ? font.FontData!
+            : FontFaceExtractor.Extract(font.FontData ?? File.ReadAllBytes(font.FilePath), font.FontCollectionIndex));
+        using var stream = new MemoryStream(bytes, writable: false);
         using var typeface = SKTypeface.FromStream(stream);
         return typeface is not null && typeface.GetGlyphs(text).All(glyph => glyph != 0);
     }
@@ -294,6 +313,9 @@ public sealed class FontManager : IFontManager
         {
             FaceId = selected.FaceId,
             FontData = selected.Data,
+            StandaloneData = selected.Data,
+            StandaloneCollectionIndex = selected.CollectionIndex,
+            FontCollectionIndex = selected.CollectionIndex,
             FontStyleApproximated = selected.Weight != request.Weight || selected.Italic != request.Italic,
         };
     }
@@ -372,6 +394,18 @@ public sealed class FontManager : IFontManager
 
     private void AddExternalFile(string path, int order)
     {
+        try
+        {
+            AddExternalFileCore(path, order);
+        }
+        catch (Exception error) when (error is InvalidDataException or NotSupportedException)
+        {
+            throw new ArgumentException($"File is not a supported font: '{path}'. {error.Message}", nameof(_options.FontFiles), error);
+        }
+    }
+
+    private void AddExternalFileCore(string path, int order)
+    {
         if (string.IsNullOrWhiteSpace(path))
         {
             throw new ArgumentException("An explicitly configured font file path cannot be empty.", nameof(_options.FontFiles));
@@ -393,28 +427,26 @@ public sealed class FontManager : IFontManager
             throw new ArgumentException($"Font file could not be read: {fullPath}", nameof(_options.FontFiles), error);
         }
 
-        using var stream = new MemoryStream(bytes, writable: false);
-        using var typeface = SKTypeface.FromStream(stream);
-        if (typeface is null || string.IsNullOrWhiteSpace(typeface.FamilyName))
+        var collection = new FontCollectionReader(bytes, ConversionFontResources.Current?.Token ?? default);
+        using var data = SKData.CreateCopy(bytes);
+        var first = _options.FontFileCollectionIndex ?? 0;
+        var limit = _options.FontFileCollectionIndex is null ? collection.FaceOffsets.Length : first + 1;
+        collection.ReadFace(first);
+        for (var index = first; index < limit; index++)
         {
-            throw new ArgumentException($"File is not a supported TrueType/OpenType font: {fullPath}", nameof(_options.FontFiles));
-        }
+            collection.ReadFace(index, ConversionFontResources.Current?.Token ?? default);
+            using var typeface = SKTypeface.FromData(data, index);
+            if (typeface is null || string.IsNullOrWhiteSpace(typeface.FamilyName))
+            {
+                throw new ArgumentException($"File is not a supported font: {fullPath}, face {index}", nameof(_options.FontFiles));
+            }
 
-        var style = typeface.FontStyle;
-        var face = Add(
-            typeface.FamilyName,
-            style.Weight,
-            style.Slant != SKFontStyleSlant.Upright,
-            fullPath,
-            bytes,
-            false,
-            0,
-            int.MaxValue,
-            null,
-            order);
-        if (!_externalFaces.Any(x => x.FaceId == face.FaceId))
-        {
-            _externalFaces.Add(face);
+            var style = typeface.FontStyle;
+            var face = Add(typeface.FamilyName, style.Weight, style.Slant != SKFontStyleSlant.Upright, fullPath, bytes, false, 0, int.MaxValue, null, order, lazy: true, collectionIndex: index);
+            if (!_externalFaces.Any(candidate => candidate.FilePath == face.FilePath && candidate.CollectionIndex == index))
+            {
+                _externalFaces.Add(face);
+            }
         }
     }
 
@@ -444,24 +476,30 @@ public sealed class FontManager : IFontManager
         }
     }
 
-    private void Add(string family, int weight, bool italic, string? path, int sourcePriority)
+    private void Add(string family, int weight, bool italic, string? path, int sourcePriority, int collectionIndex = 0)
     {
         if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
         {
             return;
         }
 
-        Add(family, weight, italic, Path.GetFullPath(path), null, false, sourcePriority, int.MaxValue, null);
+        Add(family, weight, italic, Path.GetFullPath(path), null, false, sourcePriority, int.MaxValue, null, collectionIndex: collectionIndex);
     }
 
-    private FontFace Add(string family, int weight, bool italic, string path, byte[]? data, bool bundled, int sourcePriority, int ivsPriority, IvsFontStyle? ivsFontStyle, int explicitOrder = int.MaxValue, bool lazy = false)
+    private FontFace Add(string family, int weight, bool italic, string path, byte[]? data, bool bundled, int sourcePriority, int ivsPriority, IvsFontStyle? ivsFontStyle, int explicitOrder = int.MaxValue, bool lazy = false, int collectionIndex = 0)
     {
         var info = bundled ? null : new FileInfo(path);
-        var key = (path, info?.Length ?? data?.LongLength ?? 0, info?.LastWriteTimeUtc.Ticks ?? 0);
+        var key = (path, info?.Length ?? data?.LongLength ?? 0, info?.LastWriteTimeUtc.Ticks ?? 0, collectionIndex);
         if (!_snapshots.TryGetValue(key, out var holder))
         {
-            holder = lazy ? new Lazy<FontSnapshot>(() => LoadSnapshot(path, key.Item2, key.Item3))
-                : new Lazy<FontSnapshot>(() => Snapshot(data ?? File.ReadAllBytes(path)));
+            var containerKey = (key.path, key.Item2, key.Item3);
+            if (!_containers.TryGetValue(containerKey, out var container))
+            {
+                container = new Lazy<byte[]>(() => data ?? LoadContainer(path, key.Item2, key.Item3));
+                _containers.Add(containerKey, container);
+            }
+
+            holder = new Lazy<FontSnapshot>(() => Snapshot(container.Value, collectionIndex));
             _snapshots.Add(key, holder);
         }
 
@@ -481,13 +519,14 @@ public sealed class FontManager : IFontManager
             sourcePriority,
             ivsPriority,
             ivsFontStyle,
-            explicitOrder);
+            explicitOrder,
+            collectionIndex);
         if (_faces.Any(x => x.Family.Equals(candidate.Family, StringComparison.OrdinalIgnoreCase) &&
-            x.Weight == candidate.Weight && x.Italic == candidate.Italic &&
+            x.Weight == candidate.Weight && x.Italic == candidate.Italic && x.CollectionIndex == candidate.CollectionIndex &&
             string.Equals(x.FilePath, candidate.FilePath, StringComparison.OrdinalIgnoreCase)))
         {
             return _faces.First(x => x.Family.Equals(candidate.Family, StringComparison.OrdinalIgnoreCase) &&
-                x.Weight == candidate.Weight && x.Italic == candidate.Italic &&
+                x.Weight == candidate.Weight && x.Italic == candidate.Italic && x.CollectionIndex == candidate.CollectionIndex &&
                 string.Equals(x.FilePath, candidate.FilePath, StringComparison.OrdinalIgnoreCase));
         }
 
@@ -511,33 +550,34 @@ public sealed class FontManager : IFontManager
         foreach (var directory in directories.Where(Directory.Exists).Select(Path.GetFullPath).Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(x => x, StringComparer.Ordinal))
         {
             foreach (var file in Directory.EnumerateFiles(directory, "*.*", SearchOption.AllDirectories)
-                .Where(x => x.EndsWith(".ttf", StringComparison.OrdinalIgnoreCase) || x.EndsWith(".otf", StringComparison.OrdinalIgnoreCase))
+                .Where(x => x.EndsWith(".ttf", StringComparison.OrdinalIgnoreCase) || x.EndsWith(".otf", StringComparison.OrdinalIgnoreCase) || x.EndsWith(".ttc", StringComparison.OrdinalIgnoreCase) || x.EndsWith(".otc", StringComparison.OrdinalIgnoreCase))
                 .OrderBy(x => x, StringComparer.Ordinal))
             {
                 try
                 {
-                    using var typeface = SKTypeface.FromFile(file);
-                    if (typeface is null || string.IsNullOrWhiteSpace(typeface.FamilyName))
+                    var bytes = File.ReadAllBytes(file);
+                    var collection = new FontCollectionReader(bytes, ConversionFontResources.Current?.Token ?? default);
+                    using var data = SKData.CreateCopy(bytes);
+                    for (var index = 0; index < collection.FaceOffsets.Length; index++)
                     {
-                        continue;
-                    }
+                        collection.ReadFace(index, ConversionFontResources.Current?.Token ?? default);
+                        using var typeface = SKTypeface.FromData(data, index);
+                        if (typeface is null || string.IsNullOrWhiteSpace(typeface.FamilyName))
+                        {
+                            continue;
+                        }
 
-                    var style = typeface.FontStyle;
-                    Add(
-                        typeface.FamilyName,
-                        style.Weight,
-                        style.Slant != SKFontStyleSlant.Upright,
-                        Path.GetFullPath(file),
-                        null,
-                        false,
-                        configuredDirectories.Contains(directory) ? 0 : 2,
-                        int.MaxValue,
-                        null,
-                        lazy: true);
+                        var style = typeface.FontStyle;
+                        Add(typeface.FamilyName, style.Weight, style.Slant != SKFontStyleSlant.Upright, Path.GetFullPath(file), null, false, configuredDirectories.Contains(directory) ? 0 : 2, int.MaxValue, null, lazy: true, collectionIndex: index);
+                    }
                 }
                 catch (IOException)
                 {
                     // A file can disappear while an external directory is being scanned.
+                }
+                catch (InvalidDataException)
+                {
+                    // Ignore malformed candidates discovered by directory scanning.
                 }
                 catch (UnauthorizedAccessException)
                 {
@@ -549,12 +589,12 @@ public sealed class FontManager : IFontManager
 
     private sealed record FontSnapshot(byte[] Data, string FaceId);
 
-    private sealed record FontFace(int RegistrationId, string Family, int Weight, bool Italic, string FilePath, Lazy<FontSnapshot> Snapshot, bool IsBundled, int SourcePriority, int IvsPriority, IvsFontStyle? IvsFontStyle, int ExplicitOrder = int.MaxValue)
+    private sealed record FontFace(int RegistrationId, string Family, int Weight, bool Italic, string FilePath, Lazy<FontSnapshot> Snapshot, bool IsBundled, int SourcePriority, int IvsPriority, IvsFontStyle? IvsFontStyle, int ExplicitOrder = int.MaxValue, int CollectionIndex = 0)
     {
         public byte[] Data => Snapshot.Value.Data;
 
         public string FaceId => Snapshot.Value.FaceId;
 
-        public string SortKey => $"{ExplicitOrder:D8}\0{Family}\0{Weight:D4}\0{Italic}\0{FilePath}";
+        public string SortKey => $"{ExplicitOrder:D8}\0{Family}\0{Weight:D4}\0{Italic}\0{FilePath}\0{CollectionIndex:D8}";
     }
 }

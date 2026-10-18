@@ -16,5 +16,4 @@
   <ItemGroup>
     <ProjectReference Include="../ExcelRenderer.OpenXml/ExcelRenderer.OpenXml.csproj" />
   </ItemGroup>
-  <Import Project="../../build/HarfBuzzSubset.targets" />
 </Project>

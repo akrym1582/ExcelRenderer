@@ -2,10 +2,9 @@
 
 The final solution renders only C (new measurement + Skia). A (old measurement + old renderer) and B (old measurement + Skia) are immutable PDFs captured at `71deba48ea4a397641c9ad155bc1c8b3ddf8b5d9` under `tests/Shared/PdfRemovalBaseline`. Normal build/test/CI never restores or executes the removed dependency.
 
-Build the native subset adapter first (CMake and a C++ compiler are required):
+Static TrueType subsetting uses Core C#; SkiaSharp native assets remain required:
 
 ```bash
-python3 scripts/build-harfbuzz-subset.py
 dotnet restore ExcelRenderer.slnx
 python3 scripts/compare-pdf-backends.py --fixture all
 python3 scripts/compare-pdf-backends.py --no-generate --reference B --no-exceptions
@@ -77,3 +76,14 @@ PDFs are excluded from the fixed baseline; the retained PDFs/JSON are about 3.6M
 
 The harness also supports `--api-diff <old-assembly> <new-assembly>` and
 `--audit-assemblies <json-path-list>` using PE metadata without loading old code.
+
+Managed font evidence (three warmups, five samples, subset sfnt files, full/subset
+PDF pairs, metrics and table sizes):
+
+```bash
+dotnet run --project tools/ExcelRenderer.PdfComparison -c Release -- --managed-fonts artifacts/managed-fonts
+python3 scripts/validate-managed-fonts.py --evidence artifacts/managed-fonts
+```
+
+FontTools and independent PDF rasterizers are validation only. Frozen A/B
+artifacts remain historical evidence for their recorded commit.

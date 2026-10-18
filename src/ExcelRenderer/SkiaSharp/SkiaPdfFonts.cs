@@ -16,7 +16,7 @@ internal sealed class SkiaPdfFonts : IDisposable
     /// <param name="fullEmbed">Comparison-only full embedding control.</param>
     internal SkiaPdfFonts(CancellationToken token, bool fullEmbed = false)
     {
-        ownedResources = ConversionFontResources.Current is null ? new ConversionFontResources() : null;
+        ownedResources = ConversionFontResources.Current is null ? new ConversionFontResources(token) : null;
         fonts = new(token, fullEmbed);
         this.token = token;
     }

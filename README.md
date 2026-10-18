@@ -801,10 +801,13 @@ Explicit `--pdf-backend` on non-PDF CLI output is an error. API non-PDF requests
 accept the default `SkiaSharp = 1`; invalid values and obsolete reserved `PdfSharp = 0`
 fail before input/output access. Zero is never reinterpreted as SkiaSharp.
 
-Build the pinned native subset adapter with `python3 scripts/build-harfbuzz-subset.py`
-before building/packing from source. Published runtime assets are required; missing
-assets fail conversion without a full-font fallback. Python/CMake and independent
-PDF readers are build/validation tools, not product runtime requirements.
+PDF outline subsetting is implemented in Core using BCL-only C#. Static TrueType
+sfnt files and selected TrueType faces in TTC/OTC collections are supported,
+including proportional fonts and IVS. Existing COLR v0/v1 and CBDT color emoji
+use Skia's original color drawing route. CFF/CFF2 and variable fonts are rejected
+for PDF, including when color tables are present. SkiaSharp native assets remain
+required; no custom subset adapter, CMake or font download is needed to build/pack.
+See [managed font support and collection indices](docs/managed-truetype-subset.md).
 
 PDF uses a bounded seekable spool, document-shared subsets and an internal structural
 finalizer for boxes (0.001pt precision), RGB page compositing, links/tooltips and image

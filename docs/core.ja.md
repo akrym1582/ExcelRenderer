@@ -60,7 +60,7 @@ font収集と描画の各passで1ページのpayloadだけを生成します。C
 
 フォントは一度の読込によるimmutable snapshotで計測・描画し、ptのadvanceと96dpiの丸めMDWを
 区別します。グローバルresolver/reset/gateはありません。main/Coreの混在並列でもnative資源を
-変換scopeごとに所有します。CoreにもSkiaSharpと固定版HarfBuzz subset adapterが必要です。
+変換scopeごとに所有します。Core にも SkiaSharp native assets が必要です。通常 TrueType の subset・TTC 抽出は C# で実装しています。
 Pythonや外部PDF readerは製品runtimeの要件ではありません。
 
 限定finalizerは用紙box精度0.001pt、RGB page group、画像補間を維持し、元のcontent/font/画像
@@ -88,3 +88,5 @@ Full reader/layout/drawing/PDF adapterが高機能部分を拡張し、本体の
 本体/Coreは同じ共通実装を利用し、資源は変換単位で所有します。本体とCoreは同じbuildから配布してください。[撤去の検証記録](pdfsharp-removal-validation.md)も参照してください。
 
 Core の Reader は `PdfExportOptions.ReadOptions` から選択できます。[エンジン選択](openxml-integration.ja.md)を参照してください。汎用の入力検査・spool は共有 OpenXml 依存に移管しています。
+
+コレクションは `PdfExportOptions.FontCollectionIndex`（0始まり、既定0）で選択します。[形式の詳細](managed-truetype-subset.ja.md)を参照してください。

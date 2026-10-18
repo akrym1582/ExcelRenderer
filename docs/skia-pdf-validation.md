@@ -1,5 +1,9 @@
 # Skia PDF実装・検証記録
 
+> Historical validation for the commit recorded below, using the former native subset adapter.
+> Current builds use [managed TrueType subsetting](managed-truetype-subset.md);
+> the old adapter build steps and results below do not establish current validation.
+
 ## 対象と状態
 
 `feature/skia-pdf-backend`。調査対象と分岐元のorigin/mainは

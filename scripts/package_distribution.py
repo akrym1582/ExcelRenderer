@@ -44,6 +44,7 @@ def check_packages(packages):
     for name in sorted(PUBLISHED):
         with zipfile.ZipFile(packages / f'{name}.{versions[name]}.nupkg') as archive:
             names = archive.namelist()
+            assert not any('harfbuzzsubset' in path.lower() or 'harfbuzz-copying' in path.lower() for path in names), (name, 'Removed native subset artifact in package')
             spec = ET.fromstring(archive.read(next(path for path in names if path.endswith('.nuspec'))))
             dependencies = {node.attrib['id']: node.attrib['version'] for node in spec.iter() if node.tag.rsplit('}', 1)[-1] == 'dependency'}
             assert not INTERNAL.intersection(dependencies), (name, dependencies)

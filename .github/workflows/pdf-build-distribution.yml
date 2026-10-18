@@ -1,0 +1,49 @@
+name: Verify PDF build and distribution
+on:
+  workflow_call:
+permissions:
+  contents: read
+jobs:
+  pdf:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet restore ExcelRenderer.slnx --locked-mode
+      - run: dotnet build ExcelRenderer.slnx -c Release -t:Rebuild --no-restore --verbosity:minimal -m:1
+      - run: dotnet test tests/ExcelRenderer.Core.Tests -c Release --no-build --no-restore
+      - run: dotnet test tests/ExcelRenderer.Tests -c Release --no-build --no-restore --filter "FullyQualifiedName~FontCollectionTests|FullyQualifiedName~PdfBackendTests|FullyQualifiedName~PdfRemovalContractTests|FullyQualifiedName~GlyphAdvanceTests|FullyQualifiedName~RichTextTests|FullyQualifiedName~FontManager_|FullyQualifiedName~ImageReviewTests"
+      - run: dotnet test tests/ExcelRenderer.Tool.Tests -c Release --no-build --no-restore
+      - uses: actions/setup-python@v5
+        if: runner.os == 'Linux'
+        with:
+          python-version: '3.12'
+      - name: Independently validate managed fonts and full/subset PDF pairs
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils fontconfig
+          python -m venv artifacts/font-validation-venv
+          artifacts/font-validation-venv/bin/pip install fonttools==4.61.1 PyMuPDF==1.26.6 numpy==2.3.5
+          source scripts/test-fonts.sh
+          dotnet tools/ExcelRenderer.PdfComparison/bin/Release/net10.0/ExcelRenderer.PdfComparison.dll --managed-fonts artifacts/managed-fonts
+          artifacts/font-validation-venv/bin/python scripts/validate-managed-fonts.py --evidence artifacts/managed-fonts
+      - run: dotnet pack ExcelRenderer.slnx -c Release --no-build --no-restore -m:1 -p:BuildProjectReferences=false -o artifacts/pdf-packages
+      - run: dotnet publish src/ExcelRenderer.Tool -c Release --no-restore -o artifacts/pdf-publish
+      - run: python scripts/check-no-pdfsharp.py --packages artifacts/pdf-packages --publish artifacts/pdf-publish
+      - run: python scripts/package_distribution.py --packages artifacts/pdf-packages --output artifacts/pdf-inventory.json
+      - run: python scripts/validate-formulas-packages.py --packages artifacts/pdf-packages --work "${{ runner.temp }}/pdf-consumers"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-pdf-distribution-${{ runner.os }}
+          path: |
+            artifacts/pdf-*
+            artifacts/managed-fonts/*.json
+          if-no-files-found: error

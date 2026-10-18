@@ -212,7 +212,7 @@ All active project graphs are free of ClosedXML. See the
 ## Shared Skia measurement and PDF output
 
 Core owns `Fonts/SkiaFontFace`, `Fonts/GlyphSequence`, `Layout/TextLineBreaker`,
-`Pdf/PdfFontCollection`, `Pdf/HarfBuzzSubset`, `Pdf/SkiaPdfDocument`,
+`Pdf/PdfFontCollection`, `Fonts/TrueType/TrueTypeSubsetter`, `Fonts/TrueType/FontFaceExtractor`, `Pdf/SkiaPdfDocument`,
 `Pdf/SkiaDrawingPrimitives`, `Pdf/GeneratedPdfFinalizer` and its bounded syntax reader.
 Core's single-font measurer/renderer compose those primitives. They do not reference main/Fonts/Tool.
 

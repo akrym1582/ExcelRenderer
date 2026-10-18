@@ -17,6 +17,9 @@ public sealed class OpenXmlIntegrationTests
         var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../"));
         return Directory.EnumerateFiles(Path.Combine(root, "samples"), "*.xlsx", SearchOption.AllDirectories)
             .Concat(Directory.EnumerateFiles(Path.Combine(root, "tests/ExcelRenderer.Tests/SampleInputs"), "*.xlsx", SearchOption.AllDirectories))
+            // This regression fixture was added after the retained parent baseline;
+            // CellArgbTests verifies it against an opaque workbook and visible pixels.
+            .Where(path => Path.GetFileName(path) != "10-cell-argb.xlsx")
             .Select(path => new object[] { path });
     }
 

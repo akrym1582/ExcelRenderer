@@ -55,9 +55,9 @@ internal static class OpenXmlStyleConverter
         Italic = font.Italic ?? false,
     };
 
-    /// <summary>Reads a resolved RGB color.</summary>
-    /// <param name="element">The source color element.</param>
-    /// <returns>The resolved color, or null for an omitted color.</returns>
+    /// <summary>Reads a SpreadsheetML cell or rich-text style color as opaque, matching Excel.</summary>
+    /// <param name="element">The source SpreadsheetML color element.</param>
+    /// <returns>The opaque resolved color, or null for an omitted color.</returns>
     internal static ReportColor? Color(ElementInfo? element)
     {
         var text = Attribute(element, "baseRgb") ?? Attribute(element, "rgb") ?? Attribute(element, "resolvedRgb");
@@ -68,7 +68,11 @@ internal static class OpenXmlStyleConverter
 
         var rgb = uint.Parse(text, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
         var (red, green, blue) = ColorConverter.ApplyTint((byte)(rgb >> 16), (byte)(rgb >> 8), (byte)rgb, Attribute(element, "theme") is not null ? Number(element, "tint", 0) : 0);
-        return new(red, green, blue, Attribute(element, "resolvedAlpha") is { } alpha ? byte.Parse(alpha, CultureInfo.InvariantCulture) : text.Length == 8 ? (byte)(rgb >> 24) : (byte)255);
+
+        // SpreadsheetML stores ARGB, but Excel ignores alpha in cell formatting.
+        // Keep the original alpha in OpenXml snapshots; DrawingML and drawing-model
+        // opacity are separate and must continue to reach the output renderers.
+        return new(red, green, blue);
     }
 
     /// <summary>Finds a source metadata child.</summary>

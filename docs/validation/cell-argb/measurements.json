@@ -1,0 +1,564 @@
+{
+  "before.pdf": {
+    "sha256": "bd2abce296a4a6b010116d1ffaba920805f3a5661eaf4f68c82f4feb3fd8b6c7",
+    "pages": 1,
+    "text_alpha_values": [
+      0,
+      1,
+      128,
+      255
+    ],
+    "rows": [
+      {
+        "prefix": "00",
+        "fill_rgb": [
+          51,
+          102,
+          153
+        ],
+        "border_rgb": [
+          204,
+          51,
+          0
+        ],
+        "dark_font_pixels": 0
+      },
+      {
+        "prefix": "01",
+        "fill_rgb": [
+          255,
+          255,
+          255
+        ],
+        "border_rgb": [
+          204,
+          51,
+          0
+        ],
+        "dark_font_pixels": 0
+      },
+      {
+        "prefix": "80",
+        "fill_rgb": [
+          151,
+          177,
+          203
+        ],
+        "border_rgb": [
+          228,
+          151,
+          126
+        ],
+        "dark_font_pixels": 0
+      },
+      {
+        "prefix": "FF",
+        "fill_rgb": [
+          51,
+          102,
+          153
+        ],
+        "border_rgb": [
+          204,
+          51,
+          0
+        ],
+        "dark_font_pixels": 442
+      },
+      {
+        "prefix": "six-digit RGB",
+        "fill_rgb": [
+          255,
+          255,
+          255
+        ],
+        "border_rgb": [
+          204,
+          51,
+          0
+        ],
+        "dark_font_pixels": 0
+      }
+    ]
+  },
+  "after.pdf": {
+    "sha256": "440072dcf4c25f42e79f908f11158ee464c0f3fc693cf585ae3978562eab5dfc",
+    "pages": 1,
+    "text_alpha_values": [
+      255
+    ],
+    "rows": [
+      {
+        "prefix": "00",
+        "fill_rgb": [
+          51,
+          102,
+          153
+        ],
+        "border_rgb": [
+          204,
+          51,
+          0
+        ],
+        "dark_font_pixels": 442
+      },
+      {
+        "prefix": "01",
+        "fill_rgb": [
+          51,
+          102,
+          153
+        ],
+        "border_rgb": [
+          204,
+          51,
+          0
+        ],
+        "dark_font_pixels": 442
+      },
+      {
+        "prefix": "80",
+        "fill_rgb": [
+          51,
+          102,
+          153
+        ],
+        "border_rgb": [
+          204,
+          51,
+          0
+        ],
+        "dark_font_pixels": 442
+      },
+      {
+        "prefix": "FF",
+        "fill_rgb": [
+          51,
+          102,
+          153
+        ],
+        "border_rgb": [
+          204,
+          51,
+          0
+        ],
+        "dark_font_pixels": 442
+      },
+      {
+        "prefix": "six-digit RGB",
+        "fill_rgb": [
+          51,
+          102,
+          153
+        ],
+        "border_rgb": [
+          204,
+          51,
+          0
+        ],
+        "dark_font_pixels": 442
+      }
+    ]
+  },
+  "core-before.pdf": {
+    "sha256": "886f170fcac4e06436662ca2581732a7775de41b0d95eb4a7e6d858d08995f89",
+    "pages": 1,
+    "text_alpha_values": [
+      0,
+      1,
+      128,
+      255
+    ],
+    "rows": [
+      {
+        "prefix": "00",
+        "fill_rgb": [
+          51,
+          102,
+          153
+        ],
+        "border_rgb": [
+          204,
+          51,
+          0
+        ],
+        "dark_font_pixels": 0
+      },
+      {
+        "prefix": "01",
+        "fill_rgb": [
+          255,
+          255,
+          255
+        ],
+        "border_rgb": [
+          204,
+          51,
+          0
+        ],
+        "dark_font_pixels": 0
+      },
+      {
+        "prefix": "80",
+        "fill_rgb": [
+          151,
+          177,
+          203
+        ],
+        "border_rgb": [
+          228,
+          151,
+          126
+        ],
+        "dark_font_pixels": 0
+      },
+      {
+        "prefix": "FF",
+        "fill_rgb": [
+          51,
+          102,
+          153
+        ],
+        "border_rgb": [
+          204,
+          51,
+          0
+        ],
+        "dark_font_pixels": 442
+      },
+      {
+        "prefix": "six-digit RGB",
+        "fill_rgb": [
+          255,
+          255,
+          255
+        ],
+        "border_rgb": [
+          204,
+          51,
+          0
+        ],
+        "dark_font_pixels": 0
+      }
+    ]
+  },
+  "core-after.pdf": {
+    "sha256": "f6aa937f9bafe7a35c56dfec83fa963a031f64e593f00842ae7113992ac63068",
+    "pages": 1,
+    "text_alpha_values": [
+      255
+    ],
+    "rows": [
+      {
+        "prefix": "00",
+        "fill_rgb": [
+          51,
+          102,
+          153
+        ],
+        "border_rgb": [
+          204,
+          51,
+          0
+        ],
+        "dark_font_pixels": 442
+      },
+      {
+        "prefix": "01",
+        "fill_rgb": [
+          51,
+          102,
+          153
+        ],
+        "border_rgb": [
+          204,
+          51,
+          0
+        ],
+        "dark_font_pixels": 442
+      },
+      {
+        "prefix": "80",
+        "fill_rgb": [
+          51,
+          102,
+          153
+        ],
+        "border_rgb": [
+          204,
+          51,
+          0
+        ],
+        "dark_font_pixels": 442
+      },
+      {
+        "prefix": "FF",
+        "fill_rgb": [
+          51,
+          102,
+          153
+        ],
+        "border_rgb": [
+          204,
+          51,
+          0
+        ],
+        "dark_font_pixels": 442
+      },
+      {
+        "prefix": "six-digit RGB",
+        "fill_rgb": [
+          51,
+          102,
+          153
+        ],
+        "border_rgb": [
+          204,
+          51,
+          0
+        ],
+        "dark_font_pixels": 442
+      }
+    ]
+  },
+  "package-1.9.2.pdf": {
+    "sha256": "68f12de0fa38726401c29e5b464bc894795c4a14f508f8611441f6154b5362d7",
+    "pages": 1,
+    "text_alpha_values": [
+      0,
+      1,
+      128,
+      255
+    ],
+    "rows": [
+      {
+        "prefix": "00",
+        "fill_rgb": [
+          51,
+          102,
+          153
+        ],
+        "border_rgb": [
+          204,
+          51,
+          0
+        ],
+        "dark_font_pixels": 0
+      },
+      {
+        "prefix": "01",
+        "fill_rgb": [
+          255,
+          255,
+          255
+        ],
+        "border_rgb": [
+          204,
+          51,
+          0
+        ],
+        "dark_font_pixels": 0
+      },
+      {
+        "prefix": "80",
+        "fill_rgb": [
+          151,
+          177,
+          203
+        ],
+        "border_rgb": [
+          228,
+          151,
+          126
+        ],
+        "dark_font_pixels": 0
+      },
+      {
+        "prefix": "FF",
+        "fill_rgb": [
+          51,
+          102,
+          153
+        ],
+        "border_rgb": [
+          204,
+          51,
+          0
+        ],
+        "dark_font_pixels": 442
+      },
+      {
+        "prefix": "six-digit RGB",
+        "fill_rgb": [
+          255,
+          255,
+          255
+        ],
+        "border_rgb": [
+          204,
+          51,
+          0
+        ],
+        "dark_font_pixels": 0
+      }
+    ]
+  },
+  "before.png": {
+    "sha256": "184015f4e931a413eb29d17d611c8cd21af7f06fa297c462b66cfdf238727820",
+    "size": [
+      1224,
+      1584
+    ],
+    "rows": [
+      {
+        "prefix": "00",
+        "fill_rgb": [
+          255,
+          255,
+          255
+        ],
+        "border_rgb": [
+          255,
+          255,
+          255
+        ],
+        "dark_font_pixels": 0
+      },
+      {
+        "prefix": "01",
+        "fill_rgb": [
+          254,
+          254,
+          255
+        ],
+        "border_rgb": [
+          255,
+          254,
+          254
+        ],
+        "dark_font_pixels": 0
+      },
+      {
+        "prefix": "80",
+        "fill_rgb": [
+          153,
+          178,
+          204
+        ],
+        "border_rgb": [
+          229,
+          153,
+          127
+        ],
+        "dark_font_pixels": 0
+      },
+      {
+        "prefix": "FF",
+        "fill_rgb": [
+          51,
+          102,
+          153
+        ],
+        "border_rgb": [
+          204,
+          51,
+          0
+        ],
+        "dark_font_pixels": 400
+      },
+      {
+        "prefix": "six-digit RGB",
+        "fill_rgb": [
+          255,
+          255,
+          255
+        ],
+        "border_rgb": [
+          204,
+          51,
+          0
+        ],
+        "dark_font_pixels": 0
+      }
+    ]
+  },
+  "after.png": {
+    "sha256": "5c537360dd8f783a49105071fe0235c5beaa695cf41a629b7d4c5167849c3006",
+    "size": [
+      1224,
+      1584
+    ],
+    "rows": [
+      {
+        "prefix": "00",
+        "fill_rgb": [
+          51,
+          102,
+          153
+        ],
+        "border_rgb": [
+          204,
+          51,
+          0
+        ],
+        "dark_font_pixels": 400
+      },
+      {
+        "prefix": "01",
+        "fill_rgb": [
+          51,
+          102,
+          153
+        ],
+        "border_rgb": [
+          204,
+          51,
+          0
+        ],
+        "dark_font_pixels": 400
+      },
+      {
+        "prefix": "80",
+        "fill_rgb": [
+          51,
+          102,
+          153
+        ],
+        "border_rgb": [
+          204,
+          51,
+          0
+        ],
+        "dark_font_pixels": 400
+      },
+      {
+        "prefix": "FF",
+        "fill_rgb": [
+          51,
+          102,
+          153
+        ],
+        "border_rgb": [
+          204,
+          51,
+          0
+        ],
+        "dark_font_pixels": 400
+      },
+      {
+        "prefix": "six-digit RGB",
+        "fill_rgb": [
+          51,
+          102,
+          153
+        ],
+        "border_rgb": [
+          204,
+          51,
+          0
+        ],
+        "dark_font_pixels": 400
+      }
+    ]
+  }
+}

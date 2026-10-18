@@ -12,6 +12,7 @@ public static class ExcelStyleConverter
     /// <param name="style">The resolved style returned by OpenXmlWorkbookReader.ResolveStyle.</param>
     /// <param name="valueType">The stored value type, including a formula's cached result type, used to resolve General alignment.</param>
     /// <returns>The original source appearance with General alignment resolved.</returns>
+    /// <remarks>SpreadsheetML cell colors are rendered opaque, matching Excel, regardless of the saved ARGB alpha byte.</remarks>
     /// <exception cref="ArgumentNullException">The style is null.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The value type is unknown.</exception>
     public static CellStyle Convert(CellStyleInfo style, CellValueType valueType)

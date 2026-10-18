@@ -101,11 +101,39 @@ public sealed class ExcelStyleConverterTests
     }
 
     [Theory]
-    [InlineData("80FF0000", 255, 0, 0, 128)]
-    [InlineData("FF010203", 1, 2, 3, 255)]
-    public void Convert_preserves_rgb_alpha(string rgb, byte red, byte green, byte blue, byte alpha)
+    [InlineData("00000000", 0, 0, 0)]
+    [InlineData("FF000000", 0, 0, 0)]
+    [InlineData("01010203", 1, 2, 3)]
+    [InlineData("80FF0000", 255, 0, 0)]
+    [InlineData("FF010203", 1, 2, 3)]
+    [InlineData("010203", 1, 2, 3)]
+    public void Convert_renders_cell_font_fill_and_all_borders_opaque(string rgb, byte red, byte green, byte blue)
     {
-        Assert.Equal(new ReportColor(red, green, blue, alpha), Convert(new S.Font(new S.Color { Rgb = rgb })).Font.Color);
+        var style = Convert(new S.Font(new S.Color { Rgb = rgb }),
+            new S.Fill(new S.PatternFill(new S.ForegroundColor { Rgb = rgb }) { PatternType = S.PatternValues.Solid }),
+            new S.Border(
+                new S.LeftBorder(new S.Color { Rgb = rgb }) { Style = S.BorderStyleValues.Thin },
+                new S.RightBorder(new S.Color { Rgb = rgb }) { Style = S.BorderStyleValues.Thin },
+                new S.TopBorder(new S.Color { Rgb = rgb }) { Style = S.BorderStyleValues.Thin },
+                new S.BottomBorder(new S.Color { Rgb = rgb }) { Style = S.BorderStyleValues.Thin }));
+        var expected = new ReportColor(red, green, blue, 255);
+        Assert.Equal(expected, style.Font.Color);
+        Assert.Equal(expected, style.Background);
+        Assert.All(new[] { style.Border!.Left, style.Border.Top, style.Border.Right, style.Border.Bottom },
+            side => Assert.Equal(expected, side!.Color));
+    }
+
+    [Fact]
+    public void Convert_ignores_alpha_in_a_custom_indexed_palette()
+    {
+        var style = Convert(new S.Font(new S.Color { Indexed = 0 }),
+            new S.Fill(new S.PatternFill(new S.ForegroundColor { Indexed = 0 }) { PatternType = S.PatternValues.Solid }),
+            new S.Border(new S.TopBorder(new S.Color { Indexed = 0 }) { Style = S.BorderStyleValues.Thin }),
+            palette: "80336699");
+        var expected = new ReportColor(51, 102, 153);
+        Assert.Equal(expected, style.Font.Color);
+        Assert.Equal(expected, style.Background);
+        Assert.Equal(expected, style.Border!.Top!.Color);
     }
 
     [Fact]
@@ -115,12 +143,13 @@ public sealed class ExcelStyleConverterTests
         Assert.Throws<ArgumentOutOfRangeException>(() => Convert(type: (CellValueType)999));
     }
 
-    private static CellStyle Convert(S.Font? font = null, S.Fill? fill = null, S.Border? border = null, S.Alignment? alignment = null, CellValueType type = CellValueType.String, string? accent = null)
+    private static CellStyle Convert(S.Font? font = null, S.Fill? fill = null, S.Border? border = null, S.Alignment? alignment = null, CellValueType type = CellValueType.String, string? accent = null, string? palette = null)
     {
         var styles = SdkWorkbook.Styles(new S.CellFormat { FontId = 0, FillId = 0, BorderId = 0, Alignment = alignment });
         if (font is not null) styles.Fonts!.ReplaceChild(font, styles.Fonts.FirstChild!);
         if (fill is not null) styles.Fills!.ReplaceChild(fill, styles.Fills.FirstChild!);
         if (border is not null) styles.Borders!.ReplaceChild(border, styles.Borders.FirstChild!);
+        if (palette is not null) styles.Append(new S.Colors(new S.IndexedColors(new S.RgbColor { Rgb = palette })));
         using var input = SdkWorkbook.Create(new S.Worksheet(new S.SheetData(new S.Row(SdkWorkbook.Text("A1", "text")) { RowIndex = 1 })), styles);
         if (accent is not null)
         {

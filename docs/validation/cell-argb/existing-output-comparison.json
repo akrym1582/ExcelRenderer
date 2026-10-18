@@ -1,0 +1,72 @@
+[
+  {
+    "workbook": "01-japanese",
+    "pdf_pages": 2,
+    "pdf_pixels_identical": true,
+    "png_pages": 2,
+    "png_pixels_identical": true
+  },
+  {
+    "workbook": "02-image",
+    "pdf_pages": 2,
+    "pdf_pixels_identical": true,
+    "png_pages": 2,
+    "png_pixels_identical": true
+  },
+  {
+    "workbook": "03-wrapped-text",
+    "pdf_pages": 1,
+    "pdf_pixels_identical": true,
+    "png_pages": 1,
+    "png_pixels_identical": true
+  },
+  {
+    "workbook": "04-text-decoration",
+    "pdf_pages": 1,
+    "pdf_pixels_identical": true,
+    "png_pages": 1,
+    "png_pixels_identical": true
+  },
+  {
+    "workbook": "05-borders",
+    "pdf_pages": 2,
+    "pdf_pixels_identical": true,
+    "png_pages": 2,
+    "png_pixels_identical": true
+  },
+  {
+    "workbook": "06-layout-and-pagination",
+    "pdf_pages": 4,
+    "pdf_pixels_identical": true,
+    "png_pages": 4,
+    "png_pixels_identical": true
+  },
+  {
+    "workbook": "07-multiple-sheets",
+    "pdf_pages": 2,
+    "pdf_pixels_identical": true,
+    "png_pages": 2,
+    "png_pixels_identical": true
+  },
+  {
+    "workbook": "08-print-scaling",
+    "pdf_pages": 2,
+    "pdf_pixels_identical": true,
+    "png_pages": 2,
+    "png_pixels_identical": true
+  },
+  {
+    "workbook": "09-cell-border",
+    "pdf_pages": 1,
+    "pdf_pixels_identical": true,
+    "png_pages": 1,
+    "png_pixels_identical": true
+  },
+  {
+    "workbook": "japanese-grid-report",
+    "pdf_pages": 1,
+    "pdf_pixels_identical": true,
+    "png_pages": 1,
+    "png_pixels_identical": true
+  }
+]

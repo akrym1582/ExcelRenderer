@@ -4,7 +4,7 @@
 
 `feature/skia-pdf-backend`。調査対象と分岐元のorigin/mainは
 `8d23c0725f60126f5e38c9a9e9a612a6d276b93a`。実装・自動検証・配布検証の結果を本書と
-[機械可読結果](skia-pdf-results/)に記録する。ドラフトPRのCI結果は確認後に追記する。
+[機械可読結果](skia-pdf-results/)に記録する。[ドラフトPR #89](https://github.com/akrym1582/ExcelRenderer/pull/89)。実装SHAは`d843d02d55343355b27f6cefb7b0decd4e73ae03`。
 既定はPDFsharp。今回の目的は描画切替であり、PDFsharp依存・計測器・font gateは保持する。
 
 Linux x64 / Debian 13 / SDK 10.0.401 / runtime 10.0.12。
@@ -39,7 +39,8 @@ APIの非PDF要求は既定PdfSharp値だけを互換性のため許容する。
   PDFsharp writerは既存rendererとCore Saveを利用する。
 - レイアウト、選択、preflight、診断、リンク解決、sink commitは共通。
   `PdfCommandFinalizer`が未確定の互換文字・header/footer・図形文字を共通のlayout serviceで
-  確定する。Skia writer内で再計測・折返しを行わない。
+  確定する。旧measurerのrunなしlayoutも幅・高さ・baselineを保ってrunだけを補完する。
+  Skia writer内で再計測・折返しを行わない。
 - Skiaは同じpage planから1ページずつ再生成してglyph集合を収集し、順次再生成して描画。
   全ページcommands、bitmap、SKPictureを保持しない。比較では両backend間と収集/描画間の
   確定command fingerprintを一致確認する。内部比較用の固定時計で日時も一致させる。
@@ -117,12 +118,15 @@ python3 scripts/check-source-namespaces.py
 python3 scripts/check-core-dependencies.py
 dotnet pack ExcelRenderer.slnx -c Release --no-build --no-restore -m:1 -p:BuildProjectReferences=false -o artifacts/skia-reviewed-packages
 python3 scripts/package_distribution.py --packages artifacts/skia-reviewed-packages --output artifacts/skia-reviewed-package-inventory.json
-python3 scripts/validate-formulas-packages.py --packages artifacts/skia-reviewed-packages --work /tmp/excelrenderer-skia-reviewed-consumers
+python3 scripts/validate-formulas-packages.py --packages artifacts/skia-reviewed-packages --work /tmp/excelrenderer-skia-final-reviewed-consumers
 ```
 
 Rebuildは警告0・エラー0。最終テスト集計は[verification.json](skia-pdf-results/verification.json)。
-Core/Main/Mapping/Toolを含む6 suiteと、既存PNG/SVG/RichTextの回帰を実行。
+全2,008テスト成功・失敗0・skip 0（Core 85、Formulas 833、Mapping 172、OpenXml 206、Main 614、Tool 98）。
+既存PNG/SVG/RichTextの回帰も含む。
 CLIテストは実行中のテストと同じRelease/Debug構成のToolを選び、古いDebug出力を誤って検証しない。
+共通の文字確定処理を加えたPDFsharpのheader/footer・図形の保持XLSXは、変更前との
+[ページ数・文字列・144dpi全画素一致](skia-pdf-results/pdfsharp-legacy-compatibility.json)も確認。
 APIファイル変換のcached/recalculate値、両CLI/Mapping/reader設定、borrowed measurer、nonseekable I/O、
 preflight/collect/subset/draw/page-complete/write時のcancel、write失敗、strict診断、再実行、異なるfontの同時4変換を確認。
 
@@ -187,7 +191,24 @@ python3 scripts/benchmark-pdf-backends.py --no-build --configuration Release --w
 出力bytes・peak working set・allocationをraw JSONへ保存する。画像は32種類の256×256 PNG、半数にalpha。
 ページ数50/200も実生成結果で検証する。
 
-正式なRelease結果は[benchmark-summary.json](skia-pdf-results/benchmark-summary.json)に記録する。
+正式なRelease結果は[benchmark-summary.json](skia-pdf-results/benchmark-summary.json)、
+全250測定は[benchmark-samples.csv](skia-pdf-results/benchmark-samples.csv)、条件・hashは
+[benchmark-environment.json](skia-pdf-results/benchmark-environment.json)に記録。
+
+| fixture | 並列 | 時間比 | peak WS比 | 判定 |
+| --- | ---: | ---: | ---: | --- |
+| invoice | 1 | 1.017 | 1.201 | 成功 |
+| invoice | 4 | 1.109 | 1.151 | 成功 |
+| grid | 1 | 1.825 | 1.171 | 成功 |
+| grid | 4 | 1.216 | 1.248 | 成功 |
+| images | 1 | 0.622 | 1.077 | 成功 |
+| images | 4 | 0.606 | 1.089 | 成功 |
+| 50-pages | 1 | 0.741 | 1.088 | 成功 |
+| 50-pages | 4 | 0.980 | 1.065 | 成功 |
+| 200-pages | 1 | 1.374 | 1.098 | 成功 |
+| 200-pages | 4 | 1.190 | 1.072 | 成功 |
+
+全10条件で時間・メモリとも中央値比2倍以内。最大値と段階別時間もJSON/CSVに保存し、一般的な速度優位は主張しない。
 以前のDebug/1 warm-upの請求書時間比2.083は
 [初期記録](skia-pdf-results/benchmark-initial-debug.json)として保持し、Releaseとの差をそのまま実装修正の改善率とは主張しない。
 SKFont再利用と重複purgeの整理を行い、起動/JIT/GCの分散は両engine同条件のwarm-upで分離する。
@@ -196,7 +217,12 @@ SKFont再利用と重複purgeの整理を行い、起動/JIT/GCの分散は両en
 
 ## Windowsと手動viewer確認
 
-Windows/Linux native CIの結果・実行SHA・URLは取得後に機械可読記録とPRへ追記する。
+実装SHA `d843d02`の[CI](https://github.com/akrym1582/ExcelRenderer/actions/runs/39103573971)は全7 job成功。
+Windows x64 / Ubuntu 22.04 x64ともRebuild警告0、native/API 48件、CLI 98件、4 package、9隔離consumerが成功。
+通常のLinux全suite・独立比較/変異・Core/Formulasの両OS検証も成功した。
+[CI結果](skia-pdf-results/ci.json)、[Linux native](skia-pdf-results/linux-ci-native.json)、
+[Windows native](skia-pdf-results/windows-ci-native.json)にjob・source/binary hash・exportsを保持。
+生成物は同runの`release-pdf-native-Linux` / `release-pdf-native-Windows` artifactを参照。
 このLinux環境でEdge/Adobe ReaderのGUI操作はできないため、**手動確認未実施**。
 計画書7.4に従い、自動抽出確認と混同しない。手順は以下。
 

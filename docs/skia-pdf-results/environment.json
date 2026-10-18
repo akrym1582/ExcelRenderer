@@ -1,6 +1,6 @@
 {
   "baseline_sha": "8d23c0725f60126f5e38c9a9e9a612a6d276b93a",
-  "implementation": "feature/skia-pdf-backend; see PR/CI commit SHA",
+  "implementation": "d843d02d55343355b27f6cefb7b0decd4e73ae03",
   "os": "Linux-6.18.55-x86_64-with-glibc2.41",
   "rid": "linux-x64",
   "sdk": "10.0.401",

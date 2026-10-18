@@ -1,11 +1,29 @@
 {
-  "configuration": "Debug",
+  "source_commit": "d843d02d55343355b27f6cefb7b0decd4e73ae03",
+  "configuration": "Release",
   "repeats": 5,
-  "warmup_conversions_per_process": 1,
+  "warmup_conversions_per_process": 3,
   "parallelism": "separate processes (1 or 4)",
-  "source_note": "Measured before the subsequent shared image-failure diagnostic extraction. Normal fixture rendering/layout/subset/paper-edge paths are the same; final performance gate remains unmet.",
+  "samples": 250,
+  "conversions_including_warmups": 1000,
+  "peak_working_set": "process lifetime peak includes warm-up",
+  "source_note": "Final production code; no simultaneous local builds/comparisons/consumers. Preliminary overlapping run was interrupted and excluded. Initial Debug results remain in benchmark-initial-debug.json.",
   "assemblies": {
-    "ExcelRenderer.dll": "d4842436a153ad4cc340a5b5fda20d3fb3eb129081128523d7e34d01b8d8f847",
-    "ExcelRenderer.Core.dll": "56312316667a95b7bde92432a0e028b1a047e3c91769e1ab194937995a0c35d9"
+    "ExcelRenderer.dll": "9f0af251ceb521085809bdb465e17e1477a881e8b664df3b6db3dedae1322204",
+    "ExcelRenderer.Core.dll": "004687892f48b84aa4b2b2b39ba5a9eaf650c8e92594cab105aaf8ec3bd7099b"
+  },
+  "input_sha256": {
+    "images.xlsx": "fe07ec07988b89d473eea5906197812a58cf0d72ae2e7d36ff78b1190077aa42",
+    "50-pages.xlsx": "5e8ccea67456b2d97adc089972c39cd68446f7e04abe15d5fd4749f17713158e",
+    "200-pages.xlsx": "a759378a8b95d5cc112a2588717601e9a03ed086ba2cab8b1ab691ffd5873f22"
+  },
+  "image_workload": {
+    "unique_images": 32,
+    "size": [
+      256,
+      256
+    ],
+    "format": "PNG",
+    "alpha_images": 16
   }
 }

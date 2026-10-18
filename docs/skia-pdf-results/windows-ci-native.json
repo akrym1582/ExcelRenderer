@@ -1,0 +1,15 @@
+{
+  "rid": "win-x64",
+  "version": "10.2.0",
+  "source": "https://github.com/harfbuzz/harfbuzz/archive/refs/tags/10.2.0.tar.gz",
+  "source_sha256": "11749926914fd488e08e744538f19329332487a6243eec39ef3c63efa154a578",
+  "binary_sha256": "bab78d22e46ab01ca3c3964ed1b93fe9b7e31a685dd984a41972e25efdfa5a02",
+  "license": "Old MIT (HarfBuzz), MIT (adapter)",
+  "exports": [
+    "er_subset",
+    "er_blob_data",
+    "er_blob_destroy",
+    "er_version"
+  ],
+  "platform": "Windows-2025Server-10.0.26100-SP0"
+}

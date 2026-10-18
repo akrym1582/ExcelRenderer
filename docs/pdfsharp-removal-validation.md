@@ -1,5 +1,9 @@
 # PDFsharp removal validation
 
+The later [PR #90 image review fixes](pr90-image-review-fixes.md) replace incremental
+image revisions and add complete pixel validation. Measurements below remain
+historical evidence for their recorded implementation.
+
 The later performance/refactoring review and current CI status are recorded in
 [the follow-up report](rendering-performance-review.md). The measurements below
 remain evidence for their recorded implementation.

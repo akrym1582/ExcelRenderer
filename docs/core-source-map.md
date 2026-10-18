@@ -220,7 +220,7 @@ Main owns `SkiaSharp/SkiaTextMeasurer` (fallback, IVS, rich text policy),
 border algorithms to Core. PNG/SVG use the same finalized glyph identities and line/run point geometry, retaining the existing PNG/SVG native raster advance policy.
 The reserved backend option is an API rejection contract, not another implementation.
 
-Core's incremental finalizer owns exact byte offsets/xrefs, 0.001pt boxes, RGB page
+Core's structural finalizer owns exact byte offsets/xrefs, 0.001pt boxes, RGB page
 groups, resolved annotations and interpolation metadata. It never decodes/recompresses
 font/content/image streams. Full supplies resolved final-page link metadata; Core's
 standalone product still emits no annotations. Image failures share
@@ -239,3 +239,10 @@ owns the existing full-product contiguous-run merge rules (physical face,
 explicit glyphs, missing-glyph flags and UTF-16 continuity); it does not select
 fonts. Rich measurement and finalization use one style-segment coalescer.
 See [the follow-up measurements](rendering-performance-review.md).
+
+PR #90's image review moves complete pixel validation, bounded raster/encoded
+leases and exact decode failures into `Rendering/ImageDecoder`, `DecodedImage`
+and `ImageResources`. Validated pixels use the native encoded-image generator’s premultiplied representation,
+shared across raster/PDF drawing without another codec pass or pixel roundtrip.
+The finalizer writes each active object/encoded stream once and rebuilds classic
+xref offsets; no obsolete image revision is retained. See [image review fixes](pr90-image-review-fixes.md).

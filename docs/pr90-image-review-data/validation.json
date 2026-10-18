@@ -1,0 +1,324 @@
+{
+  "implementationCommit": "eb8bfc0d67097a472ac774045fdf0a8dd04f51a1",
+  "reviewCommit": "fdeff40890f7927ed5239b285e9853026dec3728",
+  "environment": {
+    "os": "Linux-6.18.55-x86_64-with-glibc2.41",
+    "rid": "linux-x64",
+    "sdk": "10.0.401"
+  },
+  "build": {
+    "warnings": 0,
+    "errors": 0,
+    "logSha256": "d10a72aea4c89ea627b3ac5eaeba18c69200b3ac8c0399442c2cd6466a2050e0"
+  },
+  "tests": [
+    {
+      "project": "ExcelRenderer.Core.Tests",
+      "counters": {
+        "total": 111,
+        "executed": 111,
+        "passed": 111,
+        "failed": 0,
+        "error": 0,
+        "timeout": 0,
+        "aborted": 0,
+        "inconclusive": 0,
+        "passedButRunAborted": 0,
+        "notRunnable": 0,
+        "notExecuted": 0,
+        "disconnected": 0,
+        "warning": 0,
+        "completed": 0,
+        "inProgress": 0,
+        "pending": 0
+      },
+      "times": {
+        "creation": "2026-10-18T12:02:07.8282773+00:00",
+        "queuing": "2026-10-18T12:02:07.8282774+00:00",
+        "start": "2026-10-18T12:02:04.4104665+00:00",
+        "finish": "2026-10-18T12:02:16.6194745+00:00"
+      },
+      "trxSha256": "687b3fd4c35895e713ade40d40f00a092d7bf99ce9b4ea9e2f413015c0b2ae70"
+    },
+    {
+      "project": "ExcelRenderer.Formulas.Tests",
+      "counters": {
+        "total": 833,
+        "executed": 833,
+        "passed": 833,
+        "failed": 0,
+        "error": 0,
+        "timeout": 0,
+        "aborted": 0,
+        "inconclusive": 0,
+        "passedButRunAborted": 0,
+        "notRunnable": 0,
+        "notExecuted": 0,
+        "disconnected": 0,
+        "warning": 0,
+        "completed": 0,
+        "inProgress": 0,
+        "pending": 0
+      },
+      "times": {
+        "creation": "2026-10-18T12:02:05.5758208+00:00",
+        "queuing": "2026-10-18T12:02:05.5758209+00:00",
+        "start": "2026-10-18T12:02:04.5077507+00:00",
+        "finish": "2026-10-18T12:02:06.9368587+00:00"
+      },
+      "trxSha256": "2ac60dba0fdc1077b09471c648efabfcf693d38e1b24bdd50dd84508afd33018"
+    },
+    {
+      "project": "ExcelRenderer.Mapping.Tests",
+      "counters": {
+        "total": 172,
+        "executed": 172,
+        "passed": 172,
+        "failed": 0,
+        "error": 0,
+        "timeout": 0,
+        "aborted": 0,
+        "inconclusive": 0,
+        "passedButRunAborted": 0,
+        "notRunnable": 0,
+        "notExecuted": 0,
+        "disconnected": 0,
+        "warning": 0,
+        "completed": 0,
+        "inProgress": 0,
+        "pending": 0
+      },
+      "times": {
+        "creation": "2026-10-18T12:02:06.5566661+00:00",
+        "queuing": "2026-10-18T12:02:06.5566662+00:00",
+        "start": "2026-10-18T12:02:04.5918304+00:00",
+        "finish": "2026-10-18T12:02:12.9579917+00:00"
+      },
+      "trxSha256": "217e667569cf6061890e3da0b7bca1d2dce7dde1a351b11f439dfa38fa78f8b1"
+    },
+    {
+      "project": "ExcelRenderer.OpenXml.Tests",
+      "counters": {
+        "total": 206,
+        "executed": 206,
+        "passed": 206,
+        "failed": 0,
+        "error": 0,
+        "timeout": 0,
+        "aborted": 0,
+        "inconclusive": 0,
+        "passedButRunAborted": 0,
+        "notRunnable": 0,
+        "notExecuted": 0,
+        "disconnected": 0,
+        "warning": 0,
+        "completed": 0,
+        "inProgress": 0,
+        "pending": 0
+      },
+      "times": {
+        "creation": "2026-10-18T12:02:06.1338176+00:00",
+        "queuing": "2026-10-18T12:02:06.1338176+00:00",
+        "start": "2026-10-18T12:02:04.5636616+00:00",
+        "finish": "2026-10-18T12:02:07.1787509+00:00"
+      },
+      "trxSha256": "5ed453939e2246a19dda88a315b0bb0cbc7551ff5e5afb3b653b36be64dab7c0"
+    },
+    {
+      "project": "ExcelRenderer.Tests",
+      "counters": {
+        "total": 668,
+        "executed": 668,
+        "passed": 668,
+        "failed": 0,
+        "error": 0,
+        "timeout": 0,
+        "aborted": 0,
+        "inconclusive": 0,
+        "passedButRunAborted": 0,
+        "notRunnable": 0,
+        "notExecuted": 0,
+        "disconnected": 0,
+        "warning": 0,
+        "completed": 0,
+        "inProgress": 0,
+        "pending": 0
+      },
+      "times": {
+        "creation": "2026-10-18T12:02:10.9482436+00:00",
+        "queuing": "2026-10-18T12:02:10.9482436+00:00",
+        "start": "2026-10-18T12:02:08.0859385+00:00",
+        "finish": "2026-10-18T12:03:04.0734746+00:00"
+      },
+      "trxSha256": "77355d874a2f7e0aa1279b6bfe3f435bf1f057d7515b02ba8a50d194caad2f99"
+    },
+    {
+      "project": "ExcelRenderer.Tool.Tests",
+      "counters": {
+        "total": 99,
+        "executed": 99,
+        "passed": 99,
+        "failed": 0,
+        "error": 0,
+        "timeout": 0,
+        "aborted": 0,
+        "inconclusive": 0,
+        "passedButRunAborted": 0,
+        "notRunnable": 0,
+        "notExecuted": 0,
+        "disconnected": 0,
+        "warning": 0,
+        "completed": 0,
+        "inProgress": 0,
+        "pending": 0
+      },
+      "times": {
+        "creation": "2026-10-18T12:02:11.7964575+00:00",
+        "queuing": "2026-10-18T12:02:11.7964576+00:00",
+        "start": "2026-10-18T12:02:07.7507294+00:00",
+        "finish": "2026-10-18T12:03:51.5579301+00:00"
+      },
+      "trxSha256": "8109d208f389b901c05f328223de95180e8471e88f6571a16af0211c5af8f1a8"
+    }
+  ],
+  "totalTests": 2089,
+  "comparisons": {
+    "report": {
+      "sha256": "e663b4f0a09105df7345bbda2681a856345e240a684b6044625d0809fee303a3",
+      "fixtures": 25,
+      "versions": {
+        "PyMuPDF": "1.26.6",
+        "numpy": "2.3.5",
+        "Pillow": "12.3.0",
+        "fonttools": "4.61.1",
+        "scipy": "1.17.0"
+      },
+      "gates": {
+        "boxPoints": 0.01,
+        "rgbDelta": 16,
+        "differentInkRatio": 0.01,
+        "unmatchedInkRatio": 0.001
+      },
+      "screeningDifferences": 51,
+      "acceptedDifferences": 51,
+      "requiresFix": 0
+    },
+    "report-B-C": {
+      "sha256": "341026a1f7a6c66e8546108d0a9347dacbf2887351877df87a1153d5bb3265ec",
+      "fixtures": 25,
+      "versions": {
+        "PyMuPDF": "1.26.6",
+        "numpy": "2.3.5",
+        "Pillow": "12.3.0",
+        "fonttools": "4.61.1",
+        "scipy": "1.17.0"
+      },
+      "gates": {
+        "boxPoints": 0.01,
+        "rgbDelta": 16,
+        "differentInkRatio": 0.01,
+        "unmatchedInkRatio": 0.001
+      },
+      "screeningDifferences": 0,
+      "acceptedDifferences": 0,
+      "requiresFix": 0
+    },
+    "core": {
+      "sha256": "8ee372854c0ff86194f4172d6a4c996a39ad458fb291ebe36765ce2e00ad1e6e",
+      "fixtures": [
+        {
+          "fixture": "invoice",
+          "pages": 1,
+          "rasterChecks": 44,
+          "reviewedAntialiasingChecks": 3
+        },
+        {
+          "fixture": "grid",
+          "pages": 1,
+          "rasterChecks": 58,
+          "reviewedAntialiasingChecks": 8
+        },
+        {
+          "fixture": "scaling",
+          "pages": 2,
+          "rasterChecks": 64,
+          "reviewedAntialiasingChecks": 0
+        }
+      ]
+    }
+  },
+  "distribution": {
+    "packages": [
+      "ExcelRenderer.1.9.2.nupkg",
+      "ExcelRenderer.Fonts.1.9.2.nupkg",
+      "ExcelRenderer.Mapping.1.9.2.nupkg",
+      "ExcelRenderer.Tool.1.9.2.nupkg"
+    ],
+    "restoredProjects": 22,
+    "assemblyRefInventories": 788,
+    "isolatedConsumers": 9,
+    "consumerGraphsSha256": "de6c12589cf766d3052407b5656e4baa32305bb1ba96b169b151ed5c9d0c6a5f"
+  },
+  "native": {
+    "rid": "linux-x64",
+    "version": "10.2.0",
+    "source": "https://github.com/harfbuzz/harfbuzz/archive/refs/tags/10.2.0.tar.gz",
+    "source_sha256": "11749926914fd488e08e744538f19329332487a6243eec39ef3c63efa154a578",
+    "binary_sha256": "79764f41ee0ab700c178d920c51c12d3699cd0c700244485f459d36401ab24ea",
+    "license": "Old MIT (HarfBuzz), MIT (adapter)",
+    "exports": [
+      "er_subset",
+      "er_blob_data",
+      "er_blob_destroy",
+      "er_version"
+    ],
+    "platform": "Linux-6.18.55-x86_64-with-glibc2.41"
+  },
+  "implementationFiles": {
+    ".github/workflows/pdf-native-build.yml": "f74a96bf41544aa1a1ba52be28b0f91338b5b13dd6f421ba2352a2adc2dccd37",
+    ".github/workflows/unit-tests.yml": "38b257a295ce24309b9cd32c080f05828ffd23db432e82de06f750a3697a55d9",
+    "scripts/compare-pdf-backends.py": "d8a88b899185dce7e71526fa7e31c650529821fcf8797ab6b7665450fb8a5161",
+    "scripts/pdf_native_evidence.py": "9d24640f36b7dc8d72353f59d74681b09dff6eeefd6dca2a63cfb5ec7fa3232e",
+    "scripts/validate-image-review.py": "3d86febecadc66c3257bb2f6c0e326144e7307afaa40bc2d4051306d927e77e6",
+    "src/ExcelRenderer.Core/Pdf/CorePdfRenderer.cs": "d49a559625c96e4a1ff58ac44a36a1821b8c453261a858a39e2aaf02d31fdff4",
+    "src/ExcelRenderer.Core/Pdf/GeneratedPdfFinalizer.cs": "08c92302776ed452f108a2d7747fc0af7fac176ac0f05be80c8c74e7cf5a03e2",
+    "src/ExcelRenderer.Core/Pdf/SkiaDrawingPrimitives.cs": "7179dc418dc7d7e83c6049a975f04f0cbbeb9e13e791fe1f645223507c1886e8",
+    "src/ExcelRenderer.Core/Pdf/SkiaPdfDocument.cs": "70abbdb3b4f6d6fd48e4de2b6803490b054d91295b39056028f34e1678481c6d",
+    "src/ExcelRenderer.Core/Pdf/Structure/GeneratedPdfFile.cs": "dde1aeffc4344101add2e6e39b57a89b3cce7c095ac873e4234d087670648c4d",
+    "src/ExcelRenderer.Core/Rendering/DecodedImage.cs": "9b7e5faab973918df118bc90041054c7b38411aaf8208b51eb9241c396cdd287",
+    "src/ExcelRenderer.Core/Rendering/ImageDecoder.cs": "26d6142c45310d7bbc771d535de23c81399234a35b753afe6700cffb02b616b4",
+    "src/ExcelRenderer.Core/Rendering/ImageResources.cs": "c0541867d557de6d2e2b8eef6d97d509ae4c452f7fb45ab380bb13642e270c16",
+    "src/ExcelRenderer/SkiaSharp/SkiaDrawingContext.cs": "7c45ace3cca1642e2c9abb60ed6ac6fcde09afa5c42d7069aa435891a6c3f92c",
+    "src/ExcelRenderer/SkiaSharp/SkiaPdfDocumentWriter.cs": "95df07a35e4656144865d9a6128e63ec6d267707a5486a115ddcfa1c449a6735",
+    "src/ExcelRenderer/SkiaSharp/SvgRenderer.cs": "92d84617ce3ee333d26a07fb75c891a762166ea7ab158044976d89c328cfe053",
+    "tests/ExcelRenderer.Core.Tests/ExcelRenderer.Core.Tests.csproj": "b09abcea6eef5fc5e2c78c1fbdaebd2aa897f375c5a74c593d13d71cafdc0d72",
+    "tests/ExcelRenderer.Core.Tests/GeneratedPdfFinalizerTests.cs": "049248e4c0d697706632e2b46b05132bb216bd883713b4e3779649bff835ab3e",
+    "tests/ExcelRenderer.Core.Tests/ImagePayloadTests.cs": "b304e3bb5a3ca2850a1b978de4e1ec43f95ec77e647fdec2fba195e310196f92",
+    "tests/ExcelRenderer.Tests/ExcelRenderer.Tests.csproj": "68fb3293b91d8ce07f98b2fb329493eb22dff3fdda5343bd4d5eab59e20b2194",
+    "tests/ExcelRenderer.Tests/ImageReviewTests.cs": "6718701de970ebb7f9935353727b9ab729296ea2ef846586c8375a2a0582a5f9",
+    "tests/Shared/ImageReviewBaseline.json": "9126d0177cec0fbefe216b5efa1881122ac4da824d09e22dfc189b2a22fecb8d",
+    "tests/Shared/ImageReviewFixture.cs": "766ebfb137c0adbaf7d9d92b7867ff0b84561e51ee900da768f09c1f1be71b5e"
+  },
+  "benchmarkSourceSha256": {
+    "tools/ExcelRenderer.Performance/ExcelRenderer.Performance.csproj": "46473af74a2d2b9de4e6b57c8b3cdac2e929725e6f31ddd1bee258b365a6934b",
+    "tools/ExcelRenderer.Performance/FixtureWorkbook.cs": "c0a5f65a52910cda62bd05cf5305dfa578300cc2986e985936a5e32ece8cb7ef",
+    "tools/ExcelRenderer.Performance/ImageRenderingBenchmark.cs": "bfaa78e47a61f54641b4aa2f6e33951d6ead16ac27a741e7f8f71e83ee622ecb",
+    "tools/ExcelRenderer.Performance/InputSpoolBenchmark.cs": "ceb70c55297654cd17c9115f4639392984c8e12a96563da0fe5b8003864057b1",
+    "tools/ExcelRenderer.Performance/IntegrationBenchmark.cs": "41c7d787cd0566b77e1e1bac1da7e454811786043cfd0e09e625fc00982b02ad",
+    "tools/ExcelRenderer.Performance/PdfInspector.cs": "6d29a77c3507ba06d06513237971926ef31bab128b88594aa58aebf9d1d90f25",
+    "tools/ExcelRenderer.Performance/PerformanceFixtureGenerator.cs": "8a64fa18b0dc21f7dc9b31b0ef6353c1d04937b7389bd6aeb18e30ce06b81a4d",
+    "tools/ExcelRenderer.Performance/Program.cs": "19a96bded227a86a4b0a685036ce0de5b51b8e7ebdc852d7e8b9cc5da1d1f101",
+    "tools/ExcelRenderer.Performance/ReaderBenchmark.cs": "6796306c579d3fdc3caadf2391af1ba9ec2e79a3aebd63a1b1fe2e9b6f4dd4f7",
+    "tools/ExcelRenderer.Performance/ReaderFixtures.cs": "84c95345d5e44a99c5effb7ef3c5751cc2ef495130e38412e18ef9a2681e8922",
+    "tools/ExcelRenderer.Performance/RenderMemoryBenchmark.cs": "62e53eba8f718fb29d57e6432103ee4b0be361bc3aeadc27fd5f978a568f43c8",
+    "tools/ExcelRenderer.Performance/TextLayoutBenchmark.cs": "6df6b730eb8a40ea1ca6626b87e1a46e7bc4b7d4e5958a64695c8341d4d210ba",
+    "tools/ExcelRenderer.Performance/compare-pdf.py": "dd244de86ed3f258395495cc3256b5f8ded5efef127f9b939991252d031e4ec1",
+    "tools/ExcelRenderer.Performance/compare_phase3.py": "278120475611d064cd13e95357afab77e93ba7b3409a28d212c9a8cde576cc19",
+    "tools/ExcelRenderer.Performance/compare_phase3_review.py": "28d6915f5070dbfb4b0203a0bc60e317f1400829f617326ce789ccf025245f9d",
+    "tools/ExcelRenderer.Performance/compare_phase3_supplement.py": "8a0c1a454911b7abd9b8eb756fc6c82ff15dd9df03b96b9c8014f2cc59825198",
+    "tools/ExcelRenderer.Performance/mapping-benchmark.py": "58528185892891cfa8af481eb44d5c3df470a5503618805e6bfdf3cbaf89b4a2",
+    "tools/ExcelRenderer.Performance/review-performance.py": "0ba68bd9920f0b11342f5be56684deeed6b39c59040a353afb2799b91995037e",
+    "tools/ExcelRenderer.Performance/run.py": "7a546f3312fa266b004326ea563f1d880d01ba6f48193cd6d77df83cdccd5550",
+    "tools/ExcelRenderer.Performance/summarize_phase3.py": "0c4f86a40226d8171757db30c8b6bcf815a05aa6aa1978c24349cd59198e2a93"
+  }
+}

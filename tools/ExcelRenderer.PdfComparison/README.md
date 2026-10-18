@@ -60,8 +60,8 @@ See `docs/skia-pdf-validation.md` for actual results, platform scope and manual 
 
 The unchanged first-stage reviewed list applies only to A→C. B→C must pass without
 exceptions. `pdf_native_evidence.py` checks frozen B hashes, byte-identical drawing
-content and embedded streams, original native C byte-prefix preservation, and bounded
-numeric metadata precision. The old save path's implicit RGB page transparency group
+content and embedded streams, native C encoded-stream/object-identity preservation,
+single-copy image payloads, and bounded numeric metadata precision. The old save path's implicit RGB page transparency group
 is explicitly retained; otherwise byte-identical content still rasterizes differently.
 No golden/list update is used to accept that compositing difference.
 

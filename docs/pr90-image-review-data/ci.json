@@ -1,0 +1,53 @@
+{
+  "runId": 39125786270,
+  "url": "https://github.com/akrym1582/ExcelRenderer/actions/runs/39125786270",
+  "implementationCommit": "eb8bfc0d67097a472ac774045fdf0a8dd04f51a1",
+  "jobs": [
+    {
+      "id": 117670497851,
+      "name": "Core (ubuntu-latest)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 117670497972,
+      "name": "pdf-native / native (windows-latest)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 117670497977,
+      "name": "Formulas (ubuntu-latest)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 117670498003,
+      "name": "Core (windows-latest)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 117670498034,
+      "name": "Run unit tests",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 117670498040,
+      "name": "pdf-native / native (ubuntu-22.04)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 117670498053,
+      "name": "Formulas (windows-latest)",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "nativeSelectedMainTests": 139,
+  "nativeCliTests": 99,
+  "coreTestsPerOs": 111,
+  "isolatedConsumersPerNativeOs": 9
+}

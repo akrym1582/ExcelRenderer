@@ -87,11 +87,12 @@ variants are parse errors. Explicit backend options on PNG/SVG/Markdown remain p
   are unchanged.
 
 The internal generated-PDF finalizer accepts pinned Skia classic-xref output only.
-It appends bounded corrections for 0.001pt boxes, RGB transparency groups, resolved
+It applies bounded corrections for 0.001pt boxes, RGB transparency groups, resolved
 links/tooltips and image interpolation. It is not a public/general PDF editor;
-xref/object streams, encrypted and signed input are rejected. Original native bytes
-and encoded content/font/image streams are retained. Incremental color-image revisions
-repeat encoded image bytes, increasing some image-heavy files.
+xref/object streams, encrypted and signed input are rejected. Original object
+identities and encoded content/font/image streams are retained. The structural save writes
+each active object and stream once, retaining interpolation without repeating
+image payloads. See [image review fixes](pr90-image-review-fixes.md).
 
 Retired instrumentation: `xFontCreated`, font-gate wait/reset/registration metrics.
 New `pdfFontCreated/Disposed` and `pdfSubsetTypefaceCreated/Disposed` count their

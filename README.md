@@ -382,7 +382,7 @@ can select rendered PDF/PNG/SVG document pages; Markdown does not support page s
 `ConversionManifest.WriteAsync` writes the completed artifact metadata and diagnostics as schema
 version 1 JSON with relative artifact names.
 
-PDF export skips images when Skia cannot create a codec or decode a bitmap, and reports
+PDF export requires a successful complete pixel decode; corrupt or incomplete images are skipped with
 `ImageDecodeFailed` warnings. Diagnostics include the sheet, source page, image bounds,
 byte length, up to 16 header bytes, and the decode failure reason. The `render` command
 prints warnings to stderr; use `--manifest report.json` to save these details as JSON.
@@ -664,7 +664,7 @@ An OS font is not a complete snapshot until its first selection; a file that cha
 disappears before that read raises a font load error. Physical measurement/drawing fonts
 are immutable conversion-owned snapshots; there is no global font resolver or conversion lock.
 
-Skia retains its final document and resources until native close and the incremental save.
+Skia retains its final document and resources until native close and the structural save.
 The OpenXml Reader retains source styles and shared strings. Layout geometry and selected models also
 scale with workbook size. This is not constant-memory streaming.
 See the [phase 3 measurements](docs/phase3-performance.ja.md) and the historical
@@ -805,11 +805,12 @@ before building/packing from source. Published runtime assets are required; miss
 assets fail conversion without a full-font fallback. Python/CMake and independent
 PDF readers are build/validation tools, not product runtime requirements.
 
-PDF uses a bounded seekable spool, document-shared subsets and an internal incremental
+PDF uses a bounded seekable spool, document-shared subsets and an internal structural
 finalizer for boxes (0.001pt precision), RGB page compositing, links/tooltips and image
-interpolation. Original content, font and image stream bytes are preserved. Incremental
-image dictionary revisions repeat encoded color-image bytes, so image-heavy output can
-be larger. `RenderRequest.Buffering` controls the intermediate spool.
+interpolation. Each active object and its original encoded stream is written once;
+content, fonts, JPEG data and soft masks are preserved without recompression.
+`RenderRequest.Buffering` controls the intermediate spool. See the
+[image review fixes](docs/pr90-image-review-fixes.md) for size and decoding validation.
 
 Standalone `SkiaTextMeasurer` calls own native scopes; internal conversion services borrow
 their conversion's scope. Stored glyphs/font snapshots remain replayable after scope

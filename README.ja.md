@@ -355,7 +355,7 @@ var request = new RenderRequest
 
 ## C# API（高レベル）
 
-PDF出力では、Skiaがcodecを生成できない画像やbitmapへデコードできない画像をスキップし、
+PDF出力では画素の完全なデコードを確認し、破損・途中までしか復元できない画像をスキップして、
 `ImageDecodeFailed` の警告を報告します。診断にはシート名、元ページ番号、画像の位置・寸法、
 バイト数、先頭最大16バイト、失敗理由が含まれます。`render` コマンドは警告を標準エラーに表示し、
 `--manifest report.json` で詳細をJSONに保存できます。厳格モード、またはこの警告コードを
@@ -773,11 +773,11 @@ source build/pack 前に `python3 scripts/build-harfbuzz-subset.py` で固定版
 build してください。runtime assets の欠落時は失敗し、full-font 埋込へ切り替えません。
 Python/CMake と独立 PDF reader は build/検証専用で、製品の実行要件には含みません。
 
-PDF は上限付き seekable spool と文書内共有 subset を使います。限定 incremental finalizer が
+PDF は上限付き seekable spool と文書内共有 subset を使います。限定構造 finalizer が
 用紙 box（精度0.001pt）・RGB page group・リンク/tooltip・画像補間を補います。
-content・font・画像 stream の元 bytes を保持します。画像辞書の追記 revision では
-圧縮済みカラー画像 bytes を再掲するため、画像の多い PDF は大きくなる場合があります。
-中間 spool は `RenderRequest.Buffering` で設定できます。
+各 active object と圧縮済み stream を一度ずつ保存し、content・font・JPEG・soft mask を
+再圧縮せず保持します。中間 spool は `RenderRequest.Buffering` で設定できます。
+容量・デコード検証は[画像レビュー修正](docs/pr90-image-review-fixes.md)を参照してください。
 
 standalone `SkiaTextMeasurer` は独立 native scope を所有し、変換内部は現在の scope を借ります。
 確定 glyph/font snapshot は scope 終了後も再描画できます。呼出側 measurer/stream の所有権は維持します。

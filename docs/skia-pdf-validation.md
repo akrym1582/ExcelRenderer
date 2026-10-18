@@ -178,6 +178,9 @@ HTML、PDF、全差分/overlay画像は`artifacts/pdf-comparison-complete/`、CI
 
 容量は請求書約35KB・日本語帳票約105KBで1MiB未満。full-font版比98.90%/99.69%以上削減。
 [50/200ページの共有確認](skia-pdf-results/multipage-font-sharing.json)では同一書体のfont objectが各1個。
+50/200ページの埋込font streamは各169,416 bytes、PDF全体は123,021 / 474,622 bytes。
+画像多数の実PDFは6,192,058 bytes（12ページ）、font stream 169,416 bytes、画像/mask decoded stream
+7,340,032 bytes・48 objectで、画像に1MiB制限を適用していない。
 後処理のためにページ全体を画像化・通常文字をoutline化することはない。
 
 ## 性能・リソース
@@ -214,6 +217,11 @@ python3 scripts/benchmark-pdf-backends.py --no-build --configuration Release --w
 SKFont再利用と重複purgeの整理を行い、起動/JIT/GCの分散は両engine同条件のwarm-upで分離する。
 比較CPU負荷が重なった途中測定は中断し、正式な全matrixは他のbuild/比較/consumerを走らせず実行する。
 結果の選別や2倍基準の緩和はしない。`OutputBytes`はdiscard sinkのwrite counterなので実PDF容量は比較ハーネスで判定する。
+
+同一processで各engineを20回変換し、その都度GC後の状態も
+[retention.json](skia-pdf-results/retention.json)へ記録した。Skiaの最後5回のmanaged使用量差は264 bytes、
+working set差は344,064 bytesで、計測用native faceの生成/破棄数も全回一致した。
+working setにはJIT・allocator/cacheの常駐分が残るため、解放後にRSSがゼロへ戻るとは説明しない。
 
 ## Windowsと手動viewer確認
 

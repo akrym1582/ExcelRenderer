@@ -355,24 +355,13 @@ public sealed partial class ToolIntegrationTests : IDisposable
         return new(process.ExitCode, await output, await error);
     }
 
-    /// <summary>リポジトリ内の Debug、次いで Release の順に、ビルド済みツールの DLL を検索します。</summary>
+    /// <summary>実行中のテストと同じ構成のビルド済みツール DLL を検索します。</summary>
     /// <param name="repositoryRoot">ソリューションファイルがあるリポジトリルート。</param>
     private static string ResolveToolAssemblyPath(string repositoryRoot)
     {
-        var debug = Path.Combine(repositoryRoot, "src", "ExcelRenderer.Tool", "bin", "Debug", "net10.0", "ExcelRenderer.Tool.dll");
-        if (File.Exists(debug))
-        {
-            return debug;
-        }
-
-        var release = Path.Combine(repositoryRoot, "src", "ExcelRenderer.Tool", "bin", "Release", "net10.0", "ExcelRenderer.Tool.dll");
-        if (File.Exists(release))
-        {
-            return release;
-        }
-
-        throw new FileNotFoundException(
-            $"Tool assembly not found. Checked both Debug and Release outputs:{Environment.NewLine}{debug}{Environment.NewLine}{release}");
+        var configuration = new DirectoryInfo(AppContext.BaseDirectory).Parent!.Name;
+        var tool = Path.Combine(repositoryRoot, "src", "ExcelRenderer.Tool", "bin", configuration, "net10.0", "ExcelRenderer.Tool.dll");
+        return File.Exists(tool) ? tool : throw new FileNotFoundException($"Tool assembly not found for test configuration {configuration}.", tool);
     }
 
     /// <summary>実行ディレクトリから親をたどり、ExcelRenderer.slnx があるリポジトリルートを探します。</summary>

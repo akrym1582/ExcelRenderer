@@ -18,7 +18,7 @@ logs = root / 'TestResults/Mutations'
 logs.mkdir(parents=True, exist_ok=True)
 
 skia = 'src/ExcelRenderer/SkiaSharp/SkiaTextDrawing.cs'
-pdf = 'src/ExcelRenderer/PdfSharp/PdfSharpFinalizedTextPainter.cs'
+pdf = skia
 # Pictures use the shared streaming snapshot parser after ClosedXML removal.
 reader = 'src/ExcelRenderer.Core/Excel/CoreExcelReader.OpenXml.cs'
 mutations = []
@@ -31,17 +31,17 @@ change('skia-drawing-face', skia,
        'using var mutationFace = SKTypeface.FromFile(Path.Combine(AppContext.BaseDirectory, "Fonts/NotoSansMono-Regular.ttf"));\n'
        '            using var font = new SKFont(mutationFace, size);',
        'Skia_legacy_uses_selected_face_for_measurement_and_drawing')
-change('pdf-run-x', pdf, 'positioned.Left + run.X,', 'positioned.Left,',
+change('pdf-run-x', pdf, '(float)(positioned.Left + run.X),', '(float)positioned.Left,',
        'Pdf_finalized_text_uses_stored_run_origins_and_font_size')
-change('pdf-baseline', pdf, '                            positioned.Baseline,',
-       '                            command.Bounds.Y + 9,',
+change('pdf-baseline', pdf, '                            (float)positioned.Baseline,',
+       '                            (float)(command.Bounds.Y + 9),',
        'Pdf_finalized_text_uses_stored_run_origins_and_font_size')
-underline = '''                    graphics.DrawLine(
-                        new XPen(brush.Color),
-                        positioned.Left,
-                        positioned.Baseline + 1,
-                        positioned.Left + positioned.Line.Width,
-                        positioned.Baseline + 1);'''
+underline = """                    canvas.DrawLine(
+                        (float)positioned.Left,
+                        (float)(positioned.Baseline + 1),
+                        (float)(positioned.Left + positioned.Line.Width),
+                        (float)(positioned.Baseline + 1),
+                        paint);"""
 change('pdf-double-underline', pdf, underline, underline + '\n' + underline,
        'Pdf_finalized_underline_is_drawn_once_per_line_at_stored_baseline')
 change('svg-run-x', skia, '(float)(positioned.Left + run.X),',
@@ -57,20 +57,20 @@ change('skia-finalized-restore', skia, '            canvas.Restore();', '       
        'Skia_finalized_restores_canvas_after_drawing_failure', 1)
 change('skia-rotation-restore', 'src/ExcelRenderer/SkiaSharp/SkiaTextPainter.cs',
        '            canvas.Restore();', '            _ = canvas.SaveCount;', 'Skia_legacy_restores_canvas_after_drawing_failure|Skia_finalized_restores_canvas_after_drawing_failure')
-change('pdf-finalized-restore', pdf, '            graphics.Restore(state);', '            _ = graphics.Transform;',
-       'Pdf_finalized_restores_graphics_after_drawing_failure')
-change('pdf-legacy-resolved-restore', 'src/ExcelRenderer/PdfSharp/PdfSharpLegacyTextPainter.cs',
-       '            graphics.Restore(state);', '            _ = graphics.Transform;', 'Pdf_legacy_restores_graphics_after_drawing_failure', 1)
-change('pdf-legacy-ordinary-restore', 'src/ExcelRenderer/PdfSharp/PdfSharpLegacyTextPainter.cs',
-       '            graphics.Restore(state);', '            _ = graphics.Transform;', 'Pdf_legacy_ordinary_text_preserves_caller_transform_and_clip', 0)
-change('pdf-rotation-restore', 'src/ExcelRenderer/PdfSharp/PdfSharpTextPainter.cs',
-       '            graphics.Restore(state);', '            _ = graphics.Transform;', 'Pdf_legacy_restores_graphics_after_drawing_failure|Pdf_finalized_restores_graphics_after_drawing_failure')
+change('pdf-finalized-restore', pdf, '            canvas.Restore();', '            _ = canvas.SaveCount;',
+       'Pdf_finalized_restores_graphics_after_drawing_failure', 1)
+change('pdf-legacy-resolved-restore', skia,
+       '            canvas.Restore();', '            _ = canvas.SaveCount;', 'Pdf_legacy_restores_graphics_after_drawing_failure', 0)
+change('pdf-legacy-ordinary-restore', skia,
+       '            canvas.Restore();', '            _ = canvas.SaveCount;', 'Pdf_legacy_ordinary_text_preserves_caller_transform_and_clip', 0)
+change('pdf-rotation-restore', 'src/ExcelRenderer/SkiaSharp/SkiaTextPainter.cs',
+       '            canvas.Restore();', '            _ = canvas.SaveCount;', 'Pdf_legacy_restores_graphics_after_drawing_failure|Pdf_finalized_restores_graphics_after_drawing_failure')
 
 change('trim-origin', 'src/ExcelRenderer/Rendering/PageViewport.cs',
        '-Crop.X + Padding, -Crop.Y + Padding', 'Padding, Padding',
        'Artificial_scene_trim_and_PDF_annotations_have_independent_numeric_expectations')
-change('pdf-link-y', 'src/ExcelRenderer/PdfSharp/PdfHyperlinkWriter.cs',
-       'height - b.Y - b.Height', 'b.Y',
+change('pdf-link-y', 'src/ExcelRenderer.Core/Pdf/GeneratedPdfFinalizer.cs',
+       'plan.Height - bounds.Y - bounds.Height', 'bounds.Y',
        'Artificial_scene_trim_and_PDF_annotations_have_independent_numeric_expectations')
 change('pdf-destination-selection', 'src/ExcelRenderer/ExcelConverter.Viewports.cs',
        'targetPage?.Descriptor.OutputPageNumber', 'targetPage?.Descriptor.DocumentPageNumber',

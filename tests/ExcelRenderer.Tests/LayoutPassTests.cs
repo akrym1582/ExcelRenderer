@@ -5,10 +5,10 @@ using ExcelRenderer.Excel;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Model;
-using ExcelRenderer.PdfSharp;
+using ExcelRenderer.Pdf;
+using ExcelRenderer.SkiaSharp;
 using ExcelRenderer.Rendering;
 using ExcelRenderer.TestFixtures;
-using PdfSharp.Fonts;
 using SkiaSharp;
 using A = DocumentFormat.OpenXml.Drawing;
 using S = DocumentFormat.OpenXml.Spreadsheet;
@@ -39,7 +39,7 @@ public sealed class LayoutPassTests
             new(70, 100, 10, 10, 10, 10, Scale: 0.5),
             new(new(1, 1), new(1, 1)));
 
-        var layout = new ReportLayoutEngine(new PdfSharpTextMeasurer()).LayoutContinuous(sheet);
+        var layout = new ReportLayoutEngine(new SkiaTextMeasurer()).LayoutContinuous(sheet);
 
         var page = Assert.Single(layout.Document.Pages);
         Assert.Equal(120, layout.Width);
@@ -646,7 +646,7 @@ public sealed class LayoutPassTests
             [],
             new());
 
-        var layout = new ReportLayoutEngine(new PdfSharpTextMeasurer(fontManager)).Layout(sheet);
+        var layout = new ReportLayoutEngine(new SkiaTextMeasurer(fontManager)).Layout(sheet);
         var command = Assert.IsType<DrawTextCommand>(Assert.Single(new DrawCommandGeneratorPass().Generate(layout)));
 
         Assert.NotNull(command.TextLayout);
@@ -1086,11 +1086,11 @@ public sealed class LayoutPassTests
     /// 描画文書が有効な PDF データとしてストリームへ書き込まれることを検証します。
     /// </summary>
     [Fact(DisplayName = "描画文書が有効な PDF データとしてストリームへ書き込まれる")]
-    public void PdfSharpRenderer_writes_a_pdf_document()
+    public void PdfRenderer_writes_a_pdf_document()
     {
         using var output = new MemoryStream();
 
-        new PdfSharpRenderer().Render([], new PageSettings(), output);
+        new PdfRenderer().Render([], new PageSettings(), output);
 
         Assert.True(output.Length > 0);
         Assert.Equal("%PDF-", System.Text.Encoding.ASCII.GetString(output.GetBuffer(), 0, 5));
@@ -1100,12 +1100,12 @@ public sealed class LayoutPassTests
     /// 埋め込み画像が PDF ページへ描画されることを検証します。
     /// </summary>
     [Fact(DisplayName = "埋め込み画像が PDF ページへ描画される")]
-    public void PdfSharpRenderer_renders_an_image()
+    public void PdfRenderer_renders_an_image()
     {
         using var output = new MemoryStream();
         var command = new DrawImageCommand(1, new(0, 0, 20, 20), CreateImageBytes());
 
-        new PdfSharpRenderer().Render([command], new PageSettings(), output);
+        new PdfRenderer().Render([command], new PageSettings(), output);
 
         Assert.True(output.Length > 0);
         Assert.Equal("%PDF-", System.Text.Encoding.ASCII.GetString(output.GetBuffer(), 0, 5));
@@ -1113,11 +1113,11 @@ public sealed class LayoutPassTests
 
     /// <summary>CBDT カラー絵文字を PDF に画像として描画できます。</summary>
     [Fact(DisplayName = "CBDT カラー絵文字を PDF に画像として描画できます")]
-    public void PdfSharpRenderer_renders_color_emoji()
+    public void PdfRenderer_renders_color_emoji()
     {
         var manager = new FontManager(new FontOptions { AllowSystemFonts = false, FallbackFamilies = [] });
         using var output = new MemoryStream();
-        new PdfSharpRenderer(manager).Render(
+        new PdfRenderer(manager).Render(
             [new DrawTextCommand(1, new(4, 4, 80, 58), "😀", CellStyle.Default with
             { Font = new FontStyle("Noto Sans JP", 40) })],
             new PageSettings(88, 66), output);
@@ -1128,24 +1128,20 @@ public sealed class LayoutPassTests
 
     /// <summary>欠落した私用文字の置換を PDF の解決済みテキスト描画経路へ渡します。</summary>
     [Fact(DisplayName = "欠落した私用文字の置換を PDF の解決済みテキスト描画経路へ渡します")]
-    public void PdfSharpRenderer_uses_resolved_runs_for_missing_private_use_glyphs()
+    public void PdfRenderer_uses_resolved_runs_for_missing_private_use_glyphs()
     {
         var manager = new MissingPrivateUseFontManager();
-        var resolver = new CountingFontResolver();
         using var output = new MemoryStream();
-        GlobalFontSettings.ResetFontManagement();
-        GlobalFontSettings.FontResolver = resolver;
         try
         {
-            var measured = new PdfSharpTextMeasurer(manager).Measure("\uE000", new FontStyle("Missing Font", 12), 80, false);
-            new PdfSharpRenderer(manager).Render(
+            var measured = new SkiaTextMeasurer(manager).Measure("\uE000", new FontStyle("Missing Font", 12), 80, false);
+            new PdfRenderer(manager).Render(
                 [new DrawTextCommand(1, new(4, 4, 80, 20), "\uE000", CellStyle.Default with
                 { Font = new FontStyle("Missing Font", 12) })],
                 new PageSettings(88, 28), output);
 
             Assert.True(measured.Width > 0);
             Assert.True(manager.ResolveTextRunsCallCount > 1);
-            Assert.Equal(0, resolver.ResolveTypefaceCallCount);
             Assert.Equal("%PDF-", System.Text.Encoding.ASCII.GetString(output.GetBuffer(), 0, 5));
         }
         finally
@@ -1190,48 +1186,26 @@ public sealed class LayoutPassTests
     /// 登録したフォントファミリに対して設定済みフォントファイルのバイト列が返されることを検証します。
     /// </summary>
     [Fact(DisplayName = "登録したフォントファミリに対して設定済みフォントファイルのバイト列が返される")]
-    public void PdfSharpFontResolver_returns_the_configured_font_file()
+    public void FontManager_returns_configured_font_snapshot_and_aliases()
     {
-        var fontFilePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.ttf");
-        var fontData = File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf"));
-        File.WriteAllBytes(fontFilePath, fontData);
-
-        try
-        {
-            var resolver = new PdfSharpFontResolver("Noto Sans JP", fontFilePath);
-
-            var font = resolver.ResolveTypeface("Noto Sans JP", bold: false, italic: false);
-
-            Assert.NotNull(font);
-            Assert.Equal(Path.GetFullPath(fontFilePath), font.FaceName);
-            Assert.Equal(fontData, resolver.GetFont(font.FaceName));
-            Assert.Null(resolver.ResolveTypeface("Other Font", bold: false, italic: false));
-
-            var aliases = new PdfSharpFontResolver("Noto Sans JP", fontFilePath, "游ゴシック", "Yu Gothic");
-            Assert.Equal(font.FaceName, aliases.ResolveTypeface("游ゴシック", false, false)!.FaceName);
-            Assert.Equal(font.FaceName, aliases.ResolveTypeface("yu gothic", false, false)!.FaceName);
-            Assert.Null(aliases.ResolveTypeface("Other Font", false, false));
-        }
-        finally
-        {
-            File.Delete(fontFilePath);
-        }
+        var path = Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf");
+        var manager = new FontManager(new() { AllowSystemFonts = false, UseFontPack = false, Registrations = [new("Noto Sans JP", path), new("游ゴシック", path), new("Yu Gothic", path)] });
+        using var scope = new ConversionFontResources();
+        var expected = File.ReadAllBytes(path);
+        foreach (var family in new[] { "Noto Sans JP", "游ゴシック", "yu gothic" })
+            Assert.Equal(expected, scope.GetFace(manager.Resolve(new(family, 400, false))).Data);
     }
 
     /// <summary>既定のリゾルバーが NuGet アセンブリに内蔵した静的フォントを返すことを検証します。</summary>
     [Fact(DisplayName = "既定のリゾルバーが NuGet アセンブリに内蔵した静的フォントを返す")]
-    public void PdfSharpFontResolver_returns_bundled_regular_font()
+    public void FontManager_returns_bundled_regular_font()
     {
-        var resolver = new PdfSharpFontResolver();
-        var face = resolver.ResolveTypeface("游ゴシック", bold: false, italic: false);
-
-        Assert.NotNull(face);
-        var data = resolver.GetFont(face.FaceName);
-        Assert.NotNull(data);
-        Assert.Equal(File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf")), data);
-        using var stream = new MemoryStream(data);
-        using var typeface = SKTypeface.FromStream(stream);
-        Assert.Equal("Noto Sans JP", typeface.FamilyName);
+        var manager = new FontManager(new() { AllowSystemFonts = false });
+        var face = manager.Resolve(new("游ゴシック", 400, false));
+        using var scope = new ConversionFontResources();
+        var snapshot = scope.GetFace(face);
+        Assert.Equal("Noto Sans JP", snapshot.Typeface.FamilyName);
+        Assert.Equal(File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf")), snapshot.Data);
     }
 
     /// <summary>
@@ -1402,7 +1376,7 @@ public sealed class LayoutPassTests
             var sheet = Assert.Single(new ExcelReader().Read(path).Sheets);
             var geometry = new SheetGeometry(sheet);
             var source = Assert.Single(sheet.Images!);
-            var page = Assert.Single(new ReportLayoutEngine(new PdfSharpTextMeasurer()).Layout(sheet).Pages);
+            var page = Assert.Single(new ReportLayoutEngine(new SkiaTextMeasurer()).Layout(sheet).Pages);
             var rendered = Assert.Single(page.Images!);
 
             Assert.Equal(sheet.Columns[1].Width, geometry.ColumnStart(3), 6);
@@ -1536,24 +1510,4 @@ public sealed class LayoutPassTests
         }
     }
 
-    /// <summary>書体解決の呼び出し数を記録して、計測処理の利用状況を検証します。</summary>
-    private sealed class CountingFontResolver : IFontResolver
-    {
-        /// <summary>PDFsharp の書体解決が呼び出された回数を保持します。</summary>
-        public int ResolveTypefaceCallCount { get; private set; }
-
-        /// <summary>フォントデータを返さず、テスト対象の代替解決経路を使用させます。</summary>
-        /// <param name="faceName">PDFsharp が要求する書体識別名。</param>
-        public byte[]? GetFont(string faceName) => null;
-
-        /// <summary>書体解決の呼び出し回数を増やし、未解決を表す null を返します。</summary>
-        /// <param name="familyName">解決を要求するフォントファミリ名。</param>
-        /// <param name="bold">太字書体を要求するかどうか。</param>
-        /// <param name="italic">斜体書体を要求するかどうか。</param>
-        public FontResolverInfo? ResolveTypeface(string familyName, bool bold, bool italic)
-        {
-            ResolveTypefaceCallCount++;
-            return null;
-        }
-    }
 }

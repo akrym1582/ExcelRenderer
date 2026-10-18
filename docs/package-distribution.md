@@ -78,7 +78,54 @@ runs before uploading packages or creating the release commit/tag. Historical
 validation reports describe their recorded package layout; this contract replaces
 their earlier standalone OpenXml/Formulas package assumptions.
 
+The font-split workflow restores and rebuilds the entire solution before the
+dependency audit. `dotnet test` alone does not build every sample and audit tool
+required by that audit. It packs all four packages and checks the CLI's bundled
+Fonts DLL against the optional font package and its runtime dependency graph;
+dotnet tool dependencies are bundled in the tool, rather than listed as ordinary
+NuGet dependencies in its nuspec. Library consumers are checked with and without
+the optional font package, resolving its current Noto Sans JP, Noto Color Emoji
+and IPAmj Mincho families.
+
+`scripts/validate-font-packages.py` owns the font package checks for both the
+standalone font-split workflow and the normal PR unit-test job. Every PR therefore
+checks the same package-only consumers, with separate output directories and a
+fresh NuGet cache so a previously cached package cannot hide a regression. This
+also prevents the font list and tool-bundling checks from drifting between CI
+workflows. Run it locally after packing with `--packages <pack-output>` and
+`--work <temporary-directory-outside-the-repository>`.
+
 NuGet 公開対象は本体・Mapping・Tool・Fonts の4つだけです。Core・OpenXml・Formulas は
 非公開のソースプロジェクトとし、必要な DLL/XML を公開パッケージに同梱します。
 テスト・サンプル・検証・性能測定の各 csproj も公開しません。新規プロジェクトも既定で
 非公開にし、CI とリリース前の検証で公開対象の追加や未公開パッケージへの依存を検出します。
+
+## Skia PDF native subset assets
+
+Before a source build or pack, run `python3 scripts/build-harfbuzz-subset.py` on
+an OS with CMake and a C++ compiler. It builds the adapter from checksum-pinned
+HarfBuzz 10.2.0 without third-party runtime dependencies beyond the platform C/C++
+runtime. Generated assets live under `native/runtimes/<rid>/native`; generated
+`build.json` records source/binary hashes, version, license and verified exports.
+`build/HarfBuzzSubset.targets` copies the current host asset for ProjectReference
+consumers and includes native runtime assets in the main nupkg. The tool receives
+its current host asset through the main ProjectReference. The HarfBuzz license is
+included in both packages. Python/CMake are not installed for product consumers.
+
+The release workflow builds and runs subset/API/CLI tests, packs the four packages
+and runs isolated consumers independently on Linux
+x64 and Windows x64 before collecting both assets for packing. A local one-OS pack
+is only evidence for that OS; it does not establish a complete release inventory
+or other-RID runtime support. See `docs/skia-pdf-validation.md` for actual local
+verification and outstanding distribution gates. Missing native subset assets fail PDF conversion in both main and Core. PNG/SVG/Markdown do not require the subset adapter.
+
+## PDF dependency removal audit
+
+All normal restore graphs and distributed assemblies use SkiaSharp without PDFsharp.
+The Core DLL/XML bundling and four-package allowlist are unchanged. Run
+`python scripts/check-no-pdfsharp.py --packages <pack-output> --publish <tool-publish>`
+after a clean Release build. The audit reads actual managed AssemblyRefs and checks
+restore/assets/deps/nuspec/runtime files, including isolated package consumers.
+PdfPig 0.1.14 is validation-only in nonpackable tests/tools and must never enter
+product package dependency groups. Release/publish workflow changes do not authorize
+a release; versioning and NuGet publication remain separate operations.

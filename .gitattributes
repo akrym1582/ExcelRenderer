@@ -1,0 +1,5 @@
+# Hash-pinned JSON evidence must survive Windows checkouts byte-for-byte.
+*.json text eol=lf
+
+# Frozen captures include binary and textual files whose exact hashes are retained.
+tests/Shared/PdfRemovalBaseline/** -text

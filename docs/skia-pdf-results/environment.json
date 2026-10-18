@@ -1,0 +1,58 @@
+{
+  "baseline_sha": "8d23c0725f60126f5e38c9a9e9a612a6d276b93a",
+  "implementation": "d843d02d55343355b27f6cefb7b0decd4e73ae03",
+  "os": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "rid": "linux-x64",
+  "sdk": "10.0.401",
+  "packages": {
+    "PDFsharp": "6.2.3",
+    "SkiaSharp": "4.151.0",
+    "SkiaSharp.NativeAssets.Linux": "4.151.0",
+    "HarfBuzz (source build)": "10.2.0"
+  },
+  "font_sha256": {
+    "third_party/NotoSansJP/NotoSansJP-Regular.ttf": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec",
+    "third_party/IPAmjMincho/ipamjm.ttf": "a3e84f495f3c388db7a1473bf1985c1c076d0c814100f10a027ca6853eb1e8cb",
+    "third_party/NotoColorEmoji/NotoColorEmoji.ttf": "15671215ab769fdc7162a045d56fd7d7e477c51b04e6b3c761d914d8fdd6cc44"
+  },
+  "baseline_tests": {
+    "Core": 85,
+    "Formulas": 833,
+    "Mapping": 172,
+    "OpenXml": 206,
+    "Main": 565,
+    "Tool": 83
+  },
+  "baseline_build": {
+    "warnings": 0,
+    "errors": 0
+  },
+  "native": {
+    "rid": "linux-x64",
+    "version": "10.2.0",
+    "source": "https://github.com/harfbuzz/harfbuzz/archive/refs/tags/10.2.0.tar.gz",
+    "source_sha256": "11749926914fd488e08e744538f19329332487a6243eec39ef3c63efa154a578",
+    "binary_sha256": "79764f41ee0ab700c178d920c51c12d3699cd0c700244485f459d36401ab24ea",
+    "license": "Old MIT (HarfBuzz), MIT (adapter)",
+    "exports": [
+      "er_subset",
+      "er_blob_data",
+      "er_blob_destroy",
+      "er_version"
+    ],
+    "platform": "Linux-6.18.55-x86_64-with-glibc2.41"
+  },
+  "native_build_tools": {
+    "cmake": "3.31.6",
+    "compiler": "g++ (Debian 14.2.0-19) 14.2.0"
+  },
+  "configuration": "Release",
+  "format_fixture_sha256": {
+    "tests/ExcelRenderer.Tests/Fonts/PdfFormats/cff.otf": "bbabb32454e6522d7990bd81004c374cfa1570efd9378a583f6253ac80b49ec9",
+    "tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection.ttc": "2bc50db11a7c19fd1d3c603d072e24f96843f219d740c5b14b8c07ea3685f466",
+    "tests/ExcelRenderer.Tests/Fonts/PdfFormats/colr-v1.ttf": "6cc5c1207723eea73eee1b8e46d5f5cd868798ea127b6f04b851cfb74cfafc7a",
+    "tests/ExcelRenderer.Tests/Fonts/PdfFormats/colr.ttf": "bd77e0877821518e04e7e24414008f71cf80baa41531a2108bc437d434946e10",
+    "tests/ExcelRenderer.Tests/Fonts/PdfFormats/static.ttf": "2f3e1d51438d1cd9f3d13f5588c3cad8e44c0f0b3a2a65b89af00fba49cccc32",
+    "tests/ExcelRenderer.Tests/Fonts/PdfFormats/variable.ttf": "2cbfe8ef7643a1795e42ce5cf42ea4c2ded3504c24f95f5282b202e8cec7226c"
+  }
+}

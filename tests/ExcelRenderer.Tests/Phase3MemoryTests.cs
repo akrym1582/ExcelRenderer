@@ -7,9 +7,9 @@ using ExcelRenderer.Excel;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Model;
-using ExcelRenderer.PdfSharp;
-using ExcelRenderer.Rendering;
+using ExcelRenderer.Pdf;
 using ExcelRenderer.SkiaSharp;
+using ExcelRenderer.Rendering;
 using Xunit;
 
 namespace ExcelRenderer.Tests;
@@ -55,7 +55,7 @@ public sealed class Phase3MemoryTests
             Assert.Equal(new int?[] { 1, 2 }, result.Pages.Select(page => page.OutputPageNumber));
             Assert.Equal(1, maximum);
             Assert.Equal(0, active);
-            Assert.Equal(4, builds);
+            Assert.Equal(format == OutputFormat.Pdf ? 6 : 4, builds);
             Assert.Equal(format == OutputFormat.Pdf ? 1 : 2, sink.OpenCount);
         }
         finally
@@ -311,7 +311,7 @@ public sealed class Phase3MemoryTests
         using var fonts = new ConversionFontResources();
         input.Position = 0;
         var sheet = Assert.Single(new ExcelReader(manager).Read(input).Sheets);
-        var document = new ReportLayoutEngine(new PdfSharpTextMeasurer(manager, cacheLayouts: true)).Layout(sheet);
+        var document = new ReportLayoutEngine(new SkiaTextMeasurer(manager, cacheLayouts: true)).Layout(sheet);
         Assert.True(document.Pages.Count > 2);
         foreach (var page in document.Pages)
         {
@@ -390,7 +390,7 @@ public sealed class Phase3MemoryTests
         };
         using var fonts = new ConversionFontResources();
         var manager = new FontManager(Request(OutputFormat.Png).FontOptions);
-        var measurer = new PdfSharpTextMeasurer(manager, cacheLayouts: true);
+        var measurer = new SkiaTextMeasurer(manager, cacheLayouts: true);
         var plan = new ContinuousLayoutPlan(sheet, measurer);
         var materialized = new ReportLayoutEngine(measurer).LayoutContinuous(sheet);
         using var lazy = new MemoryStream();

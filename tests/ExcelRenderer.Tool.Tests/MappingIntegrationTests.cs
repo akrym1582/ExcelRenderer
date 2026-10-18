@@ -10,13 +10,15 @@ public sealed partial class ToolIntegrationTests
     [Theory]
     [InlineData("xlsx", null)]
     [InlineData("pdf", null)]
+    [InlineData("pdf", null, "skiasharp")]
     [InlineData("svg", null)]
     [InlineData("image", null)]
     [InlineData("render", "pdf")]
+    [InlineData("render", "pdf", "skiasharp")]
     [InlineData("render", "svg")]
     [InlineData("render", "png")]
     [InlineData("markdown", null)]
-    public async Task Json_mapping_completes_for_xlsx_and_all_render_commands(string command, string? format)
+    public async Task Json_mapping_completes_for_xlsx_and_all_render_commands(string command, string? format, string? backend = null)
     {
         Directory.CreateDirectory(_directory);
         var template = Path.Combine(_directory, "template.xlsx");
@@ -30,6 +32,11 @@ public sealed partial class ToolIntegrationTests
         if (format is not null)
         {
             args.AddRange(["--format", format]);
+        }
+
+        if (backend is not null)
+        {
+            args.AddRange(["--pdf-backend", backend]);
         }
 
         if (command == "image")

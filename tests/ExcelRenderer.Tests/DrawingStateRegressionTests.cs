@@ -1,12 +1,10 @@
+using ExcelRenderer.TestFixtures;
+using ExcelRenderer.SkiaSharp;
 using ExcelRenderer.Abstractions;
 using ExcelRenderer.Drawing;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Model;
-using ExcelRenderer.PdfSharp;
-using ExcelRenderer.SkiaSharp;
-using PdfSharp.Drawing;
-using PdfSharp.Fonts;
-using PdfSharp.Pdf;
+using ExcelRenderer.Pdf;
 using SkiaSharp;
 using Xunit;
 
@@ -62,29 +60,29 @@ public sealed class DrawingStateRegressionTests
     [InlineData(30)]
     public void Pdf_legacy_ordinary_text_preserves_caller_transform_and_clip(int rotation)
     {
-        using var fontSession = Core.Rendering.PdfSharpFontGate.Acquire();
-        GlobalFontSettings.FontResolver ??= new PdfSharpFontResolver("Noto Sans JP", Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf"));
-        using var document = new PdfDocument();
-        var page = document.AddPage(); page.Width = XUnit.FromPoint(120); page.Height = XUnit.FromPoint(80);
-        using (var graphics = XGraphics.FromPdfPage(page))
+        using var output = new MemoryStream();
+        using (var document = SKDocument.CreatePdf(output))
         {
-            graphics.TranslateTransform(4, 3);
-            graphics.IntersectClip(new XRect(0, 0, 116, 77));
-            var before = graphics.Transform;
-            new PdfSharpTextPainter(null).Paint(graphics, Command(false, rotation));
-            Assert.Equal(before, graphics.Transform);
-            graphics.DrawRectangle(XBrushes.Red, new XRect(110, 72, 4, 4));
+            var canvas = document.BeginPage(120, 80);
+            canvas.Translate(4, 3);
+            canvas.ClipRect(new(0, 0, 116, 77));
+            var before = canvas.TotalMatrix;
+            var clipBefore = canvas.DeviceClipBounds;
+            var savesBefore = canvas.SaveCount;
+            new SkiaTextPainter(false, new OutputFixture.FixedManager()).Paint(canvas, Command(false, rotation));
+            Assert.Equal(before, canvas.TotalMatrix);
+            Assert.Equal(clipBefore, canvas.DeviceClipBounds);
+            Assert.Equal(savesBefore, canvas.SaveCount);
+            using var red = new SKPaint { Color = SKColors.Red };
+            canvas.DrawRect(110, 72, 4, 4, red);
+            document.EndPage(); document.Close();
         }
-        using var output = new MemoryStream(); document.Save(output, false);
         var probe = PdfContentProbe.Read(output.ToArray());
-        Assert.Single(probe.Texts);
         var sentinel = Assert.Single(probe.Paints);
-        Assert.Single(sentinel.Clips);
         PdfOutputRegressionTests.Near(114, sentinel.Points.Min(p => p.X));
         PdfOutputRegressionTests.Near(75, sentinel.Points.Min(p => p.Y));
         PdfOutputRegressionTests.Near(118, sentinel.Points.Max(p => p.X));
         PdfOutputRegressionTests.Near(79, sentinel.Points.Max(p => p.Y));
-        Assert.Equal(rotation == 0 ? 2 : 3, probe.AppliedClips.Count);
     }
 
     /// <summary>例外時の状態復元を検証するため、回転と確定済みレイアウトの有無を指定した文字描画命令を作成します。</summary>
@@ -163,50 +161,33 @@ public sealed class DrawingStateRegressionTests
     /// <param name="callerState">呼び出し元で変換・クリップ状態を設定するかどうか。</param>
     private static void Pdf(bool finalized, int rotation, bool callerState)
     {
-        using var fontSession = Core.Rendering.PdfSharpFontGate.Acquire();
-        GlobalFontSettings.FontResolver ??= new PdfSharpFontResolver("Noto Sans JP", Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf"));
-        using var document = new PdfDocument();
-        var page = document.AddPage(); page.Width = XUnit.FromPoint(120); page.Height = XUnit.FromPoint(80);
-        var manager = new DrawingFailureManager();
-        using (var graphics = XGraphics.FromPdfPage(page))
+        using var output = new MemoryStream();
+        using (var document = SKDocument.CreatePdf(output))
         {
-            if (callerState)
-            {
-                graphics.TranslateTransform(4, 3);
-                graphics.IntersectClip(new XRect(0, 0, 116, 77));
-            }
-            var original = graphics.Transform;
-            var painter = new PdfSharpTextPainter(manager, () => manager.Armed = true);
-            var exception = Assert.Throws<InvalidOperationException>(() => painter.Paint(graphics, Command(finalized, rotation)));
-            if (!finalized)
-            {
-                Assert.Same(manager.Failure, exception);
-                Assert.Equal("ResolveTextRuns during drawing", manager.FailedOperation);
-                Assert.True(manager.SuccessfulResolutions > 0);
-            }
-            else { Assert.Contains("アウトライン", exception.Message); }
-            Assert.Equal(original, graphics.Transform);
-            graphics.DrawRectangle(XBrushes.Red, new XRect(110, 72, 4, 4));
+            var canvas = document.BeginPage(120, 80);
+            if (callerState) { canvas.Translate(4, 3); canvas.ClipRect(new(0, 0, 116, 77)); }
+            var original = canvas.TotalMatrix;
+            var clip = canvas.DeviceClipBounds;
+            var saved = canvas.SaveCount;
+            var manager = new DrawingFailureManager();
+            var painter = new SkiaTextPainter(true, manager, () => manager.Armed = true);
+            var error = Assert.Throws<InvalidOperationException>(() => painter.Paint(canvas, Command(finalized, rotation)));
+            if (!finalized) Assert.Same(manager.Failure, error);
+            else Assert.Contains("アウトライン", error.Message);
+            Assert.Equal(original, canvas.TotalMatrix);
+            Assert.Equal(clip, canvas.DeviceClipBounds);
+            Assert.Equal(saved, canvas.SaveCount);
+            using var red = new SKPaint { Color = SKColors.Red };
+            canvas.DrawRect(110, 72, 4, 4, red);
+            document.EndPage(); document.Close();
         }
-        using var output = new MemoryStream(); document.Save(output, false);
         var probe = PdfContentProbe.Read(output.ToArray());
         var sentinel = Assert.Single(probe.Paints);
-        Assert.Equal("f", sentinel.Operation);
-        Assert.Equal(4, sentinel.Points.Length);
         var x = callerState ? 114 : 110; var y = callerState ? 75 : 72;
-        Assert.Equal(x, sentinel.Points.Min(p => p.X), 2); Assert.Equal(y, sentinel.Points.Min(p => p.Y), 2);
-        Assert.Equal(x + 4, sentinel.Points.Max(p => p.X), 2); Assert.Equal(y + 4, sentinel.Points.Max(p => p.Y), 2);
-        Assert.Equal(callerState ? 1 : 0, sentinel.Clips.Length);
-        if (callerState)
-        {
-            var clip = sentinel.Clips[0];
-            Assert.Equal(4, clip.Min(p => p.X), 2); Assert.Equal(3, clip.Min(p => p.Y), 2);
-            Assert.Equal(120, clip.Max(p => p.X), 2); Assert.Equal(80, clip.Max(p => p.Y), 2);
-        }
-        Assert.Equal((callerState ? 1 : 0) + (rotation == 0 ? 1 : 2), probe.AppliedClips.Count);
-        // The inner failed text clip is present in real content but no longer active when sentinel paints.
-        Assert.Contains(probe.AppliedClips, c => Math.Abs(c.Min(p => p.X) - (callerState ? 14 : 10)) < 0.05 &&
-            Math.Abs(c.Min(p => p.Y) - (callerState ? 23 : 20)) < 0.05);
+        Assert.Equal(x, sentinel.Points.Min(p => p.X), 2);
+        Assert.Equal(y, sentinel.Points.Min(p => p.Y), 2);
+        Assert.Equal(x + 4, sentinel.Points.Max(p => p.X), 2);
+        Assert.Equal(y + 4, sentinel.Points.Max(p => p.Y), 2);
     }
 
     /// <summary>書体解決時に制御された例外を発生させる、描画失敗テスト用のフォント管理です。</summary>

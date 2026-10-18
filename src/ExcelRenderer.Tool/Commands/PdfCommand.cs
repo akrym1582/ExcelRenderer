@@ -19,10 +19,12 @@ public static class PdfCommand
         var formulaMode = CommandSupport.FormulaModeOption();
         var output = CommandSupport.OutputOption("Path to the output PDF file.");
         var sheet = new Option<string?>("--sheet") { Description = "Worksheet name to convert." };
+        var backend = CommandSupport.PdfBackendOption();
         var hyperlinks = CommandSupport.HyperlinksOption();
         var fonts = CommandSupport.FontOptions();
         var command = new Command("pdf", "Convert Excel worksheets to PDF.") { input, output, sheet };
         command.Add(hyperlinks);
+        command.Add(backend);
         command.Add(data);
         command.Add(formulaMode);
         CommandSupport.AddFontOptions(command, fonts);
@@ -33,7 +35,7 @@ public static class PdfCommand
             mappedInput => ExcelConverter.ConvertToPdfAsync(
                 mappedInput,
                 parseResult.GetValue(output)!,
-                new PdfExportOptions { Hyperlinks = CommandSupport.GetHyperlinks(parseResult.GetValue(hyperlinks)!), SheetName = parseResult.GetValue(sheet), ReadOptions = CommandSupport.GetReadOptions(parseResult.GetValue(formulaMode)!), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
+                new PdfExportOptions { PdfBackend = CommandSupport.GetPdfBackend(parseResult.GetValue(backend)!), Hyperlinks = CommandSupport.GetHyperlinks(parseResult.GetValue(hyperlinks)!), SheetName = parseResult.GetValue(sheet), ReadOptions = CommandSupport.GetReadOptions(parseResult.GetValue(formulaMode)!), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
                 cancellationToken),
             cancellationToken,
             CommandSupport.GetMappingOptions(parseResult.GetValue(formulaMode)!))));

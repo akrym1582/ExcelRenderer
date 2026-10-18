@@ -1,0 +1,45 @@
+{
+  "implementationCommit": "0996eb0",
+  "releaseRebuild": {
+    "warnings": 0,
+    "errors": 0
+  },
+  "tests": {
+    "Core": 102,
+    "Formulas": 833,
+    "Mapping": 172,
+    "OpenXml": 206,
+    "Main": 640,
+    "Tool": 99,
+    "total": 2052,
+    "failed": 0,
+    "skipped": 0
+  },
+  "performance": {
+    "conditions": 21,
+    "processMeasurements": 910,
+    "conversionsWithWarmup": 3640,
+    "allMedianTargetsMet": true,
+    "maxMedianTimeRatio": 1.2382136268290833,
+    "maxMedianRssRatio": 1.1346412648423982,
+    "maxTimeRatio": 1.982681757480069,
+    "maxRssRatio": 1.0600473015635201
+  },
+  "windows": "Blocked pending explicit authorization for remote push/draft PR after auto-review rejection",
+  "manualViewers": "Not performed; procedure recorded",
+  "dependencyAudit": {
+    "sourceConfigFiles": 1035,
+    "restoredProjects": 22,
+    "managedAssemblyRefInventories": 788,
+    "packages": 4,
+    "passed": true
+  },
+  "baselineManifestVerified": true,
+  "isolatedConsumers": 9,
+  "consumerRestoreRuntimeGraphs": 18,
+  "sourceNamespaces": {
+    "declarations": 625,
+    "requiredCompilerShims": 2,
+    "passed": true
+  }
+}

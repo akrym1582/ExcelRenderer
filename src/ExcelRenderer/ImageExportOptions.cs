@@ -6,11 +6,7 @@ using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Markdown;
 using ExcelRenderer.Model;
-using ExcelRenderer.PdfSharp;
 using ExcelRenderer.SkiaSharp;
-using PdfSharp.Fonts;
-using PdfSharp.Pdf;
-using PdfSharp.Pdf.IO;
 
 namespace ExcelRenderer;
 

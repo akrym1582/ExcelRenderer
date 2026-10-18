@@ -1,18 +1,19 @@
+using System.Runtime.CompilerServices;
+using ExcelRenderer.Core.Fonts;
 using ExcelRenderer.Rendering;
-using PdfSharp.Drawing;
 using SkiaSharp;
 
 namespace ExcelRenderer.Fonts;
 
-/// <summary>Owns native faces and PDF fonts only for the current conversion.</summary>
+/// <summary>Owns immutable physical font snapshots only for the current conversion.</summary>
 internal sealed class ConversionFontResources : IDisposable
 {
     private static readonly AsyncLocal<ConversionFontResources?> CurrentSlot = new();
     private readonly ConversionFontResources? _previous;
-    private readonly Dictionary<string, SKTypeface> _faces = new();
-    private readonly Dictionary<(string Face, double Size), XFont> _pdfFonts = new();
-    private readonly Dictionary<(string Face, double Size), (double Ascent, double Descent, double Leading)> _metrics = new();
+    private readonly Dictionary<string, SkiaFontFace> _snapshots = new(StringComparer.Ordinal);
+    private ConditionalWeakTable<ResolvedFont, SkiaFontFace> _faces = new();
     private bool _disposed;
+    private bool _purgeFontCache;
 
     /// <summary>Initializes a new instance of the <see cref="ConversionFontResources"/> class.</summary>
     internal ConversionFontResources()
@@ -34,13 +35,12 @@ internal sealed class ConversionFontResources : IDisposable
 
         _disposed = true;
         CurrentSlot.Value = _previous;
-        foreach (var face in _faces.Values)
+        foreach (var face in _snapshots.Values)
         {
             face.Dispose();
-            ConversionMetrics.Report("typefaceDisposed", 1);
         }
 
-        if (_faces.Count > 0)
+        if (_snapshots.Count > 0 || _purgeFontCache)
         {
             // Skia's process-wide strike cache can retain a disposed face's font data.
             // Purge unused strikes after our SKFont instances and typefaces are released;
@@ -48,65 +48,58 @@ internal sealed class ConversionFontResources : IDisposable
             SKGraphics.PurgeFontCache();
         }
 
-        _faces.Clear();
-        _pdfFonts.Clear();
-        _metrics.Clear();
+        _faces = new();
+        _snapshots.Clear();
     }
 
-    /// <summary>Gets one shared native face; callers must not dispose it.</summary>
-    /// <param name="font">The resolved physical face.</param>
-    /// <returns>The session-owned typeface.</returns>
-    internal SKTypeface GetTypeface(ResolvedFont font)
+    /// <summary>Requests one cache purge after all conversion-owned drawing faces are released.</summary>
+    internal void RequestCachePurge() => _purgeFontCache = true;
+
+    /// <summary>Gets one immutable physical snapshot owned by this scope.</summary>
+    /// <param name="font">The resolved physical font.</param>
+    /// <returns>The scope-owned snapshot.</returns>
+    internal SkiaFontFace GetFace(ResolvedFont font)
     {
         if (_disposed)
         {
             throw new ObjectDisposedException(nameof(ConversionFontResources));
         }
 
-        if (!_faces.TryGetValue(font.FaceId, out var face))
+        if (!_faces.TryGetValue(font, out var face))
         {
-            using Stream stream = font.FontData is null ? File.OpenRead(font.FilePath) : new MemoryStream(font.FontData, false);
-            face = SKTypeface.FromStream(stream) ?? throw new InvalidOperationException($"フォント {font.Family} を読み込めません。");
-            _faces.Add(font.FaceId, face);
-            ConversionMetrics.Report("typefaceCreated", 1);
+            var bytes = font.SnapshotData ?? font.FontData ?? File.ReadAllBytes(font.FilePath);
+            var identity = SkiaFontFace.ContentIdentity(bytes);
+            if (!_snapshots.TryGetValue(identity, out face))
+            {
+                face = new SkiaFontFace(bytes, identity);
+                _snapshots.Add(identity, face);
+            }
+
+            _faces.Add(font, face);
         }
 
         return face;
     }
 
-    /// <summary>Gets a PDF font within the current PDFsharp reset generation.</summary>
-    /// <param name="font">The resolved physical face.</param>
-    /// <param name="size">The size in points.</param>
-    /// <returns>The shared PDF font.</returns>
-    internal XFont GetPdfFont(ResolvedFont font, double size)
+    /// <summary>Pins a resolved font to this scope's immutable bytes for replay after disposal.</summary>
+    /// <param name="font">The resolved font.</param>
+    /// <returns>A handle-free snapshot-backed font identity.</returns>
+    internal ResolvedFont Freeze(ResolvedFont font)
     {
-        var key = (font.FaceId, size);
-        if (!_pdfFonts.TryGetValue(key, out var result))
-        {
-            result = new XFont(PdfSharp.PdfSharpFontResolver.RegisterResolvedFont(font), size, XFontStyleEx.Regular);
-            _pdfFonts.Add(key, result);
-            ConversionMetrics.Report("xFontCreated", 1);
-        }
-
-        return result;
+        var face = GetFace(font);
+        var frozen = font with { SnapshotData = face.Data };
+        _faces.Add(frozen, face);
+        return frozen;
     }
 
-    /// <summary>Gets native line metrics for one face and size.</summary>
-    /// <param name="font">The resolved physical face.</param>
-    /// <param name="size">The size in points.</param>
-    /// <returns>The ascent, descent and leading in points.</returns>
-    internal (double Ascent, double Descent, double Leading) GetMetrics(ResolvedFont font, double size)
-    {
-        var key = (font.FaceId, size);
-        if (!_metrics.TryGetValue(key, out var result))
-        {
-            using var skFont = new SKFont(GetTypeface(font), (float)size);
-            var metrics = skFont.Metrics;
-            result = (-metrics.Ascent, metrics.Descent, metrics.Leading);
-            _metrics.Add(key, result);
-            ConversionMetrics.Report("lineMetricsComputed", 1);
-        }
+    /// <summary>Gets the borrowed native face.</summary>
+    /// <param name="font">The physical font.</param>
+    /// <returns>The scope-owned typeface.</returns>
+    internal SKTypeface GetTypeface(ResolvedFont font) => GetFace(font).Typeface;
 
-        return result;
-    }
+    /// <summary>Gets the shared line metrics.</summary>
+    /// <param name="font">The physical font.</param>
+    /// <param name="size">The point size.</param>
+    /// <returns>The point metrics.</returns>
+    internal (double Ascent, double Descent, double Leading) GetMetrics(ResolvedFont font, double size) => GetFace(font).Metrics(size);
 }

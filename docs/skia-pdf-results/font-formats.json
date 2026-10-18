@@ -1,0 +1,132 @@
+{
+  "independentExtraction": [
+    {
+      "font": "static.ttf",
+      "mupdf": "A B",
+      "poppler": "A B",
+      "colorPixels": false
+    },
+    {
+      "font": "cff.otf",
+      "mupdf": "A B",
+      "poppler": "A B",
+      "colorPixels": false
+    },
+    {
+      "font": "variable.ttf",
+      "mupdf": "A B",
+      "poppler": "A B",
+      "colorPixels": false
+    },
+    {
+      "font": "collection.ttc",
+      "mupdf": "A B",
+      "poppler": "A B",
+      "colorPixels": false
+    },
+    {
+      "font": "colr.ttf",
+      "mupdf": "A B",
+      "poppler": "A B",
+      "colorPixels": true
+    },
+    {
+      "font": "colr-v1.ttf",
+      "mupdf": "A B",
+      "poppler": "A B",
+      "colorPixels": true
+    }
+  ],
+  "publicApi": [
+    {
+      "font": "cff.otf",
+      "outcomes": [
+        {
+          "backend": "PdfSharp",
+          "success": true,
+          "error": null
+        },
+        {
+          "backend": "SkiaSharp",
+          "success": true,
+          "error": null
+        }
+      ]
+    },
+    {
+      "font": "collection.ttc",
+      "outcomes": [
+        {
+          "backend": "PdfSharp",
+          "success": false,
+          "error": "Object reference not set to an instance of an object."
+        },
+        {
+          "backend": "SkiaSharp",
+          "success": false,
+          "error": "Object reference not set to an instance of an object."
+        }
+      ]
+    },
+    {
+      "font": "colr-v1.ttf",
+      "outcomes": [
+        {
+          "backend": "PdfSharp",
+          "success": true,
+          "error": null
+        },
+        {
+          "backend": "SkiaSharp",
+          "success": true,
+          "error": null
+        }
+      ]
+    },
+    {
+      "font": "colr.ttf",
+      "outcomes": [
+        {
+          "backend": "PdfSharp",
+          "success": true,
+          "error": null
+        },
+        {
+          "backend": "SkiaSharp",
+          "success": true,
+          "error": null
+        }
+      ]
+    },
+    {
+      "font": "static.ttf",
+      "outcomes": [
+        {
+          "backend": "PdfSharp",
+          "success": true,
+          "error": null
+        },
+        {
+          "backend": "SkiaSharp",
+          "success": true,
+          "error": null
+        }
+      ]
+    },
+    {
+      "font": "variable.ttf",
+      "outcomes": [
+        {
+          "backend": "PdfSharp",
+          "success": true,
+          "error": null
+        },
+        {
+          "backend": "SkiaSharp",
+          "success": true,
+          "error": null
+        }
+      ]
+    }
+  ]
+}

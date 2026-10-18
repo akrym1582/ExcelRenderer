@@ -1,0 +1,1413 @@
+[
+  {
+    "fixture": "invoice",
+    "pages": 1,
+    "oldBytes": 123981,
+    "newBytes": 33386,
+    "missingSourceGlyphs": {},
+    "raster": [
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "page-ink",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-1",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-2",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-3",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-4",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-5",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-6",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-7",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-8",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-9",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-10",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-11",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-12",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-13",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-14",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-15",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-16",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-17",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-18",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-19",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-20",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-21",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "page-ink",
+        "changedUnionFraction": 0.0016800003997621414,
+        "distantInkFraction": 9.994053538144804e-07,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-1",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-2",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-3",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-4",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-5",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-6",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-7",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-8",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-9",
+        "changedUnionFraction": 0.07072882651288821,
+        "distantInkFraction": 6.947821857847565e-05,
+        "reviewedAntialiasing": true
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-10",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-11",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-12",
+        "changedUnionFraction": 0.06395078922934076,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": true
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-13",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-14",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-15",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-16",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-17",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-18",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-19",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-20",
+        "changedUnionFraction": 0.015814741598418527,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": true
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-21",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      }
+    ],
+    "popplerUnicodeImprovements": [],
+    "mupdfUnicodeImprovements": [],
+    "maxGlyphOriginDelta": 9.1552734375e-05
+  },
+  {
+    "fixture": "grid",
+    "pages": 1,
+    "oldBytes": 152261,
+    "newBytes": 67015,
+    "missingSourceGlyphs": {
+      "🚨": 2,
+      "🎉": 2,
+      "📈": 1,
+      "🌸": 1
+    },
+    "raster": [
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "page-ink",
+        "changedUnionFraction": 0.0030456684562868695,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-1",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-2",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-3",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-4",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-5",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-6",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-7",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-8",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-9",
+        "changedUnionFraction": 0.04639479905437352,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": true
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-10",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-11",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-12",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-13",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-14",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-15",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-16",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-17",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-18",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-19",
+        "changedUnionFraction": 0.018524871355060035,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": true
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-20",
+        "changedUnionFraction": 0.03223617237869019,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": true
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-21",
+        "changedUnionFraction": 0.030541871921182268,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": true
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-22",
+        "changedUnionFraction": 0.05411858336649423,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": true
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-23",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-24",
+        "changedUnionFraction": 0.012773722627737226,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": true
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-25",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-26",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-27",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-28",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "page-ink",
+        "changedUnionFraction": 0.0010829675763594309,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-1",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-2",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-3",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-4",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-5",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-6",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-7",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-8",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-9",
+        "changedUnionFraction": 0.021940544534758143,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": true
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-10",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-11",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-12",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-13",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-14",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-15",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-16",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-17",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-18",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-19",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-20",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-21",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-22",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-23",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-24",
+        "changedUnionFraction": 0.009995265400599716,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-25",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-26",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-27",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-28",
+        "changedUnionFraction": 0.0519239021599199,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": true
+      }
+    ],
+    "popplerUnicodeImprovements": [
+      {
+        "old": "",
+        "sourceUnicode": "🚨"
+      },
+      {
+        "old": "",
+        "sourceUnicode": "🚨"
+      },
+      {
+        "old": "",
+        "sourceUnicode": "🎉"
+      },
+      {
+        "old": "",
+        "sourceUnicode": "📈🎉"
+      },
+      {
+        "old": "",
+        "sourceUnicode": "🌸"
+      }
+    ],
+    "mupdfUnicodeImprovements": [
+      {
+        "old": "\u0000",
+        "sourceUnicode": "🚨"
+      },
+      {
+        "old": "\u0000",
+        "sourceUnicode": "🚨"
+      },
+      {
+        "old": "\u0000",
+        "sourceUnicode": "🎉"
+      },
+      {
+        "old": "\u0000\u0000",
+        "sourceUnicode": "📈🎉"
+      },
+      {
+        "old": "\u0000",
+        "sourceUnicode": "🌸"
+      }
+    ],
+    "maxGlyphOriginDelta": 0.0177001953125
+  },
+  {
+    "fixture": "scaling",
+    "pages": 2,
+    "oldBytes": 119461,
+    "newBytes": 29848,
+    "missingSourceGlyphs": {},
+    "raster": [
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "page-ink",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-1",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-2",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-3",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-4",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-5",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-6",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-7",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-8",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-9",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-10",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-11",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-12",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-13",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-14",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-15",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 144,
+        "region": "block-16",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "page-ink",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-1",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-2",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-3",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-4",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-5",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-6",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-7",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-8",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-9",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-10",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-11",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-12",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-13",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-14",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-15",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 1,
+        "dpi": 300,
+        "region": "block-16",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 2,
+        "dpi": 144,
+        "region": "page-ink",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 2,
+        "dpi": 144,
+        "region": "block-1",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 2,
+        "dpi": 144,
+        "region": "block-2",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 2,
+        "dpi": 144,
+        "region": "block-3",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 2,
+        "dpi": 144,
+        "region": "block-4",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 2,
+        "dpi": 144,
+        "region": "block-5",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 2,
+        "dpi": 144,
+        "region": "block-6",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 2,
+        "dpi": 144,
+        "region": "block-7",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 2,
+        "dpi": 144,
+        "region": "block-8",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 2,
+        "dpi": 144,
+        "region": "block-9",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 2,
+        "dpi": 144,
+        "region": "block-10",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 2,
+        "dpi": 144,
+        "region": "block-11",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 2,
+        "dpi": 144,
+        "region": "block-12",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 2,
+        "dpi": 144,
+        "region": "block-13",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 2,
+        "dpi": 144,
+        "region": "block-14",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 2,
+        "dpi": 300,
+        "region": "page-ink",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 2,
+        "dpi": 300,
+        "region": "block-1",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 2,
+        "dpi": 300,
+        "region": "block-2",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 2,
+        "dpi": 300,
+        "region": "block-3",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 2,
+        "dpi": 300,
+        "region": "block-4",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 2,
+        "dpi": 300,
+        "region": "block-5",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 2,
+        "dpi": 300,
+        "region": "block-6",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 2,
+        "dpi": 300,
+        "region": "block-7",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 2,
+        "dpi": 300,
+        "region": "block-8",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 2,
+        "dpi": 300,
+        "region": "block-9",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 2,
+        "dpi": 300,
+        "region": "block-10",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 2,
+        "dpi": 300,
+        "region": "block-11",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 2,
+        "dpi": 300,
+        "region": "block-12",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 2,
+        "dpi": 300,
+        "region": "block-13",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      },
+      {
+        "page": 2,
+        "dpi": 300,
+        "region": "block-14",
+        "changedUnionFraction": 0.0,
+        "distantInkFraction": 0.0,
+        "reviewedAntialiasing": false
+      }
+    ],
+    "popplerUnicodeImprovements": [],
+    "mupdfUnicodeImprovements": [],
+    "maxGlyphOriginDelta": 6.103515625e-05
+  }
+]

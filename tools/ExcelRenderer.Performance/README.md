@@ -93,16 +93,14 @@ not force GC. Native font-strike cleanup is part of production conversion timing
 To reproduce the original implementation with the same instrumentation:
 
 ```bash
-python tools/ExcelRenderer.Performance/prepare-baseline.py /tmp/excel-baseline
+# Historical source injection has been retired; build the recorded first-stage Git commit in a separate temporary checkout.
 dotnet build /tmp/excel-baseline/tools/ExcelRenderer.Performance/ExcelRenderer.Performance.csproj -c Release
 python tools/ExcelRenderer.Performance/run.py /tmp/excel-baseline/tools/ExcelRenderer.Performance/bin/Release/net10.0/ExcelRenderer.Performance.dll /tmp/table.xlsx /tmp/results/baseline
 ```
 
-The exporter requires the investigation commit to be present in local git history.
-It verifies source fragments before applying the measurement-only overlay; it does
-not copy optimizations. Use exactly the same generated XLSX and font for both runs.
-Start with 10 rows: the original implementation exceeded the 8 GiB container limit
-on larger text fixtures. See [the report](../../docs/pdf-performance.ja.md).
+The historical investigation and its original instrumentation are recorded in
+[the report](../../docs/pdf-performance.ja.md). Build historical code only in a
+separate checkout; the normal solution does not regenerate it.
 
 For system-font PNG/SVG tests in this Linux image, Fontconfig needs the bundled
 Japanese font directory and must exclude the image's unsupported OpenAI WOFF2 fonts.
@@ -121,3 +119,79 @@ The integration worker always uses OpenXml. Its current invocation is
 `integration-worker <input.xlsx> <operation> <row-count> [mapping-capture.xlsx]`;
 there is no backend argument. See the [migration guide](../../docs/engine-selection-removal.md)
 for the updated benchmark/profiling scripts and baseline CLI output comparison.
+
+## PDF dependency-removal measurements
+
+```bash
+source scripts/test-fonts.sh
+python3 scripts/benchmark-pdf-backends.py --fixture all --output artifacts/pdf-removal-benchmark
+```
+
+The current harness accepts `--pdf-backend skiasharp` on `render-case`:
+
+```bash
+dotnet run --project tools/ExcelRenderer.Performance -- render-case samples/excel/japanese-grid-report.xlsx pdf paginated 100 --font-pack --measure-text --pdf-backend skiasharp
+```
+
+The performance project includes the optional Fonts assembly. The comparison
+script enables it for both stages. It defaults to Release, three warm-up
+conversions per fresh process, five measured rounds with alternating forward/reverse stage order, and process concurrency
+1/4/8. Seven fixtures cover invoice, Japanese grid, rich text, borders, 32 distinct
+256px PNGs (16 with alpha), and exactly 50/200 pages (asserted at runtime).
+Raw records retain time, process lifetime peak RSS, allocations, bytes, phase
+measurements and resource counts. Median and maximum are reported; B-relative
+time/RSS target 1.25. `--generate-only` prepares inputs without measurement.
+
+C is measured by default. To compare against frozen stage B, manually build the
+recorded first-stage commit in a separate temporary checkout and supply
+`--baseline-assembly /tmp/stage-b/ExcelRenderer.Performance.dll`. There is no normal
+CI/build dependency on that checkout. For measurement-phase instrumentation,
+compile the current `RenderMemoryBenchmark.cs` into a temporary friend executable
+named `ExcelRenderer.Performance`, referencing the unchanged stage-B product DLLs
+and their original managed/native dependencies. `--measure-text` wraps the
+existing conversion-local measurer, delegates all three interfaces and records
+`textMeasure.ms`; it does not replace the cache or layout algorithm. Record both
+harness hashes and verify the old main/Core DLL hashes before comparing.
+`--include-reference-a` requires that explicit historical assembly and is optional.
+
+Do not overlap formal measurements with builds, comparisons or package consumers.
+Process concurrency does not establish in-process throughput; separate mixed
+Core/main tests exercise scope isolation at 1/4/8. The 100-repeat command records
+post-GC memory outside timed conversion, and creation/disposal counts distinguish
+native cache high-water marks from resources retained per conversion. See
+[the removal validation](../../docs/pdfsharp-removal-validation.md) for results,
+conditions, exceptions and the exact baseline provenance.
+
+Use `--inputs artifacts/pdf-removal-benchmark` to reuse the exact generated workbook bytes for controlled reruns; every selected input hash is recorded. Initial grouped-stage measurements remain separate evidence when the protocol is corrected.
+
+
+## Follow-up performance review
+
+`layout-case plain|rich|rich-wrap [count]` isolates unique text layout from input,
+drawing and saving. It uses one conversion font scope per batch, three warm-up
+batches and one measured batch, explicit Noto Sans JP and no system/font-pack
+lookup. `plain` uses about 3,200 UTF-16 units per cell; `rich` uses two such style
+segments; `rich-wrap` uses shorter mixed-size text at 80pt. Default batch size is
+30. Unique prefixes and the long cases avoid relying on repeated whole-layout
+cache hits. Font discovery, result hashing and scope disposal are outside this
+microbenchmark's timer. End-to-end `render-case` includes conversion teardown.
+
+```bash
+source scripts/test-fonts.sh
+dotnet tools/ExcelRenderer.Performance/bin/Release/net10.0/ExcelRenderer.Performance.dll layout-case rich 30
+python3 tools/ExcelRenderer.Performance/review-performance.py \
+  --before /workspace/pdf-removal-review-before/ExcelRenderer.Performance.dll \
+  --after tools/ExcelRenderer.Performance/bin/Release/net10.0/ExcelRenderer.Performance.dll \
+  --inputs artifacts/pdf-removal-benchmark --output artifacts/pdf-review
+```
+
+Save the unchanged before-product DLLs and dependencies outside the repository
+before rebuilding. Copy the newly built benchmark DLL/PDB (only the harness) into
+that directory so both products run identical instrumentation. The review runner
+records hashes, inputs, five fresh-process rounds, three warm-ups and alternating
+before/after order. It covers seven PDF workloads at concurrency 1, rich text at
+4/8, all three layout microbenchmarks, and direct PNG/SVG text output. It records
+all samples, medians and maxima without claiming a universal speedup. Layout
+text/style/dimensions/origins hashes and direct-image bytes must match. Independent
+PDF/regression comparisons remain required. `--only layout-` selects a focused
+investigation without generating new input. See [the follow-up review](../../docs/rendering-performance-review.md).

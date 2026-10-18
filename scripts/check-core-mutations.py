@@ -7,11 +7,11 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 PROJECT = 'tests/ExcelRenderer.Core.Tests/ExcelRenderer.Core.Tests.csproj'
 OUT = ROOT / 'TestResults/Core/Mutations'
 CASES = [
-    ('baseline', 'Pdf/PdfSharpFinalizedTextPainter.cs',
-     'new XPoint(positioned.Left, positioned.Baseline)', 'new XPoint(positioned.Left, positioned.Baseline + 3)',
+    ('baseline', 'Pdf/SkiaFinalizedTextPainter.cs',
+     '(float)position.Baseline', '(float)(position.Baseline + 3)',
      'Finalized_baseline_and_underline'),
-    ('underline', 'Pdf/PdfSharpFinalizedTextPainter.cs',
-     'positioned.Baseline + 1', 'positioned.Baseline + 4', 'Finalized_baseline_and_underline'),
+    ('underline', 'Pdf/SkiaFinalizedTextPainter.cs',
+     'position.Baseline + 1', 'position.Baseline + 4', 'Finalized_baseline_and_underline'),
     ('image-page', 'Layout/CoreLayoutPolicy.cs',
      'item.Bounds.Y < context.Vertical.Start', 'item.Bounds.Y <= context.Vertical.Start', 'Image_is_drawn_only'),
     # Pictures use the streaming snapshot parser; DrawingMLReader still handles full-only shapes.

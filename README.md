@@ -32,7 +32,7 @@ This makes the rendering pipeline easier to test, understand, and extend with ne
 - Splits output into pages at row and column boundaries
 - Renders worksheet PNG and JPEG images
 - Renders header and footer text
-- Produces PDF output with PDFsharp
+- Produces PDF output with SkiaSharp and shared subset fonts
 - Produces one PNG image per page with SkiaSharp
 - Produces one self-contained SVG per page with outlined text and embedded images
 - Exports AI-friendly Markdown with merged-cell HTML, layout-aware reading order, formulas, and external images
@@ -45,7 +45,7 @@ This makes the rendering pipeline easier to test, understand, and extend with ne
 
 - .NET 10 SDK to build and test the repository
 - A target framework compatible with .NET Standard 2.1 to consume the library
-- Appropriate fonts installed or supplied through `PdfSharpFontResolver` for rendering; mapping alone does not need fonts
+- Appropriate fonts installed or supplied through `FontOptions` for rendering; mapping alone does not need fonts
 
 Choose the package for your task:
 
@@ -382,12 +382,12 @@ can select rendered PDF/PNG/SVG document pages; Markdown does not support page s
 `ConversionManifest.WriteAsync` writes the completed artifact metadata and diagnostics as schema
 version 1 JSON with relative artifact names.
 
-PDF export skips images when Skia cannot create a codec or decode a bitmap, and reports
+PDF export requires a successful complete pixel decode; corrupt or incomplete images are skipped with
 `ImageDecodeFailed` warnings. Diagnostics include the sheet, source page, image bounds,
 byte length, up to 16 header bytes, and the decode failure reason. The `render` command
 prints warnings to stderr; use `--manifest report.json` to save these details as JSON.
 Strict mode or treating `ImageDecodeFailed` as an error stops conversion instead.
-Low-level `PdfSharpRenderer` callers can receive warnings through `DiagnosticHandler`;
+Low-level `PdfRenderer` callers can receive warnings through `DiagnosticHandler`;
 warnings are also written to `System.Diagnostics.Trace` listeners.
 
 Use `PdfExportOptions`, `ImageExportOptions`, `SvgExportOptions`, and `MarkdownExportOptions` to select a worksheet or configure format-specific behavior. Existing output files, and non-empty image or SVG output directories, are not overwritten.
@@ -400,17 +400,18 @@ Install the `ExcelRenderer` package or reference the project, then run the workb
 using ExcelRenderer.Drawing;
 using ExcelRenderer.Excel;
 using ExcelRenderer.Layout;
-using ExcelRenderer.PdfSharp;
+using ExcelRenderer.Pdf;
+using ExcelRenderer.SkiaSharp;
 
 var document = new ExcelReader().Read("report.xlsx");
 var sheet = document.Sheets[0];
 
-var layoutEngine = new ReportLayoutEngine(new PdfSharpTextMeasurer());
+var layoutEngine = new ReportLayoutEngine(new SkiaTextMeasurer());
 var renderDocument = layoutEngine.Layout(sheet);
 var commands = new DrawCommandGeneratorPass().Generate(renderDocument);
 
 using var output = File.Create("report.pdf");
-new PdfSharpRenderer().Render(commands, sheet.PageSettings, output);
+new PdfRenderer().Render(commands, sheet.PageSettings, output);
 ```
 
 `ExcelReader` preserves whether an xlsx uses an explicit percentage or Fit-to-pages in
@@ -578,12 +579,19 @@ An embedded resource takes precedence over a loose file. The DLL search is not
 recursive; only the loose-file search includes subdirectories.
 
 ```csharp
-using ExcelRenderer.PdfSharp;
-using PdfSharp.Fonts;
+using ExcelRenderer;
+using ExcelRenderer.Fonts;
 
-GlobalFontSettings.FontResolver = new PdfSharpFontResolver(
-    "Noto Sans JP",
-    "/app/fonts/NotoSansJP-Regular.ttf");
+await ExcelConverter.ConvertToPdfAsync("report.xlsx", "report.pdf",
+    new PdfExportOptions
+    {
+        FontOptions = new FontOptions
+        {
+            FontFiles = ["/app/fonts/NotoSansJP-Regular.ttf"],
+            AllowSystemFonts = false,
+            UseFontPack = false,
+        },
+    });
 ```
 
 All commands accept the font options described above. `--font-file` reads each
@@ -653,10 +661,10 @@ OS and additional-directory font scans retain metadata; a physical face's bytes 
 SHA256 identity are loaded once when first selected. Explicit font files and registrations
 are validated and snapshotted immediately. Optional font-pack data is also loaded on demand.
 An OS font is not a complete snapshot until its first selection; a file that changes or
-disappears before that read raises a font load error. PDFsharp's process-wide resolved
-font-byte cache remains in place.
+disappears before that read raises a font load error. Physical measurement/drawing fonts
+are immutable conversion-owned snapshots; there is no global font resolver or conversion lock.
 
-PDFsharp still retains its final document and resources until the single save.
+Skia retains its final document and resources until native close and the structural save.
 The OpenXml Reader retains source styles and shared strings. Layout geometry and selected models also
 scale with workbook size. This is not constant-memory streaming.
 See the [phase 3 measurements](docs/phase3-performance.ja.md) and the historical
@@ -669,8 +677,8 @@ continuous PNG remains one worksheet per PNG with one full bitmap, not scanline 
 encoding. Its RGBA pixels require approximately `4 × width × height` bytes plus alignment
 and encoder overhead. Both PNG APIs validate dimensions and enforce their pixel limit.
 A conversion-local image cache estimates decoded resource memory and uses a 64 MiB LRU
-budget; an image exceeding that budget is owned only during its active draw. PDFsharp's
-own retained document image resources are additional to that estimate.
+budget; an image exceeding that budget is owned only during its active draw. Skia's
+retained document image resources are additional to that estimate.
 
 SVG keeps Skia's SVG canvas and streaming XML normalization (outlined text, embedded
 images, point dimensions, and `viewBox`). Its seekable intermediate buffer spills before
@@ -679,6 +687,8 @@ stream threshold does not bound the whole conversion's memory.
 
 `RenderRequest.Buffering`, `SvgExportOptions.Buffering`, and overloads of
 `SvgRenderer.Render`, `RenderPage`, and `RenderCanvas` accept `RenderBufferOptions`:
+
+`RenderRequest.Buffering` also controls Skia PDF's intermediate spool.
 
 | Property | Default | Meaning |
 |---|---|---|
@@ -753,6 +763,7 @@ if it is already configured. Keep NuGet.org enabled for dependencies such as Doc
 | PDF-only source API and font requirements | [Core](docs/core.md) ([日本語](docs/core.ja.md)) |
 | Source records, formatting and low-level reader limits | [OpenXml reader](docs/openxml-reader.md) ([日本語](docs/openxml-reader.ja.md)) |
 | Rendering stages and extension points | [Architecture](docs/architecture.md) ([日本語](docs/architecture.ja.md)) |
+| Skia foundation, optional fonts, PDF subsets, image handling and resource lifetime | [Skia rendering and font design](docs/skia-rendering.md) ([日本語](docs/skia-rendering.ja.md)) |
 | Shared implementation and product boundaries | [Core architecture](docs/core-architecture.md) ([日本語](docs/core-architecture.ja.md)), [source ownership](docs/core-source-map.md) |
 | Test, package, allocation and CI evidence by commit | [Validation record](docs/openxml-integration-validation.md) |
 
@@ -766,3 +777,49 @@ ExcelRenderer is available under the [MIT License](LICENSE).
 
 The optional `ExcelRenderer.Fonts` package contains the Japanese fonts and their
 separate license texts; see [Third-party notices](THIRD-PARTY-NOTICES.md).
+
+### PDF engine and migration
+
+PDF output and default PDF/PNG/SVG measurement use SkiaSharp. The main and Core
+products share native font/subset/document primitives. There is no PDFsharp dependency,
+resolver or process-wide conversion gate. This removes the old low-level public APIs;
+see the [breaking-change migration table](docs/pdfsharp-migration.md).
+
+```csharp
+await ExcelConverter.ConvertToPdfAsync(input, output); // SkiaSharp by default
+// Explicit selection remains available:
+// new PdfExportOptions { PdfBackend = PdfBackend.SkiaSharp }
+```
+
+```bash
+excelrenderer pdf report.xlsx -o report.pdf --pdf-backend skiasharp
+excelrenderer render report.xlsx --format pdf -o report.pdf --pdf-backend skiasharp
+```
+
+Both CLI paths retain the option with `--data`. Only lowercase `skiasharp` is valid.
+Explicit `--pdf-backend` on non-PDF CLI output is an error. API non-PDF requests
+accept the default `SkiaSharp = 1`; invalid values and obsolete reserved `PdfSharp = 0`
+fail before input/output access. Zero is never reinterpreted as SkiaSharp.
+
+Build the pinned native subset adapter with `python3 scripts/build-harfbuzz-subset.py`
+before building/packing from source. Published runtime assets are required; missing
+assets fail conversion without a full-font fallback. Python/CMake and independent
+PDF readers are build/validation tools, not product runtime requirements.
+
+PDF uses a bounded seekable spool, document-shared subsets and an internal structural
+finalizer for boxes (0.001pt precision), RGB page compositing, links/tooltips and image
+interpolation. Each active object and its original encoded stream is written once;
+content, fonts, JPEG data and soft masks are preserved without recompression.
+`RenderRequest.Buffering` controls the intermediate spool. See the
+[image review fixes](docs/pr90-image-review-fixes.md) for size and decoding validation.
+
+Standalone `SkiaTextMeasurer` calls own native scopes; internal conversion services borrow
+their conversion's scope. Stored glyphs/font snapshots remain replayable after scope
+disposal. Caller-supplied measurers and streams remain caller-owned. Core keeps its
+single regular static TrueType font and variation-selector-to-base policy.
+
+See [removal verification](docs/pdfsharp-removal-validation.md),
+[the frozen A/B/C comparison procedure](tools/ExcelRenderer.PdfComparison/README.md),
+and the [historical first-stage results](docs/skia-pdf-validation.md).
+
+Follow-up measurements of unique long text, complete PDF conversion and direct PNG/SVG output are recorded in the [performance review](docs/rendering-performance-review.md).

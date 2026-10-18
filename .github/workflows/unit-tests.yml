@@ -28,6 +28,9 @@ jobs:
           source scripts/test-fonts.sh
           echo "FONTCONFIG_FILE=$FONTCONFIG_FILE" >> "$GITHUB_ENV"
 
+      - name: Build pinned HarfBuzz subset adapter
+        run: python3 scripts/build-harfbuzz-subset.py
+
       - name: Verify fixed test font assets
         run: sha256sum -c tests/ExcelRenderer.Tests/Fonts/SHA256SUMS
 
@@ -60,11 +63,56 @@ jobs:
           --logger "trx;LogFileName=unit-tests.trx"
           --results-directory TestResults
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Set up independent PDF validation tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+          python -m pip install PyMuPDF==1.26.6 numpy==2.3.5 Pillow==12.3.0 fonttools==4.61.1 scipy==1.17.0
+
+      - name: Compare finalized commands and public API fixtures
+        run: python scripts/compare-pdf-backends.py --no-build
+
+      - name: Compare frozen stage B against the new measurement and writer
+        run: python scripts/compare-pdf-backends.py --no-generate --reference B --no-exceptions
+
+      - name: Compare frozen Core output independently
+        run: python scripts/compare-core-removal-baselines.py
+
+      - name: Validate image payload storage and corrected appearance
+        run: python scripts/validate-image-review.py
+
+      - name: Verify independent font format extraction
+        run: |
+          python - <<'PY'
+          import json, sys
+          from pathlib import Path
+          sys.path.insert(0, 'scripts')
+          from pdf_geometry_evidence import verify_font_formats
+          results = verify_font_formats(Path('tests/ExcelRenderer.Tests/bin/Release/net10.0/SampleOutputs/PdfFormats'))
+          Path('artifacts/pdf-comparison/font-formats.json').write_text(json.dumps(results, indent=2))
+          PY
+
+      - name: Verify comparison detects removed glyphs and additional ink
+        run: python scripts/check-pdf-comparison-mutations.py
+
       - name: Pack four distribution packages
         run: dotnet pack ExcelRenderer.slnx -c Release --no-build --no-restore -p:BuildProjectReferences=false -o artifacts/formulas-packages
 
+      - name: Audit removed dependency in source, graphs, assemblies and packages
+        run: python scripts/check-no-pdfsharp.py --packages artifacts/formulas-packages
+
+      - name: Verify dependency audit rejects deliberate contamination
+        run: python scripts/check-no-pdfsharp-mutations.py
+
       - name: Verify isolated formula package consumers
         run: python3 scripts/validate-formulas-packages.py --packages artifacts/formulas-packages --work "$RUNNER_TEMP/formula-package-consumers"
+
+      - name: Verify font package split with the same checks as the standalone workflow
+        run: python3 scripts/validate-font-packages.py --packages artifacts/formulas-packages --work "$RUNNER_TEMP/font-package-consumers"
 
       - name: Upload test output
         if: always()
@@ -75,6 +123,8 @@ jobs:
             TestResults/**/*.trx
             TestResults/Mutations/**
             tests/ExcelRenderer.Tests/bin/Release/net10.0/SampleOutputs/**
+            artifacts/pdf-comparison/**
+            artifacts/pr90-image-review/independent.json
           if-no-files-found: warn
           retention-days: 14
 
@@ -90,6 +140,8 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
+      - name: Build shared native subset adapter
+        run: python scripts/build-harfbuzz-subset.py
       - name: Restore Core tests
         run: dotnet restore tests/ExcelRenderer.Core.Tests/ExcelRenderer.Core.Tests.csproj --locked-mode
       - name: Rebuild Core tests
@@ -153,3 +205,6 @@ jobs:
           name: formulas-${{ matrix.os }}
           path: TestResults/Formulas/**
           if-no-files-found: warn
+
+  pdf-native:
+    uses: ./.github/workflows/pdf-native-build.yml

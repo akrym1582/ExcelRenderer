@@ -1,0 +1,14 @@
+{
+  "B": {
+    "path": "/tmp/excelrenderer-stage1-benchmark-bin/ExcelRenderer.Performance.dll",
+    "dllSha256": "dfb84919ee6de466d9162f35f2f30167604a4f59eb561a855aca88edc9beeb54",
+    "mainSha256": "9f0af251ceb521085809bdb465e17e1477a881e8b664df3b6db3dedae1322204",
+    "coreSha256": "004687892f48b84aa4b2b2b39ba5a9eaf650c8e92594cab105aaf8ec3bd7099b"
+  },
+  "C": {
+    "path": "/workspace/ExcelRenderer/tools/ExcelRenderer.Performance/bin/Release/net10.0/ExcelRenderer.Performance.dll",
+    "dllSha256": "0b3059a91148d849a83470f53fba3269f806ce52088525f155509e36c43682f2",
+    "mainSha256": "929b923f7006763092a7e2069c2e546118c26f94bda7e187ad2af296dd56f87b",
+    "coreSha256": "4d01d87c7112d8f0c31e7f5119b5b75e43e20df1c5b6fa934325f2110ebc6ffc"
+  }
+}

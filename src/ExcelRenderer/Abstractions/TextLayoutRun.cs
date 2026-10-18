@@ -10,4 +10,7 @@ public sealed record TextLayoutRun(TextRun Run, double X, double Advance)
 {
     /// <summary>Gets the finalized effective partial font, or null to use the cell font.</summary>
     public Model.FontStyle? Font { get; init; }
+
+    /// <summary>Gets the immutable selected glyphs and original source clusters.</summary>
+    internal Core.Fonts.GlyphSequence? Glyphs { get; init; }
 }

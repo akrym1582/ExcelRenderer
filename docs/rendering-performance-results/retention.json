@@ -1,0 +1,32 @@
+{
+  "repetitions": 100,
+  "allResourceCountsBalanced": true,
+  "resourceTotals": {
+    "typefaceCreated": 100,
+    "typefaceDisposed": 100,
+    "pdfFontCreated": 400,
+    "pdfFontDisposed": 400,
+    "pdfSubsetTypefaceCreated": 100,
+    "pdfSubsetTypefaceDisposed": 100
+  },
+  "postGc": {
+    "ManagedBytes": {
+      "first20Median": 13112504.0,
+      "last20Median": 13289992.0,
+      "lastHalfMin": 13112536,
+      "lastHalfMax": 13289992
+    },
+    "WorkingSet64": {
+      "first20Median": 122753024.0,
+      "last20Median": 157341696.0,
+      "lastHalfMin": 125607936,
+      "lastHalfMax": 162938880
+    },
+    "PrivateMemorySize64": {
+      "first20Median": 189542400.0,
+      "last20Median": 219211776.0,
+      "lastHalfMin": 190345216,
+      "lastHalfMax": 224534528
+    }
+  }
+}

@@ -2,7 +2,9 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using ExcelRenderer;
+using ExcelRenderer.Abstractions;
 using ExcelRenderer.Fonts;
+using ExcelRenderer.Model;
 using ExcelRenderer.Rendering;
 
 /// <summary>Runs the same synthetic workbook through all formats and both image layouts.</summary>
@@ -17,6 +19,8 @@ internal static class RenderMemoryBenchmark
         var layout = Enum.Parse<ImageLayoutMode>(args[3], ignoreCase: true);
         var repeats = args.Length > 4 ? int.Parse(args[4], System.Globalization.CultureInfo.InvariantCulture) : 1;
         var selectedPage = args.Length > 5 && int.TryParse(args[5], out var number) ? (int?)number : null;
+        var backendIndex = Array.IndexOf(args, "--pdf-backend");
+        var backend = backendIndex >= 0 ? Enum.Parse<PdfBackend>(args[backendIndex + 1], ignoreCase: true) : PdfBackend.SkiaSharp;
         var fontPack = args.Contains("--font-pack", StringComparer.Ordinal);
         var systemFonts = args.Contains("--system-fonts", StringComparer.Ordinal);
         var fontPath = Path.GetFullPath("third_party/NotoSansJP/NotoSansJP-Regular.ttf");
@@ -43,6 +47,11 @@ internal static class RenderMemoryBenchmark
                 else
                 {
                     metrics[name] = metrics.GetValueOrDefault(name) + value;
+                }
+
+                if (name == "modelSelectedCells" && args.Contains("--measure-text", StringComparer.Ordinal) && RenderResourceSession.Current is { TextMeasurer: { } inner } session)
+                {
+                    session.TextMeasurer = new TimingMeasurer(inner);
                 }
 
                 if (name.EndsWith(".ms", StringComparison.Ordinal) && sampled.Add(name))
@@ -74,6 +83,7 @@ internal static class RenderMemoryBenchmark
             var request = new RenderRequest
             {
                 OutputFormat = format,
+                PdfBackend = backend,
                 ImageLayout = layout,
                 Dpi = 24,
                 Selection = selectedPage is { } page ? new SelectionOptions { Pages = [page] } : new(),
@@ -92,6 +102,7 @@ internal static class RenderMemoryBenchmark
             Console.WriteLine(JsonSerializer.Serialize(new
             {
                 Format = format.ToString(),
+                PdfBackend = backend.ToString(),
                 Layout = layout.ToString(),
                 Iteration = iteration,
                 OS = RuntimeInformation.OSDescription,
@@ -131,6 +142,18 @@ internal static class RenderMemoryBenchmark
                 }));
             }
         }
+    }
+
+    private sealed class TimingMeasurer(ITextMeasurer inner) : ITextMeasurer, ITextLayoutService, IRichTextLayoutService
+    {
+        public TextSize Measure(string text, FontStyle font, double availableWidth, bool wrap) =>
+            ConversionMetrics.Measure("textMeasure", () => inner.Measure(text, font, availableWidth, wrap));
+
+        public TextLayoutResult Layout(string text, FontStyle font, double availableWidth, bool wrap) =>
+            ConversionMetrics.Measure("textMeasure", () => ((ITextLayoutService)inner).Layout(text, font, availableWidth, wrap));
+
+        public TextLayoutResult Layout(IReadOnlyList<CellTextRun> runs, FontStyle font, double availableWidth, bool wrap) =>
+            ConversionMetrics.Measure("textMeasure", () => ((IRichTextLayoutService)inner).Layout(runs, font, availableWidth, wrap));
     }
 
     private sealed class DiscardSink : IRenderOutputSink

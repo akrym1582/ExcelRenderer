@@ -1,0 +1,548 @@
+[
+  {
+    "workload": "pdf-invoice",
+    "concurrency": 1,
+    "stages": {
+      "before": {
+        "TotalMs": {
+          "median": 50.6541,
+          "max": 86.7802
+        },
+        "AllocatedBytes": {
+          "median": 16486536,
+          "max": 16511056
+        },
+        "PeakWorkingSet64": {
+          "median": 121368576,
+          "max": 121925632
+        }
+      },
+      "after": {
+        "TotalMs": {
+          "median": 54.8166,
+          "max": 75.4536
+        },
+        "AllocatedBytes": {
+          "median": 16444928,
+          "max": 16458424
+        },
+        "PeakWorkingSet64": {
+          "median": 122245120,
+          "max": 123326464
+        }
+      }
+    },
+    "medianRatios": {
+      "TotalMs": 1.0821749868223896,
+      "AllocatedBytes": 0.9974762436451174,
+      "PeakWorkingSet64": 1.0072221659748237
+    }
+  },
+  {
+    "workload": "pdf-grid",
+    "concurrency": 1,
+    "stages": {
+      "before": {
+        "TotalMs": {
+          "median": 433.7571,
+          "max": 486.183
+        },
+        "AllocatedBytes": {
+          "median": 310706528,
+          "max": 310735856
+        },
+        "PeakWorkingSet64": {
+          "median": 764051456,
+          "max": 819851264
+        }
+      },
+      "after": {
+        "TotalMs": {
+          "median": 465.3737,
+          "max": 822.0038
+        },
+        "AllocatedBytes": {
+          "median": 310417296,
+          "max": 310771656
+        },
+        "PeakWorkingSet64": {
+          "median": 764968960,
+          "max": 845058048
+        }
+      }
+    },
+    "medianRatios": {
+      "TotalMs": 1.0728901037008962,
+      "AllocatedBytes": 0.9990691151490708,
+      "PeakWorkingSet64": 1.0012008405884119
+    }
+  },
+  {
+    "workload": "pdf-images",
+    "concurrency": 1,
+    "stages": {
+      "before": {
+        "TotalMs": {
+          "median": 739.7733,
+          "max": 952.3712
+        },
+        "AllocatedBytes": {
+          "median": 134121040,
+          "max": 139084752
+        },
+        "PeakWorkingSet64": {
+          "median": 318758912,
+          "max": 325881856
+        }
+      },
+      "after": {
+        "TotalMs": {
+          "median": 691.686,
+          "max": 1217.2794
+        },
+        "AllocatedBytes": {
+          "median": 137211128,
+          "max": 138256224
+        },
+        "PeakWorkingSet64": {
+          "median": 325279744,
+          "max": 346943488
+        }
+      }
+    },
+    "medianRatios": {
+      "TotalMs": 0.934997248481393,
+      "AllocatedBytes": 1.0230395469644435,
+      "PeakWorkingSet64": 1.0204569401968595
+    }
+  },
+  {
+    "workload": "pdf-50-pages",
+    "concurrency": 1,
+    "stages": {
+      "before": {
+        "TotalMs": {
+          "median": 949.067,
+          "max": 1438.624
+        },
+        "AllocatedBytes": {
+          "median": 186100640,
+          "max": 186466112
+        },
+        "PeakWorkingSet64": {
+          "median": 290004992,
+          "max": 296153088
+        }
+      },
+      "after": {
+        "TotalMs": {
+          "median": 940.3478,
+          "max": 2556.1491
+        },
+        "AllocatedBytes": {
+          "median": 184225752,
+          "max": 185404744
+        },
+        "PeakWorkingSet64": {
+          "median": 292188160,
+          "max": 296357888
+        }
+      }
+    },
+    "medianRatios": {
+      "TotalMs": 0.9908128720100899,
+      "AllocatedBytes": 0.9899254081017669,
+      "PeakWorkingSet64": 1.0075280359311884
+    }
+  },
+  {
+    "workload": "pdf-200-pages",
+    "concurrency": 1,
+    "stages": {
+      "before": {
+        "TotalMs": {
+          "median": 1526.0677,
+          "max": 1683.5463
+        },
+        "AllocatedBytes": {
+          "median": 676912264,
+          "max": 678079488
+        },
+        "PeakWorkingSet64": {
+          "median": 315744256,
+          "max": 338386944
+        }
+      },
+      "after": {
+        "TotalMs": {
+          "median": 1594.4583,
+          "max": 2234.0099
+        },
+        "AllocatedBytes": {
+          "median": 670051792,
+          "max": 671204096
+        },
+        "PeakWorkingSet64": {
+          "median": 329949184,
+          "max": 336965632
+        }
+      }
+    },
+    "medianRatios": {
+      "TotalMs": 1.0448149187614677,
+      "AllocatedBytes": 0.9898650499261747,
+      "PeakWorkingSet64": 1.0449887139039515
+    }
+  },
+  {
+    "workload": "pdf-rich-text",
+    "concurrency": 1,
+    "stages": {
+      "before": {
+        "TotalMs": {
+          "median": 187.6129,
+          "max": 212.4738
+        },
+        "AllocatedBytes": {
+          "median": 56010032,
+          "max": 56197176
+        },
+        "PeakWorkingSet64": {
+          "median": 171868160,
+          "max": 176582656
+        }
+      },
+      "after": {
+        "TotalMs": {
+          "median": 214.1074,
+          "max": 281.0759
+        },
+        "AllocatedBytes": {
+          "median": 39173544,
+          "max": 39325600
+        },
+        "PeakWorkingSet64": {
+          "median": 161673216,
+          "max": 172826624
+        }
+      }
+    },
+    "medianRatios": {
+      "TotalMs": 1.1412189673524582,
+      "AllocatedBytes": 0.6994022785061076,
+      "PeakWorkingSet64": 0.9406816015252621
+    }
+  },
+  {
+    "workload": "pdf-rich-text",
+    "concurrency": 4,
+    "stages": {
+      "before": {
+        "TotalMs": {
+          "median": 314.83625,
+          "max": 461.8939
+        },
+        "AllocatedBytes": {
+          "median": 56042504.0,
+          "max": 56278752
+        },
+        "PeakWorkingSet64": {
+          "median": 158976000.0,
+          "max": 181628928
+        }
+      },
+      "after": {
+        "TotalMs": {
+          "median": 310.2294,
+          "max": 571.2278
+        },
+        "AllocatedBytes": {
+          "median": 39215892.0,
+          "max": 39338008
+        },
+        "PeakWorkingSet64": {
+          "median": 143939584.0,
+          "max": 161058816
+        }
+      }
+    },
+    "medianRatios": {
+      "TotalMs": 0.985367472773545,
+      "AllocatedBytes": 0.6997526734351485,
+      "PeakWorkingSet64": 0.9054170692431562
+    }
+  },
+  {
+    "workload": "pdf-rich-text",
+    "concurrency": 8,
+    "stages": {
+      "before": {
+        "TotalMs": {
+          "median": 400.55215,
+          "max": 1348.0251
+        },
+        "AllocatedBytes": {
+          "median": 56093432.0,
+          "max": 56582096
+        },
+        "PeakWorkingSet64": {
+          "median": 158775296.0,
+          "max": 164286464
+        }
+      },
+      "after": {
+        "TotalMs": {
+          "median": 376.77965,
+          "max": 986.3694
+        },
+        "AllocatedBytes": {
+          "median": 39239936.0,
+          "max": 39506952
+        },
+        "PeakWorkingSet64": {
+          "median": 142868480.0,
+          "max": 149065728
+        }
+      }
+    },
+    "medianRatios": {
+      "TotalMs": 0.940650674325428,
+      "AllocatedBytes": 0.699546000323175,
+      "PeakWorkingSet64": 0.8998155481316187
+    }
+  },
+  {
+    "workload": "pdf-borders",
+    "concurrency": 1,
+    "stages": {
+      "before": {
+        "TotalMs": {
+          "median": 900.3876,
+          "max": 1111.706
+        },
+        "AllocatedBytes": {
+          "median": 139477944,
+          "max": 140116160
+        },
+        "PeakWorkingSet64": {
+          "median": 267689984,
+          "max": 268673024
+        }
+      },
+      "after": {
+        "TotalMs": {
+          "median": 828.7942,
+          "max": 1067.1579
+        },
+        "AllocatedBytes": {
+          "median": 137224096,
+          "max": 148700800
+        },
+        "PeakWorkingSet64": {
+          "median": 269414400,
+          "max": 281276416
+        }
+      }
+    },
+    "medianRatios": {
+      "TotalMs": 0.9204860217977235,
+      "AllocatedBytes": 0.9838408286259224,
+      "PeakWorkingSet64": 1.0064418398261774
+    }
+  },
+  {
+    "workload": "layout-plain",
+    "concurrency": 1,
+    "stages": {
+      "before": {
+        "TotalMs": {
+          "median": 182.0127,
+          "max": 267.9039
+        },
+        "AllocatedBytes": {
+          "median": 623019888,
+          "max": 623333184
+        },
+        "PeakWorkingSet64": {
+          "median": 261881856,
+          "max": 263389184
+        }
+      },
+      "after": {
+        "TotalMs": {
+          "median": 140.9999,
+          "max": 227.86
+        },
+        "AllocatedBytes": {
+          "median": 38002176,
+          "max": 38002176
+        },
+        "PeakWorkingSet64": {
+          "median": 204775424,
+          "max": 206258176
+        }
+      }
+    },
+    "medianRatios": {
+      "TotalMs": 0.7746706685852142,
+      "AllocatedBytes": 0.060996730171798304,
+      "PeakWorkingSet64": 0.7819381881881882
+    }
+  },
+  {
+    "workload": "layout-rich",
+    "concurrency": 1,
+    "stages": {
+      "before": {
+        "TotalMs": {
+          "median": 311.6867,
+          "max": 348.6511
+        },
+        "AllocatedBytes": {
+          "median": 1841739624,
+          "max": 1842293888
+        },
+        "PeakWorkingSet64": {
+          "median": 280891392,
+          "max": 280973312
+        }
+      },
+      "after": {
+        "TotalMs": {
+          "median": 160.6985,
+          "max": 204.9566
+        },
+        "AllocatedBytes": {
+          "median": 86273912,
+          "max": 86273912
+        },
+        "PeakWorkingSet64": {
+          "median": 264863744,
+          "max": 265887744
+        }
+      }
+    },
+    "medianRatios": {
+      "TotalMs": 0.5155770201295082,
+      "AllocatedBytes": 0.04684370737087427,
+      "PeakWorkingSet64": 0.9429400527873777
+    }
+  },
+  {
+    "workload": "layout-rich-wrap",
+    "concurrency": 1,
+    "stages": {
+      "before": {
+        "TotalMs": {
+          "median": 49.5029,
+          "max": 62.7877
+        },
+        "AllocatedBytes": {
+          "median": 12966352,
+          "max": 12966352
+        },
+        "PeakWorkingSet64": {
+          "median": 106090496,
+          "max": 106340352
+        }
+      },
+      "after": {
+        "TotalMs": {
+          "median": 51.4916,
+          "max": 52.9878
+        },
+        "AllocatedBytes": {
+          "median": 12897032,
+          "max": 12897032
+        },
+        "PeakWorkingSet64": {
+          "median": 106553344,
+          "max": 106635264
+        }
+      }
+    },
+    "medianRatios": {
+      "TotalMs": 1.0401734039823929,
+      "AllocatedBytes": 0.994653854839048,
+      "PeakWorkingSet64": 1.0043627659163739
+    }
+  },
+  {
+    "workload": "direct-png-text",
+    "concurrency": 1,
+    "stages": {
+      "before": {
+        "TotalMs": {
+          "median": 235.1788,
+          "max": 275.36
+        },
+        "AllocatedBytes": {
+          "median": 5616672,
+          "max": 5616704
+        },
+        "PeakWorkingSet64": {
+          "median": 91918336,
+          "max": 93638656
+        }
+      },
+      "after": {
+        "TotalMs": {
+          "median": 230.4383,
+          "max": 231.5256
+        },
+        "AllocatedBytes": {
+          "median": 5616672,
+          "max": 5616704
+        },
+        "PeakWorkingSet64": {
+          "median": 92307456,
+          "max": 96743424
+        }
+      }
+    },
+    "medianRatios": {
+      "TotalMs": 0.9798429960523652,
+      "AllocatedBytes": 1.0,
+      "PeakWorkingSet64": 1.0042333229356981
+    }
+  },
+  {
+    "workload": "direct-svg-text",
+    "concurrency": 1,
+    "stages": {
+      "before": {
+        "TotalMs": {
+          "median": 39.9521,
+          "max": 44.8892
+        },
+        "AllocatedBytes": {
+          "median": 8635616,
+          "max": 8635616
+        },
+        "PeakWorkingSet64": {
+          "median": 92971008,
+          "max": 93118464
+        }
+      },
+      "after": {
+        "TotalMs": {
+          "median": 39.5847,
+          "max": 40.9623
+        },
+        "AllocatedBytes": {
+          "median": 8635616,
+          "max": 8635616
+        },
+        "PeakWorkingSet64": {
+          "median": 93388800,
+          "max": 93515776
+        }
+      }
+    },
+    "medianRatios": {
+      "TotalMs": 0.9908039877753609,
+      "AllocatedBytes": 1.0,
+      "PeakWorkingSet64": 1.0044937879989426
+    }
+  }
+]

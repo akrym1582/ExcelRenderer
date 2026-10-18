@@ -1,0 +1,123 @@
+{
+  "name": "links-selected",
+  "path": "e2e",
+  "commandFingerprints": {
+    "1": "EF4FE4D563034E868C12F849E80B746E500F932278F607A3E4728A001EDDB869"
+  },
+  "pagePlanSha256": "C62B5F5C62F10B9A4D7876AD865BE8D56E60E0F955E5A30FF16DA6F7244BC783",
+  "pages": [
+    {
+      "SourceSheetIndex": 1,
+      "SourceSheetName": "Sheet1",
+      "SourcePageNumber": 1,
+      "DocumentPageNumber": 1,
+      "OutputPageNumber": 1,
+      "WidthPoints": 282.60299999999995,
+      "HeightPoints": 817.89,
+      "PixelWidth": 377,
+      "PixelHeight": 1091,
+      "Dpi": 96,
+      "RequestedRange": {
+        "First": {
+          "Row": 2,
+          "Column": 2
+        },
+        "Last": {
+          "Row": 8,
+          "Column": 4
+        }
+      },
+      "SourceCellRanges": [
+        {
+          "First": {
+            "Row": 2,
+            "Column": 2
+          },
+          "Last": {
+            "Row": 8,
+            "Column": 4
+          }
+        }
+      ],
+      "SourceRegions": [
+        {
+          "X": 64.5,
+          "Y": 20,
+          "Width": 193.5,
+          "Height": 140
+        }
+      ],
+      "OriginalWidthPoints": 595.276,
+      "OriginalHeightPoints": 841.89,
+      "CropBounds": {
+        "X": 36,
+        "Y": 14.359999775886536,
+        "Width": 278.60299999999995,
+        "Height": 813.89
+      },
+      "PaddingPoints": 2
+    }
+  ],
+  "diagnostics": [
+    {
+      "Code": "MaximumDigitWidthResolved",
+      "Severity": 0,
+      "Stage": 0,
+      "Message": "Normal font \u0027Calibri\u0027 resolved to \u0027Noto Sans JP\u0027 with MDW 8px.",
+      "SheetName": "Sheet1",
+      "CellRange": null,
+      "ObjectId": null,
+      "SourcePageNumber": null,
+      "OccurrenceCount": 1,
+      "UnicodeSequence": null
+    },
+    {
+      "Code": "ClippedMergedCell",
+      "Severity": 1,
+      "Stage": 1,
+      "Message": "The explicit selection clips an original merged cell.",
+      "SheetName": "Sheet1",
+      "CellRange": "A2:C2",
+      "ObjectId": null,
+      "SourcePageNumber": null,
+      "OccurrenceCount": 1,
+      "UnicodeSequence": null
+    },
+    {
+      "Code": "FormulaCachedValueMissing",
+      "Severity": 1,
+      "Stage": 0,
+      "Message": "Formula has no stored result; calculation is not supported.",
+      "SheetName": "Sheet1",
+      "CellRange": "B6",
+      "ObjectId": null,
+      "SourcePageNumber": 1,
+      "OccurrenceCount": 1,
+      "UnicodeSequence": null
+    },
+    {
+      "Code": "FormulaCachedValueMissing",
+      "Severity": 1,
+      "Stage": 0,
+      "Message": "Formula has no stored result; calculation is not supported.",
+      "SheetName": "Sheet1",
+      "CellRange": "B7",
+      "ObjectId": null,
+      "SourcePageNumber": 1,
+      "OccurrenceCount": 1,
+      "UnicodeSequence": null
+    },
+    {
+      "Code": "HyperlinkUnsupported",
+      "Severity": 1,
+      "Stage": 1,
+      "Message": "Only literal-string HYPERLINK arguments are supported.",
+      "SheetName": "Sheet1",
+      "CellRange": "B7",
+      "ObjectId": null,
+      "SourcePageNumber": null,
+      "OccurrenceCount": 1,
+      "UnicodeSequence": null
+    }
+  ]
+}

@@ -1,0 +1,4845 @@
+{
+  "versions": {
+    "PyMuPDF": "1.26.6",
+    "numpy": "2.3.5",
+    "Pillow": "12.3.0",
+    "fonttools": "4.61.1",
+    "scipy": "1.17.0"
+  },
+  "gates": {
+    "boxPoints": 0.01,
+    "rgbDelta": 16,
+    "differentInkRatio": 0.01,
+    "unmatchedInkRatio": 0.001
+  },
+  "fixtures": [
+    {
+      "fixture": "blank",
+      "pages": [
+        {
+          "page": 1,
+          "mediaBox": [
+            0.0,
+            0.0,
+            421.12298583984375,
+            400.45599365234375
+          ],
+          "regions": [
+            {
+              "region": "page",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            }
+          ],
+          "geometryEvidence": {
+            "passed": true,
+            "errors": [],
+            "matchedTextGlyphs": 0,
+            "maxOriginDeltaPt": 0,
+            "maxFontSizeDeltaPt": 0,
+            "maxColorDelta": 0,
+            "sourceOutlinePaths": 0,
+            "maxSourcePathControlPointDeltaPt": 0,
+            "colorGlyphs": [],
+            "nonGlyphPaintsEqual": true
+          },
+          "nativePrecisionEvidence": {
+            "passed": true,
+            "errors": [],
+            "originalNativePrefixPreserved": true,
+            "contentHashes": [
+              {
+                "page": 1,
+                "B": [
+                  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                ],
+                "C": [
+                  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                ],
+                "rawC": [
+                  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                ]
+              }
+            ],
+            "numericMetadataDifferences": [],
+            "maxMetadataDelta": 0
+          },
+          "sourceFontEvidence": {
+            "reference": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 0
+            },
+            "skiasharp": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 0
+            }
+          },
+          "links": []
+        }
+      ],
+      "reference": "A",
+      "bytes": {
+        "reference": 2286,
+        "skiasharp": 898
+      },
+      "fonts": []
+    },
+    {
+      "fixture": "blank-workbook",
+      "pages": [
+        {
+          "page": 1,
+          "mediaBox": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "regions": [
+            {
+              "region": "page-ink",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page-ink",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            }
+          ],
+          "geometryEvidence": {
+            "passed": true,
+            "errors": [],
+            "matchedTextGlyphs": 0,
+            "maxOriginDeltaPt": 0,
+            "maxFontSizeDeltaPt": 0,
+            "maxColorDelta": 0,
+            "sourceOutlinePaths": 0,
+            "maxSourcePathControlPointDeltaPt": 0,
+            "colorGlyphs": [],
+            "nonGlyphPaintsEqual": true
+          },
+          "nativePrecisionEvidence": {
+            "passed": true,
+            "errors": [],
+            "originalNativePrefixPreserved": true,
+            "contentHashes": [
+              {
+                "page": 1,
+                "B": [
+                  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                ],
+                "C": [
+                  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                ],
+                "rawC": [
+                  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                ]
+              }
+            ],
+            "numericMetadataDifferences": [],
+            "maxMetadataDelta": 0
+          },
+          "sourceFontEvidence": {
+            "reference": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 0
+            },
+            "skiasharp": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 0
+            }
+          },
+          "links": []
+        }
+      ],
+      "reference": "A",
+      "bytes": {
+        "reference": 2270,
+        "skiasharp": 882
+      },
+      "fonts": []
+    },
+    {
+      "fixture": "borders",
+      "pages": [
+        {
+          "page": 1,
+          "mediaBox": [
+            0.0,
+            0.0,
+            421.12298583984375,
+            400.45599365234375
+          ],
+          "regions": [
+            {
+              "region": "Solid",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "Dotted",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "Dashed",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "DashDot",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "DashDotDot",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "Double",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "Hair",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "SlantDashDot",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "alpha-overlap",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "Solid",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "Dotted",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "Dashed",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "DashDot",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "DashDotDot",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "Double",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "Hair",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "SlantDashDot",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "alpha-overlap",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            }
+          ],
+          "geometryEvidence": {
+            "passed": false,
+            "errors": [
+              "Non-glyph vector paint geometry/style/count differs"
+            ],
+            "matchedTextGlyphs": 0,
+            "maxOriginDeltaPt": 0,
+            "maxFontSizeDeltaPt": 0,
+            "maxColorDelta": 0,
+            "sourceOutlinePaths": 0,
+            "maxSourcePathControlPointDeltaPt": 0,
+            "colorGlyphs": [],
+            "nonGlyphPaintsEqual": false
+          },
+          "nativePrecisionEvidence": {
+            "passed": true,
+            "errors": [],
+            "originalNativePrefixPreserved": true,
+            "contentHashes": [
+              {
+                "page": 1,
+                "B": [
+                  "972ebcab1dd420d7c984a259e42259d4e975e22807b861089cffc38ecdafb8e8"
+                ],
+                "C": [
+                  "972ebcab1dd420d7c984a259e42259d4e975e22807b861089cffc38ecdafb8e8"
+                ],
+                "rawC": [
+                  "972ebcab1dd420d7c984a259e42259d4e975e22807b861089cffc38ecdafb8e8"
+                ]
+              }
+            ],
+            "numericMetadataDifferences": [],
+            "maxMetadataDelta": 0
+          },
+          "sourceFontEvidence": {
+            "reference": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 0
+            },
+            "skiasharp": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 0
+            }
+          },
+          "links": []
+        }
+      ],
+      "reference": "A",
+      "bytes": {
+        "reference": 3625,
+        "skiasharp": 7288
+      },
+      "fonts": []
+    },
+    {
+      "fixture": "commands-1",
+      "pages": [
+        {
+          "page": 1,
+          "mediaBox": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "regions": [
+            {
+              "region": "text-1",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-2",
+              "dpi": 144,
+              "differentInkRatio": 0.49899799599198397,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-3",
+              "dpi": 144,
+              "differentInkRatio": 0.14406130268199233,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-4",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "line",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "fill",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-1",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-2",
+              "dpi": 300,
+              "differentInkRatio": 0.6437141366718832,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-3",
+              "dpi": 300,
+              "differentInkRatio": 0.10130074891604257,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-4",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "line",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "fill",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            }
+          ],
+          "geometryEvidence": {
+            "passed": true,
+            "errors": [],
+            "matchedTextGlyphs": 38,
+            "maxOriginDeltaPt": 2.288818359375e-05,
+            "maxFontSizeDeltaPt": 0.0,
+            "maxColorDelta": 0.0,
+            "sourceOutlinePaths": 3,
+            "maxSourcePathControlPointDeltaPt": 4.9591064453125e-05,
+            "colorGlyphs": [
+              {
+                "unicode": 128512,
+                "glyph": 118,
+                "origin": [
+                  58.6879997253418,
+                  93.92024993896484
+                ],
+                "referenceImages": 1
+              }
+            ],
+            "nonGlyphPaintsEqual": true
+          },
+          "nativePrecisionEvidence": {
+            "passed": true,
+            "errors": [],
+            "originalNativePrefixPreserved": true,
+            "contentHashes": [
+              {
+                "page": 1,
+                "B": [
+                  "9b09b6727785bad9938a37aa9fb741f453720454a55a071b5da3d607b9352ca9"
+                ],
+                "C": [
+                  "9b09b6727785bad9938a37aa9fb741f453720454a55a071b5da3d607b9352ca9"
+                ],
+                "rawC": [
+                  "9b09b6727785bad9938a37aa9fb741f453720454a55a071b5da3d607b9352ca9"
+                ]
+              }
+            ],
+            "numericMetadataDifferences": [
+              {
+                "field": "F6/FontMatrix",
+                "maxDelta": 1.8729999999968563e-08
+              }
+            ],
+            "maxMetadataDelta": 1.8729999999968563e-08
+          },
+          "sourceFontEvidence": {
+            "reference": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 19
+            },
+            "skiasharp": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 22
+            }
+          },
+          "links": []
+        }
+      ],
+      "reference": "A",
+      "bytes": {
+        "reference": 31873,
+        "skiasharp": 25130
+      },
+      "fonts": [
+        {
+          "bytes": 162072,
+          "glyphs": 15699,
+          "outlines": 19
+        },
+        {
+          "bytes": 271472,
+          "glyphs": 26797,
+          "outlines": 4
+        }
+      ],
+      "glyphValidation": [
+        {
+          "font": "NotoSansJP-Regular",
+          "usedGlyphCount": 19,
+          "retainedGlyphCount": 15699,
+          "exactSourceOutlines": true
+        },
+        {
+          "font": "IPAmjMincho",
+          "usedGlyphCount": 3,
+          "retainedGlyphCount": 26797,
+          "exactSourceOutlines": true
+        }
+      ],
+      "fullEmbedBytes": 34436569,
+      "reduction": 0.9992702525039588
+    },
+    {
+      "fixture": "commands-2",
+      "pages": [
+        {
+          "page": 1,
+          "mediaBox": [
+            0.0,
+            0.0,
+            841.8900146484375,
+            1190.551025390625
+          ],
+          "regions": [
+            {
+              "region": "text-1",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-2",
+              "dpi": 144,
+              "differentInkRatio": 0.49899799599198397,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-3",
+              "dpi": 144,
+              "differentInkRatio": 0.14406130268199233,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-4",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "line",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "fill",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-1",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-2",
+              "dpi": 300,
+              "differentInkRatio": 0.6428571428571429,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-3",
+              "dpi": 300,
+              "differentInkRatio": 0.10130074891604257,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-4",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "line",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "fill",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            }
+          ],
+          "geometryEvidence": {
+            "passed": true,
+            "errors": [],
+            "matchedTextGlyphs": 38,
+            "maxOriginDeltaPt": 4.57763671875e-05,
+            "maxFontSizeDeltaPt": 0.0,
+            "maxColorDelta": 0.0,
+            "sourceOutlinePaths": 3,
+            "maxSourcePathControlPointDeltaPt": 8.0108642578125e-05,
+            "colorGlyphs": [
+              {
+                "unicode": 128512,
+                "glyph": 118,
+                "origin": [
+                  58.6879997253418,
+                  93.91984558105469
+                ],
+                "referenceImages": 1
+              }
+            ],
+            "nonGlyphPaintsEqual": true
+          },
+          "nativePrecisionEvidence": {
+            "passed": true,
+            "errors": [],
+            "originalNativePrefixPreserved": true,
+            "contentHashes": [
+              {
+                "page": 1,
+                "B": [
+                  "025f2327eef5ee80aa296f547490bae21cc285abf3a0299e58252869262bc51d"
+                ],
+                "C": [
+                  "025f2327eef5ee80aa296f547490bae21cc285abf3a0299e58252869262bc51d"
+                ],
+                "rawC": [
+                  "025f2327eef5ee80aa296f547490bae21cc285abf3a0299e58252869262bc51d"
+                ]
+              }
+            ],
+            "numericMetadataDifferences": [
+              {
+                "field": "F6/FontMatrix",
+                "maxDelta": 1.8729999999968563e-08
+              }
+            ],
+            "maxMetadataDelta": 1.8729999999968563e-08
+          },
+          "sourceFontEvidence": {
+            "reference": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 19
+            },
+            "skiasharp": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 22
+            }
+          },
+          "links": []
+        }
+      ],
+      "reference": "A",
+      "bytes": {
+        "reference": 31899,
+        "skiasharp": 25134
+      },
+      "fonts": [
+        {
+          "bytes": 162072,
+          "glyphs": 15699,
+          "outlines": 19
+        },
+        {
+          "bytes": 271472,
+          "glyphs": 26797,
+          "outlines": 4
+        }
+      ],
+      "glyphValidation": [
+        {
+          "font": "NotoSansJP-Regular",
+          "usedGlyphCount": 19,
+          "retainedGlyphCount": 15699,
+          "exactSourceOutlines": true
+        },
+        {
+          "font": "IPAmjMincho",
+          "usedGlyphCount": 3,
+          "retainedGlyphCount": 26797,
+          "exactSourceOutlines": true
+        }
+      ]
+    },
+    {
+      "fixture": "commands-3",
+      "pages": [
+        {
+          "page": 1,
+          "mediaBox": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "regions": [
+            {
+              "region": "text-1",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-2",
+              "dpi": 144,
+              "differentInkRatio": 0.49899799599198397,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-3",
+              "dpi": 144,
+              "differentInkRatio": 0.14406130268199233,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-4",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "line",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "fill",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-1",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-2",
+              "dpi": 300,
+              "differentInkRatio": 0.6428571428571429,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-3",
+              "dpi": 300,
+              "differentInkRatio": 0.10130074891604257,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-4",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "line",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "fill",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            }
+          ],
+          "geometryEvidence": {
+            "passed": true,
+            "errors": [],
+            "matchedTextGlyphs": 38,
+            "maxOriginDeltaPt": 1.52587890625e-05,
+            "maxFontSizeDeltaPt": 0.0,
+            "maxColorDelta": 0.0,
+            "sourceOutlinePaths": 3,
+            "maxSourcePathControlPointDeltaPt": 4.9591064453125e-05,
+            "colorGlyphs": [
+              {
+                "unicode": 128512,
+                "glyph": 118,
+                "origin": [
+                  58.6879997253418,
+                  93.91999816894531
+                ],
+                "referenceImages": 1
+              }
+            ],
+            "nonGlyphPaintsEqual": true
+          },
+          "nativePrecisionEvidence": {
+            "passed": true,
+            "errors": [],
+            "originalNativePrefixPreserved": true,
+            "contentHashes": [
+              {
+                "page": 1,
+                "B": [
+                  "441c0ee9caf85d250e350b6c3af1b09c0eb6aa8b5054f61cca70e6916234e825"
+                ],
+                "C": [
+                  "441c0ee9caf85d250e350b6c3af1b09c0eb6aa8b5054f61cca70e6916234e825"
+                ],
+                "rawC": [
+                  "441c0ee9caf85d250e350b6c3af1b09c0eb6aa8b5054f61cca70e6916234e825"
+                ]
+              }
+            ],
+            "numericMetadataDifferences": [
+              {
+                "field": "F6/FontMatrix",
+                "maxDelta": 1.8729999999968563e-08
+              }
+            ],
+            "maxMetadataDelta": 1.8729999999968563e-08
+          },
+          "sourceFontEvidence": {
+            "reference": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 19
+            },
+            "skiasharp": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 22
+            }
+          },
+          "links": []
+        }
+      ],
+      "reference": "A",
+      "bytes": {
+        "reference": 31845,
+        "skiasharp": 25091
+      },
+      "fonts": [
+        {
+          "bytes": 162072,
+          "glyphs": 15699,
+          "outlines": 19
+        },
+        {
+          "bytes": 271472,
+          "glyphs": 26797,
+          "outlines": 4
+        }
+      ],
+      "glyphValidation": [
+        {
+          "font": "NotoSansJP-Regular",
+          "usedGlyphCount": 19,
+          "retainedGlyphCount": 15699,
+          "exactSourceOutlines": true
+        },
+        {
+          "font": "IPAmjMincho",
+          "usedGlyphCount": 3,
+          "retainedGlyphCount": 26797,
+          "exactSourceOutlines": true
+        }
+      ]
+    },
+    {
+      "fixture": "commands-4",
+      "pages": [
+        {
+          "page": 1,
+          "mediaBox": [
+            0.0,
+            0.0,
+            421.12298583984375,
+            333.45599365234375
+          ],
+          "regions": [
+            {
+              "region": "text-1",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-2",
+              "dpi": 144,
+              "differentInkRatio": 0.49899799599198397,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-3",
+              "dpi": 144,
+              "differentInkRatio": 0.14406130268199233,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-4",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "line",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "fill",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "fractional-page-edge",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-1",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-2",
+              "dpi": 300,
+              "differentInkRatio": 0.6428571428571429,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-3",
+              "dpi": 300,
+              "differentInkRatio": 0.10130074891604257,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-4",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "line",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "fill",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "fractional-page-edge",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            }
+          ],
+          "geometryEvidence": {
+            "passed": true,
+            "errors": [],
+            "matchedTextGlyphs": 38,
+            "maxOriginDeltaPt": 1.52587890625e-05,
+            "maxFontSizeDeltaPt": 0.0,
+            "maxColorDelta": 0.0,
+            "sourceOutlinePaths": 3,
+            "maxSourcePathControlPointDeltaPt": 5.340576171875e-05,
+            "colorGlyphs": [
+              {
+                "unicode": 128512,
+                "glyph": 118,
+                "origin": [
+                  58.6879997253418,
+                  93.91999053955078
+                ],
+                "referenceImages": 1
+              }
+            ],
+            "nonGlyphPaintsEqual": true
+          },
+          "nativePrecisionEvidence": {
+            "passed": true,
+            "errors": [],
+            "originalNativePrefixPreserved": true,
+            "contentHashes": [
+              {
+                "page": 1,
+                "B": [
+                  "5d94f0b5f0e07ce728ead7f885efc440605878c224736bebd2cbb8fbd59a14bd"
+                ],
+                "C": [
+                  "5d94f0b5f0e07ce728ead7f885efc440605878c224736bebd2cbb8fbd59a14bd"
+                ],
+                "rawC": [
+                  "5d94f0b5f0e07ce728ead7f885efc440605878c224736bebd2cbb8fbd59a14bd"
+                ]
+              }
+            ],
+            "numericMetadataDifferences": [
+              {
+                "field": "F6/FontMatrix",
+                "maxDelta": 1.8729999999968563e-08
+              }
+            ],
+            "maxMetadataDelta": 1.8729999999968563e-08
+          },
+          "sourceFontEvidence": {
+            "reference": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 19
+            },
+            "skiasharp": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 22
+            }
+          },
+          "links": []
+        }
+      ],
+      "reference": "A",
+      "bytes": {
+        "reference": 31911,
+        "skiasharp": 25269
+      },
+      "fonts": [
+        {
+          "bytes": 162072,
+          "glyphs": 15699,
+          "outlines": 19
+        },
+        {
+          "bytes": 271472,
+          "glyphs": 26797,
+          "outlines": 4
+        }
+      ],
+      "glyphValidation": [
+        {
+          "font": "NotoSansJP-Regular",
+          "usedGlyphCount": 19,
+          "retainedGlyphCount": 15699,
+          "exactSourceOutlines": true
+        },
+        {
+          "font": "IPAmjMincho",
+          "usedGlyphCount": 3,
+          "retainedGlyphCount": 26797,
+          "exactSourceOutlines": true
+        }
+      ]
+    },
+    {
+      "fixture": "drawing-anchors",
+      "pages": [
+        {
+          "page": 1,
+          "mediaBox": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "regions": [
+            {
+              "region": "block-1",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-2",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-3",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page-ink",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-1",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-2",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-3",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page-ink",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            }
+          ],
+          "geometryEvidence": {
+            "passed": true,
+            "errors": [],
+            "matchedTextGlyphs": 80,
+            "maxOriginDeltaPt": 3.0517578125e-05,
+            "maxFontSizeDeltaPt": 0.0,
+            "maxColorDelta": 0.0,
+            "sourceOutlinePaths": 0,
+            "maxSourcePathControlPointDeltaPt": 0,
+            "colorGlyphs": [],
+            "nonGlyphPaintsEqual": true
+          },
+          "nativePrecisionEvidence": {
+            "passed": true,
+            "errors": [],
+            "originalNativePrefixPreserved": true,
+            "contentHashes": [
+              {
+                "page": 1,
+                "B": [
+                  "171382e9a1063a011a29eaad29246fdcffee978e4b91c9356c7b8635cd81e5af"
+                ],
+                "C": [
+                  "171382e9a1063a011a29eaad29246fdcffee978e4b91c9356c7b8635cd81e5af"
+                ],
+                "rawC": [
+                  "171382e9a1063a011a29eaad29246fdcffee978e4b91c9356c7b8635cd81e5af"
+                ]
+              }
+            ],
+            "numericMetadataDifferences": [],
+            "maxMetadataDelta": 0
+          },
+          "sourceFontEvidence": {
+            "reference": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 1
+            },
+            "skiasharp": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 1
+            }
+          },
+          "links": []
+        }
+      ],
+      "reference": "A",
+      "bytes": {
+        "reference": 100368,
+        "skiasharp": 5327
+      },
+      "fonts": [
+        {
+          "bytes": 2512,
+          "glyphs": 90,
+          "outlines": 2
+        }
+      ],
+      "glyphValidation": [
+        {
+          "font": "NotoSansJP-Regular",
+          "usedGlyphCount": 1,
+          "retainedGlyphCount": 90,
+          "exactSourceOutlines": true
+        }
+      ]
+    },
+    {
+      "fixture": "header-footer",
+      "pages": [
+        {
+          "page": 1,
+          "mediaBox": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "regions": [
+            {
+              "region": "block-1",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-2",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page-ink",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-1",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-2",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page-ink",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            }
+          ],
+          "geometryEvidence": {
+            "passed": true,
+            "errors": [],
+            "matchedTextGlyphs": 13,
+            "maxOriginDeltaPt": 3.0517578125e-05,
+            "maxFontSizeDeltaPt": 0.0,
+            "maxColorDelta": 0.0,
+            "sourceOutlinePaths": 0,
+            "maxSourcePathControlPointDeltaPt": 0,
+            "colorGlyphs": [],
+            "nonGlyphPaintsEqual": true
+          },
+          "nativePrecisionEvidence": {
+            "passed": true,
+            "errors": [],
+            "originalNativePrefixPreserved": true,
+            "contentHashes": [
+              {
+                "page": 1,
+                "B": [
+                  "70acb5664a78848bc6d3736dc9b53b65086c82f22d894742dfa36ecef14dac6e"
+                ],
+                "C": [
+                  "70acb5664a78848bc6d3736dc9b53b65086c82f22d894742dfa36ecef14dac6e"
+                ],
+                "rawC": [
+                  "70acb5664a78848bc6d3736dc9b53b65086c82f22d894742dfa36ecef14dac6e"
+                ]
+              }
+            ],
+            "numericMetadataDifferences": [],
+            "maxMetadataDelta": 0
+          },
+          "sourceFontEvidence": {
+            "reference": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 9
+            },
+            "skiasharp": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 9
+            }
+          },
+          "links": []
+        }
+      ],
+      "reference": "A",
+      "bytes": {
+        "reference": 22752,
+        "skiasharp": 5675
+      },
+      "fonts": [
+        {
+          "bytes": 173540,
+          "glyphs": 16958,
+          "outlines": 16
+        }
+      ],
+      "glyphValidation": [
+        {
+          "font": "NotoSansJP-Regular",
+          "usedGlyphCount": 9,
+          "retainedGlyphCount": 16958,
+          "exactSourceOutlines": true
+        }
+      ]
+    },
+    {
+      "fixture": "image-anchor",
+      "pages": [
+        {
+          "page": 1,
+          "mediaBox": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "regions": [
+            {
+              "region": "page-ink",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page-ink",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            }
+          ],
+          "geometryEvidence": {
+            "passed": true,
+            "errors": [],
+            "matchedTextGlyphs": 0,
+            "maxOriginDeltaPt": 0,
+            "maxFontSizeDeltaPt": 0,
+            "maxColorDelta": 0,
+            "sourceOutlinePaths": 0,
+            "maxSourcePathControlPointDeltaPt": 0,
+            "colorGlyphs": [],
+            "nonGlyphPaintsEqual": true
+          },
+          "nativePrecisionEvidence": {
+            "passed": true,
+            "errors": [],
+            "originalNativePrefixPreserved": true,
+            "contentHashes": [
+              {
+                "page": 1,
+                "B": [
+                  "93d36c0182d2a58735728f2de1ac7d58e6601dab5d56396796bd1c3640870356"
+                ],
+                "C": [
+                  "93d36c0182d2a58735728f2de1ac7d58e6601dab5d56396796bd1c3640870356"
+                ],
+                "rawC": [
+                  "93d36c0182d2a58735728f2de1ac7d58e6601dab5d56396796bd1c3640870356"
+                ]
+              }
+            ],
+            "numericMetadataDifferences": [],
+            "maxMetadataDelta": 0
+          },
+          "sourceFontEvidence": {
+            "reference": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 0
+            },
+            "skiasharp": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 0
+            }
+          },
+          "links": []
+        }
+      ],
+      "reference": "A",
+      "bytes": {
+        "reference": 2711,
+        "skiasharp": 1955
+      },
+      "fonts": []
+    },
+    {
+      "fixture": "images",
+      "pages": [
+        {
+          "page": 1,
+          "mediaBox": [
+            0.0,
+            0.0,
+            421.12298583984375,
+            400.45599365234375
+          ],
+          "regions": [
+            {
+              "region": "image-0",
+              "dpi": 144,
+              "differentInkRatio": 0.006211180124223602,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "image-1",
+              "dpi": 144,
+              "differentInkRatio": 0.006211180124223602,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "image-2",
+              "dpi": 144,
+              "differentInkRatio": 0.6450698757763975,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "image-3",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "image-4",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "image-5",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "image-0",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "image-1",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "image-2",
+              "dpi": 300,
+              "differentInkRatio": 0.6343551702565019,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "image-3",
+              "dpi": 300,
+              "differentInkRatio": 1.0438086489984656e-05,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "image-4",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "image-5",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            }
+          ],
+          "geometryEvidence": {
+            "passed": true,
+            "errors": [],
+            "matchedTextGlyphs": 0,
+            "maxOriginDeltaPt": 0,
+            "maxFontSizeDeltaPt": 0,
+            "maxColorDelta": 0,
+            "sourceOutlinePaths": 0,
+            "maxSourcePathControlPointDeltaPt": 0,
+            "colorGlyphs": [],
+            "nonGlyphPaintsEqual": true
+          },
+          "nativePrecisionEvidence": {
+            "passed": true,
+            "errors": [],
+            "originalNativePrefixPreserved": true,
+            "contentHashes": [
+              {
+                "page": 1,
+                "B": [
+                  "d69bf14fb48e96359c041208c0b8a101f0bfa213564999db4869b5f324f5586f"
+                ],
+                "C": [
+                  "d69bf14fb48e96359c041208c0b8a101f0bfa213564999db4869b5f324f5586f"
+                ],
+                "rawC": [
+                  "d69bf14fb48e96359c041208c0b8a101f0bfa213564999db4869b5f324f5586f"
+                ]
+              }
+            ],
+            "numericMetadataDifferences": [],
+            "maxMetadataDelta": 0
+          },
+          "sourceFontEvidence": {
+            "reference": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 0
+            },
+            "skiasharp": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 0
+            }
+          },
+          "cropEvidence": {
+            "passed": true,
+            "samples": [
+              {
+                "expected": [
+                  136,
+                  63,
+                  100
+                ],
+                "actual": [
+                  135,
+                  62,
+                  100
+                ],
+                "maxChannelDelta": 1
+              },
+              {
+                "expected": [
+                  136,
+                  121,
+                  100
+                ],
+                "actual": [
+                  135,
+                  120,
+                  100
+                ],
+                "maxChannelDelta": 1
+              },
+              {
+                "expected": [
+                  159,
+                  63,
+                  100
+                ],
+                "actual": [
+                  159,
+                  62,
+                  100
+                ],
+                "maxChannelDelta": 1
+              },
+              {
+                "expected": [
+                  159,
+                  121,
+                  100
+                ],
+                "actual": [
+                  159,
+                  120,
+                  100
+                ],
+                "maxChannelDelta": 1
+              },
+              {
+                "expected": [
+                  183,
+                  63,
+                  100
+                ],
+                "actual": [
+                  182,
+                  62,
+                  100
+                ],
+                "maxChannelDelta": 1
+              },
+              {
+                "expected": [
+                  183,
+                  121,
+                  100
+                ],
+                "actual": [
+                  182,
+                  120,
+                  100
+                ],
+                "maxChannelDelta": 1
+              }
+            ]
+          },
+          "links": []
+        }
+      ],
+      "reference": "A",
+      "bytes": {
+        "reference": 7743,
+        "skiasharp": 24547
+      },
+      "fonts": []
+    },
+    {
+      "fixture": "invoice",
+      "pages": [
+        {
+          "page": 1,
+          "mediaBox": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "regions": [
+            {
+              "region": "block-1",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-2",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-3",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-4",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-5",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-6",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-7",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-8",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-9",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-10",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-11",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-12",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-13",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-14",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-15",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-16",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-17",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-18",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-19",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-20",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-21",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page-ink",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-1",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-2",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-3",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-4",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-5",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-6",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-7",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-8",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-9",
+              "dpi": 300,
+              "differentInkRatio": 0.07072882651288821,
+              "unmatchedInkRatio": 6.947821857847565e-05
+            },
+            {
+              "region": "block-10",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-11",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-12",
+              "dpi": 300,
+              "differentInkRatio": 0.06395078922934076,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-13",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-14",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-15",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-16",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-17",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-18",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-19",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-20",
+              "dpi": 300,
+              "differentInkRatio": 0.015814741598418527,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-21",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page-ink",
+              "dpi": 300,
+              "differentInkRatio": 0.0016800003997621414,
+              "unmatchedInkRatio": 9.994053538144804e-07
+            }
+          ],
+          "geometryEvidence": {
+            "passed": true,
+            "errors": [],
+            "matchedTextGlyphs": 432,
+            "maxOriginDeltaPt": 9.1552734375e-05,
+            "maxFontSizeDeltaPt": 0.0,
+            "maxColorDelta": 0.0004000067710876465,
+            "sourceOutlinePaths": 0,
+            "maxSourcePathControlPointDeltaPt": 0,
+            "colorGlyphs": [],
+            "nonGlyphPaintsEqual": true
+          },
+          "nativePrecisionEvidence": {
+            "passed": true,
+            "errors": [],
+            "originalNativePrefixPreserved": true,
+            "contentHashes": [
+              {
+                "page": 1,
+                "B": [
+                  "b6bf88d3869322d272612f53ed56f15328764642ee8ded86fde41b2fc66be14f"
+                ],
+                "C": [
+                  "b6bf88d3869322d272612f53ed56f15328764642ee8ded86fde41b2fc66be14f"
+                ],
+                "rawC": [
+                  "b6bf88d3869322d272612f53ed56f15328764642ee8ded86fde41b2fc66be14f"
+                ]
+              }
+            ],
+            "numericMetadataDifferences": [],
+            "maxMetadataDelta": 0
+          },
+          "sourceFontEvidence": {
+            "reference": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 318
+            },
+            "skiasharp": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 159
+            }
+          },
+          "links": []
+        }
+      ],
+      "reference": "A",
+      "bytes": {
+        "reference": 123952,
+        "skiasharp": 33386
+      },
+      "fonts": [
+        {
+          "bytes": 206652,
+          "glyphs": 17072,
+          "outlines": 189
+        }
+      ],
+      "glyphValidation": [
+        {
+          "font": "NotoSansJP-Regular",
+          "usedGlyphCount": 159,
+          "retainedGlyphCount": 17072,
+          "exactSourceOutlines": true
+        }
+      ],
+      "fullEmbedBytes": 3161707,
+      "reduction": 0.9894405142538508
+    },
+    {
+      "fixture": "japanese-grid-report",
+      "pages": [
+        {
+          "page": 1,
+          "mediaBox": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "regions": [
+            {
+              "region": "block-1",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-2",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-3",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-4",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-5",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-6",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-7",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-8",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-9",
+              "dpi": 144,
+              "differentInkRatio": 0.04639479905437352,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-10",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-11",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-12",
+              "dpi": 144,
+              "differentInkRatio": 0.06371595330739299,
+              "unmatchedInkRatio": 0.00048638132295719845
+            },
+            {
+              "region": "block-13",
+              "dpi": 144,
+              "differentInkRatio": 0.07351460221550855,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-14",
+              "dpi": 144,
+              "differentInkRatio": 0.07696362677912494,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-15",
+              "dpi": 144,
+              "differentInkRatio": 0.015621301775147929,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-16",
+              "dpi": 144,
+              "differentInkRatio": 0.03758847937515255,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-17",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-18",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-19",
+              "dpi": 144,
+              "differentInkRatio": 0.09648541114058355,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-20",
+              "dpi": 144,
+              "differentInkRatio": 0.03223617237869019,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-21",
+              "dpi": 144,
+              "differentInkRatio": 0.030541871921182268,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-22",
+              "dpi": 144,
+              "differentInkRatio": 0.05411858336649423,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-23",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-24",
+              "dpi": 144,
+              "differentInkRatio": 0.012773722627737226,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-25",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-26",
+              "dpi": 144,
+              "differentInkRatio": 0.15128735200150348,
+              "unmatchedInkRatio": 0.002631084382634843
+            },
+            {
+              "region": "block-27",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-28",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page-ink",
+              "dpi": 144,
+              "differentInkRatio": 0.008644677037638509,
+              "unmatchedInkRatio": 4.95113232396249e-05
+            },
+            {
+              "region": "block-1",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-2",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-3",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-4",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-5",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-6",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-7",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-8",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-9",
+              "dpi": 300,
+              "differentInkRatio": 0.021940544534758143,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-10",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-11",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-12",
+              "dpi": 300,
+              "differentInkRatio": 0.03453155958109256,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-13",
+              "dpi": 300,
+              "differentInkRatio": 0.03491200457862355,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-14",
+              "dpi": 300,
+              "differentInkRatio": 0.036730392894776455,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-15",
+              "dpi": 300,
+              "differentInkRatio": 0.012715293029707548,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-16",
+              "dpi": 300,
+              "differentInkRatio": 0.01350438892640108,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-17",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-18",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-19",
+              "dpi": 300,
+              "differentInkRatio": 0.0630392156862745,
+              "unmatchedInkRatio": 0.0002941176470588235
+            },
+            {
+              "region": "block-20",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-21",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-22",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-23",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-24",
+              "dpi": 300,
+              "differentInkRatio": 0.009995265400599716,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-25",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-26",
+              "dpi": 300,
+              "differentInkRatio": 0.1537330501552034,
+              "unmatchedInkRatio": 0.0052279039372651525
+            },
+            {
+              "region": "block-27",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-28",
+              "dpi": 300,
+              "differentInkRatio": 0.0519239021599199,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page-ink",
+              "dpi": 300,
+              "differentInkRatio": 0.004854993405090293,
+              "unmatchedInkRatio": 8.060445197114523e-05
+            }
+          ],
+          "geometryEvidence": {
+            "passed": true,
+            "errors": [],
+            "matchedTextGlyphs": 671,
+            "maxOriginDeltaPt": 0.0177001953125,
+            "maxFontSizeDeltaPt": 0.00046062469482421875,
+            "maxColorDelta": 0.00039999932050704956,
+            "sourceOutlinePaths": 5,
+            "maxSourcePathControlPointDeltaPt": 9.307443781381153e-05,
+            "colorGlyphs": [
+              {
+                "unicode": 9989,
+                "glyph": 143,
+                "origin": [
+                  466.9436950683594,
+                  293.48626708984375
+                ],
+                "referenceImages": 1
+              },
+              {
+                "unicode": 9989,
+                "glyph": 143,
+                "origin": [
+                  466.9436950683594,
+                  307.408447265625
+                ],
+                "referenceImages": 1
+              },
+              {
+                "unicode": 9989,
+                "glyph": 143,
+                "origin": [
+                  466.9436950683594,
+                  321.33062744140625
+                ],
+                "referenceImages": 1
+              },
+              {
+                "unicode": 128680,
+                "glyph": 238,
+                "origin": [
+                  463.076416015625,
+                  335.2528076171875
+                ],
+                "referenceImages": 1
+              },
+              {
+                "unicode": 128680,
+                "glyph": 238,
+                "origin": [
+                  463.076416015625,
+                  349.1749572753906
+                ],
+                "referenceImages": 1
+              },
+              {
+                "unicode": 127881,
+                "glyph": 126,
+                "origin": [
+                  240.78140258789062,
+                  411.8247375488281
+                ],
+                "referenceImages": 1
+              },
+              {
+                "unicode": 128200,
+                "glyph": 182,
+                "origin": [
+                  345.0120544433594,
+                  586.374755859375
+                ],
+                "referenceImages": 1
+              },
+              {
+                "unicode": 127881,
+                "glyph": 126,
+                "origin": [
+                  355.2606201171875,
+                  586.374755859375
+                ],
+                "referenceImages": 2
+              },
+              {
+                "unicode": 9989,
+                "glyph": 143,
+                "origin": [
+                  365.5091552734375,
+                  586.374755859375
+                ],
+                "referenceImages": 2
+              },
+              {
+                "unicode": 9888,
+                "glyph": 112,
+                "origin": [
+                  375.7577209472656,
+                  586.374755859375
+                ],
+                "referenceImages": 2
+              },
+              {
+                "unicode": 127800,
+                "glyph": 45,
+                "origin": [
+                  386.00628662109375,
+                  586.374755859375
+                ],
+                "referenceImages": 2
+              }
+            ],
+            "nonGlyphPaintsEqual": true
+          },
+          "nativePrecisionEvidence": {
+            "passed": true,
+            "errors": [],
+            "originalNativePrefixPreserved": true,
+            "contentHashes": [
+              {
+                "page": 1,
+                "B": [
+                  "834c1acb56280c9e5f72472b75ae281e1adf3277aad18bd0de5a3025ef86660d"
+                ],
+                "C": [
+                  "834c1acb56280c9e5f72472b75ae281e1adf3277aad18bd0de5a3025ef86660d"
+                ],
+                "rawC": [
+                  "834c1acb56280c9e5f72472b75ae281e1adf3277aad18bd0de5a3025ef86660d"
+                ]
+              }
+            ],
+            "numericMetadataDifferences": [
+              {
+                "field": "F8/FontMatrix",
+                "maxDelta": 1.8729999999968563e-08
+              },
+              {
+                "field": "F7/FontMatrix",
+                "maxDelta": 1.8729999999968563e-08
+              },
+              {
+                "field": "F10/FontMatrix",
+                "maxDelta": 1.8729999999968563e-08
+              },
+              {
+                "field": "F6/FontMatrix",
+                "maxDelta": 1.8729999999968563e-08
+              },
+              {
+                "field": "G4/LW",
+                "maxDelta": 9.999999994736442e-09
+              }
+            ],
+            "maxMetadataDelta": 1.8729999999968563e-08
+          },
+          "sourceFontEvidence": {
+            "reference": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 514
+            },
+            "skiasharp": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 261
+            }
+          },
+          "links": []
+        }
+      ],
+      "reference": "A",
+      "bytes": {
+        "reference": 171283,
+        "skiasharp": 125125
+      },
+      "fonts": [
+        {
+          "bytes": 238604,
+          "glyphs": 17072,
+          "outlines": 313
+        },
+        {
+          "bytes": 314924,
+          "glyphs": 31036,
+          "outlines": 5
+        }
+      ],
+      "glyphValidation": [
+        {
+          "font": "NotoSansJP-Regular",
+          "usedGlyphCount": 257,
+          "retainedGlyphCount": 17072,
+          "exactSourceOutlines": true
+        },
+        {
+          "font": "IPAmjMincho",
+          "usedGlyphCount": 4,
+          "retainedGlyphCount": 31036,
+          "exactSourceOutlines": true
+        }
+      ],
+      "fullEmbedBytes": 34487754,
+      "reduction": 0.9963719005882494
+    },
+    {
+      "fixture": "links",
+      "pages": [
+        {
+          "page": 1,
+          "mediaBox": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "regions": [
+            {
+              "region": "text-1",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-2",
+              "dpi": 144,
+              "differentInkRatio": 0.49899799599198397,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-3",
+              "dpi": 144,
+              "differentInkRatio": 0.14406130268199233,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-4",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "line",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "fill",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-1",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-2",
+              "dpi": 300,
+              "differentInkRatio": 0.6437141366718832,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-3",
+              "dpi": 300,
+              "differentInkRatio": 0.10130074891604257,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-4",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "line",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "fill",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            }
+          ],
+          "geometryEvidence": {
+            "passed": true,
+            "errors": [],
+            "matchedTextGlyphs": 38,
+            "maxOriginDeltaPt": 2.288818359375e-05,
+            "maxFontSizeDeltaPt": 0.0,
+            "maxColorDelta": 0.0,
+            "sourceOutlinePaths": 3,
+            "maxSourcePathControlPointDeltaPt": 4.9591064453125e-05,
+            "colorGlyphs": [
+              {
+                "unicode": 128512,
+                "glyph": 118,
+                "origin": [
+                  58.6879997253418,
+                  93.92024993896484
+                ],
+                "referenceImages": 1
+              }
+            ],
+            "nonGlyphPaintsEqual": true
+          },
+          "nativePrecisionEvidence": {
+            "passed": true,
+            "errors": [],
+            "originalNativePrefixPreserved": true,
+            "contentHashes": [
+              {
+                "page": 1,
+                "B": [
+                  "9b09b6727785bad9938a37aa9fb741f453720454a55a071b5da3d607b9352ca9"
+                ],
+                "C": [
+                  "9b09b6727785bad9938a37aa9fb741f453720454a55a071b5da3d607b9352ca9"
+                ],
+                "rawC": [
+                  "9b09b6727785bad9938a37aa9fb741f453720454a55a071b5da3d607b9352ca9"
+                ]
+              },
+              {
+                "page": 2,
+                "B": [
+                  "0169c35408bc5501c2f0151d36580434ac6b1789b73845a0464256e9c5c29258"
+                ],
+                "C": [
+                  "0169c35408bc5501c2f0151d36580434ac6b1789b73845a0464256e9c5c29258"
+                ],
+                "rawC": [
+                  "0169c35408bc5501c2f0151d36580434ac6b1789b73845a0464256e9c5c29258"
+                ]
+              }
+            ],
+            "numericMetadataDifferences": [
+              {
+                "field": "F6/FontMatrix",
+                "maxDelta": 1.8729999999968563e-08
+              },
+              {
+                "field": "F6/FontMatrix",
+                "maxDelta": 1.8729999999968563e-08
+              }
+            ],
+            "maxMetadataDelta": 1.8729999999968563e-08
+          },
+          "sourceFontEvidence": {
+            "reference": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 19
+            },
+            "skiasharp": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 22
+            }
+          },
+          "links": [
+            {
+              "rect": [
+                20.0,
+                210.000244140625,
+                120.0,
+                230.000244140625
+              ],
+              "uri": null,
+              "page": 1,
+              "to": [
+                20.0,
+                20.0
+              ],
+              "tooltip": "forward tooltip"
+            },
+            {
+              "rect": [
+                140.0,
+                210.000244140625,
+                240.0,
+                230.000244140625
+              ],
+              "uri": "https://example.com/a?q=a%20b",
+              "page": null,
+              "to": null,
+              "tooltip": "URL tooltip"
+            }
+          ]
+        },
+        {
+          "page": 2,
+          "mediaBox": [
+            0.0,
+            0.0,
+            421.12298583984375,
+            333.45599365234375
+          ],
+          "regions": [
+            {
+              "region": "text-1",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-2",
+              "dpi": 144,
+              "differentInkRatio": 0.49899799599198397,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-3",
+              "dpi": 144,
+              "differentInkRatio": 0.14406130268199233,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-4",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "line",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "fill",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-1",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-2",
+              "dpi": 300,
+              "differentInkRatio": 0.6428571428571429,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-3",
+              "dpi": 300,
+              "differentInkRatio": 0.10130074891604257,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "text-4",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "line",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "fill",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            }
+          ],
+          "geometryEvidence": {
+            "passed": true,
+            "errors": [],
+            "matchedTextGlyphs": 38,
+            "maxOriginDeltaPt": 1.52587890625e-05,
+            "maxFontSizeDeltaPt": 0.0,
+            "maxColorDelta": 0.0,
+            "sourceOutlinePaths": 3,
+            "maxSourcePathControlPointDeltaPt": 5.340576171875e-05,
+            "colorGlyphs": [
+              {
+                "unicode": 128512,
+                "glyph": 118,
+                "origin": [
+                  58.6879997253418,
+                  93.91999053955078
+                ],
+                "referenceImages": 1
+              }
+            ],
+            "nonGlyphPaintsEqual": true
+          },
+          "nativePrecisionEvidence": {
+            "passed": true,
+            "errors": [],
+            "originalNativePrefixPreserved": true,
+            "contentHashes": [
+              {
+                "page": 1,
+                "B": [
+                  "9b09b6727785bad9938a37aa9fb741f453720454a55a071b5da3d607b9352ca9"
+                ],
+                "C": [
+                  "9b09b6727785bad9938a37aa9fb741f453720454a55a071b5da3d607b9352ca9"
+                ],
+                "rawC": [
+                  "9b09b6727785bad9938a37aa9fb741f453720454a55a071b5da3d607b9352ca9"
+                ]
+              },
+              {
+                "page": 2,
+                "B": [
+                  "0169c35408bc5501c2f0151d36580434ac6b1789b73845a0464256e9c5c29258"
+                ],
+                "C": [
+                  "0169c35408bc5501c2f0151d36580434ac6b1789b73845a0464256e9c5c29258"
+                ],
+                "rawC": [
+                  "0169c35408bc5501c2f0151d36580434ac6b1789b73845a0464256e9c5c29258"
+                ]
+              }
+            ],
+            "numericMetadataDifferences": [
+              {
+                "field": "F6/FontMatrix",
+                "maxDelta": 1.8729999999968563e-08
+              },
+              {
+                "field": "F6/FontMatrix",
+                "maxDelta": 1.8729999999968563e-08
+              }
+            ],
+            "maxMetadataDelta": 1.8729999999968563e-08
+          },
+          "sourceFontEvidence": {
+            "reference": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 19
+            },
+            "skiasharp": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 22
+            }
+          },
+          "links": [
+            {
+              "rect": [
+                20.0,
+                210.0,
+                120.0,
+                230.0
+              ],
+              "uri": null,
+              "page": 0,
+              "to": [
+                20.0,
+                20.000245
+              ],
+              "tooltip": "backward tooltip"
+            }
+          ]
+        }
+      ],
+      "reference": "A",
+      "bytes": {
+        "reference": 35534,
+        "skiasharp": 27177
+      },
+      "fonts": [
+        {
+          "bytes": 162072,
+          "glyphs": 15699,
+          "outlines": 19
+        },
+        {
+          "bytes": 271472,
+          "glyphs": 26797,
+          "outlines": 4
+        }
+      ],
+      "glyphValidation": [
+        {
+          "font": "NotoSansJP-Regular",
+          "usedGlyphCount": 19,
+          "retainedGlyphCount": 15699,
+          "exactSourceOutlines": true
+        },
+        {
+          "font": "IPAmjMincho",
+          "usedGlyphCount": 3,
+          "retainedGlyphCount": 26797,
+          "exactSourceOutlines": true
+        }
+      ]
+    },
+    {
+      "fixture": "links-none",
+      "pages": [
+        {
+          "page": 1,
+          "mediaBox": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "regions": [
+            {
+              "region": "block-1",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-2",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-3",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-4",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-5",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page-ink",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-1",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-2",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-3",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-4",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-5",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page-ink",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            }
+          ],
+          "geometryEvidence": {
+            "passed": true,
+            "errors": [],
+            "matchedTextGlyphs": 42,
+            "maxOriginDeltaPt": 3.0517578125e-05,
+            "maxFontSizeDeltaPt": 0.0,
+            "maxColorDelta": 0.0,
+            "sourceOutlinePaths": 0,
+            "maxSourcePathControlPointDeltaPt": 0,
+            "colorGlyphs": [],
+            "nonGlyphPaintsEqual": true
+          },
+          "nativePrecisionEvidence": {
+            "passed": true,
+            "errors": [],
+            "originalNativePrefixPreserved": true,
+            "contentHashes": [
+              {
+                "page": 1,
+                "B": [
+                  "59f9f564d9c2799ba5aba75aaded49352e1036bd8aa528cd9759873dadbda53b"
+                ],
+                "C": [
+                  "59f9f564d9c2799ba5aba75aaded49352e1036bd8aa528cd9759873dadbda53b"
+                ],
+                "rawC": [
+                  "59f9f564d9c2799ba5aba75aaded49352e1036bd8aa528cd9759873dadbda53b"
+                ]
+              },
+              {
+                "page": 2,
+                "B": [
+                  "49194d675f232afb99b38aa89775c0084bb8ca6d01def9cf00720ad03d6501e3"
+                ],
+                "C": [
+                  "49194d675f232afb99b38aa89775c0084bb8ca6d01def9cf00720ad03d6501e3"
+                ],
+                "rawC": [
+                  "49194d675f232afb99b38aa89775c0084bb8ca6d01def9cf00720ad03d6501e3"
+                ]
+              },
+              {
+                "page": 3,
+                "B": [
+                  "49194d675f232afb99b38aa89775c0084bb8ca6d01def9cf00720ad03d6501e3"
+                ],
+                "C": [
+                  "49194d675f232afb99b38aa89775c0084bb8ca6d01def9cf00720ad03d6501e3"
+                ],
+                "rawC": [
+                  "49194d675f232afb99b38aa89775c0084bb8ca6d01def9cf00720ad03d6501e3"
+                ]
+              }
+            ],
+            "numericMetadataDifferences": [],
+            "maxMetadataDelta": 0
+          },
+          "sourceFontEvidence": {
+            "reference": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 52
+            },
+            "skiasharp": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 26
+            }
+          },
+          "links": []
+        },
+        {
+          "page": 2,
+          "mediaBox": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "regions": [
+            {
+              "region": "block-1",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-2",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-3",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-4",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-5",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page-ink",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-1",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-2",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-3",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-4",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-5",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page-ink",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            }
+          ],
+          "geometryEvidence": {
+            "passed": true,
+            "errors": [],
+            "matchedTextGlyphs": 37,
+            "maxOriginDeltaPt": 3.0517578125e-05,
+            "maxFontSizeDeltaPt": 0.0,
+            "maxColorDelta": 0.0,
+            "sourceOutlinePaths": 0,
+            "maxSourcePathControlPointDeltaPt": 0,
+            "colorGlyphs": [],
+            "nonGlyphPaintsEqual": true
+          },
+          "nativePrecisionEvidence": {
+            "passed": true,
+            "errors": [],
+            "originalNativePrefixPreserved": true,
+            "contentHashes": [
+              {
+                "page": 1,
+                "B": [
+                  "59f9f564d9c2799ba5aba75aaded49352e1036bd8aa528cd9759873dadbda53b"
+                ],
+                "C": [
+                  "59f9f564d9c2799ba5aba75aaded49352e1036bd8aa528cd9759873dadbda53b"
+                ],
+                "rawC": [
+                  "59f9f564d9c2799ba5aba75aaded49352e1036bd8aa528cd9759873dadbda53b"
+                ]
+              },
+              {
+                "page": 2,
+                "B": [
+                  "49194d675f232afb99b38aa89775c0084bb8ca6d01def9cf00720ad03d6501e3"
+                ],
+                "C": [
+                  "49194d675f232afb99b38aa89775c0084bb8ca6d01def9cf00720ad03d6501e3"
+                ],
+                "rawC": [
+                  "49194d675f232afb99b38aa89775c0084bb8ca6d01def9cf00720ad03d6501e3"
+                ]
+              },
+              {
+                "page": 3,
+                "B": [
+                  "49194d675f232afb99b38aa89775c0084bb8ca6d01def9cf00720ad03d6501e3"
+                ],
+                "C": [
+                  "49194d675f232afb99b38aa89775c0084bb8ca6d01def9cf00720ad03d6501e3"
+                ],
+                "rawC": [
+                  "49194d675f232afb99b38aa89775c0084bb8ca6d01def9cf00720ad03d6501e3"
+                ]
+              }
+            ],
+            "numericMetadataDifferences": [],
+            "maxMetadataDelta": 0
+          },
+          "sourceFontEvidence": {
+            "reference": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 46
+            },
+            "skiasharp": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 23
+            }
+          },
+          "links": []
+        },
+        {
+          "page": 3,
+          "mediaBox": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "regions": [
+            {
+              "region": "block-1",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-2",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-3",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-4",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-5",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page-ink",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-1",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-2",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-3",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-4",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-5",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page-ink",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            }
+          ],
+          "geometryEvidence": {
+            "passed": true,
+            "errors": [],
+            "matchedTextGlyphs": 37,
+            "maxOriginDeltaPt": 3.0517578125e-05,
+            "maxFontSizeDeltaPt": 0.0,
+            "maxColorDelta": 0.0,
+            "sourceOutlinePaths": 0,
+            "maxSourcePathControlPointDeltaPt": 0,
+            "colorGlyphs": [],
+            "nonGlyphPaintsEqual": true
+          },
+          "nativePrecisionEvidence": {
+            "passed": true,
+            "errors": [],
+            "originalNativePrefixPreserved": true,
+            "contentHashes": [
+              {
+                "page": 1,
+                "B": [
+                  "59f9f564d9c2799ba5aba75aaded49352e1036bd8aa528cd9759873dadbda53b"
+                ],
+                "C": [
+                  "59f9f564d9c2799ba5aba75aaded49352e1036bd8aa528cd9759873dadbda53b"
+                ],
+                "rawC": [
+                  "59f9f564d9c2799ba5aba75aaded49352e1036bd8aa528cd9759873dadbda53b"
+                ]
+              },
+              {
+                "page": 2,
+                "B": [
+                  "49194d675f232afb99b38aa89775c0084bb8ca6d01def9cf00720ad03d6501e3"
+                ],
+                "C": [
+                  "49194d675f232afb99b38aa89775c0084bb8ca6d01def9cf00720ad03d6501e3"
+                ],
+                "rawC": [
+                  "49194d675f232afb99b38aa89775c0084bb8ca6d01def9cf00720ad03d6501e3"
+                ]
+              },
+              {
+                "page": 3,
+                "B": [
+                  "49194d675f232afb99b38aa89775c0084bb8ca6d01def9cf00720ad03d6501e3"
+                ],
+                "C": [
+                  "49194d675f232afb99b38aa89775c0084bb8ca6d01def9cf00720ad03d6501e3"
+                ],
+                "rawC": [
+                  "49194d675f232afb99b38aa89775c0084bb8ca6d01def9cf00720ad03d6501e3"
+                ]
+              }
+            ],
+            "numericMetadataDifferences": [],
+            "maxMetadataDelta": 0
+          },
+          "sourceFontEvidence": {
+            "reference": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 46
+            },
+            "skiasharp": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 23
+            }
+          },
+          "links": []
+        }
+      ],
+      "reference": "A",
+      "bytes": {
+        "reference": 103491,
+        "skiasharp": 9765
+      },
+      "fonts": [
+        {
+          "bytes": 170576,
+          "glyphs": 16622,
+          "outlines": 27
+        }
+      ],
+      "glyphValidation": [
+        {
+          "font": "NotoSansJP-Regular",
+          "usedGlyphCount": 26,
+          "retainedGlyphCount": 16622,
+          "exactSourceOutlines": true
+        }
+      ]
+    },
+    {
+      "fixture": "links-selected",
+      "pages": [
+        {
+          "page": 1,
+          "mediaBox": [
+            0.0,
+            0.0,
+            282.6029968261719,
+            817.8900146484375
+          ],
+          "regions": [
+            {
+              "region": "block-1",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-2",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-3",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-4",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page-ink",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-1",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-2",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-3",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-4",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page-ink",
+              "dpi": 300,
+              "differentInkRatio": 0.009138648298438246,
+              "unmatchedInkRatio": 0.0
+            }
+          ],
+          "geometryEvidence": {
+            "passed": false,
+            "errors": [
+              "Reference text glyphs removed or replaced: delete 0:11/0:0"
+            ],
+            "matchedTextGlyphs": 31,
+            "maxOriginDeltaPt": 1.52587890625e-05,
+            "maxFontSizeDeltaPt": 0.0,
+            "maxColorDelta": 0.0,
+            "sourceOutlinePaths": 0,
+            "maxSourcePathControlPointDeltaPt": 0,
+            "colorGlyphs": [],
+            "nonGlyphPaintsEqual": true
+          },
+          "nativePrecisionEvidence": {
+            "passed": true,
+            "errors": [],
+            "originalNativePrefixPreserved": true,
+            "contentHashes": [
+              {
+                "page": 1,
+                "B": [
+                  "65abdcac133e2740cbd6be120756f4e03e9987a2bf445b6379b76f9840f5ddae"
+                ],
+                "C": [
+                  "65abdcac133e2740cbd6be120756f4e03e9987a2bf445b6379b76f9840f5ddae"
+                ],
+                "rawC": [
+                  "65abdcac133e2740cbd6be120756f4e03e9987a2bf445b6379b76f9840f5ddae"
+                ]
+              }
+            ],
+            "numericMetadataDifferences": [],
+            "maxMetadataDelta": 0
+          },
+          "sourceFontEvidence": {
+            "reference": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 52
+            },
+            "skiasharp": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 22
+            }
+          },
+          "links": [
+            {
+              "rect": [
+                2.0,
+                103.6400146484375,
+                66.5,
+                123.6400146484375
+              ],
+              "uri": "https://example.com/formula",
+              "page": null,
+              "to": null,
+              "tooltip": "null"
+            }
+          ]
+        }
+      ],
+      "reference": "A",
+      "bytes": {
+        "reference": 102312,
+        "skiasharp": 6954
+      },
+      "fonts": [
+        {
+          "bytes": 170576,
+          "glyphs": 16622,
+          "outlines": 27
+        }
+      ],
+      "glyphValidation": [
+        {
+          "font": "NotoSansJP-Regular",
+          "usedGlyphCount": 22,
+          "retainedGlyphCount": 16622,
+          "exactSourceOutlines": true
+        }
+      ]
+    },
+    {
+      "fixture": "missing-glyph",
+      "pages": [
+        {
+          "page": 1,
+          "mediaBox": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "regions": [
+            {
+              "region": "block-1",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page-ink",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-1",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page-ink",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            }
+          ],
+          "geometryEvidence": {
+            "passed": true,
+            "errors": [],
+            "matchedTextGlyphs": 9,
+            "maxOriginDeltaPt": 3.0517578125e-05,
+            "maxFontSizeDeltaPt": 0.0,
+            "maxColorDelta": 0.0,
+            "sourceOutlinePaths": 0,
+            "maxSourcePathControlPointDeltaPt": 0,
+            "colorGlyphs": [],
+            "nonGlyphPaintsEqual": true
+          },
+          "nativePrecisionEvidence": {
+            "passed": true,
+            "errors": [],
+            "originalNativePrefixPreserved": true,
+            "contentHashes": [
+              {
+                "page": 1,
+                "B": [
+                  "13115326b7bf5b5b683aaa86ec6518490d85a3181682a22850848ad711abcc06"
+                ],
+                "C": [
+                  "13115326b7bf5b5b683aaa86ec6518490d85a3181682a22850848ad711abcc06"
+                ],
+                "rawC": [
+                  "13115326b7bf5b5b683aaa86ec6518490d85a3181682a22850848ad711abcc06"
+                ]
+              }
+            ],
+            "numericMetadataDifferences": [],
+            "maxMetadataDelta": 0
+          },
+          "sourceFontEvidence": {
+            "reference": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 7
+            },
+            "skiasharp": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 7
+            }
+          },
+          "links": []
+        }
+      ],
+      "reference": "A",
+      "bytes": {
+        "reference": 22181,
+        "skiasharp": 3852
+      },
+      "fonts": [
+        {
+          "bytes": 3072,
+          "glyphs": 85,
+          "outlines": 6
+        }
+      ],
+      "glyphValidation": [
+        {
+          "font": "NotoSansJP-Regular",
+          "usedGlyphCount": 7,
+          "retainedGlyphCount": 85,
+          "exactSourceOutlines": true
+        }
+      ]
+    },
+    {
+      "fixture": "pages-selection",
+      "pages": [
+        {
+          "page": 1,
+          "mediaBox": [
+            0.0,
+            0.0,
+            792.0,
+            612.0
+          ],
+          "regions": [
+            {
+              "region": "block-1",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-2",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page-ink",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-1",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-2",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page-ink",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            }
+          ],
+          "geometryEvidence": {
+            "passed": true,
+            "errors": [],
+            "matchedTextGlyphs": 34,
+            "maxOriginDeltaPt": 4.57763671875e-05,
+            "maxFontSizeDeltaPt": 0.0,
+            "maxColorDelta": 0.0,
+            "sourceOutlinePaths": 0,
+            "maxSourcePathControlPointDeltaPt": 0,
+            "colorGlyphs": [],
+            "nonGlyphPaintsEqual": true
+          },
+          "nativePrecisionEvidence": {
+            "passed": true,
+            "errors": [],
+            "originalNativePrefixPreserved": true,
+            "contentHashes": [
+              {
+                "page": 1,
+                "B": [
+                  "537cdfeff92e90268407cb20e37cea852a95c942f310914de295fc639400a146"
+                ],
+                "C": [
+                  "537cdfeff92e90268407cb20e37cea852a95c942f310914de295fc639400a146"
+                ],
+                "rawC": [
+                  "537cdfeff92e90268407cb20e37cea852a95c942f310914de295fc639400a146"
+                ]
+              },
+              {
+                "page": 2,
+                "B": [
+                  "a95b425e25ba1f84128db0d24f9ff7386a9e16691192b6337f0356f548be6c56"
+                ],
+                "C": [
+                  "a95b425e25ba1f84128db0d24f9ff7386a9e16691192b6337f0356f548be6c56"
+                ],
+                "rawC": [
+                  "a95b425e25ba1f84128db0d24f9ff7386a9e16691192b6337f0356f548be6c56"
+                ]
+              }
+            ],
+            "numericMetadataDifferences": [],
+            "maxMetadataDelta": 0
+          },
+          "sourceFontEvidence": {
+            "reference": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 19
+            },
+            "skiasharp": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 19
+            }
+          },
+          "links": []
+        },
+        {
+          "page": 2,
+          "mediaBox": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "regions": [
+            {
+              "region": "block-1",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page-ink",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-1",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page-ink",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            }
+          ],
+          "geometryEvidence": {
+            "passed": true,
+            "errors": [],
+            "matchedTextGlyphs": 8,
+            "maxOriginDeltaPt": 1.52587890625e-05,
+            "maxFontSizeDeltaPt": 0.0,
+            "maxColorDelta": 0.0,
+            "sourceOutlinePaths": 0,
+            "maxSourcePathControlPointDeltaPt": 0,
+            "colorGlyphs": [],
+            "nonGlyphPaintsEqual": true
+          },
+          "nativePrecisionEvidence": {
+            "passed": true,
+            "errors": [],
+            "originalNativePrefixPreserved": true,
+            "contentHashes": [
+              {
+                "page": 1,
+                "B": [
+                  "537cdfeff92e90268407cb20e37cea852a95c942f310914de295fc639400a146"
+                ],
+                "C": [
+                  "537cdfeff92e90268407cb20e37cea852a95c942f310914de295fc639400a146"
+                ],
+                "rawC": [
+                  "537cdfeff92e90268407cb20e37cea852a95c942f310914de295fc639400a146"
+                ]
+              },
+              {
+                "page": 2,
+                "B": [
+                  "a95b425e25ba1f84128db0d24f9ff7386a9e16691192b6337f0356f548be6c56"
+                ],
+                "C": [
+                  "a95b425e25ba1f84128db0d24f9ff7386a9e16691192b6337f0356f548be6c56"
+                ],
+                "rawC": [
+                  "a95b425e25ba1f84128db0d24f9ff7386a9e16691192b6337f0356f548be6c56"
+                ]
+              }
+            ],
+            "numericMetadataDifferences": [],
+            "maxMetadataDelta": 0
+          },
+          "sourceFontEvidence": {
+            "reference": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 8
+            },
+            "skiasharp": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 8
+            }
+          },
+          "links": []
+        }
+      ],
+      "reference": "A",
+      "bytes": {
+        "reference": 101305,
+        "skiasharp": 7348
+      },
+      "fonts": [
+        {
+          "bytes": 171724,
+          "glyphs": 16652,
+          "outlines": 30
+        }
+      ],
+      "glyphValidation": [
+        {
+          "font": "NotoSansJP-Regular",
+          "usedGlyphCount": 23,
+          "retainedGlyphCount": 16652,
+          "exactSourceOutlines": true
+        }
+      ]
+    },
+    {
+      "fixture": "rich-range",
+      "pages": [
+        {
+          "page": 1,
+          "mediaBox": [
+            0.0,
+            0.0,
+            70.36599731445312,
+            21.5
+          ],
+          "regions": [
+            {
+              "region": "block-1",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page-ink",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-1",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page-ink",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            }
+          ],
+          "geometryEvidence": {
+            "passed": true,
+            "errors": [],
+            "matchedTextGlyphs": 7,
+            "maxOriginDeltaPt": 7.62939453125e-06,
+            "maxFontSizeDeltaPt": 0.0,
+            "maxColorDelta": 0.0,
+            "sourceOutlinePaths": 0,
+            "maxSourcePathControlPointDeltaPt": 0,
+            "colorGlyphs": [],
+            "nonGlyphPaintsEqual": true
+          },
+          "nativePrecisionEvidence": {
+            "passed": true,
+            "errors": [],
+            "originalNativePrefixPreserved": true,
+            "contentHashes": [
+              {
+                "page": 1,
+                "B": [
+                  "38f3b317673587c33d7e4d7b92e7580f8d78312e12bbcc334d8732e4f381f9ed"
+                ],
+                "C": [
+                  "38f3b317673587c33d7e4d7b92e7580f8d78312e12bbcc334d8732e4f381f9ed"
+                ],
+                "rawC": [
+                  "38f3b317673587c33d7e4d7b92e7580f8d78312e12bbcc334d8732e4f381f9ed"
+                ]
+              }
+            ],
+            "numericMetadataDifferences": [],
+            "maxMetadataDelta": 0
+          },
+          "sourceFontEvidence": {
+            "reference": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 6
+            },
+            "skiasharp": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 6
+            }
+          },
+          "links": []
+        }
+      ],
+      "reference": "A",
+      "bytes": {
+        "reference": 99941,
+        "skiasharp": 4034
+      },
+      "fonts": [
+        {
+          "bytes": 3040,
+          "glyphs": 87,
+          "outlines": 7
+        }
+      ],
+      "glyphValidation": [
+        {
+          "font": "NotoSansJP-Regular",
+          "usedGlyphCount": 6,
+          "retainedGlyphCount": 87,
+          "exactSourceOutlines": true
+        }
+      ]
+    },
+    {
+      "fixture": "rich-rotation",
+      "pages": [
+        {
+          "page": 1,
+          "mediaBox": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "regions": [
+            {
+              "region": "block-1",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page-ink",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-1",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page-ink",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            }
+          ],
+          "geometryEvidence": {
+            "passed": false,
+            "errors": [
+              "Reference text glyphs removed or replaced: delete 0:2/0:0",
+              "Reference text glyphs removed or replaced: delete 7:14/5:5"
+            ],
+            "matchedTextGlyphs": 5,
+            "maxOriginDeltaPt": 6.103515625e-05,
+            "maxFontSizeDeltaPt": 9.5367431640625e-07,
+            "maxColorDelta": 0.0,
+            "sourceOutlinePaths": 0,
+            "maxSourcePathControlPointDeltaPt": 0,
+            "colorGlyphs": [],
+            "nonGlyphPaintsEqual": true
+          },
+          "nativePrecisionEvidence": {
+            "passed": true,
+            "errors": [],
+            "originalNativePrefixPreserved": true,
+            "contentHashes": [
+              {
+                "page": 1,
+                "B": [
+                  "017145c28c223c548a7ccd3cfac2e1fd31d26519836343e02c3a3c9e9032f76d"
+                ],
+                "C": [
+                  "017145c28c223c548a7ccd3cfac2e1fd31d26519836343e02c3a3c9e9032f76d"
+                ],
+                "rawC": [
+                  "017145c28c223c548a7ccd3cfac2e1fd31d26519836343e02c3a3c9e9032f76d"
+                ]
+              }
+            ],
+            "numericMetadataDifferences": [],
+            "maxMetadataDelta": 0
+          },
+          "sourceFontEvidence": {
+            "reference": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 9
+            },
+            "skiasharp": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 4
+            }
+          },
+          "links": []
+        }
+      ],
+      "reference": "A",
+      "bytes": {
+        "reference": 99952,
+        "skiasharp": 4116
+      },
+      "fonts": [
+        {
+          "bytes": 3408,
+          "glyphs": 90,
+          "outlines": 9
+        }
+      ],
+      "glyphValidation": [
+        {
+          "font": "NotoSansJP-Regular",
+          "usedGlyphCount": 4,
+          "retainedGlyphCount": 90,
+          "exactSourceOutlines": true
+        }
+      ]
+    },
+    {
+      "fixture": "rich-theme",
+      "pages": [
+        {
+          "page": 1,
+          "mediaBox": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "regions": [
+            {
+              "region": "block-1",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page-ink",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-1",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page-ink",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            }
+          ],
+          "geometryEvidence": {
+            "passed": true,
+            "errors": [],
+            "matchedTextGlyphs": 9,
+            "maxOriginDeltaPt": 1.52587890625e-05,
+            "maxFontSizeDeltaPt": 0.0,
+            "maxColorDelta": 0.0,
+            "sourceOutlinePaths": 0,
+            "maxSourcePathControlPointDeltaPt": 0,
+            "colorGlyphs": [],
+            "nonGlyphPaintsEqual": true
+          },
+          "nativePrecisionEvidence": {
+            "passed": true,
+            "errors": [],
+            "originalNativePrefixPreserved": true,
+            "contentHashes": [
+              {
+                "page": 1,
+                "B": [
+                  "2a55121316aa6df5996a4b212554741f06bd43571343a29cee091d69e8220f5f"
+                ],
+                "C": [
+                  "2a55121316aa6df5996a4b212554741f06bd43571343a29cee091d69e8220f5f"
+                ],
+                "rawC": [
+                  "2a55121316aa6df5996a4b212554741f06bd43571343a29cee091d69e8220f5f"
+                ]
+              }
+            ],
+            "numericMetadataDifferences": [],
+            "maxMetadataDelta": 0
+          },
+          "sourceFontEvidence": {
+            "reference": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 7
+            },
+            "skiasharp": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 7
+            }
+          },
+          "links": []
+        }
+      ],
+      "reference": "A",
+      "bytes": {
+        "reference": 99716,
+        "skiasharp": 3853
+      },
+      "fonts": [
+        {
+          "bytes": 3068,
+          "glyphs": 86,
+          "outlines": 8
+        }
+      ],
+      "glyphValidation": [
+        {
+          "font": "NotoSansJP-Regular",
+          "usedGlyphCount": 7,
+          "retainedGlyphCount": 86,
+          "exactSourceOutlines": true
+        }
+      ]
+    },
+    {
+      "fixture": "shape-workbook",
+      "pages": [
+        {
+          "page": 1,
+          "mediaBox": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "regions": [
+            {
+              "region": "block-1",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page-ink",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "block-1",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "page-ink",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            }
+          ],
+          "geometryEvidence": {
+            "passed": true,
+            "errors": [],
+            "matchedTextGlyphs": 6,
+            "maxOriginDeltaPt": 3.0517578125e-05,
+            "maxFontSizeDeltaPt": 0.0,
+            "maxColorDelta": 0.0,
+            "sourceOutlinePaths": 0,
+            "maxSourcePathControlPointDeltaPt": 0,
+            "colorGlyphs": [],
+            "nonGlyphPaintsEqual": true
+          },
+          "nativePrecisionEvidence": {
+            "passed": true,
+            "errors": [],
+            "originalNativePrefixPreserved": true,
+            "contentHashes": [
+              {
+                "page": 1,
+                "B": [
+                  "c26403cf3c225beb3540caf64263023574eb42b3363de76644c7b43f9adce43e"
+                ],
+                "C": [
+                  "c26403cf3c225beb3540caf64263023574eb42b3363de76644c7b43f9adce43e"
+                ],
+                "rawC": [
+                  "c26403cf3c225beb3540caf64263023574eb42b3363de76644c7b43f9adce43e"
+                ]
+              }
+            ],
+            "numericMetadataDifferences": [],
+            "maxMetadataDelta": 0
+          },
+          "sourceFontEvidence": {
+            "reference": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 6
+            },
+            "skiasharp": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 6
+            }
+          },
+          "links": []
+        }
+      ],
+      "reference": "A",
+      "bytes": {
+        "reference": 99669,
+        "skiasharp": 3746
+      },
+      "fonts": [
+        {
+          "bytes": 3016,
+          "glyphs": 84,
+          "outlines": 7
+        }
+      ],
+      "glyphValidation": [
+        {
+          "font": "NotoSansJP-Regular",
+          "usedGlyphCount": 6,
+          "retainedGlyphCount": 84,
+          "exactSourceOutlines": true
+        }
+      ]
+    },
+    {
+      "fixture": "shapes",
+      "pages": [
+        {
+          "page": 1,
+          "mediaBox": [
+            0.0,
+            0.0,
+            421.12298583984375,
+            400.45599365234375
+          ],
+          "regions": [
+            {
+              "region": "Rectangle",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "Ellipse",
+              "dpi": 144,
+              "differentInkRatio": 0.004407227853680035,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "RoundedRectangle",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "WedgeRectangleCallout",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "WedgeRoundedRectangleCallout",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "Rectangle",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "Ellipse",
+              "dpi": 300,
+              "differentInkRatio": 0.019030474476019032,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "RoundedRectangle",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "WedgeRectangleCallout",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "WedgeRoundedRectangleCallout",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            }
+          ],
+          "geometryEvidence": {
+            "passed": false,
+            "errors": [
+              "Non-glyph vector paint geometry/style/count differs"
+            ],
+            "matchedTextGlyphs": 30,
+            "maxOriginDeltaPt": 3.814697265625e-06,
+            "maxFontSizeDeltaPt": 0.0,
+            "maxColorDelta": 0.0,
+            "sourceOutlinePaths": 0,
+            "maxSourcePathControlPointDeltaPt": 0,
+            "colorGlyphs": [],
+            "nonGlyphPaintsEqual": false
+          },
+          "nativePrecisionEvidence": {
+            "passed": true,
+            "errors": [],
+            "originalNativePrefixPreserved": true,
+            "contentHashes": [
+              {
+                "page": 1,
+                "B": [
+                  "5b61271191956d56a0e5ca30f2ca9cad009ef7890e9e7d069694030333db7142"
+                ],
+                "C": [
+                  "5b61271191956d56a0e5ca30f2ca9cad009ef7890e9e7d069694030333db7142"
+                ],
+                "rawC": [
+                  "5b61271191956d56a0e5ca30f2ca9cad009ef7890e9e7d069694030333db7142"
+                ]
+              }
+            ],
+            "numericMetadataDifferences": [],
+            "maxMetadataDelta": 0
+          },
+          "sourceFontEvidence": {
+            "reference": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 6
+            },
+            "skiasharp": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 6
+            }
+          },
+          "ellipseEvidence": {
+            "passed": true,
+            "curves": [
+              {
+                "curves": 4,
+                "maxNormalizedEllipseResidual": 0.0005455977352812891
+              },
+              {
+                "curves": 32,
+                "maxNormalizedEllipseResidual": 2.415720453985415e-05
+              }
+            ]
+          },
+          "links": []
+        }
+      ],
+      "reference": "A",
+      "bytes": {
+        "reference": 22823,
+        "skiasharp": 5513
+      },
+      "fonts": [
+        {
+          "bytes": 54468,
+          "glyphs": 5222,
+          "outlines": 6
+        }
+      ],
+      "glyphValidation": [
+        {
+          "font": "NotoSansJP-Regular",
+          "usedGlyphCount": 6,
+          "retainedGlyphCount": 5222,
+          "exactSourceOutlines": true
+        }
+      ]
+    },
+    {
+      "fixture": "styles",
+      "pages": [
+        {
+          "page": 1,
+          "mediaBox": [
+            0.0,
+            0.0,
+            421.12298583984375,
+            400.45599365234375
+          ],
+          "regions": [
+            {
+              "region": "alignment-0",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "alignment-1",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "alignment-2",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "alignment-3",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "alignment-4",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "alignment-5",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "alignment-6",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "alignment-7",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "alignment-8",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "rich-runs-underline",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "rotated-text",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "vertical-text",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "alignment-0",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "alignment-1",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "alignment-2",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "alignment-3",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "alignment-4",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "alignment-5",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "alignment-6",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "alignment-7",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "alignment-8",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "rich-runs-underline",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "rotated-text",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "vertical-text",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            }
+          ],
+          "geometryEvidence": {
+            "passed": false,
+            "errors": [
+              "Reference text glyphs removed or replaced: delete 145:149/145:145"
+            ],
+            "matchedTextGlyphs": 152,
+            "maxOriginDeltaPt": 0.003387451171875,
+            "maxFontSizeDeltaPt": 0.00040912628173828125,
+            "maxColorDelta": 0.000500023365020752,
+            "sourceOutlinePaths": 0,
+            "maxSourcePathControlPointDeltaPt": 0,
+            "colorGlyphs": [],
+            "nonGlyphPaintsEqual": true
+          },
+          "nativePrecisionEvidence": {
+            "passed": true,
+            "errors": [],
+            "originalNativePrefixPreserved": true,
+            "contentHashes": [
+              {
+                "page": 1,
+                "B": [
+                  "a48f98018d1bf650b089112b43c9d65cf2c21f668876d9cf1363db74244cfc68"
+                ],
+                "C": [
+                  "a48f98018d1bf650b089112b43c9d65cf2c21f668876d9cf1363db74244cfc68"
+                ],
+                "rawC": [
+                  "a48f98018d1bf650b089112b43c9d65cf2c21f668876d9cf1363db74244cfc68"
+                ]
+              }
+            ],
+            "numericMetadataDifferences": [],
+            "maxMetadataDelta": 0
+          },
+          "sourceFontEvidence": {
+            "reference": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 44
+            },
+            "skiasharp": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 20
+            }
+          },
+          "links": []
+        }
+      ],
+      "reference": "A",
+      "bytes": {
+        "reference": 102814,
+        "skiasharp": 7614
+      },
+      "fonts": [
+        {
+          "bytes": 171168,
+          "glyphs": 16647,
+          "outlines": 25
+        }
+      ],
+      "glyphValidation": [
+        {
+          "font": "NotoSansJP-Regular",
+          "usedGlyphCount": 20,
+          "retainedGlyphCount": 16647,
+          "exactSourceOutlines": true
+        }
+      ]
+    },
+    {
+      "fixture": "transforms",
+      "pages": [
+        {
+          "page": 1,
+          "mediaBox": [
+            0.0,
+            0.0,
+            421.12298583984375,
+            400.45599365234375
+          ],
+          "regions": [
+            {
+              "region": "rotated-clipped-layers",
+              "dpi": 144,
+              "differentInkRatio": 0.0018746845482731271,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "viewport-origin-and-layers",
+              "dpi": 144,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "rotated-clipped-layers",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            },
+            {
+              "region": "viewport-origin-and-layers",
+              "dpi": 300,
+              "differentInkRatio": 0.0,
+              "unmatchedInkRatio": 0.0
+            }
+          ],
+          "geometryEvidence": {
+            "passed": false,
+            "errors": [
+              "Non-glyph vector paint geometry/style/count differs"
+            ],
+            "matchedTextGlyphs": 8,
+            "maxOriginDeltaPt": 6.103515625e-05,
+            "maxFontSizeDeltaPt": 0.0,
+            "maxColorDelta": 0.0,
+            "sourceOutlinePaths": 0,
+            "maxSourcePathControlPointDeltaPt": 0,
+            "colorGlyphs": [],
+            "nonGlyphPaintsEqual": false
+          },
+          "nativePrecisionEvidence": {
+            "passed": true,
+            "errors": [],
+            "originalNativePrefixPreserved": true,
+            "contentHashes": [
+              {
+                "page": 1,
+                "B": [
+                  "893882c28475c00cb7baad7b724a7d7775f592a41ab79693c066e485c55ae749"
+                ],
+                "C": [
+                  "893882c28475c00cb7baad7b724a7d7775f592a41ab79693c066e485c55ae749"
+                ],
+                "rawC": [
+                  "893882c28475c00cb7baad7b724a7d7775f592a41ab79693c066e485c55ae749"
+                ]
+              }
+            ],
+            "numericMetadataDifferences": [],
+            "maxMetadataDelta": 0
+          },
+          "sourceFontEvidence": {
+            "reference": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 4
+            },
+            "skiasharp": {
+              "passed": true,
+              "errors": [],
+              "usedOutlines": 4
+            }
+          },
+          "links": []
+        }
+      ],
+      "reference": "A",
+      "bytes": {
+        "reference": 25173,
+        "skiasharp": 14001
+      },
+      "fonts": [
+        {
+          "bytes": 129068,
+          "glyphs": 12691,
+          "outlines": 5
+        }
+      ],
+      "glyphValidation": [
+        {
+          "font": "NotoSansJP-Regular",
+          "usedGlyphCount": 4,
+          "retainedGlyphCount": 12691,
+          "exactSourceOutlines": true
+        }
+      ]
+    }
+  ],
+  "screeningDifferences": 51,
+  "acceptedDifferences": 51,
+  "requiresFix": 0
+}

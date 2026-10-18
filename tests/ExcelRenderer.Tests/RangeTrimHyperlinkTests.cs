@@ -7,13 +7,10 @@ using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Markdown;
 using ExcelRenderer.Model;
-using ExcelRenderer.PdfSharp;
-using ExcelRenderer.Rendering;
+using ExcelRenderer.Pdf;
 using ExcelRenderer.SkiaSharp;
+using ExcelRenderer.Rendering;
 using ExcelRenderer.TestFixtures;
-using PdfSharp.Drawing;
-using PdfSharp.Pdf;
-using PdfSharp.Pdf.IO;
 using SkiaSharp;
 using Svg.Skia;
 using Xunit;
@@ -120,31 +117,28 @@ public sealed class RangeTrimHyperlinkTests
         using var bitmap = SKBitmap.Decode(png.ToArray());
         Assert.Equal(SKColors.White, bitmap.GetPixel(0, 0));
         Assert.Equal(new SKColor(10, 20, 30), bitmap.GetPixel(3, 3));
-        using var pdf = new PdfDocument();
-        pdf.AddPage().Width = XUnit.FromPoint(104);
-        pdf.Pages[0].Height = XUnit.FromPoint(64);
-        pdf.AddPage().Width = XUnit.FromPoint(104);
-        pdf.Pages[1].Height = XUnit.FromPoint(64);
-        PdfHyperlinkWriter.Write(
-            pdf,
-            1,
-            64,
-            [new(new(12, 12, 20, 10), "https://example.com/a?x=1&y=2", null, null, null, null, "tip"),
-            new(new(12, 12, 20, 10), null, 2, 42, 22, 64, null)]);
         using var saved = new MemoryStream();
-        pdf.Save(saved, false);
+        using (var writer = new SkiaPdfDocumentWriter(new FontManager(), CancellationToken.None))
+        {
+            writer.Prepare();
+            writer.Append(new(104, 64), new(0, "first", 1, 1, 1, 104, 64), [],
+                [new(new(12, 12, 20, 10), "https://example.com/a?x=1&y=2", null, null, null, null, "tip"),
+                 new(new(12, 12, 20, 10), null, 2, 42, 22, 64, null)], _ => { });
+            writer.Append(new(104, 64), new(0, "second", 2, 2, 2, 104, 64), [], [], _ => { });
+            writer.Complete(saved);
+        }
         saved.Position = 0;
-        using var reloaded = PdfReader.Open(saved, PdfDocumentOpenMode.Modify);
+        using var reloaded = PdfTestFile.Open(saved);
         var external = reloaded.Pages[0].Annotations[0];
         Assert.Equal("/Link", external.Elements.GetName("/Subtype"));
         Assert.Equal("[ 12 42 32 52 ]", external.Elements.GetArray("/Rect")!.ToString());
         Assert.Equal("https://example.com/a?x=1&y=2", external.Elements.GetDictionary("/A")!.Elements.GetString("/URI"));
         var destination = reloaded.Pages[0].Annotations[1].Elements.GetArray("/Dest")!;
-        Assert.Same(reloaded.Pages[1], ((global::PdfSharp.Pdf.Advanced.PdfReference)destination.Elements[0]).Value);
+        Assert.Same(reloaded.Pages[1], ((PdfTestReference)destination.Elements[0]).Value);
         Assert.Equal("/XYZ", destination.Elements[1].ToString());
         Assert.Equal(42, double.Parse(destination.Elements[2].ToString()!, System.Globalization.CultureInfo.InvariantCulture));
         Assert.Equal(42, double.Parse(destination.Elements[3].ToString()!, System.Globalization.CultureInfo.InvariantCulture));
-        Assert.Equal(0, ((PdfInteger)destination.Elements[4]).Value);
+        Assert.Equal(0, ((PdfTestNumber)destination.Elements[4]).Value);
     }
 
     /// <summary>保存済み XLSX の XML を読み取り、リンクの矩形範囲・空セルのリンク・静的対象 URL を保持し欠落キャッシュを空表示にすることを検証します。</summary>
@@ -180,7 +174,7 @@ public sealed class RangeTrimHyperlinkTests
         using var stream = new MemoryStream(bytes);
         var original = new ExcelReader().Read(stream).Sheets[0];
         var explicitSheet = original with { RequestedRange = new(new(2, 2), new(8, 4)), PrintArea = new(new(2, 2), new(8, 4)), PrintAreas = [], PageSettings = original.PageSettings with { TitleRows = null } };
-        var layout = new ReportLayoutEngine(new PdfSharpTextMeasurer()).Layout(explicitSheet);
+        var layout = new ReportLayoutEngine(new SkiaTextMeasurer()).Layout(explicitSheet);
         var merged = layout.Pages.SelectMany(p => p.Cells).Single(c => c.SourceAddress == new CellAddress(2, 1));
         Assert.True(merged.Bounds.X < merged.ClipBounds!.Value.X);
         Assert.Equal(original.Columns[1].Width + original.Columns[2].Width + original.Columns[3].Width, merged.Bounds.Width, 6);
@@ -191,22 +185,23 @@ public sealed class RangeTrimHyperlinkTests
     /// <param name="format">検証する出力形式。</param>
     /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
     [Theory(DisplayName = "トリミング後の PDF・PNG・SVG の実寸法が、最終ページのメタデータと一致する")]
-    [InlineData(OutputFormat.Pdf)]
-    [InlineData(OutputFormat.Png)]
-    [InlineData(OutputFormat.Svg)]
-    public async Task Generated_trim_uses_final_dimensions_in_actual_outputs(OutputFormat format)
+    [InlineData(OutputFormat.Pdf, null)]
+    [InlineData(OutputFormat.Pdf, PdfBackend.SkiaSharp)]
+    [InlineData(OutputFormat.Png, null)]
+    [InlineData(OutputFormat.Svg, null)]
+    public async Task Generated_trim_uses_final_dimensions_in_actual_outputs(OutputFormat format, PdfBackend? backend)
     {
-        var (result, bytes) = await Render(Fixture(), Request(format) with { Trim = new() { Enabled = true }, Selection = new() { SheetNames = ["Sheet1"] } });
+        var (result, bytes) = await Render(Fixture(), Request(format) with { PdfBackend = backend ?? new RenderRequest().PdfBackend, Trim = new() { Enabled = true }, Selection = new() { SheetNames = ["Sheet1"] } });
         Assert.NotEmpty(bytes);
         Assert.All(result.Pages, page => Assert.True(page.WidthPoints < page.OriginalWidthPoints));
         var page = result.Pages[0];
         if (format == OutputFormat.Pdf)
         {
             using var input = new MemoryStream(bytes);
-            using var pdf = PdfReader.Open(input, PdfDocumentOpenMode.Modify);
+            using var pdf = PdfTestFile.Open(input);
             Assert.Equal(page.WidthPoints, pdf.Pages[0].Width.Point, 4);
             Assert.Equal(page.HeightPoints, pdf.Pages[0].Height.Point, 4);
-            Assert.NotEmpty(pdf.Pages[0].Annotations.Cast<global::PdfSharp.Pdf.Annotations.PdfAnnotation>());
+            Assert.NotEmpty(pdf.Pages[0].Annotations.Cast<PdfTestMap>());
         }
         else if (format == OutputFormat.Png)
         {
@@ -236,10 +231,10 @@ public sealed class RangeTrimHyperlinkTests
     {
         var (result, bytes) = await Render(Fixture(multipleAreas: true), Request(OutputFormat.Pdf) with { Selection = new() { Pages = [1, 4, 5] } });
         using var input = new MemoryStream(bytes);
-        using var pdf = PdfReader.Open(input, PdfDocumentOpenMode.Modify);
+        using var pdf = PdfTestFile.Open(input);
         Assert.Equal(3, pdf.Pages.Count);
-        var destination = pdf.Pages[0].Annotations.Cast<global::PdfSharp.Pdf.Annotations.PdfAnnotation>().Select(a => a.Elements.GetArray("/Dest")).First(a => a is not null)!;
-        Assert.Same(pdf.Pages[1], ((global::PdfSharp.Pdf.Advanced.PdfReference)destination.Elements[0]).Value);
+        var destination = pdf.Pages[0].Annotations.Cast<PdfTestMap>().Select(a => a.Elements.GetArray("/Dest")).First(a => a is not null)!;
+        Assert.Same(pdf.Pages[1], ((PdfTestReference)destination.Elements[0]).Value);
         Assert.Equal(2, result.Pages[1].OutputPageNumber);
     }
 
@@ -324,7 +319,7 @@ public sealed class RangeTrimHyperlinkTests
         {
             RequestedRange = new(new(2, 2), new(4, 4)), PrintArea = new(new(2, 2), new(4, 4)),
         };
-        var page = Assert.Single(new ReportLayoutEngine(new PdfSharpTextMeasurer()).Layout(sheet).Pages);
+        var page = Assert.Single(new ReportLayoutEngine(new SkiaTextMeasurer()).Layout(sheet).Pages);
         Assert.Contains(page.Cells, cell => cell.SourceAddress == new CellAddress(2, 1));
         var body = page.Cells.Single(c => c.SourceAddress == new CellAddress(3, 3));
         Assert.Equal(10 + (20 * scale), body.Bounds.X, 6);
@@ -355,7 +350,7 @@ public sealed class RangeTrimHyperlinkTests
             using var input = File.OpenRead(path);
             var sheet = new ExcelReader().Read(input).Sheets[0];
             var selected = sheet with { RequestedRange = new(new(4, 3), new(5, 4)), PrintArea = new(new(4, 3), new(5, 4)) };
-            var layout = new ReportLayoutEngine(new PdfSharpTextMeasurer()).LayoutContinuous(selected);
+            var layout = new ReportLayoutEngine(new SkiaTextMeasurer()).LayoutContinuous(selected);
             Assert.Equal(sheet.Columns[3].Width + sheet.Columns[4].Width, layout.Width, 6);
             Assert.Equal(12 + 13, layout.Height);
             var images = Assert.Single(layout.Document.Pages).Images!;
@@ -511,7 +506,7 @@ public sealed class RangeTrimHyperlinkTests
         Assert.Empty(document.Sheets.Single().Cells);
         Assert.Single(document.Sheets.Single().Hyperlinks);
         var (_, pdfBytes) = await Render(bytes, Request(OutputFormat.Pdf));
-        using var pdf = PdfReader.Open(new MemoryStream(pdfBytes), PdfDocumentOpenMode.Import);
+        using var pdf = PdfTestFile.Open(new MemoryStream(pdfBytes));
         Assert.True(pdf.Pages[0].Annotations.Count > 0);
         var (_, markdown) = await Render(bytes, Request(OutputFormat.Markdown));
         Assert.Contains("Link at B2:D4", Encoding.UTF8.GetString(markdown));

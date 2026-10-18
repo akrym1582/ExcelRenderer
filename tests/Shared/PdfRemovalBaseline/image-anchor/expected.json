@@ -1,0 +1,61 @@
+{
+  "name": "image-anchor",
+  "path": "e2e",
+  "commandFingerprints": {
+    "1": "AC87B06640121DDED6A7553B7ED54E5CC7FF76777AB12897EBE82637B45EDA5F"
+  },
+  "pagePlanSha256": "EF5099402530ABB7B418202A53B8F179249F387BDF8489AAC6D6EB54050184B4",
+  "pages": [
+    {
+      "SourceSheetIndex": 1,
+      "SourceSheetName": "Sheet1",
+      "SourcePageNumber": 1,
+      "DocumentPageNumber": 1,
+      "OutputPageNumber": 1,
+      "WidthPoints": 612,
+      "HeightPoints": 792,
+      "PixelWidth": 816,
+      "PixelHeight": 1056,
+      "Dpi": 96,
+      "RequestedRange": null,
+      "SourceCellRanges": [
+        {
+          "First": {
+            "Row": 2,
+            "Column": 3
+          },
+          "Last": {
+            "Row": 2,
+            "Column": 3
+          }
+        }
+      ],
+      "SourceRegions": [
+        {
+          "X": 103.5,
+          "Y": 15,
+          "Width": 51.75,
+          "Height": 15
+        }
+      ],
+      "OriginalWidthPoints": null,
+      "OriginalHeightPoints": null,
+      "CropBounds": null,
+      "PaddingPoints": null
+    }
+  ],
+  "diagnostics": [
+    {
+      "Code": "MaximumDigitWidthResolved",
+      "Severity": 0,
+      "Stage": 0,
+      "Message": "Normal font \u0027Calibri\u0027 resolved to \u0027Noto Sans JP\u0027 with MDW 8px.",
+      "SheetName": "Sheet1",
+      "CellRange": null,
+      "ObjectId": null,
+      "SourcePageNumber": null,
+      "OccurrenceCount": 1,
+      "UnicodeSequence": null
+    }
+  ]
+}

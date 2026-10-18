@@ -1,0 +1,35 @@
+{
+  "configuration": "Release",
+  "rebuild": {
+    "warnings": 0,
+    "errors": 0
+  },
+  "tests": {
+    "passed": 2008,
+    "failed": 0,
+    "skipped": 0,
+    "projects": {
+      "Core": 85,
+      "Formulas": 833,
+      "Mapping": 172,
+      "OpenXml": 206,
+      "Main": 614,
+      "Tool": 98
+    }
+  },
+  "publication_allowlist": "four packages verified",
+  "isolated_consumers": 9,
+  "missing_subset_adapter": "Skia fails and aborts output; default PDFsharp succeeds",
+  "main_dll_sha256": "9f0af251ceb521085809bdb465e17e1477a881e8b664df3b6db3dedae1322204",
+  "core_dll_sha256": "004687892f48b84aa4b2b2b39ba5a9eaf650c8e92594cab105aaf8ec3bd7099b",
+  "comparison": {
+    "fixtures": 25,
+    "requires_fix": 0,
+    "accepted_aa": 49,
+    "independent_bug_improvements": 2
+  },
+  "comparison_mutations": {
+    "remove_ivs_unmet_gates": 9,
+    "extra_ink_unmet_gates": 5
+  }
+}

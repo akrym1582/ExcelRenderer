@@ -1,0 +1,29 @@
+[
+  {
+    "fixture": "50-pages",
+    "pages": 50,
+    "output_bytes": 123021,
+    "outline_font_objects": 1,
+    "embedded_outline_font_bytes": 169416,
+    "decoded_image_bytes": 0,
+    "image_objects_including_masks": 0
+  },
+  {
+    "fixture": "200-pages",
+    "pages": 200,
+    "output_bytes": 474622,
+    "outline_font_objects": 1,
+    "embedded_outline_font_bytes": 169416,
+    "decoded_image_bytes": 0,
+    "image_objects_including_masks": 0
+  },
+  {
+    "fixture": "images",
+    "pages": 12,
+    "output_bytes": 6192058,
+    "outline_font_objects": 1,
+    "embedded_outline_font_bytes": 169416,
+    "decoded_image_bytes": 7340032,
+    "image_objects_including_masks": 48
+  }
+]

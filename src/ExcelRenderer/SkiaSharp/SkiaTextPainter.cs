@@ -8,16 +8,19 @@ namespace ExcelRenderer.SkiaSharp;
 /// <summary>Owns Skia text transforms and selects the finalized or compatibility path.</summary>
 internal sealed class SkiaTextPainter
 {
+    private readonly SkiaPdfFonts? _pdfFonts;
     private readonly SkiaFinalizedTextPainter _finalized;
     private readonly SkiaLegacyTextPainter _legacy;
 
     /// <summary>Initializes a new instance of the <see cref="SkiaTextPainter"/> class.</summary>
     /// <param name="textAsPaths">Whether ordinary glyphs are drawn as paths.</param>
     /// <param name="fontManager">The optional resolved-font source.</param>
+    /// <param name="pdfFonts">Optional PDF Unicode and subset resources.</param>
     /// <param name="beforeLegacyDrawing">Optional internal compatibility drawing observer.</param>
-    internal SkiaTextPainter(bool textAsPaths, Fonts.IFontManager? fontManager, Action? beforeLegacyDrawing = null)
+    internal SkiaTextPainter(bool textAsPaths, Fonts.IFontManager? fontManager, Action? beforeLegacyDrawing = null, SkiaPdfFonts? pdfFonts = null)
     {
-        var drawing = new SkiaTextDrawing(textAsPaths, fontManager, beforeLegacyDrawing: beforeLegacyDrawing);
+        _pdfFonts = pdfFonts;
+        var drawing = new SkiaTextDrawing(textAsPaths, fontManager, beforeLegacyDrawing: beforeLegacyDrawing, pdfFonts: pdfFonts);
         _finalized = new(drawing);
         _legacy = new(drawing);
     }
@@ -80,6 +83,11 @@ internal sealed class SkiaTextPainter
 
     private void PaintCore(SKCanvas canvas, DrawTextCommand command)
     {
+        if (_pdfFonts is not null && command.TextLayout is null)
+        {
+            throw new InvalidOperationException("PDF text must be finalized by the shared layout service before drawing.");
+        }
+
         if (command.TextLayout is { } layout)
         {
             _finalized.Paint(canvas, command, layout);

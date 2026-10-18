@@ -6,12 +6,8 @@ using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Markdown;
 using ExcelRenderer.Model;
-using ExcelRenderer.PdfSharp;
 using ExcelRenderer.Rendering;
 using ExcelRenderer.SkiaSharp;
-using PdfSharp.Fonts;
-using PdfSharp.Pdf;
-using PdfSharp.Pdf.IO;
 
 namespace ExcelRenderer;
 
@@ -31,11 +27,12 @@ public static partial class ExcelConverter
         CancellationToken cancellationToken = default)
     {
         options ??= new PdfExportOptions();
+        ValidatePdfBackend(options.PdfBackend, OutputFormat.Pdf);
         (options.ReadOptions ?? throw new ArgumentException("ReadOptions are required.", nameof(options))).Validate();
         ValidateInput(inputPath);
         ValidateNewFile(outputPath);
         await using var input = File.OpenRead(inputPath);
-        await RenderAsync(input, CreateLegacyRequest(OutputFormat.Pdf, options.SheetName, fontOptions: options.FontOptions) with { Hyperlinks = options.Hyperlinks, ReadOptions = options.ReadOptions }, new NewFileOutputSink(outputPath), cancellationToken)
+        await RenderAsync(input, CreateLegacyRequest(OutputFormat.Pdf, options.SheetName, fontOptions: options.FontOptions) with { PdfBackend = options.PdfBackend, Hyperlinks = options.Hyperlinks, ReadOptions = options.ReadOptions }, new NewFileOutputSink(outputPath), cancellationToken)
             .ConfigureAwait(false);
     }
 

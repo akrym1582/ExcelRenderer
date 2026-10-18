@@ -4,6 +4,9 @@ English | [日本語](architecture.ja.md)
 
 This document describes ExcelRenderer's internal structure, layout passes, and extension points. For installation and usage, see the [README](../README.md).
 
+For the current drawing foundation, optional font packages, PDF subsets, resource lifetime,
+image handling and CI, see [Skia rendering and font design](skia-rendering.md).
+
 ## Processing flow
 
 ### Optional template mapping before rendering
@@ -71,7 +74,7 @@ DrawCommandGeneratorPass
     └─ DrawImageCommand
     │
     ▼
-PdfSharpRenderer / PngRenderer / SvgRenderer
+PdfRenderer / PngRenderer / SvgRenderer
     │
     ▼
 PDF / PNG / SVG
@@ -179,13 +182,13 @@ Compute the start position, size, and cumulative position of each visible column
 
 ### TextMeasurePass
 
-Measures the size each cell's text needs using `ITextMeasurer` and stores it in `TextSizes`, considering font family, size, style, wrapping, cell width, and line breaks. `PdfSharpTextMeasurer` is the PDFsharp-based implementation; the interface allows other measurement methods.
+Measures the size each cell's text needs using `ITextMeasurer` and stores it in `TextSizes`, considering font family, size, style, wrapping, cell width, and line breaks. `SkiaTextMeasurer` is the default SkiaSharp implementation; the interface allows custom measurement methods.
 
 With `ITextLayoutService`, the pass also finalizes baselines, run offsets and advances, selected
 physical faces, and an explicit effective size. A legacy result with no explicit size remains
-distinct from an explicit zero through pagination. PDFsharp uses an internal face key backed by the
-selected bytes for both measurement and drawing; Skia likewise accepts memory-backed font data.
-Finalized underlines are manual line geometry and are not also enabled on the PDF font.
+distinct from an explicit zero through pagination. Measurement and drawing share immutable
+physical font snapshots and finalized glyph choices. Finalized underlines are drawn once
+as line geometry.
 
 ### CellBoundsPass
 
@@ -199,7 +202,7 @@ Pages are split at row and column boundaries only; cells and merged cells are ne
 
 ## 3. Generating drawing commands
 
-`RenderDocument` does not yet depend on PDFsharp. `DrawCommandGeneratorPass` converts it into `DrawCommand` objects. For each page, commands are generated roughly in this order:
+`RenderDocument` is independent of output APIs. `DrawCommandGeneratorPass` converts it into `DrawCommand` objects. For each page, commands are generated roughly in this order:
 
 1. Backgrounds
 2. Borders
@@ -218,16 +221,19 @@ Commands separate layout from drawing, so renderers can be added without changin
 
 ## 4. Rendering to PDF / PNG / SVG
 
-`PdfSharpRenderer` processes the commands in order to create a PDF.
+`PdfRenderer` passes finalized commands to `SkiaPdfDocumentWriter`, using Core
+for shared PDF documents, font subsets, image resources and structural saving.
 
-| Command | PDFsharp operation |
+| Command | Skia PDF operation |
 | --- | --- |
 | `FillRectangleCommand` | Fill a rectangle |
 | `DrawBorderCommand` | Draw a line |
 | `DrawTextCommand` | Draw text |
 | `DrawImageCommand` | Draw an image |
 
-Image data is decoded with SkiaSharp before being drawn into the PDF.
+Images must pass a complete SkiaSharp pixel decode before drawing. PDF, PNG and
+SVG share image validation and Skia drawing primitives; PDF-specific finalization
+applies page boxes, image interpolation and link annotations.
 
 `PngRenderer` draws the same commands with SkiaSharp and writes each page as an independent PNG. Dimensions are received in points and converted to pixels at 96 DPI by default (or the requested DPI). Because PNG cannot hold multiple pages, multi-page output uses a stream factory that receives the page number.
 
@@ -243,7 +249,7 @@ Conversion is split into interpreting input, computing layout, generating drawin
 
 - Layout is split into passes, each with basically one purpose
 - Passes exchange information through `ReportLayoutContext`
-- `ReportLayoutEngine` does not call PDFsharp; it produces `RenderDocument` and `DrawCommand`
+- `ReportLayoutEngine` does not call native output APIs; it produces `RenderDocument` and `DrawCommand`
 - Drawing is expressed as commands, which makes unit tests, ordering changes, new renderers, and debug output easier
 
 ## Extending
@@ -277,7 +283,7 @@ The pass list is currently built inside `ReportLayoutEngine`, so adding a pass r
 
 1. Define a new `DrawCommand`
 2. Generate it in `DrawCommandGeneratorPass`
-3. Draw it in each renderer (`PdfSharpRenderer`, `PngRenderer`, `SvgRenderer`)
+3. Draw it in each renderer (`PdfRenderer`, `PngRenderer`, `SvgRenderer`)
 
 For example, a watermark can be a `DrawWatermarkCommand` generated from `Watermark` information.
 
@@ -287,7 +293,7 @@ A new renderer can take `RenderDocument` or `DrawCommand` as input.
 
 ```text
 DrawCommand
-    ├─ PdfSharpRenderer
+    ├─ PdfRenderer
     ├─ PngRenderer
     ├─ SvgRenderer
     ├─ CanvasRenderer
@@ -296,7 +302,7 @@ DrawCommand
 
 ### Replace text measurement
 
-Text measurement is isolated behind `ITextMeasurer`. Implementations can target PDFsharp, SkiaSharp, a browser-like measurer, or fixed sizes for tests.
+Text measurement is isolated behind `ITextMeasurer`. Implementations can use SkiaSharp, a browser-like measurer, or fixed sizes for tests.
 
 ## Extension ideas
 
@@ -310,7 +316,7 @@ Text measurement is isolated behind `ITextMeasurer`. Implementations can target 
 - Pass order has dependencies. `CellBoundsPass` uses `ColumnLayouts` and `RowLayouts`, so it cannot run before the layout passes.
 - Do not assume too much about properties being set; validate unset state where needed.
 - `DrawCommand` order is drawing order. Decide clearly where a new command goes relative to other elements.
-- Keep PDFsharp-specific code in `PdfSharpRenderer` and the `ExcelRenderer.PdfSharp` namespace.
+- Keep shared Skia/PDF algorithms in Core and product policy in the main adapters. Give native resources an explicit conversion owner.
 
 ## Source layout
 
@@ -339,12 +345,17 @@ src/ExcelRenderer
 │  ├─ ReportDocument
 │  ├─ ReportSheet
 │  └─ RenderDocument
-├─ PdfSharp
-│  ├─ PdfSharpRenderer
-│  ├─ PdfSharpTextMeasurer
-│  └─ PdfSharpFontResolver
+├─ Fonts
+│  ├─ FontManager
+│  └─ ConversionFontResources
+├─ Pdf
+│  ├─ PdfRenderer
+│  └─ PdfCommandFinalizer
 └─ SkiaSharp
-   └─ PngRenderer
+   ├─ SkiaTextMeasurer
+   ├─ SkiaPdfDocumentWriter
+   ├─ PngRenderer
+   └─ SvgRenderer
 ```
 
 When adding a feature, prefer a new reader, layout pass, drawing command, renderer, or abstraction over adding responsibilities to an existing class.
@@ -353,19 +364,19 @@ When adding a feature, prefer a new reader, layout pass, drawing command, render
 
 `TextLayoutTransform` is the single non-mutating operation for scaling finalized text geometry. It scales sizes, line metrics, run positions, and an explicitly supplied effective font size; an unspecified effective size remains unspecified. Shrink-to-fit first finalizes the source font size, while pagination deliberately preserves unspecified state.
 
-PDF resolved-face registrations snapshot caller-owned bytes and identify the snapshot by content digest and face ID. Registration entries weakly reference immutable bytes; the original resolved font owns its snapshot. Public finalized layouts keep their fonts alive, while expired entries are removed after conversion. Reusing a live face avoids repeated reads and hashing. Main/Core operations share the font gate; see [the two-engine architecture](core-architecture.md).
+Resolved faces snapshot caller-owned bytes and identify them by content digest and face ID. Finalized layouts retain immutable bytes and glyph data, without native handles. Native faces, fonts and subsets belong to a conversion scope; independent conversions have no shared font gate. Reusing a snapshot avoids repeated reads and hashing. See [Main and Core architecture](core-architecture.md) and [font and resource design](skia-rendering.md).
 
 `FontManager` keeps byte identity separate from resolution identity. A face ID may be shared by aliases backed by identical bytes, but the resolved-result cache is keyed by the selected registration and requested style. This preserves the registered family and style diagnostics while still reusing repeated resolutions of the same registration.
 
 ## Finalized and compatibility text paths
 
-PDFsharp and Skia keep text dispatch separate from shape, border, and image dispatch. Each backend's
-`TextPainter` owns vertical-text normalization, the page-coordinate clip, rotation, and balanced
-save/restore. It then selects exactly one path: finalized layouts consume the stored baseline, run X
-position, effective size, and resolved face without wrapping or shrinking again; commands without a
+`SkiaTextPainter` keeps text dispatch separate from shape, border, and image dispatch. It owns
+vertical-text normalization, the page-coordinate clip, rotation, and balanced save/restore.
+It selects exactly one path: finalized layouts consume the stored baseline, run X position,
+effective size, and resolved face without wrapping or shrinking again. PNG/SVG commands without a
 layout use the compatibility path, which retains wrapping, shrink-to-fit, fallback, IVS, and emoji
-handling. Backend objects remain in their backend namespace; the shared placement and effective-size
-helpers have no PDFsharp or Skia dependency.
+handling. PDF requires finalized text and rejects a text command without a layout.
+Shared placement and effective-size helpers remain independent of native drawing APIs.
 
 ## Pagination planning
 
@@ -385,4 +396,4 @@ construction, and header/footer attachment.
 
 Drawing commands retain finalized text layout. Cell clips are applied individually, and object clips use their original rotated geometry. `DrawCommandBounds` unions visible command boundaries after clipping. `PageViewport` translates that finalized scene and supplies final dimensions to PDF, PNG, SVG and descriptors. Renderer viewport saves are restored in `finally`; PNG limits are checked during preflight. Source cell regions, requested range, original dimensions, crop and padding are optional schema-1 metadata.
 
-`HyperlinkReader` reads XML definitions, relationships, scoped names and literal HYPERLINK arguments without fetching targets or evaluating formulas. Issues stay attached to original definitions until a PDF/Markdown request includes their sources. `HyperlinkPolicy` shares URI safety and simple internal-target resolution. PDF resolution uses selected final pages and their source regions; `PdfHyperlinkWriter` adds annotations only after import into the final document, converting top-origin point coordinates to PDF default coordinates. Markdown keeps plain text and targets separate, uses one formatter for every display path, and emits stable required anchors and explicit lists for blank or range sources. None and image output do not evaluate hyperlink diagnostics.
+`HyperlinkReader` reads XML definitions, relationships, scoped names and literal HYPERLINK arguments without fetching targets or evaluating formulas. Issues stay attached to original definitions until a PDF/Markdown request includes their sources. `HyperlinkPolicy` shares URI safety and simple internal-target resolution. PDF resolution uses selected final pages and their source regions; `GeneratedPdfFinalizer` applies resolved annotations after Skia closes the generated document, converting top-origin point coordinates to PDF default coordinates. Markdown keeps plain text and targets separate, uses one formatter for every display path, and emits stable required anchors and explicit lists for blank or range sources. None and image output do not evaluate hyperlink diagnostics.

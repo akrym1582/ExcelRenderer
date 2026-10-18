@@ -1,0 +1,8 @@
+{
+  "08-print-scaling-core-2.png": {
+    "baselineSha256": "30715f276e06e046a65e9fa5a0887dbb5bc18ab48545f21afc454b2abbb3eb93",
+    "currentPixelsSha256": "2053967c129f90903bdd5d983dc1cd721955544922e90106cc7d95d834cc5df3",
+    "sourceSha256": "c6ae0dcb2ae314753fc1bd1ff1c19e3bc444c4c387736e11dc27226fe8535247",
+    "reason": "Reviewed renderer antialiasing at horizontal table edges (rows 116/376/377 at 96dpi). Unchanged frozen raster; old/new PDF have 371 identical path types, unchanged stroke widths, <=0.000016pt path bounds and <=0.000062pt glyph origins; 345 glyph IDs unchanged. Core and current full reference rasters are identical. See frozen core/scaling.pdf and compare-core-removal-baselines.py."
+  }
+}

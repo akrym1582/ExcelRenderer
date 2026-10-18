@@ -8,7 +8,6 @@ using ExcelRenderer.Core.Layout;
 using ExcelRenderer.Core.Model;
 using ExcelRenderer.Core.Pdf;
 using ExcelRenderer.Core.Rendering;
-using PdfSharp.Pdf;
 using Xunit;
 using A = DocumentFormat.OpenXml.Drawing;
 using RenderingDiagnostic = ExcelRenderer.Core.Rendering.ConversionDiagnostic;
@@ -156,7 +155,7 @@ public sealed class PageAndImageTests
             part.Worksheet.Append(new S.Hyperlinks(new S.Hyperlink { Reference = "A1", Id = relationship.Id }, new S.Hyperlink { Reference = "A2", Location = "First!A1" }));
         });
         using var document = TestSupport.Open(bytes); Assert.False(document.Pages[0].Elements.ContainsKey("/Annots"));
-        Assert.Equal(2, PdfContentProbe.Read(bytes).Texts.Count);
+        Assert.Equal(2, PdfContentProbe.Read(bytes).Texts.Select(text => text.Origin.Y).Distinct().Count());
     }
 
     [Fact]
@@ -229,12 +228,12 @@ public sealed class PageAndImageTests
     public void Corrupt_image_reports_diagnostic_and_next_page_still_renders()
     {
         var diagnostics = new List<RenderingDiagnostic>();
-        using var images = new ImageResources(); using var document = new PdfDocument();
-        var renderer = new CorePdfRenderer { DiagnosticHandler = diagnostics.Add };
-        renderer.AppendPage(document, new(100, 100), [new DrawImageCommand(1, new(0, 0, 10, 10), [1, 2, 3])]);
-        renderer.AppendPage(document, new(100, 100), [new DrawImageCommand(2, new(0, 0, 10, 10), TestSupport.Png())]);
+        using var images = new ImageResources();
+        using var renderer = new CorePdfRenderer { DiagnosticHandler = diagnostics.Add }; renderer.Prepare();
+        renderer.AppendPage( new(100, 100), [new DrawImageCommand(1, new(0, 0, 10, 10), [1, 2, 3])]);
+        renderer.AppendPage( new(100, 100), [new DrawImageCommand(2, new(0, 0, 10, 10), TestSupport.Png())]);
         Assert.Equal("ImageDecodeFailed", Assert.Single(diagnostics).Code);
-        using var output = new MemoryStream(); document.Save(output, false); Assert.True(output.Length > 0);
+        using var output = new MemoryStream(); renderer.Complete(output); Assert.True(output.Length > 0);
     }
 
     [Theory]

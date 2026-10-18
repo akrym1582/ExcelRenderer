@@ -1,7 +1,9 @@
-# Two-engine architecture
+# Main and Core architecture
 
 `ExcelRenderer.Core` is the single-font PDF engine and the shared foundation.
 `ExcelRenderer` extends that engine and retains its original public assembly/types.
+Both use the same Skia drawing and PDF foundation with different product policies;
+see [Skia rendering and font design](skia-rendering.md).
 Core is `netstandard2.1`, references only the shared `ExcelRenderer.OpenXml` project, and remains nonpackable. Generic workbook input validation/spooling belongs to OpenXml; Core keeps compatibility adapters. The existing
 ExcelRenderer and Tool packages ship the Core DLL from the same build.
 
@@ -11,7 +13,7 @@ ExcelRenderer public APIs / multi-format orchestration
     FullLayoutPolicy → Core geometry / sheet plan / page builder
     CoreTextLayoutAdapter → finalized full runs in borrowed typed payloads
     FullDrawingExtension → common cell layers + image/shape Z stage
-    FullPdfRenderer → Core append / basic paint / image decode / Save
+    PdfRenderer / SkiaPdfDocumentWriter → Core document / subsets / structural save
     PNG / SVG / Markdown / continuous / trim / link preflight remain in main
                          ↓
 ExcelRenderer.Core (also independently usable through ProjectReference)
@@ -37,12 +39,12 @@ Image and font bytes are borrowed. Continuous output rescans Core cell layers wi
 reused geometry context instead of retaining all commands. Public materializing Layout
 APIs retain their existing all-pages behavior.
 
-A single Core PDFsharp gate owns global font setup through measurement, drawing, Save,
-resource disposal and resolver cleanup. Conversion paths borrow their session; independent
-public measurers/renderers acquire their own. Both engines can alternate or run concurrently
-with the same Core DLL in one load context. Unrelated external PDFsharp users and separate
-AssemblyLoadContexts do not share the gate. Public resolved font owners retain immutable
-snapshots across resets; expired snapshots have weak process registrations.
+Native fonts, subsets and images belong to individual conversion scopes. Internal
+measurement borrows the current scope; independent public measurement/rendering owns
+and restores its scope. There is no global resolver/reset/gate. Finalized runs retain
+font bytes, glyph IDs and UTF-8 clusters without native handles, allowing replay after
+disposal. Mixed Core/main calls use separate native resources. The public standalone
+measurer serializes access to its own manager/cache only; converters have no global lock.
 
 See [source ownership](core-source-map.md), [Core usage and supported scope](core.md), and
 [executed verification](core-refactor-validation.md). Windows execution is left to the

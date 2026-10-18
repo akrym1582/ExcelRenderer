@@ -8,6 +8,7 @@
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="PdfPig" Version="0.1.14" PrivateAssets="all" />
     <ProjectReference Include="../../src/ExcelRenderer.Core/ExcelRenderer.Core.csproj" />
   </ItemGroup>
 </Project>

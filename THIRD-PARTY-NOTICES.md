@@ -52,3 +52,24 @@ dropping the variation selector.
 This font is used only by deterministic rendering tests and is not embedded in
 ExcelRenderer or ExcelRenderer.Fonts. The test-only SVG rasterizer, Svg.Skia
 5.2.3, is licensed under MIT: <https://www.nuget.org/packages/Svg.Skia/5.2.3>.
+
+## HarfBuzz subset adapter (10.2.0)
+
+Skia PDF uses a native adapter statically linked against official HarfBuzz 10.2.0
+under its Old MIT license. Adapter source is MIT. The complete HarfBuzz notice is
+retained in `native/harfbuzz/COPYING` and included in the main/tool distributions.
+Official source: https://github.com/harfbuzz/harfbuzz/archive/refs/tags/10.2.0.tar.gz
+SHA-256: `11749926914fd488e08e744538f19329332487a6243eec39ef3c63efa154a578`.
+The source-pinned build recipe, native exports and per-binary hashes are recorded
+by `scripts/build-harfbuzz-subset.py`. Main and Core share this adapter; PDFsharp has been removed.
+
+## Independent PDF validation reader
+
+PdfPig 0.1.14 (Apache-2.0), upstream commit
+`88172af1c4d4f440949f59c94966c3880e3f6032`, is referenced only by nonpackable
+.NET 10 test/validation/performance projects. Its net8.0 dependency group has no
+additional NuGet dependencies. It is not included in product runtime/nupkg dependencies.
+Source and license: <https://github.com/UglyToad/PdfPig/tree/v0.1.14>.
+PyMuPDF/Poppler are separately invoked validation tools only; they are not product
+runtime dependencies or bundled executables. Historical PDFsharp validation documents
+and frozen PDFs describe their recorded commits, not current distribution requirements.

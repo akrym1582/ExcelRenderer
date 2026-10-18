@@ -1,5 +1,4 @@
 using ExcelRenderer.Fonts;
-using ExcelRenderer.PdfSharp;
 
 namespace ExcelRenderer.Rendering;
 
@@ -25,10 +24,7 @@ internal sealed class RenderResourceSession : IDisposable
     internal static RenderResourceSession? Current => CurrentSlot.Value;
 
     /// <summary>Gets the clock snapshot shared by header/footer generation in both page passes.</summary>
-    internal DateTime HeaderFooterTimestamp { get; } = DateTime.Now;
-
-    /// <summary>Gets or sets the borrowed font session owned by the converter.</summary>
-    internal Core.Rendering.PdfSharpFontGate.Lease? FontSession { get; set; }
+    internal DateTime HeaderFooterTimestamp { get; } = Pdf.PdfRenderObserver.Timestamp ?? DateTime.Now;
 
     /// <summary>Gets or sets the conversion-local bounded text layout cache.</summary>
     internal Abstractions.ITextMeasurer? TextMeasurer { get; set; }

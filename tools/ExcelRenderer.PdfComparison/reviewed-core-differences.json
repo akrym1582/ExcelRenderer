@@ -1,0 +1,200 @@
+[
+  {
+    "page": 1,
+    "dpi": 300,
+    "region": "block-9",
+    "changedUnionFraction": 0.07072882651288821,
+    "distantInkFraction": 6.947821857847565e-05,
+    "fixture": "invoice",
+    "baselineSha256": "f2a80c34360629bdb1ca8596ab5376d2234943f21857dcc1756e16734e01f459",
+    "bounds": [
+      18.5,
+      255.63600158691406,
+      539.4999389648438,
+      275.1000061035156
+    ],
+    "currentRegionPixelsSha256": "d53760527c59e2d9ef46554d4b09c7b324d1d2a208866e7c9a5e3bf2b0511e81",
+    "classification": "antialiasing-only",
+    "reason": "Same retained glyph IDs/outlines and sub-0.1pt origins; fixed PDF serialization and raster-grid rounding. Reviewed old/new/difference crops."
+  },
+  {
+    "page": 1,
+    "dpi": 300,
+    "region": "block-12",
+    "changedUnionFraction": 0.06395078922934076,
+    "distantInkFraction": 0.0,
+    "fixture": "invoice",
+    "baselineSha256": "f2a80c34360629bdb1ca8596ab5376d2234943f21857dcc1756e16734e01f459",
+    "bounds": [
+      18.5,
+      333.6360168457031,
+      539.4998779296875,
+      355.1000061035156
+    ],
+    "currentRegionPixelsSha256": "3b87f46e8172030506c825b6532d9f90c1a340ad0df9b6cf74f93fbf98b46192",
+    "classification": "antialiasing-only",
+    "reason": "Same retained glyph IDs/outlines and sub-0.1pt origins; fixed PDF serialization and raster-grid rounding. Reviewed old/new/difference crops."
+  },
+  {
+    "page": 1,
+    "dpi": 300,
+    "region": "block-20",
+    "changedUnionFraction": 0.015814741598418527,
+    "distantInkFraction": 0.0,
+    "fixture": "invoice",
+    "baselineSha256": "f2a80c34360629bdb1ca8596ab5376d2234943f21857dcc1756e16734e01f459",
+    "bounds": [
+      18.5,
+      546.135986328125,
+      425.49993896484375,
+      566.1000366210938
+    ],
+    "currentRegionPixelsSha256": "fdc1cf28fbc7235d5fac4e924b0d5258f643aecae4eb9e0dd8f9ceaecfdf4188",
+    "classification": "antialiasing-only",
+    "reason": "Same retained glyph IDs/outlines and sub-0.1pt origins; fixed PDF serialization and raster-grid rounding. Reviewed old/new/difference crops."
+  },
+  {
+    "page": 1,
+    "dpi": 144,
+    "region": "block-9",
+    "changedUnionFraction": 0.04639479905437352,
+    "distantInkFraction": 0.0,
+    "fixture": "grid",
+    "baselineSha256": "28efbf95e8b8311bb7fa6f7d06f78dc4276f92fdc00eaaa1e3d62bf8ad412ca9",
+    "bounds": [
+      66.568603515625,
+      186.08392333984375,
+      375.9683837890625,
+      219.68336486816406
+    ],
+    "currentRegionPixelsSha256": "8b6f87bfc45c979808b1dcdc5ac194625ebba03de13bc9ac1e62de95c0f2b5ac",
+    "classification": "antialiasing-only",
+    "reason": "Same retained glyph IDs/outlines and sub-0.1pt origins; fixed PDF serialization and raster-grid rounding. Reviewed old/new/difference crops."
+  },
+  {
+    "page": 1,
+    "dpi": 144,
+    "region": "block-19",
+    "changedUnionFraction": 0.018524871355060035,
+    "distantInkFraction": 0.0,
+    "fixture": "grid",
+    "baselineSha256": "28efbf95e8b8311bb7fa6f7d06f78dc4276f92fdc00eaaa1e3d62bf8ad412ca9",
+    "bounds": [
+      88.39939880371094,
+      402.85211181640625,
+      508.74188232421875,
+      414.0523986816406
+    ],
+    "currentRegionPixelsSha256": "615d2b53dea6edda08829cbca4f49233e461018503d7381eb077bc619c3fc8f8",
+    "classification": "antialiasing-only",
+    "reason": "Same retained glyph IDs/outlines and sub-0.1pt origins; fixed PDF serialization and raster-grid rounding. Reviewed old/new/difference crops."
+  },
+  {
+    "page": 1,
+    "dpi": 144,
+    "region": "block-20",
+    "changedUnionFraction": 0.03223617237869019,
+    "distantInkFraction": 0.0,
+    "fixture": "grid",
+    "baselineSha256": "28efbf95e8b8311bb7fa6f7d06f78dc4276f92fdc00eaaa1e3d62bf8ad412ca9",
+    "bounds": [
+      88.39939880371094,
+      430.696533203125,
+      508.74188232421875,
+      441.8968200683594
+    ],
+    "currentRegionPixelsSha256": "9d739b5a8413f3b7079b01d35a60fbb8b23d36e82576b7f23f4733308783e9ae",
+    "classification": "antialiasing-only",
+    "reason": "Same retained glyph IDs/outlines and sub-0.1pt origins; fixed PDF serialization and raster-grid rounding. Reviewed old/new/difference crops."
+  },
+  {
+    "page": 1,
+    "dpi": 144,
+    "region": "block-21",
+    "changedUnionFraction": 0.030541871921182268,
+    "distantInkFraction": 0.0,
+    "fixture": "grid",
+    "baselineSha256": "28efbf95e8b8311bb7fa6f7d06f78dc4276f92fdc00eaaa1e3d62bf8ad412ca9",
+    "bounds": [
+      88.39939880371094,
+      458.54083251953125,
+      508.74188232421875,
+      469.7411193847656
+    ],
+    "currentRegionPixelsSha256": "a9aef32c0d907cbe0f09e39406ff3878c752dd75cef46ae5bae78ee878eb9b30",
+    "classification": "antialiasing-only",
+    "reason": "Same retained glyph IDs/outlines and sub-0.1pt origins; fixed PDF serialization and raster-grid rounding. Reviewed old/new/difference crops."
+  },
+  {
+    "page": 1,
+    "dpi": 144,
+    "region": "block-22",
+    "changedUnionFraction": 0.05411858336649423,
+    "distantInkFraction": 0.0,
+    "fixture": "grid",
+    "baselineSha256": "28efbf95e8b8311bb7fa6f7d06f78dc4276f92fdc00eaaa1e3d62bf8ad412ca9",
+    "bounds": [
+      88.39939880371094,
+      486.3852233886719,
+      508.74188232421875,
+      497.58551025390625
+    ],
+    "currentRegionPixelsSha256": "90c592e755a6ef58f5e78cf1ec39b11841ac5a0396977be44ca1a824bb87c80d",
+    "classification": "antialiasing-only",
+    "reason": "Same retained glyph IDs/outlines and sub-0.1pt origins; fixed PDF serialization and raster-grid rounding. Reviewed old/new/difference crops."
+  },
+  {
+    "page": 1,
+    "dpi": 144,
+    "region": "block-24",
+    "changedUnionFraction": 0.012773722627737226,
+    "distantInkFraction": 0.0,
+    "fixture": "grid",
+    "baselineSha256": "28efbf95e8b8311bb7fa6f7d06f78dc4276f92fdc00eaaa1e3d62bf8ad412ca9",
+    "bounds": [
+      66.568603515625,
+      534.1382446289062,
+      205.79861450195312,
+      578.937255859375
+    ],
+    "currentRegionPixelsSha256": "f7585bb86f5d7cd8cfb72ccfdf83c8965bf8c8830cb0b679ea860da606266ed0",
+    "classification": "antialiasing-only",
+    "reason": "Same retained glyph IDs/outlines and sub-0.1pt origins; fixed PDF serialization and raster-grid rounding. Reviewed old/new/difference crops."
+  },
+  {
+    "page": 1,
+    "dpi": 300,
+    "region": "block-9",
+    "changedUnionFraction": 0.021940544534758143,
+    "distantInkFraction": 0.0,
+    "fixture": "grid",
+    "baselineSha256": "28efbf95e8b8311bb7fa6f7d06f78dc4276f92fdc00eaaa1e3d62bf8ad412ca9",
+    "bounds": [
+      66.568603515625,
+      186.08392333984375,
+      375.9683837890625,
+      219.68336486816406
+    ],
+    "currentRegionPixelsSha256": "e1a229e68acf1ddcd3c8ca1351b976d096bff6f26b3b755ad49d2454719aa25b",
+    "classification": "antialiasing-only",
+    "reason": "Same retained glyph IDs/outlines and sub-0.1pt origins; fixed PDF serialization and raster-grid rounding. Reviewed old/new/difference crops."
+  },
+  {
+    "page": 1,
+    "dpi": 300,
+    "region": "block-28",
+    "changedUnionFraction": 0.0519239021599199,
+    "distantInkFraction": 0.0,
+    "fixture": "grid",
+    "baselineSha256": "28efbf95e8b8311bb7fa6f7d06f78dc4276f92fdc00eaaa1e3d62bf8ad412ca9",
+    "bounds": [
+      192.7174072265625,
+      663.8527221679688,
+      402.5707702636719,
+      672.81298828125
+    ],
+    "currentRegionPixelsSha256": "612e2fea250f150391af89b5114b56d4a704a1da9e22a5f83062efa33c9ccc26",
+    "classification": "antialiasing-only",
+    "reason": "Same retained glyph IDs/outlines and sub-0.1pt origins; fixed PDF serialization and raster-grid rounding. Reviewed old/new/difference crops."
+  }
+]

@@ -1,0 +1,55 @@
+{
+  "name": "blank-workbook",
+  "path": "e2e",
+  "commandFingerprints": {
+    "1": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+  },
+  "pagePlanSha256": "452DBF6551E2BB7E19B6329DF96CA85294C8B6246E9FF34E8AE208B1F98267F1",
+  "pages": [
+    {
+      "SourceSheetIndex": 1,
+      "SourceSheetName": "hidden",
+      "SourcePageNumber": 1,
+      "DocumentPageNumber": 1,
+      "OutputPageNumber": 1,
+      "WidthPoints": 612,
+      "HeightPoints": 792,
+      "PixelWidth": 816,
+      "PixelHeight": 1056,
+      "Dpi": 96,
+      "RequestedRange": null,
+      "SourceCellRanges": null,
+      "SourceRegions": null,
+      "OriginalWidthPoints": null,
+      "OriginalHeightPoints": null,
+      "CropBounds": null,
+      "PaddingPoints": null
+    }
+  ],
+  "diagnostics": [
+    {
+      "Code": "MaximumDigitWidthResolved",
+      "Severity": 0,
+      "Stage": 0,
+      "Message": "Normal font \u0027Calibri\u0027 resolved to \u0027Noto Sans JP\u0027 with MDW 8px.",
+      "SheetName": "hidden",
+      "CellRange": null,
+      "ObjectId": null,
+      "SourcePageNumber": null,
+      "OccurrenceCount": 1,
+      "UnicodeSequence": null
+    },
+    {
+      "Code": "EmptyContent",
+      "Severity": 0,
+      "Stage": 1,
+      "Message": "No visible drawing content remains on this page.",
+      "SheetName": "hidden",
+      "CellRange": null,
+      "ObjectId": null,
+      "SourcePageNumber": null,
+      "OccurrenceCount": 1,
+      "UnicodeSequence": null
+    }
+  ]
+}

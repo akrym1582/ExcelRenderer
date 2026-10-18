@@ -1,0 +1,258 @@
+{
+  "pdfsharp": {
+    "conversions": 20,
+    "post_collection": [
+      {
+        "PostCollectionIteration": 0,
+        "ManagedBytes": 12791320,
+        "WorkingSet64": 97996800,
+        "PrivateMemorySize64": 151109632
+      },
+      {
+        "PostCollectionIteration": 1,
+        "ManagedBytes": 13042024,
+        "WorkingSet64": 109780992,
+        "PrivateMemorySize64": 171270144
+      },
+      {
+        "PostCollectionIteration": 2,
+        "ManagedBytes": 13042056,
+        "WorkingSet64": 110645248,
+        "PrivateMemorySize64": 171057152
+      },
+      {
+        "PostCollectionIteration": 3,
+        "ManagedBytes": 13042056,
+        "WorkingSet64": 111230976,
+        "PrivateMemorySize64": 171343872
+      },
+      {
+        "PostCollectionIteration": 4,
+        "ManagedBytes": 13221400,
+        "WorkingSet64": 117215232,
+        "PrivateMemorySize64": 177479680
+      },
+      {
+        "PostCollectionIteration": 5,
+        "ManagedBytes": 13221136,
+        "WorkingSet64": 118214656,
+        "PrivateMemorySize64": 178020352
+      },
+      {
+        "PostCollectionIteration": 6,
+        "ManagedBytes": 13221136,
+        "WorkingSet64": 118226944,
+        "PrivateMemorySize64": 178032640
+      },
+      {
+        "PostCollectionIteration": 7,
+        "ManagedBytes": 13221400,
+        "WorkingSet64": 118235136,
+        "PrivateMemorySize64": 178040832
+      },
+      {
+        "PostCollectionIteration": 8,
+        "ManagedBytes": 13221136,
+        "WorkingSet64": 118484992,
+        "PrivateMemorySize64": 178114560
+      },
+      {
+        "PostCollectionIteration": 9,
+        "ManagedBytes": 13221136,
+        "WorkingSet64": 118484992,
+        "PrivateMemorySize64": 178114560
+      },
+      {
+        "PostCollectionIteration": 10,
+        "ManagedBytes": 13221400,
+        "WorkingSet64": 118784000,
+        "PrivateMemorySize64": 178159616
+      },
+      {
+        "PostCollectionIteration": 11,
+        "ManagedBytes": 13221136,
+        "WorkingSet64": 118996992,
+        "PrivateMemorySize64": 178171904
+      },
+      {
+        "PostCollectionIteration": 12,
+        "ManagedBytes": 13221136,
+        "WorkingSet64": 119013376,
+        "PrivateMemorySize64": 178225152
+      },
+      {
+        "PostCollectionIteration": 13,
+        "ManagedBytes": 13221400,
+        "WorkingSet64": 119013376,
+        "PrivateMemorySize64": 178225152
+      },
+      {
+        "PostCollectionIteration": 14,
+        "ManagedBytes": 13221136,
+        "WorkingSet64": 119214080,
+        "PrivateMemorySize64": 178286592
+      },
+      {
+        "PostCollectionIteration": 15,
+        "ManagedBytes": 13221136,
+        "WorkingSet64": 119242752,
+        "PrivateMemorySize64": 178286592
+      },
+      {
+        "PostCollectionIteration": 16,
+        "ManagedBytes": 13221400,
+        "WorkingSet64": 119324672,
+        "PrivateMemorySize64": 178286592
+      },
+      {
+        "PostCollectionIteration": 17,
+        "ManagedBytes": 13221136,
+        "WorkingSet64": 119328768,
+        "PrivateMemorySize64": 178290688
+      },
+      {
+        "PostCollectionIteration": 18,
+        "ManagedBytes": 13221136,
+        "WorkingSet64": 119447552,
+        "PrivateMemorySize64": 178335744
+      },
+      {
+        "PostCollectionIteration": 19,
+        "ManagedBytes": 13221400,
+        "WorkingSet64": 119627776,
+        "PrivateMemorySize64": 178352128
+      }
+    ],
+    "last_five_working_set_spread_bytes": 385024,
+    "last_five_managed_spread_bytes": 264,
+    "native_measurement_faces_balanced": true
+  },
+  "skiasharp": {
+    "conversions": 20,
+    "post_collection": [
+      {
+        "PostCollectionIteration": 0,
+        "ManagedBytes": 12754832,
+        "WorkingSet64": 107032576,
+        "PrivateMemorySize64": 157028352
+      },
+      {
+        "PostCollectionIteration": 1,
+        "ManagedBytes": 12966464,
+        "WorkingSet64": 125698048,
+        "PrivateMemorySize64": 184500224
+      },
+      {
+        "PostCollectionIteration": 2,
+        "ManagedBytes": 12966464,
+        "WorkingSet64": 130240512,
+        "PrivateMemorySize64": 187424768
+      },
+      {
+        "PostCollectionIteration": 3,
+        "ManagedBytes": 12966464,
+        "WorkingSet64": 130469888,
+        "PrivateMemorySize64": 187461632
+      },
+      {
+        "PostCollectionIteration": 4,
+        "ManagedBytes": 12966728,
+        "WorkingSet64": 131543040,
+        "PrivateMemorySize64": 200998912
+      },
+      {
+        "PostCollectionIteration": 5,
+        "ManagedBytes": 12966464,
+        "WorkingSet64": 131543040,
+        "PrivateMemorySize64": 200998912
+      },
+      {
+        "PostCollectionIteration": 6,
+        "ManagedBytes": 12979816,
+        "WorkingSet64": 132276224,
+        "PrivateMemorySize64": 201146368
+      },
+      {
+        "PostCollectionIteration": 7,
+        "ManagedBytes": 12980080,
+        "WorkingSet64": 132276224,
+        "PrivateMemorySize64": 201146368
+      },
+      {
+        "PostCollectionIteration": 8,
+        "ManagedBytes": 12979816,
+        "WorkingSet64": 132431872,
+        "PrivateMemorySize64": 201211904
+      },
+      {
+        "PostCollectionIteration": 9,
+        "ManagedBytes": 12979816,
+        "WorkingSet64": 132513792,
+        "PrivateMemorySize64": 201211904
+      },
+      {
+        "PostCollectionIteration": 10,
+        "ManagedBytes": 12980080,
+        "WorkingSet64": 132612096,
+        "PrivateMemorySize64": 201211904
+      },
+      {
+        "PostCollectionIteration": 11,
+        "ManagedBytes": 12979816,
+        "WorkingSet64": 132616192,
+        "PrivateMemorySize64": 201175040
+      },
+      {
+        "PostCollectionIteration": 12,
+        "ManagedBytes": 12979816,
+        "WorkingSet64": 132726784,
+        "PrivateMemorySize64": 201256960
+      },
+      {
+        "PostCollectionIteration": 13,
+        "ManagedBytes": 13161056,
+        "WorkingSet64": 151179264,
+        "PrivateMemorySize64": 220033024
+      },
+      {
+        "PostCollectionIteration": 14,
+        "ManagedBytes": 13160792,
+        "WorkingSet64": 155533312,
+        "PrivateMemorySize64": 223739904
+      },
+      {
+        "PostCollectionIteration": 15,
+        "ManagedBytes": 13160792,
+        "WorkingSet64": 155533312,
+        "PrivateMemorySize64": 223739904
+      },
+      {
+        "PostCollectionIteration": 16,
+        "ManagedBytes": 13161056,
+        "WorkingSet64": 155701248,
+        "PrivateMemorySize64": 223739904
+      },
+      {
+        "PostCollectionIteration": 17,
+        "ManagedBytes": 13160792,
+        "WorkingSet64": 155705344,
+        "PrivateMemorySize64": 223739904
+      },
+      {
+        "PostCollectionIteration": 18,
+        "ManagedBytes": 13160792,
+        "WorkingSet64": 155705344,
+        "PrivateMemorySize64": 223739904
+      },
+      {
+        "PostCollectionIteration": 19,
+        "ManagedBytes": 13161056,
+        "WorkingSet64": 155877376,
+        "PrivateMemorySize64": 223809536
+      }
+    ],
+    "last_five_working_set_spread_bytes": 344064,
+    "last_five_managed_spread_bytes": 264,
+    "native_measurement_faces_balanced": true
+  }
+}

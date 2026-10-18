@@ -1,7 +1,9 @@
+using ExcelRenderer.TestFixtures;
 using ExcelRenderer.Abstractions;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Model;
-using ExcelRenderer.PdfSharp;
+using ExcelRenderer.Pdf;
+using ExcelRenderer.SkiaSharp;
 using Xunit;
 
 namespace ExcelRenderer.Tests;
@@ -39,7 +41,7 @@ public sealed class GeometryRegressionTests
         var context = RunUpTo(sheet);
         var source = context.CellLayouts[new(1, 1)];
 
-        var document = new ReportLayoutEngine(new PdfSharpTextMeasurer()).Layout(sheet);
+        var document = new ReportLayoutEngine(new SkiaTextMeasurer()).Layout(sheet);
 
         Assert.True(document.Pages.Count >= 2);
         foreach (var page in document.Pages)
@@ -69,7 +71,7 @@ public sealed class GeometryRegressionTests
         };
         var sheet = CreateSheet(new(new(1, 3), new(2, 4)), absolute, oneCell, outsideFrom);
 
-        var page = Assert.Single(new ReportLayoutEngine(new PdfSharpTextMeasurer()).Layout(sheet).Pages);
+        var page = Assert.Single(new ReportLayoutEngine(new SkiaTextMeasurer()).Layout(sheet).Pages);
 
         Assert.Equal(3, page.Images!.Count);
         Assert.Equal(20, page.Images[0].Bounds.X, Tolerance);
@@ -86,7 +88,7 @@ public sealed class GeometryRegressionTests
         var image = new ReportImage(new(1, 1), 0, 0, 30, 100, []);
         var sheet = CreateSheet(null, image);
 
-        var page = Assert.Single(new ReportLayoutEngine(new PdfSharpTextMeasurer()).Layout(sheet).Pages);
+        var page = Assert.Single(new ReportLayoutEngine(new SkiaTextMeasurer()).Layout(sheet).Pages);
 
         var renderImage = Assert.Single(page.Images!);
         var clip = renderImage.ClipBounds!.Value;
@@ -101,7 +103,7 @@ public sealed class GeometryRegressionTests
         var image = new ReportImage(new(1, 1), 0, 0, 30, 100, []);
         var sheet = CreateSheet(new(new(1, 1), new(1, 1)), image);
 
-        var page = Assert.Single(new ReportLayoutEngine(new PdfSharpTextMeasurer()).Layout(sheet).Pages);
+        var page = Assert.Single(new ReportLayoutEngine(new SkiaTextMeasurer()).Layout(sheet).Pages);
 
         var renderImage = Assert.Single(page.Images!);
         Assert.Equal(15, renderImage.ClipBounds!.Value.Height, Tolerance);
@@ -145,7 +147,7 @@ public sealed class GeometryRegressionTests
             new(new(1, 1), new(4, 2)),
             [image]);
 
-        var pages = new ReportLayoutEngine(new PdfSharpTextMeasurer()).Layout(sheet).Pages;
+        var pages = new ReportLayoutEngine(new SkiaTextMeasurer()).Layout(sheet).Pages;
 
         Assert.True(pages.Count >= 2);
         Assert.Equal(10, pages[0].Images!.Single().ClipBounds!.Value.Y, Tolerance);
@@ -162,7 +164,7 @@ public sealed class GeometryRegressionTests
         var image = new ReportImage(new(1, 1), 0, 0, 100, 20, []) { Rotation = 90 };
         var sheet = CreateSheet(null, image);
 
-        var result = new ReportLayoutEngine(new PdfSharpTextMeasurer()).LayoutContinuous(sheet);
+        var result = new ReportLayoutEngine(new SkiaTextMeasurer()).LayoutContinuous(sheet);
 
         var render = Assert.Single(result.Document.Pages[0].Images!);
         Assert.Equal(100, result.Height, Tolerance);
@@ -204,7 +206,7 @@ public sealed class GeometryRegressionTests
             new(new(1, 1), new(4, 1)),
             [image]);
 
-        var pages = new ReportLayoutEngine(new PdfSharpTextMeasurer()).Layout(sheet).Pages;
+        var pages = new ReportLayoutEngine(new SkiaTextMeasurer()).Layout(sheet).Pages;
 
         Assert.True(pages.Count >= 2);
         Assert.True(pages[1].Images!.Count == 1);
@@ -228,7 +230,7 @@ public sealed class GeometryRegressionTests
     /// <param name="stop">実行を止めるレイアウトパスの位置。</param>
     private static ReportLayoutContext RunUpTo(ReportSheet sheet, int stop = int.MaxValue)
     {
-        var context = new ReportLayoutContext(sheet, new PdfSharpTextMeasurer());
+        var context = new ReportLayoutContext(sheet, new SkiaTextMeasurer());
         IReportLayoutPass[] passes =
         [
             new NormalizePass(), new ResolvePrintAreaPass(), new HiddenRowColumnPass(),

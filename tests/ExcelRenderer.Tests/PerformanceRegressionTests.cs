@@ -2,10 +2,10 @@ using ExcelRenderer.Excel;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Model;
-using ExcelRenderer.PdfSharp;
+using ExcelRenderer.Pdf;
+using ExcelRenderer.SkiaSharp;
 using ExcelRenderer.Rendering;
 using ExcelRenderer.TestFixtures;
-using PdfSharp.Pdf.IO;
 using Xunit;
 
 namespace ExcelRenderer.Tests;
@@ -102,7 +102,7 @@ public sealed class PerformanceRegressionTests
             [new(1, 1)] = new("visible", CellStyle.Default),
             [new(1000, 1)] = new("outside", CellStyle.Default),
         }, new Dictionary<int, ColumnDefinition>(), new Dictionary<int, RowDefinition>(), [], new(100, 100));
-        var context = new ReportLayoutContext(sheet, new PdfSharpTextMeasurer());
+        var context = new ReportLayoutContext(sheet, new SkiaTextMeasurer());
         context.ColumnLayouts[1] = new(1, 0, 50);
         context.RowLayouts[1] = new(1, 0, 15);
         new TextMeasurePass().Execute(context);
@@ -123,7 +123,7 @@ public sealed class PerformanceRegressionTests
         });
         var request = new FontRequest("alias");
         var before = manager.ResolveTextRuns("ABC", request);
-        var measurer = new PdfSharpTextMeasurer(manager, cacheLayouts: true);
+        var measurer = new SkiaTextMeasurer(manager, cacheLayouts: true);
         using var resources = new ConversionFontResources();
         var beforeLayout = measurer.Layout("ABC", new("alias"), 100, false);
         manager.Register("alias", Path.Combine(AppContext.BaseDirectory, "Fonts", "NotoSansMono-Regular.ttf"));
@@ -216,12 +216,12 @@ public sealed class PerformanceRegressionTests
             Assert.Equal(1, metrics["typefaceCreated"]);
             Assert.Equal(1, metrics["lineMetricsComputed"]);
             output.Position = 0;
-            using var pdf = PdfReader.Open(output, PdfDocumentOpenMode.Import);
+            using var pdf = PdfTestFile.Open(output);
             Assert.Equal(result.Pages.Count, pdf.PageCount);
-            var fonts = pdf.Pages.Cast<global::PdfSharp.Pdf.PdfPage>()
+            var fonts = pdf.Pages.Cast<PdfTestPage>()
                 .Select(page => page.Elements.GetDictionary("/Resources")!.Elements.GetDictionary("/Font")!)
                 .SelectMany(font => font.Elements.Values)
-                .OfType<global::PdfSharp.Pdf.Advanced.PdfReference>()
+                .OfType<PdfTestReference>()
                 .Select(reference => reference.ObjectID).Distinct().ToArray();
             Assert.Single(fonts);
             Assert.True(output.CanWrite);
@@ -239,10 +239,13 @@ public sealed class PerformanceRegressionTests
     [Fact(DisplayName = "空ページを PDF に追加しても、異なる用紙寸法と MediaBox・CropBox の一致が保持される")]
     public void Append_page_keeps_empty_pages_and_dimensions()
     {
-        using var document = new global::PdfSharp.Pdf.PdfDocument();
-        var renderer = new PdfSharpRenderer();
-        renderer.AppendPage(document, new(100, 200), []);
-        renderer.AppendPage(document, new(300, 400), []);
+        using var output = new MemoryStream();
+        using var writer = new SkiaPdfDocumentWriter(new FontManager(), CancellationToken.None);
+        writer.Prepare();
+        writer.Append(new(100, 200), new(0, "first", 1, 1, 1, 100, 200), [], [], _ => { });
+        writer.Append(new(300, 400), new(0, "second", 2, 2, 2, 300, 400), [], [], _ => { });
+        writer.Complete(output);
+        using var document = PdfTestFile.Open(new MemoryStream(output.ToArray()));
         Assert.Equal(2, document.PageCount);
         Assert.Equal(100, document.Pages[0].Width.Point);
         Assert.Equal(400, document.Pages[1].Height.Point);

@@ -1,0 +1,15 @@
+{
+  "rid": "linux-x64",
+  "version": "10.2.0",
+  "source": "https://github.com/harfbuzz/harfbuzz/archive/refs/tags/10.2.0.tar.gz",
+  "source_sha256": "11749926914fd488e08e744538f19329332487a6243eec39ef3c63efa154a578",
+  "binary_sha256": "c79f41feb78b51fb9ef36ca84132e4bf1cebee6b02f8ae4e7b259055c5426b48",
+  "license": "Old MIT (HarfBuzz), MIT (adapter)",
+  "exports": [
+    "er_subset",
+    "er_blob_data",
+    "er_blob_destroy",
+    "er_version"
+  ],
+  "platform": "Linux-6.8.0-1064-azure-x86_64-with-glibc2.35"
+}

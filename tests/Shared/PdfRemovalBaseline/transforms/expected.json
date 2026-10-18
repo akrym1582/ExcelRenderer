@@ -1,0 +1,29 @@
+{
+  "name": "transforms",
+  "path": "features",
+  "sameCommands": true,
+  "expectedText": [
+    "\u56DE\u8EE2\u56F3\u5F62"
+  ],
+  "regions": [
+    {
+      "name": "rotated-clipped-layers",
+      "bounds": [
+        5,
+        5,
+        220,
+        150
+      ]
+    },
+    {
+      "name": "viewport-origin-and-layers",
+      "bounds": [
+        15,
+        180,
+        225,
+        330
+      ]
+    }
+  ],
+  "commandSha256": "DD51B5C3F17556BD220FB0CE4B5EA65E301C8BF8C523B2FC9A4326D42D0B4968"
+}

@@ -1,0 +1,18 @@
+{
+  "configuration": "Release",
+  "warmups": 3,
+  "rounds": 5,
+  "processConcurrency": [
+    1,
+    4,
+    8
+  ],
+  "fixture": "all",
+  "baselineAssembly": "/tmp/excelrenderer-stage1-benchmark-bin/ExcelRenderer.Performance.dll",
+  "sdk": "10.0.401",
+  "os": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "comparisonTarget": "B: old measurement + Skia subset",
+  "timeAndPeakRssTarget": 1.25,
+  "stageOrder": "alternating forward/reverse per fresh-process round",
+  "reusedInputs": "artifacts/pdf-removal-benchmark"
+}

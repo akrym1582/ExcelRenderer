@@ -1,0 +1,15 @@
+{
+  "reviewCommit": "fdeff40890f7927ed5239b285e9853026dec3728",
+  "rawBytes": 1921925,
+  "oldFinalBytes": 3843122,
+  "payloadSha256": "e5e6507391ab9a871ea00a398e6ff193bd34b32a433c2db1bc788f045931158e",
+  "oldPayloadOccurrences": 2,
+  "rawInterpolate": [
+    "null",
+    "null"
+  ],
+  "correctedPixelHashes": {
+    "144": "537d9eb63e8c5cf8a1a516573e48f621f11b97101cd211fbd503611b582a13c4",
+    "300": "23ca6b22c0933feb8bd10db35971edb3151132243ee7629b8d684d8a518a1ee3"
+  }
+}

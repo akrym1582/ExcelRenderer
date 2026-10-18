@@ -3,6 +3,8 @@
 import argparse
 import json
 import os
+import shutil
+import sys
 from pathlib import Path
 import subprocess
 from package_distribution import check_packages
@@ -26,6 +28,20 @@ env = dict(os.environ, NUGET_PACKAGES=str(work / 'packages'), DOTNET_ROOT=str(Pa
 def run(*cmd, cwd=work):
     print('+', *map(str, cmd), flush=True)
     subprocess.run(list(map(str, cmd)), cwd=cwd, env=env, check=True)
+
+
+consumer_graphs = []
+
+
+def audit_consumer(directory):
+    paths = list(directory.rglob('project.assets.json')) + list(directory.rglob('*.deps.json'))
+    assert paths, f'No restored/runtime graph: {directory}'
+    for path in paths:
+        graph = json.loads(path.read_text())
+        libraries = sorted(graph.get('libraries', {}))
+        assert not any('pdfsharp' in name.lower().replace('-', '').replace('_', '').replace('.', '') for name in libraries), path
+        consumer_graphs.append({'path': str(path.relative_to(work)), 'libraries': libraries})
+    (work / 'consumer-graphs.json').write_text(json.dumps(consumer_graphs, indent=2) + '\n')
 
 fixture = '''
 using var input = new MemoryStream();
@@ -89,6 +105,16 @@ OutputFormat=ExcelRenderer.Rendering.OutputFormat.Markdown,
 ReadOptions=new(){FormulaDisplayMode=ExcelRenderer.Excel.FormulaDisplayMode.Recalculate},
 FontOptions=new(){FontFiles=new[]{args[1]},AllowSystemFonts=false}},new ExcelRenderer.Rendering.SingleStreamOutputSink(output));
 if(!System.Text.Encoding.UTF8.GetString(output.ToArray()).Contains("413")) throw new Exception("Main recalc failure");
+foreach (var backend in new[] { new ExcelRenderer.Rendering.RenderRequest().PdfBackend, ExcelRenderer.PdfBackend.SkiaSharp }) {
+    input.Position=0;
+    using var pdfOutput=new MemoryStream();
+    await ExcelRenderer.ExcelConverter.RenderAsync(input,new(){
+        OutputFormat=ExcelRenderer.Rendering.OutputFormat.Pdf, PdfBackend=backend,
+        FontOptions=new(){FontFiles=new[]{args[1]},AllowSystemFonts=false,UseFontPack=false}},
+        new ExcelRenderer.Rendering.SingleStreamOutputSink(pdfOutput));
+    if(pdfOutput.Length==0 || !System.Text.Encoding.ASCII.GetString(pdfOutput.ToArray()).StartsWith("%PDF"))
+        throw new Exception("Package-only PDF backend failure: " + backend);
+}
 ''')}
 programs['combined'] = (['ExcelRenderer', 'ExcelRenderer.Mapping'], programs['main-core'][1] + """
 input.Position = 0;
@@ -117,11 +143,53 @@ for name,(refs,code) in programs.items():
     run('dotnet','restore','--configfile',config,cwd=directory)
     arguments = [] if name.startswith('namespace-') else [fixture_path, font]
     run('dotnet','run','-c','Release','--no-restore','--',*arguments,cwd=directory)
+    audit_consumer(directory)
+    # Every consumer copied all native RIDs (including large debug symbols).
+    # Keep its source/log evidence but release disposable build products before
+    # the next isolated project; this also fits hosted CI's disk budget.
+    for generated in ('bin', 'obj'):
+        shutil.rmtree(directory / generated, ignore_errors=True)
 tool=work/'tool'
-if (tool/'excelrenderer').exists():
+tool_command = tool / ('excelrenderer.exe' if os.name == 'nt' else 'excelrenderer')
+if tool_command.exists():
     run('dotnet','tool','uninstall','ExcelRenderer.Tool','--tool-path',tool)
 (work/'cli.md').unlink(missing_ok=True)
 run('dotnet','tool','install','ExcelRenderer.Tool','--version',versions['ExcelRenderer.Tool'],'--tool-path',tool,'--configfile',config)
-run(tool/'excelrenderer','md',fixture_path,'--formula-mode','recalculate','-o',work/'cli.md')
+run(tool_command,'md',fixture_path,'--formula-mode','recalculate','-o',work/'cli.md')
 assert '413' in (work/'cli.md').read_text()
+for command in ('pdf', 'render'):
+    destination = work / f'cli-{command}-skia.pdf'
+    destination.unlink(missing_ok=True)
+    extra = ['--format', 'pdf'] if command == 'render' else []
+    run(tool_command, command, fixture_path, '-o', destination, '--pdf-backend', 'skiasharp', *extra)
+    assert destination.read_bytes().startswith(b'%PDF')
+
+# The adapter must be a real packaged runtime dependency, with a concrete failure
+# when absent. Removing it from this disposable installation cannot affect repo/bin.
+native_name = 'ExcelRenderer.HarfBuzzSubset.dll' if os.name == 'nt' else ('libExcelRenderer.HarfBuzzSubset.dylib' if sys.platform == 'darwin' else 'libExcelRenderer.HarfBuzzSubset.so')
+native_assets = list(tool.rglob(native_name))
+assert len(native_assets) == 1, native_assets
+native_asset = native_assets[0]
+backup = native_asset.with_suffix(native_asset.suffix + '.test-backup')
+native_asset.rename(backup)
+try:
+    missing_output = work / 'cli-missing-subset.pdf'
+    missing_output.unlink(missing_ok=True)
+    missing = subprocess.run([str(tool_command), 'pdf', str(fixture_path), '-o', str(missing_output), '--pdf-backend', 'skiasharp'], env=env, text=True, capture_output=True)
+    assert missing.returncode != 0 and 'HarfBuzzSubset' in missing.stderr, (missing.returncode, missing.stderr)
+    assert not missing_output.exists(), 'Failed native conversion left a completed file'
+    default_output = work / 'cli-default-without-subset.pdf'
+    default_output.unlink(missing_ok=True)
+    missing_default = subprocess.run([str(tool_command), 'pdf', str(fixture_path), '-o', str(default_output)], env=env, text=True, capture_output=True)
+    assert missing_default.returncode != 0 and 'HarfBuzzSubset' in missing_default.stderr
+    assert not default_output.exists()
+    markdown_without_native = work / 'cli-markdown-without-subset.md'
+    markdown_without_native.unlink(missing_ok=True)
+    run(tool_command, 'md', fixture_path, '-o', markdown_without_native)
+    assert markdown_without_native.exists()
+finally:
+    backup.rename(native_asset)
+run(tool_command, 'pdf', fixture_path, '-o', default_output)
+assert default_output.read_bytes().startswith(b'%PDF')
+audit_consumer(tool)
 print('Nine isolated package consumers passed (engine, adapter, Mapping, main+Core, combined, three namespace samples, installed CLI)')

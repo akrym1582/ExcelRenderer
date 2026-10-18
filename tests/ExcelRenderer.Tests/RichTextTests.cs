@@ -4,7 +4,8 @@ using ExcelRenderer.Excel;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Model;
-using ExcelRenderer.PdfSharp;
+using ExcelRenderer.Pdf;
+using ExcelRenderer.SkiaSharp;
 using ExcelRenderer.TestFixtures;
 using Xunit;
 
@@ -56,7 +57,7 @@ public sealed class RichTextTests
     public void LayoutPreservesElementsAcrossFormattingBoundariesAndScalesEveryRun()
     {
         var fonts = new FontManager(new FontOptions());
-        var measurer = new PdfSharpTextMeasurer(fonts);
+        var measurer = new SkiaTextMeasurer(fonts);
         var small = new FontStyle(Size: 10, Color: new(255, 0, 0));
         var large = new FontStyle(Size: 20, Bold: true);
         var layout = measurer.Layout([new("a", small), new("\u0301b\r", large), new("\n\nC", large)], small, 1000, false);
@@ -75,7 +76,7 @@ public sealed class RichTextTests
     [Fact]
     public void StyleBoundaryDoesNotForceWrapAndCacheIncludesColors()
     {
-        var measurer = new PdfSharpTextMeasurer(new FontManager(new FontOptions()));
+        var measurer = new SkiaTextMeasurer(new FontManager(new FontOptions()));
         var red = new FontStyle(Color: new(255, 0, 0));
         var blue = red with { Color = new(0, 0, 255) };
         var first = measurer.Layout([new("abc", red), new("def", blue)], red, 1000, true);
@@ -105,7 +106,7 @@ public sealed class RichTextTests
     [Fact]
     public void PdfPngAndSerializedSvgUseRunSizesColorsAndBaseline()
     {
-        var measurer = new PdfSharpTextMeasurer(new OutputFixture.FixedManager());
+        var measurer = new SkiaTextMeasurer(new OutputFixture.FixedManager());
         var font = new FontStyle(Size: 10, Color: new(255, 0, 0));
         var large = font with { Size = 20, Color = new(0, 0, 255), Underline = true };
         var layout = measurer.Layout([new("A", font), new("B", large)], font, 100, false);
@@ -115,7 +116,7 @@ public sealed class RichTextTests
             VerticalAlignment = VerticalAlignment.Top,
         }) { TextLayout = layout };
         using var output = new MemoryStream();
-        new PdfSharpRenderer(new OutputFixture.FixedManager()).Render([command], new(120, 80), output);
+        new PdfRenderer(new OutputFixture.FixedManager()).Render([command], new(120, 80), output);
         var pdf = PdfContentProbe.Read(output.ToArray());
         Assert.Equal(2, pdf.Texts.Count);
         Assert.Equal(10, pdf.Texts[0].Size);
@@ -135,7 +136,7 @@ public sealed class RichTextTests
         var sheet = new ExcelReader().Read(path).Sheets[0];
         Assert.Equal(8, sheet.Cells.Count);
         Assert.All(sheet.Cells.Values, cell => Assert.Equal("Alpha 日本語 e\u0301 end", cell.Text));
-        var layout = new ReportLayoutEngine(new PdfSharpTextMeasurer(new OutputFixture.FixedManager())).Layout(sheet);
+        var layout = new ReportLayoutEngine(new SkiaTextMeasurer(new OutputFixture.FixedManager())).Layout(sheet);
         var cell = layout.Pages[0].Cells[0];
         Assert.NotNull(cell.TextLayout);
         Assert.Contains(cell.TextLayout!.Lines.SelectMany(line => line.Runs), run => run.Font?.Size == 16);
@@ -154,7 +155,7 @@ public sealed class RichTextTests
         var sheet = new ReportSheet("titles", cells, new Dictionary<int, ColumnDefinition> { [1] = new(100) },
             Enumerable.Range(1, 8).ToDictionary(row => row, row => new RowDefinition(40)), [],
             new(200, 100, 0, 0, 0, 0, Scale: .5, TitleRows: new(1, 1)));
-        var pages = new ReportLayoutEngine(new PdfSharpTextMeasurer(new OutputFixture.FixedManager())).Layout(sheet).Pages;
+        var pages = new ReportLayoutEngine(new SkiaTextMeasurer(new OutputFixture.FixedManager())).Layout(sheet).Pages;
         Assert.True(pages.Count > 1);
         foreach (var page in pages)
         {

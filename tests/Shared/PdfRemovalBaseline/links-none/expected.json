@@ -1,0 +1,209 @@
+{
+  "name": "links-none",
+  "path": "e2e",
+  "commandFingerprints": {
+    "1": "E3B3862096B561B43F10E89686A5799EAA548F45692AA484DE9550A0F24767CB",
+    "2": "28F92E9FE6520E112D376C65346AC72608B6E558E6C5D1A139714031CDCD89B2",
+    "3": "28F92E9FE6520E112D376C65346AC72608B6E558E6C5D1A139714031CDCD89B2"
+  },
+  "pagePlanSha256": "1F42ED9E52C5FEF1081359DD7227CE9AFF133A3AAB84C26441C9490F341DDB65",
+  "pages": [
+    {
+      "SourceSheetIndex": 1,
+      "SourceSheetName": "Sheet1",
+      "SourcePageNumber": 1,
+      "DocumentPageNumber": 1,
+      "OutputPageNumber": 1,
+      "WidthPoints": 595.276,
+      "HeightPoints": 841.89,
+      "PixelWidth": 794,
+      "PixelHeight": 1123,
+      "Dpi": 96,
+      "RequestedRange": null,
+      "SourceCellRanges": [
+        {
+          "First": {
+            "Row": 1,
+            "Column": 1
+          },
+          "Last": {
+            "Row": 10,
+            "Column": 6
+          }
+        }
+      ],
+      "SourceRegions": [
+        {
+          "X": 0,
+          "Y": 0,
+          "Width": 387,
+          "Height": 200
+        }
+      ],
+      "OriginalWidthPoints": null,
+      "OriginalHeightPoints": null,
+      "CropBounds": null,
+      "PaddingPoints": null
+    },
+    {
+      "SourceSheetIndex": 2,
+      "SourceSheetName": "\u58F2\u4E0A 2026",
+      "SourcePageNumber": 1,
+      "DocumentPageNumber": 2,
+      "OutputPageNumber": 2,
+      "WidthPoints": 595.276,
+      "HeightPoints": 841.89,
+      "PixelWidth": 794,
+      "PixelHeight": 1123,
+      "Dpi": 96,
+      "RequestedRange": null,
+      "SourceCellRanges": [
+        {
+          "First": {
+            "Row": 1,
+            "Column": 1
+          },
+          "Last": {
+            "Row": 10,
+            "Column": 6
+          }
+        }
+      ],
+      "SourceRegions": [
+        {
+          "X": 0,
+          "Y": 0,
+          "Width": 387,
+          "Height": 200
+        }
+      ],
+      "OriginalWidthPoints": null,
+      "OriginalHeightPoints": null,
+      "CropBounds": null,
+      "PaddingPoints": null
+    },
+    {
+      "SourceSheetIndex": 3,
+      "SourceSheetName": "O\u0027Brien!Q",
+      "SourcePageNumber": 1,
+      "DocumentPageNumber": 3,
+      "OutputPageNumber": 3,
+      "WidthPoints": 595.276,
+      "HeightPoints": 841.89,
+      "PixelWidth": 794,
+      "PixelHeight": 1123,
+      "Dpi": 96,
+      "RequestedRange": null,
+      "SourceCellRanges": [
+        {
+          "First": {
+            "Row": 1,
+            "Column": 1
+          },
+          "Last": {
+            "Row": 10,
+            "Column": 6
+          }
+        }
+      ],
+      "SourceRegions": [
+        {
+          "X": 0,
+          "Y": 0,
+          "Width": 387,
+          "Height": 200
+        }
+      ],
+      "OriginalWidthPoints": null,
+      "OriginalHeightPoints": null,
+      "CropBounds": null,
+      "PaddingPoints": null
+    }
+  ],
+  "diagnostics": [
+    {
+      "Code": "MaximumDigitWidthResolved",
+      "Severity": 0,
+      "Stage": 0,
+      "Message": "Normal font \u0027Calibri\u0027 resolved to \u0027Noto Sans JP\u0027 with MDW 8px.",
+      "SheetName": "Sheet1",
+      "CellRange": null,
+      "ObjectId": null,
+      "SourcePageNumber": null,
+      "OccurrenceCount": 1,
+      "UnicodeSequence": null
+    },
+    {
+      "Code": "FormulaCachedValueMissing",
+      "Severity": 1,
+      "Stage": 0,
+      "Message": "Formula has no stored result; calculation is not supported.",
+      "SheetName": "Sheet1",
+      "CellRange": "B6",
+      "ObjectId": null,
+      "SourcePageNumber": 1,
+      "OccurrenceCount": 1,
+      "UnicodeSequence": null
+    },
+    {
+      "Code": "FormulaCachedValueMissing",
+      "Severity": 1,
+      "Stage": 0,
+      "Message": "Formula has no stored result; calculation is not supported.",
+      "SheetName": "Sheet1",
+      "CellRange": "B7",
+      "ObjectId": null,
+      "SourcePageNumber": 1,
+      "OccurrenceCount": 1,
+      "UnicodeSequence": null
+    },
+    {
+      "Code": "FormulaCachedValueMissing",
+      "Severity": 1,
+      "Stage": 0,
+      "Message": "Formula has no stored result; calculation is not supported.",
+      "SheetName": "\u58F2\u4E0A 2026",
+      "CellRange": "B6",
+      "ObjectId": null,
+      "SourcePageNumber": 1,
+      "OccurrenceCount": 1,
+      "UnicodeSequence": null
+    },
+    {
+      "Code": "FormulaCachedValueMissing",
+      "Severity": 1,
+      "Stage": 0,
+      "Message": "Formula has no stored result; calculation is not supported.",
+      "SheetName": "\u58F2\u4E0A 2026",
+      "CellRange": "B7",
+      "ObjectId": null,
+      "SourcePageNumber": 1,
+      "OccurrenceCount": 1,
+      "UnicodeSequence": null
+    },
+    {
+      "Code": "FormulaCachedValueMissing",
+      "Severity": 1,
+      "Stage": 0,
+      "Message": "Formula has no stored result; calculation is not supported.",
+      "SheetName": "O\u0027Brien!Q",
+      "CellRange": "B6",
+      "ObjectId": null,
+      "SourcePageNumber": 1,
+      "OccurrenceCount": 1,
+      "UnicodeSequence": null
+    },
+    {
+      "Code": "FormulaCachedValueMissing",
+      "Severity": 1,
+      "Stage": 0,
+      "Message": "Formula has no stored result; calculation is not supported.",
+      "SheetName": "O\u0027Brien!Q",
+      "CellRange": "B7",
+      "ObjectId": null,
+      "SourcePageNumber": 1,
+      "OccurrenceCount": 1,
+      "UnicodeSequence": null
+    }
+  ]
+}

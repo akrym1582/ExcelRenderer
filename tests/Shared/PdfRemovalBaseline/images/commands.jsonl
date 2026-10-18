@@ -1,0 +1,6 @@
+DrawImageCommand{"Bounds":{"X":30,"Y":30,"Width":80,"Height":80},"Crop":null,"Rotation":0,"ClipBounds":null,"sha256":"5FE99D939AED0584EA327FEB2EDAB7DF8F84B3E7DE8019D603C167A7644F3944"}
+DrawImageCommand{"Bounds":{"X":160,"Y":30,"Width":80,"Height":80},"Crop":null,"Rotation":0,"ClipBounds":null,"sha256":"CE1FDAC8DC163C7F93680DC8C55A2E4F74403CF7F50DD7BE6F0F0A1CD15DD099"}
+DrawImageCommand{"Bounds":{"X":290,"Y":30,"Width":80,"Height":80},"Crop":{"Left":0.2,"Top":0.1,"Right":0.1,"Bottom":0.25},"Rotation":0,"ClipBounds":null,"sha256":"5FE99D939AED0584EA327FEB2EDAB7DF8F84B3E7DE8019D603C167A7644F3944"}
+DrawImageCommand{"Bounds":{"X":30,"Y":170,"Width":80,"Height":80},"Crop":null,"Rotation":25,"ClipBounds":{"X":30,"Y":170,"Width":80,"Height":80},"sha256":"5FE99D939AED0584EA327FEB2EDAB7DF8F84B3E7DE8019D603C167A7644F3944"}
+DrawImageCommand{"Bounds":{"X":160,"Y":170,"Width":80,"Height":80},"Crop":null,"Rotation":25,"ClipBounds":{"X":160,"Y":170,"Width":80,"Height":80},"sha256":"5FE99D939AED0584EA327FEB2EDAB7DF8F84B3E7DE8019D603C167A7644F3944"}
+DrawImageCommand{"Bounds":{"X":290,"Y":170,"Width":80,"Height":80},"Crop":null,"Rotation":25,"ClipBounds":{"X":290,"Y":170,"Width":80,"Height":80},"sha256":"5FE99D939AED0584EA327FEB2EDAB7DF8F84B3E7DE8019D603C167A7644F3944"}

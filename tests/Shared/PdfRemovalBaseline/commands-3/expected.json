@@ -1,0 +1,14 @@
+{
+  "name": "commands-3",
+  "path": "commands",
+  "expectedText": [
+    "\u65E5\u672C\u8A9E \u5C71\u9280\u884C \u91D1\u984D \u65E5\u2F47 \u5C71\u2F2D",
+    "\u8FBB\uDB40\uDD02\u8FBB\uDB40\uDD03\u845B\uDB40\uDD02",
+    "\uD842\uDFB7\u91CE\u5BB6 \uD83D\uDE00",
+    "ASCII  \u65E5\u672C\u8A9E e\u0301  A B"
+  ],
+  "width": 612,
+  "height": 792,
+  "sameCommands": true,
+  "commandSha256": "DA13506B723233E17C5F98D01339329E2E3A7795507DAD9E24BED964134F7AD7"
+}

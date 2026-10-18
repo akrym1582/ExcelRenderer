@@ -52,6 +52,7 @@ public static class RenderCommand
         var maxRangeCells = new Option<long>("--max-range-cells") { Description = "Maximum total explicit range cells.", DefaultValueFactory = _ => 1_000_000 };
         var trim = new Option<bool>("--trim") { Description = "Crop each page or canvas around visible drawing content." };
         var padding = new Option<double?>("--trim-padding") { Description = "Nonnegative crop padding in points (default: 2). Requires --trim." };
+        var backend = CommandSupport.PdfBackendOption();
         var hyperlinks = CommandSupport.HyperlinksOption();
         var layoutWarnings = new Option<bool>("--layout-warnings") { Description = "Report clipped or too-small finalized cell text." };
         var minimumFontSize = new Option<double?>("--min-readable-font-size") { Description = "Minimum readable font size in points; requires --layout-warnings." };
@@ -70,12 +71,19 @@ public static class RenderCommand
             input, output, format, sheet, pages, imageLayout, ranges, maxRangeCells, trim, padding, hyperlinks, strict, warningsAsErrors, manifest,
         };
         command.Add(data);
+        command.Add(backend);
         command.Add(formulaMode);
         command.Add(layoutWarnings);
         command.Add(minimumFontSize);
         command.Add(unsupported);
         command.Validators.Add(result =>
         {
+            if (result.GetResult(backend) is { Implicit: false } &&
+                (!TryParseFormat(result.GetValue(format), out var selectedFormat) || selectedFormat != OutputFormat.Pdf))
+            {
+                result.AddError("--pdf-backend is valid only with --format pdf.");
+            }
+
             if (result.GetValue(minimumFontSize) is { } minimum &&
                 (!result.GetValue(layoutWarnings) || !double.IsFinite(minimum) || minimum <= 0))
             {
@@ -93,6 +101,7 @@ public static class RenderCommand
                 mappedInput,
                 result.GetValue(output)!,
                 result.GetValue(format)!,
+                CommandSupport.GetPdfBackend(result.GetValue(backend)!),
                 result.GetValue(sheet),
                 result.GetValue(pages),
                 result.GetValue(imageLayout)!,
@@ -120,6 +129,7 @@ public static class RenderCommand
         string inputPath,
         string outputPath,
         string formatText,
+        PdfBackend backend,
         string[]? sheetNames,
         string? pagesText,
         string imageLayoutText,
@@ -183,6 +193,7 @@ public static class RenderCommand
         var request = new RenderRequest
         {
             OutputFormat = format,
+            PdfBackend = backend,
             Buffering = buffering,
             Trim = new TrimOptions { Enabled = trim, PaddingPoints = padding ?? 2 },
             Hyperlinks = hyperlinks,

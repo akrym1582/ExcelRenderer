@@ -1,0 +1,30 @@
+{
+  "invoice": {
+    "path": "/workspace/ExcelRenderer/samples/mapping/invoice/invoice.xlsx",
+    "sha256": "1eafc42149f48770c131f836883ffb6ac2714215d4ebe2db5352e1dee66011a5"
+  },
+  "grid": {
+    "path": "/workspace/ExcelRenderer/samples/excel/japanese-grid-report.xlsx",
+    "sha256": "4907d79963eb8267eab4230c7aad9bbd0d580238d3d42f402b34fb4c0ff217a1"
+  },
+  "images": {
+    "path": "artifacts/pdf-removal-benchmark/images.xlsx",
+    "sha256": "006f9c2e2323e2e310a46b915d9b021b2a80512009c939f5d0ed7b2f34bb0b94"
+  },
+  "50-pages": {
+    "path": "artifacts/pdf-removal-benchmark/50-pages.xlsx",
+    "sha256": "5601936b1ff8edfef833ce33fb5b58abd1549c50b01ac08ea130ea55cb484d7f"
+  },
+  "200-pages": {
+    "path": "artifacts/pdf-removal-benchmark/200-pages.xlsx",
+    "sha256": "beca16a28c3f3608c95e9e80efb7347807aa99c568ce7e254b22d4e9ede76b58"
+  },
+  "rich-text": {
+    "path": "artifacts/pdf-removal-benchmark/rich-text.xlsx",
+    "sha256": "5e8e1b8c9614e61d1f8892caf576f2368af81221792e2b6e4f53ec62c05f6987"
+  },
+  "borders": {
+    "path": "artifacts/pdf-removal-benchmark/borders.xlsx",
+    "sha256": "91da89db35abe4334d689763303405071e10aa1fdb5961ee905db89ff9ed8d5b"
+  }
+}

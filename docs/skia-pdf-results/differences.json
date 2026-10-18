@@ -1,0 +1,716 @@
+[
+  {
+    "fixture": "commands-1",
+    "page": 1,
+    "region": "text-2",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.49899799599198397,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "IVS path-versus-font edge AA: original retained glyph outlines are exact, and every reference path control point matches the source-font transform within 0.0001pt. No unmatched ink beyond 1px; both extractors retain the independent IVS source string.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "commands-1",
+    "page": 1,
+    "region": "text-3",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.14406130268199233,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "CBDT resampling edge AA: the fixed source color glyph is emitted as a canonical 64px-em Type3 charproc rather than the existing 4x bitmap. The original glyph ID, baseline and corresponding reference image are checked; unmatched ink is zero. Original supplementary Unicode is independently preserved.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "commands-1",
+    "page": 1,
+    "region": "text-2",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.6437141366718832,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "IVS path-versus-font edge AA: original retained glyph outlines are exact, and every reference path control point matches the source-font transform within 0.0001pt. No unmatched ink beyond 1px; both extractors retain the independent IVS source string.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "commands-1",
+    "page": 1,
+    "region": "text-3",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.10189199842333464,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "CBDT resampling edge AA: the fixed source color glyph is emitted as a canonical 64px-em Type3 charproc rather than the existing 4x bitmap. The original glyph ID, baseline and corresponding reference image are checked; unmatched ink is zero. Original supplementary Unicode is independently preserved.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "commands-2",
+    "page": 1,
+    "region": "text-2",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.49899799599198397,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "IVS path-versus-font edge AA: original retained glyph outlines are exact, and every reference path control point matches the source-font transform within 0.0001pt. No unmatched ink beyond 1px; both extractors retain the independent IVS source string.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "commands-2",
+    "page": 1,
+    "region": "text-3",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.14406130268199233,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "CBDT resampling edge AA: the fixed source color glyph is emitted as a canonical 64px-em Type3 charproc rather than the existing 4x bitmap. The original glyph ID, baseline and corresponding reference image are checked; unmatched ink is zero. Original supplementary Unicode is independently preserved.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "commands-2",
+    "page": 1,
+    "region": "text-2",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.6428571428571429,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "IVS path-versus-font edge AA: original retained glyph outlines are exact, and every reference path control point matches the source-font transform within 0.0001pt. No unmatched ink beyond 1px; both extractors retain the independent IVS source string.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "commands-2",
+    "page": 1,
+    "region": "text-3",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.10189199842333464,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "CBDT resampling edge AA: the fixed source color glyph is emitted as a canonical 64px-em Type3 charproc rather than the existing 4x bitmap. The original glyph ID, baseline and corresponding reference image are checked; unmatched ink is zero. Original supplementary Unicode is independently preserved.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "commands-3",
+    "page": 1,
+    "region": "text-2",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.49899799599198397,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "IVS path-versus-font edge AA: original retained glyph outlines are exact, and every reference path control point matches the source-font transform within 0.0001pt. No unmatched ink beyond 1px; both extractors retain the independent IVS source string.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "commands-3",
+    "page": 1,
+    "region": "text-3",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.14406130268199233,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "CBDT resampling edge AA: the fixed source color glyph is emitted as a canonical 64px-em Type3 charproc rather than the existing 4x bitmap. The original glyph ID, baseline and corresponding reference image are checked; unmatched ink is zero. Original supplementary Unicode is independently preserved.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "commands-3",
+    "page": 1,
+    "region": "text-2",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.6428571428571429,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "IVS path-versus-font edge AA: original retained glyph outlines are exact, and every reference path control point matches the source-font transform within 0.0001pt. No unmatched ink beyond 1px; both extractors retain the independent IVS source string.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "commands-3",
+    "page": 1,
+    "region": "text-3",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.10189199842333464,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "CBDT resampling edge AA: the fixed source color glyph is emitted as a canonical 64px-em Type3 charproc rather than the existing 4x bitmap. The original glyph ID, baseline and corresponding reference image are checked; unmatched ink is zero. Original supplementary Unicode is independently preserved.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "commands-4",
+    "page": 1,
+    "region": "text-2",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.49899799599198397,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "IVS path-versus-font edge AA: original retained glyph outlines are exact, and every reference path control point matches the source-font transform within 0.0001pt. No unmatched ink beyond 1px; both extractors retain the independent IVS source string.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "commands-4",
+    "page": 1,
+    "region": "text-3",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.14406130268199233,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "CBDT resampling edge AA: the fixed source color glyph is emitted as a canonical 64px-em Type3 charproc rather than the existing 4x bitmap. The original glyph ID, baseline and corresponding reference image are checked; unmatched ink is zero. Original supplementary Unicode is independently preserved.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "commands-4",
+    "page": 1,
+    "region": "text-2",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.6428571428571429,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "IVS path-versus-font edge AA: original retained glyph outlines are exact, and every reference path control point matches the source-font transform within 0.0001pt. No unmatched ink beyond 1px; both extractors retain the independent IVS source string.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "commands-4",
+    "page": 1,
+    "region": "text-3",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.10189199842333464,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "CBDT resampling edge AA: the fixed source color glyph is emitted as a canonical 64px-em Type3 charproc rather than the existing 4x bitmap. The original glyph ID, baseline and corresponding reference image are checked; unmatched ink is zero. Original supplementary Unicode is independently preserved.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "images",
+    "page": 1,
+    "region": "image-2",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.6450698757763975,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "existing-bug-improvement",
+    "reason": "PDFsharp ignores this nontrivial source crop. Skia matches six independent RGB source-coordinate samples within 1 channel value; clipping and destination remain the fixed command rectangle. This is a limited existing-bug improvement, not an AA waiver.",
+    "evidence": "cropEvidence"
+  },
+  {
+    "fixture": "images",
+    "page": 1,
+    "region": "image-2",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.6343551702565019,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "existing-bug-improvement",
+    "reason": "PDFsharp ignores this nontrivial source crop. Skia matches six independent RGB source-coordinate samples within 1 channel value; clipping and destination remain the fixed command rectangle. This is a limited existing-bug improvement, not an AA waiver.",
+    "evidence": "cropEvidence"
+  },
+  {
+    "fixture": "invoice",
+    "page": 1,
+    "region": "block-9",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.07072882651288821,
+      "unmatchedInkRatio": 6.947821857847565e-05
+    },
+    "status": "accepted-aa",
+    "reason": "Reviewed small text/emoji edges: both embedded fonts retain exact source outlines; glyph IDs, origins, size, color and every non-glyph vector paint match. PDFsharp serializes Tf to 3 decimals (grid maximum size delta 0.000461pt, accumulated origin delta 0.017701pt). Native Type3 color glyphs are checked against the fixed CBDT charprocs and reference image baselines. No missing lines, run changes or clipping changes in the reviewed region.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "invoice",
+    "page": 1,
+    "region": "block-12",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.06395078922934076,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "Reviewed small text/emoji edges: both embedded fonts retain exact source outlines; glyph IDs, origins, size, color and every non-glyph vector paint match. PDFsharp serializes Tf to 3 decimals (grid maximum size delta 0.000461pt, accumulated origin delta 0.017701pt). Native Type3 color glyphs are checked against the fixed CBDT charprocs and reference image baselines. No missing lines, run changes or clipping changes in the reviewed region.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "invoice",
+    "page": 1,
+    "region": "block-20",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.015814741598418527,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "Reviewed small text/emoji edges: both embedded fonts retain exact source outlines; glyph IDs, origins, size, color and every non-glyph vector paint match. PDFsharp serializes Tf to 3 decimals (grid maximum size delta 0.000461pt, accumulated origin delta 0.017701pt). Native Type3 color glyphs are checked against the fixed CBDT charprocs and reference image baselines. No missing lines, run changes or clipping changes in the reviewed region.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "japanese-grid-report",
+    "page": 1,
+    "region": "block-9",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.04639479905437352,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "Reviewed small text/emoji edges: both embedded fonts retain exact source outlines; glyph IDs, origins, size, color and every non-glyph vector paint match. PDFsharp serializes Tf to 3 decimals (grid maximum size delta 0.000461pt, accumulated origin delta 0.017701pt). Native Type3 color glyphs are checked against the fixed CBDT charprocs and reference image baselines. No missing lines, run changes or clipping changes in the reviewed region.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "japanese-grid-report",
+    "page": 1,
+    "region": "block-12",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.06371595330739299,
+      "unmatchedInkRatio": 0.00048638132295719845
+    },
+    "status": "accepted-aa",
+    "reason": "Reviewed small text/emoji edges: both embedded fonts retain exact source outlines; glyph IDs, origins, size, color and every non-glyph vector paint match. PDFsharp serializes Tf to 3 decimals (grid maximum size delta 0.000461pt, accumulated origin delta 0.017701pt). Native Type3 color glyphs are checked against the fixed CBDT charprocs and reference image baselines. No missing lines, run changes or clipping changes in the reviewed region.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "japanese-grid-report",
+    "page": 1,
+    "region": "block-13",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.07351460221550855,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "Reviewed small text/emoji edges: both embedded fonts retain exact source outlines; glyph IDs, origins, size, color and every non-glyph vector paint match. PDFsharp serializes Tf to 3 decimals (grid maximum size delta 0.000461pt, accumulated origin delta 0.017701pt). Native Type3 color glyphs are checked against the fixed CBDT charprocs and reference image baselines. No missing lines, run changes or clipping changes in the reviewed region.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "japanese-grid-report",
+    "page": 1,
+    "region": "block-14",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.07696362677912494,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "Reviewed small text/emoji edges: both embedded fonts retain exact source outlines; glyph IDs, origins, size, color and every non-glyph vector paint match. PDFsharp serializes Tf to 3 decimals (grid maximum size delta 0.000461pt, accumulated origin delta 0.017701pt). Native Type3 color glyphs are checked against the fixed CBDT charprocs and reference image baselines. No missing lines, run changes or clipping changes in the reviewed region.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "japanese-grid-report",
+    "page": 1,
+    "region": "block-15",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.015621301775147929,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "Reviewed small text/emoji edges: both embedded fonts retain exact source outlines; glyph IDs, origins, size, color and every non-glyph vector paint match. PDFsharp serializes Tf to 3 decimals (grid maximum size delta 0.000461pt, accumulated origin delta 0.017701pt). Native Type3 color glyphs are checked against the fixed CBDT charprocs and reference image baselines. No missing lines, run changes or clipping changes in the reviewed region.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "japanese-grid-report",
+    "page": 1,
+    "region": "block-16",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.03758847937515255,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "Reviewed small text/emoji edges: both embedded fonts retain exact source outlines; glyph IDs, origins, size, color and every non-glyph vector paint match. PDFsharp serializes Tf to 3 decimals (grid maximum size delta 0.000461pt, accumulated origin delta 0.017701pt). Native Type3 color glyphs are checked against the fixed CBDT charprocs and reference image baselines. No missing lines, run changes or clipping changes in the reviewed region.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "japanese-grid-report",
+    "page": 1,
+    "region": "block-19",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.09648541114058355,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "Reviewed small text/emoji edges: both embedded fonts retain exact source outlines; glyph IDs, origins, size, color and every non-glyph vector paint match. PDFsharp serializes Tf to 3 decimals (grid maximum size delta 0.000461pt, accumulated origin delta 0.017701pt). Native Type3 color glyphs are checked against the fixed CBDT charprocs and reference image baselines. No missing lines, run changes or clipping changes in the reviewed region.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "japanese-grid-report",
+    "page": 1,
+    "region": "block-20",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.03223617237869019,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "Reviewed small text/emoji edges: both embedded fonts retain exact source outlines; glyph IDs, origins, size, color and every non-glyph vector paint match. PDFsharp serializes Tf to 3 decimals (grid maximum size delta 0.000461pt, accumulated origin delta 0.017701pt). Native Type3 color glyphs are checked against the fixed CBDT charprocs and reference image baselines. No missing lines, run changes or clipping changes in the reviewed region.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "japanese-grid-report",
+    "page": 1,
+    "region": "block-21",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.030541871921182268,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "Reviewed small text/emoji edges: both embedded fonts retain exact source outlines; glyph IDs, origins, size, color and every non-glyph vector paint match. PDFsharp serializes Tf to 3 decimals (grid maximum size delta 0.000461pt, accumulated origin delta 0.017701pt). Native Type3 color glyphs are checked against the fixed CBDT charprocs and reference image baselines. No missing lines, run changes or clipping changes in the reviewed region.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "japanese-grid-report",
+    "page": 1,
+    "region": "block-22",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.05411858336649423,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "Reviewed small text/emoji edges: both embedded fonts retain exact source outlines; glyph IDs, origins, size, color and every non-glyph vector paint match. PDFsharp serializes Tf to 3 decimals (grid maximum size delta 0.000461pt, accumulated origin delta 0.017701pt). Native Type3 color glyphs are checked against the fixed CBDT charprocs and reference image baselines. No missing lines, run changes or clipping changes in the reviewed region.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "japanese-grid-report",
+    "page": 1,
+    "region": "block-24",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.012773722627737226,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "Reviewed small text/emoji edges: both embedded fonts retain exact source outlines; glyph IDs, origins, size, color and every non-glyph vector paint match. PDFsharp serializes Tf to 3 decimals (grid maximum size delta 0.000461pt, accumulated origin delta 0.017701pt). Native Type3 color glyphs are checked against the fixed CBDT charprocs and reference image baselines. No missing lines, run changes or clipping changes in the reviewed region.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "japanese-grid-report",
+    "page": 1,
+    "region": "block-26",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.15128735200150348,
+      "unmatchedInkRatio": 0.002631084382634843
+    },
+    "status": "accepted-aa",
+    "reason": "Reviewed small text/emoji edges: both embedded fonts retain exact source outlines; glyph IDs, origins, size, color and every non-glyph vector paint match. PDFsharp serializes Tf to 3 decimals (grid maximum size delta 0.000461pt, accumulated origin delta 0.017701pt). Native Type3 color glyphs are checked against the fixed CBDT charprocs and reference image baselines. No missing lines, run changes or clipping changes in the reviewed region.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "japanese-grid-report",
+    "page": 1,
+    "region": "block-9",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.021940544534758143,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "Reviewed small text/emoji edges: both embedded fonts retain exact source outlines; glyph IDs, origins, size, color and every non-glyph vector paint match. PDFsharp serializes Tf to 3 decimals (grid maximum size delta 0.000461pt, accumulated origin delta 0.017701pt). Native Type3 color glyphs are checked against the fixed CBDT charprocs and reference image baselines. No missing lines, run changes or clipping changes in the reviewed region.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "japanese-grid-report",
+    "page": 1,
+    "region": "block-12",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.03453155958109256,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "Reviewed small text/emoji edges: both embedded fonts retain exact source outlines; glyph IDs, origins, size, color and every non-glyph vector paint match. PDFsharp serializes Tf to 3 decimals (grid maximum size delta 0.000461pt, accumulated origin delta 0.017701pt). Native Type3 color glyphs are checked against the fixed CBDT charprocs and reference image baselines. No missing lines, run changes or clipping changes in the reviewed region.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "japanese-grid-report",
+    "page": 1,
+    "region": "block-13",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.03491200457862355,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "Reviewed small text/emoji edges: both embedded fonts retain exact source outlines; glyph IDs, origins, size, color and every non-glyph vector paint match. PDFsharp serializes Tf to 3 decimals (grid maximum size delta 0.000461pt, accumulated origin delta 0.017701pt). Native Type3 color glyphs are checked against the fixed CBDT charprocs and reference image baselines. No missing lines, run changes or clipping changes in the reviewed region.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "japanese-grid-report",
+    "page": 1,
+    "region": "block-14",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.036730392894776455,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "Reviewed small text/emoji edges: both embedded fonts retain exact source outlines; glyph IDs, origins, size, color and every non-glyph vector paint match. PDFsharp serializes Tf to 3 decimals (grid maximum size delta 0.000461pt, accumulated origin delta 0.017701pt). Native Type3 color glyphs are checked against the fixed CBDT charprocs and reference image baselines. No missing lines, run changes or clipping changes in the reviewed region.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "japanese-grid-report",
+    "page": 1,
+    "region": "block-15",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.012715293029707548,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "Reviewed small text/emoji edges: both embedded fonts retain exact source outlines; glyph IDs, origins, size, color and every non-glyph vector paint match. PDFsharp serializes Tf to 3 decimals (grid maximum size delta 0.000461pt, accumulated origin delta 0.017701pt). Native Type3 color glyphs are checked against the fixed CBDT charprocs and reference image baselines. No missing lines, run changes or clipping changes in the reviewed region.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "japanese-grid-report",
+    "page": 1,
+    "region": "block-16",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.01350438892640108,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "Reviewed small text/emoji edges: both embedded fonts retain exact source outlines; glyph IDs, origins, size, color and every non-glyph vector paint match. PDFsharp serializes Tf to 3 decimals (grid maximum size delta 0.000461pt, accumulated origin delta 0.017701pt). Native Type3 color glyphs are checked against the fixed CBDT charprocs and reference image baselines. No missing lines, run changes or clipping changes in the reviewed region.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "japanese-grid-report",
+    "page": 1,
+    "region": "block-19",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.0630392156862745,
+      "unmatchedInkRatio": 0.0002941176470588235
+    },
+    "status": "accepted-aa",
+    "reason": "Reviewed small text/emoji edges: both embedded fonts retain exact source outlines; glyph IDs, origins, size, color and every non-glyph vector paint match. PDFsharp serializes Tf to 3 decimals (grid maximum size delta 0.000461pt, accumulated origin delta 0.017701pt). Native Type3 color glyphs are checked against the fixed CBDT charprocs and reference image baselines. No missing lines, run changes or clipping changes in the reviewed region.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "japanese-grid-report",
+    "page": 1,
+    "region": "block-26",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.1537330501552034,
+      "unmatchedInkRatio": 0.0052279039372651525
+    },
+    "status": "accepted-aa",
+    "reason": "Reviewed small text/emoji edges: both embedded fonts retain exact source outlines; glyph IDs, origins, size, color and every non-glyph vector paint match. PDFsharp serializes Tf to 3 decimals (grid maximum size delta 0.000461pt, accumulated origin delta 0.017701pt). Native Type3 color glyphs are checked against the fixed CBDT charprocs and reference image baselines. No missing lines, run changes or clipping changes in the reviewed region.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "japanese-grid-report",
+    "page": 1,
+    "region": "block-28",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.0519239021599199,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "Reviewed small text/emoji edges: both embedded fonts retain exact source outlines; glyph IDs, origins, size, color and every non-glyph vector paint match. PDFsharp serializes Tf to 3 decimals (grid maximum size delta 0.000461pt, accumulated origin delta 0.017701pt). Native Type3 color glyphs are checked against the fixed CBDT charprocs and reference image baselines. No missing lines, run changes or clipping changes in the reviewed region.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "links",
+    "page": 1,
+    "region": "text-2",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.49899799599198397,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "IVS path-versus-font edge AA: original retained glyph outlines are exact, and every reference path control point matches the source-font transform within 0.0001pt. No unmatched ink beyond 1px; both extractors retain the independent IVS source string.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "links",
+    "page": 1,
+    "region": "text-3",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.14406130268199233,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "CBDT resampling edge AA: the fixed source color glyph is emitted as a canonical 64px-em Type3 charproc rather than the existing 4x bitmap. The original glyph ID, baseline and corresponding reference image are checked; unmatched ink is zero. Original supplementary Unicode is independently preserved.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "links",
+    "page": 1,
+    "region": "text-2",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.6437141366718832,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "IVS path-versus-font edge AA: original retained glyph outlines are exact, and every reference path control point matches the source-font transform within 0.0001pt. No unmatched ink beyond 1px; both extractors retain the independent IVS source string.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "links",
+    "page": 1,
+    "region": "text-3",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.10189199842333464,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "CBDT resampling edge AA: the fixed source color glyph is emitted as a canonical 64px-em Type3 charproc rather than the existing 4x bitmap. The original glyph ID, baseline and corresponding reference image are checked; unmatched ink is zero. Original supplementary Unicode is independently preserved.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "links",
+    "page": 2,
+    "region": "text-2",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.49899799599198397,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "IVS path-versus-font edge AA: original retained glyph outlines are exact, and every reference path control point matches the source-font transform within 0.0001pt. No unmatched ink beyond 1px; both extractors retain the independent IVS source string.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "links",
+    "page": 2,
+    "region": "text-3",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.14406130268199233,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "CBDT resampling edge AA: the fixed source color glyph is emitted as a canonical 64px-em Type3 charproc rather than the existing 4x bitmap. The original glyph ID, baseline and corresponding reference image are checked; unmatched ink is zero. Original supplementary Unicode is independently preserved.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "links",
+    "page": 2,
+    "region": "text-2",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.6428571428571429,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "IVS path-versus-font edge AA: original retained glyph outlines are exact, and every reference path control point matches the source-font transform within 0.0001pt. No unmatched ink beyond 1px; both extractors retain the independent IVS source string.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "links",
+    "page": 2,
+    "region": "text-3",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.10189199842333464,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "CBDT resampling edge AA: the fixed source color glyph is emitted as a canonical 64px-em Type3 charproc rather than the existing 4x bitmap. The original glyph ID, baseline and corresponding reference image are checked; unmatched ink is zero. Original supplementary Unicode is independently preserved.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "shapes",
+    "page": 1,
+    "region": "Ellipse",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.019030474476019032,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "Same fixed center, radii, fill and stroke. PDFsharp emits four cubic segments (normalized ellipse residual 0.000546); Skia emits 32 (0.000025). The 300dpi edge AA differs; unmatched ink ratio is zero. Independent ellipse equation is rechecked.",
+    "evidence": "ellipseEvidence"
+  }
+]

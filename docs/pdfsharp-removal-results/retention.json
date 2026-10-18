@@ -1,0 +1,66 @@
+[
+  {
+    "repetitions": 100,
+    "allResourceCountsBalanced": true,
+    "resourceTotals": {
+      "typefaceCreated": 100,
+      "typefaceDisposed": 100,
+      "pdfFontCreated": 400,
+      "pdfFontDisposed": 400,
+      "pdfSubsetTypefaceCreated": 100,
+      "pdfSubsetTypefaceDisposed": 100
+    },
+    "postGc": {
+      "ManagedBytes": {
+        "first20Median": 13234112.0,
+        "last20Median": 13424952.0,
+        "lastHalfMin": 13247552,
+        "lastHalfMax": 13433176
+      },
+      "WorkingSet64": {
+        "first20Median": 136505344.0,
+        "last20Median": 168062976.0,
+        "lastHalfMin": 145866752,
+        "lastHalfMax": 172687360
+      },
+      "PrivateMemorySize64": {
+        "first20Median": 203571200.0,
+        "last20Median": 229861376.0,
+        "lastHalfMin": 209813504,
+        "lastHalfMax": 233943040
+      }
+    }
+  },
+  {
+    "repetitions": 200,
+    "allResourceCountsBalanced": true,
+    "resourceTotals": {
+      "typefaceCreated": 200,
+      "typefaceDisposed": 200,
+      "pdfFontCreated": 800,
+      "pdfFontDisposed": 800,
+      "pdfSubsetTypefaceCreated": 200,
+      "pdfSubsetTypefaceDisposed": 200
+    },
+    "postGc": {
+      "ManagedBytes": {
+        "first20Median": 13253064.0,
+        "last20Median": 13443840.0,
+        "lastHalfMin": 13443840,
+        "lastHalfMax": 13452064
+      },
+      "WorkingSet64": {
+        "first20Median": 141172736.0,
+        "last20Median": 184930304.0,
+        "lastHalfMin": 177618944,
+        "lastHalfMax": 188788736
+      },
+      "PrivateMemorySize64": {
+        "first20Median": 198094848.0,
+        "last20Median": 231958528.0,
+        "lastHalfMin": 228286464,
+        "lastHalfMax": 235421696
+      }
+    }
+  }
+]

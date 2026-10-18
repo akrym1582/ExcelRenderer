@@ -1,0 +1,162 @@
+{
+  "PyMuPDF": "1.26.6",
+  "fixtures": [
+    {
+      "fixture": "rgb",
+      "pages": 1,
+      "rawBytes": 1921925,
+      "finalBytes": 1922041,
+      "images": [
+        {
+          "xref": 4,
+          "bytes": 1920596,
+          "sha256": "e5e6507391ab9a871ea00a398e6ff193bd34b32a433c2db1bc788f045931158e",
+          "occurrences": 1,
+          "mask": false,
+          "filter": "/FlateDecode"
+        }
+      ],
+      "streamHashesPreserved": true,
+      "correctedReferencePixels": [
+        {
+          "dpi": 144,
+          "sha256": "537d9eb63e8c5cf8a1a516573e48f621f11b97101cd211fbd503611b582a13c4",
+          "identical": true
+        },
+        {
+          "dpi": 300,
+          "sha256": "23ca6b22c0933feb8bd10db35971edb3151132243ee7629b8d684d8a518a1ee3",
+          "identical": true
+        }
+      ]
+    },
+    {
+      "fixture": "alpha",
+      "pages": 1,
+      "rawBytes": 2534515,
+      "finalBytes": 2534634,
+      "images": [
+        {
+          "xref": 4,
+          "bytes": 1920596,
+          "sha256": "710b15eb847a079a7342480d459da95feafec7edd9a235e4a163327482a3f74d",
+          "occurrences": 1,
+          "mask": false,
+          "filter": "/FlateDecode"
+        },
+        {
+          "xref": 6,
+          "bytes": 612325,
+          "sha256": "7e36253bd712bb28421cbca44ed182cf4da0a30ade639800ed1e37601d4f9bd3",
+          "occurrences": 1,
+          "mask": true,
+          "filter": "/FlateDecode"
+        }
+      ],
+      "streamHashesPreserved": true,
+      "correctedReferencePixels": []
+    },
+    {
+      "fixture": "jpeg",
+      "pages": 1,
+      "rawBytes": 528823,
+      "finalBytes": 528939,
+      "images": [
+        {
+          "xref": 4,
+          "bytes": 527421,
+          "sha256": "af99f30f46e5c7d128bbcbd1c18025245c50b6532d7478484ea9de081240d57a",
+          "occurrences": 1,
+          "mask": false,
+          "filter": "/DCTDecode"
+        }
+      ],
+      "streamHashesPreserved": true,
+      "correctedReferencePixels": []
+    },
+    {
+      "fixture": "shared",
+      "pages": 3,
+      "rawBytes": 1922859,
+      "finalBytes": 1923125,
+      "images": [
+        {
+          "xref": 4,
+          "bytes": 1920596,
+          "sha256": "e5e6507391ab9a871ea00a398e6ff193bd34b32a433c2db1bc788f045931158e",
+          "occurrences": 1,
+          "mask": false,
+          "filter": "/FlateDecode"
+        }
+      ],
+      "streamHashesPreserved": true,
+      "correctedReferencePixels": []
+    },
+    {
+      "fixture": "multiple",
+      "pages": 2,
+      "rawBytes": 5068291,
+      "finalBytes": 5068514,
+      "images": [
+        {
+          "xref": 4,
+          "bytes": 1920596,
+          "sha256": "710b15eb847a079a7342480d459da95feafec7edd9a235e4a163327482a3f74d",
+          "occurrences": 1,
+          "mask": false,
+          "filter": "/FlateDecode"
+        },
+        {
+          "xref": 6,
+          "bytes": 612325,
+          "sha256": "7e36253bd712bb28421cbca44ed182cf4da0a30ade639800ed1e37601d4f9bd3",
+          "occurrences": 1,
+          "mask": true,
+          "filter": "/FlateDecode"
+        },
+        {
+          "xref": 9,
+          "bytes": 1920596,
+          "sha256": "a085a0aaaf95a9d03e50f5e793ea579338865bd772f57e84b06902772e89d82c",
+          "occurrences": 1,
+          "mask": false,
+          "filter": "/FlateDecode"
+        },
+        {
+          "xref": 10,
+          "bytes": 612336,
+          "sha256": "a872a1b6ae4dec78dabb66210d7c891c9718365b501a8c9570db1f6a9fd1d722",
+          "occurrences": 1,
+          "mask": true,
+          "filter": "/FlateDecode"
+        }
+      ],
+      "streamHashesPreserved": true,
+      "correctedReferencePixels": []
+    }
+  ],
+  "endToEnd": [
+    {
+      "fixture": "jpeg",
+      "pages": 2,
+      "imageObjects": 1,
+      "bytes": 529464,
+      "filter": "/DCTDecode",
+      "payloadSha256": "af99f30f46e5c7d128bbcbd1c18025245c50b6532d7478484ea9de081240d57a"
+    },
+    {
+      "fixture": "png",
+      "pages": 2,
+      "imageObjects": 1,
+      "bytes": 1922625,
+      "filter": "/FlateDecode",
+      "payloadSha256": "e5e6507391ab9a871ea00a398e6ff193bd34b32a433c2db1bc788f045931158e"
+    }
+  ],
+  "corruptPngCrcChunksVerified": 238,
+  "decode": {
+    "Codec": "Success",
+    "Pixels": "IncompleteInput",
+    "LazyImageCreated": true
+  }
+}

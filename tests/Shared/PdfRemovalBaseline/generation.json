@@ -1,0 +1,1598 @@
+{
+  "sdkRuntime": "10.0.12",
+  "os": "Unix 6.18.55.0",
+  "fixtures": [
+    {
+      "name": "commands-1",
+      "path": "commands",
+      "expectedText": [
+        "\u65E5\u672C\u8A9E \u5C71\u9280\u884C \u91D1\u984D \u65E5\u2F47 \u5C71\u2F2D",
+        "\u8FBB\uDB40\uDD02\u8FBB\uDB40\uDD03\u845B\uDB40\uDD02",
+        "\uD842\uDFB7\u91CE\u5BB6 \uD83D\uDE00",
+        "ASCII  \u65E5\u672C\u8A9E e\u0301  A B"
+      ],
+      "width": 595.275590551,
+      "height": 841.88976378,
+      "sameCommands": true,
+      "commandSha256": "DA13506B723233E17C5F98D01339329E2E3A7795507DAD9E24BED964134F7AD7"
+    },
+    {
+      "name": "commands-2",
+      "path": "commands",
+      "expectedText": [
+        "\u65E5\u672C\u8A9E \u5C71\u9280\u884C \u91D1\u984D \u65E5\u2F47 \u5C71\u2F2D",
+        "\u8FBB\uDB40\uDD02\u8FBB\uDB40\uDD03\u845B\uDB40\uDD02",
+        "\uD842\uDFB7\u91CE\u5BB6 \uD83D\uDE00",
+        "ASCII  \u65E5\u672C\u8A9E e\u0301  A B"
+      ],
+      "width": 841.88976378,
+      "height": 1190.5511811,
+      "sameCommands": true,
+      "commandSha256": "DA13506B723233E17C5F98D01339329E2E3A7795507DAD9E24BED964134F7AD7"
+    },
+    {
+      "name": "commands-3",
+      "path": "commands",
+      "expectedText": [
+        "\u65E5\u672C\u8A9E \u5C71\u9280\u884C \u91D1\u984D \u65E5\u2F47 \u5C71\u2F2D",
+        "\u8FBB\uDB40\uDD02\u8FBB\uDB40\uDD03\u845B\uDB40\uDD02",
+        "\uD842\uDFB7\u91CE\u5BB6 \uD83D\uDE00",
+        "ASCII  \u65E5\u672C\u8A9E e\u0301  A B"
+      ],
+      "width": 612,
+      "height": 792,
+      "sameCommands": true,
+      "commandSha256": "DA13506B723233E17C5F98D01339329E2E3A7795507DAD9E24BED964134F7AD7"
+    },
+    {
+      "name": "commands-4",
+      "path": "commands",
+      "expectedText": [
+        "\u65E5\u672C\u8A9E \u5C71\u9280\u884C \u91D1\u984D \u65E5\u2F47 \u5C71\u2F2D",
+        "\u8FBB\uDB40\uDD02\u8FBB\uDB40\uDD03\u845B\uDB40\uDD02",
+        "\uD842\uDFB7\u91CE\u5BB6 \uD83D\uDE00",
+        "ASCII  \u65E5\u672C\u8A9E e\u0301  A B"
+      ],
+      "width": 421.123,
+      "height": 333.456,
+      "sameCommands": true,
+      "commandSha256": "A6219C7A95BAC9F6E9AC0EEBA63DA9AA075F2B1F145B2C8859DC7A71C43AC25C"
+    },
+    {
+      "name": "links",
+      "path": "commands",
+      "expectedText": [
+        "\u65E5\u672C\u8A9E \u5C71\u9280\u884C \u91D1\u984D \u65E5\u2F47 \u5C71\u2F2D",
+        "\u8FBB\uDB40\uDD02\u8FBB\uDB40\uDD03\u845B\uDB40\uDD02",
+        "\uD842\uDFB7\u91CE\u5BB6 \uD83D\uDE00",
+        "ASCII  \u65E5\u672C\u8A9E e\u0301  A B"
+      ],
+      "links": [
+        [
+          {
+            "Bounds": {
+              "X": 20,
+              "Y": 210,
+              "Width": 100,
+              "Height": 20
+            },
+            "Uri": null,
+            "TargetPage": 2,
+            "TargetX": 20,
+            "TargetY": 20,
+            "TargetHeight": 333.456,
+            "Tooltip": "forward tooltip"
+          },
+          {
+            "Bounds": {
+              "X": 140,
+              "Y": 210,
+              "Width": 100,
+              "Height": 20
+            },
+            "Uri": "https://example.com/a?q=a%20b",
+            "TargetPage": null,
+            "TargetX": null,
+            "TargetY": null,
+            "TargetHeight": null,
+            "Tooltip": "URL tooltip"
+          }
+        ],
+        [
+          {
+            "Bounds": {
+              "X": 20,
+              "Y": 210,
+              "Width": 100,
+              "Height": 20
+            },
+            "Uri": null,
+            "TargetPage": 1,
+            "TargetX": 20,
+            "TargetY": 20,
+            "TargetHeight": 841.88976378,
+            "Tooltip": "backward tooltip"
+          }
+        ]
+      ],
+      "commandSha256": "DA13506B723233E17C5F98D01339329E2E3A7795507DAD9E24BED964134F7AD7"
+    },
+    {
+      "name": "styles",
+      "path": "features",
+      "sameCommands": true,
+      "expectedText": [],
+      "regions": [
+        {
+          "name": "alignment-0",
+          "bounds": [
+            15,
+            15,
+            135,
+            60
+          ]
+        },
+        {
+          "name": "alignment-1",
+          "bounds": [
+            145,
+            15,
+            265,
+            60
+          ]
+        },
+        {
+          "name": "alignment-2",
+          "bounds": [
+            275,
+            15,
+            395,
+            60
+          ]
+        },
+        {
+          "name": "alignment-3",
+          "bounds": [
+            15,
+            70,
+            135,
+            115
+          ]
+        },
+        {
+          "name": "alignment-4",
+          "bounds": [
+            145,
+            70,
+            265,
+            115
+          ]
+        },
+        {
+          "name": "alignment-5",
+          "bounds": [
+            275,
+            70,
+            395,
+            115
+          ]
+        },
+        {
+          "name": "alignment-6",
+          "bounds": [
+            15,
+            125,
+            135,
+            170
+          ]
+        },
+        {
+          "name": "alignment-7",
+          "bounds": [
+            145,
+            125,
+            265,
+            170
+          ]
+        },
+        {
+          "name": "alignment-8",
+          "bounds": [
+            275,
+            125,
+            395,
+            170
+          ]
+        },
+        {
+          "name": "rich-runs-underline",
+          "bounds": [
+            15,
+            195,
+            370,
+            255
+          ]
+        },
+        {
+          "name": "rotated-text",
+          "bounds": [
+            15,
+            275,
+            155,
+            330
+          ]
+        },
+        {
+          "name": "vertical-text",
+          "bounds": [
+            200,
+            275,
+            300,
+            355
+          ]
+        }
+      ],
+      "commandSha256": "17FC18A507F568F4D1A77B8B1A498D7B8CCF689E34BE01D4DBEECE76223C0CE6"
+    },
+    {
+      "name": "borders",
+      "path": "features",
+      "sameCommands": true,
+      "expectedText": [],
+      "regions": [
+        {
+          "name": "Solid",
+          "bounds": [
+            15,
+            17,
+            390,
+            48
+          ]
+        },
+        {
+          "name": "Dotted",
+          "bounds": [
+            15,
+            53,
+            390,
+            84
+          ]
+        },
+        {
+          "name": "Dashed",
+          "bounds": [
+            15,
+            89,
+            390,
+            120
+          ]
+        },
+        {
+          "name": "DashDot",
+          "bounds": [
+            15,
+            125,
+            390,
+            156
+          ]
+        },
+        {
+          "name": "DashDotDot",
+          "bounds": [
+            15,
+            161,
+            390,
+            192
+          ]
+        },
+        {
+          "name": "Double",
+          "bounds": [
+            15,
+            197,
+            390,
+            228
+          ]
+        },
+        {
+          "name": "Hair",
+          "bounds": [
+            15,
+            233,
+            390,
+            264
+          ]
+        },
+        {
+          "name": "SlantDashDot",
+          "bounds": [
+            15,
+            269,
+            390,
+            300
+          ]
+        },
+        {
+          "name": "alpha-overlap",
+          "bounds": [
+            15,
+            320,
+            115,
+            360
+          ]
+        }
+      ],
+      "commandSha256": "769C3DC8542081193007EA7600661A7EF269B3164BD051C3324FFDC3E069E4FB"
+    },
+    {
+      "name": "shapes",
+      "path": "features",
+      "sameCommands": true,
+      "expectedText": [
+        "\u56F3\u5F62 ABC"
+      ],
+      "regions": [
+        {
+          "name": "Rectangle",
+          "bounds": [
+            18,
+            18,
+            182,
+            103
+          ]
+        },
+        {
+          "name": "Ellipse",
+          "bounds": [
+            213,
+            18,
+            377,
+            103
+          ]
+        },
+        {
+          "name": "RoundedRectangle",
+          "bounds": [
+            18,
+            123,
+            182,
+            208
+          ]
+        },
+        {
+          "name": "WedgeRectangleCallout",
+          "bounds": [
+            213,
+            123,
+            377,
+            208
+          ]
+        },
+        {
+          "name": "WedgeRoundedRectangleCallout",
+          "bounds": [
+            18,
+            228,
+            182,
+            313
+          ]
+        }
+      ],
+      "commandSha256": "BD1F749F0C33126F4502A7B99C44B0ACBC23481454DDB9DE4F5BDC188EF97026"
+    },
+    {
+      "name": "images",
+      "path": "features",
+      "sameCommands": true,
+      "expectedText": [],
+      "regions": [
+        {
+          "name": "image-0",
+          "bounds": [
+            20,
+            20,
+            120,
+            120
+          ]
+        },
+        {
+          "name": "image-1",
+          "bounds": [
+            150,
+            20,
+            250,
+            120
+          ]
+        },
+        {
+          "name": "image-2",
+          "bounds": [
+            280,
+            20,
+            380,
+            120
+          ]
+        },
+        {
+          "name": "image-3",
+          "bounds": [
+            20,
+            160,
+            120,
+            260
+          ]
+        },
+        {
+          "name": "image-4",
+          "bounds": [
+            150,
+            160,
+            250,
+            260
+          ]
+        },
+        {
+          "name": "image-5",
+          "bounds": [
+            280,
+            160,
+            380,
+            260
+          ]
+        }
+      ],
+      "commandSha256": "E20549086D860817EBC47F4281C60370165DBDAA00A6EC3C33E7B9067650A858"
+    },
+    {
+      "name": "transforms",
+      "path": "features",
+      "sameCommands": true,
+      "expectedText": [
+        "\u56DE\u8EE2\u56F3\u5F62"
+      ],
+      "regions": [
+        {
+          "name": "rotated-clipped-layers",
+          "bounds": [
+            5,
+            5,
+            220,
+            150
+          ]
+        },
+        {
+          "name": "viewport-origin-and-layers",
+          "bounds": [
+            15,
+            180,
+            225,
+            330
+          ]
+        }
+      ],
+      "commandSha256": "DD51B5C3F17556BD220FB0CE4B5EA65E301C8BF8C523B2FC9A4326D42D0B4968"
+    },
+    {
+      "name": "blank",
+      "path": "features",
+      "sameCommands": true,
+      "expectedText": [],
+      "regions": [
+        {
+          "name": "page",
+          "bounds": [
+            0,
+            0,
+            421.123,
+            400.456
+          ]
+        }
+      ],
+      "commandSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "name": "invoice",
+      "path": "e2e",
+      "commandFingerprints": {
+        "1": "46E0B8FF42EDA25D082E9EDEF98E6D6A60D15C638019B6693557ACD85E35B581"
+      },
+      "pagePlanSha256": "4FD790DD594E5395CD151BE176EAB11FE39763CF02A53D2495785DC9428F6782",
+      "pages": [
+        {
+          "SourceSheetIndex": 1,
+          "SourceSheetName": "\u8ACB\u6C42\u66F8",
+          "SourcePageNumber": 1,
+          "DocumentPageNumber": 1,
+          "OutputPageNumber": 1,
+          "WidthPoints": 595.276,
+          "HeightPoints": 841.89,
+          "PixelWidth": 794,
+          "PixelHeight": 1123,
+          "Dpi": 96,
+          "RequestedRange": null,
+          "SourceCellRanges": [
+            {
+              "First": {
+                "Row": 1,
+                "Column": 1
+              },
+              "Last": {
+                "Row": 23,
+                "Column": 6
+              }
+            }
+          ],
+          "SourceRegions": [
+            {
+              "X": 0,
+              "Y": 0,
+              "Width": 522,
+              "Height": 570
+            }
+          ],
+          "OriginalWidthPoints": null,
+          "OriginalHeightPoints": null,
+          "CropBounds": null,
+          "PaddingPoints": null
+        }
+      ],
+      "diagnostics": [
+        {
+          "Code": "MaximumDigitWidthResolved",
+          "Severity": 0,
+          "Stage": 0,
+          "Message": "Normal font \u0027Calibri\u0027 resolved to \u0027Noto Sans JP\u0027 with MDW 8px.",
+          "SheetName": "\u8ACB\u6C42\u66F8",
+          "CellRange": null,
+          "ObjectId": null,
+          "SourcePageNumber": null,
+          "OccurrenceCount": 1,
+          "UnicodeSequence": null
+        }
+      ]
+    },
+    {
+      "name": "japanese-grid-report",
+      "path": "e2e",
+      "commandFingerprints": {
+        "1": "0801E71CCDEED493B847381F36249A057807F26AECEBBD1C88A3BC781C113A95"
+      },
+      "pagePlanSha256": "3756F5BC32F6757C95E12F0F99D7F0904AFD8D02D8FE329D9A75B9CCB3D82951",
+      "pages": [
+        {
+          "SourceSheetIndex": 1,
+          "SourceSheetName": "\u6708\u6B21\u696D\u52D9\u5831\u544A\u66F8",
+          "SourcePageNumber": 1,
+          "DocumentPageNumber": 1,
+          "OutputPageNumber": 1,
+          "WidthPoints": 595.276,
+          "HeightPoints": 841.89,
+          "PixelWidth": 794,
+          "PixelHeight": 1123,
+          "Dpi": 96,
+          "RequestedRange": null,
+          "SourceCellRanges": [
+            {
+              "First": {
+                "Row": 1,
+                "Column": 1
+              },
+              "Last": {
+                "Row": 46,
+                "Column": 40
+              }
+            }
+          ],
+          "SourceRegions": [
+            {
+              "X": 0,
+              "Y": 0,
+              "Width": 630,
+              "Height": 780
+            }
+          ],
+          "OriginalWidthPoints": null,
+          "OriginalHeightPoints": null,
+          "CropBounds": null,
+          "PaddingPoints": null
+        }
+      ],
+      "diagnostics": [
+        {
+          "Code": "MaximumDigitWidthResolved",
+          "Severity": 0,
+          "Stage": 0,
+          "Message": "Normal font \u0027Calibri\u0027 resolved to \u0027Noto Sans JP\u0027 with MDW 8px.",
+          "SheetName": "\u6708\u6B21\u696D\u52D9\u5831\u544A\u66F8",
+          "CellRange": null,
+          "ObjectId": null,
+          "SourcePageNumber": null,
+          "OccurrenceCount": 1,
+          "UnicodeSequence": null
+        }
+      ]
+    },
+    {
+      "name": "rich-range",
+      "path": "e2e",
+      "commandFingerprints": {
+        "1": "E5DB0FF05793320149E02237D72CE4B6904F61A08B2F15D391A2719D0F3C3921"
+      },
+      "pagePlanSha256": "28FB0127FE64C56186F1023D07BC875935FADBE818AA7ACEE0B4286EA6C7BBA0",
+      "pages": [
+        {
+          "SourceSheetIndex": 1,
+          "SourceSheetName": "rich",
+          "SourcePageNumber": 1,
+          "DocumentPageNumber": 1,
+          "OutputPageNumber": 1,
+          "WidthPoints": 70.36599999999999,
+          "HeightPoints": 21.5,
+          "PixelWidth": 94,
+          "PixelHeight": 29,
+          "Dpi": 96,
+          "RequestedRange": {
+            "First": {
+              "Row": 1,
+              "Column": 1
+            },
+            "Last": {
+              "Row": 3,
+              "Column": 3
+            }
+          },
+          "SourceCellRanges": [
+            {
+              "First": {
+                "Row": 1,
+                "Column": 1
+              },
+              "Last": {
+                "Row": 3,
+                "Column": 3
+              }
+            }
+          ],
+          "SourceRegions": [
+            {
+              "X": 0,
+              "Y": 0,
+              "Width": 155.25,
+              "Height": 45
+            }
+          ],
+          "OriginalWidthPoints": 612,
+          "OriginalHeightPoints": 792,
+          "CropBounds": {
+            "X": 55.5,
+            "Y": 61.74000024795532,
+            "Width": 66.36599999999999,
+            "Height": 17.5
+          },
+          "PaddingPoints": 2
+        }
+      ],
+      "diagnostics": [
+        {
+          "Code": "MaximumDigitWidthResolved",
+          "Severity": 0,
+          "Stage": 0,
+          "Message": "Normal font \u0027Calibri\u0027 resolved to \u0027Noto Sans JP\u0027 with MDW 8px.",
+          "SheetName": "rich",
+          "CellRange": null,
+          "ObjectId": null,
+          "SourcePageNumber": null,
+          "OccurrenceCount": 1,
+          "UnicodeSequence": null
+        }
+      ]
+    },
+    {
+      "name": "rich-theme",
+      "path": "e2e",
+      "commandFingerprints": {
+        "1": "DE39C768BDEEBDDCBD04092C37D2F9A6ADCD8134D92E1A69D34D7E508582082B"
+      },
+      "pagePlanSha256": "87C64F62705DB64354C809C5D62F292D687A5ABC28C74DE4CAEB5678E300D594",
+      "pages": [
+        {
+          "SourceSheetIndex": 1,
+          "SourceSheetName": "theme",
+          "SourcePageNumber": 1,
+          "DocumentPageNumber": 1,
+          "OutputPageNumber": 1,
+          "WidthPoints": 612,
+          "HeightPoints": 792,
+          "PixelWidth": 816,
+          "PixelHeight": 1056,
+          "Dpi": 96,
+          "RequestedRange": null,
+          "SourceCellRanges": [
+            {
+              "First": {
+                "Row": 1,
+                "Column": 1
+              },
+              "Last": {
+                "Row": 1,
+                "Column": 1
+              }
+            }
+          ],
+          "SourceRegions": [
+            {
+              "X": 0,
+              "Y": 0,
+              "Width": 51.75,
+              "Height": 15
+            }
+          ],
+          "OriginalWidthPoints": null,
+          "OriginalHeightPoints": null,
+          "CropBounds": null,
+          "PaddingPoints": null
+        }
+      ],
+      "diagnostics": [
+        {
+          "Code": "MaximumDigitWidthResolved",
+          "Severity": 0,
+          "Stage": 0,
+          "Message": "Normal font \u0027Calibri\u0027 resolved to \u0027Noto Sans JP\u0027 with MDW 8px.",
+          "SheetName": "theme",
+          "CellRange": null,
+          "ObjectId": null,
+          "SourcePageNumber": null,
+          "OccurrenceCount": 1,
+          "UnicodeSequence": null
+        }
+      ]
+    },
+    {
+      "name": "rich-rotation",
+      "path": "e2e",
+      "commandFingerprints": {
+        "1": "CBAB08A817E8C1DE232E9DB832617759810794CDDC3493C418E102D8C3D6BB84"
+      },
+      "pagePlanSha256": "A912BDC195CBD30FBF70E5309A4AFA7E399172B6A318D804C6526F22A2A45A63",
+      "pages": [
+        {
+          "SourceSheetIndex": 1,
+          "SourceSheetName": "rich",
+          "SourcePageNumber": 1,
+          "DocumentPageNumber": 1,
+          "OutputPageNumber": 1,
+          "WidthPoints": 612,
+          "HeightPoints": 792,
+          "PixelWidth": 816,
+          "PixelHeight": 1056,
+          "Dpi": 96,
+          "RequestedRange": null,
+          "SourceCellRanges": [
+            {
+              "First": {
+                "Row": 1,
+                "Column": 1
+              },
+              "Last": {
+                "Row": 1,
+                "Column": 1
+              }
+            }
+          ],
+          "SourceRegions": [
+            {
+              "X": 0,
+              "Y": 0,
+              "Width": 51.75,
+              "Height": 15
+            }
+          ],
+          "OriginalWidthPoints": null,
+          "OriginalHeightPoints": null,
+          "CropBounds": null,
+          "PaddingPoints": null
+        }
+      ],
+      "diagnostics": [
+        {
+          "Code": "MaximumDigitWidthResolved",
+          "Severity": 0,
+          "Stage": 0,
+          "Message": "Normal font \u0027Calibri\u0027 resolved to \u0027Noto Sans JP\u0027 with MDW 8px.",
+          "SheetName": "rich",
+          "CellRange": null,
+          "ObjectId": null,
+          "SourcePageNumber": null,
+          "OccurrenceCount": 1,
+          "UnicodeSequence": null
+        }
+      ]
+    },
+    {
+      "name": "image-anchor",
+      "path": "e2e",
+      "commandFingerprints": {
+        "1": "AC87B06640121DDED6A7553B7ED54E5CC7FF76777AB12897EBE82637B45EDA5F"
+      },
+      "pagePlanSha256": "EF5099402530ABB7B418202A53B8F179249F387BDF8489AAC6D6EB54050184B4",
+      "pages": [
+        {
+          "SourceSheetIndex": 1,
+          "SourceSheetName": "Sheet1",
+          "SourcePageNumber": 1,
+          "DocumentPageNumber": 1,
+          "OutputPageNumber": 1,
+          "WidthPoints": 612,
+          "HeightPoints": 792,
+          "PixelWidth": 816,
+          "PixelHeight": 1056,
+          "Dpi": 96,
+          "RequestedRange": null,
+          "SourceCellRanges": [
+            {
+              "First": {
+                "Row": 2,
+                "Column": 3
+              },
+              "Last": {
+                "Row": 2,
+                "Column": 3
+              }
+            }
+          ],
+          "SourceRegions": [
+            {
+              "X": 103.5,
+              "Y": 15,
+              "Width": 51.75,
+              "Height": 15
+            }
+          ],
+          "OriginalWidthPoints": null,
+          "OriginalHeightPoints": null,
+          "CropBounds": null,
+          "PaddingPoints": null
+        }
+      ],
+      "diagnostics": [
+        {
+          "Code": "MaximumDigitWidthResolved",
+          "Severity": 0,
+          "Stage": 0,
+          "Message": "Normal font \u0027Calibri\u0027 resolved to \u0027Noto Sans JP\u0027 with MDW 8px.",
+          "SheetName": "Sheet1",
+          "CellRange": null,
+          "ObjectId": null,
+          "SourcePageNumber": null,
+          "OccurrenceCount": 1,
+          "UnicodeSequence": null
+        }
+      ]
+    },
+    {
+      "name": "drawing-anchors",
+      "path": "e2e",
+      "commandFingerprints": {
+        "1": "449D90E007953BB7D9F96D3FEA9D8B48C810C4BD67B966FB7A1DF26B77BB0843"
+      },
+      "pagePlanSha256": "6B50DFDFBEA0FDEC816E998438B412A8BBD5617AFD5E3728701ED8E831981097",
+      "pages": [
+        {
+          "SourceSheetIndex": 1,
+          "SourceSheetName": "Anchors",
+          "SourcePageNumber": 1,
+          "DocumentPageNumber": 1,
+          "OutputPageNumber": 1,
+          "WidthPoints": 612,
+          "HeightPoints": 792,
+          "PixelWidth": 816,
+          "PixelHeight": 1056,
+          "Dpi": 96,
+          "RequestedRange": null,
+          "SourceCellRanges": [
+            {
+              "First": {
+                "Row": 1,
+                "Column": 1
+              },
+              "Last": {
+                "Row": 10,
+                "Column": 8
+              }
+            }
+          ],
+          "SourceRegions": [
+            {
+              "X": 0,
+              "Y": 0,
+              "Width": 97.5,
+              "Height": 135
+            }
+          ],
+          "OriginalWidthPoints": null,
+          "OriginalHeightPoints": null,
+          "CropBounds": null,
+          "PaddingPoints": null
+        }
+      ],
+      "diagnostics": [
+        {
+          "Code": "MaximumDigitWidthResolved",
+          "Severity": 0,
+          "Stage": 0,
+          "Message": "Normal font \u0027Calibri\u0027 resolved to \u0027Noto Sans JP\u0027 with MDW 8px.",
+          "SheetName": "Anchors",
+          "CellRange": null,
+          "ObjectId": null,
+          "SourcePageNumber": null,
+          "OccurrenceCount": 1,
+          "UnicodeSequence": null
+        }
+      ]
+    },
+    {
+      "name": "shape-workbook",
+      "path": "e2e",
+      "commandFingerprints": {
+        "1": "12359461C4CCD75FC8C8BC506DC8057F964BCC72148B831EA3225487A4FD7669"
+      },
+      "pagePlanSha256": "B35165CD0BB0A901C80C47034F73A4AC1D75817E9A75988ED458A84DCE00420F",
+      "pages": [
+        {
+          "SourceSheetIndex": 1,
+          "SourceSheetName": "Shapes",
+          "SourcePageNumber": 1,
+          "DocumentPageNumber": 1,
+          "OutputPageNumber": 1,
+          "WidthPoints": 612,
+          "HeightPoints": 792,
+          "PixelWidth": 816,
+          "PixelHeight": 1056,
+          "Dpi": 96,
+          "RequestedRange": null,
+          "SourceCellRanges": [
+            {
+              "First": {
+                "Row": 1,
+                "Column": 1
+              },
+              "Last": {
+                "Row": 1,
+                "Column": 1
+              }
+            }
+          ],
+          "SourceRegions": [
+            {
+              "X": 0,
+              "Y": 0,
+              "Width": 51.75,
+              "Height": 15
+            }
+          ],
+          "OriginalWidthPoints": null,
+          "OriginalHeightPoints": null,
+          "CropBounds": null,
+          "PaddingPoints": null
+        }
+      ],
+      "diagnostics": [
+        {
+          "Code": "MaximumDigitWidthResolved",
+          "Severity": 0,
+          "Stage": 0,
+          "Message": "Normal font \u0027Calibri\u0027 resolved to \u0027Noto Sans JP\u0027 with MDW 8px.",
+          "SheetName": "Shapes",
+          "CellRange": null,
+          "ObjectId": null,
+          "SourcePageNumber": null,
+          "OccurrenceCount": 1,
+          "UnicodeSequence": null
+        }
+      ]
+    },
+    {
+      "name": "header-footer",
+      "path": "e2e",
+      "commandFingerprints": {
+        "1": "4A90E67DECCB30E9413FC6F870A4DAEEF0D51CA19686082F0F55B0F9D159C090"
+      },
+      "pagePlanSha256": "EC2401257BBDCB931717F4D7D8876F88AD963DAF05693EFCBDC7D45699B21E3F",
+      "pages": [
+        {
+          "SourceSheetIndex": 1,
+          "SourceSheetName": "Sheet1",
+          "SourcePageNumber": 1,
+          "DocumentPageNumber": 1,
+          "OutputPageNumber": 1,
+          "WidthPoints": 612,
+          "HeightPoints": 792,
+          "PixelWidth": 816,
+          "PixelHeight": 1056,
+          "Dpi": 96,
+          "RequestedRange": null,
+          "SourceCellRanges": [],
+          "SourceRegions": [],
+          "OriginalWidthPoints": null,
+          "OriginalHeightPoints": null,
+          "CropBounds": null,
+          "PaddingPoints": null
+        }
+      ],
+      "diagnostics": [
+        {
+          "Code": "MaximumDigitWidthResolved",
+          "Severity": 0,
+          "Stage": 0,
+          "Message": "Normal font \u0027Calibri\u0027 resolved to \u0027Noto Sans JP\u0027 with MDW 8px.",
+          "SheetName": "Sheet1",
+          "CellRange": null,
+          "ObjectId": null,
+          "SourcePageNumber": null,
+          "OccurrenceCount": 1,
+          "UnicodeSequence": null
+        }
+      ]
+    },
+    {
+      "name": "links-selected",
+      "path": "e2e",
+      "commandFingerprints": {
+        "1": "EF4FE4D563034E868C12F849E80B746E500F932278F607A3E4728A001EDDB869"
+      },
+      "pagePlanSha256": "C62B5F5C62F10B9A4D7876AD865BE8D56E60E0F955E5A30FF16DA6F7244BC783",
+      "pages": [
+        {
+          "SourceSheetIndex": 1,
+          "SourceSheetName": "Sheet1",
+          "SourcePageNumber": 1,
+          "DocumentPageNumber": 1,
+          "OutputPageNumber": 1,
+          "WidthPoints": 282.60299999999995,
+          "HeightPoints": 817.89,
+          "PixelWidth": 377,
+          "PixelHeight": 1091,
+          "Dpi": 96,
+          "RequestedRange": {
+            "First": {
+              "Row": 2,
+              "Column": 2
+            },
+            "Last": {
+              "Row": 8,
+              "Column": 4
+            }
+          },
+          "SourceCellRanges": [
+            {
+              "First": {
+                "Row": 2,
+                "Column": 2
+              },
+              "Last": {
+                "Row": 8,
+                "Column": 4
+              }
+            }
+          ],
+          "SourceRegions": [
+            {
+              "X": 64.5,
+              "Y": 20,
+              "Width": 193.5,
+              "Height": 140
+            }
+          ],
+          "OriginalWidthPoints": 595.276,
+          "OriginalHeightPoints": 841.89,
+          "CropBounds": {
+            "X": 36,
+            "Y": 14.359999775886536,
+            "Width": 278.60299999999995,
+            "Height": 813.89
+          },
+          "PaddingPoints": 2
+        }
+      ],
+      "diagnostics": [
+        {
+          "Code": "MaximumDigitWidthResolved",
+          "Severity": 0,
+          "Stage": 0,
+          "Message": "Normal font \u0027Calibri\u0027 resolved to \u0027Noto Sans JP\u0027 with MDW 8px.",
+          "SheetName": "Sheet1",
+          "CellRange": null,
+          "ObjectId": null,
+          "SourcePageNumber": null,
+          "OccurrenceCount": 1,
+          "UnicodeSequence": null
+        },
+        {
+          "Code": "ClippedMergedCell",
+          "Severity": 1,
+          "Stage": 1,
+          "Message": "The explicit selection clips an original merged cell.",
+          "SheetName": "Sheet1",
+          "CellRange": "A2:C2",
+          "ObjectId": null,
+          "SourcePageNumber": null,
+          "OccurrenceCount": 1,
+          "UnicodeSequence": null
+        },
+        {
+          "Code": "FormulaCachedValueMissing",
+          "Severity": 1,
+          "Stage": 0,
+          "Message": "Formula has no stored result; calculation is not supported.",
+          "SheetName": "Sheet1",
+          "CellRange": "B6",
+          "ObjectId": null,
+          "SourcePageNumber": 1,
+          "OccurrenceCount": 1,
+          "UnicodeSequence": null
+        },
+        {
+          "Code": "FormulaCachedValueMissing",
+          "Severity": 1,
+          "Stage": 0,
+          "Message": "Formula has no stored result; calculation is not supported.",
+          "SheetName": "Sheet1",
+          "CellRange": "B7",
+          "ObjectId": null,
+          "SourcePageNumber": 1,
+          "OccurrenceCount": 1,
+          "UnicodeSequence": null
+        },
+        {
+          "Code": "HyperlinkUnsupported",
+          "Severity": 1,
+          "Stage": 1,
+          "Message": "Only literal-string HYPERLINK arguments are supported.",
+          "SheetName": "Sheet1",
+          "CellRange": "B7",
+          "ObjectId": null,
+          "SourcePageNumber": null,
+          "OccurrenceCount": 1,
+          "UnicodeSequence": null
+        }
+      ]
+    },
+    {
+      "name": "links-none",
+      "path": "e2e",
+      "commandFingerprints": {
+        "1": "E3B3862096B561B43F10E89686A5799EAA548F45692AA484DE9550A0F24767CB",
+        "2": "28F92E9FE6520E112D376C65346AC72608B6E558E6C5D1A139714031CDCD89B2",
+        "3": "28F92E9FE6520E112D376C65346AC72608B6E558E6C5D1A139714031CDCD89B2"
+      },
+      "pagePlanSha256": "1F42ED9E52C5FEF1081359DD7227CE9AFF133A3AAB84C26441C9490F341DDB65",
+      "pages": [
+        {
+          "SourceSheetIndex": 1,
+          "SourceSheetName": "Sheet1",
+          "SourcePageNumber": 1,
+          "DocumentPageNumber": 1,
+          "OutputPageNumber": 1,
+          "WidthPoints": 595.276,
+          "HeightPoints": 841.89,
+          "PixelWidth": 794,
+          "PixelHeight": 1123,
+          "Dpi": 96,
+          "RequestedRange": null,
+          "SourceCellRanges": [
+            {
+              "First": {
+                "Row": 1,
+                "Column": 1
+              },
+              "Last": {
+                "Row": 10,
+                "Column": 6
+              }
+            }
+          ],
+          "SourceRegions": [
+            {
+              "X": 0,
+              "Y": 0,
+              "Width": 387,
+              "Height": 200
+            }
+          ],
+          "OriginalWidthPoints": null,
+          "OriginalHeightPoints": null,
+          "CropBounds": null,
+          "PaddingPoints": null
+        },
+        {
+          "SourceSheetIndex": 2,
+          "SourceSheetName": "\u58F2\u4E0A 2026",
+          "SourcePageNumber": 1,
+          "DocumentPageNumber": 2,
+          "OutputPageNumber": 2,
+          "WidthPoints": 595.276,
+          "HeightPoints": 841.89,
+          "PixelWidth": 794,
+          "PixelHeight": 1123,
+          "Dpi": 96,
+          "RequestedRange": null,
+          "SourceCellRanges": [
+            {
+              "First": {
+                "Row": 1,
+                "Column": 1
+              },
+              "Last": {
+                "Row": 10,
+                "Column": 6
+              }
+            }
+          ],
+          "SourceRegions": [
+            {
+              "X": 0,
+              "Y": 0,
+              "Width": 387,
+              "Height": 200
+            }
+          ],
+          "OriginalWidthPoints": null,
+          "OriginalHeightPoints": null,
+          "CropBounds": null,
+          "PaddingPoints": null
+        },
+        {
+          "SourceSheetIndex": 3,
+          "SourceSheetName": "O\u0027Brien!Q",
+          "SourcePageNumber": 1,
+          "DocumentPageNumber": 3,
+          "OutputPageNumber": 3,
+          "WidthPoints": 595.276,
+          "HeightPoints": 841.89,
+          "PixelWidth": 794,
+          "PixelHeight": 1123,
+          "Dpi": 96,
+          "RequestedRange": null,
+          "SourceCellRanges": [
+            {
+              "First": {
+                "Row": 1,
+                "Column": 1
+              },
+              "Last": {
+                "Row": 10,
+                "Column": 6
+              }
+            }
+          ],
+          "SourceRegions": [
+            {
+              "X": 0,
+              "Y": 0,
+              "Width": 387,
+              "Height": 200
+            }
+          ],
+          "OriginalWidthPoints": null,
+          "OriginalHeightPoints": null,
+          "CropBounds": null,
+          "PaddingPoints": null
+        }
+      ],
+      "diagnostics": [
+        {
+          "Code": "MaximumDigitWidthResolved",
+          "Severity": 0,
+          "Stage": 0,
+          "Message": "Normal font \u0027Calibri\u0027 resolved to \u0027Noto Sans JP\u0027 with MDW 8px.",
+          "SheetName": "Sheet1",
+          "CellRange": null,
+          "ObjectId": null,
+          "SourcePageNumber": null,
+          "OccurrenceCount": 1,
+          "UnicodeSequence": null
+        },
+        {
+          "Code": "FormulaCachedValueMissing",
+          "Severity": 1,
+          "Stage": 0,
+          "Message": "Formula has no stored result; calculation is not supported.",
+          "SheetName": "Sheet1",
+          "CellRange": "B6",
+          "ObjectId": null,
+          "SourcePageNumber": 1,
+          "OccurrenceCount": 1,
+          "UnicodeSequence": null
+        },
+        {
+          "Code": "FormulaCachedValueMissing",
+          "Severity": 1,
+          "Stage": 0,
+          "Message": "Formula has no stored result; calculation is not supported.",
+          "SheetName": "Sheet1",
+          "CellRange": "B7",
+          "ObjectId": null,
+          "SourcePageNumber": 1,
+          "OccurrenceCount": 1,
+          "UnicodeSequence": null
+        },
+        {
+          "Code": "FormulaCachedValueMissing",
+          "Severity": 1,
+          "Stage": 0,
+          "Message": "Formula has no stored result; calculation is not supported.",
+          "SheetName": "\u58F2\u4E0A 2026",
+          "CellRange": "B6",
+          "ObjectId": null,
+          "SourcePageNumber": 1,
+          "OccurrenceCount": 1,
+          "UnicodeSequence": null
+        },
+        {
+          "Code": "FormulaCachedValueMissing",
+          "Severity": 1,
+          "Stage": 0,
+          "Message": "Formula has no stored result; calculation is not supported.",
+          "SheetName": "\u58F2\u4E0A 2026",
+          "CellRange": "B7",
+          "ObjectId": null,
+          "SourcePageNumber": 1,
+          "OccurrenceCount": 1,
+          "UnicodeSequence": null
+        },
+        {
+          "Code": "FormulaCachedValueMissing",
+          "Severity": 1,
+          "Stage": 0,
+          "Message": "Formula has no stored result; calculation is not supported.",
+          "SheetName": "O\u0027Brien!Q",
+          "CellRange": "B6",
+          "ObjectId": null,
+          "SourcePageNumber": 1,
+          "OccurrenceCount": 1,
+          "UnicodeSequence": null
+        },
+        {
+          "Code": "FormulaCachedValueMissing",
+          "Severity": 1,
+          "Stage": 0,
+          "Message": "Formula has no stored result; calculation is not supported.",
+          "SheetName": "O\u0027Brien!Q",
+          "CellRange": "B7",
+          "ObjectId": null,
+          "SourcePageNumber": 1,
+          "OccurrenceCount": 1,
+          "UnicodeSequence": null
+        }
+      ]
+    },
+    {
+      "name": "blank-workbook",
+      "path": "e2e",
+      "commandFingerprints": {
+        "1": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+      },
+      "pagePlanSha256": "452DBF6551E2BB7E19B6329DF96CA85294C8B6246E9FF34E8AE208B1F98267F1",
+      "pages": [
+        {
+          "SourceSheetIndex": 1,
+          "SourceSheetName": "hidden",
+          "SourcePageNumber": 1,
+          "DocumentPageNumber": 1,
+          "OutputPageNumber": 1,
+          "WidthPoints": 612,
+          "HeightPoints": 792,
+          "PixelWidth": 816,
+          "PixelHeight": 1056,
+          "Dpi": 96,
+          "RequestedRange": null,
+          "SourceCellRanges": null,
+          "SourceRegions": null,
+          "OriginalWidthPoints": null,
+          "OriginalHeightPoints": null,
+          "CropBounds": null,
+          "PaddingPoints": null
+        }
+      ],
+      "diagnostics": [
+        {
+          "Code": "MaximumDigitWidthResolved",
+          "Severity": 0,
+          "Stage": 0,
+          "Message": "Normal font \u0027Calibri\u0027 resolved to \u0027Noto Sans JP\u0027 with MDW 8px.",
+          "SheetName": "hidden",
+          "CellRange": null,
+          "ObjectId": null,
+          "SourcePageNumber": null,
+          "OccurrenceCount": 1,
+          "UnicodeSequence": null
+        },
+        {
+          "Code": "EmptyContent",
+          "Severity": 0,
+          "Stage": 1,
+          "Message": "No visible drawing content remains on this page.",
+          "SheetName": "hidden",
+          "CellRange": null,
+          "ObjectId": null,
+          "SourcePageNumber": null,
+          "OccurrenceCount": 1,
+          "UnicodeSequence": null
+        }
+      ]
+    },
+    {
+      "name": "pages-selection",
+      "path": "e2e",
+      "commandFingerprints": {
+        "1": "BFCD1035F4997C68BAFAE9EDA109E8A0DBC2D38927DFD9D6DDFCC4F1BD69E029",
+        "2": "91BBBEB6B589ECB3A7B6B46361386E2D5004BD6FFF1C0F3DE6732EDDC7721C05"
+      },
+      "pagePlanSha256": "110C5B6FA2F403EA7AA79E4F3327C21B5DAB332D60C57F371A7A412C0860B702",
+      "pages": [
+        {
+          "SourceSheetIndex": 2,
+          "SourceSheetName": "Second",
+          "SourcePageNumber": 1,
+          "DocumentPageNumber": 1,
+          "OutputPageNumber": 1,
+          "WidthPoints": 792,
+          "HeightPoints": 612,
+          "PixelWidth": 1056,
+          "PixelHeight": 816,
+          "Dpi": 96,
+          "RequestedRange": null,
+          "SourceCellRanges": [
+            {
+              "First": {
+                "Row": 1,
+                "Column": 1
+              },
+              "Last": {
+                "Row": 1,
+                "Column": 1
+              }
+            }
+          ],
+          "SourceRegions": [
+            {
+              "X": 0,
+              "Y": 0,
+              "Width": 45.75,
+              "Height": 15
+            }
+          ],
+          "OriginalWidthPoints": null,
+          "OriginalHeightPoints": null,
+          "CropBounds": null,
+          "PaddingPoints": null
+        },
+        {
+          "SourceSheetIndex": 1,
+          "SourceSheetName": "First",
+          "SourcePageNumber": 2,
+          "DocumentPageNumber": 3,
+          "OutputPageNumber": 2,
+          "WidthPoints": 595.276,
+          "HeightPoints": 841.89,
+          "PixelWidth": 794,
+          "PixelHeight": 1123,
+          "Dpi": 96,
+          "RequestedRange": null,
+          "SourceCellRanges": [
+            {
+              "First": {
+                "Row": 19,
+                "Column": 1
+              },
+              "Last": {
+                "Row": 30,
+                "Column": 3
+              }
+            }
+          ],
+          "SourceRegions": [
+            {
+              "X": 0,
+              "Y": 270,
+              "Width": 137.25,
+              "Height": 180
+            }
+          ],
+          "OriginalWidthPoints": null,
+          "OriginalHeightPoints": null,
+          "CropBounds": null,
+          "PaddingPoints": null
+        }
+      ],
+      "diagnostics": [
+        {
+          "Code": "MaximumDigitWidthFallback",
+          "Severity": 1,
+          "Stage": 0,
+          "Message": "Normal font \u0027unknown\u0027 could not be measured; the 7px compatibility metric was used.",
+          "SheetName": "First",
+          "CellRange": null,
+          "ObjectId": null,
+          "SourcePageNumber": null,
+          "OccurrenceCount": 1,
+          "UnicodeSequence": null
+        },
+        {
+          "Code": "MaximumDigitWidthFallback",
+          "Severity": 1,
+          "Stage": 0,
+          "Message": "Normal font \u0027unknown\u0027 could not be measured; the 7px compatibility metric was used.",
+          "SheetName": "Second",
+          "CellRange": null,
+          "ObjectId": null,
+          "SourcePageNumber": null,
+          "OccurrenceCount": 1,
+          "UnicodeSequence": null
+        }
+      ]
+    },
+    {
+      "name": "missing-glyph",
+      "path": "e2e",
+      "commandFingerprints": {
+        "1": "9152B0976F75B34994B2E6FB53562990B8D9FAD180124AFFC197A599065C38E7"
+      },
+      "pagePlanSha256": "332417AAEEA6B161E530E7DA114FB527AF09674FCADF53558828470C334AB1A3",
+      "pages": [
+        {
+          "SourceSheetIndex": 1,
+          "SourceSheetName": "missing",
+          "SourcePageNumber": 1,
+          "DocumentPageNumber": 1,
+          "OutputPageNumber": 1,
+          "WidthPoints": 612,
+          "HeightPoints": 792,
+          "PixelWidth": 816,
+          "PixelHeight": 1056,
+          "Dpi": 96,
+          "RequestedRange": null,
+          "SourceCellRanges": [
+            {
+              "First": {
+                "Row": 1,
+                "Column": 1
+              },
+              "Last": {
+                "Row": 1,
+                "Column": 1
+              }
+            }
+          ],
+          "SourceRegions": [
+            {
+              "X": 0,
+              "Y": 0,
+              "Width": 45.75,
+              "Height": 15
+            }
+          ],
+          "OriginalWidthPoints": null,
+          "OriginalHeightPoints": null,
+          "CropBounds": null,
+          "PaddingPoints": null
+        }
+      ],
+      "diagnostics": [
+        {
+          "Code": "MaximumDigitWidthFallback",
+          "Severity": 1,
+          "Stage": 0,
+          "Message": "Normal font \u0027unknown\u0027 could not be measured; the 7px compatibility metric was used.",
+          "SheetName": "missing",
+          "CellRange": null,
+          "ObjectId": null,
+          "SourcePageNumber": null,
+          "OccurrenceCount": 1,
+          "UnicodeSequence": null
+        }
+      ]
+    }
+  ]
+}

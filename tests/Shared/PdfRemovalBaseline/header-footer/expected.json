@@ -1,0 +1,43 @@
+{
+  "name": "header-footer",
+  "path": "e2e",
+  "commandFingerprints": {
+    "1": "4A90E67DECCB30E9413FC6F870A4DAEEF0D51CA19686082F0F55B0F9D159C090"
+  },
+  "pagePlanSha256": "EC2401257BBDCB931717F4D7D8876F88AD963DAF05693EFCBDC7D45699B21E3F",
+  "pages": [
+    {
+      "SourceSheetIndex": 1,
+      "SourceSheetName": "Sheet1",
+      "SourcePageNumber": 1,
+      "DocumentPageNumber": 1,
+      "OutputPageNumber": 1,
+      "WidthPoints": 612,
+      "HeightPoints": 792,
+      "PixelWidth": 816,
+      "PixelHeight": 1056,
+      "Dpi": 96,
+      "RequestedRange": null,
+      "SourceCellRanges": [],
+      "SourceRegions": [],
+      "OriginalWidthPoints": null,
+      "OriginalHeightPoints": null,
+      "CropBounds": null,
+      "PaddingPoints": null
+    }
+  ],
+  "diagnostics": [
+    {
+      "Code": "MaximumDigitWidthResolved",
+      "Severity": 0,
+      "Stage": 0,
+      "Message": "Normal font \u0027Calibri\u0027 resolved to \u0027Noto Sans JP\u0027 with MDW 8px.",
+      "SheetName": "Sheet1",
+      "CellRange": null,
+      "ObjectId": null,
+      "SourcePageNumber": null,
+      "OccurrenceCount": 1,
+      "UnicodeSequence": null
+    }
+  ]
+}

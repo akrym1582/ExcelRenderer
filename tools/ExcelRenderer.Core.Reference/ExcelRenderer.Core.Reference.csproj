@@ -9,6 +9,7 @@
     <DefineConstants>$(DefineConstants);REFERENCE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="PdfPig" Version="0.1.14" PrivateAssets="all" />
     <ProjectReference Include="../../src/ExcelRenderer/ExcelRenderer.csproj" />
     <Compile Include="../ExcelRenderer.Core.Validation/Program.cs" Link="Program.cs" />
     <Compile Include="../ExcelRenderer.Core.Validation/InterlockedExtensions.cs" Link="InterlockedExtensions.cs" />

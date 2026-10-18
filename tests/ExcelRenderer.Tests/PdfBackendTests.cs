@@ -6,7 +6,6 @@ using ExcelRenderer.Pdf;
 using ExcelRenderer.Rendering;
 using ExcelRenderer.SkiaSharp;
 using ExcelRenderer.TestFixtures;
-using PdfSharp.Pdf.IO;
 using SkiaSharp;
 using Xunit;
 using S = DocumentFormat.OpenXml.Spreadsheet;
@@ -16,18 +15,18 @@ namespace ExcelRenderer.Tests;
 public sealed class PdfBackendTests
 {
     [Fact]
-    public void Defaults_preserve_pdfsharp()
+    public void Defaults_select_skia()
     {
-        Assert.Equal(PdfBackend.PdfSharp, new PdfExportOptions().PdfBackend);
-        Assert.Equal(PdfBackend.PdfSharp, new RenderRequest().PdfBackend);
+        Assert.Equal(PdfBackend.SkiaSharp, new PdfExportOptions().PdfBackend);
+        Assert.Equal(PdfBackend.SkiaSharp, new RenderRequest().PdfBackend);
     }
 
     [Theory]
-    [InlineData(PdfBackend.PdfSharp, Excel.FormulaDisplayMode.CachedValue, "7")]
+    [InlineData(null, Excel.FormulaDisplayMode.CachedValue, "7")]
     [InlineData(PdfBackend.SkiaSharp, Excel.FormulaDisplayMode.CachedValue, "7")]
-    [InlineData(PdfBackend.PdfSharp, Excel.FormulaDisplayMode.Recalculate, "42")]
+    [InlineData(null, Excel.FormulaDisplayMode.Recalculate, "42")]
     [InlineData(PdfBackend.SkiaSharp, Excel.FormulaDisplayMode.Recalculate, "42")]
-    public async Task File_api_propagates_reader_formula_policy(PdfBackend backend, Excel.FormulaDisplayMode mode, string expected)
+    public async Task File_api_propagates_reader_formula_policy(PdfBackend? backend, Excel.FormulaDisplayMode mode, string expected)
     {
         var directory = Path.Combine(Path.GetTempPath(), "pdf-formula-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(directory);
@@ -41,7 +40,7 @@ public sealed class PdfBackendTests
             var output = Path.Combine(directory, "formula.pdf");
             await ExcelConverter.ConvertToPdfAsync(path, output, new()
             {
-                PdfBackend = backend,
+                PdfBackend = backend ?? new RenderRequest().PdfBackend,
                 ReadOptions = new() { FormulaDisplayMode = mode },
                 FontOptions = new() { AllowSystemFonts = false },
             });
@@ -58,23 +57,23 @@ public sealed class PdfBackendTests
 
     [Theory]
     [InlineData((PdfBackend)42, OutputFormat.Pdf)]
-    [InlineData(PdfBackend.SkiaSharp, OutputFormat.Png)]
-    [InlineData(PdfBackend.SkiaSharp, OutputFormat.Svg)]
-    [InlineData(PdfBackend.SkiaSharp, OutputFormat.Markdown)]
-    public async Task Invalid_backend_is_rejected_before_reading_or_opening_output(PdfBackend backend, OutputFormat format)
+    [InlineData((PdfBackend)42, OutputFormat.Png)]
+    [InlineData((PdfBackend)42, OutputFormat.Svg)]
+    [InlineData((PdfBackend)42, OutputFormat.Markdown)]
+    public async Task Invalid_backend_is_rejected_before_reading_or_opening_output(PdfBackend? backend, OutputFormat format)
     {
         using var input = new UnreadableInput();
         using var output = new MemoryStream();
         await Assert.ThrowsAsync<ArgumentException>(() => ExcelConverter.RenderAsync(input,
-            new() { OutputFormat = format, PdfBackend = backend }, new SingleStreamOutputSink(output)));
+            new() { OutputFormat = format, PdfBackend = backend ?? new RenderRequest().PdfBackend }, new SingleStreamOutputSink(output)));
         Assert.Equal(0, output.Length);
         await Assert.ThrowsAsync<ArgumentException>(() => ExcelConverter.ConvertToPdfAsync("missing.xlsx", "missing.pdf", new() { PdfBackend = (PdfBackend)42 }));
     }
 
     [Theory]
-    [InlineData(PdfBackend.PdfSharp)]
+    [InlineData(null)]
     [InlineData(PdfBackend.SkiaSharp)]
-    public async Task Nonseekable_streams_and_borrowed_measurer_remain_open(PdfBackend backend)
+    public async Task Nonseekable_streams_and_borrowed_measurer_remain_open(PdfBackend? backend)
     {
         using var inputData = Workbook();
         using var input = new NonseekableStream(inputData);
@@ -82,7 +81,7 @@ public sealed class PdfBackendTests
         using var output = new NonseekableStream(outputData);
         var measurer = new BorrowedMeasurer();
         var result = await ExcelConverter.RenderAsync(input,
-            new() { OutputFormat = OutputFormat.Pdf, PdfBackend = backend, TextMeasurer = measurer, FontOptions = new() { AllowSystemFonts = false } },
+            new() { OutputFormat = OutputFormat.Pdf, PdfBackend = backend ?? new RenderRequest().PdfBackend, TextMeasurer = measurer, FontOptions = new() { AllowSystemFonts = false } },
             new SingleStreamOutputSink(output));
         Assert.Single(result.Pages);
         Assert.Single(result.Artifacts);
@@ -92,21 +91,21 @@ public sealed class PdfBackendTests
         Assert.True(outputData.CanWrite);
         Assert.StartsWith("%PDF", Encoding.ASCII.GetString(outputData.ToArray()));
         outputData.Position = 0;
-        using var pdf = PdfReader.Open(outputData, PdfDocumentOpenMode.Import);
+        using var pdf = PdfTestFile.Open(outputData);
         Assert.Single(pdf.Pages);
     }
 
     [Theory]
-    [InlineData(PdfBackend.PdfSharp)]
+    [InlineData(null)]
     [InlineData(PdfBackend.SkiaSharp)]
-    public async Task Cancelled_conversion_does_not_commit(PdfBackend backend)
+    public async Task Cancelled_conversion_does_not_commit(PdfBackend? backend)
     {
         using var input = Workbook();
         using var output = new MemoryStream();
         using var cancellation = new CancellationTokenSource();
         cancellation.Cancel();
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => ExcelConverter.RenderAsync(input,
-            new() { OutputFormat = OutputFormat.Pdf, PdfBackend = backend }, new SingleStreamOutputSink(output), cancellation.Token));
+            new() { OutputFormat = OutputFormat.Pdf, PdfBackend = backend ?? new RenderRequest().PdfBackend }, new SingleStreamOutputSink(output), cancellation.Token));
         Assert.Equal(0, output.Length);
     }
 
@@ -119,7 +118,7 @@ public sealed class PdfBackendTests
         Assert.Equal(new ushort?[] { 26795, 26796, 23477 }, runs.Select(run => run.GlyphId));
         var bytes = File.ReadAllBytes(Path.Combine(root, "third_party/IPAmjMincho/ipamjm.ttf"));
         var glyphs = runs.Select(run => run.GlyphId!.Value).Prepend((ushort)0).ToArray();
-        var subset = HarfBuzzSubset.Create(bytes, glyphs, CancellationToken.None);
+        var subset = Core.Pdf.HarfBuzzSubset.Create(bytes, glyphs, CancellationToken.None);
         Assert.True(subset.Length < bytes.Length / 10);
         using var sourceData = SKData.CreateCopy(bytes);
         using var subsetData = SKData.CreateCopy(subset);
@@ -193,7 +192,7 @@ public sealed class PdfBackendTests
         Directory.CreateDirectory(directory);
         File.WriteAllBytes(Path.Combine(directory, name + ".pdf"), output.ToArray());
         output.Position = 0;
-        using var parsed = PdfReader.Open(output, PdfDocumentOpenMode.Import);
+        using var parsed = PdfTestFile.Open(output);
         Assert.Single(parsed.Pages);
         Assert.True(output.Length > 500);
         if (!name.StartsWith("colr", StringComparison.Ordinal))
@@ -202,7 +201,7 @@ public sealed class PdfBackendTests
             using var source = SKTypeface.FromData(sourceData);
             using var original = new SKFont(source, 20);
             var glyphs = original.GetGlyphs("AB");
-            var subset = HarfBuzzSubset.Create(bytes, glyphs, CancellationToken.None);
+            var subset = Core.Pdf.HarfBuzzSubset.Create(bytes, glyphs, CancellationToken.None);
             using var subsetData = SKData.CreateCopy(subset);
             using var subsetFace = SKTypeface.FromData(subsetData);
             using var subsetFont = new SKFont(subsetFace, 20);
@@ -222,11 +221,11 @@ public sealed class PdfBackendTests
     [InlineData("collection.ttc")]
     [InlineData("colr.ttf")]
     [InlineData("colr-v1.ttf")]
-    public async Task Public_font_format_probe_preserves_shared_measurement_failures(string name)
+    public async Task Public_font_format_probe_loads_all_supported_snapshots(string name)
     {
         var outcomes = new List<object>();
         var successes = new List<bool>();
-        foreach (var backend in new[] { PdfBackend.PdfSharp, PdfBackend.SkiaSharp })
+        foreach (var backend in new PdfBackend?[] { null, PdfBackend.SkiaSharp })
         {
             using var input = Workbook("A B");
             using var output = new MemoryStream();
@@ -235,7 +234,7 @@ public sealed class PdfBackendTests
                 var result = await ExcelConverter.RenderAsync(input, new()
                 {
                     OutputFormat = OutputFormat.Pdf,
-                    PdfBackend = backend,
+                    PdfBackend = backend ?? new RenderRequest().PdfBackend,
                     FontOptions = new()
                     {
                         AllowSystemFonts = false,
@@ -259,21 +258,21 @@ public sealed class PdfBackendTests
         var directory = Path.Combine(AppContext.BaseDirectory, "SampleOutputs", "PdfFormats");
         Directory.CreateDirectory(directory);
         File.WriteAllText(Path.Combine(directory, name + ".json"), System.Text.Json.JsonSerializer.Serialize(outcomes));
-        Assert.Equal(successes[0], successes[1]);
+        Assert.All(successes, Assert.True);
     }
 
     [Fact]
-    public async Task Both_backends_keep_page_plans_and_link_tooltips()
+    public async Task Default_and_explicit_skia_keep_page_plans_and_link_tooltips()
     {
         var results = new List<ConversionResult>();
-        foreach (var backend in new[] { PdfBackend.PdfSharp, PdfBackend.SkiaSharp })
+        foreach (var backend in new PdfBackend?[] { null, PdfBackend.SkiaSharp })
         {
             using var input = Workbook(links: true);
             using var output = new MemoryStream();
             results.Add(await ExcelConverter.RenderAsync(input,
-                new() { OutputFormat = OutputFormat.Pdf, PdfBackend = backend, FontOptions = new() { AllowSystemFonts = false } }, new SingleStreamOutputSink(output)));
+                new() { OutputFormat = OutputFormat.Pdf, PdfBackend = backend ?? new RenderRequest().PdfBackend, FontOptions = new() { AllowSystemFonts = false } }, new SingleStreamOutputSink(output)));
             output.Position = 0;
-            using var pdf = PdfReader.Open(output, PdfDocumentOpenMode.Import);
+            using var pdf = PdfTestFile.Open(output);
             Assert.Single(pdf.Pages[0].Annotations);
             Assert.Equal("linktooltip", pdf.Pages[0].Annotations[0].Elements.GetString("/Contents"));
             Assert.InRange(pdf.Pages[0].MediaBox.Width, 595.27, 595.28);
@@ -286,17 +285,17 @@ public sealed class PdfBackendTests
     }
 
     [Theory]
-    [InlineData(PdfBackend.PdfSharp, false)]
+    [InlineData(null, false)]
     [InlineData(PdfBackend.SkiaSharp, false)]
-    [InlineData(PdfBackend.PdfSharp, true)]
+    [InlineData(null, true)]
     [InlineData(PdfBackend.SkiaSharp, true)]
-    public async Task Write_failure_or_midwrite_cancellation_aborts_once_and_releases_font_gate(PdfBackend backend, bool cancel)
+    public async Task Write_failure_or_midwrite_cancellation_aborts_once_and_releases_resources(PdfBackend? backend, bool cancel)
     {
         using var cancellation = new CancellationTokenSource();
         using var input = Workbook();
         using var output = new FailingOutput(cancel ? cancellation : null);
         var sink = new ObservedSink(output);
-        var request = new RenderRequest { OutputFormat = OutputFormat.Pdf, PdfBackend = backend, FontOptions = new() { AllowSystemFonts = false } };
+        var request = new RenderRequest { OutputFormat = OutputFormat.Pdf, PdfBackend = backend ?? new RenderRequest().PdfBackend, FontOptions = new() { AllowSystemFonts = false } };
         if (cancel)
         {
             await Assert.ThrowsAnyAsync<OperationCanceledException>(() => ExcelConverter.RenderAsync(input, request, sink, cancellation.Token));
@@ -326,7 +325,7 @@ public sealed class PdfBackendTests
             var result = await ExcelConverter.RenderAsync(input, new()
             {
                 OutputFormat = OutputFormat.Pdf,
-                PdfBackend = index % 2 == 0 ? PdfBackend.SkiaSharp : PdfBackend.PdfSharp,
+                PdfBackend = index % 2 == 0 ? PdfBackend.SkiaSharp : new RenderRequest().PdfBackend,
                 FontOptions = new()
                 {
                     AllowSystemFonts = false,
@@ -439,8 +438,8 @@ public sealed class PdfBackendTests
         using var output = new MemoryStream();
         writer.Complete(output);
         output.Position = 0;
-        using var pdf = PdfReader.Open(output, PdfDocumentOpenMode.Modify);
-        var images = pdf.Internals.GetAllObjects().OfType<global::PdfSharp.Pdf.PdfDictionary>()
+        using var pdf = PdfTestFile.Open(output);
+        var images = pdf.Internals.GetAllObjects().OfType<PdfTestMap>()
             .Where(dictionary => dictionary.Elements.GetName("/Subtype") == "/Image").ToArray();
         var color = Assert.Single(images, dictionary => dictionary.Elements.ContainsKey("/SMask"));
         Assert.True(color.Elements.GetBoolean("/Interpolate"));
@@ -450,7 +449,7 @@ public sealed class PdfBackendTests
     [Fact]
     public void Legacy_shape_and_vertical_text_are_finalized_before_the_writer()
     {
-        var service = new PdfSharp.PdfSharpTextMeasurer(new FontManager(new() { AllowSystemFonts = false }));
+        var service = new SkiaSharp.SkiaTextMeasurer(new FontManager(new() { AllowSystemFonts = false }));
         DrawCommand[] commands =
         [
             new DrawTextCommand(1, new(10, 10, 80, 100), "日本", Model.CellStyle.Default with { TextRotation = 255 }),
@@ -472,7 +471,7 @@ public sealed class PdfBackendTests
     {
         var command = OutputFixture.Artificial(runs: false);
         var layout = command.TextLayout!;
-        var service = new PdfSharp.PdfSharpTextMeasurer(new FontManager(new() { AllowSystemFonts = false }));
+        var service = new SkiaSharp.SkiaTextMeasurer(new FontManager(new() { AllowSystemFonts = false }));
         var finalized = Assert.IsType<DrawTextCommand>(PdfCommandFinalizer.Finalize([command], service, CancellationToken.None).Single());
         Assert.Equal(layout.Size, finalized.TextLayout!.Size);
         Assert.Equal(layout.EffectiveFontSize, finalized.TextLayout.EffectiveFontSize);
@@ -487,11 +486,11 @@ public sealed class PdfBackendTests
     }
 
     [Theory]
-    [InlineData(PdfBackend.PdfSharp, false)]
+    [InlineData(null, false)]
     [InlineData(PdfBackend.SkiaSharp, false)]
-    [InlineData(PdfBackend.PdfSharp, true)]
+    [InlineData(null, true)]
     [InlineData(PdfBackend.SkiaSharp, true)]
-    public async Task Corrupt_images_keep_warning_locations_and_strict_failure_policy(PdfBackend backend, bool strict)
+    public async Task Corrupt_images_keep_warning_locations_and_strict_failure_policy(PdfBackend? backend, bool strict)
     {
         using var input = Workbook();
         using (var document = DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Open(input, true))
@@ -505,7 +504,7 @@ public sealed class PdfBackendTests
         var request = new RenderRequest
         {
             OutputFormat = OutputFormat.Pdf,
-            PdfBackend = backend,
+            PdfBackend = backend ?? new RenderRequest().PdfBackend,
             DiagnosticOptions = new() { StrictMode = strict },
             FontOptions = new() { AllowSystemFonts = false },
         };

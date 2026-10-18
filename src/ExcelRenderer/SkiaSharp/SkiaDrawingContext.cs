@@ -13,15 +13,20 @@ internal sealed class SkiaDrawingContext
 {
     private readonly SkiaTextPainter _textPainter;
     private readonly SkiaPdfFonts? _pdfFonts;
+    private readonly bool textAsPaths;
+    private readonly CancellationToken cancellationToken;
 
     /// <summary>Initializes a new instance of the <see cref="SkiaDrawingContext"/> class. PNG または SVG の描画先へコマンドを実行するコンテキストを初期化します。</summary>
     /// <param name="textAsPaths">true の場合は文字をパスとして描画します。</param>
     /// <param name="pdfFonts">Optional document-scoped PDF Unicode and font resources.</param>
+    /// <param name="cancellationToken">The rendering cancellation token.</param>
     /// <param name="fontManager">文字の描画に使用するフォントを解決するマネージャーです。指定しない場合は Skia のシステムフォント選択を使用します。</param>
-    internal SkiaDrawingContext(bool textAsPaths, IFontManager? fontManager = null, SkiaPdfFonts? pdfFonts = null)
+    internal SkiaDrawingContext(bool textAsPaths, IFontManager? fontManager = null, SkiaPdfFonts? pdfFonts = null, CancellationToken cancellationToken = default)
     {
         _textPainter = new(textAsPaths, fontManager, pdfFonts: pdfFonts);
         _pdfFonts = pdfFonts;
+        this.textAsPaths = textAsPaths;
+        this.cancellationToken = cancellationToken;
     }
 
     /// <summary>Gets or sets the optional PDF page diagnostic callback.</summary>
@@ -65,13 +70,13 @@ internal sealed class SkiaDrawingContext
 
                 break;
             case DrawBorderCommand border:
-                DrawBorder(canvas, border);
+                Core.Pdf.SkiaDrawingPrimitives.DrawBorder(canvas, (Core.Drawing.DrawBorderCommand)CoreIntegration.CoreCommandAdapter.ToCore(border));
                 break;
             case DrawTextCommand text:
                 _textPainter.Paint(canvas, text);
                 break;
             case DrawLineCommand line:
-                DrawStyledLine(canvas, line.Style, line.X1, line.Y1, line.X2, line.Y2);
+                Core.Pdf.SkiaDrawingPrimitives.DrawStyledLine(canvas, CoreIntegration.CoreModelAdapter.ToCore(line.Style), line.X1, line.Y1, line.X2, line.Y2);
 
                 break;
             case DrawImageCommand image:
@@ -85,18 +90,6 @@ internal sealed class SkiaDrawingContext
 
     private static SKRect ToRect(ReportRect rect) =>
         new((float)rect.X, (float)rect.Y, (float)(rect.X + rect.Width), (float)(rect.Y + rect.Height));
-
-    private static SKImage? DecodeImage(byte[] imageBytes)
-    {
-        try
-        {
-            return SKImage.FromEncodedData(imageBytes);
-        }
-        catch (Exception exception) when (exception is ArgumentException or InvalidOperationException or InvalidDataException)
-        {
-            return null;
-        }
-    }
 
     private void DrawShape(SKCanvas canvas, DrawShapeCommand command)
     {
@@ -185,19 +178,18 @@ internal sealed class SkiaDrawingContext
     private void DrawImage(SKCanvas canvas, DrawImageCommand command)
     {
         using var ownedResources = ImageResources.Current is null ? new ImageResources() : null;
-        using var lease = ImageResources.Current!.Acquire(command.ImageBytes, () =>
-        {
-            var decoded = DecodeImage(command.ImageBytes);
-            return (decoded, decoded is null ? 0 : Math.Max((long)decoded.Width * 4, decoded.Info.RowBytes) * decoded.Height);
-        });
-        var image = lease?.Value;
+        cancellationToken.ThrowIfCancellationRequested();
+        using var lease = ImageResources.Current!.AcquireImage(command.ImageBytes, out var failure);
+        cancellationToken.ThrowIfCancellationRequested();
+        _pdfFonts?.CheckCancellation();
+        var image = _pdfFonts is not null ? lease?.Value.PdfImage : textAsPaths ? lease?.Value.SvgImage : lease?.Value.Raster;
         if (image is null)
         {
             if (DiagnosticHandler is { } diagnostic)
             {
                 var warning = CoreIntegration.CoreDiagnosticAdapter.ToPublic(Core.Pdf.CorePdfRenderer.CreateImageFailureDiagnostic(
                     (Core.Drawing.DrawImageCommand)CoreIntegration.CoreCommandAdapter.ToCore(command),
-                    "SKImage.FromEncodedData returned null; the image data could not be decoded."));
+                    failure!));
                 System.Diagnostics.Trace.TraceWarning("{0}: {1}", warning.Code, warning.Message);
                 diagnostic(warning);
             }
@@ -225,66 +217,18 @@ internal sealed class SkiaDrawingContext
             command.FlipVertical ? -1 : 1,
             destination.MidX,
             destination.MidY);
-        var sampling = _pdfFonts is null
-            ? new SKSamplingOptions(SKCubicResampler.Mitchell)
-            : new SKSamplingOptions(SKFilterMode.Linear);
-        canvas.DrawImage(image, source, destination, sampling);
+        if (_pdfFonts is not null)
+        {
+            Core.Pdf.SkiaDrawingPrimitives.DrawPdfImage(canvas, image, source, destination);
+        }
+        else
+        {
+            canvas.DrawImage(image, source, destination, new SKSamplingOptions(SKCubicResampler.Mitchell));
+        }
+
         canvas.Restore();
     }
 
-    private void DrawBorder(SKCanvas canvas, DrawBorderCommand command)
-    {
-        var rect = command.Bounds;
-        DrawSide(command.Border.Top, rect.X, rect.Y, rect.X + rect.Width, rect.Y, 0, 1);
-        DrawSide(command.Border.Right, rect.X + rect.Width, rect.Y, rect.X + rect.Width, rect.Y + rect.Height, -1, 0);
-        DrawSide(command.Border.Bottom, rect.X, rect.Y + rect.Height, rect.X + rect.Width, rect.Y + rect.Height, 0, -1);
-        DrawSide(command.Border.Left, rect.X, rect.Y, rect.X, rect.Y + rect.Height, 1, 0);
-
-        void DrawSide(BorderSide? side, double x1, double y1, double x2, double y2, double inwardX, double inwardY)
-        {
-            if (side is null)
-            {
-                return;
-            }
-
-            DrawStyledLine(canvas, side, x1, y1, x2, y2, inwardX, inwardY);
-        }
-    }
-
-    private void DrawStyledLine(SKCanvas canvas, BorderSide side, double x1, double y1, double x2, double y2, double inwardX = 0, double inwardY = 0)
-    {
-        using var paint = CreateBorderPaint(side);
-        foreach (var stroke in BorderStrokeGeometry.GetStrokes(side, x1, y1, x2, y2, inwardX, inwardY))
-        {
-            canvas.DrawLine((float)stroke.X1, (float)stroke.Y1, (float)stroke.X2, (float)stroke.Y2, paint);
-        }
-    }
-
-    private SKPaint CreateBorderPaint(BorderSide side)
-    {
-        var paint = CreatePaint(side.Color ?? new(0, 0, 0), SKPaintStyle.Stroke, side.Width);
-        var pattern = side.LineStyle switch
-        {
-            BorderLineStyle.Dotted => new float[] { 1, 2 },
-            BorderLineStyle.Dashed => new float[] { 3, 2 },
-            BorderLineStyle.DashDot => new float[] { 3, 2, 1, 2 },
-            BorderLineStyle.DashDotDot => new float[] { 3, 2, 1, 2, 1, 2 },
-            _ => null,
-        };
-        if (pattern is not null)
-        {
-            using var effect = SKPathEffect.CreateDash(pattern.Select(x => x * (float)side.Width).ToArray(), 0);
-            paint.PathEffect = effect;
-        }
-
-        return paint;
-    }
-
-    private SKPaint CreatePaint(ReportColor color, SKPaintStyle style, double width = 1) => new()
-    {
-        Color = new(color.Red, color.Green, color.Blue, color.Alpha),
-        Style = style,
-        StrokeWidth = (float)width,
-        IsAntialias = true,
-    };
+    private SKPaint CreatePaint(ReportColor color, SKPaintStyle style, double width = 1) =>
+        Core.Pdf.SkiaDrawingPrimitives.CreatePaint(CoreIntegration.CoreModelAdapter.ToCore(color), style, width);
 }

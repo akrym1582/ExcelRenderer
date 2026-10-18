@@ -1,0 +1,61 @@
+{
+  "name": "rich-theme",
+  "path": "e2e",
+  "commandFingerprints": {
+    "1": "DE39C768BDEEBDDCBD04092C37D2F9A6ADCD8134D92E1A69D34D7E508582082B"
+  },
+  "pagePlanSha256": "87C64F62705DB64354C809C5D62F292D687A5ABC28C74DE4CAEB5678E300D594",
+  "pages": [
+    {
+      "SourceSheetIndex": 1,
+      "SourceSheetName": "theme",
+      "SourcePageNumber": 1,
+      "DocumentPageNumber": 1,
+      "OutputPageNumber": 1,
+      "WidthPoints": 612,
+      "HeightPoints": 792,
+      "PixelWidth": 816,
+      "PixelHeight": 1056,
+      "Dpi": 96,
+      "RequestedRange": null,
+      "SourceCellRanges": [
+        {
+          "First": {
+            "Row": 1,
+            "Column": 1
+          },
+          "Last": {
+            "Row": 1,
+            "Column": 1
+          }
+        }
+      ],
+      "SourceRegions": [
+        {
+          "X": 0,
+          "Y": 0,
+          "Width": 51.75,
+          "Height": 15
+        }
+      ],
+      "OriginalWidthPoints": null,
+      "OriginalHeightPoints": null,
+      "CropBounds": null,
+      "PaddingPoints": null
+    }
+  ],
+  "diagnostics": [
+    {
+      "Code": "MaximumDigitWidthResolved",
+      "Severity": 0,
+      "Stage": 0,
+      "Message": "Normal font \u0027Calibri\u0027 resolved to \u0027Noto Sans JP\u0027 with MDW 8px.",
+      "SheetName": "theme",
+      "CellRange": null,
+      "ObjectId": null,
+      "SourcePageNumber": null,
+      "OccurrenceCount": 1,
+      "UnicodeSequence": null
+    }
+  ]
+}

@@ -1,0 +1,2564 @@
+[
+  {
+    "fixture": "invoice",
+    "concurrency": 1,
+    "stages": {
+      "A": {
+        "TotalMs": {
+          "median": 81.4856,
+          "max": 124.3306
+        },
+        "PeakWorkingSet64": {
+          "median": 123670528,
+          "max": 129806336
+        },
+        "AllocatedBytes": {
+          "median": 24680864,
+          "max": 24855160
+        },
+        "OutputBytes": {
+          "median": 123947,
+          "max": 123947
+        },
+        "pages": [
+          1
+        ],
+        "textMeasure.ms": {
+          "median": 35.783799999999964,
+          "max": 43.646300000000025
+        },
+        "pdfSubset.ms": {
+          "median": 0,
+          "max": 0
+        },
+        "pdfPage.ms": {
+          "median": 4.0537,
+          "max": 8.3816
+        },
+        "pdfFinalSave.ms": {
+          "median": 9.92,
+          "max": 23.6898
+        }
+      },
+      "B": {
+        "TotalMs": {
+          "median": 87.767,
+          "max": 106.7233
+        },
+        "PeakWorkingSet64": {
+          "median": 144003072,
+          "max": 159600640
+        },
+        "AllocatedBytes": {
+          "median": 23575032,
+          "max": 23598136
+        },
+        "OutputBytes": {
+          "median": 34738,
+          "max": 34738
+        },
+        "pages": [
+          1
+        ],
+        "textMeasure.ms": {
+          "median": 29.54380000000011,
+          "max": 44.96250000000004
+        },
+        "pdfSubset.ms": {
+          "median": 4.0836,
+          "max": 5.8406
+        },
+        "pdfPage.ms": {
+          "median": 4.0755,
+          "max": 5.8175
+        },
+        "pdfFinalSave.ms": {
+          "median": 3.0274,
+          "max": 3.5125
+        }
+      },
+      "C": {
+        "TotalMs": {
+          "median": 52.8392,
+          "max": 84.592
+        },
+        "PeakWorkingSet64": {
+          "median": 122802176,
+          "max": 138522624
+        },
+        "AllocatedBytes": {
+          "median": 16505080,
+          "max": 16511672
+        },
+        "OutputBytes": {
+          "median": 33386,
+          "max": 33386
+        },
+        "pages": [
+          1
+        ],
+        "textMeasure.ms": {
+          "median": 1.3383999999999938,
+          "max": 2.70670000000001
+        },
+        "pdfSubset.ms": {
+          "median": 3.0084,
+          "max": 4.5508
+        },
+        "pdfPage.ms": {
+          "median": 2.8537,
+          "max": 3.5026
+        },
+        "pdfFinalSave.ms": {
+          "median": 2.5516,
+          "max": 2.7183
+        }
+      }
+    },
+    "timeRatio": 0.6020394909248351,
+    "memoryRatio": 0.8527746963620332,
+    "timeMaxRatio": 0.792629163453529,
+    "memoryMaxRatio": 0.8679327601693828,
+    "passed": true
+  },
+  {
+    "fixture": "invoice",
+    "concurrency": 4,
+    "stages": {
+      "A": {
+        "TotalMs": {
+          "median": 118.92475,
+          "max": 465.869
+        },
+        "PeakWorkingSet64": {
+          "median": 123564032.0,
+          "max": 130408448
+        },
+        "AllocatedBytes": {
+          "median": 24695272.0,
+          "max": 24983272
+        },
+        "OutputBytes": {
+          "median": 123947.0,
+          "max": 123947
+        },
+        "pages": [
+          1
+        ],
+        "textMeasure.ms": {
+          "median": 37.40150000000001,
+          "max": 177.6477999999995
+        },
+        "pdfSubset.ms": {
+          "median": 0.0,
+          "max": 0
+        },
+        "pdfPage.ms": {
+          "median": 5.5133,
+          "max": 10.5971
+        },
+        "pdfFinalSave.ms": {
+          "median": 10.0303,
+          "max": 31.5403
+        }
+      },
+      "B": {
+        "TotalMs": {
+          "median": 122.71629999999999,
+          "max": 176.3199
+        },
+        "PeakWorkingSet64": {
+          "median": 142372864.0,
+          "max": 159834112
+        },
+        "AllocatedBytes": {
+          "median": 23596016.0,
+          "max": 23809280
+        },
+        "OutputBytes": {
+          "median": 34738.0,
+          "max": 34738
+        },
+        "pages": [
+          1
+        ],
+        "textMeasure.ms": {
+          "median": 38.71329999999993,
+          "max": 64.18500000000026
+        },
+        "pdfSubset.ms": {
+          "median": 5.1770499999999995,
+          "max": 13.4159
+        },
+        "pdfPage.ms": {
+          "median": 4.50985,
+          "max": 8.6574
+        },
+        "pdfFinalSave.ms": {
+          "median": 3.7129499999999998,
+          "max": 7.3942
+        }
+      },
+      "C": {
+        "TotalMs": {
+          "median": 79.62880000000001,
+          "max": 207.0361
+        },
+        "PeakWorkingSet64": {
+          "median": 121487360.0,
+          "max": 131678208
+        },
+        "AllocatedBytes": {
+          "median": 16494408.0,
+          "max": 16540672
+        },
+        "OutputBytes": {
+          "median": 33386.0,
+          "max": 33386
+        },
+        "pages": [
+          1
+        ],
+        "textMeasure.ms": {
+          "median": 1.667599999999993,
+          "max": 4.398100000000004
+        },
+        "pdfSubset.ms": {
+          "median": 5.6804,
+          "max": 20.9259
+        },
+        "pdfPage.ms": {
+          "median": 3.8230500000000003,
+          "max": 20.2825
+        },
+        "pdfFinalSave.ms": {
+          "median": 3.0212,
+          "max": 6.8775
+        }
+      }
+    },
+    "timeRatio": 0.6488852744093492,
+    "memoryRatio": 0.8533041802123191,
+    "timeMaxRatio": 1.174207222213715,
+    "memoryMaxRatio": 0.8238429603813233,
+    "passed": true
+  },
+  {
+    "fixture": "invoice",
+    "concurrency": 8,
+    "stages": {
+      "A": {
+        "TotalMs": {
+          "median": 134.28485,
+          "max": 522.618
+        },
+        "PeakWorkingSet64": {
+          "median": 120365056.0,
+          "max": 131248128
+        },
+        "AllocatedBytes": {
+          "median": 24697036.0,
+          "max": 24880488
+        },
+        "OutputBytes": {
+          "median": 123947.0,
+          "max": 123947
+        },
+        "pages": [
+          1
+        ],
+        "textMeasure.ms": {
+          "median": 43.750750000000025,
+          "max": 187.8704999999998
+        },
+        "pdfSubset.ms": {
+          "median": 0.0,
+          "max": 0
+        },
+        "pdfPage.ms": {
+          "median": 5.94165,
+          "max": 60.4225
+        },
+        "pdfFinalSave.ms": {
+          "median": 11.195599999999999,
+          "max": 58.3867
+        }
+      },
+      "B": {
+        "TotalMs": {
+          "median": 142.6972,
+          "max": 471.3968
+        },
+        "PeakWorkingSet64": {
+          "median": 134897664.0,
+          "max": 146272256
+        },
+        "AllocatedBytes": {
+          "median": 23602284.0,
+          "max": 23759544
+        },
+        "OutputBytes": {
+          "median": 34738.0,
+          "max": 34738
+        },
+        "pages": [
+          1
+        ],
+        "textMeasure.ms": {
+          "median": 45.73094999999999,
+          "max": 229.93379999999982
+        },
+        "pdfSubset.ms": {
+          "median": 6.67885,
+          "max": 20.0807
+        },
+        "pdfPage.ms": {
+          "median": 4.6479,
+          "max": 14.1154
+        },
+        "pdfFinalSave.ms": {
+          "median": 3.8837,
+          "max": 36.5616
+        }
+      },
+      "C": {
+        "TotalMs": {
+          "median": 96.94409999999999,
+          "max": 211.844
+        },
+        "PeakWorkingSet64": {
+          "median": 119654400.0,
+          "max": 126824448
+        },
+        "AllocatedBytes": {
+          "median": 16508940.0,
+          "max": 16691336
+        },
+        "OutputBytes": {
+          "median": 33386.0,
+          "max": 33386
+        },
+        "pages": [
+          1
+        ],
+        "textMeasure.ms": {
+          "median": 1.642999999999991,
+          "max": 4.922400000000006
+        },
+        "pdfSubset.ms": {
+          "median": 6.254849999999999,
+          "max": 24.0602
+        },
+        "pdfPage.ms": {
+          "median": 4.362299999999999,
+          "max": 26.2549
+        },
+        "pdfFinalSave.ms": {
+          "median": 3.6014,
+          "max": 22.1857
+        }
+      }
+    },
+    "timeRatio": 0.6793693218927911,
+    "memoryRatio": 0.8870012752778283,
+    "timeMaxRatio": 0.44939634719624744,
+    "memoryMaxRatio": 0.8670437680266585,
+    "passed": true
+  },
+  {
+    "fixture": "grid",
+    "concurrency": 1,
+    "stages": {
+      "A": {
+        "TotalMs": {
+          "median": 330.4362,
+          "max": 508.6625
+        },
+        "PeakWorkingSet64": {
+          "median": 643907584,
+          "max": 700850176
+        },
+        "AllocatedBytes": {
+          "median": 259617648,
+          "max": 259727672
+        },
+        "OutputBytes": {
+          "median": 171278,
+          "max": 171278
+        },
+        "pages": [
+          1
+        ],
+        "textMeasure.ms": {
+          "median": 64.76089999999982,
+          "max": 130.55569999999946
+        },
+        "pdfSubset.ms": {
+          "median": 0,
+          "max": 0
+        },
+        "pdfPage.ms": {
+          "median": 29.7694,
+          "max": 33.0202
+        },
+        "pdfFinalSave.ms": {
+          "median": 19.9694,
+          "max": 23.8659
+        }
+      },
+      "B": {
+        "TotalMs": {
+          "median": 457.2038,
+          "max": 999.6327
+        },
+        "PeakWorkingSet64": {
+          "median": 754302976,
+          "max": 833839104
+        },
+        "AllocatedBytes": {
+          "median": 258714096,
+          "max": 259156048
+        },
+        "OutputBytes": {
+          "median": 105313,
+          "max": 105313
+        },
+        "pages": [
+          1
+        ],
+        "textMeasure.ms": {
+          "median": 69.19740000000012,
+          "max": 177.74480000000037
+        },
+        "pdfSubset.ms": {
+          "median": 36.890499999999996,
+          "max": 83.76299999999999
+        },
+        "pdfPage.ms": {
+          "median": 11.6546,
+          "max": 22.0557
+        },
+        "pdfFinalSave.ms": {
+          "median": 15.2736,
+          "max": 17.8323
+        }
+      },
+      "C": {
+        "TotalMs": {
+          "median": 463.234,
+          "max": 588.8673
+        },
+        "PeakWorkingSet64": {
+          "median": 768061440,
+          "max": 791388160
+        },
+        "AllocatedBytes": {
+          "median": 310707200,
+          "max": 310920240
+        },
+        "OutputBytes": {
+          "median": 125125,
+          "max": 125125
+        },
+        "pages": [
+          1
+        ],
+        "textMeasure.ms": {
+          "median": 86.30969999999976,
+          "max": 87.02200000000036
+        },
+        "pdfSubset.ms": {
+          "median": 38.0501,
+          "max": 54.7687
+        },
+        "pdfPage.ms": {
+          "median": 11.2283,
+          "max": 15.6392
+        },
+        "pdfFinalSave.ms": {
+          "median": 16.4138,
+          "max": 18.5207
+        }
+      }
+    },
+    "timeRatio": 1.0131893042008837,
+    "memoryRatio": 1.0182399704598275,
+    "timeMaxRatio": 0.5890836704321497,
+    "memoryMaxRatio": 0.949089765883659,
+    "passed": true
+  },
+  {
+    "fixture": "grid",
+    "concurrency": 4,
+    "stages": {
+      "A": {
+        "TotalMs": {
+          "median": 510.9352,
+          "max": 2138.8555
+        },
+        "PeakWorkingSet64": {
+          "median": 634529792.0,
+          "max": 651857920
+        },
+        "AllocatedBytes": {
+          "median": 259939708.0,
+          "max": 260678176
+        },
+        "OutputBytes": {
+          "median": 171278.0,
+          "max": 171278
+        },
+        "pages": [
+          1
+        ],
+        "textMeasure.ms": {
+          "median": 95.82514999999995,
+          "max": 819.0191999999996
+        },
+        "pdfSubset.ms": {
+          "median": 0.0,
+          "max": 0
+        },
+        "pdfPage.ms": {
+          "median": 36.8767,
+          "max": 154.2208
+        },
+        "pdfFinalSave.ms": {
+          "median": 18.2297,
+          "max": 79.7182
+        }
+      },
+      "B": {
+        "TotalMs": {
+          "median": 676.3697,
+          "max": 1372.5535
+        },
+        "PeakWorkingSet64": {
+          "median": 728350720.0,
+          "max": 783847424
+        },
+        "AllocatedBytes": {
+          "median": 259019052.0,
+          "max": 259247240
+        },
+        "OutputBytes": {
+          "median": 105313.0,
+          "max": 105313
+        },
+        "pages": [
+          1
+        ],
+        "textMeasure.ms": {
+          "median": 93.38764999999978,
+          "max": 226.30190000000042
+        },
+        "pdfSubset.ms": {
+          "median": 49.28375,
+          "max": 96.9416
+        },
+        "pdfPage.ms": {
+          "median": 17.297800000000002,
+          "max": 35.0992
+        },
+        "pdfFinalSave.ms": {
+          "median": 20.12395,
+          "max": 95.79
+        }
+      },
+      "C": {
+        "TotalMs": {
+          "median": 616.79765,
+          "max": 1546.4472
+        },
+        "PeakWorkingSet64": {
+          "median": 747952128.0,
+          "max": 807096320
+        },
+        "AllocatedBytes": {
+          "median": 310939120.0,
+          "max": 311165480
+        },
+        "OutputBytes": {
+          "median": 125125.0,
+          "max": 125125
+        },
+        "pages": [
+          1
+        ],
+        "textMeasure.ms": {
+          "median": 117.51174999999989,
+          "max": 411.03629999999856
+        },
+        "pdfSubset.ms": {
+          "median": 49.021950000000004,
+          "max": 238.42329999999998
+        },
+        "pdfPage.ms": {
+          "median": 16.3971,
+          "max": 23.2652
+        },
+        "pdfFinalSave.ms": {
+          "median": 22.9199,
+          "max": 46.7086
+        }
+      }
+    },
+    "timeRatio": 0.9119238339624025,
+    "memoryRatio": 1.0269120458891012,
+    "timeMaxRatio": 1.1266935678645678,
+    "memoryMaxRatio": 1.0296599762761993,
+    "passed": true
+  },
+  {
+    "fixture": "grid",
+    "concurrency": 8,
+    "stages": {
+      "A": {
+        "TotalMs": {
+          "median": 810.5848000000001,
+          "max": 2430.7059
+        },
+        "PeakWorkingSet64": {
+          "median": 573177856.0,
+          "max": 644157440
+        },
+        "AllocatedBytes": {
+          "median": 260040328.0,
+          "max": 260915392
+        },
+        "OutputBytes": {
+          "median": 171278.0,
+          "max": 171278
+        },
+        "pages": [
+          1
+        ],
+        "textMeasure.ms": {
+          "median": 112.34729999999999,
+          "max": 791.5456999999984
+        },
+        "pdfSubset.ms": {
+          "median": 0.0,
+          "max": 0
+        },
+        "pdfPage.ms": {
+          "median": 43.4033,
+          "max": 335.4778
+        },
+        "pdfFinalSave.ms": {
+          "median": 21.34235,
+          "max": 178.2586
+        }
+      },
+      "B": {
+        "TotalMs": {
+          "median": 941.6492000000001,
+          "max": 2753.7437
+        },
+        "PeakWorkingSet64": {
+          "median": 672501760.0,
+          "max": 745435136
+        },
+        "AllocatedBytes": {
+          "median": 259177028.0,
+          "max": 259998864
+        },
+        "OutputBytes": {
+          "median": 105313.0,
+          "max": 105313
+        },
+        "pages": [
+          1
+        ],
+        "textMeasure.ms": {
+          "median": 143.14824999999973,
+          "max": 917.4814000000009
+        },
+        "pdfSubset.ms": {
+          "median": 79.66215,
+          "max": 633.2851999999999
+        },
+        "pdfPage.ms": {
+          "median": 20.06255,
+          "max": 79.9784
+        },
+        "pdfFinalSave.ms": {
+          "median": 25.27445,
+          "max": 73.9122
+        }
+      },
+      "C": {
+        "TotalMs": {
+          "median": 944.80405,
+          "max": 3131.6715
+        },
+        "PeakWorkingSet64": {
+          "median": 746051584.0,
+          "max": 786391040
+        },
+        "AllocatedBytes": {
+          "median": 311142776.0,
+          "max": 312097528
+        },
+        "OutputBytes": {
+          "median": 125125.0,
+          "max": 125125
+        },
+        "pages": [
+          1
+        ],
+        "textMeasure.ms": {
+          "median": 186.9820999999999,
+          "max": 425.169000000001
+        },
+        "pdfSubset.ms": {
+          "median": 79.9627,
+          "max": 487.76779999999997
+        },
+        "pdfPage.ms": {
+          "median": 20.201349999999998,
+          "max": 137.1894
+        },
+        "pdfFinalSave.ms": {
+          "median": 38.9845,
+          "max": 97.6676
+        }
+      }
+    },
+    "timeRatio": 1.0033503453302992,
+    "memoryRatio": 1.1093674818040624,
+    "timeMaxRatio": 1.1372414578742387,
+    "memoryMaxRatio": 1.0549422773653643,
+    "passed": true
+  },
+  {
+    "fixture": "images",
+    "concurrency": 1,
+    "stages": {
+      "A": {
+        "TotalMs": {
+          "median": 1236.6119,
+          "max": 1364.614
+        },
+        "PeakWorkingSet64": {
+          "median": 295755776,
+          "max": 305762304
+        },
+        "AllocatedBytes": {
+          "median": 204955344,
+          "max": 205513168
+        },
+        "OutputBytes": {
+          "median": 6204439,
+          "max": 6204439
+        },
+        "pages": [
+          12
+        ],
+        "textMeasure.ms": {
+          "median": 24.516700000003343,
+          "max": 25.59040000000246
+        },
+        "pdfSubset.ms": {
+          "median": 0,
+          "max": 0
+        },
+        "pdfPage.ms": {
+          "median": 806.3563999999999,
+          "max": 999.1902000000001
+        },
+        "pdfFinalSave.ms": {
+          "median": 10.5638,
+          "max": 11.778
+        }
+      },
+      "B": {
+        "TotalMs": {
+          "median": 771.2651,
+          "max": 880.353
+        },
+        "PeakWorkingSet64": {
+          "median": 347619328,
+          "max": 375635968
+        },
+        "AllocatedBytes": {
+          "median": 143153552,
+          "max": 143607240
+        },
+        "OutputBytes": {
+          "median": 6192052,
+          "max": 6192052
+        },
+        "pages": [
+          12
+        ],
+        "textMeasure.ms": {
+          "median": 26.707700000008998,
+          "max": 27.498400000009035
+        },
+        "pdfSubset.ms": {
+          "median": 5.566,
+          "max": 6.4315
+        },
+        "pdfPage.ms": {
+          "median": 362.0863999999999,
+          "max": 448.725
+        },
+        "pdfFinalSave.ms": {
+          "median": 13.204,
+          "max": 15.2786
+        }
+      },
+      "C": {
+        "TotalMs": {
+          "median": 772.1516,
+          "max": 929.988
+        },
+        "PeakWorkingSet64": {
+          "median": 325701632,
+          "max": 348999680
+        },
+        "AllocatedBytes": {
+          "median": 137775616,
+          "max": 138866720
+        },
+        "OutputBytes": {
+          "median": 12314710,
+          "max": 12314710
+        },
+        "pages": [
+          12
+        ],
+        "textMeasure.ms": {
+          "median": 8.300100000000157,
+          "max": 9.852199999999202
+        },
+        "pdfSubset.ms": {
+          "median": 7.539,
+          "max": 24.5662
+        },
+        "pdfPage.ms": {
+          "median": 378.25079999999997,
+          "max": 554.6211000000001
+        },
+        "pdfFinalSave.ms": {
+          "median": 9.3157,
+          "max": 12.4659
+        }
+      }
+    },
+    "timeRatio": 1.0011494102352096,
+    "memoryRatio": 0.9369491445538954,
+    "timeMaxRatio": 1.0563807927047446,
+    "memoryMaxRatio": 0.9290901557116064,
+    "passed": true
+  },
+  {
+    "fixture": "images",
+    "concurrency": 4,
+    "stages": {
+      "A": {
+        "TotalMs": {
+          "median": 1877.0482,
+          "max": 2451.5432
+        },
+        "PeakWorkingSet64": {
+          "median": 288382976.0,
+          "max": 296034304
+        },
+        "AllocatedBytes": {
+          "median": 205137408.0,
+          "max": 206422536
+        },
+        "OutputBytes": {
+          "median": 6204439.0,
+          "max": 6204439
+        },
+        "pages": [
+          12
+        ],
+        "textMeasure.ms": {
+          "median": 33.199000000002655,
+          "max": 78.07250000000177
+        },
+        "pdfSubset.ms": {
+          "median": 0.0,
+          "max": 0
+        },
+        "pdfPage.ms": {
+          "median": 1226.4058,
+          "max": 1536.8834
+        },
+        "pdfFinalSave.ms": {
+          "median": 13.51615,
+          "max": 35.6543
+        }
+      },
+      "B": {
+        "TotalMs": {
+          "median": 1109.91985,
+          "max": 1742.1181
+        },
+        "PeakWorkingSet64": {
+          "median": 324804608.0,
+          "max": 355160064
+        },
+        "AllocatedBytes": {
+          "median": 142323660.0,
+          "max": 143877536
+        },
+        "OutputBytes": {
+          "median": 6192052.0,
+          "max": 6192052
+        },
+        "pages": [
+          12
+        ],
+        "textMeasure.ms": {
+          "median": 36.57684999999998,
+          "max": 97.44849999999659
+        },
+        "pdfSubset.ms": {
+          "median": 6.4213000000000005,
+          "max": 29.1027
+        },
+        "pdfPage.ms": {
+          "median": 541.0211999999999,
+          "max": 876.9479
+        },
+        "pdfFinalSave.ms": {
+          "median": 14.4936,
+          "max": 40.9296
+        }
+      },
+      "C": {
+        "TotalMs": {
+          "median": 1234.95085,
+          "max": 2189.2814
+        },
+        "PeakWorkingSet64": {
+          "median": 302172160.0,
+          "max": 339333120
+        },
+        "AllocatedBytes": {
+          "median": 134449884.0,
+          "max": 139643536
+        },
+        "OutputBytes": {
+          "median": 12314710.0,
+          "max": 12314710
+        },
+        "pages": [
+          12
+        ],
+        "textMeasure.ms": {
+          "median": 10.936950000000147,
+          "max": 36.305599999998904
+        },
+        "pdfSubset.ms": {
+          "median": 8.1833,
+          "max": 20.8595
+        },
+        "pdfPage.ms": {
+          "median": 568.4682,
+          "max": 1174.5066000000002
+        },
+        "pdfFinalSave.ms": {
+          "median": 11.69975,
+          "max": 14.5098
+        }
+      }
+    },
+    "timeRatio": 1.112648674586728,
+    "memoryRatio": 0.930319806300285,
+    "timeMaxRatio": 1.2566779485271407,
+    "memoryMaxRatio": 0.9554371518527488,
+    "passed": true
+  },
+  {
+    "fixture": "images",
+    "concurrency": 8,
+    "stages": {
+      "A": {
+        "TotalMs": {
+          "median": 3495.6228499999997,
+          "max": 10003.9314
+        },
+        "PeakWorkingSet64": {
+          "median": 287096832.0,
+          "max": 319483904
+        },
+        "AllocatedBytes": {
+          "median": 202479316.0,
+          "max": 207390232
+        },
+        "OutputBytes": {
+          "median": 6204439.0,
+          "max": 6204439
+        },
+        "pages": [
+          12
+        ],
+        "textMeasure.ms": {
+          "median": 62.76385000000606,
+          "max": 361.95329999991293
+        },
+        "pdfSubset.ms": {
+          "median": 0.0,
+          "max": 0
+        },
+        "pdfPage.ms": {
+          "median": 2092.9945,
+          "max": 6023.016400000001
+        },
+        "pdfFinalSave.ms": {
+          "median": 15.379,
+          "max": 96.3531
+        }
+      },
+      "B": {
+        "TotalMs": {
+          "median": 2532.55035,
+          "max": 5223.9889
+        },
+        "PeakWorkingSet64": {
+          "median": 302710784.0,
+          "max": 354541568
+        },
+        "AllocatedBytes": {
+          "median": 143464848.0,
+          "max": 145528248
+        },
+        "OutputBytes": {
+          "median": 6192052.0,
+          "max": 6192052
+        },
+        "pages": [
+          12
+        ],
+        "textMeasure.ms": {
+          "median": 70.26565000001193,
+          "max": 745.6379999999846
+        },
+        "pdfSubset.ms": {
+          "median": 8.527000000000001,
+          "max": 72.891
+        },
+        "pdfPage.ms": {
+          "median": 802.1046499999998,
+          "max": 2585.9903000000004
+        },
+        "pdfFinalSave.ms": {
+          "median": 17.6231,
+          "max": 137.8427
+        }
+      },
+      "C": {
+        "TotalMs": {
+          "median": 2040.1885000000002,
+          "max": 5930.0725
+        },
+        "PeakWorkingSet64": {
+          "median": 291913728.0,
+          "max": 340459520
+        },
+        "AllocatedBytes": {
+          "median": 138951308.0,
+          "max": 140900312
+        },
+        "OutputBytes": {
+          "median": 12314710.0,
+          "max": 12314710
+        },
+        "pages": [
+          12
+        ],
+        "textMeasure.ms": {
+          "median": 11.401150000000099,
+          "max": 104.27339999999644
+        },
+        "pdfSubset.ms": {
+          "median": 7.712350000000001,
+          "max": 53.5794
+        },
+        "pdfPage.ms": {
+          "median": 777.7895000000001,
+          "max": 4010.5204000000003
+        },
+        "pdfFinalSave.ms": {
+          "median": 16.75845,
+          "max": 108.9454
+        }
+      }
+    },
+    "timeRatio": 0.8055865503325532,
+    "memoryRatio": 0.964332106516562,
+    "timeMaxRatio": 1.1351617726446548,
+    "memoryMaxRatio": 0.9602809676748538,
+    "passed": true
+  },
+  {
+    "fixture": "50-pages",
+    "concurrency": 1,
+    "stages": {
+      "A": {
+        "TotalMs": {
+          "median": 930.3043,
+          "max": 1074.8387
+        },
+        "PeakWorkingSet64": {
+          "median": 272510976,
+          "max": 275030016
+        },
+        "AllocatedBytes": {
+          "median": 186530696,
+          "max": 187016096
+        },
+        "OutputBytes": {
+          "median": 132286,
+          "max": 132286
+        },
+        "pages": [
+          50
+        ],
+        "textMeasure.ms": {
+          "median": 26.476100000007573,
+          "max": 26.943500000005088
+        },
+        "pdfSubset.ms": {
+          "median": 0,
+          "max": 0
+        },
+        "pdfPage.ms": {
+          "median": 339.9249000000001,
+          "max": 382.8968000000001
+        },
+        "pdfFinalSave.ms": {
+          "median": 15.3097,
+          "max": 31.9337
+        }
+      },
+      "B": {
+        "TotalMs": {
+          "median": 949.9996,
+          "max": 1060.3619
+        },
+        "PeakWorkingSet64": {
+          "median": 302272512,
+          "max": 304291840
+        },
+        "AllocatedBytes": {
+          "median": 186850280,
+          "max": 187330504
+        },
+        "OutputBytes": {
+          "median": 123016,
+          "max": 123016
+        },
+        "pages": [
+          50
+        ],
+        "textMeasure.ms": {
+          "median": 30.61389999998876,
+          "max": 33.0622999999982
+        },
+        "pdfSubset.ms": {
+          "median": 7.3258,
+          "max": 11.9441
+        },
+        "pdfPage.ms": {
+          "median": 165.86290000000005,
+          "max": 183.33780000000002
+        },
+        "pdfFinalSave.ms": {
+          "median": 10.4353,
+          "max": 16.769
+        }
+      },
+      "C": {
+        "TotalMs": {
+          "median": 928.9742,
+          "max": 1190.6596
+        },
+        "PeakWorkingSet64": {
+          "median": 282861568,
+          "max": 292683776
+        },
+        "AllocatedBytes": {
+          "median": 185956576,
+          "max": 186440728
+        },
+        "OutputBytes": {
+          "median": 135533,
+          "max": 135533
+        },
+        "pages": [
+          50
+        ],
+        "textMeasure.ms": {
+          "median": 10.456399999999972,
+          "max": 14.136499999999817
+        },
+        "pdfSubset.ms": {
+          "median": 6.6044,
+          "max": 7.7604
+        },
+        "pdfPage.ms": {
+          "median": 169.0743,
+          "max": 177.12160000000006
+        },
+        "pdfFinalSave.ms": {
+          "median": 17.6179,
+          "max": 23.7107
+        }
+      }
+    },
+    "timeRatio": 0.9778679906812593,
+    "memoryRatio": 0.9357832974240146,
+    "timeMaxRatio": 1.1228804052654098,
+    "memoryMaxRatio": 0.9618522008345672,
+    "passed": true
+  },
+  {
+    "fixture": "50-pages",
+    "concurrency": 4,
+    "stages": {
+      "A": {
+        "TotalMs": {
+          "median": 1510.0906,
+          "max": 2408.9077
+        },
+        "PeakWorkingSet64": {
+          "median": 261951488.0,
+          "max": 270729216
+        },
+        "AllocatedBytes": {
+          "median": 185320924.0,
+          "max": 187629336
+        },
+        "OutputBytes": {
+          "median": 132286.0,
+          "max": 132286
+        },
+        "pages": [
+          50
+        ],
+        "textMeasure.ms": {
+          "median": 38.751449999999096,
+          "max": 102.7541999999907
+        },
+        "pdfSubset.ms": {
+          "median": 0.0,
+          "max": 0
+        },
+        "pdfPage.ms": {
+          "median": 393.3126000000001,
+          "max": 740.3694000000002
+        },
+        "pdfFinalSave.ms": {
+          "median": 15.81025,
+          "max": 32.4712
+        }
+      },
+      "B": {
+        "TotalMs": {
+          "median": 1433.431,
+          "max": 1844.2168
+        },
+        "PeakWorkingSet64": {
+          "median": 285267968.0,
+          "max": 291225600
+        },
+        "AllocatedBytes": {
+          "median": 187017320.0,
+          "max": 188048656
+        },
+        "OutputBytes": {
+          "median": 123016.0,
+          "max": 123016
+        },
+        "pages": [
+          50
+        ],
+        "textMeasure.ms": {
+          "median": 42.55949999999892,
+          "max": 70.1094999999848
+        },
+        "pdfSubset.ms": {
+          "median": 3.9021,
+          "max": 20.1393
+        },
+        "pdfPage.ms": {
+          "median": 203.22540000000004,
+          "max": 336.71950000000004
+        },
+        "pdfFinalSave.ms": {
+          "median": 11.6634,
+          "max": 18.0965
+        }
+      },
+      "C": {
+        "TotalMs": {
+          "median": 1510.2717,
+          "max": 1820.8348
+        },
+        "PeakWorkingSet64": {
+          "median": 271865856.0,
+          "max": 291708928
+        },
+        "AllocatedBytes": {
+          "median": 186211708.0,
+          "max": 187318400
+        },
+        "OutputBytes": {
+          "median": 135533.0,
+          "max": 135533
+        },
+        "pages": [
+          50
+        ],
+        "textMeasure.ms": {
+          "median": 14.239299999999986,
+          "max": 31.81279999999595
+        },
+        "pdfSubset.ms": {
+          "median": 4.4258500000000005,
+          "max": 21.5986
+        },
+        "pdfPage.ms": {
+          "median": 225.27815,
+          "max": 402.23150000000004
+        },
+        "pdfFinalSave.ms": {
+          "median": 16.2083,
+          "max": 25.7268
+        }
+      }
+    },
+    "timeRatio": 1.053606138000364,
+    "memoryRatio": 0.9530192187578522,
+    "timeMaxRatio": 0.9873214472398257,
+    "memoryMaxRatio": 1.001659634317862,
+    "passed": true
+  },
+  {
+    "fixture": "50-pages",
+    "concurrency": 8,
+    "stages": {
+      "A": {
+        "TotalMs": {
+          "median": 1826.61915,
+          "max": 4681.3575
+        },
+        "PeakWorkingSet64": {
+          "median": 265299968.0,
+          "max": 275681280
+        },
+        "AllocatedBytes": {
+          "median": 185787780.0,
+          "max": 188639016
+        },
+        "OutputBytes": {
+          "median": 132286.0,
+          "max": 132286
+        },
+        "pages": [
+          50
+        ],
+        "textMeasure.ms": {
+          "median": 43.212349999997,
+          "max": 132.10620000000554
+        },
+        "pdfSubset.ms": {
+          "median": 0.0,
+          "max": 0
+        },
+        "pdfPage.ms": {
+          "median": 518.4905500000001,
+          "max": 1959.5605999999998
+        },
+        "pdfFinalSave.ms": {
+          "median": 19.2494,
+          "max": 88.802
+        }
+      },
+      "B": {
+        "TotalMs": {
+          "median": 2553.1213,
+          "max": 6945.8473
+        },
+        "PeakWorkingSet64": {
+          "median": 279906304.0,
+          "max": 302923776
+        },
+        "AllocatedBytes": {
+          "median": 187380836.0,
+          "max": 190253320
+        },
+        "OutputBytes": {
+          "median": 123016.0,
+          "max": 123016
+        },
+        "pages": [
+          50
+        ],
+        "textMeasure.ms": {
+          "median": 68.78624999999387,
+          "max": 230.2575999999873
+        },
+        "pdfSubset.ms": {
+          "median": 8.2616,
+          "max": 162.7602
+        },
+        "pdfPage.ms": {
+          "median": 377.4561,
+          "max": 1257.1271000000004
+        },
+        "pdfFinalSave.ms": {
+          "median": 20.28755,
+          "max": 123.8356
+        }
+      },
+      "C": {
+        "TotalMs": {
+          "median": 1676.5397,
+          "max": 5994.5872
+        },
+        "PeakWorkingSet64": {
+          "median": 273195008.0,
+          "max": 287735808
+        },
+        "AllocatedBytes": {
+          "median": 185915204.0,
+          "max": 188397960
+        },
+        "OutputBytes": {
+          "median": 135533.0,
+          "max": 135533
+        },
+        "pages": [
+          50
+        ],
+        "textMeasure.ms": {
+          "median": 12.784900000001418,
+          "max": 88.52230000000071
+        },
+        "pdfSubset.ms": {
+          "median": 6.3264,
+          "max": 33.842
+        },
+        "pdfPage.ms": {
+          "median": 266.61294999999996,
+          "max": 1115.9083999999996
+        },
+        "pdfFinalSave.ms": {
+          "median": 18.381050000000002,
+          "max": 471.232
+        }
+      }
+    },
+    "timeRatio": 0.6566627680400458,
+    "memoryRatio": 0.9760230623458913,
+    "timeMaxRatio": 0.8630462117990989,
+    "memoryMaxRatio": 0.9498620801557683,
+    "passed": true
+  },
+  {
+    "fixture": "200-pages",
+    "concurrency": 1,
+    "stages": {
+      "A": {
+        "TotalMs": {
+          "median": 1347.3527,
+          "max": 1485.3113
+        },
+        "PeakWorkingSet64": {
+          "median": 304578560,
+          "max": 312389632
+        },
+        "AllocatedBytes": {
+          "median": 668381088,
+          "max": 669455096
+        },
+        "OutputBytes": {
+          "median": 462287,
+          "max": 462287
+        },
+        "pages": [
+          200
+        ],
+        "textMeasure.ms": {
+          "median": 19.3471999999928,
+          "max": 23.88599999999278
+        },
+        "pdfSubset.ms": {
+          "median": 0,
+          "max": 0
+        },
+        "pdfPage.ms": {
+          "median": 234.2469,
+          "max": 260.4192999999998
+        },
+        "pdfFinalSave.ms": {
+          "median": 30.6343,
+          "max": 34.7544
+        }
+      },
+      "B": {
+        "TotalMs": {
+          "median": 1446.3802,
+          "max": 1835.1461
+        },
+        "PeakWorkingSet64": {
+          "median": 348221440,
+          "max": 350408704
+        },
+        "AllocatedBytes": {
+          "median": 675056080,
+          "max": 675214904
+        },
+        "OutputBytes": {
+          "median": 474617,
+          "max": 474617
+        },
+        "pages": [
+          200
+        ],
+        "textMeasure.ms": {
+          "median": 21.401999999989258,
+          "max": 22.768499999989288
+        },
+        "pdfSubset.ms": {
+          "median": 6.7933,
+          "max": 9.1721
+        },
+        "pdfPage.ms": {
+          "median": 253.58939999999996,
+          "max": 265.7076
+        },
+        "pdfFinalSave.ms": {
+          "median": 14.5938,
+          "max": 20.2321
+        }
+      },
+      "C": {
+        "TotalMs": {
+          "median": 1930.9286,
+          "max": 1968.742
+        },
+        "PeakWorkingSet64": {
+          "median": 327835648,
+          "max": 339931136
+        },
+        "AllocatedBytes": {
+          "median": 676979424,
+          "max": 678298600
+        },
+        "OutputBytes": {
+          "median": 529932,
+          "max": 529932
+        },
+        "pages": [
+          200
+        ],
+        "textMeasure.ms": {
+          "median": 8.552599999999982,
+          "max": 64.74900000005
+        },
+        "pdfSubset.ms": {
+          "median": 5.044,
+          "max": 7.2961
+        },
+        "pdfPage.ms": {
+          "median": 304.44350000000003,
+          "max": 410.56919999999974
+        },
+        "pdfFinalSave.ms": {
+          "median": 15.8976,
+          "max": 27.3742
+        }
+      }
+    },
+    "timeRatio": 1.335007628008182,
+    "memoryRatio": 0.9414573898723755,
+    "timeMaxRatio": 1.0727985090669347,
+    "memoryMaxRatio": 0.9700990075862955,
+    "passed": false
+  },
+  {
+    "fixture": "200-pages",
+    "concurrency": 4,
+    "stages": {
+      "A": {
+        "TotalMs": {
+          "median": 2744.1297,
+          "max": 5625.7825
+        },
+        "PeakWorkingSet64": {
+          "median": 299808768.0,
+          "max": 308023296
+        },
+        "AllocatedBytes": {
+          "median": 668764028.0,
+          "max": 675008552
+        },
+        "OutputBytes": {
+          "median": 462287.0,
+          "max": 462287
+        },
+        "pages": [
+          200
+        ],
+        "textMeasure.ms": {
+          "median": 25.83029999999291,
+          "max": 82.41280000009287
+        },
+        "pdfSubset.ms": {
+          "median": 0.0,
+          "max": 0
+        },
+        "pdfPage.ms": {
+          "median": 403.0387500000001,
+          "max": 1862.7041999999988
+        },
+        "pdfFinalSave.ms": {
+          "median": 38.8052,
+          "max": 102.8787
+        }
+      },
+      "B": {
+        "TotalMs": {
+          "median": 2731.9125999999997,
+          "max": 4868.4033
+        },
+        "PeakWorkingSet64": {
+          "median": 325412864.0,
+          "max": 351432704
+        },
+        "AllocatedBytes": {
+          "median": 669347176.0,
+          "max": 675408584
+        },
+        "OutputBytes": {
+          "median": 474617.0,
+          "max": 474617
+        },
+        "pages": [
+          200
+        ],
+        "textMeasure.ms": {
+          "median": 30.65144999998947,
+          "max": 69.80820000011917
+        },
+        "pdfSubset.ms": {
+          "median": 6.33315,
+          "max": 15.0347
+        },
+        "pdfPage.ms": {
+          "median": 326.9384000000001,
+          "max": 740.3885000000004
+        },
+        "pdfFinalSave.ms": {
+          "median": 20.55665,
+          "max": 58.6702
+        }
+      },
+      "C": {
+        "TotalMs": {
+          "median": 2153.66835,
+          "max": 2547.1972
+        },
+        "PeakWorkingSet64": {
+          "median": 314753024.0,
+          "max": 334848000
+        },
+        "AllocatedBytes": {
+          "median": 677087788.0,
+          "max": 678139960
+        },
+        "OutputBytes": {
+          "median": 529932.0,
+          "max": 529932
+        },
+        "pages": [
+          200
+        ],
+        "textMeasure.ms": {
+          "median": 5.7624000000002855,
+          "max": 22.691699999997972
+        },
+        "pdfSubset.ms": {
+          "median": 3.4859,
+          "max": 26.5446
+        },
+        "pdfPage.ms": {
+          "median": 258.9571499999999,
+          "max": 464.1370000000001
+        },
+        "pdfFinalSave.ms": {
+          "median": 18.664900000000003,
+          "max": 81.4259
+        }
+      }
+    },
+    "timeRatio": 0.7883372074201789,
+    "memoryRatio": 0.9672421063231231,
+    "timeMaxRatio": 0.5232099813916403,
+    "memoryMaxRatio": 0.9528083077891351,
+    "passed": true
+  },
+  {
+    "fixture": "200-pages",
+    "concurrency": 8,
+    "stages": {
+      "A": {
+        "TotalMs": {
+          "median": 2602.5242,
+          "max": 6529.8091
+        },
+        "PeakWorkingSet64": {
+          "median": 299141120.0,
+          "max": 307077120
+        },
+        "AllocatedBytes": {
+          "median": 668630396.0,
+          "max": 672477616
+        },
+        "OutputBytes": {
+          "median": 462287.0,
+          "max": 462287
+        },
+        "pages": [
+          200
+        ],
+        "textMeasure.ms": {
+          "median": 26.908149999993217,
+          "max": 73.38870000009477
+        },
+        "pdfSubset.ms": {
+          "median": 0.0,
+          "max": 0
+        },
+        "pdfPage.ms": {
+          "median": 382.7629999999999,
+          "max": 1195.5003000000002
+        },
+        "pdfFinalSave.ms": {
+          "median": 43.019099999999995,
+          "max": 146.3692
+        }
+      },
+      "B": {
+        "TotalMs": {
+          "median": 3257.63785,
+          "max": 8983.2306
+        },
+        "PeakWorkingSet64": {
+          "median": 313427968.0,
+          "max": 347865088
+        },
+        "AllocatedBytes": {
+          "median": 674029608.0,
+          "max": 699472664
+        },
+        "OutputBytes": {
+          "median": 474617.0,
+          "max": 474617
+        },
+        "pages": [
+          200
+        ],
+        "textMeasure.ms": {
+          "median": 32.44539999999907,
+          "max": 113.76090000014383
+        },
+        "pdfSubset.ms": {
+          "median": 5.1982,
+          "max": 27.0596
+        },
+        "pdfPage.ms": {
+          "median": 390.1445500000001,
+          "max": 1888.3693000000003
+        },
+        "pdfFinalSave.ms": {
+          "median": 18.59015,
+          "max": 132.1115
+        }
+      },
+      "C": {
+        "TotalMs": {
+          "median": 2881.3129,
+          "max": 6279.5242
+        },
+        "PeakWorkingSet64": {
+          "median": 311183360.0,
+          "max": 316252160
+        },
+        "AllocatedBytes": {
+          "median": 676047632.0,
+          "max": 679482504
+        },
+        "OutputBytes": {
+          "median": 529932.0,
+          "max": 529932
+        },
+        "pages": [
+          200
+        ],
+        "textMeasure.ms": {
+          "median": 6.759400000000552,
+          "max": 92.08880000005668
+        },
+        "pdfSubset.ms": {
+          "median": 4.7755,
+          "max": 30.8088
+        },
+        "pdfPage.ms": {
+          "median": 357.97499999999997,
+          "max": 695.676
+        },
+        "pdfFinalSave.ms": {
+          "median": 20.6567,
+          "max": 125.441
+        }
+      }
+    },
+    "timeRatio": 0.8844791940270462,
+    "memoryRatio": 0.992838520396495,
+    "timeMaxRatio": 0.6990273855376705,
+    "memoryMaxRatio": 0.9091230218538056,
+    "passed": true
+  },
+  {
+    "fixture": "rich-text",
+    "concurrency": 1,
+    "stages": {
+      "A": {
+        "TotalMs": {
+          "median": 200.8597,
+          "max": 327.5295
+        },
+        "PeakWorkingSet64": {
+          "median": 215289856,
+          "max": 216076288
+        },
+        "AllocatedBytes": {
+          "median": 115056160,
+          "max": 115104552
+        },
+        "OutputBytes": {
+          "median": 108029,
+          "max": 108029
+        },
+        "pages": [
+          2
+        ],
+        "textMeasure.ms": {
+          "median": 105.65160000000002,
+          "max": 172.97010000000006
+        },
+        "pdfSubset.ms": {
+          "median": 0,
+          "max": 0
+        },
+        "pdfPage.ms": {
+          "median": 24.6286,
+          "max": 27.0134
+        },
+        "pdfFinalSave.ms": {
+          "median": 7.2405,
+          "max": 8.0639
+        }
+      },
+      "B": {
+        "TotalMs": {
+          "median": 205.9537,
+          "max": 314.7174
+        },
+        "PeakWorkingSet64": {
+          "median": 230899712,
+          "max": 234770432
+        },
+        "AllocatedBytes": {
+          "median": 114541128,
+          "max": 114600208
+        },
+        "OutputBytes": {
+          "median": 12053,
+          "max": 12053
+        },
+        "pages": [
+          2
+        ],
+        "textMeasure.ms": {
+          "median": 107.21649999999994,
+          "max": 183.64759999999995
+        },
+        "pdfSubset.ms": {
+          "median": 2.8558,
+          "max": 3.5754
+        },
+        "pdfPage.ms": {
+          "median": 21.7281,
+          "max": 29.4372
+        },
+        "pdfFinalSave.ms": {
+          "median": 2.3765,
+          "max": 2.7162
+        }
+      },
+      "C": {
+        "TotalMs": {
+          "median": 329.381,
+          "max": 392.8061
+        },
+        "PeakWorkingSet64": {
+          "median": 198737920,
+          "max": 215257088
+        },
+        "AllocatedBytes": {
+          "median": 92227312,
+          "max": 92388328
+        },
+        "OutputBytes": {
+          "median": 10980,
+          "max": 10980
+        },
+        "pages": [
+          2
+        ],
+        "textMeasure.ms": {
+          "median": 186.42299999999983,
+          "max": 232.8682
+        },
+        "pdfSubset.ms": {
+          "median": 3.0218,
+          "max": 6.2619
+        },
+        "pdfPage.ms": {
+          "median": 21.0563,
+          "max": 24.9487
+        },
+        "pdfFinalSave.ms": {
+          "median": 1.7576,
+          "max": 2.2954
+        }
+      }
+    },
+    "timeRatio": 1.5992963467031667,
+    "memoryRatio": 0.8607109912722628,
+    "timeMaxRatio": 1.2481232369103203,
+    "memoryMaxRatio": 0.9168832981488912,
+    "passed": false
+  },
+  {
+    "fixture": "rich-text",
+    "concurrency": 4,
+    "stages": {
+      "A": {
+        "TotalMs": {
+          "median": 362.76175,
+          "max": 518.8152
+        },
+        "PeakWorkingSet64": {
+          "median": 215398400.0,
+          "max": 217493504
+        },
+        "AllocatedBytes": {
+          "median": 115129640.0,
+          "max": 115368344
+        },
+        "OutputBytes": {
+          "median": 108029.0,
+          "max": 108029
+        },
+        "pages": [
+          2
+        ],
+        "textMeasure.ms": {
+          "median": 193.2932499999999,
+          "max": 301.49449999999985
+        },
+        "pdfSubset.ms": {
+          "median": 0.0,
+          "max": 0
+        },
+        "pdfPage.ms": {
+          "median": 40.01820000000001,
+          "max": 99.65190000000001
+        },
+        "pdfFinalSave.ms": {
+          "median": 9.542300000000001,
+          "max": 24.3286
+        }
+      },
+      "B": {
+        "TotalMs": {
+          "median": 339.3234,
+          "max": 495.61
+        },
+        "PeakWorkingSet64": {
+          "median": 225257472.0,
+          "max": 235651072
+        },
+        "AllocatedBytes": {
+          "median": 114592652.0,
+          "max": 114752384
+        },
+        "OutputBytes": {
+          "median": 12053.0,
+          "max": 12053
+        },
+        "pages": [
+          2
+        ],
+        "textMeasure.ms": {
+          "median": 183.9474500000001,
+          "max": 328.6103
+        },
+        "pdfSubset.ms": {
+          "median": 5.4382,
+          "max": 23.9387
+        },
+        "pdfPage.ms": {
+          "median": 25.42225,
+          "max": 39.054
+        },
+        "pdfFinalSave.ms": {
+          "median": 2.3693,
+          "max": 3.4639
+        }
+      },
+      "C": {
+        "TotalMs": {
+          "median": 374.48105,
+          "max": 602.4688
+        },
+        "PeakWorkingSet64": {
+          "median": 198520832.0,
+          "max": 220450816
+        },
+        "AllocatedBytes": {
+          "median": 92261048.0,
+          "max": 92428064
+        },
+        "OutputBytes": {
+          "median": 10980.0,
+          "max": 10980
+        },
+        "pages": [
+          2
+        ],
+        "textMeasure.ms": {
+          "median": 212.20869999999994,
+          "max": 363.66160000000025
+        },
+        "pdfSubset.ms": {
+          "median": 3.9354,
+          "max": 7.1277
+        },
+        "pdfPage.ms": {
+          "median": 24.623350000000002,
+          "max": 55.9988
+        },
+        "pdfFinalSave.ms": {
+          "median": 1.80605,
+          "max": 2.6857
+        }
+      }
+    },
+    "timeRatio": 1.1036110389086045,
+    "memoryRatio": 0.8813063124494268,
+    "timeMaxRatio": 1.2156106616089264,
+    "memoryMaxRatio": 0.9354967670166169,
+    "passed": true
+  },
+  {
+    "fixture": "rich-text",
+    "concurrency": 8,
+    "stages": {
+      "A": {
+        "TotalMs": {
+          "median": 541.2764500000001,
+          "max": 1127.0685
+        },
+        "PeakWorkingSet64": {
+          "median": 213170176.0,
+          "max": 221089792
+        },
+        "AllocatedBytes": {
+          "median": 115221600.0,
+          "max": 116051808
+        },
+        "OutputBytes": {
+          "median": 108029.0,
+          "max": 108029
+        },
+        "pages": [
+          2
+        ],
+        "textMeasure.ms": {
+          "median": 335.0788999999999,
+          "max": 908.0926999999997
+        },
+        "pdfSubset.ms": {
+          "median": 0.0,
+          "max": 0
+        },
+        "pdfPage.ms": {
+          "median": 57.07535,
+          "max": 132.3753
+        },
+        "pdfFinalSave.ms": {
+          "median": 9.8383,
+          "max": 63.0067
+        }
+      },
+      "B": {
+        "TotalMs": {
+          "median": 743.6238000000001,
+          "max": 1110.322
+        },
+        "PeakWorkingSet64": {
+          "median": 228820992.0,
+          "max": 256212992
+        },
+        "AllocatedBytes": {
+          "median": 114788996.0,
+          "max": 115047440
+        },
+        "OutputBytes": {
+          "median": 12053.0,
+          "max": 12053
+        },
+        "pages": [
+          2
+        ],
+        "textMeasure.ms": {
+          "median": 406.35924999999986,
+          "max": 878.6992
+        },
+        "pdfSubset.ms": {
+          "median": 7.1821,
+          "max": 35.8346
+        },
+        "pdfPage.ms": {
+          "median": 37.41405,
+          "max": 129.5563
+        },
+        "pdfFinalSave.ms": {
+          "median": 3.2277,
+          "max": 24.7544
+        }
+      },
+      "C": {
+        "TotalMs": {
+          "median": 561.3235500000001,
+          "max": 2688.7781
+        },
+        "PeakWorkingSet64": {
+          "median": 198543360.0,
+          "max": 204566528
+        },
+        "AllocatedBytes": {
+          "median": 92333016.0,
+          "max": 93233288
+        },
+        "OutputBytes": {
+          "median": 10980.0,
+          "max": 10980
+        },
+        "pages": [
+          2
+        ],
+        "textMeasure.ms": {
+          "median": 312.7015499999999,
+          "max": 1421.2370000000008
+        },
+        "pdfSubset.ms": {
+          "median": 6.308949999999999,
+          "max": 34.4186
+        },
+        "pdfPage.ms": {
+          "median": 36.50965,
+          "max": 130.33010000000002
+        },
+        "pdfFinalSave.ms": {
+          "median": 2.3215000000000003,
+          "max": 14.2655
+        }
+      }
+    },
+    "timeRatio": 0.7548488227515042,
+    "memoryRatio": 0.8676798324517359,
+    "timeMaxRatio": 2.4216201246125,
+    "memoryMaxRatio": 0.7984237114720553,
+    "passed": true
+  },
+  {
+    "fixture": "borders",
+    "concurrency": 1,
+    "stages": {
+      "A": {
+        "TotalMs": {
+          "median": 923.1307,
+          "max": 1415.5465
+        },
+        "PeakWorkingSet64": {
+          "median": 263426048,
+          "max": 267124736
+        },
+        "AllocatedBytes": {
+          "median": 149065128,
+          "max": 152952944
+        },
+        "OutputBytes": {
+          "median": 221700,
+          "max": 221700
+        },
+        "pages": [
+          24
+        ],
+        "textMeasure.ms": {
+          "median": 28.65159999999307,
+          "max": 45.36689999999344
+        },
+        "pdfSubset.ms": {
+          "median": 0,
+          "max": 0
+        },
+        "pdfPage.ms": {
+          "median": 252.5378,
+          "max": 693.9308
+        },
+        "pdfFinalSave.ms": {
+          "median": 26.9437,
+          "max": 28.1909
+        }
+      },
+      "B": {
+        "TotalMs": {
+          "median": 887.5379,
+          "max": 1257.1951
+        },
+        "PeakWorkingSet64": {
+          "median": 289857536,
+          "max": 302809088
+        },
+        "AllocatedBytes": {
+          "median": 140037696,
+          "max": 142572096
+        },
+        "OutputBytes": {
+          "median": 214249,
+          "max": 214249
+        },
+        "pages": [
+          24
+        ],
+        "textMeasure.ms": {
+          "median": 23.28379999999539,
+          "max": 38.466300000012346
+        },
+        "pdfSubset.ms": {
+          "median": 4.7495,
+          "max": 18.6216
+        },
+        "pdfPage.ms": {
+          "median": 168.84000000000006,
+          "max": 321.8784
+        },
+        "pdfFinalSave.ms": {
+          "median": 6.4327,
+          "max": 9.6416
+        }
+      },
+      "C": {
+        "TotalMs": {
+          "median": 826.9289,
+          "max": 935.2922
+        },
+        "PeakWorkingSet64": {
+          "median": 277286912,
+          "max": 281468928
+        },
+        "AllocatedBytes": {
+          "median": 139570544,
+          "max": 151513512
+        },
+        "OutputBytes": {
+          "median": 219350,
+          "max": 219350
+        },
+        "pages": [
+          24
+        ],
+        "textMeasure.ms": {
+          "median": 11.64600000000302,
+          "max": 20.596399999999264
+        },
+        "pdfSubset.ms": {
+          "median": 3.073,
+          "max": 8.6925
+        },
+        "pdfPage.ms": {
+          "median": 194.88899999999998,
+          "max": 216.4308
+        },
+        "pdfFinalSave.ms": {
+          "median": 6.5857,
+          "max": 9.355
+        }
+      }
+    },
+    "timeRatio": 0.9317110852392895,
+    "memoryRatio": 0.9566317157957211,
+    "timeMaxRatio": 0.7439515155603136,
+    "memoryMaxRatio": 0.9295260253219348,
+    "passed": true
+  },
+  {
+    "fixture": "borders",
+    "concurrency": 4,
+    "stages": {
+      "A": {
+        "TotalMs": {
+          "median": 1160.5115,
+          "max": 1584.2321
+        },
+        "PeakWorkingSet64": {
+          "median": 261158912.0,
+          "max": 267173888
+        },
+        "AllocatedBytes": {
+          "median": 149099860.0,
+          "max": 152270088
+        },
+        "OutputBytes": {
+          "median": 221700.0,
+          "max": 221700
+        },
+        "pages": [
+          24
+        ],
+        "textMeasure.ms": {
+          "median": 38.17280000000248,
+          "max": 78.39709999999768
+        },
+        "pdfSubset.ms": {
+          "median": 0.0,
+          "max": 0
+        },
+        "pdfPage.ms": {
+          "median": 371.37510000000003,
+          "max": 710.5200999999998
+        },
+        "pdfFinalSave.ms": {
+          "median": 31.08275,
+          "max": 56.9282
+        }
+      },
+      "B": {
+        "TotalMs": {
+          "median": 1360.5746,
+          "max": 2005.9953
+        },
+        "PeakWorkingSet64": {
+          "median": 277237760.0,
+          "max": 302612480
+        },
+        "AllocatedBytes": {
+          "median": 152943744.0,
+          "max": 154488840
+        },
+        "OutputBytes": {
+          "median": 214249.0,
+          "max": 214249
+        },
+        "pages": [
+          24
+        ],
+        "textMeasure.ms": {
+          "median": 46.99844999999925,
+          "max": 97.5663000000008
+        },
+        "pdfSubset.ms": {
+          "median": 4.50145,
+          "max": 27.9305
+        },
+        "pdfPage.ms": {
+          "median": 370.80294999999995,
+          "max": 583.3793
+        },
+        "pdfFinalSave.ms": {
+          "median": 7.8716,
+          "max": 19.5073
+        }
+      },
+      "C": {
+        "TotalMs": {
+          "median": 1112.9313,
+          "max": 1983.4347
+        },
+        "PeakWorkingSet64": {
+          "median": 267012096.0,
+          "max": 281755648
+        },
+        "AllocatedBytes": {
+          "median": 150420512.0,
+          "max": 152962616
+        },
+        "OutputBytes": {
+          "median": 219350.0,
+          "max": 219350
+        },
+        "pages": [
+          24
+        ],
+        "textMeasure.ms": {
+          "median": 20.915149999998157,
+          "max": 44.0312999999945
+        },
+        "pdfSubset.ms": {
+          "median": 4.0100999999999996,
+          "max": 17.8647
+        },
+        "pdfPage.ms": {
+          "median": 313.33855,
+          "max": 554.7196999999999
+        },
+        "pdfFinalSave.ms": {
+          "median": 9.27615,
+          "max": 17.1137
+        }
+      }
+    },
+    "timeRatio": 0.8179862390492958,
+    "memoryRatio": 0.9631159045578784,
+    "timeMaxRatio": 0.9887534133305297,
+    "memoryMaxRatio": 0.9310774228478614,
+    "passed": true
+  },
+  {
+    "fixture": "borders",
+    "concurrency": 8,
+    "stages": {
+      "A": {
+        "TotalMs": {
+          "median": 1731.91205,
+          "max": 4084.818
+        },
+        "PeakWorkingSet64": {
+          "median": 263000064.0,
+          "max": 269967360
+        },
+        "AllocatedBytes": {
+          "median": 150246188.0,
+          "max": 154031336
+        },
+        "OutputBytes": {
+          "median": 221700.0,
+          "max": 221700
+        },
+        "pages": [
+          24
+        ],
+        "textMeasure.ms": {
+          "median": 65.45544999999512,
+          "max": 217.80469999998792
+        },
+        "pdfSubset.ms": {
+          "median": 0.0,
+          "max": 0
+        },
+        "pdfPage.ms": {
+          "median": 829.0749000000001,
+          "max": 1898.664
+        },
+        "pdfFinalSave.ms": {
+          "median": 47.4291,
+          "max": 101.7931
+        }
+      },
+      "B": {
+        "TotalMs": {
+          "median": 1504.6702,
+          "max": 4637.9802
+        },
+        "PeakWorkingSet64": {
+          "median": 275728384.0,
+          "max": 291180544
+        },
+        "AllocatedBytes": {
+          "median": 154179196.0,
+          "max": 156468704
+        },
+        "OutputBytes": {
+          "median": 214249.0,
+          "max": 214249
+        },
+        "pages": [
+          24
+        ],
+        "textMeasure.ms": {
+          "median": 73.2994999999811,
+          "max": 229.42670000006504
+        },
+        "pdfSubset.ms": {
+          "median": 4.0819,
+          "max": 39.0315
+        },
+        "pdfPage.ms": {
+          "median": 559.1212,
+          "max": 2464.7354000000005
+        },
+        "pdfFinalSave.ms": {
+          "median": 10.09795,
+          "max": 42.4445
+        }
+      },
+      "C": {
+        "TotalMs": {
+          "median": 1263.4371999999998,
+          "max": 3597.7714
+        },
+        "PeakWorkingSet64": {
+          "median": 267390976.0,
+          "max": 287084544
+        },
+        "AllocatedBytes": {
+          "median": 151982108.0,
+          "max": 153976664
+        },
+        "OutputBytes": {
+          "median": 219350.0,
+          "max": 219350
+        },
+        "pages": [
+          24
+        ],
+        "textMeasure.ms": {
+          "median": 25.63040000000688,
+          "max": 75.08049999998433
+        },
+        "pdfSubset.ms": {
+          "median": 6.61985,
+          "max": 33.2117
+        },
+        "pdfPage.ms": {
+          "median": 450.08975000000004,
+          "max": 1270.0065999999997
+        },
+        "pdfFinalSave.ms": {
+          "median": 11.291599999999999,
+          "max": 42.238
+        }
+      }
+    },
+    "timeRatio": 0.8396771598188093,
+    "memoryRatio": 0.9697622425408332,
+    "timeMaxRatio": 0.7757194392507325,
+    "memoryMaxRatio": 0.9859331260813909,
+    "passed": true
+  }
+]

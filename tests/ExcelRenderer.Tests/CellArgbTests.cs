@@ -1,11 +1,11 @@
+using ExcelRenderer.TestFixtures;
 using DocumentFormat.OpenXml.Packaging;
 using ExcelRenderer.Drawing;
 using ExcelRenderer.Excel;
 using ExcelRenderer.Model;
-using ExcelRenderer.PdfSharp;
-using ExcelRenderer.Rendering;
+using ExcelRenderer.Pdf;
 using ExcelRenderer.SkiaSharp;
-using PdfSharp.Pdf.IO;
+using ExcelRenderer.Rendering;
 using SkiaSharp;
 using Xunit;
 using S = DocumentFormat.OpenXml.Spreadsheet;
@@ -113,7 +113,7 @@ public sealed class CellArgbTests
         else
         {
             Assert.Equal(OutputFixture.Content(expected), OutputFixture.Content(actual));
-            using var pdf = PdfReader.Open(new MemoryStream(actual), PdfDocumentOpenMode.Import);
+            using var pdf = PdfTestFile.Open(new MemoryStream(actual));
             var states = pdf.Pages[0].Elements.GetDictionary("/Resources")?.Elements.GetDictionary("/ExtGState");
             if (states is not null)
                 foreach (var key in states.Elements.Keys)
@@ -138,8 +138,8 @@ public sealed class CellArgbTests
         using var image = SKBitmap.Decode(png.ToArray());
         Assert.Equal(new SKColor(255, 127, 127), image.GetPixel(6, 6));
         using var output = new MemoryStream();
-        new PdfSharpRenderer().Render(commands, new PageSettings(12, 12), output);
-        using var pdf = PdfReader.Open(new MemoryStream(output.ToArray()), PdfDocumentOpenMode.Import);
+        new PdfRenderer().Render(commands, new PageSettings(12, 12), output);
+        using var pdf = PdfTestFile.Open(new MemoryStream(output.ToArray()));
         var objects = pdf.Pages[0].Elements.GetDictionary("/Resources")!.Elements.GetDictionary("/XObject")!;
         Assert.Contains(objects.Elements.Keys, key => objects.Elements.GetDictionary(key)!.Elements.ContainsKey("/SMask"));
     }
@@ -165,8 +165,8 @@ public sealed class CellArgbTests
         foreach (var x in new[] { 5, 15, 25 })
             Assert.Equal(new SKColor((byte)(255 - alpha), (byte)(255 - alpha), (byte)(255 - alpha)), image.GetPixel(x, 5));
         using var pdfOutput = new MemoryStream();
-        new PdfSharpRenderer().Render(commands, new PageSettings(64, 24), pdfOutput);
-        using var pdf = PdfReader.Open(new MemoryStream(pdfOutput.ToArray()), PdfDocumentOpenMode.Import);
+        new PdfRenderer().Render(commands, new PageSettings(64, 24), pdfOutput);
+        using var pdf = PdfTestFile.Open(new MemoryStream(pdfOutput.ToArray()));
         var states = pdf.Pages[0].Elements.GetDictionary("/Resources")!.Elements.GetDictionary("/ExtGState");
         if (alpha == 128)
         {

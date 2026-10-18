@@ -1,0 +1,57 @@
+{
+  "os": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "sdk": "10.0.401",
+  "rounds": 5,
+  "warmups": 3,
+  "order": "alternating before/after by round",
+  "assemblies": {
+    "before": {
+      "ExcelRenderer.Performance.dll": "0b3059a91148d849a83470f53fba3269f806ce52088525f155509e36c43682f2",
+      "ExcelRenderer.Core.dll": "4d01d87c7112d8f0c31e7f5119b5b75e43e20df1c5b6fa934325f2110ebc6ffc",
+      "ExcelRenderer.Formulas.dll": "e78c38d8f556e6d6b3a57eacd81c175ffe953487a6d4c89f2ad8a1d978ec5efe",
+      "ExcelRenderer.Mapping.dll": "ecf696b55248eadd698cd756027d165a407a4cd4ba4683c93bce74ebc77f3f11",
+      "ExcelRenderer.Fonts.dll": "ed476739072d1fd8b3390bb10e21f5e85cbd69d7cd318d5e40c2ea9d94cb8308",
+      "ExcelRenderer.dll": "929b923f7006763092a7e2069c2e546118c26f94bda7e187ad2af296dd56f87b",
+      "ExcelRenderer.OpenXml.dll": "35c09170052287fd427b90eba237ef3c48f89a6ceaedfca9faddf934fe010963"
+    },
+    "after": {
+      "ExcelRenderer.Performance.dll": "0050788eadc5adeec6a97f2abc0cc2664d1fe6300fbdd0212f4a412ec6ada745",
+      "ExcelRenderer.Core.dll": "f3e27946ea44979d373f8cf29881f5d6d09e08d694dc22e629d54e53a2f1049e",
+      "ExcelRenderer.Formulas.dll": "92f14b647cb544d9c46571eb470cc473093a2a847bcaf709559958f77f338e9c",
+      "ExcelRenderer.Mapping.dll": "f190ebbcb51265c5fc4679ac53beaedbe748fdc90ca5b214397483986b27b1b5",
+      "ExcelRenderer.Fonts.dll": "5c9a216e600313fc7268c7efb3be38085d81e2356b184658e2932daa44de236e",
+      "ExcelRenderer.dll": "75373eab6c96ef3f56d453122829778da26d537f1b5c829fbab370ee9bf15b32",
+      "ExcelRenderer.OpenXml.dll": "3b0bc18143fae07828a76164f9e1a378d95a75001a188e1cd06e0588c0828426"
+    }
+  },
+  "inputs": {
+    "invoice": {
+      "path": "/workspace/ExcelRenderer/samples/mapping/invoice/invoice.xlsx",
+      "sha256": "1eafc42149f48770c131f836883ffb6ac2714215d4ebe2db5352e1dee66011a5"
+    },
+    "grid": {
+      "path": "/workspace/ExcelRenderer/samples/excel/japanese-grid-report.xlsx",
+      "sha256": "4907d79963eb8267eab4230c7aad9bbd0d580238d3d42f402b34fb4c0ff217a1"
+    },
+    "images": {
+      "path": "/workspace/ExcelRenderer/artifacts/pdf-removal-benchmark/images.xlsx",
+      "sha256": "006f9c2e2323e2e310a46b915d9b021b2a80512009c939f5d0ed7b2f34bb0b94"
+    },
+    "50-pages": {
+      "path": "/workspace/ExcelRenderer/artifacts/pdf-removal-benchmark/50-pages.xlsx",
+      "sha256": "5601936b1ff8edfef833ce33fb5b58abd1549c50b01ac08ea130ea55cb484d7f"
+    },
+    "200-pages": {
+      "path": "/workspace/ExcelRenderer/artifacts/pdf-removal-benchmark/200-pages.xlsx",
+      "sha256": "beca16a28c3f3608c95e9e80efb7347807aa99c568ce7e254b22d4e9ede76b58"
+    },
+    "rich-text": {
+      "path": "/workspace/ExcelRenderer/artifacts/pdf-removal-benchmark/rich-text.xlsx",
+      "sha256": "5e8e1b8c9614e61d1f8892caf576f2368af81221792e2b6e4f53ec62c05f6987"
+    },
+    "borders": {
+      "path": "/workspace/ExcelRenderer/artifacts/pdf-removal-benchmark/borders.xlsx",
+      "sha256": "91da89db35abe4334d689763303405071e10aa1fdb5961ee905db89ff9ed8d5b"
+    }
+  }
+}

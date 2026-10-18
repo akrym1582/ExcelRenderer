@@ -38,7 +38,7 @@ PDF / PNG / SVG
 - PNG、JPEG などのワークシート画像の描画
 - ヘッダー、フッター文字列の描画
 - 印刷範囲に依存しないシート座標での図形・画像のアンカー解決（回転後の外接矩形によるページ判定・自動使用範囲・連続キャンバス寸法、反復タイトル領域を除いた本文クリップ）。非表示行列とアンカーの相互作用は Excel 実機で未検証です
-- PDFsharp による PDF 出力
+- SkiaSharp と文書内で共有する subset font による PDF 出力
 - SkiaSharp によるページごとの PNG 出力と画像のデコード
 - 独立したマッピングパッケージによる C# オブジェクト・JSON からの XLSX テンプレートへの値の設定
 - 明示的な数式再計算。[対応構文・40関数・制約](docs/formulas-reference.ja.md)は専用リファレンスを参照
@@ -355,11 +355,11 @@ var request = new RenderRequest
 
 ## C# API（高レベル）
 
-PDF出力では、Skiaがcodecを生成できない画像やbitmapへデコードできない画像をスキップし、
+PDF出力では画素の完全なデコードを確認し、破損・途中までしか復元できない画像をスキップして、
 `ImageDecodeFailed` の警告を報告します。診断にはシート名、元ページ番号、画像の位置・寸法、
 バイト数、先頭最大16バイト、失敗理由が含まれます。`render` コマンドは警告を標準エラーに表示し、
 `--manifest report.json` で詳細をJSONに保存できます。厳格モード、またはこの警告コードを
-エラー扱いにした場合は変換を中止します。低レベルの `PdfSharpRenderer` では
+エラー扱いにした場合は変換を中止します。低レベルの `PdfRenderer` では
 `DiagnosticHandler` で警告を受け取れます。`System.Diagnostics.Trace` のリスナーにも出力します。
 
 `ExcelConverter` が読み込み、レイアウト、描画、書き出しまでを行います。
@@ -381,18 +381,19 @@ PNG/SVG には `DirectoryOutputSink` を使用します。`RenderRequest` では
 
 ## C# API（低レベル）
 
-ライブラリを参照し、`ExcelReader`、`ReportLayoutEngine`、`DrawCommandGeneratorPass`、`PdfSharpRenderer` の順に使用します。
+ライブラリを参照し、`ExcelReader`、`ReportLayoutEngine`、`DrawCommandGeneratorPass`、`PdfRenderer` の順に使用します。
 
 ```csharp
 using ExcelRenderer.Drawing;
 using ExcelRenderer.Excel;
 using ExcelRenderer.Layout;
-using ExcelRenderer.PdfSharp;
+using ExcelRenderer.Pdf;
+using ExcelRenderer.SkiaSharp;
 
 var document = new ExcelReader().Read("report.xlsx");
-var layoutEngine = new ReportLayoutEngine(new PdfSharpTextMeasurer());
+var layoutEngine = new ReportLayoutEngine(new SkiaTextMeasurer());
 var commandGenerator = new DrawCommandGeneratorPass();
-var renderer = new PdfSharpRenderer();
+var renderer = new PdfRenderer();
 var sheet = document.Sheets[0];
 
 var renderDocument = layoutEngine.Layout(sheet);
@@ -557,8 +558,8 @@ AST 参照書換え・再計算を行います。`=` で始まる入力値は文
 
 PDF と PNG の変換では、任意の `ExcelRenderer.Fonts` パッケージが導入されていれば、
 埋め込まれた Noto Sans JP Regular TTF、IVS 用の IPAmj 明朝、および Noto Color Emoji を使用できます。単体の絵文字と VS16 付き絵文字はカラーで描画し、PDF と SVG には画像として埋め込みます。ZWJ などの複合絵文字には別途シェーピングが必要です。未導入
-の場合は登録済みまたは OS のフォントを解決します。PDFsharp で外部フォントを使う
-場合は、PDFsharp がフォントを使用する前にフォントリゾルバーを設定してください。
+の場合は登録済みまたは OS のフォントを解決します。外部フォントは `FontOptions` の
+`FontFiles` または `Registrations` に指定します。
 指定するファミリー名は、Excel のセルに設定されたフォント名と一致させます。
 
 任意の同梱フォントを読み込む際は、次のファイル名（`NotoSansJP-Regular.ttf`、
@@ -575,15 +576,22 @@ PDF と PNG の変換では、任意の `ExcelRenderer.Fonts` パッケージが
 サブディレクトリまで検索するのは通常ファイルだけです。
 
 ```csharp
-using PdfSharp.Fonts;
-using ExcelRenderer.PdfSharp;
+using ExcelRenderer;
+using ExcelRenderer.Fonts;
 
-GlobalFontSettings.FontResolver = new PdfSharpFontResolver(
-    "Noto Sans JP",
-    "/app/fonts/NotoSansJP-Regular.ttf");
+await ExcelConverter.ConvertToPdfAsync("report.xlsx", "report.pdf",
+    new PdfExportOptions
+    {
+        FontOptions = new FontOptions
+        {
+            FontFiles = ["/app/fonts/NotoSansJP-Regular.ttf"],
+            AllowSystemFonts = false,
+            UseFontPack = false,
+        },
+    });
 ```
 
-フォントリゾルバーはアプリケーションドメインごとに一度だけ、PDFsharp がフォントを使用する処理より前に設定します。
+フォントの計測・描画には変換単位の immutable snapshot を使います。グローバルな resolver の登録は不要です。
 
 ## アーキテクチャ
 
@@ -636,9 +644,9 @@ OS・追加ディレクトリのフォント走査では metadata のみを保�
 明示 FontFiles・Registrations は即時に検証・snapshot し、任意 font pack のデータは
 必要時に読み込みます。OS フォントは初回選択前には完全な snapshot ではなく、
 読み込み前に消失・変更したファイルは明確な font load エラーになります。
-PDFsharpの確定font bytesは所有元のfont/layoutの寿命に紐付け、グローバル登録は弱参照で保持します。
+確定font bytesとglyph情報はlayoutから再利用でき、native資源は変換scopeの終了時に解放します。
 
-PDFsharp の最終文書・リソースと、OpenXml Reader のスタイル・共有文字列は保持します。
+Skia の最終文書・リソースと、OpenXml Reader のスタイル・共有文字列は保持します。
 幾何索引と選択モデルもブックの大きさに依存するため、定メモリのストリーミングではありません。
 [フェーズ3測定](docs/phase3-performance.ja.md)、過去の[PDF測定](docs/pdf-performance.ja.md)と
 [画像測定](docs/image-performance.ja.md)を参照してください。
@@ -650,7 +658,7 @@ PNG は既存 bitmap の画素を直接エンコードします。ページ別�
 RGBA の画素だけで概ね `4 × 幅 × 高さ` bytes に加え、alignment・encoder overhead が必要です。
 直接 API も寸法・pixel limit を検証します。変換単位の画像 cache は decoded resource の
 推定量に対する64MiBの LRU 上限を持ち、単独で上限超過する画像は現在の描画中だけ所有します。
-PDFsharp が文書内で保持する画像リソースは、この推定上限とは別に残ります。
+Skia が文書内で保持する画像リソースは、この推定上限とは別に残ります。
 
 SVG は Skia SVG canvas と XML のストリーム正規化を維持し、文字のパス・埋込画像・
 pt 寸法・viewBox を保持します。seekable 中間 buffer はメモリ capacity が閾値を超える前に
@@ -741,14 +749,15 @@ ExcelRenderer は [MIT License](LICENSE) で提供されます。
 
 日本語フォントと Noto Color Emoji は任意の `ExcelRenderer.Fonts` パッケージに収録されます。ライブラリで使用する場合は `dotnet add package ExcelRenderer.Fonts` を追加してください。未導入の場合は登録済みまたはシステムのフォントを使います。CLI はフォントパッケージに依存します。Noto Sans JP と Noto Color Emoji には SIL Open Font License 1.1、IPAmj 明朝には IPA Font License Agreement v1.0 が適用されます。`FontOptions.ReplaceIvsWithBaseCharacter` を `true` にすると、IVS を異体字セレクターのない基底文字に置換して描画できます。詳細は[サードパーティ通知](THIRD-PARTY-NOTICES.md)を参照してください。
 
-### PDF描画バックエンド
+### PDF engine と移行
 
-既定値は従来どおりPDFsharpです。本体APIでSkiaSharpを明示的に選択できます。
+PDF 出力と PDF/PNG/SVG の既定計測は SkiaSharp です。main/Core は font・subset・
+PDF 文書生成の共通処理を使い、PDFsharp の依存・resolver・変換全体の排他は撤去しました。
+旧低レベル公開 API の削除を伴う破壊的変更です。[移行表](docs/pdfsharp-migration.md)を参照してください。
 
 ```csharp
-await ExcelConverter.ConvertToPdfAsync(input, output,
-    new PdfExportOptions { PdfBackend = PdfBackend.SkiaSharp });
-// RenderAsync: new RenderRequest { OutputFormat = OutputFormat.Pdf, PdfBackend = PdfBackend.SkiaSharp }
+await ExcelConverter.ConvertToPdfAsync(input, output); // 既定 SkiaSharp
+// 明示指定: new PdfExportOptions { PdfBackend = PdfBackend.SkiaSharp }
 ```
 
 ```bash
@@ -756,21 +765,26 @@ excelrenderer pdf report.xlsx -o report.pdf --pdf-backend skiasharp
 excelrenderer render report.xlsx --format pdf -o report.pdf --pdf-backend skiasharp
 ```
 
-両CLI経路とも`--data`利用時に設定を保持します。他のCLI設定と同様、指定値は小文字です。
-CLIでPDF以外の形式に`--pdf-backend`を明示すると、値によらずエラーになります。
-APIのPDF以外の要求では既定のPdfSharp値を許容し、SkiaSharpを拒否します。
-不正enum値は入力読み取り・出力作成前に拒否します。
+`--data` 使用時も設定を保持します。CLI は小文字 `skiasharp` のみ有効で、PDF 以外への
+backend 明示はエラーです。API の非 PDF 要求では既定 `SkiaSharp = 1` を許容します。
+廃止予約値 `PdfSharp = 0` と不正値は入力読込・出力作成前に拒否し、0 を別 engine と解釈しません。
 
-ソースからのビルド・pack前に`python3 scripts/build-harfbuzz-subset.py`でnativeサブセット
-アダプタを作成します。固定した公式HarfBuzzソースを使用し、glyph IDを保持した事前サブセットを
-文書内で共有します。nativeライブラリ欠落・サブセット失敗時には変換を失敗させ、
-暗黙のエンジン切替やアウトラインフォントのフル埋込は行いません。
-Python/CMakeはビルド・検証用で、利用者のPDF生成経路では不要です。
+source build/pack 前に `python3 scripts/build-harfbuzz-subset.py` で固定版 native adapter を
+build してください。runtime assets の欠落時は失敗し、full-font 埋込へ切り替えません。
+Python/CMake と独立 PDF reader は build/検証専用で、製品の実行要件には含みません。
 
-今回は描画の切替です。両エンジンで既存の計測サービス（呼出側所有の
-`RenderRequest.TextMeasurer`の明示指定を含む）、PDFsharp font gate、PDFsharp依存を保持します。
-Skia出力には上限付きの中間spoolを使い、隔離したPDFsharp後処理でページ寸法・リンクtooltip・
-画像補間のメタデータを補正します。画像・フォントのバイト列や描画内容は保持します。
-Core単独APIはPDFsharpのままです。PNG/SVG/Markdownはこの設定で変更されません。
-[検証結果・限定AA差分・確認環境](docs/skia-pdf-validation.md)と
-[比較ハーネス](tools/ExcelRenderer.PdfComparison/README.md)を参照してください。
+PDF は上限付き seekable spool と文書内共有 subset を使います。限定構造 finalizer が
+用紙 box（精度0.001pt）・RGB page group・リンク/tooltip・画像補間を補います。
+各 active object と圧縮済み stream を一度ずつ保存し、content・font・JPEG・soft mask を
+再圧縮せず保持します。中間 spool は `RenderRequest.Buffering` で設定できます。
+容量・デコード検証は[画像レビュー修正](docs/pr90-image-review-fixes.md)を参照してください。
+
+standalone `SkiaTextMeasurer` は独立 native scope を所有し、変換内部は現在の scope を借ります。
+確定 glyph/font snapshot は scope 終了後も再描画できます。呼出側 measurer/stream の所有権は維持します。
+Core は単一 regular static TrueType font と IVS の基底文字化を維持します。
+
+[撤去の検証記録](docs/pdfsharp-removal-validation.md)、
+[固定 A/B/C 比較](tools/ExcelRenderer.PdfComparison/README.md)、
+[第1段階の履歴記録](docs/skia-pdf-validation.md)も参照してください。
+
+長い一意な文字列・PDF変換全体・直接PNG/SVG出力を再点検した結果は、[性能レビュー](docs/rendering-performance-review.md)を参照してください。

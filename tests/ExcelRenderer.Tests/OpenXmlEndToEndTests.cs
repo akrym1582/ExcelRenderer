@@ -49,7 +49,7 @@ public sealed class OpenXmlEndToEndTests
         if (format == OutputFormat.Pdf)
         {
             output.Position = 0;
-            using var pdf = global::PdfSharp.Pdf.IO.PdfReader.Open(output, global::PdfSharp.Pdf.IO.PdfDocumentOpenMode.Import);
+            using var pdf = PdfTestFile.Open(output);
             Assert.Equal(1, pdf.PageCount);
         }
     }

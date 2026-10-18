@@ -1,0 +1,90 @@
+{
+  "name": "borders",
+  "path": "features",
+  "sameCommands": true,
+  "expectedText": [],
+  "regions": [
+    {
+      "name": "Solid",
+      "bounds": [
+        15,
+        17,
+        390,
+        48
+      ]
+    },
+    {
+      "name": "Dotted",
+      "bounds": [
+        15,
+        53,
+        390,
+        84
+      ]
+    },
+    {
+      "name": "Dashed",
+      "bounds": [
+        15,
+        89,
+        390,
+        120
+      ]
+    },
+    {
+      "name": "DashDot",
+      "bounds": [
+        15,
+        125,
+        390,
+        156
+      ]
+    },
+    {
+      "name": "DashDotDot",
+      "bounds": [
+        15,
+        161,
+        390,
+        192
+      ]
+    },
+    {
+      "name": "Double",
+      "bounds": [
+        15,
+        197,
+        390,
+        228
+      ]
+    },
+    {
+      "name": "Hair",
+      "bounds": [
+        15,
+        233,
+        390,
+        264
+      ]
+    },
+    {
+      "name": "SlantDashDot",
+      "bounds": [
+        15,
+        269,
+        390,
+        300
+      ]
+    },
+    {
+      "name": "alpha-overlap",
+      "bounds": [
+        15,
+        320,
+        115,
+        360
+      ]
+    }
+  ],
+  "commandSha256": "769C3DC8542081193007EA7600661A7EF269B3164BD051C3324FFDC3E069E4FB"
+}

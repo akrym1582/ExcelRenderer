@@ -5,11 +5,8 @@ using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Markdown;
 using ExcelRenderer.Model;
-using ExcelRenderer.PdfSharp;
 using ExcelRenderer.Rendering;
 using ExcelRenderer.SkiaSharp;
-using PdfSharp.Fonts;
-using PdfSharp.Pdf;
 
 namespace ExcelRenderer;
 
@@ -53,7 +50,7 @@ public static partial class ExcelConverter
             using var source = await WorkbookInputPreparer.ReadAsync(input, request.Input, cancellationToken).ConfigureAwait(false);
             ConversionMetrics.Report("input.ms", inputTimer.Elapsed.TotalMilliseconds);
             var fontManager = ConversionMetrics.Measure("fonts", () => new FontManager(request.FontOptions));
-            resources.TextMeasurer = request.TextMeasurer ?? new PdfSharpTextMeasurer(fontManager, cacheLayouts: true);
+            resources.TextMeasurer = request.TextMeasurer ?? new SkiaTextMeasurer(fontManager, cacheLayouts: true);
             var readOptions = request.ReadOptions with
             {
                 IgnoreFormulaPrintAreas = request.OutputFormat == OutputFormat.Markdown || request.ImageLayout == ImageLayoutMode.Continuous,
@@ -149,69 +146,37 @@ public static partial class ExcelConverter
             document = new ReportDocument([]);
             ConversionMetrics.Report("modelSelectedCells", sheets.Sum(selected => selected.Sheet.Cells.Count));
 
-            var lockTimer = System.Diagnostics.Stopwatch.StartNew();
-            var fontSession = await Core.Rendering.PdfSharpFontGate.AcquireAsync(cancellationToken).ConfigureAwait(false);
-            resources.FontSession = fontSession;
-            ConversionMetrics.Report("fontLockWait.ms", lockTimer.Elapsed.TotalMilliseconds);
-            try
+            var pages = request.ImageLayout == ImageLayoutMode.Continuous
+                ? LayoutContinuous(sheets, request.Dpi, fontManager)
+                : LayoutPages(sheets, request.Dpi, fontManager);
+            var selectedPages = SelectPages(pages, request.Selection.Pages).Select(page =>
+                ConversionMetrics.Measure("pagePreflight", () => PreflightPage(page, request, fontManager, diagnostics, cancellationToken))).ToArray();
+            if (request.OutputFormat == OutputFormat.Pdf && request.Hyperlinks == HyperlinkMode.Preserve)
             {
-                // PDFsharp caches resolved typefaces process-wide. Reset that cache while conversions are
-                // serialized so that this request's font manager is used for both measurement and PDF output.
-                GlobalFontSettings.ResetFontManagement();
-                GlobalFontSettings.FontResolver = new PdfSharpFontResolver(fontManager);
-
-                var pages = request.ImageLayout == ImageLayoutMode.Continuous
-                    ? LayoutContinuous(sheets, request.Dpi, fontManager)
-                    : LayoutPages(sheets, request.Dpi, fontManager);
-                var selectedPages = SelectPages(pages, request.Selection.Pages).Select(page =>
-                    ConversionMetrics.Measure("pagePreflight", () => PreflightPage(page, request, fontManager, diagnostics, cancellationToken))).ToArray();
-                if (request.OutputFormat == OutputFormat.Pdf && request.Hyperlinks == HyperlinkMode.Preserve)
-                {
-                    selectedPages = ConversionMetrics.Measure("links", () => ResolvePdfLinks(selectedPages, workbookMetadata, diagnostics)).ToArray();
-                }
-
-                if (diagnostics.HasFailure)
-                {
-                    throw Failure("Conversion was stopped by diagnostic policy.", null, diagnostics, artifacts);
-                }
-
-                if (request.OutputFormat == OutputFormat.Pdf)
-                {
-                    await WritePdfAsync(selectedPages, request.PdfBackend, request.Buffering, fontManager, diagnostics, sink, artifacts, cancellationToken).ConfigureAwait(false);
-                }
-                else
-                {
-                    await WritePageArtifactsAsync(selectedPages, request, fontManager, sink, artifacts, cancellationToken).ConfigureAwait(false);
-                }
-
-                return new(
-                    ConversionManifest.SchemaVersion,
-                    "Completed",
-                    sheets.Select(x => x.Sheet.Name).ToArray(),
-                    selectedPages.Select(x => x.Descriptor).ToArray(),
-                    artifacts,
-                    diagnostics.ToArray());
+                selectedPages = ConversionMetrics.Measure("links", () => ResolvePdfLinks(selectedPages, workbookMetadata, diagnostics)).ToArray();
             }
-            finally
+
+            if (diagnostics.HasFailure)
             {
-                try
-                {
-                    try
-                    {
-                        resources.Dispose();
-                    }
-                    finally
-                    {
-                        GlobalFontSettings.ResetFontManagement();
-                        PdfSharpFontResolver.RemoveExpiredRegistrations();
-                    }
-                }
-                finally
-                {
-                    resources.FontSession = null;
-                    fontSession.Dispose();
-                }
+                throw Failure("Conversion was stopped by diagnostic policy.", null, diagnostics, artifacts);
             }
+
+            if (request.OutputFormat == OutputFormat.Pdf)
+            {
+                await WritePdfAsync(selectedPages, request.PdfBackend, request.Buffering, fontManager, diagnostics, sink, artifacts, cancellationToken).ConfigureAwait(false);
+            }
+            else
+            {
+                await WritePageArtifactsAsync(selectedPages, request, fontManager, sink, artifacts, cancellationToken).ConfigureAwait(false);
+            }
+
+            return new(
+                ConversionManifest.SchemaVersion,
+                "Completed",
+                sheets.Select(x => x.Sheet.Name).ToArray(),
+                selectedPages.Select(x => x.Descriptor).ToArray(),
+                artifacts,
+                diagnostics.ToArray());
         }
         catch (OperationCanceledException)
         {
@@ -233,9 +198,14 @@ public static partial class ExcelConverter
 
     private static void ValidatePdfBackend(PdfBackend backend, OutputFormat format)
     {
-        if (!Enum.IsDefined(typeof(PdfBackend), backend) || (format != OutputFormat.Pdf && backend != PdfBackend.PdfSharp))
+        if ((int)backend == 0)
         {
-            throw new ArgumentException("The PDF backend must be PdfSharp or SkiaSharp; SkiaSharp requires PDF output.", nameof(backend));
+            throw new NotSupportedException("PDFsharp has been removed. Specify PdfBackend.SkiaSharp.");
+        }
+
+        if (backend != PdfBackend.SkiaSharp)
+        {
+            throw new ArgumentException("The PDF backend must be SkiaSharp.", nameof(backend));
         }
     }
 
@@ -299,7 +269,7 @@ public static partial class ExcelConverter
         var pages = new List<SheetPage>();
         foreach (var selected in sheets)
         {
-            var plans = new ReportLayoutEngine(RenderResourceSession.Current?.TextMeasurer ?? new PdfSharpTextMeasurer(fontManager, cacheLayouts: true)).Plan(selected.Sheet);
+            var plans = new ReportLayoutEngine(RenderResourceSession.Current?.TextMeasurer ?? new SkiaTextMeasurer(fontManager, cacheLayouts: true)).Plan(selected.Sheet);
             var count = plans.Sum(plan => plan.Pages.Count);
             var sourceNumber = 0;
             foreach (var plan in plans)
@@ -327,14 +297,14 @@ public static partial class ExcelConverter
     private static IReadOnlyList<SheetPage> LayoutContinuous(IReadOnlyList<SelectedSheet> sheets, double dpi, FontManager fontManager) =>
         sheets.Select((selected, index) =>
         {
-            var plan = new ContinuousLayoutPlan(selected.Sheet, RenderResourceSession.Current?.TextMeasurer ?? new PdfSharpTextMeasurer(fontManager, cacheLayouts: true));
+            var plan = new ContinuousLayoutPlan(selected.Sheet, RenderResourceSession.Current?.TextMeasurer ?? new SkiaTextMeasurer(fontManager, cacheLayouts: true));
             var descriptor = CreateDescriptor(selected, 1, index + 1, dpi) with { WidthPoints = plan.Width, HeightPoints = plan.Height };
             return SheetPage.CreateContinuous(selected.Sheet, descriptor, plan);
         }).ToArray();
 
     private static PageRenderPayload BuildPage(SheetPage page, FontManager fonts, CancellationToken token)
     {
-        var measurer = RenderResourceSession.Current?.TextMeasurer ?? new PdfSharpTextMeasurer(fonts, cacheLayouts: true);
+        var measurer = RenderResourceSession.Current?.TextMeasurer ?? new SkiaTextMeasurer(fonts, cacheLayouts: true);
         if (page.CanvasPlan is { } canvas)
         {
             return new(ConversionMetrics.MeasureCommands(new DrawCommandGeneratorPass().GenerateContinuous(canvas, measurer)), canvas.SourceRegions);
@@ -404,7 +374,7 @@ public static partial class ExcelConverter
                 : payload.Commands;
             if (finalizePdfText)
             {
-                var resolvedRuns = new PdfSharpTextMeasurer(fonts, cacheLayouts: true);
+                var resolvedRuns = new SkiaTextMeasurer(fonts, cacheLayouts: true);
                 var layout = RenderResourceSession.Current?.TextMeasurer as Abstractions.ITextLayoutService ?? resolvedRuns;
                 commands = Pdf.PdfCommandFinalizer.Finalize(commands, layout, token, resolvedRuns);
             }
@@ -521,15 +491,8 @@ public static partial class ExcelConverter
             artifacts,
             stream =>
             {
-                using Pdf.IPdfDocumentWriter writer = backend == PdfBackend.PdfSharp
-                    ? new Pdf.PdfSharpDocumentWriter(fontManager)
-                    : new SkiaPdfDocumentWriter(fontManager, token, buffering: buffering);
+                using Pdf.IPdfDocumentWriter writer = new SkiaPdfDocumentWriter(fontManager, token, buffering: buffering);
                 ConversionMetrics.Report("pdfBackend", (int)backend);
-                if (writer is SkiaPdfDocumentWriter skia)
-                {
-                    skia.RegisterDestinations(pages.SelectMany(page => page.Links ?? []));
-                }
-
                 if (writer.RequiresFontCollection)
                 {
                     foreach (var page in pages)

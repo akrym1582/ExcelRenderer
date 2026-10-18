@@ -1,0 +1,82 @@
+{
+  "implementationCommit": "104d685a8a106daf5de3487630cc98057e973aae",
+  "validatedCommit": "8145afee4df7a45f5b6ebca911b34e63c90d6a35",
+  "releaseRebuild": {
+    "warnings": 0,
+    "errors": 0
+  },
+  "tests": {
+    "Core": 102,
+    "Formulas": 833,
+    "Mapping": 172,
+    "OpenXml": 206,
+    "Main": 646,
+    "Tool": 99,
+    "total": 2058,
+    "failed": 0,
+    "skipped": 0
+  },
+  "comparisons": {
+    "AtoC": {
+      "fixtures": 25,
+      "unmet": 0,
+      "existingReviews": 51
+    },
+    "BtoC": {
+      "fixtures": 25,
+      "unmet": 0,
+      "reviews": 0
+    },
+    "frozenCoreFixtures": 3,
+    "frozenCorePages": 4,
+    "independentFontFormats": 6,
+    "unchangedGoldenCases": 31
+  },
+  "performance": {
+    "conditions": 14,
+    "freshProcessSamples": 240,
+    "rounds": 5,
+    "warmups": 3,
+    "stageBRichSamples": 10,
+    "stageBRichTimeRatio": 0.9684475347022219,
+    "stageBRichRssRatio": 0.6189427312775331
+  },
+  "retention": {
+    "repetitions": 100,
+    "allResourceCountsBalanced": true
+  },
+  "distribution": {
+    "packages": 4,
+    "isolatedConsumers": 9,
+    "consumerGraphs": 18
+  },
+  "api": {
+    "main": {
+      "added": 0,
+      "removed": 0
+    },
+    "core": {
+      "added": 0,
+      "removed": 0
+    }
+  },
+  "sourceNamespaces": {
+    "declarations": 627,
+    "requiredCompilerShims": 2
+  },
+  "dependencyAudit": {
+    "sourceConfigFiles": 1053,
+    "restoredProjects": 22,
+    "managedAssemblyRefInventories": 788,
+    "packages": 4,
+    "passed": true
+  },
+  "remoteCi": {
+    "run": 128,
+    "passedJobs": 7,
+    "totalJobs": 7,
+    "windowsNative": "passed",
+    "linuxNative": "passed"
+  },
+  "manualViewers": "Not performed; procedure retained"
+}

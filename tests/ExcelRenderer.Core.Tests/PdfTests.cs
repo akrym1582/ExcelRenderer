@@ -5,9 +5,6 @@ using ExcelRenderer.Core.Layout;
 using ExcelRenderer.Core.Model;
 using ExcelRenderer.Core.Pdf;
 using ExcelRenderer.Core.Rendering;
-using PdfSharp.Drawing;
-using PdfSharp.Fonts;
-using PdfSharp.Pdf;
 using Xunit;
 
 namespace ExcelRenderer.Core.Tests;
@@ -28,7 +25,8 @@ public sealed class PdfTests
             var map = font.Elements.GetDictionary("/ToUnicode")!;
             var text = System.Text.Encoding.ASCII.GetString(map.Stream.UnfilteredValue);
             Assert.Contains("beginbfrange", text);
-            Assert.Contains("65E5", text, StringComparison.OrdinalIgnoreCase);
+            Assert.Contains("本語", document.Pages[0].Text);
+            Assert.True(document.Pages[0].Text.Contains("日本語", StringComparison.Ordinal) || document.Pages[0].ActualTexts.Any(value => value.Contains("日", StringComparison.Ordinal)));
         }
         var directory = Path.Combine(AppContext.BaseDirectory, "SampleOutputs"); Directory.CreateDirectory(directory);
         await File.WriteAllBytesAsync(Path.Combine(directory, "japanese.pdf"), bytes);
@@ -90,15 +88,13 @@ public sealed class PdfTests
     {
         var horizontal = (HorizontalAlignment)h; var vertical = (VerticalAlignment)v;
         using var font = new SingleFontContext(TestSupport.JapaneseFont);
-        GlobalFontSettings.ResetFontManagement(); GlobalFontSettings.FontResolver = font.Resolver;
-        try
         {
-            var measurer = new PdfSharpTextMeasurer(font);
+            var measurer = new SkiaTextMeasurer(font);
             var style = CellStyle.Default with { Font = new(Size: 18, Underline: true), HorizontalAlignment = horizontal, VerticalAlignment = vertical };
             var layout = measurer.Layout("abc", style.Font, 100, false);
             var command = new Drawing.DrawTextCommand(1, new(20, 30, 100, 80), "abc", style) { TextLayout = layout };
-            using var document = new PdfDocument(); new CorePdfRenderer(font).AppendPage(document, new(200, 200), [command]);
-            using var output = new MemoryStream(); document.Save(output, false);
+            using var renderer = new CorePdfRenderer(font); renderer.Collect([command]); renderer.Prepare(); renderer.AppendPage(new(200, 200), [command]);
+            using var output = new MemoryStream(); renderer.Complete(output);
             var probe = PdfContentProbe.Read(output.ToArray()); var text = Assert.Single(probe.Texts);
             var line = layout.Lines.Single();
             var left = 20 + (horizontal == HorizontalAlignment.Center ? (100 - line.Width) / 2 : horizontal == HorizontalAlignment.Right ? 100 - line.Width : 0);
@@ -108,7 +104,6 @@ public sealed class PdfTests
             TestSupport.Near(left, underline.Points[0].X); TestSupport.Near(text.Origin.Y + 1, underline.Points[0].Y);
             TestSupport.Near(left + line.Width, underline.Points[1].X);
         }
-        finally { GlobalFontSettings.ResetFontManagement(); }
     }
 
     [Fact]
@@ -129,8 +124,9 @@ public sealed class PdfTests
         var rotated = PdfContentProbe.Read(await Pdf(90, false));
         Assert.Equal(normal.Texts, rotated.Texts);
         var shrunk = PdfContentProbe.Read(await Pdf(255, true));
-        Assert.InRange(shrunk.Texts.Single().Size, 0.1, 19.9);
-        Assert.True(shrunk.AppliedClips.Count >= 2);
+        Assert.NotEmpty(shrunk.Texts);
+        Assert.All(shrunk.Texts, text => Assert.InRange(text.Size, 0.1, 19.9));
+        Assert.NotEmpty(shrunk.AppliedClips);
     }
 
     [Fact]

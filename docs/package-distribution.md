@@ -100,6 +100,15 @@ and runs isolated consumers independently on Linux
 x64 and Windows x64 before collecting both assets for packing. A local one-OS pack
 is only evidence for that OS; it does not establish a complete release inventory
 or other-RID runtime support. See `docs/skia-pdf-validation.md` for actual local
-verification and outstanding distribution gates. Missing native assets fail only
-when Skia PDF is selected; PDFsharp and the Core standalone API retain their
-existing native dependency contract.
+verification and outstanding distribution gates. Missing native subset assets fail PDF conversion in both main and Core. PNG/SVG/Markdown do not require the subset adapter.
+
+## PDF dependency removal audit
+
+All normal restore graphs and distributed assemblies use SkiaSharp without PDFsharp.
+The Core DLL/XML bundling and four-package allowlist are unchanged. Run
+`python scripts/check-no-pdfsharp.py --packages <pack-output> --publish <tool-publish>`
+after a clean Release build. The audit reads actual managed AssemblyRefs and checks
+restore/assets/deps/nuspec/runtime files, including isolated package consumers.
+PdfPig 0.1.14 is validation-only in nonpackable tests/tools and must never enter
+product package dependency groups. Release/publish workflow changes do not authorize
+a release; versioning and NuGet publication remain separate operations.

@@ -1,0 +1,36 @@
+[
+  {
+    "B": {
+      "TotalMs": 1590.0291,
+      "ProcessCpuMs": 2153.0409999999993,
+      "PeakWorkingSet64": 348405760,
+      "AllocatedBytes": 671097728
+    },
+    "C": {
+      "TotalMs": 1466.9807,
+      "ProcessCpuMs": 1912.8230000000003,
+      "PeakWorkingSet64": 328814592,
+      "AllocatedBytes": 676810320
+    },
+    "fixture": "200-pages",
+    "timeRatio": 0.9226124855199191,
+    "memoryRatio": 0.9437691041617682
+  },
+  {
+    "B": {
+      "TotalMs": 296.8988,
+      "ProcessCpuMs": 344.5340000000001,
+      "PeakWorkingSet64": 231157760,
+      "AllocatedBytes": 114570152
+    },
+    "C": {
+      "TotalMs": 305.278,
+      "ProcessCpuMs": 383.75199999999995,
+      "PeakWorkingSet64": 204840960,
+      "AllocatedBytes": 92236384
+    },
+    "fixture": "rich-text",
+    "timeRatio": 1.0282224111380713,
+    "memoryRatio": 0.8861522105076637
+  }
+]

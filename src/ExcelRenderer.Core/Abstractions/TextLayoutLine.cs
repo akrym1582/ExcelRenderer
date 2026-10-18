@@ -22,6 +22,9 @@ internal sealed record TextLayoutLine(
     /// <summary>Gets the additional inter-line spacing.</summary>
     public double Leading { get; init; }
 
+    /// <summary>Gets the single-font glyph selection without native handles.</summary>
+    internal Fonts.GlyphSequence? Glyphs { get; init; }
+
     /// <summary>Gets borrowed product line metadata.</summary>
     internal Extensibility.ICoreExtensionData? ExtensionData { get; init; }
 

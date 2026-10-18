@@ -1,5 +1,6 @@
 using ExcelRenderer.Abstractions;
 using ExcelRenderer.Drawing;
+using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Model;
 
@@ -16,6 +17,7 @@ internal static class PdfCommandFinalizer
     /// <returns>Commands with resolved text, preserving existing finalized geometry.</returns>
     internal static IEnumerable<DrawCommand> Finalize(IEnumerable<DrawCommand> commands, ITextLayoutService layout, CancellationToken token, ITextLayoutService? resolvedRuns = null)
     {
+        using var resources = ConversionFontResources.Current is null ? new ConversionFontResources() : null;
         foreach (var command in commands)
         {
             token.ThrowIfCancellationRequested();
@@ -79,7 +81,7 @@ internal static class PdfCommandFinalizer
     {
         var layout = command.TextLayout!;
         var size = TextLayoutFontSize.Resolve(layout, command.Style.Font);
-        if (size == 0 || !layout.Lines.Any(line => line.Text.Length > 0 && line.Runs.Count == 0))
+        if (size == 0 || !layout.Lines.Any(line => (line.Text.Length > 0 && line.Runs.Count == 0) || line.Runs.Any(run => run.Glyphs is null)))
         {
             return command;
         }
@@ -95,6 +97,7 @@ internal static class PdfCommandFinalizer
             throw new InvalidOperationException("PDF text requires resolved font runs before drawing.");
         }
 
+        lines = lines.Select(line => line with { Runs = Array.AsReadOnly(line.Runs.Select(ResolvedGlyphLayout.Finalize).ToArray()) }).ToArray();
         return command with { TextLayout = layout with { Lines = lines } };
     }
 }

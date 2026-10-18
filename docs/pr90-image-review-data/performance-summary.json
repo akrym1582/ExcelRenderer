@@ -1,0 +1,41 @@
+[
+  {
+    "workload": "pdf-images",
+    "concurrency": 1,
+    "stages": {
+      "before": {
+        "TotalMs": {
+          "median": 722.2296,
+          "max": 1093.515
+        },
+        "AllocatedBytes": {
+          "median": 133368296,
+          "max": 136878368
+        },
+        "PeakWorkingSet64": {
+          "median": 323604480,
+          "max": 328253440
+        }
+      },
+      "after": {
+        "TotalMs": {
+          "median": 811.7922,
+          "max": 957.9536
+        },
+        "AllocatedBytes": {
+          "median": 130904584,
+          "max": 135079816
+        },
+        "PeakWorkingSet64": {
+          "median": 304869376,
+          "max": 317075456
+        }
+      }
+    },
+    "medianRatios": {
+      "TotalMs": 1.124008487051763,
+      "AllocatedBytes": 0.981527003989014,
+      "PeakWorkingSet64": 0.9421049300677172
+    }
+  }
+]

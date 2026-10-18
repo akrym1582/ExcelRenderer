@@ -1,4 +1,6 @@
-using ExcelRenderer.PdfSharp;
+using ExcelRenderer.TestFixtures;
+using ExcelRenderer.Pdf;
+using ExcelRenderer.SkiaSharp;
 using Xunit;
 
 namespace ExcelRenderer.Tests;
@@ -21,7 +23,7 @@ public sealed class PdfSampleOutputTests
 
         using (var output = File.Create(outputPath))
         {
-            new PdfSharpRenderer().Render(sample.Commands, sample.Sheet.PageSettings, output);
+            new PdfRenderer().Render(sample.Commands, sample.Sheet.PageSettings, output);
         }
 
         var bytes = File.ReadAllBytes(outputPath);

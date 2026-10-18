@@ -1,0 +1,61 @@
+{
+  "name": "drawing-anchors",
+  "path": "e2e",
+  "commandFingerprints": {
+    "1": "449D90E007953BB7D9F96D3FEA9D8B48C810C4BD67B966FB7A1DF26B77BB0843"
+  },
+  "pagePlanSha256": "6B50DFDFBEA0FDEC816E998438B412A8BBD5617AFD5E3728701ED8E831981097",
+  "pages": [
+    {
+      "SourceSheetIndex": 1,
+      "SourceSheetName": "Anchors",
+      "SourcePageNumber": 1,
+      "DocumentPageNumber": 1,
+      "OutputPageNumber": 1,
+      "WidthPoints": 612,
+      "HeightPoints": 792,
+      "PixelWidth": 816,
+      "PixelHeight": 1056,
+      "Dpi": 96,
+      "RequestedRange": null,
+      "SourceCellRanges": [
+        {
+          "First": {
+            "Row": 1,
+            "Column": 1
+          },
+          "Last": {
+            "Row": 10,
+            "Column": 8
+          }
+        }
+      ],
+      "SourceRegions": [
+        {
+          "X": 0,
+          "Y": 0,
+          "Width": 97.5,
+          "Height": 135
+        }
+      ],
+      "OriginalWidthPoints": null,
+      "OriginalHeightPoints": null,
+      "CropBounds": null,
+      "PaddingPoints": null
+    }
+  ],
+  "diagnostics": [
+    {
+      "Code": "MaximumDigitWidthResolved",
+      "Severity": 0,
+      "Stage": 0,
+      "Message": "Normal font \u0027Calibri\u0027 resolved to \u0027Noto Sans JP\u0027 with MDW 8px.",
+      "SheetName": "Anchors",
+      "CellRange": null,
+      "ObjectId": null,
+      "SourcePageNumber": null,
+      "OccurrenceCount": 1,
+      "UnicodeSequence": null
+    }
+  ]
+}

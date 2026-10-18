@@ -165,14 +165,14 @@ internal static class CommandSupport
     {
         var option = new Option<string>("--pdf-backend")
         {
-            Description = "PDF drawing backend: pdfsharp (default) or skiasharp. PDFsharp measurement remains in use.",
-            DefaultValueFactory = _ => "pdfsharp",
+            Description = "PDF backend: skiasharp (default).",
+            DefaultValueFactory = _ => "skiasharp",
         };
         option.Validators.Add(result =>
         {
-            if (result.GetValueOrDefault<string>() is not ("pdfsharp" or "skiasharp"))
+            if (result.GetValueOrDefault<string>() is not "skiasharp")
             {
-                result.AddError("--pdf-backend must be pdfsharp or skiasharp.");
+                result.AddError("PDFsharp has been removed. Use --pdf-backend skiasharp.");
             }
         });
         return option;
@@ -183,7 +183,6 @@ internal static class CommandSupport
     /// <returns>The drawing backend.</returns>
     internal static PdfBackend GetPdfBackend(string value) => value switch
     {
-        "pdfsharp" => PdfBackend.PdfSharp,
         "skiasharp" => PdfBackend.SkiaSharp,
         _ => throw new ArgumentException("Unknown PDF backend.", nameof(value)),
     };

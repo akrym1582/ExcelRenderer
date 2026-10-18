@@ -1,0 +1,61 @@
+{
+  "name": "japanese-grid-report",
+  "path": "e2e",
+  "commandFingerprints": {
+    "1": "0801E71CCDEED493B847381F36249A057807F26AECEBBD1C88A3BC781C113A95"
+  },
+  "pagePlanSha256": "3756F5BC32F6757C95E12F0F99D7F0904AFD8D02D8FE329D9A75B9CCB3D82951",
+  "pages": [
+    {
+      "SourceSheetIndex": 1,
+      "SourceSheetName": "\u6708\u6B21\u696D\u52D9\u5831\u544A\u66F8",
+      "SourcePageNumber": 1,
+      "DocumentPageNumber": 1,
+      "OutputPageNumber": 1,
+      "WidthPoints": 595.276,
+      "HeightPoints": 841.89,
+      "PixelWidth": 794,
+      "PixelHeight": 1123,
+      "Dpi": 96,
+      "RequestedRange": null,
+      "SourceCellRanges": [
+        {
+          "First": {
+            "Row": 1,
+            "Column": 1
+          },
+          "Last": {
+            "Row": 46,
+            "Column": 40
+          }
+        }
+      ],
+      "SourceRegions": [
+        {
+          "X": 0,
+          "Y": 0,
+          "Width": 630,
+          "Height": 780
+        }
+      ],
+      "OriginalWidthPoints": null,
+      "OriginalHeightPoints": null,
+      "CropBounds": null,
+      "PaddingPoints": null
+    }
+  ],
+  "diagnostics": [
+    {
+      "Code": "MaximumDigitWidthResolved",
+      "Severity": 0,
+      "Stage": 0,
+      "Message": "Normal font \u0027Calibri\u0027 resolved to \u0027Noto Sans JP\u0027 with MDW 8px.",
+      "SheetName": "\u6708\u6B21\u696D\u52D9\u5831\u544A\u66F8",
+      "CellRange": null,
+      "ObjectId": null,
+      "SourcePageNumber": null,
+      "OccurrenceCount": 1,
+      "UnicodeSequence": null
+    }
+  ]
+}

@@ -1,0 +1,117 @@
+{
+  "name": "styles",
+  "path": "features",
+  "sameCommands": true,
+  "expectedText": [],
+  "regions": [
+    {
+      "name": "alignment-0",
+      "bounds": [
+        15,
+        15,
+        135,
+        60
+      ]
+    },
+    {
+      "name": "alignment-1",
+      "bounds": [
+        145,
+        15,
+        265,
+        60
+      ]
+    },
+    {
+      "name": "alignment-2",
+      "bounds": [
+        275,
+        15,
+        395,
+        60
+      ]
+    },
+    {
+      "name": "alignment-3",
+      "bounds": [
+        15,
+        70,
+        135,
+        115
+      ]
+    },
+    {
+      "name": "alignment-4",
+      "bounds": [
+        145,
+        70,
+        265,
+        115
+      ]
+    },
+    {
+      "name": "alignment-5",
+      "bounds": [
+        275,
+        70,
+        395,
+        115
+      ]
+    },
+    {
+      "name": "alignment-6",
+      "bounds": [
+        15,
+        125,
+        135,
+        170
+      ]
+    },
+    {
+      "name": "alignment-7",
+      "bounds": [
+        145,
+        125,
+        265,
+        170
+      ]
+    },
+    {
+      "name": "alignment-8",
+      "bounds": [
+        275,
+        125,
+        395,
+        170
+      ]
+    },
+    {
+      "name": "rich-runs-underline",
+      "bounds": [
+        15,
+        195,
+        370,
+        255
+      ]
+    },
+    {
+      "name": "rotated-text",
+      "bounds": [
+        15,
+        275,
+        155,
+        330
+      ]
+    },
+    {
+      "name": "vertical-text",
+      "bounds": [
+        200,
+        275,
+        300,
+        355
+      ]
+    }
+  ],
+  "commandSha256": "17FC18A507F568F4D1A77B8B1A498D7B8CCF689E34BE01D4DBEECE76223C0CE6"
+}

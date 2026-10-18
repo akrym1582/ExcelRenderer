@@ -29,6 +29,20 @@ def run(*cmd, cwd=work):
     print('+', *map(str, cmd), flush=True)
     subprocess.run(list(map(str, cmd)), cwd=cwd, env=env, check=True)
 
+
+consumer_graphs = []
+
+
+def audit_consumer(directory):
+    paths = list(directory.rglob('project.assets.json')) + list(directory.rglob('*.deps.json'))
+    assert paths, f'No restored/runtime graph: {directory}'
+    for path in paths:
+        graph = json.loads(path.read_text())
+        libraries = sorted(graph.get('libraries', {}))
+        assert not any('pdfsharp' in name.lower().replace('-', '').replace('_', '').replace('.', '') for name in libraries), path
+        consumer_graphs.append({'path': str(path.relative_to(work)), 'libraries': libraries})
+    (work / 'consumer-graphs.json').write_text(json.dumps(consumer_graphs, indent=2) + '\n')
+
 fixture = '''
 using var input = new MemoryStream();
 using (var doc = DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Create(input, DocumentFormat.OpenXml.SpreadsheetDocumentType.Workbook, true)) {
@@ -91,7 +105,7 @@ OutputFormat=ExcelRenderer.Rendering.OutputFormat.Markdown,
 ReadOptions=new(){FormulaDisplayMode=ExcelRenderer.Excel.FormulaDisplayMode.Recalculate},
 FontOptions=new(){FontFiles=new[]{args[1]},AllowSystemFonts=false}},new ExcelRenderer.Rendering.SingleStreamOutputSink(output));
 if(!System.Text.Encoding.UTF8.GetString(output.ToArray()).Contains("413")) throw new Exception("Main recalc failure");
-foreach (var backend in new[] { ExcelRenderer.PdfBackend.PdfSharp, ExcelRenderer.PdfBackend.SkiaSharp }) {
+foreach (var backend in new[] { new ExcelRenderer.Rendering.RenderRequest().PdfBackend, ExcelRenderer.PdfBackend.SkiaSharp }) {
     input.Position=0;
     using var pdfOutput=new MemoryStream();
     await ExcelRenderer.ExcelConverter.RenderAsync(input,new(){
@@ -129,6 +143,7 @@ for name,(refs,code) in programs.items():
     run('dotnet','restore','--configfile',config,cwd=directory)
     arguments = [] if name.startswith('namespace-') else [fixture_path, font]
     run('dotnet','run','-c','Release','--no-restore','--',*arguments,cwd=directory)
+    audit_consumer(directory)
     # Every consumer copied all native RIDs (including large debug symbols).
     # Keep its source/log evidence but release disposable build products before
     # the next isolated project; this also fits hosted CI's disk budget.
@@ -165,8 +180,16 @@ try:
     assert not missing_output.exists(), 'Failed native conversion left a completed file'
     default_output = work / 'cli-default-without-subset.pdf'
     default_output.unlink(missing_ok=True)
-    run(tool_command, 'pdf', fixture_path, '-o', default_output)
-    assert default_output.read_bytes().startswith(b'%PDF')
+    missing_default = subprocess.run([str(tool_command), 'pdf', str(fixture_path), '-o', str(default_output)], env=env, text=True, capture_output=True)
+    assert missing_default.returncode != 0 and 'HarfBuzzSubset' in missing_default.stderr
+    assert not default_output.exists()
+    markdown_without_native = work / 'cli-markdown-without-subset.md'
+    markdown_without_native.unlink(missing_ok=True)
+    run(tool_command, 'md', fixture_path, '-o', markdown_without_native)
+    assert markdown_without_native.exists()
 finally:
     backup.rename(native_asset)
+run(tool_command, 'pdf', fixture_path, '-o', default_output)
+assert default_output.read_bytes().startswith(b'%PDF')
+audit_consumer(tool)
 print('Nine isolated package consumers passed (engine, adapter, Mapping, main+Core, combined, three namespace samples, installed CLI)')

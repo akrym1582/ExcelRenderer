@@ -6,12 +6,8 @@ using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Markdown;
 using ExcelRenderer.Model;
-using ExcelRenderer.PdfSharp;
 using ExcelRenderer.Rendering;
 using ExcelRenderer.SkiaSharp;
-using PdfSharp.Fonts;
-using PdfSharp.Pdf;
-using PdfSharp.Pdf.IO;
 
 namespace ExcelRenderer;
 
@@ -19,7 +15,7 @@ namespace ExcelRenderer;
 public sealed record PdfExportOptions
 {
     /// <summary>Gets the PDF drawing backend; nondefault values require PDF output.</summary>
-    public PdfBackend PdfBackend { get; init; } = global::ExcelRenderer.PdfBackend.PdfSharp;
+    public PdfBackend PdfBackend { get; init; } = global::ExcelRenderer.PdfBackend.SkiaSharp;
 
     /// <summary>Gets the workbook formula display policy.</summary>
     public ExcelRenderer.Excel.ExcelReadOptions ReadOptions { get; init; } = new();

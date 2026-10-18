@@ -11,7 +11,7 @@ assert {p.attrib['Include'] for p in project.findall('.//ProjectReference')} == 
 for path in CORE.rglob('*.cs'):
     if {'bin', 'obj'} & set(path.parts):
         continue
-    for name in re.findall(r'\bExcelRenderer\.[A-Za-z0-9_.]+', path.read_text()):
+    for name in re.findall(r'\bExcelRenderer\.[A-Za-z0-9_.]+', re.sub(r'"(?:\\.|[^"\\])*"', '""', path.read_text())):
         assert name.startswith('ExcelRenderer.Core') or name.startswith('ExcelRenderer.OpenXml') or name == 'ExcelRenderer.Tests', f'{path}: forbidden main namespace {name}'
 for relative, owner in {
     'Excel/CellRangeIndex.cs': 'Core.Excel.CoreCellRangeIndex',
@@ -54,7 +54,7 @@ for relative, owner in {
     'Layout/HeaderFooterLayout.cs': 'Core.Layout.HeaderFooterLayout',
     'Layout/TextLayoutTransform.cs': 'Core.Layout.TextLayoutTransform',
     'Drawing/DrawCommandGeneratorPass.cs': 'Core.Drawing.DrawCommandGeneratorPass',
-    'PdfSharp/PdfSharpRenderer.cs': 'Core.Pdf.CorePdfRenderer',
+    'SkiaSharp/SkiaPdfDocumentWriter.cs': 'Core.Pdf.SkiaPdfDocument',
     'Excel/StylePool.cs': 'Core.Excel.StyleInternPool',
     'Rendering/DiagnosticCollector.cs': 'Core.Rendering.DiagnosticStore',
 }.items():

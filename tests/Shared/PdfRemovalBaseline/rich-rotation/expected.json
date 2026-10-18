@@ -1,0 +1,61 @@
+{
+  "name": "rich-rotation",
+  "path": "e2e",
+  "commandFingerprints": {
+    "1": "CBAB08A817E8C1DE232E9DB832617759810794CDDC3493C418E102D8C3D6BB84"
+  },
+  "pagePlanSha256": "A912BDC195CBD30FBF70E5309A4AFA7E399172B6A318D804C6526F22A2A45A63",
+  "pages": [
+    {
+      "SourceSheetIndex": 1,
+      "SourceSheetName": "rich",
+      "SourcePageNumber": 1,
+      "DocumentPageNumber": 1,
+      "OutputPageNumber": 1,
+      "WidthPoints": 612,
+      "HeightPoints": 792,
+      "PixelWidth": 816,
+      "PixelHeight": 1056,
+      "Dpi": 96,
+      "RequestedRange": null,
+      "SourceCellRanges": [
+        {
+          "First": {
+            "Row": 1,
+            "Column": 1
+          },
+          "Last": {
+            "Row": 1,
+            "Column": 1
+          }
+        }
+      ],
+      "SourceRegions": [
+        {
+          "X": 0,
+          "Y": 0,
+          "Width": 51.75,
+          "Height": 15
+        }
+      ],
+      "OriginalWidthPoints": null,
+      "OriginalHeightPoints": null,
+      "CropBounds": null,
+      "PaddingPoints": null
+    }
+  ],
+  "diagnostics": [
+    {
+      "Code": "MaximumDigitWidthResolved",
+      "Severity": 0,
+      "Stage": 0,
+      "Message": "Normal font \u0027Calibri\u0027 resolved to \u0027Noto Sans JP\u0027 with MDW 8px.",
+      "SheetName": "rich",
+      "CellRange": null,
+      "ObjectId": null,
+      "SourcePageNumber": null,
+      "OccurrenceCount": 1,
+      "UnicodeSequence": null
+    }
+  ]
+}

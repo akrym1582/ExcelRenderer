@@ -1,0 +1,61 @@
+{
+  "name": "missing-glyph",
+  "path": "e2e",
+  "commandFingerprints": {
+    "1": "9152B0976F75B34994B2E6FB53562990B8D9FAD180124AFFC197A599065C38E7"
+  },
+  "pagePlanSha256": "332417AAEEA6B161E530E7DA114FB527AF09674FCADF53558828470C334AB1A3",
+  "pages": [
+    {
+      "SourceSheetIndex": 1,
+      "SourceSheetName": "missing",
+      "SourcePageNumber": 1,
+      "DocumentPageNumber": 1,
+      "OutputPageNumber": 1,
+      "WidthPoints": 612,
+      "HeightPoints": 792,
+      "PixelWidth": 816,
+      "PixelHeight": 1056,
+      "Dpi": 96,
+      "RequestedRange": null,
+      "SourceCellRanges": [
+        {
+          "First": {
+            "Row": 1,
+            "Column": 1
+          },
+          "Last": {
+            "Row": 1,
+            "Column": 1
+          }
+        }
+      ],
+      "SourceRegions": [
+        {
+          "X": 0,
+          "Y": 0,
+          "Width": 45.75,
+          "Height": 15
+        }
+      ],
+      "OriginalWidthPoints": null,
+      "OriginalHeightPoints": null,
+      "CropBounds": null,
+      "PaddingPoints": null
+    }
+  ],
+  "diagnostics": [
+    {
+      "Code": "MaximumDigitWidthFallback",
+      "Severity": 1,
+      "Stage": 0,
+      "Message": "Normal font \u0027unknown\u0027 could not be measured; the 7px compatibility metric was used.",
+      "SheetName": "missing",
+      "CellRange": null,
+      "ObjectId": null,
+      "SourcePageNumber": null,
+      "OccurrenceCount": 1,
+      "UnicodeSequence": null
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "font": "static.ttf",
+    "mupdf": "A B",
+    "poppler": "A B",
+    "colorPixels": false
+  },
+  {
+    "font": "cff.otf",
+    "mupdf": "A B",
+    "poppler": "A B",
+    "colorPixels": false
+  },
+  {
+    "font": "variable.ttf",
+    "mupdf": "A B",
+    "poppler": "A B",
+    "colorPixels": false
+  },
+  {
+    "font": "collection.ttc",
+    "mupdf": "A B",
+    "poppler": "A B",
+    "colorPixels": false
+  },
+  {
+    "font": "colr.ttf",
+    "mupdf": "A B",
+    "poppler": "A B",
+    "colorPixels": true
+  },
+  {
+    "font": "colr-v1.ttf",
+    "mupdf": "A B",
+    "poppler": "A B",
+    "colorPixels": true
+  }
+]

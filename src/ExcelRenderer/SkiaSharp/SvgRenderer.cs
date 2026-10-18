@@ -124,7 +124,7 @@ public sealed class SvgRenderer
         {
             using var background = new SKPaint { Color = SKColors.White, Style = SKPaintStyle.Fill };
             canvas.DrawRect(0, 0, (float)pageSettings.Width, (float)pageSettings.Height, background);
-            var drawingContext = new SkiaDrawingContext(textAsPaths: true, _fontManager);
+            var drawingContext = new SkiaDrawingContext(textAsPaths: true, _fontManager, cancellationToken: cancellationToken);
             foreach (var command in commands)
             {
                 cancellationToken.ThrowIfCancellationRequested();

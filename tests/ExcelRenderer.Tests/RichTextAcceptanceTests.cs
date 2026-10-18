@@ -2,7 +2,8 @@ using System.IO.Compression;
 using ExcelRenderer.Excel;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Model;
-using ExcelRenderer.PdfSharp;
+using ExcelRenderer.Pdf;
+using ExcelRenderer.SkiaSharp;
 using ExcelRenderer.Rendering;
 using ExcelRenderer.TestFixtures;
 using SkiaSharp;
@@ -28,7 +29,7 @@ public sealed class RichTextAcceptanceTests
         var sheet = new ReportSheet("merged", new Dictionary<CellAddress, ReportCell> { [new(1, 1)] = cell },
             new Dictionary<int, ColumnDefinition> { [1] = new(25), [2] = new(25) },
             new Dictionary<int, RowDefinition> { [1] = new(50) }, [new(new(1, 1), new(1, 2))], new(200, 200));
-        var rendered = Assert.Single(new ReportLayoutEngine(new PdfSharpTextMeasurer(new OutputFixture.FixedManager())).Layout(sheet).Pages[0].Cells);
+        var rendered = Assert.Single(new ReportLayoutEngine(new SkiaTextMeasurer(new OutputFixture.FixedManager())).Layout(sheet).Pages[0].Cells);
         var runs = rendered.TextLayout!.Lines.SelectMany(line => line.Runs).ToArray();
         Assert.Equal(2, runs.Length);
         Assert.True(runs[0].Font!.Size < 20);

@@ -76,6 +76,15 @@ jobs:
       - name: Compare finalized commands and public API fixtures
         run: python scripts/compare-pdf-backends.py --no-build
 
+      - name: Compare frozen stage B against the new measurement and writer
+        run: python scripts/compare-pdf-backends.py --no-generate --reference B --no-exceptions
+
+      - name: Compare frozen Core output independently
+        run: python scripts/compare-core-removal-baselines.py
+
+      - name: Validate image payload storage and corrected appearance
+        run: python scripts/validate-image-review.py
+
       - name: Verify independent font format extraction
         run: |
           python - <<'PY'
@@ -93,6 +102,12 @@ jobs:
       - name: Pack four distribution packages
         run: dotnet pack ExcelRenderer.slnx -c Release --no-build --no-restore -p:BuildProjectReferences=false -o artifacts/formulas-packages
 
+      - name: Audit removed dependency in source, graphs, assemblies and packages
+        run: python scripts/check-no-pdfsharp.py --packages artifacts/formulas-packages
+
+      - name: Verify dependency audit rejects deliberate contamination
+        run: python scripts/check-no-pdfsharp-mutations.py
+
       - name: Verify isolated formula package consumers
         run: python3 scripts/validate-formulas-packages.py --packages artifacts/formulas-packages --work "$RUNNER_TEMP/formula-package-consumers"
 
@@ -106,6 +121,7 @@ jobs:
             TestResults/Mutations/**
             tests/ExcelRenderer.Tests/bin/Release/net10.0/SampleOutputs/**
             artifacts/pdf-comparison/**
+            artifacts/pr90-image-review/independent.json
           if-no-files-found: warn
           retention-days: 14
 
@@ -121,6 +137,8 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
+      - name: Build shared native subset adapter
+        run: python scripts/build-harfbuzz-subset.py
       - name: Restore Core tests
         run: dotnet restore tests/ExcelRenderer.Core.Tests/ExcelRenderer.Core.Tests.csproj --locked-mode
       - name: Rebuild Core tests

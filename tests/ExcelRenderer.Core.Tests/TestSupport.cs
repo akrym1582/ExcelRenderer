@@ -6,10 +6,6 @@ using ExcelRenderer.Core.Fonts;
 using ExcelRenderer.Core.Model;
 using ExcelRenderer.Core.Input;
 using ExcelRenderer.Core.Rendering;
-using PdfSharp.Fonts;
-using PdfSharp.Pdf.Advanced;
-using PdfSharp.Pdf;
-using PdfSharp.Pdf.IO;
 using SkiaSharp;
 
 namespace ExcelRenderer.Core.Tests;
@@ -73,16 +69,16 @@ internal static class TestSupport
         return (result, output.ToArray());
     }
 
-    internal static PdfDocument Open(byte[] bytes) => PdfReader.Open(new MemoryStream(bytes), PdfDocumentOpenMode.Import);
+    internal static PdfTestFile Open(byte[] bytes) => PdfTestFile.Open(new MemoryStream(bytes));
 
-    internal static IEnumerable<PdfDictionary> Fonts(PdfPage page)
+    internal static IEnumerable<PdfTestMap> Fonts(PdfTestPage page)
     {
         var fonts = page.Elements.GetDictionary("/Resources")?.Elements.GetDictionary("/Font");
         return fonts?.Elements.Keys.Select(key => fonts.Elements.GetDictionary(key)!) ?? [];
     }
 
-    internal static PdfDictionary Descriptor(PdfDictionary font) =>
-        ((PdfDictionary)((PdfReference)font.Elements.GetArray("/DescendantFonts")!.Elements[0]).Value).Elements.GetDictionary("/FontDescriptor")!;
+    internal static PdfTestMap Descriptor(PdfTestMap font) =>
+        ((PdfTestMap)((PdfTestReference)font.Elements.GetArray("/DescendantFonts")!.Elements[0]).Value).Elements.GetDictionary("/FontDescriptor")!;
 
     internal static string FontName(byte[] bytes)
     {
@@ -94,10 +90,7 @@ internal static class TestSupport
     {
         using var prepared = await WorkbookInputPreparer.ReadAsync(input, new(), default);
         using var font = new SingleFontContext(JapaneseFont);
-        GlobalFontSettings.ResetFontManagement();
-        GlobalFontSettings.FontResolver = font.Resolver;
-        try { action(new CoreExcelReader(font).Read(prepared, null).Sheets.Single(), font); }
-        finally { GlobalFontSettings.ResetFontManagement(); }
+        action(new CoreExcelReader(font).Read(prepared, null).Sheets.Single(), font);
     }
 
     internal static byte[] Png(SKColor? color = null)

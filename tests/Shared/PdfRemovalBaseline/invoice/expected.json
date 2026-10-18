@@ -1,0 +1,61 @@
+{
+  "name": "invoice",
+  "path": "e2e",
+  "commandFingerprints": {
+    "1": "46E0B8FF42EDA25D082E9EDEF98E6D6A60D15C638019B6693557ACD85E35B581"
+  },
+  "pagePlanSha256": "4FD790DD594E5395CD151BE176EAB11FE39763CF02A53D2495785DC9428F6782",
+  "pages": [
+    {
+      "SourceSheetIndex": 1,
+      "SourceSheetName": "\u8ACB\u6C42\u66F8",
+      "SourcePageNumber": 1,
+      "DocumentPageNumber": 1,
+      "OutputPageNumber": 1,
+      "WidthPoints": 595.276,
+      "HeightPoints": 841.89,
+      "PixelWidth": 794,
+      "PixelHeight": 1123,
+      "Dpi": 96,
+      "RequestedRange": null,
+      "SourceCellRanges": [
+        {
+          "First": {
+            "Row": 1,
+            "Column": 1
+          },
+          "Last": {
+            "Row": 23,
+            "Column": 6
+          }
+        }
+      ],
+      "SourceRegions": [
+        {
+          "X": 0,
+          "Y": 0,
+          "Width": 522,
+          "Height": 570
+        }
+      ],
+      "OriginalWidthPoints": null,
+      "OriginalHeightPoints": null,
+      "CropBounds": null,
+      "PaddingPoints": null
+    }
+  ],
+  "diagnostics": [
+    {
+      "Code": "MaximumDigitWidthResolved",
+      "Severity": 0,
+      "Stage": 0,
+      "Message": "Normal font \u0027Calibri\u0027 resolved to \u0027Noto Sans JP\u0027 with MDW 8px.",
+      "SheetName": "\u8ACB\u6C42\u66F8",
+      "CellRange": null,
+      "ObjectId": null,
+      "SourcePageNumber": null,
+      "OccurrenceCount": 1,
+      "UnicodeSequence": null
+    }
+  ]
+}

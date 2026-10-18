@@ -1,13 +1,12 @@
+using ExcelRenderer.Rendering;
+using ExcelRenderer.TestFixtures;
 using ExcelRenderer.Abstractions;
 using ExcelRenderer.Drawing;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Model;
-using ExcelRenderer.PdfSharp;
+using ExcelRenderer.Pdf;
 using ExcelRenderer.SkiaSharp;
-using PdfSharp.Drawing;
-using PdfSharp.Pdf.Content;
-using PdfSharp.Pdf.IO;
 using SkiaSharp;
 using Xunit;
 
@@ -103,7 +102,7 @@ public sealed class FinalizedTextRenderingTests
     [Fact(DisplayName = "通常文字と空文字のレイアウト結果に、計測で確定した実効フォントサイズが記録される")]
     public void Layout_records_effective_font_size_for_text_and_empty_text()
     {
-        var measurer = new PdfSharpTextMeasurer();
+        var measurer = new SkiaTextMeasurer();
         var style = new FontStyle("Noto Sans JP", 12);
 
         Assert.Equal(12, measurer.Layout("ABC", style, 100, false).EffectiveFontSize);
@@ -223,12 +222,12 @@ public sealed class FinalizedTextRenderingTests
         var command = CreateCommand(layout);
         using var pdf = new MemoryStream();
 
-        new PdfSharpRenderer().Render([command], Page, pdf);
+        new PdfRenderer().Render([command], Page, pdf);
 
         Assert.Equal("%PDF-", System.Text.Encoding.ASCII.GetString(pdf.ToArray(), 0, 5));
         pdf.Position = 0;
-        using var document = PdfReader.Open(pdf, PdfDocumentOpenMode.Import);
-        Assert.Contains("Tj", ContentReader.ReadContent(document.Pages[0]).ToString());
+        using var document = PdfTestFile.Open(pdf);
+        Assert.Contains("Tj", PdfTestContent.ReadContent(document.Pages[0]).ToString());
         Assert.True(RenderInk(command) > 0);
     }
 
@@ -236,11 +235,9 @@ public sealed class FinalizedTextRenderingTests
     [Fact(DisplayName = "確定済み PDF 文字の下線を手動で描く際に、フォント側の自動下線が無効になっている")]
     public void Finalized_pdf_font_does_not_enable_automatic_underline()
     {
-        var font = PdfSharpTextMeasurer.CreateFont(
-            new FontStyle("Noto Sans JP", 12, Underline: true),
-            includeUnderline: false);
-
-        Assert.False(font.Style.HasFlag(XFontStyleEx.Underline));
+        var command = new DrawTextCommand(1, new(10, 10, 100, 30), "ABC", CellStyle.Default with { Font = new("Noto Sans JP", 12, Underline: true) });
+        var probe = PdfContentProbe.Read(OutputFixture.Pdf(command));
+        Assert.Single(probe.Paints, paint => paint.Operation == "S");
     }
 
     /// <summary>ファミリ名とファイルパスが同じ書体でも、識別子とフォントデータの違いで PDF 用のキーを区別することを検証します。</summary>
@@ -250,80 +247,62 @@ public sealed class FinalizedTextRenderingTests
         var first = MemoryFont();
         var secondData = first.FontData!.Concat(new byte[] { 0 }).ToArray();
         var second = first with { FontData = secondData };
-
-        var firstKey = PdfSharpFontResolver.RegisterResolvedFont(first);
-        var secondKey = PdfSharpFontResolver.RegisterResolvedFont(second);
-        var resolver = new PdfSharpFontResolver();
-
-        Assert.NotEqual(firstKey, secondKey);
-        Assert.Equal(first.FontData, resolver.GetFont(firstKey));
-        Assert.Equal(secondData, resolver.GetFont(secondKey));
+        using var scope = new ConversionFontResources();
+        var firstFace = scope.GetFace(first);
+        var secondFace = scope.GetFace(second);
+        Assert.NotEqual(firstFace.Identity, secondFace.Identity);
+        Assert.Equal(first.FontData, firstFace.Data);
+        Assert.Equal(secondData, secondFace.Data);
     }
 
     /// <summary>並行する PDF 書体登録が一度だけ実行され、登録後に元のバイト配列を変更しても保存済みデータが変わらないことを検証します。</summary>
     [Fact(DisplayName = "並行する PDF 書体登録が一度だけ実行され、登録後に元のバイト配列を変更しても保存済みデータが変わらない")]
-    public void Pdf_face_registration_is_atomic_cached_and_immutable()
+    public void Font_snapshots_are_isolated_cached_and_immutable()
     {
-        var font = MemoryFont() with { FaceId = $"parallel-{Guid.NewGuid():N}" };
-        var mutableData = font.FontData!;
-        var original = mutableData.ToArray();
-        var before = PdfSharpFontResolver.RegistrationWork;
-
-        var keys = Enumerable.Range(0, 32)
-            .AsParallel()
-            .Select(_ => PdfSharpFontResolver.RegisterResolvedFont(font))
-            .ToArray();
-        mutableData[0] ^= 0xff;
-        var after = PdfSharpFontResolver.RegistrationWork;
-
-        Assert.Single(keys.Distinct());
-        Assert.Equal(before.Hashes + 1, after.Hashes);
-        Assert.Equal(before.Reads, after.Reads);
-        Assert.Equal(original, new PdfSharpFontResolver().GetFont(keys[0]));
-        Assert.Equal(keys[0], PdfSharpFontResolver.RegisterResolvedFont(font));
+        var font = MemoryFont();
+        var original = font.FontData!.ToArray();
+        var snapshots = Enumerable.Range(0, 32).AsParallel().Select(_ =>
+        {
+            using var scope = new ConversionFontResources();
+            var face = scope.GetFace(font);
+            Assert.Same(face, scope.GetFace(font));
+            return face.Data;
+        }).ToArray();
+        font.FontData![0] ^= 0xff;
+        Assert.All(snapshots, data => Assert.Equal(original, data));
     }
 
     /// <summary>フォント管理と文字計測を組み合わせた繰り返しの折り返し計測で、同じ PDF 書体登録を再利用することを検証します。</summary>
     [Fact(DisplayName = "フォント管理と文字計測を組み合わせた繰り返しの折り返し計測で、同じ PDF 書体登録を再利用する")]
-    public void Text_measurer_reuses_registration_from_font_manager()
+    public void Text_measurer_reuses_physical_font_snapshot()
     {
-        var path = Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf");
-        var options = new FontOptions
+        using var scope = new ConversionFontResources();
+        var counts = new Dictionary<string, double>();
+        ConversionMetrics.Observer = (name, value) => counts[name] = counts.GetValueOrDefault(name) + value;
+        try
         {
-            AllowSystemFonts = false,
-            UseFontPack = false,
-            Registrations = [new("Measured Face", path)],
-        };
-        var measurer = new PdfSharpTextMeasurer(new FontManager(options));
-        var before = PdfSharpFontResolver.RegistrationWork;
-
-        _ = measurer.Layout("repeated wrapping measurement", new("Measured Face", 12), 30, true);
-        var middle = PdfSharpFontResolver.RegistrationWork;
-        _ = measurer.Layout("repeated wrapping measurement", new("Measured Face", 12), 30, true);
-        var after = PdfSharpFontResolver.RegistrationWork;
-
-        Assert.Equal(before.Hashes + 1, middle.Hashes);
-        Assert.Equal(middle, after);
+            var path = Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf");
+            var measurer = new SkiaTextMeasurer(new FontManager(new() { AllowSystemFonts = false, UseFontPack = false, Registrations = [new("Measured Face", path)] }), cacheLayouts: true);
+            var first = measurer.Layout("repeated wrapping measurement", new("Measured Face", 12), 30, true);
+            var before = counts["typefaceCreated"];
+            var second = measurer.Layout("repeated wrapping measurement", new("Measured Face", 12), 30, true);
+            Assert.Equal(first.Size, second.Size);
+            Assert.Equal(first.Lines.Select(line => line.Text), second.Lines.Select(line => line.Text));
+            Assert.Equal(1, before);
+            Assert.Equal(before, counts["typefaceCreated"]);
+        }
+        finally { ConversionMetrics.Observer = null; }
     }
 
     /// <summary>ファイル由来の PDF 書体を繰り返し登録しても、登録用データの読み込みとハッシュ計算が一度だけ行われることを検証します。</summary>
     [Fact(DisplayName = "ファイル由来の PDF 書体を繰り返し登録しても、登録用データの読み込みとハッシュ計算が一度だけ行われる")]
-    public void Pdf_file_face_registration_avoids_repeated_io_and_hashing()
+    public void Font_snapshot_avoids_repeated_io_and_hashing()
     {
-        var path = Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf");
-        var font = new ResolvedFont("File Face", 400, false, path)
-        {
-            FaceId = $"file-{Guid.NewGuid():N}",
-        };
-        var before = PdfSharpFontResolver.RegistrationWork;
-
-        var first = PdfSharpFontResolver.RegisterResolvedFont(font);
-        var second = PdfSharpFontResolver.RegisterResolvedFont(font);
-        var after = PdfSharpFontResolver.RegistrationWork;
-
-        Assert.Equal(first, second);
-        Assert.Equal(before.Reads + 1, after.Reads);
-        Assert.Equal(before.Hashes + 1, after.Hashes);
+        var font = new ResolvedFont("File Face", 400, false, Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf"));
+        using var scope = new ConversionFontResources();
+        var first = scope.GetFace(font);
+        Assert.Same(first, scope.GetFace(font));
+        Assert.Equal(File.ReadAllBytes(font.FilePath), first.Data);
     }
 
     /// <summary>負数・NaN・無限大の実効フォントサイズを指定すると、公開レイアウト状態の生成時に拒否されることを検証します。</summary>

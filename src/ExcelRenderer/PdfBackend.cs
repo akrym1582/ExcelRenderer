@@ -1,11 +1,12 @@
 namespace ExcelRenderer;
 
-/// <summary>Selects PDF drawing. Both backends currently retain PDFsharp measurement and dependencies.</summary>
+/// <summary>Identifies the PDF engine. Only SkiaSharp is supported.</summary>
 public enum PdfBackend
 {
-    /// <summary>Uses the existing PDFsharp renderer.</summary>
+    /// <summary>Reserved obsolete value. Explicit selection throws before reading input or creating output.</summary>
+    [Obsolete("PDFsharp has been removed. Specify SkiaSharp.")]
     PdfSharp = 0,
 
-    /// <summary>Uses SkiaSharp with subset fonts and structural compatibility processing.</summary>
+    /// <summary>Uses SkiaSharp with shared subset fonts and preserved source Unicode.</summary>
     SkiaSharp = 1,
 }

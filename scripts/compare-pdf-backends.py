@@ -21,6 +21,7 @@ from PIL import Image
 from fontTools.ttLib import TTFont
 from fontTools.pens.recordingPen import DecomposingRecordingPen
 from scipy.ndimage import binary_dilation
+from pdf_native_evidence import evidence as native_precision_evidence, verify_frozen_baseline
 from pdf_geometry_evidence import inspect_page, verify_outlines, ellipse_evidence, image_crop_evidence
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -29,19 +30,22 @@ ROOT = Path(__file__).resolve().parents[1]
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--fixture", default="all")
+    parser.add_argument("--reference", choices=["A", "B"], default="A")
+    parser.add_argument("--review-file", type=Path)
     parser.add_argument("--output", type=Path, default=ROOT / "artifacts/pdf-comparison")
     parser.add_argument("--no-generate", action="store_true")
     parser.add_argument("--no-build", action="store_true")
     parser.add_argument("--configuration", choices=["Debug", "Release"], default="Release")
     parser.add_argument("--no-exceptions", action="store_true", help="Show raw fixed-threshold failures without reviewed exceptions")
     args = parser.parse_args()
+    verify_frozen_baseline()
     args.output.mkdir(parents=True, exist_ok=True)
     if not args.no_generate:
         if not args.no_build:
             subprocess.run(["dotnet", "build", str(ROOT / "tools/ExcelRenderer.PdfComparison"), "-c", args.configuration, "-m:1"], cwd=ROOT, check=True)
         dll = ROOT / f"tools/ExcelRenderer.PdfComparison/bin/{args.configuration}/net10.0/ExcelRenderer.PdfComparison.dll"
         subprocess.run(["dotnet", str(dll), str(args.output.resolve()), args.fixture], cwd=ROOT, check=True)
-    reviewed_path = ROOT / "tools/ExcelRenderer.PdfComparison/reviewed-differences.json"
+    reviewed_path = args.review_file or ROOT / "tools/ExcelRenderer.PdfComparison/reviewed-differences.json"
     reviewed = json.loads(reviewed_path.read_text()) if reviewed_path.exists() and not args.no_exceptions else []
     differences = []
     results = []
@@ -51,9 +55,11 @@ def main():
         name = expected["name"]
         if args.fixture != "all" and name != args.fixture and not (args.fixture == "commands" and name.startswith("commands-")):
             continue
-        left = fitz.open(directory / "pdfsharp.pdf")
+        reference_path = directory / ("pdfsharp.pdf" if args.reference == "A" else "baseline-skiasharp.pdf")
+        left = fitz.open(reference_path)
         right = fitz.open(directory / "skiasharp.pdf")
-        record = {"fixture": name, "pages": [], "bytes": {"pdfsharp": (directory / "pdfsharp.pdf").stat().st_size,
+        native_evidence = native_precision_evidence(directory) if (directory / "baseline-skiasharp.pdf").exists() else None
+        record = {"fixture": name, "pages": [], "reference": args.reference, "bytes": {"reference": reference_path.stat().st_size,
                                                            "skiasharp": (directory / "skiasharp.pdf").stat().st_size}}
         def fail(page, region, kind, metrics, reason):
             differences.append({"fixture": name, "page": page, "region": region, "kind": kind,
@@ -63,7 +69,11 @@ def main():
         for page_number, (lp, rp) in enumerate(zip(left, right), 1):
             page_record = {"page": page_number, "mediaBox": list(rp.mediabox), "regions": []}
             page_record["geometryEvidence"] = inspect_page(lp, rp)
-            page_record["sourceFontEvidence"] = {"pdfsharp": verify_outlines(lp), "skiasharp": verify_outlines(rp)}
+            if native_evidence is not None:
+                page_record["nativePrecisionEvidence"] = native_evidence
+                if not native_evidence["passed"]:
+                    fail(page_number, "native-preservation", "native-preservation", native_evidence, "Native B/C content, encoded streams or object identities changed")
+            page_record["sourceFontEvidence"] = {"reference": verify_outlines(lp), "skiasharp": verify_outlines(rp)}
             if name == "images":
                 page_record["cropEvidence"] = image_crop_evidence(rp)
                 if not page_record["cropEvidence"]["passed"]:
@@ -107,7 +117,7 @@ def main():
                 else:
                     links_equal &= reference["to"] == actual["to"]
             if not links_equal:
-                fail(page_number, "links", "annotations", {"pdfsharp": left_links, "skiasharp": right_links}, "Resolved annotations differ beyond 0.1pt or lost URI/destination/tooltip")
+                fail(page_number, "links", "annotations", {"reference": left_links, "skiasharp": right_links}, "Resolved annotations differ beyond 0.1pt or lost URI/destination/tooltip")
             page_record["links"] = right_links
             for dpi in (144, 300):
                 reference_pix = lp.get_pixmap(dpi=dpi, alpha=False)
@@ -117,8 +127,8 @@ def main():
                 if a.shape != b.shape:
                     fail(page_number, "page", "raster-dimensions", [list(a.shape), list(b.shape)], "No resizing or alignment is permitted")
                     continue
-                Image.fromarray(np.maximum(np.abs(a.astype(int) - b.astype(int)), 0).astype(np.uint8)).save(directory / f"page-{page_number}-{dpi}-diff.png")
-                Image.fromarray(((a.astype(int) + b.astype(int)) // 2).astype(np.uint8)).save(directory / f"page-{page_number}-{dpi}-overlay.png")
+                Image.fromarray(np.maximum(np.abs(a.astype(int) - b.astype(int)), 0).astype(np.uint8)).save(directory / f"{args.reference}-C-page-{page_number}-{dpi}-diff.png")
+                Image.fromarray(((a.astype(int) + b.astype(int)) // 2).astype(np.uint8)).save(directory / f"{args.reference}-C-page-{page_number}-{dpi}-overlay.png")
                 if expected.get("regions") is not None:
                     regions = [(region["name"], region["bounds"]) for region in expected["regions"]]
                 elif expected["path"] == "commands":
@@ -257,11 +267,11 @@ def main():
     report = {"versions": {package: importlib.metadata.version(package) for package in ("PyMuPDF", "numpy", "Pillow", "fonttools", "scipy")},
               "gates": {"boxPoints": .01, "rgbDelta": 16, "differentInkRatio": .01, "unmatchedInkRatio": .001},
               "fixtures": results, "screeningDifferences": len(differences), "acceptedDifferences": len(differences) - requires_fix, "requiresFix": requires_fix}
-    (args.output / "report.json").write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n")
-    (args.output / "differences.json").write_text(json.dumps(differences, indent=2, ensure_ascii=False) + "\n")
+    (args.output / ("report.json" if args.reference == "A" else "report-B-C.json")).write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+    (args.output / ("differences.json" if args.reference == "A" else "differences-B-C.json")).write_text(json.dumps(differences, indent=2, ensure_ascii=False) + "\n")
     rows = "".join(f'<tr><td>{html.escape(row["fixture"])}</td><td>{row["page"]}</td><td>{html.escape(row["region"])}</td><td>{html.escape(row["kind"])}</td><td>{html.escape(str(row["metrics"]))}</td><td>{html.escape(row["status"])}</td><td>{html.escape(row["reason"])}</td></tr>' for row in differences)
     image_links = "".join(f'<p><a href="{html.escape(str(path.relative_to(args.output)))}">{html.escape(str(path.relative_to(args.output)))}</a></p>' for path in sorted(args.output.glob("*/*-diff.png")))
-    (args.output / "index.html").write_text(f'<!doctype html><meta charset="utf-8"><title>PDF backend comparison</title><h1>PDF backend comparison</h1><p>Requires fix: {requires_fix}; reviewed: {len(differences) - requires_fix}</p><p><a href="report.json">Report</a> · <a href="differences.json">Differences</a></p><table border="1"><tr><th>Fixture</th><th>Page</th><th>Region</th><th>Kind</th><th>Metrics</th><th>Status</th><th>Evidence/reason</th></tr>{rows}</table>{image_links}')
+    (args.output / ("index.html" if args.reference == "A" else "index-B-C.html")).write_text(f'<!doctype html><meta charset="utf-8"><title>PDF backend comparison</title><h1>PDF backend comparison</h1><p>Requires fix: {requires_fix}; reviewed: {len(differences) - requires_fix}</p><p><a href="report.json">Report</a> · <a href="differences.json">Differences</a></p><table border="1"><tr><th>Fixture</th><th>Page</th><th>Region</th><th>Kind</th><th>Metrics</th><th>Status</th><th>Evidence/reason</th></tr>{rows}</table>{image_links}')
     print(f'{len(results)} fixtures; {requires_fix} unmet gates; {len(differences) - requires_fix} reviewed differences; report: {args.output / "index.html"}')
     return 1 if requires_fix else 0
 

@@ -7,6 +7,7 @@
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="PdfPig" Version="0.1.14" PrivateAssets="all" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.8.1" />
     <PackageReference Include="xunit" Version="2.9.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
@@ -33,6 +34,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="../Shared/PdfTestFile.cs" Link="Fixtures/PdfTestFile.cs" />
+    <Compile Include="../Shared/PdfTestContent.cs" Link="Fixtures/PdfTestContent.cs" />
     <Compile Include="../Shared/SdkWorkbook.cs" Link="Fixtures/SdkWorkbook.cs" />
+    <Compile Include="../Shared/ImageReviewFixture.cs" Link="Fixtures/ImageReviewFixture.cs" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,75 @@
+{
+  "name": "rich-range",
+  "path": "e2e",
+  "commandFingerprints": {
+    "1": "E5DB0FF05793320149E02237D72CE4B6904F61A08B2F15D391A2719D0F3C3921"
+  },
+  "pagePlanSha256": "28FB0127FE64C56186F1023D07BC875935FADBE818AA7ACEE0B4286EA6C7BBA0",
+  "pages": [
+    {
+      "SourceSheetIndex": 1,
+      "SourceSheetName": "rich",
+      "SourcePageNumber": 1,
+      "DocumentPageNumber": 1,
+      "OutputPageNumber": 1,
+      "WidthPoints": 70.36599999999999,
+      "HeightPoints": 21.5,
+      "PixelWidth": 94,
+      "PixelHeight": 29,
+      "Dpi": 96,
+      "RequestedRange": {
+        "First": {
+          "Row": 1,
+          "Column": 1
+        },
+        "Last": {
+          "Row": 3,
+          "Column": 3
+        }
+      },
+      "SourceCellRanges": [
+        {
+          "First": {
+            "Row": 1,
+            "Column": 1
+          },
+          "Last": {
+            "Row": 3,
+            "Column": 3
+          }
+        }
+      ],
+      "SourceRegions": [
+        {
+          "X": 0,
+          "Y": 0,
+          "Width": 155.25,
+          "Height": 45
+        }
+      ],
+      "OriginalWidthPoints": 612,
+      "OriginalHeightPoints": 792,
+      "CropBounds": {
+        "X": 55.5,
+        "Y": 61.74000024795532,
+        "Width": 66.36599999999999,
+        "Height": 17.5
+      },
+      "PaddingPoints": 2
+    }
+  ],
+  "diagnostics": [
+    {
+      "Code": "MaximumDigitWidthResolved",
+      "Severity": 0,
+      "Stage": 0,
+      "Message": "Normal font \u0027Calibri\u0027 resolved to \u0027Noto Sans JP\u0027 with MDW 8px.",
+      "SheetName": "rich",
+      "CellRange": null,
+      "ObjectId": null,
+      "SourcePageNumber": null,
+      "OccurrenceCount": 1,
+      "UnicodeSequence": null
+    }
+  ]
+}

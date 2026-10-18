@@ -1,0 +1,111 @@
+{
+  "name": "pages-selection",
+  "path": "e2e",
+  "commandFingerprints": {
+    "1": "BFCD1035F4997C68BAFAE9EDA109E8A0DBC2D38927DFD9D6DDFCC4F1BD69E029",
+    "2": "91BBBEB6B589ECB3A7B6B46361386E2D5004BD6FFF1C0F3DE6732EDDC7721C05"
+  },
+  "pagePlanSha256": "110C5B6FA2F403EA7AA79E4F3327C21B5DAB332D60C57F371A7A412C0860B702",
+  "pages": [
+    {
+      "SourceSheetIndex": 2,
+      "SourceSheetName": "Second",
+      "SourcePageNumber": 1,
+      "DocumentPageNumber": 1,
+      "OutputPageNumber": 1,
+      "WidthPoints": 792,
+      "HeightPoints": 612,
+      "PixelWidth": 1056,
+      "PixelHeight": 816,
+      "Dpi": 96,
+      "RequestedRange": null,
+      "SourceCellRanges": [
+        {
+          "First": {
+            "Row": 1,
+            "Column": 1
+          },
+          "Last": {
+            "Row": 1,
+            "Column": 1
+          }
+        }
+      ],
+      "SourceRegions": [
+        {
+          "X": 0,
+          "Y": 0,
+          "Width": 45.75,
+          "Height": 15
+        }
+      ],
+      "OriginalWidthPoints": null,
+      "OriginalHeightPoints": null,
+      "CropBounds": null,
+      "PaddingPoints": null
+    },
+    {
+      "SourceSheetIndex": 1,
+      "SourceSheetName": "First",
+      "SourcePageNumber": 2,
+      "DocumentPageNumber": 3,
+      "OutputPageNumber": 2,
+      "WidthPoints": 595.276,
+      "HeightPoints": 841.89,
+      "PixelWidth": 794,
+      "PixelHeight": 1123,
+      "Dpi": 96,
+      "RequestedRange": null,
+      "SourceCellRanges": [
+        {
+          "First": {
+            "Row": 19,
+            "Column": 1
+          },
+          "Last": {
+            "Row": 30,
+            "Column": 3
+          }
+        }
+      ],
+      "SourceRegions": [
+        {
+          "X": 0,
+          "Y": 270,
+          "Width": 137.25,
+          "Height": 180
+        }
+      ],
+      "OriginalWidthPoints": null,
+      "OriginalHeightPoints": null,
+      "CropBounds": null,
+      "PaddingPoints": null
+    }
+  ],
+  "diagnostics": [
+    {
+      "Code": "MaximumDigitWidthFallback",
+      "Severity": 1,
+      "Stage": 0,
+      "Message": "Normal font \u0027unknown\u0027 could not be measured; the 7px compatibility metric was used.",
+      "SheetName": "First",
+      "CellRange": null,
+      "ObjectId": null,
+      "SourcePageNumber": null,
+      "OccurrenceCount": 1,
+      "UnicodeSequence": null
+    },
+    {
+      "Code": "MaximumDigitWidthFallback",
+      "Severity": 1,
+      "Stage": 0,
+      "Message": "Normal font \u0027unknown\u0027 could not be measured; the 7px compatibility metric was used.",
+      "SheetName": "Second",
+      "CellRange": null,
+      "ObjectId": null,
+      "SourcePageNumber": null,
+      "OccurrenceCount": 1,
+      "UnicodeSequence": null
+    }
+  ]
+}

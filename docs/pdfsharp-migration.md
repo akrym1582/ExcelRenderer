@@ -74,7 +74,7 @@ variants are parse errors. Explicit backend options on PNG/SVG/Markdown remain p
 - Independent public `SkiaTextMeasurer` calls own/restore native scopes and serialize
   access to their own manager/cache. Conversion-local instances and a supplied Skia service invoked by its conversion borrow that scope. Independent PdfRenderer calls always own/restore a separate session, including calls that inherit another session through ExecutionContext.
   There is no process-wide conversion lock. Conversion-local caches are limited to
-  512 entries / 2048 characters. Standalone rich calls with the built-in manager
+  512 entries / 2048 characters per layout, prefix-width and finalized-line cache. Keys include style and registration generation; width/line caches apply only to the built-in manager inside a conversion. Standalone rich calls with the built-in manager
   keep at most eight weak layout references, so the service does not retain font
   snapshots after callers release them. Custom managers without registration
   generations resolve afresh on each independent call.

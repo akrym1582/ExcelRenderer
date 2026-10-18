@@ -31,6 +31,7 @@ def main():
     parser.add_argument("--configuration", choices=["Debug", "Release"], default="Release")
     parser.add_argument("--warmups", type=int, default=3)
     parser.add_argument("--generate-only", action="store_true")
+    parser.add_argument("--inputs", type=Path, help="Reuse exact generated workbook bytes from an earlier run")
     args = parser.parse_args()
     if args.repeats < 5 or args.warmups < 1:
         parser.error("Use at least five fresh-process rounds and one warm-up per process")
@@ -39,11 +40,17 @@ def main():
     if not args.no_build:
         subprocess.run(["dotnet", "build", str(ROOT / "tools/ExcelRenderer.Performance"), "-c", args.configuration, "-m:1", "--verbosity:minimal"], cwd=ROOT, check=True)
     (args.output / "conditions.json").write_text(json.dumps({"configuration": args.configuration, "warmups": args.warmups, "rounds": args.repeats,
-        "processConcurrency": args.parallelism, "fixture": args.fixture, "baselineAssembly": str(args.baseline_assembly) if args.baseline_assembly else None, "sdk": subprocess.check_output(["dotnet", "--version"], text=True).strip(), "os": platform.platform(), "comparisonTarget": "B: old measurement + Skia subset", "timeAndPeakRssTarget": 1.25}, indent=2))
+        "processConcurrency": args.parallelism, "fixture": args.fixture, "baselineAssembly": str(args.baseline_assembly) if args.baseline_assembly else None, "sdk": subprocess.check_output(["dotnet", "--version"], text=True).strip(), "os": platform.platform(), "comparisonTarget": "B: old measurement + Skia subset", "timeAndPeakRssTarget": 1.25,
+        "stageOrder": "alternating forward/reverse per fresh-process round", "reusedInputs": str(args.inputs) if args.inputs else None}, indent=2))
     fixtures = {"invoice": ROOT / "samples/mapping/invoice/invoice.xlsx", "grid": ROOT / "samples/excel/japanese-grid-report.xlsx"}
     # Manual row breaks and a four-column print area make the page workloads exact.
     for name, rows, mode in [("images", 120, "images"), ("50-pages", 900, "text"), ("200-pages", 3600, "text")]:
         if args.fixture in ("all", name):
+            if args.inputs:
+                fixtures[name] = args.inputs.resolve() / f"{name}.xlsx"
+                if not fixtures[name].is_file():
+                    parser.error(f"Missing frozen input: {fixtures[name]}")
+                continue
             path = args.output / f"{name}.xlsx"
             subprocess.run(["dotnet", str(dll), "generate", str(path), str(rows), mode], cwd=ROOT, check=True)
             if name in ("50-pages", "200-pages"):
@@ -109,6 +116,11 @@ def main():
             fixtures[name] = path
     for name in ("rich-text", "borders"):
         if args.fixture not in ("all", name):
+            continue
+        if args.inputs:
+            fixtures[name] = args.inputs.resolve() / f"{name}.xlsx"
+            if not fixtures[name].is_file():
+                parser.error(f"Missing frozen input: {fixtures[name]}")
             continue
         path = args.output / (name + ".xlsx")
         subprocess.run(["dotnet", str(dll), "generate", str(path), "40" if name == "rich-text" else "300", "text"], cwd=ROOT, check=True)
@@ -189,12 +201,16 @@ def main():
             continue
         for concurrency in args.parallelism:
             groups = {}
+            stage_values = {label: [] for label, _, _ in engines}
+            for iteration in range(args.repeats):
+                ordered = engines if iteration % 2 == 0 else list(reversed(engines))
+                for label, assembly, backend in ordered:
+                    values = sample(name, path, label, assembly, backend, concurrency, iteration)
+                    stage_values[label] += values
+                    raw += values
+                    (args.output / "raw.json").write_text(json.dumps(raw, indent=2))
             for label, assembly, backend in engines:
-                values = []
-                for iteration in range(args.repeats):
-                    values += sample(name, path, label, assembly, backend, concurrency, iteration)
-                raw += values
-                (args.output / "raw.json").write_text(json.dumps(raw, indent=2))
+                values = stage_values[label]
                 groups[label] = {metric: {"median": statistics.median(value[metric] for value in values), "max": max(value[metric] for value in values)}
                                  for metric in ("TotalMs", "PeakWorkingSet64", "AllocatedBytes", "OutputBytes")}
                 groups[label]["pages"] = sorted(set(value["Pages"] for value in values))

@@ -13,6 +13,8 @@ public sealed partial class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
     private readonly object standaloneSync = new();
     private readonly bool borrowConversionScope;
     private readonly Dictionary<(string Text, FontStyle Font, double Width, bool Wrap, int Generation), TextLayoutResult>? _layouts;
+    private readonly Dictionary<(string Text, FontStyle Font, int Generation), double>? widths;
+    private readonly Dictionary<(string Text, FontStyle Font, bool ExplicitBreak, int Generation), TextLayoutLine>? lineLayouts;
 
     /// <summary>Initializes a new instance of the <see cref="SkiaTextMeasurer"/> class.</summary>
     public SkiaTextMeasurer()
@@ -34,6 +36,8 @@ public sealed partial class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
         : this(fontManager)
     {
         _layouts = cacheLayouts ? new() : null;
+        widths = cacheLayouts ? new() : null;
+        lineLayouts = cacheLayouts ? new() : null;
         borrowConversionScope = true;
     }
 
@@ -114,12 +118,14 @@ public sealed partial class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
         string text,
         bool explicitBreak,
         FontStyle style,
-        FontRequest request,
-        bool measureOnly = false)
+        FontRequest request)
     {
-        if (measureOnly)
+        var key = (text, style, explicitBreak, (_fontManager as FontManager)?.RegistrationGeneration ?? 0);
+        var cacheable = lineLayouts is not null && _fontManager is FontManager && text.Length <= 2048;
+        if (cacheable && lineLayouts!.TryGetValue(key, out var cached))
         {
-            return new(text, MeasureWidth(text, style, request), 0, 0, [], explicitBreak);
+            Rendering.ConversionMetrics.Report("textLineCacheHits", 1);
+            return cached;
         }
 
         var resolvedRuns = _fontManager?.ResolveTextRuns(text, request) ?? [];
@@ -144,16 +150,48 @@ public sealed partial class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
         var leading = metrics.Length == 0 ? 0 : metrics.Max(item => item.Leading);
         var height = ascent + descent + leading;
         var width = resolvedRuns.Count == 0 ? 0 : x;
-        return new(text, width, height, ascent, positionedRuns.AsReadOnly(), explicitBreak)
+        var result = new TextLayoutLine(text, width, height, ascent, positionedRuns.AsReadOnly(), explicitBreak)
         {
             Ascent = ascent,
             Descent = descent,
             Leading = leading,
         };
+        if (cacheable)
+        {
+            if (lineLayouts!.Count >= 512)
+            {
+                lineLayouts.Clear();
+            }
+
+            lineLayouts[key] = result;
+            Rendering.ConversionMetrics.Report("textLineCacheMisses", 1);
+        }
+
+        return result;
     }
 
     private double MeasureWidth(string text, FontStyle style, FontRequest request)
     {
-        return _fontManager.ResolveTextRuns(text, request).Sum(run => MeasureRun(run, style));
+        var key = (text, style, (_fontManager as FontManager)?.RegistrationGeneration ?? 0);
+        var cacheable = widths is not null && _fontManager is FontManager && text.Length <= 2048;
+        if (cacheable && widths!.TryGetValue(key, out var cached))
+        {
+            Rendering.ConversionMetrics.Report("textWidthCacheHits", 1);
+            return cached;
+        }
+
+        var width = _fontManager.ResolveTextRuns(text, request).Sum(run => MeasureRun(run, style));
+        if (cacheable)
+        {
+            if (widths!.Count >= 512)
+            {
+                widths.Clear();
+            }
+
+            widths[key] = width;
+            Rendering.ConversionMetrics.Report("textWidthCacheMisses", 1);
+        }
+
+        return width;
     }
 }

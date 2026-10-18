@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text;
 using ExcelRenderer.Abstractions;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Model;
@@ -76,7 +77,7 @@ public sealed partial class SkiaTextMeasurer
 
             var item = new CellTextRun(element, snapshot[sourceIndex].Font);
             current.Add(item);
-            if (wrap && availableWidth > 0 && current.Count > 1 && !Core.Layout.TextLineBreaker.Fits(CreateRichLine(current, font, false, measureOnly: true).Width, availableWidth))
+            if (wrap && availableWidth > 0 && current.Count > 1 && !Core.Layout.TextLineBreaker.Fits(MeasureRichWidth(current), availableWidth))
             {
                 current.RemoveAt(current.Count - 1);
                 lines.Add(CreateRichLine(current, font, false));
@@ -116,7 +117,27 @@ public sealed partial class SkiaTextMeasurer
         return result;
     }
 
-    private TextLayoutLine CreateRichLine(IReadOnlyList<CellTextRun> elements, FontStyle emptyFont, bool explicitBreak, bool measureOnly = false)
+    private double MeasureRichWidth(IReadOnlyList<CellTextRun> elements)
+    {
+        var width = 0d;
+        var index = 0;
+        while (index < elements.Count)
+        {
+            var style = elements[index].Font;
+            var text = new StringBuilder();
+            do
+            {
+                text.Append(elements[index++].Text);
+            }
+            while (index < elements.Count && elements[index].Font == style);
+
+            width += MeasureWidth(text.ToString(), style, new(style.Family, style.Bold ? 700 : 400, style.Italic));
+        }
+
+        return width;
+    }
+
+    private TextLayoutLine CreateRichLine(IReadOnlyList<CellTextRun> elements, FontStyle emptyFont, bool explicitBreak)
     {
         if (elements.Count == 0)
         {
@@ -144,7 +165,7 @@ public sealed partial class SkiaTextMeasurer
         foreach (var segment in segments)
         {
             var style = segment.Font;
-            var line = CreateLine(segment.Text, false, style, new(style.Family, style.Bold ? 700 : 400, style.Italic), measureOnly);
+            var line = CreateLine(segment.Text, false, style, new(style.Family, style.Bold ? 700 : 400, style.Italic));
             runs.AddRange(line.Runs.Select(run => run with { X = run.X + x, Font = style }));
             x += line.Width;
             ascent = Math.Max(ascent, line.Ascent);

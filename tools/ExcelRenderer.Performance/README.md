@@ -135,7 +135,7 @@ dotnet run --project tools/ExcelRenderer.Performance -- render-case samples/exce
 
 The performance project includes the optional Fonts assembly. The comparison
 script enables it for both stages. It defaults to Release, three warm-up
-conversions per fresh process, five measured rounds and process concurrency
+conversions per fresh process, five measured rounds with alternating forward/reverse stage order, and process concurrency
 1/4/8. Seven fixtures cover invoice, Japanese grid, rich text, borders, 32 distinct
 256px PNGs (16 with alpha), and exactly 50/200 pages (asserted at runtime).
 Raw records retain time, process lifetime peak RSS, allocations, bytes, phase
@@ -161,3 +161,5 @@ post-GC memory outside timed conversion, and creation/disposal counts distinguis
 native cache high-water marks from resources retained per conversion. See
 [the removal validation](../../docs/pdfsharp-removal-validation.md) for results,
 conditions, exceptions and the exact baseline provenance.
+
+Use `--inputs artifacts/pdf-removal-benchmark` to reuse the exact generated workbook bytes for controlled reruns; every selected input hash is recorded. Initial grouped-stage measurements remain separate evidence when the protocol is corrected.

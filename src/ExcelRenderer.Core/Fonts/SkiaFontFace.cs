@@ -89,17 +89,43 @@ internal sealed class SkiaFontFace : IDisposable
             // Color strikes use the same normal native metrics as their drawing font.
             // Their bitmap strike advances are distinct from scalable outline advances.
             using var font = new SKFont(Typeface, (float)size) { LinearMetrics = false, Subpixel = false, Hinting = SKFontHinting.Normal };
-            return font.GetGlyphWidths(glyphs.ToArray()).Sum(width => (double)width);
+            return font.GetGlyphWidths(glyphs as ushort[] ?? glyphs.ToArray()).Sum(width => (double)width);
         }
 
         long total = 0;
         foreach (var glyph in glyphs)
         {
-            var offset = Math.Min(glyph, MetricCount - 1) * 4;
-            total += (hmtx[offset] << 8) | hmtx[offset + 1];
+            total += AdvanceUnits(glyph);
         }
 
         return total * size / Units;
+    }
+
+    /// <summary>Gets per-glyph advances without allocating a collection or native font per glyph.</summary>
+    /// <param name="glyphs">The selected glyphs.</param>
+    /// <param name="size">The size in points.</param>
+    /// <returns>Individual point advances under the existing scalable/color policy.</returns>
+    internal double[] Advances(ushort[] glyphs, double size)
+    {
+        var result = new double[glyphs.Length];
+        if (Color)
+        {
+            using var font = new SKFont(Typeface, (float)size) { LinearMetrics = false, Subpixel = false, Hinting = SKFontHinting.Normal };
+            var widths = font.GetGlyphWidths(glyphs);
+            for (var index = 0; index < glyphs.Length; index++)
+            {
+                result[index] = widths[index];
+            }
+        }
+        else
+        {
+            for (var index = 0; index < glyphs.Length; index++)
+            {
+                result[index] = AdvanceUnits(glyphs[index]) * size / Units;
+            }
+        }
+
+        return result;
     }
 
     /// <summary>Gets glyph origins from the same advances used by layout.</summary>
@@ -109,11 +135,12 @@ internal sealed class SkiaFontFace : IDisposable
     internal SKPoint[] Positions(ushort[] glyphs, double size)
     {
         var result = new SKPoint[glyphs.Length];
+        var colorAdvances = Color ? Advances(glyphs, size) : null;
         double x = 0;
         for (var index = 0; index < glyphs.Length; index++)
         {
             result[index] = new((float)x, 0);
-            x += Measure([glyphs[index]], size);
+            x += colorAdvances is null ? AdvanceUnits(glyphs[index]) * size / Units : colorAdvances[index];
         }
 
         return result;
@@ -134,5 +161,11 @@ internal sealed class SkiaFontFace : IDisposable
         }
 
         return result;
+    }
+
+    private int AdvanceUnits(ushort glyph)
+    {
+        var offset = Math.Min(glyph, MetricCount - 1) * 4;
+        return (hmtx[offset] << 8) | hmtx[offset + 1];
     }
 }

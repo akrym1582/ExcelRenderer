@@ -87,8 +87,7 @@ internal sealed class PdfFontCollection : IDisposable
                 throw new InvalidOperationException("Skia PDF encountered an uncollected physical face.");
             }
 
-            var tags = face.Typeface.GetTableTags();
-            entry = new(face, tags.Contains(0x43424454u) || tags.Contains(0x434f4c52u) || tags.Contains(0x73626978u));
+            entry = new(face);
             entries.Add(face.Identity, entry);
         }
 
@@ -137,11 +136,11 @@ internal sealed class PdfFontCollection : IDisposable
         canvas.DrawText(blob, x, y, paint);
     }
 
-    private sealed class Entry(SkiaFontFace face, bool color)
+    private sealed class Entry(SkiaFontFace face)
     {
         internal SkiaFontFace Face { get; } = face;
 
-        internal bool Color { get; } = color;
+        internal bool Color => Face.Color;
 
         internal HashSet<ushort> Glyphs { get; } = [0];
 

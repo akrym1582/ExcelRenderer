@@ -61,7 +61,7 @@ internal sealed class GlyphSequence
         }
 
         Clusters = clusters.AsReadOnly();
-        Advances = Array.AsReadOnly(glyphs.Select(glyph => face.Measure([glyph], 1)).ToArray());
+        Advances = Array.AsReadOnly(face.Advances(glyphs, 1));
     }
 
     /// <summary>Gets the immutable physical content identity.</summary>

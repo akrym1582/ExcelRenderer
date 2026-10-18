@@ -18,7 +18,7 @@ jobs:
       - run: python scripts/build-harfbuzz-subset.py
       - run: dotnet restore ExcelRenderer.slnx --locked-mode
       - run: dotnet build ExcelRenderer.slnx -c Release -t:Rebuild --no-restore --verbosity:minimal -m:1
-      - run: dotnet test tests/ExcelRenderer.Tests -c Release --no-build --no-restore --filter "FullyQualifiedName~PdfBackendTests|FullyQualifiedName~PdfRemovalContractTests"
+      - run: dotnet test tests/ExcelRenderer.Tests -c Release --no-build --no-restore --filter "FullyQualifiedName~PdfBackendTests|FullyQualifiedName~PdfRemovalContractTests|FullyQualifiedName~GlyphAdvanceTests|FullyQualifiedName~RichTextTests|FullyQualifiedName~FontManager_"
       - run: dotnet test tests/ExcelRenderer.Tool.Tests -c Release --no-build --no-restore
       - run: dotnet pack ExcelRenderer.slnx -c Release --no-build --no-restore -m:1 -p:BuildProjectReferences=false -o artifacts/pdf-native-packages
       - run: dotnet publish src/ExcelRenderer.Tool -c Release --no-restore -o artifacts/pdf-native-publish

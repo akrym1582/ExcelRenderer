@@ -117,7 +117,7 @@ public sealed class FontManager : IFontManager
             return cachedRuns;
         }
 
-        var runs = new List<TextRun>();
+        var runs = new TextRunBuilder();
         foreach (var (element, start, baseScalar, selector) in EnumerateElements(text))
         {
             var replaceIvs = selector is not null && _options.ReplaceIvsWithBaseCharacter;
@@ -140,30 +140,19 @@ public sealed class FontManager : IFontManager
             }
 
             renderedText = missing || missingPrivateUse ? "\uFFFD" : renderedText;
-            if (runs.Count > 0 && runs[^1].Font.FaceId == font.FaceId &&
-                glyph is null && colorEmojiGlyph is null && runs[^1].GlyphId is null &&
-                runs[^1].ColorEmojiGlyphId is null && runs[^1].MissingIvsGlyph == missing &&
-                runs[^1].MissingPrivateUseGlyph == missingPrivateUse &&
-                runs[^1].Utf16Start + runs[^1].SourceText.Length == start)
+            runs.Add(new(renderedText, font)
             {
-                runs[^1] = runs[^1] with { Text = runs[^1].Text + renderedText, SourceText = runs[^1].SourceText + element };
-            }
-            else
-            {
-                runs.Add(new(renderedText, font)
-                {
-                    Utf16Start = start,
-                    SourceText = element,
-                    MissingIvsGlyph = missing,
-                    MissingPrivateUseGlyph = missingPrivateUse,
-                    GlyphId = glyph?.GlyphId,
-                    ColorEmojiGlyphId = colorEmojiGlyph,
-                    IsDefaultVariationGlyph = glyph?.IsDefault ?? false,
-                });
-            }
+                Utf16Start = start,
+                SourceText = element,
+                MissingIvsGlyph = missing,
+                MissingPrivateUseGlyph = missingPrivateUse,
+                GlyphId = glyph?.GlyphId,
+                ColorEmojiGlyphId = colorEmojiGlyph,
+                IsDefaultVariationGlyph = glyph?.IsDefault ?? false,
+            });
         }
 
-        var result = runs.AsReadOnly();
+        var result = runs.Complete();
         if (text.Length <= 2048)
         {
             if (_runs.Count >= 512)

@@ -66,9 +66,10 @@ internal sealed class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
     private TextLayoutLine CreateLine(string text, bool explicitBreak, FontStyle style)
     {
         var (ascent, descent, leading) = context.Metrics(style.Size);
-        return new(text, context.Face.Measure(context.Face.Typeface.GetGlyphs(text), style.Size), ascent + descent + leading, ascent, explicitBreak)
+        var glyphs = context.Face.Typeface.GetGlyphs(text);
+        return new(text, context.Face.Measure(glyphs, style.Size), ascent + descent + leading, ascent, explicitBreak)
         {
-            Glyphs = new(context.Face, context.Face.Typeface.GetGlyphs(text), text, text),
+            Glyphs = new(context.Face, glyphs, text, text),
             Ascent = ascent,
             Descent = descent,
             Leading = leading,

@@ -10,6 +10,12 @@ using ExcelRenderer.Rendering;
 
 var command = args[0];
 var path = args[1];
+if (command == "layout-case")
+{
+    TextLayoutBenchmark.Run(args);
+    return;
+}
+
 if (command.StartsWith("integration-", StringComparison.Ordinal))
 {
     await IntegrationBenchmark.RunAsync(args);

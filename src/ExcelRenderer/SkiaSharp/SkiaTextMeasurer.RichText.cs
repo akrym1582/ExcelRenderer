@@ -26,6 +26,23 @@ public sealed partial class SkiaTextMeasurer
         }
     }
 
+    private static IEnumerable<(string Text, FontStyle Font)> Segments(IReadOnlyList<CellTextRun> elements)
+    {
+        var index = 0;
+        while (index < elements.Count)
+        {
+            var style = elements[index].Font;
+            var text = new StringBuilder();
+            do
+            {
+                text.Append(elements[index++].Text);
+            }
+            while (index < elements.Count && elements[index].Font == style);
+
+            yield return (text.ToString(), style);
+        }
+    }
+
     private TextLayoutResult LayoutCore(IReadOnlyList<CellTextRun> runs, FontStyle font, double availableWidth, bool wrap)
     {
         if (runs is null)
@@ -120,18 +137,9 @@ public sealed partial class SkiaTextMeasurer
     private double MeasureRichWidth(IReadOnlyList<CellTextRun> elements)
     {
         var width = 0d;
-        var index = 0;
-        while (index < elements.Count)
+        foreach (var (text, style) in Segments(elements))
         {
-            var style = elements[index].Font;
-            var text = new StringBuilder();
-            do
-            {
-                text.Append(elements[index++].Text);
-            }
-            while (index < elements.Count && elements[index].Font == style);
-
-            width += MeasureWidth(text.ToString(), style, new(style.Family, style.Bold ? 700 : 400, style.Italic));
+            width += MeasureWidth(text, style, new(style.Family, style.Bold ? 700 : 400, style.Italic));
         }
 
         return width;
@@ -144,28 +152,14 @@ public sealed partial class SkiaTextMeasurer
             return CreateLine(string.Empty, explicitBreak, emptyFont, new(emptyFont.Family, emptyFont.Bold ? 700 : 400, emptyFont.Italic));
         }
 
-        var segments = new List<CellTextRun>();
-        foreach (var element in elements)
-        {
-            if (segments.Count > 0 && segments[segments.Count - 1].Font == element.Font)
-            {
-                segments[segments.Count - 1] = element with { Text = segments[segments.Count - 1].Text + element.Text };
-            }
-            else
-            {
-                segments.Add(element);
-            }
-        }
-
         var runs = new List<TextLayoutRun>();
         var x = 0d;
         var ascent = 0d;
         var descent = 0d;
         var leading = 0d;
-        foreach (var segment in segments)
+        foreach (var (text, style) in Segments(elements))
         {
-            var style = segment.Font;
-            var line = CreateLine(segment.Text, false, style, new(style.Family, style.Bold ? 700 : 400, style.Italic));
+            var line = CreateLine(text, false, style, new(style.Family, style.Bold ? 700 : 400, style.Italic));
             runs.AddRange(line.Runs.Select(run => run with { X = run.X + x, Font = style }));
             x += line.Width;
             ascent = Math.Max(ascent, line.Ascent);

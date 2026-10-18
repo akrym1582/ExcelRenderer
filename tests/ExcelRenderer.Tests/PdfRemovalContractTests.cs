@@ -1,3 +1,4 @@
+using System.Buffers.Binary;
 using System.Text.Json;
 using ExcelRenderer.Abstractions;
 using ExcelRenderer.Drawing;
@@ -100,6 +101,12 @@ public sealed class PdfRemovalContractTests
     {
         var root = FindRoot();
         using var samples = JsonDocument.Parse(File.ReadAllText(Path.Combine(root, "tests/Shared/PdfRemovalBaseline/metrics.json")));
+        using var face = global::SkiaSharp.SKTypeface.FromFile(Path.Combine(root, "third_party/NotoSansJP/NotoSansJP-Regular.ttf"));
+        var head = face.GetTableData(0x68656164);
+        var hhea = face.GetTableData(0x68686561);
+        var units = BinaryPrimitives.ReadUInt16BigEndian(head.AsSpan(18));
+        var ascent = BinaryPrimitives.ReadInt16BigEndian(hhea.AsSpan(4));
+        var observations = new List<object>();
         var manager = new FontManager(new() { AllowSystemFonts = false });
         var measurer = new SkiaTextMeasurer(manager);
         foreach (var item in samples.RootElement.EnumerateArray())
@@ -110,9 +117,21 @@ public sealed class PdfRemovalContractTests
             foreach (var (line, expected) in layout.Lines.Zip(item.GetProperty("lines").EnumerateArray()))
             {
                 Assert.Equal(expected.GetProperty("Text").GetString(), line.Text);
-                Assert.InRange(Math.Abs(line.Baseline - expected.GetProperty("Baseline").GetDouble()), 0, .0000001);
+                var size = (float)item.GetProperty("size").GetDouble();
+                var frozenBaseline = expected.GetProperty("Baseline").GetDouble();
+                // FreeType normalizes design metrics before scaling. DirectWrite scales
+                // before division (SkScalerContext_win_dw.cpp, generateFontMetrics).
+                // Assert each exact arithmetic path; retain the original numeric threshold.
+                Assert.Equal(frozenBaseline, (double)(ascent / (float)units * size));
+                var platformBaseline = OperatingSystem.IsWindows() ? (double)(size * ascent / units) : frozenBaseline;
+                observations.Add(new { Size = size, Frozen = frozenBaseline, Expected = platformBaseline, Actual = line.Baseline });
+                Assert.InRange(Math.Abs(line.Baseline - platformBaseline), 0, .0000001);
             }
         }
+
+        var directory = Path.Combine(AppContext.BaseDirectory, "SampleOutputs/PdfMetrics");
+        Directory.CreateDirectory(directory);
+        File.WriteAllText(Path.Combine(directory, "platform-metrics.json"), JsonSerializer.Serialize(observations));
     }
 
     [Fact]

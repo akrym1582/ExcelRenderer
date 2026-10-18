@@ -55,3 +55,9 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# Reproducible native build output (source and recipe remain tracked).
+native/runtimes/
+
+# Python validation bytecode.
+__pycache__/

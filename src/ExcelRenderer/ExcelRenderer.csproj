@@ -25,6 +25,7 @@
   <ItemGroup>
     <None Include="../../README.md" Pack="true" PackagePath="/" />
     <None Include="../../THIRD-PARTY-NOTICES.md" Pack="true" PackagePath="/" />
+    <None Include="../../native/harfbuzz/COPYING" Pack="true" PackagePath="licenses/HarfBuzz-COPYING" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,4 +49,5 @@
     <ProjectReference Include="../ExcelRenderer.OpenXml/ExcelRenderer.OpenXml.csproj" PrivateAssets="all" />
   </ItemGroup>
   <Import Project="../../build/EmbeddedOpenXml.targets" />
+  <Import Project="../../build/HarfBuzzSubset.targets" />
 </Project>

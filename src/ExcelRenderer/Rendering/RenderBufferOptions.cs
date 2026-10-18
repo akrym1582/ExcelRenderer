@@ -1,6 +1,6 @@
 namespace ExcelRenderer.Rendering;
 
-/// <summary>Controls the seekable intermediate SVG buffer independently of workbook input buffering.</summary>
+/// <summary>Controls seekable intermediate SVG and Skia PDF buffers independently of workbook input buffering.</summary>
 public sealed record RenderBufferOptions
 {
     /// <summary>Gets the maximum in-memory buffer capacity in bytes.</summary>

@@ -51,6 +51,24 @@ internal class CorePdfRenderer
         ConversionMetrics.Report("pdfSave", 1);
     }
 
+    /// <summary>Creates the shared image decode warning without owning backend resources.</summary>
+    /// <param name="command">The failed image command.</param>
+    /// <param name="reason">The backend decode failure details.</param>
+    /// <returns>The warning with stable page and image location metadata.</returns>
+    internal static RenderingDiagnostic CreateImageFailureDiagnostic(DrawImageCommand command, string reason)
+    {
+        var bounds = command.Bounds;
+        var location = string.Format(CultureInfo.InvariantCulture, "image@{0},{1},{2},{3}", bounds.X, bounds.Y, bounds.Width, bounds.Height);
+        var header = BitConverter.ToString(command.ImageBytes, 0, Math.Min(16, command.ImageBytes.Length));
+        return new RenderingDiagnostic(
+            "ImageDecodeFailed",
+            DiagnosticSeverity.Warning,
+            DiagnosticStage.Render,
+            $"画像を読み込めないためスキップしました。Skipped image: {reason} Bytes={command.ImageBytes.Length}; header={header}; bounds={location}; page={command.PageNumber}.",
+            ObjectId: location,
+            SourcePageNumber: command.PageNumber);
+    }
+
     /// <summary>Appends exactly one page, including pages with no commands.</summary>
     /// <param name="document">The final document owned by the caller.</param>
     /// <param name="pageSettings">The output page dimensions.</param>
@@ -218,16 +236,7 @@ internal class CorePdfRenderer
 
     private void ReportImageFailure(DrawImageCommand command, string reason)
     {
-        var bounds = command.Bounds;
-        var location = string.Format(CultureInfo.InvariantCulture, "image@{0},{1},{2},{3}", bounds.X, bounds.Y, bounds.Width, bounds.Height);
-        var header = BitConverter.ToString(command.ImageBytes, 0, Math.Min(16, command.ImageBytes.Length));
-        var diagnostic = new RenderingDiagnostic(
-            "ImageDecodeFailed",
-            DiagnosticSeverity.Warning,
-            DiagnosticStage.Render,
-            $"画像を読み込めないためスキップしました。Skipped image: {reason} Bytes={command.ImageBytes.Length}; header={header}; bounds={location}; page={command.PageNumber}.",
-            ObjectId: location,
-            SourcePageNumber: command.PageNumber);
+        var diagnostic = CreateImageFailureDiagnostic(command, reason);
         Trace.TraceWarning("{0}: {1}", diagnostic.Code, diagnostic.Message);
         DiagnosticHandler?.Invoke(diagnostic);
         PageDiagnosticHandler?.Invoke(diagnostic);

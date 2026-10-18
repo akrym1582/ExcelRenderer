@@ -17,6 +17,8 @@ internal static class RenderMemoryBenchmark
         var layout = Enum.Parse<ImageLayoutMode>(args[3], ignoreCase: true);
         var repeats = args.Length > 4 ? int.Parse(args[4], System.Globalization.CultureInfo.InvariantCulture) : 1;
         var selectedPage = args.Length > 5 && int.TryParse(args[5], out var number) ? (int?)number : null;
+        var backendIndex = Array.IndexOf(args, "--pdf-backend");
+        var backend = backendIndex >= 0 ? Enum.Parse<PdfBackend>(args[backendIndex + 1], ignoreCase: true) : PdfBackend.PdfSharp;
         var fontPack = args.Contains("--font-pack", StringComparer.Ordinal);
         var systemFonts = args.Contains("--system-fonts", StringComparer.Ordinal);
         var fontPath = Path.GetFullPath("third_party/NotoSansJP/NotoSansJP-Regular.ttf");
@@ -74,6 +76,7 @@ internal static class RenderMemoryBenchmark
             var request = new RenderRequest
             {
                 OutputFormat = format,
+                PdfBackend = backend,
                 ImageLayout = layout,
                 Dpi = 24,
                 Selection = selectedPage is { } page ? new SelectionOptions { Pages = [page] } : new(),
@@ -92,6 +95,7 @@ internal static class RenderMemoryBenchmark
             Console.WriteLine(JsonSerializer.Serialize(new
             {
                 Format = format.ToString(),
+                PdfBackend = backend.ToString(),
                 Layout = layout.ToString(),
                 Iteration = iteration,
                 OS = RuntimeInformation.OSDescription,

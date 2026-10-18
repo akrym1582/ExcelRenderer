@@ -121,3 +121,30 @@ The integration worker always uses OpenXml. Its current invocation is
 `integration-worker <input.xlsx> <operation> <row-count> [mapping-capture.xlsx]`;
 there is no backend argument. See the [migration guide](../../docs/engine-selection-removal.md)
 for the updated benchmark/profiling scripts and baseline CLI output comparison.
+
+## PDF backend benchmark
+
+```bash
+python3 scripts/benchmark-pdf-backends.py --fixture all --output artifacts/pdf-benchmark-final
+```
+
+The harness supports `--pdf-backend pdfsharp|skiasharp` on `render-case`:
+
+```bash
+dotnet run --project tools/ExcelRenderer.Performance -- render-case samples/excel/japanese-grid-report.xlsx pdf paginated 2 --font-pack --pdf-backend skiasharp
+```
+
+The performance project includes the optional Fonts assembly so `--font-pack`
+measures the actual pack. The direct `render-case` command disables it by default;
+the comparison script explicitly enables it for both engines.
+The script defaults to Release and three warm-up conversions per fresh process
+(`--configuration` / `--warmups`). It runs five rounds per engine and
+process concurrency 1/4, records raw JSON plus medians/maxima and gates time/RSS
+ratios at 2. Exact 50/200-page fixtures use a four-column print area and manual
+row breaks, and the observed page counts are asserted. JSON metrics include the
+selected engine, subset/page/save phases, output bytes and managed allocations.
+The image workload contains 32 distinct deterministic 256px PNGs, half with alpha.
+`--generate-only` writes inputs without measurements. Process lifetime peak RSS
+includes warm-up peaks; conversion time/allocation refer to the last conversion.
+Separate in-process concurrency tests cover the shared font gate; process concurrency
+measurements do not establish in-process throughput.

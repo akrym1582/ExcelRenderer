@@ -680,6 +680,8 @@ stream threshold does not bound the whole conversion's memory.
 `RenderRequest.Buffering`, `SvgExportOptions.Buffering`, and overloads of
 `SvgRenderer.Render`, `RenderPage`, and `RenderCanvas` accept `RenderBufferOptions`:
 
+`RenderRequest.Buffering` also controls Skia PDF's intermediate spool.
+
 | Property | Default | Meaning |
 |---|---|---|
 | `MemoryThresholdBytes` | 8,388,608 | Maximum intermediate memory capacity in bytes. |
@@ -766,3 +768,40 @@ ExcelRenderer is available under the [MIT License](LICENSE).
 
 The optional `ExcelRenderer.Fonts` package contains the Japanese fonts and their
 separate license texts; see [Third-party notices](THIRD-PARTY-NOTICES.md).
+
+### PDF drawing backend
+
+PDFsharp remains the default. Select SkiaSharp explicitly through the main API:
+
+```csharp
+await ExcelConverter.ConvertToPdfAsync(input, output,
+    new PdfExportOptions { PdfBackend = PdfBackend.SkiaSharp });
+// RenderAsync: new RenderRequest { OutputFormat = OutputFormat.Pdf, PdfBackend = PdfBackend.SkiaSharp }
+```
+
+```bash
+excelrenderer pdf report.xlsx -o report.pdf --pdf-backend skiasharp
+excelrenderer render report.xlsx --format pdf -o report.pdf --pdf-backend skiasharp
+```
+
+Both CLI paths preserve this option when using `--data`. Backend names are lowercase,
+matching existing CLI options. Explicit `--pdf-backend` on non-PDF CLI output is an
+error. At the API level, non-PDF requests accept the default PdfSharp value and reject
+SkiaSharp. Invalid enum values fail before reading input or opening output.
+
+Skia PDF requires the native HarfBuzz subset adapter built with
+`python3 scripts/build-harfbuzz-subset.py` before building/packing from source.
+The adapter uses pinned official HarfBuzz source, retains original glyph IDs, and
+shares subset faces across the document. Missing native assets or subset failures
+fail conversion; they do not silently switch engines or embed complete outline fonts.
+Python/CMake are build and validation tools, not PDF generation dependencies.
+
+This is a drawing backend switch: both engines retain the existing measurement
+service (including an explicit caller-owned `RenderRequest.TextMeasurer`), PDFsharp
+font gate and PDFsharp dependency. Skia drawing also uses a bounded intermediate
+spool and an isolated PDFsharp pass for exact page boxes, link tooltips and image
+interpolation metadata. Image/font bytes and drawing content are preserved.
+Core's standalone API continues to use PDFsharp. PNG/SVG/Markdown are unaffected by
+this option. See the
+[measured results, reviewed AA differences and platform scope](docs/skia-pdf-validation.md) and
+[comparison harness](tools/ExcelRenderer.PdfComparison/README.md).

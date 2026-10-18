@@ -1,0 +1,14 @@
+[
+  {
+    "fixture": "LayoutPassTests.ExcelReader_reads_worksheet_header_and_footer.1A25B17C5123DEF2.xlsx",
+    "pagesEqual": true,
+    "textEqual": true,
+    "144dpiExact": true
+  },
+  {
+    "fixture": "ShapeAndFontTests.CreateWorkbookWithShapes.C704163BF33ECFBD.xlsx",
+    "pagesEqual": true,
+    "textEqual": true,
+    "144dpiExact": true
+  }
+]

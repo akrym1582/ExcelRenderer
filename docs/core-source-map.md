@@ -205,3 +205,19 @@ have been removed. Tests use SDK fixtures and immutable parent-generated workboo
 All active project graphs are free of ClosedXML. See the
 [compatibility ledger](closedxml-removal-compatibility.md) and
 [validation record](closedxml-removal-validation.md).
+
+## Dual PDF drawing backends
+
+`Pdf/IPdfDocumentWriter`, `PdfSharpDocumentWriter`, the `PdfBackend` selection and
+`SkiaSharp/SkiaPdf*` adapters are main-only. Core still owns PDFsharp basic drawing
+and saving. Skia uses shared final commands; no layout or pagination algorithms
+were copied. `SkiaPdfFonts` and the separately built HarfBuzz subset adapter own
+only drawing fonts. `PdfCommandFinalizer` resolves compatibility/header/footer/shape
+text through the common layout service before either PDF writer; renderers do not
+decide wrapping again. `SkiaPdfCompatibilityFinalizer` modifies page boxes, link
+tooltips and image interpolation metadata, preserving Skia content streams/resources.
+Core's public scope is unchanged.
+
+Image decode warning construction is shared by `CorePdfRenderer.CreateImageFailureDiagnostic`;
+PDFsharp and Skia PDF supply backend decode details and dispatch the same warning
+location/severity to the conversion policy and trace listeners.

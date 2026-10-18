@@ -658,6 +658,7 @@ pt 寸法・viewBox を保持します。seekable 中間 buffer はメモリ cap
 
 `RenderRequest.Buffering`、`SvgExportOptions.Buffering`、および
 `SvgRenderer.Render`・`RenderPage`・`RenderCanvas` の overload で `RenderBufferOptions` を指定します。
+`RenderRequest.Buffering`はSkia PDFの中間spoolにも適用します。
 
 | 設定 | 既定 | 意味 |
 |---|---|---|
@@ -739,3 +740,37 @@ CLI をソースから試す手順は [English README の Development](README.md
 ExcelRenderer は [MIT License](LICENSE) で提供されます。
 
 日本語フォントと Noto Color Emoji は任意の `ExcelRenderer.Fonts` パッケージに収録されます。ライブラリで使用する場合は `dotnet add package ExcelRenderer.Fonts` を追加してください。未導入の場合は登録済みまたはシステムのフォントを使います。CLI はフォントパッケージに依存します。Noto Sans JP と Noto Color Emoji には SIL Open Font License 1.1、IPAmj 明朝には IPA Font License Agreement v1.0 が適用されます。`FontOptions.ReplaceIvsWithBaseCharacter` を `true` にすると、IVS を異体字セレクターのない基底文字に置換して描画できます。詳細は[サードパーティ通知](THIRD-PARTY-NOTICES.md)を参照してください。
+
+### PDF描画バックエンド
+
+既定値は従来どおりPDFsharpです。本体APIでSkiaSharpを明示的に選択できます。
+
+```csharp
+await ExcelConverter.ConvertToPdfAsync(input, output,
+    new PdfExportOptions { PdfBackend = PdfBackend.SkiaSharp });
+// RenderAsync: new RenderRequest { OutputFormat = OutputFormat.Pdf, PdfBackend = PdfBackend.SkiaSharp }
+```
+
+```bash
+excelrenderer pdf report.xlsx -o report.pdf --pdf-backend skiasharp
+excelrenderer render report.xlsx --format pdf -o report.pdf --pdf-backend skiasharp
+```
+
+両CLI経路とも`--data`利用時に設定を保持します。他のCLI設定と同様、指定値は小文字です。
+CLIでPDF以外の形式に`--pdf-backend`を明示すると、値によらずエラーになります。
+APIのPDF以外の要求では既定のPdfSharp値を許容し、SkiaSharpを拒否します。
+不正enum値は入力読み取り・出力作成前に拒否します。
+
+ソースからのビルド・pack前に`python3 scripts/build-harfbuzz-subset.py`でnativeサブセット
+アダプタを作成します。固定した公式HarfBuzzソースを使用し、glyph IDを保持した事前サブセットを
+文書内で共有します。nativeライブラリ欠落・サブセット失敗時には変換を失敗させ、
+暗黙のエンジン切替やアウトラインフォントのフル埋込は行いません。
+Python/CMakeはビルド・検証用で、利用者のPDF生成経路では不要です。
+
+今回は描画の切替です。両エンジンで既存の計測サービス（呼出側所有の
+`RenderRequest.TextMeasurer`の明示指定を含む）、PDFsharp font gate、PDFsharp依存を保持します。
+Skia出力には上限付きの中間spoolを使い、隔離したPDFsharp後処理でページ寸法・リンクtooltip・
+画像補間のメタデータを補正します。画像・フォントのバイト列や描画内容は保持します。
+Core単独APIはPDFsharpのままです。PNG/SVG/Markdownはこの設定で変更されません。
+[検証結果・限定AA差分・確認環境](docs/skia-pdf-validation.md)と
+[比較ハーネス](tools/ExcelRenderer.PdfComparison/README.md)を参照してください。

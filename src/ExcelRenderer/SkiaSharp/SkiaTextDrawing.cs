@@ -11,6 +11,7 @@ namespace ExcelRenderer.SkiaSharp;
 internal sealed class SkiaTextDrawing
 {
     private readonly bool _textAsPaths;
+    private readonly SkiaPdfFonts? _pdfFonts;
     private readonly Action? _beforeLegacyDrawing;
     private readonly IFontManager? _fontManager;
     private readonly Func<FontStyle, SKTypeface?> _systemTypefaceSelector;
@@ -19,14 +20,17 @@ internal sealed class SkiaTextDrawing
     /// <param name="textAsPaths">Whether ordinary text is converted to owned glyph paths.</param>
     /// <param name="fontManager">The optional resolved-font source.</param>
     /// <param name="systemTypefaceSelector">The optional system-face selection boundary used by deterministic tests.</param>
+    /// <param name="pdfFonts">Optional PDF Unicode and subset font resources.</param>
     /// <param name="beforeLegacyDrawing">Optional internal observer after clipping and measurement, before compatibility run drawing.</param>
     internal SkiaTextDrawing(
         bool textAsPaths,
         IFontManager? fontManager,
         Func<FontStyle, SKTypeface?>? systemTypefaceSelector = null,
-        Action? beforeLegacyDrawing = null)
+        Action? beforeLegacyDrawing = null,
+        SkiaPdfFonts? pdfFonts = null)
     {
         _textAsPaths = textAsPaths;
+        _pdfFonts = pdfFonts;
         _beforeLegacyDrawing = beforeLegacyDrawing;
         _fontManager = fontManager;
         _systemTypefaceSelector = systemTypefaceSelector ?? CreateSystemTypeface;
@@ -375,6 +379,12 @@ internal sealed class SkiaTextDrawing
         SKPaint paint,
         bool asPaths)
     {
+        if (_pdfFonts is not null)
+        {
+            _pdfFonts.Draw(canvas, run, size, x, y, paint);
+            return;
+        }
+
         using var lease = run.Font.FontData is null && string.IsNullOrEmpty(run.Font.FilePath)
             ? (TypefaceLease?)null
             : LeaseTypeface(run.Font);

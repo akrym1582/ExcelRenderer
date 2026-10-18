@@ -5,13 +5,16 @@ namespace ExcelRenderer.Rendering;
 /// <summary>ストリームを入力として実行する変換要求を記述します。</summary>
 public sealed record RenderRequest
 {
+    /// <summary>Gets the PDF drawing backend; nondefault values require PDF output.</summary>
+    public PdfBackend PdfBackend { get; init; } = global::ExcelRenderer.PdfBackend.PdfSharp;
+
     /// <summary>Gets an optional caller-owned text measurement service; null uses the built-in rich-text service.</summary>
     public Abstractions.ITextMeasurer? TextMeasurer { get; init; }
 
     /// <summary>Gets the workbook formula display policy.</summary>
     public ExcelRenderer.Excel.ExcelReadOptions ReadOptions { get; init; } = new();
 
-    /// <summary>Gets the SVG intermediate buffer policy; it does not affect PDF or PNG buffers.</summary>
+    /// <summary>Gets the SVG and Skia PDF intermediate buffer policy; it does not affect PDFsharp or PNG buffers.</summary>
     public ExcelRenderer.Rendering.RenderBufferOptions Buffering { get; init; } = new();
 
     /// <summary>Gets the content cropping options.</summary>

@@ -191,12 +191,13 @@ public sealed class RangeTrimHyperlinkTests
     /// <param name="format">検証する出力形式。</param>
     /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
     [Theory(DisplayName = "トリミング後の PDF・PNG・SVG の実寸法が、最終ページのメタデータと一致する")]
-    [InlineData(OutputFormat.Pdf)]
-    [InlineData(OutputFormat.Png)]
-    [InlineData(OutputFormat.Svg)]
-    public async Task Generated_trim_uses_final_dimensions_in_actual_outputs(OutputFormat format)
+    [InlineData(OutputFormat.Pdf, PdfBackend.PdfSharp)]
+    [InlineData(OutputFormat.Pdf, PdfBackend.SkiaSharp)]
+    [InlineData(OutputFormat.Png, PdfBackend.PdfSharp)]
+    [InlineData(OutputFormat.Svg, PdfBackend.PdfSharp)]
+    public async Task Generated_trim_uses_final_dimensions_in_actual_outputs(OutputFormat format, PdfBackend backend)
     {
-        var (result, bytes) = await Render(Fixture(), Request(format) with { Trim = new() { Enabled = true }, Selection = new() { SheetNames = ["Sheet1"] } });
+        var (result, bytes) = await Render(Fixture(), Request(format) with { PdfBackend = backend, Trim = new() { Enabled = true }, Selection = new() { SheetNames = ["Sheet1"] } });
         Assert.NotEmpty(bytes);
         Assert.All(result.Pages, page => Assert.True(page.WidthPoints < page.OriginalWidthPoints));
         var page = result.Pages[0];

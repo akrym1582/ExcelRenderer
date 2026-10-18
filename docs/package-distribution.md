@@ -82,3 +82,24 @@ NuGet 公開対象は本体・Mapping・Tool・Fonts の4つだけです。Core�
 非公開のソースプロジェクトとし、必要な DLL/XML を公開パッケージに同梱します。
 テスト・サンプル・検証・性能測定の各 csproj も公開しません。新規プロジェクトも既定で
 非公開にし、CI とリリース前の検証で公開対象の追加や未公開パッケージへの依存を検出します。
+
+## Skia PDF native subset assets
+
+Before a source build or pack, run `python3 scripts/build-harfbuzz-subset.py` on
+an OS with CMake and a C++ compiler. It builds the adapter from checksum-pinned
+HarfBuzz 10.2.0 without third-party runtime dependencies beyond the platform C/C++
+runtime. Generated assets live under `native/runtimes/<rid>/native`; generated
+`build.json` records source/binary hashes, version, license and verified exports.
+`build/HarfBuzzSubset.targets` copies the current host asset for ProjectReference
+consumers and includes native runtime assets in the main nupkg. The tool receives
+its current host asset through the main ProjectReference. The HarfBuzz license is
+included in both packages. Python/CMake are not installed for product consumers.
+
+The release workflow builds and runs subset/API/CLI tests, packs the four packages
+and runs isolated consumers independently on Linux
+x64 and Windows x64 before collecting both assets for packing. A local one-OS pack
+is only evidence for that OS; it does not establish a complete release inventory
+or other-RID runtime support. See `docs/skia-pdf-validation.md` for actual local
+verification and outstanding distribution gates. Missing native assets fail only
+when Skia PDF is selected; PDFsharp and the Core standalone API retain their
+existing native dependency contract.

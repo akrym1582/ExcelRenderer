@@ -160,9 +160,7 @@ internal sealed class FullPdfRenderer : Core.Pdf.CorePdfRenderer
                     b.Y + text.MarginTop,
                     Math.Max(0, b.Width - text.MarginLeft - text.MarginRight),
                     Math.Max(0, b.Height - text.MarginTop - text.MarginBottom));
-                textPainter.Paint(
-                    graphics,
-                    new DrawTextCommand(
+                var textCommand = command.TextCommand ?? new DrawTextCommand(
                     command.PageNumber,
                     bounds,
                     text.Text,
@@ -172,7 +170,8 @@ internal sealed class FullPdfRenderer : Core.Pdf.CorePdfRenderer
                         HorizontalAlignment = text.HorizontalAlignment,
                         VerticalAlignment = text.VerticalAlignment,
                         WrapText = text.WrapText,
-                    }));
+                    });
+                textPainter.Paint(graphics, textCommand);
             }
         }
         finally

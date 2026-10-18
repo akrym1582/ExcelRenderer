@@ -10,4 +10,7 @@ public sealed record DrawShapeCommand(int PageNumber, ReportRect Bounds, ReportS
 {
     /// <summary>Gets the page-space clipping rectangle.</summary>
     public ReportRect? ClipBounds { get; init; }
+
+    /// <summary>Gets the shape text finalized before PDF drawing.</summary>
+    internal DrawTextCommand? TextCommand { get; init; }
 }

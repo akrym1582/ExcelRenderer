@@ -13,6 +13,7 @@ internal sealed class ConversionFontResources : IDisposable
     private readonly Dictionary<(string Face, double Size), XFont> _pdfFonts = new();
     private readonly Dictionary<(string Face, double Size), (double Ascent, double Descent, double Leading)> _metrics = new();
     private bool _disposed;
+    private bool _purgeFontCache;
 
     /// <summary>Initializes a new instance of the <see cref="ConversionFontResources"/> class.</summary>
     internal ConversionFontResources()
@@ -40,7 +41,7 @@ internal sealed class ConversionFontResources : IDisposable
             ConversionMetrics.Report("typefaceDisposed", 1);
         }
 
-        if (_faces.Count > 0)
+        if (_faces.Count > 0 || _purgeFontCache)
         {
             // Skia's process-wide strike cache can retain a disposed face's font data.
             // Purge unused strikes after our SKFont instances and typefaces are released;
@@ -52,6 +53,9 @@ internal sealed class ConversionFontResources : IDisposable
         _pdfFonts.Clear();
         _metrics.Clear();
     }
+
+    /// <summary>Requests one cache purge after all conversion-owned drawing faces are released.</summary>
+    internal void RequestCachePurge() => _purgeFontCache = true;
 
     /// <summary>Gets one shared native face; callers must not dispose it.</summary>
     /// <param name="font">The resolved physical face.</param>

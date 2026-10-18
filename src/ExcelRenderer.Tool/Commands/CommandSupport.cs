@@ -159,6 +159,35 @@ internal static class CommandSupport
         _ => throw new ArgumentException("--hyperlinks must be preserve or none."),
     };
 
+    /// <summary>Creates the PDF drawing backend option.</summary>
+    /// <returns>The validated option.</returns>
+    internal static Option<string> PdfBackendOption()
+    {
+        var option = new Option<string>("--pdf-backend")
+        {
+            Description = "PDF drawing backend: pdfsharp (default) or skiasharp. PDFsharp measurement remains in use.",
+            DefaultValueFactory = _ => "pdfsharp",
+        };
+        option.Validators.Add(result =>
+        {
+            if (result.GetValueOrDefault<string>() is not ("pdfsharp" or "skiasharp"))
+            {
+                result.AddError("--pdf-backend must be pdfsharp or skiasharp.");
+            }
+        });
+        return option;
+    }
+
+    /// <summary>Maps a validated backend option.</summary>
+    /// <param name="value">The validated option value.</param>
+    /// <returns>The drawing backend.</returns>
+    internal static PdfBackend GetPdfBackend(string value) => value switch
+    {
+        "pdfsharp" => PdfBackend.PdfSharp,
+        "skiasharp" => PdfBackend.SkiaSharp,
+        _ => throw new ArgumentException("Unknown PDF backend.", nameof(value)),
+    };
+
     /// <summary>Creates the shared formula display option.</summary>
     /// <returns>The validated mode option.</returns>
     internal static Option<string> FormulaModeOption()

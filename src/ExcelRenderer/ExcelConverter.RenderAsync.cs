@@ -177,7 +177,7 @@ public static partial class ExcelConverter
 
                 if (request.OutputFormat == OutputFormat.Pdf)
                 {
-                    await WritePdfAsync(selectedPages, fontManager, diagnostics, sink, artifacts, cancellationToken).ConfigureAwait(false);
+                    await WritePdfAsync(selectedPages, request.PdfBackend, request.Buffering, fontManager, diagnostics, sink, artifacts, cancellationToken).ConfigureAwait(false);
                 }
                 else
                 {
@@ -231,8 +231,17 @@ public static partial class ExcelConverter
         }
     }
 
+    private static void ValidatePdfBackend(PdfBackend backend, OutputFormat format)
+    {
+        if (!Enum.IsDefined(typeof(PdfBackend), backend) || (format != OutputFormat.Pdf && backend != PdfBackend.PdfSharp))
+        {
+            throw new ArgumentException("The PDF backend must be PdfSharp or SkiaSharp; SkiaSharp requires PDF output.", nameof(backend));
+        }
+    }
+
     private static void ValidateRequest(RenderRequest request)
     {
+        ValidatePdfBackend(request.PdfBackend, request.OutputFormat);
         if (request.Buffering is null || request.Selection is null || request.Trim is null || request.Input is null || request.FontOptions is null || request.DiagnosticOptions is null || request.ReadOptions is null)
         {
             throw new ArgumentException("Required render options must not be null.", nameof(request));
@@ -383,7 +392,7 @@ public static partial class ExcelConverter
         }
     }
 
-    private static void RenderPagePayload(SheetPage page, FontManager fonts, CancellationToken token, Action<IEnumerable<DrawCommand>> render)
+    private static void RenderPagePayload(SheetPage page, FontManager fonts, CancellationToken token, Action<IEnumerable<DrawCommand>> render, bool finalizePdfText = false)
     {
         token.ThrowIfCancellationRequested();
         ConversionMetrics.Report("pagePayloadActive", 1);
@@ -393,6 +402,19 @@ public static partial class ExcelConverter
             var commands = page.Descriptor.CropBounds is not null
                 ? ApplyViewport(payload.Commands, page.Viewport!, page.Descriptor.SourcePageNumber)
                 : payload.Commands;
+            if (finalizePdfText)
+            {
+                var resolvedRuns = new PdfSharpTextMeasurer(fonts, cacheLayouts: true);
+                var layout = RenderResourceSession.Current?.TextMeasurer as Abstractions.ITextLayoutService ?? resolvedRuns;
+                commands = Pdf.PdfCommandFinalizer.Finalize(commands, layout, token, resolvedRuns);
+            }
+
+            if (Pdf.PdfRenderObserver.Current is { } observer)
+            {
+                commands = commands.ToArray();
+                observer(page.Descriptor, commands);
+            }
+
             render(WithCancellation(commands, token));
         }
         finally
@@ -490,7 +512,7 @@ public static partial class ExcelConverter
         return selected;
     }
 
-    private static async Task WritePdfAsync(IReadOnlyList<SheetPage> pages, FontManager fontManager, DiagnosticCollector diagnostics, IRenderOutputSink sink, List<ArtifactMetadata> artifacts, CancellationToken token)
+    private static async Task WritePdfAsync(IReadOnlyList<SheetPage> pages, PdfBackend backend, RenderBufferOptions buffering, FontManager fontManager, DiagnosticCollector diagnostics, IRenderOutputSink sink, List<ArtifactMetadata> artifacts, CancellationToken token)
     {
         var descriptor = new ArtifactDescriptor("pdf", "pdf", "application/pdf", "workbook.pdf");
         await WriteArtifactAsync(
@@ -499,24 +521,53 @@ public static partial class ExcelConverter
             artifacts,
             stream =>
             {
-                using var result = new PdfDocument();
-                var renderer = new PdfSharpRenderer(fontManager);
-                var completedPages = new List<Action>();
+                using Pdf.IPdfDocumentWriter writer = backend == PdfBackend.PdfSharp
+                    ? new Pdf.PdfSharpDocumentWriter(fontManager)
+                    : new SkiaPdfDocumentWriter(fontManager, token, buffering: buffering);
+                ConversionMetrics.Report("pdfBackend", (int)backend);
+                if (writer is SkiaPdfDocumentWriter skia)
+                {
+                    skia.RegisterDestinations(pages.SelectMany(page => page.Links ?? []));
+                }
+
+                if (writer.RequiresFontCollection)
+                {
+                    foreach (var page in pages)
+                    {
+                        RenderPagePayload(page, fontManager, token, writer.Collect, finalizePdfText: true);
+                    }
+                }
+
+                try
+                {
+                    writer.Prepare();
+                }
+                catch (Exception error) when (backend == PdfBackend.SkiaSharp && error is not OperationCanceledException)
+                {
+                    diagnostics.Add(new("SkiaPdfFontPreparationFailed", DiagnosticSeverity.Error, DiagnosticStage.Render, error.Message));
+                    throw Failure("Skia PDF font preparation failed.", error, diagnostics, artifacts);
+                }
+
                 foreach (var page in pages)
                 {
                     token.ThrowIfCancellationRequested();
-                    renderer.PageCompleted = _ => completedPages.Add(() => PdfHyperlinkWriter.Write(result, page.Descriptor.OutputPageNumber!.Value, page.Descriptor.HeightPoints, page.Links ?? []));
-                    renderer.PageDiagnosticHandler = diagnostic => diagnostics.Add(diagnostic with
-                    {
-                        SheetName = page.Sheet.Name,
-                        SourcePageNumber = page.Descriptor.SourcePageNumber,
-                    });
                     ConversionMetrics.Measure("pdfPage", () =>
                     {
-                        RenderPagePayload(page, fontManager, token, commands => renderer.AppendPage(
-                            result,
+                        RenderPagePayload(
+                            page,
+                            fontManager,
+                            token,
+                            commands => writer.Append(
                             page.Sheet.PageSettings with { Width = page.Descriptor.WidthPoints, Height = page.Descriptor.HeightPoints },
-                            commands));
+                            page.Descriptor,
+                            commands,
+                            page.Links ?? [],
+                            diagnostic => diagnostics.Add(diagnostic with
+                            {
+                                SheetName = page.Sheet.Name,
+                                SourcePageNumber = page.Descriptor.SourcePageNumber,
+                            })),
+                            finalizePdfText: true);
                         return true;
                     });
                     if (diagnostics.HasFailure)
@@ -525,15 +576,11 @@ public static partial class ExcelConverter
                     }
                 }
 
-                foreach (var complete in completedPages)
-                {
-                    complete();
-                }
-
                 token.ThrowIfCancellationRequested();
                 ConversionMetrics.Measure("pdfFinalSave", () =>
                 {
-                    Core.Pdf.CorePdfRenderer.Save(result, stream);
+                    using var cancellable = new Core.Rendering.CancellationWriteStream(stream, token);
+                    writer.Complete(cancellable);
                     return true;
                 });
             },
@@ -857,7 +904,7 @@ public static partial class ExcelConverter
 
         public override long Length => _inner.Length;
 
-        public override long Position { get => _inner.Position; set => _inner.Position = value; }
+        public override long Position { get => _inner.CanSeek ? _inner.Position : BytesWritten; set => _inner.Position = value; }
 
         public override void Flush() => _inner.Flush();
 

@@ -12,20 +12,32 @@ namespace ExcelRenderer.SkiaSharp;
 internal sealed class SkiaDrawingContext
 {
     private readonly SkiaTextPainter _textPainter;
+    private readonly SkiaPdfFonts? _pdfFonts;
 
     /// <summary>Initializes a new instance of the <see cref="SkiaDrawingContext"/> class. PNG または SVG の描画先へコマンドを実行するコンテキストを初期化します。</summary>
     /// <param name="textAsPaths">true の場合は文字をパスとして描画します。</param>
+    /// <param name="pdfFonts">Optional document-scoped PDF Unicode and font resources.</param>
     /// <param name="fontManager">文字の描画に使用するフォントを解決するマネージャーです。指定しない場合は Skia のシステムフォント選択を使用します。</param>
-    internal SkiaDrawingContext(bool textAsPaths, IFontManager? fontManager = null)
+    internal SkiaDrawingContext(bool textAsPaths, IFontManager? fontManager = null, SkiaPdfFonts? pdfFonts = null)
     {
-        _textPainter = new(textAsPaths, fontManager);
+        _textPainter = new(textAsPaths, fontManager, pdfFonts: pdfFonts);
+        _pdfFonts = pdfFonts;
     }
+
+    /// <summary>Gets or sets the optional PDF page diagnostic callback.</summary>
+    internal Action<ConversionDiagnostic>? DiagnosticHandler { get; set; }
 
     /// <summary>単一の描画コマンドを実行します。</summary>
     /// <param name="canvas">描画先のキャンバスです。</param>
     /// <param name="command">実行する描画コマンドです。</param>
     internal void Execute(SKCanvas canvas, DrawCommand command)
     {
+        _pdfFonts?.CheckCancellation();
+        if (_pdfFonts?.IsCollecting == true && command is not (DrawTextCommand or DrawViewportCommand or DrawShapeCommand))
+        {
+            return;
+        }
+
         switch (command)
         {
             case DrawViewportCommand viewport:
@@ -114,7 +126,7 @@ internal sealed class SkiaDrawingContext
             }
             else if (command.Shape.Kind == ShapeKind.RoundedRectangle)
             {
-                canvas.DrawRoundRect(b, 10, 10, paint);
+                canvas.DrawRoundRect(b, (float)Math.Min(10, command.Bounds.Width / 4) / 2, (float)Math.Min(10, command.Bounds.Height / 4) / 2, paint);
             }
             else if (command.Shape.Kind is ShapeKind.WedgeRectangleCallout or ShapeKind.WedgeRoundedRectangleCallout)
             {
@@ -153,14 +165,18 @@ internal sealed class SkiaDrawingContext
                 command.Bounds.Y + text.MarginTop,
                 Math.Max(0, command.Bounds.Width - text.MarginLeft - text.MarginRight),
                 Math.Max(0, command.Bounds.Height - text.MarginTop - text.MarginBottom));
-            _textPainter.Paint(
-                canvas,
-                new DrawTextCommand(
+            var textCommand = command.TextCommand ?? new DrawTextCommand(
                 command.PageNumber,
                 bounds,
                 text.Text,
                 CellStyle.Default with
-            { Font = text.Font, HorizontalAlignment = text.HorizontalAlignment, VerticalAlignment = text.VerticalAlignment, WrapText = text.WrapText }));
+                {
+                    Font = text.Font,
+                    HorizontalAlignment = text.HorizontalAlignment,
+                    VerticalAlignment = text.VerticalAlignment,
+                    WrapText = text.WrapText,
+                });
+            _textPainter.Paint(canvas, textCommand);
         }
 
         canvas.Restore();
@@ -177,6 +193,15 @@ internal sealed class SkiaDrawingContext
         var image = lease?.Value;
         if (image is null)
         {
+            if (DiagnosticHandler is { } diagnostic)
+            {
+                var warning = CoreIntegration.CoreDiagnosticAdapter.ToPublic(Core.Pdf.CorePdfRenderer.CreateImageFailureDiagnostic(
+                    (Core.Drawing.DrawImageCommand)CoreIntegration.CoreCommandAdapter.ToCore(command),
+                    "SKImage.FromEncodedData returned null; the image data could not be decoded."));
+                System.Diagnostics.Trace.TraceWarning("{0}: {1}", warning.Code, warning.Message);
+                diagnostic(warning);
+            }
+
             return;
         }
 
@@ -200,7 +225,10 @@ internal sealed class SkiaDrawingContext
             command.FlipVertical ? -1 : 1,
             destination.MidX,
             destination.MidY);
-        canvas.DrawImage(image, source, destination, new SKSamplingOptions(SKCubicResampler.Mitchell));
+        var sampling = _pdfFonts is null
+            ? new SKSamplingOptions(SKCubicResampler.Mitchell)
+            : new SKSamplingOptions(SKFilterMode.Linear);
+        canvas.DrawImage(image, source, destination, sampling);
         canvas.Restore();
     }
 

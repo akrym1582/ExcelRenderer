@@ -13,7 +13,7 @@ from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.worksheet.page import PageMargins
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTPUT = ROOT / 'tests/ExcelRenderer.Tests/SampleInputs/10-cell-argb.xlsx'
+OUTPUT = ROOT / 'tests/ExcelRenderer.Tests/SampleInputs/CellArgb/10-cell-argb.xlsx'
 
 wb = Workbook()
 wb.properties.created = wb.properties.modified = datetime(2026, 10, 17)
@@ -40,6 +40,7 @@ for row, prefix in enumerate(['00', '01', '80', 'FF', 'six-digit RGB'], 2):
     ws.cell(row, 5, CellRichText(TextBlock(InlineFont(rFont='Noto Sans JP', sz=11, color=alpha + '000000'), '日本語 ABC')))
     for col in range(2, 6):
         ws.cell(row, col).alignment = Alignment(horizontal='left', vertical='center')
+OUTPUT.parent.mkdir(parents=True, exist_ok=True)
 buffer = io.BytesIO()
 wb.save(buffer)
 # Stable ZIP metadata makes regeneration reviewable. The six-digit row is

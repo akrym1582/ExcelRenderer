@@ -1,0 +1,113 @@
+{
+  "os": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "dotnet": "10.0.401",
+  "renderer": "pdftoppm version 26.05.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC",
+  "dpi": 96,
+  "font_sha256": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec",
+  "source_commit": "32e9165d145516dbd0bcb4c2ae31a78ce6774bce",
+  "visual": [
+    {
+      "page": "01-japanese-core-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "01-japanese-core-2.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "02-image-core-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "02-image-core-2.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "03-wrapped-text-core-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "04-text-decoration-core-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "05-borders-core-1.png",
+      "mae_0_255": 0.0003622448865152939,
+      "changed_fraction": 5.7196561028760584e-05,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "05-borders-core-2.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "06-layout-and-pagination-core-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "06-layout-and-pagination-core-2.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "06-layout-and-pagination-core-3.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "06-layout-and-pagination-core-4.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "07-multiple-sheets-core-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "07-multiple-sheets-core-2.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "08-print-scaling-core-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "08-print-scaling-core-2.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "09-cell-border-core-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    }
+  ],
+  "performance": []
+}

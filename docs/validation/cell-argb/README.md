@@ -46,7 +46,7 @@ an exported PDF when doing that follow-up.
 
 ## Fixture and observed output
 
-[Minimal XLSX](../../../tests/ExcelRenderer.Tests/SampleInputs/10-cell-argb.xlsx):
+[Minimal XLSX](../../../tests/ExcelRenderer.Tests/SampleInputs/CellArgb/10-cell-argb.xlsx):
 one sheet, five columns, header plus five data rows. Prefixes `00`, `01`, `80`,
 `FF` and six-digit input. Font/rich text use black, fill uses `336699`, all four
 borders use `CC3300`. The six-digit row is passed through openpyxl and stored
@@ -96,8 +96,8 @@ From the repository root, output commands (run separately on the baseline and
 patched source, using distinct fresh destinations):
 
 ```sh
-dotnet src/ExcelRenderer.Tool/bin/Debug/net10.0/ExcelRenderer.Tool.dll pdf tests/ExcelRenderer.Tests/SampleInputs/10-cell-argb.xlsx -o /tmp/argb.pdf
-dotnet src/ExcelRenderer.Tool/bin/Debug/net10.0/ExcelRenderer.Tool.dll image tests/ExcelRenderer.Tests/SampleInputs/10-cell-argb.xlsx -o /tmp/argb-png --dpi 144
+dotnet src/ExcelRenderer.Tool/bin/Debug/net10.0/ExcelRenderer.Tool.dll pdf tests/ExcelRenderer.Tests/SampleInputs/CellArgb/10-cell-argb.xlsx -o /tmp/argb.pdf
+dotnet src/ExcelRenderer.Tool/bin/Debug/net10.0/ExcelRenderer.Tool.dll image tests/ExcelRenderer.Tests/SampleInputs/CellArgb/10-cell-argb.xlsx -o /tmp/argb-png --dpi 144
 ```
 
 Core's `Saved_Core_PDF_contains_visible_text_fill_and_border_paints` test writes
@@ -135,3 +135,31 @@ python3 scripts/check-source-namespaces.py
 git diff --check
   clean
 ```
+
+## CI follow-up: isolate the regression input
+
+The initial [Core Linux CI job](https://github.com/akrym1582/ExcelRenderer/actions/runs/39081639460/job/117539613106)
+passed all 85 Core tests and four mutation checks, then failed in
+`validate-core.py --visual-only`: `Visual input inventory differs from the captured
+parent inputs`. The new fixture had been placed alongside the nine immutable
+parent-baseline inputs enumerated by that script. The initial local validation
+ran the .NET suites but missed this standalone CI validation command.
+
+The ARGB fixture now lives under `SampleInputs/CellArgb/`, outside that script's
+nonrecursive historical input inventory. Both test suites and the generator use
+the new path; Core explicitly copies the fixture to its output directory. The
+XLSX bytes, historical provenance/inventory checks, raster baselines, validation
+script and production code are unchanged by this follow-up.
+
+The failure was reproduced locally before the move. Afterwards,
+`python3 scripts/validate-core.py --visual-only` passed all **17 raster pages**.
+The maximum baseline mean channel difference was **0**; the maximum Core/reference
+difference was **0.000363** (acceptance threshold 0.25).
+[Captured visual report](ci-core-visual.json).
+
+Release rebuild completed with 0 warnings/errors; all **1,944** tests passed
+(Main 565, Core 85, OpenXml 206, Formulas 833, Mapping 172, Tool 83).
+The count is one lower because the root-only Markdown sample enumeration no
+longer discovers the relocated rendering fixture; all explicit ARGB regression
+tests remain enabled. Main NuGet pack, namespace and publication-allowlist
+checks also passed. [Captured follow-up commands](ci-follow-up-checks.txt).

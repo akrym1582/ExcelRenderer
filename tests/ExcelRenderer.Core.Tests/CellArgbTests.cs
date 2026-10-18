@@ -7,7 +7,7 @@ namespace ExcelRenderer.Core.Tests;
 
 public sealed class CellArgbTests
 {
-    private static string FixturePath => Path.Combine(AppContext.BaseDirectory, "SampleInputs", "10-cell-argb.xlsx");
+    private static string FixturePath => Path.Combine(AppContext.BaseDirectory, "SampleInputs", "CellArgb", "10-cell-argb.xlsx");
 
     [Fact]
     public void Shared_converter_ignores_alpha_while_source_snapshots_preserve_it()

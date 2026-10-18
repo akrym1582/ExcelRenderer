@@ -14,7 +14,7 @@ namespace ExcelRenderer.Tests;
 
 public sealed class CellArgbTests
 {
-    private static string FixturePath => Path.Combine(AppContext.BaseDirectory, "SampleInputs", "10-cell-argb.xlsx");
+    private static string FixturePath => Path.Combine(AppContext.BaseDirectory, "SampleInputs", "CellArgb", "10-cell-argb.xlsx");
 
     [Theory]
     [InlineData(false)]
@@ -94,7 +94,7 @@ public sealed class CellArgbTests
             using var reference = SKBitmap.Decode(expected);
             Assert.Equal(reference.Pixels, image.Pixels);
             // Independent visibility checks prevent an equally blank reference passing.
-            var sample = SampleOutputTestSupport.ReadAndLayout("10-cell-argb.xlsx");
+            var sample = SampleOutputTestSupport.ReadAndLayout("CellArgb/10-cell-argb.xlsx");
             foreach (var cell in sample.Layout.Pages.Single().Cells.Where(cell => cell.SourceAddress?.Row >= 2))
             {
                 var bounds = cell.Bounds;

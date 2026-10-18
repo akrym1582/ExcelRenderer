@@ -27,6 +27,7 @@
     <None Include="../ExcelRenderer.Tests/Fonts/*" Link="Fonts/%(Filename)%(Extension)">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="../ExcelRenderer.Tests/SampleInputs/CellArgb/*.xlsx" Link="SampleInputs/CellArgb/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../ExcelRenderer.Tests/SampleInputs/*.xlsx" Link="SampleInputs/%(Filename)%(Extension)">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

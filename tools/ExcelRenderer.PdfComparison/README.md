@@ -1,4 +1,6 @@
-# PDF backend comparison
+# Frozen A/B/C PDF comparison
+
+The final solution renders only C (new measurement + Skia). A (old measurement + old renderer) and B (old measurement + Skia) are immutable PDFs captured at `71deba48ea4a397641c9ad155bc1c8b3ddf8b5d9` under `tests/Shared/PdfRemovalBaseline`. Normal build/test/CI never restores or executes the removed dependency.
 
 Build the native subset adapter first (CMake and a C++ compiler are required):
 
@@ -6,6 +8,7 @@ Build the native subset adapter first (CMake and a C++ compiler are required):
 python3 scripts/build-harfbuzz-subset.py
 dotnet restore ExcelRenderer.slnx
 python3 scripts/compare-pdf-backends.py --fixture all
+python3 scripts/compare-pdf-backends.py --no-generate --reference B --no-exceptions
 ```
 
 Validation uses PyMuPDF 1.26.6, numpy 2.3.5, Pillow 12.3.0, fonttools 4.61.1,
@@ -54,3 +57,23 @@ are checked across Skia's collection/drawing passes as well. This instrumentatio
 is internal and disabled in ordinary conversions; the manifest schema is unchanged.
 
 See `docs/skia-pdf-validation.md` for actual results, platform scope and manual viewer steps.
+
+The unchanged first-stage reviewed list applies only to A→C. B→C must pass without
+exceptions. `pdf_native_evidence.py` checks frozen B hashes, byte-identical drawing
+content and embedded streams, original native C byte-prefix preservation, and bounded
+numeric metadata precision. The old save path's implicit RGB page transparency group
+is explicitly retained; otherwise byte-identical content still rasterizes differently.
+No golden/list update is used to accept that compositing difference.
+
+`metrics.json` and command JSONL retain old metric/wrap/run/baseline/geometry data.
+The same generation exports current data for exact logical comparisons. Raw C PDFs
+and all A/B/C differences/overlays are validation artifacts, not product assets.
+
+Manual baseline reproduction uses a separate checkout of the recorded first-stage SHA,
+its pinned fonts/native recipe and fixed clock; see the recorded font hashes and
+`tests/Shared/PdfRemovalBaseline/manifest.json`. Keep that checkout outside the final
+solution. Do not overwrite the committed baseline with outputs from C. Large full-font
+PDFs are excluded from the fixed baseline; the retained PDFs/JSON are about 3.6MB.
+
+The harness also supports `--api-diff <old-assembly> <new-assembly>` and
+`--audit-assemblies <json-path-list>` using PE metadata without loading old code.

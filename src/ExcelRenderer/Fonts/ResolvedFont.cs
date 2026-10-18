@@ -15,4 +15,7 @@ public sealed record ResolvedFont(string Family, int Weight, bool Italic, string
 
     /// <summary>Gets the font bytes when the face is supplied from memory. メモリから供給された書体のフォントデータを取得します。ファイル由来の場合は <see langword="null"/> です。</summary>
     public byte[]? FontData { get; init; }
+
+    /// <summary>Gets the internal immutable snapshot used by finalized layouts, without exposing its bytes to callers.</summary>
+    internal byte[]? SnapshotData { get; init; }
 }

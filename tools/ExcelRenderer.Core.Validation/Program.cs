@@ -4,8 +4,8 @@ using System.Text.Json;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using ExcelRenderer.Core.Validation;
-using PdfSharp.Pdf.IO;
 using SkiaSharp;
+using UglyToad.PdfPig;
 using A = DocumentFormat.OpenXml.Drawing;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
@@ -142,7 +142,7 @@ for (var iteration = 0; iteration < repeats; iteration++)
 #endif
     clock.Stop();
     using var process = Process.GetCurrentProcess();
-    using var document = PdfReader.Open(args[2], PdfDocumentOpenMode.Import);
+    using var document = PdfDocument.Open(args[2]);
     samples.Add(new
     {
         Iteration = iteration,
@@ -153,7 +153,7 @@ for (var iteration = 0; iteration < repeats; iteration++)
         ManagedMax = maximumManaged,
         ManagedAfter = GC.GetTotalMemory(false),
         Handles = process.HandleCount,
-        Pages = document.PageCount,
+        Pages = document.NumberOfPages,
         PdfBytes = new FileInfo(args[2]).Length,
     });
 }

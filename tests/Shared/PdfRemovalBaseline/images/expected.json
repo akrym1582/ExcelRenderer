@@ -1,0 +1,63 @@
+{
+  "name": "images",
+  "path": "features",
+  "sameCommands": true,
+  "expectedText": [],
+  "regions": [
+    {
+      "name": "image-0",
+      "bounds": [
+        20,
+        20,
+        120,
+        120
+      ]
+    },
+    {
+      "name": "image-1",
+      "bounds": [
+        150,
+        20,
+        250,
+        120
+      ]
+    },
+    {
+      "name": "image-2",
+      "bounds": [
+        280,
+        20,
+        380,
+        120
+      ]
+    },
+    {
+      "name": "image-3",
+      "bounds": [
+        20,
+        160,
+        120,
+        260
+      ]
+    },
+    {
+      "name": "image-4",
+      "bounds": [
+        150,
+        160,
+        250,
+        260
+      ]
+    },
+    {
+      "name": "image-5",
+      "bounds": [
+        280,
+        160,
+        380,
+        260
+      ]
+    }
+  ],
+  "commandSha256": "E20549086D860817EBC47F4281C60370165DBDAA00A6EC3C33E7B9067650A858"
+}

@@ -35,7 +35,7 @@ public sealed class VariationSelectorTests
         {
             Assert.Equal("葛飾", sheet.Cells[new(1, 1)].Text);
             Assert.Equal("辻", sheet.HeaderFooter!.Header.Center);
-            var measurer = new PdfSharpTextMeasurer(font);
+            var measurer = new SkiaTextMeasurer(font);
             var plain = measurer.Layout("葛飾", CellStyle.Default.Font, 20, true);
             var varied = measurer.Layout("葛\U000E0100飾\uFE00", CellStyle.Default.Font, 20, true);
             Assert.Same(plain, varied);

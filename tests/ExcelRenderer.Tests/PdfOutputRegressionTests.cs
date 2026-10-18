@@ -55,7 +55,7 @@ public sealed class PdfOutputRegressionTests
         bool runs, bool underline, HorizontalAlignment horizontal, double x1, double x2, double x3, double x4)
     {
         var probe = PdfContentProbe.Read(OutputFixture.Pdf(OutputFixture.Artificial(runs, underline, horizontal)));
-        Assert.Equal(runs ? 3 : 2, probe.Texts.Count);
+        Assert.Equal(2, probe.Texts.Select(text => text.Origin.Y).Distinct().Count());
         Assert.Equal(underline ? 2 : 0, probe.Paints.Count);
         if (!underline) { return; }
         Assert.All(probe.Paints, p => { Assert.Equal("S", p.Operation); Assert.Equal(2, p.Points.Length); });
@@ -67,7 +67,7 @@ public sealed class PdfOutputRegressionTests
 
     /// <summary>確定済み字形の原点を移動すると、PDF の字形パス全体が同じ差分で移動し、フォントの輪郭寸法にも一致することを検証します。</summary>
     [Fact(DisplayName = "確定済み字形の原点を移動すると、PDF の字形パス全体が同じ差分で移動し、フォントの輪郭寸法にも一致する")]
-    public void Pdf_finalized_glyph_path_uses_stored_origin()
+    public void Pdf_finalized_embedded_glyph_uses_stored_origin()
     {
         using var face = OutputFixture.Typeface();
         using var font = new SKFont(face, 9);
@@ -80,18 +80,29 @@ public sealed class PdfOutputRegressionTests
             TextLayout = new(new(40, 30), [new("A", 40, 10, baseline,
                 [new(new("A", OutputFixture.Face) { GlyphId = glyph }, x, 5)], false)]) { EffectiveFontSize = 9 },
         };
-        var first = PdfContentProbe.Read(OutputFixture.Pdf(Command(7, 3)));
-        var shifted = PdfContentProbe.Read(OutputFixture.Pdf(Command(25, 17)));
-        Assert.Empty(first.Texts);
-        var a = Assert.Single(first.Paints);
-        var b = Assert.Single(shifted.Paints);
-        Assert.Equal("f", a.Operation);
-        Assert.True(a.Points.Length > 3);
-        Assert.Equal(a.Points.Length, b.Points.Length);
-        for (var i = 0; i < a.Points.Length; i++) { Point(b.Points[i], a.Points[i].X + 18, a.Points[i].Y + 14); }
-        // Absolute extent agrees with the fixed font's outline as well as relative movement.
-        Near(17 + outline.Bounds.Left, a.Points.Min(p => p.X));
-        Near(23 + outline.Bounds.Top, a.Points.Min(p => p.Y));
+        var firstBytes = OutputFixture.Pdf(Command(7, 3));
+        var shiftedBytes = OutputFixture.Pdf(Command(25, 17));
+        var first = PdfContentProbe.Read(firstBytes);
+        var shifted = PdfContentProbe.Read(shiftedBytes);
+        var a = Assert.Single(first.Texts);
+        var b = Assert.Single(shifted.Texts);
+        Point(b.Origin, a.Origin.X + 18, a.Origin.Y + 14);
+        Point(a.Origin, 17, 23);
+        Assert.Equal(9, a.Size);
+        using var pdf = TestFixtures.PdfTestFile.Open(new MemoryStream(firstBytes));
+        var fonts = pdf.Pages[0].Elements.GetDictionary("/Resources")!.Elements.GetDictionary("/Font")!;
+        var descendant = fonts.Elements.GetDictionary(a.Font)!.Elements.GetArray("/DescendantFonts")!.Elements.GetDictionary(0)!;
+        var bytes = descendant.Elements.GetDictionary("/FontDescriptor")!.Elements.GetDictionary("/FontFile2")!.Stream.UnfilteredValue;
+        using var data = SKData.CreateCopy(bytes);
+        using var embeddedFace = SKTypeface.FromData(data);
+        using var embeddedFont = new SKFont(embeddedFace, (float)a.Size);
+        Assert.Equal(2, a.Encoded.Length);
+        var embeddedGlyph = (ushort)((a.Encoded[0] << 8) | a.Encoded[1]);
+        using var embeddedPath = embeddedFont.GetGlyphPath(embeddedGlyph);
+        Assert.NotNull(embeddedPath);
+        Assert.Equal(outline.ToSvgPathData(), embeddedPath.ToSvgPathData());
+        Near(17 + outline.Bounds.Left, a.Origin.X + embeddedPath.Bounds.Left);
+        Near(23 + outline.Bounds.Top, a.Origin.Y + embeddedPath.Bounds.Top);
     }
 
     /// <summary>点の X・Y 座標が、それぞれ指定した期待値と許容誤差内で一致することを検証します。</summary>

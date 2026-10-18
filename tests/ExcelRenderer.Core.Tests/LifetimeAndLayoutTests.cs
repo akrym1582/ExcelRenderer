@@ -1,3 +1,4 @@
+using ExcelRenderer.TestFixtures;
 using ExcelRenderer.Core.Abstractions;
 using ExcelRenderer.Core.Drawing;
 using ExcelRenderer.Core.Fonts;
@@ -5,7 +6,6 @@ using ExcelRenderer.Core.Layout;
 using ExcelRenderer.Core.Model;
 using ExcelRenderer.Core.Pdf;
 using ExcelRenderer.Core.Rendering;
-using PdfSharp.Fonts;
 using Xunit;
 
 namespace ExcelRenderer.Core.Tests;
@@ -13,7 +13,7 @@ namespace ExcelRenderer.Core.Tests;
 public sealed class LifetimeAndLayoutTests
 {
     [Fact]
-    public async Task Waiting_for_font_gate_is_cancellable()
+    public async Task Independent_conversion_progresses_while_another_font_snapshot_is_paused()
     {
         using var entered = new ManualResetEventSlim(); using var release = new ManualResetEventSlim();
         ConversionMetrics.Observer = (key, _) => { if (key == "fontSnapshotRead") { entered.Set(); Assert.True(release.Wait(TimeSpan.FromSeconds(15))); } };
@@ -21,10 +21,12 @@ public sealed class LifetimeAndLayoutTests
         try
         {
             Assert.True(entered.Wait(TimeSpan.FromSeconds(15)));
-            using var input = TestSupport.Workbook(); using var output = new MemoryStream(); using var cancellation = new CancellationTokenSource();
-            var waiting = ExcelConverter.ConvertAsync(input, output, TestSupport.Options, cancellation.Token);
-            cancellation.Cancel();
-            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => waiting);
+            ConversionMetrics.Observer = null;
+            var independent = await Task.Run(() => TestSupport.Convert()).WaitAsync(TimeSpan.FromSeconds(10));
+            Assert.Equal(1, independent.Result.PageCount);
+            using var cancellation = new CancellationTokenSource(); cancellation.Cancel();
+            using var input = TestSupport.Workbook(); using var output = new MemoryStream();
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => ExcelConverter.ConvertAsync(input, output, TestSupport.Options, cancellation.Token));
             Assert.Equal(0, output.Length);
         }
         finally { release.Set(); ConversionMetrics.Observer = null; }
@@ -108,10 +110,8 @@ public sealed class LifetimeAndLayoutTests
     public void Wrap_and_explicit_newlines_use_single_text_lines()
     {
         using var context = new SingleFontContext(TestSupport.JapaneseFont);
-        GlobalFontSettings.ResetFontManagement(); GlobalFontSettings.FontResolver = context.Resolver;
-        try
         {
-            var measurer = new PdfSharpTextMeasurer(context);
+            var measurer = new SkiaTextMeasurer(context);
             var layout = measurer.Layout("ab\ncd", new(Size: 10), 100, true);
             Assert.Equal(2, layout.Lines.Count); Assert.True(layout.Lines[0].ExplicitBreak);
             Assert.Equal("ab", layout.Lines[0].Text); Assert.Equal("cd", layout.Lines[1].Text);
@@ -121,7 +121,6 @@ public sealed class LifetimeAndLayoutTests
             for (var i = 0; i < 520; i++) measurer.Layout(i.ToString(), new(), 100, false);
             Assert.NotSame(layout, measurer.Layout("ab\ncd", new(Size: 10), 100, true));
         }
-        finally { GlobalFontSettings.ResetFontManagement(); }
     }
 
     private sealed class Resource : IDisposable

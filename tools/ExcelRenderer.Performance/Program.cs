@@ -7,8 +7,6 @@ using System.Xml.Linq;
 using ExcelRenderer;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Rendering;
-using PdfSharp.Pdf;
-using PdfSharp.Pdf.IO;
 
 var command = args[0];
 var path = args[1];
@@ -119,11 +117,7 @@ for (var iteration = 0; iteration < repeats; iteration++)
     var heap = GC.GetGCMemoryInfo();
     output.Flush();
     output.Position = 0;
-    using var pdf = PdfReader.Open(output, PdfDocumentOpenMode.Import);
-    var objects = pdf.Internals.GetAllObjects().OfType<PdfDictionary>().ToArray();
-    var fontStreams = objects.SelectMany(dictionary => new[] { "/FontFile", "/FontFile2", "/FontFile3" }
-        .Select(key => dictionary.Elements.GetDictionary(key)))
-        .Where(dictionary => dictionary is not null).Distinct().ToArray();
+    var pdfStats = ExcelRenderer.Performance.PdfInspector.Inspect(output);
     long? postCollectionManaged = null;
     long? postCollectionWorkingSet = null;
     long? postCollectionPrivateBytes = null;
@@ -160,10 +154,10 @@ for (var iteration = 0; iteration < repeats; iteration++)
         PostCollectionPrivateBytes = postCollectionPrivateBytes,
         GC = conversionCollections,
         Heap = heap.GenerationInfo.ToArray().Select(info => new { info.SizeAfterBytes, info.FragmentationAfterBytes }),
-        FontObjects = objects.Count(dictionary => dictionary.Elements.GetName("/Type") == "/Font"),
-        ImageObjects = objects.Count(dictionary => dictionary.Elements.GetName("/Subtype") == "/Image"),
-        FontStreams = fontStreams.Length,
-        FontStreamBytes = fontStreams.Sum(dictionary => dictionary?.Stream?.Value.Length ?? 0),
+        FontObjects = pdfStats.FontObjects,
+        ImageObjects = pdfStats.ImageObjects,
+        FontStreams = pdfStats.FontStreams,
+        FontStreamBytes = pdfStats.FontStreamBytes,
         Pages = result.Pages.Count,
         OutputBytes = output.Length,
         Phases = phases,

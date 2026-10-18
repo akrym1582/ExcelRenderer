@@ -16,15 +16,25 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
-      - run: dotnet test ExcelRenderer.slnx --configuration Release
+      - run: python scripts/build-harfbuzz-subset.py
+      - name: Read current package version
+        run: |
+          python3 - <<'PYTHON'
+          import os, xml.etree.ElementTree as ET
+          version = ET.parse('src/ExcelRenderer/ExcelRenderer.csproj').getroot().find('.//Version').text
+          with open(os.environ['GITHUB_ENV'], 'a') as output:
+              output.write('PACKAGE_VERSION=' + version + '\n')
+          PYTHON
+      - run: dotnet test ExcelRenderer.slnx --configuration Release -m:1
       - run: dotnet pack src/ExcelRenderer/ExcelRenderer.csproj -c Release -o artifacts/packages
       - run: dotnet pack src/ExcelRenderer.Fonts/ExcelRenderer.Fonts.csproj -c Release -o artifacts/packages
       - run: dotnet pack src/ExcelRenderer.Tool/ExcelRenderer.Tool.csproj -c Release -o artifacts/packages
+      - run: python scripts/check-no-pdfsharp.py --packages artifacts/packages
       - name: Verify package sizes and tool dependency
         run: |
           python3 - <<'PY'
           import glob, os, zipfile
-          files = {os.path.basename(p).split('.1.5.2.')[0]: p for p in glob.glob('artifacts/packages/*.nupkg')}
+          files = {os.path.basename(p).removesuffix('.' + os.environ['PACKAGE_VERSION'] + '.nupkg'): p for p in glob.glob('artifacts/packages/*.nupkg')}
           for name, path in files.items():
               print(name, os.path.getsize(path))
           assert os.path.getsize(files['ExcelRenderer']) < 3_000_000
@@ -36,7 +46,7 @@ jobs:
       - name: Verify library without font pack
         run: |
           dotnet new console -n WithoutFonts -o /tmp/without-fonts --framework net10.0
-          dotnet add /tmp/without-fonts/WithoutFonts.csproj package ExcelRenderer --version 1.5.2 --source "$PWD/artifacts/packages"
+          dotnet add /tmp/without-fonts/WithoutFonts.csproj package ExcelRenderer --version "${{ env.PACKAGE_VERSION }}" --source "$PWD/artifacts/packages"
           cat > /tmp/without-fonts/Program.cs <<'CS'
           using ExcelRenderer.Fonts;
           var manager = new FontManager(new FontOptions { AllowSystemFonts = false, FallbackFamilies = [] });
@@ -46,7 +56,7 @@ jobs:
           dotnet run --project /tmp/without-fonts/WithoutFonts.csproj
       - name: Verify library with font pack
         run: |
-          dotnet add /tmp/without-fonts/WithoutFonts.csproj package ExcelRenderer.Fonts --version 1.5.2 --source "$PWD/artifacts/packages"
+          dotnet add /tmp/without-fonts/WithoutFonts.csproj package ExcelRenderer.Fonts --version "${{ env.PACKAGE_VERSION }}" --source "$PWD/artifacts/packages"
           cat > /tmp/without-fonts/Program.cs <<'CS'
           using ExcelRenderer.Fonts;
           var manager = new FontManager(new FontOptions { AllowSystemFonts = false, FallbackFamilies = [] });
@@ -57,5 +67,5 @@ jobs:
           dotnet run --project /tmp/without-fonts/WithoutFonts.csproj
       - name: Verify local CLI installation
         run: |
-          dotnet tool install --tool-path /tmp/excelrenderer-cli --add-source "$PWD/artifacts/packages" ExcelRenderer.Tool --version 1.5.2
+          dotnet tool install --tool-path /tmp/excelrenderer-cli --add-source "$PWD/artifacts/packages" ExcelRenderer.Tool --version "${{ env.PACKAGE_VERSION }}"
           /tmp/excelrenderer-cli/excelrenderer --help

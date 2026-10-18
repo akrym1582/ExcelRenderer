@@ -1,0 +1,71 @@
+{
+  "styles": [],
+  "dimensionBandSchema": [
+    "first",
+    "last",
+    "sizePoints",
+    "hidden01"
+  ],
+  "sheets": [
+    {
+      "Name": "Sheet1",
+      "DefaultColumnWidth": 51.75,
+      "DefaultRowHeight": 15,
+      "DefaultRowsHidden": false,
+      "columns": [
+        [
+          3,
+          3,
+          51.75,
+          0
+        ]
+      ],
+      "rows": [
+        [
+          2,
+          2,
+          15,
+          0
+        ]
+      ],
+      "MergedRanges": [],
+      "PrintArea": null,
+      "PrintAreas": [],
+      "PageSettings": {
+        "Width": 612,
+        "Height": 792,
+        "MarginLeft": 54,
+        "MarginTop": 54,
+        "MarginRight": 54,
+        "MarginBottom": 36,
+        "Scale": 1,
+        "FitToPagesWide": null,
+        "FitToPagesTall": null,
+        "TitleRows": null,
+        "TitleColumns": null,
+        "ScaleMode": 0,
+        "ManualRowBreaks": [],
+        "ManualColumnBreaks": [],
+        "PageOrder": 0,
+        "HorizontalCentered": false,
+        "VerticalCentered": false
+      },
+      "HeaderFooter": null,
+      "cells": []
+    }
+  ],
+  "mdw": [
+    {
+      "Code": "MaximumDigitWidthResolved",
+      "Severity": 0,
+      "Stage": 0,
+      "Message": "Normal font \u0027Calibri\u0027 resolved to \u0027Noto Sans JP\u0027 with MDW 8px.",
+      "SheetName": "Sheet1",
+      "CellRange": null,
+      "ObjectId": null,
+      "SourcePageNumber": null,
+      "OccurrenceCount": 1,
+      "UnicodeSequence": null
+    }
+  ]
+}

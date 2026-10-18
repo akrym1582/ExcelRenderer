@@ -1,6 +1,4 @@
-using PdfSharp.Pdf.Content;
-using PdfSharp.Pdf.Content.Objects;
-using PdfSharp.Pdf.IO;
+using ExcelRenderer.TestFixtures;
 
 namespace ExcelRenderer.Core.Tests;
 
@@ -29,7 +27,7 @@ internal sealed class PdfContentProbe
     internal static PdfContentProbe Read(byte[] bytes)
     {
         using var stream = new MemoryStream(bytes);
-        using var document = PdfReader.Open(stream, PdfDocumentOpenMode.Import);
+        using var document = PdfTestFile.Open(stream);
         var page = document.Pages[0];
         // Fail closed if a gs resource could modify geometry or text state (for example /Font).
         var resources = page.Elements.GetDictionary("/Resources");
@@ -41,7 +39,7 @@ internal sealed class PdfContentProbe
                 var dictionary = states.Elements.GetDictionary(key) ?? throw new InvalidDataException($"Invalid ExtGState {key}");
                 foreach (var entry in dictionary.Elements.Keys)
                 {
-                    if (entry is not ("/Type" or "/CA" or "/ca"))
+                    if (entry is not ("/Type" or "/CA" or "/ca" or "/LC" or "/LJ" or "/LW" or "/ML" or "/SA") && !(entry == "/BM" && dictionary.Elements.GetName(entry) == "/Normal") && !(entry == "/SMask" && dictionary.Elements.GetName(entry) == "/None"))
                     {
                         throw new InvalidDataException($"Unsupported ExtGState {key} entry {entry}");
                     }
@@ -49,7 +47,7 @@ internal sealed class PdfContentProbe
             }
         }
         var result = new PdfContentProbe();
-        result.Parse(ContentReader.ReadContent(page), page.Height.Point);
+        result.Parse(PdfTestContent.ReadContent(page), page.Height.Point, page);
         return result;
     }
 
@@ -60,7 +58,7 @@ internal sealed class PdfContentProbe
         _ => throw new InvalidDataException($"Expected PDF number, got {value.GetType().Name}: {value}"),
     };
 
-    private void Parse(CSequence sequence, double height)
+    private void Parse(CSequence sequence, double height, PdfTestPage page)
     {
         var state = new State(Matrix.Identity, 0, string.Empty, []);
         var stack = new Stack<State>();
@@ -69,7 +67,6 @@ internal sealed class PdfContentProbe
         var path = new List<Point>();
         var inText = false;
         var pendingClip = false;
-        var consumed = false;
         var leading = 0d;
         var rise = 0d;
         Point Normalize(double x, double y)
@@ -81,18 +78,45 @@ internal sealed class PdfContentProbe
         {
             lineMatrix = lineMatrix.Times(new(1, 0, 0, 1, x, y));
             textMatrix = lineMatrix;
-            consumed = false;
         }
         void Show(string encoded)
         {
-            if (!inText || consumed || encoded.Length == 0)
+            if (!inText || encoded.Length == 0)
             {
                 throw new InvalidDataException("Unexpected text show: BT and explicit positioning are required for each fixture run.");
             }
             var origin = textMatrix.Apply(0, rise);
             var combined = state.Ctm.Times(textMatrix);
             Texts.Add(new(Normalize(origin.X, origin.Y), state.FontSize * Math.Sqrt(combined.C * combined.C + combined.D * combined.D), encoded, state.Font));
-            consumed = true;
+            var font = page.Elements.GetDictionary("/Resources")!.Elements.GetDictionary("/Font")!.Elements.GetDictionary(state.Font)!;
+            var descendant = font.Elements.GetArray("/DescendantFonts")?.Elements.GetDictionary(0) ?? font;
+            var defaultWidth = descendant.Elements.ContainsKey("/DW") ? descendant.Elements.GetReal("/DW") : 1000;
+            var widths = descendant.Elements.GetArray("/W")?.Elements;
+            var advance = 0d;
+            for (var index = 0; index < encoded.Length; index += 2)
+            {
+                if (index + 1 >= encoded.Length) throw new InvalidDataException("Expected two-byte CID text");
+                var glyph = (encoded[index] << 8) | encoded[index + 1];
+                var width = defaultWidth;
+                if (widths is not null)
+                    for (var item = 0; item < widths.Count;)
+                    {
+                        var start = (int)((PdfTestNumber)widths[item++]).Value;
+                        if (widths[item] is PdfTestArray values)
+                        {
+                            item++;
+                            if (glyph >= start && glyph < start + values.Elements.Count) width = ((PdfTestNumber)values.Elements[glyph - start]).Value;
+                        }
+                        else
+                        {
+                            var end = (int)((PdfTestNumber)widths[item++]).Value;
+                            var value = ((PdfTestNumber)widths[item++]).Value;
+                            if (glyph >= start && glyph <= end) width = value;
+                        }
+                    }
+                advance += width * state.FontSize / 1000;
+            }
+            textMatrix = textMatrix.Times(new(1, 0, 0, 1, advance, 0));
         }
         void EndPath(string operation)
         {
@@ -121,10 +145,10 @@ internal sealed class PdfContentProbe
                 case "q": stack.Push(state); break;
                 case "Q": state = stack.Count > 0 ? stack.Pop() : throw new InvalidDataException("Unmatched Q"); break;
                 case "cm": state = state with { Ctm = state.Ctm.Times(new(N(0), N(1), N(2), N(3), N(4), N(5))) }; break;
-                case "BT": inText = true; consumed = false; textMatrix = lineMatrix = Matrix.Identity; break;
+                case "BT": inText = true; textMatrix = lineMatrix = Matrix.Identity; break;
                 case "ET": inText = false; break;
                 case "Tf": state = state with { FontSize = N(1), Font = ((CName)args[0]).Name }; break;
-                case "Tm": textMatrix = lineMatrix = new(N(0), N(1), N(2), N(3), N(4), N(5)); consumed = false; break;
+                case "Tm": textMatrix = lineMatrix = new(N(0), N(1), N(2), N(3), N(4), N(5)); break;
                 case "Td": MoveText(N(0), N(1)); break;
                 case "TD": leading = -N(1); MoveText(N(0), N(1)); break;
                 case "T*": MoveText(0, -leading); break;
@@ -133,11 +157,11 @@ internal sealed class PdfContentProbe
                 case "Tj": Show(((CString)args[0]).Value); break;
                 case "TJ":
                     var array = (CArray)args[0];
-                    if (array.Count != 1 || array[0] is not CString str)
+                    foreach (var value in array)
                     {
-                        throw new InvalidDataException("TJ with font-dependent advances is unsupported by this fixture probe.");
+                        if (value is CString str) Show(str.Value);
+                        else textMatrix = textMatrix.Times(new(1, 0, 0, 1, -Number(value) * state.FontSize / 1000, 0));
                     }
-                    Show(str.Value);
                     break;
                 case "Tc": case "Tw": case "Tr":
                     if (N(0) != 0) { throw new InvalidDataException($"Unsupported text state {op.OpCode.Name} {N(0)}"); }
@@ -158,6 +182,7 @@ internal sealed class PdfContentProbe
                 case "S": case "s": case "f": case "f*": case "B": case "B*": case "b": case "b*": case "n": EndPath(op.OpCode.Name); break;
                 // These cannot change origins or create paint. gs resources were checked above for opacity-only entries.
                 case "rg": case "RG": case "g": case "G": case "w": case "J": case "j": case "d": case "M": break;
+                case "BDC": case "BMC": case "EMC": case "Do": break;
                 case "gs":
                     // Only the validated opacity-only resources are admitted.
                     break;

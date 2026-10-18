@@ -35,21 +35,26 @@ def main():
     parser.add_argument('--visual-only', action='store_true')
     parser.add_argument('--accept-baseline', action='store_true')
     parser.add_argument('--reuse-reference', action='store_true')
+    parser.add_argument('--no-build', action='store_true')
     args = parser.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
     previous = json.loads((OUT / 'report.json').read_text()) if args.reuse_reference and (OUT / 'report.json').exists() else {}
-    for name in ['Validation', 'Reference']:
-        project = ROOT / f'tools/ExcelRenderer.Core.{name}/ExcelRenderer.Core.{name}.csproj'
-        run('dotnet', 'restore', project, '--locked-mode')
-        run('dotnet', 'build', project, '-c', 'Release', '--no-restore')
+    if not args.no_build:
+        for name in ['Validation', 'Reference']:
+            project = ROOT / f'tools/ExcelRenderer.Core.{name}/ExcelRenderer.Core.{name}.csproj'
+            run('dotnet', 'restore', project, '--locked-mode')
+            run('dotnet', 'build', project, '-c', 'Release', '--no-restore')
     report = {
         'os': platform.platform(), 'dotnet': run('dotnet', '--version').strip(),
         'renderer': run('pdftoppm', '-v').strip(), 'dpi': DPI,
         'font_sha256': hashlib.sha256(FONT.read_bytes()).hexdigest(),
-        'source_commit': '32e9165d145516dbd0bcb4c2ae31a78ce6774bce',
+        'source_commit': run('git', 'rev-parse', 'HEAD').strip(),
+        'source_note': 'Current working tree; unchanged historical golden provenance remains in Baselines/provenance.json',
         'visual': [], 'performance': [],
     }
     baselines = ROOT / 'tests/ExcelRenderer.Core.Tests/Baselines'
+    review_file = baselines / 'skia-reviewed-differences.json'
+    reviewed = json.loads(review_file.read_text()) if review_file.exists() else {}
     inputs = baselines / 'Inputs'
     provenance = json.loads((inputs / 'provenance.json').read_text())
     sources = sorted((ROOT / 'tests/ExcelRenderer.Tests/SampleInputs').glob('*.xlsx'))
@@ -97,7 +102,10 @@ def main():
                     # Rasterizer versions can differ in antialiasing; a mean channel delta
                     # above 0.25 requires review. Numeric PDF tests catch small shifts.
                     if item['baseline_mae'] > 0.25:
-                        raise AssertionError(f'Golden raster changed: {actual.name}')
+                        review = reviewed.get(actual.name)
+                        if review is None or review['baselineSha256'] != hashlib.sha256(baseline.read_bytes()).hexdigest() or review['sourceSha256'] != recorded['normalized_sha256'] or review['currentPixelsSha256'] != hashlib.sha256(a.convert('RGB').tobytes()).hexdigest():
+                            raise AssertionError(f'Golden raster changed: {actual.name}')
+                        item['reviewed_antialiasing'] = review['reason']
             if mae > 0.25:
                 raise AssertionError(f'Reference raster differs: {actual.name}: MAE={mae}')
             report['visual'].append(item)

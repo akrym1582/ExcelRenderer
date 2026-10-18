@@ -32,7 +32,7 @@ This makes the rendering pipeline easier to test, understand, and extend with ne
 - Splits output into pages at row and column boundaries
 - Renders worksheet PNG and JPEG images
 - Renders header and footer text
-- Produces PDF output with PDFsharp
+- Produces PDF output with SkiaSharp and shared subset fonts
 - Produces one PNG image per page with SkiaSharp
 - Produces one self-contained SVG per page with outlined text and embedded images
 - Exports AI-friendly Markdown with merged-cell HTML, layout-aware reading order, formulas, and external images
@@ -45,7 +45,7 @@ This makes the rendering pipeline easier to test, understand, and extend with ne
 
 - .NET 10 SDK to build and test the repository
 - A target framework compatible with .NET Standard 2.1 to consume the library
-- Appropriate fonts installed or supplied through `PdfSharpFontResolver` for rendering; mapping alone does not need fonts
+- Appropriate fonts installed or supplied through `FontOptions` for rendering; mapping alone does not need fonts
 
 Choose the package for your task:
 
@@ -387,7 +387,7 @@ PDF export skips images when Skia cannot create a codec or decode a bitmap, and 
 byte length, up to 16 header bytes, and the decode failure reason. The `render` command
 prints warnings to stderr; use `--manifest report.json` to save these details as JSON.
 Strict mode or treating `ImageDecodeFailed` as an error stops conversion instead.
-Low-level `PdfSharpRenderer` callers can receive warnings through `DiagnosticHandler`;
+Low-level `PdfRenderer` callers can receive warnings through `DiagnosticHandler`;
 warnings are also written to `System.Diagnostics.Trace` listeners.
 
 Use `PdfExportOptions`, `ImageExportOptions`, `SvgExportOptions`, and `MarkdownExportOptions` to select a worksheet or configure format-specific behavior. Existing output files, and non-empty image or SVG output directories, are not overwritten.
@@ -400,17 +400,18 @@ Install the `ExcelRenderer` package or reference the project, then run the workb
 using ExcelRenderer.Drawing;
 using ExcelRenderer.Excel;
 using ExcelRenderer.Layout;
-using ExcelRenderer.PdfSharp;
+using ExcelRenderer.Pdf;
+using ExcelRenderer.SkiaSharp;
 
 var document = new ExcelReader().Read("report.xlsx");
 var sheet = document.Sheets[0];
 
-var layoutEngine = new ReportLayoutEngine(new PdfSharpTextMeasurer());
+var layoutEngine = new ReportLayoutEngine(new SkiaTextMeasurer());
 var renderDocument = layoutEngine.Layout(sheet);
 var commands = new DrawCommandGeneratorPass().Generate(renderDocument);
 
 using var output = File.Create("report.pdf");
-new PdfSharpRenderer().Render(commands, sheet.PageSettings, output);
+new PdfRenderer().Render(commands, sheet.PageSettings, output);
 ```
 
 `ExcelReader` preserves whether an xlsx uses an explicit percentage or Fit-to-pages in
@@ -578,12 +579,19 @@ An embedded resource takes precedence over a loose file. The DLL search is not
 recursive; only the loose-file search includes subdirectories.
 
 ```csharp
-using ExcelRenderer.PdfSharp;
-using PdfSharp.Fonts;
+using ExcelRenderer;
+using ExcelRenderer.Fonts;
 
-GlobalFontSettings.FontResolver = new PdfSharpFontResolver(
-    "Noto Sans JP",
-    "/app/fonts/NotoSansJP-Regular.ttf");
+await ExcelConverter.ConvertToPdfAsync("report.xlsx", "report.pdf",
+    new PdfExportOptions
+    {
+        FontOptions = new FontOptions
+        {
+            FontFiles = ["/app/fonts/NotoSansJP-Regular.ttf"],
+            AllowSystemFonts = false,
+            UseFontPack = false,
+        },
+    });
 ```
 
 All commands accept the font options described above. `--font-file` reads each
@@ -653,10 +661,10 @@ OS and additional-directory font scans retain metadata; a physical face's bytes 
 SHA256 identity are loaded once when first selected. Explicit font files and registrations
 are validated and snapshotted immediately. Optional font-pack data is also loaded on demand.
 An OS font is not a complete snapshot until its first selection; a file that changes or
-disappears before that read raises a font load error. PDFsharp's process-wide resolved
-font-byte cache remains in place.
+disappears before that read raises a font load error. Physical measurement/drawing fonts
+are immutable conversion-owned snapshots; there is no global font resolver or conversion lock.
 
-PDFsharp still retains its final document and resources until the single save.
+Skia retains its final document and resources until native close and the incremental save.
 The OpenXml Reader retains source styles and shared strings. Layout geometry and selected models also
 scale with workbook size. This is not constant-memory streaming.
 See the [phase 3 measurements](docs/phase3-performance.ja.md) and the historical
@@ -669,8 +677,8 @@ continuous PNG remains one worksheet per PNG with one full bitmap, not scanline 
 encoding. Its RGBA pixels require approximately `4 × width × height` bytes plus alignment
 and encoder overhead. Both PNG APIs validate dimensions and enforce their pixel limit.
 A conversion-local image cache estimates decoded resource memory and uses a 64 MiB LRU
-budget; an image exceeding that budget is owned only during its active draw. PDFsharp's
-own retained document image resources are additional to that estimate.
+budget; an image exceeding that budget is owned only during its active draw. Skia's
+retained document image resources are additional to that estimate.
 
 SVG keeps Skia's SVG canvas and streaming XML normalization (outlined text, embedded
 images, point dimensions, and `viewBox`). Its seekable intermediate buffer spills before
@@ -769,14 +777,17 @@ ExcelRenderer is available under the [MIT License](LICENSE).
 The optional `ExcelRenderer.Fonts` package contains the Japanese fonts and their
 separate license texts; see [Third-party notices](THIRD-PARTY-NOTICES.md).
 
-### PDF drawing backend
+### PDF engine and migration
 
-PDFsharp remains the default. Select SkiaSharp explicitly through the main API:
+PDF output and default PDF/PNG/SVG measurement use SkiaSharp. The main and Core
+products share native font/subset/document primitives. There is no PDFsharp dependency,
+resolver or process-wide conversion gate. This removes the old low-level public APIs;
+see the [breaking-change migration table](docs/pdfsharp-migration.md).
 
 ```csharp
-await ExcelConverter.ConvertToPdfAsync(input, output,
-    new PdfExportOptions { PdfBackend = PdfBackend.SkiaSharp });
-// RenderAsync: new RenderRequest { OutputFormat = OutputFormat.Pdf, PdfBackend = PdfBackend.SkiaSharp }
+await ExcelConverter.ConvertToPdfAsync(input, output); // SkiaSharp by default
+// Explicit selection remains available:
+// new PdfExportOptions { PdfBackend = PdfBackend.SkiaSharp }
 ```
 
 ```bash
@@ -784,24 +795,27 @@ excelrenderer pdf report.xlsx -o report.pdf --pdf-backend skiasharp
 excelrenderer render report.xlsx --format pdf -o report.pdf --pdf-backend skiasharp
 ```
 
-Both CLI paths preserve this option when using `--data`. Backend names are lowercase,
-matching existing CLI options. Explicit `--pdf-backend` on non-PDF CLI output is an
-error. At the API level, non-PDF requests accept the default PdfSharp value and reject
-SkiaSharp. Invalid enum values fail before reading input or opening output.
+Both CLI paths retain the option with `--data`. Only lowercase `skiasharp` is valid.
+Explicit `--pdf-backend` on non-PDF CLI output is an error. API non-PDF requests
+accept the default `SkiaSharp = 1`; invalid values and obsolete reserved `PdfSharp = 0`
+fail before input/output access. Zero is never reinterpreted as SkiaSharp.
 
-Skia PDF requires the native HarfBuzz subset adapter built with
-`python3 scripts/build-harfbuzz-subset.py` before building/packing from source.
-The adapter uses pinned official HarfBuzz source, retains original glyph IDs, and
-shares subset faces across the document. Missing native assets or subset failures
-fail conversion; they do not silently switch engines or embed complete outline fonts.
-Python/CMake are build and validation tools, not PDF generation dependencies.
+Build the pinned native subset adapter with `python3 scripts/build-harfbuzz-subset.py`
+before building/packing from source. Published runtime assets are required; missing
+assets fail conversion without a full-font fallback. Python/CMake and independent
+PDF readers are build/validation tools, not product runtime requirements.
 
-This is a drawing backend switch: both engines retain the existing measurement
-service (including an explicit caller-owned `RenderRequest.TextMeasurer`), PDFsharp
-font gate and PDFsharp dependency. Skia drawing also uses a bounded intermediate
-spool and an isolated PDFsharp pass for exact page boxes, link tooltips and image
-interpolation metadata. Image/font bytes and drawing content are preserved.
-Core's standalone API continues to use PDFsharp. PNG/SVG/Markdown are unaffected by
-this option. See the
-[measured results, reviewed AA differences and platform scope](docs/skia-pdf-validation.md) and
-[comparison harness](tools/ExcelRenderer.PdfComparison/README.md).
+PDF uses a bounded seekable spool, document-shared subsets and an internal incremental
+finalizer for boxes (0.001pt precision), RGB page compositing, links/tooltips and image
+interpolation. Original content, font and image stream bytes are preserved. Incremental
+image dictionary revisions repeat encoded color-image bytes, so image-heavy output can
+be larger. `RenderRequest.Buffering` controls the intermediate spool.
+
+Standalone `SkiaTextMeasurer` calls own native scopes; internal conversion services borrow
+their conversion's scope. Stored glyphs/font snapshots remain replayable after scope
+disposal. Caller-supplied measurers and streams remain caller-owned. Core keeps its
+single regular static TrueType font and variation-selector-to-base policy.
+
+See [removal verification](docs/pdfsharp-removal-validation.md),
+[the frozen A/B/C comparison procedure](tools/ExcelRenderer.PdfComparison/README.md),
+and the [historical first-stage results](docs/skia-pdf-validation.md).

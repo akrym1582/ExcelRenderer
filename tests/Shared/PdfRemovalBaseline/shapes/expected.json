@@ -1,0 +1,56 @@
+{
+  "name": "shapes",
+  "path": "features",
+  "sameCommands": true,
+  "expectedText": [
+    "\u56F3\u5F62 ABC"
+  ],
+  "regions": [
+    {
+      "name": "Rectangle",
+      "bounds": [
+        18,
+        18,
+        182,
+        103
+      ]
+    },
+    {
+      "name": "Ellipse",
+      "bounds": [
+        213,
+        18,
+        377,
+        103
+      ]
+    },
+    {
+      "name": "RoundedRectangle",
+      "bounds": [
+        18,
+        123,
+        182,
+        208
+      ]
+    },
+    {
+      "name": "WedgeRectangleCallout",
+      "bounds": [
+        213,
+        123,
+        377,
+        208
+      ]
+    },
+    {
+      "name": "WedgeRoundedRectangleCallout",
+      "bounds": [
+        18,
+        228,
+        182,
+        313
+      ]
+    }
+  ],
+  "commandSha256": "BD1F749F0C33126F4502A7B99C44B0ACBC23481454DDB9DE4F5BDC188EF97026"
+}

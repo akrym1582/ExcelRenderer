@@ -1,0 +1,115 @@
+{
+  "os": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "dotnet": "10.0.401",
+  "renderer": "pdftoppm version 26.05.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC",
+  "dpi": 96,
+  "font_sha256": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec",
+  "source_commit": "71deba48ea4a397641c9ad155bc1c8b3ddf8b5d9",
+  "source_note": "Current working tree; unchanged historical golden provenance remains in Baselines/provenance.json",
+  "visual": [
+    {
+      "page": "01-japanese-core-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "01-japanese-core-2.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "02-image-core-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "02-image-core-2.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "03-wrapped-text-core-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 2.616836125497479e-06
+    },
+    {
+      "page": "04-text-decoration-core-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 2.0187021539551984e-05
+    },
+    {
+      "page": "05-borders-core-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "05-borders-core-2.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 2.3551525129477312e-05
+    },
+    {
+      "page": "06-layout-and-pagination-core-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "06-layout-and-pagination-core-2.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "06-layout-and-pagination-core-3.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "06-layout-and-pagination-core-4.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "07-multiple-sheets-core-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "07-multiple-sheets-core-2.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "08-print-scaling-core-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.038049544932197775
+    },
+    {
+      "page": "08-print-scaling-core-2.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.2783435128258615,
+      "reviewed_antialiasing": "Reviewed renderer antialiasing at horizontal table edges (rows 116/376/377 at 96dpi). Unchanged frozen raster; old/new PDF have 371 identical path types, unchanged stroke widths, <=0.000016pt path bounds and <=0.000062pt glyph origins; 345 glyph IDs unchanged. Core and current full reference rasters are identical. See frozen core/scaling.pdf and compare-core-removal-baselines.py."
+    },
+    {
+      "page": "09-cell-border-core-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.08680194961768024
+    }
+  ],
+  "performance": []
+}

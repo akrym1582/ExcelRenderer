@@ -3,7 +3,7 @@
 ## Repository
 
 - `src/ExcelRenderer` is the .NET Standard 2.1 library. `src/ExcelRenderer.Fonts` is the optional font package. `src/ExcelRenderer.Tool` is the .NET 10 CLI. Their tests are under `tests`.
-- The rendering flow is `ExcelReader` → `ReportDocument` (`Model`) → `ReportLayoutEngine` (`Layout`) → `DrawCommandGeneratorPass` (`Drawing`) → `PdfSharpRenderer` or `PngRenderer`. Markdown export consumes `ReportDocument` through a separate path.
+- The rendering flow is `ExcelReader` → `ReportDocument` (`Model`) → `ReportLayoutEngine` (`Layout`) → `DrawCommandGeneratorPass` (`Drawing`) → `PdfRenderer`, `PngRenderer`, or `SvgRenderer`. Markdown export consumes `ReportDocument` through a separate path.
 - Keep parsing, layout, drawing commands, and output rendering in their respective layers. Add layout behavior as an `IReportLayoutPass` and place it deliberately in `ReportLayoutEngine`.
 
 ## Maintaining the main library and Core
@@ -12,10 +12,10 @@
 - `src/ExcelRenderer.Core` is the renamed PDF-only foundation. `ExcelRenderer` references Core; Core must never reference the main library, Fonts, or Tool. Keep Core nonpackable and ship its DLL/XML in the existing main package. Tool must include the same Core DLL.
 - Workbook input validation and generic seekable spool algorithms belong to `ExcelRenderer.OpenXml/Input`. Core retains thin compatibility and metrics adapters. OpenXml must not reference Core, Mapping, rendering, ClosedXML, or font libraries. Core, main, and Mapping may reference OpenXml.
 - Fix shared image-resource, column-width, axis/band, placement, border, style interning/reading, common workbook/cell traversal, sheet/page layout, cell-layer drawing, diagnostic aggregation, and PDF drawing/saving algorithms in Core. Keep public main-library models and APIs in their existing assembly, using explicit adapters at the boundary.
-- Consult [the source ownership table](docs/core-source-map.md). Basic reader, geometry, page planning/building, cell-layer command generation and PDF operations belong to Core. FullLayoutPolicy/FullDrawingExtension/FullPdfRenderer supply product differences; do not restore algorithm copies in public facades.
+- Consult [the source ownership table](docs/core-source-map.md). Basic reader, geometry, page planning/building, cell-layer command generation and PDF operations belong to Core. FullLayoutPolicy/FullDrawingExtension and the main PDF adapters supply product differences; do not restore algorithm copies in public facades.
 - Preserve [Core's supported scope](docs/core.md): one supplied regular font, variation selectors reduced to base characters, PDF only, no shapes, link annotations, range/page selection, or transformed/split images. Preserve the main library's complete feature set.
-- Run both regression suites for shared changes. The converters share Core's PDFsharp font gate in the same load context. Borrow the current conversion's font session in internal measurement/preflight paths; independent public measurement/rendering acquires its own session. Never acquire that gate twice in one path.
-- The gate does not synchronize unrelated PDFsharp users or independently loaded Core DLLs in other AssemblyLoadContexts. Do not retain conversion contexts in global resolver references after conversion.
+- Run both regression suites for shared changes. Native font, subset and drawing resources belong to each conversion. Internal measurement/preflight borrows its scope; independent public measurement/rendering owns and restores its scope. Never add a global conversion lock or retain native handles in public layout results.
+- PDFsharp is prohibited in source, restore graphs and distributions; run `scripts/check-no-pdfsharp.py` after restoring/building all projects. Keep frozen historical PDFs and their hashes unchanged.
 - Keep source ownership, English/Japanese usage guides and validation reports accurate. Historical validation is evidence only for its recorded commit and contract.
 
 ## Changes
@@ -24,7 +24,7 @@
 
 - Coordinates and dimensions in the model and drawing commands are PDF points. Convert to pixels only at PNG output using the requested DPI.
 - Merged ranges use their top-left cell for `RowSpan` and `ColumnSpan`; avoid drawing the remaining cells again.
-- When a drawing command or style changes, check both PDFsharp and SkiaSharp renderers. Preserve Excel line style and width separately when converting borders.
+- When a drawing command or style changes, check PDF, PNG and SVG outputs through the shared Skia primitives. Preserve Excel line style and width separately when converting borders.
 - Japanese fonts are embedded in the optional `ExcelRenderer.Fonts` package. The `ExcelRenderer` library does not depend on that package, while the CLI depends on it transitively. Keep README.md and README.ja.md consistent about package responsibilities, and keep font licenses and `THIRD-PARTY-NOTICES.md` aligned with any font changes.
 - Optional embedded fonts are discovered from DLLs beside `ExcelRenderer.dll`; do not depend on a particular font-package DLL name, and do not let an unloadable or invalid neighboring DLL abort discovery. If no matching resource exists, loose font files are resolved from the `ExcelRenderer.dll` directory tree.
 - Preserve nullable annotations and consider existing callers before changing public APIs. Follow the surrounding C# style and the language used in each file; `README.md` is English and `README.ja.md` is Japanese.

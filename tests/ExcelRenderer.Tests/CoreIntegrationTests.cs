@@ -1,9 +1,8 @@
+using ExcelRenderer.TestFixtures;
+using ExcelRenderer.SkiaSharp;
 using ExcelRenderer.Core.Rendering;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Rendering;
-using ExcelRenderer.TestFixtures;
-using PdfSharp.Fonts;
-using PdfSharp.Pdf.IO;
 using Xunit;
 
 namespace ExcelRenderer.Tests;
@@ -61,7 +60,7 @@ public sealed class CoreIntegrationTests
 
         await ConvertFull(bytes);
         await ConvertCore(bytes);
-        Assert.Null(GlobalFontSettings.FontResolver);
+        Assert.Null(ConversionFontResources.Current);
     }
 
     [Fact]
@@ -102,40 +101,35 @@ public sealed class CoreIntegrationTests
     }
 
     [Fact]
-    public async Task Cancellation_while_waiting_does_not_release_another_font_session()
+    public async Task Cancellation_does_not_dispose_or_replace_caller_font_scope()
     {
+        using var outer = new ConversionFontResources();
         var bytes = Workbook();
         using var cancellation = new CancellationTokenSource();
-        using (var session = PdfSharpFontGate.Acquire())
-        {
-            var pending = PdfSharpFontGate.AcquireAsync(cancellation.Token);
-            Assert.False(pending.IsCompleted);
-            cancellation.Cancel();
-            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => pending);
-            using var secondCancellation = new CancellationTokenSource();
-            secondCancellation.Cancel();
-            Assert.ThrowsAny<OperationCanceledException>(() => PdfSharpFontGate.Acquire(secondCancellation.Token));
-        }
-
-        await ConvertFull(bytes);
+        cancellation.Cancel();
+        using var input = new MemoryStream(bytes);
+        using var output = new MemoryStream();
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => Core.ExcelConverter.ConvertAsync(input, output, CoreOptions(), cancellation.Token));
+        Assert.Same(outer, ConversionFontResources.Current);
         await ConvertCore(bytes);
+        Assert.Same(outer, ConversionFontResources.Current);
     }
 
     [Fact]
     public async Task Public_finalized_layout_can_be_rendered_after_a_core_conversion()
     {
         var manager = new FontManager(new FontOptions { AllowSystemFonts = false });
-        var measurer = new PdfSharp.PdfSharpTextMeasurer(manager);
+        var measurer = new SkiaTextMeasurer(manager);
         var style = Model.CellStyle.Default;
         var layout = measurer.Layout("日本語 ABC", style.Font, 300, false);
         await ConvertCore(Workbook());
         using var output = new MemoryStream();
-        new PdfSharp.PdfSharpRenderer(manager).Render(
+        new Pdf.PdfRenderer(manager).Render(
             [new Drawing.DrawTextCommand(1, new(20, 20, 300, 60), "日本語 ABC", style) { TextLayout = layout }],
             new Model.PageSettings(),
             output);
         output.Position = 0;
-        using var pdf = PdfReader.Open(output, PdfDocumentOpenMode.Import);
+        using var pdf = PdfTestFile.Open(output);
         Assert.Equal(1, pdf.PageCount);
     }
 
@@ -192,15 +186,17 @@ public sealed class CoreIntegrationTests
             using var output = new MemoryStream();
             await Core.ExcelConverter.ConvertAsync(input, output, new() { FontFilePath = mono });
             output.Position = 0;
-            using var pdf = PdfReader.Open(output, PdfDocumentOpenMode.Import);
+            using var pdf = PdfTestFile.Open(output);
             var fonts = pdf.Pages[0].Elements.GetDictionary("/Resources")!.Elements.GetDictionary("/Font")!;
             var font = fonts.Elements.GetDictionary(fonts.Elements.Keys.First())!;
             var descendant = font.Elements.GetArray("/DescendantFonts")?.Elements.GetDictionary(0) ?? font;
             var embedded = descendant.Elements.GetDictionary("/FontDescriptor")!.Elements.GetDictionary("/FontFile2")!.Stream.UnfilteredValue;
-            var widths = descendant.Elements.GetArray("/W")!.Elements.OfType<global::PdfSharp.Pdf.PdfArray>()
-                .SelectMany(array => array.Elements).OfType<global::PdfSharp.Pdf.PdfInteger>().Select(width => width.Value).ToArray();
+            using var fontData = global::SkiaSharp.SKData.CreateCopy(embedded);
+            using var fontFace = global::SkiaSharp.SKTypeface.FromData(fontData);
+            using var glyphFont = new global::SkiaSharp.SKFont(fontFace, 10);
+            var widths = glyphFont.GetGlyphWidths(glyphFont.GetGlyphs("abc 123"));
             Assert.NotEmpty(widths);
-            Assert.All(widths, width => Assert.Equal(600, width));
+            Assert.All(widths, width => Assert.Equal(6, width));
             if (firstFont is not null) Assert.Equal(firstFont, embedded);
             firstFont = embedded;
             if (iteration == 0)
@@ -213,7 +209,7 @@ public sealed class CoreIntegrationTests
                     OutputFormat = OutputFormat.Pdf,
                     FontOptions = new() { AllowSystemFonts = false },
                 }, failedSink));
-                Assert.Null(GlobalFontSettings.FontResolver);
+                Assert.Null(ConversionFontResources.Current);
             }
         }
 
@@ -224,17 +220,13 @@ public sealed class CoreIntegrationTests
     public void Expired_font_snapshots_are_collectible_while_owned_runs_keep_their_snapshot()
     {
         var expired = RegisterUnownedSnapshot();
-        var retained = new ResolvedFont("retained", 400, false, "memory") { FaceId = Guid.NewGuid().ToString(), FontData = new byte[8192] };
-        var retainedKey = PdfSharp.PdfSharpFontResolver.RegisterResolvedFont(retained);
-        GC.Collect();
-        GC.WaitForPendingFinalizers();
-        GC.Collect();
+        var retained = new ResolvedFont("retained", 400, false, "memory") { FontData = File.ReadAllBytes(CoreOptions().FontFilePath) };
+        using var resources = new ConversionFontResources();
+        var snapshot = resources.GetFace(retained);
+        GC.Collect(); GC.WaitForPendingFinalizers(); GC.Collect();
         Assert.False(expired.Owner.IsAlive);
         Assert.False(expired.Bytes.IsAlive);
-        PdfSharp.PdfSharpFontResolver.RemoveExpiredRegistrations();
-        var resolver = new PdfSharp.PdfSharpFontResolver();
-        Assert.Null(resolver.GetFont(expired.Key));
-        Assert.Equal(retained.FontData, resolver.GetFont(retainedKey));
+        Assert.Equal(retained.FontData, snapshot.Data);
         GC.KeepAlive(retained);
     }
 
@@ -257,7 +249,7 @@ public sealed class CoreIntegrationTests
                 if (iteration % 2 == 0) await ConvertCore(bytes);
                 else await ConvertFull(bytes);
                 Assert.Equal(created, disposed);
-                Assert.Null(GlobalFontSettings.FontResolver);
+                Assert.Null(ConversionFontResources.Current);
                 Assert.Null(Rendering.RenderResourceSession.Current);
                 Assert.Same(previousImages, Core.Rendering.ImageResources.Current);
             }
@@ -273,9 +265,10 @@ public sealed class CoreIntegrationTests
     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
     private static (string Key, WeakReference Owner, WeakReference Bytes) RegisterUnownedSnapshot()
     {
-        var font = new ResolvedFont("expired", 400, false, "memory") { FaceId = Guid.NewGuid().ToString(), FontData = new byte[8192] };
-        var key = PdfSharp.PdfSharpFontResolver.RegisterResolvedFont(font);
-        return (key, new WeakReference(font), new WeakReference(new PdfSharp.PdfSharpFontResolver().GetFont(key)!));
+        var font = new ResolvedFont("expired", 400, false, "memory") { FontData = File.ReadAllBytes(CoreOptions().FontFilePath) };
+        using var resources = new ConversionFontResources();
+        var face = resources.GetFace(font);
+        return (face.Identity, new WeakReference(font), new WeakReference(face.Data));
     }
 
     private static Core.PdfExportOptions CoreOptions() => new()
@@ -296,7 +289,7 @@ public sealed class CoreIntegrationTests
         var result = await Core.ExcelConverter.ConvertAsync(input, output, CoreOptions());
         Assert.Equal(1, result.PageCount);
         output.Position = 0;
-        using var document = PdfReader.Open(output, PdfDocumentOpenMode.Import);
+        using var document = PdfTestFile.Open(output);
         Assert.Equal(1, document.PageCount);
         Assert.True(input.CanRead);
         Assert.True(output.CanWrite);
@@ -313,7 +306,7 @@ public sealed class CoreIntegrationTests
         }, sink);
         Assert.Single(result.Pages);
         sink.Output.Position = 0;
-        using var document = PdfReader.Open(sink.Output, PdfDocumentOpenMode.Import);
+        using var document = PdfTestFile.Open(sink.Output);
         Assert.Equal(1, document.PageCount);
         sink.Output.Dispose();
     }

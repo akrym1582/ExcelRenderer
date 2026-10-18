@@ -1,5 +1,5 @@
 using ExcelRenderer.Core.Drawing;
-using PdfSharp.Drawing;
+using SkiaSharp;
 
 namespace ExcelRenderer.Core.Extensibility;
 
@@ -9,5 +9,5 @@ internal interface ICorePdfTextPainter
     /// <summary>Paints a single text command.</summary>
     /// <param name="graphics">The page graphics owned by the renderer.</param>
     /// <param name="command">The finalized command.</param>
-    void Paint(XGraphics graphics, DrawTextCommand command);
+    void Paint(SKCanvas graphics, DrawTextCommand command);
 }

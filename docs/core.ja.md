@@ -29,9 +29,9 @@ Console.WriteLine(result.PageCount);
 
 ## フォントと表示
 
-呼出し側が指定する静的TrueTypeアウトラインの単一sfntを使います。拡張子では判定しません。テーブル範囲・必須テーブル・可変/CFF形式を検証し、SkiaSharpとPDFsharpで読込みを確認してからページを生成します。TTC/OTC、CFF OTF、可変フォント、WOFF/TTEは対象外です。破損・未対応形式は`InvalidDataException`、不存在は`FileNotFoundException`です。
+呼出し側が指定する静的TrueTypeアウトラインの単一sfntを使います。拡張子では判定しません。テーブル範囲・必須テーブル・可変/CFF形式を検証し、SkiaSharpで読込みを確認してからページを生成します。TTC/OTC、CFF OTF、可変フォント、WOFF/TTEは対象外です。破損・未対応形式は`InvalidDataException`、不存在は`FileNotFoundException`です。
 
-フォントbytesは変換ごとに一度読み、同じsnapshotで列幅・行高・文字幅・PDF描画を処理します。セルとヘッダー/フッターは通常書体に統一します。太字・斜体の疑似描画、フォント探索・fallback、IVSの異体字形の再現、外字・カラー絵文字の特別処理はありません。セルとヘッダー/フッターの異体字セレクター（U+FE00–U+FE0F、U+E0100–U+E01EF）は計測・描画前に除去し、基底文字を表示します。例えば「葛」＋IVSは「葛」として表示し、セレクター由来の追加の豆腐や文字幅は生成しません。基底文字自体が指定フォントに未収録の場合の表示は保証しません。サイズ・色・下線を維持します。未収録文字は指定フォント/PDFsharpの通常動作に従い、すべてのUnicode文字の表示は保証しません。フォント置換によりExcel原本と列幅や折返しが変わることがあります。
+フォントbytesは変換ごとに一度読み、同じsnapshotで列幅・行高・文字幅・PDF描画を処理します。セルとヘッダー/フッターは通常書体に統一します。太字・斜体の疑似描画、フォント探索・fallback、IVSの異体字形の再現、外字・カラー絵文字の特別処理はありません。セルとヘッダー/フッターの異体字セレクター（U+FE00–U+FE0F、U+E0100–U+E01EF）は計測・描画前に除去し、基底文字を表示します。例えば「葛」＋IVSは「葛」として表示し、セレクター由来の追加の豆腐や文字幅は生成しません。基底文字自体が指定フォントに未収録の場合の表示は保証しません。サイズ・色・下線を維持します。未収録文字は指定フォント/Skiaの欠字表示に従い、すべてのUnicode文字の表示は保証しません。フォント置換によりExcel原本と列幅や折返しが変わることがあります。
 
 ## 印刷と画像
 
@@ -53,9 +53,19 @@ APIのセル範囲、ページ抽出、trim、連続画像、PNG/SVG/Markdownは
 dotnet run --project samples/ExcelRenderer.Core.Sample -c Release -- input.xlsx output.pdf /fonts/font.ttf
 ```
 
-1ページのpayloadだけを生成して最終PdfDocumentへAppendPageし、Saveは1回です。文字layout cacheは512件・文字列2048まで、画像cacheの推定decoded資源上限は64MiBです。画像leaseとnative資源は変換内で解放します。ただしClosedXMLモデルと最終PDF文書は保持され、PDFsharpが文書に保持する画像はcache上限とは別です。定メモリやRSS削減率は保証しません。SkiaSharp/native DLLは画像decode・行高・列幅の計測に必要です。
+font収集と描画の各passで1ページのpayloadだけを生成します。Coreが共通Skia文書・subset・
+基本描画・incremental finalizerを所有します。文字cacheは512件・2048文字まで、decoded画像の
+推定cache上限は64MiBです。PDF中間spoolは8MiBを超えると一時ファイルを使い、成功・失敗時に
+削除します。入力spoolの設定とは独立しています。Skia文書の資源も保持するため定メモリではありません。
 
-Core内のSemaphoreSlimでPDFsharpフォントresetから計測・描画・Save・文書解放まで直列化します。待機はキャンセル可能です。異なるフォントのCore呼出しは連続・並行で利用できます。同じCore DLL/load contextを使う通常版との同一process混在は共有gateで同期します。他ライブラリのPDFsharp操作や別AssemblyLoadContextは対象外です。旧版との比較は別processで実施します。
+フォントは一度の読込によるimmutable snapshotで計測・描画し、ptのadvanceと96dpiの丸めMDWを
+区別します。グローバルresolver/reset/gateはありません。main/Coreの混在並列でもnative資源を
+変換scopeごとに所有します。CoreにもSkiaSharpと固定版HarfBuzz subset adapterが必要です。
+Pythonや外部PDF readerは製品runtimeの要件ではありません。
+
+限定finalizerは用紙box精度0.001pt、RGB page group、画像補間を維持し、元のcontent/font/画像
+stream bytesを保持します。画像辞書の追記revisionは圧縮済み画像bytesを再掲するため、画像の
+多い出力は大きくなる場合があります。
 
 ## ソースと保守
 
@@ -75,6 +85,6 @@ Core内のSemaphoreSlimでPDFsharpフォントresetから計測・描画・Save�
 
 Full reader/layout/drawing/PDF adapterが高機能部分を拡張し、本体の公開APIは既存assemblyに維持します。[構成](core-architecture.ja.md)、[検証結果](core-refactor-validation.md)と[所有者表](core-source-map.md)を参照してください。
 
-同じload contextの同じCore DLLを利用する本体/Core converterは共有font gateを使います。外部PDFsharp利用者や別AssemblyLoadContextのCoreは同期対象外です。本体とCoreは同じbuildから配布してください。
+本体/Coreは同じ共通実装を利用し、資源は変換単位で所有します。本体とCoreは同じbuildから配布してください。[撤去の検証記録](pdfsharp-removal-validation.md)も参照してください。
 
 Core の Reader は `PdfExportOptions.ReadOptions` から選択できます。[エンジン選択](openxml-integration.ja.md)を参照してください。汎用の入力検査・spool は共有 OpenXml 依存に移管しています。

@@ -10,12 +10,11 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DocumentFormat.OpenXml" Version="3.3.0" />
-    <PackageReference Include="PDFsharp" Version="6.2.3" />
-    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="8.0.2" />
     <PackageReference Include="SkiaSharp" Version="4.151.0" />
     <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="4.151.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../ExcelRenderer.OpenXml/ExcelRenderer.OpenXml.csproj" />
   </ItemGroup>
+  <Import Project="../../build/HarfBuzzSubset.targets" />
 </Project>

@@ -1,10 +1,10 @@
+using ExcelRenderer.TestFixtures;
 using ExcelRenderer.Abstractions;
 using ExcelRenderer.Drawing;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Model;
-using ExcelRenderer.PdfSharp;
-using PdfSharp.Pdf.Content;
-using PdfSharp.Pdf.IO;
+using ExcelRenderer.Pdf;
+using ExcelRenderer.SkiaSharp;
 using SkiaSharp;
 
 namespace ExcelRenderer.Tests;
@@ -56,7 +56,7 @@ internal static class OutputFixture
     internal static byte[] Pdf(DrawTextCommand command)
     {
         using var output = new MemoryStream();
-        new PdfSharpRenderer().Render([command], Page, output);
+        new PdfRenderer().Render([command], Page, output);
         return output.ToArray();
     }
 
@@ -65,8 +65,8 @@ internal static class OutputFixture
     internal static string Content(byte[] bytes)
     {
         using var input = new MemoryStream(bytes);
-        using var document = PdfReader.Open(input, PdfDocumentOpenMode.Import);
-        return string.Join("\n", ContentReader.ReadContent(document.Pages[0]).Cast<global::PdfSharp.Pdf.Content.Objects.COperator>().Select(op => string.Join(" ", op.Operands.Cast<global::PdfSharp.Pdf.Content.Objects.CObject>().Select(x => x.ToString())) + " " + op.OpCode.Name));
+        using var document = PdfTestFile.Open(input);
+        return string.Join("\n", PdfTestContent.ReadContent(document.Pages[0]).Cast<COperator>().Select(op => string.Join(" ", op.Operands.Cast<CObject>().Select(x => x.ToString())) + " " + op.OpCode.Name));
     }
 
     /// <summary>すべての要求を固定の Noto Sans JP 書体へ解決する、出力比較用のフォント管理です。</summary>

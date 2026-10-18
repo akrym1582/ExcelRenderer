@@ -5,8 +5,6 @@ using ExcelRenderer.Core.Input;
 using ExcelRenderer.Core.Layout;
 using ExcelRenderer.Core.Pdf;
 using ExcelRenderer.Core.Rendering;
-using PdfSharp.Fonts;
-using PdfSharp.Pdf;
 
 namespace ExcelRenderer.Core;
 
@@ -49,68 +47,66 @@ public static class ExcelConverter
         (options.ReadOptions ?? throw new ArgumentException("ReadOptions is required.", nameof(options))).Validate();
         cancellationToken.ThrowIfCancellationRequested();
         using var prepared = await WorkbookInputPreparer.ReadAsync(xlsx, options.Input, cancellationToken).ConfigureAwait(false);
-        var fontSession = await PdfSharpFontGate.AcquireAsync(cancellationToken).ConfigureAwait(false);
-        try
+        using var font = new SingleFontContext(options.FontFilePath);
+        var diagnostics = new DiagnosticCollector();
+        var reader = new CoreExcelReader(font);
+        var report = reader.Read(prepared, diagnostics, options.SheetName is null ? null : new[] { options.SheetName }, cancellationToken, options.ReadOptions);
+        cancellationToken.ThrowIfCancellationRequested();
+        var measurer = new SkiaTextMeasurer(font);
+        var engine = new ReportLayoutEngine(measurer);
+        var plans = report.Sheets.Select(sheet => (Sheet: sheet, Plans: engine.Plan(sheet))).ToArray();
+        using var renderer = new CorePdfRenderer(font, cancellationToken) { DiagnosticHandler = diagnostics.Add };
+        var generator = new DrawCommandGeneratorPass();
+        var timestamp = DateTime.Now;
+        using var images = new ImageResources();
+        var number = 0;
+        for (var pass = 0; pass < 2; pass++)
         {
-            using var font = new SingleFontContext(options.FontFilePath);
-            GlobalFontSettings.ResetFontManagement();
-            GlobalFontSettings.FontResolver = font.Resolver;
-            try
+            if (pass == 1)
             {
-                font.ValidatePdfFont();
-                var diagnostics = new DiagnosticCollector();
-                var reader = new CoreExcelReader(font);
-                var report = reader.Read(prepared, diagnostics, options.SheetName is null ? null : new[] { options.SheetName }, cancellationToken, options.ReadOptions);
-                cancellationToken.ThrowIfCancellationRequested();
-                var measurer = new PdfSharpTextMeasurer(font);
-                var engine = new ReportLayoutEngine(measurer);
-                var plans = report.Sheets.Select(sheet => (Sheet: sheet, Plans: engine.Plan(sheet))).ToArray();
-                var renderer = new CorePdfRenderer(font) { DiagnosticHandler = diagnostics.Add };
-                var generator = new DrawCommandGeneratorPass();
-                var timestamp = DateTime.Now;
-                using var images = new ImageResources();
-                using var document = new PdfDocument();
-                var number = 0;
-                foreach (var entry in plans)
+                renderer.Prepare();
+            }
+
+            number = 0;
+            foreach (var entry in plans)
+            {
+                var sheetCount = entry.Plans.Sum(plan => plan.Pages.Count);
+                var sheetNumber = 0;
+                foreach (var plan in entry.Plans)
                 {
-                    var sheetCount = entry.Plans.Sum(plan => plan.Pages.Count);
-                    var sheetNumber = 0;
-                    foreach (var plan in entry.Plans)
+                    for (var index = 0; index < plan.Pages.Count; index++)
                     {
-                        for (var index = 0; index < plan.Pages.Count; index++)
+                        cancellationToken.ThrowIfCancellationRequested();
+                        ConversionMetrics.Report("pagePayloadActive", 1);
+                        try
                         {
-                            cancellationToken.ThrowIfCancellationRequested();
-                            ConversionMetrics.Report("pagePayloadActive", 1);
-                            try
+                            var page = plan.Build(index, ++number, sheetCount, measurer, cancellationToken) with
                             {
-                                var page = plan.Build(index, ++number, sheetCount, measurer, cancellationToken) with
-                                {
-                                    HeaderFooterTexts = PaginationPass.GetHeaderFooterTexts(entry.Sheet, ++sheetNumber, sheetCount, timestamp),
-                                };
-                                renderer.AppendPage(document, entry.Sheet.PageSettings, generator.GeneratePage(page, measurer));
-                            }
-                            finally
+                                HeaderFooterTexts = PaginationPass.GetHeaderFooterTexts(entry.Sheet, ++sheetNumber, sheetCount, timestamp),
+                            };
+                            var commands = generator.GeneratePage(page, measurer);
+                            if (pass == 0)
                             {
-                                ConversionMetrics.Report("pagePayloadActive", 0);
+                                renderer.Collect(commands);
                             }
+                            else
+                            {
+                                renderer.AppendPage(entry.Sheet.PageSettings, commands);
+                            }
+                        }
+                        finally
+                        {
+                            ConversionMetrics.Report("pagePayloadActive", 0);
                         }
                     }
                 }
+            }
+        }
 
-                cancellationToken.ThrowIfCancellationRequested();
-                using var destination = new CancellationWriteStream(pdf, cancellationToken);
-                CorePdfRenderer.Save(document, destination);
-                cancellationToken.ThrowIfCancellationRequested();
-                return new(number, diagnostics.ToArray().Select(item => new ConversionDiagnostic(item.Code, item.Message, item.SheetName, item.SourcePageNumber)).ToArray());
-            }
-            finally
-            {
-                GlobalFontSettings.ResetFontManagement();
-            }
-        }
-        finally
-        {
-            fontSession.Dispose();
-        }
+        cancellationToken.ThrowIfCancellationRequested();
+        using var destination = new CancellationWriteStream(pdf, cancellationToken);
+        renderer.Complete(destination);
+        cancellationToken.ThrowIfCancellationRequested();
+        return new(number, diagnostics.ToArray().Select(item => new ConversionDiagnostic(item.Code, item.Message, item.SheetName, item.SourcePageNumber)).ToArray());
     }
 }

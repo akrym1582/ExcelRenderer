@@ -1,8 +1,10 @@
+using ExcelRenderer.TestFixtures;
 using ExcelRenderer.Drawing;
 using ExcelRenderer.Excel;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Model;
-using ExcelRenderer.PdfSharp;
+using ExcelRenderer.Pdf;
+using ExcelRenderer.SkiaSharp;
 using Xunit;
 
 namespace ExcelRenderer.Tests;
@@ -69,7 +71,7 @@ public sealed class ReaderAnchorRegressionTests
                 ["one"] = new(x, y, 30, 22.5),
                 ["two"] = new(x, y, ColumnStart(5) + 3.75 - x, RowStart(6) + 7.5 - y),
             };
-            var engine = new ReportLayoutEngine(new PdfSharpTextMeasurer(new OutputFixture.FixedManager()));
+            var engine = new ReportLayoutEngine(new SkiaTextMeasurer(new OutputFixture.FixedManager()));
             var document = engine.Layout(sheet);
             var page = Assert.Single(document.Pages);
             Assert.Equal(3, page.Images!.Count);

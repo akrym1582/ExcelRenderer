@@ -124,7 +124,7 @@ internal static class DrawCommandBounds
             return null;
         }
 
-        var layout = command.TextLayout ?? new PdfSharp.PdfSharpTextMeasurer(fonts).Layout(
+        var layout = command.TextLayout ?? new SkiaSharp.SkiaTextMeasurer(fonts, cacheLayouts: true).Layout(
             command.Text,
             command.Style.Font,
             command.Bounds.Width,

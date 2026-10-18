@@ -163,3 +163,35 @@ native cache high-water marks from resources retained per conversion. See
 conditions, exceptions and the exact baseline provenance.
 
 Use `--inputs artifacts/pdf-removal-benchmark` to reuse the exact generated workbook bytes for controlled reruns; every selected input hash is recorded. Initial grouped-stage measurements remain separate evidence when the protocol is corrected.
+
+
+## Follow-up performance review
+
+`layout-case plain|rich|rich-wrap [count]` isolates unique text layout from input,
+drawing and saving. It uses one conversion font scope per batch, three warm-up
+batches and one measured batch, explicit Noto Sans JP and no system/font-pack
+lookup. `plain` uses about 3,200 UTF-16 units per cell; `rich` uses two such style
+segments; `rich-wrap` uses shorter mixed-size text at 80pt. Default batch size is
+30. Unique prefixes and the long cases avoid relying on repeated whole-layout
+cache hits. Font discovery, result hashing and scope disposal are outside this
+microbenchmark's timer. End-to-end `render-case` includes conversion teardown.
+
+```bash
+source scripts/test-fonts.sh
+dotnet tools/ExcelRenderer.Performance/bin/Release/net10.0/ExcelRenderer.Performance.dll layout-case rich 30
+python3 tools/ExcelRenderer.Performance/review-performance.py \
+  --before /workspace/pdf-removal-review-before/ExcelRenderer.Performance.dll \
+  --after tools/ExcelRenderer.Performance/bin/Release/net10.0/ExcelRenderer.Performance.dll \
+  --inputs artifacts/pdf-removal-benchmark --output artifacts/pdf-review
+```
+
+Save the unchanged before-product DLLs and dependencies outside the repository
+before rebuilding. Copy the newly built benchmark DLL/PDB (only the harness) into
+that directory so both products run identical instrumentation. The review runner
+records hashes, inputs, five fresh-process rounds, three warm-ups and alternating
+before/after order. It covers seven PDF workloads at concurrency 1, rich text at
+4/8, all three layout microbenchmarks, and direct PNG/SVG text output. It records
+all samples, medians and maxima without claiming a universal speedup. Layout
+text/style/dimensions/origins hashes and direct-image bytes must match. Independent
+PDF/regression comparisons remain required. `--only layout-` selects a focused
+investigation without generating new input. See [the follow-up review](../../docs/rendering-performance-review.md).

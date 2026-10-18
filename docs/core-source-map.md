@@ -214,7 +214,7 @@ Core owns `Fonts/SkiaFontFace`, `Fonts/GlyphSequence`, `Layout/TextLineBreaker`,
 Core's single-font measurer/renderer compose those primitives. They do not reference main/Fonts/Tool.
 
 Main owns `SkiaSharp/SkiaTextMeasurer` (fallback, IVS, rich text policy),
-`Fonts/ConversionFontResources` / `ResolvedGlyphLayout`, `Pdf/PdfRenderer`,
+`Fonts/ConversionFontResources` / `ResolvedGlyphLayout` / `TextRunBuilder`, `Pdf/PdfRenderer`,
 `Pdf/PdfCommandFinalizer`, `SkiaSharp/SkiaPdfFonts` and `SkiaPdfDocumentWriter` adapters.
 `SkiaDrawingContext` supplies shapes/viewports/transformed images and delegates cell
 border algorithms to Core. PNG/SVG use the same finalized glyph identities and line/run point geometry, retaining the existing PNG/SVG native raster advance policy.
@@ -229,3 +229,13 @@ standalone product still emits no annotations. Image failures share
 See [the inventory](pdfsharp-removal-inventory.md), [migration](pdfsharp-migration.md)
 and [validation](pdfsharp-removal-validation.md). Earlier source paths in this table
 record provenance only; the old implementations are available in Git history.
+
+
+The follow-up text review keeps scalable advance arithmetic and color-strike
+measurement in `Core/Fonts/SkiaFontFace`: glyph batches share the native color
+measurement call, and positioning no longer creates a temporary collection per
+glyph. The Core measurer selects each line's glyphs once. Main's `TextRunBuilder`
+owns the existing full-product contiguous-run merge rules (physical face,
+explicit glyphs, missing-glyph flags and UTF-16 continuity); it does not select
+fonts. Rich measurement and finalization use one style-segment coalescer.
+See [the follow-up measurements](rendering-performance-review.md).

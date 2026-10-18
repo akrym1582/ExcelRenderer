@@ -1,0 +1,63 @@
+{
+  "implementationCommit": "104d685a8a106daf5de3487630cc98057e973aae",
+  "validatedCommit": "8145afee4df7a45f5b6ebca911b34e63c90d6a35",
+  "run": 128,
+  "runId": 39120859579,
+  "url": "https://github.com/akrym1582/ExcelRenderer/actions/runs/39120859579",
+  "jobs": [
+    {
+      "id": 117656006134,
+      "name": "Run unit tests",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 117656006291,
+      "name": "Formulas (windows-latest)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 117656006300,
+      "name": "Core (ubuntu-latest)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 117656006322,
+      "name": "Core (windows-latest)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 117656006347,
+      "name": "pdf-native / native (windows-latest)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 117656006363,
+      "name": "Formulas (ubuntu-latest)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 117656006385,
+      "name": "pdf-native / native (ubuntu-22.04)",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "earlierFailures": [
+    {
+      "run": 126,
+      "cause": "FreeType vs DirectWrite floating-point order in frozen baseline test",
+      "resolution": "Independent table-derived platform expectations; unchanged numerical threshold"
+    },
+    {
+      "run": 127,
+      "cause": "Git autocrlf changed hash-pinned historical JSON bytes",
+      "resolution": "Canonical LF JSON and byte-preserved frozen captures; original hashes retained"
+    }
+  ]
+}

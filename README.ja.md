@@ -786,3 +786,5 @@ Core は単一 regular static TrueType font と IVS の基底文字化を維持�
 [撤去の検証記録](docs/pdfsharp-removal-validation.md)、
 [固定 A/B/C 比較](tools/ExcelRenderer.PdfComparison/README.md)、
 [第1段階の履歴記録](docs/skia-pdf-validation.md)も参照してください。
+
+長い一意な文字列・PDF変換全体・直接PNG/SVG出力を再点検した結果は、[性能レビュー](docs/rendering-performance-review.md)を参照してください。

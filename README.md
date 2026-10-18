@@ -819,3 +819,5 @@ single regular static TrueType font and variation-selector-to-base policy.
 See [removal verification](docs/pdfsharp-removal-validation.md),
 [the frozen A/B/C comparison procedure](tools/ExcelRenderer.PdfComparison/README.md),
 and the [historical first-stage results](docs/skia-pdf-validation.md).
+
+Follow-up measurements of unique long text, complete PDF conversion and direct PNG/SVG output are recorded in the [performance review](docs/rendering-performance-review.md).

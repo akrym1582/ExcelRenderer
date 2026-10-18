@@ -1,5 +1,9 @@
 # PDFsharp removal validation
 
+The later performance/refactoring review and current CI status are recorded in
+[the follow-up report](rendering-performance-review.md). The measurements below
+remain evidence for their recorded implementation.
+
 This report describes the work on `feature/remove-pdfsharp`, based on
 `71deba48ea4a397641c9ad155bc1c8b3ddf8b5d9`. The first-stage draft PR #89 is
 unmerged; fetched main remains `8d23c0725f60126f5e38c9a9e9a612a6d276b93a`.
@@ -278,12 +282,12 @@ hairlines, clipped/rotated images and header/footer positions. Expected Unicode,
 dimensions and link targets are in each fixture's frozen `expected.json`.
 Automated checks do not substitute for those viewer checks.
 
-The mandatory Windows/native gate remains outstanding, so this report does not
-claim that every completion condition is satisfied. The attempted push of
-`feature/remove-pdfsharp` was rejected before execution by automatic approval
-review: the removal plan §0 explicitly excludes remote push and PR publication,
-and the earlier first-stage draft-PR instruction was judged insufficient for this
-stage. No remote branch or second-stage PR has been created. Explicit fresh
-user authorization is required before pushing this branch, opening its draft PR
-and running the remote Windows workflow. No alternate publication route is used.
-Merge and package publication remain separate release work.
+At the time of the recorded local run, the mandatory Windows/native gate was
+outstanding. Automatic approval review initially rejected push under plan §0.
+The user subsequently explicitly authorized a draft PR and branch updates;
+[draft PR #90](https://github.com/akrym1582/ExcelRenderer/pull/90) is now open on
+`feature/remove-pdfsharp`, stacked on #89. The follow-up report records the actual
+Windows runs, the source-backed native-metric rounding diagnosis and the final
+verification status. The prior blocked status in the frozen JSON remains historical
+evidence, not the present publication status. Merge and package publication remain
+separate release work.

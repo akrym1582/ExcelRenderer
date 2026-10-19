@@ -1,7 +1,7 @@
 using System.Text.Json;
 using ExcelRenderer.Formulas.Oracle;
 using ExcelRenderer.OpenXml.Calculation;
-using ExcelRenderer.OpenXml.Reading;
+using ExcelRenderer.OpenXml.Reader;
 using Xunit;
 
 namespace ExcelRenderer.OpenXml.Tests;

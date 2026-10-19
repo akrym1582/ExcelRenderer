@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using ExcelRenderer.Formulas.References;
 using ExcelRenderer.Formulas.Syntax;
-using ExcelRenderer.OpenXml.Model.Cells;
+using ExcelRenderer.OpenXml.Reader.Model.Cells;
 using ExcelRenderer.OpenXml.Writing.Plans;
 
 namespace ExcelRenderer.OpenXml.References;

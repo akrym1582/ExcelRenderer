@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading;
 using System.Xml;
 using System.Xml.Linq;
-using ExcelRenderer.OpenXml.Diagnostics;
-using ExcelRenderer.OpenXml.Input;
-using ExcelRenderer.OpenXml.Model.Cells;
+using ExcelRenderer.OpenXml.Reader.Diagnostics;
+using ExcelRenderer.OpenXml.Reader.Input;
+using ExcelRenderer.OpenXml.Reader.Model.Cells;
 using ExcelRenderer.OpenXml.Writing.Plans;
 
 namespace ExcelRenderer.OpenXml.Writing;

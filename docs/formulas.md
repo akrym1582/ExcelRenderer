@@ -23,8 +23,7 @@ var document = new ExcelRenderer.Excel.ExcelReader().Read(input,
     });
 ```
 
-Core offers the corresponding `ExcelRenderer.Core.FormulaDisplayMode.Recalculate`
-in `PdfExportOptions.ReadOptions`. Main PDF, PNG, SVG and Markdown APIs use their
+Core reads saved values only and no longer exposes formula mode/evaluation options. Use main rendering or WorkbookRecalculator for explicit recalculation. See [Reader split migration](openxml-reader-split.md). Main PDF, PNG, SVG and Markdown APIs use their
 existing `ReadOptions`. CLI rendering commands accept `--formula-mode recalculate`;
 `--formula-mode cached` remains the default. Historical `Legacy` mode is rejected.
 

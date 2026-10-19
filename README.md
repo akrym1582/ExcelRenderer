@@ -56,8 +56,8 @@ Choose the package for your task:
 | `ExcelRenderer.Fonts` | Add optional bundled Japanese and emoji fonts for rendering | Use alongside `ExcelRenderer` |
 | `ExcelRenderer.Tool` | Map and convert workbooks from the command line | .NET 10 SDK |
 
-These are the four published NuGet packages. `ExcelRenderer.Formulas` and
-`ExcelRenderer.OpenXml` are separate assemblies bundled in both `ExcelRenderer`
+These are the four published NuGet packages. `ExcelRenderer.OpenXml.Reader`,
+`ExcelRenderer.Formulas` and `ExcelRenderer.OpenXml` are separate assemblies bundled in both `ExcelRenderer`
 and `ExcelRenderer.Mapping`, not installable package IDs. For their APIs, install
 either package as shown [below](#formula-and-low-level-xlsx-apis).
 
@@ -126,12 +126,14 @@ If your application already references `ExcelRenderer` 1.9.1, it provides the sa
 Formulas/OpenXml APIs; no additional package is needed. When using both main and
 Mapping, keep their versions aligned. Fonts are unnecessary for these APIs.
 
+The following Reader imports require packages built from this source revision. Released 1.9.1 uses the previous OpenXml.Reading namespace. See [split migration](docs/openxml-reader-split.md).
+
 ```csharp
 using ExcelRenderer.Formulas.Data;
 using ExcelRenderer.Formulas.Evaluation;
 using ExcelRenderer.Formulas.References;
 using ExcelRenderer.Formulas.Syntax;
-using ExcelRenderer.OpenXml.Reading;
+using ExcelRenderer.OpenXml.Reader;
 
 var source = new InMemoryFormulaWorkbook.Builder().AddSheet("Invoice").Build();
 var result = new FormulaEngine().Evaluate(
@@ -539,13 +541,13 @@ service remains the default. No additional glyph measurement is done just for di
 Reader and Mapping always use OpenXml. See
 [workbook APIs, CLI usage, supported scope and stream guarantees](docs/openxml-integration.md).
 Existing callers can follow the [engine-selection migration](docs/engine-selection-removal.md).
-`ExcelRenderer.OpenXml` provides the shared reader, writer and input handling;
+`ExcelRenderer.OpenXml.Reader` provides reading and input handling; `ExcelRenderer.OpenXml` provides writing and recalculation;
 ClosedXML has been removed from the libraries, CLI, tests and tools. The Reader style
 API has changed to `ExcelStyleConverter.Convert(CellStyleInfo, CellValueType)`; see
 [breaking changes and migration](docs/closedxml-removal-compatibility.md). Low-level APIs are documented in the
 [OpenXml reader reference](docs/openxml-reader.md).
 
-Formula display defaults to `FormulaDisplayMode.CachedValue` in Core, the main
+Core always displays saved formula values. Formula display defaults to `FormulaDisplayMode.CachedValue` in the main
 Reader, export APIs and CLI (`--formula-mode cached`). Saved results may be stale;
 missing caches produce `FormulaCachedValueMissing`. Opt in to the limited built-in
 calculator with `FormulaDisplayMode.Recalculate` or `--formula-mode recalculate`.
@@ -718,7 +720,7 @@ The Formulas/OpenXml API namespaces now follow their source folders. See the
 
 
 NuGet publication is limited to `ExcelRenderer`, `ExcelRenderer.Mapping`,
-`ExcelRenderer.Tool` and `ExcelRenderer.Fonts`. Core, OpenXml and Formulas are
+`ExcelRenderer.Tool` and `ExcelRenderer.Fonts`. Core, OpenXml.Reader, OpenXml and Formulas are
 source projects whose assemblies ship inside those packages; they are not published
 separately. See [package distribution](docs/package-distribution.md).
 
@@ -826,3 +828,7 @@ See [removal verification](docs/pdfsharp-removal-validation.md),
 and the [historical first-stage results](docs/skia-pdf-validation.md).
 
 Follow-up measurements of unique long text, complete PDF conversion and direct PNG/SVG output are recorded in the [performance review](docs/rendering-performance-review.md).
+
+### Reader assembly split
+
+`ExcelRenderer.OpenXml.Reader` owns XLSX reading, models, formatting and bounded input. It ships inside the existing main/Mapping/Tool packages. Update low-level imports to `ExcelRenderer.OpenXml.Reader` and its model/formatting/input subnamespaces, then rebuild all consumers. Core references only Reader and renders saved formula values; its formula mode/evaluation options have been removed. Main rendering, Mapping and CLI retain explicit recalculation. See [API migration and validation](docs/openxml-reader-split.md).

@@ -20,4 +20,8 @@
   <ItemGroup>
     <Compile Include="../../tools/ExcelRenderer.Formulas.Oracle/OracleRunner.cs" Link="Oracle/OracleRunner.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/ExcelRenderer.OpenXml.Reader/ExcelRenderer.OpenXml.Reader.csproj" />
+    <ProjectReference Include="../../src/ExcelRenderer.Formulas/ExcelRenderer.Formulas.csproj" />
+  </ItemGroup>
 </Project>

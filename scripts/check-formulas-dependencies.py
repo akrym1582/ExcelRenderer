@@ -23,7 +23,7 @@ for path in (ROOT / 'src').glob('*/*.csproj'):
     assert not any(p.startswith(('ClosedXML', 'NPOI', 'Antlr')) for p in packages), (path, packages)
     for ref in xml.findall('.//ProjectReference'):
         if 'ExcelRenderer.Formulas' in ref.attrib['Include']:
-            assert path.parent.name in {'ExcelRenderer.OpenXml', 'ExcelRenderer.Mapping', 'ExcelRenderer.Core', 'ExcelRenderer'}, path
+            assert path.parent.name in {'ExcelRenderer.OpenXml', 'ExcelRenderer.Mapping', 'ExcelRenderer'}, path
 registered = set(re.findall(r'"([A-Z]+)"', (ENGINE / 'Functions/FunctionRegistry.cs').read_text()))
 for language in ['', '.ja']:
     reference = ROOT / f'docs/formulas-reference{language}.md'

@@ -1,6 +1,5 @@
 # ExcelRenderer Core
 
-> 明示再計算モードを追加しました。[数式計算ガイド](formulas.ja.md)が評価範囲・キャッシュ失効・対応機能の現在の仕様です。以下の保存値／数式拒否の説明は、特記のない限り既定の CachedValue モードに適用します。
 
 [English](core.md) | 日本語
 
@@ -39,7 +38,7 @@ nullのSheetNameは非表示状態でも追加フィルターせず、ブック�
 
 画像は元画像全体を配置枠へ伸縮し、位置・サイズ・Z順を維持します。開始点が所属する印刷領域のページにだけ出力し、はみ出しはPDFページ境界で切れます。開始点が印刷範囲外なら省略します。後続ページへの複製・分割、繰返し行列由来の画像複製、crop・回転・反転を行いません。同じ開始点を含む複数印刷範囲では領域ごとに印刷します。
 
-図形・吹き出し・図形内文字・クリック可能なPDFリンクは生成しません。リンク付きセルの表示文字を保持し、HYPERLINKを含む数式は元XMLの型付き保存結果だけを表示します。OpenXmlが不変の保存値を直接書式化します。保存結果がなければ空表示と診断を返し、friendly textでは補いません。数式モードの既定はCachedValueで、Legacy は入力処理前に拒否し、Recalculate は数式ガイドに記載した限定計算器を使います。通常セルは通常の書式処理に従います。仕様上無視する図形や画像加工ごとの大量警告は作りません。画像decode失敗などの非致命的な診断はresult.Diagnosticsで取得できます。
+図形・吹き出し・図形内文字・クリック可能なPDFリンクは生成しません。リンク付きセルの表示文字を保持し、HYPERLINKを含む数式は元XMLの型付き保存結果だけを表示します。OpenXml.Readerが不変の保存値を直接書式化します。保存結果がなければ空表示と診断を返し、friendly textでは補いません。Coreは保存結果専用です。CoreのFormulaDisplayModeとFormulaEvaluationOptionsは削除しました。再計算には本体またはOpenXmlの再計算APIを使ってください。通常セルは通常の書式処理に従います。仕様上無視する図形や画像加工ごとの大量警告は作りません。画像decode失敗などの非致命的な診断はresult.Diagnosticsで取得できます。
 
 APIのセル範囲、ページ抽出、trim、連続画像、PNG/SVG/Markdownはありません。
 
@@ -87,6 +86,12 @@ Full reader/layout/drawing/PDF adapterが高機能部分を拡張し、本体の
 
 本体/Coreは同じ共通実装を利用し、資源は変換単位で所有します。本体とCoreは同じbuildから配布してください。[撤去の検証記録](pdfsharp-removal-validation.md)も参照してください。
 
-Core の Reader は `PdfExportOptions.ReadOptions` から選択できます。[エンジン選択](openxml-integration.ja.md)を参照してください。汎用の入力検査・spool は共有 OpenXml 依存に移管しています。
+Coreは常にOpenXml.Readerを使い、保存値を描画します。汎用の入力検査・spoolもReaderが所有します。[統合説明](openxml-integration.ja.md)を参照してください。
 
 コレクションは `PdfExportOptions.FontCollectionIndex`（0始まり、既定0）で選択します。[形式の詳細](managed-truetype-subset.ja.md)を参照してください。
+
+## Reader分離後の依存
+
+Coreが参照する自作プロジェクトは `ExcelRenderer.OpenXml.Reader` だけです。既存OpenXml・Formulasへの直接・推移依存はありません。`PdfExportOptions.ReadOptions` の数式モード・評価オプションを指定していた呼び出しは修正して再ビルドしてください。本体とCLIの明示再計算は維持しています。[移行案内](openxml-reader-split.md)を参照してください。
+
+`python3 scripts/validate-reader-isolation.py` はCore／Reader単独consumerを通常のrestore/build/publishで作り、出力DLL・依存グラフ・AssemblyRefを監査し、Core単独で保存済み数式結果を使ったPDFを生成します。

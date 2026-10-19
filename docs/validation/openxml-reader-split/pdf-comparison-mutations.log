@@ -1,0 +1,6 @@
+1 fixtures; 10 unmet gates; 0 reviewed differences; report: /tmp/pdf-comparison-mutation-m5ko4lc7/index.html
+Detected remove-ivs: 10 unmet gates
+1 fixtures; 6 unmet gates; 0 reviewed differences; report: /tmp/pdf-comparison-mutation-mc0ujox0/index.html
+Detected extra-ink: 6 unmet gates
+Detected font-metrics: independent font evidence rejected corruption
+Detected font-bounds: independent font evidence rejected corruption

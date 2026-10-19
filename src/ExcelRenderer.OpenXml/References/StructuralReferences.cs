@@ -5,8 +5,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
-using ExcelRenderer.OpenXml.Infrastructure;
-using ExcelRenderer.OpenXml.Model.Cells;
+using ExcelRenderer.OpenXml.Reader.Infrastructure;
+using ExcelRenderer.OpenXml.Reader.Model.Cells;
 using ExcelRenderer.OpenXml.Writing.Plans;
 
 namespace ExcelRenderer.OpenXml.References;

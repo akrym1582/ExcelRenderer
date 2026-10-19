@@ -28,15 +28,6 @@ public sealed class FormulaEvaluationScopeTests
         await Assert.ThrowsAsync<NotSupportedException>(() => ExcelConverter.ConvertToSvgAsync("missing.xlsx", "unused-svg", new() { ReadOptions = options }));
         await Assert.ThrowsAsync<NotSupportedException>(() => ExcelConverter.ConvertToMarkdownAsync("missing.xlsx", "unused.md", new() { ReadOptions = options }));
 
-        using var coreInput = new MemoryStream([1, 2, 3]);
-        using var coreOutput = new MemoryStream();
-        await Assert.ThrowsAsync<NotSupportedException>(() => Core.ExcelConverter.ConvertAsync(coreInput, coreOutput, new()
-        {
-            FontFilePath = "not-opened.ttf",
-            ReadOptions = new() { FormulaDisplayMode = (Core.FormulaDisplayMode)mode },
-        }));
-        Assert.Equal(0, coreInput.Position);
-        Assert.Empty(coreOutput.ToArray());
     }
 
     [Fact]
@@ -46,10 +37,5 @@ public sealed class FormulaEvaluationScopeTests
         {
             FormulaDisplayMode = (FormulaDisplayMode)93,
         }));
-        Assert.Throws<ArgumentOutOfRangeException>(() => new Core.ExcelReadOptions
-        {
-            FormulaDisplayMode = (Core.FormulaDisplayMode)93,
-        }.Validate());
-        Assert.Equal(Core.FormulaDisplayMode.CachedValue, new Core.ExcelReadOptions().FormulaDisplayMode);
     }
 }

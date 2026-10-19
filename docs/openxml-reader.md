@@ -101,7 +101,7 @@ separate writer accepts typed formula-free plans, never general formula evaluati
 
 Core owns source-to-rendering adaptation, model assembly, fonts and layout. Full
 hooks add product runs, drawings and links. Generic input preparation/spooling is
-shared in OpenXml/Input. Mapping owns syntax/evaluation and sends final occurrences
+shared in OpenXml.Reader/Input. Mapping owns syntax/evaluation and sends final occurrences
 to the conservative writer. See [OpenXml integration](openxml-integration.md) for
 current APIs and scope. The compatibility reader keeps its ClosedXML-only helpers.
 Public `ExcelStyleConverter.Convert(IXLCell)` remains available.

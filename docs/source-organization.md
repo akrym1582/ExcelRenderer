@@ -19,19 +19,21 @@ validation reports preserve their recorded paths and contracts.
 | Formulas / Functions / Dates | `ExcelRenderer.Formulas.Functions.Dates` | Excel calendar/serial helper |
 | Formulas / Functions / Lookup | `ExcelRenderer.Formulas.Functions.Lookup` | Bounded session-local lookup index |
 | OpenXml / Calculation | `ExcelRenderer.OpenXml.Calculation` | Workbook calculation, date adaptation, formula inspection and recalc/save APIs |
-| OpenXml / Reading | `ExcelRenderer.OpenXml.Reading` | Streaming reader and reader configuration |
+| OpenXml.Reader (root) | `ExcelRenderer.OpenXml.Reader` | Streaming reader and reader configuration |
 | OpenXml / Writing | `ExcelRenderer.OpenXml.Writing` | Staged writer, capability checks and row prototype cache |
 | OpenXml / Writing / Plans | `ExcelRenderer.OpenXml.Writing.Plans` | Typed cell, sheet, workbook and row occurrence edits |
-| OpenXml / Model / Cells | `ExcelRenderer.OpenXml.Model.Cells` | Cell addresses, ranges, values, records, runs and formula metadata |
-| OpenXml / Model / Styles | `ExcelRenderer.OpenXml.Model.Styles` | Font and cell style metadata |
-| OpenXml / Model / Workbook | `ExcelRenderer.OpenXml.Model.Workbook` | Workbook, sheet, row, column, name and XML element metadata |
-| OpenXml / Model / Drawing | `ExcelRenderer.OpenXml.Model.Drawing` | Neutral image metadata |
-| OpenXml / Model / Printing | `ExcelRenderer.OpenXml.Model.Printing` | Print range/reference metadata |
-| OpenXml / Formatting | `ExcelRenderer.OpenXml.Formatting` | Number formatting, display results and style reading |
-| OpenXml / References | `ExcelRenderer.OpenXml.References` | Structural, formula and print-reference transformations |
-| OpenXml / Diagnostics | `ExcelRenderer.OpenXml.Diagnostics` | Reader diagnostics and operation metrics |
-| OpenXml / Infrastructure | `ExcelRenderer.OpenXml.Infrastructure` | ZIP relationships, XML values and stream helpers |
-| OpenXml / Input | `ExcelRenderer.OpenXml.Input` | Generic input validation and seekable memory/file spool |
+| OpenXml.Reader / Model / Cells | `ExcelRenderer.OpenXml.Reader.Model.Cells` | Cell addresses, ranges, values, records, runs and formula metadata |
+| OpenXml.Reader / Model / Styles | `ExcelRenderer.OpenXml.Reader.Model.Styles` | Font and cell style metadata |
+| OpenXml.Reader / Model / Workbook | `ExcelRenderer.OpenXml.Reader.Model.Workbook` | Workbook, sheet, row, column, name and XML element metadata |
+| OpenXml.Reader / Model / Drawing | `ExcelRenderer.OpenXml.Reader.Model.Drawing` | Neutral image metadata |
+| OpenXml.Reader / Model / Printing | `ExcelRenderer.OpenXml.Reader.Model.Printing` | Print range/reference metadata |
+| OpenXml.Reader / Formatting | `ExcelRenderer.OpenXml.Reader.Formatting` | Number formatting, display results and style reading |
+| OpenXml / References | `ExcelRenderer.OpenXml.References` | Structural and formula reference transformations |
+| OpenXml.Reader / Diagnostics | `ExcelRenderer.OpenXml.Reader.Diagnostics` | Reader diagnostics and operation metrics |
+| OpenXml / Infrastructure | `ExcelRenderer.OpenXml.Infrastructure` | Writer-only relationship validation |
+| OpenXml.Reader / Infrastructure | `ExcelRenderer.OpenXml.Reader.Infrastructure` | Shared XML values and borrowed stream helpers |
+| OpenXml.Reader / References | `ExcelRenderer.OpenXml.Reader.References` | Print area/title parsing without formula ASTs |
+| OpenXml.Reader / Input | `ExcelRenderer.OpenXml.Reader.Input` | Generic input validation and seekable memory/file spool |
 
 Formula function families remain separate `FormulaSession.*.cs` files, with all
 partial declarations in the same `Evaluation` namespace and folder. Private
@@ -39,7 +41,7 @@ session control, lazy branches, bounded cursors and retention limits stay shared
 Function helpers remain internal, and Formulas has only BCL runtime dependencies.
 
 Core owns rendering geometry, shared traversal and PDF drawing. Main and Mapping
-adapt their public models to OpenXml; OpenXml never references rendering, Mapping,
+adapt their public models to Reader. Core references only Reader; OpenXml connects Reader and Formulas for editing/calculation and never references rendering, Mapping,
 Core or font libraries. See [Core ownership](core-source-map.md).
 
 Development-only Oracle and benchmark tools remain nonpackable. The shared Core

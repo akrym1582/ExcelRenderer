@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using ExcelRenderer.Mapping.Diagnostics;
-using ExcelRenderer.OpenXml.Model.Cells;
-using ExcelRenderer.OpenXml.Reading;
+using ExcelRenderer.OpenXml.Reader;
+using ExcelRenderer.OpenXml.Reader.Model.Cells;
 
 namespace ExcelRenderer.Mapping.Templates;
 

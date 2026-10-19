@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using ExcelRenderer.Formulas.References;
 using ExcelRenderer.Formulas.Syntax;
-using ExcelRenderer.OpenXml.Model.Cells;
+using ExcelRenderer.OpenXml.Reader.Model.Cells;
 
 namespace ExcelRenderer.OpenXml.Calculation;
 

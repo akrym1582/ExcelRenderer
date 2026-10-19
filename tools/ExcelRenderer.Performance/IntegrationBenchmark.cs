@@ -9,7 +9,7 @@ using ExcelRenderer.Fonts;
 using ExcelRenderer.Mapping;
 using ExcelRenderer.Mapping.Configuration;
 using ExcelRenderer.OpenXml.Calculation;
-using ExcelRenderer.OpenXml.Diagnostics;
+using ExcelRenderer.OpenXml.Reader.Diagnostics;
 using ExcelRenderer.Rendering;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 

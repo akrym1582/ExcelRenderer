@@ -136,7 +136,9 @@ def main():
         assert set(names) == {'ExcelRenderer', 'ExcelRenderer.Mapping', 'ExcelRenderer.Tool', 'ExcelRenderer.Fonts'}, names
     report['checks']['readme-package-tables'] = {'published_package_count': 4}
 
-    sample = (ROOT / 'samples/namespace-migration/Program.cs').read_text()
+    # This command compares released 1.9.0/1.9.1, before the source Reader split.
+    sample = (ROOT / 'samples/namespace-migration/Program.cs').read_text().replace(
+        'using ExcelRenderer.OpenXml.Reader;', 'using ExcelRenderer.OpenXml.Reading;')
     legacy_lines = []
     for line in sample.splitlines():
         if line.startswith('using ExcelRenderer.Formulas.'):

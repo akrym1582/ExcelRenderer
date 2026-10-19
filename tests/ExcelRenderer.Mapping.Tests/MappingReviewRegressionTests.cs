@@ -2,7 +2,7 @@ using System.Xml.Linq;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Validation;
-using ExcelRenderer.OpenXml.Model.Cells;
+using ExcelRenderer.OpenXml.Reader.Model.Cells;
 using ExcelRenderer.OpenXml.Writing;
 using ExcelRenderer.OpenXml.Writing.Plans;
 using ExcelRenderer.TestFixtures;

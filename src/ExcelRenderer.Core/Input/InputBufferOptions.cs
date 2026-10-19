@@ -17,7 +17,7 @@ internal sealed record InputBufferOptions
 
     /// <summary>Adapts values to the generic spool owner.</summary>
     /// <returns>The shared buffer settings.</returns>
-    internal OpenXml.Input.InputBufferOptions ToShared() => new()
+    internal OpenXml.Reader.Input.InputBufferOptions ToShared() => new()
     {
         MemoryThresholdBytes = MemoryThresholdBytes,
         AllowTemporaryFiles = AllowTemporaryFiles,

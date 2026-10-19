@@ -2,13 +2,11 @@ using System.Globalization;
 using ExcelRenderer.Core.Input;
 using ExcelRenderer.Core.Model;
 using ExcelRenderer.Core.Rendering;
-using ExcelRenderer.OpenXml.Calculation;
-using ExcelRenderer.OpenXml.Model.Cells;
-using ExcelRenderer.OpenXml.Model.Drawing;
-using ExcelRenderer.OpenXml.Model.Printing;
-using ExcelRenderer.OpenXml.Model.Styles;
-using ExcelRenderer.OpenXml.Model.Workbook;
-using ExcelRenderer.OpenXml.Reading;
+using ExcelRenderer.OpenXml.Reader;
+using ExcelRenderer.OpenXml.Reader.Model.Cells;
+using ExcelRenderer.OpenXml.Reader.Model.Drawing;
+using ExcelRenderer.OpenXml.Reader.Model.Styles;
+using ExcelRenderer.OpenXml.Reader.Model.Workbook;
 using static ExcelRenderer.Core.Excel.OpenXmlStyleConverter;
 using CellAddress = ExcelRenderer.Core.Model.CellAddress;
 using CellRange = ExcelRenderer.Core.Model.CellRange;
@@ -30,6 +28,12 @@ internal partial class CoreExcelReader
         TextRotation = 0,
         TopToBottom = false,
     };
+
+    /// <summary>Creates an optional value substitution for this read before cell enumeration starts.</summary>
+    /// <param name="reader">The opened source; snapshot construction must finish before returning.</param>
+    /// <param name="cancellationToken">Cooperative cancellation.</param>
+    /// <returns>A read-local substitution, or null to retain saved cells.</returns>
+    protected virtual Func<CellRecord, CellRecord>? CreateCellValueResolver(IWorkbookDataReader reader, CancellationToken cancellationToken) => null;
 
     private static SourceCellText? ReadOpenXmlCellText(CellRecord source, CellStyleInfo style)
     {
@@ -73,7 +77,7 @@ internal partial class CoreExcelReader
                 Attribute(element, "auto") is not "1" and not "true" && Attribute(element, "indexed") is not "64" and not "65") || element.Children.Any(Unresolved);
     }
 
-    private static CellRange ToRange(OpenXml.Model.Cells.CellRange range) => new(new(range.First.Row, range.First.Column), new(range.Last.Row, range.Last.Column));
+    private static CellRange ToRange(OpenXml.Reader.Model.Cells.CellRange range) => new(new(range.First.Row, range.First.Column), new(range.Last.Row, range.Last.Column));
 
     private static PageSettings OpenXmlPageSettings(WorksheetInfo info)
     {
@@ -205,7 +209,7 @@ internal partial class CoreExcelReader
     {
         using var stream = source.OpenRead();
         using var reader = OpenXmlWorkbookReader.Open(stream, new() { SelectedSheetNames = selectedSheets, Culture = CultureInfo.CurrentCulture }, token);
-        var calculation = options.FormulaDisplayMode == FormulaDisplayMode.Recalculate ? WorkbookCalculationSession.Create(reader, options.FormulaEvaluationOptions, token) : null;
+        var resolveCellValue = CreateCellValueResolver(reader, token);
         ConversionMetrics.Report("openXmlReaderWorkbook", 1);
         var infos = reader.Sheets.Where(sheet => sheet.Kind == "Worksheet").Select(sheet => reader.ReadWorksheetInfo(sheet.Index, token)).ToArray();
         var metadata = new CoreWorkbookMetadata();
@@ -270,24 +274,9 @@ internal partial class CoreExcelReader
 
             var pendingLeaders = info.MergedRanges.Select(range => range.First).Distinct().OrderBy(address => address.Row).ThenBy(address => address.Column).ToArray();
             var leaderIndex = 0;
-            var selectedRegion = options.GetSelectedRange?.Invoke(info.Sheet.Name);
-            var mergeBands = calculation is null ? null : new Layout.BandIndex<OpenXml.Model.Cells.CellRange>(info.MergedRanges.Select(range => (range, (double)range.First.Row, (double)range.Last.Row + 1)));
-            var titleRegions = calculation is null || options.IgnoreFormulaPrintAreas ? Array.Empty<PrintRangeInfo>() : info.PrintReferences.Where(reference => reference.Name == "_xlnm.Print_Titles").SelectMany(reference => reference.Ranges).ToArray();
-            var printRegions = calculation is null || options.IgnoreFormulaPrintAreas ? Array.Empty<PrintRangeInfo>() : info.PrintReferences.Where(reference => reference.Name == "_xlnm.Print_Area").SelectMany(reference => reference.Ranges).ToArray();
-            var hiddenRows = calculation is null ? null : info.Rows.Where(row => row.Hidden ?? info.DefaultRowsHidden).Select(row => row.Index).ToHashSet();
-            var visibleRows = calculation is null ? null : info.Rows.Where(row => row.Hidden == false).Select(row => row.Index).ToHashSet();
-            var hiddenColumns = calculation is null ? Array.Empty<bool>() : new bool[16385];
-            foreach (var column in calculation is null ? Enumerable.Empty<ColumnInfo>() : info.Columns)
-            {
-                for (var index = column.Min; index <= column.Max; index++)
-                {
-                    hiddenColumns[index] = column.Hidden ?? false;
-                }
-            }
-
             foreach (var sourceCell in includeBody ? reader.EnumerateCells(info.Sheet.Index, token) : Enumerable.Empty<CellRecord>())
             {
-                var cell = calculation is not null && sourceCell.Formula is not null && IsCalculationTarget(sourceCell.Address) ? calculation.EvaluateCell(sourceCell) : sourceCell;
+                var cell = resolveCellValue is null ? sourceCell : resolveCellValue(sourceCell);
                 while (leaderIndex < pendingLeaders.Length && (pendingLeaders[leaderIndex].Row < cell.Address.Row ||
                     (pendingLeaders[leaderIndex].Row == cell.Address.Row && pendingLeaders[leaderIndex].Column < cell.Address.Column)))
                 {
@@ -398,45 +387,7 @@ internal partial class CoreExcelReader
             };
             sheets.Add(CompleteSheet(info.Sheet.Name, sheet, context));
 
-            bool IsCalculationTarget(OpenXml.Model.Cells.CellAddress address)
-            {
-                if (options.IsFormulaTarget is { } isTarget)
-                {
-                    return isTarget(info.Sheet.Name, address.Row, address.Column);
-                }
-
-                var mergedRange = mergeBands!.Query(address.Row, address.Row + 1).FirstOrDefault(range => address.Column >= range.First.Column && address.Column <= range.Last.Column);
-                if (mergedRange is not null && !address.Equals(mergedRange.First))
-                {
-                    return false;
-                }
-
-                var lastRow = mergedRange?.Last.Row ?? address.Row;
-                var lastColumn = mergedRange?.Last.Column ?? address.Column;
-                if (Enumerable.Range(address.Column, lastColumn - address.Column + 1).All(column => hiddenColumns[column]) ||
-                    Enumerable.Range(address.Row, lastRow - address.Row + 1).All(row => hiddenRows!.Contains(row) || (info.DefaultRowsHidden && !visibleRows!.Contains(row))))
-                {
-                    return false;
-                }
-
-                var titleRow = titleRegions.Any(range => range.Kind == "Rows" && address.Row >= range.FirstRow && address.Row <= range.LastRow);
-                var titleColumn = titleRegions.Any(range => range.Kind == "Columns" && address.Column >= range.FirstColumn && address.Column <= range.LastColumn);
-                if (selectedRegion is { } region)
-                {
-                    if ((!titleRow && (lastRow < region.FirstRow || address.Row > region.LastRow)) || (!titleColumn && (lastColumn < region.FirstColumn || address.Column > region.LastColumn)))
-                    {
-                        return false;
-                    }
-                }
-                else if (printRegions.Length > 0 && !printRegions.Any(range => (titleRow || (lastRow >= range.FirstRow && address.Row <= range.LastRow)) && (titleColumn || (lastColumn >= range.FirstColumn && address.Column <= range.LastColumn))))
-                {
-                    return false;
-                }
-
-                return true;
-            }
-
-            void AddMissingLeader(OpenXml.Model.Cells.CellAddress address)
+            void AddMissingLeader(OpenXml.Reader.Model.Cells.CellAddress address)
             {
                 var index = rowDefaults.TryGetValue(address.Row, out var rowStyle) ? rowStyle : columnDefaults[address.Column] ?? 0;
                 cells.Add(new(address.Row, address.Column), new(string.Empty, BlankStyle(index)));

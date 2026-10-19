@@ -3,7 +3,7 @@ using ExcelRenderer.Core.Rendering;
 namespace ExcelRenderer.Core.Input;
 
 /// <summary>Adapts Core buffering settings and metrics to the shared spool.</summary>
-internal class SpillableBufferStream : OpenXml.Input.SpillableBufferStream
+internal class SpillableBufferStream : OpenXml.Reader.Input.SpillableBufferStream
 {
     /// <summary>Initializes a new instance of the <see cref="SpillableBufferStream"/> class.</summary>
     /// <param name="options">The Core buffer settings.</param>

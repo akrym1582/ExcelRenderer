@@ -1,5 +1,7 @@
 # Namespace migration
 
+> The source Reader split adds a further assembly/namespace break and removes Core-only recalculation settings. See the [complete split migration](openxml-reader-split.md) for moved types and affected signatures. The released 1.9.0/1.9.1 comparison below remains historical evidence for those versions.
+
 In **1.9.1**, Formulas and OpenXml use namespaces matching their physical source folders
 ([PR #83](https://github.com/akrym1582/ExcelRenderer/pull/83)).
 This is a **source and binary breaking API change**: update imports and qualified

@@ -6,8 +6,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Xml;
 using DocumentFormat.OpenXml.Packaging;
-using ExcelRenderer.OpenXml.Infrastructure;
-using ExcelRenderer.OpenXml.Model.Cells;
+using ExcelRenderer.OpenXml.Reader.Infrastructure;
+using ExcelRenderer.OpenXml.Reader.Model.Cells;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 
 namespace ExcelRenderer.OpenXml.Calculation;

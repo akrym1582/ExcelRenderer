@@ -7,12 +7,12 @@ import xml.etree.ElementTree as ET
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 CORE = ROOT / 'src/ExcelRenderer.Core'
 project = ET.parse(CORE / 'ExcelRenderer.Core.csproj').getroot()
-assert {p.attrib['Include'] for p in project.findall('.//ProjectReference')} == {'../ExcelRenderer.OpenXml/ExcelRenderer.OpenXml.csproj'}, 'Core may reference only shared OpenXml'
+assert {p.attrib['Include'] for p in project.findall('.//ProjectReference')} == {'../ExcelRenderer.OpenXml.Reader/ExcelRenderer.OpenXml.Reader.csproj'}, 'Core may reference only the saved-value Reader'
 for path in CORE.rglob('*.cs'):
     if {'bin', 'obj'} & set(path.parts):
         continue
     for name in re.findall(r'\bExcelRenderer\.[A-Za-z0-9_.]+', re.sub(r'"(?:\\.|[^"\\])*"', '""', path.read_text())):
-        assert name.startswith('ExcelRenderer.Core') or name.startswith('ExcelRenderer.OpenXml') or name == 'ExcelRenderer.Tests', f'{path}: forbidden main namespace {name}'
+        assert name.startswith('ExcelRenderer.Core') or name.startswith('ExcelRenderer.OpenXml.Reader') or name == 'ExcelRenderer.Tests', f'{path}: forbidden main namespace {name}'
 for relative, owner in {
     'Excel/CellRangeIndex.cs': 'Core.Excel.CoreCellRangeIndex',
     'Drawing/TextLayoutFontSize.cs': 'Core.Drawing.TextLayoutFontSize',
@@ -70,10 +70,16 @@ print('Shared conversion pipeline and compatibility facade ownership passed')
 # XML and bounded workbook input belong to the shared OpenXml project.
 OPENXML = ROOT / 'src/ExcelRenderer.OpenXml'
 reader_project = ET.parse(OPENXML / 'ExcelRenderer.OpenXml.csproj').getroot()
-assert {p.attrib['Include'] for p in reader_project.findall('.//ProjectReference')} == {'../ExcelRenderer.Formulas/ExcelRenderer.Formulas.csproj'}, 'OpenXml may reference only the BCL formula engine'
+assert {p.attrib['Include'] for p in reader_project.findall('.//ProjectReference')} == {'../ExcelRenderer.OpenXml.Reader/ExcelRenderer.OpenXml.Reader.csproj', '../ExcelRenderer.Formulas/ExcelRenderer.Formulas.csproj'}, 'OpenXml connects Reader and the BCL formula engine'
 reader_packages = {p.attrib['Include'] for p in reader_project.findall('.//PackageReference')}
-assert reader_packages == {'DocumentFormat.OpenXml', 'ExcelNumberFormat'}, reader_packages
-for path in OPENXML.rglob('*.cs'):
+assert reader_packages == {'DocumentFormat.OpenXml'}, reader_packages
+READER = ROOT / 'src/ExcelRenderer.OpenXml.Reader'
+source_project = ET.parse(READER / 'ExcelRenderer.OpenXml.Reader.csproj').getroot()
+assert not source_project.findall('.//ProjectReference'), 'Reader must be independent of product projects'
+assert {p.attrib['Include'] for p in source_project.findall('.//PackageReference')} == {'DocumentFormat.OpenXml', 'ExcelNumberFormat'}
+assert source_project.findtext('.//TargetFramework') == 'netstandard2.1'
+assert source_project.findtext('.//IsPackable') == 'false'
+for path in list(OPENXML.rglob('*.cs')) + list(READER.rglob('*.cs')):
     if {'bin', 'obj'} & set(path.parts):
         continue
     text = path.read_text()
@@ -81,13 +87,15 @@ for path in OPENXML.rglob('*.cs'):
     if path.name == 'AssemblyInfo.cs':
         code = re.sub(r'^\[assembly: InternalsVisibleTo\(.*$', '', code, flags=re.MULTILINE)
     assert not re.search(r'\b(ClosedXML|PDFsharp|SkiaSharp)\b|ExcelRenderer\.(Core|Mapping|Fonts)', code), path
+    if path.is_relative_to(READER):
+        assert not re.search(r'ExcelRenderer\.(Formulas|OpenXml\.(Calculation|Writing|References))', code), path
     assert 'WorksheetPart.Worksheet' not in text and '.SharedStringTable' not in text.replace('.SharedStringTablePart', ''), path
 for name in ('ExcelRenderer.Core', 'ExcelRenderer', 'ExcelRenderer.Mapping'):
     path = ROOT / 'src' / name / (name + '.csproj')
     assert 'ExcelRenderer.OpenXml' in path.read_text(), f'{path}: shared OpenXml reference missing'
 for relative in ('Input/SpillableBufferStream.cs', 'Input/WorkbookInputPreparer.cs'):
     text = (CORE / relative).read_text()
-    assert 'OpenXml.Input.' in text, f'{relative}: shared input delegation missing'
+    assert 'OpenXml.Reader.Input.' in text, f'{relative}: shared input delegation missing'
     assert not re.search(r'\b(for|foreach|while)\s*\(', text), f'{relative}: duplicate input algorithm'
 print('Shared OpenXml dependency direction and input ownership passed')
 

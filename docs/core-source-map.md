@@ -42,12 +42,12 @@ Source: main 1.7.2, commit `32e9165d145516dbd0bcb4c2ae31a78ce6774bce`. Every cop
 | New Core implementation | Fonts/SingleFontContext.cs | Core単独所有 | Complete; Core single-font product implementation |
 | New Core implementation | Fonts/SingleFontResolver.cs | Core単独所有 | Complete; Core single-font product implementation |
 | GlobalUsings.cs | GlobalUsings.cs | 本体専用差分 / Core内部型 | Public compatibility value/contracts stay in main; neutral internal equivalents stay in Core |
-| Rendering/BufferReadStream.cs | ../ExcelRenderer.OpenXml/Input/BufferReadStream.cs | OpenXml所有 / Core・本体adapter | Generic implementation shared with Mapping; Core preserves input types and metrics |
+| Rendering/BufferReadStream.cs | ../ExcelRenderer.OpenXml.Reader/Input/BufferReadStream.cs | Reader所有 / Core・本体adapter | Generic implementation shared with Mapping; Core preserves input types and metrics |
 | Rendering/CancellationReadStream.cs | Input/CancellationReadStream.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
-| Rendering/RenderBufferOptions.cs | ../ExcelRenderer.OpenXml/Input/InputBufferOptions.cs | OpenXml所有 / Core・本体adapter | Generic implementation shared with Mapping; Core preserves input types and metrics |
-| Rendering/PreparedWorkbook.cs | ../ExcelRenderer.OpenXml/Input/PreparedWorkbook.cs | OpenXml所有 / Core・本体adapter | Generic implementation shared with Mapping; Core preserves input types and metrics |
-| Rendering/SpillableBufferStream.cs | ../ExcelRenderer.OpenXml/Input/SpillableBufferStream.cs | OpenXml所有 / Core・本体adapter | Generic implementation shared with Mapping; Core preserves input types and metrics |
-| Rendering/WorkbookInputPreparer.cs | ../ExcelRenderer.OpenXml/Input/WorkbookInputPreparer.cs | OpenXml所有 / Core・本体adapter | Generic implementation shared with Mapping; Core preserves input types and metrics |
+| Rendering/RenderBufferOptions.cs | ../ExcelRenderer.OpenXml.Reader/Input/InputBufferOptions.cs | Reader所有 / Core・本体adapter | Generic implementation shared with Mapping; Core preserves input types and metrics |
+| Rendering/PreparedWorkbook.cs | ../ExcelRenderer.OpenXml.Reader/Input/PreparedWorkbook.cs | Reader所有 / Core・本体adapter | Generic implementation shared with Mapping; Core preserves input types and metrics |
+| Rendering/SpillableBufferStream.cs | ../ExcelRenderer.OpenXml.Reader/Input/SpillableBufferStream.cs | Reader所有 / Core・本体adapter | Generic implementation shared with Mapping; Core preserves input types and metrics |
+| Rendering/WorkbookInputPreparer.cs | ../ExcelRenderer.OpenXml.Reader/Input/WorkbookInputPreparer.cs | Reader所有 / Core・本体adapter | Generic implementation shared with Mapping; Core preserves input types and metrics |
 | Layout/BandIndex.cs | Layout/BandIndex.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
 | Layout/CellBoundsPass.cs | Layout/CellBoundsPass.cs | Core単独所有 / 本体wrapper | Shared Core implementation; main delegates and maps only boundary state |
 | Layout/CellContentBounds.cs | Layout/CellContentBounds.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
@@ -249,3 +249,15 @@ and `ImageResources`. Validated pixels use the native encoded-image generator’
 shared across raster/PDF drawing without another codec pass or pixel roundtrip.
 The finalizer writes each active object/encoded stream once and rebuilds classic
 xref offsets; no obsolete image revision is retained. See [image review fixes](pr90-image-review-fixes.md).
+
+## Reader and formula ownership after the split
+
+| Owner | Responsibility |
+| --- | --- |
+| `ExcelRenderer.OpenXml.Reader` | Streaming reader entry points at the project root; typed cells, raw/shared formula metadata, workbook/style/printing/drawing models, saved-value formatting, diagnostics, bounded input/spooling, XML/stream helpers and print reference parsing |
+| `ExcelRenderer.OpenXml` | Calculation snapshot/adapter, shared formula expansion, recalculation, Writer/staging, writer-only relationship validation and structural reference rewriting |
+| `ExcelRenderer.Formulas` | Independent BCL-only parser, evaluator and reference rewriting engine |
+| `ExcelRenderer.Core` | Shared cell traversal, rendering model, style conversion and PDF; a read-local optional `CreateCellValueResolver` runs before streaming/style conversion and returns null for Core |
+| `ExcelRenderer/CoreIntegration/FullExcelReader.Formulas.cs` | Creates one calculation session per recalculated read; retains page/range/print-title/merge/hidden-axis target policy using Reader metadata and Core's existing BandIndex |
+
+Core's `ExcelReadOptions` retains the neutral selected-region setting and removes all calculation-only settings and the Core `FormulaDisplayMode` enum. Main's read options and CLI modes retain their behavior. Reader and Formulas have no references to each other; Core's sole product reference is Reader. See [migration and validation](openxml-reader-split.md).

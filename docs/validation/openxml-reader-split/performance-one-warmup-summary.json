@@ -1,0 +1,65 @@
+{
+  "products": {
+    "before": {
+      "ExcelRenderer.Fonts.dll": "006e9247ad00389372878d2ba411511df34532845247a1b3f2a35433cc2fb580",
+      "ExcelRenderer.OpenXml.dll": "ef5d95366ffb54529c72845b41338fb5ccfdc502fda47247f2138964a89dc1fc",
+      "ExcelRenderer.Mapping.dll": "7163656639888c9bc2a796560c84102bbbdebcf782a411f979ca100296bff955",
+      "ExcelRenderer.Formulas.dll": "fa99b91974fa293d75398a62024e89c563f2a93aded30c12a619086f22b8f22b",
+      "ExcelRenderer.Core.dll": "374fd04cbc12e3c766d2d725c8635090b7a62d5ca20df016992028cb24e8e76d",
+      "ExcelRenderer.dll": "e8f7632b471c70ff8ddf5fd51aa24404b24775d999916637629c419b90232f77",
+      "ExcelRenderer.Performance.dll": "0617cc9664394ea0b698876491f2319b50c1b47a0cc0eeb5840c2e6229893630"
+    },
+    "after": {
+      "ExcelRenderer.OpenXml.Reader.dll": "ee002913cd8e3baa6485fa0a53beba58fb6e88d22107f8716901a4a89daf4ca1",
+      "ExcelRenderer.Fonts.dll": "006e9247ad00389372878d2ba411511df34532845247a1b3f2a35433cc2fb580",
+      "ExcelRenderer.OpenXml.dll": "53f217ded659ecb08b831b581ba2dbdd83341f2bf13f30764ccce9812fc608b8",
+      "ExcelRenderer.Mapping.dll": "40a1773ed5c32816e277bcceb332387786a4d444e1a6d3fcf79875d7cd60374a",
+      "ExcelRenderer.Formulas.dll": "fa99b91974fa293d75398a62024e89c563f2a93aded30c12a619086f22b8f22b",
+      "ExcelRenderer.Core.dll": "a7904582b626aee0a50e40c978fe01e39133461a6625301c75dcd081099c6b07",
+      "ExcelRenderer.dll": "ce6b8aabd9e5ee4da8715db2a9a8359b9b1d38eeec39b861280c250a92f5b72b",
+      "ExcelRenderer.Performance.dll": "e057d33d1f4941d3d36dcca7d11df90f9e1e14ac2139f25e30c225372348f2c4"
+    }
+  },
+  "fixtures": {
+    "plain.xlsx": "b2c9e47e45fe7a3f3b23216ffbc44b065af590376f0f3e1708342d3894e613bf",
+    "formulas.xlsx": "6bb5098194dc0960b3c23f55a39208c08d9c64a6d060ac75d7b59b7f6f9d6be8"
+  },
+  "summary": {
+    "core-cached": {
+      "before": {
+        "elapsedMs": 459.5597,
+        "allocatedBytes": 191723504,
+        "peakRssBytes": 187985920
+      },
+      "after": {
+        "elapsedMs": 432.9072,
+        "allocatedBytes": 189372376,
+        "peakRssBytes": 185708544
+      }
+    },
+    "main-cached": {
+      "before": {
+        "elapsedMs": 603.7168,
+        "allocatedBytes": 289228904,
+        "peakRssBytes": 171409408
+      },
+      "after": {
+        "elapsedMs": 600.0469,
+        "allocatedBytes": 289229024,
+        "peakRssBytes": 169619456
+      }
+    },
+    "main-recalculate": {
+      "before": {
+        "elapsedMs": 450.2625,
+        "allocatedBytes": 175140912,
+        "peakRssBytes": 139862016
+      },
+      "after": {
+        "elapsedMs": 530.8038,
+        "allocatedBytes": 175142040,
+        "peakRssBytes": 138510336
+      }
+    }
+  }
+}

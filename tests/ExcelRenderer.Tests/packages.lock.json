@@ -245,15 +245,12 @@
         "type": "Project",
         "dependencies": {
           "DocumentFormat.OpenXml": "[3.3.0, )",
-          "ExcelRenderer.OpenXml": "[1.8.0, )",
+          "ExcelRenderer.OpenXml.Reader": "[1.8.0, )",
           "SkiaSharp": "[4.151.0, )",
           "SkiaSharp.NativeAssets.Linux": "[4.151.0, )"
         }
       },
       "excelrenderer.fonts": {
-        "type": "Project"
-      },
-      "excelrenderer.formulas": {
         "type": "Project"
       },
       "excelrenderer.mapping": {
@@ -263,12 +260,11 @@
           "ExcelNumberFormat": "[1.1.0, )"
         }
       },
-      "excelrenderer.openxml": {
+      "excelrenderer.openxml.reader": {
         "type": "Project",
         "dependencies": {
           "DocumentFormat.OpenXml": "[3.3.0, )",
-          "ExcelNumberFormat": "[1.1.0, )",
-          "ExcelRenderer.Formulas": "[1.8.0, )"
+          "ExcelNumberFormat": "[1.1.0, )"
         }
       }
     }

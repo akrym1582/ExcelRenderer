@@ -11,17 +11,20 @@ internal sealed partial class FullExcelReader : CoreExcelReader
 {
     private readonly DiagnosticCollector? diagnostics;
     private readonly bool detectUnsupportedFeatures;
+    private readonly Excel.ExcelReadOptions readOptions;
 
     /// <summary>Initializes a new instance of the <see cref="FullExcelReader"/> class.</summary>
     /// <param name="fontManager">The optional full font manager.</param>
     /// <param name="diagnostics">The existing diagnostic collector.</param>
     /// <param name="maximumDigitWidths">The public reader's metric cache.</param>
     /// <param name="detectUnsupportedFeatures">Whether to retain additional unsupported-feature candidates.</param>
-    internal FullExcelReader(IFontManager? fontManager, DiagnosticCollector? diagnostics, Dictionary<NormalFontMetadata, double> maximumDigitWidths, bool detectUnsupportedFeatures = false)
+    /// <param name="readOptions">The product formula and selection policy.</param>
+    internal FullExcelReader(IFontManager? fontManager, DiagnosticCollector? diagnostics, Dictionary<NormalFontMetadata, double> maximumDigitWidths, bool detectUnsupportedFeatures = false, Excel.ExcelReadOptions? readOptions = null)
         : base(new FullFontMetrics(fontManager, diagnostics, maximumDigitWidths))
     {
         this.diagnostics = diagnostics;
         this.detectUnsupportedFeatures = detectUnsupportedFeatures;
+        this.readOptions = readOptions ?? new Excel.ExcelReadOptions();
     }
 
     /// <inheritdoc/>

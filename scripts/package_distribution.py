@@ -10,7 +10,7 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 PUBLISHED = {'ExcelRenderer', 'ExcelRenderer.Mapping', 'ExcelRenderer.Tool', 'ExcelRenderer.Fonts'}
-INTERNAL = {'ExcelRenderer.Core', 'ExcelRenderer.OpenXml', 'ExcelRenderer.Formulas'}
+INTERNAL = {'ExcelRenderer.Core', 'ExcelRenderer.OpenXml.Reader', 'ExcelRenderer.OpenXml', 'ExcelRenderer.Formulas'}
 
 
 def check_projects():
@@ -52,8 +52,10 @@ def check_packages(packages):
             dlls = [path for path in names if path.endswith('.dll')]
             if name == 'ExcelRenderer.Fonts':
                 assert sum(path.endswith('/ExcelRenderer.Fonts.dll') for path in dlls) == 1
+            if name == 'ExcelRenderer.Mapping':
+                assert not {'ExcelRenderer.dll', 'ExcelRenderer.Core.dll', 'ExcelRenderer.Fonts.dll', 'SkiaSharp.dll'}.intersection(Path(path).name for path in dlls), (name, dlls)
             embedded = {}
-            assemblies = {'ExcelRenderer.OpenXml', 'ExcelRenderer.Formulas'} if name in {'ExcelRenderer', 'ExcelRenderer.Mapping'} else set()
+            assemblies = {'ExcelRenderer.OpenXml.Reader', 'ExcelRenderer.OpenXml', 'ExcelRenderer.Formulas'} if name in {'ExcelRenderer', 'ExcelRenderer.Mapping'} else set()
             if name == 'ExcelRenderer':
                 assemblies.add('ExcelRenderer.Core')
             if name == 'ExcelRenderer.Tool':

@@ -1,0 +1,31 @@
++ dotnet restore /workspace/reader-final-font-package-consumers/font-split-fjq6t9zl/without-fonts/Consumer.csproj --configfile /workspace/reader-final-font-package-consumers/font-split-fjq6t9zl/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/reader-final-font-package-consumers/font-split-fjq6t9zl/without-fonts/Consumer.csproj (in 1.51 sec).
++ dotnet run --project /workspace/reader-final-font-package-consumers/font-split-fjq6t9zl/without-fonts/Consumer.csproj -c Release --no-restore
++ dotnet restore /workspace/reader-final-font-package-consumers/font-split-fjq6t9zl/with-fonts/Consumer.csproj --configfile /workspace/reader-final-font-package-consumers/font-split-fjq6t9zl/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/reader-final-font-package-consumers/font-split-fjq6t9zl/with-fonts/Consumer.csproj (in 652 ms).
++ dotnet run --project /workspace/reader-final-font-package-consumers/font-split-fjq6t9zl/with-fonts/Consumer.csproj -c Release --no-restore
++ dotnet tool install ExcelRenderer.Tool --version 1.10.0 --tool-path /workspace/reader-final-font-package-consumers/font-split-fjq6t9zl/tool --configfile /workspace/reader-final-font-package-consumers/font-split-fjq6t9zl/NuGet.Config
+You can invoke the tool using the following command: excelrenderer
+Tool 'excelrenderer.tool' (version '1.10.0') was successfully installed.
++ /workspace/reader-final-font-package-consumers/font-split-fjq6t9zl/tool/excelrenderer --help
+Description:
+  Convert Excel files to PDF, PNG, SVG and Markdown.
+
+Usage:
+  ExcelRenderer.Tool [command] [options]
+
+Options:
+  -?, -h, --help  Show help and usage information
+  --version       Show version information
+
+Commands:
+  xlsx <input>          Map JSON into an Excel template and save XLSX without rendering.
+  pdf <input>           Convert Excel worksheets to PDF.
+  image <input>         Convert Excel worksheets to paginated PNG images. Use 'render --format png --image-layout continuous' for continuous images.
+  svg <input>           Convert Excel worksheets to SVG files.
+  markdown, md <input>  Convert an Excel workbook to Markdown.
+  render <input>        Render an Excel workbook using the unified rendering API.
+
+Font package split passed: no implicit fonts, all three packaged families, identical CLI fonts and installed CLI

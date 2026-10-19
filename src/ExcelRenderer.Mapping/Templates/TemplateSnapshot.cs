@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using ExcelRenderer.OpenXml.Model.Cells;
+using ExcelRenderer.OpenXml.Reader.Model.Cells;
 
 namespace ExcelRenderer.Mapping.Templates;
 

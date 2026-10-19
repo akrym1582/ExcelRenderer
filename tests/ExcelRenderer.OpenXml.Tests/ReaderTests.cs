@@ -1,6 +1,6 @@
 using System.Globalization;
 using System.Xml;
-using ExcelRenderer.OpenXml.Reading;
+using ExcelRenderer.OpenXml.Reader;
 using Xunit;
 
 namespace ExcelRenderer.OpenXml.Tests;

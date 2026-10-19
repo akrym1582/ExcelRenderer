@@ -1,6 +1,6 @@
 using ExcelRenderer.Mapping;
 using ExcelRenderer.Mapping.Diagnostics;
-using ExcelRenderer.OpenXml.Model.Cells;
+using ExcelRenderer.OpenXml.Reader.Model.Cells;
 using ExcelRenderer.TestFixtures;
 using Xunit;
 using static ExcelRenderer.TestFixtures.WorkbookAssertions;

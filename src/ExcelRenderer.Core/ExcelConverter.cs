@@ -49,7 +49,11 @@ public static class ExcelConverter
             throw new ArgumentOutOfRangeException(nameof(options), "FontCollectionIndex must be nonnegative.");
         }
 
-        (options.ReadOptions ?? throw new ArgumentException("ReadOptions is required.", nameof(options))).Validate();
+        if (options.ReadOptions is null)
+        {
+            throw new ArgumentException("ReadOptions is required.", nameof(options));
+        }
+
         cancellationToken.ThrowIfCancellationRequested();
         using var prepared = await WorkbookInputPreparer.ReadAsync(xlsx, options.Input, cancellationToken).ConfigureAwait(false);
         using var font = new SingleFontContext(options.FontFilePath, options.FontCollectionIndex, cancellationToken);

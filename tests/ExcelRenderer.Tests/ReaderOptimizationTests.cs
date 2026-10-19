@@ -1,9 +1,9 @@
 using DocumentFormat.OpenXml.Packaging;
-using ExcelRenderer.TestFixtures;
-using S = DocumentFormat.OpenXml.Spreadsheet;
 using ExcelRenderer.Excel;
+using S = DocumentFormat.OpenXml.Spreadsheet;
 using ExcelRenderer.Model;
 using ExcelRenderer.Rendering;
+using ExcelRenderer.TestFixtures;
 using Xunit;
 
 namespace ExcelRenderer.Tests;
@@ -57,7 +57,7 @@ public sealed class ReaderOptimizationTests
     public void ResolvedStylesHaveValueEqualityAndConvertingDoesNotMutateSource()
     {
         using var input = SdkWorkbook.Create(new S.Worksheet(new S.SheetData(new S.Row(SdkWorkbook.Text("A1", "one"), SdkWorkbook.Text("B1", "two")) { RowIndex = 1 })), SdkWorkbook.Styles());
-        using var reader = OpenXml.Reading.OpenXmlWorkbookReader.Open(input);
+        using var reader = OpenXml.Reader.OpenXmlWorkbookReader.Open(input);
         var cells = reader.EnumerateCells(1).ToArray();
         var first = reader.ResolveStyle(cells[0]);
         var before = first.FontProperties;

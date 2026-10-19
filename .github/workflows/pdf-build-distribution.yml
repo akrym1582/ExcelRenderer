@@ -37,6 +37,7 @@ jobs:
           artifacts/font-validation-venv/bin/python scripts/validate-managed-fonts.py --evidence artifacts/managed-fonts
       - run: dotnet pack ExcelRenderer.slnx -c Release --no-build --no-restore -m:1 -p:BuildProjectReferences=false -o artifacts/pdf-packages
       - run: dotnet publish src/ExcelRenderer.Tool -c Release --no-restore -o artifacts/pdf-publish
+      - run: python scripts/validate-reader-isolation.py
       - run: python scripts/check-no-pdfsharp.py --packages artifacts/pdf-packages --publish artifacts/pdf-publish
       - run: python scripts/package_distribution.py --packages artifacts/pdf-packages --output artifacts/pdf-inventory.json
       - run: python scripts/validate-formulas-packages.py --packages artifacts/pdf-packages --work "${{ runner.temp }}/pdf-consumers"

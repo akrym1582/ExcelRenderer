@@ -1,6 +1,6 @@
 using System.Xml.Linq;
-using ExcelRenderer.OpenXml.Diagnostics;
-using ExcelRenderer.OpenXml.Reading;
+using ExcelRenderer.OpenXml.Reader;
+using ExcelRenderer.OpenXml.Reader.Diagnostics;
 using ExcelRenderer.OpenXml.Writing;
 using ExcelRenderer.OpenXml.Writing.Plans;
 using Xunit;

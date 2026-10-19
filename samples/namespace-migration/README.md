@@ -1,40 +1,28 @@
 # Published-package API sample / 公開パッケージのAPIサンプル
 
-This sample uses **NuGet.org packages only**, not repository ProjectReferences.
-It evaluates `A1*125` over an in-memory workbook and reads a generated XLSX file;
-both checks require the result 375. No input file, rendering or fonts are needed.
-Requires the .NET 10 SDK for this executable (the libraries target .NET Standard 2.1).
+This sample uses **generated NuGet packages only**, not repository ProjectReferences. It evaluates A1*125 over an in-memory workbook and reads a generated XLSX; both paths require 375. No rendering, fonts or external input are needed. The executable uses .NET 10 and the libraries target .NET Standard 2.1.
 
-From the repository root, create an isolated console project outside the repository:
+The current source uses the new OpenXml.Reader namespace. Run it against packages built from this revision using the isolated consumer validator (which tests main, Mapping and both):
 
 ```bash
-dotnet new console --framework net10.0 --output /tmp/excelrenderer-api-sample
-cp samples/namespace-migration/Program.cs /tmp/excelrenderer-api-sample/Program.cs
-dotnet add /tmp/excelrenderer-api-sample package ExcelRenderer.Mapping --version 1.9.1
-dotnet run --project /tmp/excelrenderer-api-sample
+python3 scripts/validate-formulas-packages.py --packages artifacts/packages-reader-split --work /tmp/excelrenderer-api-consumers
 ```
 
-Alternatively, replace the `ExcelRenderer.Mapping` package in the command with
-`ExcelRenderer`, or reference both at 1.9.1. Each choice supplies the same public
-Formulas/OpenXml assemblies. Do not add unpublished packages named
-`ExcelRenderer.Formulas` or `ExcelRenderer.OpenXml`. Mapping includes XLSX/JSON
-dependencies; the formula engine assembly itself uses only the BCL.
+Build the four packages first as described in [distribution](../../docs/package-distribution.md). Do not add unpublished Reader, Formulas or OpenXml package IDs. Main and Mapping bundle the same shared assemblies. The source split does not assign a release version; released 1.9.1 uses the previous OpenXml.Reading namespace.
 
 Expected output:
 
 ```text
 ExcelRenderer.Formulas.Evaluation.FormulaEngine
 engine: 375
-ExcelRenderer.OpenXml.Reading.OpenXmlWorkbookReader
+ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader
 reader: 375
 ```
 
 Pass `engine` or `reader` to run one path. The identity probes are separate methods
 so the compatibility reproduction can resolve each old CLR type independently.
 
-通常の利用例は上記のとおりです。リポジトリ外のコンソールプロジェクトで、NuGet.org の
-Mapping または本体の1.9.1だけを参照します。インメモリ数式の計算と、生成した XLSX の
-読み込みで375を確認します。描画・フォント・外部入力ファイルは不要です。
+このサンプルは分離後のReader名前空間を使います。同じソースから生成した本体／Mapping／両方のパッケージだけで検証してください。公開済み1.9.1のAPIとは区別し、未公開Readerパッケージへの参照は追加しません。
 
 For the **historical compatibility check**, run:
 

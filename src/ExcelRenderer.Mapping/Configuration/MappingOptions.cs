@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using ExcelRenderer.Formulas.Evaluation;
 using ExcelRenderer.OpenXml.Calculation;
-using ExcelRenderer.OpenXml.Input;
+using ExcelRenderer.OpenXml.Reader.Input;
 
 namespace ExcelRenderer.Mapping.Configuration;
 

@@ -8,9 +8,9 @@ using ExcelRenderer.Formulas.Evaluation;
 using ExcelRenderer.Formulas.References;
 using ExcelRenderer.Formulas.Syntax;
 using ExcelRenderer.Formulas.Values;
-using ExcelRenderer.OpenXml.Model.Cells;
-using ExcelRenderer.OpenXml.Model.Workbook;
-using ExcelRenderer.OpenXml.Reading;
+using ExcelRenderer.OpenXml.Reader;
+using ExcelRenderer.OpenXml.Reader.Model.Cells;
+using ExcelRenderer.OpenXml.Reader.Model.Workbook;
 
 namespace ExcelRenderer.OpenXml.Calculation;
 

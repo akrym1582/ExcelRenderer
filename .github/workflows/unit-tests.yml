@@ -53,6 +53,9 @@ jobs:
       - name: Rebuild solution
         run: dotnet build ExcelRenderer.slnx -t:Rebuild --configuration Release --no-restore
 
+      - name: Verify standalone Reader and Core dependency isolation
+        run: python3 scripts/validate-reader-isolation.py
+
       - name: Run unit tests
         run: >-
           dotnet test ExcelRenderer.slnx

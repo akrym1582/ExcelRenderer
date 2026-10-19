@@ -8,7 +8,8 @@ using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using ExcelRenderer.OpenXml.Calculation;
 using ExcelRenderer.OpenXml.Infrastructure;
-using ExcelRenderer.OpenXml.Reading;
+using ExcelRenderer.OpenXml.Reader;
+using ExcelRenderer.OpenXml.Reader.Infrastructure;
 
 namespace ExcelRenderer.OpenXml.Writing;
 

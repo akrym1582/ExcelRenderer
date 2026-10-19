@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text.Json;
-using ExcelRenderer.OpenXml.Reading;
+using ExcelRenderer.OpenXml.Reader;
 
 /// <summary>Compares reader projections with immutable parent-revision results.</summary>
 internal static class Comparison

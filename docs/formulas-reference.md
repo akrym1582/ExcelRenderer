@@ -365,9 +365,9 @@ and the full retention contract are in [the guide](formulas.md#text-resource-lim
 | Locale/date semantics | Localized formula syntax, locale-aware text collation, locale date strings or timezone-bearing ISO dates; date functions interpret numeric serials using the session/workbook date system. |
 
 Literal HYPERLINK metadata extraction in cached-value rendering is a separate
-feature; HYPERLINK is not a supported calculator function. Conditional-formatting
-and validation formulas remain workbook metadata and are not evaluated to render
-conditional styles. Supported formulas can still fail when a reached dependency
+feature; HYPERLINK is not a supported calculator function. The main renderer evaluates
+[Phase 1 conditional-formatting conditions](conditional-formatting.md) through the same
+engine; Core retains ordinary saved styles. Data-validation formulas remain metadata. Supported formulas can still fail when a reached dependency
 uses an unsupported feature or exceeds a limit.
 
 The function and syntax tables describe implemented behavior, not an Excel desktop

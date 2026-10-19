@@ -8,6 +8,40 @@ namespace ExcelRenderer.Formulas.References;
 /// <summary>Safely serializes and transforms parsed references without modifying string literals.</summary>
 public static class FormulaRewriter
 {
+    /// <summary>Copies a parsed formula without parsing or serializing it again.</summary>
+    /// <param name="formula">Original parsed formula.</param>
+    /// <param name="rowDelta">Relative row displacement.</param>
+    /// <param name="columnDelta">Relative column displacement.</param>
+    /// <returns>An immutable syntax tree with moved relative references.</returns>
+    public static ParsedFormula Copy(ParsedFormula formula, int rowDelta, int columnDelta)
+    {
+        if (formula == null)
+        {
+            throw new ArgumentNullException(nameof(formula));
+        }
+
+        if (rowDelta == 0 && columnDelta == 0)
+        {
+            return formula;
+        }
+
+        return new ParsedFormula(formula.Text, Visit(formula.Root));
+
+        FormulaNode Visit(FormulaNode node)
+        {
+            if (node.Kind == FormulaNodeKind.Cell)
+            {
+                long row = node.Row == 0 || node.AbsoluteRow ? node.Row : (long)node.Row + rowDelta;
+                long column = node.Column == 0 || node.AbsoluteColumn ? node.Column : (long)node.Column + columnDelta;
+                return (node.Row != 0 && row < 1) || row > 1048576 || (node.Column != 0 && column < 1) || column > 16384
+                    ? new FormulaNode(FormulaNodeKind.Error, node.Span, "#REF!")
+                    : node.WithReference(node.Sheet, (int)row, (int)column, node.AbsoluteRow, node.AbsoluteColumn);
+            }
+
+            return node.Children.Count == 0 ? node : node.WithChildren(node.Children.Select(Visit));
+        }
+    }
+
     /// <summary>Copies a formula, moving only relative reference coordinates.</summary>
     /// <param name="formula">Original formula.</param>
     /// <param name="rowDelta">Row displacement.</param>

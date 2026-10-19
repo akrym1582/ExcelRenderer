@@ -193,6 +193,9 @@ public static partial class OpenXmlWorkbookWriter
 
     private static void RewriteSheetStructures(SheetSource source, StructuralReferences references, string name, CancellationToken token)
     {
+        var originalPriorities = source.Children.Where(element => element.Name.LocalName == "conditionalFormatting")
+            .SelectMany(element => element.Elements(Ns + "cfRule")).Select(rule => (int?)rule.Attribute("priority")).ToArray();
+        var validPriorities = originalPriorities.All(priority => priority > 0) && originalPriorities.Distinct().Count() == originalPriorities.Length;
         for (var index = 0; index < source.Children.Count; index++)
         {
             var element = source.Children[index];
@@ -252,6 +255,19 @@ public static partial class OpenXmlWorkbookWriter
                 {
                     RewriteAttributes(element, source.Plan, references, name);
                 }
+            }
+        }
+
+        // Expansion can split one logical rule into disjoint application sets. Give
+        // those clones unique priorities while preserving every original conflict
+        // and stopIfTrue ordering. Do not repair already-invalid input priorities.
+        if (references.HasRowChanges && validPriorities)
+        {
+            var priority = 0;
+            foreach (var rule in source.Children.Where(element => element.Name.LocalName == "conditionalFormatting")
+                .SelectMany(element => element.Elements(Ns + "cfRule")).OrderBy(rule => (int?)rule.Attribute("priority")))
+            {
+                rule.SetAttributeValue("priority", ++priority);
             }
         }
     }

@@ -35,6 +35,17 @@ internal partial class CoreExcelReader
     /// <returns>A read-local substitution, or null to retain saved cells.</returns>
     protected virtual Func<CellRecord, CellRecord>? CreateCellValueResolver(IWorkbookDataReader reader, CancellationToken cancellationToken) => null;
 
+    /// <summary>Completes product-specific cell appearances before shared merged-border aggregation.</summary>
+    /// <param name="info">Immutable source sheet geometry.</param>
+    /// <param name="cells">Read-local cells.</param>
+    /// <param name="regions">Existing finite rendering regions.</param>
+    /// <param name="blankStyle">Resolves inherited ordinary styles for missing cells.</param>
+    /// <param name="styles">Read-local style interning.</param>
+    /// <param name="token">Cooperative cancellation.</param>
+    protected virtual void CompleteCellAppearances(WorksheetInfo info, Dictionary<CellAddress, ReportCell> cells, IReadOnlyList<CellRange> regions, Func<CellAddress, CellStyle> blankStyle, StylePool styles, CancellationToken token)
+    {
+    }
+
     private static SourceCellText? ReadOpenXmlCellText(CellRecord source, CellStyleInfo style)
     {
         if (source.Formula is not null || source.RichTextRuns.Count == 0)
@@ -343,6 +354,7 @@ internal partial class CoreExcelReader
                 }
 
                 WorkbookModelBuilder.AddStyledBlanks(rowDefaults, columnDefaults, regions, cells, BlankStyle);
+                CompleteCellAppearances(info, cells, regions, address => BlankStyle(rowDefaults.TryGetValue(address.Row, out var rowStyle) ? rowStyle : columnDefaults[address.Column] ?? 0), styles, token);
                 WorkbookModelBuilder.ApplyMergedSpans(cells, merged, styles);
             }
 

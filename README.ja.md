@@ -508,9 +508,9 @@ Core 単独の通常フォント一つという仕様と、Markdown のプレー
 
 回転・縦書きとの併用はセル単一書式へ縮退します。取り消し線、上付き・下付き、
 二重・会計下線、ふりがなは描画しません。追加検出を有効にすると、未対応の部分書式と
-条件付き書式を診断します。anchor のあるグラフは既存の `UnsupportedDrawingObject`
+未対応の条件付き書式を診断します。anchor のあるグラフは既存の `UnsupportedDrawingObject`
 コードを維持し、追加検出時は選択ページの preflight で対象範囲へ絞り込みます。
-グラフや条件付き書式の描画は追加していません。
+グラフは描画しません。本体では対応する条件付き書式を既定で適用します。
 
 ```sh
 excelrenderer render input.xlsx -o output.pdf --format pdf \
@@ -530,6 +530,21 @@ ink bounds を完全に判定する機能ではありません。`CellTextTooSma
 診断のみを返し、成果物は作りません。`RenderRequest.TextMeasurer` で呼び出し元所有の旧計測サービスを
 指定できます。`IRichTextLayoutService` がなければセル書式へ縮退し、opt-in 時に preflight で
 `RichTextLayoutFallback` を出します。既定は組込みサービスで、診断だけの追加グリフ計測は行いません。
+
+## 条件付き書式
+
+本体では cellIs・数式・文字列・空白・エラー条件を既定で適用します。
+単色背景、文字色・太字・斜体・単一下線、上下左右の罫線を、優先度と
+stopIfTrue に従って合成し、PDF・PNG・SVG 共通のモデルへ反映します。
+`ExcelReadOptions.ApplyConditionalFormatting = false` で無効化でき、
+`RenderRequest.ReadOptions` からも指定できます。保存値モードでは参照先の
+保存された型付き値を使い、再計算モードでは表示と同じ計算セッションを使います。
+**Core 単独は条件付き書式に対応せず、通常の保存書式を維持します。**
+Markdown に新しい色表現は追加しません。
+
+カラースケール・データバー・アイコンセット・条件付き表示形式・x14 描画は
+対象外です。未対応・評価不能は診断で確認できます。
+[対応表、診断、検証上の制約](docs/conditional-formatting.md)を参照してください。
 
 ## ワークブックの読み込みと数式の保存結果
 
@@ -615,7 +630,7 @@ Excel (.xlsx) → ReportDocument → RenderDocument → DrawCommand → PDF / PN
 
 - 数式表示の既定値は保存結果です。明示再計算は[対応構文・40関数](docs/formulas-reference.ja.md)を扱い、Excel の計算機能すべてとの互換性は保証しません。
 - Excel のグラフには対応していません。
-- 条件付き書式は描画しません。
+- 条件付き書式は本体で第1段階のルールに対応します。Core は通常の保存書式を使用します。[対応範囲と制約](docs/conditional-formatting.md)を参照してください。
 - すべての用紙サイズには対応していません。
 - ヘッダー、フッターのすべての書式指定には対応していません。
 - ページ分割は行・列の境界で行い、結合セル、行、列の途中では分割しません。

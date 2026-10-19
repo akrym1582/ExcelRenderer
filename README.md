@@ -511,9 +511,9 @@ fallback. Core-only output keeps its single regular font. Markdown stays plain t
 Partial formatting with rotated/vertical cell text falls back to the cell font.
 Strikethrough, superscript/subscript, double/accounting underlines and phonetics are
 not rendered. Enable additional detection to report unsupported partial formatting
-and conditional formatting. Anchored chart diagnostics retain the existing
+and unsupported conditional formatting. Anchored chart diagnostics retain the existing
 `UnsupportedDrawingObject` code and are filtered during selected-page preflight
-when additional detection is enabled. No chart or conditional-format rendering is added.
+when additional detection is enabled. Charts are not rendered. Supported conditional formatting is applied by default in the main library.
 
 ```sh
 excelrenderer render input.xlsx -o output.pdf --format pdf \
@@ -535,6 +535,21 @@ only chart sheets returns diagnostics and no artifacts. `RenderRequest.TextMeasu
 can supply a caller-owned legacy service. Without `IRichTextLayoutService`, rich cells
 use the cell font and emit opt-in `RichTextLayoutFallback` in preflight. The built-in
 service remains the default. No additional glyph measurement is done just for diagnostics.
+
+## Conditional formatting
+
+The main library applies supported `cellIs`, expression, text, blank and error rules
+by default, including solid fills, font color/bold/italic/single underline and four
+border edges. Rules share priority, `stopIfTrue`, typed values and rich-text handling
+across PDF, PNG and SVG. Disable with
+`new ExcelReadOptions { ApplyConditionalFormatting = false }`, also available through
+`RenderRequest.ReadOptions`. Cached mode uses saved dependency values; Recalculate
+shares the display calculation session. **Core retains ordinary saved styles and does
+not evaluate conditional formatting.** Markdown adds no color syntax.
+
+Unsupported rules/styles and evaluation failures remain diagnosable. Color scales,
+data bars, icon sets, conditional number formats and x14 rendering are outside Phase 1.
+See [conditional formatting support, diagnostics and verification](docs/conditional-formatting.md).
 
 ## Workbook reading and formula results
 
@@ -632,7 +647,7 @@ See [Architecture](docs/architecture.md) for the layout passes, drawing commands
 - Charts are not supported.
 - Formula display uses saved results by default; explicit recalculation supports the
   [documented syntax and 40 functions](docs/formulas-reference.md). Full Excel calculation compatibility is not guaranteed.
-- Conditional formatting is not rendered.
+- Conditional formatting supports Phase 1 rules in the main library; Core uses ordinary saved styles. See [support and limitations](docs/conditional-formatting.md).
 - Not every paper size or header/footer formatting code is supported.
 - Page breaks occur only at row and column boundaries.
 - Japanese top-to-bottom mode stacks Unicode text elements; it does not yet select full

@@ -100,7 +100,10 @@ internal static class OpenXmlStyleConverter
     /// <returns>Whether the saved flag is true.</returns>
     internal static bool Boolean(ElementInfo? element, string name) => Attribute(element, name) is "1" or "true";
 
-    private static BorderSide? Border(ElementInfo? edge)
+    /// <summary>Converts one explicitly supplied source border edge, including an explicit empty edge.</summary>
+    /// <param name="edge">The saved edge.</param>
+    /// <returns>The stroke, or null for no border.</returns>
+    internal static BorderSide? Border(ElementInfo? edge)
     {
         var style = Attribute(edge, "style");
         if (style is null or "none")

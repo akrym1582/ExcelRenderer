@@ -1,0 +1,5 @@
+  Successfully created package '/workspace/ExcelRenderer/artifacts/packages-conditional-formatting-verified/ExcelRenderer.Mapping.1.10.0.nupkg'.
+  Successfully created package '/workspace/ExcelRenderer/artifacts/packages-conditional-formatting-verified/ExcelRenderer.1.10.0.nupkg'.
+  Successfully created package '/workspace/ExcelRenderer/artifacts/packages-conditional-formatting-verified/ExcelRenderer.Fonts.1.10.0.nupkg'.
+  ExcelRenderer.Tool -> /workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/publish/
+  Successfully created package '/workspace/ExcelRenderer/artifacts/packages-conditional-formatting-verified/ExcelRenderer.Tool.1.10.0.nupkg'.

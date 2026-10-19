@@ -25,12 +25,10 @@ internal sealed partial class FullExcelReader
             ExtensionData = new FullSheetData(context.IncludeBody ? data.Shapes.GetValueOrDefault(sheet.Name, []) : [], data.Hyperlinks.GetValueOrDefault(sheet.Name))
             {
                 DimensionRanges = context.Metadata.AdditionalGeometry.GetValueOrDefault(sheet.Name, []),
-                CellReadDiagnostics = context.Metadata.CellDiagnostics.GetValueOrDefault(sheet.Name, []).Select(CoreDiagnosticAdapter.ToPublic).ToArray(),
-                UnsupportedFeatures = context.IncludeBody && detectUnsupportedFeatures ? data.UnsupportedFeatures.GetValueOrDefault(sheet.Name, []).Concat(context.ConditionalFormattingRanges.Select((ranges, index) => new UnsupportedFeature(
-                    "UnsupportedConditionalFormatting",
-                    "A conditional formatting rule exists but its visual effects are not rendered.",
-                    "conditional-format-" + (index + 1),
-                    ranges.Select(CoreModelAdapter.ToPublic).ToArray()))).ToArray() : [],
+                CellReadDiagnostics = context.Metadata.CellDiagnostics.GetValueOrDefault(sheet.Name, []).Select(CoreDiagnosticAdapter.ToPublic)
+                    .Concat(conditionalFormatting.TryGetValue(context.SourceSheetIndex, out var evaluation) ? evaluation.Diagnostics : []).ToArray(),
+                UnsupportedFeatures = context.IncludeBody && detectUnsupportedFeatures ? data.UnsupportedFeatures.GetValueOrDefault(sheet.Name, [])
+                    .Concat(conditionalFormatting.TryGetValue(context.SourceSheetIndex, out var conditional) ? conditional.Features : []).ToArray() : [],
             },
         };
     }

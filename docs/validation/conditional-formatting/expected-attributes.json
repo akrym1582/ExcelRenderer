@@ -1,0 +1,19 @@
+{
+  "provenance": "Hand-authored expectations from the supplied OOXML, not renderer output or Excel observation",
+  "fixture": "representative.xlsx",
+  "date": "2026-10-19",
+  "excelVersion": null,
+  "excelDesktopCompared": false,
+  "sheet": "data",
+  "cells": {
+    "A1": {
+      "text": "Conditional",
+      "backgroundRgb": "FFFF00",
+      "fontRgb": "FF0000",
+      "bottomBorderStyle": "solid",
+      "bottomBorderWidthPt": 2
+    }
+  },
+  "rule": { "type": "expression", "formula": "TRUE", "priority": 1, "sqref": "A1:B1" },
+  "core": { "backgroundRgb": null, "conditionalFontOverride": false, "conditionalBorderOverride": false }
+}

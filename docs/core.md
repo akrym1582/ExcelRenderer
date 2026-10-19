@@ -76,3 +76,7 @@ Core always uses OpenXml.Reader. Generic input/spool storage is shared through R
 Run `python3 scripts/validate-reader-isolation.py` to publish and execute separate Core and Reader consumers. It verifies the initial output, restore/runtime graphs and actual Core/Reader AssemblyRefs without deleting dependencies. The Core consumer generates a PDF from typed saved formula results and checks the missing-cache diagnostic.
 
 Font collections use `PdfExportOptions.FontCollectionIndex` (zero-based, default 0). See [font support](managed-truetype-subset.md).
+
+## Conditional formatting boundary
+
+Core renders ordinary saved styles and never evaluates conditional formatting. The main library owns its optional evaluator; the shared reader only offers a generic no-op appearance completion hook before merged borders. Core has no CF option, formula dependency or calculation snapshot. See [main support](conditional-formatting.md).

@@ -50,7 +50,7 @@ public sealed class LayoutDiagnosticTests
     }
 
     [Fact]
-    public async Task MarkdownHasNoLayoutWarningsAndConditionalFormattingIsOptIn()
+    public async Task MarkdownHasNoLayoutWarningsAndSupportedConditionalFormattingIsNotReportedUnsupported()
     {
         using var input = CreateWorkbook();
         using var output = new MemoryStream();
@@ -60,7 +60,7 @@ public sealed class LayoutDiagnosticTests
             DiagnosticOptions = new() { EnableLayoutWarnings = true, DetectUnsupportedFeatures = true },
         }, new SingleStreamOutputSink(output));
         Assert.DoesNotContain(result.Diagnostics, d => d.Code is "CellTextClipped" or "CellTextTooSmall");
-        Assert.Contains(result.Diagnostics, d => d.Code == "UnsupportedConditionalFormatting" && d.ObjectId == "conditional-format-1");
+        Assert.DoesNotContain(result.Diagnostics, d => d.Code == "UnsupportedConditionalFormatting");
     }
 
     [Fact]

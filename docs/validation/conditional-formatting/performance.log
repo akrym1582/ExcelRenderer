@@ -1,0 +1,269 @@
+0: plain/core/before
+0: plain/core/after
+0: plain/enabled/before
+0: plain/enabled/after
+0: rules/disabled/after
+0: rules/enabled/after
+0: whole-column/disabled/after
+0: whole-column/enabled/after
+0: overlap/disabled/after
+0: overlap/enabled/after
+0: recalculate/recalculate-disabled/after
+0: recalculate/recalculate/after
+1: plain/core/after
+1: plain/core/before
+1: plain/enabled/after
+1: plain/enabled/before
+1: rules/disabled/after
+1: rules/enabled/after
+1: whole-column/disabled/after
+1: whole-column/enabled/after
+1: overlap/disabled/after
+1: overlap/enabled/after
+1: recalculate/recalculate-disabled/after
+1: recalculate/recalculate/after
+2: plain/core/before
+2: plain/core/after
+2: plain/enabled/before
+2: plain/enabled/after
+2: rules/disabled/after
+2: rules/enabled/after
+2: whole-column/disabled/after
+2: whole-column/enabled/after
+2: overlap/disabled/after
+2: overlap/enabled/after
+2: recalculate/recalculate-disabled/after
+2: recalculate/recalculate/after
+[
+  {
+    "fixture": "plain",
+    "mode": "core",
+    "stage": "before",
+    "elapsedMs": 403.3216,
+    "allocatedBytes": 190757768,
+    "peakRssBytes": 346505216,
+    "count": 100000,
+    "painted": 0,
+    "metrics": {
+      "fontSnapshotRead": 1,
+      "typefaceCreated": 1,
+      "openXmlReaderWorkbook": 1,
+      "readerStyleConversions": 1,
+      "readerStyleCacheHits": 99999,
+      "readerStyleCacheEntries": 2,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "fixture": "plain",
+    "mode": "core",
+    "stage": "after",
+    "elapsedMs": 389.2175,
+    "allocatedBytes": 190758360,
+    "peakRssBytes": 346447872,
+    "count": 100000,
+    "painted": 0,
+    "metrics": {
+      "fontSnapshotRead": 1,
+      "typefaceCreated": 1,
+      "openXmlReaderWorkbook": 1,
+      "readerStyleConversions": 1,
+      "readerStyleCacheHits": 99999,
+      "readerStyleCacheEntries": 2,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "fixture": "plain",
+    "mode": "enabled",
+    "stage": "before",
+    "elapsedMs": 549.5298,
+    "allocatedBytes": 282770512,
+    "peakRssBytes": 263933952,
+    "count": 100000,
+    "painted": 0,
+    "metrics": {
+      "openXmlReaderWorkbook": 1,
+      "readerStyleConversions": 1,
+      "readerStyleCacheHits": 99999,
+      "readerStyleCacheEntries": 2,
+      "model.cells": 100000,
+      "model.ms": 26.9216
+    }
+  },
+  {
+    "fixture": "plain",
+    "mode": "enabled",
+    "stage": "after",
+    "elapsedMs": 541.5778,
+    "allocatedBytes": 282771088,
+    "peakRssBytes": 267653120,
+    "count": 100000,
+    "painted": 0,
+    "metrics": {
+      "openXmlReaderWorkbook": 1,
+      "readerStyleConversions": 1,
+      "readerStyleCacheHits": 99999,
+      "readerStyleCacheEntries": 2,
+      "model.cells": 100000,
+      "model.ms": 25.879
+    }
+  },
+  {
+    "fixture": "rules",
+    "mode": "disabled",
+    "stage": "after",
+    "elapsedMs": 424.2003,
+    "allocatedBytes": 186960528,
+    "peakRssBytes": 327507968,
+    "count": 60000,
+    "painted": 0,
+    "metrics": {
+      "openXmlReaderWorkbook": 1,
+      "readerStyleConversions": 1,
+      "readerStyleCacheHits": 59999,
+      "readerStyleCacheEntries": 2,
+      "model.cells": 60000,
+      "model.ms": 12.4251
+    }
+  },
+  {
+    "fixture": "rules",
+    "mode": "enabled",
+    "stage": "after",
+    "elapsedMs": 822.9114,
+    "allocatedBytes": 500943496,
+    "peakRssBytes": 354840576,
+    "count": 60000,
+    "painted": 32599,
+    "metrics": {
+      "calculation.snapshots": 1,
+      "openXmlReaderWorkbook": 1,
+      "conditionalFormatting.evaluations": 90000,
+      "conditionalFormatting.candidates": 60000,
+      "readerStyleConversions": 1,
+      "readerStyleCacheHits": 59999,
+      "readerStyleCacheEntries": 2,
+      "model.cells": 60000,
+      "model.ms": 10.7083
+    }
+  },
+  {
+    "fixture": "whole-column",
+    "mode": "disabled",
+    "stage": "after",
+    "elapsedMs": 415.7189,
+    "allocatedBytes": 186960112,
+    "peakRssBytes": 327380992,
+    "count": 60000,
+    "painted": 0,
+    "metrics": {
+      "openXmlReaderWorkbook": 1,
+      "readerStyleConversions": 1,
+      "readerStyleCacheHits": 59999,
+      "readerStyleCacheEntries": 2,
+      "model.cells": 60000,
+      "model.ms": 11.8914
+    }
+  },
+  {
+    "fixture": "whole-column",
+    "mode": "enabled",
+    "stage": "after",
+    "elapsedMs": 864.4978,
+    "allocatedBytes": 500942584,
+    "peakRssBytes": 355086336,
+    "count": 60000,
+    "painted": 32599,
+    "metrics": {
+      "calculation.snapshots": 1,
+      "openXmlReaderWorkbook": 1,
+      "conditionalFormatting.evaluations": 90000,
+      "conditionalFormatting.candidates": 60000,
+      "readerStyleConversions": 1,
+      "readerStyleCacheHits": 59999,
+      "readerStyleCacheEntries": 2,
+      "model.cells": 60000,
+      "model.ms": 12.0818
+    }
+  },
+  {
+    "fixture": "overlap",
+    "mode": "disabled",
+    "stage": "after",
+    "elapsedMs": 433.6601,
+    "allocatedBytes": 187050512,
+    "peakRssBytes": 327847936,
+    "count": 60000,
+    "painted": 0,
+    "metrics": {
+      "openXmlReaderWorkbook": 1,
+      "readerStyleConversions": 1,
+      "readerStyleCacheHits": 59999,
+      "readerStyleCacheEntries": 2,
+      "model.cells": 60000,
+      "model.ms": 14.0314
+    }
+  },
+  {
+    "fixture": "overlap",
+    "mode": "enabled",
+    "stage": "after",
+    "elapsedMs": 1514.4845,
+    "allocatedBytes": 1222192672,
+    "peakRssBytes": 351784960,
+    "count": 60000,
+    "painted": 30000,
+    "metrics": {
+      "calculation.snapshots": 1,
+      "openXmlReaderWorkbook": 1,
+      "conditionalFormatting.evaluations": 960000,
+      "conditionalFormatting.candidates": 60000,
+      "readerStyleConversions": 1,
+      "readerStyleCacheHits": 59999,
+      "readerStyleCacheEntries": 2,
+      "model.cells": 60000,
+      "model.ms": 11.5898
+    }
+  },
+  {
+    "fixture": "recalculate",
+    "mode": "recalculate-disabled",
+    "stage": "after",
+    "elapsedMs": 623.2695,
+    "allocatedBytes": 289571368,
+    "peakRssBytes": 344981504,
+    "count": 60000,
+    "painted": 0,
+    "metrics": {
+      "calculation.snapshots": 1,
+      "openXmlReaderWorkbook": 1,
+      "readerStyleConversions": 1,
+      "readerStyleCacheHits": 59999,
+      "readerStyleCacheEntries": 2,
+      "model.cells": 60000,
+      "model.ms": 28.018
+    }
+  },
+  {
+    "fixture": "recalculate",
+    "mode": "recalculate",
+    "stage": "after",
+    "elapsedMs": 977.9855,
+    "allocatedBytes": 575284136,
+    "peakRssBytes": 360624128,
+    "count": 60000,
+    "painted": 60000,
+    "metrics": {
+      "calculation.snapshots": 1,
+      "openXmlReaderWorkbook": 1,
+      "conditionalFormatting.evaluations": 90000,
+      "conditionalFormatting.candidates": 60000,
+      "readerStyleConversions": 1,
+      "readerStyleCacheHits": 59999,
+      "readerStyleCacheEntries": 2,
+      "model.cells": 60000,
+      "model.ms": 16.6669
+    }
+  }
+]

@@ -9,20 +9,41 @@ namespace ExcelRenderer.CoreIntegration;
 /// <summary>Connects selective recalculation to the common reader before formatting.</summary>
 internal sealed partial class FullExcelReader
 {
+    private readonly Dictionary<int, ConditionalFormattingSession> conditionalFormatting = [];
+
     /// <inheritdoc/>
     protected override Func<CellRecord, CellRecord>? CreateCellValueResolver(IWorkbookDataReader reader, CancellationToken cancellationToken)
     {
-        if (readOptions.FormulaDisplayMode != Excel.FormulaDisplayMode.Recalculate)
+        conditionalFormatting.Clear();
+        var recalculate = readOptions.FormulaDisplayMode == Excel.FormulaDisplayMode.Recalculate;
+        var sheets = reader.SelectedWorksheetIndices.Select(index => reader.ReadWorksheetInfo(index, cancellationToken)).ToArray();
+        var hasConditionalRules = sheets.Any(info => info.ConditionalFormattingRules.Count > 0);
+        if (!recalculate && !hasConditionalRules)
         {
             return null;
         }
 
-        var calculation = WorkbookCalculationSession.Create(reader, readOptions.FormulaEvaluationOptions, cancellationToken);
-        var targets = reader.SelectedWorksheetIndices.ToDictionary(index => index, index => CreateCalculationTarget(reader.ReadWorksheetInfo(index, cancellationToken)));
-        return cell => cell.Formula is not null && targets[cell.SheetIndex](cell.Address) ? calculation.EvaluateCell(cell) : cell;
+        var calculation = recalculate ? WorkbookCalculationSession.Create(reader, readOptions.FormulaEvaluationOptions, cancellationToken) :
+            hasConditionalRules && readOptions.ApplyConditionalFormatting ? WorkbookCalculationSession.CreateSavedValueSession(reader, readOptions.FormulaEvaluationOptions, cancellationToken) : null;
+        var targets = sheets.ToDictionary(info => info.Sheet.Index, info => CreateCalculationTarget(info));
+        foreach (var info in sheets.Where(info => info.ConditionalFormattingRules.Count > 0))
+        {
+            conditionalFormatting.Add(info.Sheet.Index, new(info, calculation, readOptions, CreateCalculationTarget(info, true)));
+        }
+
+        return !recalculate ? null : cell => cell.Formula is not null && targets[cell.SheetIndex](cell.Address) ? calculation!.EvaluateCell(cell) : cell;
     }
 
-    private Func<CellAddress, bool> CreateCalculationTarget(WorksheetInfo info)
+    /// <inheritdoc/>
+    protected override void CompleteCellAppearances(WorksheetInfo info, Dictionary<Core.Model.CellAddress, Core.Model.ReportCell> cells, IReadOnlyList<Core.Model.CellRange> regions, Func<Core.Model.CellAddress, Core.Model.CellStyle> blankStyle, Core.Excel.StylePool styles, CancellationToken token)
+    {
+        if (conditionalFormatting.TryGetValue(info.Sheet.Index, out var session))
+        {
+            session.Apply(cells, regions, blankStyle, styles, token);
+        }
+    }
+
+    private Func<CellAddress, bool> CreateCalculationTarget(WorksheetInfo info, bool appearance = false)
     {
         var selectedRegion = readOptions.GetSelectedRange?.Invoke(info.Sheet.Name);
         var mergeBands = new Core.Layout.BandIndex<OpenXml.Reader.Model.Cells.CellRange>(info.MergedRanges.Select(range => (range, (double)range.First.Row, (double)range.Last.Row + 1)));
@@ -43,7 +64,7 @@ internal sealed partial class FullExcelReader
 
         bool IsCalculationTarget(CellAddress address)
         {
-            if (readOptions.IsFormulaTarget is { } isTarget)
+            if ((appearance ? readOptions.IsConditionalFormattingTarget : readOptions.IsFormulaTarget) is { } isTarget)
             {
                 return isTarget(info.Sheet.Name, address.Row, address.Column);
             }

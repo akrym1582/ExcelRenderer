@@ -121,6 +121,8 @@ def verify_outlines(page):
             errors.append("Unknown outline source: " + str(name)); continue
         original, source_glyphs = source_font(name)
         embedded_glyphs = embedded.getGlyphSet()
+        if embedded['head'].unitsPerEm != original['head'].unitsPerEm:
+            errors.append(f"Changed source unitsPerEm {name}")
         used = {glyph["gid"] for glyph in glyphs(page) if family(glyph["font"]) == family(name)}
         for gid in used:
             try:
@@ -128,6 +130,8 @@ def verify_outlines(page):
                 after = DecomposingRecordingPen(embedded_glyphs)
                 source_glyphs[original.getGlyphOrder()[gid]].draw(before)
                 embedded_glyphs[embedded.getGlyphOrder()[gid]].draw(after)
+                if original['hmtx'][original.getGlyphOrder()[gid]] != embedded['hmtx'][embedded.getGlyphOrder()[gid]]:
+                    errors.append(f"Changed source metrics {name}:{gid}")
                 if before.value != after.value:
                     errors.append(f"Changed source outline {name}:{gid}")
                 count += 1
@@ -235,10 +239,20 @@ def image_crop_evidence(page):
 
 
 def verify_font_formats(directory):
+    import json
     import subprocess
     results = []
     for name in ("static.ttf", "cff.otf", "variable.ttf", "collection.ttc", "colr.ttf", "colr-v1.ttf"):
         path = directory / (name + ".pdf")
+        outcomes = json.loads((directory / (name + '.json')).read_text(encoding='utf-8'))
+        assert len(outcomes) == 2, (name, outcomes)
+        if name in ('cff.otf', 'variable.ttf'):
+            reason = 'CFF' if name == 'cff.otf' else 'variable'
+            assert all(not row['success'] and reason in row['error'] for row in outcomes), (name, outcomes)
+            assert not path.exists(), ('Unsupported PDF font produced output', path)
+            results.append({'font': name, 'rejected': True, 'reason': reason})
+            continue
+        assert all(row['success'] for row in outcomes), (name, outcomes)
         document = fitz.open(path)
         mupdf = document[0].get_text().strip()
         poppler = subprocess.check_output(["pdftotext", "-raw", str(path), "-"], text=True).strip()

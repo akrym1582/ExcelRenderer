@@ -58,9 +58,16 @@ is internal and disabled in ordinary conversions; the manifest schema is unchang
 See `docs/skia-pdf-validation.md` for actual results, platform scope and manual viewer steps.
 
 The unchanged first-stage reviewed list applies only to A→C. B→C must pass without
-exceptions. `pdf_native_evidence.py` checks frozen B hashes, byte-identical drawing
-content and embedded streams, native C encoded-stream/object-identity preservation,
-single-copy image payloads, and bounded numeric metadata precision. The old save path's implicit RGB page transparency group
+exceptions. `pdf_native_evidence.py` checks frozen B hashes, drawing content,
+byte-identical image streams, native C encoded-stream/object-identity preservation,
+single-copy image payloads, and bounded numeric metadata precision. Drawing content
+may omit only balanced nonpainting graphics-state scopes containing empty BT/ET.
+The managed subset intentionally changes embedded font bytes, head bounds and
+Skia's stem estimate: used GIDs retain exact source outlines and horizontal metrics,
+descriptor bounds must match the retained glyph union, and a changed zero stem
+estimate requires an empty i/I/!/1 probe in the subset. Other descriptor fields
+keep the existing precision bounds. No fixed PDFs or raster exceptions are changed.
+The old save path's implicit RGB page transparency group
 is explicitly retained; otherwise byte-identical content still rasterizes differently.
 No golden/list update is used to accept that compositing difference.
 

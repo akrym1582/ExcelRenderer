@@ -19,11 +19,11 @@ root = Path(__file__).resolve().parents[1]
 packages, work = a.packages.resolve(), a.work.resolve()
 work.mkdir(parents=True, exist_ok=True)
 config = work / 'NuGet.Config'
-config.write_text(f'<configuration><packageSources><clear/><add key="local" value="{packages}"/><add key="nuget" value="https://api.nuget.org/v3/index.json"/></packageSources><packageSourceMapping><packageSource key="local"><package pattern="ExcelRenderer*"/></packageSource><packageSource key="nuget"><package pattern="*"/></packageSource></packageSourceMapping></configuration>')
+config.write_text(f'<configuration><packageSources><clear/><add key="local" value="{packages}"/><add key="nuget" value="https://api.nuget.org/v3/index.json"/></packageSources><packageSourceMapping><packageSource key="local"><package pattern="ExcelRenderer*"/></packageSource><packageSource key="nuget"><package pattern="*"/></packageSource></packageSourceMapping></configuration>', encoding='utf-8')
 inventory = check_packages(packages)
 versions = {name: record['version'] for name, record in inventory.items()}
-(work / 'inventory.json').write_text(json.dumps(inventory, indent=2) + '\n')
-runtime_lines = subprocess.check_output(['dotnet', '--list-runtimes'], text=True).splitlines()
+(work / 'inventory.json').write_text(json.dumps(inventory, indent=2) + '\n', encoding='utf-8')
+runtime_lines = subprocess.check_output(['dotnet', '--list-runtimes'], encoding='utf-8').splitlines()
 runtime_path = next(line.rsplit('[', 1)[1].rstrip(']') for line in runtime_lines if line.startswith('Microsoft.NETCore.App 10.'))
 env = dict(os.environ, NUGET_PACKAGES=str(work / 'packages'), DOTNET_ROOT=str(Path(runtime_path).parents[1]))
 
@@ -39,11 +39,11 @@ def audit_consumer(directory):
     paths = list(directory.rglob('project.assets.json')) + list(directory.rglob('*.deps.json'))
     assert paths, f'No restored/runtime graph: {directory}'
     for path in paths:
-        graph = json.loads(path.read_text())
+        graph = json.loads(path.read_text(encoding='utf-8'))
         libraries = sorted(graph.get('libraries', {}))
         assert not any('pdfsharp' in name.lower().replace('-', '').replace('_', '').replace('.', '') for name in libraries), path
         consumer_graphs.append({'path': str(path.relative_to(work)), 'libraries': libraries})
-    (work / 'consumer-graphs.json').write_text(json.dumps(consumer_graphs, indent=2) + '\n')
+    (work / 'consumer-graphs.json').write_text(json.dumps(consumer_graphs, indent=2) + '\n', encoding='utf-8')
 
 fixture = '''
 using var input = new MemoryStream();
@@ -168,7 +168,7 @@ using (var pdf = new MemoryStream()) {
 ''')
 # Keep the documented low-level sample executable against each supported package
 # choice, rather than relying only on source-project references.
-namespace_sample = (root / 'samples/namespace-migration/Program.cs').read_text()
+namespace_sample = (root / 'samples/namespace-migration/Program.cs').read_text(encoding='utf-8')
 programs['namespace-main'] = (['ExcelRenderer'], namespace_sample)
 programs['namespace-mapping'] = (['ExcelRenderer.Mapping'], namespace_sample)
 programs['namespace-combined'] = (['ExcelRenderer', 'ExcelRenderer.Mapping'], namespace_sample)
@@ -177,8 +177,8 @@ font=root/'third_party/NotoSansJP/NotoSansJP-Regular.ttf'
 for name,(refs,code) in programs.items():
     directory=work/name;directory.mkdir(exist_ok=True)
     references=''.join(f'<PackageReference Include="{ref}" Version="{versions[ref]}"/>' for ref in refs)
-    (directory/'consumer.csproj').write_text(f'<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable></PropertyGroup><ItemGroup>{references}</ItemGroup></Project>')
-    (directory/'Program.cs').write_text(code+'\nConsole.WriteLine("'+name+' passed");\n')
+    (directory/'consumer.csproj').write_text(f'<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable></PropertyGroup><ItemGroup>{references}</ItemGroup></Project>', encoding='utf-8')
+    (directory/'Program.cs').write_text(code+'\nConsole.WriteLine("'+name+' passed");\n', encoding='utf-8')
     run('dotnet','restore','--configfile',config,cwd=directory)
     arguments = [] if name.startswith('namespace-') else [fixture_path, font, root / 'tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc']
     run('dotnet','run','-c','Release','--no-restore','--',*arguments,cwd=directory)
@@ -195,7 +195,7 @@ if tool_command.exists():
 (work/'cli.md').unlink(missing_ok=True)
 run('dotnet','tool','install','ExcelRenderer.Tool','--version',versions['ExcelRenderer.Tool'],'--tool-path',tool,'--configfile',config)
 run(tool_command,'md',fixture_path,'--formula-mode','recalculate','-o',work/'cli.md')
-assert '413' in (work/'cli.md').read_text()
+assert '413' in (work/'cli.md').read_text(encoding='utf-8')
 for command in ('pdf', 'render'):
     destination = work / f'cli-{command}-skia.pdf'
     destination.unlink(missing_ok=True)
@@ -234,7 +234,7 @@ for name, reason in [('cff.otf', 'CFF'), ('variable.ttf', 'variable')]:
     command = [str(tool_command), 'pdf', str(font_fixture), '-o', str(destination),
         '--font-file', str(root / 'tests/ExcelRenderer.Tests/Fonts/PdfFormats' / name),
         '--font-face-index', '0', '--fallback-font', 'PDF Format Fixture', '--no-system-fonts']
-    rejected = subprocess.run(command, env=env, text=True, capture_output=True)
+    rejected = subprocess.run(command, env=env, encoding='utf-8', capture_output=True)
     assert rejected.returncode != 0 and reason in rejected.stderr, (name, rejected.stderr)
     assert not destination.exists(), 'Unsupported font committed an installed-CLI PDF'
 print('Installed CLI used collection face 1 and rejected CFF/variable fonts without committing output')

@@ -553,6 +553,9 @@ and evaluation failures remain diagnosable. Collapsed color-scale thresholds ret
 ordinary fill with a diagnostic. Data bars, icon sets, timePeriod, conditional number
 formats and x14 rendering remain unsupported; desktop Excel equivalence is unverified.
 See [conditional formatting support, diagnostics and verification](docs/conditional-formatting.md).
+The [Phase 2 validation report](docs/validation/conditional-formatting-phase2/README.md)
+records functional checks and performance measurements; the 5% regression goal remains
+unconfirmed for the small input without conditional formatting.
 
 ## Workbook reading and formula results
 

@@ -548,6 +548,8 @@ Markdown に新しい色表現は追加しません。
 データバー・アイコンセット・timePeriod・条件付き表示形式・x14 描画は対象外です。
 未対応・評価不能は診断で確認できます。Excel実機との一致は未検証です。
 [対応表、診断、検証上の制約](docs/conditional-formatting.md)を参照してください。
+[第2段階の検証記録](docs/validation/conditional-formatting-phase2/README.md)に機能検証と
+性能測定をまとめています。条件付き書式のない小規模入力では、性能劣化5%以内の目標は未確認です。
 
 ## ワークブックの読み込みと数式の保存結果
 

@@ -255,11 +255,21 @@ Desktop Excel is unavailable in this Linux environment. **No Excel DisplayFormat
 Excel-exported PDF comparison has been performed.** Text/blank coercion and the first
 sqref anchor are explicit hand-authored expectations, not desktop-observed guarantees.
 Existing frozen references and hashes are unchanged. Windows execution is not claimed.
-See [the validation report](validation/conditional-formatting/README.md) for actual
+See [the Phase 1 validation report](validation/conditional-formatting/README.md) for actual
 commands, measurements, artifacts and remaining verification limits.
-
 
 Phase 2 tests additionally fix typed frequencies, ranking ties and percent rounding,
 population σ, percent versus percentile, dynamic/static fill priority, sparse whole-sheet
 blanks, overlaps, selection/hidden/formula policies, budgets and Mapping save/reload to
 all visual formats. See [Phase 2 evidence](validation/conditional-formatting-phase2/README.md).
+That report retains measured regressions and follow-ups: the small No-CF case does
+not establish the 5% performance goal under default scheduling.
+
+For development, source `scripts/test-fonts.sh` before Linux tests and finish any
+rebuild before running tests against its outputs. The Phase 2 benchmark is invoked
+through `scripts/benchmark-conditional-formatting.py --phase2`; provide separately
+built baseline and feature Release runtime directories, and a fresh output directory.
+Keep builds, tests and rendering idle during timing. For a repeated case, use
+`--fixture-source` to copy the first run's exact XLSX bytes and retain per-round/raw
+samples alongside DLL hashes. See the report for the complete reproduction commands
+and the optional Windows Excel DisplayFormat/PDF capture procedure.

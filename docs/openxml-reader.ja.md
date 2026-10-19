@@ -87,7 +87,11 @@ XML に存在する全 `c` を返します。書式だけの空セル、保存�
 診断コードは `ReaderDiagnosticCodes` で定義しています。Code、Severity、任意の元 sheet/address、セル内容や URI を含まない説明を返します。`DiagnosticSink` には通知しますが、Reader 内に全件蓄積しません。`FormatCell` はその呼び出しの少数の診断も返します。書式色の未解決診断は、書式の初回解決時に通知し、セルごとの表示で再通知しません。
 
 `HasDrawings`、`HasHyperlinks`、`HasConditionalFormatting`、`HasTables` は存在情報、
-`ConditionalFormattingRanges` は rule 本文を保持しない元の範囲です。条件付き書式は評価しません。
+`ConditionalFormattingRanges` は rule 本文を保持しない元の範囲です。
+別途 `WorksheetInfo.ConditionalFormattingRules` に不変のルール情報、順序付き sqref、式、
+カラースケール子要素を保持し、各ルールの `Style` に解決可能な差分書式を保持します。
+スケール色にも通常書式と同じ色解決を使います。Reader は対象セルの条件判定・母集団集計・
+色補間を行いません。[本体の対応範囲](conditional-formatting.md)を参照してください。
 `ReadImages` はバイト列を開かず、part/relationship 識別子・content type・anchor を返します。
 `OpenImageStream` の stream は呼び出し元で破棄し、Reader が生存する間だけ利用します。
 必要な内容は Reader 破棄前に移管してください。同じ part URI の bytes は name や配置と

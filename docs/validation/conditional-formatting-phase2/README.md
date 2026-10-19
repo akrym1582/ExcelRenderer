@@ -4,7 +4,8 @@ Fetched base: `origin/main` = `9ac854f97bfeebc511f89f36e6f340376cfb35d8`, matchi
 the task's 2026-10-19 plan. The initial `work` checkout was clean. Work branch:
 `feature/conditional-formatting-phase2`; implementation commit:
 `ab4ad115f700e05e4aae659e99910326568ec442`. The preceding implementation is `93079af0193d8cec498d690a7615c89057e7a5d0`.
-Follow-up evidence commits add retained artifacts. No remote push, PR, version bump or publication was performed.
+Follow-up evidence commits add retained artifacts. This report records local validation;
+version bumps and package publication are outside its scope.
 
 Linux x64, .NET SDK 10.0.401, runtime 10.0.12. All results below describe this
 environment. Windows/desktop Excel behavior is not established.

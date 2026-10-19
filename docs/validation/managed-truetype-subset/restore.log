@@ -1,0 +1,23 @@
+  Determining projects to restore...
+  Restored /workspace/excelrenderer-validation/clean/tests/ExcelRenderer.OpenXml.Tests/ExcelRenderer.OpenXml.Tests.csproj (in 1.14 sec).
+  Restored /workspace/excelrenderer-validation/clean/tests/ExcelRenderer.Mapping.Tests/ExcelRenderer.Mapping.Tests.csproj (in 1.14 sec).
+  Restored /workspace/excelrenderer-validation/clean/tools/ExcelRenderer.Core.Reference/ExcelRenderer.Core.Reference.csproj (in 1.14 sec).
+  Restored /workspace/excelrenderer-validation/clean/src/ExcelRenderer.Mapping/ExcelRenderer.Mapping.csproj (in 1.14 sec).
+  Restored /workspace/excelrenderer-validation/clean/tests/ExcelRenderer.Formulas.Tests/ExcelRenderer.Formulas.Tests.csproj (in 4 ms).
+  Restored /workspace/excelrenderer-validation/clean/tools/ExcelRenderer.Formulas.Performance/ExcelRenderer.Formulas.Performance.csproj (in 8 ms).
+  Restored /workspace/excelrenderer-validation/clean/tools/ExcelRenderer.OpenXml.Validation/ExcelRenderer.OpenXml.Validation.csproj (in 12 ms).
+  Restored /workspace/excelrenderer-validation/clean/tools/ExcelRenderer.Performance/ExcelRenderer.Performance.csproj (in 18 ms).
+  Restored /workspace/excelrenderer-validation/clean/tools/ExcelRenderer.PdfComparison/ExcelRenderer.PdfComparison.csproj (in 26 ms).
+  Restored /workspace/excelrenderer-validation/clean/tools/ExcelRenderer.Formulas.Oracle/ExcelRenderer.Formulas.Oracle.csproj (in 7 ms).
+  Restored /workspace/excelrenderer-validation/clean/tests/ExcelRenderer.Tool.Tests/ExcelRenderer.Tool.Tests.csproj (in 32 ms).
+  Restored /workspace/excelrenderer-validation/clean/tests/ExcelRenderer.Core.Tests/ExcelRenderer.Core.Tests.csproj (in 30 ms).
+  Restored /workspace/excelrenderer-validation/clean/tools/ExcelRenderer.Core.Validation/ExcelRenderer.Core.Validation.csproj (in 37 ms).
+  Restored /workspace/excelrenderer-validation/clean/src/ExcelRenderer/ExcelRenderer.csproj (in 25 ms).
+  Restored /workspace/excelrenderer-validation/clean/src/ExcelRenderer.Tool/ExcelRenderer.Tool.csproj (in 14 ms).
+  Restored /workspace/excelrenderer-validation/clean/src/ExcelRenderer.OpenXml/ExcelRenderer.OpenXml.csproj (in 27 ms).
+  Restored /workspace/excelrenderer-validation/clean/src/ExcelRenderer.Formulas/ExcelRenderer.Formulas.csproj (in 2 ms).
+  Restored /workspace/excelrenderer-validation/clean/tests/ExcelRenderer.Tests/ExcelRenderer.Tests.csproj (in 80 ms).
+  Restored /workspace/excelrenderer-validation/clean/src/ExcelRenderer.Core/ExcelRenderer.Core.csproj (in 3 ms).
+  Restored /workspace/excelrenderer-validation/clean/samples/ExcelRenderer.Formulas.Sample/ExcelRenderer.Formulas.Sample.csproj (in 12 ms).
+  Restored /workspace/excelrenderer-validation/clean/src/ExcelRenderer.Fonts/ExcelRenderer.Fonts.csproj (in 17 ms).
+  Restored /workspace/excelrenderer-validation/clean/samples/ExcelRenderer.Core.Sample/ExcelRenderer.Core.Sample.csproj (in 9 ms).

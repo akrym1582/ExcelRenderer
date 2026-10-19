@@ -1,0 +1,6 @@
+VSTest version 18.7.0 (x64)
+
+Starting test execution, please wait...
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:    56, Skipped:     0, Total:    56, Duration: 185 ms - ExcelRenderer.Core.Tests.dll (net10.0)

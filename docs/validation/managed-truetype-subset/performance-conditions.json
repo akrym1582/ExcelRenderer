@@ -1,0 +1,50 @@
+{
+  "configuration": "Release",
+  "warmups": 3,
+  "samples": 5,
+  "os": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "sdk": "10.0.401",
+  "peakRssScope": "fresh worker process (3 warmups + final measured conversion)",
+  "thresholdRatio": 2.0,
+  "order": "alternating old/new per round",
+  "assemblies": {
+    "old": {
+      "path": "/tmp/excelrenderer-subset-baseline/tools/ExcelRenderer.Performance/bin/Release/net10.0/ExcelRenderer.Performance.dll",
+      "mainSha256": "ecc6cc7449fb1507782a06043a8a7cbd0144d0dab9e1675f3bfcc093ae392ea4",
+      "coreSha256": "ba6209659a8b6cc39062125f4a119ff48a07a19f2f51292efa363c598f1cd3d2"
+    },
+    "managed": {
+      "path": "/workspace/excelrenderer-validation/clean/tools/ExcelRenderer.Performance/bin/Release/net10.0/ExcelRenderer.Performance.dll",
+      "mainSha256": "1f249f9eb8bdb9cf133ca7391dc2eadc59ea9ede9cf8c38d3a1ca8d0cba03b7a",
+      "coreSha256": "a0d2b1cc796979ad7148431eccdf2a4edf7fb704e06196041f0eeff7f44a8085"
+    }
+  },
+  "inputs": {
+    "invoice": {
+      "sha256": "1eafc42149f48770c131f836883ffb6ac2714215d4ebe2db5352e1dee66011a5"
+    },
+    "japanese": {
+      "sha256": "4907d79963eb8267eab4230c7aad9bbd0d580238d3d42f402b34fb4c0ff217a1"
+    },
+    "small": {
+      "sha256": "9673f888b53aff059e65a2dc1b3ba6bd9e3a9f5b256cab7d1901bb908618382a"
+    },
+    "ivs": {
+      "sha256": "8d816905b8b816a14eba9b77104d82add72c158b1e6c303408c93e144a548dd5"
+    },
+    "color": {
+      "sha256": "1ed63888b85ae5a8060d01e4e71faf0108a01e0ccd6dbf5ee0cbaec41bef90ad"
+    },
+    "50-pages": {
+      "sha256": "63ed727017c145d661ac869d6a716c3ec50441e51aefdf11d68902ad80f761eb"
+    },
+    "200-pages": {
+      "sha256": "518c9f59907304e46154d3ecb94187968c5c899663f8702d0163d636cf9f14ae"
+    }
+  },
+  "fonts": {
+    "third_party/IPAmjMincho/ipamjm.ttf": "a3e84f495f3c388db7a1473bf1985c1c076d0c814100f10a027ca6853eb1e8cb",
+    "third_party/NotoColorEmoji/NotoColorEmoji.ttf": "15671215ab769fdc7162a045d56fd7d7e477c51b04e6b3c761d914d8fdd6cc44",
+    "third_party/NotoSansJP/NotoSansJP-Regular.ttf": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec"
+  }
+}

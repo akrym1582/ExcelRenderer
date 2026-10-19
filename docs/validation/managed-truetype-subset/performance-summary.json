@@ -1,0 +1,240 @@
+[
+  {
+    "fixture": "invoice",
+    "stages": {
+      "old": {
+        "TotalMs": 57.0599,
+        "PeakWorkingSet64": 126337024,
+        "AllocatedBytes": 16478528,
+        "OutputBytes": 33118,
+        "pages": [
+          1
+        ],
+        "subsetMs": 5.6488,
+        "originalFontBytes": 5472784,
+        "subsetFontBytes": 206652,
+        "subsetsCreated": 1
+      },
+      "managed": {
+        "TotalMs": 60.8193,
+        "PeakWorkingSet64": 125341696,
+        "AllocatedBytes": 22565816,
+        "OutputBytes": 136405,
+        "pages": [
+          1
+        ],
+        "subsetMs": 1.1129,
+        "originalFontBytes": 5472784,
+        "subsetFontBytes": 357060,
+        "subsetsCreated": 1
+      }
+    },
+    "timeRatio": 1.0658851487647192,
+    "peakRssRatio": 0.992121644404098,
+    "passed": true
+  },
+  {
+    "fixture": "japanese",
+    "stages": {
+      "old": {
+        "TotalMs": 470.5461,
+        "PeakWorkingSet64": 765931520,
+        "AllocatedBytes": 310292608,
+        "OutputBytes": 104918,
+        "pages": [
+          1
+        ],
+        "subsetMs": 51.4829,
+        "originalFontBytes": 52149528,
+        "subsetFontBytes": 553528,
+        "subsetsCreated": 2
+      },
+      "managed": {
+        "TotalMs": 498.5428,
+        "PeakWorkingSet64": 858689536,
+        "AllocatedBytes": 377628024,
+        "OutputBytes": 742092,
+        "pages": [
+          1
+        ],
+        "subsetMs": 3.9085,
+        "originalFontBytes": 52149528,
+        "subsetFontBytes": 1824216,
+        "subsetsCreated": 2
+      }
+    },
+    "timeRatio": 1.059498314830364,
+    "peakRssRatio": 1.1211048423754646,
+    "passed": true
+  },
+  {
+    "fixture": "small",
+    "stages": {
+      "old": {
+        "TotalMs": 23.7094,
+        "PeakWorkingSet64": 108998656,
+        "AllocatedBytes": 12847672,
+        "OutputBytes": 4655,
+        "pages": [
+          1
+        ],
+        "subsetMs": 2.6832,
+        "originalFontBytes": 5472784,
+        "subsetFontBytes": 169356,
+        "subsetsCreated": 1
+      },
+      "managed": {
+        "TotalMs": 31.3624,
+        "PeakWorkingSet64": 116105216,
+        "AllocatedBytes": 18920680,
+        "OutputBytes": 114046,
+        "pages": [
+          1
+        ],
+        "subsetMs": 0.6859,
+        "originalFontBytes": 5472784,
+        "subsetFontBytes": 331156,
+        "subsetsCreated": 1
+      }
+    },
+    "timeRatio": 1.3227833686217283,
+    "peakRssRatio": 1.0651986020818458,
+    "passed": true
+  },
+  {
+    "fixture": "ivs",
+    "stages": {
+      "old": {
+        "TotalMs": 235.9277,
+        "PeakWorkingSet64": 642236416,
+        "AllocatedBytes": 240890440,
+        "OutputBytes": 7791,
+        "pages": [
+          1
+        ],
+        "subsetMs": 36.7082,
+        "originalFontBytes": 52149528,
+        "subsetFontBytes": 430060,
+        "subsetsCreated": 2
+      },
+      "managed": {
+        "TotalMs": 257.9774,
+        "PeakWorkingSet64": 695427072,
+        "AllocatedBytes": 297323152,
+        "OutputBytes": 657280,
+        "pages": [
+          1
+        ],
+        "subsetMs": 3.6169000000000002,
+        "originalFontBytes": 52149528,
+        "subsetFontBytes": 1770624,
+        "subsetsCreated": 2
+      }
+    },
+    "timeRatio": 1.0934595640952716,
+    "peakRssRatio": 1.082820990331386,
+    "passed": true
+  },
+  {
+    "fixture": "color",
+    "stages": {
+      "old": {
+        "TotalMs": 275.5121,
+        "PeakWorkingSet64": 741363712,
+        "AllocatedBytes": 296616440,
+        "OutputBytes": 20785,
+        "pages": [
+          1
+        ],
+        "subsetMs": 36.245099999999994,
+        "originalFontBytes": 52149528,
+        "subsetFontBytes": 393476,
+        "subsetsCreated": 2
+      },
+      "managed": {
+        "TotalMs": 303.247,
+        "PeakWorkingSet64": 718827520,
+        "AllocatedBytes": 363740936,
+        "OutputBytes": 670597,
+        "pages": [
+          1
+        ],
+        "subsetMs": 3.5036,
+        "originalFontBytes": 52149528,
+        "subsetFontBytes": 1769880,
+        "subsetsCreated": 2
+      }
+    },
+    "timeRatio": 1.1006667220786313,
+    "peakRssRatio": 0.969601706105626,
+    "passed": true
+  },
+  {
+    "fixture": "50-pages",
+    "stages": {
+      "old": {
+        "TotalMs": 845.1847,
+        "PeakWorkingSet64": 284114944,
+        "AllocatedBytes": 184366040,
+        "OutputBytes": 123590,
+        "pages": [
+          50
+        ],
+        "subsetMs": 5.4416,
+        "originalFontBytes": 5472784,
+        "subsetFontBytes": 169416,
+        "subsetsCreated": 1
+      },
+      "managed": {
+        "TotalMs": 841.1648,
+        "PeakWorkingSet64": 278601728,
+        "AllocatedBytes": 190587648,
+        "OutputBytes": 233001,
+        "pages": [
+          50
+        ],
+        "subsetMs": 1.0348,
+        "originalFontBytes": 5472784,
+        "subsetFontBytes": 331232,
+        "subsetsCreated": 1
+      }
+    },
+    "timeRatio": 0.995243761511537,
+    "peakRssRatio": 0.9805951213886166,
+    "passed": true
+  },
+  {
+    "fixture": "200-pages",
+    "stages": {
+      "old": {
+        "TotalMs": 1281.3482,
+        "PeakWorkingSet64": 329039872,
+        "AllocatedBytes": 670424808,
+        "OutputBytes": 482115,
+        "pages": [
+          200
+        ],
+        "subsetMs": 5.5797,
+        "originalFontBytes": 5472784,
+        "subsetFontBytes": 169416,
+        "subsetsCreated": 1
+      },
+      "managed": {
+        "TotalMs": 1324.0958,
+        "PeakWorkingSet64": 322695168,
+        "AllocatedBytes": 676233976,
+        "OutputBytes": 591526,
+        "pages": [
+          200
+        ],
+        "subsetMs": 1.761,
+        "originalFontBytes": 5472784,
+        "subsetFontBytes": 331232,
+        "subsetsCreated": 1
+      }
+    },
+    "timeRatio": 1.033361423538114,
+    "peakRssRatio": 0.9807175222825275,
+    "passed": true
+  }
+]

@@ -3,8 +3,10 @@
 import argparse
 import json
 import os
+import runpy
 import shutil
 import sys
+import zipfile
 from pathlib import Path
 import subprocess
 from package_distribution import check_packages
@@ -210,8 +212,29 @@ assert default_output.read_bytes().startswith(b'%PDF')
 audit_consumer(tool)
 print('Ten isolated package consumers passed (engine, adapter, Mapping, main+Core, combined, managed fonts, three namespace samples, installed CLI)')
 
+# Make the requested family explicit so the installed CLI must use the chosen
+# collection/CFF/variable face rather than an available bundled fallback.
+font_fixture = work / 'cli-font-formats.xlsx'
+runpy.run_path(str(root / 'scripts/benchmark-managed-fonts.py'))['workbook'](font_fixture, 'A B')
+with zipfile.ZipFile(font_fixture) as archive:
+    font_entries = {name: archive.read(name) for name in archive.namelist()}
+font_entries['xl/styles.xml'] = font_entries['xl/styles.xml'].replace(b'Noto Sans JP', b'PDF Format Fixture')
+with zipfile.ZipFile(font_fixture, 'w', zipfile.ZIP_DEFLATED) as archive:
+    for name, data in font_entries.items():
+        archive.writestr(name, data)
 collection_output = work / 'cli-collection-face-1.pdf'
-run(tool_command, 'pdf', fixture_path, '-o', collection_output,
+collection_output.unlink(missing_ok=True)
+run(tool_command, 'pdf', font_fixture, '-o', collection_output,
     '--font-file', root / 'tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc',
     '--font-face-index', '1', '--fallback-font', 'PDF Format Fixture', '--no-system-fonts')
-assert collection_output.read_bytes().startswith(b'%PDF')
+assert b'PdfFormatFixture-Bold' in collection_output.read_bytes()
+for name, reason in [('cff.otf', 'CFF'), ('variable.ttf', 'variable')]:
+    destination = work / ('cli-rejected-' + name + '.pdf')
+    destination.unlink(missing_ok=True)
+    command = [str(tool_command), 'pdf', str(font_fixture), '-o', str(destination),
+        '--font-file', str(root / 'tests/ExcelRenderer.Tests/Fonts/PdfFormats' / name),
+        '--font-face-index', '0', '--fallback-font', 'PDF Format Fixture', '--no-system-fonts']
+    rejected = subprocess.run(command, env=env, text=True, capture_output=True)
+    assert rejected.returncode != 0 and reason in rejected.stderr, (name, rejected.stderr)
+    assert not destination.exists(), 'Unsupported font committed an installed-CLI PDF'
+print('Installed CLI used collection face 1 and rejected CFF/variable fonts without committing output')

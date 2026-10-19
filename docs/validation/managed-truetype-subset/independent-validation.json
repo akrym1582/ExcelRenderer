@@ -1,0 +1,1869 @@
+{
+  "fontToolsVersion": "4.61.1",
+  "mupdfVersion": "1.26.6",
+  "sfnt": [
+    {
+      "file": "collection-face-0.ttf",
+      "sha256": "8ba98bdafc94ede53a6616856a40f806cbfd9032547d9ac9156dd6e39f8af162",
+      "bytes": 1172,
+      "glyphCount": 5,
+      "tables": {
+        "OS/2": 96,
+        "cmap": 60,
+        "glyf": 104,
+        "head": 54,
+        "hhea": 36,
+        "hmtx": 12,
+        "loca": 12,
+        "maxp": 32,
+        "name": 537,
+        "post": 50
+      }
+    },
+    {
+      "file": "collection-face-1.ttf",
+      "sha256": "ece8e52f15b9158204f755cfd4839c28836caeacdc1626996240b88d91c10837",
+      "bytes": 1180,
+      "glyphCount": 5,
+      "tables": {
+        "OS/2": 96,
+        "cmap": 64,
+        "glyf": 104,
+        "head": 54,
+        "hhea": 36,
+        "hmtx": 12,
+        "loca": 12,
+        "maxp": 32,
+        "name": 543,
+        "post": 50
+      }
+    },
+    {
+      "file": "ipamj-subset.ttf",
+      "sha256": "06c753424d61dad9e4ee4a7ec8451859fae616e47c665b130ee9c7ef68ce7299",
+      "bytes": 1440340,
+      "glyphCount": 61360,
+      "tables": {
+        "OS/2": 96,
+        "cmap": 270124,
+        "cvt ": 206,
+        "fpgm": 104,
+        "gasp": 16,
+        "glyf": 1630,
+        "head": 54,
+        "hhea": 36,
+        "hmtx": 126640,
+        "loca": 245444,
+        "maxp": 32,
+        "name": 1202,
+        "post": 671708,
+        "prep": 10,
+        "vhea": 36,
+        "vmtx": 122722
+      }
+    },
+    {
+      "file": "mono-subset.ttf",
+      "sha256": "86e97fb742094d467d35cea7413b3e826e6dc8deb9fbec7526fba13a8a5cf9d4",
+      "bytes": 94048,
+      "glyphCount": 3787,
+      "tables": {
+        "OS/2": 96,
+        "cmap": 16050,
+        "cvt ": 270,
+        "fpgm": 3605,
+        "gasp": 8,
+        "glyf": 2012,
+        "head": 54,
+        "hhea": 36,
+        "hmtx": 15124,
+        "loca": 15152,
+        "maxp": 32,
+        "name": 1702,
+        "post": 39408,
+        "prep": 250
+      }
+    },
+    {
+      "file": "noto-subset.ttf",
+      "sha256": "64b5f7e4de94f3edb22cab5bd23bd9afbccfa887b2cc2c2806d4ef0927b2de83",
+      "bytes": 330976,
+      "glyphCount": 17103,
+      "tables": {
+        "OS/2": 96,
+        "cmap": 122858,
+        "gasp": 8,
+        "glyf": 870,
+        "head": 54,
+        "hhea": 36,
+        "hmtx": 68412,
+        "loca": 68416,
+        "maxp": 32,
+        "name": 2116,
+        "post": 32,
+        "prep": 7,
+        "vhea": 36,
+        "vmtx": 67758
+      }
+    }
+  ],
+  "pdf": [
+    {
+      "name": "200-pages-subset",
+      "pages": 200,
+      "fullBytes": 3329528,
+      "subsetBytes": 285693,
+      "unicodeAndPositionsEqual": true,
+      "fontsPerPage": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "raster": [
+        {
+          "page": 1,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 1,
+          "dpi": 300,
+          "changedChannels": 0
+        },
+        {
+          "page": 2,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 3,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 4,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 5,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 6,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 7,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 8,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 9,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 10,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 11,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 12,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 13,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 14,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 15,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 16,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 17,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 18,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 19,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 20,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 21,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 22,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 23,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 24,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 25,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 26,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 27,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 28,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 29,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 30,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 31,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 32,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 33,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 34,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 35,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 36,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 37,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 38,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 39,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 40,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 41,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 42,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 43,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 44,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 45,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 46,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 47,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 48,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 49,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 50,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 51,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 52,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 53,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 54,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 55,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 56,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 57,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 58,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 59,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 60,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 61,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 62,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 63,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 64,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 65,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 66,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 67,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 68,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 69,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 70,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 71,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 72,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 73,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 74,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 75,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 76,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 77,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 78,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 79,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 80,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 81,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 82,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 83,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 84,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 85,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 86,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 87,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 88,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 89,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 90,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 91,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 92,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 93,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 94,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 95,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 96,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 97,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 98,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 99,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 100,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 101,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 101,
+          "dpi": 300,
+          "changedChannels": 0
+        },
+        {
+          "page": 102,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 103,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 104,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 105,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 106,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 107,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 108,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 109,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 110,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 111,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 112,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 113,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 114,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 115,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 116,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 117,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 118,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 119,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 120,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 121,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 122,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 123,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 124,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 125,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 126,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 127,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 128,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 129,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 130,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 131,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 132,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 133,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 134,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 135,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 136,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 137,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 138,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 139,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 140,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 141,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 142,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 143,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 144,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 145,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 146,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 147,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 148,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 149,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 150,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 151,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 152,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 153,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 154,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 155,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 156,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 157,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 158,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 159,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 160,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 161,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 162,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 163,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 164,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 165,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 166,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 167,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 168,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 169,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 170,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 171,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 172,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 173,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 174,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 175,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 176,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 177,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 178,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 179,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 180,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 181,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 182,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 183,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 184,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 185,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 186,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 187,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 188,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 189,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 190,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 191,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 192,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 193,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 194,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 195,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 196,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 197,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 198,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 199,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 200,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 200,
+          "dpi": 300,
+          "changedChannels": 0
+        }
+      ]
+    },
+    {
+      "name": "50-pages-subset",
+      "pages": 50,
+      "fullBytes": 3200504,
+      "subsetBytes": 156688,
+      "unicodeAndPositionsEqual": true,
+      "fontsPerPage": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "raster": [
+        {
+          "page": 1,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 1,
+          "dpi": 300,
+          "changedChannels": 0
+        },
+        {
+          "page": 2,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 3,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 4,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 5,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 6,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 7,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 8,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 9,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 10,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 11,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 12,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 13,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 14,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 15,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 16,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 17,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 18,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 19,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 20,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 21,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 22,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 23,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 24,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 25,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 26,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 26,
+          "dpi": 300,
+          "changedChannels": 0
+        },
+        {
+          "page": 27,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 28,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 29,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 30,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 31,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 32,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 33,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 34,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 35,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 36,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 37,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 38,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 39,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 40,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 41,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 42,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 43,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 44,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 45,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 46,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 47,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 48,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 49,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 50,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 50,
+          "dpi": 300,
+          "changedChannels": 0
+        }
+      ]
+    },
+    {
+      "name": "collection-subset",
+      "pages": 1,
+      "fullBytes": 4417,
+      "subsetBytes": 4413,
+      "unicodeAndPositionsEqual": true,
+      "fontsPerPage": [
+        2
+      ],
+      "raster": [
+        {
+          "page": 1,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 1,
+          "dpi": 300,
+          "changedChannels": 0
+        }
+      ]
+    },
+    {
+      "name": "color-subset",
+      "pages": 1,
+      "fullBytes": 34436127,
+      "subsetBytes": 670720,
+      "unicodeAndPositionsEqual": true,
+      "fontsPerPage": [
+        4
+      ],
+      "raster": [
+        {
+          "page": 1,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 1,
+          "dpi": 300,
+          "changedChannels": 0
+        }
+      ]
+    },
+    {
+      "name": "ivs-subset",
+      "pages": 1,
+      "fullBytes": 31265028,
+      "subsetBytes": 545116,
+      "unicodeAndPositionsEqual": true,
+      "fontsPerPage": [
+        1
+      ],
+      "raster": [
+        {
+          "page": 1,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 1,
+          "dpi": 300,
+          "changedChannels": 0
+        }
+      ]
+    },
+    {
+      "name": "japanese-subset",
+      "pages": 1,
+      "fullBytes": 3158435,
+      "subsetBytes": 114495,
+      "unicodeAndPositionsEqual": true,
+      "fontsPerPage": [
+        1
+      ],
+      "raster": [
+        {
+          "page": 1,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 1,
+          "dpi": 300,
+          "changedChannels": 0
+        }
+      ]
+    }
+  ],
+  "baseline": [
+    {
+      "name": "skiasharp",
+      "pages": 1,
+      "fullBytes": 19505,
+      "subsetBytes": 668189,
+      "unicodeAndPositionsEqual": true,
+      "fontsPerPage": [
+        3
+      ],
+      "raster": [
+        {
+          "page": 1,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 1,
+          "dpi": 300,
+          "changedChannels": 0
+        }
+      ]
+    },
+    {
+      "name": "skiasharp",
+      "pages": 1,
+      "fullBytes": 19508,
+      "subsetBytes": 668192,
+      "unicodeAndPositionsEqual": true,
+      "fontsPerPage": [
+        3
+      ],
+      "raster": [
+        {
+          "page": 1,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 1,
+          "dpi": 300,
+          "changedChannels": 0
+        }
+      ]
+    },
+    {
+      "name": "skiasharp",
+      "pages": 1,
+      "fullBytes": 19466,
+      "subsetBytes": 668150,
+      "unicodeAndPositionsEqual": true,
+      "fontsPerPage": [
+        3
+      ],
+      "raster": [
+        {
+          "page": 1,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 1,
+          "dpi": 300,
+          "changedChannels": 0
+        }
+      ]
+    },
+    {
+      "name": "skiasharp",
+      "pages": 1,
+      "fullBytes": 19639,
+      "subsetBytes": 668323,
+      "unicodeAndPositionsEqual": true,
+      "fontsPerPage": [
+        3
+      ],
+      "raster": [
+        {
+          "page": 1,
+          "dpi": 144,
+          "changedChannels": 0
+        },
+        {
+          "page": 1,
+          "dpi": 300,
+          "changedChannels": 0
+        }
+      ]
+    }
+  ],
+  "colorPixels144dpi": 11850,
+  "colorFormats": [
+    {
+      "file": "colr.ttf.pdf",
+      "pages": 1,
+      "coloredPixels144dpi": 504,
+      "bytes": 4117
+    },
+    {
+      "file": "colr-v1.ttf.pdf",
+      "pages": 1,
+      "coloredPixels144dpi": 504,
+      "bytes": 4126
+    },
+    {
+      "file": "collection-3.pdf",
+      "pages": 1,
+      "coloredPixels144dpi": 504,
+      "bytes": 4281
+    },
+    {
+      "file": "collection-4.pdf",
+      "pages": 1,
+      "coloredPixels144dpi": 504,
+      "bytes": 4293
+    }
+  ]
+}

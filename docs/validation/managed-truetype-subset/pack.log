@@ -1,0 +1,9 @@
+  Successfully created package '/workspace/excelrenderer-validation/clean/artifacts/packages/ExcelRenderer.Fonts.1.10.0.nupkg'.
+  Successfully created package '/workspace/excelrenderer-validation/clean/artifacts/packages/ExcelRenderer.Mapping.1.10.0.nupkg'.
+  ExcelRenderer.Tool -> /workspace/excelrenderer-validation/clean/src/ExcelRenderer.Tool/bin/Release/net10.0/publish/
+  Successfully created package '/workspace/excelrenderer-validation/clean/artifacts/packages/ExcelRenderer.Tool.1.10.0.nupkg'.
+  Successfully created package '/workspace/excelrenderer-validation/clean/artifacts/packages/ExcelRenderer.1.10.0.nupkg'.
+  ExcelRenderer.Tool -> /workspace/excelrenderer-validation/clean/artifacts/publish/
+Verified 22 projects: only ExcelRenderer, ExcelRenderer.Fonts, ExcelRenderer.Mapping, ExcelRenderer.Tool are packable
+Exactly four packages; no unpublished dependencies; shared DLL/XML hashes match
+No removed PDF dependency: 1080 source/config files, 22 restored projects, 788 managed AssemblyRef inventories, 4 packages

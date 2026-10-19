@@ -1,0 +1,20 @@
+[
+  {
+    "stage": "old",
+    "pdfBytes": 19505,
+    "imageStreamHashes": [
+      "19539e5a377f91898eed6e8e669cc7d173a3afbea221b452a629df53398ce0e5",
+      "37958fda4c84c04e9398c5a99cb9e8912d1519b478c10b560e4bb962fd82c70f"
+    ],
+    "type3Count": 1
+  },
+  {
+    "stage": "managed",
+    "pdfBytes": 668189,
+    "imageStreamHashes": [
+      "19539e5a377f91898eed6e8e669cc7d173a3afbea221b452a629df53398ce0e5",
+      "37958fda4c84c04e9398c5a99cb9e8912d1519b478c10b560e4bb962fd82c70f"
+    ],
+    "type3Count": 1
+  }
+]

@@ -1,0 +1,31 @@
++ /workspace/excelrenderer-validation/consumers/tool/excelrenderer pdf /workspace/excelrenderer-validation/consumers/cli-font-formats.xlsx -o /workspace/excelrenderer-validation/consumers/cli-collection-face-1.pdf --font-file /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc --font-face-index 1 --fallback-font PDF Format Fixture --no-system-fonts
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Installed CLI used collection face 1 and rejected CFF/variable fonts without committing output

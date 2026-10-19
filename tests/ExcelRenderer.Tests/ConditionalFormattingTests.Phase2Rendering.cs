@@ -56,6 +56,37 @@ public sealed partial class ConditionalFormattingTests
         }
     }
 
+    [Fact]
+    public void TenThousandMappedRowsKeepOneSharedPopulationAcrossAllRuleTypes()
+    {
+        using var template = Book("<row r=\"1\"><c r=\"A1\" t=\"inlineStr\"><is><t>**items[*]</t></is></c></row>",
+            Rule("duplicateValues", "", ranges: "A1") + Rule("top10", "", priority: 2, ranges: "A1") + Rule("aboveAverage", "", priority: 3, ranges: "A1") +
+            Scale("<cfvo type=\"min\"/><cfvo type=\"percentile\" val=\"50\"/><cfvo type=\"max\"/>", "000000", "00FF00", "FFFFFF", ranges: "A1", priority: 4));
+        using var mapped = new MemoryStream();
+        Mapping.ExcelTemplateMapper.Map(template, mapped, new { items = Enumerable.Range(0, 10000).Select(index => index % 101).ToArray() });
+        mapped.Position = 0;
+        using (var reader = OpenXmlWorkbookReader.Open(mapped))
+        {
+            Assert.All(reader.ReadWorksheetInfo(1).ConditionalFormattingRules, rule => Assert.Equal(10000, rule.Ranges.Count));
+        }
+
+        var metrics = new Dictionary<string, double>();
+        ConversionMetrics.Observer = (name, value) => metrics[name] = metrics.GetValueOrDefault(name) + value;
+        try
+        {
+            var sheet = Read(mapped);
+            Assert.Empty(sheet.CellReadDiagnostics);
+            Assert.Equal(10000, sheet.Cells.Values.Count(cell => cell.Style.Background is not null));
+            Assert.Equal(1, metrics["conditionalFormatting.populations"]);
+            Assert.Equal(1, metrics["conditionalFormatting.sorts"]);
+            Assert.Equal(10000, metrics["conditionalFormatting.valueReads"]);
+        }
+        finally
+        {
+            ConversionMetrics.Observer = null;
+        }
+    }
+
     [Theory]
     [InlineData(OutputFormat.Pdf)]
     [InlineData(OutputFormat.Png)]

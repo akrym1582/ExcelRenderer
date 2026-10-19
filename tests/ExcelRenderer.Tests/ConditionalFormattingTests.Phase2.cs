@@ -337,12 +337,46 @@ public sealed partial class ConditionalFormattingTests
     [Fact]
     public void RangeNormalizationWorkBudgetAndStatisticsOverflowAreDiagnosed()
     {
-        var ranges = Enumerable.Range(1, 1024).Select(row => new OpenXml.Reader.Model.Cells.CellRange(new(row, 1), new(row, 2))).ToArray();
+        var ranges = Enumerable.Range(1, 1024).Select(row => new OpenXml.Reader.Model.Cells.CellRange(new(row * 2, 1), new(row * 2, 2))).ToArray();
         Assert.Throws<ConditionalFormattingException>(() => ConditionalPopulation.Normalize(ranges, default));
         using var input = Book(NumericRows("1E308,-1E308"), Rule("aboveAverage", "", ranges: "A1:A2"));
         var sheet = Read(input);
         Assert.Equal("00", Painted(sheet, 2));
         Assert.Contains(sheet.CellReadDiagnostics, diagnostic => diagnostic.Code == "ConditionalFormattingPopulationInvalid");
+    }
+
+    [Fact]
+    public void CoalescingAcceptsOneHundredThousandSavedRowIntervals()
+    {
+        var rows = Enumerable.Range(1, 100000).Select(row => new OpenXml.Reader.Model.Cells.CellRange(new(row, 1), new(row, 1))).ToArray();
+        Assert.Equal("A1:A100000", Assert.Single(ConditionalPopulation.Normalize(rows, default).Ranges).ToString());
+        var fragmented = Enumerable.Range(1, ConditionalPopulation.SweepRangeLimit + 1).Select(row => new OpenXml.Reader.Model.Cells.CellRange(new(row * 2, 1), new(row * 2, 1))).ToArray();
+        Assert.Contains("after coalescing", Assert.Throws<ConditionalFormattingException>(() => ConditionalPopulation.Normalize(fragmented, default)).Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void CheckerboardUnionHitsRectangleBudgetBeforeAnyCellExpansion()
+    {
+        var vertical = Enumerable.Range(0, 300).Select(index => new OpenXml.Reader.Model.Cells.CellRange(new(1, (index * 2) + 1), new(600, (index * 2) + 1)));
+        var horizontal = Enumerable.Range(0, 300).Select(index => new OpenXml.Reader.Model.Cells.CellRange(new((index * 2) + 1, 1), new((index * 2) + 1, 600)));
+        var failure = Assert.Throws<ConditionalFormattingException>(() => ConditionalPopulation.Normalize(vertical.Concat(horizontal).ToArray(), default));
+        Assert.Equal("ConditionalFormattingLimitExceeded", failure.Code);
+        Assert.Contains("65536", failure.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void PopulationCollectionNumericPreparationAndKeyCreationPropagateCancellation()
+    {
+        using var input = Book(NumericRows("0,10,20"), "");
+        using var reader = OpenXmlWorkbookReader.Open(input);
+        var calculation = WorkbookCalculationSession.CreateSavedValueSession(reader);
+        var ranges = new[] { OpenXml.Reader.Model.Cells.CellRange.Parse("A1:A3") };
+        using var cancellation = new CancellationTokenSource();
+        var visits = 0;
+        Assert.Throws<OperationCanceledException>(() => ConditionalPopulation.Create(ranges, calculation, "data", () => { if (++visits == 2) cancellation.Cancel(); }, cancellation.Token));
+        var complete = ConditionalPopulation.Create(ranges, calculation, "data", () => { }, default);
+        Assert.Throws<OperationCanceledException>(() => complete.PrepareNumbers(true, cancellation.Token));
+        Assert.Throws<OperationCanceledException>(() => complete.Frequency(FormulaValue.FromNumber(10), cancellation.Token));
     }
 
     private static IReadOnlyList<UnsupportedFeature> SourceFeatures(MemoryStream input)

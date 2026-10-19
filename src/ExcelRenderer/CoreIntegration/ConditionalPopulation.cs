@@ -10,8 +10,11 @@ internal sealed class ConditionalPopulation
     /// <summary>Maximum total stored value visits and retained values per worksheet.</summary>
     internal const int StoredCellLimit = 2000000;
 
-    /// <summary>Maximum source rectangles per population.</summary>
-    internal const int RangeLimit = 4096;
+    /// <summary>Maximum source rectangles before linear coalescing.</summary>
+    internal const int RangeLimit = 100000;
+
+    /// <summary>Maximum remaining rectangles entering the bounded union sweep.</summary>
+    internal const int SweepRangeLimit = 4096;
 
     /// <summary>Maximum disjoint output rectangles per population.</summary>
     internal const int NormalizedRangeLimit = 65536;
@@ -72,7 +75,13 @@ internal sealed class ConditionalPopulation
     {
         if (source.Count > RangeLimit)
         {
-            throw new ConditionalFormattingException("ConditionalFormattingLimitExceeded", "Population range count exceeds 4096.");
+            throw new ConditionalFormattingException("ConditionalFormattingLimitExceeded", "Population source range count exceeds 100000.");
+        }
+
+        source = Coalesce(source, token);
+        if (source.Count > SweepRangeLimit)
+        {
+            throw new ConditionalFormattingException("ConditionalFormattingLimitExceeded", "Population sweep range count exceeds 4096 after coalescing.");
         }
 
         token.ThrowIfCancellationRequested();
@@ -240,6 +249,47 @@ internal sealed class ConditionalPopulation
 
         statistics = result;
         return result;
+    }
+
+    private static IReadOnlyList<SourceRange> Coalesce(IReadOnlyList<SourceRange> source, CancellationToken token)
+    {
+        // Mapping can save a separate sqref for every expanded row. Merge those
+        // intervals before the general sweep, without allocating any missing cells.
+        return Merge(Merge(source, true), false);
+
+        List<SourceRange> Merge(IReadOnlyList<SourceRange> input, bool vertical)
+        {
+            token.ThrowIfCancellationRequested();
+            var sortedRanges = input.ToArray();
+            Array.Sort(sortedRanges, (left, right) =>
+            {
+                var first = (vertical ? left.First.Column : left.First.Row).CompareTo(vertical ? right.First.Column : right.First.Row);
+                var last = (vertical ? left.Last.Column : left.Last.Row).CompareTo(vertical ? right.Last.Column : right.Last.Row);
+                return first != 0 ? first : last != 0 ? last :
+                    (vertical ? left.First.Row : left.First.Column).CompareTo(vertical ? right.First.Row : right.First.Column);
+            });
+            token.ThrowIfCancellationRequested();
+            var result = new List<SourceRange>();
+            foreach (var range in sortedRanges)
+            {
+                token.ThrowIfCancellationRequested();
+                var previous = result.Count == 0 ? null : result[result.Count - 1];
+                if (previous is not null && (vertical
+                    ? previous.First.Column == range.First.Column && previous.Last.Column == range.Last.Column && range.First.Row <= previous.Last.Row + 1
+                    : previous.First.Row == range.First.Row && previous.Last.Row == range.Last.Row && range.First.Column <= previous.Last.Column + 1))
+                {
+                    result[result.Count - 1] = vertical
+                        ? new(previous.First, new(Math.Max(previous.Last.Row, range.Last.Row), previous.Last.Column))
+                        : new(previous.First, new(previous.Last.Row, Math.Max(previous.Last.Column, range.Last.Column)));
+                }
+                else
+                {
+                    result.Add(range);
+                }
+            }
+
+            return result;
+        }
     }
 
     private sealed class ValueComparer : IEqualityComparer<FormulaValue>

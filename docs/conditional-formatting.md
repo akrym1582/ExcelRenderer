@@ -181,7 +181,8 @@ existing part and formula-engine limits remain enforced. The main evaluator also
 caps intersected candidate visits at 2,000,000 per sheet; exceeding this leaves that
 sheet's ordinary appearance and reports `ConditionalFormattingLimitExceeded`. No partial candidate-budget application
 occurs. Phase 2 separately limits aggregate stored-cell visits/retained values to
-2,000,000 per worksheet, source rectangles to 4,096 per normalization, range inspections
+2,000,000 per worksheet, source rectangles to 100,000 per normalization, remaining rectangles after row/column
+interval coalescing to 4,096, range inspections
 to 1,000,000 per normalization, and normalized rectangles to 65,536 both per population
 and cumulatively per worksheet. Frequency entries and numeric lists are bounded by the
 retained observations (plus one implicit-blank key). Exceeded budgets never publish

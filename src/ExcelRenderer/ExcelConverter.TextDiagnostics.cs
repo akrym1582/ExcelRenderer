@@ -129,7 +129,7 @@ public static partial class ExcelConverter
         {
             if (feature.IsSheetLevel)
             {
-                diagnostics.Add(new(feature.Code, DiagnosticSeverity.Warning, DiagnosticStage.Read, feature.Message, sheet.Name, ObjectId: feature.Id));
+                diagnostics.Add(new(feature.Code, feature.Code == "ConditionalFormattingDisabled" ? DiagnosticSeverity.Info : DiagnosticSeverity.Warning, DiagnosticStage.Read, feature.Message, sheet.Name, ObjectId: feature.Id));
                 continue;
             }
 
@@ -138,7 +138,7 @@ public static partial class ExcelConverter
                 var bounds = Layout.ObjectGeometry.GetSheetRect(geometry, anchor.From ?? new(1, 1), anchor.FromOffsetX, anchor.FromOffsetY, anchor.ExtentWidth, anchor.ExtentHeight, anchor);
                 if (bounds.Width > 0 && bounds.Height > 0 && (regions is null || regions.Any(region => Layout.RectangleGeometry.Intersect(bounds, region.SourceBounds) is not null)))
                 {
-                    diagnostics.Add(new(feature.Code, DiagnosticSeverity.Warning, DiagnosticStage.Read, feature.Message, sheet.Name, feature.Ranges.Count == 0 ? null : string.Join(" ", feature.Ranges.Select(Markdown.MarkdownExporter.Range)), feature.Id, SourcePageNumber: pageNumber));
+                    diagnostics.Add(new(feature.Code, feature.Code == "ConditionalFormattingDisabled" ? DiagnosticSeverity.Info : DiagnosticSeverity.Warning, DiagnosticStage.Read, feature.Message, sheet.Name, feature.Ranges.Count == 0 ? null : string.Join(" ", feature.Ranges.Select(Markdown.MarkdownExporter.Range)), feature.Id, SourcePageNumber: pageNumber));
                 }
 
                 continue;
@@ -152,7 +152,7 @@ public static partial class ExcelConverter
             }).ToArray();
             if (visible.Length > 0)
             {
-                diagnostics.Add(new(feature.Code, DiagnosticSeverity.Warning, DiagnosticStage.Read, feature.Message, sheet.Name, string.Join(" ", visible.Select(Markdown.MarkdownExporter.Range)), feature.Id, SourcePageNumber: pageNumber));
+                diagnostics.Add(new(feature.Code, feature.Code == "ConditionalFormattingDisabled" ? DiagnosticSeverity.Info : DiagnosticSeverity.Warning, DiagnosticStage.Read, feature.Message, sheet.Name, string.Join(" ", visible.Select(Markdown.MarkdownExporter.Range)), feature.Id, SourcePageNumber: pageNumber));
             }
         }
     }

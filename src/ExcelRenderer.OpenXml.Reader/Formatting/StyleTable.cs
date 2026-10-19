@@ -21,6 +21,7 @@ internal sealed class StyleTable
     private readonly OpenXmlReaderOptions options;
     private readonly Dictionary<string, List<XElement>> tables = new Dictionary<string, List<XElement>>(StringComparer.Ordinal);
     private readonly Dictionary<int, CellStyleInfo> resolved = new Dictionary<int, CellStyleInfo>();
+    private readonly Dictionary<int, DifferentialStyleInfo> differentials = new Dictionary<int, DifferentialStyleInfo>();
     private readonly Dictionary<int, string> formats = new Dictionary<int, string>();
     private readonly List<string?> themeColors = new List<string?>();
 
@@ -114,6 +115,25 @@ internal sealed class StyleTable
     /// <summary>Gets the Count metadata.</summary>
     internal int Count => Table("cellXfs").Count;
 
+    /// <summary>Resolves a differential index without manufacturing ordinary-style defaults.</summary>
+    /// <param name="index">Saved dxfId.</param>
+    /// <returns>The immutable differential, or null for an invalid index.</returns>
+    internal DifferentialStyleInfo? ResolveDifferential(int index)
+    {
+        if (index < 0 || index >= Table("dxfs").Count)
+        {
+            return null;
+        }
+
+        if (!differentials.TryGetValue(index, out var result))
+        {
+            result = new DifferentialStyleInfo(ColorInfo(Table("dxfs")[index]));
+            differentials.Add(index, result);
+        }
+
+        return result;
+    }
+
     /// <summary>Resolves saved XF components with parent fallback.</summary>
     /// <returns>The resulting value.</returns>
     /// <param name="index">The index value.</param>
@@ -184,6 +204,7 @@ internal sealed class StyleTable
     {
         tables.Clear();
         resolved.Clear();
+        differentials.Clear();
         formats.Clear();
         themeColors.Clear();
     }

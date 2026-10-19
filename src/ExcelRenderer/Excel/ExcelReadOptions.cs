@@ -3,6 +3,9 @@ namespace ExcelRenderer.Excel;
 /// <summary>Controls conversion of workbook cells to display text.</summary>
 public sealed record ExcelReadOptions
 {
+    /// <summary>Gets a value indicating whether supported saved conditional formatting is evaluated and applied. Defaults to true; Core does not offer this option.</summary>
+    public bool ApplyConditionalFormatting { get; init; } = true;
+
     /// <summary>Gets the formula display policy.</summary>
     public FormulaDisplayMode FormulaDisplayMode { get; init; } = FormulaDisplayMode.CachedValue;
 
@@ -17,6 +20,9 @@ public sealed record ExcelReadOptions
 
     /// <summary>Gets an exact calculation target predicate obtained from a geometry-only page plan.</summary>
     internal Func<string, int, int, bool>? IsFormulaTarget { get; init; }
+
+    /// <summary>Gets the geometry-only page predicate, including missing cells inside visible page regions.</summary>
+    internal Func<string, int, int, bool>? IsConditionalFormattingTarget { get; init; }
 
     /// <summary>Validates the policy before opening input or output.</summary>
     internal void Validate()

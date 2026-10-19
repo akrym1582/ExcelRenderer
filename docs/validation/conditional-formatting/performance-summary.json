@@ -1,0 +1,273 @@
+{
+  "baseSha": "1c85529ac8662bf766deb09c00445670f21aafd8",
+  "protocol": {
+    "rounds": 3,
+    "warmups": 10,
+    "measurements": 5,
+    "configuration": "Release",
+    "concurrency": 1
+  },
+  "products": {
+    "before": {
+      "ExcelRenderer.OpenXml.dll": "81b7a4a0552d42997caeac5a24cceeb3cdfd9ec8539f89840f447ef6ac973678",
+      "ExcelRenderer.OpenXml.Reader.dll": "3b5af4d0f9e021bed7c4753ce1603e65ec3811ef2467c9c59d4cba46e38ad429",
+      "ExcelRenderer.Formulas.dll": "bd1b7735f342ef8818a096da4552ffb47b01932e0bdd8467247c0407480205f2",
+      "ExcelRenderer.Performance.dll": "21d178dd12eb075d8735d8891745ce810197dd45a12f6a78232ad3cd68c6a18c",
+      "ExcelRenderer.Fonts.dll": "057d1a88c20262173ed9264d8eb0726b9b084d21750263af4a00c258611656e8",
+      "ExcelRenderer.Mapping.dll": "15068a89d28d461dcef1881fece2d74ee5ed8fe53716c539fb45d9a7bf868487",
+      "ExcelRenderer.Core.dll": "869be694a1e5abcddfb823f7b0812e5d4b97389b79c51dcd19f2dd189282ae85",
+      "ExcelRenderer.dll": "61cba7fe45d054e1f6b1fe0c92e7982bea4bb72c02e085dcdc8784033888306b"
+    },
+    "after": {
+      "ExcelRenderer.OpenXml.dll": "5b5cfc8392c5ecb9e2ebd161bb78f4ff92ad67534b5b706ab1d3e9c77aa17da8",
+      "ExcelRenderer.OpenXml.Reader.dll": "3f1e90003c506aaefd47b36835af069897b294488cf2bd0d9802f851c803a5c2",
+      "ExcelRenderer.Formulas.dll": "bd2d32d98dd41fec4425faf6c0e6e7bc26599a4de7e11a4ae0f2574db296ad28",
+      "ExcelRenderer.Performance.dll": "716a36bdb24c869e299c18b47a0e461e3c32dfa0f7d41f90feecb4f2aa2682e2",
+      "ExcelRenderer.Fonts.dll": "8b305f91d6f30f7b9d0096c1887a43c60e9359ebbb017cd9bab8b36beae4308b",
+      "ExcelRenderer.Mapping.dll": "d1beb36480ddf3bbec83ce20d555a797a9feda1bd27b09f9110223c033b68ea8",
+      "ExcelRenderer.Core.dll": "5b332f6157a6952ec88257ba042189e3a7ff7b28a0c15fd0c9581fec8ce24991",
+      "ExcelRenderer.dll": "3b31743dbec4d0aae2608812430f5758d3a86cb11291323d77dfa679ed180913"
+    }
+  },
+  "harnessSourceSha256": "129035b7772e4acc0fae382bdfebd1314e9f560fdc5a295fbc5ea2ebde0f2380",
+  "fixtures": {
+    "plain.xlsx": "619556873f96e8fce30b1e64e0ee1e15c4f9336fa65f79ba355e24c4fa0811c6",
+    "rules.xlsx": "2fc28dd83703a50d9f661dd2bfa60f5a484265d779d13fe16d7f7b6df0c1a4ab",
+    "overlap.xlsx": "a10df7afeff7aca870f4fc0348a4f5144851f0657254327f352c277554dc2e1e",
+    "recalculate.xlsx": "49b935cd7f562ce810ac530242a2d74036c55b112cf3654ed6338738dc692f0d",
+    "whole-column.xlsx": "147708c3c1d7f6e7b14337ca4c85c7544f973edd097f4233c6f5cdcc3ff7fb9c"
+  },
+  "summary": [
+    {
+      "fixture": "plain",
+      "mode": "core",
+      "stage": "before",
+      "elapsedMs": 403.3216,
+      "allocatedBytes": 190757768,
+      "peakRssBytes": 346505216,
+      "count": 100000,
+      "painted": 0,
+      "metrics": {
+        "fontSnapshotRead": 1,
+        "typefaceCreated": 1,
+        "openXmlReaderWorkbook": 1,
+        "readerStyleConversions": 1,
+        "readerStyleCacheHits": 99999,
+        "readerStyleCacheEntries": 2,
+        "typefaceDisposed": 1
+      }
+    },
+    {
+      "fixture": "plain",
+      "mode": "core",
+      "stage": "after",
+      "elapsedMs": 389.2175,
+      "allocatedBytes": 190758360,
+      "peakRssBytes": 346447872,
+      "count": 100000,
+      "painted": 0,
+      "metrics": {
+        "fontSnapshotRead": 1,
+        "typefaceCreated": 1,
+        "openXmlReaderWorkbook": 1,
+        "readerStyleConversions": 1,
+        "readerStyleCacheHits": 99999,
+        "readerStyleCacheEntries": 2,
+        "typefaceDisposed": 1
+      }
+    },
+    {
+      "fixture": "plain",
+      "mode": "enabled",
+      "stage": "before",
+      "elapsedMs": 549.5298,
+      "allocatedBytes": 282770512,
+      "peakRssBytes": 263933952,
+      "count": 100000,
+      "painted": 0,
+      "metrics": {
+        "openXmlReaderWorkbook": 1,
+        "readerStyleConversions": 1,
+        "readerStyleCacheHits": 99999,
+        "readerStyleCacheEntries": 2,
+        "model.cells": 100000,
+        "model.ms": 26.9216
+      }
+    },
+    {
+      "fixture": "plain",
+      "mode": "enabled",
+      "stage": "after",
+      "elapsedMs": 541.5778,
+      "allocatedBytes": 282771088,
+      "peakRssBytes": 267653120,
+      "count": 100000,
+      "painted": 0,
+      "metrics": {
+        "openXmlReaderWorkbook": 1,
+        "readerStyleConversions": 1,
+        "readerStyleCacheHits": 99999,
+        "readerStyleCacheEntries": 2,
+        "model.cells": 100000,
+        "model.ms": 25.879
+      }
+    },
+    {
+      "fixture": "rules",
+      "mode": "disabled",
+      "stage": "after",
+      "elapsedMs": 424.2003,
+      "allocatedBytes": 186960528,
+      "peakRssBytes": 327507968,
+      "count": 60000,
+      "painted": 0,
+      "metrics": {
+        "openXmlReaderWorkbook": 1,
+        "readerStyleConversions": 1,
+        "readerStyleCacheHits": 59999,
+        "readerStyleCacheEntries": 2,
+        "model.cells": 60000,
+        "model.ms": 12.4251
+      }
+    },
+    {
+      "fixture": "rules",
+      "mode": "enabled",
+      "stage": "after",
+      "elapsedMs": 822.9114,
+      "allocatedBytes": 500943496,
+      "peakRssBytes": 354840576,
+      "count": 60000,
+      "painted": 32599,
+      "metrics": {
+        "calculation.snapshots": 1,
+        "openXmlReaderWorkbook": 1,
+        "conditionalFormatting.evaluations": 90000,
+        "conditionalFormatting.candidates": 60000,
+        "readerStyleConversions": 1,
+        "readerStyleCacheHits": 59999,
+        "readerStyleCacheEntries": 2,
+        "model.cells": 60000,
+        "model.ms": 10.7083
+      }
+    },
+    {
+      "fixture": "whole-column",
+      "mode": "disabled",
+      "stage": "after",
+      "elapsedMs": 415.7189,
+      "allocatedBytes": 186960112,
+      "peakRssBytes": 327380992,
+      "count": 60000,
+      "painted": 0,
+      "metrics": {
+        "openXmlReaderWorkbook": 1,
+        "readerStyleConversions": 1,
+        "readerStyleCacheHits": 59999,
+        "readerStyleCacheEntries": 2,
+        "model.cells": 60000,
+        "model.ms": 11.8914
+      }
+    },
+    {
+      "fixture": "whole-column",
+      "mode": "enabled",
+      "stage": "after",
+      "elapsedMs": 864.4978,
+      "allocatedBytes": 500942584,
+      "peakRssBytes": 355086336,
+      "count": 60000,
+      "painted": 32599,
+      "metrics": {
+        "calculation.snapshots": 1,
+        "openXmlReaderWorkbook": 1,
+        "conditionalFormatting.evaluations": 90000,
+        "conditionalFormatting.candidates": 60000,
+        "readerStyleConversions": 1,
+        "readerStyleCacheHits": 59999,
+        "readerStyleCacheEntries": 2,
+        "model.cells": 60000,
+        "model.ms": 12.0818
+      }
+    },
+    {
+      "fixture": "overlap",
+      "mode": "disabled",
+      "stage": "after",
+      "elapsedMs": 433.6601,
+      "allocatedBytes": 187050512,
+      "peakRssBytes": 327847936,
+      "count": 60000,
+      "painted": 0,
+      "metrics": {
+        "openXmlReaderWorkbook": 1,
+        "readerStyleConversions": 1,
+        "readerStyleCacheHits": 59999,
+        "readerStyleCacheEntries": 2,
+        "model.cells": 60000,
+        "model.ms": 14.0314
+      }
+    },
+    {
+      "fixture": "overlap",
+      "mode": "enabled",
+      "stage": "after",
+      "elapsedMs": 1514.4845,
+      "allocatedBytes": 1222192672,
+      "peakRssBytes": 351784960,
+      "count": 60000,
+      "painted": 30000,
+      "metrics": {
+        "calculation.snapshots": 1,
+        "openXmlReaderWorkbook": 1,
+        "conditionalFormatting.evaluations": 960000,
+        "conditionalFormatting.candidates": 60000,
+        "readerStyleConversions": 1,
+        "readerStyleCacheHits": 59999,
+        "readerStyleCacheEntries": 2,
+        "model.cells": 60000,
+        "model.ms": 11.5898
+      }
+    },
+    {
+      "fixture": "recalculate",
+      "mode": "recalculate-disabled",
+      "stage": "after",
+      "elapsedMs": 623.2695,
+      "allocatedBytes": 289571368,
+      "peakRssBytes": 344981504,
+      "count": 60000,
+      "painted": 0,
+      "metrics": {
+        "calculation.snapshots": 1,
+        "openXmlReaderWorkbook": 1,
+        "readerStyleConversions": 1,
+        "readerStyleCacheHits": 59999,
+        "readerStyleCacheEntries": 2,
+        "model.cells": 60000,
+        "model.ms": 28.018
+      }
+    },
+    {
+      "fixture": "recalculate",
+      "mode": "recalculate",
+      "stage": "after",
+      "elapsedMs": 977.9855,
+      "allocatedBytes": 575284136,
+      "peakRssBytes": 360624128,
+      "count": 60000,
+      "painted": 60000,
+      "metrics": {
+        "calculation.snapshots": 1,
+        "openXmlReaderWorkbook": 1,
+        "conditionalFormatting.evaluations": 90000,
+        "conditionalFormatting.candidates": 60000,
+        "readerStyleConversions": 1,
+        "readerStyleCacheHits": 59999,
+        "readerStyleCacheEntries": 2,
+        "model.cells": 60000,
+        "model.ms": 16.6669
+      }
+    }
+  ]
+}

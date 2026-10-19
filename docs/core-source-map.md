@@ -261,3 +261,7 @@ xref offsets; no obsolete image revision is retained. See [image review fixes](p
 | `ExcelRenderer/CoreIntegration/FullExcelReader.Formulas.cs` | Creates one calculation session per recalculated read; retains page/range/print-title/merge/hidden-axis target policy using Reader metadata and Core's existing BandIndex |
 
 Core's `ExcelReadOptions` retains the neutral selected-region setting and removes all calculation-only settings and the Core `FormulaDisplayMode` enum. Main's read options and CLI modes retain their behavior. Reader and Formulas have no references to each other; Core's sole product reference is Reader. See [migration and validation](openxml-reader-split.md).
+
+## Conditional formatting ownership
+
+Reader owns raw immutable rule/differential metadata and colors. OpenXml owns saved-value/calculation snapshots and arbitrary expression evaluation; Formulas owns parsed-reference movement. Main alone owns ConditionalFormattingSession/ConditionalStyle. Core owns ordinary traversal, style interning, merged-border aggregation and the generic no-op CompleteCellAppearances hook. Core does not evaluate or apply conditional formatting.

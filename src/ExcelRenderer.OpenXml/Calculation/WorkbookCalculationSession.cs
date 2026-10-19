@@ -61,6 +61,38 @@ public sealed class WorkbookCalculationSession
         return new WorkbookCalculationSession(new Snapshot(reader, cancellationToken), options, cancellationToken);
     }
 
+    /// <summary>Creates a condition-evaluation session whose references use saved typed values, without recalculating source formulas.</summary>
+    /// <param name="reader">Workbook reader including all dependency sheets.</param>
+    /// <param name="options">Calculation limits.</param>
+    /// <param name="cancellationToken">Cooperative cancellation.</param>
+    /// <returns>One shared saved-value snapshot and evaluation cache.</returns>
+    public static WorkbookCalculationSession CreateSavedValueSession(IWorkbookDataReader reader, FormulaEvaluationOptions? options = null, CancellationToken cancellationToken = default)
+    {
+        if (reader == null)
+        {
+            throw new ArgumentNullException(nameof(reader));
+        }
+
+        return new WorkbookCalculationSession(new Snapshot(reader, cancellationToken, false), options, cancellationToken);
+    }
+
+    /// <summary>Evaluates arbitrary parsed syntax, with explicit relative-reference movement from its saved anchor.</summary>
+    /// <param name="formula">Reusable parsed syntax.</param>
+    /// <param name="anchor">Saved formula anchor.</param>
+    /// <param name="origin">Target cell.</param>
+    /// <returns>The typed value or engine diagnostics, distinguishing Excel errors from evaluation failure.</returns>
+    public FormulaEvaluationResult EvaluateFormula(ParsedFormula formula, FormulaCellAddress anchor, FormulaCellAddress origin) =>
+        session.Evaluate(FormulaRewriter.Copy(formula, origin.Row - anchor.Row, origin.Column - anchor.Column), origin);
+
+    /// <summary>Reads a typed value from this session's snapshot, recalculating only in calculation mode.</summary>
+    /// <param name="address">Requested source cell, including cells outside the selected output.</param>
+    /// <returns>The saved or recalculated typed value; a truly absent cell is blank.</returns>
+    public FormulaValue ReadValue(FormulaCellAddress address)
+    {
+        var cell = source.GetCell(address);
+        return cell.Formula == null ? cell.Value : Evaluate(address);
+    }
+
     /// <summary>Evaluates a source cell, retaining its style and formula metadata.</summary>
     /// <param name="cell">Source cell.</param>
     /// <returns>A snapshot containing the recalculated typed value.</returns>
@@ -112,9 +144,12 @@ public sealed class WorkbookCalculationSession
         private readonly Dictionary<string, string> sheets = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         private readonly IReadOnlyList<DefinedNameInfo> names;
         private readonly FormulaRangeIndex index;
+        private readonly bool recalculate;
 
-        internal Snapshot(IWorkbookDataReader reader, CancellationToken token)
+        internal Snapshot(IWorkbookDataReader reader, CancellationToken token, bool recalculate = true)
         {
+            Reader.Diagnostics.OperationMetrics.Report("calculation.snapshots", 1);
+            this.recalculate = recalculate;
             names = reader.Workbook.DefinedNames;
             DateSystem = reader.Workbook.Date1904 ? FormulaDateSystem.Excel1904 : FormulaDateSystem.Excel1900;
             foreach (var sheet in reader.Sheets.Where(sheet => sheet.Kind == "Worksheet"))
@@ -152,7 +187,12 @@ public sealed class WorkbookCalculationSession
                 throw new FormulaCalculationException(address.SheetId + "!" + cell.Address + ": UnsupportedSyntax: cell/value metadata, including dynamic arrays.");
             }
 
-            if (cell.Formula != null)
+            if (cell.Formula != null && !recalculate && !cell.Formula.HasCachedResult)
+            {
+                throw new FormulaCalculationException(address + ": MissingCachedValue: formula has no saved result.");
+            }
+
+            if (cell.Formula != null && recalculate)
             {
                 if (cell.Formula.Kind != "normal" && cell.Formula.Kind != string.Empty && cell.Formula.Kind != "shared")
                 {

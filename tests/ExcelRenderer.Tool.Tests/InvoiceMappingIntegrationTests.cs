@@ -3,10 +3,10 @@ using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Xml.Linq;
-using ExcelRenderer.OpenXml.Model.Cells;
-using ExcelRenderer.TestFixtures;
-using static ExcelRenderer.TestFixtures.WorkbookAssertions;
 using ExcelRenderer.Mapping;
+using ExcelRenderer.OpenXml.Reader.Model.Cells;
+using static ExcelRenderer.TestFixtures.WorkbookAssertions;
+using ExcelRenderer.TestFixtures;
 using Xunit;
 
 namespace ExcelRenderer.Tool.Tests;

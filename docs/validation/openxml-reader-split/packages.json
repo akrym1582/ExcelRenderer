@@ -1,0 +1,222 @@
+{
+  "projects": {
+    "src/ExcelRenderer/ExcelRenderer.csproj": {
+      "IsPackable": "true",
+      "PackageId": "ExcelRenderer",
+      "Version": "1.10.0"
+    },
+    "src/ExcelRenderer.Core/ExcelRenderer.Core.csproj": {
+      "IsPackable": "false",
+      "PackageId": "ExcelRenderer.Core",
+      "Version": "1.0.0"
+    },
+    "src/ExcelRenderer.Fonts/ExcelRenderer.Fonts.csproj": {
+      "IsPackable": "true",
+      "PackageId": "ExcelRenderer.Fonts",
+      "Version": "1.10.0"
+    },
+    "src/ExcelRenderer.Formulas/ExcelRenderer.Formulas.csproj": {
+      "IsPackable": "false",
+      "PackageId": "ExcelRenderer.Formulas",
+      "Version": "1.8.0"
+    },
+    "src/ExcelRenderer.Mapping/ExcelRenderer.Mapping.csproj": {
+      "IsPackable": "true",
+      "PackageId": "ExcelRenderer.Mapping",
+      "Version": "1.10.0"
+    },
+    "src/ExcelRenderer.OpenXml/ExcelRenderer.OpenXml.csproj": {
+      "IsPackable": "false",
+      "PackageId": "ExcelRenderer.OpenXml",
+      "Version": "1.8.0"
+    },
+    "src/ExcelRenderer.OpenXml.Reader/ExcelRenderer.OpenXml.Reader.csproj": {
+      "IsPackable": "false",
+      "PackageId": "ExcelRenderer.OpenXml.Reader",
+      "Version": "1.8.0"
+    },
+    "src/ExcelRenderer.Tool/ExcelRenderer.Tool.csproj": {
+      "IsPackable": "true",
+      "PackageId": "ExcelRenderer.Tool",
+      "Version": "1.10.0"
+    },
+    "tests/ExcelRenderer.Core.Tests/ExcelRenderer.Core.Tests.csproj": {
+      "IsPackable": "false",
+      "PackageId": "ExcelRenderer.Core.Tests",
+      "Version": "1.0.0"
+    },
+    "tests/ExcelRenderer.Formulas.Tests/ExcelRenderer.Formulas.Tests.csproj": {
+      "IsPackable": "false",
+      "PackageId": "ExcelRenderer.Formulas.Tests",
+      "Version": "1.0.0"
+    },
+    "tests/ExcelRenderer.Mapping.Tests/ExcelRenderer.Mapping.Tests.csproj": {
+      "IsPackable": "false",
+      "PackageId": "ExcelRenderer.Mapping.Tests",
+      "Version": "1.0.0"
+    },
+    "tests/ExcelRenderer.OpenXml.Tests/ExcelRenderer.OpenXml.Tests.csproj": {
+      "IsPackable": "false",
+      "PackageId": "ExcelRenderer.OpenXml.Tests",
+      "Version": "1.0.0"
+    },
+    "tests/ExcelRenderer.Tests/ExcelRenderer.Tests.csproj": {
+      "IsPackable": "false",
+      "PackageId": "ExcelRenderer.Tests",
+      "Version": "1.0.0"
+    },
+    "tests/ExcelRenderer.Tool.Tests/ExcelRenderer.Tool.Tests.csproj": {
+      "IsPackable": "false",
+      "PackageId": "ExcelRenderer.Tool.Tests",
+      "Version": "1.0.0"
+    },
+    "samples/ExcelRenderer.Core.Sample/ExcelRenderer.Core.Sample.csproj": {
+      "IsPackable": "false",
+      "PackageId": "ExcelRenderer.Core.Sample",
+      "Version": "1.0.0"
+    },
+    "samples/ExcelRenderer.Formulas.Sample/ExcelRenderer.Formulas.Sample.csproj": {
+      "IsPackable": "false",
+      "PackageId": "ExcelRenderer.Formulas.Sample",
+      "Version": "1.0.0"
+    },
+    "tools/ExcelRenderer.Core.Reference/ExcelRenderer.Core.Reference.csproj": {
+      "IsPackable": "false",
+      "PackageId": "ExcelRenderer.Core.Reference",
+      "Version": "1.0.0"
+    },
+    "tools/ExcelRenderer.Core.Validation/ExcelRenderer.Core.Validation.csproj": {
+      "IsPackable": "false",
+      "PackageId": "ExcelRenderer.Core.Validation",
+      "Version": "1.0.0"
+    },
+    "tools/ExcelRenderer.Formulas.Oracle/ExcelRenderer.Formulas.Oracle.csproj": {
+      "IsPackable": "false",
+      "PackageId": "ExcelRenderer.Formulas.Oracle",
+      "Version": "1.0.0"
+    },
+    "tools/ExcelRenderer.Formulas.Performance/ExcelRenderer.Formulas.Performance.csproj": {
+      "IsPackable": "false",
+      "PackageId": "ExcelRenderer.Formulas.Performance",
+      "Version": "1.0.0"
+    },
+    "tools/ExcelRenderer.OpenXml.Validation/ExcelRenderer.OpenXml.Validation.csproj": {
+      "IsPackable": "false",
+      "PackageId": "ExcelRenderer.OpenXml.Validation",
+      "Version": "1.0.0"
+    },
+    "tools/ExcelRenderer.PdfComparison/ExcelRenderer.PdfComparison.csproj": {
+      "IsPackable": "false",
+      "PackageId": "ExcelRenderer.PdfComparison",
+      "Version": "1.0.0"
+    },
+    "tools/ExcelRenderer.Performance/ExcelRenderer.Performance.csproj": {
+      "IsPackable": "false",
+      "PackageId": "ExcelRenderer.Performance",
+      "Version": "1.0.0"
+    }
+  },
+  "packages": {
+    "ExcelRenderer": {
+      "version": "1.10.0",
+      "dependencies": {
+        "DocumentFormat.OpenXml": "3.3.0",
+        "ExcelNumberFormat": "1.1.0",
+        "SkiaSharp": "4.151.0",
+        "SkiaSharp.NativeAssets.Linux": "4.151.0"
+      },
+      "dlls": [
+        "lib/netstandard2.1/ExcelRenderer.Core.dll",
+        "lib/netstandard2.1/ExcelRenderer.Formulas.dll",
+        "lib/netstandard2.1/ExcelRenderer.OpenXml.Reader.dll",
+        "lib/netstandard2.1/ExcelRenderer.OpenXml.dll",
+        "lib/netstandard2.1/ExcelRenderer.dll"
+      ],
+      "embedded_sha256": {
+        "ExcelRenderer.Core.dll": "a7904582b626aee0a50e40c978fe01e39133461a6625301c75dcd081099c6b07",
+        "ExcelRenderer.Core.xml": "24d75603f03b3e9e503452d8d6d2f5c0655cf9ff58d9b19a4c05ff4e5e26eb48",
+        "ExcelRenderer.Formulas.dll": "fa99b91974fa293d75398a62024e89c563f2a93aded30c12a619086f22b8f22b",
+        "ExcelRenderer.Formulas.xml": "a0e619141a7caccf6c838678e07a018cd206f7ee6b0a2f5a9e79d0e3aff0e665",
+        "ExcelRenderer.OpenXml.dll": "53f217ded659ecb08b831b581ba2dbdd83341f2bf13f30764ccce9812fc608b8",
+        "ExcelRenderer.OpenXml.xml": "a2cc374ff40535c225d48ff6d7ac1029c0bf9c94011904182c00a7f61f8cf8bd",
+        "ExcelRenderer.OpenXml.Reader.dll": "ee002913cd8e3baa6485fa0a53beba58fb6e88d22107f8716901a4a89daf4ca1",
+        "ExcelRenderer.OpenXml.Reader.xml": "6582f738a9b232dabba386d65d3293d2d73f6c20a47166930d5f3ce1a05a9868"
+      }
+    },
+    "ExcelRenderer.Fonts": {
+      "version": "1.10.0",
+      "dependencies": {},
+      "dlls": [
+        "lib/netstandard2.1/ExcelRenderer.Fonts.dll"
+      ],
+      "embedded_sha256": {}
+    },
+    "ExcelRenderer.Mapping": {
+      "version": "1.10.0",
+      "dependencies": {
+        "DocumentFormat.OpenXml": "3.3.0",
+        "ExcelNumberFormat": "1.1.0",
+        "System.Text.Json": "10.0.0"
+      },
+      "dlls": [
+        "lib/netstandard2.1/ExcelRenderer.Formulas.dll",
+        "lib/netstandard2.1/ExcelRenderer.Mapping.dll",
+        "lib/netstandard2.1/ExcelRenderer.OpenXml.Reader.dll",
+        "lib/netstandard2.1/ExcelRenderer.OpenXml.dll"
+      ],
+      "embedded_sha256": {
+        "ExcelRenderer.Formulas.dll": "fa99b91974fa293d75398a62024e89c563f2a93aded30c12a619086f22b8f22b",
+        "ExcelRenderer.Formulas.xml": "a0e619141a7caccf6c838678e07a018cd206f7ee6b0a2f5a9e79d0e3aff0e665",
+        "ExcelRenderer.OpenXml.dll": "53f217ded659ecb08b831b581ba2dbdd83341f2bf13f30764ccce9812fc608b8",
+        "ExcelRenderer.OpenXml.xml": "a2cc374ff40535c225d48ff6d7ac1029c0bf9c94011904182c00a7f61f8cf8bd",
+        "ExcelRenderer.OpenXml.Reader.dll": "ee002913cd8e3baa6485fa0a53beba58fb6e88d22107f8716901a4a89daf4ca1",
+        "ExcelRenderer.OpenXml.Reader.xml": "6582f738a9b232dabba386d65d3293d2d73f6c20a47166930d5f3ce1a05a9868"
+      }
+    },
+    "ExcelRenderer.Tool": {
+      "version": "1.10.0",
+      "dependencies": {},
+      "dlls": [
+        "tools/net10.0/any/DocumentFormat.OpenXml.Framework.dll",
+        "tools/net10.0/any/DocumentFormat.OpenXml.dll",
+        "tools/net10.0/any/ExcelNumberFormat.dll",
+        "tools/net10.0/any/ExcelRenderer.Core.dll",
+        "tools/net10.0/any/ExcelRenderer.Fonts.dll",
+        "tools/net10.0/any/ExcelRenderer.Formulas.dll",
+        "tools/net10.0/any/ExcelRenderer.Mapping.dll",
+        "tools/net10.0/any/ExcelRenderer.OpenXml.Reader.dll",
+        "tools/net10.0/any/ExcelRenderer.OpenXml.dll",
+        "tools/net10.0/any/ExcelRenderer.Tool.dll",
+        "tools/net10.0/any/ExcelRenderer.dll",
+        "tools/net10.0/any/SkiaSharp.dll",
+        "tools/net10.0/any/System.CommandLine.dll",
+        "tools/net10.0/any/System.IO.Packaging.dll",
+        "tools/net10.0/any/cs/System.CommandLine.resources.dll",
+        "tools/net10.0/any/de/System.CommandLine.resources.dll",
+        "tools/net10.0/any/es/System.CommandLine.resources.dll",
+        "tools/net10.0/any/fr/System.CommandLine.resources.dll",
+        "tools/net10.0/any/it/System.CommandLine.resources.dll",
+        "tools/net10.0/any/ja/System.CommandLine.resources.dll",
+        "tools/net10.0/any/ko/System.CommandLine.resources.dll",
+        "tools/net10.0/any/pl/System.CommandLine.resources.dll",
+        "tools/net10.0/any/pt-BR/System.CommandLine.resources.dll",
+        "tools/net10.0/any/ru/System.CommandLine.resources.dll",
+        "tools/net10.0/any/runtimes/win-arm64/native/libSkiaSharp.dll",
+        "tools/net10.0/any/runtimes/win-x64/native/libSkiaSharp.dll",
+        "tools/net10.0/any/runtimes/win-x86/native/libSkiaSharp.dll",
+        "tools/net10.0/any/tr/System.CommandLine.resources.dll",
+        "tools/net10.0/any/zh-Hans/System.CommandLine.resources.dll",
+        "tools/net10.0/any/zh-Hant/System.CommandLine.resources.dll"
+      ],
+      "embedded_sha256": {
+        "ExcelRenderer.dll": "ce6b8aabd9e5ee4da8715db2a9a8359b9b1d38eeec39b861280c250a92f5b72b",
+        "ExcelRenderer.Core.dll": "a7904582b626aee0a50e40c978fe01e39133461a6625301c75dcd081099c6b07",
+        "ExcelRenderer.Fonts.dll": "006e9247ad00389372878d2ba411511df34532845247a1b3f2a35433cc2fb580",
+        "ExcelRenderer.Formulas.dll": "fa99b91974fa293d75398a62024e89c563f2a93aded30c12a619086f22b8f22b",
+        "ExcelRenderer.Mapping.dll": "40a1773ed5c32816e277bcceb332387786a4d444e1a6d3fcf79875d7cd60374a",
+        "ExcelRenderer.OpenXml.dll": "53f217ded659ecb08b831b581ba2dbdd83341f2bf13f30764ccce9812fc608b8",
+        "ExcelRenderer.OpenXml.Reader.dll": "ee002913cd8e3baa6485fa0a53beba58fb6e88d22107f8716901a4a89daf4ca1"
+      }
+    }
+  }
+}

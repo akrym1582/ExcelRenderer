@@ -1,6 +1,6 @@
 using ExcelRenderer.Core.Excel;
 using ExcelRenderer.Core.Model;
-using ExcelRenderer.OpenXml.Model.Drawing;
+using ExcelRenderer.OpenXml.Reader.Model.Drawing;
 
 namespace ExcelRenderer.CoreIntegration;
 

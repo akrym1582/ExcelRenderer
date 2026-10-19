@@ -1,7 +1,7 @@
 using ExcelRenderer.Model;
-using ExcelRenderer.OpenXml.Model.Cells;
-using ExcelRenderer.OpenXml.Model.Styles;
-using ExcelRenderer.OpenXml.Reading;
+using ExcelRenderer.OpenXml.Reader;
+using ExcelRenderer.OpenXml.Reader.Model.Cells;
+using ExcelRenderer.OpenXml.Reader.Model.Styles;
 
 namespace ExcelRenderer.Excel;
 

@@ -74,7 +74,7 @@ public sealed partial class ToolIntegrationTests
         else if (command == "xlsx")
         {
             using var input = File.OpenRead(output);
-            using var reader = OpenXml.Reading.OpenXmlWorkbookReader.Open(input);
+            using var reader = OpenXml.Reader.OpenXmlWorkbookReader.Open(input);
             Assert.Contains(reader.EnumerateCells(1), cell => cell.Value.Text == "MappedOpenXmlValue");
         }
     }

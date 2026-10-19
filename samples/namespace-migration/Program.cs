@@ -5,7 +5,7 @@ using ExcelRenderer.Formulas.Data;
 using ExcelRenderer.Formulas.Evaluation;
 using ExcelRenderer.Formulas.References;
 using ExcelRenderer.Formulas.Values;
-using ExcelRenderer.OpenXml.Reading;
+using ExcelRenderer.OpenXml.Reader;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 
 // Separate methods let the compatibility check exercise each old type reference.

@@ -1,0 +1,24 @@
+Test run for /workspace/reader-split-baseline/tests/ExcelRenderer.Core.Tests/bin/Release/net10.0/ExcelRenderer.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:   167, Skipped:     0, Total:   167, Duration: 6 s - ExcelRenderer.Core.Tests.dll (net10.0)
+Test run for /workspace/reader-split-baseline/tests/ExcelRenderer.Formulas.Tests/bin/Release/net10.0/ExcelRenderer.Formulas.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:   833, Skipped:     0, Total:   833, Duration: 823 ms - ExcelRenderer.Formulas.Tests.dll (net10.0)
+Test run for /workspace/reader-split-baseline/tests/ExcelRenderer.Mapping.Tests/bin/Release/net10.0/ExcelRenderer.Mapping.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:   172, Skipped:     0, Total:   172, Duration: 5 s - ExcelRenderer.Mapping.Tests.dll (net10.0)
+Test run for /workspace/reader-split-baseline/tests/ExcelRenderer.OpenXml.Tests/bin/Release/net10.0/ExcelRenderer.OpenXml.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:   206, Skipped:     0, Total:   206, Duration: 633 ms - ExcelRenderer.OpenXml.Tests.dll (net10.0)
+Test run for /workspace/reader-split-baseline/tests/ExcelRenderer.Tests/bin/Release/net10.0/ExcelRenderer.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:   686, Skipped:     0, Total:   686, Duration: 47 s - ExcelRenderer.Tests.dll (net10.0)
+Test run for /workspace/reader-split-baseline/tests/ExcelRenderer.Tool.Tests/bin/Release/net10.0/ExcelRenderer.Tool.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:   105, Skipped:     0, Total:   105, Duration: 1 m 35 s - ExcelRenderer.Tool.Tests.dll (net10.0)

@@ -23,4 +23,7 @@
     <Compile Include="../Shared/RetainedWorkbook.cs" Link="Fixtures/RetainedWorkbook.cs" />
     <None Include="../Shared/RetainedWorkbooks/*.xlsx" Link="RetainedWorkbooks/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/ExcelRenderer.OpenXml.Reader/ExcelRenderer.OpenXml.Reader.csproj" />
+  </ItemGroup>
 </Project>

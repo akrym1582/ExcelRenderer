@@ -65,7 +65,7 @@ public sealed class OpenXmlEndToEndTests
             using var mapped = new MemoryStream();
             ExcelTemplateMapper.Map(template, mapped, new { amount, doubled = amount * 2 });
             mapped.Position = 0;
-            using (var reader = OpenXml.Reading.OpenXmlWorkbookReader.Open(mapped))
+            using (var reader = OpenXml.Reader.OpenXmlWorkbookReader.Open(mapped))
             {
                 Assert.Equal(amount * 2d, reader.EnumerateCells(1).Single(cell => cell.Address.Column == 2).Value.Number);
             }
@@ -97,7 +97,6 @@ public sealed class OpenXmlEndToEndTests
             var result = await Core.ExcelConverter.ConvertAsync(input, output, new()
             {
                 FontFilePath = Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf"),
-                ReadOptions = new() { FormulaDisplayMode = Core.FormulaDisplayMode.CachedValue },
             });
             Assert.Equal(1, result.PageCount);
             Assert.Equal(0, loads);

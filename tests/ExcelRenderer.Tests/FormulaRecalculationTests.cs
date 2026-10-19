@@ -229,6 +229,127 @@ public sealed class FormulaRecalculationTests
         Assert.DoesNotContain("999", text);
     }
 
+    [Fact]
+    public async Task SelectedSheetFollowsOtherSheetDependenciesWithoutEvaluatingUnrelatedFormula()
+    {
+        using var input = CreateWorkbook();
+        using (var package = SpreadsheetDocument.Open(input, true))
+        {
+            var workbook = package.WorkbookPart!;
+            workbook.WorksheetParts.Single().Worksheet.Descendants<S.Cell>().First().CellFormula = new("Dependencies!B1*3");
+            var dependency = workbook.AddNewPart<WorksheetPart>();
+            dependency.Worksheet = new(new S.SheetData(new S.Row(
+                new S.Cell(new S.CellFormula("UNKNOWN()"), new S.CellValue("999")) { CellReference = "A1" },
+                new S.Cell(new S.CellValue("2")) { CellReference = "B1" }) { RowIndex = 1 }));
+            workbook.Workbook.Sheets!.Append(new S.Sheet { Name = "Dependencies", SheetId = 2, Id = workbook.GetIdOfPart(dependency) });
+        }
+
+        input.Position = 0;
+        using var output = new MemoryStream();
+        await ExcelConverter.RenderAsync(input, new()
+        {
+            OutputFormat = OutputFormat.Markdown,
+            ReadOptions = new() { FormulaDisplayMode = FormulaDisplayMode.Recalculate },
+            Selection = new() { SheetNames = ["Sheet1"] },
+        }, new SingleStreamOutputSink(output));
+        var text = System.Text.Encoding.UTF8.GetString(output.ToArray());
+        Assert.Contains("6", text);
+        Assert.DoesNotContain("999", text);
+    }
+
+    [Fact]
+    public async Task ConcurrentReadsKeepCalculationAndCachedValuesSeparate()
+    {
+        await Task.WhenAll(Enumerable.Range(1, 16).Select(index => Task.Run(() =>
+        {
+            using var input = CreateWorkbook();
+            using (var package = SpreadsheetDocument.Open(input, true))
+            {
+                var cell = package.WorkbookPart!.WorksheetParts.Single().Worksheet.Descendants<S.Cell>().First();
+                cell.CellFormula = new(index + "*2");
+                cell.CellValue = new((900 + index).ToString(System.Globalization.CultureInfo.InvariantCulture));
+            }
+
+            input.Position = 0;
+            var mode = index % 2 == 0 ? FormulaDisplayMode.Recalculate : FormulaDisplayMode.CachedValue;
+            var sheet = new ExcelReader().Read(input, new()
+            {
+                FormulaDisplayMode = mode,
+                FormulaEvaluationOptions = new() { MaxFormulaCells = index % 2 == 0 ? 100 : 1 },
+            }).Sheets[0];
+            var expected = mode == FormulaDisplayMode.Recalculate ? index * 2 : 900 + index;
+            Assert.Equal(expected.ToString(System.Globalization.CultureInfo.InvariantCulture), sheet.Cells[new(1, 1)].Text);
+        })));
+    }
+
+    [Fact]
+    public void MergedLeaderUsesVisibleSpanAndSkipsNonleaderFormula()
+    {
+        using var input = CreateWorkbook();
+        using (var package = SpreadsheetDocument.Open(input, true))
+        {
+            var sheet = package.WorkbookPart!.WorksheetParts.Single().Worksheet;
+            var rows = sheet.Descendants<S.Row>().ToArray();
+            rows[0].Hidden = true;
+            rows[1].Hidden = false;
+            rows[1].Descendants<S.Cell>().Single().CellFormula = new("UNKNOWN()");
+            sheet.Append(new S.MergeCells(new S.MergeCell { Reference = "A1:A2" }));
+        }
+
+        input.Position = 0;
+        var result = new ExcelReader().Read(input, new() { FormulaDisplayMode = FormulaDisplayMode.Recalculate });
+        Assert.Equal("6", result.Sheets[0].Cells[new(1, 1)].Text);
+    }
+
+    [Fact]
+    public void DefaultHiddenRowsRespectExplicitVisibleRow()
+    {
+        using var input = CreateWorkbook();
+        using (var package = SpreadsheetDocument.Open(input, true))
+        {
+            var sheet = package.WorkbookPart!.WorksheetParts.Single().Worksheet;
+            sheet.InsertAt(new S.SheetFormatProperties { DefaultRowHeight = 15, ZeroHeight = true }, 0);
+            var rows = sheet.Descendants<S.Row>().ToArray();
+            rows[0].Hidden = false;
+            foreach (var row in rows.Skip(1))
+                row.Descendants<S.Cell>().Single().CellFormula = new("UNKNOWN()");
+        }
+
+        input.Position = 0;
+        var result = new ExcelReader().Read(input, new() { FormulaDisplayMode = FormulaDisplayMode.Recalculate });
+        Assert.Equal("6", result.Sheets[0].Cells[new(1, 1)].Text);
+        Assert.Equal("999", result.Sheets[0].Cells[new(2, 1)].Text);
+    }
+
+    [Fact]
+    public async Task ConcurrentConversionsKeepRecalculationOptionsAndValuesSeparate()
+    {
+        await Task.WhenAll(Enumerable.Range(1, 8).Select(index => Task.Run(async () =>
+        {
+            using var input = CreateWorkbook();
+            using (var package = SpreadsheetDocument.Open(input, true))
+            {
+                var cell = package.WorkbookPart!.WorksheetParts.Single().Worksheet.Descendants<S.Cell>().First();
+                cell.CellFormula = new(index + "*101");
+            }
+
+            input.Position = 0;
+            using var output = new MemoryStream();
+            await ExcelConverter.RenderAsync(input, new()
+            {
+                OutputFormat = OutputFormat.Markdown,
+                ReadOptions = new()
+                {
+                    FormulaDisplayMode = FormulaDisplayMode.Recalculate,
+                    FormulaEvaluationOptions = new() { MaxFormulaCells = 10 + index },
+                },
+            }, new SingleStreamOutputSink(output));
+            var text = System.Text.Encoding.UTF8.GetString(output.ToArray());
+            Assert.Contains((index * 101).ToString(System.Globalization.CultureInfo.InvariantCulture), text);
+            Assert.DoesNotContain("999", text);
+        })));
+    }
+
     private sealed class RecordingMeasurer : Abstractions.ITextMeasurer
     {
         internal List<string> Texts { get; } = [];

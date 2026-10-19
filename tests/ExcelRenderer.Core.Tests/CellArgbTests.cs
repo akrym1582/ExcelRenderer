@@ -1,6 +1,6 @@
 using ExcelRenderer.Core.Excel;
 using ExcelRenderer.Core.Model;
-using ExcelRenderer.OpenXml.Reading;
+using ExcelRenderer.OpenXml.Reader;
 using Xunit;
 
 namespace ExcelRenderer.Core.Tests;
@@ -21,7 +21,7 @@ public sealed class CellArgbTests
             var source = reader.ResolveStyle(cells.Single(cell => cell.Address.Row == row && cell.Address.Column == 2));
             Assert.Equal(prefixes[row - 2] + "000000", source.FontProperties.Color!.Attributes["rgb"]);
             Assert.Equal(Convert.ToByte(prefixes[row - 2], 16).ToString(), source.FontProperties.Color.Attributes["resolvedAlpha"]);
-            Assert.Equal(new ReportColor(0, 0, 0), OpenXmlStyleConverter.Convert(source, OpenXml.Model.Cells.CellValueType.String).Font.Color);
+            Assert.Equal(new ReportColor(0, 0, 0), OpenXmlStyleConverter.Convert(source, OpenXml.Reader.Model.Cells.CellValueType.String).Font.Color);
         }
     }
 

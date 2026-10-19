@@ -1,7 +1,7 @@
 using System.Globalization;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
-using ExcelRenderer.OpenXml.Model.Cells;
+using ExcelRenderer.OpenXml.Reader.Model.Cells;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 
 /// <summary>Generates rendering benchmark fixtures without a workbook editing library.</summary>

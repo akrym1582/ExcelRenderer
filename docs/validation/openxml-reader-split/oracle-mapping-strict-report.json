@@ -1,0 +1,21 @@
+{
+  "caseSha256": "023a162796a3d2cc28bab81fc137f99d52c7ffaedc83eb8b4a7353095d6fa65c",
+  "capturedAt": "2026-10-19T09:27:19.454967+00:00",
+  "excelObservedCases": 0,
+  "notObservedCases": 4,
+  "counts": {
+    "matched": 0,
+    "mismatch": 0,
+    "unsupported": 0,
+    "known-difference": 0,
+    "not-observed": 8
+  },
+  "profileChecks": {
+    "matched": 8,
+    "mismatch": 0
+  },
+  "missingRequiredCategories": [
+    "mapping"
+  ],
+  "strict": true
+}

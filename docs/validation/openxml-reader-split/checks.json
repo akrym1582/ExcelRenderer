@@ -1,0 +1,80 @@
+{
+  "baseCommit": "283dc5b64d4ad54f640d3c6d179f0fff2b0631b1",
+  "initialCommit": "06280e538df4ebc49989efcb3f239379ffa1e09b",
+  "branch": "refactor/openxml-reader-split",
+  "environment": {
+    "os": "Debian 13 Linux x64",
+    "sdk": "10.0.401",
+    "runtime": "10.0.12",
+    "font": "committed Noto Sans JP; scripts/test-fonts.sh"
+  },
+  "builds": {
+    "baselineRelease": {
+      "warnings": 0,
+      "errors": 0
+    },
+    "finalDebug": {
+      "warnings": 0,
+      "errors": 0
+    },
+    "finalRelease": {
+      "warnings": 0,
+      "errors": 0
+    }
+  },
+  "tests": {
+    "baseline": 2169,
+    "debugBeforeLastThreeTests": 2174,
+    "release": 2177,
+    "finalFormulaRerun": 30
+  },
+  "consumerIsolation": {
+    "reader": "passed",
+    "core": "passed",
+    "pdfText": "999 saved TRUE #DIV/0! 1000 7; missing cache diagnostic"
+  },
+  "distribution": {
+    "packageCount": 4,
+    "sharedAssemblyAndXmlHashes": "identical",
+    "packageConsumers": 10,
+    "installedCli": "passed",
+    "fontPackages": "passed"
+  },
+  "rendering": {
+    "fixtures": 25,
+    "historicalReviewedDifferences": 51,
+    "unmetGates": 0,
+    "stageBReviewedDifferences": 0,
+    "stageBUnmetGates": 0,
+    "coreFrozenFixtures": 3,
+    "imageFixtures": 5
+  },
+  "notRun": [
+    "Windows runtime/CI execution (Linux executor only)",
+    "Live Microsoft Excel COM oracle capture (requires Windows/Excel). The checked-in Excel observation list is empty; specification/profile tests pass, but strict Excel-oracle completion is not established."
+  ],
+  "notes": [
+    "Default sandbox could not connect to the proxy or open test-host sockets; network-enabled execution succeeded.",
+    "CLI package fixture emits the existing MaximumDigitWidthFallback diagnostic for its unspecified Normal font.",
+    "No release/version change, push, merge or NuGet publication performed."
+  ],
+  "oracle": {
+    "cases": 500,
+    "engineOpenXmlRoundtripProfileChecks": "passed",
+    "mappingCases": 4,
+    "mappingRoundtripProfileChecks": "passed",
+    "excelObservedCases": 0,
+    "strictExitCode": 1,
+    "strictStatus": "incomplete: no Excel desktop observations"
+  },
+  "performance": {
+    "source": "performance-summary.json",
+    "freshProcessRounds": 3,
+    "warmups": 10,
+    "measuredReadsPerProcess": 5,
+    "concurrency": 1,
+    "defaultTieredCompilation": true,
+    "allValuesMatchExpected": true,
+    "readerWorkbookCountBeforeAfter": 1
+  }
+}

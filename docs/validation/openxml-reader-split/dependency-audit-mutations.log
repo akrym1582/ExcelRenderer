@@ -1,0 +1,6 @@
+baseline: passed
+PrivateAssets source reference: contamination detected
+restored transitive graph: contamination detected
+AssemblyRef behind an innocent filename: contamination detected
+packed transitive dependency: contamination detected
+restored audit: passed

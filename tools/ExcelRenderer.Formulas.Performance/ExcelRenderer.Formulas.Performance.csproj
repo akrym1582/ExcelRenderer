@@ -18,4 +18,7 @@
   <ItemGroup Condition="'$(Baseline)' == 'true'">
     <Compile Remove="EngineBenchmark.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/ExcelRenderer.Formulas/ExcelRenderer.Formulas.csproj" />
+  </ItemGroup>
 </Project>

@@ -18,6 +18,10 @@ a = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 packages, work = a.packages.resolve(), a.work.resolve()
 work.mkdir(parents=True, exist_ok=True)
+# Isolated consumers must not inherit source-checkout build configuration when
+# --work is inside artifacts. These files also stop parent targets from leaking in.
+for build_file in ('Directory.Build.props', 'Directory.Build.targets'):
+    (work / build_file).write_text('<Project/>\n', encoding='utf-8')
 config = work / 'NuGet.Config'
 config.write_text(f'<configuration><packageSources><clear/><add key="local" value="{packages}"/><add key="nuget" value="https://api.nuget.org/v3/index.json"/></packageSources><packageSourceMapping><packageSource key="local"><package pattern="ExcelRenderer*"/></packageSource><packageSource key="nuget"><package pattern="*"/></packageSource></packageSourceMapping></configuration>', encoding='utf-8')
 inventory = check_packages(packages)
@@ -41,6 +45,8 @@ def audit_consumer(directory):
     for path in paths:
         graph = json.loads(path.read_text(encoding='utf-8'))
         libraries = sorted(graph.get('libraries', {}))
+        if directory.name in {'engine', 'adapter', 'mapping', 'namespace-mapping'}:
+            assert not {'ExcelRenderer', 'ExcelRenderer.Core', 'ExcelRenderer.Fonts', 'SkiaSharp'}.intersection(name.split('/')[0] for name in libraries), (path, libraries)
         assert not any('pdfsharp' in name.lower().replace('-', '').replace('_', '').replace('.', '') for name in libraries), path
         consumer_graphs.append({'path': str(path.relative_to(work)), 'libraries': libraries})
     (work / 'consumer-graphs.json').write_text(json.dumps(consumer_graphs, indent=2) + '\n', encoding='utf-8')
@@ -86,7 +92,7 @@ if (tooLong.Success || tooLong.Diagnostics[0].Code != "ResourceLimitExceeded") t
 using var output = new MemoryStream();
 ExcelRenderer.OpenXml.Calculation.WorkbookRecalculator.Recalculate(input,output);
 output.Position=0;
-using var reader=ExcelRenderer.OpenXml.Reading.OpenXmlWorkbookReader.Open(output);
+using var reader=ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader.Open(output);
 if(reader.EnumerateCells(1).Single(c=>c.Address.Column==3).Value.Number!=413) throw new Exception("Typed cache failure");
 File.WriteAllBytes(args[0],output.ToArray());
 '''),
@@ -94,13 +100,13 @@ File.WriteAllBytes(args[0],output.ToArray());
 using var output=new MemoryStream();
 ExcelRenderer.Mapping.ExcelTemplateMapper.Map(input,output,new {},new(){FormulaCalculationMode=ExcelRenderer.OpenXml.Calculation.FormulaCalculationMode.Recalculate});
 output.Position=0;
-using var reader=ExcelRenderer.OpenXml.Reading.OpenXmlWorkbookReader.Open(output);
+using var reader=ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader.Open(output);
 if(reader.EnumerateCells(1).Single(c=>c.Address.Column==3).Value.Number!=413) throw new Exception("Mapping package failure");
 '''),
  'main-core': (['ExcelRenderer'], fixture + '''
 using var output=new MemoryStream();
-var core=await ExcelRenderer.Core.ExcelConverter.ConvertAsync(input,output,new(){FontFilePath=args[1],ReadOptions=new(){FormulaDisplayMode=ExcelRenderer.Core.FormulaDisplayMode.Recalculate}});
-if(core.PageCount<1 || output.Length==0) throw new Exception("Core recalc failure");
+var core=await ExcelRenderer.Core.ExcelConverter.ConvertAsync(input,output,new(){FontFilePath=args[1]});
+if(core.PageCount<1 || output.Length==0) throw new Exception("Core saved-value failure");
 input.Position=0;output.SetLength(0);
 await ExcelRenderer.ExcelConverter.RenderAsync(input,new ExcelRenderer.Rendering.RenderRequest{
 OutputFormat=ExcelRenderer.Rendering.OutputFormat.Markdown,
@@ -125,7 +131,7 @@ ExcelRenderer.Mapping.ExcelTemplateMapper.Map(input, mappedOutput, new {}, new()
     FormulaCalculationMode = ExcelRenderer.OpenXml.Calculation.FormulaCalculationMode.Recalculate
 });
 mappedOutput.Position = 0;
-using var mappedReader = ExcelRenderer.OpenXml.Reading.OpenXmlWorkbookReader.Open(mappedOutput);
+using var mappedReader = ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader.Open(mappedOutput);
 if (mappedReader.EnumerateCells(1).Single(c => c.Address.Column == 3).Value.Number != 413)
     throw new Exception("Combined package failure");
 """)

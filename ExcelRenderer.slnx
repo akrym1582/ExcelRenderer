@@ -5,6 +5,7 @@
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/ExcelRenderer.Formulas/ExcelRenderer.Formulas.csproj" />
+    <Project Path="src/ExcelRenderer.OpenXml.Reader/ExcelRenderer.OpenXml.Reader.csproj" />
     <Project Path="src/ExcelRenderer.OpenXml/ExcelRenderer.OpenXml.csproj" />
     <Project Path="src/ExcelRenderer.Mapping/ExcelRenderer.Mapping.csproj" />
     <Project Path="src/ExcelRenderer.Fonts/ExcelRenderer.Fonts.csproj" />

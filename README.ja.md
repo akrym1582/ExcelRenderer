@@ -54,7 +54,7 @@ PDF / PNG / SVG
 | `ExcelRenderer.Fonts` | 描画用の日本語・絵文字フォントを追加 | `ExcelRenderer` と併用 |
 | `ExcelRenderer.Tool` | コマンドラインでマッピング・変換 | .NET 10 SDK |
 
-NuGet 公開対象はこの4つです。`ExcelRenderer.Formulas` と `ExcelRenderer.OpenXml` は
+NuGet 公開対象はこの4つです。`ExcelRenderer.OpenXml.Reader`・`ExcelRenderer.Formulas`・`ExcelRenderer.OpenXml` は
 本体と Mapping の両方に同梱される独立したアセンブリであり、インストールする
 パッケージ ID ではありません。API の利用には[後述の手順](#数式と低レベル-xlsx-api)で
 本体または Mapping のどちらかを追加します。
@@ -111,12 +111,14 @@ dotnet add package ExcelRenderer.Mapping --version 1.9.1
 パッケージの追加は不要です。本体と Mapping を併用する場合はバージョンを揃えてください。
 これらの API にフォントは必要ありません。
 
+以下のReader名前空間は、このソース変更からビルドしたパッケージ向けです。公開済み1.9.1では旧OpenXml.Readingを使います。[分離の移行案内](docs/openxml-reader-split.md)を参照してください。
+
 ```csharp
 using ExcelRenderer.Formulas.Data;
 using ExcelRenderer.Formulas.Evaluation;
 using ExcelRenderer.Formulas.References;
 using ExcelRenderer.Formulas.Syntax;
-using ExcelRenderer.OpenXml.Reading;
+using ExcelRenderer.OpenXml.Reader;
 
 var source = new InMemoryFormulaWorkbook.Builder().AddSheet("Invoice").Build();
 var result = new FormulaEngine().Evaluate(
@@ -534,12 +536,12 @@ ink bounds を完全に判定する機能ではありません。`CellTextTooSma
 Reader と Mapping は常に OpenXml を使います。
 [ワークブック API・CLI・対応範囲・stream 保証](docs/openxml-integration.ja.md)と、
 既存コード向けの[エンジン選択の廃止と移行](docs/engine-selection-removal.md)を参照してください。
-`ExcelRenderer.OpenXml` は共通の Reader・Writer・入力処理を提供し、ClosedXML はライブラリ・CLI・テスト・ツールから撤去済みです。
+`ExcelRenderer.OpenXml.Reader` は読み取り・入力処理を、既存OpenXmlは書き込み・再計算を提供し、ClosedXML はライブラリ・CLI・テスト・ツールから撤去済みです。
 公開 style API は `ExcelStyleConverter.Convert(CellStyleInfo, CellValueType)` に変更しました。
 [破壊的変更と移行例](docs/closedxml-removal-compatibility.md)を参照してください。低レベル API は [OpenXml Reader リファレンス](docs/openxml-reader.ja.md)
 にまとめています。
 
-数式表示の既定値は Core・本体 Reader・各 export API・CLI ともに
+Coreは保存済み数式値だけを描画します。本体Reader・各export API・CLIの数式表示の既定値は
 `FormulaDisplayMode.CachedValue`（`--formula-mode cached`）です。古い保存結果もそのまま使い、
 欠落は `FormulaCachedValueMissing` として診断します。限定的な自作計算器を使う場合は
 `FormulaDisplayMode.Recalculate` または `--formula-mode recalculate` を明示してください。
@@ -695,7 +697,7 @@ Formulas／OpenXmlの公開APIのnamespaceはフォルダ構成に一致させ�
 
 
 NuGet 公開対象は `ExcelRenderer`・`ExcelRenderer.Mapping`・`ExcelRenderer.Tool`・
-`ExcelRenderer.Fonts` の4つです。Core・OpenXml・Formulas は公開パッケージへ DLL を
+`ExcelRenderer.Fonts` の4つです。Core・OpenXml.Reader・OpenXml・Formulas は公開パッケージへ DLL を
 同梱するソースプロジェクトで、個別公開しません。詳しくは[配布構成](docs/package-distribution.md)を参照してください。
 
 
@@ -792,3 +794,7 @@ Core は単一 regular static TrueType font と IVS の基底文字化を維持�
 [第1段階の履歴記録](docs/skia-pdf-validation.md)も参照してください。
 
 長い一意な文字列・PDF変換全体・直接PNG/SVG出力を再点検した結果は、[性能レビュー](docs/rendering-performance-review.md)を参照してください。
+
+### Readerアセンブリの分離
+
+`ExcelRenderer.OpenXml.Reader` がXLSX読み取り・モデル・書式・入力処理を所有し、既存の本体／Mapping／Toolに同梱されます。低レベルAPIのusingを新しいReader名前空間へ変更し、利用側をすべて再ビルドしてください。CoreはReaderのみを参照して保存済み数式値を描画し、Coreの数式モード・評価オプションは削除しました。本体・Mapping・CLIの明示再計算は維持しています。[API移行と検証](docs/openxml-reader-split.md)を参照してください。

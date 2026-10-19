@@ -98,7 +98,7 @@ uncached HYPERLINK は空のままで、製品 adapter も保存結果だけを�
 ## 製品接続
 
 Core が元情報の描画モデル変換・共通モデル組立・フォント計測・layout を所有し、
-本体の hook が run・図形・リンクを追加します。汎用入力検査・spool は OpenXml/Input、
+本体の hook が run・図形・リンクを追加します。汎用入力検査・spool は OpenXml.Reader/Input、
 構文・評価・最終行配置は Mapping、型付き編集は限定 Writer の責務です。
 [OpenXml の統合](openxml-integration.ja.md)に現在の API と範囲をまとめています。
 互換 Reader の ClosedXML 専用 helper は残し、公開 `ExcelStyleConverter.Convert(IXLCell)`

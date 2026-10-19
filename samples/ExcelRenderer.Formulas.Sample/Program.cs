@@ -8,7 +8,7 @@ using ExcelRenderer.Mapping;
 using ExcelRenderer.Mapping.Configuration;
 using ExcelRenderer.Markdown;
 using ExcelRenderer.OpenXml.Calculation;
-using ExcelRenderer.OpenXml.Reading;
+using ExcelRenderer.OpenXml.Reader;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 
 if (args.Length > 3)

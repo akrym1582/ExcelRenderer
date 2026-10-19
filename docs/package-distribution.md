@@ -4,18 +4,18 @@ Only these four projects publish NuGet packages:
 
 | Package | Contents |
 | --- | --- |
-| `ExcelRenderer` | Main library, Core, OpenXml and Formulas DLL/XML files |
-| `ExcelRenderer.Mapping` | Mapping, OpenXml and Formulas DLL/XML files |
+| `ExcelRenderer` | Main library, Core, OpenXml.Reader, OpenXml and Formulas DLL/XML files |
+| `ExcelRenderer.Mapping` | Mapping, OpenXml.Reader, OpenXml and Formulas DLL/XML files |
 | `ExcelRenderer.Tool` | Installable CLI with one copy of each required assembly, including Fonts |
 | `ExcelRenderer.Fonts` | Optional embedded fonts and their license notices |
 
-`ExcelRenderer.Core`, `ExcelRenderer.OpenXml` and `ExcelRenderer.Formulas` retain
+`ExcelRenderer.Core`, `ExcelRenderer.OpenXml.Reader`, `ExcelRenderer.OpenXml` and `ExcelRenderer.Formulas` retain
 their assemblies, namespaces and source-project boundaries. They do not publish
 separate packages. Tests, samples, benchmarks and validation tools are also
 nonpackable. `Directory.Build.props` defaults new projects to nonpackable; only
 the four distribution projects explicitly opt in.
 
-The main library and Mapping work independently. Both include the same OpenXml
+The main library and Mapping work independently. Both include the same Reader, OpenXml
 and Formulas assemblies because neither package requires the other. Their copies
 must have identical SHA-256 hashes. The combined consumer check verifies that
 an application using both packages compiles and runs. Keep their package versions
@@ -24,7 +24,7 @@ dependencies (`DocumentFormat.OpenXml` and `ExcelNumberFormat`) directly, withou
 dependencies on unpublished ExcelRenderer packages.
 
 `build/EmbeddedOpenXml.targets` owns shared assembly inclusion. Internal project
-references use `PrivateAssets="all"`, so source projects that directly use OpenXml
+references use `PrivateAssets="all"`, so source projects that directly use Reader, OpenXml
 or Formulas APIs must declare their own project reference. Package consumers get
 these APIs from the DLLs in the published main or Mapping package.
 
@@ -95,7 +95,7 @@ also prevents the font list and tool-bundling checks from drifting between CI
 workflows. Run it locally after packing with `--packages <pack-output>` and
 `--work <temporary-directory-outside-the-repository>`.
 
-NuGet 公開対象は本体・Mapping・Tool・Fonts の4つだけです。Core・OpenXml・Formulas は
+NuGet 公開対象は本体・Mapping・Tool・Fonts の4つだけです。Core・OpenXml.Reader・OpenXml・Formulas は
 非公開のソースプロジェクトとし、必要な DLL/XML を公開パッケージに同梱します。
 テスト・サンプル・検証・性能測定の各 csproj も公開しません。新規プロジェクトも既定で
 非公開にし、CI とリリース前の検証で公開対象の追加や未公開パッケージへの依存を検出します。
@@ -124,3 +124,7 @@ restore/assets/deps/nuspec/runtime files, including isolated package consumers.
 PdfPig 0.1.14 is validation-only in nonpackable tests/tools and must never enter
 product package dependency groups. Release/publish workflow changes do not authorize
 a release; versioning and NuGet publication remain separate operations.
+
+## Reader split
+
+Reader remains nonpackable. Main and Mapping bundle its DLL/XML via the shared targets, and Tool carries one matching DLL. It must never become an unpublished NuGet dependency. Main/Mapping export the same OpenXml SDK and ExcelNumberFormat versions. Reader has no product project dependencies; Core references only Reader. `scripts/validate-reader-isolation.py` publishes independent source consumers and audits restore/runtime graphs, initial DLL contents and PE AssemblyRefs before separate-process execution. The same check runs in PR and reusable release validation. See [API migration](openxml-reader-split.md).

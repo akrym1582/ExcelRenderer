@@ -37,7 +37,6 @@ internal partial class CoreExcelReader
     internal ReportDocument Read(PreparedWorkbook source, DiagnosticCollector? diagnostics, IReadOnlyList<string>? selectedSheets = null, CancellationToken cancellationToken = default, ExcelReadOptions? options = null)
     {
         options ??= new ExcelReadOptions();
-        options.Validate();
         return ReadOpenXml(source, diagnostics, selectedSheets, cancellationToken, options);
     }
 

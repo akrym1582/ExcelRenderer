@@ -73,7 +73,7 @@ internal static class FixtureGenerator
                 previousRow = row;
             }
 
-            var address = new ExcelRenderer.OpenXml.Model.Cells.CellAddress(row, col).ToString();
+            var address = new ExcelRenderer.OpenXml.Reader.Model.Cells.CellAddress(row, col).ToString();
             var cell = new S.Cell { CellReference = address, StyleIndex = 1 };
             if (kind != "styled-empty")
             {

@@ -119,14 +119,10 @@ public sealed class ExcelReader
     {
         options?.Validate();
         var coreDiagnostics = diagnostics is null ? null : new Core.Rendering.DiagnosticCollector(diagnostic => diagnostics.Add(CoreIntegration.CoreDiagnosticAdapter.ToPublic(diagnostic)));
-        var document = new CoreIntegration.FullExcelReader(fontManager, diagnostics, maximumDigitWidths, detectUnsupportedFeatures)
+        var document = new CoreIntegration.FullExcelReader(fontManager, diagnostics, maximumDigitWidths, detectUnsupportedFeatures, options)
             .Read(source.CoreWorkbook, coreDiagnostics, selectedSheets, cancellationToken, new Core.ExcelReadOptions
             {
                 GetSelectedRange = options?.GetSelectedRange,
-                FormulaEvaluationOptions = options?.FormulaEvaluationOptions,
-                IgnoreFormulaPrintAreas = options?.IgnoreFormulaPrintAreas ?? false,
-                IsFormulaTarget = options?.IsFormulaTarget,
-                FormulaDisplayMode = (Core.FormulaDisplayMode)(options?.FormulaDisplayMode ?? FormulaDisplayMode.CachedValue),
             });
         Core.Rendering.ConversionMetrics.Report("model.cells", document.Sheets.Sum(sheet => sheet.Cells.Count));
         return document;

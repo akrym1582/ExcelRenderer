@@ -5,7 +5,7 @@ using System.Threading;
 using ExcelRenderer.Mapping.Configuration;
 using ExcelRenderer.Mapping.Diagnostics;
 using ExcelRenderer.OpenXml.Calculation;
-using ExcelRenderer.OpenXml.Input;
+using ExcelRenderer.OpenXml.Reader.Input;
 using ExcelRenderer.OpenXml.Writing;
 
 namespace ExcelRenderer.Mapping;

@@ -1,0 +1,263 @@
+[
+  {
+    "path": "engine/obj/project.assets.json",
+    "libraries": [
+      "DocumentFormat.OpenXml.Framework/3.3.0",
+      "DocumentFormat.OpenXml/3.3.0",
+      "ExcelNumberFormat/1.1.0",
+      "ExcelRenderer.Mapping/1.10.0",
+      "System.IO.Packaging/8.0.1"
+    ]
+  },
+  {
+    "path": "engine/bin/Release/net10.0/consumer.deps.json",
+    "libraries": [
+      "DocumentFormat.OpenXml.Framework/3.3.0",
+      "DocumentFormat.OpenXml/3.3.0",
+      "ExcelNumberFormat/1.1.0",
+      "ExcelRenderer.Mapping/1.10.0",
+      "System.IO.Packaging/8.0.1",
+      "consumer/1.0.0"
+    ]
+  },
+  {
+    "path": "adapter/obj/project.assets.json",
+    "libraries": [
+      "DocumentFormat.OpenXml.Framework/3.3.0",
+      "DocumentFormat.OpenXml/3.3.0",
+      "ExcelNumberFormat/1.1.0",
+      "ExcelRenderer.Mapping/1.10.0",
+      "System.IO.Packaging/8.0.1"
+    ]
+  },
+  {
+    "path": "adapter/bin/Release/net10.0/consumer.deps.json",
+    "libraries": [
+      "DocumentFormat.OpenXml.Framework/3.3.0",
+      "DocumentFormat.OpenXml/3.3.0",
+      "ExcelNumberFormat/1.1.0",
+      "ExcelRenderer.Mapping/1.10.0",
+      "System.IO.Packaging/8.0.1",
+      "consumer/1.0.0"
+    ]
+  },
+  {
+    "path": "mapping/obj/project.assets.json",
+    "libraries": [
+      "DocumentFormat.OpenXml.Framework/3.3.0",
+      "DocumentFormat.OpenXml/3.3.0",
+      "ExcelNumberFormat/1.1.0",
+      "ExcelRenderer.Mapping/1.10.0",
+      "System.IO.Packaging/8.0.1"
+    ]
+  },
+  {
+    "path": "mapping/bin/Release/net10.0/consumer.deps.json",
+    "libraries": [
+      "DocumentFormat.OpenXml.Framework/3.3.0",
+      "DocumentFormat.OpenXml/3.3.0",
+      "ExcelNumberFormat/1.1.0",
+      "ExcelRenderer.Mapping/1.10.0",
+      "System.IO.Packaging/8.0.1",
+      "consumer/1.0.0"
+    ]
+  },
+  {
+    "path": "main-core/obj/project.assets.json",
+    "libraries": [
+      "DocumentFormat.OpenXml.Framework/3.3.0",
+      "DocumentFormat.OpenXml/3.3.0",
+      "ExcelNumberFormat/1.1.0",
+      "ExcelRenderer/1.10.0",
+      "SkiaSharp.NativeAssets.Linux/4.151.0",
+      "SkiaSharp.NativeAssets.Win32/4.151.0",
+      "SkiaSharp.NativeAssets.macOS/4.151.0",
+      "SkiaSharp/4.151.0",
+      "System.IO.Packaging/8.0.1"
+    ]
+  },
+  {
+    "path": "main-core/bin/Release/net10.0/consumer.deps.json",
+    "libraries": [
+      "DocumentFormat.OpenXml.Framework/3.3.0",
+      "DocumentFormat.OpenXml/3.3.0",
+      "ExcelNumberFormat/1.1.0",
+      "ExcelRenderer/1.10.0",
+      "SkiaSharp.NativeAssets.Linux/4.151.0",
+      "SkiaSharp.NativeAssets.Win32/4.151.0",
+      "SkiaSharp.NativeAssets.macOS/4.151.0",
+      "SkiaSharp/4.151.0",
+      "System.IO.Packaging/8.0.1",
+      "consumer/1.0.0"
+    ]
+  },
+  {
+    "path": "combined/obj/project.assets.json",
+    "libraries": [
+      "DocumentFormat.OpenXml.Framework/3.3.0",
+      "DocumentFormat.OpenXml/3.3.0",
+      "ExcelNumberFormat/1.1.0",
+      "ExcelRenderer.Mapping/1.10.0",
+      "ExcelRenderer/1.10.0",
+      "SkiaSharp.NativeAssets.Linux/4.151.0",
+      "SkiaSharp.NativeAssets.Win32/4.151.0",
+      "SkiaSharp.NativeAssets.macOS/4.151.0",
+      "SkiaSharp/4.151.0",
+      "System.IO.Packaging/8.0.1"
+    ]
+  },
+  {
+    "path": "combined/bin/Release/net10.0/consumer.deps.json",
+    "libraries": [
+      "DocumentFormat.OpenXml.Framework/3.3.0",
+      "DocumentFormat.OpenXml/3.3.0",
+      "ExcelNumberFormat/1.1.0",
+      "ExcelRenderer.Mapping/1.10.0",
+      "ExcelRenderer/1.10.0",
+      "SkiaSharp.NativeAssets.Linux/4.151.0",
+      "SkiaSharp.NativeAssets.Win32/4.151.0",
+      "SkiaSharp.NativeAssets.macOS/4.151.0",
+      "SkiaSharp/4.151.0",
+      "System.IO.Packaging/8.0.1",
+      "consumer/1.0.0"
+    ]
+  },
+  {
+    "path": "managed-fonts/obj/project.assets.json",
+    "libraries": [
+      "DocumentFormat.OpenXml.Framework/3.3.0",
+      "DocumentFormat.OpenXml/3.3.0",
+      "ExcelNumberFormat/1.1.0",
+      "ExcelRenderer.Fonts/1.10.0",
+      "ExcelRenderer/1.10.0",
+      "SkiaSharp.NativeAssets.Linux/4.151.0",
+      "SkiaSharp.NativeAssets.Win32/4.151.0",
+      "SkiaSharp.NativeAssets.macOS/4.151.0",
+      "SkiaSharp/4.151.0",
+      "System.IO.Packaging/8.0.1"
+    ]
+  },
+  {
+    "path": "managed-fonts/bin/Release/net10.0/consumer.deps.json",
+    "libraries": [
+      "DocumentFormat.OpenXml.Framework/3.3.0",
+      "DocumentFormat.OpenXml/3.3.0",
+      "ExcelNumberFormat/1.1.0",
+      "ExcelRenderer.Fonts/1.10.0",
+      "ExcelRenderer/1.10.0",
+      "SkiaSharp.NativeAssets.Linux/4.151.0",
+      "SkiaSharp.NativeAssets.Win32/4.151.0",
+      "SkiaSharp.NativeAssets.macOS/4.151.0",
+      "SkiaSharp/4.151.0",
+      "System.IO.Packaging/8.0.1",
+      "consumer/1.0.0"
+    ]
+  },
+  {
+    "path": "namespace-main/obj/project.assets.json",
+    "libraries": [
+      "DocumentFormat.OpenXml.Framework/3.3.0",
+      "DocumentFormat.OpenXml/3.3.0",
+      "ExcelNumberFormat/1.1.0",
+      "ExcelRenderer/1.10.0",
+      "SkiaSharp.NativeAssets.Linux/4.151.0",
+      "SkiaSharp.NativeAssets.Win32/4.151.0",
+      "SkiaSharp.NativeAssets.macOS/4.151.0",
+      "SkiaSharp/4.151.0",
+      "System.IO.Packaging/8.0.1"
+    ]
+  },
+  {
+    "path": "namespace-main/bin/Release/net10.0/consumer.deps.json",
+    "libraries": [
+      "DocumentFormat.OpenXml.Framework/3.3.0",
+      "DocumentFormat.OpenXml/3.3.0",
+      "ExcelNumberFormat/1.1.0",
+      "ExcelRenderer/1.10.0",
+      "SkiaSharp.NativeAssets.Linux/4.151.0",
+      "SkiaSharp.NativeAssets.Win32/4.151.0",
+      "SkiaSharp.NativeAssets.macOS/4.151.0",
+      "SkiaSharp/4.151.0",
+      "System.IO.Packaging/8.0.1",
+      "consumer/1.0.0"
+    ]
+  },
+  {
+    "path": "namespace-mapping/obj/project.assets.json",
+    "libraries": [
+      "DocumentFormat.OpenXml.Framework/3.3.0",
+      "DocumentFormat.OpenXml/3.3.0",
+      "ExcelNumberFormat/1.1.0",
+      "ExcelRenderer.Mapping/1.10.0",
+      "System.IO.Packaging/8.0.1"
+    ]
+  },
+  {
+    "path": "namespace-mapping/bin/Release/net10.0/consumer.deps.json",
+    "libraries": [
+      "DocumentFormat.OpenXml.Framework/3.3.0",
+      "DocumentFormat.OpenXml/3.3.0",
+      "ExcelNumberFormat/1.1.0",
+      "ExcelRenderer.Mapping/1.10.0",
+      "System.IO.Packaging/8.0.1",
+      "consumer/1.0.0"
+    ]
+  },
+  {
+    "path": "namespace-combined/obj/project.assets.json",
+    "libraries": [
+      "DocumentFormat.OpenXml.Framework/3.3.0",
+      "DocumentFormat.OpenXml/3.3.0",
+      "ExcelNumberFormat/1.1.0",
+      "ExcelRenderer.Mapping/1.10.0",
+      "ExcelRenderer/1.10.0",
+      "SkiaSharp.NativeAssets.Linux/4.151.0",
+      "SkiaSharp.NativeAssets.Win32/4.151.0",
+      "SkiaSharp.NativeAssets.macOS/4.151.0",
+      "SkiaSharp/4.151.0",
+      "System.IO.Packaging/8.0.1"
+    ]
+  },
+  {
+    "path": "namespace-combined/bin/Release/net10.0/consumer.deps.json",
+    "libraries": [
+      "DocumentFormat.OpenXml.Framework/3.3.0",
+      "DocumentFormat.OpenXml/3.3.0",
+      "ExcelNumberFormat/1.1.0",
+      "ExcelRenderer.Mapping/1.10.0",
+      "ExcelRenderer/1.10.0",
+      "SkiaSharp.NativeAssets.Linux/4.151.0",
+      "SkiaSharp.NativeAssets.Win32/4.151.0",
+      "SkiaSharp.NativeAssets.macOS/4.151.0",
+      "SkiaSharp/4.151.0",
+      "System.IO.Packaging/8.0.1",
+      "consumer/1.0.0"
+    ]
+  },
+  {
+    "path": "tool/.store/excelrenderer.tool/1.10.0/project.assets.json",
+    "libraries": []
+  },
+  {
+    "path": "tool/.store/excelrenderer.tool/1.10.0/excelrenderer.tool/1.10.0/tools/net10.0/any/ExcelRenderer.Tool.deps.json",
+    "libraries": [
+      "DocumentFormat.OpenXml.Framework/3.3.0",
+      "DocumentFormat.OpenXml/3.3.0",
+      "ExcelNumberFormat/1.1.0",
+      "ExcelRenderer.Core/1.0.0.0",
+      "ExcelRenderer.Fonts/1.10.0",
+      "ExcelRenderer.Formulas/1.8.0",
+      "ExcelRenderer.Mapping/1.10.0",
+      "ExcelRenderer.OpenXml.Reader/1.8.0",
+      "ExcelRenderer.OpenXml/1.8.0",
+      "ExcelRenderer.Tool/1.10.0",
+      "ExcelRenderer/1.10.0",
+      "SkiaSharp.NativeAssets.Linux/4.151.0",
+      "SkiaSharp.NativeAssets.Win32/4.151.0",
+      "SkiaSharp.NativeAssets.macOS/4.151.0",
+      "SkiaSharp/4.151.0",
+      "System.CommandLine/2.0.11",
+      "System.IO.Packaging/8.0.1"
+    ]
+  }
+]

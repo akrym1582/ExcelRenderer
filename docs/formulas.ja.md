@@ -22,8 +22,7 @@ var document = new ExcelRenderer.Excel.ExcelReader().Read(input,
     });
 ```
 
-Core では `PdfExportOptions.ReadOptions` の
-`ExcelRenderer.Core.FormulaDisplayMode.Recalculate` を指定します。
+Coreは保存値専用で、数式モード・評価オプションは削除しました。再計算は本体または `WorkbookRecalculator` を利用してください。[Reader分離の移行案内](openxml-reader-split.md)を参照してください。
 本体の PDF・PNG・SVG・Markdown も既存の `ReadOptions` を使います。
 既存 CLI の描画コマンドは `--formula-mode recalculate` に対応し、既定値は `cached` です。
 過去の `Legacy` モードは引き続き拒否します。

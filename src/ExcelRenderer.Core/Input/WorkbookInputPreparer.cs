@@ -9,9 +9,9 @@ internal static class WorkbookInputPreparer
     /// <param name="cancellationToken">Cooperative cancellation.</param>
     /// <returns>The owner of validated seekable storage.</returns>
     internal static async Task<PreparedWorkbook> ReadAsync(Stream input, WorkbookInputOptions options, CancellationToken cancellationToken) =>
-        new(await OpenXml.Input.WorkbookInputPreparer.ReadAsync(
+        new(await OpenXml.Reader.Input.WorkbookInputPreparer.ReadAsync(
             input,
-            new OpenXml.Input.WorkbookInputOptions
+            new OpenXml.Reader.Input.WorkbookInputOptions
             {
                 MemoryThresholdBytes = options.MemoryThresholdBytes,
                 MaxInputBytes = options.MaxInputBytes,

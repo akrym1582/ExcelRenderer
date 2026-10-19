@@ -40,4 +40,7 @@
     <Compile Include="../Shared/SdkWorkbook.cs" Link="Fixtures/SdkWorkbook.cs" />
     <Compile Include="../Shared/ImageReviewFixture.cs" Link="Fixtures/ImageReviewFixture.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/ExcelRenderer.OpenXml.Reader/ExcelRenderer.OpenXml.Reader.csproj" />
+  </ItemGroup>
 </Project>

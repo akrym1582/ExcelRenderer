@@ -1,0 +1,68 @@
++ dotnet restore --configfile /workspace/reader-final-package-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/reader-final-package-consumers/engine/consumer.csproj (in 634 ms).
++ dotnet run -c Release --no-restore -- /workspace/reader-final-package-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+engine passed
++ dotnet restore --configfile /workspace/reader-final-package-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/reader-final-package-consumers/adapter/consumer.csproj (in 257 ms).
++ dotnet run -c Release --no-restore -- /workspace/reader-final-package-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+adapter passed
++ dotnet restore --configfile /workspace/reader-final-package-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/reader-final-package-consumers/mapping/consumer.csproj (in 258 ms).
++ dotnet run -c Release --no-restore -- /workspace/reader-final-package-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+mapping passed
++ dotnet restore --configfile /workspace/reader-final-package-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/reader-final-package-consumers/main-core/consumer.csproj (in 1.39 sec).
++ dotnet run -c Release --no-restore -- /workspace/reader-final-package-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+main-core passed
++ dotnet restore --configfile /workspace/reader-final-package-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/reader-final-package-consumers/combined/consumer.csproj (in 274 ms).
++ dotnet run -c Release --no-restore -- /workspace/reader-final-package-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+combined passed
++ dotnet restore --configfile /workspace/reader-final-package-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/reader-final-package-consumers/managed-fonts/consumer.csproj (in 660 ms).
++ dotnet run -c Release --no-restore -- /workspace/reader-final-package-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+managed-fonts passed
++ dotnet restore --configfile /workspace/reader-final-package-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/reader-final-package-consumers/namespace-main/consumer.csproj (in 294 ms).
++ dotnet run -c Release --no-restore --
+ExcelRenderer.Formulas.Evaluation.FormulaEngine
+engine: 375
+ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader
+reader: 375
+namespace-main passed
++ dotnet restore --configfile /workspace/reader-final-package-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/reader-final-package-consumers/namespace-mapping/consumer.csproj (in 282 ms).
++ dotnet run -c Release --no-restore --
+ExcelRenderer.Formulas.Evaluation.FormulaEngine
+engine: 375
+ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader
+reader: 375
+namespace-mapping passed
++ dotnet restore --configfile /workspace/reader-final-package-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/reader-final-package-consumers/namespace-combined/consumer.csproj (in 254 ms).
++ dotnet run -c Release --no-restore --
+ExcelRenderer.Formulas.Evaluation.FormulaEngine
+engine: 375
+ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader
+reader: 375
+namespace-combined passed
++ dotnet tool install ExcelRenderer.Tool --version 1.10.0 --tool-path /workspace/reader-final-package-consumers/tool --configfile /workspace/reader-final-package-consumers/NuGet.Config
+You can invoke the tool using the following command: excelrenderer
+Tool 'excelrenderer.tool' (version '1.10.0') was successfully installed.
++ /workspace/reader-final-package-consumers/tool/excelrenderer md /workspace/reader-final-package-consumers/invoice.xlsx --formula-mode recalculate -o /workspace/reader-final-package-consumers/cli.md
++ /workspace/reader-final-package-consumers/tool/excelrenderer pdf /workspace/reader-final-package-consumers/invoice.xlsx -o /workspace/reader-final-package-consumers/cli-pdf-skia.pdf --pdf-backend skiasharp
++ /workspace/reader-final-package-consumers/tool/excelrenderer render /workspace/reader-final-package-consumers/invoice.xlsx -o /workspace/reader-final-package-consumers/cli-render-skia.pdf --pdf-backend skiasharp --format pdf
+Warning: MaximumDigitWidthFallback [Invoice!workbook]: Normal font 'unknown' could not be measured; the 7px compatibility metric was used.
++ /workspace/reader-final-package-consumers/tool/excelrenderer pdf /workspace/reader-final-package-consumers/invoice.xlsx -o /workspace/reader-final-package-consumers/cli-default-without-subset.pdf
+Ten isolated package consumers passed (engine, adapter, Mapping, main+Core, combined, managed fonts, three namespace samples, installed CLI)
++ /workspace/reader-final-package-consumers/tool/excelrenderer pdf /workspace/reader-final-package-consumers/cli-font-formats.xlsx -o /workspace/reader-final-package-consumers/cli-collection-face-1.pdf --font-file /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc --font-face-index 1 --fallback-font PDF Format Fixture --no-system-fonts
+Installed CLI used collection face 1 and rejected CFF/variable fonts without committing output

@@ -1,9 +1,9 @@
 using System.Globalization;
 using DocumentFormat.OpenXml.Packaging;
-using ExcelRenderer.OpenXml.Model.Cells;
-using ExcelRenderer.OpenXml.Model.Styles;
-using ExcelRenderer.OpenXml.Model.Workbook;
-using ExcelRenderer.OpenXml.Reading;
+using ExcelRenderer.OpenXml.Reader;
+using ExcelRenderer.OpenXml.Reader.Model.Cells;
+using ExcelRenderer.OpenXml.Reader.Model.Styles;
+using ExcelRenderer.OpenXml.Reader.Model.Workbook;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 
 namespace ExcelRenderer.TestFixtures;

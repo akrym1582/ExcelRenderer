@@ -1,0 +1,11 @@
+tests/ExcelRenderer.Tests/Fonts/NotoSansMono-Regular.ttf: OK
+tests/ExcelRenderer.Tests/Fonts/OFL.txt: OK
+tests/ExcelRenderer.Tests/Fonts/PdfFormats/cff.otf: OK
+tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection.ttc: OK
+tests/ExcelRenderer.Tests/Fonts/PdfFormats/colr-v1.ttf: OK
+tests/ExcelRenderer.Tests/Fonts/PdfFormats/colr.ttf: OK
+tests/ExcelRenderer.Tests/Fonts/PdfFormats/static.ttf: OK
+tests/ExcelRenderer.Tests/Fonts/PdfFormats/variable.ttf: OK
+tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc: OK
+tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-v2.ttc: OK
+tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-mixed.ttc: OK

@@ -1,6 +1,6 @@
 using System.Globalization;
-using ExcelRenderer.OpenXml.Diagnostics;
-using ExcelRenderer.OpenXml.Reading;
+using ExcelRenderer.OpenXml.Reader;
+using ExcelRenderer.OpenXml.Reader.Diagnostics;
 using Xunit;
 
 namespace ExcelRenderer.OpenXml.Tests;

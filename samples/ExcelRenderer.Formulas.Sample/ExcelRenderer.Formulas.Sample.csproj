@@ -12,4 +12,7 @@
     <ProjectReference Include="../../src/ExcelRenderer.Mapping/ExcelRenderer.Mapping.csproj" />
     <ProjectReference Include="../../src/ExcelRenderer/ExcelRenderer.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/ExcelRenderer.OpenXml.Reader/ExcelRenderer.OpenXml.Reader.csproj" />
+  </ItemGroup>
 </Project>

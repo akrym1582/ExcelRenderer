@@ -1,10 +1,10 @@
 # OpenXml workbook reading and mapping
 
 NuGet distribution contains only the main, Mapping, Tool and Fonts packages.
-Formulas and OpenXml assemblies are bundled in the main and Mapping packages;
+Reader, Formulas and OpenXml assemblies are bundled in the main and Mapping packages;
 there are no separate packages for them. See [package distribution](package-distribution.md).
-Install `ExcelRenderer.Mapping` 1.9.1 (or use `ExcelRenderer` 1.9.1) and import
-`ExcelRenderer.OpenXml.Reading` for `OpenXmlWorkbookReader`. See the
+With the Reader split build of `ExcelRenderer.Mapping` (or `ExcelRenderer`), import
+`ExcelRenderer.OpenXml.Reader` for `OpenXmlWorkbookReader`. See the
 [namespace migration](namespace-migration.md) and [package-only sample](../samples/namespace-migration/README.md).
 
 > Explicit recalculation is available. The [formula guide](formulas.md) defines its scope, cache invalidation and supported features. The [support reference](formulas-reference.md) lists syntax and all 40 functions. Saved-value/formula-rejection behavior below describes the default CachedValue mode unless stated otherwise.
@@ -14,8 +14,7 @@ English | [日本語](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/
 Core, the main library and Mapping always use OpenXml. There is no engine
 selection API or CLI switch. For existing callers, see the
 [engine-selection migration](engine-selection-removal.md).
-`ExcelRenderer.OpenXml` supplies the shared reader, writer and input handling. It
-has no rendering, Mapping-language, font or ClosedXML dependency.
+`ExcelRenderer.OpenXml.Reader` supplies reading, saved-value formatting and input handling with no product dependencies. `ExcelRenderer.OpenXml` references Reader and Formulas for writing and recalculation. Neither has a rendering, Mapping-language or font dependency.
 
 ```csharp
 using ExcelRenderer.Mapping;
@@ -33,9 +32,7 @@ ExcelTemplateMapper.Map(template, output, data, new MappingOptions
 });
 ```
 
-Core exposes the equivalent `ExcelRenderer.Core.ExcelReadOptions` through
-`PdfExportOptions.ReadOptions`. Main conversion and export options continue to
-carry `ExcelReadOptions` through their existing `ReadOptions` properties.
+The formula policies below apply to main rendering and CLI. Core uses saved values only and its read options no longer expose formula mode/evaluation settings. Main conversion and export options continue to carry `ExcelReadOptions` through their existing `ReadOptions` properties. See [Reader split migration](openxml-reader-split.md).
 
 | Formula policy | Behavior |
 | --- | --- |
@@ -54,7 +51,7 @@ nonempty body with a leading equals sign. Shared/array followers without a body
 have null text and retain `FormulaSharedIndex` / `FormulaMasterAddress` on the cell
 and Markdown `VisualCell`. Drawing does not expand formulas or fall back because
 formula text cannot be expanded. The standalone low-level `FormulaTextResolver`
-remains available to existing callers; it is not used by rendering.
+remains available to existing callers; it is used by the recalculation adapter, while cached rendering preserves raw metadata.
 
 The reader builds one OpenXml model. Source diagnostics continue to use the
 selected sheets, rectangles, hidden dimensions and output pages. Input corruption,
@@ -162,7 +159,7 @@ before input processing or output creation.
 ## Ownership and verification
 
 Generic input validation and the seekable memory/file spool live in
-`ExcelRenderer.OpenXml/Input`; Core preserves its existing input types through
+`ExcelRenderer.OpenXml.Reader/Input`; Core preserves its existing input types through
 thin adapters. Core owns style conversion, merged-cell assembly, layout and
 rendering. Full product hooks add runs, drawings, images and links to the neutral
 model. Mapping owns the template language and final row occurrences; the writer

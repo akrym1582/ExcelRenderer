@@ -1,10 +1,10 @@
 # ExcelRenderer Core
 
-> Explicit recalculation is available. The [formula guide](formulas.md) defines its scope, cache invalidation and supported features. Saved-value/formula-rejection behavior below describes the default CachedValue mode unless stated otherwise.
+> Core reads saved formula results only. It has no dependency on the calculation adapter or formula engine. Use the main renderer or recalculate a workbook with OpenXml before passing it to Core.
 
 English | [日本語](core.ja.md)
 
-A standalone `netstandard2.1` source project for XLSX-to-PDF conversion, usable from .NET 8/10 through ProjectReference. Core has no separate NuGet package or embedded-font DLL and does not reference ExcelRenderer/Fonts/Tool. The main ExcelRenderer package includes Core DLL/XML from the same build.
+A standalone `netstandard2.1` source project for XLSX-to-PDF conversion, usable from .NET 8/10 through ProjectReference. Core has no separate NuGet package or embedded-font DLL and references only ExcelRenderer.OpenXml.Reader among product projects; it does not reference ExcelRenderer.OpenXml, Formulas, ExcelRenderer, Fonts or Tool. The main ExcelRenderer package includes Core DLL/XML from the same build.
 
 Public types include `ExcelConverter`, `PdfExportOptions`, `WorkbookInputOptions`, `ConversionResult`, and `ConversionDiagnostic` in the `ExcelRenderer.Core` namespace. Options and results follow the Core-specific scope described below.
 
@@ -29,7 +29,7 @@ var result = await ExcelConverter.ConvertAsync(xlsx, pdf, new PdfExportOptions
 
 All sheets, including hidden sheets, print in workbook order unless one SheetName is supplied. Empty sheets produce one page. Workbook print areas (including multiple areas), paper, margins, scaling/FitToPages, page order, print titles, manual breaks, cells, merges, backgrounds, borders, alignment, wrapping, ShrinkToFit, and existing header/footer rules remain supported. Date/time fields share one conversion snapshot. Cell rotation is ignored.
 
-Pictures use their complete source image stretched into the placement rectangle. Position, size, and Z order remain supported. Only the page containing the picture's top-left point prints it; points outside the print area are omitted. Overflow is clipped at the PDF page boundary. Pictures are neither split nor repeated across pages or print titles. Each matching print area prints independently. Crop, rotation, and flips are ignored. Shapes, callouts, shape text, and PDF link annotations are omitted. Cell hyperlink display text remains; HYPERLINK formulas use CachedValue. In default CachedValue mode, formula displays use typed saved results from the original XML. OpenXml formats the immutable saved values directly. Missing caches display empty text with a diagnostic; Legacy is rejected before input processing; Recalculate uses the limited engine described in the formula guide. Non-formula cells retain ordinary formatting. Images require a complete successful pixel decode; partial or corrupt images are skipped with nonfatal diagnostics.
+Pictures use their complete source image stretched into the placement rectangle. Position, size, and Z order remain supported. Only the page containing the picture's top-left point prints it; points outside the print area are omitted. Overflow is clipped at the PDF page boundary. Pictures are neither split nor repeated across pages or print titles. Each matching print area prints independently. Crop, rotation, and flips are ignored. Shapes, callouts, shape text, and PDF link annotations are omitted. Cell hyperlink display text remains; HYPERLINK formulas use CachedValue. In default CachedValue mode, formula displays use typed saved results from the original XML. OpenXml.Reader formats the immutable saved values directly. Missing caches display empty text with a diagnostic. Core has no formula mode or evaluation options; formula text and typed/shared saved results remain available as metadata. Non-formula cells retain ordinary formatting. Images require a complete successful pixel decode; partial or corrupt images are skipped with nonfatal diagnostics.
 
 There is no format/range/page extraction/trim/continuous-image API and no PNG/SVG/Markdown renderer.
 
@@ -71,6 +71,8 @@ Full reader/layout/drawing/PDF adapters provide the advanced behavior. Public ma
 
 Main/Core use the same shared drawing/subset implementation while owning separate conversion resources. Distribute the main and Core DLLs from the same build. See [the removal validation](pdfsharp-removal-validation.md).
 
-Core always uses OpenXml. `PdfExportOptions.ReadOptions` configures formula handling; see [OpenXml integration](openxml-integration.md) and [migration](engine-selection-removal.md). Generic input/spool storage is shared through the OpenXml dependency.
+Core always uses OpenXml.Reader. Generic input/spool storage is shared through Reader. `ExcelReadOptions.FormulaDisplayMode`, `FormulaEvaluationOptions` and the Core `FormulaDisplayMode` enum have been removed; update callers and rebuild. Main rendering and CLI still support explicit recalculation. See [Reader split migration](openxml-reader-split.md).
+
+Run `python3 scripts/validate-reader-isolation.py` to publish and execute separate Core and Reader consumers. It verifies the initial output, restore/runtime graphs and actual Core/Reader AssemblyRefs without deleting dependencies. The Core consumer generates a PDF from typed saved formula results and checks the missing-cache diagnostic.
 
 Font collections use `PdfExportOptions.FontCollectionIndex` (zero-based, default 0). See [font support](managed-truetype-subset.md).

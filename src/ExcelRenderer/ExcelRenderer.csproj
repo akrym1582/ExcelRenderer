@@ -46,4 +46,8 @@
     <ProjectReference Include="../ExcelRenderer.OpenXml/ExcelRenderer.OpenXml.csproj" PrivateAssets="all" />
   </ItemGroup>
   <Import Project="../../build/EmbeddedOpenXml.targets" />
+  <ItemGroup>
+    <ProjectReference Include="../ExcelRenderer.OpenXml.Reader/ExcelRenderer.OpenXml.Reader.csproj" PrivateAssets="all" />
+    <ProjectReference Include="../ExcelRenderer.Formulas/ExcelRenderer.Formulas.csproj" PrivateAssets="all" />
+  </ItemGroup>
 </Project>

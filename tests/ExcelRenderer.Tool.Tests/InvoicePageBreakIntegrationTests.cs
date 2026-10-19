@@ -1,5 +1,5 @@
 using System.Text.Json.Nodes;
-using ExcelRenderer.OpenXml.Model.Cells;
+using ExcelRenderer.OpenXml.Reader.Model.Cells;
 using ExcelRenderer.TestFixtures;
 using static ExcelRenderer.TestFixtures.WorkbookAssertions;
 using Xunit;

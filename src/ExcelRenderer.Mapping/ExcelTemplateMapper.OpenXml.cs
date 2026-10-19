@@ -7,8 +7,8 @@ using ExcelRenderer.Mapping.Configuration;
 using ExcelRenderer.Mapping.Expansion;
 using ExcelRenderer.Mapping.Templates;
 using ExcelRenderer.OpenXml.Calculation;
-using ExcelRenderer.OpenXml.Input;
-using ExcelRenderer.OpenXml.Reading;
+using ExcelRenderer.OpenXml.Reader;
+using ExcelRenderer.OpenXml.Reader.Input;
 using ExcelRenderer.OpenXml.Writing;
 using ExcelRenderer.OpenXml.Writing.Plans;
 

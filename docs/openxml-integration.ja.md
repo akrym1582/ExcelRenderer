@@ -1,10 +1,10 @@
 # OpenXml によるワークブックの読み込みとマッピング
 
-NuGet 配布は本体・Mapping・Tool・Fonts の4つです。Formulas と OpenXml は
+NuGet 配布は本体・Mapping・Tool・Fonts の4つです。Reader・Formulas・OpenXml は
 本体と Mapping に同梱される DLL で、個別パッケージは公開しません。
 [配布構成](package-distribution.md)を参照してください。
-`ExcelRenderer.Mapping` 1.9.1、または本体の1.9.1を参照すれば利用できます。
-`OpenXmlWorkbookReader` の using は `ExcelRenderer.OpenXml.Reading` です。
+以下のReader名前空間は、このソース変更からビルドした本体またはMappingパッケージで利用できます。公開済みバージョンのAPIは当時の仕様に従います。
+`OpenXmlWorkbookReader` の using は `ExcelRenderer.OpenXml.Reader` です。
 [名前空間移行ガイド](namespace-migration.md)と[パッケージのみを使うサンプル](../samples/namespace-migration/README.md)も参照してください。
 
 > 明示再計算モードを追加しました。[数式計算ガイド](formulas.ja.md)が評価範囲・キャッシュ失効・対応機能の現在の仕様です。[対応範囲・40関数](formulas-reference.ja.md)も参照してください。以下の保存値／数式拒否の説明は、特記のない限り既定の CachedValue モードに適用します。
@@ -14,8 +14,7 @@ NuGet 配布は本体・Mapping・Tool・Fonts の4つです。Formulas と Open
 Core・本体の Reader と Mapping は常に OpenXml を使います。エンジンを選ぶ API や
 CLI オプションはありません。既存コードの更新は[エンジン選択の廃止と移行](engine-selection-removal.md)
 を参照してください。
-`ExcelRenderer.OpenXml` は共通の Reader・Writer・入力処理を提供し、描画・Mapping 言語・
-フォント・ClosedXML を参照しません。
+`ExcelRenderer.OpenXml.Reader` は読み取り・入力処理を、既存OpenXmlはReaderとFormulasを接続して書き込み・再計算を提供します。描画・Mapping言語・フォントへの依存はありません。
 
 ```csharp
 using ExcelRenderer.Mapping;
@@ -33,9 +32,7 @@ ExcelTemplateMapper.Map(template, output, data, new MappingOptions
 });
 ```
 
-Core は `PdfExportOptions.ReadOptions` に同等の
-`ExcelRenderer.Core.ExcelReadOptions` を持ちます。本体の各変換 API は既存の
-`ReadOptions` から数式の表示方法を設定します。
+以下の数式指定は本体・CLI向けです。Coreは保存値専用で、Coreの数式モード・評価オプションは削除しました。本体の各変換APIは既存の `ReadOptions` から数式の表示方法を設定します。
 
 | 数式指定 | 動作 |
 | --- | --- |
@@ -157,3 +154,7 @@ SpreadsheetML の escape 規則で保存し、新 Reader で元の文字列へ�
 ClosedXML 0.105.1 は plain inlineStr の escape を復号しないため、これらの特殊値を
 同ライブラリだけで再読込すると escape 表記が残ります。通常文字列と先頭アポストロフィ
 （quotePrefix）は従来の値の意味を保持します。
+
+## Reader分離
+
+読み取り・保存値の書式化・入力検証は `ExcelRenderer.OpenXml.Reader` が所有します。既存OpenXmlはReaderとFormulasを参照し、編集・書き込み・再計算を接続します。CoreはReaderのみを参照して保存値を描画し、Coreの数式モード・評価オプションは削除しました。本体とCLIの数式モードは維持します。[API移行案内](openxml-reader-split.md)を参照してください。

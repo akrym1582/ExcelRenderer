@@ -14,4 +14,7 @@
     <ProjectReference Include="../../src/ExcelRenderer/ExcelRenderer.csproj" />
     <ProjectReference Include="../../src/ExcelRenderer.Fonts/ExcelRenderer.Fonts.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/ExcelRenderer.OpenXml.Reader/ExcelRenderer.OpenXml.Reader.csproj" />
+  </ItemGroup>
 </Project>

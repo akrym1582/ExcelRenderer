@@ -5,7 +5,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Validation;
 using ExcelRenderer.Mapping.Configuration;
 using ExcelRenderer.Mapping.Diagnostics;
-using ExcelRenderer.OpenXml.Model.Cells;
+using ExcelRenderer.OpenXml.Reader.Model.Cells;
 using ExcelRenderer.TestFixtures;
 using Xunit;
 using static ExcelRenderer.TestFixtures.WorkbookAssertions;
@@ -100,7 +100,7 @@ public sealed class OpenXmlMappingTests
         }
 
         output.Position = 0;
-        using var reader = ExcelRenderer.OpenXml.Reading.OpenXmlWorkbookReader.Open(output);
+        using var reader = ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader.Open(output);
         Assert.Equal(value, Assert.Single(reader.EnumerateCells(1)).Value.Text);
     }
 

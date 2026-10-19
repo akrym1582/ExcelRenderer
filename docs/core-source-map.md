@@ -264,4 +264,4 @@ Core's `ExcelReadOptions` retains the neutral selected-region setting and remove
 
 ## Conditional formatting ownership
 
-Reader owns raw immutable rule/differential metadata and colors. OpenXml owns saved-value/calculation snapshots and arbitrary expression evaluation; Formulas owns parsed-reference movement. Main alone owns ConditionalFormattingSession/ConditionalStyle. Core owns ordinary traversal, style interning, merged-border aggregation and the generic no-op CompleteCellAppearances hook. Core does not evaluate or apply conditional formatting.
+Reader owns raw immutable rule/differential metadata and colors. OpenXml owns saved-value/calculation snapshots and arbitrary expression evaluation; Formulas owns parsed-reference movement. Main alone owns ConditionalFormattingSession/ConditionalStyle, sparse population union/statistics and ConditionalColorScale. OpenXml exposes only sparse source-coordinate enumeration on its existing calculation snapshot. Core owns ordinary traversal, style interning, merged-border aggregation and the generic no-op CompleteCellAppearances hook. Core does not evaluate or apply conditional formatting.

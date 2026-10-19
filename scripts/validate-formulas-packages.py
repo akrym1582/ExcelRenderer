@@ -135,6 +135,29 @@ using var mappedReader = ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader.Open
 if (mappedReader.EnumerateCells(1).Single(c => c.Address.Column == 3).Value.Number != 413)
     throw new Exception("Combined package failure");
 """)
+# Verify the Phase 2 shared Reader/OpenXml APIs and main evaluator from package assemblies.
+programs['conditional-formatting'] = (['ExcelRenderer', 'ExcelRenderer.Mapping'], fixture + '''
+using (var doc = DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Open(input, true)) {
+    var ws = doc.WorkbookPart!.WorksheetParts.Single().Worksheet;
+    var cells = ws.Descendants<DocumentFormat.OpenXml.Spreadsheet.Cell>().ToArray();
+    cells[0].CellValue = new("0"); cells[1].CellValue = new("50");
+    cells[2].CellFormula = new("50+50"); cells[2].CellValue = new("100");
+    ws.InnerXml += """<conditionalFormatting xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" sqref="A1:C1"><cfRule type="colorScale" priority="1"><colorScale><cfvo type="min"/><cfvo type="max"/><color indexed="0"/><color rgb="FFFFFFFF"/></colorScale></cfRule></conditionalFormatting>""";
+}
+input.Position = 0;
+using (var reader = ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader.Open(input)) {
+    var calculation = ExcelRenderer.OpenXml.Calculation.WorkbookCalculationSession.CreateSavedValueSession(reader);
+    if (calculation.EnumerateValueCells(new("Invoice", 1, 1, 1048576, 16384)).Count() != 3) throw new Exception("Sparse package API failure");
+    var scale = reader.ReadWorksheetInfo(1).ConditionalFormattingRules.Single().Source.Children.Single();
+    if (scale.Children.First(c => c.Name == "color").Attributes["resolvedRgb"] != "000000") throw new Exception("Scale package metadata failure");
+}
+input.Position = 0;
+using var mapped = new MemoryStream();
+ExcelRenderer.Mapping.ExcelTemplateMapper.Map(input, mapped, new {}, new() { FormulaCalculationMode = ExcelRenderer.OpenXml.Calculation.FormulaCalculationMode.Recalculate });
+mapped.Position = 0;
+var sheet = new ExcelRenderer.Excel.ExcelReader().Read(mapped).Sheets[0];
+if (sheet.Cells[new(1,2)].Style.Background != new ExcelRenderer.Model.ReportColor(128,128,128)) throw new Exception("Phase 2 package evaluator failure");
+''')
 # Exercise Japanese/IVS/color and a nonzero TTC face from package assemblies only.
 programs['managed-fonts'] = (['ExcelRenderer', 'ExcelRenderer.Fonts'], fixture + '''
 _ = typeof(ExcelRenderer.Fonts.FontPack);
@@ -216,7 +239,7 @@ default_output.unlink(missing_ok=True)
 run(tool_command, 'pdf', fixture_path, '-o', default_output)
 assert default_output.read_bytes().startswith(b'%PDF')
 audit_consumer(tool)
-print('Ten isolated package consumers passed (engine, adapter, Mapping, main+Core, combined, managed fonts, three namespace samples, installed CLI)')
+print('Eleven isolated package consumers passed (engine, adapter, Mapping, main+Core, combined, conditional formatting, managed fonts, three namespace samples, installed CLI)')
 
 # Make the requested family explicit so the installed CLI must use the chosen
 # collection/CFF/variable face rather than an available bundled fallback.

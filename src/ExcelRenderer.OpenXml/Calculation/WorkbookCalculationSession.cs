@@ -93,6 +93,13 @@ public sealed class WorkbookCalculationSession
         return cell.Formula == null ? cell.Value : Evaluate(address);
     }
 
+    /// <summary>Streams stored value/formula coordinates from the same sparse snapshot used by ReadValue.</summary>
+    /// <param name="range">Inclusive source rectangle; missing coordinates are never materialized.</param>
+    /// <param name="cancellationToken">Cooperative cancellation.</param>
+    /// <returns>Stored coordinates, including formulas with missing caches and unsupported metadata. ReadValue retains their failure semantics.</returns>
+    public IEnumerable<FormulaCellAddress> EnumerateValueCells(FormulaRange range, CancellationToken cancellationToken = default) =>
+        source.EnumerateStoredCells(range, cancellationToken);
+
     /// <summary>Evaluates a source cell, retaining its style and formula metadata.</summary>
     /// <param name="cell">Source cell.</param>
     /// <returns>A snapshot containing the recalculated typed value.</returns>

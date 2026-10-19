@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Measure Phase 1 reads using identical harnesses against saved Release runtimes."""
+"""Measure conditional-formatting reads against saved Release runtimes; --phase2 adds population cases."""
 import argparse
 import hashlib
 import importlib.util
@@ -98,7 +98,12 @@ def main():
     parser.add_argument('--before', type=Path, required=True)
     parser.add_argument('--after', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument("--phase2", action="store_true", help="Run the Phase 2 population and regression protocol")
     args = parser.parse_args()
+    if args.phase2:
+        import runpy
+        runpy.run_path(str(ROOT / "scripts/benchmark-conditional-formatting-phase2.py"))["run"](args, globals())
+        return
     work = args.output.resolve()
     work.mkdir(parents=True, exist_ok=True)
     assert not any(work.iterdir()), 'Use an empty output directory'

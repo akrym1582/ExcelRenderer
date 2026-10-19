@@ -172,13 +172,13 @@ public sealed partial class OpenXmlWorkbookReader
                     conditionalRanges.Add(ranges);
                     foreach (var rule in element.Elements().Where(e => e.Name.LocalName == "cfRule"))
                     {
-                        if (conditionalRules.Count >= options.MaxStyleRecords || (XmlValues.Attr(rule, "text")?.Length ?? 0) > options.MaxCellTextCharacters || rule.Descendants().Any(e => (e.Name.LocalName == "formula" || e.Name.LocalName == "f") && e.Value.Length > options.MaxCellTextCharacters))
+                        if (conditionalRules.Count >= options.MaxStyleRecords || (XmlValues.Attr(rule, "text")?.Length ?? 0) > options.MaxCellTextCharacters || rule.Descendants().Any(e => ((e.Name.LocalName == "formula" || e.Name.LocalName == "f") && e.Value.Length > options.MaxCellTextCharacters) || (e.Name.LocalName == "cfvo" && (XmlValues.Attr(e, "val")?.Length ?? 0) > options.MaxCellTextCharacters)))
                         {
                             throw new InvalidDataException("Conditional formatting rule or formula limit exceeded.");
                         }
 
                         var dxf = XmlValues.Int(rule, "dxfId");
-                        conditionalRules.Add(new ConditionalFormattingRuleInfo(ranges, XmlValues.Info(rule), dxf.HasValue ? styles.ResolveDifferential(dxf.Value) : null, element.Name.Namespace != XmlValues.Spreadsheet || rule.Descendants().Any(e => e.Name.LocalName == "ext")));
+                        conditionalRules.Add(new ConditionalFormattingRuleInfo(ranges, styles.ColorInfo(rule), dxf.HasValue ? styles.ResolveDifferential(dxf.Value) : null, element.Name.Namespace != XmlValues.Spreadsheet || rule.Descendants().Any(e => e.Name.LocalName == "ext")));
                     }
                 }
                 else if (reader.ElementType == typeof(S.Column))

@@ -1,0 +1,30 @@
+{
+  "implementationSha": "93079af0193d8cec498d690a7615c89057e7a5d0",
+  "expectedPainted": 10000,
+  "cause": "Mapping preserves 10000 individual sqref intervals; the initial 4096 raw-range budget rejected the population before value collection. Fixed by bounded interval coalescing, without changing expected fills.",
+  "sample": {
+    "round": 0,
+    "fixture": "mapped",
+    "mode": "mapped",
+    "stage": "after",
+    "iteration": 5,
+    "warmup": false,
+    "elapsedMs": 318.8245,
+    "allocatedBytes": 155618720,
+    "peakRssBytes": 166666240,
+    "count": 10000,
+    "painted": 0,
+    "firstColors": "none|none|none|none|none",
+    "metrics": {
+      "calculation.snapshots": 1,
+      "openXmlReaderWorkbook": 1,
+      "conditionalFormatting.evaluations": 10000,
+      "conditionalFormatting.candidates": 10000,
+      "readerStyleConversions": 1,
+      "readerStyleCacheHits": 9999,
+      "readerStyleCacheEntries": 2,
+      "model.cells": 10000,
+      "model.ms": 13.1235
+    }
+  }
+}

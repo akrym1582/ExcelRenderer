@@ -1,0 +1,24 @@
++ dotnet restore --configfile /tmp/excelrenderer-phase2-final-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /tmp/excelrenderer-phase2-final-consumers/engine/consumer.csproj (in 10.01 sec).
++ dotnet run -c Release --no-restore -- /tmp/excelrenderer-phase2-final-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+engine passed
++ dotnet restore --configfile /tmp/excelrenderer-phase2-final-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /tmp/excelrenderer-phase2-final-consumers/adapter/consumer.csproj (in 312 ms).
++ dotnet run -c Release --no-restore -- /tmp/excelrenderer-phase2-final-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+adapter passed
++ dotnet restore --configfile /tmp/excelrenderer-phase2-final-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /tmp/excelrenderer-phase2-final-consumers/mapping/consumer.csproj (in 312 ms).
++ dotnet run -c Release --no-restore -- /tmp/excelrenderer-phase2-final-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+mapping passed
++ dotnet restore --configfile /tmp/excelrenderer-phase2-final-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /tmp/excelrenderer-phase2-final-consumers/main-core/consumer.csproj (in 33.27 sec).
++ dotnet run -c Release --no-restore -- /tmp/excelrenderer-phase2-final-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+/workspace/.tools/dotnet/sdk/10.0.401/Microsoft.Common.CurrentVersion.targets(5096,5): warning MSB3026: Could not copy "/tmp/excelrenderer-phase2-final-consumers/packages/skiasharp.nativeassets.win32/4.151.0/runtimes/win-arm64/native/libSkiaSharp.pdb" to "bin/Release/net10.0/runtimes/win-arm64/native/libSkiaSharp.pdb". Beginning retry 1 in 1000ms. No space left on device  [/tmp/excelrenderer-phase2-final-consumers/main-core/consumer.csproj]
+/workspace/.tools/dotnet/sdk/10.0.401/Microsoft.Common.CurrentVersion.targets(5096,5): warning MSB3026: Could not copy "/tmp/excelrenderer-phase2-final-consumers/packages/skiasharp.nativeassets.win32/4.151.0/runtimes/win-x64/native/libSkiaSharp.dll" to "bin/Release/net10.0/runtimes/win-x64/native/libSkiaSharp.dll". Beginning retry 1 in 1000ms. No space left on device  [/tmp/excelrenderer-phase2-final-consumers/main-core/consumer.csproj]
+/workspace/.tools/dotnet/sdk/10.0.401/Microsoft.Common.CurrentVersion.targets(5096,5): warning MSB3026: Could not copy "/tmp/excelrenderer-phase2-final-consumers/packages/skiasharp.nativeassets.win32/4.151.0/runtimes/win-x64/native/libSkiaSharp.pdb" to "bin/Release/net10.0/runtimes/win-x64/native/libSkiaSharp.pdb". Beginning retry 1 in 1000ms. No space left on device  [/tmp/excelrenderer-phase2-final-consumers/main-core/consumer.csproj]
+/workspace/.tools/dotnet/sdk/10.0.401/Microsoft.Common.CurrentVersion.targets(5096,5): warning MSB3026: Could not copy "/tmp/excelrenderer-phase2-final-consumers/packages/skiasharp.nativeassets.linux/4.151.0/runtimes/linux-musl-arm/native/libSkiaSharp.so" to "bin/Release/net10.0/runtimes/linux-musl-arm/native/libSkiaSharp.so". Beginning retry 1 in 1000ms. No space left on device  [/tmp/excelrenderer-phase2-final-consumers/main-core/consumer.csproj]
+/workspace/.tools/dotnet/sdk/10.0.401/Microsoft.Common.CurrentVersion.targets(5096,5): warning MSB3026: Could not copy "/tmp/excelrenderer-phase2-final-consumers/packages/skiasharp.nativeassets.win32/4.151.0/runtimes/win-arm64/native/libSkiaSharp.pdb" to "bin/Release/net10.0/runtimes/win-arm64/native/libSkiaSharp.pdb". Beginning retry 2 in 1000ms. No space left on device  [/tmp/exce

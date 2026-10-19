@@ -99,6 +99,12 @@ def main():
     parser.add_argument('--after', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument("--phase2", action="store_true", help="Run the Phase 2 population and regression protocol")
+    parser.add_argument("--warmups", type=int, default=5, help="Phase 2 warm-up reads per process")
+    parser.add_argument("--measurements", type=int, default=3, help="Phase 2 measured reads per process")
+    parser.add_argument("--rounds", type=int, default=3, help="Phase 2 alternating rounds")
+    parser.add_argument("--case", help="Run one Phase 2 fixture for targeted follow-up")
+    parser.add_argument("--mode", help="Restrict Phase 2 follow-up to one read policy")
+    parser.add_argument("--fixture-source", type=Path, help="Reuse the exact XLSX bytes from a prior Phase 2 matrix")
     args = parser.parse_args()
     if args.phase2:
         import runpy

@@ -1,0 +1,7 @@
+653 namespace declarations match source folders; 2 required compiler shims verified
+Core dependency direction and migrated helper ownership passed
+Shared conversion pipeline and compatibility facade ownership passed
+Shared OpenXml dependency direction and input ownership passed
+Source-neutral reader hooks and shared mapping language passed
+BCL formula engine, embedded distribution, adapter direction and 40 documented functions passed
+No removed PDF dependency: 1128 source/config files, 23 restored projects, 778 managed AssemblyRef inventories, 4 packages

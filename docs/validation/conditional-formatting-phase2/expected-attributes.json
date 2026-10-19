@@ -1,0 +1,16 @@
+{
+  "provenance": "Hand-authored numeric and typed-value expectations; not captured from Excel or renderer output",
+  "representative": {
+    "A": {"rule": "duplicateValues", "values": [10,20,20,30], "backgroundRgb": [null,"FFFF00","FFFF00",null]},
+    "B": {"rule": "top10 rank=2", "values": [100,90,90,80], "backgroundRgb": ["FFFF00","FFFF00","FFFF00",null]},
+    "C": {"rule": "aboveAverage", "values": [0,10,20,0], "mean": 7.5, "backgroundRgb": [null,"FFFF00","FFFF00",null]},
+    "D": {"rule": "colorScale min/num50/max", "values": [0,25,50,100], "backgroundRgb": ["000000","008000","00FF00","FFFFFF"]},
+    "E": {"rule": "colorScale min/percent50/max", "values": [0,1,2,100], "middleThreshold": 50, "backgroundRgb": ["000000","000500","000A00","FFFFFF"]},
+    "F": {"rule": "colorScale min/percentile50/max", "values": [0,1,2,100], "middleThreshold": 1.5, "backgroundRgb": ["000000","00AA00","01FF01","FFFFFF"]}
+  },
+  "mappedTwoColorScale": {"values": [10,20,20,30], "backgroundRgb": ["000000","808080","808080","FFFFFF"]},
+  "rankPercent": {"values": [0,1,2], "rank": 50, "percent": true, "count": 2, "matches": [false,true,true]},
+  "mean": {"values": [0,10,20], "mean": 10, "populationVariance": "200/3", "above": [false,false,true], "aboveOrEqual": [false,true,true]},
+  "rgbProfile": "Linear interpolation of sRGB bytes; round once, MidpointRounding.AwayFromZero; black0/white100: 25=404040, 50=808080",
+  "degeneracy": "Collapsed adjacent color-scale thresholds preserve ordinary fill and report ConditionalFormattingThresholdInvalid; not Excel verified"
+}

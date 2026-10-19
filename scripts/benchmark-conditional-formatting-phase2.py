@@ -2,6 +2,7 @@
 """Phase 2 protocol, invoked by benchmark-conditional-formatting.py --phase2."""
 import hashlib
 import json
+import shutil
 import statistics
 import subprocess
 from pathlib import Path
@@ -9,6 +10,7 @@ from zipfile import ZIP_DEFLATED, ZipFile
 
 
 def run(args, parent):
+    assert args.warmups >= 0 and args.measurements > 0 and args.rounds > 0
     bench = parent['bench']
     root = parent['ROOT']
     # Reuse the exact Phase 1/Core harness and add only selection, mapping and checksums.
@@ -18,7 +20,7 @@ if (args[2].Contains("mapped")) {
     using var mapped = new MemoryStream();
     ExcelRenderer.Mapping.ExcelTemplateMapper.Map(template, mapped, new { items = Enumerable.Range(0, 10000).Select(i => i % 101).ToArray() });
     bytes = mapped.ToArray();
-}''').replace('iteration < 15', 'iteration < 8').replace('iteration < 10', 'iteration < 5').replace('int count, painted;', 'int count, painted;\n    string firstColors = "";').replace('var document = new ExcelReader(fonts).Read(input, options);', '''if (mode.Contains("selected")) {
+}''').replace('iteration < 15', f'iteration < {args.warmups + args.measurements}').replace('iteration < 10', f'iteration < {args.warmups}').replace('int count, painted;', 'int count, painted;\n    string firstColors = "";').replace('var document = new ExcelReader(fonts).Read(input, options);', '''if (mode.Contains("selected")) {
         typeof(ExcelReadOptions).GetProperty("GetSelectedRange", BindingFlags.Instance | BindingFlags.NonPublic)!.SetValue(options,
             (Func<string, (int, int, int, int)?>)(_ => (1, 1, 5, 1)));
     }
@@ -35,6 +37,9 @@ if (args[2].Contains("mapped")) {
 
     def fixture(name, size, kind):
         path = work / f'{name}.xlsx'
+        if args.fixture_source is not None:
+            shutil.copyfile(args.fixture_source / path.name, path)
+            return
         parent['fixture'](path, 'rules')
         with ZipFile(path) as archive:
             parts = {name: archive.read(name) for name in archive.namelist()}
@@ -87,8 +92,14 @@ if (args[2].Contains("mapped")) {
             fixture(name, size, kind)
         cases.append((name, mode, ('after',)))
     cases += [('shared-100000', 'disabled', ('before', 'after')), ('shared-100000', 'core', ('before', 'after'))]
+    if args.case is not None:
+        cases = [case for case in cases if case[0] == args.case]
+        assert cases, f'Unknown Phase 2 fixture: {args.case}'
+    if args.mode is not None:
+        cases = [case for case in cases if case[1] == args.mode]
+        assert cases, f'Unknown Phase 2 mode: {args.mode}'
     records = []
-    for round_index in range(3):
+    for round_index in range(args.rounds):
         for name, mode, stages in cases:
             for stage in stages if round_index % 2 == 0 else stages[::-1]:
                 result = subprocess.run(['dotnet', str(harnesses[stage]), str(work / f'{name}.xlsx'), str(root / 'third_party/NotoSansJP/NotoSansJP-Regular.ttf'), mode], capture_output=True, text=True, check=True)
@@ -130,5 +141,5 @@ if (args[2].Contains("mapped")) {
                 assert metrics['conditionalFormatting.valueReads'] == 100000
             summary.append({'fixture': name, 'mode': mode, 'stage': stage, **{key: statistics.median(r[key] for r in values) for key in ('elapsedMs', 'allocatedBytes', 'peakRssBytes', 'count', 'painted')}, 'firstColors': values[0]['firstColors'], 'metrics': metrics})
     assert hashes == {stage: {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in source.glob('ExcelRenderer*.dll')} for stage, source in sources.items()}
-    (work / 'summary.json').write_text(json.dumps({'baseSha': '9ac854f97bfeebc511f89f36e6f340376cfb35d8', 'protocol': {'rounds': 3, 'warmups': 5, 'measurements': 3, 'configuration': 'Release', 'concurrency': 1, 'scope': 'read/evaluate; mapping performed before timed reads; no layout/render'}, 'products': hashes, 'harnessSourceSha256': hashlib.sha256(bench.HARNESS.encode()).hexdigest(), 'fixtures': {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in work.glob('*.xlsx')}, 'summary': summary}, indent=2) + '\n')
+    (work / 'summary.json').write_text(json.dumps({'baseSha': '9ac854f97bfeebc511f89f36e6f340376cfb35d8', 'protocol': {'rounds': args.rounds, 'warmups': args.warmups, 'measurements': args.measurements, 'configuration': 'Release', 'concurrency': 1, 'scope': 'read/evaluate; mapping performed before timed reads; no layout/render'}, 'products': hashes, 'harnessSourceSha256': hashlib.sha256(bench.HARNESS.encode()).hexdigest(), 'fixtures': {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in work.glob('*.xlsx')}, 'summary': summary}, indent=2) + '\n')
     print(json.dumps(summary, indent=2))

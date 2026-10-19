@@ -1,0 +1,97 @@
+{
+  "baseSha": "9ac854f97bfeebc511f89f36e6f340376cfb35d8",
+  "protocol": {
+    "rounds": 3,
+    "warmups": 25,
+    "measurements": 5,
+    "configuration": "Release",
+    "concurrency": 1,
+    "scope": "read/evaluate; mapping performed before timed reads; no layout/render"
+  },
+  "products": {
+    "before": {
+      "ExcelRenderer.dll": "c78038fd902de87fb62ae9cf999b0f1713cba1ca99a06421b49229f900aa81bc",
+      "ExcelRenderer.Tests.dll": "b93bf3baa1745962c984a5bf6220a5856288c55f56dc8fc832352abc4110b3f9",
+      "ExcelRenderer.OpenXml.Reader.dll": "ff4670cf32777e2fb281acae1bc14101929d22fc41e32404e311d2b0a1083349",
+      "ExcelRenderer.Mapping.dll": "620f0666a68d93b89f86a127f0992f671ec9a386281cdbb1ed49a380ea958147",
+      "ExcelRenderer.OpenXml.dll": "ca70e9ce2bf5310252835a322c44c7dc51908c49fcd2a319b71b167f970f3b20",
+      "ExcelRenderer.Core.dll": "65927d77533d0dab36c2add1da493188226754303647ead89ef7ef0e5dab3caf",
+      "ExcelRenderer.Formulas.dll": "b290ba55a00847374d056cd78d20475d3c7767c95131208d2a4d1cab89a7c7a7",
+      "ExcelRenderer.Fonts.dll": "c06e231743dc3c66f501de9805592f2963199dd63c9bae2f9e57c36230fd7920"
+    },
+    "after": {
+      "ExcelRenderer.dll": "26632f5dfdef4f51838d179a5c24bce3082a3500f2f92eb2bc2309051fefed7c",
+      "ExcelRenderer.Tests.dll": "a4d6eee3115048956f5c16455241113e41df261c4205b7fd8850f047d1d38983",
+      "ExcelRenderer.OpenXml.Reader.dll": "567554715c6c579cbf604e6e7c10ef59444d29892c3c367380bc799262b318f4",
+      "ExcelRenderer.Mapping.dll": "64509675b942055d6cea328801a7f7e56d5df572ec7f2984098616298fc9ef53",
+      "ExcelRenderer.OpenXml.dll": "b4eaf7ff288c3873fcb46dbce392af238a65b623af3b1ee63df9fa8e1b2f78d3",
+      "ExcelRenderer.Core.dll": "234f77b395bc254417c650f616495ee612540e3b7dff1e9cd9e2d35faac9f5b6",
+      "ExcelRenderer.Formulas.dll": "3ac99411176e9ab1da6f0dd9c6e5020b14effca5b699dad6b104e4478cc2abb6",
+      "ExcelRenderer.Fonts.dll": "5ad5cb9533054da9bb7736a3b0524e39dd65969f0724e36b39e831a547105544"
+    }
+  },
+  "harnessSourceSha256": "3496fe0f179457de17905feccb81bcec189401ef309ca802f439b73b64d77fa9",
+  "fixtures": {
+    "distinct.xlsx": "0cab8665f729afb787d602d875c562cef2bda25982a38f9fba2c4420a81b4e2a",
+    "overlap.xlsx": "46b98d437114007aabbdf4337b0baee4725214e2d6083bd1001a78fb53dd94bf",
+    "average-10000.xlsx": "1564ac7732de0ffe1f0f2c5170b7ce31ea229001639d8e398d20f6e7a2f3b14c",
+    "strings-100000.xlsx": "b131632e5f67c0111c2d50dd15b2d548b3109b67dec973178db5b25af429fc07",
+    "phase1-100000.xlsx": "140f23e6988f4d3e6bfd0121dfd7820312fad5445b060ade6b649d7aa39db293",
+    "shared-100000.xlsx": "557c29367eae1e0fa43bc2fee70768398abe9ec6c5c0aa3e5403c8f3748f7c30",
+    "top-100000.xlsx": "b707310c0d1d1c07beb4a10ae4fcd89d72c5a27068bc37f3a119a221107ddb16",
+    "mapped.xlsx": "ff2877487cedd9a73741a7a1df58979d8ba88530f665ce4b6b6e97051c57da0f",
+    "shared-10000.xlsx": "64349290de33fd6d060e8fc70e8918c75bc151bd2bea4329ffc2f1a729f0dff4",
+    "scale-10000.xlsx": "ed41c9c5e48a85c64da38db26516a5d27257e167a7e4a2f6e64fe8902498ce0d",
+    "duplicate-100000.xlsx": "a6234ed30cf935876a1da2d575675110d8f7a71f3eb3a7e91e423f00f9a2a270",
+    "plain-10000.xlsx": "d641a9aad5078e0115b340b0a8f2e478a51c557447efde8c1887e1a56584a447",
+    "average-100000.xlsx": "de8700087868b0a1a4fd92115338db2b5a3c7a5c044cee75f95d4a59a28c5556",
+    "strings-10000.xlsx": "d5099a4b2420d38bda81240baf8b657636e0e83bee2221e5e9a80f4b6f99306b",
+    "plain-100000.xlsx": "24b6de9fc66d51fc040eb8191d6cacb27361c1c2fda3cafac3f0dd8e68a95ce1",
+    "formula.xlsx": "090282c020d00a0f803f71cfed104cd9f0ea79dd4e6a0e006cf71a97c27c4007",
+    "scale-100000.xlsx": "131be1dddc36d159e0490154c0c51ab654d44581179c08285124fbc014618ea1",
+    "duplicate-10000.xlsx": "3519d1a05d621021a3d44df0de377449a78dd45b0ada3cb010ac660f3687acda",
+    "top-10000.xlsx": "8243505617c0752e6efdd0064dc8c5c5859e74210ae00567a19d7f345f4f8b28",
+    "whole.xlsx": "ede544051cb831ee4e4cea70cbda1ee330c2bce9e68d833bcb270b805ad94559",
+    "phase1-10000.xlsx": "90af71067bd13d5bdc97d12071679ba683f6414b2e52c1300ae21f3e17fe3886"
+  },
+  "summary": [
+    {
+      "fixture": "plain-10000",
+      "mode": "enabled",
+      "stage": "before",
+      "elapsedMs": 336.6296,
+      "allocatedBytes": 48140728,
+      "peakRssBytes": 262148096,
+      "count": 10000,
+      "painted": 0,
+      "firstColors": "none|none|none|none|none",
+      "metrics": {
+        "openXmlReaderWorkbook": 1,
+        "readerStyleConversions": 1,
+        "readerStyleCacheHits": 9999,
+        "readerStyleCacheEntries": 2,
+        "model.cells": 10000,
+        "model.ms": 14.2321
+      }
+    },
+    {
+      "fixture": "plain-10000",
+      "mode": "enabled",
+      "stage": "after",
+      "elapsedMs": 349.5681,
+      "allocatedBytes": 48141176,
+      "peakRssBytes": 261935104,
+      "count": 10000,
+      "painted": 0,
+      "firstColors": "none|none|none|none|none",
+      "metrics": {
+        "openXmlReaderWorkbook": 1,
+        "readerStyleConversions": 1,
+        "readerStyleCacheHits": 9999,
+        "readerStyleCacheEntries": 2,
+        "model.cells": 10000,
+        "model.ms": 13.6572
+      }
+    }
+  ]
+}

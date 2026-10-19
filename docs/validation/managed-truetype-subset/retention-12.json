@@ -1,0 +1,198 @@
+{
+  "managed": [
+    {
+      "iteration": 0,
+      "ms": 4937.6824,
+      "allocatedBytes": 705262752,
+      "postGcManagedBytes": 33387592,
+      "postGcWorkingSet": 260009984,
+      "nativeResourcesBalanced": true
+    },
+    {
+      "iteration": 1,
+      "ms": 3014.9064,
+      "allocatedBytes": 690264696,
+      "postGcManagedBytes": 33413184,
+      "postGcWorkingSet": 297041920,
+      "nativeResourcesBalanced": true
+    },
+    {
+      "iteration": 2,
+      "ms": 1525.404,
+      "allocatedBytes": 672965704,
+      "postGcManagedBytes": 34770056,
+      "postGcWorkingSet": 306290688,
+      "nativeResourcesBalanced": true
+    },
+    {
+      "iteration": 3,
+      "ms": 1307.6222,
+      "allocatedBytes": 676268752,
+      "postGcManagedBytes": 34770088,
+      "postGcWorkingSet": 310726656,
+      "nativeResourcesBalanced": true
+    },
+    {
+      "iteration": 4,
+      "ms": 1329.9763,
+      "allocatedBytes": 676271568,
+      "postGcManagedBytes": 34770152,
+      "postGcWorkingSet": 295800832,
+      "nativeResourcesBalanced": true
+    },
+    {
+      "iteration": 5,
+      "ms": 1489.9453,
+      "allocatedBytes": 677639064,
+      "postGcManagedBytes": 36082952,
+      "postGcWorkingSet": 315691008,
+      "nativeResourcesBalanced": true
+    },
+    {
+      "iteration": 6,
+      "ms": 1329.3809,
+      "allocatedBytes": 677562600,
+      "postGcManagedBytes": 37390672,
+      "postGcWorkingSet": 318582784,
+      "nativeResourcesBalanced": true
+    },
+    {
+      "iteration": 7,
+      "ms": 1331.3,
+      "allocatedBytes": 676272088,
+      "postGcManagedBytes": 37398896,
+      "postGcWorkingSet": 325627904,
+      "nativeResourcesBalanced": true
+    },
+    {
+      "iteration": 8,
+      "ms": 1431.2788,
+      "allocatedBytes": 676315984,
+      "postGcManagedBytes": 37390672,
+      "postGcWorkingSet": 319434752,
+      "nativeResourcesBalanced": true
+    },
+    {
+      "iteration": 9,
+      "ms": 1465.9788,
+      "allocatedBytes": 676340488,
+      "postGcManagedBytes": 37390672,
+      "postGcWorkingSet": 326082560,
+      "nativeResourcesBalanced": true
+    },
+    {
+      "iteration": 10,
+      "ms": 1510.8416,
+      "allocatedBytes": 676360752,
+      "postGcManagedBytes": 37390672,
+      "postGcWorkingSet": 326922240,
+      "nativeResourcesBalanced": true
+    },
+    {
+      "iteration": 11,
+      "ms": 1322.9216,
+      "allocatedBytes": 676271888,
+      "postGcManagedBytes": 37390672,
+      "postGcWorkingSet": 326647808,
+      "nativeResourcesBalanced": true
+    }
+  ],
+  "old": [
+    {
+      "iteration": 0,
+      "ms": 4719.8227,
+      "allocatedBytes": 699363408,
+      "postGcManagedBytes": 27917512,
+      "postGcWorkingSet": 253562880,
+      "nativeResourcesBalanced": true
+    },
+    {
+      "iteration": 1,
+      "ms": 2847.7723,
+      "allocatedBytes": 685447024,
+      "postGcManagedBytes": 29307200,
+      "postGcWorkingSet": 293429248,
+      "nativeResourcesBalanced": true
+    },
+    {
+      "iteration": 2,
+      "ms": 1766.5717,
+      "allocatedBytes": 665800320,
+      "postGcManagedBytes": 29311320,
+      "postGcWorkingSet": 299683840,
+      "nativeResourcesBalanced": true
+    },
+    {
+      "iteration": 3,
+      "ms": 1426.3402,
+      "allocatedBytes": 671741408,
+      "postGcManagedBytes": 30606696,
+      "postGcWorkingSet": 314068992,
+      "nativeResourcesBalanced": true
+    },
+    {
+      "iteration": 4,
+      "ms": 1296.0909,
+      "allocatedBytes": 670395328,
+      "postGcManagedBytes": 30606728,
+      "postGcWorkingSet": 325074944,
+      "nativeResourcesBalanced": true
+    },
+    {
+      "iteration": 5,
+      "ms": 1488.0248,
+      "allocatedBytes": 670471592,
+      "postGcManagedBytes": 30606728,
+      "postGcWorkingSet": 325783552,
+      "nativeResourcesBalanced": true
+    },
+    {
+      "iteration": 6,
+      "ms": 1776.2005,
+      "allocatedBytes": 670580088,
+      "postGcManagedBytes": 30606728,
+      "postGcWorkingSet": 328646656,
+      "nativeResourcesBalanced": true
+    },
+    {
+      "iteration": 7,
+      "ms": 1345.1483,
+      "allocatedBytes": 670404832,
+      "postGcManagedBytes": 30606728,
+      "postGcWorkingSet": 329252864,
+      "nativeResourcesBalanced": true
+    },
+    {
+      "iteration": 8,
+      "ms": 1373.6211,
+      "allocatedBytes": 670421728,
+      "postGcManagedBytes": 30606728,
+      "postGcWorkingSet": 329449472,
+      "nativeResourcesBalanced": true
+    },
+    {
+      "iteration": 9,
+      "ms": 1247.9618,
+      "allocatedBytes": 670365928,
+      "postGcManagedBytes": 30606792,
+      "postGcWorkingSet": 329650176,
+      "nativeResourcesBalanced": true
+    },
+    {
+      "iteration": 10,
+      "ms": 1968.7486,
+      "allocatedBytes": 670655424,
+      "postGcManagedBytes": 30606792,
+      "postGcWorkingSet": 335962112,
+      "nativeResourcesBalanced": true
+    },
+    {
+      "iteration": 11,
+      "ms": 1265.3908,
+      "allocatedBytes": 670385664,
+      "postGcManagedBytes": 30606792,
+      "postGcWorkingSet": 330768384,
+      "nativeResourcesBalanced": true
+    }
+  ]
+}

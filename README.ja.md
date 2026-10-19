@@ -770,9 +770,12 @@ excelrenderer render report.xlsx --format pdf -o report.pdf --pdf-backend skiash
 backend 明示はエラーです。API の非 PDF 要求では既定 `SkiaSharp = 1` を許容します。
 廃止予約値 `PdfSharp = 0` と不正値は入力読込・出力作成前に拒否し、0 を別 engine と解釈しません。
 
-source build/pack 前に `python3 scripts/build-harfbuzz-subset.py` で固定版 native adapter を
-build してください。runtime assets の欠落時は失敗し、full-font 埋込へ切り替えません。
-Python/CMake と独立 PDF reader は build/検証専用で、製品の実行要件には含みません。
+PDF の輪郭 subset は Core の BCL のみを使う C# 実装です。単体の非可変 TrueType と
+TTC/OTC 内の選択 TrueType face（プロポーショナル・IVS を含む）に対応します。
+既存の COLR v0/v1・CBDT カラー絵文字は Skia のカラー描画経路を維持します。
+CFF/CFF2・可変フォントはカラー table 併存時も PDF では拒否します。
+SkiaSharp native assets は引き続き必要ですが、独自 subset adapter・CMake・フォント取得は
+通常 build/pack に不要です。[対応形式と face index](docs/managed-truetype-subset.ja.md)を参照してください。
 
 PDF は上限付き seekable spool と文書内共有 subset を使います。限定構造 finalizer が
 用紙 box（精度0.001pt）・RGB page group・リンク/tooltip・画像補間を補います。

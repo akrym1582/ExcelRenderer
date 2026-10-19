@@ -7,15 +7,17 @@ internal sealed class RenderResourceSession : IDisposable
 {
     private static readonly AsyncLocal<RenderResourceSession?> CurrentSlot = new();
     private readonly RenderResourceSession? previous;
-    private readonly ConversionFontResources fonts = new();
+    private readonly ConversionFontResources fonts;
     private readonly ImageResources images = new();
     private bool disposed;
     private int activePayloads;
     private int maximumPayloads;
 
     /// <summary>Initializes a new instance of the <see cref="RenderResourceSession"/> class.</summary>
-    internal RenderResourceSession()
+    /// <param name="token">The conversion cancellation token.</param>
+    internal RenderResourceSession(CancellationToken token = default)
     {
+        fonts = new(token);
         previous = CurrentSlot.Value;
         CurrentSlot.Value = this;
     }

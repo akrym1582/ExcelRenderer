@@ -1,0 +1,248 @@
+[
+  {
+    "font": "noto",
+    "originalBytes": 5472784,
+    "oldBytes": 159500,
+    "managedBytes": 330976,
+    "oldNumGlyphs": 15699,
+    "managedNumGlyphs": 17103,
+    "tables": {
+      "GPOS": {
+        "old": 152,
+        "managed": 0
+      },
+      "GSUB": {
+        "old": 64,
+        "managed": 0
+      },
+      "OS/2": {
+        "old": 96,
+        "managed": 96
+      },
+      "STAT": {
+        "old": 46,
+        "managed": 0
+      },
+      "cmap": {
+        "old": 228,
+        "managed": 122858
+      },
+      "gasp": {
+        "old": 8,
+        "managed": 8
+      },
+      "glyf": {
+        "old": 870,
+        "managed": 870
+      },
+      "head": {
+        "old": 54,
+        "managed": 54
+      },
+      "hhea": {
+        "old": 36,
+        "managed": 36
+      },
+      "hmtx": {
+        "old": 62796,
+        "managed": 68412
+      },
+      "loca": {
+        "old": 31400,
+        "managed": 68416
+      },
+      "maxp": {
+        "old": 32,
+        "managed": 32
+      },
+      "name": {
+        "old": 554,
+        "managed": 2116
+      },
+      "post": {
+        "old": 32,
+        "managed": 32
+      },
+      "prep": {
+        "old": 7,
+        "managed": 7
+      },
+      "vhea": {
+        "old": 36,
+        "managed": 36
+      },
+      "vmtx": {
+        "old": 62796,
+        "managed": 67758
+      }
+    }
+  },
+  {
+    "font": "ipamj",
+    "originalBytes": 46676744,
+    "oldBytes": 271472,
+    "managedBytes": 1440340,
+    "oldNumGlyphs": 26797,
+    "managedNumGlyphs": 61360,
+    "tables": {
+      "BASE": {
+        "old": 210,
+        "managed": 0
+      },
+      "GDEF": {
+        "old": 34,
+        "managed": 0
+      },
+      "GPOS": {
+        "old": 30,
+        "managed": 0
+      },
+      "GSUB": {
+        "old": 64,
+        "managed": 0
+      },
+      "OS/2": {
+        "old": 96,
+        "managed": 96
+      },
+      "cmap": {
+        "old": 52,
+        "managed": 270124
+      },
+      "cvt ": {
+        "old": 206,
+        "managed": 206
+      },
+      "fpgm": {
+        "old": 104,
+        "managed": 104
+      },
+      "gasp": {
+        "old": 16,
+        "managed": 16
+      },
+      "glyf": {
+        "old": 1630,
+        "managed": 1630
+      },
+      "head": {
+        "old": 54,
+        "managed": 54
+      },
+      "hhea": {
+        "old": 36,
+        "managed": 36
+      },
+      "hmtx": {
+        "old": 107186,
+        "managed": 126640
+      },
+      "loca": {
+        "old": 53596,
+        "managed": 245444
+      },
+      "maxp": {
+        "old": 32,
+        "managed": 32
+      },
+      "name": {
+        "old": 512,
+        "managed": 1202
+      },
+      "post": {
+        "old": 32,
+        "managed": 671708
+      },
+      "prep": {
+        "old": 10,
+        "managed": 10
+      },
+      "vhea": {
+        "old": 36,
+        "managed": 36
+      },
+      "vmtx": {
+        "old": 107186,
+        "managed": 122722
+      }
+    }
+  },
+  {
+    "font": "mono",
+    "originalBytes": 512836,
+    "oldBytes": 27412,
+    "managedBytes": 94048,
+    "oldNumGlyphs": 3485,
+    "managedNumGlyphs": 3787,
+    "tables": {
+      "GDEF": {
+        "old": 40,
+        "managed": 0
+      },
+      "GPOS": {
+        "old": 30,
+        "managed": 0
+      },
+      "GSUB": {
+        "old": 202,
+        "managed": 0
+      },
+      "OS/2": {
+        "old": 96,
+        "managed": 96
+      },
+      "cmap": {
+        "old": 92,
+        "managed": 16050
+      },
+      "cvt ": {
+        "old": 270,
+        "managed": 270
+      },
+      "fpgm": {
+        "old": 3605,
+        "managed": 3605
+      },
+      "gasp": {
+        "old": 8,
+        "managed": 8
+      },
+      "glyf": {
+        "old": 2628,
+        "managed": 2012
+      },
+      "head": {
+        "old": 54,
+        "managed": 54
+      },
+      "hhea": {
+        "old": 36,
+        "managed": 36
+      },
+      "hmtx": {
+        "old": 12210,
+        "managed": 15124
+      },
+      "loca": {
+        "old": 6972,
+        "managed": 15152
+      },
+      "maxp": {
+        "old": 32,
+        "managed": 32
+      },
+      "name": {
+        "old": 554,
+        "managed": 1702
+      },
+      "post": {
+        "old": 32,
+        "managed": 39408
+      },
+      "prep": {
+        "old": 250,
+        "managed": 250
+      }
+    }
+  }
+]

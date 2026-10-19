@@ -1,0 +1,67 @@
++ dotnet restore --configfile /workspace/excelrenderer-validation/consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/excelrenderer-validation/consumers/engine/consumer.csproj (in 2.03 sec).
++ dotnet run -c Release --no-restore -- /workspace/excelrenderer-validation/consumers/invoice.xlsx /workspace/excelrenderer-validation/clean/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/excelrenderer-validation/clean/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+engine passed
++ dotnet restore --configfile /workspace/excelrenderer-validation/consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/excelrenderer-validation/consumers/adapter/consumer.csproj (in 425 ms).
++ dotnet run -c Release --no-restore -- /workspace/excelrenderer-validation/consumers/invoice.xlsx /workspace/excelrenderer-validation/clean/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/excelrenderer-validation/clean/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+adapter passed
++ dotnet restore --configfile /workspace/excelrenderer-validation/consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/excelrenderer-validation/consumers/mapping/consumer.csproj (in 803 ms).
++ dotnet run -c Release --no-restore -- /workspace/excelrenderer-validation/consumers/invoice.xlsx /workspace/excelrenderer-validation/clean/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/excelrenderer-validation/clean/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+mapping passed
++ dotnet restore --configfile /workspace/excelrenderer-validation/consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/excelrenderer-validation/consumers/main-core/consumer.csproj (in 7.79 sec).
++ dotnet run -c Release --no-restore -- /workspace/excelrenderer-validation/consumers/invoice.xlsx /workspace/excelrenderer-validation/clean/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/excelrenderer-validation/clean/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+main-core passed
++ dotnet restore --configfile /workspace/excelrenderer-validation/consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/excelrenderer-validation/consumers/combined/consumer.csproj (in 297 ms).
++ dotnet run -c Release --no-restore -- /workspace/excelrenderer-validation/consumers/invoice.xlsx /workspace/excelrenderer-validation/clean/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/excelrenderer-validation/clean/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+combined passed
++ dotnet restore --configfile /workspace/excelrenderer-validation/consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/excelrenderer-validation/consumers/managed-fonts/consumer.csproj (in 866 ms).
++ dotnet run -c Release --no-restore -- /workspace/excelrenderer-validation/consumers/invoice.xlsx /workspace/excelrenderer-validation/clean/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/excelrenderer-validation/clean/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+managed-fonts passed
++ dotnet restore --configfile /workspace/excelrenderer-validation/consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/excelrenderer-validation/consumers/namespace-main/consumer.csproj (in 356 ms).
++ dotnet run -c Release --no-restore --
+ExcelRenderer.Formulas.Evaluation.FormulaEngine
+engine: 375
+ExcelRenderer.OpenXml.Reading.OpenXmlWorkbookReader
+reader: 375
+namespace-main passed
++ dotnet restore --configfile /workspace/excelrenderer-validation/consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/excelrenderer-validation/consumers/namespace-mapping/consumer.csproj (in 281 ms).
++ dotnet run -c Release --no-restore --
+ExcelRenderer.Formulas.Evaluation.FormulaEngine
+engine: 375
+ExcelRenderer.OpenXml.Reading.OpenXmlWorkbookReader
+reader: 375
+namespace-mapping passed
++ dotnet restore --configfile /workspace/excelrenderer-validation/consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/excelrenderer-validation/consumers/namespace-combined/consumer.csproj (in 297 ms).
++ dotnet run -c Release --no-restore --
+ExcelRenderer.Formulas.Evaluation.FormulaEngine
+engine: 375
+ExcelRenderer.OpenXml.Reading.OpenXmlWorkbookReader
+reader: 375
+namespace-combined passed
++ dotnet tool install ExcelRenderer.Tool --version 1.10.0 --tool-path /workspace/excelrenderer-validation/consumers/tool --configfile /workspace/excelrenderer-validation/consumers/NuGet.Config
+You can invoke the tool using the following command: excelrenderer
+Tool 'excelrenderer.tool' (version '1.10.0') was successfully installed.
++ /workspace/excelrenderer-validation/consumers/tool/excelrenderer md /workspace/excelrenderer-validation/consumers/invoice.xlsx --formula-mode recalculate -o /workspace/excelrenderer-validation/consumers/cli.md
++ /workspace/excelrenderer-validation/consumers/tool/excelrenderer pdf /workspace/excelrenderer-validation/consumers/invoice.xlsx -o /workspace/excelrenderer-validation/consumers/cli-pdf-skia.pdf --pdf-backend skiasharp
++ /workspace/excelrenderer-validation/consumers/tool/excelrenderer render /workspace/excelrenderer-validation/consumers/invoice.xlsx -o /workspace/excelrenderer-validation/consumers/cli-render-skia.pdf --pdf-backend skiasharp --format pdf
+Warning: MaximumDigitWidthFallback [Invoice!workbook]: Normal font 'unknown' could not be measured; the 7px compatibility metric was used.
++ /workspace/excelrenderer-validation/consumers/tool/excelrenderer pdf /workspace/excelrenderer-validation/consumers/invoice.xlsx -o /workspace/excelrenderer-validation/consumers/cli-default-without-subset.pdf
+Ten isolated package consumers passed (engine, adapter, Mapping, main+Core, combined, managed fonts, three namespace samples, installed CLI)
++ /workspace/excelrenderer-validation/consumers/tool/excelrenderer pdf /workspace/excelrenderer-validation/consumers/invoice.xlsx -o /workspace/excelrenderer-validation/consumers/cli-collection-face-1.pdf --font-file /workspace/excelrenderer-validation/clean/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc --font-face-index 1 --fallback-font PDF Format Fixture --no-system-fonts

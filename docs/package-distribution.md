@@ -100,24 +100,19 @@ NuGet 公開対象は本体・Mapping・Tool・Fonts の4つだけです。Core�
 テスト・サンプル・検証・性能測定の各 csproj も公開しません。新規プロジェクトも既定で
 非公開にし、CI とリリース前の検証で公開対象の追加や未公開パッケージへの依存を検出します。
 
-## Skia PDF native subset assets
+## PDF fonts and native assets
 
-Before a source build or pack, run `python3 scripts/build-harfbuzz-subset.py` on
-an OS with CMake and a C++ compiler. It builds the adapter from checksum-pinned
-HarfBuzz 10.2.0 without third-party runtime dependencies beyond the platform C/C++
-runtime. Generated assets live under `native/runtimes/<rid>/native`; generated
-`build.json` records source/binary hashes, version, license and verified exports.
-`build/HarfBuzzSubset.targets` copies the current host asset for ProjectReference
-consumers and includes native runtime assets in the main nupkg. The tool receives
-its current host asset through the main ProjectReference. The HarfBuzz license is
-included in both packages. Python/CMake are not installed for product consumers.
+Core contains a BCL-only static TrueType subsetter and TTC/OTC face extractor.
+Normal restore/build/test/pack needs no custom native subset adapter, CMake/C++
+compiler or HarfBuzz source acquisition. SkiaSharp native assets remain required
+for drawing and PDF generation. The four-package contract is unchanged.
 
-The release workflow builds and runs subset/API/CLI tests, packs the four packages
-and runs isolated consumers independently on Linux
-x64 and Windows x64 before collecting both assets for packing. A local one-OS pack
-is only evidence for that OS; it does not establish a complete release inventory
-or other-RID runtime support. See `docs/skia-pdf-validation.md` for actual local
-verification and outstanding distribution gates. Missing native subset assets fail PDF conversion in both main and Core. PNG/SVG/Markdown do not require the subset adapter.
+The reusable PDF workflow builds, tests, packs, publishes locally and exercises
+isolated NuGet/CLI consumers on Linux x64 and Windows x64. It no longer builds or
+collects custom native binaries. `package_distribution.py` rejects custom subset
+adapters/targets/licenses in package inventories. Local results establish only
+the OS actually exercised. See [font contract](managed-truetype-subset.md) and
+[recorded validation](validation/managed-truetype-subset/README.md).
 
 ## PDF dependency removal audit
 

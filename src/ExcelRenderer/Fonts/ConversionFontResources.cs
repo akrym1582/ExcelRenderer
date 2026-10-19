@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using ExcelRenderer.Core.Fonts;
+using ExcelRenderer.Core.Fonts.TrueType;
 using ExcelRenderer.Rendering;
 using SkiaSharp;
 
@@ -10,20 +11,27 @@ internal sealed class ConversionFontResources : IDisposable
 {
     private static readonly AsyncLocal<ConversionFontResources?> CurrentSlot = new();
     private readonly ConversionFontResources? _previous;
+    private readonly Dictionary<(string Path, long Length, long Modified), byte[]> _containers = new();
+    private readonly Dictionary<(string Path, long Length, long Modified, int Index), SkiaFontFace> _fileFaces = new();
     private readonly Dictionary<string, SkiaFontFace> _snapshots = new(StringComparer.Ordinal);
     private ConditionalWeakTable<ResolvedFont, SkiaFontFace> _faces = new();
     private bool _disposed;
     private bool _purgeFontCache;
 
     /// <summary>Initializes a new instance of the <see cref="ConversionFontResources"/> class.</summary>
-    internal ConversionFontResources()
+    /// <param name="token">The conversion cancellation token.</param>
+    internal ConversionFontResources(CancellationToken token = default)
     {
+        Token = token;
         _previous = CurrentSlot.Value;
         CurrentSlot.Value = this;
     }
 
     /// <summary>Gets the resource owner for the current conversion, if any.</summary>
     internal static ConversionFontResources? Current => CurrentSlot.Value;
+
+    /// <summary>Gets the cancellation token for snapshot normalization.</summary>
+    internal CancellationToken Token { get; }
 
     /// <inheritdoc/>
     public void Dispose()
@@ -50,6 +58,8 @@ internal sealed class ConversionFontResources : IDisposable
 
         _faces = new();
         _snapshots.Clear();
+        _containers.Clear();
+        _fileFaces.Clear();
     }
 
     /// <summary>Requests one cache purge after all conversion-owned drawing faces are released.</summary>
@@ -60,6 +70,7 @@ internal sealed class ConversionFontResources : IDisposable
     /// <returns>The scope-owned snapshot.</returns>
     internal SkiaFontFace GetFace(ResolvedFont font)
     {
+        Token.ThrowIfCancellationRequested();
         if (_disposed)
         {
             throw new ObjectDisposedException(nameof(ConversionFontResources));
@@ -67,13 +78,33 @@ internal sealed class ConversionFontResources : IDisposable
 
         if (!_faces.TryGetValue(font, out var face))
         {
-            var bytes = font.SnapshotData ?? font.FontData ?? File.ReadAllBytes(font.FilePath);
-            var identity = SkiaFontFace.ContentIdentity(bytes);
-            if (!_snapshots.TryGetValue(identity, out face))
+            if (font.SnapshotData is null && font.FontData is null)
             {
-                face = new SkiaFontFace(bytes, identity);
-                _snapshots.Add(identity, face);
+                var info = new FileInfo(font.FilePath);
+                var key = (info.FullName, info.Length, info.LastWriteTimeUtc.Ticks);
+                var faceKey = (key.FullName, key.Length, key.Ticks, font.FontCollectionIndex);
+                if (_fileFaces.TryGetValue(faceKey, out face))
+                {
+                    _faces.Add(font, face);
+                    return face;
+                }
+
+                if (!_containers.TryGetValue(key, out var container))
+                {
+                    container = File.ReadAllBytes(info.FullName);
+                    _containers.Add(key, container);
+                }
+
+                face = GetSnapshot(FontFaceExtractor.Extract(container, font.FontCollectionIndex, Token));
+                _fileFaces.Add(faceKey, face);
+                _faces.Add(font, face);
+                return face;
             }
+
+            var bytes = font.SnapshotData ?? (font.FontDataIsStandalone
+                ? font.FontData!
+                : FontFaceExtractor.Extract(font.FontData!, font.FontCollectionIndex, Token));
+            face = GetSnapshot(bytes);
 
             _faces.Add(font, face);
         }
@@ -102,4 +133,16 @@ internal sealed class ConversionFontResources : IDisposable
     /// <param name="size">The point size.</param>
     /// <returns>The point metrics.</returns>
     internal (double Ascent, double Descent, double Leading) GetMetrics(ResolvedFont font, double size) => GetFace(font).Metrics(size);
+
+    private SkiaFontFace GetSnapshot(byte[] bytes)
+    {
+        var identity = SkiaFontFace.ContentIdentity(bytes);
+        if (!_snapshots.TryGetValue(identity, out var face))
+        {
+            face = new SkiaFontFace(bytes, identity);
+            _snapshots.Add(identity, face);
+        }
+
+        return face;
+    }
 }

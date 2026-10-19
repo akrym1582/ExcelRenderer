@@ -28,8 +28,6 @@ jobs:
           source scripts/test-fonts.sh
           echo "FONTCONFIG_FILE=$FONTCONFIG_FILE" >> "$GITHUB_ENV"
 
-      - name: Build pinned HarfBuzz subset adapter
-        run: python3 scripts/build-harfbuzz-subset.py
 
       - name: Verify fixed test font assets
         run: sha256sum -c tests/ExcelRenderer.Tests/Fonts/SHA256SUMS
@@ -140,8 +138,6 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
-      - name: Build shared native subset adapter
-        run: python scripts/build-harfbuzz-subset.py
       - name: Restore Core tests
         run: dotnet restore tests/ExcelRenderer.Core.Tests/ExcelRenderer.Core.Tests.csproj --locked-mode
       - name: Rebuild Core tests
@@ -206,5 +202,5 @@ jobs:
           path: TestResults/Formulas/**
           if-no-files-found: warn
 
-  pdf-native:
-    uses: ./.github/workflows/pdf-native-build.yml
+  pdf-distribution:
+    uses: ./.github/workflows/pdf-build-distribution.yml

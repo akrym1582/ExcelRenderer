@@ -3,8 +3,10 @@
 import argparse
 import json
 import os
+import runpy
 import shutil
 import sys
+import zipfile
 from pathlib import Path
 import subprocess
 from package_distribution import check_packages
@@ -17,11 +19,11 @@ root = Path(__file__).resolve().parents[1]
 packages, work = a.packages.resolve(), a.work.resolve()
 work.mkdir(parents=True, exist_ok=True)
 config = work / 'NuGet.Config'
-config.write_text(f'<configuration><packageSources><clear/><add key="local" value="{packages}"/><add key="nuget" value="https://api.nuget.org/v3/index.json"/></packageSources><packageSourceMapping><packageSource key="local"><package pattern="ExcelRenderer*"/></packageSource><packageSource key="nuget"><package pattern="*"/></packageSource></packageSourceMapping></configuration>')
+config.write_text(f'<configuration><packageSources><clear/><add key="local" value="{packages}"/><add key="nuget" value="https://api.nuget.org/v3/index.json"/></packageSources><packageSourceMapping><packageSource key="local"><package pattern="ExcelRenderer*"/></packageSource><packageSource key="nuget"><package pattern="*"/></packageSource></packageSourceMapping></configuration>', encoding='utf-8')
 inventory = check_packages(packages)
 versions = {name: record['version'] for name, record in inventory.items()}
-(work / 'inventory.json').write_text(json.dumps(inventory, indent=2) + '\n')
-runtime_lines = subprocess.check_output(['dotnet', '--list-runtimes'], text=True).splitlines()
+(work / 'inventory.json').write_text(json.dumps(inventory, indent=2) + '\n', encoding='utf-8')
+runtime_lines = subprocess.check_output(['dotnet', '--list-runtimes'], encoding='utf-8').splitlines()
 runtime_path = next(line.rsplit('[', 1)[1].rstrip(']') for line in runtime_lines if line.startswith('Microsoft.NETCore.App 10.'))
 env = dict(os.environ, NUGET_PACKAGES=str(work / 'packages'), DOTNET_ROOT=str(Path(runtime_path).parents[1]))
 
@@ -37,11 +39,11 @@ def audit_consumer(directory):
     paths = list(directory.rglob('project.assets.json')) + list(directory.rglob('*.deps.json'))
     assert paths, f'No restored/runtime graph: {directory}'
     for path in paths:
-        graph = json.loads(path.read_text())
+        graph = json.loads(path.read_text(encoding='utf-8'))
         libraries = sorted(graph.get('libraries', {}))
         assert not any('pdfsharp' in name.lower().replace('-', '').replace('_', '').replace('.', '') for name in libraries), path
         consumer_graphs.append({'path': str(path.relative_to(work)), 'libraries': libraries})
-    (work / 'consumer-graphs.json').write_text(json.dumps(consumer_graphs, indent=2) + '\n')
+    (work / 'consumer-graphs.json').write_text(json.dumps(consumer_graphs, indent=2) + '\n', encoding='utf-8')
 
 fixture = '''
 using var input = new MemoryStream();
@@ -127,9 +129,46 @@ using var mappedReader = ExcelRenderer.OpenXml.Reading.OpenXmlWorkbookReader.Ope
 if (mappedReader.EnumerateCells(1).Single(c => c.Address.Column == 3).Value.Number != 413)
     throw new Exception("Combined package failure");
 """)
+# Exercise Japanese/IVS/color and a nonzero TTC face from package assemblies only.
+programs['managed-fonts'] = (['ExcelRenderer', 'ExcelRenderer.Fonts'], fixture + '''
+_ = typeof(ExcelRenderer.Fonts.FontPack);
+using (var doc = DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Open(input, true)) {
+    var cell = doc.WorkbookPart!.WorksheetParts.First().Worksheet.Descendants<DocumentFormat.OpenXml.Spreadsheet.Cell>().First();
+    cell.RemoveAllChildren();
+    cell.DataType = DocumentFormat.OpenXml.Spreadsheet.CellValues.InlineString;
+    cell.InlineString = new(new DocumentFormat.OpenXml.Spreadsheet.Text("日本語 辻󠄂辻󠄃葛󠄂 😀"));
+}
+input.Position = 0;
+using (var pdf = new MemoryStream()) {
+    await ExcelRenderer.ExcelConverter.RenderAsync(input, new() {
+        OutputFormat = ExcelRenderer.Rendering.OutputFormat.Pdf,
+        FontOptions = new() { AllowSystemFonts = false, IvsFontStyle = ExcelRenderer.Fonts.IvsFontStyle.Mincho }
+    }, new ExcelRenderer.Rendering.SingleStreamOutputSink(pdf));
+    File.WriteAllBytes("japanese-ivs-color.pdf", pdf.ToArray());
+}
+using (var doc = DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Open(input, true)) {
+    var cell = doc.WorkbookPart!.WorksheetParts.First().Worksheet.Descendants<DocumentFormat.OpenXml.Spreadsheet.Cell>().First();
+    cell.InlineString = new(new DocumentFormat.OpenXml.Spreadsheet.Text("A B"));
+}
+input.Position = 0;
+using (var pdf = new MemoryStream()) {
+    await ExcelRenderer.ExcelConverter.RenderAsync(input, new() {
+        OutputFormat = ExcelRenderer.Rendering.OutputFormat.Pdf,
+        FontOptions = new() { AllowSystemFonts = false, UseFontPack = false,
+            FontFiles = new[] { args[2] }, FontFileCollectionIndex = 1,
+            FallbackFamilies = new[] { "PDF Format Fixture" } }
+    }, new ExcelRenderer.Rendering.SingleStreamOutputSink(pdf));
+    File.WriteAllBytes("collection-face-1.pdf", pdf.ToArray());
+}
+input.Position = 0;
+using (var pdf = new MemoryStream()) {
+    await ExcelRenderer.Core.ExcelConverter.ConvertAsync(input, pdf, new() { FontFilePath = args[2], FontCollectionIndex = 1 });
+    File.WriteAllBytes("core-collection-face-1.pdf", pdf.ToArray());
+}
+''')
 # Keep the documented low-level sample executable against each supported package
 # choice, rather than relying only on source-project references.
-namespace_sample = (root / 'samples/namespace-migration/Program.cs').read_text()
+namespace_sample = (root / 'samples/namespace-migration/Program.cs').read_text(encoding='utf-8')
 programs['namespace-main'] = (['ExcelRenderer'], namespace_sample)
 programs['namespace-mapping'] = (['ExcelRenderer.Mapping'], namespace_sample)
 programs['namespace-combined'] = (['ExcelRenderer', 'ExcelRenderer.Mapping'], namespace_sample)
@@ -138,10 +177,10 @@ font=root/'third_party/NotoSansJP/NotoSansJP-Regular.ttf'
 for name,(refs,code) in programs.items():
     directory=work/name;directory.mkdir(exist_ok=True)
     references=''.join(f'<PackageReference Include="{ref}" Version="{versions[ref]}"/>' for ref in refs)
-    (directory/'consumer.csproj').write_text(f'<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable></PropertyGroup><ItemGroup>{references}</ItemGroup></Project>')
-    (directory/'Program.cs').write_text(code+'\nConsole.WriteLine("'+name+' passed");\n')
+    (directory/'consumer.csproj').write_text(f'<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable></PropertyGroup><ItemGroup>{references}</ItemGroup></Project>', encoding='utf-8')
+    (directory/'Program.cs').write_text(code+'\nConsole.WriteLine("'+name+' passed");\n', encoding='utf-8')
     run('dotnet','restore','--configfile',config,cwd=directory)
-    arguments = [] if name.startswith('namespace-') else [fixture_path, font]
+    arguments = [] if name.startswith('namespace-') else [fixture_path, font, root / 'tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc']
     run('dotnet','run','-c','Release','--no-restore','--',*arguments,cwd=directory)
     audit_consumer(directory)
     # Every consumer copied all native RIDs (including large debug symbols).
@@ -156,7 +195,7 @@ if tool_command.exists():
 (work/'cli.md').unlink(missing_ok=True)
 run('dotnet','tool','install','ExcelRenderer.Tool','--version',versions['ExcelRenderer.Tool'],'--tool-path',tool,'--configfile',config)
 run(tool_command,'md',fixture_path,'--formula-mode','recalculate','-o',work/'cli.md')
-assert '413' in (work/'cli.md').read_text()
+assert '413' in (work/'cli.md').read_text(encoding='utf-8')
 for command in ('pdf', 'render'):
     destination = work / f'cli-{command}-skia.pdf'
     destination.unlink(missing_ok=True)
@@ -164,32 +203,38 @@ for command in ('pdf', 'render'):
     run(tool_command, command, fixture_path, '-o', destination, '--pdf-backend', 'skiasharp', *extra)
     assert destination.read_bytes().startswith(b'%PDF')
 
-# The adapter must be a real packaged runtime dependency, with a concrete failure
-# when absent. Removing it from this disposable installation cannot affect repo/bin.
-native_name = 'ExcelRenderer.HarfBuzzSubset.dll' if os.name == 'nt' else ('libExcelRenderer.HarfBuzzSubset.dylib' if sys.platform == 'darwin' else 'libExcelRenderer.HarfBuzzSubset.so')
-native_assets = list(tool.rglob(native_name))
-assert len(native_assets) == 1, native_assets
-native_asset = native_assets[0]
-backup = native_asset.with_suffix(native_asset.suffix + '.test-backup')
-native_asset.rename(backup)
-try:
-    missing_output = work / 'cli-missing-subset.pdf'
-    missing_output.unlink(missing_ok=True)
-    missing = subprocess.run([str(tool_command), 'pdf', str(fixture_path), '-o', str(missing_output), '--pdf-backend', 'skiasharp'], env=env, text=True, capture_output=True)
-    assert missing.returncode != 0 and 'HarfBuzzSubset' in missing.stderr, (missing.returncode, missing.stderr)
-    assert not missing_output.exists(), 'Failed native conversion left a completed file'
-    default_output = work / 'cli-default-without-subset.pdf'
-    default_output.unlink(missing_ok=True)
-    missing_default = subprocess.run([str(tool_command), 'pdf', str(fixture_path), '-o', str(default_output)], env=env, text=True, capture_output=True)
-    assert missing_default.returncode != 0 and 'HarfBuzzSubset' in missing_default.stderr
-    assert not default_output.exists()
-    markdown_without_native = work / 'cli-markdown-without-subset.md'
-    markdown_without_native.unlink(missing_ok=True)
-    run(tool_command, 'md', fixture_path, '-o', markdown_without_native)
-    assert markdown_without_native.exists()
-finally:
-    backup.rename(native_asset)
+# The custom native subset adapter is absent; default PDF must still succeed.
+assert not list(tool.rglob('*HarfBuzzSubset*'))
+default_output = work / 'cli-default-without-subset.pdf'
+default_output.unlink(missing_ok=True)
 run(tool_command, 'pdf', fixture_path, '-o', default_output)
 assert default_output.read_bytes().startswith(b'%PDF')
 audit_consumer(tool)
-print('Nine isolated package consumers passed (engine, adapter, Mapping, main+Core, combined, three namespace samples, installed CLI)')
+print('Ten isolated package consumers passed (engine, adapter, Mapping, main+Core, combined, managed fonts, three namespace samples, installed CLI)')
+
+# Make the requested family explicit so the installed CLI must use the chosen
+# collection/CFF/variable face rather than an available bundled fallback.
+font_fixture = work / 'cli-font-formats.xlsx'
+runpy.run_path(str(root / 'scripts/benchmark-managed-fonts.py'))['workbook'](font_fixture, 'A B')
+with zipfile.ZipFile(font_fixture) as archive:
+    font_entries = {name: archive.read(name) for name in archive.namelist()}
+font_entries['xl/styles.xml'] = font_entries['xl/styles.xml'].replace(b'Noto Sans JP', b'PDF Format Fixture')
+with zipfile.ZipFile(font_fixture, 'w', zipfile.ZIP_DEFLATED) as archive:
+    for name, data in font_entries.items():
+        archive.writestr(name, data)
+collection_output = work / 'cli-collection-face-1.pdf'
+collection_output.unlink(missing_ok=True)
+run(tool_command, 'pdf', font_fixture, '-o', collection_output,
+    '--font-file', root / 'tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc',
+    '--font-face-index', '1', '--fallback-font', 'PDF Format Fixture', '--no-system-fonts')
+assert b'PdfFormatFixture-Bold' in collection_output.read_bytes()
+for name, reason in [('cff.otf', 'CFF'), ('variable.ttf', 'variable')]:
+    destination = work / ('cli-rejected-' + name + '.pdf')
+    destination.unlink(missing_ok=True)
+    command = [str(tool_command), 'pdf', str(font_fixture), '-o', str(destination),
+        '--font-file', str(root / 'tests/ExcelRenderer.Tests/Fonts/PdfFormats' / name),
+        '--font-face-index', '0', '--fallback-font', 'PDF Format Fixture', '--no-system-fonts']
+    rejected = subprocess.run(command, env=env, encoding='utf-8', capture_output=True)
+    assert rejected.returncode != 0 and reason in rejected.stderr, (name, rejected.stderr)
+    assert not destination.exists(), 'Unsupported font committed an installed-CLI PDF'
+print('Installed CLI used collection face 1 and rejected CFF/variable fonts without committing output')

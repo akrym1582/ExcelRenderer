@@ -65,12 +65,11 @@ variants are parse errors. Explicit backend options on PNG/SVG/Markdown remain p
 
 ## Runtime and ownership
 
-- Main/Core PDF require the pinned HarfBuzz subset adapter and SkiaSharp native assets.
-  Source builds run `python scripts/build-harfbuzz-subset.py` before build/pack.
+- Main/Core PDF require SkiaSharp native assets. Static TrueType subsets and TTC face extraction use Core C#; see [supported formats](managed-truetype-subset.md).
   Published applications need no Python, PDF reader, Ghostscript, Node or server.
-- Missing subset assets fail with a concrete diagnostic and abort the artifact. They
+- Unsupported PDF fonts or subset failures report a concrete diagnostic and abort the artifact. They
   do not select another engine or embed complete outline fonts. PNG/SVG/Markdown
-  do not invoke the PDF subset adapter.
+  do not invoke the PDF outline subsetter.
 - Independent public `SkiaTextMeasurer` calls own/restore native scopes and serialize
   access to their own manager/cache. Conversion-local instances and a supplied Skia service invoked by its conversion borrow that scope. Independent PdfRenderer calls always own/restore a separate session, including calls that inherit another session through ExecutionContext.
   There is no process-wide conversion lock. Conversion-local caches are limited to
@@ -81,10 +80,11 @@ variants are parse errors. Explicit backend options on PNG/SVG/Markdown remain p
 - Point layout uses scalable glyph advances and explicit unhinted linear metrics.
   Core's rounded 96-dpi maximum digit width remains separate. PNG/SVG retain their
   established native raster advance policy and consume the stored glyph IDs.
-- Main font-format probes cover static TTF, CFF, default variable outlines, TTC face
-  zero and COLRv0/v1. This does not promise collection face selection, arbitrary
-  variation coordinates or newly complete shaping/RTL support. Core's restrictions
-  are unchanged.
+- PDF probes cover static TrueType, nonzero TTC v1/v2 face indices and existing
+  COLR v0/v1/CBDT color drawing. CFF/CFF2 and variable faces now fail explicitly
+  for PDF; PNG/SVG keep their existing native behavior. Main, Core, CLI and
+  caller-supplied memory faces support collection indices. This adds no general
+  shaping/RTL or arbitrary variation-coordinate support.
 
 The internal generated-PDF finalizer accepts pinned Skia classic-xref output only.
 It applies bounded corrections for 0.001pt boxes, RGB transparency groups, resolved

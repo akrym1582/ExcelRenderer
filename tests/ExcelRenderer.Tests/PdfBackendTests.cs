@@ -110,7 +110,7 @@ public sealed class PdfBackendTests
     }
 
     [Fact]
-    public void Native_subset_retains_ivs_ids_and_removes_unused_outlines()
+    public void Managed_subset_retains_ivs_ids_and_removes_unused_outlines()
     {
         var root = FindRoot();
         var manager = new FontManager(new FontOptions { AllowSystemFonts = false, IvsFontStyle = IvsFontStyle.Mincho });
@@ -118,8 +118,11 @@ public sealed class PdfBackendTests
         Assert.Equal(new ushort?[] { 26795, 26796, 23477 }, runs.Select(run => run.GlyphId));
         var bytes = File.ReadAllBytes(Path.Combine(root, "third_party/IPAmjMincho/ipamjm.ttf"));
         var glyphs = runs.Select(run => run.GlyphId!.Value).Prepend((ushort)0).ToArray();
-        var subset = Core.Pdf.HarfBuzzSubset.Create(bytes, glyphs, CancellationToken.None);
+        var subset = Core.Fonts.TrueType.TrueTypeSubsetter.Create(Core.Fonts.TrueType.FontFaceExtractor.Extract(bytes), glyphs, CancellationToken.None);
         Assert.True(subset.Length < bytes.Length / 10);
+        var subsetDirectory = Path.Combine(AppContext.BaseDirectory, "SampleOutputs", "ManagedTrueType");
+        Directory.CreateDirectory(subsetDirectory);
+        File.WriteAllBytes(Path.Combine(subsetDirectory, "ipamj-subset.ttf"), subset);
         using var sourceData = SKData.CreateCopy(bytes);
         using var subsetData = SKData.CreateCopy(subset);
         using var sourceFace = SKTypeface.FromData(sourceData);
@@ -173,6 +176,17 @@ public sealed class PdfBackendTests
     {
         var bytes = File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "Fonts", "PdfFormats", name));
         var face = new ResolvedFont("PDF Format Fixture", 400, false, string.Empty) { FontData = bytes, FaceId = name };
+        if (name is "cff.otf" or "variable.ttf")
+        {
+            using var rejected = new SkiaPdfFonts(CancellationToken.None);
+            using var rejectedSurface = SKSurface.CreateNull(1, 1);
+            using var rejectedPaint = new SKPaint();
+            rejected.Draw(rejectedSurface.Canvas, new TextRun("A B", face), 20, 10, 30, rejectedPaint);
+            var error = Assert.Throws<NotSupportedException>(rejected.Prepare);
+            Assert.Contains(name == "cff.otf" ? "CFF" : "variable", error.Message);
+            return;
+        }
+
         var run = new TextRun("A B", face);
         using var surface = SKSurface.CreateNull(1, 1);
         using var resources = new SkiaPdfFonts(CancellationToken.None);
@@ -201,7 +215,7 @@ public sealed class PdfBackendTests
             using var source = SKTypeface.FromData(sourceData);
             using var original = new SKFont(source, 20);
             var glyphs = original.GetGlyphs("AB");
-            var subset = Core.Pdf.HarfBuzzSubset.Create(bytes, glyphs, CancellationToken.None);
+            var subset = Core.Fonts.TrueType.TrueTypeSubsetter.Create(Core.Fonts.TrueType.FontFaceExtractor.Extract(bytes), glyphs, CancellationToken.None);
             using var subsetData = SKData.CreateCopy(subset);
             using var subsetFace = SKTypeface.FromData(subsetData);
             using var subsetFont = new SKFont(subsetFace, 20);
@@ -251,6 +265,7 @@ public sealed class PdfBackendTests
             {
                 successes.Add(false);
                 Assert.Empty(error.CompletedArtifacts);
+                Assert.Equal(0, output.Length);
                 outcomes.Add(new { backend = backend.ToString(), success = false, error = error.InnerException?.Message ?? error.Message });
             }
         }
@@ -258,7 +273,7 @@ public sealed class PdfBackendTests
         var directory = Path.Combine(AppContext.BaseDirectory, "SampleOutputs", "PdfFormats");
         Directory.CreateDirectory(directory);
         File.WriteAllText(Path.Combine(directory, name + ".json"), System.Text.Json.JsonSerializer.Serialize(outcomes));
-        Assert.All(successes, Assert.True);
+        Assert.All(successes, success => Assert.Equal(name is not ("cff.otf" or "variable.ttf"), success));
     }
 
     [Fact]

@@ -82,13 +82,11 @@ fontを使い、不要な探索を無効にします。
 PDFでは選択済みページのglyphを先に収集し、物理face単位のsubsetを準備してから
 描画します。同じ文書の複数ページ・サイズでsubsetを共有し、元Unicodeとclusterも
 描画へ渡します。主な共有実装はCoreの`SkiaFontFace`、`GlyphSequence`、
-`PdfFontCollection`、`HarfBuzzSubset`です。
+`PdfFontCollection`、`Fonts/TrueType/TrueTypeSubsetter`です。
 
-固定版HarfBuzz adapterとSkiaSharpのnative assetsがPDF実行時に必要です。
-Python／CMakeはソースbuild用、独立PDF readerは検証用であり、利用アプリの
-実行時依存ではありません。subset資源が欠落した場合は失敗として扱います。
-対応font形式やshapingの制約は[移行時のruntime説明](pdfsharp-migration.md#runtime-and-ownership)
-を参照してください。
+通常 TrueType の subset と TTC face 抽出は Core の C# 実装です。
+カラー face は元の正規化 face を Skia へ渡します。SkiaSharp native assets は必要です。
+[対応形式と index 指定](managed-truetype-subset.ja.md)を参照してください。
 
 ## 5. native資源・cache・spoolの寿命を分ける
 

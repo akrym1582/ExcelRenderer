@@ -1,5 +1,9 @@
 # PDFsharp removal validation
 
+> Historical validation for the commit recorded below, using the former native subset adapter.
+> Current builds use [managed TrueType subsetting](managed-truetype-subset.md);
+> the old adapter build steps and results below do not establish current validation.
+
 The later [PR #90 image review fixes](pr90-image-review-fixes.md) replace incremental
 image revisions and add complete pixel validation. Measurements below remain
 historical evidence for their recorded implementation.

@@ -40,8 +40,12 @@ internal static class CommandSupport
         };
         var fontFiles = new Option<string[]>("--font-file")
         {
-            Description = "TrueType/OpenType font file to register (repeatable; .ttf, .tte, and supported .otf contents are accepted).",
+            Description = "Font file or TTC/OTC collection to register (repeatable; contents determine format support).",
             AllowMultipleArgumentsPerToken = true,
+        };
+        var faceIndex = new Option<int?>("--font-face-index")
+        {
+            Description = "Zero-based collection face index; requires exactly one --font-file. Omit to enumerate all faces.",
         };
         var fallbackFonts = new Option<string[]>("--fallback-font")
         {
@@ -73,7 +77,7 @@ internal static class CommandSupport
                 result.AddError("--ivs-font-style must be gothic or mincho.");
             }
         });
-        return new(fontDirectories, fontFiles, fallbackFonts, noSystemFonts, fontPolicy, ivsFontStyle);
+        return new(fontDirectories, fontFiles, fallbackFonts, noSystemFonts, fontPolicy, ivsFontStyle, faceIndex);
     }
 
     /// <summary>コマンドラインで指定されたフォント検索設定をライブラリ設定へ変換します。</summary>
@@ -85,6 +89,7 @@ internal static class CommandSupport
         AllowSystemFonts = !result.GetValue(options.NoSystemFonts),
         FontDirectories = NonEmpty(result.GetValue(options.FontDirectories)),
         FontFiles = NonEmpty(result.GetValue(options.FontFiles)),
+        FontFileCollectionIndex = result.GetValue(options.FontFaceIndex),
         FallbackFamilies = result.GetValue(options.FallbackFonts) is { Length: > 0 } fallbacks
             ? fallbacks
             : new FontOptions().FallbackFamilies,
@@ -103,6 +108,15 @@ internal static class CommandSupport
         command.Options.Add(options.NoSystemFonts);
         command.Options.Add(options.FontPolicy);
         command.Options.Add(options.IvsFontStyle);
+        command.Options.Add(options.FontFaceIndex);
+        command.Validators.Add(result =>
+        {
+            if (result.GetValue(options.FontFaceIndex) is { } index &&
+                (index < 0 || result.GetValue(options.FontFiles)?.Length != 1))
+            {
+                result.AddError("--font-face-index requires exactly one --font-file and a nonnegative index.");
+            }
+        });
     }
 
     /// <summary>
@@ -243,5 +257,6 @@ internal static class CommandSupport
         Option<string[]> FallbackFonts,
         Option<bool> NoSystemFonts,
         Option<string> FontPolicy,
-        Option<string> IvsFontStyle);
+        Option<string> IvsFontStyle,
+        Option<int?> FontFaceIndex);
 }

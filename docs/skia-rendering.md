@@ -84,12 +84,11 @@ disposed native handles. Caller-owned font data is separate from internal snapsh
 PDF first collects glyphs from selected pages, prepares a subset per physical
 face, then draws. Pages and sizes reuse document subsets, and original Unicode
 and clusters accompany drawing. Core owns `SkiaFontFace`, `GlyphSequence`,
-`PdfFontCollection` and `HarfBuzzSubset`.
+`PdfFontCollection` and `Fonts/TrueType/TrueTypeSubsetter`.
 
-PDF runtime needs the pinned HarfBuzz adapter and SkiaSharp native assets.
-Python/CMake are source-build tools; independent PDF readers are validation tools.
-They are not application runtime dependencies. Missing subset assets fail the
-conversion. See [runtime/font-format limits](pdfsharp-migration.md#runtime-and-ownership).
+Core performs outline subsetting and TTC extraction in managed C#. Color fonts
+retain their original normalized face and use Skia drawing. SkiaSharp native
+assets remain required. See [supported formats and indices](managed-truetype-subset.md).
 
 ## 5. Resource, cache and spool lifetimes
 

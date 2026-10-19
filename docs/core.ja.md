@@ -29,7 +29,7 @@ Console.WriteLine(result.PageCount);
 
 ## フォントと表示
 
-呼出し側が指定する静的TrueTypeアウトラインの単一sfntを使います。拡張子では判定しません。テーブル範囲・必須テーブル・可変/CFF形式を検証し、SkiaSharpで読込みを確認してからページを生成します。TTC/OTC、CFF OTF、可変フォント、WOFF/TTEは対象外です。破損・未対応形式は`InvalidDataException`、不存在は`FileNotFoundException`です。
+呼出し側が指定する単体の固定 TrueType sfnt、または TTC/OTC 内の選択 face を使います。FontCollectionIndex（0始まり、既定0）で選び、計測・描画前に同じ単体 face へ正規化します。既存の非可変カラー face は共通 Skia カラー経路を使います。拡張子では判定しません。CFF/CFF2・可変・WOFF/WOFF2・旧 true/typ1 は PDF 対象外です。破損・未対応形式は InvalidDataException、不存在は FileNotFoundException、不正 index は引数エラーです。[形式の契約](managed-truetype-subset.ja.md)を参照してください。
 
 フォントbytesは変換ごとに一度読み、同じsnapshotで列幅・行高・文字幅・PDF描画を処理します。セルとヘッダー/フッターは通常書体に統一します。太字・斜体の疑似描画、フォント探索・fallback、IVSの異体字形の再現、外字・カラー絵文字の特別処理はありません。セルとヘッダー/フッターの異体字セレクター（U+FE00–U+FE0F、U+E0100–U+E01EF）は計測・描画前に除去し、基底文字を表示します。例えば「葛」＋IVSは「葛」として表示し、セレクター由来の追加の豆腐や文字幅は生成しません。基底文字自体が指定フォントに未収録の場合の表示は保証しません。サイズ・色・下線を維持します。未収録文字は指定フォント/Skiaの欠字表示に従い、すべてのUnicode文字の表示は保証しません。フォント置換によりExcel原本と列幅や折返しが変わることがあります。
 
@@ -60,7 +60,7 @@ font収集と描画の各passで1ページのpayloadだけを生成します。C
 
 フォントは一度の読込によるimmutable snapshotで計測・描画し、ptのadvanceと96dpiの丸めMDWを
 区別します。グローバルresolver/reset/gateはありません。main/Coreの混在並列でもnative資源を
-変換scopeごとに所有します。CoreにもSkiaSharpと固定版HarfBuzz subset adapterが必要です。
+変換scopeごとに所有します。Core にも SkiaSharp native assets が必要です。通常 TrueType の subset・TTC 抽出は C# で実装しています。
 Pythonや外部PDF readerは製品runtimeの要件ではありません。
 
 限定finalizerは用紙box精度0.001pt、RGB page group、画像補間を維持し、元のcontent/font/画像
@@ -88,3 +88,5 @@ Full reader/layout/drawing/PDF adapterが高機能部分を拡張し、本体の
 本体/Coreは同じ共通実装を利用し、資源は変換単位で所有します。本体とCoreは同じbuildから配布してください。[撤去の検証記録](pdfsharp-removal-validation.md)も参照してください。
 
 Core の Reader は `PdfExportOptions.ReadOptions` から選択できます。[エンジン選択](openxml-integration.ja.md)を参照してください。汎用の入力検査・spool は共有 OpenXml 依存に移管しています。
+
+コレクションは `PdfExportOptions.FontCollectionIndex`（0始まり、既定0）で選択します。[形式の詳細](managed-truetype-subset.ja.md)を参照してください。

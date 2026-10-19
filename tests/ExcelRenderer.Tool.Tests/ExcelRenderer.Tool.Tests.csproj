@@ -15,6 +15,7 @@
     <ProjectReference Include="../../src/ExcelRenderer.OpenXml/ExcelRenderer.OpenXml.csproj" />
     <ProjectReference Include="../../src/ExcelRenderer.Mapping/ExcelRenderer.Mapping.csproj" />
     <ProjectReference Include="../../src/ExcelRenderer.Tool/ExcelRenderer.Tool.csproj" ReferenceOutputAssembly="false" />
+    <None Include="../ExcelRenderer.Tests/Fonts/PdfFormats/*" Link="Fonts/PdfFormats/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../ExcelRenderer.Tests/SampleInputs/03-wrapped-text.xlsx" Link="SampleInputs/sample.xlsx" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>

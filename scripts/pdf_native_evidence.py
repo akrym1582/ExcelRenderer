@@ -1,9 +1,12 @@
 """Validate native stream preservation and quantify metadata precision against frozen stage B."""
 import hashlib
+import io
 import json
 import re
 from pathlib import Path
 import fitz
+from fontTools.ttLib import TTFont
+from pdf_geometry_evidence import verify_outlines
 
 ROOT = Path(__file__).resolve().parents[1]
 NUMBER = re.compile(r'(?<![A-Za-z_])[-+]?(?:\d+\.?\d*|\.\d+)(?![A-Za-z_])')
@@ -24,11 +27,59 @@ def stream_digest(document, references):
     return [hashlib.sha256(document.xref_stream(reference)).hexdigest() for reference in references]
 
 
-def resource_digests(document):
+def resource_digests(document, images_only=False):
     return sorted(hashlib.sha256(document.xref_stream_raw(xref)).hexdigest()
                   for xref in range(1, document.xref_length())
-                  if document.xref_is_stream(xref) and (document.xref_get_key(xref, 'Length1')[0] != 'null'
+                  if document.xref_is_stream(xref) and ((not images_only and document.xref_get_key(xref, 'Length1')[0] != 'null')
                       or document.xref_get_key(xref, 'Subtype')[1] == '/Image'))
+
+
+def drawing_content(document, page):
+    # Skia may omit a clipped empty BT/ET scope when unused outlines are removed.
+    # Remove only balanced scopes containing empty text and nonpainting state;
+    # every actual text/path/image paint operation remains byte-exact.
+    state = re.compile(rb'(?:BT|ET|(?:[-+\d.]+ ){5}[-+\d.]+ cm|(?:[-+\d.]+ ){3}[-+\d.]+ re|W\*? n|(?:[-+\d.]+ ){2}[-+\d.]+ RG (?:[-+\d.]+ ){2}[-+\d.]+ rg|/G\d+ gs)')
+    scopes = [([], False)]
+    removed = 0
+    for line in b''.join(document.xref_stream(xref) for xref in page.get_contents()).splitlines(keepends=True):
+        if line.strip() == b'q':
+            scopes.append(([line], False))
+        elif line.strip() == b'Q' and len(scopes) > 1:
+            lines, empty_text = scopes.pop()
+            body = b''.join(lines[1:])
+            empty_text |= b'BT\nET\n' in body
+            if empty_text and all(state.fullmatch(part.strip()) for part in lines[1:]):
+                removed += 1
+                scopes[-1] = (scopes[-1][0], True)
+            else:
+                scopes[-1][0].extend([*lines, line])
+        else:
+            scopes[-1][0].append(line)
+    if len(scopes) != 1:
+        raise ValueError('Unbalanced PDF graphics state scopes')
+    return b''.join(scopes[0][0]), removed
+
+
+def subset_descriptor(document, descriptor, data, name, changes, errors):
+    font = TTFont(io.BytesIO(data))
+    head = font['head']
+    bounds = [(glyph.xMin, glyph.yMin, glyph.xMax, glyph.yMax)
+              for glyph in (font['glyf'][name] for name in font.getGlyphOrder()) if glyph.numberOfContours != 0]
+    union = ([min(row[0] for row in bounds), min(row[1] for row in bounds),
+              max(row[2] for row in bounds), max(row[3] for row in bounds)] if bounds else [0, 0, 0, 0])
+    if [head.xMin, head.yMin, head.xMax, head.yMax] != union:
+        errors.append(f'{name}: embedded head bounds differ from retained glyph bounds')
+    expected = [getattr(head, key) * 1000 / head.unitsPerEm for key in ('xMin', 'yMin', 'xMax', 'yMax')]
+    actual = list(map(float, NUMBER.findall(document.xref_get_key(descriptor, 'FontBBox')[1])))
+    if len(actual) != 4 or max(abs(a - b) for a, b in zip(actual, expected)) > .0005001:
+        errors.append(f'{name}: descriptor FontBBox differs from embedded head bounds')
+    # The retained cmap resolves Skia's i/I/!/1 stem probes to empty outlines
+    # when any probe was unused. Its descriptor estimate must then be zero.
+    cmap, glyf = font.getBestCmap(), font['glyf']
+    empty_probe = any(glyf[cmap.get(ord(char), '.notdef')].numberOfContours == 0 for char in 'iI!1')
+    if not empty_probe or document.xref_get_key(descriptor, 'StemV')[1] != '0':
+        errors.append(f'{name}: changed StemV is not explained by an empty subset stem probe')
+    changes.append({'font': name, 'headBounds': expected, 'stemV': 0, 'emptyStemProbe': empty_probe})
 
 
 def metadata_difference(before, after, label, differences, errors):
@@ -52,7 +103,7 @@ def metadata_difference(before, after, label, differences, errors):
 
 def evidence(directory):
     directory = Path(directory)
-    errors, changes = [], []
+    errors, changes, subset_changes = [], [], []
     baseline = directory / 'baseline-skiasharp.pdf'
     raw_path = directory / 'skiasharp-raw.pdf'
     current = directory / 'skiasharp.pdf'
@@ -87,17 +138,26 @@ def evidence(directory):
         x, y, z = (stream_digest(document, page.get_contents()) for document, page in ((old, a), (new, b), (raw, native)))
         content_hashes.append({'page': index, 'B': x, 'C': y, 'rawC': z})
         if x != y or y != z:
-            errors.append(f'Page {index}: native drawing content differs')
+            normalized = [drawing_content(document, page) for document, page in ((old, a), (new, b), (raw, native))]
+            if not normalized[0][0] == normalized[1][0] == normalized[2][0]:
+                errors.append(f'Page {index}: native drawing content differs')
+            content_hashes[-1]['emptyTextScopesRemoved'] = [row[1] for row in normalized]
         metadata_difference(str(list(a.mediabox)), str(list(b.mediabox)), f'page-{index}/MediaBox', changes, errors)
         # get_fonts exposes document resource names, independent of global font IDs.
         fonts_a = {font[4]: font for font in a.get_fonts(full=True)}
         fonts_b = {font[4]: font for font in b.get_fonts(full=True)}
         if fonts_a.keys() != fonts_b.keys():
             errors.append(f'Page {index}: font resources differ')
+        for label, page in (('B', a), ('C', b)):
+            outlines = verify_outlines(page)
+            if not outlines['passed']:
+                errors.extend(f'{label}: {error}' for error in outlines['errors'])
         for name in fonts_a.keys() & fonts_b.keys():
             left_xref, right_xref = fonts_a[name][0], fonts_b[name][0]
-            if old.extract_font(left_xref)[3] != new.extract_font(right_xref)[3]:
-                errors.append(f'{name}: embedded font bytes changed')
+            before_font, after_font = old.extract_font(left_xref)[3], new.extract_font(right_xref)[3]
+            changed_font = before_font != after_font
+            if changed_font and (not before_font or not after_font):
+                errors.append(f'{name}: embedded font missing or changed representation')
             descendants = []
             for document, xref in ((old, left_xref), (new, right_xref)):
                 refs = REFERENCE.findall(document.xref_get_key(xref, 'DescendantFonts')[1])
@@ -107,7 +167,12 @@ def evidence(directory):
             descriptor_refs = [REFERENCE.findall(document.xref_get_key(xref, 'FontDescriptor')[1])
                                for document, xref in ((old, descendants[0]), (new, descendants[1]))]
             if all(descriptor_refs):
+                right_descriptor = int(descriptor_refs[1][0])
+                if changed_font and after_font:
+                    subset_descriptor(new, right_descriptor, after_font, name, subset_changes, errors)
                 for key in ('FontBBox', 'Ascent', 'Descent', 'CapHeight', 'StemV'):
+                    if changed_font and after_font and key in ('FontBBox', 'StemV'):
+                        continue  # Independently verified against the selected subset above.
                     metadata_difference(old.xref_get_key(int(descriptor_refs[0][0]), key)[1], new.xref_get_key(int(descriptor_refs[1][0]), key)[1], f'{name}/descriptor/{key}', changes, errors)
         states = []
         for document, page in ((old, a), (new, b)):
@@ -120,8 +185,8 @@ def evidence(directory):
                 metadata_difference(old.xref_get_key(states[0][name], key)[1], new.xref_get_key(states[1][name], key)[1], f'{name}/{key}', changes, errors)
     if resource_digests(raw) != resource_digests(new):
         errors.append('Structural correction changed encoded font or image streams')
-    if resource_digests(old) != resource_digests(new):
-        errors.append('Frozen B and C font/image resource streams differ')
+    if resource_digests(old, images_only=True) != resource_digests(new, images_only=True):
+        errors.append('Frozen B and C image resource streams differ')
     return {'passed': not errors, 'errors': errors, 'encodedStreamsPreserved': raw_streams == new_streams, 'imagePayloadOccurrences': payload_counts,
-            'contentHashes': content_hashes, 'numericMetadataDifferences': changes,
+            'contentHashes': content_hashes, 'numericMetadataDifferences': changes, 'subsetMetadata': subset_changes,
             'maxMetadataDelta': max((row['maxDelta'] for row in changes), default=0)}

@@ -1,4 +1,4 @@
-using System.Text;
+using ExcelRenderer.Core.Fonts.TrueType;
 using ExcelRenderer.Core.Rendering;
 using SkiaSharp;
 
@@ -13,11 +13,12 @@ internal sealed class SingleFontContext : IDisposable
 
     /// <summary>Initializes a new instance of the <see cref="SingleFontContext"/> class.</summary>
     /// <param name="path">The static TrueType file.</param>
-    internal SingleFontContext(string path)
+    /// <param name="collectionIndex">The zero-based collection face index.</param>
+    /// <param name="token">The conversion cancellation token.</param>
+    internal SingleFontContext(string path, int collectionIndex = 0, CancellationToken token = default)
     {
-        var bytes = File.ReadAllBytes(path);
+        var bytes = ReadFace(path, collectionIndex, token);
         ConversionMetrics.Report("fontSnapshotRead", 1);
-        Validate(bytes);
         Face = new SkiaFontFace(bytes);
         typeface = Face.Typeface;
     }
@@ -42,39 +43,18 @@ internal sealed class SingleFontContext : IDisposable
         return Math.Max(1, Math.Round(Enumerable.Range(0, 10).Max(digit => font.MeasureText(digit.ToString())), MidpointRounding.AwayFromZero));
     }
 
-    private static void Validate(byte[] bytes)
+    private static byte[] ReadFace(string path, int collectionIndex, CancellationToken token)
     {
-        if (bytes.Length < 12 || Read32(bytes, 0) != 0x00010000)
+        try
         {
-            throw new InvalidDataException("Only single static TrueType sfnt fonts are supported.");
+            var bytes = FontFaceExtractor.Extract(File.ReadAllBytes(path), collectionIndex, token);
+            FontCapabilities.ValidatePdf(new SfntReader(bytes, token: token), token);
+            return bytes;
         }
-
-        var count = (bytes[4] << 8) | bytes[5];
-        if (count == 0 || 12 + (count * 16) > bytes.Length)
+        catch (NotSupportedException error)
         {
-            throw new InvalidDataException("The font table directory is corrupt.");
-        }
-
-        var tables = new HashSet<string>(StringComparer.Ordinal);
-        for (var i = 0; i < count; i++)
-        {
-            var position = 12 + (i * 16);
-            var tag = Encoding.ASCII.GetString(bytes, position, 4);
-            var offset = Read32(bytes, position + 8);
-            var length = Read32(bytes, position + 12);
-            if (offset > bytes.Length || length > bytes.Length - offset || !tables.Add(tag))
-            {
-                throw new InvalidDataException("The font contains an invalid table.");
-            }
-        }
-
-        if (tables.Contains("fvar") || tables.Contains("CFF ") || tables.Contains("CFF2") ||
-            new[] { "glyf", "loca", "head", "hhea", "hmtx", "maxp", "cmap", "name" }.Any(tag => !tables.Contains(tag)))
-        {
-            throw new InvalidDataException("A static TrueType outline font is required.");
+            // Core has historically reported unsupported single-font inputs as invalid data.
+            throw new InvalidDataException($"Font '{path}', face {collectionIndex}: {error.Message}", error);
         }
     }
-
-    private static uint Read32(byte[] bytes, int offset) =>
-        ((uint)bytes[offset] << 24) | ((uint)bytes[offset + 1] << 16) | ((uint)bytes[offset + 2] << 8) | bytes[offset + 3];
 }

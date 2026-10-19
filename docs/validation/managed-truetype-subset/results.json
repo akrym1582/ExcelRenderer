@@ -1,0 +1,75 @@
+{
+  "startMain": "9157b80788d590694ef90d04dbaea9872773c6d6",
+  "implementationCommit": "4731249a8ca00f7f73b8afc1c01844ecf801c59d",
+  "branch": "feature/managed-truetype-subset",
+  "sdk": "10.0.401",
+  "runtime": "10.0.12",
+  "os": "Debian GNU/Linux 13 linux-x64",
+  "cleanRestoreBuildTestPack": true,
+  "buildWarnings": 0,
+  "buildErrors": 0,
+  "suites": [
+    {
+      "suite": "Core",
+      "passed": 167,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "Formulas",
+      "passed": 833,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "Mapping",
+      "passed": 172,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "OpenXml",
+      "passed": 206,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "Tests",
+      "passed": 686,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "Tool",
+      "passed": 105,
+      "failed": 0,
+      "skipped": 0
+    }
+  ],
+  "totalPassed": 2169,
+  "pureTestsWithoutSkiaNativePassed": 56,
+  "windowsExecuted": false,
+  "windowsCi": ".github/workflows/pdf-build-distribution.yml",
+  "independentFontFiles": 5,
+  "fullSubsetPdfPairs": 6,
+  "startingCommitPdfPairs": 4,
+  "fullSubsetRasterComparisons": 264,
+  "startingCommitRasterComparisons": 8,
+  "pixelDifferences": 0,
+  "packageCount": 4,
+  "notes": [
+    "Clean checkout initially used /tmp; after successful full tests it was moved to /workspace/excelrenderer-validation/clean because the temporary volume filled during pack. Restore and zero-warning rebuild/pack/publish/audits were repeated at the destination.",
+    "No custom subset adapter was ever built in the managed checkout. The pinned native adapter exists only in the isolated starting-commit baseline."
+  ],
+  "isolatedConsumersPassed": 10,
+  "installedCliPdfPassed": true,
+  "isolatedConsumerUnicodeExtractionPassed": true,
+  "performanceCases": 7,
+  "performanceAllPassed": true,
+  "maxTimeRatio": 1.3227833686217283,
+  "maxPeakRssRatio": 1.1211048423754646,
+  "installedCliUsesActualNonzeroFace": true,
+  "installedCliRejectsCffAndVariableWithoutCommit": true,
+  "extendedRetentionConversionsPerStage": 12,
+  "trackedNativeResourceCountersBalanced": true
+}

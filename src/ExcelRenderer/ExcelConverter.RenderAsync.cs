@@ -45,7 +45,7 @@ public static partial class ExcelConverter
         var artifacts = new List<ArtifactMetadata>();
         try
         {
-            using var resources = new RenderResourceSession();
+            using var resources = new RenderResourceSession(cancellationToken);
             var inputTimer = System.Diagnostics.Stopwatch.StartNew();
             using var source = await WorkbookInputPreparer.ReadAsync(input, request.Input, cancellationToken).ConfigureAwait(false);
             ConversionMetrics.Report("input.ms", inputTimer.Elapsed.TotalMilliseconds);

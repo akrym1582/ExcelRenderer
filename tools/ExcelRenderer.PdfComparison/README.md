@@ -2,10 +2,9 @@
 
 The final solution renders only C (new measurement + Skia). A (old measurement + old renderer) and B (old measurement + Skia) are immutable PDFs captured at `71deba48ea4a397641c9ad155bc1c8b3ddf8b5d9` under `tests/Shared/PdfRemovalBaseline`. Normal build/test/CI never restores or executes the removed dependency.
 
-Build the native subset adapter first (CMake and a C++ compiler are required):
+Static TrueType subsetting uses Core C#; SkiaSharp native assets remain required:
 
 ```bash
-python3 scripts/build-harfbuzz-subset.py
 dotnet restore ExcelRenderer.slnx
 python3 scripts/compare-pdf-backends.py --fixture all
 python3 scripts/compare-pdf-backends.py --no-generate --reference B --no-exceptions
@@ -59,9 +58,16 @@ is internal and disabled in ordinary conversions; the manifest schema is unchang
 See `docs/skia-pdf-validation.md` for actual results, platform scope and manual viewer steps.
 
 The unchanged first-stage reviewed list applies only to A→C. B→C must pass without
-exceptions. `pdf_native_evidence.py` checks frozen B hashes, byte-identical drawing
-content and embedded streams, native C encoded-stream/object-identity preservation,
-single-copy image payloads, and bounded numeric metadata precision. The old save path's implicit RGB page transparency group
+exceptions. `pdf_native_evidence.py` checks frozen B hashes, drawing content,
+byte-identical image streams, native C encoded-stream/object-identity preservation,
+single-copy image payloads, and bounded numeric metadata precision. Drawing content
+may omit only balanced nonpainting graphics-state scopes containing empty BT/ET.
+The managed subset intentionally changes embedded font bytes, head bounds and
+Skia's stem estimate: used GIDs retain exact source outlines and horizontal metrics,
+descriptor bounds must match the retained glyph union, and a changed zero stem
+estimate requires an empty i/I/!/1 probe in the subset. Other descriptor fields
+keep the existing precision bounds. No fixed PDFs or raster exceptions are changed.
+The old save path's implicit RGB page transparency group
 is explicitly retained; otherwise byte-identical content still rasterizes differently.
 No golden/list update is used to accept that compositing difference.
 
@@ -77,3 +83,15 @@ PDFs are excluded from the fixed baseline; the retained PDFs/JSON are about 3.6M
 
 The harness also supports `--api-diff <old-assembly> <new-assembly>` and
 `--audit-assemblies <json-path-list>` using PE metadata without loading old code.
+
+Managed font evidence (three warmups, five samples, subset sfnt files, full/subset
+PDF pairs, metrics and table sizes):
+
+```bash
+dotnet test tests/ExcelRenderer.Tests -c Release --filter "FullyQualifiedName~PdfBackendTests|FullyQualifiedName~FontCollectionTests"
+dotnet run --project tools/ExcelRenderer.PdfComparison -c Release -- --managed-fonts artifacts/managed-fonts
+python3 scripts/validate-managed-fonts.py --evidence artifacts/managed-fonts
+```
+
+FontTools and independent PDF rasterizers are validation only. Frozen A/B
+artifacts remain historical evidence for their recorded commit.

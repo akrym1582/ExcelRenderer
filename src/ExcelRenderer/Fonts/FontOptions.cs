@@ -28,6 +28,9 @@ public sealed class FontOptions
     /// <remarks>The file contents, rather than the extension, determine whether a file is a supported font.</remarks>
     public IReadOnlyList<string> FontFiles { get; init; } = [];
 
+    /// <summary>Gets an explicit face index for exactly one FontFiles entry; null enumerates every face.</summary>
+    public int? FontFileCollectionIndex { get; init; }
+
     /// <summary>Gets explicitly registered font faces. 明示的に登録するフォントフェイスの一覧を取得または設定します。</summary>
     public IReadOnlyList<FontRegistration> Registrations { get; init; } = [];
 }

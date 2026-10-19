@@ -1,4 +1,5 @@
 using ExcelRenderer.Core.Fonts;
+using ExcelRenderer.Core.Fonts.TrueType;
 using ExcelRenderer.Core.Rendering;
 using SkiaSharp;
 
@@ -51,12 +52,13 @@ internal sealed class PdfFontCollection : IDisposable
         foreach (var entry in entries.Values)
         {
             token.ThrowIfCancellationRequested();
+            FontCapabilities.ValidatePdf(new SfntReader(entry.Face.Data, token: token), token);
             if (entry.Color || fullEmbed)
             {
                 continue;
             }
 
-            var bytes = ConversionMetrics.Measure("pdfSubset", () => HarfBuzzSubset.Create(entry.Face.Data, entry.Glyphs, token));
+            var bytes = ConversionMetrics.Measure("pdfSubset", () => TrueTypeSubsetter.Create(entry.Face.Data, entry.Glyphs, token));
             ConversionMetrics.Report("pdfOriginalFontBytes", entry.Face.Data.Length);
             ConversionMetrics.Report("pdfSubsetFontBytes", bytes.Length);
             using var data = SKData.CreateCopy(bytes);

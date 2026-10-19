@@ -4,3 +4,5 @@ using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("ExcelRenderer")]
 [assembly: InternalsVisibleTo("ExcelRenderer.Tests")]
+
+[assembly: InternalsVisibleTo("ExcelRenderer.PdfComparison")]

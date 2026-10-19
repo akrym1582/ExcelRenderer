@@ -9,7 +9,7 @@ using S = DocumentFormat.OpenXml.Spreadsheet;
 
 namespace ExcelRenderer.Tests;
 
-public sealed class ConditionalFormattingTests
+public sealed partial class ConditionalFormattingTests
 {
     private const string Red = "<font><color rgb=\"FFFF0000\"/></font>";
     private const string Yellow = "<fill><patternFill patternType=\"solid\"><fgColor rgb=\"FFFFFF00\"/></patternFill></fill>";
@@ -102,7 +102,7 @@ public sealed class ConditionalFormattingTests
         var sheet = Read(missing);
         Assert.Null(sheet.Cells[new(1, 1)].Style.Background);
         Assert.Contains(sheet.CellReadDiagnostics, diagnostic => diagnostic.Code == "ConditionalFormattingCachedValueMissing");
-        using var unsupported = Book("<row r=\"1\"><c r=\"A1\"><v>1</v></c></row>", Rule("top10", "", priority: 1, extra: "stopIfTrue=\"1\"") + Rule("expression", "<formula>TRUE</formula>", priority: 2));
+        using var unsupported = Book("<row r=\"1\"><c r=\"A1\"><v>1</v></c></row>", Rule("dataBar", "", priority: 1, extra: "stopIfTrue=\"1\"") + Rule("expression", "<formula>TRUE</formula>", priority: 2));
         Assert.Null(Read(unsupported).Cells[new(1, 1)].Style.Background);
         using var unknown = Book("<row r=\"1\"><c r=\"A1\"><v>1</v></c></row>", Rule("expression", "<formula>NO_SUCH_FUNCTION(A1)</formula>"));
         Assert.Contains(Read(unknown).CellReadDiagnostics, diagnostic => diagnostic.Code == "ConditionalFormattingFunctionUnsupported");
@@ -271,7 +271,7 @@ public sealed class ConditionalFormattingTests
     }
 
     [Theory]
-    [InlineData("top10", "", 0, "UnsupportedConditionalFormatting")]
+    [InlineData("dataBar", "", 0, "UnsupportedConditionalFormatting")]
     [InlineData("expression", "<formula>TRUE</formula>", 99, "ConditionalFormattingDifferentialInvalid")]
     [InlineData("expression", "<formula>TRUE</formula>", 0, "ConditionalFormattingPriorityInvalid")]
     public async Task UnsupportedRuleDiagnosticsRemainSelectedAndStable(string type, string body, int dxf, string code)

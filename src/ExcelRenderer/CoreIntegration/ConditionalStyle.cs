@@ -62,15 +62,16 @@ internal sealed class ConditionalStyle
     /// <summary>Applies explicit supported properties to a normal cell appearance.</summary>
     /// <param name="style">Normal style.</param>
     /// <param name="properties">Winning explicit properties.</param>
+    /// <param name="background">Optional winning dynamic background.</param>
     /// <returns>The effective style.</returns>
-    internal static CellStyle Apply(CellStyle style, IReadOnlyDictionary<string, ElementInfo> properties)
+    internal static CellStyle Apply(CellStyle style, IReadOnlyDictionary<string, ElementInfo> properties, ReportColor? background = null)
     {
         var border = style.Border ?? new BorderStyle();
         var result = style with
         {
             Font = ApplyFont(style.Font, properties),
-            Background = properties.TryGetValue("fill", out var fill) && Supported("fill", fill)
-                ? Attribute(Child(fill, "patternFill"), "patternType") != "none" ? FillColor(fill) : null : style.Background,
+            Background = background ?? (properties.TryGetValue("fill", out var fill) && Supported("fill", fill)
+                ? Attribute(Child(fill, "patternFill"), "patternType") != "none" ? FillColor(fill) : null : style.Background),
             Border = border with
             {
                 Left = Edge("left", border.Left),
@@ -97,20 +98,10 @@ internal sealed class ConditionalStyle
         Color = properties.TryGetValue("color", out var color) && Supported("color", color) ? ResolvedColor(color) : font.Color,
     };
 
-    /// <summary>Combines matched rules in priority order, reserving even unsupported properties against lower priorities.</summary>
-    /// <param name="higher">Properties already claimed by higher priorities.</param>
-    internal void AddTo(Dictionary<string, ElementInfo> higher)
-    {
-        foreach (var property in properties)
-        {
-            if (!higher.ContainsKey(property.Key))
-            {
-                higher.Add(property.Key, property.Value);
-            }
-        }
-    }
-
-    private static ReportColor? ResolvedColor(ElementInfo? color)
+    /// <summary>Reads Reader-resolved RGB without creating rendering metadata in Reader.</summary>
+    /// <param name="color">Saved resolved color.</param>
+    /// <returns>The typed RGB color when available.</returns>
+    internal static ReportColor? ResolvedColor(ElementInfo? color)
     {
         if (Attribute(color, "resolvedRgb") is { } rgb && uint.TryParse(rgb, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var value))
         {
@@ -118,6 +109,20 @@ internal sealed class ConditionalStyle
         }
 
         return Attribute(color, "auto") is "1" or "true" || Attribute(color, "indexed") is "64" or "65" ? Color(color) : null;
+    }
+
+    /// <summary>Combines matched rules in priority order, reserving even unsupported properties against lower priorities.</summary>
+    /// <param name="higher">Properties already claimed by higher priorities.</param>
+    /// <param name="fillClaimed">Whether a higher dynamic background already owns the fill.</param>
+    internal void AddTo(Dictionary<string, ElementInfo> higher, bool fillClaimed = false)
+    {
+        foreach (var property in properties)
+        {
+            if (!higher.ContainsKey(property.Key) && !(fillClaimed && property.Key == "fill"))
+            {
+                higher.Add(property.Key, property.Value);
+            }
+        }
     }
 
     private static ReportColor? FillColor(ElementInfo fill)

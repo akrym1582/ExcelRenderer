@@ -126,4 +126,10 @@ The initial one-warm-up run is retained separately: its main recalculation media
 
 ## Conditional formatting metadata and calculation extension
 
-Reader now exposes saved ConditionalFormattingRuleInfo and DifferentialStyleInfo on WorksheetInfo without changing IWorkbookDataReader. It performs no evaluation. Main connects those snapshots through OpenXml WorkbookCalculationSession.CreateSavedValueSession / EvaluateFormula / ReadValue, sharing the existing recalculation snapshot when requested. Core retains only Reader and ordinary saved styles; its generic appearance completion hook is a no-op. See [Phase 1 support](conditional-formatting.md).
+Reader now exposes saved ConditionalFormattingRuleInfo and DifferentialStyleInfo without changing IWorkbookDataReader. It performs no evaluation. Main connects those snapshots through OpenXml WorkbookCalculationSession.CreateSavedValueSession / EvaluateFormula / ReadValue, sharing the existing recalculation snapshot when requested. Core retains only Reader and ordinary saved styles; its generic appearance completion hook is a no-op. See [Phase 1 and Phase 2 support](conditional-formatting.md).
+
+Phase 2 resolves colorScale descendant colors with the same Reader color path and bounds
+cfvo val lengths. OpenXml EnumerateValueCells exposes sparse stored value/formula
+coordinates on the existing shared snapshot; the main product owns union/statistics,
+frequency keys, numeric thresholds and RGB interpolation. Core remains free of those
+algorithms and has no new option or calculation snapshot.

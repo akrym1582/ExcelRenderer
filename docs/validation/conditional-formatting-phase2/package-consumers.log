@@ -1,0 +1,73 @@
++ dotnet restore --configfile /tmp/excelrenderer-phase2-final-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /tmp/excelrenderer-phase2-final-consumers/engine/consumer.csproj (in 1.43 sec).
++ dotnet run -c Release --no-restore -- /tmp/excelrenderer-phase2-final-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+engine passed
++ dotnet restore --configfile /tmp/excelrenderer-phase2-final-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /tmp/excelrenderer-phase2-final-consumers/adapter/consumer.csproj (in 304 ms).
++ dotnet run -c Release --no-restore -- /tmp/excelrenderer-phase2-final-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+adapter passed
++ dotnet restore --configfile /tmp/excelrenderer-phase2-final-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /tmp/excelrenderer-phase2-final-consumers/mapping/consumer.csproj (in 305 ms).
++ dotnet run -c Release --no-restore -- /tmp/excelrenderer-phase2-final-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+mapping passed
++ dotnet restore --configfile /tmp/excelrenderer-phase2-final-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /tmp/excelrenderer-phase2-final-consumers/main-core/consumer.csproj (in 3.01 sec).
++ dotnet run -c Release --no-restore -- /tmp/excelrenderer-phase2-final-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+main-core passed
++ dotnet restore --configfile /tmp/excelrenderer-phase2-final-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /tmp/excelrenderer-phase2-final-consumers/combined/consumer.csproj (in 361 ms).
++ dotnet run -c Release --no-restore -- /tmp/excelrenderer-phase2-final-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+combined passed
++ dotnet restore --configfile /tmp/excelrenderer-phase2-final-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /tmp/excelrenderer-phase2-final-consumers/conditional-formatting/consumer.csproj (in 312 ms).
++ dotnet run -c Release --no-restore -- /tmp/excelrenderer-phase2-final-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+conditional-formatting passed
++ dotnet restore --configfile /tmp/excelrenderer-phase2-final-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /tmp/excelrenderer-phase2-final-consumers/managed-fonts/consumer.csproj (in 687 ms).
++ dotnet run -c Release --no-restore -- /tmp/excelrenderer-phase2-final-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+managed-fonts passed
++ dotnet restore --configfile /tmp/excelrenderer-phase2-final-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /tmp/excelrenderer-phase2-final-consumers/namespace-main/consumer.csproj (in 301 ms).
++ dotnet run -c Release --no-restore --
+ExcelRenderer.Formulas.Evaluation.FormulaEngine
+engine: 375
+ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader
+reader: 375
+namespace-main passed
++ dotnet restore --configfile /tmp/excelrenderer-phase2-final-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /tmp/excelrenderer-phase2-final-consumers/namespace-mapping/consumer.csproj (in 299 ms).
++ dotnet run -c Release --no-restore --
+ExcelRenderer.Formulas.Evaluation.FormulaEngine
+engine: 375
+ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader
+reader: 375
+namespace-mapping passed
++ dotnet restore --configfile /tmp/excelrenderer-phase2-final-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /tmp/excelrenderer-phase2-final-consumers/namespace-combined/consumer.csproj (in 306 ms).
++ dotnet run -c Release --no-restore --
+ExcelRenderer.Formulas.Evaluation.FormulaEngine
+engine: 375
+ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader
+reader: 375
+namespace-combined passed
++ dotnet tool install ExcelRenderer.Tool --version 1.10.0 --tool-path /tmp/excelrenderer-phase2-final-consumers/tool --configfile /tmp/excelrenderer-phase2-final-consumers/NuGet.Config
+You can invoke the tool using the following command: excelrenderer
+Tool 'excelrenderer.tool' (version '1.10.0') was successfully installed.
++ /tmp/excelrenderer-phase2-final-consumers/tool/excelrenderer md /tmp/excelrenderer-phase2-final-consumers/invoice.xlsx --formula-mode recalculate -o /tmp/excelrenderer-phase2-final-consumers/cli.md
++ /tmp/excelrenderer-phase2-final-consumers/tool/excelrenderer pdf /tmp/excelrenderer-phase2-final-consumers/invoice.xlsx -o /tmp/excelrenderer-phase2-final-consumers/cli-pdf-skia.pdf --pdf-backend skiasharp
++ /tmp/excelrenderer-phase2-final-consumers/tool/excelrenderer render /tmp/excelrenderer-phase2-final-consumers/invoice.xlsx -o /tmp/excelrenderer-phase2-final-consumers/cli-render-skia.pdf --pdf-backend skiasharp --format pdf
+Warning: MaximumDigitWidthFallback [Invoice!workbook]: Normal font 'unknown' could not be measured; the 7px compatibility metric was used.
++ /tmp/excelrenderer-phase2-final-consumers/tool/excelrenderer pdf /tmp/excelrenderer-phase2-final-consumers/invoice.xlsx -o /tmp/excelrenderer-phase2-final-consumers/cli-default-without-subset.pdf
+Eleven isolated package consumers passed (engine, adapter, Mapping, main+Core, combined, conditional formatting, managed fonts, three namespace samples, installed CLI)
++ /tmp/excelrenderer-phase2-final-consumers/tool/excelrenderer pdf /tmp/excelrenderer-phase2-final-consumers/cli-font-formats.xlsx -o /tmp/excelrenderer-phase2-final-consumers/cli-collection-face-1.pdf --font-file /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc --font-face-index 1 --fallback-font PDF Format Fixture --no-system-fonts
+Installed CLI used collection face 1 and rejected CFF/variable fonts without committing output

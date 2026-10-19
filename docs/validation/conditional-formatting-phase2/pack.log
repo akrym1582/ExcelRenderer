@@ -1,0 +1,7 @@
+  Successfully created package '/workspace/ExcelRenderer/artifacts/packages-conditional-formatting-phase2-final/ExcelRenderer.Mapping.1.10.0.nupkg'.
+  Successfully created package '/workspace/ExcelRenderer/artifacts/packages-conditional-formatting-phase2-final/ExcelRenderer.1.10.0.nupkg'.
+  Successfully created package '/workspace/ExcelRenderer/artifacts/packages-conditional-formatting-phase2-final/ExcelRenderer.Fonts.1.10.0.nupkg'.
+  ExcelRenderer.Tool -> /workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/publish/
+  Successfully created package '/workspace/ExcelRenderer/artifacts/packages-conditional-formatting-phase2-final/ExcelRenderer.Tool.1.10.0.nupkg'.
+Verified 23 projects: only ExcelRenderer, ExcelRenderer.Fonts, ExcelRenderer.Mapping, ExcelRenderer.Tool are packable
+Exactly four packages; no unpublished dependencies; shared DLL/XML hashes match

@@ -60,6 +60,40 @@ public sealed class ConditionalFormattingReaderTests
     }
 
     [Fact]
+    public void SparseValueEnumerationRetainsMissingFormulaAndMetadataButNeverExpandsBlanks()
+    {
+        using var input = Fixture.Create(Fixture.Cells("<c r=\"A1\"><v>1</v></c><c r=\"B1\"/><c r=\"C1\" t=\"str\"><f>\"\"</f><v/></c><c r=\"D1\"><f>1+1</f></c><c r=\"E1\" cm=\"1\"><v>3</v></c>"), Fixture.Styles);
+        using var reader = OpenXmlWorkbookReader.Open(input);
+        var saved = WorkbookCalculationSession.CreateSavedValueSession(reader);
+        var addresses = saved.EnumerateValueCells(new("Sheet1", 1, 1, 1048576, 16384)).ToArray();
+        Assert.Equal(new[] { 1, 3, 4, 5 }, addresses.Select(address => address.Column));
+        Assert.Equal(FormulaValueKind.Text, saved.ReadValue(addresses[1]).Kind);
+        Assert.Equal("", saved.ReadValue(addresses[1]).Text);
+        Assert.Throws<FormulaCalculationException>(() => saved.ReadValue(addresses[2]));
+        Assert.Throws<FormulaCalculationException>(() => saved.ReadValue(addresses[3]));
+        Assert.Equal(2, WorkbookCalculationSession.Create(reader).ReadValue(addresses[2]).Number);
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+        Assert.Throws<OperationCanceledException>(() => saved.EnumerateValueCells(new("Sheet1", 1, 1, 1048576, 16384), cancellation.Token).ToArray());
+    }
+
+    [Fact]
+    public void ThresholdValLengthIsBoundedAndScaleColorsKeepResolvedMetadata()
+    {
+        const string rule = "<conditionalFormatting sqref=\"A1\"><cfRule type=\"colorScale\" priority=\"1\"><colorScale><cfvo type=\"formula\" val=\"SUM(1,2,3,4,5)\"/><cfvo type=\"max\"/><color indexed=\"2\" tint=\"0.5\"/><color rgb=\"FFFFFFFF\"/></colorScale></cfRule></conditionalFormatting>";
+        using var input = Fixture.Create(Fixture.Cells("<c r=\"A1\"><v>1</v></c>") + rule, Fixture.Styles);
+        using (var reader = OpenXmlWorkbookReader.Open(input))
+        {
+            var scale = Assert.Single(Assert.Single(reader.ReadWorksheetInfo(1).ConditionalFormattingRules).Source.Children);
+            Assert.Equal("FF8080", scale.Children.Single(child => child.Name == "color" && child.Attributes.ContainsKey("indexed")).Attributes["resolvedRgb"]);
+        }
+
+        input.Position = 0;
+        using var limited = OpenXmlWorkbookReader.Open(input, new() { MaxCellTextCharacters = 8 });
+        Assert.Throws<InvalidDataException>(() => limited.ReadWorksheetInfo(1));
+    }
+
+    [Fact]
     public void ParsedCopyMatchesTextRewriterAndRetainsMixedReferencesAndLiterals()
     {
         const string expression = "AND($A2=B$3,$C$4=\"A2\")";

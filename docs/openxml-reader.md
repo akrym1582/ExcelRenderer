@@ -88,7 +88,11 @@ Diagnostic codes are defined in `ReaderDiagnosticCodes`. Diagnostics have code, 
 
 `HasDrawings`, `HasHyperlinks`, `HasConditionalFormatting` and `HasTables` report
 presence; `ConditionalFormattingRanges` retains rule source ranges without rule
-bodies. The reader does not evaluate conditional formatting. `ReadImages` returns
+bodies. `WorksheetInfo.ConditionalFormattingRules` separately retains immutable rule
+metadata, ordered sqrefs, formulas and color-scale descendants; each rule's `Style`
+retains its resolved differential style when available. Scale colors use the same resolved-color path as ordinary
+styles. The reader does not evaluate rules, populations or colors for target cells;
+see [main-library support](conditional-formatting.md). `ReadImages` returns
 part/relationship identity, content type and anchor metadata without loading bytes;
 `OpenImageStream` opens caller-disposed image data valid only while the reader is
 alive. Transfer required data before disposing the reader. Shared part URIs identify

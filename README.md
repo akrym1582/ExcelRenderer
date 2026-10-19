@@ -539,17 +539,23 @@ service remains the default. No additional glyph measurement is done just for di
 ## Conditional formatting
 
 The main library applies supported `cellIs`, expression, text, blank and error rules
-by default, including solid fills, font color/bold/italic/single underline and four
-border edges. Rules share priority, `stopIfTrue`, typed values and rich-text handling
+by default, plus duplicate/unique values, top/bottom N or N%, mean/population-standard-
+deviation comparisons and two/three-color scales. Supported styles include solid fills,
+font color/bold/italic/single underline and four border edges. Rules share priority, `stopIfTrue`, typed values and rich-text handling
 across PDF, PNG and SVG. Disable with
 `new ExcelReadOptions { ApplyConditionalFormatting = false }`, also available through
 `RenderRequest.ReadOptions`. Cached mode uses saved dependency values; Recalculate
 shares the display calculation session. **Core retains ordinary saved styles and does
 not evaluate conditional formatting.** Markdown adds no color syntax.
 
-Unsupported rules/styles and evaluation failures remain diagnosable. Color scales,
-data bars, icon sets, conditional number formats and x14 rendering are outside Phase 1.
+Population rules include hidden and selected-out source values. Unsupported rules/styles
+and evaluation failures remain diagnosable. Collapsed color-scale thresholds retain
+ordinary fill with a diagnostic. Data bars, icon sets, timePeriod, conditional number
+formats and x14 rendering remain unsupported; desktop Excel equivalence is unverified.
 See [conditional formatting support, diagnostics and verification](docs/conditional-formatting.md).
+The [Phase 2 validation report](docs/validation/conditional-formatting-phase2/README.md)
+records functional checks and performance measurements; the 5% regression goal remains
+unconfirmed for the small input without conditional formatting.
 
 ## Workbook reading and formula results
 
@@ -647,7 +653,7 @@ See [Architecture](docs/architecture.md) for the layout passes, drawing commands
 - Charts are not supported.
 - Formula display uses saved results by default; explicit recalculation supports the
   [documented syntax and 40 functions](docs/formulas-reference.md). Full Excel calculation compatibility is not guaranteed.
-- Conditional formatting supports Phase 1 rules in the main library; Core uses ordinary saved styles. See [support and limitations](docs/conditional-formatting.md).
+- Conditional formatting supports Phase 1 and Phase 2 rules in the main library; Core uses ordinary saved styles. See [support and limitations](docs/conditional-formatting.md).
 - Not every paper size or header/footer formatting code is supported.
 - Page breaks occur only at row and column boundaries.
 - Japanese top-to-bottom mode stacks Unicode text elements; it does not yet select full

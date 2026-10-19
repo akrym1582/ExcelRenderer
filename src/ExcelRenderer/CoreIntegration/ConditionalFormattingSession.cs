@@ -15,7 +15,7 @@ using SourceRange = ExcelRenderer.OpenXml.Reader.Model.Cells.CellRange;
 namespace ExcelRenderer.CoreIntegration;
 
 /// <summary>Owns the main product's rule evaluation, priority composition and bounded candidates for one sheet.</summary>
-internal sealed class ConditionalFormattingSession
+internal sealed partial class ConditionalFormattingSession
 {
     private readonly WorksheetInfo info;
     private readonly WorkbookCalculationSession? calculation;
@@ -163,6 +163,7 @@ internal sealed class ConditionalFormattingSession
 
             var properties = new Dictionary<string, ElementInfo>(StringComparer.Ordinal);
             var uncertain = false;
+            ReportColor? dynamicBackground = null;
             foreach (var rule in index.Query(address.Row, address.Row + 1).Where(entry => address.Column >= entry.Range.First.Column && address.Column <= entry.Range.Last.Column).Select(entry => entry.Rule).Distinct().OrderBy(rule => rule.Priority).ThenBy(rule => rule.Order))
             {
                 if (rule.Failure is not null)
@@ -174,44 +175,48 @@ internal sealed class ConditionalFormattingSession
                 try
                 {
                     evaluations++;
-                    if (!Matches(rule, sourceAddress))
+                    var evaluation = Evaluate(rule, sourceAddress, token);
+                    if (!evaluation.Match)
                     {
                         continue;
                     }
+
+                    if (evaluation.Background is { } background && !properties.ContainsKey("fill"))
+                    {
+                        dynamicBackground ??= background;
+                    }
+                }
+                catch (ConditionalFormattingException exception)
+                {
+                    ReportFailure(rule, sourceAddress, exception.Code, exception.Message);
+                    uncertain = true;
+                    break;
                 }
                 catch (FormulaCalculationException exception)
                 {
                     var code = exception.Message.Contains("MissingCachedValue", StringComparison.Ordinal) ? "ConditionalFormattingCachedValueMissing" :
                         exception.Message.Contains("ResourceLimitExceeded", StringComparison.Ordinal) ? "ConditionalFormattingLimitExceeded" :
                         exception.Diagnostics.Any(diagnostic => diagnostic.Code == "UnsupportedFunction") ? "ConditionalFormattingFunctionUnsupported" : "ConditionalFormattingEvaluationFailed";
-                    var key = (rule.Order, code);
-                    if (diagnostics.TryGetValue(key, out var previous))
-                    {
-                        diagnostics[key] = previous with { OccurrenceCount = previous.OccurrenceCount + 1 };
-                    }
-                    else
-                    {
-                        diagnostics.Add(key, new(code, DiagnosticSeverity.Warning, DiagnosticStage.Read, "The condition could not be evaluated; ordinary formatting is retained. " + exception.Message, info.Sheet.Name, sourceAddress.ToString(), ObjectId: Id(rule)));
-                    }
+                    ReportFailure(rule, sourceAddress, code, exception.Message);
 
                     uncertain = true;
                     break;
                 }
 
-                rule.Style.AddTo(properties);
+                rule.Style.AddTo(properties, dynamicBackground is not null);
                 if (Attribute(rule.Source.Source, "stopIfTrue") is "1" or "true")
                 {
                     break;
                 }
             }
 
-            if (uncertain || properties.Count == 0)
+            if (uncertain || (properties.Count == 0 && dynamicBackground is null))
             {
                 continue;
             }
 
             var cell = cells.GetValueOrDefault(address) ?? new ReportCell(string.Empty, blankStyle(address));
-            var style = styles.Intern(ConditionalStyle.Apply(cell.Style, properties));
+            var style = styles.Intern(ConditionalStyle.Apply(cell.Style, properties, dynamicBackground));
             if (!cells.ContainsKey(address) && style.Background is null && style.Border is null)
             {
                 continue;
@@ -262,7 +267,7 @@ internal sealed class ConditionalFormattingSession
     {
         var result = new PreparedRule(source, order, int.TryParse(Attribute(source.Source, "priority"), NumberStyles.None, CultureInfo.InvariantCulture, out var priority) ? priority : int.MaxValue);
         var type = Attribute(source.Source, "type");
-        if (source.IsExtension || source.Ranges.Count == 0 || type is not ("cellIs" or "expression" or "containsText" or "notContainsText" or "beginsWith" or "endsWith" or "containsBlanks" or "notContainsBlanks" or "containsErrors" or "notContainsErrors"))
+        if (source.IsExtension || source.Ranges.Count == 0 || type is not ("cellIs" or "expression" or "containsText" or "notContainsText" or "beginsWith" or "endsWith" or "containsBlanks" or "notContainsBlanks" or "containsErrors" or "notContainsErrors" or "duplicateValues" or "uniqueValues" or "top10" or "aboveAverage" or "colorScale"))
         {
             result.Failure = source.IsExtension ? "ConditionalFormattingExtensionUnsupported" : "UnsupportedConditionalFormatting";
             return result;
@@ -272,6 +277,18 @@ internal sealed class ConditionalFormattingSession
         {
             result.Failure = "ConditionalFormattingDifferentialInvalid";
             return result;
+        }
+
+        if (type is "duplicateValues" or "uniqueValues" or "top10" or "aboveAverage" or "colorScale")
+        {
+            try
+            {
+                result.PopulationRule = new PopulationRule(source, options);
+            }
+            catch (ConditionalFormattingException exception)
+            {
+                result.Failure = exception.Code;
+            }
         }
 
         if (type is "cellIs" or "expression")
@@ -389,5 +406,7 @@ internal sealed class ConditionalFormattingSession
         internal ParsedFormula? Formula { get; set; }
 
         internal string? Failure { get; set; }
+
+        internal PopulationRule? PopulationRule { get; set; }
     }
 }

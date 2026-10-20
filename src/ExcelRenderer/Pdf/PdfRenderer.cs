@@ -44,14 +44,14 @@ public sealed class PdfRenderer : IRenderer
         using var writer = new SkiaPdfDocumentWriter(manager, CancellationToken.None);
         foreach (var group in groups)
         {
-            writer.Collect(PdfCommandFinalizer.Finalize(group, measurer, CancellationToken.None));
+            writer.Collect(CommandTextFinalizer.Finalize(group, measurer, CancellationToken.None));
         }
 
         writer.Prepare();
         for (var index = 0; index < groups.Length; index++)
         {
             var descriptor = new RenderPageDescriptor(0, "commands", index + 1, index + 1, index + 1, pageSettings.Width, pageSettings.Height);
-            writer.Append(pageSettings, descriptor, PdfCommandFinalizer.Finalize(groups[index], measurer, CancellationToken.None), [], diagnostic => DiagnosticHandler?.Invoke(diagnostic));
+            writer.Append(pageSettings, descriptor, CommandTextFinalizer.Finalize(groups[index], measurer, CancellationToken.None), [], diagnostic => DiagnosticHandler?.Invoke(diagnostic));
         }
 
         writer.Complete(output);

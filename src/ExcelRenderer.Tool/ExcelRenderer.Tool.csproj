@@ -11,13 +11,13 @@
     <PackageId>ExcelRenderer.Tool</PackageId>
     <Version>1.10.1</Version>
     <Title>ExcelRenderer command-line tool</Title>
-    <Description>Convert Excel XLSX files to PDF, PNG and AI-friendly Markdown.</Description>
+    <Description>Convert Excel XLSX files to PDF, PostScript, PNG, SVG and AI-friendly Markdown.</Description>
     <Authors>akrym1582</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/akrym1582/ExcelRenderer</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageTags>excel xlsx pdf png markdown cli dotnet-tool</PackageTags>
+    <PackageTags>excel xlsx pdf postscript png markdown cli dotnet-tool</PackageTags>
   </PropertyGroup>
   <ItemGroup>
     <None Include="../../README.md" Pack="true" PackagePath="/" />

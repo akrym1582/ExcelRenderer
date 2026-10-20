@@ -6,7 +6,7 @@ English | [日本語](README.ja.md)
 
 ## Overview
 
-ExcelRenderer is a .NET library for rendering Excel (`.xlsx`) worksheets as PDF documents or page-by-page PNG and SVG images.
+ExcelRenderer is a .NET library for rendering Excel (`.xlsx`) worksheets as PDF or PostScript documents or page-by-page PNG and SVG images.
 
 It separates workbook parsing, layout, drawing-command generation, and output rendering into distinct stages:
 
@@ -15,7 +15,7 @@ Excel (.xlsx)
     -> ReportDocument
     -> RenderDocument
     -> DrawCommand
-    -> PDF / PNG / SVG
+    -> PDF / PostScript / PNG / SVG
 ```
 
 This makes the rendering pipeline easier to test, understand, and extend with new layout behavior or output formats.
@@ -51,7 +51,7 @@ Choose the package for your task:
 
 | Package | Use it for | Requirements |
 | --- | --- | --- |
-| `ExcelRenderer` | Render existing XLSX files to PDF, PNG, SVG or Markdown from C# | .NET Standard 2.1-compatible application |
+| `ExcelRenderer` | Render existing XLSX files to PDF, PostScript, PNG, SVG or Markdown from C# | .NET Standard 2.1-compatible application |
 | `ExcelRenderer.Mapping` | Populate XLSX templates from C# objects or JSON and save XLSX | .NET Standard 2.1-compatible application; no rendering or fonts required |
 | `ExcelRenderer.Fonts` | Add optional bundled Japanese and emoji fonts for rendering | Use alongside `ExcelRenderer` |
 | `ExcelRenderer.Tool` | Map and convert workbooks from the command line | .NET 10 SDK |
@@ -272,8 +272,9 @@ excelrenderer md input.xlsx -o output.md
 | `pdf` | One PDF file | `--sheet <name>` |
 | `image` | One paginated PNG per worksheet page | `--sheet <name>`, `--dpi <number>` (default: `144`) |
 | `svg` | One self-contained SVG per worksheet page | `--sheet <name>` |
+| `ps` | One multipage PostScript file with embedded TrueType fonts | `--sheet <name>` and buffer options |
 | `markdown` / `md` | One Markdown file and optional extracted images | `--sheet`, `--image-dir`, `--[no-]images`, `--[no-]cell-addresses`, `--[no-]formulas`, `--[no-]layout-detection`, `--[no-]region-detection` |
-| `render` | PDF file, or a PNG/SVG/Markdown output directory | `--format pdf\|png\|svg\|markdown` plus selection, layout, diagnostics, manifest, and font-policy options |
+| `render` | PDF/PostScript file, or a PNG/SVG/Markdown output directory | `--format pdf\|ps\|png\|svg\|markdown` plus selection, layout, diagnostics, manifest, and font-policy options |
 
 All rendering commands also accept `--data <data.json>` to populate a template
 before conversion. Without it, they convert the existing workbook as before.
@@ -374,13 +375,14 @@ using ExcelRenderer;
 await ExcelConverter.ConvertToPdfAsync("input.xlsx", "output.pdf");
 await ExcelConverter.ConvertToImagesAsync("input.xlsx", "./images");
 await ExcelConverter.ConvertToSvgAsync("input.xlsx", "./svg-output");
+await ExcelConverter.ConvertToPostScriptAsync("input.xlsx", "report.ps");
 await ExcelConverter.ConvertToMarkdownAsync("input.xlsx", "output.md");
 ```
 
 For stream-based integrations, `RenderAsync` reads from the input's current position and leaves both
 the input stream and a `SingleStreamOutputSink` output stream open. Use `DirectoryOutputSink` for
 page-by-page PNG/SVG output. `RenderRequest` selects sheets by exact name (in request order) and
-can select rendered PDF/PNG/SVG document pages; Markdown does not support page selection.
+can select rendered PDF/PostScript/PNG/SVG document pages; Markdown does not support page selection.
 `ConversionManifest.WriteAsync` writes the completed artifact metadata and diagnostics as schema
 version 1 JSON with relative artifact names.
 
@@ -392,7 +394,7 @@ Strict mode or treating `ImageDecodeFailed` as an error stops conversion instead
 Low-level `PdfRenderer` callers can receive warnings through `DiagnosticHandler`;
 warnings are also written to `System.Diagnostics.Trace` listeners.
 
-Use `PdfExportOptions`, `ImageExportOptions`, `SvgExportOptions`, and `MarkdownExportOptions` to select a worksheet or configure format-specific behavior. Existing output files, and non-empty image or SVG output directories, are not overwritten.
+Use `PdfExportOptions`, `ImageExportOptions`, `SvgExportOptions`, `PostScriptExportOptions`, and `MarkdownExportOptions` to select a worksheet or configure format-specific behavior. Existing output files, and non-empty image or SVG output directories, are not overwritten.
 
 ## C# API (low-level)
 
@@ -498,6 +500,43 @@ This creates `output/sample.md` and image files under `output/images`. Use
 `MarkdownExportOptions` to control formula/address metadata, hidden rows and columns,
 nearby image text, layout analysis, and image export. Markdown export consumes the
 same `ReportDocument` model as the renderers and does not alter the PDF/PNG pipeline.
+
+## PostScript output
+
+```bash
+excelrenderer ps input.xlsx -o report.ps --no-system-fonts
+excelrenderer render input.xlsx -o report.ps --format ps --pages 1,3 --manifest report.json
+```
+
+`OutputFormat.PostScript` writes one `application/postscript` artifact (`workbook.ps`
+with `DirectoryOutputSink`). `SingleStreamOutputSink` accepts nonseekable streams and
+leaves them open. `ConvertToPostScriptAsync` refuses existing output files; `render`
+uses the existing file replacement policy. Sheets, ranges, pages, trimming, formulas,
+rich text and font fallback use the shared layout. Continuous image layout is rejected.
+Hyperlinks retain their visible appearance without clickable annotations.
+
+The renderer generates PostScript directly in C#. Text uses embedded static **glyf
+TrueType / Type 42** subsets and `show`, with multiple 256-code encoding banks when
+needed; TTC faces use the configured collection index. Requires LanguageLevel 3,
+Type 42 and PostScript 3011+ large sfnt table support. CFF/CFF2, variable/color fonts,
+restricted embedding and prohibited subsetting fail with `PostScriptFontUnsupported`.
+Partial alpha fails with `PostScriptTransparencyUnsupported`; mixed transparent/opaque
+image masks fail with `PostScriptImageTransparencyUnsupported`. Fully invisible
+objects may be omitted. Invalid images fail with `PostScriptImageDecodeFailed`.
+There is no page raster fallback or silent alpha compositing.
+
+Original Unicode (including IVS and supplementary characters), run positions and
+code/GID mappings are preserved as versioned nonexecuting comments. This is distinct
+from a viewer's search/copy support. Ghostscript tests verify standard Latin, kana
+and kanji extraction; **arbitrary IVS/supplementary extraction and retention through
+PDF conversion are not guaranteed**. See [format, decoder and validation details](docs/postscript.md).
+
+`RenderRequest.Buffering` / `PostScriptExportOptions.Buffering` bound the document
+spool with the same temporary-file policy as SVG/PDF. Fonts are shared per document;
+pages are processed individually. These settings do not cap the font or image decode
+working set. Ghostscript is an independent development/CI validator, has no role in
+the library/CLI runtime and is not bundled in NuGet, the tool or ZIP distributions.
+The project retains its MIT license; Ghostscript has its own AGPL/commercial license.
 
 ## Partial cell formatting and optional diagnostics
 
@@ -643,7 +682,7 @@ The main package includes `ExcelRenderer.Core.dll` from the same build; Core is 
 ExcelRenderer converts a workbook to `ReportDocument`, `RenderDocument`, and `DrawCommand`, then renders PDF, PNG, or SVG.
 
 ```text
-Excel (.xlsx) -> ReportDocument -> RenderDocument -> DrawCommand -> PDF / PNG / SVG
+Excel (.xlsx) -> ReportDocument -> RenderDocument -> DrawCommand -> PDF / PostScript / PNG / SVG
 ```
 
 See [Architecture](docs/architecture.md) for the layout passes, drawing commands, renderers, extension points, and source layout.

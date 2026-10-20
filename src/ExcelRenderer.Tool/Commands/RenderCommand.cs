@@ -17,13 +17,13 @@ public static class RenderCommand
         var input = CommandSupport.InputArgument();
         var data = MappingCommandSupport.DataOption();
         var formulaMode = CommandSupport.FormulaModeOption();
-        var output = CommandSupport.OutputOption("Output file for PDF, or output directory for other formats.");
-        var format = new Option<string>("--format") { Description = "Output format: pdf, png, svg, or markdown.", Required = true };
+        var output = CommandSupport.OutputOption("Output file for PDF/PostScript, or output directory for other formats.");
+        var format = new Option<string>("--format") { Description = "Output format: pdf, ps, png, svg, or markdown.", Required = true };
         format.Validators.Add(result =>
         {
             if (!TryParseFormat(result.GetValueOrDefault<string>(), out _))
             {
-                result.AddError("--format must be one of: pdf, png, svg, markdown.");
+                result.AddError("--format must be one of: pdf, ps, png, svg, markdown.");
             }
         });
         var sheet = new Option<string[]>("--sheet") { Description = "Worksheet name to render.", AllowMultipleArgumentsPerToken = true };
@@ -219,7 +219,7 @@ public static class RenderCommand
 
         await using var input = new FileStream(inputPath, FileMode.Open, FileAccess.Read, FileShare.Read);
         ConversionResult conversion;
-        if (format == OutputFormat.Pdf)
+        if (format is OutputFormat.Pdf or OutputFormat.PostScript)
         {
             conversion = await ExcelConverter.RenderAsync(input, request, new FileOutputSink(outputPath), cancellationToken).ConfigureAwait(false);
         }
@@ -247,6 +247,7 @@ public static class RenderCommand
         format = text?.ToLowerInvariant() switch
         {
             "pdf" => OutputFormat.Pdf,
+            "ps" => OutputFormat.PostScript,
             "png" => OutputFormat.Png,
             "svg" => OutputFormat.Svg,
             "markdown" => OutputFormat.Markdown,
@@ -254,6 +255,7 @@ public static class RenderCommand
         };
         return text is not null && (text.Equals("pdf", StringComparison.OrdinalIgnoreCase) ||
             text.Equals("png", StringComparison.OrdinalIgnoreCase) ||
+            text.Equals("ps", StringComparison.OrdinalIgnoreCase) ||
             text.Equals("svg", StringComparison.OrdinalIgnoreCase) ||
             text.Equals("markdown", StringComparison.OrdinalIgnoreCase));
     }

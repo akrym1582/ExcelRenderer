@@ -12,6 +12,9 @@ public sealed record DrawTextCommand(int PageNumber, ReportRect Bounds, string T
     /// <summary>Gets the finalized line and font-run layout.</summary>
     public TextLayoutResult? TextLayout { get; init; }
 
+    /// <summary>Gets the original text before vertical compatibility normalization.</summary>
+    internal string? OriginalText { get; init; }
+
     /// <summary>Gets the original cell address for selected-page diagnostics.</summary>
     internal CellAddress? SourceAddress { get; init; }
 }

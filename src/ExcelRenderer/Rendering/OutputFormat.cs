@@ -14,4 +14,7 @@ public enum OutputFormat
 
     /// <summary>ワークシートの内容を Markdown 文書として生成します。</summary>
     Markdown,
+
+    /// <summary>Generates one multipage PostScript document with embedded TrueType fonts.</summary>
+    PostScript,
 }

@@ -6,7 +6,7 @@
 
 ## 概要
 
-Excel ワークブックを読み込み、レイアウト計算を経て PDF またはページごとの PNG・SVG を生成する .NET ライブラリです。
+Excel ワークブックを読み込み、レイアウト計算を経て PDF・PostScript 文書またはページごとの PNG・SVG を生成する .NET ライブラリです。
 
 Excel を直接 PDF へ描画するのではなく、次の中間モデルを段階的に生成します。
 
@@ -19,12 +19,12 @@ RenderDocument
     ↓
 DrawCommand
     ↓
-PDF / PNG / SVG
+PDF / PostScript / PNG / SVG
 ```
 
 読み込み、レイアウト計算、描画命令生成、出力を分離することで、処理内容を理解しやすくし、将来的な機能追加や出力先の追加を行いやすい構成にしています。
 
-現在は MVP 段階です。ライブラリに加えて、PDF・PNG・SVG・Markdownへ変換するコマンドラインツールを提供します。
+現在は MVP 段階です。ライブラリに加えて、PDF・PostScript・PNG・SVG・Markdownへ変換するコマンドラインツールを提供します。
 
 ### 主な機能
 
@@ -49,7 +49,7 @@ PDF / PNG / SVG
 
 | パッケージ | 用途 | 必要な環境 |
 | --- | --- | --- |
-| `ExcelRenderer` | C# から既存の XLSX を PDF・PNG・SVG・Markdown に変換 | .NET Standard 2.1 と互換性のあるアプリケーション |
+| `ExcelRenderer` | C# から既存の XLSX を PDF・PostScript・PNG・SVG・Markdown に変換 | .NET Standard 2.1 と互換性のあるアプリケーション |
 | `ExcelRenderer.Mapping` | C# オブジェクト・JSON をテンプレートへ設定して XLSX を保存 | .NET Standard 2.1 と互換性のあるアプリケーション。描画・フォントは不要 |
 | `ExcelRenderer.Fonts` | 描画用の日本語・絵文字フォントを追加 | `ExcelRenderer` と併用 |
 | `ExcelRenderer.Tool` | コマンドラインでマッピング・変換 | .NET 10 SDK |
@@ -248,8 +248,9 @@ excelrenderer <command> <input.xlsx> --output <path> [options]
 | `pdf` | 1 個の PDF | `--sheet <シート名>` |
 | `image` | 印刷ページごとの PNG | `--sheet <シート名>`、`--dpi <数値>`（既定値 `144`） |
 | `svg` | 印刷ページごとの自己完結 SVG | `--sheet <シート名>` |
+| `ps` | TrueType フォントを埋め込んだ複数ページの PostScript ファイル | `--sheet <シート名>` と buffer オプション |
 | `markdown` / `md` | 1 個の Markdown と任意の抽出画像 | `--sheet`、`--image-dir`、`--[no-]images`、`--[no-]cell-addresses`、`--[no-]formulas`、`--[no-]layout-detection`、`--[no-]region-detection` |
-| `render` | PDF ファイル、または PNG/SVG/Markdown の出力ディレクトリ | `--format pdf\|png\|svg\|markdown` と選択、レイアウト、診断、マニフェスト、フォント方針の各オプション |
+| `render` | PDF/PostScript ファイル、または PNG/SVG/Markdown の出力ディレクトリ | `--format pdf\|ps\|png\|svg\|markdown` と選択、レイアウト、診断、マニフェスト、フォント方針の各オプション |
 
 描画コマンドはすべて `--data <data.json>` を指定すると、テンプレートへ値を設定してから
 変換します。省略時は従来どおり既存のワークブックを変換します。
@@ -372,6 +373,7 @@ using ExcelRenderer;
 await ExcelConverter.ConvertToPdfAsync("input.xlsx", "output.pdf");
 await ExcelConverter.ConvertToImagesAsync("input.xlsx", "./images");
 await ExcelConverter.ConvertToSvgAsync("input.xlsx", "./svg-output");
+await ExcelConverter.ConvertToPostScriptAsync("input.xlsx", "report.ps");
 await ExcelConverter.ConvertToMarkdownAsync("input.xlsx", "output.md");
 ```
 
@@ -496,6 +498,44 @@ svgRenderer.Render(
     sheet.PageSettings,
     pageNumber => File.Create($"report-{pageNumber}.svg"));
 ```
+
+## PostScript 出力
+
+```bash
+excelrenderer ps input.xlsx -o report.ps --no-system-fonts
+excelrenderer render input.xlsx -o report.ps --format ps --pages 1,3 --manifest report.json
+```
+
+`OutputFormat.PostScript` は、選択した全ページを1個の `application/postscript`
+成果物に出力します。`DirectoryOutputSink` では `workbook.ps` になります。
+`SingleStreamOutputSink` は seek 不可のストリームにも対応し、出力先を閉じません。
+`ConvertToPostScriptAsync` は既存ファイルを拒否し、`render` は既存の置換方針を使います。
+シート・範囲・ページ選択、余白切り詰め、数式、部分書式、フォントフォールバックは
+共通レイアウトを使います。連続画像レイアウトは指定できません。リンクは見た目のみを出力します。
+
+C# で直接生成し、文字は **glyf 形式の固定 TrueType / Type 42** サブセットと
+`show` で描きます。256種類を超える場合は Encoding を複数に分け、フォントデータを共有します。
+TTC は設定した Face index を使います。LanguageLevel 3、Type 42 および
+PostScript 3011 以降の大きな sfnt テーブルに対応した処理系が必要です。
+CFF/CFF2・可変・カラーフォント、埋め込み禁止・サブセット禁止のフォントは
+`PostScriptFontUnsupported` で失敗します。
+半透明は `PostScriptTransparencyUnsupported`、透明・不透明が混在する画像マスクは
+`PostScriptImageTransparencyUnsupported`、画像のデコード失敗は
+`PostScriptImageDecodeFailed` で失敗します。完全透明の要素は省略できます。
+ページの画像化や白背景への合成、黙った不透明化は行いません。
+
+原文 Unicode（IVS・補助平面を含む）、run の位置、出力コードと GID の対応を、
+バージョン付きの非実行コメントで保持します。これはビューアーの検索・コピーとは別の機能です。
+Ghostscript で英数字・かな・標準漢字の抽出を検証しますが、**任意の IVS・補助平面文字の
+外部抽出や PDF 変換後の完全保持は保証しません**。
+[形式・デコーダー・検証の詳細](docs/postscript.md)を参照してください。
+
+`RenderRequest.Buffering` / `PostScriptExportOptions.Buffering` は SVG/PDF と同じ
+一時ファイル方針で文書の中間バッファを制限します。フォントは文書単位で共有し、
+ページを順次処理します。フォントや画像のデコードに必要なメモリ全体の上限ではありません。
+Ghostscript は開発・CI の独立した検証ツールであり、製品の実行時依存ではなく、
+NuGet・dotnet tool・配布 ZIP に同梱しません。本プロジェクトは MIT ライセンスを維持し、
+Ghostscript の AGPL/商用ライセンスとは区別します。
 
 ## セル内の部分書式と任意の診断
 
@@ -626,7 +666,7 @@ PDF専用のソースプロジェクトは[ExcelRenderer Core](docs/core.ja.md)�
 Excel を `ReportDocument`、`RenderDocument`、`DrawCommand` の順に変換し、PDF・PNG・SVG へ描画します。
 
 ```text
-Excel (.xlsx) → ReportDocument → RenderDocument → DrawCommand → PDF / PNG / SVG
+Excel (.xlsx) → ReportDocument → RenderDocument → DrawCommand → PDF / PostScript / PNG / SVG
 ```
 
 レイアウト Pass、描画コマンド、レンダラー、拡張方法、ソースコード構成の詳細は [アーキテクチャ](docs/architecture.ja.md)を参照してください。

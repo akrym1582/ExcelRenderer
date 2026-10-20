@@ -46,9 +46,9 @@ internal sealed class ContinuousLayoutPlan
         }
         else
         {
-            var visual = CellBoundsPass.EnumerateBounds(context).SelectMany(cell => new[] { cell.Bounds }.Concat(
+            var visual = CellBoundsPass.EnumerateBounds(context).SelectMany(cell => new[] { OuterBounds(cell.Bounds, sheet.Cells[cell.Address].Style.Border) }.Concat(
                 (sheet.Cells[cell.Address].MergedBorders ?? []).Where(border => columns.ContainsKey(border.Address.Column) && rows.ContainsKey(border.Address.Row))
-                    .Select(border => new ReportRect(columns[border.Address.Column].X, rows[border.Address.Row].Y, columns[border.Address.Column].Width, rows[border.Address.Row].Height))))
+                    .Select(border => OuterBounds(new(columns[border.Address.Column].X, rows[border.Address.Row].Y, columns[border.Address.Column].Width, rows[border.Address.Row].Height), border.Border))))
                 .Concat(Images.Select(image => ObjectGeometry.GetVisualBounds(image.Bounds, image.Rotation)))
                 .Concat(Shapes.Select(shape => ObjectGeometry.GetVisualBounds(shape.Bounds, shape.Shape.Rotation)));
             double minX = 0, minY = 0, maxX = double.NegativeInfinity, maxY = double.NegativeInfinity;
@@ -92,6 +92,65 @@ internal sealed class ContinuousLayoutPlan
     /// <returns>Complete cells in original model order.</returns>
     internal IEnumerable<RenderCell> EnumerateCells(ITextMeasurer measurer) => EnumerateCore(measurer, null);
 
+    /// <summary>Streams final border cells and only the saved edges of selected-out neighbors.</summary>
+    /// <param name="measurer">The shared measurer, unused by border layout.</param>
+    /// <returns>Neutral cells for the shared boundary resolver.</returns>
+    internal IEnumerable<Core.Layout.RenderCell> EnumerateBorderCells(ITextMeasurer measurer)
+    {
+        var cells = EnumerateLayerCells(measurer, DrawingLayer.CellBorder).Select(CoreIntegration.CorePageAdapter.ToCore);
+        foreach (var cell in cells)
+        {
+            yield return cell;
+        }
+
+        foreach (var neighbor in EnumerateBorderNeighbors())
+        {
+            yield return neighbor;
+        }
+    }
+
+    /// <summary>Streams only saved neighboring edges outside the selected content.</summary>
+    /// <returns>Border-only cells in canvas coordinates.</returns>
+    internal IEnumerable<Core.Layout.RenderCell> EnumerateBorderNeighbors()
+    {
+        if (clip is null)
+        {
+            yield break;
+        }
+
+        // Blank selected cells may still have a border owned by an outside cell.
+        coreGeometry.BorderNeighbors ??= new(coreGeometry.Sheet);
+        foreach (var neighbor in coreGeometry.BorderNeighbors.Collect(EnumerateGeometry(), coreGeometry, 1, address =>
+            coreGeometry.Sheet.Cells.ContainsKey(address) && columns.ContainsKey(address.Column) && rows.ContainsKey(address.Row)))
+        {
+            yield return neighbor;
+        }
+
+        IEnumerable<Core.Layout.RenderCell> EnumerateGeometry()
+        {
+            if (clip is not null && columns.Count > 0 && rows.Count > 0)
+            {
+                var first = new Core.Model.CellAddress(rows.Keys.Min(), columns.Keys.Min());
+                var last = new Core.Model.CellAddress(rows.Keys.Max(), columns.Keys.Max());
+                yield return new(new(null, Core.Model.CellStyle.Default, last.Row - first.Row + 1, last.Column - first.Column + 1), new(0, 0, Width, Height))
+                {
+                    SourceAddress = first,
+                    ClipBounds = new(0, 0, Width, Height),
+                };
+            }
+
+            foreach (var (address, bounds) in Core.Layout.CellBoundsPass.EnumerateBounds(coreGeometry))
+            {
+                var source = coreGeometry.Sheet.Cells[address];
+                yield return new(source, CoreIntegration.CoreModelAdapter.ToCore(Move(CoreIntegration.CoreModelAdapter.ToPublic(bounds))))
+                {
+                    SourceAddress = address,
+                    ClipBounds = clip is null ? null : CoreIntegration.CoreModelAdapter.ToCore(Move(clip.Value)),
+                };
+            }
+        }
+    }
+
     /// <summary>Enumerates only cells needed by the specified layer, measuring text only for the text layer.</summary>
     /// <param name="measurer">The text measurer.</param>
     /// <param name="layer">The drawing layer.</param>
@@ -106,6 +165,9 @@ internal sealed class ContinuousLayoutPlan
         return EnumerateCore(measurer, layer);
     }
 
+    private static ReportRect OuterBounds(ReportRect bounds, BorderStyle? border) => CoreIntegration.CoreModelAdapter.ToPublic(
+        Core.Drawing.BorderStrokeGeometry.GetOuterBounds(CoreIntegration.CoreModelAdapter.ToCore(bounds), border is null ? null : CoreIntegration.CoreModelAdapter.ToCore(border)));
+
     private IEnumerable<RenderCell> EnumerateCore(ITextMeasurer measurer, DrawingLayer? layer)
     {
         var context = new Core.Layout.ReportLayoutContext(coreGeometry.Sheet, CoreIntegration.CoreTextMeasurerAdapter.Create(measurer), coreGeometry.Geometry)
@@ -119,7 +181,7 @@ internal sealed class ContinuousLayoutPlan
         {
             var source = sheet.Cells[address];
             if ((layer == DrawingLayer.Background && source.Style.Background is null) ||
-                (layer == DrawingLayer.CellBorder && source.Style.Border is null) ||
+                (layer == DrawingLayer.CellBorder && source.Style.Border is null && (source.MergedBorders?.Count ?? 0) == 0) ||
                 (layer == DrawingLayer.MergedBorder && (source.MergedBorders?.Count ?? 0) == 0) ||
                 (layer == DrawingLayer.Text && string.IsNullOrEmpty(source.Text)))
             {
@@ -128,7 +190,7 @@ internal sealed class ContinuousLayoutPlan
 
             var coreAddress = CoreIntegration.CoreModelAdapter.ToCore(address);
             context.CandidateAddresses = [coreAddress];
-            if (layer is DrawingLayer.Background or DrawingLayer.CellBorder)
+            if (layer == DrawingLayer.Background || (layer == DrawingLayer.CellBorder && (source.MergedBorders?.Count ?? 0) == 0))
             {
                 var (_, coreBounds) = Core.Layout.CellBoundsPass.EnumerateBounds(context).FirstOrDefault();
                 var bounds = CoreIntegration.CoreModelAdapter.ToPublic(coreBounds);

@@ -104,6 +104,26 @@ internal sealed class CorePdfRenderer : IDisposable
 
     private void Execute(SKCanvas canvas, DrawCommand command)
     {
+        if (command.ClipBounds is not { } clip)
+        {
+            ExecuteUnclipped(canvas, command);
+            return;
+        }
+
+        canvas.Save();
+        try
+        {
+            canvas.ClipRect(new((float)clip.X, (float)clip.Y, (float)(clip.X + clip.Width), (float)(clip.Y + clip.Height)));
+            ExecuteUnclipped(canvas, command);
+        }
+        finally
+        {
+            canvas.Restore();
+        }
+    }
+
+    private void ExecuteUnclipped(SKCanvas canvas, DrawCommand command)
+    {
         switch (command)
         {
             case FillRectangleCommand fill:

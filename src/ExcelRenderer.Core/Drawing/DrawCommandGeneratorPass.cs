@@ -67,6 +67,17 @@ internal sealed class DrawCommandGeneratorPass
         var commands = new List<DrawCommand>();
         for (var layer = 0; layer < 4; layer++)
         {
+            if (layer == 1)
+            {
+                commands.AddRange(BorderConflictResolver.Generate(page.Number, page.Cells.Concat(page.BorderOnlyCells)));
+                continue;
+            }
+
+            if (layer == 2)
+            {
+                continue;
+            }
+
             commands.AddRange(page.Cells.SelectMany(cell => GenerateCellLayer(page.Number, cell, layer, extension?.RequiresTextLayout ?? true)));
         }
 

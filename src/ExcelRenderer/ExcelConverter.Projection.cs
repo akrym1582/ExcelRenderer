@@ -37,6 +37,7 @@ public static partial class ExcelConverter
         return sheet with
         {
             RenderUsedRange = used,
+            BorderSourceCells = sheet.BorderSourceCells ?? sheet.Cells,
             Images = (sheet.Images ?? []).Where(image => Intersects(ObjectGeometry.GetVisualBounds(
                 ObjectGeometry.GetSheetRect(geometry, image.Anchor, image.OffsetX, image.OffsetY, image.Width, image.Height, image.DrawingAnchor), image.Rotation))).ToArray(),
             Shapes = (sheet.Shapes ?? []).Where(shape => Intersects(ObjectGeometry.GetShapeVisualBounds(

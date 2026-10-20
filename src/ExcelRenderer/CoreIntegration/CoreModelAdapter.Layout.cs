@@ -36,6 +36,9 @@ internal static partial class CoreModelAdapter
             value.HeaderFooter is { } header ? ToCoreHeader(header) : null)
         {
             DefaultColumnWidth = value.DefaultColumnWidth,
+            BorderSourceCells = value.BorderSourceCells is CoreDictionaryView<Core.Model.CellAddress, Core.Model.ReportCell, CellAddress, ReportCell> borderCells
+                ? borderCells.Source
+                : value.BorderSourceCells is { } original ? new CoreDictionaryView<CellAddress, ReportCell, Core.Model.CellAddress, Core.Model.ReportCell>(original, ToCore, ToPublic, Cell) : null,
             DefaultRowHeight = value.DefaultRowHeight,
             DefaultRowsHidden = value.DefaultRowsHidden,
             PrintAreas = value.PrintAreas.Select(ToCore).ToArray(),

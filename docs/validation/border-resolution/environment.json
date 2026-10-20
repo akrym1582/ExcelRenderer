@@ -1,0 +1,9 @@
+{
+  "os": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "python": "3.12.14",
+  "dotnet": "10.0.401",
+  "ghostscript": "10.05.1",
+  "poppler": "pdftoppm version 26.05.0",
+  "baseCommit": "2996f6c9940f9a4dcdaa041531c75e277911d911",
+  "workingBranch": "fix/shared-cell-border-resolution"
+}

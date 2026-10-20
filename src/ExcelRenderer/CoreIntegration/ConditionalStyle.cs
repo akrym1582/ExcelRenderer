@@ -59,6 +59,9 @@ internal sealed class ConditionalStyle
     /// <summary>Gets a value indicating whether some source properties cannot be rendered.</summary>
     internal bool HasUnsupportedProperties { get; }
 
+    /// <summary>Gets a value indicating whether the differential sets or clears a cell edge.</summary>
+    internal bool HasBorders => properties.ContainsKey("left") || properties.ContainsKey("right") || properties.ContainsKey("top") || properties.ContainsKey("bottom");
+
     /// <summary>Applies explicit supported properties to a normal cell appearance.</summary>
     /// <param name="style">Normal style.</param>
     /// <param name="properties">Winning explicit properties.</param>

@@ -1,0 +1,113 @@
+{
+  "ordinary": {
+    "before": {
+      "milliseconds": 177.5904,
+      "allocationBytes": 31236024,
+      "outputBytes": 1554280,
+      "commandCount": 4000,
+      "peakWorkingSetBytes": 86564864,
+      "counters": {
+        "coreGeometryPlan": 1,
+        "corePageBuild": 4,
+        "coreCommandBuild": 4,
+        "coreBorderGeometry": 16000,
+        "svgBufferBytes": 1570188,
+        "svgBufferMemoryPeakBytes": 1638400,
+        "svg.spillCount": 0,
+        "svgNormalize.ms": 63.1482
+      }
+    },
+    "after": {
+      "milliseconds": 44.7885,
+      "allocationBytes": 50076136,
+      "outputBytes": 28727,
+      "commandCount": 288,
+      "peakWorkingSetBytes": 77389824,
+      "counters": {
+        "coreGeometryPlan": 1,
+        "corePageBuild": 4,
+        "borderCandidates": 16240,
+        "resolvedBorderSegments": 288,
+        "coreCommandBuild": 4,
+        "coreBorderGeometry": 288,
+        "svgBufferBytes": 28923,
+        "svgBufferMemoryPeakBytes": 53248,
+        "svg.spillCount": 0,
+        "svgNormalize.ms": 5.050799999999999
+      }
+    }
+  },
+  "merged": {
+    "before": {
+      "milliseconds": 119.1875,
+      "allocationBytes": 49338632,
+      "outputBytes": 2546680,
+      "commandCount": 4000,
+      "peakWorkingSetBytes": 90587136,
+      "counters": {
+        "coreGeometryPlan": 1,
+        "corePageBuild": 4,
+        "coreCommandBuild": 4,
+        "coreBorderGeometry": 12000,
+        "svgBufferBytes": 2570588,
+        "svgBufferMemoryPeakBytes": 3276800,
+        "svg.spillCount": 0,
+        "svgNormalize.ms": 21.416099999999997
+      }
+    },
+    "after": {
+      "milliseconds": 58.0053,
+      "allocationBytes": 44743000,
+      "outputBytes": 39832,
+      "commandCount": 188,
+      "peakWorkingSetBytes": 78159872,
+      "counters": {
+        "coreGeometryPlan": 1,
+        "corePageBuild": 4,
+        "borderCandidates": 12240,
+        "resolvedBorderSegments": 188,
+        "coreCommandBuild": 4,
+        "coreBorderGeometry": 188,
+        "svgBufferBytes": 40116,
+        "svgBufferMemoryPeakBytes": 57344,
+        "svg.spillCount": 0,
+        "svgNormalize.ms": 1.0101
+      }
+    }
+  },
+  "continuous": {
+    "before": {
+      "milliseconds": 1575.5593,
+      "allocationBytes": 308096600,
+      "outputBytes": 35043433,
+      "commandCount": 40000,
+      "peakWorkingSetBytes": 201732096,
+      "counters": {
+        "coreBorderGeometry": 160000,
+        "buffer.spillCount": 1,
+        "coreCommandBuild": 1,
+        "svgBufferBytes": 35363409,
+        "svgBufferMemoryPeakBytes": 8388608,
+        "svg.spillCount": 1,
+        "svgNormalize.ms": 235.4486
+      }
+    },
+    "after": {
+      "milliseconds": 181.1262,
+      "allocationBytes": 93317848,
+      "outputBytes": 470313,
+      "commandCount": 2022,
+      "peakWorkingSetBytes": 112480256,
+      "counters": {
+        "borderCandidates": 160000,
+        "resolvedBorderSegments": 2022,
+        "coreBorderGeometry": 2022,
+        "coreCommandBuild": 1,
+        "svgBufferBytes": 474321,
+        "svgBufferMemoryPeakBytes": 524288,
+        "svg.spillCount": 0,
+        "svgNormalize.ms": 19.2722
+      }
+    }
+  }
+}

@@ -29,6 +29,9 @@ internal sealed record ReportSheet(
     /// </summary>
     public IReadOnlyList<CellRange> PrintAreas { get; init; } = [];
 
+    /// <summary>Gets final styled cells retained only for boundary ownership outside a selection.</summary>
+    internal IReadOnlyDictionary<CellAddress, ReportCell>? BorderSourceCells { get; init; }
+
     /// <summary>Gets the original one-based workbook sheet index.</summary>
     internal int SourceSheetIndex { get; init; }
 

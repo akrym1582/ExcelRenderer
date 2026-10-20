@@ -144,6 +144,12 @@ internal sealed partial class ConditionalFormattingSession
             }
         }
 
+        var borderNeighbors = AddSavedBorderNeighbors(cells, candidates, mergedIndex, candidateLimit, ref visits, token);
+        if (borderNeighbors is null)
+        {
+            return;
+        }
+
         var merges = info.MergedRanges.Where(range => candidates.Contains(new(range.First.Row, range.First.Column))).ToDictionary(range => new CellAddress(range.First.Row, range.First.Column));
         if (merges.Values.Sum(range => (long)(range.Last.Row - range.First.Row + 1 + range.Last.Column - range.First.Column + 1) * 2) > candidateLimit)
         {
@@ -156,7 +162,7 @@ internal sealed partial class ConditionalFormattingSession
         {
             token.ThrowIfCancellationRequested();
             var sourceAddress = new OpenXml.Reader.Model.Cells.CellAddress(address.Row, address.Column);
-            if (!isTarget(sourceAddress))
+            if (!isTarget(sourceAddress) && !borderNeighbors.Contains(address))
             {
                 continue;
             }
@@ -208,6 +214,14 @@ internal sealed partial class ConditionalFormattingSession
                 {
                     break;
                 }
+            }
+
+            if (borderNeighbors.Contains(address))
+            {
+                // Outside owners contribute only borders. Their font/fill and text
+                // must not enlarge or otherwise change the selected content model.
+                properties = properties.Where(property => property.Key is "left" or "right" or "top" or "bottom").ToDictionary(property => property.Key, property => property.Value, StringComparer.Ordinal);
+                dynamicBackground = null;
             }
 
             if (uncertain || (properties.Count == 0 && dynamicBackground is null))

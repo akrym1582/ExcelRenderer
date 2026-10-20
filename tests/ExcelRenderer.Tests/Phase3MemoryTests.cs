@@ -354,7 +354,7 @@ public sealed class Phase3MemoryTests
         var measurer = new CountingMeasurer();
         var plan = new ContinuousLayoutPlan(sheet, measurer);
         Assert.Single(plan.EnumerateLayerCells(measurer, DrawingLayer.Background));
-        Assert.Single(plan.EnumerateLayerCells(measurer, DrawingLayer.CellBorder));
+        Assert.Equal(2, plan.EnumerateLayerCells(measurer, DrawingLayer.CellBorder).Count());
         Assert.Single(plan.EnumerateLayerCells(measurer, DrawingLayer.MergedBorder));
         Assert.Equal(0, measurer.Measured);
         Assert.Single(plan.EnumerateLayerCells(measurer, DrawingLayer.Text));

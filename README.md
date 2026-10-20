@@ -27,6 +27,7 @@ This makes the rendering pipeline easier to test, understand, and extend with ne
 
 - Reads `.xlsx` workbooks with the streaming OpenXml reader
 - Supports cell text, fonts, alignment, wrapping, fills, and borders
+- Resolves shared cell borders once across normal and merged cells; double lines are centered on the boundary. Conflicts use a deterministic [fallback policy](docs/validation/border-resolution/README.md), pending Excel print-output measurements.
 - Handles merged cells, hidden rows and columns, column widths, and row heights
 - Honors print areas, page size, orientation, margins, and scaling settings
 - Splits output into pages at row and column boundaries
@@ -717,6 +718,9 @@ It then generates and writes one page at a time. Paginated output uses two page
 passes; public `ReportLayoutEngine.Layout` remains a materializing compatibility API.
 Continuous PNG/SVG rescans cells by drawing layer, preserving backgrounds, borders,
 text and object order without keeping all commands. Markdown retains its existing path.
+Border resolution retains and sorts edge metadata, using memory proportional to the
+number of defined edges. An unselected continuous canvas includes stroke extents;
+an explicit range keeps its original clip.
 
 Selected-sheet body models and drawing-range projection reduce retained models.
 OS and additional-directory font scans retain metadata; a physical face's bytes and

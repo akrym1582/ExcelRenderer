@@ -1,0 +1,159 @@
+  ExcelRenderer.OpenXml.Reader -> /workspace/ExcelRenderer/src/ExcelRenderer.OpenXml.Reader/bin/Debug/netstandard2.1/ExcelRenderer.OpenXml.Reader.dll
+  ExcelRenderer.Core -> /workspace/ExcelRenderer/src/ExcelRenderer.Core/bin/Debug/netstandard2.1/ExcelRenderer.Core.dll
+  ExcelRenderer.Core.Tests -> /workspace/ExcelRenderer/tests/ExcelRenderer.Core.Tests/bin/Debug/net10.0/ExcelRenderer.Core.Tests.dll
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Core.Tests/bin/Debug/net10.0/ExcelRenderer.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+WARNING: Overwriting results file: /workspace/ExcelRenderer/tests/ExcelRenderer.Core.Tests/TestResults/border-full.trx
+Results File: /workspace/ExcelRenderer/tests/ExcelRenderer.Core.Tests/TestResults/border-full.trx
+
+Passed!  - Failed:     0, Passed:   305, Skipped:     0, Total:   305, Duration: 4 s - ExcelRenderer.Core.Tests.dll (net10.0)
+  ExcelRenderer.Formulas -> /workspace/ExcelRenderer/src/ExcelRenderer.Formulas/bin/Debug/netstandard2.1/ExcelRenderer.Formulas.dll
+  ExcelRenderer.Formulas.Tests -> /workspace/ExcelRenderer/tests/ExcelRenderer.Formulas.Tests/bin/Debug/net10.0/ExcelRenderer.Formulas.Tests.dll
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Formulas.Tests/bin/Debug/net10.0/ExcelRenderer.Formulas.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+WARNING: Overwriting results file: /workspace/ExcelRenderer/tests/ExcelRenderer.Formulas.Tests/TestResults/border-full.trx
+Results File: /workspace/ExcelRenderer/tests/ExcelRenderer.Formulas.Tests/TestResults/border-full.trx
+
+Passed!  - Failed:     0, Passed:   833, Skipped:     0, Total:   833, Duration: 408 ms - ExcelRenderer.Formulas.Tests.dll (net10.0)
+  ExcelRenderer.OpenXml -> /workspace/ExcelRenderer/src/ExcelRenderer.OpenXml/bin/Debug/netstandard2.1/ExcelRenderer.OpenXml.dll
+  ExcelRenderer.Mapping -> /workspace/ExcelRenderer/src/ExcelRenderer.Mapping/bin/Debug/netstandard2.1/ExcelRenderer.Mapping.dll
+  ExcelRenderer.Mapping.Tests -> /workspace/ExcelRenderer/tests/ExcelRenderer.Mapping.Tests/bin/Debug/net10.0/ExcelRenderer.Mapping.Tests.dll
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Mapping.Tests/bin/Debug/net10.0/ExcelRenderer.Mapping.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+WARNING: Overwriting results file: /workspace/ExcelRenderer/tests/ExcelRenderer.Mapping.Tests/TestResults/border-full.trx
+Results File: /workspace/ExcelRenderer/tests/ExcelRenderer.Mapping.Tests/TestResults/border-full.trx
+
+Passed!  - Failed:     0, Passed:   172, Skipped:     0, Total:   172, Duration: 1 s - ExcelRenderer.Mapping.Tests.dll (net10.0)
+  ExcelRenderer.OpenXml.Tests -> /workspace/ExcelRenderer/tests/ExcelRenderer.OpenXml.Tests/bin/Debug/net10.0/ExcelRenderer.OpenXml.Tests.dll
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.OpenXml.Tests/bin/Debug/net10.0/ExcelRenderer.OpenXml.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+WARNING: Overwriting results file: /workspace/ExcelRenderer/tests/ExcelRenderer.OpenXml.Tests/TestResults/border-full.trx
+Results File: /workspace/ExcelRenderer/tests/ExcelRenderer.OpenXml.Tests/TestResults/border-full.trx
+
+Passed!  - Failed:     0, Passed:   213, Skipped:     0, Total:   213, Duration: 449 ms - ExcelRenderer.OpenXml.Tests.dll (net10.0)
+  ExcelRenderer -> /workspace/ExcelRenderer/src/ExcelRenderer/bin/Debug/netstandard2.1/ExcelRenderer.dll
+  ExcelRenderer.Fonts -> /workspace/ExcelRenderer/src/ExcelRenderer.Fonts/bin/Debug/netstandard2.1/ExcelRenderer.Fonts.dll
+  ExcelRenderer.Tests -> /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:03.72]     ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(path: "/workspace/ExcelRenderer/tests/ExcelRenderer.Tests"···) [FAIL]
+[xUnit.net 00:00:03.89]     ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(path: "/workspace/ExcelRenderer/samples/mapping/invoice/p"···) [FAIL]
+[xUnit.net 00:00:03.97]     ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(path: "/workspace/ExcelRenderer/tests/ExcelRenderer.Tests"···) [FAIL]
+  Failed ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(path: "/workspace/ExcelRenderer/tests/ExcelRenderer.Tests"···) [257 ms]
+  Error Message:
+   System.Collections.Generic.KeyNotFoundException : The given key 'tests/ExcelRenderer.Tests/SampleInputs/border-conflicts.xlsx' was not present in the dictionary.
+  Stack Trace:
+     at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(String path) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/OpenXmlIntegrationTests.cs:line 57
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(path: "/workspace/ExcelRenderer/samples/mapping/invoice/p"···) [173 ms]
+  Error Message:
+   samples/mapping/invoice/page-breaks/template.xlsx Svg/請求書-1.svg differs from parent output
+  Stack Trace:
+     at ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(String path) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/OpenXmlIntegrationTests.cs:line 59
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(path: "/workspace/ExcelRenderer/tests/ExcelRenderer.Tests"···) [79 ms]
+  Error Message:
+   tests/ExcelRenderer.Tests/SampleInputs/09-cell-border.xlsx Png/Sheet1-1.png differs from parent output
+  Stack Trace:
+     at ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(String path) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/OpenXmlIntegrationTests.cs:line 59
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:04.07]     ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(path: "/workspace/ExcelRenderer/tests/ExcelRenderer.Tests"···) [FAIL]
+[xUnit.net 00:00:04.22]     ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(path: "/workspace/ExcelRenderer/samples/excel/japanese-gr"···) [FAIL]
+[xUnit.net 00:00:04.45]     ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(path: "/workspace/ExcelRenderer/tests/ExcelRenderer.Tests"···) [FAIL]
+[xUnit.net 00:00:04.52]     ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(path: "/workspace/ExcelRenderer/tests/ExcelRenderer.Tests"···) [FAIL]
+[xUnit.net 00:00:04.68]     ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(path: "/workspace/ExcelRenderer/samples/mapping/invoice/t"···) [FAIL]
+[xUnit.net 00:00:04.88]     ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(path: "/workspace/ExcelRenderer/tests/ExcelRenderer.Tests"···) [FAIL]
+  Failed ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(path: "/workspace/ExcelRenderer/tests/ExcelRenderer.Tests"···) [96 ms]
+  Error Message:
+   tests/ExcelRenderer.Tests/SampleInputs/06-layout-and-pagination.xlsx Png/ページ設定-1.png differs from parent output
+  Stack Trace:
+     at ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(String path) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/OpenXmlIntegrationTests.cs:line 59
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(path: "/workspace/ExcelRenderer/samples/excel/japanese-gr"···) [151 ms]
+  Error Message:
+   samples/excel/japanese-grid-report.xlsx Png/月次業務報告書-1.png differs from parent output
+  Stack Trace:
+     at ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(String path) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/OpenXmlIntegrationTests.cs:line 59
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(path: "/workspace/ExcelRenderer/tests/ExcelRenderer.Tests"···) [108 ms]
+  Error Message:
+   tests/ExcelRenderer.Tests/SampleInputs/08-print-scaling.xlsx Png/75%縮小-1.png differs from parent output
+  Stack Trace:
+     at ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(String path) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/OpenXmlIntegrationTests.cs:line 59
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(path: "/workspace/ExcelRenderer/tests/ExcelRenderer.Tests"···) [61 ms]
+  Error Message:
+   tests/ExcelRenderer.Tests/SampleInputs/04-text-decoration.xlsx Png/文字装飾-1.png differs from parent output
+  Stack Trace:
+     at ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(String path) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/OpenXmlIntegrationTests.cs:line 59
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(path: "/workspace/ExcelRenderer/samples/mapping/invoice/t"···) [157 ms]
+  Error Message:
+   samples/mapping/invoice/template.xlsx Svg/請求書-1.svg differs from parent output
+  Stack Trace:
+     at ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(String path) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/OpenXmlIntegrationTests.cs:line 59
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(path: "/workspace/ExcelRenderer/tests/ExcelRenderer.Tests"···) [92 ms]
+  Error Message:
+   tests/ExcelRenderer.Tests/SampleInputs/05-borders.xlsx Png/罫線-1.png differs from parent output
+  Stack Trace:
+     at ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(String path) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/OpenXmlIntegrationTests.cs:line 59
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:05.28]     ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(path: "/workspace/ExcelRenderer/samples/mapping/invoice/i"···) [FAIL]
+[xUnit.net 00:00:05.71]     ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(path: "/workspace/ExcelRenderer/samples/mapping/invoice/p"···) [FAIL]
+  Failed ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(path: "/workspace/ExcelRenderer/samples/mapping/invoice/i"···) [150 ms]
+  Error Message:
+   samples/mapping/invoice/invoice.xlsx Svg/請求書-1.svg differs from parent output
+  Stack Trace:
+     at ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(String path) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/OpenXmlIntegrationTests.cs:line 59
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(path: "/workspace/ExcelRenderer/samples/mapping/invoice/p"···) [287 ms]
+  Error Message:
+   samples/mapping/invoice/page-breaks/invoice.xlsx Svg/請求書-1.svg differs from parent output
+  Stack Trace:
+     at ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesRenderIdenticalPngSvgAndMarkdown(String path) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/OpenXmlIntegrationTests.cs:line 59
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:05.94]     ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesPreserveRenderedCellSnapshots(path: "/workspace/ExcelRenderer/tests/ExcelRenderer.Tests"···) [FAIL]
+  Failed ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesPreserveRenderedCellSnapshots(path: "/workspace/ExcelRenderer/tests/ExcelRenderer.Tests"···) [< 1 ms]
+  Error Message:
+   System.IO.FileNotFoundException : Could not find file '/workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ReaderGolden/18DE14023612DB9FFCACD2BD9149C03B3B7064EA59C2E3677AA5156F6A8F6290.json'.
+  Stack Trace:
+     at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)
+   at System.IO.File.ReadAllText(String path, Encoding encoding)
+   at ExcelRenderer.Tests.OpenXmlIntegrationTests.ExistingFixturesPreserveRenderedCellSnapshots(String path) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/OpenXmlIntegrationTests.cs:line 34
+   at InvokeStub_OpenXmlIntegrationTests.ExistingFixturesPreserveRenderedCellSnapshots(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:01:39.41]     サンプル Excel ブックからシート構造と内容を保持した Markdown を生成できる(excelFileName: "border-conflicts.xlsx") [FAIL]
+  Failed サンプル Excel ブックからシート構造と内容を保持した Markdown を生成できる(excelFileName: "border-conflicts.xlsx") [7 ms]
+  Error Message:
+   System.InvalidOperationException : Sequence contains no matching element
+  Stack Trace:
+     at System.Linq.ThrowHelper.ThrowNoMatchException()
+   at System.Linq.Enumerable.First[TSource](IEnumerable`1 source, Func`2 predicate)
+   at ExcelRenderer.Tests.MarkdownSampleOutputTests.Generates_markdown_from_prebuilt_excel(String excelFileName) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/MarkdownSampleOutputTests.cs:line 48
+--- End of stack trace from previous location ---
+[xUnit.net 00:01:42.65]     ExcelRenderer.Tests.ConditionalFormattingTests.CommonDrawingCommandsContainEffectiveBackgroundFontAndBorder [FAIL]
+  Failed ExcelRenderer.Tests.ConditionalFormattingTests.CommonDrawingCommandsContainEffectiveBackgroundFontAndBorder [62 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: [FillRectangleCommand { PageNumber = 1, Bounds = ReportRect { X = 54, Y = 54, Width = 45.75, Height = 15 }, Color = ReportColor { Red = 255, Green = 255, Blue = 0, Alpha = 255 } }, DrawLineCommand { PageNumber = 1, X1 = 54, Y1 = 69, X2 = 99.75, Y2 = 69, Style = BorderSide { Width = 2, Color = , LineStyle = Solid } }, DrawTextCommand { PageNumber = 1, Bounds = ReportRect { X = 54.5, Y = 54.5, Width = 44.75, Height = 14 }, Text = 1, Style = CellStyle { Font = FontStyle { Family = Calibri, Size = 11, Bold = False, Italic = False, Underline = False, Color = ReportColor { Red = 255, Green = 0, Blue = 0, Alpha = 255 } }, Background = ReportColor { Red = 255, Green = 255, Blue = 0, Alpha = 255 }, Border = BorderStyle { Left = , Top = , Right = , Bottom = BorderSide { Width = 2, Color = , LineStyle = Solid } }, HorizontalAlignment = Right, VerticalAlignment = Bottom, WrapText = False, ShrinkToFit = False, Indent = 0, TextRotation = 0, TopToBottom = False }, TextLayout = TextLayoutResult { Size = TextSize { Width = 6.105, Height = 15.927999019622803 }, Lines = System.Collections.ObjectModel.ReadOnlyCollection`1[ExcelRenderer.Abstractions.TextLayoutLine], EffectiveFontSize = 11 } }]
+  Stack Trace:
+     at ExcelRenderer.Tests.ConditionalFormattingTests.CommonDrawingCommandsContainEffectiveBackgroundFontAndBorder() in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/ConditionalFormattingTests.cs:line 345
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+Results File: /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/TestResults/border-full.trx
+
+Failed!  - Failed:    14, Passed:   903, Skipped:     0, Total:   917, Duration: 1 m 46 s - ExcelRenderer.Tests.dll (net10.0)
+  ExcelRenderer.Tool -> /workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Debug/net10.0/ExcelRenderer.Tool.dll
+  ExcelRenderer.Tool.Tests -> /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/bin/Debug/net10.0/ExcelRenderer.Tool.Tests.dll
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/bin/Debug/net10.0/ExcelRenderer.Tool.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/TestResults/border-full.trx
+
+Passed!  - Failed:     0, Passed:   108, Skipped:     0, Total:   108, Duration: 1 m 25 s - ExcelRenderer.Tool.Tests.dll (net10.0)

@@ -62,6 +62,7 @@ public sealed class CellArgbTests
         var probe = PdfContentProbe.Read(output.ToArray());
         Assert.True(probe.Texts.Count >= 10);
         Assert.True(probe.Paints.Count(paint => paint.Operation == "f") >= 5);
-        Assert.True(probe.Paints.Count(paint => paint.Operation == "S") >= 20);
+        // Five stacked rectangles share four edges; equal vertical intervals join.
+        Assert.Equal(8, probe.Paints.Count(paint => paint.Operation == "S"));
     }
 }

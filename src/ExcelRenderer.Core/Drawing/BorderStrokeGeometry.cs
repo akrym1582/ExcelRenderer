@@ -5,6 +5,26 @@ namespace ExcelRenderer.Core.Drawing;
 /// <summary>罫線の線種に応じて描画する線分の座標を求めます。</summary>
 internal static class BorderStrokeGeometry
 {
+    /// <summary>Includes symmetric cell strokes in an unselected continuous canvas.</summary>
+    /// <param name="bounds">The cell or merged-fragment rectangle.</param>
+    /// <param name="border">The final border style.</param>
+    /// <returns>Conservative visible bounds in points.</returns>
+    internal static Layout.ReportRect GetOuterBounds(Layout.ReportRect bounds, BorderStyle? border)
+    {
+        var left = Outset(border?.Left);
+        var top = Outset(border?.Top);
+        var right = Outset(border?.Right);
+        var bottom = Outset(border?.Bottom);
+        return new(bounds.X - left, bounds.Y - top, bounds.Width + left + right, bounds.Height + top + bottom);
+
+        static double Outset(BorderSide? side) => side is null || side.Color?.Alpha == 0 ? 0 : side.LineStyle switch
+        {
+            BorderLineStyle.Double => Math.Max(side.Width, 0.25) + (side.Width / 2),
+            BorderLineStyle.SlantDashDot => (Math.Max(side.Width, 0.5) * 0.6) + (side.Width / 2),
+            _ => side.Width / 2,
+        };
+    }
+
     /// <summary>線種に応じた 1 本または複数の描画線分を返します。</summary>
     /// <param name="side">描画する罫線の書式です。</param>
     /// <param name="x1">始点の X 座標です。</param>

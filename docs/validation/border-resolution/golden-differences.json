@@ -1,0 +1,343 @@
+{
+  "baselineMismatch": [],
+  "changed": [
+    [
+      "samples/excel/japanese-grid-report.xlsx",
+      "Png/月次業務報告書-1.png"
+    ],
+    [
+      "samples/excel/japanese-grid-report.xlsx",
+      "Svg/月次業務報告書-1.svg"
+    ],
+    [
+      "samples/mapping/invoice/invoice.xlsx",
+      "Png/請求書-1.png"
+    ],
+    [
+      "samples/mapping/invoice/invoice.xlsx",
+      "Svg/請求書-1.svg"
+    ],
+    [
+      "samples/mapping/invoice/page-breaks/invoice.xlsx",
+      "Png/請求書-1.png"
+    ],
+    [
+      "samples/mapping/invoice/page-breaks/invoice.xlsx",
+      "Png/請求書-3.png"
+    ],
+    [
+      "samples/mapping/invoice/page-breaks/invoice.xlsx",
+      "Svg/請求書-1.svg"
+    ],
+    [
+      "samples/mapping/invoice/page-breaks/invoice.xlsx",
+      "Svg/請求書-3.svg"
+    ],
+    [
+      "samples/mapping/invoice/page-breaks/template.xlsx",
+      "Png/請求書-1.png"
+    ],
+    [
+      "samples/mapping/invoice/page-breaks/template.xlsx",
+      "Svg/請求書-1.svg"
+    ],
+    [
+      "samples/mapping/invoice/template.xlsx",
+      "Png/請求書-1.png"
+    ],
+    [
+      "samples/mapping/invoice/template.xlsx",
+      "Svg/請求書-1.svg"
+    ],
+    [
+      "tests/ExcelRenderer.Tests/SampleInputs/04-text-decoration.xlsx",
+      "Png/文字装飾-1.png"
+    ],
+    [
+      "tests/ExcelRenderer.Tests/SampleInputs/04-text-decoration.xlsx",
+      "Svg/文字装飾-1.svg"
+    ],
+    [
+      "tests/ExcelRenderer.Tests/SampleInputs/05-borders.xlsx",
+      "Png/罫線-1.png"
+    ],
+    [
+      "tests/ExcelRenderer.Tests/SampleInputs/05-borders.xlsx",
+      "Png/罫線-2.png"
+    ],
+    [
+      "tests/ExcelRenderer.Tests/SampleInputs/05-borders.xlsx",
+      "Svg/罫線-1.svg"
+    ],
+    [
+      "tests/ExcelRenderer.Tests/SampleInputs/05-borders.xlsx",
+      "Svg/罫線-2.svg"
+    ],
+    [
+      "tests/ExcelRenderer.Tests/SampleInputs/06-layout-and-pagination.xlsx",
+      "Png/ページ設定-1.png"
+    ],
+    [
+      "tests/ExcelRenderer.Tests/SampleInputs/06-layout-and-pagination.xlsx",
+      "Png/ページ設定-2.png"
+    ],
+    [
+      "tests/ExcelRenderer.Tests/SampleInputs/06-layout-and-pagination.xlsx",
+      "Png/ページ設定-3.png"
+    ],
+    [
+      "tests/ExcelRenderer.Tests/SampleInputs/06-layout-and-pagination.xlsx",
+      "Png/ページ設定-4.png"
+    ],
+    [
+      "tests/ExcelRenderer.Tests/SampleInputs/06-layout-and-pagination.xlsx",
+      "Svg/ページ設定-1.svg"
+    ],
+    [
+      "tests/ExcelRenderer.Tests/SampleInputs/06-layout-and-pagination.xlsx",
+      "Svg/ページ設定-2.svg"
+    ],
+    [
+      "tests/ExcelRenderer.Tests/SampleInputs/06-layout-and-pagination.xlsx",
+      "Svg/ページ設定-3.svg"
+    ],
+    [
+      "tests/ExcelRenderer.Tests/SampleInputs/06-layout-and-pagination.xlsx",
+      "Svg/ページ設定-4.svg"
+    ],
+    [
+      "tests/ExcelRenderer.Tests/SampleInputs/08-print-scaling.xlsx",
+      "Png/75%縮小-1.png"
+    ],
+    [
+      "tests/ExcelRenderer.Tests/SampleInputs/08-print-scaling.xlsx",
+      "Png/75%縮小-2.png"
+    ],
+    [
+      "tests/ExcelRenderer.Tests/SampleInputs/08-print-scaling.xlsx",
+      "Svg/75%縮小-1.svg"
+    ],
+    [
+      "tests/ExcelRenderer.Tests/SampleInputs/08-print-scaling.xlsx",
+      "Svg/75%縮小-2.svg"
+    ],
+    [
+      "tests/ExcelRenderer.Tests/SampleInputs/09-cell-border.xlsx",
+      "Png/Sheet1-1.png"
+    ],
+    [
+      "tests/ExcelRenderer.Tests/SampleInputs/09-cell-border.xlsx",
+      "Svg/Sheet1-1.svg"
+    ]
+  ],
+  "pngPixelChecks": [
+    {
+      "input": "samples/excel/japanese-grid-report.xlsx",
+      "artifact": "Png/月次業務報告書-1.png",
+      "changedPixels": 15769,
+      "outsideBorderMask": 0,
+      "bounds": [
+        87,
+        101,
+        705,
+        823
+      ],
+      "diff": "2d8aa64b3865.png"
+    },
+    {
+      "input": "samples/mapping/invoice/invoice.xlsx",
+      "artifact": "Png/請求書-1.png",
+      "changedPixels": 4304,
+      "outsideBorderMask": 0,
+      "bounds": [
+        24,
+        334,
+        719,
+        437
+      ],
+      "diff": "9f19c65d4e65.png"
+    },
+    {
+      "input": "samples/mapping/invoice/page-breaks/invoice.xlsx",
+      "artifact": "Png/請求書-1.png",
+      "changedPixels": 4312,
+      "outsideBorderMask": 0,
+      "bounds": [
+        24,
+        334,
+        719,
+        437
+      ],
+      "diff": "c1355a2ca21f.png"
+    },
+    {
+      "input": "samples/mapping/invoice/page-breaks/invoice.xlsx",
+      "artifact": "Png/請求書-3.png",
+      "changedPixels": 2216,
+      "outsideBorderMask": 0,
+      "bounds": [
+        24,
+        334,
+        719,
+        367
+      ],
+      "diff": "54470d451522.png"
+    },
+    {
+      "input": "samples/mapping/invoice/page-breaks/template.xlsx",
+      "artifact": "Png/請求書-1.png",
+      "changedPixels": 2088,
+      "outsideBorderMask": 0,
+      "bounds": [
+        24,
+        388,
+        719,
+        421
+      ],
+      "diff": "0ebb53fad8e9.png"
+    },
+    {
+      "input": "samples/mapping/invoice/template.xlsx",
+      "artifact": "Png/請求書-1.png",
+      "changedPixels": 2088,
+      "outsideBorderMask": 0,
+      "bounds": [
+        24,
+        368,
+        719,
+        401
+      ],
+      "diff": "d00583442636.png"
+    },
+    {
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/04-text-decoration.xlsx",
+      "artifact": "Png/文字装飾-1.png",
+      "changedPixels": 975,
+      "outsideBorderMask": 0,
+      "bounds": [
+        63,
+        131,
+        703,
+        215
+      ],
+      "diff": "854db5091e0c.png"
+    },
+    {
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/05-borders.xlsx",
+      "artifact": "Png/罫線-1.png",
+      "changedPixels": 130,
+      "outsideBorderMask": 0,
+      "bounds": [
+        246,
+        138,
+        247,
+        202
+      ],
+      "diff": "d691cc4b026e.png"
+    },
+    {
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/05-borders.xlsx",
+      "artifact": "Png/罫線-2.png",
+      "changedPixels": 142,
+      "outsideBorderMask": 0,
+      "bounds": [
+        64,
+        138,
+        642,
+        303
+      ],
+      "diff": "016f64e2a961.png"
+    },
+    {
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/06-layout-and-pagination.xlsx",
+      "artifact": "Png/ページ設定-1.png",
+      "changedPixels": 8819,
+      "outsideBorderMask": 0,
+      "bounds": [
+        39,
+        48,
+        727,
+        456
+      ],
+      "diff": "ce58e0a034aa.png"
+    },
+    {
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/06-layout-and-pagination.xlsx",
+      "artifact": "Png/ページ設定-2.png",
+      "changedPixels": 3080,
+      "outsideBorderMask": 0,
+      "bounds": [
+        39,
+        47,
+        727,
+        165
+      ],
+      "diff": "df1a8e60e60a.png"
+    },
+    {
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/06-layout-and-pagination.xlsx",
+      "artifact": "Png/ページ設定-3.png",
+      "changedPixels": 2757,
+      "outsideBorderMask": 0,
+      "bounds": [
+        39,
+        48,
+        269,
+        397
+      ],
+      "diff": "ed5677ec26f5.png"
+    },
+    {
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/06-layout-and-pagination.xlsx",
+      "artifact": "Png/ページ設定-4.png",
+      "changedPixels": 460,
+      "outsideBorderMask": 0,
+      "bounds": [
+        39,
+        106,
+        269,
+        107
+      ],
+      "diff": "32d1986ba78e.png"
+    },
+    {
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/08-print-scaling.xlsx",
+      "artifact": "Png/75%縮小-1.png",
+      "changedPixels": 2137,
+      "outsideBorderMask": 0,
+      "bounds": [
+        48,
+        117,
+        136,
+        357
+      ],
+      "diff": "04cb4aa64f0c.png"
+    },
+    {
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/08-print-scaling.xlsx",
+      "artifact": "Png/75%縮小-2.png",
+      "changedPixels": 17555,
+      "outsideBorderMask": 0,
+      "bounds": [
+        48,
+        116,
+        691,
+        377
+      ],
+      "diff": "006e0b788f99.png"
+    },
+    {
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/09-cell-border.xlsx",
+      "artifact": "Png/Sheet1-1.png",
+      "changedPixels": 2487,
+      "outsideBorderMask": 0,
+      "bounds": [
+        66,
+        71,
+        689,
+        533
+      ],
+      "diff": "17f6f705e158.png"
+    }
+  ]
+}

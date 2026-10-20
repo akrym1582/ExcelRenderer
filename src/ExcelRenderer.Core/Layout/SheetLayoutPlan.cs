@@ -20,6 +20,7 @@ internal sealed class SheetLayoutPlan
     private readonly HashSet<int> titleRows;
     private readonly HashSet<int> titleColumns;
     private readonly SheetObjectLayoutIndex? objects;
+    private readonly BorderNeighborIndex borderNeighbors;
 
     /// <summary>Initializes a new instance of the <see cref="SheetLayoutPlan"/> class.</summary>
     /// <param name="context">The context used by this operation.</param>
@@ -35,6 +36,7 @@ internal sealed class SheetLayoutPlan
         rows = context.RowLayouts;
         Pages = PaginationPass.Plan(context);
         objects = new(context);
+        borderNeighbors = context.BorderNeighbors ?? new(sheet);
         cells = CellBoundsPass.EnumerateBounds(context).ToArray();
         cellBands = new(cells.Select((cell, index) => (index, cell.Bounds.Y, cell.Bounds.Y + cell.Bounds.Height)));
         titleRows = new(Pages.FirstOrDefault()?.TitleRows ?? []);
@@ -94,6 +96,7 @@ internal sealed class SheetLayoutPlan
             VisibleColumns = visibleColumns,
             VisibleRows = visibleRows,
             ObjectLayouts = objects,
+            BorderNeighbors = borderNeighbors,
         };
         context.ColumnLayouts = columns;
         context.RowLayouts = rows;

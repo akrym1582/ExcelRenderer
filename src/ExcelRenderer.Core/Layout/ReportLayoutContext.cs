@@ -95,6 +95,9 @@ internal sealed class ReportLayoutContext
     /// <summary>Gets or sets shared lightweight object geometry without retaining other page payloads.</summary>
     internal SheetObjectLayoutIndex? ObjectLayouts { get; set; }
 
+    /// <summary>Gets or sets the shared saved-border index for page-local neighbor queries.</summary>
+    internal BorderNeighborIndex? BorderNeighbors { get; set; }
+
     /// <summary>Gets the print-area independent sheet-origin geometry.</summary>
     internal SheetGeometry Geometry => geometry ??= new(Sheet);
 }

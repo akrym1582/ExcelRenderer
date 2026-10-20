@@ -33,6 +33,9 @@ public sealed record ReportSheet(
     /// </summary>
     public IReadOnlyList<CellRange> PrintAreas { get; init; } = [];
 
+    /// <summary>Gets final styled source cells borrowed for borders outside drawing selection.</summary>
+    internal IReadOnlyDictionary<CellAddress, ReportCell>? BorderSourceCells { get; init; }
+
     /// <summary>Gets deferred formula display diagnostics.</summary>
     internal IReadOnlyList<Rendering.ConversionDiagnostic> CellReadDiagnostics { get; init; } = [];
 

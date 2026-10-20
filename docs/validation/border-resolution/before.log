@@ -1,0 +1,113 @@
+  ExcelRenderer.OpenXml.Reader -> /workspace/ExcelRenderer/src/ExcelRenderer.OpenXml.Reader/bin/Debug/netstandard2.1/ExcelRenderer.OpenXml.Reader.dll
+  ExcelRenderer.Formulas -> /workspace/ExcelRenderer/src/ExcelRenderer.Formulas/bin/Debug/netstandard2.1/ExcelRenderer.Formulas.dll
+  ExcelRenderer.OpenXml -> /workspace/ExcelRenderer/src/ExcelRenderer.OpenXml/bin/Debug/netstandard2.1/ExcelRenderer.OpenXml.dll
+  ExcelRenderer.Mapping -> /workspace/ExcelRenderer/src/ExcelRenderer.Mapping/bin/Debug/netstandard2.1/ExcelRenderer.Mapping.dll
+  ExcelRenderer.Core -> /workspace/ExcelRenderer/src/ExcelRenderer.Core/bin/Debug/netstandard2.1/ExcelRenderer.Core.dll
+  ExcelRenderer -> /workspace/ExcelRenderer/src/ExcelRenderer/bin/Debug/netstandard2.1/ExcelRenderer.dll
+  ExcelRenderer.Fonts -> /workspace/ExcelRenderer/src/ExcelRenderer.Fonts/bin/Debug/netstandard2.1/ExcelRenderer.Fonts.dll
+  ExcelRenderer.Tests -> /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.32]     ExcelRenderer.Tests.SharedBorderTests.Shared_double_has_two_strokes(vertical: True, dpi: 288, scale: 0.5) [FAIL]
+[xUnit.net 00:00:00.32]     ExcelRenderer.Tests.SharedBorderTests.Shared_double_has_two_strokes(vertical: False, dpi: 144, scale: 1) [FAIL]
+[xUnit.net 00:00:00.33]     ExcelRenderer.Tests.SharedBorderTests.Shared_double_has_two_strokes(vertical: True, dpi: 144, scale: 1) [FAIL]
+[xUnit.net 00:00:00.33]     ExcelRenderer.Tests.SharedBorderTests.Shared_double_has_two_strokes(vertical: False, dpi: 288, scale: 0.5) [FAIL]
+[xUnit.net 00:00:00.33]     ExcelRenderer.Tests.SharedBorderTests.One_sided_double_uses_the_same_centered_geometry [FAIL]
+[xUnit.net 00:00:00.33]     ExcelRenderer.Tests.SharedBorderTests.Narrow_column_keeps_distinct_edges [FAIL]
+[xUnit.net 00:00:00.34]     ExcelRenderer.Tests.SharedBorderTests.White_can_win_an_equal_width_color_conflict(vertical: False) [FAIL]
+[xUnit.net 00:00:00.34]     ExcelRenderer.Tests.SharedBorderTests.White_can_win_an_equal_width_color_conflict(vertical: True) [FAIL]
+[xUnit.net 00:00:00.34]     ExcelRenderer.Tests.SharedBorderTests.Split_dashed_edge_keeps_its_original_phase [FAIL]
+  Failed ExcelRenderer.Tests.SharedBorderTests.Shared_double_has_two_strokes(vertical: True, dpi: 288, scale: 0.5) [48 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: 2
+Actual:   3
+  Stack Trace:
+     at ExcelRenderer.Tests.SharedBorderTests.Shared_double_has_two_strokes(Boolean vertical, Int32 dpi, Double scale) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/SharedBorderTests.cs:line 48
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed ExcelRenderer.Tests.SharedBorderTests.Shared_double_has_two_strokes(vertical: False, dpi: 144, scale: 1) [2 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: 2
+Actual:   3
+  Stack Trace:
+     at ExcelRenderer.Tests.SharedBorderTests.Shared_double_has_two_strokes(Boolean vertical, Int32 dpi, Double scale) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/SharedBorderTests.cs:line 48
+   at InvokeStub_SharedBorderTests.Shared_double_has_two_strokes(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed ExcelRenderer.Tests.SharedBorderTests.Shared_double_has_two_strokes(vertical: True, dpi: 144, scale: 1) [1 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: 2
+Actual:   3
+  Stack Trace:
+     at ExcelRenderer.Tests.SharedBorderTests.Shared_double_has_two_strokes(Boolean vertical, Int32 dpi, Double scale) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/SharedBorderTests.cs:line 48
+   at InvokeStub_SharedBorderTests.Shared_double_has_two_strokes(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed ExcelRenderer.Tests.SharedBorderTests.Shared_double_has_two_strokes(vertical: False, dpi: 288, scale: 0.5) [1 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: 2
+Actual:   3
+  Stack Trace:
+     at ExcelRenderer.Tests.SharedBorderTests.Shared_double_has_two_strokes(Boolean vertical, Int32 dpi, Double scale) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/SharedBorderTests.cs:line 48
+   at InvokeStub_SharedBorderTests.Shared_double_has_two_strokes(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed ExcelRenderer.Tests.SharedBorderTests.One_sided_double_uses_the_same_centered_geometry [12 ms]
+  Error Message:
+   Assert.Equal() Failure: Collections differ
+                                                                                                                                                                                                                                          ↓ (pos 1)
+Expected: [DrawBorderCommand { PageNumber = 1, Bounds = ReportRect { X = 10, Y = 10, Width = 30, Height = 30 }, Border = BorderStyle { Left = , Top = , Right = BorderSide { Width = 0.75, Color = , LineStyle = Double }, Bottom =  } }, DrawBorderCommand { PageNumber = 1, Bounds = ReportRect { X = 40, Y = 10, Width = 30, Height = 30 }, Border = BorderStyle { Left = BorderSide { Width = 0.75, Color = , LineStyle = Double }, Top = , Right = , Bottom =  } }]
+Actual:   [DrawBorderCommand { PageNumber = 1, Bounds = ReportRect { X = 10, Y = 10, Width = 30, Height = 30 }, Border = BorderStyle { Left = , Top = , Right = BorderSide { Width = 0.75, Color = , LineStyle = Double }, Bottom =  } }, DrawBorderCommand { PageNumber = 1, Bounds = ReportRect { X = 40, Y = 10, Width = 30, Height = 30 }, Border = BorderStyle { Left = , Top = , Right = , Bottom =  } }]
+                                                                                                                                                                                                                                          ↑ (pos 1)
+  Stack Trace:
+     at ExcelRenderer.Tests.SharedBorderTests.One_sided_double_uses_the_same_centered_geometry() in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/SharedBorderTests.cs:line 61
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed ExcelRenderer.Tests.SharedBorderTests.Narrow_column_keeps_distinct_edges [< 1 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: 2
+Actual:   0
+  Stack Trace:
+     at ExcelRenderer.Tests.SharedBorderTests.Narrow_column_keeps_distinct_edges() in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/SharedBorderTests.cs:line 105
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed ExcelRenderer.Tests.SharedBorderTests.White_can_win_an_equal_width_color_conflict(vertical: False) [1 ms]
+  Error Message:
+   Assert.Single() Failure: The collection contained 2 items
+Collection: [DrawBorderCommand { PageNumber = 1, Bounds = ReportRect { X = 10, Y = 10, Width = 30, Height = 30 }, Border = BorderStyle { Left = , Top = , Right = , Bottom = BorderSide { Width = 1, Color = ReportColor { Red = 255, Green = 255, Blue = 255, Alpha = 255 }, LineStyle = Solid } } }, DrawBorderCommand { PageNumber = 1, Bounds = ReportRect { X = 10, Y = 40, Width = 30, Height = 30 }, Border = BorderStyle { Left = , Top = BorderSide { Width = 1, Color = ReportColor { Red = 0, Green = 0, Blue = 0, Alpha = 255 }, LineStyle = Solid }, Right = , Bottom =  } }]
+  Stack Trace:
+     at ExcelRenderer.Tests.SharedBorderTests.White_can_win_an_equal_width_color_conflict(Boolean vertical) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/SharedBorderTests.cs:line 76
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed ExcelRenderer.Tests.SharedBorderTests.White_can_win_an_equal_width_color_conflict(vertical: True) [< 1 ms]
+  Error Message:
+   Assert.Single() Failure: The collection contained 2 items
+Collection: [DrawBorderCommand { PageNumber = 1, Bounds = ReportRect { X = 10, Y = 10, Width = 30, Height = 30 }, Border = BorderStyle { Left = , Top = , Right = BorderSide { Width = 1, Color = ReportColor { Red = 255, Green = 255, Blue = 255, Alpha = 255 }, LineStyle = Solid }, Bottom =  } }, DrawBorderCommand { PageNumber = 1, Bounds = ReportRect { X = 40, Y = 10, Width = 30, Height = 30 }, Border = BorderStyle { Left = BorderSide { Width = 1, Color = ReportColor { Red = 0, Green = 0, Blue = 0, Alpha = 255 }, LineStyle = Solid }, Top = , Right = , Bottom =  } }]
+  Stack Trace:
+     at ExcelRenderer.Tests.SharedBorderTests.White_can_win_an_equal_width_color_conflict(Boolean vertical) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/SharedBorderTests.cs:line 76
+   at InvokeStub_SharedBorderTests.White_can_win_an_equal_width_color_conflict(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed ExcelRenderer.Tests.SharedBorderTests.Split_dashed_edge_keeps_its_original_phase [< 1 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: 2
+Actual:   0
+  Stack Trace:
+     at ExcelRenderer.Tests.SharedBorderTests.Split_dashed_edge_keeps_its_original_phase() in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/SharedBorderTests.cs:line 118
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:00.35]     ExcelRenderer.Tests.SharedBorderTests.Merged_partial_edges_preserve_blank_intervals_and_local_winners [FAIL]
+  Failed ExcelRenderer.Tests.SharedBorderTests.Merged_partial_edges_preserve_blank_intervals_and_local_winners [2 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: 3
+Actual:   0
+  Stack Trace:
+     at ExcelRenderer.Tests.SharedBorderTests.Merged_partial_edges_preserve_blank_intervals_and_local_winners() in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/SharedBorderTests.cs:line 92
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+Results File: /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/TestResults/border-before.trx
+
+Failed!  - Failed:    10, Passed:     0, Skipped:     0, Total:    10, Duration: 72 ms - ExcelRenderer.Tests.dll (net10.0)

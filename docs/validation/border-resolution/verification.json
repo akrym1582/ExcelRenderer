@@ -1,0 +1,143 @@
+{
+  "validatedAtUtc": "2026-10-20T14:12:17.246492+00:00",
+  "baseCommit": "513ddd4d424d9afa6e92ed154abdc631841ba302",
+  "testedSourceParent": "a650bb9eb459788de9f60e78d517dc9e4215f12e",
+  "sourceIdentity": "Source hashes include the final uncommitted changes; evidence is committed after validation.",
+  "sourceSha256": {
+    ".github/workflows/unit-tests.yml": "30c72c9a5cf44aed3aaf32fd13401d97d234924c268570a142e32fd4d2cbf36b",
+    "scripts/check-shared-border-mutations.py": "b1b26fa0a4616a11c74c45ac3168ef54871d2f7022864dd174f12ab182d3e7b5",
+    "scripts/compare-core-removal-baselines.py": "cc50f5fb7d7cab48f634089aa6690bf0417df2a1a2f98779462cd4f26913d488",
+    "scripts/compare-pdf-backends.py": "0c0b9cf8d83f6bc7e926819c63aa007c3d20a417892cc45bbcc97aa4424a9c21",
+    "scripts/pdf_native_evidence.py": "b2c685cb4c9f667aea0b950efe599354340bc20b38f685cde3efd1853e033280",
+    "scripts/shared_border_evidence.py": "cd555965b3b4a0eecff0683d22c9dd9fbbbcb3978504af824112a3bc1e776e8f",
+    "src/ExcelRenderer.Core/Drawing/BorderConflictResolver.cs": "d155c5cf70f421c6188abb90d124cd5f9cd4444f66d80a41a7090dee0cb1db63",
+    "src/ExcelRenderer.Core/Drawing/BorderStrokeGeometry.cs": "08cca6ba0cea2275b5e5fdc99810bca415c82d0103791c4da1aab1022133c707",
+    "src/ExcelRenderer.Core/Drawing/DrawCommandGeneratorPass.cs": "60ef05d6c81183c3092a7e05bb0710f19eae11fb36d7542f9c34ca2bc06dcdde",
+    "src/ExcelRenderer.Core/Layout/BandIndex.cs": "8c66c2719d5b322b2c0c0f8a9af038600410f82e8e81843d295618acedecbbb9",
+    "src/ExcelRenderer.Core/Layout/BorderNeighborIndex.cs": "aadc98ff2e08bbbc3bc7b0bd94ed6e869119e47dcdb3e67da02b782ad39e2be5",
+    "src/ExcelRenderer.Core/Layout/CoreLayoutPolicy.cs": "6bb8d03a27b5664706e357bc06109b609859eaca09eb15499da1e5a70b1cdbbb",
+    "src/ExcelRenderer.Core/Layout/RenderPage.cs": "2f211265c1fb7a3618c8442dc1757ac2fbe972ac418b63a008ae0b213c17f837",
+    "src/ExcelRenderer.Core/Layout/RenderPageBuilder.cs": "29cc9109613ffaa4c3b4071982f53a178a0feda0623124d7ae707bceb06225ff",
+    "src/ExcelRenderer.Core/Layout/ReportLayoutContext.cs": "bf11207280444e4abbf72306c6342db1c8fb23bfad782b862b2bf18b041b3ab1",
+    "src/ExcelRenderer.Core/Layout/SheetLayoutPlan.cs": "8ba5f5252db9a9f9f0f4041f9b073dbaf5793c3dac0713505fe01f7286dd300e",
+    "src/ExcelRenderer.Core/Model/ReportSheet.cs": "5aeb631af8a20a040ed28997539634fe66b225940f252c08d831069d4d2ce7bc",
+    "src/ExcelRenderer.Core/Pdf/CorePdfRenderer.cs": "3ba19f92309270c4939951b3cec67bfeba2ba7c46137073435fd1bd79248e65a",
+    "src/ExcelRenderer/CoreIntegration/ConditionalFormattingSession.Borders.cs": "a99604ce8480377337099781a88b4c8c3b5fd01b30674612e509bbd8947556ef",
+    "src/ExcelRenderer/CoreIntegration/ConditionalFormattingSession.cs": "010034fe5358d997efaca2954cba3506d850d0be049e9dbda993b5ee91889a26",
+    "src/ExcelRenderer/CoreIntegration/ConditionalStyle.cs": "6879fead3df5c57c07800be1ff9ace2fd2040eaa4d2383d9cda5ff4a1421a30b",
+    "src/ExcelRenderer/CoreIntegration/CoreModelAdapter.Layout.cs": "83973836fb50ee04b08a400eb971b7f953ae9e9bbe1d1a7ca7b90befb596287e",
+    "src/ExcelRenderer/CoreIntegration/CorePageAdapter.cs": "2ae41f9bffb8994e9a7f363453713ffc46d4a1912f8d709fdb2dd6954c5f5809",
+    "src/ExcelRenderer/Drawing/DrawCommandGeneratorPass.cs": "a807d441dfd509b31c1bdb4659882b3df1b7ced01ad28a045da4d07c524a9a43",
+    "src/ExcelRenderer/ExcelConverter.Projection.cs": "2fe2c6507ba9264e6142a24d0eea54a7a10da380fea9e6c72ce2175a02ff9c1d",
+    "src/ExcelRenderer/Layout/ContinuousLayoutPlan.cs": "a2edc1ea8918fe566241d7b4b87760b9e0d4e38d0bb8efb83a5393ecbe396862",
+    "src/ExcelRenderer/Layout/RenderPage.cs": "68a19c88fd0c0c7e46d5abd9606304fc313e051fe4afbe0664f2516d88f8e0ab",
+    "src/ExcelRenderer/Layout/ReportLayoutEngine.cs": "07006f77d60038aadf63372404c37a69d8617bbc99b973dd47a94eee8354a49d",
+    "src/ExcelRenderer/Model/ReportSheet.cs": "7105f52dbc65a68826886b52e8e4da0e7dc22b4cc21c2894bfdede646a29a6f9",
+    "tests/ExcelRenderer.Core.Tests/BorderResolutionTests.cs": "a7c5a2945154cffab3509ffb7295fb0ae7187042aaa7962415b49955dfe46a37",
+    "tests/ExcelRenderer.Core.Tests/CellArgbTests.cs": "a6624d827ff8268dc874b75f722c0bb414b5fb1d6095383be571ddc0208c279f",
+    "tests/ExcelRenderer.Core.Tests/ExcelRenderer.Core.Tests.csproj": "b3ff2f08ad0c329c8b11de5a9a884219655ae40db71a40c2b76a76909c751469",
+    "tests/ExcelRenderer.Tests/ConditionalFormattingTests.cs": "df60e9ca315e4ec01990e6cfb3074a0832e38a9191398f7771269b8b62f0f308",
+    "tests/ExcelRenderer.Tests/LayoutPassTests.cs": "8b036acf6f97645765972c7ff8652f9992698bce0a11857a2d9c2270c304c5e8",
+    "tests/ExcelRenderer.Tests/OpenXmlIntegrationTests.cs": "8a9b2571705c5322e96bad113ebb4037a8163d5a8f4d30e76371ccfebb930ecd",
+    "tests/ExcelRenderer.Tests/Phase3MemoryTests.cs": "c88aee06ec7575751cc3fa84fcbfe3f8dcd4a2d36b6a5ea4786be8e5198b36cd",
+    "tests/ExcelRenderer.Tests/ReaderGolden/border-artifacts.json": "fa303ac72263d4e0beacab9f75a505255e39f4cf94a369ca9b7543fb4bf4d7d8",
+    "tests/ExcelRenderer.Tests/SampleInputs/BorderResolution/border-conflicts.xlsx": "a07e159caa4a83a12c38231f70cbf2ca6bdcded9404291ba5244e8f03249a12a",
+    "tests/ExcelRenderer.Tests/SharedBorderTests.cs": "1853878a8a8b42593ede34725820a5691664deaf1d52b0e63ffc7bce0fc8997b",
+    "tests/ExcelRenderer.Tests/SharedBorderWorkbookTests.cs": "dc6913bfcc559b2a35afd8a4a3975077d36c9ecf5a3b4bbdba98b422437bf540",
+    "tools/ExcelRenderer.PdfComparison/Program.cs": "f3da156fc121ec80ee8a2de544289af701466cf8e12e80fca1ec49bd9f44e183",
+    "tools/ExcelRenderer.PdfComparison/shared-border-contracts.json": "294adac3701acbb935798d3a4d3a54b6a67ef2f91e30e34965e969486d72f6b2"
+  },
+  "rebuild": {
+    "warnings": 0,
+    "errors": 0,
+    "configuration": "Release"
+  },
+  "tests": {
+    "total": 2617,
+    "failed": 0,
+    "suites": {
+      "ExcelRenderer.Core.Tests": {
+        "total": 326,
+        "passed": 326,
+        "failed": 0
+      },
+      "ExcelRenderer.Formulas.Tests": {
+        "total": 833,
+        "passed": 833,
+        "failed": 0
+      },
+      "ExcelRenderer.Mapping.Tests": {
+        "total": 172,
+        "passed": 172,
+        "failed": 0
+      },
+      "ExcelRenderer.OpenXml.Tests": {
+        "total": 213,
+        "passed": 213,
+        "failed": 0
+      },
+      "ExcelRenderer.Tests": {
+        "total": 955,
+        "passed": 955,
+        "failed": 0
+      },
+      "ExcelRenderer.Tool.Tests": {
+        "total": 118,
+        "passed": 118,
+        "failed": 0
+      }
+    },
+    "fontEnvironment": "scripts/test-fonts.sh"
+  },
+  "pdfComparison": {
+    "fixtures": 25,
+    "unmetGates": 0,
+    "historicalAaReviews": 27
+  },
+  "nativeComparison": {
+    "fixtures": 25,
+    "unmetGates": 0,
+    "historicalAaExceptionsEnabled": false
+  },
+  "coreComparison": {
+    "fixtures": 3,
+    "passed": true
+  },
+  "sharedBorderMutations": {
+    "missingBorder": "rejected",
+    "missingText": "rejected",
+    "extraInk": "rejected"
+  },
+  "existingPdfMutations": {
+    "missingIvs": "rejected",
+    "extraInk": "rejected",
+    "fontMetrics": "rejected",
+    "fontBounds": "rejected"
+  },
+  "readerGolden": {
+    "inputs": 15,
+    "changedVisualArtifacts": 32,
+    "changedPngs": 16,
+    "changedPixelsOutsideBorderMasks": 0,
+    "markdown": "unchanged"
+  },
+  "performance": {
+    "cases": 6,
+    "lowerAllocationAllCases": true,
+    "finalProductDllsMatchBenchmarkHashes": true,
+    "strictFivePercentTargetClaimed": false
+  },
+  "packages": {
+    "count": 4,
+    "distribution": "passed"
+  },
+  "readerCoreIsolation": "passed",
+  "namespaceOwnership": "passed",
+  "coreDependencies": "passed",
+  "removedDependencyAudit": "passed",
+  "historicalFilesChanged": [],
+  "unavailable": [
+    "Microsoft Excel print/PDF comparison",
+    "User original workbook"
+  ]
+}

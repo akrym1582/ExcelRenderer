@@ -109,7 +109,77 @@ internal sealed class RenderPageBuilder
         var pageContext = new CorePageBuildContext(_context, placement, horizontal, vertical, _bodyColumns, _bodyRows, _titleColumns, _titleRows, repeatColumns, repeatRows);
         var images = _context.Policy.BuildPageImages(pageContext);
         Rendering.ConversionMetrics.Report("corePageBuild", 1);
-        return _context.Policy.BuildAdditionalPageContent(pageContext, new(pageNumber, cells, images));
+        var page = _context.Policy.BuildAdditionalPageContent(pageContext, new(pageNumber, cells, images));
+        _context.BorderNeighbors ??= new(_context.Sheet);
+        if (!_context.BorderNeighbors.HasEdges)
+        {
+            return page;
+        }
+
+        var placed = new HashSet<CellAddress>(cells.Select(cell => cell.SourceAddress!.Value));
+        return page with { BorderOnlyCells = _context.BorderNeighbors.Collect(page.Cells.Concat(BorderRegions()), _context, _scale, placed.Contains).ToArray() };
+
+        IEnumerable<RenderCell> BorderRegions()
+        {
+            var bodyColumns = Range(_bodyColumns, index => _context.ColumnLayouts[index].X, horizontal.Start, horizontal.End);
+            var bodyRows = Range(_bodyRows, index => _context.RowLayouts[index].Y, vertical.Start, vertical.End);
+            foreach (var region in Region(bodyColumns, bodyRows, false, false)
+                .Concat(repeatColumns ? Region(_titleColumns, bodyRows, true, false) : [])
+                .Concat(repeatRows ? Region(bodyColumns, _titleRows, false, true) : [])
+                .Concat(repeatColumns && repeatRows ? Region(_titleColumns, _titleRows, true, true) : []))
+            {
+                yield return region;
+            }
+        }
+
+        IEnumerable<RenderCell> Region(IReadOnlyList<int> columns, IReadOnlyList<int> rows, bool titleColumn, bool titleRow)
+        {
+            if (columns.Count == 0 || rows.Count == 0)
+            {
+                yield break;
+            }
+
+            var firstColumn = _context.ColumnLayouts[columns[0]];
+            var lastColumn = _context.ColumnLayouts[columns[columns.Count - 1]];
+            var firstRow = _context.RowLayouts[rows[0]];
+            var lastRow = _context.RowLayouts[rows[rows.Count - 1]];
+            var bounds = new ReportRect(
+                placement.MapCellX(firstColumn.X, repeatColumns, titleColumn, _titleColumns.Count == 0 ? 0 : _context.ColumnLayouts[_titleColumns[0]].X),
+                placement.MapCellY(firstRow.Y, repeatRows, titleRow, _titleRows.Count == 0 ? 0 : _context.RowLayouts[_titleRows[0]].Y),
+                (lastColumn.X + lastColumn.Width - firstColumn.X) * _scale,
+                (lastRow.Y + lastRow.Height - firstRow.Y) * _scale);
+            yield return new(new(null, CellStyle.Default, lastRow.Row - firstRow.Row + 1, lastColumn.Column - firstColumn.Column + 1), bounds)
+            {
+                SourceAddress = new(firstRow.Row, firstColumn.Column),
+                ClipBounds = _context.Sheet.RequestedRange is null ? null : bounds,
+            };
+        }
+    }
+
+    private static IReadOnlyList<int> Range(IReadOnlyList<int> indices, Func<int, double> position, double start, double end)
+    {
+        var low = 0;
+        var high = indices.Count;
+        while (low < high)
+        {
+            var middle = low + ((high - low) / 2);
+            if (position(indices[middle]) < start)
+            {
+                low = middle + 1;
+            }
+            else
+            {
+                high = middle;
+            }
+        }
+
+        var result = new List<int>();
+        while (low < indices.Count && position(indices[low]) < end)
+        {
+            result.Add(indices[low++]);
+        }
+
+        return result;
     }
 
     private BorderStyle ScaleBorder(BorderStyle border, double scale)

@@ -1,0 +1,30 @@
+{
+  "testedSourceSha": "ba4c377a459e06b6bfc93441ff2fb5815eb8d160",
+  "stackedBaseSha": "64f5a7781dac317d9b4c1ff4794262d1604bd823",
+  "mainSha": "513ddd4d424d9afa6e92ed154abdc631841ba302",
+  "tests": {
+    "Core": 326,
+    "Formulas": 833,
+    "Mapping": 172,
+    "OpenXml": 213,
+    "Main": 972,
+    "Tool": 118
+  },
+  "totalTests": 2634,
+  "debugWarnings": 0,
+  "releaseWarnings": 0,
+  "api": {
+    "main": 1883,
+    "core": 83,
+    "added": 0,
+    "removed": 0
+  },
+  "sameFormatArtifacts": 47,
+  "sameFormatPixelChanges": 0,
+  "mainFrozenFixtures": 25,
+  "mainHistoricalReviews": 27,
+  "stageBHistoricalReviews": 0,
+  "coreFrozenFixtures": 3,
+  "distributionConfigurationChanged": false,
+  "ExcelApplicationAvailable": false
+}

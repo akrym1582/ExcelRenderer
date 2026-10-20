@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using ExcelRenderer;
 using ExcelRenderer.Drawing;
 using ExcelRenderer.Fonts;
@@ -268,13 +269,21 @@ if (reports.Count == 0)
     throw new ArgumentException("Unknown fixture. Use all, commands, links, invoice, or japanese-grid-report.");
 }
 
+var borderContracts = JsonNode.Parse(File.ReadAllText(Path.Combine(root, "tools/ExcelRenderer.PdfComparison/shared-border-contracts.json")))!;
 foreach (var report in reports)
 {
     var actual = JsonSerializer.SerializeToElement(report);
     var name = actual.GetProperty("name").GetString()!;
     var baseline = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../tests/Shared/PdfRemovalBaseline", name, "expected.json"));
-    using var frozen = JsonDocument.Parse(File.ReadAllText(baseline));
-    if (!JsonElement.DeepEquals(actual, frozen.RootElement))
+    var frozen = JsonNode.Parse(File.ReadAllText(baseline))!;
+    if (borderContracts["full"]?[name] is { } borderContract)
+    {
+        // Only the reviewed cell-border fingerprints change. Page plans,
+        // diagnostics and every other frozen report field remain mandatory.
+        frozen["commandFingerprints"] = borderContract["commandFingerprints"]!.DeepClone();
+    }
+
+    if (!JsonNode.DeepEquals(JsonNode.Parse(actual.GetRawText()), frozen))
     {
         throw new InvalidOperationException($"{name}: finalized commands, geometry, page plan or diagnostics differ from the frozen baseline.");
     }

@@ -1,0 +1,27 @@
+[
+  {
+    "mutation": "missing-border",
+    "detected": true,
+    "errors": [
+      "after: decoded content differs from the reviewed border contract",
+      "after: paint geometry differs from the reviewed border contract"
+    ]
+  },
+  {
+    "mutation": "missing-text",
+    "detected": true,
+    "errors": [
+      "Retained glyph IDs changed",
+      "after: decoded content differs from the reviewed border contract"
+    ]
+  },
+  {
+    "mutation": "extra-ink",
+    "detected": true,
+    "errors": [
+      "Non-axial strokes or filled paths changed",
+      "after: decoded content differs from the reviewed border contract",
+      "after: paint geometry differs from the reviewed border contract"
+    ]
+  }
+]

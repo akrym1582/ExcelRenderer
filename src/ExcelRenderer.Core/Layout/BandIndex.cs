@@ -60,6 +60,18 @@ internal sealed class BandIndex<T>
         }
     }
 
+    /// <summary>Visits intersecting values without allocating recursive iterator objects.</summary>
+    /// <param name="start">The inclusive band start.</param>
+    /// <param name="end">The exclusive band end.</param>
+    /// <param name="visitor">The reusable callback.</param>
+    internal void Visit(double start, double end, Action<T> visitor)
+    {
+        if (start < end)
+        {
+            VisitRange(0, _entries.Length, start, end, visitor);
+        }
+    }
+
     private double BuildMaximumEnds(int low, int high)
     {
         if (low >= high)
@@ -100,5 +112,27 @@ internal sealed class BandIndex<T>
         {
             yield return value;
         }
+    }
+
+    private void VisitRange(int low, int high, double start, double end, Action<T> visitor)
+    {
+        if (low >= high || _entries[low].Start >= end)
+        {
+            return;
+        }
+
+        var middle = low + ((high - low) / 2);
+        if (_maximumEnds[middle] <= start)
+        {
+            return;
+        }
+
+        VisitRange(low, middle, start, end, visitor);
+        if (_entries[middle].Start < end && _entries[middle].End > start)
+        {
+            visitor(_entries[middle].Value);
+        }
+
+        VisitRange(middle + 1, high, start, end, visitor);
     }
 }

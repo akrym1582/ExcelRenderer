@@ -43,4 +43,7 @@
   <ItemGroup>
     <ProjectReference Include="../../src/ExcelRenderer.OpenXml.Reader/ExcelRenderer.OpenXml.Reader.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="Fixtures/BorderResolution/*.xlsx" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

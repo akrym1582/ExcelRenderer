@@ -1,0 +1,62 @@
+{
+  "before": {
+    "ExcelRenderer.dll": "49d73aa8864b8072518b3aa11c1f6200117452a5e78120b74f43dc690558d581",
+    "ExcelRenderer.Mapping.dll": "2a82c8a1305f8170bd96ff688e3e2af7e3c8bdb545214927bc3c73697ae28f01",
+    "ExcelRenderer.Formulas.dll": "ee8a9a17a650b0599835b0969c9b32f05d1f3fbba9af988c6734a4525a3d1beb",
+    "ExcelRenderer.Core.dll": "50e65b23a67203e729489119c2deeda8c124e3986e04d9556bc6166e1456f9d5",
+    "ExcelRenderer.Fonts.dll": "6f651dcd25f25663835d2902d3e7c56bf89b5c23594945091014a37f5a651e8c",
+    "ExcelRenderer.OpenXml.dll": "c0c5391cde72d2f687d25b32bbb99f9495cf4539d5492447759a71e72bb2e4a7",
+    "ExcelRenderer.OpenXml.Reader.dll": "6a6eb9a0b4455358484ed485fdd7d5081d73933456d078151a79152b9b8ae81a",
+    "ExcelRenderer.Performance.dll": "73663d3cdcf2b508491e33e6a629176a8926b78b6efccf3310b60ba83540458d",
+    "SkiaSharp.dll": "6e9f9367c0a30ca826065af19b2a6d6138c35ca9b47a72865539267f7e1bb1d1",
+    "runtimes/linux-x64/native/libSkiaSharp.so": "30b882ffbea5f7f3a1d71731ece30333d37023c0df783ad218b80949343352b2"
+  },
+  "after": {
+    "ExcelRenderer.dll": "56adfd61a753f165b7951a3d3c32e513e07d97a4d33607a5e29247612638e834",
+    "ExcelRenderer.Mapping.dll": "aa6d74417f5fce4c28ea5b3c6b0a9d624aec5205fe654e40777b78a4707d1d7b",
+    "ExcelRenderer.Formulas.dll": "5f279082b7fad42337c14014e5a3730acf44046ba4bc7b3cbe0a85faea7cde04",
+    "ExcelRenderer.Core.dll": "5b42e8e2cdc83758e52afd0140ba82abab8cdd71fa0e2dd670d246ab4e8b2412",
+    "ExcelRenderer.Fonts.dll": "516b51c5cacb7f2cc216fd43aa2eb2289f36df63276ae0039836981ac4a70c89",
+    "ExcelRenderer.OpenXml.dll": "cb4b9020d0c7d760d805180561d0b7c1163fb2270b6287d55e4652e5257b3ca5",
+    "ExcelRenderer.OpenXml.Reader.dll": "08bfe0edaa21c971e2d7da964c56176bd979259c50f7d746ef658a3aa1512813",
+    "ExcelRenderer.Performance.dll": "73663d3cdcf2b508491e33e6a629176a8926b78b6efccf3310b60ba83540458d",
+    "SkiaSharp.dll": "6e9f9367c0a30ca826065af19b2a6d6138c35ca9b47a72865539267f7e1bb1d1",
+    "runtimes/linux-x64/native/libSkiaSharp.so": "30b882ffbea5f7f3a1d71731ece30333d37023c0df783ad218b80949343352b2"
+  },
+  "counter-before": {
+    "ExcelRenderer.dll": "4b98023f6ef9b155590e2575d8216de6ac891ee2c359d1dc67194ea9f9d65bd9",
+    "ExcelRenderer.Mapping.dll": "02b46369154a2c7cdbca8bc3480cdd858b97a30f4f93f31360fa4bef39fbd0a1",
+    "ExcelRenderer.Formulas.dll": "4cf03436cf3e17e74f8bf01044825718ddf54b65bd7560d62d6c5937b2a47970",
+    "ExcelRenderer.Core.dll": "395334b3ef7938e0b72464e47835d88770054e05fcee7efe1f725ad664159f24",
+    "ExcelRenderer.Fonts.dll": "cab9b6ef73181afccbf3d07c58c35de48304a0dffd0d66c1c72c807e029e4b21",
+    "ExcelRenderer.OpenXml.dll": "2a176eaf60e2b70a55d640a84c441621c4524c43e5b0cbfea29b43c94cb49929",
+    "ExcelRenderer.OpenXml.Reader.dll": "38f41a844824a5ef0d998f21b4ae8c41740309e3e5c8c1d39ddfc893b2ef50a5",
+    "ExcelRenderer.Performance.dll": "ba35d4ea434204b3d326e8b3a2f739c78d0b7e63aa10229954b06deadd9e7e67",
+    "SkiaSharp.dll": "6e9f9367c0a30ca826065af19b2a6d6138c35ca9b47a72865539267f7e1bb1d1",
+    "runtimes/linux-x64/native/libSkiaSharp.so": "30b882ffbea5f7f3a1d71731ece30333d37023c0df783ad218b80949343352b2"
+  },
+  "diagnostic-before": {
+    "ExcelRenderer.dll": "49d73aa8864b8072518b3aa11c1f6200117452a5e78120b74f43dc690558d581",
+    "ExcelRenderer.Mapping.dll": "2a82c8a1305f8170bd96ff688e3e2af7e3c8bdb545214927bc3c73697ae28f01",
+    "ExcelRenderer.Formulas.dll": "ee8a9a17a650b0599835b0969c9b32f05d1f3fbba9af988c6734a4525a3d1beb",
+    "ExcelRenderer.Core.dll": "50e65b23a67203e729489119c2deeda8c124e3986e04d9556bc6166e1456f9d5",
+    "ExcelRenderer.Fonts.dll": "6f651dcd25f25663835d2902d3e7c56bf89b5c23594945091014a37f5a651e8c",
+    "ExcelRenderer.OpenXml.dll": "c0c5391cde72d2f687d25b32bbb99f9495cf4539d5492447759a71e72bb2e4a7",
+    "ExcelRenderer.OpenXml.Reader.dll": "6a6eb9a0b4455358484ed485fdd7d5081d73933456d078151a79152b9b8ae81a",
+    "ExcelRenderer.Performance.dll": "ba35d4ea434204b3d326e8b3a2f739c78d0b7e63aa10229954b06deadd9e7e67",
+    "SkiaSharp.dll": "6e9f9367c0a30ca826065af19b2a6d6138c35ca9b47a72865539267f7e1bb1d1",
+    "runtimes/linux-x64/native/libSkiaSharp.so": "30b882ffbea5f7f3a1d71731ece30333d37023c0df783ad218b80949343352b2"
+  },
+  "diagnostic-after": {
+    "ExcelRenderer.dll": "56adfd61a753f165b7951a3d3c32e513e07d97a4d33607a5e29247612638e834",
+    "ExcelRenderer.Mapping.dll": "aa6d74417f5fce4c28ea5b3c6b0a9d624aec5205fe654e40777b78a4707d1d7b",
+    "ExcelRenderer.Formulas.dll": "5f279082b7fad42337c14014e5a3730acf44046ba4bc7b3cbe0a85faea7cde04",
+    "ExcelRenderer.Core.dll": "5b42e8e2cdc83758e52afd0140ba82abab8cdd71fa0e2dd670d246ab4e8b2412",
+    "ExcelRenderer.Fonts.dll": "516b51c5cacb7f2cc216fd43aa2eb2289f36df63276ae0039836981ac4a70c89",
+    "ExcelRenderer.OpenXml.dll": "cb4b9020d0c7d760d805180561d0b7c1163fb2270b6287d55e4652e5257b3ca5",
+    "ExcelRenderer.OpenXml.Reader.dll": "08bfe0edaa21c971e2d7da964c56176bd979259c50f7d746ef658a3aa1512813",
+    "ExcelRenderer.Performance.dll": "ba35d4ea434204b3d326e8b3a2f739c78d0b7e63aa10229954b06deadd9e7e67",
+    "SkiaSharp.dll": "6e9f9367c0a30ca826065af19b2a6d6138c35ca9b47a72865539267f7e1bb1d1",
+    "runtimes/linux-x64/native/libSkiaSharp.so": "30b882ffbea5f7f3a1d71731ece30333d37023c0df783ad218b80949343352b2"
+  }
+}

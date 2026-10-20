@@ -25,13 +25,13 @@ internal sealed partial class FullExcelReader
 
         var calculation = recalculate ? WorkbookCalculationSession.Create(reader, readOptions.FormulaEvaluationOptions, cancellationToken) :
             hasConditionalRules && readOptions.ApplyConditionalFormatting ? WorkbookCalculationSession.CreateSavedValueSession(reader, readOptions.FormulaEvaluationOptions, cancellationToken) : null;
-        var targets = sheets.ToDictionary(info => info.Sheet.Index, info => CreateCalculationTarget(info));
+        var targets = recalculate ? sheets.ToDictionary(info => info.Sheet.Index, info => CreateCalculationTarget(info)) : null;
         foreach (var info in sheets.Where(info => info.ConditionalFormattingRules.Count > 0))
         {
-            conditionalFormatting.Add(info.Sheet.Index, new(info, calculation, readOptions, CreateCalculationTarget(info, true)));
+            conditionalFormatting.Add(info.Sheet.Index, new(info, calculation, readOptions, readOptions.ApplyConditionalFormatting ? CreateCalculationTarget(info, true) : static _ => false));
         }
 
-        return !recalculate ? null : cell => cell.Formula is not null && targets[cell.SheetIndex](cell.Address) ? calculation!.EvaluateCell(cell) : cell;
+        return !recalculate ? null : cell => cell.Formula is not null && targets![cell.SheetIndex](cell.Address) ? calculation!.EvaluateCell(cell) : cell;
     }
 
     /// <inheritdoc/>
@@ -45,6 +45,11 @@ internal sealed partial class FullExcelReader
 
     private Func<CellAddress, bool> CreateCalculationTarget(WorksheetInfo info, bool appearance = false)
     {
+        if ((appearance ? readOptions.IsConditionalFormattingTarget : readOptions.IsFormulaTarget) is { } supplied)
+        {
+            return address => supplied(info.Sheet.Name, address.Row, address.Column);
+        }
+
         var selectedRegion = readOptions.GetSelectedRange?.Invoke(info.Sheet.Name);
         var mergeBands = new Core.Layout.BandIndex<OpenXml.Reader.Model.Cells.CellRange>(info.MergedRanges.Select(range => (range, (double)range.First.Row, (double)range.Last.Row + 1)));
         var titleRegions = readOptions.IgnoreFormulaPrintAreas ? Array.Empty<PrintRangeInfo>() : info.PrintReferences.Where(reference => reference.Name == "_xlnm.Print_Titles").SelectMany(reference => reference.Ranges).ToArray();
@@ -64,11 +69,6 @@ internal sealed partial class FullExcelReader
 
         bool IsCalculationTarget(CellAddress address)
         {
-            if ((appearance ? readOptions.IsConditionalFormattingTarget : readOptions.IsFormulaTarget) is { } isTarget)
-            {
-                return isTarget(info.Sheet.Name, address.Row, address.Column);
-            }
-
             var mergedRange = mergeBands.Query(address.Row, address.Row + 1).FirstOrDefault(range => address.Column >= range.First.Column && address.Column <= range.Last.Column);
             if (mergedRange is not null && !address.Equals(mergedRange.First))
             {

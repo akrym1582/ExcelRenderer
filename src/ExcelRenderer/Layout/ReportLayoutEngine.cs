@@ -62,6 +62,7 @@ public sealed class ReportLayoutEngine
         var page = new RenderPage(1, plan.EnumerateCells(TextMeasurer).ToArray(), plan.Images, Shapes: plan.Shapes)
         {
             SourceRegions = plan.SourceRegions,
+            BorderOnlyCells = plan.EnumerateBorderNeighbors().ToArray(),
         };
         return new(new([page]), plan.Width, plan.Height);
     }

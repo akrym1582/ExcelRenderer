@@ -54,11 +54,21 @@ internal sealed class SkiaPdfDocumentWriter : IPdfDocumentWriter
     /// <inheritdoc/>
     public void Collect(IEnumerable<DrawCommand> commands)
     {
-        using var surface = SKSurface.CreateNull(1, 1);
         foreach (var command in commands)
         {
             _token.ThrowIfCancellationRequested();
-            _drawing.Execute(surface.Canvas, command);
+            switch (command)
+            {
+                case DrawViewportCommand viewport:
+                    Collect(viewport.Commands);
+                    break;
+                case DrawShapeCommand { TextCommand: { } text }:
+                    CollectText(text);
+                    break;
+                case DrawTextCommand text:
+                    CollectText(text);
+                    break;
+            }
         }
     }
 
@@ -90,4 +100,21 @@ internal sealed class SkiaPdfDocumentWriter : IPdfDocumentWriter
 
     /// <inheritdoc/>
     public void Complete(Stream output) => document.Complete(output);
+
+    private void CollectText(DrawTextCommand command)
+    {
+        var layout = command.TextLayout ?? throw new InvalidOperationException("Text must be finalized before font collection.");
+        if (Drawing.TextLayoutFontSize.Resolve(layout, command.Style.Font) == 0)
+        {
+            return;
+        }
+
+        foreach (var line in layout.Lines)
+        {
+            foreach (var run in line.Runs)
+            {
+                _fonts.Collect(run.Run, run.Glyphs ?? throw new InvalidOperationException("Finalized glyph selection is missing."));
+            }
+        }
+    }
 }

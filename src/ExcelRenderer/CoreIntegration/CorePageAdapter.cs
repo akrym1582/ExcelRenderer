@@ -26,6 +26,7 @@ internal static class CorePageAdapter
         return new(page.Number, cells, images, headers, data?.Shapes)
         {
             SourceRegions = data?.Regions ?? [],
+            BorderOnlyCells = page.BorderOnlyCells,
         };
     }
 
@@ -40,6 +41,7 @@ internal static class CorePageAdapter
         },
         CoreModelAdapter.ToCore(cell.Bounds))
     {
+        SourceAddress = cell.SourceAddress is { } address ? CoreModelAdapter.ToCore(address) : null,
         ContentBounds = CoreModelAdapter.ToCore(cell.ContentBounds),
         ClipBounds = cell.ClipBounds is { } clip ? CoreModelAdapter.ToCore(clip) : null,
         TextLayout = cell.TextLayout is { } text ? CoreTextLayoutAdapter.ToCore(text) : null,
@@ -56,6 +58,7 @@ internal static class CorePageAdapter
         page.HeaderFooterTexts?.Select(text => new Core.Layout.RenderText(CoreModelAdapter.ToCore(text.Bounds), text.Text, CoreModelAdapter.ToCore(text.Style))).ToArray())
     {
         ExtensionData = new FullPageData(page.Shapes ?? [], page.SourceRegions),
+        BorderOnlyCells = page.BorderOnlyCells,
     };
 
     /// <summary>Maps small immutable page-band plans at the facade boundary.</summary>

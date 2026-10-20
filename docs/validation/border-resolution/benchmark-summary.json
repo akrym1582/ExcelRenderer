@@ -1,0 +1,224 @@
+{
+  "ordinary": {
+    "before": {
+      "milliseconds": 273.1162,
+      "allocationBytes": 32132024,
+      "outputBytes": 1554280,
+      "commandCount": 4000,
+      "peakWorkingSetBytes": 85336064,
+      "counters": {
+        "coreGeometryPlan": 1,
+        "corePageBuild": 4,
+        "coreCommandBuild": 4,
+        "coreBorderGeometry": 16000,
+        "svgBufferBytes": 1570188,
+        "svgBufferMemoryPeakBytes": 1638400,
+        "svg.spillCount": 0,
+        "svgNormalize.ms": 62.71619999999999
+      }
+    },
+    "after": {
+      "milliseconds": 77.0966,
+      "allocationBytes": 20990200,
+      "outputBytes": 28727,
+      "commandCount": 288,
+      "peakWorkingSetBytes": 76738560,
+      "counters": {
+        "coreGeometryPlan": 1,
+        "corePageBuild": 4,
+        "borderCandidates": 16240,
+        "resolvedBorderSegments": 288,
+        "coreCommandBuild": 4,
+        "coreBorderGeometry": 288,
+        "svgBufferBytes": 28923,
+        "svgBufferMemoryPeakBytes": 53248,
+        "svg.spillCount": 0,
+        "svgNormalize.ms": 5.2322
+      }
+    }
+  },
+  "merged": {
+    "before": {
+      "milliseconds": 124.4068,
+      "allocationBytes": 49335032,
+      "outputBytes": 2546680,
+      "commandCount": 4000,
+      "peakWorkingSetBytes": 90951680,
+      "counters": {
+        "coreGeometryPlan": 1,
+        "corePageBuild": 4,
+        "coreCommandBuild": 4,
+        "coreBorderGeometry": 12000,
+        "svgBufferBytes": 2570588,
+        "svgBufferMemoryPeakBytes": 3276800,
+        "svg.spillCount": 0,
+        "svgNormalize.ms": 20.718899999999998
+      }
+    },
+    "after": {
+      "milliseconds": 62.9312,
+      "allocationBytes": 28536168,
+      "outputBytes": 39832,
+      "commandCount": 188,
+      "peakWorkingSetBytes": 77869056,
+      "counters": {
+        "coreGeometryPlan": 1,
+        "corePageBuild": 4,
+        "borderCandidates": 12240,
+        "resolvedBorderSegments": 188,
+        "coreCommandBuild": 4,
+        "coreBorderGeometry": 188,
+        "svgBufferBytes": 40116,
+        "svgBufferMemoryPeakBytes": 57344,
+        "svg.spillCount": 0,
+        "svgNormalize.ms": 1.9453999999999998
+      }
+    }
+  },
+  "continuous": {
+    "before": {
+      "milliseconds": 1585.9372,
+      "allocationBytes": 308091712,
+      "outputBytes": 35043433,
+      "commandCount": 40000,
+      "peakWorkingSetBytes": 204660736,
+      "counters": {
+        "coreBorderGeometry": 160000,
+        "buffer.spillCount": 1,
+        "coreCommandBuild": 1,
+        "svgBufferBytes": 35363409,
+        "svgBufferMemoryPeakBytes": 8388608,
+        "svg.spillCount": 1,
+        "svgNormalize.ms": 240.3298
+      }
+    },
+    "after": {
+      "milliseconds": 193.4211,
+      "allocationBytes": 93317728,
+      "outputBytes": 470313,
+      "commandCount": 2022,
+      "peakWorkingSetBytes": 109854720,
+      "counters": {
+        "borderCandidates": 160000,
+        "resolvedBorderSegments": 2022,
+        "coreBorderGeometry": 2022,
+        "coreCommandBuild": 1,
+        "svgBufferBytes": 474321,
+        "svgBufferMemoryPeakBytes": 524288,
+        "svg.spillCount": 0,
+        "svgNormalize.ms": 18.3667
+      }
+    }
+  },
+  "dashed": {
+    "before": {
+      "milliseconds": 552.8041,
+      "allocationBytes": 118443952,
+      "outputBytes": 12531800,
+      "commandCount": 4000,
+      "peakWorkingSetBytes": 204660736,
+      "counters": {
+        "coreGeometryPlan": 1,
+        "corePageBuild": 4,
+        "coreCommandBuild": 4,
+        "coreBorderGeometry": 16000,
+        "svgBufferBytes": 12547708,
+        "svgBufferMemoryPeakBytes": 15027712,
+        "svg.spillCount": 0,
+        "svgNormalize.ms": 36.9099
+      }
+    },
+    "after": {
+      "milliseconds": 292.4955,
+      "allocationBytes": 72124496,
+      "outputBytes": 6419712,
+      "commandCount": 8280,
+      "peakWorkingSetBytes": 109854720,
+      "counters": {
+        "coreGeometryPlan": 1,
+        "corePageBuild": 4,
+        "borderCandidates": 16240,
+        "resolvedBorderSegments": 8280,
+        "coreCommandBuild": 4,
+        "coreBorderGeometry": 8280,
+        "svgBufferBytes": 6427900,
+        "svgBufferMemoryPeakBytes": 6553600,
+        "svg.spillCount": 0,
+        "svgNormalize.ms": 42.19520000000001
+      }
+    }
+  },
+  "borderless": {
+    "before": {
+      "milliseconds": 7.5515,
+      "allocationBytes": 13856120,
+      "outputBytes": 920,
+      "commandCount": 0,
+      "peakWorkingSetBytes": 204660736,
+      "counters": {
+        "coreGeometryPlan": 1,
+        "corePageBuild": 4,
+        "coreCommandBuild": 4,
+        "svgBufferBytes": 828,
+        "svgBufferMemoryPeakBytes": 1024,
+        "svg.spillCount": 0,
+        "svgNormalize.ms": 0.04820000000000001
+      }
+    },
+    "after": {
+      "milliseconds": 8.6359,
+      "allocationBytes": 13251392,
+      "outputBytes": 920,
+      "commandCount": 0,
+      "peakWorkingSetBytes": 109854720,
+      "counters": {
+        "coreGeometryPlan": 1,
+        "corePageBuild": 4,
+        "borderCandidates": 0,
+        "coreCommandBuild": 4,
+        "svgBufferBytes": 828,
+        "svgBufferMemoryPeakBytes": 1024,
+        "svg.spillCount": 0,
+        "svgNormalize.ms": 0.0513
+      }
+    }
+  },
+  "large-paged": {
+    "before": {
+      "milliseconds": 1542.0989,
+      "allocationBytes": 505205032,
+      "outputBytes": 33966090,
+      "commandCount": 40000,
+      "peakWorkingSetBytes": 204660736,
+      "counters": {
+        "coreGeometryPlan": 1,
+        "corePageBuild": 31,
+        "coreCommandBuild": 31,
+        "coreBorderGeometry": 160000,
+        "svgBufferBytes": 34285377,
+        "svgBufferMemoryPeakBytes": 63963136,
+        "svg.spillCount": 0,
+        "svgNormalize.ms": 237.48789999999997
+      }
+    },
+    "after": {
+      "milliseconds": 231.3823,
+      "allocationBytes": 210273968,
+      "outputBytes": 563126,
+      "commandCount": 2682,
+      "peakWorkingSetBytes": 138670080,
+      "counters": {
+        "coreGeometryPlan": 1,
+        "corePageBuild": 31,
+        "borderCandidates": 162400,
+        "resolvedBorderSegments": 2682,
+        "coreCommandBuild": 31,
+        "coreBorderGeometry": 2682,
+        "svgBufferBytes": 567777,
+        "svgBufferMemoryPeakBytes": 999424,
+        "svg.spillCount": 0,
+        "svgNormalize.ms": 4.0768
+      }
+    }
+  }
+}

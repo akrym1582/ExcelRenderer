@@ -111,35 +111,7 @@ internal sealed class SkiaDrawingContext
             draw(paint);
         }
 
-        void Draw(SKPaint paint)
-        {
-            if (command.Shape.Kind == ShapeKind.Ellipse)
-            {
-                canvas.DrawOval(b, paint);
-            }
-            else if (command.Shape.Kind == ShapeKind.RoundedRectangle)
-            {
-                canvas.DrawRoundRect(b, (float)Math.Min(10, command.Bounds.Width / 4) / 2, (float)Math.Min(10, command.Bounds.Height / 4) / 2, paint);
-            }
-            else if (command.Shape.Kind is ShapeKind.WedgeRectangleCallout or ShapeKind.WedgeRoundedRectangleCallout)
-            {
-                using var pathBuilder = new SKPathBuilder();
-                pathBuilder.MoveTo(b.Left, b.Top);
-                pathBuilder.LineTo(b.Right, b.Top);
-                pathBuilder.LineTo(b.Right, b.Bottom);
-                pathBuilder.LineTo(b.Left + (b.Width * .35f), b.Bottom);
-                pathBuilder.LineTo(b.Left + (b.Width * .15f), b.Bottom + (b.Height * .2f));
-                pathBuilder.LineTo(b.Left + (b.Width * .2f), b.Bottom);
-                pathBuilder.LineTo(b.Left, b.Bottom);
-                pathBuilder.Close();
-                using var path = pathBuilder.Detach();
-                canvas.DrawPath(path, paint);
-            }
-            else
-            {
-                canvas.DrawRect(b, paint);
-            }
-        }
+        void Draw(SKPaint paint) => ShapeGeometry.DrawSkia(canvas, command.Bounds, command.Shape.Kind, paint);
 
         if (command.Shape.Style.FillColor is { } fill)
         {

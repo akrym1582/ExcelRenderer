@@ -342,7 +342,7 @@ public sealed partial class ConditionalFormattingTests
         var commands = new Drawing.DrawCommandGeneratorPass().Generate(document);
         Assert.Contains(commands, command => command is Drawing.FillRectangleCommand fill && fill.Color == new ReportColor(255, 255, 0));
         Assert.Contains(commands, command => command is Drawing.DrawTextCommand text && text.Style.Font.Color == new ReportColor(255, 0, 0));
-        Assert.Contains(commands, command => command is Drawing.DrawBorderCommand);
+        Assert.Contains(commands, command => command is Drawing.DrawLineCommand line && line.Style.Width == 2 && line.Y1 == line.Y2);
     }
 
     [Fact]

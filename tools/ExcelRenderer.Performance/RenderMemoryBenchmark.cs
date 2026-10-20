@@ -8,7 +8,7 @@ using ExcelRenderer.Model;
 using ExcelRenderer.Rendering;
 
 /// <summary>Runs the same synthetic workbook through all formats and both image layouts.</summary>
-internal static class RenderMemoryBenchmark
+internal static partial class RenderMemoryBenchmark
 {
     /// <summary>Runs a reproducible fresh-process benchmark or repeated conversion retention check.</summary>
     /// <param name="args">Command, fixture path, format, image layout, repetitions and optional page selection.</param>

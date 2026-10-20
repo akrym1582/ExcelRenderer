@@ -1,0 +1,52 @@
+[
+  {
+    "Name": "ordinary",
+    "Rows": 200,
+    "Columns": 20,
+    "Merged": false,
+    "Continuous": false,
+    "Double": false
+  },
+  {
+    "Name": "merged",
+    "Rows": 200,
+    "Columns": 20,
+    "Merged": true,
+    "Continuous": false,
+    "Double": true
+  },
+  {
+    "Name": "continuous",
+    "Rows": 2000,
+    "Columns": 20,
+    "Merged": false,
+    "Continuous": true,
+    "Double": true
+  },
+  {
+    "Name": "dashed",
+    "Rows": 200,
+    "Columns": 20,
+    "Merged": false,
+    "Continuous": false,
+    "Double": false,
+    "LineStyle": "Dashed"
+  },
+  {
+    "Name": "borderless",
+    "Rows": 200,
+    "Columns": 20,
+    "Merged": false,
+    "Continuous": false,
+    "Double": false,
+    "Borders": false
+  },
+  {
+    "Name": "large-paged",
+    "Rows": 2000,
+    "Columns": 20,
+    "Merged": false,
+    "Continuous": false,
+    "Double": true
+  }
+]

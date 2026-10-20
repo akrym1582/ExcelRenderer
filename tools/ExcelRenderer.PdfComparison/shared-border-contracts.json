@@ -1,0 +1,228 @@
+{
+  "full": {
+    "invoice": {
+      "commandFingerprints": {
+        "1": "A2522FDFF5E947D8BFC5504AEB3FDC02534CC27376B94FDD7BE87E21CCF2FFFF"
+      },
+      "pages": {
+        "1": {
+          "before": {
+            "contentSha256": "b6bf88d3869322d272612f53ed56f15328764642ee8ded86fde41b2fc66be14f",
+            "paintSha256": "930c97419bbf758024bab50e6ba29ceadbdd6e0c2a3cd8e54d600553ce81e5f5",
+            "rasterSha256": {
+              "144": "c2b73451f881e780c06d81b4cb6db4b81f617ef76567fe43076e6f9e54ef1074",
+              "300": "48da883192d80037ebe64cb61ccd4f99a6c300ec1a7a9b89e9f7f6b831a94dbe"
+            }
+          },
+          "after": {
+            "contentSha256": "27758010e9e923326a2bda4c98ffb2bd4c20df308e04ef5a1ed209e135d8ad98",
+            "paintSha256": "e29677df01d7a01b71742355847565cc0e48bf0aefa9daaca68938c5f38b5d55",
+            "rasterSha256": {
+              "144": "c2b73451f881e780c06d81b4cb6db4b81f617ef76567fe43076e6f9e54ef1074",
+              "300": "e1ae2cf48e872885785a22706ea0d640a4ce837bce85aae1c6e5f00bcb2a3845"
+            }
+          }
+        }
+      }
+    },
+    "japanese-grid-report": {
+      "commandFingerprints": {
+        "1": "ACE3504CFF33EB190D6AFFC9BE865ADE55BC104EBE80F977E54DF9B1B02FF40F"
+      },
+      "pages": {
+        "1": {
+          "before": {
+            "contentSha256": "834c1acb56280c9e5f72472b75ae281e1adf3277aad18bd0de5a3025ef86660d",
+            "paintSha256": "1db928f9874c17fa07233fb28a64cd0788c8d1e681fe8caa6020ea72d45614bc",
+            "rasterSha256": {
+              "144": "eca9b471b4f667d65eb17ffb3d11f2830ae77c181530f91505fe83a0b108fb57",
+              "300": "a36feb26cda2a8a6efa13954f319d27be5deb48eaf7e588ce5632e04a31dbf21"
+            }
+          },
+          "after": {
+            "contentSha256": "f4bed826a22c6bd6b3c888a602c63e34e793c461a8c4c4149d0bfb9beaaaa008",
+            "paintSha256": "199cc76bd0c3c7459ae552d23f7ef765eedfa1f309626c3d229afd57dab23f07",
+            "rasterSha256": {
+              "144": "b8ec3e8e31dab0a82282c2127239f5aa0d864474257fca81db638a408817b6c4",
+              "300": "468b30eb8a3f88cbb9664c6e9101028aaee95d6c5086da1f1c367aa6a32d9aa9"
+            }
+          }
+        }
+      }
+    },
+    "links-none": {
+      "commandFingerprints": {
+        "1": "2EC58369E944FF79E44E6B20251643A25865F11E2F22A4478F7DFFBCAD246B08",
+        "2": "BFB91E020F44921768206112C93CC8D27F92C8CF191855DAA4C388554019EBCB",
+        "3": "BFB91E020F44921768206112C93CC8D27F92C8CF191855DAA4C388554019EBCB"
+      },
+      "pages": {
+        "1": {
+          "before": {
+            "contentSha256": "59f9f564d9c2799ba5aba75aaded49352e1036bd8aa528cd9759873dadbda53b",
+            "paintSha256": "7e170c21ec376c5bd8bdbd703f4d9a85a82616e314a6d48f89bff4e6c9ae9b46",
+            "rasterSha256": {
+              "144": "b0ccf8f89e29d6dca3a7c0aeffe530c1bd3d7238def5e840ebc2ce8cf91bc4f6",
+              "300": "f60f77d7d494f8a084d1454e69983b284924875fcc60e7af04dd4cc6aceb37b5"
+            }
+          },
+          "after": {
+            "contentSha256": "dd0d1c6f372140ad29a268b21e29dd67fdaf237532521aa78e550e97c9883597",
+            "paintSha256": "4a4e6d35260127be8a5c23f01c2f34a71a721a4879bdb4f9171adc20db5eff61",
+            "rasterSha256": {
+              "144": "98840ade28e270af37fd301cc0459ad7cc1db2a3fa4a118ded9e082053c6f21a",
+              "300": "0dd0b2615b4dba3d96f11588e3ab2ee0b14565bc034dfb1bb0da6480ed35227a"
+            }
+          }
+        },
+        "2": {
+          "before": {
+            "contentSha256": "49194d675f232afb99b38aa89775c0084bb8ca6d01def9cf00720ad03d6501e3",
+            "paintSha256": "7e170c21ec376c5bd8bdbd703f4d9a85a82616e314a6d48f89bff4e6c9ae9b46",
+            "rasterSha256": {
+              "144": "7a02702f9ad98150e946c77d1de11bfe0fbe1493219ec24def0a449036c37497",
+              "300": "98d25d49b13f0e29abbc944a35874aaa56169f0a3c3ede17a67fa1e4c731e77a"
+            }
+          },
+          "after": {
+            "contentSha256": "f8f28838bf0e891e1fddd6c92bffb4c255bea57f6f804180ae1434a99a289b90",
+            "paintSha256": "4a4e6d35260127be8a5c23f01c2f34a71a721a4879bdb4f9171adc20db5eff61",
+            "rasterSha256": {
+              "144": "17a36539e99a053c2497cded305888a6344960283d04d3d40d10aecb9aeaf4a8",
+              "300": "708072937c658cdd715bd28a765aae996a82773fb06d96704f661cc282ab8238"
+            }
+          }
+        },
+        "3": {
+          "before": {
+            "contentSha256": "49194d675f232afb99b38aa89775c0084bb8ca6d01def9cf00720ad03d6501e3",
+            "paintSha256": "7e170c21ec376c5bd8bdbd703f4d9a85a82616e314a6d48f89bff4e6c9ae9b46",
+            "rasterSha256": {
+              "144": "7a02702f9ad98150e946c77d1de11bfe0fbe1493219ec24def0a449036c37497",
+              "300": "98d25d49b13f0e29abbc944a35874aaa56169f0a3c3ede17a67fa1e4c731e77a"
+            }
+          },
+          "after": {
+            "contentSha256": "f8f28838bf0e891e1fddd6c92bffb4c255bea57f6f804180ae1434a99a289b90",
+            "paintSha256": "4a4e6d35260127be8a5c23f01c2f34a71a721a4879bdb4f9171adc20db5eff61",
+            "rasterSha256": {
+              "144": "17a36539e99a053c2497cded305888a6344960283d04d3d40d10aecb9aeaf4a8",
+              "300": "708072937c658cdd715bd28a765aae996a82773fb06d96704f661cc282ab8238"
+            }
+          }
+        }
+      }
+    },
+    "links-selected": {
+      "commandFingerprints": {
+        "1": "A3F2DCB96489BF3ABD24582DE3E040C3BA07DF6492CEE53002A40DC262717D8C"
+      },
+      "pages": {
+        "1": {
+          "before": {
+            "contentSha256": "65abdcac133e2740cbd6be120756f4e03e9987a2bf445b6379b76f9840f5ddae",
+            "paintSha256": "0ab096b2fb5e48475e20be6fbf5c3f28a956a27a9d38eabefaa7fa5a176bafe2",
+            "rasterSha256": {
+              "144": "3d4f9050708a68198030ff60aae1383952320bc5169f05ec6eef260eaec5f0ba",
+              "300": "b8a24c7ef4db18885a8741806ebb3ad013de9b255613a968d2820fbe338d7e50"
+            }
+          },
+          "after": {
+            "contentSha256": "448a26ee82398542f732073d552ad50b909a2397cc3d484c91ee91f3109d4e02",
+            "paintSha256": "9d09bba9960e538db95aaada68a865747c26c7076204501d10336549eddb47b7",
+            "rasterSha256": {
+              "144": "d35a7abd5dbc329af90b69fb8d40a86e44bf035ffe9ec0940687aa945d27e060",
+              "300": "d7f32bf71de220ecbec50836105f15c3521456dbdffccb56bd3df293dc3f0db9"
+            }
+          }
+        }
+      }
+    }
+  },
+  "core": {
+    "invoice": {
+      "pages": {
+        "1": {
+          "before": {
+            "contentSha256": "7e5f7644a210f5e20a843325f9670459e93c94be7d4aa031dfc5c6262f3421ea",
+            "paintSha256": "a3b89830385aa1963740142a46ecee0fde96cf14e16496c1500c8aa27ac8118a",
+            "rasterSha256": {
+              "144": "ab9bda05cd849fdefb349e3f9321c90c0619b30a4839a03e42fed19dc0ff3520",
+              "300": "2e70cbdbfce2ea250f4525b194947f941ca2e412a20766e8de6f6950720c92ad"
+            }
+          },
+          "after": {
+            "contentSha256": "27758010e9e923326a2bda4c98ffb2bd4c20df308e04ef5a1ed209e135d8ad98",
+            "paintSha256": "e29677df01d7a01b71742355847565cc0e48bf0aefa9daaca68938c5f38b5d55",
+            "rasterSha256": {
+              "144": "c2b73451f881e780c06d81b4cb6db4b81f617ef76567fe43076e6f9e54ef1074",
+              "300": "e1ae2cf48e872885785a22706ea0d640a4ce837bce85aae1c6e5f00bcb2a3845"
+            }
+          }
+        }
+      }
+    },
+    "grid": {
+      "pages": {
+        "1": {
+          "before": {
+            "contentSha256": "c6b6a33f7c506c43fae0e6e86dc5cbfa666f4ceff96a6ec19816848391a1f9e1",
+            "paintSha256": "6052b543121b3b6588095fb38cd10b34a1612fdb1675fca448157206be296641",
+            "rasterSha256": {
+              "144": "ca8aa1b32df41077bd0ff8756e170ee861f041511e6402f054802b7e6ab4b87a",
+              "300": "d4656d2639bb65a6a52ca4e3bb7e49ee67af7c9c244333452d1350af60a0edff"
+            }
+          },
+          "after": {
+            "contentSha256": "7b645fb9c93e0fdf027ae74ce76377f79edd04b960fe3d054286f179dbecbdd6",
+            "paintSha256": "199cc76bd0c3c7459ae552d23f7ef765eedfa1f309626c3d229afd57dab23f07",
+            "rasterSha256": {
+              "144": "6953ae0bccd7ac586296d22dd9e023e1c0dc244661798514a7c75b3ea1bb7b27",
+              "300": "ad424da16269d8902cd0786a7e9e3b39382a2701112e1f17e6945b040a8fb3e5"
+            }
+          }
+        }
+      }
+    },
+    "scaling": {
+      "pages": {
+        "1": {
+          "before": {
+            "contentSha256": "a42975eac176e51eea70e636dd504ce1d838461f6724637a28fac9dae73d01a0",
+            "paintSha256": "0645b00b82610f35da9e47907abbdb9f4ba42115fe9b100c3d92ce0e7e4b1c0c",
+            "rasterSha256": {
+              "144": "0d854910103dcc777d4764ae4eb3406242338cbbb71f1ac61a02d8b55323949e",
+              "300": "e23fcefa4c79020b52153498046e42200f9980982ccce98b60c0ac7131c33c09"
+            }
+          },
+          "after": {
+            "contentSha256": "b9ea34a88e04673f8dcfedc9d8b514477d985f4f8fcbbb3a8cbe1e9d1e9f52f5",
+            "paintSha256": "2a1397a89e964d194e6f790a0850737ef637680733d2f7e01cf81abf2b1b077c",
+            "rasterSha256": {
+              "144": "25adb25a7e9074592a338962aebda84b163b48156a3f250426f016767efee67a",
+              "300": "9a30aa0482782b74ffeb6589150f750bf72933ce838c135fdd470d6764df92a9"
+            }
+          }
+        },
+        "2": {
+          "before": {
+            "contentSha256": "96a6b2d426f342dd9926fbf2264f5c73ec6e2571453b99c2c1743f7afaf86d71",
+            "paintSha256": "0942b5c25ab3fc4ff6c623228a8da2e238134841febfa7940ed608b896e0437c",
+            "rasterSha256": {
+              "144": "aa39efac9a30a742953c46d3731a9f639a2edddf4c5f144b50e69b2a27947150",
+              "300": "88cef0bd0c73773f67e88761eec4658650d29bbb6d67a6358794efe40f95f383"
+            }
+          },
+          "after": {
+            "contentSha256": "436bdc3466bfb7eba3958e853f00af9311b908b78c66943d318c7d3142a01fa5",
+            "paintSha256": "83fcbfe1993e6b6e23df0f02e6f258ffb075f79836345f27584835bfa63b8a5b",
+            "rasterSha256": {
+              "144": "7ddc5a4b4f5f6d4fd61e3427f178e1bbd33f5e54a691058ad98a048fa6a425e0",
+              "300": "7c964dc41ef44fa6681c005f6e9933efdd9b3da3eccdc909820fb9eb32f85c16"
+            }
+          }
+        }
+      }
+    }
+  }
+}

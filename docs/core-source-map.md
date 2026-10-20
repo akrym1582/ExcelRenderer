@@ -139,6 +139,7 @@ Fix basic algorithms in Core and run both product regressions. CoreLayoutPolicy/
 - `FullLayoutPolicy` supplies shape/image visual bounds before used-range and pagination resolution, selection rules, transformed images, shapes and source regions. Core owns band planning, candidate extraction, measurements and placement.
 - `CoreTextLayoutAdapter` stores finalized full runs in `FullLineData`; Core scales neutral metrics and a payload scale, while main restores run offsets without searching for fonts or rewrapping.
 - `ICoreDrawingExtension` supplies the shared image/shape Z stage. Background/border/merged-border/text layer generation is Core-only, including continuous rescans.
+- `Drawing/BorderConflictResolver` owns shared-edge collection, interval sweeps and fallback priorities. `Layout/BorderNeighborIndex` uses logical row/column boundaries to retain outside owners without their content. Page and continuous adapters pass final styles to these Core algorithms; standalone public border/line commands and shape outlines retain their existing meaning. See [border validation](validation/border-resolution/README.md).
 - `FullPdfRenderer` paints full finalized/legacy runs, transformed images, shapes and viewports; its page-completion hook prepares annotations for execution after all destination pages exist. Core owns page append, basic paint, image decoding and final Save.
 - Normal conversion reads neutral cells directly. Public sheet views borrow those dictionaries, range filters preserve neutral values, and internal page building goes directly to common command generation. Public `ExcelReader.Read` materializes durable public dictionaries for its compatibility contract.
 - Typed payloads borrow image bytes, runs and metadata; conversion sessions own native resources. Finalized runs retain immutable font bytes, glyph IDs and UTF-8 clusters without native handles. Conversion-owned snapshots are deduplicated by content, with weak aliases for caller font objects.
@@ -266,6 +267,8 @@ Core's `ExcelReadOptions` retains the neutral selected-region setting and remove
 
 Reader owns raw immutable rule/differential metadata and colors. OpenXml owns saved-value/calculation snapshots and arbitrary expression evaluation; Formulas owns parsed-reference movement. Main alone owns ConditionalFormattingSession/ConditionalStyle, sparse population union/statistics and ConditionalColorScale. OpenXml exposes only sparse source-coordinate enumeration on its existing calculation snapshot. Core owns ordinary traversal, style interning, merged-border aggregation and the generic no-op CompleteCellAppearances hook. Core does not evaluate or apply conditional formatting.
 
+Main's `ConditionalFormattingSession.Borders` additionally evaluates saved neighboring border owners outside the selected content, within the existing candidate budget; only their border properties are applied. Core receives the final styles through the same sheet adapters.
+
 ## PostScript ownership
 
 Main owns `PostScript/*`, `PostScriptExportOptions` and the high-level/CLI/sink integration.
@@ -285,3 +288,12 @@ FontManager's internal exact lookup respects its existing discovery permissions 
 physical family names. No IFontManager contract member or Core system-font search was added.
 Main shares conversion-local metric decisions between selection preflight and the actual read;
 all output formats consume Core's common geometry plan. Core's single supplied font is unchanged.
+
+## Command finalization and two-pass collection
+
+Main owns `CommandTextFinalizer`, the native PNG/SVG compatibility finalization policy,
+CF display unions and band-shared rule arrays, trim placement, and `ShapeGeometry`.
+Core owns immutable glyph/source/cluster storage and direct PDF glyph registration,
+and the conversion image owner stores bounded, weak-identity alpha metadata.
+Main supplies the PS validation policy. No Reader drawing dependencies or Core PS/CF
+public features are added. See [current finalization and resource contracts](render-finalization-performance.md).

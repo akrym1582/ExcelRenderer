@@ -13,6 +13,9 @@ public sealed record RenderPage(
     IReadOnlyList<RenderText>? HeaderFooterTexts = null,
     IReadOnlyList<RenderShape>? Shapes = null)
 {
+    /// <summary>Gets borrowed Core border owners outside this page's content selection.</summary>
+    internal IReadOnlyList<Core.Layout.RenderCell> BorderOnlyCells { get; init; } = [];
+
     /// <summary>Gets the source-to-page mappings, including repeated titles.</summary>
     internal IReadOnlyList<PageSourceRegion> SourceRegions { get; init; } = [];
 }

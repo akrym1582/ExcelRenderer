@@ -12,7 +12,6 @@ public sealed class DrawCommandGeneratorPass
     {
         DrawingLayer.Background,
         DrawingLayer.CellBorder,
-        DrawingLayer.MergedBorder,
         DrawingLayer.Text,
     });
 
@@ -52,6 +51,16 @@ public sealed class DrawCommandGeneratorPass
         var projection = CoreIntegration.CoreCommandAdapter.CreatePublicProjection();
         foreach (var layer in ContinuousLayerOrder)
         {
+            if (layer == DrawingLayer.CellBorder)
+            {
+                foreach (var command in Core.Drawing.BorderConflictResolver.Generate(1, plan.EnumerateBorderCells(measurer)))
+                {
+                    yield return projection(command);
+                }
+
+                continue;
+            }
+
             foreach (var cell in plan.EnumerateLayerCells(measurer, layer))
             {
                 var coreLayer = layer switch

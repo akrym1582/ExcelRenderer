@@ -95,6 +95,22 @@ internal sealed class PostScriptDrawingContext
             return;
         }
 
+        if (writer is null)
+        {
+            foreach (var line in layout.Lines)
+            {
+                foreach (var run in line.Runs)
+                {
+                    if (Visible((run.Font ?? command.Style.Font).Color ?? new(0, 0, 0)))
+                    {
+                        fonts.Collect(run);
+                    }
+                }
+            }
+
+            return;
+        }
+
         writer?.Line("gsave");
         if (command.Style.WrapText || command.Style.ShrinkToFit || command.Style.TextRotation is not (0 or 255))
         {
@@ -116,17 +132,11 @@ internal sealed class PostScriptDrawingContext
                     continue;
                 }
 
-                if (writer is null)
-                {
-                    fonts.Collect(run);
-                    continue;
-                }
-
                 var fontSize = run.Font?.Size ?? size;
                 var x = positioned.Left + run.X;
                 var encoded = fonts.Encode(run).ToArray();
                 var selection = run.Glyphs!;
-                writer.Metadata(binary =>
+                writer!.Metadata(binary =>
                 {
                     binary.Write((byte)1);
                     binary.Write(page);
@@ -184,6 +194,11 @@ internal sealed class PostScriptDrawingContext
             throw new ArgumentOutOfRangeException(nameof(side), "Stroke width must be finite and nonnegative.");
         }
 
+        if (writer is null)
+        {
+            return;
+        }
+
         writer?.Color(side.Color ?? new(0, 0, 0));
         var pattern = side.LineStyle switch
         {
@@ -215,31 +230,18 @@ internal sealed class PostScriptDrawingContext
             throw new PostScriptFailure("PostScriptImageDecodeFailed", failure ?? "Image decoding failed.");
         }
 
-        using var bitmap = SKBitmap.FromImage(lease.Value.Raster);
-        var visible = false;
-        var transparent = false;
-        for (var y = 0; y < bitmap.Height; y++)
+        var alpha = ImageResources.Current!.InspectAlpha(command.ImageBytes, lease.Value, token);
+        if (alpha == Core.Rendering.ImageAlphaKind.Partial)
         {
-            token.ThrowIfCancellationRequested();
-            for (var x = 0; x < bitmap.Width; x++)
-            {
-                var alpha = bitmap.GetPixel(x, y).Alpha;
-                if (alpha is > 0 and < 255)
-                {
-                    throw new PostScriptFailure("PostScriptTransparencyUnsupported", "PostScript output does not support image pixels with partial alpha.");
-                }
-
-                visible |= alpha != 0;
-                transparent |= alpha == 0;
-            }
+            throw new PostScriptFailure("PostScriptTransparencyUnsupported", "PostScript output does not support image pixels with partial alpha.");
         }
 
-        if (!visible)
+        if (alpha == Core.Rendering.ImageAlphaKind.Transparent)
         {
             return;
         }
 
-        if (transparent)
+        if (alpha == Core.Rendering.ImageAlphaKind.BinaryMask)
         {
             throw new PostScriptFailure("PostScriptImageTransparencyUnsupported", "PostScript output does not support binary image transparency masks.");
         }
@@ -249,6 +251,7 @@ internal sealed class PostScriptDrawingContext
             return;
         }
 
+        using var bitmap = SKBitmap.FromImage(lease.Value.Raster);
         var b = command.Bounds;
         var crop = command.Crop ?? new ImageCrop(0, 0, 0, 0);
         var width = 1 - crop.Left - crop.Right;
@@ -338,55 +341,7 @@ internal sealed class PostScriptDrawingContext
 
     private void ShapePath(ReportRect b, ShapeKind kind)
     {
-        using var builder = new SKPathBuilder();
-        var rect = new SKRect((float)b.X, (float)b.Y, (float)(b.X + b.Width), (float)(b.Y + b.Height));
-        if (kind == ShapeKind.Ellipse)
-        {
-            var cx = rect.MidX;
-            var cy = rect.MidY;
-            var rx = rect.Width / 2;
-            var ry = rect.Height / 2;
-            const float k = .552284749831f;
-            builder.MoveTo(cx + rx, cy);
-            builder.CubicTo(cx + rx, cy + (k * ry), cx + (k * rx), cy + ry, cx, cy + ry);
-            builder.CubicTo(cx - (k * rx), cy + ry, cx - rx, cy + (k * ry), cx - rx, cy);
-            builder.CubicTo(cx - rx, cy - (k * ry), cx - (k * rx), cy - ry, cx, cy - ry);
-            builder.CubicTo(cx + (k * rx), cy - ry, cx + rx, cy - (k * ry), cx + rx, cy);
-            builder.Close();
-        }
-        else if (kind == ShapeKind.RoundedRectangle)
-        {
-            var rx = (float)Math.Min(10, b.Width / 4) / 2;
-            var ry = (float)Math.Min(10, b.Height / 4) / 2;
-            const float k = .552284749831f;
-            builder.MoveTo(rect.Left + rx, rect.Top);
-            builder.LineTo(rect.Right - rx, rect.Top);
-            builder.CubicTo(rect.Right - rx + (k * rx), rect.Top, rect.Right, rect.Top + ry - (k * ry), rect.Right, rect.Top + ry);
-            builder.LineTo(rect.Right, rect.Bottom - ry);
-            builder.CubicTo(rect.Right, rect.Bottom - ry + (k * ry), rect.Right - rx + (k * rx), rect.Bottom, rect.Right - rx, rect.Bottom);
-            builder.LineTo(rect.Left + rx, rect.Bottom);
-            builder.CubicTo(rect.Left + rx - (k * rx), rect.Bottom, rect.Left, rect.Bottom - ry + (k * ry), rect.Left, rect.Bottom - ry);
-            builder.LineTo(rect.Left, rect.Top + ry);
-            builder.CubicTo(rect.Left, rect.Top + ry - (k * ry), rect.Left + rx - (k * rx), rect.Top, rect.Left + rx, rect.Top);
-            builder.Close();
-        }
-        else if (kind is ShapeKind.WedgeRectangleCallout or ShapeKind.WedgeRoundedRectangleCallout)
-        {
-            builder.MoveTo(rect.Left, rect.Top);
-            builder.LineTo(rect.Right, rect.Top);
-            builder.LineTo(rect.Right, rect.Bottom);
-            builder.LineTo(rect.Left + (rect.Width * .35f), rect.Bottom);
-            builder.LineTo(rect.Left + (rect.Width * .15f), rect.Bottom + (rect.Height * .2f));
-            builder.LineTo(rect.Left + (rect.Width * .2f), rect.Bottom);
-            builder.LineTo(rect.Left, rect.Bottom);
-            builder.Close();
-        }
-        else
-        {
-            builder.AddRect(rect);
-        }
-
-        using var path = builder.Detach();
+        using var path = ShapeGeometry.CreateCubicPath(b, kind);
         using var iterator = path.CreateIterator(false);
         var points = new SKPoint[4];
         writer!.Line("newpath");

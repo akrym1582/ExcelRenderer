@@ -14,6 +14,7 @@ internal sealed class ConversionFontResources : IDisposable
     private readonly Dictionary<(string Path, long Length, long Modified), byte[]> _containers = new();
     private readonly Dictionary<(string Path, long Length, long Modified, int Index), SkiaFontFace> _fileFaces = new();
     private readonly Dictionary<string, SkiaFontFace> _snapshots = new(StringComparer.Ordinal);
+    private readonly Dictionary<(GlyphSequence Selection, float Size, bool ExplicitGlyph), SKRect> glyphInk = new();
     private ConditionalWeakTable<ResolvedFont, SkiaFontFace> _faces = new();
     private bool _disposed;
     private bool _purgeFontCache;
@@ -60,6 +61,7 @@ internal sealed class ConversionFontResources : IDisposable
         _snapshots.Clear();
         _containers.Clear();
         _fileFaces.Clear();
+        glyphInk.Clear();
     }
 
     /// <summary>Requests one cache purge after all conversion-owned drawing faces are released.</summary>
@@ -127,6 +129,53 @@ internal sealed class ConversionFontResources : IDisposable
     /// <param name="font">The physical font.</param>
     /// <returns>The scope-owned typeface.</returns>
     internal SKTypeface GetTypeface(ResolvedFont font) => GetFace(font).Typeface;
+
+    /// <summary>Measures selected glyph ink with native raster metrics, reusing only small immutable runs.</summary>
+    /// <param name="font">The physical snapshot.</param>
+    /// <param name="selection">The exact glyph IDs already selected by finalization.</param>
+    /// <param name="size">The drawing size in points.</param>
+    /// <param name="explicitGlyph">Whether the established explicit-glyph path bounds apply.</param>
+    /// <returns>Ink bounds relative to the run origin and baseline.</returns>
+    internal SKRect GetGlyphInk(ResolvedFont font, GlyphSequence selection, float size, bool explicitGlyph)
+    {
+        Token.ThrowIfCancellationRequested();
+        var key = (selection, size, explicitGlyph);
+        if (glyphInk.TryGetValue(key, out var cached))
+        {
+            ConversionMetrics.Report("glyphInkCacheHits", 1);
+            return cached;
+        }
+
+        var face = GetFace(font);
+        if (face.Identity != selection.FontIdentity)
+        {
+            throw new InvalidOperationException("Finalized ink belongs to another physical font snapshot.");
+        }
+
+        using var drawingFont = new SKFont(face.Typeface, size);
+        drawingFont.MeasureText(selection.GlyphSpan, out var ink);
+        if (explicitGlyph && selection.Glyphs.Count == 1)
+        {
+            using var path = drawingFont.GetGlyphPath(selection.Glyphs[0]);
+            if (path is not null && !path.Bounds.IsEmpty)
+            {
+                ink = path.Bounds;
+            }
+        }
+
+        ConversionMetrics.Report("glyphInkComputations", 1);
+        if (selection.Glyphs.Count <= 2048 && selection.Source.Count <= 16384)
+        {
+            if (glyphInk.Count >= 512)
+            {
+                glyphInk.Clear();
+            }
+
+            glyphInk[key] = ink;
+        }
+
+        return ink;
+    }
 
     /// <summary>Gets the shared line metrics.</summary>
     /// <param name="font">The physical font.</param>

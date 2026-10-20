@@ -79,7 +79,7 @@ public static partial class ExcelConverter
     {
         var original = new ReportRect(0, 0, page.Descriptor.WidthPoints, page.Descriptor.HeightPoints);
         var content = request.Trim.Enabled || page.Sheet.RequestedRange is not null || (commands is IReadOnlyCollection<DrawCommand> collection ? collection.Count == 0 : !commands.Any())
-            ? DrawCommandBounds.Get(commands, original, fonts) : original;
+            ? ConversionMetrics.Measure("bounds", () => DrawCommandBounds.Get(commands, original, fonts)) : original;
         if (content is null)
         {
             diagnostics.Add(new(

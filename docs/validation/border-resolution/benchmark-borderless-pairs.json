@@ -1,0 +1,1207 @@
+[
+  {
+    "pair": 0,
+    "side": "before",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.55.0",
+      "architecture": "X64",
+      "hashes": {
+        "input": "3531B1F276E3245BDF8C3B6DBB45D77F52771F473333428502487B4E8A6B340E",
+        "main": "62E44AC602FB3F878F4DCFC9317A6FCB50BBC61C054890B2BCB58696E7F008C0",
+        "core": "981E387377F3586C16E8050201FDA0C3BC3C3FF4195DCE99F955CADBAB693F20"
+      }
+    },
+    "samples": [
+      {
+        "name": "borderless",
+        "round": -3,
+        "warmup": true,
+        "diagnostic": true,
+        "milliseconds": 180.2361,
+        "allocationBytes": 14302984,
+        "peakWorkingSetBytes": 58707968,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {
+          "coreGeometryPlan": 1,
+          "corePageBuild": 4,
+          "coreCommandBuild": 4,
+          "svgBufferBytes": 828,
+          "svgBufferMemoryPeakBytes": 1024,
+          "svg.spillCount": 0,
+          "svgNormalize.ms": 4.542400000000001
+        }
+      },
+      {
+        "name": "borderless",
+        "round": -2,
+        "warmup": true,
+        "diagnostic": false,
+        "milliseconds": 45.0734,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 64684032,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": -1,
+        "warmup": true,
+        "diagnostic": false,
+        "milliseconds": 53.1653,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 67780608,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 0,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 56.8129,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 68923392,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 1,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 28.3898,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 68997120,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 2,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 27.5621,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 68993024,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 3,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 27.8408,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 68993024,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 4,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 28.5177,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 68993024,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      }
+    ]
+  },
+  {
+    "pair": 0,
+    "side": "after",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.55.0",
+      "architecture": "X64",
+      "hashes": {
+        "input": "3531B1F276E3245BDF8C3B6DBB45D77F52771F473333428502487B4E8A6B340E",
+        "main": "49D73AA8864B8072518B3AA11C1F6200117452A5E78120B74F43DC690558D581",
+        "core": "50E65B23A67203E729489119C2DEEDA8C124E3986E04D9556BC6166E1456F9D5"
+      }
+    },
+    "samples": [
+      {
+        "name": "borderless",
+        "round": -3,
+        "warmup": true,
+        "diagnostic": true,
+        "milliseconds": 179.4297,
+        "allocationBytes": 13699760,
+        "peakWorkingSetBytes": 58380288,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {
+          "coreGeometryPlan": 1,
+          "corePageBuild": 4,
+          "borderCandidates": 0,
+          "coreCommandBuild": 4,
+          "svgBufferBytes": 828,
+          "svgBufferMemoryPeakBytes": 1024,
+          "svg.spillCount": 0,
+          "svgNormalize.ms": 4.6938
+        }
+      },
+      {
+        "name": "borderless",
+        "round": -2,
+        "warmup": true,
+        "diagnostic": false,
+        "milliseconds": 76.0741,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 72851456,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": -1,
+        "warmup": true,
+        "diagnostic": false,
+        "milliseconds": 61.8484,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 73928704,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 0,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 66.1039,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 74108928,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 1,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 41.3638,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 74104832,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 2,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 29.7642,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 74227712,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 3,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 22.2827,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 74330112,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 4,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 21.0369,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 74330112,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      }
+    ]
+  },
+  {
+    "pair": 1,
+    "side": "after",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.55.0",
+      "architecture": "X64",
+      "hashes": {
+        "input": "3531B1F276E3245BDF8C3B6DBB45D77F52771F473333428502487B4E8A6B340E",
+        "main": "49D73AA8864B8072518B3AA11C1F6200117452A5E78120B74F43DC690558D581",
+        "core": "50E65B23A67203E729489119C2DEEDA8C124E3986E04D9556BC6166E1456F9D5"
+      }
+    },
+    "samples": [
+      {
+        "name": "borderless",
+        "round": -3,
+        "warmup": true,
+        "diagnostic": true,
+        "milliseconds": 177.7214,
+        "allocationBytes": 13699760,
+        "peakWorkingSetBytes": 58630144,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {
+          "coreGeometryPlan": 1,
+          "corePageBuild": 4,
+          "borderCandidates": 0,
+          "coreCommandBuild": 4,
+          "svgBufferBytes": 828,
+          "svgBufferMemoryPeakBytes": 1024,
+          "svg.spillCount": 0,
+          "svgNormalize.ms": 4.4619
+        }
+      },
+      {
+        "name": "borderless",
+        "round": -2,
+        "warmup": true,
+        "diagnostic": false,
+        "milliseconds": 74.5703,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 73039872,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": -1,
+        "warmup": true,
+        "diagnostic": false,
+        "milliseconds": 55.2973,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 73932800,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 0,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 79.5719,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 74825728,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 1,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 45.7805,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 74825728,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 2,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 45.7369,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 75157504,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 3,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 28.5602,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 75309056,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 4,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 21.8781,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 75309056,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      }
+    ]
+  },
+  {
+    "pair": 1,
+    "side": "before",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.55.0",
+      "architecture": "X64",
+      "hashes": {
+        "input": "3531B1F276E3245BDF8C3B6DBB45D77F52771F473333428502487B4E8A6B340E",
+        "main": "62E44AC602FB3F878F4DCFC9317A6FCB50BBC61C054890B2BCB58696E7F008C0",
+        "core": "981E387377F3586C16E8050201FDA0C3BC3C3FF4195DCE99F955CADBAB693F20"
+      }
+    },
+    "samples": [
+      {
+        "name": "borderless",
+        "round": -3,
+        "warmup": true,
+        "diagnostic": true,
+        "milliseconds": 198.4079,
+        "allocationBytes": 14302984,
+        "peakWorkingSetBytes": 58654720,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {
+          "coreGeometryPlan": 1,
+          "corePageBuild": 4,
+          "coreCommandBuild": 4,
+          "svgBufferBytes": 828,
+          "svgBufferMemoryPeakBytes": 1024,
+          "svg.spillCount": 0,
+          "svgNormalize.ms": 4.6472999999999995
+        }
+      },
+      {
+        "name": "borderless",
+        "round": -2,
+        "warmup": true,
+        "diagnostic": false,
+        "milliseconds": 45.7303,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 64634880,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": -1,
+        "warmup": true,
+        "diagnostic": false,
+        "milliseconds": 62.8412,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 68423680,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 0,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 86.954,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 68853760,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 1,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 68.0929,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 69644288,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 2,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 51.0337,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 69873664,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 3,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 34.2114,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 69873664,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 4,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 35.697,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 69873664,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      }
+    ]
+  },
+  {
+    "pair": 2,
+    "side": "before",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.55.0",
+      "architecture": "X64",
+      "hashes": {
+        "input": "3531B1F276E3245BDF8C3B6DBB45D77F52771F473333428502487B4E8A6B340E",
+        "main": "62E44AC602FB3F878F4DCFC9317A6FCB50BBC61C054890B2BCB58696E7F008C0",
+        "core": "981E387377F3586C16E8050201FDA0C3BC3C3FF4195DCE99F955CADBAB693F20"
+      }
+    },
+    "samples": [
+      {
+        "name": "borderless",
+        "round": -3,
+        "warmup": true,
+        "diagnostic": true,
+        "milliseconds": 171.3619,
+        "allocationBytes": 14278360,
+        "peakWorkingSetBytes": 58757120,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {
+          "coreGeometryPlan": 1,
+          "corePageBuild": 4,
+          "coreCommandBuild": 4,
+          "svgBufferBytes": 828,
+          "svgBufferMemoryPeakBytes": 1024,
+          "svg.spillCount": 0,
+          "svgNormalize.ms": 4.6834999999999996
+        }
+      },
+      {
+        "name": "borderless",
+        "round": -2,
+        "warmup": true,
+        "diagnostic": false,
+        "milliseconds": 43.0683,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 64770048,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": -1,
+        "warmup": true,
+        "diagnostic": false,
+        "milliseconds": 56.2165,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 67850240,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 0,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 55.0271,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 68841472,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 1,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 31.2593,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 68841472,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 2,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 30.8843,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 68849664,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 3,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 30.4742,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 69066752,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 4,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 23.2637,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 69206016,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      }
+    ]
+  },
+  {
+    "pair": 2,
+    "side": "after",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.55.0",
+      "architecture": "X64",
+      "hashes": {
+        "input": "3531B1F276E3245BDF8C3B6DBB45D77F52771F473333428502487B4E8A6B340E",
+        "main": "49D73AA8864B8072518B3AA11C1F6200117452A5E78120B74F43DC690558D581",
+        "core": "50E65B23A67203E729489119C2DEEDA8C124E3986E04D9556BC6166E1456F9D5"
+      }
+    },
+    "samples": [
+      {
+        "name": "borderless",
+        "round": -3,
+        "warmup": true,
+        "diagnostic": true,
+        "milliseconds": 178.898,
+        "allocationBytes": 13675136,
+        "peakWorkingSetBytes": 58380288,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {
+          "coreGeometryPlan": 1,
+          "corePageBuild": 4,
+          "borderCandidates": 0,
+          "coreCommandBuild": 4,
+          "svgBufferBytes": 828,
+          "svgBufferMemoryPeakBytes": 1024,
+          "svg.spillCount": 0,
+          "svgNormalize.ms": 4.3687000000000005
+        }
+      },
+      {
+        "name": "borderless",
+        "round": -2,
+        "warmup": true,
+        "diagnostic": false,
+        "milliseconds": 76.7776,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 72814592,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": -1,
+        "warmup": true,
+        "diagnostic": false,
+        "milliseconds": 63.0007,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 73740288,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 0,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 65.9195,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 74121216,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 1,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 25.8166,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 74121216,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 2,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 26.5382,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 74121216,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 3,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 27.5699,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 74182656,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 4,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 26.1794,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 74784768,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      }
+    ]
+  },
+  {
+    "pair": 3,
+    "side": "after",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.55.0",
+      "architecture": "X64",
+      "hashes": {
+        "input": "3531B1F276E3245BDF8C3B6DBB45D77F52771F473333428502487B4E8A6B340E",
+        "main": "49D73AA8864B8072518B3AA11C1F6200117452A5E78120B74F43DC690558D581",
+        "core": "50E65B23A67203E729489119C2DEEDA8C124E3986E04D9556BC6166E1456F9D5"
+      }
+    },
+    "samples": [
+      {
+        "name": "borderless",
+        "round": -3,
+        "warmup": true,
+        "diagnostic": true,
+        "milliseconds": 181.3891,
+        "allocationBytes": 13675136,
+        "peakWorkingSetBytes": 58515456,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {
+          "coreGeometryPlan": 1,
+          "corePageBuild": 4,
+          "borderCandidates": 0,
+          "coreCommandBuild": 4,
+          "svgBufferBytes": 828,
+          "svgBufferMemoryPeakBytes": 1024,
+          "svg.spillCount": 0,
+          "svgNormalize.ms": 5.4433
+        }
+      },
+      {
+        "name": "borderless",
+        "round": -2,
+        "warmup": true,
+        "diagnostic": false,
+        "milliseconds": 78.1541,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 73035776,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": -1,
+        "warmup": true,
+        "diagnostic": false,
+        "milliseconds": 62.1949,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 74063872,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 0,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 62.3766,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 74162176,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 1,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 40.8825,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 74280960,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 2,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 28.8558,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 74420224,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 3,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 29.0444,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 74416128,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 4,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 28.7972,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 74416128,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      }
+    ]
+  },
+  {
+    "pair": 3,
+    "side": "before",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.55.0",
+      "architecture": "X64",
+      "hashes": {
+        "input": "3531B1F276E3245BDF8C3B6DBB45D77F52771F473333428502487B4E8A6B340E",
+        "main": "62E44AC602FB3F878F4DCFC9317A6FCB50BBC61C054890B2BCB58696E7F008C0",
+        "core": "981E387377F3586C16E8050201FDA0C3BC3C3FF4195DCE99F955CADBAB693F20"
+      }
+    },
+    "samples": [
+      {
+        "name": "borderless",
+        "round": -3,
+        "warmup": true,
+        "diagnostic": true,
+        "milliseconds": 169.6089,
+        "allocationBytes": 14302984,
+        "peakWorkingSetBytes": 58736640,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {
+          "coreGeometryPlan": 1,
+          "corePageBuild": 4,
+          "coreCommandBuild": 4,
+          "svgBufferBytes": 828,
+          "svgBufferMemoryPeakBytes": 1024,
+          "svg.spillCount": 0,
+          "svgNormalize.ms": 4.5098
+        }
+      },
+      {
+        "name": "borderless",
+        "round": -2,
+        "warmup": true,
+        "diagnostic": false,
+        "milliseconds": 42.0001,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 64724992,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": -1,
+        "warmup": true,
+        "diagnostic": false,
+        "milliseconds": 53.5012,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 67813376,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 0,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 77.9658,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 68976640,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 1,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 47.9498,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 68972544,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 2,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 40.3924,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 68972544,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 3,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 27.1187,
+        "allocationBytes": 13859400,
+        "peakWorkingSetBytes": 69140480,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 4,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 20.0891,
+        "allocationBytes": 13859400,
+        "peakWorkingSetBytes": 69234688,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      }
+    ]
+  },
+  {
+    "pair": 4,
+    "side": "before",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.55.0",
+      "architecture": "X64",
+      "hashes": {
+        "input": "3531B1F276E3245BDF8C3B6DBB45D77F52771F473333428502487B4E8A6B340E",
+        "main": "62E44AC602FB3F878F4DCFC9317A6FCB50BBC61C054890B2BCB58696E7F008C0",
+        "core": "981E387377F3586C16E8050201FDA0C3BC3C3FF4195DCE99F955CADBAB693F20"
+      }
+    },
+    "samples": [
+      {
+        "name": "borderless",
+        "round": -3,
+        "warmup": true,
+        "diagnostic": true,
+        "milliseconds": 180.639,
+        "allocationBytes": 14302984,
+        "peakWorkingSetBytes": 58880000,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {
+          "coreGeometryPlan": 1,
+          "corePageBuild": 4,
+          "coreCommandBuild": 4,
+          "svgBufferBytes": 828,
+          "svgBufferMemoryPeakBytes": 1024,
+          "svg.spillCount": 0,
+          "svgNormalize.ms": 4.5947
+        }
+      },
+      {
+        "name": "borderless",
+        "round": -2,
+        "warmup": true,
+        "diagnostic": false,
+        "milliseconds": 43.4352,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 64917504,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": -1,
+        "warmup": true,
+        "diagnostic": false,
+        "milliseconds": 55.4747,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 68018176,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 0,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 67.4848,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 69025792,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 1,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 40.3113,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 69025792,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 2,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 45.2062,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 69156864,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 3,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 35.1347,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 69328896,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 4,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 22.8739,
+        "allocationBytes": 13863096,
+        "peakWorkingSetBytes": 69357568,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      }
+    ]
+  },
+  {
+    "pair": 4,
+    "side": "after",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.55.0",
+      "architecture": "X64",
+      "hashes": {
+        "input": "3531B1F276E3245BDF8C3B6DBB45D77F52771F473333428502487B4E8A6B340E",
+        "main": "49D73AA8864B8072518B3AA11C1F6200117452A5E78120B74F43DC690558D581",
+        "core": "50E65B23A67203E729489119C2DEEDA8C124E3986E04D9556BC6166E1456F9D5"
+      }
+    },
+    "samples": [
+      {
+        "name": "borderless",
+        "round": -3,
+        "warmup": true,
+        "diagnostic": true,
+        "milliseconds": 175.61,
+        "allocationBytes": 13699760,
+        "peakWorkingSetBytes": 58376192,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {
+          "coreGeometryPlan": 1,
+          "corePageBuild": 4,
+          "borderCandidates": 0,
+          "coreCommandBuild": 4,
+          "svgBufferBytes": 828,
+          "svgBufferMemoryPeakBytes": 1024,
+          "svg.spillCount": 0,
+          "svgNormalize.ms": 4.5402
+        }
+      },
+      {
+        "name": "borderless",
+        "round": -2,
+        "warmup": true,
+        "diagnostic": false,
+        "milliseconds": 74.9941,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 72785920,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": -1,
+        "warmup": true,
+        "diagnostic": false,
+        "milliseconds": 54.2309,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 73625600,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 0,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 71.3061,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 74764288,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 1,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 32.3452,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 74764288,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 2,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 32.7854,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 74764288,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 3,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 32.3811,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 74940416,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      },
+      {
+        "name": "borderless",
+        "round": 4,
+        "warmup": false,
+        "diagnostic": false,
+        "milliseconds": 33.5781,
+        "allocationBytes": 13258368,
+        "peakWorkingSetBytes": 74981376,
+        "commandCount": 0,
+        "outputBytes": 920,
+        "counters": {}
+      }
+    ]
+  }
+]

@@ -91,7 +91,9 @@ internal class CoreLayoutPolicy
     /// <summary>Determines whether body pagination is required for this sheet.</summary>
     /// <param name="context">The completed geometry.</param>
     /// <returns>Whether the product has printable body content.</returns>
-    internal virtual bool HasPageContent(ReportLayoutContext context) => context.Sheet.Cells.Keys.Any(address => context.ColumnLayouts.ContainsKey(address.Column) && context.RowLayouts.ContainsKey(address.Row)) || (context.Sheet.Images?.Count ?? 0) > 0;
+    internal virtual bool HasPageContent(ReportLayoutContext context) => context.Sheet.Cells.Keys.Any(address => context.ColumnLayouts.ContainsKey(address.Column) && context.RowLayouts.ContainsKey(address.Row)) ||
+        (context.Sheet.Images?.Count ?? 0) > 0 ||
+        (context.PrintArea is { } area && (context.BorderNeighbors ??= new(context.Sheet)).HasBoundary(area));
 
     /// <summary>Selects cell spans that extend the automatic page bands.</summary>
     /// <param name="context">The completed geometry.</param>

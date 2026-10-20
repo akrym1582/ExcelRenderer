@@ -40,42 +40,7 @@ if (args[2].Contains("mapped")) {
         if args.fixture_source is not None:
             shutil.copyfile(args.fixture_source / path.name, path)
             return
-        parent['fixture'](path, 'rules')
-        with ZipFile(path) as archive:
-            parts = {name: archive.read(name) for name in archive.namelist()}
-        rows = []
-        for row in range(1, size + 1):
-            number = (row - 1) % 101
-            if kind == 'mapped':
-                cell = '<c r="A1" t="inlineStr"><is><t>**items[*]</t></is></c>'
-            elif kind == 'strings':
-                cell = f'<c r="A{row}" t="inlineStr"><is><t>key-{number}</t></is></c>'
-            else:
-                formula = f'<f>MOD({row}-1,101)</f>' if kind == 'recalculate' else ''
-                cell = f'<c r="A{row}">{formula}<v>{number}</v></c>'
-            rows.append(f'<row r="{row}">{cell}</row>')
-        ranges = f'A1:A{size}'
-        if kind == 'whole':
-            ranges = 'A1:A1048576'
-        elif kind == 'overlap':
-            ranges = f'A1:A{size} A1:A{size // 2} A{size // 2}:A{size}'
-        definitions = {
-            'duplicate': '<cfRule type="duplicateValues" priority="1" dxfId="0"/>',
-            'top': '<cfRule type="top10" priority="2" rank="10" dxfId="0"/>',
-            'average': '<cfRule type="aboveAverage" priority="3" dxfId="0"/>',
-            'scale': '<cfRule type="colorScale" priority="4"><colorScale><cfvo type="min"/><cfvo type="percentile" val="50"/><cfvo type="max"/><color rgb="FF000000"/><color rgb="FF00FF00"/><color rgb="FFFFFFFF"/></colorScale></cfRule>',
-            'phase1': '<cfRule type="cellIs" operator="greaterThan" priority="1" dxfId="0"><formula>50</formula></cfRule>',
-        }
-        rules = ''
-        keys = [] if kind == 'plain' else [kind] if kind in definitions else ['duplicate'] if kind == 'strings' else ['duplicate', 'top', 'average', 'scale']
-        for key in keys:
-            rules += f'<conditionalFormatting sqref="{ranges}">{definitions[key]}</conditionalFormatting>'
-        if kind == 'distinct':
-            rules = ''.join(f'<conditionalFormatting sqref="A{i}:A{size - i + 1}">{definitions["average"].replace("priority=\"3\"", f"priority=\"{i}\"")}</conditionalFormatting>' for i in range(1, 17))
-        parts['xl/worksheets/sheet1.xml'] = ('<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>' + ''.join(rows) + '</sheetData>' + rules + '</worksheet>').encode()
-        with ZipFile(path, 'w', ZIP_DEFLATED) as archive:
-            for part, data in parts.items():
-                archive.writestr(part, data)
+        population_fixture(path, size, kind, parent['fixture'])
 
     cases = []
     for size in (10000, 100000):
@@ -143,3 +108,43 @@ if (args[2].Contains("mapped")) {
     assert hashes == {stage: {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in source.glob('ExcelRenderer*.dll')} for stage, source in sources.items()}
     (work / 'summary.json').write_text(json.dumps({'baseSha': '9ac854f97bfeebc511f89f36e6f340376cfb35d8', 'protocol': {'rounds': args.rounds, 'warmups': args.warmups, 'measurements': args.measurements, 'configuration': 'Release', 'concurrency': 1, 'scope': 'read/evaluate; mapping performed before timed reads; no layout/render'}, 'products': hashes, 'harnessSourceSha256': hashlib.sha256(bench.HARNESS.encode()).hexdigest(), 'fixtures': {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in work.glob('*.xlsx')}, 'summary': summary}, indent=2) + '\n')
     print(json.dumps(summary, indent=2))
+
+
+def population_fixture(path, size, kind, base_fixture):
+    """Reuse the Phase 2 fixture definitions in render/read comparisons."""
+    base_fixture(path, 'rules')
+    with ZipFile(path) as archive:
+        parts = {name: archive.read(name) for name in archive.namelist()}
+    rows = []
+    for row in range(1, size + 1):
+        number = (row - 1) % 101
+        if kind == 'mapped':
+            cell = '<c r="A1" t="inlineStr"><is><t>**items[*]</t></is></c>'
+        elif kind == 'strings':
+            cell = f'<c r="A{row}" t="inlineStr"><is><t>key-{number}</t></is></c>'
+        else:
+            formula = f'<f>MOD({row}-1,101)</f>' if kind == 'recalculate' else ''
+            cell = f'<c r="A{row}">{formula}<v>{number}</v></c>'
+        rows.append(f'<row r="{row}">{cell}</row>')
+    ranges = f'A1:A{size}'
+    if kind == 'whole':
+        ranges = 'A1:A1048576'
+    elif kind == 'overlap':
+        ranges = f'A1:A{size} A1:A{size // 2} A{size // 2}:A{size}'
+    definitions = {
+        'duplicate': '<cfRule type="duplicateValues" priority="1" dxfId="0"/>',
+        'top': '<cfRule type="top10" priority="2" rank="10" dxfId="0"/>',
+        'average': '<cfRule type="aboveAverage" priority="3" dxfId="0"/>',
+        'scale': '<cfRule type="colorScale" priority="4"><colorScale><cfvo type="min"/><cfvo type="percentile" val="50"/><cfvo type="max"/><color rgb="FF000000"/><color rgb="FF00FF00"/><color rgb="FFFFFFFF"/></colorScale></cfRule>',
+        'phase1': '<cfRule type="cellIs" operator="greaterThan" priority="1" dxfId="0"><formula>50</formula></cfRule>',
+    }
+    rules = ''
+    keys = [] if kind == 'plain' else [kind] if kind in definitions else ['duplicate'] if kind == 'strings' else ['duplicate', 'top', 'average', 'scale']
+    for key in keys:
+        rules += f'<conditionalFormatting sqref="{ranges}">{definitions[key]}</conditionalFormatting>'
+    if kind == 'distinct':
+        rules = ''.join(f'<conditionalFormatting sqref="A{i}:A{size - i + 1}">{definitions["average"].replace("priority=\"3\"", f"priority=\"{i}\"")}</conditionalFormatting>' for i in range(1, 17))
+    parts['xl/worksheets/sheet1.xml'] = ('<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>' + ''.join(rows) + '</sheetData>' + rules + '</worksheet>').encode()
+    with ZipFile(path, 'w', ZIP_DEFLATED) as archive:
+        for part, data in parts.items():
+            archive.writestr(part, data)

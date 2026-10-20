@@ -12,6 +12,9 @@ internal sealed record RenderPage(
     IReadOnlyList<RenderImage>? Images = null,
     IReadOnlyList<RenderText>? HeaderFooterTexts = null)
 {
+    /// <summary>Gets placed external border owners without their content.</summary>
+    internal IReadOnlyList<RenderCell> BorderOnlyCells { get; init; } = [];
+
     /// <summary>Gets borrowed product page metadata.</summary>
     internal Extensibility.ICoreExtensionData? ExtensionData { get; init; }
 }

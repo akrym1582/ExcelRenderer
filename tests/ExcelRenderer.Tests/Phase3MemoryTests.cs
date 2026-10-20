@@ -22,6 +22,7 @@ public sealed class Phase3MemoryTests
     /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
     [Theory(DisplayName = "ページを重複・逆順で指定しても重複を除いて出力し、事前検証と描画で同時に保持するページデータが最大一つである")]
     [InlineData(OutputFormat.Pdf)]
+    [InlineData(OutputFormat.PostScript)]
     [InlineData(OutputFormat.Png)]
     [InlineData(OutputFormat.Svg)]
     public async Task Selected_pages_preflight_and_render_with_one_active_payload(OutputFormat format)
@@ -32,9 +33,14 @@ public sealed class Phase3MemoryTests
         var active = 0d;
         var maximum = 0d;
         var builds = 0;
+        var legacyPaints = 0d;
         ConversionMetrics.Observer = (name, value) =>
         {
-            if (name == "pagePayloadActive")
+            if (name == "legacyTextPaints")
+            {
+                legacyPaints += value;
+            }
+            else if (name == "pagePayloadActive")
             {
                 active += value;
                 maximum = Math.Max(maximum, active);
@@ -55,8 +61,9 @@ public sealed class Phase3MemoryTests
             Assert.Equal(new int?[] { 1, 2 }, result.Pages.Select(page => page.OutputPageNumber));
             Assert.Equal(1, maximum);
             Assert.Equal(0, active);
-            Assert.Equal(format == OutputFormat.Pdf ? 6 : 4, builds);
-            Assert.Equal(format == OutputFormat.Pdf ? 1 : 2, sink.OpenCount);
+            Assert.Equal(4, builds);
+            Assert.Equal(0, legacyPaints);
+            Assert.Equal(format is OutputFormat.Pdf or OutputFormat.PostScript ? 1 : 2, sink.OpenCount);
         }
         finally
         {
@@ -354,7 +361,7 @@ public sealed class Phase3MemoryTests
         var measurer = new CountingMeasurer();
         var plan = new ContinuousLayoutPlan(sheet, measurer);
         Assert.Single(plan.EnumerateLayerCells(measurer, DrawingLayer.Background));
-        Assert.Single(plan.EnumerateLayerCells(measurer, DrawingLayer.CellBorder));
+        Assert.Equal(2, plan.EnumerateLayerCells(measurer, DrawingLayer.CellBorder).Count());
         Assert.Single(plan.EnumerateLayerCells(measurer, DrawingLayer.MergedBorder));
         Assert.Equal(0, measurer.Measured);
         Assert.Single(plan.EnumerateLayerCells(measurer, DrawingLayer.Text));

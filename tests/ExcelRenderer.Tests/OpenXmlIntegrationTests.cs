@@ -17,9 +17,9 @@ public sealed class OpenXmlIntegrationTests
         var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../"));
         return Directory.EnumerateFiles(Path.Combine(root, "samples"), "*.xlsx", SearchOption.AllDirectories)
             .Concat(Directory.EnumerateFiles(Path.Combine(root, "tests/ExcelRenderer.Tests/SampleInputs"), "*.xlsx", SearchOption.AllDirectories))
-            // This regression fixture was added after the retained parent baseline;
-            // CellArgbTests verifies it against an opaque workbook and visible pixels.
-            .Where(path => Path.GetFileName(path) != "10-cell-argb.xlsx")
+            // These regression fixtures postdate the retained reader baseline;
+            // CellArgbTests and SharedBorderWorkbookTests verify them separately.
+            .Where(path => Path.GetFileName(path) is not ("10-cell-argb.xlsx" or "border-conflicts.xlsx"))
             .Select(path => new object[] { path });
     }
 
@@ -46,6 +46,7 @@ public sealed class OpenXmlIntegrationTests
         var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../"));
         var name = Path.GetRelativePath(root, path).Replace(Path.DirectorySeparatorChar, '/');
         var all = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "ReaderGolden", "artifacts.json")))!;
+        var borderUpdates = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "ReaderGolden", "border-artifacts.json")))!;
         foreach (var format in new[] { OutputFormat.Png, OutputFormat.Svg, OutputFormat.Markdown })
         {
             using var input = File.OpenRead(path);
@@ -58,8 +59,16 @@ public sealed class OpenXmlIntegrationTests
             }, actual);
             var hashes = actual.Artifacts.ToDictionary(item => format + "/" + item.Key, item => ReaderSnapshot.ArtifactHash(format, item.Value.ToArray()));
             var expected = all[name].Where(pair => pair.Key.StartsWith(format + "/", StringComparison.Ordinal)).ToDictionary();
+            if (borderUpdates.TryGetValue(name, out var updated))
+            {
+                foreach (var pair in updated.Where(pair => pair.Key.StartsWith(format + "/", StringComparison.Ordinal)))
+                {
+                    expected[pair.Key] = pair.Value;
+                }
+            }
+
             Assert.Equal(expected.Keys.Order(), hashes.Keys.Order());
-            foreach (var pair in expected) Assert.True(pair.Value == hashes[pair.Key], name + " " + pair.Key + " differs from parent output");
+            foreach (var pair in expected) Assert.True(pair.Value == hashes[pair.Key], name + " " + pair.Key + " differs from retained output");
         }
     }
 

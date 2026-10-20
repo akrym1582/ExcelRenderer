@@ -31,6 +31,12 @@ internal sealed class RenderResourceSession : IDisposable
     /// <summary>Gets or sets the conversion-local bounded text layout cache.</summary>
     internal Abstractions.ITextMeasurer? TextMeasurer { get; set; }
 
+    /// <summary>Gets or sets the bounded native compatibility layout service shared by image passes.</summary>
+    internal Abstractions.ITextLayoutService? RasterTextLayout { get; set; }
+
+    /// <summary>Gets or sets the built-in run completion service shared by vector passes.</summary>
+    internal Abstractions.ITextLayoutService? ResolvedTextLayout { get; set; }
+
     /// <inheritdoc/>
     public void Dispose()
     {
@@ -41,6 +47,8 @@ internal sealed class RenderResourceSession : IDisposable
 
         disposed = true;
         TextMeasurer = null;
+        RasterTextLayout = null;
+        ResolvedTextLayout = null;
         try
         {
             images.Dispose();

@@ -1025,7 +1025,7 @@ public sealed class LayoutPassTests
         Assert.Collection(
             commands,
             command => Assert.IsType<FillRectangleCommand>(command),
-            command => Assert.IsType<DrawBorderCommand>(command),
+            command => Assert.IsType<DrawLineCommand>(command),
             command => Assert.IsType<DrawTextCommand>(command));
     }
 

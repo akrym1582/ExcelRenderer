@@ -157,7 +157,7 @@ public sealed class PngRenderer
         canvas.Scale(scale);
 
         var drawingContext = new SkiaDrawingContext(textAsPaths: false, _fontManager);
-        foreach (var command in commands)
+        foreach (var command in CommandTextFinalizer.FinalizeRaster(commands, _fontManager, CancellationToken.None))
         {
             drawingContext.Execute(canvas, command);
         }
@@ -209,7 +209,7 @@ public sealed class PngRenderer
         canvas.Clear(SKColors.White);
         canvas.Scale((float)(dpi / 72d));
         var drawingContext = new SkiaDrawingContext(textAsPaths: false, _fontManager);
-        foreach (var command in commands)
+        foreach (var command in CommandTextFinalizer.FinalizeRaster(commands, _fontManager, CancellationToken.None))
         {
             drawingContext.Execute(canvas, command);
         }

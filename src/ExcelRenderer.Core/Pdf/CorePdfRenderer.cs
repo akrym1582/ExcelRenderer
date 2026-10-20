@@ -70,11 +70,10 @@ internal sealed class CorePdfRenderer : IDisposable
     /// <param name="commands">One page's finalized commands.</param>
     internal void Collect(IEnumerable<DrawCommand> commands)
     {
-        using var surface = SKSurface.CreateNull(1, 1);
         foreach (var text in commands.OfType<DrawTextCommand>())
         {
             token.ThrowIfCancellationRequested();
-            (textPainter ?? throw new InvalidOperationException("The conversion font is missing.")).Paint(surface.Canvas, text);
+            (textPainter ?? throw new InvalidOperationException("The conversion font is missing.")).Collect(text);
         }
     }
 
@@ -103,6 +102,26 @@ internal sealed class CorePdfRenderer : IDisposable
     internal void Complete(Stream output) => document.Complete(output);
 
     private void Execute(SKCanvas canvas, DrawCommand command)
+    {
+        if (command.ClipBounds is not { } clip)
+        {
+            ExecuteUnclipped(canvas, command);
+            return;
+        }
+
+        canvas.Save();
+        try
+        {
+            canvas.ClipRect(new((float)clip.X, (float)clip.Y, (float)(clip.X + clip.Width), (float)(clip.Y + clip.Height)));
+            ExecuteUnclipped(canvas, command);
+        }
+        finally
+        {
+            canvas.Restore();
+        }
+    }
+
+    private void ExecuteUnclipped(SKCanvas canvas, DrawCommand command)
     {
         switch (command)
         {

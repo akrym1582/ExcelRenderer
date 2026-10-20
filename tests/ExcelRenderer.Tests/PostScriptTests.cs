@@ -285,7 +285,9 @@ public sealed class PostScriptTests
             SdkWorkbook.Image(document.WorkbookPart!.WorksheetParts.First(), data.ToArray());
         input.Position = 0;
         using var output = new MemoryStream();
-        var failure = await Assert.ThrowsAsync<ConversionException>(() => ExcelConverter.RenderAsync(input, new() { OutputFormat = OutputFormat.PostScript }, new SingleStreamOutputSink(output)));
+        var sink = new ObservedSink(output);
+        var failure = await Assert.ThrowsAsync<ConversionException>(() => ExcelConverter.RenderAsync(input, new() { OutputFormat = OutputFormat.PostScript }, sink));
+        Assert.Equal(0, sink.Opens);
         var diagnostic = Assert.Single(failure.CollectedDiagnostics, value => value.Code == "PostScriptTransparencyUnsupported");
         Assert.Equal("a4", diagnostic.SheetName);
         Assert.Equal(1, diagnostic.SourcePageNumber);
@@ -305,9 +307,10 @@ public sealed class PostScriptTests
 
     private sealed class ObservedSink(Stream stream) : IRenderOutputSink
     {
+        public int Opens { get; private set; }
         public int Aborts { get; private set; }
         public int Completes { get; private set; }
-        public ValueTask<Stream> OpenAsync(ArtifactDescriptor artifact, CancellationToken cancellationToken) => new(stream);
+        public ValueTask<Stream> OpenAsync(ArtifactDescriptor artifact, CancellationToken cancellationToken) { Opens++; return new(stream); }
         public ValueTask CompleteAsync(ArtifactDescriptor artifact, long byteLength, CancellationToken cancellationToken) { Completes++; return default; }
         public ValueTask AbortAsync(ArtifactDescriptor artifact, Exception error, CancellationToken cancellationToken) { Aborts++; return default; }
     }

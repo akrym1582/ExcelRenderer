@@ -151,6 +151,51 @@ internal sealed class ConditionalPopulation
         return (string.Join(" ", result.Select(range => range.ToString())), result);
     }
 
+    /// <summary>Coalesces adjacent equal-width/height rectangles without changing a rule's source anchors.</summary>
+    /// <param name="source">The bounded source metadata.</param>
+    /// <param name="token">Cooperative cancellation.</param>
+    /// <returns>Equivalent union geometry for display or population normalization.</returns>
+    internal static IReadOnlyList<SourceRange> Coalesce(IReadOnlyList<SourceRange> source, CancellationToken token)
+    {
+        // Mapping can save a separate sqref for every expanded row. Merge those
+        // intervals before the general sweep, without allocating any missing cells.
+        return Merge(Merge(source, true), false);
+
+        List<SourceRange> Merge(IReadOnlyList<SourceRange> input, bool vertical)
+        {
+            token.ThrowIfCancellationRequested();
+            var sortedRanges = input.ToArray();
+            Array.Sort(sortedRanges, (left, right) =>
+            {
+                var first = (vertical ? left.First.Column : left.First.Row).CompareTo(vertical ? right.First.Column : right.First.Row);
+                var last = (vertical ? left.Last.Column : left.Last.Row).CompareTo(vertical ? right.Last.Column : right.Last.Row);
+                return first != 0 ? first : last != 0 ? last :
+                    (vertical ? left.First.Row : left.First.Column).CompareTo(vertical ? right.First.Row : right.First.Column);
+            });
+            token.ThrowIfCancellationRequested();
+            var result = new List<SourceRange>();
+            foreach (var range in sortedRanges)
+            {
+                token.ThrowIfCancellationRequested();
+                var previous = result.Count == 0 ? null : result[result.Count - 1];
+                if (previous is not null && (vertical
+                    ? previous.First.Column == range.First.Column && previous.Last.Column == range.Last.Column && range.First.Row <= previous.Last.Row + 1
+                    : previous.First.Row == range.First.Row && previous.Last.Row == range.Last.Row && range.First.Column <= previous.Last.Column + 1))
+                {
+                    result[result.Count - 1] = vertical
+                        ? new(previous.First, new(Math.Max(previous.Last.Row, range.Last.Row), previous.Last.Column))
+                        : new(previous.First, new(previous.Last.Row, Math.Max(previous.Last.Column, range.Last.Column)));
+                }
+                else
+                {
+                    result.Add(range);
+                }
+            }
+
+            return result;
+        }
+    }
+
     /// <summary>Reads each stored coordinate in the union exactly once.</summary>
     /// <param name="ranges">Disjoint normalized rectangles.</param>
     /// <param name="calculation">Shared saved/recalculated snapshot.</param>
@@ -249,47 +294,6 @@ internal sealed class ConditionalPopulation
 
         statistics = result;
         return result;
-    }
-
-    private static IReadOnlyList<SourceRange> Coalesce(IReadOnlyList<SourceRange> source, CancellationToken token)
-    {
-        // Mapping can save a separate sqref for every expanded row. Merge those
-        // intervals before the general sweep, without allocating any missing cells.
-        return Merge(Merge(source, true), false);
-
-        List<SourceRange> Merge(IReadOnlyList<SourceRange> input, bool vertical)
-        {
-            token.ThrowIfCancellationRequested();
-            var sortedRanges = input.ToArray();
-            Array.Sort(sortedRanges, (left, right) =>
-            {
-                var first = (vertical ? left.First.Column : left.First.Row).CompareTo(vertical ? right.First.Column : right.First.Row);
-                var last = (vertical ? left.Last.Column : left.Last.Row).CompareTo(vertical ? right.Last.Column : right.Last.Row);
-                return first != 0 ? first : last != 0 ? last :
-                    (vertical ? left.First.Row : left.First.Column).CompareTo(vertical ? right.First.Row : right.First.Column);
-            });
-            token.ThrowIfCancellationRequested();
-            var result = new List<SourceRange>();
-            foreach (var range in sortedRanges)
-            {
-                token.ThrowIfCancellationRequested();
-                var previous = result.Count == 0 ? null : result[result.Count - 1];
-                if (previous is not null && (vertical
-                    ? previous.First.Column == range.First.Column && previous.Last.Column == range.Last.Column && range.First.Row <= previous.Last.Row + 1
-                    : previous.First.Row == range.First.Row && previous.Last.Row == range.Last.Row && range.First.Column <= previous.Last.Column + 1))
-                {
-                    result[result.Count - 1] = vertical
-                        ? new(previous.First, new(Math.Max(previous.Last.Row, range.Last.Row), previous.Last.Column))
-                        : new(previous.First, new(previous.Last.Row, Math.Max(previous.Last.Column, range.Last.Column)));
-                }
-                else
-                {
-                    result.Add(range);
-                }
-            }
-
-            return result;
-        }
     }
 
     private sealed class ValueComparer : IEqualityComparer<FormulaValue>

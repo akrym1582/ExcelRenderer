@@ -42,6 +42,7 @@ internal sealed class SkiaTextDrawing
     /// <param name="command">The compatibility text command.</param>
     internal void PaintLegacy(SKCanvas canvas, DrawTextCommand command)
     {
+        Rendering.ConversionMetrics.Report("legacyTextPaints", 1);
         var request = new FontRequest(
             command.Style.Font.Family,
             command.Style.Font.Bold ? 700 : 400,
@@ -469,14 +470,14 @@ internal sealed class SkiaTextDrawing
             throw new InvalidOperationException("Finalized glyphs belong to another physical font snapshot.");
         }
 
-        var glyphs = selection.Glyphs.ToArray();
+        var glyphs = selection.GlyphSpan;
         using var font = new SKFont(face.Typeface, size);
 
         // Preserve the established PNG/SVG native advance/raster policy while
         // emitting the already selected glyph IDs, without fallback or shaping.
         if (asPaths)
         {
-            using var path = font.GetTextPath(MemoryMarshal.AsBytes(glyphs.AsSpan()), SKTextEncoding.GlyphId, new SKPoint(x, y));
+            using var path = font.GetTextPath(MemoryMarshal.AsBytes(glyphs), SKTextEncoding.GlyphId, new SKPoint(x, y));
             if (path.IsEmpty && run.Text.Any(character => !char.IsWhiteSpace(character)))
             {
                 throw new InvalidOperationException("文字のアウトラインを生成できません。");

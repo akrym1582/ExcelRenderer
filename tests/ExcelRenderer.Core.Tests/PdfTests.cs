@@ -1,4 +1,3 @@
-using ExcelRenderer.TestFixtures;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 using ExcelRenderer.Core.Fonts;
 using ExcelRenderer.Core.Layout;
@@ -6,6 +5,9 @@ using ExcelRenderer.Core.Model;
 using ExcelRenderer.Core.Pdf;
 using ExcelRenderer.Core.Rendering;
 using Xunit;
+using UglyToad.PdfPig.Tokens;
+using UglyToad.PdfPig.Filters;
+using UglyToad.PdfPig;
 
 namespace ExcelRenderer.Core.Tests;
 
@@ -17,16 +19,21 @@ public sealed class PdfTests
         var (result, bytes) = await TestSupport.Convert();
         Assert.Equal(1, result.PageCount);
         using var document = TestSupport.Open(bytes);
-        var fonts = TestSupport.Fonts(document.Pages[0]).ToArray(); Assert.NotEmpty(fonts);
+        var fonts = TestSupport.Fonts(document).ToArray(); Assert.NotEmpty(fonts);
         foreach (var font in fonts)
         {
-            var embedded = TestSupport.Descriptor(font).Elements.GetDictionary("/FontFile2")!;
-            Assert.NotNull(embedded.Stream); Assert.True(embedded.Stream.Value.Length > 1000);
-            var map = font.Elements.GetDictionary("/ToUnicode")!;
-            var text = System.Text.Encoding.ASCII.GetString(map.Stream.UnfilteredValue);
+            var embedded = TestSupport.Entry<StreamToken>(document, TestSupport.Descriptor(document, font), "FontFile2");
+            Assert.True(embedded.Data.Length > 1000);
+            var map = TestSupport.Entry<StreamToken>(document, font, "ToUnicode");
+            var text = System.Text.Encoding.ASCII.GetString(map.Decode(DefaultFilterProvider.Instance).Span);
             Assert.Contains("beginbfrange", text);
-            Assert.Contains("本語", document.Pages[0].Text);
-            Assert.True(document.Pages[0].Text.Contains("日本語", StringComparison.Ordinal) || document.Pages[0].ActualTexts.Any(value => value.Contains("日", StringComparison.Ordinal)));
+            Assert.Contains("本語", document.GetPage(1).Text);
+            Assert.Contains("672C", text, StringComparison.OrdinalIgnoreCase);
+            var actualTexts = document.GetPage(1).Operations
+                .OfType<UglyToad.PdfPig.Graphics.Operations.MarkedContent.BeginMarkedContentWithProperties>()
+                .Where(operation => operation.Properties?.Data.ContainsKey("ActualText") == true)
+                .Select(operation => TestSupport.PdfString(operation.Properties!.Data["ActualText"]));
+            Assert.True(document.GetPage(1).Text.Contains("日本語", StringComparison.Ordinal) || actualTexts.Contains("日"));
         }
         var directory = Path.Combine(AppContext.BaseDirectory, "SampleOutputs"); Directory.CreateDirectory(directory);
         await File.WriteAllBytesAsync(Path.Combine(directory, "japanese.pdf"), bytes);
@@ -95,7 +102,9 @@ public sealed class PdfTests
             var command = new Drawing.DrawTextCommand(1, new(20, 30, 100, 80), "abc", style) { TextLayout = layout };
             using var renderer = new CorePdfRenderer(font); renderer.Collect([command]); renderer.Prepare(); renderer.AppendPage(new(200, 200), [command]);
             using var output = new MemoryStream(); renderer.Complete(output);
-            var probe = PdfContentProbe.Read(output.ToArray()); var text = Assert.Single(probe.Texts);
+            var probe = PdfContentProbe.Read(output.ToArray());
+            Assert.Equal("abc", string.Concat(probe.Texts.Select(text => text.Value)));
+            var text = probe.Texts[0];
             var line = layout.Lines.Single();
             var left = 20 + (horizontal == HorizontalAlignment.Center ? (100 - line.Width) / 2 : horizontal == HorizontalAlignment.Right ? 100 - line.Width : 0);
             var top = 30 + (vertical == VerticalAlignment.Center ? (80 - layout.Size.Height) / 2 : vertical == VerticalAlignment.Bottom ? 80 - layout.Size.Height : 0);
@@ -114,7 +123,7 @@ public sealed class PdfTests
             var (_, bytes) = await TestSupport.Convert(workbook =>
             {
                 var sheet = TestSupport.Sheet(workbook);
-                sheet.GetFirstChild<S.SheetData>()!.GetFirstChild<S.Row>()!.ReplaceChild(SdkWorkbook.Text("A1", "abcdefghijklmnopqrstuv"), sheet.Descendants<S.Cell>().Single());
+                sheet.GetFirstChild<S.SheetData>()!.GetFirstChild<S.Row>()!.ReplaceChild(TestWorkbook.Text("A1", "abcdefghijklmnopqrstuv"), sheet.Descendants<S.Cell>().Single());
                 sheet.InsertAt(new S.Columns(new S.Column { Min = 1, Max = 1, Width = 4.710625, CustomWidth = true }), 0);
                 workbook.WorkbookStylesPart!.Stylesheet.Fonts!.GetFirstChild<S.Font>()!.FontSize = new S.FontSize { Val = 20 };
                 workbook.WorkbookStylesPart.Stylesheet.CellFormats!.GetFirstChild<S.CellFormat>()!.Alignment = new S.Alignment { TextRotation = (uint)rotation, ShrinkToFit = shrink };
@@ -126,7 +135,7 @@ public sealed class PdfTests
         var shrunk = PdfContentProbe.Read(await Pdf(255, true));
         Assert.NotEmpty(shrunk.Texts);
         Assert.All(shrunk.Texts, text => Assert.InRange(text.Size, 0.1, 19.9));
-        Assert.NotEmpty(shrunk.AppliedClips);
+        Assert.True(shrunk.ClipCount > 0);
     }
 
     [Fact]
@@ -162,7 +171,7 @@ public sealed class PdfTests
             {
                 var data = TestSupport.Sheet(workbook).GetFirstChild<S.SheetData>()!;
                 data.RemoveAllChildren();
-                for (var i = 1; i <= 200; i++) data.Append(new S.Row(SdkWorkbook.Text("A" + i, "行 " + i)) { RowIndex = (uint)i });
+                for (var i = 1; i <= 200; i++) data.Append(new S.Row(TestWorkbook.Text("A" + i, "行 " + i)) { RowIndex = (uint)i });
             });
             Assert.True(result.PageCount > 1); Assert.Equal(1, max); Assert.Equal(0, active);
             Assert.Equal(1, saves); Assert.Equal(1, created); Assert.Equal(created, disposed);
@@ -171,20 +180,22 @@ public sealed class PdfTests
     }
 
     [Theory]
-    [InlineData("01-japanese.xlsx")]
-    [InlineData("02-image.xlsx")]
-    [InlineData("03-wrapped-text.xlsx")]
-    [InlineData("04-text-decoration.xlsx")]
-    [InlineData("05-borders.xlsx")]
-    [InlineData("06-layout-and-pagination.xlsx")]
-    [InlineData("07-multiple-sheets.xlsx")]
-    [InlineData("08-print-scaling.xlsx")]
-    [InlineData("09-cell-border.xlsx")]
-    public async Task Existing_samples_produce_readable_PDF(string name)
+    [InlineData("01-japanese.xlsx", 2)]
+    [InlineData("02-image.xlsx", 2)]
+    [InlineData("03-wrapped-text.xlsx", 1)]
+    [InlineData("04-text-decoration.xlsx", 1)]
+    [InlineData("05-borders.xlsx", 2)]
+    [InlineData("06-layout-and-pagination.xlsx", 4)]
+    [InlineData("07-multiple-sheets.xlsx", 2)]
+    [InlineData("08-print-scaling.xlsx", 2)]
+    [InlineData("09-cell-border.xlsx", 1)]
+    public async Task Core_owned_workbooks_keep_expected_page_counts_and_readable_PDF(string name, int expectedPages)
     {
-        using var input = File.OpenRead(Path.Combine(AppContext.BaseDirectory, "SampleInputs", name)); using var output = new MemoryStream();
+        using var input = File.OpenRead(Path.Combine(AppContext.BaseDirectory, "Baselines", "Inputs", name)); using var output = new MemoryStream();
         var result = await ExcelConverter.ConvertAsync(input, output, TestSupport.Options);
-        using var document = TestSupport.Open(output.ToArray()); Assert.Equal(result.PageCount, document.PageCount); Assert.True(result.PageCount > 0);
+        using var document = TestSupport.Open(output.ToArray());
+        Assert.Equal(expectedPages, result.PageCount);
+        Assert.Equal(expectedPages, document.NumberOfPages);
         var directory = Path.Combine(AppContext.BaseDirectory, "SampleOutputs"); Directory.CreateDirectory(directory);
         await File.WriteAllBytesAsync(Path.Combine(directory, name.Replace(".xlsx", ".pdf")), output.ToArray());
     }

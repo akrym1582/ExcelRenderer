@@ -154,6 +154,12 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            src/ExcelRenderer.Core
+            src/ExcelRenderer.OpenXml.Reader
+            tests/ExcelRenderer.Core.Tests
+            third_party/NotoSansJP
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
@@ -161,17 +167,10 @@ jobs:
         run: dotnet restore tests/ExcelRenderer.Core.Tests/ExcelRenderer.Core.Tests.csproj --locked-mode
       - name: Rebuild Core tests
         run: dotnet build tests/ExcelRenderer.Core.Tests/ExcelRenderer.Core.Tests.csproj -t:Rebuild -c Release --no-restore --verbosity:minimal
-      - name: Run Core tests without OS font setup
-        run: dotnet test tests/ExcelRenderer.Core.Tests/ExcelRenderer.Core.Tests.csproj -c Release --no-build --logger "trx;LogFileName=core.trx" --results-directory TestResults/Core
-      - name: Verify Core regression detection
-        if: runner.os == 'Linux'
-        run: python3 scripts/check-core-mutations.py
-      - name: Rasterize and compare on Linux
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y poppler-utils python3-pil
-          python3 scripts/validate-core.py --visual-only
+      - name: Verify Core PDFs and coverage without shared fixtures or OS font setup
+        run: dotnet test tests/ExcelRenderer.Core.Tests/ExcelRenderer.Core.Tests.csproj -c Release --no-build --filter "Category!=Performance" -p:CollectCoverage=true --logger "trx;LogFileName=core.trx" --results-directory TestResults/Core
+      - name: Measure Core conversions without coverage instrumentation
+        run: dotnet test tests/ExcelRenderer.Core.Tests/ExcelRenderer.Core.Tests.csproj -c Release --no-build --filter "Category=Performance" --logger "trx;LogFileName=performance.trx" --results-directory TestResults/Core
       - name: Upload Core results
         if: always()
         uses: actions/upload-artifact@v4

@@ -2,7 +2,6 @@ using System.IO.Compression;
 using ExcelRenderer.Core.Abstractions;
 using ExcelRenderer.Core.Layout;
 using ExcelRenderer.Core.Model;
-using ExcelRenderer.TestFixtures;
 using Xunit;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 
@@ -121,7 +120,7 @@ public sealed class SavedPaginationTests
 
     private static MemoryStream Workbook(string? height, string? custom, string? defaultHeight = null, int? hiddenRow = null, string breaks = "", bool fit = false)
     {
-        var stream = SdkWorkbook.Create(new S.Worksheet(new S.SheetData()), SdkWorkbook.Styles());
+        var stream = TestWorkbook.Create(new S.Worksheet(new S.SheetData()), TestWorkbook.Styles());
         using (var zip = new ZipArchive(stream, ZipArchiveMode.Update, leaveOpen: true))
         {
             var entry = zip.GetEntry("xl/worksheets/sheet1.xml")!;

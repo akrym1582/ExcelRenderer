@@ -29,7 +29,7 @@ public sealed class SavedFormulaTests
         });
         Assert.NotEmpty(pdf);
         using var document = TestSupport.Open(pdf);
-        Assert.Single(document.Pages);
+        Assert.Single(document.GetPages());
         if (value is null)
         {
             Assert.Contains(result.Diagnostics, diagnostic => diagnostic.Code == "FormulaCachedValueMissing");

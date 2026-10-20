@@ -1,4 +1,3 @@
-using ExcelRenderer.TestFixtures;
 using ExcelRenderer.Core.Abstractions;
 using ExcelRenderer.Core.Drawing;
 using ExcelRenderer.Core.Fonts;

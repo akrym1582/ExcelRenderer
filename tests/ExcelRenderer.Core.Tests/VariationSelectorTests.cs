@@ -1,4 +1,3 @@
-using ExcelRenderer.TestFixtures;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 using ExcelRenderer.Core.Model;
 using ExcelRenderer.Core.Pdf;
@@ -65,6 +64,6 @@ public sealed class VariationSelectorTests
         var expected = PdfContentProbe.Read(await Render(false)).Texts;
         var actual = PdfContentProbe.Read(await Render(true)).Texts;
         Assert.NotEmpty(expected);
-        Assert.Equal(expected.Select(text => (text.Encoded, text.Origin, text.Size)), actual.Select(text => (text.Encoded, text.Origin, text.Size)));
+        Assert.Equal(expected.Select(text => (text.Value, text.Origin, text.Size)), actual.Select(text => (text.Value, text.Origin, text.Size)));
     }
 }

@@ -1,4 +1,3 @@
-using ExcelRenderer.TestFixtures;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
@@ -17,15 +16,15 @@ internal static class DrawingAnchorWorkbookFixture
         for (var column = 1; column <= 8; column++) columns.Append(new S.Column { Min = (uint)column, Max = (uint)column, Width = 1.710625 + (column % 3) * 0.25, CustomWidth = true });
         for (var row = 1; row <= 10; row++)
         {
-            rows.Append(new S.Row(Enumerable.Range(1, 8).Select(column => SdkWorkbook.Text(((char)('A' + column - 1)).ToString() + row, "x"))) { RowIndex = (uint)row, Height = 8 + row, CustomHeight = true });
+            rows.Append(new S.Row(Enumerable.Range(1, 8).Select(column => TestWorkbook.Text(((char)('A' + column - 1)).ToString() + row, "x"))) { RowIndex = (uint)row, Height = 8 + row, CustomHeight = true });
         }
-        using (var input = SdkWorkbook.Create(new S.Worksheet(columns, rows), SdkWorkbook.Styles(), name: "Anchors"))
+        using (var input = TestWorkbook.Create(new S.Worksheet(columns, rows), TestWorkbook.Styles(), name: "Anchors"))
         {
             using (var document = SpreadsheetDocument.Open(input, true))
             {
                 var names = new[] { "absolute", "one", "two" };
                 var colors = new[] { SKColors.Red, SKColors.Green, SKColors.Blue };
-                for (var index = 0; index < names.Length; index++) SdkWorkbook.Image(document.WorkbookPart!.WorksheetParts.Single(), TestSupport.Png(colors[index]), names[index], 3, 2);
+                for (var index = 0; index < names.Length; index++) TestWorkbook.Image(document.WorkbookPart!.WorksheetParts.Single(), TestSupport.Png(colors[index]), names[index], 3, 2);
             }
             File.WriteAllBytes(path, input.ToArray());
         }

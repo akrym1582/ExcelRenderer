@@ -1,5 +1,4 @@
 using DocumentFormat.OpenXml.Packaging;
-using ExcelRenderer.TestFixtures;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 using ExcelRenderer.Core.Excel;
 using ExcelRenderer.Core.Fonts;
@@ -7,6 +6,8 @@ using ExcelRenderer.Core.Model;
 using ExcelRenderer.Core.Input;
 using ExcelRenderer.Core.Rendering;
 using SkiaSharp;
+using UglyToad.PdfPig;
+using UglyToad.PdfPig.Tokens;
 
 namespace ExcelRenderer.Core.Tests;
 
@@ -18,7 +19,7 @@ internal static class TestSupport
 
     internal static MemoryStream Workbook(Action<WorkbookPart>? configure = null)
     {
-        var stream = SdkWorkbook.Create(new S.Worksheet(new S.SheetData(new S.Row(SdkWorkbook.Text("A1", "帳票 日本語 abc 123")) { RowIndex = 1 })), SdkWorkbook.Styles(), name: "First");
+        var stream = TestWorkbook.Create(new S.Worksheet(new S.SheetData(new S.Row(TestWorkbook.Text("A1", "帳票 日本語 abc 123")) { RowIndex = 1 })), TestWorkbook.Styles(), name: "First");
         if (configure is not null)
         {
             using var document = SpreadsheetDocument.Open(stream, true);
@@ -69,21 +70,41 @@ internal static class TestSupport
         return (result, output.ToArray());
     }
 
-    internal static PdfTestFile Open(byte[] bytes) => PdfTestFile.Open(new MemoryStream(bytes));
+    internal static PdfDocument Open(byte[] bytes) => PdfDocument.Open(bytes, new ParsingOptions { UseLenientParsing = false });
 
-    internal static IEnumerable<PdfTestMap> Fonts(PdfTestPage page)
+    internal static T Token<T>(PdfDocument document, IToken token) where T : IToken =>
+        (T)(token is IndirectReferenceToken reference ? document.Structure.GetObject(reference.Data).Data : token);
+
+    internal static T Entry<T>(PdfDocument document, DictionaryToken dictionary, string key) where T : IToken =>
+        Token<T>(document, dictionary.Data[key]);
+
+    internal static string PdfString(IToken token)
     {
-        var fonts = page.Elements.GetDictionary("/Resources")?.Elements.GetDictionary("/Font");
-        return fonts?.Elements.Keys.Select(key => fonts.Elements.GetDictionary(key)!) ?? [];
+        if (token is StringToken text) return text.Data;
+        if (token is not HexToken hex) throw new InvalidDataException($"Expected PDF string, got {token.GetType().Name}.");
+        var bytes = hex.Bytes.ToArray();
+        return bytes.Length >= 2 && bytes[0] == 254 && bytes[1] == 255
+            ? System.Text.Encoding.BigEndianUnicode.GetString(bytes, 2, bytes.Length - 2)
+            : System.Text.Encoding.Latin1.GetString(bytes);
     }
 
-    internal static PdfTestMap Descriptor(PdfTestMap font) =>
-        ((PdfTestMap)((PdfTestReference)font.Elements.GetArray("/DescendantFonts")!.Elements[0]).Value).Elements.GetDictionary("/FontDescriptor")!;
+    internal static IEnumerable<DictionaryToken> Fonts(PdfDocument document)
+    {
+        var resources = Entry<DictionaryToken>(document, document.GetPage(1).Dictionary, "Resources");
+        var fonts = Entry<DictionaryToken>(document, resources, "Font");
+        return fonts.Data.Values.Select(token => Token<DictionaryToken>(document, token));
+    }
+
+    internal static DictionaryToken Descriptor(PdfDocument document, DictionaryToken font)
+    {
+        var descendants = Entry<ArrayToken>(document, font, "DescendantFonts");
+        return Entry<DictionaryToken>(document, Token<DictionaryToken>(document, descendants.Data[0]), "FontDescriptor");
+    }
 
     internal static string FontName(byte[] bytes)
     {
         using var document = Open(bytes);
-        return Descriptor(Fonts(document.Pages[0]).First()).Elements.GetName("/FontName").Replace(" ", string.Empty);
+        return Entry<NameToken>(document, Descriptor(document, Fonts(document).First()), "FontName").Data.Replace(" ", string.Empty);
     }
 
     internal static async Task WithSheet(Stream input, Action<ReportSheet, SingleFontContext> action)

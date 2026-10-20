@@ -90,6 +90,8 @@ def fixtures(work, runtime):
                            ('shapes', 'ShapeAndFontTests.CreateWorkbookWithShapes.C704163BF33ECFBD.xlsx')]:
         path = directory / (kind + '.xlsx')
         shutil.copyfile(retained / filename, path)
+        if kind == 'shapes':
+            add_shape_text_fixture(path)
         for form in ('Pdf', 'PostScript', 'Png', 'Svg'):
             case(kind + '-' + form, path, Format=form, Trim=True)
     phase1 = load('benchmark-conditional-formatting')
@@ -116,6 +118,27 @@ def fixtures(work, runtime):
     (work / 'cases.json').write_text(json.dumps(cases, ensure_ascii=False, indent=2) + '\n')
 
 
+def add_shape_text_fixture(path):
+    """Complete the retained seed with the DrawingML used by ShapeAndFontTests."""
+    with ZipFile(path) as archive:
+        parts = {name: archive.read(name) for name in archive.namelist()}
+    rel = 'http://schemas.openxmlformats.org/package/2006/relationships'
+    office = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'
+    worksheet = ET.fromstring(parts['xl/worksheets/sheet1.xml'])
+    ET.SubElement(worksheet, f'{{{NS}}}drawing', {f'{{{office}}}id': 'rIdShapePerformance'})
+    parts['xl/worksheets/sheet1.xml'] = ET.tostring(worksheet, encoding='utf-8')
+    parts['xl/worksheets/_rels/sheet1.xml.rels'] = (f'<Relationships xmlns="{rel}"><Relationship Id="rIdShapePerformance" Type="{office}/drawing" Target="../drawings/performance.xml"/></Relationships>').encode()
+    parts['[Content_Types].xml'] = parts['[Content_Types].xml'].replace(b'</Types>', b'<Override PartName="/xl/drawings/performance.xml" ContentType="application/vnd.openxmlformats-officedocument.drawing+xml"/></Types>')
+    anchors = []
+    for index, kind in enumerate(['rect', 'ellipse', 'roundRect', 'wedgeRectCallout', 'wedgeRoundRectCallout']):
+        def marker(name, row):
+            return f'<xdr:{name}><xdr:col>{0 if name == "from" else 6}</xdr:col><xdr:colOff>0</xdr:colOff><xdr:row>{row}</xdr:row><xdr:rowOff>0</xdr:rowOff></xdr:{name}>'
+        anchors.append(f'<xdr:twoCellAnchor>{marker("from", index * 4)}{marker("to", index * 4 + 3)}<xdr:sp><xdr:nvSpPr><xdr:cNvPr id="{index + 1}" name="Shape {kind}"/><xdr:cNvSpPr/></xdr:nvSpPr><xdr:spPr><a:xfrm rot="{index * 900000}"><a:off x="0" y="0"/><a:ext cx="914400" cy="457200"/></a:xfrm><a:prstGeom prst="{kind}"><a:avLst/></a:prstGeom><a:solidFill><a:srgbClr val="FFFF00"/></a:solidFill><a:ln w="12700"><a:solidFill><a:srgbClr val="0000FF"/></a:solidFill></a:ln></xdr:spPr><xdr:txBody><a:bodyPr anchor="ctr"/><a:lstStyle/><a:p><a:pPr algn="ctr"/><a:r><a:rPr sz="1200"/><a:t>Shape {kind} 日本語 ABC</a:t></a:r></a:p></xdr:txBody></xdr:sp><xdr:clientData/></xdr:twoCellAnchor>')
+    parts['xl/drawings/performance.xml'] = ('<xdr:wsDr xmlns:xdr="http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">' + ''.join(anchors) + '</xdr:wsDr>').encode()
+    with ZipFile(path, 'w', ZIP_DEFLATED) as archive:
+        for name, data in parts.items():archive.writestr(name, data)
+
+
 def run(args):
     work = args.output.resolve()
     if args.generate:
@@ -138,7 +161,9 @@ def run(args):
                 rows = [json.loads(line) for line in result.stdout.splitlines()]
                 control = next(row for row in rows[1:] if row['observerControl'])
                 observed = next(row for row in rows[1:] if row['diagnostic'])
-                assert (control['pages'], control['outputBytes'], control['captureHash']) == (observed['pages'], observed['outputBytes'], observed['captureHash']), 'Observer changed output'
+                assert (control['pages'], control['captureHash']) == (observed['pages'], observed['captureHash']), 'Observer changed output'
+                if case.get('Format', 'Pdf') != 'Svg':
+                    assert control['outputBytes'] == observed['outputBytes'], 'Observer changed output size'
                 observations.append(dict(stage=stage, case=case['Name'], records=rows))
                 (work / 'diagnostics.json').write_text(json.dumps(observations, indent=2) + '\n')
                 print(f'diagnostic: {case["Name"]}/{stage}', flush=True)

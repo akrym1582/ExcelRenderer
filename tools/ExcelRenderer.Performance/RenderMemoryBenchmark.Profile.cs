@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text.Json;
+using System.Xml.Linq;
 using ExcelRenderer;
 using ExcelRenderer.Excel;
 using ExcelRenderer.Fonts;
@@ -99,7 +100,7 @@ internal static partial class RenderMemoryBenchmark
             clock.Stop();
             var allocationBytes = GC.GetTotalAllocatedBytes(true) - allocated;
             var captureHash = diagnosticOnly && iteration >= 0 && item.Capture is { } directory && Directory.Exists(directory)
-                ? Hash(System.Text.Encoding.UTF8.GetBytes(string.Join("\n", Directory.GetFiles(directory).OrderBy(file => file, StringComparer.Ordinal).Select(file => Path.GetFileName(file) + ":" + HashFile(file))))) : null;
+                ? Hash(System.Text.Encoding.UTF8.GetBytes(string.Join("\n", Directory.GetFiles(directory).OrderBy(file => file, StringComparer.Ordinal).Select(file => Path.GetFileName(file) + ":" + HashArtifactFile(file))))) : null;
             using var process = Process.GetCurrentProcess();
             Console.WriteLine(JsonSerializer.Serialize(new
             {
@@ -119,6 +120,36 @@ internal static partial class RenderMemoryBenchmark
     {
         using var input = File.OpenRead(path);
         return Convert.ToHexString(SHA256.HashData(input));
+    }
+
+    private static string HashArtifactFile(string path)
+    {
+        if (!path.EndsWith(".svg", StringComparison.OrdinalIgnoreCase))
+        {
+            return HashFile(path);
+        }
+
+        // Match tests/Shared/ReaderSnapshot.CanonicalSvg: only resource names change.
+        var document = XDocument.Load(path);
+        var ids = document.Root!.DescendantsAndSelf().Attributes("id").Select((attribute, index) => (attribute.Value, Name: "resource" + index))
+            .ToDictionary(item => item.Value, item => item.Name, StringComparer.Ordinal);
+        foreach (var attribute in document.Root.DescendantsAndSelf().Attributes())
+        {
+            if (attribute.Name.LocalName == "id")
+            {
+                attribute.Value = ids[attribute.Value];
+            }
+            else if (attribute.Value.StartsWith("url(#", StringComparison.Ordinal) && attribute.Value.EndsWith(")", StringComparison.Ordinal) && ids.TryGetValue(attribute.Value.Substring(5, attribute.Value.Length - 6), out var referenced))
+            {
+                attribute.Value = "url(#" + referenced + ")";
+            }
+            else if (attribute.Value.StartsWith("#", StringComparison.Ordinal) && ids.TryGetValue(attribute.Value.Substring(1), out referenced))
+            {
+                attribute.Value = "#" + referenced;
+            }
+        }
+
+        return Hash(System.Text.Encoding.UTF8.GetBytes(document.ToString(SaveOptions.DisableFormatting)));
     }
 
     private sealed record ProfileCase(string Name, string Input, string Format = "Pdf", bool ReadOnly = false, bool ConditionalFormatting = true, bool Continuous = false, bool Trim = false, int[]? Pages = null, string? Range = null, string? Capture = null, string Mode = "cached", bool FontPack = false, string? Template = null);

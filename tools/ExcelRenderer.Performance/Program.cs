@@ -10,6 +10,12 @@ using ExcelRenderer.Rendering;
 
 var command = args[0];
 var path = args[1];
+if (command == "pdf-read")
+{
+    await PdfReadBenchmark.RunAsync(args);
+    return;
+}
+
 if (command == "render-profile")
 {
     await RenderMemoryBenchmark.ProfileAsync(args);

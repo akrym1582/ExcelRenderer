@@ -42,7 +42,7 @@ APIの非PDF要求は既定PdfSharp値だけを互換性のため許容する。
 - main内部の`IPdfDocumentWriter`で文書・ページ・確定・中断を分離。
   PDFsharp writerは既存rendererとCore Saveを利用する。
 - レイアウト、選択、preflight、診断、リンク解決、sink commitは共通。
-  `PdfCommandFinalizer`が未確定の互換文字・header/footer・図形文字を共通のlayout serviceで
+  `CommandTextFinalizer`が未確定の互換文字・header/footer・図形文字を共通のlayout serviceで
   確定する。旧measurerのrunなしlayoutも幅・高さ・baselineを保ってrunだけを補完する。
   Skia writer内で再計測・折返しを行わない。
 - Skiaは同じpage planから1ページずつ再生成してglyph集合を収集し、順次再生成して描画。

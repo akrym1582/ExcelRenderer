@@ -1,0 +1,26 @@
+{
+  "ExcelRenderer.Fonts.1.10.1.nupkg": {
+    "entries": 12,
+    "ghostscriptBinaries": [],
+    "coreDll": []
+  },
+  "ExcelRenderer.Tool.1.10.1.nupkg": {
+    "entries": 72,
+    "ghostscriptBinaries": [],
+    "coreDll": [
+      "tools/net10.0/any/ExcelRenderer.Core.dll"
+    ]
+  },
+  "ExcelRenderer.1.10.1.nupkg": {
+    "entries": 16,
+    "ghostscriptBinaries": [],
+    "coreDll": [
+      "lib/netstandard2.1/ExcelRenderer.Core.dll"
+    ]
+  },
+  "ExcelRenderer.Mapping.1.10.1.nupkg": {
+    "entries": 13,
+    "ghostscriptBinaries": [],
+    "coreDll": []
+  }
+}

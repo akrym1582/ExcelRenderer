@@ -1,13 +1,12 @@
 using ExcelRenderer.Abstractions;
-using ExcelRenderer.Drawing;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Model;
 
-namespace ExcelRenderer.Pdf;
+namespace ExcelRenderer.Drawing;
 
-/// <summary>Finalizes compatibility and shape text before either PDF writer consumes a page.</summary>
-internal static class PdfCommandFinalizer
+/// <summary>Finalizes compatibility and shape text before a vector document writer consumes a page.</summary>
+internal static class CommandTextFinalizer
 {
     /// <summary>Resolves text through the shared, conversion-local layout service.</summary>
     /// <param name="commands">One page's commands.</param>
@@ -65,7 +64,7 @@ internal static class PdfCommandFinalizer
                 lines.Add(elements.GetTextElement());
             }
 
-            command = command with { Text = string.Join("\n", lines), Style = command.Style with { TextRotation = 0, TopToBottom = true } };
+            command = command with { OriginalText = command.OriginalText ?? command.Text, Text = string.Join("\n", lines), Style = command.Style with { TextRotation = 0, TopToBottom = true } };
         }
 
         var measured = layout.Layout(command.Text, command.Style.Font, command.Bounds.Width, command.Style.WrapText);
@@ -94,7 +93,7 @@ internal static class PdfCommandFinalizer
             : line with { Runs = service.Layout(line.Text, command.Style.Font with { Size = size }, double.MaxValue, false).Lines.Single().Runs }).ToArray();
         if (lines.Any(line => line.Text.Length > 0 && line.Runs.Count == 0))
         {
-            throw new InvalidOperationException("PDF text requires resolved font runs before drawing.");
+            throw new InvalidOperationException("Vector text requires resolved font runs before drawing.");
         }
 
         lines = lines.Select(line => line with { Runs = Array.AsReadOnly(line.Runs.Select(ResolvedGlyphLayout.Finalize).ToArray()) }).ToArray();

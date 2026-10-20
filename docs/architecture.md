@@ -334,7 +334,8 @@ src/ExcelRenderer
 │  └─ ITextMeasurer
 ├─ Drawing
 │  ├─ DrawCommand
-│  └─ DrawCommandGeneratorPass
+│  ├─ DrawCommandGeneratorPass
+│  └─ CommandTextFinalizer
 ├─ Excel
 │  └─ ExcelReader
 ├─ Layout
@@ -348,9 +349,10 @@ src/ExcelRenderer
 ├─ Fonts
 │  ├─ FontManager
 │  └─ ConversionFontResources
+├─ PostScript
+│  └─ PostScriptRenderer
 ├─ Pdf
-│  ├─ PdfRenderer
-│  └─ PdfCommandFinalizer
+│  └─ PdfRenderer
 └─ SkiaSharp
    ├─ SkiaTextMeasurer
    ├─ SkiaPdfDocumentWriter

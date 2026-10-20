@@ -14,7 +14,7 @@ public sealed record RenderRequest
     /// <summary>Gets the workbook formula display policy.</summary>
     public ExcelRenderer.Excel.ExcelReadOptions ReadOptions { get; init; } = new();
 
-    /// <summary>Gets the SVG and Skia PDF intermediate buffer policy; it does not affect Skia PDF or PNG buffers.</summary>
+    /// <summary>Gets the SVG, PostScript and Skia PDF intermediate spool policy; it does not bound PNG bitmap allocations.</summary>
     public ExcelRenderer.Rendering.RenderBufferOptions Buffering { get; init; } = new();
 
     /// <summary>Gets the content cropping options.</summary>
@@ -35,7 +35,7 @@ public sealed record RenderRequest
     /// <summary>Gets the input-size and ZIP-expansion criteria. 入力ストリームのサイズと ZIP 展開に関する条件です。</summary>
     public WorkbookInputOptions Input { get; init; } = new();
 
-    /// <summary>Gets the font selection criteria for PDF, PNG, and SVG rendering. PDF、PNG、および SVG の描画に使用するフォントの選択条件です。</summary>
+    /// <summary>Gets the font selection criteria for PDF, PostScript, PNG, and SVG rendering. PDF、PostScript、PNG、および SVG の描画に使用するフォントの選択条件です。</summary>
     public FontOptions FontOptions { get; init; } = new();
 
     /// <summary>Gets the PNG output resolution in DPI. PNG 出力の解像度を DPI で指定します。</summary>

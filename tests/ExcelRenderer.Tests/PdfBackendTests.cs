@@ -471,13 +471,13 @@ public sealed class PdfBackendTests
             new DrawShapeCommand(1, new(10, 120, 150, 60), new(new(1, 1), 0, 0, 150, 60, Model.ShapeKind.Rectangle,
                 new(null, null), new("図形 辻\U000E0102", new("Noto Sans JP", 12), Model.HorizontalAlignment.Center, Model.VerticalAlignment.Center, true, 2, 3, 4, 5), 0, 0)),
         ];
-        var finalized = PdfCommandFinalizer.Finalize(commands, service, CancellationToken.None).ToArray();
+        var finalized = CommandTextFinalizer.Finalize(commands, service, CancellationToken.None).ToArray();
         Assert.NotNull(Assert.IsType<DrawTextCommand>(finalized[0]).TextLayout);
         var shape = Assert.IsType<DrawShapeCommand>(finalized[1]);
         Assert.NotNull(shape.TextCommand!.TextLayout);
         Assert.Equal(new Layout.ReportRect(12, 123, 144, 52), shape.TextCommand.Bounds);
         Assert.Contains(shape.TextCommand.TextLayout!.Lines.SelectMany(line => line.Runs), run => run.Run.GlyphId is not null);
-        var repeated = PdfCommandFinalizer.Finalize([finalized[0]], service, CancellationToken.None).Single();
+        var repeated = CommandTextFinalizer.Finalize([finalized[0]], service, CancellationToken.None).Single();
         Assert.Same(finalized[0], repeated);
     }
 
@@ -487,7 +487,7 @@ public sealed class PdfBackendTests
         var command = OutputFixture.Artificial(runs: false);
         var layout = command.TextLayout!;
         var service = new SkiaSharp.SkiaTextMeasurer(new FontManager(new() { AllowSystemFonts = false }));
-        var finalized = Assert.IsType<DrawTextCommand>(PdfCommandFinalizer.Finalize([command], service, CancellationToken.None).Single());
+        var finalized = Assert.IsType<DrawTextCommand>(CommandTextFinalizer.Finalize([command], service, CancellationToken.None).Single());
         Assert.Equal(layout.Size, finalized.TextLayout!.Size);
         Assert.Equal(layout.EffectiveFontSize, finalized.TextLayout.EffectiveFontSize);
         foreach (var pair in layout.Lines.Zip(finalized.TextLayout.Lines))

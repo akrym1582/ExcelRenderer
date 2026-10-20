@@ -45,7 +45,7 @@ internal static class CompatibilityFixtures
         text.Add(new DrawTextCommand(1, new(200, 275, 100, 80), "縦書ABC", CellStyle.Default with { Font = font, TextRotation = 255 }));
         regions.Add(new("rotated-text", [15, 275, 155, 330]));
         regions.Add(new("vertical-text", [200, 275, 300, 355]));
-        yield return new("styles", PdfCommandFinalizer.Finalize(text, layout, CancellationToken.None).ToArray(), regions, []);
+        yield return new("styles", CommandTextFinalizer.Finalize(text, layout, CancellationToken.None).ToArray(), regions, []);
 
         var borders = new List<DrawCommand>();
         regions = [];
@@ -75,7 +75,7 @@ internal static class CompatibilityFixtures
             regions.Add(new(shapeKinds[index].ToString(), [bounds.X - 2, bounds.Y - 2, bounds.X + bounds.Width + 2, bounds.Y + bounds.Height + 18]));
         }
 
-        yield return new("shapes", PdfCommandFinalizer.Finalize(shapes, layout, CancellationToken.None).ToArray(), regions, ["図形 ABC"]);
+        yield return new("shapes", CommandTextFinalizer.Finalize(shapes, layout, CancellationToken.None).ToArray(), regions, ["図形 ABC"]);
 
         using var bitmap = new SKBitmap(32, 32);
         for (var y = 0; y < 32; y++)
@@ -116,7 +116,7 @@ internal static class CompatibilityFixtures
         var transformed = layers.Concat([new DrawViewportCommand(1, layers, new(0, 0, 205, 145), 15, 180)]);
         yield return new(
             "transforms",
-            PdfCommandFinalizer.Finalize(transformed, layout, CancellationToken.None).ToArray(),
+            CommandTextFinalizer.Finalize(transformed, layout, CancellationToken.None).ToArray(),
             [new("rotated-clipped-layers", [5, 5, 220, 150]), new("viewport-origin-and-layers", [15, 180, 225, 330])],
             ["回転図形"]);
         yield return new("blank", [], [new("page", [0, 0, 421.123, 400.456])], []);

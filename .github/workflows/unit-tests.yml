@@ -24,7 +24,8 @@ jobs:
       - name: Set up fixed fonts for public renderer smoke tests
         run: |
           sudo apt-get update
-          sudo apt-get install -y fontconfig
+          sudo apt-get install -y fontconfig ghostscript
+          gs --version
           source scripts/test-fonts.sh
           echo "FONTCONFIG_FILE=$FONTCONFIG_FILE" >> "$GITHUB_ENV"
 
@@ -57,12 +58,27 @@ jobs:
         run: python3 scripts/validate-reader-isolation.py
 
       - name: Run unit tests
+        env:
+          EXCELRENDERER_REQUIRE_GHOSTSCRIPT: '1'
         run: >-
           dotnet test ExcelRenderer.slnx
           --configuration Release
           --no-build
           --logger "trx;LogFileName=unit-tests.trx"
           --results-directory TestResults
+
+      - name: Decode PostScript source text and glyph metadata independently
+        run: >-
+          python3 scripts/decode-postscript-text.py
+          tests/ExcelRenderer.Tests/bin/Release/net10.0/SampleOutputs/PostScript/fonts.ps
+          --output tests/ExcelRenderer.Tests/bin/Release/net10.0/SampleOutputs/PostScript/source-text.json
+
+      - name: Verify PostScript fonts and metadata against actual character operators
+        run: >-
+          python3 scripts/validate-postscript.py
+          tests/ExcelRenderer.Tests/bin/Release/net10.0/SampleOutputs/PostScript/fonts.ps
+          tests/ExcelRenderer.Tests/bin/Release/net10.0/SampleOutputs/PostScript/drawing.ps
+          --output tests/ExcelRenderer.Tests/bin/Release/net10.0/SampleOutputs/PostScript/font-validation.json
 
       - uses: actions/setup-python@v5
         with:

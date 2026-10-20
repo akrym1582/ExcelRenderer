@@ -218,7 +218,7 @@ Core's single-font measurer/renderer compose those primitives. They do not refer
 
 Main owns `SkiaSharp/SkiaTextMeasurer` (fallback, IVS, rich text policy),
 `Fonts/ConversionFontResources` / `ResolvedGlyphLayout` / `TextRunBuilder`, `Pdf/PdfRenderer`,
-`Pdf/PdfCommandFinalizer`, `SkiaSharp/SkiaPdfFonts` and `SkiaPdfDocumentWriter` adapters.
+`Drawing/CommandTextFinalizer`, `SkiaSharp/SkiaPdfFonts` and `SkiaPdfDocumentWriter` adapters.
 `SkiaDrawingContext` supplies shapes/viewports/transformed images and delegates cell
 border algorithms to Core. PNG/SVG use the same finalized glyph identities and line/run point geometry, retaining the existing PNG/SVG native raster advance policy.
 The reserved backend option is an API rejection contract, not another implementation.
@@ -265,3 +265,11 @@ Core's `ExcelReadOptions` retains the neutral selected-region setting and remove
 ## Conditional formatting ownership
 
 Reader owns raw immutable rule/differential metadata and colors. OpenXml owns saved-value/calculation snapshots and arbitrary expression evaluation; Formulas owns parsed-reference movement. Main alone owns ConditionalFormattingSession/ConditionalStyle, sparse population union/statistics and ConditionalColorScale. OpenXml exposes only sparse source-coordinate enumeration on its existing calculation snapshot. Core owns ordinary traversal, style interning, merged-border aggregation and the generic no-op CompleteCellAppearances hook. Core does not evaluate or apply conditional formatting.
+
+## PostScript ownership
+
+Main owns `PostScript/*`, `PostScriptExportOptions` and the high-level/CLI/sink integration.
+`Drawing/CommandTextFinalizer` resolves only missing compatibility/shape text and preserves
+finalized line/run geometry for PDF and PostScript. Core's existing immutable physical
+font snapshots, TTC extraction, glyph closure and TrueType subsetter are reused internally.
+Core has no PostScript public API, writer, output enum value or dependency on main.

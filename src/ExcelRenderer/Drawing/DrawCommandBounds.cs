@@ -1,7 +1,6 @@
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Model;
-using SkiaSharp;
 
 namespace ExcelRenderer.Drawing;
 
@@ -15,6 +14,7 @@ internal static class DrawCommandBounds
     /// <returns>The visible union, or null when nothing draws.</returns>
     internal static ReportRect? Get(IEnumerable<DrawCommand> commands, ReportRect clip, IFontManager fonts)
     {
+        using var ownedResources = ConversionFontResources.Current is null ? new ConversionFontResources() : null;
         ReportRect? union = null;
         foreach (var command in commands)
         {
@@ -124,11 +124,12 @@ internal static class DrawCommandBounds
             return null;
         }
 
-        var layout = command.TextLayout ?? new SkiaSharp.SkiaTextMeasurer(fonts, cacheLayouts: true).Layout(
-            command.Text,
-            command.Style.Font,
-            command.Bounds.Width,
-            command.Style.WrapText);
+        if (command.TextLayout is null || command.TextLayout.Lines.Any(line => (line.Text.Length > 0 && line.Runs.Count == 0) || line.Runs.Any(run => run.Glyphs is null)))
+        {
+            command = (DrawTextCommand)CommandTextFinalizer.FinalizeRaster([command], fonts, CancellationToken.None).Single();
+        }
+
+        var layout = command.TextLayout!;
         ReportRect? result = null;
         var size = TextLayoutFontSize.Resolve(layout, command.Style.Font);
         if (size <= 0)
@@ -145,17 +146,8 @@ internal static class DrawCommandBounds
                     continue;
                 }
 
-                using Stream stream = run.Run.Font.FontData is { } bytes ? new MemoryStream(bytes, false) : File.OpenRead(run.Run.Font.FilePath);
-                using var ownedFace = ConversionFontResources.Current is null ? SKTypeface.FromStream(stream) : null;
-                var face = ConversionFontResources.Current?.GetTypeface(run.Run.Font) ?? ownedFace;
                 var runSize = run.Font?.Size ?? size;
-                using var font = new SKFont(face, (float)runSize);
-                font.MeasureText(run.Run.Text, out var ink);
-                using var glyphPath = run.Run.GlyphId is { } glyph ? font.GetGlyphPath(glyph) : null;
-                if (glyphPath is not null && !glyphPath.Bounds.IsEmpty)
-                {
-                    ink = glyphPath.Bounds;
-                }
+                var ink = ConversionFontResources.Current!.GetGlyphInk(run.Run.Font, run.Glyphs!, (float)runSize, run.Run.GlyphId is not null);
 
                 var x = positioned.Left + run.X;
                 var baseline = positioned.Baseline;
@@ -177,7 +169,7 @@ internal static class DrawCommandBounds
                 }
             }
 
-            if (command.Style.Font.Underline && positioned.Line.Runs.Count == 0)
+            if (command.Style.Font.Underline && !positioned.Line.Runs.Any(run => run.Font is not null))
             {
                 result = Union(result, new ReportRect(positioned.Left, positioned.Baseline + .5, positioned.Line.Width, 1));
             }

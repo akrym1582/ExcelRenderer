@@ -105,7 +105,7 @@ internal sealed class SkiaFontFace : IDisposable
     /// <param name="glyphs">The selected glyphs.</param>
     /// <param name="size">The size in points.</param>
     /// <returns>Individual point advances under the existing scalable/color policy.</returns>
-    internal double[] Advances(ushort[] glyphs, double size)
+    internal double[] Advances(ReadOnlySpan<ushort> glyphs, double size)
     {
         var result = new double[glyphs.Length];
         if (Color)
@@ -132,7 +132,7 @@ internal sealed class SkiaFontFace : IDisposable
     /// <param name="glyphs">The selected glyphs.</param>
     /// <param name="size">The size in points.</param>
     /// <returns>Point-coordinate positions relative to the run.</returns>
-    internal SKPoint[] Positions(ushort[] glyphs, double size)
+    internal SKPoint[] Positions(ReadOnlySpan<ushort> glyphs, double size)
     {
         var result = new SKPoint[glyphs.Length];
         var colorAdvances = Color ? Advances(glyphs, size) : null;

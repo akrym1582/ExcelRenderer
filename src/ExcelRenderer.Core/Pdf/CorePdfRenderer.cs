@@ -70,11 +70,10 @@ internal sealed class CorePdfRenderer : IDisposable
     /// <param name="commands">One page's finalized commands.</param>
     internal void Collect(IEnumerable<DrawCommand> commands)
     {
-        using var surface = SKSurface.CreateNull(1, 1);
         foreach (var text in commands.OfType<DrawTextCommand>())
         {
             token.ThrowIfCancellationRequested();
-            (textPainter ?? throw new InvalidOperationException("The conversion font is missing.")).Paint(surface.Canvas, text);
+            (textPainter ?? throw new InvalidOperationException("The conversion font is missing.")).Collect(text);
         }
     }
 

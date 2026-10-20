@@ -148,11 +148,34 @@ internal static class CommandTextFinalizer
         return CompleteRuns(command with { TextLayout = measured }, resolvedRuns);
     }
 
+    private static bool NeedsCompletion(TextLayoutResult layout)
+    {
+        for (var lineIndex = 0; lineIndex < layout.Lines.Count; lineIndex++)
+        {
+            var line = layout.Lines[lineIndex];
+            var runs = line.Runs;
+            if (line.Text.Length > 0 && runs.Count == 0)
+            {
+                return true;
+            }
+
+            for (var runIndex = 0; runIndex < runs.Count; runIndex++)
+            {
+                if (runs[runIndex].Glyphs is null)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     private static DrawTextCommand CompleteRuns(DrawTextCommand command, ITextLayoutService service)
     {
         var layout = command.TextLayout!;
         var size = TextLayoutFontSize.Resolve(layout, command.Style.Font);
-        if (size == 0 || !layout.Lines.Any(line => (line.Text.Length > 0 && line.Runs.Count == 0) || line.Runs.Any(run => run.Glyphs is null)))
+        if (size == 0 || !NeedsCompletion(layout))
         {
             return command;
         }

@@ -169,7 +169,7 @@ def run(args):
         entry['pairedRoundChanges'] = [(after / before - 1) * 100 for before, after in zip(entry['before']['roundMedians'], entry['after']['roundMedians'])]
         summary.append(entry)
     assert products == {stage: {file.name: sha(file) for file in path.glob('ExcelRenderer*.dll')} for stage, path in runtimes.items()}
-    (work / 'summary.json').write_text(json.dumps(dict(protocol=vars(args) | {'cpuAffinity': sorted(os.sched_getaffinity(0)), 'before': str(args.before), 'after': str(args.after), 'output': str(args.output)}, products=products, inputs={file.name: sha(file) for file in (work / 'inputs').glob('*.xlsx')}, summary=summary), indent=2) + '\n')
+    (work / 'summary.json').write_text(json.dumps(dict(protocol=vars(args) | {'cpuAffinity': sorted(os.sched_getaffinity(0)), 'caseWarmups': {case['Name']: case.get('Warmups', args.warmups) for case in cases}, 'before': str(args.before), 'after': str(args.after), 'output': str(args.output)}, products=products, inputs={file.name: sha(file) for file in (work / 'inputs').glob('*.xlsx')}, summary=summary), indent=2) + '\n')
 
 
 if __name__ == '__main__':

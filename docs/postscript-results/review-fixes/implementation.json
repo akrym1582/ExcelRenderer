@@ -1,0 +1,37 @@
+{
+  "baseCommit": "9dd0eb8a23de1c7bf0e382977f6ffd51e57705cd",
+  "verificationCommit": "3ad6eafa30e3db51833fc6257ad9a7129605e387",
+  "sourceSha256": {
+    "src/ExcelRenderer/PostScript/PostScriptDrawingContext.cs": "a5ab3c12f95739892a171059716629f4f42e5b103dd2c93c2e53bb1b21c1c498",
+    "tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs": "3ff6ed341bfd3aa4ca9d451c7039f2cdc4720677fe0824e064fbabef57992e32",
+    "tests/ExcelRenderer.Tests/PostScriptTests.cs": "b97a295c32eccbc0cb410de36a0a9d93eff22b7d39bac3e19e6981233a5a2686"
+  },
+  "psOutputSha256": {
+    "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/custom-collection.ps": "c1a90a0ef63655e912f0cdc48557924713a9fcc66c8e2de8be05624e53ce1583",
+    "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/displaced.ps": "7f388fd29ab10af0135ddd49bed4a0b8417688c44fd4bec149e4c77505967dda",
+    "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/drawing.ps": "c858e778af89636de39406e3a1c3443848e13988fd0b8b580697e6fdf5215538",
+    "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/fonts.ps": "1ffff1493036d88d7911bdac64c66cc795e45ffca3c3e69c911a840e3118da27",
+    "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/missing-glyph.ps": "51ec116233f1f874f0c1f9f151bcf3f0fe0a4f6ad4f3b72945f86a45e5c74034",
+    "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/missing-line.ps": "23f03c99458ec851aef68d67a517c349ca9c1ad4e460d47850a68839e9d6785f",
+    "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/mixed-paper.ps": "2c400c8b00b8525e22f3692bfddce7965e97f78aa4b6b7b4d1bcc0a239b37ab0",
+    "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/performance-images-4-pages.ps": "6e412fd36d97d5cdb2c7c8d36c7a6596beb4c2104fb5ee3671f531f4df1625a0",
+    "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/performance-japanese-borders.ps": "68e0aa6fc3aff1fd7af38fc8679541ae8f1d755c5b7375a3972fab1aef49857d",
+    "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/performance-many-glyphs.ps": "019d4b0d2071decce2bf5e72373d08858e75781d46539f2a057c4b57d92e97cd",
+    "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/performance-repeated-text-10-pages.ps": "851d1a93c8682918422846cb6ee44536da444b2a80fad7f0d49d4bb936632eba",
+    "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/review-colors-dark-red-black.ps": "f5c1a35434bcc0c6552b535020d348fee23df3ec5a34d3587ed2b97a1273f105",
+    "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/review-colors-gray-added.ps": "18e34f664382632c21ec51611fe34c3b4e1364e725bac88910e49749b49e6828",
+    "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/review-colors-gray-removed.ps": "b6e7039001f491aee92fbef3f58b75bfd2969c170fb9ad28d584f42eb302b167",
+    "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/review-colors-normal.ps": "616b56fa92f05107507f2b5303f2be25b0fee66aed9b4cb47140d0be6d74f875",
+    "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/review-dashes-0.5.ps": "0b2e28082ed2720f1dec09e567c27e8c19dddfa5ae6339965588f661ee48e9ed",
+    "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/review-dashes-1.ps": "6fe1190cf6b9964e53feb72ebc02e555ca7e89073514e6ac53ebeecdda42d617",
+    "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/review-dashes-tiny.ps": "20005bdfac0cba0bedaee4eed17534a6c439a969b82100b80c1eb6999f2f5549",
+    "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/review-dashes-zero.ps": "20005bdfac0cba0bedaee4eed17534a6c439a969b82100b80c1eb6999f2f5549",
+    "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/standard.ps": "d7bf9ef7fb2b55e9171c3c149659a086b8817fdbf4434b567a09fae068e668d9"
+  },
+  "assemblySha256": {
+    "src/ExcelRenderer/bin/Debug/netstandard2.1/ExcelRenderer.dll": "2c5ee33dbd5b5a8f27d0aef0272f8f3fdfa67b81269e5e47036611f9d75c7502",
+    "src/ExcelRenderer.Core/bin/Debug/netstandard2.1/ExcelRenderer.Core.dll": "d6af3c0b53b43e820ae85e34de01be0a9b7dbfd1dbab0c6e181b4bae333e73aa",
+    "tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll": "064794b2565cdd5a09590f2b34b913e3bd955d022017a6f57bf8c5bd6bac311b",
+    "src/ExcelRenderer.Tool/bin/Debug/net10.0/ExcelRenderer.Tool.dll": "c667e691ced4d397e8019f8870885b53f3e057c3484aac8e78c621dd3bc6a087"
+  }
+}

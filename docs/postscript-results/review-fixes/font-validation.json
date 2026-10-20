@@ -1,0 +1,244 @@
+{
+  "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/custom-collection.ps": {
+    "pages": 1,
+    "fonts": [
+      {
+        "name": "ERF0",
+        "bytes": 1140,
+        "chunks": 1
+      }
+    ],
+    "glyphs": 3,
+    "commands": 1,
+    "passed": true
+  },
+  "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/displaced.ps": {
+    "pages": 1,
+    "fonts": [
+      {
+        "name": "ERF0",
+        "bytes": 336048,
+        "chunks": 6
+      },
+      {
+        "name": "ERF1",
+        "bytes": 1439948,
+        "chunks": 22
+      }
+    ],
+    "glyphs": 60,
+    "commands": 9,
+    "passed": true
+  },
+  "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/drawing.ps": {
+    "pages": 1,
+    "fonts": [
+      {
+        "name": "ERF0",
+        "bytes": 336048,
+        "chunks": 6
+      },
+      {
+        "name": "ERF1",
+        "bytes": 1439948,
+        "chunks": 22
+      }
+    ],
+    "glyphs": 60,
+    "commands": 9,
+    "passed": true
+  },
+  "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/fonts.ps": {
+    "pages": 1,
+    "fonts": [
+      {
+        "name": "ERF0",
+        "bytes": 379100,
+        "chunks": 6
+      },
+      {
+        "name": "ERF1",
+        "bytes": 1439948,
+        "chunks": 22
+      }
+    ],
+    "glyphs": 359,
+    "commands": 3,
+    "passed": true
+  },
+  "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/missing-glyph.ps": {
+    "pages": 1,
+    "fonts": [
+      {
+        "name": "ERF0",
+        "bytes": 336048,
+        "chunks": 6
+      },
+      {
+        "name": "ERF1",
+        "bytes": 1439948,
+        "chunks": 22
+      }
+    ],
+    "glyphs": 59,
+    "commands": 9,
+    "passed": true
+  },
+  "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/missing-line.ps": {
+    "pages": 1,
+    "fonts": [
+      {
+        "name": "ERF0",
+        "bytes": 336048,
+        "chunks": 6
+      },
+      {
+        "name": "ERF1",
+        "bytes": 1439948,
+        "chunks": 22
+      }
+    ],
+    "glyphs": 60,
+    "commands": 9,
+    "passed": true
+  },
+  "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/mixed-paper.ps": {
+    "pages": 2,
+    "fonts": [
+      {
+        "name": "ERF0",
+        "bytes": 331848,
+        "chunks": 6
+      }
+    ],
+    "glyphs": 12,
+    "commands": 2,
+    "passed": true
+  },
+  "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/performance-images-4-pages.ps": {
+    "pages": 4,
+    "fonts": [
+      {
+        "name": "ERF0",
+        "bytes": 336048,
+        "chunks": 6
+      },
+      {
+        "name": "ERF1",
+        "bytes": 1439948,
+        "chunks": 22
+      }
+    ],
+    "glyphs": 240,
+    "commands": 36,
+    "passed": true
+  },
+  "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/performance-japanese-borders.ps": {
+    "pages": 1,
+    "fonts": [
+      {
+        "name": "ERF0",
+        "bytes": 330880,
+        "chunks": 6
+      }
+    ],
+    "glyphs": 1120,
+    "commands": 160,
+    "passed": true
+  },
+  "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/performance-many-glyphs.ps": {
+    "pages": 1,
+    "fonts": [
+      {
+        "name": "ERF0",
+        "bytes": 371228,
+        "chunks": 6
+      }
+    ],
+    "glyphs": 350,
+    "commands": 1,
+    "passed": true
+  },
+  "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/performance-repeated-text-10-pages.ps": {
+    "pages": 10,
+    "fonts": [
+      {
+        "name": "ERF0",
+        "bytes": 330880,
+        "chunks": 6
+      }
+    ],
+    "glyphs": 11200,
+    "commands": 1600,
+    "passed": true
+  },
+  "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/review-colors-dark-red-black.ps": {
+    "pages": 1,
+    "fonts": [],
+    "glyphs": 0,
+    "commands": 0,
+    "passed": true
+  },
+  "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/review-colors-gray-added.ps": {
+    "pages": 1,
+    "fonts": [],
+    "glyphs": 0,
+    "commands": 0,
+    "passed": true
+  },
+  "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/review-colors-gray-removed.ps": {
+    "pages": 1,
+    "fonts": [],
+    "glyphs": 0,
+    "commands": 0,
+    "passed": true
+  },
+  "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/review-colors-normal.ps": {
+    "pages": 1,
+    "fonts": [],
+    "glyphs": 0,
+    "commands": 0,
+    "passed": true
+  },
+  "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/review-dashes-0.5.ps": {
+    "pages": 1,
+    "fonts": [],
+    "glyphs": 0,
+    "commands": 0,
+    "passed": true
+  },
+  "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/review-dashes-1.ps": {
+    "pages": 1,
+    "fonts": [],
+    "glyphs": 0,
+    "commands": 0,
+    "passed": true
+  },
+  "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/review-dashes-tiny.ps": {
+    "pages": 1,
+    "fonts": [],
+    "glyphs": 0,
+    "commands": 0,
+    "passed": true
+  },
+  "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/review-dashes-zero.ps": {
+    "pages": 1,
+    "fonts": [],
+    "glyphs": 0,
+    "commands": 0,
+    "passed": true
+  },
+  "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/standard.ps": {
+    "pages": 1,
+    "fonts": [
+      {
+        "name": "ERF0",
+        "bytes": 331840,
+        "chunks": 6
+      }
+    ],
+    "glyphs": 18,
+    "commands": 1,
+    "passed": true
+  }
+}

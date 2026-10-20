@@ -1,0 +1,269 @@
+{
+  "baseCommit": "9dd0eb8a23de1c7bf0e382977f6ffd51e57705cd",
+  "verificationCommit": "3ad6eafa30e3db51833fc6257ad9a7129605e387",
+  "ghostscript": "10.05.1",
+  "projects": [
+    {
+      "project": "excelrenderer.core.tests",
+      "total": 170,
+      "passed": 170,
+      "failed": 0,
+      "notExecuted": 0
+    },
+    {
+      "project": "excelrenderer.formulas.tests",
+      "total": 833,
+      "passed": 833,
+      "failed": 0,
+      "notExecuted": 0
+    },
+    {
+      "project": "excelrenderer.mapping.tests",
+      "total": 172,
+      "passed": 172,
+      "failed": 0,
+      "notExecuted": 0
+    },
+    {
+      "project": "excelrenderer.openxml.tests",
+      "total": 213,
+      "passed": 213,
+      "failed": 0,
+      "notExecuted": 0
+    },
+    {
+      "project": "excelrenderer.tests",
+      "total": 890,
+      "passed": 890,
+      "failed": 0,
+      "notExecuted": 0
+    },
+    {
+      "project": "excelrenderer.tool.tests",
+      "total": 108,
+      "passed": 108,
+      "failed": 0,
+      "notExecuted": 0
+    }
+  ],
+  "total": 2386,
+  "passed": 2386,
+  "failed": 0,
+  "skipped": 0,
+  "postscriptTests": [
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptTests.Embedding_and_subsetting_restrictions_are_diagnosed(restrictions: 2)",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptTests.Transparent_image_reports_sheet_page_and_does_not_commit",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptGhostscriptTests.Representative_workloads_record_time_memory_size_and_shared_fonts",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptGhostscriptTests.Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison(mutation: \"normal\")",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptTests.Unified_api_selects_mixed_paper_pages_and_creates_one_ps_artifact",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptTests.Output_failure_or_cancellation_aborts_once_and_releases_spool(cancel: True)",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptGhostscriptTests.Zero_tiny_and_normal_width_lines_and_borders_execute_and_draw_dash_gaps(width: 1.0000000000000001E-18)",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptTests.Invalid_stroke_widths_fail_without_committing_output(width: -Infinity)",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptGhostscriptTests.Finalized_commands_compare_with_png_and_detect_removed_glyph_and_displaced_text",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptGhostscriptTests.Embedded_custom_collection_glyphs_render_after_source_deletion_without_platform_fonts",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptTests.Selected_collection_face_and_composite_glyphs_are_embedded(index: 1)",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptTests.More_than_256_glyphs_use_multiple_banks_without_reembedding",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptTests.Unsupported_fonts_fail_before_writing(name: \"cff.otf\")",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptTests.Embedding_and_subsetting_restrictions_are_diagnosed(restrictions: 256)",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptGhostscriptTests.Zero_tiny_and_normal_width_lines_and_borders_execute_and_draw_dash_gaps(width: 1)",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptTests.Unsupported_fonts_fail_before_writing(name: \"variable.ttf\")",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(name: \"gray-removed\", r: 180, g: 180, b: 180, mr: 255, mg: 255, mb: 255)",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(name: \"near-white-removed\", r: 250, g: 250, b: 250, mr: 255, mg: 255, mb: 255)",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptGhostscriptTests.Zero_tiny_and_normal_width_lines_and_borders_execute_and_draw_dash_gaps(width: 0.5)",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_handles_blank_and_low_contrast_pages(reference: 250, candidate: 255, passed: False)",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_small_gray_loss_among_near_white_pixels",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptTests.Invalid_stroke_widths_fail_without_committing_output(width: NaN)",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptTests.Unsupported_fonts_fail_before_writing(name: \"colr.ttf\")",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_accepts_small_boundary_rasterization_differences",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptTests.Original_text_survives_vertical_layout_and_many_metadata_chunks",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_handles_blank_and_low_contrast_pages(reference: 250, candidate: 250, passed: True)",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptGhostscriptTests.Multipage_document_executes_all_paper_sizes_and_records_measurements",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptTests.Direct_output_is_deterministic_ascii_with_text_operators_and_embedded_sfnt",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptGhostscriptTests.Type42_japanese_banks_ivs_and_supplementary_execute_without_substitution",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptGhostscriptTests.Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison(mutation: \"gray-removed\")",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_handles_blank_and_low_contrast_pages(reference: 254, candidate: 255, passed: True)",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptTests.Output_failure_or_cancellation_aborts_once_and_releases_spool(cancel: False)",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptTests.Invalid_stroke_widths_fail_without_committing_output(width: Infinity)",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptGhostscriptTests.Ubuntu_txtwrite_cleanup_diagnostic_is_scoped_to_version_device_and_success",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptTests.Partial_alpha_and_image_masks_fail_with_distinct_diagnostics",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptTests.Pages_empty_page_and_nonseekable_output_keep_ownership",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(name: \"gray-added\", r: 255, g: 255, b: 255, mr: 180, mg: 180, mb: 180)",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptTests.Identical_family_and_face_labels_do_not_merge_different_physical_fonts",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptTests.Invalid_stroke_widths_fail_without_committing_output(width: -1)",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(name: \"equal-luminance\", r: 120, g: 0, b: 0, mr: 0, mg: 36, mb: 0)",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptTests.Selected_collection_face_and_composite_glyphs_are_embedded(index: 0)",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptGhostscriptTests.Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison(mutation: \"gray-added\")",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_handles_blank_and_low_contrast_pages(reference: 255, candidate: 255, passed: True)",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptGhostscriptTests.Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison(mutation: \"dark-red-black\")",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptTests.Embedding_and_subsetting_restrictions_are_diagnosed(restrictions: 512)",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(name: \"dark-red-black\", r: 120, g: 0, b: 0, mr: 0, mg: 0, mb: 0)",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptTests.Cancellation_and_continuous_layout_do_not_commit",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptGhostscriptTests.Zero_tiny_and_normal_width_lines_and_borders_execute_and_draw_dash_gaps(width: 0)",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptTests.Alternate_glyphs_for_the_same_unicode_name_use_independent_bank_charstrings",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tool.Tests.ToolIntegrationTests.PostScript_rejects_continuous_layout_and_cleans_spill_files",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tool.Tests.ToolIntegrationTests.PostScript_commands_create_one_file_and_preserve_manifest_and_overwrite_rules(command: \"ps\")",
+      "outcome": "Passed"
+    },
+    {
+      "testName": "ExcelRenderer.Tool.Tests.ToolIntegrationTests.PostScript_commands_create_one_file_and_preserve_manifest_and_overwrite_rules(command: \"render\")",
+      "outcome": "Passed"
+    }
+  ],
+  "before": {
+    "total": 23,
+    "passed": 11,
+    "failed": 12,
+    "skipped": 0
+  }
+}

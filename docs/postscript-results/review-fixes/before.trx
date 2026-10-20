@@ -1,0 +1,446 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="cfe85ac0-f94e-46a8-8ce2-daeca53a3ec3" name="@924872f98ba9 2026-10-20 11:01:40" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-20T11:01:40.5344170+00:00" queuing="2026-10-20T11:01:40.5344170+00:00" start="2026-10-20T11:01:38.7749834+00:00" finish="2026-10-20T11:01:42.8039840+00:00" />
+  <TestSettings name="default" id="71843982-a182-4c2d-aa08-7cb980ef72e5">
+    <Deployment runDeploymentRoot="_924872f98ba9_2026-10-20_11_01_40" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="3bb008c1-91a3-4e71-8be7-8dbd15b94496" testId="b1d39944-9fa1-613d-e4f5-03e6fb408295" testName="ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_accepts_small_boundary_rasterization_differences" computerName="924872f98ba9" duration="00:00:00.0278603" startTime="2026-10-20T11:01:42.5300316+00:00" endTime="2026-10-20T11:01:42.5300317+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3bb008c1-91a3-4e71-8be7-8dbd15b94496" />
+    <UnitTestResult executionId="62356e17-4368-409c-840c-0e6ca5491ee4" testId="061cc357-7abe-b88c-d623-0536d143e00a" testName="ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(name: &quot;near-white-removed&quot;, r: 250, g: 250, b: 250, mr: 255, mg: 255, mb: 255)" computerName="924872f98ba9" duration="00:00:00.0409682" startTime="2026-10-20T11:01:42.5716008+00:00" endTime="2026-10-20T11:01:42.5716023+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="62356e17-4368-409c-840c-0e6ca5491ee4">
+      <Output>
+        <ErrorInfo>
+          <Message>{"Passed":true,"Unmatched":0,"Ink":0,"FailedTiles":[]}</Message>
+          <StackTrace>   at ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(String name, Byte r, Byte g, Byte b, Byte mr, Byte mg, Byte mb) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs:line 222
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="add5538e-1135-42ad-8ecc-28625bb382b6" testId="660df881-db0a-ffed-dff4-f6a0945897b1" testName="ExcelRenderer.Tests.PostScriptGhostscriptTests.Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison(mutation: &quot;normal&quot;)" computerName="924872f98ba9" duration="00:00:00.8990508" startTime="2026-10-20T11:01:40.3027453+00:00" endTime="2026-10-20T11:01:40.3027456+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="add5538e-1135-42ad-8ecc-28625bb382b6" />
+    <UnitTestResult executionId="f31ded7c-6865-4148-bb73-f90770708e90" testId="a6c2fa48-29ea-4eba-f0f6-8702c60a8afb" testName="ExcelRenderer.Tests.PostScriptGhostscriptTests.Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison(mutation: &quot;dark-red-black&quot;)" computerName="924872f98ba9" duration="00:00:00.5867568" startTime="2026-10-20T11:01:40.9039069+00:00" endTime="2026-10-20T11:01:40.9039072+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f31ded7c-6865-4148-bb73-f90770708e90">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ
+Expected: False
+Actual:   True</Message>
+          <StackTrace>   at ExcelRenderer.Tests.PostScriptGhostscriptTests.Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison(String mutation) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs:line 308
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="7b5e000e-7d31-4157-a697-dc9cc4cdc422" testId="2cd0a3e5-782f-92cc-b9fb-8892def1ed8e" testName="ExcelRenderer.Tests.PostScriptTests.Invalid_stroke_widths_fail_without_committing_output(width: Infinity)" computerName="924872f98ba9" duration="00:00:00.0055145" startTime="2026-10-20T11:01:39.3988748+00:00" endTime="2026-10-20T11:01:39.3988748+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7b5e000e-7d31-4157-a697-dc9cc4cdc422" />
+    <UnitTestResult executionId="3510f2eb-281f-4a18-85ab-d8dbc7551970" testId="fd6ea030-19e0-8dad-49ea-60cd57c1ef62" testName="ExcelRenderer.Tests.PostScriptGhostscriptTests.Zero_tiny_and_normal_width_lines_and_borders_execute_and_draw_dash_gaps(width: 0)" computerName="924872f98ba9" duration="00:00:00.0519917" startTime="2026-10-20T11:01:42.2423234+00:00" endTime="2026-10-20T11:01:42.2423236+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3510f2eb-281f-4a18-85ab-d8dbc7551970">
+      <Output>
+        <ErrorInfo>
+          <Message>GPL Ghostscript 10.05.1 (2025-04-29)
+Copyright (C) 2025 Artifex Software, Inc.  All rights reserved.
+This software is supplied under the GNU AGPLv3 and comes with NO WARRANTY:
+see the file COPYING for details.
+Error: /rangecheck in --setdash--
+Operand stack:
+   --nostringval--   0
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   setdash   --nostringval--   2   %stopped_push   --nostringval--   setdash   setdash   false   1   %stopped_push   1949   1   3   %oparray_pop   1948   1   3   %oparray_pop   1933   1   3   %oparray_pop   1803   1   3   %oparray_pop   --nostringval--   %errorexec_pop   .runexec2   --nostringval--   setdash   --nostringval--   2   %stopped_push   --nostringval--   1804   2   4   %oparray_pop
+Dictionary stack:
+   --dict:748/1123(ro)(G)--   --dict:0/20(G)--   --dict:86/200(L)--   --dict:1/20(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+Current file position is 1088
+GPL Ghostscript 10.05.1: Unrecoverable error, exit code 1
+</Message>
+          <StackTrace>   at ExcelRenderer.Tests.PostScriptGhostscriptTests.ValidateResult(Int32 exitCode, String message, Boolean textOutput) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs:line 458
+   at ExcelRenderer.Tests.PostScriptGhostscriptTests.Run(String[] arguments) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs:line 452
+   at ExcelRenderer.Tests.PostScriptGhostscriptTests.Zero_tiny_and_normal_width_lines_and_borders_execute_and_draw_dash_gaps(Double width) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs:line 330
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="cb58dc3f-3147-41a5-9239-079f2f915736" testId="056c1979-9971-7063-f8f5-4f4f9984b498" testName="ExcelRenderer.Tests.PostScriptGhostscriptTests.Zero_tiny_and_normal_width_lines_and_borders_execute_and_draw_dash_gaps(width: 1)" computerName="924872f98ba9" duration="00:00:00.0909557" startTime="2026-10-20T11:01:42.4368424+00:00" endTime="2026-10-20T11:01:42.4368425+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="cb58dc3f-3147-41a5-9239-079f2f915736" />
+    <UnitTestResult executionId="d2e937d7-b2b8-4d49-b124-7ceaf8fb6995" testId="82be4105-d7b8-1262-8b4c-ca51fcee47f9" testName="ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_handles_blank_and_low_contrast_pages(reference: 250, candidate: 250, passed: True)" computerName="924872f98ba9" duration="00:00:00.0265868" startTime="2026-10-20T11:01:42.1312800+00:00" endTime="2026-10-20T11:01:42.1312802+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d2e937d7-b2b8-4d49-b124-7ceaf8fb6995" />
+    <UnitTestResult executionId="49e64241-708e-43a2-96c2-d3422c3b4205" testId="c24d0dab-a692-3660-7dfd-5a4f3cf1b3ea" testName="ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(name: &quot;dark-red-black&quot;, r: 120, g: 0, b: 0, mr: 0, mg: 0, mb: 0)" computerName="924872f98ba9" duration="00:00:00.0401731" startTime="2026-10-20T11:01:42.7024725+00:00" endTime="2026-10-20T11:01:42.7024727+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="49e64241-708e-43a2-96c2-d3422c3b4205">
+      <Output>
+        <ErrorInfo>
+          <Message>{"Passed":true,"Unmatched":0,"Ink":512,"FailedTiles":[]}</Message>
+          <StackTrace>   at ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(String name, Byte r, Byte g, Byte b, Byte mr, Byte mg, Byte mb) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs:line 222
+   at InvokeStub_PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="f192d990-c9a8-4c83-bef6-2b3ac9615606" testId="56a8defa-2e55-b490-4cbe-f3dbd51f43df" testName="ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_handles_blank_and_low_contrast_pages(reference: 255, candidate: 255, passed: True)" computerName="924872f98ba9" duration="00:00:00.0192396" startTime="2026-10-20T11:01:42.1506601+00:00" endTime="2026-10-20T11:01:42.1506603+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f192d990-c9a8-4c83-bef6-2b3ac9615606" />
+    <UnitTestResult executionId="c4df15d8-eff5-4049-badc-cd54f7ac8a2c" testId="372651d7-bfad-5658-083e-5d97af28872f" testName="ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(name: &quot;gray-added&quot;, r: 255, g: 255, b: 255, mr: 180, mg: 180, mb: 180)" computerName="924872f98ba9" duration="00:00:00.0501621" startTime="2026-10-20T11:01:42.7558547+00:00" endTime="2026-10-20T11:01:42.7558549+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c4df15d8-eff5-4049-badc-cd54f7ac8a2c">
+      <Output>
+        <ErrorInfo>
+          <Message>{"Passed":true,"Unmatched":0,"Ink":0,"FailedTiles":[]}</Message>
+          <StackTrace>   at ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(String name, Byte r, Byte g, Byte b, Byte mr, Byte mg, Byte mb) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs:line 222
+   at InvokeStub_PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="38b82f0b-40d2-4d59-8665-e364f3be09f9" testId="597842f5-97bd-eeaf-c4cd-48ccc9b90e9a" testName="ExcelRenderer.Tests.PostScriptTests.Invalid_stroke_widths_fail_without_committing_output(width: -1)" computerName="924872f98ba9" duration="00:00:00.0000798" startTime="2026-10-20T11:01:39.3991899+00:00" endTime="2026-10-20T11:01:39.3991900+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="38b82f0b-40d2-4d59-8665-e364f3be09f9" />
+    <UnitTestResult executionId="b47ab91e-2c0b-4524-a02a-df361e84651c" testId="be88a31c-db21-a72f-12cb-7651e7f3ae10" testName="ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(name: &quot;equal-luminance&quot;, r: 120, g: 0, b: 0, mr: 0, mg: 36, mb: 0)" computerName="924872f98ba9" duration="00:00:00.0496898" startTime="2026-10-20T11:01:42.6215827+00:00" endTime="2026-10-20T11:01:42.6215829+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b47ab91e-2c0b-4524-a02a-df361e84651c">
+      <Output>
+        <ErrorInfo>
+          <Message>{"Passed":true,"Unmatched":0,"Ink":512,"FailedTiles":[]}</Message>
+          <StackTrace>   at ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(String name, Byte r, Byte g, Byte b, Byte mr, Byte mg, Byte mb) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs:line 222
+   at InvokeStub_PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="3a233632-b5a3-49ec-afeb-612ddce8d9bb" testId="75ba0d4d-aad7-38f9-80a7-f300054167f0" testName="ExcelRenderer.Tests.PostScriptGhostscriptTests.Zero_tiny_and_normal_width_lines_and_borders_execute_and_draw_dash_gaps(width: 0.5)" computerName="924872f98ba9" duration="00:00:00.1028819" startTime="2026-10-20T11:01:42.3453410+00:00" endTime="2026-10-20T11:01:42.3453411+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3a233632-b5a3-49ec-afeb-612ddce8d9bb" />
+    <UnitTestResult executionId="052bdc64-d564-4846-94ed-52ad294a3d88" testId="2997d7a6-c4fc-afe6-1711-736c5a2fe7c2" testName="ExcelRenderer.Tests.PostScriptTests.Invalid_stroke_widths_fail_without_committing_output(width: NaN)" computerName="924872f98ba9" duration="00:00:00.0000463" startTime="2026-10-20T11:01:39.3992419+00:00" endTime="2026-10-20T11:01:39.3992419+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="052bdc64-d564-4846-94ed-52ad294a3d88" />
+    <UnitTestResult executionId="4a7c977c-54d1-494f-bc5c-5142c062811f" testId="e16b38a7-ee09-67aa-d8f5-5ffb4e3013d4" testName="ExcelRenderer.Tests.PostScriptGhostscriptTests.Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison(mutation: &quot;gray-added&quot;)" computerName="924872f98ba9" duration="00:00:00.5858891" startTime="2026-10-20T11:01:42.1039434+00:00" endTime="2026-10-20T11:01:42.1039436+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4a7c977c-54d1-494f-bc5c-5142c062811f">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ
+Expected: False
+Actual:   True</Message>
+          <StackTrace>   at ExcelRenderer.Tests.PostScriptGhostscriptTests.Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison(String mutation) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs:line 308
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="0c078d57-4065-4a72-b888-045650b44a49" testId="f3e2d157-bcaf-ab2b-15c2-692c2b950e7f" testName="ExcelRenderer.Tests.PostScriptTests.Invalid_stroke_widths_fail_without_committing_output(width: -Infinity)" computerName="924872f98ba9" duration="00:00:00.0287979" startTime="2026-10-20T11:01:39.3940299+00:00" endTime="2026-10-20T11:01:39.3940961+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0c078d57-4065-4a72-b888-045650b44a49" />
+    <UnitTestResult executionId="aff8bbfa-c4ac-490b-b360-142b5e4cb6c3" testId="62817864-a5ae-7c73-f5e8-f4850bfba3c2" testName="ExcelRenderer.Tests.PostScriptGhostscriptTests.Zero_tiny_and_normal_width_lines_and_borders_execute_and_draw_dash_gaps(width: 1.0000000000000001E-18)" computerName="924872f98ba9" duration="00:00:00.0366338" startTime="2026-10-20T11:01:42.4746672+00:00" endTime="2026-10-20T11:01:42.4746675+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="aff8bbfa-c4ac-490b-b360-142b5e4cb6c3">
+      <Output>
+        <ErrorInfo>
+          <Message>GPL Ghostscript 10.05.1 (2025-04-29)
+Copyright (C) 2025 Artifex Software, Inc.  All rights reserved.
+This software is supplied under the GNU AGPLv3 and comes with NO WARRANTY:
+see the file COPYING for details.
+Error: /rangecheck in --setdash--
+Operand stack:
+   --nostringval--   0
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   setdash   --nostringval--   2   %stopped_push   --nostringval--   setdash   setdash   false   1   %stopped_push   1949   1   3   %oparray_pop   1948   1   3   %oparray_pop   1933   1   3   %oparray_pop   1803   1   3   %oparray_pop   --nostringval--   %errorexec_pop   .runexec2   --nostringval--   setdash   --nostringval--   2   %stopped_push   --nostringval--   1804   2   4   %oparray_pop
+Dictionary stack:
+   --dict:748/1123(ro)(G)--   --dict:0/20(G)--   --dict:86/200(L)--   --dict:1/20(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+Current file position is 1088
+GPL Ghostscript 10.05.1: Unrecoverable error, exit code 1
+</Message>
+          <StackTrace>   at ExcelRenderer.Tests.PostScriptGhostscriptTests.ValidateResult(Int32 exitCode, String message, Boolean textOutput) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs:line 458
+   at ExcelRenderer.Tests.PostScriptGhostscriptTests.Run(String[] arguments) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs:line 452
+   at ExcelRenderer.Tests.PostScriptGhostscriptTests.Zero_tiny_and_normal_width_lines_and_borders_execute_and_draw_dash_gaps(Double width) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs:line 330
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="7f7f0294-fe89-488b-a768-93ee3441824f" testId="917756d7-32f0-1d2f-b3bf-0fa91d671984" testName="ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_handles_blank_and_low_contrast_pages(reference: 250, candidate: 255, passed: False)" computerName="924872f98ba9" duration="00:00:00.0189795" startTime="2026-10-20T11:01:42.1704264+00:00" endTime="2026-10-20T11:01:42.1704264+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7f7f0294-fe89-488b-a768-93ee3441824f">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ
+Expected: False
+Actual:   True</Message>
+          <StackTrace>   at ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_handles_blank_and_low_contrast_pages(Byte reference, Byte candidate, Boolean passed) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs:line 239
+   at InvokeStub_PostScriptGhostscriptTests.Comparison_handles_blank_and_low_contrast_pages(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="6466c8d9-0aab-4eae-b2d9-bde260ef472e" testId="9028a547-26ea-3540-c746-6796d23442fe" testName="ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_small_gray_loss_among_near_white_pixels" computerName="924872f98ba9" duration="00:00:00.0274162" startTime="2026-10-20T11:01:42.5023184+00:00" endTime="2026-10-20T11:01:42.5023185+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6466c8d9-0aab-4eae-b2d9-bde260ef472e">
+      <Output>
+        <ErrorInfo>
+          <Message>{"Passed":true,"Unmatched":0,"Ink":0,"FailedTiles":[]}</Message>
+          <StackTrace>   at ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_small_gray_loss_among_near_white_pixels() in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs:line 254
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="2031c3de-0614-4994-a864-77f5dc2e387b" testId="cf3f5209-4787-f0c0-8a08-0bc1be15b584" testName="ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(name: &quot;gray-removed&quot;, r: 180, g: 180, b: 180, mr: 255, mg: 255, mb: 255)" computerName="924872f98ba9" duration="00:00:00.0402339" startTime="2026-10-20T11:01:42.6620177+00:00" endTime="2026-10-20T11:01:42.6620178+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2031c3de-0614-4994-a864-77f5dc2e387b">
+      <Output>
+        <ErrorInfo>
+          <Message>{"Passed":true,"Unmatched":0,"Ink":0,"FailedTiles":[]}</Message>
+          <StackTrace>   at ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(String name, Byte r, Byte g, Byte b, Byte mr, Byte mg, Byte mb) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs:line 222
+   at InvokeStub_PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="4f3514fc-9c88-4956-a539-3bd7a488e6c6" testId="9b686ae8-c47a-be30-64ff-772cf632b422" testName="ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_handles_blank_and_low_contrast_pages(reference: 254, candidate: 255, passed: True)" computerName="924872f98ba9" duration="00:00:00.0186341" startTime="2026-10-20T11:01:42.1887128+00:00" endTime="2026-10-20T11:01:42.1887129+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4f3514fc-9c88-4956-a539-3bd7a488e6c6" />
+    <UnitTestResult executionId="bfb629a6-a555-43ab-8ad6-c298ebf0e2fb" testId="56d6afef-3f38-340a-2515-dcaea249bda2" testName="ExcelRenderer.Tests.PostScriptGhostscriptTests.Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison(mutation: &quot;gray-removed&quot;)" computerName="924872f98ba9" duration="00:00:00.6178104" startTime="2026-10-20T11:01:41.5199606+00:00" endTime="2026-10-20T11:01:41.5199608+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="bfb629a6-a555-43ab-8ad6-c298ebf0e2fb">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ
+Expected: False
+Actual:   True</Message>
+          <StackTrace>   at ExcelRenderer.Tests.PostScriptGhostscriptTests.Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison(String mutation) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs:line 308
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="ExcelRenderer.Tests.PostScriptTests.Invalid_stroke_widths_fail_without_committing_output(width: -Infinity)" storage="/workspace/excelrenderer/tests/excelrenderer.tests/bin/debug/net10.0/excelrenderer.tests.dll" id="f3e2d157-bcaf-ab2b-15c2-692c2b950e7f">
+      <Execution id="0c078d57-4065-4a72-b888-045650b44a49" />
+      <TestMethod codeBase="/workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ExcelRenderer.Tests.PostScriptTests" name="Invalid_stroke_widths_fail_without_committing_output" />
+    </UnitTest>
+    <UnitTest name="ExcelRenderer.Tests.PostScriptGhostscriptTests.Zero_tiny_and_normal_width_lines_and_borders_execute_and_draw_dash_gaps(width: 0.5)" storage="/workspace/excelrenderer/tests/excelrenderer.tests/bin/debug/net10.0/excelrenderer.tests.dll" id="75ba0d4d-aad7-38f9-80a7-f300054167f0">
+      <Execution id="3a233632-b5a3-49ec-afeb-612ddce8d9bb" />
+      <TestMethod codeBase="/workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ExcelRenderer.Tests.PostScriptGhostscriptTests" name="Zero_tiny_and_normal_width_lines_and_borders_execute_and_draw_dash_gaps" />
+    </UnitTest>
+    <UnitTest name="ExcelRenderer.Tests.PostScriptTests.Invalid_stroke_widths_fail_without_committing_output(width: -1)" storage="/workspace/excelrenderer/tests/excelrenderer.tests/bin/debug/net10.0/excelrenderer.tests.dll" id="597842f5-97bd-eeaf-c4cd-48ccc9b90e9a">
+      <Execution id="38b82f0b-40d2-4d59-8665-e364f3be09f9" />
+      <TestMethod codeBase="/workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ExcelRenderer.Tests.PostScriptTests" name="Invalid_stroke_widths_fail_without_committing_output" />
+    </UnitTest>
+    <UnitTest name="ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_small_gray_loss_among_near_white_pixels" storage="/workspace/excelrenderer/tests/excelrenderer.tests/bin/debug/net10.0/excelrenderer.tests.dll" id="9028a547-26ea-3540-c746-6796d23442fe">
+      <Execution id="6466c8d9-0aab-4eae-b2d9-bde260ef472e" />
+      <TestMethod codeBase="/workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ExcelRenderer.Tests.PostScriptGhostscriptTests" name="Comparison_detects_small_gray_loss_among_near_white_pixels" />
+    </UnitTest>
+    <UnitTest name="ExcelRenderer.Tests.PostScriptGhostscriptTests.Zero_tiny_and_normal_width_lines_and_borders_execute_and_draw_dash_gaps(width: 1)" storage="/workspace/excelrenderer/tests/excelrenderer.tests/bin/debug/net10.0/excelrenderer.tests.dll" id="056c1979-9971-7063-f8f5-4f4f9984b498">
+      <Execution id="cb58dc3f-3147-41a5-9239-079f2f915736" />
+      <TestMethod codeBase="/workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ExcelRenderer.Tests.PostScriptGhostscriptTests" name="Zero_tiny_and_normal_width_lines_and_borders_execute_and_draw_dash_gaps" />
+    </UnitTest>
+    <UnitTest name="ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_handles_blank_and_low_contrast_pages(reference: 254, candidate: 255, passed: True)" storage="/workspace/excelrenderer/tests/excelrenderer.tests/bin/debug/net10.0/excelrenderer.tests.dll" id="9b686ae8-c47a-be30-64ff-772cf632b422">
+      <Execution id="4f3514fc-9c88-4956-a539-3bd7a488e6c6" />
+      <TestMethod codeBase="/workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ExcelRenderer.Tests.PostScriptGhostscriptTests" name="Comparison_handles_blank_and_low_contrast_pages" />
+    </UnitTest>
+    <UnitTest name="ExcelRenderer.Tests.PostScriptGhostscriptTests.Zero_tiny_and_normal_width_lines_and_borders_execute_and_draw_dash_gaps(width: 1.0000000000000001E-18)" storage="/workspace/excelrenderer/tests/excelrenderer.tests/bin/debug/net10.0/excelrenderer.tests.dll" id="62817864-a5ae-7c73-f5e8-f4850bfba3c2">
+      <Execution id="aff8bbfa-c4ac-490b-b360-142b5e4cb6c3" />
+      <TestMethod codeBase="/workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ExcelRenderer.Tests.PostScriptGhostscriptTests" name="Zero_tiny_and_normal_width_lines_and_borders_execute_and_draw_dash_gaps" />
+    </UnitTest>
+    <UnitTest name="ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_handles_blank_and_low_contrast_pages(reference: 250, candidate: 250, passed: True)" storage="/workspace/excelrenderer/tests/excelrenderer.tests/bin/debug/net10.0/excelrenderer.tests.dll" id="82be4105-d7b8-1262-8b4c-ca51fcee47f9">
+      <Execution id="d2e937d7-b2b8-4d49-b124-7ceaf8fb6995" />
+      <TestMethod codeBase="/workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ExcelRenderer.Tests.PostScriptGhostscriptTests" name="Comparison_handles_blank_and_low_contrast_pages" />
+    </UnitTest>
+    <UnitTest name="ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(name: &quot;gray-added&quot;, r: 255, g: 255, b: 255, mr: 180, mg: 180, mb: 180)" storage="/workspace/excelrenderer/tests/excelrenderer.tests/bin/debug/net10.0/excelrenderer.tests.dll" id="372651d7-bfad-5658-083e-5d97af28872f">
+      <Execution id="c4df15d8-eff5-4049-badc-cd54f7ac8a2c" />
+      <TestMethod codeBase="/workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ExcelRenderer.Tests.PostScriptGhostscriptTests" name="Comparison_detects_local_color_and_coverage_changes" />
+    </UnitTest>
+    <UnitTest name="ExcelRenderer.Tests.PostScriptGhostscriptTests.Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison(mutation: &quot;gray-added&quot;)" storage="/workspace/excelrenderer/tests/excelrenderer.tests/bin/debug/net10.0/excelrenderer.tests.dll" id="e16b38a7-ee09-67aa-d8f5-5ffb4e3013d4">
+      <Execution id="4a7c977c-54d1-494f-bc5c-5142c062811f" />
+      <TestMethod codeBase="/workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ExcelRenderer.Tests.PostScriptGhostscriptTests" name="Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison" />
+    </UnitTest>
+    <UnitTest name="ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_handles_blank_and_low_contrast_pages(reference: 250, candidate: 255, passed: False)" storage="/workspace/excelrenderer/tests/excelrenderer.tests/bin/debug/net10.0/excelrenderer.tests.dll" id="917756d7-32f0-1d2f-b3bf-0fa91d671984">
+      <Execution id="7f7f0294-fe89-488b-a768-93ee3441824f" />
+      <TestMethod codeBase="/workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ExcelRenderer.Tests.PostScriptGhostscriptTests" name="Comparison_handles_blank_and_low_contrast_pages" />
+    </UnitTest>
+    <UnitTest name="ExcelRenderer.Tests.PostScriptGhostscriptTests.Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison(mutation: &quot;gray-removed&quot;)" storage="/workspace/excelrenderer/tests/excelrenderer.tests/bin/debug/net10.0/excelrenderer.tests.dll" id="56d6afef-3f38-340a-2515-dcaea249bda2">
+      <Execution id="bfb629a6-a555-43ab-8ad6-c298ebf0e2fb" />
+      <TestMethod codeBase="/workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ExcelRenderer.Tests.PostScriptGhostscriptTests" name="Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison" />
+    </UnitTest>
+    <UnitTest name="ExcelRenderer.Tests.PostScriptGhostscriptTests.Zero_tiny_and_normal_width_lines_and_borders_execute_and_draw_dash_gaps(width: 0)" storage="/workspace/excelrenderer/tests/excelrenderer.tests/bin/debug/net10.0/excelrenderer.tests.dll" id="fd6ea030-19e0-8dad-49ea-60cd57c1ef62">
+      <Execution id="3510f2eb-281f-4a18-85ab-d8dbc7551970" />
+      <TestMethod codeBase="/workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ExcelRenderer.Tests.PostScriptGhostscriptTests" name="Zero_tiny_and_normal_width_lines_and_borders_execute_and_draw_dash_gaps" />
+    </UnitTest>
+    <UnitTest name="ExcelRenderer.Tests.PostScriptGhostscriptTests.Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison(mutation: &quot;dark-red-black&quot;)" storage="/workspace/excelrenderer/tests/excelrenderer.tests/bin/debug/net10.0/excelrenderer.tests.dll" id="a6c2fa48-29ea-4eba-f0f6-8702c60a8afb">
+      <Execution id="f31ded7c-6865-4148-bb73-f90770708e90" />
+      <TestMethod codeBase="/workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ExcelRenderer.Tests.PostScriptGhostscriptTests" name="Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison" />
+    </UnitTest>
+    <UnitTest name="ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(name: &quot;near-white-removed&quot;, r: 250, g: 250, b: 250, mr: 255, mg: 255, mb: 255)" storage="/workspace/excelrenderer/tests/excelrenderer.tests/bin/debug/net10.0/excelrenderer.tests.dll" id="061cc357-7abe-b88c-d623-0536d143e00a">
+      <Execution id="62356e17-4368-409c-840c-0e6ca5491ee4" />
+      <TestMethod codeBase="/workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ExcelRenderer.Tests.PostScriptGhostscriptTests" name="Comparison_detects_local_color_and_coverage_changes" />
+    </UnitTest>
+    <UnitTest name="ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(name: &quot;dark-red-black&quot;, r: 120, g: 0, b: 0, mr: 0, mg: 0, mb: 0)" storage="/workspace/excelrenderer/tests/excelrenderer.tests/bin/debug/net10.0/excelrenderer.tests.dll" id="c24d0dab-a692-3660-7dfd-5a4f3cf1b3ea">
+      <Execution id="49e64241-708e-43a2-96c2-d3422c3b4205" />
+      <TestMethod codeBase="/workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ExcelRenderer.Tests.PostScriptGhostscriptTests" name="Comparison_detects_local_color_and_coverage_changes" />
+    </UnitTest>
+    <UnitTest name="ExcelRenderer.Tests.PostScriptTests.Invalid_stroke_widths_fail_without_committing_output(width: NaN)" storage="/workspace/excelrenderer/tests/excelrenderer.tests/bin/debug/net10.0/excelrenderer.tests.dll" id="2997d7a6-c4fc-afe6-1711-736c5a2fe7c2">
+      <Execution id="052bdc64-d564-4846-94ed-52ad294a3d88" />
+      <TestMethod codeBase="/workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ExcelRenderer.Tests.PostScriptTests" name="Invalid_stroke_widths_fail_without_committing_output" />
+    </UnitTest>
+    <UnitTest name="ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_handles_blank_and_low_contrast_pages(reference: 255, candidate: 255, passed: True)" storage="/workspace/excelrenderer/tests/excelrenderer.tests/bin/debug/net10.0/excelrenderer.tests.dll" id="56a8defa-2e55-b490-4cbe-f3dbd51f43df">
+      <Execution id="f192d990-c9a8-4c83-bef6-2b3ac9615606" />
+      <TestMethod codeBase="/workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ExcelRenderer.Tests.PostScriptGhostscriptTests" name="Comparison_handles_blank_and_low_contrast_pages" />
+    </UnitTest>
+    <UnitTest name="ExcelRenderer.Tests.PostScriptTests.Invalid_stroke_widths_fail_without_committing_output(width: Infinity)" storage="/workspace/excelrenderer/tests/excelrenderer.tests/bin/debug/net10.0/excelrenderer.tests.dll" id="2cd0a3e5-782f-92cc-b9fb-8892def1ed8e">
+      <Execution id="7b5e000e-7d31-4157-a697-dc9cc4cdc422" />
+      <TestMethod codeBase="/workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ExcelRenderer.Tests.PostScriptTests" name="Invalid_stroke_widths_fail_without_committing_output" />
+    </UnitTest>
+    <UnitTest name="ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_accepts_small_boundary_rasterization_differences" storage="/workspace/excelrenderer/tests/excelrenderer.tests/bin/debug/net10.0/excelrenderer.tests.dll" id="b1d39944-9fa1-613d-e4f5-03e6fb408295">
+      <Execution id="3bb008c1-91a3-4e71-8be7-8dbd15b94496" />
+      <TestMethod codeBase="/workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ExcelRenderer.Tests.PostScriptGhostscriptTests" name="Comparison_accepts_small_boundary_rasterization_differences" />
+    </UnitTest>
+    <UnitTest name="ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(name: &quot;equal-luminance&quot;, r: 120, g: 0, b: 0, mr: 0, mg: 36, mb: 0)" storage="/workspace/excelrenderer/tests/excelrenderer.tests/bin/debug/net10.0/excelrenderer.tests.dll" id="be88a31c-db21-a72f-12cb-7651e7f3ae10">
+      <Execution id="b47ab91e-2c0b-4524-a02a-df361e84651c" />
+      <TestMethod codeBase="/workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ExcelRenderer.Tests.PostScriptGhostscriptTests" name="Comparison_detects_local_color_and_coverage_changes" />
+    </UnitTest>
+    <UnitTest name="ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(name: &quot;gray-removed&quot;, r: 180, g: 180, b: 180, mr: 255, mg: 255, mb: 255)" storage="/workspace/excelrenderer/tests/excelrenderer.tests/bin/debug/net10.0/excelrenderer.tests.dll" id="cf3f5209-4787-f0c0-8a08-0bc1be15b584">
+      <Execution id="2031c3de-0614-4994-a864-77f5dc2e387b" />
+      <TestMethod codeBase="/workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ExcelRenderer.Tests.PostScriptGhostscriptTests" name="Comparison_detects_local_color_and_coverage_changes" />
+    </UnitTest>
+    <UnitTest name="ExcelRenderer.Tests.PostScriptGhostscriptTests.Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison(mutation: &quot;normal&quot;)" storage="/workspace/excelrenderer/tests/excelrenderer.tests/bin/debug/net10.0/excelrenderer.tests.dll" id="660df881-db0a-ffed-dff4-f6a0945897b1">
+      <Execution id="add5538e-1135-42ad-8ecc-28625bb382b6" />
+      <TestMethod codeBase="/workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ExcelRenderer.Tests.PostScriptGhostscriptTests" name="Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="b1d39944-9fa1-613d-e4f5-03e6fb408295" executionId="3bb008c1-91a3-4e71-8be7-8dbd15b94496" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="061cc357-7abe-b88c-d623-0536d143e00a" executionId="62356e17-4368-409c-840c-0e6ca5491ee4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="660df881-db0a-ffed-dff4-f6a0945897b1" executionId="add5538e-1135-42ad-8ecc-28625bb382b6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a6c2fa48-29ea-4eba-f0f6-8702c60a8afb" executionId="f31ded7c-6865-4148-bb73-f90770708e90" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2cd0a3e5-782f-92cc-b9fb-8892def1ed8e" executionId="7b5e000e-7d31-4157-a697-dc9cc4cdc422" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="fd6ea030-19e0-8dad-49ea-60cd57c1ef62" executionId="3510f2eb-281f-4a18-85ab-d8dbc7551970" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="056c1979-9971-7063-f8f5-4f4f9984b498" executionId="cb58dc3f-3147-41a5-9239-079f2f915736" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="82be4105-d7b8-1262-8b4c-ca51fcee47f9" executionId="d2e937d7-b2b8-4d49-b124-7ceaf8fb6995" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c24d0dab-a692-3660-7dfd-5a4f3cf1b3ea" executionId="49e64241-708e-43a2-96c2-d3422c3b4205" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="56a8defa-2e55-b490-4cbe-f3dbd51f43df" executionId="f192d990-c9a8-4c83-bef6-2b3ac9615606" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="372651d7-bfad-5658-083e-5d97af28872f" executionId="c4df15d8-eff5-4049-badc-cd54f7ac8a2c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="597842f5-97bd-eeaf-c4cd-48ccc9b90e9a" executionId="38b82f0b-40d2-4d59-8665-e364f3be09f9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="be88a31c-db21-a72f-12cb-7651e7f3ae10" executionId="b47ab91e-2c0b-4524-a02a-df361e84651c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="75ba0d4d-aad7-38f9-80a7-f300054167f0" executionId="3a233632-b5a3-49ec-afeb-612ddce8d9bb" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2997d7a6-c4fc-afe6-1711-736c5a2fe7c2" executionId="052bdc64-d564-4846-94ed-52ad294a3d88" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e16b38a7-ee09-67aa-d8f5-5ffb4e3013d4" executionId="4a7c977c-54d1-494f-bc5c-5142c062811f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f3e2d157-bcaf-ab2b-15c2-692c2b950e7f" executionId="0c078d57-4065-4a72-b888-045650b44a49" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="62817864-a5ae-7c73-f5e8-f4850bfba3c2" executionId="aff8bbfa-c4ac-490b-b360-142b5e4cb6c3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="917756d7-32f0-1d2f-b3bf-0fa91d671984" executionId="7f7f0294-fe89-488b-a768-93ee3441824f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9028a547-26ea-3540-c746-6796d23442fe" executionId="6466c8d9-0aab-4eae-b2d9-bde260ef472e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="cf3f5209-4787-f0c0-8a08-0bc1be15b584" executionId="2031c3de-0614-4994-a864-77f5dc2e387b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9b686ae8-c47a-be30-64ff-772cf632b422" executionId="4f3514fc-9c88-4956-a539-3bd7a488e6c6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="56d6afef-3f38-340a-2515-dcaea249bda2" executionId="bfb629a6-a555-43ab-8ad6-c298ebf0e2fb" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="23" executed="23" passed="11" failed="12" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 10.0.12)
+[xUnit.net 00:00:00.09]   Discovering: ExcelRenderer.Tests
+[xUnit.net 00:00:00.26]   Discovered:  ExcelRenderer.Tests
+[xUnit.net 00:00:00.26]   Starting:    ExcelRenderer.Tests
+[xUnit.net 00:00:01.84]       Assert.Equal() Failure: Values differ
+[xUnit.net 00:00:01.84]       Expected: False
+[xUnit.net 00:00:01.84]       Actual:   True
+[xUnit.net 00:00:01.84]       Stack Trace:
+[xUnit.net 00:00:01.84]         /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs(308,0): at ExcelRenderer.Tests.PostScriptGhostscriptTests.Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison(String mutation)
+[xUnit.net 00:00:01.84]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:02.46]       Assert.Equal() Failure: Values differ
+[xUnit.net 00:00:02.46]       Expected: False
+[xUnit.net 00:00:02.46]       Actual:   True
+[xUnit.net 00:00:02.46]       Stack Trace:
+[xUnit.net 00:00:02.46]         /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs(308,0): at ExcelRenderer.Tests.PostScriptGhostscriptTests.Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison(String mutation)
+[xUnit.net 00:00:02.46]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:03.04]       Assert.Equal() Failure: Values differ
+[xUnit.net 00:00:03.04]       Expected: False
+[xUnit.net 00:00:03.04]       Actual:   True
+[xUnit.net 00:00:03.04]       Stack Trace:
+[xUnit.net 00:00:03.04]         /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs(308,0): at ExcelRenderer.Tests.PostScriptGhostscriptTests.Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison(String mutation)
+[xUnit.net 00:00:03.04]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:03.11]       Assert.Equal() Failure: Values differ
+[xUnit.net 00:00:03.11]       Expected: False
+[xUnit.net 00:00:03.11]       Actual:   True
+[xUnit.net 00:00:03.11]       Stack Trace:
+[xUnit.net 00:00:03.11]         /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs(239,0): at ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_handles_blank_and_low_contrast_pages(Byte reference, Byte candidate, Boolean passed)
+[xUnit.net 00:00:03.11]            at InvokeStub_PostScriptGhostscriptTests.Comparison_handles_blank_and_low_contrast_pages(Object, Span`1)
+[xUnit.net 00:00:03.11]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:03.18]       GPL Ghostscript 10.05.1 (2025-04-29)
+[xUnit.net 00:00:03.18]       Copyright (C) 2025 Artifex Software, Inc.  All rights reserved.
+[xUnit.net 00:00:03.18]       This software is supplied under the GNU AGPLv3 and comes with NO WARRANTY:
+[xUnit.net 00:00:03.18]       see the file COPYING for details.
+[xUnit.net 00:00:03.18]       Error: /rangecheck in --setdash--
+[xUnit.net 00:00:03.18]       Operand stack:
+[xUnit.net 00:00:03.18]          --nostringval--   0
+[xUnit.net 00:00:03.18]       Execution stack:
+[xUnit.net 00:00:03.18]          %interp_exit   .runexec2   --nostringval--   setdash   --nostringval--   2   %stopped_push   --nostringval--   setdash   setdash   false   1   %stopped_push   1949   1   3   %oparray_pop   1948   1   3   %oparray_pop   1933   1   3   %oparray_pop   1803   1   3   %oparray_pop   --nostringval--   %errorexec_pop   .runexec2   --nostringval--   setdash   --nostringval--   2   %stopped_push   --nostringval--   1804   2   4   %oparray_pop
+[xUnit.net 00:00:03.18]       Dictionary stack:
+[xUnit.net 00:00:03.18]          --dict:748/1123(ro)(G)--   --dict:0/20(G)--   --dict:86/200(L)--   --dict:1/20(L)--
+[xUnit.net 00:00:03.18]       Current allocation mode is local
+[xUnit.net 00:00:03.18]       Last OS error: No such file or directory
+[xUnit.net 00:00:03.18]       Current file position is 1088
+[xUnit.net 00:00:03.18]       GPL Ghostscript 10.05.1: Unrecoverable error, exit code 1
+[xUnit.net 00:00:03.18]       
+[xUnit.net 00:00:03.18]       Stack Trace:
+[xUnit.net 00:00:03.18]         /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs(458,0): at ExcelRenderer.Tests.PostScriptGhostscriptTests.ValidateResult(Int32 exitCode, String message, Boolean textOutput)
+[xUnit.net 00:00:03.18]         /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs(452,0): at ExcelRenderer.Tests.PostScriptGhostscriptTests.Run(String[] arguments)
+[xUnit.net 00:00:03.18]         /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs(330,0): at ExcelRenderer.Tests.PostScriptGhostscriptTests.Zero_tiny_and_normal_width_lines_and_borders_execute_and_draw_dash_gaps(Double width)
+[xUnit.net 00:00:03.18]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:03.41]       GPL Ghostscript 10.05.1 (2025-04-29)
+[xUnit.net 00:00:03.41]       Copyright (C) 2025 Artifex Software, Inc.  All rights reserved.
+[xUnit.net 00:00:03.41]       This software is supplied under the GNU AGPLv3 and comes with NO WARRANTY:
+[xUnit.net 00:00:03.41]       see the file COPYING for details.
+[xUnit.net 00:00:03.41]       Error: /rangecheck in --setdash--
+[xUnit.net 00:00:03.41]       Operand stack:
+[xUnit.net 00:00:03.41]          --nostringval--   0
+[xUnit.net 00:00:03.41]       Execution stack:
+[xUnit.net 00:00:03.41]          %interp_exit   .runexec2   --nostringval--   setdash   --nostringval--   2   %stopped_push   --nostringval--   setdash   setdash   false   1   %stopped_push   1949   1   3   %oparray_pop   1948   1   3   %oparray_pop   1933   1   3   %oparray_pop   1803   1   3   %oparray_pop   --nostringval--   %errorexec_pop   .runexec2   --nostringval--   setdash   --nostringval--   2   %stopped_push   --nostringval--   1804   2   4   %oparray_pop
+[xUnit.net 00:00:03.41]       Dictionary stack:
+[xUnit.net 00:00:03.41]          --dict:748/1123(ro)(G)--   --dict:0/20(G)--   --dict:86/200(L)--   --dict:1/20(L)--
+[xUnit.net 00:00:03.41]       Current allocation mode is local
+[xUnit.net 00:00:03.41]       Last OS error: No such file or directory
+[xUnit.net 00:00:03.41]       Current file position is 1088
+[xUnit.net 00:00:03.41]       GPL Ghostscript 10.05.1: Unrecoverable error, exit code 1
+[xUnit.net 00:00:03.41]       
+[xUnit.net 00:00:03.41]       Stack Trace:
+[xUnit.net 00:00:03.41]         /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs(458,0): at ExcelRenderer.Tests.PostScriptGhostscriptTests.ValidateResult(Int32 exitCode, String message, Boolean textOutput)
+[xUnit.net 00:00:03.41]         /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs(452,0): at ExcelRenderer.Tests.PostScriptGhostscriptTests.Run(String[] arguments)
+[xUnit.net 00:00:03.41]         /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs(330,0): at ExcelRenderer.Tests.PostScriptGhostscriptTests.Zero_tiny_and_normal_width_lines_and_borders_execute_and_draw_dash_gaps(Double width)
+[xUnit.net 00:00:03.41]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:03.44]       {"Passed":true,"Unmatched":0,"Ink":0,"FailedTiles":[]}
+[xUnit.net 00:00:03.44]       Stack Trace:
+[xUnit.net 00:00:03.44]         /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs(254,0): at ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_small_gray_loss_among_near_white_pixels()
+[xUnit.net 00:00:03.44]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:03.44]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:03.51]       {"Passed":true,"Unmatched":0,"Ink":0,"FailedTiles":[]}
+[xUnit.net 00:00:03.51]       Stack Trace:
+[xUnit.net 00:00:03.51]         /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs(222,0): at ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(String name, Byte r, Byte g, Byte b, Byte mr, Byte mg, Byte mb)
+[xUnit.net 00:00:03.51]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:03.51]            at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:03.56]       {"Passed":true,"Unmatched":0,"Ink":512,"FailedTiles":[]}
+[xUnit.net 00:00:03.56]       Stack Trace:
+[xUnit.net 00:00:03.56]         /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs(222,0): at ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(String name, Byte r, Byte g, Byte b, Byte mr, Byte mg, Byte mb)
+[xUnit.net 00:00:03.56]            at InvokeStub_PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(Object, Span`1)
+[xUnit.net 00:00:03.56]            at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:03.60]       {"Passed":true,"Unmatched":0,"Ink":0,"FailedTiles":[]}
+[xUnit.net 00:00:03.60]       Stack Trace:
+[xUnit.net 00:00:03.60]         /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs(222,0): at ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(String name, Byte r, Byte g, Byte b, Byte mr, Byte mg, Byte mb)
+[xUnit.net 00:00:03.60]            at InvokeStub_PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(Object, Span`1)
+[xUnit.net 00:00:03.60]            at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:03.64]       {"Passed":true,"Unmatched":0,"Ink":512,"FailedTiles":[]}
+[xUnit.net 00:00:03.64]       Stack Trace:
+[xUnit.net 00:00:03.64]         /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs(222,0): at ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(String name, Byte r, Byte g, Byte b, Byte mr, Byte mg, Byte mb)
+[xUnit.net 00:00:03.64]            at InvokeStub_PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(Object, Span`1)
+[xUnit.net 00:00:03.64]            at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:03.69]       {"Passed":true,"Unmatched":0,"Ink":0,"FailedTiles":[]}
+[xUnit.net 00:00:03.69]       Stack Trace:
+[xUnit.net 00:00:03.69]         /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs(222,0): at ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(String name, Byte r, Byte g, Byte b, Byte mr, Byte mg, Byte mb)
+[xUnit.net 00:00:03.69]            at InvokeStub_PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(Object, Span`1)
+[xUnit.net 00:00:03.69]            at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:03.69]   Finished:    ExcelRenderer.Tests
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="924872f98ba9" outcome="Error" timestamp="2026-10-20T11:01:40.9017200+00:00">
+        <Text>[xUnit.net 00:00:01.84]     ExcelRenderer.Tests.PostScriptGhostscriptTests.Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison(mutation: "dark-red-black") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="924872f98ba9" outcome="Error" timestamp="2026-10-20T11:01:41.5206042+00:00">
+        <Text>[xUnit.net 00:00:02.46]     ExcelRenderer.Tests.PostScriptGhostscriptTests.Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison(mutation: "gray-removed") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="924872f98ba9" outcome="Error" timestamp="2026-10-20T11:01:42.1049005+00:00">
+        <Text>[xUnit.net 00:00:03.04]     ExcelRenderer.Tests.PostScriptGhostscriptTests.Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison(mutation: "gray-added") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="924872f98ba9" outcome="Error" timestamp="2026-10-20T11:01:42.1708549+00:00">
+        <Text>[xUnit.net 00:00:03.11]     ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_handles_blank_and_low_contrast_pages(reference: 250, candidate: 255, passed: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="924872f98ba9" outcome="Error" timestamp="2026-10-20T11:01:42.2429454+00:00">
+        <Text>[xUnit.net 00:00:03.18]     ExcelRenderer.Tests.PostScriptGhostscriptTests.Zero_tiny_and_normal_width_lines_and_borders_execute_and_draw_dash_gaps(width: 0) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="924872f98ba9" outcome="Error" timestamp="2026-10-20T11:01:42.4753946+00:00">
+        <Text>[xUnit.net 00:00:03.41]     ExcelRenderer.Tests.PostScriptGhostscriptTests.Zero_tiny_and_normal_width_lines_and_borders_execute_and_draw_dash_gaps(width: 1.0000000000000001E-18) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="924872f98ba9" outcome="Error" timestamp="2026-10-20T11:01:42.5026043+00:00">
+        <Text>[xUnit.net 00:00:03.44]     ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_small_gray_loss_among_near_white_pixels [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="924872f98ba9" outcome="Error" timestamp="2026-10-20T11:01:42.5719836+00:00">
+        <Text>[xUnit.net 00:00:03.51]     ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(name: "near-white-removed", r: 250, g: 250, b: 250, mr: 255, mg: 255, mb: 255) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="924872f98ba9" outcome="Error" timestamp="2026-10-20T11:01:42.6218896+00:00">
+        <Text>[xUnit.net 00:00:03.56]     ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(name: "equal-luminance", r: 120, g: 0, b: 0, mr: 0, mg: 36, mb: 0) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="924872f98ba9" outcome="Error" timestamp="2026-10-20T11:01:42.6622739+00:00">
+        <Text>[xUnit.net 00:00:03.60]     ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(name: "gray-removed", r: 180, g: 180, b: 180, mr: 255, mg: 255, mb: 255) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="924872f98ba9" outcome="Error" timestamp="2026-10-20T11:01:42.7026861+00:00">
+        <Text>[xUnit.net 00:00:03.64]     ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(name: "dark-red-black", r: 120, g: 0, b: 0, mr: 0, mg: 0, mb: 0) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="924872f98ba9" outcome="Error" timestamp="2026-10-20T11:01:42.7576211+00:00">
+        <Text>[xUnit.net 00:00:03.69]     ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(name: "gray-added", r: 255, g: 255, b: 255, mr: 180, mg: 180, mb: 180) [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

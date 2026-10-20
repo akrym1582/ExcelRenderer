@@ -1,0 +1,30 @@
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Core.Tests/bin/Debug/net10.0/ExcelRenderer.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /workspace/ExcelRenderer/TestResults/PostScriptReview/Full/_924872f98ba9_2026-10-20_11_05_06_net10.0.trx
+
+Passed!  - Failed:     0, Passed:   170, Skipped:     0, Total:   170, Duration: 4 s - ExcelRenderer.Core.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Formulas.Tests/bin/Debug/net10.0/ExcelRenderer.Formulas.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /workspace/ExcelRenderer/TestResults/PostScriptReview/Full/_924872f98ba9_2026-10-20_11_05_11_net10.0.trx
+
+Passed!  - Failed:     0, Passed:   833, Skipped:     0, Total:   833, Duration: 384 ms - ExcelRenderer.Formulas.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Mapping.Tests/bin/Debug/net10.0/ExcelRenderer.Mapping.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /workspace/ExcelRenderer/TestResults/PostScriptReview/Full/_924872f98ba9_2026-10-20_11_05_12_net10.0.trx
+
+Passed!  - Failed:     0, Passed:   172, Skipped:     0, Total:   172, Duration: 1 s - ExcelRenderer.Mapping.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.OpenXml.Tests/bin/Debug/net10.0/ExcelRenderer.OpenXml.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /workspace/ExcelRenderer/TestResults/PostScriptReview/Full/_924872f98ba9_2026-10-20_11_05_14_net10.0.trx
+
+Passed!  - Failed:     0, Passed:   213, Skipped:     0, Total:   213, Duration: 385 ms - ExcelRenderer.OpenXml.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /workspace/ExcelRenderer/TestResults/PostScriptReview/Full/_924872f98ba9_2026-10-20_11_05_16_net10.0.trx
+
+Passed!  - Failed:     0, Passed:   890, Skipped:     0, Total:   890, Duration: 1 m 46 s - ExcelRenderer.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/bin/Debug/net10.0/ExcelRenderer.Tool.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /workspace/ExcelRenderer/TestResults/PostScriptReview/Full/_924872f98ba9_2026-10-20_11_07_04_net10.0.trx
+
+Passed!  - Failed:     0, Passed:   108, Skipped:     0, Total:   108, Duration: 1 m 23 s - ExcelRenderer.Tool.Tests.dll (net10.0)

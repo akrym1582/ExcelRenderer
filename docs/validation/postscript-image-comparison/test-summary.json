@@ -1,0 +1,196 @@
+{
+  "passed": 2656,
+  "failed": 0,
+  "skipped": 0,
+  "projects": [
+    {
+      "assembly": "excelrenderer.core.tests.dll",
+      "counters": {
+        "total": 344,
+        "executed": 344,
+        "passed": 344,
+        "failed": 0,
+        "error": 0,
+        "timeout": 0,
+        "aborted": 0,
+        "inconclusive": 0,
+        "passedButRunAborted": 0,
+        "notRunnable": 0,
+        "notExecuted": 0,
+        "disconnected": 0,
+        "warning": 0,
+        "completed": 0,
+        "inProgress": 0,
+        "pending": 0
+      },
+      "times": {
+        "creation": "2026-10-20T22:11:56.9149670+00:00",
+        "queuing": "2026-10-20T22:11:56.9149670+00:00",
+        "start": "2026-10-20T22:11:52.4778553+00:00",
+        "finish": "2026-10-20T22:12:53.2653474+00:00"
+      }
+    },
+    {
+      "assembly": "excelrenderer.formulas.tests.dll",
+      "counters": {
+        "total": 833,
+        "executed": 833,
+        "passed": 833,
+        "failed": 0,
+        "error": 0,
+        "timeout": 0,
+        "aborted": 0,
+        "inconclusive": 0,
+        "passedButRunAborted": 0,
+        "notRunnable": 0,
+        "notExecuted": 0,
+        "disconnected": 0,
+        "warning": 0,
+        "completed": 0,
+        "inProgress": 0,
+        "pending": 0
+      },
+      "times": {
+        "creation": "2026-10-20T22:13:58.8512503+00:00",
+        "queuing": "2026-10-20T22:13:58.8512504+00:00",
+        "start": "2026-10-20T22:12:55.1761896+00:00",
+        "finish": "2026-10-20T22:14:03.4141322+00:00"
+      }
+    },
+    {
+      "assembly": "excelrenderer.mapping.tests.dll",
+      "counters": {
+        "total": 172,
+        "executed": 172,
+        "passed": 172,
+        "failed": 0,
+        "error": 0,
+        "timeout": 0,
+        "aborted": 0,
+        "inconclusive": 0,
+        "passedButRunAborted": 0,
+        "notRunnable": 0,
+        "notExecuted": 0,
+        "disconnected": 0,
+        "warning": 0,
+        "completed": 0,
+        "inProgress": 0,
+        "pending": 0
+      },
+      "times": {
+        "creation": "2026-10-20T22:14:10.7530577+00:00",
+        "queuing": "2026-10-20T22:14:10.7530578+00:00",
+        "start": "2026-10-20T22:14:05.9138769+00:00",
+        "finish": "2026-10-20T22:14:26.0325756+00:00"
+      }
+    },
+    {
+      "assembly": "excelrenderer.openxml.tests.dll",
+      "counters": {
+        "total": 213,
+        "executed": 213,
+        "passed": 213,
+        "failed": 0,
+        "error": 0,
+        "timeout": 0,
+        "aborted": 0,
+        "inconclusive": 0,
+        "passedButRunAborted": 0,
+        "notRunnable": 0,
+        "notExecuted": 0,
+        "disconnected": 0,
+        "warning": 0,
+        "completed": 0,
+        "inProgress": 0,
+        "pending": 0
+      },
+      "times": {
+        "creation": "2026-10-20T22:14:29.2534676+00:00",
+        "queuing": "2026-10-20T22:14:29.2534676+00:00",
+        "start": "2026-10-20T22:14:26.7857685+00:00",
+        "finish": "2026-10-20T22:14:31.2704035+00:00"
+      }
+    },
+    {
+      "assembly": "excelrenderer.tests.dll",
+      "counters": {
+        "total": 976,
+        "executed": 976,
+        "passed": 976,
+        "failed": 0,
+        "error": 0,
+        "timeout": 0,
+        "aborted": 0,
+        "inconclusive": 0,
+        "passedButRunAborted": 0,
+        "notRunnable": 0,
+        "notExecuted": 0,
+        "disconnected": 0,
+        "warning": 0,
+        "completed": 0,
+        "inProgress": 0,
+        "pending": 0
+      },
+      "times": {
+        "creation": "2026-10-20T22:14:37.5930072+00:00",
+        "queuing": "2026-10-20T22:14:37.5930072+00:00",
+        "start": "2026-10-20T22:14:32.4007355+00:00",
+        "finish": "2026-10-20T22:29:55.7053609+00:00"
+      }
+    },
+    {
+      "assembly": "excelrenderer.tool.tests.dll",
+      "counters": {
+        "total": 118,
+        "executed": 118,
+        "passed": 118,
+        "failed": 0,
+        "error": 0,
+        "timeout": 0,
+        "aborted": 0,
+        "inconclusive": 0,
+        "passedButRunAborted": 0,
+        "notRunnable": 0,
+        "notExecuted": 0,
+        "disconnected": 0,
+        "warning": 0,
+        "completed": 0,
+        "inProgress": 0,
+        "pending": 0
+      },
+      "times": {
+        "creation": "2026-10-20T22:30:10.8334714+00:00",
+        "queuing": "2026-10-20T22:30:10.8334715+00:00",
+        "start": "2026-10-20T22:29:59.7133201+00:00",
+        "finish": "2026-10-20T22:43:10.2128245+00:00"
+      }
+    }
+  ],
+  "selectedTests": [
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_preserves_diff_channels_and_opaque_alpha(colorType: Rgba8888, alphaType: Premul)",
+      "outcome": "Passed",
+      "duration": "00:00:00.0021798"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptGhostscriptTests.Finalized_commands_compare_with_png_and_detect_removed_glyph_and_displaced_text",
+      "outcome": "Passed",
+      "duration": "00:00:12.6052812"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_preserves_diff_channels_and_opaque_alpha(colorType: Bgra8888, alphaType: Unpremul)",
+      "outcome": "Passed",
+      "duration": "00:00:00.0007808"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_preserves_diff_channels_and_opaque_alpha(colorType: Rgba8888, alphaType: Unpremul)",
+      "outcome": "Passed",
+      "duration": "00:00:00.0013814"
+    },
+    {
+      "testName": "ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_preserves_diff_channels_and_opaque_alpha(colorType: Bgra8888, alphaType: Premul)",
+      "outcome": "Passed",
+      "duration": "00:00:00.0099094"
+    }
+  ]
+}

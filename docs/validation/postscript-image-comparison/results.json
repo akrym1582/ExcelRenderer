@@ -1,0 +1,1793 @@
+{
+  "schemaVersion": 1,
+  "dateUtc": "2026-10-20",
+  "baselineRevision": "d5fa038cc1e097900a4dcbc5c09723c584e63edd",
+  "branchParent": "f73676c437bc991384dc04c8b19d48d6f1fbff4e",
+  "baselineSourceSha256": "3ff6ed341bfd3aa4ca9d451c7039f2cdc4720677fe0824e064fbabef57992e32",
+  "optimizedSourceSha256": "28eb02ae01b895abd191ac0b0a0e51031edee6c691315f41157e53ccb196ad88",
+  "benchmarkScriptSha256": "7ed4417c33680ee6c42457dd39fa6a467af3435bc84aa66964a8d5cf2d590ab9",
+  "before": {
+    "manifest": {
+      "runtime": "/workspace/ExcelRenderer/artifacts/postscript-image-comparison/before-runtime",
+      "fixtures": "/workspace/ExcelRenderer/artifacts/postscript-image-comparison/fixtures",
+      "repetitions": 3,
+      "dllSha256": {
+        "ComparisonBenchmark.dll": "9ecacb7a1f58b3ed6751d4b043a391875ad1e2d3821ebeda2f9069d74066573c",
+        "DocumentFormat.OpenXml.Framework.dll": "5b8c2b9ca1aa70539af0b8054d649bd09fdce4dec812b263ab511b13789c8589",
+        "DocumentFormat.OpenXml.dll": "72e8f6e3e3527d7e6ee29f2f9182ef1b39a4de6da355a33013c0940efb24d87e",
+        "ExCSS.dll": "6b166e638181eba3150f0d10379d1cc8362af6dfd518e9e9e194aa9a746293c2",
+        "ExcelNumberFormat.dll": "d7c45b8e4e1027831e2fc8cdf941faf51d28a66feacfcaaa737da73262e7b507",
+        "ExcelRenderer.Core.dll": "f96974f7d83e92014b9b8162f1d3656c0f91d475cd5771c43f6c97147ba9648d",
+        "ExcelRenderer.Fonts.dll": "38521667092bff2904327a3755caf0ae74237642ba3be615fe0ac1fa0c4a5101",
+        "ExcelRenderer.Formulas.dll": "629424fdb06e89c4285e0b1411341734973a4994c9bada2a112388d8a1eff629",
+        "ExcelRenderer.Mapping.dll": "c87de4a6634443f2450ad641846a4a9c8a04c3ffd6bbe10bfe120a204ba8f052",
+        "ExcelRenderer.OpenXml.Reader.dll": "9c2ecbf224c65bc4f296bdc916f6c8d04648ec473af2cb04328a46184e593ae3",
+        "ExcelRenderer.OpenXml.dll": "9f32e8c4ba46e2b5e4798b42a01369fcba608d75c16ae0e40197b5b6e9a1eaa2",
+        "ExcelRenderer.Tests.dll": "a97d6d6377a257f3e71c6444fc83a5582a480f8bbf602ae589b8ebec3cc80752",
+        "ExcelRenderer.dll": "dff95720214b32ff7303bf51957084db9c065b6ff6121732fae375f40f18c89e",
+        "HarfBuzzSharp.dll": "a28c70688886f87519211a4c9b0536284266070d15ea4ca09ba54a342e47bfb0",
+        "Microsoft.TestPlatform.CommunicationUtilities.dll": "410f3a8b5820e85bbc0245abcf35398f3f22ec52361c7f309b614cf7b8df5be2",
+        "Microsoft.TestPlatform.CoreUtilities.dll": "65a8652e3bfbc496cd479fcb7f019a0c8b5891d987120111c25da6ebd9bb1014",
+        "Microsoft.TestPlatform.CrossPlatEngine.dll": "f4d98814767e3c998daac2f4b41c1534386ed776c2d1e670df7cc4cd811c9b1a",
+        "Microsoft.TestPlatform.PlatformAbstractions.dll": "c016b663b74be1986147eb419ffbc5bd265debdf1f7e65ccf142e91d439aa8bc",
+        "Microsoft.TestPlatform.Utilities.dll": "a9e53f7d7e1ca58f580cf192db0f493335a6d09efb2736e875d9a3e120e51dff",
+        "Microsoft.VisualStudio.CodeCoverage.Shim.dll": "a8550b59f7b15009fb6c24d85d4b70f0faba5b03a08882bf22f852f32993d9f9",
+        "Microsoft.VisualStudio.TestPlatform.Common.dll": "7f5b9964f3d718f4db4b6f4469f32d8ff1dbb9d1e5494654ddc7bdf5154981fa",
+        "Microsoft.VisualStudio.TestPlatform.ObjectModel.dll": "f0608ac026dba091ce770deb49bee9ead7f4f7da05e9c732bbf637d1877a42a5",
+        "ShimSkiaSharp.dll": "d5a801cafed66c273ab251194909621858ec4e6cd4d600363f2764300c408b34",
+        "SkiaSharp.dll": "6e9f9367c0a30ca826065af19b2a6d6138c35ca9b47a72865539267f7e1bb1d1",
+        "Svg.Animation.dll": "945e0bdda45810077f1c0466f1b24673d695e7b670a0f3b7069f6a5ff19425fe",
+        "Svg.Custom.dll": "2d7c63d988eac3777bbe9dbc690d5529c6bfca0a1f0357719d2e6c5458902bbd",
+        "Svg.Model.dll": "4c9a9c65745ce5e1b404942caaa922f693ad2004a0fd0448cc7e3c6dfd4f3ed3",
+        "Svg.SceneGraph.dll": "010776d45585cae94394c1219ac6fa587968b85ddac317b91ead31656ff30e22",
+        "Svg.Skia.dll": "52b6abd42cf1c2f757bea5d6a60a7e2d5a0f11fca379bed91aa2cad5a8cdfdea",
+        "System.IO.Packaging.dll": "12ddc8bff279fad856551a74894dc52b80fa437d5d2b32722e70ae6899217b7c",
+        "UglyToad.PdfPig.Core.dll": "70d93534a6573cb6674d94f6d3c2235c09a6a9e09d1d13b032a2a4a1c3b19818",
+        "UglyToad.PdfPig.DocumentLayoutAnalysis.dll": "3a763e3afd8b290fd46bbc91750459d057d6f64b8dc11ecd6527c977044086be",
+        "UglyToad.PdfPig.Fonts.dll": "aade3f7c3211c961303b136d78888da4194c183a1ea6503b72818b24cbd3a72a",
+        "UglyToad.PdfPig.Package.dll": "6da637d4a06099adf02036d632c3f4a7ea93f01c37145534e6d061725b0361b5",
+        "UglyToad.PdfPig.Tokenization.dll": "ad06282eb18bed04e3da01c757bcc16bc6fbfd8471660c1cddb5f75cbd643758",
+        "UglyToad.PdfPig.Tokens.dll": "128195b9c82ecf521ba2ddbfb358ff033c6d0a67938c87493ca8bf0991fff91d",
+        "UglyToad.PdfPig.dll": "e062781488d3a8557bcf670c57d6776ea7e723faa683b49ec4c6d449c087f5a1",
+        "testhost.dll": "e0145246ef258ca7e8c582f83f1c3b8bb9c655808e118fbac912c76a6c099a3b",
+        "xunit.abstractions.dll": "3166dc70323fb30ccf1cedb0fe86f2ad122c46d254542342d90386efc4c9285c",
+        "xunit.assert.dll": "bcd9711b22d227ac8cd4c1568e72433a0f576d2ec8aae64ac508081892015b1d",
+        "xunit.core.dll": "2f7feeec8c6dec7df684c25fb80aadb292b963d09723460f03d53c5ad2088acc",
+        "xunit.execution.dotnet.dll": "e70febe547c15f8155db3e2d95c3ba4445a59cbc21a3e7541ab22ed49d3dcf7b",
+        "xunit.runner.reporters.netcoreapp10.dll": "194458c816e0ea9ff0c5eac8896c52133fe9205661833b3d0f57e85a4e66936b",
+        "xunit.runner.utility.netcoreapp10.dll": "ec705ad62e33f31fc46ad5800c9b1694c02d0ec4e1ee704712da9f24ebbea22e",
+        "xunit.runner.visualstudio.testadapter.dll": "c5ac41b36fac0fcef9714fb80fea0175913530fb53dd7bb8e5e1470339667100"
+      },
+      "inputSha256": {
+        "displaced.png": "c63025efc779bbcb7e15ffc4482a11051c58ee4c69c627a8291673658c12581f",
+        "drawing-png.png": "720ae23284e264171cb9544d337bae2987414c1cee02821607129b6c9d1755ed",
+        "drawing-ps.png": "050a1641e0ae8bccedfccadfa520c10446399af064c3d133ee43ad78f8d3b15d",
+        "missing-glyph.png": "7568358ad0ec14d544dcdc20a404bbecedf1230d2c7384fe85425c44fd8ca311",
+        "missing-line.png": "a15ab1809fafe0ee15126d2f685685ddb30cf5f73b29d1f59b827e635d84010e"
+      },
+      "harnessSha256": "cede130b46e9755825f1a433210aa61bfd8daeaa28cc0970e034a52835240b59",
+      "nativeSha256": {
+        "runtimes/linux-arm/native/libHarfBuzzSharp.so": "28a903c27039de54f9267f921be7d40c643368c3474caee9c88c3416ed1d4e38",
+        "runtimes/linux-arm/native/libSkiaSharp.so": "f9cda39142d800c9508a21d82ec3c0c58b1f8e72f314c2165f8371693b586434",
+        "runtimes/linux-arm64/native/libHarfBuzzSharp.so": "0216f68a07d78a186f54f7b10878df44b2af2d34d4a350596538d3e0aadd8247",
+        "runtimes/linux-arm64/native/libSkiaSharp.so": "f534ff4d2899d45a7559cc1899b6c413fa117559d0ccd9a38c56a74e1cf2ab6e",
+        "runtimes/linux-bionic-arm64/native/libHarfBuzzSharp.so": "b81ef8f8b961f197e017a26c9823ffdff2cae55e18ec408ea3570a1483b6b1c8",
+        "runtimes/linux-bionic-arm64/native/libSkiaSharp.so": "29a857e3ddb10c9101f5312dbc1105cb4ccb993232b34aacc6dc6cb8efa3737c",
+        "runtimes/linux-bionic-x64/native/libHarfBuzzSharp.so": "c7d1d0a970e4eb6c3e0751147b7e8978ba514d36ee26893d944777a433aec637",
+        "runtimes/linux-bionic-x64/native/libSkiaSharp.so": "87fc2e0d94afd91c7b0efa505789908eff4e7fd1677fca0f15dff03210b905b4",
+        "runtimes/linux-loongarch64/native/libHarfBuzzSharp.so": "ed1432129fa8d5fd7ff66ae41448514763437dd27e0d6120b3781803d4663569",
+        "runtimes/linux-loongarch64/native/libSkiaSharp.so": "9df52e7ca46d319b590d6b8d1e862db506f47c1f8ceedf2cf319b520b2d0f33e",
+        "runtimes/linux-musl-arm/native/libHarfBuzzSharp.so": "1f8d3d8a67023d85f8180328c68d392eb8d1bee45ed794db830c50ad508fb997",
+        "runtimes/linux-musl-arm/native/libSkiaSharp.so": "136f4069841619fb4e55785e2e36a351c4d213c1fea5c199b3569d73ab2e87bb",
+        "runtimes/linux-musl-arm64/native/libHarfBuzzSharp.so": "c0dd7ac2d31473415ae438c3d554e2e94df36cd25dcfebe25304fe2381cdcab9",
+        "runtimes/linux-musl-arm64/native/libSkiaSharp.so": "93f841341e4c794d6fe876d1d6c0cf0d48c1a99b9dac9cb6b3afc7d584a0bbe3",
+        "runtimes/linux-musl-loongarch64/native/libHarfBuzzSharp.so": "0321f4fce59e9cdaf6cd5979d0b98fec6f33e9b8178e0e430cfbb0b8e78e0a61",
+        "runtimes/linux-musl-loongarch64/native/libSkiaSharp.so": "9394dc8c3e453b8b5cdf4df0015257409398e70783cf3bd948532b4bed5cf2e4",
+        "runtimes/linux-musl-riscv64/native/libHarfBuzzSharp.so": "efde55b338c160e1d45c0f9f6930f5f221138fa628eeebf24ac66983c2827cbf",
+        "runtimes/linux-musl-riscv64/native/libSkiaSharp.so": "d2bfc726dcf564cfdc00483cb7d3f440c7300bf50eebb3a746f609664d51a73f",
+        "runtimes/linux-musl-x64/native/libHarfBuzzSharp.so": "ee0ada14a584d0c6c03930dec947f2ab63b49f11151555876b9a2af1f0571ac6",
+        "runtimes/linux-musl-x64/native/libSkiaSharp.so": "253eeaaaf010f2b7dbc77a537042e06f591e17b2263aba5fc64565ebbc8d0ea5",
+        "runtimes/linux-riscv64/native/libHarfBuzzSharp.so": "09ff05c21f03a19cd3f4a964d8fa098430f8721c8583e788f8de61d2fb5a693e",
+        "runtimes/linux-riscv64/native/libSkiaSharp.so": "f6becaf6bbc6feb9b5f110e799d29d724feca9343d04d1d74e9f72e43db3672c",
+        "runtimes/linux-x64/native/libHarfBuzzSharp.so": "0c46fa146a9a8b4125af5c23b04fed548093a3b551d7898b27cf584b884dbf9b",
+        "runtimes/linux-x64/native/libSkiaSharp.so": "30b882ffbea5f7f3a1d71731ece30333d37023c0df783ad218b80949343352b2",
+        "runtimes/linux-x86/native/libHarfBuzzSharp.so": "95afab7c8155f510d5a4814e7ad3f912dd43f59f7b6405bd896270039f7c65a0",
+        "runtimes/linux-x86/native/libSkiaSharp.so": "bb839a799b5201810c1fc25aad759c9e71b13b051155882fb0adab20c99d4b93",
+        "runtimes/osx/native/libHarfBuzzSharp.dylib": "6c8bf85b6b1047dd101a8e28cc5697a41890efb7d244e5f5af1ccefa3d8b45c0",
+        "runtimes/osx/native/libSkiaSharp.dylib": "2308a70f2e25e1ad5250e8f3bf5e11b1c549a8355aa3d131844ccaeaf67015f0",
+        "runtimes/win-arm64/native/libHarfBuzzSharp.dll": "97fe6592ff4053334e1242dd6140c3862f8f2d9f91d6ea11b6d05518f491db39",
+        "runtimes/win-arm64/native/libSkiaSharp.dll": "b2502e6520f1662f58748fa18abc61f6f15e861c530f8e5550590584585d8376",
+        "runtimes/win-x64/native/libHarfBuzzSharp.dll": "3e47dcf6e42ada1ada2202bfbab1a804c0c98eddd6989145e27af6588fed90af",
+        "runtimes/win-x64/native/libSkiaSharp.dll": "7d81368aff17a4ab15c83b7c48f8c210a49f3a047e8779317c648178398708a3",
+        "runtimes/win-x86/native/libHarfBuzzSharp.dll": "629f92557b63f713adc889e18c849a47b1895a06991b39a1f15513cfecf9e7bd",
+        "runtimes/win-x86/native/libSkiaSharp.dll": "f7bc3765fa08f45078672bf161fc9236d262a2360566f37965095dec3ad612c7"
+      }
+    },
+    "environment": {
+      "kind": "environment",
+      "runtime": ".NET 10.0.12",
+      "os": "Debian GNU/Linux 13 (trixie)",
+      "processors": 4,
+      "warmups": 3,
+      "warmupWidth": 32,
+      "warmupHeight": 32
+    },
+    "samples": [
+      {
+        "kind": "sample",
+        "name": "drawing-ps",
+        "round": 0,
+        "Width": 1500,
+        "Height": 1667,
+        "elapsedMs": 45723.4067,
+        "allocatedBytes": 500128992,
+        "result": {
+          "Passed": true,
+          "Contour": {
+            "Compared": 465932,
+            "Unmatched": 13,
+            "MaximumUnmatchedPerTile": 6,
+            "FailedTiles": []
+          },
+          "Color": {
+            "Compared": 505511,
+            "Unmatched": 759,
+            "MaximumUnmatchedPerTile": 214,
+            "FailedTiles": []
+          },
+          "Region": {
+            "Compared": 4433106,
+            "Unmatched": 0,
+            "MaximumUnmatchedPerTile": 0,
+            "FailedTiles": []
+          }
+        },
+        "diffPixelSha256": "765952CE0DD276A8C2877D0702A8DE37CCFD29215EDA288A5ABD7BCEBE4FB2B4",
+        "diffFileSha256": "9867B211514AAE73AD724822925AD80C12342CC8E96CF80508716A573392B7D6"
+      },
+      {
+        "kind": "sample",
+        "name": "drawing-ps",
+        "round": 1,
+        "Width": 1500,
+        "Height": 1667,
+        "elapsedMs": 41510.324,
+        "allocatedBytes": 500122504,
+        "result": {
+          "Passed": true,
+          "Contour": {
+            "Compared": 465932,
+            "Unmatched": 13,
+            "MaximumUnmatchedPerTile": 6,
+            "FailedTiles": []
+          },
+          "Color": {
+            "Compared": 505511,
+            "Unmatched": 759,
+            "MaximumUnmatchedPerTile": 214,
+            "FailedTiles": []
+          },
+          "Region": {
+            "Compared": 4433106,
+            "Unmatched": 0,
+            "MaximumUnmatchedPerTile": 0,
+            "FailedTiles": []
+          }
+        },
+        "diffPixelSha256": "765952CE0DD276A8C2877D0702A8DE37CCFD29215EDA288A5ABD7BCEBE4FB2B4",
+        "diffFileSha256": "9867B211514AAE73AD724822925AD80C12342CC8E96CF80508716A573392B7D6"
+      },
+      {
+        "kind": "sample",
+        "name": "drawing-ps",
+        "round": 2,
+        "Width": 1500,
+        "Height": 1667,
+        "elapsedMs": 57436.0879,
+        "allocatedBytes": 500122504,
+        "result": {
+          "Passed": true,
+          "Contour": {
+            "Compared": 465932,
+            "Unmatched": 13,
+            "MaximumUnmatchedPerTile": 6,
+            "FailedTiles": []
+          },
+          "Color": {
+            "Compared": 505511,
+            "Unmatched": 759,
+            "MaximumUnmatchedPerTile": 214,
+            "FailedTiles": []
+          },
+          "Region": {
+            "Compared": 4433106,
+            "Unmatched": 0,
+            "MaximumUnmatchedPerTile": 0,
+            "FailedTiles": []
+          }
+        },
+        "diffPixelSha256": "765952CE0DD276A8C2877D0702A8DE37CCFD29215EDA288A5ABD7BCEBE4FB2B4",
+        "diffFileSha256": "9867B211514AAE73AD724822925AD80C12342CC8E96CF80508716A573392B7D6"
+      },
+      {
+        "kind": "sample",
+        "name": "missing-glyph",
+        "round": 0,
+        "Width": 1500,
+        "Height": 1667,
+        "elapsedMs": 78075.7872,
+        "allocatedBytes": 500122720,
+        "result": {
+          "Passed": false,
+          "Contour": {
+            "Compared": 464654,
+            "Unmatched": 5744,
+            "MaximumUnmatchedPerTile": 1151,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31
+            ]
+          },
+          "Color": {
+            "Compared": 504014,
+            "Unmatched": 4282,
+            "MaximumUnmatchedPerTile": 750,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31
+            ]
+          },
+          "Region": {
+            "Compared": 4434359,
+            "Unmatched": 2370,
+            "MaximumUnmatchedPerTile": 419,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31
+            ]
+          }
+        },
+        "diffPixelSha256": "AE93CC6D787D8B52EB87D4BB76426F6DA2F6E27C92700F91C66AFE6DF9C84CFA",
+        "diffFileSha256": "FA7BF66BFBFC48B443C290F700AD028DFD06A6794243F40CCB1ABDC411E16E8E"
+      },
+      {
+        "kind": "sample",
+        "name": "missing-glyph",
+        "round": 1,
+        "Width": 1500,
+        "Height": 1667,
+        "elapsedMs": 48765.6575,
+        "allocatedBytes": 500122688,
+        "result": {
+          "Passed": false,
+          "Contour": {
+            "Compared": 464654,
+            "Unmatched": 5744,
+            "MaximumUnmatchedPerTile": 1151,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31
+            ]
+          },
+          "Color": {
+            "Compared": 504014,
+            "Unmatched": 4282,
+            "MaximumUnmatchedPerTile": 750,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31
+            ]
+          },
+          "Region": {
+            "Compared": 4434359,
+            "Unmatched": 2370,
+            "MaximumUnmatchedPerTile": 419,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31
+            ]
+          }
+        },
+        "diffPixelSha256": "AE93CC6D787D8B52EB87D4BB76426F6DA2F6E27C92700F91C66AFE6DF9C84CFA",
+        "diffFileSha256": "FA7BF66BFBFC48B443C290F700AD028DFD06A6794243F40CCB1ABDC411E16E8E"
+      },
+      {
+        "kind": "sample",
+        "name": "missing-glyph",
+        "round": 2,
+        "Width": 1500,
+        "Height": 1667,
+        "elapsedMs": 34917.5309,
+        "allocatedBytes": 500121680,
+        "result": {
+          "Passed": false,
+          "Contour": {
+            "Compared": 464654,
+            "Unmatched": 5744,
+            "MaximumUnmatchedPerTile": 1151,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31
+            ]
+          },
+          "Color": {
+            "Compared": 504014,
+            "Unmatched": 4282,
+            "MaximumUnmatchedPerTile": 750,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31
+            ]
+          },
+          "Region": {
+            "Compared": 4434359,
+            "Unmatched": 2370,
+            "MaximumUnmatchedPerTile": 419,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31
+            ]
+          }
+        },
+        "diffPixelSha256": "AE93CC6D787D8B52EB87D4BB76426F6DA2F6E27C92700F91C66AFE6DF9C84CFA",
+        "diffFileSha256": "FA7BF66BFBFC48B443C290F700AD028DFD06A6794243F40CCB1ABDC411E16E8E"
+      },
+      {
+        "kind": "sample",
+        "name": "displaced",
+        "round": 0,
+        "Width": 1500,
+        "Height": 1667,
+        "elapsedMs": 66436.8882,
+        "allocatedBytes": 500122688,
+        "result": {
+          "Passed": false,
+          "Contour": {
+            "Compared": 465932,
+            "Unmatched": 5549,
+            "MaximumUnmatchedPerTile": 860,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32
+            ]
+          },
+          "Color": {
+            "Compared": 505457,
+            "Unmatched": 4286,
+            "MaximumUnmatchedPerTile": 514,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              30,
+              31,
+              32
+            ]
+          },
+          "Region": {
+            "Compared": 4433106,
+            "Unmatched": 2288,
+            "MaximumUnmatchedPerTile": 411,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32
+            ]
+          }
+        },
+        "diffPixelSha256": "6417D1B81013A4E43710E9AE8914C92F30802F34D33A69701B53D7D1056FB222",
+        "diffFileSha256": "EF24D1155DA7EBD6A4F46D5C6CB9BE7BCC5B0755AF8FF9359CC1109AEF779760"
+      },
+      {
+        "kind": "sample",
+        "name": "displaced",
+        "round": 1,
+        "Width": 1500,
+        "Height": 1667,
+        "elapsedMs": 30409.6658,
+        "allocatedBytes": 500122688,
+        "result": {
+          "Passed": false,
+          "Contour": {
+            "Compared": 465932,
+            "Unmatched": 5549,
+            "MaximumUnmatchedPerTile": 860,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32
+            ]
+          },
+          "Color": {
+            "Compared": 505457,
+            "Unmatched": 4286,
+            "MaximumUnmatchedPerTile": 514,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              30,
+              31,
+              32
+            ]
+          },
+          "Region": {
+            "Compared": 4433106,
+            "Unmatched": 2288,
+            "MaximumUnmatchedPerTile": 411,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32
+            ]
+          }
+        },
+        "diffPixelSha256": "6417D1B81013A4E43710E9AE8914C92F30802F34D33A69701B53D7D1056FB222",
+        "diffFileSha256": "EF24D1155DA7EBD6A4F46D5C6CB9BE7BCC5B0755AF8FF9359CC1109AEF779760"
+      },
+      {
+        "kind": "sample",
+        "name": "displaced",
+        "round": 2,
+        "Width": 1500,
+        "Height": 1667,
+        "elapsedMs": 27931.1018,
+        "allocatedBytes": 500122688,
+        "result": {
+          "Passed": false,
+          "Contour": {
+            "Compared": 465932,
+            "Unmatched": 5549,
+            "MaximumUnmatchedPerTile": 860,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32
+            ]
+          },
+          "Color": {
+            "Compared": 505457,
+            "Unmatched": 4286,
+            "MaximumUnmatchedPerTile": 514,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              30,
+              31,
+              32
+            ]
+          },
+          "Region": {
+            "Compared": 4433106,
+            "Unmatched": 2288,
+            "MaximumUnmatchedPerTile": 411,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32
+            ]
+          }
+        },
+        "diffPixelSha256": "6417D1B81013A4E43710E9AE8914C92F30802F34D33A69701B53D7D1056FB222",
+        "diffFileSha256": "EF24D1155DA7EBD6A4F46D5C6CB9BE7BCC5B0755AF8FF9359CC1109AEF779760"
+      },
+      {
+        "kind": "sample",
+        "name": "missing-line",
+        "round": 0,
+        "Width": 1500,
+        "Height": 1667,
+        "elapsedMs": 30032.6483,
+        "allocatedBytes": 500122824,
+        "result": {
+          "Passed": false,
+          "Contour": {
+            "Compared": 460754,
+            "Unmatched": 4278,
+            "MaximumUnmatchedPerTile": 215,
+            "FailedTiles": [
+              240,
+              241,
+              242,
+              243,
+              244,
+              245,
+              246,
+              247,
+              248,
+              250,
+              251,
+              252,
+              253,
+              256,
+              257,
+              258,
+              259,
+              260,
+              261
+            ]
+          },
+          "Color": {
+            "Compared": 499151,
+            "Unmatched": 4385,
+            "MaximumUnmatchedPerTile": 214,
+            "FailedTiles": [
+              240,
+              241,
+              242,
+              243,
+              244,
+              245,
+              246,
+              247,
+              248,
+              250,
+              251,
+              252,
+              253,
+              256,
+              257,
+              258,
+              259,
+              260,
+              261
+            ]
+          },
+          "Region": {
+            "Compared": 4439754,
+            "Unmatched": 618,
+            "MaximumUnmatchedPerTile": 31,
+            "FailedTiles": [
+              241,
+              242,
+              243,
+              244,
+              245,
+              246,
+              247,
+              248,
+              249,
+              250,
+              251,
+              252,
+              253,
+              254,
+              255,
+              256,
+              257,
+              258,
+              259,
+              260
+            ]
+          }
+        },
+        "diffPixelSha256": "6BE064C3A5D11CA3350883F733C85B90DEF29CAF1B8F44E6B09E947275F1FCAE",
+        "diffFileSha256": "8C1D13875E271777F7C178196F38F0EF7AAE5A7808300268E3F70E075242B837"
+      },
+      {
+        "kind": "sample",
+        "name": "missing-line",
+        "round": 1,
+        "Width": 1500,
+        "Height": 1667,
+        "elapsedMs": 33392.8334,
+        "allocatedBytes": 500122824,
+        "result": {
+          "Passed": false,
+          "Contour": {
+            "Compared": 460754,
+            "Unmatched": 4278,
+            "MaximumUnmatchedPerTile": 215,
+            "FailedTiles": [
+              240,
+              241,
+              242,
+              243,
+              244,
+              245,
+              246,
+              247,
+              248,
+              250,
+              251,
+              252,
+              253,
+              256,
+              257,
+              258,
+              259,
+              260,
+              261
+            ]
+          },
+          "Color": {
+            "Compared": 499151,
+            "Unmatched": 4385,
+            "MaximumUnmatchedPerTile": 214,
+            "FailedTiles": [
+              240,
+              241,
+              242,
+              243,
+              244,
+              245,
+              246,
+              247,
+              248,
+              250,
+              251,
+              252,
+              253,
+              256,
+              257,
+              258,
+              259,
+              260,
+              261
+            ]
+          },
+          "Region": {
+            "Compared": 4439754,
+            "Unmatched": 618,
+            "MaximumUnmatchedPerTile": 31,
+            "FailedTiles": [
+              241,
+              242,
+              243,
+              244,
+              245,
+              246,
+              247,
+              248,
+              249,
+              250,
+              251,
+              252,
+              253,
+              254,
+              255,
+              256,
+              257,
+              258,
+              259,
+              260
+            ]
+          }
+        },
+        "diffPixelSha256": "6BE064C3A5D11CA3350883F733C85B90DEF29CAF1B8F44E6B09E947275F1FCAE",
+        "diffFileSha256": "8C1D13875E271777F7C178196F38F0EF7AAE5A7808300268E3F70E075242B837"
+      },
+      {
+        "kind": "sample",
+        "name": "missing-line",
+        "round": 2,
+        "Width": 1500,
+        "Height": 1667,
+        "elapsedMs": 34075.2392,
+        "allocatedBytes": 500122824,
+        "result": {
+          "Passed": false,
+          "Contour": {
+            "Compared": 460754,
+            "Unmatched": 4278,
+            "MaximumUnmatchedPerTile": 215,
+            "FailedTiles": [
+              240,
+              241,
+              242,
+              243,
+              244,
+              245,
+              246,
+              247,
+              248,
+              250,
+              251,
+              252,
+              253,
+              256,
+              257,
+              258,
+              259,
+              260,
+              261
+            ]
+          },
+          "Color": {
+            "Compared": 499151,
+            "Unmatched": 4385,
+            "MaximumUnmatchedPerTile": 214,
+            "FailedTiles": [
+              240,
+              241,
+              242,
+              243,
+              244,
+              245,
+              246,
+              247,
+              248,
+              250,
+              251,
+              252,
+              253,
+              256,
+              257,
+              258,
+              259,
+              260,
+              261
+            ]
+          },
+          "Region": {
+            "Compared": 4439754,
+            "Unmatched": 618,
+            "MaximumUnmatchedPerTile": 31,
+            "FailedTiles": [
+              241,
+              242,
+              243,
+              244,
+              245,
+              246,
+              247,
+              248,
+              249,
+              250,
+              251,
+              252,
+              253,
+              254,
+              255,
+              256,
+              257,
+              258,
+              259,
+              260
+            ]
+          }
+        },
+        "diffPixelSha256": "6BE064C3A5D11CA3350883F733C85B90DEF29CAF1B8F44E6B09E947275F1FCAE",
+        "diffFileSha256": "8C1D13875E271777F7C178196F38F0EF7AAE5A7808300268E3F70E075242B837"
+      }
+    ],
+    "summary": {
+      "displaced": {
+        "elapsedMs": [
+          66436.8882,
+          30409.6658,
+          27931.1018
+        ],
+        "medianMs": 30409.6658
+      },
+      "drawing-ps": {
+        "elapsedMs": [
+          45723.4067,
+          41510.324,
+          57436.0879
+        ],
+        "medianMs": 45723.4067
+      },
+      "missing-glyph": {
+        "elapsedMs": [
+          78075.7872,
+          48765.6575,
+          34917.5309
+        ],
+        "medianMs": 48765.6575
+      },
+      "missing-line": {
+        "elapsedMs": [
+          30032.6483,
+          33392.8334,
+          34075.2392
+        ],
+        "medianMs": 33392.8334
+      }
+    }
+  },
+  "after": {
+    "manifest": {
+      "runtime": "/workspace/ExcelRenderer/artifacts/postscript-image-comparison/after-runtime",
+      "fixtures": "/workspace/ExcelRenderer/artifacts/postscript-image-comparison/fixtures",
+      "repetitions": 3,
+      "dllSha256": {
+        "ComparisonBenchmark.dll": "37b84282b8e3d0085d4a0a3ef7e346960d3c63bac6b57a7170161ef980e10f8a",
+        "DocumentFormat.OpenXml.Framework.dll": "5b8c2b9ca1aa70539af0b8054d649bd09fdce4dec812b263ab511b13789c8589",
+        "DocumentFormat.OpenXml.dll": "72e8f6e3e3527d7e6ee29f2f9182ef1b39a4de6da355a33013c0940efb24d87e",
+        "ExCSS.dll": "6b166e638181eba3150f0d10379d1cc8362af6dfd518e9e9e194aa9a746293c2",
+        "ExcelNumberFormat.dll": "d7c45b8e4e1027831e2fc8cdf941faf51d28a66feacfcaaa737da73262e7b507",
+        "ExcelRenderer.Core.dll": "62c88c9a1b43bcb5bb5f8959adc2448d1f4dbfb76a9fc4da1f15ca0d633d94bc",
+        "ExcelRenderer.Fonts.dll": "90127ec85a5d11a1c53c8643b00246fe54ce28e8d086e0f8e8ddacc478786a01",
+        "ExcelRenderer.Formulas.dll": "567946770c166ee5dbee889fa1841f04f16530a4e3378e1a2d0f1a5a2333f615",
+        "ExcelRenderer.Mapping.dll": "d1e03e007d72a7d056ed1ef7504f0ea62c24c5756fd7c3698bfdeea1207853c4",
+        "ExcelRenderer.OpenXml.Reader.dll": "35adfdb7832180f08efacf929cc7c24c7dff7bc0270a93246e36677a2d21eba3",
+        "ExcelRenderer.OpenXml.dll": "b76ee259c94749980d0b28451a4639d7c956d6cac767edaabc9cd4d629e91c38",
+        "ExcelRenderer.Tests.dll": "63621dfe06ac7811cf06008421d48a0fe07e7115a629a1d8ee2f07e64a37c5d1",
+        "ExcelRenderer.dll": "05084c0d015eb6e20ad8efdb72621901cf392fc96be9e24fb7a70e385491351a",
+        "HarfBuzzSharp.dll": "a28c70688886f87519211a4c9b0536284266070d15ea4ca09ba54a342e47bfb0",
+        "Microsoft.TestPlatform.CommunicationUtilities.dll": "410f3a8b5820e85bbc0245abcf35398f3f22ec52361c7f309b614cf7b8df5be2",
+        "Microsoft.TestPlatform.CoreUtilities.dll": "65a8652e3bfbc496cd479fcb7f019a0c8b5891d987120111c25da6ebd9bb1014",
+        "Microsoft.TestPlatform.CrossPlatEngine.dll": "f4d98814767e3c998daac2f4b41c1534386ed776c2d1e670df7cc4cd811c9b1a",
+        "Microsoft.TestPlatform.PlatformAbstractions.dll": "c016b663b74be1986147eb419ffbc5bd265debdf1f7e65ccf142e91d439aa8bc",
+        "Microsoft.TestPlatform.Utilities.dll": "a9e53f7d7e1ca58f580cf192db0f493335a6d09efb2736e875d9a3e120e51dff",
+        "Microsoft.VisualStudio.CodeCoverage.Shim.dll": "a8550b59f7b15009fb6c24d85d4b70f0faba5b03a08882bf22f852f32993d9f9",
+        "Microsoft.VisualStudio.TestPlatform.Common.dll": "7f5b9964f3d718f4db4b6f4469f32d8ff1dbb9d1e5494654ddc7bdf5154981fa",
+        "Microsoft.VisualStudio.TestPlatform.ObjectModel.dll": "f0608ac026dba091ce770deb49bee9ead7f4f7da05e9c732bbf637d1877a42a5",
+        "ShimSkiaSharp.dll": "d5a801cafed66c273ab251194909621858ec4e6cd4d600363f2764300c408b34",
+        "SkiaSharp.dll": "6e9f9367c0a30ca826065af19b2a6d6138c35ca9b47a72865539267f7e1bb1d1",
+        "Svg.Animation.dll": "945e0bdda45810077f1c0466f1b24673d695e7b670a0f3b7069f6a5ff19425fe",
+        "Svg.Custom.dll": "2d7c63d988eac3777bbe9dbc690d5529c6bfca0a1f0357719d2e6c5458902bbd",
+        "Svg.Model.dll": "4c9a9c65745ce5e1b404942caaa922f693ad2004a0fd0448cc7e3c6dfd4f3ed3",
+        "Svg.SceneGraph.dll": "010776d45585cae94394c1219ac6fa587968b85ddac317b91ead31656ff30e22",
+        "Svg.Skia.dll": "52b6abd42cf1c2f757bea5d6a60a7e2d5a0f11fca379bed91aa2cad5a8cdfdea",
+        "System.IO.Packaging.dll": "12ddc8bff279fad856551a74894dc52b80fa437d5d2b32722e70ae6899217b7c",
+        "UglyToad.PdfPig.Core.dll": "70d93534a6573cb6674d94f6d3c2235c09a6a9e09d1d13b032a2a4a1c3b19818",
+        "UglyToad.PdfPig.DocumentLayoutAnalysis.dll": "3a763e3afd8b290fd46bbc91750459d057d6f64b8dc11ecd6527c977044086be",
+        "UglyToad.PdfPig.Fonts.dll": "aade3f7c3211c961303b136d78888da4194c183a1ea6503b72818b24cbd3a72a",
+        "UglyToad.PdfPig.Package.dll": "6da637d4a06099adf02036d632c3f4a7ea93f01c37145534e6d061725b0361b5",
+        "UglyToad.PdfPig.Tokenization.dll": "ad06282eb18bed04e3da01c757bcc16bc6fbfd8471660c1cddb5f75cbd643758",
+        "UglyToad.PdfPig.Tokens.dll": "128195b9c82ecf521ba2ddbfb358ff033c6d0a67938c87493ca8bf0991fff91d",
+        "UglyToad.PdfPig.dll": "e062781488d3a8557bcf670c57d6776ea7e723faa683b49ec4c6d449c087f5a1",
+        "testhost.dll": "e0145246ef258ca7e8c582f83f1c3b8bb9c655808e118fbac912c76a6c099a3b",
+        "xunit.abstractions.dll": "3166dc70323fb30ccf1cedb0fe86f2ad122c46d254542342d90386efc4c9285c",
+        "xunit.assert.dll": "bcd9711b22d227ac8cd4c1568e72433a0f576d2ec8aae64ac508081892015b1d",
+        "xunit.core.dll": "2f7feeec8c6dec7df684c25fb80aadb292b963d09723460f03d53c5ad2088acc",
+        "xunit.execution.dotnet.dll": "e70febe547c15f8155db3e2d95c3ba4445a59cbc21a3e7541ab22ed49d3dcf7b",
+        "xunit.runner.reporters.netcoreapp10.dll": "194458c816e0ea9ff0c5eac8896c52133fe9205661833b3d0f57e85a4e66936b",
+        "xunit.runner.utility.netcoreapp10.dll": "ec705ad62e33f31fc46ad5800c9b1694c02d0ec4e1ee704712da9f24ebbea22e",
+        "xunit.runner.visualstudio.testadapter.dll": "c5ac41b36fac0fcef9714fb80fea0175913530fb53dd7bb8e5e1470339667100"
+      },
+      "nativeSha256": {
+        "runtimes/linux-arm/native/libHarfBuzzSharp.so": "28a903c27039de54f9267f921be7d40c643368c3474caee9c88c3416ed1d4e38",
+        "runtimes/linux-arm/native/libSkiaSharp.so": "f9cda39142d800c9508a21d82ec3c0c58b1f8e72f314c2165f8371693b586434",
+        "runtimes/linux-arm64/native/libHarfBuzzSharp.so": "0216f68a07d78a186f54f7b10878df44b2af2d34d4a350596538d3e0aadd8247",
+        "runtimes/linux-arm64/native/libSkiaSharp.so": "f534ff4d2899d45a7559cc1899b6c413fa117559d0ccd9a38c56a74e1cf2ab6e",
+        "runtimes/linux-bionic-arm64/native/libHarfBuzzSharp.so": "b81ef8f8b961f197e017a26c9823ffdff2cae55e18ec408ea3570a1483b6b1c8",
+        "runtimes/linux-bionic-arm64/native/libSkiaSharp.so": "29a857e3ddb10c9101f5312dbc1105cb4ccb993232b34aacc6dc6cb8efa3737c",
+        "runtimes/linux-bionic-x64/native/libHarfBuzzSharp.so": "c7d1d0a970e4eb6c3e0751147b7e8978ba514d36ee26893d944777a433aec637",
+        "runtimes/linux-bionic-x64/native/libSkiaSharp.so": "87fc2e0d94afd91c7b0efa505789908eff4e7fd1677fca0f15dff03210b905b4",
+        "runtimes/linux-loongarch64/native/libHarfBuzzSharp.so": "ed1432129fa8d5fd7ff66ae41448514763437dd27e0d6120b3781803d4663569",
+        "runtimes/linux-loongarch64/native/libSkiaSharp.so": "9df52e7ca46d319b590d6b8d1e862db506f47c1f8ceedf2cf319b520b2d0f33e",
+        "runtimes/linux-musl-arm/native/libHarfBuzzSharp.so": "1f8d3d8a67023d85f8180328c68d392eb8d1bee45ed794db830c50ad508fb997",
+        "runtimes/linux-musl-arm/native/libSkiaSharp.so": "136f4069841619fb4e55785e2e36a351c4d213c1fea5c199b3569d73ab2e87bb",
+        "runtimes/linux-musl-arm64/native/libHarfBuzzSharp.so": "c0dd7ac2d31473415ae438c3d554e2e94df36cd25dcfebe25304fe2381cdcab9",
+        "runtimes/linux-musl-arm64/native/libSkiaSharp.so": "93f841341e4c794d6fe876d1d6c0cf0d48c1a99b9dac9cb6b3afc7d584a0bbe3",
+        "runtimes/linux-musl-loongarch64/native/libHarfBuzzSharp.so": "0321f4fce59e9cdaf6cd5979d0b98fec6f33e9b8178e0e430cfbb0b8e78e0a61",
+        "runtimes/linux-musl-loongarch64/native/libSkiaSharp.so": "9394dc8c3e453b8b5cdf4df0015257409398e70783cf3bd948532b4bed5cf2e4",
+        "runtimes/linux-musl-riscv64/native/libHarfBuzzSharp.so": "efde55b338c160e1d45c0f9f6930f5f221138fa628eeebf24ac66983c2827cbf",
+        "runtimes/linux-musl-riscv64/native/libSkiaSharp.so": "d2bfc726dcf564cfdc00483cb7d3f440c7300bf50eebb3a746f609664d51a73f",
+        "runtimes/linux-musl-x64/native/libHarfBuzzSharp.so": "ee0ada14a584d0c6c03930dec947f2ab63b49f11151555876b9a2af1f0571ac6",
+        "runtimes/linux-musl-x64/native/libSkiaSharp.so": "253eeaaaf010f2b7dbc77a537042e06f591e17b2263aba5fc64565ebbc8d0ea5",
+        "runtimes/linux-riscv64/native/libHarfBuzzSharp.so": "09ff05c21f03a19cd3f4a964d8fa098430f8721c8583e788f8de61d2fb5a693e",
+        "runtimes/linux-riscv64/native/libSkiaSharp.so": "f6becaf6bbc6feb9b5f110e799d29d724feca9343d04d1d74e9f72e43db3672c",
+        "runtimes/linux-x64/native/libHarfBuzzSharp.so": "0c46fa146a9a8b4125af5c23b04fed548093a3b551d7898b27cf584b884dbf9b",
+        "runtimes/linux-x64/native/libSkiaSharp.so": "30b882ffbea5f7f3a1d71731ece30333d37023c0df783ad218b80949343352b2",
+        "runtimes/linux-x86/native/libHarfBuzzSharp.so": "95afab7c8155f510d5a4814e7ad3f912dd43f59f7b6405bd896270039f7c65a0",
+        "runtimes/linux-x86/native/libSkiaSharp.so": "bb839a799b5201810c1fc25aad759c9e71b13b051155882fb0adab20c99d4b93",
+        "runtimes/osx/native/libHarfBuzzSharp.dylib": "6c8bf85b6b1047dd101a8e28cc5697a41890efb7d244e5f5af1ccefa3d8b45c0",
+        "runtimes/osx/native/libSkiaSharp.dylib": "2308a70f2e25e1ad5250e8f3bf5e11b1c549a8355aa3d131844ccaeaf67015f0",
+        "runtimes/win-arm64/native/libHarfBuzzSharp.dll": "97fe6592ff4053334e1242dd6140c3862f8f2d9f91d6ea11b6d05518f491db39",
+        "runtimes/win-arm64/native/libSkiaSharp.dll": "b2502e6520f1662f58748fa18abc61f6f15e861c530f8e5550590584585d8376",
+        "runtimes/win-x64/native/libHarfBuzzSharp.dll": "3e47dcf6e42ada1ada2202bfbab1a804c0c98eddd6989145e27af6588fed90af",
+        "runtimes/win-x64/native/libSkiaSharp.dll": "7d81368aff17a4ab15c83b7c48f8c210a49f3a047e8779317c648178398708a3",
+        "runtimes/win-x86/native/libHarfBuzzSharp.dll": "629f92557b63f713adc889e18c849a47b1895a06991b39a1f15513cfecf9e7bd",
+        "runtimes/win-x86/native/libSkiaSharp.dll": "f7bc3765fa08f45078672bf161fc9236d262a2360566f37965095dec3ad612c7"
+      },
+      "inputSha256": {
+        "displaced.png": "c63025efc779bbcb7e15ffc4482a11051c58ee4c69c627a8291673658c12581f",
+        "drawing-png.png": "720ae23284e264171cb9544d337bae2987414c1cee02821607129b6c9d1755ed",
+        "drawing-ps.png": "050a1641e0ae8bccedfccadfa520c10446399af064c3d133ee43ad78f8d3b15d",
+        "missing-glyph.png": "7568358ad0ec14d544dcdc20a404bbecedf1230d2c7384fe85425c44fd8ca311",
+        "missing-line.png": "a15ab1809fafe0ee15126d2f685685ddb30cf5f73b29d1f59b827e635d84010e"
+      },
+      "harnessSha256": "cede130b46e9755825f1a433210aa61bfd8daeaa28cc0970e034a52835240b59"
+    },
+    "environment": {
+      "kind": "environment",
+      "runtime": ".NET 10.0.12",
+      "os": "Debian GNU/Linux 13 (trixie)",
+      "processors": 4,
+      "warmups": 3,
+      "warmupWidth": 32,
+      "warmupHeight": 32
+    },
+    "samples": [
+      {
+        "kind": "sample",
+        "name": "drawing-ps",
+        "round": 0,
+        "Width": 1500,
+        "Height": 1667,
+        "elapsedMs": 1498.0777,
+        "allocatedBytes": 30035280,
+        "result": {
+          "Passed": true,
+          "Contour": {
+            "Compared": 465932,
+            "Unmatched": 13,
+            "MaximumUnmatchedPerTile": 6,
+            "FailedTiles": []
+          },
+          "Color": {
+            "Compared": 505511,
+            "Unmatched": 759,
+            "MaximumUnmatchedPerTile": 214,
+            "FailedTiles": []
+          },
+          "Region": {
+            "Compared": 4433106,
+            "Unmatched": 0,
+            "MaximumUnmatchedPerTile": 0,
+            "FailedTiles": []
+          }
+        },
+        "diffPixelSha256": "765952CE0DD276A8C2877D0702A8DE37CCFD29215EDA288A5ABD7BCEBE4FB2B4",
+        "diffFileSha256": "9867B211514AAE73AD724822925AD80C12342CC8E96CF80508716A573392B7D6"
+      },
+      {
+        "kind": "sample",
+        "name": "drawing-ps",
+        "round": 1,
+        "Width": 1500,
+        "Height": 1667,
+        "elapsedMs": 1917.8968,
+        "allocatedBytes": 30053584,
+        "result": {
+          "Passed": true,
+          "Contour": {
+            "Compared": 465932,
+            "Unmatched": 13,
+            "MaximumUnmatchedPerTile": 6,
+            "FailedTiles": []
+          },
+          "Color": {
+            "Compared": 505511,
+            "Unmatched": 759,
+            "MaximumUnmatchedPerTile": 214,
+            "FailedTiles": []
+          },
+          "Region": {
+            "Compared": 4433106,
+            "Unmatched": 0,
+            "MaximumUnmatchedPerTile": 0,
+            "FailedTiles": []
+          }
+        },
+        "diffPixelSha256": "765952CE0DD276A8C2877D0702A8DE37CCFD29215EDA288A5ABD7BCEBE4FB2B4",
+        "diffFileSha256": "9867B211514AAE73AD724822925AD80C12342CC8E96CF80508716A573392B7D6"
+      },
+      {
+        "kind": "sample",
+        "name": "drawing-ps",
+        "round": 2,
+        "Width": 1500,
+        "Height": 1667,
+        "elapsedMs": 922.3866,
+        "allocatedBytes": 30028936,
+        "result": {
+          "Passed": true,
+          "Contour": {
+            "Compared": 465932,
+            "Unmatched": 13,
+            "MaximumUnmatchedPerTile": 6,
+            "FailedTiles": []
+          },
+          "Color": {
+            "Compared": 505511,
+            "Unmatched": 759,
+            "MaximumUnmatchedPerTile": 214,
+            "FailedTiles": []
+          },
+          "Region": {
+            "Compared": 4433106,
+            "Unmatched": 0,
+            "MaximumUnmatchedPerTile": 0,
+            "FailedTiles": []
+          }
+        },
+        "diffPixelSha256": "765952CE0DD276A8C2877D0702A8DE37CCFD29215EDA288A5ABD7BCEBE4FB2B4",
+        "diffFileSha256": "9867B211514AAE73AD724822925AD80C12342CC8E96CF80508716A573392B7D6"
+      },
+      {
+        "kind": "sample",
+        "name": "missing-glyph",
+        "round": 0,
+        "Width": 1500,
+        "Height": 1667,
+        "elapsedMs": 907.7437,
+        "allocatedBytes": 30029152,
+        "result": {
+          "Passed": false,
+          "Contour": {
+            "Compared": 464654,
+            "Unmatched": 5744,
+            "MaximumUnmatchedPerTile": 1151,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31
+            ]
+          },
+          "Color": {
+            "Compared": 504014,
+            "Unmatched": 4282,
+            "MaximumUnmatchedPerTile": 750,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31
+            ]
+          },
+          "Region": {
+            "Compared": 4434359,
+            "Unmatched": 2370,
+            "MaximumUnmatchedPerTile": 419,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31
+            ]
+          }
+        },
+        "diffPixelSha256": "AE93CC6D787D8B52EB87D4BB76426F6DA2F6E27C92700F91C66AFE6DF9C84CFA",
+        "diffFileSha256": "FA7BF66BFBFC48B443C290F700AD028DFD06A6794243F40CCB1ABDC411E16E8E"
+      },
+      {
+        "kind": "sample",
+        "name": "missing-glyph",
+        "round": 1,
+        "Width": 1500,
+        "Height": 1667,
+        "elapsedMs": 913.1154,
+        "allocatedBytes": 30029120,
+        "result": {
+          "Passed": false,
+          "Contour": {
+            "Compared": 464654,
+            "Unmatched": 5744,
+            "MaximumUnmatchedPerTile": 1151,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31
+            ]
+          },
+          "Color": {
+            "Compared": 504014,
+            "Unmatched": 4282,
+            "MaximumUnmatchedPerTile": 750,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31
+            ]
+          },
+          "Region": {
+            "Compared": 4434359,
+            "Unmatched": 2370,
+            "MaximumUnmatchedPerTile": 419,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31
+            ]
+          }
+        },
+        "diffPixelSha256": "AE93CC6D787D8B52EB87D4BB76426F6DA2F6E27C92700F91C66AFE6DF9C84CFA",
+        "diffFileSha256": "FA7BF66BFBFC48B443C290F700AD028DFD06A6794243F40CCB1ABDC411E16E8E"
+      },
+      {
+        "kind": "sample",
+        "name": "missing-glyph",
+        "round": 2,
+        "Width": 1500,
+        "Height": 1667,
+        "elapsedMs": 901.756,
+        "allocatedBytes": 30029120,
+        "result": {
+          "Passed": false,
+          "Contour": {
+            "Compared": 464654,
+            "Unmatched": 5744,
+            "MaximumUnmatchedPerTile": 1151,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31
+            ]
+          },
+          "Color": {
+            "Compared": 504014,
+            "Unmatched": 4282,
+            "MaximumUnmatchedPerTile": 750,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31
+            ]
+          },
+          "Region": {
+            "Compared": 4434359,
+            "Unmatched": 2370,
+            "MaximumUnmatchedPerTile": 419,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31
+            ]
+          }
+        },
+        "diffPixelSha256": "AE93CC6D787D8B52EB87D4BB76426F6DA2F6E27C92700F91C66AFE6DF9C84CFA",
+        "diffFileSha256": "FA7BF66BFBFC48B443C290F700AD028DFD06A6794243F40CCB1ABDC411E16E8E"
+      },
+      {
+        "kind": "sample",
+        "name": "displaced",
+        "round": 0,
+        "Width": 1500,
+        "Height": 1667,
+        "elapsedMs": 894.1284,
+        "allocatedBytes": 30029120,
+        "result": {
+          "Passed": false,
+          "Contour": {
+            "Compared": 465932,
+            "Unmatched": 5549,
+            "MaximumUnmatchedPerTile": 860,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32
+            ]
+          },
+          "Color": {
+            "Compared": 505457,
+            "Unmatched": 4286,
+            "MaximumUnmatchedPerTile": 514,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              30,
+              31,
+              32
+            ]
+          },
+          "Region": {
+            "Compared": 4433106,
+            "Unmatched": 2288,
+            "MaximumUnmatchedPerTile": 411,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32
+            ]
+          }
+        },
+        "diffPixelSha256": "6417D1B81013A4E43710E9AE8914C92F30802F34D33A69701B53D7D1056FB222",
+        "diffFileSha256": "EF24D1155DA7EBD6A4F46D5C6CB9BE7BCC5B0755AF8FF9359CC1109AEF779760"
+      },
+      {
+        "kind": "sample",
+        "name": "displaced",
+        "round": 1,
+        "Width": 1500,
+        "Height": 1667,
+        "elapsedMs": 1064.6688,
+        "allocatedBytes": 30029120,
+        "result": {
+          "Passed": false,
+          "Contour": {
+            "Compared": 465932,
+            "Unmatched": 5549,
+            "MaximumUnmatchedPerTile": 860,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32
+            ]
+          },
+          "Color": {
+            "Compared": 505457,
+            "Unmatched": 4286,
+            "MaximumUnmatchedPerTile": 514,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              30,
+              31,
+              32
+            ]
+          },
+          "Region": {
+            "Compared": 4433106,
+            "Unmatched": 2288,
+            "MaximumUnmatchedPerTile": 411,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32
+            ]
+          }
+        },
+        "diffPixelSha256": "6417D1B81013A4E43710E9AE8914C92F30802F34D33A69701B53D7D1056FB222",
+        "diffFileSha256": "EF24D1155DA7EBD6A4F46D5C6CB9BE7BCC5B0755AF8FF9359CC1109AEF779760"
+      },
+      {
+        "kind": "sample",
+        "name": "displaced",
+        "round": 2,
+        "Width": 1500,
+        "Height": 1667,
+        "elapsedMs": 2029.4086,
+        "allocatedBytes": 30029120,
+        "result": {
+          "Passed": false,
+          "Contour": {
+            "Compared": 465932,
+            "Unmatched": 5549,
+            "MaximumUnmatchedPerTile": 860,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32
+            ]
+          },
+          "Color": {
+            "Compared": 505457,
+            "Unmatched": 4286,
+            "MaximumUnmatchedPerTile": 514,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              30,
+              31,
+              32
+            ]
+          },
+          "Region": {
+            "Compared": 4433106,
+            "Unmatched": 2288,
+            "MaximumUnmatchedPerTile": 411,
+            "FailedTiles": [
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32
+            ]
+          }
+        },
+        "diffPixelSha256": "6417D1B81013A4E43710E9AE8914C92F30802F34D33A69701B53D7D1056FB222",
+        "diffFileSha256": "EF24D1155DA7EBD6A4F46D5C6CB9BE7BCC5B0755AF8FF9359CC1109AEF779760"
+      },
+      {
+        "kind": "sample",
+        "name": "missing-line",
+        "round": 0,
+        "Width": 1500,
+        "Height": 1667,
+        "elapsedMs": 3845.4898,
+        "allocatedBytes": 30029256,
+        "result": {
+          "Passed": false,
+          "Contour": {
+            "Compared": 460754,
+            "Unmatched": 4278,
+            "MaximumUnmatchedPerTile": 215,
+            "FailedTiles": [
+              240,
+              241,
+              242,
+              243,
+              244,
+              245,
+              246,
+              247,
+              248,
+              250,
+              251,
+              252,
+              253,
+              256,
+              257,
+              258,
+              259,
+              260,
+              261
+            ]
+          },
+          "Color": {
+            "Compared": 499151,
+            "Unmatched": 4385,
+            "MaximumUnmatchedPerTile": 214,
+            "FailedTiles": [
+              240,
+              241,
+              242,
+              243,
+              244,
+              245,
+              246,
+              247,
+              248,
+              250,
+              251,
+              252,
+              253,
+              256,
+              257,
+              258,
+              259,
+              260,
+              261
+            ]
+          },
+          "Region": {
+            "Compared": 4439754,
+            "Unmatched": 618,
+            "MaximumUnmatchedPerTile": 31,
+            "FailedTiles": [
+              241,
+              242,
+              243,
+              244,
+              245,
+              246,
+              247,
+              248,
+              249,
+              250,
+              251,
+              252,
+              253,
+              254,
+              255,
+              256,
+              257,
+              258,
+              259,
+              260
+            ]
+          }
+        },
+        "diffPixelSha256": "6BE064C3A5D11CA3350883F733C85B90DEF29CAF1B8F44E6B09E947275F1FCAE",
+        "diffFileSha256": "8C1D13875E271777F7C178196F38F0EF7AAE5A7808300268E3F70E075242B837"
+      },
+      {
+        "kind": "sample",
+        "name": "missing-line",
+        "round": 1,
+        "Width": 1500,
+        "Height": 1667,
+        "elapsedMs": 3874.3625,
+        "allocatedBytes": 30029256,
+        "result": {
+          "Passed": false,
+          "Contour": {
+            "Compared": 460754,
+            "Unmatched": 4278,
+            "MaximumUnmatchedPerTile": 215,
+            "FailedTiles": [
+              240,
+              241,
+              242,
+              243,
+              244,
+              245,
+              246,
+              247,
+              248,
+              250,
+              251,
+              252,
+              253,
+              256,
+              257,
+              258,
+              259,
+              260,
+              261
+            ]
+          },
+          "Color": {
+            "Compared": 499151,
+            "Unmatched": 4385,
+            "MaximumUnmatchedPerTile": 214,
+            "FailedTiles": [
+              240,
+              241,
+              242,
+              243,
+              244,
+              245,
+              246,
+              247,
+              248,
+              250,
+              251,
+              252,
+              253,
+              256,
+              257,
+              258,
+              259,
+              260,
+              261
+            ]
+          },
+          "Region": {
+            "Compared": 4439754,
+            "Unmatched": 618,
+            "MaximumUnmatchedPerTile": 31,
+            "FailedTiles": [
+              241,
+              242,
+              243,
+              244,
+              245,
+              246,
+              247,
+              248,
+              249,
+              250,
+              251,
+              252,
+              253,
+              254,
+              255,
+              256,
+              257,
+              258,
+              259,
+              260
+            ]
+          }
+        },
+        "diffPixelSha256": "6BE064C3A5D11CA3350883F733C85B90DEF29CAF1B8F44E6B09E947275F1FCAE",
+        "diffFileSha256": "8C1D13875E271777F7C178196F38F0EF7AAE5A7808300268E3F70E075242B837"
+      },
+      {
+        "kind": "sample",
+        "name": "missing-line",
+        "round": 2,
+        "Width": 1500,
+        "Height": 1667,
+        "elapsedMs": 11096.4187,
+        "allocatedBytes": 30029256,
+        "result": {
+          "Passed": false,
+          "Contour": {
+            "Compared": 460754,
+            "Unmatched": 4278,
+            "MaximumUnmatchedPerTile": 215,
+            "FailedTiles": [
+              240,
+              241,
+              242,
+              243,
+              244,
+              245,
+              246,
+              247,
+              248,
+              250,
+              251,
+              252,
+              253,
+              256,
+              257,
+              258,
+              259,
+              260,
+              261
+            ]
+          },
+          "Color": {
+            "Compared": 499151,
+            "Unmatched": 4385,
+            "MaximumUnmatchedPerTile": 214,
+            "FailedTiles": [
+              240,
+              241,
+              242,
+              243,
+              244,
+              245,
+              246,
+              247,
+              248,
+              250,
+              251,
+              252,
+              253,
+              256,
+              257,
+              258,
+              259,
+              260,
+              261
+            ]
+          },
+          "Region": {
+            "Compared": 4439754,
+            "Unmatched": 618,
+            "MaximumUnmatchedPerTile": 31,
+            "FailedTiles": [
+              241,
+              242,
+              243,
+              244,
+              245,
+              246,
+              247,
+              248,
+              249,
+              250,
+              251,
+              252,
+              253,
+              254,
+              255,
+              256,
+              257,
+              258,
+              259,
+              260
+            ]
+          }
+        },
+        "diffPixelSha256": "6BE064C3A5D11CA3350883F733C85B90DEF29CAF1B8F44E6B09E947275F1FCAE",
+        "diffFileSha256": "8C1D13875E271777F7C178196F38F0EF7AAE5A7808300268E3F70E075242B837"
+      }
+    ],
+    "summary": {
+      "displaced": {
+        "elapsedMs": [
+          894.1284,
+          1064.6688,
+          2029.4086
+        ],
+        "medianMs": 1064.6688,
+        "referenceMedianMs": 30409.6658,
+        "speedup": 28.5625593611835
+      },
+      "drawing-ps": {
+        "elapsedMs": [
+          1498.0777,
+          1917.8968,
+          922.3866
+        ],
+        "medianMs": 1498.0777,
+        "referenceMedianMs": 45723.4067,
+        "speedup": 30.52138530598246
+      },
+      "missing-glyph": {
+        "elapsedMs": [
+          907.7437,
+          913.1154,
+          901.756
+        ],
+        "medianMs": 907.7437,
+        "referenceMedianMs": 48765.6575,
+        "speedup": 53.72183524931101
+      },
+      "missing-line": {
+        "elapsedMs": [
+          3845.4898,
+          3874.3625,
+          11096.4187
+        ],
+        "medianMs": 3874.3625,
+        "referenceMedianMs": 33392.8334,
+        "speedup": 8.618923345453608
+      }
+    }
+  },
+  "equivalence": {
+    "allMetrics": true,
+    "decodedDiffPixels": true,
+    "encodedPngBytes": true,
+    "managedSkia": true,
+    "nativeDependencies": true,
+    "regeneratedReleaseInputs": true
+  },
+  "fixtureGenerator": {
+    "ghostscriptVersion": "10.05.1",
+    "dpi": 300,
+    "retainedDirectory": "fixtures",
+    "names": [
+      "drawing-png",
+      "drawing-ps",
+      "missing-glyph",
+      "displaced",
+      "missing-line"
+    ]
+  }
+}

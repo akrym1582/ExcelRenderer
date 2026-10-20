@@ -179,9 +179,9 @@ internal sealed class PostScriptDrawingContext
             return;
         }
 
-        if (side.Width < 0)
+        if (!double.IsFinite(side.Width) || side.Width < 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(side), "Stroke width must be nonnegative.");
+            throw new ArgumentOutOfRangeException(nameof(side), "Stroke width must be finite and nonnegative.");
         }
 
         writer?.Color(side.Color ?? new(0, 0, 0));
@@ -193,7 +193,13 @@ internal sealed class PostScriptDrawingContext
             BorderLineStyle.DashDotDot => new[] { 3, 2, 1, 2, 1, 2 },
             _ => Array.Empty<int>(),
         };
-        writer?.Line($"{Number(side.Width)} setlinewidth [{string.Join(" ", pattern.Select(value => Number(value * side.Width)))}] 0 setdash");
+
+        // Width zero is a PostScript hairline. If formatting also rounds a tiny width
+        // to zero, use the same fixed one-point dash unit; never emit an all-zero array.
+        var width = Number(side.Width);
+        var dashUnit = width == "0" ? 1 : side.Width;
+        var dash = string.Join(" ", pattern.Select(value => Number(value * dashUnit)));
+        writer?.Line($"{width} setlinewidth [{dash}] 0 setdash");
         foreach (var stroke in BorderStrokeGeometry.GetStrokes(side, x1, y1, x2, y2, inwardX, inwardY))
         {
             writer?.Line($"newpath {Number(stroke.X1)} {Number(stroke.Y1)} moveto {Number(stroke.X2)} {Number(stroke.Y2)} lineto stroke");

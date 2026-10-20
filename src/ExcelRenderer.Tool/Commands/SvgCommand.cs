@@ -29,7 +29,7 @@ public static class SvgCommand
             mappedInput => ExcelConverter.ConvertToSvgAsync(
                 mappedInput,
                 parseResult.GetValue(output)!,
-                new SvgExportOptions { Buffering = buffering.Get(parseResult), SheetName = parseResult.GetValue(sheet), ReadOptions = CommandSupport.GetReadOptions(parseResult.GetValue(formulaMode)!), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
+                new SvgExportOptions { Buffering = buffering.Get(parseResult), SheetName = parseResult.GetValue(sheet), ReadOptions = CommandSupport.GetReadOptions(parseResult.GetValue(formulaMode)!, parseResult, fonts), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
                 cancellationToken),
             cancellationToken,
             CommandSupport.GetMappingOptions(parseResult.GetValue(formulaMode)!))));

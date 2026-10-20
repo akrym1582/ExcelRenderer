@@ -53,6 +53,7 @@ public static partial class ExcelConverter
             resources.TextMeasurer = request.TextMeasurer ?? new SkiaTextMeasurer(fontManager, cacheLayouts: true);
             var readOptions = request.ReadOptions with
             {
+                ColumnWidthMetricsCache = new CoreIntegration.FullFontMetrics.MetricCache(),
                 IgnoreFormulaPrintAreas = request.OutputFormat == OutputFormat.Markdown || request.ImageLayout == ImageLayoutMode.Continuous,
                 GetSelectedRange = name => request.Selection.Ranges?.FirstOrDefault(range => range.SheetName == name)?.Range is { } selected
                     ? (selected.First.Row, selected.First.Column, selected.Last.Row, selected.Last.Column) : null,
@@ -148,7 +149,7 @@ public static partial class ExcelConverter
 
             var pages = request.ImageLayout == ImageLayoutMode.Continuous
                 ? LayoutContinuous(sheets, request.Dpi, fontManager)
-                : LayoutPages(sheets, request.Dpi, fontManager);
+                : LayoutPages(sheets, request.Dpi, fontManager, request.DiagnosticOptions.EnableLayoutWarnings ? diagnostics : null);
             var selectedPages = SelectPages(pages, request.Selection.Pages).Select(page =>
                 ConversionMetrics.Measure("pagePreflight", () => PreflightPage(page, request, fontManager, diagnostics, cancellationToken))).ToArray();
             if (request.OutputFormat == OutputFormat.Pdf && request.Hyperlinks == HyperlinkMode.Preserve)
@@ -268,7 +269,7 @@ public static partial class ExcelConverter
         }
     }
 
-    private static IReadOnlyList<SheetPage> LayoutPages(IReadOnlyList<SelectedSheet> sheets, double dpi, FontManager fontManager)
+    private static IReadOnlyList<SheetPage> LayoutPages(IReadOnlyList<SelectedSheet> sheets, double dpi, FontManager fontManager, DiagnosticCollector? diagnostics = null)
     {
         var pages = new List<SheetPage>();
         foreach (var selected in sheets)
@@ -278,6 +279,18 @@ public static partial class ExcelConverter
             var sourceNumber = 0;
             foreach (var plan in plans)
             {
+                if (diagnostics is not null && plan.Pages.FirstOrDefault() is { } first)
+                {
+                    var settings = selected.Sheet.PageSettings;
+                    diagnostics.Add(new(
+                        "PaginationMetrics",
+                        DiagnosticSeverity.Info,
+                        DiagnosticStage.Layout,
+                        $"Visible row height {first.BodyRows.Sum(row => selected.Sheet.Rows.TryGetValue(row, out var definition) ? definition.Height : selected.Sheet.DefaultRowHeight)}pt; column width {first.BodyColumns.Sum(column => selected.Sheet.Columns.TryGetValue(column, out var definition) ? definition.Width : selected.Sheet.DefaultColumnWidth)}pt; paper height {settings.Height}pt; top/bottom margins {settings.MarginTop}/{settings.MarginBottom}pt; printable height {settings.Height - settings.MarginTop - settings.MarginBottom}pt; mode {settings.ScaleMode}; saved scale {settings.Scale}; fit {settings.FitToPagesWide}/{settings.FitToPagesTall}; applied scale {first.Scale}; pages {plan.Pages.Select(page => page.Horizontal).Distinct().Count()}x{plan.Pages.Select(page => page.Vertical).Distinct().Count()}.",
+                        selected.Sheet.Name,
+                        first.BodyRows.Count == 0 || first.BodyColumns.Count == 0 ? null : new CellRange(new(first.BodyRows[0], first.BodyColumns[0]), new(first.BodyRows[first.BodyRows.Count - 1], first.BodyColumns[first.BodyColumns.Count - 1])).ToString()));
+                }
+
                 for (var index = 0; index < plan.Pages.Count; index++)
                 {
                     pages.Add(SheetPage.CreatePaginated(selected.Sheet, CreateDescriptor(selected, ++sourceNumber, pages.Count + 1, dpi), plan, index, count));

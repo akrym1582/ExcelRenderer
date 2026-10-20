@@ -91,6 +91,19 @@ internal partial class CoreExcelReader
 
     private static CellRange ToRange(OpenXml.Reader.Model.Cells.CellRange range) => new(new(range.First.Row, range.First.Column), new(range.Last.Row, range.Last.Column));
 
+    private static bool IsManualBreak(ElementInfo item) => Attribute(item, "man") switch
+    {
+        "1" or "true" => true,
+        null or "0" or "false" => false,
+        _ => throw new InvalidDataException("Invalid boolean attribute."),
+    };
+
+    private static IReadOnlyList<int> ManualBreaks(IEnumerable<ElementInfo> items) => items.Where(IsManualBreak)
+        .Select(item => (int)Number(item, "id", 0)).Where(id => id > 0).Distinct().OrderBy(id => id).ToArray();
+
+    private static double ValidHeight(double? height, double fallback) =>
+        height is { } value && !double.IsNaN(value) && !double.IsInfinity(value) && value >= 0 ? value : fallback;
+
     private static PageSettings OpenXmlPageSettings(WorksheetInfo info)
     {
         var fit = Boolean(info.PageSetupProperties, "fitToPage");
@@ -117,8 +130,8 @@ internal partial class CoreExcelReader
             columnTitle is null ? null : new(columnTitle.FirstColumn, columnTitle.LastColumn))
         {
             ScaleMode = fit ? PrintScaleMode.FitToPages : PrintScaleMode.Explicit,
-            ManualRowBreaks = info.RowBreaks.Select(item => (int)Number(item, "id", 0)).Where(id => id > 0).Distinct().OrderBy(id => id).ToArray(),
-            ManualColumnBreaks = info.ColumnBreaks.Select(item => (int)Number(item, "id", 0)).Where(id => id > 0).Distinct().OrderBy(id => id).ToArray(),
+            ManualRowBreaks = ManualBreaks(info.RowBreaks),
+            ManualColumnBreaks = ManualBreaks(info.ColumnBreaks),
             PageOrder = Attribute(info.PageSetup, "pageOrder") == "overThenDown" ? PrintPageOrder.OverThenDown : PrintPageOrder.DownThenOver,
             HorizontalCentered = Boolean(info.PrintOptions, "horizontalCentered"),
             VerticalCentered = Boolean(info.PrintOptions, "verticalCentered"),
@@ -274,6 +287,14 @@ internal partial class CoreExcelReader
                 cellDiagnostics.Add(new("UnsupportedPaperDimensions", DiagnosticSeverity.Warning, DiagnosticStage.Read, "Explicit paperWidth/paperHeight lengths are not interpreted; the paperSize dimensions are used.", info.Sheet.Name));
             }
 
+            var pageSettings = OpenXmlPageSettings(info);
+            diagnostics?.Add(new(
+                "SavedPageBreaks",
+                DiagnosticSeverity.Info,
+                DiagnosticStage.Read,
+                $"Manual row breaks: {pageSettings.ManualRowBreaks?.Count ?? 0}; manual column breaks: {pageSettings.ManualColumnBreaks?.Count ?? 0}; excluded automatic row breaks: {info.RowBreaks.Count(item => !IsManualBreak(item))}; excluded automatic column breaks: {info.ColumnBreaks.Count(item => !IsManualBreak(item))}; saved print scale percent: {Attribute(info.PageSetup, "scale") ?? "100"}.",
+                info.Sheet.Name));
+
             var rowDefaults = info.Rows.Where(row => row.CustomFormat == true && row.StyleIndex is not null).ToDictionary(row => row.Index, row => row.StyleIndex!.Value);
             var columnDefaults = new int?[16385];
             foreach (var definition in info.Columns)
@@ -360,7 +381,7 @@ internal partial class CoreExcelReader
             }
 
             var normal = reader.Workbook.DefaultFontProperties;
-            var mdw = fontMetrics.MaximumDigitWidth(reader.Workbook.DefaultFont.Children.Count == 0 ? null : new(normal.Name ?? "Calibri", normal.SizePt ?? 11), info.Sheet.Name);
+            var mdw = fontMetrics.MaximumDigitWidth(reader.Workbook.DefaultFont.Children.Count == 0 ? null : new(normal.Name ?? "Calibri", normal.SizePt ?? 11, normal.Bold == true ? 700 : 400, normal.Italic == true), info.Sheet.Name);
             var defaultWidth = info.DefaultColumnWidthExcel ?? ColumnWidthCalculator.FromBaseColumnWidth(info.BaseColumnWidthCharacters, mdw);
             var columns = new Dictionary<int, ColumnDefinition>();
             foreach (var column in info.Columns)
@@ -371,7 +392,7 @@ internal partial class CoreExcelReader
                 }
             }
 
-            var rows = info.Rows.ToDictionary(row => row.Index, row => new RowDefinition(row.CustomHeight == true ? row.HeightPt ?? info.DefaultRowHeightPt : info.DefaultRowHeightPt, row.Hidden ?? info.DefaultRowsHidden));
+            var rows = info.Rows.ToDictionary(row => row.Index, row => new RowDefinition(ValidHeight(row.HeightPt, ValidHeight(info.DefaultRowHeightPt, 15)), row.Hidden ?? info.DefaultRowsHidden));
             var pictures = new List<ReportImage>();
             foreach (var image in images.GetValueOrDefault(info.Sheet.Index, Array.Empty<ImageInfo>()))
             {
@@ -390,10 +411,10 @@ internal partial class CoreExcelReader
 
             var printAreas = info.PrintReferences.Where(reference => reference.Name == "_xlnm.Print_Area").SelectMany(reference => reference.Ranges)
                 .Select(range => new CellRange(new(range.FirstRow, range.FirstColumn), new(range.LastRow, range.LastColumn))).ToArray();
-            var sheet = new ReportSheet(info.Sheet.Name, cells, columns, rows, merged, OpenXmlPageSettings(info), printAreas.Length > 0 ? printAreas[0] : null, pictures, OpenXmlHeaderFooter(info.HeaderFooter))
+            var sheet = new ReportSheet(info.Sheet.Name, cells, columns, rows, merged, pageSettings, printAreas.Length > 0 ? printAreas[0] : null, pictures, OpenXmlHeaderFooter(info.HeaderFooter))
             {
                 DefaultColumnWidth = ColumnWidthCalculator.ToPoints(defaultWidth, mdw),
-                DefaultRowHeight = info.DefaultRowHeightPt,
+                DefaultRowHeight = ValidHeight(info.DefaultRowHeightPt, 15),
                 DefaultRowsHidden = info.DefaultRowsHidden,
                 PrintAreas = printAreas,
                 SourceSheetIndex = info.Sheet.Index,

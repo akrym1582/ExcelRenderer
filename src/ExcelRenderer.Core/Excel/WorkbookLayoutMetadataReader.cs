@@ -48,10 +48,10 @@ internal static class WorkbookLayoutMetadataReader
                 .ToArray() ?? [];
             var rows = worksheet.GetFirstChild<S.SheetData>()?.Elements<S.Row>()
                 .Where(row => row.RowIndex?.Value is > 0 &&
-                    (row.CustomHeight?.Value == true || row.Hidden?.Value == true))
+                    (row.Height?.Value is not null || row.Hidden?.Value == true))
                 .Select(row => new RawRowDefinition(
                     (int)Math.Min(row.RowIndex!.Value, int.MaxValue),
-                    row.CustomHeight?.Value == true ? row.Height?.Value : null,
+                    row.Height?.Value is { } height && !double.IsNaN(height) && !double.IsInfinity(height) && height >= 0 ? height : null,
                     row.Hidden?.Value ?? false))
                 .ToArray() ?? [];
             var pageOrder = pageSetup?.PageOrder?.Value == S.PageOrderValues.OverThenDown
@@ -79,7 +79,7 @@ internal static class WorkbookLayoutMetadataReader
     }
 
     private static IReadOnlyList<int> ReadBreaks(OpenXmlCompositeElement? breaks) => breaks?.Elements<S.Break>()
-        .Where(pageBreak => pageBreak.Id?.Value is > 0)
+        .Where(pageBreak => pageBreak.Id?.Value is > 0 && pageBreak.ManualPageBreak?.Value == true)
         .Select(pageBreak => (int)Math.Min(pageBreak.Id!.Value, int.MaxValue))
         .Distinct()
         .OrderBy(value => value)

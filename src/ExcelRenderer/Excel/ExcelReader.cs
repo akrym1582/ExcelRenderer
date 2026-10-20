@@ -8,7 +8,6 @@ namespace ExcelRenderer.Excel;
 /// <summary>Excel ブックのワークシート、セル、印刷設定、画像、および図形をレンダリング用モデルとして読み込みます。</summary>
 public sealed class ExcelReader
 {
-    private readonly Dictionary<NormalFontMetadata, double> maximumDigitWidths = new();
     private readonly IFontManager? fontManager;
 
     /// <summary>Initializes a new instance of the <see cref="ExcelReader"/> class.</summary>
@@ -120,7 +119,7 @@ public sealed class ExcelReader
     {
         options?.Validate();
         var coreDiagnostics = diagnostics is null ? null : new Core.Rendering.DiagnosticCollector(diagnostic => diagnostics.Add(CoreIntegration.CoreDiagnosticAdapter.ToPublic(diagnostic)));
-        var document = new CoreIntegration.FullExcelReader(fontManager, diagnostics, maximumDigitWidths, detectUnsupportedFeatures, options)
+        var document = new CoreIntegration.FullExcelReader(fontManager, diagnostics, detectUnsupportedFeatures, options)
             .Read(source, coreDiagnostics, selectedSheets, cancellationToken, new Core.ExcelReadOptions
             {
                 GetSelectedRange = options?.GetSelectedRange,

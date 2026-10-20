@@ -35,7 +35,7 @@ public static class PdfCommand
             mappedInput => ExcelConverter.ConvertToPdfAsync(
                 mappedInput,
                 parseResult.GetValue(output)!,
-                new PdfExportOptions { PdfBackend = CommandSupport.GetPdfBackend(parseResult.GetValue(backend)!), Hyperlinks = CommandSupport.GetHyperlinks(parseResult.GetValue(hyperlinks)!), SheetName = parseResult.GetValue(sheet), ReadOptions = CommandSupport.GetReadOptions(parseResult.GetValue(formulaMode)!), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
+                new PdfExportOptions { PdfBackend = CommandSupport.GetPdfBackend(parseResult.GetValue(backend)!), Hyperlinks = CommandSupport.GetHyperlinks(parseResult.GetValue(hyperlinks)!), SheetName = parseResult.GetValue(sheet), ReadOptions = CommandSupport.GetReadOptions(parseResult.GetValue(formulaMode)!, parseResult, fonts), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
                 cancellationToken),
             cancellationToken,
             CommandSupport.GetMappingOptions(parseResult.GetValue(formulaMode)!))));

@@ -749,10 +749,10 @@ public sealed class LayoutPassTests
     }
 
     /// <summary>
-    /// Normal スタイルのテーマフォントを実フォントへ解決してMDWを計測することを検証します。
+    /// Normalの元フォントが代替された場合に互換寸法を警告することを検証します。
     /// </summary>
-    [Fact(DisplayName = "Normal スタイルのテーマフォントを実フォントへ解決してMDWを計測する")]
-    public void ExcelReader_measures_maximum_digit_width_from_normal_theme_font()
+    [Fact(DisplayName = "Normalの元フォントが代替された場合は互換寸法を警告する")]
+    public void ExcelReader_reports_compatibility_metrics_when_normal_theme_font_is_substituted()
     {
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
         try
@@ -764,8 +764,8 @@ public sealed class LayoutPassTests
                 .Read(File.ReadAllBytes(path), diagnostics);
 
             Assert.NotEmpty(document.Sheets[0].Columns);
-            Assert.Contains(diagnostics.ToArray(), diagnostic => diagnostic.Code == "MaximumDigitWidthResolved");
-            Assert.DoesNotContain(diagnostics.ToArray(), diagnostic => diagnostic.Code == "MaximumDigitWidthFallback");
+            Assert.Contains(diagnostics.ToArray(), diagnostic => diagnostic.Code == "MaximumDigitWidthFallback" && diagnostic.Message.Contains("Normal 'Calibri'"));
+            Assert.DoesNotContain(diagnostics.ToArray(), diagnostic => diagnostic.Code == "MaximumDigitWidthResolved");
         }
         finally
         {

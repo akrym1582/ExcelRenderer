@@ -54,7 +54,7 @@ public static class RenderCommand
         var padding = new Option<double?>("--trim-padding") { Description = "Nonnegative crop padding in points (default: 2). Requires --trim." };
         var backend = CommandSupport.PdfBackendOption();
         var hyperlinks = CommandSupport.HyperlinksOption();
-        var layoutWarnings = new Option<bool>("--layout-warnings") { Description = "Report clipped or too-small finalized cell text." };
+        var layoutWarnings = new Option<bool>("--layout-warnings") { Description = "Report page geometry/scaling and clipped or too-small finalized cell text." };
         var minimumFontSize = new Option<double?>("--min-readable-font-size") { Description = "Minimum readable font size in points; requires --layout-warnings." };
         var unsupported = new Option<bool>("--detect-unsupported-features") { Description = "Report unsupported conditional and partial text formatting." };
         var strict = new Option<bool>("--strict") { Description = "Treat all warnings and errors as conversion failures." };
@@ -110,7 +110,7 @@ public static class RenderCommand
                 result.GetValue(trim),
                 result.GetValue(padding),
                 CommandSupport.GetHyperlinks(result.GetValue(hyperlinks)!),
-                CommandSupport.GetReadOptions(result.GetValue(formulaMode)!),
+                CommandSupport.GetReadOptions(result.GetValue(formulaMode)!, result, fonts),
                 result.GetValue(strict),
                 result.GetValue(layoutWarnings),
                 result.GetValue(minimumFontSize) ?? 6,

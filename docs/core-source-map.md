@@ -273,3 +273,15 @@ Main owns `PostScript/*`, `PostScriptExportOptions` and the high-level/CLI/sink 
 finalized line/run geometry for PDF and PostScript. Core's existing immutable physical
 font snapshots, TTC extraction, glyph closure and TrueType subsetter are reused internally.
 Core has no PostScript public API, writer, output enum value or dependency on main.
+
+## Source metrics and saved pagination metadata
+
+Core owns saved row-height precedence (`ht` regardless of `customHeight`), strict manual-break
+filtering, row/column geometry, scaling and page planning. Reader preserves source attributes
+without font dependencies. NormalFontMetadata retains weight/italic in addition to family/size.
+Main's ColumnWidthMetricsOptions and FullFontMetrics resolve source-font files, exact families,
+explicit MDW and legacy drawing metrics before passing a decided MDW through ICoreFontMetrics.
+FontManager's internal exact lookup respects its existing discovery permissions and verifies
+physical family names. No IFontManager contract member or Core system-font search was added.
+Main shares conversion-local metric decisions between selection preflight and the actual read;
+all output formats consume Core's common geometry plan. Core's single supplied font is unchanged.

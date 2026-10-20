@@ -66,6 +66,7 @@ public sealed class ImageReviewTests
         {
             OutputFormat = OutputFormat.Pdf,
             FontOptions = new() { AllowSystemFonts = false },
+            ReadOptions = new() { ColumnWidthMetrics = new() { MaximumDigitWidthPixels96Dpi = 7 } },
             DiagnosticOptions = new() { StrictMode = policy == "strict", TreatAsErrors = policy == "code" ? ["ImageDecodeFailed"] : [] },
         };
         IReadOnlyList<ConversionDiagnostic> diagnostics;

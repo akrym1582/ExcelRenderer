@@ -4,6 +4,23 @@
   "dotnet": "10.0.401",
   "ghostscript": "10.05.1",
   "poppler": "pdftoppm version 26.05.0",
-  "baseCommit": "2996f6c9940f9a4dcdaa041531c75e277911d911",
-  "workingBranch": "fix/shared-cell-border-resolution"
+  "baseCommit": "513ddd4d424d9afa6e92ed154abdc631841ba302",
+  "workingBranch": "fix/shared-cell-border-resolution",
+  "initialBaseCommit": "2996f6c9940f9a4dcdaa041531c75e277911d911",
+  "testedSourceParent": "a650bb9eb459788de9f60e78d517dc9e4215f12e",
+  "sourceIdentity": "Changed source files are hashed in verification.json; validation precedes the evidence commit.",
+  "goldenColumnWidthMetricsMode": "RenderingFontLegacy",
+  "benchmarkColumnWidthMetricsMode": "Model-built cells with fixed dimensions; no reader/font measurement",
+  "goldenRuntimeHashes": {
+    "before": {
+      "BorderProbe.dll": "ecb43e51ab2ccf14ed5354dbeb65164e323259f4df01f8de72eff6d8ab93ba4a",
+      "ExcelRenderer.dll": "62e44ac602fb3f878f4dcfc9317a6fcb50bbc61c054890b2bcb58696e7f008c0",
+      "ExcelRenderer.Core.dll": "981e387377f3586c16e8050201fda0c3bc3c3ff4195dce99f955cadbab693f20"
+    },
+    "after": {
+      "BorderProbe.dll": "7eb71e7cc589ffc9e8e61497b54bf43f6fe919498e45fdfbce36f00a17d5b2bf",
+      "ExcelRenderer.dll": "49d73aa8864b8072518b3aa11c1f6200117452a5e78120b74f43dc690558d581",
+      "ExcelRenderer.Core.dll": "50e65b23a67203e729489119c2deeda8c124e3986e04d9556bc6166e1456f9d5"
+    }
+  }
 }

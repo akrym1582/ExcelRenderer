@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/workspace/ExcelRenderer/scripts/compare-core-removal-baselines.py", line 125, in <module>
+    main()
+  File "/workspace/ExcelRenderer/scripts/compare-core-removal-baselines.py", line 84, in main
+    assert len(before_paths) == len(after_paths)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

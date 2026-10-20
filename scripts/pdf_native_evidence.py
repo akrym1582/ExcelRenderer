@@ -7,6 +7,7 @@ from pathlib import Path
 import fitz
 from fontTools.ttLib import TTFont
 from pdf_geometry_evidence import verify_outlines
+from shared_border_evidence import evidence as shared_border_evidence
 
 ROOT = Path(__file__).resolve().parents[1]
 NUMBER = re.compile(r'(?<![A-Za-z_])[-+]?(?:\d+\.?\d*|\.\d+)(?![A-Za-z_])')
@@ -139,7 +140,10 @@ def evidence(directory):
         content_hashes.append({'page': index, 'B': x, 'C': y, 'rawC': z})
         if x != y or y != z:
             normalized = [drawing_content(document, page) for document, page in ((old, a), (new, b), (raw, native))]
-            if not normalized[0][0] == normalized[1][0] == normalized[2][0]:
+            border_review = shared_border_evidence(a, b, 'full', directory.name, index)
+            content_hashes[-1]['sharedBorderContract'] = border_review
+            reviewed_border = border_review is not None and border_review['passed'] and normalized[1][0] == normalized[2][0]
+            if not normalized[0][0] == normalized[1][0] == normalized[2][0] and not reviewed_border:
                 errors.append(f'Page {index}: native drawing content differs')
             content_hashes[-1]['emptyTextScopesRemoved'] = [row[1] for row in normalized]
         metadata_difference(str(list(a.mediabox)), str(list(b.mediabox)), f'page-{index}/MediaBox', changes, errors)

@@ -15,6 +15,7 @@ import numpy as np
 from scipy.ndimage import binary_dilation
 from pdf_geometry_evidence import verify_outlines
 from pdf_native_evidence import verify_frozen_baseline
+from shared_border_evidence import evidence as shared_border_evidence, raster_matches as border_raster_matches
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'artifacts/pdfsharp-removal-current/core'
@@ -81,11 +82,15 @@ def main():
         assert record['maxGlyphOriginDelta'] <= .1
         for number, (left, right) in enumerate(zip(old, new), 1):
             before_paths, after_paths = left.get_drawings(), right.get_drawings()
-            assert len(before_paths) == len(after_paths)
-            for before, after in zip(before_paths, after_paths):
-                assert before['type'] == after['type']
-                assert max(abs(a - b) for a, b in zip(before['rect'], after['rect'])) <= .01
-                assert abs((before['width'] or 0) - (after['width'] or 0)) <= .001
+            border_review = shared_border_evidence(left, right, 'core', name, number)
+            if border_review is not None:
+                assert border_review['passed'], border_review
+            else:
+                assert len(before_paths) == len(after_paths)
+                for before, after in zip(before_paths, after_paths):
+                    assert before['type'] == after['type']
+                    assert max(abs(a - b) for a, b in zip(before['rect'], after['rect'])) <= .01
+                    assert abs((before['width'] or 0) - (after['width'] or 0)) <= .001
             outlines = verify_outlines(right)
             assert outlines['passed'], outlines
             for attribute in ('mediabox', 'cropbox'):
@@ -94,6 +99,7 @@ def main():
                 pixmaps = [page.get_pixmap(dpi=dpi, alpha=False) for page in (left, right)]
                 assert (pixmaps[0].width, pixmaps[0].height) == (pixmaps[1].width, pixmaps[1].height)
                 images = [np.frombuffer(pix.samples, dtype=np.uint8).reshape(pix.height, pix.width, 3) for pix in pixmaps]
+                border_pixels_match = border_raster_matches(border_review, dpi, pixmaps[1].samples)
                 regions = [('page-ink', (0, 0, left.rect.width, left.rect.height))]
                 regions += [(f'block-{index + 1}', block[:4]) for index, block in enumerate(left.get_text('blocks'))]
                 for region, bounds in regions:
@@ -106,7 +112,7 @@ def main():
                     far = (ink[0] & ~binary_dilation(ink[1])) | (ink[1] & ~binary_dilation(ink[0]))
                     color, distant = float(np.sum(changed) / denominator), float(np.sum(far) / denominator)
                     reviewed = False
-                    if color > .01 or distant > .001:
+                    if (color > .01 or distant > .001) and not border_pixels_match:
                         matching = [review for review in reviews if (review['fixture'], review['page'], review['dpi'], review['region']) == (name, number, dpi, region)]
                         assert len(matching) == 1, (name, number, dpi, region, color, distant)
                         review = matching[0]
@@ -115,7 +121,7 @@ def main():
                         assert review['currentRegionPixelsSha256'] == hashlib.sha256(cropped[1].tobytes()).hexdigest()
                         assert distant <= .001, 'AA review cannot excuse distant added/missing ink'
                         reviewed = True
-                    record['raster'].append({'page': number, 'dpi': dpi, 'region': region, 'changedUnionFraction': color, 'distantInkFraction': distant, 'reviewedAntialiasing': reviewed})
+                    record['raster'].append({'page': number, 'dpi': dpi, 'region': region, 'changedUnionFraction': color, 'distantInkFraction': distant, 'reviewedAntialiasing': reviewed, 'sharedBorderContract': border_pixels_match})
         results.append(record)
     (OUT / 'comparison.json').write_text(json.dumps(results, ensure_ascii=False, indent=2) + '\n')
     print('Three frozen Core fixtures passed; missing-glyph source Unicode restored without adding font fallback')

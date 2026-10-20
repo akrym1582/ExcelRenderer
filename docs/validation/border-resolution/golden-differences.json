@@ -329,7 +329,7 @@
     {
       "input": "tests/ExcelRenderer.Tests/SampleInputs/09-cell-border.xlsx",
       "artifact": "Png/Sheet1-1.png",
-      "changedPixels": 2487,
+      "changedPixels": 2470,
       "outsideBorderMask": 0,
       "bounds": [
         66,

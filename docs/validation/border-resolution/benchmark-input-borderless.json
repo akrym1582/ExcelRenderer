@@ -1,0 +1,11 @@
+[
+  {
+    "Name": "borderless",
+    "Rows": 200,
+    "Columns": 20,
+    "Merged": false,
+    "Continuous": false,
+    "Double": false,
+    "Borders": false
+  }
+]

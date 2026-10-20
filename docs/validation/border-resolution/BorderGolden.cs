@@ -23,6 +23,7 @@ foreach (var path in original.Keys.Order())
         await ExcelConverter.RenderAsync(input, new()
         {
             OutputFormat = format,
+            ReadOptions = new() { ColumnWidthMetrics = new() { Mode = ColumnWidthMetricsMode.RenderingFontLegacy } },
             FontOptions = new() { AllowSystemFonts = false, UseFontPack = false, FontFiles = [Path.Combine(root, "third_party/NotoSansJP/NotoSansJP-Regular.ttf")] },
         }, capture);
         foreach (var (name, stream) in capture.Artifacts)
@@ -39,7 +40,7 @@ foreach (var path in original.Keys.Order())
     hashes.Add(path, outputs);
     var masks = new Dictionary<string, List<double[]>>();
     var manager = new FontManager(new() { AllowSystemFonts = false, UseFontPack = false, FontFiles = [Path.Combine(root, "third_party/NotoSansJP/NotoSansJP-Regular.ttf")] });
-    foreach (var sheet in new ExcelReader(manager).Read(Path.Combine(root, path)).Sheets)
+    foreach (var sheet in new ExcelReader(manager).Read(Path.Combine(root, path), new() { ColumnWidthMetrics = new() { Mode = ColumnWidthMetricsMode.RenderingFontLegacy } }).Sheets)
     {
         var document = new ReportLayoutEngine(new SkiaTextMeasurer(manager)).Layout(sheet);
         foreach (var page in document.Pages)

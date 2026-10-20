@@ -23,6 +23,7 @@ from fontTools.pens.recordingPen import DecomposingRecordingPen
 from scipy.ndimage import binary_dilation
 from pdf_native_evidence import evidence as native_precision_evidence, verify_frozen_baseline
 from pdf_geometry_evidence import inspect_page, verify_outlines, ellipse_evidence, image_crop_evidence
+from shared_border_evidence import raster_matches as border_raster_matches
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -36,7 +37,7 @@ def main():
     parser.add_argument("--no-generate", action="store_true")
     parser.add_argument("--no-build", action="store_true")
     parser.add_argument("--configuration", choices=["Debug", "Release"], default="Release")
-    parser.add_argument("--no-exceptions", action="store_true", help="Show raw fixed-threshold failures without reviewed exceptions")
+    parser.add_argument("--no-exceptions", action="store_true", help="Disable historical AA exceptions; fixed shared-border contracts remain enforced")
     args = parser.parse_args()
     verify_frozen_baseline()
     args.output.mkdir(parents=True, exist_ok=True)
@@ -124,6 +125,9 @@ def main():
                 a = np.frombuffer(reference_pix.samples, np.uint8).reshape(reference_pix.height, reference_pix.width, 3)
                 pix = rp.get_pixmap(dpi=dpi, alpha=False)
                 b = np.frombuffer(pix.samples, np.uint8).reshape(pix.height, pix.width, 3)
+                border_review = next((row.get('sharedBorderContract') for row in (native_evidence or {}).get('contentHashes', []) if row['page'] == page_number), None)
+                border_pixels_match = border_raster_matches(border_review, dpi, pix.samples)
+                page_record.setdefault('sharedBorderPixels', {})[str(dpi)] = border_pixels_match
                 if a.shape != b.shape:
                     fail(page_number, "page", "raster-dimensions", [list(a.shape), list(b.shape)], "No resizing or alignment is permitted")
                     continue
@@ -152,7 +156,7 @@ def main():
                     unmatched = int((ia & ~binary_dilation(ib, structure=structure)).sum() + (ib & ~binary_dilation(ia, structure=structure)).sum()) / area
                     metrics = {"dpi": dpi, "differentInkRatio": changed, "unmatchedInkRatio": unmatched}
                     page_record["regions"].append({"region": region, **metrics})
-                    if changed > .01 or unmatched > .001:
+                    if (changed > .01 or unmatched > .001) and not border_pixels_match:
                         fail(page_number, region, "raster", metrics, "Exceeds fixed 1% RGB or 0.1% unmatched ink gate")
             record["pages"].append(page_record)
         fonts = []

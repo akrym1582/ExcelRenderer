@@ -40,5 +40,13 @@
     "Continuous": false,
     "Double": false,
     "Borders": false
+  },
+  {
+    "Name": "large-paged",
+    "Rows": 2000,
+    "Columns": 20,
+    "Merged": false,
+    "Continuous": false,
+    "Double": true
   }
 ]

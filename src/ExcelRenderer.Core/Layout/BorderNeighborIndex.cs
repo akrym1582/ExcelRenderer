@@ -6,6 +6,10 @@ namespace ExcelRenderer.Core.Layout;
 internal sealed class BorderNeighborIndex
 {
     private readonly Dictionary<(bool Horizontal, int Boundary), BandIndex<SourceEdge>> edges;
+    private Dictionary<int, ColumnLayout>? columnSource;
+    private Dictionary<int, RowLayout>? rowSource;
+    private int[] columns = [];
+    private int[] rows = [];
 
     /// <summary>Initializes a new instance of the <see cref="BorderNeighborIndex"/> class.</summary>
     /// <param name="sheet">The final styled sheet, before drawing selection.</param>
@@ -91,6 +95,25 @@ internal sealed class BorderNeighborIndex
         }
     }
 
+    private (int[] Columns, int[] Rows) GetAxes(ReportLayoutContext context)
+    {
+        // One index belongs to a completed sheet plan. Its page contexts borrow
+        // the same immutable axes; do not sort/copy whole-sheet rows per page.
+        if (!ReferenceEquals(columnSource, context.ColumnLayouts) || columns.Length != context.ColumnLayouts.Count)
+        {
+            columnSource = context.ColumnLayouts;
+            columns = columnSource.Keys.OrderBy(value => value).ToArray();
+        }
+
+        if (!ReferenceEquals(rowSource, context.RowLayouts) || rows.Length != context.RowLayouts.Count)
+        {
+            rowSource = context.RowLayouts;
+            rows = rowSource.Keys.OrderBy(value => value).ToArray();
+        }
+
+        return (columns, rows);
+    }
+
     private bool Has(bool horizontal, int boundary, int start, int end) =>
         edges.TryGetValue((horizontal, boundary), out var band) && band.Query(start, end).Any();
 
@@ -115,8 +138,7 @@ internal sealed class BorderNeighborIndex
             this.context = context;
             this.scale = scale;
             this.isPlaced = isPlaced;
-            columns = context.ColumnLayouts.Keys.OrderBy(value => value).ToArray();
-            rows = context.RowLayouts.Keys.OrderBy(value => value).ToArray();
+            (columns, rows) = index.GetAxes(context);
             visitor = VisitEdge;
         }
 

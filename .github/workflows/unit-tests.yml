@@ -99,6 +99,9 @@ jobs:
       - name: Compare frozen Core output independently
         run: python scripts/compare-core-removal-baselines.py
 
+      - name: Verify shared-border contracts reject missing strokes and text
+        run: python scripts/check-shared-border-mutations.py
+
       - name: Validate image payload storage and corrected appearance
         run: python scripts/validate-image-review.py
 

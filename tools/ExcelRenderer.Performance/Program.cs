@@ -10,6 +10,12 @@ using ExcelRenderer.Rendering;
 
 var command = args[0];
 var path = args[1];
+if (command == "render-profile")
+{
+    await RenderMemoryBenchmark.ProfileAsync(args);
+    return;
+}
+
 if (command == "layout-case")
 {
     TextLayoutBenchmark.Run(args);

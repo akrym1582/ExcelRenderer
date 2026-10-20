@@ -10,7 +10,7 @@ using ExcelRenderer.Rendering;
 /// <summary>Separates diagnostic observations from uninstrumented render/read measurements.</summary>
 internal static partial class RenderMemoryBenchmark
 {
-    /// <summary>Runs one saved case with a diagnostic capture, warmups and measured samples.</summary>
+    /// <summary>Runs uninstrumented samples or a separate warmed diagnostic/control pair.</summary>
     /// <param name="args">Command, JSON specification, case name, warmup count and sample count.</param>
     /// <returns>The asynchronous completion.</returns>
     internal static async Task ProfileAsync(string[] args)
@@ -43,8 +43,8 @@ internal static partial class RenderMemoryBenchmark
                 item,
                 inputSha256 = Hash(inputBytes),
                 templateSha256 = templateHash,
-                fontSha256 = Hash(File.ReadAllBytes(font)),
-                dlls = Directory.GetFiles(AppContext.BaseDirectory, "ExcelRenderer*.dll").ToDictionary(file => Path.GetFileName(file)!, file => Hash(File.ReadAllBytes(file))),
+                fontSha256 = HashFile(font),
+                dlls = Directory.GetFiles(AppContext.BaseDirectory, "ExcelRenderer*.dll").ToDictionary(file => Path.GetFileName(file)!, file => HashFile(file)),
             },
         }));
         for (var iteration = diagnosticOnly ? -warmups : -warmups - 1; iteration < (diagnosticOnly ? 2 : samples); iteration++)
@@ -121,6 +121,12 @@ internal static partial class RenderMemoryBenchmark
     }
 
     private static string Hash(byte[] bytes) => Convert.ToHexString(SHA256.HashData(bytes));
+
+    private static string HashFile(string path)
+    {
+        using var input = File.OpenRead(path);
+        return Convert.ToHexString(SHA256.HashData(input));
+    }
 
     private sealed record ProfileCase(string Name, string Input, string Format = "Pdf", bool ReadOnly = false, bool ConditionalFormatting = true, bool Continuous = false, bool Trim = false, int[]? Pages = null, string? Range = null, string? Capture = null, string Mode = "cached", bool FontPack = false);
 

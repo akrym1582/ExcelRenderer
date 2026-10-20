@@ -2,7 +2,6 @@ using System.Security.Cryptography;
 using ExcelRenderer.Core.Pdf;
 using ExcelRenderer.Core.Pdf.Structure;
 using ExcelRenderer.Core.Rendering;
-using ExcelRenderer.TestFixtures;
 using SkiaSharp;
 using Xunit;
 
@@ -18,9 +17,9 @@ public sealed class ImagePayloadTests
     [InlineData("multiple", false, true, 2, true)]
     public void Finalization_stores_large_encoded_image_payload_once(string name, bool jpeg, bool alpha, int pages, bool distinct)
     {
-        var bytes = ImageReviewFixture.Image(jpeg ? SKEncodedImageFormat.Jpeg : SKEncodedImageFormat.Png, alpha);
+        var bytes = TestImages.Image(jpeg ? SKEncodedImageFormat.Jpeg : SKEncodedImageFormat.Png, alpha);
         using var image = SKImage.FromEncodedData(bytes);
-        using var other = distinct ? SKImage.FromEncodedData(ImageReviewFixture.Image(alpha: true, seed: 23)) : null;
+        using var other = distinct ? SKImage.FromEncodedData(TestImages.Image(alpha: true, seed: 23)) : null;
         using var raw = new MemoryStream();
         using (var document = SKDocument.CreatePdf(raw))
         {
@@ -73,8 +72,8 @@ public sealed class ImagePayloadTests
         }
 
         Assert.Equal(distinct ? 4 : alpha ? 2 : 1, imageObjects);
-        using var independent = PdfTestFile.Open(new MemoryStream(final.ToArray()));
-        Assert.Equal(pages, independent.PageCount);
+        using var independent = TestSupport.Open(final.ToArray());
+        Assert.Equal(pages, independent.NumberOfPages);
         using var again = new MemoryStream();
         GeneratedPdfFinalizer.Write(final, again, corrections, default);
         Assert.Equal(final.ToArray(), again.ToArray());
@@ -86,8 +85,8 @@ public sealed class ImagePayloadTests
         using var input = TestSupport.Workbook(workbook =>
         {
             var sheet = workbook.WorksheetParts.Single();
-            SdkWorkbook.Image(sheet, ImageReviewFixture.CorruptPng(), row: 0);
-            SdkWorkbook.Image(sheet, TestSupport.Png(), row: 2);
+            TestWorkbook.Image(sheet, TestImages.CorruptPng(), row: 0);
+            TestWorkbook.Image(sheet, TestSupport.Png(), row: 2);
         });
         using var output = new MemoryStream();
         var result = await ExcelConverter.ConvertAsync(input, output, TestSupport.Options);
@@ -95,7 +94,7 @@ public sealed class ImagePayloadTests
         Assert.Contains("GetPixels", warning.Message);
         Assert.Equal(1, warning.PageNumber);
         using var pdf = TestSupport.Open(output.ToArray());
-        Assert.Contains("abc 123", pdf.Pages[0].Text);
+        Assert.Contains("abc 123", pdf.GetPage(1).Text);
         var parsed = new GeneratedPdfFile(new MemoryStream(output.ToArray()));
         Assert.Single(parsed.References.Select(parsed.Read), record => record.Value is PdfMap map && map.Get("/Subtype") is PdfName { Value: "/Image" });
     }
@@ -123,7 +122,7 @@ public sealed class ImagePayloadTests
                     Assert.NotEmpty(Directory.GetFiles(directory));
                     if (mode == "cancel") cancellation.Cancel();
                 };
-                using var image = SKImage.FromEncodedData(ImageReviewFixture.Image());
+                using var image = SKImage.FromEncodedData(TestImages.Image());
                 document.Prepare();
                 document.Append(new(100, 100, []), canvas => canvas.DrawImage(image, new SKRect(0, 0, 100, 100), new SKSamplingOptions(SKFilterMode.Linear)));
                 if (mode == "write") Assert.Throws<IOException>(() => document.Complete(output));

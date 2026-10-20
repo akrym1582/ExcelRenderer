@@ -69,7 +69,7 @@ public sealed class ContractsTests
         var input = new TestStream(prefixed, seekable: seekable); var output = new TestStream(target);
         var result = await ExcelConverter.ConvertAsync(input, output, TestSupport.Options);
         Assert.Equal(1, result.PageCount); Assert.False(input.Disposed); Assert.False(output.Disposed);
-        using var pdf = TestSupport.Open(target.ToArray()); Assert.Single(pdf.Pages);
+        using var pdf = TestSupport.Open(target.ToArray()); Assert.Single(pdf.GetPages());
     }
 
     [Theory]

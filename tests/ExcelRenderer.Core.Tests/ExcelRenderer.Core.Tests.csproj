@@ -6,7 +6,19 @@
     <IsPackable>false</IsPackable>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(CollectCoverage)' == 'true'">
+    <Include>[ExcelRenderer.Core]*</Include>
+    <CoverletOutput>$(MSBuildThisFileDirectory)../../TestResults/Core/Coverage/</CoverletOutput>
+    <CoverletOutputFormat>json,cobertura</CoverletOutputFormat>
+    <ThresholdType>line,branch</ThresholdType>
+    <Threshold>82.73,70.08</Threshold>
+    <ThresholdStat>total</ThresholdStat>
+  </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="coverlet.msbuild" Version="6.0.4">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="PdfPig" Version="0.1.14" PrivateAssets="all" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.8.1" />
     <PackageReference Include="xunit" Version="2.9.3" />
@@ -25,20 +37,8 @@
     <None Include="../../third_party/NotoSansJP/OFL.txt" Link="OFL-NotoSansJP.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="../ExcelRenderer.Tests/Fonts/PdfFormats/**/*" Link="Fonts/PdfFormats/%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
-    <None Include="../ExcelRenderer.Tests/Fonts/*" Link="Fonts/%(Filename)%(Extension)">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="../ExcelRenderer.Tests/SampleInputs/CellArgb/*.xlsx" Link="SampleInputs/CellArgb/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
-    <None Include="../ExcelRenderer.Tests/SampleInputs/*.xlsx" Link="SampleInputs/%(Filename)%(Extension)">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="../Shared/PdfTestFile.cs" Link="Fixtures/PdfTestFile.cs" />
-    <Compile Include="../Shared/PdfTestContent.cs" Link="Fixtures/PdfTestContent.cs" />
-    <Compile Include="../Shared/SdkWorkbook.cs" Link="Fixtures/SdkWorkbook.cs" />
-    <Compile Include="../Shared/ImageReviewFixture.cs" Link="Fixtures/ImageReviewFixture.cs" />
+    <None Update="Fonts/**/*" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="Baselines/Inputs/*.xlsx" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../../src/ExcelRenderer.OpenXml.Reader/ExcelRenderer.OpenXml.Reader.csproj" />

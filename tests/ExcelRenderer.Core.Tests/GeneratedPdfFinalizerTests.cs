@@ -2,8 +2,8 @@ using System.Globalization;
 using System.Text;
 using ExcelRenderer.Core.Pdf;
 using ExcelRenderer.Core.Pdf.Structure;
-using ExcelRenderer.TestFixtures;
 using Xunit;
+using UglyToad.PdfPig.Tokens;
 
 namespace ExcelRenderer.Core.Tests;
 
@@ -38,15 +38,19 @@ public sealed class GeneratedPdfFinalizerTests
         updated.CopyStream(image, copied, default);
         Assert.Equal(new byte[] { 9, 128, 255 }, copied.ToArray());
         Assert.Equal(new PdfLiteral("true"), ((PdfMap)image.Value).Get("/Interpolate"));
-        using var independent = PdfTestFile.Open(new MemoryStream(output.ToArray()));
-        Assert.Equal(100.123, independent.Pages[0].Width.Point, 5);
-        Assert.Equal(99.456, independent.Pages[0].Height.Point, 5);
-        Assert.Equal(2, independent.Pages[0].Annotations.Count);
-        Assert.Equal("説明", independent.Pages[0].Annotations[0].Elements.GetString("/Contents"));
-        Assert.Equal("https://example.com?q=日本", independent.Pages[0].Annotations[0].Elements.GetDictionary("/A")!.Elements.GetString("/URI"));
-        var destination = independent.Pages[0].Annotations[1].Elements.GetArray("/Dest")!;
-        Assert.Same(independent.Pages[0], ((PdfTestReference)destination.Elements[0]).Value);
-        Assert.Equal(65.456, ((PdfTestNumber)destination.Elements[3]).Value, 5);
+        using var independent = TestSupport.Open(output.ToArray());
+        var page = independent.GetPage(1);
+        Assert.Equal(100.123, page.Width, 5);
+        Assert.Equal(99.456, page.Height, 5);
+        var annotations = TestSupport.Entry<ArrayToken>(independent, page.Dictionary, "Annots").Data
+            .Select(token => TestSupport.Token<DictionaryToken>(independent, token)).ToArray();
+        Assert.Equal(2, annotations.Length);
+        Assert.Equal("説明", TestSupport.PdfString(annotations[0].Data["Contents"]));
+        var action = TestSupport.Entry<DictionaryToken>(independent, annotations[0], "A");
+        Assert.Equal("https://example.com?q=日本", TestSupport.PdfString(action.Data["URI"]));
+        var destination = TestSupport.Entry<ArrayToken>(independent, annotations[1], "Dest");
+        Assert.Equal(page.Dictionary, TestSupport.Token<DictionaryToken>(independent, destination.Data[0]));
+        Assert.Equal(65.456, ((NumericToken)destination.Data[3]).Double, 5);
     }
 
     [Theory]

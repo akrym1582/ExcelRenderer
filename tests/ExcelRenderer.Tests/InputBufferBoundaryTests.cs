@@ -11,7 +11,7 @@ public sealed class InputBufferBoundaryTests
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
-    public async Task Product_input_settings_enforce_all_limits_and_preserve_ownership(bool core)
+    public async Task Reader_and_main_input_settings_enforce_all_limits_and_preserve_ownership(bool core)
     {
         var directory = Directory.CreateTempSubdirectory();
         using var input = CreateInput();
@@ -145,7 +145,7 @@ public sealed class InputBufferBoundaryTests
     }
 
     private static Task<PreparedWorkbook> Prepare(bool core, Stream input, WorkbookInputOptions options) => core
-        ? Core.Input.WorkbookInputPreparer.ReadAsync(input, new()
+        ? OpenXml.Reader.Input.WorkbookInputPreparer.ReadAsync(input, new OpenXml.Reader.Input.WorkbookInputOptions
         {
             MemoryThresholdBytes = options.MemoryThresholdBytes,
             MaxInputBytes = options.MaxInputBytes,
@@ -153,7 +153,7 @@ public sealed class InputBufferBoundaryTests
             TemporaryDirectory = options.TemporaryDirectory,
             MaxZipEntryCount = options.MaxZipEntryCount,
             MaxUncompressedZipBytes = options.MaxUncompressedZipBytes,
-        }, default)
+        }, default, () => Core.Rendering.ConversionMetrics.Report("buffer.spillCount", 1))
         : Rendering.WorkbookInputPreparer.ReadAsync(input, options, default);
 
     private static MemoryStream CreateInput()

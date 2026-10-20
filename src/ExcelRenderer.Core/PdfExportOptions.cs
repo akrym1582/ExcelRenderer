@@ -1,3 +1,5 @@
+using ExcelRenderer.OpenXml.Reader.Input;
+
 namespace ExcelRenderer.Core;
 
 /// <summary>Options for a PDF-only, single-font conversion.</summary>
@@ -15,6 +17,6 @@ public sealed record PdfExportOptions
     /// <summary>Gets the reader engine and stored-formula display policy.</summary>
     public ExcelReadOptions ReadOptions { get; init; } = new();
 
-    /// <summary>Gets the input spool and ZIP limits.</summary>
+    /// <summary>Gets the Reader input spool and ZIP limits.</summary>
     public WorkbookInputOptions Input { get; init; } = new();
 }

@@ -1,4 +1,5 @@
 using ExcelRenderer.Core.Rendering;
+using ExcelRenderer.OpenXml.Reader.Input;
 using Xunit;
 
 namespace ExcelRenderer.Core.Tests;
@@ -89,21 +90,97 @@ public sealed class ContractsTests
         await Assert.ThrowsAsync<InvalidDataException>(() => TestSupport.Convert(options: TestSupport.Options with { Input = settings }));
     }
 
-    [Fact]
-    public async Task Spool_cleanup_on_success_and_cancellation()
+    [Theory]
+    [InlineData("success")]
+    [InlineData("zip")]
+    [InlineData("sheet")]
+    [InlineData("cancel")]
+    public async Task Spool_cleanup_on_success_failure_and_cancellation(string outcome)
     {
-        var directory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()); Directory.CreateDirectory(directory);
+        var directory = Directory.CreateTempSubdirectory();
+        var previous = ConversionMetrics.Observer;
+        using var cancellation = new CancellationTokenSource();
+        var spills = 0;
+        ConversionMetrics.Observer = (name, value) =>
+        {
+            if (name != "buffer.spillCount") return;
+            Assert.Equal(1d, value);
+            Assert.Single(directory.GetFiles());
+            spills++;
+            if (outcome == "cancel") cancellation.Cancel();
+        };
         try
         {
-            var options = TestSupport.Options with { Input = new() { MemoryThresholdBytes = 1, AllowTemporaryFiles = true, TemporaryDirectory = directory } };
-            await TestSupport.Convert(options: options); Assert.Empty(Directory.GetFiles(directory));
-            using var input = TestSupport.Workbook(); using var output = new MemoryStream();
-            using var cancellation = new CancellationTokenSource(); var reads = 0;
-            using var cancelInput = new TestStream(input, onRead: () => { if (++reads == 2) cancellation.Cancel(); });
-            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => ExcelConverter.ConvertAsync(cancelInput, output, options, cancellation.Token));
-            Assert.Empty(Directory.GetFiles(directory));
+            var options = TestSupport.Options with
+            {
+                SheetName = outcome == "sheet" ? "missing" : null,
+                Input = new WorkbookInputOptions
+                {
+                    MemoryThresholdBytes = 1,
+                    AllowTemporaryFiles = true,
+                    TemporaryDirectory = directory.FullName,
+                    MaxZipEntryCount = outcome == "zip" ? 1 : 10_000,
+                },
+            };
+            using var input = TestSupport.Workbook();
+            using var output = new MemoryStream();
+            Task<ConversionResult> Convert() => ExcelConverter.ConvertAsync(input, output, options, cancellation.Token);
+            switch (outcome)
+            {
+                case "zip":
+                    await Assert.ThrowsAsync<InvalidDataException>(Convert);
+                    break;
+                case "sheet":
+                    await Assert.ThrowsAsync<ArgumentException>(Convert);
+                    break;
+                case "cancel":
+                    await Assert.ThrowsAnyAsync<OperationCanceledException>(Convert);
+                    break;
+                default:
+                    Assert.Equal(1, (await Convert()).PageCount);
+                    break;
+            }
+
+            Assert.Equal(1, spills);
+            Assert.True(input.CanRead);
+            Assert.True(output.CanWrite);
+            Assert.Empty(directory.GetFiles());
+            if (outcome != "success") Assert.Equal(0, output.Length);
         }
-        finally { Directory.Delete(directory, true); }
+        finally
+        {
+            ConversionMetrics.Observer = previous;
+            directory.Delete(true);
+        }
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Input_spill_is_reported_once_and_small_output_stays_in_memory(bool spill)
+    {
+        using var input = TestSupport.Workbook();
+        using var output = new MemoryStream();
+        var previous = ConversionMetrics.Observer;
+        var notifications = new List<double>();
+        ConversionMetrics.Observer = (name, value) =>
+        {
+            if (name == "buffer.spillCount") notifications.Add(value);
+        };
+        try
+        {
+            var options = TestSupport.Options with
+            {
+                Input = new WorkbookInputOptions { MemoryThresholdBytes = spill ? 1 : input.Length, AllowTemporaryFiles = spill },
+            };
+            Assert.Equal(1, (await ExcelConverter.ConvertAsync(input, output, options)).PageCount);
+            Assert.InRange(output.Length, 1, 8 * 1024 * 1024);
+            Assert.Equal(spill ? new[] { 1d } : Array.Empty<double>(), notifications);
+        }
+        finally
+        {
+            ConversionMetrics.Observer = previous;
+        }
     }
 
     [Fact]
@@ -154,7 +231,9 @@ public sealed class ContractsTests
     public void Exported_types_and_dependencies_are_minimal()
     {
         var assembly = typeof(ExcelConverter).Assembly;
-        Assert.Equal(new[] { "ConversionDiagnostic", "ConversionResult", "ExcelConverter", "ExcelReadOptions", "PdfExportOptions", "WorkbookInputOptions" }, assembly.GetExportedTypes().Select(t => t.Name).Order().ToArray());
+        Assert.Equal(new[] { "ConversionDiagnostic", "ConversionResult", "ExcelConverter", "ExcelReadOptions", "PdfExportOptions" }, assembly.GetExportedTypes().Select(t => t.Name).Order().ToArray());
+        Assert.Null(assembly.GetType("ExcelRenderer.Core.WorkbookInputOptions"));
+        Assert.Equal(typeof(WorkbookInputOptions), typeof(PdfExportOptions).GetProperty(nameof(PdfExportOptions.Input))!.PropertyType);
         Assert.DoesNotContain(assembly.GetReferencedAssemblies(), a => a.Name is "ExcelRenderer.OpenXml" or "ExcelRenderer.Formulas" or "ExcelRenderer" or "ExcelRenderer.Fonts" or "ExcelRenderer.Tool");
     }
 }

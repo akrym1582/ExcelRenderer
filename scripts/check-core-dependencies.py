@@ -93,10 +93,21 @@ for path in list(OPENXML.rglob('*.cs')) + list(READER.rglob('*.cs')):
 for name in ('ExcelRenderer.Core', 'ExcelRenderer', 'ExcelRenderer.Mapping'):
     path = ROOT / 'src' / name / (name + '.csproj')
     assert 'ExcelRenderer.OpenXml' in path.read_text(), f'{path}: shared OpenXml reference missing'
-for relative in ('Input/InputBufferFactory.cs', 'Input/WorkbookInputPreparer.cs'):
+for relative in ('Input/InputBufferFactory.cs',):
     text = (CORE / relative).read_text()
     assert 'OpenXml.Reader.Input' in text, f'{relative}: shared input delegation missing'
     assert not re.search(r'\b(for|foreach|while)\s*\(', text), f'{relative}: duplicate input algorithm'
+for relative in ('Input/WorkbookInputPreparer.cs', 'WorkbookInputOptions.cs'):
+    assert not (CORE / relative).exists(), f'{relative}: removed Core input boundary returned'
+for path in CORE.rglob('*.cs'):
+    if {'bin', 'obj'} & set(path.parts):
+        continue
+    assert not re.search(r'\b(class|record|struct)\s+(WorkbookInputOptions|WorkbookInputPreparer)\b', path.read_text()), f'{path}: duplicate Reader input type'
+converter = (CORE / 'ExcelConverter.cs').read_text()
+assert re.search(r'using var prepared = await OpenXml\.Reader\.Input\.WorkbookInputPreparer\.ReadAsync\(\s*xlsx,\s*options\.Input,\s*cancellationToken,\s*\(\) => ConversionMetrics\.Report\("buffer\.spillCount", 1\)\)', converter), 'Core must pass Reader settings and one spill callback directly'
+options = (CORE / 'PdfExportOptions.cs').read_text()
+assert 'using ExcelRenderer.OpenXml.Reader.Input;' in options
+assert 'public WorkbookInputOptions Input { get; init; } = new();' in options, 'Core must expose Reader input settings with the existing initializer'
 print('Shared OpenXml dependency direction and input ownership passed')
 
 # Product enrichment hooks and the shared mapping language must remain source-neutral.

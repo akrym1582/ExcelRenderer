@@ -113,7 +113,7 @@ public sealed class SavedPaginationTests
 
     private static async Task<ReportSheet> Read(Stream input)
     {
-        using var prepared = await Core.Input.WorkbookInputPreparer.ReadAsync(input, new(), default);
+        using var prepared = await OpenXml.Reader.Input.WorkbookInputPreparer.ReadAsync(input, new(), default);
         using var font = new Core.Fonts.SingleFontContext(TestSupport.JapaneseFont);
         return new Core.Excel.CoreExcelReader(font).Read(prepared, null).Sheets.Single();
     }

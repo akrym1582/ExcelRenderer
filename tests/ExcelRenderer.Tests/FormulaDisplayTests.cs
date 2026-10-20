@@ -227,7 +227,7 @@ public sealed class FormulaDisplayTests
         }
 
         input.Position = 0;
-        using var prepared = await Core.Input.WorkbookInputPreparer.ReadAsync(input, new(), CancellationToken.None);
+        using var prepared = await OpenXml.Reader.Input.WorkbookInputPreparer.ReadAsync(input, new(), CancellationToken.None);
         using (var package = SpreadsheetDocument.Open(input, true))
         {
             package.WorkbookPart!.WorksheetParts.Single().Worksheet.Descendants<S.Cell>().Single(cell => cell.CellReference == "A1").CellValue = new S.CellValue("50");

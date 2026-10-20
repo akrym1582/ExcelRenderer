@@ -70,4 +70,4 @@ CoreExcelReader が表示ポリシーと診断候補を管理します。scratch
 選択機能を所有する本体 preflight が担当します。チャートシートはメタデータのみを保持し、
 診断のために空白ページを追加しません。旧計測器は任意の RenderRequest.TextMeasurer で借用します。
 
-汎用の入力検査・spool は `ExcelRenderer.OpenXml/Input` が所有します。Core は共有 OpenXml のみを ProjectReference し、本体・Mapping も同じ共有版を参照します。[エンジン選択](openxml-integration.ja.md)を参照してください。
+汎用の入力検査・spool は `ExcelRenderer.OpenXml.Reader/Input` が所有します。Core が参照する製品プロジェクトはReaderだけです。CoreはReaderの入力設定・入力準備を直接使用し、変換単位のspill通知を接続します。本体は既存の公開入力設定をReaderへ変換します。本体・Mappingも同じReaderを参照します。[エンジン選択](openxml-integration.ja.md)を参照してください。

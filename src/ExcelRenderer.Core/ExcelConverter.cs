@@ -1,7 +1,6 @@
 using ExcelRenderer.Core.Drawing;
 using ExcelRenderer.Core.Excel;
 using ExcelRenderer.Core.Fonts;
-using ExcelRenderer.Core.Input;
 using ExcelRenderer.Core.Layout;
 using ExcelRenderer.Core.Pdf;
 using ExcelRenderer.Core.Rendering;
@@ -55,7 +54,11 @@ public static class ExcelConverter
         }
 
         cancellationToken.ThrowIfCancellationRequested();
-        using var prepared = await WorkbookInputPreparer.ReadAsync(xlsx, options.Input, cancellationToken).ConfigureAwait(false);
+        using var prepared = await OpenXml.Reader.Input.WorkbookInputPreparer.ReadAsync(
+            xlsx,
+            options.Input,
+            cancellationToken,
+            () => ConversionMetrics.Report("buffer.spillCount", 1)).ConfigureAwait(false);
         using var font = new SingleFontContext(options.FontFilePath, options.FontCollectionIndex, cancellationToken);
         var diagnostics = new DiagnosticCollector();
         var reader = new CoreExcelReader(font);

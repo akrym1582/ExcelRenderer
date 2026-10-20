@@ -4,7 +4,7 @@
 `ExcelRenderer` extends that engine and retains its original public assembly/types.
 Both use the same Skia drawing and PDF foundation with different product policies;
 see [Skia rendering and font design](skia-rendering.md).
-Core is `netstandard2.1`, references only the shared `ExcelRenderer.OpenXml` project, and remains nonpackable. Generic workbook input validation/spooling belongs to OpenXml; Core keeps compatibility adapters. The existing
+Core is `netstandard2.1`, references only `ExcelRenderer.OpenXml.Reader`, and remains nonpackable. Generic workbook input validation/spooling belongs to Reader. Core uses Reader input settings and preparation directly with a conversion-local spill callback; main retains its public input settings adapter. The existing
 ExcelRenderer and Tool packages ship the Core DLL from the same build.
 
 ```text
@@ -17,7 +17,7 @@ ExcelRenderer public APIs / multi-format orchestration
     PNG / SVG / Markdown / continuous / trim / link preflight remain in main
                          ↓
 ExcelRenderer.Core (also independently usable through ProjectReference)
-    OpenXml input/spool → selected reader → geometry/pagination/placement → commands → PDF
+    Reader input/spool → saved-value reader → geometry/pagination/placement → commands → PDF
     regular single font; no shapes/annotations/selection or image splitting
 ```
 

@@ -41,7 +41,7 @@ for (var iteration = 0; iteration < 15; iteration++) {
     int count, painted;
     if (mode == "core") {
         using var font = new ExcelRenderer.Core.Fonts.SingleFontContext(args[1]);
-        using var prepared = await ExcelRenderer.Core.Input.WorkbookInputPreparer.ReadAsync(input, new(), default);
+        using var prepared = await ExcelRenderer.OpenXml.Reader.Input.WorkbookInputPreparer.ReadAsync(input, new(), default);
         var document = new ExcelRenderer.Core.Excel.CoreExcelReader(font).Read(prepared, null);
         count = document.Sheets.Sum(sheet => sheet.Cells.Count);
         painted = document.Sheets.Sum(sheet => sheet.Cells.Values.Count(cell => cell.Style.Background is not null));

@@ -22,6 +22,23 @@ def instrument(root):
     replace(base + 'Drawing/CommandTextFinalizer.cs', '        var measured = layout.Layout(command.Text, command.Style.Font, command.Bounds.Width, command.Style.WrapText);', '        Rendering.ConversionMetrics.Report("unfinalizedTextLayouts", 1);\n        var measured = layout.Layout(command.Text, command.Style.Font, command.Bounds.Width, command.Style.WrapText);')
     replace(base + 'Drawing/CommandTextFinalizer.cs', '            yield return command switch', '            var started = System.Diagnostics.Stopwatch.GetTimestamp();\n            var result = command switch')
     replace(base + 'Drawing/CommandTextFinalizer.cs', '                _ => command,\n            };', '                _ => command,\n            };\n\n            Rendering.ConversionMetrics.Report("textFinalize.ms", (System.Diagnostics.Stopwatch.GetTimestamp() - started) * 1000d / System.Diagnostics.Stopwatch.Frequency);\n            yield return result;')
+    old = """        var lines = layout.Lines.Select(line => line.Text.Length == 0 || line.Runs.Count > 0
+            ? line
+            : line with { Runs = service.Layout(line.Text, command.Style.Font with { Size = size }, double.MaxValue, false).Lines.Single().Runs }).ToArray();"""
+    new = """        var lines = layout.Lines.Select(line =>
+        {
+            if (line.Text.Length == 0 || line.Runs.Count > 0)
+            {
+                return line;
+            }
+
+            Rendering.ConversionMetrics.Report("fontRunCompletions", 1);
+            return line with { Runs = service.Layout(line.Text, command.Style.Font with { Size = size }, double.MaxValue, false).Lines.Single().Runs };
+        }).ToArray();
+"""
+    replace(base + 'Drawing/CommandTextFinalizer.cs', old, new)
+    replace(base + 'Fonts/ResolvedGlyphLayout.cs', '        var resources = ConversionFontResources.Current', '        Rendering.ConversionMetrics.Report("glyphRunsFinalized", 1);\n        var resources = ConversionFontResources.Current')
+    replace('src/ExcelRenderer.Core/Pdf/PdfFontCollection.cs', '            entry.Glyphs.UnionWith(glyphs);', '            ConversionMetrics.Report("pdfFontRunsCollected", 1);\n            entry.Glyphs.UnionWith(glyphs);')
     replace(base + 'ExcelConverter.Viewports.cs', 'DrawCommandBounds.Get(commands, original, fonts)', 'ConversionMetrics.Measure("bounds", () => DrawCommandBounds.Get(commands, original, fonts))')
     # Copy only the driver into this diagnostic checkout. Its source uses baseline APIs.
     for name in ('Program.cs', 'RenderMemoryBenchmark.cs', 'RenderMemoryBenchmark.Profile.cs'):

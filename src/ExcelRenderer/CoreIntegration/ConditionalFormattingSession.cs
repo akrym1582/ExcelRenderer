@@ -109,7 +109,7 @@ internal sealed partial class ConditionalFormattingSession
             ? new CellRange(new(title.FirstRow, region.First.Column), new(title.LastRow, region.Last.Column))
             : new CellRange(new(region.First.Row, title.FirstColumn), new(region.Last.Row, title.LastColumn)))))
             .Concat(titleRanges.Where(title => title.Kind == "Rows").SelectMany(row => titleRanges.Where(title => title.Kind == "Columns")
-                .Select(column => new CellRange(new(row.FirstRow, column.FirstColumn), new(row.LastRow, column.LastColumn))))).ToArray();
+                .Select(column => new CellRange(new(row.FirstRow, column.FirstColumn), new(row.LastRow, column.LastColumn)))));
         if (!CollectCandidates(finiteRegions, candidates, candidateLimit, ref visits, token))
         {
             return;

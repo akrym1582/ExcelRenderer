@@ -89,7 +89,7 @@ internal static partial class RenderMemoryBenchmark
                         Selection = new() { Pages = item.Pages, Ranges = item.Range is { } range ? [new("Synthetic", CellRangeParser.Parse(range, out _))] : null },
                         Dpi = 72,
                     };
-                    var sink = diagnostic ? (IRenderOutputSink)new ProfileSink(item.Capture) : new DiscardSink();
+                    var sink = diagnosticOnly && iteration >= 0 ? (IRenderOutputSink)new ProfileSink(item.Capture) : new DiscardSink();
                     var result = await ExcelConverter.RenderAsync(input, request, sink).ConfigureAwait(false);
                     outputBytes = result.Artifacts.Sum(artifact => artifact.ByteLength);
                     pages = result.Pages.Count;
@@ -98,13 +98,15 @@ internal static partial class RenderMemoryBenchmark
 
             clock.Stop();
             var allocationBytes = GC.GetTotalAllocatedBytes(true) - allocated;
+            var captureHash = diagnosticOnly && iteration >= 0 && item.Capture is { } directory && Directory.Exists(directory)
+                ? Hash(System.Text.Encoding.UTF8.GetBytes(string.Join("\n", Directory.GetFiles(directory).OrderBy(file => file, StringComparer.Ordinal).Select(file => Path.GetFileName(file) + ":" + HashFile(file))))) : null;
             using var process = Process.GetCurrentProcess();
             Console.WriteLine(JsonSerializer.Serialize(new
             {
                 name = item.Name, iteration, diagnostic, cold = iteration == (diagnosticOnly ? -warmups : -warmups - 1), observerControl = diagnosticOnly && iteration == 0, warmup = iteration < 0,
                 milliseconds = clock.Elapsed.TotalMilliseconds, allocationBytes,
                 gc = collections.Select((count, generation) => GC.CollectionCount(generation) - count).ToArray(),
-                peakRssBytes = process.PeakWorkingSet64, outputBytes, pages, metrics,
+                peakRssBytes = process.PeakWorkingSet64, outputBytes, pages, captureHash, metrics,
             }));
             ConversionMetrics.Observer = null;
             snapshots.SetValue(null, null);

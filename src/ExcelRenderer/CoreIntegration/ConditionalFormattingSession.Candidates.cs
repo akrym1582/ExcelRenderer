@@ -18,6 +18,34 @@ internal sealed partial class ConditionalFormattingSession
 
     private static ConditionalFormattingException Limit() => new("ConditionalFormattingLimitExceeded", "The finite candidate/rule normalization work or retained interval budget was exceeded; this sheet retains ordinary formatting.");
 
+    private static IEnumerable<CellAddress> LimitTargets(IEnumerable<SourceRange> ranges, CancellationToken token)
+    {
+        long probes = 0;
+        try
+        {
+            foreach (var range in ranges)
+            {
+                for (var row = range.First.Row; row <= range.Last.Row; row++)
+                {
+                    token.ThrowIfCancellationRequested();
+                    for (var column = range.First.Column; column <= range.Last.Column; column++)
+                    {
+                        if (++probes > CandidateRangeLimit)
+                        {
+                            yield break;
+                        }
+
+                        yield return new(row, column);
+                    }
+                }
+            }
+        }
+        finally
+        {
+            ConversionMetrics.Report("conditionalFormatting.limitTargetProbes", Math.Min(probes, CandidateRangeLimit));
+        }
+    }
+
     private bool PrepareDisplayRanges(CancellationToken token)
     {
         try
@@ -47,20 +75,20 @@ internal sealed partial class ConditionalFormattingSession
         }
         catch (ConditionalFormattingException exception)
         {
-            ReportCandidateLimit(rules[0], info.ConditionalFormattingRules.SelectMany(rule => rule.Ranges).Select(range => new CellAddress(range.First.Row, range.First.Column)), exception.Message);
+            ReportCandidateLimit(rules[0], LimitTargets(rules.SelectMany(rule => rule.Source.Ranges), token), exception.Message);
             return false;
         }
     }
 
-    private bool CollectCandidates(IReadOnlyList<CellRange> regions, HashSet<CellAddress> candidates, long limit, ref long visits, CancellationToken token)
+    private bool CollectCandidates(IEnumerable<CellRange> regions, HashSet<CellAddress> candidates, long limit, ref long visits, CancellationToken token)
     {
         long work = 0;
-        SourceRange? representative = null;
+        var source = new HashSet<SourceRange>();
         try
         {
-            var source = new HashSet<SourceRange>();
             foreach (var region in regions)
             {
+                Work();
                 foreach (var entry in index.Query(region.First.Row, region.Last.Row + 1))
                 {
                     Work();
@@ -69,7 +97,6 @@ internal sealed partial class ConditionalFormattingSession
                     if (firstColumn <= lastColumn)
                     {
                         var range = new SourceRange(new(Math.Max(region.First.Row, entry.Range.First.Row), firstColumn), new(Math.Min(region.Last.Row, entry.Range.Last.Row), lastColumn));
-                        representative ??= range;
                         source.Add(range);
                         if (source.Count > CandidateRangeLimit)
                         {
@@ -160,12 +187,7 @@ internal sealed partial class ConditionalFormattingSession
         }
         catch (ConditionalFormattingException exception)
         {
-            if (representative is { } range)
-            {
-                candidates.Add(new(range.First.Row, range.First.Column));
-            }
-
-            ReportCandidateLimit(rules[0], candidates, exception.Message);
+            ReportCandidateLimit(rules[0], LimitTargets(source, token), exception.Message);
             return false;
         }
         finally

@@ -135,7 +135,11 @@ def run(args):
                 path = work / 'diagnostic-case.json'
                 path.write_text(json.dumps([specification]))
                 result = subprocess.run(['dotnet', str(runtime / 'ExcelRenderer.Performance.dll'), 'render-profile', str(path), case['Name'], str(args.warmups), '1', 'diagnostic'], check=True, capture_output=True, text=True)
-                observations.append(dict(stage=stage, case=case['Name'], records=[json.loads(line) for line in result.stdout.splitlines()]))
+                rows = [json.loads(line) for line in result.stdout.splitlines()]
+                control = next(row for row in rows[1:] if row['observerControl'])
+                observed = next(row for row in rows[1:] if row['diagnostic'])
+                assert (control['pages'], control['outputBytes'], control['captureHash']) == (observed['pages'], observed['outputBytes'], observed['captureHash']), 'Observer changed output'
+                observations.append(dict(stage=stage, case=case['Name'], records=rows))
                 (work / 'diagnostics.json').write_text(json.dumps(observations, indent=2) + '\n')
                 print(f'diagnostic: {case["Name"]}/{stage}', flush=True)
         return
@@ -144,7 +148,7 @@ def run(args):
     for round_index in range(args.rounds):
         for case in cases:
             for stage in ('before', 'after') if round_index % 2 == 0 else ('after', 'before'):
-                command = ['dotnet', str(runtimes[stage] / 'ExcelRenderer.Performance.dll'), 'render-profile', str(work / 'cases.json'), case['Name'], str(args.warmups), str(args.samples)]
+                command = ['dotnet', str(runtimes[stage] / 'ExcelRenderer.Performance.dll'), 'render-profile', str(work / 'cases.json'), case['Name'], str(case.get('Warmups', args.warmups)), str(args.samples)]
                 result = subprocess.run(command, check=True, capture_output=True, text=True)
                 rows = [json.loads(line) for line in result.stdout.splitlines()]
                 environments.append(dict(round=round_index, stage=stage, case=case['Name'], **rows[0]))

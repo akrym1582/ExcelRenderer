@@ -1,0 +1,146 @@
+  ExcelRenderer.OpenXml.Reader -> /workspace/ExcelRenderer/src/ExcelRenderer.OpenXml.Reader/bin/Debug/netstandard2.1/ExcelRenderer.OpenXml.Reader.dll
+  ExcelRenderer.Formulas -> /workspace/ExcelRenderer/src/ExcelRenderer.Formulas/bin/Debug/netstandard2.1/ExcelRenderer.Formulas.dll
+  ExcelRenderer.OpenXml -> /workspace/ExcelRenderer/src/ExcelRenderer.OpenXml/bin/Debug/netstandard2.1/ExcelRenderer.OpenXml.dll
+  ExcelRenderer.Mapping -> /workspace/ExcelRenderer/src/ExcelRenderer.Mapping/bin/Debug/netstandard2.1/ExcelRenderer.Mapping.dll
+  ExcelRenderer.Core -> /workspace/ExcelRenderer/src/ExcelRenderer.Core/bin/Debug/netstandard2.1/ExcelRenderer.Core.dll
+  ExcelRenderer -> /workspace/ExcelRenderer/src/ExcelRenderer/bin/Debug/netstandard2.1/ExcelRenderer.dll
+  ExcelRenderer.Fonts -> /workspace/ExcelRenderer/src/ExcelRenderer.Fonts/bin/Debug/netstandard2.1/ExcelRenderer.Fonts.dll
+  ExcelRenderer.Tests -> /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:01.84]     ExcelRenderer.Tests.PostScriptGhostscriptTests.Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison(mutation: "dark-red-black") [FAIL]
+[xUnit.net 00:00:02.46]     ExcelRenderer.Tests.PostScriptGhostscriptTests.Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison(mutation: "gray-removed") [FAIL]
+  Failed ExcelRenderer.Tests.PostScriptGhostscriptTests.Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison(mutation: "dark-red-black") [586 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: False
+Actual:   True
+  Stack Trace:
+     at ExcelRenderer.Tests.PostScriptGhostscriptTests.Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison(String mutation) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs:line 308
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tests.PostScriptGhostscriptTests.Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison(mutation: "gray-removed") [617 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: False
+Actual:   True
+  Stack Trace:
+     at ExcelRenderer.Tests.PostScriptGhostscriptTests.Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison(String mutation) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs:line 308
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:03.04]     ExcelRenderer.Tests.PostScriptGhostscriptTests.Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison(mutation: "gray-added") [FAIL]
+[xUnit.net 00:00:03.11]     ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_handles_blank_and_low_contrast_pages(reference: 250, candidate: 255, passed: False) [FAIL]
+[xUnit.net 00:00:03.18]     ExcelRenderer.Tests.PostScriptGhostscriptTests.Zero_tiny_and_normal_width_lines_and_borders_execute_and_draw_dash_gaps(width: 0) [FAIL]
+[xUnit.net 00:00:03.41]     ExcelRenderer.Tests.PostScriptGhostscriptTests.Zero_tiny_and_normal_width_lines_and_borders_execute_and_draw_dash_gaps(width: 1.0000000000000001E-18) [FAIL]
+  Failed ExcelRenderer.Tests.PostScriptGhostscriptTests.Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison(mutation: "gray-added") [585 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: False
+Actual:   True
+  Stack Trace:
+     at ExcelRenderer.Tests.PostScriptGhostscriptTests.Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison(String mutation) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs:line 308
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_handles_blank_and_low_contrast_pages(reference: 250, candidate: 255, passed: False) [18 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: False
+Actual:   True
+  Stack Trace:
+     at ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_handles_blank_and_low_contrast_pages(Byte reference, Byte candidate, Boolean passed) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs:line 239
+   at InvokeStub_PostScriptGhostscriptTests.Comparison_handles_blank_and_low_contrast_pages(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed ExcelRenderer.Tests.PostScriptGhostscriptTests.Zero_tiny_and_normal_width_lines_and_borders_execute_and_draw_dash_gaps(width: 0) [51 ms]
+  Error Message:
+   GPL Ghostscript 10.05.1 (2025-04-29)
+Copyright (C) 2025 Artifex Software, Inc.  All rights reserved.
+This software is supplied under the GNU AGPLv3 and comes with NO WARRANTY:
+see the file COPYING for details.
+Error: /rangecheck in --setdash--
+Operand stack:
+   --nostringval--   0
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   setdash   --nostringval--   2   %stopped_push   --nostringval--   setdash   setdash   false   1   %stopped_push   1949   1   3   %oparray_pop   1948   1   3   %oparray_pop   1933   1   3   %oparray_pop   1803   1   3   %oparray_pop   --nostringval--   %errorexec_pop   .runexec2   --nostringval--   setdash   --nostringval--   2   %stopped_push   --nostringval--   1804   2   4   %oparray_pop
+Dictionary stack:
+   --dict:748/1123(ro)(G)--   --dict:0/20(G)--   --dict:86/200(L)--   --dict:1/20(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+Current file position is 1088
+GPL Ghostscript 10.05.1: Unrecoverable error, exit code 1
+
+  Stack Trace:
+     at ExcelRenderer.Tests.PostScriptGhostscriptTests.ValidateResult(Int32 exitCode, String message, Boolean textOutput) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs:line 458
+   at ExcelRenderer.Tests.PostScriptGhostscriptTests.Run(String[] arguments) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs:line 452
+   at ExcelRenderer.Tests.PostScriptGhostscriptTests.Zero_tiny_and_normal_width_lines_and_borders_execute_and_draw_dash_gaps(Double width) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs:line 330
+--- End of stack trace from previous location ---
+  Failed ExcelRenderer.Tests.PostScriptGhostscriptTests.Zero_tiny_and_normal_width_lines_and_borders_execute_and_draw_dash_gaps(width: 1.0000000000000001E-18) [36 ms]
+  Error Message:
+   GPL Ghostscript 10.05.1 (2025-04-29)
+Copyright (C) 2025 Artifex Software, Inc.  All rights reserved.
+This software is supplied under the GNU AGPLv3 and comes with NO WARRANTY:
+see the file COPYING for details.
+Error: /rangecheck in --setdash--
+Operand stack:
+   --nostringval--   0
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   setdash   --nostringval--   2   %stopped_push   --nostringval--   setdash   setdash   false   1   %stopped_push   1949   1   3   %oparray_pop   1948   1   3   %oparray_pop   1933   1   3   %oparray_pop   1803   1   3   %oparray_pop   --nostringval--   %errorexec_pop   .runexec2   --nostringval--   setdash   --nostringval--   2   %stopped_push   --nostringval--   1804   2   4   %oparray_pop
+Dictionary stack:
+   --dict:748/1123(ro)(G)--   --dict:0/20(G)--   --dict:86/200(L)--   --dict:1/20(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+Current file position is 1088
+GPL Ghostscript 10.05.1: Unrecoverable error, exit code 1
+
+  Stack Trace:
+     at ExcelRenderer.Tests.PostScriptGhostscriptTests.ValidateResult(Int32 exitCode, String message, Boolean textOutput) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs:line 458
+   at ExcelRenderer.Tests.PostScriptGhostscriptTests.Run(String[] arguments) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs:line 452
+   at ExcelRenderer.Tests.PostScriptGhostscriptTests.Zero_tiny_and_normal_width_lines_and_borders_execute_and_draw_dash_gaps(Double width) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs:line 330
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:03.44]     ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_small_gray_loss_among_near_white_pixels [FAIL]
+[xUnit.net 00:00:03.51]     ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(name: "near-white-removed", r: 250, g: 250, b: 250, mr: 255, mg: 255, mb: 255) [FAIL]
+[xUnit.net 00:00:03.56]     ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(name: "equal-luminance", r: 120, g: 0, b: 0, mr: 0, mg: 36, mb: 0) [FAIL]
+[xUnit.net 00:00:03.60]     ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(name: "gray-removed", r: 180, g: 180, b: 180, mr: 255, mg: 255, mb: 255) [FAIL]
+[xUnit.net 00:00:03.64]     ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(name: "dark-red-black", r: 120, g: 0, b: 0, mr: 0, mg: 0, mb: 0) [FAIL]
+[xUnit.net 00:00:03.69]     ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(name: "gray-added", r: 255, g: 255, b: 255, mr: 180, mg: 180, mb: 180) [FAIL]
+  Failed ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_small_gray_loss_among_near_white_pixels [27 ms]
+  Error Message:
+   {"Passed":true,"Unmatched":0,"Ink":0,"FailedTiles":[]}
+  Stack Trace:
+     at ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_small_gray_loss_among_near_white_pixels() in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs:line 254
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(name: "near-white-removed", r: 250, g: 250, b: 250, mr: 255, mg: 255, mb: 255) [40 ms]
+  Error Message:
+   {"Passed":true,"Unmatched":0,"Ink":0,"FailedTiles":[]}
+  Stack Trace:
+     at ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(String name, Byte r, Byte g, Byte b, Byte mr, Byte mg, Byte mb) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs:line 222
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(name: "equal-luminance", r: 120, g: 0, b: 0, mr: 0, mg: 36, mb: 0) [49 ms]
+  Error Message:
+   {"Passed":true,"Unmatched":0,"Ink":512,"FailedTiles":[]}
+  Stack Trace:
+     at ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(String name, Byte r, Byte g, Byte b, Byte mr, Byte mg, Byte mb) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs:line 222
+   at InvokeStub_PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(name: "gray-removed", r: 180, g: 180, b: 180, mr: 255, mg: 255, mb: 255) [40 ms]
+  Error Message:
+   {"Passed":true,"Unmatched":0,"Ink":0,"FailedTiles":[]}
+  Stack Trace:
+     at ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(String name, Byte r, Byte g, Byte b, Byte mr, Byte mg, Byte mb) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs:line 222
+   at InvokeStub_PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(name: "dark-red-black", r: 120, g: 0, b: 0, mr: 0, mg: 0, mb: 0) [40 ms]
+  Error Message:
+   {"Passed":true,"Unmatched":0,"Ink":512,"FailedTiles":[]}
+  Stack Trace:
+     at ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(String name, Byte r, Byte g, Byte b, Byte mr, Byte mg, Byte mb) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs:line 222
+   at InvokeStub_PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(name: "gray-added", r: 255, g: 255, b: 255, mr: 180, mg: 180, mb: 180) [50 ms]
+  Error Message:
+   {"Passed":true,"Unmatched":0,"Ink":0,"FailedTiles":[]}
+  Stack Trace:
+     at ExcelRenderer.Tests.PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(String name, Byte r, Byte g, Byte b, Byte mr, Byte mg, Byte mb) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/PostScriptGhostscriptTests.cs:line 222
+   at InvokeStub_PostScriptGhostscriptTests.Comparison_detects_local_color_and_coverage_changes(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+Results File: /workspace/ExcelRenderer/TestResults/PostScriptReview/before-final.trx
+
+Failed!  - Failed:    12, Passed:    11, Skipped:     0, Total:    23, Duration: 3 s - ExcelRenderer.Tests.dll (net10.0)

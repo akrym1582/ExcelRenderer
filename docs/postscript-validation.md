@@ -161,3 +161,133 @@ PS生成コードと文字抽出の照合・描画比較・変異検出の条件
 skip 0**（main 867、その他は上記統合後と同じ）。10.05.1でもGhostscript検証5件と
 診断判定の回帰テスト1件が成功した。両版の `fonts.ps` の抽出結果はバイト単位で一致。
 原文デコーダーと `fonts.ps` / `drawing.ps` の独立フォント検査も成功した。
+
+## PostScript レビュー指摘2件の修正
+
+検証日: 2026-10-20。`origin/main` を再取得し、レビュー対象と同じ
+`9dd0eb8a23de1c7bf0e382977f6ffd51e57705cd` から
+`fix/postscript-review` を作成した。開始時の作業ツリーはクリーン。
+今回の検証コードのコミットは `3ad6eafa30e3db51833fc6257ad9a7129605e387`。
+過去の実測値・JSONは変更せず、今回の証拠は
+[review-fixes](postscript-results/review-fixes/) に分けて保存した。
+
+### 描画比較
+
+輪郭の近傍一致だけを最終合格の条件にせず、`Contour`（配置・輪郭）、
+`Color`（境界の色）、`Region`（均一領域の色）を独立に検査する。
+すべて双方向・64 pixel tile 単位で判定する。領域色の不一致は、同じ tile 内の
+大量の背景画素が一致しても相殺しない。製品側の塗り・文字・画像描画には変更を加えていない。
+
+閾値と選定理由:
+
+| 項目 | 条件 | 理由 |
+| --- | --- | --- |
+| 背景 | 白との差が各 channel 2以下だけ除外 | 8-bit量子化の差を明示的に許容。254対255は正常、250対255は欠落として検出 |
+| 輪郭 | 白との差が20超、半径4 pixelの近傍 | 既存fixtureの文字位置丸め・ヒンティング差を吸収。中間グレーは除外しない |
+| 均一領域 | 3x3近傍が各channel 2以内、照合色差は各channel 3以内 | ベタ色をAA境界と分離。白近傍でも内容があれば検査し、濃色同士の無条件一致を廃止 |
+| 境界色 | RGB最大channel差24以内、または正規化したink色の差0.1以内 | AAによる濃度差と色相差を分ける。正規化は `(255-RGB)/max(255-RGB)`。均一領域には適用しない |
+| 局所失敗 | 輪郭・境界色は15画素超かつ局所supportの12%超。均一領域は15画素超 | 輪郭の既存budgetを維持しつつ、ベタ領域の欠落を背景の一致率で薄めない |
+
+境界色のsupportは、tile内の境界画素数と輪郭画素数の大きい方。
+ベタ領域を含む局所内容に対する境界差の割合を使う。
+最初のRGB距離だけの試行（最大channel差40）では、正常fixtureの境界10,204画素が
+不一致となり39 tileが失敗した。均一領域は不一致0だった。
+AA濃度差を色相から分離し、境界supportを内容全体に合わせた最終条件では、
+正常fixtureの輪郭不一致13画素、境界色不一致759画素、均一領域不一致0画素で
+失敗tileはすべて0。独自TTCでは3指標とも不一致0。
+異常例固有の除外条件は追加していない。
+
+決定的な画像では、グレー180の矩形削除・追加、濃い赤120/0/0から黒、
+および120/0/0から0/36/0への置換を同じ合格条件で失敗として検出した。
+最後の2色はRec.709の輝度が約25.51と25.75で、輝度だけでは識別しにくい例。
+白同士、250グレー同士、境界の2 pixel移動とAA濃度差は正常として通る。
+250グレー全体の白への置換、245グレー背景上の9x9 pixelの180グレー欠落も失敗する。
+実際のPSを生成してGSで画像化する経路でも、灰色削除・追加と濃い赤の黒置換を検出。
+既存の日本語1文字削除、5 point移動、罫線削除も検出した。
+基準PNG、PSのraster、差分PNG、各指標のJSONを保存した。
+
+### ヘアラインと破線
+
+`BorderSide.Width` はモデルで0を禁止しておらず、既存PNG/PDF側は値をSkiaの
+`StrokeWidth` と破線間隔へ渡す方式。共有モデルやSkia実装は変更していない。
+PSでは幅0の実線・破線をヘアラインとして受け付ける。
+`0 setlinewidth` 自体は有効であり、従来不正だったのは全要素0のdash配列。
+幅のフォーマット結果が `0` の場合だけ、間隔計算の基準を固定の **1 point** にする。
+これは正の微小幅（1e-18 point）が既存formatterで0になる場合も含む。
+線幅は0のままで、DPIによるPSの変更やformatter全体の変更はない。
+通常の正の幅は従来どおり幅の倍数を使用する。
+負数・NaN・Infinityは収集時に拒否し、出力先が0 byteのまま停止する。
+
+公開`PostScriptRenderer`から、幅0 / 1e-18 / 0.5 / 1 pointについて、
+実線・Dotted・Dashed・DashDot・DashDotDotをそれぞれ線と四辺の罫線で生成した。
+すべてGS nullpage実行が成功。300 DPI rasterでも線の存在、実線の連続、破線の隙間を
+各線種・線/罫線ごとに確認した。PSの文字列照合だけでは合格にしていない。
+
+### 実行と結果
+
+Debian 13、.NET SDK 10.0.401 / runtime 10.0.12、Ghostscript **10.05.1**。
+Linuxの全test呼出しで同じshellから`source scripts/test-fonts.sh`を実行した。
+旧コードへ最終版の再現テストを適用した結果は **23件中12件失敗、11件成功、skip 0**。
+見逃し10件と幅0/極小幅のGS setdashエラー2件を確認し、その後コードを戻して検証した。
+[旧実装のログ](postscript-results/review-fixes/before.log)とテスト結果を保持した。
+
+```bash
+git fetch origin main
+git switch -c fix/postscript-review origin/main
+dotnet restore ExcelRenderer.slnx --locked-mode
+dotnet build ExcelRenderer.slnx -t:Rebuild --no-restore -m:1 --verbosity:minimal
+source scripts/test-fonts.sh
+EXCELRENDERER_REQUIRE_GHOSTSCRIPT=1 dotnet test ExcelRenderer.slnx \
+  --no-build --no-restore -m:1 --logger trx --results-directory TestResults/PostScriptReview/Full
+python3 scripts/check-source-namespaces.py
+python3 scripts/check-core-dependencies.py
+python3 scripts/check-no-pdfsharp.py --configuration Debug \
+  --output artifacts/postscript-review-dependency-audit.json
+python3 scripts/decode-postscript-text.py \
+  tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/fonts.ps \
+  --output artifacts/postscript-review-text.json
+python3 scripts/validate-postscript.py \
+  tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/*.ps \
+  --output artifacts/postscript-review-font-validation.json
+```
+
+最終リビルドは **警告0・エラー0**。StyleCop抑制は追加していない。
+最終全体テストは **2,386件成功・失敗0・skip 0**
+（Core 170 / Formulas 833 / Mapping 172 / OpenXml 213 / main 890 / Tool 108）。
+PS関連52件（main 49 / CLI 3）もすべて成功。
+[集計・各PSテスト結果](postscript-results/review-fixes/tests.json)、
+[全体テストログ](postscript-results/review-fixes/tests.log)、
+[リビルドログ](postscript-results/review-fixes/rebuild.log)を保存した。
+
+namespace 663宣言とcompiler shim 2件、Core所有権・依存方向の検査が成功。
+PDFsharp除去監査は23 restore project・714 managed AssemblyRef inventoryを検査して成功した。
+独立PS検査は20ファイル・33ページ・18埋め込みfont resourceで成功。
+sfnt全体/各table checksum、metadata/code/GID、実際のshow命令、DSCページ数を照合した。
+原文デコーダーの結果、txtwriteの標準文字照合、Type 42と独自TTCの検証も成功した。
+実行時依存・NuGet構成の追加はない。
+
+[実装とPSのSHA-256](postscript-results/review-fixes/implementation.json)で
+検証コミットと生成PSを対応づけた。保存証拠のSHA-256は
+[artifact-hashes.json](postscript-results/review-fixes/artifact-hashes.json)に記録した。
+`full-trx.tar.gz` は全6 projectの生のTRX、`ghostscript-logs/` は最終全体実行のGSログ。
+旧コードの失敗は`before.log` / `before.trx`に分離している。
+
+| 比較 | 合格 | 輪郭不一致 | 境界色不一致 | 均一領域不一致 |
+| --- | --- | ---: | ---: | ---: |
+| 正常fixture | はい | 13 | 759 | 0 |
+| 独自TTC | はい | 0 | 0 | 0 |
+| 日本語1文字削除 | いいえ | 5,744 | 4,282 | 2,370 |
+| 5 point移動 | いいえ | 5,549 | 4,286 | 2,288 |
+| 罫線削除 | いいえ | 4,278 | 4,385 | 618 |
+| PSの灰色矩形削除 | いいえ | 21,164 | 1,163 | 20,008 |
+| PSの濃い赤→黒 | いいえ | 0 | 1,861 | 31,146 |
+| PSへの灰色矩形追加 | いいえ | 21,166 | 1,163 | 20,008 |
+
+不一致数は双方向の合算。正常例では局所budget内、異常例では少なくとも1指標が
+失敗tileを持つ。数字だけを加工せず、実画像の同じ比較処理から得た結果である。
+
+今回実施していない検証: 実プリンター、Windows、GitHub Actions上の実行、
+Ghostscript 10.02.1での再実行。既存10.02.1診断判定テストは全体テストに含む。
+配布・プロジェクト・NuGet構成・実行時依存には変更がないためpackは再実施していない。
+Ghostscriptは独立した開発/CIツールのまま。Type 42・原文メタデータ・直接生成、
+半透明未対応、IVS/補助平面の外部抽出の既存制約は維持している。

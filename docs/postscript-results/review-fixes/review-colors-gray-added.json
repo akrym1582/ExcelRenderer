@@ -1,0 +1,1 @@
+{"Passed":false,"Contour":{"Compared":96629,"Unmatched":21166,"MaximumUnmatchedPerTile":4096,"FailedTiles":[4,5,6,7,14,15,16,17,24,25,26,27]},"Color":{"Compared":96630,"Unmatched":1163,"MaximumUnmatchedPerTile":132,"FailedTiles":[4,7,17,27]},"Region":{"Compared":91170,"Unmatched":20008,"MaximumUnmatchedPerTile":4096,"FailedTiles":[4,5,6,7,14,15,16,17,24,25,26,27]}}

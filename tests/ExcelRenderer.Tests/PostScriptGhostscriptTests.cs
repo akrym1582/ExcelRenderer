@@ -89,7 +89,9 @@ public sealed class PostScriptGhostscriptTests
             var mutantPng = Path.Combine(Artifacts, mutation + ".png");
             await Run("-sDEVICE=png16m", "-r300", "-sOutputFile=" + mutantPng, mutantPath);
             using var image = SKBitmap.Decode(mutantPng);
-            Assert.False(Compare(expected, image, Path.Combine(Artifacts, mutation + "-diff.png")).Passed, mutation + " must be detected.");
+            var result = Compare(expected, image, Path.Combine(Artifacts, mutation + "-diff.png"));
+            await File.WriteAllTextAsync(Path.Combine(Artifacts, mutation + "-comparison.json"), JsonSerializer.Serialize(result));
+            Assert.False(result.Passed, mutation + " must be detected.");
         }
     }
 
@@ -145,6 +147,7 @@ public sealed class PostScriptGhostscriptTests
         Assert.Equal(expected.Width, actual.Width);
         Assert.Equal(expected.Height, actual.Height);
         var result = Compare(expected, actual, Path.Combine(Artifacts, "custom-collection-diff.png"));
+        await File.WriteAllTextAsync(Path.Combine(Artifacts, "custom-collection-comparison.json"), JsonSerializer.Serialize(result));
         Assert.True(result.Passed, JsonSerializer.Serialize(result));
     }
 
@@ -192,6 +195,162 @@ public sealed class PostScriptGhostscriptTests
         await File.WriteAllTextAsync(Path.Combine(Artifacts, "performance.json"), JsonSerializer.Serialize(new { runtime = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription, os = System.Runtime.InteropServices.RuntimeInformation.OSDescription, processors = Environment.ProcessorCount, ghostscript = await Version(), repetitions = 3, results }));
     }
 
+    [Theory]
+    [InlineData("gray-removed", 180, 180, 180, 255, 255, 255)]
+    [InlineData("dark-red-black", 120, 0, 0, 0, 0, 0)]
+    [InlineData("equal-luminance", 120, 0, 0, 0, 36, 0)]
+    [InlineData("gray-added", 255, 255, 255, 180, 180, 180)]
+    [InlineData("near-white-removed", 250, 250, 250, 255, 255, 255)]
+    public void Comparison_detects_local_color_and_coverage_changes(string name, byte r, byte g, byte b, byte mr, byte mg, byte mb)
+    {
+        Directory.CreateDirectory(Artifacts);
+        using var expected = new SKBitmap(256, 128);
+        using var actual = new SKBitmap(256, 128);
+        expected.Erase(SKColors.White);
+        actual.Erase(SKColors.White);
+        // A local 16 x 16 change must not be diluted by the surrounding blank page.
+        for (var y = 20; y < 36; y++)
+        for (var x = 20; x < 36; x++)
+        {
+            expected.SetPixel(x, y, new(r, g, b));
+            actual.SetPixel(x, y, new(mr, mg, mb));
+        }
+        SaveBitmap(expected, Path.Combine(Artifacts, name + "-synthetic-reference.png"));
+        SaveBitmap(actual, Path.Combine(Artifacts, name + "-synthetic-actual.png"));
+        var result = Compare(expected, actual, Path.Combine(Artifacts, name + "-synthetic-diff.png"));
+        File.WriteAllText(Path.Combine(Artifacts, name + "-synthetic.json"), JsonSerializer.Serialize(result));
+        Assert.False(result.Passed, JsonSerializer.Serialize(result));
+        Assert.False(Compare(actual, expected, Path.Combine(Artifacts, name + "-synthetic-reverse-diff.png")).Passed);
+    }
+
+    [Theory]
+    [InlineData(255, 255, true)]
+    [InlineData(254, 255, true)]
+    [InlineData(250, 250, true)]
+    [InlineData(250, 255, false)]
+    public void Comparison_handles_blank_and_low_contrast_pages(byte reference, byte candidate, bool passed)
+    {
+        Directory.CreateDirectory(Artifacts);
+        using var expected = new SKBitmap(128, 128);
+        using var actual = new SKBitmap(128, 128);
+        expected.Erase(new SKColor(reference, reference, reference));
+        actual.Erase(new SKColor(candidate, candidate, candidate));
+        var result = Compare(expected, actual, Path.Combine(Artifacts, $"low-contrast-{reference}-{candidate}-diff.png"));
+        Assert.Equal(passed, result.Passed);
+    }
+
+    [Fact]
+    public void Comparison_detects_small_gray_loss_among_near_white_pixels()
+    {
+        Directory.CreateDirectory(Artifacts);
+        using var expected = new SKBitmap(128, 128);
+        using var actual = new SKBitmap(128, 128);
+        expected.Erase(new SKColor(245, 245, 245));
+        actual.Erase(new SKColor(245, 245, 245));
+        for (var y = 20; y < 29; y++)
+        for (var x = 20; x < 29; x++) expected.SetPixel(x, y, new(180, 180, 180));
+        var result = Compare(expected, actual, Path.Combine(Artifacts, "local-gray-on-near-white-diff.png"));
+        File.WriteAllText(Path.Combine(Artifacts, "local-gray-on-near-white.json"), JsonSerializer.Serialize(result));
+        Assert.False(result.Passed, JsonSerializer.Serialize(result));
+    }
+
+    [Fact]
+    public void Comparison_accepts_small_boundary_rasterization_differences()
+    {
+        Directory.CreateDirectory(Artifacts);
+        using var expected = new SKBitmap(128, 128);
+        using var actual = new SKBitmap(128, 128);
+        expected.Erase(SKColors.White);
+        actual.Erase(SKColors.White);
+        for (var y = 20; y < 80; y++)
+        for (var x = 20; x < 80; x++)
+        {
+            expected.SetPixel(x, y, x == 20 ? new(100, 100, 100) : SKColors.Black);
+            actual.SetPixel(x + 2, y, x == 20 ? new(160, 160, 160) : SKColors.Black);
+        }
+        var result = Compare(expected, actual, Path.Combine(Artifacts, "boundary-rasterization-diff.png"));
+        Assert.True(result.Passed, JsonSerializer.Serialize(result));
+    }
+
+    [GhostscriptTheory]
+    [InlineData("normal")]
+    [InlineData("gray-removed")]
+    [InlineData("dark-red-black")]
+    [InlineData("gray-added")]
+    public async Task Rasterized_gray_removal_and_dark_red_replacement_fail_the_normal_comparison(string mutation)
+    {
+        Directory.CreateDirectory(Artifacts);
+        var manager = PostScriptTests.Manager();
+        var page = new PageSettings(144, 144);
+        DrawCommand[] commands =
+        [
+            new FillRectangleCommand(1, new(10, 10, 40, 30), new(180, 180, 180)),
+            new DrawShapeCommand(1, new(70, 70, 40, 30), new(new(0, 0), 0, 0, 40, 30, ShapeKind.Ellipse, new(new(120, 0, 0), null), null, 0, 0)),
+        ];
+        var reference = Path.Combine(Artifacts, "review-colors-" + mutation + "-reference.png");
+        using (var output = File.Create(reference)) new PngRenderer(manager).RenderCanvas(commands, page.Width, page.Height, output, 300);
+        using var expected = SKBitmap.Decode(reference);
+        var mutated = commands.ToArray();
+        if (mutation == "gray-removed") mutated = [commands[1]];
+        if (mutation == "dark-red-black")
+        {
+            var shape = (DrawShapeCommand)commands[1];
+            mutated[1] = shape with { Shape = shape.Shape with { Style = shape.Shape.Style with { FillColor = new(0, 0, 0) } } };
+        }
+        if (mutation == "gray-added") mutated = [.. commands, new FillRectangleCommand(1, new(70, 10, 40, 30), new(180, 180, 180))];
+        var path = Path.Combine(Artifacts, "review-colors-" + mutation);
+        using (var output = File.Create(path + ".ps")) new PostScriptRenderer(manager).Render(mutated, page, output);
+        await Run("-sDEVICE=nullpage", path + ".ps");
+        await Run("-sDEVICE=png16m", "-r300", "-sOutputFile=" + path + ".png", path + ".ps");
+        using var actual = SKBitmap.Decode(path + ".png");
+        var result = Compare(expected, actual, path + "-diff.png");
+        await File.WriteAllTextAsync(path + ".json", JsonSerializer.Serialize(result));
+        Assert.Equal(mutation == "normal", result.Passed);
+    }
+
+    [GhostscriptTheory]
+    [InlineData(0d)]
+    [InlineData(1e-18)]
+    [InlineData(0.5)]
+    [InlineData(1d)]
+    public async Task Zero_tiny_and_normal_width_lines_and_borders_execute_and_draw_dash_gaps(double width)
+    {
+        Directory.CreateDirectory(Artifacts);
+        var styles = new[] { BorderLineStyle.Solid, BorderLineStyle.Dotted, BorderLineStyle.Dashed, BorderLineStyle.DashDot, BorderLineStyle.DashDotDot };
+        var commands = new List<DrawCommand>();
+        for (var i = 0; i < styles.Length; i++)
+        {
+            var side = new BorderSide(width, LineStyle: styles[i]);
+            commands.Add(new DrawLineCommand(1, 10, 10 + (i * 25), 90, 10 + (i * 25), side));
+            commands.Add(new DrawBorderCommand(1, new(105, 10 + (i * 25), 60, 15), new(side, side, side, side)));
+        }
+        var name = width == 0 ? "zero" : width < 1e-16 ? "tiny" : PostScriptWriter.Number(width);
+        var path = Path.Combine(Artifacts, "review-dashes-" + name);
+        using (var output = File.Create(path + ".ps")) new PostScriptRenderer(PostScriptTests.Manager()).Render(commands, new(180, 144), output);
+        await Run("-sDEVICE=nullpage", path + ".ps");
+        await Run("-sDEVICE=png16m", "-r300", "-sOutputFile=" + path + ".png", path + ".ps");
+        using var raster = SKBitmap.Decode(path + ".png");
+        for (var i = 0; i < styles.Length; i++)
+        foreach (var border in new[] { false, true })
+        {
+            var y = (int)Math.Round((10 + (i * 25)) * 300d / 72);
+            var first = (int)Math.Ceiling((border ? 108 : 13) * 300d / 72);
+            var last = (int)Math.Floor((border ? 162 : 87) * 300d / 72);
+            var ink = Enumerable.Range(first, last - first).Select(x => Enumerable.Range(y - 3, 7).Any(row => raster.GetPixel(x, row).Red < 245)).ToArray();
+            Assert.Contains(true, ink);
+            if (styles[i] == BorderLineStyle.Solid) Assert.All(ink, Assert.True);
+            else Assert.Contains(false, ink);
+        }
+    }
+
+    private static void SaveBitmap(SKBitmap bitmap, string path)
+    {
+        using var image = SKImage.FromBitmap(bitmap);
+        using var encoded = image.Encode(SKEncodedImageFormat.Png, 100);
+        using var stream = File.Create(path);
+        encoded.SaveTo(stream);
+    }
+
     private static DrawCommand[] Fixture()
     {
         using var bitmap = new SKBitmap(64, 64);
@@ -233,49 +392,102 @@ public sealed class PostScriptGhostscriptTests
 
     private static Comparison Compare(SKBitmap expected, SKBitmap actual, string diffPath)
     {
+        Assert.Equal(expected.Width, actual.Width);
+        Assert.Equal(expected.Height, actual.Height);
         const int tile = 64;
+        const int radius = 4;
+        const int whiteTolerance = 2;
+        const int interiorTolerance = 3;
+        const int boundaryTolerance = 24;
+        const double boundaryHueTolerance = .1;
         var columns = (expected.Width + tile - 1) / tile;
         var rows = (expected.Height + tile - 1) / tile;
-        var ink = new int[columns * rows];
-        var unmatched = new int[ink.Length];
+        var contourInk = new int[columns * rows];
+        var contourMissing = new int[contourInk.Length];
+        var colorInk = new int[contourInk.Length];
+        var colorMissing = new int[contourInk.Length];
+        var regionInk = new int[contourInk.Length];
+        var regionMissing = new int[contourInk.Length];
+        var a = expected.Pixels;
+        var b = actual.Pixels;
         using var diff = new SKBitmap(expected.Width, expected.Height);
         for (var y = 0; y < expected.Height; y++)
         for (var x = 0; x < expected.Width; x++)
         {
-            var a = expected.GetPixel(x, y);
-            var b = actual.GetPixel(x, y);
-            diff.SetPixel(x, y, new((byte)Math.Abs(a.Red - b.Red), (byte)Math.Abs(a.Green - b.Green), (byte)Math.Abs(a.Blue - b.Blue)));
-            Check(expected, actual, x, y);
-            Check(actual, expected, x, y);
+            var offset = (y * expected.Width) + x;
+            diff.SetPixel(x, y, new((byte)Math.Abs(a[offset].Red - b[offset].Red), (byte)Math.Abs(a[offset].Green - b[offset].Green), (byte)Math.Abs(a[offset].Blue - b[offset].Blue)));
+            Check(a, b, x, y);
+            Check(b, a, x, y);
         }
-        using (var image = SKImage.FromBitmap(diff))
-        using (var encoded = image.Encode(SKEncodedImageFormat.Png, 100))
-        using (var stream = File.Create(diffPath)) encoded.SaveTo(stream);
-        var failed = Enumerable.Range(0, ink.Length).Where(i => unmatched[i] > 15 && unmatched[i] > ink[i] * .12).ToArray();
-        return new(failed.Length == 0, unmatched.Sum(), ink.Sum(), failed);
+        SaveBitmap(diff, diffPath);
+        var contour = Measure(contourInk, contourMissing, relative: true);
+        // Boundary discrepancies are relative to local content, including its solid interior.
+        // Stable-region mismatches retain a separate absolute budget below.
+        var color = Measure(colorInk.Zip(contourInk, Math.Max).ToArray(), colorMissing, relative: true);
+        var region = Measure(regionInk, regionMissing, relative: false);
+        return new(contour.FailedTiles.Length + color.FailedTiles.Length + region.FailedTiles.Length == 0, contour, color, region);
 
-        void Check(SKBitmap source, SKBitmap target, int x, int y)
+        static int Distance(SKColor left, SKColor right) => Math.Max(Math.Abs(left.Red - right.Red), Math.Max(Math.Abs(left.Green - right.Green), Math.Abs(left.Blue - right.Blue)));
+        static int Contrast(SKColor color) => 255 - Math.Min(color.Red, Math.Min(color.Green, color.Blue));
+        static double HueDistance(SKColor left, SKColor right)
         {
-            var color = source.GetPixel(x, y);
-            // Compare colored content as well as text against a small neighborhood for antialiasing differences.
-            if (color.Red > 235 && color.Green > 235 && color.Blue > 235) return;
-            var dark = Math.Max(color.Red, Math.Max(color.Green, color.Blue)) < 150;
-            if (!dark && Math.Max(color.Red, Math.Max(color.Green, color.Blue)) - Math.Min(color.Red, Math.Min(color.Green, color.Blue)) < 35) return;
+            var a = (double)Contrast(left);
+            var b = (double)Contrast(right);
+            return Math.Max(Math.Abs(((255 - left.Red) / a) - ((255 - right.Red) / b)), Math.Max(Math.Abs(((255 - left.Green) / a) - ((255 - right.Green) / b)), Math.Abs(((255 - left.Blue) / a) - ((255 - right.Blue) / b))));
+        }
+
+        static ComparisonMetric Measure(int[] ink, int[] missing, bool relative) => new(ink.Sum(), missing.Sum(), missing.Max(), Enumerable.Range(0, ink.Length).Where(i => missing[i] > 15 && (!relative || missing[i] > ink[i] * .12)).ToArray());
+
+        void Check(SKColor[] source, SKColor[] target, int x, int y)
+        {
+            var color = source[(y * expected.Width) + x];
+            // Ignore only 1-2 channel levels next to white, not low-contrast content in general.
+            if (Contrast(color) <= whiteTolerance) return;
             var index = (y / tile * columns) + (x / tile);
-            ink[index]++;
-            for (var dy = -4; dy <= 4; dy++)
-            for (var dx = -4; dx <= 4; dx++)
+            var interior = true;
+            for (var dy = -1; dy <= 1; dy++)
+            for (var dx = -1; dx <= 1; dx++)
             {
-                if (x + dx < 0 || y + dy < 0 || x + dx >= target.Width || y + dy >= target.Height) continue;
-                var candidate = target.GetPixel(x + dx, y + dy);
-                if (dark && Math.Max(candidate.Red, Math.Max(candidate.Green, candidate.Blue)) < 150) return;
-                if (Math.Abs(color.Red - candidate.Red) + Math.Abs(color.Green - candidate.Green) + Math.Abs(color.Blue - candidate.Blue) < 100) return;
+                var sx = Math.Clamp(x + dx, 0, expected.Width - 1);
+                var sy = Math.Clamp(y + dy, 0, expected.Height - 1);
+                if (Distance(color, source[(sy * expected.Width) + sx]) > whiteTolerance) interior = false;
             }
-            unmatched[index]++;
+
+            // Geometry deliberately ignores color. Color checks below independently gate success.
+            var contour = Contrast(color) > 20;
+            if (contour) contourInk[index]++;
+            if (interior) regionInk[index]++;
+            else colorInk[index]++;
+            var center = target[(y * expected.Width) + x];
+            var geometryMatched = Contrast(center) > 20;
+            var colorMatched = MatchesColor(center);
+            if (!colorMatched || (contour && !geometryMatched))
+            {
+                for (var dy = -radius; dy <= radius; dy++)
+                for (var dx = -radius; dx <= radius; dx++)
+                {
+                    if (x + dx < 0 || y + dy < 0 || x + dx >= expected.Width || y + dy >= expected.Height) continue;
+                    var candidate = target[((y + dy) * expected.Width) + x + dx];
+                    geometryMatched |= Contrast(candidate) > 20;
+                    colorMatched |= MatchesColor(candidate);
+                }
+            }
+            if (contour && !geometryMatched) contourMissing[index]++;
+            if (!colorMatched)
+            {
+                if (interior) regionMissing[index]++;
+                else colorMissing[index]++;
+            }
+
+            bool MatchesColor(SKColor candidate) => Contrast(candidate) > whiteTolerance &&
+                (Distance(color, candidate) <= (interior ? interiorTolerance : boundaryTolerance) ||
+                (!interior && HueDistance(color, candidate) <= boundaryHueTolerance));
         }
     }
 
-    private sealed record Comparison(bool Passed, int Unmatched, int Ink, int[] FailedTiles);
+    private sealed record Comparison(bool Passed, ComparisonMetric Contour, ComparisonMetric Color, ComparisonMetric Region);
+
+    private sealed record ComparisonMetric(int Compared, int Unmatched, int MaximumUnmatchedPerTile, int[] FailedTiles);
 
     internal static async Task<string> Run(params string[] arguments)
     {
@@ -343,6 +555,15 @@ public sealed class PostScriptGhostscriptTests
 public sealed class GhostscriptFactAttribute : FactAttribute
 {
     public GhostscriptFactAttribute()
+    {
+        if (PostScriptGhostscriptTests.Executable is null && Environment.GetEnvironmentVariable("EXCELRENDERER_REQUIRE_GHOSTSCRIPT") != "1")
+            Skip = "Ghostscript is not installed; CI requires it with EXCELRENDERER_REQUIRE_GHOSTSCRIPT=1.";
+    }
+}
+
+public sealed class GhostscriptTheoryAttribute : TheoryAttribute
+{
+    public GhostscriptTheoryAttribute()
     {
         if (PostScriptGhostscriptTests.Executable is null && Environment.GetEnvironmentVariable("EXCELRENDERER_REQUIRE_GHOSTSCRIPT") != "1")
             Skip = "Ghostscript is not installed; CI requires it with EXCELRENDERER_REQUIRE_GHOSTSCRIPT=1.";

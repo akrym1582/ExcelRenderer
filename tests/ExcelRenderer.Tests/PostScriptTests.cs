@@ -29,6 +29,23 @@ public sealed class PostScriptTests
         return output.ToArray();
     }
 
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(double.NaN)]
+    [InlineData(double.PositiveInfinity)]
+    [InlineData(double.NegativeInfinity)]
+    public void Invalid_stroke_widths_fail_without_committing_output(double width)
+    {
+        foreach (var border in new[] { false, true })
+        {
+            var side = new BorderSide(width, LineStyle: BorderLineStyle.Dashed);
+            DrawCommand command = border ? new DrawBorderCommand(1, new(10, 10, 20, 20), new(side, side, side, side)) : new DrawLineCommand(1, 10, 10, 30, 10, side);
+            using var output = new MemoryStream();
+            Assert.Throws<ArgumentOutOfRangeException>(() => new PostScriptRenderer(Manager()).Render([command], new(100, 100), output));
+            Assert.Equal(0, output.Length);
+        }
+    }
+
     [Fact]
     public void Direct_output_is_deterministic_ascii_with_text_operators_and_embedded_sfnt()
     {

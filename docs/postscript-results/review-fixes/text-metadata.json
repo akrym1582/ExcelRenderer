@@ -1,0 +1,2693 @@
+[
+  {
+    "version": 1,
+    "record": 1,
+    "kind": 0,
+    "page": 1,
+    "command": 1,
+    "text": "ABC 123 () \\ かな 漢字"
+  },
+  {
+    "version": 1,
+    "record": 2,
+    "kind": 1,
+    "page": 1,
+    "command": 1,
+    "text": "ABC 123 () \\ かな 漢字",
+    "font_identity": "2TDV1S0VIxwoMIl2D4RYQnKtXjfhRge6DRnHmOepyuw=",
+    "x": 10.0,
+    "baseline": 28.559999465942383,
+    "size": 16.0,
+    "glyphs": [
+      {
+        "font": "ERF0B0",
+        "code": 0,
+        "gid": 34,
+        "cluster_utf8": 0,
+        "advance_at_one_point": 0.608
+      },
+      {
+        "font": "ERF0B0",
+        "code": 1,
+        "gid": 35,
+        "cluster_utf8": 1,
+        "advance_at_one_point": 0.657
+      },
+      {
+        "font": "ERF0B0",
+        "code": 2,
+        "gid": 36,
+        "cluster_utf8": 2,
+        "advance_at_one_point": 0.638
+      },
+      {
+        "font": "ERF0B0",
+        "code": 3,
+        "gid": 1,
+        "cluster_utf8": 3,
+        "advance_at_one_point": 0.224
+      },
+      {
+        "font": "ERF0B0",
+        "code": 4,
+        "gid": 18,
+        "cluster_utf8": 4,
+        "advance_at_one_point": 0.555
+      },
+      {
+        "font": "ERF0B0",
+        "code": 5,
+        "gid": 19,
+        "cluster_utf8": 5,
+        "advance_at_one_point": 0.555
+      },
+      {
+        "font": "ERF0B0",
+        "code": 6,
+        "gid": 20,
+        "cluster_utf8": 6,
+        "advance_at_one_point": 0.555
+      },
+      {
+        "font": "ERF0B0",
+        "code": 3,
+        "gid": 1,
+        "cluster_utf8": 7,
+        "advance_at_one_point": 0.224
+      },
+      {
+        "font": "ERF0B0",
+        "code": 7,
+        "gid": 9,
+        "cluster_utf8": 8,
+        "advance_at_one_point": 0.338
+      },
+      {
+        "font": "ERF0B0",
+        "code": 8,
+        "gid": 10,
+        "cluster_utf8": 9,
+        "advance_at_one_point": 0.338
+      },
+      {
+        "font": "ERF0B0",
+        "code": 3,
+        "gid": 1,
+        "cluster_utf8": 10,
+        "advance_at_one_point": 0.224
+      },
+      {
+        "font": "ERF0B0",
+        "code": 9,
+        "gid": 61,
+        "cluster_utf8": 11,
+        "advance_at_one_point": 0.392
+      },
+      {
+        "font": "ERF0B0",
+        "code": 3,
+        "gid": 1,
+        "cluster_utf8": 12,
+        "advance_at_one_point": 0.224
+      },
+      {
+        "font": "ERF0B0",
+        "code": 10,
+        "gid": 1212,
+        "cluster_utf8": 13,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 11,
+        "gid": 1243,
+        "cluster_utf8": 16,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 3,
+        "gid": 1,
+        "cluster_utf8": 19,
+        "advance_at_one_point": 0.224
+      },
+      {
+        "font": "ERF0B0",
+        "code": 12,
+        "gid": 7851,
+        "cluster_utf8": 20,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 13,
+        "gid": 4549,
+        "cluster_utf8": 23,
+        "advance_at_one_point": 1.0
+      }
+    ]
+  },
+  {
+    "version": 1,
+    "record": 3,
+    "kind": 0,
+    "page": 1,
+    "command": 2,
+    "text": "辻󠄂 葛󠄂 𠀋"
+  },
+  {
+    "version": 1,
+    "record": 4,
+    "kind": 1,
+    "page": 1,
+    "command": 2,
+    "text": "辻󠄂",
+    "font_identity": "o+hPSV88OI23oUc78ZhcHAdtDIFBAPEKAnymhT6x6Ms=",
+    "x": 10.0,
+    "baseline": 78.55999946594238,
+    "size": 16.0,
+    "glyphs": [
+      {
+        "font": "ERF1B0",
+        "code": 0,
+        "gid": 26795,
+        "cluster_utf8": 0,
+        "advance_at_one_point": 1.0
+      }
+    ]
+  },
+  {
+    "version": 1,
+    "record": 5,
+    "kind": 1,
+    "page": 1,
+    "command": 2,
+    "text": " ",
+    "font_identity": "2TDV1S0VIxwoMIl2D4RYQnKtXjfhRge6DRnHmOepyuw=",
+    "x": 26.0,
+    "baseline": 78.55999946594238,
+    "size": 16.0,
+    "glyphs": [
+      {
+        "font": "ERF0B0",
+        "code": 3,
+        "gid": 1,
+        "cluster_utf8": 0,
+        "advance_at_one_point": 0.224
+      }
+    ]
+  },
+  {
+    "version": 1,
+    "record": 6,
+    "kind": 1,
+    "page": 1,
+    "command": 2,
+    "text": "葛󠄂",
+    "font_identity": "o+hPSV88OI23oUc78ZhcHAdtDIFBAPEKAnymhT6x6Ms=",
+    "x": 29.584,
+    "baseline": 78.55999946594238,
+    "size": 16.0,
+    "glyphs": [
+      {
+        "font": "ERF1B0",
+        "code": 1,
+        "gid": 23477,
+        "cluster_utf8": 0,
+        "advance_at_one_point": 1.0
+      }
+    ]
+  },
+  {
+    "version": 1,
+    "record": 7,
+    "kind": 1,
+    "page": 1,
+    "command": 2,
+    "text": " 𠀋",
+    "font_identity": "2TDV1S0VIxwoMIl2D4RYQnKtXjfhRge6DRnHmOepyuw=",
+    "x": 45.584,
+    "baseline": 78.55999946594238,
+    "size": 16.0,
+    "glyphs": [
+      {
+        "font": "ERF0B0",
+        "code": 3,
+        "gid": 1,
+        "cluster_utf8": 0,
+        "advance_at_one_point": 0.224
+      },
+      {
+        "font": "ERF0B0",
+        "code": 14,
+        "gid": 15663,
+        "cluster_utf8": 1,
+        "advance_at_one_point": 1.0
+      }
+    ]
+  },
+  {
+    "version": 1,
+    "record": 8,
+    "kind": 0,
+    "page": 1,
+    "command": 3,
+    "text": "ぁあぃいぅうぇえぉおかがきぎくぐけげこごさざしじすずせぜそぞただちぢっつづてでとどなにぬねのはばぱひびぴふぶぷへべぺほぼぽまみむめもゃやゅゆょよらりるれろゎわゐゑをんゔゕゖ一丁丂七丄丅丆万丈三上下丌不与丏丐丑丒专且丕世丗丘丙业丛东丝丞丟丠両丢丣两严並丧丨丩个丫丬中丮丯丰丱串丳临丵丶丷丸丹为主丼丽举丿乀乁乂乃乄久乆乇么义乊之乌乍乎乏乐乑乒乓乔乕乖乗乘乙乚乛乜九乞也习乡乢乣乤乥书乧乨乩乪乫乬乭乮乯买乱乲乳乴乵乶乷乸乹乺乻乼乽乾乿亀亁亂亃亄亅了亇予争亊事二亍于亏亐云互亓五井亖亗亘亙亚些亜亝亞亟亠亡亢亣交亥亦产亨亩亪享京亭亮亯亰亱亲亳亴亵亶亷亸亹人亻亼亽亾亿什仁仂仃仄仅仆仇仈仉今介仌仍从仏仐仑仒仓仔仕他仗付仙仚仛仜仝仞仟仠仡仢代令以仦仧仨仩仪仫们仭仮仯仰仱仲仳仴仵件价仸仹"
+  },
+  {
+    "version": 1,
+    "record": 9,
+    "kind": 1,
+    "page": 1,
+    "command": 3,
+    "text": "ぁあぃいぅうぇえぉおかがきぎくぐけげこごさざしじすずせぜそぞただちぢっつづてでとどなにぬねのはばぱひびぴふぶぷへべ",
+    "font_identity": "2TDV1S0VIxwoMIl2D4RYQnKtXjfhRge6DRnHmOepyuw=",
+    "x": 10.0,
+    "baseline": 121.59999942779541,
+    "size": 10.0,
+    "glyphs": [
+      {
+        "font": "ERF0B0",
+        "code": 15,
+        "gid": 1202,
+        "cluster_utf8": 0,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 16,
+        "gid": 1203,
+        "cluster_utf8": 3,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 17,
+        "gid": 1204,
+        "cluster_utf8": 6,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 18,
+        "gid": 1205,
+        "cluster_utf8": 9,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 19,
+        "gid": 1206,
+        "cluster_utf8": 12,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 20,
+        "gid": 1207,
+        "cluster_utf8": 15,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 21,
+        "gid": 1208,
+        "cluster_utf8": 18,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 22,
+        "gid": 1209,
+        "cluster_utf8": 21,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 23,
+        "gid": 1210,
+        "cluster_utf8": 24,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 24,
+        "gid": 1211,
+        "cluster_utf8": 27,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 10,
+        "gid": 1212,
+        "cluster_utf8": 30,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 25,
+        "gid": 1213,
+        "cluster_utf8": 33,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 26,
+        "gid": 1214,
+        "cluster_utf8": 36,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 27,
+        "gid": 1215,
+        "cluster_utf8": 39,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 28,
+        "gid": 1216,
+        "cluster_utf8": 42,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 29,
+        "gid": 1217,
+        "cluster_utf8": 45,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 30,
+        "gid": 1218,
+        "cluster_utf8": 48,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 31,
+        "gid": 1219,
+        "cluster_utf8": 51,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 32,
+        "gid": 1220,
+        "cluster_utf8": 54,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 33,
+        "gid": 1221,
+        "cluster_utf8": 57,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 34,
+        "gid": 1222,
+        "cluster_utf8": 60,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 35,
+        "gid": 1223,
+        "cluster_utf8": 63,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 36,
+        "gid": 1224,
+        "cluster_utf8": 66,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 37,
+        "gid": 1225,
+        "cluster_utf8": 69,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 38,
+        "gid": 1226,
+        "cluster_utf8": 72,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 39,
+        "gid": 1227,
+        "cluster_utf8": 75,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 40,
+        "gid": 1228,
+        "cluster_utf8": 78,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 41,
+        "gid": 1229,
+        "cluster_utf8": 81,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 42,
+        "gid": 1230,
+        "cluster_utf8": 84,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 43,
+        "gid": 1231,
+        "cluster_utf8": 87,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 44,
+        "gid": 1232,
+        "cluster_utf8": 90,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 45,
+        "gid": 1233,
+        "cluster_utf8": 93,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 46,
+        "gid": 1234,
+        "cluster_utf8": 96,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 47,
+        "gid": 1235,
+        "cluster_utf8": 99,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 48,
+        "gid": 1236,
+        "cluster_utf8": 102,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 49,
+        "gid": 1237,
+        "cluster_utf8": 105,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 50,
+        "gid": 1238,
+        "cluster_utf8": 108,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 51,
+        "gid": 1239,
+        "cluster_utf8": 111,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 52,
+        "gid": 1240,
+        "cluster_utf8": 114,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 53,
+        "gid": 1241,
+        "cluster_utf8": 117,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 54,
+        "gid": 1242,
+        "cluster_utf8": 120,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 11,
+        "gid": 1243,
+        "cluster_utf8": 123,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 55,
+        "gid": 1244,
+        "cluster_utf8": 126,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 56,
+        "gid": 1245,
+        "cluster_utf8": 129,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 57,
+        "gid": 1246,
+        "cluster_utf8": 132,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 58,
+        "gid": 1247,
+        "cluster_utf8": 135,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 59,
+        "gid": 1248,
+        "cluster_utf8": 138,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 60,
+        "gid": 1249,
+        "cluster_utf8": 141,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 61,
+        "gid": 1250,
+        "cluster_utf8": 144,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 62,
+        "gid": 1251,
+        "cluster_utf8": 147,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 63,
+        "gid": 1252,
+        "cluster_utf8": 150,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 64,
+        "gid": 1253,
+        "cluster_utf8": 153,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 65,
+        "gid": 1254,
+        "cluster_utf8": 156,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 66,
+        "gid": 1255,
+        "cluster_utf8": 159,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 67,
+        "gid": 1256,
+        "cluster_utf8": 162,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 68,
+        "gid": 1257,
+        "cluster_utf8": 165,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 69,
+        "gid": 1258,
+        "cluster_utf8": 168,
+        "advance_at_one_point": 1.0
+      }
+    ]
+  },
+  {
+    "version": 1,
+    "record": 10,
+    "kind": 1,
+    "page": 1,
+    "command": 3,
+    "text": "ぺほぼぽまみむめもゃやゅゆょよらりるれろゎわゐゑをんゔゕゖ一丁丂七丄丅丆万丈三上下丌不与丏丐丑丒专且丕世丗丘丙业丛",
+    "font_identity": "2TDV1S0VIxwoMIl2D4RYQnKtXjfhRge6DRnHmOepyuw=",
+    "x": 10.0,
+    "baseline": 136.07999873161316,
+    "size": 10.0,
+    "glyphs": [
+      {
+        "font": "ERF0B0",
+        "code": 70,
+        "gid": 1259,
+        "cluster_utf8": 0,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 71,
+        "gid": 1260,
+        "cluster_utf8": 3,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 72,
+        "gid": 1261,
+        "cluster_utf8": 6,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 73,
+        "gid": 1262,
+        "cluster_utf8": 9,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 74,
+        "gid": 1263,
+        "cluster_utf8": 12,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 75,
+        "gid": 1264,
+        "cluster_utf8": 15,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 76,
+        "gid": 1265,
+        "cluster_utf8": 18,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 77,
+        "gid": 1266,
+        "cluster_utf8": 21,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 78,
+        "gid": 1267,
+        "cluster_utf8": 24,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 79,
+        "gid": 1268,
+        "cluster_utf8": 27,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 80,
+        "gid": 1269,
+        "cluster_utf8": 30,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 81,
+        "gid": 1270,
+        "cluster_utf8": 33,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 82,
+        "gid": 1271,
+        "cluster_utf8": 36,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 83,
+        "gid": 1272,
+        "cluster_utf8": 39,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 84,
+        "gid": 1273,
+        "cluster_utf8": 42,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 85,
+        "gid": 1274,
+        "cluster_utf8": 45,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 86,
+        "gid": 1275,
+        "cluster_utf8": 48,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 87,
+        "gid": 1276,
+        "cluster_utf8": 51,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 88,
+        "gid": 1277,
+        "cluster_utf8": 54,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 89,
+        "gid": 1278,
+        "cluster_utf8": 57,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 90,
+        "gid": 1279,
+        "cluster_utf8": 60,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 91,
+        "gid": 1280,
+        "cluster_utf8": 63,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 92,
+        "gid": 1281,
+        "cluster_utf8": 66,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 93,
+        "gid": 1282,
+        "cluster_utf8": 69,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 94,
+        "gid": 1283,
+        "cluster_utf8": 72,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 95,
+        "gid": 1284,
+        "cluster_utf8": 75,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 96,
+        "gid": 1285,
+        "cluster_utf8": 78,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 97,
+        "gid": 1286,
+        "cluster_utf8": 81,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 98,
+        "gid": 1287,
+        "cluster_utf8": 84,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 99,
+        "gid": 2336,
+        "cluster_utf8": 87,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 100,
+        "gid": 2337,
+        "cluster_utf8": 90,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 101,
+        "gid": 2338,
+        "cluster_utf8": 93,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 102,
+        "gid": 2339,
+        "cluster_utf8": 96,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 103,
+        "gid": 2340,
+        "cluster_utf8": 99,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 104,
+        "gid": 2341,
+        "cluster_utf8": 102,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 105,
+        "gid": 0,
+        "cluster_utf8": 105,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 106,
+        "gid": 2342,
+        "cluster_utf8": 108,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 107,
+        "gid": 2343,
+        "cluster_utf8": 111,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 108,
+        "gid": 2344,
+        "cluster_utf8": 114,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 109,
+        "gid": 2345,
+        "cluster_utf8": 117,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 110,
+        "gid": 2346,
+        "cluster_utf8": 120,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 111,
+        "gid": 2347,
+        "cluster_utf8": 123,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 112,
+        "gid": 2348,
+        "cluster_utf8": 126,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 113,
+        "gid": 2349,
+        "cluster_utf8": 129,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 114,
+        "gid": 2350,
+        "cluster_utf8": 132,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 115,
+        "gid": 2351,
+        "cluster_utf8": 135,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 116,
+        "gid": 2352,
+        "cluster_utf8": 138,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 117,
+        "gid": 2353,
+        "cluster_utf8": 141,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 118,
+        "gid": 0,
+        "cluster_utf8": 144,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 119,
+        "gid": 2354,
+        "cluster_utf8": 147,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 120,
+        "gid": 2355,
+        "cluster_utf8": 150,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 121,
+        "gid": 2356,
+        "cluster_utf8": 153,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 122,
+        "gid": 2357,
+        "cluster_utf8": 156,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 123,
+        "gid": 2358,
+        "cluster_utf8": 159,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 124,
+        "gid": 2359,
+        "cluster_utf8": 162,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 125,
+        "gid": 0,
+        "cluster_utf8": 165,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 126,
+        "gid": 0,
+        "cluster_utf8": 168,
+        "advance_at_one_point": 1.0
+      }
+    ]
+  },
+  {
+    "version": 1,
+    "record": 11,
+    "kind": 1,
+    "page": 1,
+    "command": 3,
+    "text": "东丝丞丟丠両丢丣两严並丧丨丩个丫丬中丮丯丰丱串丳临丵丶丷丸丹为主丼丽举丿乀乁乂乃乄久乆乇么义乊之乌乍乎乏乐乑乒乓乔",
+    "font_identity": "2TDV1S0VIxwoMIl2D4RYQnKtXjfhRge6DRnHmOepyuw=",
+    "x": 10.0,
+    "baseline": 150.5599980354309,
+    "size": 10.0,
+    "glyphs": [
+      {
+        "font": "ERF0B0",
+        "code": 127,
+        "gid": 0,
+        "cluster_utf8": 0,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 128,
+        "gid": 0,
+        "cluster_utf8": 3,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 129,
+        "gid": 2360,
+        "cluster_utf8": 6,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 130,
+        "gid": 2361,
+        "cluster_utf8": 9,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 131,
+        "gid": 0,
+        "cluster_utf8": 12,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 132,
+        "gid": 2362,
+        "cluster_utf8": 15,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 133,
+        "gid": 0,
+        "cluster_utf8": 18,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 134,
+        "gid": 2363,
+        "cluster_utf8": 21,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 135,
+        "gid": 2364,
+        "cluster_utf8": 24,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 136,
+        "gid": 0,
+        "cluster_utf8": 27,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 137,
+        "gid": 2365,
+        "cluster_utf8": 30,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 138,
+        "gid": 0,
+        "cluster_utf8": 33,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 139,
+        "gid": 2366,
+        "cluster_utf8": 36,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 140,
+        "gid": 2367,
+        "cluster_utf8": 39,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 141,
+        "gid": 2368,
+        "cluster_utf8": 42,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 142,
+        "gid": 2369,
+        "cluster_utf8": 45,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 143,
+        "gid": 2370,
+        "cluster_utf8": 48,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 144,
+        "gid": 2371,
+        "cluster_utf8": 51,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 145,
+        "gid": 2372,
+        "cluster_utf8": 54,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 146,
+        "gid": 2373,
+        "cluster_utf8": 57,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 147,
+        "gid": 2374,
+        "cluster_utf8": 60,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 148,
+        "gid": 2375,
+        "cluster_utf8": 63,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 149,
+        "gid": 2376,
+        "cluster_utf8": 66,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 150,
+        "gid": 0,
+        "cluster_utf8": 69,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 151,
+        "gid": 0,
+        "cluster_utf8": 72,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 152,
+        "gid": 2377,
+        "cluster_utf8": 75,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 153,
+        "gid": 2378,
+        "cluster_utf8": 78,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 154,
+        "gid": 2379,
+        "cluster_utf8": 81,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 155,
+        "gid": 2380,
+        "cluster_utf8": 84,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 156,
+        "gid": 2381,
+        "cluster_utf8": 87,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 157,
+        "gid": 0,
+        "cluster_utf8": 90,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 158,
+        "gid": 2382,
+        "cluster_utf8": 93,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 159,
+        "gid": 2383,
+        "cluster_utf8": 96,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 160,
+        "gid": 0,
+        "cluster_utf8": 99,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 161,
+        "gid": 0,
+        "cluster_utf8": 102,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 162,
+        "gid": 2384,
+        "cluster_utf8": 105,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 163,
+        "gid": 2385,
+        "cluster_utf8": 108,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 164,
+        "gid": 2386,
+        "cluster_utf8": 111,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 165,
+        "gid": 2387,
+        "cluster_utf8": 114,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 166,
+        "gid": 2388,
+        "cluster_utf8": 117,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 167,
+        "gid": 2389,
+        "cluster_utf8": 120,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 168,
+        "gid": 2390,
+        "cluster_utf8": 123,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 169,
+        "gid": 0,
+        "cluster_utf8": 126,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 170,
+        "gid": 2391,
+        "cluster_utf8": 129,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 171,
+        "gid": 2392,
+        "cluster_utf8": 132,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 172,
+        "gid": 0,
+        "cluster_utf8": 135,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 173,
+        "gid": 0,
+        "cluster_utf8": 138,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 174,
+        "gid": 2393,
+        "cluster_utf8": 141,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 175,
+        "gid": 0,
+        "cluster_utf8": 144,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 176,
+        "gid": 2394,
+        "cluster_utf8": 147,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 177,
+        "gid": 2395,
+        "cluster_utf8": 150,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 178,
+        "gid": 2396,
+        "cluster_utf8": 153,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 179,
+        "gid": 0,
+        "cluster_utf8": 156,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 180,
+        "gid": 2397,
+        "cluster_utf8": 159,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 181,
+        "gid": 0,
+        "cluster_utf8": 162,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 182,
+        "gid": 0,
+        "cluster_utf8": 165,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 183,
+        "gid": 0,
+        "cluster_utf8": 168,
+        "advance_at_one_point": 1.0
+      }
+    ]
+  },
+  {
+    "version": 1,
+    "record": 12,
+    "kind": 1,
+    "page": 1,
+    "command": 3,
+    "text": "乕乖乗乘乙乚乛乜九乞也习乡乢乣乤乥书乧乨乩乪乫乬乭乮乯买乱乲乳乴乵乶乷乸乹乺乻乼乽乾乿亀亁亂亃亄亅了亇予争亊事二亍",
+    "font_identity": "2TDV1S0VIxwoMIl2D4RYQnKtXjfhRge6DRnHmOepyuw=",
+    "x": 10.0,
+    "baseline": 165.03999733924866,
+    "size": 10.0,
+    "glyphs": [
+      {
+        "font": "ERF0B0",
+        "code": 184,
+        "gid": 2398,
+        "cluster_utf8": 0,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 185,
+        "gid": 2399,
+        "cluster_utf8": 3,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 186,
+        "gid": 2400,
+        "cluster_utf8": 6,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 187,
+        "gid": 2401,
+        "cluster_utf8": 9,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 188,
+        "gid": 2402,
+        "cluster_utf8": 12,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 189,
+        "gid": 2403,
+        "cluster_utf8": 15,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 190,
+        "gid": 2404,
+        "cluster_utf8": 18,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 191,
+        "gid": 2405,
+        "cluster_utf8": 21,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 192,
+        "gid": 2406,
+        "cluster_utf8": 24,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 193,
+        "gid": 2407,
+        "cluster_utf8": 27,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 194,
+        "gid": 2408,
+        "cluster_utf8": 30,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 195,
+        "gid": 0,
+        "cluster_utf8": 33,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 196,
+        "gid": 0,
+        "cluster_utf8": 36,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 197,
+        "gid": 2409,
+        "cluster_utf8": 39,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 198,
+        "gid": 2410,
+        "cluster_utf8": 42,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 199,
+        "gid": 0,
+        "cluster_utf8": 45,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 200,
+        "gid": 0,
+        "cluster_utf8": 48,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 201,
+        "gid": 0,
+        "cluster_utf8": 51,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 202,
+        "gid": 0,
+        "cluster_utf8": 54,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 203,
+        "gid": 2411,
+        "cluster_utf8": 57,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 204,
+        "gid": 2412,
+        "cluster_utf8": 60,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 205,
+        "gid": 0,
+        "cluster_utf8": 63,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 206,
+        "gid": 0,
+        "cluster_utf8": 66,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 207,
+        "gid": 0,
+        "cluster_utf8": 69,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 208,
+        "gid": 0,
+        "cluster_utf8": 72,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 209,
+        "gid": 0,
+        "cluster_utf8": 75,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 210,
+        "gid": 0,
+        "cluster_utf8": 78,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 211,
+        "gid": 0,
+        "cluster_utf8": 81,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 212,
+        "gid": 2413,
+        "cluster_utf8": 84,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 213,
+        "gid": 0,
+        "cluster_utf8": 87,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 214,
+        "gid": 2414,
+        "cluster_utf8": 90,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 215,
+        "gid": 2415,
+        "cluster_utf8": 93,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 216,
+        "gid": 2416,
+        "cluster_utf8": 96,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 217,
+        "gid": 0,
+        "cluster_utf8": 99,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 218,
+        "gid": 0,
+        "cluster_utf8": 102,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 219,
+        "gid": 0,
+        "cluster_utf8": 105,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 220,
+        "gid": 2417,
+        "cluster_utf8": 108,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 221,
+        "gid": 0,
+        "cluster_utf8": 111,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 222,
+        "gid": 0,
+        "cluster_utf8": 114,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 223,
+        "gid": 0,
+        "cluster_utf8": 117,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 224,
+        "gid": 0,
+        "cluster_utf8": 120,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 225,
+        "gid": 2418,
+        "cluster_utf8": 123,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 226,
+        "gid": 2419,
+        "cluster_utf8": 126,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 227,
+        "gid": 2420,
+        "cluster_utf8": 129,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 228,
+        "gid": 0,
+        "cluster_utf8": 132,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 229,
+        "gid": 2421,
+        "cluster_utf8": 135,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 230,
+        "gid": 0,
+        "cluster_utf8": 138,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 231,
+        "gid": 0,
+        "cluster_utf8": 141,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 232,
+        "gid": 2422,
+        "cluster_utf8": 144,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 233,
+        "gid": 2423,
+        "cluster_utf8": 147,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 234,
+        "gid": 0,
+        "cluster_utf8": 150,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 235,
+        "gid": 2424,
+        "cluster_utf8": 153,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 236,
+        "gid": 2425,
+        "cluster_utf8": 156,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 237,
+        "gid": 2426,
+        "cluster_utf8": 159,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 238,
+        "gid": 2427,
+        "cluster_utf8": 162,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 239,
+        "gid": 2428,
+        "cluster_utf8": 165,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 240,
+        "gid": 2429,
+        "cluster_utf8": 168,
+        "advance_at_one_point": 1.0
+      }
+    ]
+  },
+  {
+    "version": 1,
+    "record": 13,
+    "kind": 1,
+    "page": 1,
+    "command": 3,
+    "text": "于亏亐云互亓五井亖亗亘亙亚些亜亝亞亟亠亡亢亣交亥亦产亨亩亪享京亭亮亯亰亱亲亳亴亵亶亷亸亹人亻亼亽亾亿什仁仂仃仄仅仆",
+    "font_identity": "2TDV1S0VIxwoMIl2D4RYQnKtXjfhRge6DRnHmOepyuw=",
+    "x": 10.0,
+    "baseline": 179.5199966430664,
+    "size": 10.0,
+    "glyphs": [
+      {
+        "font": "ERF0B0",
+        "code": 241,
+        "gid": 2430,
+        "cluster_utf8": 0,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 242,
+        "gid": 0,
+        "cluster_utf8": 3,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 243,
+        "gid": 0,
+        "cluster_utf8": 6,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 244,
+        "gid": 2431,
+        "cluster_utf8": 9,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 245,
+        "gid": 2432,
+        "cluster_utf8": 12,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 246,
+        "gid": 0,
+        "cluster_utf8": 15,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 247,
+        "gid": 2433,
+        "cluster_utf8": 18,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 248,
+        "gid": 2434,
+        "cluster_utf8": 21,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 249,
+        "gid": 2435,
+        "cluster_utf8": 24,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 250,
+        "gid": 2436,
+        "cluster_utf8": 27,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 251,
+        "gid": 2437,
+        "cluster_utf8": 30,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 252,
+        "gid": 2438,
+        "cluster_utf8": 33,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 253,
+        "gid": 0,
+        "cluster_utf8": 36,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 254,
+        "gid": 2439,
+        "cluster_utf8": 39,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B0",
+        "code": 255,
+        "gid": 2440,
+        "cluster_utf8": 42,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 0,
+        "gid": 2441,
+        "cluster_utf8": 45,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 1,
+        "gid": 2442,
+        "cluster_utf8": 48,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 2,
+        "gid": 2443,
+        "cluster_utf8": 51,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 3,
+        "gid": 2444,
+        "cluster_utf8": 54,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 4,
+        "gid": 2445,
+        "cluster_utf8": 57,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 5,
+        "gid": 2446,
+        "cluster_utf8": 60,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 6,
+        "gid": 0,
+        "cluster_utf8": 63,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 7,
+        "gid": 2447,
+        "cluster_utf8": 66,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 8,
+        "gid": 2448,
+        "cluster_utf8": 69,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 9,
+        "gid": 2449,
+        "cluster_utf8": 72,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 10,
+        "gid": 0,
+        "cluster_utf8": 75,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 11,
+        "gid": 2450,
+        "cluster_utf8": 78,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 12,
+        "gid": 0,
+        "cluster_utf8": 81,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 13,
+        "gid": 0,
+        "cluster_utf8": 84,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 14,
+        "gid": 2451,
+        "cluster_utf8": 87,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 15,
+        "gid": 2452,
+        "cluster_utf8": 90,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 16,
+        "gid": 2453,
+        "cluster_utf8": 93,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 17,
+        "gid": 2454,
+        "cluster_utf8": 96,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 18,
+        "gid": 2455,
+        "cluster_utf8": 99,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 19,
+        "gid": 2456,
+        "cluster_utf8": 102,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 20,
+        "gid": 0,
+        "cluster_utf8": 105,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 21,
+        "gid": 0,
+        "cluster_utf8": 108,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 22,
+        "gid": 2457,
+        "cluster_utf8": 111,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 23,
+        "gid": 0,
+        "cluster_utf8": 114,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 24,
+        "gid": 0,
+        "cluster_utf8": 117,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 25,
+        "gid": 2458,
+        "cluster_utf8": 120,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 26,
+        "gid": 0,
+        "cluster_utf8": 123,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 27,
+        "gid": 0,
+        "cluster_utf8": 126,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 28,
+        "gid": 2459,
+        "cluster_utf8": 129,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 29,
+        "gid": 2460,
+        "cluster_utf8": 132,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 30,
+        "gid": 2461,
+        "cluster_utf8": 135,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 31,
+        "gid": 2462,
+        "cluster_utf8": 138,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 32,
+        "gid": 0,
+        "cluster_utf8": 141,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 33,
+        "gid": 0,
+        "cluster_utf8": 144,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 34,
+        "gid": 0,
+        "cluster_utf8": 147,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 35,
+        "gid": 2463,
+        "cluster_utf8": 150,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 36,
+        "gid": 2464,
+        "cluster_utf8": 153,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 37,
+        "gid": 2465,
+        "cluster_utf8": 156,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 38,
+        "gid": 2466,
+        "cluster_utf8": 159,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 39,
+        "gid": 2467,
+        "cluster_utf8": 162,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 40,
+        "gid": 0,
+        "cluster_utf8": 165,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 41,
+        "gid": 2468,
+        "cluster_utf8": 168,
+        "advance_at_one_point": 1.0
+      }
+    ]
+  },
+  {
+    "version": 1,
+    "record": 14,
+    "kind": 1,
+    "page": 1,
+    "command": 3,
+    "text": "仇仈仉今介仌仍从仏仐仑仒仓仔仕他仗付仙仚仛仜仝仞仟仠仡仢代令以仦仧仨仩仪仫们仭仮仯仰仱仲仳仴仵件价仸仹",
+    "font_identity": "2TDV1S0VIxwoMIl2D4RYQnKtXjfhRge6DRnHmOepyuw=",
+    "x": 10.0,
+    "baseline": 193.99999594688416,
+    "size": 10.0,
+    "glyphs": [
+      {
+        "font": "ERF0B1",
+        "code": 42,
+        "gid": 2469,
+        "cluster_utf8": 0,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 43,
+        "gid": 2470,
+        "cluster_utf8": 3,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 44,
+        "gid": 0,
+        "cluster_utf8": 6,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 45,
+        "gid": 2471,
+        "cluster_utf8": 9,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 46,
+        "gid": 2472,
+        "cluster_utf8": 12,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 47,
+        "gid": 0,
+        "cluster_utf8": 15,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 48,
+        "gid": 2473,
+        "cluster_utf8": 18,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 49,
+        "gid": 2474,
+        "cluster_utf8": 21,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 50,
+        "gid": 2475,
+        "cluster_utf8": 24,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 51,
+        "gid": 2476,
+        "cluster_utf8": 27,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 52,
+        "gid": 0,
+        "cluster_utf8": 30,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 53,
+        "gid": 0,
+        "cluster_utf8": 33,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 54,
+        "gid": 0,
+        "cluster_utf8": 36,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 55,
+        "gid": 2477,
+        "cluster_utf8": 39,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 56,
+        "gid": 2478,
+        "cluster_utf8": 42,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 57,
+        "gid": 2479,
+        "cluster_utf8": 45,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 58,
+        "gid": 2480,
+        "cluster_utf8": 48,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 59,
+        "gid": 2481,
+        "cluster_utf8": 51,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 60,
+        "gid": 2482,
+        "cluster_utf8": 54,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 61,
+        "gid": 2483,
+        "cluster_utf8": 57,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 62,
+        "gid": 2484,
+        "cluster_utf8": 60,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 63,
+        "gid": 0,
+        "cluster_utf8": 63,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 64,
+        "gid": 2485,
+        "cluster_utf8": 66,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 65,
+        "gid": 2486,
+        "cluster_utf8": 69,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 66,
+        "gid": 2487,
+        "cluster_utf8": 72,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 67,
+        "gid": 2488,
+        "cluster_utf8": 75,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 68,
+        "gid": 2489,
+        "cluster_utf8": 78,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 69,
+        "gid": 2490,
+        "cluster_utf8": 81,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 70,
+        "gid": 2491,
+        "cluster_utf8": 84,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 71,
+        "gid": 2492,
+        "cluster_utf8": 87,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 72,
+        "gid": 2493,
+        "cluster_utf8": 90,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 73,
+        "gid": 0,
+        "cluster_utf8": 93,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 74,
+        "gid": 0,
+        "cluster_utf8": 96,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 75,
+        "gid": 2494,
+        "cluster_utf8": 99,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 76,
+        "gid": 0,
+        "cluster_utf8": 102,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 77,
+        "gid": 0,
+        "cluster_utf8": 105,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 78,
+        "gid": 2495,
+        "cluster_utf8": 108,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 79,
+        "gid": 0,
+        "cluster_utf8": 111,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 80,
+        "gid": 2496,
+        "cluster_utf8": 114,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 81,
+        "gid": 2497,
+        "cluster_utf8": 117,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 82,
+        "gid": 2498,
+        "cluster_utf8": 120,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 83,
+        "gid": 2499,
+        "cluster_utf8": 123,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 84,
+        "gid": 2500,
+        "cluster_utf8": 126,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 85,
+        "gid": 2501,
+        "cluster_utf8": 129,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 86,
+        "gid": 2502,
+        "cluster_utf8": 132,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 87,
+        "gid": 0,
+        "cluster_utf8": 135,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 88,
+        "gid": 2503,
+        "cluster_utf8": 138,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 89,
+        "gid": 2504,
+        "cluster_utf8": 141,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 90,
+        "gid": 2505,
+        "cluster_utf8": 144,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 91,
+        "gid": 0,
+        "cluster_utf8": 147,
+        "advance_at_one_point": 1.0
+      },
+      {
+        "font": "ERF0B1",
+        "code": 92,
+        "gid": 0,
+        "cluster_utf8": 150,
+        "advance_at_one_point": 1.0
+      }
+    ]
+  }
+]

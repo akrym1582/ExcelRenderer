@@ -70,6 +70,15 @@ quadratic paths are converted exactly. Nested viewports balance `gsave/grestore`
 Border geometry reuses Core through the existing border adapter. No new Core
 output responsibility is introduced.
 
+A zero-width line or border is a PostScript hairline (`0 setlinewidth`), which is
+valid independently of its dash pattern. Dotted, Dashed, DashDot and DashDotDot use
+a fixed **one-point dash unit** when the width is zero or the existing decimal
+formatter rounds it to zero. Otherwise their intervals remain the usual pattern
+multipliers times the positive width. The stroke width itself is not increased.
+This separates hairline thickness from dash spacing without using an output DPI.
+Negative, NaN and infinite line/border widths fail before any destination bytes
+are committed. The shared model and existing PNG/PDF stroke behavior are unchanged.
+
 | Diagnostic | Behavior |
 | --- | --- |
 | `PostScriptFontUnsupported` | CFF/CFF2, variable, color, embedding-restricted, subset-prohibited or oversized single-glyph fonts fail. No replacement/outline fallback. |
@@ -173,18 +182,45 @@ The 300 DPI PNG comparison uses the same finalized commands for direct PNG and P
 Dimensions are exact for these fixed comparison canvases. For arbitrary paper
 sizes, Ghostscript rounds the device pixel dimensions whereas direct PNG uses a
 ceiling; a default raster can therefore differ by one pixel. Paper sizes in points
-are checked separately, including mixed A4/A3 pages. Dark ink and colored regions are compared in both directions
-in 64-pixel tiles. Up to four neighboring pixels accommodate observed native PNG
-advance rounding (notably spaces) and independent font rasterization; dark-ink
-threshold 150 and RGB distance 100 suppress antialiasing differences. A tile fails
-when more than 15 pixels and 12% of its compared ink are unmatched. These tolerances
-were measured on the committed fixture, and removal of one Japanese glyph, a
-5-point text displacement and line deletion must all fail using the same settings.
-Small discrepancies cannot disappear into a whole-page average. Image interpolation
-is advisory in PostScript and differs from Skia's cubic sampler; the fixture tests
-crop/rotation/flip with enough source pixels to distinguish geometry from filter
-choice. Baseline, PS raster, absolute difference, mutation images and numeric
-results are uploaded with the test artifacts.
+are checked separately, including mixed A4/A3 pages. The comparison independently
+checks geometry, boundary color and uniform-region color in both directions in
+64-pixel tiles. Every check must pass; geometry alone cannot establish success.
+
+- `Contour`: pixels more than 20 channel levels from white must find content of
+  that contrast within four pixels. This handles independent font rasterization
+  and observed native PNG advance rounding (notably spaces).
+- `Color`: boundary pixels must find a nonwhite neighbor with maximum per-channel
+  RGB difference at most 24, or normalized ink-color difference at most 0.1.
+  Ink color is `(255 - RGB) / max(255 - RGB)`, allowing coverage changes from
+  antialiasing while distinguishing dark red from black. Normalization is never
+  used for uniform interiors. A tile fails above both 15 unmatched pixels and
+  12% of its local support (the larger of boundary and contour pixel counts).
+  The support includes solid content so thin boundary interpolation differences
+  are not judged against only other boundary pixels.
+- `Region`: a pixel whose 3x3 source neighborhood differs by at most two channel
+  levels is uniform. It must find RGB color within three levels per channel in
+  the same four-pixel neighborhood. More than 15 unmatched uniform pixels in
+  any tile fails, regardless of surrounding matching background or page size.
+  This catches missing/added gray fills and dark color substitutions without
+  diluting a small region in the page average.
+
+Only colors at most two channel levels from white are treated as background
+quantization noise; `(254,254,254)` versus white is explicitly accepted.
+`(250,250,250)` is content and its complete loss fails, even with no contour pixels.
+Blank versus blank passes. The color/region checks also cover grayscale content
+and are not conditional on the presence of dark or saturated pixels.
+Contour failures retain the same local 15-pixel/12% budget. These are raster
+comparison tolerances, not pixel-identity guarantees for arbitrary images.
+
+The thresholds and measured normal/mutation results are recorded in the
+[review-fix validation](postscript-validation.md#postscript-レビュー指摘2件の修正).
+Removal of one Japanese glyph, a 5-point text displacement, line deletion, gray
+fill deletion/addition, dark red to black and an approximately equal-luminance
+color substitution must all fail with the normal comparison's settings.
+Image interpolation is advisory in PostScript and differs from Skia's cubic
+sampler; the fixture tests crop/rotation/flip with enough source pixels to
+distinguish geometry from filter choice. Reference, PS raster, absolute difference,
+mutation images and separate `Contour`/`Color`/`Region` metrics are retained.
 
 An original geometric test TTC face is also rendered after its source copy is
 deleted, with platform fonts disabled and substitution warnings rejected, and

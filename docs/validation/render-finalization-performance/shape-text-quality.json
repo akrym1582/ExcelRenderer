@@ -1,0 +1,112 @@
+{
+  "records": [
+    {
+      "case": "actual-shape-text-Pdf",
+      "file": "workbook.pdf",
+      "raster": [
+        {
+          "dpi": 144,
+          "width": 561,
+          "height": 804,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 1168,
+          "height": 1675,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        }
+      ],
+      "pages": 1,
+      "passed": true
+    },
+    {
+      "case": "actual-shape-text-Png",
+      "file": "Shapes-1.png",
+      "raster": [
+        {
+          "dpi": 72,
+          "width": 281,
+          "height": 402,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        }
+      ],
+      "passed": true
+    },
+    {
+      "case": "actual-shape-text-PostScript",
+      "file": "workbook.ps",
+      "raster": [
+        {
+          "dpi": 144,
+          "width": 561,
+          "height": 804,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 1168,
+          "height": 1674,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        }
+      ],
+      "fontValidation": [
+        {
+          "pages": 1,
+          "fonts": [
+            {
+              "name": "ERF0",
+              "bytes": 332708,
+              "chunks": 6
+            }
+          ],
+          "glyphs": 133,
+          "commands": 6,
+          "passed": true
+        },
+        {
+          "pages": 1,
+          "fonts": [
+            {
+              "name": "ERF0",
+              "bytes": 332708,
+              "chunks": 6
+            }
+          ],
+          "glyphs": 133,
+          "commands": 6,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "case": "actual-shape-text-Svg",
+      "file": "Shapes-1.svg",
+      "raster": [
+        {
+          "dpi": 144,
+          "width": 561,
+          "height": 804,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 1168,
+          "height": 1675,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        }
+      ],
+      "pages": 1,
+      "passed": true
+    }
+  ],
+  "failures": []
+}

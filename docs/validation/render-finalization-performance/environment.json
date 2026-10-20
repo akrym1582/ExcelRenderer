@@ -1,0 +1,22 @@
+{
+  "productBaselineSha": "38390a69490fa56ca2ff28006d573eff5a3d925c",
+  "currentMainSha": "513ddd4d424d9afa6e92ed154abdc631841ba302",
+  "stackedBaseSha": "64f5a7781dac317d9b4c1ff4794262d1604bd823",
+  "implementationSha": "27553b2bf1749902a33f7226fe09e17f152d045c",
+  "runtime": "10.0.401",
+  "os": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "fonts": {
+    "third_party/NotoSansJP/NotoSansJP-Regular.ttf": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec"
+  },
+  "note": "38390a6 and stacked base 64f5a778 have identical src/tools/build; the latter adds preceding-border-PR CI tests/review evidence.",
+  "testedSourceSha": "ba4c377a459e06b6bfc93441ff2fb5815eb8d160",
+  "cpuAffinity": [
+    0
+  ],
+  "measuredSourceSha": "ba4c377a459e06b6bfc93441ff2fb5815eb8d160",
+  "pilotSourceSha": "81fc1daba0033715945dde374f86a4de075ee6a3",
+  "finalWarmups": 8,
+  "measurements": 3,
+  "rounds": 3,
+  "diagnosticWarmups": 2
+}

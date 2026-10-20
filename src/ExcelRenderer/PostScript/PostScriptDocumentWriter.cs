@@ -1,5 +1,6 @@
 using ExcelRenderer.Drawing;
 using ExcelRenderer.Model;
+using ExcelRenderer.OpenXml.Reader.Input;
 using ExcelRenderer.Rendering;
 using static ExcelRenderer.PostScript.PostScriptWriter;
 
@@ -26,7 +27,7 @@ internal sealed class PostScriptDocumentWriter : IDisposable
         buffering.Validate();
         this.token = token;
         fonts = new(token);
-        buffer = new(buffering);
+        buffer = RenderBufferFactory.Create(buffering);
         writer = new(buffer, token);
     }
 

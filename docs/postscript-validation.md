@@ -3,7 +3,8 @@
 検証日: 2026-10-20。最新 `origin/main` を取得し、計画書と同じ
 `5b3e831cf973cfb3ecb1d6998a413eae30e88205` から
 `feature/postscript-output` を作成した。開始時の作業ツリーはクリーン。
-実装はこのブランチの作業ツリーにあり、実装・テストファイルの SHA-256 を
+初回実装・検証のコミットは `11febab951c412679da6e125df10fbafbe54a854`。
+当時の実装・テストファイルの SHA-256 を
 [implementation.json](postscript-results/implementation.json) に記録した。
 
 ## 変更内容
@@ -119,3 +120,18 @@ Ghostscript バイナリの同梱がなく、既存の main/tool 内の Core DLL
 - EPS、プリンター送信、印刷設定 UI、クリック可能 PS リンクは対象外。
 - Ghostscript は開発/CI 専用の独立 CLI。AGPL/商用の別ライセンスであり、
   製品に組み込まず、本プロジェクトの MIT ライセンスを維持する。
+
+## PR 作成時の main 統合
+
+ドラフト PR #96 作成時、main は `dcac58b9d277b417b8c1f6e42920b80c319736f8`
+（PR #95 の内部 input/buffer wrapper 削除）へ進んでいたため、これを取り込んだ。
+PS writer は Reader の `SpillableBufferStream` を直接所有し、生成は既存の
+`RenderBufferFactory.Create` を使うように変更した。バッファの共有所有権・spill metrics は
+最新 main の方針に従い、wrapper を復活させていない。
+
+上記の初回結果とファイルハッシュは履歴として保持する。統合後はリビルド警告0・エラー0、
+全 **2,362件成功・失敗0・skip 0**（Core 170 / Formulas 833 / Mapping 172 /
+OpenXml 213 / main 866 / Tool 108）。PS の独立文字・フォント検査、4 package の pack・
+依存監査、Reader/Core の独立 restore/build/publish/AssemblyRef/実行検証も成功した。
+namespace と Core 所有権の検査も成功。検証結果と変更した writer の SHA-256 は
+[main-integration.json](postscript-results/main-integration.json) に記録した。

@@ -1,0 +1,296 @@
+{
+  "mainBase": "dcac58b9d277b417b8c1f6e42920b80c319736f8",
+  "initialImplementationCommit": "11febab951c412679da6e125df10fbafbe54a854",
+  "writerSha256": "8569e182e6075f476c638a1c7187f7cef914e9c8574289211d66f6d1d89d681d",
+  "rebuild": {
+    "warnings": 0,
+    "errors": 0
+  },
+  "readerIsolation": {
+    "reader": {
+      "dlls": [
+        "DocumentFormat.OpenXml.Framework.dll",
+        "DocumentFormat.OpenXml.dll",
+        "ExcelNumberFormat.dll",
+        "ExcelRenderer.OpenXml.Reader.dll",
+        "System.IO.Packaging.dll",
+        "consumer.dll"
+      ],
+      "graphs": {
+        "reader/obj/project.assets.json": [
+          "DocumentFormat.OpenXml.Framework/3.3.0",
+          "DocumentFormat.OpenXml/3.3.0",
+          "ExcelNumberFormat/1.1.0",
+          "ExcelRenderer.OpenXml.Reader/1.8.0",
+          "System.IO.Packaging/8.0.1"
+        ],
+        "reader/publish/consumer.deps.json": [
+          "DocumentFormat.OpenXml.Framework/3.3.0",
+          "DocumentFormat.OpenXml/3.3.0",
+          "ExcelNumberFormat/1.1.0",
+          "ExcelRenderer.OpenXml.Reader/1.8.0",
+          "System.IO.Packaging/8.0.1",
+          "consumer/1.0.0"
+        ]
+      },
+      "assemblyRefs": {
+        "ExcelRenderer.OpenXml.Reader": [
+          "netstandard",
+          "DocumentFormat.OpenXml",
+          "ExcelNumberFormat",
+          "DocumentFormat.OpenXml.Framework"
+        ]
+      },
+      "execution": "passed"
+    },
+    "core": {
+      "dlls": [
+        "DocumentFormat.OpenXml.Framework.dll",
+        "DocumentFormat.OpenXml.dll",
+        "ExcelNumberFormat.dll",
+        "ExcelRenderer.Core.dll",
+        "ExcelRenderer.OpenXml.Reader.dll",
+        "SkiaSharp.dll",
+        "System.IO.Packaging.dll",
+        "consumer.dll",
+        "libSkiaSharp.dll",
+        "libSkiaSharp.dll",
+        "libSkiaSharp.dll"
+      ],
+      "graphs": {
+        "core/obj/project.assets.json": [
+          "DocumentFormat.OpenXml.Framework/3.3.0",
+          "DocumentFormat.OpenXml/3.3.0",
+          "ExcelNumberFormat/1.1.0",
+          "ExcelRenderer.Core/1.0.0",
+          "ExcelRenderer.OpenXml.Reader/1.8.0",
+          "SkiaSharp.NativeAssets.Linux/4.151.0",
+          "SkiaSharp.NativeAssets.Win32/4.151.0",
+          "SkiaSharp.NativeAssets.macOS/4.151.0",
+          "SkiaSharp/4.151.0",
+          "System.IO.Packaging/8.0.1"
+        ],
+        "core/publish/consumer.deps.json": [
+          "DocumentFormat.OpenXml.Framework/3.3.0",
+          "DocumentFormat.OpenXml/3.3.0",
+          "ExcelNumberFormat/1.1.0",
+          "ExcelRenderer.Core/1.0.0",
+          "ExcelRenderer.OpenXml.Reader/1.8.0",
+          "SkiaSharp.NativeAssets.Linux/4.151.0",
+          "SkiaSharp.NativeAssets.Win32/4.151.0",
+          "SkiaSharp.NativeAssets.macOS/4.151.0",
+          "SkiaSharp/4.151.0",
+          "System.IO.Packaging/8.0.1",
+          "consumer/1.0.0"
+        ]
+      },
+      "assemblyRefs": {
+        "ExcelRenderer.Core": [
+          "netstandard",
+          "ExcelRenderer.OpenXml.Reader",
+          "SkiaSharp",
+          "DocumentFormat.OpenXml",
+          "DocumentFormat.OpenXml.Framework"
+        ],
+        "ExcelRenderer.OpenXml.Reader": [
+          "netstandard",
+          "DocumentFormat.OpenXml",
+          "ExcelNumberFormat",
+          "DocumentFormat.OpenXml.Framework"
+        ]
+      },
+      "execution": "passed"
+    }
+  },
+  "testRuns": [
+    {
+      "file": "_a46e0a515987_2026-10-20_04_09_12_net10.0.trx",
+      "total": "213",
+      "executed": "213",
+      "passed": "213",
+      "failed": "0",
+      "error": "0",
+      "timeout": "0",
+      "aborted": "0",
+      "inconclusive": "0",
+      "passedButRunAborted": "0",
+      "notRunnable": "0",
+      "notExecuted": "0",
+      "disconnected": "0",
+      "warning": "0",
+      "completed": "0",
+      "inProgress": "0",
+      "pending": "0"
+    },
+    {
+      "file": "_a46e0a515987_2026-10-20_04_09_07_net10.0.trx",
+      "total": "172",
+      "executed": "172",
+      "passed": "172",
+      "failed": "0",
+      "error": "0",
+      "timeout": "0",
+      "aborted": "0",
+      "inconclusive": "0",
+      "passedButRunAborted": "0",
+      "notRunnable": "0",
+      "notExecuted": "0",
+      "disconnected": "0",
+      "warning": "0",
+      "completed": "0",
+      "inProgress": "0",
+      "pending": "0"
+    },
+    {
+      "file": "_a46e0a515987_2026-10-20_04_09_05_net10.0.trx",
+      "total": "833",
+      "executed": "833",
+      "passed": "833",
+      "failed": "0",
+      "error": "0",
+      "timeout": "0",
+      "aborted": "0",
+      "inconclusive": "0",
+      "passedButRunAborted": "0",
+      "notRunnable": "0",
+      "notExecuted": "0",
+      "disconnected": "0",
+      "warning": "0",
+      "completed": "0",
+      "inProgress": "0",
+      "pending": "0"
+    },
+    {
+      "file": "_a46e0a515987_2026-10-20_04_08_58_net10.0.trx",
+      "total": "170",
+      "executed": "170",
+      "passed": "170",
+      "failed": "0",
+      "error": "0",
+      "timeout": "0",
+      "aborted": "0",
+      "inconclusive": "0",
+      "passedButRunAborted": "0",
+      "notRunnable": "0",
+      "notExecuted": "0",
+      "disconnected": "0",
+      "warning": "0",
+      "completed": "0",
+      "inProgress": "0",
+      "pending": "0"
+    },
+    {
+      "file": "_a46e0a515987_2026-10-20_04_09_14_net10.0.trx",
+      "total": "866",
+      "executed": "866",
+      "passed": "866",
+      "failed": "0",
+      "error": "0",
+      "timeout": "0",
+      "aborted": "0",
+      "inconclusive": "0",
+      "passedButRunAborted": "0",
+      "notRunnable": "0",
+      "notExecuted": "0",
+      "disconnected": "0",
+      "warning": "0",
+      "completed": "0",
+      "inProgress": "0",
+      "pending": "0"
+    },
+    {
+      "file": "_a46e0a515987_2026-10-20_04_11_45_net10.0.trx",
+      "total": "108",
+      "executed": "108",
+      "passed": "108",
+      "failed": "0",
+      "error": "0",
+      "timeout": "0",
+      "aborted": "0",
+      "inconclusive": "0",
+      "passedButRunAborted": "0",
+      "notRunnable": "0",
+      "notExecuted": "0",
+      "disconnected": "0",
+      "warning": "0",
+      "completed": "0",
+      "inProgress": "0",
+      "pending": "0"
+    }
+  ],
+  "tests": {
+    "passed": 2362,
+    "failed": 0,
+    "skipped": 0
+  },
+  "fontValidation": {
+    "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/fonts.ps": {
+      "pages": 1,
+      "fonts": [
+        {
+          "name": "ERF0",
+          "bytes": 379100,
+          "chunks": 6
+        },
+        {
+          "name": "ERF1",
+          "bytes": 1439948,
+          "chunks": 22
+        }
+      ],
+      "glyphs": 359,
+      "commands": 3,
+      "passed": true
+    },
+    "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/drawing.ps": {
+      "pages": 1,
+      "fonts": [
+        {
+          "name": "ERF0",
+          "bytes": 336048,
+          "chunks": 6
+        },
+        {
+          "name": "ERF1",
+          "bytes": 1439948,
+          "chunks": 22
+        }
+      ],
+      "glyphs": 60,
+      "commands": 9,
+      "passed": true
+    },
+    "tests/ExcelRenderer.Tests/bin/Debug/net10.0/SampleOutputs/PostScript/custom-collection.ps": {
+      "pages": 1,
+      "fonts": [
+        {
+          "name": "ERF0",
+          "bytes": 1140,
+          "chunks": 1
+        }
+      ],
+      "glyphs": 3,
+      "commands": 1,
+      "passed": true
+    }
+  },
+  "packages": {
+    "ExcelRenderer.Fonts.1.10.1.nupkg": {
+      "entries": 12,
+      "ghostscriptBinaries": []
+    },
+    "ExcelRenderer.Tool.1.10.1.nupkg": {
+      "entries": 72,
+      "ghostscriptBinaries": []
+    },
+    "ExcelRenderer.1.10.1.nupkg": {
+      "entries": 16,
+      "ghostscriptBinaries": []
+    },
+    "ExcelRenderer.Mapping.1.10.1.nupkg": {
+      "entries": 13,
+      "ghostscriptBinaries": []
+    }
+  },
+  "dependencyAudit": "1158 source/config files, 23 restored projects, 778 managed AssemblyRef inventories, 4 packages: passed"
+}

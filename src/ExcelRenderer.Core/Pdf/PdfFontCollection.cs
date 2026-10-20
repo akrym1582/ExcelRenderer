@@ -69,6 +69,31 @@ internal sealed class PdfFontCollection : IDisposable
         prepared = true;
     }
 
+    /// <summary>Registers physical glyph usage without painting or computing placement.</summary>
+    /// <param name="face">The immutable physical snapshot.</param>
+    /// <param name="glyphs">The already selected IDs, borrowed only during this call.</param>
+    internal void Collect(SkiaFontFace face, ReadOnlySpan<ushort> glyphs)
+    {
+        token.ThrowIfCancellationRequested();
+        if (prepared)
+        {
+            throw new InvalidOperationException("Cannot collect after font preparation.");
+        }
+
+        if (!entries.TryGetValue(face.Identity, out var entry))
+        {
+            entry = new(face);
+            entries.Add(face.Identity, entry);
+        }
+
+        foreach (var glyph in glyphs)
+        {
+            entry.Glyphs.Add(glyph);
+        }
+
+        ConversionMetrics.Report("pdfFontRunsCollected", 1);
+    }
+
     /// <summary>Collects or paints selected glyphs without fallback, shaping or wrapping.</summary>
     /// <param name="canvas">The target canvas.</param>
     /// <param name="face">The immutable physical face.</param>
@@ -79,29 +104,26 @@ internal sealed class PdfFontCollection : IDisposable
     /// <param name="x">The finalized X.</param>
     /// <param name="y">The finalized baseline.</param>
     /// <param name="paint">The text paint.</param>
-    internal void Draw(SKCanvas canvas, SkiaFontFace face, ushort[] glyphs, byte[] source, uint[] clusters, float size, float x, float y, SKPaint paint)
+    internal void Draw(SKCanvas canvas, SkiaFontFace face, ReadOnlySpan<ushort> glyphs, ReadOnlySpan<byte> source, ReadOnlySpan<uint> clusters, float size, float x, float y, SKPaint paint)
     {
         token.ThrowIfCancellationRequested();
-        if (!entries.TryGetValue(face.Identity, out var entry))
-        {
-            if (prepared)
-            {
-                throw new InvalidOperationException("Skia PDF encountered an uncollected physical face.");
-            }
-
-            entry = new(face);
-            entries.Add(face.Identity, entry);
-        }
-
         if (!prepared)
         {
-            entry.Glyphs.UnionWith(glyphs);
+            Collect(face, glyphs);
             return;
         }
 
-        if (glyphs.Any(glyph => !entry.Glyphs.Contains(glyph)))
+        if (!entries.TryGetValue(face.Identity, out var entry))
         {
-            throw new InvalidOperationException("Skia PDF encountered an uncollected glyph.");
+            throw new InvalidOperationException("Skia PDF encountered an uncollected physical face.");
+        }
+
+        foreach (var glyph in glyphs)
+        {
+            if (!entry.Glyphs.Contains(glyph))
+            {
+                throw new InvalidOperationException("Skia PDF encountered an uncollected glyph.");
+            }
         }
 
         if (glyphs.Length == 0)
@@ -109,9 +131,17 @@ internal sealed class PdfFontCollection : IDisposable
             return;
         }
 
-        if (clusters.Length != glyphs.Length || clusters.Any(cluster => cluster >= source.Length))
+        if (clusters.Length != glyphs.Length)
         {
             throw new InvalidDataException("Skia PDF glyph clusters do not match source Unicode.");
+        }
+
+        foreach (var cluster in clusters)
+        {
+            if (cluster >= source.Length)
+            {
+                throw new InvalidDataException("Skia PDF glyph clusters do not match source Unicode.");
+            }
         }
 
         if (!entry.Sizes.TryGetValue(size, out var font))

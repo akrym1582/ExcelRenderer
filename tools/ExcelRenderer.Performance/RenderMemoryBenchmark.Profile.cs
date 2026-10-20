@@ -1,0 +1,186 @@
+using System.Diagnostics;
+using System.Reflection;
+using System.Security.Cryptography;
+using System.Text.Json;
+using System.Xml.Linq;
+using ExcelRenderer;
+using ExcelRenderer.Excel;
+using ExcelRenderer.Fonts;
+using ExcelRenderer.Rendering;
+
+/// <summary>Separates diagnostic observations from uninstrumented render/read measurements.</summary>
+internal static partial class RenderMemoryBenchmark
+{
+    /// <summary>Runs uninstrumented samples or a separate warmed diagnostic/control pair.</summary>
+    /// <param name="args">Command, JSON specification, case name, warmup count and sample count.</param>
+    /// <returns>The asynchronous completion.</returns>
+    internal static async Task ProfileAsync(string[] args)
+    {
+        var specification = JsonSerializer.Deserialize<ProfileCase[]>(File.ReadAllText(args[1]))!;
+        var item = specification.Single(value => value.Name == args[2]);
+        var warmups = int.Parse(args[3], System.Globalization.CultureInfo.InvariantCulture);
+        var samples = int.Parse(args[4], System.Globalization.CultureInfo.InvariantCulture);
+        var inputBytes = File.ReadAllBytes(item.Input);
+        var snapshots = typeof(ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader).Assembly.GetType("ExcelRenderer.OpenXml.Reader.Diagnostics.OperationMetrics")!.GetProperty("Observer", BindingFlags.Static | BindingFlags.NonPublic)!;
+        var diagnosticOnly = args.Length > 5 && args[5] == "diagnostic";
+        var font = Path.GetFullPath("third_party/NotoSansJP/NotoSansJP-Regular.ttf");
+        var fontOptions = new FontOptions { AllowSystemFonts = false, UseFontPack = item.FontPack, FontFiles = [font] };
+        ExcelRenderer.Pdf.PdfRenderObserver.Timestamp = new(2026, 10, 20, 12, 0, 0, DateTimeKind.Local);
+        Console.WriteLine(JsonSerializer.Serialize(new
+        {
+            environment = new
+            {
+                runtime = Environment.Version.ToString(),
+                os = Environment.OSVersion.ToString(),
+                item,
+                inputSha256 = Hash(inputBytes),
+                templateSha256 = item.Template is { } template ? HashFile(template) : Hash(inputBytes),
+                fontSha256 = HashFile(font),
+                dlls = Directory.GetFiles(AppContext.BaseDirectory, "ExcelRenderer*.dll").ToDictionary(file => Path.GetFileName(file)!, file => HashFile(file)),
+            },
+        }));
+        for (var iteration = diagnosticOnly ? -warmups : -warmups - 1; iteration < (diagnosticOnly ? 2 : samples); iteration++)
+        {
+            var diagnostic = diagnosticOnly && iteration == 1;
+            var metrics = new Dictionary<string, double>();
+            ConversionMetrics.Observer = null;
+            if (diagnostic)
+            {
+                ConversionMetrics.Observer = (name, value) =>
+                {
+                    metrics[name] = metrics.GetValueOrDefault(name) + value;
+                    if (name.EndsWith(".ms", StringComparison.Ordinal))
+                    {
+                        metrics[name + ".count"] = metrics.GetValueOrDefault(name + ".count") + 1;
+                    }
+                };
+            }
+
+            snapshots.SetValue(null, diagnostic ? (Action<string, long>)((name, value) => metrics[name] = metrics.GetValueOrDefault(name) + value) : null);
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+            var collections = new[] { GC.CollectionCount(0), GC.CollectionCount(1), GC.CollectionCount(2) };
+            var allocated = GC.GetTotalAllocatedBytes(true);
+            var clock = Stopwatch.StartNew();
+            long outputBytes;
+            int pages;
+            using (var input = new MemoryStream(inputBytes, false))
+            {
+                if (item.ReadOnly)
+                {
+                    var document = new ExcelReader(new FontManager(fontOptions)).Read(input, new()
+                    {
+                        ApplyConditionalFormatting = item.ConditionalFormatting,
+                        FormulaDisplayMode = item.Mode.StartsWith("recalculate", StringComparison.Ordinal) ? FormulaDisplayMode.Recalculate : FormulaDisplayMode.CachedValue,
+                        GetSelectedRange = item.Mode.Contains("selected", StringComparison.Ordinal) ? _ => (1, 1, 5, 1) : null,
+                    });
+                    outputBytes = document.Sheets.Sum(sheet => (long)sheet.Cells.Count);
+                    pages = document.Sheets.Count;
+                }
+                else
+                {
+                    var request = new RenderRequest
+                    {
+                        OutputFormat = Enum.Parse<OutputFormat>(item.Format),
+                        ImageLayout = item.Continuous ? ImageLayoutMode.Continuous : ImageLayoutMode.Paginated,
+                        FontOptions = fontOptions,
+                        ReadOptions = new() { ApplyConditionalFormatting = item.ConditionalFormatting },
+                        Trim = new() { Enabled = item.Trim },
+                        Selection = new() { Pages = item.Pages, Ranges = item.Range is { } range ? [new("Synthetic", CellRangeParser.Parse(range, out _))] : null },
+                        Dpi = 72,
+                    };
+                    var sink = diagnosticOnly && iteration >= 0 ? (IRenderOutputSink)new ProfileSink(item.Capture) : new DiscardSink();
+                    var result = await ExcelConverter.RenderAsync(input, request, sink).ConfigureAwait(false);
+                    outputBytes = result.Artifacts.Sum(artifact => artifact.ByteLength);
+                    pages = result.Pages.Count;
+                }
+            }
+
+            clock.Stop();
+            var allocationBytes = GC.GetTotalAllocatedBytes(true) - allocated;
+            var captureHash = diagnosticOnly && iteration >= 0 && item.Capture is { } directory && Directory.Exists(directory)
+                ? Hash(System.Text.Encoding.UTF8.GetBytes(string.Join("\n", Directory.GetFiles(directory).OrderBy(file => file, StringComparer.Ordinal).Select(file => Path.GetFileName(file) + ":" + HashArtifactFile(file))))) : null;
+            using var process = Process.GetCurrentProcess();
+            Console.WriteLine(JsonSerializer.Serialize(new
+            {
+                name = item.Name, iteration, diagnostic, cold = iteration == (diagnosticOnly ? -warmups : -warmups - 1), observerControl = diagnosticOnly && iteration == 0, warmup = iteration < 0,
+                milliseconds = clock.Elapsed.TotalMilliseconds, allocationBytes,
+                gc = collections.Select((count, generation) => GC.CollectionCount(generation) - count).ToArray(),
+                peakRssBytes = process.PeakWorkingSet64, outputBytes, pages, captureHash, metrics,
+            }));
+            ConversionMetrics.Observer = null;
+            snapshots.SetValue(null, null);
+        }
+    }
+
+    private static string Hash(byte[] bytes) => Convert.ToHexString(SHA256.HashData(bytes));
+
+    private static string HashFile(string path)
+    {
+        using var input = File.OpenRead(path);
+        return Convert.ToHexString(SHA256.HashData(input));
+    }
+
+    private static string HashArtifactFile(string path)
+    {
+        if (!path.EndsWith(".svg", StringComparison.OrdinalIgnoreCase))
+        {
+            return HashFile(path);
+        }
+
+        // Match tests/Shared/ReaderSnapshot.CanonicalSvg: only resource names change.
+        var document = XDocument.Load(path);
+        var ids = document.Root!.DescendantsAndSelf().Attributes("id").Select((attribute, index) => (attribute.Value, Name: "resource" + index))
+            .ToDictionary(item => item.Value, item => item.Name, StringComparer.Ordinal);
+        foreach (var attribute in document.Root.DescendantsAndSelf().Attributes())
+        {
+            if (attribute.Name.LocalName == "id")
+            {
+                attribute.Value = ids[attribute.Value];
+            }
+            else if (attribute.Value.StartsWith("url(#", StringComparison.Ordinal) && attribute.Value.EndsWith(")", StringComparison.Ordinal) && ids.TryGetValue(attribute.Value.Substring(5, attribute.Value.Length - 6), out var referenced))
+            {
+                attribute.Value = "url(#" + referenced + ")";
+            }
+            else if (attribute.Value.StartsWith("#", StringComparison.Ordinal) && ids.TryGetValue(attribute.Value.Substring(1), out referenced))
+            {
+                attribute.Value = "#" + referenced;
+            }
+        }
+
+        return Hash(System.Text.Encoding.UTF8.GetBytes(document.ToString(SaveOptions.DisableFormatting)));
+    }
+
+    private sealed record ProfileCase(string Name, string Input, string Format = "Pdf", bool ReadOnly = false, bool ConditionalFormatting = true, bool Continuous = false, bool Trim = false, int[]? Pages = null, string? Range = null, string? Capture = null, string Mode = "cached", bool FontPack = false, string? Template = null);
+
+    private sealed class ProfileSink(string? directory) : IRenderOutputSink
+    {
+        private readonly Dictionary<string, Stream> streams = [];
+
+        public ValueTask<Stream> OpenAsync(ArtifactDescriptor artifact, CancellationToken cancellationToken)
+        {
+            if (directory is null)
+            {
+                return new(Stream.Null);
+            }
+
+            Directory.CreateDirectory(directory);
+            var stream = File.Create(Path.Combine(directory, artifact.RelativeName));
+            streams.Add(artifact.ArtifactId, stream);
+            return new(stream);
+        }
+
+        public ValueTask CompleteAsync(ArtifactDescriptor artifact, long byteLength, CancellationToken cancellationToken)
+        {
+            if (streams.Remove(artifact.ArtifactId, out var stream))
+            {
+                stream.Dispose();
+            }
+
+            return default;
+        }
+
+        public ValueTask AbortAsync(ArtifactDescriptor artifact, Exception error, CancellationToken cancellationToken) => CompleteAsync(artifact, 0, cancellationToken);
+    }
+}

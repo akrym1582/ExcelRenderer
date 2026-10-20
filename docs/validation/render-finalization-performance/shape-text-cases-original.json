@@ -1,0 +1,30 @@
+[
+  {
+    "Name": "actual-shape-text-Pdf",
+    "Input": "docs/validation/render-finalization-performance/inputs/actual-shape-text.xlsx",
+    "Format": "Pdf",
+    "Trim": true,
+    "Warmups": 8
+  },
+  {
+    "Name": "actual-shape-text-PostScript",
+    "Input": "docs/validation/render-finalization-performance/inputs/actual-shape-text.xlsx",
+    "Format": "PostScript",
+    "Trim": true,
+    "Warmups": 8
+  },
+  {
+    "Name": "actual-shape-text-Png",
+    "Input": "docs/validation/render-finalization-performance/inputs/actual-shape-text.xlsx",
+    "Format": "Png",
+    "Trim": true,
+    "Warmups": 8
+  },
+  {
+    "Name": "actual-shape-text-Svg",
+    "Input": "docs/validation/render-finalization-performance/inputs/actual-shape-text.xlsx",
+    "Format": "Svg",
+    "Trim": true,
+    "Warmups": 8
+  }
+]

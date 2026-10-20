@@ -51,6 +51,8 @@ public static partial class ExcelConverter
             ConversionMetrics.Report("input.ms", inputTimer.Elapsed.TotalMilliseconds);
             var fontManager = ConversionMetrics.Measure("fonts", () => new FontManager(request.FontOptions));
             resources.TextMeasurer = request.TextMeasurer ?? new SkiaTextMeasurer(fontManager, cacheLayouts: true);
+            resources.ResolvedTextLayout = new SkiaTextMeasurer(fontManager, cacheLayouts: true);
+            resources.RasterTextLayout = request.OutputFormat is OutputFormat.Png or OutputFormat.Svg ? new SkiaCompatibilityTextLayout(fontManager) : null;
             var readOptions = request.ReadOptions with
             {
                 ColumnWidthMetricsCache = new CoreIntegration.FullFontMetrics.MetricCache(),
@@ -63,12 +65,7 @@ public static partial class ExcelConverter
             var publicStyles = new StylePool();
             var document = new ReportDocument(coreDocument.Sheets.Select(sheet => CoreIntegration.CoreModelAdapter.ToPublic(sheet, publicStyles)).ToArray());
             source.Dispose();
-            if (ConversionMetrics.Observer is not null)
-            {
-                ConversionMetrics.Report("cells", document.Sheets.Sum(sheet => sheet.Cells.Count));
-                ConversionMetrics.Report("textCells", document.Sheets.Sum(sheet => sheet.Cells.Values.Count(cell => !string.IsNullOrEmpty(cell.Text))));
-                ConversionMetrics.Report("uniqueStyles", document.Sheets.SelectMany(sheet => sheet.Cells.Values).Select(cell => cell.Style).Distinct().Count());
-            }
+            ConversionMetrics.Report("cells", document.Sheets.Sum(sheet => sheet.Cells.Count));
 
             var sheets = ApplyRanges(SelectSheets(document, request.Selection.SheetNames), request.Selection, diagnostics);
             if (request.DiagnosticOptions.DetectUnsupportedFeatures)
@@ -150,8 +147,22 @@ public static partial class ExcelConverter
             var pages = request.ImageLayout == ImageLayoutMode.Continuous
                 ? LayoutContinuous(sheets, request.Dpi, fontManager)
                 : LayoutPages(sheets, request.Dpi, fontManager, request.DiagnosticOptions.EnableLayoutWarnings ? diagnostics : null);
+            using Pdf.IPdfDocumentWriter? pdfWriter = request.OutputFormat == OutputFormat.Pdf ? new SkiaPdfDocumentWriter(fontManager, cancellationToken, buffering: request.Buffering) : null;
+            using var postScriptWriter = request.OutputFormat == OutputFormat.PostScript ? new PostScript.PostScriptDocumentWriter(request.Buffering, cancellationToken) : null;
+            Action<IEnumerable<DrawCommand>>? collect = pdfWriter is not null ? pdfWriter.Collect : postScriptWriter is not null ? postScriptWriter.Collect : null;
             var selectedPages = SelectPages(pages, request.Selection.Pages).Select(page =>
-                ConversionMetrics.Measure("pagePreflight", () => PreflightPage(page, request, fontManager, diagnostics, cancellationToken))).ToArray();
+                ConversionMetrics.Measure("pagePreflight", () =>
+                {
+                    try
+                    {
+                        return PreflightPage(page, request, fontManager, diagnostics, cancellationToken, collect);
+                    }
+                    catch (PostScript.PostScriptFailure error)
+                    {
+                        diagnostics.Add(new(error.Code, DiagnosticSeverity.Error, DiagnosticStage.Render, error.Message, page.Sheet.Name, SourcePageNumber: page.Descriptor.SourcePageNumber));
+                        throw Failure("PostScript conversion failed.", error, diagnostics, artifacts);
+                    }
+                })).ToArray();
             if (request.OutputFormat == OutputFormat.Pdf && request.Hyperlinks == HyperlinkMode.Preserve)
             {
                 selectedPages = ConversionMetrics.Measure("links", () => ResolvePdfLinks(selectedPages, workbookMetadata, diagnostics)).ToArray();
@@ -164,11 +175,11 @@ public static partial class ExcelConverter
 
             if (request.OutputFormat == OutputFormat.Pdf)
             {
-                await WritePdfAsync(selectedPages, request.PdfBackend, request.Buffering, fontManager, diagnostics, sink, artifacts, cancellationToken).ConfigureAwait(false);
+                await WritePdfAsync(selectedPages, pdfWriter!, request.PdfBackend, fontManager, diagnostics, sink, artifacts, cancellationToken).ConfigureAwait(false);
             }
             else if (request.OutputFormat == OutputFormat.PostScript)
             {
-                await WritePostScriptAsync(selectedPages, request.Buffering, fontManager, diagnostics, sink, artifacts, cancellationToken).ConfigureAwait(false);
+                await WritePostScriptAsync(selectedPages, postScriptWriter!, fontManager, diagnostics, sink, artifacts, cancellationToken).ConfigureAwait(false);
             }
             else
             {
@@ -342,13 +353,14 @@ public static partial class ExcelConverter
         return new(commands, (built.ExtensionData as CoreIntegration.FullPageData)?.Regions ?? []);
     }
 
-    private static SheetPage PreflightPage(SheetPage page, RenderRequest request, FontManager fonts, DiagnosticCollector diagnostics, CancellationToken token)
+    private static SheetPage PreflightPage(SheetPage page, RenderRequest request, FontManager fonts, DiagnosticCollector diagnostics, CancellationToken token, Action<IEnumerable<DrawCommand>>? collect)
     {
         token.ThrowIfCancellationRequested();
         ConversionMetrics.Report("pagePayloadActive", 1);
         try
         {
             var payload = ConversionMetrics.Measure("pageBuild", () => BuildPage(page, fonts, token));
+            payload = payload with { Commands = FinalizeCommands(payload.Commands, fonts, token) };
             if (request.DiagnosticOptions.EnableLayoutWarnings || request.DiagnosticOptions.DetectUnsupportedFeatures)
             {
                 foreach (var command in InspectCellText(page, payload.Commands, request.DiagnosticOptions, diagnostics))
@@ -364,7 +376,7 @@ public static partial class ExcelConverter
             }
 
             var final = PrepareViewport(page with { Regions = payload.Regions }, WithCancellation(payload.Commands, token), request, fonts, diagnostics);
-            return final with
+            final = final with
             {
                 Descriptor = final.Descriptor with
                 {
@@ -372,6 +384,22 @@ public static partial class ExcelConverter
                     SourceRegions = page.Plan is null && !page.IsContinuous ? null : (final.Regions ?? []).Select(region => region.SourceBounds).ToArray(),
                 },
             };
+            if (collect is not null && !diagnostics.HasFailure)
+            {
+                var commands = final.Descriptor.CropBounds is not null
+                    ? ApplyViewport(payload.Commands, final.Viewport!, final.Descriptor.SourcePageNumber) : payload.Commands;
+                ConversionMetrics.Measure("fontCollect", () =>
+                {
+                    collect(WithCancellation(commands, token));
+                    return true;
+                });
+                if (Pdf.PdfRenderObserver.Current is { } observer)
+                {
+                    observer(final.Descriptor, commands.ToArray());
+                }
+            }
+
+            return final;
         }
         finally
         {
@@ -379,22 +407,17 @@ public static partial class ExcelConverter
         }
     }
 
-    private static void RenderPagePayload(SheetPage page, FontManager fonts, CancellationToken token, Action<IEnumerable<DrawCommand>> render, bool finalizeText = false)
+    private static void RenderPagePayload(SheetPage page, FontManager fonts, CancellationToken token, Action<IEnumerable<DrawCommand>> render)
     {
         token.ThrowIfCancellationRequested();
         ConversionMetrics.Report("pagePayloadActive", 1);
         try
         {
             var payload = ConversionMetrics.Measure("pageBuild", () => BuildPage(page, fonts, token));
+            var finalized = FinalizeCommands(payload.Commands, fonts, token);
             var commands = page.Descriptor.CropBounds is not null
-                ? ApplyViewport(payload.Commands, page.Viewport!, page.Descriptor.SourcePageNumber)
-                : payload.Commands;
-            if (finalizeText)
-            {
-                var resolvedRuns = new SkiaTextMeasurer(fonts, cacheLayouts: true);
-                var layout = RenderResourceSession.Current?.TextMeasurer as Abstractions.ITextLayoutService ?? resolvedRuns;
-                commands = CommandTextFinalizer.Finalize(commands, layout, token, resolvedRuns);
-            }
+                ? ApplyViewport(finalized, page.Viewport!, page.Descriptor.SourcePageNumber)
+                : finalized;
 
             if (Pdf.PdfRenderObserver.Current is { } observer)
             {
@@ -408,6 +431,16 @@ public static partial class ExcelConverter
         {
             ConversionMetrics.Report("pagePayloadActive", -1);
         }
+    }
+
+    private static IEnumerable<DrawCommand> FinalizeCommands(IEnumerable<DrawCommand> commands, FontManager fonts, CancellationToken token)
+    {
+        var session = RenderResourceSession.Current;
+        var resolved = session?.RasterTextLayout ?? session?.ResolvedTextLayout ?? new SkiaTextMeasurer(fonts, cacheLayouts: true);
+        var layout = session?.RasterTextLayout ?? session?.TextMeasurer as Abstractions.ITextLayoutService ?? resolved;
+        return commands is IReadOnlyList<DrawCommand> page
+            ? CommandTextFinalizer.FinalizePage(page, layout, token, resolved)
+            : CommandTextFinalizer.Finalize(commands, layout, token, resolved);
     }
 
     private static IEnumerable<DrawCommand> WithCancellation(IEnumerable<DrawCommand> commands, CancellationToken token)
@@ -499,7 +532,7 @@ public static partial class ExcelConverter
         return selected;
     }
 
-    private static async Task WritePdfAsync(IReadOnlyList<SheetPage> pages, PdfBackend backend, RenderBufferOptions buffering, FontManager fontManager, DiagnosticCollector diagnostics, IRenderOutputSink sink, List<ArtifactMetadata> artifacts, CancellationToken token)
+    private static async Task WritePdfAsync(IReadOnlyList<SheetPage> pages, Pdf.IPdfDocumentWriter writer, PdfBackend backend, FontManager fontManager, DiagnosticCollector diagnostics, IRenderOutputSink sink, List<ArtifactMetadata> artifacts, CancellationToken token)
     {
         var descriptor = new ArtifactDescriptor("pdf", "pdf", "application/pdf", "workbook.pdf");
         await WriteArtifactAsync(
@@ -508,19 +541,15 @@ public static partial class ExcelConverter
             artifacts,
             stream =>
             {
-                using Pdf.IPdfDocumentWriter writer = new SkiaPdfDocumentWriter(fontManager, token, buffering: buffering);
                 ConversionMetrics.Report("pdfBackend", (int)backend);
-                if (writer.RequiresFontCollection)
-                {
-                    foreach (var page in pages)
-                    {
-                        RenderPagePayload(page, fontManager, token, writer.Collect, finalizeText: true);
-                    }
-                }
 
                 try
                 {
-                    writer.Prepare();
+                    ConversionMetrics.Measure("fontPrepare", () =>
+                    {
+                        writer.Prepare();
+                        return true;
+                    });
                 }
                 catch (Exception error) when (backend == PdfBackend.SkiaSharp && error is not OperationCanceledException)
                 {
@@ -546,8 +575,7 @@ public static partial class ExcelConverter
                             {
                                 SheetName = page.Sheet.Name,
                                 SourcePageNumber = page.Descriptor.SourcePageNumber,
-                            })),
-                            finalizeText: true);
+                            })));
                         return true;
                     });
                     if (diagnostics.HasFailure)
@@ -567,7 +595,7 @@ public static partial class ExcelConverter
             token).ConfigureAwait(false);
     }
 
-    private static Task WritePostScriptAsync(IReadOnlyList<SheetPage> pages, RenderBufferOptions buffering, FontManager fontManager, DiagnosticCollector diagnostics, IRenderOutputSink sink, List<ArtifactMetadata> artifacts, CancellationToken token)
+    private static Task WritePostScriptAsync(IReadOnlyList<SheetPage> pages, PostScript.PostScriptDocumentWriter writer, FontManager fontManager, DiagnosticCollector diagnostics, IRenderOutputSink sink, List<ArtifactMetadata> artifacts, CancellationToken token)
     {
         var descriptor = new ArtifactDescriptor("ps", "ps", "application/postscript", "workbook.ps");
         return WriteArtifactAsync(
@@ -576,18 +604,14 @@ public static partial class ExcelConverter
             artifacts,
             stream =>
             {
-                using var writer = new PostScript.PostScriptDocumentWriter(buffering, token);
                 SheetPage? current = null;
                 try
                 {
-                    foreach (var page in pages)
+                    ConversionMetrics.Measure("fontPrepare", () =>
                     {
-                        current = page;
-                        RenderPagePayload(page, fontManager, token, writer.Collect, finalizeText: true);
-                    }
-
-                    current = null;
-                    writer.Prepare();
+                        writer.Prepare();
+                        return true;
+                    });
                     foreach (var page in pages)
                     {
                         current = page;
@@ -595,11 +619,18 @@ public static partial class ExcelConverter
                             page,
                             fontManager,
                             token,
-                            commands => writer.Append(page.Sheet.PageSettings with { Width = page.Descriptor.WidthPoints, Height = page.Descriptor.HeightPoints }, commands),
-                            finalizeText: true);
+                            commands => ConversionMetrics.Measure("draw", () =>
+                            {
+                                writer.Append(page.Sheet.PageSettings with { Width = page.Descriptor.WidthPoints, Height = page.Descriptor.HeightPoints }, commands);
+                                return true;
+                            }));
                     }
 
-                    writer.Complete(stream);
+                    ConversionMetrics.Measure("save", () =>
+                    {
+                        writer.Complete(stream);
+                        return true;
+                    });
                 }
                 catch (PostScript.PostScriptFailure error)
                 {

@@ -1,4 +1,3 @@
-using System.Text;
 using ExcelRenderer.Core.Abstractions;
 using ExcelRenderer.Core.Drawing;
 using ExcelRenderer.Core.Fonts;
@@ -10,6 +9,22 @@ namespace ExcelRenderer.Core.Pdf;
 /// <summary>Draws Core's finalized single-font lines without repeating layout.</summary>
 internal sealed class SkiaFinalizedTextPainter(SingleFontContext context, PdfFontCollection fonts) : Extensibility.ICorePdfTextPainter
 {
+    /// <inheritdoc/>
+    public void Collect(DrawTextCommand command)
+    {
+        var layout = command.TextLayout ?? throw new InvalidOperationException("Text layout is missing.");
+        if (TextLayoutFontSize.Resolve(layout, command.Style.Font) == 0)
+        {
+            return;
+        }
+
+        foreach (var line in layout.Lines)
+        {
+            var selection = line.Glyphs ?? new(context.Face, context.Face.Typeface.GetGlyphs(line.Text), line.Text, line.Text);
+            fonts.Collect(context.Face, selection.GlyphSpan);
+        }
+    }
+
     /// <inheritdoc/>
     public void Paint(SKCanvas canvas, DrawTextCommand command)
     {
@@ -34,7 +49,7 @@ internal sealed class SkiaFinalizedTextPainter(SingleFontContext context, PdfFon
             {
                 var text = position.Line.Text;
                 var selection = position.Line.Glyphs ?? new(context.Face, context.Face.Typeface.GetGlyphs(text), text, text);
-                fonts.Draw(canvas, context.Face, selection.Glyphs.ToArray(), selection.Source.ToArray(), selection.Clusters.ToArray(), (float)size, (float)position.Left, (float)position.Baseline, paint);
+                fonts.Draw(canvas, context.Face, selection.GlyphSpan, selection.SourceSpan, selection.ClusterSpan, (float)size, (float)position.Left, (float)position.Baseline, paint);
                 if (command.Style.Font.Underline && !fonts.IsCollecting)
                 {
                     canvas.DrawLine((float)position.Left, (float)(position.Baseline + 1), (float)(position.Left + position.Line.Width), (float)(position.Baseline + 1), paint);

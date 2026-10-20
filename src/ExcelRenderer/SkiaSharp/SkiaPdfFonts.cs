@@ -1,4 +1,3 @@
-using System.Text;
 using ExcelRenderer.Fonts;
 using SkiaSharp;
 
@@ -38,6 +37,20 @@ internal sealed class SkiaPdfFonts : IDisposable
     /// <summary>Prepares subsets after collection.</summary>
     internal void Prepare() => fonts.Prepare();
 
+    /// <summary>Collects finalized glyph usage without allocating paints or running a renderer.</summary>
+    /// <param name="run">The resolved physical font and Unicode.</param>
+    /// <param name="selection">The immutable selected glyphs.</param>
+    internal void Collect(TextRun run, Core.Fonts.GlyphSequence selection)
+    {
+        var face = ConversionFontResources.Current!.GetFace(run.Font);
+        if (selection.FontIdentity != face.Identity)
+        {
+            throw new InvalidOperationException("Finalized glyphs belong to a different physical font snapshot.");
+        }
+
+        fonts.Collect(face, selection.GlyphSpan);
+    }
+
     /// <summary>Collects or draws already resolved source Unicode.</summary>
     /// <param name="canvas">The target canvas.</param>
     /// <param name="run">The physical font and text.</param>
@@ -49,13 +62,17 @@ internal sealed class SkiaPdfFonts : IDisposable
     internal void Draw(SKCanvas canvas, TextRun run, float size, float x, float y, SKPaint paint, Core.Fonts.GlyphSequence? selection = null)
     {
         var face = ConversionFontResources.Current!.GetFace(run.Font);
-        var glyphs = selection?.Glyphs.ToArray() ?? ((run.GlyphId ?? run.ColorEmojiGlyphId) is { } glyph ? new[] { glyph } : face.Typeface.GetGlyphs(run.Text));
-        selection ??= new(face, glyphs, run.Text, run.SourceText, run.GlyphId is not null || run.ColorEmojiGlyphId is not null || run.MissingPrivateUseGlyph);
+        if (selection is null)
+        {
+            var glyphs = (run.GlyphId ?? run.ColorEmojiGlyphId) is { } glyph ? new[] { glyph } : face.Typeface.GetGlyphs(run.Text);
+            selection = new(face, glyphs, run.Text, run.SourceText, run.GlyphId is not null || run.ColorEmojiGlyphId is not null || run.MissingPrivateUseGlyph);
+        }
+
         if (selection.FontIdentity != face.Identity)
         {
             throw new InvalidOperationException("Finalized glyphs belong to a different physical font snapshot.");
         }
 
-        fonts.Draw(canvas, face, glyphs, selection.Source.ToArray(), selection.Clusters.ToArray(), size, x, y, paint);
+        fonts.Draw(canvas, face, selection.GlyphSpan, selection.SourceSpan, selection.ClusterSpan, size, x, y, paint);
     }
 }

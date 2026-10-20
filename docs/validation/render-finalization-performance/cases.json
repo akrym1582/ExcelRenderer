@@ -1,0 +1,273 @@
+[
+  {
+    "Name": "small-Pdf",
+    "Input": "docs/validation/render-finalization-performance/inputs/small.xlsx",
+    "Format": "Pdf",
+    "Warmups": 8
+  },
+  {
+    "Name": "small-PostScript",
+    "Input": "docs/validation/render-finalization-performance/inputs/small.xlsx",
+    "Format": "PostScript",
+    "Warmups": 8
+  },
+  {
+    "Name": "small-Png",
+    "Input": "docs/validation/render-finalization-performance/inputs/small.xlsx",
+    "Format": "Png",
+    "Warmups": 8
+  },
+  {
+    "Name": "small-Svg",
+    "Input": "docs/validation/render-finalization-performance/inputs/small.xlsx",
+    "Format": "Svg",
+    "Warmups": 8
+  },
+  {
+    "Name": "ten-Pdf",
+    "Input": "docs/validation/render-finalization-performance/inputs/ten.xlsx",
+    "Warmups": 8
+  },
+  {
+    "Name": "hundred-Pdf",
+    "Input": "docs/validation/render-finalization-performance/inputs/hundred.xlsx",
+    "Warmups": 8
+  },
+  {
+    "Name": "hundred-PostScript-selected",
+    "Input": "docs/validation/render-finalization-performance/inputs/hundred.xlsx",
+    "Format": "PostScript",
+    "Pages": [
+      1,
+      50,
+      100
+    ],
+    "Warmups": 8
+  },
+  {
+    "Name": "borders-Png",
+    "Input": "docs/validation/render-finalization-performance/inputs/ten.xlsx",
+    "Format": "Png",
+    "Warmups": 8
+  },
+  {
+    "Name": "repeated-Svg",
+    "Input": "docs/validation/render-finalization-performance/inputs/ten.xlsx",
+    "Format": "Svg",
+    "Warmups": 8
+  },
+  {
+    "Name": "unique-Pdf",
+    "Input": "docs/validation/render-finalization-performance/inputs/unique.xlsx",
+    "Warmups": 8
+  },
+  {
+    "Name": "range-trim-Pdf",
+    "Input": "docs/validation/render-finalization-performance/inputs/ten.xlsx",
+    "Range": "A5:F15",
+    "Trim": true,
+    "Warmups": 8
+  },
+  {
+    "Name": "continuous-Png",
+    "Input": "docs/validation/render-finalization-performance/inputs/ten.xlsx",
+    "Format": "Png",
+    "Continuous": true,
+    "Trim": true,
+    "Warmups": 8
+  },
+  {
+    "Name": "continuous-Svg",
+    "Input": "docs/validation/render-finalization-performance/inputs/ten.xlsx",
+    "Format": "Svg",
+    "Continuous": true,
+    "Trim": true,
+    "Warmups": 8
+  },
+  {
+    "Name": "symbols-Pdf",
+    "Input": "docs/validation/render-finalization-performance/inputs/symbols.xlsx",
+    "Format": "Pdf",
+    "FontPack": true,
+    "Warmups": 8
+  },
+  {
+    "Name": "symbols-PostScript",
+    "Input": "docs/validation/render-finalization-performance/inputs/symbols.xlsx",
+    "Format": "PostScript",
+    "FontPack": true,
+    "Warmups": 8
+  },
+  {
+    "Name": "images-PostScript",
+    "Input": "docs/validation/render-finalization-performance/inputs/images.xlsx",
+    "Format": "PostScript",
+    "Warmups": 8
+  },
+  {
+    "Name": "large-image-Png-trim",
+    "Input": "docs/validation/render-finalization-performance/inputs/images.xlsx",
+    "Format": "Png",
+    "Pages": [
+      1
+    ],
+    "Trim": true,
+    "Warmups": 8
+  },
+  {
+    "Name": "rich-Pdf",
+    "Input": "docs/validation/render-finalization-performance/inputs/rich.xlsx",
+    "Format": "Pdf",
+    "Trim": true,
+    "Warmups": 8
+  },
+  {
+    "Name": "rich-PostScript",
+    "Input": "docs/validation/render-finalization-performance/inputs/rich.xlsx",
+    "Format": "PostScript",
+    "Trim": true,
+    "Warmups": 8
+  },
+  {
+    "Name": "rich-Png",
+    "Input": "docs/validation/render-finalization-performance/inputs/rich.xlsx",
+    "Format": "Png",
+    "Trim": true,
+    "Warmups": 8
+  },
+  {
+    "Name": "rich-Svg",
+    "Input": "docs/validation/render-finalization-performance/inputs/rich.xlsx",
+    "Format": "Svg",
+    "Trim": true,
+    "Warmups": 8
+  },
+  {
+    "Name": "shapes-Pdf",
+    "Input": "docs/validation/render-finalization-performance/inputs/shapes.xlsx",
+    "Format": "Pdf",
+    "Trim": true,
+    "Warmups": 8
+  },
+  {
+    "Name": "shapes-PostScript",
+    "Input": "docs/validation/render-finalization-performance/inputs/shapes.xlsx",
+    "Format": "PostScript",
+    "Trim": true,
+    "Warmups": 8
+  },
+  {
+    "Name": "shapes-Png",
+    "Input": "docs/validation/render-finalization-performance/inputs/shapes.xlsx",
+    "Format": "Png",
+    "Trim": true,
+    "Warmups": 8
+  },
+  {
+    "Name": "shapes-Svg",
+    "Input": "docs/validation/render-finalization-performance/inputs/shapes.xlsx",
+    "Format": "Svg",
+    "Trim": true,
+    "Warmups": 8
+  },
+  {
+    "Name": "read-plain-10000",
+    "Input": "docs/validation/render-finalization-performance/inputs/cf-plain-10000.xlsx",
+    "ReadOnly": true,
+    "Warmups": 8
+  },
+  {
+    "Name": "read-phase1-10000",
+    "Input": "docs/validation/render-finalization-performance/inputs/cf-phase1-10000.xlsx",
+    "ReadOnly": true,
+    "Warmups": 8
+  },
+  {
+    "Name": "read-shared-10000",
+    "Input": "docs/validation/render-finalization-performance/inputs/cf-shared-10000.xlsx",
+    "ReadOnly": true,
+    "Warmups": 8
+  },
+  {
+    "Name": "read-plain-100000",
+    "Input": "docs/validation/render-finalization-performance/inputs/cf-plain-100000.xlsx",
+    "ReadOnly": true,
+    "Warmups": 8
+  },
+  {
+    "Name": "read-phase1-100000",
+    "Input": "docs/validation/render-finalization-performance/inputs/cf-phase1-100000.xlsx",
+    "ReadOnly": true,
+    "Warmups": 8
+  },
+  {
+    "Name": "read-shared-100000",
+    "Input": "docs/validation/render-finalization-performance/inputs/cf-shared-100000.xlsx",
+    "ReadOnly": true,
+    "Warmups": 8
+  },
+  {
+    "Name": "read-disabled-100000",
+    "Input": "docs/validation/render-finalization-performance/inputs/cf-shared-100000.xlsx",
+    "ReadOnly": true,
+    "ConditionalFormatting": false,
+    "Warmups": 8
+  },
+  {
+    "Name": "read-selected-100000",
+    "Input": "docs/validation/render-finalization-performance/inputs/cf-shared-100000.xlsx",
+    "ReadOnly": true,
+    "Mode": "selected",
+    "Warmups": 8
+  },
+  {
+    "Name": "read-overlap",
+    "Input": "docs/validation/render-finalization-performance/inputs/cf-overlap.xlsx",
+    "ReadOnly": true,
+    "Mode": "overlap",
+    "Warmups": 8
+  },
+  {
+    "Name": "read-mapped",
+    "Input": "docs/validation/render-finalization-performance/inputs/cf-mapped-values.xlsx",
+    "ReadOnly": true,
+    "Mode": "cached",
+    "Template": "docs/validation/render-finalization-performance/inputs/cf-mapped.xlsx",
+    "Warmups": 8
+  },
+  {
+    "Name": "read-recalculate",
+    "Input": "docs/validation/render-finalization-performance/inputs/cf-recalculate.xlsx",
+    "ReadOnly": true,
+    "Mode": "recalculate",
+    "Warmups": 8
+  },
+  {
+    "Name": "actual-shape-text-Pdf",
+    "Input": "docs/validation/render-finalization-performance/inputs/actual-shape-text.xlsx",
+    "Format": "Pdf",
+    "Trim": true,
+    "Warmups": 8
+  },
+  {
+    "Name": "actual-shape-text-PostScript",
+    "Input": "docs/validation/render-finalization-performance/inputs/actual-shape-text.xlsx",
+    "Format": "PostScript",
+    "Trim": true,
+    "Warmups": 8
+  },
+  {
+    "Name": "actual-shape-text-Png",
+    "Input": "docs/validation/render-finalization-performance/inputs/actual-shape-text.xlsx",
+    "Format": "Png",
+    "Trim": true,
+    "Warmups": 8
+  },
+  {
+    "Name": "actual-shape-text-Svg",
+    "Input": "docs/validation/render-finalization-performance/inputs/actual-shape-text.xlsx",
+    "Format": "Svg",
+    "Trim": true,
+    "Warmups": 8
+  }
+]

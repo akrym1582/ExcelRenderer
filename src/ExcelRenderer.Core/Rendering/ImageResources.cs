@@ -15,6 +15,8 @@ internal sealed class ImageResources : IDisposable
     private long estimatedBytes;
     private ConditionalWeakTable<byte[], DecodeFailure> failures = new();
     private int failureCount;
+    private ConditionalWeakTable<byte[], AlphaInfo> alpha = new();
+    private int alphaCount;
 
     /// <summary>Initializes a new instance of the <see cref="ImageResources"/> class.</summary>
     /// <param name="limit">The limit used by this operation.</param>
@@ -45,7 +47,65 @@ internal sealed class ImageResources : IDisposable
         estimatedBytes = 0;
         failures = new();
         failureCount = 0;
+        alpha = new();
+        alphaCount = 0;
         CurrentSlot.Value = previous;
+    }
+
+    /// <summary>Reuses a bounded, weak-key alpha classification across resource eviction and page passes.</summary>
+    /// <param name="bytes">The original immutable image snapshot, using the decoder's reference identity.</param>
+    /// <param name="image">The currently leased validated pixels.</param>
+    /// <param name="token">The conversion token, checked on every scanned row.</param>
+    /// <returns>The alpha class without retaining any additional native image.</returns>
+    internal ImageAlphaKind InspectAlpha(byte[] bytes, DecodedImage image, CancellationToken token)
+    {
+        token.ThrowIfCancellationRequested();
+        if (alpha.TryGetValue(bytes, out var cached))
+        {
+            ConversionMetrics.Report("imageAlphaCacheHits", 1);
+            return cached.Kind;
+        }
+
+        var kind = Inspect();
+        if (alphaCount >= 512)
+        {
+            alpha = new();
+            alphaCount = 0;
+        }
+
+        alpha.Add(bytes, new(kind));
+        alphaCount++;
+        return kind;
+
+        ImageAlphaKind Inspect()
+        {
+            if (image.Raster.AlphaType == SkiaSharp.SKAlphaType.Opaque)
+            {
+                return ImageAlphaKind.Opaque;
+            }
+
+            ConversionMetrics.Report("imageAlphaScans", 1);
+            using var bitmap = SkiaSharp.SKBitmap.FromImage(image.Raster);
+            var visible = false;
+            var transparent = false;
+            for (var y = 0; y < bitmap.Height; y++)
+            {
+                token.ThrowIfCancellationRequested();
+                for (var x = 0; x < bitmap.Width; x++)
+                {
+                    var value = bitmap.GetPixel(x, y).Alpha;
+                    if (value is > 0 and < 255)
+                    {
+                        return ImageAlphaKind.Partial;
+                    }
+
+                    visible |= value != 0;
+                    transparent |= value == 0;
+                }
+            }
+
+            return !visible ? ImageAlphaKind.Transparent : transparent ? ImageAlphaKind.BinaryMask : ImageAlphaKind.Opaque;
+        }
     }
 
     /// <summary>Shares one complete pixel decode and its actual failure across drawing passes.</summary>
@@ -174,6 +234,8 @@ internal sealed class ImageResources : IDisposable
     }
 
     private sealed record DecodeFailure(string Reason);
+
+    private sealed record AlphaInfo(ImageAlphaKind Kind);
 
     private sealed class Entry
     {

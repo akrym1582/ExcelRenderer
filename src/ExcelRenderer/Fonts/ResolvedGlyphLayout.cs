@@ -19,6 +19,7 @@ internal static class ResolvedGlyphLayout
         var text = run.Run;
         var face = resources.GetFace(text.Font);
         var glyphs = (text.GlyphId ?? text.ColorEmojiGlyphId) is { } glyph ? new[] { glyph } : face.Typeface.GetGlyphs(text.Text);
+        Rendering.ConversionMetrics.Report("glyphRunsFinalized", 1);
         return run with
         {
             Run = text with { Font = resources.Freeze(text.Font) },

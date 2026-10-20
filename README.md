@@ -767,6 +767,8 @@ See [Architecture](docs/architecture.md) for the layout passes, drawing commands
   anchor behavior has not been verified against desktop Excel. Repeated titles do not repeat drawing objects.
 - Output can differ from Excel because font measurement and rendering engines differ.
 
+Command finalization, two-pass PDF/PS collection, bounded CF/alpha/ink caches and the current measurements are documented in [render finalization and performance](docs/render-finalization-performance.md).
+
 ## PDF performance
 
 The stream converter draws all pages directly into one PDF document and saves once.

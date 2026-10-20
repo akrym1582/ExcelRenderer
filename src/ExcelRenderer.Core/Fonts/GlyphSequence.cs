@@ -6,6 +6,10 @@ namespace ExcelRenderer.Core.Fonts;
 /// <summary>Stores immutable glyph selection and source clusters without retaining native handles.</summary>
 internal sealed class GlyphSequence
 {
+    private readonly ushort[] glyphs;
+    private readonly byte[] source;
+    private readonly uint[] clusters;
+
     /// <summary>Initializes a new instance of the <see cref="GlyphSequence"/> class.</summary>
     /// <param name="face">The selected physical snapshot.</param>
     /// <param name="glyphs">The selected IDs.</param>
@@ -15,8 +19,10 @@ internal sealed class GlyphSequence
     internal GlyphSequence(SkiaFontFace face, ushort[] glyphs, string display, string source, bool singleCluster = false)
     {
         FontIdentity = face.Identity;
-        Glyphs = Array.AsReadOnly((ushort[])glyphs.Clone());
-        Source = Array.AsReadOnly(Encoding.UTF8.GetBytes(source));
+        this.glyphs = (ushort[])glyphs.Clone();
+        this.source = Encoding.UTF8.GetBytes(source);
+        Glyphs = Array.AsReadOnly(this.glyphs);
+        Source = Array.AsReadOnly(this.source);
         var clusters = new List<uint>();
         if (singleCluster)
         {
@@ -60,7 +66,8 @@ internal sealed class GlyphSequence
             throw new InvalidDataException("Glyphs and source Unicode clusters differ.");
         }
 
-        Clusters = clusters.AsReadOnly();
+        this.clusters = clusters.ToArray();
+        Clusters = Array.AsReadOnly(this.clusters);
         Advances = Array.AsReadOnly(face.Advances(glyphs, 1));
     }
 
@@ -78,4 +85,13 @@ internal sealed class GlyphSequence
 
     /// <summary>Gets per-glyph advances at one point; offsets are zero under the existing nonshaping policy.</summary>
     internal IReadOnlyList<double> Advances { get; }
+
+    /// <summary>Gets borrowed immutable glyphs for native APIs that copy their input.</summary>
+    internal ReadOnlySpan<ushort> GlyphSpan => glyphs;
+
+    /// <summary>Gets borrowed immutable UTF-8 text for native APIs that copy their input.</summary>
+    internal ReadOnlySpan<byte> SourceSpan => source;
+
+    /// <summary>Gets borrowed immutable clusters for native APIs that copy their input.</summary>
+    internal ReadOnlySpan<uint> ClusterSpan => clusters;
 }

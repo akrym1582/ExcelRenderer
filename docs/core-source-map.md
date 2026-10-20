@@ -288,3 +288,12 @@ FontManager's internal exact lookup respects its existing discovery permissions 
 physical family names. No IFontManager contract member or Core system-font search was added.
 Main shares conversion-local metric decisions between selection preflight and the actual read;
 all output formats consume Core's common geometry plan. Core's single supplied font is unchanged.
+
+## Command finalization and two-pass collection
+
+Main owns `CommandTextFinalizer`, the native PNG/SVG compatibility finalization policy,
+CF display unions and band-shared rule arrays, trim placement, and `ShapeGeometry`.
+Core owns immutable glyph/source/cluster storage and direct PDF glyph registration,
+and the conversion image owner stores bounded, weak-identity alpha metadata.
+Main supplies the PS validation policy. No Reader drawing dependencies or Core PS/CF
+public features are added. See [current finalization and resource contracts](render-finalization-performance.md).

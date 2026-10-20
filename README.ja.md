@@ -685,6 +685,8 @@ Excel (.xlsx) → ReportDocument → RenderDocument → DrawCommand → PDF / Po
 - システムフォントを使用する場合は、実行環境にフォントをインストールする必要があります。
 - Excel、PDF、PNG では文字列計測や描画方式が異なるため、完全に同一の見た目になることは保証しません。
 
+全形式の文字確定、PDF/PSの2回構築、CF・alpha・inkの有界cacheと今回の計測は、[描画確定と性能改善](docs/render-finalization-performance.ja.md)を参照してください。
+
 ## PDF の性能
 
 ストリーム変換では、全ページを一つのPDF文書に直接描画し、最後に1回保存します。

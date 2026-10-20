@@ -17,13 +17,14 @@ namespace ExcelRenderer.CoreIntegration;
 /// <summary>Owns the main product's rule evaluation, priority composition and bounded candidates for one sheet.</summary>
 internal sealed partial class ConditionalFormattingSession
 {
+    private static readonly IReadOnlyDictionary<string, ElementInfo> EmptyProperties = new Dictionary<string, ElementInfo>();
     private readonly WorksheetInfo info;
     private readonly WorkbookCalculationSession? calculation;
     private readonly Func<OpenXml.Reader.Model.Cells.CellAddress, bool> isTarget;
     private readonly PreparedRule[] rules;
-    private readonly Core.Layout.BandIndex<(PreparedRule Rule, SourceRange Range)> index;
     private readonly Dictionary<(int Rule, string Code), ConversionDiagnostic> diagnostics = [];
     private readonly bool enabled;
+    private Core.Layout.BandIndex<(PreparedRule Rule, SourceRange Range)> index = new([]);
     private long evaluations;
 
     /// <summary>Initializes a new instance of the <see cref="ConditionalFormattingSession"/> class.</summary>
@@ -37,8 +38,15 @@ internal sealed partial class ConditionalFormattingSession
         this.calculation = calculation;
         this.isTarget = isTarget;
         enabled = options.ApplyConditionalFormatting;
-        rules = info.ConditionalFormattingRules.Select((source, order) => Prepare(source, order, options.FormulaEvaluationOptions)).OrderBy(rule => rule.Priority).ThenBy(rule => rule.Order).ToArray();
-        var duplicates = rules.GroupBy(rule => rule.Priority).Where(group => group.Key <= 0 || group.Count() > 1).SelectMany(group => group).ToHashSet();
+        var prepared = info.ConditionalFormattingRules.Select((source, order) => enabled ? Prepare(source, order, options.FormulaEvaluationOptions) : new PreparedRule(source, order, int.TryParse(Attribute(source.Source, "priority"), out var priority) ? priority : int.MaxValue, false));
+        rules = enabled ? prepared.OrderBy(rule => rule.Priority).ThenBy(rule => rule.Order).ToArray() : prepared.ToArray();
+        var duplicates = new HashSet<PreparedRule>();
+        if (enabled)
+        {
+            ConversionMetrics.Report("conditionalFormatting.rulePrioritySorts", 1);
+            duplicates = rules.GroupBy(rule => rule.Priority).Where(group => group.Key <= 0 || group.Count() > 1).SelectMany(group => group).ToHashSet();
+        }
+
         foreach (var rule in rules)
         {
             if (!enabled)
@@ -62,8 +70,6 @@ internal sealed partial class ConditionalFormattingSession
                 Features.Add(Feature(rule, "ConditionalFormattingStyleUnsupported", "Only supported differential properties are applied; unsupported properties reserve their priority."));
             }
         }
-
-        index = new(rules.SelectMany(rule => rule.Source.Ranges.Select(range => ((rule, range), (double)range.First.Row, (double)range.Last.Row + 1))));
     }
 
     /// <summary>Gets stable source-rule diagnostics, deferred through the existing output selection filter.</summary>
@@ -85,6 +91,11 @@ internal sealed partial class ConditionalFormattingSession
             return;
         }
 
+        if (!PrepareDisplayRanges(token))
+        {
+            return;
+        }
+
         // Intersect first: whole-column sqrefs never create cells beyond the finite rendering geometry.
         var candidates = new HashSet<CellAddress>();
         long visits = 0;
@@ -98,30 +109,10 @@ internal sealed partial class ConditionalFormattingSession
             ? new CellRange(new(title.FirstRow, region.First.Column), new(title.LastRow, region.Last.Column))
             : new CellRange(new(region.First.Row, title.FirstColumn), new(region.Last.Row, title.LastColumn)))))
             .Concat(titleRanges.Where(title => title.Kind == "Rows").SelectMany(row => titleRanges.Where(title => title.Kind == "Columns")
-                .Select(column => new CellRange(new(row.FirstRow, column.FirstColumn), new(row.LastRow, column.LastColumn))))).ToArray();
-        foreach (var region in finiteRegions)
+                .Select(column => new CellRange(new(row.FirstRow, column.FirstColumn), new(row.LastRow, column.LastColumn)))));
+        if (!CollectCandidates(finiteRegions, candidates, candidateLimit, ref visits, token))
         {
-            foreach (var entry in index.Query(region.First.Row, region.Last.Row + 1))
-            {
-                var firstRow = Math.Max(region.First.Row, entry.Range.First.Row);
-                var lastRow = Math.Min(region.Last.Row, entry.Range.Last.Row);
-                var firstColumn = Math.Max(region.First.Column, entry.Range.First.Column);
-                var lastColumn = Math.Min(region.Last.Column, entry.Range.Last.Column);
-                for (var row = firstRow; row <= lastRow; row++)
-                {
-                    token.ThrowIfCancellationRequested();
-                    for (var column = firstColumn; column <= lastColumn; column++)
-                    {
-                        if (++visits > candidateLimit)
-                        {
-                            ReportCandidateLimit(entry.Rule, candidates, "The finite candidate budget was exceeded; this sheet retains ordinary formatting.");
-                            return;
-                        }
-
-                        candidates.Add(new(row, column));
-                    }
-                }
-            }
+            return;
         }
 
         var mergedIndex = new Core.Layout.BandIndex<SourceRange>(info.MergedRanges.Select(range => (range, (double)range.First.Row, (double)range.Last.Row + 1)));
@@ -133,13 +124,11 @@ internal sealed partial class ConditionalFormattingSession
                 var rule = index.Query(merge.First.Row, merge.First.Row + 1).FirstOrDefault(entry => entry.Range.First.Column <= merge.First.Column && entry.Range.Last.Column >= merge.First.Column).Rule;
                 if (rule is not null)
                 {
-                    if (++visits > candidateLimit)
+                    if (candidates.Add(new(merge.First.Row, merge.First.Column)) && ++visits > candidateLimit)
                     {
                         ReportCandidateLimit(rule, candidates, "The finite candidate budget was exceeded; this sheet retains ordinary formatting.");
                         return;
                     }
-
-                    candidates.Add(new(merge.First.Row, merge.First.Column));
                 }
             }
         }
@@ -157,8 +146,14 @@ internal sealed partial class ConditionalFormattingSession
             return;
         }
 
+        var orderedCandidates = candidates.OrderBy(address => address.Row).ThenBy(address => address.Column).ToArray();
+        if (!PrepareRuleRows(orderedCandidates, token))
+        {
+            return;
+        }
+
         var mergedProperties = new Dictionary<CellAddress, Dictionary<string, ElementInfo>>();
-        foreach (var address in candidates.OrderBy(address => address.Row).ThenBy(address => address.Column))
+        foreach (var address in orderedCandidates)
         {
             token.ThrowIfCancellationRequested();
             var sourceAddress = new OpenXml.Reader.Model.Cells.CellAddress(address.Row, address.Column);
@@ -167,10 +162,10 @@ internal sealed partial class ConditionalFormattingSession
                 continue;
             }
 
-            var properties = new Dictionary<string, ElementInfo>(StringComparer.Ordinal);
+            Dictionary<string, ElementInfo>? properties = null;
             var uncertain = false;
             ReportColor? dynamicBackground = null;
-            foreach (var rule in index.Query(address.Row, address.Row + 1).Where(entry => address.Column >= entry.Range.First.Column && address.Column <= entry.Range.Last.Column).Select(entry => entry.Rule).Distinct().OrderBy(rule => rule.Priority).ThenBy(rule => rule.Order))
+            foreach (var rule in ApplicableRules(address, token))
             {
                 if (rule.Failure is not null)
                 {
@@ -187,7 +182,7 @@ internal sealed partial class ConditionalFormattingSession
                         continue;
                     }
 
-                    if (evaluation.Background is { } background && !properties.ContainsKey("fill"))
+                    if (evaluation.Background is { } background && properties?.ContainsKey("fill") != true)
                     {
                         dynamicBackground ??= background;
                     }
@@ -209,7 +204,12 @@ internal sealed partial class ConditionalFormattingSession
                     break;
                 }
 
-                rule.Style.AddTo(properties, dynamicBackground is not null);
+                if (rule.Style.HasProperties)
+                {
+                    properties ??= new(StringComparer.Ordinal);
+                    rule.Style.AddTo(properties, dynamicBackground is not null);
+                }
+
                 if (Attribute(rule.Source.Source, "stopIfTrue") is "1" or "true")
                 {
                     break;
@@ -220,17 +220,26 @@ internal sealed partial class ConditionalFormattingSession
             {
                 // Outside owners contribute only borders. Their font/fill and text
                 // must not enlarge or otherwise change the selected content model.
-                properties = properties.Where(property => property.Key is "left" or "right" or "top" or "bottom").ToDictionary(property => property.Key, property => property.Value, StringComparer.Ordinal);
+                if (properties is not null)
+                {
+                    properties.Remove("fill");
+                    properties.Remove("color");
+                    properties.Remove("b");
+                    properties.Remove("i");
+                    properties.Remove("u");
+                }
+
                 dynamicBackground = null;
             }
 
-            if (uncertain || (properties.Count == 0 && dynamicBackground is null))
+            if (uncertain || ((properties?.Count ?? 0) == 0 && dynamicBackground is null))
             {
                 continue;
             }
 
+            var effectiveProperties = properties ?? EmptyProperties;
             var cell = cells.GetValueOrDefault(address) ?? new ReportCell(string.Empty, blankStyle(address));
-            var style = styles.Intern(ConditionalStyle.Apply(cell.Style, properties, dynamicBackground));
+            var style = styles.Intern(ConditionalStyle.Apply(cell.Style, effectiveProperties, dynamicBackground));
             if (!cells.ContainsKey(address) && style.Background is null && style.Border is null)
             {
                 continue;
@@ -238,10 +247,10 @@ internal sealed partial class ConditionalFormattingSession
 
             var text = cell.ExtensionData is FullCellTextData rich ? rich with
             {
-                Runs = rich.Runs.Select(run => run with { Font = CoreModelAdapter.ToPublic(ConditionalStyle.ApplyFont(CoreModelAdapter.ToCore(run.Font), properties)) }).ToArray(),
+                Runs = rich.Runs.Select(run => run with { Font = CoreModelAdapter.ToPublic(ConditionalStyle.ApplyFont(CoreModelAdapter.ToCore(run.Font), effectiveProperties)) }).ToArray(),
             } : cell.ExtensionData;
             cells[address] = cell with { Style = style, ExtensionData = text };
-            if (merges.ContainsKey(address))
+            if (properties is not null && merges.ContainsKey(address))
             {
                 mergedProperties.Add(address, properties);
             }
@@ -270,7 +279,10 @@ internal sealed partial class ConditionalFormattingSession
         }
 
         Core.Rendering.ConversionMetrics.Report("conditionalFormatting.evaluations", evaluations);
+        Core.Rendering.ConversionMetrics.Report("conditionalFormatting.candidateVisits", visits);
         Core.Rendering.ConversionMetrics.Report("conditionalFormatting.candidates", candidates.Count);
+        Core.Rendering.ConversionMetrics.Report("conditionalFormatting.ruleNormalizationWork", ruleWork);
+        Core.Rendering.ConversionMetrics.Report("conditionalFormatting.retainedRuleReferences", ruleReferences);
     }
 
     private static string Id(PreparedRule rule) => "conditional-format-" + (rule.Order + 1).ToString(CultureInfo.InvariantCulture);
@@ -401,12 +413,12 @@ internal sealed partial class ConditionalFormattingSession
 
     private sealed class PreparedRule
     {
-        internal PreparedRule(ConditionalFormattingRuleInfo source, int order, int priority)
+        internal PreparedRule(ConditionalFormattingRuleInfo source, int order, int priority, bool prepareStyle = true)
         {
             Source = source;
             Order = order;
             Priority = priority;
-            Style = new(source.Style?.Source);
+            Style = new(prepareStyle ? source.Style?.Source : null);
         }
 
         internal ConditionalFormattingRuleInfo Source { get; }

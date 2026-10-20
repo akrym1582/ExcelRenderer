@@ -1,0 +1,12 @@
+{
+  "README.md": "7f1907aa89c19c739fb98cf2c023ba9ad8d85c29a8acee9719c735d33338d457",
+  "fixtures/displaced.png": "c63025efc779bbcb7e15ffc4482a11051c58ee4c69c627a8291673658c12581f",
+  "fixtures/drawing-png.png": "720ae23284e264171cb9544d337bae2987414c1cee02821607129b6c9d1755ed",
+  "fixtures/drawing-ps.png": "050a1641e0ae8bccedfccadfa520c10446399af064c3d133ee43ad78f8d3b15d",
+  "fixtures/missing-glyph.png": "7568358ad0ec14d544dcdc20a404bbecedf1230d2c7384fe85425c44fd8ca311",
+  "fixtures/missing-line.png": "a15ab1809fafe0ee15126d2f685685ddb30cf5f73b29d1f59b827e635d84010e",
+  "full-tests.log": "0e6a393d567c04f76e6d2655704e3efe6086569fbf65d5919f27b57409fd1390",
+  "release-rebuild.log": "4d5d58ef53b9fd9a4b0d6c80c2daff0e84a15d12126d290d01c0b382a532f3bb",
+  "results.json": "1d8f3d95457badc3a1e1b7ce9fce3f19804152f0bdd4b57555617b41f254d341",
+  "test-summary.json": "35f7fea1ed5e83402c53b9e952acd4e7f1c5c41473ce07936e33a35eedac416f"
+}

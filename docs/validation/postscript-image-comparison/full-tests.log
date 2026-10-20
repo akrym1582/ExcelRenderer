@@ -1,0 +1,30 @@
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Core.Tests/bin/Release/net10.0/ExcelRenderer.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /workspace/ExcelRenderer/artifacts/postscript-image-comparison/verified-tests/image-comparison_net10.0_20261020221253.trx
+
+Passed!  - Failed:     0, Passed:   344, Skipped:     0, Total:   344, Duration: 57 s - ExcelRenderer.Core.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Formulas.Tests/bin/Release/net10.0/ExcelRenderer.Formulas.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /workspace/ExcelRenderer/artifacts/postscript-image-comparison/verified-tests/image-comparison_net10.0_20261020221404.trx
+
+Passed!  - Failed:     0, Passed:   833, Skipped:     0, Total:   833, Duration: 5 s - ExcelRenderer.Formulas.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Mapping.Tests/bin/Release/net10.0/ExcelRenderer.Mapping.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /workspace/ExcelRenderer/artifacts/postscript-image-comparison/verified-tests/image-comparison_net10.0_20261020221426.trx
+
+Passed!  - Failed:     0, Passed:   172, Skipped:     0, Total:   172, Duration: 16 s - ExcelRenderer.Mapping.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.OpenXml.Tests/bin/Release/net10.0/ExcelRenderer.OpenXml.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /workspace/ExcelRenderer/artifacts/postscript-image-comparison/verified-tests/image-comparison_net10.0_20261020221431.trx
+
+Passed!  - Failed:     0, Passed:   213, Skipped:     0, Total:   213, Duration: 2 s - ExcelRenderer.OpenXml.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Release/net10.0/ExcelRenderer.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /workspace/ExcelRenderer/artifacts/postscript-image-comparison/verified-tests/image-comparison_net10.0_20261020222957.trx
+
+Passed!  - Failed:     0, Passed:   976, Skipped:     0, Total:   976, Duration: 15 m 19 s - ExcelRenderer.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Tool.Tests/bin/Release/net10.0/ExcelRenderer.Tool.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /workspace/ExcelRenderer/artifacts/postscript-image-comparison/verified-tests/image-comparison_net10.0_20261020224310.trx
+
+Passed!  - Failed:     0, Passed:   118, Skipped:     0, Total:   118, Duration: 13 m 7 s - ExcelRenderer.Tool.Tests.dll (net10.0)

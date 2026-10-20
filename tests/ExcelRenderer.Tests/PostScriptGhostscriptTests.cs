@@ -272,6 +272,30 @@ public sealed class PostScriptGhostscriptTests
         Assert.True(result.Passed, JsonSerializer.Serialize(result));
     }
 
+    [Theory]
+    [InlineData(SKColorType.Bgra8888, SKAlphaType.Premul)]
+    [InlineData(SKColorType.Rgba8888, SKAlphaType.Premul)]
+    [InlineData(SKColorType.Bgra8888, SKAlphaType.Unpremul)]
+    [InlineData(SKColorType.Rgba8888, SKAlphaType.Unpremul)]
+    public void Comparison_preserves_diff_channels_and_opaque_alpha(SKColorType colorType, SKAlphaType alphaType)
+    {
+        Directory.CreateDirectory(Artifacts);
+        using var expected = new SKBitmap(new SKImageInfo(3, 2, colorType, alphaType));
+        using var actual = new SKBitmap(new SKImageInfo(3, 2, colorType, alphaType));
+        expected.Pixels = [new(30, 80, 210), new(255, 240, 170), new(120, 0, 0), new(90, 180, 40, 128), SKColors.Transparent, SKColors.White];
+        actual.Pixels = [new(20, 120, 10), new(0, 30, 180), new(0, 36, 0), new(60, 20, 140, 192), SKColors.Black, SKColors.White];
+        var path = Path.Combine(Artifacts, $"diff-channels-{colorType}-{alphaType}.png");
+        Compare(expected, actual, path);
+        using var diff = SKBitmap.Decode(path);
+        // Read back inputs so premultiplied channel rounding is included in the expectation.
+        var a = expected.Pixels;
+        var b = actual.Pixels;
+        var pixels = diff.Pixels;
+        Assert.Equal(a.Length, pixels.Length);
+        for (var i = 0; i < a.Length; i++)
+            Assert.Equal(new SKColor((byte)Math.Abs(a[i].Red - b[i].Red), (byte)Math.Abs(a[i].Green - b[i].Green), (byte)Math.Abs(a[i].Blue - b[i].Blue)), pixels[i]);
+    }
+
     [GhostscriptTheory]
     [InlineData("normal")]
     [InlineData("gray-removed")]
@@ -392,16 +416,18 @@ public sealed class PostScriptGhostscriptTests
 
     private static Comparison Compare(SKBitmap expected, SKBitmap actual, string diffPath)
     {
-        Assert.Equal(expected.Width, actual.Width);
-        Assert.Equal(expected.Height, actual.Height);
+        var width = expected.Width;
+        var height = expected.Height;
+        Assert.Equal(width, actual.Width);
+        Assert.Equal(height, actual.Height);
         const int tile = 64;
         const int radius = 4;
         const int whiteTolerance = 2;
         const int interiorTolerance = 3;
         const int boundaryTolerance = 24;
         const double boundaryHueTolerance = .1;
-        var columns = (expected.Width + tile - 1) / tile;
-        var rows = (expected.Height + tile - 1) / tile;
+        var columns = (width + tile - 1) / tile;
+        var rows = (height + tile - 1) / tile;
         var contourInk = new int[columns * rows];
         var contourMissing = new int[contourInk.Length];
         var colorInk = new int[contourInk.Length];
@@ -410,15 +436,18 @@ public sealed class PostScriptGhostscriptTests
         var regionMissing = new int[contourInk.Length];
         var a = expected.Pixels;
         var b = actual.Pixels;
-        using var diff = new SKBitmap(expected.Width, expected.Height);
-        for (var y = 0; y < expected.Height; y++)
-        for (var x = 0; x < expected.Width; x++)
+        var diffPixels = new SKColor[a.Length];
+        using var diff = new SKBitmap(width, height);
+        for (var y = 0; y < height; y++)
+        for (var x = 0; x < width; x++)
         {
-            var offset = (y * expected.Width) + x;
-            diff.SetPixel(x, y, new((byte)Math.Abs(a[offset].Red - b[offset].Red), (byte)Math.Abs(a[offset].Green - b[offset].Green), (byte)Math.Abs(a[offset].Blue - b[offset].Blue)));
+            var offset = (y * width) + x;
+            diffPixels[offset] = new((byte)Math.Abs(a[offset].Red - b[offset].Red), (byte)Math.Abs(a[offset].Green - b[offset].Green), (byte)Math.Abs(a[offset].Blue - b[offset].Blue));
             Check(a, b, x, y);
             Check(b, a, x, y);
         }
+        // SetPixel draws through a native canvas for each pixel; transfer the complete diff once.
+        diff.Pixels = diffPixels;
         SaveBitmap(diff, diffPath);
         var contour = Measure(contourInk, contourMissing, relative: true);
         // Boundary discrepancies are relative to local content, including its solid interior.
@@ -440,17 +469,17 @@ public sealed class PostScriptGhostscriptTests
 
         void Check(SKColor[] source, SKColor[] target, int x, int y)
         {
-            var color = source[(y * expected.Width) + x];
+            var color = source[(y * width) + x];
             // Ignore only 1-2 channel levels next to white, not low-contrast content in general.
             if (Contrast(color) <= whiteTolerance) return;
             var index = (y / tile * columns) + (x / tile);
             var interior = true;
-            for (var dy = -1; dy <= 1; dy++)
-            for (var dx = -1; dx <= 1; dx++)
+            for (var dy = -1; dy <= 1 && interior; dy++)
+            for (var dx = -1; dx <= 1 && interior; dx++)
             {
-                var sx = Math.Clamp(x + dx, 0, expected.Width - 1);
-                var sy = Math.Clamp(y + dy, 0, expected.Height - 1);
-                if (Distance(color, source[(sy * expected.Width) + sx]) > whiteTolerance) interior = false;
+                var sx = Math.Clamp(x + dx, 0, width - 1);
+                var sy = Math.Clamp(y + dy, 0, height - 1);
+                if (Distance(color, source[(sy * width) + sx]) > whiteTolerance) interior = false;
             }
 
             // Geometry deliberately ignores color. Color checks below independently gate success.
@@ -458,16 +487,17 @@ public sealed class PostScriptGhostscriptTests
             if (contour) contourInk[index]++;
             if (interior) regionInk[index]++;
             else colorInk[index]++;
-            var center = target[(y * expected.Width) + x];
+            var center = target[(y * width) + x];
             var geometryMatched = Contrast(center) > 20;
             var colorMatched = MatchesColor(center);
             if (!colorMatched || (contour && !geometryMatched))
             {
-                for (var dy = -radius; dy <= radius; dy++)
-                for (var dx = -radius; dx <= radius; dx++)
+                // Matches only accumulate; once both required checks pass, later candidates cannot change the metrics.
+                for (var dy = -radius; dy <= radius && (!colorMatched || (contour && !geometryMatched)); dy++)
+                for (var dx = -radius; dx <= radius && (!colorMatched || (contour && !geometryMatched)); dx++)
                 {
-                    if (x + dx < 0 || y + dy < 0 || x + dx >= expected.Width || y + dy >= expected.Height) continue;
-                    var candidate = target[((y + dy) * expected.Width) + x + dx];
+                    if (x + dx < 0 || y + dy < 0 || x + dx >= width || y + dy >= height) continue;
+                    var candidate = target[((y + dy) * width) + x + dx];
                     geometryMatched |= Contrast(candidate) > 20;
                     colorMatched |= MatchesColor(candidate);
                 }

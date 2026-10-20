@@ -30,7 +30,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="../ExcelRenderer.Tests/SampleInputs/CellArgb/*.xlsx" Link="SampleInputs/CellArgb/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
-    <None Include="../ExcelRenderer.Tests/SampleInputs/BorderResolution/*.xlsx" Link="SampleInputs/BorderResolution/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../ExcelRenderer.Tests/SampleInputs/*.xlsx" Link="SampleInputs/%(Filename)%(Extension)">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -43,5 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../../src/ExcelRenderer.OpenXml.Reader/ExcelRenderer.OpenXml.Reader.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Fixtures/BorderResolution/*.xlsx" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

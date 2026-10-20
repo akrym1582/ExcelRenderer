@@ -3,6 +3,7 @@ using ExcelRenderer.Core.Excel;
 using ExcelRenderer.Core.Model;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Rendering;
+using PreparedWorkbook = ExcelRenderer.OpenXml.Reader.Input.PreparedWorkbook;
 
 namespace ExcelRenderer.CoreIntegration;
 
@@ -34,7 +35,7 @@ internal sealed partial class FullExcelReader : CoreExcelReader
     protected override bool CaptureConditionalFormatting => detectUnsupportedFeatures;
 
     /// <inheritdoc/>
-    protected override void PrepareWorkbookMetadata(Core.Input.PreparedWorkbook source, IReadOnlyList<string> sheetNames, CoreWorkbookMetadata metadata, IReadOnlyList<string>? selectedSheets)
+    protected override void PrepareWorkbookMetadata(PreparedWorkbook source, IReadOnlyList<string> sheetNames, CoreWorkbookMetadata metadata, IReadOnlyList<string>? selectedSheets)
     {
         using var drawingStream = source.OpenRead();
         using var hyperlinkStream = source.OpenRead();

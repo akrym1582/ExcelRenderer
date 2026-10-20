@@ -1,3 +1,5 @@
+using PreparedWorkbook = ExcelRenderer.OpenXml.Reader.Input.PreparedWorkbook;
+
 namespace ExcelRenderer.Rendering;
 
 /// <summary>Maps public input limits to the shared workbook preparer.</summary>
@@ -8,10 +10,10 @@ internal static class WorkbookInputPreparer
     /// <param name="options">The public input limits.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The shared owner of the validated workbook.</returns>
-    internal static async Task<PreparedWorkbook> ReadAsync(Stream input, WorkbookInputOptions options, CancellationToken cancellationToken) =>
-        new(await Core.Input.WorkbookInputPreparer.ReadAsync(
+    internal static Task<PreparedWorkbook> ReadAsync(Stream input, WorkbookInputOptions options, CancellationToken cancellationToken) =>
+        OpenXml.Reader.Input.WorkbookInputPreparer.ReadAsync(
             input,
-            new Core.WorkbookInputOptions
+            new OpenXml.Reader.Input.WorkbookInputOptions
             {
                 MaxInputBytes = options.MaxInputBytes,
                 MemoryThresholdBytes = options.MemoryThresholdBytes,
@@ -20,5 +22,6 @@ internal static class WorkbookInputPreparer
                 MaxZipEntryCount = options.MaxZipEntryCount,
                 MaxUncompressedZipBytes = options.MaxUncompressedZipBytes,
             },
-            cancellationToken).ConfigureAwait(false));
+            cancellationToken,
+            () => Core.Rendering.ConversionMetrics.Report("buffer.spillCount", 1));
 }

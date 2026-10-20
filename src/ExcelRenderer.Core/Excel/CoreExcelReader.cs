@@ -1,7 +1,7 @@
 using ExcelRenderer.Core.Fonts;
-using ExcelRenderer.Core.Input;
 using ExcelRenderer.Core.Model;
 using ExcelRenderer.Core.Rendering;
+using PreparedWorkbook = ExcelRenderer.OpenXml.Reader.Input.PreparedWorkbook;
 
 namespace ExcelRenderer.Core.Excel;
 

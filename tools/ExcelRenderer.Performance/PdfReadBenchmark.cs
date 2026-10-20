@@ -37,7 +37,7 @@ internal static class PdfReadBenchmark
         }));
         for (var iteration = -2; iteration < samples; iteration++)
         {
-            using var spool = new SpillableBufferStream(new() { MemoryThresholdBytes = threshold });
+            using var spool = new SpillableBufferStream(new() { MemoryThresholdBytes = threshold, AllowTemporaryFiles = true });
             if (!workbook)
             {
                 spool.Write(bytes);
@@ -109,7 +109,7 @@ internal static class PdfReadBenchmark
             }
             else
             {
-                using var spool = new SpillableBufferStream(new() { MemoryThresholdBytes = threshold });
+                using var spool = new SpillableBufferStream(new() { MemoryThresholdBytes = threshold, AllowTemporaryFiles = true });
                 spool.Write(bytes);
                 GeneratedPdfFinalizer.Write(spool, output, pages, default);
             }
@@ -118,7 +118,7 @@ internal static class PdfReadBenchmark
 
     private static void MeasureByteReads(long threshold)
     {
-        using var spool = new SpillableBufferStream(new() { MemoryThresholdBytes = threshold });
+        using var spool = new SpillableBufferStream(new() { MemoryThresholdBytes = threshold, AllowTemporaryFiles = true });
         spool.Write(new byte[131072]);
         for (var warmup = 0; warmup < 2; warmup++)
         {
@@ -143,7 +143,7 @@ internal static class PdfReadBenchmark
     private static RenderRequest Request(long threshold) => new()
     {
         OutputFormat = OutputFormat.Pdf,
-        Buffering = new() { MemoryThresholdBytes = threshold },
+        Buffering = new() { MemoryThresholdBytes = threshold, AllowTemporaryFiles = true },
         FontOptions = new()
         {
             AllowSystemFonts = false,

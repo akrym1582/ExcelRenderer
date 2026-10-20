@@ -78,7 +78,7 @@ public sealed class Phase3MemoryTests
         var directory = Directory.CreateTempSubdirectory();
         try
         {
-            using (var stream = new SpillableBufferStream(new() { MemoryThresholdBytes = 8, TemporaryDirectory = directory.FullName }))
+            using (var stream = new OpenXml.Reader.Input.SpillableBufferStream(new() { MemoryThresholdBytes = 8, AllowTemporaryFiles = true, TemporaryDirectory = directory.FullName }))
             {
                 var bytes = Enumerable.Range(0, count).Select(i => (byte)i).ToArray();
                 stream.Write(bytes, 0, count);
@@ -110,7 +110,7 @@ public sealed class Phase3MemoryTests
     [Fact(DisplayName = "一時ファイル禁止時に 8 バイトを超える書き込みと長さ変更を拒否し、メモリ容量と既存の長さを上限内に保つ")]
     public void No_temp_rejects_oversize_before_allocating_and_set_length_is_bounded()
     {
-        using var stream = new SpillableBufferStream(new() { MemoryThresholdBytes = 8, AllowTemporaryFiles = false });
+        using var stream = new OpenXml.Reader.Input.SpillableBufferStream(new() { MemoryThresholdBytes = 8, AllowTemporaryFiles = false });
         stream.SetLength(8);
         Assert.Throws<InvalidDataException>(() => stream.Write(new byte[100_000], 0, 100_000));
         Assert.Equal(8, stream.Length);

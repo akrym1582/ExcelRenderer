@@ -24,12 +24,7 @@ internal sealed class SkiaPdfDocumentWriter : IPdfDocumentWriter
     {
         buffering ??= new();
         document = new(
-            new Core.Input.InputBufferOptions
-            {
-                MemoryThresholdBytes = buffering.MemoryThresholdBytes,
-                AllowTemporaryFiles = buffering.AllowTemporaryFiles,
-                TemporaryDirectory = buffering.TemporaryDirectory,
-            },
+            RenderBufferFactory.ToInputOptions(buffering),
             token);
         document.BeforeFinalize = source => PdfRenderObserver.NativePdf?.Invoke(source);
         _token = token;

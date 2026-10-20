@@ -116,7 +116,7 @@ public sealed class SvgRenderer
 
         using var imageResources = ImageResources.Current is null ? new ImageResources() : null;
         using var fontResources = ConversionFontResources.Current is null ? new ConversionFontResources() : null;
-        using var buffer = new SpillableBufferStream(buffering);
+        using var buffer = RenderBufferFactory.Create(buffering);
         using var nativeWrites = new NativeWriteStream(buffer);
         using (var canvas = SKSvgCanvas.Create(
             SKRect.Create((float)pageSettings.Width, (float)pageSettings.Height),

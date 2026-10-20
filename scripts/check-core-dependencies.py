@@ -27,8 +27,8 @@ for relative, owner in {
     'Layout/CellContentBounds.cs': 'Core.Layout.CellContentBounds',
     'Drawing/BorderStrokeGeometry.cs': 'Core.Drawing.BorderStrokeGeometry',
     'Drawing/TextLayoutPlacement.cs': 'Core.Drawing.TextLayoutPlacement',
-    'Rendering/WorkbookInputPreparer.cs': 'Core.Input.WorkbookInputPreparer',
-    'Rendering/SpillableBufferStream.cs': 'Core.Input.SpillableBufferStream',
+    'Rendering/WorkbookInputPreparer.cs': 'OpenXml.Reader.Input.WorkbookInputPreparer',
+    'Rendering/RenderBufferFactory.cs': 'Core.Input.InputBufferFactory',
 }.items():
     text = (ROOT / 'src/ExcelRenderer' / relative).read_text()
     assert owner in text, f'{relative}: lost shared delegation'
@@ -93,9 +93,9 @@ for path in list(OPENXML.rglob('*.cs')) + list(READER.rglob('*.cs')):
 for name in ('ExcelRenderer.Core', 'ExcelRenderer', 'ExcelRenderer.Mapping'):
     path = ROOT / 'src' / name / (name + '.csproj')
     assert 'ExcelRenderer.OpenXml' in path.read_text(), f'{path}: shared OpenXml reference missing'
-for relative in ('Input/SpillableBufferStream.cs', 'Input/WorkbookInputPreparer.cs'):
+for relative in ('Input/InputBufferFactory.cs', 'Input/WorkbookInputPreparer.cs'):
     text = (CORE / relative).read_text()
-    assert 'OpenXml.Reader.Input.' in text, f'{relative}: shared input delegation missing'
+    assert 'OpenXml.Reader.Input' in text, f'{relative}: shared input delegation missing'
     assert not re.search(r'\b(for|foreach|while)\s*\(', text), f'{relative}: duplicate input algorithm'
 print('Shared OpenXml dependency direction and input ownership passed')
 

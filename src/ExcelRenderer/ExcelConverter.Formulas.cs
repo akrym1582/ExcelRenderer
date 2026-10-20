@@ -2,6 +2,7 @@ using ExcelRenderer.Excel;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Model;
 using ExcelRenderer.Rendering;
+using PreparedWorkbook = ExcelRenderer.OpenXml.Reader.Input.PreparedWorkbook;
 
 namespace ExcelRenderer;
 

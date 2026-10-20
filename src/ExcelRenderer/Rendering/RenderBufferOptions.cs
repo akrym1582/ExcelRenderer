@@ -13,10 +13,5 @@ public sealed record RenderBufferOptions
     public string? TemporaryDirectory { get; init; }
 
     /// <summary>Validates the buffer threshold and the existing temporary directory.</summary>
-    internal void Validate() => new Core.Input.InputBufferOptions
-    {
-        MemoryThresholdBytes = MemoryThresholdBytes,
-        AllowTemporaryFiles = AllowTemporaryFiles,
-        TemporaryDirectory = TemporaryDirectory,
-    }.Validate();
+    internal void Validate() => RenderBufferFactory.ToInputOptions(this).Validate();
 }

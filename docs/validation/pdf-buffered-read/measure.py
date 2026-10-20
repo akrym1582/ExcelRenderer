@@ -14,14 +14,17 @@ raw = []
 # The natural image spill and the deliberately forced spills are separate cases.
 cases = [(name, ext, threshold) for ext in ('pdf', 'xlsx')
          for name in ('small', 'objects', 'borders', 'image')
-         for threshold in (8388608, 1)]
+         for threshold in ((8388608, 1, 67108864) if name == 'image' else (8388608, 1))]
 for round_number, order in enumerate(('ABC', 'BCA', 'CAB')):
     for name, ext, threshold in cases:
         path = root / 'fixtures' / f'{name}.{ext}'
         for stage in order:
             command = ['dotnet', str(root / stage / 'ExcelRenderer.Performance.dll'),
                        'pdf-read', str(path), str(threshold), '5']
-            result = subprocess.run(command, check=True, text=True, capture_output=True)
+            result = subprocess.run(command, text=True, capture_output=True)
+            if result.returncode:
+                print(result.stderr, file=sys.stderr)
+                result.check_returncode()
             rows = [json.loads(line) for line in result.stdout.splitlines()]
             raw.append(dict(round=round_number, stage=stage, case=name, kind=ext,
                             threshold=threshold, command=command, stderr=result.stderr, rows=rows))

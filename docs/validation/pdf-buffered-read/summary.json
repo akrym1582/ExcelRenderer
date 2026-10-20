@@ -1,0 +1,5510 @@
+[
+  {
+    "round": 0,
+    "stage": "A",
+    "case": "small",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.146,
+        "minimum": 0.1401,
+        "maximum": 0.1687
+      },
+      "AllocatedBytes": {
+        "median": 160328,
+        "minimum": 160328,
+        "maximum": 160328
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 600,
+        "minimum": 600,
+        "maximum": 600
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "B",
+    "case": "small",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.1287,
+        "minimum": 0.1241,
+        "maximum": 0.1657
+      },
+      "AllocatedBytes": {
+        "median": 119752,
+        "minimum": 119752,
+        "maximum": 119752
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 600,
+        "minimum": 600,
+        "maximum": 600
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "C",
+    "case": "small",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.115,
+        "minimum": 0.1109,
+        "maximum": 0.2354
+      },
+      "AllocatedBytes": {
+        "median": 128000,
+        "minimum": 128000,
+        "maximum": 128000
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 600,
+        "minimum": 600,
+        "maximum": 600
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "A",
+    "case": "small",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.2858,
+        "minimum": 0.2547,
+        "maximum": 0.3656
+      },
+      "AllocatedBytes": {
+        "median": 160328,
+        "minimum": 160328,
+        "maximum": 160328
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 600,
+        "minimum": 600,
+        "maximum": 600
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "B",
+    "case": "small",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.2446,
+        "minimum": 0.2316,
+        "maximum": 0.2834
+      },
+      "AllocatedBytes": {
+        "median": 119752,
+        "minimum": 119752,
+        "maximum": 119752
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 600,
+        "minimum": 600,
+        "maximum": 600
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "C",
+    "case": "small",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.131,
+        "minimum": 0.1275,
+        "maximum": 0.1714
+      },
+      "AllocatedBytes": {
+        "median": 128000,
+        "minimum": 128000,
+        "maximum": 128000
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 600,
+        "minimum": 600,
+        "maximum": 600
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "A",
+    "case": "objects",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 29.7555,
+        "minimum": 28.0144,
+        "maximum": 40.7571
+      },
+      "AllocatedBytes": {
+        "median": 23532136,
+        "minimum": 23532136,
+        "maximum": 23533144
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 175634,
+        "minimum": 175634,
+        "maximum": 175634
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "B",
+    "case": "objects",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 22.3905,
+        "minimum": 20.2953,
+        "maximum": 24.6971
+      },
+      "AllocatedBytes": {
+        "median": 9837704,
+        "minimum": 9837704,
+        "maximum": 9838712
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 175634,
+        "minimum": 175634,
+        "maximum": 175634
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "C",
+    "case": "objects",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 17.0609,
+        "minimum": 15.9269,
+        "maximum": 19.8764
+      },
+      "AllocatedBytes": {
+        "median": 9845952,
+        "minimum": 9845952,
+        "maximum": 9846960
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 175634,
+        "minimum": 175634,
+        "maximum": 175634
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "A",
+    "case": "objects",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 101.1146,
+        "minimum": 59.7958,
+        "maximum": 152.6332
+      },
+      "AllocatedBytes": {
+        "median": 23536288,
+        "minimum": 23536256,
+        "maximum": 23560880
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 175634,
+        "minimum": 175634,
+        "maximum": 175634
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "B",
+    "case": "objects",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 52.6674,
+        "minimum": 51.5305,
+        "maximum": 54.5974
+      },
+      "AllocatedBytes": {
+        "median": 9841824,
+        "minimum": 9841824,
+        "maximum": 9842832
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 175634,
+        "minimum": 175634,
+        "maximum": 175634
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "C",
+    "case": "objects",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 16.3673,
+        "minimum": 14.8439,
+        "maximum": 19.1021
+      },
+      "AllocatedBytes": {
+        "median": 9850072,
+        "minimum": 9850072,
+        "maximum": 9851080
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 175634,
+        "minimum": 175634,
+        "maximum": 175634
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "A",
+    "case": "borders",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.4848,
+        "minimum": 0.433,
+        "maximum": 0.5908
+      },
+      "AllocatedBytes": {
+        "median": 433648,
+        "minimum": 433648,
+        "maximum": 434320
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 722835,
+        "minimum": 722835,
+        "maximum": 722835
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "B",
+    "case": "borders",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.4198,
+        "minimum": 0.3703,
+        "maximum": 0.4614
+      },
+      "AllocatedBytes": {
+        "median": 250064,
+        "minimum": 250064,
+        "maximum": 250736
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 722835,
+        "minimum": 722835,
+        "maximum": 722835
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "C",
+    "case": "borders",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.3312,
+        "minimum": 0.2982,
+        "maximum": 0.4474
+      },
+      "AllocatedBytes": {
+        "median": 258312,
+        "minimum": 258312,
+        "maximum": 258984
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 722835,
+        "minimum": 722835,
+        "maximum": 722835
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "A",
+    "case": "borders",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 1.0348,
+        "minimum": 1.0316,
+        "maximum": 1.2075
+      },
+      "AllocatedBytes": {
+        "median": 437768,
+        "minimum": 437768,
+        "maximum": 437768
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 722835,
+        "minimum": 722835,
+        "maximum": 722835
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "B",
+    "case": "borders",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.9183,
+        "minimum": 0.9128,
+        "maximum": 0.932
+      },
+      "AllocatedBytes": {
+        "median": 254184,
+        "minimum": 254184,
+        "maximum": 254184
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 722835,
+        "minimum": 722835,
+        "maximum": 722835
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "C",
+    "case": "borders",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.4464,
+        "minimum": 0.4299,
+        "maximum": 0.4524
+      },
+      "AllocatedBytes": {
+        "median": 262432,
+        "minimum": 262432,
+        "maximum": 262432
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 722835,
+        "minimum": 722835,
+        "maximum": 722835
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "A",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 1.0721,
+        "minimum": 1.0513,
+        "maximum": 1.1574
+      },
+      "AllocatedBytes": {
+        "median": 194048,
+        "minimum": 194048,
+        "maximum": 194048
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 9720798,
+        "minimum": 9720798,
+        "maximum": 9720798
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "B",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 1.0734,
+        "minimum": 1.0088,
+        "maximum": 1.1967
+      },
+      "AllocatedBytes": {
+        "median": 138528,
+        "minimum": 138528,
+        "maximum": 138528
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 9720798,
+        "minimum": 9720798,
+        "maximum": 9720798
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "C",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.963,
+        "minimum": 0.8606,
+        "maximum": 1.125
+      },
+      "AllocatedBytes": {
+        "median": 146776,
+        "minimum": 146776,
+        "maximum": 146776
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 9720798,
+        "minimum": 9720798,
+        "maximum": 9720798
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "A",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 1.1625,
+        "minimum": 1.0701,
+        "maximum": 1.238
+      },
+      "AllocatedBytes": {
+        "median": 194048,
+        "minimum": 194048,
+        "maximum": 194048
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 9720798,
+        "minimum": 9720798,
+        "maximum": 9720798
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "B",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 1.0187,
+        "minimum": 1.011,
+        "maximum": 1.0842
+      },
+      "AllocatedBytes": {
+        "median": 138528,
+        "minimum": 138528,
+        "maximum": 138528
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 9720798,
+        "minimum": 9720798,
+        "maximum": 9720798
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "C",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.9679,
+        "minimum": 0.94,
+        "maximum": 1.0592
+      },
+      "AllocatedBytes": {
+        "median": 146776,
+        "minimum": 146776,
+        "maximum": 146776
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 9720798,
+        "minimum": 9720798,
+        "maximum": 9720798
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "A",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 67108864,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.7563,
+        "minimum": 0.7334,
+        "maximum": 0.9592
+      },
+      "AllocatedBytes": {
+        "median": 189928,
+        "minimum": 189928,
+        "maximum": 190600
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 9720798,
+        "minimum": 9720798,
+        "maximum": 9720798
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "B",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 67108864,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.6896,
+        "minimum": 0.4732,
+        "maximum": 0.7415
+      },
+      "AllocatedBytes": {
+        "median": 134408,
+        "minimum": 134408,
+        "maximum": 135080
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 9720798,
+        "minimum": 9720798,
+        "maximum": 9720798
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "C",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 67108864,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.6521,
+        "minimum": 0.4377,
+        "maximum": 0.7355
+      },
+      "AllocatedBytes": {
+        "median": 142656,
+        "minimum": 142656,
+        "maximum": 143328
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 9720798,
+        "minimum": 9720798,
+        "maximum": 9720798
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "A",
+    "case": "small",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 34.1412,
+        "minimum": 30.7934,
+        "maximum": 42.3871
+      },
+      "AllocatedBytes": {
+        "median": 19818416,
+        "minimum": 19808200,
+        "maximum": 19966968
+      },
+      "FinalSaveMs": {
+        "median": 9.9072,
+        "minimum": 8.5202,
+        "maximum": 13.1368
+      },
+      "OutputBytes": {
+        "median": 116302,
+        "minimum": 116302,
+        "maximum": 116302
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "B",
+    "case": "small",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 30.0299,
+        "minimum": 25.4954,
+        "maximum": 34.1382
+      },
+      "AllocatedBytes": {
+        "median": 19582672,
+        "minimum": 19567688,
+        "maximum": 19730600
+      },
+      "FinalSaveMs": {
+        "median": 7.8635,
+        "minimum": 7.7395,
+        "maximum": 7.9045
+      },
+      "OutputBytes": {
+        "median": 116302,
+        "minimum": 116302,
+        "maximum": 116302
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "C",
+    "case": "small",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 31.1937,
+        "minimum": 27.2872,
+        "maximum": 38.9185
+      },
+      "AllocatedBytes": {
+        "median": 19589000,
+        "minimum": 19575936,
+        "maximum": 19737536
+      },
+      "FinalSaveMs": {
+        "median": 8.2394,
+        "minimum": 7.8312,
+        "maximum": 8.6769
+      },
+      "OutputBytes": {
+        "median": 116302,
+        "minimum": 116302,
+        "maximum": 116302
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "A",
+    "case": "small",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 31.2335,
+        "minimum": 26.9213,
+        "maximum": 34.3785
+      },
+      "AllocatedBytes": {
+        "median": 19561440,
+        "minimum": 19546456,
+        "maximum": 19712440
+      },
+      "FinalSaveMs": {
+        "median": 8.6827,
+        "minimum": 8.5189,
+        "maximum": 8.9499
+      },
+      "OutputBytes": {
+        "median": 116302,
+        "minimum": 116302,
+        "maximum": 116302
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "B",
+    "case": "small",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 31.972,
+        "minimum": 26.7966,
+        "maximum": 44.1506
+      },
+      "AllocatedBytes": {
+        "median": 19327056,
+        "minimum": 19310264,
+        "maximum": 19473824
+      },
+      "FinalSaveMs": {
+        "median": 8.7703,
+        "minimum": 8.3113,
+        "maximum": 9.2331
+      },
+      "OutputBytes": {
+        "median": 116302,
+        "minimum": 116302,
+        "maximum": 116302
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "C",
+    "case": "small",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 29.273,
+        "minimum": 25.1714,
+        "maximum": 32.5348
+      },
+      "AllocatedBytes": {
+        "median": 19333720,
+        "minimum": 19318512,
+        "maximum": 19483072
+      },
+      "FinalSaveMs": {
+        "median": 7.6377,
+        "minimum": 7.6005,
+        "maximum": 8.3238
+      },
+      "OutputBytes": {
+        "median": 116302,
+        "minimum": 116302,
+        "maximum": 116302
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "A",
+    "case": "objects",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 483.5245,
+        "minimum": 422.823,
+        "maximum": 580.5371
+      },
+      "AllocatedBytes": {
+        "median": 96113464,
+        "minimum": 96106680,
+        "maximum": 96551352
+      },
+      "FinalSaveMs": {
+        "median": 12.8586,
+        "minimum": 10.3104,
+        "maximum": 19.4269
+      },
+      "OutputBytes": {
+        "median": 164234,
+        "minimum": 164234,
+        "maximum": 164234
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "B",
+    "case": "objects",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 464.7289,
+        "minimum": 328.4203,
+        "maximum": 560.7171
+      },
+      "AllocatedBytes": {
+        "median": 95263040,
+        "minimum": 94911232,
+        "maximum": 95703416
+      },
+      "FinalSaveMs": {
+        "median": 12.6042,
+        "minimum": 9.8776,
+        "maximum": 12.8927
+      },
+      "OutputBytes": {
+        "median": 164234,
+        "minimum": 164234,
+        "maximum": 164234
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "C",
+    "case": "objects",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 386.2271,
+        "minimum": 228.8307,
+        "maximum": 618.4666
+      },
+      "AllocatedBytes": {
+        "median": 95271944,
+        "minimum": 90062216,
+        "maximum": 95712784
+      },
+      "FinalSaveMs": {
+        "median": 11.1335,
+        "minimum": 9.4501,
+        "maximum": 15.0858
+      },
+      "OutputBytes": {
+        "median": 164234,
+        "minimum": 164234,
+        "maximum": 164234
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "A",
+    "case": "objects",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 514.7385,
+        "minimum": 433.7644,
+        "maximum": 538.981
+      },
+      "AllocatedBytes": {
+        "median": 95592000,
+        "minimum": 89977992,
+        "maximum": 96036416
+      },
+      "FinalSaveMs": {
+        "median": 19.657,
+        "minimum": 12.4037,
+        "maximum": 26.7951
+      },
+      "OutputBytes": {
+        "median": 164234,
+        "minimum": 164234,
+        "maximum": 164234
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "B",
+    "case": "objects",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 483.4903,
+        "minimum": 449.8686,
+        "maximum": 550.428
+      },
+      "AllocatedBytes": {
+        "median": 94748400,
+        "minimum": 94740392,
+        "maximum": 95183824
+      },
+      "FinalSaveMs": {
+        "median": 18.3534,
+        "minimum": 12.1026,
+        "maximum": 22.2305
+      },
+      "OutputBytes": {
+        "median": 164234,
+        "minimum": 164234,
+        "maximum": 164234
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "C",
+    "case": "objects",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 459.0881,
+        "minimum": 443.1378,
+        "maximum": 526.7975
+      },
+      "AllocatedBytes": {
+        "median": 94753256,
+        "minimum": 94750456,
+        "maximum": 95194088
+      },
+      "FinalSaveMs": {
+        "median": 10.2637,
+        "minimum": 9.3827,
+        "maximum": 14.1268
+      },
+      "OutputBytes": {
+        "median": 164234,
+        "minimum": 164234,
+        "maximum": 164234
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "A",
+    "case": "borders",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 298.1519,
+        "minimum": 276.5727,
+        "maximum": 385.2935
+      },
+      "AllocatedBytes": {
+        "median": 67108600,
+        "minimum": 63802360,
+        "maximum": 67207120
+      },
+      "FinalSaveMs": {
+        "median": 5.0446,
+        "minimum": 2.0944,
+        "maximum": 5.3062
+      },
+      "OutputBytes": {
+        "median": 25734,
+        "minimum": 25734,
+        "maximum": 25734
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "B",
+    "case": "borders",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 255.5868,
+        "minimum": 218.8233,
+        "maximum": 362.5091
+      },
+      "AllocatedBytes": {
+        "median": 66441296,
+        "minimum": 66430664,
+        "maximum": 66925056
+      },
+      "FinalSaveMs": {
+        "median": 4.2443,
+        "minimum": 2.3152,
+        "maximum": 4.9952
+      },
+      "OutputBytes": {
+        "median": 25734,
+        "minimum": 25734,
+        "maximum": 25734
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "C",
+    "case": "borders",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 220.525,
+        "minimum": 216.4153,
+        "maximum": 358.5908
+      },
+      "AllocatedBytes": {
+        "median": 66488680,
+        "minimum": 66479568,
+        "maximum": 66929704
+      },
+      "FinalSaveMs": {
+        "median": 2.7422,
+        "minimum": 1.5396,
+        "maximum": 4.2786
+      },
+      "OutputBytes": {
+        "median": 25734,
+        "minimum": 25734,
+        "maximum": 25734
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "A",
+    "case": "borders",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 240.2661,
+        "minimum": 213.7141,
+        "maximum": 364.41
+      },
+      "AllocatedBytes": {
+        "median": 67028736,
+        "minimum": 67023640,
+        "maximum": 67473576
+      },
+      "FinalSaveMs": {
+        "median": 3.7679,
+        "minimum": 3.5889,
+        "maximum": 8.7163
+      },
+      "OutputBytes": {
+        "median": 25734,
+        "minimum": 25734,
+        "maximum": 25734
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "B",
+    "case": "borders",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 167.4077,
+        "minimum": 145.163,
+        "maximum": 357.3767
+      },
+      "AllocatedBytes": {
+        "median": 61535160,
+        "minimum": 61489616,
+        "maximum": 61538736
+      },
+      "FinalSaveMs": {
+        "median": 3.5434,
+        "minimum": 3.2402,
+        "maximum": 5.3383
+      },
+      "OutputBytes": {
+        "median": 25734,
+        "minimum": 25734,
+        "maximum": 25734
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "C",
+    "case": "borders",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 245.5685,
+        "minimum": 232.2589,
+        "maximum": 363.413
+      },
+      "AllocatedBytes": {
+        "median": 66407456,
+        "minimum": 66399568,
+        "maximum": 66849744
+      },
+      "FinalSaveMs": {
+        "median": 3.4486,
+        "minimum": 1.6855,
+        "maximum": 4.0458
+      },
+      "OutputBytes": {
+        "median": 25734,
+        "minimum": 25734,
+        "maximum": 25734
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "A",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 287.6776,
+        "minimum": 282.4738,
+        "maximum": 292.2868
+      },
+      "AllocatedBytes": {
+        "median": 107278464,
+        "minimum": 107257608,
+        "maximum": 107487472
+      },
+      "FinalSaveMs": {
+        "median": 11.7277,
+        "minimum": 9.8789,
+        "maximum": 11.946
+      },
+      "OutputBytes": {
+        "median": 9842064,
+        "minimum": 9842064,
+        "maximum": 9842064
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "B",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 300.4699,
+        "minimum": 293.8268,
+        "maximum": 325.0782
+      },
+      "AllocatedBytes": {
+        "median": 107021928,
+        "minimum": 107000200,
+        "maximum": 107230032
+      },
+      "FinalSaveMs": {
+        "median": 11.1456,
+        "minimum": 10.5246,
+        "maximum": 14.7246
+      },
+      "OutputBytes": {
+        "median": 9842064,
+        "minimum": 9842064,
+        "maximum": 9842064
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "C",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 295.6888,
+        "minimum": 289.5023,
+        "maximum": 310.001
+      },
+      "AllocatedBytes": {
+        "median": 107034424,
+        "minimum": 107008472,
+        "maximum": 107239208
+      },
+      "FinalSaveMs": {
+        "median": 9.3879,
+        "minimum": 8.9172,
+        "maximum": 9.9983
+      },
+      "OutputBytes": {
+        "median": 9842064,
+        "minimum": 9842064,
+        "maximum": 9842064
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "A",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 295.8592,
+        "minimum": 295.3183,
+        "maximum": 317.9965
+      },
+      "AllocatedBytes": {
+        "median": 88959688,
+        "minimum": 88835568,
+        "maximum": 89153288
+      },
+      "FinalSaveMs": {
+        "median": 11.1709,
+        "minimum": 10.3008,
+        "maximum": 11.8186
+      },
+      "OutputBytes": {
+        "median": 9842064,
+        "minimum": 9842064,
+        "maximum": 9842064
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "B",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 291.4958,
+        "minimum": 289.8867,
+        "maximum": 299.5765
+      },
+      "AllocatedBytes": {
+        "median": 88699368,
+        "minimum": 88690400,
+        "maximum": 88895512
+      },
+      "FinalSaveMs": {
+        "median": 10.9682,
+        "minimum": 10.6418,
+        "maximum": 11.2258
+      },
+      "OutputBytes": {
+        "median": 9842064,
+        "minimum": 9842064,
+        "maximum": 9842064
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "C",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 283.3861,
+        "minimum": 275.1353,
+        "maximum": 319.783
+      },
+      "AllocatedBytes": {
+        "median": 88720240,
+        "minimum": 88698752,
+        "maximum": 88928112
+      },
+      "FinalSaveMs": {
+        "median": 9.3936,
+        "minimum": 9.0007,
+        "maximum": 11.8902
+      },
+      "OutputBytes": {
+        "median": 9842064,
+        "minimum": 9842064,
+        "maximum": 9842064
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "A",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 67108864,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 290.2162,
+        "minimum": 282.6205,
+        "maximum": 291.932
+      },
+      "AllocatedBytes": {
+        "median": 108831392,
+        "minimum": 108805120,
+        "maximum": 109028504
+      },
+      "FinalSaveMs": {
+        "median": 9.0242,
+        "minimum": 8.5362,
+        "maximum": 9.7012
+      },
+      "OutputBytes": {
+        "median": 9842064,
+        "minimum": 9842064,
+        "maximum": 9842064
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "B",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 67108864,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 286.7829,
+        "minimum": 274.9585,
+        "maximum": 296.6246
+      },
+      "AllocatedBytes": {
+        "median": 108580608,
+        "minimum": 108547680,
+        "maximum": 108774384
+      },
+      "FinalSaveMs": {
+        "median": 8.6686,
+        "minimum": 8.227,
+        "maximum": 9.4275
+      },
+      "OutputBytes": {
+        "median": 9842064,
+        "minimum": 9842064,
+        "maximum": 9842064
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "C",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 67108864,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 286.5637,
+        "minimum": 281.2988,
+        "maximum": 290.5819
+      },
+      "AllocatedBytes": {
+        "median": 108579432,
+        "minimum": 108555960,
+        "maximum": 108786864
+      },
+      "FinalSaveMs": {
+        "median": 8.2971,
+        "minimum": 8.2432,
+        "maximum": 9.3109
+      },
+      "OutputBytes": {
+        "median": 9842064,
+        "minimum": 9842064,
+        "maximum": 9842064
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "A",
+    "case": "small",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.1459,
+        "minimum": 0.1424,
+        "maximum": 0.1765
+      },
+      "AllocatedBytes": {
+        "median": 160328,
+        "minimum": 160328,
+        "maximum": 160328
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 600,
+        "minimum": 600,
+        "maximum": 600
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "B",
+    "case": "small",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.1281,
+        "minimum": 0.1206,
+        "maximum": 0.162
+      },
+      "AllocatedBytes": {
+        "median": 119752,
+        "minimum": 119752,
+        "maximum": 119752
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 600,
+        "minimum": 600,
+        "maximum": 600
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "C",
+    "case": "small",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.1139,
+        "minimum": 0.1105,
+        "maximum": 0.3051
+      },
+      "AllocatedBytes": {
+        "median": 128000,
+        "minimum": 128000,
+        "maximum": 128000
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 600,
+        "minimum": 600,
+        "maximum": 600
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "A",
+    "case": "small",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.3038,
+        "minimum": 0.2652,
+        "maximum": 0.3309
+      },
+      "AllocatedBytes": {
+        "median": 160328,
+        "minimum": 160328,
+        "maximum": 160328
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 600,
+        "minimum": 600,
+        "maximum": 600
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "B",
+    "case": "small",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.2723,
+        "minimum": 0.2324,
+        "maximum": 0.2835
+      },
+      "AllocatedBytes": {
+        "median": 119752,
+        "minimum": 119752,
+        "maximum": 119752
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 600,
+        "minimum": 600,
+        "maximum": 600
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "C",
+    "case": "small",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.1228,
+        "minimum": 0.12,
+        "maximum": 0.1421
+      },
+      "AllocatedBytes": {
+        "median": 128000,
+        "minimum": 128000,
+        "maximum": 128000
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 600,
+        "minimum": 600,
+        "maximum": 600
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "A",
+    "case": "objects",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 28.4812,
+        "minimum": 26.5468,
+        "maximum": 30.5981
+      },
+      "AllocatedBytes": {
+        "median": 23532136,
+        "minimum": 23532136,
+        "maximum": 23533144
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 175634,
+        "minimum": 175634,
+        "maximum": 175634
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "B",
+    "case": "objects",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 21.7852,
+        "minimum": 19.7946,
+        "maximum": 26.2588
+      },
+      "AllocatedBytes": {
+        "median": 9837704,
+        "minimum": 9837704,
+        "maximum": 9838712
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 175634,
+        "minimum": 175634,
+        "maximum": 175634
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "C",
+    "case": "objects",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 16.5801,
+        "minimum": 14.9671,
+        "maximum": 19.4997
+      },
+      "AllocatedBytes": {
+        "median": 9845952,
+        "minimum": 9845952,
+        "maximum": 9846960
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 175634,
+        "minimum": 175634,
+        "maximum": 175634
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "A",
+    "case": "objects",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 104.5495,
+        "minimum": 59.7473,
+        "maximum": 149.9763
+      },
+      "AllocatedBytes": {
+        "median": 23536288,
+        "minimum": 23536256,
+        "maximum": 23560880
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 175634,
+        "minimum": 175634,
+        "maximum": 175634
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "B",
+    "case": "objects",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 47.4954,
+        "minimum": 46.3088,
+        "maximum": 75.7207
+      },
+      "AllocatedBytes": {
+        "median": 9841824,
+        "minimum": 9841824,
+        "maximum": 9842832
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 175634,
+        "minimum": 175634,
+        "maximum": 175634
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "C",
+    "case": "objects",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 17.4879,
+        "minimum": 16.2326,
+        "maximum": 19.6528
+      },
+      "AllocatedBytes": {
+        "median": 9850072,
+        "minimum": 9850072,
+        "maximum": 9851080
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 175634,
+        "minimum": 175634,
+        "maximum": 175634
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "A",
+    "case": "borders",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.5568,
+        "minimum": 0.4734,
+        "maximum": 0.8978
+      },
+      "AllocatedBytes": {
+        "median": 433648,
+        "minimum": 433648,
+        "maximum": 433984
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 722835,
+        "minimum": 722835,
+        "maximum": 722835
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "B",
+    "case": "borders",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.5057,
+        "minimum": 0.3784,
+        "maximum": 0.531
+      },
+      "AllocatedBytes": {
+        "median": 250064,
+        "minimum": 250064,
+        "maximum": 250736
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 722835,
+        "minimum": 722835,
+        "maximum": 722835
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "C",
+    "case": "borders",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.3364,
+        "minimum": 0.3027,
+        "maximum": 0.4444
+      },
+      "AllocatedBytes": {
+        "median": 258312,
+        "minimum": 258312,
+        "maximum": 258984
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 722835,
+        "minimum": 722835,
+        "maximum": 722835
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "A",
+    "case": "borders",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 1.0651,
+        "minimum": 1.0566,
+        "maximum": 1.1773
+      },
+      "AllocatedBytes": {
+        "median": 437768,
+        "minimum": 437768,
+        "maximum": 437768
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 722835,
+        "minimum": 722835,
+        "maximum": 722835
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "B",
+    "case": "borders",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.9236,
+        "minimum": 0.8998,
+        "maximum": 1.1619
+      },
+      "AllocatedBytes": {
+        "median": 254184,
+        "minimum": 254184,
+        "maximum": 254184
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 722835,
+        "minimum": 722835,
+        "maximum": 722835
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "C",
+    "case": "borders",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.4435,
+        "minimum": 0.4252,
+        "maximum": 0.4658
+      },
+      "AllocatedBytes": {
+        "median": 262432,
+        "minimum": 262432,
+        "maximum": 262432
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 722835,
+        "minimum": 722835,
+        "maximum": 722835
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "A",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 1.0509,
+        "minimum": 1.0212,
+        "maximum": 1.1712
+      },
+      "AllocatedBytes": {
+        "median": 194048,
+        "minimum": 194048,
+        "maximum": 194048
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 9720798,
+        "minimum": 9720798,
+        "maximum": 9720798
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "B",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 1.0105,
+        "minimum": 0.9713,
+        "maximum": 1.056
+      },
+      "AllocatedBytes": {
+        "median": 138528,
+        "minimum": 138528,
+        "maximum": 138528
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 9720798,
+        "minimum": 9720798,
+        "maximum": 9720798
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "C",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.8922,
+        "minimum": 0.8387,
+        "maximum": 1.0935
+      },
+      "AllocatedBytes": {
+        "median": 146776,
+        "minimum": 146776,
+        "maximum": 146776
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 9720798,
+        "minimum": 9720798,
+        "maximum": 9720798
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "A",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 1.1855,
+        "minimum": 1.1706,
+        "maximum": 1.2911
+      },
+      "AllocatedBytes": {
+        "median": 194048,
+        "minimum": 194048,
+        "maximum": 194048
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 9720798,
+        "minimum": 9720798,
+        "maximum": 9720798
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "B",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 1.0916,
+        "minimum": 1.0735,
+        "maximum": 1.1183
+      },
+      "AllocatedBytes": {
+        "median": 138528,
+        "minimum": 138528,
+        "maximum": 138528
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 9720798,
+        "minimum": 9720798,
+        "maximum": 9720798
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "C",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.8731,
+        "minimum": 0.8562,
+        "maximum": 0.9044
+      },
+      "AllocatedBytes": {
+        "median": 146776,
+        "minimum": 146776,
+        "maximum": 146776
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 9720798,
+        "minimum": 9720798,
+        "maximum": 9720798
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "A",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 67108864,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.7562,
+        "minimum": 0.5847,
+        "maximum": 0.7845
+      },
+      "AllocatedBytes": {
+        "median": 189928,
+        "minimum": 189928,
+        "maximum": 190600
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 9720798,
+        "minimum": 9720798,
+        "maximum": 9720798
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "B",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 67108864,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.6873,
+        "minimum": 0.4654,
+        "maximum": 0.7103
+      },
+      "AllocatedBytes": {
+        "median": 134408,
+        "minimum": 134408,
+        "maximum": 134408
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 9720798,
+        "minimum": 9720798,
+        "maximum": 9720798
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "C",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 67108864,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.645,
+        "minimum": 0.4315,
+        "maximum": 0.7399
+      },
+      "AllocatedBytes": {
+        "median": 142656,
+        "minimum": 142656,
+        "maximum": 143328
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 9720798,
+        "minimum": 9720798,
+        "maximum": 9720798
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "A",
+    "case": "small",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 29.9562,
+        "minimum": 26.7179,
+        "maximum": 34.5054
+      },
+      "AllocatedBytes": {
+        "median": 19824080,
+        "minimum": 19808200,
+        "maximum": 19969944
+      },
+      "FinalSaveMs": {
+        "median": 8.1791,
+        "minimum": 7.7596,
+        "maximum": 11.2448
+      },
+      "OutputBytes": {
+        "median": 116302,
+        "minimum": 116302,
+        "maximum": 116302
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "B",
+    "case": "small",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 29.9151,
+        "minimum": 25.7931,
+        "maximum": 33.3778
+      },
+      "AllocatedBytes": {
+        "median": 19582672,
+        "minimum": 19567688,
+        "maximum": 19729288
+      },
+      "FinalSaveMs": {
+        "median": 7.7578,
+        "minimum": 7.6909,
+        "maximum": 8.082
+      },
+      "OutputBytes": {
+        "median": 116302,
+        "minimum": 116302,
+        "maximum": 116302
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "C",
+    "case": "small",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 30.0083,
+        "minimum": 25.5649,
+        "maximum": 34.1248
+      },
+      "AllocatedBytes": {
+        "median": 19588552,
+        "minimum": 19575936,
+        "maximum": 19737464
+      },
+      "FinalSaveMs": {
+        "median": 7.6514,
+        "minimum": 7.5882,
+        "maximum": 7.816
+      },
+      "OutputBytes": {
+        "median": 116302,
+        "minimum": 116302,
+        "maximum": 116302
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "A",
+    "case": "small",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 31.3699,
+        "minimum": 27.3079,
+        "maximum": 34.7059
+      },
+      "AllocatedBytes": {
+        "median": 19561216,
+        "minimum": 19546456,
+        "maximum": 19707984
+      },
+      "FinalSaveMs": {
+        "median": 8.7818,
+        "minimum": 8.5208,
+        "maximum": 9.1001
+      },
+      "OutputBytes": {
+        "median": 116302,
+        "minimum": 116302,
+        "maximum": 116302
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "B",
+    "case": "small",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 30.507,
+        "minimum": 27.2896,
+        "maximum": 34.0087
+      },
+      "AllocatedBytes": {
+        "median": 19325248,
+        "minimum": 19310264,
+        "maximum": 19472520
+      },
+      "FinalSaveMs": {
+        "median": 8.5215,
+        "minimum": 8.4335,
+        "maximum": 9.1723
+      },
+      "OutputBytes": {
+        "median": 116302,
+        "minimum": 116302,
+        "maximum": 116302
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "C",
+    "case": "small",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 30.8196,
+        "minimum": 25.5064,
+        "maximum": 37.55
+      },
+      "AllocatedBytes": {
+        "median": 19333496,
+        "minimum": 19318512,
+        "maximum": 19479520
+      },
+      "FinalSaveMs": {
+        "median": 7.9807,
+        "minimum": 7.7489,
+        "maximum": 10.8031
+      },
+      "OutputBytes": {
+        "median": 116302,
+        "minimum": 116302,
+        "maximum": 116302
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "A",
+    "case": "objects",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 438.6782,
+        "minimum": 306.5677,
+        "maximum": 570.8104
+      },
+      "AllocatedBytes": {
+        "median": 96109960,
+        "minimum": 89616072,
+        "maximum": 96550560
+      },
+      "FinalSaveMs": {
+        "median": 13.6716,
+        "minimum": 10.49,
+        "maximum": 14.6146
+      },
+      "OutputBytes": {
+        "median": 164234,
+        "minimum": 164234,
+        "maximum": 164234
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "B",
+    "case": "objects",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 472.5379,
+        "minimum": 414.2658,
+        "maximum": 492.6824
+      },
+      "AllocatedBytes": {
+        "median": 95264496,
+        "minimum": 95260224,
+        "maximum": 95703416
+      },
+      "FinalSaveMs": {
+        "median": 11.1368,
+        "minimum": 9.6697,
+        "maximum": 21.1362
+      },
+      "OutputBytes": {
+        "median": 164234,
+        "minimum": 164234,
+        "maximum": 164234
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "C",
+    "case": "objects",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 470.7358,
+        "minimum": 376.7143,
+        "maximum": 594.7697
+      },
+      "AllocatedBytes": {
+        "median": 95271960,
+        "minimum": 95079200,
+        "maximum": 95712336
+      },
+      "FinalSaveMs": {
+        "median": 10.8281,
+        "minimum": 9.9433,
+        "maximum": 11.4755
+      },
+      "OutputBytes": {
+        "median": 164234,
+        "minimum": 164234,
+        "maximum": 164234
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "A",
+    "case": "objects",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 492.1376,
+        "minimum": 347.1601,
+        "maximum": 620.9594
+      },
+      "AllocatedBytes": {
+        "median": 95595624,
+        "minimum": 95250104,
+        "maximum": 96031688
+      },
+      "FinalSaveMs": {
+        "median": 19.3252,
+        "minimum": 13.0853,
+        "maximum": 21.8092
+      },
+      "OutputBytes": {
+        "median": 164234,
+        "minimum": 164234,
+        "maximum": 164234
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "B",
+    "case": "objects",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 533.4573,
+        "minimum": 341.8459,
+        "maximum": 606.658
+      },
+      "AllocatedBytes": {
+        "median": 94743928,
+        "minimum": 94386248,
+        "maximum": 95183824
+      },
+      "FinalSaveMs": {
+        "median": 18.7955,
+        "minimum": 11.6823,
+        "maximum": 22.6386
+      },
+      "OutputBytes": {
+        "median": 164234,
+        "minimum": 164234,
+        "maximum": 164234
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "C",
+    "case": "objects",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 288.721,
+        "minimum": 273.1898,
+        "maximum": 534.759
+      },
+      "AllocatedBytes": {
+        "median": 89973192,
+        "minimum": 89800104,
+        "maximum": 89980264
+      },
+      "FinalSaveMs": {
+        "median": 10.7607,
+        "minimum": 9.7412,
+        "maximum": 11.1447
+      },
+      "OutputBytes": {
+        "median": 164234,
+        "minimum": 164234,
+        "maximum": 164234
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "A",
+    "case": "borders",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 182.1348,
+        "minimum": 179.1114,
+        "maximum": 366.7047
+      },
+      "AllocatedBytes": {
+        "median": 67108992,
+        "minimum": 67103640,
+        "maximum": 67112384
+      },
+      "FinalSaveMs": {
+        "median": 2.5208,
+        "minimum": 1.8986,
+        "maximum": 4.7857
+      },
+      "OutputBytes": {
+        "median": 25734,
+        "minimum": 25734,
+        "maximum": 25734
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "B",
+    "case": "borders",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 195.5218,
+        "minimum": 156.7165,
+        "maximum": 350.0711
+      },
+      "AllocatedBytes": {
+        "median": 61103192,
+        "minimum": 61095704,
+        "maximum": 61544680
+      },
+      "FinalSaveMs": {
+        "median": 3.1251,
+        "minimum": 2.2845,
+        "maximum": 5.6615
+      },
+      "OutputBytes": {
+        "median": 25734,
+        "minimum": 25734,
+        "maximum": 25734
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "C",
+    "case": "borders",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 233.5803,
+        "minimum": 196.7823,
+        "maximum": 351.7572
+      },
+      "AllocatedBytes": {
+        "median": 61111880,
+        "minimum": 61104400,
+        "maximum": 66930632
+      },
+      "FinalSaveMs": {
+        "median": 2.0836,
+        "minimum": 1.6022,
+        "maximum": 3.2161
+      },
+      "OutputBytes": {
+        "median": 25734,
+        "minimum": 25734,
+        "maximum": 25734
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "A",
+    "case": "borders",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 199.8045,
+        "minimum": 170.1112,
+        "maximum": 348.1236
+      },
+      "AllocatedBytes": {
+        "median": 61653552,
+        "minimum": 61650008,
+        "maximum": 62094248
+      },
+      "FinalSaveMs": {
+        "median": 5.6155,
+        "minimum": 3.687,
+        "maximum": 5.7814
+      },
+      "OutputBytes": {
+        "median": 25734,
+        "minimum": 25734,
+        "maximum": 25734
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "B",
+    "case": "borders",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 235.6192,
+        "minimum": 195.5533,
+        "maximum": 375.0375
+      },
+      "AllocatedBytes": {
+        "median": 61488568,
+        "minimum": 60998456,
+        "maximum": 66401592
+      },
+      "FinalSaveMs": {
+        "median": 5.56,
+        "minimum": 5.3075,
+        "maximum": 8.671
+      },
+      "OutputBytes": {
+        "median": 25734,
+        "minimum": 25734,
+        "maximum": 25734
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "C",
+    "case": "borders",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 192.0881,
+        "minimum": 159.233,
+        "maximum": 368.1697
+      },
+      "AllocatedBytes": {
+        "median": 66400272,
+        "minimum": 61032528,
+        "maximum": 66851616
+      },
+      "FinalSaveMs": {
+        "median": 3.2127,
+        "minimum": 1.5581,
+        "maximum": 3.8389
+      },
+      "OutputBytes": {
+        "median": 25734,
+        "minimum": 25734,
+        "maximum": 25734
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "A",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 294.891,
+        "minimum": 285.0501,
+        "maximum": 321.2906
+      },
+      "AllocatedBytes": {
+        "median": 107279560,
+        "minimum": 107162168,
+        "maximum": 107487664
+      },
+      "FinalSaveMs": {
+        "median": 11.1642,
+        "minimum": 10.4176,
+        "maximum": 12.5017
+      },
+      "OutputBytes": {
+        "median": 9842064,
+        "minimum": 9842064,
+        "maximum": 9842064
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "B",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 286.2313,
+        "minimum": 284.358,
+        "maximum": 290.3532
+      },
+      "AllocatedBytes": {
+        "median": 107022152,
+        "minimum": 107000224,
+        "maximum": 107223440
+      },
+      "FinalSaveMs": {
+        "median": 11.2864,
+        "minimum": 11.0123,
+        "maximum": 11.5943
+      },
+      "OutputBytes": {
+        "median": 9842064,
+        "minimum": 9842064,
+        "maximum": 9842064
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "C",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 290.7044,
+        "minimum": 289.7639,
+        "maximum": 309.7526
+      },
+      "AllocatedBytes": {
+        "median": 107030400,
+        "minimum": 107008472,
+        "maximum": 107263080
+      },
+      "FinalSaveMs": {
+        "median": 9.3406,
+        "minimum": 8.7278,
+        "maximum": 10.9267
+      },
+      "OutputBytes": {
+        "median": 9842064,
+        "minimum": 9842064,
+        "maximum": 9842064
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "A",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 290.2842,
+        "minimum": 288.6837,
+        "maximum": 310.1476
+      },
+      "AllocatedBytes": {
+        "median": 88962192,
+        "minimum": 88948256,
+        "maximum": 89152312
+      },
+      "FinalSaveMs": {
+        "median": 11.0486,
+        "minimum": 10.0819,
+        "maximum": 11.8893
+      },
+      "OutputBytes": {
+        "median": 9842064,
+        "minimum": 9842064,
+        "maximum": 9842064
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "B",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 290.0057,
+        "minimum": 282.9986,
+        "maximum": 311.8224
+      },
+      "AllocatedBytes": {
+        "median": 88691176,
+        "minimum": 88667912,
+        "maximum": 88891608
+      },
+      "FinalSaveMs": {
+        "median": 11.259,
+        "minimum": 10.1751,
+        "maximum": 11.4622
+      },
+      "OutputBytes": {
+        "median": 9842064,
+        "minimum": 9842064,
+        "maximum": 9842064
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "C",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 293.4582,
+        "minimum": 274.9708,
+        "maximum": 307.5423
+      },
+      "AllocatedBytes": {
+        "median": 88698304,
+        "minimum": 88676160,
+        "maximum": 88897664
+      },
+      "FinalSaveMs": {
+        "median": 9.225,
+        "minimum": 9.1395,
+        "maximum": 9.7385
+      },
+      "OutputBytes": {
+        "median": 9842064,
+        "minimum": 9842064,
+        "maximum": 9842064
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "A",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 67108864,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 300.9937,
+        "minimum": 289.1208,
+        "maximum": 309.5047
+      },
+      "AllocatedBytes": {
+        "median": 108824984,
+        "minimum": 108805096,
+        "maximum": 109036496
+      },
+      "FinalSaveMs": {
+        "median": 9.5868,
+        "minimum": 9.2806,
+        "maximum": 10.6901
+      },
+      "OutputBytes": {
+        "median": 9842064,
+        "minimum": 9842064,
+        "maximum": 9842064
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "B",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 67108864,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 288.5865,
+        "minimum": 286.0731,
+        "maximum": 324.7337
+      },
+      "AllocatedBytes": {
+        "median": 108564984,
+        "minimum": 108452296,
+        "maximum": 108770376
+      },
+      "FinalSaveMs": {
+        "median": 8.7844,
+        "minimum": 8.618,
+        "maximum": 10.0226
+      },
+      "OutputBytes": {
+        "median": 9842064,
+        "minimum": 9842064,
+        "maximum": 9842064
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "C",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 67108864,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 297.986,
+        "minimum": 278.1795,
+        "maximum": 311.1108
+      },
+      "AllocatedBytes": {
+        "median": 108582456,
+        "minimum": 108578304,
+        "maximum": 108849496
+      },
+      "FinalSaveMs": {
+        "median": 8.7932,
+        "minimum": 8.3355,
+        "maximum": 9.5057
+      },
+      "OutputBytes": {
+        "median": 9842064,
+        "minimum": 9842064,
+        "maximum": 9842064
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "A",
+    "case": "small",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.1508,
+        "minimum": 0.1427,
+        "maximum": 0.1674
+      },
+      "AllocatedBytes": {
+        "median": 160328,
+        "minimum": 160328,
+        "maximum": 160328
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 600,
+        "minimum": 600,
+        "maximum": 600
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "B",
+    "case": "small",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.1277,
+        "minimum": 0.1219,
+        "maximum": 0.1481
+      },
+      "AllocatedBytes": {
+        "median": 119752,
+        "minimum": 119752,
+        "maximum": 119752
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 600,
+        "minimum": 600,
+        "maximum": 600
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "C",
+    "case": "small",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.1095,
+        "minimum": 0.1051,
+        "maximum": 0.1276
+      },
+      "AllocatedBytes": {
+        "median": 128000,
+        "minimum": 128000,
+        "maximum": 128000
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 600,
+        "minimum": 600,
+        "maximum": 600
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "A",
+    "case": "small",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.2711,
+        "minimum": 0.2503,
+        "maximum": 0.283
+      },
+      "AllocatedBytes": {
+        "median": 160328,
+        "minimum": 160328,
+        "maximum": 160328
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 600,
+        "minimum": 600,
+        "maximum": 600
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "B",
+    "case": "small",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.2473,
+        "minimum": 0.2201,
+        "maximum": 0.2824
+      },
+      "AllocatedBytes": {
+        "median": 119752,
+        "minimum": 119752,
+        "maximum": 119752
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 600,
+        "minimum": 600,
+        "maximum": 600
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "C",
+    "case": "small",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.1387,
+        "minimum": 0.1244,
+        "maximum": 0.2517
+      },
+      "AllocatedBytes": {
+        "median": 128000,
+        "minimum": 128000,
+        "maximum": 128000
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 600,
+        "minimum": 600,
+        "maximum": 600
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "A",
+    "case": "objects",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 27.7333,
+        "minimum": 25.6318,
+        "maximum": 41.0254
+      },
+      "AllocatedBytes": {
+        "median": 23532136,
+        "minimum": 23532136,
+        "maximum": 23533144
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 175634,
+        "minimum": 175634,
+        "maximum": 175634
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "B",
+    "case": "objects",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 23.4054,
+        "minimum": 20.7748,
+        "maximum": 25.0911
+      },
+      "AllocatedBytes": {
+        "median": 9837704,
+        "minimum": 9837704,
+        "maximum": 9838712
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 175634,
+        "minimum": 175634,
+        "maximum": 175634
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "C",
+    "case": "objects",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 16.0359,
+        "minimum": 15.0836,
+        "maximum": 20.0009
+      },
+      "AllocatedBytes": {
+        "median": 9845952,
+        "minimum": 9845952,
+        "maximum": 9846960
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 175634,
+        "minimum": 175634,
+        "maximum": 175634
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "A",
+    "case": "objects",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 89.342,
+        "minimum": 60.6214,
+        "maximum": 143.7197
+      },
+      "AllocatedBytes": {
+        "median": 23536256,
+        "minimum": 23536256,
+        "maximum": 23537264
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 175634,
+        "minimum": 175634,
+        "maximum": 175634
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "B",
+    "case": "objects",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 51.1626,
+        "minimum": 48.8809,
+        "maximum": 66.5865
+      },
+      "AllocatedBytes": {
+        "median": 9841824,
+        "minimum": 9841824,
+        "maximum": 9842832
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 175634,
+        "minimum": 175634,
+        "maximum": 175634
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "C",
+    "case": "objects",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 16.3319,
+        "minimum": 14.8735,
+        "maximum": 19.3091
+      },
+      "AllocatedBytes": {
+        "median": 9850072,
+        "minimum": 9850072,
+        "maximum": 9851080
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 175634,
+        "minimum": 175634,
+        "maximum": 175634
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "A",
+    "case": "borders",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.4841,
+        "minimum": 0.4562,
+        "maximum": 0.5339
+      },
+      "AllocatedBytes": {
+        "median": 433648,
+        "minimum": 433648,
+        "maximum": 434368
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 722835,
+        "minimum": 722835,
+        "maximum": 722835
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "B",
+    "case": "borders",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.4003,
+        "minimum": 0.3862,
+        "maximum": 0.4723
+      },
+      "AllocatedBytes": {
+        "median": 250064,
+        "minimum": 250064,
+        "maximum": 250784
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 722835,
+        "minimum": 722835,
+        "maximum": 722835
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "C",
+    "case": "borders",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.328,
+        "minimum": 0.3177,
+        "maximum": 0.3654
+      },
+      "AllocatedBytes": {
+        "median": 258312,
+        "minimum": 258312,
+        "maximum": 258696
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 722835,
+        "minimum": 722835,
+        "maximum": 722835
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "A",
+    "case": "borders",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 1.0275,
+        "minimum": 1.0202,
+        "maximum": 1.118
+      },
+      "AllocatedBytes": {
+        "median": 437768,
+        "minimum": 437768,
+        "maximum": 437768
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 722835,
+        "minimum": 722835,
+        "maximum": 722835
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "B",
+    "case": "borders",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.9803,
+        "minimum": 0.9281,
+        "maximum": 1.2303
+      },
+      "AllocatedBytes": {
+        "median": 254184,
+        "minimum": 254184,
+        "maximum": 254184
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 722835,
+        "minimum": 722835,
+        "maximum": 722835
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "C",
+    "case": "borders",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.4654,
+        "minimum": 0.4226,
+        "maximum": 0.5106
+      },
+      "AllocatedBytes": {
+        "median": 262432,
+        "minimum": 262432,
+        "maximum": 262432
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 722835,
+        "minimum": 722835,
+        "maximum": 722835
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "A",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 1.1473,
+        "minimum": 1.0904,
+        "maximum": 1.4093
+      },
+      "AllocatedBytes": {
+        "median": 194048,
+        "minimum": 194048,
+        "maximum": 194048
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 9720798,
+        "minimum": 9720798,
+        "maximum": 9720798
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "B",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.9975,
+        "minimum": 0.976,
+        "maximum": 1.0933
+      },
+      "AllocatedBytes": {
+        "median": 138528,
+        "minimum": 138528,
+        "maximum": 138528
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 9720798,
+        "minimum": 9720798,
+        "maximum": 9720798
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "C",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.935,
+        "minimum": 0.8703,
+        "maximum": 0.959
+      },
+      "AllocatedBytes": {
+        "median": 146776,
+        "minimum": 146776,
+        "maximum": 146776
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 9720798,
+        "minimum": 9720798,
+        "maximum": 9720798
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "A",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 1.0598,
+        "minimum": 1.0235,
+        "maximum": 1.0684
+      },
+      "AllocatedBytes": {
+        "median": 194048,
+        "minimum": 194048,
+        "maximum": 194048
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 9720798,
+        "minimum": 9720798,
+        "maximum": 9720798
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "B",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 1.0119,
+        "minimum": 0.9997,
+        "maximum": 1.0476
+      },
+      "AllocatedBytes": {
+        "median": 138528,
+        "minimum": 138528,
+        "maximum": 138528
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 9720798,
+        "minimum": 9720798,
+        "maximum": 9720798
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "C",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.8664,
+        "minimum": 0.8441,
+        "maximum": 1.0865
+      },
+      "AllocatedBytes": {
+        "median": 146776,
+        "minimum": 146776,
+        "maximum": 146776
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 9720798,
+        "minimum": 9720798,
+        "maximum": 9720798
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "A",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 67108864,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.7054,
+        "minimum": 0.5302,
+        "maximum": 0.7688
+      },
+      "AllocatedBytes": {
+        "median": 189928,
+        "minimum": 189928,
+        "maximum": 189928
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 9720798,
+        "minimum": 9720798,
+        "maximum": 9720798
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "B",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 67108864,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.643,
+        "minimum": 0.4436,
+        "maximum": 0.7024
+      },
+      "AllocatedBytes": {
+        "median": 134408,
+        "minimum": 134408,
+        "maximum": 134744
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 9720798,
+        "minimum": 9720798,
+        "maximum": 9720798
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "C",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 67108864,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 0.6521,
+        "minimum": 0.4668,
+        "maximum": 0.6805
+      },
+      "AllocatedBytes": {
+        "median": 142656,
+        "minimum": 142656,
+        "maximum": 142992
+      },
+      "FinalSaveMs": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      },
+      "OutputBytes": {
+        "median": 9720798,
+        "minimum": 9720798,
+        "maximum": 9720798
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "A",
+    "case": "small",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 30.6718,
+        "minimum": 25.9971,
+        "maximum": 36.4198
+      },
+      "AllocatedBytes": {
+        "median": 19818416,
+        "minimum": 19808200,
+        "maximum": 19970944
+      },
+      "FinalSaveMs": {
+        "median": 8.033,
+        "minimum": 7.8528,
+        "maximum": 11.1252
+      },
+      "OutputBytes": {
+        "median": 116302,
+        "minimum": 116302,
+        "maximum": 116302
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "B",
+    "case": "small",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 31.409,
+        "minimum": 26.7736,
+        "maximum": 38.0181
+      },
+      "AllocatedBytes": {
+        "median": 19582896,
+        "minimum": 19567688,
+        "maximum": 19732512
+      },
+      "FinalSaveMs": {
+        "median": 8.1286,
+        "minimum": 7.8604,
+        "maximum": 11.618
+      },
+      "OutputBytes": {
+        "median": 116302,
+        "minimum": 116302,
+        "maximum": 116302
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "C",
+    "case": "small",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 30.609,
+        "minimum": 25.4221,
+        "maximum": 33.444
+      },
+      "AllocatedBytes": {
+        "median": 19589464,
+        "minimum": 19575936,
+        "maximum": 19737464
+      },
+      "FinalSaveMs": {
+        "median": 7.8532,
+        "minimum": 7.6251,
+        "maximum": 11.3669
+      },
+      "OutputBytes": {
+        "median": 116302,
+        "minimum": 116302,
+        "maximum": 116302
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "A",
+    "case": "small",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 31.1553,
+        "minimum": 26.3611,
+        "maximum": 38.1643
+      },
+      "AllocatedBytes": {
+        "median": 19561216,
+        "minimum": 19546456,
+        "maximum": 19711680
+      },
+      "FinalSaveMs": {
+        "median": 8.7677,
+        "minimum": 8.5339,
+        "maximum": 8.8888
+      },
+      "OutputBytes": {
+        "median": 116302,
+        "minimum": 116302,
+        "maximum": 116302
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "B",
+    "case": "small",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 36.7273,
+        "minimum": 27.6625,
+        "maximum": 37.4334
+      },
+      "AllocatedBytes": {
+        "median": 19325064,
+        "minimum": 19310264,
+        "maximum": 19474824
+      },
+      "FinalSaveMs": {
+        "median": 8.4364,
+        "minimum": 8.3273,
+        "maximum": 9.4457
+      },
+      "OutputBytes": {
+        "median": 116302,
+        "minimum": 116302,
+        "maximum": 116302
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "C",
+    "case": "small",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 32.2317,
+        "minimum": 27.7809,
+        "maximum": 35.8554
+      },
+      "AllocatedBytes": {
+        "median": 19333720,
+        "minimum": 19318512,
+        "maximum": 19480040
+      },
+      "FinalSaveMs": {
+        "median": 8.1387,
+        "minimum": 7.984,
+        "maximum": 8.8482
+      },
+      "OutputBytes": {
+        "median": 116302,
+        "minimum": 116302,
+        "maximum": 116302
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "A",
+    "case": "objects",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 463.9041,
+        "minimum": 358.3576,
+        "maximum": 540.7382
+      },
+      "AllocatedBytes": {
+        "median": 96111152,
+        "minimum": 95763048,
+        "maximum": 96550560
+      },
+      "FinalSaveMs": {
+        "median": 13.5703,
+        "minimum": 9.8834,
+        "maximum": 16.9087
+      },
+      "OutputBytes": {
+        "median": 164234,
+        "minimum": 164234,
+        "maximum": 164234
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "B",
+    "case": "objects",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 355.6848,
+        "minimum": 279.5242,
+        "maximum": 493.5346
+      },
+      "AllocatedBytes": {
+        "median": 89848720,
+        "minimum": 89840504,
+        "maximum": 89995832
+      },
+      "FinalSaveMs": {
+        "median": 12.7982,
+        "minimum": 10.1756,
+        "maximum": 13.657
+      },
+      "OutputBytes": {
+        "median": 164234,
+        "minimum": 164234,
+        "maximum": 164234
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "C",
+    "case": "objects",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 410.2856,
+        "minimum": 332.2215,
+        "maximum": 528.4373
+      },
+      "AllocatedBytes": {
+        "median": 95273720,
+        "minimum": 94919992,
+        "maximum": 95712848
+      },
+      "FinalSaveMs": {
+        "median": 10.7106,
+        "minimum": 9.3592,
+        "maximum": 10.7982
+      },
+      "OutputBytes": {
+        "median": 164234,
+        "minimum": 164234,
+        "maximum": 164234
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "A",
+    "case": "objects",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 478.6652,
+        "minimum": 433.1188,
+        "maximum": 535.7303
+      },
+      "AllocatedBytes": {
+        "median": 95592296,
+        "minimum": 95589432,
+        "maximum": 96031984
+      },
+      "FinalSaveMs": {
+        "median": 14.9766,
+        "minimum": 12.2278,
+        "maximum": 19.9191
+      },
+      "OutputBytes": {
+        "median": 164234,
+        "minimum": 164234,
+        "maximum": 164234
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "B",
+    "case": "objects",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 331.6726,
+        "minimum": 284.9784,
+        "maximum": 501.6044
+      },
+      "AllocatedBytes": {
+        "median": 89966064,
+        "minimum": 89960968,
+        "maximum": 90336264
+      },
+      "FinalSaveMs": {
+        "median": 17.4184,
+        "minimum": 14.3728,
+        "maximum": 19.8837
+      },
+      "OutputBytes": {
+        "median": 164234,
+        "minimum": 164234,
+        "maximum": 164234
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "C",
+    "case": "objects",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 300.9192,
+        "minimum": 294.6029,
+        "maximum": 574.312
+      },
+      "AllocatedBytes": {
+        "median": 89587656,
+        "minimum": 89143512,
+        "maximum": 95193224
+      },
+      "FinalSaveMs": {
+        "median": 10.9584,
+        "minimum": 10.1178,
+        "maximum": 11.5102
+      },
+      "OutputBytes": {
+        "median": 164234,
+        "minimum": 164234,
+        "maximum": 164234
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "A",
+    "case": "borders",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 235.7382,
+        "minimum": 221.4708,
+        "maximum": 386.2821
+      },
+      "AllocatedBytes": {
+        "median": 67108656,
+        "minimum": 67103640,
+        "maximum": 67552768
+      },
+      "FinalSaveMs": {
+        "median": 2.6265,
+        "minimum": 2.1292,
+        "maximum": 4.9512
+      },
+      "OutputBytes": {
+        "median": 25734,
+        "minimum": 25734,
+        "maximum": 25734
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "B",
+    "case": "borders",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 160.4412,
+        "minimum": 141.4697,
+        "maximum": 354.1156
+      },
+      "AllocatedBytes": {
+        "median": 61102264,
+        "minimum": 61098592,
+        "maximum": 61548144
+      },
+      "FinalSaveMs": {
+        "median": 1.8842,
+        "minimum": 1.8762,
+        "maximum": 2.3347
+      },
+      "OutputBytes": {
+        "median": 25734,
+        "minimum": 25734,
+        "maximum": 25734
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "C",
+    "case": "borders",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 222.4261,
+        "minimum": 219.0719,
+        "maximum": 339.6371
+      },
+      "AllocatedBytes": {
+        "median": 66493392,
+        "minimum": 66480240,
+        "maximum": 66934560
+      },
+      "FinalSaveMs": {
+        "median": 2.8764,
+        "minimum": 1.493,
+        "maximum": 3.5395
+      },
+      "OutputBytes": {
+        "median": 25734,
+        "minimum": 25734,
+        "maximum": 25734
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "A",
+    "case": "borders",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 225.4801,
+        "minimum": 173.9421,
+        "maximum": 388.8376
+      },
+      "AllocatedBytes": {
+        "median": 61663832,
+        "minimum": 61650472,
+        "maximum": 67028896
+      },
+      "FinalSaveMs": {
+        "median": 5.9883,
+        "minimum": 3.8254,
+        "maximum": 9.2615
+      },
+      "OutputBytes": {
+        "median": 25734,
+        "minimum": 25734,
+        "maximum": 25734
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "B",
+    "case": "borders",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 218.9077,
+        "minimum": 211.6159,
+        "maximum": 342.5513
+      },
+      "AllocatedBytes": {
+        "median": 66400112,
+        "minimum": 66391544,
+        "maximum": 66841672
+      },
+      "FinalSaveMs": {
+        "median": 5.1559,
+        "minimum": 3.1237,
+        "maximum": 8.4434
+      },
+      "OutputBytes": {
+        "median": 25734,
+        "minimum": 25734,
+        "maximum": 25734
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "C",
+    "case": "borders",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 156.0978,
+        "minimum": 153.7451,
+        "maximum": 361.7596
+      },
+      "AllocatedBytes": {
+        "median": 61543832,
+        "minimum": 61539320,
+        "maximum": 61993448
+      },
+      "FinalSaveMs": {
+        "median": 1.797,
+        "minimum": 1.6206,
+        "maximum": 1.8997
+      },
+      "OutputBytes": {
+        "median": 25734,
+        "minimum": 25734,
+        "maximum": 25734
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "A",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 296.0291,
+        "minimum": 284.3125,
+        "maximum": 303.1398
+      },
+      "AllocatedBytes": {
+        "median": 107273816,
+        "minimum": 107252552,
+        "maximum": 107478800
+      },
+      "FinalSaveMs": {
+        "median": 11.008,
+        "minimum": 10.5109,
+        "maximum": 11.5975
+      },
+      "OutputBytes": {
+        "median": 9842064,
+        "minimum": 9842064,
+        "maximum": 9842064
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "B",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 285.1581,
+        "minimum": 281.3,
+        "maximum": 292.218
+      },
+      "AllocatedBytes": {
+        "median": 107022152,
+        "minimum": 107000224,
+        "maximum": 107231256
+      },
+      "FinalSaveMs": {
+        "median": 11.0703,
+        "minimum": 10.9287,
+        "maximum": 11.6323
+      },
+      "OutputBytes": {
+        "median": 9842064,
+        "minimum": 9842064,
+        "maximum": 9842064
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "C",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 283.063,
+        "minimum": 276.7129,
+        "maximum": 297.1083
+      },
+      "AllocatedBytes": {
+        "median": 107029728,
+        "minimum": 107008472,
+        "maximum": 107238832
+      },
+      "FinalSaveMs": {
+        "median": 9.2569,
+        "minimum": 9.0281,
+        "maximum": 11.9955
+      },
+      "OutputBytes": {
+        "median": 9842064,
+        "minimum": 9842064,
+        "maximum": 9842064
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "A",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 294.8154,
+        "minimum": 291.741,
+        "maximum": 296.5142
+      },
+      "AllocatedBytes": {
+        "median": 88947584,
+        "minimum": 88834816,
+        "maximum": 89148248
+      },
+      "FinalSaveMs": {
+        "median": 10.8361,
+        "minimum": 10.5248,
+        "maximum": 12.0733
+      },
+      "OutputBytes": {
+        "median": 9842064,
+        "minimum": 9842064,
+        "maximum": 9842064
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "B",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 299.5824,
+        "minimum": 290.8299,
+        "maximum": 318.5986
+      },
+      "AllocatedBytes": {
+        "median": 88690400,
+        "minimum": 88577960,
+        "maximum": 88891088
+      },
+      "FinalSaveMs": {
+        "median": 10.575,
+        "minimum": 10.2103,
+        "maximum": 11.2494
+      },
+      "OutputBytes": {
+        "median": 9842064,
+        "minimum": 9842064,
+        "maximum": 9842064
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "C",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 1,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 297.9251,
+        "minimum": 295.0818,
+        "maximum": 310.1401
+      },
+      "AllocatedBytes": {
+        "median": 88697752,
+        "minimum": 88585232,
+        "maximum": 88898416
+      },
+      "FinalSaveMs": {
+        "median": 9.4479,
+        "minimum": 9.0561,
+        "maximum": 9.7947
+      },
+      "OutputBytes": {
+        "median": 9842064,
+        "minimum": 9842064,
+        "maximum": 9842064
+      },
+      "Spills": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "A",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 67108864,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 276.4251,
+        "minimum": 271.576,
+        "maximum": 281.4898
+      },
+      "AllocatedBytes": {
+        "median": 108831520,
+        "minimum": 108805088,
+        "maximum": 109035600
+      },
+      "FinalSaveMs": {
+        "median": 8.7271,
+        "minimum": 8.512,
+        "maximum": 9.1213
+      },
+      "OutputBytes": {
+        "median": 9842064,
+        "minimum": 9842064,
+        "maximum": 9842064
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "B",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 67108864,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 288.2571,
+        "minimum": 272.1608,
+        "maximum": 309.5714
+      },
+      "AllocatedBytes": {
+        "median": 108573864,
+        "minimum": 108547656,
+        "maximum": 108773208
+      },
+      "FinalSaveMs": {
+        "median": 9.3264,
+        "minimum": 8.2108,
+        "maximum": 9.9849
+      },
+      "OutputBytes": {
+        "median": 9842064,
+        "minimum": 9842064,
+        "maximum": 9842064
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "C",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 67108864,
+    "metrics": {
+      "ElapsedMs": {
+        "median": 296.4641,
+        "minimum": 288.8341,
+        "maximum": 334.542
+      },
+      "AllocatedBytes": {
+        "median": 108573040,
+        "minimum": 108490120,
+        "maximum": 108778552
+      },
+      "FinalSaveMs": {
+        "median": 8.733,
+        "minimum": 8.295,
+        "maximum": 9.4912
+      },
+      "OutputBytes": {
+        "median": 9842064,
+        "minimum": 9842064,
+        "maximum": 9842064
+      },
+      "Spills": {
+        "median": 0,
+        "minimum": 0,
+        "maximum": 0
+      }
+    }
+  }
+]

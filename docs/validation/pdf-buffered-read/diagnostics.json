@@ -1,0 +1,4862 @@
+[
+  {
+    "stage": "A",
+    "case": "small",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "outputHash": "1fea7741796fc9d4d41ec4f6a4076ad72911958eb9ab8f7470d68e0aa9eeb531",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "small.pdf",
+        "InputHash": "3A490AAD7993353B11C7549B122B64B510E64C73DC87B97C113A074339B3A26E",
+        "InputBytes": 507,
+        "Threshold": 8388608,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "F5E0CFECFD66D0CA9B95D8A9B3B360A8C0B507CE800391314A144F35FFDB6AD9",
+          "ExcelRenderer.OpenXml.Reader": "A2EE1F920BD4C91271F367F6DF416C864059375E7C22C3253771DAA9F19305D8",
+          "ExcelRenderer": "EE52DACC0D7E115FAB976D8CA995AD49C24A87A9E7DB52F9B85418A9C39CA706"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 12.7282,
+        "AllocatedBytes": 164152,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 600,
+        "Operations": {
+          "Reads": 3,
+          "ReadBytes": 1832,
+          "ReadByteCalls": 1268,
+          "PositionGets": 1209,
+          "PositionSets": 831,
+          "Seeks": 0,
+          "LengthGets": 394
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 0.3213,
+        "AllocatedBytes": 160328,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 600,
+        "Operations": {
+          "Reads": 3,
+          "ReadBytes": 1832,
+          "ReadByteCalls": 1268,
+          "PositionGets": 1209,
+          "PositionSets": 831,
+          "Seeks": 0,
+          "LengthGets": 394
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 0.1805,
+        "AllocatedBytes": 160328,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 600,
+        "Operations": {
+          "Reads": 3,
+          "ReadBytes": 1832,
+          "ReadByteCalls": 1268,
+          "PositionGets": 1209,
+          "PositionSets": 831,
+          "Seeks": 0,
+          "LengthGets": 394
+        }
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 4194336,
+        "Spilled": false
+      }
+    ]
+  },
+  {
+    "stage": "B",
+    "case": "small",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "outputHash": "1fea7741796fc9d4d41ec4f6a4076ad72911958eb9ab8f7470d68e0aa9eeb531",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "small.pdf",
+        "InputHash": "3A490AAD7993353B11C7549B122B64B510E64C73DC87B97C113A074339B3A26E",
+        "InputBytes": 507,
+        "Threshold": 8388608,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "CB6C6FBAD7E3A366BEDDC604602A8E8E36B4D866DA83C63B035F03FE2C073A3A",
+          "ExcelRenderer.OpenXml.Reader": "11F4E88E9B28DE9AA1BB9D427A26F6A84DC955A9799D5FD8204447FD474734B9",
+          "ExcelRenderer": "2C79093B3C9FD016634CD09B77E2F212A9D90ED62ADC9B2847DC884FBE33E8A3"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 12.9936,
+        "AllocatedBytes": 123576,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 600,
+        "Operations": {
+          "Reads": 3,
+          "ReadBytes": 1832,
+          "ReadByteCalls": 1268,
+          "PositionGets": 1209,
+          "PositionSets": 831,
+          "Seeks": 0,
+          "LengthGets": 394
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 0.3401,
+        "AllocatedBytes": 119752,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 600,
+        "Operations": {
+          "Reads": 3,
+          "ReadBytes": 1832,
+          "ReadByteCalls": 1268,
+          "PositionGets": 1209,
+          "PositionSets": 831,
+          "Seeks": 0,
+          "LengthGets": 394
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 0.1548,
+        "AllocatedBytes": 119752,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 600,
+        "Operations": {
+          "Reads": 3,
+          "ReadBytes": 1832,
+          "ReadByteCalls": 1268,
+          "PositionGets": 1209,
+          "PositionSets": 831,
+          "Seeks": 0,
+          "LengthGets": 394
+        }
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": false
+      }
+    ]
+  },
+  {
+    "stage": "C",
+    "case": "small",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "outputHash": "1fea7741796fc9d4d41ec4f6a4076ad72911958eb9ab8f7470d68e0aa9eeb531",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "small.pdf",
+        "InputHash": "3A490AAD7993353B11C7549B122B64B510E64C73DC87B97C113A074339B3A26E",
+        "InputBytes": 507,
+        "Threshold": 8388608,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "860905C6274A6E31A84488C39DC94F8E85436EF43EEF209EE889D1DD57BC0D63",
+          "ExcelRenderer.OpenXml.Reader": "CA28934CEAD30764D1FE0E62AB0F41AC09B74801411CCE401E638EFC048C8A3C",
+          "ExcelRenderer": "08A9ABD3E581AB61AC1BFF38C93EB084379ED8B06FB541B248F9BE97190C791F"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 12.5065,
+        "AllocatedBytes": 144160,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 600,
+        "Operations": {
+          "Reads": 2,
+          "ReadBytes": 556,
+          "ReadByteCalls": 0,
+          "PositionGets": 1,
+          "PositionSets": 1,
+          "Seeks": 0,
+          "LengthGets": 1
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 0.241,
+        "AllocatedBytes": 128000,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 600,
+        "Operations": {
+          "Reads": 2,
+          "ReadBytes": 556,
+          "ReadByteCalls": 0,
+          "PositionGets": 1,
+          "PositionSets": 1,
+          "Seeks": 0,
+          "LengthGets": 1
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 0.1333,
+        "AllocatedBytes": 128000,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 600,
+        "Operations": {
+          "Reads": 2,
+          "ReadBytes": 556,
+          "ReadByteCalls": 0,
+          "PositionGets": 1,
+          "PositionSets": 1,
+          "Seeks": 0,
+          "LengthGets": 1
+        }
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": false
+      }
+    ]
+  },
+  {
+    "stage": "A",
+    "case": "small",
+    "kind": "pdf",
+    "threshold": 1,
+    "outputHash": "1fea7741796fc9d4d41ec4f6a4076ad72911958eb9ab8f7470d68e0aa9eeb531",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "small.pdf",
+        "InputHash": "3A490AAD7993353B11C7549B122B64B510E64C73DC87B97C113A074339B3A26E",
+        "InputBytes": 507,
+        "Threshold": 1,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "F5E0CFECFD66D0CA9B95D8A9B3B360A8C0B507CE800391314A144F35FFDB6AD9",
+          "ExcelRenderer.OpenXml.Reader": "A2EE1F920BD4C91271F367F6DF416C864059375E7C22C3253771DAA9F19305D8",
+          "ExcelRenderer": "EE52DACC0D7E115FAB976D8CA995AD49C24A87A9E7DB52F9B85418A9C39CA706"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 12.7598,
+        "AllocatedBytes": 164152,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 600,
+        "Operations": {
+          "Reads": 3,
+          "ReadBytes": 1832,
+          "ReadByteCalls": 1268,
+          "PositionGets": 1209,
+          "PositionSets": 831,
+          "Seeks": 0,
+          "LengthGets": 394
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 0.4445,
+        "AllocatedBytes": 160328,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 600,
+        "Operations": {
+          "Reads": 3,
+          "ReadBytes": 1832,
+          "ReadByteCalls": 1268,
+          "PositionGets": 1209,
+          "PositionSets": 831,
+          "Seeks": 0,
+          "LengthGets": 394
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 0.3025,
+        "AllocatedBytes": 160328,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 600,
+        "Operations": {
+          "Reads": 3,
+          "ReadBytes": 1832,
+          "ReadByteCalls": 1268,
+          "PositionGets": 1209,
+          "PositionSets": 831,
+          "Seeks": 0,
+          "LengthGets": 394
+        }
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 4194336,
+        "Spilled": true
+      }
+    ]
+  },
+  {
+    "stage": "B",
+    "case": "small",
+    "kind": "pdf",
+    "threshold": 1,
+    "outputHash": "1fea7741796fc9d4d41ec4f6a4076ad72911958eb9ab8f7470d68e0aa9eeb531",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "small.pdf",
+        "InputHash": "3A490AAD7993353B11C7549B122B64B510E64C73DC87B97C113A074339B3A26E",
+        "InputBytes": 507,
+        "Threshold": 1,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "CB6C6FBAD7E3A366BEDDC604602A8E8E36B4D866DA83C63B035F03FE2C073A3A",
+          "ExcelRenderer.OpenXml.Reader": "11F4E88E9B28DE9AA1BB9D427A26F6A84DC955A9799D5FD8204447FD474734B9",
+          "ExcelRenderer": "2C79093B3C9FD016634CD09B77E2F212A9D90ED62ADC9B2847DC884FBE33E8A3"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 13.1087,
+        "AllocatedBytes": 123576,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 600,
+        "Operations": {
+          "Reads": 3,
+          "ReadBytes": 1832,
+          "ReadByteCalls": 1268,
+          "PositionGets": 1209,
+          "PositionSets": 831,
+          "Seeks": 0,
+          "LengthGets": 394
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 0.3718,
+        "AllocatedBytes": 119752,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 600,
+        "Operations": {
+          "Reads": 3,
+          "ReadBytes": 1832,
+          "ReadByteCalls": 1268,
+          "PositionGets": 1209,
+          "PositionSets": 831,
+          "Seeks": 0,
+          "LengthGets": 394
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 0.2722,
+        "AllocatedBytes": 119752,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 600,
+        "Operations": {
+          "Reads": 3,
+          "ReadBytes": 1832,
+          "ReadByteCalls": 1268,
+          "PositionGets": 1209,
+          "PositionSets": 831,
+          "Seeks": 0,
+          "LengthGets": 394
+        }
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": true
+      }
+    ]
+  },
+  {
+    "stage": "C",
+    "case": "small",
+    "kind": "pdf",
+    "threshold": 1,
+    "outputHash": "1fea7741796fc9d4d41ec4f6a4076ad72911958eb9ab8f7470d68e0aa9eeb531",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "small.pdf",
+        "InputHash": "3A490AAD7993353B11C7549B122B64B510E64C73DC87B97C113A074339B3A26E",
+        "InputBytes": 507,
+        "Threshold": 1,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "860905C6274A6E31A84488C39DC94F8E85436EF43EEF209EE889D1DD57BC0D63",
+          "ExcelRenderer.OpenXml.Reader": "CA28934CEAD30764D1FE0E62AB0F41AC09B74801411CCE401E638EFC048C8A3C",
+          "ExcelRenderer": "08A9ABD3E581AB61AC1BFF38C93EB084379ED8B06FB541B248F9BE97190C791F"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 15.6046,
+        "AllocatedBytes": 131824,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 600,
+        "Operations": {
+          "Reads": 2,
+          "ReadBytes": 556,
+          "ReadByteCalls": 0,
+          "PositionGets": 1,
+          "PositionSets": 1,
+          "Seeks": 0,
+          "LengthGets": 1
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 0.452,
+        "AllocatedBytes": 128000,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 600,
+        "Operations": {
+          "Reads": 2,
+          "ReadBytes": 556,
+          "ReadByteCalls": 0,
+          "PositionGets": 1,
+          "PositionSets": 1,
+          "Seeks": 0,
+          "LengthGets": 1
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 0.139,
+        "AllocatedBytes": 128000,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 600,
+        "Operations": {
+          "Reads": 2,
+          "ReadBytes": 556,
+          "ReadByteCalls": 0,
+          "PositionGets": 1,
+          "PositionSets": 1,
+          "Seeks": 0,
+          "LengthGets": 1
+        }
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": true
+      }
+    ]
+  },
+  {
+    "stage": "A",
+    "case": "objects",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "outputHash": "051144e368175483ba186f475ac2b03bb41baf65af68c7e370f65967574cef1d",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "objects.pdf",
+        "InputHash": "16D485C2A2185BD92BDC07EBAF8B1142571F84B6E94A50B3F788132D909D483E",
+        "InputBytes": 162137,
+        "Threshold": 8388608,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "F5E0CFECFD66D0CA9B95D8A9B3B360A8C0B507CE800391314A144F35FFDB6AD9",
+          "ExcelRenderer.OpenXml.Reader": "A2EE1F920BD4C91271F367F6DF416C864059375E7C22C3253771DAA9F19305D8",
+          "ExcelRenderer": "EE52DACC0D7E115FAB976D8CA995AD49C24A87A9E7DB52F9B85418A9C39CA706"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 51.9335,
+        "AllocatedBytes": 23550608,
+        "GC": [
+          1,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 175634,
+        "Operations": {
+          "Reads": 130,
+          "ReadBytes": 435255,
+          "ReadByteCalls": 427951,
+          "PositionGets": 385154,
+          "PositionSets": 269297,
+          "Seeks": 0,
+          "LengthGets": 116381
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 30.3608,
+        "AllocatedBytes": 23533168,
+        "GC": [
+          1,
+          1,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 175634,
+        "Operations": {
+          "Reads": 130,
+          "ReadBytes": 435255,
+          "ReadByteCalls": 427951,
+          "PositionGets": 385154,
+          "PositionSets": 269297,
+          "Seeks": 0,
+          "LengthGets": 116381
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 35.5304,
+        "AllocatedBytes": 23532136,
+        "GC": [
+          2,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 175634,
+        "Operations": {
+          "Reads": 130,
+          "ReadBytes": 435255,
+          "ReadByteCalls": 427951,
+          "PositionGets": 385154,
+          "PositionSets": 269297,
+          "Seeks": 0,
+          "LengthGets": 116381
+        }
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 4194336,
+        "Spilled": false
+      }
+    ]
+  },
+  {
+    "stage": "B",
+    "case": "objects",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "outputHash": "051144e368175483ba186f475ac2b03bb41baf65af68c7e370f65967574cef1d",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "objects.pdf",
+        "InputHash": "16D485C2A2185BD92BDC07EBAF8B1142571F84B6E94A50B3F788132D909D483E",
+        "InputBytes": 162137,
+        "Threshold": 8388608,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "CB6C6FBAD7E3A366BEDDC604602A8E8E36B4D866DA83C63B035F03FE2C073A3A",
+          "ExcelRenderer.OpenXml.Reader": "11F4E88E9B28DE9AA1BB9D427A26F6A84DC955A9799D5FD8204447FD474734B9",
+          "ExcelRenderer": "2C79093B3C9FD016634CD09B77E2F212A9D90ED62ADC9B2847DC884FBE33E8A3"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 40.9981,
+        "AllocatedBytes": 9867608,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 175634,
+        "Operations": {
+          "Reads": 130,
+          "ReadBytes": 435255,
+          "ReadByteCalls": 427951,
+          "PositionGets": 385154,
+          "PositionSets": 269297,
+          "Seeks": 0,
+          "LengthGets": 116381
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 28.9017,
+        "AllocatedBytes": 9838968,
+        "GC": [
+          1,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 175634,
+        "Operations": {
+          "Reads": 130,
+          "ReadBytes": 435255,
+          "ReadByteCalls": 427951,
+          "PositionGets": 385154,
+          "PositionSets": 269297,
+          "Seeks": 0,
+          "LengthGets": 116381
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 24.469,
+        "AllocatedBytes": 9837704,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 175634,
+        "Operations": {
+          "Reads": 130,
+          "ReadBytes": 435255,
+          "ReadByteCalls": 427951,
+          "PositionGets": 385154,
+          "PositionSets": 269297,
+          "Seeks": 0,
+          "LengthGets": 116381
+        }
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": false
+      }
+    ]
+  },
+  {
+    "stage": "C",
+    "case": "objects",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "outputHash": "051144e368175483ba186f475ac2b03bb41baf65af68c7e370f65967574cef1d",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "objects.pdf",
+        "InputHash": "16D485C2A2185BD92BDC07EBAF8B1142571F84B6E94A50B3F788132D909D483E",
+        "InputBytes": 162137,
+        "Threshold": 8388608,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "860905C6274A6E31A84488C39DC94F8E85436EF43EEF209EE889D1DD57BC0D63",
+          "ExcelRenderer.OpenXml.Reader": "CA28934CEAD30764D1FE0E62AB0F41AC09B74801411CCE401E638EFC048C8A3C",
+          "ExcelRenderer": "08A9ABD3E581AB61AC1BFF38C93EB084379ED8B06FB541B248F9BE97190C791F"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 31.3086,
+        "AllocatedBytes": 9875856,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 175634,
+        "Operations": {
+          "Reads": 156,
+          "ReadBytes": 221471,
+          "ReadByteCalls": 0,
+          "PositionGets": 1,
+          "PositionSets": 137,
+          "Seeks": 0,
+          "LengthGets": 1
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 20.1155,
+        "AllocatedBytes": 9847216,
+        "GC": [
+          1,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 175634,
+        "Operations": {
+          "Reads": 156,
+          "ReadBytes": 221471,
+          "ReadByteCalls": 0,
+          "PositionGets": 1,
+          "PositionSets": 137,
+          "Seeks": 0,
+          "LengthGets": 1
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 15.8071,
+        "AllocatedBytes": 9845952,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 175634,
+        "Operations": {
+          "Reads": 156,
+          "ReadBytes": 221471,
+          "ReadByteCalls": 0,
+          "PositionGets": 1,
+          "PositionSets": 137,
+          "Seeks": 0,
+          "LengthGets": 1
+        }
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": false
+      }
+    ]
+  },
+  {
+    "stage": "A",
+    "case": "objects",
+    "kind": "pdf",
+    "threshold": 1,
+    "outputHash": "051144e368175483ba186f475ac2b03bb41baf65af68c7e370f65967574cef1d",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "objects.pdf",
+        "InputHash": "16D485C2A2185BD92BDC07EBAF8B1142571F84B6E94A50B3F788132D909D483E",
+        "InputBytes": 162137,
+        "Threshold": 1,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "F5E0CFECFD66D0CA9B95D8A9B3B360A8C0B507CE800391314A144F35FFDB6AD9",
+          "ExcelRenderer.OpenXml.Reader": "A2EE1F920BD4C91271F367F6DF416C864059375E7C22C3253771DAA9F19305D8",
+          "ExcelRenderer": "EE52DACC0D7E115FAB976D8CA995AD49C24A87A9E7DB52F9B85418A9C39CA706"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 76.7604,
+        "AllocatedBytes": 23567064,
+        "GC": [
+          1,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 175634,
+        "Operations": {
+          "Reads": 130,
+          "ReadBytes": 435255,
+          "ReadByteCalls": 427951,
+          "PositionGets": 385154,
+          "PositionSets": 269297,
+          "Seeks": 0,
+          "LengthGets": 116381
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 58.1363,
+        "AllocatedBytes": 23537288,
+        "GC": [
+          1,
+          1,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 175634,
+        "Operations": {
+          "Reads": 130,
+          "ReadBytes": 435255,
+          "ReadByteCalls": 427951,
+          "PositionGets": 385154,
+          "PositionSets": 269297,
+          "Seeks": 0,
+          "LengthGets": 116381
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 62.2688,
+        "AllocatedBytes": 23536256,
+        "GC": [
+          2,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 175634,
+        "Operations": {
+          "Reads": 130,
+          "ReadBytes": 435255,
+          "ReadByteCalls": 427951,
+          "PositionGets": 385154,
+          "PositionSets": 269297,
+          "Seeks": 0,
+          "LengthGets": 116381
+        }
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 4194336,
+        "Spilled": true
+      }
+    ]
+  },
+  {
+    "stage": "B",
+    "case": "objects",
+    "kind": "pdf",
+    "threshold": 1,
+    "outputHash": "051144e368175483ba186f475ac2b03bb41baf65af68c7e370f65967574cef1d",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "objects.pdf",
+        "InputHash": "16D485C2A2185BD92BDC07EBAF8B1142571F84B6E94A50B3F788132D909D483E",
+        "InputBytes": 162137,
+        "Threshold": 1,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "CB6C6FBAD7E3A366BEDDC604602A8E8E36B4D866DA83C63B035F03FE2C073A3A",
+          "ExcelRenderer.OpenXml.Reader": "11F4E88E9B28DE9AA1BB9D427A26F6A84DC955A9799D5FD8204447FD474734B9",
+          "ExcelRenderer": "2C79093B3C9FD016634CD09B77E2F212A9D90ED62ADC9B2847DC884FBE33E8A3"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 66.3318,
+        "AllocatedBytes": 9859392,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 175634,
+        "Operations": {
+          "Reads": 130,
+          "ReadBytes": 435255,
+          "ReadByteCalls": 427951,
+          "PositionGets": 385154,
+          "PositionSets": 269297,
+          "Seeks": 0,
+          "LengthGets": 116381
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 55.9304,
+        "AllocatedBytes": 9843088,
+        "GC": [
+          1,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 175634,
+        "Operations": {
+          "Reads": 130,
+          "ReadBytes": 435255,
+          "ReadByteCalls": 427951,
+          "PositionGets": 385154,
+          "PositionSets": 269297,
+          "Seeks": 0,
+          "LengthGets": 116381
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 50.2018,
+        "AllocatedBytes": 9841824,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 175634,
+        "Operations": {
+          "Reads": 130,
+          "ReadBytes": 435255,
+          "ReadByteCalls": 427951,
+          "PositionGets": 385154,
+          "PositionSets": 269297,
+          "Seeks": 0,
+          "LengthGets": 116381
+        }
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": true
+      }
+    ]
+  },
+  {
+    "stage": "C",
+    "case": "objects",
+    "kind": "pdf",
+    "threshold": 1,
+    "outputHash": "051144e368175483ba186f475ac2b03bb41baf65af68c7e370f65967574cef1d",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "objects.pdf",
+        "InputHash": "16D485C2A2185BD92BDC07EBAF8B1142571F84B6E94A50B3F788132D909D483E",
+        "InputBytes": 162137,
+        "Threshold": 1,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "860905C6274A6E31A84488C39DC94F8E85436EF43EEF209EE889D1DD57BC0D63",
+          "ExcelRenderer.OpenXml.Reader": "CA28934CEAD30764D1FE0E62AB0F41AC09B74801411CCE401E638EFC048C8A3C",
+          "ExcelRenderer": "08A9ABD3E581AB61AC1BFF38C93EB084379ED8B06FB541B248F9BE97190C791F"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 31.5976,
+        "AllocatedBytes": 9867640,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 175634,
+        "Operations": {
+          "Reads": 156,
+          "ReadBytes": 221471,
+          "ReadByteCalls": 0,
+          "PositionGets": 1,
+          "PositionSets": 137,
+          "Seeks": 0,
+          "LengthGets": 1
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 19.3727,
+        "AllocatedBytes": 9851336,
+        "GC": [
+          1,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 175634,
+        "Operations": {
+          "Reads": 156,
+          "ReadBytes": 221471,
+          "ReadByteCalls": 0,
+          "PositionGets": 1,
+          "PositionSets": 137,
+          "Seeks": 0,
+          "LengthGets": 1
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 15.5005,
+        "AllocatedBytes": 9850072,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 175634,
+        "Operations": {
+          "Reads": 156,
+          "ReadBytes": 221471,
+          "ReadByteCalls": 0,
+          "PositionGets": 1,
+          "PositionSets": 137,
+          "Seeks": 0,
+          "LengthGets": 1
+        }
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": true
+      }
+    ]
+  },
+  {
+    "stage": "A",
+    "case": "borders",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "outputHash": "cb7fcffa077282e53b5a2b97f7654ad4c6d43abd1cfa59e7cd71087ecf90bfaa",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "borders.pdf",
+        "InputHash": "2E2E1062ABABB92C0C5153D57168FC7C2D8B626EF94D69D699D6F6F57303A6C8",
+        "InputBytes": 722146,
+        "Threshold": 8388608,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "F5E0CFECFD66D0CA9B95D8A9B3B360A8C0B507CE800391314A144F35FFDB6AD9",
+          "ExcelRenderer.OpenXml.Reader": "A2EE1F920BD4C91271F367F6DF416C864059375E7C22C3253771DAA9F19305D8",
+          "ExcelRenderer": "EE52DACC0D7E115FAB976D8CA995AD49C24A87A9E7DB52F9B85418A9C39CA706"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 12.9164,
+        "AllocatedBytes": 437880,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 722835,
+        "Operations": {
+          "Reads": 18,
+          "ReadBytes": 727017,
+          "ReadByteCalls": 5737,
+          "PositionGets": 5580,
+          "PositionSets": 3818,
+          "Seeks": 0,
+          "LengthGets": 1806
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 0.7608,
+        "AllocatedBytes": 433648,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 722835,
+        "Operations": {
+          "Reads": 18,
+          "ReadBytes": 727017,
+          "ReadByteCalls": 5737,
+          "PositionGets": 5580,
+          "PositionSets": 3818,
+          "Seeks": 0,
+          "LengthGets": 1806
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 0.5033,
+        "AllocatedBytes": 434320,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 722835,
+        "Operations": {
+          "Reads": 18,
+          "ReadBytes": 727017,
+          "ReadByteCalls": 5737,
+          "PositionGets": 5580,
+          "PositionSets": 3818,
+          "Seeks": 0,
+          "LengthGets": 1806
+        }
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 4194336,
+        "Spilled": false
+      }
+    ]
+  },
+  {
+    "stage": "B",
+    "case": "borders",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "outputHash": "cb7fcffa077282e53b5a2b97f7654ad4c6d43abd1cfa59e7cd71087ecf90bfaa",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "borders.pdf",
+        "InputHash": "2E2E1062ABABB92C0C5153D57168FC7C2D8B626EF94D69D699D6F6F57303A6C8",
+        "InputBytes": 722146,
+        "Threshold": 8388608,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "CB6C6FBAD7E3A366BEDDC604602A8E8E36B4D866DA83C63B035F03FE2C073A3A",
+          "ExcelRenderer.OpenXml.Reader": "11F4E88E9B28DE9AA1BB9D427A26F6A84DC955A9799D5FD8204447FD474734B9",
+          "ExcelRenderer": "2C79093B3C9FD016634CD09B77E2F212A9D90ED62ADC9B2847DC884FBE33E8A3"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 12.8301,
+        "AllocatedBytes": 266632,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 722835,
+        "Operations": {
+          "Reads": 18,
+          "ReadBytes": 727017,
+          "ReadByteCalls": 5737,
+          "PositionGets": 5580,
+          "PositionSets": 3818,
+          "Seeks": 0,
+          "LengthGets": 1806
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 0.6114,
+        "AllocatedBytes": 250064,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 722835,
+        "Operations": {
+          "Reads": 18,
+          "ReadBytes": 727017,
+          "ReadByteCalls": 5737,
+          "PositionGets": 5580,
+          "PositionSets": 3818,
+          "Seeks": 0,
+          "LengthGets": 1806
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 0.474,
+        "AllocatedBytes": 250736,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 722835,
+        "Operations": {
+          "Reads": 18,
+          "ReadBytes": 727017,
+          "ReadByteCalls": 5737,
+          "PositionGets": 5580,
+          "PositionSets": 3818,
+          "Seeks": 0,
+          "LengthGets": 1806
+        }
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": false
+      }
+    ]
+  },
+  {
+    "stage": "C",
+    "case": "borders",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "outputHash": "cb7fcffa077282e53b5a2b97f7654ad4c6d43abd1cfa59e7cd71087ecf90bfaa",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "borders.pdf",
+        "InputHash": "2E2E1062ABABB92C0C5153D57168FC7C2D8B626EF94D69D699D6F6F57303A6C8",
+        "InputBytes": 722146,
+        "Threshold": 8388608,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "860905C6274A6E31A84488C39DC94F8E85436EF43EEF209EE889D1DD57BC0D63",
+          "ExcelRenderer.OpenXml.Reader": "CA28934CEAD30764D1FE0E62AB0F41AC09B74801411CCE401E638EFC048C8A3C",
+          "ExcelRenderer": "08A9ABD3E581AB61AC1BFF38C93EB084379ED8B06FB541B248F9BE97190C791F"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 12.7277,
+        "AllocatedBytes": 262544,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 722835,
+        "Operations": {
+          "Reads": 35,
+          "ReadBytes": 861028,
+          "ReadByteCalls": 0,
+          "PositionGets": 1,
+          "PositionSets": 26,
+          "Seeks": 0,
+          "LengthGets": 1
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 0.5112,
+        "AllocatedBytes": 258312,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 722835,
+        "Operations": {
+          "Reads": 35,
+          "ReadBytes": 861028,
+          "ReadByteCalls": 0,
+          "PositionGets": 1,
+          "PositionSets": 26,
+          "Seeks": 0,
+          "LengthGets": 1
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 0.3334,
+        "AllocatedBytes": 258984,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 722835,
+        "Operations": {
+          "Reads": 35,
+          "ReadBytes": 861028,
+          "ReadByteCalls": 0,
+          "PositionGets": 1,
+          "PositionSets": 26,
+          "Seeks": 0,
+          "LengthGets": 1
+        }
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": false
+      }
+    ]
+  },
+  {
+    "stage": "A",
+    "case": "borders",
+    "kind": "pdf",
+    "threshold": 1,
+    "outputHash": "cb7fcffa077282e53b5a2b97f7654ad4c6d43abd1cfa59e7cd71087ecf90bfaa",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "borders.pdf",
+        "InputHash": "2E2E1062ABABB92C0C5153D57168FC7C2D8B626EF94D69D699D6F6F57303A6C8",
+        "InputBytes": 722146,
+        "Threshold": 1,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "F5E0CFECFD66D0CA9B95D8A9B3B360A8C0B507CE800391314A144F35FFDB6AD9",
+          "ExcelRenderer.OpenXml.Reader": "A2EE1F920BD4C91271F367F6DF416C864059375E7C22C3253771DAA9F19305D8",
+          "ExcelRenderer": "EE52DACC0D7E115FAB976D8CA995AD49C24A87A9E7DB52F9B85418A9C39CA706"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 13.846,
+        "AllocatedBytes": 454336,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 722835,
+        "Operations": {
+          "Reads": 18,
+          "ReadBytes": 727017,
+          "ReadByteCalls": 5737,
+          "PositionGets": 5580,
+          "PositionSets": 3818,
+          "Seeks": 0,
+          "LengthGets": 1806
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 1.1945,
+        "AllocatedBytes": 437768,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 722835,
+        "Operations": {
+          "Reads": 18,
+          "ReadBytes": 727017,
+          "ReadByteCalls": 5737,
+          "PositionGets": 5580,
+          "PositionSets": 3818,
+          "Seeks": 0,
+          "LengthGets": 1806
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 1.116,
+        "AllocatedBytes": 437768,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 722835,
+        "Operations": {
+          "Reads": 18,
+          "ReadBytes": 727017,
+          "ReadByteCalls": 5737,
+          "PositionGets": 5580,
+          "PositionSets": 3818,
+          "Seeks": 0,
+          "LengthGets": 1806
+        }
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 4194336,
+        "Spilled": true
+      }
+    ]
+  },
+  {
+    "stage": "B",
+    "case": "borders",
+    "kind": "pdf",
+    "threshold": 1,
+    "outputHash": "cb7fcffa077282e53b5a2b97f7654ad4c6d43abd1cfa59e7cd71087ecf90bfaa",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "borders.pdf",
+        "InputHash": "2E2E1062ABABB92C0C5153D57168FC7C2D8B626EF94D69D699D6F6F57303A6C8",
+        "InputBytes": 722146,
+        "Threshold": 1,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "CB6C6FBAD7E3A366BEDDC604602A8E8E36B4D866DA83C63B035F03FE2C073A3A",
+          "ExcelRenderer.OpenXml.Reader": "11F4E88E9B28DE9AA1BB9D427A26F6A84DC955A9799D5FD8204447FD474734B9",
+          "ExcelRenderer": "2C79093B3C9FD016634CD09B77E2F212A9D90ED62ADC9B2847DC884FBE33E8A3"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 13.6177,
+        "AllocatedBytes": 258416,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 722835,
+        "Operations": {
+          "Reads": 18,
+          "ReadBytes": 727017,
+          "ReadByteCalls": 5737,
+          "PositionGets": 5580,
+          "PositionSets": 3818,
+          "Seeks": 0,
+          "LengthGets": 1806
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 1.1571,
+        "AllocatedBytes": 254184,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 722835,
+        "Operations": {
+          "Reads": 18,
+          "ReadBytes": 727017,
+          "ReadByteCalls": 5737,
+          "PositionGets": 5580,
+          "PositionSets": 3818,
+          "Seeks": 0,
+          "LengthGets": 1806
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 0.996,
+        "AllocatedBytes": 254184,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 722835,
+        "Operations": {
+          "Reads": 18,
+          "ReadBytes": 727017,
+          "ReadByteCalls": 5737,
+          "PositionGets": 5580,
+          "PositionSets": 3818,
+          "Seeks": 0,
+          "LengthGets": 1806
+        }
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": true
+      }
+    ]
+  },
+  {
+    "stage": "C",
+    "case": "borders",
+    "kind": "pdf",
+    "threshold": 1,
+    "outputHash": "cb7fcffa077282e53b5a2b97f7654ad4c6d43abd1cfa59e7cd71087ecf90bfaa",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "borders.pdf",
+        "InputHash": "2E2E1062ABABB92C0C5153D57168FC7C2D8B626EF94D69D699D6F6F57303A6C8",
+        "InputBytes": 722146,
+        "Threshold": 1,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "860905C6274A6E31A84488C39DC94F8E85436EF43EEF209EE889D1DD57BC0D63",
+          "ExcelRenderer.OpenXml.Reader": "CA28934CEAD30764D1FE0E62AB0F41AC09B74801411CCE401E638EFC048C8A3C",
+          "ExcelRenderer": "08A9ABD3E581AB61AC1BFF38C93EB084379ED8B06FB541B248F9BE97190C791F"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 12.9308,
+        "AllocatedBytes": 266664,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 722835,
+        "Operations": {
+          "Reads": 35,
+          "ReadBytes": 861028,
+          "ReadByteCalls": 0,
+          "PositionGets": 1,
+          "PositionSets": 26,
+          "Seeks": 0,
+          "LengthGets": 1
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 0.6238,
+        "AllocatedBytes": 262432,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 722835,
+        "Operations": {
+          "Reads": 35,
+          "ReadBytes": 861028,
+          "ReadByteCalls": 0,
+          "PositionGets": 1,
+          "PositionSets": 26,
+          "Seeks": 0,
+          "LengthGets": 1
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 0.4403,
+        "AllocatedBytes": 262432,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 722835,
+        "Operations": {
+          "Reads": 35,
+          "ReadBytes": 861028,
+          "ReadByteCalls": 0,
+          "PositionGets": 1,
+          "PositionSets": 26,
+          "Seeks": 0,
+          "LengthGets": 1
+        }
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": true
+      }
+    ]
+  },
+  {
+    "stage": "A",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "outputHash": "f6dbcb1033dc456888b288bfef95c50d20cc44170b14b14cfeef5bfbd8da0647",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "image.pdf",
+        "InputHash": "31370F9ED743F739E7EF95705A300927F0C44B913F0EFE876121D44EDD63076C",
+        "InputBytes": 9720685,
+        "Threshold": 8388608,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "F5E0CFECFD66D0CA9B95D8A9B3B360A8C0B507CE800391314A144F35FFDB6AD9",
+          "ExcelRenderer.OpenXml.Reader": "A2EE1F920BD4C91271F367F6DF416C864059375E7C22C3253771DAA9F19305D8",
+          "ExcelRenderer": "EE52DACC0D7E115FAB976D8CA995AD49C24A87A9E7DB52F9B85418A9C39CA706"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 13.9881,
+        "AllocatedBytes": 197896,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 9720798,
+        "Operations": {
+          "Reads": 122,
+          "ReadBytes": 9722816,
+          "ReadByteCalls": 1735,
+          "PositionGets": 1665,
+          "PositionSets": 1125,
+          "Seeks": 0,
+          "LengthGets": 561
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 1.5814,
+        "AllocatedBytes": 194048,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 9720798,
+        "Operations": {
+          "Reads": 122,
+          "ReadBytes": 9722816,
+          "ReadByteCalls": 1735,
+          "PositionGets": 1665,
+          "PositionSets": 1125,
+          "Seeks": 0,
+          "LengthGets": 561
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 1.168,
+        "AllocatedBytes": 194048,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 9720798,
+        "Operations": {
+          "Reads": 122,
+          "ReadBytes": 9722816,
+          "ReadByteCalls": 1735,
+          "PositionGets": 1665,
+          "PositionSets": 1125,
+          "Seeks": 0,
+          "LengthGets": 561
+        }
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 4194336,
+        "Spilled": false
+      }
+    ]
+  },
+  {
+    "stage": "B",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "outputHash": "f6dbcb1033dc456888b288bfef95c50d20cc44170b14b14cfeef5bfbd8da0647",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "image.pdf",
+        "InputHash": "31370F9ED743F739E7EF95705A300927F0C44B913F0EFE876121D44EDD63076C",
+        "InputBytes": 9720685,
+        "Threshold": 8388608,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "CB6C6FBAD7E3A366BEDDC604602A8E8E36B4D866DA83C63B035F03FE2C073A3A",
+          "ExcelRenderer.OpenXml.Reader": "11F4E88E9B28DE9AA1BB9D427A26F6A84DC955A9799D5FD8204447FD474734B9",
+          "ExcelRenderer": "2C79093B3C9FD016634CD09B77E2F212A9D90ED62ADC9B2847DC884FBE33E8A3"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 13.8646,
+        "AllocatedBytes": 154712,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 9720798,
+        "Operations": {
+          "Reads": 122,
+          "ReadBytes": 9722816,
+          "ReadByteCalls": 1735,
+          "PositionGets": 1665,
+          "PositionSets": 1125,
+          "Seeks": 0,
+          "LengthGets": 561
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 1.3653,
+        "AllocatedBytes": 138528,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 9720798,
+        "Operations": {
+          "Reads": 122,
+          "ReadBytes": 9722816,
+          "ReadByteCalls": 1735,
+          "PositionGets": 1665,
+          "PositionSets": 1125,
+          "Seeks": 0,
+          "LengthGets": 561
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 0.9839,
+        "AllocatedBytes": 138528,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 9720798,
+        "Operations": {
+          "Reads": 122,
+          "ReadBytes": 9722816,
+          "ReadByteCalls": 1735,
+          "PositionGets": 1665,
+          "PositionSets": 1125,
+          "Seeks": 0,
+          "LengthGets": 561
+        }
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": false
+      }
+    ]
+  },
+  {
+    "stage": "C",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 8388608,
+    "outputHash": "f6dbcb1033dc456888b288bfef95c50d20cc44170b14b14cfeef5bfbd8da0647",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "image.pdf",
+        "InputHash": "31370F9ED743F739E7EF95705A300927F0C44B913F0EFE876121D44EDD63076C",
+        "InputBytes": 9720685,
+        "Threshold": 8388608,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "860905C6274A6E31A84488C39DC94F8E85436EF43EEF209EE889D1DD57BC0D63",
+          "ExcelRenderer.OpenXml.Reader": "CA28934CEAD30764D1FE0E62AB0F41AC09B74801411CCE401E638EFC048C8A3C",
+          "ExcelRenderer": "08A9ABD3E581AB61AC1BFF38C93EB084379ED8B06FB541B248F9BE97190C791F"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 14.6025,
+        "AllocatedBytes": 150624,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 9720798,
+        "Operations": {
+          "Reads": 124,
+          "ReadBytes": 9737689,
+          "ReadByteCalls": 0,
+          "PositionGets": 1,
+          "PositionSets": 5,
+          "Seeks": 0,
+          "LengthGets": 1
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 1.1565,
+        "AllocatedBytes": 146776,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 9720798,
+        "Operations": {
+          "Reads": 124,
+          "ReadBytes": 9737689,
+          "ReadByteCalls": 0,
+          "PositionGets": 1,
+          "PositionSets": 5,
+          "Seeks": 0,
+          "LengthGets": 1
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 0.8752,
+        "AllocatedBytes": 146776,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 9720798,
+        "Operations": {
+          "Reads": 124,
+          "ReadBytes": 9737689,
+          "ReadByteCalls": 0,
+          "PositionGets": 1,
+          "PositionSets": 5,
+          "Seeks": 0,
+          "LengthGets": 1
+        }
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": false
+      }
+    ]
+  },
+  {
+    "stage": "A",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 1,
+    "outputHash": "f6dbcb1033dc456888b288bfef95c50d20cc44170b14b14cfeef5bfbd8da0647",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "image.pdf",
+        "InputHash": "31370F9ED743F739E7EF95705A300927F0C44B913F0EFE876121D44EDD63076C",
+        "InputBytes": 9720685,
+        "Threshold": 1,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "F5E0CFECFD66D0CA9B95D8A9B3B360A8C0B507CE800391314A144F35FFDB6AD9",
+          "ExcelRenderer.OpenXml.Reader": "A2EE1F920BD4C91271F367F6DF416C864059375E7C22C3253771DAA9F19305D8",
+          "ExcelRenderer": "EE52DACC0D7E115FAB976D8CA995AD49C24A87A9E7DB52F9B85418A9C39CA706"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 15.0322,
+        "AllocatedBytes": 197896,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 9720798,
+        "Operations": {
+          "Reads": 122,
+          "ReadBytes": 9722816,
+          "ReadByteCalls": 1735,
+          "PositionGets": 1665,
+          "PositionSets": 1125,
+          "Seeks": 0,
+          "LengthGets": 561
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 1.352,
+        "AllocatedBytes": 194048,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 9720798,
+        "Operations": {
+          "Reads": 122,
+          "ReadBytes": 9722816,
+          "ReadByteCalls": 1735,
+          "PositionGets": 1665,
+          "PositionSets": 1125,
+          "Seeks": 0,
+          "LengthGets": 561
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 1.2811,
+        "AllocatedBytes": 194048,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 9720798,
+        "Operations": {
+          "Reads": 122,
+          "ReadBytes": 9722816,
+          "ReadByteCalls": 1735,
+          "PositionGets": 1665,
+          "PositionSets": 1125,
+          "Seeks": 0,
+          "LengthGets": 561
+        }
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 4194336,
+        "Spilled": true
+      }
+    ]
+  },
+  {
+    "stage": "B",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 1,
+    "outputHash": "f6dbcb1033dc456888b288bfef95c50d20cc44170b14b14cfeef5bfbd8da0647",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "image.pdf",
+        "InputHash": "31370F9ED743F739E7EF95705A300927F0C44B913F0EFE876121D44EDD63076C",
+        "InputBytes": 9720685,
+        "Threshold": 1,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "CB6C6FBAD7E3A366BEDDC604602A8E8E36B4D866DA83C63B035F03FE2C073A3A",
+          "ExcelRenderer.OpenXml.Reader": "11F4E88E9B28DE9AA1BB9D427A26F6A84DC955A9799D5FD8204447FD474734B9",
+          "ExcelRenderer": "2C79093B3C9FD016634CD09B77E2F212A9D90ED62ADC9B2847DC884FBE33E8A3"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 15.1228,
+        "AllocatedBytes": 154712,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 9720798,
+        "Operations": {
+          "Reads": 122,
+          "ReadBytes": 9722816,
+          "ReadByteCalls": 1735,
+          "PositionGets": 1665,
+          "PositionSets": 1125,
+          "Seeks": 0,
+          "LengthGets": 561
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 1.4509,
+        "AllocatedBytes": 138528,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 9720798,
+        "Operations": {
+          "Reads": 122,
+          "ReadBytes": 9722816,
+          "ReadByteCalls": 1735,
+          "PositionGets": 1665,
+          "PositionSets": 1125,
+          "Seeks": 0,
+          "LengthGets": 561
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 1.0099,
+        "AllocatedBytes": 138528,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 9720798,
+        "Operations": {
+          "Reads": 122,
+          "ReadBytes": 9722816,
+          "ReadByteCalls": 1735,
+          "PositionGets": 1665,
+          "PositionSets": 1125,
+          "Seeks": 0,
+          "LengthGets": 561
+        }
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": true
+      }
+    ]
+  },
+  {
+    "stage": "C",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 1,
+    "outputHash": "f6dbcb1033dc456888b288bfef95c50d20cc44170b14b14cfeef5bfbd8da0647",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "image.pdf",
+        "InputHash": "31370F9ED743F739E7EF95705A300927F0C44B913F0EFE876121D44EDD63076C",
+        "InputBytes": 9720685,
+        "Threshold": 1,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "860905C6274A6E31A84488C39DC94F8E85436EF43EEF209EE889D1DD57BC0D63",
+          "ExcelRenderer.OpenXml.Reader": "CA28934CEAD30764D1FE0E62AB0F41AC09B74801411CCE401E638EFC048C8A3C",
+          "ExcelRenderer": "08A9ABD3E581AB61AC1BFF38C93EB084379ED8B06FB541B248F9BE97190C791F"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 14.1279,
+        "AllocatedBytes": 150624,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 9720798,
+        "Operations": {
+          "Reads": 124,
+          "ReadBytes": 9737689,
+          "ReadByteCalls": 0,
+          "PositionGets": 1,
+          "PositionSets": 5,
+          "Seeks": 0,
+          "LengthGets": 1
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 1.236,
+        "AllocatedBytes": 146776,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 9720798,
+        "Operations": {
+          "Reads": 124,
+          "ReadBytes": 9737689,
+          "ReadByteCalls": 0,
+          "PositionGets": 1,
+          "PositionSets": 5,
+          "Seeks": 0,
+          "LengthGets": 1
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 0.9888,
+        "AllocatedBytes": 146776,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 1,
+        "OutputBytes": 9720798,
+        "Operations": {
+          "Reads": 124,
+          "ReadBytes": 9737689,
+          "ReadByteCalls": 0,
+          "PositionGets": 1,
+          "PositionSets": 5,
+          "Seeks": 0,
+          "LengthGets": 1
+        }
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": true
+      }
+    ]
+  },
+  {
+    "stage": "A",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 67108864,
+    "outputHash": "f6dbcb1033dc456888b288bfef95c50d20cc44170b14b14cfeef5bfbd8da0647",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "image.pdf",
+        "InputHash": "31370F9ED743F739E7EF95705A300927F0C44B913F0EFE876121D44EDD63076C",
+        "InputBytes": 9720685,
+        "Threshold": 67108864,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "F5E0CFECFD66D0CA9B95D8A9B3B360A8C0B507CE800391314A144F35FFDB6AD9",
+          "ExcelRenderer.OpenXml.Reader": "A2EE1F920BD4C91271F367F6DF416C864059375E7C22C3253771DAA9F19305D8",
+          "ExcelRenderer": "EE52DACC0D7E115FAB976D8CA995AD49C24A87A9E7DB52F9B85418A9C39CA706"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 13.8014,
+        "AllocatedBytes": 193776,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 9720798,
+        "Operations": {
+          "Reads": 122,
+          "ReadBytes": 9722816,
+          "ReadByteCalls": 1735,
+          "PositionGets": 1665,
+          "PositionSets": 1125,
+          "Seeks": 0,
+          "LengthGets": 561
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 0.909,
+        "AllocatedBytes": 189928,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 9720798,
+        "Operations": {
+          "Reads": 122,
+          "ReadBytes": 9722816,
+          "ReadByteCalls": 1735,
+          "PositionGets": 1665,
+          "PositionSets": 1125,
+          "Seeks": 0,
+          "LengthGets": 561
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 0.7052,
+        "AllocatedBytes": 189928,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 9720798,
+        "Operations": {
+          "Reads": 122,
+          "ReadBytes": 9722816,
+          "ReadByteCalls": 1735,
+          "PositionGets": 1665,
+          "PositionSets": 1125,
+          "Seeks": 0,
+          "LengthGets": 561
+        }
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 4194336,
+        "Spilled": false
+      }
+    ]
+  },
+  {
+    "stage": "B",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 67108864,
+    "outputHash": "f6dbcb1033dc456888b288bfef95c50d20cc44170b14b14cfeef5bfbd8da0647",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "image.pdf",
+        "InputHash": "31370F9ED743F739E7EF95705A300927F0C44B913F0EFE876121D44EDD63076C",
+        "InputBytes": 9720685,
+        "Threshold": 67108864,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "CB6C6FBAD7E3A366BEDDC604602A8E8E36B4D866DA83C63B035F03FE2C073A3A",
+          "ExcelRenderer.OpenXml.Reader": "11F4E88E9B28DE9AA1BB9D427A26F6A84DC955A9799D5FD8204447FD474734B9",
+          "ExcelRenderer": "2C79093B3C9FD016634CD09B77E2F212A9D90ED62ADC9B2847DC884FBE33E8A3"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 13.289,
+        "AllocatedBytes": 138256,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 9720798,
+        "Operations": {
+          "Reads": 122,
+          "ReadBytes": 9722816,
+          "ReadByteCalls": 1735,
+          "PositionGets": 1665,
+          "PositionSets": 1125,
+          "Seeks": 0,
+          "LengthGets": 561
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 0.8204,
+        "AllocatedBytes": 134408,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 9720798,
+        "Operations": {
+          "Reads": 122,
+          "ReadBytes": 9722816,
+          "ReadByteCalls": 1735,
+          "PositionGets": 1665,
+          "PositionSets": 1125,
+          "Seeks": 0,
+          "LengthGets": 561
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 0.6522,
+        "AllocatedBytes": 134408,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 9720798,
+        "Operations": {
+          "Reads": 122,
+          "ReadBytes": 9722816,
+          "ReadByteCalls": 1735,
+          "PositionGets": 1665,
+          "PositionSets": 1125,
+          "Seeks": 0,
+          "LengthGets": 561
+        }
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": false
+      }
+    ]
+  },
+  {
+    "stage": "C",
+    "case": "image",
+    "kind": "pdf",
+    "threshold": 67108864,
+    "outputHash": "f6dbcb1033dc456888b288bfef95c50d20cc44170b14b14cfeef5bfbd8da0647",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "image.pdf",
+        "InputHash": "31370F9ED743F739E7EF95705A300927F0C44B913F0EFE876121D44EDD63076C",
+        "InputBytes": 9720685,
+        "Threshold": 67108864,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "860905C6274A6E31A84488C39DC94F8E85436EF43EEF209EE889D1DD57BC0D63",
+          "ExcelRenderer.OpenXml.Reader": "CA28934CEAD30764D1FE0E62AB0F41AC09B74801411CCE401E638EFC048C8A3C",
+          "ExcelRenderer": "08A9ABD3E581AB61AC1BFF38C93EB084379ED8B06FB541B248F9BE97190C791F"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 13.3789,
+        "AllocatedBytes": 146504,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 9720798,
+        "Operations": {
+          "Reads": 124,
+          "ReadBytes": 9737689,
+          "ReadByteCalls": 0,
+          "PositionGets": 1,
+          "PositionSets": 5,
+          "Seeks": 0,
+          "LengthGets": 1
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 0.7939,
+        "AllocatedBytes": 142656,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 9720798,
+        "Operations": {
+          "Reads": 124,
+          "ReadBytes": 9737689,
+          "ReadByteCalls": 0,
+          "PositionGets": 1,
+          "PositionSets": 5,
+          "Seeks": 0,
+          "LengthGets": 1
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 0.6374,
+        "AllocatedBytes": 142656,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 0,
+        "Spills": 0,
+        "OutputBytes": 9720798,
+        "Operations": {
+          "Reads": 124,
+          "ReadBytes": 9737689,
+          "ReadByteCalls": 0,
+          "PositionGets": 1,
+          "PositionSets": 5,
+          "Seeks": 0,
+          "LengthGets": 1
+        }
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": false
+      }
+    ]
+  },
+  {
+    "stage": "A",
+    "case": "small",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "outputHash": "b269fcff068a2508020406ba5114b190c45cf8f3335e96515b33b29dc1e96b0a",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "small.xlsx",
+        "InputHash": "73CFFACAF5A3630C74C6407AF6DEFB04E905B15993195FE88852E58491BAE956",
+        "InputBytes": 2608,
+        "Threshold": 8388608,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "F5E0CFECFD66D0CA9B95D8A9B3B360A8C0B507CE800391314A144F35FFDB6AD9",
+          "ExcelRenderer.OpenXml.Reader": "A2EE1F920BD4C91271F367F6DF416C864059375E7C22C3253771DAA9F19305D8",
+          "ExcelRenderer": "EE52DACC0D7E115FAB976D8CA995AD49C24A87A9E7DB52F9B85418A9C39CA706"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 524.3501,
+        "AllocatedBytes": 22591504,
+        "GC": [
+          1,
+          1,
+          1
+        ],
+        "FinalSaveMs": 22.4788,
+        "Spills": 0,
+        "OutputBytes": 116302,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 37.0902,
+        "AllocatedBytes": 19959952,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 8.277,
+        "Spills": 0,
+        "OutputBytes": 116302,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 34.8402,
+        "AllocatedBytes": 19970944,
+        "GC": [
+          1,
+          1,
+          1
+        ],
+        "FinalSaveMs": 8.1669,
+        "Spills": 0,
+        "OutputBytes": 116302,
+        "Operations": null
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 4194336,
+        "Spilled": false
+      }
+    ]
+  },
+  {
+    "stage": "B",
+    "case": "small",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "outputHash": "b269fcff068a2508020406ba5114b190c45cf8f3335e96515b33b29dc1e96b0a",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "small.xlsx",
+        "InputHash": "73CFFACAF5A3630C74C6407AF6DEFB04E905B15993195FE88852E58491BAE956",
+        "InputBytes": 2608,
+        "Threshold": 8388608,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "CB6C6FBAD7E3A366BEDDC604602A8E8E36B4D866DA83C63B035F03FE2C073A3A",
+          "ExcelRenderer.OpenXml.Reader": "11F4E88E9B28DE9AA1BB9D427A26F6A84DC955A9799D5FD8204447FD474734B9",
+          "ExcelRenderer": "2C79093B3C9FD016634CD09B77E2F212A9D90ED62ADC9B2847DC884FBE33E8A3"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 528.5429,
+        "AllocatedBytes": 22355136,
+        "GC": [
+          1,
+          1,
+          1
+        ],
+        "FinalSaveMs": 22.8064,
+        "Spills": 0,
+        "OutputBytes": 116302,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 35.6476,
+        "AllocatedBytes": 19723760,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 8.2896,
+        "Spills": 0,
+        "OutputBytes": 116302,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 36.0607,
+        "AllocatedBytes": 19730664,
+        "GC": [
+          1,
+          1,
+          1
+        ],
+        "FinalSaveMs": 8.1185,
+        "Spills": 0,
+        "OutputBytes": 116302,
+        "Operations": null
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": false
+      }
+    ]
+  },
+  {
+    "stage": "C",
+    "case": "small",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "outputHash": "b269fcff068a2508020406ba5114b190c45cf8f3335e96515b33b29dc1e96b0a",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "small.xlsx",
+        "InputHash": "73CFFACAF5A3630C74C6407AF6DEFB04E905B15993195FE88852E58491BAE956",
+        "InputBytes": 2608,
+        "Threshold": 8388608,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "860905C6274A6E31A84488C39DC94F8E85436EF43EEF209EE889D1DD57BC0D63",
+          "ExcelRenderer.OpenXml.Reader": "CA28934CEAD30764D1FE0E62AB0F41AC09B74801411CCE401E638EFC048C8A3C",
+          "ExcelRenderer": "08A9ABD3E581AB61AC1BFF38C93EB084379ED8B06FB541B248F9BE97190C791F"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 543.7184,
+        "AllocatedBytes": 22363192,
+        "GC": [
+          1,
+          1,
+          1
+        ],
+        "FinalSaveMs": 23.2206,
+        "Spills": 0,
+        "OutputBytes": 116302,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 34.1306,
+        "AllocatedBytes": 19732008,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 7.7948,
+        "Spills": 0,
+        "OutputBytes": 116302,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 34.4784,
+        "AllocatedBytes": 19738008,
+        "GC": [
+          1,
+          1,
+          1
+        ],
+        "FinalSaveMs": 7.8563,
+        "Spills": 0,
+        "OutputBytes": 116302,
+        "Operations": null
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": false
+      }
+    ]
+  },
+  {
+    "stage": "A",
+    "case": "small",
+    "kind": "xlsx",
+    "threshold": 1,
+    "outputHash": "b269fcff068a2508020406ba5114b190c45cf8f3335e96515b33b29dc1e96b0a",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "small.xlsx",
+        "InputHash": "73CFFACAF5A3630C74C6407AF6DEFB04E905B15993195FE88852E58491BAE956",
+        "InputBytes": 2608,
+        "Threshold": 1,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "F5E0CFECFD66D0CA9B95D8A9B3B360A8C0B507CE800391314A144F35FFDB6AD9",
+          "ExcelRenderer.OpenXml.Reader": "A2EE1F920BD4C91271F367F6DF416C864059375E7C22C3253771DAA9F19305D8",
+          "ExcelRenderer": "EE52DACC0D7E115FAB976D8CA995AD49C24A87A9E7DB52F9B85418A9C39CA706"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 533.6065,
+        "AllocatedBytes": 22333744,
+        "GC": [
+          1,
+          1,
+          1
+        ],
+        "FinalSaveMs": 23.5231,
+        "Spills": 1,
+        "OutputBytes": 116302,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 34.7417,
+        "AllocatedBytes": 19800880,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 8.5881,
+        "Spills": 1,
+        "OutputBytes": 116302,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 39.7202,
+        "AllocatedBytes": 19711000,
+        "GC": [
+          1,
+          1,
+          1
+        ],
+        "FinalSaveMs": 13.6884,
+        "Spills": 1,
+        "OutputBytes": 116302,
+        "Operations": null
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 4194336,
+        "Spilled": true
+      }
+    ]
+  },
+  {
+    "stage": "B",
+    "case": "small",
+    "kind": "xlsx",
+    "threshold": 1,
+    "outputHash": "b269fcff068a2508020406ba5114b190c45cf8f3335e96515b33b29dc1e96b0a",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "small.xlsx",
+        "InputHash": "73CFFACAF5A3630C74C6407AF6DEFB04E905B15993195FE88852E58491BAE956",
+        "InputBytes": 2608,
+        "Threshold": 1,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "CB6C6FBAD7E3A366BEDDC604602A8E8E36B4D866DA83C63B035F03FE2C073A3A",
+          "ExcelRenderer.OpenXml.Reader": "11F4E88E9B28DE9AA1BB9D427A26F6A84DC955A9799D5FD8204447FD474734B9",
+          "ExcelRenderer": "2C79093B3C9FD016634CD09B77E2F212A9D90ED62ADC9B2847DC884FBE33E8A3"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 533.6825,
+        "AllocatedBytes": 22097544,
+        "GC": [
+          1,
+          1,
+          1
+        ],
+        "FinalSaveMs": 23.2046,
+        "Spills": 1,
+        "OutputBytes": 116302,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 33.6784,
+        "AllocatedBytes": 19466336,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 8.4184,
+        "Spills": 1,
+        "OutputBytes": 116302,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 37.7444,
+        "AllocatedBytes": 19472872,
+        "GC": [
+          1,
+          1,
+          1
+        ],
+        "FinalSaveMs": 8.4393,
+        "Spills": 1,
+        "OutputBytes": 116302,
+        "Operations": null
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": true
+      }
+    ]
+  },
+  {
+    "stage": "C",
+    "case": "small",
+    "kind": "xlsx",
+    "threshold": 1,
+    "outputHash": "b269fcff068a2508020406ba5114b190c45cf8f3335e96515b33b29dc1e96b0a",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "small.xlsx",
+        "InputHash": "73CFFACAF5A3630C74C6407AF6DEFB04E905B15993195FE88852E58491BAE956",
+        "InputBytes": 2608,
+        "Threshold": 1,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "860905C6274A6E31A84488C39DC94F8E85436EF43EEF209EE889D1DD57BC0D63",
+          "ExcelRenderer.OpenXml.Reader": "CA28934CEAD30764D1FE0E62AB0F41AC09B74801411CCE401E638EFC048C8A3C",
+          "ExcelRenderer": "08A9ABD3E581AB61AC1BFF38C93EB084379ED8B06FB541B248F9BE97190C791F"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 555.2755,
+        "AllocatedBytes": 22105864,
+        "GC": [
+          1,
+          1,
+          1
+        ],
+        "FinalSaveMs": 23.5873,
+        "Spills": 1,
+        "OutputBytes": 116302,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 35.7106,
+        "AllocatedBytes": 19474584,
+        "GC": [
+          0,
+          0,
+          0
+        ],
+        "FinalSaveMs": 8.0777,
+        "Spills": 1,
+        "OutputBytes": 116302,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 34.0701,
+        "AllocatedBytes": 19484336,
+        "GC": [
+          1,
+          1,
+          1
+        ],
+        "FinalSaveMs": 8.0279,
+        "Spills": 1,
+        "OutputBytes": 116302,
+        "Operations": null
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": true
+      }
+    ]
+  },
+  {
+    "stage": "A",
+    "case": "objects",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "outputHash": "fbac8e7cc9be4f7bbbab6d96535ee5d5a946953432b979b421c589356d68734f",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "objects.xlsx",
+        "InputHash": "90AB1D6970C08D347FB3496564D091056347938E7871C71D71F62EF9F38EDC99",
+        "InputBytes": 14547,
+        "Threshold": 8388608,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "F5E0CFECFD66D0CA9B95D8A9B3B360A8C0B507CE800391314A144F35FFDB6AD9",
+          "ExcelRenderer.OpenXml.Reader": "A2EE1F920BD4C91271F367F6DF416C864059375E7C22C3253771DAA9F19305D8",
+          "ExcelRenderer": "EE52DACC0D7E115FAB976D8CA995AD49C24A87A9E7DB52F9B85418A9C39CA706"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 966.4111,
+        "AllocatedBytes": 99962000,
+        "GC": [
+          6,
+          3,
+          2
+        ],
+        "FinalSaveMs": 25.2171,
+        "Spills": 0,
+        "OutputBytes": 164234,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 438.6094,
+        "AllocatedBytes": 96682312,
+        "GC": [
+          6,
+          2,
+          1
+        ],
+        "FinalSaveMs": 10.192,
+        "Spills": 0,
+        "OutputBytes": 164234,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 583.2338,
+        "AllocatedBytes": 96551416,
+        "GC": [
+          5,
+          2,
+          0
+        ],
+        "FinalSaveMs": 10.9885,
+        "Spills": 0,
+        "OutputBytes": 164234,
+        "Operations": null
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 4194336,
+        "Spilled": false
+      }
+    ]
+  },
+  {
+    "stage": "B",
+    "case": "objects",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "outputHash": "fbac8e7cc9be4f7bbbab6d96535ee5d5a946953432b979b421c589356d68734f",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "objects.xlsx",
+        "InputHash": "90AB1D6970C08D347FB3496564D091056347938E7871C71D71F62EF9F38EDC99",
+        "InputBytes": 14547,
+        "Threshold": 8388608,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "CB6C6FBAD7E3A366BEDDC604602A8E8E36B4D866DA83C63B035F03FE2C073A3A",
+          "ExcelRenderer.OpenXml.Reader": "11F4E88E9B28DE9AA1BB9D427A26F6A84DC955A9799D5FD8204447FD474734B9",
+          "ExcelRenderer": "2C79093B3C9FD016634CD09B77E2F212A9D90ED62ADC9B2847DC884FBE33E8A3"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 939.0581,
+        "AllocatedBytes": 99201840,
+        "GC": [
+          6,
+          3,
+          2
+        ],
+        "FinalSaveMs": 24.9009,
+        "Spills": 0,
+        "OutputBytes": 164234,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 447.2463,
+        "AllocatedBytes": 95735208,
+        "GC": [
+          6,
+          2,
+          1
+        ],
+        "FinalSaveMs": 10.3538,
+        "Spills": 0,
+        "OutputBytes": 164234,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 597.3146,
+        "AllocatedBytes": 95703864,
+        "GC": [
+          5,
+          2,
+          0
+        ],
+        "FinalSaveMs": 10.1908,
+        "Spills": 0,
+        "OutputBytes": 164234,
+        "Operations": null
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": false
+      }
+    ]
+  },
+  {
+    "stage": "C",
+    "case": "objects",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "outputHash": "fbac8e7cc9be4f7bbbab6d96535ee5d5a946953432b979b421c589356d68734f",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "objects.xlsx",
+        "InputHash": "90AB1D6970C08D347FB3496564D091056347938E7871C71D71F62EF9F38EDC99",
+        "InputBytes": 14547,
+        "Threshold": 8388608,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "860905C6274A6E31A84488C39DC94F8E85436EF43EEF209EE889D1DD57BC0D63",
+          "ExcelRenderer.OpenXml.Reader": "CA28934CEAD30764D1FE0E62AB0F41AC09B74801411CCE401E638EFC048C8A3C",
+          "ExcelRenderer": "08A9ABD3E581AB61AC1BFF38C93EB084379ED8B06FB541B248F9BE97190C791F"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 929.8854,
+        "AllocatedBytes": 99124264,
+        "GC": [
+          6,
+          3,
+          2
+        ],
+        "FinalSaveMs": 24.4602,
+        "Spills": 0,
+        "OutputBytes": 164234,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 427.434,
+        "AllocatedBytes": 95841616,
+        "GC": [
+          6,
+          2,
+          1
+        ],
+        "FinalSaveMs": 9.4753,
+        "Spills": 0,
+        "OutputBytes": 164234,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 525.5253,
+        "AllocatedBytes": 90261872,
+        "GC": [
+          4,
+          2,
+          0
+        ],
+        "FinalSaveMs": 9.7236,
+        "Spills": 0,
+        "OutputBytes": 164234,
+        "Operations": null
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": false
+      }
+    ]
+  },
+  {
+    "stage": "A",
+    "case": "objects",
+    "kind": "xlsx",
+    "threshold": 1,
+    "outputHash": "fbac8e7cc9be4f7bbbab6d96535ee5d5a946953432b979b421c589356d68734f",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "objects.xlsx",
+        "InputHash": "90AB1D6970C08D347FB3496564D091056347938E7871C71D71F62EF9F38EDC99",
+        "InputBytes": 14547,
+        "Threshold": 1,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "F5E0CFECFD66D0CA9B95D8A9B3B360A8C0B507CE800391314A144F35FFDB6AD9",
+          "ExcelRenderer.OpenXml.Reader": "A2EE1F920BD4C91271F367F6DF416C864059375E7C22C3253771DAA9F19305D8",
+          "ExcelRenderer": "EE52DACC0D7E115FAB976D8CA995AD49C24A87A9E7DB52F9B85418A9C39CA706"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 944.9441,
+        "AllocatedBytes": 99530600,
+        "GC": [
+          6,
+          3,
+          2
+        ],
+        "FinalSaveMs": 27.0637,
+        "Spills": 1,
+        "OutputBytes": 164234,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 457.9729,
+        "AllocatedBytes": 90614792,
+        "GC": [
+          6,
+          2,
+          1
+        ],
+        "FinalSaveMs": 12.8476,
+        "Spills": 1,
+        "OutputBytes": 164234,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 529.0748,
+        "AllocatedBytes": 90645144,
+        "GC": [
+          4,
+          2,
+          0
+        ],
+        "FinalSaveMs": 14.7554,
+        "Spills": 1,
+        "OutputBytes": 164234,
+        "Operations": null
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 4194336,
+        "Spilled": true
+      }
+    ]
+  },
+  {
+    "stage": "B",
+    "case": "objects",
+    "kind": "xlsx",
+    "threshold": 1,
+    "outputHash": "fbac8e7cc9be4f7bbbab6d96535ee5d5a946953432b979b421c589356d68734f",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "objects.xlsx",
+        "InputHash": "90AB1D6970C08D347FB3496564D091056347938E7871C71D71F62EF9F38EDC99",
+        "InputBytes": 14547,
+        "Threshold": 1,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "CB6C6FBAD7E3A366BEDDC604602A8E8E36B4D866DA83C63B035F03FE2C073A3A",
+          "ExcelRenderer.OpenXml.Reader": "11F4E88E9B28DE9AA1BB9D427A26F6A84DC955A9799D5FD8204447FD474734B9",
+          "ExcelRenderer": "2C79093B3C9FD016634CD09B77E2F212A9D90ED62ADC9B2847DC884FBE33E8A3"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 974.1177,
+        "AllocatedBytes": 98587560,
+        "GC": [
+          6,
+          3,
+          2
+        ],
+        "FinalSaveMs": 26.4477,
+        "Spills": 1,
+        "OutputBytes": 164234,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 479.2729,
+        "AllocatedBytes": 95190776,
+        "GC": [
+          6,
+          2,
+          1
+        ],
+        "FinalSaveMs": 11.8765,
+        "Spills": 1,
+        "OutputBytes": 164234,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 541.5916,
+        "AllocatedBytes": 94838592,
+        "GC": [
+          5,
+          2,
+          0
+        ],
+        "FinalSaveMs": 11.6916,
+        "Spills": 1,
+        "OutputBytes": 164234,
+        "Operations": null
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": true
+      }
+    ]
+  },
+  {
+    "stage": "C",
+    "case": "objects",
+    "kind": "xlsx",
+    "threshold": 1,
+    "outputHash": "fbac8e7cc9be4f7bbbab6d96535ee5d5a946953432b979b421c589356d68734f",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "objects.xlsx",
+        "InputHash": "90AB1D6970C08D347FB3496564D091056347938E7871C71D71F62EF9F38EDC99",
+        "InputBytes": 14547,
+        "Threshold": 1,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "860905C6274A6E31A84488C39DC94F8E85436EF43EEF209EE889D1DD57BC0D63",
+          "ExcelRenderer.OpenXml.Reader": "CA28934CEAD30764D1FE0E62AB0F41AC09B74801411CCE401E638EFC048C8A3C",
+          "ExcelRenderer": "08A9ABD3E581AB61AC1BFF38C93EB084379ED8B06FB541B248F9BE97190C791F"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 967.3928,
+        "AllocatedBytes": 98702992,
+        "GC": [
+          6,
+          3,
+          2
+        ],
+        "FinalSaveMs": 25.4558,
+        "Spills": 1,
+        "OutputBytes": 164234,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 472.4742,
+        "AllocatedBytes": 95200336,
+        "GC": [
+          6,
+          2,
+          1
+        ],
+        "FinalSaveMs": 9.7772,
+        "Spills": 1,
+        "OutputBytes": 164234,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 549.8782,
+        "AllocatedBytes": 95191504,
+        "GC": [
+          5,
+          2,
+          0
+        ],
+        "FinalSaveMs": 9.5245,
+        "Spills": 1,
+        "OutputBytes": 164234,
+        "Operations": null
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": true
+      }
+    ]
+  },
+  {
+    "stage": "A",
+    "case": "borders",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "outputHash": "3a7f7e12c7fc1f8e18eca7063b2058911e424f117eafcf8acb1055850f19f957",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "borders.xlsx",
+        "InputHash": "D280024D9265068F310427EA126FE8244A04257109B806933E5F039FEF566DE1",
+        "InputBytes": 10524,
+        "Threshold": 8388608,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "F5E0CFECFD66D0CA9B95D8A9B3B360A8C0B507CE800391314A144F35FFDB6AD9",
+          "ExcelRenderer.OpenXml.Reader": "A2EE1F920BD4C91271F367F6DF416C864059375E7C22C3253771DAA9F19305D8",
+          "ExcelRenderer": "EE52DACC0D7E115FAB976D8CA995AD49C24A87A9E7DB52F9B85418A9C39CA706"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 662.9791,
+        "AllocatedBytes": 70066976,
+        "GC": [
+          4,
+          2,
+          1
+        ],
+        "FinalSaveMs": 17.7162,
+        "Spills": 0,
+        "OutputBytes": 25734,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 286.6076,
+        "AllocatedBytes": 67545536,
+        "GC": [
+          3,
+          0,
+          0
+        ],
+        "FinalSaveMs": 2.4766,
+        "Spills": 0,
+        "OutputBytes": 25734,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 322.545,
+        "AllocatedBytes": 62686600,
+        "GC": [
+          3,
+          1,
+          1
+        ],
+        "FinalSaveMs": 2.4189,
+        "Spills": 0,
+        "OutputBytes": 25734,
+        "Operations": null
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 4194336,
+        "Spilled": false
+      }
+    ]
+  },
+  {
+    "stage": "B",
+    "case": "borders",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "outputHash": "3a7f7e12c7fc1f8e18eca7063b2058911e424f117eafcf8acb1055850f19f957",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "borders.xlsx",
+        "InputHash": "D280024D9265068F310427EA126FE8244A04257109B806933E5F039FEF566DE1",
+        "InputBytes": 10524,
+        "Threshold": 8388608,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "CB6C6FBAD7E3A366BEDDC604602A8E8E36B4D866DA83C63B035F03FE2C073A3A",
+          "ExcelRenderer.OpenXml.Reader": "11F4E88E9B28DE9AA1BB9D427A26F6A84DC955A9799D5FD8204447FD474734B9",
+          "ExcelRenderer": "2C79093B3C9FD016634CD09B77E2F212A9D90ED62ADC9B2847DC884FBE33E8A3"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 649.853,
+        "AllocatedBytes": 69435992,
+        "GC": [
+          4,
+          2,
+          1
+        ],
+        "FinalSaveMs": 17.0275,
+        "Spills": 0,
+        "OutputBytes": 25734,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 267.4609,
+        "AllocatedBytes": 66919048,
+        "GC": [
+          4,
+          1,
+          1
+        ],
+        "FinalSaveMs": 2.5061,
+        "Spills": 0,
+        "OutputBytes": 25734,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 334.3915,
+        "AllocatedBytes": 66922120,
+        "GC": [
+          4,
+          2,
+          1
+        ],
+        "FinalSaveMs": 1.8122,
+        "Spills": 0,
+        "OutputBytes": 25734,
+        "Operations": null
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": false
+      }
+    ]
+  },
+  {
+    "stage": "C",
+    "case": "borders",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "outputHash": "3a7f7e12c7fc1f8e18eca7063b2058911e424f117eafcf8acb1055850f19f957",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "borders.xlsx",
+        "InputHash": "D280024D9265068F310427EA126FE8244A04257109B806933E5F039FEF566DE1",
+        "InputBytes": 10524,
+        "Threshold": 8388608,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "860905C6274A6E31A84488C39DC94F8E85436EF43EEF209EE889D1DD57BC0D63",
+          "ExcelRenderer.OpenXml.Reader": "CA28934CEAD30764D1FE0E62AB0F41AC09B74801411CCE401E638EFC048C8A3C",
+          "ExcelRenderer": "08A9ABD3E581AB61AC1BFF38C93EB084379ED8B06FB541B248F9BE97190C791F"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 697.4677,
+        "AllocatedBytes": 69443656,
+        "GC": [
+          4,
+          2,
+          1
+        ],
+        "FinalSaveMs": 20.7151,
+        "Spills": 0,
+        "OutputBytes": 25734,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 265.9157,
+        "AllocatedBytes": 66932024,
+        "GC": [
+          4,
+          1,
+          1
+        ],
+        "FinalSaveMs": 1.8001,
+        "Spills": 0,
+        "OutputBytes": 25734,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 379.5115,
+        "AllocatedBytes": 66938144,
+        "GC": [
+          4,
+          2,
+          1
+        ],
+        "FinalSaveMs": 3.9052,
+        "Spills": 0,
+        "OutputBytes": 25734,
+        "Operations": null
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": false
+      }
+    ]
+  },
+  {
+    "stage": "A",
+    "case": "borders",
+    "kind": "xlsx",
+    "threshold": 1,
+    "outputHash": "3a7f7e12c7fc1f8e18eca7063b2058911e424f117eafcf8acb1055850f19f957",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "borders.xlsx",
+        "InputHash": "D280024D9265068F310427EA126FE8244A04257109B806933E5F039FEF566DE1",
+        "InputBytes": 10524,
+        "Threshold": 1,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "F5E0CFECFD66D0CA9B95D8A9B3B360A8C0B507CE800391314A144F35FFDB6AD9",
+          "ExcelRenderer.OpenXml.Reader": "A2EE1F920BD4C91271F367F6DF416C864059375E7C22C3253771DAA9F19305D8",
+          "ExcelRenderer": "EE52DACC0D7E115FAB976D8CA995AD49C24A87A9E7DB52F9B85418A9C39CA706"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 664.5858,
+        "AllocatedBytes": 69987800,
+        "GC": [
+          4,
+          2,
+          1
+        ],
+        "FinalSaveMs": 19.3578,
+        "Spills": 1,
+        "OutputBytes": 25734,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 268.3819,
+        "AllocatedBytes": 67466776,
+        "GC": [
+          3,
+          0,
+          0
+        ],
+        "FinalSaveMs": 4.0414,
+        "Spills": 1,
+        "OutputBytes": 25734,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 295.646,
+        "AllocatedBytes": 62605960,
+        "GC": [
+          3,
+          1,
+          1
+        ],
+        "FinalSaveMs": 3.7858,
+        "Spills": 1,
+        "OutputBytes": 25734,
+        "Operations": null
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 4194336,
+        "Spilled": true
+      }
+    ]
+  },
+  {
+    "stage": "B",
+    "case": "borders",
+    "kind": "xlsx",
+    "threshold": 1,
+    "outputHash": "3a7f7e12c7fc1f8e18eca7063b2058911e424f117eafcf8acb1055850f19f957",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "borders.xlsx",
+        "InputHash": "D280024D9265068F310427EA126FE8244A04257109B806933E5F039FEF566DE1",
+        "InputBytes": 10524,
+        "Threshold": 1,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "CB6C6FBAD7E3A366BEDDC604602A8E8E36B4D866DA83C63B035F03FE2C073A3A",
+          "ExcelRenderer.OpenXml.Reader": "11F4E88E9B28DE9AA1BB9D427A26F6A84DC955A9799D5FD8204447FD474734B9",
+          "ExcelRenderer": "2C79093B3C9FD016634CD09B77E2F212A9D90ED62ADC9B2847DC884FBE33E8A3"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 672.5787,
+        "AllocatedBytes": 69355576,
+        "GC": [
+          4,
+          2,
+          1
+        ],
+        "FinalSaveMs": 18.5051,
+        "Spills": 1,
+        "OutputBytes": 25734,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 275.3698,
+        "AllocatedBytes": 63630280,
+        "GC": [
+          2,
+          0,
+          0
+        ],
+        "FinalSaveMs": 4.1917,
+        "Spills": 1,
+        "OutputBytes": 25734,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 365.2091,
+        "AllocatedBytes": 61474384,
+        "GC": [
+          4,
+          2,
+          1
+        ],
+        "FinalSaveMs": 3.1916,
+        "Spills": 1,
+        "OutputBytes": 25734,
+        "Operations": null
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": true
+      }
+    ]
+  },
+  {
+    "stage": "C",
+    "case": "borders",
+    "kind": "xlsx",
+    "threshold": 1,
+    "outputHash": "3a7f7e12c7fc1f8e18eca7063b2058911e424f117eafcf8acb1055850f19f957",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "borders.xlsx",
+        "InputHash": "D280024D9265068F310427EA126FE8244A04257109B806933E5F039FEF566DE1",
+        "InputBytes": 10524,
+        "Threshold": 1,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "860905C6274A6E31A84488C39DC94F8E85436EF43EEF209EE889D1DD57BC0D63",
+          "ExcelRenderer.OpenXml.Reader": "CA28934CEAD30764D1FE0E62AB0F41AC09B74801411CCE401E638EFC048C8A3C",
+          "ExcelRenderer": "08A9ABD3E581AB61AC1BFF38C93EB084379ED8B06FB541B248F9BE97190C791F"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 645.3707,
+        "AllocatedBytes": 69363896,
+        "GC": [
+          4,
+          2,
+          1
+        ],
+        "FinalSaveMs": 17.0858,
+        "Spills": 1,
+        "OutputBytes": 25734,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 300.1583,
+        "AllocatedBytes": 66847304,
+        "GC": [
+          4,
+          1,
+          1
+        ],
+        "FinalSaveMs": 2.6461,
+        "Spills": 1,
+        "OutputBytes": 25734,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 339.0452,
+        "AllocatedBytes": 61597224,
+        "GC": [
+          2,
+          1,
+          0
+        ],
+        "FinalSaveMs": 1.6832,
+        "Spills": 1,
+        "OutputBytes": 25734,
+        "Operations": null
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": true
+      }
+    ]
+  },
+  {
+    "stage": "A",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "outputHash": "9377e2a973a0b13dbf356c207af29b521fef0bd0c307336a0a4539cb5f0f61e4",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "image.xlsx",
+        "InputHash": "CFEDB4982BAB262B6DEB080897B2927D15D2E6C1883E9AEB3B6DCABFDFE84786",
+        "InputBytes": 9732563,
+        "Threshold": 8388608,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "F5E0CFECFD66D0CA9B95D8A9B3B360A8C0B507CE800391314A144F35FFDB6AD9",
+          "ExcelRenderer.OpenXml.Reader": "A2EE1F920BD4C91271F367F6DF416C864059375E7C22C3253771DAA9F19305D8",
+          "ExcelRenderer": "EE52DACC0D7E115FAB976D8CA995AD49C24A87A9E7DB52F9B85418A9C39CA706"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 829.9879,
+        "AllocatedBytes": 110913360,
+        "GC": [
+          1,
+          1,
+          1
+        ],
+        "FinalSaveMs": 25.24,
+        "Spills": 1,
+        "OutputBytes": 9842064,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 306.8542,
+        "AllocatedBytes": 107470296,
+        "GC": [
+          1,
+          0,
+          0
+        ],
+        "FinalSaveMs": 10.5957,
+        "Spills": 1,
+        "OutputBytes": 9842064,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 295.9084,
+        "AllocatedBytes": 107480504,
+        "GC": [
+          2,
+          2,
+          2
+        ],
+        "FinalSaveMs": 12.1374,
+        "Spills": 1,
+        "OutputBytes": 9842064,
+        "Operations": null
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 4194336,
+        "Spilled": false
+      }
+    ]
+  },
+  {
+    "stage": "B",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "outputHash": "9377e2a973a0b13dbf356c207af29b521fef0bd0c307336a0a4539cb5f0f61e4",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "image.xlsx",
+        "InputHash": "CFEDB4982BAB262B6DEB080897B2927D15D2E6C1883E9AEB3B6DCABFDFE84786",
+        "InputBytes": 9732563,
+        "Threshold": 8388608,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "CB6C6FBAD7E3A366BEDDC604602A8E8E36B4D866DA83C63B035F03FE2C073A3A",
+          "ExcelRenderer.OpenXml.Reader": "11F4E88E9B28DE9AA1BB9D427A26F6A84DC955A9799D5FD8204447FD474734B9",
+          "ExcelRenderer": "2C79093B3C9FD016634CD09B77E2F212A9D90ED62ADC9B2847DC884FBE33E8A3"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 879.6904,
+        "AllocatedBytes": 110581872,
+        "GC": [
+          1,
+          1,
+          1
+        ],
+        "FinalSaveMs": 25.7246,
+        "Spills": 1,
+        "OutputBytes": 9842064,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 300.5067,
+        "AllocatedBytes": 107311240,
+        "GC": [
+          1,
+          0,
+          0
+        ],
+        "FinalSaveMs": 10.0632,
+        "Spills": 1,
+        "OutputBytes": 9842064,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 280.3577,
+        "AllocatedBytes": 107223144,
+        "GC": [
+          2,
+          2,
+          2
+        ],
+        "FinalSaveMs": 11.8461,
+        "Spills": 1,
+        "OutputBytes": 9842064,
+        "Operations": null
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": false
+      }
+    ]
+  },
+  {
+    "stage": "C",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 8388608,
+    "outputHash": "9377e2a973a0b13dbf356c207af29b521fef0bd0c307336a0a4539cb5f0f61e4",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "image.xlsx",
+        "InputHash": "CFEDB4982BAB262B6DEB080897B2927D15D2E6C1883E9AEB3B6DCABFDFE84786",
+        "InputBytes": 9732563,
+        "Threshold": 8388608,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "860905C6274A6E31A84488C39DC94F8E85436EF43EEF209EE889D1DD57BC0D63",
+          "ExcelRenderer.OpenXml.Reader": "CA28934CEAD30764D1FE0E62AB0F41AC09B74801411CCE401E638EFC048C8A3C",
+          "ExcelRenderer": "08A9ABD3E581AB61AC1BFF38C93EB084379ED8B06FB541B248F9BE97190C791F"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 843.2184,
+        "AllocatedBytes": 110565544,
+        "GC": [
+          1,
+          1,
+          1
+        ],
+        "FinalSaveMs": 24.9597,
+        "Spills": 1,
+        "OutputBytes": 9842064,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 311.2144,
+        "AllocatedBytes": 107221360,
+        "GC": [
+          1,
+          0,
+          0
+        ],
+        "FinalSaveMs": 8.9497,
+        "Spills": 1,
+        "OutputBytes": 9842064,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 284.4353,
+        "AllocatedBytes": 107235000,
+        "GC": [
+          2,
+          2,
+          2
+        ],
+        "FinalSaveMs": 9.1149,
+        "Spills": 1,
+        "OutputBytes": 9842064,
+        "Operations": null
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": false
+      }
+    ]
+  },
+  {
+    "stage": "A",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 1,
+    "outputHash": "9377e2a973a0b13dbf356c207af29b521fef0bd0c307336a0a4539cb5f0f61e4",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "image.xlsx",
+        "InputHash": "CFEDB4982BAB262B6DEB080897B2927D15D2E6C1883E9AEB3B6DCABFDFE84786",
+        "InputBytes": 9732563,
+        "Threshold": 1,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "F5E0CFECFD66D0CA9B95D8A9B3B360A8C0B507CE800391314A144F35FFDB6AD9",
+          "ExcelRenderer.OpenXml.Reader": "A2EE1F920BD4C91271F367F6DF416C864059375E7C22C3253771DAA9F19305D8",
+          "ExcelRenderer": "EE52DACC0D7E115FAB976D8CA995AD49C24A87A9E7DB52F9B85418A9C39CA706"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 840.7033,
+        "AllocatedBytes": 92488096,
+        "GC": [
+          1,
+          1,
+          1
+        ],
+        "FinalSaveMs": 25.6212,
+        "Spills": 1,
+        "OutputBytes": 9842064,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 313.4388,
+        "AllocatedBytes": 89265944,
+        "GC": [
+          1,
+          0,
+          0
+        ],
+        "FinalSaveMs": 9.9663,
+        "Spills": 1,
+        "OutputBytes": 9842064,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 303.7135,
+        "AllocatedBytes": 89148120,
+        "GC": [
+          1,
+          1,
+          1
+        ],
+        "FinalSaveMs": 11.4731,
+        "Spills": 1,
+        "OutputBytes": 9842064,
+        "Operations": null
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 4194336,
+        "Spilled": true
+      }
+    ]
+  },
+  {
+    "stage": "B",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 1,
+    "outputHash": "9377e2a973a0b13dbf356c207af29b521fef0bd0c307336a0a4539cb5f0f61e4",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "image.xlsx",
+        "InputHash": "CFEDB4982BAB262B6DEB080897B2927D15D2E6C1883E9AEB3B6DCABFDFE84786",
+        "InputBytes": 9732563,
+        "Threshold": 1,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "CB6C6FBAD7E3A366BEDDC604602A8E8E36B4D866DA83C63B035F03FE2C073A3A",
+          "ExcelRenderer.OpenXml.Reader": "11F4E88E9B28DE9AA1BB9D427A26F6A84DC955A9799D5FD8204447FD474734B9",
+          "ExcelRenderer": "2C79093B3C9FD016634CD09B77E2F212A9D90ED62ADC9B2847DC884FBE33E8A3"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 839.1231,
+        "AllocatedBytes": 92230752,
+        "GC": [
+          1,
+          1,
+          1
+        ],
+        "FinalSaveMs": 25.6998,
+        "Spills": 1,
+        "OutputBytes": 9842064,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 302.6382,
+        "AllocatedBytes": 88885760,
+        "GC": [
+          1,
+          0,
+          0
+        ],
+        "FinalSaveMs": 9.8071,
+        "Spills": 1,
+        "OutputBytes": 9842064,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 297.7663,
+        "AllocatedBytes": 88895264,
+        "GC": [
+          2,
+          2,
+          2
+        ],
+        "FinalSaveMs": 10.9311,
+        "Spills": 1,
+        "OutputBytes": 9842064,
+        "Operations": null
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": true
+      }
+    ]
+  },
+  {
+    "stage": "C",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 1,
+    "outputHash": "9377e2a973a0b13dbf356c207af29b521fef0bd0c307336a0a4539cb5f0f61e4",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "image.xlsx",
+        "InputHash": "CFEDB4982BAB262B6DEB080897B2927D15D2E6C1883E9AEB3B6DCABFDFE84786",
+        "InputBytes": 9732563,
+        "Threshold": 1,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "860905C6274A6E31A84488C39DC94F8E85436EF43EEF209EE889D1DD57BC0D63",
+          "ExcelRenderer.OpenXml.Reader": "CA28934CEAD30764D1FE0E62AB0F41AC09B74801411CCE401E638EFC048C8A3C",
+          "ExcelRenderer": "08A9ABD3E581AB61AC1BFF38C93EB084379ED8B06FB541B248F9BE97190C791F"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 848.5938,
+        "AllocatedBytes": 92349928,
+        "GC": [
+          1,
+          1,
+          1
+        ],
+        "FinalSaveMs": 25.3207,
+        "Spills": 1,
+        "OutputBytes": 9842064,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 300.2781,
+        "AllocatedBytes": 88893112,
+        "GC": [
+          1,
+          0,
+          0
+        ],
+        "FinalSaveMs": 9.2427,
+        "Spills": 1,
+        "OutputBytes": 9842064,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 301.4787,
+        "AllocatedBytes": 88902560,
+        "GC": [
+          2,
+          2,
+          2
+        ],
+        "FinalSaveMs": 9.7252,
+        "Spills": 1,
+        "OutputBytes": 9842064,
+        "Operations": null
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": true
+      }
+    ]
+  },
+  {
+    "stage": "A",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 67108864,
+    "outputHash": "9377e2a973a0b13dbf356c207af29b521fef0bd0c307336a0a4539cb5f0f61e4",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "image.xlsx",
+        "InputHash": "CFEDB4982BAB262B6DEB080897B2927D15D2E6C1883E9AEB3B6DCABFDFE84786",
+        "InputBytes": 9732563,
+        "Threshold": 67108864,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "F5E0CFECFD66D0CA9B95D8A9B3B360A8C0B507CE800391314A144F35FFDB6AD9",
+          "ExcelRenderer.OpenXml.Reader": "A2EE1F920BD4C91271F367F6DF416C864059375E7C22C3253771DAA9F19305D8",
+          "ExcelRenderer": "EE52DACC0D7E115FAB976D8CA995AD49C24A87A9E7DB52F9B85418A9C39CA706"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 832.049,
+        "AllocatedBytes": 112374624,
+        "GC": [
+          1,
+          1,
+          1
+        ],
+        "FinalSaveMs": 24.1599,
+        "Spills": 0,
+        "OutputBytes": 9842064,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 307.6396,
+        "AllocatedBytes": 109042592,
+        "GC": [
+          1,
+          0,
+          0
+        ],
+        "FinalSaveMs": 8.9567,
+        "Spills": 0,
+        "OutputBytes": 9842064,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 304.5382,
+        "AllocatedBytes": 109036024,
+        "GC": [
+          2,
+          2,
+          2
+        ],
+        "FinalSaveMs": 9.4639,
+        "Spills": 0,
+        "OutputBytes": 9842064,
+        "Operations": null
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 4194336,
+        "Spilled": false
+      }
+    ]
+  },
+  {
+    "stage": "B",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 67108864,
+    "outputHash": "9377e2a973a0b13dbf356c207af29b521fef0bd0c307336a0a4539cb5f0f61e4",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "image.xlsx",
+        "InputHash": "CFEDB4982BAB262B6DEB080897B2927D15D2E6C1883E9AEB3B6DCABFDFE84786",
+        "InputBytes": 9732563,
+        "Threshold": 67108864,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "CB6C6FBAD7E3A366BEDDC604602A8E8E36B4D866DA83C63B035F03FE2C073A3A",
+          "ExcelRenderer.OpenXml.Reader": "11F4E88E9B28DE9AA1BB9D427A26F6A84DC955A9799D5FD8204447FD474734B9",
+          "ExcelRenderer": "2C79093B3C9FD016634CD09B77E2F212A9D90ED62ADC9B2847DC884FBE33E8A3"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 839.6267,
+        "AllocatedBytes": 112117232,
+        "GC": [
+          1,
+          1,
+          1
+        ],
+        "FinalSaveMs": 23.6537,
+        "Spills": 0,
+        "OutputBytes": 9842064,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 298.3861,
+        "AllocatedBytes": 108858664,
+        "GC": [
+          1,
+          0,
+          0
+        ],
+        "FinalSaveMs": 9.8053,
+        "Spills": 0,
+        "OutputBytes": 9842064,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 302.9825,
+        "AllocatedBytes": 108770648,
+        "GC": [
+          2,
+          2,
+          2
+        ],
+        "FinalSaveMs": 10.0106,
+        "Spills": 0,
+        "OutputBytes": 9842064,
+        "Operations": null
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": false
+      }
+    ]
+  },
+  {
+    "stage": "C",
+    "case": "image",
+    "kind": "xlsx",
+    "threshold": 67108864,
+    "outputHash": "9377e2a973a0b13dbf356c207af29b521fef0bd0c307336a0a4539cb5f0f61e4",
+    "rows": [
+      {
+        "Kind": "conditions",
+        "Input": "image.xlsx",
+        "InputHash": "CFEDB4982BAB262B6DEB080897B2927D15D2E6C1883E9AEB3B6DCABFDFE84786",
+        "InputBytes": 9732563,
+        "Threshold": 67108864,
+        "Diagnostic": true,
+        "Runtime": ".NET 10.0.12",
+        "OS": "Debian GNU/Linux 13 (trixie)",
+        "Assemblies": {
+          "ExcelRenderer.Core": "860905C6274A6E31A84488C39DC94F8E85436EF43EEF209EE889D1DD57BC0D63",
+          "ExcelRenderer.OpenXml.Reader": "CA28934CEAD30764D1FE0E62AB0F41AC09B74801411CCE401E638EFC048C8A3C",
+          "ExcelRenderer": "08A9ABD3E581AB61AC1BFF38C93EB084379ED8B06FB541B248F9BE97190C791F"
+        }
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -2,
+        "Warmup": true,
+        "ElapsedMs": 856.3041,
+        "AllocatedBytes": 112211536,
+        "GC": [
+          1,
+          1,
+          1
+        ],
+        "FinalSaveMs": 24.5019,
+        "Spills": 0,
+        "OutputBytes": 9842064,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": -1,
+        "Warmup": true,
+        "ElapsedMs": 305.7148,
+        "AllocatedBytes": 108769648,
+        "GC": [
+          1,
+          0,
+          0
+        ],
+        "FinalSaveMs": 8.4047,
+        "Spills": 0,
+        "OutputBytes": 9842064,
+        "Operations": null
+      },
+      {
+        "Kind": "sample",
+        "Iteration": 0,
+        "Warmup": false,
+        "ElapsedMs": 295.2944,
+        "AllocatedBytes": 108781888,
+        "GC": [
+          2,
+          2,
+          2
+        ],
+        "FinalSaveMs": 12.1847,
+        "Spills": 0,
+        "OutputBytes": 9842064,
+        "Operations": null
+      },
+      {
+        "Kind": "byte-loop",
+        "Bytes": 131072,
+        "AllocatedBytes": 0,
+        "Spilled": false
+      }
+    ]
+  }
+]

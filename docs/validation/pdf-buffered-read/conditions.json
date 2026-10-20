@@ -1,0 +1,163 @@
+{
+  "baselineMain": "f73676c437bc991384dc04c8b19d48d6f1fbff4e",
+  "commonHarnessCommit": "c99f878",
+  "productionCommits": {
+    "A": "dfe94b239903e6a1ed8ebb71ae883d46a86fb53f",
+    "B": "c99f878ce25360c13d8d0b585f3ba23d4a82bd52",
+    "C": "71dff65c09b43e587d3f8cfe7890a2b3ad0b444e"
+  },
+  "fontSha256": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec",
+  "fixtures": {
+    "borders.pdf": {
+      "bytes": 722146,
+      "sha256": "2e2e1062ababb92c0c5153d57168fc7c2d8b626ef94d69d699d6f6f57303a6c8"
+    },
+    "borders.xlsx": {
+      "bytes": 10524,
+      "sha256": "d280024d9265068f310427ea126fe8244a04257109b806933e5f039fef566de1"
+    },
+    "image.pdf": {
+      "bytes": 9720685,
+      "sha256": "31370f9ed743f739e7ef95705a300927f0c44b913f0efe876121d44edd63076c"
+    },
+    "image.xlsx": {
+      "bytes": 9732563,
+      "sha256": "cfedb4982bab262b6deb080897b2927d15d2e6c1883e9aeb3b6dcabfdfe84786"
+    },
+    "objects.pdf": {
+      "bytes": 162137,
+      "sha256": "16d485c2a2185bd92bdc07ebaf8b1142571f84b6e94a50b3f788132d909d483e"
+    },
+    "objects.xlsx": {
+      "bytes": 14547,
+      "sha256": "90ab1d6970c08d347fb3496564d091056347938e7871c71d71f62ef9f38edc99"
+    },
+    "small.pdf": {
+      "bytes": 507,
+      "sha256": "3a490aad7993353b11c7549b122b64b510e64c73dc87b97c113a074339b3a26e"
+    },
+    "small.xlsx": {
+      "bytes": 2608,
+      "sha256": "73cffacaf5a3630c74c6407af6defb04e905b15993195fe88852e58491bae956"
+    }
+  },
+  "imageFixture": "Deterministic noisy 1800x1800 RGB PNG substituted into retained image-template.xlsx by generate-fixtures.py",
+  "logicalProcessors": 5,
+  "runtimeFiles": {
+    "A": {
+      "DocumentFormat.OpenXml.Framework.dll": "5b8c2b9ca1aa70539af0b8054d649bd09fdce4dec812b263ab511b13789c8589",
+      "DocumentFormat.OpenXml.dll": "72e8f6e3e3527d7e6ee29f2f9182ef1b39a4de6da355a33013c0940efb24d87e",
+      "ExcelNumberFormat.dll": "d7c45b8e4e1027831e2fc8cdf941faf51d28a66feacfcaaa737da73262e7b507",
+      "ExcelRenderer.Core.dll": "f5e0cfecfd66d0ca9b95d8a9b3b360a8c0b507ce800391314a144f35ffdb6ad9",
+      "ExcelRenderer.Fonts.dll": "15df9412ace5b951bf5a84640bc28c3ede0a3ae8c7b415c6185e7a4668aa80ef",
+      "ExcelRenderer.Formulas.dll": "220f5109ef2c61fb8ae30ab7b50ec750a93cc49d121093bde6d656bbbff983de",
+      "ExcelRenderer.Mapping.dll": "f9beeb8cc7e310ae2b52193e8f7e8cde113232f591e24a7669cda059fc993f93",
+      "ExcelRenderer.OpenXml.Reader.dll": "a2ee1f920bd4c91271f367f6df416c864059375e7c22c3253771daa9f19305d8",
+      "ExcelRenderer.OpenXml.dll": "4446dd47bb1735c01d409a9fd05750f4d546c540cee6f232d8d67f3615e1f2bf",
+      "ExcelRenderer.Performance.dll": "fa0ee56288b0e17a898c16f44403ca3b40a8cac5485395b7a35fb5f5edf99de5",
+      "ExcelRenderer.dll": "ee52dacc0d7e115fab976d8ca995ad49c24a87a9e7db52f9b85418a9c39ca706",
+      "SkiaSharp.dll": "6e9f9367c0a30ca826065af19b2a6d6138c35ca9b47a72865539267f7e1bb1d1",
+      "System.IO.Packaging.dll": "12ddc8bff279fad856551a74894dc52b80fa437d5d2b32722e70ae6899217b7c",
+      "UglyToad.PdfPig.Core.dll": "70d93534a6573cb6674d94f6d3c2235c09a6a9e09d1d13b032a2a4a1c3b19818",
+      "UglyToad.PdfPig.DocumentLayoutAnalysis.dll": "3a763e3afd8b290fd46bbc91750459d057d6f64b8dc11ecd6527c977044086be",
+      "UglyToad.PdfPig.Fonts.dll": "aade3f7c3211c961303b136d78888da4194c183a1ea6503b72818b24cbd3a72a",
+      "UglyToad.PdfPig.Package.dll": "6da637d4a06099adf02036d632c3f4a7ea93f01c37145534e6d061725b0361b5",
+      "UglyToad.PdfPig.Tokenization.dll": "ad06282eb18bed04e3da01c757bcc16bc6fbfd8471660c1cddb5f75cbd643758",
+      "UglyToad.PdfPig.Tokens.dll": "128195b9c82ecf521ba2ddbfb358ff033c6d0a67938c87493ca8bf0991fff91d",
+      "UglyToad.PdfPig.dll": "e062781488d3a8557bcf670c57d6776ea7e723faa683b49ec4c6d449c087f5a1",
+      "runtimes/linux-arm/native/libSkiaSharp.so": "f9cda39142d800c9508a21d82ec3c0c58b1f8e72f314c2165f8371693b586434",
+      "runtimes/linux-arm64/native/libSkiaSharp.so": "f534ff4d2899d45a7559cc1899b6c413fa117559d0ccd9a38c56a74e1cf2ab6e",
+      "runtimes/linux-bionic-arm64/native/libSkiaSharp.so": "29a857e3ddb10c9101f5312dbc1105cb4ccb993232b34aacc6dc6cb8efa3737c",
+      "runtimes/linux-bionic-x64/native/libSkiaSharp.so": "87fc2e0d94afd91c7b0efa505789908eff4e7fd1677fca0f15dff03210b905b4",
+      "runtimes/linux-loongarch64/native/libSkiaSharp.so": "9df52e7ca46d319b590d6b8d1e862db506f47c1f8ceedf2cf319b520b2d0f33e",
+      "runtimes/linux-musl-arm/native/libSkiaSharp.so": "136f4069841619fb4e55785e2e36a351c4d213c1fea5c199b3569d73ab2e87bb",
+      "runtimes/linux-musl-arm64/native/libSkiaSharp.so": "93f841341e4c794d6fe876d1d6c0cf0d48c1a99b9dac9cb6b3afc7d584a0bbe3",
+      "runtimes/linux-musl-loongarch64/native/libSkiaSharp.so": "9394dc8c3e453b8b5cdf4df0015257409398e70783cf3bd948532b4bed5cf2e4",
+      "runtimes/linux-musl-riscv64/native/libSkiaSharp.so": "d2bfc726dcf564cfdc00483cb7d3f440c7300bf50eebb3a746f609664d51a73f",
+      "runtimes/linux-musl-x64/native/libSkiaSharp.so": "253eeaaaf010f2b7dbc77a537042e06f591e17b2263aba5fc64565ebbc8d0ea5",
+      "runtimes/linux-riscv64/native/libSkiaSharp.so": "f6becaf6bbc6feb9b5f110e799d29d724feca9343d04d1d74e9f72e43db3672c",
+      "runtimes/linux-x64/native/libSkiaSharp.so": "30b882ffbea5f7f3a1d71731ece30333d37023c0df783ad218b80949343352b2",
+      "runtimes/linux-x86/native/libSkiaSharp.so": "bb839a799b5201810c1fc25aad759c9e71b13b051155882fb0adab20c99d4b93",
+      "runtimes/win-arm64/native/libSkiaSharp.dll": "b2502e6520f1662f58748fa18abc61f6f15e861c530f8e5550590584585d8376",
+      "runtimes/win-x64/native/libSkiaSharp.dll": "7d81368aff17a4ab15c83b7c48f8c210a49f3a047e8779317c648178398708a3",
+      "runtimes/win-x86/native/libSkiaSharp.dll": "f7bc3765fa08f45078672bf161fc9236d262a2360566f37965095dec3ad612c7"
+    },
+    "B": {
+      "DocumentFormat.OpenXml.Framework.dll": "5b8c2b9ca1aa70539af0b8054d649bd09fdce4dec812b263ab511b13789c8589",
+      "DocumentFormat.OpenXml.dll": "72e8f6e3e3527d7e6ee29f2f9182ef1b39a4de6da355a33013c0940efb24d87e",
+      "ExcelNumberFormat.dll": "d7c45b8e4e1027831e2fc8cdf941faf51d28a66feacfcaaa737da73262e7b507",
+      "ExcelRenderer.Core.dll": "cb6c6fbad7e3a366beddc604602a8e8e36b4d866da83c63b035f03fe2c073a3a",
+      "ExcelRenderer.Fonts.dll": "404f5f36922fbbb229727629d0d02ae23ba87841fc60dec1bf72c4231590d5fa",
+      "ExcelRenderer.Formulas.dll": "e93fe13f1da2be9e7ab6a4337f84ead207af61e0cbb09c9dfdb6027824d0f852",
+      "ExcelRenderer.Mapping.dll": "5c3d4564d0a74f2a9a536ac77ba263966d2e18d896d05df4c07295315332b0ab",
+      "ExcelRenderer.OpenXml.Reader.dll": "11f4e88e9b28de9aa1bb9d427a26f6a84dc955a9799d5fd8204447fd474734b9",
+      "ExcelRenderer.OpenXml.dll": "7459f465646f16ffb48bf8e787f6cee5cad5342ca7b0b8f2c63b2abee2321cec",
+      "ExcelRenderer.Performance.dll": "fa0ee56288b0e17a898c16f44403ca3b40a8cac5485395b7a35fb5f5edf99de5",
+      "ExcelRenderer.dll": "2c79093b3c9fd016634cd09b77e2f212a9d90ed62adc9b2847dc884fbe33e8a3",
+      "SkiaSharp.dll": "6e9f9367c0a30ca826065af19b2a6d6138c35ca9b47a72865539267f7e1bb1d1",
+      "System.IO.Packaging.dll": "12ddc8bff279fad856551a74894dc52b80fa437d5d2b32722e70ae6899217b7c",
+      "UglyToad.PdfPig.Core.dll": "70d93534a6573cb6674d94f6d3c2235c09a6a9e09d1d13b032a2a4a1c3b19818",
+      "UglyToad.PdfPig.DocumentLayoutAnalysis.dll": "3a763e3afd8b290fd46bbc91750459d057d6f64b8dc11ecd6527c977044086be",
+      "UglyToad.PdfPig.Fonts.dll": "aade3f7c3211c961303b136d78888da4194c183a1ea6503b72818b24cbd3a72a",
+      "UglyToad.PdfPig.Package.dll": "6da637d4a06099adf02036d632c3f4a7ea93f01c37145534e6d061725b0361b5",
+      "UglyToad.PdfPig.Tokenization.dll": "ad06282eb18bed04e3da01c757bcc16bc6fbfd8471660c1cddb5f75cbd643758",
+      "UglyToad.PdfPig.Tokens.dll": "128195b9c82ecf521ba2ddbfb358ff033c6d0a67938c87493ca8bf0991fff91d",
+      "UglyToad.PdfPig.dll": "e062781488d3a8557bcf670c57d6776ea7e723faa683b49ec4c6d449c087f5a1",
+      "runtimes/linux-arm/native/libSkiaSharp.so": "f9cda39142d800c9508a21d82ec3c0c58b1f8e72f314c2165f8371693b586434",
+      "runtimes/linux-arm64/native/libSkiaSharp.so": "f534ff4d2899d45a7559cc1899b6c413fa117559d0ccd9a38c56a74e1cf2ab6e",
+      "runtimes/linux-bionic-arm64/native/libSkiaSharp.so": "29a857e3ddb10c9101f5312dbc1105cb4ccb993232b34aacc6dc6cb8efa3737c",
+      "runtimes/linux-bionic-x64/native/libSkiaSharp.so": "87fc2e0d94afd91c7b0efa505789908eff4e7fd1677fca0f15dff03210b905b4",
+      "runtimes/linux-loongarch64/native/libSkiaSharp.so": "9df52e7ca46d319b590d6b8d1e862db506f47c1f8ceedf2cf319b520b2d0f33e",
+      "runtimes/linux-musl-arm/native/libSkiaSharp.so": "136f4069841619fb4e55785e2e36a351c4d213c1fea5c199b3569d73ab2e87bb",
+      "runtimes/linux-musl-arm64/native/libSkiaSharp.so": "93f841341e4c794d6fe876d1d6c0cf0d48c1a99b9dac9cb6b3afc7d584a0bbe3",
+      "runtimes/linux-musl-loongarch64/native/libSkiaSharp.so": "9394dc8c3e453b8b5cdf4df0015257409398e70783cf3bd948532b4bed5cf2e4",
+      "runtimes/linux-musl-riscv64/native/libSkiaSharp.so": "d2bfc726dcf564cfdc00483cb7d3f440c7300bf50eebb3a746f609664d51a73f",
+      "runtimes/linux-musl-x64/native/libSkiaSharp.so": "253eeaaaf010f2b7dbc77a537042e06f591e17b2263aba5fc64565ebbc8d0ea5",
+      "runtimes/linux-riscv64/native/libSkiaSharp.so": "f6becaf6bbc6feb9b5f110e799d29d724feca9343d04d1d74e9f72e43db3672c",
+      "runtimes/linux-x64/native/libSkiaSharp.so": "30b882ffbea5f7f3a1d71731ece30333d37023c0df783ad218b80949343352b2",
+      "runtimes/linux-x86/native/libSkiaSharp.so": "bb839a799b5201810c1fc25aad759c9e71b13b051155882fb0adab20c99d4b93",
+      "runtimes/win-arm64/native/libSkiaSharp.dll": "b2502e6520f1662f58748fa18abc61f6f15e861c530f8e5550590584585d8376",
+      "runtimes/win-x64/native/libSkiaSharp.dll": "7d81368aff17a4ab15c83b7c48f8c210a49f3a047e8779317c648178398708a3",
+      "runtimes/win-x86/native/libSkiaSharp.dll": "f7bc3765fa08f45078672bf161fc9236d262a2360566f37965095dec3ad612c7"
+    },
+    "C": {
+      "DocumentFormat.OpenXml.Framework.dll": "5b8c2b9ca1aa70539af0b8054d649bd09fdce4dec812b263ab511b13789c8589",
+      "DocumentFormat.OpenXml.dll": "72e8f6e3e3527d7e6ee29f2f9182ef1b39a4de6da355a33013c0940efb24d87e",
+      "ExcelNumberFormat.dll": "d7c45b8e4e1027831e2fc8cdf941faf51d28a66feacfcaaa737da73262e7b507",
+      "ExcelRenderer.Core.dll": "860905c6274a6e31a84488c39dc94f8e85436ef43eef209ee889d1dd57bc0d63",
+      "ExcelRenderer.Fonts.dll": "690151de14f99418ada41ba401df1b1f7c539c9544f23fb4ba87637248322ea0",
+      "ExcelRenderer.Formulas.dll": "dd29a279a51fae90f3d1219b280e81132b312b438789d1a5f61aab437ce2664f",
+      "ExcelRenderer.Mapping.dll": "74d70fce9129777779277437a5b5a747287eb5481b1089de55bbda2fa0982a09",
+      "ExcelRenderer.OpenXml.Reader.dll": "ca28934cead30764d1fe0e62ab0f41ac09b74801411cce401e638efc048c8a3c",
+      "ExcelRenderer.OpenXml.dll": "4d82abc5c4e03c8e282b26a31b6cf0c9efbe9c4fdd96eb30b2d90ba4b5a8f6df",
+      "ExcelRenderer.Performance.dll": "75d046dfcedf70d7a1aa74a22bb0f3808490839781449116f33a03dfc75b4a3e",
+      "ExcelRenderer.dll": "08a9abd3e581ab61ac1bff38c93eb084379ed8b06fb541b248f9be97190c791f",
+      "SkiaSharp.dll": "6e9f9367c0a30ca826065af19b2a6d6138c35ca9b47a72865539267f7e1bb1d1",
+      "System.IO.Packaging.dll": "12ddc8bff279fad856551a74894dc52b80fa437d5d2b32722e70ae6899217b7c",
+      "UglyToad.PdfPig.Core.dll": "70d93534a6573cb6674d94f6d3c2235c09a6a9e09d1d13b032a2a4a1c3b19818",
+      "UglyToad.PdfPig.DocumentLayoutAnalysis.dll": "3a763e3afd8b290fd46bbc91750459d057d6f64b8dc11ecd6527c977044086be",
+      "UglyToad.PdfPig.Fonts.dll": "aade3f7c3211c961303b136d78888da4194c183a1ea6503b72818b24cbd3a72a",
+      "UglyToad.PdfPig.Package.dll": "6da637d4a06099adf02036d632c3f4a7ea93f01c37145534e6d061725b0361b5",
+      "UglyToad.PdfPig.Tokenization.dll": "ad06282eb18bed04e3da01c757bcc16bc6fbfd8471660c1cddb5f75cbd643758",
+      "UglyToad.PdfPig.Tokens.dll": "128195b9c82ecf521ba2ddbfb358ff033c6d0a67938c87493ca8bf0991fff91d",
+      "UglyToad.PdfPig.dll": "e062781488d3a8557bcf670c57d6776ea7e723faa683b49ec4c6d449c087f5a1",
+      "runtimes/linux-arm/native/libSkiaSharp.so": "f9cda39142d800c9508a21d82ec3c0c58b1f8e72f314c2165f8371693b586434",
+      "runtimes/linux-arm64/native/libSkiaSharp.so": "f534ff4d2899d45a7559cc1899b6c413fa117559d0ccd9a38c56a74e1cf2ab6e",
+      "runtimes/linux-bionic-arm64/native/libSkiaSharp.so": "29a857e3ddb10c9101f5312dbc1105cb4ccb993232b34aacc6dc6cb8efa3737c",
+      "runtimes/linux-bionic-x64/native/libSkiaSharp.so": "87fc2e0d94afd91c7b0efa505789908eff4e7fd1677fca0f15dff03210b905b4",
+      "runtimes/linux-loongarch64/native/libSkiaSharp.so": "9df52e7ca46d319b590d6b8d1e862db506f47c1f8ceedf2cf319b520b2d0f33e",
+      "runtimes/linux-musl-arm/native/libSkiaSharp.so": "136f4069841619fb4e55785e2e36a351c4d213c1fea5c199b3569d73ab2e87bb",
+      "runtimes/linux-musl-arm64/native/libSkiaSharp.so": "93f841341e4c794d6fe876d1d6c0cf0d48c1a99b9dac9cb6b3afc7d584a0bbe3",
+      "runtimes/linux-musl-loongarch64/native/libSkiaSharp.so": "9394dc8c3e453b8b5cdf4df0015257409398e70783cf3bd948532b4bed5cf2e4",
+      "runtimes/linux-musl-riscv64/native/libSkiaSharp.so": "d2bfc726dcf564cfdc00483cb7d3f440c7300bf50eebb3a746f609664d51a73f",
+      "runtimes/linux-musl-x64/native/libSkiaSharp.so": "253eeaaaf010f2b7dbc77a537042e06f591e17b2263aba5fc64565ebbc8d0ea5",
+      "runtimes/linux-riscv64/native/libSkiaSharp.so": "f6becaf6bbc6feb9b5f110e799d29d724feca9343d04d1d74e9f72e43db3672c",
+      "runtimes/linux-x64/native/libSkiaSharp.so": "30b882ffbea5f7f3a1d71731ece30333d37023c0df783ad218b80949343352b2",
+      "runtimes/linux-x86/native/libSkiaSharp.so": "bb839a799b5201810c1fc25aad759c9e71b13b051155882fb0adab20c99d4b93",
+      "runtimes/win-arm64/native/libSkiaSharp.dll": "b2502e6520f1662f58748fa18abc61f6f15e861c530f8e5550590584585d8376",
+      "runtimes/win-x64/native/libSkiaSharp.dll": "7d81368aff17a4ab15c83b7c48f8c210a49f3a047e8779317c648178398708a3",
+      "runtimes/win-x86/native/libSkiaSharp.dll": "f7bc3765fa08f45078672bf161fc9236d262a2360566f37965095dec3ad612c7"
+    }
+  },
+  "commonHarnessSourceSha256": "76e0f720da9f8557850e03d33657f6c7c3c329281145b6c76c6658e02b6eabdf"
+}

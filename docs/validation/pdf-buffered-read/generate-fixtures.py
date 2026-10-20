@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 """Generate deterministic classic-xref inputs; do not update historical fixtures."""
 import pathlib
+import random
+import shutil
+import struct
 import sys
+import zipfile
+import zlib
 
 root = pathlib.Path(sys.argv[1])
 root.mkdir(parents=True, exist_ok=True)
@@ -20,7 +25,7 @@ for name, pages, extra, lines, image in [
         content = b'% endstream xref /Length 0 obj\n' + b'0 0 m 100 100 l S\n' * lines
         objects.append(b'<< /Length ' + str(len(content)).encode() + b' >>\nstream\n' + content + b'endstream')
     for index in range(extra):
-        objects.append(b'<< /Name (metadata\\(x\\) (nested)) /A [1 -2.75 true null <FEFF> 3 0 R] /Na#6De /Value >>')
+        objects.append(b'<< /Title (metadata\\(x\\) (nested)) /A [1 -2.75 true null <FEFF> 3 0 R] /Na#6De /Value >>')
     if image:
         # Valid raw RGB image (9.72 MB), larger than the default 8 MiB threshold.
         payload = bytes(range(256)) * (1800 * 1800 * 3 // 256) + bytes(range(1800 * 1800 * 3 % 256))
@@ -38,3 +43,20 @@ for name, pages, extra, lines, image in [
         output.extend(f'{offset:010d} 00000 n \n'.encode())
     output.extend(f'trailer\n<< /Size {len(offsets)} /Root 1 0 R /ID [<01234567><89ABCDEF>] >>\nstartxref\n{xref}\n%%EOF\n'.encode())
     (root / f'{name}.pdf').write_bytes(output)
+
+fixtures = pathlib.Path(__file__).resolve().parent / 'fixtures'
+for name in ('small', 'objects', 'borders'):
+    shutil.copyfile(fixtures / f'{name}.xlsx', root / f'{name}.xlsx')
+
+# Replace the template's uniform image with deterministic RGB noise. Keep the
+# small original ZIP metadata/template, avoiding a large checked-in binary.
+def chunk(kind, data):
+    return struct.pack('>I', len(data)) + kind + data + struct.pack('>I', zlib.crc32(kind + data))
+
+random_bytes = random.Random(7241).randbytes(1800 * 1800 * 3)
+scanlines = b''.join(b'\0' + random_bytes[row * 5400:(row + 1) * 5400] for row in range(1800))
+png = (b'\x89PNG\r\n\x1a\n' + chunk(b'IHDR', struct.pack('>IIBBBBB', 1800, 1800, 8, 2, 0, 0, 0))
+       + chunk(b'IDAT', zlib.compress(scanlines)) + chunk(b'IEND', b''))
+with zipfile.ZipFile(fixtures / 'image-template.xlsx') as source, zipfile.ZipFile(root / 'image.xlsx', 'w') as target:
+    for info in source.infolist():
+        target.writestr(info, png if '/media/' in info.filename else source.read(info.filename))

@@ -33,7 +33,7 @@ public static class PostScriptCommand
             mappedInput => ExcelConverter.ConvertToPostScriptAsync(
                 mappedInput,
                 parseResult.GetValue(output)!,
-                new PostScriptExportOptions { Buffering = buffering.Get(parseResult), SheetName = parseResult.GetValue(sheet), ReadOptions = CommandSupport.GetReadOptions(parseResult.GetValue(formulaMode)!), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
+                new PostScriptExportOptions { Buffering = buffering.Get(parseResult), SheetName = parseResult.GetValue(sheet), ReadOptions = CommandSupport.GetReadOptions(parseResult.GetValue(formulaMode)!, parseResult, fonts), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
                 cancellationToken),
             cancellationToken,
             CommandSupport.GetMappingOptions(parseResult.GetValue(formulaMode)!))));

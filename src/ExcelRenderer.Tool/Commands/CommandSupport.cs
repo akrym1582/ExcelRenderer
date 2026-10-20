@@ -102,6 +102,10 @@ internal static class CommandSupport
     /// <param name="options">追加するフォントオプション。</param>
     internal static void AddFontOptions(Command command, FontOptionsArguments options)
     {
+        command.Options.Add(options.ColumnWidthMdw);
+        command.Options.Add(options.LayoutFont);
+        command.Options.Add(options.LayoutFontIndex);
+        command.Options.Add(options.ColumnWidthMetrics);
         command.Options.Add(options.FontDirectories);
         command.Options.Add(options.FontFiles);
         command.Options.Add(options.FallbackFonts);
@@ -222,9 +226,23 @@ internal static class CommandSupport
 
     /// <summary>Maps a validated mode to workbook read settings.</summary>
     /// <param name="value">The mode text.</param>
+    /// <param name="result">Parsed command values.</param>
+    /// <param name="fonts">Shared font and layout metric options.</param>
     /// <returns>The requested read policy.</returns>
-    internal static Excel.ExcelReadOptions GetReadOptions(string value) => new()
+    internal static Excel.ExcelReadOptions GetReadOptions(string value, ParseResult result, FontOptionsArguments fonts) => new()
     {
+        ColumnWidthMetrics = new()
+        {
+            Mode = result.GetValue(fonts.ColumnWidthMetrics) switch
+            {
+                "source" => Excel.ColumnWidthMetricsMode.SourceFont,
+                "legacy" => Excel.ColumnWidthMetricsMode.RenderingFontLegacy,
+                _ => throw new ArgumentException("--column-width-metrics must be source or legacy."),
+            },
+            MaximumDigitWidthPixels96Dpi = result.GetValue(fonts.ColumnWidthMdw),
+            SourceFontFile = result.GetValue(fonts.LayoutFont),
+            SourceFontCollectionIndex = result.GetValue(fonts.LayoutFontIndex),
+        },
         FormulaDisplayMode = value switch
         {
             "cached" => Excel.FormulaDisplayMode.CachedValue,
@@ -258,5 +276,18 @@ internal static class CommandSupport
         Option<bool> NoSystemFonts,
         Option<string> FontPolicy,
         Option<string> IvsFontStyle,
-        Option<int?> FontFaceIndex);
+        Option<int?> FontFaceIndex)
+    {
+        /// <summary>Gets explicit Normal digit width.</summary>
+        internal Option<double?> ColumnWidthMdw { get; } = new("--column-width-mdw") { Description = "Original Normal font MDW in pixels at 96 DPI (finite, at least 1)." };
+
+        /// <summary>Gets the source layout font file.</summary>
+        internal Option<string?> LayoutFont { get; } = new("--layout-font") { Description = "Original font file for column layout only; does not register a drawing font." };
+
+        /// <summary>Gets the source layout face index.</summary>
+        internal Option<int?> LayoutFontIndex { get; } = new("--layout-font-index") { Description = "Zero-based face index; requires --layout-font." };
+
+        /// <summary>Gets the column metric policy.</summary>
+        internal Option<string> ColumnWidthMetrics { get; } = new("--column-width-metrics") { Description = "Column metrics: source (default) or legacy.", DefaultValueFactory = _ => "source" };
+    }
 }

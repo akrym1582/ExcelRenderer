@@ -264,7 +264,7 @@ public sealed class RangeTrimHyperlinkTests
     [Fact(DisplayName = "厳格モードの診断エラーと不正な範囲・トリミング・リンク引数を、出力先を開く前に拒否する")]
     public async Task Strict_and_invalid_arguments_do_not_open_the_sink()
     {
-        var request = Request(OutputFormat.Pdf) with { Selection = new() { Ranges = [new("Sheet1", new(new(2, 2), new(8, 4)))] }, DiagnosticOptions = new() { StrictMode = true } };
+        var request = Request(OutputFormat.Pdf) with { Selection = new() { Ranges = [new("Sheet1", new(new(2, 2), new(8, 4)))] }, ReadOptions = new() { ColumnWidthMetrics = new() { MaximumDigitWidthPixels96Dpi = 7 } }, DiagnosticOptions = new() { StrictMode = true } };
         var sink = new CaptureSink();
         await Assert.ThrowsAsync<ConversionException>(() => ExcelConverter.RenderAsync(new MemoryStream(Fixture()), request, sink));
         Assert.Equal(0, sink.OpenCount);

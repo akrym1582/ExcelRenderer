@@ -7,14 +7,105 @@ namespace ExcelRenderer.Core.Pdf.Structure;
 internal sealed class PdfSyntaxReader
 {
     private readonly Stream input;
+    private readonly byte[] buffer;
+    private long position;
+    private long inputPosition;
+    private long bufferStart;
+    private int bufferCount;
     private int tokens;
 
     /// <summary>Initializes a new instance of the <see cref="PdfSyntaxReader"/> class.</summary>
-    /// <param name="input">The borrowed seekable PDF stream.</param>
-    internal PdfSyntaxReader(Stream input) => this.input = input;
+    /// <param name="input">The immutable seekable PDF stream, exclusively borrowed for this reader's lifetime; never disposed here.</param>
+    /// <param name="bufferSize">The bounded syntax buffer size.</param>
+    internal PdfSyntaxReader(Stream input, int bufferSize = 8192)
+    {
+        if (bufferSize <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(bufferSize));
+        }
+
+        this.input = input;
+        Length = input.Length;
+        position = inputPosition = input.Position;
+        buffer = new byte[bufferSize];
+    }
 
     /// <summary>Gets or sets the byte position.</summary>
-    internal long Position { get => input.Position; set => input.Position = value; }
+    internal long Position
+    {
+        get => position;
+        set
+        {
+            if (value < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value));
+            }
+
+            position = value;
+        }
+    }
+
+    /// <summary>Gets the immutable input length captured at construction.</summary>
+    internal long Length { get; }
+
+    /// <summary>Reads a bounded header or tail through the logical cursor.</summary>
+    /// <param name="bytes">The destination to fill completely.</param>
+    internal void ReadExactly(byte[] bytes)
+    {
+        var offset = 0;
+        while (offset < bytes.Length)
+        {
+            if (!EnsureBuffer())
+            {
+                throw new InvalidDataException("Truncated generated PDF.");
+            }
+
+            var index = (int)(position - bufferStart);
+            var count = Math.Min(bytes.Length - offset, bufferCount - index);
+            Buffer.BlockCopy(buffer, index, bytes, offset, count);
+            position += count;
+            offset += count;
+        }
+    }
+
+    /// <summary>Copies an encoded range directly, invalidating syntax read-ahead and leaving the logical cursor at its end.</summary>
+    /// <param name="offset">The absolute input offset.</param>
+    /// <param name="length">The exact number of bytes to copy.</param>
+    /// <param name="output">The borrowed destination.</param>
+    /// <param name="token">The cancellation token.</param>
+    /// <param name="transferBuffer">The optional shared block transfer buffer.</param>
+    internal void CopyRange(long offset, long length, Stream output, CancellationToken token, byte[]? transferBuffer = null)
+    {
+        transferBuffer ??= new byte[81920];
+        if (transferBuffer.Length == 0)
+        {
+            throw new ArgumentException("A nonempty transfer buffer is required.", nameof(transferBuffer));
+        }
+
+        if (offset < 0 || length < 0 || offset > Length || length > Length - offset)
+        {
+            throw new InvalidDataException("Invalid generated PDF stream range.");
+        }
+
+        bufferCount = 0;
+        position = offset;
+        MoveInput();
+        var remaining = length;
+        while (remaining > 0)
+        {
+            token.ThrowIfCancellationRequested();
+            var read = input.Read(transferBuffer, 0, (int)Math.Min(transferBuffer.Length, remaining));
+            if (read == 0)
+            {
+                throw new InvalidDataException("Truncated PDF stream during finalization.");
+            }
+
+            position += read;
+            inputPosition += read;
+            output.Write(transferBuffer, 0, read);
+            remaining -= read;
+        }
+    }
 
     /// <summary>Reads a whitespace-delimited token.</summary>
     /// <returns>The token.</returns>
@@ -22,7 +113,7 @@ internal sealed class PdfSyntaxReader
     {
         Skip();
         var result = new StringBuilder();
-        while (input.Position < input.Length && !Delimiter(Peek()))
+        while (Position < Length && !Delimiter(Peek()))
         {
             result.Append((char)Read());
             if (result.Length > 1048576)
@@ -103,7 +194,7 @@ internal sealed class PdfSyntaxReader
         if (first == '/')
         {
             var name = new StringBuilder("/");
-            while (input.Position < input.Length && !Delimiter(Peek()))
+            while (Position < Length && !Delimiter(Peek()))
             {
                 name.Append((char)Read());
                 if (name.Length > 4096)
@@ -205,21 +296,47 @@ internal sealed class PdfSyntaxReader
 
     private static bool Delimiter(int value) => White(value) || value is -1 or '(' or ')' or '<' or '>' or '[' or ']' or '{' or '}' or '/' or '%';
 
-    private int Peek()
-    {
-        var value = input.ReadByte();
-        if (value >= 0)
-        {
-            Position--;
-        }
-
-        return value;
-    }
+    private int Peek() => EnsureBuffer() ? buffer[(int)(position - bufferStart)] : -1;
 
     private int Read()
     {
-        var value = input.ReadByte();
-        return value >= 0 ? value : throw new InvalidDataException("Truncated PDF syntax.");
+        var value = Peek();
+        if (value < 0)
+        {
+            throw new InvalidDataException("Truncated PDF syntax.");
+        }
+
+        position++;
+        return value;
+    }
+
+    private bool EnsureBuffer()
+    {
+        if (position >= Length)
+        {
+            return false;
+        }
+
+        var offset = position - bufferStart;
+        if (offset >= 0 && offset < bufferCount)
+        {
+            return true;
+        }
+
+        MoveInput();
+        bufferStart = position;
+        bufferCount = input.Read(buffer, 0, (int)Math.Min(buffer.Length, Length - position));
+        inputPosition += bufferCount;
+        return bufferCount > 0;
+    }
+
+    private void MoveInput()
+    {
+        if (inputPosition != position)
+        {
+            input.Position = position;
+            inputPosition = position;
+        }
     }
 
     private void ExpectByte(char expected)
@@ -244,7 +361,7 @@ internal sealed class PdfSyntaxReader
                 return;
             }
 
-            while (input.Position < input.Length && Read() is not ('\r' or '\n'))
+            while (Position < Length && Read() is not ('\r' or '\n'))
             {
             }
         }

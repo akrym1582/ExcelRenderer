@@ -3,6 +3,7 @@ using System.Text;
 using ExcelRenderer.Core.Pdf;
 using ExcelRenderer.Core.Pdf.Structure;
 using Xunit;
+using ExcelRenderer.OpenXml.Reader.Input;
 using UglyToad.PdfPig.Tokens;
 
 namespace ExcelRenderer.Core.Tests;
@@ -10,15 +11,22 @@ namespace ExcelRenderer.Core.Tests;
 public sealed class GeneratedPdfFinalizerTests
 {
     [Theory]
-    [InlineData("\n", false)]
-    [InlineData("\r\n", false)]
-    [InlineData("\r", false)]
-    [InlineData("\n", true)]
-    [InlineData("\r\n", true)]
-    public void Structural_save_preserves_streams_generations_and_metadata(string newline, bool escapedNames)
+    [InlineData("\n", false, false)]
+    [InlineData("\n", false, true)]
+    [InlineData("\r\n", false, false)]
+    [InlineData("\r\n", false, true)]
+    [InlineData("\r", false, false)]
+    [InlineData("\r", false, true)]
+    [InlineData("\n", true, false)]
+    [InlineData("\n", true, true)]
+    [InlineData("\r\n", true, false)]
+    [InlineData("\r\n", true, true)]
+    public void Structural_save_preserves_streams_generations_and_metadata(string newline, bool escapedNames, bool spill)
     {
         var sourceBytes = Fixture(newline, escapedNames);
-        using var source = new MemoryStream(sourceBytes);
+        using var source = new SpillableBufferStream(new() { MemoryThresholdBytes = spill ? 1 : sourceBytes.Length, AllowTemporaryFiles = true });
+        source.Write(sourceBytes);
+        source.Position = 0;
         using var output = new MemoryStream();
         GeneratedPdfFinalizer.Write(source, output, [new(100.123, 99.456,
             [new(new(10, 20, 30, 10), "https://example.com?q=日本", null, null, null, "説明\n"),
@@ -104,18 +112,86 @@ public sealed class GeneratedPdfFinalizerTests
         Assert.Throws<InvalidDataException>(() => new PdfSyntaxReader(new MemoryStream(Encoding.ASCII.GetBytes("<< /Bad#X1 1 >>"))).Value());
     }
 
-    private static byte[] Fixture(string newline = "\n", bool escapedNames = false, string? defect = null)
+    [Theory]
+    [InlineData(8191, false, 1)]
+    [InlineData(8192, true, 2)]
+    [InlineData(100000, false, 3)]
+    [InlineData(200000, true, int.MaxValue)]
+    public void Indirect_lengths_and_out_of_order_reads_survive_copy_and_nonseekable_output(int length, bool spill, int maximumRead)
     {
-        var content = "% /Page xref trailer startxref endstream obj dictionary injection must remain a comment\nq\nQ\n";
+        var payload = string.Concat(Enumerable.Repeat("\0\u0080\u00ff endstream\r\nxref /Length 0 obj % fake\n", (length / 30) + 1))[..length];
+        var bytes = Fixture(payload: payload, indirectLength: true);
+        var directory = Directory.CreateTempSubdirectory();
+        try
+        {
+            using (var spool = new SpillableBufferStream(new() { MemoryThresholdBytes = spill ? 1 : bytes.Length, AllowTemporaryFiles = true, TemporaryDirectory = directory.FullName }))
+            {
+                spool.Write(bytes);
+                using var input = new PdfReadTestStream(bytes, maximumRead);
+                var pdf = new GeneratedPdfFile(input);
+                Assert.IsType<PdfMap>(pdf.Read(new(6)).Value);
+                var content = pdf.Read(new(4));
+                Assert.Equal(length, content.StreamLength);
+                using var copied = new MemoryStream();
+                pdf.CopyStream(content, copied, default);
+                Assert.Equal(Encoding.Latin1.GetBytes(payload), copied.ToArray());
+                // This object was not cached before copying. Its parse must restore the copy-end cursor.
+                Assert.IsType<PdfMap>(pdf.Read(new(5)).Value);
+                Assert.Equal(new PdfNumber(length), pdf.Read(new(7)).Value);
+                using var image = new MemoryStream();
+                pdf.CopyStream(pdf.Read(new(6)), image, default);
+                Assert.Equal(new byte[] { 9, 128, 255 }, image.ToArray());
+                Assert.Equal(0, input.ReadByteCalls);
+
+                using var output = new WriteOnlyOutput();
+                GeneratedPdfFinalizer.Write(spool, output, [new(100.123, 99.456, [])], default);
+                Assert.True(spool.CanRead);
+                using var rewritten = new MemoryStream(output.Bytes);
+                var updated = new GeneratedPdfFile(rewritten);
+                using var finalPayload = new MemoryStream();
+                updated.CopyStream(updated.Read(new(4)), finalPayload, default);
+                Assert.Equal(Encoding.Latin1.GetBytes(payload), finalPayload.ToArray());
+                Assert.True(rewritten.CanRead);
+            }
+
+            Assert.Empty(directory.GetFiles());
+        }
+        finally
+        {
+            directory.Delete(true);
+        }
+    }
+
+    [Fact]
+    public void Range_copy_rejects_truncation_and_checks_cancellation_between_blocks()
+    {
+        var payload = new string('x', 200000);
+        var bytes = Fixture(payload: payload, indirectLength: true);
+        using var source = new MemoryStream(bytes);
+        var pdf = new GeneratedPdfFile(source);
+        var record = pdf.Read(new(4));
+        Assert.Throws<ArgumentException>(() => pdf.CopyStream(record, Stream.Null, default, []));
+        using var cancel = new CancellationTokenSource();
+        using var output = new WriteOnlyOutput(cancel);
+        Assert.Throws<OperationCanceledException>(() => pdf.CopyStream(record, output, cancel.Token, new byte[1024]));
+        Assert.Equal(1024, output.Bytes.Length);
+        source.SetLength(record.StreamOffset + 10);
+        Assert.Throws<InvalidDataException>(() => pdf.CopyStream(record, Stream.Null, default));
+    }
+
+    private static byte[] Fixture(string newline = "\n", bool escapedNames = false, string? defect = null, string? payload = null, bool indirectLength = false)
+    {
+        var content = payload ?? "% /Page xref trailer startxref endstream obj dictionary injection must remain a comment\nq\nQ\n";
         var objects = new Dictionary<int, (int Generation, string Value)>
         {
             [1] = (0, "<< /Type /Catalog /Pages 2 0 R /Names << /Dests << /Names [(back) [3 2 R /XYZ 0 100 0]] >> >> >>"),
             [2] = (0, "<< /Type /Pages /Kids [" + (defect == "cycle" ? "2 0 R" : "3 2 R") + "] /Count 1 /MediaBox [0 0 100 100] >>"),
             [3] = (2, "<< /Type /Page /Parent 2 0 R /Contents 4 0 R /Resources << >> /Custom [(preserve me)] >>"),
-            [4] = (0, "<< /Length " + (defect == "length" ? "999999999" : Encoding.Latin1.GetByteCount(content).ToString(CultureInfo.InvariantCulture)) + " >>\nstream\n" + content + "endstream"),
+            [4] = (0, "<< /Length " + (defect == "length" ? "999999999" : indirectLength ? "7 0 R" : Encoding.Latin1.GetByteCount(content).ToString(CultureInfo.InvariantCulture)) + " >>\nstream\n" + content + "endstream"),
             [5] = (0, "<< /Title (metadata\\(x\\) \\376\\377) /Producer (Skia/PDF) >>"),
             [6] = (0, defect == "signature" ? "<< /Type /Sig /ByteRange [0 1 2 3] >>" : defect == "object-stream" ? "<< /Type /ObjStm >>" : "<< /Type /XObject /Subtype /Image /Width 1 /Height 1 /BitsPerComponent 8 /ColorSpace /DeviceRGB /Length 3 >>\nstream\n\u0009\u0080\u00ff\nendstream"),
         };
+        if (indirectLength) objects.Add(7, (0, Encoding.Latin1.GetByteCount(content).ToString(CultureInfo.InvariantCulture)));
         using var output = new MemoryStream();
         void Write(string text) => output.Write(Encoding.Latin1.GetBytes(text));
         Write("%PDF-1.7\n");
@@ -129,10 +205,31 @@ public sealed class GeneratedPdfFinalizerTests
             Write($"{item.Key} {item.Value.Generation} obj" + newline + value + newline + "endobj" + newline);
         }
         var xref = output.Position;
-        Write((defect == "xref-stream" ? "unsupported-xref-stream" : "xref") + newline + "0 7" + newline + "0000000000 65535 f " + newline);
+        Write((defect == "xref-stream" ? "unsupported-xref-stream" : "xref") + newline + "0 " + (objects.Count + 1).ToString(CultureInfo.InvariantCulture) + newline + "0000000000 65535 f " + newline);
         foreach (var item in objects)
             Write(offsets[item.Key].ToString("D10", CultureInfo.InvariantCulture) + " " + item.Value.Generation.ToString("D5", CultureInfo.InvariantCulture) + " n " + newline);
-        Write("trailer" + newline + "<< /Size 7 /Root 1 0 R /Info 5 0 R /ID [<01234567><89ABCDEF>]" + (defect == "encrypted" ? " /Encrypt 5 0 R" : string.Empty) + ">>" + newline + "startxref" + newline + xref.ToString(CultureInfo.InvariantCulture) + newline + "%%EOF" + newline);
+        Write("trailer" + newline + "<< /Size " + (objects.Count + 1).ToString(CultureInfo.InvariantCulture) + " /Root 1 0 R /Info 5 0 R /ID [<01234567><89ABCDEF>]" + (defect == "encrypted" ? " /Encrypt 5 0 R" : string.Empty) + ">>" + newline + "startxref" + newline + xref.ToString(CultureInfo.InvariantCulture) + newline + "%%EOF" + newline);
         return output.ToArray();
+    }
+
+    private sealed class WriteOnlyOutput(CancellationTokenSource? cancel = null) : Stream
+    {
+        private readonly MemoryStream bytes = new();
+        internal byte[] Bytes => bytes.ToArray();
+        public override bool CanRead => false;
+        public override bool CanSeek => false;
+        public override bool CanWrite => true;
+        public override long Length => throw new NotSupportedException();
+        public override long Position { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
+        public override void Flush() { }
+        public override int Read(byte[] buffer, int offset, int count) => throw new NotSupportedException();
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+        public override void SetLength(long value) => throw new NotSupportedException();
+        public override void Write(byte[] buffer, int offset, int count) { bytes.Write(buffer, offset, count); cancel?.Cancel(); }
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing) bytes.Dispose();
+            base.Dispose(disposing);
+        }
     }
 }

@@ -6,7 +6,6 @@ namespace ExcelRenderer.Core.Pdf.Structure;
 /// <summary>Reads the classic xref format emitted by pinned Skia; never accepts arbitrary user PDFs.</summary>
 internal sealed class GeneratedPdfFile
 {
-    private readonly Stream input;
     private readonly PdfSyntaxReader reader;
     private readonly Dictionary<int, (long Offset, int Generation, bool Active)> offsets = new();
     private readonly Dictionary<int, ObjectRecord> objects = new();
@@ -16,25 +15,29 @@ internal sealed class GeneratedPdfFile
     /// <param name="input">Our completed, seekable Skia spool.</param>
     internal GeneratedPdfFile(Stream input)
     {
-        this.input = input;
-        reader = new(input);
-        if (!input.CanSeek || input.Length < 20)
+        if (!input.CanSeek)
         {
             throw new InvalidDataException("A complete seekable generated PDF is required.");
         }
 
-        input.Position = 0;
+        reader = new(input);
+        if (reader.Length < 20)
+        {
+            throw new InvalidDataException("A complete seekable generated PDF is required.");
+        }
+
+        reader.Position = 0;
         var header = new byte[8];
-        ReadExactly(input, header);
+        reader.ReadExactly(header);
         Header = Encoding.ASCII.GetString(header);
         if (!Header.StartsWith("%PDF-1.", StringComparison.Ordinal))
         {
             throw new InvalidDataException("Unexpected generated PDF header.");
         }
 
-        input.Position = Math.Max(0, input.Length - 1024);
-        var tail = new byte[checked((int)(input.Length - input.Position))];
-        ReadExactly(input, tail);
+        reader.Position = Math.Max(0, reader.Length - 1024);
+        var tail = new byte[checked((int)(reader.Length - reader.Position))];
+        reader.ReadExactly(tail);
         var end = Encoding.ASCII.GetString(tail);
         var marker = end.LastIndexOf("startxref", StringComparison.Ordinal);
         if (marker < 0 || !end.Substring(marker).Contains("%%EOF", StringComparison.Ordinal))
@@ -42,15 +45,15 @@ internal sealed class GeneratedPdfFile
             throw new InvalidDataException("Generated PDF has no final xref marker.");
         }
 
-        reader.Position = input.Length - tail.Length + marker;
+        reader.Position = reader.Length - tail.Length + marker;
         reader.Expect("startxref");
-        StartXref = Integer(reader.Token(), input.Length - 1);
+        StartXref = Integer(reader.Token(), reader.Length - 1);
         var next = StartXref;
         var visited = new HashSet<long>();
         PdfMap? latest = null;
         while (true)
         {
-            if (next < 0 || next >= input.Length || !visited.Add(next) || visited.Count > 32)
+            if (next < 0 || next >= reader.Length || !visited.Add(next) || visited.Count > 32)
             {
                 throw new InvalidDataException("Invalid or cyclic generated PDF xref chain.");
             }
@@ -71,7 +74,7 @@ internal sealed class GeneratedPdfFile
 
                 for (var index = 0; index < count; index++)
                 {
-                    var offset = Integer(reader.Token(), input.Length - 1);
+                    var offset = Integer(reader.Token(), reader.Length - 1);
                     var generation = checked((int)Integer(reader.Token(), 65535));
                     var flag = reader.Token();
                     if (flag is not ("n" or "f"))
@@ -98,7 +101,7 @@ internal sealed class GeneratedPdfFile
                 break;
             }
 
-            next = ExactInteger(previous.Value, input.Length - 1);
+            next = ExactInteger(previous.Value, reader.Length - 1);
         }
 
         Trailer = latest!;
@@ -190,8 +193,8 @@ internal sealed class GeneratedPdfFile
             {
                 reader.StreamNewline();
                 streamOffset = reader.Position;
-                streamLength = ExactInteger((Resolve(dictionary.Get("/Length")) as PdfNumber)?.Value ?? -1, input.Length);
-                if (streamLength > input.Length - streamOffset)
+                streamLength = ExactInteger((Resolve(dictionary.Get("/Length")) as PdfNumber)?.Value ?? -1, reader.Length);
+                if (streamLength > reader.Length - streamOffset)
                 {
                     throw new InvalidDataException("Truncated generated PDF stream.");
                 }
@@ -222,48 +225,12 @@ internal sealed class GeneratedPdfFile
     /// <param name="output">The destination.</param>
     /// <param name="token">The cancellation token.</param>
     /// <param name="buffer">An optional shared transfer buffer.</param>
-    internal void CopyStream(ObjectRecord record, Stream output, CancellationToken token, byte[]? buffer = null)
-    {
-        input.Position = record.StreamOffset;
-        var remaining = record.StreamLength;
-        buffer ??= new byte[81920];
-        if (buffer.Length == 0)
-        {
-            throw new ArgumentException("A nonempty transfer buffer is required.", nameof(buffer));
-        }
-
-        while (remaining > 0)
-        {
-            token.ThrowIfCancellationRequested();
-            var read = input.Read(buffer, 0, (int)Math.Min(buffer.Length, remaining));
-            if (read == 0)
-            {
-                throw new InvalidDataException("Truncated PDF stream during finalization.");
-            }
-
-            output.Write(buffer, 0, read);
-            remaining -= read;
-        }
-    }
+    internal void CopyStream(ObjectRecord record, Stream output, CancellationToken token, byte[]? buffer = null) =>
+        reader.CopyRange(record.StreamOffset, record.StreamLength, output, token, buffer);
 
     private static long Integer(string token, long maximum) => long.TryParse(token, NumberStyles.None, CultureInfo.InvariantCulture, out var result) && result <= maximum ? result : throw new InvalidDataException("Invalid generated PDF integer.");
 
     private static long ExactInteger(double value, long maximum) => value >= 0 && value <= maximum && value == Math.Truncate(value) ? (long)value : throw new InvalidDataException("Invalid generated PDF offset or length.");
-
-    private static void ReadExactly(Stream stream, byte[] bytes)
-    {
-        var offset = 0;
-        while (offset < bytes.Length)
-        {
-            var read = stream.Read(bytes, offset, bytes.Length - offset);
-            if (read == 0)
-            {
-                throw new InvalidDataException("Truncated generated PDF.");
-            }
-
-            offset += read;
-        }
-    }
 
     private void WalkPages(PdfValue? value, HashSet<int> visited, List<PdfReference> pages, int depth = 0)
     {

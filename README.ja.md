@@ -862,7 +862,7 @@ Core は単一 regular static TrueType font と IVS の基底文字化を維持�
 
 ### Readerアセンブリの分離
 
-`ExcelRenderer.OpenXml.Reader` がXLSX読み取り・モデル・書式・入力処理を所有し、既存の本体／Mapping／Toolに同梱されます。低レベルAPIのusingを新しいReader名前空間へ変更し、利用側をすべて再ビルドしてください。CoreはReaderのみを参照して保存済み数式値を描画し、Coreの数式モード・評価オプションは削除しました。本体・Mapping・CLIの明示再計算は維持しています。[API移行と検証](docs/openxml-reader-split.md)を参照してください。
+`ExcelRenderer.OpenXml.Reader` がXLSX読み取り・モデル・書式・入力処理を所有し、既存の本体／Mapping／Toolに同梱されます。低レベルAPIのusingを新しいReader名前空間へ変更し、利用側をすべて再ビルドしてください。CoreはReaderのみを参照して保存済み数式値を描画し、Coreの数式モード・評価オプションは削除しました。入力設定もReader.Input.WorkbookInputOptionsを直接使用します。削除したCore入力型と入力recordの `with` 式はReader設定の新規生成へ変更し、変換中に共有設定を変更しないでください。[Core入力設定の移行](docs/core.ja.md#入力設定の移行)を参照してください。本体・Mapping・CLIの明示再計算は維持しています。[API移行と検証](docs/openxml-reader-split.md)を参照してください。
 
 ## 列幅の元フォント寸法・保存行高・改ページ
 

@@ -14,7 +14,7 @@ public sealed class CoreIntegrationTests
     {
         using var input = RetainedWorkbook.Open("CoreIntegrationTests.Reader_hooks_share_traversal_and_preserve_product_style_policies.15C35DA96C969E4D.xlsx");
         input.Position = 0;
-        using var prepared = await Core.Input.WorkbookInputPreparer.ReadAsync(input, new Core.WorkbookInputOptions(), CancellationToken.None);
+        using var prepared = await OpenXml.Reader.Input.WorkbookInputPreparer.ReadAsync(input, new OpenXml.Reader.Input.WorkbookInputOptions(), CancellationToken.None);
         using var font = new Core.Fonts.SingleFontContext(CoreOptions().FontFilePath);
         var reads = 0;
         Core.Rendering.ConversionMetrics.Observer = (name, value) => { if (name == "openXmlReaderWorkbook") reads += (int)value; };

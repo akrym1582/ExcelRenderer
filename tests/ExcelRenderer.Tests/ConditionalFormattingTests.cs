@@ -150,7 +150,7 @@ public sealed partial class ConditionalFormattingTests
         var bytes = input.ToArray();
         Assert.NotNull(Read(input).Cells[new(1, 1)].Style.Background);
         using var source = new MemoryStream(bytes);
-        using var prepared = await Core.Input.WorkbookInputPreparer.ReadAsync(source, new(), CancellationToken.None);
+        using var prepared = await OpenXml.Reader.Input.WorkbookInputPreparer.ReadAsync(source, new(), CancellationToken.None);
         using var font = new Core.Fonts.SingleFontContext(Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf"));
         var core = new Core.Excel.CoreExcelReader(font).Read(prepared, null);
         Assert.Null(core.Sheets[0].Cells[new(1, 1)].Style.Background);
@@ -326,7 +326,7 @@ public sealed partial class ConditionalFormattingTests
         }
 
         input.Position = 0;
-        using var prepared = await Core.Input.WorkbookInputPreparer.ReadAsync(input, new(), CancellationToken.None);
+        using var prepared = await OpenXml.Reader.Input.WorkbookInputPreparer.ReadAsync(input, new(), CancellationToken.None);
         var document = new CoreIntegration.FullExcelReader(null, null, new()).Read(prepared, null, ["data"]);
         Assert.NotNull(document.Sheets.Single(sheet => sheet.Name == "data").Cells[new(1, 1)].Style.Background);
         Assert.Empty(document.Sheets.Single(sheet => sheet.Name == "Second").Cells);

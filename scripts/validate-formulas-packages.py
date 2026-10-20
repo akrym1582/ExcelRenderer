@@ -105,7 +105,13 @@ if(reader.EnumerateCells(1).Single(c=>c.Address.Column==3).Value.Number!=413) th
 '''),
  'main-core': (['ExcelRenderer'], fixture + '''
 using var output=new MemoryStream();
-var core=await ExcelRenderer.Core.ExcelConverter.ConvertAsync(input,output,new(){FontFilePath=args[1]});
+var options = new ExcelRenderer.Core.PdfExportOptions {
+    FontFilePath = args[1],
+    Input = new ExcelRenderer.OpenXml.Reader.Input.WorkbookInputOptions { MaxInputBytes = input.Length },
+};
+if (typeof(ExcelRenderer.Core.PdfExportOptions).GetProperty("Input")!.PropertyType != typeof(ExcelRenderer.OpenXml.Reader.Input.WorkbookInputOptions) ||
+    typeof(ExcelRenderer.Core.ExcelConverter).Assembly.GetType("ExcelRenderer.Core.WorkbookInputOptions") is not null) throw new Exception("Core input API migration failure");
+var core=await ExcelRenderer.Core.ExcelConverter.ConvertAsync(input,output,options);
 if(core.PageCount<1 || output.Length==0) throw new Exception("Core saved-value failure");
 input.Position=0;output.SetLength(0);
 await ExcelRenderer.ExcelConverter.RenderAsync(input,new ExcelRenderer.Rendering.RenderRequest{

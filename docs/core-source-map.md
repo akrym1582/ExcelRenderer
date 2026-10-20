@@ -47,7 +47,7 @@ Source: main 1.7.2, commit `32e9165d145516dbd0bcb4c2ae31a78ce6774bce`. Every cop
 | Rendering/RenderBufferOptions.cs, RenderBufferFactory.cs | ../ExcelRenderer.OpenXml.Reader/Input/InputBufferOptions.cs, Input/InputBufferFactory.cs | Reader所有 / Core・本体の設定・生成境界 | Main copies three public output settings; Core creates Reader buffers with conversion-local spill metrics |
 | Removed owner wrappers (Core and main) | ../ExcelRenderer.OpenXml.Reader/Input/PreparedWorkbook.cs | Reader単独所有 | Core/main readers, metadata hooks and formula/page selection borrow the same Reader owner directly |
 | Removed buffer subclasses (Core and main) | ../ExcelRenderer.OpenXml.Reader/Input/SpillableBufferStream.cs | Reader単独所有 | No product buffer inheritance; PDF/SVG use the factories without reimplementing storage |
-| Rendering/WorkbookInputPreparer.cs | Input/WorkbookInputPreparer.cs, ../ExcelRenderer.OpenXml.Reader/Input/WorkbookInputPreparer.cs | Reader所有 / Core・本体の設定境界 | Each product copies all six public input settings directly to Reader and attaches one spill callback |
+| Rendering/WorkbookInputPreparer.cs | ../ExcelRenderer.OpenXml.Reader/Input/WorkbookInputPreparer.cs | Reader所有 / Core直接使用・本体の設定境界 | Core calls Reader directly with Reader settings and one spill callback; main retains its public settings adapter |
 | Layout/BandIndex.cs | Layout/BandIndex.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
 | Layout/CellBoundsPass.cs | Layout/CellBoundsPass.cs | Core単独所有 / 本体wrapper | Shared Core implementation; main delegates and maps only boundary state |
 | Layout/CellContentBounds.cs | Layout/CellContentBounds.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
@@ -122,7 +122,7 @@ Source: main 1.7.2, commit `32e9165d145516dbd0bcb4c2ae31a78ce6774bce`. Every cop
 | Rendering/ImageResources.cs | Rendering/ImageResources.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
 | New Core implementation | ConversionDiagnostic.cs | Core単独所有 | Complete; Core single-font product implementation |
 | New Core implementation | ExcelConverter.cs | Core単独所有 | Complete; Core single-font product implementation |
-| Rendering/WorkbookInputOptions.cs | WorkbookInputOptions.cs | 本体専用差分 / Core内部型 | Compatibility value types retained in main; neutral Core values and explicit adapters do not duplicate algorithms |
+| Rendering/WorkbookInputOptions.cs | ../ExcelRenderer.OpenXml.Reader/Input/WorkbookInputOptions.cs | Reader所有 / 本体の公開recordを維持 | Core exposes Reader sealed class/set settings directly; main retains its public record/init settings and copies them at preparation |
 | New Core implementation | PdfExportOptions.cs | Core単独所有 | Complete; Core single-font product implementation |
 | New Core implementation | ConversionResult.cs | Core単独所有 | Complete; Core single-font product implementation |
 

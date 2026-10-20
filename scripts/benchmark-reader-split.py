@@ -35,7 +35,7 @@ for (var iteration = 0; iteration < 15; iteration++) {
     string checksum;
     if (mode == "core-cached") {
         using var font = new ExcelRenderer.Core.Fonts.SingleFontContext(args[1]);
-        using var prepared = await ExcelRenderer.Core.Input.WorkbookInputPreparer.ReadAsync(input, new(), default);
+        using var prepared = await ExcelRenderer.OpenXml.Reader.Input.WorkbookInputPreparer.ReadAsync(input, new(), default);
         var document = new ExcelRenderer.Core.Excel.CoreExcelReader(font).Read(prepared, null);
         count = document.Sheets.Sum(sheet => sheet.Cells.Count);
         checksum = string.Join("|", document.Sheets.SelectMany(sheet => sheet.Cells.Values).Select(cell => cell.Text));

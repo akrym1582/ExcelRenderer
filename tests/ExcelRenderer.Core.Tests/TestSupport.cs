@@ -3,7 +3,7 @@ using S = DocumentFormat.OpenXml.Spreadsheet;
 using ExcelRenderer.Core.Excel;
 using ExcelRenderer.Core.Fonts;
 using ExcelRenderer.Core.Model;
-using ExcelRenderer.Core.Input;
+using ExcelRenderer.OpenXml.Reader.Input;
 using ExcelRenderer.Core.Rendering;
 using SkiaSharp;
 using UglyToad.PdfPig;

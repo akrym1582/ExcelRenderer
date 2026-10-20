@@ -5,7 +5,7 @@
 
 XLSXからPDFだけを生成する独立したソースプロジェクトです。`netstandard2.1`で、.NET 8/10からProjectReferenceできます。Core単独のNuGetパッケージ、CLI、フォント入りDLLは作成しません。本体パッケージには同じbuildのCore DLL/XMLを同梱します。
 
-公開型には `ExcelConverter`、`PdfExportOptions`、`WorkbookInputOptions`、`ConversionResult`、`ConversionDiagnostic` があります。名前空間は `ExcelRenderer.Core` で、設定や結果のメンバーは以下に示すCore版の対応範囲に合わせています。
+公開型には `ExcelConverter`、`PdfExportOptions`、`ExcelReadOptions`、`ConversionResult`、`ConversionDiagnostic` があります。名前空間は `ExcelRenderer.Core` で、設定や結果のメンバーは以下に示すCore版の対応範囲に合わせています。
 
 ```xml
 <ItemGroup>
@@ -15,6 +15,7 @@ XLSXからPDFだけを生成する独立したソースプロジェクトです�
 
 ```csharp
 using ExcelRenderer.Core;
+using ExcelRenderer.OpenXml.Reader.Input;
 
 using var xlsx = File.OpenRead("report.xlsx");
 using var pdf = new FileStream("report.pdf", FileMode.Create, FileAccess.ReadWrite);
@@ -22,9 +23,25 @@ var result = await ExcelConverter.ConvertAsync(xlsx, pdf, new PdfExportOptions
 {
     FontFilePath = "/fonts/NotoSansJP-Regular.ttf",
     SheetName = null,
+    Input = new WorkbookInputOptions { MaxInputBytes = 128 * 1024 * 1024 },
 });
 Console.WriteLine(result.PageCount);
 ```
+
+## 入力設定の移行
+
+`PdfExportOptions.Input` は `ExcelRenderer.OpenXml.Reader.Input.WorkbookInputOptions` を直接使用します。旧公開型 `ExcelRenderer.Core.WorkbookInputOptions` とCore内部の入力準備ラッパーは削除しました。破壊的API変更なので、明示的な型名・usingをReader.Inputへ変更し、同じbuildの製品DLLで利用側を再ビルドしてください。互換クラスやバイナリ互換の型別名はありません。`Input = new() { ... }` は引き続き使用できます。
+
+Readerの設定は可変の `sealed class` / `set` のままです。旧入力recordの `with` 式は、新しい `WorkbookInputOptions` に必要な値を指定する形へ変更してください。既存の `PdfExportOptions options` から別の入力設定を作る例です。
+
+```csharp
+var separate = options with
+{
+    Input = new WorkbookInputOptions { MaxInputBytes = 64 * 1024 * 1024 },
+};
+```
+
+`PdfExportOptions` 自体はrecordですが、`options with { ... }` はInputを深くコピーしません。変換中・並列変換中に共有入力設定を変更せず、別設定が必要な変換ごとに別インスタンスを作ってください。Input自身のinitと既定値の `new()` は維持しています。本体の `ExcelRenderer.Rendering.WorkbookInputOptions` recordとMapping・OpenXml・ToolのAPI契約は維持します。[今回の検証結果](core-input-unification-validation.md)を参照してください。
 
 ## フォントと表示
 
@@ -80,7 +97,7 @@ stream bytesを保持します。画像辞書の追記revisionは圧縮済み画
 
 ## 共通実装
 
-入力準備/spool、画像資源、workbook/cell走査、style intern、幾何・ページ計画/構築、文字placement、セルcommand生成、診断集計、基本PDF描画/SaveはCoreへ集約しています。本体の公開型、完全font painter、画像変形、図形、リンク、PNG/SVG/Markdown、選択/trim、連続出力は本体に残ります。
+入力準備/spoolはReaderが所有します。画像資源、workbook/cell走査、style intern、幾何・ページ計画/構築、文字placement、セルcommand生成、診断集計、基本PDF描画/SaveはCoreへ集約しています。本体の公開型、完全font painter、画像変形、図形、リンク、PNG/SVG/Markdown、選択/trim、連続出力は本体に残ります。
 
 Full reader/layout/drawing/PDF adapterが高機能部分を拡張し、本体の公開APIは既存assemblyに維持します。[構成](core-architecture.ja.md)、[検証結果](core-refactor-validation.md)と[所有者表](core-source-map.md)を参照してください。
 

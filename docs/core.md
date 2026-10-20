@@ -6,7 +6,7 @@ English | [日本語](core.ja.md)
 
 A standalone `netstandard2.1` source project for XLSX-to-PDF conversion, usable from .NET 8/10 through ProjectReference. Core has no separate NuGet package or embedded-font DLL and references only ExcelRenderer.OpenXml.Reader among product projects; it does not reference ExcelRenderer.OpenXml, Formulas, ExcelRenderer, Fonts or Tool. The main ExcelRenderer package includes Core DLL/XML from the same build.
 
-Public types include `ExcelConverter`, `PdfExportOptions`, `WorkbookInputOptions`, `ConversionResult`, and `ConversionDiagnostic` in the `ExcelRenderer.Core` namespace. Options and results follow the Core-specific scope described below.
+Public types include `ExcelConverter`, `PdfExportOptions`, `ExcelReadOptions`, `ConversionResult`, and `ConversionDiagnostic` in the `ExcelRenderer.Core` namespace. Options and results follow the Core-specific scope described below.
 
 ```xml
 <ItemGroup>
@@ -16,14 +16,31 @@ Public types include `ExcelConverter`, `PdfExportOptions`, `WorkbookInputOptions
 
 ```csharp
 using ExcelRenderer.Core;
+using ExcelRenderer.OpenXml.Reader.Input;
 using var xlsx = File.OpenRead("report.xlsx");
 using var pdf = new FileStream("report.pdf", FileMode.Create, FileAccess.ReadWrite);
 var result = await ExcelConverter.ConvertAsync(xlsx, pdf, new PdfExportOptions
 {
     FontFilePath = "/fonts/NotoSansJP-Regular.ttf",
     SheetName = null,
+    Input = new WorkbookInputOptions { MaxInputBytes = 128 * 1024 * 1024 },
 });
 ```
+
+## Input settings migration
+
+`PdfExportOptions.Input` uses `ExcelRenderer.OpenXml.Reader.Input.WorkbookInputOptions` directly. The former public `ExcelRenderer.Core.WorkbookInputOptions` and Core's internal input preparer have been removed. This is a breaking API change: update explicit type names/imports to Reader.Input and rebuild consumers with matching product DLLs. No compatibility class or binary type alias is provided. `Input = new() { ... }` still works.
+
+Reader settings remain a mutable `sealed class` with `set` properties. Replace `with` expressions on the old input record with a new `WorkbookInputOptions` instance and specify the required values. For example, given an existing `PdfExportOptions options`:
+
+```csharp
+var separate = options with
+{
+    Input = new WorkbookInputOptions { MaxInputBytes = 64 * 1024 * 1024 },
+};
+```
+
+`PdfExportOptions` remains a record, but `options with { ... }` does not deep-copy Input. Do not mutate shared input settings during a conversion or concurrent conversions; create a separate instance for each conversion that needs different settings. Input's init accessor and default `new()` remain. The main library's `ExcelRenderer.Rendering.WorkbookInputOptions` record and the Mapping/OpenXml/Tool APIs retain their existing contracts. See [validation for this change](core-input-unification-validation.md).
 
 ## Supported behavior
 
@@ -65,7 +82,7 @@ Header/footer handling inherits the existing field expansion and placement, with
 
 ## Shared implementation
 
-The main library delegates input preparation/spooling, image resources, workbook/cell traversal, style interning, geometry/page planning and building, text placement, cell-layer command generation, diagnostic aggregation and basic PDF drawing/saving to Core. The main assembly retains its public models, advanced font painters, image transforms, shapes, links, PNG/SVG/Markdown, selection/trim, and continuous orchestration.
+Reader owns shared input preparation/spooling; Core uses its settings and preparer directly, while main retains its public settings adapter. The main library delegates image resources, workbook/cell traversal, style interning, geometry/page planning and building, text placement, cell-layer command generation, diagnostic aggregation and basic PDF drawing/saving to Core. The main assembly retains its public models, advanced font painters, image transforms, shapes, links, PNG/SVG/Markdown, selection/trim, and continuous orchestration.
 
 Full reader/layout/drawing/PDF adapters provide the advanced behavior. Public main APIs stay in their existing assembly. See [the architecture](core-architecture.md), [verification results](core-refactor-validation.md) and [source ownership](core-source-map.md).
 

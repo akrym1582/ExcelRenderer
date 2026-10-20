@@ -108,7 +108,7 @@ public sealed class BorderResolutionTests
     public async Task Saved_border_ids_use_the_same_Core_page_resolver()
     {
         using var input = File.OpenRead(Path.Combine(AppContext.BaseDirectory, "Fixtures", "BorderResolution", "border-conflicts.xlsx"));
-        using var prepared = await Input.WorkbookInputPreparer.ReadAsync(input, new(), default);
+        using var prepared = await OpenXml.Reader.Input.WorkbookInputPreparer.ReadAsync(input, new(), default);
         using var font = new Fonts.SingleFontContext(TestSupport.JapaneseFont);
         var sheet = new Excel.CoreExcelReader(font).Read(prepared, null, ["Double"]).Sheets.Single();
         var measurer = new NoTextMeasurer();

@@ -42,9 +42,12 @@ public sealed class PerformanceTests(ITestOutputHelper output)
             TestSupport.Print(part, $"First!$A$1:$B${rows}");
         });
         var inputBytes = workbook.ToArray();
-        var warmup = await Measure(inputBytes, rows, images);
-        var trials = new List<Sample>();
-        for (var trial = 0; trial < 3; trial++) trials.Add(await Measure(inputBytes, rows, images));
+        var warmup = await Measure(inputBytes);
+        var measurements = new List<Measurement>();
+        for (var trial = 0; trial < 3; trial++) measurements.Add(await Measure(inputBytes));
+        // Parsing between trials would leave validation garbage for the next conversion's GC.
+        foreach (var measurement in measurements.Prepend(warmup)) Validate(measurement, rows, images);
+        var trials = measurements.Select(measurement => measurement.Sample).ToArray();
         var report = new
         {
             Rows = rows,
@@ -58,7 +61,7 @@ public sealed class PerformanceTests(ITestOutputHelper output)
             InputSha256 = Convert.ToHexString(SHA256.HashData(inputBytes)),
             CoreSha256 = Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(typeof(ExcelConverter).Assembly.Location))),
             FontSha256 = Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(TestSupport.JapaneseFont))),
-            Warmup = warmup,
+            Warmup = warmup.Sample,
             Trials = trials,
             MedianMilliseconds = trials.OrderBy(sample => sample.Milliseconds).ElementAt(1).Milliseconds,
         };
@@ -70,7 +73,7 @@ public sealed class PerformanceTests(ITestOutputHelper output)
         output.WriteLine(json);
     }
 
-    private static async Task<Sample> Measure(byte[] bytes, int rows, bool images)
+    private static async Task<Measurement> Measure(byte[] bytes)
     {
         using var input = new MemoryStream(bytes, writable: false);
         using var pdf = new MemoryStream();
@@ -96,10 +99,15 @@ public sealed class PerformanceTests(ITestOutputHelper output)
         process.Refresh();
         var workingSetAfter = process.WorkingSet64;
         var handlesAfter = process.HandleCount;
-        // Both counters stop before PDF parsing, extraction, assertions and output serialization.
-        using var document = TestSupport.Open(pdf.ToArray());
+        var sample = new Sample(elapsed, allocated, managedBefore, managedAfter, workingSetBefore, workingSetAfter, handlesAfter, pdf.Length, result.PageCount);
+        return new(sample, result, pdf.ToArray(), metrics);
+    }
+
+    private static void Validate(Measurement measurement, int rows, bool images)
+    {
+        using var document = TestSupport.Open(measurement.Pdf);
         var expectedPages = rows / 50;
-        Assert.Equal(expectedPages, result.PageCount);
+        Assert.Equal(expectedPages, measurement.Result.PageCount);
         Assert.Equal(expectedPages, document.NumberOfPages);
         for (var index = 1; index <= expectedPages; index++)
         {
@@ -109,16 +117,18 @@ public sealed class PerformanceTests(ITestOutputHelper output)
             Assert.Equal(images ? 1 : 0, page.NumberOfImages);
         }
 
-        Assert.All(result.Diagnostics, diagnostic => Assert.Equal("SavedPageBreaks", diagnostic.Code));
+        Assert.All(measurement.Result.Diagnostics, diagnostic => Assert.Equal("SavedPageBreaks", diagnostic.Code));
+        var metrics = measurement.Metrics;
         Assert.Equal(1, metrics["pdfSave"]);
         Assert.Equal(2 * expectedPages, metrics["corePageBuild"]);
         Assert.Equal(2 * expectedPages, metrics["coreCommandBuild"]);
         Assert.Equal(metrics["typefaceCreated"], metrics["typefaceDisposed"]);
         Assert.Equal(metrics["pdfFontCreated"], metrics["pdfFontDisposed"]);
-        Assert.True(allocated > 0);
-        Assert.True(elapsed > 0);
-        return new(elapsed, allocated, managedBefore, managedAfter, workingSetBefore, workingSetAfter, handlesAfter, pdf.Length, result.PageCount);
+        Assert.True(measurement.Sample.AllocatedBytes > 0);
+        Assert.True(measurement.Sample.Milliseconds > 0);
     }
+
+    private sealed record Measurement(Sample Sample, ConversionResult Result, byte[] Pdf, Dictionary<string, double> Metrics);
 
     private sealed record Sample(double Milliseconds, long AllocatedBytes, long ManagedBefore, long ManagedAfter,
         long WorkingSetBefore, long WorkingSetAfter, int HandlesAfter, long PdfBytes, int Pages);

@@ -55,7 +55,8 @@ The timed and allocated-byte intervals contain only `ExcelConverter.ConvertAsync
 Input generation, stream setup, PdfPig verification, assertions, hashing and JSON
 writing occur outside both intervals. The observer is enabled consistently to
 check two page builds per page, one save and matching native font disposal.
-PdfPig checks every row label in page order and image count after each conversion.
+PdfPig checks every row label in page order and image count for every conversion
+after all trials finish, keeping validation allocations out of subsequent trials.
 Manual page breaks specify 50 rows per page independently of the renderer.
 
 `SampleOutputs/Performance` contains each XLSX and a JSON report with runtime/OS,

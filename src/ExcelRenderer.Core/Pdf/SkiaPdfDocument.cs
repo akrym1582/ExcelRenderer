@@ -1,4 +1,5 @@
 using ExcelRenderer.Core.Input;
+using ExcelRenderer.OpenXml.Reader.Input;
 using SkiaSharp;
 
 namespace ExcelRenderer.Core.Pdf;
@@ -18,7 +19,7 @@ internal sealed class SkiaPdfDocument : IDisposable
     /// <param name="token">The cancellation token.</param>
     internal SkiaPdfDocument(InputBufferOptions buffering, CancellationToken token)
     {
-        spool = new(buffering);
+        spool = InputBufferFactory.Create(buffering);
         this.token = token;
     }
 

@@ -10,6 +10,7 @@ using ExcelRenderer.OpenXml.Reader.Model.Workbook;
 using static ExcelRenderer.Core.Excel.OpenXmlStyleConverter;
 using CellAddress = ExcelRenderer.Core.Model.CellAddress;
 using CellRange = ExcelRenderer.Core.Model.CellRange;
+using PreparedWorkbook = ExcelRenderer.OpenXml.Reader.Input.PreparedWorkbook;
 
 namespace ExcelRenderer.Core.Excel;
 

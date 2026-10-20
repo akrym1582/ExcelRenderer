@@ -4,6 +4,7 @@ using ExcelRenderer.Core.Drawing;
 using ExcelRenderer.Core.Fonts;
 using ExcelRenderer.Core.Model;
 using ExcelRenderer.Core.Rendering;
+using ExcelRenderer.OpenXml.Reader.Input;
 using SkiaSharp;
 using RenderingDiagnostic = ExcelRenderer.Core.Rendering.ConversionDiagnostic;
 
@@ -24,7 +25,7 @@ internal sealed class CorePdfRenderer : IDisposable
     {
         this.token = token;
         fonts = new(token);
-        document = new(new Input.InputBufferOptions { MemoryThresholdBytes = 8 * 1024 * 1024, AllowTemporaryFiles = true }, token);
+        document = new(new InputBufferOptions { MemoryThresholdBytes = 8 * 1024 * 1024, AllowTemporaryFiles = true }, token);
         textPainter = context is null ? null : new SkiaFinalizedTextPainter(context, fonts);
     }
 

@@ -1,6 +1,7 @@
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Model;
 using ExcelRenderer.Rendering;
+using PreparedWorkbook = ExcelRenderer.OpenXml.Reader.Input.PreparedWorkbook;
 
 namespace ExcelRenderer.Excel;
 
@@ -79,9 +80,9 @@ public sealed class ExcelReader
     /// <returns>ブック内のワークシートを元の順序で格納したレンダリング用ドキュメントを返します。</returns>
     internal ReportDocument Read(byte[] workbookBytes, DiagnosticCollector? diagnostics)
     {
-        using var prepared = new SpillableBufferStream(new RenderBufferOptions());
-        prepared.Write(workbookBytes, 0, workbookBytes.Length);
+        var prepared = RenderBufferFactory.Create(new RenderBufferOptions());
         using var owner = new PreparedWorkbook(prepared);
+        prepared.Write(workbookBytes, 0, workbookBytes.Length);
         return Read(owner, diagnostics);
     }
 
@@ -120,7 +121,7 @@ public sealed class ExcelReader
         options?.Validate();
         var coreDiagnostics = diagnostics is null ? null : new Core.Rendering.DiagnosticCollector(diagnostic => diagnostics.Add(CoreIntegration.CoreDiagnosticAdapter.ToPublic(diagnostic)));
         var document = new CoreIntegration.FullExcelReader(fontManager, diagnostics, maximumDigitWidths, detectUnsupportedFeatures, options)
-            .Read(source.CoreWorkbook, coreDiagnostics, selectedSheets, cancellationToken, new Core.ExcelReadOptions
+            .Read(source, coreDiagnostics, selectedSheets, cancellationToken, new Core.ExcelReadOptions
             {
                 GetSelectedRange = options?.GetSelectedRange,
             });

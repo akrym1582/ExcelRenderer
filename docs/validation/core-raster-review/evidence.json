@@ -1,0 +1,44 @@
+{
+  "beforeCommit": "513ddd4d424d9afa6e92ed154abdc631841ba302",
+  "afterCommit": "38390a69490fa56ca2ff28006d573eff5a3d925c",
+  "poppler": "pdftoppm version 26.05.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC",
+  "changedPixelsFromPreBorder": 26,
+  "changedRows": {
+    "116": 7,
+    "137": 1,
+    "157": 1,
+    "177": 1,
+    "197": 1,
+    "217": 1,
+    "237": 1,
+    "257": 1,
+    "277": 1,
+    "297": 1,
+    "317": 1,
+    "337": 1,
+    "357": 1,
+    "376": 7
+  },
+  "preBorderMae": 0.002196273176756813,
+  "frozenGoldenMae": 0.28053978600261836,
+  "currentPixelsSha256": "ef948b35fcbffa6180d906812bcf7f801a6a103c2ddba62f43cd0a17cadcdff1",
+  "paintCounts": [
+    371,
+    29
+  ],
+  "equalAxialCoverageAndStyles": true,
+  "unchangedNonBorderContent": true,
+  "identicalCoreAndReferencePixels": true,
+  "existingPdfContract": {
+    "passed": true,
+    "errors": [],
+    "family": "core",
+    "fixture": "scaling",
+    "page": 2,
+    "rasterSha256": {
+      "144": "7ddc5a4b4f5f6d4fd61e3427f178e1bbd33f5e54a691058ad98a048fa6a425e0",
+      "300": "7c964dc41ef44fa6681c005f6e9933efdd9b3da3eccdc909820fb9eb32f85c16"
+    },
+    "reason": "Exact reviewed shared-border content/paints; unchanged other paints, glyph IDs/origins and images"
+  }
+}

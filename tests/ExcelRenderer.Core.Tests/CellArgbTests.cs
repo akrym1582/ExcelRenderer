@@ -65,7 +65,7 @@ public sealed class CellArgbTests
         var probe = PdfContentProbe.Read(output.ToArray());
         Assert.True(probe.Texts.Count >= 10);
         Assert.True(probe.Paints.Count(paint => paint.Operation == "f") >= 5);
-        Assert.True(probe.Paints.Count(paint => paint.Operation == "S") >= 20);
+        CellBorderAssertions.StackedCells(probe);
         Assert.All(pdf.GetPage(1).Letters, letter => Assert.Equal((0d, 0d, 0d), letter.Color.ToRGBValues()));
         Assert.Equal(5, pdf.GetPage(1).Paths.Count(path => path.IsFilled && path.FillColor!.ToRGBValues() == (0.2, 0.4, 0.6)));
     }

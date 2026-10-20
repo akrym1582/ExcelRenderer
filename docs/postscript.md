@@ -160,7 +160,14 @@ silently skipping. Local Ghostscript facts may skip with an explicit reason if n
 `gs`, `gswin64c.exe` or `gswin32c.exe` is on PATH. Processes use argument lists,
 `-dSAFER -dBATCH -dNOPAUSE -dNOPLATFONTS`, concurrent stdout/stderr draining, a 60-second timeout
 and process-tree termination. Nonzero exit, warnings, errors and substitution
-messages fail validation.
+messages fail validation. Raw stdout/stderr are saved as `PostScript/ghostscript-*.log`
+in the test artifacts. One compatibility exception applies only to a successful
+`txtwrite` invocation whose banner identifies Ghostscript 10.02.1: a single exact
+`Error: finalizing subclassing device while child refcount > 1` line is a device
+cleanup defect, reproducible with standalone Helvetica `(ABC) show showpage`.
+The output and all other diagnostics are still checked; another occurrence,
+another version/device or a nonzero exit fails. Ghostscript 10.05.1 does not emit
+this diagnostic. See the [CI follow-up record](postscript-validation.md#ci-ghostscript-10021-の互換性修正).
 
 The 300 DPI PNG comparison uses the same finalized commands for direct PNG and PS.
 Dimensions are exact for these fixed comparison canvases. For arbitrary paper

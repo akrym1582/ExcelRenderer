@@ -288,9 +288,41 @@ public sealed class PostScriptGhostscriptTests
         try { await process.WaitForExitAsync().WaitAsync(TimeSpan.FromSeconds(60)); }
         catch { process.Kill(entireProcessTree: true); throw; }
         var message = await stdout + await stderr;
-        Assert.True(process.ExitCode == 0, message);
-        Assert.DoesNotMatch("(?i)(substitut|error:|warning|can't find|cannot find)", message);
+        Directory.CreateDirectory(Artifacts);
+        await File.WriteAllTextAsync(Path.Combine(Artifacts, $"ghostscript-{process.Id}.log"), message);
+        ValidateResult(process.ExitCode, message, arguments.Contains("-sDEVICE=txtwrite"));
         return message;
+    }
+
+    internal static void ValidateResult(int exitCode, string message, bool textOutput)
+    {
+        Assert.True(exitCode == 0, message);
+        var diagnostics = message;
+        if (textOutput && message.StartsWith("GPL Ghostscript 10.02.1 (", StringComparison.Ordinal))
+        {
+            // Ubuntu 24.04's txtwrite emits this device cleanup diagnostic even for
+            // a standalone Helvetica (ABC) showpage. Keep the raw log and reject
+            // every other diagnostic, including another occurrence of this line.
+            diagnostics = new Regex(@"(?m)^Error: finalizing subclassing device while child refcount > 1\r?$").Replace(diagnostics, "", 1);
+        }
+
+        Assert.False(Regex.IsMatch(diagnostics, "(?i)(substitut|error:|warning|can't find|cannot find)"), message);
+    }
+
+    [Fact]
+    public void Ubuntu_txtwrite_cleanup_diagnostic_is_scoped_to_version_device_and_success()
+    {
+        const string banner = "GPL Ghostscript 10.02.1 (2023-11-01)\n";
+        const string cleanup = "Error: finalizing subclassing device while child refcount > 1\n";
+        ValidateResult(0, banner + cleanup, true);
+        ValidateResult(0, banner + cleanup.Replace("\n", "\r\n", StringComparison.Ordinal), true);
+        Assert.ThrowsAny<Xunit.Sdk.XunitException>(() => ValidateResult(1, banner + cleanup, true));
+        Assert.ThrowsAny<Xunit.Sdk.XunitException>(() => ValidateResult(0, banner + cleanup, false));
+        Assert.ThrowsAny<Xunit.Sdk.XunitException>(() => ValidateResult(0, banner.Replace("10.02.1", "10.05.1", StringComparison.Ordinal) + cleanup, true));
+        Assert.ThrowsAny<Xunit.Sdk.XunitException>(() => ValidateResult(0, cleanup, true));
+        Assert.ThrowsAny<Xunit.Sdk.XunitException>(() => ValidateResult(0, banner + cleanup + cleanup, true));
+        foreach (var diagnostic in new[] { "Error: /invalidfont", "Error: /syntaxerror", "Warning: invalid font", "Substituting font", "Can't find font", "Cannot find font", cleanup.TrimEnd() + " unexpected" })
+            Assert.ThrowsAny<Xunit.Sdk.XunitException>(() => ValidateResult(0, banner + cleanup + diagnostic, true));
     }
 
     private static async Task<string> Version() => (await Run("--version")).Trim();

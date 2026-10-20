@@ -135,3 +135,29 @@ OpenXml 213 / main 866 / Tool 108）。PS の独立文字・フォント検査�
 依存監査、Reader/Core の独立 restore/build/publish/AssemblyRef/実行検証も成功した。
 namespace と Core 所有権の検査も成功。検証結果と変更した writer の SHA-256 は
 [main-integration.json](postscript-results/main-integration.json) に記録した。
+
+## CI: Ghostscript 10.02.1 の互換性修正
+
+[初回CIの失敗ログ](https://github.com/akrym1582/ExcelRenderer/actions/runs/39368683848/job/118451300425)
+では2,362件中、`txtwrite` を使う1件だけが失敗した。Ubuntu 24.04 の
+Ghostscript 10.02.1 は正常な文字抽出後にも終了処理で
+`Error: finalizing subclassing device while child refcount > 1` を出す。
+同じ Ubuntu パッケージ `10.02.1~dfsg1-0ubuntu7.9` のコンテナで再現した。
+製品の出力を使わない次の入力でも同じ診断が出て、終了コードは0だった。
+
+```bash
+gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=txtwrite -sOutputFile=/tmp/minimal.txt \
+  -c '/Helvetica findfont 12 scalefont setfont 20 20 moveto (ABC) show showpage'
+```
+
+生成した `fonts.ps` の抽出結果は10.05.1の出力とバイト単位で一致した。
+テスト用プロセス検査は、10.02.1のバナー・`txtwrite`・終了コード0の組合せに限り、
+この完全一致の診断を1回だけ識別する。診断の追加文字・重複、別バージョン・device、
+非0終了、構文エラー、フォントエラー・代替、その他の警告は回帰テストで失敗を確認する。
+実行時の生のstdout/stderrは `PostScript/ghostscript-*.log` に保存しCI成果物に含める。
+PS生成コードと文字抽出の照合・描画比較・変異検出の条件は変更していない。
+
+修正後のリビルドは警告0・エラー0。10.02.1を使う全テストは **2,363件成功・失敗0・
+skip 0**（main 867、その他は上記統合後と同じ）。10.05.1でもGhostscript検証5件と
+診断判定の回帰テスト1件が成功した。両版の `fonts.ps` の抽出結果はバイト単位で一致。
+原文デコーダーと `fonts.ps` / `drawing.ps` の独立フォント検査も成功した。

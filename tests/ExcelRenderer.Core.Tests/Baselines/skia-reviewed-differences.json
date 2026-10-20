@@ -1,8 +1,8 @@
 {
   "08-print-scaling-core-2.png": {
     "baselineSha256": "30715f276e06e046a65e9fa5a0887dbb5bc18ab48545f21afc454b2abbb3eb93",
-    "currentPixelsSha256": "2053967c129f90903bdd5d983dc1cd721955544922e90106cc7d95d834cc5df3",
+    "currentPixelsSha256": "ef948b35fcbffa6180d906812bcf7f801a6a103c2ddba62f43cd0a17cadcdff1",
     "sourceSha256": "c6ae0dcb2ae314753fc1bd1ff1c19e3bc444c4c387736e11dc27226fe8535247",
-    "reason": "Reviewed renderer antialiasing at horizontal table edges (rows 116/376/377 at 96dpi). Unchanged frozen raster; old/new PDF have 371 identical path types, unchanged stroke widths, <=0.000016pt path bounds and <=0.000062pt glyph origins; 345 glyph IDs unchanged. Core and current full reference rasters are identical. See frozen core/scaling.pdf and compare-core-removal-baselines.py."
+    "reason": "Reviewed horizontal-edge antialiasing plus shared-border coalescing: only 26 pixels differ from the previously reviewed pre-border output, at table corners and right-edge row endpoints (96dpi). Axial coverage and stroke styles are unchanged at 0.001pt precision; non-border paints, glyphs and images pass independent checks. Paint count changes from 371 to 29 by resolving shared edges once. Current PDF content/paints and 144/300dpi pixels match the existing exact shared-border contract; Core and full reference 96dpi pixels are identical. Frozen raster/source hashes and thresholds remain unchanged. See docs/validation/core-raster-review/README.md and evidence.json."
   }
 }

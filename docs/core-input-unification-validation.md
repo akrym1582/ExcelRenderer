@@ -105,5 +105,54 @@ python3 scripts/validate-formulas-packages.py --packages artifacts/core-input-un
 python3 scripts/validate-font-packages.py --packages artifacts/core-input-unification/packages-1.10.2 --work /tmp/excelrenderer-core-input-font-consumers-1.10.2
 ```
 
-No Windows execution is claimed. No release version, NuGet publication or merge
-is part of this change.
+## CI coverage baseline correction
+
+The first PR run, [39499716030](https://github.com/akrym1582/ExcelRenderer/actions/runs/39499716030),
+failed the independent Core jobs on Ubuntu and Windows after all 336 nonperformance
+tests passed. Both reported 82.12% line coverage against the stale 82.73% minimum.
+Normal solution tests had passed without enabling this separate coverage gate.
+
+The same CI command was reproduced for the PR and for an isolated worktree at its
+unchanged main parent `d5fa038`. Main also failed that minimum. Coverlet 6.0.4
+reported the following source-line and branch counts:
+
+| Measurement | Main parent | Input unification |
+| --- | ---: | ---: |
+| Covered / total lines | 3,195 / 3,887 | 3,180 / 3,872 |
+| Uncovered lines | 692 | 692 |
+| Covered / total branches | 2,105 / 3,001 | 2,105 / 3,001 |
+| Reported line coverage | 82.19% | 82.12% |
+| Reported branch coverage | 70.14% | 70.14% |
+
+The removed preparer accounts for 13 covered lines and the removed options for 6;
+the direct converter call adds 4 covered lines. These are the only files whose
+covered/total line counts differ. The net reduction of 15 covered lines changes
+the percentage while leaving all 692 uncovered lines and all branch counts
+unchanged.
+
+The Core-only line minimum is therefore recalibrated to 82.12%. The branch minimum
+stays at 70.08%; the include filter, test categories, source files, coverage
+exclusions and functional tests are unchanged. The commands used by the Core CI
+job are now included in AGENTS.md so future checks include the gate:
+
+```bash
+dotnet build ExcelRenderer.slnx -t:Rebuild -c Release --no-restore --verbosity:minimal -m:1
+dotnet test tests/ExcelRenderer.Core.Tests/ExcelRenderer.Core.Tests.csproj -c Release --no-build --filter 'Category!=Performance' -p:CollectCoverage=true
+dotnet test tests/ExcelRenderer.Core.Tests/ExcelRenderer.Core.Tests.csproj -c Release --no-build --filter 'Category=Performance'
+```
+
+The CI follow-up changes the test-project coverage baseline and documentation;
+product code and package contents are unchanged. The original distribution and
+full-solution test results above remain applicable. Local follow-up passed:
+
+- Solution Release Rebuild: 0 warnings, 0 errors.
+- The exact CI coverage command: 336 passed, 0 failed, 0 skipped; line 82.12%,
+  branch 70.14%; both coverage gates passed.
+- Separate performance command: 8 passed, 0 failed, 0 skipped.
+
+The original CI run's five other jobs (main unit tests, both Formulas jobs and
+both PDF distribution jobs) succeeded. Windows rerun results are verified in the
+PR checks separately from these local Linux results. Raw coverage comparisons
+and command logs are retained under `artifacts/core-input-unification-ci/`.
+
+No release version, NuGet publication or merge is part of this change.

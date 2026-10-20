@@ -11,7 +11,9 @@
     <CoverletOutput>$(MSBuildThisFileDirectory)../../TestResults/Core/Coverage/</CoverletOutput>
     <CoverletOutputFormat>json,cobertura</CoverletOutputFormat>
     <ThresholdType>line,branch</ThresholdType>
-    <Threshold>82.73,70.08</Threshold>
+    <!-- Core-only baseline after removing the input adapter/options: 3180/3872 lines.
+         Uncovered lines and branch coverage are unchanged; see docs/core-input-unification-validation.md. -->
+    <Threshold>82.12,70.08</Threshold>
     <ThresholdStat>total</ThresholdStat>
   </PropertyGroup>
   <ItemGroup>

@@ -105,7 +105,14 @@ def fixtures(work, runtime):
     for kind, size in [('overlap', 10000), ('mapped', 1), ('recalculate', 10000)]:
         path = directory / f'cf-{kind}.xlsx'
         phase2.population_fixture(path, size, kind, phase1.fixture)
-        case('read-' + kind, path, ReadOnly=True, Mode=kind)
+        if kind == 'mapped':
+            data = directory / 'mapping-data.json'
+            data.write_text(json.dumps({'items': [index % 101 for index in range(10000)]}))
+            mapped = directory / 'cf-mapped-values.xlsx'
+            subprocess.run(['dotnet', str(ROOT / 'src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll'), 'xlsx', str(path), '--data', str(data), '--output', str(mapped)], check=True, capture_output=True)
+            case('read-mapped', mapped, ReadOnly=True, Template=str(path.resolve()))
+        else:
+            case('read-' + kind, path, ReadOnly=True, Mode=kind)
     (work / 'cases.json').write_text(json.dumps(cases, ensure_ascii=False, indent=2) + '\n')
 
 

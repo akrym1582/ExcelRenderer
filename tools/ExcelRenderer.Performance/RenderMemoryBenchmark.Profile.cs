@@ -20,15 +20,6 @@ internal static partial class RenderMemoryBenchmark
         var warmups = int.Parse(args[3], System.Globalization.CultureInfo.InvariantCulture);
         var samples = int.Parse(args[4], System.Globalization.CultureInfo.InvariantCulture);
         var inputBytes = File.ReadAllBytes(item.Input);
-        var templateHash = Hash(inputBytes);
-        if (item.Mode.Contains("mapped", StringComparison.Ordinal))
-        {
-            using var template = new MemoryStream(inputBytes, false);
-            using var mapped = new MemoryStream();
-            ExcelRenderer.Mapping.ExcelTemplateMapper.Map(template, mapped, new { items = Enumerable.Range(0, 10000).Select(index => index % 101).ToArray() });
-            inputBytes = mapped.ToArray();
-        }
-
         var snapshots = typeof(ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader).Assembly.GetType("ExcelRenderer.OpenXml.Reader.Diagnostics.OperationMetrics")!.GetProperty("Observer", BindingFlags.Static | BindingFlags.NonPublic)!;
         var diagnosticOnly = args.Length > 5 && args[5] == "diagnostic";
         var font = Path.GetFullPath("third_party/NotoSansJP/NotoSansJP-Regular.ttf");
@@ -42,7 +33,7 @@ internal static partial class RenderMemoryBenchmark
                 os = Environment.OSVersion.ToString(),
                 item,
                 inputSha256 = Hash(inputBytes),
-                templateSha256 = templateHash,
+                templateSha256 = item.Template is { } template ? HashFile(template) : Hash(inputBytes),
                 fontSha256 = HashFile(font),
                 dlls = Directory.GetFiles(AppContext.BaseDirectory, "ExcelRenderer*.dll").ToDictionary(file => Path.GetFileName(file)!, file => HashFile(file)),
             },
@@ -128,7 +119,7 @@ internal static partial class RenderMemoryBenchmark
         return Convert.ToHexString(SHA256.HashData(input));
     }
 
-    private sealed record ProfileCase(string Name, string Input, string Format = "Pdf", bool ReadOnly = false, bool ConditionalFormatting = true, bool Continuous = false, bool Trim = false, int[]? Pages = null, string? Range = null, string? Capture = null, string Mode = "cached", bool FontPack = false);
+    private sealed record ProfileCase(string Name, string Input, string Format = "Pdf", bool ReadOnly = false, bool ConditionalFormatting = true, bool Continuous = false, bool Trim = false, int[]? Pages = null, string? Range = null, string? Capture = null, string Mode = "cached", bool FontPack = false, string? Template = null);
 
     private sealed class ProfileSink(string? directory) : IRenderOutputSink
     {

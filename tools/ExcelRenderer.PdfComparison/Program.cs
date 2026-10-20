@@ -195,7 +195,7 @@ foreach (var sample in samples.Where(sample => fixtureFilter == "all" || fixture
     Directory.CreateDirectory(directory);
     CopyBaseline(sample.Key, Path.Combine(directory, "pdfsharp.pdf"));
     CaptureNative(directory);
-    var readerSnapshot = ExcelRenderer.PdfComparison.ReaderSnapshot.Capture(Path.Combine(root, sample.Value), fonts);
+    var readerSnapshot = ExcelRenderer.PdfComparison.ReaderSnapshot.Capture(Path.Combine(root, sample.Value), fonts, Path.Combine(directory, "mdw-diagnostics.json"));
     File.WriteAllText(Path.Combine(directory, "reader-snapshot.json"), JsonSerializer.Serialize(readerSnapshot, new JsonSerializerOptions { WriteIndented = true }));
     using var frozenReader = JsonDocument.Parse(File.ReadAllText(Path.Combine(root, "tests/Shared/PdfRemovalBaseline", sample.Key, "reader-snapshot.json")));
     if (!JsonElement.DeepEquals(readerSnapshot, frozenReader.RootElement))
@@ -237,6 +237,7 @@ foreach (var sample in samples.Where(sample => fixtureFilter == "all" || fixture
         {
             OutputFormat = OutputFormat.Pdf,
             PdfBackend = backend,
+            ReadOptions = ExcelRenderer.PdfComparison.ReaderSnapshot.HistoricalReadOptions,
             FontOptions = sample.Key == "missing-glyph"
                 ? new() { AllowSystemFonts = false, UseFontPack = false, Registrations = [new("Noto Sans JP", Path.Combine(root, "third_party/NotoSansJP/NotoSansJP-Regular.ttf"))], FallbackFamilies = ["Noto Sans JP"] }
                 : new() { AllowSystemFonts = false },
@@ -256,7 +257,8 @@ foreach (var sample in samples.Where(sample => fixtureFilter == "all" || fixture
     PdfRenderObserver.Current = null;
     PdfRenderObserver.NativePdf = null;
     var left = JsonSerializer.Serialize(results[PdfBackend.SkiaSharp].Pages);
-    var expected = new { name = sample.Key, path = "e2e", commandFingerprints = fingerprints[PdfBackend.SkiaSharp], pagePlanSha256 = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(left))), pages = results[PdfBackend.SkiaSharp].Pages, diagnostics = results[PdfBackend.SkiaSharp].Diagnostics };
+    File.WriteAllText(Path.Combine(directory, "conversion-diagnostics.json"), JsonSerializer.Serialize(results[PdfBackend.SkiaSharp].Diagnostics, new JsonSerializerOptions { WriteIndented = true }));
+    var expected = new { name = sample.Key, path = "e2e", commandFingerprints = fingerprints[PdfBackend.SkiaSharp], pagePlanSha256 = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(left))), pages = results[PdfBackend.SkiaSharp].Pages, diagnostics = ExcelRenderer.PdfComparison.ReaderSnapshot.HistoricalDiagnostics(results[PdfBackend.SkiaSharp].Diagnostics) };
     File.WriteAllText(Path.Combine(directory, "expected.json"), JsonSerializer.Serialize(expected, new JsonSerializerOptions { WriteIndented = true }));
     reports.Add(expected);
 }

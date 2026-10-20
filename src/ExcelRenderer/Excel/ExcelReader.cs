@@ -76,13 +76,14 @@ public sealed class ExcelReader
     /// <summary>読み取り時の診断情報を収集しながら、バイト配列の Excel ブックを読み取ります。</summary>
     /// <param name="workbookBytes">Excel ブック全体を格納したバイト配列です。</param>
     /// <param name="diagnostics">読み取り中に発生した診断情報を追加するコレクターです。</param>
+    /// <param name="options">表示形式と元フォント寸法に関する省略可能な設定です。</param>
     /// <returns>ブック内のワークシートを元の順序で格納したレンダリング用ドキュメントを返します。</returns>
-    internal ReportDocument Read(byte[] workbookBytes, DiagnosticCollector? diagnostics)
+    internal ReportDocument Read(byte[] workbookBytes, DiagnosticCollector? diagnostics, ExcelReadOptions? options = null)
     {
         var prepared = RenderBufferFactory.Create(new RenderBufferOptions());
         using var owner = new PreparedWorkbook(prepared);
         prepared.Write(workbookBytes, 0, workbookBytes.Length);
-        return Read(owner, diagnostics);
+        return Read(owner, diagnostics, options: options);
     }
 
     /// <summary>Reads workbook models with optional selected-sheet body projection.</summary>

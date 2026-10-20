@@ -5,7 +5,7 @@
 - 作業ブランチ: `fix/pagination-source-metrics`
 - 開始SHA: `2996f6c9940f9a4dcdaa041531c75e277911d911`（2026-10-20に `git fetch origin` 後の `origin/main`）。作業開始時の未コミット変更なし。
 - 依頼計画のレビュー基準 `9dd0eb8a23de1c7bf0e382977f6ffd51e57705cd` より新しいmainを使用。現在のReader分離・Skia PDF構成に合わせ、Coreの所有箇所で修正した。
-- 終了実装SHA: `da6ba4c32291f79056b7b0a6d9c944138739ad40`。このSHAのコードをビルド・検証し、後続コミットはこの検証記録のみ。
+- 初回実装SHA: `da6ba4c32291f79056b7b0a6d9c944138739ad40`。以下の初回実行記録はこのSHAが対象。CI比較ハーネスの追補は末尾に分けて記録する。
 - Linux / .NET SDK 10.0.401。Linuxのテストは同じshellで `source scripts/test-fonts.sh` を先に実行。
 - 利用者の実ブックは未提供。症状の原因は確定していない。Windows Excel・Meiryoとの実機比較は未実施であり、合格扱いにしない。Meiryoファイルは追加していない。
 
@@ -103,3 +103,24 @@ manualの次ページ範囲は `A21:E50`。元MDW=16のPDF/PNG/SVG/PostScriptは
 SourceFontFileの機能対照で使ったNoto Sans Monoは、この合成ブックのCalibriを正確に復元するフォントとして提示していない。表の9px・2ページは指定されたファイルを実測した期待結果である。7px互換値も決定的な代替値であり、元書体との完全一致を意味しない。
 
 未実施: 利用者の実ファイル、Windows Excel/Meiryoによる実測比較。原因の確定や実ファイルとの完全一致は報告しない。
+
+
+## CI比較ハーネスの追補（2026-10-20）
+
+[CI run 39422168818 / Core Linux](https://github.com/akrym1582/ExcelRenderer/actions/runs/39422168818/job/118625578859) は、189件のCoreテスト後の画像比較で `Page counts differ: 01-japanese.xlsx` となった。初回検証ではこのCI固有の画像比較を実行していなかった。同じ失敗をローカルの `python3 scripts/validate-core.py --visual-only --no-build` でも再現した。
+
+固定入力は描画書体をNotoへ正規化しているが、Normal書体名にはCalibriが残っている。Coreは単一供給フォントのMDW=8を使い、本体参照側は新既定SourceFontでCalibri不在の7pxを使っていた。参照側へ同じ供給フォントを `SourceFontFile` として渡し、双方の列幅計測条件を揃えた。Coreの製品仕様と固定goldenは変更していない。
+
+後続の `compare-pdf-backends.py` も、旧出力の列幅とMDW診断を固定比較するため、ReaderとRenderRequestへLegacyを明示した。`invoice` の修正前失敗もローカルで再現済み。新しい診断文を旧スキーマへ射影し、元/解決先ファミリー、実測MDW、severity、stage、位置、行列寸法、ページ計画と描画fingerprintの比較を維持する。旧版でブックに一度だけ出た成功診断は同一解決のシート別再利用分をまとめ、新設のRead/Info `SavedPageBreaks` 集計は旧スキーマに含めない。新しい診断の全文はfixtureごとの `mdw-diagnostics.json` と `conversion-diagnostics.json` に別途保存する。未知のMDW診断形式は例外として失敗させる。
+
+固定PDF・golden画像・許容差・既存の差分レビュー一覧は変更していない。SourceFontの新既定とフォールバック警告の製品動作も維持する。
+
+追補でのローカル確認:
+
+- Release全solutionリビルド: 警告0・エラー0。
+- `python3 scripts/validate-core.py --visual-only`: 17ページ成功。
+- `python3 scripts/compare-pdf-backends.py --no-build`: 25 fixture、未達ゲート0。既存のレビュー済み差分51件を維持。
+- `python3 scripts/compare-pdf-backends.py --no-generate --reference B --no-exceptions`: 25 fixture、未達ゲート0、レビュー済み差分適用0。
+- 名前空間669宣言とcompiler shim 2件、23プロジェクト/714 managed AssemblyRefの依存監査、`git diff --check` 成功。
+
+追補の生ログは作業環境の `artifacts/pagination-ci-fix/`、新しい比較診断とPDFは `artifacts/pdf-comparison/`、Core画像比較は `TestResults/Core/Validation/` に保持する。

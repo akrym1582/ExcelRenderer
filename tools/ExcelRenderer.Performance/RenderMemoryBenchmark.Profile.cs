@@ -47,9 +47,9 @@ internal static partial class RenderMemoryBenchmark
                 dlls = Directory.GetFiles(AppContext.BaseDirectory, "ExcelRenderer*.dll").ToDictionary(file => Path.GetFileName(file)!, file => Hash(File.ReadAllBytes(file))),
             },
         }));
-        for (var iteration = diagnosticOnly ? 0 : -warmups - 1; iteration < (diagnosticOnly ? 1 : samples); iteration++)
+        for (var iteration = diagnosticOnly ? -warmups : -warmups - 1; iteration < (diagnosticOnly ? 2 : samples); iteration++)
         {
-            var diagnostic = diagnosticOnly;
+            var diagnostic = diagnosticOnly && iteration == 1;
             var metrics = new Dictionary<string, double>();
             ConversionMetrics.Observer = null;
             if (diagnostic)
@@ -110,7 +110,7 @@ internal static partial class RenderMemoryBenchmark
             using var process = Process.GetCurrentProcess();
             Console.WriteLine(JsonSerializer.Serialize(new
             {
-                name = item.Name, iteration, diagnostic, cold = !diagnostic && iteration == -warmups - 1, warmup = iteration < 0,
+                name = item.Name, iteration, diagnostic, cold = iteration == (diagnosticOnly ? -warmups : -warmups - 1), observerControl = diagnosticOnly && iteration == 0, warmup = iteration < 0,
                 milliseconds = clock.Elapsed.TotalMilliseconds, allocationBytes,
                 gc = collections.Select((count, generation) => GC.CollectionCount(generation) - count).ToArray(),
                 peakRssBytes = process.PeakWorkingSet64, outputBytes, pages, metrics,

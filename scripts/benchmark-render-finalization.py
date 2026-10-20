@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import importlib.util
 import json
+import os
 import shutil
 import statistics
 import subprocess
@@ -126,7 +127,7 @@ def run(args):
                 specification = dict(case, Capture=str(work / 'captures' / stage / case['Name']))
                 path = work / 'diagnostic-case.json'
                 path.write_text(json.dumps([specification]))
-                result = subprocess.run(['dotnet', str(runtime / 'ExcelRenderer.Performance.dll'), 'render-profile', str(path), case['Name'], '0', '1', 'diagnostic'], check=True, capture_output=True, text=True)
+                result = subprocess.run(['dotnet', str(runtime / 'ExcelRenderer.Performance.dll'), 'render-profile', str(path), case['Name'], str(args.warmups), '1', 'diagnostic'], check=True, capture_output=True, text=True)
                 observations.append(dict(stage=stage, case=case['Name'], records=[json.loads(line) for line in result.stdout.splitlines()]))
                 (work / 'diagnostics.json').write_text(json.dumps(observations, indent=2) + '\n')
                 print(f'diagnostic: {case["Name"]}/{stage}', flush=True)
@@ -157,7 +158,7 @@ def run(args):
         entry['pairedRoundChanges'] = [(after / before - 1) * 100 for before, after in zip(entry['before']['roundMedians'], entry['after']['roundMedians'])]
         summary.append(entry)
     assert products == {stage: {file.name: sha(file) for file in path.glob('ExcelRenderer*.dll')} for stage, path in runtimes.items()}
-    (work / 'summary.json').write_text(json.dumps(dict(protocol=vars(args) | {'before': str(args.before), 'after': str(args.after), 'output': str(args.output)}, products=products, inputs={file.name: sha(file) for file in (work / 'inputs').glob('*.xlsx')}, summary=summary), indent=2) + '\n')
+    (work / 'summary.json').write_text(json.dumps(dict(protocol=vars(args) | {'cpuAffinity': sorted(os.sched_getaffinity(0)), 'before': str(args.before), 'after': str(args.after), 'output': str(args.output)}, products=products, inputs={file.name: sha(file) for file in (work / 'inputs').glob('*.xlsx')}, summary=summary), indent=2) + '\n')
 
 
 if __name__ == '__main__':

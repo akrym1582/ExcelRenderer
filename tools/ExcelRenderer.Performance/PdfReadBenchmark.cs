@@ -175,7 +175,9 @@ internal static class PdfReadBenchmark
         internal long Bytes { get; private set; }
 
         /// <inheritdoc/>
-        public override void Flush() { }
+        public override void Flush()
+        {
+        }
 
         /// <inheritdoc/>
         public override int Read(byte[] buffer, int offset, int count) => throw new NotSupportedException();
@@ -211,13 +213,35 @@ internal static class PdfReadBenchmark
         public override bool CanWrite => false;
 
         /// <inheritdoc/>
-        public override long Length { get { lengthGets++; return source.Length; } }
+        public override long Length
+        {
+            get
+            {
+                lengthGets++;
+                return source.Length;
+            }
+        }
 
         /// <inheritdoc/>
-        public override long Position { get { positionGets++; return source.Position; } set { positionSets++; source.Position = value; } }
+        public override long Position
+        {
+            get
+            {
+                positionGets++;
+                return source.Position;
+            }
+
+            set
+            {
+                positionSets++;
+                source.Position = value;
+            }
+        }
 
         /// <inheritdoc/>
-        public override void Flush() { }
+        public override void Flush()
+        {
+        }
 
         /// <inheritdoc/>
         public override int Read(byte[] buffer, int offset, int count)
@@ -242,7 +266,11 @@ internal static class PdfReadBenchmark
         }
 
         /// <inheritdoc/>
-        public override long Seek(long offset, SeekOrigin origin) { seeks++; return source.Seek(offset, origin); }
+        public override long Seek(long offset, SeekOrigin origin)
+        {
+            seeks++;
+            return source.Seek(offset, origin);
+        }
 
         /// <inheritdoc/>
         public override void SetLength(long value) => throw new NotSupportedException();

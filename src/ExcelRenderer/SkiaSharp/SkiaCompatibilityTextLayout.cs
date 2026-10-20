@@ -101,6 +101,11 @@ internal sealed class SkiaCompatibilityTextLayout(IFontManager? manager) : IComm
         }
     }
 
+    /// <summary>Tests whether an internal replay may borrow this exact caller's font policy.</summary>
+    /// <param name="fonts">The renderer's explicitly supplied policy.</param>
+    /// <returns>Whether the resolver instance is identical.</returns>
+    internal bool Uses(IFontManager? fonts) => ReferenceEquals(manager, fonts);
+
     private ResolvedFont ResolveSystem(FontRequest request)
     {
         if (systemFonts.TryGetValue(request, out var cached))

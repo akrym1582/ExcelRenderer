@@ -89,6 +89,25 @@ public sealed class RenderFinalizationTests
         }
     }
 
+    [Theory]
+    [InlineData(OutputFormat.Png)]
+    [InlineData(OutputFormat.Svg)]
+    public void Nested_public_raster_calls_use_their_own_explicit_font_manager(OutputFormat format)
+    {
+        using var session = new RenderResourceSession();
+        var outer = new SkiaCompatibilityTextLayout(new RejectingFontManager());
+        session.RasterTextLayout = outer;
+        using var output = new MemoryStream();
+        var manager = PostScriptTests.Manager();
+        if (format == OutputFormat.Png)
+            new PngRenderer(manager).RenderCanvas([PostScriptTests.Text("ABC")], 100, 100, output, 72);
+        else
+            new SvgRenderer(manager).RenderCanvas([PostScriptTests.Text("ABC")], 100, 100, output);
+        Assert.True(output.Length > 0);
+        Assert.Same(session, RenderResourceSession.Current);
+        Assert.Same(outer, session.RasterTextLayout);
+    }
+
     [Fact]
     public void Pdf_collection_registers_transparent_nested_text_without_decoding_images_or_painting()
     {
@@ -157,4 +176,11 @@ public sealed class RenderFinalizationTests
             ConversionMetrics.Observer = null;
         }
     }
+    private sealed class RejectingFontManager : IFontManager
+    {
+        public ResolvedFont Resolve(FontRequest request) => throw new InvalidOperationException("The outer resolver must not replace the public renderer's resolver.");
+
+        public IReadOnlyList<TextRun> ResolveTextRuns(string text, FontRequest request) => throw new InvalidOperationException("The outer resolver must not replace the public renderer's resolver.");
+    }
+
 }

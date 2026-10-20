@@ -15,7 +15,9 @@ internal static class CommandTextFinalizer
     /// <returns>Finalized commands, retaining streaming enumeration.</returns>
     internal static IEnumerable<DrawCommand> FinalizeRaster(IEnumerable<DrawCommand> commands, IFontManager? fonts, CancellationToken token)
     {
-        var layout = Rendering.RenderResourceSession.Current?.RasterTextLayout ?? new SkiaSharp.SkiaCompatibilityTextLayout(fonts);
+        var shared = Rendering.RenderResourceSession.Current?.RasterTextLayout;
+        var layout = shared is SkiaSharp.SkiaCompatibilityTextLayout compatibility && compatibility.Uses(fonts)
+            ? compatibility : new SkiaSharp.SkiaCompatibilityTextLayout(fonts);
         return Finalize(commands, layout, token);
     }
 

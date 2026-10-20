@@ -125,6 +125,12 @@ for (var iteration = 0; iteration < repeats; iteration++)
     await ExcelConverter.ConvertToPdfAsync(args[1], args[2], new PdfExportOptions
     {
         Hyperlinks = HyperlinkMode.None,
+
+        // Core measures column widths with the supplied font, including a saved Normal family that differs.
+        ReadOptions = new()
+        {
+            ColumnWidthMetrics = new() { SourceFontFile = args[3] },
+        },
         FontOptions = new FontOptions
         {
             FontFiles = [args[3]],

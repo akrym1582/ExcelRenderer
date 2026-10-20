@@ -183,6 +183,94 @@ public sealed class FontManager : IFontManager
         return result;
     }
 
+    /// <summary>Verifies family identity from the selected font data, including localized family names.</summary>
+    /// <param name="font">The selected physical face.</param>
+    /// <param name="family">The source family name.</param>
+    /// <returns>Whether the physical font declares the requested family.</returns>
+    internal static bool MatchesSourceFamily(ResolvedFont font, string family)
+    {
+        using var ownedResources = ConversionFontResources.Current is null ? new ConversionFontResources() : null;
+        var typeface = ConversionFontResources.Current!.GetTypeface(font);
+        return string.Equals(typeface.FamilyName, family, StringComparison.OrdinalIgnoreCase) ||
+            HasFamilyName(typeface.GetTableData(0x6e616d65), family);
+    }
+
+    /// <summary>Resolves only the requested source family within already permitted discovery roots.</summary>
+    /// <param name="request">Original Normal style.</param>
+    /// <returns>An exact family face, or null without drawing fallback.</returns>
+    internal ResolvedFont? ResolveExact(FontRequest request)
+    {
+        var candidates = _faces.Where(face => string.Equals(face.Family, request.Family, StringComparison.OrdinalIgnoreCase)).ToArray();
+        if (candidates.Length > 0)
+        {
+            var priority = candidates.Min(face => face.SourcePriority);
+            return Select(candidates.Where(face => face.SourcePriority == priority), request);
+        }
+
+        // Localized aliases must be present in the physical font's own name table.
+        // Inspect bytes without retaining a native drawing face for every discovered font.
+        var aliases = new List<FontFace>();
+        foreach (var face in _faces)
+        {
+            try
+            {
+                if (HasFamilyName(face.FamilyNames.Value, request.Family))
+                {
+                    aliases.Add(face);
+                }
+            }
+            catch (Exception error) when (error is IOException or InvalidDataException or InvalidOperationException or UnauthorizedAccessException or NotSupportedException)
+            {
+                // Unavailable implicit candidates do not prevent trying another permitted face.
+            }
+        }
+
+        if (aliases.Count == 0)
+        {
+            return null;
+        }
+
+        var aliasPriority = aliases.Min(face => face.SourcePriority);
+        return Select(aliases.Where(face => face.SourcePriority == aliasPriority), request);
+    }
+
+    private static byte[] ReadFamilyNames(byte[] container, int collectionIndex)
+    {
+        var face = new FontCollectionReader(container, ConversionFontResources.Current?.Token ?? default).ReadFace(collectionIndex);
+        return face.Tables.TryGetValue("name", out var names) ? container.AsSpan(names.Offset, names.Length).ToArray() : [];
+    }
+
+    private static bool HasFamilyName(byte[] table, string family)
+    {
+        if (table.Length < 6)
+        {
+            return false;
+        }
+
+        int Read(int offset) => (table[offset] << 8) | table[offset + 1];
+        var count = Read(2);
+        var strings = Read(4);
+        for (var index = 0; index < count && 6 + ((index + 1) * 12) <= table.Length; index++)
+        {
+            var record = 6 + (index * 12);
+            var platform = Read(record);
+            var name = Read(record + 6);
+            var length = Read(record + 8);
+            var start = strings + Read(record + 10);
+            if (name is not (1 or 16) || platform is not (0 or 3) || (length % 2) != 0 || start + length > table.Length)
+            {
+                continue;
+            }
+
+            if (string.Equals(System.Text.Encoding.BigEndianUnicode.GetString(table, start, length), family, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private static byte[] LoadContainer(string path, long expectedLength, long expectedModified)
     {
         try
@@ -472,7 +560,7 @@ public sealed class FontManager : IFontManager
         foreach (var resource in OptionalFontPack.Fonts)
         {
             var style = resource.Name == "ipamjm.ttf" ? IvsFontStyle.Mincho : (IvsFontStyle?)null;
-            _faces.Add(new FontFace(_faces.Count, resource.Family, 400, false, resource.Name, new Lazy<FontSnapshot>(() => Snapshot(resource.Load())), true, 1, style is null ? 1 : 0, style));
+            _faces.Add(new FontFace(_faces.Count, resource.Family, 400, false, resource.Name, new Lazy<FontSnapshot>(() => Snapshot(resource.Load())), new Lazy<byte[]>(() => ReadFamilyNames(resource.Load(), 0)), true, 1, style is null ? 1 : 0, style));
         }
     }
 
@@ -515,6 +603,7 @@ public sealed class FontManager : IFontManager
             italic,
             path,
             holder,
+            new Lazy<byte[]>(() => ReadFamilyNames(data ?? LoadContainer(path, key.Item2, key.Item3), collectionIndex)),
             bundled,
             sourcePriority,
             ivsPriority,
@@ -589,7 +678,7 @@ public sealed class FontManager : IFontManager
 
     private sealed record FontSnapshot(byte[] Data, string FaceId);
 
-    private sealed record FontFace(int RegistrationId, string Family, int Weight, bool Italic, string FilePath, Lazy<FontSnapshot> Snapshot, bool IsBundled, int SourcePriority, int IvsPriority, IvsFontStyle? IvsFontStyle, int ExplicitOrder = int.MaxValue, int CollectionIndex = 0)
+    private sealed record FontFace(int RegistrationId, string Family, int Weight, bool Italic, string FilePath, Lazy<FontSnapshot> Snapshot, Lazy<byte[]> FamilyNames, bool IsBundled, int SourcePriority, int IvsPriority, IvsFontStyle? IvsFontStyle, int ExplicitOrder = int.MaxValue, int CollectionIndex = 0)
     {
         public byte[] Data => Snapshot.Value.Data;
 

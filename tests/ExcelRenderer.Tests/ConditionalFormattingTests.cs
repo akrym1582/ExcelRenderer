@@ -290,7 +290,7 @@ public sealed partial class ConditionalFormattingTests
         var result = await ExcelConverter.RenderAsync(input, new()
         {
             OutputFormat = OutputFormat.Markdown,
-            ReadOptions = new() { ApplyConditionalFormatting = false },
+            ReadOptions = new() { ApplyConditionalFormatting = false, ColumnWidthMetrics = new() { MaximumDigitWidthPixels96Dpi = 7 } },
             DiagnosticOptions = new() { DetectUnsupportedFeatures = true, StrictMode = true },
         }, new SingleStreamOutputSink(output));
         Assert.Contains(result.Diagnostics, diagnostic => diagnostic.Code == "ConditionalFormattingDisabled" && diagnostic.Severity == DiagnosticSeverity.Info);

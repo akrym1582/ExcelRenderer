@@ -397,6 +397,70 @@ warnings are also written to `System.Diagnostics.Trace` listeners.
 
 Use `PdfExportOptions`, `ImageExportOptions`, `SvgExportOptions`, `PostScriptExportOptions`, and `MarkdownExportOptions` to select a worksheet or configure format-specific behavior. Existing output files, and non-empty image or SVG output directories, are not overwritten.
 
+## Column widths, saved row heights, and pagination
+
+Saved row heights (`ht`, in points) are honored even when `customHeight` is false or
+omitted. Missing heights use the sheet default, then 15pt. Hidden rows remain hidden;
+text measurement never increases saved row heights. Only saved breaks with `man=true`
+or `man=1` force a page break. Fit-to-pages continues to ignore manual breaks.
+
+`ExcelReadOptions.ColumnWidthMetrics` now defaults to `SourceFont`. Column widths use
+the workbook Normal style's original digit width, independently of drawing fallback
+fonts. Source resolution uses only the font manager's permitted registrations and search
+roots (`AllowSystemFonts` is respected), including verified localized family aliases.
+You can measure with an original font while drawing with Noto:
+
+```csharp
+using ExcelRenderer;
+using ExcelRenderer.Excel;
+
+var read = new ExcelReadOptions
+{
+    ColumnWidthMetrics = new ColumnWidthMetricsOptions
+    {
+        SourceFontFile = "fonts/original-normal.ttc",
+        SourceFontCollectionIndex = 0,
+    },
+};
+await ExcelConverter.ConvertToPdfAsync("input.xlsx", "output.pdf",
+    new PdfExportOptions { ReadOptions = read });
+```
+
+Alternatively set `MaximumDigitWidthPixels96Dpi` to the measured maximum advance of
+`0`–`9` for that workbook's Normal font, size, weight, and italic style at 96 DPI.
+This explicit value takes precedence and applies to **all sheets** in the workbook.
+It must be finite and at least 1; collection indices must be nonnegative and require
+a source file. Missing/invalid explicit files and invalid face indices are errors.
+A layout font is never registered as a drawing font, and requires no Fonts package.
+
+```bash
+excelrenderer pdf input.xlsx -o output.pdf --layout-font original-normal.ttc --layout-font-index 0
+# 9 is an illustrative measured value, not a preset for Meiryo or any other family.
+excelrenderer render input.xlsx --format pdf -o output.pdf --column-width-mdw 9
+# Reproduce historical rendering-font column metrics during migration:
+excelrenderer pdf input.xlsx -o output.pdf --column-width-metrics legacy
+```
+
+The shared flags are `--column-width-mdw`, `--layout-font`, `--layout-font-index`, and
+`--column-width-metrics source|legacy`. In the library, migration compatibility is
+`ColumnWidthMetrics = new() { Mode = ColumnWidthMetricsMode.RenderingFontLegacy }`.
+Legacy cannot be combined with a source file; explicit MDW still takes precedence.
+All rendering formats, range/continuous rendering, and page-selection preflight use
+the same read settings and conversion-local metric decisions. Core's independent
+single-supplied-font contract is unchanged.
+
+If the original family is unavailable, SourceFont uses the deterministic 7px
+compatibility metric and reports `MaximumDigitWidthFallback`. StrictMode treats this
+warning as a conversion failure. This does **not**
+guarantee Excel-equivalent geometry. Supply the original font or its measured MDW
+for accurate column sizing. `MaximumDigitWidthResolved` identifies the requested
+Normal style, physical measurement source, MDW, and decision (`override`, `source-file`,
+`exact-font`, or `legacy`). `SavedPageBreaks` reports adopted/manual and excluded/automatic
+break counts. `DiagnosticOptions.EnableLayoutWarnings` also enables per-print-area
+`PaginationMetrics` (dimensions, margins, scale, and horizontal/vertical page counts).
+See [validation evidence](docs/pagination-source-metrics-validation.md) for synthetic
+fixtures and the limits of comparisons without the user's workbook or Windows fonts.
+
 ## C# API (low-level)
 
 Install the `ExcelRenderer` package or reference the project, then run the workbook through the layout and rendering pipeline:

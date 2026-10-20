@@ -861,3 +861,63 @@ Core は単一 regular static TrueType font と IVS の基底文字化を維持�
 ### Readerアセンブリの分離
 
 `ExcelRenderer.OpenXml.Reader` がXLSX読み取り・モデル・書式・入力処理を所有し、既存の本体／Mapping／Toolに同梱されます。低レベルAPIのusingを新しいReader名前空間へ変更し、利用側をすべて再ビルドしてください。CoreはReaderのみを参照して保存済み数式値を描画し、Coreの数式モード・評価オプションは削除しました。本体・Mapping・CLIの明示再計算は維持しています。[API移行と検証](docs/openxml-reader-split.md)を参照してください。
+
+## 列幅の元フォント寸法・保存行高・改ページ
+
+保存行高 `ht`（pt）は `customHeight` がfalse／省略でも優先します。高さがなければ
+シート既定値、さらに未指定なら15ptを使います。非表示行の扱いは維持し、文字計測で
+行高を広げません。保存改ページは `man=true`／`man=1` のみ強制改ページに採用します。
+FitToPagesでは従来どおり手動改ページを無視します。
+
+`ExcelReadOptions.ColumnWidthMetrics` の新既定は `SourceFont` です。列幅の計測には
+ブックのNormalスタイルの元フォント寸法を使い、描画用の代替フォントから切り離します。
+探索はFontManagerに許可された登録・ディレクトリのみで、`AllowSystemFonts` を尊重します。
+ローカライズ名はフォント内のファミリー名情報で確認します。元フォントで列幅を測り、
+文字はNotoで描画する例です。
+
+```csharp
+using ExcelRenderer;
+using ExcelRenderer.Excel;
+
+var read = new ExcelReadOptions
+{
+    ColumnWidthMetrics = new ColumnWidthMetricsOptions
+    {
+        SourceFontFile = "fonts/original-normal.ttc",
+        SourceFontCollectionIndex = 0,
+    },
+};
+await ExcelConverter.ConvertToPdfAsync("input.xlsx", "output.pdf",
+    new PdfExportOptions { ReadOptions = read });
+```
+
+元のNormalフォント・サイズ・太さ・斜体に対応する96dpiでの数字0〜9の最大送り幅を
+`MaximumDigitWidthPixels96Dpi` に指定すると最優先され、ブック内の全シートに同じ値を
+適用します。MDWは有限かつ1以上、face indexは非負でファイル指定が必要です。
+明示ファイルの不在・不正や無効なindexは設定エラーです。元フォントは描画用に登録せず、
+Fontsパッケージも必須にしません。
+
+```bash
+excelrenderer pdf input.xlsx -o output.pdf --layout-font original-normal.ttc --layout-font-index 0
+# 9は実測値を仮定した例です。Meiryo等の固定値ではありません。
+excelrenderer render input.xlsx --format pdf -o output.pdf --column-width-mdw 9
+# 従来の描画用フォント経由の寸法へ移行期間中だけ戻す場合:
+excelrenderer pdf input.xlsx -o output.pdf --column-width-metrics legacy
+```
+
+共通オプションは `--column-width-mdw`、`--layout-font`、`--layout-font-index`、
+`--column-width-metrics source|legacy` です。ライブラリの従来互換設定は
+`ColumnWidthMetrics = new() { Mode = ColumnWidthMetricsMode.RenderingFontLegacy }` です。
+Legacyと元フォントファイルは併用不可ですが、明示MDWはLegacyでも最優先です。
+各出力形式、範囲・連続描画、選択ページの事前計画は同じ読取設定と変換単位の決定を使います。
+Core単独APIの単一供給フォントという契約は変更しません。
+
+元フォントが見つからない場合は決定的な7px互換値を使用し、
+`MaximumDigitWidthFallback` を警告します。StrictModeではこの警告により変換が失敗します。
+Excelとの完全一致は保証できません。
+元フォントまたはその実測MDWを指定してください。`MaximumDigitWidthResolved` は
+Normalの要求書体、寸法計測元、MDW、決定元（override／source-file／exact-font／legacy）を記録します。
+`SavedPageBreaks` は手動改ページ採用・自動改ページ除外件数を記録します。
+`DiagnosticOptions.EnableLayoutWarnings` を有効にすると、印刷範囲ごとに寸法・余白・倍率・
+横縦ページ数を `PaginationMetrics` へ記録します。
+合成fixtureの結果と実機比較の制限は[検証記録](docs/pagination-source-metrics-validation.md)を参照してください。

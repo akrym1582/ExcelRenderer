@@ -521,6 +521,7 @@ public sealed class PdfBackendTests
             OutputFormat = OutputFormat.Pdf,
             PdfBackend = backend ?? new RenderRequest().PdfBackend,
             DiagnosticOptions = new() { StrictMode = strict },
+            ReadOptions = new() { ColumnWidthMetrics = new() { MaximumDigitWidthPixels96Dpi = 7 } },
             FontOptions = new() { AllowSystemFonts = false },
         };
         IReadOnlyList<ConversionDiagnostic> diagnostics;

@@ -1,16 +1,22 @@
 namespace ExcelRenderer.Excel;
 
-/// <summary>Controls conversion of workbook cells to display text.</summary>
+/// <summary>Controls workbook display, conditional formatting, and source layout metrics.</summary>
 public sealed record ExcelReadOptions
 {
     /// <summary>Gets a value indicating whether supported saved conditional formatting is evaluated and applied. Defaults to true; Core does not offer this option.</summary>
     public bool ApplyConditionalFormatting { get; init; } = true;
+
+    /// <summary>Gets the Normal-font metrics used for column widths, independently of drawing fonts.</summary>
+    public ColumnWidthMetricsOptions ColumnWidthMetrics { get; init; } = new();
 
     /// <summary>Gets the formula display policy.</summary>
     public FormulaDisplayMode FormulaDisplayMode { get; init; } = FormulaDisplayMode.CachedValue;
 
     /// <summary>Gets optional limits for the limited formula calculation session.</summary>
     public Formulas.Evaluation.FormulaEvaluationOptions? FormulaEvaluationOptions { get; init; }
+
+    /// <summary>Gets the conversion-local metric decisions shared by geometry preflight and rendering.</summary>
+    internal CoreIntegration.FullFontMetrics.MetricCache? ColumnWidthMetricsCache { get; init; }
 
     /// <summary>Gets the conversion's explicit finite source region for default-style materialization.</summary>
     internal Func<string, (int FirstRow, int FirstColumn, int LastRow, int LastColumn)?>? GetSelectedRange { get; init; }
@@ -27,6 +33,7 @@ public sealed record ExcelReadOptions
     /// <summary>Validates the policy before opening input or output.</summary>
     internal void Validate()
     {
+        (ColumnWidthMetrics ?? throw new ArgumentNullException(nameof(ColumnWidthMetrics))).Validate();
         if (!Enum.IsDefined(typeof(FormulaDisplayMode), FormulaDisplayMode))
         {
             throw new ArgumentOutOfRangeException(nameof(FormulaDisplayMode));

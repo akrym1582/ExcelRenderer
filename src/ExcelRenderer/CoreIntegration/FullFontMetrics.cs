@@ -1,26 +1,29 @@
 using ExcelRenderer.Core.Excel;
+using ExcelRenderer.Excel;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Rendering;
 using SkiaSharp;
 
 namespace ExcelRenderer.CoreIntegration;
 
-/// <summary>Preserves full font discovery, compatibility fallback and MDW diagnostics.</summary>
+/// <summary>Resolves source layout metrics independently of rendering substitutions.</summary>
 internal sealed class FullFontMetrics : ICoreFontMetrics
 {
-    private readonly IFontManager? fontManager;
     private readonly DiagnosticCollector? diagnostics;
-    private readonly Dictionary<NormalFontMetadata, double> maximumDigitWidths;
+    private readonly ColumnWidthMetricsOptions options;
+    private readonly MetricCache cache;
+    private IFontManager? fontManager;
 
     /// <summary>Initializes a new instance of the <see cref="FullFontMetrics"/> class.</summary>
-    /// <param name="fontManager">The optional full font manager.</param>
-    /// <param name="diagnostics">The existing diagnostic collector.</param>
-    /// <param name="maximumDigitWidths">The reader-local metric cache.</param>
-    internal FullFontMetrics(IFontManager? fontManager, DiagnosticCollector? diagnostics, Dictionary<NormalFontMetadata, double> maximumDigitWidths)
+    /// <param name="fontManager">The optional drawing manager, with bounded exact discovery.</param>
+    /// <param name="diagnostics">The conversion collector.</param>
+    /// <param name="readOptions">The source metric policy and optional conversion cache.</param>
+    internal FullFontMetrics(IFontManager? fontManager, DiagnosticCollector? diagnostics, ExcelReadOptions? readOptions = null)
     {
         this.fontManager = fontManager;
         this.diagnostics = diagnostics;
-        this.maximumDigitWidths = maximumDigitWidths;
+        options = readOptions?.ColumnWidthMetrics ?? new();
+        cache = readOptions?.ColumnWidthMetricsCache ?? new();
     }
 
     /// <inheritdoc/>
@@ -29,48 +32,104 @@ internal sealed class FullFontMetrics : ICoreFontMetrics
     /// <inheritdoc/>
     public double MaximumDigitWidth(NormalFontMetadata? normalFont, string sheetName)
     {
-        if (fontManager is not null && normalFont is not null)
+        var normal = normalFont ?? DefaultFont;
+        var key = (normalFont, options, (fontManager as FontManager)?.RegistrationGeneration ?? 0);
+        if (!cache.Values.TryGetValue(key, out var decision))
         {
-            try
-            {
-                if (!maximumDigitWidths.TryGetValue(normalFont, out var cached))
-                {
-                    var resolved = fontManager.Resolve(new(normalFont.Family));
-                    using Stream stream = resolved.FontData is null
-                        ? File.OpenRead(resolved.FilePath)
-                        : new MemoryStream(resolved.FontData, writable: false);
-                    using var ownedTypeface = ConversionFontResources.Current is null ? SKTypeface.FromStream(stream) : null;
-                    var typeface = ConversionFontResources.Current?.GetTypeface(resolved) ?? ownedTypeface ??
-                        throw new InvalidOperationException($"Font {resolved.Family} could not be loaded.");
-                    using var font = new SKFont(typeface, (float)(normalFont.Size * 96 / 72));
-                    cached = Math.Max(
-                        1,
-                        Math.Round(
-                        Enumerable.Range(0, 10).Max(digit => font.MeasureText(digit.ToString())),
-                        MidpointRounding.AwayFromZero));
-                    maximumDigitWidths[normalFont] = cached;
-                    diagnostics?.Add(new(
-                        "MaximumDigitWidthResolved",
-                        DiagnosticSeverity.Info,
-                        DiagnosticStage.Read,
-                        $"Normal font '{normalFont.Family}' resolved to '{resolved.Family}' with MDW {cached}px.",
-                        sheetName));
-                }
+            decision = normalFont is null && options.MaximumDigitWidthPixels96Dpi is null && options.SourceFontFile is null
+                ? new(7, options.Mode == ColumnWidthMetricsMode.RenderingFontLegacy ? "legacy" : "compatibility", "7px compatibility metric (Normal metadata unavailable)", true)
+                : Resolve(normal);
+            cache.Values.Add(key, decision);
+        }
 
-                return cached;
-            }
-            catch (Exception error) when (error is IOException or InvalidOperationException)
-            {
-                // Fall through to the documented compatibility metric.
-            }
+        var fallback = decision.IsFallback;
+        var message = $"Normal '{normalFont?.Family ?? "unknown"}', {normal.Size}pt, weight {normal.Weight}, italic {normal.Italic}; measurement '{decision.Font}', MDW {decision.Width}px at 96 DPI; source={decision.Source}.";
+        if (fallback)
+        {
+            message += " Exact Excel layout cannot be guaranteed; specify SourceFontFile or MaximumDigitWidthPixels96Dpi to supply original metrics.";
         }
 
         diagnostics?.Add(new(
-            "MaximumDigitWidthFallback",
-            DiagnosticSeverity.Warning,
+            fallback ? "MaximumDigitWidthFallback" : "MaximumDigitWidthResolved",
+            fallback ? DiagnosticSeverity.Warning : DiagnosticSeverity.Info,
             DiagnosticStage.Read,
-            $"Normal font '{normalFont?.Family ?? "unknown"}' could not be measured; the 7px compatibility metric was used.",
+            message,
             sheetName));
-        return 7;
+        return decision.Width;
     }
+
+    private static MetricDecision Measure(ResolvedFont resolved, NormalFontMetadata normal, string source)
+    {
+        using var ownedResources = ConversionFontResources.Current is null ? new ConversionFontResources() : null;
+        var typeface = ConversionFontResources.Current!.GetTypeface(resolved);
+        using var font = new SKFont(typeface, (float)(normal.Size * 96 / 72));
+        var width = Math.Max(1, Math.Round(Enumerable.Range(0, 10).Max(digit => font.MeasureText(digit.ToString())), MidpointRounding.AwayFromZero));
+        var style = typeface.FontStyle;
+        var italic = style.Slant != SKFontStyleSlant.Upright;
+        var approximated = style.Weight != normal.Weight || italic != normal.Italic;
+        return new(width, source, $"{typeface.FamilyName}, weight {style.Weight}, italic {italic}, approximated {approximated}, face {resolved.FontCollectionIndex}, {resolved.FaceId}");
+    }
+
+    private MetricDecision Resolve(NormalFontMetadata normal)
+    {
+        if (options.MaximumDigitWidthPixels96Dpi is { } width)
+        {
+            return new(width, "override", "explicit MDW");
+        }
+
+        if (options.SourceFontFile is not null)
+        {
+            var bytes = options.LoadSourceFont();
+            var resolved = new ResolvedFont(normal.Family, normal.Weight, normal.Italic, options.SourceFontFile)
+            {
+                FontData = bytes,
+                FontCollectionIndex = options.SourceFontCollectionIndex ?? 0,
+                StandaloneData = bytes,
+                StandaloneCollectionIndex = options.SourceFontCollectionIndex ?? 0,
+                FaceId = $"{options.SourceFontFile}#{options.SourceFontCollectionIndex ?? 0}",
+            };
+            return Measure(resolved, normal, "source-file");
+        }
+
+        try
+        {
+            if (options.Mode == ColumnWidthMetricsMode.SourceFont)
+            {
+                fontManager ??= new FontManager();
+            }
+
+            var request = new FontRequest(normal.Family, normal.Weight, normal.Italic);
+            if (options.Mode == ColumnWidthMetricsMode.RenderingFontLegacy && fontManager is not null)
+            {
+                // Historical MDW resolution requested the regular drawing family.
+                return Measure(fontManager.Resolve(new(normal.Family)), normal, "legacy");
+            }
+
+            var exact = fontManager is FontManager builtIn ? builtIn.ResolveExact(request) : fontManager?.Resolve(request);
+            if (exact is not null && FontManager.MatchesSourceFamily(exact, normal.Family))
+            {
+                return Measure(exact, normal, "exact-font");
+            }
+        }
+        catch (Exception error) when (error is InvalidDataException or IOException or InvalidOperationException or ArgumentException or UnauthorizedAccessException or NotSupportedException)
+        {
+            // Implicit discovery is best effort; explicit files are validated above.
+        }
+
+        return new(7, options.Mode == ColumnWidthMetricsMode.RenderingFontLegacy ? "legacy" : "compatibility", "7px compatibility metric", true);
+    }
+
+    /// <summary>Conversion-owned decisions, also used by selection preflight.</summary>
+    internal sealed class MetricCache
+    {
+        /// <summary>Gets decisions separated by Normal style, settings and registration generation.</summary>
+        internal Dictionary<(NormalFontMetadata? Font, ColumnWidthMetricsOptions Options, int Generation), MetricDecision> Values { get; } = new();
+    }
+
+    /// <summary>A handle-free metric decision.</summary>
+    /// <param name="Width">Maximum digit width.</param>
+    /// <param name="Source">Decision source.</param>
+    /// <param name="Font">Physical measurement identity.</param>
+    /// <param name="IsFallback">Whether no physical measurement was available.</param>
+    internal sealed record MetricDecision(double Width, string Source, string Font, bool IsFallback = false);
 }

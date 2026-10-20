@@ -25,20 +25,22 @@ public sealed class OpenXmlIntegrationTests
 
     [Theory]
     [MemberData(nameof(Fixtures))]
-    public void ExistingFixturesPreserveRenderedCellSnapshots(string path)
+    public void LegacyColumnMetricsPreserveReaderMigrationCellSnapshots(string path)
     {
         using var culture = new ReaderSnapshot.InvariantCultureScope();
         var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../"));
         var name = Path.GetRelativePath(root, path).Replace(Path.DirectorySeparatorChar, '/');
         var key = ReaderSnapshot.Hash(Encoding.UTF8.GetBytes(name));
         var expected = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "ReaderGolden", key + ".json"));
-        var actual = ReaderSnapshot.Model(new ExcelReader().Read(path));
+        // Retain the frozen Reader-migration baseline under its historical metric policy.
+        // SourceFont defaults and corrected pagination have dedicated regression fixtures.
+        var actual = ReaderSnapshot.Model(new ExcelReader().Read(path, new() { ColumnWidthMetrics = new() { Mode = ColumnWidthMetricsMode.RenderingFontLegacy } }));
         Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)), name + " model differs from parent snapshot");
     }
 
     [Theory]
     [MemberData(nameof(Fixtures))]
-    public async Task ExistingFixturesRenderIdenticalPngSvgAndMarkdown(string path)
+    public async Task LegacyColumnMetricsPreserveReaderMigrationPngSvgAndMarkdown(string path)
     {
         using var culture = new ReaderSnapshot.InvariantCultureScope();
         var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../"));
@@ -52,6 +54,7 @@ public sealed class OpenXmlIntegrationTests
             await ExcelConverter.RenderAsync(input, new()
             {
                 OutputFormat = format,
+                ReadOptions = new() { ColumnWidthMetrics = new() { Mode = ColumnWidthMetricsMode.RenderingFontLegacy } },
                 FontOptions = new() { AllowSystemFonts = false, UseFontPack = false, FontFiles = [root + "/third_party/NotoSansJP/NotoSansJP-Regular.ttf"] },
             }, actual);
             var hashes = actual.Artifacts.ToDictionary(item => format + "/" + item.Key, item => ReaderSnapshot.ArtifactHash(format, item.Value.ToArray()));

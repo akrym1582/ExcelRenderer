@@ -60,7 +60,7 @@ public static class MarkdownCommand
                     DetectLayout = Enabled(result, layout, noLayout, true),
                     DetectRegions = Enabled(result, regions, noRegions, true),
                     ImageDirectoryName = result.GetValue(imageDir)!,
-                    ReadOptions = CommandSupport.GetReadOptions(result.GetValue(formulaMode)!),
+                    ReadOptions = CommandSupport.GetReadOptions(result.GetValue(formulaMode)!, result, fonts),
                     FontOptions = CommandSupport.GetFontOptions(result, fonts),
                 },
                 cancellationToken),

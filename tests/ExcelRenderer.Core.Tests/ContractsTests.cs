@@ -22,7 +22,6 @@ public sealed class ContractsTests
     [Theory]
     [InlineData(false, true, true, false)]
     [InlineData(true, false, true, false)]
-    [InlineData(true, true, false, false)]
     [InlineData(true, true, true, true)]
     public async Task Stream_contracts_are_validated(bool readable, bool writable, bool seekable, bool nonempty)
     {

@@ -18,6 +18,79 @@ internal static class GeneratedPdfFinalizer
     {
         token.ThrowIfCancellationRequested();
         var pdf = new GeneratedPdfFile(source);
+        var buffer = new byte[81920];
+        foreach (var element in Elements(pdf, pages, token))
+        {
+            token.ThrowIfCancellationRequested();
+            if (element.Bytes is { } bytes)
+            {
+                output.Write(bytes, 0, bytes.Length);
+            }
+            else
+            {
+                pdf.CopyStream(element.Stream!, output, token, buffer);
+            }
+        }
+
+        Rendering.ConversionMetrics.Report("pdfSave", 1);
+    }
+
+    /// <summary>Writes corrected syntax and original payloads sequentially using only asynchronous destination I/O.</summary>
+    /// <param name="source">The complete generated spool.</param>
+    /// <param name="output">The caller-owned, possibly nonseekable destination.</param>
+    /// <param name="pages">Exact page dimensions and resolved links.</param>
+    /// <param name="token">The conversion token.</param>
+    /// <returns>The completion of all destination writes; does not flush or close the destination.</returns>
+    internal static async Task WriteAsync(Stream source, Stream output, IReadOnlyList<PageCorrection> pages, CancellationToken token)
+    {
+        token.ThrowIfCancellationRequested();
+        var pdf = new GeneratedPdfFile(source);
+        var syntax = new byte[65536];
+        var transfer = new byte[81920];
+        var pending = 0;
+        foreach (var element in Elements(pdf, pages, token))
+        {
+            token.ThrowIfCancellationRequested();
+            if (element.Bytes is { } bytes)
+            {
+                if (bytes.Length > syntax.Length - pending)
+                {
+                    await DrainAsync().ConfigureAwait(false);
+                }
+
+                if (bytes.Length >= syntax.Length)
+                {
+                    await output.WriteAsync(bytes.AsMemory(), token).ConfigureAwait(false);
+                }
+                else
+                {
+                    bytes.CopyTo(syntax, pending);
+                    pending += bytes.Length;
+                }
+            }
+            else
+            {
+                await DrainAsync().ConfigureAwait(false);
+                await pdf.CopyStreamAsync(element.Stream!, output, token, transfer).ConfigureAwait(false);
+            }
+        }
+
+        await DrainAsync().ConfigureAwait(false);
+        Rendering.ConversionMetrics.Report("pdfSave", 1);
+
+        async Task DrainAsync()
+        {
+            if (pending > 0)
+            {
+                await output.WriteAsync(syntax.AsMemory(0, pending), token).ConfigureAwait(false);
+                pending = 0;
+            }
+        }
+    }
+
+    private static IEnumerable<OutputElement> Elements(GeneratedPdfFile pdf, IReadOnlyList<PageCorrection> pages, CancellationToken token)
+    {
+        token.ThrowIfCancellationRequested();
         if (pdf.Pages.Count != pages.Count)
         {
             throw new InvalidDataException("Skia PDF page count differs from the selected page plan.");
@@ -136,18 +209,17 @@ internal static class GeneratedPdfFinalizer
         }
 
         long written = 0;
-        void WriteText(string text)
+        OutputElement Text(string text)
         {
             token.ThrowIfCancellationRequested();
             var bytes = Encoding.GetEncoding(28591).GetBytes(text);
-            output.Write(bytes, 0, bytes.Length);
             written += bytes.Length;
+            return new(bytes, null);
         }
 
         // Retain object identities and all active streams, but discard obsolete revisions.
         // The parser records stream ranges only; no payload is decoded or gathered in memory.
-        WriteText(pdf.Header + "\n%\u00e2\u00e3\u00cf\u00d3\n");
-        var buffer = new byte[81920];
+        yield return Text(pdf.Header + "\n%\u00e2\u00e3\u00cf\u00d3\n");
         var offsets = new List<(PdfReference Reference, long Offset)>();
         var references = pdf.References.Concat(revisions.Keys).Distinct().OrderBy(reference => reference.Number);
         foreach (var reference in references)
@@ -157,20 +229,20 @@ internal static class GeneratedPdfFinalizer
             var value = revisions.TryGetValue(reference, out var revision) ? revision.Value : original!.Value;
             var stream = revision.Stream ?? original;
             offsets.Add((reference, written));
-            WriteText(reference.Number.ToString(CultureInfo.InvariantCulture) + " " + reference.Generation.ToString(CultureInfo.InvariantCulture) + " obj\n" + value.Serialize() + "\n");
+            yield return Text(reference.Number.ToString(CultureInfo.InvariantCulture) + " " + reference.Generation.ToString(CultureInfo.InvariantCulture) + " obj\n" + value.Serialize() + "\n");
             if (stream is { StreamOffset: > 0 })
             {
-                WriteText("stream\n");
-                pdf.CopyStream(stream, output, token, buffer);
+                yield return Text("stream\n");
+                yield return new(null, stream);
                 written += stream.StreamLength;
-                WriteText("\nendstream\n");
+                yield return Text("\nendstream\n");
             }
 
-            WriteText("endobj\n");
+            yield return Text("endobj\n");
         }
 
         var xref = written;
-        WriteText("xref\n0 1\n0000000000 65535 f \n");
+        yield return Text("xref\n0 1\n0000000000 65535 f \n");
         foreach (var item in offsets)
         {
             if (item.Offset > 9999999999)
@@ -178,7 +250,7 @@ internal static class GeneratedPdfFinalizer
                 throw new InvalidDataException("Generated PDF exceeds classic xref offset limits.");
             }
 
-            WriteText(string.Format(CultureInfo.InvariantCulture, "{0} 1\n{1:0000000000} {2:00000} n \n", item.Reference.Number, item.Offset, item.Reference.Generation));
+            yield return Text(string.Format(CultureInfo.InvariantCulture, "{0} 1\n{1:0000000000} {2:00000} n \n", item.Reference.Number, item.Offset, item.Reference.Generation));
         }
 
         var trailer = new Dictionary<string, PdfValue>(pdf.Trailer.Entries, StringComparer.Ordinal)
@@ -186,9 +258,10 @@ internal static class GeneratedPdfFinalizer
             ["/Size"] = new PdfNumber(next),
         };
         trailer.Remove("/Prev");
-        WriteText("trailer\n" + new PdfMap(trailer).Serialize() + "\nstartxref\n" + xref.ToString(CultureInfo.InvariantCulture) + "\n%%EOF\n");
-        Rendering.ConversionMetrics.Report("pdfSave", 1);
+        yield return Text("trailer\n" + new PdfMap(trailer).Serialize() + "\nstartxref\n" + xref.ToString(CultureInfo.InvariantCulture) + "\n%%EOF\n");
     }
+
+    private readonly record struct OutputElement(byte[]? Bytes, GeneratedPdfFile.ObjectRecord? Stream);
 
     /// <summary>Stores exact final page dimensions and links independently of product models.</summary>
     /// <param name="Width">The width in points.</param>

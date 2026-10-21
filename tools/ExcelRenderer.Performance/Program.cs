@@ -8,6 +8,12 @@ using ExcelRenderer;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Rendering;
 
+if (args.Length > 0 && args[0] == "async-pdf")
+{
+    await AsyncPdfBenchmark.RunAsync(args);
+    return;
+}
+
 var command = args[0];
 var path = args[1];
 if (command == "pdf-read")

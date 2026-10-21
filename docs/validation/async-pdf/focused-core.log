@@ -1,0 +1,5 @@
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Core.Tests/bin/Debug/net10.0/ExcelRenderer.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /workspace/ExcelRenderer/tests/ExcelRenderer.Core.Tests/TestResults/async-core.trx
+
+Passed!  - Failed:     0, Passed:    38, Skipped:     0, Total:    38, Duration: 1 s - ExcelRenderer.Core.Tests.dll (net10.0)

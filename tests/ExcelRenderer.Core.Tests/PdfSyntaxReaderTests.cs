@@ -163,4 +163,50 @@ public sealed class PdfSyntaxReaderTests
         Assert.Throws<InvalidDataException>(() => reader.CopyRange(3, 0, Stream.Null, default));
         Assert.Throws<InvalidDataException>(() => reader.CopyRange(1, long.MaxValue, Stream.Null, default));
     }
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Async_ranges_invalidate_read_ahead_and_restore_the_logical_cursor_after_success_or_cancellation(bool cancel)
+    {
+        var bytes = Encoding.ASCII.GetBytes("header 123 /Name tail");
+        using var input = new PdfReadTestStream(bytes, 3);
+        var reader = new PdfSyntaxReader(input, 7);
+        reader.Position = 7;
+        Assert.Equal(new PdfNumber(123), reader.Value());
+        var saved = reader.Position;
+        using var cancellation = new CancellationTokenSource();
+        var gate = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        using var output = new AsyncOnlyWriteStream { Gate = cancel ? gate : null };
+        var copy = reader.CopyRangeAsync(0, 6, output, cancellation.Token, new byte[2]);
+        if (cancel)
+        {
+            await output.Entered.Task;
+            cancellation.Cancel();
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => copy);
+            Assert.Equal(2, reader.Position);
+        }
+        else
+        {
+            await copy;
+            Assert.Equal("header", Encoding.ASCII.GetString(output.Bytes));
+            Assert.Equal(6, reader.Position);
+        }
+        reader.Position = saved;
+        Assert.Equal(new PdfName("/Name"), reader.Value());
+        reader.Position = 0;
+        Assert.Equal("header", reader.Token());
+        Assert.Equal(0, input.ReadByteCalls);
+    }
+
+    [Fact]
+    public async Task Async_ranges_validate_bounds_and_detect_physical_truncation()
+    {
+        using var input = new PdfReadTestStream([1], reportedLength: 2);
+        var reader = new PdfSyntaxReader(input);
+        await Assert.ThrowsAsync<ArgumentException>(() => reader.CopyRangeAsync(0, 1, Stream.Null, default, []));
+        foreach (var range in new[] { (-1L, 1L), (0L, -1L), (3L, 0L), (1L, long.MaxValue) })
+            await Assert.ThrowsAsync<InvalidDataException>(() => reader.CopyRangeAsync(range.Item1, range.Item2, Stream.Null, default, new byte[2]));
+        await Assert.ThrowsAsync<InvalidDataException>(() => reader.CopyRangeAsync(0, 2, Stream.Null, default, new byte[2]));
+    }
+
 }

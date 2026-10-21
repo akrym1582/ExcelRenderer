@@ -28,4 +28,9 @@ internal interface IPdfDocumentWriter : IDisposable
     /// <summary>Completes the document and writes it to the caller-owned sink stream.</summary>
     /// <param name="output">The output stream.</param>
     void Complete(Stream output);
+
+    /// <summary>Completes final output using asynchronous destination writes.</summary>
+    /// <param name="output">The caller-owned output.</param>
+    /// <returns>The completion of final writes.</returns>
+    Task CompleteAsync(Stream output);
 }

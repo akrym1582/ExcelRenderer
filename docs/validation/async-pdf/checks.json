@@ -1,0 +1,38 @@
+{
+  "implementationCommit": "53a4b24f0d07158494b2c2bd8de74c775581ea2f",
+  "baselineCommit": "f73676c437bc991384dc04c8b19d48d6f1fbff4e",
+  "platform": "Linux x64 Debian 13",
+  "sdk": "10.0.401",
+  "runtime": "10.0.12",
+  "solutionTests": {
+    "passed": 2683,
+    "failed": 0,
+    "skipped": 0
+  },
+  "releaseCoreCoverage": {
+    "passed": 356,
+    "linePercent": 82.36,
+    "branchPercent": 70.35
+  },
+  "corePerformancePassed": 8,
+  "kestrelPassed": [
+    "/pdf",
+    "/core-pdf"
+  ],
+  "allowSynchronousIO": false,
+  "savedRuntimeDlls": [
+    {
+      "Name": "ExcelRenderer.dll",
+      "Sha256": "5D31997BDF8A4B5A2523EFF11AAEE4E82C9D81B1503055CF273A35AC5F9B64D7"
+    },
+    {
+      "Name": "ExcelRenderer.Core.dll",
+      "Sha256": "4F4E7CADB4D6E0F0137881A89684DE190D82A09092F9CA45FD699F6E1C33E47C"
+    }
+  ],
+  "notes": [
+    "Only documentation/evidence metadata follows the implementation commit.",
+    "Three-round latency probes do not establish a speed improvement or regression bound.",
+    "Native generation and the existing memory/file spool remain."
+  ]
+}

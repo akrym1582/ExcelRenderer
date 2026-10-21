@@ -42,7 +42,16 @@ internal sealed class TextMeasurePass : IReportLayoutPass
             var availableWidth = Enumerable.Range(address.Column, cell.ColumnSpan)
                 .Where(context.ColumnLayouts.ContainsKey).Sum(x => context.ColumnLayouts[x].Width);
             availableWidth = CellContentBounds.Calculate(new(0, 0, availableWidth, double.MaxValue), cell.Style).Width;
-            var insets = context.Policy.GetCellContentInsets(cell, availableWidth);
+            var sourceHeight = 0d;
+            for (var row = address.Row; row < address.Row + cell.RowSpan; row++)
+            {
+                if (context.RowLayouts.TryGetValue(row, out var metric))
+                {
+                    sourceHeight += metric.Height;
+                }
+            }
+
+            var insets = context.Policy.GetCellContentInsets(cell, availableWidth, sourceHeight);
             availableWidth = Math.Max(0, availableWidth - insets.Left - insets.Right);
             if (context.TextMeasurer is ITextLayoutService layoutService)
             {

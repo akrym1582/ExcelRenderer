@@ -7,15 +7,20 @@ namespace ExcelRenderer.Drawing;
 /// <summary>Maps normalized decorations from full cell bounds once, before page clipping.</summary>
 internal static class ConditionalCellVisualGeometry
 {
-    /// <summary>Computes the icon width before page scaling.</summary>
-    /// <returns>The generated geometry.</returns>
-    /// <param name="ordinaryContentWidth">Ordinary source text width in points.</param>
-    internal static double IconSize(double ordinaryContentWidth) => Math.Min(12, Math.Max(0, ordinaryContentWidth - 2));
+    /// <summary>Resolves source geometry before page scaling and clipping.</summary>
+    /// <param name="cell">Placed cell with its original font scaled once by page placement.</param>
+    /// <returns>The shared placement and value policy.</returns>
+    internal static ConditionalIconPlacement IconPlacement(Core.Layout.RenderCell cell)
+    {
+        var source = new Core.Layout.ReportRect(0, 0, cell.Bounds.Width / cell.DecorationScale, cell.Bounds.Height / cell.DecorationScale);
+        var style = cell.Cell.Style with { Font = cell.Cell.Style.Font with { Size = cell.Cell.Style.Font.Size / cell.DecorationScale } };
+        return ConditionalIconPlacement.Resolve(FullCellPresentationData.Decoration(cell.Cell.ExtensionData)?.Icon, Core.Layout.CellContentBounds.Calculate(source, style).Width, style.Font.Size, source.Height);
+    }
 
-    /// <summary>Checks the same width reservation used during text measurement.</summary>
-    /// <param name="cell">Placed cell and immutable visual payload.</param>
-    /// <returns>Whether the icon has usable space.</returns>
-    internal static bool CanDrawIcon(Core.Layout.RenderCell cell) => SourceIconSize(cell) >= 3 && cell.Bounds.Height > (2 * cell.DecorationScale);
+    /// <summary>Checks the shared source-space placement decision.</summary>
+    /// <param name="cell">The placed cell.</param>
+    /// <returns>Whether the icon can be drawn.</returns>
+    internal static bool CanDrawIcon(Core.Layout.RenderCell cell) => IconPlacement(cell).CanDraw;
 
     /// <summary>Builds decorations from full cell geometry before applying all viewports.</summary>
     /// <param name="page">Output page number.</param>
@@ -71,9 +76,9 @@ internal static class ConditionalCellVisualGeometry
             }
         }
 
-        if (visual.Icon is { } icon && CanDrawIcon(cell))
+        if (visual.Icon is { } icon && IconPlacement(cell).CanDraw)
         {
-            var size = SourceIconSize(cell) * scale;
+            var size = IconPlacement(cell).Size * scale;
             var height = Math.Min(size, inner.Height);
             var iconBounds = new ReportRect(icon.RightToLeft ? bounds.X + bounds.Width - scale - size : bounds.X + scale, bounds.Y + ((bounds.Height - height) / 2), size, height);
             commands.AddRange(ConditionalIconGeometry.Create(page, icon.Set, icon.Index, iconBounds));
@@ -85,12 +90,5 @@ internal static class ConditionalCellVisualGeometry
         }
 
         void Fill(ReportRect rect, Core.Model.ReportColor color) => commands.Add(new FillRectangleCommand(page, rect, CoreModelAdapter.ToPublic(color)));
-    }
-
-    private static double SourceIconSize(Core.Layout.RenderCell cell)
-    {
-        var source = new Core.Layout.ReportRect(0, 0, cell.Bounds.Width / cell.DecorationScale, cell.Bounds.Height / cell.DecorationScale);
-        var style = cell.Cell.Style with { Font = cell.Cell.Style.Font with { Size = cell.Cell.Style.Font.Size / cell.DecorationScale } };
-        return IconSize(Core.Layout.CellContentBounds.Calculate(source, style).Width);
     }
 }

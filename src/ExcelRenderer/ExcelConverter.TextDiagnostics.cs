@@ -131,7 +131,12 @@ public static partial class ExcelConverter
             }
 
             var range = CellRangeParser.Parse(diagnostic.CellRange!, out _);
-            if (sheet.RequestedRange is { } requested && !requested.Contains(range.First))
+            if (range.First == range.Last && sheet.Cells.TryGetValue(range.First, out var sourceCell))
+            {
+                range = new(range.First, new(range.First.Row + sourceCell.RowSpan - 1, range.First.Column + sourceCell.ColumnSpan - 1));
+            }
+
+            if (sheet.RequestedRange is { } requested && (range.Last.Row < requested.First.Row || range.First.Row > requested.Last.Row || range.Last.Column < requested.First.Column || range.First.Column > requested.Last.Column))
             {
                 continue;
             }

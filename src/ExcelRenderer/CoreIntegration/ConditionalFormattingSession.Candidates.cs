@@ -18,34 +18,6 @@ internal sealed partial class ConditionalFormattingSession
 
     private static ConditionalFormattingException Limit() => new("ConditionalFormattingLimitExceeded", "The finite candidate/rule normalization work or retained interval budget was exceeded; this sheet retains ordinary formatting.");
 
-    private static IEnumerable<CellAddress> LimitTargets(IEnumerable<SourceRange> ranges, CancellationToken token)
-    {
-        long probes = 0;
-        try
-        {
-            foreach (var range in ranges)
-            {
-                for (var row = range.First.Row; row <= range.Last.Row; row++)
-                {
-                    token.ThrowIfCancellationRequested();
-                    for (var column = range.First.Column; column <= range.Last.Column; column++)
-                    {
-                        if (++probes > CandidateRangeLimit)
-                        {
-                            yield break;
-                        }
-
-                        yield return new(row, column);
-                    }
-                }
-            }
-        }
-        finally
-        {
-            ConversionMetrics.Report("conditionalFormatting.limitTargetProbes", Math.Min(probes, CandidateRangeLimit));
-        }
-    }
-
     private bool PrepareDisplayRanges(CancellationToken token)
     {
         try
@@ -75,7 +47,7 @@ internal sealed partial class ConditionalFormattingSession
         }
         catch (ConditionalFormattingException exception)
         {
-            ReportCandidateLimit(rules[0], LimitTargets(rules.SelectMany(rule => rule.Source.Ranges), token), exception.Message);
+            ReportCandidateLimit(rules[0], exception.Message);
             return false;
         }
     }
@@ -187,7 +159,7 @@ internal sealed partial class ConditionalFormattingSession
         }
         catch (ConditionalFormattingException exception)
         {
-            ReportCandidateLimit(rules[0], LimitTargets(source, token), exception.Message);
+            ReportCandidateLimit(rules[0], exception.Message);
             return false;
         }
         finally
@@ -232,7 +204,7 @@ internal sealed partial class ConditionalFormattingSession
         }
         catch (ConditionalFormattingException exception)
         {
-            ReportCandidateLimit(rules[0], candidates, exception.Message);
+            ReportCandidateLimit(rules[0], exception.Message);
             return false;
         }
     }

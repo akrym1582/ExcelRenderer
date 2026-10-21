@@ -362,13 +362,15 @@ public sealed partial class ConditionalFormattingTests
 
     [Theory]
     [InlineData(4, 0)]
-    [InlineData(5, 5)]
-    [InlineData(8, 8)]
-    [InlineData(20, 14)]
-    public void IconInsetsUseOrdinaryContentWidth(double width, double expected)
+    [InlineData(5, 0)]
+    [InlineData(8, 0)]
+    [InlineData(14, 0)]
+    [InlineData(16, 5)]
+    [InlineData(25, 14)]
+    public void VisibleValueIconInsetsPreserveOneOriginalEm(double width, double expected)
     {
-        var visual = new ConditionalCellVisual(null, new("3Arrows", 1, false, false));
-        var cell = new Core.Model.ReportCell("50", Core.Model.CellStyle.Default) { ExtensionData = new FullCellPresentationData(null, visual) };
+        var visual = new ConditionalCellVisual(null, new("3Arrows", 1, true, false));
+        var cell = new Core.Model.ReportCell("50", Core.Model.CellStyle.Default with { Font = Core.Model.CellStyle.Default.Font with { Size = 11 } }) { ExtensionData = new FullCellPresentationData(null, visual) };
         var policy = new FullLayoutPolicy();
         Assert.Equal((expected, 0d), policy.GetCellContentInsets(cell, width));
     }

@@ -59,7 +59,7 @@ public sealed class CellExtensionTests
 
     private sealed class InsetsPolicy : CoreLayoutPolicy
     {
-        internal override (double Left, double Right) GetCellContentInsets(ReportCell cell, double ordinaryContentWidth) => (3, 5);
+        internal override (double Left, double Right) GetCellContentInsets(ReportCell cell, double ordinaryContentWidth, double sourceHeight = double.MaxValue) => (3, 5);
     }
 
     private sealed class Measurer : ITextMeasurer

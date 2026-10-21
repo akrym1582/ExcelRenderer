@@ -1,0 +1,121 @@
+{
+  "base_main": "e0b9e22920eb0f7ba6dc7084fddc44e96d80227d",
+  "platform": "Linux; .NET SDK 10.0.401",
+  "before": {
+    "icon_and_hidden_prefix_tests": {
+      "failed": 5,
+      "passed": 2
+    },
+    "merged_diagnostic_filter_tests": {
+      "failed": 2,
+      "passed": 0
+    }
+  },
+  "after": {
+    "build_warnings": 0,
+    "build_errors": 0,
+    "solution_tests": {
+      "ExcelRenderer.Formulas.Tests": 833,
+      "ExcelRenderer.OpenXml.Tests": 213,
+      "ExcelRenderer.Mapping.Tests": 172,
+      "ExcelRenderer.Core.Tests": 403,
+      "ExcelRenderer.Tool.Tests": 118,
+      "ExcelRenderer.Tests": 1114
+    },
+    "solution_total_passed": 2853,
+    "strengthened_layout_glyph_tests_passed": 6,
+    "core_correctness_coverage_tests_passed": 395,
+    "core_isolated_performance_tests_passed": 8,
+    "core_line_coverage_percent": 82.8,
+    "core_branch_coverage_percent": 71.31,
+    "output_mutations_detected": 19,
+    "shared_geometry_mutations_detected": 2,
+    "core_mutations_detected": 4,
+    "core_raster_pages": 17,
+    "independent_pdf_ps_files": 18,
+    "public_api_and_nullability": "unchanged: ExcelRenderer, ExcelRenderer.Core, ExcelRenderer.OpenXml.Reader",
+    "hidden_prefix_probe_assertions": {
+      "explicit_2000_hidden_rows_max": 2001,
+      "default_hidden_rows_max": 2
+    },
+    "png_ink": {
+      "narrow-value-Paginated.png": {
+        "size": [
+          816,
+          1056
+        ],
+        "dark_digit_pixels": 30
+      },
+      "narrow-value-Continuous.png": {
+        "size": [
+          12,
+          20
+        ],
+        "dark_digit_pixels": 30
+      }
+    }
+  },
+  "commands": [
+    "dotnet restore ExcelRenderer.slnx --locked-mode",
+    "source scripts/test-fonts.sh",
+    "sha256sum -c tests/ExcelRenderer.Tests/Fonts/SHA256SUMS",
+    "python3 scripts/check-core-dependencies.py",
+    "python3 scripts/check-output-mutations.py",
+    "python3 scripts/check-core-shared-mutations.py",
+    "python3 scripts/check-core-mutations.py",
+    "dotnet build ExcelRenderer.slnx -t:Rebuild --no-restore --verbosity:minimal -c Release",
+    "dotnet test ExcelRenderer.slnx -c Release --no-build --no-restore --logger trx --results-directory TestResults/ReviewFinal",
+    "dotnet test tests/ExcelRenderer.Core.Tests -c Release --no-build --no-restore --filter Category!=Performance -p:CollectCoverage=true",
+    "dotnet test tests/ExcelRenderer.Core.Tests -c Release --no-build --no-restore --filter Category=Performance",
+    "python3 scripts/validate-core.py --visual-only --no-build",
+    "python3 scripts/validate-conditional-formatting-phase3.py --artifacts TestResults/cf-review",
+    "python3 scripts/check-source-namespaces.py",
+    "python3 scripts/check-no-pdfsharp.py",
+    "dotnet test tests/ExcelRenderer.Tests/ExcelRenderer.Tests.csproj -c Release --no-build --no-restore --filter FullyQualifiedName~OmittedIconsMatchUndecoratedMeasurementAndInk"
+  ],
+  "api_method": "Compare the existing scripts/compare-core-api.py SNAPSHOT_SOURCE inventories of baseline DLLs retained before production edits and final Release DLLs, including nullable contracts. All three inventories are equal.",
+  "not_run": {
+    "desktop_Excel_comparison": "Desktop Excel is not installed in this Linux environment; no Excel equivalence is claimed.",
+    "Windows_execution": "This environment is Linux; Windows Core verification is left to the existing PR CI job."
+  },
+  "changed_files": [
+    "docs/validation/conditional-formatting-phase3/README.md",
+    "docs/validation/conditional-formatting-phase3/review-fixes/api-compatibility.json",
+    "docs/validation/conditional-formatting-phase3/review-fixes/before.log",
+    "docs/validation/conditional-formatting-phase3/review-fixes/build.log",
+    "docs/validation/conditional-formatting-phase3/review-fixes/core-visual.json",
+    "docs/validation/conditional-formatting-phase3/review-fixes/coverage.log",
+    "docs/validation/conditional-formatting-phase3/review-fixes/glyph-comparison.log",
+    "docs/validation/conditional-formatting-phase3/review-fixes/independent-validation.json",
+    "docs/validation/conditional-formatting-phase3/review-fixes/merged-filter-before.log",
+    "docs/validation/conditional-formatting-phase3/review-fixes/mutations.json",
+    "docs/validation/conditional-formatting-phase3/review-fixes/narrow-value-Continuous.png",
+    "docs/validation/conditional-formatting-phase3/review-fixes/narrow-value-Continuous.svg",
+    "docs/validation/conditional-formatting-phase3/review-fixes/narrow-value-Paginated.png",
+    "docs/validation/conditional-formatting-phase3/review-fixes/narrow-value-Paginated.svg",
+    "docs/validation/conditional-formatting-phase3/review-fixes/narrow-value.xlsx",
+    "docs/validation/conditional-formatting-phase3/review-fixes/performance.log",
+    "docs/validation/conditional-formatting-phase3/review-fixes/tests.log",
+    "docs/validation/conditional-formatting-phase3/review-fixes/validation.json",
+    "src/ExcelRenderer.Core/Layout/CellBoundsPass.cs",
+    "src/ExcelRenderer.Core/Layout/CoreLayoutPolicy.cs",
+    "src/ExcelRenderer.Core/Layout/TextMeasurePass.cs",
+    "src/ExcelRenderer/CoreIntegration/ConditionalFormattingSession.Borders.cs",
+    "src/ExcelRenderer/CoreIntegration/ConditionalFormattingSession.Candidates.cs",
+    "src/ExcelRenderer/CoreIntegration/ConditionalFormattingSession.cs",
+    "src/ExcelRenderer/CoreIntegration/ConditionalTargetSearch.cs",
+    "src/ExcelRenderer/CoreIntegration/FullDrawingExtension.cs",
+    "src/ExcelRenderer/CoreIntegration/FullLayoutPolicy.cs",
+    "src/ExcelRenderer/CoreIntegration/TargetSearchState.cs",
+    "src/ExcelRenderer/Drawing/ConditionalCellVisualGeometry.cs",
+    "src/ExcelRenderer/Drawing/ConditionalIconPlacement.cs",
+    "src/ExcelRenderer/Excel/ExcelReadOptions.cs",
+    "src/ExcelRenderer/ExcelConverter.Formulas.cs",
+    "src/ExcelRenderer/ExcelConverter.TextDiagnostics.cs",
+    "tests/ExcelRenderer.Core.Tests/CellExtensionTests.cs",
+    "tests/ExcelRenderer.Tests/ConditionalFormattingTests.IconLayout.cs",
+    "tests/ExcelRenderer.Tests/ConditionalFormattingTests.LimitTargets.cs",
+    "tests/ExcelRenderer.Tests/ConditionalFormattingTests.Performance.cs",
+    "tests/ExcelRenderer.Tests/ConditionalFormattingTests.Phase3.cs"
+  ]
+}

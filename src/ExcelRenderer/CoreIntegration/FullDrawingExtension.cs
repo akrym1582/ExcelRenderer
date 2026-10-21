@@ -15,9 +15,10 @@ internal sealed class FullDrawingExtension : Core.Extensibility.ICoreDrawingExte
     public bool ShouldDrawCellText(Core.Layout.RenderCell cell)
     {
         var visual = FullCellPresentationData.Decoration(cell.Cell.ExtensionData);
-        if (visual?.Icon is not null && !ConditionalCellVisualGeometry.CanDrawIcon(cell))
+        if (visual?.Icon is not null)
         {
-            return true;
+            var placement = ConditionalCellVisualGeometry.IconPlacement(cell);
+            return placement.ShowValue && (!placement.CanDraw || visual.DataBar?.ShowValue != false);
         }
 
         if (visual?.DataBar is not null && (cell.Bounds.Width <= 2 * cell.DecorationScale || cell.Bounds.Height <= 2 * cell.DecorationScale))

@@ -1,0 +1,14 @@
+{
+  "ExcelRenderer": {
+    "removed": [],
+    "added": []
+  },
+  "ExcelRenderer.Core": {
+    "removed": [],
+    "added": []
+  },
+  "ExcelRenderer.OpenXml.Reader": {
+    "removed": [],
+    "added": []
+  }
+}

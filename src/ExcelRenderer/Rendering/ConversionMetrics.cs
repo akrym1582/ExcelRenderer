@@ -33,6 +33,15 @@ internal static class ConversionMetrics
         return Core.Rendering.ConversionMetrics.Measure(name, action);
     }
 
+    /// <summary>Measures a phase through asynchronous completion, including failures and cancellation.</summary>
+    /// <param name="name">The phase name.</param>
+    /// <param name="action">The awaited operation.</param>
+    /// <returns>The completion of the measured operation.</returns>
+    internal static Task MeasureAsync(string name, Func<Task> action)
+    {
+        return Core.Rendering.ConversionMetrics.MeasureAsync(name, action);
+    }
+
     /// <summary>Measures deferred command generation separately from time spent consuming each command.</summary>
     /// <param name="commands">The regenerable internal command source.</param>
     /// <returns>A source with measured MoveNext calls when instrumentation is enabled.</returns>

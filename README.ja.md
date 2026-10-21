@@ -382,7 +382,49 @@ await ExcelConverter.ConvertToMarkdownAsync("input.xlsx", "output.md");
 ストリームと `SingleStreamOutputSink` の出力ストリームは閉じません。ページごとの
 PNG/SVG には `DirectoryOutputSink` を使用します。`RenderRequest` では完全一致の
 シート名（指定順）と PDF/PNG/SVG の文書ページを選択できます。Markdown はページ
-選択を受け付けません。`ConversionManifest.WriteAsync` は完了した成果物メタデータと
+選択を受け付けません。`ConversionManifest.WriteAsync` は完了した成果物メタデータと診断を記録します。
+
+### PDF を HTTP 応答へ直接出力する
+
+PDF の `RenderAsync` は、同期 I/O が禁止された非 Seek の書き込み可能 Stream に対応します。
+ASP.NET Core の `Response.Body` へ直接出力でき、`AllowSynchronousIO = true` は不要です。
+
+```csharp
+using ExcelRenderer;
+using ExcelRenderer.Rendering;
+
+// xlsx はアプリ側で用意した読み取り可能な Stream。
+httpContext.Response.ContentType = "application/pdf";
+httpContext.Response.Headers["Content-Disposition"] = "attachment; filename=report.pdf";
+await ExcelConverter.RenderAsync(
+    xlsx,
+    new RenderRequest { OutputFormat = OutputFormat.Pdf },
+    new SingleStreamOutputSink(httpContext.Response.Body),
+    httpContext.RequestAborted);
+```
+
+実行環境に合わせて `RenderRequest.FontOptions` を設定してください。
+[コンパイル可能な HTTP サンプル](samples/ExcelRenderer.Http.Sample) は外部フォントを明示し、
+本体と Core の両エンドポイントを同期 I/O 禁止の実 Kestrel でテストします。
+`Response.Body` を破棄したり、書き込み後に別の File/JSON 結果を返したりしないでください。
+生成前の Content-Length 設定は不要で、HTTP の転送方式はサーバーに任せます。
+
+既存の中間スプール（上限付きメモリから一時ファイルへ退避）に全ページを生成し、構造解析後に
+最終送信を開始します。最終 PDF 全体を保持するメモリバッファは追加しません。
+構文集約は 64 KiB、ペイロード転送は 80 KiB のバッファを使用し、書き込み完了を順番に await します。
+先頭ページから即時送信する機能ではありません。Excel 読み込み・レイアウト・Skia 描画は同期処理のままで、
+今回の async 対象は最終出力 I/O です。フォント・画像・レイアウト・native 描画には別途メモリが必要です。
+本体の sink 経路では、最後の `FlushAsync` 完了後に成果物を確定します。
+
+失敗・キャンセル時は部分出力が残る場合があります。送信済みの PDF を取り消したり、正常な JSON エラーへ
+差し替えたりはできないため、ホスト側で例外処理または接続中断を行ってください。
+`SingleStreamOutputSink` は出力先を閉じません。失敗時の `AbortAsync` はキャンセルされない cleanup token で通知し、
+cleanup の二次例外は元例外の `Data["AbortException"]` に記録します。
+
+Core の `ConvertAsync(xlsx, response.Body, options, requestAborted)` も同じ非 Seek・非同期専用出力に対応します。
+Core は通常フォントの明示指定が必須で、最後の Flush は呼び出し側が行います。
+詳細は [Core の Stream 契約](docs/core.ja.md) を参照してください。
+今回の保証対象は PDF で、他形式は従来の動作を維持します。
 
 ## C# API（低レベル）
 
@@ -749,7 +791,7 @@ excelrenderer render input.xlsx -o ./svg --format svg --buffer-memory-threshold 
 excelrenderer svg input.xlsx -o ./svg --buffer-memory-threshold 1048576 --buffer-temp-directory ./existing-temp
 ```
 
-PDF/PNG でも設定を渡せますが、適用先は SVG 中間 stream だけです。
+適用先は SVG・Skia PDF・PostScript の中間スプールです。PNG の bitmap 割り当て量は制限しません。
 入力用 `WorkbookInputOptions` とは独立しており、入力側も自身の閾値・許可設定に従って
 seekable な一時ファイルへ spool します。reader は独立した cursor を使い、spool を byte[] へ戻しません。
 成功・キャンセル・失敗時に一時 buffer を cleanup し、caller 所有の入力・出力 stream は閉じません。

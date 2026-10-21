@@ -7,6 +7,11 @@
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
   <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="../../samples/ExcelRenderer.Http.Sample/ExcelRenderer.Http.Sample.csproj" />
+    <Compile Include="../ExcelRenderer.Core.Tests/AsyncOnlyWriteStream.cs" Link="Fixtures/AsyncOnlyWriteStream.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="PdfPig" Version="0.1.14" PrivateAssets="all" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.8.1" />
     <PackageReference Include="Svg.Skia" Version="5.2.3" PrivateAssets="all" />

@@ -101,6 +101,11 @@ internal sealed class CorePdfRenderer : IDisposable
     /// <param name="output">The borrowed destination.</param>
     internal void Complete(Stream output) => document.Complete(output);
 
+    /// <summary>Saves asynchronously without flushing or closing the caller's stream.</summary>
+    /// <param name="output">The borrowed destination.</param>
+    /// <returns>The completion of all final writes.</returns>
+    internal Task CompleteAsync(Stream output) => document.CompleteAsync(output);
+
     private void Execute(SKCanvas canvas, DrawCommand command)
     {
         if (command.ClipBounds is not { } clip)

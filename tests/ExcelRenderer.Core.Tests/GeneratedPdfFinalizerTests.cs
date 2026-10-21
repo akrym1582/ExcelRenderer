@@ -21,7 +21,7 @@ public sealed class GeneratedPdfFinalizerTests
     [InlineData("\n", true, true)]
     [InlineData("\r\n", true, false)]
     [InlineData("\r\n", true, true)]
-    public void Structural_save_preserves_streams_generations_and_metadata(string newline, bool escapedNames, bool spill)
+    public async Task Structural_save_preserves_streams_generations_and_metadata(string newline, bool escapedNames, bool spill)
     {
         var sourceBytes = Fixture(newline, escapedNames);
         using var source = new SpillableBufferStream(new() { MemoryThresholdBytes = spill ? 1 : sourceBytes.Length, AllowTemporaryFiles = true });
@@ -31,6 +31,16 @@ public sealed class GeneratedPdfFinalizerTests
         GeneratedPdfFinalizer.Write(source, output, [new(100.123, 99.456,
             [new(new(10, 20, 30, 10), "https://example.com?q=日本", null, null, null, "説明\n"),
              new(new(50, 20, 30, 10), null, 1, 12, 34, null)])], default);
+        using var asyncSource = new SpillableBufferStream(new() { MemoryThresholdBytes = spill ? 1 : sourceBytes.Length, AllowTemporaryFiles = true });
+        asyncSource.Write(sourceBytes);
+        asyncSource.Position = 0;
+        using var asyncOutput = new AsyncOnlyWriteStream();
+        await GeneratedPdfFinalizer.WriteAsync(asyncSource, asyncOutput, [new(100.123, 99.456,
+            [new(new(10, 20, 30, 10), "https://example.com?q=日本", null, null, null, "説明\n"),
+             new(new(50, 20, 30, 10), null, 1, 12, 34, null)])], default);
+        Assert.Equal(output.ToArray(), asyncOutput.Bytes);
+        Assert.Equal(0, asyncOutput.Flushes);
+        Assert.False(asyncOutput.Disposed);
         Assert.NotEqual(sourceBytes, output.ToArray());
         Assert.DoesNotContain("/Prev", Encoding.Latin1.GetString(output.ToArray()));
         var updated = new GeneratedPdfFile(new MemoryStream(output.ToArray()));
@@ -113,6 +123,57 @@ public sealed class GeneratedPdfFinalizerTests
     }
 
     [Theory]
+    [InlineData(200000, 0)]
+    [InlineData(0, 70000)]
+    [InlineData(0, 64000)]
+    public async Task Large_payload_and_syntax_preserve_bytes_with_short_async_reads(int payload, int metadata)
+    {
+        var bytes = Fixture(payloadSize: payload, metadataSize: metadata);
+        using var source = new ShortReadStream(bytes);
+        using var expected = new MemoryStream();
+        GeneratedPdfFinalizer.Write(source, expected, [new(100, 100, [])], default);
+        using var output = new AsyncOnlyWriteStream();
+        await GeneratedPdfFinalizer.WriteAsync(source, output, [new(100, 100, [])], default);
+        Assert.Equal(expected.ToArray(), output.Bytes);
+        Assert.Equal(1, output.MaxActive);
+        Assert.InRange(output.MaxWriteBytes, 1, 81920);
+        using var parsed = TestSupport.Open(output.Bytes);
+        Assert.Single(parsed.GetPages());
+    }
+
+    [Fact]
+    public async Task Range_copy_detects_truncation_and_empty_transfer_buffer()
+    {
+        using var source = new ShortReadStream(Fixture());
+        var pdf = new GeneratedPdfFile(source);
+        var record = pdf.Read(new(4));
+        using var output = new AsyncOnlyWriteStream();
+        await Assert.ThrowsAsync<ArgumentException>(() => pdf.CopyStreamAsync(record, output, default, []));
+        source.Truncated = true;
+        await Assert.ThrowsAsync<InvalidDataException>(() => pdf.CopyStreamAsync(record, output, default, new byte[32]));
+        Assert.Empty(output.Bytes);
+    }
+
+    [Theory]
+    [InlineData("signature")]
+    [InlineData("length")]
+    [InlineData("encrypted")]
+    public async Task Async_save_rejects_invalid_input_before_output(string defect)
+    {
+        using var source = new MemoryStream(Fixture(defect: defect));
+        using var output = new AsyncOnlyWriteStream();
+        await Assert.ThrowsAsync<InvalidDataException>(() => GeneratedPdfFinalizer.WriteAsync(source, output, [new(100, 100, [])], default));
+        Assert.Empty(output.Bytes);
+    }
+
+    private sealed class ShortReadStream(byte[] bytes) : MemoryStream(bytes)
+    {
+        internal bool Truncated { get; set; }
+        public override ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default) =>
+            Truncated ? ValueTask.FromResult(0) : base.ReadAsync(buffer[..Math.Min(13, buffer.Length)], cancellationToken);
+    }
+
+    [Theory]
     [InlineData(8191, false, 1)]
     [InlineData(8192, true, 2)]
     [InlineData(100000, false, 3)]
@@ -179,16 +240,16 @@ public sealed class GeneratedPdfFinalizerTests
         Assert.Throws<InvalidDataException>(() => pdf.CopyStream(record, Stream.Null, default));
     }
 
-    private static byte[] Fixture(string newline = "\n", bool escapedNames = false, string? defect = null, string? payload = null, bool indirectLength = false)
+    private static byte[] Fixture(string newline = "\n", bool escapedNames = false, string? defect = null, int payloadSize = 0, int metadataSize = 0, string? payload = null, bool indirectLength = false)
     {
-        var content = payload ?? "% /Page xref trailer startxref endstream obj dictionary injection must remain a comment\nq\nQ\n";
+        var content = payload ?? new string(' ', payloadSize) + "% /Page xref trailer startxref endstream obj dictionary injection must remain a comment\nq\nQ\n";
         var objects = new Dictionary<int, (int Generation, string Value)>
         {
             [1] = (0, "<< /Type /Catalog /Pages 2 0 R /Names << /Dests << /Names [(back) [3 2 R /XYZ 0 100 0]] >> >> >>"),
             [2] = (0, "<< /Type /Pages /Kids [" + (defect == "cycle" ? "2 0 R" : "3 2 R") + "] /Count 1 /MediaBox [0 0 100 100] >>"),
             [3] = (2, "<< /Type /Page /Parent 2 0 R /Contents 4 0 R /Resources << >> /Custom [(preserve me)] >>"),
             [4] = (0, "<< /Length " + (defect == "length" ? "999999999" : indirectLength ? "7 0 R" : Encoding.Latin1.GetByteCount(content).ToString(CultureInfo.InvariantCulture)) + " >>\nstream\n" + content + "endstream"),
-            [5] = (0, "<< /Title (metadata\\(x\\) \\376\\377) /Producer (Skia/PDF) >>"),
+            [5] = (0, "<< /Extra (" + new string('x', metadataSize) + ") /Title (metadata\\(x\\) \\376\\377) /Producer (Skia/PDF) >>"),
             [6] = (0, defect == "signature" ? "<< /Type /Sig /ByteRange [0 1 2 3] >>" : defect == "object-stream" ? "<< /Type /ObjStm >>" : "<< /Type /XObject /Subtype /Image /Width 1 /Height 1 /BitsPerComponent 8 /ColorSpace /DeviceRGB /Length 3 >>\nstream\n\u0009\u0080\u00ff\nendstream"),
         };
         if (indirectLength) objects.Add(7, (0, Encoding.Latin1.GetByteCount(content).ToString(CultureInfo.InvariantCulture)));
@@ -211,7 +272,6 @@ public sealed class GeneratedPdfFinalizerTests
         Write("trailer" + newline + "<< /Size " + (objects.Count + 1).ToString(CultureInfo.InvariantCulture) + " /Root 1 0 R /Info 5 0 R /ID [<01234567><89ABCDEF>]" + (defect == "encrypted" ? " /Encrypt 5 0 R" : string.Empty) + ">>" + newline + "startxref" + newline + xref.ToString(CultureInfo.InvariantCulture) + newline + "%%EOF" + newline);
         return output.ToArray();
     }
-
     private sealed class WriteOnlyOutput(CancellationTokenSource? cancel = null) : Stream
     {
         private readonly MemoryStream bytes = new();

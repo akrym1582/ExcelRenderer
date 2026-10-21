@@ -45,6 +45,33 @@ internal static class ConversionMetrics
         }
     }
 
+    /// <summary>Measures a phase through asynchronous completion, including failures and cancellation.</summary>
+    /// <param name="name">The phase name.</param>
+    /// <param name="action">The awaited operation.</param>
+    /// <returns>The completion of the measured operation.</returns>
+    internal static Task MeasureAsync(string name, Func<Task> action)
+    {
+        if (Observer is null)
+        {
+            return action();
+        }
+
+        return MeasureCoreAsync();
+
+        async Task MeasureCoreAsync()
+        {
+            var timer = Stopwatch.StartNew();
+            try
+            {
+                await action().ConfigureAwait(false);
+            }
+            finally
+            {
+                Report(name + ".ms", timer.Elapsed.TotalMilliseconds);
+            }
+        }
+    }
+
     /// <summary>Measures deferred command generation separately from time spent consuming each command.</summary>
     /// <typeparam name="T">The command type.</typeparam>
     /// <param name="commands">The regenerable internal command source.</param>

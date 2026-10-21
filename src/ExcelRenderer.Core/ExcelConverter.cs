@@ -12,10 +12,15 @@ public static class ExcelConverter
 {
     /// <summary>Reads from the input's current position and writes a PDF without closing either stream.</summary>
     /// <param name="xlsx">The readable XLSX stream.</param>
-    /// <param name="pdf">An empty writable, seekable stream positioned at zero.</param>
+    /// <param name="pdf">A writable stream; seekable destinations must be empty and positioned at zero.</param>
     /// <param name="options">The required font and optional sheet/input settings.</param>
     /// <param name="cancellationToken">The conversion cancellation token.</param>
     /// <returns>The page count and nonfatal diagnostics.</returns>
+    /// <remarks>
+    /// Final PDF writes are awaited and support nonseekable streams with synchronous I/O disabled.
+    /// The output is not flushed or closed. Skia generates a complete memory/file spool before final
+    /// transmission; workbook reading, layout and drawing remain synchronous. Failure may leave partial output.
+    /// </remarks>
     public static async Task<ConversionResult> ConvertAsync(Stream xlsx, Stream pdf, PdfExportOptions options, CancellationToken cancellationToken = default)
     {
         if (xlsx is null)
@@ -33,9 +38,9 @@ public static class ExcelConverter
             throw new ArgumentNullException(nameof(options));
         }
 
-        if (!xlsx.CanRead || !pdf.CanWrite || !pdf.CanSeek || pdf.Position != 0 || pdf.Length != 0)
+        if (!xlsx.CanRead || !pdf.CanWrite || (pdf.CanSeek && (pdf.Position != 0 || pdf.Length != 0)))
         {
-            throw new ArgumentException("Input must be readable; output must be writable, seekable, empty, and positioned at zero.");
+            throw new ArgumentException("Input must be readable; output must be writable and, if seekable, empty and positioned at zero.");
         }
 
         if (string.IsNullOrWhiteSpace(options.FontFilePath) || options.Input is null)
@@ -117,7 +122,7 @@ public static class ExcelConverter
 
         cancellationToken.ThrowIfCancellationRequested();
         using var destination = new CancellationWriteStream(pdf, cancellationToken);
-        renderer.Complete(destination);
+        await ConversionMetrics.MeasureAsync("pdfFinalSave", () => renderer.CompleteAsync(destination)).ConfigureAwait(false);
         cancellationToken.ThrowIfCancellationRequested();
         return new(number, diagnostics.ToArray().Select(item => new ConversionDiagnostic(item.Code, item.Message, item.SheetName, item.SourcePageNumber)).ToArray());
     }

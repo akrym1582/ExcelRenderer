@@ -228,6 +228,15 @@ internal sealed class GeneratedPdfFile
     internal void CopyStream(ObjectRecord record, Stream output, CancellationToken token, byte[]? buffer = null) =>
         reader.CopyRange(record.StreamOffset, record.StreamLength, output, token, buffer);
 
+    /// <summary>Copies an encoded payload range without decoding or buffering the complete stream.</summary>
+    /// <param name="record">The original stream range.</param>
+    /// <param name="output">The borrowed destination.</param>
+    /// <param name="token">The conversion token.</param>
+    /// <param name="buffer">The reusable, nonempty transfer buffer.</param>
+    /// <returns>The completion of sequential reads and destination writes.</returns>
+    internal Task CopyStreamAsync(ObjectRecord record, Stream output, CancellationToken token, byte[] buffer) =>
+        reader.CopyRangeAsync(record.StreamOffset, record.StreamLength, output, token, buffer);
+
     private static long Integer(string token, long maximum) => long.TryParse(token, NumberStyles.None, CultureInfo.InvariantCulture, out var result) && result <= maximum ? result : throw new InvalidDataException("Invalid generated PDF integer.");
 
     private static long ExactInteger(double value, long maximum) => value >= 0 && value <= maximum && value == Math.Truncate(value) ? (long)value : throw new InvalidDataException("Invalid generated PDF offset or length.");

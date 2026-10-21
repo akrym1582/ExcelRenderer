@@ -13,6 +13,7 @@ internal sealed class SkiaPdfDocument : IDisposable
     private SKManagedWStream? stream;
     private SKDocument? document;
     private bool closed;
+    private int completing;
 
     /// <summary>Initializes a new instance of the <see cref="SkiaPdfDocument"/> class.</summary>
     /// <param name="buffering">The intermediate spool policy.</param>
@@ -75,12 +76,31 @@ internal sealed class SkiaPdfDocument : IDisposable
     /// <param name="output">The caller-owned destination.</param>
     internal void Complete(Stream output)
     {
+        Close();
+        GeneratedPdfFinalizer.Write(spool, output, pages, token);
+    }
+
+    /// <summary>Closes native output and asynchronously writes the corrected PDF without owning the destination.</summary>
+    /// <param name="output">The borrowed destination.</param>
+    /// <returns>The completion of final output writes.</returns>
+    internal Task CompleteAsync(Stream output)
+    {
+        Close();
+        return GeneratedPdfFinalizer.WriteAsync(spool, output, pages, token);
+    }
+
+    private void Close()
+    {
         token.ThrowIfCancellationRequested();
+        if (Interlocked.Exchange(ref completing, 1) != 0)
+        {
+            throw new InvalidOperationException("The PDF document can only be completed once.");
+        }
+
         document!.Close();
         closed = true;
         stream!.Flush();
         spool.Position = 0;
         BeforeFinalize?.Invoke(spool);
-        GeneratedPdfFinalizer.Write(spool, output, pages, token);
     }
 }

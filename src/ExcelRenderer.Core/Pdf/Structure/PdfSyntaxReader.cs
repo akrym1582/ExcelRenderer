@@ -77,19 +77,7 @@ internal sealed class PdfSyntaxReader
     internal void CopyRange(long offset, long length, Stream output, CancellationToken token, byte[]? transferBuffer = null)
     {
         transferBuffer ??= new byte[81920];
-        if (transferBuffer.Length == 0)
-        {
-            throw new ArgumentException("A nonempty transfer buffer is required.", nameof(transferBuffer));
-        }
-
-        if (offset < 0 || length < 0 || offset > Length || length > Length - offset)
-        {
-            throw new InvalidDataException("Invalid generated PDF stream range.");
-        }
-
-        bufferCount = 0;
-        position = offset;
-        MoveInput();
+        BeginCopy(offset, length, transferBuffer);
         var remaining = length;
         while (remaining > 0)
         {
@@ -103,6 +91,34 @@ internal sealed class PdfSyntaxReader
             position += read;
             inputPosition += read;
             output.Write(transferBuffer, 0, read);
+            remaining -= read;
+        }
+    }
+
+    /// <summary>Copies an encoded range sequentially using the same logical cursor and invalidation as synchronous copies.</summary>
+    /// <param name="offset">The absolute input offset.</param>
+    /// <param name="length">The exact number of bytes to copy.</param>
+    /// <param name="output">The borrowed destination.</param>
+    /// <param name="token">The conversion token.</param>
+    /// <param name="transferBuffer">The reusable nonempty block buffer.</param>
+    /// <returns>The completion of all range writes.</returns>
+    internal async Task CopyRangeAsync(long offset, long length, Stream output, CancellationToken token, byte[] transferBuffer)
+    {
+        token.ThrowIfCancellationRequested();
+        BeginCopy(offset, length, transferBuffer);
+        var remaining = length;
+        while (remaining > 0)
+        {
+            token.ThrowIfCancellationRequested();
+            var read = await input.ReadAsync(transferBuffer.AsMemory(0, (int)Math.Min(transferBuffer.Length, remaining)), token).ConfigureAwait(false);
+            if (read == 0)
+            {
+                throw new InvalidDataException("Truncated PDF stream during finalization.");
+            }
+
+            position += read;
+            inputPosition += read;
+            await output.WriteAsync(transferBuffer.AsMemory(0, read), token).ConfigureAwait(false);
             remaining -= read;
         }
     }
@@ -328,6 +344,23 @@ internal sealed class PdfSyntaxReader
         bufferCount = input.Read(buffer, 0, (int)Math.Min(buffer.Length, Length - position));
         inputPosition += bufferCount;
         return bufferCount > 0;
+    }
+
+    private void BeginCopy(long offset, long length, byte[] transferBuffer)
+    {
+        if (transferBuffer.Length == 0)
+        {
+            throw new ArgumentException("A nonempty transfer buffer is required.", nameof(transferBuffer));
+        }
+
+        if (offset < 0 || length < 0 || offset > Length || length > Length - offset)
+        {
+            throw new InvalidDataException("Invalid generated PDF stream range.");
+        }
+
+        bufferCount = 0;
+        position = offset;
+        MoveInput();
     }
 
     private void MoveInput()

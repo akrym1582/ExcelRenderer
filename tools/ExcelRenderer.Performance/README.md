@@ -195,3 +195,25 @@ all samples, medians and maxima without claiming a universal speedup. Layout
 text/style/dimensions/origins hashes and direct-image bytes must match. Independent
 PDF/regression comparisons remain required. `--only layout-` selects a focused
 investigation without generating new input. See [the follow-up review](../../docs/rendering-performance-review.md).
+
+## Async PDF output
+
+After a Release build, run the saved runtime with one warm-up and three rounds per
+small/multipage/image/forced-spill workload:
+
+```sh
+dotnet tools/ExcelRenderer.Performance/bin/Release/net10.0/ExcelRenderer.Performance.dll \
+  async-pdf "$PWD" /tmp/async-pdf-after.jsonl
+```
+
+Modes are final file, temporary final PDF then CopyToAsync through Kestrel, and direct
+Kestrel response. Kestrel always prohibits synchronous I/O. Pass `baseline` last to
+omit unsupported direct output when running this same harness against the old runtime.
+An optional following argument records the baseline source commit (used for optimized-main comparisons).
+Save before/after Release runtime directories and run them sequentially with no
+build/test activity. Retain JSONL environment records (input/font/DLL hashes), warm-ups
+and all rounds. Allocation measurements use process-wide GC.GetTotalAllocatedBytes;
+HTTP records include both the loopback server and client, including its response byte
+array. Output/spool counts and extra final file bytes distinguish I/O behavior from
+latency. Thread snapshots are descriptive, not a measurement of blocked thread time.
+There are no speed or allocation thresholds. See [async validation](../../docs/async-pdf-validation.md).

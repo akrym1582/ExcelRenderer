@@ -22,6 +22,13 @@ internal sealed class CancellationWriteStream(Stream source, CancellationToken c
     public override void Flush() => source.Flush();
 
     /// <inheritdoc/>
+    public override async Task FlushAsync(CancellationToken token)
+    {
+        using var linked = Link(token);
+        await source.FlushAsync(linked?.Token ?? (token.CanBeCanceled ? token : cancellationToken)).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
     public override int Read(byte[] buffer, int offset, int count) => source.Read(buffer, offset, count);
 
     /// <inheritdoc/>
@@ -35,5 +42,28 @@ internal sealed class CancellationWriteStream(Stream source, CancellationToken c
     {
         cancellationToken.ThrowIfCancellationRequested();
         source.Write(buffer, offset, count);
+    }
+
+    /// <inheritdoc/>
+    public override async Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken token)
+    {
+        using var linked = Link(token);
+        await source.WriteAsync(buffer, offset, count, linked?.Token ?? (token.CanBeCanceled ? token : cancellationToken)).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public override async ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken token = default)
+    {
+        using var linked = Link(token);
+        await source.WriteAsync(buffer, linked?.Token ?? (token.CanBeCanceled ? token : cancellationToken)).ConfigureAwait(false);
+    }
+
+    private CancellationTokenSource? Link(CancellationToken token)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        token.ThrowIfCancellationRequested();
+        return cancellationToken.CanBeCanceled && token.CanBeCanceled && token != cancellationToken
+            ? CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, token)
+            : null;
     }
 }

@@ -1,0 +1,182 @@
+{
+  "before|('01-japanese.xlsx', False, 'file')": {
+    "ElapsedMs": 36.3843,
+    "AllocatedBytes": 19536744,
+    "OutputBytes": 119165,
+    "FinalSaveMs": 8.2314,
+    "Spills": 0,
+    "ExtraFinalFileBytes": 0,
+    "Threads": 18
+  },
+  "before|('01-japanese.xlsx', False, 'staged')": {
+    "ElapsedMs": 36.3601,
+    "AllocatedBytes": 19788920,
+    "OutputBytes": 119165,
+    "FinalSaveMs": 8.2535,
+    "Spills": 0,
+    "ExtraFinalFileBytes": 119165,
+    "Threads": 18
+  },
+  "before|('02-image.xlsx', False, 'file')": {
+    "ElapsedMs": 36.4906,
+    "AllocatedBytes": 20122168,
+    "OutputBytes": 120712,
+    "FinalSaveMs": 8.0812,
+    "Spills": 0,
+    "ExtraFinalFileBytes": 0,
+    "Threads": 18
+  },
+  "before|('02-image.xlsx', False, 'staged')": {
+    "ElapsedMs": 43.4211,
+    "AllocatedBytes": 20373008,
+    "OutputBytes": 120712,
+    "FinalSaveMs": 8.6955,
+    "Spills": 0,
+    "ExtraFinalFileBytes": 120712,
+    "Threads": 18
+  },
+  "before|('02-image.xlsx', True, 'file')": {
+    "ElapsedMs": 39.0441,
+    "AllocatedBytes": 19807136,
+    "OutputBytes": 120712,
+    "FinalSaveMs": 9.3572,
+    "Spills": 1,
+    "ExtraFinalFileBytes": 0,
+    "Threads": 18
+  },
+  "before|('02-image.xlsx', True, 'staged')": {
+    "ElapsedMs": 41.428,
+    "AllocatedBytes": 20026504,
+    "OutputBytes": 120712,
+    "FinalSaveMs": 9.4829,
+    "Spills": 1,
+    "ExtraFinalFileBytes": 120712,
+    "Threads": 18
+  },
+  "before|('06-layout-and-pagination.xlsx', False, 'file')": {
+    "ElapsedMs": 47.7034,
+    "AllocatedBytes": 20902088,
+    "OutputBytes": 119480,
+    "FinalSaveMs": 10.1996,
+    "Spills": 0,
+    "ExtraFinalFileBytes": 0,
+    "Threads": 18
+  },
+  "before|('06-layout-and-pagination.xlsx', False, 'staged')": {
+    "ElapsedMs": 46.0467,
+    "AllocatedBytes": 21162424,
+    "OutputBytes": 119480,
+    "FinalSaveMs": 9.6585,
+    "Spills": 0,
+    "ExtraFinalFileBytes": 119480,
+    "Threads": 18
+  },
+  "after|('01-japanese.xlsx', False, 'direct')": {
+    "ElapsedMs": 54.9878,
+    "AllocatedBytes": 19896408,
+    "OutputBytes": 119165,
+    "FinalSaveMs": 11.7278,
+    "Spills": 0,
+    "ExtraFinalFileBytes": 0,
+    "Threads": 19
+  },
+  "after|('01-japanese.xlsx', False, 'file')": {
+    "ElapsedMs": 37.1063,
+    "AllocatedBytes": 19634152,
+    "OutputBytes": 119165,
+    "FinalSaveMs": 10.095,
+    "Spills": 0,
+    "ExtraFinalFileBytes": 0,
+    "Threads": 19
+  },
+  "after|('01-japanese.xlsx', False, 'staged')": {
+    "ElapsedMs": 44.22,
+    "AllocatedBytes": 19872872,
+    "OutputBytes": 119165,
+    "FinalSaveMs": 9.1404,
+    "Spills": 0,
+    "ExtraFinalFileBytes": 119165,
+    "Threads": 19
+  },
+  "after|('02-image.xlsx', False, 'direct')": {
+    "ElapsedMs": 46.1772,
+    "AllocatedBytes": 20443560,
+    "OutputBytes": 120712,
+    "FinalSaveMs": 9.5946,
+    "Spills": 0,
+    "ExtraFinalFileBytes": 0,
+    "Threads": 19
+  },
+  "after|('02-image.xlsx', False, 'file')": {
+    "ElapsedMs": 36.6748,
+    "AllocatedBytes": 20177624,
+    "OutputBytes": 120712,
+    "FinalSaveMs": 8.7798,
+    "Spills": 0,
+    "ExtraFinalFileBytes": 0,
+    "Threads": 19
+  },
+  "after|('02-image.xlsx', False, 'staged')": {
+    "ElapsedMs": 44.9276,
+    "AllocatedBytes": 20391536,
+    "OutputBytes": 120712,
+    "FinalSaveMs": 10.3664,
+    "Spills": 0,
+    "ExtraFinalFileBytes": 120712,
+    "Threads": 19
+  },
+  "after|('02-image.xlsx', True, 'direct')": {
+    "ElapsedMs": 46.3897,
+    "AllocatedBytes": 20048512,
+    "OutputBytes": 120712,
+    "FinalSaveMs": 11.3908,
+    "Spills": 1,
+    "ExtraFinalFileBytes": 0,
+    "Threads": 19
+  },
+  "after|('02-image.xlsx', True, 'file')": {
+    "ElapsedMs": 44.5645,
+    "AllocatedBytes": 19866600,
+    "OutputBytes": 120712,
+    "FinalSaveMs": 11.1698,
+    "Spills": 1,
+    "ExtraFinalFileBytes": 0,
+    "Threads": 19
+  },
+  "after|('02-image.xlsx', True, 'staged')": {
+    "ElapsedMs": 42.2499,
+    "AllocatedBytes": 20124672,
+    "OutputBytes": 120712,
+    "FinalSaveMs": 11.4128,
+    "Spills": 1,
+    "ExtraFinalFileBytes": 120712,
+    "Threads": 19
+  },
+  "after|('06-layout-and-pagination.xlsx', False, 'direct')": {
+    "ElapsedMs": 53.5436,
+    "AllocatedBytes": 21182096,
+    "OutputBytes": 119480,
+    "FinalSaveMs": 10.8568,
+    "Spills": 0,
+    "ExtraFinalFileBytes": 0,
+    "Threads": 19
+  },
+  "after|('06-layout-and-pagination.xlsx', False, 'file')": {
+    "ElapsedMs": 57.0962,
+    "AllocatedBytes": 20999120,
+    "OutputBytes": 119480,
+    "FinalSaveMs": 11.2082,
+    "Spills": 0,
+    "ExtraFinalFileBytes": 0,
+    "Threads": 19
+  },
+  "after|('06-layout-and-pagination.xlsx', False, 'staged')": {
+    "ElapsedMs": 49.689,
+    "AllocatedBytes": 21223552,
+    "OutputBytes": 119480,
+    "FinalSaveMs": 10.1097,
+    "Spills": 0,
+    "ExtraFinalFileBytes": 119480,
+    "Threads": 19
+  }
+}

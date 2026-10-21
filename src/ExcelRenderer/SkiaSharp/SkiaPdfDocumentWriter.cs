@@ -101,6 +101,9 @@ internal sealed class SkiaPdfDocumentWriter : IPdfDocumentWriter
     /// <inheritdoc/>
     public void Complete(Stream output) => document.Complete(output);
 
+    /// <inheritdoc/>
+    public Task CompleteAsync(Stream output) => document.CompleteAsync(output);
+
     private void CollectText(DrawTextCommand command)
     {
         var layout = command.TextLayout ?? throw new InvalidOperationException("Text must be finalized before font collection.");

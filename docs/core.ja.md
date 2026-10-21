@@ -61,7 +61,9 @@ APIのセル範囲、ページ抽出、trim、連続画像、PNG/SVG/Markdownは
 
 ## Stream・資源契約
 
-入力は現在位置から読み、seekable/nonseekableに対応します。出力は書込み可能・seekable・開始位置0・長さ0が必須です。呼出し元の両streamを閉じません。非seekable出力向けの全PDFbufferはありません。キャンセルはOperationCanceledExceptionです。読込み・ページ境界・Saveの書込み境界で確認します。同期ライブラリ処理を瞬時には中断できません。
+入力は現在位置から読み、seekable/nonseekable に対応します。出力は書き込み可能であることが必須です。seekable 出力は従来どおり開始位置 0・長さ 0 が必要です。非 Seek 出力は Position/Length の照会や初期化を行わず受け付けるため、呼び出し側が新しい PDF を書ける出力先を用意してください。最終出力は順番に await する WriteAsync のみを使用し、同期 I/O 禁止の ASP.NET Core Response.Body に直接書けます。Core は出力を Flush しません。必要なら呼び出し側で FlushAsync を行ってください。成功・失敗・キャンセル時とも、呼び出し元の両 Stream を閉じません。
+
+Skia は全ページの中間 PDF を seekable スプールへ生成します。上限付きメモリを使用し、必要なら一時ファイルへ退避します。構造解析後に最終出力が始まり、ページごとの即時送信ではありません。最終 PDF 全体の byte 配列や MemoryStream は追加しません。構文集約は 64 KiB、ペイロード転送は 80 KiB のバッファで、フォント・画像・レイアウト・native リソースには別途メモリが必要です。読み込み・レイアウト・描画は同期処理のままです。キャンセルは OperationCanceledException で、読み込み・ページ境界・await する最終書き込み時に確認します。同期ライブラリ処理を瞬時には中断できません。HTTP 送信後に失敗した場合、送信済みバイトを JSON エラーに差し替えることはできず、ホスト側で処理します。
 
 入力既定値はメモリ16MiB、最大128MiB、ZIP entry 10,000、展開合計512MiB、一時ファイル不許可です。許可したspoolのtempは成功・失敗で削除します。Save時のI/O失敗やキャンセルで途中データが残る場合があり、API全体の原子的書込みは保証しません。[sample](../samples/ExcelRenderer.Core.Sample/Program.cs)は同じディレクトリの一時ファイルへ書き、streamを閉じてから目的ファイルへ移動し、失敗時は一時ファイルを削除します。
 

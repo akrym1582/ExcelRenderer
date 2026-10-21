@@ -19,6 +19,11 @@ public static partial class ExcelConverter
     /// <param name="sink">生成した成果物を受け取り、保存する出力シンクです。</param>
     /// <param name="cancellationToken">変換処理のキャンセルを通知するトークンです。</param>
     /// <returns>すべての成果物の書き込みが完了したときに完了するタスクを返します。</returns>
+    /// <remarks>
+    /// PDF の最終出力は WriteAsync/FlushAsync を await し、同期 I/O 禁止の非 Seek Stream に対応します。
+    /// 全ページの中間スプール生成と構造解析後に送信を開始し、読み込み・レイアウト・描画は同期処理のままです。
+    /// 失敗・キャンセル時には部分出力が残る場合があります。出力 Stream の所有権はシンクの契約に従います。
+    /// </remarks>
     public static async Task<ConversionResult> RenderAsync(
         Stream input,
         RenderRequest request,
@@ -535,11 +540,11 @@ public static partial class ExcelConverter
     private static async Task WritePdfAsync(IReadOnlyList<SheetPage> pages, Pdf.IPdfDocumentWriter writer, PdfBackend backend, FontManager fontManager, DiagnosticCollector diagnostics, IRenderOutputSink sink, List<ArtifactMetadata> artifacts, CancellationToken token)
     {
         var descriptor = new ArtifactDescriptor("pdf", "pdf", "application/pdf", "workbook.pdf");
-        await WriteArtifactAsync(
+        await WriteArtifactCoreAsync(
             sink,
             descriptor,
             artifacts,
-            stream =>
+            async stream =>
             {
                 ConversionMetrics.Report("pdfBackend", (int)backend);
 
@@ -585,12 +590,11 @@ public static partial class ExcelConverter
                 }
 
                 token.ThrowIfCancellationRequested();
-                ConversionMetrics.Measure("pdfFinalSave", () =>
+                await ConversionMetrics.MeasureAsync("pdfFinalSave", async () =>
                 {
                     using var cancellable = new Core.Rendering.CancellationWriteStream(stream, token);
-                    writer.Complete(cancellable);
-                    return true;
-                });
+                    await writer.CompleteAsync(cancellable).ConfigureAwait(false);
+                }).ConfigureAwait(false);
             },
             token).ConfigureAwait(false);
     }
@@ -823,14 +827,26 @@ public static partial class ExcelConverter
         artifacts.Add(new(descriptor, sink.GetMarkdownByteLength()));
     }
 
-    private static async Task WriteArtifactAsync(IRenderOutputSink sink, ArtifactDescriptor descriptor, List<ArtifactMetadata> artifacts, Action<Stream> write, CancellationToken token)
+    private static Task WriteArtifactAsync(IRenderOutputSink sink, ArtifactDescriptor descriptor, List<ArtifactMetadata> artifacts, Action<Stream> write, CancellationToken token) =>
+        WriteArtifactCoreAsync(
+            sink,
+            descriptor,
+            artifacts,
+            stream =>
+            {
+                write(stream);
+                return Task.CompletedTask;
+            },
+            token);
+
+    private static async Task WriteArtifactCoreAsync(IRenderOutputSink sink, ArtifactDescriptor descriptor, List<ArtifactMetadata> artifacts, Func<Stream, Task> writeAsync, CancellationToken token)
     {
         Stream? stream = null;
         try
         {
             stream = await sink.OpenAsync(descriptor, token).ConfigureAwait(false);
             var counted = new CountingStream(stream);
-            write(counted);
+            await writeAsync(counted).ConfigureAwait(false);
             await counted.FlushAsync(token).ConfigureAwait(false);
             var length = counted.BytesWritten;
             await sink.CompleteAsync(descriptor, length, token).ConfigureAwait(false);
@@ -842,7 +858,7 @@ public static partial class ExcelConverter
             {
                 try
                 {
-                    await sink.AbortAsync(descriptor, error, token).ConfigureAwait(false);
+                    await sink.AbortAsync(descriptor, error, CancellationToken.None).ConfigureAwait(false);
                 }
                 catch (Exception abortError)
                 {
@@ -992,6 +1008,12 @@ public static partial class ExcelConverter
         {
             await _inner.WriteAsync(buffer, offset, count, cancellationToken).ConfigureAwait(false);
             BytesWritten += count;
+        }
+
+        public override async ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default)
+        {
+            await _inner.WriteAsync(buffer, cancellationToken).ConfigureAwait(false);
+            BytesWritten += buffer.Length;
         }
 
         protected override void Dispose(bool disposing)

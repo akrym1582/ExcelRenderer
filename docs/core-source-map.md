@@ -297,3 +297,14 @@ Core owns immutable glyph/source/cluster storage and direct PDF glyph registrati
 and the conversion image owner stores bounded, weak-identity alpha metadata.
 Main supplies the PS validation policy. No Reader drawing dependencies or Core PS/CF
 public features are added. See [current finalization and resource contracts](render-finalization-performance.md).
+
+## Asynchronous final PDF output
+
+Core owns the shared GeneratedPdfFinalizer output-element iterator, synchronous and asynchronous
+consumers, original-payload CopyStreamAsync through PdfSyntaxReader's common range/cursor owner,
+SkiaPdfDocument completion, cancellation wrapper
+and awaited phase metrics. Main's IPdfDocumentWriter/SkiaPdfDocumentWriter delegate completion
+to Core; ExcelConverter awaits artifact writes, counts successful bytes, flushes once and
+notifies sink completion or noncancelable abort cleanup. Core's public converter accepts
+nonseekable outputs and leaves flushing to the caller. ASP.NET dependencies exist only in
+the HTTP sample and integration tests. See [HTTP sample](../samples/ExcelRenderer.Http.Sample).

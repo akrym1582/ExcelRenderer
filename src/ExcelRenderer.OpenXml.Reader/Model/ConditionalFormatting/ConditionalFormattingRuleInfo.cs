@@ -12,14 +12,19 @@ public sealed class ConditionalFormattingRuleInfo
     /// <param name="ranges">Ordered application ranges.</param>
     /// <param name="source">Original rule attributes and children.</param>
     /// <param name="style">Resolved differential style, or null when absent or invalid.</param>
+    /// <param name="extension">Interpreted extension provenance.</param>
     /// <param name="isExtension">Whether the rule requires extension interpretation.</param>
-    internal ConditionalFormattingRuleInfo(IReadOnlyList<CellRange> ranges, ElementInfo source, DifferentialStyleInfo? style, bool isExtension)
+    internal ConditionalFormattingRuleInfo(IReadOnlyList<CellRange> ranges, ElementInfo source, DifferentialStyleInfo? style, bool isExtension, ConditionalFormattingExtensionInfo? extension = null)
     {
+        Extension = extension;
         Ranges = ranges;
         Source = source;
         Style = style;
         IsExtension = isExtension;
     }
+
+    /// <summary>Gets interpreted extension provenance, when linked by the product normalizer.</summary>
+    public ConditionalFormattingExtensionInfo? Extension { get; }
 
     /// <summary>Gets ordered ranges. The first range supplies the formula anchor.</summary>
     public IReadOnlyList<CellRange> Ranges { get; }

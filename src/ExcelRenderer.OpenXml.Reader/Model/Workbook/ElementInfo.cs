@@ -10,13 +10,18 @@ public sealed class ElementInfo
     /// <param name="text">The text value.</param>
     /// <param name="attributes">The attributes value.</param>
     /// <param name="children">The children value.</param>
-    internal ElementInfo(string name, string text, IReadOnlyDictionary<string, string> attributes, IReadOnlyList<ElementInfo> children)
+    /// <param name="namespaceUri">Original namespace URI.</param>
+    internal ElementInfo(string name, string text, IReadOnlyDictionary<string, string> attributes, IReadOnlyList<ElementInfo> children, string namespaceUri = "")
     {
         Name = name;
+        NamespaceUri = namespaceUri;
         Text = text;
         Attributes = attributes;
         Children = children;
     }
+
+    /// <summary>Gets the original XML namespace URI.</summary>
+    public string NamespaceUri { get; }
 
     /// <summary>Gets the Name metadata.</summary>
     public string Name { get; }

@@ -24,4 +24,10 @@ public sealed record RenderCell(ReportCell Cell, ReportRect Bounds)
 
     /// <summary>Gets the finalized text layout, when the measurer provides one.</summary>
     public TextLayoutResult? TextLayout { get; init; }
+
+    /// <summary>Gets the product decoration viewport in page coordinates.</summary>
+    internal ReportRect? DecorationClipBounds { get; init; }
+
+    /// <summary>Gets the source-to-page scale for product decorations.</summary>
+    internal double DecorationScale { get; init; } = 1;
 }

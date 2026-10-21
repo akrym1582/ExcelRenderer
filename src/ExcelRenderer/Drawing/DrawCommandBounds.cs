@@ -26,6 +26,7 @@ internal static class DrawCommandBounds
                 DrawLineCommand line => Stroke(line.Style, line.X1, line.Y1, line.X2, line.Y2),
                 DrawTextCommand text when !string.IsNullOrWhiteSpace(text.Text) => Text(text, fonts),
                 DrawImageCommand image => Clip(ObjectGeometry.GetVisualBounds(image.Bounds, image.Rotation), image.ClipBounds),
+                DrawPolygonCommand polygon when polygon.Color.Alpha > 0 => Clip(polygon.Bounds, polygon.ClipBounds),
                 DrawShapeCommand shape => Shape(shape),
                 _ => null,
             };

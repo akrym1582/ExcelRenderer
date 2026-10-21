@@ -17,12 +17,29 @@ public static partial class ExcelConverter
         // Viewport preparation may enumerate commands repeatedly. Keep one diagnostic per
         // source cell on this output page while retaining the lazy command stream.
         var seen = new HashSet<(CellAddress Address, string Code)>();
+        Layout.SheetGeometry? visualGeometry = null;
         return Inspect();
 
         IEnumerable<DrawCommand> Inspect()
         {
+            Dictionary<string, ConversionDiagnostic>? clippedVisuals = null;
             foreach (var (command, clipped) in Flatten(commands, false))
             {
+                if (options.DetectUnsupportedFeatures && command is DrawTextCommand { SourceAddress: { } visualAddress } &&
+                    page.Sheet.Cells.TryGetValue(visualAddress, out var visualCell) && visualCell.ConditionalVisual?.Icon is { } icon &&
+                    seen.Add((visualAddress, "ConditionalFormattingVisualClipped")))
+                {
+                    visualGeometry ??= new(page.Sheet);
+                    var visualBounds = Layout.RectangleGeometry.Bounds(visualGeometry, new(visualAddress, new(visualAddress.Row + visualCell.RowSpan - 1, visualAddress.Column + visualCell.ColumnSpan - 1)));
+                    if (!ConditionalCellVisualGeometry.CanDrawIcon(CoreIntegration.CorePageAdapter.ToCore(new Layout.RenderCell(visualCell, visualBounds))))
+                    {
+                        clippedVisuals ??= new(StringComparer.Ordinal);
+                        var id = icon.RuleId ?? "conditional-format-icon";
+                        clippedVisuals[id] = clippedVisuals.TryGetValue(id, out var previous) ? previous with { OccurrenceCount = previous.OccurrenceCount + 1 } :
+                            new("ConditionalFormattingVisualClipped", DiagnosticSeverity.Warning, DiagnosticStage.Layout, "The icon has insufficient cell space; the saved value remains visible.", page.Sheet.Name, visualAddress.ToString(), ObjectId: id, SourcePageNumber: page.Descriptor.SourcePageNumber);
+                    }
+                }
+
                 if (options.DetectUnsupportedFeatures && command is DrawTextCommand { SourceAddress: { } unsupportedAddress } &&
                     page.Sheet.Cells.TryGetValue(unsupportedAddress, out var unsupportedCell) && unsupportedCell.UnsupportedRichTextFormatting &&
                     seen.Add((unsupportedAddress, "UnsupportedRichTextFormatting")))
@@ -88,6 +105,11 @@ public static partial class ExcelConverter
                 }
 
                 yield return command;
+            }
+
+            foreach (var diagnostic in clippedVisuals?.Values.AsEnumerable() ?? [])
+            {
+                diagnostics.Add(diagnostic);
             }
         }
     }

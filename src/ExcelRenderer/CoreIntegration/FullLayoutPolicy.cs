@@ -154,16 +154,30 @@ internal sealed class FullLayoutPolicy : Core.Layout.CoreLayoutPolicy
 
         return page with
         {
-            Cells = context.Layout.Sheet.RequestedRange is null ? page.Cells : page.Cells.Select(cell =>
+            Cells = context.Layout.Sheet.RequestedRange is null && !page.Cells.Any(cell => FullCellPresentationData.Decoration(cell.Cell.ExtensionData) is not null) ? page.Cells : page.Cells.Select(cell =>
             {
                 var address = cell.SourceAddress!.Value;
                 var source = Core.Layout.RectangleGeometry.Bounds(context.Layout.Geometry, new(address, new(address.Row + cell.Cell.RowSpan - 1, address.Column + cell.Cell.ColumnSpan - 1)));
                 var publicSource = CoreModelAdapter.ToPublic(source);
                 var clip = regions.FirstOrDefault(region => Math.Abs(region.Map(publicSource).X - cell.Bounds.X) < 1e-7 && Math.Abs(region.Map(publicSource).Y - cell.Bounds.Y) < 1e-7)?.PageBounds ?? CoreModelAdapter.ToPublic(context.Placement.BodyClip);
-                return cell with { ClipBounds = CoreModelAdapter.ToCore(clip) };
+                return cell with { DecorationClipBounds = CoreModelAdapter.ToCore(clip), ClipBounds = context.Layout.Sheet.RequestedRange is null ? cell.ClipBounds : CoreModelAdapter.ToCore(clip) };
             }).ToArray(),
             ExtensionData = new FullPageData(shapes, regions),
         };
+    }
+
+    /// <inheritdoc/>
+    internal override (double Left, double Right) GetCellContentInsets(Core.Model.ReportCell cell, double ordinaryContentWidth)
+    {
+        var visual = FullCellPresentationData.Decoration(cell.ExtensionData);
+        if (visual?.Icon is not { } icon)
+        {
+            return (0, 0);
+        }
+
+        var size = Drawing.ConditionalCellVisualGeometry.IconSize(ordinaryContentWidth);
+        var reserve = size < 3 ? 0 : size + 2;
+        return icon.RightToLeft ? (0, reserve) : (reserve, 0);
     }
 
     private static FullSheetData? Data(CoreSheet sheet) => sheet.ExtensionData as FullSheetData;

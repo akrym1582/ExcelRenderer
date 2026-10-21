@@ -57,7 +57,7 @@ internal sealed partial class ConditionalFormattingSession
                 evaluator.Initialize(population, calculation!, info.Sheet.Name, token);
             }
 
-            return evaluator.Evaluate(calculation!.ReadValue(new(info.Sheet.Name, address.Row, address.Column)), token);
+            return evaluator.Evaluate(calculation!.ReadValue(new(info.Sheet.Name, address.Row, address.Column)), token, info.RightToLeft);
         }
         catch (Exception exception) when (exception is ConditionalFormattingException or FormulaCalculationException)
         {
@@ -85,9 +85,9 @@ internal sealed partial class ConditionalFormattingSession
         }
         else
         {
-            diagnostics.Add(key, new(code, DiagnosticSeverity.Warning, DiagnosticStage.Read, "The condition could not be evaluated; ordinary formatting is retained. " + message, info.Sheet.Name, address.ToString(), ObjectId: Id(rule)));
+            diagnostics.Add(key, new(code, DiagnosticSeverity.Warning, DiagnosticStage.Read, message, info.Sheet.Name, address.ToString(), ObjectId: Id(rule)));
         }
     }
 
-    private readonly record struct Evaluation(bool Match, ReportColor? Background);
+    private readonly record struct Evaluation(bool Match, ReportColor? Background, ConditionalDataBar? DataBar = null, ConditionalIcon? Icon = null);
 }

@@ -69,6 +69,11 @@ internal sealed class DrawCommandGeneratorPass
         {
             if (layer == 1)
             {
+                if (extension is not null)
+                {
+                    commands.AddRange(page.Cells.SelectMany(cell => extension.CreateCellDecorationCommands(page.Number, cell)));
+                }
+
                 commands.AddRange(BorderConflictResolver.Generate(page.Number, page.Cells.Concat(page.BorderOnlyCells)));
                 continue;
             }
@@ -78,7 +83,7 @@ internal sealed class DrawCommandGeneratorPass
                 continue;
             }
 
-            commands.AddRange(page.Cells.SelectMany(cell => GenerateCellLayer(page.Number, cell, layer, extension?.RequiresTextLayout ?? true)));
+            commands.AddRange(page.Cells.Where(cell => layer != 3 || (extension?.ShouldDrawCellText(cell) ?? true)).SelectMany(cell => GenerateCellLayer(page.Number, cell, layer, extension?.RequiresTextLayout ?? true)));
         }
 
         commands.AddRange(extension?.CreateObjectCommands(page) ?? (page.Images ?? []).OrderBy(image => image.ZIndex)

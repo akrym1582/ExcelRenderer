@@ -1,0 +1,119 @@
+{
+  "3Arrows.pdf": {
+    "sha256": "2e026a51f3e9c402eb907640ea9c8c12360d2ada504c872474caef51894aba0f",
+    "ghostscript": "passed",
+    "raster_pages": 1,
+    "log": "",
+    "pdfinfo": "Producer:        Skia/PDF m151\nCustom Metadata: no\nMetadata Stream: no\nTagged:          no\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           1\nEncrypted:       no\nPage size:       612 x 792 pts (letter)\nPage rot:        0\nFile size:       1020 bytes\nOptimized:       no\nPDF version:     1.4\n"
+  },
+  "3Arrows.postscript": {
+    "sha256": "b0adc23480622b7cf9b82873a1fcc0574c0284c09cd8ff0a16f38d4967254fda",
+    "ghostscript": "passed",
+    "raster_pages": 1,
+    "log": ""
+  },
+  "3ArrowsGray.pdf": {
+    "sha256": "b2549a19c907464f173244a444d74dc7635114c0aa0d8c056fdbf6889b806611",
+    "ghostscript": "passed",
+    "raster_pages": 1,
+    "log": "",
+    "pdfinfo": "Producer:        Skia/PDF m151\nCustom Metadata: no\nMetadata Stream: no\nTagged:          no\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           1\nEncrypted:       no\nPage size:       612 x 792 pts (letter)\nPage rot:        0\nFile size:       1007 bytes\nOptimized:       no\nPDF version:     1.4\n"
+  },
+  "3ArrowsGray.postscript": {
+    "sha256": "1c099bda2987d63b37a7eb4a77ee333b14a912f4c1412a27ad5bea81f89f693b",
+    "ghostscript": "passed",
+    "raster_pages": 1,
+    "log": ""
+  },
+  "3Symbols.pdf": {
+    "sha256": "9ae3625ec31ec796a57fe4501915d92184399ee5bd6baa659fe4ed74e0bb1927",
+    "ghostscript": "passed",
+    "raster_pages": 1,
+    "log": "",
+    "pdfinfo": "Producer:        Skia/PDF m151\nCustom Metadata: no\nMetadata Stream: no\nTagged:          no\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           1\nEncrypted:       no\nPage size:       612 x 792 pts (letter)\nPage rot:        0\nFile size:       1865 bytes\nOptimized:       no\nPDF version:     1.4\n"
+  },
+  "3Symbols.postscript": {
+    "sha256": "ecc6862e2f18667a9f56e07b565aabfbb50a39123c45202db3235b35f17fd45a",
+    "ghostscript": "passed",
+    "raster_pages": 1,
+    "log": ""
+  },
+  "3Symbols2.pdf": {
+    "sha256": "1b6771b86f769a15d4d7d4e5ef4525011fe4de06a31b8ae0b58ef3a2069f57e1",
+    "ghostscript": "passed",
+    "raster_pages": 1,
+    "log": "",
+    "pdfinfo": "Producer:        Skia/PDF m151\nCustom Metadata: no\nMetadata Stream: no\nTagged:          no\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           1\nEncrypted:       no\nPage size:       612 x 792 pts (letter)\nPage rot:        0\nFile size:       1040 bytes\nOptimized:       no\nPDF version:     1.4\n"
+  },
+  "3Symbols2.postscript": {
+    "sha256": "9e756eb5780a202dc622fdd4ff8847cab471ecb19b91d8abac10512b9fd999d3",
+    "ghostscript": "passed",
+    "raster_pages": 1,
+    "log": ""
+  },
+  "3TrafficLights1.pdf": {
+    "sha256": "0719a3633318239ecd596245591ce8e9b2f52724963af2903fd67c22d0ed110a",
+    "ghostscript": "passed",
+    "raster_pages": 1,
+    "log": "",
+    "pdfinfo": "Producer:        Skia/PDF m151\nCustom Metadata: no\nMetadata Stream: no\nTagged:          no\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           1\nEncrypted:       no\nPage size:       612 x 792 pts (letter)\nPage rot:        0\nFile size:       1694 bytes\nOptimized:       no\nPDF version:     1.4\n"
+  },
+  "3TrafficLights1.postscript": {
+    "sha256": "0b861ecc3bf55ae7dfb2b1674a6dcbabe3455770ee1b14edb4c9f0e671813999",
+    "ghostscript": "passed",
+    "raster_pages": 1,
+    "log": ""
+  },
+  "icons.pdf": {
+    "sha256": "e86755383302bd807b67ece618a4e36fa7dfd472fcd5ccc8f1c0aca4db8bfb19",
+    "ghostscript": "passed",
+    "raster_pages": 1,
+    "log": "",
+    "pdfinfo": "Producer:        Skia/PDF m151\nCustom Metadata: no\nMetadata Stream: no\nTagged:          no\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           1\nEncrypted:       no\nPage size:       612 x 792 pts (letter)\nPage rot:        0\nFile size:       115625 bytes\nOptimized:       no\nPDF version:     1.4\n"
+  },
+  "icons.ps": {
+    "sha256": "aea098ccedb697b4a953b661cf6a97e017debab444fc8855db8a9996b7257a32",
+    "ghostscript": "passed",
+    "raster_pages": 1,
+    "log": ""
+  },
+  "layout-mapping.pdf": {
+    "sha256": "27f846371edea0c8e2ca19ef4eeaf0da42aadf835a65c4a263012360b0d5372e",
+    "ghostscript": "passed",
+    "raster_pages": 1,
+    "log": "",
+    "pdfinfo": "Producer:        Skia/PDF m151\nCustom Metadata: no\nMetadata Stream: no\nTagged:          no\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           1\nEncrypted:       no\nPage size:       612 x 792 pts (letter)\nPage rot:        0\nFile size:       114025 bytes\nOptimized:       no\nPDF version:     1.4\n"
+  },
+  "layout-mapping.ps": {
+    "sha256": "e75eac0a9fb16334999c3d79eb6358a6adb55f15107360ebebd926dfc978b295",
+    "ghostscript": "passed",
+    "raster_pages": 1,
+    "log": ""
+  },
+  "legacy-bars.pdf": {
+    "sha256": "7cfc0c6d6c8a70d98f6890d9711dd832c2c51be1c271016eb9255f962452965c",
+    "ghostscript": "passed",
+    "raster_pages": 1,
+    "log": "",
+    "pdfinfo": "Producer:        Skia/PDF m151\nCustom Metadata: no\nMetadata Stream: no\nTagged:          no\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           1\nEncrypted:       no\nPage size:       612 x 792 pts (letter)\nPage rot:        0\nFile size:       113566 bytes\nOptimized:       no\nPDF version:     1.4\n"
+  },
+  "legacy-bars.ps": {
+    "sha256": "b6454e59dbffb181f681925c32949a371258aa56acf9ccb6af941b9e1a1aab81",
+    "ghostscript": "passed",
+    "raster_pages": 1,
+    "log": ""
+  },
+  "x14-bars.pdf": {
+    "sha256": "6985e6091243a139f368abee4f166a687a7a58a1bb2e26d8579b78f8dba7db8a",
+    "ghostscript": "passed",
+    "raster_pages": 1,
+    "log": "",
+    "pdfinfo": "Producer:        Skia/PDF m151\nCustom Metadata: no\nMetadata Stream: no\nTagged:          no\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           1\nEncrypted:       no\nPage size:       612 x 792 pts (letter)\nPage rot:        0\nFile size:       114324 bytes\nOptimized:       no\nPDF version:     1.4\n"
+  },
+  "x14-bars.ps": {
+    "sha256": "b554775b4c8b913d46a5f49925fd915287359b4a28b07f80c475dcf212bc64f6",
+    "ghostscript": "passed",
+    "raster_pages": 1,
+    "log": ""
+  }
+}

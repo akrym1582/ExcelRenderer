@@ -155,7 +155,8 @@ internal sealed partial class StructuralReferences
     {
         foreach (var element in root.DescendantsAndSelf())
         {
-            if (IsFormulaElement(element.Name.LocalName, element.Name.NamespaceName))
+            if (IsFormulaElement(element.Name.LocalName, element.Name.NamespaceName) ||
+                (element.Name == XName.Get("f", "http://schemas.microsoft.com/office/excel/2006/main") && element.Parent?.Name == XName.Get("cfvo", "http://schemas.microsoft.com/office/spreadsheetml/2009/9/main") && (string?)element.Parent.Attribute("type") == "formula"))
             {
                 yield return element;
             }
@@ -171,6 +172,13 @@ internal sealed partial class StructuralReferences
     /// <returns>Formula text, or null when the element is not a formula store.</returns>
     internal static string? ReadFormulaStore(XmlReader reader)
     {
+        if (reader.LocalName == "cfvo" && reader.NamespaceURI == "http://schemas.microsoft.com/office/spreadsheetml/2009/9/main" && reader.GetAttribute("type") == "formula")
+        {
+            using var threshold = reader.ReadSubtree();
+            var element = XElement.Load(threshold);
+            return element.Element(XName.Get("f", "http://schemas.microsoft.com/office/excel/2006/main"))?.Value;
+        }
+
         if (IsFormulaThreshold(reader.LocalName, reader.NamespaceURI, reader.GetAttribute("type")))
         {
             return reader.GetAttribute("val");

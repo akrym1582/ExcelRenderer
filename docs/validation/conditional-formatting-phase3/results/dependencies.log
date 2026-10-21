@@ -1,0 +1,4 @@
+Core dependency direction and migrated helper ownership passed
+Shared conversion pipeline and compatibility facade ownership passed
+Shared OpenXml dependency direction and input ownership passed
+Source-neutral reader hooks and shared mapping language passed

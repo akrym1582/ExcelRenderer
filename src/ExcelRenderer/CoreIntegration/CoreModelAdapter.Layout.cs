@@ -12,12 +12,12 @@ internal static partial class CoreModelAdapter
     internal static Core.Model.ReportSheet ToCore(ReportSheet value)
     {
         var styles = new Dictionary<CellStyle, Core.Model.CellStyle>();
-        var richSnapshots = new Dictionary<ReportCell, FullCellTextData?>();
+        var richSnapshots = new Dictionary<ReportCell, Core.Extensibility.ICoreExtensionData?>();
         if (value.Cells is not CoreDictionaryView<Core.Model.CellAddress, Core.Model.ReportCell, CellAddress, ReportCell>)
         {
-            foreach (var cell in value.Cells.Values.Where(cell => cell.RichTextRuns is not null))
+            foreach (var cell in value.Cells.Values.Where(cell => cell.RichTextRuns is not null || cell.ConditionalVisual is not null))
             {
-                richSnapshots[cell] = FullCellTextData.Create(cell);
+                richSnapshots[cell] = FullCellPresentationData.Create(cell);
             }
         }
 
@@ -117,8 +117,9 @@ internal static partial class CoreModelAdapter
     {
         FormulaSharedIndex = value.FormulaSharedIndex,
         FormulaMasterAddress = value.FormulaMasterAddress is { } master ? ToPublic(master) : null,
-        RichTextRuns = (value.ExtensionData as FullCellTextData)?.Runs,
-        UnsupportedRichTextFormatting = (value.ExtensionData as FullCellTextData)?.UnsupportedFormatting ?? false,
+        ConditionalVisual = FullCellPresentationData.Decoration(value.ExtensionData),
+        RichTextRuns = FullCellPresentationData.Text(value.ExtensionData)?.Runs,
+        UnsupportedRichTextFormatting = FullCellPresentationData.Text(value.ExtensionData)?.UnsupportedFormatting ?? false,
         MergedBorders = value.MergedBorders?.Select(border => new CellBorder(ToPublic(border.Address), styles.Intern(ToPublic(border.Border)))).ToArray(),
     };
 

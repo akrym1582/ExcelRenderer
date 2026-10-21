@@ -26,7 +26,7 @@ internal sealed class CoreTextLayoutAdapter : CoreTextMeasurerAdapter, Core.Abst
     /// <inheritdoc/>
     public Core.Abstractions.TextLayoutResult? Layout(Core.Model.ReportCell cell, double availableWidth, bool wrap)
     {
-        if (layout is not IRichTextLayoutService rich || cell.ExtensionData is not FullCellTextData data ||
+        if (layout is not IRichTextLayoutService rich || FullCellPresentationData.Text(cell.ExtensionData) is not { } data ||
             cell.Style.TextRotation != 0 || cell.Style.TopToBottom)
         {
             return null;

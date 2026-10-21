@@ -1,0 +1,5 @@
+# Preserve generated PDF bytes, including required cross-reference whitespace.
+outputs/*.pdf binary
+# Renderer output and execution logs are retained verbatim as evidence.
+outputs/*.markdown -whitespace
+results/*.log -whitespace

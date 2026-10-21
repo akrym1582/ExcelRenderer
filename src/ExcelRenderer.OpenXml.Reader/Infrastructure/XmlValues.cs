@@ -86,7 +86,7 @@ internal static class XmlValues
     /// <summary>Provides Info metadata.</summary>
     /// <returns>The resulting value.</returns>
     /// <param name="e">The e value.</param>
-    internal static ElementInfo Info(XElement e) => new ElementInfo(e.Name.LocalName, e.HasElements ? string.Empty : e.Value, Attributes(e), e.Elements().Select(Info).ToList().AsReadOnly());
+    internal static ElementInfo Info(XElement e) => new ElementInfo(e.Name.LocalName, e.HasElements ? string.Empty : e.Value, Attributes(e), e.Elements().Select(Info).ToList().AsReadOnly(), e.Name.NamespaceName);
 
     /// <summary>Loads only the current bounded XML entry.</summary>
     /// <returns>The resulting value.</returns>

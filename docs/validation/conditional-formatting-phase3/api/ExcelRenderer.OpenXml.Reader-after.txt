@@ -1,0 +1,417 @@
+M ExcelRenderer.OpenXml.Reader.Diagnostics.ReaderDiagnostic Method System.Nullable`1[ExcelRenderer.OpenXml.Reader.Model.Cells.CellAddress] get_Address() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Diagnostics.ReaderDiagnostic Method System.Nullable`1[System.Int32] get_SheetIndex() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Diagnostics.ReaderDiagnostic Method System.String get_Code() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Diagnostics.ReaderDiagnostic Method System.String get_Message() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Diagnostics.ReaderDiagnostic Method System.String get_Severity() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Diagnostics.ReaderDiagnostic Property System.Nullable`1[ExcelRenderer.OpenXml.Reader.Model.Cells.CellAddress] Address nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Diagnostics.ReaderDiagnostic Property System.Nullable`1[System.Int32] SheetIndex nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Diagnostics.ReaderDiagnostic Property System.String Code nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Diagnostics.ReaderDiagnostic Property System.String Message nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Diagnostics.ReaderDiagnostic Property System.String Severity nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Diagnostics.ReaderDiagnosticCodes Field System.String FormulaCachedValueMissing Public, Static, Literal, HasDefault nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Diagnostics.ReaderDiagnosticCodes Field System.String FormulaResultError Public, Static, Literal, HasDefault nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Diagnostics.ReaderDiagnosticCodes Field System.String UnresolvedColor Public, Static, Literal, HasDefault nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Diagnostics.ReaderDiagnosticCodes Field System.String UnsupportedNumberFormat Public, Static, Literal, HasDefault nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Diagnostics.ReaderDiagnosticCodes Field System.String UnsupportedPrintReference Public, Static, Literal, HasDefault nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Formatting.CellDisplayResult Method System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Diagnostics.ReaderDiagnostic] get_Diagnostics() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Formatting.CellDisplayResult Method System.String get_Text() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Formatting.CellDisplayResult Property System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Diagnostics.ReaderDiagnostic] Diagnostics nullability=NotNull/Unknown[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Formatting.CellDisplayResult Property System.String Text nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.IWorkbookDataReader Method ExcelRenderer.OpenXml.Reader.Formatting.CellDisplayResult FormatCell(ExcelRenderer.OpenXml.Reader.Model.Cells.CellRecord) Public, Virtual, HideBySig, VtableLayoutMask, Abstract cell:None: nullability=NotNull/NotNull[]NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.IWorkbookDataReader Method ExcelRenderer.OpenXml.Reader.Model.Styles.CellStyleInfo ResolveStyle(ExcelRenderer.OpenXml.Reader.Model.Cells.CellRecord) Public, Virtual, HideBySig, VtableLayoutMask, Abstract cell:None: nullability=NotNull/NotNull[]NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.IWorkbookDataReader Method ExcelRenderer.OpenXml.Reader.Model.Styles.CellStyleInfo ResolveStyle(Int32) Public, Virtual, HideBySig, VtableLayoutMask, Abstract styleIndex:None: nullability=NotNull/NotNull[]NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.IWorkbookDataReader Method ExcelRenderer.OpenXml.Reader.Model.Workbook.WorkbookInfo get_Workbook() Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.IWorkbookDataReader Method ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo ReadWorksheetInfo(Int32, System.Threading.CancellationToken) Public, Virtual, HideBySig, VtableLayoutMask, Abstract sheetIndex:None:;cancellationToken:Optional, HasDefault: nullability=NotNull/NotNull[]NotNull/NotNull[];NotNull/NotNull[] contracts=;
+M ExcelRenderer.OpenXml.Reader.IWorkbookDataReader Method System.Collections.Generic.IEnumerable`1[ExcelRenderer.OpenXml.Reader.Model.Cells.CellRecord] EnumerateCells(Int32, System.Threading.CancellationToken) Public, Virtual, HideBySig, VtableLayoutMask, Abstract sheetIndex:None:;cancellationToken:Optional, HasDefault: nullability=NotNull/NotNull[NotNull/NotNull[]]NotNull/NotNull[];NotNull/NotNull[] contracts=;
+M ExcelRenderer.OpenXml.Reader.IWorkbookDataReader Method System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Model.Workbook.SheetInfo] get_Sheets() Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName  nullability=NotNull/NotNull[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.IWorkbookDataReader Method System.Collections.Generic.IReadOnlyList`1[System.Int32] get_SelectedWorksheetIndices() Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName  nullability=NotNull/NotNull[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.IWorkbookDataReader Property ExcelRenderer.OpenXml.Reader.Model.Workbook.WorkbookInfo Workbook nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.IWorkbookDataReader Property System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Model.Workbook.SheetInfo] Sheets nullability=NotNull/Unknown[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.IWorkbookDataReader Property System.Collections.Generic.IReadOnlyList`1[System.Int32] SelectedWorksheetIndices nullability=NotNull/Unknown[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Input.WorkbookInputOptions Constructor Void .ctor() Public, HideBySig, SpecialName, RTSpecialName  nullability= contracts=
+M ExcelRenderer.OpenXml.Reader.Input.WorkbookInputOptions Method Boolean get_AllowTemporaryFiles() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Input.WorkbookInputOptions Method Int32 get_MaxZipEntryCount() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Input.WorkbookInputOptions Method Int64 get_MaxInputBytes() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Input.WorkbookInputOptions Method Int64 get_MaxUncompressedZipBytes() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Input.WorkbookInputOptions Method Int64 get_MemoryThresholdBytes() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Input.WorkbookInputOptions Method System.String get_TemporaryDirectory() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Input.WorkbookInputOptions Method Void set_AllowTemporaryFiles(Boolean) Public, HideBySig, SpecialName value:None: nullability=NotNull/NotNull[]NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Input.WorkbookInputOptions Method Void set_MaxInputBytes(Int64) Public, HideBySig, SpecialName value:None: nullability=NotNull/NotNull[]NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Input.WorkbookInputOptions Method Void set_MaxUncompressedZipBytes(Int64) Public, HideBySig, SpecialName value:None: nullability=NotNull/NotNull[]NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Input.WorkbookInputOptions Method Void set_MaxZipEntryCount(Int32) Public, HideBySig, SpecialName value:None: nullability=NotNull/NotNull[]NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Input.WorkbookInputOptions Method Void set_MemoryThresholdBytes(Int64) Public, HideBySig, SpecialName value:None: nullability=NotNull/NotNull[]NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Input.WorkbookInputOptions Method Void set_TemporaryDirectory(System.String) Public, HideBySig, SpecialName value:None: nullability=NotNull/NotNull[]Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Input.WorkbookInputOptions Property Boolean AllowTemporaryFiles nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Input.WorkbookInputOptions Property Int32 MaxZipEntryCount nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Input.WorkbookInputOptions Property Int64 MaxInputBytes nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Input.WorkbookInputOptions Property Int64 MaxUncompressedZipBytes nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Input.WorkbookInputOptions Property Int64 MemoryThresholdBytes nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Input.WorkbookInputOptions Property System.String TemporaryDirectory nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellAddress Constructor Void .ctor(Int32, Int32) Public, HideBySig, SpecialName, RTSpecialName row:None:;column:None: nullability=NotNull/NotNull[];NotNull/NotNull[] contracts=;
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellAddress Method Boolean Equals(ExcelRenderer.OpenXml.Reader.Model.Cells.CellAddress) Public, Final, Virtual, HideBySig, VtableLayoutMask other:None: nullability=NotNull/NotNull[]NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellAddress Method Boolean Equals(System.Object) Public, Virtual, HideBySig obj:None: nullability=NotNull/NotNull[]Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellAddress Method ExcelRenderer.OpenXml.Reader.Model.Cells.CellAddress Parse(System.String) Public, Static, HideBySig text:None: nullability=NotNull/NotNull[]NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellAddress Method Int32 GetHashCode() Public, Virtual, HideBySig  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellAddress Method Int32 get_Column() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellAddress Method Int32 get_Row() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellAddress Method System.String ToString() Public, Virtual, HideBySig  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellAddress Property Int32 Column nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellAddress Property Int32 Row nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellRange Constructor Void .ctor(ExcelRenderer.OpenXml.Reader.Model.Cells.CellAddress, ExcelRenderer.OpenXml.Reader.Model.Cells.CellAddress) Public, HideBySig, SpecialName, RTSpecialName first:None:;last:None: nullability=NotNull/NotNull[];NotNull/NotNull[] contracts=;
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellRange Method ExcelRenderer.OpenXml.Reader.Model.Cells.CellAddress get_First() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellRange Method ExcelRenderer.OpenXml.Reader.Model.Cells.CellAddress get_Last() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellRange Method ExcelRenderer.OpenXml.Reader.Model.Cells.CellRange Parse(System.String) Public, Static, HideBySig text:None: nullability=NotNull/NotNull[]NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellRange Method System.String ToString() Public, Virtual, HideBySig  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellRange Property ExcelRenderer.OpenXml.Reader.Model.Cells.CellAddress First nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellRange Property ExcelRenderer.OpenXml.Reader.Model.Cells.CellAddress Last nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellRecord Method Boolean get_HasCalculationMetadata() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellRecord Method Boolean get_HasPhonetic() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellRecord Method ExcelRenderer.OpenXml.Reader.Model.Cells.CellAddress get_Address() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellRecord Method ExcelRenderer.OpenXml.Reader.Model.Cells.CellValue get_Value() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellRecord Method ExcelRenderer.OpenXml.Reader.Model.Cells.FormulaInfo get_Formula() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellRecord Method Int32 get_SheetIndex() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellRecord Method Int32 get_StyleIndex() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellRecord Method System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Model.Cells.RichTextRunInfo] get_RichTextRuns() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellRecord Method System.Nullable`1[System.Int32] get_ExplicitStyleIndex() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellRecord Method System.Nullable`1[System.Int32] get_SharedStringIndex() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellRecord Method System.String get_RawValue() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellRecord Property Boolean HasCalculationMetadata nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellRecord Property Boolean HasPhonetic nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellRecord Property ExcelRenderer.OpenXml.Reader.Model.Cells.CellAddress Address nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellRecord Property ExcelRenderer.OpenXml.Reader.Model.Cells.CellValue Value nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellRecord Property ExcelRenderer.OpenXml.Reader.Model.Cells.FormulaInfo Formula nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellRecord Property Int32 SheetIndex nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellRecord Property Int32 StyleIndex nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellRecord Property System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Model.Cells.RichTextRunInfo] RichTextRuns nullability=NotNull/Unknown[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellRecord Property System.Nullable`1[System.Int32] ExplicitStyleIndex nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellRecord Property System.Nullable`1[System.Int32] SharedStringIndex nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellRecord Property System.String RawValue nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellValue Method ExcelRenderer.OpenXml.Reader.Model.Cells.CellValueType get_Type() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellValue Method System.Nullable`1[System.Boolean] get_Boolean() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellValue Method System.Nullable`1[System.Double] get_Number() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellValue Method System.String get_Kind() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellValue Method System.String get_Text() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellValue Property ExcelRenderer.OpenXml.Reader.Model.Cells.CellValueType Type nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellValue Property System.Nullable`1[System.Boolean] Boolean nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellValue Property System.Nullable`1[System.Double] Number nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellValue Property System.String Kind nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellValue Property System.String Text nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellValueType Field ExcelRenderer.OpenXml.Reader.Model.Cells.CellValueType Blank Public, Static, Literal, HasDefault nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellValueType Field ExcelRenderer.OpenXml.Reader.Model.Cells.CellValueType Boolean Public, Static, Literal, HasDefault nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellValueType Field ExcelRenderer.OpenXml.Reader.Model.Cells.CellValueType Error Public, Static, Literal, HasDefault nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellValueType Field ExcelRenderer.OpenXml.Reader.Model.Cells.CellValueType IsoDate Public, Static, Literal, HasDefault nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellValueType Field ExcelRenderer.OpenXml.Reader.Model.Cells.CellValueType Number Public, Static, Literal, HasDefault nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellValueType Field ExcelRenderer.OpenXml.Reader.Model.Cells.CellValueType String Public, Static, Literal, HasDefault nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.CellValueType Field Int32 value__ Public, SpecialName, RTSpecialName nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.FormulaInfo Method Boolean get_HasCachedResult() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.FormulaInfo Method System.Collections.Generic.IReadOnlyDictionary`2[System.String,System.String] get_Attributes() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[NotNull/NotNull[],NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.FormulaInfo Method System.Nullable`1[ExcelRenderer.OpenXml.Reader.Model.Cells.CellAddress] get_MasterAddress() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.FormulaInfo Method System.Nullable`1[System.Int32] get_SharedIndex() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.FormulaInfo Method System.String get_Kind() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.FormulaInfo Method System.String get_MasterFormula() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.FormulaInfo Method System.String get_MasterReference() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.FormulaInfo Method System.String get_RawFormula() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.FormulaInfo Method System.String get_Reference() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.FormulaInfo Property Boolean HasCachedResult nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.FormulaInfo Property System.Collections.Generic.IReadOnlyDictionary`2[System.String,System.String] Attributes nullability=NotNull/Unknown[NotNull/NotNull[],NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.FormulaInfo Property System.Nullable`1[ExcelRenderer.OpenXml.Reader.Model.Cells.CellAddress] MasterAddress nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.FormulaInfo Property System.Nullable`1[System.Int32] SharedIndex nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.FormulaInfo Property System.String Kind nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.FormulaInfo Property System.String MasterFormula nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.FormulaInfo Property System.String MasterReference nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.FormulaInfo Property System.String RawFormula nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.FormulaInfo Property System.String Reference nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.RichTextRunInfo Method ExcelRenderer.OpenXml.Reader.Model.Styles.FontInfo get_FontProperties() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.RichTextRunInfo Method ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo get_Properties() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.RichTextRunInfo Method System.String get_Text() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.RichTextRunInfo Property ExcelRenderer.OpenXml.Reader.Model.Styles.FontInfo FontProperties nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.RichTextRunInfo Property ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo Properties nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Cells.RichTextRunInfo Property System.String Text nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.ConditionalFormatting.ConditionalFormattingExtensionInfo Method ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo get_Source() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.ConditionalFormatting.ConditionalFormattingExtensionInfo Method System.Nullable`1[System.Guid] get_Id() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.ConditionalFormatting.ConditionalFormattingExtensionInfo Property ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo Source nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.ConditionalFormatting.ConditionalFormattingExtensionInfo Property System.Nullable`1[System.Guid] Id nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.ConditionalFormatting.ConditionalFormattingRuleInfo Method Boolean get_IsExtension() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.ConditionalFormatting.ConditionalFormattingRuleInfo Method ExcelRenderer.OpenXml.Reader.Model.ConditionalFormatting.ConditionalFormattingExtensionInfo get_Extension() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.ConditionalFormatting.ConditionalFormattingRuleInfo Method ExcelRenderer.OpenXml.Reader.Model.Styles.DifferentialStyleInfo get_Style() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.ConditionalFormatting.ConditionalFormattingRuleInfo Method ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo get_Source() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.ConditionalFormatting.ConditionalFormattingRuleInfo Method System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Model.Cells.CellRange] get_Ranges() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.ConditionalFormatting.ConditionalFormattingRuleInfo Property Boolean IsExtension nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.ConditionalFormatting.ConditionalFormattingRuleInfo Property ExcelRenderer.OpenXml.Reader.Model.ConditionalFormatting.ConditionalFormattingExtensionInfo Extension nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.ConditionalFormatting.ConditionalFormattingRuleInfo Property ExcelRenderer.OpenXml.Reader.Model.Styles.DifferentialStyleInfo Style nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.ConditionalFormatting.ConditionalFormattingRuleInfo Property ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo Source nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.ConditionalFormatting.ConditionalFormattingRuleInfo Property System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Model.Cells.CellRange] Ranges nullability=NotNull/Unknown[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Drawing.ImageInfo Method ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo get_Anchor() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Drawing.ImageInfo Method Int32 get_SheetIndex() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Drawing.ImageInfo Method Int32 get_ZIndex() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Drawing.ImageInfo Method System.String get_ContentType() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Drawing.ImageInfo Method System.String get_Name() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Drawing.ImageInfo Method System.String get_PartUri() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Drawing.ImageInfo Method System.String get_RelationshipId() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Drawing.ImageInfo Property ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo Anchor nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Drawing.ImageInfo Property Int32 SheetIndex nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Drawing.ImageInfo Property Int32 ZIndex nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Drawing.ImageInfo Property System.String ContentType nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Drawing.ImageInfo Property System.String Name nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Drawing.ImageInfo Property System.String PartUri nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Drawing.ImageInfo Property System.String RelationshipId nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Printing.PrintRangeInfo Method Int32 get_FirstColumn() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Printing.PrintRangeInfo Method Int32 get_FirstRow() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Printing.PrintRangeInfo Method Int32 get_LastColumn() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Printing.PrintRangeInfo Method Int32 get_LastRow() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Printing.PrintRangeInfo Method System.String get_Kind() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Printing.PrintRangeInfo Property Int32 FirstColumn nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Printing.PrintRangeInfo Property Int32 FirstRow nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Printing.PrintRangeInfo Property Int32 LastColumn nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Printing.PrintRangeInfo Property Int32 LastRow nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Printing.PrintRangeInfo Property System.String Kind nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Printing.PrintReferenceInfo Method System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Model.Printing.PrintRangeInfo] get_Ranges() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Printing.PrintReferenceInfo Method System.String get_Name() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Printing.PrintReferenceInfo Method System.String get_RawText() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Printing.PrintReferenceInfo Property System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Model.Printing.PrintRangeInfo] Ranges nullability=NotNull/Unknown[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Printing.PrintReferenceInfo Property System.String Name nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Printing.PrintReferenceInfo Property System.String RawText nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.CellStyleInfo Method ExcelRenderer.OpenXml.Reader.Model.Styles.FontInfo get_FontProperties() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.CellStyleInfo Method ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo get_Alignment() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.CellStyleInfo Method ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo get_Border() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.CellStyleInfo Method ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo get_Fill() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.CellStyleInfo Method ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo get_Font() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.CellStyleInfo Method Int32 get_BorderId() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.CellStyleInfo Method Int32 get_FillId() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.CellStyleInfo Method Int32 get_FontId() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.CellStyleInfo Method Int32 get_NumberFormatId() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.CellStyleInfo Method Int32 get_StyleIndex() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.CellStyleInfo Method System.Collections.Generic.IReadOnlyDictionary`2[System.String,System.String] get_Attributes() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[NotNull/NotNull[],NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.CellStyleInfo Method System.Nullable`1[System.Int32] get_XfId() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.CellStyleInfo Method System.String get_NumberFormatCode() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.CellStyleInfo Property ExcelRenderer.OpenXml.Reader.Model.Styles.FontInfo FontProperties nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.CellStyleInfo Property ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo Alignment nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.CellStyleInfo Property ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo Border nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.CellStyleInfo Property ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo Fill nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.CellStyleInfo Property ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo Font nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.CellStyleInfo Property Int32 BorderId nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.CellStyleInfo Property Int32 FillId nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.CellStyleInfo Property Int32 FontId nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.CellStyleInfo Property Int32 NumberFormatId nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.CellStyleInfo Property Int32 StyleIndex nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.CellStyleInfo Property System.Collections.Generic.IReadOnlyDictionary`2[System.String,System.String] Attributes nullability=NotNull/Unknown[NotNull/NotNull[],NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.CellStyleInfo Property System.Nullable`1[System.Int32] XfId nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.CellStyleInfo Property System.String NumberFormatCode nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.DifferentialStyleInfo Method ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo get_Source() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.DifferentialStyleInfo Property ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo Source nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.FontInfo Method ExcelRenderer.OpenXml.Reader.Model.Styles.FontInfo WithOverrides(ExcelRenderer.OpenXml.Reader.Model.Styles.FontInfo) Public, HideBySig overrides:None: nullability=NotNull/NotNull[]Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.FontInfo Method ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo get_Color() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.FontInfo Method System.Nullable`1[System.Boolean] get_Bold() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.FontInfo Method System.Nullable`1[System.Boolean] get_Italic() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.FontInfo Method System.Nullable`1[System.Boolean] get_Strikethrough() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.FontInfo Method System.Nullable`1[System.Double] get_SizePt() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.FontInfo Method System.String get_Name() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.FontInfo Method System.String get_Scheme() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.FontInfo Method System.String get_Underline() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.FontInfo Method System.String get_VerticalAlignment() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.FontInfo Property ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo Color nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.FontInfo Property System.Nullable`1[System.Boolean] Bold nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.FontInfo Property System.Nullable`1[System.Boolean] Italic nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.FontInfo Property System.Nullable`1[System.Boolean] Strikethrough nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.FontInfo Property System.Nullable`1[System.Double] SizePt nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.FontInfo Property System.String Name nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.FontInfo Property System.String Scheme nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.FontInfo Property System.String Underline nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Styles.FontInfo Property System.String VerticalAlignment nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.ColumnInfo Method Int32 get_Max() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.ColumnInfo Method Int32 get_Min() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.ColumnInfo Method System.Nullable`1[System.Boolean] get_Collapsed() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.ColumnInfo Method System.Nullable`1[System.Boolean] get_CustomWidth() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.ColumnInfo Method System.Nullable`1[System.Boolean] get_Hidden() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.ColumnInfo Method System.Nullable`1[System.Double] get_Width() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.ColumnInfo Method System.Nullable`1[System.Int32] get_OutlineLevel() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.ColumnInfo Method System.Nullable`1[System.Int32] get_StyleIndex() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.ColumnInfo Property Int32 Max nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.ColumnInfo Property Int32 Min nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.ColumnInfo Property System.Nullable`1[System.Boolean] Collapsed nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.ColumnInfo Property System.Nullable`1[System.Boolean] CustomWidth nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.ColumnInfo Property System.Nullable`1[System.Boolean] Hidden nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.ColumnInfo Property System.Nullable`1[System.Double] Width nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.ColumnInfo Property System.Nullable`1[System.Int32] OutlineLevel nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.ColumnInfo Property System.Nullable`1[System.Int32] StyleIndex nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.DefinedNameInfo Method System.Nullable`1[System.Int32] get_LocalSheetId() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.DefinedNameInfo Method System.String get_Name() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.DefinedNameInfo Method System.String get_RawText() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.DefinedNameInfo Property System.Nullable`1[System.Int32] LocalSheetId nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.DefinedNameInfo Property System.String Name nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.DefinedNameInfo Property System.String RawText nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo Method System.Collections.Generic.IReadOnlyDictionary`2[System.String,System.String] get_Attributes() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[NotNull/NotNull[],NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo Method System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo] get_Children() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo Method System.String get_Name() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo Method System.String get_NamespaceUri() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo Method System.String get_Text() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo Property System.Collections.Generic.IReadOnlyDictionary`2[System.String,System.String] Attributes nullability=NotNull/Unknown[NotNull/NotNull[],NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo Property System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo] Children nullability=NotNull/Unknown[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo Property System.String Name nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo Property System.String NamespaceUri nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo Property System.String Text nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.RowInfo Method Int32 get_Index() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.RowInfo Method System.Nullable`1[System.Boolean] get_Collapsed() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.RowInfo Method System.Nullable`1[System.Boolean] get_CustomFormat() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.RowInfo Method System.Nullable`1[System.Boolean] get_CustomHeight() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.RowInfo Method System.Nullable`1[System.Boolean] get_Hidden() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.RowInfo Method System.Nullable`1[System.Double] get_HeightPt() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.RowInfo Method System.Nullable`1[System.Int32] get_OutlineLevel() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.RowInfo Method System.Nullable`1[System.Int32] get_StyleIndex() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.RowInfo Property Int32 Index nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.RowInfo Property System.Nullable`1[System.Boolean] Collapsed nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.RowInfo Property System.Nullable`1[System.Boolean] CustomFormat nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.RowInfo Property System.Nullable`1[System.Boolean] CustomHeight nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.RowInfo Property System.Nullable`1[System.Boolean] Hidden nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.RowInfo Property System.Nullable`1[System.Double] HeightPt nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.RowInfo Property System.Nullable`1[System.Int32] OutlineLevel nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.RowInfo Property System.Nullable`1[System.Int32] StyleIndex nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.SheetInfo Method Int32 get_Index() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.SheetInfo Method System.String get_Kind() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.SheetInfo Method System.String get_Name() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.SheetInfo Method System.String get_Visibility() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.SheetInfo Method UInt32 get_SheetId() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.SheetInfo Property Int32 Index nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.SheetInfo Property System.String Kind nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.SheetInfo Property System.String Name nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.SheetInfo Property System.String Visibility nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.SheetInfo Property UInt32 SheetId nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorkbookInfo Method Boolean get_Date1904() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorkbookInfo Method ExcelRenderer.OpenXml.Reader.Model.Styles.FontInfo get_DefaultFontProperties() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorkbookInfo Method ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo get_DefaultFont() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorkbookInfo Method ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo get_Theme() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorkbookInfo Method System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Model.Workbook.DefinedNameInfo] get_DefinedNames() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorkbookInfo Property Boolean Date1904 nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorkbookInfo Property ExcelRenderer.OpenXml.Reader.Model.Styles.FontInfo DefaultFontProperties nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorkbookInfo Property ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo DefaultFont nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorkbookInfo Property ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo Theme nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorkbookInfo Property System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Model.Workbook.DefinedNameInfo] DefinedNames nullability=NotNull/Unknown[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Method Boolean get_DefaultRowsHidden() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Method Boolean get_HasConditionalFormatting() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Method Boolean get_HasDrawings() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Method Boolean get_HasFormulas() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Method Boolean get_HasHyperlinks() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Method Boolean get_HasTables() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Method Boolean get_RightToLeft() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Method Double get_DefaultRowHeightPt() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Method ExcelRenderer.OpenXml.Reader.Model.Cells.CellRange get_ActualCellRange() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Method ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo get_HeaderFooter() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Method ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo get_PageMargins() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Method ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo get_PageSetup() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Method ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo get_PageSetupProperties() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Method ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo get_PrintOptions() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Method ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo get_SheetFormat() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Method ExcelRenderer.OpenXml.Reader.Model.Workbook.SheetInfo get_Sheet() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Method Int32 get_BaseColumnWidthCharacters() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Method System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Model.Cells.CellRange] get_MergedRanges() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Method System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Model.ConditionalFormatting.ConditionalFormattingRuleInfo] get_ConditionalFormattingRules() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Method System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Model.Printing.PrintReferenceInfo] get_PrintReferences() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Method System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Model.Workbook.ColumnInfo] get_Columns() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Method System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo] get_ColumnBreaks() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Method System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo] get_RowBreaks() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Method System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Model.Workbook.RowInfo] get_Rows() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Method System.Collections.Generic.IReadOnlyList`1[System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Model.Cells.CellRange]] get_ConditionalFormattingRanges() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[NotNull/NotNull[NotNull/NotNull[]]] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Method System.Nullable`1[System.Double] get_DefaultColumnWidthExcel() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Method System.String get_RawDimension() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Property Boolean DefaultRowsHidden nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Property Boolean HasConditionalFormatting nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Property Boolean HasDrawings nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Property Boolean HasFormulas nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Property Boolean HasHyperlinks nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Property Boolean HasTables nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Property Boolean RightToLeft nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Property Double DefaultRowHeightPt nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Property ExcelRenderer.OpenXml.Reader.Model.Cells.CellRange ActualCellRange nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Property ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo HeaderFooter nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Property ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo PageMargins nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Property ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo PageSetup nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Property ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo PageSetupProperties nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Property ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo PrintOptions nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Property ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo SheetFormat nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Property ExcelRenderer.OpenXml.Reader.Model.Workbook.SheetInfo Sheet nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Property Int32 BaseColumnWidthCharacters nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Property System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Model.Cells.CellRange] MergedRanges nullability=NotNull/Unknown[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Property System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Model.ConditionalFormatting.ConditionalFormattingRuleInfo] ConditionalFormattingRules nullability=NotNull/Unknown[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Property System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Model.Printing.PrintReferenceInfo] PrintReferences nullability=NotNull/Unknown[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Property System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Model.Workbook.ColumnInfo] Columns nullability=NotNull/Unknown[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Property System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo] ColumnBreaks nullability=NotNull/Unknown[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Property System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo] RowBreaks nullability=NotNull/Unknown[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Property System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Model.Workbook.RowInfo] Rows nullability=NotNull/Unknown[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Property System.Collections.Generic.IReadOnlyList`1[System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Model.Cells.CellRange]] ConditionalFormattingRanges nullability=NotNull/Unknown[NotNull/NotNull[NotNull/NotNull[]]] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Property System.Nullable`1[System.Double] DefaultColumnWidthExcel nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Property System.String RawDimension nullability=Nullable/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlReaderOptions Constructor Void .ctor() Public, HideBySig, SpecialName, RTSpecialName  nullability= contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlReaderOptions Method Int32 get_MaxCellTextCharacters() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlReaderOptions Method Int32 get_MaxSharedStringItems() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlReaderOptions Method Int32 get_MaxStyleRecords() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlReaderOptions Method Int64 get_MaxCharactersInPart() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlReaderOptions Method Int64 get_MaxSharedStringCharacters() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlReaderOptions Method System.Action`1[ExcelRenderer.OpenXml.Reader.Diagnostics.ReaderDiagnostic] get_DiagnosticSink() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlReaderOptions Method System.Collections.Generic.IReadOnlyList`1[System.String] get_SelectedSheetNames() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlReaderOptions Method System.Globalization.CultureInfo get_Culture() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlReaderOptions Method Void set_Culture(System.Globalization.CultureInfo) Public, HideBySig, SpecialName value:None: nullability=NotNull/NotNull[]Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlReaderOptions Method Void set_DiagnosticSink(System.Action`1[ExcelRenderer.OpenXml.Reader.Diagnostics.ReaderDiagnostic]) Public, HideBySig, SpecialName value:None: nullability=NotNull/NotNull[]Nullable/Nullable[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlReaderOptions Method Void set_MaxCellTextCharacters(Int32) Public, HideBySig, SpecialName value:None: nullability=NotNull/NotNull[]NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlReaderOptions Method Void set_MaxCharactersInPart(Int64) Public, HideBySig, SpecialName value:None: nullability=NotNull/NotNull[]NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlReaderOptions Method Void set_MaxSharedStringCharacters(Int64) Public, HideBySig, SpecialName value:None: nullability=NotNull/NotNull[]NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlReaderOptions Method Void set_MaxSharedStringItems(Int32) Public, HideBySig, SpecialName value:None: nullability=NotNull/NotNull[]NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlReaderOptions Method Void set_MaxStyleRecords(Int32) Public, HideBySig, SpecialName value:None: nullability=NotNull/NotNull[]NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlReaderOptions Method Void set_SelectedSheetNames(System.Collections.Generic.IReadOnlyList`1[System.String]) Public, HideBySig, SpecialName value:None: nullability=NotNull/NotNull[]Nullable/Nullable[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlReaderOptions Property Int32 MaxCellTextCharacters nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlReaderOptions Property Int32 MaxSharedStringItems nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlReaderOptions Property Int32 MaxStyleRecords nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlReaderOptions Property Int64 MaxCharactersInPart nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlReaderOptions Property Int64 MaxSharedStringCharacters nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlReaderOptions Property System.Action`1[ExcelRenderer.OpenXml.Reader.Diagnostics.ReaderDiagnostic] DiagnosticSink nullability=Nullable/Nullable[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlReaderOptions Property System.Collections.Generic.IReadOnlyList`1[System.String] SelectedSheetNames nullability=Nullable/Nullable[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlReaderOptions Property System.Globalization.CultureInfo Culture nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader Method ExcelRenderer.OpenXml.Reader.Formatting.CellDisplayResult FormatCell(ExcelRenderer.OpenXml.Reader.Model.Cells.CellRecord) Public, Final, Virtual, HideBySig, VtableLayoutMask cell:None: nullability=NotNull/NotNull[]NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader Method ExcelRenderer.OpenXml.Reader.Model.Styles.CellStyleInfo ResolveStyle(ExcelRenderer.OpenXml.Reader.Model.Cells.CellRecord) Public, Final, Virtual, HideBySig, VtableLayoutMask cell:None: nullability=NotNull/NotNull[]NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader Method ExcelRenderer.OpenXml.Reader.Model.Styles.CellStyleInfo ResolveStyle(Int32) Public, Final, Virtual, HideBySig, VtableLayoutMask styleIndex:None: nullability=NotNull/NotNull[]NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader Method ExcelRenderer.OpenXml.Reader.Model.Workbook.WorkbookInfo get_Workbook() Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader Method ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo ReadWorksheetInfo(Int32, System.Threading.CancellationToken) Public, Final, Virtual, HideBySig, VtableLayoutMask sheetIndex:None:;cancellationToken:Optional, HasDefault: nullability=NotNull/NotNull[]NotNull/NotNull[];NotNull/NotNull[] contracts=;
+M ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader Method ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader Open(System.IO.Stream, ExcelRenderer.OpenXml.Reader.OpenXmlReaderOptions, System.Threading.CancellationToken) Public, Static, HideBySig input:None:;options:Optional, HasDefault:;cancellationToken:Optional, HasDefault: nullability=NotNull/NotNull[]NotNull/NotNull[];Nullable/Nullable[];NotNull/NotNull[] contracts=;;
+M ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader Method Int32 get_LoadedSharedStringCount() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader Method Int32 get_StyleRecordCount() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader Method System.Collections.Generic.IEnumerable`1[ExcelRenderer.OpenXml.Reader.Model.Cells.CellRecord] EnumerateCells(Int32, System.Threading.CancellationToken) Public, Final, Virtual, HideBySig, VtableLayoutMask sheetIndex:None:;cancellationToken:Optional, HasDefault: nullability=NotNull/NotNull[NotNull/NotNull[]]NotNull/NotNull[];NotNull/NotNull[] contracts=;
+M ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader Method System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Model.Drawing.ImageInfo] ReadImages(Int32, System.Threading.CancellationToken) Public, HideBySig sheetIndex:None:;cancellationToken:Optional, HasDefault: nullability=NotNull/NotNull[NotNull/NotNull[]]NotNull/NotNull[];NotNull/NotNull[] contracts=;
+M ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader Method System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Model.Workbook.SheetInfo] get_Sheets() Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName  nullability=NotNull/NotNull[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader Method System.Collections.Generic.IReadOnlyList`1[System.Int32] get_SelectedWorksheetIndices() Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName  nullability=NotNull/NotNull[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader Method System.IO.Stream OpenImageStream(ExcelRenderer.OpenXml.Reader.Model.Drawing.ImageInfo) Public, HideBySig image:None: nullability=NotNull/NotNull[]NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader Method System.TimeSpan get_SharedStringLoadTime() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader Method Void Dispose() Public, Final, Virtual, HideBySig, VtableLayoutMask  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader Property ExcelRenderer.OpenXml.Reader.Model.Workbook.WorkbookInfo Workbook nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader Property Int32 LoadedSharedStringCount nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader Property Int32 StyleRecordCount nullability=NotNull/Unknown[] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader Property System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.OpenXml.Reader.Model.Workbook.SheetInfo] Sheets nullability=NotNull/Unknown[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader Property System.Collections.Generic.IReadOnlyList`1[System.Int32] SelectedWorksheetIndices nullability=NotNull/Unknown[NotNull/NotNull[]] contracts=
+M ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader Property System.TimeSpan SharedStringLoadTime nullability=NotNull/Unknown[] contracts=
+T ExcelRenderer.OpenXml.Reader.Diagnostics.ReaderDiagnostic Public, Sealed, BeforeFieldInit base=System.Object interfaces=
+T ExcelRenderer.OpenXml.Reader.Diagnostics.ReaderDiagnosticCodes Public, Abstract, Sealed, BeforeFieldInit base=System.Object interfaces=
+T ExcelRenderer.OpenXml.Reader.Formatting.CellDisplayResult Public, Sealed, BeforeFieldInit base=System.Object interfaces=
+T ExcelRenderer.OpenXml.Reader.IWorkbookDataReader Public, ClassSemanticsMask, Abstract, BeforeFieldInit base= interfaces=System.IDisposable
+T ExcelRenderer.OpenXml.Reader.Input.WorkbookInputOptions Public, Sealed, BeforeFieldInit base=System.Object interfaces=
+T ExcelRenderer.OpenXml.Reader.Model.Cells.CellAddress Public, SequentialLayout, Sealed, BeforeFieldInit base=System.ValueType interfaces=System.IEquatable`1[ExcelRenderer.OpenXml.Reader.Model.Cells.CellAddress]
+T ExcelRenderer.OpenXml.Reader.Model.Cells.CellRange Public, Sealed, BeforeFieldInit base=System.Object interfaces=
+T ExcelRenderer.OpenXml.Reader.Model.Cells.CellRecord Public, Sealed, BeforeFieldInit base=System.Object interfaces=
+T ExcelRenderer.OpenXml.Reader.Model.Cells.CellValue Public, Sealed, BeforeFieldInit base=System.Object interfaces=
+T ExcelRenderer.OpenXml.Reader.Model.Cells.CellValueType Public, Sealed base=System.Enum interfaces=System.IComparable,System.IConvertible,System.IFormattable,System.ISpanFormattable
+T ExcelRenderer.OpenXml.Reader.Model.Cells.FormulaInfo Public, Sealed, BeforeFieldInit base=System.Object interfaces=
+T ExcelRenderer.OpenXml.Reader.Model.Cells.RichTextRunInfo Public, Sealed, BeforeFieldInit base=System.Object interfaces=
+T ExcelRenderer.OpenXml.Reader.Model.ConditionalFormatting.ConditionalFormattingExtensionInfo Public, Sealed, BeforeFieldInit base=System.Object interfaces=
+T ExcelRenderer.OpenXml.Reader.Model.ConditionalFormatting.ConditionalFormattingRuleInfo Public, Sealed, BeforeFieldInit base=System.Object interfaces=
+T ExcelRenderer.OpenXml.Reader.Model.Drawing.ImageInfo Public, Sealed, BeforeFieldInit base=System.Object interfaces=
+T ExcelRenderer.OpenXml.Reader.Model.Printing.PrintRangeInfo Public, Sealed, BeforeFieldInit base=System.Object interfaces=
+T ExcelRenderer.OpenXml.Reader.Model.Printing.PrintReferenceInfo Public, Sealed, BeforeFieldInit base=System.Object interfaces=
+T ExcelRenderer.OpenXml.Reader.Model.Styles.CellStyleInfo Public, Sealed, BeforeFieldInit base=System.Object interfaces=
+T ExcelRenderer.OpenXml.Reader.Model.Styles.DifferentialStyleInfo Public, Sealed, BeforeFieldInit base=System.Object interfaces=
+T ExcelRenderer.OpenXml.Reader.Model.Styles.FontInfo Public, Sealed, BeforeFieldInit base=System.Object interfaces=
+T ExcelRenderer.OpenXml.Reader.Model.Workbook.ColumnInfo Public, Sealed, BeforeFieldInit base=System.Object interfaces=
+T ExcelRenderer.OpenXml.Reader.Model.Workbook.DefinedNameInfo Public, Sealed, BeforeFieldInit base=System.Object interfaces=
+T ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo Public, Sealed, BeforeFieldInit base=System.Object interfaces=
+T ExcelRenderer.OpenXml.Reader.Model.Workbook.RowInfo Public, Sealed, BeforeFieldInit base=System.Object interfaces=
+T ExcelRenderer.OpenXml.Reader.Model.Workbook.SheetInfo Public, Sealed, BeforeFieldInit base=System.Object interfaces=
+T ExcelRenderer.OpenXml.Reader.Model.Workbook.WorkbookInfo Public, Sealed, BeforeFieldInit base=System.Object interfaces=
+T ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Public, Sealed, BeforeFieldInit base=System.Object interfaces=
+T ExcelRenderer.OpenXml.Reader.OpenXmlReaderOptions Public, Sealed, BeforeFieldInit base=System.Object interfaces=
+T ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader Public, Sealed, BeforeFieldInit base=System.Object interfaces=ExcelRenderer.OpenXml.Reader.IWorkbookDataReader,System.IDisposable

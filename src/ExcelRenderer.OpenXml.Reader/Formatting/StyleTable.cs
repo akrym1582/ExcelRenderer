@@ -164,7 +164,7 @@ internal sealed class StyleTable
     internal ElementInfo ColorInfo(XElement source)
     {
         var e = new XElement(source);
-        foreach (var color in e.DescendantsAndSelf().Where(c => c.Name.LocalName == "color" || c.Name.LocalName == "fgColor" || c.Name.LocalName == "bgColor"))
+        foreach (var color in e.DescendantsAndSelf().Where(c => c.Name.LocalName == "color" || c.Name.LocalName == "fgColor" || c.Name.LocalName == "bgColor" || c.Name.LocalName.EndsWith("Color", StringComparison.Ordinal)))
         {
             var rgb = XmlValues.Attr(color, "rgb");
             if (rgb == null && XmlValues.Int(color, "theme") is int theme && theme >= 0 && theme < themeColors.Count)

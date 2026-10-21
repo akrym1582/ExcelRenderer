@@ -6,6 +6,12 @@ namespace ExcelRenderer.Core.Layout;
 /// <summary>Selects coarse product geometry and page content while Core owns planning and placement.</summary>
 internal class CoreLayoutPolicy
 {
+    /// <summary>Reserves product content before measurement and placement; ordinary content is unchanged.</summary>
+    /// <param name="cell">Original cell.</param>
+    /// <param name="ordinaryContentWidth">Ordinary content width.</param>
+    /// <returns>Additional left and right insets.</returns>
+    internal virtual (double Left, double Right) GetCellContentInsets(ReportCell cell, double ordinaryContentWidth) => (0, 0);
+
     /// <summary>Resolves an axis origin before cell geometry is built.</summary>
     /// <param name="context">The sheet geometry context.</param>
     /// <param name="index">The one-based row or column.</param>

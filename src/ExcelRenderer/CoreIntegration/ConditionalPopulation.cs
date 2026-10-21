@@ -221,7 +221,7 @@ internal sealed class ConditionalPopulation
             foreach (var value in values)
             {
                 token.ThrowIfCancellationRequested();
-                if (value.Kind == FormulaValueKind.Number)
+                if (value.Kind == FormulaValueKind.Number && Finite(value.Number))
                 {
                     numbers.Add(value.Number);
                     Minimum = Math.Min(Minimum, value.Number);

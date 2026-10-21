@@ -82,6 +82,34 @@ internal sealed class SkiaDrawingContext
             case DrawImageCommand image:
                 DrawImage(canvas, image);
                 break;
+            case DrawPolygonCommand polygon:
+                canvas.Save();
+                try
+                {
+                    if (polygon.ClipBounds is { } polygonClip)
+                    {
+                        canvas.ClipRect(ToRect(polygonClip));
+                    }
+
+                    using var path = new SKPathBuilder();
+                    var first = polygon.Vertices[0];
+                    path.MoveTo((float)first.X, (float)first.Y);
+                    foreach (var point in polygon.Vertices.Skip(1))
+                    {
+                        path.LineTo((float)point.X, (float)point.Y);
+                    }
+
+                    path.Close();
+                    using var polygonPaint = CreatePaint(polygon.Color, SKPaintStyle.Fill);
+                    using var polygonPath = path.Detach();
+                    canvas.DrawPath(polygonPath, polygonPaint);
+                }
+                finally
+                {
+                    canvas.Restore();
+                }
+
+                break;
             case DrawShapeCommand shape:
                 DrawShape(canvas, shape);
                 break;

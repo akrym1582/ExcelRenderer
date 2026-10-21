@@ -29,7 +29,7 @@ public static class WorkbookWriteCapabilities
     private static readonly HashSet<string> WorksheetChildren = new HashSet<string>(StringComparer.Ordinal)
     {
         "sheetPr", "dimension", "sheetViews", "sheetFormatPr", "cols", "sheetData", "mergeCells",
-        "printOptions", "pageMargins", "pageSetup", "headerFooter", "rowBreaks", "colBreaks", "sheetCalcPr", "phoneticPr", "tableParts", "hyperlinks", "drawing", "legacyDrawing", "autoFilter", "sortState", "conditionalFormatting", "dataValidations", "sheetProtection", "protectedRanges", "ignoredErrors", "pivotTableParts",
+        "printOptions", "pageMargins", "pageSetup", "headerFooter", "rowBreaks", "colBreaks", "sheetCalcPr", "phoneticPr", "tableParts", "hyperlinks", "drawing", "legacyDrawing", "autoFilter", "sortState", "conditionalFormatting", "dataValidations", "sheetProtection", "protectedRanges", "ignoredErrors", "pivotTableParts", "extLst",
     };
 
     /// <summary>Inspects every sheet and relationship before selecting the editing engine.</summary>
@@ -165,7 +165,16 @@ public static class WorkbookWriteCapabilities
                         reasons.Add("Unsupported" + kind + "Child:" + xml.LocalName);
                     }
 
-                    if (xml.LocalName is "extLst" or "AlternateContent")
+                    if (part is WorksheetPart && xml.LocalName == "extLst" && xml.NamespaceURI == XmlValues.Spreadsheet.NamespaceName)
+                    {
+                        using var subtree = xml.ReadSubtree();
+                        var extension = System.Xml.Linq.XElement.Load(subtree);
+                        if (!ConditionalFormattingExtensions.IsKnown(extension))
+                        {
+                            reasons.Add("UnsupportedExtension:extLst");
+                        }
+                    }
+                    else if (xml.LocalName is "extLst" or "AlternateContent")
                     {
                         reasons.Add("UnsupportedExtension:" + xml.LocalName);
                     }

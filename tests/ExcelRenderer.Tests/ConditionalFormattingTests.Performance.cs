@@ -88,6 +88,17 @@ public sealed partial class ConditionalFormattingTests
     }
 
     [Fact]
+    public void Union_limit_diagnostic_finds_a_visible_target_after_two_million_hidden_coordinates()
+    {
+        var rows = string.Concat(Enumerable.Range(1, 2000).Select(row => $"<row r=\"{row}\" hidden=\"1\"/>")) + "<row r=\"2001\"><c r=\"A2001\"><v>2</v></c></row>";
+        using var input = Book(rows, Rule("expression", "<formula>TRUE</formula>", ranges: "A1:ALL2001"));
+        var sheet = new ExcelReader().Read(input, new() { GetSelectedRange = _ => (1, 1, 2001, 1000) }).Sheets[0];
+        var diagnostic = Assert.Single(sheet.CellReadDiagnostics, diagnostic => diagnostic.Code == "ConditionalFormattingLimitExceeded");
+        Assert.Equal("A2001", diagnostic.CellRange);
+        Assert.All(sheet.Cells.Values, cell => Assert.Null(cell.Style.Background));
+    }
+
+    [Fact]
     public void Excess_unique_union_is_rejected_before_any_style_is_applied()
     {
         using var input = Book("<row r=\"1\"><c r=\"A1\"><v>1</v></c><c r=\"B1\"><v>2</v></c></row>", Rule("expression", "<formula>TRUE</formula>", ranges: "A1:ALL2001"));

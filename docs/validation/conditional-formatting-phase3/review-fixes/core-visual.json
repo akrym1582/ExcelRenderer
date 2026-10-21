@@ -1,0 +1,115 @@
+{
+  "os": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "dotnet": "10.0.401",
+  "renderer": "pdftoppm version 26.05.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC",
+  "dpi": 96,
+  "font_sha256": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec",
+  "source_commit": "e0b9e22920eb0f7ba6dc7084fddc44e96d80227d",
+  "source_note": "Current working tree; unchanged historical golden provenance remains in Baselines/provenance.json",
+  "visual": [
+    {
+      "page": "01-japanese-core-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.07237234138795494
+    },
+    {
+      "page": "01-japanese-core-2.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "02-image-core-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.046268653368653136
+    },
+    {
+      "page": "02-image-core-2.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "03-wrapped-text-core-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.04244358662064026
+    },
+    {
+      "page": "04-text-decoration-core-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0628257493684079
+    },
+    {
+      "page": "05-borders-core-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.06459173991938649
+    },
+    {
+      "page": "05-borders-core-2.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.00030542215921877723
+    },
+    {
+      "page": "06-layout-and-pagination-core-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.10324907040902004
+    },
+    {
+      "page": "06-layout-and-pagination-core-2.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 1.1994722322178242e-05
+    },
+    {
+      "page": "06-layout-and-pagination-core-3.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "06-layout-and-pagination-core-4.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "07-multiple-sheets-core-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "07-multiple-sheets-core-2.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.0
+    },
+    {
+      "page": "08-print-scaling-core-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.09849771176372511
+    },
+    {
+      "page": "08-print-scaling-core-2.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.28053978600261836,
+      "reviewed_antialiasing": "Reviewed horizontal-edge antialiasing plus shared-border coalescing: only 26 pixels differ from the previously reviewed pre-border output, at table corners and right-edge row endpoints (96dpi). Axial coverage and stroke styles are unchanged at 0.001pt precision; non-border paints, glyphs and images pass independent checks. Paint count changes from 371 to 29 by resolving shared edges once. Current PDF content/paints and 144/300dpi pixels match the existing exact shared-border contract; Core and full reference 96dpi pixels are identical. Frozen raster/source hashes and thresholds remain unchanged. See docs/validation/core-raster-review/README.md and evidence.json."
+    },
+    {
+      "page": "09-cell-border-core-1.png",
+      "mae_0_255": 0.0,
+      "changed_fraction": 0.0,
+      "baseline_mae": 0.08700568900173683
+    }
+  ],
+  "performance": []
+}

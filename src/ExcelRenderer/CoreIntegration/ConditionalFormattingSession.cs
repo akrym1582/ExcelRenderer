@@ -24,8 +24,12 @@ internal sealed partial class ConditionalFormattingSession
     private readonly PreparedRule[] rules;
     private readonly Dictionary<(int Rule, string Code), ConversionDiagnostic> diagnostics = [];
     private readonly bool enabled;
+    private readonly Excel.ExcelReadOptions options;
+    private ConditionalTargetSearch? targetSearch;
     private Core.Layout.BandIndex<(PreparedRule Rule, SourceRange Range)> index = new([]);
     private long evaluations;
+    private CancellationToken cancellationToken;
+    private IEnumerable<CellRange> limitRegions = [];
 
     /// <summary>Initializes a new instance of the <see cref="ConditionalFormattingSession"/> class.</summary>
     /// <param name="info">Saved sheet rules and geometry.</param>
@@ -38,6 +42,7 @@ internal sealed partial class ConditionalFormattingSession
         this.info = info;
         this.calculation = calculation;
         this.isTarget = isTarget;
+        this.options = options;
         enabled = options.ApplyConditionalFormatting;
         var prepared = enabled ? ConditionalFormattingRuleNormalizer.Normalize(info.ConditionalFormattingRules, token).Select((entry, order) =>
         {
@@ -101,12 +106,8 @@ internal sealed partial class ConditionalFormattingSession
     /// <param name="token">Cooperative cancellation.</param>
     internal void Apply(Dictionary<CellAddress, ReportCell> cells, IReadOnlyList<CellRange> regions, Func<CellAddress, CellStyle> blankStyle, StylePool styles, CancellationToken token)
     {
+        cancellationToken = token;
         if (!enabled)
-        {
-            return;
-        }
-
-        if (!PrepareDisplayRanges(token))
         {
             return;
         }
@@ -125,6 +126,12 @@ internal sealed partial class ConditionalFormattingSession
             : new CellRange(new(region.First.Row, title.FirstColumn), new(region.Last.Row, title.LastColumn)))))
             .Concat(titleRanges.Where(title => title.Kind == "Rows").SelectMany(row => titleRanges.Where(title => title.Kind == "Columns")
                 .Select(column => new CellRange(new(row.FirstRow, column.FirstColumn), new(row.LastRow, column.LastColumn)))));
+        limitRegions = finiteRegions;
+        if (!PrepareDisplayRanges(token))
+        {
+            return;
+        }
+
         if (!CollectCandidates(finiteRegions, candidates, candidateLimit, ref visits, token))
         {
             return;
@@ -141,7 +148,7 @@ internal sealed partial class ConditionalFormattingSession
                 {
                     if (candidates.Add(new(merge.First.Row, merge.First.Column)) && ++visits > candidateLimit)
                     {
-                        ReportCandidateLimit(rule, candidates, "The finite candidate budget was exceeded; this sheet retains ordinary formatting.");
+                        ReportCandidateLimit(rule, "The finite candidate budget was exceeded; this sheet retains ordinary formatting.");
                         return;
                     }
                 }
@@ -157,7 +164,7 @@ internal sealed partial class ConditionalFormattingSession
         var merges = info.MergedRanges.Where(range => candidates.Contains(new(range.First.Row, range.First.Column))).ToDictionary(range => new CellAddress(range.First.Row, range.First.Column));
         if (merges.Values.Sum(range => (long)(range.Last.Row - range.First.Row + 1 + range.Last.Column - range.First.Column + 1) * 2) > candidateLimit)
         {
-            ReportCandidateLimit(rules[0], candidates, "The merged-perimeter budget was exceeded; this sheet retains ordinary formatting.");
+            ReportCandidateLimit(rules[0], "The merged-perimeter budget was exceeded; this sheet retains ordinary formatting.");
             return;
         }
 
@@ -391,13 +398,72 @@ internal sealed partial class ConditionalFormattingSession
         return formulas.Length == 1 && comparison is not null ? cell + comparison + "(" + formulas[0] + ")" : null;
     }
 
-    private void ReportCandidateLimit(PreparedRule rule, IEnumerable<CellAddress> candidates, string message)
+    private void ReportCandidateLimit(PreparedRule rule, string message)
     {
-        var address = candidates.FirstOrDefault(candidate => isTarget(new(candidate.Row, candidate.Column)));
-        if (address.Row > 0)
+        // Every limit rolls back the whole sheet, including rules not yet collected.
+        targetSearch ??= new(info, options, isTarget, cancellationToken: cancellationToken);
+        var result = targetSearch.Find(AffectedRanges(), cancellationToken);
+        if (result.State == TargetSearchState.Indeterminate)
         {
-            var source = new OpenXml.Reader.Model.Cells.CellAddress(address.Row, address.Column);
-            diagnostics[(rule.Order, "ConditionalFormattingLimitExceeded")] = new("ConditionalFormattingLimitExceeded", DiagnosticSeverity.Warning, DiagnosticStage.Read, message, info.Sheet.Name, source.ToString(), ObjectId: Id(rule));
+            throw new InvalidOperationException("The bounded conditional-formatting target search could not prove whether omitted formatting affects the output.");
+        }
+
+        if (result.State == TargetSearchState.Found)
+        {
+            diagnostics[(rule.Order, "ConditionalFormattingLimitExceeded")] = new("ConditionalFormattingLimitExceeded", DiagnosticSeverity.Warning, DiagnosticStage.Read, message, info.Sheet.Name, result.Address.ToString(), ObjectId: Id(rule));
+        }
+
+        IEnumerable<SourceRange> AffectedRanges()
+        {
+            long work = 0;
+            foreach (var range in rules.SelectMany(item => item.Source.Ranges))
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                foreach (var region in limitRegions)
+                {
+                    CheckWork();
+                    var firstRow = Math.Max(range.First.Row, region.First.Row);
+                    var firstColumn = Math.Max(range.First.Column, region.First.Column);
+                    var lastRow = Math.Min(range.Last.Row, region.Last.Row);
+                    var lastColumn = Math.Min(range.Last.Column, region.Last.Column);
+                    if (firstRow <= lastRow && firstColumn <= lastColumn)
+                    {
+                        yield return new(new(firstRow, firstColumn), new(lastRow, lastColumn));
+                    }
+                }
+
+                foreach (var merge in info.MergedRanges)
+                {
+                    CheckWork();
+                    if (range.Contains(merge.First) && IntersectsOutput(merge))
+                    {
+                        yield return new(merge.First, merge.First);
+                    }
+                }
+            }
+
+            bool IntersectsOutput(SourceRange merge)
+            {
+                foreach (var region in limitRegions)
+                {
+                    CheckWork();
+                    if (merge.First.Row <= region.Last.Row && merge.Last.Row >= region.First.Row && merge.First.Column <= region.Last.Column && merge.Last.Column >= region.First.Column)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            void CheckWork()
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                if (++work > CandidateWorkLimit)
+                {
+                    throw new InvalidOperationException("The bounded affected-range search could not prove whether omitted formatting affects the output.");
+                }
+            }
         }
     }
 

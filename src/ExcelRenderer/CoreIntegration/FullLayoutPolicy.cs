@@ -167,7 +167,7 @@ internal sealed class FullLayoutPolicy : Core.Layout.CoreLayoutPolicy
     }
 
     /// <inheritdoc/>
-    internal override (double Left, double Right) GetCellContentInsets(Core.Model.ReportCell cell, double ordinaryContentWidth)
+    internal override (double Left, double Right) GetCellContentInsets(Core.Model.ReportCell cell, double ordinaryContentWidth, double sourceHeight = double.MaxValue)
     {
         var visual = FullCellPresentationData.Decoration(cell.ExtensionData);
         if (visual?.Icon is not { } icon)
@@ -175,9 +175,8 @@ internal sealed class FullLayoutPolicy : Core.Layout.CoreLayoutPolicy
             return (0, 0);
         }
 
-        var size = Drawing.ConditionalCellVisualGeometry.IconSize(ordinaryContentWidth);
-        var reserve = size < 3 ? 0 : size + 2;
-        return icon.RightToLeft ? (0, reserve) : (reserve, 0);
+        var placement = Drawing.ConditionalIconPlacement.Resolve(icon, ordinaryContentWidth, cell.Style.Font.Size, sourceHeight);
+        return (placement.Left, placement.Right);
     }
 
     private static FullSheetData? Data(CoreSheet sheet) => sheet.ExtensionData as FullSheetData;

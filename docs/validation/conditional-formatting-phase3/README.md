@@ -1,5 +1,7 @@
 # Conditional formatting Phase 3 validation
 
+The original Phase 3 evidence is retained below. See [review fixes](#review-fixes-icon-text-space-and-omitted-limit-diagnostics) for the subsequent corrections and current verification.
+
 Start: `021d1f921573ea8976ded785162693f17ea06883` (latest fetched origin/main on 2026-10-21).
 Branch: `feature/conditional-formatting-phase3`.
 Implementation end: `c8697adce9b0cf160b4aa36cbe8cf96aacc4188c`. The final documentation/evidence commit follows this revision.
@@ -160,3 +162,101 @@ inventories, rendering samples and performance evidence, to the public repositor
 `akrym1582/ExcelRenderer` as a draft pull request.
 Implementation revision IDs above identify the local development history. The
 published snapshot may use a single commit with identical Git tree contents.
+
+## Review fixes: icon text space and omitted-limit diagnostics
+
+These fixes start from fetched `origin/main`
+`e0b9e22920eb0f7ba6dc7084fddc44e96d80227d`. They correct the original
+Phase 3 icon reservation policy; the earlier 8pt-content/8pt-reservation
+expectation was unsafe for visible shrink-to-fit values.
+
+All icon decisions use source points before page scaling and full cell geometry
+before clipping. For ordinary content width W, visible values retain
+`M = max(1pt, original font size)` and the candidate icon width is
+`min(12, max(0, W - 2 - M))`. Icon-only cells retain the previous candidate width
+`min(12, max(0, W - 2))`. Widths below 3pt or full cell heights at or below 2pt
+omit the icon, reserve no space and restore ordinary text layout and visibility.
+Otherwise the icon reserves its width plus 2pt on the left, or on the right for
+RTL. This minimum preserves text space, without guaranteeing that every complete
+value fits. This is a product display policy, not a claim of Excel equivalence.
+
+The source row geometry is final before text measurement in both paginated and
+continuous pipelines. Measurement therefore uses the final full cell height on
+its first pass; no retry, inverse shrink operation, source cell mutation or
+page-clip-dependent measurement is needed. Core exposes only the generic internal
+height argument for product insets. Core does not interpret conditional rules.
+
+Limit fallback now searches affected rule rectangles intersected with finite
+output regions, including merged anchors, through the existing exact calculation
+target predicate. Source row/column, selection, print-title, merge and selected-page
+boundaries divide that predicate into constant bands. One representative per band
+skips coordinate areas with identical visibility. Every candidate/rule/border/merge
+budget failure uses the same whole-sheet fallback search, rather than an incomplete
+candidate collection. Diagnostics keep the existing Warning/Read code, aggregation,
+selection filtering and failure-policy behavior.
+
+Target search distinguishes found, absent and indeterminate. Band/rectangle work
+is bounded, cancellation remains cooperative, and an arbitrary internal predicate
+without declared geometry boundaries retains a bounded coordinate search of at
+most two million steps. An indeterminate search fails explicitly instead of
+silently treating it as absence or attaching a warning to unrelated output.
+The search index is allocated only on the exceptional limit path.
+
+The [review samples](review-fixes/) retain a new 8pt ordinary-content workbook
+(with explicit 1px Normal-font MDW), PNG/SVG outputs in both image layouts, and the
+[pre-fix failures](review-fixes/before.log). Tests assert the actual 9pt column
+width and 8pt content width. PNG/SVG raster checks find dark digit ink; separate
+text-only PNG checks exclude borders and icons. Low-height cases compare ordinary
+and decorated measurements and content rectangles rather than requiring pixels.
+No frozen reference data was regenerated, and no comparison with desktop Excel
+was performed for these fixes.
+
+The merged-output regression additionally reproduced a downstream filter loss:
+an A1 representative on a hidden row, or outside an explicit selection, was
+filtered using the anchor's single coordinate even when its merged cell was
+visible. Read-diagnostic filtering now tests the complete source cell span and
+its intersection with the selected output. Both full and clipped merged-output
+cases retain the A1 warning; unrelated ranges and sheets remain excluded. The
+[filter pre-fix log](review-fixes/merged-filter-before.log) records both failures.
+
+Current local verification: Release rebuild **0 warnings / 0 errors**, all **2,853**
+solution tests passed (including 1,114 main-library tests); the strengthened
+ordinary-layout/glyph comparisons also passed all 6 cases. Core correctness
+coverage passed 395 cases at **82.80% lines / 71.31% branches**, followed by all
+8 performance cases in a separate run. All 19 output mutations, both shared
+geometry mutations and all 4 Core mutations were detected and sources restored.
+The three public API/nullability inventories are unchanged. Independent checks
+validated 17 Core raster pages and 18 PDF/PostScript files. Both retained PNG
+layouts contain 30 dark digit pixels.
+
+[Validation details and changed-file inventory](review-fixes/validation.json)
+link the exact commands, pre/post results, limits, remaining platform checks and
+retained logs. Desktop Excel comparison and local Windows execution remain
+unperformed because this environment is Linux without desktop Excel; the existing
+PR CI includes Windows Core tests.
+
+
+### CI follow-up: dependency audit
+
+PR #107's initial CI run (39590171832) passed compilation and tests, including
+Windows Core coverage/performance, but its three distribution audit jobs rejected
+the audit command's own filename in the new machine-readable command inventory.
+The inventory is scanned as configuration, so the command transcript belongs here
+alongside the existing Markdown reproduction instructions:
+
+```sh
+python3 scripts/check-no-pdfsharp.py
+python3 scripts/check-no-pdfsharp.py --packages artifacts/pr107-ci-packages --publish artifacts/pr107-ci-publish
+python3 scripts/check-no-pdfsharp-mutations.py
+```
+
+The dependency audit and its allowlist remain unchanged. This is a documentation
+correction; it adds no dependency, production-code change or audit exemption.
+
+Local reproduction failed on the same inventory entry before this correction.
+After moving that record, the audit passed over all 24 restored projects and all
+four packed distributions plus the Tool publish output (817 managed assembly
+inventories). The existing contamination checks still rejected a source reference,
+a restored transitive reference, an AssemblyRef hidden behind an innocent filename
+and a packed dependency; their final restored audit passed. This follow-up changes
+only the command inventory, this report and retained-artifact hashes.

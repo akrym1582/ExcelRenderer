@@ -18,7 +18,7 @@ internal sealed class CellBoundsPass : IReportLayoutPass
         {
             var cell = context.Sheet.Cells[address];
             var content = CellContentBounds.Calculate(bounds, cell.Style);
-            var insets = context.Policy.GetCellContentInsets(cell, content.Width);
+            var insets = context.Policy.GetCellContentInsets(cell, content.Width, bounds.Height);
             context.CellLayouts[address] = new(
                 address,
                 bounds,

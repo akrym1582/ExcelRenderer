@@ -30,6 +30,9 @@ public sealed record ExcelReadOptions
     /// <summary>Gets the geometry-only page predicate, including missing cells inside visible page regions.</summary>
     internal Func<string, int, int, bool>? IsConditionalFormattingTarget { get; init; }
 
+    /// <summary>Gets all target-policy transition rows and columns from selected page geometry.</summary>
+    internal Func<string, (IReadOnlyList<int> Rows, IReadOnlyList<int> Columns)?>? ConditionalTargetBoundaries { get; init; }
+
     /// <summary>Validates the policy before opening input or output.</summary>
     internal void Validate()
     {

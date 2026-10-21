@@ -54,7 +54,7 @@ internal sealed partial class ConditionalFormattingSession
                 result.Add(address);
                 if (candidates.Add(address) && ++visits > candidateLimit)
                 {
-                    ReportCandidateLimit(rules.First(rule => rule.Style.HasBorders), candidates, "The finite border-neighbor candidate budget was exceeded; this sheet retains ordinary formatting.");
+                    ReportCandidateLimit(rules.First(rule => rule.Style.HasBorders), "The finite border-neighbor candidate budget was exceeded; this sheet retains ordinary formatting.");
                     return null;
                 }
             }

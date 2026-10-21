@@ -1,0 +1,63 @@
+  ExcelRenderer.OpenXml.Reader -> /workspace/ExcelRenderer/src/ExcelRenderer.OpenXml.Reader/bin/Debug/netstandard2.1/ExcelRenderer.OpenXml.Reader.dll
+  ExcelRenderer.Formulas -> /workspace/ExcelRenderer/src/ExcelRenderer.Formulas/bin/Debug/netstandard2.1/ExcelRenderer.Formulas.dll
+  ExcelRenderer.OpenXml -> /workspace/ExcelRenderer/src/ExcelRenderer.OpenXml/bin/Debug/netstandard2.1/ExcelRenderer.OpenXml.dll
+  ExcelRenderer.Fonts -> /workspace/ExcelRenderer/src/ExcelRenderer.Fonts/bin/Debug/netstandard2.1/ExcelRenderer.Fonts.dll
+  ExcelRenderer.Core -> /workspace/ExcelRenderer/src/ExcelRenderer.Core/bin/Debug/netstandard2.1/ExcelRenderer.Core.dll
+  ExcelRenderer.Mapping -> /workspace/ExcelRenderer/src/ExcelRenderer.Mapping/bin/Debug/netstandard2.1/ExcelRenderer.Mapping.dll
+  ExcelRenderer -> /workspace/ExcelRenderer/src/ExcelRenderer/bin/Debug/netstandard2.1/ExcelRenderer.dll
+  ExcelRenderer.Http.Sample -> /workspace/ExcelRenderer/samples/ExcelRenderer.Http.Sample/bin/Debug/net10.0/ExcelRenderer.Http.Sample.dll
+  ExcelRenderer.Tests -> /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Debug/net10.0/ExcelRenderer.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.39]     ExcelRenderer.Tests.ConditionalFormattingTests.VisibleValueIconInsetsPreserveOneOriginalEm(width: 5, expected: 0) [FAIL]
+[xUnit.net 00:00:00.40]     ExcelRenderer.Tests.ConditionalFormattingTests.VisibleValueIconInsetsPreserveOneOriginalEm(width: 16, expected: 5) [FAIL]
+[xUnit.net 00:00:00.40]     ExcelRenderer.Tests.ConditionalFormattingTests.VisibleValueIconInsetsPreserveOneOriginalEm(width: 8, expected: 0) [FAIL]
+[xUnit.net 00:00:00.40]     ExcelRenderer.Tests.ConditionalFormattingTests.VisibleValueIconInsetsPreserveOneOriginalEm(width: 14, expected: 0) [FAIL]
+  Failed ExcelRenderer.Tests.ConditionalFormattingTests.VisibleValueIconInsetsPreserveOneOriginalEm(width: 5, expected: 0) [7 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: Tuple (0, 0)
+Actual:   Tuple (5, 0)
+  Stack Trace:
+     at ExcelRenderer.Tests.ConditionalFormattingTests.VisibleValueIconInsetsPreserveOneOriginalEm(Double width, Double expected) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/ConditionalFormattingTests.Phase3.cs:line 375
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed ExcelRenderer.Tests.ConditionalFormattingTests.VisibleValueIconInsetsPreserveOneOriginalEm(width: 16, expected: 5) [< 1 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: Tuple (5, 0)
+Actual:   Tuple (14, 0)
+  Stack Trace:
+     at ExcelRenderer.Tests.ConditionalFormattingTests.VisibleValueIconInsetsPreserveOneOriginalEm(Double width, Double expected) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/ConditionalFormattingTests.Phase3.cs:line 375
+   at InvokeStub_ConditionalFormattingTests.VisibleValueIconInsetsPreserveOneOriginalEm(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed ExcelRenderer.Tests.ConditionalFormattingTests.VisibleValueIconInsetsPreserveOneOriginalEm(width: 8, expected: 0) [< 1 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: Tuple (0, 0)
+Actual:   Tuple (8, 0)
+  Stack Trace:
+     at ExcelRenderer.Tests.ConditionalFormattingTests.VisibleValueIconInsetsPreserveOneOriginalEm(Double width, Double expected) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/ConditionalFormattingTests.Phase3.cs:line 375
+   at InvokeStub_ConditionalFormattingTests.VisibleValueIconInsetsPreserveOneOriginalEm(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed ExcelRenderer.Tests.ConditionalFormattingTests.VisibleValueIconInsetsPreserveOneOriginalEm(width: 14, expected: 0) [< 1 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: Tuple (0, 0)
+Actual:   Tuple (14, 0)
+  Stack Trace:
+     at ExcelRenderer.Tests.ConditionalFormattingTests.VisibleValueIconInsetsPreserveOneOriginalEm(Double width, Double expected) in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/ConditionalFormattingTests.Phase3.cs:line 375
+   at InvokeStub_ConditionalFormattingTests.VisibleValueIconInsetsPreserveOneOriginalEm(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.00]     ExcelRenderer.Tests.ConditionalFormattingTests.Union_limit_diagnostic_finds_a_visible_target_after_two_million_hidden_coordinates [FAIL]
+  Failed ExcelRenderer.Tests.ConditionalFormattingTests.Union_limit_diagnostic_finds_a_visible_target_after_two_million_hidden_coordinates [1 s]
+  Error Message:
+   Assert.Single() Failure: The collection did not contain any matching items
+Expected:   (predicate expression)
+Collection: []
+  Stack Trace:
+     at ExcelRenderer.Tests.ConditionalFormattingTests.Union_limit_diagnostic_finds_a_visible_target_after_two_million_hidden_coordinates() in /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/ConditionalFormattingTests.Performance.cs:line 96
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+Failed!  - Failed:     5, Passed:     2, Skipped:     0, Total:     7, Duration: 1 s - ExcelRenderer.Tests.dll (net10.0)

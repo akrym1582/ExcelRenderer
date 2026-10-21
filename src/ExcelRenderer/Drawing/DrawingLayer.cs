@@ -6,6 +6,9 @@ internal enum DrawingLayer
     /// <summary>Cell background fills.</summary>
     Background,
 
+    /// <summary>Product cell decorations.</summary>
+    Decoration,
+
     /// <summary>Cell borders.</summary>
     CellBorder,
 

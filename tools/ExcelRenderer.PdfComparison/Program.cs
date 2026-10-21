@@ -314,6 +314,7 @@ static string Fingerprint(DrawCommand command)
             }),
         },
         DrawViewportCommand viewport => new { viewport.Clip, viewport.OffsetX, viewport.OffsetY, children = viewport.Commands.Select(Fingerprint) },
+        DrawPolygonCommand polygon => new { polygon.Bounds, vertices = polygon.Vertices.Select(point => new { point.X, point.Y }), polygon.Color, polygon.ClipBounds },
         DrawShapeCommand shape => new { shape.Bounds, shape.Shape, shape.ClipBounds, text = shape.TextCommand is null ? null : Fingerprint(shape.TextCommand) },
         DrawImageCommand image => new { image.Bounds, image.Crop, image.Rotation, image.ClipBounds, sha256 = Convert.ToHexString(SHA256.HashData(image.ImageBytes)) },
         _ => (object)command.ToString(),

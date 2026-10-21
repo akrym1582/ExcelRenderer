@@ -242,6 +242,7 @@ internal sealed class RenderPageBuilder
         var cell = _context.Sheet.Cells[layout.Address];
         return new(ScaleCell(cell, _scale), bounds)
         {
+            DecorationScale = _scale,
             SourceAddress = layout.Address,
             ContentBounds = new(
                 bounds.X + ((layout.ContentBounds.X - layout.Bounds.X) * _scale),

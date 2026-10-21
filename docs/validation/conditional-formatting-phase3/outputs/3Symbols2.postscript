@@ -1,0 +1,80 @@
+%!PS-Adobe-3.0
+%%Creator: ExcelRenderer
+%%LanguageLevel: 3
+% Requires Type 42 and PostScript 3011+ large sfnt table support.
+%%DocumentData: Clean7Bit
+%%Pages: (atend)
+%%BoundingBox: (atend)
+%%DocumentSuppliedResources: (atend)
+%%EndComments
+%%BeginProlog
+/ERDict 20 dict def ERDict begin
+/rectpath {4 dict begin /h exch def /w exch def /y exch def /x exch def x y moveto w 0 rlineto 0 h rlineto w neg 0 rlineto closepath end} bind def
+%%EndProlog
+%%Page: 1 1
+%%PageBoundingBox: 0 0 612 792
+%%BeginPageSetup
+<< /PageSize [612 792] >> setpagedevice
+gsave 0 792 translate 1 -1 scale
+%%EndPageSetup
+gsave 0 0 translate
+newpath 54 54 45.75 28 rectpath
+clip newpath
+0 0.501960784313725 1 setrgbcolor
+newpath 55 55 4.375 26 rectpath
+fill
+gsave
+0.752941176470588 0.313725490196078 0.301960784313725 setrgbcolor
+newpath
+56.8 65 moveto
+58 63.8 lineto
+65.2 71 lineto
+64 72.2 lineto
+closepath fill grestore
+gsave
+0.752941176470588 0.313725490196078 0.301960784313725 setrgbcolor
+newpath
+56.8 71 moveto
+64 63.8 lineto
+65.2 65 lineto
+58 72.2 lineto
+closepath fill grestore
+grestore
+gsave 0 0 translate
+newpath 54 82 45.75 28 rectpath
+clip newpath
+0 0.501960784313725 1 setrgbcolor
+newpath 55 83 21.875 26 rectpath
+fill
+0.898039215686275 0.717647058823529 0.231372549019608 setrgbcolor
+newpath 60.16 91.8 1.68 5.4 rectpath
+fill
+0.898039215686275 0.717647058823529 0.231372549019608 setrgbcolor
+newpath 60.16 98.64 1.68 1.68 rectpath
+fill
+grestore
+gsave 0 0 translate
+newpath 54 110 45.75 28 rectpath
+clip newpath
+0 0.501960784313725 1 setrgbcolor
+newpath 55 111 39.375 26 rectpath
+fill
+gsave
+0.388235294117647 0.63921568627451 0.36078431372549 setrgbcolor
+newpath
+56.44 124 moveto
+58.24 122.44 lineto
+60.16 124.6 lineto
+64.12 119.92 lineto
+65.92 121.48 lineto
+60.28 128.2 lineto
+closepath fill grestore
+grestore
+grestore showpage
+%%PageTrailer
+end
+%%Trailer
+%%Pages: 1
+%%BoundingBox: 0 0 612 792
+%%DocumentSuppliedResources: none
+%%EOF

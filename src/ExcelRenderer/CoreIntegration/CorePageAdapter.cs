@@ -16,6 +16,8 @@ internal static class CorePageAdapter
         var cells = page.Cells.Select(cell => new RenderCell(CoreModelAdapter.ToPublic(cell.Cell, styles), CoreModelAdapter.ToPublic(cell.Bounds))
         {
             SourceAddress = cell.SourceAddress is { } address ? CoreModelAdapter.ToPublic(address) : null,
+            DecorationScale = cell.DecorationScale,
+            DecorationClipBounds = cell.DecorationClipBounds is { } decorationClip ? CoreModelAdapter.ToPublic(decorationClip) : null,
             ContentBounds = CoreModelAdapter.ToPublic(cell.ContentBounds),
             ClipBounds = cell.ClipBounds is { } clip ? CoreModelAdapter.ToPublic(clip) : null,
             TextLayout = cell.TextLayout is { } layout ? CoreTextLayoutAdapter.ToPublic(layout) : null,
@@ -36,12 +38,15 @@ internal static class CorePageAdapter
     internal static Core.Layout.RenderCell ToCore(RenderCell cell) => new(
         new Core.Model.ReportCell(cell.Cell.Text, CoreModelAdapter.ToCore(cell.Cell.Style), cell.Cell.RowSpan, cell.Cell.ColumnSpan, cell.Cell.Formula)
         {
+            ExtensionData = FullCellPresentationData.Create(cell.Cell),
             FormulaSharedIndex = cell.Cell.FormulaSharedIndex,
             FormulaMasterAddress = cell.Cell.FormulaMasterAddress is { } master ? CoreModelAdapter.ToCore(master) : null,
         },
         CoreModelAdapter.ToCore(cell.Bounds))
     {
         SourceAddress = cell.SourceAddress is { } address ? CoreModelAdapter.ToCore(address) : null,
+        DecorationScale = cell.DecorationScale,
+        DecorationClipBounds = cell.DecorationClipBounds is { } decorationClip ? CoreModelAdapter.ToCore(decorationClip) : null,
         ContentBounds = CoreModelAdapter.ToCore(cell.ContentBounds),
         ClipBounds = cell.ClipBounds is { } clip ? CoreModelAdapter.ToCore(clip) : null,
         TextLayout = cell.TextLayout is { } text ? CoreTextLayoutAdapter.ToCore(text) : null,

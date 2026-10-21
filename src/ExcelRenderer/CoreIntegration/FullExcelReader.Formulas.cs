@@ -28,7 +28,7 @@ internal sealed partial class FullExcelReader
         var targets = recalculate ? sheets.ToDictionary(info => info.Sheet.Index, info => CreateCalculationTarget(info)) : null;
         foreach (var info in sheets.Where(info => info.ConditionalFormattingRules.Count > 0))
         {
-            conditionalFormatting.Add(info.Sheet.Index, new(info, calculation, readOptions, readOptions.ApplyConditionalFormatting ? CreateCalculationTarget(info, true) : static _ => false));
+            conditionalFormatting.Add(info.Sheet.Index, new(info, calculation, readOptions, readOptions.ApplyConditionalFormatting ? CreateCalculationTarget(info, true) : static _ => false, cancellationToken));
         }
 
         return !recalculate ? null : cell => cell.Formula is not null && targets![cell.SheetIndex](cell.Address) ? calculation!.EvaluateCell(cell) : cell;

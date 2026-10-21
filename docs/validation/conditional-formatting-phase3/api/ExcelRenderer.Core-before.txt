@@ -1,0 +1,73 @@
+M ExcelRenderer.Core.ConversionDiagnostic Constructor Void .ctor(System.String, System.String, System.String, System.Nullable`1[System.Int32]) Public, HideBySig, SpecialName, RTSpecialName Code:None:;Message:None:;SheetName:Optional, HasDefault:;PageNumber:Optional, HasDefault: nullability=NotNull/NotNull[];NotNull/NotNull[];Nullable/Nullable[];Nullable/Nullable[] contracts=;;;
+M ExcelRenderer.Core.ConversionDiagnostic Method Boolean Equals(ExcelRenderer.Core.ConversionDiagnostic) Public, Final, Virtual, HideBySig, VtableLayoutMask other:None: nullability=NotNull/NotNull[]Nullable/Nullable[] contracts=
+M ExcelRenderer.Core.ConversionDiagnostic Method Boolean Equals(System.Object) Public, Virtual, HideBySig obj:None: nullability=NotNull/NotNull[]Nullable/Nullable[] contracts=
+M ExcelRenderer.Core.ConversionDiagnostic Method Boolean op_Equality(ExcelRenderer.Core.ConversionDiagnostic, ExcelRenderer.Core.ConversionDiagnostic) Public, Static, HideBySig, SpecialName left:None:;right:None: nullability=NotNull/NotNull[]Nullable/Nullable[];Nullable/Nullable[] contracts=;
+M ExcelRenderer.Core.ConversionDiagnostic Method Boolean op_Inequality(ExcelRenderer.Core.ConversionDiagnostic, ExcelRenderer.Core.ConversionDiagnostic) Public, Static, HideBySig, SpecialName left:None:;right:None: nullability=NotNull/NotNull[]Nullable/Nullable[];Nullable/Nullable[] contracts=;
+M ExcelRenderer.Core.ConversionDiagnostic Method ExcelRenderer.Core.ConversionDiagnostic <Clone>$() Public, HideBySig  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.ConversionDiagnostic Method Int32 GetHashCode() Public, Virtual, HideBySig  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.ConversionDiagnostic Method System.Nullable`1[System.Int32] get_PageNumber() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.Core.ConversionDiagnostic Method System.String ToString() Public, Virtual, HideBySig  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.ConversionDiagnostic Method System.String get_Code() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.ConversionDiagnostic Method System.String get_Message() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.ConversionDiagnostic Method System.String get_SheetName() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.Core.ConversionDiagnostic Method Void Deconstruct(System.String ByRef, System.String ByRef, System.String ByRef, System.Nullable`1[System.Int32] ByRef) Public, HideBySig Code:Out:;Message:Out:;SheetName:Out:;PageNumber:Out: nullability=NotNull/NotNull[]NotNull/NotNull[];NotNull/NotNull[];Nullable/Nullable[];Nullable/Nullable[] contracts=;;;
+M ExcelRenderer.Core.ConversionDiagnostic Method Void set_Code(System.String) Public, HideBySig, SpecialName value:None: nullability=NotNull/NotNull[]NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.ConversionDiagnostic Method Void set_Message(System.String) Public, HideBySig, SpecialName value:None: nullability=NotNull/NotNull[]NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.ConversionDiagnostic Method Void set_PageNumber(System.Nullable`1[System.Int32]) Public, HideBySig, SpecialName value:None: nullability=NotNull/NotNull[]Nullable/Nullable[] contracts=
+M ExcelRenderer.Core.ConversionDiagnostic Method Void set_SheetName(System.String) Public, HideBySig, SpecialName value:None: nullability=NotNull/NotNull[]Nullable/Nullable[] contracts=
+M ExcelRenderer.Core.ConversionDiagnostic Property System.Nullable`1[System.Int32] PageNumber nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.Core.ConversionDiagnostic Property System.String Code nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.ConversionDiagnostic Property System.String Message nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.ConversionDiagnostic Property System.String SheetName nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.Core.ConversionResult Constructor Void .ctor(Int32, System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.Core.ConversionDiagnostic]) Public, HideBySig, SpecialName, RTSpecialName PageCount:None:;Diagnostics:None: nullability=NotNull/NotNull[];NotNull/NotNull[NotNull/NotNull[]] contracts=;
+M ExcelRenderer.Core.ConversionResult Method Boolean Equals(ExcelRenderer.Core.ConversionResult) Public, Final, Virtual, HideBySig, VtableLayoutMask other:None: nullability=NotNull/NotNull[]Nullable/Nullable[] contracts=
+M ExcelRenderer.Core.ConversionResult Method Boolean Equals(System.Object) Public, Virtual, HideBySig obj:None: nullability=NotNull/NotNull[]Nullable/Nullable[] contracts=
+M ExcelRenderer.Core.ConversionResult Method Boolean op_Equality(ExcelRenderer.Core.ConversionResult, ExcelRenderer.Core.ConversionResult) Public, Static, HideBySig, SpecialName left:None:;right:None: nullability=NotNull/NotNull[]Nullable/Nullable[];Nullable/Nullable[] contracts=;
+M ExcelRenderer.Core.ConversionResult Method Boolean op_Inequality(ExcelRenderer.Core.ConversionResult, ExcelRenderer.Core.ConversionResult) Public, Static, HideBySig, SpecialName left:None:;right:None: nullability=NotNull/NotNull[]Nullable/Nullable[];Nullable/Nullable[] contracts=;
+M ExcelRenderer.Core.ConversionResult Method ExcelRenderer.Core.ConversionResult <Clone>$() Public, HideBySig  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.ConversionResult Method Int32 GetHashCode() Public, Virtual, HideBySig  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.ConversionResult Method Int32 get_PageCount() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.ConversionResult Method System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.Core.ConversionDiagnostic] get_Diagnostics() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[NotNull/NotNull[]] contracts=
+M ExcelRenderer.Core.ConversionResult Method System.String ToString() Public, Virtual, HideBySig  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.ConversionResult Method Void Deconstruct(Int32 ByRef, System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.Core.ConversionDiagnostic] ByRef) Public, HideBySig PageCount:Out:;Diagnostics:Out: nullability=NotNull/NotNull[]NotNull/NotNull[];NotNull/NotNull[NotNull/NotNull[]] contracts=;
+M ExcelRenderer.Core.ConversionResult Method Void set_Diagnostics(System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.Core.ConversionDiagnostic]) Public, HideBySig, SpecialName value:None: nullability=NotNull/NotNull[]NotNull/NotNull[NotNull/NotNull[]] contracts=
+M ExcelRenderer.Core.ConversionResult Method Void set_PageCount(Int32) Public, HideBySig, SpecialName value:None: nullability=NotNull/NotNull[]NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.ConversionResult Property Int32 PageCount nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.ConversionResult Property System.Collections.Generic.IReadOnlyList`1[ExcelRenderer.Core.ConversionDiagnostic] Diagnostics nullability=NotNull/NotNull[NotNull/NotNull[]] contracts=
+M ExcelRenderer.Core.ExcelConverter Method System.Threading.Tasks.Task`1[ExcelRenderer.Core.ConversionResult] ConvertAsync(System.IO.Stream, System.IO.Stream, ExcelRenderer.Core.PdfExportOptions, System.Threading.CancellationToken) Public, Static, HideBySig xlsx:None:;pdf:None:;options:None:;cancellationToken:Optional, HasDefault: nullability=NotNull/NotNull[NotNull/NotNull[]]NotNull/NotNull[];NotNull/NotNull[];NotNull/NotNull[];NotNull/NotNull[] contracts=;;;
+M ExcelRenderer.Core.ExcelReadOptions Constructor Void .ctor() Public, HideBySig, SpecialName, RTSpecialName  nullability= contracts=
+M ExcelRenderer.Core.ExcelReadOptions Method Boolean Equals(ExcelRenderer.Core.ExcelReadOptions) Public, Final, Virtual, HideBySig, VtableLayoutMask other:None: nullability=NotNull/NotNull[]Nullable/Nullable[] contracts=
+M ExcelRenderer.Core.ExcelReadOptions Method Boolean Equals(System.Object) Public, Virtual, HideBySig obj:None: nullability=NotNull/NotNull[]Nullable/Nullable[] contracts=
+M ExcelRenderer.Core.ExcelReadOptions Method Boolean op_Equality(ExcelRenderer.Core.ExcelReadOptions, ExcelRenderer.Core.ExcelReadOptions) Public, Static, HideBySig, SpecialName left:None:;right:None: nullability=NotNull/NotNull[]Nullable/Nullable[];Nullable/Nullable[] contracts=;
+M ExcelRenderer.Core.ExcelReadOptions Method Boolean op_Inequality(ExcelRenderer.Core.ExcelReadOptions, ExcelRenderer.Core.ExcelReadOptions) Public, Static, HideBySig, SpecialName left:None:;right:None: nullability=NotNull/NotNull[]Nullable/Nullable[];Nullable/Nullable[] contracts=;
+M ExcelRenderer.Core.ExcelReadOptions Method ExcelRenderer.Core.ExcelReadOptions <Clone>$() Public, HideBySig  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.ExcelReadOptions Method Int32 GetHashCode() Public, Virtual, HideBySig  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.ExcelReadOptions Method System.String ToString() Public, Virtual, HideBySig  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.PdfExportOptions Constructor Void .ctor() Public, HideBySig, SpecialName, RTSpecialName  nullability= contracts=
+M ExcelRenderer.Core.PdfExportOptions Method Boolean Equals(ExcelRenderer.Core.PdfExportOptions) Public, Final, Virtual, HideBySig, VtableLayoutMask other:None: nullability=NotNull/NotNull[]Nullable/Nullable[] contracts=
+M ExcelRenderer.Core.PdfExportOptions Method Boolean Equals(System.Object) Public, Virtual, HideBySig obj:None: nullability=NotNull/NotNull[]Nullable/Nullable[] contracts=
+M ExcelRenderer.Core.PdfExportOptions Method Boolean op_Equality(ExcelRenderer.Core.PdfExportOptions, ExcelRenderer.Core.PdfExportOptions) Public, Static, HideBySig, SpecialName left:None:;right:None: nullability=NotNull/NotNull[]Nullable/Nullable[];Nullable/Nullable[] contracts=;
+M ExcelRenderer.Core.PdfExportOptions Method Boolean op_Inequality(ExcelRenderer.Core.PdfExportOptions, ExcelRenderer.Core.PdfExportOptions) Public, Static, HideBySig, SpecialName left:None:;right:None: nullability=NotNull/NotNull[]Nullable/Nullable[];Nullable/Nullable[] contracts=;
+M ExcelRenderer.Core.PdfExportOptions Method ExcelRenderer.Core.ExcelReadOptions get_ReadOptions() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.PdfExportOptions Method ExcelRenderer.Core.PdfExportOptions <Clone>$() Public, HideBySig  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.PdfExportOptions Method ExcelRenderer.OpenXml.Reader.Input.WorkbookInputOptions get_Input() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.PdfExportOptions Method Int32 GetHashCode() Public, Virtual, HideBySig  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.PdfExportOptions Method Int32 get_FontCollectionIndex() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.PdfExportOptions Method System.String ToString() Public, Virtual, HideBySig  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.PdfExportOptions Method System.String get_FontFilePath() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.PdfExportOptions Method System.String get_SheetName() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=
+M ExcelRenderer.Core.PdfExportOptions Method Void set_FontCollectionIndex(Int32) Public, HideBySig, SpecialName value:None: nullability=NotNull/NotNull[]NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.PdfExportOptions Method Void set_FontFilePath(System.String) Public, HideBySig, SpecialName value:None: nullability=NotNull/NotNull[]NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.PdfExportOptions Method Void set_Input(ExcelRenderer.OpenXml.Reader.Input.WorkbookInputOptions) Public, HideBySig, SpecialName value:None: nullability=NotNull/NotNull[]NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.PdfExportOptions Method Void set_ReadOptions(ExcelRenderer.Core.ExcelReadOptions) Public, HideBySig, SpecialName value:None: nullability=NotNull/NotNull[]NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.PdfExportOptions Method Void set_SheetName(System.String) Public, HideBySig, SpecialName value:None: nullability=NotNull/NotNull[]Nullable/Nullable[] contracts=
+M ExcelRenderer.Core.PdfExportOptions Property ExcelRenderer.Core.ExcelReadOptions ReadOptions nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.PdfExportOptions Property ExcelRenderer.OpenXml.Reader.Input.WorkbookInputOptions Input nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.PdfExportOptions Property Int32 FontCollectionIndex nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.PdfExportOptions Property System.String FontFilePath nullability=NotNull/NotNull[] contracts=
+M ExcelRenderer.Core.PdfExportOptions Property System.String SheetName nullability=Nullable/Nullable[] contracts=
+T ExcelRenderer.Core.ConversionDiagnostic Public, Sealed, BeforeFieldInit base=System.Object interfaces=System.IEquatable`1[ExcelRenderer.Core.ConversionDiagnostic]
+T ExcelRenderer.Core.ConversionResult Public, Sealed, BeforeFieldInit base=System.Object interfaces=System.IEquatable`1[ExcelRenderer.Core.ConversionResult]
+T ExcelRenderer.Core.ExcelConverter Public, Abstract, Sealed, BeforeFieldInit base=System.Object interfaces=
+T ExcelRenderer.Core.ExcelReadOptions Public, Sealed, BeforeFieldInit base=System.Object interfaces=System.IEquatable`1[ExcelRenderer.Core.ExcelReadOptions]
+T ExcelRenderer.Core.PdfExportOptions Public, Sealed, BeforeFieldInit base=System.Object interfaces=System.IEquatable`1[ExcelRenderer.Core.PdfExportOptions]

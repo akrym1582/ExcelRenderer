@@ -91,6 +91,18 @@ internal static class WorkbookFormulaInspection
                     continue;
                 }
 
+                if (part is WorksheetPart && xml.LocalName == "extLst" && xml.NamespaceURI == MainNamespace)
+                {
+                    using var subtree = xml.ReadSubtree();
+                    var extension = System.Xml.Linq.XElement.Load(subtree);
+                    if (!Infrastructure.ConditionalFormattingExtensions.IsKnown(extension))
+                    {
+                        return new FormulaLocation(sheet, string.Empty, table, "extLst");
+                    }
+
+                    continue;
+                }
+
                 if (xml.NamespaceURI != MainNamespace)
                 {
                     return new FormulaLocation(sheet, string.Empty, table, "UnknownNamespace");

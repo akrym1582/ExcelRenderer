@@ -11,6 +11,7 @@ public sealed class DrawCommandGeneratorPass
     private static readonly IReadOnlyList<DrawingLayer> ContinuousLayerOrder = Array.AsReadOnly(new[]
     {
         DrawingLayer.Background,
+        DrawingLayer.Decoration,
         DrawingLayer.CellBorder,
         DrawingLayer.Text,
     });
@@ -49,8 +50,14 @@ public sealed class DrawCommandGeneratorPass
     {
         // Rescan cells by layer: later backgrounds must never cover earlier text.
         var projection = CoreIntegration.CoreCommandAdapter.CreatePublicProjection();
+        var extension = new CoreIntegration.FullDrawingExtension();
         foreach (var layer in ContinuousLayerOrder)
         {
+            if (layer == DrawingLayer.Decoration && !plan.HasCellDecorations)
+            {
+                continue;
+            }
+
             if (layer == DrawingLayer.CellBorder)
             {
                 foreach (var command in Core.Drawing.BorderConflictResolver.Generate(1, plan.EnumerateBorderCells(measurer)))
@@ -63,6 +70,22 @@ public sealed class DrawCommandGeneratorPass
 
             foreach (var cell in plan.EnumerateLayerCells(measurer, layer))
             {
+                var coreCell = CoreIntegration.CorePageAdapter.ToCore(cell);
+                if (layer == DrawingLayer.Decoration)
+                {
+                    foreach (var command in extension.CreateCellDecorationCommands(1, coreCell))
+                    {
+                        yield return projection(command);
+                    }
+
+                    continue;
+                }
+
+                if (layer == DrawingLayer.Text && !extension.ShouldDrawCellText(coreCell))
+                {
+                    continue;
+                }
+
                 var coreLayer = layer switch
                 {
                     DrawingLayer.Background => 0,

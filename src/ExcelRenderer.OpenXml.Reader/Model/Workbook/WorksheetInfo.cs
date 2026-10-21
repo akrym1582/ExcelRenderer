@@ -32,9 +32,11 @@ public sealed class WorksheetInfo
     /// <param name="conditionalFormattingRanges">Source rule ranges.</param>
     /// <param name="hasFormulas">Whether any original cell has a formula element.</param>
     /// <param name="conditionalFormattingRules">Saved conditional rules without evaluation.</param>
-    internal WorksheetInfo(SheetInfo sheet, string? rawDimension, CellRange? actualCellRange, IReadOnlyList<RowInfo> rows, IReadOnlyList<ColumnInfo> columns, IReadOnlyList<CellRange> mergedRanges, ElementInfo? sheetFormat, ElementInfo? pageSetup, ElementInfo? pageSetupProperties, ElementInfo? pageMargins, ElementInfo? printOptions, ElementInfo? headerFooter, IReadOnlyList<ElementInfo> rowBreaks, IReadOnlyList<ElementInfo> columnBreaks, IReadOnlyList<PrintReferenceInfo> printReferences, bool hasDrawings, bool hasHyperlinks, bool hasConditionalFormatting, bool hasTables, IReadOnlyList<IReadOnlyList<CellRange>> conditionalFormattingRanges, bool hasFormulas, IReadOnlyList<ConditionalFormatting.ConditionalFormattingRuleInfo>? conditionalFormattingRules = null)
+    /// <param name="rightToLeft">First saved view direction.</param>
+    internal WorksheetInfo(SheetInfo sheet, string? rawDimension, CellRange? actualCellRange, IReadOnlyList<RowInfo> rows, IReadOnlyList<ColumnInfo> columns, IReadOnlyList<CellRange> mergedRanges, ElementInfo? sheetFormat, ElementInfo? pageSetup, ElementInfo? pageSetupProperties, ElementInfo? pageMargins, ElementInfo? printOptions, ElementInfo? headerFooter, IReadOnlyList<ElementInfo> rowBreaks, IReadOnlyList<ElementInfo> columnBreaks, IReadOnlyList<PrintReferenceInfo> printReferences, bool hasDrawings, bool hasHyperlinks, bool hasConditionalFormatting, bool hasTables, IReadOnlyList<IReadOnlyList<CellRange>> conditionalFormattingRanges, bool hasFormulas, IReadOnlyList<ConditionalFormatting.ConditionalFormattingRuleInfo>? conditionalFormattingRules = null, bool rightToLeft = false)
     {
         Sheet = sheet;
+        RightToLeft = rightToLeft;
         RawDimension = rawDimension;
         ActualCellRange = actualCellRange;
         Rows = rows;
@@ -57,6 +59,9 @@ public sealed class WorksheetInfo
         HasFormulas = hasFormulas;
         ConditionalFormattingRules = conditionalFormattingRules ?? System.Array.Empty<ConditionalFormatting.ConditionalFormattingRuleInfo>();
     }
+
+    /// <summary>Gets a value indicating whether the first saved sheet view is right to left.</summary>
+    public bool RightToLeft { get; }
 
     /// <summary>Gets the Sheet metadata.</summary>
     public SheetInfo Sheet { get; }

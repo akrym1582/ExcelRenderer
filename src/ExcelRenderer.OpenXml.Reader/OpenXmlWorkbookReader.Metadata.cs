@@ -101,6 +101,7 @@ public sealed partial class OpenXmlWorkbookReader
         var drawing = false;
         var links = false;
         var conditional = false;
+        bool? rightToLeft = null;
         var hasFormulas = false;
         var conditionalRanges = new List<IReadOnlyList<CellRange>>();
         var conditionalRules = new List<ConditionalFormattingRuleInfo>();
@@ -157,11 +158,15 @@ public sealed partial class OpenXmlWorkbookReader
                         }
                     }
                 }
-                else if (reader.LocalName == "conditionalFormatting")
+                else if (reader.LocalName == "sheetView" && reader.NamespaceUri == XmlValues.Spreadsheet.NamespaceName && rightToLeft is null)
+                {
+                    rightToLeft = reader.Attributes.FirstOrDefault(a => a.LocalName == "rightToLeft").Value is "1" or "true";
+                }
+                else if (reader.LocalName == "conditionalFormatting" && (reader.NamespaceUri == XmlValues.Spreadsheet.NamespaceName || reader.NamespaceUri == "http://schemas.microsoft.com/office/spreadsheetml/2009/9/main"))
                 {
                     conditional = true;
                     var element = XmlValues.Load(reader);
-                    var reference = XmlValues.Attr(element, "sqref") ?? element.Elements().FirstOrDefault(e => e.Name.LocalName == "sqref")?.Value ?? string.Empty;
+                    var reference = XmlValues.Attr(element, "sqref") ?? element.Elements().FirstOrDefault(e => e.Name == XName.Get("sqref", "http://schemas.microsoft.com/office/excel/2006/main"))?.Value ?? string.Empty;
                     var ranges = Array.AsReadOnly(reference.Split(new[] { ' ', '\t', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Select(CellRange.Parse).ToArray());
                     conditionalRangeCount = checked(conditionalRangeCount + ranges.Count);
                     if (conditionalRangeCount > options.MaxStyleRecords)
@@ -170,7 +175,7 @@ public sealed partial class OpenXmlWorkbookReader
                     }
 
                     conditionalRanges.Add(ranges);
-                    foreach (var rule in element.Elements().Where(e => e.Name.LocalName == "cfRule"))
+                    foreach (var rule in element.Elements().Where(e => e.Name == element.Name.Namespace + "cfRule"))
                     {
                         if (conditionalRules.Count >= options.MaxStyleRecords || (XmlValues.Attr(rule, "text")?.Length ?? 0) > options.MaxCellTextCharacters || rule.Descendants().Any(e => ((e.Name.LocalName == "formula" || e.Name.LocalName == "f") && e.Value.Length > options.MaxCellTextCharacters) || (e.Name.LocalName == "cfvo" && (XmlValues.Attr(e, "val")?.Length ?? 0) > options.MaxCellTextCharacters)))
                         {
@@ -247,7 +252,7 @@ public sealed partial class OpenXmlWorkbookReader
         ElementInfo? Find(string name) => elements.TryGetValue(name, out var e) ? e : null;
         var print = workbook.DefinedNames.Where(n => n.LocalSheetId == index - 1 && (n.Name == "_xlnm.Print_Area" || n.Name == "_xlnm.Print_Titles")).Select(n => PrintReferences.Parse(n, sheets[index - 1], options.DiagnosticSink)).ToList().AsReadOnly();
         var actual = maxRow == 0 ? null : new CellRange(new CellAddress(minRow, minCol), new CellAddress(maxRow, maxCol));
-        var info = new WorksheetInfo(sheets[index - 1], dimension, actual, rows.AsReadOnly(), columns.AsReadOnly(), merges.AsReadOnly(), Find("sheetFormatPr"), Find("pageSetup"), Find("pageSetUpPr"), Find("pageMargins"), Find("printOptions"), Find("headerFooter"), rowBreaks.AsReadOnly(), columnBreaks.AsReadOnly(), print, drawing, links, conditional, tables, conditionalRanges.AsReadOnly(), hasFormulas, conditionalRules.AsReadOnly());
+        var info = new WorksheetInfo(sheets[index - 1], dimension, actual, rows.AsReadOnly(), columns.AsReadOnly(), merges.AsReadOnly(), Find("sheetFormatPr"), Find("pageSetup"), Find("pageSetUpPr"), Find("pageMargins"), Find("printOptions"), Find("headerFooter"), rowBreaks.AsReadOnly(), columnBreaks.AsReadOnly(), print, drawing, links, conditional, tables, conditionalRanges.AsReadOnly(), hasFormulas, conditionalRules.AsReadOnly(), rightToLeft ?? false);
         cached = new SheetMetadata(info, shared, FormulaIndex.Build(arrays));
         metadata.Add(index, cached);
         return cached;

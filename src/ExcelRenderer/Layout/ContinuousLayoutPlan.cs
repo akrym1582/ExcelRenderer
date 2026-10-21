@@ -72,6 +72,9 @@ internal sealed class ContinuousLayoutPlan
             .Select(shape => shape with { Bounds = Move(shape.Bounds), ClipBounds = clip is null ? null : Move(clip.Value) }).ToArray();
     }
 
+    /// <summary>Gets a value indicating whether any source cell has product decorations.</summary>
+    internal bool HasCellDecorations => sheet.Cells.Values.Any(cell => cell.ConditionalVisual is not null);
+
     /// <summary>Gets the final canvas width in points.</summary>
     internal double Width { get; }
 
@@ -157,7 +160,7 @@ internal sealed class ContinuousLayoutPlan
     /// <returns>Current-layer cells in original model order.</returns>
     internal IEnumerable<RenderCell> EnumerateLayerCells(ITextMeasurer measurer, DrawingLayer layer)
     {
-        if (layer is not (DrawingLayer.Background or DrawingLayer.CellBorder or DrawingLayer.MergedBorder or DrawingLayer.Text))
+        if (layer is not (DrawingLayer.Background or DrawingLayer.Decoration or DrawingLayer.CellBorder or DrawingLayer.MergedBorder or DrawingLayer.Text))
         {
             throw new ArgumentOutOfRangeException(nameof(layer));
         }

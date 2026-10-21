@@ -32,13 +32,28 @@ internal sealed partial class ConditionalFormattingSession
     /// <param name="calculation">Shared dependency snapshot, absent when disabled.</param>
     /// <param name="options">Main product read policy.</param>
     /// <param name="isTarget">Exact selected visible cell policy.</param>
-    internal ConditionalFormattingSession(WorksheetInfo info, WorkbookCalculationSession? calculation, Excel.ExcelReadOptions options, Func<OpenXml.Reader.Model.Cells.CellAddress, bool> isTarget)
+    /// <param name="token">Cooperative cancellation.</param>
+    internal ConditionalFormattingSession(WorksheetInfo info, WorkbookCalculationSession? calculation, Excel.ExcelReadOptions options, Func<OpenXml.Reader.Model.Cells.CellAddress, bool> isTarget, CancellationToken token = default)
     {
         this.info = info;
         this.calculation = calculation;
         this.isTarget = isTarget;
         enabled = options.ApplyConditionalFormatting;
-        var prepared = info.ConditionalFormattingRules.Select((source, order) => enabled ? Prepare(source, order, options.FormulaEvaluationOptions) : new PreparedRule(source, order, int.TryParse(Attribute(source.Source, "priority"), out var priority) ? priority : int.MaxValue, false));
+        var prepared = enabled ? ConditionalFormattingRuleNormalizer.Normalize(info.ConditionalFormattingRules, token).Select((entry, order) =>
+        {
+            var result = Prepare(entry.Source, order, options.FormulaEvaluationOptions);
+            result.Failure = entry.Failure ?? result.Failure;
+            return result;
+        }).Where(rule =>
+        {
+            if (rule.Source.Source.NamespaceUri != ConditionalFormattingRuleNormalizer.X14 || Attribute(rule.Source.Source, "priority") is not null)
+            {
+                return true;
+            }
+
+            Features.Add(Feature(rule, "ConditionalFormattingExtensionLinkInvalid", "An extension without a priority has no unique legacy data bar owner."));
+            return false;
+        }) : info.ConditionalFormattingRules.Select((source, order) => new PreparedRule(source, order, int.TryParse(Attribute(source.Source, "priority"), out var priority) ? priority : int.MaxValue, false));
         rules = enabled ? prepared.OrderBy(rule => rule.Priority).ThenBy(rule => rule.Order).ToArray() : prepared.ToArray();
         var duplicates = new HashSet<PreparedRule>();
         if (enabled)
@@ -165,6 +180,8 @@ internal sealed partial class ConditionalFormattingSession
             Dictionary<string, ElementInfo>? properties = null;
             var uncertain = false;
             ReportColor? dynamicBackground = null;
+            ConditionalDataBar? dataBar = null;
+            ConditionalIcon? icon = null;
             foreach (var rule in ApplicableRules(address, token))
             {
                 if (rule.Failure is not null)
@@ -180,6 +197,13 @@ internal sealed partial class ConditionalFormattingSession
                     if (!evaluation.Match)
                     {
                         continue;
+                    }
+
+                    dataBar ??= evaluation.DataBar;
+                    icon ??= evaluation.Icon is { } selectedIcon ? selectedIcon with { RuleId = Id(rule) } : null;
+                    if (evaluation.DataBar is not null && rule.PopulationRule?.Gradient == true)
+                    {
+                        ReportFailure(rule, sourceAddress, "ConditionalFormattingDataBarGradientApproximated", "The gradient is approximated with a solid fill.");
                     }
 
                     if (evaluation.Background is { } background && properties?.ContainsKey("fill") != true)
@@ -230,9 +254,11 @@ internal sealed partial class ConditionalFormattingSession
                 }
 
                 dynamicBackground = null;
+                dataBar = null;
+                icon = null;
             }
 
-            if (uncertain || ((properties?.Count ?? 0) == 0 && dynamicBackground is null))
+            if (uncertain || ((properties?.Count ?? 0) == 0 && dynamicBackground is null && dataBar is null && icon is null))
             {
                 continue;
             }
@@ -245,11 +271,12 @@ internal sealed partial class ConditionalFormattingSession
                 continue;
             }
 
-            var text = cell.ExtensionData is FullCellTextData rich ? rich with
+            var text = FullCellPresentationData.Text(cell.ExtensionData) is { } rich ? rich with
             {
                 Runs = rich.Runs.Select(run => run with { Font = CoreModelAdapter.ToPublic(ConditionalStyle.ApplyFont(CoreModelAdapter.ToCore(run.Font), effectiveProperties)) }).ToArray(),
-            } : cell.ExtensionData;
-            cells[address] = cell with { Style = style, ExtensionData = text };
+            } : FullCellPresentationData.Text(cell.ExtensionData);
+            var visualData = dataBar is null && icon is null ? null : new ConditionalCellVisual(dataBar, icon);
+            cells[address] = cell with { Style = style, ExtensionData = visualData is null ? text : new FullCellPresentationData(text, visualData) };
             if (properties is not null && merges.ContainsKey(address))
             {
                 mergedProperties.Add(address, properties);
@@ -293,7 +320,9 @@ internal sealed partial class ConditionalFormattingSession
     {
         var result = new PreparedRule(source, order, int.TryParse(Attribute(source.Source, "priority"), NumberStyles.None, CultureInfo.InvariantCulture, out var priority) ? priority : int.MaxValue);
         var type = Attribute(source.Source, "type");
-        if (source.IsExtension || source.Ranges.Count == 0 || type is not ("cellIs" or "expression" or "containsText" or "notContainsText" or "beginsWith" or "endsWith" or "containsBlanks" or "notContainsBlanks" or "containsErrors" or "notContainsErrors" or "duplicateValues" or "uniqueValues" or "top10" or "aboveAverage" or "colorScale"))
+        var visual = type is "dataBar" or "iconSet";
+        var extensionSupported = visual && (source.Extension is not null || source.Source.NamespaceUri == ConditionalFormattingRuleNormalizer.X14) && !ConditionalFormattingRuleNormalizer.UnknownExtension(source.Source);
+        if ((source.IsExtension && !extensionSupported) || source.Ranges.Count == 0 || type is not ("cellIs" or "expression" or "containsText" or "notContainsText" or "beginsWith" or "endsWith" or "containsBlanks" or "notContainsBlanks" or "containsErrors" or "notContainsErrors" or "duplicateValues" or "uniqueValues" or "top10" or "aboveAverage" or "colorScale" or "dataBar" or "iconSet"))
         {
             result.Failure = source.IsExtension ? "ConditionalFormattingExtensionUnsupported" : "UnsupportedConditionalFormatting";
             return result;
@@ -305,7 +334,7 @@ internal sealed partial class ConditionalFormattingSession
             return result;
         }
 
-        if (type is "duplicateValues" or "uniqueValues" or "top10" or "aboveAverage" or "colorScale")
+        if (type is "duplicateValues" or "uniqueValues" or "top10" or "aboveAverage" or "colorScale" or "dataBar" or "iconSet")
         {
             try
             {

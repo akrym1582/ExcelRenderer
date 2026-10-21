@@ -271,7 +271,7 @@ public sealed partial class ConditionalFormattingTests
     }
 
     [Theory]
-    [InlineData("dataBar", "", 0, "UnsupportedConditionalFormatting")]
+    [InlineData("dataBar", "", 0, "ConditionalFormattingAttributesInvalid")]
     [InlineData("expression", "<formula>TRUE</formula>", 99, "ConditionalFormattingDifferentialInvalid")]
     [InlineData("expression", "<formula>TRUE</formula>", 0, "ConditionalFormattingPriorityInvalid")]
     public async Task UnsupportedRuleDiagnosticsRemainSelectedAndStable(string type, string body, int dxf, string code)

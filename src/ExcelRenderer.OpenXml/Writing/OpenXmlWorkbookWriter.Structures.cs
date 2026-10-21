@@ -193,9 +193,38 @@ public static partial class OpenXmlWorkbookWriter
 
     private static void RewriteSheetStructures(SheetSource source, StructuralReferences references, string name, CancellationToken token)
     {
-        var originalPriorities = source.Children.Where(element => element.Name.LocalName == "conditionalFormatting")
-            .SelectMany(element => element.Elements(Ns + "cfRule")).Select(rule => (int?)rule.Attribute("priority")).ToArray();
+        XNamespace x14 = "http://schemas.microsoft.com/office/spreadsheetml/2009/9/main";
+        XNamespace xm = "http://schemas.microsoft.com/office/excel/2006/main";
+        var extended = source.Children.SelectMany(child => child.DescendantsAndSelf(x14 + "conditionalFormatting")).ToArray();
+        IEnumerable<XElement> PriorityRules() => source.Children.Where(element => element.Name == Ns + "conditionalFormatting").SelectMany(element => element.Elements(Ns + "cfRule"))
+            .Concat(source.Children.SelectMany(child => child.Descendants(x14 + "cfRule")).Where(rule => rule.Attribute("priority") is not null));
+        var originalPriorities = PriorityRules().Select(rule => (int?)rule.Attribute("priority")).ToArray();
         var validPriorities = originalPriorities.All(priority => priority > 0) && originalPriorities.Distinct().Count() == originalPriorities.Length;
+        if (references.HasRowChanges)
+        {
+            foreach (var extension in extended)
+            {
+                if (extension.Elements(x14 + "cfRule").Any(rule => (string?)rule.Attribute("type") is not ("dataBar" or "iconSet") || rule.Elements().Any(child => child.Name != x14 + "dataBar" && child.Name != x14 + "iconSet") || rule.Descendants().Any(child => child.Name.LocalName is "extLst" or "cfIcon")))
+                {
+                    throw new NotSupportedException("Unknown conditional-format extension metadata cannot be moved safely.");
+                }
+
+                var sqref = extension.Element(xm + "sqref") ?? throw new NotSupportedException("An extended conditional format has no application range.");
+                var temporary = new XElement(Ns + "conditionalFormatting", new XAttribute("sqref", sqref.Value), extension.Elements(x14 + "cfRule").Select(rule => new XElement(rule)));
+                var rewritten = RewriteRule(temporary, source.Plan, references, name, token, preservePopulation: true);
+                if (rewritten.Count == 0)
+                {
+                    extension.Remove();
+                    continue;
+                }
+
+                var updated = rewritten.Single();
+                sqref.Value = (string)updated.Attribute("sqref")!;
+                extension.Elements(x14 + "cfRule").Remove();
+                sqref.AddBeforeSelf(updated.Elements());
+            }
+        }
+
         for (var index = 0; index < source.Children.Count; index++)
         {
             var element = source.Children[index];
@@ -264,8 +293,7 @@ public static partial class OpenXmlWorkbookWriter
         if (references.HasRowChanges && validPriorities)
         {
             var priority = 0;
-            foreach (var rule in source.Children.Where(element => element.Name.LocalName == "conditionalFormatting")
-                .SelectMany(element => element.Elements(Ns + "cfRule")).OrderBy(rule => (int?)rule.Attribute("priority")))
+            foreach (var rule in PriorityRules().OrderBy(rule => (int?)rule.Attribute("priority")))
             {
                 rule.SetAttributeValue("priority", ++priority);
             }

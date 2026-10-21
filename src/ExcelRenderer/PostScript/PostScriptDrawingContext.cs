@@ -70,6 +70,23 @@ internal sealed class PostScriptDrawingContext
             case DrawImageCommand image:
                 Image(image);
                 break;
+            case DrawPolygonCommand polygon:
+                writer?.Line("gsave");
+                if (polygon.ClipBounds is { } polygonClip)
+                {
+                    writer?.Clip(polygonClip);
+                }
+
+                writer?.Color(polygon.Color);
+                writer?.Line("newpath");
+                for (var index = 0; index < polygon.Vertices.Count; index++)
+                {
+                    var point = polygon.Vertices[index];
+                    writer?.Line($"{Number(point.X)} {Number(point.Y)} {(index == 0 ? "moveto" : "lineto")}");
+                }
+
+                writer?.Line("closepath fill grestore");
+                break;
             case DrawShapeCommand shape:
                 Shape(shape);
                 break;

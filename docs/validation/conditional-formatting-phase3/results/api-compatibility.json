@@ -1,0 +1,26 @@
+{
+  "ExcelRenderer": {
+    "removed": [],
+    "added": []
+  },
+  "ExcelRenderer.Core": {
+    "removed": [],
+    "added": []
+  },
+  "ExcelRenderer.OpenXml.Reader": {
+    "removed": [],
+    "added": [
+      "M ExcelRenderer.OpenXml.Reader.Model.ConditionalFormatting.ConditionalFormattingExtensionInfo Method ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo get_Source() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=",
+      "M ExcelRenderer.OpenXml.Reader.Model.ConditionalFormatting.ConditionalFormattingExtensionInfo Method System.Nullable`1[System.Guid] get_Id() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=",
+      "M ExcelRenderer.OpenXml.Reader.Model.ConditionalFormatting.ConditionalFormattingExtensionInfo Property ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo Source nullability=NotNull/Unknown[] contracts=",
+      "M ExcelRenderer.OpenXml.Reader.Model.ConditionalFormatting.ConditionalFormattingExtensionInfo Property System.Nullable`1[System.Guid] Id nullability=Nullable/Unknown[] contracts=",
+      "M ExcelRenderer.OpenXml.Reader.Model.ConditionalFormatting.ConditionalFormattingRuleInfo Method ExcelRenderer.OpenXml.Reader.Model.ConditionalFormatting.ConditionalFormattingExtensionInfo get_Extension() Public, HideBySig, SpecialName  nullability=Nullable/Nullable[] contracts=",
+      "M ExcelRenderer.OpenXml.Reader.Model.ConditionalFormatting.ConditionalFormattingRuleInfo Property ExcelRenderer.OpenXml.Reader.Model.ConditionalFormatting.ConditionalFormattingExtensionInfo Extension nullability=Nullable/Unknown[] contracts=",
+      "M ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo Method System.String get_NamespaceUri() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=",
+      "M ExcelRenderer.OpenXml.Reader.Model.Workbook.ElementInfo Property System.String NamespaceUri nullability=NotNull/Unknown[] contracts=",
+      "M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Method Boolean get_RightToLeft() Public, HideBySig, SpecialName  nullability=NotNull/NotNull[] contracts=",
+      "M ExcelRenderer.OpenXml.Reader.Model.Workbook.WorksheetInfo Property Boolean RightToLeft nullability=NotNull/Unknown[] contracts=",
+      "T ExcelRenderer.OpenXml.Reader.Model.ConditionalFormatting.ConditionalFormattingExtensionInfo Public, Sealed, BeforeFieldInit base=System.Object interfaces="
+    ]
+  }
+}

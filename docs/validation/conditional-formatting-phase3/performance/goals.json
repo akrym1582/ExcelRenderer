@@ -1,0 +1,44 @@
+{
+  "no-cf": {
+    "timeEveryRoundWithinFivePercent": false,
+    "allocationEveryRoundWithinFivePercent": true,
+    "timeChanges": [
+      -0.20948780390588972,
+      0.04698215436965736,
+      0.18067852139119367
+    ],
+    "allocationChanges": [
+      0.0012676860029308124,
+      0.0012467322845053364,
+      0.001239744858463121
+    ]
+  },
+  "disabled": {
+    "timeEveryRoundWithinFivePercent": false,
+    "allocationEveryRoundWithinFivePercent": true,
+    "timeChanges": [
+      0.07424411371573725,
+      -0.010904719611343872,
+      -0.024445560980628334
+    ],
+    "allocationChanges": [
+      0.0012703826376552207,
+      0.0012459439527103822,
+      0.0012389652708388876
+    ]
+  },
+  "phase2": {
+    "timeEveryRoundWithinFivePercent": true,
+    "allocationEveryRoundWithinFivePercent": true,
+    "timeChanges": [
+      -0.034728325375325,
+      0.0058054904166648935,
+      0.0417519405347937
+    ],
+    "allocationChanges": [
+      0.0009035466792384206,
+      0.0008763223275263243,
+      0.0008787948905275567
+    ]
+  }
+}

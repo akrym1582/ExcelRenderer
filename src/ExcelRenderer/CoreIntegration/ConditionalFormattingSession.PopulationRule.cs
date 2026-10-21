@@ -20,6 +20,8 @@ internal sealed partial class ConditionalFormattingSession
         private readonly bool equal;
         private readonly int deviations;
         private readonly ConditionalColorScale? scale;
+        private readonly DataBarRule? bar;
+        private readonly IconSetRule? icons;
         private readonly ConditionalFormattingRuleInfo source;
         private double threshold;
 
@@ -39,6 +41,24 @@ internal sealed partial class ConditionalFormattingSession
                     equal = Boolean("equalAverage", false);
                     deviations = Integer("stdDev", 0, 0, 3);
                     break;
+                case "dataBar":
+                case "iconSet":
+                    ValidateVisualSource(source.Source);
+                    if (source.Extension is { } extension)
+                    {
+                        ValidateVisualSource(extension.Source);
+                    }
+
+                    if (type == "dataBar")
+                    {
+                        bar = new(source.Source, options, source.Extension is not null || source.Source.NamespaceUri == ConditionalFormattingRuleNormalizer.X14);
+                    }
+                    else
+                    {
+                        icons = new(source.Source, options);
+                    }
+
+                    break;
                 case "colorScale":
                     if (Boolean("stopIfTrue", false) || Attribute(source.Source, "dxfId") is not null)
                     {
@@ -50,15 +70,17 @@ internal sealed partial class ConditionalFormattingSession
             }
         }
 
+        internal bool Gradient => bar?.Gradient ?? false;
+
         internal ConditionalPopulation? Population { get; private set; }
 
         internal Exception? Failure { get; set; }
 
         internal void Initialize(ConditionalPopulation population, WorkbookCalculationSession calculation, string sheet, CancellationToken token)
         {
-            if (type is "top10" or "aboveAverage" or "colorScale")
+            if (type is "top10" or "aboveAverage" or "colorScale" or "dataBar" or "iconSet")
             {
-                population.PrepareNumbers(type == "top10" || (scale?.NeedsSort ?? false), token);
+                population.PrepareNumbers(type == "top10" || (scale?.NeedsSort ?? bar?.Thresholds.NeedsSort ?? icons?.Thresholds.NeedsSort ?? false), token);
                 var count = population.Numbers.Count;
                 if (count > 0)
                 {
@@ -79,12 +101,14 @@ internal sealed partial class ConditionalFormattingSession
                 }
 
                 scale?.Initialize(population, calculation, sheet, source.Ranges[0].First, token);
+                bar?.Thresholds.Initialize(population, calculation, sheet, source.Ranges[0].First, token);
+                icons?.Thresholds.Initialize(population, calculation, sheet, source.Ranges[0].First, token);
             }
 
             Population = population;
         }
 
-        internal Evaluation Evaluate(FormulaValue value, CancellationToken token)
+        internal Evaluation Evaluate(FormulaValue value, CancellationToken token, bool rightToLeft)
         {
             if (type is "duplicateValues" or "uniqueValues")
             {
@@ -97,6 +121,16 @@ internal sealed partial class ConditionalFormattingSession
                 return default;
             }
 
+            if (bar is not null)
+            {
+                return new(true, null, bar.Evaluate(value.Number, rightToLeft));
+            }
+
+            if (icons is not null)
+            {
+                return new(true, null, Icon: icons.Evaluate(value.Number, rightToLeft));
+            }
+
             if (scale is not null)
             {
                 return new(true, scale.Color(value.Number));
@@ -105,6 +139,15 @@ internal sealed partial class ConditionalFormattingSession
             var match = type == "top10" ? bottom ? value.Number <= threshold : value.Number >= threshold :
                 above ? equal ? value.Number >= threshold : value.Number > threshold : equal ? value.Number <= threshold : value.Number < threshold;
             return new(match, null);
+        }
+
+        private static void ValidateVisualSource(OpenXml.Reader.Model.Workbook.ElementInfo source)
+        {
+            if (VisualBoolean(source, "stopIfTrue", false) || Attribute(source, "dxfId") is not null || VisualBoolean(source, "activePresent", false) ||
+                source.Children.Any(child => child.Name is "dxf" or "f" || (child.Name is not ("dataBar" or "iconSet" or "extLst"))))
+            {
+                throw AttributesInvalid("Visual rules with differential styles, stopIfTrue or active formulas are unsupported.");
+            }
         }
 
         private bool Boolean(string name, bool fallback) => Attribute(source.Source, name) switch

@@ -9,6 +9,26 @@ internal sealed class FullDrawingExtension : Core.Extensibility.ICoreDrawingExte
     public bool RequiresTextLayout => false;
 
     /// <inheritdoc/>
+    public IEnumerable<Core.Drawing.DrawCommand> CreateCellDecorationCommands(int pageNumber, Core.Layout.RenderCell cell) => FullCellPresentationData.Decoration(cell.Cell.ExtensionData) is null ? [] : ConditionalCellVisualGeometry.Create(pageNumber, cell).Select(CoreCommandAdapter.ToCore);
+
+    /// <inheritdoc/>
+    public bool ShouldDrawCellText(Core.Layout.RenderCell cell)
+    {
+        var visual = FullCellPresentationData.Decoration(cell.Cell.ExtensionData);
+        if (visual?.Icon is not null && !ConditionalCellVisualGeometry.CanDrawIcon(cell))
+        {
+            return true;
+        }
+
+        if (visual?.DataBar is not null && (cell.Bounds.Width <= 2 * cell.DecorationScale || cell.Bounds.Height <= 2 * cell.DecorationScale))
+        {
+            return true;
+        }
+
+        return visual?.HideValue != true;
+    }
+
+    /// <inheritdoc/>
     public IEnumerable<Core.Drawing.DrawCommand> CreateObjectCommands(Core.Layout.RenderPage page)
     {
         var images = (page.Images ?? []).Select(image =>

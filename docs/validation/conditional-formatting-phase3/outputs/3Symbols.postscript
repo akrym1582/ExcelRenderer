@@ -1,0 +1,119 @@
+%!PS-Adobe-3.0
+%%Creator: ExcelRenderer
+%%LanguageLevel: 3
+% Requires Type 42 and PostScript 3011+ large sfnt table support.
+%%DocumentData: Clean7Bit
+%%Pages: (atend)
+%%BoundingBox: (atend)
+%%DocumentSuppliedResources: (atend)
+%%EndComments
+%%BeginProlog
+/ERDict 20 dict def ERDict begin
+/rectpath {4 dict begin /h exch def /w exch def /y exch def /x exch def x y moveto w 0 rlineto 0 h rlineto w neg 0 rlineto closepath end} bind def
+%%EndProlog
+%%Page: 1 1
+%%PageBoundingBox: 0 0 612 792
+%%BeginPageSetup
+<< /PageSize [612 792] >> setpagedevice
+gsave 0 792 translate 1 -1 scale
+%%EndPageSetup
+gsave 0 0 translate
+newpath 54 54 45.75 28 rectpath
+clip newpath
+0 0.501960784313725 1 setrgbcolor
+newpath 55 55 4.375 26 rectpath
+fill
+gsave
+61 68 translate 0 rotate -61 -68 translate
+newpath
+66.0400009155273 68 moveto
+66.0400009155273 70.7835159301758 63.7835159301758 73.0400009155273 61 73.0400009155273 curveto
+58.2164840698242 73.0400009155273 55.9599990844727 70.7835159301758 55.9599990844727 68 curveto
+55.9599990844727 65.2164840698242 58.2164840698242 62.9599990844727 61 62.9599990844727 curveto
+63.7835159301758 62.9599990844727 66.0400009155273 65.2164840698242 66.0400009155273 68 curveto
+closepath
+0.752941176470588 0.313725490196078 0.301960784313725 setrgbcolor
+gsave fill grestore
+newpath
+grestore
+gsave
+1 1 1 setrgbcolor
+newpath
+57.976 65.84 moveto
+58.84 64.976 lineto
+64.024 70.16 lineto
+63.16 71.024 lineto
+closepath fill grestore
+gsave
+1 1 1 setrgbcolor
+newpath
+57.976 70.16 moveto
+63.16 64.976 lineto
+64.024 65.84 lineto
+58.84 71.024 lineto
+closepath fill grestore
+grestore
+gsave 0 0 translate
+newpath 54 82 45.75 28 rectpath
+clip newpath
+0 0.501960784313725 1 setrgbcolor
+newpath 55 83 21.875 26 rectpath
+fill
+gsave
+61 96 translate 0 rotate -61 -96 translate
+newpath
+66.0400009155273 96 moveto
+66.0400009155273 98.7835159301758 63.7835159301758 101.040000915527 61 101.040000915527 curveto
+58.2164840698242 101.040000915527 55.9599990844727 98.7835159301758 55.9599990844727 96 curveto
+55.9599990844727 93.2164840698242 58.2164840698242 90.9599990844727 61 90.9599990844727 curveto
+63.7835159301758 90.9599990844727 66.0400009155273 93.2164840698242 66.0400009155273 96 curveto
+closepath
+0.898039215686275 0.717647058823529 0.231372549019608 setrgbcolor
+gsave fill grestore
+newpath
+grestore
+1 1 1 setrgbcolor
+newpath 60.3952 92.976 1.2096 3.888 rectpath
+fill
+1 1 1 setrgbcolor
+newpath 60.3952 97.9008 1.2096 1.2096 rectpath
+fill
+grestore
+gsave 0 0 translate
+newpath 54 110 45.75 28 rectpath
+clip newpath
+0 0.501960784313725 1 setrgbcolor
+newpath 55 111 39.375 26 rectpath
+fill
+gsave
+61 124 translate 0 rotate -61 -124 translate
+newpath
+66.0400009155273 124 moveto
+66.0400009155273 126.783515930176 63.7835159301758 129.039993286133 61 129.039993286133 curveto
+58.2164840698242 129.039993286133 55.9599990844727 126.783515930176 55.9599990844727 124 curveto
+55.9599990844727 121.216484069824 58.2164840698242 118.960006713867 61 118.960006713867 curveto
+63.7835159301758 118.960006713867 66.0400009155273 121.216484069824 66.0400009155273 124 curveto
+closepath
+0.388235294117647 0.63921568627451 0.36078431372549 setrgbcolor
+gsave fill grestore
+newpath
+grestore
+gsave
+1 1 1 setrgbcolor
+newpath
+57.7168 124 moveto
+59.0128 122.8768 lineto
+60.3952 124.432 lineto
+63.2464 121.0624 lineto
+64.5424 122.1856 lineto
+60.4816 127.024 lineto
+closepath fill grestore
+grestore
+grestore showpage
+%%PageTrailer
+end
+%%Trailer
+%%Pages: 1
+%%BoundingBox: 0 0 612 792
+%%DocumentSuppliedResources: none
+%%EOF

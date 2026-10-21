@@ -24,6 +24,9 @@ public sealed record ReportCell(
     /// </summary>
     public IReadOnlyList<CellBorder>? MergedBorders { get; init; }
 
+    /// <summary>Gets the immutable conditional visual result.</summary>
+    internal CoreIntegration.ConditionalCellVisual? ConditionalVisual { get; init; }
+
     /// <summary>Gets a value indicating whether source partial decorations cannot be rendered.</summary>
     internal bool UnsupportedRichTextFormatting { get; init; }
 }

@@ -17,12 +17,14 @@ internal sealed class CellBoundsPass : IReportLayoutPass
         foreach (var (address, bounds) in EnumerateBounds(context))
         {
             var cell = context.Sheet.Cells[address];
+            var content = CellContentBounds.Calculate(bounds, cell.Style);
+            var insets = context.Policy.GetCellContentInsets(cell, content.Width);
             context.CellLayouts[address] = new(
                 address,
                 bounds,
                 context.TextSizes.GetValueOrDefault(address))
             {
-                ContentBounds = CellContentBounds.Calculate(bounds, cell.Style),
+                ContentBounds = content with { X = content.X + insets.Left, Width = Math.Max(0, content.Width - insets.Left - insets.Right) },
                 MergedBorders = cell.MergedBorders?
                     .Where(border => context.ColumnLayouts.ContainsKey(border.Address.Column) &&
                         context.RowLayouts.ContainsKey(border.Address.Row))

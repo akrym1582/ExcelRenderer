@@ -79,6 +79,7 @@
     "Windows_execution": "This environment is Linux; Windows Core verification is left to the existing PR CI job."
   },
   "changed_files": [
+    "docs/conditional-formatting.md",
     "docs/validation/conditional-formatting-phase3/README.md",
     "docs/validation/conditional-formatting-phase3/review-fixes/api-compatibility.json",
     "docs/validation/conditional-formatting-phase3/review-fixes/before.log",

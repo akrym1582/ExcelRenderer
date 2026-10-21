@@ -182,7 +182,12 @@ application-range count. `MaxCellTextCharacters` bounds saved condition text, an
 existing part and formula-engine limits remain enforced. The main evaluator also
 caps intersected candidate visits at 2,000,000 per sheet; exceeding this leaves that
 sheet's ordinary appearance and reports `ConditionalFormattingLimitExceeded`. No partial candidate-budget application
-occurs. Phase 2 separately limits aggregate stored-cell visits/retained values to
+occurs. The diagnostic representative is found through the existing selected-target
+policy over source visibility/selection bands, including print titles and merged
+anchors, rather than scanning a fixed coordinate prefix. Proven absence emits no
+warning; an exhausted target search fails explicitly instead of silently assuming
+absence. See the [review verification](validation/conditional-formatting-phase3/README.md#review-fixes-icon-text-space-and-omitted-limit-diagnostics).
+Phase 2 separately limits aggregate stored-cell visits/retained values to
 2,000,000 per worksheet, source rectangles to 100,000 per normalization, remaining rectangles after row/column
 interval coalescing to 4,096, range inspections
 to 1,000,000 per normalization, and normalized rectangles to 65,536 both per population
@@ -287,12 +292,17 @@ with stopIfTrue=true, dxf/dxfId or activePresent/direct xm:f are outside this in
 profile. Any reached invalid/unsupported rule rolls the whole cell back to ordinary
 appearance. Outside border owners contribute borders only.
 
-Icons reserve text width in both measurement and final ContentBounds: for ordinary
-text width W, size=min(12,max(0,W−2)) and gap=2 points. Below 3 points no icon or inset
-is applied and text is restored with a diagnostic. RTL reserves the right side. Height
-is min(size,cell inner height), independent of width reservation. Hidden values are
-still measured to preserve row height. Rotation applies to the remaining text area,
-not to the icon. Bars use the complete merged leader's cell bounds inset by 1 point;
+Icons share one source-point placement decision between measurement, final
+ContentBounds, geometry and text visibility. For ordinary text width W and original
+font size F, showValue=true preserves M=max(1pt,F), giving candidate width
+min(12,max(0,W−2−M)); showValue=false uses min(12,max(0,W−2)). A candidate below 3pt,
+or a full cell height at or below 2pt, omits the icon, reserves zero width and measures
+ordinary visible text from its original content and style. Otherwise the reservation
+is candidate width plus a 2pt gap, on the right for RTL. The minimum text space does
+not guarantee that the complete value fits. Icon height remains min(size,cell inner
+height). Hidden values are still measured; page clipping does not change placement
+or restore hidden text. Rotation applies to the remaining text area, not to the
+icon. Bars use the complete merged leader's cell bounds inset by 1 point;
 borders and axes are .5 points wide. All constants receive page scaling once. Full
 cell geometry is computed before intersecting cell, selection and body/title clips.
 Backgrounds precede all decorations, followed by resolved borders, text and objects.

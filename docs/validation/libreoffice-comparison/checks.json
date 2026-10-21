@@ -1,0 +1,111 @@
+{
+  "release_cli_build": {
+    "status": "passed",
+    "warnings": 0,
+    "errors": 0
+  },
+  "solution_rebuild": {
+    "status": "passed",
+    "warnings": 0,
+    "errors": 0
+  },
+  "solution_tests": {
+    "status": "passed",
+    "command": "source scripts/test-fonts.sh && dotnet test ExcelRenderer.slnx --no-build --no-restore -m:1 --verbosity:minimal",
+    "network_permission": "enabled for localhost test communication",
+    "projects": [
+      {
+        "failed": 0,
+        "passed": 409,
+        "skipped": 0,
+        "total": 409,
+        "assembly": "ExcelRenderer.Core.Tests.dll"
+      },
+      {
+        "failed": 0,
+        "passed": 833,
+        "skipped": 0,
+        "total": 833,
+        "assembly": "ExcelRenderer.Formulas.Tests.dll"
+      },
+      {
+        "failed": 0,
+        "passed": 172,
+        "skipped": 0,
+        "total": 172,
+        "assembly": "ExcelRenderer.Mapping.Tests.dll"
+      },
+      {
+        "failed": 0,
+        "passed": 213,
+        "skipped": 0,
+        "total": 213,
+        "assembly": "ExcelRenderer.OpenXml.Tests.dll"
+      },
+      {
+        "failed": 0,
+        "passed": 1124,
+        "skipped": 0,
+        "total": 1124,
+        "assembly": "ExcelRenderer.Tests.dll"
+      },
+      {
+        "failed": 0,
+        "passed": 135,
+        "skipped": 0,
+        "total": 135,
+        "assembly": "ExcelRenderer.Tool.Tests.dll"
+      }
+    ],
+    "passed": 2886,
+    "failed": 0,
+    "skipped": 0
+  },
+  "namespace_check": {
+    "status": "passed",
+    "declarations": 716,
+    "compiler_shims": 2
+  },
+  "removed_dependency_audit": {
+    "status": "passed",
+    "configuration": "Debug",
+    "source_config_files": 1434,
+    "restored_projects": 24,
+    "assembly_ref_inventories": 726,
+    "packages": 0
+  },
+  "independent_consumers": {
+    "reader": "passed",
+    "core": "passed"
+  },
+  "mutation_self_tests": {
+    "missing_text": "detected",
+    "missing_line": "detected",
+    "extra_page": "detected"
+  },
+  "artifact_integrity": {
+    "actual_pdfs": 44,
+    "pair_records": 66,
+    "comparison_page_previews": 101,
+    "original_input_hashes": "22 matched",
+    "reference_pdf_hashes": "22 matched",
+    "reference_manifest_and_pdfs": "byte unchanged",
+    "generation_runtime_hashes": "unchanged"
+  },
+  "initial_attempts": [
+    {
+      "action": "git fetch origin",
+      "result": "sandbox proxy connection unavailable; succeeded with network access enabled"
+    },
+    {
+      "action": "solution tests without network permission",
+      "result": "testhost localhost socket denied; all 6 projects re-run successfully with network permission"
+    },
+    {
+      "action": "removed-dependency audit default Release configuration",
+      "result": "missing sample Release output; re-run successfully against complete Debug solution rebuild"
+    }
+  ],
+  "product_code_changes": 0,
+  "comparison_script_sha256": "b4e7ef8c29a9b4e1d3ef103d9fd88a205cadd3950f52864a92641de468b960a8"
+}

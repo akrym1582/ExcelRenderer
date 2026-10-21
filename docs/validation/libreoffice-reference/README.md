@@ -25,6 +25,8 @@ This explicitly replaces reference PDFs and the manifest; do not run it during o
 
 All generated PDF pages were rasterized to check readability by the rasterizer and visually reviewed as contact sheets. This is export QA, not an ExcelRenderer comparison or proof of Excel fidelity. No product code was changed in this reference capture.
 
+The subsequent [main/Core comparison](../libreoffice-comparison/README.md) records 22 runs per engine and all three comparison pairs. It retains unresolved differences and does not establish Excel fidelity. Embedded fonts observed in some references extend beyond the available-font list above; see that report before assuming matching font environments.
+
 ## Cases
 
 The table below is generated from the retained manifest. Paths are relative to the repository root for inputs, and this directory for PDFs.
@@ -60,5 +62,5 @@ Total: 22 workbooks, 32 pages.
 
 - `05-borders` and `09-cell-border` span two pages; `06-layout-and-pagination` spans four. These are retained Calc results, not asserted expected Excel page counts.
 - `border-conflicts` contains sparse line-only sheets; its first four pages have no extractable text. All five pages were rendered and inspected.
-- `shapes` exports only the `anchor` text in this environment; do not use absence of the expected drawing as a product expectation. Inspect the source drawing and classify this in the follow-up. `actual-shape-text` provides an additional visible drawing/text case.
+- `shapes` exports only the `anchor` text. Follow-up ZIP inspection found no drawing part in this fixed input, so this case does not exercise shape output. `actual-shape-text` provides the visible drawing/text case.
 - Legacy data bars are rendered with gradients by Calc. Pixel equality to the product's intentionally solid-bar implementation is not required.

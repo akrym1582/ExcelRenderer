@@ -1,0 +1,43 @@
+{
+  "commit": "ba5f8350189bb92a4b91e31e5aa632721618e974",
+  "os": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "dotnet": {
+    "command": [
+      "dotnet",
+      "--info"
+    ],
+    "exit_code": 0,
+    "stdout": ".NET SDK:\n Version:           10.0.401\n Commit:            e34a38d2ae\n Workload version:  10.0.400-manifests.63b36e85\n MSBuild version:   18.9.11+e34a38d2a\n\nRuntime Environment:\n OS Name:     debian\n OS Version:  13\n OS Platform: Linux\n RID:         linux-x64\n Base Path:   /workspace/.tools/dotnet/sdk/10.0.401/\n\n.NET workloads installed:\nThere are no installed workloads to display.\nConfigured to use workload sets when installing new manifests.\nNo workload sets are installed. Run \"dotnet workload restore\" to install a workload set.\n\nHost:\n  Version:      10.0.12\n  Architecture: x64\n  Commit:       95017c711e\n\n.NET SDKs installed:\n  10.0.401 [/workspace/.tools/dotnet/sdk]\n\n.NET runtimes installed:\n  Microsoft.AspNetCore.App 10.0.12 [/workspace/.tools/dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.NETCore.App 10.0.12 [/workspace/.tools/dotnet/shared/Microsoft.NETCore.App]\n\nOther architectures found:\n  None\n\nEnvironment variables:\n  DOTNET_CLI_HOME                          [/workspace/.tools/dotnet-home]\n  DOTNET_ROOT                              [/workspace/.tools/dotnet]\n\nglobal.json file:\n  Not found\n\nLearn more:\n  https://aka.ms/dotnet/info\n\nDownload .NET:\n  https://aka.ms/dotnet/download\n",
+    "stderr": ""
+  },
+  "rasterizer": "PyMuPDF/MuPDF 1.26.6",
+  "dpi": [
+    144,
+    288
+  ],
+  "fonts": [
+    {
+      "path": "third_party/NotoSansJP/NotoSansJP-Regular.ttf",
+      "sha256": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec"
+    },
+    {
+      "path": "third_party/IPAmjMincho/ipamjm.ttf",
+      "sha256": "a3e84f495f3c388db7a1473bf1985c1c076d0c814100f10a027ca6853eb1e8cb"
+    },
+    {
+      "path": "tests/ExcelRenderer.Tests/Fonts/NotoSansMono-Regular.ttf",
+      "sha256": "d9e2b23d19f8230be7146f409a52b1d23117e635e28f2e2892cf91b7382f325b"
+    }
+  ],
+  "runtime_hashes": {
+    "ExcelRenderer.Tool.dll": "14749f558bc4465d20559b231776c5ea9dd80571a8c6c158415357df6c51d388",
+    "ExcelRenderer.Mapping.dll": "7b2526f02633d996a08c6cb8a82e70e673de374ad0f295a27bd730f3a647694b",
+    "ExcelRenderer.Formulas.dll": "28aa67c5f8083899987f45d7e9049ad496708e4e4052da1bcf172a87a1641942",
+    "ExcelRenderer.Fonts.dll": "5329df7e595750330d0f907c01ae939a918ce8e4ea9cdc1e832841d428ecbcc0",
+    "ExcelRenderer.dll": "d11fa5634d734eb79712054bdc392a768a4f3bd62d17ba5fa125f9d136d69d4a",
+    "ExcelRenderer.OpenXml.dll": "658a9717f0d197985e8ba54b5542a5b463c973f8631da8f5cec4c5fed40f84ae",
+    "ExcelRenderer.OpenXml.Reader.dll": "40787df452c11ae1ee0a746fcc1ae8707b48a74d3a500f708d05dde7fb98c02f",
+    "ExcelRenderer.Core.dll": "f83a1dc1703674e2ae13d5844e5cd2e7aac1035b64f8e817d4f9a01304f291ba"
+  },
+  "reference_kind": "libreoffice-provisional-not-excel"
+}

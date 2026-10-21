@@ -20,7 +20,7 @@ public static partial class ExcelConverter
         await using var input = File.OpenRead(inputPath);
         await RenderAsync(
             input,
-            CreateLegacyRequest(OutputFormat.PostScript, options.SheetName, fontOptions: options.FontOptions) with
+            CreateLegacyRequest(OutputFormat.PostScript, ResolveSheetNames(options.SheetName, options.SheetNames), fontOptions: options.FontOptions) with
             {
                 Buffering = options.Buffering,
                 ReadOptions = options.ReadOptions,

@@ -16,10 +16,11 @@ public static class MarkdownCommand
     public static Command Create()
     {
         var input = CommandSupport.InputArgument();
+        var verbose = CommandSupport.VerboseOption();
         var data = MappingCommandSupport.DataOption();
         var formulaMode = CommandSupport.FormulaModeOption();
         var output = CommandSupport.OutputOption("Path to the output Markdown file.");
-        var sheet = new Option<string?>("--sheet") { Description = "Worksheet name to convert." };
+        var sheet = new Option<string[]>("--sheet") { Description = "Worksheet names in output order (repeatable).", AllowMultipleArgumentsPerToken = true };
         var images = Flag("--images", "Export embedded images.");
         var noImages = Flag("--no-images", "Do not export embedded images.");
         var addresses = Flag("--cell-addresses", "Include cell addresses.");
@@ -43,7 +44,8 @@ public static class MarkdownCommand
         command.Add(formulaMode);
         CommandSupport.AddFontOptions(command, fonts);
         command.Aliases.Add("md");
-        command.SetAction((result, cancellationToken) => CommandSupport.RunAsync(() => MappingCommandSupport.WithInputAsync(
+        command.Add(verbose);
+        command.SetAction((result, cancellationToken) => CommandSupport.RunAsync(result, () => MappingCommandSupport.WithInputAsync(
             result.GetValue(input)!,
             result.GetValue(data),
             result.GetValue(output)!,
@@ -53,7 +55,7 @@ public static class MarkdownCommand
                 new MarkdownExportOptions
                 {
                     Hyperlinks = CommandSupport.GetHyperlinks(result.GetValue(hyperlinks)!),
-                    SheetName = result.GetValue(sheet),
+                    SheetNames = CommandSupport.GetSheetNames(result.GetValue(sheet)),
                     ExportImages = Enabled(result, images, noImages, true),
                     IncludeCellAddresses = Enabled(result, addresses, noAddresses, true),
                     IncludeFormula = Enabled(result, formulas, noFormulas, true),

@@ -15,10 +15,11 @@ public static class PostScriptCommand
     public static Command Create()
     {
         var input = CommandSupport.InputArgument();
+        var verbose = CommandSupport.VerboseOption();
         var data = MappingCommandSupport.DataOption();
         var formulaMode = CommandSupport.FormulaModeOption();
         var output = CommandSupport.OutputOption("Path to the output PostScript file.");
-        var sheet = new Option<string?>("--sheet") { Description = "Worksheet name to convert." };
+        var sheet = new Option<string[]>("--sheet") { Description = "Worksheet names in output order (repeatable).", AllowMultipleArgumentsPerToken = true };
         var fonts = CommandSupport.FontOptions();
         var buffering = new BufferOptions();
         var command = new Command("ps", "Convert Excel worksheets to PostScript.") { input, output, sheet };
@@ -26,14 +27,15 @@ public static class PostScriptCommand
         command.Add(formulaMode);
         CommandSupport.AddFontOptions(command, fonts);
         buffering.AddTo(command);
-        command.SetAction((parseResult, cancellationToken) => CommandSupport.RunAsync(() => MappingCommandSupport.WithInputAsync(
+        command.Add(verbose);
+        command.SetAction((parseResult, cancellationToken) => CommandSupport.RunAsync(parseResult, () => MappingCommandSupport.WithInputAsync(
             parseResult.GetValue(input)!,
             parseResult.GetValue(data),
             parseResult.GetValue(output)!,
             mappedInput => ExcelConverter.ConvertToPostScriptAsync(
                 mappedInput,
                 parseResult.GetValue(output)!,
-                new PostScriptExportOptions { Buffering = buffering.Get(parseResult), SheetName = parseResult.GetValue(sheet), ReadOptions = CommandSupport.GetReadOptions(parseResult.GetValue(formulaMode)!, parseResult, fonts), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
+                new PostScriptExportOptions { Buffering = buffering.Get(parseResult), SheetNames = CommandSupport.GetSheetNames(parseResult.GetValue(sheet)), ReadOptions = CommandSupport.GetReadOptions(parseResult.GetValue(formulaMode)!, parseResult, fonts), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
                 cancellationToken),
             cancellationToken,
             CommandSupport.GetMappingOptions(parseResult.GetValue(formulaMode)!))));

@@ -11,8 +11,11 @@ public sealed record PdfExportOptions
     /// <summary>Gets the zero-based face index within the font collection; standalone fonts require zero.</summary>
     public int FontCollectionIndex { get; init; }
 
-    /// <summary>Gets the optional sheet name; null selects every sheet in workbook order.</summary>
+    /// <summary>Gets one worksheet name. Use SheetNames for multiple sheets; leave both null to export all worksheets.</summary>
     public string? SheetName { get; init; }
+
+    /// <summary>Gets the worksheet names in output order, with duplicates removed. Null uses SheetName or all worksheets. Cannot be combined with SheetName.</summary>
+    public IReadOnlyList<string>? SheetNames { get; init; }
 
     /// <summary>Gets the reader engine and stored-formula display policy.</summary>
     public ExcelReadOptions ReadOptions { get; init; } = new();

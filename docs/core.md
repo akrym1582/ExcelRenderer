@@ -44,7 +44,7 @@ var separate = options with
 
 ## Supported behavior
 
-All sheets, including hidden sheets, print in workbook order unless one SheetName is supplied. Empty sheets produce one page. Workbook print areas (including multiple areas), paper, margins, scaling/FitToPages, page order, print titles, manual breaks, cells, merges, backgrounds, borders, alignment, wrapping, ShrinkToFit, and existing header/footer rules remain supported. Date/time fields share one conversion snapshot. Cell rotation is ignored.
+All sheets, including hidden sheets, print in workbook order when both `SheetName` and `SheetNames` are null. Set `SheetNames = new[] { "Sheet3", "Sheet1" }` to select multiple sheets in output order; duplicates are removed. The existing `SheetName` still selects one sheet. Combining both properties, an empty list, empty/null names or unknown names throws `ArgumentException`. Empty sheets produce one page. Workbook print areas (including multiple areas), paper, margins, scaling/FitToPages, page order, print titles, manual breaks, cells, merges, backgrounds, borders, alignment, wrapping, ShrinkToFit, and existing header/footer rules remain supported. Date/time fields share one conversion snapshot. Cell rotation is ignored.
 
 Pictures use their complete source image stretched into the placement rectangle. Position, size, and Z order remain supported. Only the page containing the picture's top-left point prints it; points outside the print area are omitted. Overflow is clipped at the PDF page boundary. Pictures are neither split nor repeated across pages or print titles. Each matching print area prints independently. Crop, rotation, and flips are ignored. Shapes, callouts, shape text, and PDF link annotations are omitted. Cell hyperlink display text remains; HYPERLINK formulas use CachedValue. In default CachedValue mode, formula displays use typed saved results from the original XML. OpenXml.Reader formats the immutable saved values directly. Missing caches display empty text with a diagnostic. Core has no formula mode or evaluation options; formula text and typed/shared saved results remain available as metadata. Non-formula cells retain ordinary formatting. Images require a complete successful pixel decode; partial or corrupt images are skipped with nonfatal diagnostics.
 
@@ -99,3 +99,19 @@ Font collections use `PdfExportOptions.FontCollectionIndex` (zero-based, default
 ## Conditional formatting boundary
 
 Core renders ordinary saved styles and never evaluates conditional formatting. The main library owns its optional evaluator; the shared reader only offers a generic no-op appearance completion hook before merged borders. Core has no CF option, formula dependency or calculation snapshot. See [main support](conditional-formatting.md).
+
+## Try Core from the CLI
+
+The existing ExcelRenderer.Tool package includes a `core` subcommand (no separate Core tool package):
+
+```bash
+excelrenderer core input.xlsx -o core.pdf --font-file ./regular.ttf --sheet Sheet3 Sheet1 --verbose
+```
+
+`--font-file` is required. `--font-collection-index` selects the zero-based face
+(default: 0). `--sheet` accepts multiple names and can be repeated. Omitting it
+selects all worksheets. The output must be a new file; failed conversions clean up
+the temporary PDF. `--verbose` writes command details, elapsed time, conversion
+metrics and full exceptions to standard error. Core diagnostics are always reported.
+Optional `--data data.json` maps the template first using the main Mapping package;
+the Core conversion itself still reads saved values and does not recalculate formulas.

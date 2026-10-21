@@ -3,7 +3,7 @@
 
 [English](core.md) | 日本語
 
-XLSXからPDFだけを生成する独立したソースプロジェクトです。`netstandard2.1`で、.NET 8/10からProjectReferenceできます。Core単独のNuGetパッケージ、CLI、フォント入りDLLは作成しません。本体パッケージには同じbuildのCore DLL/XMLを同梱します。
+XLSXからPDFだけを生成する独立したソースプロジェクトです。`netstandard2.1`で、.NET 8/10からProjectReferenceできます。Core単独のNuGetパッケージ、専用CLIパッケージ、フォント入りDLLは作成しません。既存の ExcelRenderer.Tool の `core` サブコマンドから試せます。本体パッケージには同じbuildのCore DLL/XMLを同梱します。
 
 公開型には `ExcelConverter`、`PdfExportOptions`、`ExcelReadOptions`、`ConversionResult`、`ConversionDiagnostic` があります。名前空間は `ExcelRenderer.Core` で、設定や結果のメンバーは以下に示すCore版の対応範囲に合わせています。
 
@@ -51,7 +51,7 @@ var separate = options with
 
 ## 印刷と画像
 
-nullのSheetNameは非表示状態でも追加フィルターせず、ブック順に全シートを出力します。単一SheetNameを指定でき、不存在は`ArgumentException`です。空シートは1ページです。Excel内の単一/複数印刷範囲、用紙、余白、倍率、FitToPages、ページ順、繰返し行列、改ページ、結合セル、背景、罫線、配置、折返し、ShrinkToFit、ヘッダー/フッターを維持します。ヘッダー日時は1変換に1つのsnapshotです。セル文字の回転は無視します。
+`SheetName` と `SheetNames` が両方 null なら、非表示状態でも追加フィルターせず、ブック順に全シートを出力します。`SheetNames = new[] { "Sheet3", "Sheet1" }` で複数シートを指定順に出力し、重複を除きます。既存の単一 `SheetName` も利用できます。併用、空リスト、空文字/null の名前、不存在の名前は `ArgumentException` です。空シートは1ページです。Excel内の単一/複数印刷範囲、用紙、余白、倍率、FitToPages、ページ順、繰返し行列、改ページ、結合セル、背景、罫線、配置、折返し、ShrinkToFit、ヘッダー/フッターを維持します。ヘッダー日時は1変換に1つのsnapshotです。セル文字の回転は無視します。
 
 画像は元画像全体を配置枠へ伸縮し、位置・サイズ・Z順を維持します。開始点が所属する印刷領域のページにだけ出力し、はみ出しはPDFページ境界で切れます。開始点が印刷範囲外なら省略します。後続ページへの複製・分割、繰返し行列由来の画像複製、crop・回転・反転を行いません。同じ開始点を含む複数印刷範囲では領域ごとに印刷します。
 
@@ -114,3 +114,18 @@ Coreは常にOpenXml.Readerを使い、保存値を描画します。汎用の�
 Coreが参照する自作プロジェクトは `ExcelRenderer.OpenXml.Reader` だけです。既存OpenXml・Formulasへの直接・推移依存はありません。`PdfExportOptions.ReadOptions` の数式モード・評価オプションを指定していた呼び出しは修正して再ビルドしてください。本体とCLIの明示再計算は維持しています。[移行案内](openxml-reader-split.md)を参照してください。
 
 `python3 scripts/validate-reader-isolation.py` はCore／Reader単独consumerを通常のrestore/build/publishで作り、出力DLL・依存グラフ・AssemblyRefを監査し、Core単独で保存済み数式結果を使ったPDFを生成します。
+
+## CLI から Core を試す
+
+既存の ExcelRenderer.Tool パッケージに含まれるサブコマンドです。
+
+```bash
+excelrenderer core input.xlsx -o core.pdf --font-file ./regular.ttf --sheet Sheet3 Sheet1 --verbose
+```
+
+`--font-file` は必須です。コレクション内の face は `--font-collection-index`（0始まり、既定0）
+で指定できます。`--sheet` は複数名と繰り返し指定に対応し、省略すると全シートを選択します。
+出力先は新規ファイルに限り、失敗時は一時 PDF を削除します。`--verbose` は実行引数、
+所要時間、変換メトリクス、例外詳細を標準エラーに出力します。Core の診断は常に表示します。
+`--data data.json` で先に本体の Mapping を実行することもできます。
+Core の変換自体は保存済み値を読み取り、数式を再計算しません。

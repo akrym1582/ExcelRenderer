@@ -96,10 +96,10 @@
   "results/core-coverage.log": "aca827f03c3f26e68d0765528f4373bb8357f6cc685406c13a88b836cf3ff3ce",
   "results/core-performance.log": "10ac5e67e7ec2c9ab1fdcb7f08b26e7b3a095a950fe653fa0ce3cd9ca2864572",
   "results/dependencies.log": "ec58d2255b65dc5ba1448d29a4c42f8a34e8e1d361c72a238773b98daa88d9a2",
+  "results/dependency-audit.log": "5ed23fe90302b143dabf9f35e11fb497f5ecc8409d6bce5a2d87f87033cc1fc8",
   "results/distribution.log": "4381200d46232467407656ea2aae524648e0b2d2d68b9238e233bbfc6c31c670",
   "results/independent-validation.json": "9fad40c3609427925863c44bb029d12352aed4ae68e585fab0dce572c140f932",
   "results/namespaces.log": "7a9af6e95eae6e9e68bb0ed351d6cefc6ca8511c2fcc947686cd9466e29daf74",
-  "results/no-pdfsharp.log": "5ed23fe90302b143dabf9f35e11fb497f5ecc8409d6bce5a2d87f87033cc1fc8",
   "results/reader-isolation.log": "0eb03c4cc7ec85bdbb6cc965b04103cddab2f2808762eac91c64fa8fcfdb32f3",
   "results/rebuild.log": "bc0d537e030cb01a51c5134a406769a25d6d78dbaf5ce87660e209eea9c27710",
   "results/tests.log": "a31a2a75e6a6e49e6f4bc7e2589a403b6eb1afc1186007eb9ca8d609668aae1a"

@@ -209,6 +209,7 @@ dotnet tools/ExcelRenderer.Performance/bin/Release/net10.0/ExcelRenderer.Perform
 Modes are final file, temporary final PDF then CopyToAsync through Kestrel, and direct
 Kestrel response. Kestrel always prohibits synchronous I/O. Pass `baseline` last to
 omit unsupported direct output when running this same harness against the old runtime.
+An optional following argument records the baseline source commit (used for optimized-main comparisons).
 Save before/after Release runtime directories and run them sequentially with no
 build/test activity. Retain JSONL environment records (input/font/DLL hashes), warm-ups
 and all rounds. Allocation measurements use process-wide GC.GetTotalAllocatedBytes;

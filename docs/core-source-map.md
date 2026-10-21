@@ -301,7 +301,8 @@ public features are added. See [current finalization and resource contracts](ren
 ## Asynchronous final PDF output
 
 Core owns the shared GeneratedPdfFinalizer output-element iterator, synchronous and asynchronous
-consumers, original-payload CopyStreamAsync, SkiaPdfDocument completion, cancellation wrapper
+consumers, original-payload CopyStreamAsync through PdfSyntaxReader's common range/cursor owner,
+SkiaPdfDocument completion, cancellation wrapper
 and awaited phase metrics. Main's IPdfDocumentWriter/SkiaPdfDocumentWriter delegate completion
 to Core; ExcelConverter awaits artifact writes, counts successful bytes, flushes once and
 notifies sink completion or noncancelable abort cleanup. Core's public converter accepts

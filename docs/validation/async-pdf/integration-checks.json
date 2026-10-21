@@ -1,0 +1,38 @@
+{
+  "localImplementationCommit": "03baa87a3daa697f389a34192838ea10fa3e8257",
+  "publishedImplementationCommit": "712985942166a182cfbfd0a7b2329a2c9dfe77ff",
+  "testedTree": "8409459698a63c011be12aa79c2456ad6e369708",
+  "baselineCommit": "4f9314e46685ddfafe3102a796c0fb8550e2fe31",
+  "draftPr": "https://github.com/akrym1582/ExcelRenderer/pull/105",
+  "solutionTests": {
+    "passed": 2722,
+    "failed": 0,
+    "skipped": 0
+  },
+  "coreReleaseCoverage": {
+    "passed": 391,
+    "linePercent": 82.76,
+    "branchPercent": 71.08
+  },
+  "corePerformancePassed": 8,
+  "namespaces": 692,
+  "packageDistribution": "passed",
+  "independentConsumers": "passed",
+  "readerCoreIsolation": "passed",
+  "dependencyAudit": "passed",
+  "savedRuntimeDlls": [
+    {
+      "Name": "ExcelRenderer.dll",
+      "Sha256": "95C9C77ED205DC970A1839270C30769638455C7291AF35389F3C976FA26F736E"
+    },
+    {
+      "Name": "ExcelRenderer.Core.dll",
+      "Sha256": "BD6FC944F52841D94A3654AAB794D7B2AAF90CA6C7B2366DCD02F6E4FCCD7809"
+    }
+  ],
+  "notes": [
+    "Local and published implementation commits have identical Git trees.",
+    "Only documentation and retained evidence change after the tested implementation.",
+    "Initial samples remain historical; optimized samples compare against the same buffered-reader main baseline."
+  ]
+}

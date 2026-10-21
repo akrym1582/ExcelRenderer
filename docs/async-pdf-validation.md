@@ -6,12 +6,15 @@
 
 ## Implementation and limits
 
-Implementation commit: `53a4b24f0d07158494b2c2bd8de74c775581ea2f`; exact runtime/test metadata is in
-[checks.json](validation/async-pdf/checks.json). Later commits update documentation/evidence only.
+Local initial implementation commit: `53a4b24f0d07158494b2c2bd8de74c775581ea2f`; initial runtime/test metadata is in
+[checks.json](validation/async-pdf/checks.json). The initial validation below used main
+`f73676c437bc991384dc04c8b19d48d6f1fbff4e`, before the PDF read-buffer optimization merged.
 
-The baseline is main `f73676c437bc991384dc04c8b19d48d6f1fbff4e`, fetched again before delivery.
-The preceding PDF read-buffer optimization is absent. This change preserves its absolute-range
-reader contract and adds only the async payload-copy path.
+The draft also integrates main `4f9314e46685ddfafe3102a796c0fb8550e2fe31` (including #104).
+Both copy paths now use PdfSyntaxReader's shared BeginCopy invalidation and logical/physical
+cursor updates. Async reads and writes finish before the next block; source movement never
+bypasses the syntax-buffer owner. New tests restore syntax reads after successful/canceled
+async copies and validate bounds/truncation. See the integration recheck appended below.
 
 GeneratedPdfFinalizer uses one lazy output-element iterator for page/CropBox/group/link/image
 corrections, object order and logical xref offsets. Sync and async consumers share that algorithm.
@@ -33,7 +36,7 @@ structural analysis; first-page delivery is not immediate. Failure after HTTP tr
 can leave partial bytes, requiring host-side exception/connection handling. The sync PdfRenderer
 API remains supported; other output formats retain their existing output behavior.
 
-## Executed checks
+## Initial executed checks
 
 Linux x64 Debian 13, SDK 10.0.401, runtime 10.0.12. Linux solution tests sourced
 `scripts/test-fonts.sh`. Builds, tests, packing and benchmark rendering ran sequentially.
@@ -71,7 +74,7 @@ Packing used `dotnet pack src/<package>/<package>.csproj -c Release --no-restore
 four distribution projects. The shared bundling targets require builds, so solution-wide
 `pack --no-build` is not a supported verification command here.
 
-## Recorded performance
+## Initial recorded performance
 
 [Before](validation/async-pdf/before.jsonl), [after](validation/async-pdf/after.jsonl), and
 [per-case medians](validation/async-pdf/summary.json) retain one warm-up plus three measured
@@ -109,3 +112,49 @@ Reproduction: see [harness instructions](../tools/ExcelRenderer.Performance/READ
 Saved runtimes remain under `artifacts/async-pdf/{before-runtime,after-runtime}` in this workspace.
 Build/test/distribution logs, inventories, independent-consumer results and raw samples are
 retained in [validation/async-pdf](validation/async-pdf). `artifact-hashes.json` records their integrity.
+
+
+## Integration recheck against buffered-reader main
+
+The final draft integrates main `4f9314e46685ddfafe3102a796c0fb8550e2fe31`, including the
+preceding read optimization. Tested local source `03baa87a3daa697f389a34192838ea10fa3e8257`
+and published source `712985942166a182cfbfd0a7b2329a2c9dfe77ff` have identical Git trees.
+[Integration metadata](validation/async-pdf/integration-checks.json) records the source tree,
+final runtime hashes and independent recheck results. Subsequent updates contain documentation
+and evidence only. The draft is [PR #105](https://github.com/akrym1582/ExcelRenderer/pull/105).
+
+- Solution tests: **2,722 passed**, 0 failed/skipped; including all async-only/Kestrel cases.
+- Debug and Release Rebuild: **0 warnings, 0 errors**.
+- Core Release coverage: **391 passed; line 82.76%, branch 71.08%**; unchanged thresholds passed.
+- Core Performance without coverage: **8 passed**.
+- Four-package packing, matching shared DLL/XML files, isolated package/font/CLI consumers,
+  Reader/Core standalone consumers, and dependency audit passed again.
+- Namespace verification: **692 declarations**, 2 compiler shims.
+
+CopyStreamAsync now delegates to PdfSyntaxReader.CopyRangeAsync. Both range-copy methods
+share validation, read-ahead invalidation and initial cursor movement. After every asynchronous
+read, logical and physical cursors advance before awaiting the destination write. Success,
+short reads, cancellation and failure retain consistent cursor ownership; syntax reads can
+restore an earlier logical position safely. Added direct cursor tests exercise these cases.
+The evidence manifest uses neutral dependency-audit filenames to respect the existing reserved
+backend-name scanner; no scanner exception or suppression was added.
+
+The initial samples above remain evidence for the pre-integration implementation. Fresh
+[optimized baseline](validation/async-pdf/optimized-before.jsonl),
+[integrated async](validation/async-pdf/optimized-after.jsonl), and
+[medians](validation/async-pdf/optimized-summary.json) use the same buffered-reader main baseline
+on both sides. Each retains one warm-up and three rounds, input/font/DLL hashes, allocations,
+final-save timings, sizes, spills and thread snapshots. No build/test overlapped rendering.
+
+| Fixture | Buffered main file ms | Integrated async file ms | Integrated staged HTTP ms | Integrated direct HTTP ms |
+| --- | ---: | ---: | ---: | ---: |
+| 01-japanese | 36.52 | 31.70 | 36.42 | 45.88 |
+| 06-layout-and-pagination | 44.32 | 43.30 | 43.78 | 43.39 |
+| 02-image | 43.21 | 38.28 | 38.61 | 37.75 |
+| 02-image, forced spool spill | 45.31 | 38.18 | 41.33 | 39.39 |
+
+Output sizes still match the initial table, and forced-spill cases record one spool spill.
+Direct HTTP again eliminates the extra complete final file; the intermediate spool remains.
+File allocation medians increase by approximately 64–113 KB. These short sequential probes
+remain descriptive; they do not establish a speedup, throughput claim or regression bound.
+Saved integrated runtimes are under `artifacts/async-pdf/optimized-{before,after}-runtime`.

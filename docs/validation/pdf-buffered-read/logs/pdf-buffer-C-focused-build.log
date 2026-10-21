@@ -1,0 +1,9 @@
+  ExcelRenderer.OpenXml.Reader -> /workspace/ExcelRenderer/src/ExcelRenderer.OpenXml.Reader/bin/Release/netstandard2.1/ExcelRenderer.OpenXml.Reader.dll
+  ExcelRenderer.Core -> /workspace/ExcelRenderer/src/ExcelRenderer.Core/bin/Release/netstandard2.1/ExcelRenderer.Core.dll
+  ExcelRenderer.Core.Tests -> /workspace/ExcelRenderer/tests/ExcelRenderer.Core.Tests/bin/Release/net10.0/ExcelRenderer.Core.Tests.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:06.61

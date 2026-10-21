@@ -60,6 +60,9 @@ internal class SpillableBufferStream : Stream
     public override int Read(byte[] buffer, int offset, int count) => inner.Read(buffer, offset, count);
 
     /// <inheritdoc/>
+    public override int ReadByte() => inner.ReadByte();
+
+    /// <inheritdoc/>
     public override long Seek(long offset, SeekOrigin origin) => inner.Seek(offset, origin);
 
     /// <inheritdoc/>

@@ -1,0 +1,14 @@
+  ExcelRenderer.OpenXml.Reader -> /workspace/ExcelRenderer/src/ExcelRenderer.OpenXml.Reader/bin/Release/netstandard2.1/ExcelRenderer.OpenXml.Reader.dll
+  ExcelRenderer.Formulas -> /workspace/ExcelRenderer/src/ExcelRenderer.Formulas/bin/Release/netstandard2.1/ExcelRenderer.Formulas.dll
+  ExcelRenderer.OpenXml -> /workspace/ExcelRenderer/src/ExcelRenderer.OpenXml/bin/Release/netstandard2.1/ExcelRenderer.OpenXml.dll
+  ExcelRenderer.Mapping -> /workspace/ExcelRenderer/src/ExcelRenderer.Mapping/bin/Release/netstandard2.1/ExcelRenderer.Mapping.dll
+  ExcelRenderer.Core -> /workspace/ExcelRenderer/src/ExcelRenderer.Core/bin/Release/netstandard2.1/ExcelRenderer.Core.dll
+  ExcelRenderer -> /workspace/ExcelRenderer/src/ExcelRenderer/bin/Release/netstandard2.1/ExcelRenderer.dll
+  ExcelRenderer.Fonts -> /workspace/ExcelRenderer/src/ExcelRenderer.Fonts/bin/Release/netstandard2.1/ExcelRenderer.Fonts.dll
+  ExcelRenderer.Performance -> /workspace/ExcelRenderer/tools/ExcelRenderer.Performance/bin/Release/net10.0/ExcelRenderer.Performance.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:03.30

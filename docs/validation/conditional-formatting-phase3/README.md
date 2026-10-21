@@ -234,3 +234,29 @@ link the exact commands, pre/post results, limits, remaining platform checks and
 retained logs. Desktop Excel comparison and local Windows execution remain
 unperformed because this environment is Linux without desktop Excel; the existing
 PR CI includes Windows Core tests.
+
+
+### CI follow-up: dependency audit
+
+PR #107's initial CI run (39590171832) passed compilation and tests, including
+Windows Core coverage/performance, but its three distribution audit jobs rejected
+the audit command's own filename in the new machine-readable command inventory.
+The inventory is scanned as configuration, so the command transcript belongs here
+alongside the existing Markdown reproduction instructions:
+
+```sh
+python3 scripts/check-no-pdfsharp.py
+python3 scripts/check-no-pdfsharp.py --packages artifacts/pr107-ci-packages --publish artifacts/pr107-ci-publish
+python3 scripts/check-no-pdfsharp-mutations.py
+```
+
+The dependency audit and its allowlist remain unchanged. This is a documentation
+correction; it adds no dependency, production-code change or audit exemption.
+
+Local reproduction failed on the same inventory entry before this correction.
+After moving that record, the audit passed over all 24 restored projects and all
+four packed distributions plus the Tool publish output (817 managed assembly
+inventories). The existing contamination checks still rejected a source reference,
+a restored transitive reference, an AssemblyRef hidden behind an innocent filename
+and a packed dependency; their final restored audit passed. This follow-up changes
+only the command inventory, this report and retained-artifact hashes.

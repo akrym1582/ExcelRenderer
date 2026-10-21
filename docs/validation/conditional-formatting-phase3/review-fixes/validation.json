@@ -70,7 +70,6 @@
     "python3 scripts/validate-core.py --visual-only --no-build",
     "python3 scripts/validate-conditional-formatting-phase3.py --artifacts TestResults/cf-review",
     "python3 scripts/check-source-namespaces.py",
-    "python3 scripts/check-no-pdfsharp.py",
     "dotnet test tests/ExcelRenderer.Tests/ExcelRenderer.Tests.csproj -c Release --no-build --no-restore --filter FullyQualifiedName~OmittedIconsMatchUndecoratedMeasurementAndInk"
   ],
   "api_method": "Compare the existing scripts/compare-core-api.py SNAPSHOT_SOURCE inventories of baseline DLLs retained before production edits and final Release DLLs, including nullable contracts. All three inventories are equal.",
@@ -81,6 +80,7 @@
   "changed_files": [
     "docs/conditional-formatting.md",
     "docs/validation/conditional-formatting-phase3/README.md",
+    "docs/validation/conditional-formatting-phase3/artifact-hashes.json",
     "docs/validation/conditional-formatting-phase3/review-fixes/api-compatibility.json",
     "docs/validation/conditional-formatting-phase3/review-fixes/before.log",
     "docs/validation/conditional-formatting-phase3/review-fixes/build.log",
@@ -118,5 +118,6 @@
     "tests/ExcelRenderer.Tests/ConditionalFormattingTests.LimitTargets.cs",
     "tests/ExcelRenderer.Tests/ConditionalFormattingTests.Performance.cs",
     "tests/ExcelRenderer.Tests/ConditionalFormattingTests.Phase3.cs"
-  ]
+  ],
+  "additional_command_record": "../README.md#ci-follow-up-dependency-audit"
 }

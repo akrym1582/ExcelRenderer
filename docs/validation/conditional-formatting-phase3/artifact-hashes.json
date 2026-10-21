@@ -1,7 +1,7 @@
 {
   ".gitattributes": "53d05a026edf5b90dfcd53fc3218cdd6937c1b2fd63b969c448ace1c047a2f1e",
   "PR.md": "35f0aead12641a4ed22b8ed467152fd502e15682ee0a792dbbc4645b056c1cfc",
-  "README.md": "d64dc31324276edf7dbc52b66e92b650714f720ec493c28a0654f6980bed090d",
+  "README.md": "a65885905126380f0fb55774107046f1773d032306c945f65097c62dfc7105c8",
   "api/ExcelRenderer-after.txt": "c070b1963639aca06c51d88677246dcf69b8ad8c123810cfe8f4e651c4ca21d7",
   "api/ExcelRenderer-before.txt": "c070b1963639aca06c51d88677246dcf69b8ad8c123810cfe8f4e651c4ca21d7",
   "api/ExcelRenderer.Core-after.txt": "ad2904ee2a9bd697cedfa7c4aa4686cd4ea7b55bf043dcd38b9ed7dd737626ca",
@@ -102,5 +102,22 @@
   "results/namespaces.log": "7a9af6e95eae6e9e68bb0ed351d6cefc6ca8511c2fcc947686cd9466e29daf74",
   "results/reader-isolation.log": "0eb03c4cc7ec85bdbb6cc965b04103cddab2f2808762eac91c64fa8fcfdb32f3",
   "results/rebuild.log": "bc0d537e030cb01a51c5134a406769a25d6d78dbaf5ce87660e209eea9c27710",
-  "results/tests.log": "a31a2a75e6a6e49e6f4bc7e2589a403b6eb1afc1186007eb9ca8d609668aae1a"
+  "results/tests.log": "a31a2a75e6a6e49e6f4bc7e2589a403b6eb1afc1186007eb9ca8d609668aae1a",
+  "review-fixes/api-compatibility.json": "471c631de9f2f543542a625789df58082e13c43c4dc222c2184e5b6b5d788e96",
+  "review-fixes/before.log": "76b90f8c12d3e0f111a373d732f1cc4cbfdafcd5af295ea340ec083474cdfd4f",
+  "review-fixes/build.log": "99384fe0d5e0a129d703c48fa5bf4d8811399ddbc5d72418d23bb1058a2b9736",
+  "review-fixes/core-visual.json": "97a6c726b719f01f3a838115ab62a7ba8aa07b8daabd2b1e27144bdd2a10c193",
+  "review-fixes/coverage.log": "c23bc50041667a7048ab47358ffadc5ea654e238bbf5ce9e1101400a1932f54e",
+  "review-fixes/glyph-comparison.log": "f910cc128faa28c42660b2557a3ec42775b3583bb5b267249e1c5a18e69b725b",
+  "review-fixes/independent-validation.json": "9fad40c3609427925863c44bb029d12352aed4ae68e585fab0dce572c140f932",
+  "review-fixes/merged-filter-before.log": "cc73fe9e9ad2dfd919e3dcba53d39dbee0456316e593f77c52f243618ffec036",
+  "review-fixes/mutations.json": "6464c6bf5d15bbee3369657d244099021e4c6fa3b97b93c13f6d896346155c7f",
+  "review-fixes/narrow-value-Continuous.png": "0babf3d6e0dd1efa2dbcd2608fde099aed35e7a97dd760fb953e9732a7cde48f",
+  "review-fixes/narrow-value-Continuous.svg": "91d9750dc9ab42fb33fa390ca58c380c480646f904b21c9446e27dfbd1e6b56a",
+  "review-fixes/narrow-value-Paginated.png": "daf49a876ccda3052054e0fcf9eefa30e0ad2fb7af6e8dffa44de1bad8062666",
+  "review-fixes/narrow-value-Paginated.svg": "925e18586d6094bca2e318573729ebc2d8796e3dc0d3a4ac45781d53b62892a3",
+  "review-fixes/narrow-value.xlsx": "4360e8f4447f86ec582a1cf1008b71d3844a9aaa801b7aa003f09d4b882c0493",
+  "review-fixes/performance.log": "d99ca93d7258dee984fa406476e73ba5676d0c58627cfc13054000dcbe775091",
+  "review-fixes/tests.log": "043b9a8377fc751ad708fa74874505e3887a53517141611ec4a91cab8fa1d80e",
+  "review-fixes/validation.json": "0711a1e42a5aa8972387364083961894f59199dace435a9bc9402bfbb9d5103e"
 }

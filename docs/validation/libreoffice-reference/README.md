@@ -2,7 +2,7 @@
 
 These PDFs were exported from the repository's existing XLSX fixtures on 2026-10-22 (JST). They are **LibreOffice comparisons, not Microsoft Excel golden files**. Windows Excel export and review remain future work. No ExcelRenderer output was substituted for the reference files.
 
-Start the next verification task with [the Japanese Codex instructions](Codex_Instructions.ja.md). The instructions cover generation with the latest product code, page/text/image comparison, diagnosis, justified fixes and regression checks.
+Start the next verification task with [the Japanese Codex instructions](Codex_Instructions.ja.md). The instructions cover generation of both main and Core PDFs with the latest product code, three-way page/text/image comparison (LibreOffice/main, LibreOffice/Core, main/Core), Core scope differences, diagnosis, justified fixes and regression checks.
 
 ## Provenance
 

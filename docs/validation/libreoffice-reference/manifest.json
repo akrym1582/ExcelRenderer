@@ -1,0 +1,787 @@
+{
+  "reference_kind": "libreoffice-provisional-not-excel",
+  "source_commit": "85a4f16ba96d986a361fc4eb6c2c6cc058621031",
+  "generated_date_jst": "2026-10-22",
+  "libreoffice": "LibreOfficeDev 26.8.0.0.alpha0 2c87e51eeaa2b413ff4ae097b2705eea1995d8e5",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+  "locale": "C.UTF-8",
+  "timezone": "UTC",
+  "export_filter": "calc_pdf_Export",
+  "export_policy": "whole workbook; original print settings; no fit-to-one-page override; no input saves",
+  "fontconfig": "isolated Noto Sans JP / IPAmjMincho / Noto Sans Mono directories",
+  "available_fonts": [
+    {
+      "file": "tests/ExcelRenderer.Tests/Fonts/NotoSansMono-Regular.ttf",
+      "sha256": "d9e2b23d19f8230be7146f409a52b1d23117e635e28f2e2892cf91b7382f325b"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/Fonts/PdfFormats/cff.otf",
+      "sha256": "bbabb32454e6522d7990bd81004c374cfa1570efd9378a583f6253ac80b49ec9"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc",
+      "sha256": "178359481514fa996a3b4469f68c1c2b298f200245a439b2a3e4c538323741b9"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-mixed.ttc",
+      "sha256": "07bd55d56bacb166f5ff075517eaf57034ded61642e2dafef88e0a6593db706f"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-v2.ttc",
+      "sha256": "12dabe9182af4e1ea3ca5ecfceca8b7ae03f3a5a0569bab3f64297cbf7d88377"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection.ttc",
+      "sha256": "2bc50db11a7c19fd1d3c603d072e24f96843f219d740c5b14b8c07ea3685f466"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/Fonts/PdfFormats/colr-v1.ttf",
+      "sha256": "6cc5c1207723eea73eee1b8e46d5f5cd868798ea127b6f04b851cfb74cfafc7a"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/Fonts/PdfFormats/colr.ttf",
+      "sha256": "bd77e0877821518e04e7e24414008f71cf80baa41531a2108bc437d434946e10"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/Fonts/PdfFormats/static.ttf",
+      "sha256": "2f3e1d51438d1cd9f3d13f5588c3cad8e44c0f0b3a2a65b89af00fba49cccc32"
+    },
+    {
+      "file": "tests/ExcelRenderer.Tests/Fonts/PdfFormats/variable.ttf",
+      "sha256": "2cbfe8ef7643a1795e42ce5cf42ea4c2ded3504c24f95f5282b202e8cec7226c"
+    },
+    {
+      "file": "third_party/IPAmjMincho/ipamjm.ttf",
+      "sha256": "a3e84f495f3c388db7a1473bf1985c1c076d0c814100f10a027ca6853eb1e8cb"
+    },
+    {
+      "file": "third_party/NotoSansJP/NotoSansJP-Regular.ttf",
+      "sha256": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec"
+    }
+  ],
+  "cases": [
+    {
+      "id": "01-japanese",
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/01-japanese.xlsx",
+      "input_sha256": "6a89d390e07a60e919b7be2c5fa6af47721b0e9c5a4a0c325ae97174ff6386f0",
+      "pdf": "pdf/01-japanese.pdf",
+      "pdf_sha256": "76c78acd92376485b4cca42b83e91b1e7aac1b966c18a614a2e762b92d9b4a8f",
+      "sheets": [
+        {
+          "name": "日本語",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId2"
+        }
+      ],
+      "requested_fonts": [
+        "Calibri",
+        "Noto Sans JP"
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "width_pt": 595.303955078125,
+          "height_pt": 841.8897705078125,
+          "text_characters": 56,
+          "drawing_count": 1
+        }
+      ],
+      "stdout": "convert /tmp/lo-reference-ua6k0ecw/01-japanese/01-japanese.xlsx as a Calc document -> /tmp/lo-reference-ua6k0ecw/01-japanese/01-japanese.pdf using filter : calc_pdf_Export\n",
+      "stderr": ""
+    },
+    {
+      "id": "02-image",
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/02-image.xlsx",
+      "input_sha256": "d54804111617065e59a4bbe4d5c2099b08efdea2f71d1676998bc836569de254",
+      "pdf": "pdf/02-image.pdf",
+      "pdf_sha256": "f84830e51ca878d38d20f9bb515acca82f351555413e3f891d5bb057421491bb",
+      "sheets": [
+        {
+          "name": "画像",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId2"
+        }
+      ],
+      "requested_fonts": [
+        "Calibri",
+        "Noto Sans JP"
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "width_pt": 595.303955078125,
+          "height_pt": 841.8897705078125,
+          "text_characters": 21,
+          "drawing_count": 0
+        }
+      ],
+      "stdout": "convert /tmp/lo-reference-ua6k0ecw/02-image/02-image.xlsx as a Calc document -> /tmp/lo-reference-ua6k0ecw/02-image/02-image.pdf using filter : calc_pdf_Export\n",
+      "stderr": ""
+    },
+    {
+      "id": "03-wrapped-text",
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/03-wrapped-text.xlsx",
+      "input_sha256": "60421161d8ec36904befd41ecde57551ea7880a8ffda07925b38178fc747d990",
+      "pdf": "pdf/03-wrapped-text.pdf",
+      "pdf_sha256": "33467db4c49536952312bf76cfe3521b02dcd08cad71ba23525e8f54045f1551",
+      "sheets": [
+        {
+          "name": "折り返し",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId2"
+        }
+      ],
+      "requested_fonts": [
+        "Calibri",
+        "Noto Sans JP"
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "width_pt": 595.303955078125,
+          "height_pt": 841.8897705078125,
+          "text_characters": 73,
+          "drawing_count": 2
+        }
+      ],
+      "stdout": "convert /tmp/lo-reference-ua6k0ecw/03-wrapped-text/03-wrapped-text.xlsx as a Calc document -> /tmp/lo-reference-ua6k0ecw/03-wrapped-text/03-wrapped-text.pdf using filter : calc_pdf_Export\n",
+      "stderr": ""
+    },
+    {
+      "id": "04-text-decoration",
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/04-text-decoration.xlsx",
+      "input_sha256": "c8ee629159de588541c6d08bce70cae9c0483ddcb21c3feef536102e1457cff1",
+      "pdf": "pdf/04-text-decoration.pdf",
+      "pdf_sha256": "533bacab05e984a14f35420f21830835da60286234acc6558f4a463f71b4f13d",
+      "sheets": [
+        {
+          "name": "文字装飾",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId2"
+        }
+      ],
+      "requested_fonts": [
+        "Calibri",
+        "Noto Sans JP"
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "width_pt": 595.303955078125,
+          "height_pt": 841.8897705078125,
+          "text_characters": 36,
+          "drawing_count": 11
+        }
+      ],
+      "stdout": "convert /tmp/lo-reference-ua6k0ecw/04-text-decoration/04-text-decoration.xlsx as a Calc document -> /tmp/lo-reference-ua6k0ecw/04-text-decoration/04-text-decoration.pdf using filter : calc_pdf_Export\n",
+      "stderr": ""
+    },
+    {
+      "id": "05-borders",
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/05-borders.xlsx",
+      "input_sha256": "074cfd50a3d4556380f462a69287d9b0254a71ebe412e267b395ca345a54eac2",
+      "pdf": "pdf/05-borders.pdf",
+      "pdf_sha256": "afe028052d0fba2ea8019c0e5b01f8ca5fa666203623283dc1619a34177e9c19",
+      "sheets": [
+        {
+          "name": "罫線",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId2"
+        }
+      ],
+      "requested_fonts": [
+        "Calibri",
+        "Noto Sans JP"
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "width_pt": 595.303955078125,
+          "height_pt": 841.8897705078125,
+          "text_characters": 48,
+          "drawing_count": 18
+        },
+        {
+          "page": 2,
+          "width_pt": 595.303955078125,
+          "height_pt": 841.8897705078125,
+          "text_characters": 16,
+          "drawing_count": 9
+        }
+      ],
+      "stdout": "convert /tmp/lo-reference-ua6k0ecw/05-borders/05-borders.xlsx as a Calc document -> /tmp/lo-reference-ua6k0ecw/05-borders/05-borders.pdf using filter : calc_pdf_Export\n",
+      "stderr": ""
+    },
+    {
+      "id": "06-layout-and-pagination",
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/06-layout-and-pagination.xlsx",
+      "input_sha256": "5870f080ac266568de200bf6955a617da452b14c103a30371889e8bee13b12e6",
+      "pdf": "pdf/06-layout-and-pagination.pdf",
+      "pdf_sha256": "7f667e555a7752f26074a8a56854f0172942a2d0dbc3af3647173a9b3c565474",
+      "sheets": [
+        {
+          "name": "ページ設定",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId2"
+        }
+      ],
+      "requested_fonts": [
+        "Calibri",
+        "Noto Sans JP"
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "width_pt": 595.303955078125,
+          "height_pt": 419.555908203125,
+          "text_characters": 117,
+          "drawing_count": 17
+        },
+        {
+          "page": 2,
+          "width_pt": 595.303955078125,
+          "height_pt": 419.555908203125,
+          "text_characters": 18,
+          "drawing_count": 9
+        },
+        {
+          "page": 3,
+          "width_pt": 595.303955078125,
+          "height_pt": 419.555908203125,
+          "text_characters": 50,
+          "drawing_count": 15
+        },
+        {
+          "page": 4,
+          "width_pt": 595.303955078125,
+          "height_pt": 419.555908203125,
+          "text_characters": 6,
+          "drawing_count": 6
+        }
+      ],
+      "stdout": "convert /tmp/lo-reference-ua6k0ecw/06-layout-and-pagination/06-layout-and-pagination.xlsx as a Calc document -> /tmp/lo-reference-ua6k0ecw/06-layout-and-pagination/06-layout-and-pagination.pdf using filter : calc_pdf_Export\n",
+      "stderr": ""
+    },
+    {
+      "id": "07-multiple-sheets",
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/07-multiple-sheets.xlsx",
+      "input_sha256": "2da1636a03384c0aa0ecb14ec3183631f3c41a90f1348693e795c329c0cae20e",
+      "pdf": "pdf/07-multiple-sheets.pdf",
+      "pdf_sha256": "6b84b480058d2dc6a6947f9ccfdb9bba9b7087bb1281e53f8f23e4004a8fd41d",
+      "sheets": [
+        {
+          "name": "売上",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId2"
+        },
+        {
+          "name": "在庫",
+          "sheetId": "2",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId3"
+        }
+      ],
+      "requested_fonts": [
+        "Calibri"
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "width_pt": 612.0,
+          "height_pt": 792.0,
+          "text_characters": 6,
+          "drawing_count": 0
+        },
+        {
+          "page": 2,
+          "width_pt": 612.0,
+          "height_pt": 792.0,
+          "text_characters": 6,
+          "drawing_count": 0
+        }
+      ],
+      "stdout": "convert /tmp/lo-reference-ua6k0ecw/07-multiple-sheets/07-multiple-sheets.xlsx as a Calc document -> /tmp/lo-reference-ua6k0ecw/07-multiple-sheets/07-multiple-sheets.pdf using filter : calc_pdf_Export\n",
+      "stderr": ""
+    },
+    {
+      "id": "08-print-scaling",
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/08-print-scaling.xlsx",
+      "input_sha256": "f9e5ffaa18c622d2820138d18c6aed07ae63b28da8fad1c71c4ffcbdd12a9fb7",
+      "pdf": "pdf/08-print-scaling.pdf",
+      "pdf_sha256": "71c473f1d4dd46ba27ca94ae471433f1e5b362c4ca9ff0c386ec7d8311077fd4",
+      "sheets": [
+        {
+          "name": "75%縮小",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId2"
+        }
+      ],
+      "requested_fonts": [
+        "Calibri",
+        "Noto Sans JP"
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "width_pt": 595.303955078125,
+          "height_pt": 841.8897705078125,
+          "text_characters": 678,
+          "drawing_count": 28
+        }
+      ],
+      "stdout": "convert /tmp/lo-reference-ua6k0ecw/08-print-scaling/08-print-scaling.xlsx as a Calc document -> /tmp/lo-reference-ua6k0ecw/08-print-scaling/08-print-scaling.pdf using filter : calc_pdf_Export\n",
+      "stderr": ""
+    },
+    {
+      "id": "09-cell-border",
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/09-cell-border.xlsx",
+      "input_sha256": "5655ee7b5407c1c9af6836ec65f573819b0265c833660210d04060ca8c368d70",
+      "pdf": "pdf/09-cell-border.pdf",
+      "pdf_sha256": "df975580d28811200b7e40d3ef7108840eb61e48af9d40dd3a203b56913f5f3e",
+      "sheets": [
+        {
+          "name": "Sheet1",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId1"
+        }
+      ],
+      "requested_fonts": [
+        "游ゴシック"
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "width_pt": 595.303955078125,
+          "height_pt": 841.8897705078125,
+          "text_characters": 28,
+          "drawing_count": 23
+        },
+        {
+          "page": 2,
+          "width_pt": 595.303955078125,
+          "height_pt": 841.8897705078125,
+          "text_characters": 0,
+          "drawing_count": 6
+        }
+      ],
+      "stdout": "convert /tmp/lo-reference-ua6k0ecw/09-cell-border/09-cell-border.xlsx as a Calc document -> /tmp/lo-reference-ua6k0ecw/09-cell-border/09-cell-border.pdf using filter : calc_pdf_Export\n",
+      "stderr": ""
+    },
+    {
+      "id": "cell-argb",
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/CellArgb/10-cell-argb.xlsx",
+      "input_sha256": "3d6e77900ea64b573eb26caf04c7ff7ddc34fab4b78c08a30fe0909faf9d9733",
+      "pdf": "pdf/cell-argb.pdf",
+      "pdf_sha256": "c5189112df1c9d2e7a03d292de079684461c30eef83013a17b2e2872436f562a",
+      "sheets": [
+        {
+          "name": "ARGB",
+          "sheetId": "1",
+          "state": "visible",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId1"
+        }
+      ],
+      "requested_fonts": [
+        "Calibri",
+        "Noto Sans JP"
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "width_pt": 595.303955078125,
+          "height_pt": 841.8897705078125,
+          "text_characters": 145,
+          "drawing_count": 10
+        }
+      ],
+      "stdout": "convert /tmp/lo-reference-ua6k0ecw/cell-argb/cell-argb.xlsx as a Calc document -> /tmp/lo-reference-ua6k0ecw/cell-argb/cell-argb.pdf using filter : calc_pdf_Export\n",
+      "stderr": ""
+    },
+    {
+      "id": "border-conflicts",
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/BorderResolution/border-conflicts.xlsx",
+      "input_sha256": "a07e159caa4a83a12c38231f70cbf2ca6bdcded9404291ba5244e8f03249a12a",
+      "pdf": "pdf/border-conflicts.pdf",
+      "pdf_sha256": "0098c2245bb8be63fe525b4cd48df13352093ab2020038f8e2c1063a187d264f",
+      "sheets": [
+        {
+          "name": "Double",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId1"
+        },
+        {
+          "name": "Colors",
+          "sheetId": "2",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId2"
+        },
+        {
+          "name": "Merged",
+          "sheetId": "3",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId3"
+        },
+        {
+          "name": "Defaults",
+          "sheetId": "4",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId4"
+        },
+        {
+          "name": "Conditional",
+          "sheetId": "5",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId5"
+        }
+      ],
+      "requested_fonts": [
+        "Noto Sans JP"
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "width_pt": 595.303955078125,
+          "height_pt": 841.8897705078125,
+          "text_characters": 0,
+          "drawing_count": 6
+        },
+        {
+          "page": 2,
+          "width_pt": 595.303955078125,
+          "height_pt": 841.8897705078125,
+          "text_characters": 0,
+          "drawing_count": 5
+        },
+        {
+          "page": 3,
+          "width_pt": 595.303955078125,
+          "height_pt": 841.8897705078125,
+          "text_characters": 0,
+          "drawing_count": 6
+        },
+        {
+          "page": 4,
+          "width_pt": 595.303955078125,
+          "height_pt": 841.8897705078125,
+          "text_characters": 0,
+          "drawing_count": 6
+        },
+        {
+          "page": 5,
+          "width_pt": 595.303955078125,
+          "height_pt": 841.8897705078125,
+          "text_characters": 2,
+          "drawing_count": 0
+        }
+      ],
+      "stdout": "convert /tmp/lo-reference-ua6k0ecw/border-conflicts/border-conflicts.xlsx as a Calc document -> /tmp/lo-reference-ua6k0ecw/border-conflicts/border-conflicts.pdf using filter : calc_pdf_Export\n",
+      "stderr": ""
+    },
+    {
+      "id": "richtext",
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/ReaderRichText/representative.xlsx",
+      "input_sha256": "5e4032e814530d62db777ad76b8eae467c4f761696a2877e22ca41e2fbc37357",
+      "pdf": "pdf/richtext.pdf",
+      "pdf_sha256": "42d1a37dc00b51564598221c6ff9429a519552dd0082854833de9dc9e031feda",
+      "sheets": [
+        {
+          "name": "Synthetic",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId2"
+        }
+      ],
+      "requested_fonts": [
+        "Calibri",
+        "Noto Sans JP"
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "width_pt": 612.0,
+          "height_pt": 792.0,
+          "text_characters": 136,
+          "drawing_count": 8
+        }
+      ],
+      "stdout": "convert /tmp/lo-reference-ua6k0ecw/richtext/richtext.xlsx as a Calc document -> /tmp/lo-reference-ua6k0ecw/richtext/richtext.pdf using filter : calc_pdf_Export\n",
+      "stderr": ""
+    },
+    {
+      "id": "cf-phase1",
+      "input": "docs/validation/conditional-formatting/representative.xlsx",
+      "input_sha256": "2de333cf34b705aa6a0cec71a69c61a85df446302831cc4157078e7a83c39826",
+      "pdf": "pdf/cf-phase1.pdf",
+      "pdf_sha256": "2f6e7ec2016fb1087bf87eb257f860039480e7f31d54e78a93f93bd301ecdeff",
+      "sheets": [
+        {
+          "name": "data",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "Rf4645794369c4f75"
+        }
+      ],
+      "requested_fonts": [
+        "Calibri"
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "width_pt": 595.303955078125,
+          "height_pt": 841.8897705078125,
+          "text_characters": 12,
+          "drawing_count": 3
+        }
+      ],
+      "stdout": "convert /tmp/lo-reference-ua6k0ecw/cf-phase1/cf-phase1.xlsx as a Calc document -> /tmp/lo-reference-ua6k0ecw/cf-phase1/cf-phase1.pdf using filter : calc_pdf_Export\n",
+      "stderr": ""
+    },
+    {
+      "id": "cf-phase2",
+      "input": "docs/validation/conditional-formatting-phase2/representative.xlsx",
+      "input_sha256": "a8f48ee704a1db4cefcc433a1fef03600088e9d1f8e04ed33b055cd656727a12",
+      "pdf": "pdf/cf-phase2.pdf",
+      "pdf_sha256": "8d3f14fa3347ca50135cd2e4d48240f8659753e47e1867699ea31c17d6a48afc",
+      "sheets": [
+        {
+          "name": "data",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "R14bb055e867547c3"
+        }
+      ],
+      "requested_fonts": [
+        "Calibri"
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "width_pt": 595.303955078125,
+          "height_pt": 841.8897705078125,
+          "text_characters": 67,
+          "drawing_count": 15
+        }
+      ],
+      "stdout": "convert /tmp/lo-reference-ua6k0ecw/cf-phase2/cf-phase2.xlsx as a Calc document -> /tmp/lo-reference-ua6k0ecw/cf-phase2/cf-phase2.pdf using filter : calc_pdf_Export\n",
+      "stderr": ""
+    },
+    {
+      "id": "cf-mapped-scale",
+      "input": "docs/validation/conditional-formatting-phase2/mapped-scale.xlsx",
+      "input_sha256": "d25403efc3ca5021d697075370e83e42e7215bbe89885f7aa2d0f61b4768d3b6",
+      "pdf": "pdf/cf-mapped-scale.pdf",
+      "pdf_sha256": "2fdad0169d57261addaa6b0c39e069c86ea6d9b8e6ae66d3ede6cbc2db93b35c",
+      "sheets": [
+        {
+          "name": "data",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "Rd6265b8d38ff405c"
+        }
+      ],
+      "requested_fonts": [
+        "Calibri"
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "width_pt": 595.303955078125,
+          "height_pt": 841.8897705078125,
+          "text_characters": 12,
+          "drawing_count": 3
+        }
+      ],
+      "stdout": "convert /tmp/lo-reference-ua6k0ecw/cf-mapped-scale/cf-mapped-scale.xlsx as a Calc document -> /tmp/lo-reference-ua6k0ecw/cf-mapped-scale/cf-mapped-scale.pdf using filter : calc_pdf_Export\n",
+      "stderr": ""
+    },
+    {
+      "id": "cf-phase3-icons",
+      "input": "docs/validation/conditional-formatting-phase3/fixtures/icons.xlsx",
+      "input_sha256": "800b4ff9c62bee007bf0602fbd4d140d17ca79adcb2fc0806a052fe183845aa3",
+      "pdf": "pdf/cf-phase3-icons.pdf",
+      "pdf_sha256": "23cf73be3cce8b779b065277a99e9807ad2f068ccd40161d10d568adecc254e6",
+      "sheets": [
+        {
+          "name": "Phase3",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId1"
+        }
+      ],
+      "requested_fonts": [
+        "Noto Sans JP"
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "width_pt": 595.303955078125,
+          "height_pt": 841.8897705078125,
+          "text_characters": 40,
+          "drawing_count": 0
+        }
+      ],
+      "stdout": "convert /tmp/lo-reference-ua6k0ecw/cf-phase3-icons/cf-phase3-icons.xlsx as a Calc document -> /tmp/lo-reference-ua6k0ecw/cf-phase3-icons/cf-phase3-icons.pdf using filter : calc_pdf_Export\n",
+      "stderr": ""
+    },
+    {
+      "id": "cf-phase3-layout-mapping",
+      "input": "docs/validation/conditional-formatting-phase3/fixtures/layout-mapping.xlsx",
+      "input_sha256": "ad6831e0cf5774f3e2a0d38e935f3dffd3f87c3d1b63fe2c2e18e4b097b1c2d5",
+      "pdf": "pdf/cf-phase3-layout-mapping.pdf",
+      "pdf_sha256": "1c84fce7ec0526b17ab152e5517c607a282afb8819c6af3c7bba32c55df6fcc1",
+      "sheets": [
+        {
+          "name": "Phase3",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId1"
+        }
+      ],
+      "requested_fonts": [
+        "Noto Sans JP"
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "width_pt": 595.303955078125,
+          "height_pt": 841.8897705078125,
+          "text_characters": 21,
+          "drawing_count": 0
+        }
+      ],
+      "stdout": "convert /tmp/lo-reference-ua6k0ecw/cf-phase3-layout-mapping/cf-phase3-layout-mapping.xlsx as a Calc document -> /tmp/lo-reference-ua6k0ecw/cf-phase3-layout-mapping/cf-phase3-layout-mapping.pdf using filter : calc_pdf_Export\n",
+      "stderr": ""
+    },
+    {
+      "id": "cf-phase3-legacy-bars",
+      "input": "docs/validation/conditional-formatting-phase3/fixtures/legacy-bars.xlsx",
+      "input_sha256": "a5587789e8e27e00e27ee8263c74ef861d786e314ed4a9c31918f4fac7443335",
+      "pdf": "pdf/cf-phase3-legacy-bars.pdf",
+      "pdf_sha256": "62f8372bafb2d15223550b2e140ea9dae5a173ec550370e410276f06fd095b8a",
+      "sheets": [
+        {
+          "name": "Phase3",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId1"
+        }
+      ],
+      "requested_fonts": [
+        "Noto Sans JP"
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "width_pt": 595.303955078125,
+          "height_pt": 841.8897705078125,
+          "text_characters": 15,
+          "drawing_count": 2550
+        }
+      ],
+      "stdout": "convert /tmp/lo-reference-ua6k0ecw/cf-phase3-legacy-bars/cf-phase3-legacy-bars.xlsx as a Calc document -> /tmp/lo-reference-ua6k0ecw/cf-phase3-legacy-bars/cf-phase3-legacy-bars.pdf using filter : calc_pdf_Export\n",
+      "stderr": ""
+    },
+    {
+      "id": "cf-phase3-x14-bars",
+      "input": "docs/validation/conditional-formatting-phase3/fixtures/x14-bars.xlsx",
+      "input_sha256": "73dc15ca2efb0acda64b3ba6e07a257e6fe2000a4b98b446bcd6089b813243fe",
+      "pdf": "pdf/cf-phase3-x14-bars.pdf",
+      "pdf_sha256": "c77facd41550c0e630570f487c39e835d6aabee5d8e396aa4f9fd4fc87fcc9d5",
+      "sheets": [
+        {
+          "name": "Phase3",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId1"
+        }
+      ],
+      "requested_fonts": [
+        "Noto Sans JP"
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "width_pt": 595.303955078125,
+          "height_pt": 841.8897705078125,
+          "text_characters": 80,
+          "drawing_count": 10
+        }
+      ],
+      "stdout": "convert /tmp/lo-reference-ua6k0ecw/cf-phase3-x14-bars/cf-phase3-x14-bars.xlsx as a Calc document -> /tmp/lo-reference-ua6k0ecw/cf-phase3-x14-bars/cf-phase3-x14-bars.pdf using filter : calc_pdf_Export\n",
+      "stderr": ""
+    },
+    {
+      "id": "shapes",
+      "input": "docs/validation/render-finalization-performance/inputs/shapes.xlsx",
+      "input_sha256": "e7728f9ef142f30d94490295705d8d55557556f0902d2e6a2a95960b987eb57c",
+      "pdf": "pdf/shapes.pdf",
+      "pdf_sha256": "5f8ea40c59f98e036faac415820e0a9102479b4a92e8820188c2e9739eb422b2",
+      "sheets": [
+        {
+          "name": "Shapes",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId2"
+        }
+      ],
+      "requested_fonts": [
+        "Calibri"
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "width_pt": 612.0,
+          "height_pt": 792.0,
+          "text_characters": 7,
+          "drawing_count": 0
+        }
+      ],
+      "stdout": "convert /tmp/lo-reference-ua6k0ecw/shapes/shapes.xlsx as a Calc document -> /tmp/lo-reference-ua6k0ecw/shapes/shapes.pdf using filter : calc_pdf_Export\n",
+      "stderr": ""
+    },
+    {
+      "id": "actual-shape-text",
+      "input": "docs/validation/render-finalization-performance/inputs/actual-shape-text.xlsx",
+      "input_sha256": "f1a19080b15a44c786adc1b47ffaa4cb729ee1fac09d279a5ba8718344e63518",
+      "pdf": "pdf/actual-shape-text.pdf",
+      "pdf_sha256": "d431c3968ddf21da52103bfee793bd058ad660a8938286fa16a9697b9a33b22a",
+      "sheets": [
+        {
+          "name": "Shapes",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId2"
+        }
+      ],
+      "requested_fonts": [
+        "Calibri"
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "width_pt": 612.0,
+          "height_pt": 792.0,
+          "text_characters": 162,
+          "drawing_count": 5
+        }
+      ],
+      "stdout": "convert /tmp/lo-reference-ua6k0ecw/actual-shape-text/actual-shape-text.xlsx as a Calc document -> /tmp/lo-reference-ua6k0ecw/actual-shape-text/actual-shape-text.pdf using filter : calc_pdf_Export\n",
+      "stderr": ""
+    },
+    {
+      "id": "japanese-grid-report",
+      "input": "samples/excel/japanese-grid-report.xlsx",
+      "input_sha256": "4907d79963eb8267eab4230c7aad9bbd0d580238d3d42f402b34fb4c0ff217a1",
+      "pdf": "pdf/japanese-grid-report.pdf",
+      "pdf_sha256": "8c8163090382aa8f53318cd3e95f547ca982ab7bdc492ddf457940e382329e81",
+      "sheets": [
+        {
+          "name": "月次業務報告書",
+          "sheetId": "1",
+          "state": "visible",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId1"
+        }
+      ],
+      "requested_fonts": [
+        "Calibri",
+        "MS Gothic"
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "width_pt": 595.303955078125,
+          "height_pt": 841.8897705078125,
+          "text_characters": 800,
+          "drawing_count": 75
+        }
+      ],
+      "stdout": "convert /tmp/lo-reference-ua6k0ecw/japanese-grid-report/japanese-grid-report.xlsx as a Calc document -> /tmp/lo-reference-ua6k0ecw/japanese-grid-report/japanese-grid-report.pdf using filter : calc_pdf_Export\n",
+      "stderr": ""
+    }
+  ]
+}

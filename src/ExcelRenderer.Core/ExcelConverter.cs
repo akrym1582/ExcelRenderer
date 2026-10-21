@@ -58,6 +58,17 @@ public static class ExcelConverter
             throw new ArgumentException("ReadOptions is required.", nameof(options));
         }
 
+        if (options.SheetName is not null && options.SheetNames is not null)
+        {
+            throw new ArgumentException("SheetName and SheetNames cannot be combined.", nameof(options));
+        }
+
+        var sheetNames = options.SheetNames ?? (options.SheetName is null ? null : new[] { options.SheetName });
+        if (sheetNames is not null && (sheetNames.Count == 0 || sheetNames.Any(string.IsNullOrEmpty)))
+        {
+            throw new ArgumentException("SheetNames must contain at least one nonempty worksheet name.", nameof(options));
+        }
+
         cancellationToken.ThrowIfCancellationRequested();
         using var prepared = await OpenXml.Reader.Input.WorkbookInputPreparer.ReadAsync(
             xlsx,
@@ -67,11 +78,14 @@ public static class ExcelConverter
         using var font = new SingleFontContext(options.FontFilePath, options.FontCollectionIndex, cancellationToken);
         var diagnostics = new DiagnosticCollector();
         var reader = new CoreExcelReader(font);
-        var report = reader.Read(prepared, diagnostics, options.SheetName is null ? null : new[] { options.SheetName }, cancellationToken, options.ReadOptions);
+        var report = ConversionMetrics.Measure("reader", () => reader.Read(prepared, diagnostics, sheetNames, cancellationToken, options.ReadOptions));
         cancellationToken.ThrowIfCancellationRequested();
         var measurer = new SkiaTextMeasurer(font);
         var engine = new ReportLayoutEngine(measurer);
-        var plans = report.Sheets.Select(sheet => (Sheet: sheet, Plans: engine.Plan(sheet))).ToArray();
+        var selectedSheets = sheetNames is null
+            ? report.Sheets
+            : sheetNames.Distinct(StringComparer.Ordinal).Select(name => report.Sheets.Single(sheet => sheet.Name == name)).ToArray();
+        var plans = selectedSheets.Select(sheet => (Sheet: sheet, Plans: engine.Plan(sheet))).ToArray();
         using var renderer = new CorePdfRenderer(font, cancellationToken) { DiagnosticHandler = diagnostics.Add };
         var generator = new DrawCommandGeneratorPass();
         var timestamp = DateTime.Now;

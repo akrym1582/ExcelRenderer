@@ -15,10 +15,11 @@ public static class ImageCommand
     public static Command Create()
     {
         var input = CommandSupport.InputArgument();
+        var verbose = CommandSupport.VerboseOption();
         var data = MappingCommandSupport.DataOption();
         var formulaMode = CommandSupport.FormulaModeOption();
         var output = CommandSupport.OutputOption("Directory for generated PNG files.");
-        var sheet = new Option<string?>("--sheet") { Description = "Worksheet name to convert." };
+        var sheet = new Option<string[]>("--sheet") { Description = "Worksheet names in output order (repeatable).", AllowMultipleArgumentsPerToken = true };
         var dpi = new Option<int>("--dpi") { Description = "Output resolution in dots per inch.", DefaultValueFactory = _ => 144 };
         var fonts = CommandSupport.FontOptions();
         dpi.Validators.Add(result =>
@@ -32,14 +33,15 @@ public static class ImageCommand
         command.Add(data);
         command.Add(formulaMode);
         CommandSupport.AddFontOptions(command, fonts);
-        command.SetAction((parseResult, cancellationToken) => CommandSupport.RunAsync(() => MappingCommandSupport.WithInputAsync(
+        command.Add(verbose);
+        command.SetAction((parseResult, cancellationToken) => CommandSupport.RunAsync(parseResult, () => MappingCommandSupport.WithInputAsync(
             parseResult.GetValue(input)!,
             parseResult.GetValue(data),
             parseResult.GetValue(output)!,
             mappedInput => ExcelConverter.ConvertToImagesAsync(
                 mappedInput,
                 parseResult.GetValue(output)!,
-                new ImageExportOptions { SheetName = parseResult.GetValue(sheet), Dpi = parseResult.GetValue(dpi), ReadOptions = CommandSupport.GetReadOptions(parseResult.GetValue(formulaMode)!, parseResult, fonts), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
+                new ImageExportOptions { SheetNames = CommandSupport.GetSheetNames(parseResult.GetValue(sheet)), Dpi = parseResult.GetValue(dpi), ReadOptions = CommandSupport.GetReadOptions(parseResult.GetValue(formulaMode)!, parseResult, fonts), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
                 cancellationToken),
             cancellationToken,
             CommandSupport.GetMappingOptions(parseResult.GetValue(formulaMode)!))));

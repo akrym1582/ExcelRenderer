@@ -1,4 +1,5 @@
 using System.CommandLine;
+using System.Diagnostics;
 using ExcelRenderer.Fonts;
 
 namespace ExcelRenderer.Tool.Commands;
@@ -126,13 +127,33 @@ internal static class CommandSupport
     /// <summary>
     /// 変換処理を実行し、キャンセルまたは例外を標準エラーへ通知して終了コードへ変換します。
     /// </summary>
+    /// <param name="result">The parsed command and verbosity option.</param>
     /// <param name="conversion">実行する非同期の変換処理。</param>
     /// <returns>正常に完了した場合は <c>0</c>、キャンセルまたは例外が発生した場合は <c>1</c>。</returns>
-    internal static async Task<int> RunAsync(Func<Task> conversion)
+    internal static async Task<int> RunAsync(ParseResult result, Func<Task> conversion)
     {
+        var verbose = result.GetValue<bool>("--verbose");
+        var timer = Stopwatch.StartNew();
+        var previousObserver = Core.Rendering.ConversionMetrics.Observer;
+        var metrics = new Dictionary<string, double>(StringComparer.Ordinal);
+        if (verbose)
+        {
+            Core.Rendering.ConversionMetrics.Observer = (name, value) =>
+            {
+                metrics[name] = name.EndsWith(".ms", StringComparison.Ordinal) ? metrics.GetValueOrDefault(name) + value : value;
+                previousObserver?.Invoke(name, value);
+            };
+            Console.Error.WriteLine($"Starting {result.CommandResult.Command.Name}: {string.Join(" ", result.Tokens.Select(token => token.Value))}");
+        }
+
         try
         {
             await conversion().ConfigureAwait(false);
+            if (verbose)
+            {
+                Console.Error.WriteLine($"Completed in {timer.Elapsed.TotalMilliseconds:F1} ms.");
+            }
+
             return 0;
         }
         catch (OperationCanceledException)
@@ -142,13 +163,24 @@ internal static class CommandSupport
         }
         catch (Exception exception)
         {
-            Console.Error.WriteLine($"Error: {exception.Message}");
+            Console.Error.WriteLine(verbose ? exception.ToString() : $"Error: {exception.Message}");
             if (exception is ExcelRenderer.Rendering.ConversionException && exception.InnerException is { } cause)
             {
                 Console.Error.WriteLine(cause.Message);
             }
 
             return 1;
+        }
+        finally
+        {
+            Core.Rendering.ConversionMetrics.Observer = previousObserver;
+            if (verbose)
+            {
+                foreach (var metric in metrics.OrderBy(item => item.Key, StringComparer.Ordinal))
+                {
+                    Console.Error.WriteLine($"Metric {metric.Key}: {metric.Value:F3}");
+                }
+            }
         }
     }
 
@@ -265,6 +297,15 @@ internal static class CommandSupport
         },
         RecalculateMappedWorkbook = recalculateMappedWorkbook,
     };
+
+    /// <summary>Creates the shared detailed logging option.</summary>
+    /// <returns>The verbosity flag.</returns>
+    internal static Option<bool> VerboseOption() => new("--verbose") { Description = "Write command details, elapsed time, conversion metrics, informational diagnostics and full exceptions to standard error." };
+
+    /// <summary>Normalizes an omitted worksheet option to all worksheets.</summary>
+    /// <param name="names">The parsed names.</param>
+    /// <returns>The selection or null.</returns>
+    internal static IReadOnlyList<string>? GetSheetNames(string[]? names) => names is { Length: > 0 } ? names : null;
 
     private static IReadOnlyList<string> NonEmpty(string[]? values) => values is { Length: > 0 } ? values : Array.Empty<string>();
 

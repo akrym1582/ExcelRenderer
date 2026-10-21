@@ -32,7 +32,7 @@ public static partial class ExcelConverter
         ValidateInput(inputPath);
         ValidateNewFile(outputPath);
         await using var input = File.OpenRead(inputPath);
-        await RenderAsync(input, CreateLegacyRequest(OutputFormat.Pdf, options.SheetName, fontOptions: options.FontOptions) with { PdfBackend = options.PdfBackend, Hyperlinks = options.Hyperlinks, ReadOptions = options.ReadOptions }, new NewFileOutputSink(outputPath), cancellationToken)
+        await RenderAsync(input, CreateLegacyRequest(OutputFormat.Pdf, ResolveSheetNames(options.SheetName, options.SheetNames), fontOptions: options.FontOptions) with { PdfBackend = options.PdfBackend, Hyperlinks = options.Hyperlinks, ReadOptions = options.ReadOptions }, new NewFileOutputSink(outputPath), cancellationToken)
             .ConfigureAwait(false);
     }
 
@@ -72,7 +72,7 @@ public static partial class ExcelConverter
         await using var input = File.OpenRead(inputPath);
         await RenderAsync(
             input,
-            CreateLegacyRequest(OutputFormat.Png, options.SheetName, options.Dpi, options.FontOptions) with { ReadOptions = options.ReadOptions },
+            CreateLegacyRequest(OutputFormat.Png, ResolveSheetNames(options.SheetName, options.SheetNames), options.Dpi, options.FontOptions) with { ReadOptions = options.ReadOptions },
             new DirectoryOutputSink(outputDirectory),
             cancellationToken).ConfigureAwait(false);
     }
@@ -105,7 +105,7 @@ public static partial class ExcelConverter
         await using var input = File.OpenRead(inputPath);
         await RenderAsync(
             input,
-            CreateLegacyRequest(OutputFormat.Svg, options.SheetName, fontOptions: options.FontOptions) with { Buffering = options.Buffering, ReadOptions = options.ReadOptions },
+            CreateLegacyRequest(OutputFormat.Svg, ResolveSheetNames(options.SheetName, options.SheetNames), fontOptions: options.FontOptions) with { Buffering = options.Buffering, ReadOptions = options.ReadOptions },
             new DirectoryOutputSink(outputDirectory),
             cancellationToken).ConfigureAwait(false);
     }
@@ -135,18 +135,18 @@ public static partial class ExcelConverter
         await using var input = File.OpenRead(inputPath);
         await RenderAsync(
             input,
-            CreateLegacyRequest(OutputFormat.Markdown, options.SheetName, fontOptions: options.FontOptions) with { Hyperlinks = options.Hyperlinks, ReadOptions = options.ReadOptions },
+            CreateLegacyRequest(OutputFormat.Markdown, ResolveSheetNames(options.SheetName, options.SheetNames), fontOptions: options.FontOptions) with { Hyperlinks = options.Hyperlinks, ReadOptions = options.ReadOptions },
             new LegacyMarkdownOutputSink(outputPath, options, Path.GetFileName(inputPath)),
             cancellationToken).ConfigureAwait(false);
     }
 
-    private static RenderRequest CreateLegacyRequest(OutputFormat outputFormat, string? sheetName, double dpi = PngRenderer.DefaultDpi, FontOptions? fontOptions = null) =>
+    private static RenderRequest CreateLegacyRequest(OutputFormat outputFormat, IReadOnlyList<string>? sheetNames, double dpi = PngRenderer.DefaultDpi, FontOptions? fontOptions = null) =>
         new()
         {
             OutputFormat = outputFormat,
             Dpi = dpi,
             FontOptions = fontOptions ?? new FontOptions(),
-            Selection = sheetName is null ? new SelectionOptions() : new SelectionOptions { SheetNames = [sheetName] },
+            Selection = new SelectionOptions { SheetNames = sheetNames },
             Input = new WorkbookInputOptions
             {
                 MemoryThresholdBytes = long.MaxValue,
@@ -156,17 +156,19 @@ public static partial class ExcelConverter
             },
         };
 
-    private static ReportSheet[] SelectSheets(ReportDocument document, string? sheetName)
+    private static IReadOnlyList<string>? ResolveSheetNames(string? sheetName, IReadOnlyList<string>? sheetNames)
     {
-        if (sheetName is null)
+        if (sheetName is not null && sheetNames is not null)
         {
-            return document.Sheets.ToArray();
+            throw new ArgumentException("SheetName and SheetNames cannot be combined.");
         }
 
-        var sheet = document.Sheets.FirstOrDefault(x => string.Equals(x.Name, sheetName, StringComparison.Ordinal));
-        return sheet is null
-            ? throw new ArgumentException($"Worksheet was not found: {sheetName}", nameof(sheetName))
-            : [sheet];
+        if (sheetNames is not null && (sheetNames.Count == 0 || sheetNames.Any(string.IsNullOrEmpty)))
+        {
+            throw new ArgumentException("SheetNames must contain at least one nonempty worksheet name.", nameof(sheetNames));
+        }
+
+        return sheetNames ?? (sheetName is null ? null : new[] { sheetName });
     }
 
     private static void ValidateInput(string path)

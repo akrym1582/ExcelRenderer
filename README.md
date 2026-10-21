@@ -270,10 +270,11 @@ excelrenderer md input.xlsx -o output.md
 | Command | Output | Command-specific options |
 | --- | --- | --- |
 | `xlsx` | One mapped XLSX file | `--data <data.json>` (required) |
-| `pdf` | One PDF file | `--sheet <name>` |
-| `image` | One paginated PNG per worksheet page | `--sheet <name>`, `--dpi <number>` (default: `144`) |
-| `svg` | One self-contained SVG per worksheet page | `--sheet <name>` |
-| `ps` | One multipage PostScript file with embedded TrueType fonts | `--sheet <name>` and buffer options |
+| `pdf` | One PDF file | `--sheet <name>...` (repeatable) |
+| `core` | One PDF using ExcelRenderer.Core and saved cell values | Required `--font-file <path>`; `--font-collection-index <index>`, `--sheet <name>...` |
+| `image` | One paginated PNG per worksheet page | `--sheet <name>...`, `--dpi <number>` (default: `144`) |
+| `svg` | One self-contained SVG per worksheet page | `--sheet <name>...` |
+| `ps` | One multipage PostScript file with embedded TrueType fonts | `--sheet <name>...` and buffer options |
 | `markdown` / `md` | One Markdown file and optional extracted images | `--sheet`, `--image-dir`, `--[no-]images`, `--[no-]cell-addresses`, `--[no-]formulas`, `--[no-]layout-detection`, `--[no-]region-detection` |
 | `render` | PDF/PostScript file, or a PNG/SVG/Markdown output directory | `--format pdf\|ps\|png\|svg\|markdown` plus selection, layout, diagnostics, manifest, and font-policy options |
 
@@ -306,6 +307,23 @@ excelrenderer pdf report.xlsx -o report.pdf \
 ```
 
 Run `excelrenderer --help` to list commands and `excelrenderer <command> --help` for the complete, current option list.
+
+All rendering commands accept multiple worksheet names: `--sheet Sheet3 Sheet1` or
+`--sheet Sheet3 --sheet Sheet1`. Output follows the requested order; duplicates are
+removed. Omitting `--sheet` exports all worksheets in workbook order.
+
+Use `--verbose` on any subcommand (including `xlsx`) to write the command arguments,
+elapsed time, available conversion metrics and full exception details to standard error.
+`render --verbose` also includes informational diagnostics. Normal logging stays concise.
+
+```bash
+excelrenderer core input.xlsx -o core.pdf --font-file ./NotoSansJP-Regular.ttf --sheet Sheet3 Sheet1 --verbose
+excelrenderer pdf input.xlsx -o selected.pdf --sheet Sheet3 --sheet Sheet1
+```
+
+`core` invokes the Core converter with one supplied font, without main-library shapes,
+hyperlink annotations or formula recalculation. Its output file must be new.
+See [Core usage and limits](docs/core.md).
 
 ### Continuous image layout
 
@@ -395,7 +413,21 @@ Strict mode or treating `ImageDecodeFailed` as an error stops conversion instead
 Low-level `PdfRenderer` callers can receive warnings through `DiagnosticHandler`;
 warnings are also written to `System.Diagnostics.Trace` listeners.
 
-Use `PdfExportOptions`, `ImageExportOptions`, `SvgExportOptions`, `PostScriptExportOptions`, and `MarkdownExportOptions` to select a worksheet or configure format-specific behavior. Existing output files, and non-empty image or SVG output directories, are not overwritten.
+Use `PdfExportOptions`, `ImageExportOptions`, `SvgExportOptions`, `PostScriptExportOptions`, and `MarkdownExportOptions` to select worksheets or configure format-specific behavior. Existing output files, and non-empty image or SVG output directories, are not overwritten.
+
+Each format-specific options type now accepts `SheetNames`, including Core's
+`PdfExportOptions`. `SheetName` remains available for existing callers. Leave both
+null to export all worksheets, or set one property. Setting both, using an empty
+list, an empty/null name, or an unknown sheet name throws `ArgumentException`.
+Names match exactly; output follows list order and duplicates are removed.
+
+```csharp
+await ExcelConverter.ConvertToPdfAsync("input.xlsx", "selected.pdf", new PdfExportOptions
+{
+    SheetNames = new[] { "Sheet3", "Sheet1" },
+});
+```
+
 
 ## Column widths, saved row heights, and pagination
 
@@ -770,7 +802,7 @@ await ExcelConverter.ConvertToPdfAsync("report.xlsx", "report.pdf",
     });
 ```
 
-All commands accept the font options described above. `--font-file` reads each
+Rendering commands other than `core` accept the common font options described above. `--font-file` reads each
 font directly and registers its internal family and style; supported TrueType/OpenType content can
 therefore be supplied as `.ttf`, Windows EUDC `.tte`, or `.otf` without relying on its extension.
 For example: `--font-file /app/fonts/report.ttf --font-file C:\Windows\Fonts\EUDC.TTE`.

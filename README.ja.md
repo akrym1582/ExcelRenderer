@@ -246,10 +246,11 @@ excelrenderer <command> <input.xlsx> --output <path> [options]
 | コマンド | 出力 | コマンド固有の主なオプション |
 | --- | --- | --- |
 | `xlsx` | マッピング済みの XLSX ファイル | `--data <data.json>`（必須） |
-| `pdf` | 1 個の PDF | `--sheet <シート名>` |
-| `image` | 印刷ページごとの PNG | `--sheet <シート名>`、`--dpi <数値>`（既定値 `144`） |
-| `svg` | 印刷ページごとの自己完結 SVG | `--sheet <シート名>` |
-| `ps` | TrueType フォントを埋め込んだ複数ページの PostScript ファイル | `--sheet <シート名>` と buffer オプション |
+| `pdf` | 1 個の PDF | `--sheet <シート名>...`（繰り返し可） |
+| `core` | Core と保存済みセル値を使う1個の PDF | `--font-file <パス>`（必須）、`--font-collection-index <番号>`、`--sheet <シート名>...` |
+| `image` | 印刷ページごとの PNG | `--sheet <シート名>...`、`--dpi <数値>`（既定値 `144`） |
+| `svg` | 印刷ページごとの自己完結 SVG | `--sheet <シート名>...` |
+| `ps` | TrueType フォントを埋め込んだ複数ページの PostScript ファイル | `--sheet <シート名>...` と buffer オプション |
 | `markdown` / `md` | 1 個の Markdown と任意の抽出画像 | `--sheet`、`--image-dir`、`--[no-]images`、`--[no-]cell-addresses`、`--[no-]formulas`、`--[no-]layout-detection`、`--[no-]region-detection` |
 | `render` | PDF/PostScript ファイル、または PNG/SVG/Markdown の出力ディレクトリ | `--format pdf\|ps\|png\|svg\|markdown` と選択、レイアウト、診断、マニフェスト、フォント方針の各オプション |
 
@@ -259,7 +260,7 @@ excelrenderer <command> <input.xlsx> --output <path> [options]
 
 ### フォント指定
 
-描画コマンドで次のフォント指定を使用できます。`xlsx` にはフォントは不要です。
+`core` 以外の描画コマンドで次の共通フォント指定を使用できます。`xlsx` にはフォントは不要です。
 
 | オプション | 説明 |
 | --- | --- |
@@ -283,7 +284,7 @@ excelrenderer pdf report.xlsx -o report.pdf \
 
 コマンド一覧は `excelrenderer --help`、各コマンドの完全なオプション一覧は `excelrenderer <command> --help` で確認できます。
 
-上記のフォント指定はすべてのコマンドで使用できます。
+上記の共通フォント指定は `core` 以外の描画コマンドで使用できます。
 `--font-file` はファイルを直接読み、内部のファミリー名と書体を登録します。このため、
 拡張子ではなく内容が SkiaSharp で有効な TrueType/OpenType であれば `.ttf`、Windows EUDC の
 `.tte`、`.otf` を同じ入口から指定できます。例:
@@ -297,6 +298,23 @@ BMP 私用領域 (U+E000–U+F8FF) は要求フォント、指定ファイル（
 `bundled` は既存出力との互換性のため同梱フォントを優先し、`requested` は指定フォントと
 追加ディレクトリを設定済みフォールバックおよび同梱フォントより先に検索します。フォール
 バックは Unicode テキスト要素単位で決定するため、サロゲートペアと結合文字列は分断しません。
+
+すべての描画コマンドで `--sheet Sheet3 Sheet1` または
+`--sheet Sheet3 --sheet Sheet1` と複数シートを指定できます。指定順に出力し、
+重複を除きます。省略時はブック順に全シートを出力します。
+
+各サブコマンド（`xlsx` を含む）の `--verbose` は、実行引数、所要時間、
+取得できる変換メトリクス、例外のスタックトレースを標準エラーへ出力します。
+`render --verbose` では情報レベルの診断も表示します。
+
+```bash
+excelrenderer core input.xlsx -o core.pdf --font-file ./NotoSansJP-Regular.ttf --sheet Sheet3 Sheet1 --verbose
+```
+
+`core` サブコマンドは、指定した単一フォントで Core API の PDF 出力を実行します。
+`--font-file` は必須で、コレクション内の face は `--font-collection-index` で指定できます。
+保存済みセル値を使用し、本体の図形・リンク注釈・数式再計算には対応しません。
+既存の出力ファイルは上書きしません。[Core の使い方と制限](docs/core.ja.md)も参照してください。
 
 ### 連続画像として出力する
 
@@ -376,6 +394,20 @@ await ExcelConverter.ConvertToImagesAsync("input.xlsx", "./images");
 await ExcelConverter.ConvertToSvgAsync("input.xlsx", "./svg-output");
 await ExcelConverter.ConvertToPostScriptAsync("input.xlsx", "report.ps");
 await ExcelConverter.ConvertToMarkdownAsync("input.xlsx", "output.md");
+```
+
+形式別 API の `PdfExportOptions`、`ImageExportOptions`、`SvgExportOptions`、
+`PostScriptExportOptions`、`MarkdownExportOptions` と Core の `PdfExportOptions` に
+`SheetNames` を追加しました。既存の `SheetName` も利用できます。
+両方 null なら全シート、どちらか一方を指定すれば対象を選択します。
+併用、空リスト、空文字/null の名前、不存在のシート名は `ArgumentException` です。
+名前は完全一致で、指定順に出力し、重複を除きます。
+
+```csharp
+await ExcelConverter.ConvertToPdfAsync("input.xlsx", "selected.pdf", new PdfExportOptions
+{
+    SheetNames = new[] { "Sheet3", "Sheet1" },
+});
 ```
 
 ストリーム連携には `RenderAsync` を使用できます。入力は現在位置から読み取り、入力

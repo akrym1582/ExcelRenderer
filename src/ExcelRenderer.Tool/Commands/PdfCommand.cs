@@ -15,10 +15,11 @@ public static class PdfCommand
     public static Command Create()
     {
         var input = CommandSupport.InputArgument();
+        var verbose = CommandSupport.VerboseOption();
         var data = MappingCommandSupport.DataOption();
         var formulaMode = CommandSupport.FormulaModeOption();
         var output = CommandSupport.OutputOption("Path to the output PDF file.");
-        var sheet = new Option<string?>("--sheet") { Description = "Worksheet name to convert." };
+        var sheet = new Option<string[]>("--sheet") { Description = "Worksheet names in output order (repeatable).", AllowMultipleArgumentsPerToken = true };
         var backend = CommandSupport.PdfBackendOption();
         var hyperlinks = CommandSupport.HyperlinksOption();
         var fonts = CommandSupport.FontOptions();
@@ -28,14 +29,15 @@ public static class PdfCommand
         command.Add(data);
         command.Add(formulaMode);
         CommandSupport.AddFontOptions(command, fonts);
-        command.SetAction((parseResult, cancellationToken) => CommandSupport.RunAsync(() => MappingCommandSupport.WithInputAsync(
+        command.Add(verbose);
+        command.SetAction((parseResult, cancellationToken) => CommandSupport.RunAsync(parseResult, () => MappingCommandSupport.WithInputAsync(
             parseResult.GetValue(input)!,
             parseResult.GetValue(data),
             parseResult.GetValue(output)!,
             mappedInput => ExcelConverter.ConvertToPdfAsync(
                 mappedInput,
                 parseResult.GetValue(output)!,
-                new PdfExportOptions { PdfBackend = CommandSupport.GetPdfBackend(parseResult.GetValue(backend)!), Hyperlinks = CommandSupport.GetHyperlinks(parseResult.GetValue(hyperlinks)!), SheetName = parseResult.GetValue(sheet), ReadOptions = CommandSupport.GetReadOptions(parseResult.GetValue(formulaMode)!, parseResult, fonts), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
+                new PdfExportOptions { PdfBackend = CommandSupport.GetPdfBackend(parseResult.GetValue(backend)!), Hyperlinks = CommandSupport.GetHyperlinks(parseResult.GetValue(hyperlinks)!), SheetNames = CommandSupport.GetSheetNames(parseResult.GetValue(sheet)), ReadOptions = CommandSupport.GetReadOptions(parseResult.GetValue(formulaMode)!, parseResult, fonts), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
                 cancellationToken),
             cancellationToken,
             CommandSupport.GetMappingOptions(parseResult.GetValue(formulaMode)!))));

@@ -7,3 +7,5 @@ using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("ExcelRenderer.PdfComparison")]
 [assembly: InternalsVisibleTo("ExcelRenderer.Performance")]
+
+[assembly: InternalsVisibleTo("ExcelRenderer.Tool")]

@@ -22,7 +22,6 @@ public sealed partial class ToolIntegrationTests
         {
             new[] { "--reader-backend", "openxml" },
             new[] { "--mapping-backend", "auto" },
-            new[] { "--verbose" },
         })
         {
             var args = new List<string> { command, "missing.xlsx", "-o", destination, "--data", "missing.json" };
@@ -51,7 +50,7 @@ public sealed partial class ToolIntegrationTests
         AssertSuccess(help);
         Assert.DoesNotContain("--reader-backend", help.Output);
         Assert.DoesNotContain("--mapping-backend", help.Output);
-        Assert.DoesNotContain("--verbose", help.Output);
+        Assert.Contains("--verbose", help.Output);
         Assert.Contains("--formula-mode", help.Output);
 
         var template = Path.Combine(_directory, "template.xlsx");

@@ -7,8 +7,11 @@ namespace ExcelRenderer;
 /// <summary>Configures direct multipage PostScript export.</summary>
 public sealed record PostScriptExportOptions
 {
-    /// <summary>Gets the worksheet name, or null for all worksheets.</summary>
+    /// <summary>Gets one worksheet name. Use SheetNames for multiple sheets; leave both null to export all worksheets.</summary>
     public string? SheetName { get; init; }
+
+    /// <summary>Gets the worksheet names in output order, with duplicates removed. Null uses SheetName or all worksheets. Cannot be combined with SheetName.</summary>
+    public IReadOnlyList<string>? SheetNames { get; init; }
 
     /// <summary>Gets the font selection policy.</summary>
     public FontOptions FontOptions { get; init; } = new();

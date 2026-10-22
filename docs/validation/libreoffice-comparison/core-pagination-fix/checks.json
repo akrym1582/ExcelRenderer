@@ -1,0 +1,131 @@
+{
+  "source_runtime_commit": "c18aec74778865aaf75e849f2820726c71a520c3",
+  "release_solution_rebuild": {
+    "status": "passed",
+    "warnings": 0,
+    "errors": 0
+  },
+  "debug_solution_rebuild": {
+    "status": "passed",
+    "warnings": 0,
+    "errors": 0
+  },
+  "solution_tests": {
+    "status": "passed",
+    "projects": [
+      {
+        "failed": 0,
+        "passed": 413,
+        "skipped": 0,
+        "total": 413,
+        "assembly": "ExcelRenderer.Core.Tests.dll"
+      },
+      {
+        "failed": 0,
+        "passed": 833,
+        "skipped": 0,
+        "total": 833,
+        "assembly": "ExcelRenderer.Formulas.Tests.dll"
+      },
+      {
+        "failed": 0,
+        "passed": 172,
+        "skipped": 0,
+        "total": 172,
+        "assembly": "ExcelRenderer.Mapping.Tests.dll"
+      },
+      {
+        "failed": 0,
+        "passed": 213,
+        "skipped": 0,
+        "total": 213,
+        "assembly": "ExcelRenderer.OpenXml.Tests.dll"
+      },
+      {
+        "failed": 0,
+        "passed": 1124,
+        "skipped": 0,
+        "total": 1124,
+        "assembly": "ExcelRenderer.Tests.dll"
+      },
+      {
+        "failed": 0,
+        "passed": 135,
+        "skipped": 0,
+        "total": 135,
+        "assembly": "ExcelRenderer.Tool.Tests.dll"
+      }
+    ],
+    "passed": 2890,
+    "failed": 0,
+    "skipped": 0
+  },
+  "core_coverage_gate": {
+    "status": "passed",
+    "tests": 405,
+    "line_percent": 82.9,
+    "branch_percent": 71.55,
+    "threshold_line": 82.12,
+    "threshold_branch": 70.08
+  },
+  "core_performance_gate": {
+    "status": "passed",
+    "tests": 8,
+    "warmups_per_case": 1,
+    "rounds_per_case": 3,
+    "evidence": "artifacts/libreoffice-comparison/core-pagination-fix/ci/core-performance",
+    "quantitative_regression_claim": false
+  },
+  "namespace_check": {
+    "status": "passed",
+    "declarations": 717,
+    "compiler_shims": 2
+  },
+  "dependency_audit": {
+    "status": "passed",
+    "configuration": "Release",
+    "source_config_files": 1438,
+    "restored_projects": 24,
+    "assembly_ref_inventories": 726
+  },
+  "independent_consumers": {
+    "reader": "passed",
+    "core": "passed"
+  },
+  "comparison_mutations": {
+    "missing_text": "detected",
+    "missing_line": "detected",
+    "extra_page": "detected"
+  },
+  "border_audit": {
+    "status": "passed",
+    "sheets_per_engine": 5,
+    "strokes_per_engine": 23,
+    "product_duplicate_strokes": 0,
+    "calc_duplicate_strokes": 5,
+    "mutation_checks": 5,
+    "product_border_code_changes": 0,
+    "excel_compatibility": "not established"
+  },
+  "core_richtext_contract": "unsupported per user instruction; cell-level formatting guarantees retained",
+  "retained_comparison": {
+    "generated_pdfs": 44,
+    "comparison_records": 66,
+    "main_pages": 31,
+    "core_pages": 31,
+    "main_core_equal_page_counts": 22,
+    "main_before_after_pixel_identical_cases": 22,
+    "core_before_after_pixel_identical_cases": 10,
+    "core_page_count_changes": [
+      "01-japanese",
+      "02-image",
+      "08-print-scaling"
+    ],
+    "input_reference_hashes": "all matched",
+    "generation_runtime_hashes": "unchanged"
+  },
+  "initial_performance_attempt": "All 8 failed only because the fixture allowed SavedPageBreaks alone. Updated to require exactly one MaximumDigitWidthFallback and permit only those two known codes; re-run passed. Output/geometry/resource assertions unchanged.",
+  "audit_script_sha256": "a564308354ed4b738cc9292791f2f450f396bfcfee30c3796987fced1e5bf26e",
+  "core_contract_difference_cases": 12,
+  "unresolved_richtext_contract_cases": 0
+}

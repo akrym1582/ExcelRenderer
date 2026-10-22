@@ -1,0 +1,413 @@
+[
+  {
+    "id": "F01",
+    "category": "resolved-product-defect",
+    "priority": "P1",
+    "cases": [
+      "01-japanese",
+      "02-image",
+      "08-print-scaling"
+    ],
+    "engines": [
+      "core"
+    ],
+    "pairs": [
+      "libreoffice-core",
+      "main-core"
+    ],
+    "pages": "1-2",
+    "region": "全列・改ページ",
+    "expected": "描画用の代替フォントで元ブックの列幅メトリクスを置き換えない。元Normalと一致する場合に指定フォントを実測し、不明/不一致なら本体と同じ7px互換MDWと診断を使用。",
+    "actual": "修正前はCore各2ページ。修正後は01-japanese、02-image、08-print-scalingが各1ページ。本体も各1ページ。印刷倍率・シート・入力は変更しない。",
+    "evidence": [
+      "src/ExcelRenderer.Core/Excel/SingleFontMetrics.cs",
+      "tests/ExcelRenderer.Core.Tests/ColumnMetricTests.cs",
+      "tests/ExcelRenderer.Core.Tests/PdfTests.cs",
+      "docs/core.md#one-font"
+    ],
+    "action": "SingleFontMetricsとCore読取時の診断配線を修正。フォント置換・一致するNormalサイズ・情報欠落の回帰テストと3サンプルのページ数テストで検証。旧証跡は親ディレクトリと旧artifactsに保持。"
+  },
+  {
+    "id": "F02",
+    "category": "recalculation",
+    "priority": "P2",
+    "cases": [
+      "08-print-scaling"
+    ],
+    "engines": [
+      "main",
+      "core"
+    ],
+    "pairs": [
+      "libreoffice-main",
+      "libreoffice-core"
+    ],
+    "pages": "main 1 / core 1",
+    "region": "G5:G16",
+    "expected": "cachedでは保存値のない数式は空表示とFormulaCachedValueMissing診断。",
+    "actual": "XMLはE行*F行の数式にv要素なし。両版に12件の診断。Calcは6,000円〜36,800円を表示。本体の別recalculate結果では12値を表示。",
+    "evidence": [
+      "tests/ExcelRenderer.Tests/SampleInputs/08-print-scaling.xlsx",
+      "docs/core.md#supported-behavior",
+      "artifacts/libreoffice-comparison/investigation/08-print-scaling-recalculate.inspection.json"
+    ],
+    "action": "欠落不具合に分類しない。Core比較にはcached結果だけを使用。"
+  },
+  {
+    "id": "F03",
+    "category": "excel-review",
+    "priority": "P2",
+    "cases": [
+      "01-japanese",
+      "02-image",
+      "03-wrapped-text",
+      "04-text-decoration",
+      "05-borders",
+      "06-layout-and-pagination",
+      "08-print-scaling"
+    ],
+    "engines": [
+      "main",
+      "core"
+    ],
+    "pairs": [
+      "libreoffice-main",
+      "libreoffice-core"
+    ],
+    "pages": "全ページ",
+    "region": "ヘッダー/フッター",
+    "expected": "保存された&A、&P、&Nのフィールドを反映。",
+    "actual": "両製品はページ番号を表示。Calc参照にはページ番号がない。06では製品がヘッダーのシート名も表示。入力XMLにフィールドが保存されている。",
+    "evidence": [
+      "src/ExcelRenderer.Core/Excel/CoreExcelReader.OpenXml.cs",
+      "src/ExcelRenderer.Core/Layout/HeaderFooterLayout.cs",
+      "artifacts/libreoffice-comparison/pdf-inspection"
+    ],
+    "action": "製品の文字重複とは扱わず、Calc/Excelのヘッダーフッター実機動作を後日確認。"
+  },
+  {
+    "id": "F04",
+    "category": "excel-review",
+    "priority": "P1",
+    "cases": [
+      "05-borders"
+    ],
+    "engines": [
+      "main",
+      "core"
+    ],
+    "pairs": [
+      "libreoffice-main",
+      "libreoffice-core",
+      "main-core"
+    ],
+    "pages": "1-2",
+    "region": "A1:D5・横方向ページ境界",
+    "expected": "全セルの値・罫線を保持し、保存幅・印刷余白・結合セルからページを計画。",
+    "actual": "全体の文字は保持。ただしCalcはp1にA:C、製品はp1にAのみ。製品の幅500.25ptは有効幅499.276ptを超える。PageBandBuilderは先頭の過大結合範囲を取り込んだ直後に残り列を次ページへ送る。",
+    "evidence": [
+      "src/ExcelRenderer.Core/Layout/PageBandBuilder.cs",
+      "artifacts/libreoffice-comparison/actual/main/05-borders.run.json",
+      "tests/ExcelRenderer.Tests/SampleInputs/05-borders.xlsx"
+    ],
+    "action": "過大結合セルの分割方針をExcelで確認する要調査項目。Calcと同じ分割になるような一律補正は加えない。"
+  },
+  {
+    "id": "F05",
+    "category": "excel-review",
+    "priority": "P2",
+    "cases": [
+      "06-layout-and-pagination",
+      "09-cell-border"
+    ],
+    "engines": [
+      "main",
+      "core"
+    ],
+    "pairs": [
+      "libreoffice-main",
+      "libreoffice-core",
+      "main-core"
+    ],
+    "pages": "06:1-4 / 09:Calc 1-2・製品1",
+    "region": "用紙・行列幅・自動改ページ",
+    "expected": "元の印刷設定のまま、各実装がページを計算。",
+    "actual": "06は3実装とも4ページだがR9等が別ページへ移動。用紙高Calc419.5559pt・製品419.5300pt。09はCalcの2ページ目が罫線のみ、製品は60%倍率で1ページ。文字インベントリは09で同じ。",
+    "evidence": [
+      "artifacts/libreoffice-comparison/pdf-inspection",
+      "artifacts/libreoffice-comparison/actual/main/06-layout-and-pagination.run.json",
+      "tests/ExcelRenderer.Tests/SampleInputs/09-cell-border.xlsx"
+    ],
+    "action": "単なる余分なページや線欠落とは断定しない。Excel出力と罫線の対応領域を照合する。"
+  },
+  {
+    "id": "F06",
+    "category": "libreoffice-difference",
+    "priority": "P1",
+    "cases": [
+      "border-conflicts"
+    ],
+    "engines": [
+      "main",
+      "core"
+    ],
+    "pairs": [
+      "libreoffice-main",
+      "libreoffice-core"
+    ],
+    "pages": "2-5",
+    "region": "Colors / Merged A1:B2 / Defaults / Conditional A1:B1",
+    "expected": "独立した既存テストでは、部分的な結合辺を全面へ拡張せず、隣接辺を解決し、CFの明示クリアを反映。",
+    "actual": "追加数値監査で、本体/Coreの全5シート・各23物理ストロークが独立した位置/長さ/幅/色の期待値に一致。二重描画0。Calcでは同一ストロークの重複が5件（Colors:1、Merged:2、Defaults:2）あり、白い共有辺、結合部分辺、既定辺、CF消去後の辺も異なる。",
+    "evidence": [
+      "tests/ExcelRenderer.Tests/SharedBorderWorkbookTests.cs",
+      "tests/ExcelRenderer.Core.Tests/BorderResolutionTests.cs",
+      "docs/validation/border-resolution/README.md",
+      "scripts/audit-libreoffice-borders.py",
+      "docs/validation/libreoffice-comparison/core-pagination-fix/border-audit.json"
+    ],
+    "action": "製品の既存期待値違反は再現しないため罫線アルゴリズムは変更しない。監査scriptと5種類の変異検出、数値明細を追加。暫定優先順位/結合部分辺のExcel実機確認は継続。"
+  },
+  {
+    "id": "F07",
+    "category": "core-contract",
+    "priority": "P2",
+    "cases": [
+      "border-conflicts",
+      "cf-phase1",
+      "cf-phase2",
+      "cf-mapped-scale",
+      "cf-phase3-icons",
+      "cf-phase3-legacy-bars",
+      "cf-phase3-x14-bars"
+    ],
+    "engines": [
+      "core"
+    ],
+    "pairs": [
+      "libreoffice-core",
+      "main-core"
+    ],
+    "pages": "border-conflicts 5 / その他1",
+    "region": "各入力のconditionalFormatting sqref（main/core-cases.jsonのworkbookに保存）",
+    "expected": "Coreは条件付き書式を評価せず通常スタイルと値を描画。",
+    "actual": "通常値は残り、塗り・アイコン・バーはない。legacy-bars B1:B6はshowValue=0が適用されず値が表示される。border-conflictsでは通常2pt辺が残る。",
+    "evidence": [
+      "docs/core.md#conditional-formatting-boundary",
+      "docs/conditional-formatting.md",
+      "artifacts/libreoffice-comparison/pdf-inspection/core"
+    ],
+    "action": "意図した機能差として領域限定で計上。値・通常罫線・ページ構成の比較は継続。"
+  },
+  {
+    "id": "F08",
+    "category": "libreoffice-difference",
+    "priority": "P2",
+    "cases": [
+      "cf-phase3-icons",
+      "cf-phase3-legacy-bars",
+      "cf-phase3-x14-bars"
+    ],
+    "engines": [
+      "main"
+    ],
+    "pairs": [
+      "libreoffice-main"
+    ],
+    "pages": "1",
+    "region": "icons A1:E3 / legacy A1:B6 / x14 A1:E6",
+    "expected": "本体の公開CF契約に沿ったベクターアイコン、solidバー、x14ルール。",
+    "actual": "アイコンの輪郭等が異なる。legacyはCalcがgradient、本体は意図したsolid。x14ではCalcがA列以外のバーを表示せず、本体はB:Eも表示。負値・ゼロ軸・左右方向・値を保存画像で確認。",
+    "evidence": [
+      "docs/conditional-formatting.md",
+      "docs/validation/conditional-formatting-phase3/fixtures/x14-bars.xlsx",
+      "artifacts/libreoffice-comparison/review/cf-phase3-x14-bars-detail.png"
+    ],
+    "action": "Calcに合わせてx14やsolidプロファイルを削除しない。閾値・負数長さ・アイコンの厳密なExcel一致は未検証。"
+  },
+  {
+    "id": "F09",
+    "category": "core-contract",
+    "priority": "P1",
+    "cases": [
+      "richtext",
+      "cell-argb"
+    ],
+    "engines": [
+      "core"
+    ],
+    "pairs": [
+      "libreoffice-core",
+      "main-core"
+    ],
+    "pages": "1",
+    "region": "richtextの全8セル / cell-argbの部分書式文字",
+    "expected": "2026-10-22のユーザー指示によりCoreのrichtext部分書式は未対応でよい。通常セルのサイズ・色・下線は保持し、部分書式runは本文へ連結して通常セルスタイルで描画する。",
+    "actual": "Coreのrichtextは全runが10pt黒、Alphaの赤・日本語の16pt・末尾の青/下線が消失。本体は保持。CoreExcelReader.CaptureRichText=false、CompleteCellはセルをそのまま返す。cell-argbもrun色が失われる。",
+    "evidence": [
+      "src/ExcelRenderer.Core/Excel/CoreExcelReader.cs",
+      "docs/core.md#one-font",
+      "docs/core-architecture.ja.md",
+      "docs/core-source-map.md#reader-style-cache-and-partial-text-extension",
+      "artifacts/libreoffice-comparison/pdf-inspection/core/richtext.json"
+    ],
+    "action": "ユーザーがCore richtext未対応を明示承認したため契約上の差として分類。docs/core.mdとcore.ja.mdを通常セル書式とrun部分書式に分けて明確化。本体の部分書式対応は維持。"
+  },
+  {
+    "id": "F10",
+    "category": "core-contract",
+    "priority": "P2",
+    "cases": [
+      "04-text-decoration",
+      "japanese-grid-report"
+    ],
+    "engines": [
+      "core"
+    ],
+    "pairs": [
+      "libreoffice-core",
+      "main-core"
+    ],
+    "pages": "1",
+    "region": "太字/斜体の通常体化・日本語帳票のIVS/絵文字",
+    "expected": "Coreは通常体1個、IVSは基底文字、未収録字の表示は保証しない。",
+    "actual": "04の全セル文字は保持、太字斜体は通常体。日本語帳票のIVSは除去され、チェックマーク等は欠字。通常の日本語本文と数値は保持。",
+    "evidence": [
+      "docs/core.md#one-font",
+      "artifacts/libreoffice-comparison/pdf-inspection/core/japanese-grid-report.json"
+    ],
+    "action": "指定フォント外の文字を追加フォントで補完しない。通常本文や数値の欠落までこの分類で除外しない。"
+  },
+  {
+    "id": "F11",
+    "category": "core-contract",
+    "priority": "P2",
+    "cases": [
+      "actual-shape-text"
+    ],
+    "engines": [
+      "core"
+    ],
+    "pairs": [
+      "libreoffice-core",
+      "main-core"
+    ],
+    "pages": "1",
+    "region": "5図形および図形内文字（セルanchorを除く）",
+    "expected": "Coreは図形・図形内文字を出力対象外とする。セル本文は保持。",
+    "actual": "Coreはanchorのみ。本体は5図形の全文字を保持（空白と抽出順を除いた文字インベントリはCalcと同じ）。",
+    "evidence": [
+      "docs/core.md#supported-behavior",
+      "docs/validation/render-finalization-performance/inputs/actual-shape-text.xlsx"
+    ],
+    "action": "図形の欠落は意図した機能差。anchorは共通領域として検証。"
+  },
+  {
+    "id": "F12",
+    "category": "excel-review",
+    "priority": "P1",
+    "cases": [
+      "actual-shape-text"
+    ],
+    "engines": [
+      "main"
+    ],
+    "pairs": [
+      "libreoffice-main"
+    ],
+    "pages": "1",
+    "region": "回転した5図形、特に2個のcallout",
+    "expected": "保存a:xfrmの回転・位置、図形形状・文字を対応範囲内で反映。",
+    "actual": "Calcと本体でcalloutの傾き、文字折返し、重なりが異なる。入力のrotは0/900000/1800000/2700000/3600000。文字自体の欠落はない。",
+    "evidence": [
+      "docs/validation/render-finalization-performance/inputs/actual-shape-text.xlsx",
+      "artifacts/libreoffice-comparison/review/overview-4.png"
+    ],
+    "action": "Excel実機の回転/anchor/flip解釈と比較するまで修正を保留。"
+  },
+  {
+    "id": "F13",
+    "category": "coverage-limitation",
+    "priority": "P2",
+    "cases": [
+      "shapes",
+      "cf-phase3-layout-mapping"
+    ],
+    "engines": [
+      "main",
+      "core"
+    ],
+    "pairs": [
+      "libreoffice-main",
+      "libreoffice-core",
+      "main-core"
+    ],
+    "pages": "1",
+    "region": "入力全体の対象機能",
+    "expected": "ケース名だけで図形・条件付き書式を検証したとみなさない。",
+    "actual": "shapes.xlsxのZIPにはdrawing partがなく3実装ともanchorのみ。layout-mapping.xlsxにもconditionalFormattingルールがなく3実装の通常文字を比較した。",
+    "evidence": [
+      "docs/validation/render-finalization-performance/inputs/shapes.xlsx",
+      "docs/validation/conditional-formatting-phase3/fixtures/layout-mapping.xlsx",
+      "artifacts/libreoffice-comparison/actual/main/shapes.run.json"
+    ],
+    "action": "この2件を図形/CFのカバレッジに加算しない。実図形はactual-shape-textで検証。入力は変更しない。"
+  },
+  {
+    "id": "F14",
+    "category": "font-environment",
+    "priority": "P2",
+    "cases": [
+      "actual-shape-text",
+      "japanese-grid-report"
+    ],
+    "engines": [
+      "main",
+      "core"
+    ],
+    "pairs": [
+      "libreoffice-main",
+      "libreoffice-core"
+    ],
+    "pages": "1",
+    "region": "PDF埋込フォントと文字メトリクス",
+    "expected": "manifestの利用可能フォント一覧だけで実際の物理フォント一致を仮定しない。",
+    "actual": "Calc図形PDFにCarlito/LiberationSerif/DejaVuSans、帳票にFrankRuhlHofshi-Bold/LinuxLibertineGB/DejaVuSansが埋め込まれる。本体はNotoSansJP/IPAmjMincho/Type3等、CoreはNotoSansJPのみ。",
+    "evidence": [
+      "docs/validation/libreoffice-reference/manifest.json",
+      "artifacts/libreoffice-comparison/pdf-inspection/libreoffice/actual-shape-text.json",
+      "artifacts/libreoffice-comparison/pdf-inspection/libreoffice/japanese-grid-report.json"
+    ],
+    "action": "参照PDFは維持し、フォント環境を揃えたとの主張を避ける。"
+  },
+  {
+    "id": "F15",
+    "category": "excel-review",
+    "priority": "P2",
+    "cases": [
+      "cf-phase1",
+      "cf-phase2",
+      "cf-mapped-scale",
+      "cell-argb",
+      "richtext",
+      "03-wrapped-text",
+      "japanese-grid-report"
+    ],
+    "engines": [
+      "main"
+    ],
+    "pairs": [
+      "libreoffice-main"
+    ],
+    "pages": "1",
+    "region": "CF塗り・文字折返し・色/alpha・帳票縮尺",
+    "expected": "保存ルール/スタイルを使い、画像差率だけで成否を決めない。",
+    "actual": "CF値の文字インベントリはCalcと同じ。塗り領域/フォント位置/alpha/折返し/帳票のFitToPages縮尺に視覚差がある。通常文字欠落や描画例外は確認しない。",
+    "evidence": [
+      "docs/conditional-formatting.md",
+      "docs/validation/libreoffice-comparison/pairs",
+      "artifacts/libreoffice-comparison/images"
+    ],
+    "action": "全ページ画像を保持。priority/stopIfTrue、percent/percentile等の厳密なExcel適合は未確認であり、参照1件の目視で全ルール検証済みとはしない。"
+  }
+]

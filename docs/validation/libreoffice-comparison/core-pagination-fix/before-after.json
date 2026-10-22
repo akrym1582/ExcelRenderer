@@ -1,0 +1,1962 @@
+{
+  "note": "Ordinal pages are not semantic correspondences when counts differ. Original before and after PDFs/images are retained separately.",
+  "summary": {
+    "main": {
+      "cases": 22,
+      "before_pages": 31,
+      "after_pages": 31,
+      "pixel_identical_cases": 22,
+      "changed_page_count_cases": []
+    },
+    "core": {
+      "cases": 22,
+      "before_pages": 34,
+      "after_pages": 31,
+      "pixel_identical_cases": 10,
+      "changed_page_count_cases": [
+        "01-japanese",
+        "02-image",
+        "08-print-scaling"
+      ]
+    }
+  },
+  "records": [
+    {
+      "case_id": "01-japanese",
+      "engine": "main",
+      "before_sha256": "317ae1b31d87d1462db3ec3c4ac409324a82f48afb3e54477206d4ca0cbe50fc",
+      "after_sha256": "317ae1b31d87d1462db3ec3c4ac409324a82f48afb3e54477206d4ca0cbe50fc",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        }
+      ],
+      "all_pages_pixel_identical": true
+    },
+    {
+      "case_id": "02-image",
+      "engine": "main",
+      "before_sha256": "8132c9d3d7dcd9033151bf819bfed985fe062c685d2c48b092292adae667cb58",
+      "after_sha256": "8132c9d3d7dcd9033151bf819bfed985fe062c685d2c48b092292adae667cb58",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        }
+      ],
+      "all_pages_pixel_identical": true
+    },
+    {
+      "case_id": "03-wrapped-text",
+      "engine": "main",
+      "before_sha256": "7b1d6fbac7d933f845fd5838d2f855370499d7317620b21087c7524dbf430832",
+      "after_sha256": "7b1d6fbac7d933f845fd5838d2f855370499d7317620b21087c7524dbf430832",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        }
+      ],
+      "all_pages_pixel_identical": true
+    },
+    {
+      "case_id": "04-text-decoration",
+      "engine": "main",
+      "before_sha256": "0f7e3576c26348c9d9e36f4569d8fae174629561803e1c5c9bc23dfeaecad62f",
+      "after_sha256": "0f7e3576c26348c9d9e36f4569d8fae174629561803e1c5c9bc23dfeaecad62f",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        }
+      ],
+      "all_pages_pixel_identical": true
+    },
+    {
+      "case_id": "05-borders",
+      "engine": "main",
+      "before_sha256": "47f5637e281586b314318755453dc438c3ba42eaef420a23b3555eef83d71b0c",
+      "after_sha256": "47f5637e281586b314318755453dc438c3ba42eaef420a23b3555eef83d71b0c",
+      "before_pages": 2,
+      "after_pages": 2,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        },
+        {
+          "page": 2,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        }
+      ],
+      "all_pages_pixel_identical": true
+    },
+    {
+      "case_id": "06-layout-and-pagination",
+      "engine": "main",
+      "before_sha256": "af90d36de1596b1cea0301a2b8f6bf1c64498a61a681a8fd53c037cc42d247a5",
+      "after_sha256": "af90d36de1596b1cea0301a2b8f6bf1c64498a61a681a8fd53c037cc42d247a5",
+      "before_pages": 4,
+      "after_pages": 4,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            595.280029296875,
+            419.5299987792969
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            595.280029296875,
+            419.5299987792969
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        },
+        {
+          "page": 2,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            595.280029296875,
+            419.5299987792969
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            595.280029296875,
+            419.5299987792969
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        },
+        {
+          "page": 3,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            595.280029296875,
+            419.5299987792969
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            595.280029296875,
+            419.5299987792969
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        },
+        {
+          "page": 4,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            595.280029296875,
+            419.5299987792969
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            595.280029296875,
+            419.5299987792969
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        }
+      ],
+      "all_pages_pixel_identical": true
+    },
+    {
+      "case_id": "07-multiple-sheets",
+      "engine": "main",
+      "before_sha256": "63f63b4d0b2ae4a57361d489384f7633ef5396fec6b68009752c5478f476762f",
+      "after_sha256": "63f63b4d0b2ae4a57361d489384f7633ef5396fec6b68009752c5478f476762f",
+      "before_pages": 2,
+      "after_pages": 2,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        },
+        {
+          "page": 2,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        }
+      ],
+      "all_pages_pixel_identical": true
+    },
+    {
+      "case_id": "08-print-scaling",
+      "engine": "main",
+      "before_sha256": "b771b1da9655a6483cb5e1a28647a8555231643d691f88efcf1e15f2ac97714c",
+      "after_sha256": "b771b1da9655a6483cb5e1a28647a8555231643d691f88efcf1e15f2ac97714c",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        }
+      ],
+      "all_pages_pixel_identical": true
+    },
+    {
+      "case_id": "09-cell-border",
+      "engine": "main",
+      "before_sha256": "65b525b28bfc5ca03fad7a8d4b12cbcf40bbc92c595f334283d85a0304b957b2",
+      "after_sha256": "65b525b28bfc5ca03fad7a8d4b12cbcf40bbc92c595f334283d85a0304b957b2",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        }
+      ],
+      "all_pages_pixel_identical": true
+    },
+    {
+      "case_id": "cell-argb",
+      "engine": "main",
+      "before_sha256": "609131061f8edf28b7b7149c7dcc2c3b013fcc8fed6617fce1ed764a958945c0",
+      "after_sha256": "609131061f8edf28b7b7149c7dcc2c3b013fcc8fed6617fce1ed764a958945c0",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        }
+      ],
+      "all_pages_pixel_identical": true
+    },
+    {
+      "case_id": "border-conflicts",
+      "engine": "main",
+      "before_sha256": "95c7f50fad7e50ae53395d5fe04d75e69d483bb01a4bf3a42365af448a31ad24",
+      "after_sha256": "95c7f50fad7e50ae53395d5fe04d75e69d483bb01a4bf3a42365af448a31ad24",
+      "before_pages": 5,
+      "after_pages": 5,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        },
+        {
+          "page": 2,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        },
+        {
+          "page": 3,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        },
+        {
+          "page": 4,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        },
+        {
+          "page": 5,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        }
+      ],
+      "all_pages_pixel_identical": true
+    },
+    {
+      "case_id": "richtext",
+      "engine": "main",
+      "before_sha256": "86891a7f9b25dcbd4c127c3584ed17d1727461263940e6082089af7ca5b15bca",
+      "after_sha256": "86891a7f9b25dcbd4c127c3584ed17d1727461263940e6082089af7ca5b15bca",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        }
+      ],
+      "all_pages_pixel_identical": true
+    },
+    {
+      "case_id": "cf-phase1",
+      "engine": "main",
+      "before_sha256": "6e415dd9987f6ceb017e66497a59e41154ec483ac364cb18dfd5e9979b1d78a3",
+      "after_sha256": "6e415dd9987f6ceb017e66497a59e41154ec483ac364cb18dfd5e9979b1d78a3",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        }
+      ],
+      "all_pages_pixel_identical": true
+    },
+    {
+      "case_id": "cf-phase2",
+      "engine": "main",
+      "before_sha256": "a697c49006e354d82e038d765d148a165af412c9158799f2e890b99e3c97514e",
+      "after_sha256": "a697c49006e354d82e038d765d148a165af412c9158799f2e890b99e3c97514e",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        }
+      ],
+      "all_pages_pixel_identical": true
+    },
+    {
+      "case_id": "cf-mapped-scale",
+      "engine": "main",
+      "before_sha256": "8954b589945fdbe7002f18ecd033df7d84bacf37a48c6034c15821f01684048a",
+      "after_sha256": "8954b589945fdbe7002f18ecd033df7d84bacf37a48c6034c15821f01684048a",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        }
+      ],
+      "all_pages_pixel_identical": true
+    },
+    {
+      "case_id": "cf-phase3-icons",
+      "engine": "main",
+      "before_sha256": "e86755383302bd807b67ece618a4e36fa7dfd472fcd5ccc8f1c0aca4db8bfb19",
+      "after_sha256": "e86755383302bd807b67ece618a4e36fa7dfd472fcd5ccc8f1c0aca4db8bfb19",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        }
+      ],
+      "all_pages_pixel_identical": true
+    },
+    {
+      "case_id": "cf-phase3-layout-mapping",
+      "engine": "main",
+      "before_sha256": "b989dbedada2ab412203779549e889059248306444800fc86bfebfb950d1d377",
+      "after_sha256": "b989dbedada2ab412203779549e889059248306444800fc86bfebfb950d1d377",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        }
+      ],
+      "all_pages_pixel_identical": true
+    },
+    {
+      "case_id": "cf-phase3-legacy-bars",
+      "engine": "main",
+      "before_sha256": "7cfc0c6d6c8a70d98f6890d9711dd832c2c51be1c271016eb9255f962452965c",
+      "after_sha256": "7cfc0c6d6c8a70d98f6890d9711dd832c2c51be1c271016eb9255f962452965c",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        }
+      ],
+      "all_pages_pixel_identical": true
+    },
+    {
+      "case_id": "cf-phase3-x14-bars",
+      "engine": "main",
+      "before_sha256": "6985e6091243a139f368abee4f166a687a7a58a1bb2e26d8579b78f8dba7db8a",
+      "after_sha256": "6985e6091243a139f368abee4f166a687a7a58a1bb2e26d8579b78f8dba7db8a",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        }
+      ],
+      "all_pages_pixel_identical": true
+    },
+    {
+      "case_id": "shapes",
+      "engine": "main",
+      "before_sha256": "f51bd7231b0b7e6b713cf99da5e6d245d32ca08a2302ca339057b6952a81f225",
+      "after_sha256": "f51bd7231b0b7e6b713cf99da5e6d245d32ca08a2302ca339057b6952a81f225",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        }
+      ],
+      "all_pages_pixel_identical": true
+    },
+    {
+      "case_id": "actual-shape-text",
+      "engine": "main",
+      "before_sha256": "edc7877f42a60e794779e688d19cd9cde8f3fd2004b40e207d24f2c895ee6415",
+      "after_sha256": "edc7877f42a60e794779e688d19cd9cde8f3fd2004b40e207d24f2c895ee6415",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        }
+      ],
+      "all_pages_pixel_identical": true
+    },
+    {
+      "case_id": "japanese-grid-report",
+      "engine": "main",
+      "before_sha256": "9c097f21e16386447851017e598eccf06af6d51f31db6187496e7e0318eca277",
+      "after_sha256": "9c097f21e16386447851017e598eccf06af6d51f31db6187496e7e0318eca277",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        }
+      ],
+      "all_pages_pixel_identical": true
+    },
+    {
+      "case_id": "01-japanese",
+      "engine": "core",
+      "before_sha256": "38127f87ae6510e752b0db2acda0d952906860c7d73c455e4f93bd05e8d6e4bd",
+      "after_sha256": "317ae1b31d87d1462db3ec3c4ac409324a82f48afb3e54477206d4ca0cbe50fc",
+      "before_pages": 2,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {
+          "日": 1,
+          "本": 1,
+          "語": 1,
+          "ペ": 1,
+          "ー": 1,
+          "ジ": 1,
+          "/": 1,
+          "2": 3
+        },
+        "right_only_characters": {
+          "1": 1
+        },
+        "same_non_whitespace_character_inventory": false,
+        "same_extracted_text": false
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "changed_pixel_ratio_144dpi": 0.010776089874374515
+        },
+        {
+          "page": 2,
+          "before_present": true,
+          "after_present": false,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "after_size_pt": null,
+          "changed_pixel_ratio_144dpi": 0.0031401385290709617
+        }
+      ],
+      "all_pages_pixel_identical": false
+    },
+    {
+      "case_id": "02-image",
+      "engine": "core",
+      "before_sha256": "58cd3ddcee329874d167515b0536b2f5d45f58e956bffe478a45cd361d207a08",
+      "after_sha256": "820f8d1c83ef7d1104329e736fb80077d646e7a52bb3bffef266063d1c99634f",
+      "before_pages": 2,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {
+          "画": 1,
+          "像": 1,
+          "ペ": 1,
+          "ー": 1,
+          "ジ": 1,
+          "/": 1,
+          "2": 3
+        },
+        "right_only_characters": {
+          "1": 1
+        },
+        "same_non_whitespace_character_inventory": false,
+        "same_extracted_text": false
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "changed_pixel_ratio_144dpi": 0.03829991763244125
+        },
+        {
+          "page": 2,
+          "before_present": true,
+          "after_present": false,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "after_size_pt": null,
+          "changed_pixel_ratio_144dpi": 0.038452487081456134
+        }
+      ],
+      "all_pages_pixel_identical": false
+    },
+    {
+      "case_id": "03-wrapped-text",
+      "engine": "core",
+      "before_sha256": "b35c9be5e812f66d22d020cf07e0e98b8232d6232818d3ab0013dc6a14b85011",
+      "after_sha256": "7b1d6fbac7d933f845fd5838d2f855370499d7317620b21087c7524dbf430832",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": false
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "changed_pixel_ratio_144dpi": 0.01318130236472674
+        }
+      ],
+      "all_pages_pixel_identical": false
+    },
+    {
+      "case_id": "04-text-decoration",
+      "engine": "core",
+      "before_sha256": "bc0a887847f7d6bd802471f46d8b36469fb69e88bdc9f3de05f2f0759ccc956a",
+      "after_sha256": "0f7e3576c26348c9d9e36f4569d8fae174629561803e1c5c9bc23dfeaecad62f",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "changed_pixel_ratio_144dpi": 0.005201321869683752
+        }
+      ],
+      "all_pages_pixel_identical": false
+    },
+    {
+      "case_id": "05-borders",
+      "engine": "core",
+      "before_sha256": "199db2f05349f85c45f668f950efee456995d79aaeac50a7987a9b48d1d5568a",
+      "after_sha256": "47f5637e281586b314318755453dc438c3ba42eaef420a23b3555eef83d71b0c",
+      "before_pages": 2,
+      "after_pages": 2,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "changed_pixel_ratio_144dpi": 0.011378888775874483
+        },
+        {
+          "page": 2,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "changed_pixel_ratio_144dpi": 0.0163727959697733
+        }
+      ],
+      "all_pages_pixel_identical": false
+    },
+    {
+      "case_id": "06-layout-and-pagination",
+      "engine": "core",
+      "before_sha256": "15a45929bb5ed231bfc543f5be76831a5d6a35fc4e2d34232b5264e0a0dc1205",
+      "after_sha256": "af90d36de1596b1cea0301a2b8f6bf1c64498a61a681a8fd53c037cc42d247a5",
+      "before_pages": 4,
+      "after_pages": 4,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            595.280029296875,
+            419.5299987792969
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            595.280029296875,
+            419.5299987792969
+          ],
+          "changed_pixel_ratio_144dpi": 0.03026568309943625
+        },
+        {
+          "page": 2,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            595.280029296875,
+            419.5299987792969
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            595.280029296875,
+            419.5299987792969
+          ],
+          "changed_pixel_ratio_144dpi": 0.007020910799248331
+        },
+        {
+          "page": 3,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            595.280029296875,
+            419.5299987792969
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            595.280029296875,
+            419.5299987792969
+          ],
+          "changed_pixel_ratio_144dpi": 0.011566910559353884
+        },
+        {
+          "page": 4,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            595.280029296875,
+            419.5299987792969
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            595.280029296875,
+            419.5299987792969
+          ],
+          "changed_pixel_ratio_144dpi": 0.0069919235536364
+        }
+      ],
+      "all_pages_pixel_identical": false
+    },
+    {
+      "case_id": "07-multiple-sheets",
+      "engine": "core",
+      "before_sha256": "63f63b4d0b2ae4a57361d489384f7633ef5396fec6b68009752c5478f476762f",
+      "after_sha256": "63f63b4d0b2ae4a57361d489384f7633ef5396fec6b68009752c5478f476762f",
+      "before_pages": 2,
+      "after_pages": 2,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        },
+        {
+          "page": 2,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        }
+      ],
+      "all_pages_pixel_identical": true
+    },
+    {
+      "case_id": "08-print-scaling",
+      "engine": "core",
+      "before_sha256": "de6fe887978d1d6e36993df5610ac627c1708987af463968d4134e91e6861450",
+      "after_sha256": "b771b1da9655a6483cb5e1a28647a8555231643d691f88efcf1e15f2ac97714c",
+      "before_pages": 2,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {
+          "7": 1,
+          "5": 1,
+          "%": 1,
+          "ペ": 1,
+          "ー": 1,
+          "ジ": 1,
+          "縮": 1,
+          "小": 1,
+          "2": 3,
+          "/": 2
+        },
+        "right_only_characters": {
+          "1": 1
+        },
+        "same_non_whitespace_character_inventory": false,
+        "same_extracted_text": false
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "changed_pixel_ratio_144dpi": 0.05269629106661003
+        },
+        {
+          "page": 2,
+          "before_present": true,
+          "after_present": false,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "after_size_pt": null,
+          "changed_pixel_ratio_144dpi": 0.0384574730111625
+        }
+      ],
+      "all_pages_pixel_identical": false
+    },
+    {
+      "case_id": "09-cell-border",
+      "engine": "core",
+      "before_sha256": "05a26ac9158308fb20e9679f75c823624fe0269baba1a1527167c61afddf99e2",
+      "after_sha256": "0ad8bfba04d1baf6018eb5f4ba0943a8f5fc7f07b0f8a750dc77fdf4eb43b7c4",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "changed_pixel_ratio_144dpi": 0.026864189257914166
+        }
+      ],
+      "all_pages_pixel_identical": false
+    },
+    {
+      "case_id": "cell-argb",
+      "engine": "core",
+      "before_sha256": "e2f56de310407d462b95691026157ed73a74c3cce95d9a9925cf31816127442e",
+      "after_sha256": "609131061f8edf28b7b7149c7dcc2c3b013fcc8fed6617fce1ed764a958945c0",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.03624686406549152
+        }
+      ],
+      "all_pages_pixel_identical": false
+    },
+    {
+      "case_id": "border-conflicts",
+      "engine": "core",
+      "before_sha256": "d2e80fa7d6c9a64cd8ef1595daefb59c2a7e114e80fb0343bf503b907e0c2ece",
+      "after_sha256": "d2e80fa7d6c9a64cd8ef1595daefb59c2a7e114e80fb0343bf503b907e0c2ece",
+      "before_pages": 5,
+      "after_pages": 5,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        },
+        {
+          "page": 2,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        },
+        {
+          "page": 3,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        },
+        {
+          "page": 4,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        },
+        {
+          "page": 5,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        }
+      ],
+      "all_pages_pixel_identical": true
+    },
+    {
+      "case_id": "richtext",
+      "engine": "core",
+      "before_sha256": "7fb3248e28ab3930027646c9ddc534425f8549c3de6046ece5f12cc8afdaae16",
+      "after_sha256": "a2700aacca090fa975c0c43226050e21d721bf01b7b82aa69c618ad9c28916ff",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        }
+      ],
+      "all_pages_pixel_identical": true
+    },
+    {
+      "case_id": "cf-phase1",
+      "engine": "core",
+      "before_sha256": "a8a7667f28675425a62c02bea4eed62a14fbe8d51ff139c07c6de998275041e2",
+      "after_sha256": "a8a7667f28675425a62c02bea4eed62a14fbe8d51ff139c07c6de998275041e2",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        }
+      ],
+      "all_pages_pixel_identical": true
+    },
+    {
+      "case_id": "cf-phase2",
+      "engine": "core",
+      "before_sha256": "eda8ad4916240a143e511595ccbbea224d04ad01f76e0b8bf899d45a999fa531",
+      "after_sha256": "f778f489bd8e12b2f28fdb93f1301e35e8844db97a2515036ab51f8a95facdbe",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.004433117944147356
+        }
+      ],
+      "all_pages_pixel_identical": false
+    },
+    {
+      "case_id": "cf-mapped-scale",
+      "engine": "core",
+      "before_sha256": "f62a27295eeb565b67b036ed336ff46c90b06fe4ee5b04383dd6834c9c2db94b",
+      "after_sha256": "72c1574f67f5ababfb81558f37e92f60068fff92f873313da8fc34f168179345",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0007251848550868158
+        }
+      ],
+      "all_pages_pixel_identical": false
+    },
+    {
+      "case_id": "cf-phase3-icons",
+      "engine": "core",
+      "before_sha256": "f42a22211fb9a9b026793950b5468224492ae09f3851018d6f585e19289121eb",
+      "after_sha256": "f42a22211fb9a9b026793950b5468224492ae09f3851018d6f585e19289121eb",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        }
+      ],
+      "all_pages_pixel_identical": true
+    },
+    {
+      "case_id": "cf-phase3-layout-mapping",
+      "engine": "core",
+      "before_sha256": "f94df2917fd49e59754ed210553dc3b515150385ce2cebd6314b379b2fcada91",
+      "after_sha256": "f94df2917fd49e59754ed210553dc3b515150385ce2cebd6314b379b2fcada91",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        }
+      ],
+      "all_pages_pixel_identical": true
+    },
+    {
+      "case_id": "cf-phase3-legacy-bars",
+      "engine": "core",
+      "before_sha256": "f826ec8af1cb8226e63537d1308cec90a92c60bca8da16658c286e7440d7cb96",
+      "after_sha256": "f826ec8af1cb8226e63537d1308cec90a92c60bca8da16658c286e7440d7cb96",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        }
+      ],
+      "all_pages_pixel_identical": true
+    },
+    {
+      "case_id": "cf-phase3-x14-bars",
+      "engine": "core",
+      "before_sha256": "f07faebef470a2f4ddfb2ec511abb6a3e01bab8aedda0a85b2e7ad3071b7d107",
+      "after_sha256": "f07faebef470a2f4ddfb2ec511abb6a3e01bab8aedda0a85b2e7ad3071b7d107",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        }
+      ],
+      "all_pages_pixel_identical": true
+    },
+    {
+      "case_id": "shapes",
+      "engine": "core",
+      "before_sha256": "f51bd7231b0b7e6b713cf99da5e6d245d32ca08a2302ca339057b6952a81f225",
+      "after_sha256": "f51bd7231b0b7e6b713cf99da5e6d245d32ca08a2302ca339057b6952a81f225",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        }
+      ],
+      "all_pages_pixel_identical": true
+    },
+    {
+      "case_id": "actual-shape-text",
+      "engine": "core",
+      "before_sha256": "f51bd7231b0b7e6b713cf99da5e6d245d32ca08a2302ca339057b6952a81f225",
+      "after_sha256": "f51bd7231b0b7e6b713cf99da5e6d245d32ca08a2302ca339057b6952a81f225",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "changed_pixel_ratio_144dpi": 0.0
+        }
+      ],
+      "all_pages_pixel_identical": true
+    },
+    {
+      "case_id": "japanese-grid-report",
+      "engine": "core",
+      "before_sha256": "f20259adc16fff7a8774171c8864c437bc8fa6f2459d9b64487049625c5b2986",
+      "after_sha256": "9cec1890e2612bbfc1c026e01c040da56229413a61b799457ec8233bdddb3076",
+      "before_pages": 1,
+      "after_pages": 1,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "before_present": true,
+          "after_present": true,
+          "before_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "after_size_pt": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "changed_pixel_ratio_144dpi": 0.2818381527329875
+        }
+      ],
+      "all_pages_pixel_identical": false
+    }
+  ]
+}

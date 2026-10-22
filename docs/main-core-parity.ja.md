@@ -68,10 +68,10 @@ python3 scripts/check-main-core-parity.py
 両PDF・入力・比較JSON・差分画像をCIの `SampleOutputs/MainCoreParity` に保存します。
 [実行記録](validation/main-core-parity/README.md)も参照してください。
 
-ファイル変換の実コードは[本体](../samples/ExcelRenderer.Http.Sample/PdfFileExample.cs)と
+ファイル変換の実コードは[本体](../samples/ExcelRenderer.Sample/PdfFileExample.cs)と
 [Core](../samples/ExcelRenderer.Core.Sample/Program.cs)。いずれも一意な隣接一時ファイルへ生成し、
 閉じてから置換します。失敗時は既存成果物を保持し、一時ファイルを削除。Ctrl+Cにも対応します。
-電源断耐性は保証しません。[起動コマンド](../samples/ExcelRenderer.Http.Sample/README.ja.md)を参照。
+電源断耐性は保証しません。[起動コマンド](../samples/ExcelRenderer.Sample/README.ja.md)を参照。
 リポジトリ内はProjectReference、公開パッケージ利用者はExcelRendererパッケージを参照します。
 
 期待差の既存独立テストも再利用します: [Core PdfTests](../tests/ExcelRenderer.Core.Tests/PdfTests.cs)（通常体化）、[PageAndImageTests](../tests/ExcelRenderer.Core.Tests/PageAndImageTests.cs)（画像開始点ページ・加工無視・図形省略）、[SavedFormulaTests](../tests/ExcelRenderer.Core.Tests/SavedFormulaTests.cs)（保存値のみ）、[本体再計算](../tests/ExcelRenderer.Tests/FormulaRecalculationTests.cs)。

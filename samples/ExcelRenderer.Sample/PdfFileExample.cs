@@ -1,6 +1,6 @@
 using ExcelRenderer.Rendering;
 
-namespace ExcelRenderer.Http.Sample;
+namespace ExcelRenderer.Sample;
 
 /// <summary>Publishes a completed main-library PDF only after closing the temporary output.</summary>
 public static class PdfFileExample

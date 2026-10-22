@@ -91,3 +91,17 @@ remain historical evidence for commit 857f745; current follow-up results are in
 
 Follow-up verification: Release rebuild has zero warnings/errors. All 2,919 solution tests pass,
 including the 29 cases retained in the Windows comparison filter. No HTTP sample code changed.
+
+## Follow-up: remove the HTTP sample
+
+The HTTP project, endpoints, documentation and remaining Kestrel cases are removed at the
+user's request. Main's file conversion example moves to the nonpackable ExcelRenderer.Sample
+console project; Core.Sample remains independent. Solution/test references and lockfiles are
+updated, including removal of the ASP.NET framework reference. Earlier HTTP results in this
+directory are historical records, not current sample instructions. Current file commands are
+in [the console README](../../../samples/ExcelRenderer.Sample/README.md). Follow-up validation
+is recorded in [http-sample-removal.json](http-sample-removal.json).
+
+Removal verification: zero build warnings/errors; all 2,917 solution tests pass. Both console
+commands produce readable PDFs. Four-package pack/inventory, independent Reader/Core consumers
+and dependency audits pass. No ASP.NET framework is required by the console sample or tests.

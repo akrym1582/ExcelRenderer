@@ -1,0 +1,102 @@
+{
+  "parent_commit": "3d431ba44e97cac7b5e036bea3783edaf9a6e26b",
+  "scope": "Remove the HTTP project, Kestrel tests and ASP.NET reference; keep file conversion in a nonpackable console project",
+  "http_project_removed": true,
+  "main_sample": "samples/ExcelRenderer.Sample",
+  "rebuild": {
+    "warnings": 0,
+    "errors": 0,
+    "configuration": "Release"
+  },
+  "solution": [
+    {
+      "project": "ExcelRenderer.Core.Tests.dll",
+      "failed": 0,
+      "passed": 413,
+      "skipped": 0,
+      "total": 413
+    },
+    {
+      "project": "ExcelRenderer.Formulas.Tests.dll",
+      "failed": 0,
+      "passed": 833,
+      "skipped": 0,
+      "total": 833
+    },
+    {
+      "project": "ExcelRenderer.Mapping.Tests.dll",
+      "failed": 0,
+      "passed": 172,
+      "skipped": 0,
+      "total": 172
+    },
+    {
+      "project": "ExcelRenderer.OpenXml.Tests.dll",
+      "failed": 0,
+      "passed": 213,
+      "skipped": 0,
+      "total": 213
+    },
+    {
+      "project": "ExcelRenderer.Tests.dll",
+      "failed": 0,
+      "passed": 1151,
+      "skipped": 0,
+      "total": 1151
+    },
+    {
+      "project": "ExcelRenderer.Tool.Tests.dll",
+      "failed": 0,
+      "passed": 135,
+      "skipped": 0,
+      "total": 135
+    }
+  ],
+  "total_passed": 2917,
+  "samples": [
+    {
+      "command": [
+        "dotnet",
+        "run",
+        "--project",
+        "samples/ExcelRenderer.Sample",
+        "-c",
+        "Release",
+        "--no-build",
+        "--",
+        "/workspace/ExcelRenderer/tests/ExcelRenderer.Tests/SampleInputs/01-japanese.xlsx",
+        "/workspace/ExcelRenderer/artifacts/main-core-parity/http-removal-files/main.pdf",
+        "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+      ],
+      "exit_code": 0,
+      "pages": 1
+    },
+    {
+      "command": [
+        "dotnet",
+        "run",
+        "--project",
+        "samples/ExcelRenderer.Core.Sample",
+        "-c",
+        "Release",
+        "--no-build",
+        "--",
+        "/workspace/ExcelRenderer/tests/ExcelRenderer.Tests/SampleInputs/01-japanese.xlsx",
+        "/workspace/ExcelRenderer/artifacts/main-core-parity/http-removal-files/core.pdf",
+        "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+      ],
+      "exit_code": 0,
+      "pages": 1
+    }
+  ],
+  "aspnet_framework_required": false,
+  "pack": [
+    "Verified 24 projects: only ExcelRenderer, ExcelRenderer.Fonts, ExcelRenderer.Mapping, ExcelRenderer.Tool are packable",
+    "Exactly four packages; no unpublished dependencies; shared DLL/XML hashes match"
+  ],
+  "isolation": [
+    "reader: restore/build/publish, graph, initial output, AssemblyRef and separate-process execution passed",
+    "core: restore/build/publish, graph, initial output, AssemblyRef and separate-process execution passed"
+  ],
+  "dependency_audit": "No removed PDF dependency: 1534 source/config files, 24 restored projects, 790 managed AssemblyRef inventories, 4 packages"
+}

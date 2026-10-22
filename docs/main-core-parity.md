@@ -76,11 +76,11 @@ requiring cross-platform pixel identity. Linux additionally runs the existing ra
 Both PDFs, inputs, per-case JSON and difference images are retained in CI `SampleOutputs/MainCoreParity`.
 See [execution evidence](validation/main-core-parity/README.md).
 
-File examples are executable: [main](../samples/ExcelRenderer.Http.Sample/PdfFileExample.cs),
+File examples are executable: [main](../samples/ExcelRenderer.Sample/PdfFileExample.cs),
 [Core](../samples/ExcelRenderer.Core.Sample/Program.cs). Both close a unique adjacent temporary
 file before replacing the destination, remove it on failure, and support Ctrl+C. This preserves
 the previous output if conversion fails; filesystem/power-loss durability is not promised.
-See [sample commands](../samples/ExcelRenderer.Http.Sample/README.md). Repository samples use
+See [sample commands](../samples/ExcelRenderer.Sample/README.md). Repository samples use
 ProjectReference; installed consumers reference the published `ExcelRenderer` package.
 
 Existing independent difference contracts are reused: [Core PdfTests](../tests/ExcelRenderer.Core.Tests/PdfTests.cs) (regular face normalization), [PageAndImageTests](../tests/ExcelRenderer.Core.Tests/PageAndImageTests.cs) (start-page-only pictures, ignored transforms and omitted shapes), [SavedFormulaTests](../tests/ExcelRenderer.Core.Tests/SavedFormulaTests.cs) (saved values only), and [main recalculation](../tests/ExcelRenderer.Tests/FormulaRecalculationTests.cs).

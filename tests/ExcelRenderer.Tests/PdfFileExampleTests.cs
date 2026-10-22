@@ -1,4 +1,4 @@
-using ExcelRenderer.Http.Sample;
+using ExcelRenderer.Sample;
 using UglyToad.PdfPig;
 using Xunit;
 

@@ -1,6 +1,6 @@
 # 診断と確実なPDF出力
 
-[English](diagnostics.md) · [本体/Core比較](main-core-parity.ja.md) · [HTTPサンプル](../samples/ExcelRenderer.Http.Sample/README.ja.md)
+[English](diagnostics.md) · [本体/Core比較](main-core-parity.ja.md) · [ファイルサンプル](../samples/ExcelRenderer.Sample/README.ja.md)
 
 変換成功とExcelの完全再現は別です。診断がなくても、対象外機能の再現保証にはなりません。
 分岐には `Code` を使い、翻訳・変更される `Message` の文字列一致に依存しないでください。
@@ -63,37 +63,23 @@ Unicode列）は発生回数を合算。上限到達後も保持済み識別子�
 部分書式、回転、条件付き書式の意図した省略も全件通知しません。必要な文字の収録と機能範囲は
 別途確認してください。Core内部の上限は一意100件と集約通知で、網羅的監査APIではありません。
 
-コンパイル対象の[HTTPハンドラー](../samples/ExcelRenderer.Http.Sample/PdfHttpEndpoints.cs)は
-検証後出力で `FormulaCachedValueMissing` と `ImageDecodeFailed` を拒否します。本体は発生回数、
-Coreは保持された診断エントリ数をコード別に合算するため、件数の粒度は異なります。
-欠落キャッシュの診断は[MainCoreParityTests](../tests/ExcelRenderer.Tests/MainCoreParityTests.cs)、
-画像decode失敗は[ImageReviewTests](../tests/ExcelRenderer.Tests/ImageReviewTests.cs)で確認します。
-その他はログとPDFが両立します。この2コードは業務ポリシーの例で、
-任意ブックの完全性検証ではありません。より厳格ならDiagnosticsTruncatedと対象機能も考慮します。
+拒否する診断コードは業務側で明示し、Codeで分岐してください。本体はDiagnosticOptionsで
+失敗にでき、Coreは結果のDiagnosticsを呼出側で判定します。公開前に診断を確認するなら、
+最終PDFを一時ファイルへ変換し、結果を確認してから公開または削除します。追加ディスクI/Oと
+配信までの待ち時間が発生し、ライブラリ内部の中間スプールとは別物です。
+ファイルサンプルは変換完了後に公開して診断を表示します。業務固有の拒否ポリシーは実装しません。
 
-| 出力方法 | 用途 | 拒否とコスト |
+| 出力方法 | 用途 | 診断の扱い |
 | --- | --- | --- |
-| /pdf、/core-pdf | 警告付きPDFを返せる | 変換後にログ。診断取得時には送信済みの場合あり |
-| /pdf-validated、/core-pdf-validated | 特定診断で返却を止める | 一意な最終PDF一時ファイルへ変換、判定後コピー。追加ディスクI/Oと初回応答の待ち時間 |
-| ファイル変換 | 失敗時に旧成果物を保持 | 隣接一時ファイルへ生成、close、キャンセル確認、成功後置換 |
+| 呼出側Streamへ直接出力 | 警告付き出力を許容 | 診断は変換後に取得。送信済みbytesは撤回不可 |
+| 診断確認後に公開 | 特定コードで公開を止める | 最終PDF一時ファイルの結果を確認し、公開または削除 |
+| ファイル変換サンプル | 失敗時に旧成果物を保持 | 一時ファイルを閉じてから目的ファイルを置換 |
 
-拒否はコード/件数だけの422 ProblemDetails。許可時はCopyToAsync完了後にファイルを閉じて削除。
-成功・変換失敗・拒否・コピー失敗・キャンセルの全経路で後始末し、Response.Bodyは閉じません。
-アプリが判定用に作る「最終PDF一時ファイル」はライブラリ内部の「中間スプール」と別です。
-サンプルでは全PDFをToArray/MemoryStreamへ複製しません。
-
-このサンプルの入力・フォントはサーバー所有パスなので、不正/不存在XLSX、設定フォントの不正/不存在、
-I/O・変換失敗は送信開始前なら500と一般的なタイトルで返します。将来アップロードを受ける場合は、
-利用者入力の不正/上限超過と独立に特定できたものを400/413に分類できますが、
-Coreの不正フォントもInvalidDataExceptionなので、それを一括400へ変換してはいけません。
-アップロード処理は対象外です。業務診断拒否は422、キャンセルはInformationログで別扱いし伝播、
-切断の扱いはホストへ任せます。
-
-Response.HasStarted後は例外をホストへ伝播し、JSONを付加しません。最初に200でも途中PDFに
-なる場合があります。利用者側は通信完了とPDFの妥当性を確認し、再試行は一時的切断など業務方針に
-応じて行います。保存値欠落、不正フォント、確定した拒否を同じ条件で繰り返しても直りません。
-直接出力は送信後に診断を見ても撤回できません。CPUの読取・配置・native描画は同期のまま、
-最終送信を非同期にしても即時中断可能にはなりません。Task.Runで非同期化した例ではありません。
+独自アプリでHTTP連携する場合、Response.Bodyを閉じずキャンセルを伝達します。
+応答開始後は途中PDFへJSONを付加せず、ホストの例外処理へ委ねます。利用者入力とサーバー側の
+フォント設定不備を区別してください。Coreの不正フォントもInvalidDataExceptionになるため、
+この例外を一括して利用者入力エラーへ変換してはいけません。キャンセルも変換失敗と別扱いです。
+CPUの読取・配置・native描画は同期のままで、最終送信の非同期化は即時中断の保証ではありません。
 
 両APIの入力既定値は最大128MiB、メモリ閾値16MiB、入力一時ファイル無効、ZIP 10,000エントリ、
 宣言された展開後合計512MiB。業務に合わせて設定してください。プロセスメモリ全体の上限ではありません。
@@ -102,5 +88,5 @@ Response.HasStarted後は例外をホストへ伝播し、JSONを付加しませ
 
 ライブラリは呼出側Streamを閉じません。本体SingleStreamOutputSinkは完了時flush、Coreは出力を
 flushしません。RequestAborted/CancellationTokenを変換とコピーへ伝達します。
-[本体ファイル例](../samples/ExcelRenderer.Http.Sample/PdfFileExample.cs)と
+[本体ファイル例](../samples/ExcelRenderer.Sample/PdfFileExample.cs)と
 [Coreファイル例](../samples/ExcelRenderer.Core.Sample/Program.cs)で所有権、ページ数、診断、キャンセルを確認できます。

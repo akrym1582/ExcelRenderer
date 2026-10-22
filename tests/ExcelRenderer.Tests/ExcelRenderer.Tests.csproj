@@ -7,8 +7,7 @@
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
   <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <ProjectReference Include="../../samples/ExcelRenderer.Http.Sample/ExcelRenderer.Http.Sample.csproj" />
+    <ProjectReference Include="../../samples/ExcelRenderer.Sample/ExcelRenderer.Sample.csproj" />
     <Compile Include="../ExcelRenderer.Core.Tests/AsyncOnlyWriteStream.cs" Link="Fixtures/AsyncOnlyWriteStream.cs" />
   </ItemGroup>
   <ItemGroup>

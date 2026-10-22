@@ -306,8 +306,8 @@ SkiaPdfDocument completion, cancellation wrapper
 and awaited phase metrics. Main's IPdfDocumentWriter/SkiaPdfDocumentWriter delegate completion
 to Core; ExcelConverter awaits artifact writes, counts successful bytes, flushes once and
 notifies sink completion or noncancelable abort cleanup. Core's public converter accepts
-nonseekable outputs and leaves flushing to the caller. ASP.NET dependencies exist only in
-the HTTP sample and integration tests. See [HTTP sample](../samples/ExcelRenderer.Http.Sample).
+nonseekable outputs and leaves flushing to the caller. Async-only stream regression tests
+verify output behavior without ASP.NET dependencies. See the [file sample](../samples/ExcelRenderer.Sample).
 
 ## Core source column metrics
 

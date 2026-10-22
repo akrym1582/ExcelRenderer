@@ -1,6 +1,6 @@
 # Diagnostics and reliable PDF delivery
 
-[日本語](diagnostics.ja.md) · [Main/Core comparison](main-core-parity.md) · [HTTP sample](../samples/ExcelRenderer.Http.Sample/README.md)
+[日本語](diagnostics.ja.md) · [Main/Core comparison](main-core-parity.md) · [File sample](../samples/ExcelRenderer.Sample/README.md)
 
 A successful conversion means the requested operation completed. It does not establish exact
 Excel appearance. Absence of diagnostics does not guarantee support for omitted features.
@@ -67,40 +67,25 @@ Core does not diagnose every intentionally omitted shape, link, rich run, rotati
 format. Verify required glyph coverage and supported scope separately. Its diagnostic list is
 internally bounded at 100 unique identities plus summary; it is not an exhaustive audit API.
 
-The compiled [HTTP handler](../samples/ExcelRenderer.Http.Sample/PdfHttpEndpoints.cs) explicitly
-rejects `FormulaCachedValueMissing` and `ImageDecodeFailed` in validated mode after obtaining the
-result. It groups main occurrence counts and Core retained entries by code; these counts have
-different granularity. The missing-cache diagnostic is covered by
-[MainCoreParityTests](../tests/ExcelRenderer.Tests/MainCoreParityTests.cs), and image decode
-failures by [ImageReviewTests](../tests/ExcelRenderer.Tests/ImageReviewTests.cs). Other codes
-are logged and allowed. An application with stricter completeness requirements should also
-consider `DiagnosticsTruncated` and its supported-feature contract; these two codes are an
-example business policy, not a complete validation of arbitrary spreadsheets.
+Choose application rejection codes explicitly and branch on Code. Main can fail through
+DiagnosticOptions; Core callers inspect result.Diagnostics themselves. To inspect diagnostics
+before publishing, convert to a temporary final PDF first, check the result, then publish or
+remove that file. This adds disk I/O and delays delivery; the application file is separate from
+the library's intermediate spool. The file samples publish completed conversions and report
+diagnostics; they do not impose a business-specific rejection policy.
 
-| Delivery | Use when | Diagnostic rejection and cost |
+| Delivery | Use when | Diagnostic handling |
 | --- | --- | --- |
-| /pdf, /core-pdf | Result can be delivered with warnings | Log after conversion; final output may already have been sent |
-| /pdf-validated, /core-pdf-validated | Refuse specific diagnostics before delivery | Convert to unique final-PDF file, inspect result, then copy; extra disk I/O and later first response byte |
-| File conversion | Keep previous file on failure | Generate adjacent temporary, close, check cancellation, replace after success |
+| Direct caller-owned stream | Warnings may accompany output | Diagnostics arrive after conversion; sent bytes cannot be withdrawn |
+| Inspect before publishing | Specific codes must prevent delivery | Inspect a temporary final PDF's result, then publish or delete |
+| File conversion sample | Preserve the previous output on failure | Close the temporary file before replacing the destination |
 
-Validated rejection is 422 ProblemDetails containing only codes/counts. Output is copied with
-`CopyToAsync` before disposing/deleting the file; all failure/cancel paths clean up, and
-Response.Body remains caller-owned. The application temporary **final PDF** is separate from
-the library's intermediate spool. No full PDF `ToArray`/MemoryStream copy is used by the samples.
-
-This sample reads server-owned paths, so malformed/missing XLSX, missing/invalid configured
-fonts, I/O and conversion failures before response start are 500, with a generic title.
-A future upload endpoint could map independently identified bad client input/limits to 400/413;
-it must not map every InvalidDataException to 400 because Core's invalid font is also invalid
-data. Upload handling is not part of this sample. Diagnostic policy rejection remains 422.
-Cancellation propagates separately and is logged at Information; the host owns disconnect behavior.
-
-After `Response.HasStarted`, exceptions propagate to the host: no JSON is appended. Clients can
-receive a partial PDF even with an initial 200. Check transport completion and PDF validity;
-retry only under application policy (for example a transient disconnect), not repeatedly for
-missing caches, invalid fonts or deterministic rejections. A direct response cannot be withdrawn
-after diagnostics arrive. CPU reading/layout/native drawing remain synchronous; asynchronous
-final writes do not make them interruptible immediately and do not use Task.Run.
+For HTTP integration in your own application, leave Response.Body open and forward cancellation.
+After response start, let the host handle exceptions without appending JSON to a partial PDF.
+Classify client input separately from server-owned fonts/settings: Core invalid fonts can also
+throw InvalidDataException, so that exception must not be mapped wholesale to a client error.
+Cancellation is distinct from conversion failure. CPU reading/layout/native drawing remain
+synchronous; asynchronous final writes do not make them interruptible immediately.
 
 Input defaults in both APIs: 128MiB maximum input, 16MiB memory threshold, temporary input
 files disabled, 10,000 ZIP entries, 512MiB total declared expanded ZIP bytes. Configure limits
@@ -111,6 +96,6 @@ writable with adequate disk space and access controls; always close files before
 
 Libraries leave caller input/output streams open. Main's SingleStreamOutputSink flushes at
 completion; Core does not flush the caller output. Pass RequestAborted/CancellationToken through
-all conversion/copy calls. [Main file example](../samples/ExcelRenderer.Http.Sample/PdfFileExample.cs)
+all conversion/copy calls. [Main file example](../samples/ExcelRenderer.Sample/PdfFileExample.cs)
 and [Core file example](../samples/ExcelRenderer.Core.Sample/Program.cs) illustrate ownership,
 cleanup, page counts and cancellation with executable code.

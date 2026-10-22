@@ -97,3 +97,20 @@ Calcの重複描画はPDF内で実際に同じ線を複数回命令している�
 python3 scripts/audit-libreoffice-borders.py
 python3 docs/validation/libreoffice-comparison/core-pagination-fix/before-after.py
 ```
+
+## CIで現在の一致レベルを維持する回帰チェック
+
+CIの旧Core比較は列幅修正前の文字位置0.1pt以内を要求していたため失敗しました。
+元のPDF・AAレビュー・閾値は維持し、入力/旧PDF/修正後PDFのハッシュで限定した3件の明示的な新契約を追加しました。
+新契約は文字/位置/罫線/画像/リンク/ページ寸法と144/288/300dpi画素を修正後の固定PDFと厳密比較し、既存のfont outline検証も継続します。
+未知の入力に対する一括例外や閾値緩和ではありません。
+
+さらに通常PRのLinuxジョブで、[固定基準](../../../../tests/Shared/LibreOfficeComparisonBaseline/README.md)に対して
+全22入力×本体/Coreの44PDFを毎回新規生成し、ページ数・用紙・全文字と位置/色/サイズ・全描画パス・画像・リンク・144/288dpi全画素を比較します。
+CIからLibreOfficeの参照生成や期待値の自動更新はしません。
+文字/罫線の欠落、余分な塗り、位置ずれ、余分なページ、表示glyphを変えずに元Unicodeだけを誤らせた6変異を同じ比較処理で拒否し、罫線の独立数値監査もCIで実行します。
+失敗時の実PDF・期待/実画像・JSONはCI artifactへ保存します。
+
+ローカル実行では44件一致、6変異を検出し、旧Core 3件、既存A/B 25件、罫線変異、画像保存/描画、字体破損検出も成功しました。
+実測は [ci-regression-checks.json](ci-regression-checks.json) を参照してください。
+これは現在レビュー済みのLinux出力を維持する検査であり、Excel互換性やWindowsの画素一致の証明ではありません。

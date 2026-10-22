@@ -1,0 +1,466 @@
+{
+  "kind": "reviewed-product-regression-not-excel",
+  "approved_runtime_commit": "c18aec7",
+  "pymupdf": "1.26.6",
+  "reference_manifest_sha256": "f6fb80aca88447168e2faa8fa0abc68b3f7fb4076ed65115d22e6af420568283",
+  "fonts": [
+    {
+      "path": "third_party/NotoSansJP/NotoSansJP-Regular.ttf",
+      "sha256": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec"
+    },
+    {
+      "path": "third_party/IPAmjMincho/ipamjm.ttf",
+      "sha256": "a3e84f495f3c388db7a1473bf1985c1c076d0c814100f10a027ca6853eb1e8cb"
+    },
+    {
+      "path": "tests/ExcelRenderer.Tests/Fonts/NotoSansMono-Regular.ttf",
+      "sha256": "d9e2b23d19f8230be7146f409a52b1d23117e635e28f2e2892cf91b7382f325b"
+    }
+  ],
+  "cases": [
+    {
+      "id": "01-japanese",
+      "engines": {
+        "main": {
+          "input": "tests/ExcelRenderer.Tests/SampleInputs/01-japanese.xlsx",
+          "input_sha256": "6a89d390e07a60e919b7be2c5fa6af47721b0e9c5a4a0c325ae97174ff6386f0",
+          "pdf": "main/01-japanese.pdf",
+          "pdf_sha256": "317ae1b31d87d1462db3ec3c4ac409324a82f48afb3e54477206d4ca0cbe50fc",
+          "pages": 1
+        },
+        "core": {
+          "input": "tests/ExcelRenderer.Tests/SampleInputs/01-japanese.xlsx",
+          "input_sha256": "6a89d390e07a60e919b7be2c5fa6af47721b0e9c5a4a0c325ae97174ff6386f0",
+          "pdf": "core/01-japanese.pdf",
+          "pdf_sha256": "317ae1b31d87d1462db3ec3c4ac409324a82f48afb3e54477206d4ca0cbe50fc",
+          "pages": 1
+        }
+      }
+    },
+    {
+      "id": "02-image",
+      "engines": {
+        "main": {
+          "input": "tests/ExcelRenderer.Tests/SampleInputs/02-image.xlsx",
+          "input_sha256": "d54804111617065e59a4bbe4d5c2099b08efdea2f71d1676998bc836569de254",
+          "pdf": "main/02-image.pdf",
+          "pdf_sha256": "8132c9d3d7dcd9033151bf819bfed985fe062c685d2c48b092292adae667cb58",
+          "pages": 1
+        },
+        "core": {
+          "input": "tests/ExcelRenderer.Tests/SampleInputs/02-image.xlsx",
+          "input_sha256": "d54804111617065e59a4bbe4d5c2099b08efdea2f71d1676998bc836569de254",
+          "pdf": "core/02-image.pdf",
+          "pdf_sha256": "820f8d1c83ef7d1104329e736fb80077d646e7a52bb3bffef266063d1c99634f",
+          "pages": 1
+        }
+      }
+    },
+    {
+      "id": "03-wrapped-text",
+      "engines": {
+        "main": {
+          "input": "tests/ExcelRenderer.Tests/SampleInputs/03-wrapped-text.xlsx",
+          "input_sha256": "60421161d8ec36904befd41ecde57551ea7880a8ffda07925b38178fc747d990",
+          "pdf": "main/03-wrapped-text.pdf",
+          "pdf_sha256": "7b1d6fbac7d933f845fd5838d2f855370499d7317620b21087c7524dbf430832",
+          "pages": 1
+        },
+        "core": {
+          "input": "tests/ExcelRenderer.Tests/SampleInputs/03-wrapped-text.xlsx",
+          "input_sha256": "60421161d8ec36904befd41ecde57551ea7880a8ffda07925b38178fc747d990",
+          "pdf": "core/03-wrapped-text.pdf",
+          "pdf_sha256": "7b1d6fbac7d933f845fd5838d2f855370499d7317620b21087c7524dbf430832",
+          "pages": 1
+        }
+      }
+    },
+    {
+      "id": "04-text-decoration",
+      "engines": {
+        "main": {
+          "input": "tests/ExcelRenderer.Tests/SampleInputs/04-text-decoration.xlsx",
+          "input_sha256": "c8ee629159de588541c6d08bce70cae9c0483ddcb21c3feef536102e1457cff1",
+          "pdf": "main/04-text-decoration.pdf",
+          "pdf_sha256": "0f7e3576c26348c9d9e36f4569d8fae174629561803e1c5c9bc23dfeaecad62f",
+          "pages": 1
+        },
+        "core": {
+          "input": "tests/ExcelRenderer.Tests/SampleInputs/04-text-decoration.xlsx",
+          "input_sha256": "c8ee629159de588541c6d08bce70cae9c0483ddcb21c3feef536102e1457cff1",
+          "pdf": "core/04-text-decoration.pdf",
+          "pdf_sha256": "0f7e3576c26348c9d9e36f4569d8fae174629561803e1c5c9bc23dfeaecad62f",
+          "pages": 1
+        }
+      }
+    },
+    {
+      "id": "05-borders",
+      "engines": {
+        "main": {
+          "input": "tests/ExcelRenderer.Tests/SampleInputs/05-borders.xlsx",
+          "input_sha256": "074cfd50a3d4556380f462a69287d9b0254a71ebe412e267b395ca345a54eac2",
+          "pdf": "main/05-borders.pdf",
+          "pdf_sha256": "47f5637e281586b314318755453dc438c3ba42eaef420a23b3555eef83d71b0c",
+          "pages": 2
+        },
+        "core": {
+          "input": "tests/ExcelRenderer.Tests/SampleInputs/05-borders.xlsx",
+          "input_sha256": "074cfd50a3d4556380f462a69287d9b0254a71ebe412e267b395ca345a54eac2",
+          "pdf": "core/05-borders.pdf",
+          "pdf_sha256": "47f5637e281586b314318755453dc438c3ba42eaef420a23b3555eef83d71b0c",
+          "pages": 2
+        }
+      }
+    },
+    {
+      "id": "06-layout-and-pagination",
+      "engines": {
+        "main": {
+          "input": "tests/ExcelRenderer.Tests/SampleInputs/06-layout-and-pagination.xlsx",
+          "input_sha256": "5870f080ac266568de200bf6955a617da452b14c103a30371889e8bee13b12e6",
+          "pdf": "main/06-layout-and-pagination.pdf",
+          "pdf_sha256": "af90d36de1596b1cea0301a2b8f6bf1c64498a61a681a8fd53c037cc42d247a5",
+          "pages": 4
+        },
+        "core": {
+          "input": "tests/ExcelRenderer.Tests/SampleInputs/06-layout-and-pagination.xlsx",
+          "input_sha256": "5870f080ac266568de200bf6955a617da452b14c103a30371889e8bee13b12e6",
+          "pdf": "core/06-layout-and-pagination.pdf",
+          "pdf_sha256": "af90d36de1596b1cea0301a2b8f6bf1c64498a61a681a8fd53c037cc42d247a5",
+          "pages": 4
+        }
+      }
+    },
+    {
+      "id": "07-multiple-sheets",
+      "engines": {
+        "main": {
+          "input": "tests/ExcelRenderer.Tests/SampleInputs/07-multiple-sheets.xlsx",
+          "input_sha256": "2da1636a03384c0aa0ecb14ec3183631f3c41a90f1348693e795c329c0cae20e",
+          "pdf": "main/07-multiple-sheets.pdf",
+          "pdf_sha256": "63f63b4d0b2ae4a57361d489384f7633ef5396fec6b68009752c5478f476762f",
+          "pages": 2
+        },
+        "core": {
+          "input": "tests/ExcelRenderer.Tests/SampleInputs/07-multiple-sheets.xlsx",
+          "input_sha256": "2da1636a03384c0aa0ecb14ec3183631f3c41a90f1348693e795c329c0cae20e",
+          "pdf": "core/07-multiple-sheets.pdf",
+          "pdf_sha256": "63f63b4d0b2ae4a57361d489384f7633ef5396fec6b68009752c5478f476762f",
+          "pages": 2
+        }
+      }
+    },
+    {
+      "id": "08-print-scaling",
+      "engines": {
+        "main": {
+          "input": "tests/ExcelRenderer.Tests/SampleInputs/08-print-scaling.xlsx",
+          "input_sha256": "f9e5ffaa18c622d2820138d18c6aed07ae63b28da8fad1c71c4ffcbdd12a9fb7",
+          "pdf": "main/08-print-scaling.pdf",
+          "pdf_sha256": "b771b1da9655a6483cb5e1a28647a8555231643d691f88efcf1e15f2ac97714c",
+          "pages": 1
+        },
+        "core": {
+          "input": "tests/ExcelRenderer.Tests/SampleInputs/08-print-scaling.xlsx",
+          "input_sha256": "f9e5ffaa18c622d2820138d18c6aed07ae63b28da8fad1c71c4ffcbdd12a9fb7",
+          "pdf": "core/08-print-scaling.pdf",
+          "pdf_sha256": "b771b1da9655a6483cb5e1a28647a8555231643d691f88efcf1e15f2ac97714c",
+          "pages": 1
+        }
+      }
+    },
+    {
+      "id": "09-cell-border",
+      "engines": {
+        "main": {
+          "input": "tests/ExcelRenderer.Tests/SampleInputs/09-cell-border.xlsx",
+          "input_sha256": "5655ee7b5407c1c9af6836ec65f573819b0265c833660210d04060ca8c368d70",
+          "pdf": "main/09-cell-border.pdf",
+          "pdf_sha256": "65b525b28bfc5ca03fad7a8d4b12cbcf40bbc92c595f334283d85a0304b957b2",
+          "pages": 1
+        },
+        "core": {
+          "input": "tests/ExcelRenderer.Tests/SampleInputs/09-cell-border.xlsx",
+          "input_sha256": "5655ee7b5407c1c9af6836ec65f573819b0265c833660210d04060ca8c368d70",
+          "pdf": "core/09-cell-border.pdf",
+          "pdf_sha256": "0ad8bfba04d1baf6018eb5f4ba0943a8f5fc7f07b0f8a750dc77fdf4eb43b7c4",
+          "pages": 1
+        }
+      }
+    },
+    {
+      "id": "cell-argb",
+      "engines": {
+        "main": {
+          "input": "tests/ExcelRenderer.Tests/SampleInputs/CellArgb/10-cell-argb.xlsx",
+          "input_sha256": "3d6e77900ea64b573eb26caf04c7ff7ddc34fab4b78c08a30fe0909faf9d9733",
+          "pdf": "main/cell-argb.pdf",
+          "pdf_sha256": "609131061f8edf28b7b7149c7dcc2c3b013fcc8fed6617fce1ed764a958945c0",
+          "pages": 1
+        },
+        "core": {
+          "input": "tests/ExcelRenderer.Tests/SampleInputs/CellArgb/10-cell-argb.xlsx",
+          "input_sha256": "3d6e77900ea64b573eb26caf04c7ff7ddc34fab4b78c08a30fe0909faf9d9733",
+          "pdf": "core/cell-argb.pdf",
+          "pdf_sha256": "609131061f8edf28b7b7149c7dcc2c3b013fcc8fed6617fce1ed764a958945c0",
+          "pages": 1
+        }
+      }
+    },
+    {
+      "id": "border-conflicts",
+      "engines": {
+        "main": {
+          "input": "tests/ExcelRenderer.Tests/SampleInputs/BorderResolution/border-conflicts.xlsx",
+          "input_sha256": "a07e159caa4a83a12c38231f70cbf2ca6bdcded9404291ba5244e8f03249a12a",
+          "pdf": "main/border-conflicts.pdf",
+          "pdf_sha256": "95c7f50fad7e50ae53395d5fe04d75e69d483bb01a4bf3a42365af448a31ad24",
+          "pages": 5
+        },
+        "core": {
+          "input": "tests/ExcelRenderer.Tests/SampleInputs/BorderResolution/border-conflicts.xlsx",
+          "input_sha256": "a07e159caa4a83a12c38231f70cbf2ca6bdcded9404291ba5244e8f03249a12a",
+          "pdf": "core/border-conflicts.pdf",
+          "pdf_sha256": "d2e80fa7d6c9a64cd8ef1595daefb59c2a7e114e80fb0343bf503b907e0c2ece",
+          "pages": 5
+        }
+      }
+    },
+    {
+      "id": "richtext",
+      "engines": {
+        "main": {
+          "input": "tests/ExcelRenderer.Tests/SampleInputs/ReaderRichText/representative.xlsx",
+          "input_sha256": "5e4032e814530d62db777ad76b8eae467c4f761696a2877e22ca41e2fbc37357",
+          "pdf": "main/richtext.pdf",
+          "pdf_sha256": "86891a7f9b25dcbd4c127c3584ed17d1727461263940e6082089af7ca5b15bca",
+          "pages": 1
+        },
+        "core": {
+          "input": "tests/ExcelRenderer.Tests/SampleInputs/ReaderRichText/representative.xlsx",
+          "input_sha256": "5e4032e814530d62db777ad76b8eae467c4f761696a2877e22ca41e2fbc37357",
+          "pdf": "core/richtext.pdf",
+          "pdf_sha256": "a2700aacca090fa975c0c43226050e21d721bf01b7b82aa69c618ad9c28916ff",
+          "pages": 1
+        }
+      }
+    },
+    {
+      "id": "cf-phase1",
+      "engines": {
+        "main": {
+          "input": "docs/validation/conditional-formatting/representative.xlsx",
+          "input_sha256": "2de333cf34b705aa6a0cec71a69c61a85df446302831cc4157078e7a83c39826",
+          "pdf": "main/cf-phase1.pdf",
+          "pdf_sha256": "6e415dd9987f6ceb017e66497a59e41154ec483ac364cb18dfd5e9979b1d78a3",
+          "pages": 1
+        },
+        "core": {
+          "input": "docs/validation/conditional-formatting/representative.xlsx",
+          "input_sha256": "2de333cf34b705aa6a0cec71a69c61a85df446302831cc4157078e7a83c39826",
+          "pdf": "core/cf-phase1.pdf",
+          "pdf_sha256": "a8a7667f28675425a62c02bea4eed62a14fbe8d51ff139c07c6de998275041e2",
+          "pages": 1
+        }
+      }
+    },
+    {
+      "id": "cf-phase2",
+      "engines": {
+        "main": {
+          "input": "docs/validation/conditional-formatting-phase2/representative.xlsx",
+          "input_sha256": "a8f48ee704a1db4cefcc433a1fef03600088e9d1f8e04ed33b055cd656727a12",
+          "pdf": "main/cf-phase2.pdf",
+          "pdf_sha256": "a697c49006e354d82e038d765d148a165af412c9158799f2e890b99e3c97514e",
+          "pages": 1
+        },
+        "core": {
+          "input": "docs/validation/conditional-formatting-phase2/representative.xlsx",
+          "input_sha256": "a8f48ee704a1db4cefcc433a1fef03600088e9d1f8e04ed33b055cd656727a12",
+          "pdf": "core/cf-phase2.pdf",
+          "pdf_sha256": "f778f489bd8e12b2f28fdb93f1301e35e8844db97a2515036ab51f8a95facdbe",
+          "pages": 1
+        }
+      }
+    },
+    {
+      "id": "cf-mapped-scale",
+      "engines": {
+        "main": {
+          "input": "docs/validation/conditional-formatting-phase2/mapped-scale.xlsx",
+          "input_sha256": "d25403efc3ca5021d697075370e83e42e7215bbe89885f7aa2d0f61b4768d3b6",
+          "pdf": "main/cf-mapped-scale.pdf",
+          "pdf_sha256": "8954b589945fdbe7002f18ecd033df7d84bacf37a48c6034c15821f01684048a",
+          "pages": 1
+        },
+        "core": {
+          "input": "docs/validation/conditional-formatting-phase2/mapped-scale.xlsx",
+          "input_sha256": "d25403efc3ca5021d697075370e83e42e7215bbe89885f7aa2d0f61b4768d3b6",
+          "pdf": "core/cf-mapped-scale.pdf",
+          "pdf_sha256": "72c1574f67f5ababfb81558f37e92f60068fff92f873313da8fc34f168179345",
+          "pages": 1
+        }
+      }
+    },
+    {
+      "id": "cf-phase3-icons",
+      "engines": {
+        "main": {
+          "input": "docs/validation/conditional-formatting-phase3/fixtures/icons.xlsx",
+          "input_sha256": "800b4ff9c62bee007bf0602fbd4d140d17ca79adcb2fc0806a052fe183845aa3",
+          "pdf": "main/cf-phase3-icons.pdf",
+          "pdf_sha256": "e86755383302bd807b67ece618a4e36fa7dfd472fcd5ccc8f1c0aca4db8bfb19",
+          "pages": 1
+        },
+        "core": {
+          "input": "docs/validation/conditional-formatting-phase3/fixtures/icons.xlsx",
+          "input_sha256": "800b4ff9c62bee007bf0602fbd4d140d17ca79adcb2fc0806a052fe183845aa3",
+          "pdf": "core/cf-phase3-icons.pdf",
+          "pdf_sha256": "f42a22211fb9a9b026793950b5468224492ae09f3851018d6f585e19289121eb",
+          "pages": 1
+        }
+      }
+    },
+    {
+      "id": "cf-phase3-layout-mapping",
+      "engines": {
+        "main": {
+          "input": "docs/validation/conditional-formatting-phase3/fixtures/layout-mapping.xlsx",
+          "input_sha256": "ad6831e0cf5774f3e2a0d38e935f3dffd3f87c3d1b63fe2c2e18e4b097b1c2d5",
+          "pdf": "main/cf-phase3-layout-mapping.pdf",
+          "pdf_sha256": "b989dbedada2ab412203779549e889059248306444800fc86bfebfb950d1d377",
+          "pages": 1
+        },
+        "core": {
+          "input": "docs/validation/conditional-formatting-phase3/fixtures/layout-mapping.xlsx",
+          "input_sha256": "ad6831e0cf5774f3e2a0d38e935f3dffd3f87c3d1b63fe2c2e18e4b097b1c2d5",
+          "pdf": "core/cf-phase3-layout-mapping.pdf",
+          "pdf_sha256": "f94df2917fd49e59754ed210553dc3b515150385ce2cebd6314b379b2fcada91",
+          "pages": 1
+        }
+      }
+    },
+    {
+      "id": "cf-phase3-legacy-bars",
+      "engines": {
+        "main": {
+          "input": "docs/validation/conditional-formatting-phase3/fixtures/legacy-bars.xlsx",
+          "input_sha256": "a5587789e8e27e00e27ee8263c74ef861d786e314ed4a9c31918f4fac7443335",
+          "pdf": "main/cf-phase3-legacy-bars.pdf",
+          "pdf_sha256": "7cfc0c6d6c8a70d98f6890d9711dd832c2c51be1c271016eb9255f962452965c",
+          "pages": 1
+        },
+        "core": {
+          "input": "docs/validation/conditional-formatting-phase3/fixtures/legacy-bars.xlsx",
+          "input_sha256": "a5587789e8e27e00e27ee8263c74ef861d786e314ed4a9c31918f4fac7443335",
+          "pdf": "core/cf-phase3-legacy-bars.pdf",
+          "pdf_sha256": "f826ec8af1cb8226e63537d1308cec90a92c60bca8da16658c286e7440d7cb96",
+          "pages": 1
+        }
+      }
+    },
+    {
+      "id": "cf-phase3-x14-bars",
+      "engines": {
+        "main": {
+          "input": "docs/validation/conditional-formatting-phase3/fixtures/x14-bars.xlsx",
+          "input_sha256": "73dc15ca2efb0acda64b3ba6e07a257e6fe2000a4b98b446bcd6089b813243fe",
+          "pdf": "main/cf-phase3-x14-bars.pdf",
+          "pdf_sha256": "6985e6091243a139f368abee4f166a687a7a58a1bb2e26d8579b78f8dba7db8a",
+          "pages": 1
+        },
+        "core": {
+          "input": "docs/validation/conditional-formatting-phase3/fixtures/x14-bars.xlsx",
+          "input_sha256": "73dc15ca2efb0acda64b3ba6e07a257e6fe2000a4b98b446bcd6089b813243fe",
+          "pdf": "core/cf-phase3-x14-bars.pdf",
+          "pdf_sha256": "f07faebef470a2f4ddfb2ec511abb6a3e01bab8aedda0a85b2e7ad3071b7d107",
+          "pages": 1
+        }
+      }
+    },
+    {
+      "id": "shapes",
+      "engines": {
+        "main": {
+          "input": "docs/validation/render-finalization-performance/inputs/shapes.xlsx",
+          "input_sha256": "e7728f9ef142f30d94490295705d8d55557556f0902d2e6a2a95960b987eb57c",
+          "pdf": "main/shapes.pdf",
+          "pdf_sha256": "f51bd7231b0b7e6b713cf99da5e6d245d32ca08a2302ca339057b6952a81f225",
+          "pages": 1
+        },
+        "core": {
+          "input": "docs/validation/render-finalization-performance/inputs/shapes.xlsx",
+          "input_sha256": "e7728f9ef142f30d94490295705d8d55557556f0902d2e6a2a95960b987eb57c",
+          "pdf": "core/shapes.pdf",
+          "pdf_sha256": "f51bd7231b0b7e6b713cf99da5e6d245d32ca08a2302ca339057b6952a81f225",
+          "pages": 1
+        }
+      }
+    },
+    {
+      "id": "actual-shape-text",
+      "engines": {
+        "main": {
+          "input": "docs/validation/render-finalization-performance/inputs/actual-shape-text.xlsx",
+          "input_sha256": "f1a19080b15a44c786adc1b47ffaa4cb729ee1fac09d279a5ba8718344e63518",
+          "pdf": "main/actual-shape-text.pdf",
+          "pdf_sha256": "edc7877f42a60e794779e688d19cd9cde8f3fd2004b40e207d24f2c895ee6415",
+          "pages": 1
+        },
+        "core": {
+          "input": "docs/validation/render-finalization-performance/inputs/actual-shape-text.xlsx",
+          "input_sha256": "f1a19080b15a44c786adc1b47ffaa4cb729ee1fac09d279a5ba8718344e63518",
+          "pdf": "core/actual-shape-text.pdf",
+          "pdf_sha256": "f51bd7231b0b7e6b713cf99da5e6d245d32ca08a2302ca339057b6952a81f225",
+          "pages": 1
+        }
+      }
+    },
+    {
+      "id": "japanese-grid-report",
+      "engines": {
+        "main": {
+          "input": "samples/excel/japanese-grid-report.xlsx",
+          "input_sha256": "4907d79963eb8267eab4230c7aad9bbd0d580238d3d42f402b34fb4c0ff217a1",
+          "pdf": "main/japanese-grid-report.pdf",
+          "pdf_sha256": "9c097f21e16386447851017e598eccf06af6d51f31db6187496e7e0318eca277",
+          "pages": 1
+        },
+        "core": {
+          "input": "samples/excel/japanese-grid-report.xlsx",
+          "input_sha256": "4907d79963eb8267eab4230c7aad9bbd0d580238d3d42f402b34fb4c0ff217a1",
+          "pdf": "core/japanese-grid-report.pdf",
+          "pdf_sha256": "9cec1890e2612bbfc1c026e01c040da56229413a61b799457ec8233bdddb3076",
+          "pages": 1
+        }
+      }
+    }
+  ],
+  "historical_core": {
+    "invoice": {
+      "input": "samples/mapping/invoice/invoice.xlsx",
+      "input_sha256": "1eafc42149f48770c131f836883ffb6ac2714215d4ebe2db5352e1dee66011a5",
+      "historical_sha256": "f2a80c34360629bdb1ca8596ab5376d2234943f21857dcc1756e16734e01f459",
+      "pdf": "historical-core-followups/invoice.pdf",
+      "pdf_sha256": "ff33041bb587d4359cc6a32eadf9c35fb5281b58447fad5459062a65290ba13f",
+      "reason": "Reviewed source Normal column-metric correction: use 7px compatibility MDW for substituted Calibri, while drawing remains single-font Noto Sans JP. Historical PDFs stay unchanged."
+    },
+    "grid": {
+      "input": "samples/excel/japanese-grid-report.xlsx",
+      "input_sha256": "4907d79963eb8267eab4230c7aad9bbd0d580238d3d42f402b34fb4c0ff217a1",
+      "historical_sha256": "28efbf95e8b8311bb7fa6f7d06f78dc4276f92fdc00eaaa1e3d62bf8ad412ca9",
+      "pdf": "historical-core-followups/grid.pdf",
+      "pdf_sha256": "9cec1890e2612bbfc1c026e01c040da56229413a61b799457ec8233bdddb3076",
+      "reason": "Reviewed source Normal column-metric correction: use 7px compatibility MDW for substituted Calibri, while drawing remains single-font Noto Sans JP. Historical PDFs stay unchanged."
+    },
+    "scaling": {
+      "input": "tests/ExcelRenderer.Core.Tests/Baselines/Inputs/08-print-scaling.xlsx",
+      "input_sha256": "c6ae0dcb2ae314753fc1bd1ff1c19e3bc444c4c387736e11dc27226fe8535247",
+      "historical_sha256": "9c1ced36f4f6bab5ea07e11ccc2b2dbd502f409fc54501966f2385930e1d3e2b",
+      "pdf": "historical-core-followups/scaling.pdf",
+      "pdf_sha256": "84ab3caad8a9b8b0158fb5630b40a818d5f645a5decb811ad1cfcbe51c33b003",
+      "reason": "Reviewed source Normal column-metric correction: use 7px compatibility MDW for substituted Calibri, while drawing remains single-font Noto Sans JP. Historical PDFs stay unchanged."
+    }
+  }
+}

@@ -99,6 +99,15 @@ jobs:
       - name: Compare frozen Core output independently
         run: python scripts/compare-core-removal-baselines.py
 
+      - name: Preserve reviewed main and Core PDF appearance for all 22 inputs
+        run: python scripts/check-libreoffice-regression.py
+
+      - name: Verify independent border coordinates, widths and colors
+        run: >-
+          python scripts/audit-libreoffice-borders.py
+          --run artifacts/libreoffice-regression
+          --output artifacts/libreoffice-regression/border-audit.json
+
       - name: Verify shared-border contracts reject missing strokes and text
         run: python scripts/check-shared-border-mutations.py
 
@@ -145,6 +154,7 @@ jobs:
             tests/ExcelRenderer.Tests/bin/Release/net10.0/SampleOutputs/**
             artifacts/pdf-comparison/**
             artifacts/pr90-image-review/independent.json
+            artifacts/libreoffice-regression/**
           if-no-files-found: warn
           retention-days: 14
 

@@ -5,6 +5,7 @@ import difflib
 import hashlib
 import json
 from pathlib import Path
+import shutil
 import subprocess
 from zipfile import ZipFile
 import xml.etree.ElementTree as ET
@@ -16,6 +17,7 @@ from scipy.ndimage import binary_dilation
 from pdf_geometry_evidence import verify_outlines
 from pdf_native_evidence import verify_frozen_baseline
 from shared_border_evidence import evidence as shared_border_evidence, raster_matches as border_raster_matches
+from libreoffice_regression import reviewed_core_layout
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'artifacts/pdfsharp-removal-current/core'
@@ -67,6 +69,16 @@ def main():
         baseline = ROOT / 'tests/Shared/PdfRemovalBaseline/core' / (name + '.pdf')
         missing = missing_source_scalars(ROOT / source)
         old, new = fitz.open(baseline), fitz.open(output)
+        layout_review = reviewed_core_layout(name, ROOT / source, baseline, output)
+        if layout_review is not None:
+            assert layout_review['passed'], (name, layout_review)
+            for page in new:
+                outlines = verify_outlines(page)
+                assert outlines['passed'], outlines
+            results.append({'fixture': name, 'historicalPages': len(old), 'pages': len(new), 'sourceColumnMetrics': layout_review})
+            old.close()
+            new.close()
+            continue
         assert len(old) == len(new)
         record = {'fixture': name, 'pages': len(new), 'oldBytes': baseline.stat().st_size, 'newBytes': output.stat().st_size,
                   'missingSourceGlyphs': dict(missing), 'raster': []}
@@ -124,7 +136,8 @@ def main():
                     record['raster'].append({'page': number, 'dpi': dpi, 'region': region, 'changedUnionFraction': color, 'distantInkFraction': distant, 'reviewedAntialiasing': reviewed, 'sharedBorderContract': border_pixels_match})
         results.append(record)
     (OUT / 'comparison.json').write_text(json.dumps(results, ensure_ascii=False, indent=2) + '\n')
-    print('Three frozen Core fixtures passed; missing-glyph source Unicode restored without adding font fallback')
+    shutil.copytree(OUT, ROOT / 'artifacts/libreoffice-regression/historical-core', dirs_exist_ok=True)
+    print('Three Core fixtures passed: frozen history preserved; reviewed source-column layout contracts matched exactly')
 
 
 if __name__ == '__main__':

@@ -1,5 +1,5 @@
 {
-  "README.md": "415f3591c4f2a23122233a429567b1ce2ed91e026e82c0b35aa1fdcbea98c18d",
+  "README.md": "7e4fd41e95b722b80b5e24e16009cbf689d6f979905c8144396946d4cff2123b",
   "before-after.json": "f0883d621559b73d5001394a5ff661ad03a018cc25a1ead6926a9020c50a2095",
   "before-after.py": "fc2bcd38d913c7e248c2e57a872150062548a9cd72533fb4a24c3800d2771aa9",
   "border-audit.json": "73ccc643a5465157cc3f8c924a54b1450c4356d11a62f2208cacc3edabb49d86",
@@ -178,5 +178,6 @@
   "previews/main-core/shapes/page-001.png": "d356f62092cc3e8a470bc6f24d9b3aa768996515944792237bf351066e5ea7dc",
   "reader-isolation.json": "f2dc40309a2d48d30f09a2cad75131d9a9259f9f3d9b7a37820eee6c55719beb",
   "run-artifact-hashes.json": "d6f6fda3fb8beb63f7dabf44e15d817b9c5cbcce490defd9aaa13ed1a5f276c3",
-  "summary.json": "54433461ec2d18c72eae4ad2730470e103933adf540487f9b677afaccfce8e5d"
+  "summary.json": "54433461ec2d18c72eae4ad2730470e103933adf540487f9b677afaccfce8e5d",
+  "ci-regression-checks.json": "485b38faac0a5763fef38e914e9ad2e9096b815eb50b031f4148c12494773e71"
 }

@@ -66,8 +66,9 @@ Unicode列）は発生回数を合算。上限到達後も保持済み識別子�
 コンパイル対象の[HTTPハンドラー](../samples/ExcelRenderer.Http.Sample/PdfHttpEndpoints.cs)は
 検証後出力で `FormulaCachedValueMissing` と `ImageDecodeFailed` を拒否します。本体は発生回数、
 Coreは保持された診断エントリ数をコード別に合算するため、件数の粒度は異なります。
-`MainCoreParityTests.Fixture("values")` の欠落キャッシュを[HTTPテスト](../tests/ExcelRenderer.Tests/ValidatedPdfHttpTests.cs)
-で422と対応づけます。既存の壊れたPNG fixtureでImageDecodeFailedの拒否も確認します。その他はログとPDFが両立します。この2コードは業務ポリシーの例で、
+欠落キャッシュの診断は[MainCoreParityTests](../tests/ExcelRenderer.Tests/MainCoreParityTests.cs)、
+画像decode失敗は[ImageReviewTests](../tests/ExcelRenderer.Tests/ImageReviewTests.cs)で確認します。
+その他はログとPDFが両立します。この2コードは業務ポリシーの例で、
 任意ブックの完全性検証ではありません。より厳格ならDiagnosticsTruncatedと対象機能も考慮します。
 
 | 出力方法 | 用途 | 拒否とコスト |

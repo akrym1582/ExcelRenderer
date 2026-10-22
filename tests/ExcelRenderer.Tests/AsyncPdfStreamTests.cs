@@ -107,11 +107,7 @@ public sealed class AsyncPdfStreamTests
     [Theory]
     [InlineData("/pdf")]
     [InlineData("/core-pdf")]
-    [InlineData("/pdf-validated")]
-    [InlineData("/core-pdf-validated")]
-    [InlineData("/pdf-validated", true)]
-    [InlineData("/core-pdf-validated", true)]
-    public async Task Kestrel_response_body_accepts_direct_pdf_with_synchronous_io_disabled(string endpoint, bool rejected = false)
+    public async Task Kestrel_response_body_accepts_direct_pdf_with_synchronous_io_disabled(string endpoint)
     {
         var builder = WebApplication.CreateBuilder();
         builder.WebHost.ConfigureKestrel(options => options.AllowSynchronousIO = false).UseUrls("http://127.0.0.1:0");
@@ -128,10 +124,7 @@ public sealed class AsyncPdfStreamTests
             }
             catch (Exception error) { handled.TrySetResult(error); throw; }
         });
-        var directory = Directory.CreateTempSubdirectory();
-        var workbook = Path.Combine(directory.FullName, "input.xlsx");
-        await File.WriteAllBytesAsync(workbook, MainCoreParityTests.Fixture(rejected ? "values" : "portrait"));
-        PdfHttpEndpoints.Map(app, workbook, FontPath);
+        PdfHttpEndpoints.Map(app, Path.Combine(SampleOutputTestSupport.InputDirectory, "01-japanese.xlsx"), FontPath);
         await app.StartAsync();
         try
         {
@@ -139,21 +132,13 @@ public sealed class AsyncPdfStreamTests
             using var client = new HttpClient { Timeout = TimeSpan.FromSeconds(30) };
             using var response = await client.GetAsync(address + endpoint);
             Assert.Null(await handled.Task.WaitAsync(TimeSpan.FromSeconds(15)));
-            if (rejected)
-            {
-                Assert.Equal(System.Net.HttpStatusCode.UnprocessableEntity, response.StatusCode);
-                var body = await response.Content.ReadAsStringAsync();
-                Assert.Contains("FormulaCachedValueMissing", body);
-                Assert.DoesNotContain("%PDF", body);
-                return;
-            }
             Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
             Assert.Equal("application/pdf", response.Content.Headers.ContentType!.MediaType);
             using var pdf = PdfDocument.Open(await response.Content.ReadAsByteArrayAsync(), new ParsingOptions { UseLenientParsing = false });
             Assert.True(pdf.NumberOfPages > 0);
             Assert.NotEmpty(pdf.GetPage(1).Text);
         }
-        finally { await app.StopAsync(); directory.Delete(true); }
+        finally { await app.StopAsync(); }
     }
 
     private static string FontPath => Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf");

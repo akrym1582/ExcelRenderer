@@ -63,7 +63,6 @@ print page counts/diagnostics. Libraries do not close caller streams. Main flush
 Core leaves flushing to the caller/host. The destination directory must already exist. Existing output survives conversion failure; atomicity
 and power-loss durability depend on the destination filesystem.
 
-AsyncPdfStreamTests executes all four actual routes on synchronous-I/O-disabled loopback Kestrel.
-ValidatedPdfHttpTests injects deterministic cancellation/copy faults and checks cleanup, policy
-rejection, code-only logging, server-error classification and parallel request isolation.
-PdfFileExampleTests checks publication and preservation of previous output.
+The existing AsyncPdfStreamTests covers direct output on synchronous-I/O-disabled loopback
+Kestrel. This change adds no HTTP endpoint tests. PdfFileExampleTests checks file publication
+and preservation of previous output.

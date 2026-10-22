@@ -57,7 +57,8 @@ The reviewed-output gate passes 44 PDFs and detects all seven mutations, includi
 same-coordinate duplicate border. The separate border audit verifies five worksheets and 23
 physical strokes per product without duplicate strokes. The dependency audit checks 24 restored
 projects and 726 managed AssemblyRef inventories. Release rebuild reports zero warnings/errors.
-The final assertion/stream/HTTP suite includes 61 tests; the full solution includes 2,940 tests.
+The original validation at commit `857f745` covered 61 assertion/stream/HTTP tests and
+2,940 solution tests. These historical counts precede the scope reduction below.
 Expected-difference and default-selection pairs now retain their PDFs, exact XLSX and hash JSON
 as well; assertion status is in TRX. Existing Core scope tests supplement the five new difference
 cases without introducing a main/shared dependency into Core tests.
@@ -76,3 +77,17 @@ Windows runs are configured in PR CI and were not executed on this Linux host. N
 published; pack and standalone distribution gates are not applicable because no project or
 package composition changed. Core's 413 tests passed in the complete solution, while its
 separate coverage/performance gate is unchanged and not newly required by test/sample changes.
+
+
+## Follow-up: remove HTTP test additions
+
+At the user's request, the HTTP sample improvements remain, while the newly added
+ValidatedPdfHttpTests and the additions to AsyncPdfStreamTests are removed. The existing
+AsyncPdfStreamTests is restored exactly to the starting main revision. The Windows comparison
+job runs only parity, diagnostic-policy and file-publication tests; it no longer adds HTTP
+coverage. Guides describe this reduced scope. The earlier results.json and live sample records
+remain historical evidence for commit 857f745; current follow-up results are in
+[http-test-scope-reduction.json](http-test-scope-reduction.json).
+
+Follow-up verification: Release rebuild has zero warnings/errors. All 2,919 solution tests pass,
+including the 29 cases retained in the Windows comparison filter. No HTTP sample code changed.

@@ -70,8 +70,9 @@ internally bounded at 100 unique identities plus summary; it is not an exhaustiv
 The compiled [HTTP handler](../samples/ExcelRenderer.Http.Sample/PdfHttpEndpoints.cs) explicitly
 rejects `FormulaCachedValueMissing` and `ImageDecodeFailed` in validated mode after obtaining the
 result. It groups main occurrence counts and Core retained entries by code; these counts have
-different granularity. `MainCoreParityTests.Fixture("values")` generates the missing-cache
-input used by [HTTP tests](../tests/ExcelRenderer.Tests/ValidatedPdfHttpTests.cs). The same tests use the existing corrupt-pixel PNG fixture to verify ImageDecodeFailed rejection. Other codes
+different granularity. The missing-cache diagnostic is covered by
+[MainCoreParityTests](../tests/ExcelRenderer.Tests/MainCoreParityTests.cs), and image decode
+failures by [ImageReviewTests](../tests/ExcelRenderer.Tests/ImageReviewTests.cs). Other codes
 are logged and allowed. An application with stricter completeness requirements should also
 consider `DiagnosticsTruncated` and its supported-feature contract; these two codes are an
 example business policy, not a complete validation of arbitrary spreadsheets.

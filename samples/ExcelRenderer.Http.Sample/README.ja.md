@@ -60,7 +60,6 @@ dotnet run --project samples/ExcelRenderer.Core.Sample -- \
 ライブラリは呼出側Streamを閉じません。本体sinkはflush、Coreは呼出側/ホストに任せます。
 出力先ディレクトリは事前に用意してください。変換失敗で旧成果物を壊しませんが、ファイルシステム依存の原子性・電源断耐性は保証しません。
 
-AsyncPdfStreamTestsで実4ルートを同期I/O禁止Kestrel上で確認します。
-ValidatedPdfHttpTestsはキャンセル・書込失敗を確実に注入し、後始末、拒否、コードだけのログ、
-サーバーエラー分類、並列リクエストの分離を確認。
-PdfFileExampleTestsは成果物の公開と旧ファイル保持を検証します。
+既存のAsyncPdfStreamTestsは同期I/O禁止Kestrelで直接出力を確認します。
+今回の変更ではHTTPエンドポイントのテストを追加しません。
+PdfFileExampleTestsでファイル公開と旧成果物保持を検証します。

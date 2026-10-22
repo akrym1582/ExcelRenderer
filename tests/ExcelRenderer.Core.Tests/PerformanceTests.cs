@@ -117,7 +117,8 @@ public sealed class PerformanceTests(ITestOutputHelper output)
             Assert.Equal(images ? 1 : 0, page.NumberOfImages);
         }
 
-        Assert.All(measurement.Result.Diagnostics, diagnostic => Assert.Equal("SavedPageBreaks", diagnostic.Code));
+        Assert.Single(measurement.Result.Diagnostics, diagnostic => diagnostic.Code == "MaximumDigitWidthFallback");
+        Assert.All(measurement.Result.Diagnostics, diagnostic => Assert.Contains(diagnostic.Code, new[] { "SavedPageBreaks", "MaximumDigitWidthFallback" }));
         var metrics = measurement.Metrics;
         Assert.Equal(1, metrics["pdfSave"]);
         Assert.Equal(2 * expectedPages, metrics["corePageBuild"]);

@@ -160,7 +160,7 @@ public sealed class PageAndImageTests
     }
 
     [Fact]
-    public async Task MDW_uses_snapshot_and_Normal_size()
+    public async Task MDW_uses_snapshot_and_Normal_size_when_source_family_matches()
     {
         using var input = TestSupport.Workbook(workbook =>
         {
@@ -172,6 +172,7 @@ public sealed class PageAndImageTests
             var styles = package.WorkbookPart!.WorkbookStylesPart!.Stylesheet;
             var normal = styles.CellStyleFormats!.Elements<DocumentFormat.OpenXml.Spreadsheet.CellFormat>().First();
             styles.Fonts!.Elements<DocumentFormat.OpenXml.Spreadsheet.Font>().ElementAt((int)(normal.FontId?.Value ?? 0)).FontSize = new() { Val = 20 };
+            styles.Fonts!.Elements<DocumentFormat.OpenXml.Spreadsheet.Font>().ElementAt((int)(normal.FontId?.Value ?? 0)).FontName = new() { Val = "Noto Sans JP" };
             styles.Save();
             var worksheet = package.WorkbookPart.WorksheetParts.Single().Worksheet;
             worksheet.GetFirstChild<DocumentFormat.OpenXml.Spreadsheet.Columns>()!.Elements<DocumentFormat.OpenXml.Spreadsheet.Column>().First().Width = 10;

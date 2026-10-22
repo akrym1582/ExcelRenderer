@@ -77,7 +77,7 @@ public static class ExcelConverter
             () => ConversionMetrics.Report("buffer.spillCount", 1)).ConfigureAwait(false);
         using var font = new SingleFontContext(options.FontFilePath, options.FontCollectionIndex, cancellationToken);
         var diagnostics = new DiagnosticCollector();
-        var reader = new CoreExcelReader(font);
+        var reader = new CoreExcelReader(font, diagnostics);
         var report = ConversionMetrics.Measure("reader", () => reader.Read(prepared, diagnostics, sheetNames, cancellationToken, options.ReadOptions));
         cancellationToken.ThrowIfCancellationRequested();
         var measurer = new SkiaTextMeasurer(font);

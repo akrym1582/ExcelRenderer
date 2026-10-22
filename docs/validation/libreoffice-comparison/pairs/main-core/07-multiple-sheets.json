@@ -1,0 +1,371 @@
+{
+  "case_id": "07-multiple-sheets",
+  "pair": "main-core",
+  "status": "compared-needs-review",
+  "left_sha256": "63f63b4d0b2ae4a57361d489384f7633ef5396fec6b68009752c5478f476762f",
+  "right_sha256": "63f63b4d0b2ae4a57361d489384f7633ef5396fec6b68009752c5478f476762f",
+  "page_count": [
+    2,
+    2
+  ],
+  "page_count_equal": true,
+  "page_correspondence": "ordinal only; if counts differ consult both complete page sets",
+  "document_text": {
+    "left_only_characters": {},
+    "right_only_characters": {},
+    "same_non_whitespace_character_inventory": true,
+    "same_extracted_text": true
+  },
+  "character_positions": {
+    "method": "Extraction sequence alignment; repeated characters and extraction order can be ambiguous",
+    "matched_characters": 10,
+    "matched_characters_on_different_pages": 0,
+    "matches": [
+      {
+        "text": "売",
+        "left_page": 1,
+        "right_page": 1,
+        "left_origin": [
+          54.5,
+          65.33200073242188
+        ],
+        "right_origin": [
+          54.5,
+          65.33200073242188
+        ],
+        "left_bbox": [
+          54.5,
+          52.57200241088867,
+          65.5,
+          68.5
+        ],
+        "right_bbox": [
+          54.5,
+          52.57200241088867,
+          65.5,
+          68.5
+        ],
+        "dx_pt": 0.0,
+        "dy_pt": 0.0
+      },
+      {
+        "text": "上",
+        "left_page": 1,
+        "right_page": 1,
+        "left_origin": [
+          65.5,
+          65.33200073242188
+        ],
+        "right_origin": [
+          65.5,
+          65.33200073242188
+        ],
+        "left_bbox": [
+          65.5,
+          52.57200241088867,
+          76.5,
+          68.5
+        ],
+        "right_bbox": [
+          65.5,
+          52.57200241088867,
+          76.5,
+          68.5
+        ],
+        "dx_pt": 0.0,
+        "dy_pt": 0.0
+      },
+      {
+        "text": "シ",
+        "left_page": 1,
+        "right_page": 1,
+        "left_origin": [
+          76.5,
+          65.33200073242188
+        ],
+        "right_origin": [
+          76.5,
+          65.33200073242188
+        ],
+        "left_bbox": [
+          76.5,
+          52.57200241088867,
+          87.5,
+          68.5
+        ],
+        "right_bbox": [
+          76.5,
+          52.57200241088867,
+          87.5,
+          68.5
+        ],
+        "dx_pt": 0.0,
+        "dy_pt": 0.0
+      },
+      {
+        "text": "ー",
+        "left_page": 1,
+        "right_page": 1,
+        "left_origin": [
+          87.5,
+          65.33200073242188
+        ],
+        "right_origin": [
+          87.5,
+          65.33200073242188
+        ],
+        "left_bbox": [
+          87.5,
+          52.57200241088867,
+          98.5,
+          68.5
+        ],
+        "right_bbox": [
+          87.5,
+          52.57200241088867,
+          98.5,
+          68.5
+        ],
+        "dx_pt": 0.0,
+        "dy_pt": 0.0
+      },
+      {
+        "text": "ト",
+        "left_page": 1,
+        "right_page": 1,
+        "left_origin": [
+          98.5,
+          65.33200073242188
+        ],
+        "right_origin": [
+          98.5,
+          65.33200073242188
+        ],
+        "left_bbox": [
+          98.5,
+          52.57200241088867,
+          109.5,
+          68.5
+        ],
+        "right_bbox": [
+          98.5,
+          52.57200241088867,
+          109.5,
+          68.5
+        ],
+        "dx_pt": 0.0,
+        "dy_pt": 0.0
+      },
+      {
+        "text": "在",
+        "left_page": 2,
+        "right_page": 2,
+        "left_origin": [
+          54.5,
+          65.33200073242188
+        ],
+        "right_origin": [
+          54.5,
+          65.33200073242188
+        ],
+        "left_bbox": [
+          54.5,
+          52.57200241088867,
+          65.5,
+          68.5
+        ],
+        "right_bbox": [
+          54.5,
+          52.57200241088867,
+          65.5,
+          68.5
+        ],
+        "dx_pt": 0.0,
+        "dy_pt": 0.0
+      },
+      {
+        "text": "庫",
+        "left_page": 2,
+        "right_page": 2,
+        "left_origin": [
+          65.5,
+          65.33200073242188
+        ],
+        "right_origin": [
+          65.5,
+          65.33200073242188
+        ],
+        "left_bbox": [
+          65.5,
+          52.57200241088867,
+          76.5,
+          68.5
+        ],
+        "right_bbox": [
+          65.5,
+          52.57200241088867,
+          76.5,
+          68.5
+        ],
+        "dx_pt": 0.0,
+        "dy_pt": 0.0
+      },
+      {
+        "text": "シ",
+        "left_page": 2,
+        "right_page": 2,
+        "left_origin": [
+          76.5,
+          65.33200073242188
+        ],
+        "right_origin": [
+          76.5,
+          65.33200073242188
+        ],
+        "left_bbox": [
+          76.5,
+          52.57200241088867,
+          87.5,
+          68.5
+        ],
+        "right_bbox": [
+          76.5,
+          52.57200241088867,
+          87.5,
+          68.5
+        ],
+        "dx_pt": 0.0,
+        "dy_pt": 0.0
+      },
+      {
+        "text": "ー",
+        "left_page": 2,
+        "right_page": 2,
+        "left_origin": [
+          87.5,
+          65.33200073242188
+        ],
+        "right_origin": [
+          87.5,
+          65.33200073242188
+        ],
+        "left_bbox": [
+          87.5,
+          52.57200241088867,
+          98.5,
+          68.5
+        ],
+        "right_bbox": [
+          87.5,
+          52.57200241088867,
+          98.5,
+          68.5
+        ],
+        "dx_pt": 0.0,
+        "dy_pt": 0.0
+      },
+      {
+        "text": "ト",
+        "left_page": 2,
+        "right_page": 2,
+        "left_origin": [
+          98.5,
+          65.33200073242188
+        ],
+        "right_origin": [
+          98.5,
+          65.33200073242188
+        ],
+        "left_bbox": [
+          98.5,
+          52.57200241088867,
+          109.5,
+          68.5
+        ],
+        "right_bbox": [
+          98.5,
+          52.57200241088867,
+          109.5,
+          68.5
+        ],
+        "dx_pt": 0.0,
+        "dy_pt": 0.0
+      }
+    ]
+  },
+  "pages": [
+    {
+      "page": 1,
+      "sizes_pt": [
+        [
+          0.0,
+          0.0,
+          612.0,
+          792.0
+        ],
+        [
+          0.0,
+          0.0,
+          612.0,
+          792.0
+        ]
+      ],
+      "size_equal": true,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "rasters": [
+        {
+          "dpi": 144,
+          "canvas_pixels": [
+            1224,
+            1584
+          ],
+          "changed_pixel_ratio": 0.0,
+          "difference_over_16_ratio": 0.0,
+          "side_by_side": "artifacts/libreoffice-comparison/images/main-core/07-multiple-sheets/page-001-144dpi/side-by-side.png"
+        }
+      ]
+    },
+    {
+      "page": 2,
+      "sizes_pt": [
+        [
+          0.0,
+          0.0,
+          612.0,
+          792.0
+        ],
+        [
+          0.0,
+          0.0,
+          612.0,
+          792.0
+        ]
+      ],
+      "size_equal": true,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "rasters": [
+        {
+          "dpi": 144,
+          "canvas_pixels": [
+            1224,
+            1584
+          ],
+          "changed_pixel_ratio": 0.0,
+          "difference_over_16_ratio": 0.0,
+          "side_by_side": "artifacts/libreoffice-comparison/images/main-core/07-multiple-sheets/page-002-144dpi/side-by-side.png"
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

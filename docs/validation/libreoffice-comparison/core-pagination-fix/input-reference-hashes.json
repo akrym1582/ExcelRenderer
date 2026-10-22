@@ -1,0 +1,332 @@
+[
+  {
+    "case_id": "01-japanese",
+    "input": {
+      "path": "tests/ExcelRenderer.Tests/SampleInputs/01-japanese.xlsx",
+      "expected": "6a89d390e07a60e919b7be2c5fa6af47721b0e9c5a4a0c325ae97174ff6386f0",
+      "actual": "6a89d390e07a60e919b7be2c5fa6af47721b0e9c5a4a0c325ae97174ff6386f0",
+      "matches": true
+    },
+    "pdf": {
+      "path": "docs/validation/libreoffice-reference/pdf/01-japanese.pdf",
+      "expected": "76c78acd92376485b4cca42b83e91b1e7aac1b966c18a614a2e762b92d9b4a8f",
+      "actual": "76c78acd92376485b4cca42b83e91b1e7aac1b966c18a614a2e762b92d9b4a8f",
+      "matches": true
+    }
+  },
+  {
+    "case_id": "02-image",
+    "input": {
+      "path": "tests/ExcelRenderer.Tests/SampleInputs/02-image.xlsx",
+      "expected": "d54804111617065e59a4bbe4d5c2099b08efdea2f71d1676998bc836569de254",
+      "actual": "d54804111617065e59a4bbe4d5c2099b08efdea2f71d1676998bc836569de254",
+      "matches": true
+    },
+    "pdf": {
+      "path": "docs/validation/libreoffice-reference/pdf/02-image.pdf",
+      "expected": "f84830e51ca878d38d20f9bb515acca82f351555413e3f891d5bb057421491bb",
+      "actual": "f84830e51ca878d38d20f9bb515acca82f351555413e3f891d5bb057421491bb",
+      "matches": true
+    }
+  },
+  {
+    "case_id": "03-wrapped-text",
+    "input": {
+      "path": "tests/ExcelRenderer.Tests/SampleInputs/03-wrapped-text.xlsx",
+      "expected": "60421161d8ec36904befd41ecde57551ea7880a8ffda07925b38178fc747d990",
+      "actual": "60421161d8ec36904befd41ecde57551ea7880a8ffda07925b38178fc747d990",
+      "matches": true
+    },
+    "pdf": {
+      "path": "docs/validation/libreoffice-reference/pdf/03-wrapped-text.pdf",
+      "expected": "33467db4c49536952312bf76cfe3521b02dcd08cad71ba23525e8f54045f1551",
+      "actual": "33467db4c49536952312bf76cfe3521b02dcd08cad71ba23525e8f54045f1551",
+      "matches": true
+    }
+  },
+  {
+    "case_id": "04-text-decoration",
+    "input": {
+      "path": "tests/ExcelRenderer.Tests/SampleInputs/04-text-decoration.xlsx",
+      "expected": "c8ee629159de588541c6d08bce70cae9c0483ddcb21c3feef536102e1457cff1",
+      "actual": "c8ee629159de588541c6d08bce70cae9c0483ddcb21c3feef536102e1457cff1",
+      "matches": true
+    },
+    "pdf": {
+      "path": "docs/validation/libreoffice-reference/pdf/04-text-decoration.pdf",
+      "expected": "533bacab05e984a14f35420f21830835da60286234acc6558f4a463f71b4f13d",
+      "actual": "533bacab05e984a14f35420f21830835da60286234acc6558f4a463f71b4f13d",
+      "matches": true
+    }
+  },
+  {
+    "case_id": "05-borders",
+    "input": {
+      "path": "tests/ExcelRenderer.Tests/SampleInputs/05-borders.xlsx",
+      "expected": "074cfd50a3d4556380f462a69287d9b0254a71ebe412e267b395ca345a54eac2",
+      "actual": "074cfd50a3d4556380f462a69287d9b0254a71ebe412e267b395ca345a54eac2",
+      "matches": true
+    },
+    "pdf": {
+      "path": "docs/validation/libreoffice-reference/pdf/05-borders.pdf",
+      "expected": "afe028052d0fba2ea8019c0e5b01f8ca5fa666203623283dc1619a34177e9c19",
+      "actual": "afe028052d0fba2ea8019c0e5b01f8ca5fa666203623283dc1619a34177e9c19",
+      "matches": true
+    }
+  },
+  {
+    "case_id": "06-layout-and-pagination",
+    "input": {
+      "path": "tests/ExcelRenderer.Tests/SampleInputs/06-layout-and-pagination.xlsx",
+      "expected": "5870f080ac266568de200bf6955a617da452b14c103a30371889e8bee13b12e6",
+      "actual": "5870f080ac266568de200bf6955a617da452b14c103a30371889e8bee13b12e6",
+      "matches": true
+    },
+    "pdf": {
+      "path": "docs/validation/libreoffice-reference/pdf/06-layout-and-pagination.pdf",
+      "expected": "7f667e555a7752f26074a8a56854f0172942a2d0dbc3af3647173a9b3c565474",
+      "actual": "7f667e555a7752f26074a8a56854f0172942a2d0dbc3af3647173a9b3c565474",
+      "matches": true
+    }
+  },
+  {
+    "case_id": "07-multiple-sheets",
+    "input": {
+      "path": "tests/ExcelRenderer.Tests/SampleInputs/07-multiple-sheets.xlsx",
+      "expected": "2da1636a03384c0aa0ecb14ec3183631f3c41a90f1348693e795c329c0cae20e",
+      "actual": "2da1636a03384c0aa0ecb14ec3183631f3c41a90f1348693e795c329c0cae20e",
+      "matches": true
+    },
+    "pdf": {
+      "path": "docs/validation/libreoffice-reference/pdf/07-multiple-sheets.pdf",
+      "expected": "6b84b480058d2dc6a6947f9ccfdb9bba9b7087bb1281e53f8f23e4004a8fd41d",
+      "actual": "6b84b480058d2dc6a6947f9ccfdb9bba9b7087bb1281e53f8f23e4004a8fd41d",
+      "matches": true
+    }
+  },
+  {
+    "case_id": "08-print-scaling",
+    "input": {
+      "path": "tests/ExcelRenderer.Tests/SampleInputs/08-print-scaling.xlsx",
+      "expected": "f9e5ffaa18c622d2820138d18c6aed07ae63b28da8fad1c71c4ffcbdd12a9fb7",
+      "actual": "f9e5ffaa18c622d2820138d18c6aed07ae63b28da8fad1c71c4ffcbdd12a9fb7",
+      "matches": true
+    },
+    "pdf": {
+      "path": "docs/validation/libreoffice-reference/pdf/08-print-scaling.pdf",
+      "expected": "71c473f1d4dd46ba27ca94ae471433f1e5b362c4ca9ff0c386ec7d8311077fd4",
+      "actual": "71c473f1d4dd46ba27ca94ae471433f1e5b362c4ca9ff0c386ec7d8311077fd4",
+      "matches": true
+    }
+  },
+  {
+    "case_id": "09-cell-border",
+    "input": {
+      "path": "tests/ExcelRenderer.Tests/SampleInputs/09-cell-border.xlsx",
+      "expected": "5655ee7b5407c1c9af6836ec65f573819b0265c833660210d04060ca8c368d70",
+      "actual": "5655ee7b5407c1c9af6836ec65f573819b0265c833660210d04060ca8c368d70",
+      "matches": true
+    },
+    "pdf": {
+      "path": "docs/validation/libreoffice-reference/pdf/09-cell-border.pdf",
+      "expected": "df975580d28811200b7e40d3ef7108840eb61e48af9d40dd3a203b56913f5f3e",
+      "actual": "df975580d28811200b7e40d3ef7108840eb61e48af9d40dd3a203b56913f5f3e",
+      "matches": true
+    }
+  },
+  {
+    "case_id": "cell-argb",
+    "input": {
+      "path": "tests/ExcelRenderer.Tests/SampleInputs/CellArgb/10-cell-argb.xlsx",
+      "expected": "3d6e77900ea64b573eb26caf04c7ff7ddc34fab4b78c08a30fe0909faf9d9733",
+      "actual": "3d6e77900ea64b573eb26caf04c7ff7ddc34fab4b78c08a30fe0909faf9d9733",
+      "matches": true
+    },
+    "pdf": {
+      "path": "docs/validation/libreoffice-reference/pdf/cell-argb.pdf",
+      "expected": "c5189112df1c9d2e7a03d292de079684461c30eef83013a17b2e2872436f562a",
+      "actual": "c5189112df1c9d2e7a03d292de079684461c30eef83013a17b2e2872436f562a",
+      "matches": true
+    }
+  },
+  {
+    "case_id": "border-conflicts",
+    "input": {
+      "path": "tests/ExcelRenderer.Tests/SampleInputs/BorderResolution/border-conflicts.xlsx",
+      "expected": "a07e159caa4a83a12c38231f70cbf2ca6bdcded9404291ba5244e8f03249a12a",
+      "actual": "a07e159caa4a83a12c38231f70cbf2ca6bdcded9404291ba5244e8f03249a12a",
+      "matches": true
+    },
+    "pdf": {
+      "path": "docs/validation/libreoffice-reference/pdf/border-conflicts.pdf",
+      "expected": "0098c2245bb8be63fe525b4cd48df13352093ab2020038f8e2c1063a187d264f",
+      "actual": "0098c2245bb8be63fe525b4cd48df13352093ab2020038f8e2c1063a187d264f",
+      "matches": true
+    }
+  },
+  {
+    "case_id": "richtext",
+    "input": {
+      "path": "tests/ExcelRenderer.Tests/SampleInputs/ReaderRichText/representative.xlsx",
+      "expected": "5e4032e814530d62db777ad76b8eae467c4f761696a2877e22ca41e2fbc37357",
+      "actual": "5e4032e814530d62db777ad76b8eae467c4f761696a2877e22ca41e2fbc37357",
+      "matches": true
+    },
+    "pdf": {
+      "path": "docs/validation/libreoffice-reference/pdf/richtext.pdf",
+      "expected": "42d1a37dc00b51564598221c6ff9429a519552dd0082854833de9dc9e031feda",
+      "actual": "42d1a37dc00b51564598221c6ff9429a519552dd0082854833de9dc9e031feda",
+      "matches": true
+    }
+  },
+  {
+    "case_id": "cf-phase1",
+    "input": {
+      "path": "docs/validation/conditional-formatting/representative.xlsx",
+      "expected": "2de333cf34b705aa6a0cec71a69c61a85df446302831cc4157078e7a83c39826",
+      "actual": "2de333cf34b705aa6a0cec71a69c61a85df446302831cc4157078e7a83c39826",
+      "matches": true
+    },
+    "pdf": {
+      "path": "docs/validation/libreoffice-reference/pdf/cf-phase1.pdf",
+      "expected": "2f6e7ec2016fb1087bf87eb257f860039480e7f31d54e78a93f93bd301ecdeff",
+      "actual": "2f6e7ec2016fb1087bf87eb257f860039480e7f31d54e78a93f93bd301ecdeff",
+      "matches": true
+    }
+  },
+  {
+    "case_id": "cf-phase2",
+    "input": {
+      "path": "docs/validation/conditional-formatting-phase2/representative.xlsx",
+      "expected": "a8f48ee704a1db4cefcc433a1fef03600088e9d1f8e04ed33b055cd656727a12",
+      "actual": "a8f48ee704a1db4cefcc433a1fef03600088e9d1f8e04ed33b055cd656727a12",
+      "matches": true
+    },
+    "pdf": {
+      "path": "docs/validation/libreoffice-reference/pdf/cf-phase2.pdf",
+      "expected": "8d3f14fa3347ca50135cd2e4d48240f8659753e47e1867699ea31c17d6a48afc",
+      "actual": "8d3f14fa3347ca50135cd2e4d48240f8659753e47e1867699ea31c17d6a48afc",
+      "matches": true
+    }
+  },
+  {
+    "case_id": "cf-mapped-scale",
+    "input": {
+      "path": "docs/validation/conditional-formatting-phase2/mapped-scale.xlsx",
+      "expected": "d25403efc3ca5021d697075370e83e42e7215bbe89885f7aa2d0f61b4768d3b6",
+      "actual": "d25403efc3ca5021d697075370e83e42e7215bbe89885f7aa2d0f61b4768d3b6",
+      "matches": true
+    },
+    "pdf": {
+      "path": "docs/validation/libreoffice-reference/pdf/cf-mapped-scale.pdf",
+      "expected": "2fdad0169d57261addaa6b0c39e069c86ea6d9b8e6ae66d3ede6cbc2db93b35c",
+      "actual": "2fdad0169d57261addaa6b0c39e069c86ea6d9b8e6ae66d3ede6cbc2db93b35c",
+      "matches": true
+    }
+  },
+  {
+    "case_id": "cf-phase3-icons",
+    "input": {
+      "path": "docs/validation/conditional-formatting-phase3/fixtures/icons.xlsx",
+      "expected": "800b4ff9c62bee007bf0602fbd4d140d17ca79adcb2fc0806a052fe183845aa3",
+      "actual": "800b4ff9c62bee007bf0602fbd4d140d17ca79adcb2fc0806a052fe183845aa3",
+      "matches": true
+    },
+    "pdf": {
+      "path": "docs/validation/libreoffice-reference/pdf/cf-phase3-icons.pdf",
+      "expected": "23cf73be3cce8b779b065277a99e9807ad2f068ccd40161d10d568adecc254e6",
+      "actual": "23cf73be3cce8b779b065277a99e9807ad2f068ccd40161d10d568adecc254e6",
+      "matches": true
+    }
+  },
+  {
+    "case_id": "cf-phase3-layout-mapping",
+    "input": {
+      "path": "docs/validation/conditional-formatting-phase3/fixtures/layout-mapping.xlsx",
+      "expected": "ad6831e0cf5774f3e2a0d38e935f3dffd3f87c3d1b63fe2c2e18e4b097b1c2d5",
+      "actual": "ad6831e0cf5774f3e2a0d38e935f3dffd3f87c3d1b63fe2c2e18e4b097b1c2d5",
+      "matches": true
+    },
+    "pdf": {
+      "path": "docs/validation/libreoffice-reference/pdf/cf-phase3-layout-mapping.pdf",
+      "expected": "1c84fce7ec0526b17ab152e5517c607a282afb8819c6af3c7bba32c55df6fcc1",
+      "actual": "1c84fce7ec0526b17ab152e5517c607a282afb8819c6af3c7bba32c55df6fcc1",
+      "matches": true
+    }
+  },
+  {
+    "case_id": "cf-phase3-legacy-bars",
+    "input": {
+      "path": "docs/validation/conditional-formatting-phase3/fixtures/legacy-bars.xlsx",
+      "expected": "a5587789e8e27e00e27ee8263c74ef861d786e314ed4a9c31918f4fac7443335",
+      "actual": "a5587789e8e27e00e27ee8263c74ef861d786e314ed4a9c31918f4fac7443335",
+      "matches": true
+    },
+    "pdf": {
+      "path": "docs/validation/libreoffice-reference/pdf/cf-phase3-legacy-bars.pdf",
+      "expected": "62f8372bafb2d15223550b2e140ea9dae5a173ec550370e410276f06fd095b8a",
+      "actual": "62f8372bafb2d15223550b2e140ea9dae5a173ec550370e410276f06fd095b8a",
+      "matches": true
+    }
+  },
+  {
+    "case_id": "cf-phase3-x14-bars",
+    "input": {
+      "path": "docs/validation/conditional-formatting-phase3/fixtures/x14-bars.xlsx",
+      "expected": "73dc15ca2efb0acda64b3ba6e07a257e6fe2000a4b98b446bcd6089b813243fe",
+      "actual": "73dc15ca2efb0acda64b3ba6e07a257e6fe2000a4b98b446bcd6089b813243fe",
+      "matches": true
+    },
+    "pdf": {
+      "path": "docs/validation/libreoffice-reference/pdf/cf-phase3-x14-bars.pdf",
+      "expected": "c77facd41550c0e630570f487c39e835d6aabee5d8e396aa4f9fd4fc87fcc9d5",
+      "actual": "c77facd41550c0e630570f487c39e835d6aabee5d8e396aa4f9fd4fc87fcc9d5",
+      "matches": true
+    }
+  },
+  {
+    "case_id": "shapes",
+    "input": {
+      "path": "docs/validation/render-finalization-performance/inputs/shapes.xlsx",
+      "expected": "e7728f9ef142f30d94490295705d8d55557556f0902d2e6a2a95960b987eb57c",
+      "actual": "e7728f9ef142f30d94490295705d8d55557556f0902d2e6a2a95960b987eb57c",
+      "matches": true
+    },
+    "pdf": {
+      "path": "docs/validation/libreoffice-reference/pdf/shapes.pdf",
+      "expected": "5f8ea40c59f98e036faac415820e0a9102479b4a92e8820188c2e9739eb422b2",
+      "actual": "5f8ea40c59f98e036faac415820e0a9102479b4a92e8820188c2e9739eb422b2",
+      "matches": true
+    }
+  },
+  {
+    "case_id": "actual-shape-text",
+    "input": {
+      "path": "docs/validation/render-finalization-performance/inputs/actual-shape-text.xlsx",
+      "expected": "f1a19080b15a44c786adc1b47ffaa4cb729ee1fac09d279a5ba8718344e63518",
+      "actual": "f1a19080b15a44c786adc1b47ffaa4cb729ee1fac09d279a5ba8718344e63518",
+      "matches": true
+    },
+    "pdf": {
+      "path": "docs/validation/libreoffice-reference/pdf/actual-shape-text.pdf",
+      "expected": "d431c3968ddf21da52103bfee793bd058ad660a8938286fa16a9697b9a33b22a",
+      "actual": "d431c3968ddf21da52103bfee793bd058ad660a8938286fa16a9697b9a33b22a",
+      "matches": true
+    }
+  },
+  {
+    "case_id": "japanese-grid-report",
+    "input": {
+      "path": "samples/excel/japanese-grid-report.xlsx",
+      "expected": "4907d79963eb8267eab4230c7aad9bbd0d580238d3d42f402b34fb4c0ff217a1",
+      "actual": "4907d79963eb8267eab4230c7aad9bbd0d580238d3d42f402b34fb4c0ff217a1",
+      "matches": true
+    },
+    "pdf": {
+      "path": "docs/validation/libreoffice-reference/pdf/japanese-grid-report.pdf",
+      "expected": "8c8163090382aa8f53318cd3e95f547ca982ab7bdc492ddf457940e382329e81",
+      "actual": "8c8163090382aa8f53318cd3e95f547ca982ab7bdc492ddf457940e382329e81",
+      "matches": true
+    }
+  }
+]

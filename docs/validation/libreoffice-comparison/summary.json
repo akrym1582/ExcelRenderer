@@ -1,0 +1,40 @@
+{
+  "engines": {
+    "main": {
+      "cases": 22,
+      "generated_pdfs": 22,
+      "pages": 31,
+      "failed_or_unverified": 0,
+      "core_contract_difference_cases": 0,
+      "unresolved_contract_cases": 0
+    },
+    "core": {
+      "cases": 22,
+      "generated_pdfs": 22,
+      "pages": 34,
+      "failed_or_unverified": 0,
+      "core_contract_difference_cases": 10,
+      "unresolved_contract_cases": 2
+    }
+  },
+  "pairs": {
+    "libreoffice-main": {
+      "records": 22,
+      "compared": 22,
+      "equal_page_counts": 21,
+      "equal_text_inventory": 14
+    },
+    "libreoffice-core": {
+      "records": 22,
+      "compared": 22,
+      "equal_page_counts": 18,
+      "equal_text_inventory": 12
+    },
+    "main-core": {
+      "records": 22,
+      "compared": 22,
+      "equal_page_counts": 19,
+      "equal_text_inventory": 16
+    }
+  }
+}

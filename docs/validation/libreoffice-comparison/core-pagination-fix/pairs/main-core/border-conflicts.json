@@ -1,0 +1,288 @@
+{
+  "case_id": "border-conflicts",
+  "pair": "main-core",
+  "status": "compared-needs-review",
+  "left_sha256": "95c7f50fad7e50ae53395d5fe04d75e69d483bb01a4bf3a42365af448a31ad24",
+  "right_sha256": "d2e80fa7d6c9a64cd8ef1595daefb59c2a7e114e80fb0343bf503b907e0c2ece",
+  "page_count": [
+    5,
+    5
+  ],
+  "page_count_equal": true,
+  "page_correspondence": "ordinal only; if counts differ consult both complete page sets",
+  "document_text": {
+    "left_only_characters": {},
+    "right_only_characters": {},
+    "same_non_whitespace_character_inventory": true,
+    "same_extracted_text": true
+  },
+  "character_positions": {
+    "method": "Extraction sequence alignment; repeated characters and extraction order can be ambiguous",
+    "matched_characters": 1,
+    "matched_characters_on_different_pages": 0,
+    "matches": [
+      {
+        "text": "1",
+        "left_page": 5,
+        "right_page": 5,
+        "left_origin": [
+          59.39500045776367,
+          44.332000732421875
+        ],
+        "right_origin": [
+          59.39500045776367,
+          44.332000732421875
+        ],
+        "left_bbox": [
+          59.39500045776367,
+          31.572002410888672,
+          65.5,
+          47.5
+        ],
+        "right_bbox": [
+          59.39500045776367,
+          31.572002410888672,
+          65.5,
+          47.5
+        ],
+        "dx_pt": 0.0,
+        "dy_pt": 0.0
+      }
+    ]
+  },
+  "pages": [
+    {
+      "page": 1,
+      "sizes_pt": [
+        [
+          0.0,
+          0.0,
+          612.0,
+          792.0
+        ],
+        [
+          0.0,
+          0.0,
+          612.0,
+          792.0
+        ]
+      ],
+      "size_equal": true,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "rasters": [
+        {
+          "dpi": 144,
+          "canvas_pixels": [
+            1224,
+            1584
+          ],
+          "changed_pixel_ratio": 0.0,
+          "difference_over_16_ratio": 0.0,
+          "side_by_side": "artifacts/libreoffice-comparison/core-pagination-fix/images/main-core/border-conflicts/page-001-144dpi/side-by-side.png"
+        },
+        {
+          "dpi": 288,
+          "canvas_pixels": [
+            2448,
+            3168
+          ],
+          "changed_pixel_ratio": 0.0,
+          "difference_over_16_ratio": 0.0,
+          "side_by_side": "artifacts/libreoffice-comparison/core-pagination-fix/images/main-core/border-conflicts/page-001-288dpi/side-by-side.png"
+        }
+      ]
+    },
+    {
+      "page": 2,
+      "sizes_pt": [
+        [
+          0.0,
+          0.0,
+          612.0,
+          792.0
+        ],
+        [
+          0.0,
+          0.0,
+          612.0,
+          792.0
+        ]
+      ],
+      "size_equal": true,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "rasters": [
+        {
+          "dpi": 144,
+          "canvas_pixels": [
+            1224,
+            1584
+          ],
+          "changed_pixel_ratio": 0.0,
+          "difference_over_16_ratio": 0.0,
+          "side_by_side": "artifacts/libreoffice-comparison/core-pagination-fix/images/main-core/border-conflicts/page-002-144dpi/side-by-side.png"
+        },
+        {
+          "dpi": 288,
+          "canvas_pixels": [
+            2448,
+            3168
+          ],
+          "changed_pixel_ratio": 0.0,
+          "difference_over_16_ratio": 0.0,
+          "side_by_side": "artifacts/libreoffice-comparison/core-pagination-fix/images/main-core/border-conflicts/page-002-288dpi/side-by-side.png"
+        }
+      ]
+    },
+    {
+      "page": 3,
+      "sizes_pt": [
+        [
+          0.0,
+          0.0,
+          612.0,
+          792.0
+        ],
+        [
+          0.0,
+          0.0,
+          612.0,
+          792.0
+        ]
+      ],
+      "size_equal": true,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "rasters": [
+        {
+          "dpi": 144,
+          "canvas_pixels": [
+            1224,
+            1584
+          ],
+          "changed_pixel_ratio": 0.0,
+          "difference_over_16_ratio": 0.0,
+          "side_by_side": "artifacts/libreoffice-comparison/core-pagination-fix/images/main-core/border-conflicts/page-003-144dpi/side-by-side.png"
+        },
+        {
+          "dpi": 288,
+          "canvas_pixels": [
+            2448,
+            3168
+          ],
+          "changed_pixel_ratio": 0.0,
+          "difference_over_16_ratio": 0.0,
+          "side_by_side": "artifacts/libreoffice-comparison/core-pagination-fix/images/main-core/border-conflicts/page-003-288dpi/side-by-side.png"
+        }
+      ]
+    },
+    {
+      "page": 4,
+      "sizes_pt": [
+        [
+          0.0,
+          0.0,
+          612.0,
+          792.0
+        ],
+        [
+          0.0,
+          0.0,
+          612.0,
+          792.0
+        ]
+      ],
+      "size_equal": true,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "rasters": [
+        {
+          "dpi": 144,
+          "canvas_pixels": [
+            1224,
+            1584
+          ],
+          "changed_pixel_ratio": 0.0,
+          "difference_over_16_ratio": 0.0,
+          "side_by_side": "artifacts/libreoffice-comparison/core-pagination-fix/images/main-core/border-conflicts/page-004-144dpi/side-by-side.png"
+        },
+        {
+          "dpi": 288,
+          "canvas_pixels": [
+            2448,
+            3168
+          ],
+          "changed_pixel_ratio": 0.0,
+          "difference_over_16_ratio": 0.0,
+          "side_by_side": "artifacts/libreoffice-comparison/core-pagination-fix/images/main-core/border-conflicts/page-004-288dpi/side-by-side.png"
+        }
+      ]
+    },
+    {
+      "page": 5,
+      "sizes_pt": [
+        [
+          0.0,
+          0.0,
+          612.0,
+          792.0
+        ],
+        [
+          0.0,
+          0.0,
+          612.0,
+          792.0
+        ]
+      ],
+      "size_equal": true,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "rasters": [
+        {
+          "dpi": 144,
+          "canvas_pixels": [
+            1224,
+            1584
+          ],
+          "changed_pixel_ratio": 0.00012378688849277084,
+          "difference_over_16_ratio": 0.00012378688849277084,
+          "side_by_side": "artifacts/libreoffice-comparison/core-pagination-fix/images/main-core/border-conflicts/page-005-144dpi/side-by-side.png"
+        },
+        {
+          "dpi": 288,
+          "canvas_pixels": [
+            2448,
+            3168
+          ],
+          "changed_pixel_ratio": 9.284016636957813e-05,
+          "difference_over_16_ratio": 9.284016636957813e-05,
+          "side_by_side": "artifacts/libreoffice-comparison/core-pagination-fix/images/main-core/border-conflicts/page-005-288dpi/side-by-side.png"
+        }
+      ]
+    }
+  ],
+  "findings": [
+    "F07"
+  ]
+}

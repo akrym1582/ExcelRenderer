@@ -1,0 +1,292 @@
+[
+  {
+    "case_id": "01-japanese",
+    "engine": "main",
+    "generation": "generated",
+    "page_count": 1,
+    "verdict": "review-required",
+    "findings": [
+      "F03"
+    ],
+    "common_scope_reviewed": "Values, ordinary formatting, borders and pagination; see pair evidence and findings. No desktop Excel check.",
+    "input_sha256": "6a89d390e07a60e919b7be2c5fa6af47721b0e9c5a4a0c325ae97174ff6386f0",
+    "pdf_sha256": "317ae1b31d87d1462db3ec3c4ac409324a82f48afb3e54477206d4ca0cbe50fc"
+  },
+  {
+    "case_id": "02-image",
+    "engine": "main",
+    "generation": "generated",
+    "page_count": 1,
+    "verdict": "review-required",
+    "findings": [
+      "F03"
+    ],
+    "common_scope_reviewed": "Values, ordinary formatting, borders and pagination; see pair evidence and findings. No desktop Excel check.",
+    "input_sha256": "d54804111617065e59a4bbe4d5c2099b08efdea2f71d1676998bc836569de254",
+    "pdf_sha256": "8132c9d3d7dcd9033151bf819bfed985fe062c685d2c48b092292adae667cb58"
+  },
+  {
+    "case_id": "03-wrapped-text",
+    "engine": "main",
+    "generation": "generated",
+    "page_count": 1,
+    "verdict": "review-required",
+    "findings": [
+      "F03",
+      "F15"
+    ],
+    "common_scope_reviewed": "Values, ordinary formatting, borders and pagination; see pair evidence and findings. No desktop Excel check.",
+    "input_sha256": "60421161d8ec36904befd41ecde57551ea7880a8ffda07925b38178fc747d990",
+    "pdf_sha256": "7b1d6fbac7d933f845fd5838d2f855370499d7317620b21087c7524dbf430832"
+  },
+  {
+    "case_id": "04-text-decoration",
+    "engine": "main",
+    "generation": "generated",
+    "page_count": 1,
+    "verdict": "review-required",
+    "findings": [
+      "F03"
+    ],
+    "common_scope_reviewed": "Values, ordinary formatting, borders and pagination; see pair evidence and findings. No desktop Excel check.",
+    "input_sha256": "c8ee629159de588541c6d08bce70cae9c0483ddcb21c3feef536102e1457cff1",
+    "pdf_sha256": "0f7e3576c26348c9d9e36f4569d8fae174629561803e1c5c9bc23dfeaecad62f"
+  },
+  {
+    "case_id": "05-borders",
+    "engine": "main",
+    "generation": "generated",
+    "page_count": 2,
+    "verdict": "review-required",
+    "findings": [
+      "F03",
+      "F04"
+    ],
+    "common_scope_reviewed": "Values, ordinary formatting, borders and pagination; see pair evidence and findings. No desktop Excel check.",
+    "input_sha256": "074cfd50a3d4556380f462a69287d9b0254a71ebe412e267b395ca345a54eac2",
+    "pdf_sha256": "47f5637e281586b314318755453dc438c3ba42eaef420a23b3555eef83d71b0c"
+  },
+  {
+    "case_id": "06-layout-and-pagination",
+    "engine": "main",
+    "generation": "generated",
+    "page_count": 4,
+    "verdict": "review-required",
+    "findings": [
+      "F03",
+      "F05"
+    ],
+    "common_scope_reviewed": "Values, ordinary formatting, borders and pagination; see pair evidence and findings. No desktop Excel check.",
+    "input_sha256": "5870f080ac266568de200bf6955a617da452b14c103a30371889e8bee13b12e6",
+    "pdf_sha256": "af90d36de1596b1cea0301a2b8f6bf1c64498a61a681a8fd53c037cc42d247a5"
+  },
+  {
+    "case_id": "07-multiple-sheets",
+    "engine": "main",
+    "generation": "generated",
+    "page_count": 2,
+    "verdict": "no-material-difference-observed",
+    "findings": [],
+    "common_scope_reviewed": "Values, ordinary formatting, borders and pagination; see pair evidence and findings. No desktop Excel check.",
+    "input_sha256": "2da1636a03384c0aa0ecb14ec3183631f3c41a90f1348693e795c329c0cae20e",
+    "pdf_sha256": "63f63b4d0b2ae4a57361d489384f7633ef5396fec6b68009752c5478f476762f"
+  },
+  {
+    "case_id": "08-print-scaling",
+    "engine": "main",
+    "generation": "generated",
+    "page_count": 1,
+    "verdict": "review-required",
+    "findings": [
+      "F02",
+      "F03"
+    ],
+    "common_scope_reviewed": "Values, ordinary formatting, borders and pagination; see pair evidence and findings. No desktop Excel check.",
+    "input_sha256": "f9e5ffaa18c622d2820138d18c6aed07ae63b28da8fad1c71c4ffcbdd12a9fb7",
+    "pdf_sha256": "b771b1da9655a6483cb5e1a28647a8555231643d691f88efcf1e15f2ac97714c"
+  },
+  {
+    "case_id": "09-cell-border",
+    "engine": "main",
+    "generation": "generated",
+    "page_count": 1,
+    "verdict": "review-required",
+    "findings": [
+      "F05"
+    ],
+    "common_scope_reviewed": "Values, ordinary formatting, borders and pagination; see pair evidence and findings. No desktop Excel check.",
+    "input_sha256": "5655ee7b5407c1c9af6836ec65f573819b0265c833660210d04060ca8c368d70",
+    "pdf_sha256": "65b525b28bfc5ca03fad7a8d4b12cbcf40bbc92c595f334283d85a0304b957b2"
+  },
+  {
+    "case_id": "cell-argb",
+    "engine": "main",
+    "generation": "generated",
+    "page_count": 1,
+    "verdict": "review-required",
+    "findings": [
+      "F15"
+    ],
+    "common_scope_reviewed": "Values, ordinary formatting, borders and pagination; see pair evidence and findings. No desktop Excel check.",
+    "input_sha256": "3d6e77900ea64b573eb26caf04c7ff7ddc34fab4b78c08a30fe0909faf9d9733",
+    "pdf_sha256": "609131061f8edf28b7b7149c7dcc2c3b013fcc8fed6617fce1ed764a958945c0"
+  },
+  {
+    "case_id": "border-conflicts",
+    "engine": "main",
+    "generation": "generated",
+    "page_count": 5,
+    "verdict": "observed-with-classified-differences",
+    "findings": [
+      "F06"
+    ],
+    "common_scope_reviewed": "Values, ordinary formatting, borders and pagination; see pair evidence and findings. No desktop Excel check.",
+    "input_sha256": "a07e159caa4a83a12c38231f70cbf2ca6bdcded9404291ba5244e8f03249a12a",
+    "pdf_sha256": "95c7f50fad7e50ae53395d5fe04d75e69d483bb01a4bf3a42365af448a31ad24"
+  },
+  {
+    "case_id": "richtext",
+    "engine": "main",
+    "generation": "generated",
+    "page_count": 1,
+    "verdict": "review-required",
+    "findings": [
+      "F15"
+    ],
+    "common_scope_reviewed": "Values, ordinary formatting, borders and pagination; see pair evidence and findings. No desktop Excel check.",
+    "input_sha256": "5e4032e814530d62db777ad76b8eae467c4f761696a2877e22ca41e2fbc37357",
+    "pdf_sha256": "86891a7f9b25dcbd4c127c3584ed17d1727461263940e6082089af7ca5b15bca"
+  },
+  {
+    "case_id": "cf-phase1",
+    "engine": "main",
+    "generation": "generated",
+    "page_count": 1,
+    "verdict": "review-required",
+    "findings": [
+      "F15"
+    ],
+    "common_scope_reviewed": "Values, ordinary formatting, borders and pagination; see pair evidence and findings. No desktop Excel check.",
+    "input_sha256": "2de333cf34b705aa6a0cec71a69c61a85df446302831cc4157078e7a83c39826",
+    "pdf_sha256": "6e415dd9987f6ceb017e66497a59e41154ec483ac364cb18dfd5e9979b1d78a3"
+  },
+  {
+    "case_id": "cf-phase2",
+    "engine": "main",
+    "generation": "generated",
+    "page_count": 1,
+    "verdict": "review-required",
+    "findings": [
+      "F15"
+    ],
+    "common_scope_reviewed": "Values, ordinary formatting, borders and pagination; see pair evidence and findings. No desktop Excel check.",
+    "input_sha256": "a8f48ee704a1db4cefcc433a1fef03600088e9d1f8e04ed33b055cd656727a12",
+    "pdf_sha256": "a697c49006e354d82e038d765d148a165af412c9158799f2e890b99e3c97514e"
+  },
+  {
+    "case_id": "cf-mapped-scale",
+    "engine": "main",
+    "generation": "generated",
+    "page_count": 1,
+    "verdict": "review-required",
+    "findings": [
+      "F15"
+    ],
+    "common_scope_reviewed": "Values, ordinary formatting, borders and pagination; see pair evidence and findings. No desktop Excel check.",
+    "input_sha256": "d25403efc3ca5021d697075370e83e42e7215bbe89885f7aa2d0f61b4768d3b6",
+    "pdf_sha256": "8954b589945fdbe7002f18ecd033df7d84bacf37a48c6034c15821f01684048a"
+  },
+  {
+    "case_id": "cf-phase3-icons",
+    "engine": "main",
+    "generation": "generated",
+    "page_count": 1,
+    "verdict": "observed-with-classified-differences",
+    "findings": [
+      "F08"
+    ],
+    "common_scope_reviewed": "Values, ordinary formatting, borders and pagination; see pair evidence and findings. No desktop Excel check.",
+    "input_sha256": "800b4ff9c62bee007bf0602fbd4d140d17ca79adcb2fc0806a052fe183845aa3",
+    "pdf_sha256": "e86755383302bd807b67ece618a4e36fa7dfd472fcd5ccc8f1c0aca4db8bfb19"
+  },
+  {
+    "case_id": "cf-phase3-layout-mapping",
+    "engine": "main",
+    "generation": "generated",
+    "page_count": 1,
+    "verdict": "observed-with-classified-differences",
+    "findings": [
+      "F13"
+    ],
+    "common_scope_reviewed": "Values, ordinary formatting, borders and pagination; see pair evidence and findings. No desktop Excel check.",
+    "input_sha256": "ad6831e0cf5774f3e2a0d38e935f3dffd3f87c3d1b63fe2c2e18e4b097b1c2d5",
+    "pdf_sha256": "b989dbedada2ab412203779549e889059248306444800fc86bfebfb950d1d377"
+  },
+  {
+    "case_id": "cf-phase3-legacy-bars",
+    "engine": "main",
+    "generation": "generated",
+    "page_count": 1,
+    "verdict": "observed-with-classified-differences",
+    "findings": [
+      "F08"
+    ],
+    "common_scope_reviewed": "Values, ordinary formatting, borders and pagination; see pair evidence and findings. No desktop Excel check.",
+    "input_sha256": "a5587789e8e27e00e27ee8263c74ef861d786e314ed4a9c31918f4fac7443335",
+    "pdf_sha256": "7cfc0c6d6c8a70d98f6890d9711dd832c2c51be1c271016eb9255f962452965c"
+  },
+  {
+    "case_id": "cf-phase3-x14-bars",
+    "engine": "main",
+    "generation": "generated",
+    "page_count": 1,
+    "verdict": "observed-with-classified-differences",
+    "findings": [
+      "F08"
+    ],
+    "common_scope_reviewed": "Values, ordinary formatting, borders and pagination; see pair evidence and findings. No desktop Excel check.",
+    "input_sha256": "73dc15ca2efb0acda64b3ba6e07a257e6fe2000a4b98b446bcd6089b813243fe",
+    "pdf_sha256": "6985e6091243a139f368abee4f166a687a7a58a1bb2e26d8579b78f8dba7db8a"
+  },
+  {
+    "case_id": "shapes",
+    "engine": "main",
+    "generation": "generated",
+    "page_count": 1,
+    "verdict": "observed-with-classified-differences",
+    "findings": [
+      "F13"
+    ],
+    "common_scope_reviewed": "Values, ordinary formatting, borders and pagination; see pair evidence and findings. No desktop Excel check.",
+    "input_sha256": "e7728f9ef142f30d94490295705d8d55557556f0902d2e6a2a95960b987eb57c",
+    "pdf_sha256": "f51bd7231b0b7e6b713cf99da5e6d245d32ca08a2302ca339057b6952a81f225"
+  },
+  {
+    "case_id": "actual-shape-text",
+    "engine": "main",
+    "generation": "generated",
+    "page_count": 1,
+    "verdict": "review-required",
+    "findings": [
+      "F12",
+      "F14"
+    ],
+    "common_scope_reviewed": "Values, ordinary formatting, borders and pagination; see pair evidence and findings. No desktop Excel check.",
+    "input_sha256": "f1a19080b15a44c786adc1b47ffaa4cb729ee1fac09d279a5ba8718344e63518",
+    "pdf_sha256": "edc7877f42a60e794779e688d19cd9cde8f3fd2004b40e207d24f2c895ee6415"
+  },
+  {
+    "case_id": "japanese-grid-report",
+    "engine": "main",
+    "generation": "generated",
+    "page_count": 1,
+    "verdict": "review-required",
+    "findings": [
+      "F14",
+      "F15"
+    ],
+    "common_scope_reviewed": "Values, ordinary formatting, borders and pagination; see pair evidence and findings. No desktop Excel check.",
+    "input_sha256": "4907d79963eb8267eab4230c7aad9bbd0d580238d3d42f402b34fb4c0ff217a1",
+    "pdf_sha256": "9c097f21e16386447851017e598eccf06af6d51f31db6187496e7e0318eca277"
+  }
+]

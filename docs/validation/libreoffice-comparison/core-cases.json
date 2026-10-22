@@ -1,0 +1,1787 @@
+[
+  {
+    "case_id": "01-japanese",
+    "engine": "core",
+    "input": "tests/ExcelRenderer.Tests/SampleInputs/01-japanese.xlsx",
+    "input_sha256": "6a89d390e07a60e919b7be2c5fa6af47721b0e9c5a4a0c325ae97174ff6386f0",
+    "hashes_valid": true,
+    "selected_sheets": [
+      "日本語"
+    ],
+    "workbook": {
+      "sheets": [
+        {
+          "name": "日本語",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId2"
+        }
+      ],
+      "worksheet_metadata": [
+        {
+          "part": "xl/worksheets/sheet1.xml",
+          "conditional_ranges": [],
+          "formulas": [],
+          "print_settings": {
+            "pageSetup": [
+              {
+                "paperSize": "9",
+                "scale": "100",
+                "pageOrder": "downThenOver",
+                "orientation": "portrait",
+                "blackAndWhite": "0",
+                "draft": "0",
+                "cellComments": "none",
+                "errors": "displayed"
+              }
+            ],
+            "pageMargins": [
+              {
+                "left": "0.6666666666666666",
+                "right": "0.6666666666666666",
+                "top": "0.6666666666666666",
+                "bottom": "0.6666666666666666",
+                "header": "0.5",
+                "footer": "0.75"
+              }
+            ],
+            "rowBreaks": [],
+            "colBreaks": []
+          }
+        }
+      ],
+      "drawing_parts": []
+    },
+    "font_hashes": {
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec"
+    },
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "core",
+      "tests/ExcelRenderer.Tests/SampleInputs/01-japanese.xlsx",
+      "--output",
+      "/workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/01-japanese.pdf",
+      "--verbose",
+      "--sheet",
+      "日本語",
+      "--font-file",
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Starting core: core tests/ExcelRenderer.Tests/SampleInputs/01-japanese.xlsx --output /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/01-japanese.pdf --verbose --sheet 日本語 --font-file third_party/NotoSansJP/NotoSansJP-Regular.ttf\nWarning: SavedPageBreaks [日本語, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nCore PDF: 2 pages; 1 diagnostics; output: /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/01-japanese.pdf\nCompleted in 543.0 ms.\nMetric borderCandidates: 0.000\nMetric coreCommandBuild: 1.000\nMetric coreGeometryPlan: 1.000\nMetric corePageBuild: 1.000\nMetric fontSnapshotRead: 1.000\nMetric lineMetricsComputed: 1.000\nMetric openXmlReaderWorkbook: 1.000\nMetric pagePayloadActive: 0.000\nMetric pdfFinalSave.ms: 32.457\nMetric pdfFontCreated: 1.000\nMetric pdfFontDisposed: 1.000\nMetric pdfFontRunsCollected: 1.000\nMetric pdfOriginalFontBytes: 5472784.000\nMetric pdfSave: 1.000\nMetric pdfSubset.ms: 25.648\nMetric pdfSubsetFontBytes: 337612.000\nMetric pdfSubsetTypefaceCreated: 1.000\nMetric pdfSubsetTypefaceDisposed: 1.000\nMetric reader.ms: 315.658\nMetric readerStyleCacheEntries: 5.000\nMetric readerStyleCacheHits: 4.000\nMetric readerStyleConversions: 4.000\nMetric typefaceCreated: 1.000\nMetric typefaceDisposed: 1.000\n",
+    "elapsed_seconds": 0.6025427060000084,
+    "status": "generated",
+    "pdf_sha256": "38127f87ae6510e752b0db2acda0d952906860c7d73c455e4f93bd05e8d6e4bd",
+    "page_count": 2
+  },
+  {
+    "case_id": "02-image",
+    "engine": "core",
+    "input": "tests/ExcelRenderer.Tests/SampleInputs/02-image.xlsx",
+    "input_sha256": "d54804111617065e59a4bbe4d5c2099b08efdea2f71d1676998bc836569de254",
+    "hashes_valid": true,
+    "selected_sheets": [
+      "画像"
+    ],
+    "workbook": {
+      "sheets": [
+        {
+          "name": "画像",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId2"
+        }
+      ],
+      "worksheet_metadata": [
+        {
+          "part": "xl/worksheets/sheet1.xml",
+          "conditional_ranges": [],
+          "formulas": [],
+          "print_settings": {
+            "pageSetup": [
+              {
+                "paperSize": "9",
+                "scale": "100",
+                "pageOrder": "downThenOver",
+                "orientation": "portrait",
+                "blackAndWhite": "0",
+                "draft": "0",
+                "cellComments": "none",
+                "errors": "displayed"
+              }
+            ],
+            "pageMargins": [
+              {
+                "left": "0.6666666666666666",
+                "right": "0.6666666666666666",
+                "top": "0.6666666666666666",
+                "bottom": "0.6666666666666666",
+                "header": "0.5",
+                "footer": "0.75"
+              }
+            ],
+            "rowBreaks": [],
+            "colBreaks": []
+          }
+        }
+      ],
+      "drawing_parts": [
+        "xl/drawings/drawing1.xml"
+      ]
+    },
+    "font_hashes": {
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec"
+    },
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "core",
+      "tests/ExcelRenderer.Tests/SampleInputs/02-image.xlsx",
+      "--output",
+      "/workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/02-image.pdf",
+      "--verbose",
+      "--sheet",
+      "画像",
+      "--font-file",
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Starting core: core tests/ExcelRenderer.Tests/SampleInputs/02-image.xlsx --output /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/02-image.pdf --verbose --sheet 画像 --font-file third_party/NotoSansJP/NotoSansJP-Regular.ttf\nWarning: SavedPageBreaks [画像, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nCore PDF: 2 pages; 1 diagnostics; output: /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/02-image.pdf\nCompleted in 572.2 ms.\nMetric borderCandidates: 0.000\nMetric coreCommandBuild: 1.000\nMetric coreGeometryPlan: 1.000\nMetric corePageBuild: 1.000\nMetric fontSnapshotRead: 1.000\nMetric imageCacheEstimatedBytes: 215948.000\nMetric imageDecode: 1.000\nMetric imagePixelDecode: 1.000\nMetric lineMetricsComputed: 1.000\nMetric openXmlReaderWorkbook: 1.000\nMetric pagePayloadActive: 0.000\nMetric pdfFinalSave.ms: 35.340\nMetric pdfFontCreated: 1.000\nMetric pdfFontDisposed: 1.000\nMetric pdfFontRunsCollected: 1.000\nMetric pdfOriginalFontBytes: 5472784.000\nMetric pdfSave: 1.000\nMetric pdfSubset.ms: 23.396\nMetric pdfSubsetFontBytes: 332612.000\nMetric pdfSubsetTypefaceCreated: 1.000\nMetric pdfSubsetTypefaceDisposed: 1.000\nMetric reader.ms: 330.025\nMetric readerStyleCacheEntries: 4.000\nMetric readerStyleCacheHits: 1.000\nMetric readerStyleConversions: 3.000\nMetric typefaceCreated: 1.000\nMetric typefaceDisposed: 1.000\n",
+    "elapsed_seconds": 0.6447686369999985,
+    "status": "generated",
+    "pdf_sha256": "58cd3ddcee329874d167515b0536b2f5d45f58e956bffe478a45cd361d207a08",
+    "page_count": 2
+  },
+  {
+    "case_id": "03-wrapped-text",
+    "engine": "core",
+    "input": "tests/ExcelRenderer.Tests/SampleInputs/03-wrapped-text.xlsx",
+    "input_sha256": "60421161d8ec36904befd41ecde57551ea7880a8ffda07925b38178fc747d990",
+    "hashes_valid": true,
+    "selected_sheets": [
+      "折り返し"
+    ],
+    "workbook": {
+      "sheets": [
+        {
+          "name": "折り返し",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId2"
+        }
+      ],
+      "worksheet_metadata": [
+        {
+          "part": "xl/worksheets/sheet1.xml",
+          "conditional_ranges": [],
+          "formulas": [],
+          "print_settings": {
+            "pageSetup": [
+              {
+                "paperSize": "9",
+                "scale": "100",
+                "pageOrder": "downThenOver",
+                "orientation": "portrait",
+                "blackAndWhite": "0",
+                "draft": "0",
+                "cellComments": "none",
+                "errors": "displayed"
+              }
+            ],
+            "pageMargins": [
+              {
+                "left": "0.6666666666666666",
+                "right": "0.6666666666666666",
+                "top": "0.6666666666666666",
+                "bottom": "0.6666666666666666",
+                "header": "0.5",
+                "footer": "0.75"
+              }
+            ],
+            "rowBreaks": [],
+            "colBreaks": []
+          }
+        }
+      ],
+      "drawing_parts": []
+    },
+    "font_hashes": {
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec"
+    },
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "core",
+      "tests/ExcelRenderer.Tests/SampleInputs/03-wrapped-text.xlsx",
+      "--output",
+      "/workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/03-wrapped-text.pdf",
+      "--verbose",
+      "--sheet",
+      "折り返し",
+      "--font-file",
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Starting core: core tests/ExcelRenderer.Tests/SampleInputs/03-wrapped-text.xlsx --output /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/03-wrapped-text.pdf --verbose --sheet 折り返し --font-file third_party/NotoSansJP/NotoSansJP-Regular.ttf\nWarning: SavedPageBreaks [折り返し, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nCore PDF: 1 pages; 1 diagnostics; output: /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/03-wrapped-text.pdf\nCompleted in 534.3 ms.\nMetric borderCandidates: 1.000\nMetric coreBorderGeometry: 1.000\nMetric coreCommandBuild: 1.000\nMetric coreGeometryPlan: 1.000\nMetric corePageBuild: 1.000\nMetric fontSnapshotRead: 1.000\nMetric lineMetricsComputed: 1.000\nMetric openXmlReaderWorkbook: 1.000\nMetric pagePayloadActive: 0.000\nMetric pdfFinalSave.ms: 31.139\nMetric pdfFontCreated: 1.000\nMetric pdfFontDisposed: 1.000\nMetric pdfFontRunsCollected: 1.000\nMetric pdfOriginalFontBytes: 5472784.000\nMetric pdfSave: 1.000\nMetric pdfSubset.ms: 23.707\nMetric pdfSubsetFontBytes: 339156.000\nMetric pdfSubsetTypefaceCreated: 1.000\nMetric pdfSubsetTypefaceDisposed: 1.000\nMetric reader.ms: 286.043\nMetric readerStyleCacheEntries: 3.000\nMetric readerStyleCacheHits: 0.000\nMetric readerStyleConversions: 2.000\nMetric resolvedBorderSegments: 1.000\nMetric typefaceCreated: 1.000\nMetric typefaceDisposed: 1.000\n",
+    "elapsed_seconds": 0.6129026019999912,
+    "status": "generated",
+    "pdf_sha256": "b35c9be5e812f66d22d020cf07e0e98b8232d6232818d3ab0013dc6a14b85011",
+    "page_count": 1
+  },
+  {
+    "case_id": "04-text-decoration",
+    "engine": "core",
+    "input": "tests/ExcelRenderer.Tests/SampleInputs/04-text-decoration.xlsx",
+    "input_sha256": "c8ee629159de588541c6d08bce70cae9c0483ddcb21c3feef536102e1457cff1",
+    "hashes_valid": true,
+    "selected_sheets": [
+      "文字装飾"
+    ],
+    "workbook": {
+      "sheets": [
+        {
+          "name": "文字装飾",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId2"
+        }
+      ],
+      "worksheet_metadata": [
+        {
+          "part": "xl/worksheets/sheet1.xml",
+          "conditional_ranges": [],
+          "formulas": [],
+          "print_settings": {
+            "pageSetup": [
+              {
+                "paperSize": "9",
+                "scale": "100",
+                "pageOrder": "downThenOver",
+                "orientation": "portrait",
+                "blackAndWhite": "0",
+                "draft": "0",
+                "cellComments": "none",
+                "errors": "displayed"
+              }
+            ],
+            "pageMargins": [
+              {
+                "left": "0.6666666666666666",
+                "right": "0.6666666666666666",
+                "top": "0.6666666666666666",
+                "bottom": "0.6666666666666666",
+                "header": "0.5",
+                "footer": "0.75"
+              }
+            ],
+            "rowBreaks": [],
+            "colBreaks": []
+          }
+        }
+      ],
+      "drawing_parts": []
+    },
+    "font_hashes": {
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec"
+    },
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "core",
+      "tests/ExcelRenderer.Tests/SampleInputs/04-text-decoration.xlsx",
+      "--output",
+      "/workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/04-text-decoration.pdf",
+      "--verbose",
+      "--sheet",
+      "文字装飾",
+      "--font-file",
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Starting core: core tests/ExcelRenderer.Tests/SampleInputs/04-text-decoration.xlsx --output /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/04-text-decoration.pdf --verbose --sheet 文字装飾 --font-file third_party/NotoSansJP/NotoSansJP-Regular.ttf\nWarning: SavedPageBreaks [文字装飾, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nCore PDF: 1 pages; 1 diagnostics; output: /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/04-text-decoration.pdf\nCompleted in 613.9 ms.\nMetric borderCandidates: 24.000\nMetric coreBorderGeometry: 1.000\nMetric coreCommandBuild: 1.000\nMetric coreGeometryPlan: 1.000\nMetric corePageBuild: 1.000\nMetric fontSnapshotRead: 1.000\nMetric lineMetricsComputed: 1.000\nMetric openXmlReaderWorkbook: 1.000\nMetric pagePayloadActive: 0.000\nMetric pdfFinalSave.ms: 32.434\nMetric pdfFontCreated: 1.000\nMetric pdfFontDisposed: 1.000\nMetric pdfFontRunsCollected: 1.000\nMetric pdfOriginalFontBytes: 5472784.000\nMetric pdfSave: 1.000\nMetric pdfSubset.ms: 25.475\nMetric pdfSubsetFontBytes: 334596.000\nMetric pdfSubsetTypefaceCreated: 1.000\nMetric pdfSubsetTypefaceDisposed: 1.000\nMetric reader.ms: 362.321\nMetric readerStyleCacheEntries: 8.000\nMetric readerStyleCacheHits: 0.000\nMetric readerStyleConversions: 7.000\nMetric resolvedBorderSegments: 1.000\nMetric typefaceCreated: 1.000\nMetric typefaceDisposed: 1.000\n",
+    "elapsed_seconds": 0.6760968799999887,
+    "status": "generated",
+    "pdf_sha256": "bc0a887847f7d6bd802471f46d8b36469fb69e88bdc9f3de05f2f0759ccc956a",
+    "page_count": 1
+  },
+  {
+    "case_id": "05-borders",
+    "engine": "core",
+    "input": "tests/ExcelRenderer.Tests/SampleInputs/05-borders.xlsx",
+    "input_sha256": "074cfd50a3d4556380f462a69287d9b0254a71ebe412e267b395ca345a54eac2",
+    "hashes_valid": true,
+    "selected_sheets": [
+      "罫線"
+    ],
+    "workbook": {
+      "sheets": [
+        {
+          "name": "罫線",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId2"
+        }
+      ],
+      "worksheet_metadata": [
+        {
+          "part": "xl/worksheets/sheet1.xml",
+          "conditional_ranges": [],
+          "formulas": [],
+          "print_settings": {
+            "pageSetup": [
+              {
+                "paperSize": "9",
+                "scale": "100",
+                "pageOrder": "downThenOver",
+                "orientation": "portrait",
+                "blackAndWhite": "0",
+                "draft": "0",
+                "cellComments": "none",
+                "errors": "displayed"
+              }
+            ],
+            "pageMargins": [
+              {
+                "left": "0.6666666666666666",
+                "right": "0.6666666666666666",
+                "top": "0.6666666666666666",
+                "bottom": "0.6666666666666666",
+                "header": "0.5",
+                "footer": "0.75"
+              }
+            ],
+            "rowBreaks": [],
+            "colBreaks": []
+          }
+        }
+      ],
+      "drawing_parts": []
+    },
+    "font_hashes": {
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec"
+    },
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "core",
+      "tests/ExcelRenderer.Tests/SampleInputs/05-borders.xlsx",
+      "--output",
+      "/workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/05-borders.pdf",
+      "--verbose",
+      "--sheet",
+      "罫線",
+      "--font-file",
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Starting core: core tests/ExcelRenderer.Tests/SampleInputs/05-borders.xlsx --output /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/05-borders.pdf --verbose --sheet 罫線 --font-file third_party/NotoSansJP/NotoSansJP-Regular.ttf\nWarning: SavedPageBreaks [罫線, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nCore PDF: 2 pages; 1 diagnostics; output: /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/05-borders.pdf\nCompleted in 568.1 ms.\nMetric borderCandidates: 17.000\nMetric coreBorderGeometry: 1.000\nMetric coreCommandBuild: 1.000\nMetric coreGeometryPlan: 1.000\nMetric corePageBuild: 1.000\nMetric fontSnapshotRead: 1.000\nMetric lineMetricsComputed: 1.000\nMetric openXmlReaderWorkbook: 1.000\nMetric pagePayloadActive: 0.000\nMetric pdfFinalSave.ms: 31.518\nMetric pdfFontCreated: 1.000\nMetric pdfFontDisposed: 1.000\nMetric pdfFontRunsCollected: 1.000\nMetric pdfOriginalFontBytes: 5472784.000\nMetric pdfSave: 1.000\nMetric pdfSubset.ms: 23.337\nMetric pdfSubsetFontBytes: 335528.000\nMetric pdfSubsetTypefaceCreated: 1.000\nMetric pdfSubsetTypefaceDisposed: 1.000\nMetric reader.ms: 321.727\nMetric readerStyleCacheEntries: 11.000\nMetric readerStyleCacheHits: 2.000\nMetric readerStyleConversions: 10.000\nMetric resolvedBorderSegments: 1.000\nMetric typefaceCreated: 1.000\nMetric typefaceDisposed: 1.000\n",
+    "elapsed_seconds": 0.6302078669999958,
+    "status": "generated",
+    "pdf_sha256": "199db2f05349f85c45f668f950efee456995d79aaeac50a7987a9b48d1d5568a",
+    "page_count": 2
+  },
+  {
+    "case_id": "06-layout-and-pagination",
+    "engine": "core",
+    "input": "tests/ExcelRenderer.Tests/SampleInputs/06-layout-and-pagination.xlsx",
+    "input_sha256": "5870f080ac266568de200bf6955a617da452b14c103a30371889e8bee13b12e6",
+    "hashes_valid": true,
+    "selected_sheets": [
+      "ページ設定"
+    ],
+    "workbook": {
+      "sheets": [
+        {
+          "name": "ページ設定",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId2"
+        }
+      ],
+      "worksheet_metadata": [
+        {
+          "part": "xl/worksheets/sheet1.xml",
+          "conditional_ranges": [],
+          "formulas": [],
+          "print_settings": {
+            "pageSetup": [
+              {
+                "paperSize": "11",
+                "scale": "100",
+                "pageOrder": "downThenOver",
+                "orientation": "landscape",
+                "blackAndWhite": "0",
+                "draft": "0",
+                "cellComments": "none",
+                "errors": "displayed"
+              }
+            ],
+            "pageMargins": [
+              {
+                "left": "0.4166666666666667",
+                "right": "0.4166666666666667",
+                "top": "0.5",
+                "bottom": "0.5",
+                "header": "0.5",
+                "footer": "0.75"
+              }
+            ],
+            "rowBreaks": [],
+            "colBreaks": []
+          }
+        }
+      ],
+      "drawing_parts": []
+    },
+    "font_hashes": {
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec"
+    },
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "core",
+      "tests/ExcelRenderer.Tests/SampleInputs/06-layout-and-pagination.xlsx",
+      "--output",
+      "/workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/06-layout-and-pagination.pdf",
+      "--verbose",
+      "--sheet",
+      "ページ設定",
+      "--font-file",
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Starting core: core tests/ExcelRenderer.Tests/SampleInputs/06-layout-and-pagination.xlsx --output /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/06-layout-and-pagination.pdf --verbose --sheet ページ設定 --font-file third_party/NotoSansJP/NotoSansJP-Regular.ttf\nWarning: SavedPageBreaks [ページ設定, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nCore PDF: 4 pages; 1 diagnostics; output: /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/06-layout-and-pagination.pdf\nCompleted in 547.9 ms.\nMetric borderCandidates: 14.000\nMetric coreBorderGeometry: 1.000\nMetric coreCommandBuild: 1.000\nMetric coreGeometryPlan: 1.000\nMetric corePageBuild: 1.000\nMetric fontSnapshotRead: 1.000\nMetric lineMetricsComputed: 1.000\nMetric openXmlReaderWorkbook: 1.000\nMetric pagePayloadActive: 0.000\nMetric pdfFinalSave.ms: 31.922\nMetric pdfFontCreated: 1.000\nMetric pdfFontDisposed: 1.000\nMetric pdfFontRunsCollected: 1.000\nMetric pdfOriginalFontBytes: 5472784.000\nMetric pdfSave: 1.000\nMetric pdfSubset.ms: 23.149\nMetric pdfSubsetFontBytes: 334768.000\nMetric pdfSubsetTypefaceCreated: 1.000\nMetric pdfSubsetTypefaceDisposed: 1.000\nMetric reader.ms: 300.784\nMetric readerStyleCacheEntries: 6.000\nMetric readerStyleCacheHits: 45.000\nMetric readerStyleConversions: 5.000\nMetric resolvedBorderSegments: 1.000\nMetric typefaceCreated: 1.000\nMetric typefaceDisposed: 1.000\n",
+    "elapsed_seconds": 0.6110957289999988,
+    "status": "generated",
+    "pdf_sha256": "15a45929bb5ed231bfc543f5be76831a5d6a35fc4e2d34232b5264e0a0dc1205",
+    "page_count": 4
+  },
+  {
+    "case_id": "07-multiple-sheets",
+    "engine": "core",
+    "input": "tests/ExcelRenderer.Tests/SampleInputs/07-multiple-sheets.xlsx",
+    "input_sha256": "2da1636a03384c0aa0ecb14ec3183631f3c41a90f1348693e795c329c0cae20e",
+    "hashes_valid": true,
+    "selected_sheets": [
+      "売上",
+      "在庫"
+    ],
+    "workbook": {
+      "sheets": [
+        {
+          "name": "売上",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId2"
+        },
+        {
+          "name": "在庫",
+          "sheetId": "2",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId3"
+        }
+      ],
+      "worksheet_metadata": [
+        {
+          "part": "xl/worksheets/sheet1.xml",
+          "conditional_ranges": [],
+          "formulas": [],
+          "print_settings": {
+            "pageSetup": [
+              {
+                "paperSize": "1",
+                "scale": "100",
+                "pageOrder": "downThenOver",
+                "orientation": "default",
+                "blackAndWhite": "0",
+                "draft": "0",
+                "cellComments": "none",
+                "errors": "displayed"
+              }
+            ],
+            "pageMargins": [
+              {
+                "left": "0.75",
+                "right": "0.75",
+                "top": "0.75",
+                "bottom": "0.5",
+                "header": "0.5",
+                "footer": "0.75"
+              }
+            ],
+            "rowBreaks": [],
+            "colBreaks": []
+          }
+        },
+        {
+          "part": "xl/worksheets/sheet2.xml",
+          "conditional_ranges": [],
+          "formulas": [],
+          "print_settings": {
+            "pageSetup": [
+              {
+                "paperSize": "1",
+                "scale": "100",
+                "pageOrder": "downThenOver",
+                "orientation": "default",
+                "blackAndWhite": "0",
+                "draft": "0",
+                "cellComments": "none",
+                "errors": "displayed"
+              }
+            ],
+            "pageMargins": [
+              {
+                "left": "0.75",
+                "right": "0.75",
+                "top": "0.75",
+                "bottom": "0.5",
+                "header": "0.5",
+                "footer": "0.75"
+              }
+            ],
+            "rowBreaks": [],
+            "colBreaks": []
+          }
+        }
+      ],
+      "drawing_parts": []
+    },
+    "font_hashes": {
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec"
+    },
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "core",
+      "tests/ExcelRenderer.Tests/SampleInputs/07-multiple-sheets.xlsx",
+      "--output",
+      "/workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/07-multiple-sheets.pdf",
+      "--verbose",
+      "--sheet",
+      "売上",
+      "在庫",
+      "--font-file",
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Starting core: core tests/ExcelRenderer.Tests/SampleInputs/07-multiple-sheets.xlsx --output /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/07-multiple-sheets.pdf --verbose --sheet 売上 在庫 --font-file third_party/NotoSansJP/NotoSansJP-Regular.ttf\nWarning: SavedPageBreaks [売上, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nWarning: SavedPageBreaks [在庫, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nCore PDF: 2 pages; 2 diagnostics; output: /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/07-multiple-sheets.pdf\nCompleted in 539.7 ms.\nMetric borderCandidates: 0.000\nMetric coreCommandBuild: 1.000\nMetric coreGeometryPlan: 1.000\nMetric corePageBuild: 1.000\nMetric fontSnapshotRead: 1.000\nMetric lineMetricsComputed: 1.000\nMetric openXmlReaderWorkbook: 1.000\nMetric pagePayloadActive: 0.000\nMetric pdfFinalSave.ms: 34.204\nMetric pdfFontCreated: 1.000\nMetric pdfFontDisposed: 1.000\nMetric pdfFontRunsCollected: 1.000\nMetric pdfOriginalFontBytes: 5472784.000\nMetric pdfSave: 1.000\nMetric pdfSubset.ms: 24.485\nMetric pdfSubsetFontBytes: 331052.000\nMetric pdfSubsetTypefaceCreated: 1.000\nMetric pdfSubsetTypefaceDisposed: 1.000\nMetric reader.ms: 313.026\nMetric readerStyleCacheEntries: 2.000\nMetric readerStyleCacheHits: 1.000\nMetric readerStyleConversions: 1.000\nMetric typefaceCreated: 1.000\nMetric typefaceDisposed: 1.000\n",
+    "elapsed_seconds": 0.6091011420000143,
+    "status": "generated",
+    "pdf_sha256": "63f63b4d0b2ae4a57361d489384f7633ef5396fec6b68009752c5478f476762f",
+    "page_count": 2
+  },
+  {
+    "case_id": "08-print-scaling",
+    "engine": "core",
+    "input": "tests/ExcelRenderer.Tests/SampleInputs/08-print-scaling.xlsx",
+    "input_sha256": "f9e5ffaa18c622d2820138d18c6aed07ae63b28da8fad1c71c4ffcbdd12a9fb7",
+    "hashes_valid": true,
+    "selected_sheets": [
+      "75%縮小"
+    ],
+    "workbook": {
+      "sheets": [
+        {
+          "name": "75%縮小",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId2"
+        }
+      ],
+      "worksheet_metadata": [
+        {
+          "part": "xl/worksheets/sheet1.xml",
+          "conditional_ranges": [],
+          "formulas": [
+            {
+              "cell": "G5",
+              "formula": "E5*F5",
+              "cache": null
+            },
+            {
+              "cell": "G6",
+              "formula": "E6*F6",
+              "cache": null
+            },
+            {
+              "cell": "G7",
+              "formula": "E7*F7",
+              "cache": null
+            },
+            {
+              "cell": "G8",
+              "formula": "E8*F8",
+              "cache": null
+            },
+            {
+              "cell": "G9",
+              "formula": "E9*F9",
+              "cache": null
+            },
+            {
+              "cell": "G10",
+              "formula": "E10*F10",
+              "cache": null
+            },
+            {
+              "cell": "G11",
+              "formula": "E11*F11",
+              "cache": null
+            },
+            {
+              "cell": "G12",
+              "formula": "E12*F12",
+              "cache": null
+            },
+            {
+              "cell": "G13",
+              "formula": "E13*F13",
+              "cache": null
+            },
+            {
+              "cell": "G14",
+              "formula": "E14*F14",
+              "cache": null
+            },
+            {
+              "cell": "G15",
+              "formula": "E15*F15",
+              "cache": null
+            },
+            {
+              "cell": "G16",
+              "formula": "E16*F16",
+              "cache": null
+            }
+          ],
+          "print_settings": {
+            "pageSetup": [
+              {
+                "paperSize": "9",
+                "scale": "75",
+                "pageOrder": "downThenOver",
+                "orientation": "portrait",
+                "blackAndWhite": "0",
+                "draft": "0",
+                "cellComments": "none",
+                "errors": "displayed"
+              }
+            ],
+            "pageMargins": [
+              {
+                "left": "0.5",
+                "right": "0.5",
+                "top": "0.5",
+                "bottom": "0.5",
+                "header": "0.5",
+                "footer": "0.75"
+              }
+            ],
+            "rowBreaks": [],
+            "colBreaks": []
+          }
+        }
+      ],
+      "drawing_parts": []
+    },
+    "font_hashes": {
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec"
+    },
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "core",
+      "tests/ExcelRenderer.Tests/SampleInputs/08-print-scaling.xlsx",
+      "--output",
+      "/workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/08-print-scaling.pdf",
+      "--verbose",
+      "--sheet",
+      "75%縮小",
+      "--font-file",
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Starting core: core tests/ExcelRenderer.Tests/SampleInputs/08-print-scaling.xlsx --output /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/08-print-scaling.pdf --verbose --sheet 75%縮小 --font-file third_party/NotoSansJP/NotoSansJP-Regular.ttf\nWarning: SavedPageBreaks [75%縮小, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 75.\nWarning: FormulaCachedValueMissing [75%縮小, page ]: Formula has no stored result; calculation is not supported.\nWarning: FormulaCachedValueMissing [75%縮小, page ]: Formula has no stored result; calculation is not supported.\nWarning: FormulaCachedValueMissing [75%縮小, page ]: Formula has no stored result; calculation is not supported.\nWarning: FormulaCachedValueMissing [75%縮小, page ]: Formula has no stored result; calculation is not supported.\nWarning: FormulaCachedValueMissing [75%縮小, page ]: Formula has no stored result; calculation is not supported.\nWarning: FormulaCachedValueMissing [75%縮小, page ]: Formula has no stored result; calculation is not supported.\nWarning: FormulaCachedValueMissing [75%縮小, page ]: Formula has no stored result; calculation is not supported.\nWarning: FormulaCachedValueMissing [75%縮小, page ]: Formula has no stored result; calculation is not supported.\nWarning: FormulaCachedValueMissing [75%縮小, page ]: Formula has no stored result; calculation is not supported.\nWarning: FormulaCachedValueMissing [75%縮小, page ]: Formula has no stored result; calculation is not supported.\nWarning: FormulaCachedValueMissing [75%縮小, page ]: Formula has no stored result; calculation is not supported.\nWarning: FormulaCachedValueMissing [75%縮小, page ]: Formula has no stored result; calculation is not supported.\nCore PDF: 2 pages; 13 diagnostics; output: /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/08-print-scaling.pdf\nCompleted in 583.0 ms.\nMetric borderCandidates: 390.000\nMetric coreBorderGeometry: 1.000\nMetric coreCommandBuild: 1.000\nMetric coreGeometryPlan: 1.000\nMetric corePageBuild: 1.000\nMetric fontSnapshotRead: 1.000\nMetric lineMetricsComputed: 1.000\nMetric openXmlReaderWorkbook: 1.000\nMetric pagePayloadActive: 0.000\nMetric pdfFinalSave.ms: 35.151\nMetric pdfFontCreated: 1.000\nMetric pdfFontDisposed: 1.000\nMetric pdfFontRunsCollected: 1.000\nMetric pdfOriginalFontBytes: 5472784.000\nMetric pdfSave: 1.000\nMetric pdfSubset.ms: 25.637\nMetric pdfSubsetFontBytes: 346504.000\nMetric pdfSubsetTypefaceCreated: 1.000\nMetric pdfSubsetTypefaceDisposed: 1.000\nMetric reader.ms: 323.670\nMetric readerStyleCacheEntries: 21.000\nMetric readerStyleCacheHits: 108.000\nMetric readerStyleConversions: 20.000\nMetric resolvedBorderSegments: 1.000\nMetric typefaceCreated: 1.000\nMetric typefaceDisposed: 1.000\n",
+    "elapsed_seconds": 0.6510305969999877,
+    "status": "generated",
+    "pdf_sha256": "de6fe887978d1d6e36993df5610ac627c1708987af463968d4134e91e6861450",
+    "page_count": 2
+  },
+  {
+    "case_id": "09-cell-border",
+    "engine": "core",
+    "input": "tests/ExcelRenderer.Tests/SampleInputs/09-cell-border.xlsx",
+    "input_sha256": "5655ee7b5407c1c9af6836ec65f573819b0265c833660210d04060ca8c368d70",
+    "hashes_valid": true,
+    "selected_sheets": [
+      "Sheet1"
+    ],
+    "workbook": {
+      "sheets": [
+        {
+          "name": "Sheet1",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId1"
+        }
+      ],
+      "worksheet_metadata": [
+        {
+          "part": "xl/worksheets/sheet1.xml",
+          "conditional_ranges": [],
+          "formulas": [],
+          "print_settings": {
+            "pageSetup": [
+              {
+                "paperSize": "9",
+                "scale": "60",
+                "orientation": "portrait",
+                "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId1"
+              }
+            ],
+            "pageMargins": [
+              {
+                "left": "0.7",
+                "right": "0.7",
+                "top": "0.75",
+                "bottom": "0.75",
+                "header": "0.3",
+                "footer": "0.3"
+              }
+            ],
+            "rowBreaks": [],
+            "colBreaks": []
+          }
+        }
+      ],
+      "drawing_parts": [
+        "xl/drawings/drawing1.xml"
+      ]
+    },
+    "font_hashes": {
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec"
+    },
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "core",
+      "tests/ExcelRenderer.Tests/SampleInputs/09-cell-border.xlsx",
+      "--output",
+      "/workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/09-cell-border.pdf",
+      "--verbose",
+      "--sheet",
+      "Sheet1",
+      "--font-file",
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Starting core: core tests/ExcelRenderer.Tests/SampleInputs/09-cell-border.xlsx --output /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/09-cell-border.pdf --verbose --sheet Sheet1 --font-file third_party/NotoSansJP/NotoSansJP-Regular.ttf\nWarning: SavedPageBreaks [Sheet1, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 60.\nCore PDF: 1 pages; 1 diagnostics; output: /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/09-cell-border.pdf\nCompleted in 697.3 ms.\nMetric borderCandidates: 359.000\nMetric coreBorderGeometry: 1.000\nMetric coreCommandBuild: 1.000\nMetric coreGeometryPlan: 1.000\nMetric corePageBuild: 1.000\nMetric fontSnapshotRead: 1.000\nMetric imageCacheEstimatedBytes: 10179392.000\nMetric imageDecode: 1.000\nMetric imagePixelDecode: 1.000\nMetric lineMetricsComputed: 1.000\nMetric openXmlReaderWorkbook: 1.000\nMetric pagePayloadActive: 0.000\nMetric pdfFinalSave.ms: 35.016\nMetric pdfFontCreated: 1.000\nMetric pdfFontDisposed: 1.000\nMetric pdfFontRunsCollected: 1.000\nMetric pdfOriginalFontBytes: 5472784.000\nMetric pdfSave: 1.000\nMetric pdfSubset.ms: 25.069\nMetric pdfSubsetFontBytes: 331932.000\nMetric pdfSubsetTypefaceCreated: 1.000\nMetric pdfSubsetTypefaceDisposed: 1.000\nMetric reader.ms: 359.675\nMetric readerStyleCacheEntries: 26.000\nMetric readerStyleCacheHits: 272.000\nMetric readerStyleConversions: 25.000\nMetric resolvedBorderSegments: 1.000\nMetric typefaceCreated: 1.000\nMetric typefaceDisposed: 1.000\n",
+    "elapsed_seconds": 0.7603446850000068,
+    "status": "generated",
+    "pdf_sha256": "05a26ac9158308fb20e9679f75c823624fe0269baba1a1527167c61afddf99e2",
+    "page_count": 1
+  },
+  {
+    "case_id": "cell-argb",
+    "engine": "core",
+    "input": "tests/ExcelRenderer.Tests/SampleInputs/CellArgb/10-cell-argb.xlsx",
+    "input_sha256": "3d6e77900ea64b573eb26caf04c7ff7ddc34fab4b78c08a30fe0909faf9d9733",
+    "hashes_valid": true,
+    "selected_sheets": [
+      "ARGB"
+    ],
+    "workbook": {
+      "sheets": [
+        {
+          "name": "ARGB",
+          "sheetId": "1",
+          "state": "visible",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId1"
+        }
+      ],
+      "worksheet_metadata": [
+        {
+          "part": "xl/worksheets/sheet1.xml",
+          "conditional_ranges": [],
+          "formulas": [],
+          "print_settings": {
+            "pageSetup": [],
+            "pageMargins": [
+              {
+                "left": "0.25",
+                "right": "0.25",
+                "top": "0.25",
+                "bottom": "0.25",
+                "header": "0",
+                "footer": "0"
+              }
+            ],
+            "rowBreaks": [],
+            "colBreaks": []
+          }
+        }
+      ],
+      "drawing_parts": []
+    },
+    "font_hashes": {
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec"
+    },
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "core",
+      "tests/ExcelRenderer.Tests/SampleInputs/CellArgb/10-cell-argb.xlsx",
+      "--output",
+      "/workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/cell-argb.pdf",
+      "--verbose",
+      "--sheet",
+      "ARGB",
+      "--font-file",
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Starting core: core tests/ExcelRenderer.Tests/SampleInputs/CellArgb/10-cell-argb.xlsx --output /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/cell-argb.pdf --verbose --sheet ARGB --font-file third_party/NotoSansJP/NotoSansJP-Regular.ttf\nWarning: SavedPageBreaks [ARGB, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nCore PDF: 1 pages; 1 diagnostics; output: /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/cell-argb.pdf\nCompleted in 574.1 ms.\nMetric borderCandidates: 20.000\nMetric coreBorderGeometry: 1.000\nMetric coreCommandBuild: 1.000\nMetric coreGeometryPlan: 1.000\nMetric corePageBuild: 1.000\nMetric fontSnapshotRead: 1.000\nMetric lineMetricsComputed: 1.000\nMetric openXmlReaderWorkbook: 1.000\nMetric pagePayloadActive: 0.000\nMetric pdfFinalSave.ms: 33.886\nMetric pdfFontCreated: 1.000\nMetric pdfFontDisposed: 1.000\nMetric pdfFontRunsCollected: 1.000\nMetric pdfOriginalFontBytes: 5472784.000\nMetric pdfSave: 1.000\nMetric pdfSubset.ms: 24.556\nMetric pdfSubsetFontBytes: 332924.000\nMetric pdfSubsetTypefaceCreated: 1.000\nMetric pdfSubsetTypefaceDisposed: 1.000\nMetric reader.ms: 320.263\nMetric readerStyleCacheEntries: 15.000\nMetric readerStyleCacheHits: 16.000\nMetric readerStyleConversions: 14.000\nMetric resolvedBorderSegments: 1.000\nMetric typefaceCreated: 1.000\nMetric typefaceDisposed: 1.000\n",
+    "elapsed_seconds": 0.6510185530000001,
+    "status": "generated",
+    "pdf_sha256": "e2f56de310407d462b95691026157ed73a74c3cce95d9a9925cf31816127442e",
+    "page_count": 1
+  },
+  {
+    "case_id": "border-conflicts",
+    "engine": "core",
+    "input": "tests/ExcelRenderer.Tests/SampleInputs/BorderResolution/border-conflicts.xlsx",
+    "input_sha256": "a07e159caa4a83a12c38231f70cbf2ca6bdcded9404291ba5244e8f03249a12a",
+    "hashes_valid": true,
+    "selected_sheets": [
+      "Double",
+      "Colors",
+      "Merged",
+      "Defaults",
+      "Conditional"
+    ],
+    "workbook": {
+      "sheets": [
+        {
+          "name": "Double",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId1"
+        },
+        {
+          "name": "Colors",
+          "sheetId": "2",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId2"
+        },
+        {
+          "name": "Merged",
+          "sheetId": "3",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId3"
+        },
+        {
+          "name": "Defaults",
+          "sheetId": "4",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId4"
+        },
+        {
+          "name": "Conditional",
+          "sheetId": "5",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId5"
+        }
+      ],
+      "worksheet_metadata": [
+        {
+          "part": "xl/worksheets/sheet1.xml",
+          "conditional_ranges": [],
+          "formulas": [],
+          "print_settings": {
+            "pageSetup": [],
+            "pageMargins": [
+              {
+                "left": "0.25",
+                "right": "0.25",
+                "top": "0.25",
+                "bottom": "0.25",
+                "header": "0",
+                "footer": "0"
+              }
+            ],
+            "rowBreaks": [],
+            "colBreaks": []
+          }
+        },
+        {
+          "part": "xl/worksheets/sheet2.xml",
+          "conditional_ranges": [],
+          "formulas": [],
+          "print_settings": {
+            "pageSetup": [],
+            "pageMargins": [
+              {
+                "left": "0.25",
+                "right": "0.25",
+                "top": "0.25",
+                "bottom": "0.25",
+                "header": "0",
+                "footer": "0"
+              }
+            ],
+            "rowBreaks": [],
+            "colBreaks": []
+          }
+        },
+        {
+          "part": "xl/worksheets/sheet3.xml",
+          "conditional_ranges": [],
+          "formulas": [],
+          "print_settings": {
+            "pageSetup": [],
+            "pageMargins": [
+              {
+                "left": "0.25",
+                "right": "0.25",
+                "top": "0.25",
+                "bottom": "0.25",
+                "header": "0",
+                "footer": "0"
+              }
+            ],
+            "rowBreaks": [],
+            "colBreaks": []
+          }
+        },
+        {
+          "part": "xl/worksheets/sheet4.xml",
+          "conditional_ranges": [],
+          "formulas": [],
+          "print_settings": {
+            "pageSetup": [],
+            "pageMargins": [
+              {
+                "left": "0.25",
+                "right": "0.25",
+                "top": "0.25",
+                "bottom": "0.25",
+                "header": "0",
+                "footer": "0"
+              }
+            ],
+            "rowBreaks": [],
+            "colBreaks": []
+          }
+        },
+        {
+          "part": "xl/worksheets/sheet5.xml",
+          "conditional_ranges": [
+            "A1"
+          ],
+          "formulas": [],
+          "print_settings": {
+            "pageSetup": [],
+            "pageMargins": [
+              {
+                "left": "0.25",
+                "right": "0.25",
+                "top": "0.25",
+                "bottom": "0.25",
+                "header": "0",
+                "footer": "0"
+              }
+            ],
+            "rowBreaks": [],
+            "colBreaks": []
+          }
+        }
+      ],
+      "drawing_parts": []
+    },
+    "font_hashes": {
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec"
+    },
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "core",
+      "tests/ExcelRenderer.Tests/SampleInputs/BorderResolution/border-conflicts.xlsx",
+      "--output",
+      "/workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/border-conflicts.pdf",
+      "--verbose",
+      "--sheet",
+      "Double",
+      "Colors",
+      "Merged",
+      "Defaults",
+      "Conditional",
+      "--font-file",
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Starting core: core tests/ExcelRenderer.Tests/SampleInputs/BorderResolution/border-conflicts.xlsx --output /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/border-conflicts.pdf --verbose --sheet Double Colors Merged Defaults Conditional --font-file third_party/NotoSansJP/NotoSansJP-Regular.ttf\nWarning: SavedPageBreaks [Double, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nWarning: SavedPageBreaks [Colors, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nWarning: SavedPageBreaks [Merged, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nWarning: SavedPageBreaks [Defaults, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nWarning: SavedPageBreaks [Conditional, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nCore PDF: 5 pages; 5 diagnostics; output: /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/border-conflicts.pdf\nCompleted in 503.1 ms.\nMetric borderCandidates: 2.000\nMetric coreBorderGeometry: 1.000\nMetric coreCommandBuild: 1.000\nMetric coreGeometryPlan: 1.000\nMetric corePageBuild: 1.000\nMetric fontSnapshotRead: 1.000\nMetric lineMetricsComputed: 1.000\nMetric openXmlReaderWorkbook: 1.000\nMetric pagePayloadActive: 0.000\nMetric pdfFinalSave.ms: 31.614\nMetric pdfFontCreated: 1.000\nMetric pdfFontDisposed: 1.000\nMetric pdfFontRunsCollected: 1.000\nMetric pdfOriginalFontBytes: 5472784.000\nMetric pdfSave: 1.000\nMetric pdfSubset.ms: 24.348\nMetric pdfSubsetFontBytes: 330236.000\nMetric pdfSubsetTypefaceCreated: 1.000\nMetric pdfSubsetTypefaceDisposed: 1.000\nMetric reader.ms: 261.920\nMetric readerStyleCacheEntries: 12.000\nMetric readerStyleCacheHits: 7.000\nMetric readerStyleConversions: 11.000\nMetric resolvedBorderSegments: 1.000\nMetric typefaceCreated: 1.000\nMetric typefaceDisposed: 1.000\n",
+    "elapsed_seconds": 0.5634634210000229,
+    "status": "generated",
+    "pdf_sha256": "d2e80fa7d6c9a64cd8ef1595daefb59c2a7e114e80fb0343bf503b907e0c2ece",
+    "page_count": 5
+  },
+  {
+    "case_id": "richtext",
+    "engine": "core",
+    "input": "tests/ExcelRenderer.Tests/SampleInputs/ReaderRichText/representative.xlsx",
+    "input_sha256": "5e4032e814530d62db777ad76b8eae467c4f761696a2877e22ca41e2fbc37357",
+    "hashes_valid": true,
+    "selected_sheets": [
+      "Synthetic"
+    ],
+    "workbook": {
+      "sheets": [
+        {
+          "name": "Synthetic",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId2"
+        }
+      ],
+      "worksheet_metadata": [
+        {
+          "part": "xl/worksheets/sheet1.xml",
+          "conditional_ranges": [],
+          "formulas": [],
+          "print_settings": {
+            "pageSetup": [
+              {
+                "paperSize": "1",
+                "scale": "100",
+                "pageOrder": "downThenOver",
+                "orientation": "default",
+                "blackAndWhite": "0",
+                "draft": "0",
+                "cellComments": "none",
+                "errors": "displayed"
+              }
+            ],
+            "pageMargins": [
+              {
+                "left": "0.75",
+                "right": "0.75",
+                "top": "0.75",
+                "bottom": "0.5",
+                "header": "0.5",
+                "footer": "0.75"
+              }
+            ],
+            "rowBreaks": [],
+            "colBreaks": []
+          }
+        }
+      ],
+      "drawing_parts": []
+    },
+    "font_hashes": {
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec"
+    },
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "core",
+      "tests/ExcelRenderer.Tests/SampleInputs/ReaderRichText/representative.xlsx",
+      "--output",
+      "/workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/richtext.pdf",
+      "--verbose",
+      "--sheet",
+      "Synthetic",
+      "--font-file",
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Starting core: core tests/ExcelRenderer.Tests/SampleInputs/ReaderRichText/representative.xlsx --output /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/richtext.pdf --verbose --sheet Synthetic --font-file third_party/NotoSansJP/NotoSansJP-Regular.ttf\nWarning: SavedPageBreaks [Synthetic, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nCore PDF: 1 pages; 1 diagnostics; output: /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/richtext.pdf\nCompleted in 544.5 ms.\nMetric borderCandidates: 0.000\nMetric coreCommandBuild: 1.000\nMetric coreGeometryPlan: 1.000\nMetric corePageBuild: 1.000\nMetric fontSnapshotRead: 1.000\nMetric lineMetricsComputed: 1.000\nMetric openXmlReaderWorkbook: 1.000\nMetric pagePayloadActive: 0.000\nMetric pdfFinalSave.ms: 33.861\nMetric pdfFontCreated: 1.000\nMetric pdfFontDisposed: 1.000\nMetric pdfFontRunsCollected: 1.000\nMetric pdfOriginalFontBytes: 5472784.000\nMetric pdfSave: 1.000\nMetric pdfSubset.ms: 27.830\nMetric pdfSubsetFontBytes: 331360.000\nMetric pdfSubsetTypefaceCreated: 1.000\nMetric pdfSubsetTypefaceDisposed: 1.000\nMetric reader.ms: 294.959\nMetric readerStyleCacheEntries: 2.000\nMetric readerStyleCacheHits: 7.000\nMetric readerStyleConversions: 1.000\nMetric typefaceCreated: 1.000\nMetric typefaceDisposed: 1.000\n",
+    "elapsed_seconds": 0.6120396160000041,
+    "status": "generated",
+    "pdf_sha256": "7fb3248e28ab3930027646c9ddc534425f8549c3de6046ece5f12cc8afdaae16",
+    "page_count": 1
+  },
+  {
+    "case_id": "cf-phase1",
+    "engine": "core",
+    "input": "docs/validation/conditional-formatting/representative.xlsx",
+    "input_sha256": "2de333cf34b705aa6a0cec71a69c61a85df446302831cc4157078e7a83c39826",
+    "hashes_valid": true,
+    "selected_sheets": [
+      "data"
+    ],
+    "workbook": {
+      "sheets": [
+        {
+          "name": "data",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "Rf4645794369c4f75"
+        }
+      ],
+      "worksheet_metadata": [
+        {
+          "part": "xl/worksheets/sheet1.xml",
+          "conditional_ranges": [
+            "A1:B1"
+          ],
+          "formulas": [],
+          "print_settings": {
+            "pageSetup": [],
+            "pageMargins": [],
+            "rowBreaks": [],
+            "colBreaks": []
+          }
+        }
+      ],
+      "drawing_parts": []
+    },
+    "font_hashes": {
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec"
+    },
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "core",
+      "docs/validation/conditional-formatting/representative.xlsx",
+      "--output",
+      "/workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/cf-phase1.pdf",
+      "--verbose",
+      "--sheet",
+      "data",
+      "--font-file",
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Starting core: core docs/validation/conditional-formatting/representative.xlsx --output /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/cf-phase1.pdf --verbose --sheet data --font-file third_party/NotoSansJP/NotoSansJP-Regular.ttf\nWarning: SavedPageBreaks [data, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nCore PDF: 1 pages; 1 diagnostics; output: /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/cf-phase1.pdf\nCompleted in 470.3 ms.\nMetric borderCandidates: 0.000\nMetric coreCommandBuild: 1.000\nMetric coreGeometryPlan: 1.000\nMetric corePageBuild: 1.000\nMetric fontSnapshotRead: 1.000\nMetric lineMetricsComputed: 1.000\nMetric openXmlReaderWorkbook: 1.000\nMetric pagePayloadActive: 0.000\nMetric pdfFinalSave.ms: 32.762\nMetric pdfFontCreated: 1.000\nMetric pdfFontDisposed: 1.000\nMetric pdfFontRunsCollected: 1.000\nMetric pdfOriginalFontBytes: 5472784.000\nMetric pdfSave: 1.000\nMetric pdfSubset.ms: 25.505\nMetric pdfSubsetFontBytes: 330888.000\nMetric pdfSubsetTypefaceCreated: 1.000\nMetric pdfSubsetTypefaceDisposed: 1.000\nMetric reader.ms: 240.702\nMetric readerStyleCacheEntries: 2.000\nMetric readerStyleCacheHits: 0.000\nMetric readerStyleConversions: 1.000\nMetric typefaceCreated: 1.000\nMetric typefaceDisposed: 1.000\n",
+    "elapsed_seconds": 0.5296573560000013,
+    "status": "generated",
+    "pdf_sha256": "a8a7667f28675425a62c02bea4eed62a14fbe8d51ff139c07c6de998275041e2",
+    "page_count": 1
+  },
+  {
+    "case_id": "cf-phase2",
+    "engine": "core",
+    "input": "docs/validation/conditional-formatting-phase2/representative.xlsx",
+    "input_sha256": "a8f48ee704a1db4cefcc433a1fef03600088e9d1f8e04ed33b055cd656727a12",
+    "hashes_valid": true,
+    "selected_sheets": [
+      "data"
+    ],
+    "workbook": {
+      "sheets": [
+        {
+          "name": "data",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "R14bb055e867547c3"
+        }
+      ],
+      "worksheet_metadata": [
+        {
+          "part": "xl/worksheets/sheet1.xml",
+          "conditional_ranges": [
+            "A1:A4",
+            "B1:B4",
+            "C1:C4",
+            "D1:D4",
+            "E1:E4",
+            "F1:F4"
+          ],
+          "formulas": [],
+          "print_settings": {
+            "pageSetup": [],
+            "pageMargins": [],
+            "rowBreaks": [],
+            "colBreaks": []
+          }
+        }
+      ],
+      "drawing_parts": []
+    },
+    "font_hashes": {
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec"
+    },
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "core",
+      "docs/validation/conditional-formatting-phase2/representative.xlsx",
+      "--output",
+      "/workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/cf-phase2.pdf",
+      "--verbose",
+      "--sheet",
+      "data",
+      "--font-file",
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Starting core: core docs/validation/conditional-formatting-phase2/representative.xlsx --output /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/cf-phase2.pdf --verbose --sheet data --font-file third_party/NotoSansJP/NotoSansJP-Regular.ttf\nWarning: SavedPageBreaks [data, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nCore PDF: 1 pages; 1 diagnostics; output: /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/cf-phase2.pdf\nCompleted in 462.1 ms.\nMetric borderCandidates: 0.000\nMetric coreCommandBuild: 1.000\nMetric coreGeometryPlan: 1.000\nMetric corePageBuild: 1.000\nMetric fontSnapshotRead: 1.000\nMetric lineMetricsComputed: 1.000\nMetric openXmlReaderWorkbook: 1.000\nMetric pagePayloadActive: 0.000\nMetric pdfFinalSave.ms: 32.578\nMetric pdfFontCreated: 1.000\nMetric pdfFontDisposed: 1.000\nMetric pdfFontRunsCollected: 1.000\nMetric pdfOriginalFontBytes: 5472784.000\nMetric pdfSave: 1.000\nMetric pdfSubset.ms: 24.346\nMetric pdfSubsetFontBytes: 331000.000\nMetric pdfSubsetTypefaceCreated: 1.000\nMetric pdfSubsetTypefaceDisposed: 1.000\nMetric reader.ms: 233.745\nMetric readerStyleCacheEntries: 2.000\nMetric readerStyleCacheHits: 23.000\nMetric readerStyleConversions: 1.000\nMetric typefaceCreated: 1.000\nMetric typefaceDisposed: 1.000\n",
+    "elapsed_seconds": 0.5241588910000132,
+    "status": "generated",
+    "pdf_sha256": "eda8ad4916240a143e511595ccbbea224d04ad01f76e0b8bf899d45a999fa531",
+    "page_count": 1
+  },
+  {
+    "case_id": "cf-mapped-scale",
+    "engine": "core",
+    "input": "docs/validation/conditional-formatting-phase2/mapped-scale.xlsx",
+    "input_sha256": "d25403efc3ca5021d697075370e83e42e7215bbe89885f7aa2d0f61b4768d3b6",
+    "hashes_valid": true,
+    "selected_sheets": [
+      "data"
+    ],
+    "workbook": {
+      "sheets": [
+        {
+          "name": "data",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "Rd6265b8d38ff405c"
+        }
+      ],
+      "worksheet_metadata": [
+        {
+          "part": "xl/worksheets/sheet1.xml",
+          "conditional_ranges": [
+            "A1 A2 A3 A4"
+          ],
+          "formulas": [],
+          "print_settings": {
+            "pageSetup": [],
+            "pageMargins": [],
+            "rowBreaks": [],
+            "colBreaks": []
+          }
+        }
+      ],
+      "drawing_parts": []
+    },
+    "font_hashes": {
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec"
+    },
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "core",
+      "docs/validation/conditional-formatting-phase2/mapped-scale.xlsx",
+      "--output",
+      "/workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/cf-mapped-scale.pdf",
+      "--verbose",
+      "--sheet",
+      "data",
+      "--font-file",
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Starting core: core docs/validation/conditional-formatting-phase2/mapped-scale.xlsx --output /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/cf-mapped-scale.pdf --verbose --sheet data --font-file third_party/NotoSansJP/NotoSansJP-Regular.ttf\nWarning: SavedPageBreaks [data, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nCore PDF: 1 pages; 1 diagnostics; output: /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/cf-mapped-scale.pdf\nCompleted in 495.8 ms.\nMetric borderCandidates: 0.000\nMetric coreCommandBuild: 1.000\nMetric coreGeometryPlan: 1.000\nMetric corePageBuild: 1.000\nMetric fontSnapshotRead: 1.000\nMetric lineMetricsComputed: 1.000\nMetric openXmlReaderWorkbook: 1.000\nMetric pagePayloadActive: 0.000\nMetric pdfFinalSave.ms: 30.147\nMetric pdfFontCreated: 1.000\nMetric pdfFontDisposed: 1.000\nMetric pdfFontRunsCollected: 1.000\nMetric pdfOriginalFontBytes: 5472784.000\nMetric pdfSave: 1.000\nMetric pdfSubset.ms: 24.845\nMetric pdfSubsetFontBytes: 330564.000\nMetric pdfSubsetTypefaceCreated: 1.000\nMetric pdfSubsetTypefaceDisposed: 1.000\nMetric reader.ms: 252.288\nMetric readerStyleCacheEntries: 2.000\nMetric readerStyleCacheHits: 3.000\nMetric readerStyleConversions: 1.000\nMetric typefaceCreated: 1.000\nMetric typefaceDisposed: 1.000\n",
+    "elapsed_seconds": 0.56068484299999,
+    "status": "generated",
+    "pdf_sha256": "f62a27295eeb565b67b036ed336ff46c90b06fe4ee5b04383dd6834c9c2db94b",
+    "page_count": 1
+  },
+  {
+    "case_id": "cf-phase3-icons",
+    "engine": "core",
+    "input": "docs/validation/conditional-formatting-phase3/fixtures/icons.xlsx",
+    "input_sha256": "800b4ff9c62bee007bf0602fbd4d140d17ca79adcb2fc0806a052fe183845aa3",
+    "hashes_valid": true,
+    "selected_sheets": [
+      "Phase3"
+    ],
+    "workbook": {
+      "sheets": [
+        {
+          "name": "Phase3",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId1"
+        }
+      ],
+      "worksheet_metadata": [
+        {
+          "part": "xl/worksheets/sheet1.xml",
+          "conditional_ranges": [
+            "A1:A3",
+            "B1:B3",
+            "C1:C3",
+            "D1:D3",
+            "E1:E3"
+          ],
+          "formulas": [],
+          "print_settings": {
+            "pageSetup": [],
+            "pageMargins": [
+              {
+                "left": "0.3",
+                "right": "0.3",
+                "top": "0.3",
+                "bottom": "0.3",
+                "header": "0.1",
+                "footer": "0.1"
+              }
+            ],
+            "rowBreaks": [],
+            "colBreaks": []
+          }
+        }
+      ],
+      "drawing_parts": []
+    },
+    "font_hashes": {
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec"
+    },
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "core",
+      "docs/validation/conditional-formatting-phase3/fixtures/icons.xlsx",
+      "--output",
+      "/workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/cf-phase3-icons.pdf",
+      "--verbose",
+      "--sheet",
+      "Phase3",
+      "--font-file",
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Starting core: core docs/validation/conditional-formatting-phase3/fixtures/icons.xlsx --output /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/cf-phase3-icons.pdf --verbose --sheet Phase3 --font-file third_party/NotoSansJP/NotoSansJP-Regular.ttf\nWarning: SavedPageBreaks [Phase3, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nCore PDF: 1 pages; 1 diagnostics; output: /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/cf-phase3-icons.pdf\nCompleted in 541.5 ms.\nMetric borderCandidates: 0.000\nMetric coreCommandBuild: 1.000\nMetric coreGeometryPlan: 1.000\nMetric corePageBuild: 1.000\nMetric fontSnapshotRead: 1.000\nMetric lineMetricsComputed: 1.000\nMetric openXmlReaderWorkbook: 1.000\nMetric pagePayloadActive: 0.000\nMetric pdfFinalSave.ms: 36.270\nMetric pdfFontCreated: 1.000\nMetric pdfFontDisposed: 1.000\nMetric pdfFontRunsCollected: 1.000\nMetric pdfOriginalFontBytes: 5472784.000\nMetric pdfSave: 1.000\nMetric pdfSubset.ms: 28.386\nMetric pdfSubsetFontBytes: 330620.000\nMetric pdfSubsetTypefaceCreated: 1.000\nMetric pdfSubsetTypefaceDisposed: 1.000\nMetric reader.ms: 272.144\nMetric readerStyleCacheEntries: 2.000\nMetric readerStyleCacheHits: 14.000\nMetric readerStyleConversions: 1.000\nMetric typefaceCreated: 1.000\nMetric typefaceDisposed: 1.000\n",
+    "elapsed_seconds": 0.6007184780000046,
+    "status": "generated",
+    "pdf_sha256": "f42a22211fb9a9b026793950b5468224492ae09f3851018d6f585e19289121eb",
+    "page_count": 1
+  },
+  {
+    "case_id": "cf-phase3-layout-mapping",
+    "engine": "core",
+    "input": "docs/validation/conditional-formatting-phase3/fixtures/layout-mapping.xlsx",
+    "input_sha256": "ad6831e0cf5774f3e2a0d38e935f3dffd3f87c3d1b63fe2c2e18e4b097b1c2d5",
+    "hashes_valid": true,
+    "selected_sheets": [
+      "Phase3"
+    ],
+    "workbook": {
+      "sheets": [
+        {
+          "name": "Phase3",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId1"
+        }
+      ],
+      "worksheet_metadata": [
+        {
+          "part": "xl/worksheets/sheet1.xml",
+          "conditional_ranges": [
+            "A2",
+            "A2",
+            "-50 100 A2"
+          ],
+          "formulas": [],
+          "print_settings": {
+            "pageSetup": [],
+            "pageMargins": [
+              {
+                "left": "0.3",
+                "right": "0.3",
+                "top": "0.3",
+                "bottom": "0.3",
+                "header": "0.1",
+                "footer": "0.1"
+              }
+            ],
+            "rowBreaks": [],
+            "colBreaks": []
+          }
+        }
+      ],
+      "drawing_parts": []
+    },
+    "font_hashes": {
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec"
+    },
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "core",
+      "docs/validation/conditional-formatting-phase3/fixtures/layout-mapping.xlsx",
+      "--output",
+      "/workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/cf-phase3-layout-mapping.pdf",
+      "--verbose",
+      "--sheet",
+      "Phase3",
+      "--font-file",
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Starting core: core docs/validation/conditional-formatting-phase3/fixtures/layout-mapping.xlsx --output /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/cf-phase3-layout-mapping.pdf --verbose --sheet Phase3 --font-file third_party/NotoSansJP/NotoSansJP-Regular.ttf\nWarning: SavedPageBreaks [Phase3, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nCore PDF: 1 pages; 1 diagnostics; output: /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/cf-phase3-layout-mapping.pdf\nCompleted in 500.6 ms.\nMetric borderCandidates: 0.000\nMetric coreCommandBuild: 1.000\nMetric coreGeometryPlan: 1.000\nMetric corePageBuild: 1.000\nMetric fontSnapshotRead: 1.000\nMetric lineMetricsComputed: 1.000\nMetric openXmlReaderWorkbook: 1.000\nMetric pagePayloadActive: 0.000\nMetric pdfFinalSave.ms: 31.943\nMetric pdfFontCreated: 1.000\nMetric pdfFontDisposed: 1.000\nMetric pdfFontRunsCollected: 1.000\nMetric pdfOriginalFontBytes: 5472784.000\nMetric pdfSave: 1.000\nMetric pdfSubset.ms: 23.746\nMetric pdfSubsetFontBytes: 331144.000\nMetric pdfSubsetTypefaceCreated: 1.000\nMetric pdfSubsetTypefaceDisposed: 1.000\nMetric reader.ms: 265.652\nMetric readerStyleCacheEntries: 2.000\nMetric readerStyleCacheHits: 1.000\nMetric readerStyleConversions: 1.000\nMetric typefaceCreated: 1.000\nMetric typefaceDisposed: 1.000\n",
+    "elapsed_seconds": 0.5643991080000035,
+    "status": "generated",
+    "pdf_sha256": "f94df2917fd49e59754ed210553dc3b515150385ce2cebd6314b379b2fcada91",
+    "page_count": 1
+  },
+  {
+    "case_id": "cf-phase3-legacy-bars",
+    "engine": "core",
+    "input": "docs/validation/conditional-formatting-phase3/fixtures/legacy-bars.xlsx",
+    "input_sha256": "a5587789e8e27e00e27ee8263c74ef861d786e314ed4a9c31918f4fac7443335",
+    "hashes_valid": true,
+    "selected_sheets": [
+      "Phase3"
+    ],
+    "workbook": {
+      "sheets": [
+        {
+          "name": "Phase3",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId1"
+        }
+      ],
+      "worksheet_metadata": [
+        {
+          "part": "xl/worksheets/sheet1.xml",
+          "conditional_ranges": [
+            "A1:A5",
+            "B1:B5"
+          ],
+          "formulas": [],
+          "print_settings": {
+            "pageSetup": [],
+            "pageMargins": [
+              {
+                "left": "0.3",
+                "right": "0.3",
+                "top": "0.3",
+                "bottom": "0.3",
+                "header": "0.1",
+                "footer": "0.1"
+              }
+            ],
+            "rowBreaks": [],
+            "colBreaks": []
+          }
+        }
+      ],
+      "drawing_parts": []
+    },
+    "font_hashes": {
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec"
+    },
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "core",
+      "docs/validation/conditional-formatting-phase3/fixtures/legacy-bars.xlsx",
+      "--output",
+      "/workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/cf-phase3-legacy-bars.pdf",
+      "--verbose",
+      "--sheet",
+      "Phase3",
+      "--font-file",
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Starting core: core docs/validation/conditional-formatting-phase3/fixtures/legacy-bars.xlsx --output /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/cf-phase3-legacy-bars.pdf --verbose --sheet Phase3 --font-file third_party/NotoSansJP/NotoSansJP-Regular.ttf\nWarning: SavedPageBreaks [Phase3, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nCore PDF: 1 pages; 1 diagnostics; output: /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/cf-phase3-legacy-bars.pdf\nCompleted in 560.0 ms.\nMetric borderCandidates: 0.000\nMetric coreCommandBuild: 1.000\nMetric coreGeometryPlan: 1.000\nMetric corePageBuild: 1.000\nMetric fontSnapshotRead: 1.000\nMetric lineMetricsComputed: 1.000\nMetric openXmlReaderWorkbook: 1.000\nMetric pagePayloadActive: 0.000\nMetric pdfFinalSave.ms: 36.538\nMetric pdfFontCreated: 1.000\nMetric pdfFontDisposed: 1.000\nMetric pdfFontRunsCollected: 1.000\nMetric pdfOriginalFontBytes: 5472784.000\nMetric pdfSave: 1.000\nMetric pdfSubset.ms: 26.932\nMetric pdfSubsetFontBytes: 330592.000\nMetric pdfSubsetTypefaceCreated: 1.000\nMetric pdfSubsetTypefaceDisposed: 1.000\nMetric reader.ms: 286.380\nMetric readerStyleCacheEntries: 2.000\nMetric readerStyleCacheHits: 9.000\nMetric readerStyleConversions: 1.000\nMetric typefaceCreated: 1.000\nMetric typefaceDisposed: 1.000\n",
+    "elapsed_seconds": 0.6330348559999948,
+    "status": "generated",
+    "pdf_sha256": "f826ec8af1cb8226e63537d1308cec90a92c60bca8da16658c286e7440d7cb96",
+    "page_count": 1
+  },
+  {
+    "case_id": "cf-phase3-x14-bars",
+    "engine": "core",
+    "input": "docs/validation/conditional-formatting-phase3/fixtures/x14-bars.xlsx",
+    "input_sha256": "73dc15ca2efb0acda64b3ba6e07a257e6fe2000a4b98b446bcd6089b813243fe",
+    "hashes_valid": true,
+    "selected_sheets": [
+      "Phase3"
+    ],
+    "workbook": {
+      "sheets": [
+        {
+          "name": "Phase3",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId1"
+        }
+      ],
+      "worksheet_metadata": [
+        {
+          "part": "xl/worksheets/sheet1.xml",
+          "conditional_ranges": [
+            "A1:A6",
+            "-50 100 A1:A6",
+            "-50 100 B1:B6",
+            "-50 100 C1:C6",
+            "-50 100 D1:D6"
+          ],
+          "formulas": [],
+          "print_settings": {
+            "pageSetup": [],
+            "pageMargins": [
+              {
+                "left": "0.3",
+                "right": "0.3",
+                "top": "0.3",
+                "bottom": "0.3",
+                "header": "0.1",
+                "footer": "0.1"
+              }
+            ],
+            "rowBreaks": [],
+            "colBreaks": []
+          }
+        }
+      ],
+      "drawing_parts": []
+    },
+    "font_hashes": {
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec"
+    },
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "core",
+      "docs/validation/conditional-formatting-phase3/fixtures/x14-bars.xlsx",
+      "--output",
+      "/workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/cf-phase3-x14-bars.pdf",
+      "--verbose",
+      "--sheet",
+      "Phase3",
+      "--font-file",
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Starting core: core docs/validation/conditional-formatting-phase3/fixtures/x14-bars.xlsx --output /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/cf-phase3-x14-bars.pdf --verbose --sheet Phase3 --font-file third_party/NotoSansJP/NotoSansJP-Regular.ttf\nWarning: SavedPageBreaks [Phase3, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nCore PDF: 1 pages; 1 diagnostics; output: /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/cf-phase3-x14-bars.pdf\nCompleted in 549.9 ms.\nMetric borderCandidates: 0.000\nMetric coreCommandBuild: 1.000\nMetric coreGeometryPlan: 1.000\nMetric corePageBuild: 1.000\nMetric fontSnapshotRead: 1.000\nMetric lineMetricsComputed: 1.000\nMetric openXmlReaderWorkbook: 1.000\nMetric pagePayloadActive: 0.000\nMetric pdfFinalSave.ms: 38.650\nMetric pdfFontCreated: 1.000\nMetric pdfFontDisposed: 1.000\nMetric pdfFontRunsCollected: 1.000\nMetric pdfOriginalFontBytes: 5472784.000\nMetric pdfSave: 1.000\nMetric pdfSubset.ms: 26.835\nMetric pdfSubsetFontBytes: 330564.000\nMetric pdfSubsetTypefaceCreated: 1.000\nMetric pdfSubsetTypefaceDisposed: 1.000\nMetric reader.ms: 297.707\nMetric readerStyleCacheEntries: 2.000\nMetric readerStyleCacheHits: 23.000\nMetric readerStyleConversions: 1.000\nMetric typefaceCreated: 1.000\nMetric typefaceDisposed: 1.000\n",
+    "elapsed_seconds": 0.6165233240000134,
+    "status": "generated",
+    "pdf_sha256": "f07faebef470a2f4ddfb2ec511abb6a3e01bab8aedda0a85b2e7ad3071b7d107",
+    "page_count": 1
+  },
+  {
+    "case_id": "shapes",
+    "engine": "core",
+    "input": "docs/validation/render-finalization-performance/inputs/shapes.xlsx",
+    "input_sha256": "e7728f9ef142f30d94490295705d8d55557556f0902d2e6a2a95960b987eb57c",
+    "hashes_valid": true,
+    "selected_sheets": [
+      "Shapes"
+    ],
+    "workbook": {
+      "sheets": [
+        {
+          "name": "Shapes",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId2"
+        }
+      ],
+      "worksheet_metadata": [
+        {
+          "part": "xl/worksheets/sheet1.xml",
+          "conditional_ranges": [],
+          "formulas": [],
+          "print_settings": {
+            "pageSetup": [
+              {
+                "paperSize": "1",
+                "scale": "100",
+                "pageOrder": "downThenOver",
+                "orientation": "default",
+                "blackAndWhite": "0",
+                "draft": "0",
+                "cellComments": "none",
+                "errors": "displayed"
+              }
+            ],
+            "pageMargins": [
+              {
+                "left": "0.75",
+                "right": "0.75",
+                "top": "0.75",
+                "bottom": "0.5",
+                "header": "0.5",
+                "footer": "0.75"
+              }
+            ],
+            "rowBreaks": [],
+            "colBreaks": []
+          }
+        }
+      ],
+      "drawing_parts": []
+    },
+    "font_hashes": {
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec"
+    },
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "core",
+      "docs/validation/render-finalization-performance/inputs/shapes.xlsx",
+      "--output",
+      "/workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/shapes.pdf",
+      "--verbose",
+      "--sheet",
+      "Shapes",
+      "--font-file",
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Starting core: core docs/validation/render-finalization-performance/inputs/shapes.xlsx --output /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/shapes.pdf --verbose --sheet Shapes --font-file third_party/NotoSansJP/NotoSansJP-Regular.ttf\nWarning: SavedPageBreaks [Shapes, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nCore PDF: 1 pages; 1 diagnostics; output: /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/shapes.pdf\nCompleted in 509.2 ms.\nMetric borderCandidates: 0.000\nMetric coreCommandBuild: 1.000\nMetric coreGeometryPlan: 1.000\nMetric corePageBuild: 1.000\nMetric fontSnapshotRead: 1.000\nMetric lineMetricsComputed: 1.000\nMetric openXmlReaderWorkbook: 1.000\nMetric pagePayloadActive: 0.000\nMetric pdfFinalSave.ms: 44.782\nMetric pdfFontCreated: 1.000\nMetric pdfFontDisposed: 1.000\nMetric pdfFontRunsCollected: 1.000\nMetric pdfOriginalFontBytes: 5472784.000\nMetric pdfSave: 1.000\nMetric pdfSubset.ms: 23.991\nMetric pdfSubsetFontBytes: 330708.000\nMetric pdfSubsetTypefaceCreated: 1.000\nMetric pdfSubsetTypefaceDisposed: 1.000\nMetric reader.ms: 277.674\nMetric readerStyleCacheEntries: 2.000\nMetric readerStyleCacheHits: 0.000\nMetric readerStyleConversions: 1.000\nMetric typefaceCreated: 1.000\nMetric typefaceDisposed: 1.000\n",
+    "elapsed_seconds": 0.5722207350000019,
+    "status": "generated",
+    "pdf_sha256": "f51bd7231b0b7e6b713cf99da5e6d245d32ca08a2302ca339057b6952a81f225",
+    "page_count": 1
+  },
+  {
+    "case_id": "actual-shape-text",
+    "engine": "core",
+    "input": "docs/validation/render-finalization-performance/inputs/actual-shape-text.xlsx",
+    "input_sha256": "f1a19080b15a44c786adc1b47ffaa4cb729ee1fac09d279a5ba8718344e63518",
+    "hashes_valid": true,
+    "selected_sheets": [
+      "Shapes"
+    ],
+    "workbook": {
+      "sheets": [
+        {
+          "name": "Shapes",
+          "sheetId": "1",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId2"
+        }
+      ],
+      "worksheet_metadata": [
+        {
+          "part": "xl/worksheets/sheet1.xml",
+          "conditional_ranges": [],
+          "formulas": [],
+          "print_settings": {
+            "pageSetup": [
+              {
+                "paperSize": "1",
+                "scale": "100",
+                "pageOrder": "downThenOver",
+                "orientation": "default",
+                "blackAndWhite": "0",
+                "draft": "0",
+                "cellComments": "none",
+                "errors": "displayed"
+              }
+            ],
+            "pageMargins": [
+              {
+                "left": "0.75",
+                "right": "0.75",
+                "top": "0.75",
+                "bottom": "0.5",
+                "header": "0.5",
+                "footer": "0.75"
+              }
+            ],
+            "rowBreaks": [],
+            "colBreaks": []
+          }
+        }
+      ],
+      "drawing_parts": [
+        "xl/drawings/performance.xml"
+      ]
+    },
+    "font_hashes": {
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec"
+    },
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "core",
+      "docs/validation/render-finalization-performance/inputs/actual-shape-text.xlsx",
+      "--output",
+      "/workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/actual-shape-text.pdf",
+      "--verbose",
+      "--sheet",
+      "Shapes",
+      "--font-file",
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Starting core: core docs/validation/render-finalization-performance/inputs/actual-shape-text.xlsx --output /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/actual-shape-text.pdf --verbose --sheet Shapes --font-file third_party/NotoSansJP/NotoSansJP-Regular.ttf\nWarning: SavedPageBreaks [Shapes, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nCore PDF: 1 pages; 1 diagnostics; output: /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/actual-shape-text.pdf\nCompleted in 552.2 ms.\nMetric borderCandidates: 0.000\nMetric coreCommandBuild: 1.000\nMetric coreGeometryPlan: 1.000\nMetric corePageBuild: 1.000\nMetric fontSnapshotRead: 1.000\nMetric lineMetricsComputed: 1.000\nMetric openXmlReaderWorkbook: 1.000\nMetric pagePayloadActive: 0.000\nMetric pdfFinalSave.ms: 31.574\nMetric pdfFontCreated: 1.000\nMetric pdfFontDisposed: 1.000\nMetric pdfFontRunsCollected: 1.000\nMetric pdfOriginalFontBytes: 5472784.000\nMetric pdfSave: 1.000\nMetric pdfSubset.ms: 25.458\nMetric pdfSubsetFontBytes: 330708.000\nMetric pdfSubsetTypefaceCreated: 1.000\nMetric pdfSubsetTypefaceDisposed: 1.000\nMetric reader.ms: 318.096\nMetric readerStyleCacheEntries: 2.000\nMetric readerStyleCacheHits: 0.000\nMetric readerStyleConversions: 1.000\nMetric typefaceCreated: 1.000\nMetric typefaceDisposed: 1.000\n",
+    "elapsed_seconds": 0.6195832129999985,
+    "status": "generated",
+    "pdf_sha256": "f51bd7231b0b7e6b713cf99da5e6d245d32ca08a2302ca339057b6952a81f225",
+    "page_count": 1
+  },
+  {
+    "case_id": "japanese-grid-report",
+    "engine": "core",
+    "input": "samples/excel/japanese-grid-report.xlsx",
+    "input_sha256": "4907d79963eb8267eab4230c7aad9bbd0d580238d3d42f402b34fb4c0ff217a1",
+    "hashes_valid": true,
+    "selected_sheets": [
+      "月次業務報告書"
+    ],
+    "workbook": {
+      "sheets": [
+        {
+          "name": "月次業務報告書",
+          "sheetId": "1",
+          "state": "visible",
+          "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId1"
+        }
+      ],
+      "worksheet_metadata": [
+        {
+          "part": "xl/worksheets/sheet1.xml",
+          "conditional_ranges": [],
+          "formulas": [],
+          "print_settings": {
+            "pageSetup": [
+              {
+                "orientation": "portrait",
+                "paperSize": "9",
+                "fitToHeight": "1",
+                "fitToWidth": "1"
+              }
+            ],
+            "pageMargins": [
+              {
+                "left": "0.75",
+                "right": "0.75",
+                "top": "1",
+                "bottom": "1",
+                "header": "0.5",
+                "footer": "0.5"
+              }
+            ],
+            "rowBreaks": [],
+            "colBreaks": []
+          }
+        }
+      ],
+      "drawing_parts": []
+    },
+    "font_hashes": {
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf": "d930d5d52d15231c283089760f84584272ad5e37e14607ba0d19c798e7a9caec"
+    },
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "core",
+      "samples/excel/japanese-grid-report.xlsx",
+      "--output",
+      "/workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/japanese-grid-report.pdf",
+      "--verbose",
+      "--sheet",
+      "月次業務報告書",
+      "--font-file",
+      "third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Starting core: core samples/excel/japanese-grid-report.xlsx --output /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/japanese-grid-report.pdf --verbose --sheet 月次業務報告書 --font-file third_party/NotoSansJP/NotoSansJP-Regular.ttf\nWarning: SavedPageBreaks [月次業務報告書, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nCore PDF: 1 pages; 1 diagnostics; output: /workspace/ExcelRenderer/artifacts/libreoffice-comparison/actual/core/japanese-grid-report.pdf\nCompleted in 686.0 ms.\nMetric borderCandidates: 1394.000\nMetric coreBorderGeometry: 1.000\nMetric coreCommandBuild: 1.000\nMetric coreGeometryPlan: 1.000\nMetric corePageBuild: 1.000\nMetric fontSnapshotRead: 1.000\nMetric lineMetricsComputed: 1.000\nMetric openXmlReaderWorkbook: 1.000\nMetric pagePayloadActive: 0.000\nMetric pdfFinalSave.ms: 34.885\nMetric pdfFontCreated: 1.000\nMetric pdfFontDisposed: 1.000\nMetric pdfFontRunsCollected: 1.000\nMetric pdfOriginalFontBytes: 5472784.000\nMetric pdfSave: 1.000\nMetric pdfSubset.ms: 27.292\nMetric pdfSubsetFontBytes: 384272.000\nMetric pdfSubsetTypefaceCreated: 1.000\nMetric pdfSubsetTypefaceDisposed: 1.000\nMetric reader.ms: 399.105\nMetric readerStyleCacheEntries: 39.000\nMetric readerStyleCacheHits: 1290.000\nMetric readerStyleConversions: 38.000\nMetric resolvedBorderSegments: 1.000\nMetric typefaceCreated: 1.000\nMetric typefaceDisposed: 1.000\n",
+    "elapsed_seconds": 0.7539122549999888,
+    "status": "generated",
+    "pdf_sha256": "f20259adc16fff7a8774171c8864c437bc8fa6f2459d9b64487049625c5b2986",
+    "page_count": 1
+  }
+]

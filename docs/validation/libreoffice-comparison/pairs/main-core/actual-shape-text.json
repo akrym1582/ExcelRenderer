@@ -1,0 +1,279 @@
+{
+  "case_id": "actual-shape-text",
+  "pair": "main-core",
+  "status": "compared-needs-review",
+  "left_sha256": "edc7877f42a60e794779e688d19cd9cde8f3fd2004b40e207d24f2c895ee6415",
+  "right_sha256": "f51bd7231b0b7e6b713cf99da5e6d245d32ca08a2302ca339057b6952a81f225",
+  "page_count": [
+    1,
+    1
+  ],
+  "page_count_equal": true,
+  "page_correspondence": "ordinal only; if counts differ consult both complete page sets",
+  "document_text": {
+    "left_only_characters": {
+      "a": 7,
+      "n": 2,
+      "c": 4,
+      "h": 5,
+      "o": 4,
+      "r": 2,
+      "S": 5,
+      "p": 6,
+      "e": 15,
+      "t": 6,
+      "日": 5,
+      "本": 5,
+      "語": 5,
+      "A": 5,
+      "B": 5,
+      "C": 7,
+      "l": 6,
+      "i": 1,
+      "s": 1,
+      "u": 4,
+      "d": 4,
+      "R": 4,
+      "w": 2,
+      "g": 2
+    },
+    "right_only_characters": {},
+    "same_non_whitespace_character_inventory": false,
+    "same_extracted_text": false
+  },
+  "character_positions": {
+    "method": "Extraction sequence alignment; repeated characters and extraction order can be ambiguous",
+    "matched_characters": 6,
+    "matched_characters_on_different_pages": 0,
+    "matches": [
+      {
+        "text": "a",
+        "left_page": 1,
+        "right_page": 1,
+        "left_origin": [
+          54.5,
+          65.33200073242188
+        ],
+        "right_origin": [
+          54.5,
+          65.33200073242188
+        ],
+        "left_bbox": [
+          54.5,
+          52.57200241088867,
+          60.69300079345703,
+          68.5
+        ],
+        "right_bbox": [
+          54.5,
+          52.57200241088867,
+          60.69300079345703,
+          68.5
+        ],
+        "dx_pt": 0.0,
+        "dy_pt": 0.0
+      },
+      {
+        "text": "n",
+        "left_page": 1,
+        "right_page": 1,
+        "left_origin": [
+          60.69300079345703,
+          65.33200073242188
+        ],
+        "right_origin": [
+          60.69300079345703,
+          65.33200073242188
+        ],
+        "left_bbox": [
+          60.69300079345703,
+          52.57200241088867,
+          67.40299987792969,
+          68.5
+        ],
+        "right_bbox": [
+          60.69300079345703,
+          52.57200241088867,
+          67.40299987792969,
+          68.5
+        ],
+        "dx_pt": 0.0,
+        "dy_pt": 0.0
+      },
+      {
+        "text": "c",
+        "left_page": 1,
+        "right_page": 1,
+        "left_origin": [
+          67.40299987792969,
+          65.33200073242188
+        ],
+        "right_origin": [
+          67.40299987792969,
+          65.33200073242188
+        ],
+        "left_bbox": [
+          67.40299987792969,
+          52.57200241088867,
+          73.01300048828125,
+          68.5
+        ],
+        "right_bbox": [
+          67.40299987792969,
+          52.57200241088867,
+          73.01300048828125,
+          68.5
+        ],
+        "dx_pt": 0.0,
+        "dy_pt": 0.0
+      },
+      {
+        "text": "h",
+        "left_page": 1,
+        "right_page": 1,
+        "left_origin": [
+          73.01300048828125,
+          65.33200073242188
+        ],
+        "right_origin": [
+          73.01300048828125,
+          65.33200073242188
+        ],
+        "left_bbox": [
+          73.01300048828125,
+          52.57200241088867,
+          79.69000244140625,
+          68.5
+        ],
+        "right_bbox": [
+          73.01300048828125,
+          52.57200241088867,
+          79.69000244140625,
+          68.5
+        ],
+        "dx_pt": 0.0,
+        "dy_pt": 0.0
+      },
+      {
+        "text": "o",
+        "left_page": 1,
+        "right_page": 1,
+        "left_origin": [
+          79.69000244140625,
+          65.33200073242188
+        ],
+        "right_origin": [
+          79.69000244140625,
+          65.33200073242188
+        ],
+        "left_bbox": [
+          79.69000244140625,
+          52.57200241088867,
+          86.35600280761719,
+          68.5
+        ],
+        "right_bbox": [
+          79.69000244140625,
+          52.57200241088867,
+          86.35600280761719,
+          68.5
+        ],
+        "dx_pt": 0.0,
+        "dy_pt": 0.0
+      },
+      {
+        "text": "r",
+        "left_page": 1,
+        "right_page": 1,
+        "left_origin": [
+          86.35600280761719,
+          65.33200073242188
+        ],
+        "right_origin": [
+          86.35600280761719,
+          65.33200073242188
+        ],
+        "left_bbox": [
+          86.35600280761719,
+          52.57200241088867,
+          90.6240005493164,
+          68.5
+        ],
+        "right_bbox": [
+          86.35600280761719,
+          52.57200241088867,
+          90.6240005493164,
+          68.5
+        ],
+        "dx_pt": 0.0,
+        "dy_pt": 0.0
+      }
+    ]
+  },
+  "pages": [
+    {
+      "page": 1,
+      "sizes_pt": [
+        [
+          0.0,
+          0.0,
+          612.0,
+          792.0
+        ],
+        [
+          0.0,
+          0.0,
+          612.0,
+          792.0
+        ]
+      ],
+      "size_equal": true,
+      "text": {
+        "left_only_characters": {
+          "a": 7,
+          "n": 2,
+          "c": 4,
+          "h": 5,
+          "o": 4,
+          "r": 2,
+          "S": 5,
+          "p": 6,
+          "e": 15,
+          "t": 6,
+          "日": 5,
+          "本": 5,
+          "語": 5,
+          "A": 5,
+          "B": 5,
+          "C": 7,
+          "l": 6,
+          "i": 1,
+          "s": 1,
+          "u": 4,
+          "d": 4,
+          "R": 4,
+          "w": 2,
+          "g": 2
+        },
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": false,
+        "same_extracted_text": false
+      },
+      "rasters": [
+        {
+          "dpi": 144,
+          "canvas_pixels": [
+            1224,
+            1584
+          ],
+          "changed_pixel_ratio": 0.1147942868224731,
+          "difference_over_16_ratio": 0.11455909173433683,
+          "side_by_side": "artifacts/libreoffice-comparison/images/main-core/actual-shape-text/page-001-144dpi/side-by-side.png"
+        }
+      ]
+    }
+  ],
+  "findings": [
+    "F11"
+  ]
+}

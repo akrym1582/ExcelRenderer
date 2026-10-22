@@ -1,0 +1,293 @@
+{
+  "case_id": "cf-mapped-scale",
+  "pair": "libreoffice-main",
+  "status": "compared-needs-review",
+  "left_sha256": "2fdad0169d57261addaa6b0c39e069c86ea6d9b8e6ae66d3ede6cbc2db93b35c",
+  "right_sha256": "8954b589945fdbe7002f18ecd033df7d84bacf37a48c6034c15821f01684048a",
+  "page_count": [
+    1,
+    1
+  ],
+  "page_count_equal": true,
+  "page_correspondence": "ordinal only; if counts differ consult both complete page sets",
+  "document_text": {
+    "left_only_characters": {},
+    "right_only_characters": {},
+    "same_non_whitespace_character_inventory": true,
+    "same_extracted_text": true
+  },
+  "character_positions": {
+    "method": "Extraction sequence alignment; repeated characters and extraction order can be ambiguous",
+    "matched_characters": 8,
+    "matched_characters_on_different_pages": 0,
+    "matches": [
+      {
+        "text": "1",
+        "left_page": 1,
+        "right_page": 1,
+        "left_origin": [
+          88.89399719238281,
+          80.53277587890625
+        ],
+        "right_origin": [
+          87.04000091552734,
+          65.33200073242188
+        ],
+        "left_bbox": [
+          88.89399719238281,
+          71.47734832763672,
+          94.45733642578125,
+          82.64404296875
+        ],
+        "right_bbox": [
+          87.04000091552734,
+          52.57200241088867,
+          93.14500427246094,
+          68.5
+        ],
+        "dx_pt": -1.8539962768554688,
+        "dy_pt": -15.200775146484375
+      },
+      {
+        "text": "0",
+        "left_page": 1,
+        "right_page": 1,
+        "left_origin": [
+          94.45733642578125,
+          80.53277587890625
+        ],
+        "right_origin": [
+          93.14500427246094,
+          65.33200073242188
+        ],
+        "left_bbox": [
+          94.45733642578125,
+          71.47734832763672,
+          100.02067565917969,
+          82.64404296875
+        ],
+        "right_bbox": [
+          93.14500427246094,
+          52.57200241088867,
+          99.25000762939453,
+          68.5
+        ],
+        "dx_pt": -1.3123321533203125,
+        "dy_pt": -15.200775146484375
+      },
+      {
+        "text": "2",
+        "left_page": 1,
+        "right_page": 1,
+        "left_origin": [
+          88.89399719238281,
+          93.3177490234375
+        ],
+        "right_origin": [
+          87.04000091552734,
+          80.33200073242188
+        ],
+        "left_bbox": [
+          88.89399719238281,
+          84.26232147216797,
+          94.45733642578125,
+          95.42901611328125
+        ],
+        "right_bbox": [
+          87.04000091552734,
+          67.5719985961914,
+          93.14500427246094,
+          83.5
+        ],
+        "dx_pt": -1.8539962768554688,
+        "dy_pt": -12.985748291015625
+      },
+      {
+        "text": "0",
+        "left_page": 1,
+        "right_page": 1,
+        "left_origin": [
+          94.45733642578125,
+          93.3177490234375
+        ],
+        "right_origin": [
+          93.14500427246094,
+          80.33200073242188
+        ],
+        "left_bbox": [
+          94.45733642578125,
+          84.26232147216797,
+          100.02067565917969,
+          95.42901611328125
+        ],
+        "right_bbox": [
+          93.14500427246094,
+          67.5719985961914,
+          99.25000762939453,
+          83.5
+        ],
+        "dx_pt": -1.3123321533203125,
+        "dy_pt": -12.985748291015625
+      },
+      {
+        "text": "2",
+        "left_page": 1,
+        "right_page": 1,
+        "left_origin": [
+          88.89399719238281,
+          106.10174560546875
+        ],
+        "right_origin": [
+          87.04000091552734,
+          95.33200073242188
+        ],
+        "left_bbox": [
+          88.89399719238281,
+          97.04631805419922,
+          94.45733642578125,
+          108.2130126953125
+        ],
+        "right_bbox": [
+          87.04000091552734,
+          82.5719985961914,
+          93.14500427246094,
+          98.5
+        ],
+        "dx_pt": -1.8539962768554688,
+        "dy_pt": -10.769744873046875
+      },
+      {
+        "text": "0",
+        "left_page": 1,
+        "right_page": 1,
+        "left_origin": [
+          94.45733642578125,
+          106.10174560546875
+        ],
+        "right_origin": [
+          93.14500427246094,
+          95.33200073242188
+        ],
+        "left_bbox": [
+          94.45733642578125,
+          97.04631805419922,
+          100.02067565917969,
+          108.2130126953125
+        ],
+        "right_bbox": [
+          93.14500427246094,
+          82.5719985961914,
+          99.25000762939453,
+          98.5
+        ],
+        "dx_pt": -1.3123321533203125,
+        "dy_pt": -10.769744873046875
+      },
+      {
+        "text": "3",
+        "left_page": 1,
+        "right_page": 1,
+        "left_origin": [
+          88.89399719238281,
+          118.8857421875
+        ],
+        "right_origin": [
+          87.04000091552734,
+          110.33200073242188
+        ],
+        "left_bbox": [
+          88.89399719238281,
+          109.83031463623047,
+          94.45733642578125,
+          120.99700927734375
+        ],
+        "right_bbox": [
+          87.04000091552734,
+          97.5719985961914,
+          93.14500427246094,
+          113.5
+        ],
+        "dx_pt": -1.8539962768554688,
+        "dy_pt": -8.553741455078125
+      },
+      {
+        "text": "0",
+        "left_page": 1,
+        "right_page": 1,
+        "left_origin": [
+          94.45733642578125,
+          118.8857421875
+        ],
+        "right_origin": [
+          93.14500427246094,
+          110.33200073242188
+        ],
+        "left_bbox": [
+          94.45733642578125,
+          109.83031463623047,
+          100.02067565917969,
+          120.99700927734375
+        ],
+        "right_bbox": [
+          93.14500427246094,
+          97.5719985961914,
+          99.25000762939453,
+          113.5
+        ],
+        "dx_pt": -1.3123321533203125,
+        "dy_pt": -8.553741455078125
+      }
+    ]
+  },
+  "pages": [
+    {
+      "page": 1,
+      "sizes_pt": [
+        [
+          0.0,
+          0.0,
+          595.303955078125,
+          841.8897705078125
+        ],
+        [
+          0.0,
+          0.0,
+          612.0,
+          792.0
+        ]
+      ],
+      "size_equal": false,
+      "text": {
+        "left_only_characters": {},
+        "right_only_characters": {},
+        "same_non_whitespace_character_inventory": true,
+        "same_extracted_text": true
+      },
+      "rasters": [
+        {
+          "dpi": 144,
+          "canvas_pixels": [
+            1224,
+            1684
+          ],
+          "changed_pixel_ratio": 0.005147446943939888,
+          "difference_over_16_ratio": 0.0038365702575567043,
+          "side_by_side": "artifacts/libreoffice-comparison/images/libreoffice-main/cf-mapped-scale/page-001-144dpi/side-by-side.png"
+        },
+        {
+          "dpi": 288,
+          "canvas_pixels": [
+            2448,
+            3368
+          ],
+          "changed_pixel_ratio": 0.005067882259792278,
+          "difference_over_16_ratio": 0.0037777457578439134,
+          "side_by_side": "artifacts/libreoffice-comparison/images/libreoffice-main/cf-mapped-scale/page-001-288dpi/side-by-side.png"
+        }
+      ]
+    }
+  ],
+  "findings": [
+    "F15"
+  ]
+}

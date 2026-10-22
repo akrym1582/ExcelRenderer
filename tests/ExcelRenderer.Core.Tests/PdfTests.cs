@@ -180,14 +180,14 @@ public sealed class PdfTests
     }
 
     [Theory]
-    [InlineData("01-japanese.xlsx", 2)]
-    [InlineData("02-image.xlsx", 2)]
+    [InlineData("01-japanese.xlsx", 1)]
+    [InlineData("02-image.xlsx", 1)]
     [InlineData("03-wrapped-text.xlsx", 1)]
     [InlineData("04-text-decoration.xlsx", 1)]
     [InlineData("05-borders.xlsx", 2)]
     [InlineData("06-layout-and-pagination.xlsx", 4)]
     [InlineData("07-multiple-sheets.xlsx", 2)]
-    [InlineData("08-print-scaling.xlsx", 2)]
+    [InlineData("08-print-scaling.xlsx", 1)]
     [InlineData("09-cell-border.xlsx", 1)]
     public async Task Core_owned_workbooks_keep_expected_page_counts_and_readable_PDF(string name, int expectedPages)
     {

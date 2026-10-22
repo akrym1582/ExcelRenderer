@@ -308,3 +308,15 @@ to Core; ExcelConverter awaits artifact writes, counts successful bytes, flushes
 notifies sink completion or noncancelable abort cleanup. Core's public converter accepts
 nonseekable outputs and leaves flushing to the caller. ASP.NET dependencies exist only in
 the HTTP sample and integration tests. See [HTTP sample](../samples/ExcelRenderer.Http.Sample).
+
+## Core source column metrics
+
+Core SingleFontMetrics separates source Normal column metrics from the supplied drawing font.
+It measures the supplied snapshot only for a matching physical family name; substituted or
+missing source families use the main-compatible 7px/96-DPI MDW and report
+MaximumDigitWidthFallback. Text measurement and painting continue to use the supplied font.
+No OS/font-package discovery, additional font, public API or Core dependency is introduced.
+
+Core standalone rich strings are flattened to ordinary cell text. Per-run size, color,
+underline and face styling remain main-only; the single-font cell-level guarantees do not
+extend to partial formatting. This boundary was explicitly confirmed for the comparison follow-up.

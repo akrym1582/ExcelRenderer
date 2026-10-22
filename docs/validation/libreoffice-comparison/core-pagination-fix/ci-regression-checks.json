@@ -1,0 +1,119 @@
+{
+  "failed_job": "https://github.com/akrym1582/ExcelRenderer/actions/runs/39703882490/job/119579232304",
+  "failure": "Old frozen Core maxGlyphOriginDelta <= 0.1pt was incompatible with the approved source-column-metric change.",
+  "historical_core_followups": {
+    "status": "passed",
+    "cases": 3,
+    "dpis": [
+      144,
+      288,
+      300
+    ],
+    "original_pdfs_and_thresholds": "unchanged",
+    "new_contract": "Exact reviewed page/glyph/paint/image/link geometry and full-page pixels; independent font-outline check retained."
+  },
+  "product_regression": {
+    "status": "passed",
+    "cases": 22,
+    "engines": [
+      "main",
+      "core"
+    ],
+    "pdfs": 44,
+    "dpis": [
+      144,
+      288
+    ],
+    "errors": 0,
+    "mutations": [
+      {
+        "mutation": "missing-text",
+        "detected": true,
+        "errors": [
+          "Poppler extracted source text changed",
+          "Page 1: text changed",
+          "Page 1: glyphs changed",
+          "Page 1: 144dpi pixels changed",
+          "Page 1: 288dpi pixels changed"
+        ]
+      },
+      {
+        "mutation": "missing-border",
+        "detected": true,
+        "errors": [
+          "Page 1: paint changed",
+          "Page 1: 144dpi pixels changed",
+          "Page 1: 288dpi pixels changed"
+        ]
+      },
+      {
+        "mutation": "extra-ink",
+        "detected": true,
+        "errors": [
+          "Page 1: paint changed",
+          "Page 1: 144dpi pixels changed",
+          "Page 1: 288dpi pixels changed"
+        ]
+      },
+      {
+        "mutation": "shifted-content",
+        "detected": true,
+        "errors": [
+          "Page 1: glyphs changed",
+          "Page 1: paint changed",
+          "Page 1: 144dpi pixels changed",
+          "Page 1: 288dpi pixels changed"
+        ]
+      },
+      {
+        "mutation": "wrong-source-text",
+        "detected": true,
+        "errors": [
+          "Poppler extracted source text changed",
+          "Page 1: text changed"
+        ]
+      },
+      {
+        "mutation": "extra-page",
+        "detected": true,
+        "errors": [
+          "Poppler extracted source text changed",
+          "Page count: expected 1, actual 2"
+        ]
+      }
+    ],
+    "independent_text_readers": [
+      "MuPDF",
+      "Poppler"
+    ]
+  },
+  "border_audit": {
+    "status": "passed",
+    "sheets_per_engine": 5,
+    "strokes_per_engine": 23,
+    "duplicate_product_strokes": 0
+  },
+  "existing_main_comparison": {
+    "fixtures": 25,
+    "unmet_gates": 0,
+    "reference_B_no_exceptions_unmet_gates": 0
+  },
+  "existing_mutations": {
+    "shared_borders": "passed",
+    "removed_ivs_extra_ink_font_metrics_font_bounds": "passed"
+  },
+  "image_validation": {
+    "fixtures": 5,
+    "status": "passed",
+    "main_release_tests": 22,
+    "core_release_tests": 9
+  },
+  "namespace_declarations": 717,
+  "dependency_audit": "passed",
+  "dotnet_source_changes": false,
+  "unit_suite_in_original_job": {
+    "passed": 2890,
+    "failed": 0
+  },
+  "baseline_manifest_sha256": "511f7a094d3da609a6027ba7dad30acf6a0b9709deb58e5c50bf7ab1cc8f925b"
+}

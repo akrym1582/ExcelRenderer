@@ -1,5 +1,8 @@
 # Asynchronous final PDF output validation
 
+This is historical validation. The HTTP sample and Kestrel tests have since been removed;
+async-only stream tests remain. Current executable examples are [file conversions](../samples/ExcelRenderer.Sample/README.md).
+
 本体の RenderAsync と Core の ConvertAsync は、非 Seek・同期 I/O 禁止の HTTP 応答 Stream に
 最終 PDF を直接非同期出力できます。日英の利用ガイド、実行可能な HTTP サンプル、回帰テストを更新しました。
 中間スプールと同期 CPU 処理は残ります。今回の測定では高速化を確認していません。
@@ -66,7 +69,7 @@ Deterministic generated PDFs produce byte-identical sync/async results, includin
 links, generations, metadata, xref and encoded image payloads. Existing independent PDF/image/font,
 link/SMask, sync renderer and CLI regressions ran in the full solution suite.
 
-The [HTTP sample](../samples/ExcelRenderer.Http.Sample) handlers themselves run in the Kestrel
+The [historical HTTP sample](https://github.com/akrym1582/ExcelRenderer/tree/f73676c437bc991384dc04c8b19d48d6f1fbff4e/samples/ExcelRenderer.Http.Sample) handlers themselves run in the Kestrel
 tests, bound to a dynamic loopback port with AllowSynchronousIO=false. Server exceptions are
 captured; HttpClient checks 200/application/pdf and strict PdfPig parsing/page text for both APIs.
 

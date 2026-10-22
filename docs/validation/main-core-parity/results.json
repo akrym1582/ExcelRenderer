@@ -1,0 +1,158 @@
+{
+  "base_sha": "aa1b8006de4b20e449ad4a015c70928c617858a2",
+  "os": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "dotnet": "10.0.401",
+  "configuration": "Release",
+  "rebuild": {
+    "warnings": 0,
+    "errors": 0
+  },
+  "solution": [
+    {
+      "project": "ExcelRenderer.Core.Tests.dll",
+      "failed": 0,
+      "passed": 413,
+      "skipped": 0,
+      "total": 413
+    },
+    {
+      "project": "ExcelRenderer.Formulas.Tests.dll",
+      "failed": 0,
+      "passed": 833,
+      "skipped": 0,
+      "total": 833
+    },
+    {
+      "project": "ExcelRenderer.Mapping.Tests.dll",
+      "failed": 0,
+      "passed": 172,
+      "skipped": 0,
+      "total": 172
+    },
+    {
+      "project": "ExcelRenderer.OpenXml.Tests.dll",
+      "failed": 0,
+      "passed": 213,
+      "skipped": 0,
+      "total": 213
+    },
+    {
+      "project": "ExcelRenderer.Tests.dll",
+      "failed": 0,
+      "passed": 1174,
+      "skipped": 0,
+      "total": 1174
+    },
+    {
+      "project": "ExcelRenderer.Tool.Tests.dll",
+      "failed": 0,
+      "passed": 135,
+      "skipped": 0,
+      "total": 135
+    }
+  ],
+  "total_passed": 2940,
+  "focused_tests": 61,
+  "common_cases": 19,
+  "intended_difference_cases": 5,
+  "default_selection_contracts": 1,
+  "unresolved_common_cases": 0,
+  "windows": "CI configured; not run on this Linux executor",
+  "conditional_gates": "Core product and project/distribution files unchanged; no separate coverage/performance/pack/isolation gate required",
+  "reviewed_pdfs": {
+    "passed": 44,
+    "failures": 0,
+    "detected_mutations": [
+      "missing-text",
+      "missing-border",
+      "duplicate-border",
+      "extra-ink",
+      "shifted-content",
+      "wrong-source-text",
+      "extra-page"
+    ]
+  },
+  "border_audit": {
+    "worksheets": 5,
+    "physical_strokes_per_product": 23,
+    "duplicates_per_product": 0,
+    "tolerance_pt": 0.002
+  },
+  "dependency_audit": "No removed PDF dependency: 1533 source/config files, 24 restored projects, 726 managed AssemblyRef inventories, 0 packages",
+  "runtime_hashes": {
+    "ExcelRenderer.Mapping.dll": "9cd6afbcf3ef7cf4b38cf0ddca6f978e51b5c7dde2f40a8441c665f360bc81e7",
+    "ExcelRenderer.dll": "5b58cbbfaa08f2e642466e1acf6cb645ff6e109031ff7b0b92535cd3ea989450",
+    "ExcelRenderer.Fonts.dll": "9a2a602e90c34378573acabf9ab5e4f9b0e825a3e28d650df526dbdcbacbbfa6",
+    "ExcelRenderer.Formulas.dll": "167f1aed49aa2449fe5e96ce3a019ca4b1c38974eb73d185d8a0c6e8fe50c0dc",
+    "ExcelRenderer.Tool.dll": "66be0643237607f058ecce689fcfcf0a247ebe82c2729a9c1628a992859a4b84",
+    "ExcelRenderer.OpenXml.Reader.dll": "65e3abb64020bf2e83d46cfb7ef4e15ce5276e712f2d57a5efd70598900d5b7f",
+    "ExcelRenderer.Core.dll": "94973b3d4f26454680281d8af1d1a264db1180d4cea9d5694c329b9a5eb0a0b6",
+    "ExcelRenderer.OpenXml.dll": "ade30d583a10c717ee4659917d2095f08d6897150c20b57a7ef66d55f7c34098"
+  },
+  "sample_runs": [
+    {
+      "command": [
+        "dotnet",
+        "run",
+        "--project",
+        "samples/ExcelRenderer.Http.Sample",
+        "-c",
+        "Release",
+        "--no-build",
+        "--",
+        "--file",
+        "/workspace/ExcelRenderer/tests/ExcelRenderer.Tests/SampleInputs/01-japanese.xlsx",
+        "/workspace/ExcelRenderer/artifacts/main-core-parity/sample-runs/main.pdf",
+        "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+      ],
+      "exit_code": 0,
+      "pages": 1,
+      "stdout": "1 pages: /workspace/ExcelRenderer/artifacts/main-core-parity/sample-runs/main.pdf\n",
+      "stderr": "SavedPageBreaks: sheet=日本語 page= count=1\nMaximumDigitWidthFallback: sheet=日本語 page= count=1\n"
+    },
+    {
+      "command": [
+        "dotnet",
+        "run",
+        "--project",
+        "samples/ExcelRenderer.Core.Sample",
+        "-c",
+        "Release",
+        "--no-build",
+        "--",
+        "/workspace/ExcelRenderer/tests/ExcelRenderer.Tests/SampleInputs/01-japanese.xlsx",
+        "/workspace/ExcelRenderer/artifacts/main-core-parity/sample-runs/core.pdf",
+        "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+      ],
+      "exit_code": 0,
+      "pages": 1,
+      "stdout": "1 pages: /workspace/ExcelRenderer/artifacts/main-core-parity/sample-runs/core.pdf\n",
+      "stderr": "SavedPageBreaks: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nMaximumDigitWidthFallback: Normal 'Calibri', 11pt; supplied drawing font 'Noto Sans JP' is not the source Normal font. Column layout uses the 7px compatibility metric at 96 DPI; exact Excel layout cannot be guaranteed.\n"
+    },
+    {
+      "endpoint": "/pdf",
+      "status": 200,
+      "pages": 1,
+      "bytes": 119165
+    },
+    {
+      "endpoint": "/core-pdf",
+      "status": 200,
+      "pages": 1,
+      "bytes": 119165
+    },
+    {
+      "endpoint": "/pdf-validated",
+      "status": 200,
+      "pages": 1,
+      "bytes": 119165
+    },
+    {
+      "endpoint": "/core-pdf-validated",
+      "status": 200,
+      "pages": 1,
+      "bytes": 119165
+    }
+  ],
+  "rasterizer": "PyMuPDF 1.26.6; 144/288dpi"
+}

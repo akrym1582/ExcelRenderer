@@ -1,5 +1,7 @@
 # ExcelRenderer
 
+Usage guides: [Main/Core parity](docs/main-core-parity.md) · [Diagnostics and delivery](docs/diagnostics.md)
+
 > PDF output keeps ordinary text searchable, but supported ideographic variation sequences (IVS) are emitted as vector outlines so the selected format 14 glyph is preserved. Those outlined IVS characters are not searchable or copyable as text.
 
 English | [日本語](README.ja.md)
@@ -493,31 +495,11 @@ break counts. `DiagnosticOptions.EnableLayoutWarnings` also enables per-print-ar
 See [validation evidence](docs/pagination-source-metrics-validation.md) for synthetic
 fixtures and the limits of comparisons without the user's workbook or Windows fonts.
 
-### Direct PDF HTTP responses
+### Asynchronous PDF streams
 
-PDF `RenderAsync` supports writable nonseekable streams that prohibit synchronous I/O,
-including ASP.NET Core `Response.Body`. `AllowSynchronousIO = true` is unnecessary:
-
-```csharp
-using ExcelRenderer;
-using ExcelRenderer.Rendering;
-
-// xlsx is a readable stream prepared by the application.
-httpContext.Response.ContentType = "application/pdf";
-httpContext.Response.Headers["Content-Disposition"] = "attachment; filename=report.pdf";
-await ExcelConverter.RenderAsync(
-    xlsx,
-    new RenderRequest { OutputFormat = OutputFormat.Pdf },
-    new SingleStreamOutputSink(httpContext.Response.Body),
-    httpContext.RequestAborted);
-```
-
-Configure `RenderRequest.FontOptions` for your deployment. The
-[compilable HTTP sample](samples/ExcelRenderer.Http.Sample) supplies an explicit font
-and includes main-library and Core endpoints, both tested against real Kestrel with
-synchronous I/O disabled. Do not dispose `Response.Body` or return an additional File/JSON
-result after writing it. Content-Length need not be known in advance; let the server
-handle HTTP framing.
+PDF RenderAsync supports writable nonseekable streams that prohibit synchronous I/O.
+Use SingleStreamOutputSink for a caller-owned destination and configure FontOptions explicitly.
+See the [file sample](samples/ExcelRenderer.Sample) for an executable conversion example.
 
 The converter generates all pages into its existing seekable spool (bounded memory,
 then a temporary file) and parses the structure before final transmission. It adds no
@@ -533,7 +515,7 @@ the exception or abort the connection. `SingleStreamOutputSink` leaves the desti
 open. Failed artifacts receive `AbortAsync` with a noncancelable cleanup token; cleanup
 errors are retained in the original exception's `Data["AbortException"]`.
 
-Core `ConvertAsync(xlsx, response.Body, options, requestAborted)` has the same async-only,
+Core `ConvertAsync(xlsx, outputStream, options, cancellationToken)` has the same async-only,
 nonseekable output support, requires an explicit regular font, and leaves final flushing
 to the caller. See [Core stream contracts](docs/core.md#streams-and-lifetime).
 This guarantee applies to PDF; other output formats retain their existing behavior.

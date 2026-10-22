@@ -256,13 +256,6 @@
       "excelrenderer.formulas": {
         "type": "Project"
       },
-      "excelrenderer.http.sample": {
-        "type": "Project",
-        "dependencies": {
-          "ExcelRenderer": "[1.10.2, )",
-          "ExcelRenderer.Core": "[1.0.0, )"
-        }
-      },
       "excelrenderer.mapping": {
         "type": "Project",
         "dependencies": {
@@ -283,6 +276,12 @@
         "dependencies": {
           "DocumentFormat.OpenXml": "[3.3.0, )",
           "ExcelNumberFormat": "[1.1.0, )"
+        }
+      },
+      "excelrenderer.sample": {
+        "type": "Project",
+        "dependencies": {
+          "ExcelRenderer": "[1.10.4, )"
         }
       }
     }

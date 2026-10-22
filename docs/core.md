@@ -1,5 +1,7 @@
 # ExcelRenderer Core
 
+Usage guides: [Main/Core parity](main-core-parity.md) · [Diagnostics and delivery](diagnostics.md)
+
 > Core reads saved formula results only. It has no dependency on the calculation adapter or formula engine. Use the main renderer or recalculate a workbook with OpenXml before passing it to Core.
 
 English | [日本語](core.ja.md)

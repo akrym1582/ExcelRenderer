@@ -1,5 +1,7 @@
 # ExcelRenderer Core
 
+利用ガイド: [本体/Core比較](main-core-parity.ja.md) · [診断と出力](diagnostics.ja.md)
+
 
 [English](core.md) | 日本語
 

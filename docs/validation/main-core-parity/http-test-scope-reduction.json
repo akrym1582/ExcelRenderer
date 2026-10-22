@@ -1,0 +1,61 @@
+{
+  "parent_commit": "857f74580da33af398563c57d1854d36d222ac73",
+  "scope": "Remove HTTP test additions; retain HTTP sample improvements and existing tests",
+  "removed_http_tests": 21,
+  "existing_http_tests_restored_from": "aa1b8006de4b20e449ad4a015c70928c617858a2",
+  "sample_implementation_changed": false,
+  "rebuild": {
+    "configuration": "Release",
+    "warnings": 0,
+    "errors": 0
+  },
+  "solution": [
+    {
+      "project": "ExcelRenderer.Core.Tests.dll",
+      "failed": 0,
+      "passed": 413,
+      "skipped": 0,
+      "total": 413
+    },
+    {
+      "project": "ExcelRenderer.Formulas.Tests.dll",
+      "failed": 0,
+      "passed": 833,
+      "skipped": 0,
+      "total": 833
+    },
+    {
+      "project": "ExcelRenderer.Mapping.Tests.dll",
+      "failed": 0,
+      "passed": 172,
+      "skipped": 0,
+      "total": 172
+    },
+    {
+      "project": "ExcelRenderer.OpenXml.Tests.dll",
+      "failed": 0,
+      "passed": 213,
+      "skipped": 0,
+      "total": 213
+    },
+    {
+      "project": "ExcelRenderer.Tests.dll",
+      "failed": 0,
+      "passed": 1153,
+      "skipped": 0,
+      "total": 1153
+    },
+    {
+      "project": "ExcelRenderer.Tool.Tests.dll",
+      "failed": 0,
+      "passed": 135,
+      "skipped": 0,
+      "total": 135
+    }
+  ],
+  "total_passed": 2919,
+  "comparison_diagnostics_file_cases": 29,
+  "http_test_additions": false,
+  "test_command": "source scripts/test-fonts.sh && dotnet test ExcelRenderer.slnx -c Release --no-build -m:1 --logger trx --results-directory artifacts/main-core-parity/http-test-scope-reduction",
+  "windows_ci": "Filter reduced to comparison, diagnostic-policy and file-publication cases; follow-up CI runs after push"
+}

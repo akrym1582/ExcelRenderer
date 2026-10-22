@@ -1,5 +1,7 @@
 # ExcelRenderer
 
+利用ガイド: [本体/Core比較](docs/main-core-parity.ja.md) · [診断と出力](docs/diagnostics.ja.md)
+
 > PDF 出力では通常文字を検索可能なテキストとして維持しますが、対応する漢字 IVS は format 14 で選択された字形を保持するためベクター輪郭として出力します。輪郭化された IVS 部分はテキストとして検索・コピーできません。
 
 [English](README.md) | 日本語
@@ -416,30 +418,11 @@ PNG/SVG には `DirectoryOutputSink` を使用します。`RenderRequest` では
 シート名（指定順）と PDF/PNG/SVG の文書ページを選択できます。Markdown はページ
 選択を受け付けません。`ConversionManifest.WriteAsync` は完了した成果物メタデータと診断を記録します。
 
-### PDF を HTTP 応答へ直接出力する
+### PDF の非同期Stream出力
 
-PDF の `RenderAsync` は、同期 I/O が禁止された非 Seek の書き込み可能 Stream に対応します。
-ASP.NET Core の `Response.Body` へ直接出力でき、`AllowSynchronousIO = true` は不要です。
-
-```csharp
-using ExcelRenderer;
-using ExcelRenderer.Rendering;
-
-// xlsx はアプリ側で用意した読み取り可能な Stream。
-httpContext.Response.ContentType = "application/pdf";
-httpContext.Response.Headers["Content-Disposition"] = "attachment; filename=report.pdf";
-await ExcelConverter.RenderAsync(
-    xlsx,
-    new RenderRequest { OutputFormat = OutputFormat.Pdf },
-    new SingleStreamOutputSink(httpContext.Response.Body),
-    httpContext.RequestAborted);
-```
-
-実行環境に合わせて `RenderRequest.FontOptions` を設定してください。
-[コンパイル可能な HTTP サンプル](samples/ExcelRenderer.Http.Sample) は外部フォントを明示し、
-本体と Core の両エンドポイントを同期 I/O 禁止の実 Kestrel でテストします。
-`Response.Body` を破棄したり、書き込み後に別の File/JSON 結果を返したりしないでください。
-生成前の Content-Length 設定は不要で、HTTP の転送方式はサーバーに任せます。
+PDFのRenderAsyncは、同期I/O禁止の非Seek Streamへ出力できます。呼出側が所有する出力先には
+SingleStreamOutputSinkを使用し、FontOptionsを明示してください。
+実行可能な変換例は[ファイルサンプル](samples/ExcelRenderer.Sample)を参照してください。
 
 既存の中間スプール（上限付きメモリから一時ファイルへ退避）に全ページを生成し、構造解析後に
 最終送信を開始します。最終 PDF 全体を保持するメモリバッファは追加しません。
@@ -453,7 +436,7 @@ await ExcelConverter.RenderAsync(
 `SingleStreamOutputSink` は出力先を閉じません。失敗時の `AbortAsync` はキャンセルされない cleanup token で通知し、
 cleanup の二次例外は元例外の `Data["AbortException"]` に記録します。
 
-Core の `ConvertAsync(xlsx, response.Body, options, requestAborted)` も同じ非 Seek・非同期専用出力に対応します。
+Core の `ConvertAsync(xlsx, outputStream, options, cancellationToken)` も同じ非 Seek・非同期専用出力に対応します。
 Core は通常フォントの明示指定が必須で、最後の Flush は呼び出し側が行います。
 詳細は [Core の Stream 契約](docs/core.ja.md) を参照してください。
 今回の保証対象は PDF で、他形式は従来の動作を維持します。

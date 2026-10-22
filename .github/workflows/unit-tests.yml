@@ -99,6 +99,9 @@ jobs:
       - name: Compare frozen Core output independently
         run: python scripts/compare-core-removal-baselines.py
 
+      - name: Compare main and Core common contracts at 144 and 288 dpi
+        run: python scripts/check-main-core-parity.py
+
       - name: Preserve reviewed main and Core PDF appearance for all 22 inputs
         run: python scripts/check-libreoffice-regression.py
 
@@ -156,6 +159,26 @@ jobs:
             artifacts/pr90-image-review/independent.json
             artifacts/libreoffice-regression/**
           if-no-files-found: warn
+          retention-days: 14
+
+  main-core-windows:
+    name: Main/Core semantic parity (Windows)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet restore tests/ExcelRenderer.Tests --locked-mode
+      - run: dotnet build tests/ExcelRenderer.Tests -c Release --no-restore
+      - run: dotnet test tests/ExcelRenderer.Tests -c Release --no-build --filter "FullyQualifiedName~MainCoreParityTests|FullyQualifiedName~MainCoreExpectedDifferenceTests|FullyQualifiedName~DiagnosticPolicyTests|FullyQualifiedName~PdfFileExampleTests" --logger "trx;LogFileName=parity.trx" --results-directory TestResults/Parity
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: main-core-windows
+          path: |
+            TestResults/Parity/**
+            tests/ExcelRenderer.Tests/bin/Release/net10.0/SampleOutputs/MainCoreParity/**
           retention-days: 14
 
   core:

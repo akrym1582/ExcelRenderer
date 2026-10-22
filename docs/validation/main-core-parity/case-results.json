@@ -1,0 +1,530 @@
+{
+  "common": [
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "independent_errors": [],
+      "id": "values",
+      "status": "passed",
+      "error": null,
+      "input_sha256": "58B4A95E5F067BA6C5E8A28936390C493478A2ADE8E0A10CC8A9ECB38D3EFCBD",
+      "font_sha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "tolerance_pt": 0.01
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "independent_errors": [],
+      "id": "text",
+      "status": "passed",
+      "error": null,
+      "input_sha256": "33827FB86BC86F81BB7A06242B3E4801927935688A8C86F0B447F1344E519621",
+      "font_sha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "tolerance_pt": 0.01
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "independent_errors": [],
+      "id": "dimensions-match",
+      "status": "passed",
+      "error": null,
+      "input_sha256": "2D772E508784D30680AD6A85E7754B5189B399269EB797E033ACE44BB9489AE3",
+      "font_sha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "tolerance_pt": 0.01
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "independent_errors": [],
+      "id": "dimensions-mismatch",
+      "status": "passed",
+      "error": null,
+      "input_sha256": "37D7F2ADC81C912415F5BBFD2409ADF23E03E4B9A464282CFAC595A280123A9C",
+      "font_sha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "tolerance_pt": 0.01
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "independent_errors": [],
+      "id": "borders",
+      "status": "passed",
+      "error": null,
+      "input_sha256": "6AF3A09C9F468802535D9CDA8FF27A10826B452BB277F0A549F2ADF79E1699A7",
+      "font_sha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "tolerance_pt": 0.01
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "independent_errors": [],
+      "id": "portrait",
+      "status": "passed",
+      "error": null,
+      "input_sha256": "CB07EAD440D1DED5D145DECBC8442E6850D630D314C25D38E373F7DEA481C8CA",
+      "font_sha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "tolerance_pt": 0.01
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "independent_errors": [],
+      "id": "landscape",
+      "status": "passed",
+      "error": null,
+      "input_sha256": "53C7799ED69101540B97B89B8DB088C35DDA1815D0BC3787287611DD9EE870DF",
+      "font_sha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "tolerance_pt": 0.01
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "independent_errors": [],
+      "id": "scale",
+      "status": "passed",
+      "error": null,
+      "input_sha256": "73854770D15DBB7F1B0B917479BE33614189333CF472FDE278F086512A47F531",
+      "font_sha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "tolerance_pt": 0.01
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "independent_errors": [],
+      "id": "fit",
+      "status": "passed",
+      "error": null,
+      "input_sha256": "899B73B47E0CBCA6D1C6A57D004D8BC01F64FD817D2F53220AA8B02FC79AEB8E",
+      "font_sha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "tolerance_pt": 0.01
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 2,
+      "actual_pages": 2,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        },
+        {
+          "page": 2,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "independent_errors": [],
+      "id": "breaks",
+      "status": "passed",
+      "error": null,
+      "input_sha256": "F150E355226081B2272EB44692DB6AF6AF25C61FFD68D012DE126D05B477A3A9",
+      "font_sha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "tolerance_pt": 0.01
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 2,
+      "actual_pages": 2,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        },
+        {
+          "page": 2,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "independent_errors": [],
+      "id": "titles",
+      "status": "passed",
+      "error": null,
+      "input_sha256": "459A107C8681382488D47B2711E105377C068EFA4F736E6E7DE7E0A8984DB405",
+      "font_sha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "tolerance_pt": 0.01
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 2,
+      "actual_pages": 2,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        },
+        {
+          "page": 2,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "independent_errors": [],
+      "id": "areas",
+      "status": "passed",
+      "error": null,
+      "input_sha256": "F2D557D3505F4B6399AD532A699C3E2575ACB27F20E46CE0C05E52788670C29E",
+      "font_sha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "tolerance_pt": 0.01
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "independent_errors": [],
+      "id": "empty",
+      "status": "passed",
+      "error": null,
+      "input_sha256": "A59D6972885C605C2F9E02AE09043D01FB8ED4C9406E240E9E436E31F6EDD1D2",
+      "font_sha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "tolerance_pt": 0.01
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 2,
+      "actual_pages": 2,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        },
+        {
+          "page": 2,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "independent_errors": [],
+      "id": "selection",
+      "status": "passed",
+      "error": null,
+      "input_sha256": "7A46B57C262719B55B93AB7D6C6E45A0C9DB3218D7BB550C82EC688D0D0822FA",
+      "font_sha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "tolerance_pt": 0.01
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "independent_errors": [],
+      "id": "images",
+      "status": "passed",
+      "error": null,
+      "input_sha256": "4E5B205B6E0580AE29452EC70B27A92A81192C896ED3180B66741114D70D59D0",
+      "font_sha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "tolerance_pt": 0.01
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "independent_errors": [],
+      "id": "header-footer",
+      "status": "passed",
+      "error": null,
+      "input_sha256": "4B08702698CF47BB66142193A7BBCEED6F059C1167FA67E21A231656FC41BBC1",
+      "font_sha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "tolerance_pt": 0.01
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "independent_errors": [],
+      "id": "defaults",
+      "status": "passed",
+      "error": null,
+      "input_sha256": "5C6E96C11F8A8D48CE077C9F0F354162EE95A3306697882C83D9A6B10206CD43",
+      "font_sha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "tolerance_pt": 0.01
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "independent_errors": [],
+      "id": "border-conflict",
+      "status": "passed",
+      "error": null,
+      "input_sha256": "6BD19B14CD59B7597F8C0B7A8C89BDFBA6A4616A46B11222F36ABCC01AF57886",
+      "font_sha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "tolerance_pt": 0.01
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "independent_errors": [],
+      "id": "image-overlap",
+      "status": "passed",
+      "error": null,
+      "input_sha256": "8AA972D0874DA0EC1E815E9CAD00AFA5750BD856707BA09871FFA739B128A81D",
+      "font_sha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "tolerance_pt": 0.01
+    }
+  ],
+  "expected_differences_and_default_selection": [
+    {
+      "id": "default-selection",
+      "input_sha256": "7C3DE98549281E60B1FBF79DDF08B80CEF9871FE6538F810D2BF18545AD67531",
+      "font_sha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "assertion_result": "Passed"
+    },
+    {
+      "id": "difference-conditional-format",
+      "input_sha256": "802DE763BE290336145321C10F5C9CF5268C72AAD41C180A73FB3DBD7D701B94",
+      "font_sha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "assertion_result": "Passed"
+    },
+    {
+      "id": "difference-ivs",
+      "input_sha256": "D4F61C6F65176AE775EDE1EF9916B8A0E5796C819DDF340959EF4860E12EAA0F",
+      "font_sha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "assertion_result": "Passed"
+    },
+    {
+      "id": "difference-link",
+      "input_sha256": "737821830A6D0F4CE68494CAAF6E0FA3A34EF4B0CCA06D7467A7A09FF1CF97DA",
+      "font_sha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "assertion_result": "Passed"
+    },
+    {
+      "id": "difference-richtext",
+      "input_sha256": "221E01E5D259E37EFD2BA7BB79E1439DDD3C3EED6923A620991A54CB67D66F2B",
+      "font_sha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "assertion_result": "Passed"
+    },
+    {
+      "id": "difference-rotation",
+      "input_sha256": "D96DA0D71DDC714B4A7660A02500FC42368FAD8E8A9A081D4B0F30DDEBC7717A",
+      "font_sha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "assertion_result": "Passed"
+    }
+  ]
+}

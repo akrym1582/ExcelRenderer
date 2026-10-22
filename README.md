@@ -1,5 +1,7 @@
 # ExcelRenderer
 
+Usage guides: [Main/Core parity](docs/main-core-parity.md) · [Diagnostics and delivery](docs/diagnostics.md)
+
 > PDF output keeps ordinary text searchable, but supported ideographic variation sequences (IVS) are emitted as vector outlines so the selected format 14 glyph is preserved. Those outlined IVS characters are not searchable or copyable as text.
 
 English | [日本語](README.ja.md)

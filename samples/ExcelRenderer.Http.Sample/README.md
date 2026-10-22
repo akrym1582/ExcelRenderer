@@ -1,34 +1,69 @@
-# Direct PDF responses
+# PDF delivery and file conversion sample
 
-This .NET 10 Kestrel sample keeps synchronous I/O disabled and writes final PDF bytes
-directly to `Response.Body`. Main uses `RenderAsync` with `SingleStreamOutputSink`;
-Core uses `ConvertAsync` with one supplied regular font. ASP.NET dependencies belong
-to this nonpackable sample, not the libraries.
+[日本語](README.ja.md) · [Main/Core choice and tests](../../docs/main-core-parity.md) · [Diagnostic policy](../../docs/diagnostics.md)
+
+This nonpackable .NET 10 sample uses ProjectReference to this checkout. Installed applications
+reference the published `ExcelRenderer` package, which bundles Core; do not look for a separate
+Core NuGet package. ASP.NET dependencies belong only to this sample.
+
+From the repository root (pass absolute paths because the Web SDK changes the child working directory):
 
 ```sh
 dotnet run --project samples/ExcelRenderer.Http.Sample -- \
-  tests/ExcelRenderer.Tests/SampleInputs/01-japanese.xlsx \
-  third_party/NotoSansJP/NotoSansJP-Regular.ttf
+  "$PWD/tests/ExcelRenderer.Tests/SampleInputs/01-japanese.xlsx" \
+  "$PWD/third_party/NotoSansJP/NotoSansJP-Regular.ttf"
 curl http://localhost:5000/pdf -o report.pdf
 curl http://localhost:5000/core-pdf -o core-report.pdf
+curl http://localhost:5000/pdf-validated -o validated.pdf
+curl http://localhost:5000/core-pdf-validated -o core-validated.pdf
 ```
 
-The workbook and font paths are server-owned command-line arguments. `ASPNETCORE_URLS`
-can select a different listening address. Both endpoints set Content-Type and
-Content-Disposition, forward RequestAborted, and leave Response.Body open without
-returning a second File/JSON result. No Content-Length is required.
+Use `ASPNETCORE_URLS=http://127.0.0.1:5000` to fix the listening address explicitly.
+Paths are server-owned command-line configuration; this is not an upload API.
+Main uses RenderAsync + SingleStreamOutputSink; Core uses ConvertAsync.
+[The actual handlers](PdfHttpEndpoints.cs) log code and location without cell values/messages,
+forward RequestAborted and leave Response.Body open. Kestrel keeps synchronous I/O disabled.
+There is no second File/JSON return after writing a PDF, and no Task.Run wrapper.
 
-All pages are generated into the existing memory/file spool before final output.
-CPU reading/layout/drawing remain synchronous. Final output is sequential asynchronous
-I/O with bounded aggregation/transfer buffers; this does not send the first page
-immediately or eliminate font/image/layout memory. Main flushes once before artifact
-completion; Core leaves flushing to the HTTP host. If output fails after the response
-starts, already sent bytes cannot be replaced with an error document; the host handles
-the exception/connection. Library callers own their input/output streams.
+Direct endpoints log diagnostics after conversion. If the response has already begun, diagnostics
+cannot retract it. Validated endpoints generate a unique temporary final PDF, reject the explicit
+business codes FormulaCachedValueMissing/ImageDecodeFailed with 422 ProblemDetails (codes/counts
+only), or copy the PDF asynchronously and delete the temporary after closing it. Every failure,
+rejection and cancellation path cleans up. Extra disk I/O delays the first response byte.
+This application file is distinct from the library's intermediate spool; neither route sends
+pages immediately as they are laid out, and native/CPU processing remains synchronous.
 
-`AsyncPdfStreamTests` runs these exact handlers against real loopback Kestrel with
-`AllowSynchronousIO = false` and validates both responses with PdfPig.
+Unselected warnings are logged and permitted; this example policy does not certify arbitrary
+spreadsheets. Core has no StrictMode/Severity API. Main's Completed result is checked, and thrown
+conversions cannot become successful files. See the diagnostic guide for retention limits.
 
-日本語: 同期 I/O 禁止の Kestrel に、本体と Core の両 API から直接 PDF を出力するサンプルです。
-中間スプールと同期 CPU 処理は残り、非同期化の対象は最終送信です。送信開始後のエラーは
-送信済みデータを取り消せないため、ホスト側で処理してください。
+Before response start, server-owned invalid/missing workbooks, missing/invalid configured fonts
+and conversion/I/O failures are generic 500 responses. Rejections are 422. A client-input endpoint
+would need separate input provenance/validation to choose 400/413; a missing configured font must
+remain a server fault. No raw exception details are returned. Request cancellation propagates and
+is logged separately. Once Response.HasStarted is true, errors propagate to host connection policy;
+no JSON is appended to a partially delivered PDF. A client may need to discard a partial response.
+
+For filesystem output (Ctrl+C cancels), these compiled examples create an adjacent temporary,
+close it and replace the destination only on success:
+
+```sh
+# Main, using this existing sample project
+dotnet run --project samples/ExcelRenderer.Http.Sample -- --file \
+  "$PWD/tests/ExcelRenderer.Tests/SampleInputs/01-japanese.xlsx" /tmp/main.pdf \
+  "$PWD/third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+# Core; optional fourth argument selects a sheet
+dotnet run --project samples/ExcelRenderer.Core.Sample -- \
+  "$PWD/tests/ExcelRenderer.Tests/SampleInputs/01-japanese.xlsx" /tmp/core.pdf \
+  "$PWD/third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+```
+
+[Main file implementation](PdfFileExample.cs) and [Core file implementation](../ExcelRenderer.Core.Sample/Program.cs)
+print page counts/diagnostics. Libraries do not close caller streams. Main flushes its sink;
+Core leaves flushing to the caller/host. The destination directory must already exist. Existing output survives conversion failure; atomicity
+and power-loss durability depend on the destination filesystem.
+
+AsyncPdfStreamTests executes all four actual routes on synchronous-I/O-disabled loopback Kestrel.
+ValidatedPdfHttpTests injects deterministic cancellation/copy faults and checks cleanup, policy
+rejection, code-only logging, server-error classification and parallel request isolation.
+PdfFileExampleTests checks publication and preservation of previous output.

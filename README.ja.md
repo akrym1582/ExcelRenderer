@@ -1,5 +1,7 @@
 # ExcelRenderer
 
+利用ガイド: [本体/Core比較](docs/main-core-parity.ja.md) · [診断と出力](docs/diagnostics.ja.md)
+
 > PDF 出力では通常文字を検索可能なテキストとして維持しますが、対応する漢字 IVS は format 14 で選択された字形を保持するためベクター輪郭として出力します。輪郭化された IVS 部分はテキストとして検索・コピーできません。
 
 [English](README.md) | 日本語

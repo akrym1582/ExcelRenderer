@@ -16,6 +16,7 @@ def mutation_checks(output, data):
     samples = [
         ('missing-text', '01-japanese', lambda b: re.sub(rb'<[0-9A-Fa-f]+> Tj', b'<> Tj', b, count=1)),
         ('missing-border', 'border-conflicts', lambda b: re.sub(rb'(?m)^[-.\d]+ [-.\d]+ m\n[-.\d]+ [-.\d]+ l\nS\n', b'', b, count=1)),
+        ('duplicate-border', 'border-conflicts', lambda b: re.sub(rb'(?m)^[-.\d]+ [-.\d]+ m\n[-.\d]+ [-.\d]+ l\nS\n', lambda match: match[0] + match[0], b, count=1)),
         ('extra-ink', '01-japanese', lambda b: b + b'\n0 0 0 rg\n20 20 10 10 re f\n'),
         ('shifted-content', '01-japanese', lambda b: b'1 0 0 1 3 0 cm\n' + b),
         ('wrong-source-text', '01-japanese', lambda b: b.replace(b'FEFF65E5', b'FEFF65E6', 1)),

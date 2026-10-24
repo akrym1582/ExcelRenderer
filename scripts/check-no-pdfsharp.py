@@ -65,6 +65,15 @@ ALLOWED_LINES.update({'scripts/benchmark-pdf-backends.py': {'if args.include_ref
                                                           'StringComparison.OrdinalIgnoreCase));'}})
 
 
+# Excel provenance rejection and its negative test do not load this dependency.
+ALLOWED_LINES['scripts/excel_reference.py'] = {
+    "if re.search(r'LibreOffice|OpenOffice|Skia|PDFsharp|ExcelRenderer', identity, re.I):",
+}
+ALLOWED_LINES['scripts/tests/test_excel_reference.py'] = {
+    "for name in ['LibreOffice', 'Skia/PDF', 'PDFsharp', 'Microsoft Excel LibreOffice']:",
+}
+
+
 def require_clean(text, location):
     if FORBIDDEN.search(text):
         raise RuntimeError(f"Removed PDF dependency found: {location}")

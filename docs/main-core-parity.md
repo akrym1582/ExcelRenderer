@@ -84,3 +84,10 @@ See [sample commands](../samples/ExcelRenderer.Sample/README.md). Repository sam
 ProjectReference; installed consumers reference the published `ExcelRenderer` package.
 
 Existing independent difference contracts are reused: [Core PdfTests](../tests/ExcelRenderer.Core.Tests/PdfTests.cs) (regular face normalization), [PageAndImageTests](../tests/ExcelRenderer.Core.Tests/PageAndImageTests.cs) (start-page-only pictures, ignored transforms and omitted shapes), [SavedFormulaTests](../tests/ExcelRenderer.Core.Tests/SavedFormulaTests.cs) (saved values only), and [main recalculation](../tests/ExcelRenderer.Tests/FormulaRecalculationTests.cs).
+
+## Comparison with Microsoft Excel output
+
+Main/Core parity and the 44 frozen product PDFs do not establish Microsoft Excel
+fidelity. See [Windows Excel reference validation](validation/excel-reference/README.md)
+for the independent 22-case registry, Windows export steps, comparison artifacts
+and CI. Missing Excel references are explicitly unverified.

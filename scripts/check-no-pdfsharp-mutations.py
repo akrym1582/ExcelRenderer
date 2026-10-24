@@ -24,6 +24,15 @@ def check(label, expected=None, extra=()):
 
 def main():
     check('baseline')
+    # A reviewed rejection line must not exempt the rest of either Python file.
+    for relative in ('scripts/excel_reference.py', 'scripts/tests/test_excel_reference.py'):
+        path = ROOT / relative
+        content = path.read_bytes()
+        try:
+            path.write_bytes(content + b'\nimport pdfsharp\n')
+            check('unapproved import in ' + relative, 'Forbidden source/configuration reference')
+        finally:
+            path.write_bytes(content)
     source = ROOT / 'src/ExcelRenderer/RemovedDependencyMutation.csproj'
     assets = ROOT / 'src/ExcelRenderer/obj/project.assets.json'
     original = assets.read_bytes()

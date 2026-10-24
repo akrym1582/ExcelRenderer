@@ -1,0 +1,263 @@
+{
+  "schema_version": 1,
+  "reference_kind": "microsoft-excel-windows",
+  "cases": [
+    {
+      "id": "01-japanese",
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/01-japanese.xlsx",
+      "input_sha256": "6a89d390e07a60e919b7be2c5fa6af47721b0e9c5a4a0c325ae97174ff6386f0",
+      "selected_sheets": [
+        "日本語"
+      ],
+      "requested_fonts": [
+        "Calibri",
+        "Noto Sans JP"
+      ]
+    },
+    {
+      "id": "02-image",
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/02-image.xlsx",
+      "input_sha256": "d54804111617065e59a4bbe4d5c2099b08efdea2f71d1676998bc836569de254",
+      "selected_sheets": [
+        "画像"
+      ],
+      "requested_fonts": [
+        "Calibri",
+        "Noto Sans JP"
+      ]
+    },
+    {
+      "id": "03-wrapped-text",
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/03-wrapped-text.xlsx",
+      "input_sha256": "60421161d8ec36904befd41ecde57551ea7880a8ffda07925b38178fc747d990",
+      "selected_sheets": [
+        "折り返し"
+      ],
+      "requested_fonts": [
+        "Calibri",
+        "Noto Sans JP"
+      ]
+    },
+    {
+      "id": "04-text-decoration",
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/04-text-decoration.xlsx",
+      "input_sha256": "c8ee629159de588541c6d08bce70cae9c0483ddcb21c3feef536102e1457cff1",
+      "selected_sheets": [
+        "文字装飾"
+      ],
+      "requested_fonts": [
+        "Calibri",
+        "Noto Sans JP"
+      ]
+    },
+    {
+      "id": "05-borders",
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/05-borders.xlsx",
+      "input_sha256": "074cfd50a3d4556380f462a69287d9b0254a71ebe412e267b395ca345a54eac2",
+      "selected_sheets": [
+        "罫線"
+      ],
+      "requested_fonts": [
+        "Calibri",
+        "Noto Sans JP"
+      ]
+    },
+    {
+      "id": "06-layout-and-pagination",
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/06-layout-and-pagination.xlsx",
+      "input_sha256": "5870f080ac266568de200bf6955a617da452b14c103a30371889e8bee13b12e6",
+      "selected_sheets": [
+        "ページ設定"
+      ],
+      "requested_fonts": [
+        "Calibri",
+        "Noto Sans JP"
+      ]
+    },
+    {
+      "id": "07-multiple-sheets",
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/07-multiple-sheets.xlsx",
+      "input_sha256": "2da1636a03384c0aa0ecb14ec3183631f3c41a90f1348693e795c329c0cae20e",
+      "selected_sheets": [
+        "売上",
+        "在庫"
+      ],
+      "requested_fonts": [
+        "Calibri"
+      ]
+    },
+    {
+      "id": "08-print-scaling",
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/08-print-scaling.xlsx",
+      "input_sha256": "f9e5ffaa18c622d2820138d18c6aed07ae63b28da8fad1c71c4ffcbdd12a9fb7",
+      "selected_sheets": [
+        "75%縮小"
+      ],
+      "requested_fonts": [
+        "Calibri",
+        "Noto Sans JP"
+      ]
+    },
+    {
+      "id": "09-cell-border",
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/09-cell-border.xlsx",
+      "input_sha256": "5655ee7b5407c1c9af6836ec65f573819b0265c833660210d04060ca8c368d70",
+      "selected_sheets": [
+        "Sheet1"
+      ],
+      "requested_fonts": [
+        "游ゴシック"
+      ]
+    },
+    {
+      "id": "cell-argb",
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/CellArgb/10-cell-argb.xlsx",
+      "input_sha256": "3d6e77900ea64b573eb26caf04c7ff7ddc34fab4b78c08a30fe0909faf9d9733",
+      "selected_sheets": [
+        "ARGB"
+      ],
+      "requested_fonts": [
+        "Calibri",
+        "Noto Sans JP"
+      ]
+    },
+    {
+      "id": "border-conflicts",
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/BorderResolution/border-conflicts.xlsx",
+      "input_sha256": "a07e159caa4a83a12c38231f70cbf2ca6bdcded9404291ba5244e8f03249a12a",
+      "selected_sheets": [
+        "Double",
+        "Colors",
+        "Merged",
+        "Defaults",
+        "Conditional"
+      ],
+      "requested_fonts": [
+        "Noto Sans JP"
+      ]
+    },
+    {
+      "id": "richtext",
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/ReaderRichText/representative.xlsx",
+      "input_sha256": "5e4032e814530d62db777ad76b8eae467c4f761696a2877e22ca41e2fbc37357",
+      "selected_sheets": [
+        "Synthetic"
+      ],
+      "requested_fonts": [
+        "Calibri",
+        "Noto Sans JP"
+      ]
+    },
+    {
+      "id": "cf-phase1",
+      "input": "docs/validation/conditional-formatting/representative.xlsx",
+      "input_sha256": "2de333cf34b705aa6a0cec71a69c61a85df446302831cc4157078e7a83c39826",
+      "selected_sheets": [
+        "data"
+      ],
+      "requested_fonts": [
+        "Calibri"
+      ]
+    },
+    {
+      "id": "cf-phase2",
+      "input": "docs/validation/conditional-formatting-phase2/representative.xlsx",
+      "input_sha256": "a8f48ee704a1db4cefcc433a1fef03600088e9d1f8e04ed33b055cd656727a12",
+      "selected_sheets": [
+        "data"
+      ],
+      "requested_fonts": [
+        "Calibri"
+      ]
+    },
+    {
+      "id": "cf-mapped-scale",
+      "input": "docs/validation/conditional-formatting-phase2/mapped-scale.xlsx",
+      "input_sha256": "d25403efc3ca5021d697075370e83e42e7215bbe89885f7aa2d0f61b4768d3b6",
+      "selected_sheets": [
+        "data"
+      ],
+      "requested_fonts": [
+        "Calibri"
+      ]
+    },
+    {
+      "id": "cf-phase3-icons",
+      "input": "docs/validation/conditional-formatting-phase3/fixtures/icons.xlsx",
+      "input_sha256": "800b4ff9c62bee007bf0602fbd4d140d17ca79adcb2fc0806a052fe183845aa3",
+      "selected_sheets": [
+        "Phase3"
+      ],
+      "requested_fonts": [
+        "Noto Sans JP"
+      ]
+    },
+    {
+      "id": "cf-phase3-layout-mapping",
+      "input": "docs/validation/conditional-formatting-phase3/fixtures/layout-mapping.xlsx",
+      "input_sha256": "ad6831e0cf5774f3e2a0d38e935f3dffd3f87c3d1b63fe2c2e18e4b097b1c2d5",
+      "selected_sheets": [
+        "Phase3"
+      ],
+      "requested_fonts": [
+        "Noto Sans JP"
+      ]
+    },
+    {
+      "id": "cf-phase3-legacy-bars",
+      "input": "docs/validation/conditional-formatting-phase3/fixtures/legacy-bars.xlsx",
+      "input_sha256": "a5587789e8e27e00e27ee8263c74ef861d786e314ed4a9c31918f4fac7443335",
+      "selected_sheets": [
+        "Phase3"
+      ],
+      "requested_fonts": [
+        "Noto Sans JP"
+      ]
+    },
+    {
+      "id": "cf-phase3-x14-bars",
+      "input": "docs/validation/conditional-formatting-phase3/fixtures/x14-bars.xlsx",
+      "input_sha256": "73dc15ca2efb0acda64b3ba6e07a257e6fe2000a4b98b446bcd6089b813243fe",
+      "selected_sheets": [
+        "Phase3"
+      ],
+      "requested_fonts": [
+        "Noto Sans JP"
+      ]
+    },
+    {
+      "id": "shapes",
+      "input": "docs/validation/render-finalization-performance/inputs/shapes.xlsx",
+      "input_sha256": "e7728f9ef142f30d94490295705d8d55557556f0902d2e6a2a95960b987eb57c",
+      "selected_sheets": [
+        "Shapes"
+      ],
+      "requested_fonts": [
+        "Calibri"
+      ]
+    },
+    {
+      "id": "actual-shape-text",
+      "input": "docs/validation/render-finalization-performance/inputs/actual-shape-text.xlsx",
+      "input_sha256": "f1a19080b15a44c786adc1b47ffaa4cb729ee1fac09d279a5ba8718344e63518",
+      "selected_sheets": [
+        "Shapes"
+      ],
+      "requested_fonts": [
+        "Calibri"
+      ]
+    },
+    {
+      "id": "japanese-grid-report",
+      "input": "samples/excel/japanese-grid-report.xlsx",
+      "input_sha256": "4907d79963eb8267eab4230c7aad9bbd0d580238d3d42f402b34fb4c0ff217a1",
+      "selected_sheets": [
+        "月次業務報告書"
+      ],
+      "requested_fonts": [
+        "Calibri",
+        "MS Gothic"
+      ]
+    }
+  ]
+}

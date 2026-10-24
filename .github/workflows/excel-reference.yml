@@ -1,0 +1,61 @@
+name: Microsoft Excel reference comparison
+
+on:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      require_all_references:
+        description: Fail if any Windows Excel reference is unregistered
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  excel-reference:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install independent PDF inspection tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fontconfig
+          python -m pip install -r scripts/excel-reference-requirements.txt
+      - name: Test registration, missing references and comparison mutations
+        run: python -m unittest discover -s scripts/tests -p 'test_excel_reference.py' -v
+      - name: Restore and build actual renderers
+        run: |
+          dotnet restore src/ExcelRenderer.Tool --locked-mode
+          dotnet build src/ExcelRenderer.Tool -c Release --no-restore
+      - name: Compare Windows Excel with main and Core
+        env:
+          REQUIRE_ALL: ${{ inputs.require_all_references || false }}
+        shell: bash
+        run: |
+          source scripts/test-fonts.sh
+          extra=()
+          if [[ "$REQUIRE_ALL" == "true" ]]; then extra+=(--require-all-references); fi
+          python scripts/excel_reference.py run --fail-on-difference "${extra[@]}"
+      - name: Publish explicit coverage summary
+        if: always()
+        shell: bash
+        run: |
+          if [[ -f artifacts/excel-reference/summary.md ]]; then
+            cat artifacts/excel-reference/summary.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'Excel validation failed before a report could be generated; fidelity is UNVERIFIED.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: microsoft-excel-reference
+          path: artifacts/excel-reference/
+          if-no-files-found: warn
+          retention-days: 14

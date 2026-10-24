@@ -75,3 +75,10 @@ python3 scripts/check-main-core-parity.py
 リポジトリ内はProjectReference、公開パッケージ利用者はExcelRendererパッケージを参照します。
 
 期待差の既存独立テストも再利用します: [Core PdfTests](../tests/ExcelRenderer.Core.Tests/PdfTests.cs)（通常体化）、[PageAndImageTests](../tests/ExcelRenderer.Core.Tests/PageAndImageTests.cs)（画像開始点ページ・加工無視・図形省略）、[SavedFormulaTests](../tests/ExcelRenderer.Core.Tests/SavedFormulaTests.cs)（保存値のみ）、[本体再計算](../tests/ExcelRenderer.Tests/FormulaRecalculationTests.cs)。
+
+## Microsoft Excel実出力との比較
+
+本体/Core間の一致と既存44件の製品回帰PDFは、Microsoft Excelとの表示一致を示すものではありません。
+独立した22ケースの正解PDF登録・Windows出力手順・比較結果・CIは、
+[Windows Excel参照検証](validation/excel-reference/README.md)を参照してください。
+Excel正解PDFが未登録のケースは明示的に未検証として扱います。

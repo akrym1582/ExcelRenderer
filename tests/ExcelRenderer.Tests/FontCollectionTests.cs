@@ -214,10 +214,10 @@ public sealed class FontCollectionTests
         Assert.True(selected.Length > 500);
         input.Position = 0;
         using var all = new MemoryStream();
-        var error = await Assert.ThrowsAsync<ConversionException>(() => ExcelConverter.RenderAsync(input,
-            new() { OutputFormat = OutputFormat.Pdf, FontOptions = fonts }, new SingleStreamOutputSink(all)));
-        Assert.Empty(error.CompletedArtifacts);
-        Assert.Equal(0, all.Length);
+        var allPages = await ExcelConverter.RenderAsync(input,
+            new() { OutputFormat = OutputFormat.Pdf, FontOptions = fonts }, new SingleStreamOutputSink(all));
+        Assert.Equal(2, allPages.Pages.Count);
+        Assert.True(all.Length > 500);
     }
 
     [Theory]

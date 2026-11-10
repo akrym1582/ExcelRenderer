@@ -14,6 +14,39 @@ namespace ExcelRenderer.Tests;
 
 public sealed class PdfBackendTests
 {
+    [Theory]
+    [InlineData("cff.otf")]
+    [InlineData("variable.ttf")]
+    public async Task Pdf_uses_a_compatible_fallback_without_changing_layout_font_resolution(string name)
+    {
+        var directory = Path.Combine(AppContext.BaseDirectory, "Fonts", "PdfFormats");
+        var options = new FontOptions
+        {
+            AllowSystemFonts = false,
+            UseFontPack = false,
+            FallbackFamilies = ["Noto Sans JP", "Compatible"],
+            Registrations = [
+                new("Noto Sans JP", Path.Combine(directory, name)),
+                new("Compatible", Path.Combine(directory, "static.ttf")),
+            ],
+        };
+        var pdfFonts = new FontManager(options, requirePdfCompatibleFonts: true);
+        Assert.Equal("Compatible", pdfFonts.Resolve(new("Noto Sans JP")).Family);
+        Assert.Equal(name, Path.GetFileName(pdfFonts.ResolveExact(new("Noto Sans JP"))!.FilePath));
+        Assert.Equal("Noto Sans JP", new FontManager(options).Resolve(new("Noto Sans JP")).Family);
+
+        using var input = Workbook("A B");
+        using var output = new MemoryStream();
+        var result = await ExcelConverter.RenderAsync(input, new()
+        {
+            OutputFormat = OutputFormat.Pdf,
+            FontOptions = options,
+        }, new SingleStreamOutputSink(output));
+        Assert.Single(result.Artifacts);
+        Assert.True(output.Length > 0);
+        Assert.StartsWith("%PDF-", Encoding.ASCII.GetString(output.ToArray(), 0, 5));
+    }
+
     [Fact]
     public void Defaults_select_skia()
     {

@@ -11,6 +11,8 @@ public sealed class FontManager : IFontManager
     private readonly Dictionary<(string Face, string Text), bool> _support = new();
     private readonly Dictionary<(FontRequest Request, string Text), IReadOnlyList<TextRun>> _runs = new();
     private readonly FontOptions _options;
+    private readonly bool _requirePdfCompatibleFonts;
+    private readonly Dictionary<int, bool> _pdfCompatibility = new();
 
     private readonly Dictionary<(string Path, long Length, long Modified, int Index), Lazy<FontSnapshot>> _snapshots = new();
     private readonly Dictionary<(string Path, long Length, long Modified), Lazy<byte[]>> _containers = new();
@@ -23,8 +25,17 @@ public sealed class FontManager : IFontManager
     /// <summary>Initializes a new instance of the <see cref="FontManager"/> class. 指定された設定でフォントマネージャーを初期化します。</summary>
     /// <param name="options">登録フォント、追加検索フォルダー、フォールバック名を含む設定です。省略時は既定設定を使用します。</param>
     public FontManager(FontOptions? options = null)
+        : this(options, false)
+    {
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="FontManager"/> class for a specific output format.</summary>
+    /// <param name="options">The font resolution settings.</param>
+    /// <param name="requirePdfCompatibleFonts">Whether drawing candidates must support PDF embedding.</param>
+    internal FontManager(FontOptions? options, bool requirePdfCompatibleFonts)
     {
         _options = options ?? new();
+        _requirePdfCompatibleFonts = requirePdfCompatibleFonts;
         if (_options.FontFileCollectionIndex is { } index && (index < 0 || _options.FontFiles.Count != 1))
         {
             throw new ArgumentException("FontFileCollectionIndex requires exactly one FontFiles entry and a nonnegative index.", nameof(options));
@@ -106,7 +117,7 @@ public sealed class FontManager : IFontManager
 
         foreach (var family in requestedFamilies)
         {
-            var matching = candidates.Where(x => string.Equals(x.Family, family, StringComparison.OrdinalIgnoreCase)).ToArray();
+            var matching = candidates.Where(x => string.Equals(x.Family, family, StringComparison.OrdinalIgnoreCase)).Where(IsDrawingFont).ToArray();
             if (matching.Length > 0)
             {
                 return _cache[request] = Select(matching, request);
@@ -380,6 +391,30 @@ public sealed class FontManager : IFontManager
         return supported;
     }
 
+    private bool IsDrawingFont(FontFace face)
+    {
+        if (!_requirePdfCompatibleFonts)
+        {
+            return true;
+        }
+
+        if (_pdfCompatibility.TryGetValue(face.RegistrationId, out var supported))
+        {
+            return supported;
+        }
+
+        try
+        {
+            var token = ConversionFontResources.Current?.Token ?? default;
+            Core.Fonts.FontCapabilities.ValidatePdf(new SfntReader(face.Data, token: token), token);
+            return _pdfCompatibility[face.RegistrationId] = true;
+        }
+        catch (Exception error) when (error is InvalidDataException or NotSupportedException)
+        {
+            return _pdfCompatibility[face.RegistrationId] = false;
+        }
+    }
+
     private ResolvedFont Select(IEnumerable<FontFace> candidates, FontRequest request)
     {
         var selected = candidates
@@ -415,7 +450,7 @@ public sealed class FontManager : IFontManager
             .Where(x => x.IsBundled && x.Family != "Noto Color Emoji" &&
                 (x.IvsFontStyle == _options.IvsFontStyle ||
                     (_options.IvsFontStyle == IvsFontStyle.Gothic && x.IvsFontStyle == IvsFontStyle.Mincho)))
-            .OrderBy(x => x.IvsPriority))
+            .Where(IsDrawingFont).OrderBy(x => x.IvsPriority))
         {
             var font = Select([face], request);
             var key = (font.FaceId, baseScalar, selector);
@@ -450,7 +485,7 @@ public sealed class FontManager : IFontManager
 
         if (baseScalar is >= 0xE000 and <= 0xF8FF && _externalFaces.Count > 0)
         {
-            foreach (var face in _externalFaces)
+            foreach (var face in _externalFaces.Where(IsDrawingFont))
             {
                 var external = Select([face], request);
                 if (Supports(external, element))
@@ -541,7 +576,7 @@ public sealed class FontManager : IFontManager
     private (ResolvedFont Font, ushort Glyph)? TryColorEmoji(int scalar, FontRequest request)
     {
         if (scalar is not (>= 0x1F300 and <= 0x1FAFF or >= 0x2600 and <= 0x27BF) ||
-            _faces.FirstOrDefault(x => x.IsBundled && x.Family == "Noto Color Emoji") is not { } emoji)
+            _faces.FirstOrDefault(x => x.IsBundled && x.Family == "Noto Color Emoji" && IsDrawingFont(x)) is not { } emoji)
         {
             return null;
         }

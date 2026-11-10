@@ -26,6 +26,12 @@ PDF restrictions apply when collecting/preparing fonts actually used on selected
 pages. Merely registering an unsupported face does not fail conversion. Shared
 font resolution/PNG/SVG/Markdown do not inherit the PDF-only restrictions. Core
 retains its single supplied regular font and variation-selector-to-base policy.
+The main PDF conversion API skips incompatible drawing candidates and tries the
+configured fallback families before layout and glyph collection. This includes CFF,
+variable and embedding-restricted faces. Original-font column-width measurement
+still resolves the exact source face independently. If no compatible drawing face
+is available, conversion fails rather than embedding an unsupported font. Core's
+explicit single-font validation and low-level PDF font validation remain strict.
 Main retains selected IVS GIDs and original Unicode/cluster data for search/copy.
 IVS and cmap format 14 do not indicate a variable font; STAT alone is also allowed.
 

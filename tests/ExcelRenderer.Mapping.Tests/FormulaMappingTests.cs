@@ -11,6 +11,71 @@ namespace ExcelRenderer.Mapping.Tests;
 public sealed class FormulaMappingTests
 {
     [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void Value_only_mapping_refreshes_loaded_caches_in_dependent_sheets(bool evaluateDuringMapping)
+    {
+        static S.Cell CachedFormula(string address, string formula, string cached, bool text = false) =>
+            new(new S.CellFormula(formula), new S.CellValue(cached))
+            {
+                CellReference = address,
+                DataType = text ? S.CellValues.String : S.CellValues.Number,
+            };
+
+        using var input = SdkWorkbook.Create(new S.Worksheet(new S.SheetData(
+            new S.Row(
+                SdkWorkbook.Text("A1", "**actual"),
+                SdkWorkbook.Number("B1", "35"),
+                CachedFormula("C1", "A1/B1", "0.914285714285714"),
+                CachedFormula("D1", "IF(A1>=B1,\"達成\",\"未達\")", "未達", true)) { RowIndex = 1 },
+            new S.Row(
+                SdkWorkbook.Text("A2", "**amount"),
+                CachedFormula("B2", "SUM(A1:A2)", "21332")) { RowIndex = 2 })), SdkWorkbook.Styles(), name: "Inputs");
+        using (var document = SpreadsheetDocument.Open(input, true))
+        {
+            SdkWorkbook.AddSheet(document.WorkbookPart!, new S.Worksheet(new S.SheetData(
+                new S.Row(CachedFormula("A1", "Inputs!A1", "32")) { RowIndex = 1 },
+                new S.Row(CachedFormula("A2", "COUNTIF(Inputs!D1,\"達成\")", "0")) { RowIndex = 2 },
+                new S.Row(CachedFormula("A3", "TEXT(Inputs!C1,\"0.0%\")", "91.4%", true)) { RowIndex = 3 })), "Summary");
+        }
+
+        input.Position = 0;
+        using var mapped = new MemoryStream();
+        ExcelTemplateMapper.Map(input, mapped, new { actual = 40, amount = 25000 }, new MappingOptions
+        {
+            FormulaCalculationMode = FormulaCalculationMode.Recalculate,
+            RecalculateMappedWorkbook = evaluateDuringMapping,
+        });
+        using var recalculated = new MemoryStream();
+        if (!evaluateDuringMapping)
+        {
+            using (var pending = WorkbookProbe.Open(mapped))
+            {
+                var formulas = pending.Reader.SelectedWorksheetIndices
+                    .SelectMany(sheet => pending.Reader.EnumerateCells(sheet))
+                    .Where(cell => cell.Formula is not null).ToArray();
+                Assert.Equal(6, formulas.Length);
+                Assert.All(formulas, cell => Assert.False(cell.Formula!.HasCachedResult));
+            }
+
+            mapped.Position = 0;
+            WorkbookRecalculator.Recalculate(mapped, recalculated);
+        }
+
+        using var book = WorkbookProbe.Open(evaluateDuringMapping ? mapped : recalculated);
+        Assert.Equal(40, Number(book, "A1"));
+        Assert.Equal(25000, Number(book, "A2"));
+        Assert.Equal(40.0 / 35, Number(book, "C1"), 12);
+        Assert.Equal("達成", Text(book, "D1"));
+        Assert.Equal(25040, Number(book, "B2"));
+        Assert.Equal(40, Number(book, "A1", 2));
+        Assert.Equal(1, Number(book, "A2", 2));
+        Assert.Equal("114.3%", Text(book, "A3", 2));
+        foreach (var sheet in book.Reader.SelectedWorksheetIndices)
+            Assert.All(book.Reader.EnumerateCells(sheet).Where(cell => cell.Formula is not null), cell => Assert.True(cell.Formula!.HasCachedResult));
+    }
+
+    [Theory]
     [InlineData(0)]
     [InlineData(1)]
     [InlineData(3)]

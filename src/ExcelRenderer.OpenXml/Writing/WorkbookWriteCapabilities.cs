@@ -44,6 +44,15 @@ public static class WorkbookWriteCapabilities
     /// <param name="allowFormulas">Whether ordinary formulas may be rewritten by the caller.</param>
     /// <returns>Every distinct unsupported feature reason, or an empty list.</returns>
     public static IReadOnlyList<string> Inspect(Stream input, CancellationToken cancellationToken, bool allowFormulas)
+        => Inspect(input, cancellationToken, allowFormulas, false);
+
+    /// <summary>Inspects edits that may retain opaque metadata without moving rows.</summary>
+    /// <param name="input">The validated source.</param>
+    /// <param name="cancellationToken">Cooperative cancellation.</param>
+    /// <param name="allowFormulas">Whether ordinary formulas may be rewritten.</param>
+    /// <param name="preserveMetadata">Whether unknown metadata remains unchanged.</param>
+    /// <returns>The unsupported features.</returns>
+    internal static IReadOnlyList<string> Inspect(Stream input, CancellationToken cancellationToken, bool allowFormulas, bool preserveMetadata)
     {
         if (input == null)
         {
@@ -188,7 +197,7 @@ public static class WorkbookWriteCapabilities
         }
 
         input.Position = 0;
-        if (!allowFormulas && WorkbookFormulaInspection.Find(input, cancellationToken) is not null)
+        if (!allowFormulas && WorkbookFormulaInspection.Find(input, cancellationToken, preserveMetadata) is not null)
         {
             reasons.Add("FormulasOrUninspectableExtensionsPresent");
         }
@@ -233,4 +242,19 @@ public static class WorkbookWriteCapabilities
 
         return Array.AsReadOnly(reasons.OrderBy(reason => reason, StringComparer.Ordinal).ToArray());
     }
+
+    /// <summary>Checks whether unsupported metadata can be copied without interpreting it.</summary>
+    /// <param name="reasons">The inspection results.</param>
+    /// <returns>Whether only opaque parts and metadata are unsupported.</returns>
+    internal static bool CanPreserveMetadata(IReadOnlyList<string> reasons) => reasons.All(reason =>
+        !reason.Contains("digital-signature", StringComparison.OrdinalIgnoreCase) &&
+        !reason.Contains("/vba", StringComparison.OrdinalIgnoreCase) &&
+        (reason.StartsWith("UnsupportedPart:", StringComparison.Ordinal) ||
+        reason.StartsWith("UnsupportedExtension:", StringComparison.Ordinal) ||
+        reason.StartsWith("UnsupportedRelatedExtension:", StringComparison.Ordinal) ||
+        reason.StartsWith("UnsupportedDrawingAnchor:", StringComparison.Ordinal) ||
+        reason.StartsWith("UnsupportedWorkbookChild:", StringComparison.Ordinal) ||
+        reason.StartsWith("UnsupportedWorksheetChild:", StringComparison.Ordinal) ||
+        reason.StartsWith("UnsupportedStylesChild:", StringComparison.Ordinal) ||
+        reason is "ExternalOrDataRelationship" or "UnsupportedVmlObject" or "CalculatedOrGroupedPivotCache" or "ExternalPivotCache" or "UnsupportedPivotSource" or "UnsupportedPivotExtension"));
 }

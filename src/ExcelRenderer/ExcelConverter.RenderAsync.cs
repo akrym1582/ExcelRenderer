@@ -54,7 +54,7 @@ public static partial class ExcelConverter
             var inputTimer = System.Diagnostics.Stopwatch.StartNew();
             using var source = await WorkbookInputPreparer.ReadAsync(input, request.Input, cancellationToken).ConfigureAwait(false);
             ConversionMetrics.Report("input.ms", inputTimer.Elapsed.TotalMilliseconds);
-            var fontManager = ConversionMetrics.Measure("fonts", () => new FontManager(request.FontOptions));
+            var fontManager = ConversionMetrics.Measure("fonts", () => new FontManager(request.FontOptions, request.OutputFormat == OutputFormat.Pdf));
             resources.TextMeasurer = request.TextMeasurer ?? new SkiaTextMeasurer(fontManager, cacheLayouts: true);
             resources.ResolvedTextLayout = new SkiaTextMeasurer(fontManager, cacheLayouts: true);
             resources.RasterTextLayout = request.OutputFormat is OutputFormat.Png or OutputFormat.Svg ? new SkiaCompatibilityTextLayout(fontManager) : null;

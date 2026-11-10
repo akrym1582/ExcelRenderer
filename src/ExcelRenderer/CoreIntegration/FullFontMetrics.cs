@@ -116,7 +116,8 @@ internal sealed class FullFontMetrics : ICoreFontMetrics
             // Implicit discovery is best effort; explicit files are validated above.
         }
 
-        return new(7, options.Mode == ColumnWidthMetricsMode.RenderingFontLegacy ? "legacy" : "compatibility", "7px compatibility metric", true);
+        var fallbackWidth = options.Mode == ColumnWidthMetricsMode.RenderingFontLegacy ? 7 : SourceFontFallbackMetrics.MaximumDigitWidth(normal);
+        return new(fallbackWidth, options.Mode == ColumnWidthMetricsMode.RenderingFontLegacy ? "legacy" : "compatibility", $"{fallbackWidth}px compatibility metric", true);
     }
 
     /// <summary>Conversion-owned decisions, also used by selection preflight.</summary>

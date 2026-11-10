@@ -43,6 +43,7 @@ internal static partial class CoreModelAdapter
             DefaultRowsHidden = value.DefaultRowsHidden,
             PrintAreas = value.PrintAreas.Select(ToCore).ToArray(),
             SourceSheetIndex = value.SourceSheetIndex,
+            PreserveLegacyMergePagination = value.PreserveLegacyMergePagination,
             RequestedRange = value.RequestedRange is { } requested ? ToCore(requested) : null,
             RenderUsedRange = value.RenderUsedRange is { } used ? ToCore(used) : null,
             ExtensionData = new FullSheetData(value.Shapes ?? [], new Excel.SheetHyperlinkMetadata(value.Hyperlinks, value.HyperlinkNames)) { UnsupportedFeatures = value.UnsupportedFeatures, CellReadDiagnostics = value.CellReadDiagnostics },

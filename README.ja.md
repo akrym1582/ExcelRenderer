@@ -482,7 +482,8 @@ var settings = new PageSettings(FitToPagesWide: 1)
 xlsx の個別列幅と既定列幅は、Excel の基準である固定96 DPIのraw値から変換します。PNGの出力DPIは
 シートの幾何には影響しません。Normalスタイルのstyle XFからフォントをたどり、themeのmajor/minor
 指定を解決したうえで、設定されたフォントマネージャーにより0～9を計測します。計測できない場合は
-最大数字幅7pxを使用し、変換診断へ`MaximumDigitWidthFallback`を記録します。
+互換最大数字幅を使用し、変換診断へ`MaximumDigitWidthFallback`を記録します。
+MS PゴシックはCalcのNoto Sans代替に近いサイズ依存値（11ptで8.4px）、その他は7pxです。
 
 離れた複数の印刷範囲は外接矩形へ結合せず、個別にページ化します。明示倍率では保存された行・列の
 手動改ページとページ順を反映し、Fitでは手動改ページを無視します。全領域を結合したページ番号を一度だけ
@@ -975,8 +976,11 @@ excelrenderer pdf input.xlsx -o output.pdf --column-width-metrics legacy
 Legacyと元フォントファイルは併用不可ですが、明示MDWはLegacyでも最優先です。
 各出力形式、範囲・連続描画、選択ページの事前計画は同じ読取設定と変換単位の決定を使います。
 Core単独APIの単一供給フォントという契約は変更しません。
+legacyモードは従来の結合セル改ページも維持します。sourceモードでは用紙より大きい結合を
+通常の行・列境界で分割し、結合の直前に余分なページができることを防ぎます。
 
-元フォントが見つからない場合は決定的な7px互換値を使用し、
+元フォントが見つからない場合は決定的な互換値を使用し、
+MS PゴシックはCalcのNoto Sans代替に近いサイズ依存値（11ptで8.4px）、その他とNormal情報なしは7pxとします。
 `MaximumDigitWidthFallback` を警告します。StrictModeではこの警告により変換が失敗します。
 Excelとの完全一致は保証できません。
 元フォントまたはその実測MDWを指定してください。`MaximumDigitWidthResolved` は

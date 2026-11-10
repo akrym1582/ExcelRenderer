@@ -53,4 +53,7 @@ public sealed record ReportSheet(
 
     /// <summary>Gets the automatic render range preserved before drawing projection.</summary>
     internal CellRange? RenderUsedRange { get; init; }
+
+    /// <summary>Gets a value indicating whether explicitly requested legacy rendering retains historical merged page bands.</summary>
+    internal bool PreserveLegacyMergePagination { get; init; }
 }

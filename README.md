@@ -481,12 +481,16 @@ The shared flags are `--column-width-mdw`, `--layout-font`, `--layout-font-index
 `--column-width-metrics source|legacy`. In the library, migration compatibility is
 `ColumnWidthMetrics = new() { Mode = ColumnWidthMetricsMode.RenderingFontLegacy }`.
 Legacy cannot be combined with a source file; explicit MDW still takes precedence.
+Legacy also preserves historical merged-cell page bands; source mode lets a merge
+larger than a page split at ordinary row/column boundaries.
 All rendering formats, range/continuous rendering, and page-selection preflight use
 the same read settings and conversion-local metric decisions. Core's independent
 single-supplied-font contract is unchanged.
 
-If the original family is unavailable, SourceFont uses the deterministic 7px
-compatibility metric and reports `MaximumDigitWidthFallback`. StrictMode treats this
+If the original family is unavailable, SourceFont uses a deterministic compatibility
+metric and reports `MaximumDigitWidthFallback`. MS P Gothic uses a size-dependent
+Noto Sans digit profile matching Calc substitution (8.4px at 11pt); other unavailable
+families and missing Normal metadata use 7px. StrictMode treats this
 warning as a conversion failure. This does **not**
 guarantee Excel-equivalent geometry. Supply the original font or its measured MDW
 for accurate column sizing. `MaximumDigitWidthResolved` identifies the requested
@@ -559,7 +563,8 @@ var settings = new PageSettings(FitToPagesWide: 1)
 For xlsx input, explicit and default raw column widths are converted at the fixed Excel
 reference DPI of 96; output PNG DPI does not change sheet geometry. The Normal style is resolved
 through its style XF and theme major/minor font before measuring digits 0–9 with the configured
-font manager. If that font cannot be measured, a 7px compatibility width is used and
+font manager. If that font cannot be measured, a compatibility width is used (MS P Gothic:
+8.4px at 11pt, scaled and rounded to twips; otherwise 7px), and
 `MaximumDigitWidthFallback` is reported through conversion diagnostics.
 
 Distinct print areas are paginated independently without filling their bounding rectangle.

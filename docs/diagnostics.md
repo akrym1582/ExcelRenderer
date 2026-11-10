@@ -49,7 +49,7 @@ These rules are covered by [DiagnosticPolicyTests](../tests/ExcelRenderer.Tests/
 
 | Code | Main / Core | Meaning and output impact | Action / related tests |
 | --- | --- | --- | --- |
-| MaximumDigitWidthFallback | Both | Original Normal metrics unavailable; 7px compatibility MDW may change columns/pages | Supply source metrics in main, preserve Normal metadata; ColumnWidthMetricsTests, MainCoreParityTests |
+| MaximumDigitWidthFallback | Both | Original Normal metrics unavailable; compatibility MDW (MS P Gothic 8.4px at 11pt, otherwise 7px) may change columns/pages | Supply source metrics in main, preserve Normal metadata; ColumnWidthMetricsTests, MainCoreParityTests |
 | MaximumDigitWidthResolved | Main Info / Core no notification | Main records resolved/override MDW decision | Inspect source metric decision; ColumnWidthMetricsTests |
 | FormulaCachedValueMissing | Both | Formula cache absent, displayed empty in saved-value mode | Re-save after calculation or explicitly choose main limited recalculation; FormulaDisplayTests, MainCoreParityTests |
 | ImageDecodeFailed | Both | Complete decode failed; image skipped | Replace damaged/unsupported image; ImageReviewTests, Core ImagePayloadTests / PageAndImageTests |

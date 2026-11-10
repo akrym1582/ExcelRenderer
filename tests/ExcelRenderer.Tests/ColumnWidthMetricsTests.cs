@@ -20,6 +20,29 @@ public sealed class ColumnWidthMetricsTests
     private static string Noto => Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf");
     private static string Collection => Path.Combine(AppContext.BaseDirectory, "Fonts", "PdfFormats", "collection-distinct.ttc");
 
+    [Theory]
+    [InlineData("ＭＳ Ｐゴシック", 11, 8.4)]
+    [InlineData("MS PGothic", 10, 7.6)]
+    public void Missing_Japanese_source_metrics_match_Core_and_respect_explicit_settings(string family, double size, double expected)
+    {
+        var normal = new Core.Excel.NormalFontMetadata(family, size);
+        foreach (var file in new[] { Mono, Noto })
+        {
+            var manager = new SubstituteManager(file);
+            var diagnostics = new DiagnosticCollector(new());
+            Assert.Equal(expected, new FullFontMetrics(manager, diagnostics).MaximumDigitWidth(normal, "data"));
+            Assert.Contains(diagnostics.ToArray(), item => item.Code == "MaximumDigitWidthFallback");
+            Assert.Equal(7, new FullFontMetrics(manager, null, new()
+            {
+                ColumnWidthMetrics = new() { MaximumDigitWidthPixels96Dpi = 7 },
+            }).MaximumDigitWidth(normal, "data"));
+            Assert.Equal(Measure(file, 0, size), new FullFontMetrics(manager, null, new()
+            {
+                ColumnWidthMetrics = new() { SourceFontFile = file },
+            }).MaximumDigitWidth(normal, "data"));
+        }
+    }
+
     [Fact]
     public void Substituted_families_use_7px_and_do_not_change_layout()
     {

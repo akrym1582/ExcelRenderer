@@ -313,8 +313,10 @@ verify output behavior without ASP.NET dependencies. See the [file sample](../sa
 
 Core SingleFontMetrics separates source Normal column metrics from the supplied drawing font.
 It measures the supplied snapshot only for a matching physical family name; substituted or
-missing source families use the main-compatible 7px/96-DPI MDW and report
+missing source families use the shared SourceFontFallbackMetrics profile and report
 MaximumDigitWidthFallback. Text measurement and painting continue to use the supplied font.
+MS P Gothic uses a size-dependent Noto Sans digit profile (8.4px at 11pt) matching
+Calc substitution; other missing families and absent Normal metadata retain 7px/96 DPI.
 No OS/font-package discovery, additional font, public API or Core dependency is introduced.
 
 Core standalone rich strings are flattened to ordinary cell text. Per-run size, color,

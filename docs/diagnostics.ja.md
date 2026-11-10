@@ -46,7 +46,7 @@ Unicode列）は発生回数を合算。上限到達後も保持済み識別子�
 
 | コード | 本体 / Core | 意味・出力への影響 | 対応 / 関連テスト |
 | --- | --- | --- | --- |
-| MaximumDigitWidthFallback | 両方 | 元Normalの寸法なし、7px互換MDWで列幅・改ページが変わる可能性 | 本体なら元フォント寸法を指定。Normal情報維持。ColumnWidthMetricsTests / MainCoreParityTests |
+| MaximumDigitWidthFallback | 両方 | 元Normalの寸法なし、互換MDW（MS Pゴシック11ptは8.4px、その他7px）で列幅・改ページが変わる可能性 | 本体なら元フォント寸法を指定。Normal情報維持。ColumnWidthMetricsTests / MainCoreParityTests |
 | MaximumDigitWidthResolved | 本体Info / Core通知なし | 解決・上書きしたMDWの記録 | 寸法の出所確認。ColumnWidthMetricsTests |
 | FormulaCachedValueMissing | 両方 | 保存結果なし、保存値モードで空文字 | 計算後保存、または本体の限定再計算を明示選択。FormulaDisplayTests / MainCoreParityTests |
 | ImageDecodeFailed | 両方 | 完全decodeに失敗し画像省略 | 画像を交換。本体ImageReviewTests / Core ImagePayloadTests・PageAndImageTests |

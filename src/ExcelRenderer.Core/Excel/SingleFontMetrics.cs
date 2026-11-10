@@ -29,7 +29,7 @@ internal sealed class SingleFontMetrics : ICoreFontMetrics
         var sourceMatches = normalFont is not null && string.Equals(context.Face.Typeface.FamilyName, key.Family, StringComparison.OrdinalIgnoreCase);
         if (!widths.TryGetValue((key, sourceMatches), out var width))
         {
-            width = sourceMatches ? context.MaximumDigitWidth(key.Size) : 7;
+            width = sourceMatches ? context.MaximumDigitWidth(key.Size) : SourceFontFallbackMetrics.MaximumDigitWidth(normalFont);
             widths[(key, sourceMatches)] = width;
         }
 
@@ -39,7 +39,7 @@ internal sealed class SingleFontMetrics : ICoreFontMetrics
                 "MaximumDigitWidthFallback",
                 DiagnosticSeverity.Warning,
                 DiagnosticStage.Read,
-                $"Normal '{normalFont?.Family ?? "unknown"}', {key.Size}pt; supplied drawing font '{context.Face.Typeface.FamilyName}' is not the source Normal font. Column layout uses the 7px compatibility metric at 96 DPI; exact Excel layout cannot be guaranteed.",
+                $"Normal '{normalFont?.Family ?? "unknown"}', {key.Size}pt; supplied drawing font '{context.Face.Typeface.FamilyName}' is not the source Normal font. Column layout uses a {width}px compatibility metric at 96 DPI; exact Excel layout cannot be guaranteed.",
                 sheetName));
         }
 

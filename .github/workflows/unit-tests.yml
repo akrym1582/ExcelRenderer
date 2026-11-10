@@ -105,6 +105,9 @@ jobs:
       - name: Preserve reviewed main and Core PDF appearance for all 22 inputs
         run: python scripts/check-libreoffice-regression.py
 
+      - name: Verify reviewed oversized-merge pagination independently
+        run: python scripts/audit-borders-pagination.py --run artifacts/libreoffice-regression
+
       - name: Verify independent border coordinates, widths and colors
         run: >-
           python scripts/audit-libreoffice-borders.py

@@ -1,0 +1,75 @@
++ dotnet restore --configfile /workspace/ExcelRenderer/artifacts/pr113-consumers-final/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/ExcelRenderer/artifacts/pr113-consumers-final/engine/consumer.csproj (in 446 ms).
++ dotnet run -c Release --no-restore -- /workspace/ExcelRenderer/artifacts/pr113-consumers-final/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+engine passed
++ dotnet restore --configfile /workspace/ExcelRenderer/artifacts/pr113-consumers-final/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/ExcelRenderer/artifacts/pr113-consumers-final/adapter/consumer.csproj (in 179 ms).
++ dotnet run -c Release --no-restore -- /workspace/ExcelRenderer/artifacts/pr113-consumers-final/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+adapter passed
++ dotnet restore --configfile /workspace/ExcelRenderer/artifacts/pr113-consumers-final/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/ExcelRenderer/artifacts/pr113-consumers-final/mapping/consumer.csproj (in 173 ms).
++ dotnet run -c Release --no-restore -- /workspace/ExcelRenderer/artifacts/pr113-consumers-final/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+mapping passed
++ dotnet restore --configfile /workspace/ExcelRenderer/artifacts/pr113-consumers-final/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/ExcelRenderer/artifacts/pr113-consumers-final/main-core/consumer.csproj (in 945 ms).
++ dotnet run -c Release --no-restore -- /workspace/ExcelRenderer/artifacts/pr113-consumers-final/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+main-core passed
++ dotnet restore --configfile /workspace/ExcelRenderer/artifacts/pr113-consumers-final/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/ExcelRenderer/artifacts/pr113-consumers-final/combined/consumer.csproj (in 168 ms).
++ dotnet run -c Release --no-restore -- /workspace/ExcelRenderer/artifacts/pr113-consumers-final/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+combined passed
++ dotnet restore --configfile /workspace/ExcelRenderer/artifacts/pr113-consumers-final/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/ExcelRenderer/artifacts/pr113-consumers-final/conditional-formatting/consumer.csproj (in 172 ms).
++ dotnet run -c Release --no-restore -- /workspace/ExcelRenderer/artifacts/pr113-consumers-final/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+conditional-formatting passed
++ dotnet restore --configfile /workspace/ExcelRenderer/artifacts/pr113-consumers-final/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/ExcelRenderer/artifacts/pr113-consumers-final/managed-fonts/consumer.csproj (in 456 ms).
++ dotnet run -c Release --no-restore -- /workspace/ExcelRenderer/artifacts/pr113-consumers-final/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+managed-fonts passed
++ dotnet restore --configfile /workspace/ExcelRenderer/artifacts/pr113-consumers-final/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/ExcelRenderer/artifacts/pr113-consumers-final/namespace-main/consumer.csproj (in 180 ms).
++ dotnet run -c Release --no-restore --
+ExcelRenderer.Formulas.Evaluation.FormulaEngine
+engine: 375
+ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader
+reader: 375
+namespace-main passed
++ dotnet restore --configfile /workspace/ExcelRenderer/artifacts/pr113-consumers-final/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/ExcelRenderer/artifacts/pr113-consumers-final/namespace-mapping/consumer.csproj (in 185 ms).
++ dotnet run -c Release --no-restore --
+ExcelRenderer.Formulas.Evaluation.FormulaEngine
+engine: 375
+ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader
+reader: 375
+namespace-mapping passed
++ dotnet restore --configfile /workspace/ExcelRenderer/artifacts/pr113-consumers-final/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/ExcelRenderer/artifacts/pr113-consumers-final/namespace-combined/consumer.csproj (in 187 ms).
++ dotnet run -c Release --no-restore --
+ExcelRenderer.Formulas.Evaluation.FormulaEngine
+engine: 375
+ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader
+reader: 375
+namespace-combined passed
++ dotnet tool install ExcelRenderer.Tool --version 1.10.4 --tool-path /workspace/ExcelRenderer/artifacts/pr113-consumers-final/tool --configfile /workspace/ExcelRenderer/artifacts/pr113-consumers-final/NuGet.Config
+You can invoke the tool using the following command: excelrenderer
+Tool 'excelrenderer.tool' (version '1.10.4') was successfully installed.
++ /workspace/ExcelRenderer/artifacts/pr113-consumers-final/tool/excelrenderer md /workspace/ExcelRenderer/artifacts/pr113-consumers-final/invoice.xlsx --formula-mode recalculate -o /workspace/ExcelRenderer/artifacts/pr113-consumers-final/cli.md
++ /workspace/ExcelRenderer/artifacts/pr113-consumers-final/tool/excelrenderer pdf /workspace/ExcelRenderer/artifacts/pr113-consumers-final/invoice.xlsx -o /workspace/ExcelRenderer/artifacts/pr113-consumers-final/cli-pdf-skia.pdf --pdf-backend skiasharp
++ /workspace/ExcelRenderer/artifacts/pr113-consumers-final/tool/excelrenderer render /workspace/ExcelRenderer/artifacts/pr113-consumers-final/invoice.xlsx -o /workspace/ExcelRenderer/artifacts/pr113-consumers-final/cli-render-skia.pdf --pdf-backend skiasharp --format pdf
+Warning: MaximumDigitWidthFallback [Invoice!workbook]: Normal 'unknown', 11pt, weight 400, italic False; measurement '7px compatibility metric (Normal metadata unavailable)', MDW 7px at 96 DPI; source=compatibility. Exact Excel layout cannot be guaranteed; specify SourceFontFile or MaximumDigitWidthPixels96Dpi to supply original metrics.
++ /workspace/ExcelRenderer/artifacts/pr113-consumers-final/tool/excelrenderer pdf /workspace/ExcelRenderer/artifacts/pr113-consumers-final/invoice.xlsx -o /workspace/ExcelRenderer/artifacts/pr113-consumers-final/cli-default-without-subset.pdf
+Eleven isolated package consumers passed (engine, adapter, Mapping, main+Core, combined, conditional formatting, managed fonts, three namespace samples, installed CLI)
++ /workspace/ExcelRenderer/artifacts/pr113-consumers-final/tool/excelrenderer pdf /workspace/ExcelRenderer/artifacts/pr113-consumers-final/cli-font-formats.xlsx -o /workspace/ExcelRenderer/artifacts/pr113-consumers-final/cli-collection-face-1.pdf --font-file /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc --font-face-index 1 --fallback-font PDF Format Fixture --no-system-fonts
++ /workspace/ExcelRenderer/artifacts/pr113-consumers-final/tool/excelrenderer pdf /workspace/ExcelRenderer/artifacts/pr113-consumers-final/cli-font-formats.xlsx -o /workspace/ExcelRenderer/artifacts/pr113-consumers-final/cli-fallback-cff.otf.pdf --font-file /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/cff.otf --font-file /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/static.ttf --fallback-font PDF Format Fixture --no-system-fonts
++ /workspace/ExcelRenderer/artifacts/pr113-consumers-final/tool/excelrenderer pdf /workspace/ExcelRenderer/artifacts/pr113-consumers-final/cli-font-formats.xlsx -o /workspace/ExcelRenderer/artifacts/pr113-consumers-final/cli-fallback-variable.ttf.pdf --font-file /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/variable.ttf --font-file /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/static.ttf --fallback-font PDF Format Fixture --no-system-fonts
+Installed CLI used collection face 1, retained CFF/variable rejection reasons without output, and succeeded with a static substitute

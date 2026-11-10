@@ -67,3 +67,16 @@ not Excel compatibility or Windows pixel equality.
 
 Provenance and the original comparison findings are in
 `docs/validation/libreoffice-comparison/core-pagination-fix/README.md`.
+
+
+## Reviewed oversized merged title pagination (PR #113)
+
+The original manifest and PDFs remain frozen. Only main/Core `05-borders` use
+[separate reviewed pagination expectations](reviewed-pagination/manifest.json),
+bound to the original manifest, input and historical PDF hashes. The current gate
+still records the historical mismatch and compares the complete reviewed geometry
+and pixels at the existing DPIs without tolerances or case omissions. All other
+42 outputs keep their existing expectations. The independent
+`audit-borders-pagination.py` checks page labels, 19 physical strokes and 9 fills
+against source cell dimensions. See the
+[review and remaining Calc differences](../../../docs/validation/pr113-review/README.md).

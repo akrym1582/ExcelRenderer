@@ -211,6 +211,11 @@ public static partial class ExcelConverter
         {
             throw;
         }
+        catch (PdfFontResolutionException exception)
+        {
+            diagnostics.Add(new("PdfFontResolutionFailed", DiagnosticSeverity.Error, DiagnosticStage.Layout, exception.Message));
+            throw Failure("Conversion failed.", exception, diagnostics, artifacts);
+        }
         catch (Exception exception)
         {
             throw Failure("Conversion failed.", exception, diagnostics, artifacts);

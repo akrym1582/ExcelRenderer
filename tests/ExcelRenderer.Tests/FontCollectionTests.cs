@@ -242,6 +242,46 @@ public sealed class FontCollectionTests
         Assert.True(output.Length > 100);
     }
 
+    [Theory]
+    [InlineData("cff.otf", "CFF")]
+    [InlineData("variable.ttf", "variable")]
+    public async Task Rejected_requested_face_uses_valid_fallback_or_reports_reason_without_output(string name, string reason)
+    {
+        foreach (var hasFallback in new[] { true, false })
+        {
+            var registrations = new List<FontRegistration> { new("Calibri", Fixture(name)) };
+            if (hasFallback) registrations.Add(new("compatible", Fixture("static.ttf")));
+            var options = new FontOptions
+            {
+                AllowSystemFonts = false, UseFontPack = false, FallbackFamilies = ["compatible"],
+                Registrations = registrations,
+            };
+            using var input = Workbook();
+            using var output = new MemoryStream();
+            var conversion = ExcelConverter.RenderAsync(input, new() { OutputFormat = OutputFormat.Pdf, FontOptions = options }, new SingleStreamOutputSink(output));
+            if (hasFallback)
+            {
+                await conversion;
+                using var pdf = PdfTestFile.Open(new MemoryStream(output.ToArray()));
+                Assert.Contains("A", pdf.Pages[0].Text);
+            }
+            else
+            {
+                var error = await Assert.ThrowsAsync<ConversionException>(() => conversion);
+                Assert.Contains(error.CollectedDiagnostics, diagnostic => diagnostic.Code == "PdfFontResolutionFailed" && diagnostic.Message.Contains(reason, StringComparison.Ordinal));
+                Assert.Empty(error.CompletedArtifacts);
+                Assert.Contains(reason, error.ToString());
+                Assert.Contains(name, error.ToString());
+                Assert.Equal(0, output.Length);
+                var manager = new FontManager(options, requirePdfCompatibleFonts: true);
+                for (var attempt = 0; attempt < 2; attempt++)
+                {
+                    Assert.Contains(reason, Assert.Throws<PdfFontResolutionException>(() => manager.Resolve(new("Calibri", 400, false))).Message);
+                }
+            }
+        }
+    }
+
     private static string Fixture(string name) => Path.Combine(AppContext.BaseDirectory, "Fonts", "PdfFormats", name);
 
     private static MemoryStream Workbook() => SdkWorkbook.Create(new(new S.SheetData(new S.Row(SdkWorkbook.Text("A1", "A B")) { RowIndex = 1 })), SdkWorkbook.Styles());

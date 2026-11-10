@@ -158,10 +158,7 @@ public static partial class OpenXmlWorkbookWriter
             try
             {
                 var references = new StructuralReferences(names);
-                if (!preserveMetadata)
-                {
-                    RewriteStructures(input, archive, sources, replacements, references, buffers, cancellationToken, plan.RewriteFormulas);
-                }
+                RewriteStructures(input, archive, sources, replacements, references, buffers, cancellationToken, plan.RewriteFormulas, preserveMetadata);
 
                 foreach (var item in sources)
                 {

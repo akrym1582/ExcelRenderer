@@ -13,6 +13,7 @@ public sealed class FontManager : IFontManager
     private readonly FontOptions _options;
     private readonly bool _requirePdfCompatibleFonts;
     private readonly Dictionary<int, bool> _pdfCompatibility = new();
+    private readonly Dictionary<int, string> _pdfRejections = new();
 
     private readonly Dictionary<(string Path, long Length, long Modified, int Index), Lazy<FontSnapshot>> _snapshots = new();
     private readonly Dictionary<(string Path, long Length, long Modified), Lazy<byte[]>> _containers = new();
@@ -115,17 +116,26 @@ public sealed class FontManager : IFontManager
             .OrderBy(x => x.SourcePriority)
             .ThenBy(x => x.SortKey, StringComparer.Ordinal);
 
+        var rejections = new List<string>();
         foreach (var family in requestedFamilies)
         {
-            var matching = candidates.Where(x => string.Equals(x.Family, family, StringComparison.OrdinalIgnoreCase)).Where(IsDrawingFont).ToArray();
+            var familyFaces = candidates.Where(x => string.Equals(x.Family, family, StringComparison.OrdinalIgnoreCase)).ToArray();
+            var matching = familyFaces.Where(IsDrawingFont).ToArray();
+            rejections.AddRange(familyFaces.Where(face => _pdfRejections.ContainsKey(face.RegistrationId))
+                .Select(face => $"{face.Family} ({face.FilePath}, face {face.CollectionIndex}): {_pdfRejections[face.RegistrationId]}"));
             if (matching.Length > 0)
             {
                 return _cache[request] = Select(matching, request);
             }
         }
 
-        throw new InvalidOperationException(
-            $"No usable font was found. Requested: \"{request.Family}\" Fallbacks: {string.Join(", ", _options.FallbackFamilies)}");
+        var message = $"No usable font was found. Requested: \"{request.Family}\" Fallbacks: {string.Join(", ", _options.FallbackFamilies)}";
+        if (rejections.Count > 0)
+        {
+            throw new PdfFontResolutionException(message + " Rejected candidates: " + string.Join("; ", rejections));
+        }
+
+        throw new InvalidOperationException(message);
     }
 
     /// <summary>文字列を Unicode の書記素クラスタごとに分割し、各文字を表示できるフォントの実行列へ変換します。</summary>
@@ -411,6 +421,7 @@ public sealed class FontManager : IFontManager
         }
         catch (Exception error) when (error is InvalidDataException or NotSupportedException)
         {
+            _pdfRejections[face.RegistrationId] = error.Message;
             return _pdfCompatibility[face.RegistrationId] = false;
         }
     }

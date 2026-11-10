@@ -272,4 +272,14 @@ for name, reason in [('cff.otf', 'CFF'), ('variable.ttf', 'variable')]:
     rejected = subprocess.run(command, env=env, encoding='utf-8', capture_output=True)
     assert rejected.returncode != 0 and reason in rejected.stderr, (name, rejected.stderr)
     assert not destination.exists(), 'Unsupported font committed an installed-CLI PDF'
-print('Installed CLI used collection face 1 and rejected CFF/variable fonts without committing output')
+    fallback_output = work / ('cli-fallback-' + name + '.pdf')
+    fallback_output.unlink(missing_ok=True)
+    run(tool_command, 'pdf', font_fixture, '-o', fallback_output,
+        '--font-file', root / 'tests/ExcelRenderer.Tests/Fonts/PdfFormats' / name,
+        '--font-file', root / 'tests/ExcelRenderer.Tests/Fonts/PdfFormats/static.ttf',
+        '--fallback-font', 'PDF Format Fixture', '--no-system-fonts')
+    assert fallback_output.read_bytes().startswith(b'%PDF')
+    assert b'PdfFormatFixture' in fallback_output.read_bytes()
+    assert b'/FontFile2' in fallback_output.read_bytes(), 'Fallback did not embed static TrueType'
+
+print('Installed CLI used collection face 1, retained CFF/variable rejection reasons without output, and succeeded with a static substitute')

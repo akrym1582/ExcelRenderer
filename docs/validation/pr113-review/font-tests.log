@@ -1,0 +1,15 @@
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Release/net10.0/ExcelRenderer.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+/workspace/ExcelRenderer/tests/ExcelRenderer.Tests/bin/Release/net10.0/ExcelRenderer.Tests.dll
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 10.0.12)
+[xUnit.net 00:00:00.06]   Discovering: ExcelRenderer.Tests
+[xUnit.net 00:00:00.17]   Discovered:  ExcelRenderer.Tests
+[xUnit.net 00:00:00.18]   Starting:    ExcelRenderer.Tests
+[xUnit.net 00:00:00.80]   Finished:    ExcelRenderer.Tests
+  Passed ExcelRenderer.Tests.FontCollectionTests.Rejected_requested_face_uses_valid_fallback_or_reports_reason_without_output(name: "cff.otf", reason: "CFF") [584 ms]
+  Passed ExcelRenderer.Tests.FontCollectionTests.Rejected_requested_face_uses_valid_fallback_or_reports_reason_without_output(name: "variable.ttf", reason: "variable") [9 ms]
+
+Test Run Successful.
+Total tests: 2
+     Passed: 2
+ Total time: 1.0569 Seconds

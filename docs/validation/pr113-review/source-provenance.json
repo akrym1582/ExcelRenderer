@@ -1,0 +1,24 @@
+{
+  "base_head": "12e41f82f4697bf242d9bde11d9b3c341eb434bb",
+  "source_sha256": {
+    "src/ExcelRenderer.OpenXml/Writing/OpenXmlWorkbookWriter.Pivots.cs": "eea97849a052a5800974a59618e96d3481585b8c19f901a48a5359afea3b5444",
+    "src/ExcelRenderer.OpenXml/Writing/OpenXmlWorkbookWriter.Structures.cs": "a8e315468677e06ba8367f22a586e57eb63983ccc33d83c542f415cbfce17184",
+    "src/ExcelRenderer.OpenXml/Writing/OpenXmlWorkbookWriter.cs": "146ff70574252b5c529f55a44b9cedb9718ac288495c6ba2bce4a7457118cfdf",
+    "src/ExcelRenderer.OpenXml/Writing/WorkbookWriteCapabilities.cs": "a8570d13be7e718b55a3e44df0df06e302ae9c1967d16418d70388db5d38a716",
+    "src/ExcelRenderer/ExcelConverter.RenderAsync.cs": "92411ec18a90cb906ce313e4ff4e1b487fdaaea84320ae5f65a2e4de885c3d81",
+    "src/ExcelRenderer/Fonts/FontManager.cs": "579f02a663223993e9848a0a4e9b748d88fd52d61e183e99cb1643fe5aaf3526",
+    "tests/ExcelRenderer.Mapping.Tests/PivotMappingReviewTests.cs": "35c7de60a93758a350b1e97f5fb6831bcb5a5ccfccde01ae1a22822061708783",
+    "tests/ExcelRenderer.Tests/FontCollectionTests.cs": "2fcda9be4ae284222986ae898570f395461045bbd47d178e40b2df6ab9e1aa5c",
+    "src/ExcelRenderer/Fonts/PdfFontResolutionException.cs": "96a90ee53f2b9a1f9a075373598fce1e2fc0f747d216a397741525d2f56eec47"
+  },
+  "runtime_sha256": {
+    "src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.OpenXml.dll": "8fc782d3c8de75b3543d2513ee3cd86d3d0abd7149221f5fe2980a0e4b5f8e75",
+    "src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Fonts.dll": "91a9be7ee477ebbff13f596bb03f76dd02bd85044f020d4845c6ab8f6db5661a",
+    "src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.dll": "b83c0ac601e99a1ddf09122d51e4b3449cbf062f0a832cb6faf79cb0e5259d49",
+    "src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Core.dll": "c686b8e0f7fdc3857c8862e5bbdd5db5ed998ef7924aae3dee50cb0981d002b7",
+    "src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll": "2fcdc644d000bb6318540dbea39225ebed692b6e08d4b2a89def0114906a6de2",
+    "src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.OpenXml.Reader.dll": "733c6e9d09578ef48d90a0459d566299b73c371ae97a1b578cb5978a6286703c",
+    "src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Mapping.dll": "5f77669bf8848871ffde15fdcc6f9f023c42aba8f1ded992712be65908959b1e",
+    "src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Formulas.dll": "22555af39653db26488f0fb326c590dea06d2184dc6d5ba250678c819af5ac85"
+  }
+}

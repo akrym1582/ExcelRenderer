@@ -7,7 +7,7 @@ import re
 import subprocess
 
 import fitz
-from libreoffice_regression import BASE, ROOT, checked_baseline, compare, manifest
+from libreoffice_regression import BASE, ROOT, checked_baseline, compare, current_baseline, manifest
 
 
 def mutation_checks(output, data):
@@ -21,12 +21,15 @@ def mutation_checks(output, data):
         ('shifted-content', '01-japanese', lambda b: b'1 0 0 1 3 0 cm\n' + b),
         ('wrong-source-text', '01-japanese', lambda b: b.replace(b'FEFF65E5', b'FEFF65E6', 1)),
         ('extra-page', '01-japanese', None),
+        ('pagination-missing-text', '05-borders', lambda b: re.sub(rb'<[0-9A-Fa-f]+> Tj', b'<> Tj', b, count=1)),
+        ('pagination-missing-border', '05-borders', lambda b: re.sub(rb'(?m)^[-.\d]+ [-.\d]+ m\n[-.\d]+ [-.\d]+ l\nS\n', b'', b, count=1)),
+        ('pagination-shifted-content', '05-borders', lambda b: b'1 0 0 1 3 0 cm\n' + b),
     ]
     directory = output / 'mutations'
     directory.mkdir(parents=True, exist_ok=True)
     for name, case_id, mutate in samples:
         record = next(c for c in data['cases'] if c['id'] == case_id)['engines']['main']
-        original = checked_baseline(record)
+        original = current_baseline(case_id, 'main', record)
         candidate = directory / (name + '.pdf')
         with fitz.open(original) as document:
             if mutate is None:
@@ -59,18 +62,25 @@ def main():
         for case in data['cases']:
             for record in case['engines'].values():
                 checked_baseline(record)
+            for engine, record in case['engines'].items():
+                current_baseline(case['id'], engine, record)
         subprocess.run(['python3', str(ROOT / 'scripts/compare-libreoffice.py'), 'render', '--run', str(output)], cwd=ROOT, check=True)
     report = {'contract': str(BASE.relative_to(ROOT)), 'records': [], 'mutation_checks': mutation_checks(output, data)}
     errors = []
     for case in data['cases']:
         for engine, record in case['engines'].items():
-            expected = checked_baseline(record)
+            historical = checked_baseline(record)
+            expected = current_baseline(case['id'], engine, record)
             actual = output / 'actual' / engine / (case['id'] + '.pdf')
             execution = actual.with_suffix('.run.json')
             if not actual.exists() or not execution.exists() or json.loads(execution.read_text())['status'] != 'generated':
                 result = {'passed': False, 'errors': ['Output not generated successfully in this run']}
             else:
                 result = compare(expected, actual, differences=output / 'differences' / engine / case['id'])
+            if historical != expected and actual.exists():
+                result['historical_comparison'] = compare(historical, actual)
+                result['classification'] = 'reviewed-oversized-merged-pagination'
+                result['expected_pdf'] = str(expected.relative_to(ROOT))
             result.update(case_id=case['id'], engine=engine)
             report['records'].append(result)
             errors.extend(f'{engine}/{case["id"]}: {error}' for error in result['errors'])

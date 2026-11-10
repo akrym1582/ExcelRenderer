@@ -111,3 +111,21 @@ def reviewed_core_layout(name, source, historical, actual):
     result['classification'] = 'reviewed-source-column-metrics'
     result['reason'] = record['reason']
     return result
+
+
+def current_baseline(case_id, engine, historical):
+    """Use only the explicitly reviewed pagination follow-up; retain all old PDFs/hashes."""
+    original = checked_baseline(historical)
+    path = BASE / 'reviewed-pagination/manifest.json'
+    followups = json.loads(path.read_text())
+    if sha(MANIFEST) != followups['historical_manifest_sha256']:
+        raise ValueError('Historical appearance contract changed')
+    if set(followups['cases']) != {'05-borders/main', '05-borders/core'}:
+        raise ValueError('Only the reviewed 05-borders engines may use this pagination follow-up')
+    record = followups['cases'].get(case_id + '/' + engine)
+    if record is None:
+        return original
+    if (record['input'] != historical['input'] or record['input_sha256'] != historical['input_sha256'] or
+            record['historical_pdf_sha256'] != historical['pdf_sha256']):
+        raise ValueError('Pagination follow-up does not bind the original input/PDF')
+    return checked_baseline(record)

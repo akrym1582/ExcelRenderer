@@ -1,0 +1,20 @@
+{
+  "historical_manifest_sha256": "511f7a094d3da609a6027ba7dad30acf6a0b9709deb58e5c50bf7ab1cc8f925b",
+  "reason": "Oversized A1:D1 merged title must not force a premature column band; A:C fit at 100%, D belongs on page 2, matching the retained Calc page assignment. See docs/validation/pr113-review/README.md.",
+  "cases": {
+    "05-borders/main": {
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/05-borders.xlsx",
+      "input_sha256": "074cfd50a3d4556380f462a69287d9b0254a71ebe412e267b395ca345a54eac2",
+      "historical_pdf_sha256": "47f5637e281586b314318755453dc438c3ba42eaef420a23b3555eef83d71b0c",
+      "pdf": "reviewed-pagination/main-05-borders.pdf",
+      "pdf_sha256": "4e0aa2c120caaf01bb23f9c9db3626d13c3fc4aa930a014de606b4e9959a4da1"
+    },
+    "05-borders/core": {
+      "input": "tests/ExcelRenderer.Tests/SampleInputs/05-borders.xlsx",
+      "input_sha256": "074cfd50a3d4556380f462a69287d9b0254a71ebe412e267b395ca345a54eac2",
+      "historical_pdf_sha256": "47f5637e281586b314318755453dc438c3ba42eaef420a23b3555eef83d71b0c",
+      "pdf": "reviewed-pagination/core-05-borders.pdf",
+      "pdf_sha256": "4e0aa2c120caaf01bb23f9c9db3626d13c3fc4aa930a014de606b4e9959a4da1"
+    }
+  }
+}

@@ -120,34 +120,7 @@ public static class WorkbookWriteCapabilities
 
             if (part is PivotTablePart or PivotTableCacheDefinitionPart)
             {
-                using var source = part.GetStream(FileMode.Open, FileAccess.Read);
-                var root = System.Xml.Linq.XElement.Load(source);
-                if (root.Descendants().Any(element => element.Name.LocalName is "fieldGroup" or "calculatedItems" or "calculatedMembers" || element.Attribute("formula") != null))
-                {
-                    reasons.Add("CalculatedOrGroupedPivotCache");
-                }
-
-                if (part is PivotTableCacheDefinitionPart && root.Descendants(XmlValues.Spreadsheet + "cacheSource").Any(element => (string?)element.Attribute("type") != "worksheet"))
-                {
-                    reasons.Add("ExternalPivotCache");
-                }
-
-                if (part is PivotTableCacheDefinitionPart cache)
-                {
-                    var worksheet = root.Descendants(XmlValues.Spreadsheet + "worksheetSource").SingleOrDefault();
-                    if (worksheet?.Attribute("sheet") == null || worksheet.Attribute("ref") == null || cache.PivotTableCacheRecordsPart == null)
-                    {
-                        reasons.Add("UnsupportedPivotSource");
-                    }
-                }
-
-                foreach (var extension in root.Descendants().Where(element => element.Name.LocalName == "ext"))
-                {
-                    if ((string?)extension.Attribute("uri") != "{962EF5D1-5CA2-4c93-8EF4-DBF5C05439D2}" || extension.Elements().Any(element => element.Name != System.Xml.Linq.XName.Get("pivotTableDefinition", "http://schemas.microsoft.com/office/spreadsheetml/2009/9/main")))
-                    {
-                        reasons.Add("UnsupportedPivotExtension");
-                    }
-                }
+                InspectPivotPart(part, reasons);
             }
 
             if (part is WorksheetPart or WorkbookPart or WorkbookStylesPart)
@@ -241,6 +214,41 @@ public static class WorkbookWriteCapabilities
         }
 
         return Array.AsReadOnly(reasons.OrderBy(reason => reason, StringComparer.Ordinal).ToArray());
+    }
+
+    /// <summary>Checks one pivot definition without treating unrelated opaque parts as pivot limitations.</summary>
+    /// <param name="part">The pivot or cache definition.</param>
+    /// <param name="reasons">The capability findings.</param>
+    internal static void InspectPivotPart(OpenXmlPart part, HashSet<string> reasons)
+    {
+        using var source = part.GetStream(FileMode.Open, FileAccess.Read);
+        var root = System.Xml.Linq.XElement.Load(source);
+        if (root.Descendants().Any(element => element.Name.LocalName is "fieldGroup" or "calculatedItems" or "calculatedMembers" || element.Attribute("formula") != null))
+        {
+            reasons.Add("CalculatedOrGroupedPivotCache");
+        }
+
+        if (part is PivotTableCacheDefinitionPart && root.Descendants(XmlValues.Spreadsheet + "cacheSource").Any(element => (string?)element.Attribute("type") != "worksheet"))
+        {
+            reasons.Add("ExternalPivotCache");
+        }
+
+        if (part is PivotTableCacheDefinitionPart cache)
+        {
+            var worksheet = root.Descendants(XmlValues.Spreadsheet + "worksheetSource").SingleOrDefault();
+            if (worksheet?.Attribute("sheet") == null || worksheet.Attribute("ref") == null || cache.PivotTableCacheRecordsPart == null)
+            {
+                reasons.Add("UnsupportedPivotSource");
+            }
+        }
+
+        foreach (var extension in root.Descendants().Where(element => element.Name.LocalName == "ext"))
+        {
+            if ((string?)extension.Attribute("uri") != "{962EF5D1-5CA2-4c93-8EF4-DBF5C05439D2}" || extension.Elements().Any(element => element.Name != System.Xml.Linq.XName.Get("pivotTableDefinition", "http://schemas.microsoft.com/office/spreadsheetml/2009/9/main")))
+            {
+                reasons.Add("UnsupportedPivotExtension");
+            }
+        }
     }
 
     /// <summary>Checks whether unsupported metadata can be copied without interpreting it.</summary>

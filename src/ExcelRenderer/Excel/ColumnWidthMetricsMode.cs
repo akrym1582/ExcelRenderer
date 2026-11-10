@@ -8,4 +8,7 @@ public enum ColumnWidthMetricsMode
 
     /// <summary>Use the historical drawing-font resolution for compatibility.</summary>
     RenderingFontLegacy,
+
+    /// <summary>Use substitute-font digit metrics and fractional column widths for LibreOffice compatibility.</summary>
+    LibreOfficeCompatible,
 }

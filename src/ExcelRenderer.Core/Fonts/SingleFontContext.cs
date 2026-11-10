@@ -37,10 +37,20 @@ internal sealed class SingleFontContext : IDisposable
     /// <summary>Measures Normal-style maximum digit width at 96 DPI.</summary>
     /// <param name="size">The Normal font point size.</param>
     /// <returns>The rounded maximum width in pixels.</returns>
-    internal double MaximumDigitWidth(double size)
+    /// <param name="libreOfficeCompatible">Whether to round digit advances to twips instead of integer pixels.</param>
+    internal double MaximumDigitWidth(double size, bool libreOfficeCompatible = false)
     {
         using var font = new SKFont(typeface, (float)(size * 96 / 72));
-        return Math.Max(1, Math.Round(Enumerable.Range(0, 10).Max(digit => font.MeasureText(digit.ToString())), MidpointRounding.AwayFromZero));
+        if (libreOfficeCompatible)
+        {
+            font.LinearMetrics = true;
+            font.Subpixel = true;
+            font.Hinting = SKFontHinting.None;
+        }
+
+        var width = Enumerable.Range(0, 10).Max(digit => font.MeasureText(digit.ToString()));
+        var scale = libreOfficeCompatible ? 15 : 1;
+        return Math.Max(1, Math.Round(width * scale, MidpointRounding.AwayFromZero) / scale);
     }
 
     private static byte[] ReadFace(string path, int collectionIndex, CancellationToken token)

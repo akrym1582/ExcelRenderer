@@ -21,6 +21,33 @@ public sealed class ColumnWidthMetricsTests
     private static string Collection => Path.Combine(AppContext.BaseDirectory, "Fonts", "PdfFormats", "collection-distinct.ttc");
 
     [Theory]
+    [InlineData(false, 219.75)]
+    [InlineData(true, 276.5472666)]
+    public void LibreOffice_mode_changes_column_geometry_without_changing_row_height(bool compatible, double expected)
+    {
+        var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../"));
+        var options = new ExcelReadOptions
+        {
+            ColumnWidthMetrics = new()
+            {
+                Mode = compatible ? ColumnWidthMetricsMode.LibreOfficeCompatible : ColumnWidthMetricsMode.SourceFont,
+                MaximumDigitWidthPixels96Dpi = compatible ? 8.8 : 7,
+            },
+        };
+        var sheet = new ExcelReader().Read(Path.Combine(root, "tests/ExcelRenderer.Tests/SampleInputs/03-wrapped-text.xlsx"), options).Sheets.Single();
+        Assert.InRange(Math.Abs(sheet.Columns[1].Width - expected), 0, 0.000001);
+        Assert.Equal(120, sheet.Rows[2].Height);
+    }
+
+    [Fact]
+    public void LibreOffice_mode_measures_layout_font_at_twip_precision()
+    {
+        var manager = new FontManager(new() { AllowSystemFonts = false, UseFontPack = false, FontFiles = [Noto] });
+        var options = new ExcelReadOptions { ColumnWidthMetrics = new() { Mode = ColumnWidthMetricsMode.LibreOfficeCompatible, SourceFontFile = Noto } };
+        Assert.Equal(122d / 15, new FullFontMetrics(manager, null, options).MaximumDigitWidth(new("Calibri", 11), "First"));
+    }
+
+    [Theory]
     [InlineData("ＭＳ Ｐゴシック", 11, 8.4)]
     [InlineData("MS PGothic", 10, 7.6)]
     public void Missing_Japanese_source_metrics_match_Core_and_respect_explicit_settings(string family, double size, double expected)

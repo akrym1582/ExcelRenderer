@@ -416,7 +416,7 @@ internal partial class CoreExcelReader
             {
                 for (var index = column.Min; index <= column.Max; index++)
                 {
-                    columns[index] = new(ColumnWidthCalculator.ToPoints(column.Width ?? defaultWidth, mdw), column.Hidden ?? false);
+                    columns[index] = new(ColumnWidthCalculator.ToPoints(column.Width ?? defaultWidth, mdw, fontMetrics.UseLibreOfficeColumnWidths), column.Hidden ?? false);
                 }
             }
 
@@ -441,7 +441,7 @@ internal partial class CoreExcelReader
                 .Select(range => new CellRange(new(range.FirstRow, range.FirstColumn), new(range.LastRow, range.LastColumn))).ToArray();
             var sheet = new ReportSheet(info.Sheet.Name, cells, columns, rows, merged, pageSettings, printAreas.Length > 0 ? printAreas[0] : null, pictures, OpenXmlHeaderFooter(info.HeaderFooter))
             {
-                DefaultColumnWidth = ColumnWidthCalculator.ToPoints(defaultWidth, mdw),
+                DefaultColumnWidth = ColumnWidthCalculator.ToPoints(defaultWidth, mdw, fontMetrics.UseLibreOfficeColumnWidths),
                 DefaultRowHeight = ValidHeight(info.DefaultRowHeightPt, 15),
                 DefaultRowsHidden = info.DefaultRowsHidden,
                 PrintAreas = printAreas,

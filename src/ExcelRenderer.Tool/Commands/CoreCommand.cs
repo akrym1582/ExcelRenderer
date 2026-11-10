@@ -15,10 +15,12 @@ public static class CoreCommand
         var fontIndex = new Option<int>("--font-collection-index") { Description = "Zero-based font collection face index." };
         var sheet = new Option<string[]>("--sheet") { Description = "Worksheet names in output order (repeatable).", AllowMultipleArgumentsPerToken = true };
         var verbose = CommandSupport.VerboseOption();
+        var metrics = new Option<string>("--column-width-metrics") { Description = "Column metrics: source (default) or libreoffice.", DefaultValueFactory = _ => "source" };
+        var mdw = new Option<double?>("--column-width-mdw") { Description = "Explicit Normal digit width in pixels at 96 DPI." };
         var data = MappingCommandSupport.DataOption();
         var command = new Command("core", "Convert Excel to PDF using ExcelRenderer.Core and one supplied font (saved values only).")
         {
-            input, output, font, fontIndex, sheet, verbose, data,
+            input, output, font, fontIndex, sheet, verbose, data, metrics, mdw,
         };
         command.SetAction((result, cancellationToken) => CommandSupport.RunAsync(result, () => MappingCommandSupport.WithInputAsync(
             result.GetValue(input)!,
@@ -29,6 +31,16 @@ public static class CoreCommand
                 result.GetValue(output)!,
                 new Core.PdfExportOptions
                 {
+                    ReadOptions = new()
+                    {
+                        UseLibreOfficeColumnWidths = result.GetValue(metrics) switch
+                        {
+                            "source" => false,
+                            "libreoffice" => true,
+                            _ => throw new ArgumentException("--column-width-metrics must be source or libreoffice."),
+                        },
+                        MaximumDigitWidthPixels96Dpi = result.GetValue(mdw),
+                    },
                     FontFilePath = result.GetValue(font)!,
                     FontCollectionIndex = result.GetValue(fontIndex),
                     SheetNames = CommandSupport.GetSheetNames(result.GetValue(sheet)),

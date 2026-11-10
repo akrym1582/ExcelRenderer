@@ -7,20 +7,26 @@ namespace ExcelRenderer.Core.Excel;
 internal sealed class SingleFontMetrics : ICoreFontMetrics
 {
     private readonly SingleFontContext context;
+    private readonly ExcelReadOptions options;
     private readonly DiagnosticCollector? diagnostics;
     private readonly Dictionary<(NormalFontMetadata Font, bool SourceMatches), double> widths = new();
 
     /// <summary>Initializes a new instance of the <see cref="SingleFontMetrics"/> class.</summary>
     /// <param name="context">The conversion-owned font.</param>
     /// <param name="diagnostics">The conversion diagnostic collector.</param>
-    internal SingleFontMetrics(SingleFontContext context, DiagnosticCollector? diagnostics = null)
+    /// <param name="options">Column metric compatibility settings.</param>
+    internal SingleFontMetrics(SingleFontContext context, DiagnosticCollector? diagnostics = null, ExcelReadOptions? options = null)
     {
         this.context = context;
+        this.options = options ?? new();
         this.diagnostics = diagnostics;
     }
 
     /// <inheritdoc/>
     public NormalFontMetadata DefaultFont => new("Calibri", 11);
+
+    /// <inheritdoc/>
+    public bool UseLibreOfficeColumnWidths => options.UseLibreOfficeColumnWidths;
 
     /// <inheritdoc/>
     public double MaximumDigitWidth(NormalFontMetadata? normalFont, string sheetName)
@@ -29,7 +35,7 @@ internal sealed class SingleFontMetrics : ICoreFontMetrics
         var sourceMatches = normalFont is not null && string.Equals(context.Face.Typeface.FamilyName, key.Family, StringComparison.OrdinalIgnoreCase);
         if (!widths.TryGetValue((key, sourceMatches), out var width))
         {
-            width = sourceMatches ? context.MaximumDigitWidth(key.Size) : SourceFontFallbackMetrics.MaximumDigitWidth(normalFont);
+            width = options.MaximumDigitWidthPixels96Dpi ?? (UseLibreOfficeColumnWidths ? context.MaximumDigitWidth(key.Size, true) : sourceMatches ? context.MaximumDigitWidth(key.Size) : SourceFontFallbackMetrics.MaximumDigitWidth(normalFont));
             widths[(key, sourceMatches)] = width;
         }
 

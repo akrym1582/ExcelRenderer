@@ -8,6 +8,8 @@ English | [日本語](README.ja.md)
 
 Main and Core apply the eight named Excel number-format colors (for example `[Red]` in the negative-value section). Indexed `[ColorN]` palettes are not resolved. Pivot tables render saved worksheet cells; aggregate generation is not implemented. A pivot with no nonempty saved output in the selected print region fails before rendering (`PivotSavedValuesMissing`). A cache requesting refresh produces `PivotRefreshRequired`; refresh and save in a spreadsheet application to obtain current totals. Mapping refreshes supported cache records, not the displayed aggregate cells.
 
+Cell-width compatibility: main's `ColumnWidthMetricsMode.LibreOfficeCompatible` and Core's `ReadOptions.UseLibreOfficeColumnWidths` retain fractional digit/column widths. Both CLI commands accept `--column-width-metrics libreoffice --column-width-mdw 8.8`. Use the digit width of the actual reference font; 8.8px is specific to Noto Sans Mono at 11pt, not a universal replacement. Existing defaults remain unchanged. See [the measured cell-size validation](docs/validation/cell-width-compatibility/README.md).
+
 ## Overview
 
 ExcelRenderer is a .NET library for rendering Excel (`.xlsx`) worksheets as PDF or PostScript documents or page-by-page PNG and SVG images.

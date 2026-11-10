@@ -12,13 +12,19 @@ internal static class ColumnWidthCalculator
     /// </summary>
     /// <param name="rawWidth">col 要素に保存された文字数単位の幅です。</param>
     /// <param name="maximumDigitWidth">96 DPI における標準フォントの最大数字幅です。</param>
+    /// <param name="libreOfficeCompatible">Whether to retain fractional pixels for Calc-compatible dimensions.</param>
     /// <returns>ポイント単位の列幅です。</returns>
-    public static double ToPoints(double rawWidth, double maximumDigitWidth)
+    public static double ToPoints(double rawWidth, double maximumDigitWidth, bool libreOfficeCompatible = false)
     {
         if (!double.IsFinite(rawWidth) || rawWidth <= 0 ||
             !double.IsFinite(maximumDigitWidth) || maximumDigitWidth <= 0)
         {
             return 0;
+        }
+
+        if (libreOfficeCompatible)
+        {
+            return rawWidth * maximumDigitWidth * PointsPerPixel;
         }
 
         var pixels = Math.Truncate(

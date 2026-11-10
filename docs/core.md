@@ -123,3 +123,7 @@ the Core conversion itself still reads saved values and does not recalculate for
 Core reads saved pivot cells and does not generate aggregates. An empty saved pivot rectangle inside the selected print area raises `InvalidDataException` containing `PivotSavedValuesMissing` before any PDF bytes are written. Pivots outside explicit print areas are ignored. Nonempty saved output can still be stale: cache `refreshOnLoad` or `invalid` flags produce `PivotRefreshRequired`. This check cannot prove every saved result is complete or current.
 
 The shared Reader selects named number-format colors by value and section; Core applies the resulting RGB color after style-cache lookup, before main's conditional-formatting policy. This preserves cell-specific colors without contaminating cells that share the same base style. The eight standard names are supported; indexed `[ColorN]` is not.
+
+### Fractional column widths
+
+`PdfExportOptions.ReadOptions.UseLibreOfficeColumnWidths = true` measures the supplied regular font at the workbook Normal size, rounds digit advances to twips (1/15 pixel at 96 DPI), and retains fractional column pixels. `MaximumDigitWidthPixels96Dpi` supplies an explicit layout metric independently of the drawing font. The default remains the original source-font/compatibility policy. The mode does not emulate LibreOffice font discovery, headers, row auto-fit or all pagination rules. Saved row heights and print scale are preserved.

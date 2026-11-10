@@ -94,11 +94,14 @@ def compare(left, right):
 
 
 def contact(paths, destination):
-    docs = [fitz.open(p) for p in paths]
-    rows = max(len(d) for d in docs)
+    docs = [fitz.open(p) if p is not None else None for p in paths]
+    rows = max((len(d) for d in docs if d is not None), default=1)
     canvas = Image.new('RGB', (1200, 590 * rows), '#dddddd')
     draw = ImageDraw.Draw(canvas)
     for col, (name, doc) in enumerate(zip(['main', 'core', 'LibreOffice 25.2'], docs)):
+        if doc is None:
+            draw.text((col * 400 + 8, 5), name + ': PivotSavedValuesMissing; no PDF', fill='black')
+            continue
         for index, page in enumerate(doc):
             pix = page.get_pixmap(matrix=fitz.Matrix(.63, .63))
             img = Image.frombytes('RGB', (pix.width, pix.height), pix.samples)
@@ -163,8 +166,15 @@ def main():
                     command = ['dotnet', CLI, 'render' if engine == 'main' else 'core', source, '-o', pdf, '--font-file', FONT]
                     if engine == 'main':
                         command += ['--format', 'pdf', '--no-system-fonts', '--fallback-font', 'Noto Sans JP']
-                    run(command, log)
-                item['engines'][engine] = inspect(pdf)
+                    try:
+                        run(command, log)
+                    except RuntimeError:
+                        if name != 'pivot-opaque' or 'PivotSavedValuesMissing' not in log[-1]['stderr'] or pdf.exists():
+                            raise
+                        item['engines'][engine] = {'status': 'rejected-missing-pivot-saved-values', 'page_count': 0, 'pages': [], 'diagnostic': log[-1]['stderr']}
+                        paths.append(None)
+                        continue
+                item['engines'][engine] = {'status': 'generated', **inspect(pdf)}
                 paths.append(pdf)
             item['comparisons'] = {left + '-' + right: compare(item['engines'][left], item['engines'][right]) for left, right in [('main', 'core'), ('libreoffice', 'main'), ('libreoffice', 'core')]}
             contact(paths, source.parent / (version + '-contact.png'))

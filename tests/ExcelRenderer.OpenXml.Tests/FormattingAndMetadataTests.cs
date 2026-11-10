@@ -29,6 +29,28 @@ public sealed class FormattingAndMetadataTests
     }
 
     [Theory]
+    [InlineData("0;[Red](0);[Blue]0", -2, "FF0000")]
+    [InlineData("0;[Red](0);[Blue]0", 2, null)]
+    [InlineData("0;[Red](0);[Blue]0", 0, "0000FF")]
+    [InlineData("[Red][<0]0;[Blue][>=10]0;[Green]0", -2, "FF0000")]
+    [InlineData("[Red][<0]0;[Blue][>=10]0;[Green]0", 10, "0000FF")]
+    [InlineData("[Red][<0]0;[Blue][>=10]0;[Green]0", 5, "00FF00")]
+    [InlineData("\"[Red];\"0;[Blue]0", 2, null)]
+    [InlineData("\"[Red];\"0;[Blue]0", -2, "0000FF")]
+    [InlineData("[Red]0", -2, "FF0000")]
+    [InlineData("[Blue]0;[Red][<0]0;[Green]0", -2, "FF0000")]
+    [InlineData("[Red][<0]0;[Blue]0;[Green]0", 2, "00FF00")]
+    [InlineData("[Red][<0]0;[Blue]0", 2, "0000FF")]
+    [InlineData("[Red][<0]0", 2, null)]
+    [InlineData("[invalid", -2, null)]
+    public void SelectedNumberFormatSectionSuppliesColor(string code, double number, string? expected)
+    {
+        using var input = Fixture.Create(Fixture.Cells($"<c><v>{number.ToString(CultureInfo.InvariantCulture)}</v></c>"), NumberStyles(164, code));
+        using var reader = OpenXmlWorkbookReader.Open(input);
+        Assert.Equal(expected, reader.FormatCell(reader.EnumerateCells(1).Single()).ForegroundRgb);
+    }
+
+    [Theory]
     [InlineData("s=\"99\"", "")]
     [InlineData("s=\"1\"", "fontId=\"99\"")]
     [InlineData("s=\"1\"", "fillId=\"99\"")]

@@ -117,3 +117,9 @@ the temporary PDF. `--verbose` writes command details, elapsed time, conversion
 metrics and full exceptions to standard error. Core diagnostics are always reported.
 Optional `--data data.json` maps the template first using the main Mapping package;
 the Core conversion itself still reads saved values and does not recalculate formulas.
+
+### Pivot saved output and number-format colors
+
+Core reads saved pivot cells and does not generate aggregates. An empty saved pivot rectangle inside the selected print area raises `InvalidDataException` containing `PivotSavedValuesMissing` before any PDF bytes are written. Pivots outside explicit print areas are ignored. Nonempty saved output can still be stale: cache `refreshOnLoad` or `invalid` flags produce `PivotRefreshRequired`. This check cannot prove every saved result is complete or current.
+
+The shared Reader selects named number-format colors by value and section; Core applies the resulting RGB color after style-cache lookup, before main's conditional-formatting policy. This preserves cell-specific colors without contaminating cells that share the same base style. The eight standard names are supported; indexed `[ColorN]` is not.

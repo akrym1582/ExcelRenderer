@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Xml.Linq;
 using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
 using ExcelRenderer.OpenXml.Reader.Infrastructure;
 using ExcelRenderer.OpenXml.Reader.Model.Cells;
 using ExcelRenderer.OpenXml.Reader.Model.ConditionalFormatting;
@@ -73,6 +74,49 @@ public sealed partial class OpenXmlWorkbookReader
     }
 
     private static ColumnInfo Slice(ColumnInfo c, int min, int max) => new ColumnInfo(min, max, c.Width, c.CustomWidth, c.Hidden, c.StyleIndex, c.OutlineLevel, c.Collapsed);
+
+    private static PivotTableInfo ReadPivotInfo(PivotTablePart pivot, CancellationToken token)
+    {
+        var name = "unnamed";
+        string? reference = null;
+        using (var reader = XmlValues.CreateReader(pivot))
+        {
+            while (XmlValues.Read(reader))
+            {
+                token.ThrowIfCancellationRequested();
+                if (!reader.IsStartElement || reader.NamespaceUri != XmlValues.Spreadsheet.NamespaceName)
+                {
+                    continue;
+                }
+
+                if (reader.LocalName == "pivotTableDefinition")
+                {
+                    name = XmlValues.Attr(AttributesElement(reader), "name") ?? name;
+                }
+                else if (reader.LocalName == "location")
+                {
+                    reference = XmlValues.Attr(AttributesElement(reader), "ref");
+                    break;
+                }
+            }
+        }
+
+        var refresh = false;
+        if (pivot.PivotTableCacheDefinitionPart is { } cache)
+        {
+            // Only the root flags are needed. Do not materialize large shared-item
+            // dictionaries or records just to render existing worksheet cells.
+            using var reader = XmlValues.CreateReader(cache);
+            token.ThrowIfCancellationRequested();
+            if (XmlValues.Read(reader))
+            {
+                var root = AttributesElement(reader);
+                refresh = XmlValues.Bool(root, "refreshOnLoad") == true || XmlValues.Bool(root, "invalid") == true;
+            }
+        }
+
+        return new PivotTableInfo(name, CellRange.Parse(reference ?? throw new InvalidDataException("Missing pivot output location.")), refresh);
+    }
 
     private SheetMetadata GetMetadata(int index, CancellationToken token)
     {
@@ -253,6 +297,7 @@ public sealed partial class OpenXmlWorkbookReader
         var print = workbook.DefinedNames.Where(n => n.LocalSheetId == index - 1 && (n.Name == "_xlnm.Print_Area" || n.Name == "_xlnm.Print_Titles")).Select(n => PrintReferences.Parse(n, sheets[index - 1], options.DiagnosticSink)).ToList().AsReadOnly();
         var actual = maxRow == 0 ? null : new CellRange(new CellAddress(minRow, minCol), new CellAddress(maxRow, maxCol));
         var info = new WorksheetInfo(sheets[index - 1], dimension, actual, rows.AsReadOnly(), columns.AsReadOnly(), merges.AsReadOnly(), Find("sheetFormatPr"), Find("pageSetup"), Find("pageSetUpPr"), Find("pageMargins"), Find("printOptions"), Find("headerFooter"), rowBreaks.AsReadOnly(), columnBreaks.AsReadOnly(), print, drawing, links, conditional, tables, conditionalRanges.AsReadOnly(), hasFormulas, conditionalRules.AsReadOnly(), rightToLeft ?? false);
+        info.PivotTables = part.PivotTableParts.Select(pivot => ReadPivotInfo(pivot, token)).ToList().AsReadOnly();
         cached = new SheetMetadata(info, shared, FormulaIndex.Build(arrays));
         metadata.Add(index, cached);
         return cached;

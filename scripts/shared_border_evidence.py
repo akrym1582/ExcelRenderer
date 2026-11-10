@@ -74,7 +74,8 @@ def independent_checks(before, after):
 
 @lru_cache(maxsize=1)
 def contracts():
-    return json.loads(CONTRACTS.read_text())
+    from number_format_color_evidence import full_contracts
+    return full_contracts(json.loads(CONTRACTS.read_text()))
 
 
 def evidence(before, after, family, name, number):

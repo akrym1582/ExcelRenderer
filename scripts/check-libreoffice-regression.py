@@ -14,6 +14,7 @@ def mutation_checks(output, data):
     """Prove the same production gate rejects realistic PDF defects."""
     results = []
     samples = [
+        ('missing-number-format-color', 'japanese-grid-report', lambda b: b.replace(b'1 0 0 rg', b'0 0 0 rg', 1)),
         ('missing-text', '01-japanese', lambda b: re.sub(rb'<[0-9A-Fa-f]+> Tj', b'<> Tj', b, count=1)),
         ('missing-border', 'border-conflicts', lambda b: re.sub(rb'(?m)^[-.\d]+ [-.\d]+ m\n[-.\d]+ [-.\d]+ l\nS\n', b'', b, count=1)),
         ('duplicate-border', 'border-conflicts', lambda b: re.sub(rb'(?m)^[-.\d]+ [-.\d]+ m\n[-.\d]+ [-.\d]+ l\nS\n', lambda match: match[0] + match[0], b, count=1)),
@@ -79,7 +80,7 @@ def main():
                 result = compare(expected, actual, differences=output / 'differences' / engine / case['id'])
             if historical != expected and actual.exists():
                 result['historical_comparison'] = compare(historical, actual)
-                result['classification'] = 'reviewed-oversized-merged-pagination'
+                result['classification'] = 'reviewed-number-format-color' if case['id'] == 'japanese-grid-report' else 'reviewed-oversized-merged-pagination'
                 result['expected_pdf'] = str(expected.relative_to(ROOT))
             result.update(case_id=case['id'], engine=engine)
             report['records'].append(result)

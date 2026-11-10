@@ -1,0 +1,24 @@
+  [coverlet] _mapping file name: 'CoverletSourceRootsMapping_ExcelRenderer.Core.Tests'
+Test run for /workspace/ExcelRenderer/tests/ExcelRenderer.Core.Tests/bin/Release/net10.0/ExcelRenderer.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:   417, Skipped:     0, Total:   417, Duration: 5 s - ExcelRenderer.Core.Tests.dll (net10.0)
+  [coverlet] 
+  Calculating coverage result...
+   Generating report '/workspace/ExcelRenderer/TestResults/Core/Coverage/coverage.json'
+   Generating report '/workspace/ExcelRenderer/TestResults/Core/Coverage/coverage.cobertura.xml'
+
++--------------------+--------+--------+--------+
+| Module             | Line   | Branch | Method |
++--------------------+--------+--------+--------+
+| ExcelRenderer.Core | 83.07% | 71.88% | 86.79% |
++--------------------+--------+--------+--------+
+
++---------+--------+--------+--------+
+|         | Line   | Branch | Method |
++---------+--------+--------+--------+
+| Total   | 83.07% | 71.88% | 86.79% |
++---------+--------+--------+--------+
+| Average | 83.07% | 71.88% | 86.79% |
++---------+--------+--------+--------+
+

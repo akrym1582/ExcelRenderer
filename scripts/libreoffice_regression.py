@@ -107,6 +107,12 @@ def reviewed_core_layout(name, source, historical, actual):
     expected = checked_baseline(record)
     if sha(source) != record['input_sha256'] or sha(historical) != record['historical_sha256']:
         raise ValueError('Source/historical Core contract mismatch: ' + name)
+    from number_format_color_evidence import contract, checked_color_pdf
+    color = contract()['core'].get(name)
+    if color is not None:
+        if color['input_sha256'] != record['input_sha256'] or color['input'] != record['input']:
+            raise ValueError('Color review changed the Core input')
+        expected = checked_color_pdf(color, expected)
     result = compare(expected, actual, (144, 288, 300))
     result['classification'] = 'reviewed-source-column-metrics'
     result['reason'] = record['reason']
@@ -114,8 +120,36 @@ def reviewed_core_layout(name, source, historical, actual):
 
 
 def current_baseline(case_id, engine, historical):
-    """Use only the explicitly reviewed pagination follow-up; retain all old PDFs/hashes."""
+    """Use explicitly reviewed pagination/color follow-ups; retain all old PDFs/hashes."""
     original = checked_baseline(historical)
+    if case_id == 'japanese-grid-report':
+        colors = json.loads((BASE / 'reviewed-number-format-colors/manifest.json').read_text())
+        if sha(MANIFEST) != colors['historical_manifest_sha256'] or set(colors['cases']) != {'japanese-grid-report/main', 'japanese-grid-report/core'}:
+            raise ValueError('Number-format color follow-up changed its bound contract')
+        record = colors['cases'][case_id + '/' + engine]
+        if (record['input'] != historical['input'] or record['input_sha256'] != historical['input_sha256'] or record['historical_pdf_sha256'] != historical['pdf_sha256']):
+            raise ValueError('Number-format color follow-up does not bind the original input/PDF')
+        expected = checked_baseline(record)
+        # Independently ensure the reviewed PDF differs only at the saved red -24.
+        with fitz.open(original) as before, fitz.open(expected) as after:
+            if len(before) != len(after):
+                raise ValueError('Color review changed page count')
+            changes = 0
+            for left, right in zip(before, after):
+                a, b = page_geometry(left), page_geometry(right)
+                if len(a['glyphs']) != len(b['glyphs']):
+                    raise ValueError('Color review changed glyph count')
+                for old, new in zip(a['glyphs'], b['glyphs']):
+                    if old != new:
+                        if old['color'] != [0, 0, 0] or new['color'] != [1, 0, 0] or ''.join(chr(c[0]) for c in old['chars']) != '-24':
+                            raise ValueError('Unexpected reviewed color change')
+                        old['color'] = new['color']
+                        changes += 1
+                if a != b:
+                    raise ValueError('Color review changed non-color geometry')
+            if changes != 1:
+                raise ValueError('Expected exactly one red number')
+        return expected
     path = BASE / 'reviewed-pagination/manifest.json'
     followups = json.loads(path.read_text())
     if sha(MANIFEST) != followups['historical_manifest_sha256']:

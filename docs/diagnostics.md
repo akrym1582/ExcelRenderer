@@ -52,6 +52,8 @@ These rules are covered by [DiagnosticPolicyTests](../tests/ExcelRenderer.Tests/
 | MaximumDigitWidthFallback | Both | Original Normal metrics unavailable; compatibility MDW (MS P Gothic 8.4px at 11pt, otherwise 7px) may change columns/pages | Supply source metrics in main, preserve Normal metadata; ColumnWidthMetricsTests, MainCoreParityTests |
 | MaximumDigitWidthResolved | Main Info / Core no notification | Main records resolved/override MDW decision | Inspect source metric decision; ColumnWidthMetricsTests |
 | FormulaCachedValueMissing | Both | Formula cache absent, displayed empty in saved-value mode | Re-save after calculation or explicitly choose main limited recalculation; FormulaDisplayTests, MainCoreParityTests |
+| PivotSavedValuesMissing | Both | No nonempty saved pivot output in the selected print area; read fails before PDF output (Core throws) | Refresh and save in a spreadsheet application; PivotDisplayTests |
+| PivotRefreshRequired | Both | Cache requests refresh; saved cells may be stale | Refresh and save; Mapping cache updates do not generate aggregate cells |
 | ImageDecodeFailed | Both | Complete decode failed; image skipped | Replace damaged/unsupported image; ImageReviewTests, Core ImagePayloadTests / PageAndImageTests |
 | MissingIvsGlyph | Main / Core no notification | Requested variation glyph unavailable | Supply IVS-capable font or explicitly allow base replacement; ShapeAndFontTests |
 | MissingPrivateUseGlyph | Main / Core no notification | Private-use glyph unavailable | Supply intended font; ShapeAndFontTests |

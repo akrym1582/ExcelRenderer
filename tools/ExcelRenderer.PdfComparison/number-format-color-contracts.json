@@ -1,0 +1,259 @@
+{
+  "historical_border_contract_sha256": "294adac3701acbb935798d3a4d3a54b6a67ef2f91e30e34965e969486d72f6b2",
+  "full": {
+    "invoice": {
+      "historical_reader_sha256": "20ca30f4d460f7f8d7efebf47dc09dfa32d89d71c26d24ed2ce58e7c7867f4c0",
+      "reader_sha256": "bc5bababf0c31461f32dc7ce7e980f79f4bfaf3a8c02a947202531382b2ea4ba",
+      "commandFingerprints": {
+        "1": "F04B6DB3959EAA839798AA048488B9E6F039EF88E99908953F2E69BD076D918B"
+      },
+      "pages": {
+        "1": {
+          "after": {
+            "contentSha256": "3e25af7177392122ff716927ce357c8d6155fc1f32adb440cc894234da8e1dbd",
+            "paintSha256": "e29677df01d7a01b71742355847565cc0e48bf0aefa9daaca68938c5f38b5d55",
+            "rasterSha256": {
+              "144": "4a414d4a1dac9def9f390743676e3932c682464373e9de1e21a36d40500f4aa6",
+              "300": "7e0bf088a463a21d15b676c57ccd1a168a8528f3c84de517d6dff4bbdee60c71"
+            }
+          }
+        }
+      },
+      "reader_color_changes": [
+        {
+          "sheet": "\u8acb\u6c42\u66f8",
+          "cell": {
+            "Row": 13,
+            "Column": 5
+          },
+          "before": {
+            "Red": 0,
+            "Green": 0,
+            "Blue": 0,
+            "Alpha": 255
+          },
+          "after": {
+            "Red": 255,
+            "Green": 0,
+            "Blue": 0,
+            "Alpha": 255
+          }
+        },
+        {
+          "sheet": "\u8acb\u6c42\u66f8",
+          "cell": {
+            "Row": 13,
+            "Column": 6
+          },
+          "before": {
+            "Red": 0,
+            "Green": 0,
+            "Blue": 0,
+            "Alpha": 255
+          },
+          "after": {
+            "Red": 255,
+            "Green": 0,
+            "Blue": 0,
+            "Alpha": 255
+          }
+        },
+        {
+          "sheet": "\u8acb\u6c42\u66f8",
+          "cell": {
+            "Row": 22,
+            "Column": 2
+          },
+          "before": {
+            "Red": 0,
+            "Green": 0,
+            "Blue": 0,
+            "Alpha": 255
+          },
+          "after": {
+            "Red": 255,
+            "Green": 0,
+            "Blue": 0,
+            "Alpha": 255
+          }
+        }
+      ],
+      "historical_pdf": "docs/validation/pr113-display-followup/historical-writer/invoice/skiasharp.pdf",
+      "historical_pdf_sha256": "249d6a4851a8f2fc7ef089e39c50b8c2ebf0fca6a32f6ac27564b196b622a6b9",
+      "pdf": "reviewed-number-format-colors/historical-full-invoice.pdf",
+      "pdf_sha256": "cbb72057b2b17fcff53d8faeefb49f75bb2e4f79b20f5b6dc902304db5fc871a",
+      "changes": [
+        {
+          "text": "-\u00a5500.00",
+          "before": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "after": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "text": "-\u00a5500.00",
+          "before": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "after": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "text": "(1,234.50)",
+          "before": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "after": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    "japanese-grid-report": {
+      "historical_reader_sha256": "3b01a94e6820ea1576805e7a9cc4e5d7f5b36e35d8af598f281d6d3153bfe755",
+      "reader_sha256": "15cda548e5454cd897b5bde212719ad798c34127ec5418b01a8f48e348442e3b",
+      "commandFingerprints": {
+        "1": "9D71A41D7A8F8B287F65FB9FEFCAB1CDFA33DB606DCDD6769052E0A6246F6D64"
+      },
+      "pages": {
+        "1": {
+          "after": {
+            "contentSha256": "28de9d10c98b1103bf9d020fe0f4803ae70eb947c07fead63f28f211d633a8d0",
+            "paintSha256": "199cc76bd0c3c7459ae552d23f7ef765eedfa1f309626c3d229afd57dab23f07",
+            "rasterSha256": {
+              "144": "9277c796528f7f0c05135f86fbbfdd82912e1b5e81ec6a0889d3c841e7e5d2f1",
+              "300": "4cd44e6cac84a2e142a19871cf987ffecf723cd8f15d16b16abba12f549226cf"
+            }
+          }
+        }
+      },
+      "reader_color_changes": [
+        {
+          "sheet": "\u6708\u6b21\u696d\u52d9\u5831\u544a\u66f8",
+          "cell": {
+            "Row": 21,
+            "Column": 20
+          },
+          "before": {
+            "Red": 0,
+            "Green": 0,
+            "Blue": 0,
+            "Alpha": 255
+          },
+          "after": {
+            "Red": 255,
+            "Green": 0,
+            "Blue": 0,
+            "Alpha": 255
+          }
+        }
+      ],
+      "historical_pdf": "docs/validation/pr113-display-followup/historical-writer/japanese-grid-report/skiasharp.pdf",
+      "historical_pdf_sha256": "feff7d72054fbc12455e04df99f28a02396528d868f1f020d6dd8b0b407a1b21",
+      "pdf": "reviewed-number-format-colors/historical-full-japanese-grid-report.pdf",
+      "pdf_sha256": "a9fc6fd47396a7e52f23e5294907a7f304c101b5c61bf7e1b069c2e87e6cb7ee",
+      "changes": [
+        {
+          "text": "-24",
+          "before": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "after": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    }
+  },
+  "core": {
+    "invoice": {
+      "historical_pdf_sha256": "ff33041bb587d4359cc6a32eadf9c35fb5281b58447fad5459062a65290ba13f",
+      "pdf": "reviewed-number-format-colors/historical-core-invoice.pdf",
+      "pdf_sha256": "679afc9f144e1542a18c79dfe80671b31c4c781d938c0bec5365cd38003c871e",
+      "input": "samples/mapping/invoice/invoice.xlsx",
+      "input_sha256": "1eafc42149f48770c131f836883ffb6ac2714215d4ebe2db5352e1dee66011a5",
+      "changes": [
+        {
+          "text": "-\u00a5500.00",
+          "before": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "after": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "text": "-\u00a5500.00",
+          "before": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "after": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "text": "(1,234.50)",
+          "before": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "after": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    "grid": {
+      "historical_pdf_sha256": "9cec1890e2612bbfc1c026e01c040da56229413a61b799457ec8233bdddb3076",
+      "pdf": "reviewed-number-format-colors/historical-core-grid.pdf",
+      "pdf_sha256": "978af9e893143802d24c510424cb607e25cc1eeb5be72e5722c52d837c5fb8fd",
+      "input": "samples/excel/japanese-grid-report.xlsx",
+      "input_sha256": "4907d79963eb8267eab4230c7aad9bbd0d580238d3d42f402b34fb4c0ff217a1",
+      "changes": [
+        {
+          "text": "-24",
+          "before": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "after": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    }
+  }
+}

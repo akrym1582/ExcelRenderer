@@ -1,0 +1,258 @@
+{
+  "samples/excel/japanese-grid-report.xlsx": {
+    "input_sha256": "4907D79963EB8267EAB4230C7AAD9BBD0D580238D3D42F402B34FB4C0FF217A1",
+    "historical_model_sha256": "F2E275A00FDB2FC0170896DD30F308D2BE905F298742665D83575363A66D5A94",
+    "cells": [
+      {
+        "sheet": "月次業務報告書",
+        "cell": "CellAddress { Row = 21, Column = 20 }",
+        "old": {
+          "Red": 0,
+          "Green": 0,
+          "Blue": 0,
+          "Alpha": 255
+        },
+        "new": {
+          "Red": 255,
+          "Green": 0,
+          "Blue": 0,
+          "Alpha": 255
+        }
+      }
+    ],
+    "artifacts": {
+      "Png/月次業務報告書-1.png": {
+        "old": "6C23B7F1F116E0E853EE27A60BB8909A4AC3FD4A3E055ABF52F292DF3D78BD26",
+        "new": "CAD09C71158B8D155E8B0F62DF717C6C572E0900C9AFB6FCF9E84D0F8D86469D"
+      },
+      "Svg/月次業務報告書-1.svg": {
+        "old": "B53DF5377ED8F13E0B1CB27AD498455C79C0EE5A2C99D8DD7A2EBC8D29253B79",
+        "new": "13AF24148EECF1D83A34AFA731DB2BE4A2DF7125BA3F88658F525BD8B453359B"
+      }
+    }
+  },
+  "samples/mapping/invoice/invoice.xlsx": {
+    "input_sha256": "1EAFC42149F48770C131F836883FFB6AC2714215D4EBE2DB5352E1DEE66011A5",
+    "historical_model_sha256": "524B13AE8A73352E489617CB68D2E21A3EF3EF9FD5F610BC672B3F73E5BBDC79",
+    "cells": [
+      {
+        "sheet": "請求書",
+        "cell": "CellAddress { Row = 13, Column = 5 }",
+        "old": {
+          "Red": 0,
+          "Green": 0,
+          "Blue": 0,
+          "Alpha": 255
+        },
+        "new": {
+          "Red": 255,
+          "Green": 0,
+          "Blue": 0,
+          "Alpha": 255
+        }
+      },
+      {
+        "sheet": "請求書",
+        "cell": "CellAddress { Row = 13, Column = 6 }",
+        "old": {
+          "Red": 0,
+          "Green": 0,
+          "Blue": 0,
+          "Alpha": 255
+        },
+        "new": {
+          "Red": 255,
+          "Green": 0,
+          "Blue": 0,
+          "Alpha": 255
+        }
+      },
+      {
+        "sheet": "請求書",
+        "cell": "CellAddress { Row = 22, Column = 2 }",
+        "old": {
+          "Red": 0,
+          "Green": 0,
+          "Blue": 0,
+          "Alpha": 255
+        },
+        "new": {
+          "Red": 255,
+          "Green": 0,
+          "Blue": 0,
+          "Alpha": 255
+        }
+      }
+    ],
+    "artifacts": {
+      "Png/請求書-1.png": {
+        "old": "EFB80911DB63DF7857E12EFCC1DC14AEFFA67C4568F7C39FD17F151DCD7F4458",
+        "new": "96258A1B76FEABFCD2908EB4547ECBB1A36B12363EE9059675DF04E9A5AEE2C8"
+      },
+      "Svg/請求書-1.svg": {
+        "old": "42800B50957D7B96E478179A5D85C66BD1B585A4768B901CA7F61FE4CE438BD4",
+        "new": "FFB9587786B4D2DF65770DE7A83C152266392532DA5221F55959AA4D4AB4293C"
+      }
+    }
+  },
+  "samples/mapping/invoice/page-breaks/invoice.xlsx": {
+    "input_sha256": "FE9E74BB06481AA86D2DCF14268C94CA95844B5A2A3B3693B7C98996FA2E8D93",
+    "historical_model_sha256": "8B04197E49305E37B049DEAC4F76D89C46A214638C5CCE9397C6423D9F8EBA8B",
+    "cells": [
+      {
+        "sheet": "請求書",
+        "cell": "CellAddress { Row = 20, Column = 2 }",
+        "old": {
+          "Red": 0,
+          "Green": 0,
+          "Blue": 0,
+          "Alpha": 255
+        },
+        "new": {
+          "Red": 255,
+          "Green": 0,
+          "Blue": 0,
+          "Alpha": 255
+        }
+      },
+      {
+        "sheet": "請求書",
+        "cell": "CellAddress { Row = 37, Column = 2 }",
+        "old": {
+          "Red": 0,
+          "Green": 0,
+          "Blue": 0,
+          "Alpha": 255
+        },
+        "new": {
+          "Red": 255,
+          "Green": 0,
+          "Blue": 0,
+          "Alpha": 255
+        }
+      },
+      {
+        "sheet": "請求書",
+        "cell": "CellAddress { Row = 44, Column = 6 }",
+        "old": {
+          "Red": 0,
+          "Green": 0,
+          "Blue": 0,
+          "Alpha": 255
+        },
+        "new": {
+          "Red": 255,
+          "Green": 0,
+          "Blue": 0,
+          "Alpha": 255
+        }
+      },
+      {
+        "sheet": "請求書",
+        "cell": "CellAddress { Row = 47, Column = 5 }",
+        "old": {
+          "Red": 0,
+          "Green": 0,
+          "Blue": 0,
+          "Alpha": 255
+        },
+        "new": {
+          "Red": 255,
+          "Green": 0,
+          "Blue": 0,
+          "Alpha": 255
+        }
+      },
+      {
+        "sheet": "請求書",
+        "cell": "CellAddress { Row = 47, Column = 6 }",
+        "old": {
+          "Red": 0,
+          "Green": 0,
+          "Blue": 0,
+          "Alpha": 255
+        },
+        "new": {
+          "Red": 255,
+          "Green": 0,
+          "Blue": 0,
+          "Alpha": 255
+        }
+      },
+      {
+        "sheet": "請求書",
+        "cell": "CellAddress { Row = 49, Column = 6 }",
+        "old": {
+          "Red": 36,
+          "Green": 52,
+          "Blue": 71,
+          "Alpha": 255
+        },
+        "new": {
+          "Red": 255,
+          "Green": 0,
+          "Blue": 0,
+          "Alpha": 255
+        }
+      },
+      {
+        "sheet": "請求書",
+        "cell": "CellAddress { Row = 51, Column = 6 }",
+        "old": {
+          "Red": 36,
+          "Green": 52,
+          "Blue": 71,
+          "Alpha": 255
+        },
+        "new": {
+          "Red": 255,
+          "Green": 0,
+          "Blue": 0,
+          "Alpha": 255
+        }
+      },
+      {
+        "sheet": "請求書",
+        "cell": "CellAddress { Row = 56, Column = 2 }",
+        "old": {
+          "Red": 0,
+          "Green": 0,
+          "Blue": 0,
+          "Alpha": 255
+        },
+        "new": {
+          "Red": 255,
+          "Green": 0,
+          "Blue": 0,
+          "Alpha": 255
+        }
+      }
+    ],
+    "artifacts": {
+      "Png/請求書-1.png": {
+        "old": "8248E80F89682762FCD7A1356146A3C10FF6E3521AEE176BB70BC1832BE3B10D",
+        "new": "CD4DB3937BD3DBBC703495F31FFA9EB9FA11C10366F1B6F40216232527F1D564"
+      },
+      "Png/請求書-2.png": {
+        "old": "A295B668FB0A805FD6E1645D8BD1A516BDCD9ED00BAD72F9E7A651504F39963A",
+        "new": "92DB59C5A21804ACBDE3D72FAA4E1452BF68045DB75AC423D60B5A15E7EDA66B"
+      },
+      "Png/請求書-3.png": {
+        "old": "1C9568C4F9DC8EA2AB2D075CCEB9F269434A152B31CD388137DD971BD01B7183",
+        "new": "6A46EF76556A651B320429B41B4EFC7C8F071C670C70DB7F14B5EC4E9AA6B5F5"
+      },
+      "Svg/請求書-1.svg": {
+        "old": "EC6CD9C970AB3562C525370F72DD01C8638F1332F86DB449EE658ED5F8C6BB52",
+        "new": "10488F1761FC9596375A667A17AEB25ADDA1BF36275F7872C77A83F252580722"
+      },
+      "Svg/請求書-2.svg": {
+        "old": "CB9E370FC16F91BDE34A7442CD6462BC0D43A8426539E8471491526B6E6D7C70",
+        "new": "A0792CCAC485DBB6E18DF40AA6BC9AD6BE9F618AF8827B2A28B18164C1844CAB"
+      },
+      "Svg/請求書-3.svg": {
+        "old": "AD79E8E1AAEF191308FA14A32F54641E9FDF2A26250C3460E6DFA5E6F3DA3F26",
+        "new": "B4BC87436C2EA69FCF7DAD8EC924A7F740A56CB6C07A955E450EE8BF58B96316"
+      }
+    }
+  }
+}

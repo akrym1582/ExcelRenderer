@@ -34,8 +34,21 @@ public sealed class OpenXmlIntegrationTests
         var expected = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "ReaderGolden", key + ".json"));
         // Retain the frozen Reader-migration baseline under its historical metric policy.
         // SourceFont defaults and corrected pagination have dedicated regression fixtures.
+        var expectedModel = JsonNode.Parse(expected)!;
+        if (NumberColorUpdate(name, path) is { } colorUpdate)
+        {
+            Assert.Equal(colorUpdate["historical_model_sha256"]!.GetValue<string>(), ReaderSnapshot.Hash(Encoding.UTF8.GetBytes(expected)));
+            foreach (var patch in colorUpdate["cells"]!.AsArray())
+            {
+                var sheet = expectedModel.AsArray().Single(item => item!["Name"]!.GetValue<string>() == patch!["sheet"]!.GetValue<string>())!;
+                var cell = sheet["Cells"]!.AsArray().Single(item => item!["Address"]!.GetValue<string>() == patch!["cell"]!.GetValue<string>())!;
+                Assert.True(JsonNode.DeepEquals(cell["Style"]!["Font"]!["Color"], patch!["old"]));
+                cell["Style"]!["Font"]!["Color"] = patch!["new"]!.DeepClone();
+            }
+        }
+
         var actual = ReaderSnapshot.Model(new ExcelReader().Read(path, new() { ColumnWidthMetrics = new() { Mode = ColumnWidthMetricsMode.RenderingFontLegacy } }));
-        Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)), name + " model differs from parent snapshot");
+        Assert.True(JsonNode.DeepEquals(expectedModel, JsonNode.Parse(actual)), name + " model differs from parent snapshot");
     }
 
     [Theory]
@@ -67,6 +80,15 @@ public sealed class OpenXmlIntegrationTests
                 }
             }
 
+            if (NumberColorUpdate(name, path) is { } colorUpdate)
+            {
+                foreach (var (key, update) in colorUpdate["artifacts"]!.AsObject().Where(pair => pair.Key.StartsWith(format + "/", StringComparison.Ordinal)))
+                {
+                    Assert.Equal(update!["old"]!.GetValue<string>(), expected[key]);
+                    expected[key] = update["new"]!.GetValue<string>();
+                }
+            }
+
             Assert.Equal(expected.Keys.Order(), hashes.Keys.Order());
             foreach (var pair in expected) Assert.True(pair.Value == hashes[pair.Key], name + " " + pair.Key + " differs from retained output");
         }
@@ -84,6 +106,18 @@ public sealed class OpenXmlIntegrationTests
         Assert.InRange(actual.Cells.Count, 5, 9);
     }
 
+
+    private static JsonNode? NumberColorUpdate(string name, string path)
+    {
+        var updates = JsonNode.Parse(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "ReaderGolden", "number-format-colors.json")))!;
+        var update = updates[name];
+        if (update is not null)
+        {
+            Assert.Equal(update["input_sha256"]!.GetValue<string>(), ReaderSnapshot.Hash(File.ReadAllBytes(path)));
+        }
+
+        return update;
+    }
 
     private static string CanonicalSvg(byte[] bytes)
     {

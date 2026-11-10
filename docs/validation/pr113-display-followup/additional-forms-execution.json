@@ -1,0 +1,562 @@
+[
+  {
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "xlsx",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-repeat/before.xlsx",
+      "--data",
+      "/workspace/ExcelRenderer/samples/mapping/invoice/data.json",
+      "-o",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-repeat/after.xlsx"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "xlsx",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-manual/before.xlsx",
+      "--data",
+      "/workspace/ExcelRenderer/samples/mapping/invoice/page-breaks/data.json",
+      "-o",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-manual/after.xlsx"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "xlsx",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/wrapped/before.xlsx",
+      "--data",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/wrapped/data.json",
+      "-o",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/wrapped/after.xlsx"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "xlsx",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/crossing-images/before.xlsx",
+      "--data",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/crossing-images/data.json",
+      "-o",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/crossing-images/after.xlsx"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "render",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-repeat/before.xlsx",
+      "-o",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-repeat/before/main/before.pdf",
+      "--font-file",
+      "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf",
+      "--format",
+      "pdf",
+      "--no-system-fonts",
+      "--fallback-font",
+      "Noto Sans JP"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Warning: MaximumDigitWidthFallback [請求書!workbook]: Normal 'Calibri', 11pt, weight 400, italic False; measurement '7px compatibility metric', MDW 7px at 96 DPI; source=compatibility. Exact Excel layout cannot be guaranteed; specify SourceFontFile or MaximumDigitWidthPixels96Dpi to supply original metrics.\n"
+  },
+  {
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "core",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-repeat/before.xlsx",
+      "-o",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-repeat/before/core/before.pdf",
+      "--font-file",
+      "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Warning: SavedPageBreaks [請求書, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nWarning: MaximumDigitWidthFallback [請求書, page ]: Normal 'Calibri', 11pt; supplied drawing font 'Noto Sans JP' is not the source Normal font. Column layout uses a 7px compatibility metric at 96 DPI; exact Excel layout cannot be guaranteed.\n"
+  },
+  {
+    "command": [
+      "/workspace/.tools/lo/root/usr/lib/libreoffice/program/soffice",
+      "-env:UserInstallation=file:///workspace/ExcelRenderer/artifacts/pr113-forms-display-final/lo-profile",
+      "--headless",
+      "--convert-to",
+      "pdf:calc_pdf_Export",
+      "--outdir",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-repeat/before/libreoffice",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-repeat/before.xlsx"
+    ],
+    "exit_code": 0,
+    "stdout": "convert /workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-repeat/before.xlsx as a Calc document -> /workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-repeat/before/libreoffice/before.pdf using filter : calc_pdf_Export\n",
+    "stderr": "Warning: failed to launch javaldx - java may not function correctly\n"
+  },
+  {
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "render",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-repeat/after.xlsx",
+      "-o",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-repeat/after/main/after.pdf",
+      "--font-file",
+      "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf",
+      "--format",
+      "pdf",
+      "--no-system-fonts",
+      "--fallback-font",
+      "Noto Sans JP"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Warning: MaximumDigitWidthFallback [請求書!workbook]: Normal 'Calibri', 11pt, weight 400, italic False; measurement '7px compatibility metric', MDW 7px at 96 DPI; source=compatibility. Exact Excel layout cannot be guaranteed; specify SourceFontFile or MaximumDigitWidthPixels96Dpi to supply original metrics.\n"
+  },
+  {
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "core",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-repeat/after.xlsx",
+      "-o",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-repeat/after/core/after.pdf",
+      "--font-file",
+      "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Warning: SavedPageBreaks [請求書, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nWarning: MaximumDigitWidthFallback [請求書, page ]: Normal 'Calibri', 11pt; supplied drawing font 'Noto Sans JP' is not the source Normal font. Column layout uses a 7px compatibility metric at 96 DPI; exact Excel layout cannot be guaranteed.\n"
+  },
+  {
+    "command": [
+      "/workspace/.tools/lo/root/usr/lib/libreoffice/program/soffice",
+      "-env:UserInstallation=file:///workspace/ExcelRenderer/artifacts/pr113-forms-display-final/lo-profile",
+      "--headless",
+      "--convert-to",
+      "pdf:calc_pdf_Export",
+      "--outdir",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-repeat/after/libreoffice",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-repeat/after.xlsx"
+    ],
+    "exit_code": 0,
+    "stdout": "convert /workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-repeat/after.xlsx as a Calc document -> /workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-repeat/after/libreoffice/after.pdf using filter : calc_pdf_Export\n",
+    "stderr": "Warning: failed to launch javaldx - java may not function correctly\n"
+  },
+  {
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "render",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-manual/before.xlsx",
+      "-o",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-manual/before/main/before.pdf",
+      "--font-file",
+      "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf",
+      "--format",
+      "pdf",
+      "--no-system-fonts",
+      "--fallback-font",
+      "Noto Sans JP"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Warning: MaximumDigitWidthFallback [請求書!workbook]: Normal 'Calibri', 11pt, weight 400, italic False; measurement '7px compatibility metric', MDW 7px at 96 DPI; source=compatibility. Exact Excel layout cannot be guaranteed; specify SourceFontFile or MaximumDigitWidthPixels96Dpi to supply original metrics.\n"
+  },
+  {
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "core",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-manual/before.xlsx",
+      "-o",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-manual/before/core/before.pdf",
+      "--font-file",
+      "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Warning: SavedPageBreaks [請求書, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nWarning: MaximumDigitWidthFallback [請求書, page ]: Normal 'Calibri', 11pt; supplied drawing font 'Noto Sans JP' is not the source Normal font. Column layout uses a 7px compatibility metric at 96 DPI; exact Excel layout cannot be guaranteed.\n"
+  },
+  {
+    "command": [
+      "/workspace/.tools/lo/root/usr/lib/libreoffice/program/soffice",
+      "-env:UserInstallation=file:///workspace/ExcelRenderer/artifacts/pr113-forms-display-final/lo-profile",
+      "--headless",
+      "--convert-to",
+      "pdf:calc_pdf_Export",
+      "--outdir",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-manual/before/libreoffice",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-manual/before.xlsx"
+    ],
+    "exit_code": 0,
+    "stdout": "convert /workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-manual/before.xlsx as a Calc document -> /workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-manual/before/libreoffice/before.pdf using filter : calc_pdf_Export\n",
+    "stderr": "Warning: failed to launch javaldx - java may not function correctly\n"
+  },
+  {
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "render",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-manual/after.xlsx",
+      "-o",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-manual/after/main/after.pdf",
+      "--font-file",
+      "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf",
+      "--format",
+      "pdf",
+      "--no-system-fonts",
+      "--fallback-font",
+      "Noto Sans JP"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Warning: MaximumDigitWidthFallback [請求書!workbook]: Normal 'Calibri', 11pt, weight 400, italic False; measurement '7px compatibility metric', MDW 7px at 96 DPI; source=compatibility. Exact Excel layout cannot be guaranteed; specify SourceFontFile or MaximumDigitWidthPixels96Dpi to supply original metrics.\n"
+  },
+  {
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "core",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-manual/after.xlsx",
+      "-o",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-manual/after/core/after.pdf",
+      "--font-file",
+      "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Warning: SavedPageBreaks [請求書, page ]: Manual row breaks: 2; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nWarning: MaximumDigitWidthFallback [請求書, page ]: Normal 'Calibri', 11pt; supplied drawing font 'Noto Sans JP' is not the source Normal font. Column layout uses a 7px compatibility metric at 96 DPI; exact Excel layout cannot be guaranteed.\n"
+  },
+  {
+    "command": [
+      "/workspace/.tools/lo/root/usr/lib/libreoffice/program/soffice",
+      "-env:UserInstallation=file:///workspace/ExcelRenderer/artifacts/pr113-forms-display-final/lo-profile",
+      "--headless",
+      "--convert-to",
+      "pdf:calc_pdf_Export",
+      "--outdir",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-manual/after/libreoffice",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-manual/after.xlsx"
+    ],
+    "exit_code": 0,
+    "stdout": "convert /workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-manual/after.xlsx as a Calc document -> /workspace/ExcelRenderer/artifacts/pr113-forms-display-final/invoice-manual/after/libreoffice/after.pdf using filter : calc_pdf_Export\n",
+    "stderr": "Warning: failed to launch javaldx - java may not function correctly\n"
+  },
+  {
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "render",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/wrapped/before.xlsx",
+      "-o",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/wrapped/before/main/before.pdf",
+      "--font-file",
+      "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf",
+      "--format",
+      "pdf",
+      "--no-system-fonts",
+      "--fallback-font",
+      "Noto Sans JP"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Warning: MaximumDigitWidthFallback [折り返し!workbook]: Normal 'Calibri', 11pt, weight 400, italic False; measurement '7px compatibility metric', MDW 7px at 96 DPI; source=compatibility. Exact Excel layout cannot be guaranteed; specify SourceFontFile or MaximumDigitWidthPixels96Dpi to supply original metrics.\n"
+  },
+  {
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "core",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/wrapped/before.xlsx",
+      "-o",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/wrapped/before/core/before.pdf",
+      "--font-file",
+      "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Warning: SavedPageBreaks [折り返し, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nWarning: MaximumDigitWidthFallback [折り返し, page ]: Normal 'Calibri', 11pt; supplied drawing font 'Noto Sans JP' is not the source Normal font. Column layout uses a 7px compatibility metric at 96 DPI; exact Excel layout cannot be guaranteed.\n"
+  },
+  {
+    "command": [
+      "/workspace/.tools/lo/root/usr/lib/libreoffice/program/soffice",
+      "-env:UserInstallation=file:///workspace/ExcelRenderer/artifacts/pr113-forms-display-final/lo-profile",
+      "--headless",
+      "--convert-to",
+      "pdf:calc_pdf_Export",
+      "--outdir",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/wrapped/before/libreoffice",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/wrapped/before.xlsx"
+    ],
+    "exit_code": 0,
+    "stdout": "convert /workspace/ExcelRenderer/artifacts/pr113-forms-display-final/wrapped/before.xlsx as a Calc document -> /workspace/ExcelRenderer/artifacts/pr113-forms-display-final/wrapped/before/libreoffice/before.pdf using filter : calc_pdf_Export\n",
+    "stderr": "Warning: failed to launch javaldx - java may not function correctly\n"
+  },
+  {
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "render",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/wrapped/after.xlsx",
+      "-o",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/wrapped/after/main/after.pdf",
+      "--font-file",
+      "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf",
+      "--format",
+      "pdf",
+      "--no-system-fonts",
+      "--fallback-font",
+      "Noto Sans JP"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Warning: MaximumDigitWidthFallback [折り返し!workbook]: Normal 'Calibri', 11pt, weight 400, italic False; measurement '7px compatibility metric', MDW 7px at 96 DPI; source=compatibility. Exact Excel layout cannot be guaranteed; specify SourceFontFile or MaximumDigitWidthPixels96Dpi to supply original metrics.\n"
+  },
+  {
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "core",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/wrapped/after.xlsx",
+      "-o",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/wrapped/after/core/after.pdf",
+      "--font-file",
+      "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Warning: SavedPageBreaks [折り返し, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nWarning: MaximumDigitWidthFallback [折り返し, page ]: Normal 'Calibri', 11pt; supplied drawing font 'Noto Sans JP' is not the source Normal font. Column layout uses a 7px compatibility metric at 96 DPI; exact Excel layout cannot be guaranteed.\n"
+  },
+  {
+    "command": [
+      "/workspace/.tools/lo/root/usr/lib/libreoffice/program/soffice",
+      "-env:UserInstallation=file:///workspace/ExcelRenderer/artifacts/pr113-forms-display-final/lo-profile",
+      "--headless",
+      "--convert-to",
+      "pdf:calc_pdf_Export",
+      "--outdir",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/wrapped/after/libreoffice",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/wrapped/after.xlsx"
+    ],
+    "exit_code": 0,
+    "stdout": "convert /workspace/ExcelRenderer/artifacts/pr113-forms-display-final/wrapped/after.xlsx as a Calc document -> /workspace/ExcelRenderer/artifacts/pr113-forms-display-final/wrapped/after/libreoffice/after.pdf using filter : calc_pdf_Export\n",
+    "stderr": "Warning: failed to launch javaldx - java may not function correctly\n"
+  },
+  {
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "render",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/crossing-images/before.xlsx",
+      "-o",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/crossing-images/before/main/before.pdf",
+      "--font-file",
+      "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf",
+      "--format",
+      "pdf",
+      "--no-system-fonts",
+      "--fallback-font",
+      "Noto Sans JP"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Warning: MaximumDigitWidthFallback [画像!workbook]: Normal 'Calibri', 11pt, weight 400, italic False; measurement '7px compatibility metric', MDW 7px at 96 DPI; source=compatibility. Exact Excel layout cannot be guaranteed; specify SourceFontFile or MaximumDigitWidthPixels96Dpi to supply original metrics.\n"
+  },
+  {
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "core",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/crossing-images/before.xlsx",
+      "-o",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/crossing-images/before/core/before.pdf",
+      "--font-file",
+      "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Warning: SavedPageBreaks [画像, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nWarning: MaximumDigitWidthFallback [画像, page ]: Normal 'Calibri', 11pt; supplied drawing font 'Noto Sans JP' is not the source Normal font. Column layout uses a 7px compatibility metric at 96 DPI; exact Excel layout cannot be guaranteed.\n"
+  },
+  {
+    "command": [
+      "/workspace/.tools/lo/root/usr/lib/libreoffice/program/soffice",
+      "-env:UserInstallation=file:///workspace/ExcelRenderer/artifacts/pr113-forms-display-final/lo-profile",
+      "--headless",
+      "--convert-to",
+      "pdf:calc_pdf_Export",
+      "--outdir",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/crossing-images/before/libreoffice",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/crossing-images/before.xlsx"
+    ],
+    "exit_code": 0,
+    "stdout": "convert /workspace/ExcelRenderer/artifacts/pr113-forms-display-final/crossing-images/before.xlsx as a Calc document -> /workspace/ExcelRenderer/artifacts/pr113-forms-display-final/crossing-images/before/libreoffice/before.pdf using filter : calc_pdf_Export\n",
+    "stderr": "Warning: failed to launch javaldx - java may not function correctly\n"
+  },
+  {
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "render",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/crossing-images/after.xlsx",
+      "-o",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/crossing-images/after/main/after.pdf",
+      "--font-file",
+      "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf",
+      "--format",
+      "pdf",
+      "--no-system-fonts",
+      "--fallback-font",
+      "Noto Sans JP"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Warning: MaximumDigitWidthFallback [画像!workbook]: Normal 'Calibri', 11pt, weight 400, italic False; measurement '7px compatibility metric', MDW 7px at 96 DPI; source=compatibility. Exact Excel layout cannot be guaranteed; specify SourceFontFile or MaximumDigitWidthPixels96Dpi to supply original metrics.\n"
+  },
+  {
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "core",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/crossing-images/after.xlsx",
+      "-o",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/crossing-images/after/core/after.pdf",
+      "--font-file",
+      "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Warning: SavedPageBreaks [画像, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nWarning: MaximumDigitWidthFallback [画像, page ]: Normal 'Calibri', 11pt; supplied drawing font 'Noto Sans JP' is not the source Normal font. Column layout uses a 7px compatibility metric at 96 DPI; exact Excel layout cannot be guaranteed.\n"
+  },
+  {
+    "command": [
+      "/workspace/.tools/lo/root/usr/lib/libreoffice/program/soffice",
+      "-env:UserInstallation=file:///workspace/ExcelRenderer/artifacts/pr113-forms-display-final/lo-profile",
+      "--headless",
+      "--convert-to",
+      "pdf:calc_pdf_Export",
+      "--outdir",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/crossing-images/after/libreoffice",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/crossing-images/after.xlsx"
+    ],
+    "exit_code": 0,
+    "stdout": "convert /workspace/ExcelRenderer/artifacts/pr113-forms-display-final/crossing-images/after.xlsx as a Calc document -> /workspace/ExcelRenderer/artifacts/pr113-forms-display-final/crossing-images/after/libreoffice/after.pdf using filter : calc_pdf_Export\n",
+    "stderr": "Warning: failed to launch javaldx - java may not function correctly\n"
+  },
+  {
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "render",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/pivot-opaque/before.xlsx",
+      "-o",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/pivot-opaque/before/main/before.pdf",
+      "--font-file",
+      "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf",
+      "--format",
+      "pdf",
+      "--no-system-fonts",
+      "--fallback-font",
+      "Noto Sans JP"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "Error: Conversion failed.\nPivotSavedValuesMissing: Sheet 'Data', pivot 'Summary0', F4:F4. Refresh and save the pivot in a spreadsheet application before rendering; pivot aggregate calculation is not supported.\n"
+  },
+  {
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "core",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/pivot-opaque/before.xlsx",
+      "-o",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/pivot-opaque/before/core/before.pdf",
+      "--font-file",
+      "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "Error: PivotSavedValuesMissing: Sheet 'Data', pivot 'Summary0', F4:F4. Refresh and save the pivot in a spreadsheet application before rendering; pivot aggregate calculation is not supported.\n"
+  },
+  {
+    "command": [
+      "/workspace/.tools/lo/root/usr/lib/libreoffice/program/soffice",
+      "-env:UserInstallation=file:///workspace/ExcelRenderer/artifacts/pr113-forms-display-final/lo-profile",
+      "--headless",
+      "--convert-to",
+      "pdf:calc_pdf_Export",
+      "--outdir",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/pivot-opaque/before/libreoffice",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/pivot-opaque/before.xlsx"
+    ],
+    "exit_code": 0,
+    "stdout": "convert /workspace/ExcelRenderer/artifacts/pr113-forms-display-final/pivot-opaque/before.xlsx as a Calc document -> /workspace/ExcelRenderer/artifacts/pr113-forms-display-final/pivot-opaque/before/libreoffice/before.pdf using filter : calc_pdf_Export\n",
+    "stderr": "Warning: failed to launch javaldx - java may not function correctly\n"
+  },
+  {
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "render",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/pivot-opaque/after.xlsx",
+      "-o",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/pivot-opaque/after/main/after.pdf",
+      "--font-file",
+      "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf",
+      "--format",
+      "pdf",
+      "--no-system-fonts",
+      "--fallback-font",
+      "Noto Sans JP"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "Error: Conversion failed.\nPivotSavedValuesMissing: Sheet 'Data', pivot 'Summary0', F4:F4. Refresh and save the pivot in a spreadsheet application before rendering; pivot aggregate calculation is not supported.\n"
+  },
+  {
+    "command": [
+      "dotnet",
+      "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+      "core",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/pivot-opaque/after.xlsx",
+      "-o",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/pivot-opaque/after/core/after.pdf",
+      "--font-file",
+      "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "Error: PivotSavedValuesMissing: Sheet 'Data', pivot 'Summary0', F4:F4. Refresh and save the pivot in a spreadsheet application before rendering; pivot aggregate calculation is not supported.\n"
+  },
+  {
+    "command": [
+      "/workspace/.tools/lo/root/usr/lib/libreoffice/program/soffice",
+      "-env:UserInstallation=file:///workspace/ExcelRenderer/artifacts/pr113-forms-display-final/lo-profile",
+      "--headless",
+      "--convert-to",
+      "pdf:calc_pdf_Export",
+      "--outdir",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/pivot-opaque/after/libreoffice",
+      "/workspace/ExcelRenderer/artifacts/pr113-forms-display-final/pivot-opaque/after.xlsx"
+    ],
+    "exit_code": 0,
+    "stdout": "convert /workspace/ExcelRenderer/artifacts/pr113-forms-display-final/pivot-opaque/after.xlsx as a Calc document -> /workspace/ExcelRenderer/artifacts/pr113-forms-display-final/pivot-opaque/after/libreoffice/after.pdf using filter : calc_pdf_Export\n",
+    "stderr": "Warning: failed to launch javaldx - java may not function correctly\n"
+  }
+]

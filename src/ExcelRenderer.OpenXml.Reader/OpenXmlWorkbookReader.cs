@@ -267,6 +267,7 @@ public sealed partial class OpenXmlWorkbookReader : IWorkbookDataReader
             return new CellDisplayResult(string.Empty, diagnostics == null ? Array.Empty<ReaderDiagnostic>() : diagnostics.AsReadOnly());
         }
 
+        string? foreground = null;
         var value = cell.Value;
         var text = value.Text ?? string.Empty;
         if (value.Type == CellValueType.Boolean)
@@ -302,10 +303,11 @@ public sealed partial class OpenXmlWorkbookReader : IWorkbookDataReader
                 format = new NumberFormat("General");
             }
 
+            foreground = NumberFormatColor.Resolve(format.FormatString, value.Type == CellValueType.Number ? value.Number : null);
             text = format.Format(value.Type == CellValueType.Number ? (object)value.Number!.Value : text, options.Culture!, workbook.Date1904);
         }
 
-        return new CellDisplayResult(text, diagnostics == null ? Array.Empty<ReaderDiagnostic>() : diagnostics.AsReadOnly());
+        return new CellDisplayResult(text, diagnostics == null ? Array.Empty<ReaderDiagnostic>() : diagnostics.AsReadOnly(), foreground);
     }
 
     /// <summary>Closes package resources while leaving the caller's input stream open.</summary>

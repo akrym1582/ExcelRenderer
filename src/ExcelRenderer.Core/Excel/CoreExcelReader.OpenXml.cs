@@ -350,6 +350,12 @@ internal partial class CoreExcelReader
                     cellDiagnostics.Add(new(diagnostic.Code, DiagnosticSeverity.Warning, DiagnosticStage.Read, diagnostic.Message, info.Sheet.Name, cell.Address.ToString()));
                 }
 
+                if (display.ForegroundRgb is { } rgb)
+                {
+                    var color = new ReportColor(byte.Parse(rgb.Substring(0, 2), NumberStyles.HexNumber), byte.Parse(rgb.Substring(2, 2), NumberStyles.HexNumber), byte.Parse(rgb.Substring(4, 2), NumberStyles.HexNumber));
+                    style = styles.Intern(style with { Font = style.Font with { Color = color } });
+                }
+
                 var model = new ReportCell(NormalizeDisplayText(display.Text), style, Formula: cell.Formula?.RawFormula is { Length: > 0 } formula ? "=" + formula : null)
                 {
                     FormulaSharedIndex = cell.Formula?.SharedIndex,
@@ -370,6 +376,28 @@ internal partial class CoreExcelReader
                     ? new[] { new CellRange(new(selected.FirstRow, selected.FirstColumn), new(selected.LastRow, selected.LastColumn)) }
                     : info.PrintReferences.Where(reference => reference.Name == "_xlnm.Print_Area").SelectMany(reference => reference.Ranges)
                         .Select(range => new CellRange(new(range.FirstRow, range.FirstColumn), new(range.LastRow, range.LastColumn))).ToArray();
+                foreach (var pivot in info.PivotTables)
+                {
+                    token.ThrowIfCancellationRequested();
+                    var range = ToRange(pivot.Range);
+                    if (regions.Length > 0 && !regions.Any(region => region.First.Row <= range.Last.Row && region.Last.Row >= range.First.Row && region.First.Column <= range.Last.Column && region.Last.Column >= range.First.Column))
+                    {
+                        continue;
+                    }
+
+                    if (!cells.Any(pair => pair.Key.Row >= range.First.Row && pair.Key.Row <= range.Last.Row && pair.Key.Column >= range.First.Column && pair.Key.Column <= range.Last.Column && !string.IsNullOrEmpty(pair.Value.Text)))
+                    {
+                        var message = $"Sheet '{info.Sheet.Name}', pivot '{pivot.Name}', {pivot.Range}. Refresh and save the pivot in a spreadsheet application before rendering; pivot aggregate calculation is not supported.";
+                        diagnostics?.Add(new("PivotSavedValuesMissing", DiagnosticSeverity.Error, DiagnosticStage.Read, message, info.Sheet.Name, pivot.Range.ToString()));
+                        throw new InvalidDataException("PivotSavedValuesMissing: " + message);
+                    }
+
+                    if (pivot.RequiresRefresh)
+                    {
+                        cellDiagnostics.Add(new("PivotRefreshRequired", DiagnosticSeverity.Warning, DiagnosticStage.Read, $"Pivot '{pivot.Name}' requests cache refresh. Rendering uses saved worksheet cells; totals may be stale. Refresh and save the pivot before rendering.", info.Sheet.Name, pivot.Range.ToString()));
+                    }
+                }
+
                 if (regions.Length == 0 && cells.Count > 0)
                 {
                     regions = [new(new(cells.Keys.Min(address => address.Row), cells.Keys.Min(address => address.Column)), new(cells.Keys.Max(address => address.Row), cells.Keys.Max(address => address.Column)))];

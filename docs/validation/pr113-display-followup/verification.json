@@ -1,0 +1,37 @@
+{
+  "source_parent": "548b559df2c42fdfcf6efec4ba9c87d250392824",
+  "success": {
+    "release_rebuild": "zero warnings/errors",
+    "solution_tests": 3003,
+    "core_coverage": {
+      "lines": 83.07,
+      "branches": 71.88
+    },
+    "core_performance_tests": 8,
+    "published_package_inventory": 4,
+    "isolated_consumers": 11,
+    "reader_core_isolation": true,
+    "historical_writer_A": "25 fixtures, zero unmet gates; 27 existing reviewed differences",
+    "historical_writer_B": "25 fixtures, zero unmet gates; zero exceptions",
+    "core_historical_fixtures": 3,
+    "main_core_parity": 19,
+    "strict_pdf_appearance": 44,
+    "appearance_mutations_detected": 11,
+    "borders_pagination": "2 engines, 2 pages, 19 strokes, 9 fills",
+    "additional_forms": "26 generated PDFs; 4 intentional missing-pivot rejections",
+    "shared_border_mutations_detected": 3,
+    "independent_border_strokes": "5 sheets, 23 physical strokes per engine",
+    "final_solution_tests_after_comparison_tool_update": 3003
+  },
+  "remaining_differences": [
+    "Invoice width remains 5.7% different even with Carlito reference; original Mono reference differs by 21.9%.",
+    "Pivot aggregate generation is not implemented. Missing saved tables now fail instead of silently disappearing.",
+    "LibreOffice may change pivot headers/filter presentation when refreshing a saved reference copy.",
+    "Manual-break and crossing-image page counts differ; Core does not split images."
+  ],
+  "not_run": [
+    "Desktop Microsoft Excel",
+    "New user-supplied real reports (none available)"
+  ],
+  "ci": "Pending push of this change; final run status reported in the conversation."
+}

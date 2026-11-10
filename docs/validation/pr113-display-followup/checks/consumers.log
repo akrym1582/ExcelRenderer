@@ -1,0 +1,75 @@
++ dotnet restore --configfile /workspace/ExcelRenderer/artifacts/followup-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/ExcelRenderer/artifacts/followup-consumers/engine/consumer.csproj (in 8.68 sec).
++ dotnet run -c Release --no-restore -- /workspace/ExcelRenderer/artifacts/followup-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+engine passed
++ dotnet restore --configfile /workspace/ExcelRenderer/artifacts/followup-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/ExcelRenderer/artifacts/followup-consumers/adapter/consumer.csproj (in 163 ms).
++ dotnet run -c Release --no-restore -- /workspace/ExcelRenderer/artifacts/followup-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+adapter passed
++ dotnet restore --configfile /workspace/ExcelRenderer/artifacts/followup-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/ExcelRenderer/artifacts/followup-consumers/mapping/consumer.csproj (in 161 ms).
++ dotnet run -c Release --no-restore -- /workspace/ExcelRenderer/artifacts/followup-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+mapping passed
++ dotnet restore --configfile /workspace/ExcelRenderer/artifacts/followup-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/ExcelRenderer/artifacts/followup-consumers/main-core/consumer.csproj (in 11.98 sec).
++ dotnet run -c Release --no-restore -- /workspace/ExcelRenderer/artifacts/followup-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+main-core passed
++ dotnet restore --configfile /workspace/ExcelRenderer/artifacts/followup-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/ExcelRenderer/artifacts/followup-consumers/combined/consumer.csproj (in 168 ms).
++ dotnet run -c Release --no-restore -- /workspace/ExcelRenderer/artifacts/followup-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+combined passed
++ dotnet restore --configfile /workspace/ExcelRenderer/artifacts/followup-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/ExcelRenderer/artifacts/followup-consumers/conditional-formatting/consumer.csproj (in 169 ms).
++ dotnet run -c Release --no-restore -- /workspace/ExcelRenderer/artifacts/followup-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+conditional-formatting passed
++ dotnet restore --configfile /workspace/ExcelRenderer/artifacts/followup-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/ExcelRenderer/artifacts/followup-consumers/managed-fonts/consumer.csproj (in 404 ms).
++ dotnet run -c Release --no-restore -- /workspace/ExcelRenderer/artifacts/followup-consumers/invoice.xlsx /workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc
+managed-fonts passed
++ dotnet restore --configfile /workspace/ExcelRenderer/artifacts/followup-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/ExcelRenderer/artifacts/followup-consumers/namespace-main/consumer.csproj (in 170 ms).
++ dotnet run -c Release --no-restore --
+ExcelRenderer.Formulas.Evaluation.FormulaEngine
+engine: 375
+ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader
+reader: 375
+namespace-main passed
++ dotnet restore --configfile /workspace/ExcelRenderer/artifacts/followup-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/ExcelRenderer/artifacts/followup-consumers/namespace-mapping/consumer.csproj (in 337 ms).
++ dotnet run -c Release --no-restore --
+ExcelRenderer.Formulas.Evaluation.FormulaEngine
+engine: 375
+ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader
+reader: 375
+namespace-mapping passed
++ dotnet restore --configfile /workspace/ExcelRenderer/artifacts/followup-consumers/NuGet.Config
+  Determining projects to restore...
+  Restored /workspace/ExcelRenderer/artifacts/followup-consumers/namespace-combined/consumer.csproj (in 190 ms).
++ dotnet run -c Release --no-restore --
+ExcelRenderer.Formulas.Evaluation.FormulaEngine
+engine: 375
+ExcelRenderer.OpenXml.Reader.OpenXmlWorkbookReader
+reader: 375
+namespace-combined passed
++ dotnet tool install ExcelRenderer.Tool --version 1.10.4 --tool-path /workspace/ExcelRenderer/artifacts/followup-consumers/tool --configfile /workspace/ExcelRenderer/artifacts/followup-consumers/NuGet.Config
+You can invoke the tool using the following command: excelrenderer
+Tool 'excelrenderer.tool' (version '1.10.4') was successfully installed.
++ /workspace/ExcelRenderer/artifacts/followup-consumers/tool/excelrenderer md /workspace/ExcelRenderer/artifacts/followup-consumers/invoice.xlsx --formula-mode recalculate -o /workspace/ExcelRenderer/artifacts/followup-consumers/cli.md
++ /workspace/ExcelRenderer/artifacts/followup-consumers/tool/excelrenderer pdf /workspace/ExcelRenderer/artifacts/followup-consumers/invoice.xlsx -o /workspace/ExcelRenderer/artifacts/followup-consumers/cli-pdf-skia.pdf --pdf-backend skiasharp
++ /workspace/ExcelRenderer/artifacts/followup-consumers/tool/excelrenderer render /workspace/ExcelRenderer/artifacts/followup-consumers/invoice.xlsx -o /workspace/ExcelRenderer/artifacts/followup-consumers/cli-render-skia.pdf --pdf-backend skiasharp --format pdf
+Warning: MaximumDigitWidthFallback [Invoice!workbook]: Normal 'unknown', 11pt, weight 400, italic False; measurement '7px compatibility metric (Normal metadata unavailable)', MDW 7px at 96 DPI; source=compatibility. Exact Excel layout cannot be guaranteed; specify SourceFontFile or MaximumDigitWidthPixels96Dpi to supply original metrics.
++ /workspace/ExcelRenderer/artifacts/followup-consumers/tool/excelrenderer pdf /workspace/ExcelRenderer/artifacts/followup-consumers/invoice.xlsx -o /workspace/ExcelRenderer/artifacts/followup-consumers/cli-default-without-subset.pdf
+Eleven isolated package consumers passed (engine, adapter, Mapping, main+Core, combined, conditional formatting, managed fonts, three namespace samples, installed CLI)
++ /workspace/ExcelRenderer/artifacts/followup-consumers/tool/excelrenderer pdf /workspace/ExcelRenderer/artifacts/followup-consumers/cli-font-formats.xlsx -o /workspace/ExcelRenderer/artifacts/followup-consumers/cli-collection-face-1.pdf --font-file /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc --font-face-index 1 --fallback-font PDF Format Fixture --no-system-fonts
++ /workspace/ExcelRenderer/artifacts/followup-consumers/tool/excelrenderer pdf /workspace/ExcelRenderer/artifacts/followup-consumers/cli-font-formats.xlsx -o /workspace/ExcelRenderer/artifacts/followup-consumers/cli-fallback-cff.otf.pdf --font-file /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/cff.otf --font-file /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/static.ttf --fallback-font PDF Format Fixture --no-system-fonts
++ /workspace/ExcelRenderer/artifacts/followup-consumers/tool/excelrenderer pdf /workspace/ExcelRenderer/artifacts/followup-consumers/cli-font-formats.xlsx -o /workspace/ExcelRenderer/artifacts/followup-consumers/cli-fallback-variable.ttf.pdf --font-file /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/variable.ttf --font-file /workspace/ExcelRenderer/tests/ExcelRenderer.Tests/Fonts/PdfFormats/static.ttf --fallback-font PDF Format Fixture --no-system-fonts
+Installed CLI used collection face 1, retained CFF/variable rejection reasons without output, and succeeded with a static substitute

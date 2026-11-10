@@ -13,7 +13,8 @@ internal sealed class TemplateNode
     /// <param name="path">The path.</param>
     /// <param name="alias">The alias.</param>
     /// <param name="children">The children.</param>
-    internal TemplateNode(int firstRow, int lastRow, TemplateCell location, DataPath? path = null, string? alias = null, List<TemplateNode>? children = null)
+    /// <param name="indexAlias">The optional zero-based index alias.</param>
+    internal TemplateNode(int firstRow, int lastRow, TemplateCell location, DataPath? path = null, string? alias = null, List<TemplateNode>? children = null, string? indexAlias = null)
     {
         FirstRow = firstRow;
         LastRow = lastRow;
@@ -21,6 +22,7 @@ internal sealed class TemplateNode
         Path = path;
         Alias = alias;
         Children = children;
+        IndexAlias = indexAlias;
     }
 
     /// <summary>Gets the first original row.</summary>
@@ -37,6 +39,9 @@ internal sealed class TemplateNode
 
     /// <summary>Gets the array element alias.</summary>
     internal string? Alias { get; }
+
+    /// <summary>Gets the optional zero-based index alias.</summary>
+    internal string? IndexAlias { get; }
 
     /// <summary>Gets the nested template regions.</summary>
     internal List<TemplateNode>? Children { get; }

@@ -79,10 +79,10 @@ internal sealed class TemplateSheet
                     return nodes;
                 }
 
-                var match = Regex.Match(marker.Text, @"^\*\*@start-array\s+(.+?)\s+as\s+([\p{L}_][\p{L}\p{N}_]*)$");
+                var match = Regex.Match(marker.Text, @"^\*\*@start-array\s+(.+?)\s+as\s+([\p{L}_][\p{L}\p{N}_]*)(?:\s*,\s*([\p{L}_][\p{L}\p{N}_]*))?$");
                 if (!match.Success)
                 {
-                    throw Error(marker, "Expected **@start-array path[*] as alias.");
+                    throw Error(marker, "Expected **@start-array path[*] as alias[, index].");
                 }
 
                 var path = At(Sheet, marker, () => new DataPath(match.Groups[1].Value));
@@ -99,6 +99,12 @@ internal sealed class TemplateSheet
                 }
 
                 var nestedAliases = new HashSet<string>(aliases, StringComparer.Ordinal) { alias };
+                var indexAlias = match.Groups[3].Success ? match.Groups[3].Value : null;
+                if (indexAlias is not null && !nestedAliases.Add(indexAlias))
+                {
+                    throw Error(marker, "An index alias cannot duplicate or shadow an array alias.");
+                }
+
                 row++;
                 var children = Parse(ref row, nestedAliases, true);
                 if (row > LastRow)
@@ -106,7 +112,7 @@ internal sealed class TemplateSheet
                     throw Error(marker, "The start-array marker has no matching end-array.");
                 }
 
-                var node = new TemplateNode(sourceRow, row, marker, path, alias, children);
+                var node = new TemplateNode(sourceRow, row, marker, path, alias, children, indexAlias);
                 nodes.Add(node);
                 row++;
                 continue;
@@ -115,8 +121,18 @@ internal sealed class TemplateSheet
             var ordinary = new TemplateNode(row, row, cells.FirstOrDefault() ?? new TemplateCell($"A{row}", 1, string.Empty));
             foreach (var cell in cells)
             {
-                if (cell.Text == "**@page-break")
+                if (cell.Text == "**@page-break" || cell.Text.StartsWith("**@page-break ", StringComparison.Ordinal))
                 {
+                    cell.IsPageBreak = true;
+                    if (cell.Text != "**@page-break")
+                    {
+                        cell.Condition = At(Sheet, cell, () => new PageBreakCondition(cell.Text));
+                        foreach (var path in cell.Condition.Paths)
+                        {
+                            ValidateAlias(cell, path, aliases);
+                        }
+                    }
+
                     ordinary.Cells.Add(cell);
                 }
                 else if (cell.Text.StartsWith("\\**", StringComparison.Ordinal))

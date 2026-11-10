@@ -83,8 +83,8 @@ public static partial class ExcelTemplateMapper
                             for (var index = 0; index < values.Count; index++)
                             {
                                 var cell = node.Template.Cells[index];
-                                edits.Add(Edit(cell.Column, values[index].Value));
-                                if (cell.Text == "**@page-break")
+                                edits.Add(Edit(cell.Column, cell.IsPageBreak ? null : values[index].Value));
+                                if (cell.IsPageBreak && values[index].Value is true)
                                 {
                                     explicitBreak = true;
                                     if (outputRow > 1)

@@ -42,12 +42,18 @@ internal sealed class ExpansionPlan
             var planned = new ExpansionNode(node);
             var items = node.Path is null ? new object?[] { null } :
                 TemplateSheet.At(template.Sheet, node.Location, () => node.Path.Array(root, aliases, options.MaxOutputRows));
-            foreach (var item in items)
+            for (var index = 0; index < items.Count; index++)
             {
+                var item = items[index];
                 cancellationToken.ThrowIfCancellationRequested();
                 if (node.IsBlock)
                 {
                     var nestedAliases = new Dictionary<string, object?>(aliases, StringComparer.Ordinal) { [node.Alias!] = item };
+                    if (node.IndexAlias is not null)
+                    {
+                        nestedAliases.Add(node.IndexAlias, index);
+                    }
+
                     planned.Blocks.Add(Plan(node.Children!, nestedAliases));
                 }
                 else
@@ -76,9 +82,14 @@ internal sealed class ExpansionPlan
 
     private MappedValue Value(TemplateCell cell, IReadOnlyDictionary<string, object?> aliases, object? item, bool implicitArray)
     {
+        if (cell.IsPageBreak)
+        {
+            return new MappedValue(cell.Condition is null || cell.Condition.Evaluate(aliases));
+        }
+
         if (cell.Expression is null)
         {
-            return cell.Text == "**@page-break" ? new MappedValue(null) : new MappedValue(cell.Text.Substring(1));
+            return new MappedValue(cell.Text.Substring(1));
         }
 
         var value = cell.Expression.Evaluate(root, aliases, options, item, implicitArray);

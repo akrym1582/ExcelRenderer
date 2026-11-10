@@ -289,11 +289,13 @@ opening the destination, so mapping errors leave an existing output file intact.
 | `**Items[0].Name` | Read one array element; indices start at zero | Any text cell |
 | `**Items[*].Name` | Repeat the entire row for each array element | Outside explicit array blocks |
 | `**@start-array Items[*] as item` | Begin a repeated multi-row block | Dedicated unmerged row with one content cell |
+| `**@start-array Items[*] as item, index` | Also bind a zero-based index (`**@index`) | Same marker rules; aliases must be distinct |
 | `**@item.Name` | Read the element bound to an alias | Inside its block or a nested child |
 | `**@end-array` | End the matching block | Dedicated unmerged row with one content cell |
 | `**Price \| format("N2")` | Format a value as text | Scalar or wildcard expression |
 | `**IssuedAt \| date("yyyy/MM/dd")` | Explicitly convert/format a date as text | Scalar or wildcard expression |
 | `**@page-break` | Clear the cell and add breaks above/left of its final position | Ordinary row, including inside repeated regions |
+| `**@page-break if index % 10 == 0` | Add breaks only when the numeric alias comparison is true; always clear the cell | Inside the alias scope |
 | `\**literal` | Remove one leading backslash and output literal text | Any text cell |
 
 ### Recognition and evaluation rules
@@ -302,11 +304,12 @@ Only text cells beginning with `**` or `\**` are interpreted. Do not add leading
 spaces or an Excel `=` before an expression. Numeric cells and ordinary text remain workbook content; formula cells are rejected. A replacement occupies the entire cell;
 string interpolation such as `Customer: **Customer` is not supported.
 
-Directive names are case-sensitive. Write `**@end-array` and `**@page-break`
-exactly, without trailing spaces or arguments. `**@page-break` has no direction,
-condition or page-count parameters. Formatting accepts one `format()` or
+Directive names are case-sensitive. Write `**@end-array` and unconditional
+`**@page-break` exactly, without trailing spaces or arguments. A conditional
+page break accepts `if` followed by the numeric comparison described below.
+There are no direction or page-count parameters. Formatting accepts one `format()` or
 `date()` function with one or two JSON string arguments; chaining functions is
-not supported. Arithmetic, conditions and calculations belong in the caller, not Excel formulas.
+not supported. Apart from page-break conditions, arithmetic and calculations belong in the caller, not Excel formulas.
 
 Mapping validates the structure and path syntax of every worksheet, then
 evaluates the instantiated rows before applying expansion. It is independent
@@ -338,6 +341,7 @@ are ordinary literal text.
 | `**name.value` or `**.name.value` | Same root path |
 | `**items[0].name` | Resolve a nonnegative array index |
 | `**$['a.b']["key\|name"]` | Resolve literal property keys |
+| `**@page-break if index % 10 == 0` | Add breaks only when the numeric alias comparison is true; always clear the cell | Inside the alias scope |
 | `\**literal` | Emit the literal `**literal` |
 | `**$` | Map a scalar root value |
 
@@ -485,10 +489,55 @@ Positions are determined **after expansion**, so a directive below an array
 moves with the rows inserted or deleted above it. A directive inside an empty
 array disappears with the block and does not add breaks or change print mode.
 
+### Example: break every ten items
+
+```text
+A1: **@start-array Items[*] as item, index
+A2: **@page-break if index % 10 == 0
+B2: **@item.Name
+C2: **@index
+A3: **@end-array
+```
+
+The optional second alias is a zero-based index. It can be mapped as `**@index`
+and used in conditions as `index` or `@index`. For 25 items this example inserts
+breaks after rows 10 and 20. The directive always clears its cell, including when
+the condition is false; it does not remove the row. The index resets for each
+nested array, and enclosing aliases remain available. Index aliases cannot
+shadow enclosing aliases or duplicate the element alias.
+
+Conditions support a numeric alias, optionally `%` a positive integer, followed
+by `==`, `!=`, `<`, `<=`, `>` or `>=` and an integer literal (which may be negative).
+For example, `**@page-break if index >= 10` is also valid. Combine comparisons
+with `&&` (AND), `||` (OR), and `!` (NOT).
+Comparisons (including `%`) bind first, then `!`, then `&&`, then `||`.
+Parentheses group conditions and override logical precedence; for example:
+
+```text
+**@page-break if index > 0 && index % 10 == 0
+**@page-break if index > 0 && (index % 10 == 0 || index == 25)
+**@page-break if !(index < 10 || index >= 30)
+```
+
+`&&` and `||` short-circuit: the right side is evaluated only when needed.
+All branches are still checked for syntax and alias scope, even when skipped.
+Parentheses and negations may be nested up to 64 parsing levels.
+General arithmetic (`+`, `-`, `*`, `/`), numeric grouping such as `(index + 1)`,
+and property paths in conditions are not supported.
+Syntax and alias scope are checked even inside empty blocks.
+
+Because breaks occur **before** the directive's row, place it alongside the
+first item of each page. `index % 10 == 0` is true at index 0 too; this creates no
+row break when that item is on row 1. If a header precedes the block, index 0
+also starts a new page after that header. Use
+`index > 0 && index % 10 == 0` to exclude the first item. A false condition adds
+neither row nor column breaks and does not enable scale mode. Escaping a conditional directive
+with a leading backslash prints it literally.
+
 ### Print settings and output behavior
 
 Existing manual row breaks follow copied rows; column breaks are retained.
-A sheet with a page-break directive switches from fit-to-page to explicit scale
+A sheet with an unconditional or true conditional page-break directive switches from fit-to-page to explicit scale
 mode (retaining a positive scale or using 100%). This makes manual breaks effective
 in Excel and in SVG/PNG/PDF output. Other sheets retain their original print mode.
 Even a surviving directive at A1 enables scale mode, although neither break is

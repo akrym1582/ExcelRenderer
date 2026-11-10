@@ -481,8 +481,10 @@ excelrenderer render input.xlsx --format pdf -o output.pdf --column-width-mdw 9
 excelrenderer pdf input.xlsx -o output.pdf --column-width-metrics legacy
 ```
 
-The shared flags are `--column-width-mdw`, `--layout-font`, `--layout-font-index`, and
-`--column-width-metrics source|legacy`. In the library, migration compatibility is
+The main CLI flags are `--column-width-mdw`, `--layout-font`, `--layout-font-index`, and
+`--column-width-metrics source|legacy|libreoffice` for main. Core accepts
+`--column-width-metrics source|libreoffice` and `--column-width-mdw`; layout-font
+file/index flags and legacy mode are main-only. In the library, migration compatibility is
 `ColumnWidthMetrics = new() { Mode = ColumnWidthMetricsMode.RenderingFontLegacy }`.
 Legacy cannot be combined with a source file; explicit MDW still takes precedence.
 Legacy also preserves historical merged-cell page bands; source mode lets a merge
@@ -491,7 +493,66 @@ All rendering formats, range/continuous rendering, and page-selection preflight 
 the same read settings and conversion-local metric decisions. Core's independent
 single-supplied-font contract is unchanged.
 
-If the original family is unavailable, SourceFont uses a deterministic compatibility
+### Optional LibreOffice column-width calculation
+
+This is **opt-in**. Omitting the option keeps the existing `SourceFont` behavior;
+Core defaults to `UseLibreOfficeColumnWidths = false`.
+
+| Choice | Main API | Core API | Purpose |
+| --- | --- | --- | --- |
+| Default | `ColumnWidthMetricsMode.SourceFont` | `UseLibreOfficeColumnWidths = false` | Preserve the existing source-font/compatibility column calculation |
+| LibreOffice compatibility | `ColumnWidthMetricsMode.LibreOfficeCompatible` | `UseLibreOfficeColumnWidths = true` | Measure fractional digit advances and retain fractional column pixels |
+| Historical migration | `ColumnWidthMetricsMode.RenderingFontLegacy` | Not available | Reproduce main's historical drawing-font column policy |
+
+Main library configuration:
+
+```csharp
+var read = new ExcelRenderer.Excel.ExcelReadOptions
+{
+    ColumnWidthMetrics = new()
+    {
+        Mode = ExcelRenderer.Excel.ColumnWidthMetricsMode.LibreOfficeCompatible,
+        MaximumDigitWidthPixels96Dpi = 8.8,
+    },
+};
+// Pass read as PdfExportOptions.ReadOptions or RenderRequest.ReadOptions.
+```
+
+Core library configuration:
+
+```csharp
+var options = new ExcelRenderer.Core.PdfExportOptions
+{
+    FontFilePath = "fonts/NotoSansJP-Regular.ttf",
+    ReadOptions = new()
+    {
+        UseLibreOfficeColumnWidths = true,
+        MaximumDigitWidthPixels96Dpi = 8.8,
+    },
+};
+```
+
+CLI equivalents:
+
+```bash
+excelrenderer render input.xlsx --format pdf -o main.pdf --font-file NotoSansJP-Regular.ttf --column-width-metrics libreoffice --column-width-mdw 8.8
+excelrenderer core input.xlsx -o core.pdf --font-file NotoSansJP-Regular.ttf --column-width-metrics libreoffice --column-width-mdw 8.8
+```
+
+**8.8 is an example for the reviewed reference's Noto Sans Mono substitution at 11pt,
+not a general font preset.** An explicit MDW is optional and overrides measurement;
+without one, main measures the resolved layout font and Core measures its supplied
+regular font, both at the workbook Normal size. Main can select a layout-only font
+with `SourceFontFile` / `--layout-font`. Enabling the mode does not automatically
+replicate LibreOffice's font substitution. Set the reference font/metric explicitly
+when reproducible dimensions are required. A numeric MDW override alone does not
+enable the fractional column calculation.
+
+This option can change cell widths, wrapping and page boundaries. It preserves saved
+row heights and print settings; it does not reproduce LibreOffice's header positioning
+or every rendering rule. See the [measured before/after comparison](docs/validation/cell-width-compatibility/README.md).
+
+In default SourceFont mode, if the original family is unavailable, SourceFont uses a deterministic compatibility
 metric and reports `MaximumDigitWidthFallback`. MS P Gothic uses a size-dependent
 Noto Sans digit profile matching Calc substitution (8.4px at 11pt); other unavailable
 families and missing Normal metadata use 7px. StrictMode treats this

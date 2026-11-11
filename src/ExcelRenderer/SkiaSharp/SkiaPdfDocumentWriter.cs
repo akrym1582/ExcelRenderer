@@ -47,7 +47,14 @@ internal sealed class SkiaPdfDocumentWriter : IPdfDocumentWriter
         }
         finally
         {
-            _fonts.Dispose();
+            try
+            {
+                _drawing.Dispose();
+            }
+            finally
+            {
+                _fonts.Dispose();
+            }
         }
     }
 

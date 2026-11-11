@@ -1,0 +1,61 @@
+[
+  {
+    "case": "text1",
+    "pages": 1,
+    "structureEqual": true,
+    "pixelIdentical": true,
+    "embeddedFontSha256": [
+      "4d35837baaaa5a60267c04e24bc6ffc23f72f7f678ec894b4aa03aaedb5aa1aa"
+    ]
+  },
+  {
+    "case": "text1000",
+    "pages": 25,
+    "structureEqual": true,
+    "pixelIdentical": true,
+    "embeddedFontSha256": [
+      "31a694e6620f358637fdd338522ee3df9b0160747a607f758a0651ecfcf115c8"
+    ]
+  },
+  {
+    "case": "wrap1000",
+    "pages": 25,
+    "structureEqual": true,
+    "pixelIdentical": true,
+    "embeddedFontSha256": [
+      "69caf8ba35e733fb69435b4480bc514c75433c4665913af436a59c69ce191ca8"
+    ]
+  },
+  {
+    "case": "borders1000",
+    "pages": 25,
+    "structureEqual": true,
+    "pixelIdentical": true,
+    "embeddedFontSha256": [
+      "31a694e6620f358637fdd338522ee3df9b0160747a607f758a0651ecfcf115c8"
+    ]
+  },
+  {
+    "case": "empty",
+    "pages": 1,
+    "structureEqual": true,
+    "pixelIdentical": true,
+    "embeddedFontSha256": []
+  },
+  {
+    "case": "imagesonly",
+    "pages": 1,
+    "structureEqual": true,
+    "pixelIdentical": true,
+    "embeddedFontSha256": []
+  },
+  {
+    "case": "header",
+    "pages": 1,
+    "structureEqual": true,
+    "pixelIdentical": true,
+    "embeddedFontSha256": [
+      "8cd808765073aada4a33db11cd394360bf5e4601b5f43e9caf449ac6a6bf1793"
+    ]
+  }
+]

@@ -102,8 +102,9 @@ internal sealed class SheetLayoutPlan
     /// <param name="measurer">The measurer used by this operation.</param>
     /// <param name="cancellationToken">The page-build cancellation token.</param>
     /// <param name="collectTextOnly">Whether to omit nontext payloads during Core font collection.</param>
+    /// <param name="textPreflight">Whether to ask the product policy for a metadata-preserving text payload.</param>
     /// <returns>The planned or generated result.</returns>
-    internal RenderPage Build(int index, int number, int count, ITextMeasurer measurer, CancellationToken cancellationToken = default, bool collectTextOnly = false)
+    internal RenderPage Build(int index, int number, int count, ITextMeasurer measurer, CancellationToken cancellationToken = default, bool collectTextOnly = false, bool textPreflight = false)
     {
         var plan = Pages[index];
         var context = new ReportLayoutContext(sheet, measurer, geometry)
@@ -122,6 +123,8 @@ internal sealed class SheetLayoutPlan
 
         context.SelectedPageCells = new(GetCandidateAddresses(index));
         context.CandidateAddresses = context.SelectedPageCells.Addresses;
+        context.PreservePreflightMetadata = textPreflight && policy.CanBuildTextPreflight(context);
+        context.CollectTextOnly |= context.PreservePreflightMetadata;
 
         new TextMeasurePass().Execute(context);
         new CellBoundsPass().Execute(context);

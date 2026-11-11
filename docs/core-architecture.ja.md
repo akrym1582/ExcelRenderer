@@ -85,3 +85,17 @@ CoreExcelReader が表示ポリシーと診断候補を管理します。scratch
 装飾と折り返しなしの幅はキーから除き、縮小はcache外で適用します。
 PDF位置はbuilder所有のSpanへ書き込み、rendererごとにPaint最大2個とdash effect最大1個を所有します。
 実装と測定証拠は[性能改善レポート](core-performance-optimization.md)を参照してください。
+
+## 本体の描画高速化
+
+本体もCoreの描画scope単位Paint所有者を使用する。CLOCK退避と通常単一face段落の
+折り返しはCoreが所有し、font選択・部分書式・native raster互換方針は本体に残す。
+条件付きPDF文字preflightは本体hookを通じてregions・clip・図形情報を保持し、
+その他の要求では完全経路を維持する。
+[実装範囲・検証記録](main-performance-optimization.ja.md)を参照。
+
+## Core glyph保存の追加改善
+
+通常outline行は段落glyph範囲から最終保存へ一回だけコピーする。
+source/displayが同じcluster構築は一列挙にし、異なる対応は互換検証を維持する。
+[実装・検証](core-glyph-storage-optimization.ja.md)を参照。

@@ -1,0 +1,271 @@
+--- a/src/ExcelRenderer.Core/Fonts/GlyphSequence.cs
++++ b/src/ExcelRenderer.Core/Fonts/GlyphSequence.cs
+@@ -17,58 +17,30 @@
+     /// <param name="source">The original source text.</param>
+     /// <param name="singleCluster">Whether one explicit glyph represents the source sequence.</param>
+     internal GlyphSequence(SkiaFontFace face, ushort[] glyphs, string display, string source, bool singleCluster = false)
++        : this(face, glyphs.AsSpan(0, glyphs.Length), display, source, singleCluster)
++    {
++    }
++
++    /// <summary>Initializes a new instance of the <see cref="GlyphSequence"/> class from borrowed glyphs.</summary>
++    /// <param name="face">The selected physical snapshot.</param>
++    /// <param name="glyphs">The borrowed range; copied exactly once into privately owned storage.</param>
++    /// <param name="display">The display text.</param>
++    /// <param name="source">The original source text.</param>
++    /// <param name="singleCluster">Whether one explicit glyph represents the source sequence.</param>
++    internal GlyphSequence(SkiaFontFace face, ReadOnlySpan<ushort> glyphs, string display, string source, bool singleCluster = false)
+     {
+         FontIdentity = face.Identity;
+-        this.glyphs = (ushort[])glyphs.Clone();
++        this.glyphs = glyphs.ToArray();
+         this.source = Encoding.UTF8.GetBytes(source);
+         Glyphs = Array.AsReadOnly(this.glyphs);
+         Source = Array.AsReadOnly(this.source);
+-        var clusters = new List<uint>();
+-        if (singleCluster)
+-        {
+-            clusters.AddRange(new uint[glyphs.Length]);
+-        }
+-        else
+-        {
+-            using var originals = TextLineBreaker.Elements(source).GetEnumerator();
+-            var offset = 0;
+-            uint? whitespace = null;
+-            foreach (var element in TextLineBreaker.Elements(display))
+-            {
+-                if (!originals.MoveNext())
+-                {
+-                    throw new InvalidDataException("Display and source Unicode clusters differ.");
+-                }
+-
+-                var isWhitespace = element.All(char.IsWhiteSpace);
+-                var cluster = isWhitespace ? whitespace ?? (uint)offset : (uint)offset;
+-                whitespace = isWhitespace ? cluster : null;
+-                for (var index = 0; index < element.Length; index++)
+-                {
+-                    clusters.Add(cluster);
+-                    if (char.IsHighSurrogate(element[index]) && index + 1 < element.Length && char.IsLowSurrogate(element[index + 1]))
+-                    {
+-                        index++;
+-                    }
+-                }
+-
+-                offset += Encoding.UTF8.GetByteCount(originals.Current);
+-            }
+-
+-            if (originals.MoveNext())
+-            {
+-                throw new InvalidDataException("Unused source Unicode clusters.");
+-            }
+-        }
+-
+-        if (clusters.Count != glyphs.Length)
+-        {
+-            throw new InvalidDataException("Glyphs and source Unicode clusters differ.");
+-        }
+-
+-        this.clusters = clusters.ToArray();
++        this.clusters = singleCluster ? new uint[glyphs.Length] :
++            string.Equals(display, source, StringComparison.Ordinal) ? IdentityClusters(glyphs.Length, source) :
++            CompatibilityClusters(glyphs.Length, display, source);
+         Clusters = Array.AsReadOnly(this.clusters);
+-        Advances = Array.AsReadOnly(face.Advances(glyphs, 1));
++        Advances = Array.AsReadOnly(face.Advances(this.glyphs, 1));
++        Rendering.ConversionMetrics.Report("glyphStorageCopies", 1);
++        Rendering.ConversionMetrics.Report("glyphStorageCopiedGlyphs", glyphs.Length);
+     }
+ 
+     /// <summary>Gets the immutable physical content identity.</summary>
+@@ -94,4 +66,92 @@
+ 
+     /// <summary>Gets borrowed immutable clusters for native APIs that copy their input.</summary>
+     internal ReadOnlySpan<uint> ClusterSpan => clusters;
++
++    private static uint[] IdentityClusters(int glyphCount, string text)
++    {
++        var clusters = new uint[glyphCount];
++        var glyphIndex = 0;
++        var offset = 0;
++        uint? whitespace = null;
++        foreach (var element in TextLineBreaker.Elements(text))
++        {
++            var isWhitespace = true;
++            for (var index = 0; index < element.Length; index++)
++            {
++                if (!char.IsWhiteSpace(element[index]))
++                {
++                    isWhitespace = false;
++                    break;
++                }
++            }
++
++            var cluster = isWhitespace ? whitespace ?? (uint)offset : (uint)offset;
++            whitespace = isWhitespace ? cluster : null;
++            for (var index = 0; index < element.Length; index++)
++            {
++                if (glyphIndex == glyphCount)
++                {
++                    throw new InvalidDataException("Glyphs and source Unicode clusters differ.");
++                }
++
++                clusters[glyphIndex++] = cluster;
++                if (char.IsHighSurrogate(element[index]) && index + 1 < element.Length && char.IsLowSurrogate(element[index + 1]))
++                {
++                    index++;
++                }
++            }
++
++            offset += Encoding.UTF8.GetByteCount(element);
++        }
++
++        if (glyphIndex != glyphCount)
++        {
++            throw new InvalidDataException("Glyphs and source Unicode clusters differ.");
++        }
++
++        Rendering.ConversionMetrics.Report("glyphClusterElementPasses", 1);
++        return clusters;
++    }
++
++    private static uint[] CompatibilityClusters(int glyphCount, string display, string source)
++    {
++        var clusters = new List<uint>();
++        using var originals = TextLineBreaker.Elements(source).GetEnumerator();
++        var offset = 0;
++        uint? whitespace = null;
++        foreach (var element in TextLineBreaker.Elements(display))
++        {
++            if (!originals.MoveNext())
++            {
++                throw new InvalidDataException("Display and source Unicode clusters differ.");
++            }
++
++            var isWhitespace = element.All(char.IsWhiteSpace);
++            var cluster = isWhitespace ? whitespace ?? (uint)offset : (uint)offset;
++            whitespace = isWhitespace ? cluster : null;
++            for (var index = 0; index < element.Length; index++)
++            {
++                clusters.Add(cluster);
++                if (char.IsHighSurrogate(element[index]) && index + 1 < element.Length && char.IsLowSurrogate(element[index + 1]))
++                {
++                    index++;
++                }
++            }
++
++            offset += Encoding.UTF8.GetByteCount(originals.Current);
++        }
++
++        if (originals.MoveNext())
++        {
++            throw new InvalidDataException("Unused source Unicode clusters.");
++        }
++
++        if (clusters.Count != glyphCount)
++        {
++            throw new InvalidDataException("Glyphs and source Unicode clusters differ.");
++        }
++
++        Rendering.ConversionMetrics.Report("glyphClusterElementPasses", 2);
++        return clusters.ToArray();
++    }
+ }
+--- a/src/ExcelRenderer.Core/Layout/OutlineParagraph.cs
++++ b/src/ExcelRenderer.Core/Layout/OutlineParagraph.cs
+@@ -63,6 +63,34 @@
+             yield break;
+         }
+ 
++        foreach (var line in BreakRanges(size, width, wrap))
++        {
++            ConversionMetrics.Report("outlineIntermediateGlyphCopies", 1);
++            yield return (line.Text, glyphs.AsSpan(line.GlyphStart, line.GlyphCount).ToArray());
++        }
++    }
++
++    /// <summary>Copies a borrowed paragraph range only into the final immutable selection.</summary>
++    /// <param name="line">The complete line text.</param>
++    /// <param name="start">The paragraph glyph offset.</param>
++    /// <param name="count">The selected glyph count.</param>
++    /// <returns>A selection that does not retain the paragraph buffer.</returns>
++    internal GlyphSequence CreateSelection(string line, int start, int count) =>
++        new(face, glyphs.AsSpan(start, count), line, line);
++
++    /// <summary>Enumerates glyph ranges without allocating temporary line glyph arrays.</summary>
++    /// <param name="size">The run size.</param>
++    /// <param name="width">The available width.</param>
++    /// <param name="wrap">Whether automatic wrapping is enabled.</param>
++    /// <returns>Line text and paragraph-relative glyph ranges.</returns>
++    internal IEnumerable<(string Text, int GlyphStart, int GlyphCount)> BreakRanges(double size, double width, bool wrap)
++    {
++        if (!wrap || width <= 0)
++        {
++            yield return (text, 0, glyphs.Length);
++            yield break;
++        }
++
+         var boundaries = StringInfo.ParseCombiningCharacters(text);
+         var start = 0;
+         var firstGlyph = 0;
+@@ -96,7 +124,7 @@
+             ConversionMetrics.Report("textWrapComparisons", 1);
+             if (elementStart > start && !TextLineBreaker.Fits(face.MeasureUnits(units + elementUnits, size), width))
+             {
+-                yield return (text.Substring(start, elementStart - start), glyphs.AsSpan(firstGlyph, elementGlyph - firstGlyph).ToArray());
++                yield return (text.Substring(start, elementStart - start), firstGlyph, elementGlyph - firstGlyph);
+                 start = elementStart;
+                 firstGlyph = elementGlyph;
+                 units = 0;
+@@ -105,6 +133,6 @@
+             units += elementUnits;
+         }
+ 
+-        yield return (text.Substring(start), glyphs.AsSpan(firstGlyph).ToArray());
++        yield return (text.Substring(start), firstGlyph, glyphs.Length - firstGlyph);
+     }
+ }
+--- a/src/ExcelRenderer.Core/Pdf/SkiaTextMeasurer.cs
++++ b/src/ExcelRenderer.Core/Pdf/SkiaTextMeasurer.cs
+@@ -77,7 +77,8 @@
+         var paragraphs = text.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n');
+         for (var index = 0; index < paragraphs.Length; index++)
+         {
+-            var selected = new OutlineParagraph(paragraphs[index], context.Face, token).Break(font.Size, width, wrap).GetEnumerator();
++            var paragraph = new OutlineParagraph(paragraphs[index], context.Face, token);
++            var selected = paragraph.BreakRanges(font.Size, width, wrap).GetEnumerator();
+             using (selected)
+             {
+                 if (!selected.MoveNext())
+@@ -88,11 +89,11 @@
+                 var previous = selected.Current;
+                 while (selected.MoveNext())
+                 {
+-                    yield return CreateLine(previous.Text, false, font, previous.Glyphs);
++                    yield return CreateLine(previous.Text, false, font, paragraph.CreateSelection(previous.Text, previous.GlyphStart, previous.GlyphCount));
+                     previous = selected.Current;
+                 }
+ 
+-                yield return CreateLine(previous.Text, index < paragraphs.Length - 1, font, previous.Glyphs);
++                yield return CreateLine(previous.Text, index < paragraphs.Length - 1, font, paragraph.CreateSelection(previous.Text, previous.GlyphStart, previous.GlyphCount));
+             }
+         }
+     }
+@@ -104,13 +105,14 @@
+         return context.Face.Typeface.GetGlyphs(text);
+     }
+ 
+-    private TextLayoutLine CreateLine(string text, bool explicitBreak, FontStyle style, ushort[]? selectedGlyphs = null)
++    private TextLayoutLine CreateLine(string text, bool explicitBreak, FontStyle style, GlyphSequence? selectedGlyphs = null)
+     {
+         var (ascent, descent, leading) = context.Metrics(style.Size);
+-        var glyphs = selectedGlyphs ?? SelectGlyphs(text);
+-        return new(text, context.Face.Measure(glyphs, style.Size), ascent + descent + leading, ascent, explicitBreak)
++        var glyphs = selectedGlyphs is null ? SelectGlyphs(text) : null;
++        var width = glyphs is null ? context.Face.Measure(selectedGlyphs!.Glyphs, style.Size) : context.Face.Measure(glyphs, style.Size);
++        return new(text, width, ascent + descent + leading, ascent, explicitBreak)
+         {
+-            Glyphs = new(context.Face, glyphs, text, text),
++            Glyphs = selectedGlyphs ?? new(context.Face, glyphs!, text, text),
+             Ascent = ascent,
+             Descent = descent,
+             Leading = leading,

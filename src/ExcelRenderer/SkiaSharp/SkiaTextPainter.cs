@@ -17,10 +17,11 @@ internal sealed class SkiaTextPainter
     /// <param name="fontManager">The optional resolved-font source.</param>
     /// <param name="pdfFonts">Optional PDF Unicode and subset resources.</param>
     /// <param name="beforeLegacyDrawing">Optional internal compatibility drawing observer.</param>
-    internal SkiaTextPainter(bool textAsPaths, Fonts.IFontManager? fontManager, Action? beforeLegacyDrawing = null, SkiaPdfFonts? pdfFonts = null)
+    /// <param name="paints">Optional drawing-scope paints.</param>
+    internal SkiaTextPainter(bool textAsPaths, Fonts.IFontManager? fontManager, Action? beforeLegacyDrawing = null, SkiaPdfFonts? pdfFonts = null, Core.Pdf.SkiaPaintResources? paints = null)
     {
         _pdfFonts = pdfFonts;
-        var drawing = new SkiaTextDrawing(textAsPaths, fontManager, beforeLegacyDrawing: beforeLegacyDrawing, pdfFonts: pdfFonts);
+        var drawing = new SkiaTextDrawing(textAsPaths, fontManager, beforeLegacyDrawing: beforeLegacyDrawing, pdfFonts: pdfFonts, paints: paints);
         _finalized = new(drawing);
         _legacy = new(drawing);
     }

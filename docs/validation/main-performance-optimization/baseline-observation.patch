@@ -1,0 +1,131 @@
+diff --git a/src/ExcelRenderer.Core/Pdf/SkiaDrawingPrimitives.cs b/src/ExcelRenderer.Core/Pdf/SkiaDrawingPrimitives.cs
+index a836d7e..ae07f8d 100644
+--- a/src/ExcelRenderer.Core/Pdf/SkiaDrawingPrimitives.cs
++++ b/src/ExcelRenderer.Core/Pdf/SkiaDrawingPrimitives.cs
+@@ -93,13 +93,17 @@ internal static class SkiaDrawingPrimitives
+     /// <param name="style">The paint style.</param>
+     /// <param name="width">The stroke width.</param>
+     /// <returns>The caller-owned paint.</returns>
+-    internal static SKPaint CreatePaint(ReportColor color, SKPaintStyle style, double width = 1) => new()
++    internal static SKPaint CreatePaint(ReportColor color, SKPaintStyle style, double width = 1)
+     {
+-        Color = new(color.Red, color.Green, color.Blue, color.Alpha),
+-        Style = style,
+-        StrokeWidth = (float)width,
+-        IsAntialias = true,
+-    };
++        ExcelRenderer.Core.Rendering.ConversionMetrics.Report("paintCreated", 1);
++        return new()
++        {
++            Color = new(color.Red, color.Green, color.Blue, color.Alpha),
++            Style = style,
++            StrokeWidth = (float)width,
++            IsAntialias = true,
++        };
++    }
+ 
+     /// <summary>Creates a caller-owned dash effect under the shared border policy.</summary>
+     /// <param name="side">The finalized line style and width.</param>
+diff --git a/src/ExcelRenderer/Fonts/ResolvedGlyphLayout.cs b/src/ExcelRenderer/Fonts/ResolvedGlyphLayout.cs
+index 47eb12d..21bd422 100644
+--- a/src/ExcelRenderer/Fonts/ResolvedGlyphLayout.cs
++++ b/src/ExcelRenderer/Fonts/ResolvedGlyphLayout.cs
+@@ -19,6 +19,8 @@ internal static class ResolvedGlyphLayout
+         var text = run.Run;
+         var face = resources.GetFace(text.Font);
+         var glyphs = (text.GlyphId ?? text.ColorEmojiGlyphId) is { } glyph ? new[] { glyph } : face.Typeface.GetGlyphs(text.Text);
++        Rendering.ConversionMetrics.Report("textGlyphCalls", 1);
++        Rendering.ConversionMetrics.Report("textGlyphCharacters", text.Text.Length);
+         Rendering.ConversionMetrics.Report("glyphRunsFinalized", 1);
+         return run with
+         {
+diff --git a/src/ExcelRenderer/SkiaSharp/SkiaTextDrawing.cs b/src/ExcelRenderer/SkiaSharp/SkiaTextDrawing.cs
+index ac0641c..dcee54a 100644
+--- a/src/ExcelRenderer/SkiaSharp/SkiaTextDrawing.cs
++++ b/src/ExcelRenderer/SkiaSharp/SkiaTextDrawing.cs
+@@ -494,11 +494,15 @@ internal sealed class SkiaTextDrawing
+         }
+     }
+ 
+-    private SKPaint CreatePaint(ReportColor color, SKPaintStyle style, double width = 1) => new()
++    private SKPaint CreatePaint(ReportColor color, SKPaintStyle style, double width = 1)
+     {
+-        Color = new SKColor(color.Red, color.Green, color.Blue, color.Alpha),
+-        Style = style,
+-        StrokeWidth = (float)width,
+-        IsAntialias = true,
+-    };
++        ExcelRenderer.Core.Rendering.ConversionMetrics.Report("paintCreated", 1);
++        return new()
++        {
++            Color = new SKColor(color.Red, color.Green, color.Blue, color.Alpha),
++            Style = style,
++            StrokeWidth = (float)width,
++            IsAntialias = true,
++        };
++    }
+ }
+diff --git a/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.cs b/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.cs
+index 60a7a3b..40028a4 100644
+--- a/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.cs
++++ b/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.cs
+@@ -72,6 +72,8 @@ public sealed partial class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
+     {
+         var face = ConversionFontResources.Current!.GetFace(run.Font);
+         var glyphs = (run.GlyphId ?? run.ColorEmojiGlyphId) is { } glyph ? new[] { glyph } : face.Typeface.GetGlyphs(run.Text);
++        Rendering.ConversionMetrics.Report("textGlyphCalls", 1);
++        Rendering.ConversionMetrics.Report("textGlyphCharacters", run.Text.Length);
+         return face.Measure(glyphs, style.Size);
+     }
+ 
+diff --git a/tools/ExcelRenderer.Performance/RenderMemoryBenchmark.Profile.cs b/tools/ExcelRenderer.Performance/RenderMemoryBenchmark.Profile.cs
+index 3022fc3..9e5efcf 100644
+--- a/tools/ExcelRenderer.Performance/RenderMemoryBenchmark.Profile.cs
++++ b/tools/ExcelRenderer.Performance/RenderMemoryBenchmark.Profile.cs
+@@ -48,7 +48,9 @@ internal static partial class RenderMemoryBenchmark
+             {
+                 ConversionMetrics.Observer = (name, value) =>
+                 {
+-                    metrics[name] = metrics.GetValueOrDefault(name) + value;
++                    metrics[name] = name.EndsWith(".current", StringComparison.Ordinal) ? value :
++                        name.EndsWith(".max", StringComparison.Ordinal) ? Math.Max(metrics.GetValueOrDefault(name), value) :
++                        metrics.GetValueOrDefault(name) + value;
+                     if (name.EndsWith(".ms", StringComparison.Ordinal))
+                     {
+                         metrics[name + ".count"] = metrics.GetValueOrDefault(name + ".count") + 1;
+diff --git a/tools/ExcelRenderer.Performance/TextLayoutBenchmark.cs b/tools/ExcelRenderer.Performance/TextLayoutBenchmark.cs
+index 93d0868..c964c1e 100644
+--- a/tools/ExcelRenderer.Performance/TextLayoutBenchmark.cs
++++ b/tools/ExcelRenderer.Performance/TextLayoutBenchmark.cs
+@@ -16,9 +16,9 @@ internal static class TextLayoutBenchmark
+     internal static void Run(string[] args)
+     {
+         var workload = args[1];
+-        if (workload is not ("plain" or "rich" or "rich-wrap"))
++        if (workload is not ("plain" or "plain-wrap" or "rich" or "rich-wrap"))
+         {
+-            throw new ArgumentException("Workload must be plain, rich or rich-wrap.", nameof(args));
++            throw new ArgumentException("Workload must be plain, plain-wrap, rich or rich-wrap.", nameof(args));
+         }
+ 
+         var count = args.Length > 2 ? int.Parse(args[2], CultureInfo.InvariantCulture) : 30;
+@@ -49,8 +49,8 @@ internal static class TextLayoutBenchmark
+             var timer = Stopwatch.StartNew();
+             for (var index = 0; index < count; index++)
+             {
+-                results.Add(workload == "plain"
+-                    ? measurer.Layout(texts[index], font, 100000, false)
++                results.Add(workload is "plain" or "plain-wrap"
++                    ? measurer.Layout(texts[index], font, workload == "plain-wrap" ? 180 : 100000, workload == "plain-wrap")
+                     : measurer.Layout(inputs[index], font, workload == "rich-wrap" ? 80 : 100000, workload == "rich-wrap"));
+             }
+ 
+@@ -69,7 +69,7 @@ internal static class TextLayoutBenchmark
+                         line.Width,
+                         line.Height,
+                         line.Baseline,
+-                        Runs = line.Runs.Select(run => new { run.Run.Text, run.Run.SourceText, run.X, run.Advance, run.Font }),
++                        Runs = line.Runs.Select(run => new { run.Run.Text, run.Run.SourceText, run.Run.Utf16Start, run.X, run.Advance, run.Font, run.Glyphs!.FontIdentity, run.Glyphs.Glyphs, run.Glyphs.Source, run.Glyphs.Clusters, run.Glyphs.Advances }),
+                     }),
+                 };
+                 digest.AppendData(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(projection)));

@@ -1,8 +1,8 @@
 using ExcelRenderer.Abstractions;
+using ExcelRenderer.Core.Rendering;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
 using ExcelRenderer.Model;
-using SkiaSharp;
 
 namespace ExcelRenderer.SkiaSharp;
 
@@ -12,9 +12,9 @@ public sealed partial class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
     private readonly IFontManager _fontManager;
     private readonly object standaloneSync = new();
     private readonly bool borrowConversionScope;
-    private readonly Dictionary<(string Text, FontStyle Font, double Width, bool Wrap, int Generation), TextLayoutResult>? _layouts;
-    private readonly Dictionary<(string Text, FontStyle Font, int Generation), double>? widths;
-    private readonly Dictionary<(string Text, FontStyle Font, bool ExplicitBreak, int Generation), TextLayoutLine>? lineLayouts;
+    private readonly BoundedClockCache<(string Text, MetricFontKey Font, double Width, bool Wrap, int Generation), TextLayoutResult>? _layouts;
+    private readonly BoundedClockCache<(string Text, MetricFontKey Font, int Generation), double>? widths;
+    private readonly BoundedClockCache<(string Text, MetricFontKey Font, bool ExplicitBreak, int Generation), TextLayoutLine>? lineLayouts;
 
     /// <summary>Initializes a new instance of the <see cref="SkiaTextMeasurer"/> class.</summary>
     public SkiaTextMeasurer()
@@ -35,9 +35,9 @@ public sealed partial class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
     internal SkiaTextMeasurer(IFontManager fontManager, bool cacheLayouts)
         : this(fontManager)
     {
-        _layouts = cacheLayouts ? new() : null;
-        widths = cacheLayouts ? new() : null;
-        lineLayouts = cacheLayouts ? new() : null;
+        _layouts = cacheLayouts ? new("textLayoutCache") : null;
+        widths = cacheLayouts ? new("textWidthCache") : null;
+        lineLayouts = cacheLayouts ? new("textLineCache") : null;
         borrowConversionScope = true;
     }
 
@@ -71,7 +71,7 @@ public sealed partial class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
     private static double MeasureRun(TextRun run, FontStyle style)
     {
         var face = ConversionFontResources.Current!.GetFace(run.Font);
-        var glyphs = (run.GlyphId ?? run.ColorEmojiGlyphId) is { } glyph ? new[] { glyph } : face.Typeface.GetGlyphs(run.Text);
+        var glyphs = SelectGlyphs(run, face);
         return face.Measure(glyphs, style.Size);
     }
 
@@ -86,15 +86,15 @@ public sealed partial class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
             return new(new(0, 0), []) { EffectiveFontSize = font.Size };
         }
 
-        var key = (text, font, availableWidth, wrap, (_fontManager as FontManager)?.RegistrationGeneration ?? 0);
+        CheckGeneration();
+        var key = (text, MetricFontKey.From(font), wrap ? availableWidth : 0, wrap, generation);
         if (_layouts?.TryGetValue(key, out var cached) == true)
         {
             return cached;
         }
 
         var request = new FontRequest(font.Family, font.Bold ? 700 : 400, font.Italic);
-        var lineTexts = Core.Layout.TextLineBreaker.Break(text, availableWidth, wrap, value => MeasureWidth(value, font, request));
-        var lines = lineTexts.Select(line => CreateLine(line.Text, line.ExplicitBreak, font, request)).ToArray();
+        var lines = CreateLines(text, font, request, availableWidth, wrap).ToArray();
         var result = new TextLayoutResult(
             new(lines.Length == 0 ? 0 : lines.Max(line => line.Width), lines.Sum(line => line.Height)),
             Array.AsReadOnly(lines))
@@ -103,12 +103,7 @@ public sealed partial class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
         };
         if (_layouts is not null && text.Length <= 2048)
         {
-            if (_layouts.Count >= 512)
-            {
-                _layouts.Clear();
-            }
-
-            _layouts[key] = result;
+            _layouts.Store(key, result, text.Length + (long)font.Family.Length + LayoutUnits(result));
         }
 
         return result;
@@ -118,23 +113,26 @@ public sealed partial class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
         string text,
         bool explicitBreak,
         FontStyle style,
-        FontRequest request)
+        FontRequest request,
+        TextRun? selectedRun = null,
+        ushort[]? selectedGlyphs = null)
     {
-        var key = (text, style, explicitBreak, (_fontManager as FontManager)?.RegistrationGeneration ?? 0);
+        var key = (text, MetricFontKey.From(style), explicitBreak, generation);
         var cacheable = lineLayouts is not null && _fontManager is FontManager && text.Length <= 2048;
         if (cacheable && lineLayouts!.TryGetValue(key, out var cached))
         {
-            Rendering.ConversionMetrics.Report("textLineCacheHits", 1);
             return cached;
         }
 
-        var resolvedRuns = _fontManager?.ResolveTextRuns(text, request) ?? [];
+        IReadOnlyList<TextRun> resolvedRuns = selectedRun is null ? _fontManager.ResolveTextRuns(text, request) : [selectedRun];
         var positionedRuns = new List<TextLayoutRun>();
         var x = 0d;
         foreach (var run in resolvedRuns)
         {
-            var advance = MeasureRun(run, style);
-            positionedRuns.Add(ResolvedGlyphLayout.Finalize(new(run, x, advance)));
+            var face = ConversionFontResources.Current!.GetFace(run.Font);
+            var glyphs = selectedGlyphs ?? SelectGlyphs(run, face);
+            var advance = face.Measure(glyphs, style.Size);
+            positionedRuns.Add(ResolvedGlyphLayout.Finalize(new(run, x, advance), glyphs));
             x += advance;
         }
 
@@ -158,13 +156,7 @@ public sealed partial class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
         };
         if (cacheable)
         {
-            if (lineLayouts!.Count >= 512)
-            {
-                lineLayouts.Clear();
-            }
-
-            lineLayouts[key] = result;
-            Rendering.ConversionMetrics.Report("textLineCacheMisses", 1);
+            lineLayouts!.Store(key, result, text.Length + (long)style.Family.Length + LineUnits(result));
         }
 
         return result;
@@ -172,24 +164,17 @@ public sealed partial class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
 
     private double MeasureWidth(string text, FontStyle style, FontRequest request)
     {
-        var key = (text, style, (_fontManager as FontManager)?.RegistrationGeneration ?? 0);
+        var key = (text, MetricFontKey.From(style), generation);
         var cacheable = widths is not null && _fontManager is FontManager && text.Length <= 2048;
         if (cacheable && widths!.TryGetValue(key, out var cached))
         {
-            Rendering.ConversionMetrics.Report("textWidthCacheHits", 1);
             return cached;
         }
 
         var width = _fontManager.ResolveTextRuns(text, request).Sum(run => MeasureRun(run, style));
         if (cacheable)
         {
-            if (widths!.Count >= 512)
-            {
-                widths.Clear();
-            }
-
-            widths[key] = width;
-            Rendering.ConversionMetrics.Report("textWidthCacheMisses", 1);
+            widths!.Store(key, width, text.Length + (long)style.Family.Length + 1);
         }
 
         return width;

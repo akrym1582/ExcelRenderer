@@ -18,16 +18,19 @@ internal sealed class SkiaPaintResources : IDisposable
         if (fill is not null)
         {
             fill.Dispose();
+            fill = null;
             ConversionMetrics.Report("paintDisposed", 1);
         }
 
         if (stroke is not null)
         {
             stroke.Dispose();
+            stroke = null;
             ConversionMetrics.Report("paintDisposed", 1);
         }
 
         DisposeEffect();
+        effectKey = null;
     }
 
     /// <summary>Gets the renderer's fill paint with the current RGBA color.</summary>
@@ -41,6 +44,8 @@ internal sealed class SkiaPaintResources : IDisposable
             ConversionMetrics.Report("paintCreated", 1);
         }
 
+        // Style, cap/join and antialias stay fixed after construction; only RGBA changes.
+        ConversionMetrics.Report("paintFillRequests", 1);
         fill.Color = new(color.Red, color.Green, color.Blue, color.Alpha);
         return fill;
     }
@@ -56,6 +61,7 @@ internal sealed class SkiaPaintResources : IDisposable
             ConversionMetrics.Report("paintCreated", 1);
         }
 
+        ConversionMetrics.Report("paintStrokeRequests", 1);
         var color = side.Color ?? new(0, 0, 0);
         stroke.Color = new(color.Red, color.Green, color.Blue, color.Alpha);
         stroke.StrokeWidth = (float)side.Width;

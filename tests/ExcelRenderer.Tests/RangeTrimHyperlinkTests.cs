@@ -447,7 +447,8 @@ public sealed class RangeTrimHyperlinkTests
         var matrix = canvas.TotalMatrix;
         var clip = canvas.DeviceClipBounds;
         var viewport = new PageViewport(200, 150, new(40, 30, 100, 60), 2);
-        new SkiaDrawingContext(false).Execute(canvas,
+        using var context = new SkiaDrawingContext(false);
+        context.Execute(canvas,
             viewport.Apply([new DrawImageCommand(1, new(40, 30, 10, 10), [1, 2])], 1));
         Assert.Equal(savedCount, canvas.SaveCount);
         Assert.Equal(matrix, canvas.TotalMatrix);

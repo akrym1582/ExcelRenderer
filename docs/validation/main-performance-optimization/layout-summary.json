@@ -1,0 +1,92 @@
+[
+  {
+    "round": 0,
+    "workload": "plain",
+    "layoutEqual": true,
+    "ratios": {
+      "TotalMs": 0.999516600550922,
+      "AllocatedBytes": 0.9209332473919999,
+      "PeakWorkingSet64": 0.9939655172413793
+    }
+  },
+  {
+    "round": 0,
+    "workload": "plain-wrap",
+    "layoutEqual": true,
+    "ratios": {
+      "TotalMs": 1.0399918884880568,
+      "AllocatedBytes": 1.0188240768747527,
+      "PeakWorkingSet64": 1.0103532063246117
+    }
+  },
+  {
+    "round": 0,
+    "workload": "rich-wrap",
+    "layoutEqual": true,
+    "ratios": {
+      "TotalMs": 1.0626353280823422,
+      "AllocatedBytes": 0.9944494682286886,
+      "PeakWorkingSet64": 1.2431206306708316
+    }
+  },
+  {
+    "round": 1,
+    "workload": "plain",
+    "layoutEqual": true,
+    "ratios": {
+      "TotalMs": 1.1161424986126183,
+      "AllocatedBytes": 0.9209332473919999,
+      "PeakWorkingSet64": 0.9929197684036394
+    }
+  },
+  {
+    "round": 1,
+    "workload": "plain-wrap",
+    "layoutEqual": true,
+    "ratios": {
+      "TotalMs": 0.8537762043592948,
+      "AllocatedBytes": 1.0188240768747527,
+      "PeakWorkingSet64": 1.0106993277724985
+    }
+  },
+  {
+    "round": 1,
+    "workload": "rich-wrap",
+    "layoutEqual": true,
+    "ratios": {
+      "TotalMs": 1.2658749972863252,
+      "AllocatedBytes": 0.995760886558445,
+      "PeakWorkingSet64": 1.0043373493975905
+    }
+  },
+  {
+    "round": 2,
+    "workload": "plain",
+    "layoutEqual": true,
+    "ratios": {
+      "TotalMs": 1.014504333363228,
+      "AllocatedBytes": 0.9209332473919999,
+      "PeakWorkingSet64": 0.9902507878151261
+    }
+  },
+  {
+    "round": 2,
+    "workload": "plain-wrap",
+    "layoutEqual": true,
+    "ratios": {
+      "TotalMs": 1.0255318251776264,
+      "AllocatedBytes": 1.0188240768747527,
+      "PeakWorkingSet64": 1.01314259539833
+    }
+  },
+  {
+    "round": 2,
+    "workload": "rich-wrap",
+    "layoutEqual": true,
+    "ratios": {
+      "TotalMs": 0.9859983683459107,
+      "AllocatedBytes": 0.994621744755048,
+      "PeakWorkingSet64": 1.003001560811622
+    }
+  }
+]

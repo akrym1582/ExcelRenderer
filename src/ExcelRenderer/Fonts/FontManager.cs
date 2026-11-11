@@ -178,16 +178,7 @@ public sealed class FontManager : IFontManager
             }
 
             renderedText = missing || missingPrivateUse ? "\uFFFD" : renderedText;
-            runs.Add(new(renderedText, font)
-            {
-                Utf16Start = start,
-                SourceText = element,
-                MissingIvsGlyph = missing,
-                MissingPrivateUseGlyph = missingPrivateUse,
-                GlyphId = glyph?.GlyphId,
-                ColorEmojiGlyphId = colorEmojiGlyph,
-                IsDefaultVariationGlyph = glyph?.IsDefault ?? false,
-            });
+            runs.Add(renderedText, element, start, font, missing, missingPrivateUse, glyph?.GlyphId, colorEmojiGlyph, glyph?.IsDefault ?? false);
         }
 
         var result = runs.Complete();

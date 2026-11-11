@@ -1,4 +1,3 @@
-using System.Globalization;
 using ExcelRenderer.Core.Abstractions;
 using ExcelRenderer.Core.Drawing;
 using ExcelRenderer.Core.Fonts;
@@ -10,14 +9,9 @@ namespace ExcelRenderer.Core.Pdf;
 /// <summary>Skia の物理フォントメトリクスを使用して、レイアウトに必要な文字列の寸法を測定します。</summary>
 internal sealed class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
 {
-    private const int MaximumEntries = 512;
-    private const int MaximumRetainedUnits = 131072;
     private readonly SingleFontContext context;
     private readonly CancellationToken token;
-    private readonly Dictionary<LayoutKey, CacheEntry> layouts = new();
-    private readonly CacheEntry?[] slots = new CacheEntry?[MaximumEntries];
-    private int hand;
-    private int retainedUnits;
+    private readonly Rendering.BoundedClockCache<LayoutKey, TextLayoutResult> layouts = new("layoutCache");
 
     /// <summary>Initializes a new instance of the <see cref="SkiaTextMeasurer"/> class.</summary>
     /// <param name="context">The conversion font snapshot.</param>
@@ -52,15 +46,14 @@ internal sealed class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
         var key = new LayoutKey(text, font.Size, wraps ? availableWidth : 0, wraps);
         if (layouts.TryGetValue(key, out var cached))
         {
-            cached.Referenced = true;
             Rendering.ConversionMetrics.Report("layoutCacheHit", 1);
-            return cached.Result;
+            return cached;
         }
 
         Rendering.ConversionMetrics.Report("layoutCacheMiss", 1);
 
         token.ThrowIfCancellationRequested();
-        var lines = (!context.Face.Color && IsValidUtf16(text)
+        var lines = (!context.Face.Color && OutlineParagraph.IsValidUtf16(text)
             ? LayoutOutline(text, font, availableWidth, wrap)
             : TextLineBreaker.Break(text, availableWidth, wrap, value => context.Face.Measure(SelectGlyphs(value), font.Size))
                 .Select(line => CreateLine(line.Text, line.ExplicitBreak, font))).ToArray();
@@ -73,129 +66,36 @@ internal sealed class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
         if (text.Length <= 2048)
         {
             var units = text.Length + lines.Sum(line => line.Text.Length + (line.Glyphs?.Glyphs.Count ?? 0));
-            Store(key, result, units);
+            layouts.Store(key, result, units);
         }
 
         return result;
     }
 
-    private static bool IsValidUtf16(string text)
-    {
-        for (var index = 0; index < text.Length; index++)
-        {
-            if (char.IsHighSurrogate(text[index]))
-            {
-                if (++index == text.Length || !char.IsLowSurrogate(text[index]))
-                {
-                    return false;
-                }
-            }
-            else if (char.IsLowSurrogate(text[index]))
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     private IEnumerable<TextLayoutLine> LayoutOutline(string text, FontStyle font, double width, bool wrap)
     {
         var paragraphs = text.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n');
-        for (var paragraphIndex = 0; paragraphIndex < paragraphs.Length; paragraphIndex++)
+        for (var index = 0; index < paragraphs.Length; index++)
         {
-            token.ThrowIfCancellationRequested();
-            var paragraph = paragraphs[paragraphIndex];
-            var glyphs = SelectGlyphs(paragraph);
-            var explicitBreak = paragraphIndex < paragraphs.Length - 1;
-            if (!wrap || width <= 0)
+            var paragraph = new OutlineParagraph(paragraphs[index], context.Face, token);
+            var selected = paragraph.BreakRanges(font.Size, width, wrap).GetEnumerator();
+            using (selected)
             {
-                yield return CreateLine(paragraph, explicitBreak, font, glyphs);
-                continue;
-            }
-
-            var boundaries = StringInfo.ParseCombiningCharacters(paragraph);
-            var start = 0;
-            var firstGlyph = 0;
-            var glyphIndex = 0;
-            long units = 0;
-            for (var index = 0; index < boundaries.Length; index++)
-            {
-                if ((index & 255) == 0)
+                if (!selected.MoveNext())
                 {
-                    token.ThrowIfCancellationRequested();
-                }
-
-                var elementStart = boundaries[index];
-                var elementEnd = index + 1 < boundaries.Length ? boundaries[index + 1] : paragraph.Length;
-                var elementGlyph = glyphIndex;
-                long elementUnits = 0;
-                for (var character = elementStart; character < elementEnd; character++)
-                {
-                    if ((character & 255) == 0)
-                    {
-                        token.ThrowIfCancellationRequested();
-                    }
-
-                    elementUnits += context.Face.AdvanceUnits(glyphs[glyphIndex++]);
-                    if (char.IsHighSurrogate(paragraph[character]))
-                    {
-                        character++;
-                    }
-                }
-
-                Rendering.ConversionMetrics.Report("textWrapComparisons", 1);
-                if (elementStart > start && !TextLineBreaker.Fits(context.Face.MeasureUnits(units + elementUnits, font.Size), width))
-                {
-                    yield return CreateLine(paragraph.Substring(start, elementStart - start), false, font, glyphs.AsSpan(firstGlyph, elementGlyph - firstGlyph).ToArray());
-                    start = elementStart;
-                    firstGlyph = elementGlyph;
-                    units = 0;
-                }
-
-                units += elementUnits;
-            }
-
-            yield return CreateLine(paragraph.Substring(start), explicitBreak, font, glyphs.AsSpan(firstGlyph).ToArray());
-        }
-    }
-
-    private void Store(LayoutKey key, TextLayoutResult result, int units)
-    {
-        while (layouts.Count >= MaximumEntries || retainedUnits + units > MaximumRetainedUnits)
-        {
-            var entry = slots[hand];
-            if (entry is not null)
-            {
-                if (entry.Referenced)
-                {
-                    entry.Referenced = false;
-                }
-                else
-                {
-                    layouts.Remove(entry.Key);
-                    retainedUnits -= entry.Units;
-                    slots[hand] = null;
-                    Rendering.ConversionMetrics.Report("layoutCacheEviction", 1);
                     continue;
                 }
+
+                var previous = selected.Current;
+                while (selected.MoveNext())
+                {
+                    yield return CreateLine(previous.Text, false, font, paragraph.CreateSelection(previous.Text, previous.GlyphStart, previous.GlyphCount));
+                    previous = selected.Current;
+                }
+
+                yield return CreateLine(previous.Text, index < paragraphs.Length - 1, font, paragraph.CreateSelection(previous.Text, previous.GlyphStart, previous.GlyphCount));
             }
-
-            hand = (hand + 1) % MaximumEntries;
         }
-
-        while (slots[hand] is not null)
-        {
-            hand = (hand + 1) % MaximumEntries;
-        }
-
-        var value = new CacheEntry(key, result, units);
-        slots[hand] = value;
-        layouts.Add(key, value);
-        retainedUnits += units;
-        hand = (hand + 1) % MaximumEntries;
-        Rendering.ConversionMetrics.Report("layoutCacheEntries", layouts.Count);
-        Rendering.ConversionMetrics.Report("layoutCacheRetainedUnits", retainedUnits);
     }
 
     private ushort[] SelectGlyphs(string text)
@@ -205,13 +105,14 @@ internal sealed class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
         return context.Face.Typeface.GetGlyphs(text);
     }
 
-    private TextLayoutLine CreateLine(string text, bool explicitBreak, FontStyle style, ushort[]? selectedGlyphs = null)
+    private TextLayoutLine CreateLine(string text, bool explicitBreak, FontStyle style, GlyphSequence? selectedGlyphs = null)
     {
         var (ascent, descent, leading) = context.Metrics(style.Size);
-        var glyphs = selectedGlyphs ?? SelectGlyphs(text);
-        return new(text, context.Face.Measure(glyphs, style.Size), ascent + descent + leading, ascent, explicitBreak)
+        var glyphs = selectedGlyphs is null ? SelectGlyphs(text) : null;
+        var width = glyphs is null ? context.Face.Measure(selectedGlyphs!.Glyphs, style.Size) : context.Face.Measure(glyphs, style.Size);
+        return new(text, width, ascent + descent + leading, ascent, explicitBreak)
         {
-            Glyphs = new(context.Face, glyphs, text, text),
+            Glyphs = selectedGlyphs ?? new(context.Face, glyphs!, text, text),
             Ascent = ascent,
             Descent = descent,
             Leading = leading,
@@ -219,15 +120,4 @@ internal sealed class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
     }
 
     private readonly record struct LayoutKey(string Text, double Size, double Width, bool Wrap);
-
-    private sealed class CacheEntry(LayoutKey key, TextLayoutResult result, int units)
-    {
-        internal LayoutKey Key { get; } = key;
-
-        internal TextLayoutResult Result { get; } = result;
-
-        internal int Units { get; } = units;
-
-        internal bool Referenced { get; set; } = true;
-    }
 }

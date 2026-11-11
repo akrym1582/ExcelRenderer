@@ -12,6 +12,9 @@ internal sealed record RenderPage(
     IReadOnlyList<RenderImage>? Images = null,
     IReadOnlyList<RenderText>? HeaderFooterTexts = null)
 {
+    /// <summary>Gets a value indicating whether this payload omits nontext drawing layers for product preflight.</summary>
+    internal bool IsTextPreflight { get; init; }
+
     /// <summary>Gets placed external border owners without their content.</summary>
     internal IReadOnlyList<RenderCell> BorderOnlyCells { get; init; } = [];
 

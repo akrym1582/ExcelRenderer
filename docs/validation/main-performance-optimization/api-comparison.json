@@ -1,0 +1,10 @@
+{
+  "ExcelRenderer": {
+    "equal": true,
+    "entries": 2361
+  },
+  "ExcelRenderer.Core": {
+    "equal": true,
+    "entries": 82
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "primary": [
+    {
+      "case": "wide-wrap-Pdf",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 2484.5256,
+          "allocationBytes": 3866895808,
+          "peakRssBytes": 174563328
+        },
+        "after": {
+          "milliseconds": 125.8574,
+          "allocationBytes": 56977904,
+          "peakRssBytes": 154275840
+        }
+      },
+      "processPeaks": {
+        "before": 178487296,
+        "after": 165736448
+      },
+      "ratios": {
+        "milliseconds": 0.0506565116495479,
+        "allocationBytes": 0.01473479163367207,
+        "peakRssBytes": 0.8837815007743207,
+        "processPeakRssBytes": 0.9285615935377272
+      },
+      "investigate": false
+    },
+    {
+      "case": "wide-wrap-Pdf",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 2512.0072,
+          "allocationBytes": 3866899672,
+          "peakRssBytes": 162811904
+        },
+        "after": {
+          "milliseconds": 94.8774,
+          "allocationBytes": 56976368,
+          "peakRssBytes": 166236160
+        }
+      },
+      "processPeaks": {
+        "before": 163180544,
+        "after": 166289408
+      },
+      "ratios": {
+        "milliseconds": 0.037769557348402504,
+        "allocationBytes": 0.014734379692486628,
+        "peakRssBytes": 1.0210319756471862,
+        "processPeakRssBytes": 1.0190516830241723
+      },
+      "investigate": false
+    },
+    {
+      "case": "wide-wrap-Pdf",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 2400.9604,
+          "allocationBytes": 3866894456,
+          "peakRssBytes": 151158784
+        },
+        "after": {
+          "milliseconds": 72.7497,
+          "allocationBytes": 56977280,
+          "peakRssBytes": 137949184
+        }
+      },
+      "processPeaks": {
+        "before": 151543808,
+        "after": 138133504
+      },
+      "ratios": {
+        "milliseconds": 0.030300249850018352,
+        "allocationBytes": 0.014734635415660799,
+        "peakRssBytes": 0.9126110990678518,
+        "processPeakRssBytes": 0.9115087302016325
+      },
+      "investigate": false
+    }
+  ],
+  "interpretation": "Separate supplementary wide fixture; checked per-round time/RSS without pooling."
+}

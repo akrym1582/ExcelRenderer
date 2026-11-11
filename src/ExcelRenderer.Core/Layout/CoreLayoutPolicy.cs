@@ -6,6 +6,11 @@ namespace ExcelRenderer.Core.Layout;
 /// <summary>Selects coarse product geometry and page content while Core owns planning and placement.</summary>
 internal class CoreLayoutPolicy
 {
+    /// <summary>Tests a proven page candidate list for a product's text-only preflight policy.</summary>
+    /// <param name="context">The page-local geometry and candidates.</param>
+    /// <returns>Whether full drawing commands are unnecessary for this preflight.</returns>
+    internal virtual bool CanBuildTextPreflight(ReportLayoutContext context) => false;
+
     /// <summary>Reserves product content before measurement and placement; ordinary content is unchanged.</summary>
     /// <param name="cell">Original cell.</param>
     /// <param name="ordinaryContentWidth">Ordinary content width.</param>

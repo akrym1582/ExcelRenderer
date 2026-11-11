@@ -7,8 +7,9 @@ internal static class ResolvedGlyphLayout
 {
     /// <summary>Completes a run without changing its text, advance, style or position.</summary>
     /// <param name="run">The caller's resolved run.</param>
+    /// <param name="selectedGlyphs">Optional glyphs already selected by measurement.</param>
     /// <returns>A handle-free snapshot-backed run.</returns>
-    internal static TextLayoutRun Finalize(TextLayoutRun run)
+    internal static TextLayoutRun Finalize(TextLayoutRun run, ushort[]? selectedGlyphs = null)
     {
         if (run.Glyphs is not null)
         {
@@ -18,7 +19,7 @@ internal static class ResolvedGlyphLayout
         var resources = ConversionFontResources.Current ?? throw new InvalidOperationException("A font resource scope is required to finalize glyphs.");
         var text = run.Run;
         var face = resources.GetFace(text.Font);
-        var glyphs = (text.GlyphId ?? text.ColorEmojiGlyphId) is { } glyph ? new[] { glyph } : face.Typeface.GetGlyphs(text.Text);
+        var glyphs = selectedGlyphs ?? ((text.GlyphId ?? text.ColorEmojiGlyphId) is { } glyph ? new[] { glyph } : face.Typeface.GetGlyphs(text.Text));
         Rendering.ConversionMetrics.Report("glyphRunsFinalized", 1);
         return run with
         {

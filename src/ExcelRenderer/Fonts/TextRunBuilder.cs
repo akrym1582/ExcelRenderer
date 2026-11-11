@@ -10,25 +10,42 @@ internal sealed class TextRunBuilder
     private StringBuilder? display;
     private StringBuilder? source;
 
-    /// <summary>Appends a selected source element under the existing merge policy.</summary>
-    /// <param name="run">The already resolved element.</param>
-    internal void Add(TextRun run)
+    /// <summary>Appends element metadata, allocating a run only when a new physical segment starts.</summary>
+    /// <param name="text">Selected display text.</param>
+    /// <param name="sourceText">Original Unicode element.</param>
+    /// <param name="start">Original UTF-16 offset.</param>
+    /// <param name="font">Selected immutable physical face.</param>
+    /// <param name="missingIvs">Whether an IVS is missing.</param>
+    /// <param name="missingPrivateUse">Whether a private-use glyph is missing.</param>
+    /// <param name="glyphId">An explicitly selected variation glyph.</param>
+    /// <param name="colorEmojiGlyphId">An explicitly selected color glyph.</param>
+    /// <param name="defaultVariation">Whether this is a default variation glyph.</param>
+    internal void Add(string text, string sourceText, int start, ResolvedFont font, bool missingIvs, bool missingPrivateUse, ushort? glyphId, ushort? colorEmojiGlyphId, bool defaultVariation)
     {
-        if (pending is not null && pending.Font.FaceId == run.Font.FaceId &&
-            run.GlyphId is null && run.ColorEmojiGlyphId is null && pending.GlyphId is null &&
-            pending.ColorEmojiGlyphId is null && pending.MissingIvsGlyph == run.MissingIvsGlyph &&
-            pending.MissingPrivateUseGlyph == run.MissingPrivateUseGlyph &&
-            pending.Utf16Start + (source?.Length ?? pending.SourceText.Length) == run.Utf16Start)
+        if (pending is not null && pending.Font.FaceId == font.FaceId &&
+            glyphId is null && colorEmojiGlyphId is null && pending.GlyphId is null &&
+            pending.ColorEmojiGlyphId is null && pending.MissingIvsGlyph == missingIvs &&
+            pending.MissingPrivateUseGlyph == missingPrivateUse &&
+            pending.Utf16Start + (source?.Length ?? pending.SourceText.Length) == start)
         {
             display ??= new(pending.Text);
             source ??= new(pending.SourceText);
-            display.Append(run.Text);
-            source.Append(run.SourceText);
+            display.Append(text);
+            source.Append(sourceText);
             return;
         }
 
         Flush();
-        pending = run;
+        pending = new(text, font)
+        {
+            Utf16Start = start,
+            SourceText = sourceText,
+            MissingIvsGlyph = missingIvs,
+            MissingPrivateUseGlyph = missingPrivateUse,
+            GlyphId = glyphId,
+            ColorEmojiGlyphId = colorEmojiGlyphId,
+            IsDefaultVariationGlyph = defaultVariation,
+        };
     }
 
     /// <summary>Completes the immutable run list.</summary>

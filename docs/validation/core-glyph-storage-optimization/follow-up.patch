@@ -1,0 +1,610 @@
+--- a/src/ExcelRenderer.Core/Fonts/GlyphSequence.cs
++++ b/src/ExcelRenderer.Core/Fonts/GlyphSequence.cs
+@@ -17,58 +17,30 @@
+     /// <param name="source">The original source text.</param>
+     /// <param name="singleCluster">Whether one explicit glyph represents the source sequence.</param>
+     internal GlyphSequence(SkiaFontFace face, ushort[] glyphs, string display, string source, bool singleCluster = false)
++        : this(face, glyphs.AsSpan(0, glyphs.Length), display, source, singleCluster)
++    {
++    }
++
++    /// <summary>Initializes a new instance of the <see cref="GlyphSequence"/> class from borrowed glyphs.</summary>
++    /// <param name="face">The selected physical snapshot.</param>
++    /// <param name="glyphs">The borrowed range; copied exactly once into privately owned storage.</param>
++    /// <param name="display">The display text.</param>
++    /// <param name="source">The original source text.</param>
++    /// <param name="singleCluster">Whether one explicit glyph represents the source sequence.</param>
++    internal GlyphSequence(SkiaFontFace face, ReadOnlySpan<ushort> glyphs, string display, string source, bool singleCluster = false)
+     {
+         FontIdentity = face.Identity;
+-        this.glyphs = (ushort[])glyphs.Clone();
++        this.glyphs = glyphs.ToArray();
+         this.source = Encoding.UTF8.GetBytes(source);
+         Glyphs = Array.AsReadOnly(this.glyphs);
+         Source = Array.AsReadOnly(this.source);
+-        var clusters = new List<uint>();
+-        if (singleCluster)
+-        {
+-            clusters.AddRange(new uint[glyphs.Length]);
+-        }
+-        else
+-        {
+-            using var originals = TextLineBreaker.Elements(source).GetEnumerator();
+-            var offset = 0;
+-            uint? whitespace = null;
+-            foreach (var element in TextLineBreaker.Elements(display))
+-            {
+-                if (!originals.MoveNext())
+-                {
+-                    throw new InvalidDataException("Display and source Unicode clusters differ.");
+-                }
+-
+-                var isWhitespace = element.All(char.IsWhiteSpace);
+-                var cluster = isWhitespace ? whitespace ?? (uint)offset : (uint)offset;
+-                whitespace = isWhitespace ? cluster : null;
+-                for (var index = 0; index < element.Length; index++)
+-                {
+-                    clusters.Add(cluster);
+-                    if (char.IsHighSurrogate(element[index]) && index + 1 < element.Length && char.IsLowSurrogate(element[index + 1]))
+-                    {
+-                        index++;
+-                    }
+-                }
+-
+-                offset += Encoding.UTF8.GetByteCount(originals.Current);
+-            }
+-
+-            if (originals.MoveNext())
+-            {
+-                throw new InvalidDataException("Unused source Unicode clusters.");
+-            }
+-        }
+-
+-        if (clusters.Count != glyphs.Length)
+-        {
+-            throw new InvalidDataException("Glyphs and source Unicode clusters differ.");
+-        }
+-
+-        this.clusters = clusters.ToArray();
++        this.clusters = singleCluster ? new uint[glyphs.Length] :
++            string.Equals(display, source, StringComparison.Ordinal) ? IdentityClusters(glyphs.Length, source) :
++            CompatibilityClusters(glyphs.Length, display, source);
+         Clusters = Array.AsReadOnly(this.clusters);
+-        Advances = Array.AsReadOnly(face.Advances(glyphs, 1));
++        Advances = Array.AsReadOnly(face.Advances(this.glyphs, 1));
++        Rendering.ConversionMetrics.Report("glyphStorageCopies", 1);
++        Rendering.ConversionMetrics.Report("glyphStorageCopiedGlyphs", glyphs.Length);
+     }
+ 
+     /// <summary>Gets the immutable physical content identity.</summary>
+@@ -94,4 +66,92 @@
+ 
+     /// <summary>Gets borrowed immutable clusters for native APIs that copy their input.</summary>
+     internal ReadOnlySpan<uint> ClusterSpan => clusters;
++
++    private static uint[] IdentityClusters(int glyphCount, string text)
++    {
++        var clusters = new uint[glyphCount];
++        var glyphIndex = 0;
++        var offset = 0;
++        uint? whitespace = null;
++        foreach (var element in TextLineBreaker.Elements(text))
++        {
++            var isWhitespace = true;
++            for (var index = 0; index < element.Length; index++)
++            {
++                if (!char.IsWhiteSpace(element[index]))
++                {
++                    isWhitespace = false;
++                    break;
++                }
++            }
++
++            var cluster = isWhitespace ? whitespace ?? (uint)offset : (uint)offset;
++            whitespace = isWhitespace ? cluster : null;
++            for (var index = 0; index < element.Length; index++)
++            {
++                if (glyphIndex == glyphCount)
++                {
++                    throw new InvalidDataException("Glyphs and source Unicode clusters differ.");
++                }
++
++                clusters[glyphIndex++] = cluster;
++                if (char.IsHighSurrogate(element[index]) && index + 1 < element.Length && char.IsLowSurrogate(element[index + 1]))
++                {
++                    index++;
++                }
++            }
++
++            offset += Encoding.UTF8.GetByteCount(element);
++        }
++
++        if (glyphIndex != glyphCount)
++        {
++            throw new InvalidDataException("Glyphs and source Unicode clusters differ.");
++        }
++
++        Rendering.ConversionMetrics.Report("glyphClusterElementPasses", 1);
++        return clusters;
++    }
++
++    private static uint[] CompatibilityClusters(int glyphCount, string display, string source)
++    {
++        var clusters = new List<uint>();
++        using var originals = TextLineBreaker.Elements(source).GetEnumerator();
++        var offset = 0;
++        uint? whitespace = null;
++        foreach (var element in TextLineBreaker.Elements(display))
++        {
++            if (!originals.MoveNext())
++            {
++                throw new InvalidDataException("Display and source Unicode clusters differ.");
++            }
++
++            var isWhitespace = element.All(char.IsWhiteSpace);
++            var cluster = isWhitespace ? whitespace ?? (uint)offset : (uint)offset;
++            whitespace = isWhitespace ? cluster : null;
++            for (var index = 0; index < element.Length; index++)
++            {
++                clusters.Add(cluster);
++                if (char.IsHighSurrogate(element[index]) && index + 1 < element.Length && char.IsLowSurrogate(element[index + 1]))
++                {
++                    index++;
++                }
++            }
++
++            offset += Encoding.UTF8.GetByteCount(originals.Current);
++        }
++
++        if (originals.MoveNext())
++        {
++            throw new InvalidDataException("Unused source Unicode clusters.");
++        }
++
++        if (clusters.Count != glyphCount)
++        {
++            throw new InvalidDataException("Glyphs and source Unicode clusters differ.");
++        }
++
++        Rendering.ConversionMetrics.Report("glyphClusterElementPasses", 2);
++        return clusters.ToArray();
++    }
+ }
+--- a/src/ExcelRenderer.Core/Layout/OutlineParagraph.cs
++++ b/src/ExcelRenderer.Core/Layout/OutlineParagraph.cs
+@@ -63,6 +63,34 @@
+             yield break;
+         }
+ 
++        foreach (var line in BreakRanges(size, width, wrap))
++        {
++            ConversionMetrics.Report("outlineIntermediateGlyphCopies", 1);
++            yield return (line.Text, glyphs.AsSpan(line.GlyphStart, line.GlyphCount).ToArray());
++        }
++    }
++
++    /// <summary>Copies a borrowed paragraph range only into the final immutable selection.</summary>
++    /// <param name="line">The complete line text.</param>
++    /// <param name="start">The paragraph glyph offset.</param>
++    /// <param name="count">The selected glyph count.</param>
++    /// <returns>A selection that does not retain the paragraph buffer.</returns>
++    internal GlyphSequence CreateSelection(string line, int start, int count) =>
++        new(face, glyphs.AsSpan(start, count), line, line);
++
++    /// <summary>Enumerates glyph ranges without allocating temporary line glyph arrays.</summary>
++    /// <param name="size">The run size.</param>
++    /// <param name="width">The available width.</param>
++    /// <param name="wrap">Whether automatic wrapping is enabled.</param>
++    /// <returns>Line text and paragraph-relative glyph ranges.</returns>
++    internal IEnumerable<(string Text, int GlyphStart, int GlyphCount)> BreakRanges(double size, double width, bool wrap)
++    {
++        if (!wrap || width <= 0)
++        {
++            yield return (text, 0, glyphs.Length);
++            yield break;
++        }
++
+         var boundaries = StringInfo.ParseCombiningCharacters(text);
+         var start = 0;
+         var firstGlyph = 0;
+@@ -96,7 +124,7 @@
+             ConversionMetrics.Report("textWrapComparisons", 1);
+             if (elementStart > start && !TextLineBreaker.Fits(face.MeasureUnits(units + elementUnits, size), width))
+             {
+-                yield return (text.Substring(start, elementStart - start), glyphs.AsSpan(firstGlyph, elementGlyph - firstGlyph).ToArray());
++                yield return (text.Substring(start, elementStart - start), firstGlyph, elementGlyph - firstGlyph);
+                 start = elementStart;
+                 firstGlyph = elementGlyph;
+                 units = 0;
+@@ -105,6 +133,6 @@
+             units += elementUnits;
+         }
+ 
+-        yield return (text.Substring(start), glyphs.AsSpan(firstGlyph).ToArray());
++        yield return (text.Substring(start), firstGlyph, glyphs.Length - firstGlyph);
+     }
+ }
+--- a/src/ExcelRenderer.Core/Pdf/SkiaTextMeasurer.cs
++++ b/src/ExcelRenderer.Core/Pdf/SkiaTextMeasurer.cs
+@@ -77,7 +77,8 @@
+         var paragraphs = text.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n');
+         for (var index = 0; index < paragraphs.Length; index++)
+         {
+-            var selected = new OutlineParagraph(paragraphs[index], context.Face, token).Break(font.Size, width, wrap).GetEnumerator();
++            var paragraph = new OutlineParagraph(paragraphs[index], context.Face, token);
++            var selected = paragraph.BreakRanges(font.Size, width, wrap).GetEnumerator();
+             using (selected)
+             {
+                 if (!selected.MoveNext())
+@@ -88,11 +89,11 @@
+                 var previous = selected.Current;
+                 while (selected.MoveNext())
+                 {
+-                    yield return CreateLine(previous.Text, false, font, previous.Glyphs);
++                    yield return CreateLine(previous.Text, false, font, paragraph.CreateSelection(previous.Text, previous.GlyphStart, previous.GlyphCount));
+                     previous = selected.Current;
+                 }
+ 
+-                yield return CreateLine(previous.Text, index < paragraphs.Length - 1, font, previous.Glyphs);
++                yield return CreateLine(previous.Text, index < paragraphs.Length - 1, font, paragraph.CreateSelection(previous.Text, previous.GlyphStart, previous.GlyphCount));
+             }
+         }
+     }
+@@ -104,13 +105,14 @@
+         return context.Face.Typeface.GetGlyphs(text);
+     }
+ 
+-    private TextLayoutLine CreateLine(string text, bool explicitBreak, FontStyle style, ushort[]? selectedGlyphs = null)
++    private TextLayoutLine CreateLine(string text, bool explicitBreak, FontStyle style, GlyphSequence? selectedGlyphs = null)
+     {
+         var (ascent, descent, leading) = context.Metrics(style.Size);
+-        var glyphs = selectedGlyphs ?? SelectGlyphs(text);
+-        return new(text, context.Face.Measure(glyphs, style.Size), ascent + descent + leading, ascent, explicitBreak)
++        var glyphs = selectedGlyphs is null ? SelectGlyphs(text) : null;
++        var width = glyphs is null ? context.Face.Measure(selectedGlyphs!.Glyphs, style.Size) : context.Face.Measure(glyphs, style.Size);
++        return new(text, width, ascent + descent + leading, ascent, explicitBreak)
+         {
+-            Glyphs = new(context.Face, glyphs, text, text),
++            Glyphs = selectedGlyphs ?? new(context.Face, glyphs!, text, text),
+             Ascent = ascent,
+             Descent = descent,
+             Leading = leading,
+--- /dev/null
++++ b/tests/ExcelRenderer.Core.Tests/GlyphStorageOptimizationTests.cs
+@@ -0,0 +1,151 @@
++using System.Text;
++using ExcelRenderer.Core.Abstractions;
++using ExcelRenderer.Core.Drawing;
++using ExcelRenderer.Core.Fonts;
++using ExcelRenderer.Core.Layout;
++using ExcelRenderer.Core.Model;
++using ExcelRenderer.Core.Pdf;
++using ExcelRenderer.Core.Rendering;
++using Xunit;
++
++namespace ExcelRenderer.Core.Tests;
++
++public sealed class GlyphStorageOptimizationTests
++{
++    [Fact]
++    public void Identity_clusters_match_original_builder_for_unicode_and_invalid_input()
++    {
++        using var context = new SingleFontContext(TestSupport.JapaneseFont);
++        var random = new Random(91831);
++        string[] elements = ["a", "日", "e\u0301", "😀", "👩‍👩‍👧", "🇯🇵", " ", "\t", "\r\n", "\u00a0", "\u2003", "\u200d", "\uD800", "\uDC00"];
++        var texts = new List<string> { "", "  \t \n", "a   b", "e\u0301  😀", "a" + new string('\u0301', 2048) };
++        for (var sample = 0; sample < 100; sample++)
++        {
++            texts.Add(string.Concat(Enumerable.Range(0, random.Next(1, 30)).Select(_ => elements[random.Next(elements.Length)])));
++        }
++
++        foreach (var text in texts)
++        foreach (var delta in new[] { -1, 0, 1 })
++        {
++            var native = context.Face.Typeface.GetGlyphs(text);
++            var glyphs = native.Take(Math.Max(0, native.Length + delta)).Concat(delta > 0 ? new ushort[] { 0 } : []).ToArray();
++            AssertOriginal(context.Face, glyphs, text, new string(text.ToCharArray()), false);
++        }
++    }
++
++    [Theory]
++    [InlineData("a", "a\U000E0100", false)]
++    [InlineData("?", "👩‍👩‍👧", false)]
++    [InlineData("a", "ab", false)]
++    [InlineData("ab", "a", false)]
++    [InlineData("", "a", false)]
++    [InlineData("ab", "", false)]
++    [InlineData("a", "ab", true)]
++    [InlineData("", "", true)]
++    [InlineData("  ", "  ", true)]
++    public void Compatibility_and_explicit_clusters_preserve_original_validation(string display, string source, bool singleCluster)
++    {
++        using var context = new SingleFontContext(TestSupport.JapaneseFont);
++        var glyphs = context.Face.Typeface.GetGlyphs(display);
++        AssertOriginal(context.Face, glyphs, display, source, singleCluster);
++    }
++
++    [Fact]
++    public void Span_storage_is_frozen_and_does_not_retain_the_paragraph_buffer()
++    {
++        using var context = new SingleFontContext(TestSupport.JapaneseFont);
++        var input = context.Face.Typeface.GetGlyphs("x日本😀y");
++        var original = input.AsSpan(1, input.Length - 2).ToArray();
++        var sequence = new GlyphSequence(context.Face, input.AsSpan(1, input.Length - 2), "日本😀", "日本😀");
++        Array.Fill(input, (ushort)0);
++        Assert.Equal(original, sequence.Glyphs);
++        Assert.Equal(context.Face.Advances(original, 1), sequence.Advances);
++        Assert.Throws<NotSupportedException>(() => ((IList<ushort>)sequence.Glyphs)[0] = 0);
++        Assert.Throws<NotSupportedException>(() => ((IList<uint>)sequence.Clusters)[0] = 99);
++        Assert.Equal(Encoding.UTF8.GetBytes("日本😀"), sequence.Source);
++    }
++
++    [Fact]
++    public void Core_outline_uses_one_storage_copy_per_line_and_replays_after_scope_disposal()
++    {
++        var text = "replay " + string.Concat(Enumerable.Repeat("日本語 e\u0301 😀    ", 300));
++        var counts = new Dictionary<string, double>();
++        ConversionMetrics.Observer = (name, value) => counts[name] = counts.GetValueOrDefault(name) + value;
++        TextLayoutResult layout;
++        try
++        {
++            using (var font = new SingleFontContext(TestSupport.JapaneseFont))
++            {
++                layout = new SkiaTextMeasurer(font).Layout(text, new(Size: 10.125), 80, true);
++            }
++        }
++        finally
++        {
++            ConversionMetrics.Observer = null;
++        }
++
++        Assert.True(layout.Lines.Count > 10);
++        Assert.Equal(layout.Lines.Count, counts["glyphStorageCopies"]);
++        Assert.Equal(layout.Lines.Sum(line => line.Glyphs!.Glyphs.Count), counts["glyphStorageCopiedGlyphs"]);
++        Assert.False(counts.ContainsKey("outlineIntermediateGlyphCopies"));
++        Assert.Equal(layout.Lines.Count, counts["glyphClusterElementPasses"]);
++        using var replayFont = new SingleFontContext(TestSupport.JapaneseFont);
++        using var renderer = new CorePdfRenderer(replayFont);
++        DrawCommand[] commands = [new DrawTextCommand(1, new(0, 0, 80, 800), text, CellStyle.Default with { WrapText = true, Font = new(Size: 10.125) }) { TextLayout = layout }];
++        renderer.Collect(commands);
++        renderer.Prepare();
++        renderer.AppendPage(new(100, 800), commands);
++        using var output = new MemoryStream();
++        renderer.Complete(output);
++        using var document = TestSupport.Open(output.ToArray());
++        Assert.Equal(1, document.NumberOfPages);
++        Assert.Contains("replay", document.GetPage(1).Text);
++    }
++
++    private static void AssertOriginal(SkiaFontFace face, ushort[] glyphs, string display, string source, bool singleCluster)
++    {
++        uint[]? expected = null;
++        GlyphSequence? actual = null;
++        var oldError = Record.Exception(() => expected = OriginalClusters(glyphs.Length, display, source, singleCluster));
++        var newError = Record.Exception(() => actual = new(face, glyphs, display, source, singleCluster));
++        Assert.Equal(oldError?.GetType(), newError?.GetType());
++        Assert.Equal(oldError?.Message, newError?.Message);
++        if (oldError is not null) return;
++        Assert.Equal(expected, actual!.Clusters);
++        Assert.Equal(glyphs, actual.Glyphs);
++        Assert.Equal(Encoding.UTF8.GetBytes(source), actual.Source);
++        Assert.Equal(face.Advances(glyphs, 1), actual.Advances);
++    }
++
++    // Independent snapshot of the pre-change cluster algorithm.
++    private static uint[] OriginalClusters(int glyphCount, string display, string source, bool singleCluster)
++    {
++        var clusters = new List<uint>();
++        if (singleCluster)
++        {
++            clusters.AddRange(new uint[glyphCount]);
++        }
++        else
++        {
++            using var originals = TextLineBreaker.Elements(source).GetEnumerator();
++            var offset = 0;
++            uint? whitespace = null;
++            foreach (var element in TextLineBreaker.Elements(display))
++            {
++                if (!originals.MoveNext()) throw new InvalidDataException("Display and source Unicode clusters differ.");
++                var isWhitespace = element.All(char.IsWhiteSpace);
++                var cluster = isWhitespace ? whitespace ?? (uint)offset : (uint)offset;
++                whitespace = isWhitespace ? cluster : null;
++                for (var index = 0; index < element.Length; index++)
++                {
++                    clusters.Add(cluster);
++                    if (char.IsHighSurrogate(element[index]) && index + 1 < element.Length && char.IsLowSurrogate(element[index + 1])) index++;
++                }
++                offset += Encoding.UTF8.GetByteCount(originals.Current);
++            }
++            if (originals.MoveNext()) throw new InvalidDataException("Unused source Unicode clusters.");
++        }
++        if (clusters.Count != glyphCount) throw new InvalidDataException("Glyphs and source Unicode clusters differ.");
++        return clusters.ToArray();
++    }
++}
+--- /dev/null
++++ b/tools/ExcelRenderer.Performance/CoreGlyphBenchmark.cs
+@@ -0,0 +1,82 @@
++using System.Diagnostics;
++using System.Globalization;
++using System.Security.Cryptography;
++using System.Text;
++using System.Text.Json;
++using ExcelRenderer.Core.Fonts;
++using ExcelRenderer.Core.Model;
++using ExcelRenderer.Core.Pdf;
++
++/// <summary>Measures Core glyph storage without workbook input, font loading or cache hits.</summary>
++internal static class CoreGlyphBenchmark
++{
++    /// <summary>Runs three warm-ups and three measured batches against fixed glyph input.</summary>
++    /// <param name="args">Command, workload, count and optional wrap width.</param>
++    internal static void Run(string[] args)
++    {
++        var workload = args[1];
++        var count = args.Length > 2 ? int.Parse(args[2], CultureInfo.InvariantCulture) : 20;
++        var width = args.Length > 3 ? double.Parse(args[3], CultureInfo.InvariantCulture) : 80;
++        if (workload is not ("clusters" or "compatibility" or "outline"))
++        {
++            throw new ArgumentException("Unknown glyph workload.", nameof(args));
++        }
++
++        var fontPath = Path.GetFullPath("third_party/NotoSansJP/NotoSansJP-Regular.ttf");
++        using var font = new SingleFontContext(fontPath);
++        var texts = Enumerable.Range(0, count).Select(index => index.ToString(CultureInfo.InvariantCulture) + " " +
++            string.Concat(Enumerable.Repeat("日本 e\u0301 😀 👩‍👩‍👧 \t  ", 200))).ToArray();
++        var sources = workload == "compatibility" ? texts.Select(text => text.Replace("日", "日\U000E0100", StringComparison.Ordinal)).ToArray() : texts;
++        var inputs = texts.Select(text => font.Face.Typeface.GetGlyphs(text)).ToArray();
++        for (var iteration = 0; iteration < 6; iteration++)
++        {
++            var sequences = new List<GlyphSequence>();
++            var layouts = new List<ExcelRenderer.Core.Abstractions.TextLayoutResult>();
++            var measurer = new SkiaTextMeasurer(font);
++            var collections = Enumerable.Range(0, 3).Select(GC.CollectionCount).ToArray();
++            var allocated = GC.GetTotalAllocatedBytes(true);
++            var clock = Stopwatch.StartNew();
++            for (var index = 0; index < count; index++)
++            {
++                if (workload == "outline")
++                {
++                    layouts.Add(measurer.Layout(texts[index], new FontStyle(Size: 10.125), width, true));
++                }
++                else
++                {
++                    sequences.Add(new(font.Face, inputs[index], texts[index], sources[index]));
++                }
++            }
++
++            clock.Stop();
++            var allocationBytes = GC.GetTotalAllocatedBytes(true) - allocated;
++            var gc = collections.Select((value, generation) => GC.CollectionCount(generation) - value).ToArray();
++            using var digest = IncrementalHash.CreateHash(HashAlgorithmName.SHA256);
++            foreach (var layout in layouts)
++            {
++                digest.AppendData(JsonSerializer.SerializeToUtf8Bytes(new
++                {
++                    layout.Size,
++                    layout.EffectiveFontSize,
++                    Lines = layout.Lines.Select(line => new { line.Text, line.Width, line.Height, line.Baseline, line.Ascent, line.Descent, line.Leading, line.ExplicitBreak }),
++                }));
++                sequences.AddRange(layout.Lines.Select(line => line.Glyphs!));
++            }
++
++            foreach (var sequence in sequences)
++            {
++                digest.AppendData(JsonSerializer.SerializeToUtf8Bytes(new { sequence.FontIdentity, sequence.Glyphs, sequence.Source, sequence.Clusters, sequence.Advances }));
++            }
++
++            using var process = Process.GetCurrentProcess();
++            Console.WriteLine(JsonSerializer.Serialize(new
++            {
++                workload, count, width, iteration, cold = iteration == 0, warmup = iteration < 3,
++                milliseconds = clock.Elapsed.TotalMilliseconds, allocationBytes, gc, peakRssBytes = process.PeakWorkingSet64,
++                inputSha256 = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(string.Concat(texts) + string.Concat(sources)))),
++                fontSha256 = Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(fontPath))),
++                outputSha256 = Convert.ToHexString(digest.GetHashAndReset()),
++            }));
++        }
++    }
++}
+--- /dev/null
++++ b/scripts/measure-core-glyph-storage.py
+@@ -0,0 +1,82 @@
++#!/usr/bin/env python3
++"""Compare saved Core glyph-storage runtimes without overlapping build/test work."""
++import argparse
++import hashlib
++import json
++import os
++from pathlib import Path
++import platform
++import statistics
++import subprocess
++
++ROOT = Path(__file__).resolve().parents[1]
++
++
++def sha(path):
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('directory', type=Path)
++    parser.add_argument('--rounds', type=int, default=3)
++    parser.add_argument('--controlled', action='store_true')
++    args = parser.parse_args()
++    work = args.directory.resolve()
++    environment = os.environ.copy()
++    environment.pop('CORE_PERF_DIAGNOSTICS', None)
++    if args.controlled:
++        environment['DOTNET_TieredCompilation'] = '0'
++    prefix = 'controlled-' if args.controlled else ''
++    inputs = ROOT / 'docs/validation/core-performance-optimization/inputs'
++    cases = ['text1', 'text1000', 'wrap1000', 'borders1000', 'empty', 'imagesonly', 'header']
++    metadata = dict(os=platform.platform(), cpu=Path('/proc/cpuinfo').read_text().split('\n\n')[0],
++                    sdk=subprocess.check_output(['dotnet', '--info'], text=True),
++                    inputs={name: sha(inputs / (name + '.xlsx')) for name in cases},
++                    fontSha256=sha(ROOT / 'third_party/NotoSansJP/NotoSansJP-Regular.ttf'),
++                    tieringDisabled=args.controlled,
++                    runtimes={name: {p.name: sha(p) for p in (work / name).glob('*.dll')} for name in ['before-core', 'after-core', 'before-main', 'after-main']})
++    (work / (prefix + 'environment.json')).write_text(json.dumps(metadata, indent=2) + '\n')
++    records = []
++    raw = work / (prefix + 'samples.jsonl')
++    raw.write_text('')
++
++    def record(value):
++        records.append(value)
++        with raw.open('a') as stream:
++            stream.write(json.dumps(value) + '\n')
++
++    for round_index in range(args.rounds):
++        order = ['before', 'after'] if round_index % 2 == 0 else ['after', 'before']
++        for name in ['clusters', 'compatibility', 'outline-80', 'outline-600', 'outline-100000']:
++            for stage in order:
++                workload, width = name.split('-') if '-' in name else (name, '80')
++                command = ['dotnet', str(work / (stage + '-main') / 'ExcelRenderer.Performance.dll'), 'core-glyph-case', workload, '20', width]
++                output = subprocess.check_output(command, cwd=ROOT, env=environment, text=True)
++                samples = [json.loads(line) for line in output.splitlines()]
++                record(dict(round=round_index, case='micro-' + name, stage=stage, command=command, samples=samples))
++                print(round_index, name, stage, flush=True)
++        for name in cases:
++            for stage in order:
++                target = work / (name + '-' + stage + '.pdf')
++                command = ['dotnet', str(work / (stage + '-core') / 'ExcelRenderer.Core.Validation.dll'), 'render', str(inputs / (name + '.xlsx')), str(target), str(ROOT / 'third_party/NotoSansJP/NotoSansJP-Regular.ttf'), '6']
++                samples = json.loads(subprocess.check_output(command, cwd=ROOT, env=environment, text=True))
++                samples = [dict(milliseconds=row['Milliseconds'], allocationBytes=row['AllocatedBytes'], peakRssBytes=row['PeakRss'], gc=row['GCCollections'], cold=row['Iteration'] == 0, warmup=row['Iteration'] < 3, original=row) for row in samples]
++                record(dict(round=round_index, case=name, stage=stage, command=command, samples=samples))
++                print(round_index, name, stage, flush=True)
++    pairs = []
++    for before in (row for row in records if row['stage'] == 'before'):
++        after = next(row for row in records if row['stage'] == 'after' and row['case'] == before['case'] and row['round'] == before['round'])
++        for a, b in zip(before['samples'], after['samples']):
++            if 'outputSha256' in a:
++                assert (a['inputSha256'], a['fontSha256'], a['outputSha256']) == (b['inputSha256'], b['fontSha256'], b['outputSha256']), before['case']
++        medians = {stage: {key: statistics.median(s[key] for s in row['samples'] if not s['warmup']) for key in ['milliseconds', 'allocationBytes', 'peakRssBytes']} for stage, row in [('before', before), ('after', after)]}
++        ratios = {key: medians['after'][key] / medians['before'][key] for key in medians['before']}
++        ratios['processPeakRssBytes'] = max(s['peakRssBytes'] for s in after['samples']) / max(s['peakRssBytes'] for s in before['samples'])
++        pairs.append(dict(case=before['case'], round=before['round'], medians=medians, ratios=ratios,
++                          investigate=any(ratios[key] > 1.05 for key in ['milliseconds', 'peakRssBytes', 'processPeakRssBytes'])))
++    (work / (prefix + 'summary.json')).write_text(json.dumps(dict(pairs=pairs, protocol='Sequential alternating processes; iteration 0 cold, two further warm-ups, three warm samples; inclusive times not additive; process RSS includes validation/digest work.'), indent=2) + '\n')
++
++
++if __name__ == '__main__':
++    main()
+--- a/tools/ExcelRenderer.Performance/Program.cs
++++ b/tools/ExcelRenderer.Performance/Program.cs
+@@ -16,6 +16,12 @@
+ 
+ var command = args[0];
+ var path = args[1];
++if (command == "core-glyph-case")
++{
++    CoreGlyphBenchmark.Run(args);
++    return;
++}
++
+ if (command == "pdf-read")
+ {
+     await PdfReadBenchmark.RunAsync(args);

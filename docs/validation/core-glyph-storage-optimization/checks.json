@@ -1,0 +1,36 @@
+{
+  "solutionPassed": 3073,
+  "failed": 0,
+  "skipped": 0,
+  "debugWarnings": 0,
+  "releaseWarnings": 0,
+  "coreCoverage": {
+    "passed": 455,
+    "linePercent": 84.82,
+    "branchPercent": 74.34
+  },
+  "corePerformancePassed": 8,
+  "focusedPassed": 25,
+  "savedCorePdfPairs": 7,
+  "savedMainOutputFiles": 24,
+  "historicalPdfFixtures": 25,
+  "frozenBUnmetGates": 0,
+  "frozenBDifferences": 0,
+  "mainCoreParityComparisons": 19,
+  "readerIsolation": true,
+  "namespaceAndDependencyDirection": true,
+  "api": {
+    "ExcelRenderer": {
+      "entries": 2361,
+      "equal": true
+    },
+    "ExcelRenderer.Core": {
+      "entries": 82,
+      "equal": true
+    }
+  },
+  "allCaseFivePercentGate": "Not established; primary and controlled flags retained per round.",
+  "windowsExecuted": false,
+  "localPackages": 4,
+  "packageAudit": true
+}

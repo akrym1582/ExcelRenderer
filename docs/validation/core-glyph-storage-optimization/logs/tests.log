@@ -1,0 +1,30 @@
+Test run for /workspace/ExcelRenderer-review/tests/ExcelRenderer.Core.Tests/bin/Release/net10.0/ExcelRenderer.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /workspace/ExcelRenderer-review/TestResults/CoreGlyph/_a8cfa7a05959_2026-11-11_10_45_40_net10.0.trx
+
+Passed!  - Failed:     0, Passed:   463, Skipped:     0, Total:   463, Duration: 15 s - ExcelRenderer.Core.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer-review/tests/ExcelRenderer.Formulas.Tests/bin/Release/net10.0/ExcelRenderer.Formulas.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /workspace/ExcelRenderer-review/TestResults/CoreGlyph/_a8cfa7a05959_2026-11-11_10_45_56_net10.0.trx
+
+Passed!  - Failed:     0, Passed:   833, Skipped:     0, Total:   833, Duration: 235 ms - ExcelRenderer.Formulas.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer-review/tests/ExcelRenderer.Mapping.Tests/bin/Release/net10.0/ExcelRenderer.Mapping.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /workspace/ExcelRenderer-review/TestResults/CoreGlyph/_a8cfa7a05959_2026-11-11_10_45_57_net10.0.trx
+
+Passed!  - Failed:     0, Passed:   226, Skipped:     0, Total:   226, Duration: 1 s - ExcelRenderer.Mapping.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer-review/tests/ExcelRenderer.OpenXml.Tests/bin/Release/net10.0/ExcelRenderer.OpenXml.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /workspace/ExcelRenderer-review/TestResults/CoreGlyph/_a8cfa7a05959_2026-11-11_10_45_59_net10.0.trx
+
+Passed!  - Failed:     0, Passed:   227, Skipped:     0, Total:   227, Duration: 301 ms - ExcelRenderer.OpenXml.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer-review/tests/ExcelRenderer.Tests/bin/Release/net10.0/ExcelRenderer.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /workspace/ExcelRenderer-review/TestResults/CoreGlyph/_a8cfa7a05959_2026-11-11_10_46_00_net10.0.trx
+
+Passed!  - Failed:     0, Passed:  1189, Skipped:     0, Total:  1189, Duration: 2 m 44 s - ExcelRenderer.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer-review/tests/ExcelRenderer.Tool.Tests/bin/Release/net10.0/ExcelRenderer.Tool.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /workspace/ExcelRenderer-review/TestResults/CoreGlyph/_a8cfa7a05959_2026-11-11_10_48_46_net10.0.trx
+
+Passed!  - Failed:     0, Passed:   135, Skipped:     0, Total:   135, Duration: 1 m 35 s - ExcelRenderer.Tool.Tests.dll (net10.0)

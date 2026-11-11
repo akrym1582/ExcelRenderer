@@ -1,0 +1,12 @@
+0: wide-wrap-Pdf/before
+0: wide-wrap-Pdf/after
+1: wide-wrap-Pdf/after
+1: wide-wrap-Pdf/before
+2: wide-wrap-Pdf/before
+2: wide-wrap-Pdf/after
+diagnostic: wide-wrap-Pdf/before
+diagnostic: wide-wrap-Pdf/after
+{
+  "compared": 1,
+  "failures": []
+}

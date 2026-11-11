@@ -57,6 +57,16 @@ internal sealed class DrawCommandGeneratorPass
         }
     }
 
+    /// <summary>Shares final-stage header/footer commands with metadata-preserving collection.</summary>
+    /// <param name="page">The page header/footer text.</param>
+    /// <param name="measurer">The optional header/footer measurer.</param>
+    /// <returns>The same commands used by painting.</returns>
+    internal static IEnumerable<DrawTextCommand> GenerateHeaderFooter(RenderPage page, Abstractions.ITextLayoutService? measurer) =>
+        (page.HeaderFooterTexts ?? []).Select(x => new DrawTextCommand(page.Number, x.Bounds, x.Text, x.Style)
+        {
+            TextLayout = measurer?.Layout(x.Text, x.Style.Font, x.Bounds.Width, false),
+        });
+
     /// <summary>Generates commands for one page in the shared drawing order.</summary>
     /// <param name="page">The page used by this operation.</param>
     /// <param name="measurer">The header/footer layout service.</param>
@@ -97,28 +107,27 @@ internal sealed class DrawCommandGeneratorPass
     /// <summary>Streams the same finalized text commands used by painting, without other layers.</summary>
     /// <param name="page">The text-only page payload.</param>
     /// <param name="measurer">The shared header/footer measurer.</param>
+    /// <param name="extension">Optional product cell-text visibility and completion policy.</param>
+    /// <param name="includeHeaderFooter">Whether to append headers and footers after cell text.</param>
     /// <returns>Cell text followed by header/footer text.</returns>
-    internal IEnumerable<DrawTextCommand> GenerateText(RenderPage page, Abstractions.ITextLayoutService? measurer)
+    internal IEnumerable<DrawTextCommand> GenerateText(RenderPage page, Abstractions.ITextLayoutService? measurer, Extensibility.ICoreDrawingExtension? extension = null, bool includeHeaderFooter = true)
     {
-        foreach (var cell in page.Cells)
+        foreach (var cell in page.Cells.Where(cell => extension?.ShouldDrawCellText(cell) ?? true))
         {
-            foreach (var command in GenerateCellLayer(page.Number, cell, 3, true))
+            foreach (var command in GenerateCellLayer(page.Number, cell, 3, extension?.RequiresTextLayout ?? true))
             {
                 yield return (DrawTextCommand)command;
             }
         }
 
-        foreach (var command in GenerateHeaderFooter(page, measurer))
+        if (includeHeaderFooter)
         {
-            yield return command;
+            foreach (var command in GenerateHeaderFooter(page, measurer))
+            {
+                yield return command;
+            }
         }
     }
-
-    private static IEnumerable<DrawTextCommand> GenerateHeaderFooter(RenderPage page, Abstractions.ITextLayoutService? measurer) =>
-        (page.HeaderFooterTexts ?? []).Select(x => new DrawTextCommand(page.Number, x.Bounds, x.Text, x.Style)
-        {
-            TextLayout = measurer?.Layout(x.Text, x.Style.Font, x.Bounds.Width, false),
-        });
 
     private static ReportRect GetContentBounds(RenderCell cell) =>
         cell.ContentBounds.Width > 0 || cell.ContentBounds.Height > 0

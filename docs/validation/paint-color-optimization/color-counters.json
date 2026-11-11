@@ -1,0 +1,221 @@
+{
+  "definition": "Owned SKPaint.Color setter calls including initialization; before=requests+creations because its request setter was unconditional. After is directly instrumented. Emoji temporary writes and unrelated paints are excluded.",
+  "cases": [
+    {
+      "product": "core",
+      "case": "text1000",
+      "beforeSetterCalls": 2001,
+      "afterSetterCalls": 1,
+      "ownerRequests": 2000,
+      "beforePaints": 1,
+      "afterPaints": 1
+    },
+    {
+      "product": "core",
+      "case": "borders1000",
+      "beforeSetterCalls": 5102,
+      "afterSetterCalls": 51,
+      "ownerRequests": 5100,
+      "beforePaints": 2,
+      "afterPaints": 2
+    },
+    {
+      "product": "main",
+      "case": "02-image-Png",
+      "beforeSetterCalls": 16,
+      "afterSetterCalls": 1,
+      "ownerRequests": 15,
+      "beforePaints": 1,
+      "afterPaints": 1
+    },
+    {
+      "product": "main",
+      "case": "02-image-Svg",
+      "beforeSetterCalls": 16,
+      "afterSetterCalls": 1,
+      "ownerRequests": 15,
+      "beforePaints": 1,
+      "afterPaints": 1
+    },
+    {
+      "product": "main",
+      "case": "04-text-decoration-Png",
+      "beforeSetterCalls": 37,
+      "afterSetterCalls": 3,
+      "ownerRequests": 35,
+      "beforePaints": 2,
+      "afterPaints": 2
+    },
+    {
+      "product": "main",
+      "case": "04-text-decoration-Svg",
+      "beforeSetterCalls": 37,
+      "afterSetterCalls": 3,
+      "ownerRequests": 35,
+      "beforePaints": 2,
+      "afterPaints": 2
+    },
+    {
+      "product": "main",
+      "case": "05-borders-Png",
+      "beforeSetterCalls": 71,
+      "afterSetterCalls": 22,
+      "ownerRequests": 67,
+      "beforePaints": 4,
+      "afterPaints": 4
+    },
+    {
+      "product": "main",
+      "case": "05-borders-Svg",
+      "beforeSetterCalls": 71,
+      "afterSetterCalls": 22,
+      "ownerRequests": 67,
+      "beforePaints": 4,
+      "afterPaints": 4
+    },
+    {
+      "product": "main",
+      "case": "borders1000-Pdf",
+      "beforeSetterCalls": 9102,
+      "afterSetterCalls": 51,
+      "ownerRequests": 9100,
+      "beforePaints": 2,
+      "afterPaints": 2
+    },
+    {
+      "product": "main",
+      "case": "empty-Pdf",
+      "beforeSetterCalls": 0,
+      "afterSetterCalls": 0,
+      "ownerRequests": 0,
+      "beforePaints": 0,
+      "afterPaints": 0
+    },
+    {
+      "product": "main",
+      "case": "header-Pdf",
+      "beforeSetterCalls": 4,
+      "afterSetterCalls": 1,
+      "ownerRequests": 3,
+      "beforePaints": 1,
+      "afterPaints": 1
+    },
+    {
+      "product": "main",
+      "case": "imagesonly-Pdf",
+      "beforeSetterCalls": 0,
+      "afterSetterCalls": 0,
+      "ownerRequests": 0,
+      "beforePaints": 0,
+      "afterPaints": 0
+    },
+    {
+      "product": "main",
+      "case": "mixed1000-Pdf",
+      "beforeSetterCalls": 6001,
+      "afterSetterCalls": 1,
+      "ownerRequests": 6000,
+      "beforePaints": 1,
+      "afterPaints": 1
+    },
+    {
+      "product": "main",
+      "case": "range-trim-Pdf",
+      "beforeSetterCalls": 285,
+      "afterSetterCalls": 3,
+      "ownerRequests": 283,
+      "beforePaints": 2,
+      "afterPaints": 2
+    },
+    {
+      "product": "main",
+      "case": "rich-Pdf",
+      "beforeSetterCalls": 5,
+      "afterSetterCalls": 3,
+      "ownerRequests": 4,
+      "beforePaints": 1,
+      "afterPaints": 1
+    },
+    {
+      "product": "main",
+      "case": "rich-Png",
+      "beforeSetterCalls": 5,
+      "afterSetterCalls": 3,
+      "ownerRequests": 4,
+      "beforePaints": 1,
+      "afterPaints": 1
+    },
+    {
+      "product": "main",
+      "case": "rich-Svg",
+      "beforeSetterCalls": 5,
+      "afterSetterCalls": 3,
+      "ownerRequests": 4,
+      "beforePaints": 1,
+      "afterPaints": 1
+    },
+    {
+      "product": "main",
+      "case": "selected-Pdf",
+      "beforeSetterCalls": 247,
+      "afterSetterCalls": 1,
+      "ownerRequests": 246,
+      "beforePaints": 1,
+      "afterPaints": 1
+    },
+    {
+      "product": "main",
+      "case": "shapes-Pdf",
+      "beforeSetterCalls": 4,
+      "afterSetterCalls": 1,
+      "ownerRequests": 3,
+      "beforePaints": 1,
+      "afterPaints": 1
+    },
+    {
+      "product": "main",
+      "case": "shapes-Png",
+      "beforeSetterCalls": 4,
+      "afterSetterCalls": 1,
+      "ownerRequests": 3,
+      "beforePaints": 1,
+      "afterPaints": 1
+    },
+    {
+      "product": "main",
+      "case": "shapes-Svg",
+      "beforeSetterCalls": 4,
+      "afterSetterCalls": 1,
+      "ownerRequests": 3,
+      "beforePaints": 1,
+      "afterPaints": 1
+    },
+    {
+      "product": "main",
+      "case": "text1-Pdf",
+      "beforeSetterCalls": 7,
+      "afterSetterCalls": 1,
+      "ownerRequests": 6,
+      "beforePaints": 1,
+      "afterPaints": 1
+    },
+    {
+      "product": "main",
+      "case": "text1000-Pdf",
+      "beforeSetterCalls": 6001,
+      "afterSetterCalls": 1,
+      "ownerRequests": 6000,
+      "beforePaints": 1,
+      "afterPaints": 1
+    },
+    {
+      "product": "main",
+      "case": "wrap1000-Pdf",
+      "beforeSetterCalls": 78001,
+      "afterSetterCalls": 1,
+      "ownerRequests": 78000,
+      "beforePaints": 1,
+      "afterPaints": 1
+    }
+  ]
+}

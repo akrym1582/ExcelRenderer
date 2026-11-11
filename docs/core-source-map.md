@@ -343,5 +343,23 @@ main preflight keeps images, shapes, links, diagnostics and trim work.
 `SkiaTextMeasurer` owns outline paragraph wrapping and its bounded single-font CLOCK.
 `SkiaFontFace.WritePositions` writes into the native builder's borrowed position span.
 `SkiaPaintResources` owns renderer-local fill/stroke paints and the last dash effect;
-shared PNG/SVG primitives retain their fresh-paint path. See
+main PDF/PNG/SVG contexts now pass their drawing-scope resources to shared primitives;
+the fresh-paint fallback remains available to independent primitive callers. See
 [performance implementation and validation](core-performance-optimization.md).
+
+## Main rendering optimization follow-up
+
+Main now composes the same renderer-local `SkiaPaintResources`. Core owns the
+bounded CLOCK implementation and ordinary single-face `OutlineParagraph` breaker;
+main retains font selection, rich decoration and native raster compatibility.
+Conditional main PDF text preflight preserves product regions, clips and shape
+metadata through the full policy hook, while other preflight requirements retain
+their complete path. See [implemented boundaries and validation](main-performance-optimization.md).
+
+## Core glyph storage follow-up
+
+Core outline layout consumes paragraph-relative glyph ranges and freezes each
+line once, without an intermediate line glyph array. `GlyphSequence` uses one
+Unicode-element pass for identical source/display, while distinct source mapping
+keeps its compatibility validation. Public layouts retain immutable data only.
+See [implementation and validation](core-glyph-storage-optimization.md).

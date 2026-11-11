@@ -1,0 +1,663 @@
+{
+  "protocol": {
+    "before": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/before-main",
+    "after": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/after-main",
+    "output": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled",
+    "generate": false,
+    "diagnostics": false,
+    "rounds": 3,
+    "warmups": 2,
+    "samples": 3,
+    "case": [
+      "text1-Pdf",
+      "text1000-Pdf",
+      "wrap1000-Pdf",
+      "borders1000-Pdf",
+      "imagesonly-Pdf",
+      "header-Pdf",
+      "empty-Pdf",
+      "rich-Pdf",
+      "05-borders-Png",
+      "05-borders-Svg"
+    ],
+    "cpuAffinity": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "caseWarmups": {
+      "text1-Pdf": 2,
+      "text1000-Pdf": 2,
+      "wrap1000-Pdf": 2,
+      "borders1000-Pdf": 2,
+      "imagesonly-Pdf": 2,
+      "header-Pdf": 2,
+      "empty-Pdf": 2,
+      "05-borders-Png": 2,
+      "05-borders-Svg": 2,
+      "rich-Pdf": 2
+    }
+  },
+  "products": {
+    "before": {
+      "ExcelRenderer.dll": "d4e9a599fbaf3d67b38845cea09bd7b9691c5e6a63b6503e2d01ba2a6be9f038",
+      "ExcelRenderer.Formulas.dll": "98b2a7e666464ef7b683649080e8ec58506d09bc520028c0ab3585bb22cd2429",
+      "ExcelRenderer.OpenXml.Reader.dll": "77121efa5963e25e864293b00fcc6ca54144e4f6e708592e209b8917e404b540",
+      "ExcelRenderer.Fonts.dll": "6648d11e91f8aa3ab9b0479ce265ea9e596211643e77a48fe4927d3256f2cb01",
+      "ExcelRenderer.OpenXml.dll": "2c2ce15b5f79103a4f26b639d755767fb503eb3ccd78d058b6458a1f0dbe6fba",
+      "ExcelRenderer.Mapping.dll": "6b14db38bed077c93e0c265c32eba015392ea01cae852cc145ed17e97e66e3a2",
+      "ExcelRenderer.Core.dll": "3eb883f906f06575cb6a9707bab8c4cd95ca5cda036633b4e22ffa8f43234ce4",
+      "ExcelRenderer.Performance.dll": "8ef0d15bf31fc9350f049eb3057100abab747f07a94224b977c59c7dff9908c8"
+    },
+    "after": {
+      "ExcelRenderer.dll": "f35046f20aea5be1dc7ea7d86f35fde694ef09560da4f835027ee80784ad99e4",
+      "ExcelRenderer.Formulas.dll": "98b2a7e666464ef7b683649080e8ec58506d09bc520028c0ab3585bb22cd2429",
+      "ExcelRenderer.OpenXml.Reader.dll": "77121efa5963e25e864293b00fcc6ca54144e4f6e708592e209b8917e404b540",
+      "ExcelRenderer.Fonts.dll": "6648d11e91f8aa3ab9b0479ce265ea9e596211643e77a48fe4927d3256f2cb01",
+      "ExcelRenderer.OpenXml.dll": "2c2ce15b5f79103a4f26b639d755767fb503eb3ccd78d058b6458a1f0dbe6fba",
+      "ExcelRenderer.Mapping.dll": "6b14db38bed077c93e0c265c32eba015392ea01cae852cc145ed17e97e66e3a2",
+      "ExcelRenderer.Core.dll": "f698a0106735b503f8d3b33da76783c60830d1ba909baa451e4697cbb1d264d6",
+      "ExcelRenderer.Performance.dll": "8ef0d15bf31fc9350f049eb3057100abab747f07a94224b977c59c7dff9908c8"
+    }
+  },
+  "inputs": {
+    "imagesonly.xlsx": "9762bd0954cc55910bfa50d196af1a1b7d3fa83757efbcaca19bae26efb55d3c",
+    "02-image.xlsx": "d54804111617065e59a4bbe4d5c2099b08efdea2f71d1676998bc836569de254",
+    "RichTextAcceptanceTests.RangeTrimAndMergedCellRetainRichTextInAllOutputFormats.79F50EFE1F4F079D.xlsx": "e558cd35f95b7d0fc240a5b79120a149f56665b55fbdf1e2fb424c3e38c10b31",
+    "ShapeAndFontTests.CreateWorkbookWithShapes.C704163BF33ECFBD.xlsx": "e7728f9ef142f30d94490295705d8d55557556f0902d2e6a2a95960b987eb57c",
+    "header.xlsx": "18309bb98675f31f9a885753b979a4f86a7d5bdc878ae0bd01742c56862955a0",
+    "text1.xlsx": "88505d85011fb9bcb36d4e48dff7804b9368f51493bb37fac6f06ee7d12f8c3c",
+    "range-source.xlsx": "582ff1ebb6aad39d3c22ff60f40ceeaf135d3895a5f507a4fe68d788dd0427aa",
+    "borders1000.xlsx": "6b2f8da7ade3d211177e4931cf706e153f9e85ec138245b8d0d8757b423141cf",
+    "05-borders.xlsx": "074cfd50a3d4556380f462a69287d9b0254a71ebe412e267b395ca345a54eac2",
+    "mixed1000.xlsx": "b1144f27d74241e2c15d6c44282e26b53eb699ae7605a8f7a19506adf3fa9ead",
+    "04-text-decoration.xlsx": "c8ee629159de588541c6d08bce70cae9c0483ddcb21c3feef536102e1457cff1",
+    "text1000.xlsx": "c6fdbc2e54ec4fde141493b46b98310dfd0202e96cbd0c8b12844b8ec337fc03",
+    "wrap1000.xlsx": "7bd2c23ae89c8bd7986e56aba1102f18ba2e997ef2effd8b7c0314e1ecce2684",
+    "empty.xlsx": "dc632d34252dd2ddaa9e44869f79c269f79e3331e68a642f65f31b2163b70c86"
+  },
+  "summary": [
+    {
+      "case": "text1-Pdf",
+      "before": {
+        "milliseconds": 16.7557,
+        "allocationBytes": 18625232,
+        "peakRssBytes": 124030976,
+        "gc": [
+          0,
+          0,
+          0
+        ],
+        "outputBytes": 113853,
+        "pages": 1,
+        "roundMedians": [
+          17.5166,
+          16.7557,
+          16.0302
+        ],
+        "minimum": 15.8108,
+        "maximum": 19.4778,
+        "coldMilliseconds": [
+          989.0321,
+          872.1298,
+          951.4266
+        ]
+      },
+      "after": {
+        "milliseconds": 18.0936,
+        "allocationBytes": 18627432,
+        "peakRssBytes": 135405568,
+        "gc": [
+          0,
+          0,
+          0
+        ],
+        "outputBytes": 113853,
+        "pages": 1,
+        "roundMedians": [
+          18.0936,
+          18.5644,
+          17.9983
+        ],
+        "minimum": 16.3955,
+        "maximum": 19.8543,
+        "coldMilliseconds": [
+          896.4041,
+          946.7762,
+          896.0356
+        ]
+      },
+      "timeChangePercent": 7.98474548959458,
+      "allocationChangePercent": 0.011811933403027552,
+      "pairedRoundChanges": [
+        3.2940182455499345,
+        10.794535590873533,
+        12.277451310651145
+      ]
+    },
+    {
+      "case": "text1000-Pdf",
+      "before": {
+        "milliseconds": 81.061,
+        "allocationBytes": 57707792,
+        "peakRssBytes": 153796608,
+        "gc": [
+          2,
+          0,
+          0
+        ],
+        "outputBytes": 140223,
+        "pages": 25,
+        "roundMedians": [
+          81.7463,
+          84.4447,
+          80.1935
+        ],
+        "minimum": 75.588,
+        "maximum": 94.9838,
+        "coldMilliseconds": [
+          982.4008,
+          993.2693,
+          1014.8788
+        ]
+      },
+      "after": {
+        "milliseconds": 81.3013,
+        "allocationBytes": 57707400,
+        "peakRssBytes": 170258432,
+        "gc": [
+          2,
+          0,
+          0
+        ],
+        "outputBytes": 140223,
+        "pages": 25,
+        "roundMedians": [
+          81.3013,
+          76.9155,
+          83.3883
+        ],
+        "minimum": 75.6947,
+        "maximum": 100.2692,
+        "coldMilliseconds": [
+          1037.6304,
+          954.4301,
+          1048.0086
+        ]
+      },
+      "timeChangePercent": 0.2964434191534693,
+      "allocationChangePercent": -0.0006792843503689028,
+      "pairedRoundChanges": [
+        -0.5443671456689891,
+        -8.916130911709086,
+        3.9838640288801574
+      ]
+    },
+    {
+      "case": "wrap1000-Pdf",
+      "before": {
+        "milliseconds": 692.4644,
+        "allocationBytes": 448707528,
+        "peakRssBytes": 179752960,
+        "gc": [
+          26,
+          4,
+          1
+        ],
+        "outputBytes": 148157,
+        "pages": 25,
+        "roundMedians": [
+          698.521,
+          692.4644,
+          676.9588
+        ],
+        "minimum": 674.0322,
+        "maximum": 719.6902,
+        "coldMilliseconds": [
+          1617.7132,
+          1635.7648,
+          1718.1055
+        ]
+      },
+      "after": {
+        "milliseconds": 712.9479,
+        "allocationBytes": 448710136,
+        "peakRssBytes": 175382528,
+        "gc": [
+          26,
+          4,
+          1
+        ],
+        "outputBytes": 148157,
+        "pages": 25,
+        "roundMedians": [
+          714.0557,
+          706.7319,
+          703.2998
+        ],
+        "minimum": 685.2207,
+        "maximum": 738.7129,
+        "coldMilliseconds": [
+          1601.2644,
+          1661.442,
+          1673.9249
+        ]
+      },
+      "timeChangePercent": 2.9580582048694515,
+      "allocationChangePercent": 0.0005812249265435554,
+      "pairedRoundChanges": [
+        2.2239417283088203,
+        2.060394729317494,
+        3.8910787480715303
+      ]
+    },
+    {
+      "case": "borders1000-Pdf",
+      "before": {
+        "milliseconds": 85.9937,
+        "allocationBytes": 62045328,
+        "peakRssBytes": 161914880,
+        "gc": [
+          2,
+          0,
+          0
+        ],
+        "outputBytes": 154483,
+        "pages": 25,
+        "roundMedians": [
+          89.6879,
+          85.804,
+          85.9937
+        ],
+        "minimum": 82.7068,
+        "maximum": 114.6288,
+        "coldMilliseconds": [
+          1067.0099,
+          1078.1216,
+          1102.0007
+        ]
+      },
+      "after": {
+        "milliseconds": 86.7798,
+        "allocationBytes": 62042704,
+        "peakRssBytes": 159817728,
+        "gc": [
+          2,
+          0,
+          0
+        ],
+        "outputBytes": 154483,
+        "pages": 25,
+        "roundMedians": [
+          86.808,
+          86.7798,
+          84.674
+        ],
+        "minimum": 82.9114,
+        "maximum": 99.6426,
+        "coldMilliseconds": [
+          1006.3483,
+          1027.6107,
+          1094.4062
+        ]
+      },
+      "timeChangePercent": 0.9141367332723194,
+      "allocationChangePercent": -0.004229166134794848,
+      "pairedRoundChanges": [
+        -3.211024006582819,
+        1.1372430189734661,
+        -1.534647305558423
+      ]
+    },
+    {
+      "case": "imagesonly-Pdf",
+      "before": {
+        "milliseconds": 10.8015,
+        "allocationBytes": 18187896,
+        "peakRssBytes": 123686912,
+        "gc": [
+          0,
+          0,
+          0
+        ],
+        "outputBytes": 1521,
+        "pages": 1,
+        "roundMedians": [
+          10.8015,
+          10.7801,
+          10.8534
+        ],
+        "minimum": 9.975,
+        "maximum": 35.6474,
+        "coldMilliseconds": [
+          865.3235,
+          870.2239,
+          878.8243
+        ]
+      },
+      "after": {
+        "milliseconds": 10.8338,
+        "allocationBytes": 18187752,
+        "peakRssBytes": 123785216,
+        "gc": [
+          0,
+          0,
+          0
+        ],
+        "outputBytes": 1521,
+        "pages": 1,
+        "roundMedians": [
+          10.8338,
+          11.407,
+          10.7718
+        ],
+        "minimum": 10.0694,
+        "maximum": 52.1912,
+        "coldMilliseconds": [
+          784.2317,
+          850.733,
+          798.9052
+        ]
+      },
+      "timeChangePercent": 0.29903254177658933,
+      "allocationChangePercent": -0.0007917353387121295,
+      "pairedRoundChanges": [
+        0.29903254177658933,
+        5.815344941141554,
+        -0.7518381336724
+      ]
+    },
+    {
+      "case": "header-Pdf",
+      "before": {
+        "milliseconds": 17.039,
+        "allocationBytes": 18606184,
+        "peakRssBytes": 134434816,
+        "gc": [
+          0,
+          0,
+          0
+        ],
+        "outputBytes": 113544,
+        "pages": 1,
+        "roundMedians": [
+          17.039,
+          18.9395,
+          16.9057
+        ],
+        "minimum": 15.9566,
+        "maximum": 27.788,
+        "coldMilliseconds": [
+          823.0906,
+          824.6082,
+          827.8273
+        ]
+      },
+      "after": {
+        "milliseconds": 17.4246,
+        "allocationBytes": 18605040,
+        "peakRssBytes": 134410240,
+        "gc": [
+          0,
+          0,
+          0
+        ],
+        "outputBytes": 113544,
+        "pages": 1,
+        "roundMedians": [
+          18.3573,
+          16.9856,
+          17.4246
+        ],
+        "minimum": 15.6329,
+        "maximum": 20.2976,
+        "coldMilliseconds": [
+          772.4239,
+          830.1124,
+          781.4426
+        ]
+      },
+      "timeChangePercent": 2.263043605845416,
+      "allocationChangePercent": -0.0061484934256283985,
+      "pairedRoundChanges": [
+        7.7369563941545705,
+        -10.316534227408313,
+        3.06937896685735
+      ]
+    },
+    {
+      "case": "empty-Pdf",
+      "before": {
+        "milliseconds": 10.2656,
+        "allocationBytes": 17713336,
+        "peakRssBytes": 95748096,
+        "gc": [
+          1,
+          1,
+          1
+        ],
+        "outputBytes": 657,
+        "pages": 1,
+        "roundMedians": [
+          10.2656,
+          10.555,
+          9.9424
+        ],
+        "minimum": 9.7533,
+        "maximum": 11.4581,
+        "coldMilliseconds": [
+          654.2743,
+          686.1975,
+          699.0837
+        ]
+      },
+      "after": {
+        "milliseconds": 9.5622,
+        "allocationBytes": 17713280,
+        "peakRssBytes": 95789056,
+        "gc": [
+          1,
+          1,
+          1
+        ],
+        "outputBytes": 657,
+        "pages": 1,
+        "roundMedians": [
+          10.4549,
+          9.0266,
+          9.5622
+        ],
+        "minimum": 9.0153,
+        "maximum": 10.7057,
+        "coldMilliseconds": [
+          702.8498,
+          691.9116,
+          650.619
+        ]
+      },
+      "timeChangePercent": -6.852010598503721,
+      "allocationChangePercent": -0.0003161459817602186,
+      "pairedRoundChanges": [
+        1.8440227556109745,
+        -14.480341070582659,
+        -3.8240263920180095
+      ]
+    },
+    {
+      "case": "05-borders-Png",
+      "before": {
+        "milliseconds": 44.1272,
+        "allocationBytes": 18815024,
+        "peakRssBytes": 105062400,
+        "gc": [
+          1,
+          1,
+          1
+        ],
+        "outputBytes": 22218,
+        "pages": 2,
+        "roundMedians": [
+          44.1272,
+          47.1057,
+          44.0177
+        ],
+        "minimum": 43.4989,
+        "maximum": 54.8402,
+        "coldMilliseconds": [
+          1032.3087,
+          994.7849,
+          1054.9015
+        ]
+      },
+      "after": {
+        "milliseconds": 44.7112,
+        "allocationBytes": 18815264,
+        "peakRssBytes": 105099264,
+        "gc": [
+          1,
+          1,
+          1
+        ],
+        "outputBytes": 22218,
+        "pages": 2,
+        "roundMedians": [
+          45.8335,
+          42.7195,
+          44.7112
+        ],
+        "minimum": 42.4291,
+        "maximum": 48.7614,
+        "coldMilliseconds": [
+          1059.6541,
+          1053.0614,
+          1046.8381
+        ]
+      },
+      "timeChangePercent": 1.3234467629942515,
+      "allocationChangePercent": 0.001275576369175191,
+      "pairedRoundChanges": [
+        3.8667760474265345,
+        -9.311399681991784,
+        1.5755025819159219
+      ]
+    },
+    {
+      "case": "05-borders-Svg",
+      "before": {
+        "milliseconds": 19.196,
+        "allocationBytes": 19614784,
+        "peakRssBytes": 101617664,
+        "gc": [
+          1,
+          1,
+          1
+        ],
+        "outputBytes": 102249,
+        "pages": 2,
+        "roundMedians": [
+          18.7211,
+          19.4972,
+          19.6409
+        ],
+        "minimum": 18.5748,
+        "maximum": 20.0596,
+        "coldMilliseconds": [
+          985.4633,
+          1095.2612,
+          1096.7149
+        ]
+      },
+      "after": {
+        "milliseconds": 19.2306,
+        "allocationBytes": 19612520,
+        "peakRssBytes": 101416960,
+        "gc": [
+          1,
+          1,
+          1
+        ],
+        "outputBytes": 102249,
+        "pages": 2,
+        "roundMedians": [
+          19.9795,
+          18.6378,
+          19.0638
+        ],
+        "minimum": 18.5684,
+        "maximum": 20.7495,
+        "coldMilliseconds": [
+          1080.6605,
+          1055.9141,
+          1072.4166
+        ]
+      },
+      "timeChangePercent": 0.18024588455927137,
+      "allocationChangePercent": -0.011542314205448267,
+      "pairedRoundChanges": [
+        6.721827243057299,
+        -4.407812403832345,
+        -2.9382563935461126
+      ]
+    },
+    {
+      "case": "rich-Pdf",
+      "before": {
+        "milliseconds": 18.9799,
+        "allocationBytes": 19234744,
+        "peakRssBytes": 137388032,
+        "gc": [
+          0,
+          0,
+          0
+        ],
+        "outputBytes": 113728,
+        "pages": 1,
+        "roundMedians": [
+          18.6884,
+          19.1399,
+          18.9799
+        ],
+        "minimum": 18.0226,
+        "maximum": 30.3575,
+        "coldMilliseconds": [
+          1097.2207,
+          1182.5853,
+          1076.572
+        ]
+      },
+      "after": {
+        "milliseconds": 20.1561,
+        "allocationBytes": 19235664,
+        "peakRssBytes": 142036992,
+        "gc": [
+          0,
+          0,
+          0
+        ],
+        "outputBytes": 113728,
+        "pages": 1,
+        "roundMedians": [
+          37.9244,
+          21.5079,
+          18.0509
+        ],
+        "minimum": 17.7952,
+        "maximum": 49.0819,
+        "coldMilliseconds": [
+          1032.7373,
+          1108.6813,
+          1120.5277
+        ]
+      },
+      "timeChangePercent": 6.1970821764076645,
+      "allocationChangePercent": 0.004783011408937554,
+      "pairedRoundChanges": [
+        102.93015988527641,
+        12.372060460085986,
+        -4.894651710493747
+      ]
+    }
+  ]
+}

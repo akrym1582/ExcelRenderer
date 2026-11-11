@@ -1,0 +1,17 @@
+{
+  "beforeCommit": "49a6be3461579eeedc32d0a2dfde0730f9f13106",
+  "baseCommit": "a71e21d9f8a612c8747918383eced1742b385ada",
+  "afterSources": {
+    "src/ExcelRenderer.Core/Pdf/SkiaTextMeasurer.cs": "91132e2c851d01b58444c9a509c310b7a3598e35d9713fdf007031b0c91e4ed2",
+    "src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.Outline.cs": "3092df6d4d5fd800714d9524a48758aea58872b8b936eecee247b70a4ea42b3b",
+    "tests/ExcelRenderer.Tests/MainPerformanceOptimizationTests.cs": "4ec50f20dc9254efe36a7d9b14ac1273e54330cd850d2d8e7e22212b59220dd6"
+  },
+  "instructionsSha256": "09392a158a023a367799d9d892338c427a3a2b6bddcd3dd230ab83a24047f780",
+  "windowsExecuted": false,
+  "sameMainBenchmarkExecutable": true,
+  "sameCoreBenchmarkExecutable": true,
+  "scriptsSha256": {
+    "scripts/measure-no-wrap-optimization.py": "9311255dfb9aa0ff6c19f69e000e768199f01692536020830f3cc7c6cb6396bc",
+    "scripts/validate-no-wrap-optimization.py": "175074cf4ae65bed43c96d901b3fbaf795d0fcfd274c287a2024edf0eae2444b"
+  }
+}

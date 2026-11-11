@@ -1,0 +1,224 @@
+[
+  {
+    "round": 0,
+    "stage": "before",
+    "case": "wide-wrap-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "wide-wrap-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/main-performance/wide/inputs/wide-wrap.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "CA7AE164C2A4D651592429E009DF18B4539FDAD273090843389F0E4B4CE26DBE",
+      "templateSha256": "CA7AE164C2A4D651592429E009DF18B4539FDAD273090843389F0E4B4CE26DBE",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "34447F8595B01995DD085FFC9CD4AC1DAC65D719F7DB9D9A8CAE47A06C518861",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "C75B7A503CCEFEB3DE30FAFC9A08DBFDCC0B7532218042FE314625C26CABC779",
+        "ExcelRenderer.Performance.dll": "939226C1D6A9879A3D93CA4B97C5C230E3EB49AFA4330737A2460E041BE5AFCD"
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "after",
+    "case": "wide-wrap-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "wide-wrap-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/main-performance/wide/inputs/wide-wrap.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "CA7AE164C2A4D651592429E009DF18B4539FDAD273090843389F0E4B4CE26DBE",
+      "templateSha256": "CA7AE164C2A4D651592429E009DF18B4539FDAD273090843389F0E4B4CE26DBE",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "71FEF5AF0CC867CCDC272D46BD9886C77D272EECA596C3A0ED217F59294A8E45",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "EDF810934AA12843666C27844DD3530F2AE5244B90175BD0CB3ED965F1112A3D",
+        "ExcelRenderer.Performance.dll": "1F0F7C166F8E04724151E6BB52113C602B4F166A7D10D1BC88A9C763B1ACE5EC"
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "after",
+    "case": "wide-wrap-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "wide-wrap-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/main-performance/wide/inputs/wide-wrap.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "CA7AE164C2A4D651592429E009DF18B4539FDAD273090843389F0E4B4CE26DBE",
+      "templateSha256": "CA7AE164C2A4D651592429E009DF18B4539FDAD273090843389F0E4B4CE26DBE",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "71FEF5AF0CC867CCDC272D46BD9886C77D272EECA596C3A0ED217F59294A8E45",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "EDF810934AA12843666C27844DD3530F2AE5244B90175BD0CB3ED965F1112A3D",
+        "ExcelRenderer.Performance.dll": "1F0F7C166F8E04724151E6BB52113C602B4F166A7D10D1BC88A9C763B1ACE5EC"
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "before",
+    "case": "wide-wrap-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "wide-wrap-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/main-performance/wide/inputs/wide-wrap.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "CA7AE164C2A4D651592429E009DF18B4539FDAD273090843389F0E4B4CE26DBE",
+      "templateSha256": "CA7AE164C2A4D651592429E009DF18B4539FDAD273090843389F0E4B4CE26DBE",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "34447F8595B01995DD085FFC9CD4AC1DAC65D719F7DB9D9A8CAE47A06C518861",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "C75B7A503CCEFEB3DE30FAFC9A08DBFDCC0B7532218042FE314625C26CABC779",
+        "ExcelRenderer.Performance.dll": "939226C1D6A9879A3D93CA4B97C5C230E3EB49AFA4330737A2460E041BE5AFCD"
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "before",
+    "case": "wide-wrap-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "wide-wrap-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/main-performance/wide/inputs/wide-wrap.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "CA7AE164C2A4D651592429E009DF18B4539FDAD273090843389F0E4B4CE26DBE",
+      "templateSha256": "CA7AE164C2A4D651592429E009DF18B4539FDAD273090843389F0E4B4CE26DBE",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "34447F8595B01995DD085FFC9CD4AC1DAC65D719F7DB9D9A8CAE47A06C518861",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "C75B7A503CCEFEB3DE30FAFC9A08DBFDCC0B7532218042FE314625C26CABC779",
+        "ExcelRenderer.Performance.dll": "939226C1D6A9879A3D93CA4B97C5C230E3EB49AFA4330737A2460E041BE5AFCD"
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "after",
+    "case": "wide-wrap-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "wide-wrap-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/main-performance/wide/inputs/wide-wrap.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "CA7AE164C2A4D651592429E009DF18B4539FDAD273090843389F0E4B4CE26DBE",
+      "templateSha256": "CA7AE164C2A4D651592429E009DF18B4539FDAD273090843389F0E4B4CE26DBE",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "71FEF5AF0CC867CCDC272D46BD9886C77D272EECA596C3A0ED217F59294A8E45",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "EDF810934AA12843666C27844DD3530F2AE5244B90175BD0CB3ED965F1112A3D",
+        "ExcelRenderer.Performance.dll": "1F0F7C166F8E04724151E6BB52113C602B4F166A7D10D1BC88A9C763B1ACE5EC"
+      }
+    }
+  }
+]

@@ -1,0 +1,5 @@
+{
+  "parentEnvironment": "../environment.json",
+  "inputSha256": "ca7ae164c2a4d651592429e009df18b4539fdad273090843389f0e4b4ce26dbe",
+  "fixture": "20 unique ordinary 3202..3203-character cells; source column width=255; original saved Noto font; separate supplementary protocol"
+}

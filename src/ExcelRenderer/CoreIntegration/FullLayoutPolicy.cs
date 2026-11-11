@@ -12,6 +12,12 @@ namespace ExcelRenderer.CoreIntegration;
 internal sealed class FullLayoutPolicy : Core.Layout.CoreLayoutPolicy
 {
     /// <inheritdoc/>
+    internal override bool CanBuildTextPreflight(CoreContext context) =>
+        context.CandidateAddresses is { } addresses &&
+        addresses.Any(address => !string.IsNullOrEmpty(context.Sheet.Cells[address].Text)) &&
+        addresses.All(address => FullCellPresentationData.Decoration(context.Sheet.Cells[address].ExtensionData) is null);
+
+    /// <inheritdoc/>
     internal override double ResolveAxisPosition(Core.Layout.ReportLayoutContext context, int index, bool column, double position) =>
         context.Sheet.RequestedRange is null ? position : column ? context.Geometry.ColumnStart(index) : context.Geometry.RowStart(index);
 

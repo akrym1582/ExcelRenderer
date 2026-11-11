@@ -1,0 +1,27 @@
+{
+  "records": [
+    {
+      "case": "wide-wrap-Pdf",
+      "file": "workbook.pdf",
+      "raster": [
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        }
+      ],
+      "pages": 1,
+      "passed": true
+    }
+  ],
+  "failures": []
+}

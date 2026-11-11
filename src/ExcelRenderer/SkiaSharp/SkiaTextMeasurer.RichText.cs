@@ -9,8 +9,8 @@ namespace ExcelRenderer.SkiaSharp;
 /// <summary>Finalizes partial formatting using whole-string Unicode element boundaries.</summary>
 public sealed partial class SkiaTextMeasurer
 {
-    private readonly Dictionary<RichTextLayoutKey, TextLayoutResult> richLayouts = new();
-    private readonly Dictionary<RichTextLayoutKey, WeakReference<TextLayoutResult>> standaloneRichLayouts = new();
+    private readonly Core.Rendering.BoundedClockCache<RichTextLayoutKey, TextLayoutResult> richLayouts = new("richTextLayoutCache");
+    private readonly Core.Rendering.BoundedClockCache<RichTextLayoutKey, WeakReference<TextLayoutResult>> standaloneRichLayouts = new("standaloneRichTextCache", 8, 16384);
 
     /// <inheritdoc/>
     public TextLayoutResult Layout(IReadOnlyList<CellTextRun> runs, FontStyle font, double availableWidth, bool wrap)
@@ -25,6 +25,9 @@ public sealed partial class SkiaTextMeasurer
             return LayoutCore(runs, font, availableWidth, wrap);
         }
     }
+
+    private static long RichKeyUnits(IReadOnlyList<CellTextRun> runs, FontStyle font) =>
+        font.Family.Length + 1L + runs.Sum(run => 1L + run.Text.Length + run.Font.Family.Length);
 
     private static IEnumerable<(string Text, FontStyle Font)> Segments(IReadOnlyList<CellTextRun> elements)
     {
@@ -50,6 +53,7 @@ public sealed partial class SkiaTextMeasurer
             throw new ArgumentNullException(nameof(runs));
         }
 
+        CheckGeneration();
         var snapshot = runs.ToArray();
         if (snapshot.Any(run => run is null || run.Text is null || run.Font is null || !double.IsFinite(run.Font.Size) || run.Font.Size <= 0))
         {
@@ -57,20 +61,17 @@ public sealed partial class SkiaTextMeasurer
         }
 
         var text = string.Concat(snapshot.Select(run => run.Text));
-        var key = new RichTextLayoutKey(snapshot, font, availableWidth, wrap, (_fontManager as FontManager)?.RegistrationGeneration ?? 0);
+        var key = new RichTextLayoutKey(snapshot, font, wrap ? availableWidth : 0, wrap, generation);
         if (borrowConversionScope && richLayouts.TryGetValue(key, out var cached))
         {
-            Rendering.ConversionMetrics.Report("richTextLayoutCacheHits", 1);
             return cached;
         }
 
         if (!borrowConversionScope && _fontManager is FontManager && standaloneRichLayouts.TryGetValue(key, out var reference) && reference.TryGetTarget(out var standaloneCached))
         {
-            Rendering.ConversionMetrics.Report("richTextLayoutCacheHits", 1);
             return standaloneCached;
         }
 
-        Rendering.ConversionMetrics.Report("richTextLayoutCacheMisses", 1);
         using var resources = !BorrowsResources || ConversionFontResources.Current is null ? new ConversionFontResources() : null;
         var elements = StringInfo.GetTextElementEnumerator(text);
         var current = new List<CellTextRun>();
@@ -114,21 +115,11 @@ public sealed partial class SkiaTextMeasurer
         };
         if (borrowConversionScope && text.Length <= 2048)
         {
-            if (richLayouts.Count >= 512)
-            {
-                richLayouts.Clear();
-            }
-
-            richLayouts[key] = result;
+            richLayouts.Store(key, result, RichKeyUnits(snapshot, font) + LayoutUnits(result));
         }
         else if (_fontManager is FontManager && text.Length <= 2048)
         {
-            if (standaloneRichLayouts.Count >= 8)
-            {
-                standaloneRichLayouts.Clear();
-            }
-
-            standaloneRichLayouts[key] = new(result);
+            standaloneRichLayouts.Store(key, new(result), RichKeyUnits(snapshot, font));
         }
 
         return result;

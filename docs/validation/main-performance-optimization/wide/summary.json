@@ -1,0 +1,108 @@
+{
+  "protocol": {
+    "before": "artifacts/main-performance/before",
+    "after": "artifacts/main-performance/after",
+    "output": "artifacts/main-performance/wide",
+    "generate": false,
+    "diagnostics": false,
+    "rounds": 3,
+    "warmups": 2,
+    "samples": 3,
+    "case": null,
+    "cpuAffinity": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "caseWarmups": {
+      "wide-wrap-Pdf": 2
+    }
+  },
+  "products": {
+    "before": {
+      "ExcelRenderer.dll": "34447f8595b01995dd085ffc9cd4ac1dac65d719f7db9d9a8cae47a06c518861",
+      "ExcelRenderer.Formulas.dll": "98b2a7e666464ef7b683649080e8ec58506d09bc520028c0ab3585bb22cd2429",
+      "ExcelRenderer.OpenXml.Reader.dll": "77121efa5963e25e864293b00fcc6ca54144e4f6e708592e209b8917e404b540",
+      "ExcelRenderer.Fonts.dll": "6648d11e91f8aa3ab9b0479ce265ea9e596211643e77a48fe4927d3256f2cb01",
+      "ExcelRenderer.OpenXml.dll": "2c2ce15b5f79103a4f26b639d755767fb503eb3ccd78d058b6458a1f0dbe6fba",
+      "ExcelRenderer.Mapping.dll": "6b14db38bed077c93e0c265c32eba015392ea01cae852cc145ed17e97e66e3a2",
+      "ExcelRenderer.Core.dll": "c75b7a503ccefeb3de30fafc9a08dbfdcc0b7532218042fe314625c26cabc779",
+      "ExcelRenderer.Performance.dll": "939226c1d6a9879a3d93ca4b97c5c230e3eb49afa4330737a2460e041be5afcd"
+    },
+    "after": {
+      "ExcelRenderer.dll": "71fef5af0cc867ccdc272d46bd9886c77d272eeca596c3a0ed217f59294a8e45",
+      "ExcelRenderer.Formulas.dll": "98b2a7e666464ef7b683649080e8ec58506d09bc520028c0ab3585bb22cd2429",
+      "ExcelRenderer.OpenXml.Reader.dll": "77121efa5963e25e864293b00fcc6ca54144e4f6e708592e209b8917e404b540",
+      "ExcelRenderer.Fonts.dll": "6648d11e91f8aa3ab9b0479ce265ea9e596211643e77a48fe4927d3256f2cb01",
+      "ExcelRenderer.OpenXml.dll": "2c2ce15b5f79103a4f26b639d755767fb503eb3ccd78d058b6458a1f0dbe6fba",
+      "ExcelRenderer.Mapping.dll": "6b14db38bed077c93e0c265c32eba015392ea01cae852cc145ed17e97e66e3a2",
+      "ExcelRenderer.Core.dll": "edf810934aa12843666c27844dd3530f2ae5244b90175bd0cb3ed965f1112a3d",
+      "ExcelRenderer.Performance.dll": "1f0f7c166f8e04724151e6bb52113c602b4f166a7d10d1bc88a9c763b1ace5ec"
+    }
+  },
+  "inputs": {
+    "wide-wrap.xlsx": "ca7ae164c2a4d651592429e009df18b4539fdad273090843389f0e4b4ce26dbe"
+  },
+  "summary": [
+    {
+      "case": "wide-wrap-Pdf",
+      "before": {
+        "milliseconds": 2484.5256,
+        "allocationBytes": 3866895584,
+        "peakRssBytes": 161165312,
+        "gc": [
+          230,
+          0,
+          0
+        ],
+        "outputBytes": 116189,
+        "pages": 1,
+        "roundMedians": [
+          2484.5256,
+          2512.0072,
+          2400.9604
+        ],
+        "minimum": 2395.6491,
+        "maximum": 2567.0431,
+        "coldMilliseconds": [
+          3595.0832,
+          3408.0384,
+          3353.4377
+        ]
+      },
+      "after": {
+        "milliseconds": 96.589,
+        "allocationBytes": 56977280,
+        "peakRssBytes": 153821184,
+        "gc": [
+          2,
+          0,
+          0
+        ],
+        "outputBytes": 116189,
+        "pages": 1,
+        "roundMedians": [
+          125.8574,
+          94.8774,
+          72.7497
+        ],
+        "minimum": 63.7917,
+        "maximum": 165.8009,
+        "coldMilliseconds": [
+          454.8266,
+          515.9391,
+          451.3765
+        ]
+      },
+      "timeChangePercent": -96.11237654383598,
+      "allocationChangePercent": -98.52653688825336,
+      "pairedRoundChanges": [
+        -94.93434883504521,
+        -96.22304426515976,
+        -96.96997501499817
+      ]
+    }
+  ]
+}

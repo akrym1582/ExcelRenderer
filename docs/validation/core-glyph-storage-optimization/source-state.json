@@ -1,0 +1,55 @@
+{
+  "baseCommit": "a71e21d9f8a612c8747918383eced1742b385ada",
+  "baseline": "Previous uncommitted main rendering implementation, not bare base commit",
+  "priorProductPatchSha256": "be397369a6861ee1a11391e19a230049fce73579aa0ec85acaa72196a31b5a60",
+  "beforeCoreSourceSha256": {
+    "src/ExcelRenderer.Core/Fonts/GlyphSequence.cs": "48d79c83fb4b68fe5c97bd6ced39defb88518a8662238c781fd171927c30ad73",
+    "src/ExcelRenderer.Core/Layout/OutlineParagraph.cs": "e3b448e77411f3586185be178bd4313cd3babb047c24c44258cf2ef28d94f2a5",
+    "src/ExcelRenderer.Core/Pdf/SkiaTextMeasurer.cs": "01d0b6093364812b12c5a6017b33346b6b14c27772d7b1e7a3f4bd4e701ae3d6"
+  },
+  "afterSourceSha256": {
+    "src/ExcelRenderer.Core/Fonts/GlyphSequence.cs": "6116690d2eaf1784f51e56559e306f0100a4f5a8d0b68ab1920b54748f6fbd1c",
+    "src/ExcelRenderer.Core/Layout/OutlineParagraph.cs": "7c048198070fb72729b42f77fe6af88fa8de60d6dc806064010d3dab026f3116",
+    "src/ExcelRenderer.Core/Pdf/SkiaTextMeasurer.cs": "659f52fc9328e6f80422185a9e5acc96cf1b04f7f858c307349c1c587559f414",
+    "tests/ExcelRenderer.Core.Tests/GlyphStorageOptimizationTests.cs": "a80150118e080f5ce505cffc25bbc535e063844fe25105904d46670b8efd0d59",
+    "tools/ExcelRenderer.Performance/CoreGlyphBenchmark.cs": "ce9643f96c2e433f4379d0f3c7a4b81531201da212e599002ce445ce7c6e9a6d",
+    "tools/ExcelRenderer.Performance/Program.cs": "8ac77a68fa863817952a5581078472c5d07c34653072ccde54f5f51a0b2e13f1",
+    "scripts/measure-core-glyph-storage.py": "1b15685b5d048a0b59c6bc38b97d92ad603496f55f04367e663060442b281c3e"
+  },
+  "instructionsSha256": "09392a158a023a367799d9d892338c427a3a2b6bddcd3dd230ab83a24047f780",
+  "sameBenchmarkExecutable": true,
+  "runtimeDlls": {
+    "before-core": {
+      "ExcelRenderer.OpenXml.Reader.dll": "77121efa5963e25e864293b00fcc6ca54144e4f6e708592e209b8917e404b540",
+      "ExcelRenderer.Core.Validation.dll": "4cc6e8776558c54c41ce9c5bc7e084e9596086cba178ca422fa194fd294be2bd",
+      "ExcelRenderer.Core.dll": "edf810934aa12843666c27844dd3530f2ae5244b90175bd0cb3ed965f1112a3d"
+    },
+    "after-core": {
+      "ExcelRenderer.OpenXml.Reader.dll": "77121efa5963e25e864293b00fcc6ca54144e4f6e708592e209b8917e404b540",
+      "ExcelRenderer.Core.Validation.dll": "80cd2ce12536a08113d52755faf78c4b1a75d44d096672caf92875458698dbe1",
+      "ExcelRenderer.Core.dll": "0790a6d37bd9b06768bffb978e0e0c1ea52409c19faa2b95a92b78e4dc071a53"
+    },
+    "before-main": {
+      "ExcelRenderer.dll": "71fef5af0cc867ccdc272d46bd9886c77d272eeca596c3a0ed217f59294a8e45",
+      "ExcelRenderer.Formulas.dll": "98b2a7e666464ef7b683649080e8ec58506d09bc520028c0ab3585bb22cd2429",
+      "ExcelRenderer.OpenXml.Reader.dll": "77121efa5963e25e864293b00fcc6ca54144e4f6e708592e209b8917e404b540",
+      "ExcelRenderer.Fonts.dll": "6648d11e91f8aa3ab9b0479ce265ea9e596211643e77a48fe4927d3256f2cb01",
+      "ExcelRenderer.OpenXml.dll": "2c2ce15b5f79103a4f26b639d755767fb503eb3ccd78d058b6458a1f0dbe6fba",
+      "ExcelRenderer.Mapping.dll": "6b14db38bed077c93e0c265c32eba015392ea01cae852cc145ed17e97e66e3a2",
+      "ExcelRenderer.Core.dll": "edf810934aa12843666c27844dd3530f2ae5244b90175bd0cb3ed965f1112a3d",
+      "ExcelRenderer.Performance.dll": "ec18277e4947301cea58223d528ea83f736f2b82d07f1e816a74e3285d9c3179"
+    },
+    "after-main": {
+      "ExcelRenderer.dll": "1b616dfe3f0b654eb930bf7fd9c68b294c29fdfa3d4eb77606696af3a1437df4",
+      "ExcelRenderer.Formulas.dll": "98b2a7e666464ef7b683649080e8ec58506d09bc520028c0ab3585bb22cd2429",
+      "ExcelRenderer.OpenXml.Reader.dll": "77121efa5963e25e864293b00fcc6ca54144e4f6e708592e209b8917e404b540",
+      "ExcelRenderer.Fonts.dll": "6648d11e91f8aa3ab9b0479ce265ea9e596211643e77a48fe4927d3256f2cb01",
+      "ExcelRenderer.OpenXml.dll": "2c2ce15b5f79103a4f26b639d755767fb503eb3ccd78d058b6458a1f0dbe6fba",
+      "ExcelRenderer.Mapping.dll": "6b14db38bed077c93e0c265c32eba015392ea01cae852cc145ed17e97e66e3a2",
+      "ExcelRenderer.Core.dll": "0790a6d37bd9b06768bffb978e0e0c1ea52409c19faa2b95a92b78e4dc071a53",
+      "ExcelRenderer.Performance.dll": "ec18277e4947301cea58223d528ea83f736f2b82d07f1e816a74e3285d9c3179"
+    }
+  },
+  "windowsExecuted": false,
+  "excludedAttempt": "discarded-controlled-overlap under workspace artifacts; full controlled rerun used"
+}

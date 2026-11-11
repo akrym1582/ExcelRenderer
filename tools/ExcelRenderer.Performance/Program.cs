@@ -16,6 +16,18 @@ if (args.Length > 0 && args[0] == "async-pdf")
 
 var command = args[0];
 var path = args[1];
+if (command == "paint-color-case")
+{
+    PaintColorBenchmark.Run(args);
+    return;
+}
+
+if (command == "core-glyph-case")
+{
+    CoreGlyphBenchmark.Run(args);
+    return;
+}
+
 if (command == "pdf-read")
 {
     await PdfReadBenchmark.RunAsync(args);

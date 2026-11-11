@@ -48,7 +48,9 @@ internal static partial class RenderMemoryBenchmark
             {
                 ConversionMetrics.Observer = (name, value) =>
                 {
-                    metrics[name] = metrics.GetValueOrDefault(name) + value;
+                    metrics[name] = name.EndsWith(".current", StringComparison.Ordinal) ? value :
+                        name.EndsWith(".max", StringComparison.Ordinal) ? Math.Max(metrics.GetValueOrDefault(name), value) :
+                        metrics.GetValueOrDefault(name) + value;
                     if (name.EndsWith(".ms", StringComparison.Ordinal))
                     {
                         metrics[name + ".count"] = metrics.GetValueOrDefault(name + ".count") + 1;

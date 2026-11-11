@@ -1,0 +1,228 @@
+diff --git a/src/ExcelRenderer.Core/Pdf/SkiaPaintResources.cs b/src/ExcelRenderer.Core/Pdf/SkiaPaintResources.cs
+index 3002dab..0d7e157 100644
+--- a/src/ExcelRenderer.Core/Pdf/SkiaPaintResources.cs
++++ b/src/ExcelRenderer.Core/Pdf/SkiaPaintResources.cs
+@@ -1,3 +1,4 @@
++using System.Runtime.CompilerServices;
+ using ExcelRenderer.Core.Model;
+ using ExcelRenderer.Core.Rendering;
+ using SkiaSharp;
+@@ -9,6 +10,8 @@ internal sealed class SkiaPaintResources : IDisposable
+ {
+     private SKPaint? fill;
+     private SKPaint? stroke;
++    private SKColor fillColor;
++    private SKColor strokeColor;
+     private SKPathEffect? effect;
+     private (BorderLineStyle Style, double Width)? effectKey;
+ 
+@@ -31,22 +34,38 @@ internal sealed class SkiaPaintResources : IDisposable
+ 
+         DisposeEffect();
+         effectKey = null;
++        fillColor = default;
++        strokeColor = default;
+     }
+ 
+     /// <summary>Gets the renderer's fill paint with the current RGBA color.</summary>
+     /// <param name="color">The command color.</param>
+-    /// <returns>The borrowed paint; never mutated outside this owner.</returns>
++    /// <returns>The borrowed paint; temporary color changes must be restored before the next owner request.</returns>
++    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+     internal SKPaint Fill(ReportColor color)
+     {
++        var rgba = new SKColor(color.Red, color.Green, color.Blue, color.Alpha);
++        var observer = ConversionMetrics.Observer;
+         if (fill is null)
+         {
+             fill = SkiaDrawingPrimitives.CreatePaint(color, SKPaintStyle.Fill);
+-            ConversionMetrics.Report("paintCreated", 1);
++            fillColor = rgba;
++            observer?.Invoke("paintCreated", 1);
++            observer?.Invoke("paintColorSetters", 1);
++        }
++        else if (fillColor != rgba)
++        {
++            fill.Color = rgba;
++            fillColor = rgba;
++            observer?.Invoke("paintColorSetters", 1);
++        }
++        else
++        {
++            observer?.Invoke("paintColorSettersSkipped", 1);
+         }
+ 
+         // Style, cap/join and antialias stay fixed after construction; only RGBA changes.
+-        ConversionMetrics.Report("paintFillRequests", 1);
+-        fill.Color = new(color.Red, color.Green, color.Blue, color.Alpha);
++        observer?.Invoke("paintFillRequests", 1);
+         return fill;
+     }
+ 
+@@ -55,15 +74,28 @@ internal sealed class SkiaPaintResources : IDisposable
+     /// <returns>The borrowed paint, valid until the next stroke.</returns>
+     internal SKPaint Stroke(BorderSide side)
+     {
++        var color = side.Color ?? new(0, 0, 0);
++        var rgba = new SKColor(color.Red, color.Green, color.Blue, color.Alpha);
++        var observer = ConversionMetrics.Observer;
+         if (stroke is null)
+         {
+-            stroke = SkiaDrawingPrimitives.CreatePaint(new(0, 0, 0), SKPaintStyle.Stroke);
+-            ConversionMetrics.Report("paintCreated", 1);
++            stroke = SkiaDrawingPrimitives.CreatePaint(color, SKPaintStyle.Stroke);
++            strokeColor = rgba;
++            observer?.Invoke("paintCreated", 1);
++            observer?.Invoke("paintColorSetters", 1);
++        }
++        else if (strokeColor != rgba)
++        {
++            stroke.Color = rgba;
++            strokeColor = rgba;
++            observer?.Invoke("paintColorSetters", 1);
++        }
++        else
++        {
++            observer?.Invoke("paintColorSettersSkipped", 1);
+         }
+ 
+-        ConversionMetrics.Report("paintStrokeRequests", 1);
+-        var color = side.Color ?? new(0, 0, 0);
+-        stroke.Color = new(color.Red, color.Green, color.Blue, color.Alpha);
++        observer?.Invoke("paintStrokeRequests", 1);
+         stroke.StrokeWidth = (float)side.Width;
+         var key = (side.LineStyle, side.Width);
+         if (effectKey != key)
+@@ -75,7 +107,7 @@ internal sealed class SkiaPaintResources : IDisposable
+             stroke.PathEffect = effect;
+             if (effect is not null)
+             {
+-                ConversionMetrics.Report("pathEffectCreated", 1);
++                observer?.Invoke("pathEffectCreated", 1);
+             }
+         }
+ 
+diff --git a/src/ExcelRenderer/SkiaSharp/SkiaTextDrawing.cs b/src/ExcelRenderer/SkiaSharp/SkiaTextDrawing.cs
+index 3286641..9e15898 100644
+--- a/src/ExcelRenderer/SkiaSharp/SkiaTextDrawing.cs
++++ b/src/ExcelRenderer/SkiaSharp/SkiaTextDrawing.cs
+@@ -424,6 +424,8 @@ internal sealed class SkiaTextDrawing
+                 using var builder = new SKTextBlobBuilder();
+                 builder.AddRun([emojiGlyph], font, new SKPoint(x, y));
+                 using var blob = builder.Build();
++
++                // Restore this borrowed fill before its owner can reuse the cached RGBA.
+                 var color = paint.Color;
+                 try
+                 {
+diff --git a/tests/ExcelRenderer.Core.Tests/PaintColorOptimizationTests.cs b/tests/ExcelRenderer.Core.Tests/PaintColorOptimizationTests.cs
+new file mode 100644
+index 0000000..43620ff
+--- /dev/null
++++ b/tests/ExcelRenderer.Core.Tests/PaintColorOptimizationTests.cs
+@@ -0,0 +1,105 @@
++using ExcelRenderer.Core.Model;
++using ExcelRenderer.Core.Pdf;
++using ExcelRenderer.Core.Rendering;
++using SkiaSharp;
++using Xunit;
++
++namespace ExcelRenderer.Core.Tests;
++
++public sealed class PaintColorOptimizationTests
++{
++    [Fact]
++    public void Fill_compares_every_rgba_component_without_reading_native_color()
++    {
++        var counts = new Dictionary<string, double>();
++        ConversionMetrics.Observer = (name, value) => counts[name] = counts.GetValueOrDefault(name) + value;
++        try
++        {
++            using var resources = new SkiaPaintResources();
++            ReportColor[] colors = [new(1, 2, 3, 4), new(1, 2, 3, 5), new(2, 2, 3, 5), new(2, 3, 3, 5), new(2, 3, 4, 5), new(1, 2, 3, 4)];
++            SKPaint? first = null;
++            foreach (var color in colors)
++            {
++                var paint = resources.Fill(color);
++                first ??= paint;
++                Assert.Same(first, paint);
++                Assert.Equal(new SKColor(color.Red, color.Green, color.Blue, color.Alpha), paint.Color);
++                Assert.Same(paint, resources.Fill(color));
++            }
++
++            Assert.Equal(colors.Length, counts["paintColorSetters"]);
++            Assert.Equal(colors.Length, counts["paintColorSettersSkipped"]);
++            Assert.Equal(1, counts["paintCreated"]);
++        }
++        finally
++        {
++            ConversionMetrics.Observer = null;
++        }
++    }
++
++    [Fact]
++    public void Stroke_color_skip_preserves_width_dash_and_separate_fill_state()
++    {
++        using var resources = new SkiaPaintResources();
++        var color = new ReportColor(20, 30, 40, 50);
++        var stroke = resources.Stroke(new(2, color, BorderLineStyle.Dashed));
++        Assert.Equal(SKPaintStyle.Stroke, stroke.Style);
++        Assert.NotNull(stroke.PathEffect);
++        var fill = resources.Fill(color);
++        Assert.NotSame(fill, stroke);
++        Assert.Equal(SKPaintStyle.Fill, fill.Style);
++        Assert.Null(fill.PathEffect);
++        Assert.Same(stroke, resources.Stroke(new(4, color, BorderLineStyle.Solid)));
++        Assert.Equal(4, stroke.StrokeWidth);
++        Assert.Null(stroke.PathEffect);
++        Assert.Equal(new SKColor(20, 30, 40, 50), stroke.Color);
++        resources.Fill(new(20, 30, 40, 51));
++        Assert.Equal(new SKColor(20, 30, 40, 50), stroke.Color);
++        Assert.Equal(SKColors.Black, resources.Stroke(new(1)).Color);
++        Assert.Equal(SKColors.Black, resources.Stroke(new(3, new(0, 0, 0))).Color);
++    }
++
++    [Fact]
++    public void Restored_temporary_emoji_color_keeps_owner_state_valid_after_exception()
++    {
++        using var resources = new SkiaPaintResources();
++        var color = new ReportColor(120, 20, 30, 100);
++        var paint = resources.Fill(color);
++        var original = paint.Color;
++        Assert.Throws<InvalidOperationException>((Action)(() =>
++        {
++            try
++            {
++                paint.Color = SKColors.White;
++                throw new InvalidOperationException();
++            }
++            finally
++            {
++                paint.Color = original;
++            }
++        }));
++        Assert.Same(paint, resources.Fill(color));
++        Assert.Equal(original, paint.Color);
++        Assert.Equal(SKColors.White, resources.Fill(new(255, 255, 255)).Color);
++        Assert.Equal(original, resources.Fill(color).Color);
++    }
++
++    [Fact]
++    public void Independent_owners_and_recreation_do_not_share_cached_colors()
++    {
++        using var first = new SkiaPaintResources();
++        using var second = new SkiaPaintResources();
++        var color = new ReportColor(10, 20, 30, 40);
++        var oldFill = first.Fill(color);
++        var oldStroke = first.Stroke(new(2, color));
++        Assert.NotSame(oldFill, second.Fill(color));
++        second.Fill(new(50, 60, 70, 80));
++        Assert.Equal(new SKColor(10, 20, 30, 40), oldFill.Color);
++        first.Dispose();
++        first.Dispose();
++        Assert.NotSame(oldFill, first.Fill(color));
++        Assert.NotSame(oldStroke, first.Stroke(new(2, color)));
++        Assert.Equal(new SKColor(10, 20, 30, 40), first.Fill(color).Color);
++        Assert.Equal(new SKColor(10, 20, 30, 40), first.Stroke(new(2, color)).Color);
++    }
++}

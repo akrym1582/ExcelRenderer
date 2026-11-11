@@ -98,6 +98,9 @@ internal static class SkiaDrawingPrimitives
         Color = new(color.Red, color.Green, color.Blue, color.Alpha),
         Style = style,
         StrokeWidth = (float)width,
+        StrokeCap = SKStrokeCap.Butt,
+        StrokeJoin = SKStrokeJoin.Miter,
+        StrokeMiter = 4,
         IsAntialias = true,
     };
 

@@ -1,0 +1,5 @@
+  Successfully created package '/workspace/ExcelRenderer-review/artifacts/main-performance/packages/ExcelRenderer.Mapping.1.10.4.nupkg'.
+  Successfully created package '/workspace/ExcelRenderer-review/artifacts/main-performance/packages/ExcelRenderer.1.10.4.nupkg'.
+  Successfully created package '/workspace/ExcelRenderer-review/artifacts/main-performance/packages/ExcelRenderer.Fonts.1.10.4.nupkg'.
+  ExcelRenderer.Tool -> /workspace/ExcelRenderer-review/src/ExcelRenderer.Tool/bin/Release/net10.0/publish/
+  Successfully created package '/workspace/ExcelRenderer-review/artifacts/main-performance/packages/ExcelRenderer.Tool.1.10.4.nupkg'.

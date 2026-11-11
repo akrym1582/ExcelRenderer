@@ -1,0 +1,1114 @@
+{
+  "pdf": [
+    {
+      "case": "borders1000-Pdf",
+      "file": "workbook.pdf",
+      "pages": 25,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": [
+        "31a694e6620f358637fdd338522ee3df9b0160747a607f758a0651ecfcf115c8"
+      ]
+    },
+    {
+      "case": "empty-Pdf",
+      "file": "workbook.pdf",
+      "pages": 1,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": []
+    },
+    {
+      "case": "header-Pdf",
+      "file": "workbook.pdf",
+      "pages": 1,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": [
+        "8cd808765073aada4a33db11cd394360bf5e4601b5f43e9caf449ac6a6bf1793"
+      ]
+    },
+    {
+      "case": "imagesonly-Pdf",
+      "file": "workbook.pdf",
+      "pages": 1,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": []
+    },
+    {
+      "case": "mixed1000-Pdf",
+      "file": "workbook.pdf",
+      "pages": 25,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": [
+        "5348ae3b3aedbdda4eda4ad43ff24ab3c696f95a00a449d5b4d2d9b3ac1c0d69"
+      ]
+    },
+    {
+      "case": "range-trim-Pdf",
+      "file": "workbook.pdf",
+      "pages": 1,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": [
+        "344547471da2bb52520c2da765b8bdf9f81e381a447d23f889ca5a276ba98f39"
+      ]
+    },
+    {
+      "case": "rich-Pdf",
+      "file": "workbook.pdf",
+      "pages": 1,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": [
+        "8bba352dd5f0298f96a039e4c1be981315759d73f635f19f44dd262ff63f24e4"
+      ]
+    },
+    {
+      "case": "selected-Pdf",
+      "file": "workbook.pdf",
+      "pages": 1,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": [
+        "31a694e6620f358637fdd338522ee3df9b0160747a607f758a0651ecfcf115c8"
+      ]
+    },
+    {
+      "case": "shapes-Pdf",
+      "file": "workbook.pdf",
+      "pages": 1,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": [
+        "3c5acc16eec9208c5e3163a9e873449dc0b9561fab94d225b4ac6fdc51a33324"
+      ]
+    },
+    {
+      "case": "text1-Pdf",
+      "file": "workbook.pdf",
+      "pages": 1,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": [
+        "4d35837baaaa5a60267c04e24bc6ffc23f72f7f678ec894b4aa03aaedb5aa1aa"
+      ]
+    },
+    {
+      "case": "text1000-Pdf",
+      "file": "workbook.pdf",
+      "pages": 25,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": [
+        "31a694e6620f358637fdd338522ee3df9b0160747a607f758a0651ecfcf115c8"
+      ]
+    },
+    {
+      "case": "wrap1000-Pdf",
+      "file": "workbook.pdf",
+      "pages": 25,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": [
+        "69caf8ba35e733fb69435b4480bc514c75433c4665913af436a59c69ce191ca8"
+      ]
+    }
+  ],
+  "native": [
+    {
+      "case": "02-image-Png",
+      "file": "\u753b\u50cf-1.png",
+      "canonicalBytesEqual": true
+    },
+    {
+      "case": "02-image-Svg",
+      "file": "\u753b\u50cf-1.svg",
+      "canonicalBytesEqual": true
+    },
+    {
+      "case": "04-text-decoration-Png",
+      "file": "\u6587\u5b57\u88c5\u98fe-1.png",
+      "canonicalBytesEqual": true
+    },
+    {
+      "case": "04-text-decoration-Svg",
+      "file": "\u6587\u5b57\u88c5\u98fe-1.svg",
+      "canonicalBytesEqual": true
+    },
+    {
+      "case": "05-borders-Png",
+      "file": "\u7f6b\u7dda-1.png",
+      "canonicalBytesEqual": true
+    },
+    {
+      "case": "05-borders-Png",
+      "file": "\u7f6b\u7dda-2.png",
+      "canonicalBytesEqual": true
+    },
+    {
+      "case": "05-borders-Svg",
+      "file": "\u7f6b\u7dda-1.svg",
+      "canonicalBytesEqual": true
+    },
+    {
+      "case": "05-borders-Svg",
+      "file": "\u7f6b\u7dda-2.svg",
+      "canonicalBytesEqual": true
+    },
+    {
+      "case": "rich-Png",
+      "file": "rich-1.png",
+      "canonicalBytesEqual": true
+    },
+    {
+      "case": "rich-Svg",
+      "file": "rich-1.svg",
+      "canonicalBytesEqual": true
+    },
+    {
+      "case": "shapes-Png",
+      "file": "Shapes-1.png",
+      "canonicalBytesEqual": true
+    },
+    {
+      "case": "shapes-Svg",
+      "file": "Shapes-1.svg",
+      "canonicalBytesEqual": true
+    }
+  ],
+  "core": [
+    {
+      "case": "text1",
+      "pages": 1,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": [
+        "4d35837baaaa5a60267c04e24bc6ffc23f72f7f678ec894b4aa03aaedb5aa1aa"
+      ]
+    },
+    {
+      "case": "text1000",
+      "pages": 25,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": [
+        "31a694e6620f358637fdd338522ee3df9b0160747a607f758a0651ecfcf115c8"
+      ]
+    },
+    {
+      "case": "wrap1000",
+      "pages": 25,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": [
+        "69caf8ba35e733fb69435b4480bc514c75433c4665913af436a59c69ce191ca8"
+      ]
+    },
+    {
+      "case": "borders1000",
+      "pages": 25,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": [
+        "31a694e6620f358637fdd338522ee3df9b0160747a607f758a0651ecfcf115c8"
+      ]
+    },
+    {
+      "case": "header",
+      "pages": 1,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": [
+        "8cd808765073aada4a33db11cd394360bf5e4601b5f43e9caf449ac6a6bf1793"
+      ]
+    },
+    {
+      "case": "imagesonly",
+      "pages": 1,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": []
+    },
+    {
+      "case": "empty",
+      "pages": 1,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": []
+    }
+  ],
+  "baselineObservations": [
+    {
+      "case": "text1000-Pdf",
+      "command": [
+        "dotnet",
+        "/workspace/ExcelRenderer-review/artifacts/main-performance/observation-before/ExcelRenderer.Performance.dll",
+        "render-profile",
+        "/workspace/ExcelRenderer-review/artifacts/main-performance/observation-case.json",
+        "text1000-Pdf",
+        "1",
+        "1",
+        "diagnostic"
+      ],
+      "records": [
+        {
+          "environment": {
+            "runtime": "10.0.12",
+            "os": "Unix 6.18.57.0",
+            "item": {
+              "Name": "text1000-Pdf",
+              "Input": "/workspace/ExcelRenderer-review/artifacts/main-performance/inputs/text1000.xlsx",
+              "Format": "Pdf",
+              "ReadOnly": false,
+              "ConditionalFormatting": true,
+              "Continuous": false,
+              "Trim": false,
+              "Pages": null,
+              "Range": null,
+              "Capture": "/workspace/ExcelRenderer-review/artifacts/main-performance/observation-captures/text1000-Pdf",
+              "Mode": "cached",
+              "FontPack": false,
+              "Template": null
+            },
+            "inputSha256": "C6FDBC2E54EC4FDE141493B46B98310DFD0202E96CBD0C8B12844B8EC337FC03",
+            "templateSha256": "C6FDBC2E54EC4FDE141493B46B98310DFD0202E96CBD0C8B12844B8EC337FC03",
+            "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+            "dlls": {
+              "ExcelRenderer.dll": "C2F64D208E6ED32822BBEA76C4E92E5ADB3AA9CE3AF09A84AA20229027AA821C",
+              "ExcelRenderer.Formulas.dll": "12CA812B6BDA012BC624278CA515351A1C8C730B9D99BBD1B110CEF00A6FB3F3",
+              "ExcelRenderer.OpenXml.Reader.dll": "B58C2ED9EA9698BF01DE672054E319B621A12469C742A12F270E88FD2D3E5D92",
+              "ExcelRenderer.Fonts.dll": "21318903B314F2B2558F1F9F04F3AD65ACF77718EA6653EDD0A3CD0016E09D5A",
+              "ExcelRenderer.OpenXml.dll": "C83E3384453E3B3FFDD400CD43FA5828559E24900C5714D1E272ADED363BCD84",
+              "ExcelRenderer.Mapping.dll": "083EED6A199425BA1443263BCE0AA2709F114A157F8616A84ADAD887EE27B670",
+              "ExcelRenderer.Core.dll": "F30E64B33036BA4C0E0DEF7DC9099D483630D5DBCEF373BB1AC9B84C6F309AFA",
+              "ExcelRenderer.Performance.dll": "BBD1CADF3DC23F5FEFA6499F35BEE3A7A75F375CB591800866F0A7D6158C490C"
+            }
+          }
+        },
+        {
+          "name": "text1000-Pdf",
+          "iteration": -1,
+          "diagnostic": false,
+          "cold": true,
+          "observerControl": false,
+          "warmup": true,
+          "milliseconds": 645.5415,
+          "allocationBytes": 63562768,
+          "gc": [
+            3,
+            2,
+            1
+          ],
+          "peakRssBytes": 111616000,
+          "outputBytes": 140223,
+          "pages": 25,
+          "captureHash": null,
+          "metrics": {}
+        },
+        {
+          "name": "text1000-Pdf",
+          "iteration": 0,
+          "diagnostic": false,
+          "cold": false,
+          "observerControl": true,
+          "warmup": false,
+          "milliseconds": 210.5377,
+          "allocationBytes": 61096216,
+          "gc": [
+            2,
+            0,
+            0
+          ],
+          "peakRssBytes": 144551936,
+          "outputBytes": 140223,
+          "pages": 25,
+          "captureHash": "99760E3AE928F3CFC54F2EC114FC9882D47B41D6C5C38C3EDE4925D70B73DE4D",
+          "metrics": {}
+        },
+        {
+          "name": "text1000-Pdf",
+          "iteration": 1,
+          "diagnostic": true,
+          "cold": false,
+          "observerControl": false,
+          "warmup": false,
+          "milliseconds": 196.7682,
+          "allocationBytes": 61616288,
+          "gc": [
+            2,
+            0,
+            0
+          ],
+          "peakRssBytes": 160980992,
+          "outputBytes": 140223,
+          "pages": 25,
+          "captureHash": "99760E3AE928F3CFC54F2EC114FC9882D47B41D6C5C38C3EDE4925D70B73DE4D",
+          "metrics": {
+            "input.ms": 0.04,
+            "input.ms.count": 1,
+            "fonts.ms": 1.7466,
+            "fonts.ms.count": 1,
+            "openXmlReaderWorkbook": 1,
+            "fontsBytesLoaded": 5472784,
+            "typefaceCreated": 1,
+            "readerStyleConversions": 1,
+            "readerStyleCacheHits": 1999,
+            "readerStyleCacheEntries": 2,
+            "model.cells": 2000,
+            "reader.ms": 86.1838,
+            "reader.ms.count": 1,
+            "cells": 2000,
+            "supportChecks": 29679,
+            "supportCacheHits": 29663,
+            "diagnostics.ms": 9.1217,
+            "diagnostics.ms.count": 1,
+            "modelSelectedCells": 2000,
+            "coreGeometryPlan": 1,
+            "pagePayloadMax": 1,
+            "pagePayloadActive": 0,
+            "pageCandidateSort": 50,
+            "pageCandidateCount": 4000,
+            "textGlyphCalls": 4000,
+            "textGlyphCharacters": 39572,
+            "glyphRunsFinalized": 2000,
+            "lineMetricsComputed": 1,
+            "textLineCacheMisses": 2000,
+            "corePageBuild": 50,
+            "borderCandidates": 0,
+            "coreCommandBuild": 50,
+            "renderCells": 4000,
+            "commands": 4000,
+            "pageBuild.ms": 51.0466,
+            "pageBuild.ms.count": 50,
+            "textFinalize.ms": 0.8194910000000037,
+            "textFinalize.ms.count": 4000,
+            "pdfFontRunsCollected": 2000,
+            "fontCollect.ms": 1.5168000000000001,
+            "fontCollect.ms.count": 25,
+            "pagePreflight.ms": 24.955399999999997,
+            "pagePreflight.ms.count": 25,
+            "links.ms": 0.006,
+            "links.ms.count": 1,
+            "pdfBackend": 1,
+            "pdfSubset.ms": 0.4207,
+            "pdfSubset.ms.count": 1,
+            "pdfOriginalFontBytes": 5472784,
+            "pdfSubsetFontBytes": 332024,
+            "pdfSubsetTypefaceCreated": 1,
+            "fontPrepare.ms": 0.8779,
+            "fontPrepare.ms.count": 1,
+            "paintCreated": 2000,
+            "pdfFontCreated": 1,
+            "pdfPositionsWritten": 19786,
+            "pdfPage.ms": 41.4549,
+            "pdfPage.ms.count": 25,
+            "pdfSave": 1,
+            "pdfFinalSave.ms": 7.7749,
+            "pdfFinalSave.ms.count": 1,
+            "pdfFontDisposed": 1,
+            "pdfSubsetTypefaceDisposed": 1,
+            "typefaceDisposed": 1
+          }
+        }
+      ],
+      "outputEqualToPrimary": true
+    },
+    {
+      "case": "wrap1000-Pdf",
+      "command": [
+        "dotnet",
+        "/workspace/ExcelRenderer-review/artifacts/main-performance/observation-before/ExcelRenderer.Performance.dll",
+        "render-profile",
+        "/workspace/ExcelRenderer-review/artifacts/main-performance/observation-case.json",
+        "wrap1000-Pdf",
+        "1",
+        "1",
+        "diagnostic"
+      ],
+      "records": [
+        {
+          "environment": {
+            "runtime": "10.0.12",
+            "os": "Unix 6.18.57.0",
+            "item": {
+              "Name": "wrap1000-Pdf",
+              "Input": "/workspace/ExcelRenderer-review/artifacts/main-performance/inputs/wrap1000.xlsx",
+              "Format": "Pdf",
+              "ReadOnly": false,
+              "ConditionalFormatting": true,
+              "Continuous": false,
+              "Trim": false,
+              "Pages": null,
+              "Range": null,
+              "Capture": "/workspace/ExcelRenderer-review/artifacts/main-performance/observation-captures/wrap1000-Pdf",
+              "Mode": "cached",
+              "FontPack": false,
+              "Template": null
+            },
+            "inputSha256": "7BD2C23AE89C8BD7986E56ABA1102F18BA2E997EF2EFFD8B7C0314E1ECCE2684",
+            "templateSha256": "7BD2C23AE89C8BD7986E56ABA1102F18BA2E997EF2EFFD8B7C0314E1ECCE2684",
+            "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+            "dlls": {
+              "ExcelRenderer.dll": "C2F64D208E6ED32822BBEA76C4E92E5ADB3AA9CE3AF09A84AA20229027AA821C",
+              "ExcelRenderer.Formulas.dll": "12CA812B6BDA012BC624278CA515351A1C8C730B9D99BBD1B110CEF00A6FB3F3",
+              "ExcelRenderer.OpenXml.Reader.dll": "B58C2ED9EA9698BF01DE672054E319B621A12469C742A12F270E88FD2D3E5D92",
+              "ExcelRenderer.Fonts.dll": "21318903B314F2B2558F1F9F04F3AD65ACF77718EA6653EDD0A3CD0016E09D5A",
+              "ExcelRenderer.OpenXml.dll": "C83E3384453E3B3FFDD400CD43FA5828559E24900C5714D1E272ADED363BCD84",
+              "ExcelRenderer.Mapping.dll": "083EED6A199425BA1443263BCE0AA2709F114A157F8616A84ADAD887EE27B670",
+              "ExcelRenderer.Core.dll": "F30E64B33036BA4C0E0DEF7DC9099D483630D5DBCEF373BB1AC9B84C6F309AFA",
+              "ExcelRenderer.Performance.dll": "BBD1CADF3DC23F5FEFA6499F35BEE3A7A75F375CB591800866F0A7D6158C490C"
+            }
+          }
+        },
+        {
+          "name": "wrap1000-Pdf",
+          "iteration": -1,
+          "diagnostic": false,
+          "cold": true,
+          "observerControl": false,
+          "warmup": true,
+          "milliseconds": 1567.3866,
+          "allocationBytes": 513747248,
+          "gc": [
+            31,
+            5,
+            2
+          ],
+          "peakRssBytes": 123822080,
+          "outputBytes": 148157,
+          "pages": 25,
+          "captureHash": null,
+          "metrics": {}
+        },
+        {
+          "name": "wrap1000-Pdf",
+          "iteration": 0,
+          "diagnostic": false,
+          "cold": false,
+          "observerControl": true,
+          "warmup": false,
+          "milliseconds": 625.1087,
+          "allocationBytes": 503358480,
+          "gc": [
+            30,
+            4,
+            1
+          ],
+          "peakRssBytes": 157569024,
+          "outputBytes": 148157,
+          "pages": 25,
+          "captureHash": "C8E489CF3C271DEE82010AEB4013C2F0AE2F60891A2113F2493E8004B081D412",
+          "metrics": {}
+        },
+        {
+          "name": "wrap1000-Pdf",
+          "iteration": 1,
+          "diagnostic": true,
+          "cold": false,
+          "observerControl": false,
+          "warmup": false,
+          "milliseconds": 791.998,
+          "allocationBytes": 504503680,
+          "gc": [
+            29,
+            4,
+            0
+          ],
+          "peakRssBytes": 174841856,
+          "outputBytes": 148157,
+          "pages": 25,
+          "captureHash": "C8E489CF3C271DEE82010AEB4013C2F0AE2F60891A2113F2493E8004B081D412",
+          "metrics": {
+            "input.ms": 0.0433,
+            "input.ms.count": 1,
+            "fonts.ms": 1.4722,
+            "fonts.ms.count": 1,
+            "openXmlReaderWorkbook": 1,
+            "fontsBytesLoaded": 5472784,
+            "typefaceCreated": 1,
+            "readerStyleConversions": 1,
+            "readerStyleCacheHits": 1999,
+            "readerStyleCacheEntries": 2,
+            "model.cells": 2000,
+            "reader.ms": 142.7641,
+            "reader.ms.count": 1,
+            "cells": 2000,
+            "supportChecks": 1128378,
+            "supportCacheHits": 1128352,
+            "diagnostics.ms": 181.3443,
+            "diagnostics.ms.count": 1,
+            "modelSelectedCells": 2000,
+            "coreGeometryPlan": 1,
+            "pagePayloadMax": 1,
+            "pagePayloadActive": 0,
+            "pageCandidateSort": 50,
+            "pageCandidateCount": 4000,
+            "textGlyphCalls": 64643,
+            "textGlyphCharacters": 634169,
+            "textWidthCacheMisses": 56543,
+            "glyphRunsFinalized": 4050,
+            "lineMetricsComputed": 1,
+            "textLineCacheMisses": 4050,
+            "textWidthCacheHits": 1009237,
+            "textLineCacheHits": 71950,
+            "corePageBuild": 50,
+            "borderCandidates": 0,
+            "coreCommandBuild": 50,
+            "renderCells": 4000,
+            "commands": 4000,
+            "pageBuild.ms": 388.62309999999997,
+            "pageBuild.ms.count": 50,
+            "textFinalize.ms": 1.2337930000000172,
+            "textFinalize.ms.count": 4000,
+            "pdfFontRunsCollected": 38000,
+            "fontCollect.ms": 9.486699999999997,
+            "fontCollect.ms.count": 25,
+            "pagePreflight.ms": 225.17020000000002,
+            "pagePreflight.ms.count": 25,
+            "links.ms": 0.0184,
+            "links.ms.count": 1,
+            "pdfBackend": 1,
+            "pdfSubset.ms": 0.4549,
+            "pdfSubset.ms.count": 1,
+            "pdfOriginalFontBytes": 5472784,
+            "pdfSubsetFontBytes": 333080,
+            "pdfSubsetTypefaceCreated": 1,
+            "fontPrepare.ms": 0.7826,
+            "fontPrepare.ms.count": 1,
+            "paintCreated": 2000,
+            "pdfFontCreated": 1,
+            "pdfPositionsWritten": 558890,
+            "pdfPage.ms": 206.95339999999996,
+            "pdfPage.ms.count": 25,
+            "pdfSave": 1,
+            "pdfFinalSave.ms": 9.4071,
+            "pdfFinalSave.ms.count": 1,
+            "pdfFontDisposed": 1,
+            "pdfSubsetTypefaceDisposed": 1,
+            "typefaceDisposed": 1
+          }
+        }
+      ],
+      "outputEqualToPrimary": true
+    },
+    {
+      "case": "borders1000-Pdf",
+      "command": [
+        "dotnet",
+        "/workspace/ExcelRenderer-review/artifacts/main-performance/observation-before/ExcelRenderer.Performance.dll",
+        "render-profile",
+        "/workspace/ExcelRenderer-review/artifacts/main-performance/observation-case.json",
+        "borders1000-Pdf",
+        "1",
+        "1",
+        "diagnostic"
+      ],
+      "records": [
+        {
+          "environment": {
+            "runtime": "10.0.12",
+            "os": "Unix 6.18.57.0",
+            "item": {
+              "Name": "borders1000-Pdf",
+              "Input": "/workspace/ExcelRenderer-review/artifacts/main-performance/inputs/borders1000.xlsx",
+              "Format": "Pdf",
+              "ReadOnly": false,
+              "ConditionalFormatting": true,
+              "Continuous": false,
+              "Trim": false,
+              "Pages": null,
+              "Range": null,
+              "Capture": "/workspace/ExcelRenderer-review/artifacts/main-performance/observation-captures/borders1000-Pdf",
+              "Mode": "cached",
+              "FontPack": false,
+              "Template": null
+            },
+            "inputSha256": "6B2F8DA7ADE3D211177E4931CF706E153F9E85EC138245B8D0D8757B423141CF",
+            "templateSha256": "6B2F8DA7ADE3D211177E4931CF706E153F9E85EC138245B8D0D8757B423141CF",
+            "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+            "dlls": {
+              "ExcelRenderer.dll": "C2F64D208E6ED32822BBEA76C4E92E5ADB3AA9CE3AF09A84AA20229027AA821C",
+              "ExcelRenderer.Formulas.dll": "12CA812B6BDA012BC624278CA515351A1C8C730B9D99BBD1B110CEF00A6FB3F3",
+              "ExcelRenderer.OpenXml.Reader.dll": "B58C2ED9EA9698BF01DE672054E319B621A12469C742A12F270E88FD2D3E5D92",
+              "ExcelRenderer.Fonts.dll": "21318903B314F2B2558F1F9F04F3AD65ACF77718EA6653EDD0A3CD0016E09D5A",
+              "ExcelRenderer.OpenXml.dll": "C83E3384453E3B3FFDD400CD43FA5828559E24900C5714D1E272ADED363BCD84",
+              "ExcelRenderer.Mapping.dll": "083EED6A199425BA1443263BCE0AA2709F114A157F8616A84ADAD887EE27B670",
+              "ExcelRenderer.Core.dll": "F30E64B33036BA4C0E0DEF7DC9099D483630D5DBCEF373BB1AC9B84C6F309AFA",
+              "ExcelRenderer.Performance.dll": "BBD1CADF3DC23F5FEFA6499F35BEE3A7A75F375CB591800866F0A7D6158C490C"
+            }
+          }
+        },
+        {
+          "name": "borders1000-Pdf",
+          "iteration": -1,
+          "diagnostic": false,
+          "cold": true,
+          "observerControl": false,
+          "warmup": true,
+          "milliseconds": 521.7353,
+          "allocationBytes": 70939952,
+          "gc": [
+            4,
+            2,
+            1
+          ],
+          "peakRssBytes": 113217536,
+          "outputBytes": 154483,
+          "pages": 25,
+          "captureHash": null,
+          "metrics": {}
+        },
+        {
+          "name": "borders1000-Pdf",
+          "iteration": 0,
+          "diagnostic": false,
+          "cold": false,
+          "observerControl": true,
+          "warmup": false,
+          "milliseconds": 174.165,
+          "allocationBytes": 68379504,
+          "gc": [
+            3,
+            1,
+            0
+          ],
+          "peakRssBytes": 142114816,
+          "outputBytes": 154483,
+          "pages": 25,
+          "captureHash": "FCC5D7B02933062F15342F938BB40C04470C61138A6006A6F7814E6B1D121446",
+          "metrics": {}
+        },
+        {
+          "name": "borders1000-Pdf",
+          "iteration": 1,
+          "diagnostic": true,
+          "cold": false,
+          "observerControl": false,
+          "warmup": false,
+          "milliseconds": 220.1114,
+          "allocationBytes": 69713456,
+          "gc": [
+            3,
+            1,
+            0
+          ],
+          "peakRssBytes": 158838784,
+          "outputBytes": 154483,
+          "pages": 25,
+          "captureHash": "FCC5D7B02933062F15342F938BB40C04470C61138A6006A6F7814E6B1D121446",
+          "metrics": {
+            "input.ms": 0.0526,
+            "input.ms.count": 1,
+            "fonts.ms": 1.453,
+            "fonts.ms.count": 1,
+            "openXmlReaderWorkbook": 1,
+            "fontsBytesLoaded": 5472784,
+            "typefaceCreated": 1,
+            "readerStyleConversions": 1,
+            "readerStyleCacheHits": 1999,
+            "readerStyleCacheEntries": 2,
+            "model.cells": 2000,
+            "reader.ms": 91.2339,
+            "reader.ms.count": 1,
+            "cells": 2000,
+            "supportChecks": 29679,
+            "supportCacheHits": 29663,
+            "diagnostics.ms": 9.2744,
+            "diagnostics.ms.count": 1,
+            "modelSelectedCells": 2000,
+            "coreGeometryPlan": 1,
+            "pagePayloadMax": 1,
+            "pagePayloadActive": 0,
+            "pageCandidateSort": 50,
+            "pageCandidateCount": 4000,
+            "textGlyphCalls": 4000,
+            "textGlyphCharacters": 39572,
+            "glyphRunsFinalized": 2000,
+            "lineMetricsComputed": 1,
+            "textLineCacheMisses": 2000,
+            "corePageBuild": 50,
+            "borderCandidates": 16384,
+            "resolvedBorderSegments": 2200,
+            "coreCommandBuild": 50,
+            "renderCells": 4000,
+            "commands": 10200,
+            "pageBuild.ms": 62.16520000000002,
+            "pageBuild.ms.count": 50,
+            "textFinalize.ms": 1.1475739999999839,
+            "textFinalize.ms.count": 10200,
+            "pdfFontRunsCollected": 2000,
+            "fontCollect.ms": 1.7700000000000002,
+            "fontCollect.ms.count": 25,
+            "pagePreflight.ms": 34.07339999999999,
+            "pagePreflight.ms.count": 25,
+            "links.ms": 0.0062,
+            "links.ms.count": 1,
+            "pdfBackend": 1,
+            "pdfSubset.ms": 0.3922,
+            "pdfSubset.ms.count": 1,
+            "pdfOriginalFontBytes": 5472784,
+            "pdfSubsetFontBytes": 332024,
+            "pdfSubsetTypefaceCreated": 1,
+            "fontPrepare.ms": 0.7041,
+            "fontPrepare.ms.count": 1,
+            "paintCreated": 5100,
+            "coreBorderGeometry": 1100,
+            "pdfFontCreated": 1,
+            "pdfPositionsWritten": 19786,
+            "pdfPage.ms": 48.70829999999999,
+            "pdfPage.ms.count": 25,
+            "pdfSave": 1,
+            "pdfFinalSave.ms": 9.0103,
+            "pdfFinalSave.ms.count": 1,
+            "pdfFontDisposed": 1,
+            "pdfSubsetTypefaceDisposed": 1,
+            "typefaceDisposed": 1
+          }
+        }
+      ],
+      "outputEqualToPrimary": true
+    },
+    {
+      "case": "rich-Pdf",
+      "command": [
+        "dotnet",
+        "/workspace/ExcelRenderer-review/artifacts/main-performance/observation-before/ExcelRenderer.Performance.dll",
+        "render-profile",
+        "/workspace/ExcelRenderer-review/artifacts/main-performance/observation-case.json",
+        "rich-Pdf",
+        "1",
+        "1",
+        "diagnostic"
+      ],
+      "records": [
+        {
+          "environment": {
+            "runtime": "10.0.12",
+            "os": "Unix 6.18.57.0",
+            "item": {
+              "Name": "rich-Pdf",
+              "Input": "/workspace/ExcelRenderer-review/artifacts/main-performance/inputs/RichTextAcceptanceTests.RangeTrimAndMergedCellRetainRichTextInAllOutputFormats.79F50EFE1F4F079D.xlsx",
+              "Format": "Pdf",
+              "ReadOnly": false,
+              "ConditionalFormatting": true,
+              "Continuous": false,
+              "Trim": true,
+              "Pages": null,
+              "Range": null,
+              "Capture": "/workspace/ExcelRenderer-review/artifacts/main-performance/observation-captures/rich-Pdf",
+              "Mode": "cached",
+              "FontPack": false,
+              "Template": null
+            },
+            "inputSha256": "E558CD35F95B7D0FC240A5B79120A149F56665B55FBDF1E2FB424C3E38C10B31",
+            "templateSha256": "E558CD35F95B7D0FC240A5B79120A149F56665B55FBDF1E2FB424C3E38C10B31",
+            "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+            "dlls": {
+              "ExcelRenderer.dll": "C2F64D208E6ED32822BBEA76C4E92E5ADB3AA9CE3AF09A84AA20229027AA821C",
+              "ExcelRenderer.Formulas.dll": "12CA812B6BDA012BC624278CA515351A1C8C730B9D99BBD1B110CEF00A6FB3F3",
+              "ExcelRenderer.OpenXml.Reader.dll": "B58C2ED9EA9698BF01DE672054E319B621A12469C742A12F270E88FD2D3E5D92",
+              "ExcelRenderer.Fonts.dll": "21318903B314F2B2558F1F9F04F3AD65ACF77718EA6653EDD0A3CD0016E09D5A",
+              "ExcelRenderer.OpenXml.dll": "C83E3384453E3B3FFDD400CD43FA5828559E24900C5714D1E272ADED363BCD84",
+              "ExcelRenderer.Mapping.dll": "083EED6A199425BA1443263BCE0AA2709F114A157F8616A84ADAD887EE27B670",
+              "ExcelRenderer.Core.dll": "F30E64B33036BA4C0E0DEF7DC9099D483630D5DBCEF373BB1AC9B84C6F309AFA",
+              "ExcelRenderer.Performance.dll": "BBD1CADF3DC23F5FEFA6499F35BEE3A7A75F375CB591800866F0A7D6158C490C"
+            }
+          }
+        },
+        {
+          "name": "rich-Pdf",
+          "iteration": -1,
+          "diagnostic": false,
+          "cold": true,
+          "observerControl": false,
+          "warmup": true,
+          "milliseconds": 399.1106,
+          "allocationBytes": 23600832,
+          "gc": [
+            1,
+            1,
+            1
+          ],
+          "peakRssBytes": 96993280,
+          "outputBytes": 113728,
+          "pages": 1,
+          "captureHash": null,
+          "metrics": {}
+        },
+        {
+          "name": "rich-Pdf",
+          "iteration": 0,
+          "diagnostic": false,
+          "cold": false,
+          "observerControl": true,
+          "warmup": false,
+          "milliseconds": 38.0029,
+          "allocationBytes": 19407792,
+          "gc": [
+            0,
+            0,
+            0
+          ],
+          "peakRssBytes": 127045632,
+          "outputBytes": 113728,
+          "pages": 1,
+          "captureHash": "9EF4436012CA401EC840FE8B75ABF87944459D0DA72FE5BE2F85917E27831C29",
+          "metrics": {}
+        },
+        {
+          "name": "rich-Pdf",
+          "iteration": 1,
+          "diagnostic": true,
+          "cold": false,
+          "observerControl": false,
+          "warmup": false,
+          "milliseconds": 21.7842,
+          "allocationBytes": 19388880,
+          "gc": [
+            0,
+            0,
+            0
+          ],
+          "peakRssBytes": 133152768,
+          "outputBytes": 113728,
+          "pages": 1,
+          "captureHash": "9EF4436012CA401EC840FE8B75ABF87944459D0DA72FE5BE2F85917E27831C29",
+          "metrics": {
+            "input.ms": 0.0373,
+            "input.ms.count": 1,
+            "fonts.ms": 1.4513,
+            "fonts.ms.count": 1,
+            "openXmlReaderWorkbook": 1,
+            "readerStyleConversions": 1,
+            "readerStyleCacheHits": 0,
+            "readerStyleCacheEntries": 2,
+            "model.cells": 1,
+            "reader.ms": 3.743,
+            "reader.ms.count": 1,
+            "cells": 1,
+            "fontsBytesLoaded": 5472784,
+            "supportChecks": 14,
+            "typefaceCreated": 1,
+            "supportCacheHits": 8,
+            "diagnostics.ms": 6.3548,
+            "diagnostics.ms.count": 1,
+            "modelSelectedCells": 1,
+            "coreGeometryPlan": 1,
+            "pagePayloadMax": 1,
+            "pagePayloadActive": 0,
+            "pageCandidateSort": 2,
+            "pageCandidateCount": 2,
+            "richTextLayoutCacheMisses": 1,
+            "textGlyphCalls": 4,
+            "textGlyphCharacters": 14,
+            "glyphRunsFinalized": 2,
+            "lineMetricsComputed": 2,
+            "textLineCacheMisses": 2,
+            "corePageBuild": 2,
+            "borderCandidates": 0,
+            "coreCommandBuild": 2,
+            "renderCells": 2,
+            "commands": 2,
+            "pageBuild.ms": 0.24130000000000001,
+            "pageBuild.ms.count": 2,
+            "textFinalize.ms": 0.003085,
+            "textFinalize.ms.count": 2,
+            "glyphInkComputations": 2,
+            "bounds.ms": 0.4622,
+            "bounds.ms.count": 1,
+            "pdfFontRunsCollected": 2,
+            "fontCollect.ms": 0.0101,
+            "fontCollect.ms.count": 1,
+            "pagePreflight.ms": 0.6892,
+            "pagePreflight.ms.count": 1,
+            "links.ms": 0.0024,
+            "links.ms.count": 1,
+            "pdfBackend": 1,
+            "pdfSubset.ms": 0.4257,
+            "pdfSubset.ms.count": 1,
+            "pdfOriginalFontBytes": 5472784,
+            "pdfSubsetFontBytes": 330740,
+            "pdfSubsetTypefaceCreated": 1,
+            "fontPrepare.ms": 0.6427,
+            "fontPrepare.ms.count": 1,
+            "richTextLayoutCacheHits": 1,
+            "paintCreated": 3,
+            "pdfFontCreated": 2,
+            "pdfPositionsWritten": 7,
+            "pdfPage.ms": 0.6806,
+            "pdfPage.ms.count": 1,
+            "pdfSave": 1,
+            "pdfFinalSave.ms": 6.3525,
+            "pdfFinalSave.ms.count": 1,
+            "pdfFontDisposed": 2,
+            "pdfSubsetTypefaceDisposed": 1,
+            "typefaceDisposed": 1
+          }
+        }
+      ],
+      "outputEqualToPrimary": true
+    },
+    {
+      "case": "05-borders-Png",
+      "command": [
+        "dotnet",
+        "/workspace/ExcelRenderer-review/artifacts/main-performance/observation-before/ExcelRenderer.Performance.dll",
+        "render-profile",
+        "/workspace/ExcelRenderer-review/artifacts/main-performance/observation-case.json",
+        "05-borders-Png",
+        "1",
+        "1",
+        "diagnostic"
+      ],
+      "records": [
+        {
+          "environment": {
+            "runtime": "10.0.12",
+            "os": "Unix 6.18.57.0",
+            "item": {
+              "Name": "05-borders-Png",
+              "Input": "/workspace/ExcelRenderer-review/artifacts/main-performance/inputs/05-borders.xlsx",
+              "Format": "Png",
+              "ReadOnly": false,
+              "ConditionalFormatting": true,
+              "Continuous": false,
+              "Trim": false,
+              "Pages": null,
+              "Range": null,
+              "Capture": "/workspace/ExcelRenderer-review/artifacts/main-performance/observation-captures/05-borders-Png",
+              "Mode": "cached",
+              "FontPack": false,
+              "Template": null
+            },
+            "inputSha256": "074CFD50A3D4556380F462A69287D9B0254A71EBE412E267B395CA345A54EAC2",
+            "templateSha256": "074CFD50A3D4556380F462A69287D9B0254A71EBE412E267B395CA345A54EAC2",
+            "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+            "dlls": {
+              "ExcelRenderer.dll": "C2F64D208E6ED32822BBEA76C4E92E5ADB3AA9CE3AF09A84AA20229027AA821C",
+              "ExcelRenderer.Formulas.dll": "12CA812B6BDA012BC624278CA515351A1C8C730B9D99BBD1B110CEF00A6FB3F3",
+              "ExcelRenderer.OpenXml.Reader.dll": "B58C2ED9EA9698BF01DE672054E319B621A12469C742A12F270E88FD2D3E5D92",
+              "ExcelRenderer.Fonts.dll": "21318903B314F2B2558F1F9F04F3AD65ACF77718EA6653EDD0A3CD0016E09D5A",
+              "ExcelRenderer.OpenXml.dll": "C83E3384453E3B3FFDD400CD43FA5828559E24900C5714D1E272ADED363BCD84",
+              "ExcelRenderer.Mapping.dll": "083EED6A199425BA1443263BCE0AA2709F114A157F8616A84ADAD887EE27B670",
+              "ExcelRenderer.Core.dll": "F30E64B33036BA4C0E0DEF7DC9099D483630D5DBCEF373BB1AC9B84C6F309AFA",
+              "ExcelRenderer.Performance.dll": "BBD1CADF3DC23F5FEFA6499F35BEE3A7A75F375CB591800866F0A7D6158C490C"
+            }
+          }
+        },
+        {
+          "name": "05-borders-Png",
+          "iteration": -1,
+          "diagnostic": false,
+          "cold": true,
+          "observerControl": false,
+          "warmup": true,
+          "milliseconds": 394.0454,
+          "allocationBytes": 23198448,
+          "gc": [
+            1,
+            1,
+            1
+          ],
+          "peakRssBytes": 95559680,
+          "outputBytes": 22218,
+          "pages": 2,
+          "captureHash": null,
+          "metrics": {}
+        },
+        {
+          "name": "05-borders-Png",
+          "iteration": 0,
+          "diagnostic": false,
+          "cold": false,
+          "observerControl": true,
+          "warmup": false,
+          "milliseconds": 54.8602,
+          "allocationBytes": 18874600,
+          "gc": [
+            1,
+            1,
+            1
+          ],
+          "peakRssBytes": 100347904,
+          "outputBytes": 22218,
+          "pages": 2,
+          "captureHash": "D8F87ABBF2A8B0D2B289BFB61EC5F450C8BD84A60A5FE3A1080FC4C2C288807B",
+          "metrics": {}
+        },
+        {
+          "name": "05-borders-Png",
+          "iteration": 1,
+          "diagnostic": true,
+          "cold": false,
+          "observerControl": false,
+          "warmup": false,
+          "milliseconds": 50.7713,
+          "allocationBytes": 19000888,
+          "gc": [
+            0,
+            0,
+            0
+          ],
+          "peakRssBytes": 127254528,
+          "outputBytes": 22218,
+          "pages": 2,
+          "captureHash": "D8F87ABBF2A8B0D2B289BFB61EC5F450C8BD84A60A5FE3A1080FC4C2C288807B",
+          "metrics": {
+            "input.ms": 0.0455,
+            "input.ms.count": 1,
+            "fonts.ms": 2.4556,
+            "fonts.ms.count": 1,
+            "openXmlReaderWorkbook": 1,
+            "readerStyleConversions": 10,
+            "readerStyleCacheHits": 2,
+            "readerStyleCacheEntries": 11,
+            "model.cells": 9,
+            "reader.ms": 4.9591,
+            "reader.ms.count": 1,
+            "cells": 9,
+            "fontsBytesLoaded": 5472784,
+            "supportChecks": 69,
+            "typefaceCreated": 1,
+            "supportCacheHits": 31,
+            "diagnostics.ms": 10.6312,
+            "diagnostics.ms.count": 1,
+            "modelSelectedCells": 9,
+            "coreGeometryPlan": 1,
+            "pagePayloadMax": 1,
+            "pagePayloadActive": 0,
+            "pageCandidateSort": 4,
+            "pageCandidateCount": 18,
+            "textGlyphCalls": 26,
+            "textGlyphCharacters": 142,
+            "glyphRunsFinalized": 17,
+            "lineMetricsComputed": 2,
+            "textLineCacheMisses": 9,
+            "corePageBuild": 4,
+            "borderCandidates": 52,
+            "resolvedBorderSegments": 38,
+            "coreCommandBuild": 4,
+            "renderCells": 18,
+            "commands": 82,
+            "pageBuild.ms": 0.7344999999999999,
+            "pageBuild.ms.count": 4,
+            "textFinalize.ms": 0.6949290000000011,
+            "textFinalize.ms.count": 123,
+            "unfinalizedTextLayouts": 8,
+            "pagePreflight.ms": 1.1461,
+            "pagePreflight.ms.count": 2,
+            "paintCreated": 41,
+            "coreBorderGeometry": 19,
+            "pngBitmapBytes": 4014656,
+            "pngEncode.ms": 27.8807,
+            "pngEncode.ms.count": 2,
+            "typefaceDisposed": 1
+          }
+        }
+      ],
+      "outputEqualToPrimary": true
+    }
+  ]
+}

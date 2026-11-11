@@ -9,8 +9,9 @@ using SkiaSharp;
 namespace ExcelRenderer.SkiaSharp;
 
 /// <summary>PNG と SVG で共有する SkiaSharp 描画コマンド実行処理です。</summary>
-internal sealed class SkiaDrawingContext
+internal sealed class SkiaDrawingContext : IDisposable
 {
+    private readonly Core.Pdf.SkiaPaintResources paints = new();
     private readonly SkiaTextPainter _textPainter;
     private readonly SkiaPdfFonts? _pdfFonts;
     private readonly bool textAsPaths;
@@ -23,7 +24,7 @@ internal sealed class SkiaDrawingContext
     /// <param name="fontManager">文字の描画に使用するフォントを解決するマネージャーです。指定しない場合は Skia のシステムフォント選択を使用します。</param>
     internal SkiaDrawingContext(bool textAsPaths, IFontManager? fontManager = null, SkiaPdfFonts? pdfFonts = null, CancellationToken cancellationToken = default)
     {
-        _textPainter = new(textAsPaths, fontManager, pdfFonts: pdfFonts);
+        _textPainter = new(textAsPaths, fontManager, pdfFonts: pdfFonts, paints: paints);
         _pdfFonts = pdfFonts;
         this.textAsPaths = textAsPaths;
         this.cancellationToken = cancellationToken;
@@ -31,6 +32,9 @@ internal sealed class SkiaDrawingContext
 
     /// <summary>Gets or sets the optional PDF page diagnostic callback.</summary>
     internal Action<ConversionDiagnostic>? DiagnosticHandler { get; set; }
+
+    /// <inheritdoc/>
+    public void Dispose() => paints.Dispose();
 
     /// <summary>単一の描画コマンドを実行します。</summary>
     /// <param name="canvas">描画先のキャンバスです。</param>
@@ -63,20 +67,17 @@ internal sealed class SkiaDrawingContext
 
                 break;
             case FillRectangleCommand fill:
-                using (var paint = CreatePaint(fill.Color, SKPaintStyle.Fill))
-                {
-                    canvas.DrawRect(ToRect(fill.Bounds), paint);
-                }
+                canvas.DrawRect(ToRect(fill.Bounds), CreatePaint(fill.Color, SKPaintStyle.Fill));
 
                 break;
             case DrawBorderCommand border:
-                Core.Pdf.SkiaDrawingPrimitives.DrawBorder(canvas, (Core.Drawing.DrawBorderCommand)CoreIntegration.CoreCommandAdapter.ToCore(border));
+                Core.Pdf.SkiaDrawingPrimitives.DrawBorder(canvas, (Core.Drawing.DrawBorderCommand)CoreIntegration.CoreCommandAdapter.ToCore(border), paints);
                 break;
             case DrawTextCommand text:
                 _textPainter.Paint(canvas, text);
                 break;
             case DrawLineCommand line:
-                Core.Pdf.SkiaDrawingPrimitives.DrawStyledLine(canvas, CoreIntegration.CoreModelAdapter.ToCore(line.Style), line.X1, line.Y1, line.X2, line.Y2);
+                Core.Pdf.SkiaDrawingPrimitives.DrawStyledLine(canvas, CoreIntegration.CoreModelAdapter.ToCore(line.Style), line.X1, line.Y1, line.X2, line.Y2, resources: paints);
 
                 break;
             case DrawImageCommand image:
@@ -100,7 +101,7 @@ internal sealed class SkiaDrawingContext
                     }
 
                     path.Close();
-                    using var polygonPaint = CreatePaint(polygon.Color, SKPaintStyle.Fill);
+                    var polygonPaint = CreatePaint(polygon.Color, SKPaintStyle.Fill);
                     using var polygonPath = path.Detach();
                     canvas.DrawPath(polygonPath, polygonPaint);
                 }
@@ -123,56 +124,61 @@ internal sealed class SkiaDrawingContext
     {
         var b = ToRect(command.Bounds);
         canvas.Save();
-        if (command.ClipBounds is { } clip)
+        try
         {
-            canvas.ClipRect(ToRect(clip));
-        }
+            if (command.ClipBounds is { } clip)
+            {
+                canvas.ClipRect(ToRect(clip));
+            }
 
-        if (command.Shape.Rotation != 0)
+            if (command.Shape.Rotation != 0)
+            {
+                canvas.RotateDegrees((float)command.Shape.Rotation, b.MidX, b.MidY);
+            }
+
+            void Paint(SKPaintStyle style, ReportColor color, Action<SKPaint> draw)
+            {
+                var paint = CreatePaint(color, style, command.Shape.Style.LineWidth);
+                draw(paint);
+            }
+
+            void Draw(SKPaint paint) => ShapeGeometry.DrawSkia(canvas, command.Bounds, command.Shape.Kind, paint);
+
+            if (command.Shape.Style.FillColor is { } fill)
+            {
+                Paint(SKPaintStyle.Fill, fill, Draw);
+            }
+
+            if (command.Shape.Style.LineColor is { } line)
+            {
+                Paint(SKPaintStyle.Stroke, line, Draw);
+            }
+
+            if (command.Shape.Text is { } text)
+            {
+                var bounds = new ReportRect(
+                    command.Bounds.X + text.MarginLeft,
+                    command.Bounds.Y + text.MarginTop,
+                    Math.Max(0, command.Bounds.Width - text.MarginLeft - text.MarginRight),
+                    Math.Max(0, command.Bounds.Height - text.MarginTop - text.MarginBottom));
+                var textCommand = command.TextCommand ?? new DrawTextCommand(
+                    command.PageNumber,
+                    bounds,
+                    text.Text,
+                    CellStyle.Default with
+                    {
+                        Font = text.Font,
+                        HorizontalAlignment = text.HorizontalAlignment,
+                        VerticalAlignment = text.VerticalAlignment,
+                        WrapText = text.WrapText,
+                    });
+                _textPainter.Paint(canvas, textCommand);
+            }
+        }
+        finally
         {
-            canvas.RotateDegrees((float)command.Shape.Rotation, b.MidX, b.MidY);
+            canvas.Restore();
         }
-
-        void Paint(SKPaintStyle style, ReportColor color, Action<SKPaint> draw)
-        {
-            using var paint = CreatePaint(color, style, command.Shape.Style.LineWidth);
-            draw(paint);
-        }
-
-        void Draw(SKPaint paint) => ShapeGeometry.DrawSkia(canvas, command.Bounds, command.Shape.Kind, paint);
-
-        if (command.Shape.Style.FillColor is { } fill)
-        {
-            Paint(SKPaintStyle.Fill, fill, Draw);
-        }
-
-        if (command.Shape.Style.LineColor is { } line)
-        {
-            Paint(SKPaintStyle.Stroke, line, Draw);
-        }
-
-        if (command.Shape.Text is { } text)
-        {
-            var bounds = new ReportRect(
-                command.Bounds.X + text.MarginLeft,
-                command.Bounds.Y + text.MarginTop,
-                Math.Max(0, command.Bounds.Width - text.MarginLeft - text.MarginRight),
-                Math.Max(0, command.Bounds.Height - text.MarginTop - text.MarginBottom));
-            var textCommand = command.TextCommand ?? new DrawTextCommand(
-                command.PageNumber,
-                bounds,
-                text.Text,
-                CellStyle.Default with
-                {
-                    Font = text.Font,
-                    HorizontalAlignment = text.HorizontalAlignment,
-                    VerticalAlignment = text.VerticalAlignment,
-                    WrapText = text.WrapText,
-                });
-            _textPainter.Paint(canvas, textCommand);
-        }
-
-        canvas.Restore();
     }
 
     private void DrawImage(SKCanvas canvas, DrawImageCommand command)
@@ -206,29 +212,35 @@ internal sealed class SkiaDrawingContext
                 (float)((1 - crop.Right) * image.Width),
                 (float)((1 - crop.Bottom) * image.Height));
         canvas.Save();
-        if (command.ClipBounds is { } clip)
+        try
         {
-            canvas.ClipRect(ToRect(clip));
-        }
+            if (command.ClipBounds is { } clip)
+            {
+                canvas.ClipRect(ToRect(clip));
+            }
 
-        canvas.RotateDegrees((float)command.Rotation, destination.MidX, destination.MidY);
-        canvas.Scale(
-            command.FlipHorizontal ? -1 : 1,
-            command.FlipVertical ? -1 : 1,
-            destination.MidX,
-            destination.MidY);
-        if (_pdfFonts is not null)
-        {
-            Core.Pdf.SkiaDrawingPrimitives.DrawPdfImage(canvas, image, source, destination);
+            canvas.RotateDegrees((float)command.Rotation, destination.MidX, destination.MidY);
+            canvas.Scale(
+                command.FlipHorizontal ? -1 : 1,
+                command.FlipVertical ? -1 : 1,
+                destination.MidX,
+                destination.MidY);
+            if (_pdfFonts is not null)
+            {
+                Core.Pdf.SkiaDrawingPrimitives.DrawPdfImage(canvas, image, source, destination);
+            }
+            else
+            {
+                canvas.DrawImage(image, source, destination, new SKSamplingOptions(SKCubicResampler.Mitchell));
+            }
         }
-        else
+        finally
         {
-            canvas.DrawImage(image, source, destination, new SKSamplingOptions(SKCubicResampler.Mitchell));
+            canvas.Restore();
         }
-
-        canvas.Restore();
     }
 
     private SKPaint CreatePaint(ReportColor color, SKPaintStyle style, double width = 1) =>
-        Core.Pdf.SkiaDrawingPrimitives.CreatePaint(CoreIntegration.CoreModelAdapter.ToCore(color), style, width);
+        style == SKPaintStyle.Fill ? paints.Fill(CoreIntegration.CoreModelAdapter.ToCore(color)) :
+        paints.Stroke(new(width, CoreIntegration.CoreModelAdapter.ToCore(color)));
 }

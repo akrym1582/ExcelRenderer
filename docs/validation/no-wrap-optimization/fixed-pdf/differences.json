@@ -1,0 +1,380 @@
+[
+  {
+    "fixture": "commands-1",
+    "page": 1,
+    "region": "text-2",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.49899799599198397,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "IVS path-versus-font edge AA: original retained glyph outlines are exact, and every reference path control point matches the source-font transform within 0.0001pt. No unmatched ink beyond 1px; both extractors retain the independent IVS source string.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "commands-1",
+    "page": 1,
+    "region": "text-3",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.14406130268199233,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "CBDT resampling edge AA: the fixed source color glyph is emitted as a canonical 64px-em Type3 charproc rather than the existing 4x bitmap. The original glyph ID, baseline and corresponding reference image are checked; unmatched ink is zero. Original supplementary Unicode is independently preserved.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "commands-1",
+    "page": 1,
+    "region": "text-2",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.6437141366718832,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "IVS path-versus-font edge AA: original retained glyph outlines are exact, and every reference path control point matches the source-font transform within 0.0001pt. No unmatched ink beyond 1px; both extractors retain the independent IVS source string.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "commands-1",
+    "page": 1,
+    "region": "text-3",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.10130074891604257,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "CBDT resampling edge AA: the fixed source color glyph is emitted as a canonical 64px-em Type3 charproc rather than the existing 4x bitmap. The original glyph ID, baseline and corresponding reference image are checked; unmatched ink is zero. Original supplementary Unicode is independently preserved.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "commands-2",
+    "page": 1,
+    "region": "text-2",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.49899799599198397,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "IVS path-versus-font edge AA: original retained glyph outlines are exact, and every reference path control point matches the source-font transform within 0.0001pt. No unmatched ink beyond 1px; both extractors retain the independent IVS source string.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "commands-2",
+    "page": 1,
+    "region": "text-3",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.14406130268199233,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "CBDT resampling edge AA: the fixed source color glyph is emitted as a canonical 64px-em Type3 charproc rather than the existing 4x bitmap. The original glyph ID, baseline and corresponding reference image are checked; unmatched ink is zero. Original supplementary Unicode is independently preserved.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "commands-2",
+    "page": 1,
+    "region": "text-2",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.6428571428571429,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "IVS path-versus-font edge AA: original retained glyph outlines are exact, and every reference path control point matches the source-font transform within 0.0001pt. No unmatched ink beyond 1px; both extractors retain the independent IVS source string.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "commands-2",
+    "page": 1,
+    "region": "text-3",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.10130074891604257,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "CBDT resampling edge AA: the fixed source color glyph is emitted as a canonical 64px-em Type3 charproc rather than the existing 4x bitmap. The original glyph ID, baseline and corresponding reference image are checked; unmatched ink is zero. Original supplementary Unicode is independently preserved.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "commands-3",
+    "page": 1,
+    "region": "text-2",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.49899799599198397,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "IVS path-versus-font edge AA: original retained glyph outlines are exact, and every reference path control point matches the source-font transform within 0.0001pt. No unmatched ink beyond 1px; both extractors retain the independent IVS source string.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "commands-3",
+    "page": 1,
+    "region": "text-3",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.14406130268199233,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "CBDT resampling edge AA: the fixed source color glyph is emitted as a canonical 64px-em Type3 charproc rather than the existing 4x bitmap. The original glyph ID, baseline and corresponding reference image are checked; unmatched ink is zero. Original supplementary Unicode is independently preserved.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "commands-3",
+    "page": 1,
+    "region": "text-2",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.6428571428571429,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "IVS path-versus-font edge AA: original retained glyph outlines are exact, and every reference path control point matches the source-font transform within 0.0001pt. No unmatched ink beyond 1px; both extractors retain the independent IVS source string.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "commands-3",
+    "page": 1,
+    "region": "text-3",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.10130074891604257,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "CBDT resampling edge AA: the fixed source color glyph is emitted as a canonical 64px-em Type3 charproc rather than the existing 4x bitmap. The original glyph ID, baseline and corresponding reference image are checked; unmatched ink is zero. Original supplementary Unicode is independently preserved.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "commands-4",
+    "page": 1,
+    "region": "text-2",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.49899799599198397,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "IVS path-versus-font edge AA: original retained glyph outlines are exact, and every reference path control point matches the source-font transform within 0.0001pt. No unmatched ink beyond 1px; both extractors retain the independent IVS source string.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "commands-4",
+    "page": 1,
+    "region": "text-3",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.14406130268199233,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "CBDT resampling edge AA: the fixed source color glyph is emitted as a canonical 64px-em Type3 charproc rather than the existing 4x bitmap. The original glyph ID, baseline and corresponding reference image are checked; unmatched ink is zero. Original supplementary Unicode is independently preserved.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "commands-4",
+    "page": 1,
+    "region": "text-2",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.6428571428571429,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "IVS path-versus-font edge AA: original retained glyph outlines are exact, and every reference path control point matches the source-font transform within 0.0001pt. No unmatched ink beyond 1px; both extractors retain the independent IVS source string.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "commands-4",
+    "page": 1,
+    "region": "text-3",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.10130074891604257,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "CBDT resampling edge AA: the fixed source color glyph is emitted as a canonical 64px-em Type3 charproc rather than the existing 4x bitmap. The original glyph ID, baseline and corresponding reference image are checked; unmatched ink is zero. Original supplementary Unicode is independently preserved.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "images",
+    "page": 1,
+    "region": "image-2",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.6450698757763975,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "existing-bug-improvement",
+    "reason": "PDFsharp ignores this nontrivial source crop. Skia matches six independent RGB source-coordinate samples within 1 channel value; clipping and destination remain the fixed command rectangle. This is a limited existing-bug improvement, not an AA waiver.",
+    "evidence": "cropEvidence"
+  },
+  {
+    "fixture": "images",
+    "page": 1,
+    "region": "image-2",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.6343551702565019,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "existing-bug-improvement",
+    "reason": "PDFsharp ignores this nontrivial source crop. Skia matches six independent RGB source-coordinate samples within 1 channel value; clipping and destination remain the fixed command rectangle. This is a limited existing-bug improvement, not an AA waiver.",
+    "evidence": "cropEvidence"
+  },
+  {
+    "fixture": "links",
+    "page": 1,
+    "region": "text-2",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.49899799599198397,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "IVS path-versus-font edge AA: original retained glyph outlines are exact, and every reference path control point matches the source-font transform within 0.0001pt. No unmatched ink beyond 1px; both extractors retain the independent IVS source string.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "links",
+    "page": 1,
+    "region": "text-3",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.14406130268199233,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "CBDT resampling edge AA: the fixed source color glyph is emitted as a canonical 64px-em Type3 charproc rather than the existing 4x bitmap. The original glyph ID, baseline and corresponding reference image are checked; unmatched ink is zero. Original supplementary Unicode is independently preserved.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "links",
+    "page": 1,
+    "region": "text-2",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.6437141366718832,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "IVS path-versus-font edge AA: original retained glyph outlines are exact, and every reference path control point matches the source-font transform within 0.0001pt. No unmatched ink beyond 1px; both extractors retain the independent IVS source string.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "links",
+    "page": 1,
+    "region": "text-3",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.10130074891604257,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "CBDT resampling edge AA: the fixed source color glyph is emitted as a canonical 64px-em Type3 charproc rather than the existing 4x bitmap. The original glyph ID, baseline and corresponding reference image are checked; unmatched ink is zero. Original supplementary Unicode is independently preserved.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "links",
+    "page": 2,
+    "region": "text-2",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.49899799599198397,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "IVS path-versus-font edge AA: original retained glyph outlines are exact, and every reference path control point matches the source-font transform within 0.0001pt. No unmatched ink beyond 1px; both extractors retain the independent IVS source string.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "links",
+    "page": 2,
+    "region": "text-3",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 144,
+      "differentInkRatio": 0.14406130268199233,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "CBDT resampling edge AA: the fixed source color glyph is emitted as a canonical 64px-em Type3 charproc rather than the existing 4x bitmap. The original glyph ID, baseline and corresponding reference image are checked; unmatched ink is zero. Original supplementary Unicode is independently preserved.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "links",
+    "page": 2,
+    "region": "text-2",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.6428571428571429,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "IVS path-versus-font edge AA: original retained glyph outlines are exact, and every reference path control point matches the source-font transform within 0.0001pt. No unmatched ink beyond 1px; both extractors retain the independent IVS source string.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "links",
+    "page": 2,
+    "region": "text-3",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.10130074891604257,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "CBDT resampling edge AA: the fixed source color glyph is emitted as a canonical 64px-em Type3 charproc rather than the existing 4x bitmap. The original glyph ID, baseline and corresponding reference image are checked; unmatched ink is zero. Original supplementary Unicode is independently preserved.",
+    "evidence": "geometryEvidence"
+  },
+  {
+    "fixture": "shapes",
+    "page": 1,
+    "region": "Ellipse",
+    "kind": "raster",
+    "metrics": {
+      "dpi": 300,
+      "differentInkRatio": 0.019030474476019032,
+      "unmatchedInkRatio": 0.0
+    },
+    "status": "accepted-aa",
+    "reason": "Same fixed center, radii, fill and stroke. PDFsharp emits four cubic segments (normalized ellipse residual 0.000546); Skia emits 32 (0.000025). The 300dpi edge AA differs; unmatched ink ratio is zero. Independent ellipse equation is rechecked.",
+    "evidence": "ellipseEvidence"
+  }
+]

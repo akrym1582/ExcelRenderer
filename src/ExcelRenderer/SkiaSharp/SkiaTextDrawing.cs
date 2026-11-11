@@ -11,6 +11,7 @@ namespace ExcelRenderer.SkiaSharp;
 /// <summary>Owns Skia font resources and finalized and compatibility run drawing.</summary>
 internal sealed class SkiaTextDrawing
 {
+    private readonly Core.Pdf.SkiaPaintResources? _paints;
     private readonly bool _textAsPaths;
     private readonly SkiaPdfFonts? _pdfFonts;
     private readonly Action? _beforeLegacyDrawing;
@@ -23,13 +24,16 @@ internal sealed class SkiaTextDrawing
     /// <param name="systemTypefaceSelector">The optional system-face selection boundary used by deterministic tests.</param>
     /// <param name="pdfFonts">Optional PDF Unicode and subset font resources.</param>
     /// <param name="beforeLegacyDrawing">Optional internal observer after clipping and measurement, before compatibility run drawing.</param>
+    /// <param name="paints">Optional drawing-scope paints.</param>
     internal SkiaTextDrawing(
         bool textAsPaths,
         IFontManager? fontManager,
         Func<FontStyle, SKTypeface?>? systemTypefaceSelector = null,
         Action? beforeLegacyDrawing = null,
-        SkiaPdfFonts? pdfFonts = null)
+        SkiaPdfFonts? pdfFonts = null,
+        Core.Pdf.SkiaPaintResources? paints = null)
     {
+        _paints = paints;
         _textAsPaths = textAsPaths;
         _pdfFonts = pdfFonts;
         _beforeLegacyDrawing = beforeLegacyDrawing;
@@ -55,7 +59,9 @@ internal sealed class SkiaTextDrawing
             : null;
         var typeface = resolvedTypeface ?? systemTypeface ?? SKTypeface.Default;
         using var font = new SKFont(typeface, (float)command.Style.Font.Size);
-        using var paint = CreatePaint(command.Style.Font.Color ?? new(0, 0, 0), SKPaintStyle.Fill);
+        using var ownedPaints = _paints is null ? new Core.Pdf.SkiaPaintResources() : null;
+        var paints = _paints ?? ownedPaints!;
+        var paint = paints.Fill(CoreIntegration.CoreModelAdapter.ToCore(command.Style.Font.Color ?? new(0, 0, 0)));
         paint.IsAntialias = true;
 
         if (command.Style.ShrinkToFit && !command.Style.WrapText && command.Bounds.Width > 0)
@@ -133,7 +139,9 @@ internal sealed class SkiaTextDrawing
             return;
         }
 
-        using var paint = CreatePaint(command.Style.Font.Color ?? new(0, 0, 0), SKPaintStyle.Fill);
+        using var ownedPaints = _paints is null ? new Core.Pdf.SkiaPaintResources() : null;
+        var paints = _paints ?? ownedPaints!;
+        var paint = paints.Fill(CoreIntegration.CoreModelAdapter.ToCore(command.Style.Font.Color ?? new(0, 0, 0)));
         paint.IsAntialias = true;
         TypefaceLease? selectedPrimaryTypeface = null;
         var primaryTypefaceSelected = false;
@@ -155,6 +163,7 @@ internal sealed class SkiaTextDrawing
                          command.Style.HorizontalAlignment,
                          command.Style.VerticalAlignment))
             {
+                paint = paints.Fill(CoreIntegration.CoreModelAdapter.ToCore(command.Style.Font.Color ?? new(0, 0, 0)));
                 if (positioned.Line.Runs.Count == 0)
                 {
                     if (!primaryTypefaceSelected)
@@ -179,11 +188,7 @@ internal sealed class SkiaTextDrawing
                     foreach (var run in positioned.Line.Runs)
                     {
                         var font = run.Font;
-                        using var runPaint = font is null ? null : CreatePaint(font.Color ?? new(0, 0, 0), SKPaintStyle.Fill);
-                        if (runPaint is not null)
-                        {
-                            runPaint.IsAntialias = true;
-                        }
+                        var runPaint = paints.Fill(CoreIntegration.CoreModelAdapter.ToCore((font ?? command.Style.Font).Color ?? new(0, 0, 0)));
 
                         DrawResolvedRun(
                             canvas,
@@ -191,12 +196,12 @@ internal sealed class SkiaTextDrawing
                             (float)(font?.Size ?? effectiveFontSize),
                             (float)(positioned.Left + run.X),
                             (float)positioned.Baseline,
-                            runPaint ?? paint,
+                            runPaint,
                             _textAsPaths,
                             run.Glyphs);
                         if (font?.Underline == true)
                         {
-                            canvas.DrawLine((float)(positioned.Left + run.X), (float)(positioned.Baseline + 1), (float)(positioned.Left + run.X + run.Advance), (float)(positioned.Baseline + 1), runPaint ?? paint);
+                            canvas.DrawLine((float)(positioned.Left + run.X), (float)(positioned.Baseline + 1), (float)(positioned.Left + run.X + run.Advance), (float)(positioned.Baseline + 1), runPaint);
                         }
                     }
                 }
@@ -419,8 +424,18 @@ internal sealed class SkiaTextDrawing
                 using var builder = new SKTextBlobBuilder();
                 builder.AddRun([emojiGlyph], font, new SKPoint(x, y));
                 using var blob = builder.Build();
-                using var emojiPaint = new SKPaint { Color = SKColors.White, IsAntialias = true };
-                canvas.DrawText(blob, 0, 0, emojiPaint);
+
+                // Restore this borrowed fill before its owner can reuse the cached RGBA.
+                var color = paint.Color;
+                try
+                {
+                    paint.Color = SKColors.White;
+                    canvas.DrawText(blob, 0, 0, paint);
+                }
+                finally
+                {
+                    paint.Color = color;
+                }
             }
         }
         else if (run.GlyphId is { } glyphId)
@@ -493,12 +508,4 @@ internal sealed class SkiaTextDrawing
             canvas.DrawText(blob, x, y, paint);
         }
     }
-
-    private SKPaint CreatePaint(ReportColor color, SKPaintStyle style, double width = 1) => new()
-    {
-        Color = new SKColor(color.Red, color.Green, color.Blue, color.Alpha),
-        Style = style,
-        StrokeWidth = (float)width,
-        IsAntialias = true,
-    };
 }

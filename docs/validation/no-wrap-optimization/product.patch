@@ -1,0 +1,77 @@
+diff --git a/src/ExcelRenderer.Core/Pdf/SkiaTextMeasurer.cs b/src/ExcelRenderer.Core/Pdf/SkiaTextMeasurer.cs
+index d9d599c..f15b7c7 100644
+--- a/src/ExcelRenderer.Core/Pdf/SkiaTextMeasurer.cs
++++ b/src/ExcelRenderer.Core/Pdf/SkiaTextMeasurer.cs
+@@ -53,7 +53,7 @@ internal sealed class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
+         Rendering.ConversionMetrics.Report("layoutCacheMiss", 1);
+ 
+         token.ThrowIfCancellationRequested();
+-        var lines = (!context.Face.Color && OutlineParagraph.IsValidUtf16(text)
++        var lines = (wrap && !(availableWidth <= 0) && !context.Face.Color && OutlineParagraph.IsValidUtf16(text)
+             ? LayoutOutline(text, font, availableWidth, wrap)
+             : TextLineBreaker.Break(text, availableWidth, wrap, value => context.Face.Measure(SelectGlyphs(value), font.Size))
+                 .Select(line => CreateLine(line.Text, line.ExplicitBreak, font))).ToArray();
+@@ -107,6 +107,7 @@ internal sealed class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
+ 
+     private TextLayoutLine CreateLine(string text, bool explicitBreak, FontStyle style, GlyphSequence? selectedGlyphs = null)
+     {
++        token.ThrowIfCancellationRequested();
+         var (ascent, descent, leading) = context.Metrics(style.Size);
+         var glyphs = selectedGlyphs is null ? SelectGlyphs(text) : null;
+         var width = glyphs is null ? context.Face.Measure(selectedGlyphs!.Glyphs, style.Size) : context.Face.Measure(glyphs, style.Size);
+diff --git a/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.Outline.cs b/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.Outline.cs
+index 2c34dda..f124446 100644
+--- a/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.Outline.cs
++++ b/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.Outline.cs
+@@ -18,11 +18,12 @@ public sealed partial class SkiaTextMeasurer
+ 
+     private IEnumerable<TextLayoutLine> CreateLines(string text, FontStyle font, FontRequest request, double width, bool wrap)
+     {
+-        // Custom resolvers may depend on complete input or have mutable policies.
+-        if (_fontManager is not FontManager || !OutlineParagraph.IsValidUtf16(text))
++        // Finalize unwrapped lines directly; custom resolvers retain their complete-line input.
++        if (!wrap || width <= 0 || _fontManager is not FontManager || !OutlineParagraph.IsValidUtf16(text))
+         {
+             foreach (var line in TextLineBreaker.Break(text, width, wrap, value => MeasureWidth(value, font, request)))
+             {
++                ConversionFontResources.Current!.Token.ThrowIfCancellationRequested();
+                 yield return CreateLine(line.Text, line.ExplicitBreak, font, request);
+             }
+ 
+diff --git a/tests/ExcelRenderer.Tests/MainPerformanceOptimizationTests.cs b/tests/ExcelRenderer.Tests/MainPerformanceOptimizationTests.cs
+index 8953848..a807af4 100644
+--- a/tests/ExcelRenderer.Tests/MainPerformanceOptimizationTests.cs
++++ b/tests/ExcelRenderer.Tests/MainPerformanceOptimizationTests.cs
+@@ -14,6 +14,32 @@ namespace ExcelRenderer.Tests;
+ 
+ public sealed class MainPerformanceOptimizationTests
+ {
++    [Theory]
++    [InlineData(false, 80)]
++    [InlineData(true, 0)]
++    [InlineData(true, -1)]
++    public void Unwrapped_lines_skip_outline_paragraphs_and_preserve_cancellation(bool wrap, double width)
++    {
++        using var cancellation = new CancellationTokenSource();
++        using var resources = new ConversionFontResources(cancellation.Token);
++        var measurer = new SkiaTextMeasurer(Manager(), true);
++        var counts = new Dictionary<string, double>();
++        ConversionMetrics.Observer = (name, value) => counts[name] = counts.GetValueOrDefault(name) + value;
++        try
++        {
++            var result = measurer.Layout("first  \r\n\nlast ", new(), width, wrap);
++            Assert.Equal(new[] { "first  ", "", "last " }, result.Lines.Select(line => line.Text));
++            Assert.Equal(new[] { true, true, false }, result.Lines.Select(line => line.ExplicitBreak));
++            Assert.False(counts.ContainsKey("outlineParagraphs"));
++            cancellation.Cancel();
++            Assert.Throws<OperationCanceledException>(() => measurer.Layout("first  \nnew", new(), width, wrap));
++        }
++        finally
++        {
++            ConversionMetrics.Observer = null;
++        }
++    }
++
+     [Fact]
+     public void Outline_matches_compatibility_at_exact_wrap_boundaries()
+     {

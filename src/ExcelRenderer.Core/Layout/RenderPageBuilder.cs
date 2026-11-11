@@ -126,7 +126,10 @@ internal sealed class RenderPageBuilder
         if (_context.CollectTextOnly)
         {
             Rendering.ConversionMetrics.Report("coreTextPageBuild", 1);
-            return new(pageNumber, cells);
+            var textPage = new RenderPage(pageNumber, cells);
+            return _context.PreservePreflightMetadata
+                ? _context.Policy.BuildAdditionalPageContent(pageContext, textPage) with { IsTextPreflight = true }
+                : textPage;
         }
 
         var page = _context.Policy.BuildAdditionalPageContent(pageContext, new(pageNumber, cells, images));

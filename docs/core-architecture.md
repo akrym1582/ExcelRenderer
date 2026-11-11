@@ -63,3 +63,20 @@ and limits retained text/line/glyph units to 131072. Its key excludes decoration
 and unused unwrapped width; shrink-to-fit remains outside the cache. PDF positions
 are written to the builder-owned span; each Core renderer lazily owns at most two
 paints and one dash effect. See [implementation and evidence](core-performance-optimization.md).
+
+## Main rendering optimization follow-up
+
+Main now composes the same renderer-local `SkiaPaintResources`. Core owns the
+bounded CLOCK implementation and ordinary single-face `OutlineParagraph` breaker;
+main retains font selection, rich decoration and native raster compatibility.
+Conditional main PDF text preflight preserves product regions, clips and shape
+metadata through the full policy hook, while other preflight requirements retain
+their complete path. See [implemented boundaries and validation](main-performance-optimization.md).
+
+## Core glyph storage follow-up
+
+Core outline layout consumes paragraph-relative glyph ranges and freezes each
+line once, without an intermediate line glyph array. `GlyphSequence` uses one
+Unicode-element pass for identical source/display, while distinct source mapping
+keeps its compatibility validation. Public layouts retain immutable data only.
+See [implementation and validation](core-glyph-storage-optimization.md).

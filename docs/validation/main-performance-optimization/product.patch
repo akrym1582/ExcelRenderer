@@ -1,0 +1,2474 @@
+diff --git a/src/ExcelRenderer.Core/Drawing/DrawCommandGeneratorPass.cs b/src/ExcelRenderer.Core/Drawing/DrawCommandGeneratorPass.cs
+index 9d95892..efe00be 100644
+--- a/src/ExcelRenderer.Core/Drawing/DrawCommandGeneratorPass.cs
++++ b/src/ExcelRenderer.Core/Drawing/DrawCommandGeneratorPass.cs
+@@ -57,6 +57,16 @@ internal sealed class DrawCommandGeneratorPass
+         }
+     }
+ 
++    /// <summary>Shares final-stage header/footer commands with metadata-preserving collection.</summary>
++    /// <param name="page">The page header/footer text.</param>
++    /// <param name="measurer">The optional header/footer measurer.</param>
++    /// <returns>The same commands used by painting.</returns>
++    internal static IEnumerable<DrawTextCommand> GenerateHeaderFooter(RenderPage page, Abstractions.ITextLayoutService? measurer) =>
++        (page.HeaderFooterTexts ?? []).Select(x => new DrawTextCommand(page.Number, x.Bounds, x.Text, x.Style)
++        {
++            TextLayout = measurer?.Layout(x.Text, x.Style.Font, x.Bounds.Width, false),
++        });
++
+     /// <summary>Generates commands for one page in the shared drawing order.</summary>
+     /// <param name="page">The page used by this operation.</param>
+     /// <param name="measurer">The header/footer layout service.</param>
+@@ -97,29 +107,28 @@ internal sealed class DrawCommandGeneratorPass
+     /// <summary>Streams the same finalized text commands used by painting, without other layers.</summary>
+     /// <param name="page">The text-only page payload.</param>
+     /// <param name="measurer">The shared header/footer measurer.</param>
++    /// <param name="extension">Optional product cell-text visibility and completion policy.</param>
++    /// <param name="includeHeaderFooter">Whether to append headers and footers after cell text.</param>
+     /// <returns>Cell text followed by header/footer text.</returns>
+-    internal IEnumerable<DrawTextCommand> GenerateText(RenderPage page, Abstractions.ITextLayoutService? measurer)
++    internal IEnumerable<DrawTextCommand> GenerateText(RenderPage page, Abstractions.ITextLayoutService? measurer, Extensibility.ICoreDrawingExtension? extension = null, bool includeHeaderFooter = true)
+     {
+-        foreach (var cell in page.Cells)
++        foreach (var cell in page.Cells.Where(cell => extension?.ShouldDrawCellText(cell) ?? true))
+         {
+-            foreach (var command in GenerateCellLayer(page.Number, cell, 3, true))
++            foreach (var command in GenerateCellLayer(page.Number, cell, 3, extension?.RequiresTextLayout ?? true))
+             {
+                 yield return (DrawTextCommand)command;
+             }
+         }
+ 
+-        foreach (var command in GenerateHeaderFooter(page, measurer))
++        if (includeHeaderFooter)
+         {
+-            yield return command;
++            foreach (var command in GenerateHeaderFooter(page, measurer))
++            {
++                yield return command;
++            }
+         }
+     }
+ 
+-    private static IEnumerable<DrawTextCommand> GenerateHeaderFooter(RenderPage page, Abstractions.ITextLayoutService? measurer) =>
+-        (page.HeaderFooterTexts ?? []).Select(x => new DrawTextCommand(page.Number, x.Bounds, x.Text, x.Style)
+-        {
+-            TextLayout = measurer?.Layout(x.Text, x.Style.Font, x.Bounds.Width, false),
+-        });
+-
+     private static ReportRect GetContentBounds(RenderCell cell) =>
+         cell.ContentBounds.Width > 0 || cell.ContentBounds.Height > 0
+             ? cell.ContentBounds
+diff --git a/src/ExcelRenderer.Core/Layout/CoreLayoutPolicy.cs b/src/ExcelRenderer.Core/Layout/CoreLayoutPolicy.cs
+index 0ac25f1..985634c 100644
+--- a/src/ExcelRenderer.Core/Layout/CoreLayoutPolicy.cs
++++ b/src/ExcelRenderer.Core/Layout/CoreLayoutPolicy.cs
+@@ -6,6 +6,11 @@ namespace ExcelRenderer.Core.Layout;
+ /// <summary>Selects coarse product geometry and page content while Core owns planning and placement.</summary>
+ internal class CoreLayoutPolicy
+ {
++    /// <summary>Tests a proven page candidate list for a product's text-only preflight policy.</summary>
++    /// <param name="context">The page-local geometry and candidates.</param>
++    /// <returns>Whether full drawing commands are unnecessary for this preflight.</returns>
++    internal virtual bool CanBuildTextPreflight(ReportLayoutContext context) => false;
++
+     /// <summary>Reserves product content before measurement and placement; ordinary content is unchanged.</summary>
+     /// <param name="cell">Original cell.</param>
+     /// <param name="ordinaryContentWidth">Ordinary content width.</param>
+diff --git a/src/ExcelRenderer.Core/Layout/RenderPage.cs b/src/ExcelRenderer.Core/Layout/RenderPage.cs
+index 60b05f2..9f8b90f 100644
+--- a/src/ExcelRenderer.Core/Layout/RenderPage.cs
++++ b/src/ExcelRenderer.Core/Layout/RenderPage.cs
+@@ -12,6 +12,9 @@ internal sealed record RenderPage(
+     IReadOnlyList<RenderImage>? Images = null,
+     IReadOnlyList<RenderText>? HeaderFooterTexts = null)
+ {
++    /// <summary>Gets a value indicating whether this payload omits nontext drawing layers for product preflight.</summary>
++    internal bool IsTextPreflight { get; init; }
++
+     /// <summary>Gets placed external border owners without their content.</summary>
+     internal IReadOnlyList<RenderCell> BorderOnlyCells { get; init; } = [];
+ 
+diff --git a/src/ExcelRenderer.Core/Layout/RenderPageBuilder.cs b/src/ExcelRenderer.Core/Layout/RenderPageBuilder.cs
+index e11b6df..1a70c90 100644
+--- a/src/ExcelRenderer.Core/Layout/RenderPageBuilder.cs
++++ b/src/ExcelRenderer.Core/Layout/RenderPageBuilder.cs
+@@ -126,7 +126,10 @@ internal sealed class RenderPageBuilder
+         if (_context.CollectTextOnly)
+         {
+             Rendering.ConversionMetrics.Report("coreTextPageBuild", 1);
+-            return new(pageNumber, cells);
++            var textPage = new RenderPage(pageNumber, cells);
++            return _context.PreservePreflightMetadata
++                ? _context.Policy.BuildAdditionalPageContent(pageContext, textPage) with { IsTextPreflight = true }
++                : textPage;
+         }
+ 
+         var page = _context.Policy.BuildAdditionalPageContent(pageContext, new(pageNumber, cells, images));
+diff --git a/src/ExcelRenderer.Core/Layout/ReportLayoutContext.cs b/src/ExcelRenderer.Core/Layout/ReportLayoutContext.cs
+index b24b68a..bbadcf8 100644
+--- a/src/ExcelRenderer.Core/Layout/ReportLayoutContext.cs
++++ b/src/ExcelRenderer.Core/Layout/ReportLayoutContext.cs
+@@ -98,6 +98,9 @@ internal sealed class ReportLayoutContext
+     /// <summary>Gets or sets a value indicating whether this Core-only build omits nontext page payloads.</summary>
+     internal bool CollectTextOnly { get; set; }
+ 
++    /// <summary>Gets or sets a value indicating whether text collection must preserve product regions and shape text.</summary>
++    internal bool PreservePreflightMetadata { get; set; }
++
+     /// <summary>Gets or sets shared lightweight object geometry without retaining other page payloads.</summary>
+     internal SheetObjectLayoutIndex? ObjectLayouts { get; set; }
+ 
+diff --git a/src/ExcelRenderer.Core/Layout/SheetLayoutPlan.cs b/src/ExcelRenderer.Core/Layout/SheetLayoutPlan.cs
+index 0d7881e..bd254d9 100644
+--- a/src/ExcelRenderer.Core/Layout/SheetLayoutPlan.cs
++++ b/src/ExcelRenderer.Core/Layout/SheetLayoutPlan.cs
+@@ -102,8 +102,9 @@ internal sealed class SheetLayoutPlan
+     /// <param name="measurer">The measurer used by this operation.</param>
+     /// <param name="cancellationToken">The page-build cancellation token.</param>
+     /// <param name="collectTextOnly">Whether to omit nontext payloads during Core font collection.</param>
++    /// <param name="textPreflight">Whether to ask the product policy for a metadata-preserving text payload.</param>
+     /// <returns>The planned or generated result.</returns>
+-    internal RenderPage Build(int index, int number, int count, ITextMeasurer measurer, CancellationToken cancellationToken = default, bool collectTextOnly = false)
++    internal RenderPage Build(int index, int number, int count, ITextMeasurer measurer, CancellationToken cancellationToken = default, bool collectTextOnly = false, bool textPreflight = false)
+     {
+         var plan = Pages[index];
+         var context = new ReportLayoutContext(sheet, measurer, geometry)
+@@ -122,6 +123,8 @@ internal sealed class SheetLayoutPlan
+ 
+         context.SelectedPageCells = new(GetCandidateAddresses(index));
+         context.CandidateAddresses = context.SelectedPageCells.Addresses;
++        context.PreservePreflightMetadata = textPreflight && policy.CanBuildTextPreflight(context);
++        context.CollectTextOnly |= context.PreservePreflightMetadata;
+ 
+         new TextMeasurePass().Execute(context);
+         new CellBoundsPass().Execute(context);
+diff --git a/src/ExcelRenderer.Core/Pdf/SkiaDrawingPrimitives.cs b/src/ExcelRenderer.Core/Pdf/SkiaDrawingPrimitives.cs
+index a836d7e..6ba6b2a 100644
+--- a/src/ExcelRenderer.Core/Pdf/SkiaDrawingPrimitives.cs
++++ b/src/ExcelRenderer.Core/Pdf/SkiaDrawingPrimitives.cs
+@@ -98,6 +98,9 @@ internal static class SkiaDrawingPrimitives
+         Color = new(color.Red, color.Green, color.Blue, color.Alpha),
+         Style = style,
+         StrokeWidth = (float)width,
++        StrokeCap = SKStrokeCap.Butt,
++        StrokeJoin = SKStrokeJoin.Miter,
++        StrokeMiter = 4,
+         IsAntialias = true,
+     };
+ 
+diff --git a/src/ExcelRenderer.Core/Pdf/SkiaPaintResources.cs b/src/ExcelRenderer.Core/Pdf/SkiaPaintResources.cs
+index 52f713f..3002dab 100644
+--- a/src/ExcelRenderer.Core/Pdf/SkiaPaintResources.cs
++++ b/src/ExcelRenderer.Core/Pdf/SkiaPaintResources.cs
+@@ -18,16 +18,19 @@ internal sealed class SkiaPaintResources : IDisposable
+         if (fill is not null)
+         {
+             fill.Dispose();
++            fill = null;
+             ConversionMetrics.Report("paintDisposed", 1);
+         }
+ 
+         if (stroke is not null)
+         {
+             stroke.Dispose();
++            stroke = null;
+             ConversionMetrics.Report("paintDisposed", 1);
+         }
+ 
+         DisposeEffect();
++        effectKey = null;
+     }
+ 
+     /// <summary>Gets the renderer's fill paint with the current RGBA color.</summary>
+@@ -41,6 +44,8 @@ internal sealed class SkiaPaintResources : IDisposable
+             ConversionMetrics.Report("paintCreated", 1);
+         }
+ 
++        // Style, cap/join and antialias stay fixed after construction; only RGBA changes.
++        ConversionMetrics.Report("paintFillRequests", 1);
+         fill.Color = new(color.Red, color.Green, color.Blue, color.Alpha);
+         return fill;
+     }
+@@ -56,6 +61,7 @@ internal sealed class SkiaPaintResources : IDisposable
+             ConversionMetrics.Report("paintCreated", 1);
+         }
+ 
++        ConversionMetrics.Report("paintStrokeRequests", 1);
+         var color = side.Color ?? new(0, 0, 0);
+         stroke.Color = new(color.Red, color.Green, color.Blue, color.Alpha);
+         stroke.StrokeWidth = (float)side.Width;
+diff --git a/src/ExcelRenderer.Core/Pdf/SkiaTextMeasurer.cs b/src/ExcelRenderer.Core/Pdf/SkiaTextMeasurer.cs
+index 9a5e97e..d356e2f 100644
+--- a/src/ExcelRenderer.Core/Pdf/SkiaTextMeasurer.cs
++++ b/src/ExcelRenderer.Core/Pdf/SkiaTextMeasurer.cs
+@@ -1,4 +1,3 @@
+-using System.Globalization;
+ using ExcelRenderer.Core.Abstractions;
+ using ExcelRenderer.Core.Drawing;
+ using ExcelRenderer.Core.Fonts;
+@@ -10,14 +9,9 @@ namespace ExcelRenderer.Core.Pdf;
+ /// <summary>Skia の物理フォントメトリクスを使用して、レイアウトに必要な文字列の寸法を測定します。</summary>
+ internal sealed class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
+ {
+-    private const int MaximumEntries = 512;
+-    private const int MaximumRetainedUnits = 131072;
+     private readonly SingleFontContext context;
+     private readonly CancellationToken token;
+-    private readonly Dictionary<LayoutKey, CacheEntry> layouts = new();
+-    private readonly CacheEntry?[] slots = new CacheEntry?[MaximumEntries];
+-    private int hand;
+-    private int retainedUnits;
++    private readonly Rendering.BoundedClockCache<LayoutKey, TextLayoutResult> layouts = new("layoutCache");
+ 
+     /// <summary>Initializes a new instance of the <see cref="SkiaTextMeasurer"/> class.</summary>
+     /// <param name="context">The conversion font snapshot.</param>
+@@ -52,15 +46,14 @@ internal sealed class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
+         var key = new LayoutKey(text, font.Size, wraps ? availableWidth : 0, wraps);
+         if (layouts.TryGetValue(key, out var cached))
+         {
+-            cached.Referenced = true;
+             Rendering.ConversionMetrics.Report("layoutCacheHit", 1);
+-            return cached.Result;
++            return cached;
+         }
+ 
+         Rendering.ConversionMetrics.Report("layoutCacheMiss", 1);
+ 
+         token.ThrowIfCancellationRequested();
+-        var lines = (!context.Face.Color && IsValidUtf16(text)
++        var lines = (!context.Face.Color && OutlineParagraph.IsValidUtf16(text)
+             ? LayoutOutline(text, font, availableWidth, wrap)
+             : TextLineBreaker.Break(text, availableWidth, wrap, value => context.Face.Measure(SelectGlyphs(value), font.Size))
+                 .Select(line => CreateLine(line.Text, line.ExplicitBreak, font))).ToArray();
+@@ -73,129 +66,35 @@ internal sealed class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
+         if (text.Length <= 2048)
+         {
+             var units = text.Length + lines.Sum(line => line.Text.Length + (line.Glyphs?.Glyphs.Count ?? 0));
+-            Store(key, result, units);
++            layouts.Store(key, result, units);
+         }
+ 
+         return result;
+     }
+ 
+-    private static bool IsValidUtf16(string text)
+-    {
+-        for (var index = 0; index < text.Length; index++)
+-        {
+-            if (char.IsHighSurrogate(text[index]))
+-            {
+-                if (++index == text.Length || !char.IsLowSurrogate(text[index]))
+-                {
+-                    return false;
+-                }
+-            }
+-            else if (char.IsLowSurrogate(text[index]))
+-            {
+-                return false;
+-            }
+-        }
+-
+-        return true;
+-    }
+-
+     private IEnumerable<TextLayoutLine> LayoutOutline(string text, FontStyle font, double width, bool wrap)
+     {
+         var paragraphs = text.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n');
+-        for (var paragraphIndex = 0; paragraphIndex < paragraphs.Length; paragraphIndex++)
++        for (var index = 0; index < paragraphs.Length; index++)
+         {
+-            token.ThrowIfCancellationRequested();
+-            var paragraph = paragraphs[paragraphIndex];
+-            var glyphs = SelectGlyphs(paragraph);
+-            var explicitBreak = paragraphIndex < paragraphs.Length - 1;
+-            if (!wrap || width <= 0)
+-            {
+-                yield return CreateLine(paragraph, explicitBreak, font, glyphs);
+-                continue;
+-            }
+-
+-            var boundaries = StringInfo.ParseCombiningCharacters(paragraph);
+-            var start = 0;
+-            var firstGlyph = 0;
+-            var glyphIndex = 0;
+-            long units = 0;
+-            for (var index = 0; index < boundaries.Length; index++)
++            var selected = new OutlineParagraph(paragraphs[index], context.Face, token).Break(font.Size, width, wrap).GetEnumerator();
++            using (selected)
+             {
+-                if ((index & 255) == 0)
++                if (!selected.MoveNext())
+                 {
+-                    token.ThrowIfCancellationRequested();
+-                }
+-
+-                var elementStart = boundaries[index];
+-                var elementEnd = index + 1 < boundaries.Length ? boundaries[index + 1] : paragraph.Length;
+-                var elementGlyph = glyphIndex;
+-                long elementUnits = 0;
+-                for (var character = elementStart; character < elementEnd; character++)
+-                {
+-                    if ((character & 255) == 0)
+-                    {
+-                        token.ThrowIfCancellationRequested();
+-                    }
+-
+-                    elementUnits += context.Face.AdvanceUnits(glyphs[glyphIndex++]);
+-                    if (char.IsHighSurrogate(paragraph[character]))
+-                    {
+-                        character++;
+-                    }
++                    continue;
+                 }
+ 
+-                Rendering.ConversionMetrics.Report("textWrapComparisons", 1);
+-                if (elementStart > start && !TextLineBreaker.Fits(context.Face.MeasureUnits(units + elementUnits, font.Size), width))
++                var previous = selected.Current;
++                while (selected.MoveNext())
+                 {
+-                    yield return CreateLine(paragraph.Substring(start, elementStart - start), false, font, glyphs.AsSpan(firstGlyph, elementGlyph - firstGlyph).ToArray());
+-                    start = elementStart;
+-                    firstGlyph = elementGlyph;
+-                    units = 0;
++                    yield return CreateLine(previous.Text, false, font, previous.Glyphs);
++                    previous = selected.Current;
+                 }
+ 
+-                units += elementUnits;
+-            }
+-
+-            yield return CreateLine(paragraph.Substring(start), explicitBreak, font, glyphs.AsSpan(firstGlyph).ToArray());
+-        }
+-    }
+-
+-    private void Store(LayoutKey key, TextLayoutResult result, int units)
+-    {
+-        while (layouts.Count >= MaximumEntries || retainedUnits + units > MaximumRetainedUnits)
+-        {
+-            var entry = slots[hand];
+-            if (entry is not null)
+-            {
+-                if (entry.Referenced)
+-                {
+-                    entry.Referenced = false;
+-                }
+-                else
+-                {
+-                    layouts.Remove(entry.Key);
+-                    retainedUnits -= entry.Units;
+-                    slots[hand] = null;
+-                    Rendering.ConversionMetrics.Report("layoutCacheEviction", 1);
+-                    continue;
+-                }
++                yield return CreateLine(previous.Text, index < paragraphs.Length - 1, font, previous.Glyphs);
+             }
+-
+-            hand = (hand + 1) % MaximumEntries;
+-        }
+-
+-        while (slots[hand] is not null)
+-        {
+-            hand = (hand + 1) % MaximumEntries;
+         }
+-
+-        var value = new CacheEntry(key, result, units);
+-        slots[hand] = value;
+-        layouts.Add(key, value);
+-        retainedUnits += units;
+-        hand = (hand + 1) % MaximumEntries;
+-        Rendering.ConversionMetrics.Report("layoutCacheEntries", layouts.Count);
+-        Rendering.ConversionMetrics.Report("layoutCacheRetainedUnits", retainedUnits);
+     }
+ 
+     private ushort[] SelectGlyphs(string text)
+@@ -219,15 +118,4 @@ internal sealed class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
+     }
+ 
+     private readonly record struct LayoutKey(string Text, double Size, double Width, bool Wrap);
+-
+-    private sealed class CacheEntry(LayoutKey key, TextLayoutResult result, int units)
+-    {
+-        internal LayoutKey Key { get; } = key;
+-
+-        internal TextLayoutResult Result { get; } = result;
+-
+-        internal int Units { get; } = units;
+-
+-        internal bool Referenced { get; set; } = true;
+-    }
+ }
+diff --git a/src/ExcelRenderer/CoreIntegration/FullDrawingExtension.cs b/src/ExcelRenderer/CoreIntegration/FullDrawingExtension.cs
+index 72a91d5..637fb66 100644
+--- a/src/ExcelRenderer/CoreIntegration/FullDrawingExtension.cs
++++ b/src/ExcelRenderer/CoreIntegration/FullDrawingExtension.cs
+@@ -45,7 +45,19 @@ internal sealed class FullDrawingExtension : Core.Extensibility.ICoreDrawingExte
+             });
+         });
+         var shapes = (page.ExtensionData as FullPageData)?.Shapes ?? [];
+-        return images.Concat(shapes.Select(shape => (Z: shape.Shape.ZIndex, Command: (DrawCommand)new DrawShapeCommand(page.Number, shape.Bounds, shape.Shape) { ClipBounds = shape.ClipBounds })))
++        return images.Concat(shapes.Select(shape => (Z: shape.Shape.ZIndex, Command: (DrawCommand)ShapeCommand(page.Number, shape))))
+             .OrderBy(item => item.Z).Select(item => CoreCommandAdapter.ToCore(item.Command));
+     }
++
++    /// <summary>Retains shape text in the same stable Z order as the full object stage.</summary>
++    /// <param name="page">The page's borrowed full metadata.</param>
++    /// <returns>Only shape commands that require font collection.</returns>
++    internal static IEnumerable<Core.Drawing.DrawCommand> CreateShapeTextCommands(Core.Layout.RenderPage page) =>
++        ((page.ExtensionData as FullPageData)?.Shapes ?? [])
++        .Where(shape => shape.Shape.Text is not null)
++        .OrderBy(shape => shape.Shape.ZIndex)
++        .Select(shape => CoreCommandAdapter.ToCore(ShapeCommand(page.Number, shape)));
++
++    private static DrawShapeCommand ShapeCommand(int number, Layout.RenderShape shape) =>
++        new(number, shape.Bounds, shape.Shape) { ClipBounds = shape.ClipBounds };
+ }
+diff --git a/src/ExcelRenderer/CoreIntegration/FullLayoutPolicy.cs b/src/ExcelRenderer/CoreIntegration/FullLayoutPolicy.cs
+index b58f26d..5b1f5bb 100644
+--- a/src/ExcelRenderer/CoreIntegration/FullLayoutPolicy.cs
++++ b/src/ExcelRenderer/CoreIntegration/FullLayoutPolicy.cs
+@@ -11,6 +11,12 @@ namespace ExcelRenderer.CoreIntegration;
+ /// <summary>Supplies the full product's geometry, selection, transformed objects and source regions.</summary>
+ internal sealed class FullLayoutPolicy : Core.Layout.CoreLayoutPolicy
+ {
++    /// <inheritdoc/>
++    internal override bool CanBuildTextPreflight(CoreContext context) =>
++        context.CandidateAddresses is { } addresses &&
++        addresses.Any(address => !string.IsNullOrEmpty(context.Sheet.Cells[address].Text)) &&
++        addresses.All(address => FullCellPresentationData.Decoration(context.Sheet.Cells[address].ExtensionData) is null);
++
+     /// <inheritdoc/>
+     internal override double ResolveAxisPosition(Core.Layout.ReportLayoutContext context, int index, bool column, double position) =>
+         context.Sheet.RequestedRange is null ? position : column ? context.Geometry.ColumnStart(index) : context.Geometry.RowStart(index);
+diff --git a/src/ExcelRenderer/ExcelConverter.RenderAsync.cs b/src/ExcelRenderer/ExcelConverter.RenderAsync.cs
+index 18a6e1b..b2a061a 100644
+--- a/src/ExcelRenderer/ExcelConverter.RenderAsync.cs
++++ b/src/ExcelRenderer/ExcelConverter.RenderAsync.cs
+@@ -341,7 +341,7 @@ public static partial class ExcelConverter
+             return SheetPage.CreateContinuous(selected.Sheet, descriptor, plan);
+         }).ToArray();
+ 
+-    private static PageRenderPayload BuildPage(SheetPage page, FontManager fonts, CancellationToken token)
++    private static PageRenderPayload BuildPage(SheetPage page, FontManager fonts, CancellationToken token, bool textPreflight = false)
+     {
+         var measurer = RenderResourceSession.Current?.TextMeasurer ?? new SkiaTextMeasurer(fonts, cacheLayouts: true);
+         if (page.CanvasPlan is { } canvas)
+@@ -350,15 +350,22 @@ public static partial class ExcelConverter
+         }
+ 
+         var built = page.Plan is { } plan
+-            ? plan.BuildCore(page.PlanIndex, page.Descriptor.SourcePageNumber, page.SheetPageCount, measurer, token)
++            ? plan.BuildCore(page.PlanIndex, page.Descriptor.SourcePageNumber, page.SheetPageCount, measurer, token, textPreflight)
+             : new Core.Layout.RenderPage(1, []);
+         var headers = PaginationPass.GetHeaderFooterTexts(page.Sheet, page.Descriptor.SourcePageNumber, page.SheetPageCount, RenderResourceSession.Current?.HeaderFooterTimestamp);
+         built = built with
+         {
+             HeaderFooterTexts = headers.Select(text => new Core.Layout.RenderText(CoreIntegration.CoreModelAdapter.ToCore(text.Bounds), text.Text, CoreIntegration.CoreModelAdapter.ToCore(text.Style))).ToArray(),
+         };
+-        var commands = new Core.Drawing.DrawCommandGeneratorPass().GeneratePage(built, null, new CoreIntegration.FullDrawingExtension())
+-            .Select(CoreIntegration.CoreCommandAdapter.CreatePublicProjection()).ToArray();
++        var generator = new Core.Drawing.DrawCommandGeneratorPass();
++        var extension = new CoreIntegration.FullDrawingExtension();
++        IEnumerable<Core.Drawing.DrawCommand> generated = built.IsTextPreflight
++            ? generator.GenerateText(built, null, extension, includeHeaderFooter: false)
++                .Concat(CoreIntegration.FullDrawingExtension.CreateShapeTextCommands(built))
++                .Concat(Core.Drawing.DrawCommandGeneratorPass.GenerateHeaderFooter(built, null))
++            : generator.GeneratePage(built, null, extension);
++        var commands = generated.Select(CoreIntegration.CoreCommandAdapter.CreatePublicProjection()).ToArray();
++        ConversionMetrics.Report(built.IsTextPreflight ? "mainTextPreflightBuilds" : "mainFullPageBuilds", 1);
+         ConversionMetrics.Report("renderCells", built.Cells.Count);
+         ConversionMetrics.Report("commands", commands.Length);
+         return new(commands, (built.ExtensionData as CoreIntegration.FullPageData)?.Regions ?? []);
+@@ -370,7 +377,10 @@ public static partial class ExcelConverter
+         ConversionMetrics.Report("pagePayloadActive", 1);
+         try
+         {
+-            var payload = ConversionMetrics.Measure("pageBuild", () => BuildPage(page, fonts, token));
++            var textPreflight = request.OutputFormat == OutputFormat.Pdf && !request.Trim.Enabled &&
++                page.Sheet.RequestedRange is null && !request.DiagnosticOptions.EnableLayoutWarnings &&
++                !request.DiagnosticOptions.DetectUnsupportedFeatures && Pdf.PdfRenderObserver.Current is null;
++            var payload = ConversionMetrics.Measure("pageBuild", () => BuildPage(page, fonts, token, textPreflight));
+             payload = payload with { Commands = FinalizeCommands(payload.Commands, fonts, token) };
+             if (request.DiagnosticOptions.EnableLayoutWarnings || request.DiagnosticOptions.DetectUnsupportedFeatures)
+             {
+diff --git a/src/ExcelRenderer/Fonts/FontManager.cs b/src/ExcelRenderer/Fonts/FontManager.cs
+index 5d3524a..973abb2 100644
+--- a/src/ExcelRenderer/Fonts/FontManager.cs
++++ b/src/ExcelRenderer/Fonts/FontManager.cs
+@@ -178,16 +178,7 @@ public sealed class FontManager : IFontManager
+             }
+ 
+             renderedText = missing || missingPrivateUse ? "\uFFFD" : renderedText;
+-            runs.Add(new(renderedText, font)
+-            {
+-                Utf16Start = start,
+-                SourceText = element,
+-                MissingIvsGlyph = missing,
+-                MissingPrivateUseGlyph = missingPrivateUse,
+-                GlyphId = glyph?.GlyphId,
+-                ColorEmojiGlyphId = colorEmojiGlyph,
+-                IsDefaultVariationGlyph = glyph?.IsDefault ?? false,
+-            });
++            runs.Add(renderedText, element, start, font, missing, missingPrivateUse, glyph?.GlyphId, colorEmojiGlyph, glyph?.IsDefault ?? false);
+         }
+ 
+         var result = runs.Complete();
+diff --git a/src/ExcelRenderer/Fonts/ResolvedGlyphLayout.cs b/src/ExcelRenderer/Fonts/ResolvedGlyphLayout.cs
+index 47eb12d..93ff628 100644
+--- a/src/ExcelRenderer/Fonts/ResolvedGlyphLayout.cs
++++ b/src/ExcelRenderer/Fonts/ResolvedGlyphLayout.cs
+@@ -7,8 +7,9 @@ internal static class ResolvedGlyphLayout
+ {
+     /// <summary>Completes a run without changing its text, advance, style or position.</summary>
+     /// <param name="run">The caller's resolved run.</param>
++    /// <param name="selectedGlyphs">Optional glyphs already selected by measurement.</param>
+     /// <returns>A handle-free snapshot-backed run.</returns>
+-    internal static TextLayoutRun Finalize(TextLayoutRun run)
++    internal static TextLayoutRun Finalize(TextLayoutRun run, ushort[]? selectedGlyphs = null)
+     {
+         if (run.Glyphs is not null)
+         {
+@@ -18,7 +19,7 @@ internal static class ResolvedGlyphLayout
+         var resources = ConversionFontResources.Current ?? throw new InvalidOperationException("A font resource scope is required to finalize glyphs.");
+         var text = run.Run;
+         var face = resources.GetFace(text.Font);
+-        var glyphs = (text.GlyphId ?? text.ColorEmojiGlyphId) is { } glyph ? new[] { glyph } : face.Typeface.GetGlyphs(text.Text);
++        var glyphs = selectedGlyphs ?? ((text.GlyphId ?? text.ColorEmojiGlyphId) is { } glyph ? new[] { glyph } : face.Typeface.GetGlyphs(text.Text));
+         Rendering.ConversionMetrics.Report("glyphRunsFinalized", 1);
+         return run with
+         {
+diff --git a/src/ExcelRenderer/Fonts/TextRunBuilder.cs b/src/ExcelRenderer/Fonts/TextRunBuilder.cs
+index 4337650..b4e27ae 100644
+--- a/src/ExcelRenderer/Fonts/TextRunBuilder.cs
++++ b/src/ExcelRenderer/Fonts/TextRunBuilder.cs
+@@ -10,25 +10,42 @@ internal sealed class TextRunBuilder
+     private StringBuilder? display;
+     private StringBuilder? source;
+ 
+-    /// <summary>Appends a selected source element under the existing merge policy.</summary>
+-    /// <param name="run">The already resolved element.</param>
+-    internal void Add(TextRun run)
++    /// <summary>Appends element metadata, allocating a run only when a new physical segment starts.</summary>
++    /// <param name="text">Selected display text.</param>
++    /// <param name="sourceText">Original Unicode element.</param>
++    /// <param name="start">Original UTF-16 offset.</param>
++    /// <param name="font">Selected immutable physical face.</param>
++    /// <param name="missingIvs">Whether an IVS is missing.</param>
++    /// <param name="missingPrivateUse">Whether a private-use glyph is missing.</param>
++    /// <param name="glyphId">An explicitly selected variation glyph.</param>
++    /// <param name="colorEmojiGlyphId">An explicitly selected color glyph.</param>
++    /// <param name="defaultVariation">Whether this is a default variation glyph.</param>
++    internal void Add(string text, string sourceText, int start, ResolvedFont font, bool missingIvs, bool missingPrivateUse, ushort? glyphId, ushort? colorEmojiGlyphId, bool defaultVariation)
+     {
+-        if (pending is not null && pending.Font.FaceId == run.Font.FaceId &&
+-            run.GlyphId is null && run.ColorEmojiGlyphId is null && pending.GlyphId is null &&
+-            pending.ColorEmojiGlyphId is null && pending.MissingIvsGlyph == run.MissingIvsGlyph &&
+-            pending.MissingPrivateUseGlyph == run.MissingPrivateUseGlyph &&
+-            pending.Utf16Start + (source?.Length ?? pending.SourceText.Length) == run.Utf16Start)
++        if (pending is not null && pending.Font.FaceId == font.FaceId &&
++            glyphId is null && colorEmojiGlyphId is null && pending.GlyphId is null &&
++            pending.ColorEmojiGlyphId is null && pending.MissingIvsGlyph == missingIvs &&
++            pending.MissingPrivateUseGlyph == missingPrivateUse &&
++            pending.Utf16Start + (source?.Length ?? pending.SourceText.Length) == start)
+         {
+             display ??= new(pending.Text);
+             source ??= new(pending.SourceText);
+-            display.Append(run.Text);
+-            source.Append(run.SourceText);
++            display.Append(text);
++            source.Append(sourceText);
+             return;
+         }
+ 
+         Flush();
+-        pending = run;
++        pending = new(text, font)
++        {
++            Utf16Start = start,
++            SourceText = sourceText,
++            MissingIvsGlyph = missingIvs,
++            MissingPrivateUseGlyph = missingPrivateUse,
++            GlyphId = glyphId,
++            ColorEmojiGlyphId = colorEmojiGlyphId,
++            IsDefaultVariationGlyph = defaultVariation,
++        };
+     }
+ 
+     /// <summary>Completes the immutable run list.</summary>
+diff --git a/src/ExcelRenderer/Layout/SheetLayoutPlan.cs b/src/ExcelRenderer/Layout/SheetLayoutPlan.cs
+index 7412c53..03a255d 100644
+--- a/src/ExcelRenderer/Layout/SheetLayoutPlan.cs
++++ b/src/ExcelRenderer/Layout/SheetLayoutPlan.cs
+@@ -59,7 +59,8 @@ internal sealed class SheetLayoutPlan
+     /// <param name="count">The sheet page count.</param>
+     /// <param name="measurer">The product measurer.</param>
+     /// <param name="cancellationToken">The cancellation token.</param>
++    /// <param name="textPreflight">Whether the product may omit nontext payload work.</param>
+     /// <returns>The neutral page with borrowed full runs and objects.</returns>
+-    internal Core.Layout.RenderPage BuildCore(int index, int number, int count, ITextMeasurer measurer, CancellationToken cancellationToken) =>
+-        inner.Build(index, number, count, ReferenceEquals(measurer, this.measurer) ? coreMeasurer : CoreIntegration.CoreTextMeasurerAdapter.Create(measurer), cancellationToken);
++    internal Core.Layout.RenderPage BuildCore(int index, int number, int count, ITextMeasurer measurer, CancellationToken cancellationToken, bool textPreflight = false) =>
++        inner.Build(index, number, count, ReferenceEquals(measurer, this.measurer) ? coreMeasurer : CoreIntegration.CoreTextMeasurerAdapter.Create(measurer), cancellationToken, textPreflight: textPreflight);
+ }
+diff --git a/src/ExcelRenderer/SkiaSharp/PngRenderer.cs b/src/ExcelRenderer/SkiaSharp/PngRenderer.cs
+index 3702e1b..a790f07 100644
+--- a/src/ExcelRenderer/SkiaSharp/PngRenderer.cs
++++ b/src/ExcelRenderer/SkiaSharp/PngRenderer.cs
+@@ -156,7 +156,7 @@ public sealed class PngRenderer
+         canvas.Clear(SKColors.White);
+         canvas.Scale(scale);
+ 
+-        var drawingContext = new SkiaDrawingContext(textAsPaths: false, _fontManager);
++        using var drawingContext = new SkiaDrawingContext(textAsPaths: false, _fontManager);
+         foreach (var command in CommandTextFinalizer.FinalizeRaster(commands, _fontManager, CancellationToken.None))
+         {
+             drawingContext.Execute(canvas, command);
+@@ -208,7 +208,7 @@ public sealed class PngRenderer
+         using var canvas = new SKCanvas(bitmap);
+         canvas.Clear(SKColors.White);
+         canvas.Scale((float)(dpi / 72d));
+-        var drawingContext = new SkiaDrawingContext(textAsPaths: false, _fontManager);
++        using var drawingContext = new SkiaDrawingContext(textAsPaths: false, _fontManager);
+         foreach (var command in CommandTextFinalizer.FinalizeRaster(commands, _fontManager, CancellationToken.None))
+         {
+             drawingContext.Execute(canvas, command);
+diff --git a/src/ExcelRenderer/SkiaSharp/SkiaDrawingContext.cs b/src/ExcelRenderer/SkiaSharp/SkiaDrawingContext.cs
+index 207010d..3c4ea15 100644
+--- a/src/ExcelRenderer/SkiaSharp/SkiaDrawingContext.cs
++++ b/src/ExcelRenderer/SkiaSharp/SkiaDrawingContext.cs
+@@ -9,8 +9,9 @@ using SkiaSharp;
+ namespace ExcelRenderer.SkiaSharp;
+ 
+ /// <summary>PNG と SVG で共有する SkiaSharp 描画コマンド実行処理です。</summary>
+-internal sealed class SkiaDrawingContext
++internal sealed class SkiaDrawingContext : IDisposable
+ {
++    private readonly Core.Pdf.SkiaPaintResources paints = new();
+     private readonly SkiaTextPainter _textPainter;
+     private readonly SkiaPdfFonts? _pdfFonts;
+     private readonly bool textAsPaths;
+@@ -23,7 +24,7 @@ internal sealed class SkiaDrawingContext
+     /// <param name="fontManager">文字の描画に使用するフォントを解決するマネージャーです。指定しない場合は Skia のシステムフォント選択を使用します。</param>
+     internal SkiaDrawingContext(bool textAsPaths, IFontManager? fontManager = null, SkiaPdfFonts? pdfFonts = null, CancellationToken cancellationToken = default)
+     {
+-        _textPainter = new(textAsPaths, fontManager, pdfFonts: pdfFonts);
++        _textPainter = new(textAsPaths, fontManager, pdfFonts: pdfFonts, paints: paints);
+         _pdfFonts = pdfFonts;
+         this.textAsPaths = textAsPaths;
+         this.cancellationToken = cancellationToken;
+@@ -32,6 +33,9 @@ internal sealed class SkiaDrawingContext
+     /// <summary>Gets or sets the optional PDF page diagnostic callback.</summary>
+     internal Action<ConversionDiagnostic>? DiagnosticHandler { get; set; }
+ 
++    /// <inheritdoc/>
++    public void Dispose() => paints.Dispose();
++
+     /// <summary>単一の描画コマンドを実行します。</summary>
+     /// <param name="canvas">描画先のキャンバスです。</param>
+     /// <param name="command">実行する描画コマンドです。</param>
+@@ -63,20 +67,17 @@ internal sealed class SkiaDrawingContext
+ 
+                 break;
+             case FillRectangleCommand fill:
+-                using (var paint = CreatePaint(fill.Color, SKPaintStyle.Fill))
+-                {
+-                    canvas.DrawRect(ToRect(fill.Bounds), paint);
+-                }
++                canvas.DrawRect(ToRect(fill.Bounds), CreatePaint(fill.Color, SKPaintStyle.Fill));
+ 
+                 break;
+             case DrawBorderCommand border:
+-                Core.Pdf.SkiaDrawingPrimitives.DrawBorder(canvas, (Core.Drawing.DrawBorderCommand)CoreIntegration.CoreCommandAdapter.ToCore(border));
++                Core.Pdf.SkiaDrawingPrimitives.DrawBorder(canvas, (Core.Drawing.DrawBorderCommand)CoreIntegration.CoreCommandAdapter.ToCore(border), paints);
+                 break;
+             case DrawTextCommand text:
+                 _textPainter.Paint(canvas, text);
+                 break;
+             case DrawLineCommand line:
+-                Core.Pdf.SkiaDrawingPrimitives.DrawStyledLine(canvas, CoreIntegration.CoreModelAdapter.ToCore(line.Style), line.X1, line.Y1, line.X2, line.Y2);
++                Core.Pdf.SkiaDrawingPrimitives.DrawStyledLine(canvas, CoreIntegration.CoreModelAdapter.ToCore(line.Style), line.X1, line.Y1, line.X2, line.Y2, resources: paints);
+ 
+                 break;
+             case DrawImageCommand image:
+@@ -100,7 +101,7 @@ internal sealed class SkiaDrawingContext
+                     }
+ 
+                     path.Close();
+-                    using var polygonPaint = CreatePaint(polygon.Color, SKPaintStyle.Fill);
++                    var polygonPaint = CreatePaint(polygon.Color, SKPaintStyle.Fill);
+                     using var polygonPath = path.Detach();
+                     canvas.DrawPath(polygonPath, polygonPaint);
+                 }
+@@ -123,56 +124,61 @@ internal sealed class SkiaDrawingContext
+     {
+         var b = ToRect(command.Bounds);
+         canvas.Save();
+-        if (command.ClipBounds is { } clip)
++        try
+         {
+-            canvas.ClipRect(ToRect(clip));
+-        }
++            if (command.ClipBounds is { } clip)
++            {
++                canvas.ClipRect(ToRect(clip));
++            }
+ 
+-        if (command.Shape.Rotation != 0)
+-        {
+-            canvas.RotateDegrees((float)command.Shape.Rotation, b.MidX, b.MidY);
+-        }
++            if (command.Shape.Rotation != 0)
++            {
++                canvas.RotateDegrees((float)command.Shape.Rotation, b.MidX, b.MidY);
++            }
+ 
+-        void Paint(SKPaintStyle style, ReportColor color, Action<SKPaint> draw)
+-        {
+-            using var paint = CreatePaint(color, style, command.Shape.Style.LineWidth);
+-            draw(paint);
+-        }
++            void Paint(SKPaintStyle style, ReportColor color, Action<SKPaint> draw)
++            {
++                var paint = CreatePaint(color, style, command.Shape.Style.LineWidth);
++                draw(paint);
++            }
+ 
+-        void Draw(SKPaint paint) => ShapeGeometry.DrawSkia(canvas, command.Bounds, command.Shape.Kind, paint);
++            void Draw(SKPaint paint) => ShapeGeometry.DrawSkia(canvas, command.Bounds, command.Shape.Kind, paint);
+ 
+-        if (command.Shape.Style.FillColor is { } fill)
+-        {
+-            Paint(SKPaintStyle.Fill, fill, Draw);
+-        }
++            if (command.Shape.Style.FillColor is { } fill)
++            {
++                Paint(SKPaintStyle.Fill, fill, Draw);
++            }
+ 
+-        if (command.Shape.Style.LineColor is { } line)
+-        {
+-            Paint(SKPaintStyle.Stroke, line, Draw);
+-        }
++            if (command.Shape.Style.LineColor is { } line)
++            {
++                Paint(SKPaintStyle.Stroke, line, Draw);
++            }
+ 
+-        if (command.Shape.Text is { } text)
++            if (command.Shape.Text is { } text)
++            {
++                var bounds = new ReportRect(
++                    command.Bounds.X + text.MarginLeft,
++                    command.Bounds.Y + text.MarginTop,
++                    Math.Max(0, command.Bounds.Width - text.MarginLeft - text.MarginRight),
++                    Math.Max(0, command.Bounds.Height - text.MarginTop - text.MarginBottom));
++                var textCommand = command.TextCommand ?? new DrawTextCommand(
++                    command.PageNumber,
++                    bounds,
++                    text.Text,
++                    CellStyle.Default with
++                    {
++                        Font = text.Font,
++                        HorizontalAlignment = text.HorizontalAlignment,
++                        VerticalAlignment = text.VerticalAlignment,
++                        WrapText = text.WrapText,
++                    });
++                _textPainter.Paint(canvas, textCommand);
++            }
++        }
++        finally
+         {
+-            var bounds = new ReportRect(
+-                command.Bounds.X + text.MarginLeft,
+-                command.Bounds.Y + text.MarginTop,
+-                Math.Max(0, command.Bounds.Width - text.MarginLeft - text.MarginRight),
+-                Math.Max(0, command.Bounds.Height - text.MarginTop - text.MarginBottom));
+-            var textCommand = command.TextCommand ?? new DrawTextCommand(
+-                command.PageNumber,
+-                bounds,
+-                text.Text,
+-                CellStyle.Default with
+-                {
+-                    Font = text.Font,
+-                    HorizontalAlignment = text.HorizontalAlignment,
+-                    VerticalAlignment = text.VerticalAlignment,
+-                    WrapText = text.WrapText,
+-                });
+-            _textPainter.Paint(canvas, textCommand);
++            canvas.Restore();
+         }
+-
+-        canvas.Restore();
+     }
+ 
+     private void DrawImage(SKCanvas canvas, DrawImageCommand command)
+@@ -206,29 +212,35 @@ internal sealed class SkiaDrawingContext
+                 (float)((1 - crop.Right) * image.Width),
+                 (float)((1 - crop.Bottom) * image.Height));
+         canvas.Save();
+-        if (command.ClipBounds is { } clip)
++        try
+         {
+-            canvas.ClipRect(ToRect(clip));
+-        }
++            if (command.ClipBounds is { } clip)
++            {
++                canvas.ClipRect(ToRect(clip));
++            }
+ 
+-        canvas.RotateDegrees((float)command.Rotation, destination.MidX, destination.MidY);
+-        canvas.Scale(
+-            command.FlipHorizontal ? -1 : 1,
+-            command.FlipVertical ? -1 : 1,
+-            destination.MidX,
+-            destination.MidY);
+-        if (_pdfFonts is not null)
+-        {
+-            Core.Pdf.SkiaDrawingPrimitives.DrawPdfImage(canvas, image, source, destination);
++            canvas.RotateDegrees((float)command.Rotation, destination.MidX, destination.MidY);
++            canvas.Scale(
++                command.FlipHorizontal ? -1 : 1,
++                command.FlipVertical ? -1 : 1,
++                destination.MidX,
++                destination.MidY);
++            if (_pdfFonts is not null)
++            {
++                Core.Pdf.SkiaDrawingPrimitives.DrawPdfImage(canvas, image, source, destination);
++            }
++            else
++            {
++                canvas.DrawImage(image, source, destination, new SKSamplingOptions(SKCubicResampler.Mitchell));
++            }
+         }
+-        else
++        finally
+         {
+-            canvas.DrawImage(image, source, destination, new SKSamplingOptions(SKCubicResampler.Mitchell));
++            canvas.Restore();
+         }
+-
+-        canvas.Restore();
+     }
+ 
+     private SKPaint CreatePaint(ReportColor color, SKPaintStyle style, double width = 1) =>
+-        Core.Pdf.SkiaDrawingPrimitives.CreatePaint(CoreIntegration.CoreModelAdapter.ToCore(color), style, width);
++        style == SKPaintStyle.Fill ? paints.Fill(CoreIntegration.CoreModelAdapter.ToCore(color)) :
++        paints.Stroke(new(width, CoreIntegration.CoreModelAdapter.ToCore(color)));
+ }
+diff --git a/src/ExcelRenderer/SkiaSharp/SkiaPdfDocumentWriter.cs b/src/ExcelRenderer/SkiaSharp/SkiaPdfDocumentWriter.cs
+index 838edd8..e88d86b 100644
+--- a/src/ExcelRenderer/SkiaSharp/SkiaPdfDocumentWriter.cs
++++ b/src/ExcelRenderer/SkiaSharp/SkiaPdfDocumentWriter.cs
+@@ -47,7 +47,14 @@ internal sealed class SkiaPdfDocumentWriter : IPdfDocumentWriter
+         }
+         finally
+         {
+-            _fonts.Dispose();
++            try
++            {
++                _drawing.Dispose();
++            }
++            finally
++            {
++                _fonts.Dispose();
++            }
+         }
+     }
+ 
+diff --git a/src/ExcelRenderer/SkiaSharp/SkiaTextDrawing.cs b/src/ExcelRenderer/SkiaSharp/SkiaTextDrawing.cs
+index ac0641c..3286641 100644
+--- a/src/ExcelRenderer/SkiaSharp/SkiaTextDrawing.cs
++++ b/src/ExcelRenderer/SkiaSharp/SkiaTextDrawing.cs
+@@ -11,6 +11,7 @@ namespace ExcelRenderer.SkiaSharp;
+ /// <summary>Owns Skia font resources and finalized and compatibility run drawing.</summary>
+ internal sealed class SkiaTextDrawing
+ {
++    private readonly Core.Pdf.SkiaPaintResources? _paints;
+     private readonly bool _textAsPaths;
+     private readonly SkiaPdfFonts? _pdfFonts;
+     private readonly Action? _beforeLegacyDrawing;
+@@ -23,13 +24,16 @@ internal sealed class SkiaTextDrawing
+     /// <param name="systemTypefaceSelector">The optional system-face selection boundary used by deterministic tests.</param>
+     /// <param name="pdfFonts">Optional PDF Unicode and subset font resources.</param>
+     /// <param name="beforeLegacyDrawing">Optional internal observer after clipping and measurement, before compatibility run drawing.</param>
++    /// <param name="paints">Optional drawing-scope paints.</param>
+     internal SkiaTextDrawing(
+         bool textAsPaths,
+         IFontManager? fontManager,
+         Func<FontStyle, SKTypeface?>? systemTypefaceSelector = null,
+         Action? beforeLegacyDrawing = null,
+-        SkiaPdfFonts? pdfFonts = null)
++        SkiaPdfFonts? pdfFonts = null,
++        Core.Pdf.SkiaPaintResources? paints = null)
+     {
++        _paints = paints;
+         _textAsPaths = textAsPaths;
+         _pdfFonts = pdfFonts;
+         _beforeLegacyDrawing = beforeLegacyDrawing;
+@@ -55,7 +59,9 @@ internal sealed class SkiaTextDrawing
+             : null;
+         var typeface = resolvedTypeface ?? systemTypeface ?? SKTypeface.Default;
+         using var font = new SKFont(typeface, (float)command.Style.Font.Size);
+-        using var paint = CreatePaint(command.Style.Font.Color ?? new(0, 0, 0), SKPaintStyle.Fill);
++        using var ownedPaints = _paints is null ? new Core.Pdf.SkiaPaintResources() : null;
++        var paints = _paints ?? ownedPaints!;
++        var paint = paints.Fill(CoreIntegration.CoreModelAdapter.ToCore(command.Style.Font.Color ?? new(0, 0, 0)));
+         paint.IsAntialias = true;
+ 
+         if (command.Style.ShrinkToFit && !command.Style.WrapText && command.Bounds.Width > 0)
+@@ -133,7 +139,9 @@ internal sealed class SkiaTextDrawing
+             return;
+         }
+ 
+-        using var paint = CreatePaint(command.Style.Font.Color ?? new(0, 0, 0), SKPaintStyle.Fill);
++        using var ownedPaints = _paints is null ? new Core.Pdf.SkiaPaintResources() : null;
++        var paints = _paints ?? ownedPaints!;
++        var paint = paints.Fill(CoreIntegration.CoreModelAdapter.ToCore(command.Style.Font.Color ?? new(0, 0, 0)));
+         paint.IsAntialias = true;
+         TypefaceLease? selectedPrimaryTypeface = null;
+         var primaryTypefaceSelected = false;
+@@ -155,6 +163,7 @@ internal sealed class SkiaTextDrawing
+                          command.Style.HorizontalAlignment,
+                          command.Style.VerticalAlignment))
+             {
++                paint = paints.Fill(CoreIntegration.CoreModelAdapter.ToCore(command.Style.Font.Color ?? new(0, 0, 0)));
+                 if (positioned.Line.Runs.Count == 0)
+                 {
+                     if (!primaryTypefaceSelected)
+@@ -179,11 +188,7 @@ internal sealed class SkiaTextDrawing
+                     foreach (var run in positioned.Line.Runs)
+                     {
+                         var font = run.Font;
+-                        using var runPaint = font is null ? null : CreatePaint(font.Color ?? new(0, 0, 0), SKPaintStyle.Fill);
+-                        if (runPaint is not null)
+-                        {
+-                            runPaint.IsAntialias = true;
+-                        }
++                        var runPaint = paints.Fill(CoreIntegration.CoreModelAdapter.ToCore((font ?? command.Style.Font).Color ?? new(0, 0, 0)));
+ 
+                         DrawResolvedRun(
+                             canvas,
+@@ -191,12 +196,12 @@ internal sealed class SkiaTextDrawing
+                             (float)(font?.Size ?? effectiveFontSize),
+                             (float)(positioned.Left + run.X),
+                             (float)positioned.Baseline,
+-                            runPaint ?? paint,
++                            runPaint,
+                             _textAsPaths,
+                             run.Glyphs);
+                         if (font?.Underline == true)
+                         {
+-                            canvas.DrawLine((float)(positioned.Left + run.X), (float)(positioned.Baseline + 1), (float)(positioned.Left + run.X + run.Advance), (float)(positioned.Baseline + 1), runPaint ?? paint);
++                            canvas.DrawLine((float)(positioned.Left + run.X), (float)(positioned.Baseline + 1), (float)(positioned.Left + run.X + run.Advance), (float)(positioned.Baseline + 1), runPaint);
+                         }
+                     }
+                 }
+@@ -419,8 +424,16 @@ internal sealed class SkiaTextDrawing
+                 using var builder = new SKTextBlobBuilder();
+                 builder.AddRun([emojiGlyph], font, new SKPoint(x, y));
+                 using var blob = builder.Build();
+-                using var emojiPaint = new SKPaint { Color = SKColors.White, IsAntialias = true };
+-                canvas.DrawText(blob, 0, 0, emojiPaint);
++                var color = paint.Color;
++                try
++                {
++                    paint.Color = SKColors.White;
++                    canvas.DrawText(blob, 0, 0, paint);
++                }
++                finally
++                {
++                    paint.Color = color;
++                }
+             }
+         }
+         else if (run.GlyphId is { } glyphId)
+@@ -493,12 +506,4 @@ internal sealed class SkiaTextDrawing
+             canvas.DrawText(blob, x, y, paint);
+         }
+     }
+-
+-    private SKPaint CreatePaint(ReportColor color, SKPaintStyle style, double width = 1) => new()
+-    {
+-        Color = new SKColor(color.Red, color.Green, color.Blue, color.Alpha),
+-        Style = style,
+-        StrokeWidth = (float)width,
+-        IsAntialias = true,
+-    };
+ }
+diff --git a/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.RichText.cs b/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.RichText.cs
+index 498e48d..09ba272 100644
+--- a/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.RichText.cs
++++ b/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.RichText.cs
+@@ -9,8 +9,8 @@ namespace ExcelRenderer.SkiaSharp;
+ /// <summary>Finalizes partial formatting using whole-string Unicode element boundaries.</summary>
+ public sealed partial class SkiaTextMeasurer
+ {
+-    private readonly Dictionary<RichTextLayoutKey, TextLayoutResult> richLayouts = new();
+-    private readonly Dictionary<RichTextLayoutKey, WeakReference<TextLayoutResult>> standaloneRichLayouts = new();
++    private readonly Core.Rendering.BoundedClockCache<RichTextLayoutKey, TextLayoutResult> richLayouts = new("richTextLayoutCache");
++    private readonly Core.Rendering.BoundedClockCache<RichTextLayoutKey, WeakReference<TextLayoutResult>> standaloneRichLayouts = new("standaloneRichTextCache", 8, 16384);
+ 
+     /// <inheritdoc/>
+     public TextLayoutResult Layout(IReadOnlyList<CellTextRun> runs, FontStyle font, double availableWidth, bool wrap)
+@@ -26,6 +26,9 @@ public sealed partial class SkiaTextMeasurer
+         }
+     }
+ 
++    private static long RichKeyUnits(IReadOnlyList<CellTextRun> runs, FontStyle font) =>
++        font.Family.Length + 1L + runs.Sum(run => 1L + run.Text.Length + run.Font.Family.Length);
++
+     private static IEnumerable<(string Text, FontStyle Font)> Segments(IReadOnlyList<CellTextRun> elements)
+     {
+         var index = 0;
+@@ -50,6 +53,7 @@ public sealed partial class SkiaTextMeasurer
+             throw new ArgumentNullException(nameof(runs));
+         }
+ 
++        CheckGeneration();
+         var snapshot = runs.ToArray();
+         if (snapshot.Any(run => run is null || run.Text is null || run.Font is null || !double.IsFinite(run.Font.Size) || run.Font.Size <= 0))
+         {
+@@ -57,20 +61,17 @@ public sealed partial class SkiaTextMeasurer
+         }
+ 
+         var text = string.Concat(snapshot.Select(run => run.Text));
+-        var key = new RichTextLayoutKey(snapshot, font, availableWidth, wrap, (_fontManager as FontManager)?.RegistrationGeneration ?? 0);
++        var key = new RichTextLayoutKey(snapshot, font, wrap ? availableWidth : 0, wrap, generation);
+         if (borrowConversionScope && richLayouts.TryGetValue(key, out var cached))
+         {
+-            Rendering.ConversionMetrics.Report("richTextLayoutCacheHits", 1);
+             return cached;
+         }
+ 
+         if (!borrowConversionScope && _fontManager is FontManager && standaloneRichLayouts.TryGetValue(key, out var reference) && reference.TryGetTarget(out var standaloneCached))
+         {
+-            Rendering.ConversionMetrics.Report("richTextLayoutCacheHits", 1);
+             return standaloneCached;
+         }
+ 
+-        Rendering.ConversionMetrics.Report("richTextLayoutCacheMisses", 1);
+         using var resources = !BorrowsResources || ConversionFontResources.Current is null ? new ConversionFontResources() : null;
+         var elements = StringInfo.GetTextElementEnumerator(text);
+         var current = new List<CellTextRun>();
+@@ -114,21 +115,11 @@ public sealed partial class SkiaTextMeasurer
+         };
+         if (borrowConversionScope && text.Length <= 2048)
+         {
+-            if (richLayouts.Count >= 512)
+-            {
+-                richLayouts.Clear();
+-            }
+-
+-            richLayouts[key] = result;
++            richLayouts.Store(key, result, RichKeyUnits(snapshot, font) + LayoutUnits(result));
+         }
+         else if (_fontManager is FontManager && text.Length <= 2048)
+         {
+-            if (standaloneRichLayouts.Count >= 8)
+-            {
+-                standaloneRichLayouts.Clear();
+-            }
+-
+-            standaloneRichLayouts[key] = new(result);
++            standaloneRichLayouts.Store(key, new(result), RichKeyUnits(snapshot, font));
+         }
+ 
+         return result;
+diff --git a/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.cs b/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.cs
+index 60a7a3b..61aa8f6 100644
+--- a/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.cs
++++ b/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.cs
+@@ -1,8 +1,8 @@
+ using ExcelRenderer.Abstractions;
++using ExcelRenderer.Core.Rendering;
+ using ExcelRenderer.Fonts;
+ using ExcelRenderer.Layout;
+ using ExcelRenderer.Model;
+-using SkiaSharp;
+ 
+ namespace ExcelRenderer.SkiaSharp;
+ 
+@@ -12,9 +12,9 @@ public sealed partial class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
+     private readonly IFontManager _fontManager;
+     private readonly object standaloneSync = new();
+     private readonly bool borrowConversionScope;
+-    private readonly Dictionary<(string Text, FontStyle Font, double Width, bool Wrap, int Generation), TextLayoutResult>? _layouts;
+-    private readonly Dictionary<(string Text, FontStyle Font, int Generation), double>? widths;
+-    private readonly Dictionary<(string Text, FontStyle Font, bool ExplicitBreak, int Generation), TextLayoutLine>? lineLayouts;
++    private readonly BoundedClockCache<(string Text, MetricFontKey Font, double Width, bool Wrap, int Generation), TextLayoutResult>? _layouts;
++    private readonly BoundedClockCache<(string Text, MetricFontKey Font, int Generation), double>? widths;
++    private readonly BoundedClockCache<(string Text, MetricFontKey Font, bool ExplicitBreak, int Generation), TextLayoutLine>? lineLayouts;
+ 
+     /// <summary>Initializes a new instance of the <see cref="SkiaTextMeasurer"/> class.</summary>
+     public SkiaTextMeasurer()
+@@ -35,9 +35,9 @@ public sealed partial class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
+     internal SkiaTextMeasurer(IFontManager fontManager, bool cacheLayouts)
+         : this(fontManager)
+     {
+-        _layouts = cacheLayouts ? new() : null;
+-        widths = cacheLayouts ? new() : null;
+-        lineLayouts = cacheLayouts ? new() : null;
++        _layouts = cacheLayouts ? new("textLayoutCache") : null;
++        widths = cacheLayouts ? new("textWidthCache") : null;
++        lineLayouts = cacheLayouts ? new("textLineCache") : null;
+         borrowConversionScope = true;
+     }
+ 
+@@ -71,7 +71,7 @@ public sealed partial class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
+     private static double MeasureRun(TextRun run, FontStyle style)
+     {
+         var face = ConversionFontResources.Current!.GetFace(run.Font);
+-        var glyphs = (run.GlyphId ?? run.ColorEmojiGlyphId) is { } glyph ? new[] { glyph } : face.Typeface.GetGlyphs(run.Text);
++        var glyphs = SelectGlyphs(run, face);
+         return face.Measure(glyphs, style.Size);
+     }
+ 
+@@ -86,15 +86,15 @@ public sealed partial class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
+             return new(new(0, 0), []) { EffectiveFontSize = font.Size };
+         }
+ 
+-        var key = (text, font, availableWidth, wrap, (_fontManager as FontManager)?.RegistrationGeneration ?? 0);
++        CheckGeneration();
++        var key = (text, MetricFontKey.From(font), wrap ? availableWidth : 0, wrap, generation);
+         if (_layouts?.TryGetValue(key, out var cached) == true)
+         {
+             return cached;
+         }
+ 
+         var request = new FontRequest(font.Family, font.Bold ? 700 : 400, font.Italic);
+-        var lineTexts = Core.Layout.TextLineBreaker.Break(text, availableWidth, wrap, value => MeasureWidth(value, font, request));
+-        var lines = lineTexts.Select(line => CreateLine(line.Text, line.ExplicitBreak, font, request)).ToArray();
++        var lines = CreateLines(text, font, request, availableWidth, wrap).ToArray();
+         var result = new TextLayoutResult(
+             new(lines.Length == 0 ? 0 : lines.Max(line => line.Width), lines.Sum(line => line.Height)),
+             Array.AsReadOnly(lines))
+@@ -103,12 +103,7 @@ public sealed partial class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
+         };
+         if (_layouts is not null && text.Length <= 2048)
+         {
+-            if (_layouts.Count >= 512)
+-            {
+-                _layouts.Clear();
+-            }
+-
+-            _layouts[key] = result;
++            _layouts.Store(key, result, text.Length + (long)font.Family.Length + LayoutUnits(result));
+         }
+ 
+         return result;
+@@ -118,23 +113,26 @@ public sealed partial class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
+         string text,
+         bool explicitBreak,
+         FontStyle style,
+-        FontRequest request)
++        FontRequest request,
++        TextRun? selectedRun = null,
++        ushort[]? selectedGlyphs = null)
+     {
+-        var key = (text, style, explicitBreak, (_fontManager as FontManager)?.RegistrationGeneration ?? 0);
++        var key = (text, MetricFontKey.From(style), explicitBreak, generation);
+         var cacheable = lineLayouts is not null && _fontManager is FontManager && text.Length <= 2048;
+         if (cacheable && lineLayouts!.TryGetValue(key, out var cached))
+         {
+-            Rendering.ConversionMetrics.Report("textLineCacheHits", 1);
+             return cached;
+         }
+ 
+-        var resolvedRuns = _fontManager?.ResolveTextRuns(text, request) ?? [];
++        IReadOnlyList<TextRun> resolvedRuns = selectedRun is null ? _fontManager.ResolveTextRuns(text, request) : [selectedRun];
+         var positionedRuns = new List<TextLayoutRun>();
+         var x = 0d;
+         foreach (var run in resolvedRuns)
+         {
+-            var advance = MeasureRun(run, style);
+-            positionedRuns.Add(ResolvedGlyphLayout.Finalize(new(run, x, advance)));
++            var face = ConversionFontResources.Current!.GetFace(run.Font);
++            var glyphs = selectedGlyphs ?? SelectGlyphs(run, face);
++            var advance = face.Measure(glyphs, style.Size);
++            positionedRuns.Add(ResolvedGlyphLayout.Finalize(new(run, x, advance), glyphs));
+             x += advance;
+         }
+ 
+@@ -158,13 +156,7 @@ public sealed partial class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
+         };
+         if (cacheable)
+         {
+-            if (lineLayouts!.Count >= 512)
+-            {
+-                lineLayouts.Clear();
+-            }
+-
+-            lineLayouts[key] = result;
+-            Rendering.ConversionMetrics.Report("textLineCacheMisses", 1);
++            lineLayouts!.Store(key, result, text.Length + (long)style.Family.Length + LineUnits(result));
+         }
+ 
+         return result;
+@@ -172,24 +164,17 @@ public sealed partial class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
+ 
+     private double MeasureWidth(string text, FontStyle style, FontRequest request)
+     {
+-        var key = (text, style, (_fontManager as FontManager)?.RegistrationGeneration ?? 0);
++        var key = (text, MetricFontKey.From(style), generation);
+         var cacheable = widths is not null && _fontManager is FontManager && text.Length <= 2048;
+         if (cacheable && widths!.TryGetValue(key, out var cached))
+         {
+-            Rendering.ConversionMetrics.Report("textWidthCacheHits", 1);
+             return cached;
+         }
+ 
+         var width = _fontManager.ResolveTextRuns(text, request).Sum(run => MeasureRun(run, style));
+         if (cacheable)
+         {
+-            if (widths!.Count >= 512)
+-            {
+-                widths.Clear();
+-            }
+-
+-            widths[key] = width;
+-            Rendering.ConversionMetrics.Report("textWidthCacheMisses", 1);
++            widths!.Store(key, width, text.Length + (long)style.Family.Length + 1);
+         }
+ 
+         return width;
+diff --git a/src/ExcelRenderer/SkiaSharp/SkiaTextPainter.cs b/src/ExcelRenderer/SkiaSharp/SkiaTextPainter.cs
+index cd5f226..30c27f2 100644
+--- a/src/ExcelRenderer/SkiaSharp/SkiaTextPainter.cs
++++ b/src/ExcelRenderer/SkiaSharp/SkiaTextPainter.cs
+@@ -17,10 +17,11 @@ internal sealed class SkiaTextPainter
+     /// <param name="fontManager">The optional resolved-font source.</param>
+     /// <param name="pdfFonts">Optional PDF Unicode and subset resources.</param>
+     /// <param name="beforeLegacyDrawing">Optional internal compatibility drawing observer.</param>
+-    internal SkiaTextPainter(bool textAsPaths, Fonts.IFontManager? fontManager, Action? beforeLegacyDrawing = null, SkiaPdfFonts? pdfFonts = null)
++    /// <param name="paints">Optional drawing-scope paints.</param>
++    internal SkiaTextPainter(bool textAsPaths, Fonts.IFontManager? fontManager, Action? beforeLegacyDrawing = null, SkiaPdfFonts? pdfFonts = null, Core.Pdf.SkiaPaintResources? paints = null)
+     {
+         _pdfFonts = pdfFonts;
+-        var drawing = new SkiaTextDrawing(textAsPaths, fontManager, beforeLegacyDrawing: beforeLegacyDrawing, pdfFonts: pdfFonts);
++        var drawing = new SkiaTextDrawing(textAsPaths, fontManager, beforeLegacyDrawing: beforeLegacyDrawing, pdfFonts: pdfFonts, paints: paints);
+         _finalized = new(drawing);
+         _legacy = new(drawing);
+     }
+diff --git a/src/ExcelRenderer/SkiaSharp/SvgRenderer.cs b/src/ExcelRenderer/SkiaSharp/SvgRenderer.cs
+index d2847d8..0127e8b 100644
+--- a/src/ExcelRenderer/SkiaSharp/SvgRenderer.cs
++++ b/src/ExcelRenderer/SkiaSharp/SvgRenderer.cs
+@@ -124,7 +124,7 @@ public sealed class SvgRenderer
+         {
+             using var background = new SKPaint { Color = SKColors.White, Style = SKPaintStyle.Fill };
+             canvas.DrawRect(0, 0, (float)pageSettings.Width, (float)pageSettings.Height, background);
+-            var drawingContext = new SkiaDrawingContext(textAsPaths: true, _fontManager, cancellationToken: cancellationToken);
++            using var drawingContext = new SkiaDrawingContext(textAsPaths: true, _fontManager, cancellationToken: cancellationToken);
+             foreach (var command in CommandTextFinalizer.FinalizeRaster(commands, _fontManager, cancellationToken))
+             {
+                 cancellationToken.ThrowIfCancellationRequested();
+diff --git a/tests/ExcelRenderer.Tests/FinalizedTextRenderingTests.cs b/tests/ExcelRenderer.Tests/FinalizedTextRenderingTests.cs
+index 46091f4..71348d3 100644
+--- a/tests/ExcelRenderer.Tests/FinalizedTextRenderingTests.cs
++++ b/tests/ExcelRenderer.Tests/FinalizedTextRenderingTests.cs
+@@ -200,7 +200,8 @@ public sealed class FinalizedTextRenderingTests
+             Style = CreateCommand(layout).Style with { TextRotation = rotation, WrapText = true },
+         };
+ 
+-        Assert.Throws<InvalidOperationException>(() => new SkiaDrawingContext(true).Execute(canvas, command));
++        using var context = new SkiaDrawingContext(true);
++        Assert.Throws<InvalidOperationException>(() => context.Execute(canvas, command));
+         Assert.Equal(initialSaveCount, canvas.SaveCount);
+ 
+         using var paint = new SKPaint { Color = SKColors.Red };
+diff --git a/tests/ExcelRenderer.Tests/RangeTrimHyperlinkTests.cs b/tests/ExcelRenderer.Tests/RangeTrimHyperlinkTests.cs
+index 9330c1f..b6fd44b 100644
+--- a/tests/ExcelRenderer.Tests/RangeTrimHyperlinkTests.cs
++++ b/tests/ExcelRenderer.Tests/RangeTrimHyperlinkTests.cs
+@@ -447,7 +447,8 @@ public sealed class RangeTrimHyperlinkTests
+         var matrix = canvas.TotalMatrix;
+         var clip = canvas.DeviceClipBounds;
+         var viewport = new PageViewport(200, 150, new(40, 30, 100, 60), 2);
+-        new SkiaDrawingContext(false).Execute(canvas,
++        using var context = new SkiaDrawingContext(false);
++        context.Execute(canvas,
+             viewport.Apply([new DrawImageCommand(1, new(40, 30, 10, 10), [1, 2])], 1));
+         Assert.Equal(savedCount, canvas.SaveCount);
+         Assert.Equal(matrix, canvas.TotalMatrix);
+diff --git a/tools/ExcelRenderer.Performance/RenderMemoryBenchmark.Profile.cs b/tools/ExcelRenderer.Performance/RenderMemoryBenchmark.Profile.cs
+index 3022fc3..9e5efcf 100644
+--- a/tools/ExcelRenderer.Performance/RenderMemoryBenchmark.Profile.cs
++++ b/tools/ExcelRenderer.Performance/RenderMemoryBenchmark.Profile.cs
+@@ -48,7 +48,9 @@ internal static partial class RenderMemoryBenchmark
+             {
+                 ConversionMetrics.Observer = (name, value) =>
+                 {
+-                    metrics[name] = metrics.GetValueOrDefault(name) + value;
++                    metrics[name] = name.EndsWith(".current", StringComparison.Ordinal) ? value :
++                        name.EndsWith(".max", StringComparison.Ordinal) ? Math.Max(metrics.GetValueOrDefault(name), value) :
++                        metrics.GetValueOrDefault(name) + value;
+                     if (name.EndsWith(".ms", StringComparison.Ordinal))
+                     {
+                         metrics[name + ".count"] = metrics.GetValueOrDefault(name + ".count") + 1;
+diff --git a/tools/ExcelRenderer.Performance/TextLayoutBenchmark.cs b/tools/ExcelRenderer.Performance/TextLayoutBenchmark.cs
+index 93d0868..c964c1e 100644
+--- a/tools/ExcelRenderer.Performance/TextLayoutBenchmark.cs
++++ b/tools/ExcelRenderer.Performance/TextLayoutBenchmark.cs
+@@ -16,9 +16,9 @@ internal static class TextLayoutBenchmark
+     internal static void Run(string[] args)
+     {
+         var workload = args[1];
+-        if (workload is not ("plain" or "rich" or "rich-wrap"))
++        if (workload is not ("plain" or "plain-wrap" or "rich" or "rich-wrap"))
+         {
+-            throw new ArgumentException("Workload must be plain, rich or rich-wrap.", nameof(args));
++            throw new ArgumentException("Workload must be plain, plain-wrap, rich or rich-wrap.", nameof(args));
+         }
+ 
+         var count = args.Length > 2 ? int.Parse(args[2], CultureInfo.InvariantCulture) : 30;
+@@ -49,8 +49,8 @@ internal static class TextLayoutBenchmark
+             var timer = Stopwatch.StartNew();
+             for (var index = 0; index < count; index++)
+             {
+-                results.Add(workload == "plain"
+-                    ? measurer.Layout(texts[index], font, 100000, false)
++                results.Add(workload is "plain" or "plain-wrap"
++                    ? measurer.Layout(texts[index], font, workload == "plain-wrap" ? 180 : 100000, workload == "plain-wrap")
+                     : measurer.Layout(inputs[index], font, workload == "rich-wrap" ? 80 : 100000, workload == "rich-wrap"));
+             }
+ 
+@@ -69,7 +69,7 @@ internal static class TextLayoutBenchmark
+                         line.Width,
+                         line.Height,
+                         line.Baseline,
+-                        Runs = line.Runs.Select(run => new { run.Run.Text, run.Run.SourceText, run.X, run.Advance, run.Font }),
++                        Runs = line.Runs.Select(run => new { run.Run.Text, run.Run.SourceText, run.Run.Utf16Start, run.X, run.Advance, run.Font, run.Glyphs!.FontIdentity, run.Glyphs.Glyphs, run.Glyphs.Source, run.Glyphs.Clusters, run.Glyphs.Advances }),
+                     }),
+                 };
+                 digest.AppendData(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(projection)));
+diff --git a/scripts/measure-main-optimization.py b/scripts/measure-main-optimization.py
+new file mode 100644
+index 0000000..b950869
+--- /dev/null
++++ b/scripts/measure-main-optimization.py
+@@ -0,0 +1,112 @@
++#!/usr/bin/env python3
++"""Compare saved main runtimes; never build or regenerate input between paired trials."""
++import argparse
++import hashlib
++import json
++import os
++from pathlib import Path
++import platform
++import shutil
++import subprocess
++
++ROOT = Path(__file__).resolve().parents[1]
++
++
++def sha(path):
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def prepare(work, runtime):
++    inputs = work / 'inputs'
++    inputs.mkdir(parents=True, exist_ok=True)
++    cases = []
++
++    def case(name, source, **settings):
++        target = inputs / source.name
++        if not target.exists():
++            shutil.copy2(source, target)
++        cases.append(dict(Name=name, Input=str(target.resolve()), **settings))
++
++    core = ROOT / 'docs/validation/core-performance-optimization/inputs'
++    for name in ('text1', 'text1000', 'wrap1000', 'borders1000', 'imagesonly', 'header', 'empty', 'mixed1000'):
++        case(name + '-Pdf', core / (name + '.xlsx'))
++    samples = ROOT / 'tests/ExcelRenderer.Tests/SampleInputs'
++    for name in ('02-image', '04-text-decoration', '05-borders'):
++        for form in ('Png', 'Svg'):
++            case(name + '-' + form, samples / (name + '.xlsx'), Format=form)
++    retained = ROOT / 'tests/Shared/RetainedWorkbooks'
++    for kind, filename in (
++        ('rich', 'RichTextAcceptanceTests.RangeTrimAndMergedCellRetainRichTextInAllOutputFormats.79F50EFE1F4F079D.xlsx'),
++        ('shapes', 'ShapeAndFontTests.CreateWorkbookWithShapes.C704163BF33ECFBD.xlsx'),
++    ):
++        for form in ('Pdf', 'Png', 'Svg'):
++            case(kind + '-' + form, retained / filename, Format=form, Trim=True)
++    range_source = inputs / 'range-source.xlsx'
++    if not range_source.exists():
++        subprocess.run(['dotnet', str(runtime.resolve() / 'ExcelRenderer.Performance.dll'), 'generate', str(range_source), '20', 'text'], cwd=ROOT, check=True)
++    case('range-trim-Pdf', range_source, Range='A5:F15', Trim=True)
++    case('selected-Pdf', core / 'text1000.xlsx', Pages=[1])
++    (work / 'cases.json').write_text(json.dumps(cases, indent=2) + '\n')
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('--before', type=Path, required=True)
++    parser.add_argument('--after', type=Path, required=True)
++    parser.add_argument('--output', type=Path, required=True)
++    parser.add_argument('--prepare', action='store_true')
++    parser.add_argument('--diagnostics', action='store_true')
++    parser.add_argument('--rounds', type=int, default=3)
++    parser.add_argument('--case', action='append')
++    args = parser.parse_args()
++    work = args.output.resolve()
++    work.mkdir(parents=True, exist_ok=True)
++    if args.prepare:
++        prepare(work, args.before)
++        return
++    runtimes = dict(before=args.before.resolve(), after=args.after.resolve())
++    environment = dict(
++        os=platform.platform(), cpu=platform.processor(), affinity=sorted(os.sched_getaffinity(0)),
++        sdk=subprocess.check_output(['dotnet', '--info'], text=True),
++        cpuInfo=Path('/proc/cpuinfo').read_text().split('\n\n')[0],
++        runtimeVariables={key: value for key, value in os.environ.items() if key.startswith(('DOTNET_', 'COMPlus_'))},
++        inputs={path.name: sha(path) for path in (work / 'inputs').glob('*.xlsx')},
++        fonts={str(path.relative_to(ROOT)): sha(path) for directory in ('third_party/NotoSansJP', 'tests/ExcelRenderer.Tests/Fonts') for path in (ROOT / directory).rglob('*') if path.suffix in ('.ttf', '.otf', '.ttc')},
++        dlls={stage: {path.name: sha(path) for path in runtime.glob('*.dll')} for stage, runtime in runtimes.items()},
++        protocol='Saved Release runtimes; sequential processes; alternating order per round; observer-free primary; cold and warm separate. Inclusive phase times are not additive.',
++    )
++    (work / ('diagnostic-environment.json' if args.diagnostics else 'environment.json')).write_text(json.dumps(environment, indent=2) + '\n')
++    command = ['python3', str(ROOT / 'scripts/benchmark-render-finalization.py'), '--before', str(runtimes['before']), '--after', str(runtimes['after']), '--output', str(work), '--rounds', str(args.rounds)]
++    if args.diagnostics:
++        command.append('--diagnostics')
++    for case in args.case or []:
++        command.extend(['--case', case])
++    subprocess.run(command, cwd=ROOT, check=True)
++    if args.diagnostics:
++        return
++    rows = []
++    output = work / 'layout-samples.jsonl'
++    output.write_text('')
++    for round_index in range(args.rounds):
++        for workload in ('plain', 'plain-wrap', 'rich-wrap'):
++            for stage in ('before', 'after') if round_index % 2 == 0 else ('after', 'before'):
++                command = ['dotnet', str(runtimes[stage] / 'ExcelRenderer.Performance.dll'), 'layout-case', workload, '5']
++                result = subprocess.check_output(command, cwd=ROOT, text=True)
++                samples = [json.loads(line) for line in result.splitlines()]
++                record = dict(round=round_index, stage=stage, workload=workload, command=command, samples=samples)
++                rows.append(record)
++                with output.open('a') as stream:
++                    stream.write(json.dumps(record) + '\n')
++    summary = []
++    for before in (row for row in rows if row['stage'] == 'before'):
++        after = next(row for row in rows if row['stage'] == 'after' and row['round'] == before['round'] and row['workload'] == before['workload'])
++        a, b = before['samples'][-1], after['samples'][-1]
++        assert a['InputSha256'] == b['InputSha256'] and a['FontSha256'] == b['FontSha256']
++        assert a['OutputSha256'] == b['OutputSha256'], (before['workload'], 'layout/run/glyph/cluster digest differs')
++        summary.append(dict(round=before['round'], workload=before['workload'], layoutEqual=True,
++                            ratios={key: b[key] / a[key] for key in ('TotalMs', 'AllocatedBytes', 'PeakWorkingSet64')}))
++    (work / 'layout-summary.json').write_text(json.dumps(summary, indent=2) + '\n')
++
++
++if __name__ == '__main__':
++    main()
+diff --git a/scripts/prepare-main-wide-wrap.py b/scripts/prepare-main-wide-wrap.py
+new file mode 100644
+index 0000000..e328b05
+--- /dev/null
++++ b/scripts/prepare-main-wide-wrap.py
+@@ -0,0 +1,56 @@
++#!/usr/bin/env python3
++"""Retain an additional ordinary long-text fixture with Excel's maximum source column width."""
++import argparse
++import json
++from pathlib import Path
++from zipfile import ZipFile, ZIP_DEFLATED
++import xml.etree.ElementTree as ET
++
++ROOT = Path(__file__).resolve().parents[1]
++NS = 'http://schemas.openxmlformats.org/spreadsheetml/2006/main'
++ET.register_namespace('x', NS)
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('directory', type=Path)
++    args = parser.parse_args()
++    work = args.directory.resolve()
++    inputs = work / 'inputs'
++    inputs.mkdir(parents=True, exist_ok=True)
++    target = inputs / 'wide-wrap.xlsx'
++    if not target.exists():
++        with ZipFile(ROOT / 'docs/validation/core-performance-optimization/inputs/wrap1000.xlsx') as archive:
++            parts = {name: archive.read(name) for name in archive.namelist()}
++        sheet = ET.fromstring(parts['xl/worksheets/sheet1.xml'])
++        data = sheet.find('x:sheetData', {'x': NS})
++        rows = list(data)[:20]
++        data.clear()
++        for index, row in enumerate(rows):
++            cell = next(iter(row))
++            row.clear()
++            row.set('r', str(index + 1))
++            row.set('ht', '20')
++            row.set('customHeight', '1')
++            cell.set('r', 'A' + str(index + 1))
++            text = cell.find('x:is/x:t', {'x': NS})
++            text.text = str(index) + ' ' + ('ABC 日本語 e\u0301 0123 ' * 200)
++            row.append(cell)
++            data.append(row)
++        columns = sheet.find('x:cols', {'x': NS})
++        columns.clear()
++        ET.SubElement(columns, '{' + NS + '}col', min='1', max='1', width='255', customWidth='1')
++        workbook = ET.fromstring(parts['xl/workbook.xml'])
++        for name in workbook.findall('x:definedNames/x:definedName', {'x': NS}):
++            if name.get('name') == '_xlnm.Print_Area':
++                name.text = "'Report'!$A$1:$A$20"
++        parts['xl/workbook.xml'] = ET.tostring(workbook, encoding='utf-8', xml_declaration=True)
++        parts['xl/worksheets/sheet1.xml'] = ET.tostring(sheet, encoding='utf-8', xml_declaration=True)
++        with ZipFile(target, 'w', ZIP_DEFLATED) as archive:
++            for name, data in parts.items():
++                archive.writestr(name, data)
++    (work / 'cases.json').write_text(json.dumps([dict(Name='wide-wrap-Pdf', Input=str(target), Format='Pdf')], indent=2) + '\n')
++
++
++if __name__ == '__main__':
++    main()
+diff --git a/scripts/recheck-main-optimization.py b/scripts/recheck-main-optimization.py
+new file mode 100644
+index 0000000..59441ac
+--- /dev/null
++++ b/scripts/recheck-main-optimization.py
+@@ -0,0 +1,58 @@
++#!/usr/bin/env python3
++"""Investigate every primary time/RSS flag under a separate tiering-disabled protocol."""
++import argparse
++import json
++import os
++from pathlib import Path
++import statistics
++import subprocess
++
++ROOT = Path(__file__).resolve().parents[1]
++
++
++def analyze(rows):
++    paired = []
++    for name in dict.fromkeys(row['name'] for row in rows):
++        for round_index in sorted({row['round'] for row in rows}):
++            stages = {stage: [row for row in rows if row['name'] == name and row['round'] == round_index and row['stage'] == stage and not row['warmup']] for stage in ('before', 'after')}
++            if not stages['before'] or not stages['after']:
++                continue
++            medians = {stage: {key: statistics.median(row[key] for row in values) for key in ('milliseconds', 'allocationBytes', 'peakRssBytes')} for stage, values in stages.items()}
++            ratios = {key: medians['after'][key] / medians['before'][key] for key in medians['before']}
++            peaks = {stage: max(row['peakRssBytes'] for row in rows if row['name'] == name and row['round'] == round_index and row['stage'] == stage) for stage in stages}
++            ratios['processPeakRssBytes'] = peaks['after'] / peaks['before']
++            paired.append(dict(case=name, round=round_index, medians=medians, processPeaks=peaks, ratios=ratios,
++                               investigate=any(ratios[key] > 1.05 for key in ('milliseconds', 'peakRssBytes', 'processPeakRssBytes'))))
++    return paired
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('directory', type=Path)
++    parser.add_argument('--rounds', type=int, default=3)
++    args = parser.parse_args()
++    work = args.directory.resolve()
++    primary = analyze(json.loads((work / 'raw.json').read_text()))
++    flags = sorted({row['case'] for row in primary if row['investigate']})
++    records = []
++    environment = os.environ | {'DOTNET_TieredCompilation': '0'}
++    output = work / 'controlled-samples.jsonl'
++    output.write_text('')
++    for round_index in range(args.rounds):
++        for case in flags:
++            for stage in ('before', 'after') if round_index % 2 == 0 else ('after', 'before'):
++                command = ['dotnet', str(work / stage / 'ExcelRenderer.Performance.dll'), 'render-profile', str(work / 'cases.json'), case, '5', '8']
++                result = subprocess.check_output(command, cwd=ROOT, env=environment, text=True)
++                samples = [json.loads(line) for line in result.splitlines()]
++                record = dict(round=round_index, stage=stage, case=case, command=command, tiering=False, warmups=5, measuredWarmSamples=8, records=samples)
++                with output.open('a') as stream:
++                    stream.write(json.dumps(record) + '\n')
++                records.extend(dict(round=round_index, stage=stage, **sample) for sample in samples[1:])
++                print(round_index, case, stage, flush=True)
++    (work / 'regression-analysis.json').write_text(json.dumps(dict(
++        primary=primary, flaggedCases=flags, controlled=analyze(records),
++        interpretation='Every primary case/round over 1.05 is listed. Controlled runs change tiering and warm count; they investigate but do not replace the primary protocol. No pooled-median acceptance.'), indent=2) + '\n')
++
++
++if __name__ == '__main__':
++    main()
+diff --git a/scripts/validate-main-optimization.py b/scripts/validate-main-optimization.py
+new file mode 100644
+index 0000000..a34727a
+--- /dev/null
++++ b/scripts/validate-main-optimization.py
+@@ -0,0 +1,106 @@
++#!/usr/bin/env python3
++"""Validate saved native captures, font subsets and observation-only baseline counters."""
++import argparse
++import hashlib
++import json
++from pathlib import Path
++import subprocess
++import xml.etree.ElementTree as ET
++
++import fitz
++
++ROOT = Path(__file__).resolve().parents[1]
++
++
++def sha(path):
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def artifact_hash(path):
++    if path.suffix != '.svg':
++        return sha(path)
++    root = ET.fromstring(path.read_bytes())
++    names = {node.attrib['id']: 'resource' + str(index) for index, node in enumerate(node for node in root.iter() if 'id' in node.attrib)}
++    for node in root.iter():
++        for key, value in list(node.attrib.items()):
++            if key == 'id':
++                node.attrib[key] = names[value]
++            elif value.startswith('url(#') and value.endswith(')') and value[5:-1] in names:
++                node.attrib[key] = 'url(#' + names[value[5:-1]] + ')'
++            elif value.startswith('#') and value[1:] in names:
++                node.attrib[key] = '#' + names[value[1:]]
++    return hashlib.sha256(ET.tostring(root)).hexdigest()
++
++
++def normalize(value):
++    if isinstance(value, dict):
++        return {key: normalize(item) for key, item in value.items() if key not in ('xref', 'seqno', 'id')}
++    if isinstance(value, (list, tuple)):
++        return [normalize(item) for item in value]
++    if value is None or isinstance(value, (str, int, float, bool)):
++        return value
++    return list(value)
++
++
++def pdf(first, second):
++    fonts = []
++    with fitz.open(first) as a, fitz.open(second) as b:
++        assert len(a) == len(b), (first, 'page count')
++        for document in (a, b):
++            refs = {font[0] for page in document for font in page.get_fonts(full=True)}
++            fonts.append(sorted(hashlib.sha256(document.extract_font(xref)[3]).hexdigest() for xref in refs))
++        assert fonts[0] == fonts[1], (first, 'embedded font subsets')
++        for old, new in zip(a, b):
++            assert old.rect == new.rect
++            for method in ('get_texttrace', 'get_drawings', 'get_image_info', 'get_links'):
++                assert normalize(getattr(old, method)()) == normalize(getattr(new, method)()), (first, method)
++            x, y = old.get_pixmap(dpi=96), new.get_pixmap(dpi=96)
++            assert (x.width, x.height, x.samples) == (y.width, y.height, y.samples), (first, 'pixels')
++        return dict(pages=len(a), structureEqual=True, pixelIdentical=True, embeddedFontSha256=fonts[0])
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('directory', type=Path)
++    args = parser.parse_args()
++    work = args.directory.resolve()
++    report = dict(pdf=[], native=[], core=[], baselineObservations=[])
++    for case in sorted((work / 'captures/before').iterdir()):
++        for source in sorted(case.iterdir()):
++            target = work / 'captures/after' / case.name / source.name
++            if source.suffix == '.pdf':
++                report['pdf'].append(dict(case=case.name, file=source.name, **pdf(source, target)))
++            else:
++                assert artifact_hash(source) == artifact_hash(target), source
++                report['native'].append(dict(case=case.name, file=source.name, canonicalBytesEqual=True))
++    captures = work / 'observation-captures'
++    for name in ('text1000-Pdf', 'wrap1000-Pdf', 'borders1000-Pdf', 'rich-Pdf', '05-borders-Png'):
++        case = next(case for case in json.loads((work / 'cases.json').read_text()) if case['Name'] == name)
++        case['Capture'] = str(captures / name)
++        specification = work / 'observation-case.json'
++        specification.write_text(json.dumps([case]))
++        command = ['dotnet', str(work / 'observation-before/ExcelRenderer.Performance.dll'), 'render-profile', str(specification), name, '1', '1', 'diagnostic']
++        result = subprocess.check_output(command, cwd=ROOT, text=True)
++        records = [json.loads(line) for line in result.splitlines()]
++        observed = next(record for record in records[1:] if record['diagnostic'])
++        original = next(record for record in records[1:] if record['observerControl'])
++        assert observed['captureHash'] == original['captureHash']
++        for path in (captures / name).iterdir():
++            assert artifact_hash(path) == artifact_hash(work / 'captures/before' / name / path.name), (name, 'baseline observer changed bytes')
++        report['baselineObservations'].append(dict(case=name, command=command, records=records, outputEqualToPrimary=True))
++    font = ROOT / 'third_party/NotoSansJP/NotoSansJP-Regular.ttf'
++    core = work / 'core-comparison'
++    core.mkdir(exist_ok=True)
++    for name in ('text1', 'text1000', 'wrap1000', 'borders1000', 'header', 'imagesonly', 'empty'):
++        paths = []
++        for stage in ('before', 'after'):
++            target = core / (name + '-' + stage + '.pdf')
++            subprocess.run(['dotnet', str(work / ('core-' + stage) / 'ExcelRenderer.Core.Validation.dll'), 'render', str(work / 'inputs' / (name + '.xlsx')), str(target), str(font), '1'], cwd=ROOT, check=True, capture_output=True)
++            paths.append(target)
++        report['core'].append(dict(case=name, **pdf(*paths)))
++    (work / 'structural-quality.json').write_text(json.dumps(report, indent=2) + '\n')
++    print(json.dumps({key: len(value) for key, value in report.items()}))
++
++
++if __name__ == '__main__':
++    main()
+diff --git a/src/ExcelRenderer.Core/Layout/OutlineParagraph.cs b/src/ExcelRenderer.Core/Layout/OutlineParagraph.cs
+new file mode 100644
+index 0000000..5a31d1f
+--- /dev/null
++++ b/src/ExcelRenderer.Core/Layout/OutlineParagraph.cs
+@@ -0,0 +1,110 @@
++using System.Globalization;
++using ExcelRenderer.Core.Fonts;
++using ExcelRenderer.Core.Rendering;
++
++namespace ExcelRenderer.Core.Layout;
++
++/// <summary>Owns one ordinary outline paragraph's glyphs and breaks only at Unicode element boundaries.</summary>
++internal sealed class OutlineParagraph
++{
++    private readonly string text;
++    private readonly SkiaFontFace face;
++    private readonly ushort[] glyphs;
++    private readonly CancellationToken token;
++
++    /// <summary>Initializes a new instance of the <see cref="OutlineParagraph"/> class.</summary>
++    /// <param name="text">A valid UTF-16 paragraph with unchanged display/source text.</param>
++    /// <param name="face">Its single noncolor physical face.</param>
++    /// <param name="token">The owning conversion's cancellation token.</param>
++    internal OutlineParagraph(string text, SkiaFontFace face, CancellationToken token)
++    {
++        this.text = text;
++        this.face = face;
++        this.token = token;
++        token.ThrowIfCancellationRequested();
++        glyphs = face.Typeface.GetGlyphs(text);
++        ConversionMetrics.Report("textGlyphCalls", 1);
++        ConversionMetrics.Report("textGlyphCharacters", text.Length);
++    }
++
++    /// <summary>Checks whether scalar-to-glyph indexing is well-defined.</summary>
++    /// <param name="text">The paragraph.</param>
++    /// <returns>Whether no unmatched surrogate is present.</returns>
++    internal static bool IsValidUtf16(string text)
++    {
++        for (var index = 0; index < text.Length; index++)
++        {
++            if (char.IsHighSurrogate(text[index]))
++            {
++                if (++index == text.Length || !char.IsLowSurrogate(text[index]))
++                {
++                    return false;
++                }
++            }
++            else if (char.IsLowSurrogate(text[index]))
++            {
++                return false;
++            }
++        }
++
++        return true;
++    }
++
++    /// <summary>Enumerates lines while preserving the existing integer-run advance conversion.</summary>
++    /// <param name="size">The run size.</param>
++    /// <param name="width">The available width.</param>
++    /// <param name="wrap">Whether automatic wrapping is enabled.</param>
++    /// <returns>Line text and already selected glyphs; source clusters are rebuilt per line.</returns>
++    internal IEnumerable<(string Text, ushort[] Glyphs)> Break(double size, double width, bool wrap)
++    {
++        if (!wrap || width <= 0)
++        {
++            yield return (text, glyphs);
++            yield break;
++        }
++
++        var boundaries = StringInfo.ParseCombiningCharacters(text);
++        var start = 0;
++        var firstGlyph = 0;
++        var glyphIndex = 0;
++        long units = 0;
++        for (var index = 0; index < boundaries.Length; index++)
++        {
++            if ((index & 255) == 0)
++            {
++                token.ThrowIfCancellationRequested();
++            }
++
++            var elementStart = boundaries[index];
++            var elementEnd = index + 1 < boundaries.Length ? boundaries[index + 1] : text.Length;
++            var elementGlyph = glyphIndex;
++            long elementUnits = 0;
++            for (var character = elementStart; character < elementEnd; character++)
++            {
++                if ((character & 255) == 0)
++                {
++                    token.ThrowIfCancellationRequested();
++                }
++
++                elementUnits += face.AdvanceUnits(glyphs[glyphIndex++]);
++                if (char.IsHighSurrogate(text[character]))
++                {
++                    character++;
++                }
++            }
++
++            ConversionMetrics.Report("textWrapComparisons", 1);
++            if (elementStart > start && !TextLineBreaker.Fits(face.MeasureUnits(units + elementUnits, size), width))
++            {
++                yield return (text.Substring(start, elementStart - start), glyphs.AsSpan(firstGlyph, elementGlyph - firstGlyph).ToArray());
++                start = elementStart;
++                firstGlyph = elementGlyph;
++                units = 0;
++            }
++
++            units += elementUnits;
++        }
++
++        yield return (text.Substring(start), glyphs.AsSpan(firstGlyph).ToArray());
++    }
++}
+diff --git a/src/ExcelRenderer.Core/Rendering/BoundedClockCache.cs b/src/ExcelRenderer.Core/Rendering/BoundedClockCache.cs
+new file mode 100644
+index 0000000..2b59905
+--- /dev/null
++++ b/src/ExcelRenderer.Core/Rendering/BoundedClockCache.cs
+@@ -0,0 +1,156 @@
++namespace ExcelRenderer.Core.Rendering;
++
++/// <summary>Bounds retained entries and caller-accounted payload units with second-chance eviction.</summary>
++/// <typeparam name="TKey">The immutable lookup key.</typeparam>
++/// <typeparam name="TValue">The cached value.</typeparam>
++internal sealed class BoundedClockCache<TKey, TValue>
++    where TKey : notnull
++{
++    private readonly Dictionary<TKey, Entry> entries = new();
++    private readonly int maximumEntries;
++    private readonly int maximumUnits;
++    private readonly string metric;
++    private Entry?[]? slots;
++    private int hand;
++
++    /// <summary>Initializes a new instance of the <see cref="BoundedClockCache{TKey, TValue}"/> class.</summary>
++    /// <param name="metric">The diagnostic metric prefix.</param>
++    /// <param name="maximumEntries">The retained entry limit.</param>
++    /// <param name="maximumUnits">The retained payload limit.</param>
++    internal BoundedClockCache(string metric, int maximumEntries = 512, int maximumUnits = 131072)
++    {
++        this.metric = metric;
++        this.maximumUnits = maximumUnits;
++        this.maximumEntries = maximumEntries;
++    }
++
++    /// <summary>Gets the number of retained entries.</summary>
++    internal int Count => entries.Count;
++
++    /// <summary>Gets the conservatively accounted retained payload.</summary>
++    internal int RetainedUnits { get; private set; }
++
++    /// <summary>Finds a value and gives its slot a second chance.</summary>
++    /// <param name="key">The lookup key.</param>
++    /// <param name="value">The cached value, or the default on a miss.</param>
++    /// <returns>Whether the key was found.</returns>
++    internal bool TryGetValue(TKey key, out TValue value)
++    {
++        if (entries.TryGetValue(key, out var entry))
++        {
++            entry.Referenced = true;
++            value = entry.Value;
++            Report("Hits", 1);
++            return true;
++        }
++
++        value = default!;
++        Report("Misses", 1);
++        return false;
++    }
++
++    /// <summary>Admits a bounded value, evicting individual cold entries when necessary.</summary>
++    /// <param name="key">The immutable key.</param>
++    /// <param name="value">The value.</param>
++    /// <param name="units">The retained key and value payload units.</param>
++    internal void Store(TKey key, TValue value, long units)
++    {
++        if (units < 0 || units > maximumUnits)
++        {
++            Report("Bypasses", 1);
++            return;
++        }
++
++        var slots = this.slots ??= new Entry[maximumEntries];
++
++        // Existing weak values can expire; replace their entry without clearing other slots.
++        if (entries.TryGetValue(key, out var previous))
++        {
++            entries.Remove(key);
++            RetainedUnits -= previous.Units;
++            slots[previous.Slot] = null;
++        }
++
++        while (entries.Count >= slots.Length || RetainedUnits + units > maximumUnits)
++        {
++            var entry = slots[hand];
++            Report("Scans", 1);
++            if (entry is not null)
++            {
++                if (entry.Referenced)
++                {
++                    entry.Referenced = false;
++                }
++                else
++                {
++                    entries.Remove(entry.Key);
++                    RetainedUnits -= entry.Units;
++                    slots[hand] = null;
++                    Report("Evictions", 1);
++                    if (metric == "layoutCache")
++                    {
++                        ConversionMetrics.Report("layoutCacheEviction", 1);
++                    }
++                }
++            }
++
++            hand = (hand + 1) % slots.Length;
++        }
++
++        while (slots[hand] is not null)
++        {
++            hand = (hand + 1) % slots.Length;
++        }
++
++        var added = new Entry(key, value, (int)units, hand);
++        slots[hand] = added;
++        entries.Add(key, added);
++        RetainedUnits += added.Units;
++        hand = (hand + 1) % slots.Length;
++        if (metric == "layoutCache")
++        {
++            ConversionMetrics.Report("layoutCacheEntries", Count);
++            ConversionMetrics.Report("layoutCacheRetainedUnits", RetainedUnits);
++        }
++
++        Report("Entries.current", Count);
++        Report("RetainedUnits.current", RetainedUnits);
++        Report("RetainedUnits.max", RetainedUnits);
++    }
++
++    /// <summary>Releases all values after a resolver generation change.</summary>
++    internal void Clear()
++    {
++        entries.Clear();
++        if (slots is not null)
++        {
++            Array.Clear(slots, 0, slots.Length);
++        }
++
++        hand = 0;
++        RetainedUnits = 0;
++        Report("Entries.current", 0);
++        Report("RetainedUnits.current", 0);
++    }
++
++    private void Report(string suffix, double value)
++    {
++        if (ConversionMetrics.Observer is not null)
++        {
++            ConversionMetrics.Report(metric + suffix, value);
++        }
++    }
++
++    private sealed class Entry(TKey key, TValue value, int units, int slot)
++    {
++        internal TKey Key { get; } = key;
++
++        internal TValue Value { get; } = value;
++
++        internal int Units { get; } = units;
++
++        internal int Slot { get; } = slot;
++
++        internal bool Referenced { get; set; } = true;
++    }
++}
+diff --git a/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.Cache.cs b/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.Cache.cs
+new file mode 100644
+index 0000000..ecd2066
+--- /dev/null
++++ b/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.Cache.cs
+@@ -0,0 +1,38 @@
++using ExcelRenderer.Abstractions;
++using ExcelRenderer.Fonts;
++using ExcelRenderer.Model;
++
++namespace ExcelRenderer.SkiaSharp;
++
++/// <summary>Accounts immutable cache payloads without retaining native font resources.</summary>
++public sealed partial class SkiaTextMeasurer
++{
++    private int generation = -1;
++
++    private static long LayoutUnits(TextLayoutResult result) => result.Lines.Sum(LineUnits);
++
++    private static long LineUnits(TextLayoutLine line) => line.Text.Length + 1L + line.Runs.Sum(run =>
++        1L + run.Run.Text.Length + run.Run.SourceText.Length + run.Run.Font.Family.Length + (run.Glyphs is { } glyphs ?
++            glyphs.Source.Count + (glyphs.Glyphs.Count * 7L) : 0));
++
++    private void CheckGeneration()
++    {
++        var current = (_fontManager as FontManager)?.RegistrationGeneration ?? 0;
++        if (current == generation)
++        {
++            return;
++        }
++
++        _layouts?.Clear();
++        widths?.Clear();
++        lineLayouts?.Clear();
++        richLayouts.Clear();
++        standaloneRichLayouts.Clear();
++        generation = current;
++    }
++
++    private readonly record struct MetricFontKey(string Family, double Size, bool Bold, bool Italic)
++    {
++        internal static MetricFontKey From(FontStyle font) => new(font.Family, font.Size, font.Bold, font.Italic);
++    }
++}
+diff --git a/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.Outline.cs b/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.Outline.cs
+new file mode 100644
+index 0000000..2c34dda
+--- /dev/null
++++ b/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.Outline.cs
+@@ -0,0 +1,81 @@
++using ExcelRenderer.Abstractions;
++using ExcelRenderer.Core.Fonts;
++using ExcelRenderer.Core.Layout;
++using ExcelRenderer.Fonts;
++using ExcelRenderer.Model;
++
++namespace ExcelRenderer.SkiaSharp;
++
++/// <summary>Adapts ordinary single-face paragraphs to Core's shared outline breaker.</summary>
++public sealed partial class SkiaTextMeasurer
++{
++    private static ushort[] SelectGlyphs(TextRun run, SkiaFontFace face)
++    {
++        Rendering.ConversionMetrics.Report("textGlyphCalls", 1);
++        Rendering.ConversionMetrics.Report("textGlyphCharacters", run.Text.Length);
++        return (run.GlyphId ?? run.ColorEmojiGlyphId) is { } glyph ? [glyph] : face.Typeface.GetGlyphs(run.Text);
++    }
++
++    private IEnumerable<TextLayoutLine> CreateLines(string text, FontStyle font, FontRequest request, double width, bool wrap)
++    {
++        // Custom resolvers may depend on complete input or have mutable policies.
++        if (_fontManager is not FontManager || !OutlineParagraph.IsValidUtf16(text))
++        {
++            foreach (var line in TextLineBreaker.Break(text, width, wrap, value => MeasureWidth(value, font, request)))
++            {
++                yield return CreateLine(line.Text, line.ExplicitBreak, font, request);
++            }
++
++            yield break;
++        }
++
++        var paragraphs = text.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n');
++        for (var index = 0; index < paragraphs.Length; index++)
++        {
++            var paragraph = paragraphs[index];
++            var runs = _fontManager.ResolveTextRuns(paragraph, request);
++            var run = runs.Count == 1 ? runs[0] : null;
++            var face = run is null ? null : ConversionFontResources.Current!.GetFace(run.Font);
++            if (run is null || face!.Color || run.GlyphId is not null || run.ColorEmojiGlyphId is not null ||
++                run.MissingIvsGlyph || run.MissingPrivateUseGlyph || run.Text != paragraph || run.SourceText != paragraph)
++            {
++                Rendering.ConversionMetrics.Report("outlineCompatibilityParagraphs", 1);
++                var lines = TextLineBreaker.Break(paragraph, width, wrap, value => MeasureWidth(value, font, request)).GetEnumerator();
++                using (lines)
++                {
++                    lines.MoveNext();
++                    var previous = lines.Current;
++                    while (lines.MoveNext())
++                    {
++                        yield return CreateLine(previous.Text, false, font, request);
++                        previous = lines.Current;
++                    }
++
++                    yield return CreateLine(previous.Text, index < paragraphs.Length - 1, font, request);
++                }
++
++                continue;
++            }
++
++            Rendering.ConversionMetrics.Report("outlineParagraphs", 1);
++            using var selected = new OutlineParagraph(paragraph, face, ConversionFontResources.Current!.Token).Break(font.Size, width, wrap).GetEnumerator();
++            selected.MoveNext();
++            var pending = selected.Current;
++            while (selected.MoveNext())
++            {
++                yield return CreateSelected(pending, false);
++                pending = selected.Current;
++            }
++
++            yield return CreateSelected(pending, index < paragraphs.Length - 1);
++
++            TextLayoutLine CreateSelected((string Text, ushort[] Glyphs) line, bool explicitBreak) => CreateLine(
++                line.Text,
++                explicitBreak,
++                font,
++                request,
++                run with { Text = line.Text, SourceText = line.Text, Utf16Start = 0 },
++                line.Glyphs);
++        }
++    }
++}
+diff --git a/tests/ExcelRenderer.Core.Tests/BoundedClockCacheTests.cs b/tests/ExcelRenderer.Core.Tests/BoundedClockCacheTests.cs
+new file mode 100644
+index 0000000..74e5489
+--- /dev/null
++++ b/tests/ExcelRenderer.Core.Tests/BoundedClockCacheTests.cs
+@@ -0,0 +1,61 @@
++using ExcelRenderer.Core.Rendering;
++using Xunit;
++
++namespace ExcelRenderer.Core.Tests;
++
++public sealed class BoundedClockCacheTests
++{
++    [Fact]
++    public void Budget_bypasses_oversized_values_and_replaces_expired_weak_slots()
++    {
++        var cache = new BoundedClockCache<string, object>("testCache", 3, 10);
++        var original = new object();
++        cache.Store("first", original, 4);
++        cache.Store("second", new(), 4);
++        cache.Store("oversized", new(), 11);
++        Assert.Equal(2, cache.Count);
++        Assert.Equal(8, cache.RetainedUnits);
++        Assert.False(cache.TryGetValue("oversized", out _));
++        var replacement = new object();
++        cache.Store("first", replacement, 2);
++        Assert.True(cache.TryGetValue("first", out var found));
++        Assert.Same(replacement, found);
++        Assert.Equal(6, cache.RetainedUnits);
++        cache.Store("third", new(), 5);
++        Assert.InRange(cache.Count, 1, 3);
++        Assert.InRange(cache.RetainedUnits, 5, 10);
++        cache.Clear();
++        Assert.Equal(0, cache.Count);
++        Assert.Equal(0, cache.RetainedUnits);
++        Assert.False(cache.TryGetValue("first", out _));
++        cache.Store("after-clear", original, 10);
++        Assert.True(cache.TryGetValue("after-clear", out found));
++        Assert.Same(original, found);
++    }
++
++    [Fact]
++    public void Mixed_hot_and_unique_keys_keep_the_hot_value_without_full_clear()
++    {
++        var cache = new BoundedClockCache<int, object>("testCache", 8, 100);
++        var hot = new object();
++        cache.Store(-1, hot, 1);
++        var hits = 0;
++        for (var index = 0; index < 1000; index++)
++        {
++            if (cache.TryGetValue(-1, out var found))
++            {
++                Assert.Same(hot, found);
++                hits++;
++            }
++            else
++            {
++                cache.Store(-1, hot, 1);
++            }
++
++            cache.Store(index, new(), 1);
++            Assert.InRange(cache.Count, 1, 8);
++        }
++
++        Assert.True(hits > 800);
++    }
++}
+diff --git a/tests/ExcelRenderer.Tests/MainPerformanceOptimizationTests.cs b/tests/ExcelRenderer.Tests/MainPerformanceOptimizationTests.cs
+new file mode 100644
+index 0000000..8953848
+--- /dev/null
++++ b/tests/ExcelRenderer.Tests/MainPerformanceOptimizationTests.cs
+@@ -0,0 +1,293 @@
++using System.Text;
++using ExcelRenderer.Abstractions;
++using ExcelRenderer.Drawing;
++using ExcelRenderer.Fonts;
++using ExcelRenderer.Layout;
++using ExcelRenderer.Model;
++using ExcelRenderer.Rendering;
++using ExcelRenderer.SkiaSharp;
++using ExcelRenderer.TestFixtures;
++using SkiaSharp;
++using Xunit;
++
++namespace ExcelRenderer.Tests;
++
++public sealed class MainPerformanceOptimizationTests
++{
++    [Fact]
++    public void Outline_matches_compatibility_at_exact_wrap_boundaries()
++    {
++        var manager = Manager();
++        using var resources = new ConversionFontResources();
++        var fast = new SkiaTextMeasurer(manager, true);
++        var original = new SkiaTextMeasurer(new CompatibilityManager(manager));
++        var random = new Random(43119);
++        string[] elements = ["a", " ", "日", "本", "e\u0301", "😀", "👩‍👩‍👧", "\r\n", "\n", "\t", "\u0378", "葛\U000E0100"];
++        var texts = new List<string> { "", "\n", "\n\n", "abc \r\n\n", "日 本   ", "a" + new string('\u0301', 256) };
++        for (var sample = 0; sample < 50; sample++)
++        {
++            var text = new StringBuilder();
++            for (var index = 0; index < random.Next(1, 25); index++) text.Append(elements[random.Next(elements.Length)]);
++            texts.Add(text.ToString());
++        }
++
++        foreach (var text in texts)
++        foreach (var size in new[] { 0d, 7.25, 11, 28 })
++        foreach (var wrap in new[] { false, true })
++        {
++            var style = new FontStyle(Size: size);
++            var boundary = original.Layout("a日", style, 100, false).Size.Width;
++            foreach (var width in new[] { -1d, 0, Math.BitDecrement(boundary), boundary, Math.BitIncrement(boundary), 37.5 })
++            {
++                EqualLayout(original.Layout(text, style, width, wrap), fast.Layout(text, style, width, wrap));
++            }
++        }
++    }
++
++    [Fact]
++    public void Unique_long_paragraphs_select_glyphs_once_without_cache_hits()
++    {
++        var manager = Manager();
++        using var resources = new ConversionFontResources();
++        var metrics = new Dictionary<string, double>();
++        ConversionMetrics.Observer = (name, value) => metrics[name] = metrics.GetValueOrDefault(name) + value;
++        try
++        {
++            var measurer = new SkiaTextMeasurer(manager, true);
++            var text = string.Concat(Enumerable.Repeat("日本abc ", 1000));
++            Assert.True(measurer.Layout(text, new(), 80, true).Lines.Count > 100);
++            Assert.Equal(1, metrics["textGlyphCalls"]);
++            Assert.Equal(text.Length, metrics["textGlyphCharacters"]);
++            Assert.False(metrics.ContainsKey("textLayoutCacheHits"));
++        }
++        finally
++        {
++            ConversionMetrics.Observer = null;
++        }
++    }
++
++    [Theory]
++    [InlineData(511)]
++    [InlineData(512)]
++    [InlineData(513)]
++    public void Normal_cache_uses_only_metric_inputs_and_evicts_one_entry(int count)
++    {
++        using var resources = new ConversionFontResources();
++        var manager = Manager();
++        var measurer = new SkiaTextMeasurer(manager, true);
++        var style = new FontStyle();
++        var first = measurer.Layout("heading", style, 10, false);
++        Assert.Same(first, measurer.Layout("heading", style with { Underline = true, Color = new(100, 20, 30) }, 100, false));
++        Assert.NotSame(first, measurer.Layout("heading", style with { Size = 12 }, 100, false));
++        manager.Register("Noto Sans JP", FontPath);
++        Assert.NotSame(first, measurer.Layout("heading", style, 10, false));
++        measurer = new(manager, true);
++        var entries = 0d;
++        var evictions = 0d;
++        var maximumUnits = 0d;
++        ConversionMetrics.Observer = (name, value) =>
++        {
++            if (name == "textLayoutCacheEntries.current") entries = value;
++            if (name == "textLayoutCacheEvictions") evictions += value;
++            if (name.EndsWith("RetainedUnits.max", StringComparison.Ordinal)) maximumUnits = Math.Max(maximumUnits, value);
++        };
++        try
++        {
++            for (var index = 0; index < count; index++) measurer.Layout(index.ToString(), style, 100, false);
++            Assert.Equal(Math.Min(count, 512), entries);
++            Assert.Equal(Math.Max(0, count - 512), evictions);
++            Assert.InRange(maximumUnits, 1, 131072);
++        }
++        finally
++        {
++            ConversionMetrics.Observer = null;
++        }
++    }
++
++    [Fact]
++    public void Rich_cache_keeps_decorations_and_bounds_zero_length_run_keys()
++    {
++        using var resources = new ConversionFontResources();
++        var measurer = new SkiaTextMeasurer(Manager(), true);
++        var red = new FontStyle(Color: new(180, 20, 30), Underline: true);
++        var blue = red with { Color = new(20, 30, 180), Underline = false };
++        var first = measurer.Layout([new("text", red)], new(), 100, false);
++        Assert.Same(first, measurer.Layout([new("text", red)], new(), 200, false));
++        var second = measurer.Layout([new("text", blue)], new(), 100, false);
++        Assert.NotSame(first, second);
++        Assert.Equal(red, first.Lines[0].Runs[0].Font);
++        Assert.Equal(blue, second.Lines[0].Runs[0].Font);
++        var bypasses = 0d;
++        ConversionMetrics.Observer = (name, value) => { if (name == "richTextLayoutCacheBypasses") bypasses += value; };
++        try
++        {
++            var huge = Enumerable.Repeat(new CellTextRun("", red), 131073).ToArray();
++            Assert.Empty(measurer.Layout(huge, new(), 100, false).Lines);
++            Assert.Equal(1, bypasses);
++        }
++        finally
++        {
++            ConversionMetrics.Observer = null;
++        }
++    }
++
++    [Fact]
++    public void Standalone_rich_cache_does_not_keep_layout_alive()
++    {
++        var manager = Manager();
++        var measurer = new SkiaTextMeasurer(manager);
++        var reference = WeakLayout(measurer);
++        GC.Collect();
++        GC.WaitForPendingFinalizers();
++        GC.Collect();
++        Assert.False(reference.TryGetTarget(out _));
++        GC.KeepAlive(measurer);
++        GC.KeepAlive(manager);
++    }
++
++    [Theory]
++    [InlineData(false)]
++    [InlineData(true)]
++    public void Context_reuses_paints_without_changing_rich_and_border_pixels(bool paths)
++    {
++        using var resources = new ConversionFontResources();
++        var manager = Manager();
++        var measurer = new SkiaTextMeasurer(manager);
++        var commands = new List<DrawCommand>();
++        for (var index = 0; index < 16; index++)
++        {
++            var font = new FontStyle(Size: 9, Underline: true, Color: new(20, 30, 180));
++            var rich = measurer.Layout([new("A", font with { Color = new(180, 20, 30) }), new("B", font)], font, 100, false);
++            commands.Add(new FillRectangleCommand(1, new(0, index * 15, 150, 15), new(240, 240, 250, 180)));
++            commands.Add(new DrawTextCommand(1, new(5, index * 15, 100, 15), "AB", CellStyle.Default with { Font = font }) { TextLayout = rich });
++            commands.Add(new DrawTextCommand(1, new(40, index * 15, 100, 15), "plain", CellStyle.Default with { Font = font }) { TextLayout = measurer.Layout("plain", font, 100, false) });
++            commands.Add(new DrawLineCommand(1, 0, index * 15, 145, index * 15, new(0.75, new(40, 90, 20), (BorderLineStyle)(index % 6))));
++        }
++
++        using var expected = new SKBitmap(150, 250);
++        using var actual = new SKBitmap(150, 250);
++        using (var canvas = new SKCanvas(expected))
++        {
++            canvas.Clear(SKColors.White);
++            foreach (var command in commands)
++            {
++                using var isolated = new SkiaDrawingContext(paths, manager);
++                isolated.Execute(canvas, command);
++            }
++        }
++
++        var created = 0d;
++        var disposed = 0d;
++        ConversionMetrics.Observer = (name, value) =>
++        {
++            if (name == "paintCreated") created += value;
++            if (name == "paintDisposed") disposed += value;
++        };
++        try
++        {
++            using (var context = new SkiaDrawingContext(paths, manager))
++            using (var canvas = new SKCanvas(actual))
++            {
++                canvas.Clear(SKColors.White);
++                foreach (var command in commands) context.Execute(canvas, command);
++            }
++
++            Assert.Equal(expected.Pixels, actual.Pixels);
++            Assert.Equal(2, created);
++            Assert.Equal(created, disposed);
++        }
++        finally
++        {
++            ConversionMetrics.Observer = null;
++        }
++    }
++
++    [Theory]
++    [InlineData(false, false, true)]
++    [InlineData(true, false, false)]
++    [InlineData(false, true, false)]
++    public async Task Preflight_preserves_selected_page_descriptors_and_one_payload(bool trim, bool warnings, bool lightweight)
++    {
++        using var input = RetainedWorkbook.Open("Phase3MemoryTests.Selected_pages_preflight_and_render_with_one_active_payload.0BA00D47150071DC.xlsx");
++        using var output = new MemoryStream();
++        var counts = new Dictionary<string, double>();
++        var active = 0d;
++        ConversionMetrics.Observer = (name, value) =>
++        {
++            counts[name] = counts.GetValueOrDefault(name) + value;
++            if (name == "pagePayloadActive")
++            {
++                active += value;
++                Assert.InRange(active, 0, 1);
++            }
++        };
++        try
++        {
++            var result = await ExcelConverter.RenderAsync(input, new()
++            {
++                FontOptions = new() { AllowSystemFonts = false, UseFontPack = false, FontFiles = [FontPath] },
++                Selection = new() { Pages = [3, 1, 3] },
++                Trim = new() { Enabled = trim },
++                DiagnosticOptions = new() { EnableLayoutWarnings = warnings },
++            }, new SingleStreamOutputSink(output));
++            Assert.Equal(2, result.Pages.Count);
++            Assert.All(result.Pages, page => Assert.NotEmpty(page.SourceRegions!));
++            Assert.Equal(lightweight ? 2 : 0, counts.GetValueOrDefault("mainTextPreflightBuilds"));
++            Assert.Equal(lightweight ? 2 : 4, counts["mainFullPageBuilds"]);
++            Assert.Equal(counts["paintCreated"], counts["paintDisposed"]);
++            Assert.Equal(0, active);
++        }
++        finally
++        {
++            ConversionMetrics.Observer = null;
++        }
++    }
++
++    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
++    private static WeakReference<TextLayoutResult> WeakLayout(SkiaTextMeasurer measurer) =>
++        new(measurer.Layout([new("standalone", new(Color: new(30, 80, 120)))], new(), 100, false));
++
++    private static string FontPath => Path.Combine(AppContext.BaseDirectory, "NotoSansJP-Regular.ttf");
++
++    private static FontManager Manager() => new(new()
++    {
++        AllowSystemFonts = false,
++        UseFontPack = false,
++        Registrations = [new("Noto Sans JP", FontPath)],
++        FallbackFamilies = ["Noto Sans JP"],
++    });
++
++    private static void EqualLayout(TextLayoutResult expected, TextLayoutResult actual)
++    {
++        Assert.Equal(expected.Size, actual.Size);
++        Assert.Equal(expected.EffectiveFontSize, actual.EffectiveFontSize);
++        Assert.Equal(expected.Lines.Count, actual.Lines.Count);
++        for (var index = 0; index < expected.Lines.Count; index++)
++        {
++            var a = expected.Lines[index];
++            var b = actual.Lines[index];
++            Assert.Equal((a.Text, a.Width, a.Height, a.Baseline, a.Ascent, a.Descent, a.Leading, a.ExplicitBreak),
++                (b.Text, b.Width, b.Height, b.Baseline, b.Ascent, b.Descent, b.Leading, b.ExplicitBreak));
++            Assert.Equal(a.Runs.Count, b.Runs.Count);
++            for (var runIndex = 0; runIndex < a.Runs.Count; runIndex++)
++            {
++                var x = a.Runs[runIndex];
++                var y = b.Runs[runIndex];
++                Assert.Equal((x.Run.Text, x.Run.SourceText, x.Run.Utf16Start, x.Run.Font.FaceId, x.X, x.Advance, x.Font),
++                    (y.Run.Text, y.Run.SourceText, y.Run.Utf16Start, y.Run.Font.FaceId, y.X, y.Advance, y.Font));
++                Assert.Equal(x.Glyphs!.FontIdentity, y.Glyphs!.FontIdentity);
++                Assert.Equal(x.Glyphs.Glyphs, y.Glyphs.Glyphs);
++                Assert.Equal(x.Glyphs.Source, y.Glyphs.Source);
++                Assert.Equal(x.Glyphs.Clusters, y.Glyphs.Clusters);
++                Assert.Equal(x.Glyphs.Advances, y.Glyphs.Advances);
++            }
++        }
++    }
++
++    private sealed class CompatibilityManager(FontManager manager) : IFontManager
++    {
++        public ResolvedFont Resolve(FontRequest request) => manager.Resolve(request);
++
++        public IReadOnlyList<TextRun> ResolveTextRuns(string text, FontRequest request) => manager.ResolveTextRuns(text, request);
++    }
++}

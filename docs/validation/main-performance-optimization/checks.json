@@ -1,0 +1,57 @@
+{
+  "debugRebuild": {
+    "warnings": 0,
+    "errors": 0
+  },
+  "releaseRebuild": {
+    "warnings": 0,
+    "errors": 0
+  },
+  "solutionPassed": 3061,
+  "solutionFailed": 0,
+  "solutionSkipped": 0,
+  "coreCoverage": {
+    "passed": 443,
+    "linePercent": 84.79,
+    "branchPercent": 74.4
+  },
+  "corePerformancePassed": 8,
+  "api": {
+    "ExcelRenderer": {
+      "equal": true,
+      "entries": 2361
+    },
+    "ExcelRenderer.Core": {
+      "equal": true,
+      "entries": 82
+    }
+  },
+  "comparison": {
+    "mainSavedOutputFiles": 24,
+    "mainSavedPdfFiles": 12,
+    "mainSavedNativeFiles": 12,
+    "coreSavedCases": 7,
+    "wideSavedOutputFiles": 1,
+    "historicalPdfFixtures": 25,
+    "historicalBUnmetGates": 0,
+    "historicalBReviewedDifferences": 0,
+    "mainCoreDirectComparisons": 19,
+    "imageFixtures": 5
+  },
+  "outputMutations": {
+    "count": 19,
+    "allDetected": true,
+    "sourceBytesRestored": true
+  },
+  "readerIsolation": true,
+  "dependencyDirection": true,
+  "namespaceCheck": true,
+  "removedDependencyAudit": true,
+  "publicationAllowlist": true,
+  "allCaseFivePercentGate": "Not met by recorded samples; see every flagged primary/controlled case in regression-analysis.json.",
+  "windowsExecuted": false,
+  "localPackages": 4,
+  "isolatedPackageConsumers": 11,
+  "fontPackageSplit": true,
+  "baselinePatchApplicability": true
+}

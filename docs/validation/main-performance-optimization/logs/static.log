@@ -1,0 +1,6 @@
+740 namespace declarations match source folders; 2 required compiler shims verified
+Core dependency direction and migrated helper ownership passed
+Shared conversion pipeline and compatibility facade ownership passed
+Shared OpenXml dependency direction and input ownership passed
+Source-neutral reader hooks and shared mapping language passed
+Verified 24 projects: only ExcelRenderer, ExcelRenderer.Fonts, ExcelRenderer.Mapping, ExcelRenderer.Tool are packable

@@ -1,0 +1,241 @@
+{
+  "main": [
+    {
+      "case": "02-image-Png",
+      "file": "\u753b\u50cf-1.png",
+      "canonicalBytesEqual": true
+    },
+    {
+      "case": "02-image-Svg",
+      "file": "\u753b\u50cf-1.svg",
+      "canonicalBytesEqual": true
+    },
+    {
+      "case": "04-text-decoration-Png",
+      "file": "\u6587\u5b57\u88c5\u98fe-1.png",
+      "canonicalBytesEqual": true
+    },
+    {
+      "case": "04-text-decoration-Svg",
+      "file": "\u6587\u5b57\u88c5\u98fe-1.svg",
+      "canonicalBytesEqual": true
+    },
+    {
+      "case": "05-borders-Png",
+      "file": "\u7f6b\u7dda-1.png",
+      "canonicalBytesEqual": true
+    },
+    {
+      "case": "05-borders-Png",
+      "file": "\u7f6b\u7dda-2.png",
+      "canonicalBytesEqual": true
+    },
+    {
+      "case": "05-borders-Svg",
+      "file": "\u7f6b\u7dda-1.svg",
+      "canonicalBytesEqual": true
+    },
+    {
+      "case": "05-borders-Svg",
+      "file": "\u7f6b\u7dda-2.svg",
+      "canonicalBytesEqual": true
+    },
+    {
+      "case": "borders1000-Pdf",
+      "file": "workbook.pdf",
+      "pages": 25,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": [
+        "31a694e6620f358637fdd338522ee3df9b0160747a607f758a0651ecfcf115c8"
+      ]
+    },
+    {
+      "case": "empty-Pdf",
+      "file": "workbook.pdf",
+      "pages": 1,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": []
+    },
+    {
+      "case": "header-Pdf",
+      "file": "workbook.pdf",
+      "pages": 1,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": [
+        "8cd808765073aada4a33db11cd394360bf5e4601b5f43e9caf449ac6a6bf1793"
+      ]
+    },
+    {
+      "case": "imagesonly-Pdf",
+      "file": "workbook.pdf",
+      "pages": 1,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": []
+    },
+    {
+      "case": "mixed1000-Pdf",
+      "file": "workbook.pdf",
+      "pages": 25,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": [
+        "5348ae3b3aedbdda4eda4ad43ff24ab3c696f95a00a449d5b4d2d9b3ac1c0d69"
+      ]
+    },
+    {
+      "case": "range-trim-Pdf",
+      "file": "workbook.pdf",
+      "pages": 1,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": [
+        "344547471da2bb52520c2da765b8bdf9f81e381a447d23f889ca5a276ba98f39"
+      ]
+    },
+    {
+      "case": "rich-Pdf",
+      "file": "workbook.pdf",
+      "pages": 1,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": [
+        "8bba352dd5f0298f96a039e4c1be981315759d73f635f19f44dd262ff63f24e4"
+      ]
+    },
+    {
+      "case": "rich-Png",
+      "file": "rich-1.png",
+      "canonicalBytesEqual": true
+    },
+    {
+      "case": "rich-Svg",
+      "file": "rich-1.svg",
+      "canonicalBytesEqual": true
+    },
+    {
+      "case": "selected-Pdf",
+      "file": "workbook.pdf",
+      "pages": 1,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": [
+        "31a694e6620f358637fdd338522ee3df9b0160747a607f758a0651ecfcf115c8"
+      ]
+    },
+    {
+      "case": "shapes-Pdf",
+      "file": "workbook.pdf",
+      "pages": 1,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": [
+        "3c5acc16eec9208c5e3163a9e873449dc0b9561fab94d225b4ac6fdc51a33324"
+      ]
+    },
+    {
+      "case": "shapes-Png",
+      "file": "Shapes-1.png",
+      "canonicalBytesEqual": true
+    },
+    {
+      "case": "shapes-Svg",
+      "file": "Shapes-1.svg",
+      "canonicalBytesEqual": true
+    },
+    {
+      "case": "text1-Pdf",
+      "file": "workbook.pdf",
+      "pages": 1,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": [
+        "4d35837baaaa5a60267c04e24bc6ffc23f72f7f678ec894b4aa03aaedb5aa1aa"
+      ]
+    },
+    {
+      "case": "text1000-Pdf",
+      "file": "workbook.pdf",
+      "pages": 25,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": [
+        "31a694e6620f358637fdd338522ee3df9b0160747a607f758a0651ecfcf115c8"
+      ]
+    },
+    {
+      "case": "wrap1000-Pdf",
+      "file": "workbook.pdf",
+      "pages": 25,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": [
+        "69caf8ba35e733fb69435b4480bc514c75433c4665913af436a59c69ce191ca8"
+      ]
+    }
+  ],
+  "core": [
+    {
+      "case": "text1",
+      "pages": 1,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": [
+        "4d35837baaaa5a60267c04e24bc6ffc23f72f7f678ec894b4aa03aaedb5aa1aa"
+      ]
+    },
+    {
+      "case": "text1000",
+      "pages": 25,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": [
+        "31a694e6620f358637fdd338522ee3df9b0160747a607f758a0651ecfcf115c8"
+      ]
+    },
+    {
+      "case": "wrap1000",
+      "pages": 25,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": [
+        "69caf8ba35e733fb69435b4480bc514c75433c4665913af436a59c69ce191ca8"
+      ]
+    },
+    {
+      "case": "borders1000",
+      "pages": 25,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": [
+        "31a694e6620f358637fdd338522ee3df9b0160747a607f758a0651ecfcf115c8"
+      ]
+    },
+    {
+      "case": "empty",
+      "pages": 1,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": []
+    },
+    {
+      "case": "imagesonly",
+      "pages": 1,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": []
+    },
+    {
+      "case": "header",
+      "pages": 1,
+      "structureEqual": true,
+      "pixelIdentical": true,
+      "embeddedFontSha256": [
+        "8cd808765073aada4a33db11cd394360bf5e4601b5f43e9caf449ac6a6bf1793"
+      ]
+    }
+  ]
+}

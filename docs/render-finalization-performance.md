@@ -79,3 +79,12 @@ cold/warm samples, quality gates, limits and reproduction commands. Observer tim
 inclusive and may overlap (for example finalization inside preflight); they must not be
 summed as independent wall time. Build counters count completed build events, including
 fully consumed streaming builds. No package/version/distribution configuration changes.
+
+## Main rendering optimization follow-up
+
+Main now composes the same renderer-local `SkiaPaintResources`. Core owns the
+bounded CLOCK implementation and ordinary single-face `OutlineParagraph` breaker;
+main retains font selection, rich decoration and native raster compatibility.
+Conditional main PDF text preflight preserves product regions, clips and shape
+metadata through the full policy hook, while other preflight requirements retain
+their complete path. See [implemented boundaries and validation](main-performance-optimization.md).

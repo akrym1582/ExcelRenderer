@@ -341,7 +341,7 @@ public static partial class ExcelConverter
             return SheetPage.CreateContinuous(selected.Sheet, descriptor, plan);
         }).ToArray();
 
-    private static PageRenderPayload BuildPage(SheetPage page, FontManager fonts, CancellationToken token)
+    private static PageRenderPayload BuildPage(SheetPage page, FontManager fonts, CancellationToken token, bool textPreflight = false)
     {
         var measurer = RenderResourceSession.Current?.TextMeasurer ?? new SkiaTextMeasurer(fonts, cacheLayouts: true);
         if (page.CanvasPlan is { } canvas)
@@ -350,15 +350,22 @@ public static partial class ExcelConverter
         }
 
         var built = page.Plan is { } plan
-            ? plan.BuildCore(page.PlanIndex, page.Descriptor.SourcePageNumber, page.SheetPageCount, measurer, token)
+            ? plan.BuildCore(page.PlanIndex, page.Descriptor.SourcePageNumber, page.SheetPageCount, measurer, token, textPreflight)
             : new Core.Layout.RenderPage(1, []);
         var headers = PaginationPass.GetHeaderFooterTexts(page.Sheet, page.Descriptor.SourcePageNumber, page.SheetPageCount, RenderResourceSession.Current?.HeaderFooterTimestamp);
         built = built with
         {
             HeaderFooterTexts = headers.Select(text => new Core.Layout.RenderText(CoreIntegration.CoreModelAdapter.ToCore(text.Bounds), text.Text, CoreIntegration.CoreModelAdapter.ToCore(text.Style))).ToArray(),
         };
-        var commands = new Core.Drawing.DrawCommandGeneratorPass().GeneratePage(built, null, new CoreIntegration.FullDrawingExtension())
-            .Select(CoreIntegration.CoreCommandAdapter.CreatePublicProjection()).ToArray();
+        var generator = new Core.Drawing.DrawCommandGeneratorPass();
+        var extension = new CoreIntegration.FullDrawingExtension();
+        IEnumerable<Core.Drawing.DrawCommand> generated = built.IsTextPreflight
+            ? generator.GenerateText(built, null, extension, includeHeaderFooter: false)
+                .Concat(CoreIntegration.FullDrawingExtension.CreateShapeTextCommands(built))
+                .Concat(Core.Drawing.DrawCommandGeneratorPass.GenerateHeaderFooter(built, null))
+            : generator.GeneratePage(built, null, extension);
+        var commands = generated.Select(CoreIntegration.CoreCommandAdapter.CreatePublicProjection()).ToArray();
+        ConversionMetrics.Report(built.IsTextPreflight ? "mainTextPreflightBuilds" : "mainFullPageBuilds", 1);
         ConversionMetrics.Report("renderCells", built.Cells.Count);
         ConversionMetrics.Report("commands", commands.Length);
         return new(commands, (built.ExtensionData as CoreIntegration.FullPageData)?.Regions ?? []);
@@ -370,7 +377,10 @@ public static partial class ExcelConverter
         ConversionMetrics.Report("pagePayloadActive", 1);
         try
         {
-            var payload = ConversionMetrics.Measure("pageBuild", () => BuildPage(page, fonts, token));
+            var textPreflight = request.OutputFormat == OutputFormat.Pdf && !request.Trim.Enabled &&
+                page.Sheet.RequestedRange is null && !request.DiagnosticOptions.EnableLayoutWarnings &&
+                !request.DiagnosticOptions.DetectUnsupportedFeatures && Pdf.PdfRenderObserver.Current is null;
+            var payload = ConversionMetrics.Measure("pageBuild", () => BuildPage(page, fonts, token, textPreflight));
             payload = payload with { Commands = FinalizeCommands(payload.Commands, fonts, token) };
             if (request.DiagnosticOptions.EnableLayoutWarnings || request.DiagnosticOptions.DetectUnsupportedFeatures)
             {

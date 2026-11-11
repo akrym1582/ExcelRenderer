@@ -1,0 +1,1829 @@
+{
+  "records": [
+    {
+      "case": "02-image-Png",
+      "file": "\u753b\u50cf-1.png",
+      "raster": [
+        {
+          "dpi": 72,
+          "width": 596,
+          "height": 842,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        }
+      ],
+      "passed": true
+    },
+    {
+      "case": "02-image-Svg",
+      "file": "\u753b\u50cf-1.svg",
+      "raster": [
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        }
+      ],
+      "pages": 1,
+      "passed": true
+    },
+    {
+      "case": "04-text-decoration-Png",
+      "file": "\u6587\u5b57\u88c5\u98fe-1.png",
+      "raster": [
+        {
+          "dpi": 72,
+          "width": 596,
+          "height": 842,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        }
+      ],
+      "passed": true
+    },
+    {
+      "case": "04-text-decoration-Svg",
+      "file": "\u6587\u5b57\u88c5\u98fe-1.svg",
+      "raster": [
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        }
+      ],
+      "pages": 1,
+      "passed": true
+    },
+    {
+      "case": "05-borders-Png",
+      "file": "\u7f6b\u7dda-1.png",
+      "raster": [
+        {
+          "dpi": 72,
+          "width": 596,
+          "height": 842,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        }
+      ],
+      "passed": true
+    },
+    {
+      "case": "05-borders-Png",
+      "file": "\u7f6b\u7dda-2.png",
+      "raster": [
+        {
+          "dpi": 72,
+          "width": 596,
+          "height": 842,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        }
+      ],
+      "passed": true
+    },
+    {
+      "case": "05-borders-Svg",
+      "file": "\u7f6b\u7dda-1.svg",
+      "raster": [
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        }
+      ],
+      "pages": 1,
+      "passed": true
+    },
+    {
+      "case": "05-borders-Svg",
+      "file": "\u7f6b\u7dda-2.svg",
+      "raster": [
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        }
+      ],
+      "pages": 1,
+      "passed": true
+    },
+    {
+      "case": "borders1000-Pdf",
+      "file": "workbook.pdf",
+      "raster": [
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        }
+      ],
+      "pages": 25,
+      "passed": true
+    },
+    {
+      "case": "empty-Pdf",
+      "file": "workbook.pdf",
+      "raster": [
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        }
+      ],
+      "pages": 1,
+      "passed": true
+    },
+    {
+      "case": "header-Pdf",
+      "file": "workbook.pdf",
+      "raster": [
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        }
+      ],
+      "pages": 1,
+      "passed": true
+    },
+    {
+      "case": "imagesonly-Pdf",
+      "file": "workbook.pdf",
+      "raster": [
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        }
+      ],
+      "pages": 1,
+      "passed": true
+    },
+    {
+      "case": "mixed1000-Pdf",
+      "file": "workbook.pdf",
+      "raster": [
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        }
+      ],
+      "pages": 25,
+      "passed": true
+    },
+    {
+      "case": "range-trim-Pdf",
+      "file": "workbook.pdf",
+      "raster": [
+        {
+          "dpi": 144,
+          "width": 683,
+          "height": 404,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 1423,
+          "height": 842,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        }
+      ],
+      "pages": 1,
+      "passed": true
+    },
+    {
+      "case": "rich-Pdf",
+      "file": "workbook.pdf",
+      "raster": [
+        {
+          "dpi": 144,
+          "width": 141,
+          "height": 43,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 294,
+          "height": 90,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        }
+      ],
+      "pages": 1,
+      "passed": true
+    },
+    {
+      "case": "rich-Png",
+      "file": "rich-1.png",
+      "raster": [
+        {
+          "dpi": 72,
+          "width": 71,
+          "height": 22,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        }
+      ],
+      "passed": true
+    },
+    {
+      "case": "rich-Svg",
+      "file": "rich-1.svg",
+      "raster": [
+        {
+          "dpi": 144,
+          "width": 141,
+          "height": 43,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 294,
+          "height": 90,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        }
+      ],
+      "pages": 1,
+      "passed": true
+    },
+    {
+      "case": "selected-Pdf",
+      "file": "workbook.pdf",
+      "raster": [
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        }
+      ],
+      "pages": 1,
+      "passed": true
+    },
+    {
+      "case": "shapes-Pdf",
+      "file": "workbook.pdf",
+      "raster": [
+        {
+          "dpi": 144,
+          "width": 86,
+          "height": 24,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 180,
+          "height": 50,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        }
+      ],
+      "pages": 1,
+      "passed": true
+    },
+    {
+      "case": "shapes-Png",
+      "file": "Shapes-1.png",
+      "raster": [
+        {
+          "dpi": 72,
+          "width": 43,
+          "height": 12,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        }
+      ],
+      "passed": true
+    },
+    {
+      "case": "shapes-Svg",
+      "file": "Shapes-1.svg",
+      "raster": [
+        {
+          "dpi": 144,
+          "width": 86,
+          "height": 24,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 180,
+          "height": 50,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        }
+      ],
+      "pages": 1,
+      "passed": true
+    },
+    {
+      "case": "text1-Pdf",
+      "file": "workbook.pdf",
+      "raster": [
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        }
+      ],
+      "pages": 1,
+      "passed": true
+    },
+    {
+      "case": "text1000-Pdf",
+      "file": "workbook.pdf",
+      "raster": [
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        }
+      ],
+      "pages": 25,
+      "passed": true
+    },
+    {
+      "case": "wrap1000-Pdf",
+      "file": "workbook.pdf",
+      "raster": [
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 144,
+          "width": 1191,
+          "height": 1684,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        {
+          "dpi": 300,
+          "width": 2481,
+          "height": 3508,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        }
+      ],
+      "pages": 25,
+      "passed": true
+    }
+  ],
+  "failures": []
+}

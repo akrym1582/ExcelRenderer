@@ -1,0 +1,30 @@
+Test run for /workspace/ExcelRenderer-review/tests/ExcelRenderer.Core.Tests/bin/Release/net10.0/ExcelRenderer.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+Test run for /workspace/ExcelRenderer-review/tests/ExcelRenderer.Formulas.Tests/bin/Release/net10.0/ExcelRenderer.Formulas.Tests.dll (.NETCoreApp,Version=v10.0)
+Test run for /workspace/ExcelRenderer-review/tests/ExcelRenderer.Mapping.Tests/bin/Release/net10.0/ExcelRenderer.Mapping.Tests.dll (.NETCoreApp,Version=v10.0)
+Test run for /workspace/ExcelRenderer-review/tests/ExcelRenderer.OpenXml.Tests/bin/Release/net10.0/ExcelRenderer.OpenXml.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+A total of 1 test files matched the specified pattern.
+A total of 1 test files matched the specified pattern.
+A total of 1 test files matched the specified pattern.
+Results File: /workspace/ExcelRenderer-review/artifacts/paint-color-optimization/final-tests/_a8cfa7a05959_2026-11-11_12_00_11_net10.0.trx
+
+Passed!  - Failed:     0, Passed:   227, Skipped:     0, Total:   227, Duration: 1 s - ExcelRenderer.OpenXml.Tests.dll (net10.0)
+Results File: /workspace/ExcelRenderer-review/artifacts/paint-color-optimization/final-tests/_a8cfa7a05959_2026-11-11_12_00_11_net10.0[1].trx
+
+Passed!  - Failed:     0, Passed:   833, Skipped:     0, Total:   833, Duration: 1 s - ExcelRenderer.Formulas.Tests.dll (net10.0)
+Test run for /workspace/ExcelRenderer-review/tests/ExcelRenderer.Tests/bin/Release/net10.0/ExcelRenderer.Tests.dll (.NETCoreApp,Version=v10.0)
+Test run for /workspace/ExcelRenderer-review/tests/ExcelRenderer.Tool.Tests/bin/Release/net10.0/ExcelRenderer.Tool.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+A total of 1 test files matched the specified pattern.
+Results File: /workspace/ExcelRenderer-review/artifacts/paint-color-optimization/final-tests/_a8cfa7a05959_2026-11-11_12_00_12_net10.0.trx
+
+Passed!  - Failed:     0, Passed:   226, Skipped:     0, Total:   226, Duration: 5 s - ExcelRenderer.Mapping.Tests.dll (net10.0)
+Results File: /workspace/ExcelRenderer-review/artifacts/paint-color-optimization/final-tests/_a8cfa7a05959_2026-11-11_12_00_11_net10.0[2].trx
+
+Passed!  - Failed:     0, Passed:   467, Skipped:     0, Total:   467, Duration: 24 s - ExcelRenderer.Core.Tests.dll (net10.0)
+Results File: /workspace/ExcelRenderer-review/artifacts/paint-color-optimization/final-tests/_a8cfa7a05959_2026-11-11_12_00_16_net10.0.trx
+
+Passed!  - Failed:     0, Passed:   135, Skipped:     0, Total:   135, Duration: 1 m 52 s - ExcelRenderer.Tool.Tests.dll (net10.0)
+Results File: /workspace/ExcelRenderer-review/artifacts/paint-color-optimization/final-tests/_a8cfa7a05959_2026-11-11_12_00_15_net10.0.trx
+
+Passed!  - Failed:     0, Passed:  1192, Skipped:     0, Total:  1192, Duration: 3 m 15 s - ExcelRenderer.Tests.dll (net10.0)

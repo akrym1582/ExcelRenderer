@@ -1,0 +1,22 @@
+{
+  "beforeCommit": "364d938512c93ac97fc492a571a91dbcff9800aa",
+  "afterSources": {
+    "src/ExcelRenderer.Core/Pdf/SkiaPaintResources.cs": "a9f2e4a0cb257d32e77f89db5e81224882f1276f48b9a62afe35ab7c95df2212",
+    "src/ExcelRenderer/SkiaSharp/SkiaTextDrawing.cs": "66dafa2b845d367bb629382940e02223e580cc08472d8c592f709009a9f6619f",
+    "tests/ExcelRenderer.Core.Tests/PaintColorOptimizationTests.cs": "30bfdbc315d30bf63c00e756a503e71795e6f9b797e6d8586644e28b8dcbf61c",
+    "tools/ExcelRenderer.Performance/Program.cs": "d4228edc56b2da1abd5c0d1dffe05abf91e02f04b166d7dd84b4862b7734e600",
+    "tools/ExcelRenderer.Performance/PaintColorBenchmark.cs": "765ee5349332213f807f76ceeaea344c8ee13932ab29e958b191a942469760f9"
+  },
+  "instructionsSha256": "09392a158a023a367799d9d892338c427a3a2b6bddcd3dd230ab83a24047f780",
+  "windowsExecuted": false,
+  "sameMainBenchmarkExecutable": true,
+  "sameCoreBenchmarkExecutable": true,
+  "excludedInitialPrototype": "prototype-initial/; initial observer overhead, stopped before completing output verification; never pooled with final measurements",
+  "probeUsedForSelectionOnly": true,
+  "helperSha256": {
+    "scripts/measure-paint-color.py": "90b221eb0ec37f947310397f8a6754f6e0f08b7608f11de5e9df4cbd4dff61fc",
+    "scripts/benchmark-render-finalization.py": "4dfa6190c3c5af0e7e26ba2230e08b557cd7d32afa5ad1aeae8c23d18e785bf9",
+    "scripts/validate-no-wrap-optimization.py": "175074cf4ae65bed43c96d901b3fbaf795d0fcfd274c287a2024edf0eae2444b",
+    "scripts/validate-main-optimization.py": "16c2ab8bb77a93293d5e81842731cea05e1cebcfd1c61d5f122d6fd6da1c5ae8"
+  }
+}

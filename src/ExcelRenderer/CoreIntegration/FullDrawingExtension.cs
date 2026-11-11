@@ -45,7 +45,19 @@ internal sealed class FullDrawingExtension : Core.Extensibility.ICoreDrawingExte
             });
         });
         var shapes = (page.ExtensionData as FullPageData)?.Shapes ?? [];
-        return images.Concat(shapes.Select(shape => (Z: shape.Shape.ZIndex, Command: (DrawCommand)new DrawShapeCommand(page.Number, shape.Bounds, shape.Shape) { ClipBounds = shape.ClipBounds })))
+        return images.Concat(shapes.Select(shape => (Z: shape.Shape.ZIndex, Command: (DrawCommand)ShapeCommand(page.Number, shape))))
             .OrderBy(item => item.Z).Select(item => CoreCommandAdapter.ToCore(item.Command));
     }
+
+    /// <summary>Retains shape text in the same stable Z order as the full object stage.</summary>
+    /// <param name="page">The page's borrowed full metadata.</param>
+    /// <returns>Only shape commands that require font collection.</returns>
+    internal static IEnumerable<Core.Drawing.DrawCommand> CreateShapeTextCommands(Core.Layout.RenderPage page) =>
+        ((page.ExtensionData as FullPageData)?.Shapes ?? [])
+        .Where(shape => shape.Shape.Text is not null)
+        .OrderBy(shape => shape.Shape.ZIndex)
+        .Select(shape => CoreCommandAdapter.ToCore(ShapeCommand(page.Number, shape)));
+
+    private static DrawShapeCommand ShapeCommand(int number, Layout.RenderShape shape) =>
+        new(number, shape.Bounds, shape.Shape) { ClipBounds = shape.ClipBounds };
 }

@@ -200,7 +200,8 @@ public sealed class FinalizedTextRenderingTests
             Style = CreateCommand(layout).Style with { TextRotation = rotation, WrapText = true },
         };
 
-        Assert.Throws<InvalidOperationException>(() => new SkiaDrawingContext(true).Execute(canvas, command));
+        using var context = new SkiaDrawingContext(true);
+        Assert.Throws<InvalidOperationException>(() => context.Execute(canvas, command));
         Assert.Equal(initialSaveCount, canvas.SaveCount);
 
         using var paint = new SKPaint { Color = SKColors.Red };

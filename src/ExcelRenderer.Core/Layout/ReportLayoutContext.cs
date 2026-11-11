@@ -98,6 +98,9 @@ internal sealed class ReportLayoutContext
     /// <summary>Gets or sets a value indicating whether this Core-only build omits nontext page payloads.</summary>
     internal bool CollectTextOnly { get; set; }
 
+    /// <summary>Gets or sets a value indicating whether text collection must preserve product regions and shape text.</summary>
+    internal bool PreservePreflightMetadata { get; set; }
+
     /// <summary>Gets or sets shared lightweight object geometry without retaining other page payloads.</summary>
     internal SheetObjectLayoutIndex? ObjectLayouts { get; set; }
 

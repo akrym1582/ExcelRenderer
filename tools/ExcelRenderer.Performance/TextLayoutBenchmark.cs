@@ -16,9 +16,9 @@ internal static class TextLayoutBenchmark
     internal static void Run(string[] args)
     {
         var workload = args[1];
-        if (workload is not ("plain" or "rich" or "rich-wrap"))
+        if (workload is not ("plain" or "plain-wrap" or "rich" or "rich-wrap"))
         {
-            throw new ArgumentException("Workload must be plain, rich or rich-wrap.", nameof(args));
+            throw new ArgumentException("Workload must be plain, plain-wrap, rich or rich-wrap.", nameof(args));
         }
 
         var count = args.Length > 2 ? int.Parse(args[2], CultureInfo.InvariantCulture) : 30;
@@ -49,8 +49,8 @@ internal static class TextLayoutBenchmark
             var timer = Stopwatch.StartNew();
             for (var index = 0; index < count; index++)
             {
-                results.Add(workload == "plain"
-                    ? measurer.Layout(texts[index], font, 100000, false)
+                results.Add(workload is "plain" or "plain-wrap"
+                    ? measurer.Layout(texts[index], font, workload == "plain-wrap" ? 180 : 100000, workload == "plain-wrap")
                     : measurer.Layout(inputs[index], font, workload == "rich-wrap" ? 80 : 100000, workload == "rich-wrap"));
             }
 
@@ -69,7 +69,7 @@ internal static class TextLayoutBenchmark
                         line.Width,
                         line.Height,
                         line.Baseline,
-                        Runs = line.Runs.Select(run => new { run.Run.Text, run.Run.SourceText, run.X, run.Advance, run.Font }),
+                        Runs = line.Runs.Select(run => new { run.Run.Text, run.Run.SourceText, run.Run.Utf16Start, run.X, run.Advance, run.Font, run.Glyphs!.FontIdentity, run.Glyphs.Glyphs, run.Glyphs.Source, run.Glyphs.Clusters, run.Glyphs.Advances }),
                     }),
                 };
                 digest.AppendData(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(projection)));

@@ -171,6 +171,16 @@ filtering remains with the main converter, which owns selection. FullExcelReader
 chart-sheet metadata placeholders; the converter reports them without rendering pages.
 RenderRequest.TextMeasurer is an optional borrowed service, not a new DI/plugin layer.
 
+CoreExcelReader detects missing saved pivot output and includes repeated print titles
+when checking print-area intersections. Core and standalone ExcelReader reads reject
+missing values immediately. Main conversions with explicit page selection retain the
+error candidate in CellReadDiagnostics, including geometry-only formula/conditional
+formatting preflight reads, and filter it against final selected page source regions.
+All-page conversions retain immediate rejection, including pivots beyond saved used
+cells. Diagnostic suppression and retention limits never permit missing selected
+pivot output to be written. Pivot aggregate calculation remains unsupported.
+
+
 ## Shared workbook input (OpenXml integration)
 
 `ExcelRenderer.OpenXml/Input` owns bounded workbook preparation, ZIP limits and the seekable memory/file spool. Core input types preserve existing callers through thin adapters; image-resource ownership and rendering policy remain in Core. OpenXml has no project references. Core, main and Mapping depend on OpenXml.

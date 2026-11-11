@@ -11,6 +11,9 @@ internal sealed partial class FullExcelReader
     protected override bool DeferOpenXmlDiagnostics => true;
 
     /// <inheritdoc/>
+    protected override bool DeferPivotValidation => readOptions.DeferPivotValidation;
+
+    /// <inheritdoc/>
     protected override CellStyle NormalizeCellStyle(CellStyle style) => style;
 
     /// <inheritdoc/>

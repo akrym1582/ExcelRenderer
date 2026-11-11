@@ -22,6 +22,40 @@ public sealed class PivotDisplayTests
     }
 
     [Fact]
+    public async Task Missing_pivot_on_second_page_fails_before_writing_pdf()
+    {
+        using var input = TestSupport.Workbook(workbook =>
+        {
+            Pivot(workbook, false, true);
+            var sheet = workbook.WorksheetParts.Single();
+            sheet.PivotTableParts.Single().PivotTableDefinition.Location!.Reference = "F15:F15";
+            sheet.Worksheet.Append(new S.RowBreaks(new S.Break { Id = 10, Min = 0, Max = 16383, ManualPageBreak = true }));
+            TestSupport.Print(workbook, "First!$A$1:$F$20");
+        });
+        using var pdf = new MemoryStream();
+        var exception = await Assert.ThrowsAsync<InvalidDataException>(() => ExcelConverter.ConvertAsync(input, pdf, TestSupport.Options));
+        Assert.Contains("PivotSavedValuesMissing", exception.Message);
+        Assert.Equal(0, pdf.Length);
+    }
+
+    [Fact]
+    public async Task Missing_pivot_on_unselected_sheet_does_not_block_output()
+    {
+        using var input = TestSupport.Workbook(workbook =>
+        {
+            Pivot(workbook, false, true);
+            var other = workbook.AddNewPart<WorksheetPart>();
+            other.Worksheet = new S.Worksheet(new S.SheetData(new S.Row(new S.Cell { CellReference = "A1", CellValue = new S.CellValue("30") }) { RowIndex = 1 }));
+            workbook.Workbook.Sheets!.Append(new S.Sheet { Id = workbook.GetIdOfPart(other), SheetId = 2, Name = "Other" });
+        });
+        using var pdf = new MemoryStream();
+        var result = await ExcelConverter.ConvertAsync(input, pdf, TestSupport.Options with { SheetName = "Other" });
+        Assert.Equal(1, result.PageCount);
+        Assert.True(pdf.Length > 0);
+        Assert.DoesNotContain(result.Diagnostics, diagnostic => diagnostic.Code.StartsWith("Pivot", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public async Task Missing_pivot_outside_explicit_print_area_does_not_block_source_data()
     {
         using var input = TestSupport.Workbook(workbook =>
@@ -33,6 +67,33 @@ public sealed class PivotDisplayTests
         var result = await ExcelConverter.ConvertAsync(input, pdf, TestSupport.Options);
         Assert.True(pdf.Length > 0);
         Assert.DoesNotContain(result.Diagnostics, diagnostic => diagnostic.Code == "PivotRefreshRequired");
+    }
+
+    [Theory]
+    [InlineData("First!$A$5:$F$10", "First!$4:$4")]
+    [InlineData("First!$G$1:$J$6", "First!$F:$F")]
+    public async Task Missing_pivot_in_repeated_titles_fails_before_writing_pdf(string printArea, string titles)
+    {
+        using var input = TestSupport.Workbook(workbook =>
+        {
+            Pivot(workbook, false, true);
+            TestSupport.Print(workbook, printArea);
+            TestSupport.Print(workbook, titles, "_xlnm.Print_Titles");
+        });
+        using var pdf = new MemoryStream();
+        var exception = await Assert.ThrowsAsync<InvalidDataException>(() => ExcelConverter.ConvertAsync(input, pdf, TestSupport.Options));
+        Assert.Contains("PivotSavedValuesMissing", exception.Message);
+        Assert.Equal(0, pdf.Length);
+    }
+
+    [Fact]
+    public async Task Standalone_core_reader_rejects_missing_pivot_without_diagnostic_collector()
+    {
+        using var input = TestSupport.Workbook(workbook => Pivot(workbook, false, true));
+        using var font = new SingleFontContext(TestSupport.JapaneseFont);
+        using var prepared = await OpenXml.Reader.Input.WorkbookInputPreparer.ReadAsync(input, new(), default);
+        var exception = Assert.Throws<InvalidDataException>(() => new CoreExcelReader(font).Read(prepared, null));
+        Assert.Contains("PivotSavedValuesMissing", exception.Message);
     }
 
     [Theory]

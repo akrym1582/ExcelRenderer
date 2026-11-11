@@ -60,6 +60,7 @@ public static partial class ExcelConverter
             resources.RasterTextLayout = request.OutputFormat is OutputFormat.Png or OutputFormat.Svg ? new SkiaCompatibilityTextLayout(fontManager) : null;
             var readOptions = request.ReadOptions with
             {
+                DeferPivotValidation = request.Selection.Pages is not null,
                 ColumnWidthMetricsCache = new CoreIntegration.FullFontMetrics.MetricCache(),
                 IgnoreFormulaPrintAreas = request.OutputFormat == OutputFormat.Markdown || request.ImageLayout == ImageLayoutMode.Continuous,
                 GetSelectedRange = name => request.Selection.Ranges?.FirstOrDefault(range => range.SheetName == name)?.Range is { } selected

@@ -21,6 +21,9 @@ public sealed record ExcelReadOptions
     /// <summary>Gets the conversion's explicit finite source region for default-style materialization.</summary>
     internal Func<string, (int FirstRow, int FirstColumn, int LastRow, int LastColumn)?>? GetSelectedRange { get; init; }
 
+    /// <summary>Gets a value indicating whether conversion validates pivot failures against final output regions.</summary>
+    internal bool DeferPivotValidation { get; init; }
+
     /// <summary>Gets a value indicating whether the consumer includes cells outside print areas.</summary>
     internal bool IgnoreFormulaPrintAreas { get; init; }
 

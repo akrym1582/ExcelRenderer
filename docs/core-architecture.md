@@ -49,3 +49,17 @@ measurer serializes access to its own manager/cache only; converters have no glo
 See [source ownership](core-source-map.md), [Core usage and supported scope](core.md), and
 [executed verification](core-refactor-validation.md). Windows execution is left to the
 retained Ubuntu/Windows CI matrix; local Linux results are not presented as Windows results.
+
+Core's PDF font collection streams the common cell/header/footer text commands from
+text-only page payloads. It omits image placement, merged border fragments, border
+neighbors and conflict resolution; main preflight retains its complete product policy.
+For valid UTF-16 and noncolor outline faces, Core selects paragraph glyphs once and
+wraps on Unicode element boundaries with integer hmtx advances. Color fonts and
+custom/full measurers retain their compatibility paths. Finalized line clusters are
+rebuilt relative to each line. Plan-selected candidates retain source order and
+uniqueness, allowing placement to skip a second page-local band index and sort.
+The single-font cache uses a 512-entry CLOCK, excludes texts over 2048 characters,
+and limits retained text/line/glyph units to 131072. Its key excludes decoration
+and unused unwrapped width; shrink-to-fit remains outside the cache. PDF positions
+are written to the builder-owned span; each Core renderer lazily owns at most two
+paints and one dash effect. See [implementation and evidence](core-performance-optimization.md).

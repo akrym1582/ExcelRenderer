@@ -135,15 +135,28 @@ internal sealed class SkiaFontFace : IDisposable
     internal SKPoint[] Positions(ReadOnlySpan<ushort> glyphs, double size)
     {
         var result = new SKPoint[glyphs.Length];
+        WritePositions(glyphs, size, result);
+        return result;
+    }
+
+    /// <summary>Writes origins directly into a caller-owned native run buffer.</summary>
+    /// <param name="glyphs">The selected glyphs.</param>
+    /// <param name="size">The point size.</param>
+    /// <param name="destination">The writable positions, valid only during this call.</param>
+    internal void WritePositions(ReadOnlySpan<ushort> glyphs, double size, Span<SKPoint> destination)
+    {
+        if (destination.Length < glyphs.Length)
+        {
+            throw new ArgumentException("The position buffer is too short.", nameof(destination));
+        }
+
         var colorAdvances = Color ? Advances(glyphs, size) : null;
         double x = 0;
         for (var index = 0; index < glyphs.Length; index++)
         {
-            result[index] = new((float)x, 0);
+            destination[index] = new((float)x, 0);
             x += colorAdvances is null ? AdvanceUnits(glyphs[index]) * size / Units : colorAdvances[index];
         }
-
-        return result;
     }
 
     /// <summary>Gets positive line metrics from the immutable face.</summary>
@@ -163,7 +176,16 @@ internal sealed class SkiaFontFace : IDisposable
         return result;
     }
 
-    private int AdvanceUnits(ushort glyph)
+    /// <summary>Converts an exact accumulated design advance using layout's operation order.</summary>
+    /// <param name="units">The accumulated integer advance.</param>
+    /// <param name="size">The point size.</param>
+    /// <returns>The advance in points.</returns>
+    internal double MeasureUnits(long units, double size) => units * size / Units;
+
+    /// <summary>Gets the exact unscaled horizontal advance for an outline glyph.</summary>
+    /// <param name="glyph">The selected glyph.</param>
+    /// <returns>The design advance.</returns>
+    internal int AdvanceUnits(ushort glyph)
     {
         var offset = Math.Min(glyph, MetricCount - 1) * 4;
         return (hmtx[offset] << 8) | hmtx[offset + 1];

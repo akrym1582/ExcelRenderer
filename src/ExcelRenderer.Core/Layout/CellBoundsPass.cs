@@ -17,6 +17,11 @@ internal sealed class CellBoundsPass : IReportLayoutPass
         foreach (var (address, bounds) in EnumerateBounds(context))
         {
             var cell = context.Sheet.Cells[address];
+            if (context.CollectTextOnly && string.IsNullOrEmpty(cell.Text))
+            {
+                continue;
+            }
+
             var content = CellContentBounds.Calculate(bounds, cell.Style);
             var insets = context.Policy.GetCellContentInsets(cell, content.Width, bounds.Height);
             context.CellLayouts[address] = new(
@@ -25,7 +30,7 @@ internal sealed class CellBoundsPass : IReportLayoutPass
                 context.TextSizes.GetValueOrDefault(address))
             {
                 ContentBounds = content with { X = content.X + insets.Left, Width = Math.Max(0, content.Width - insets.Left - insets.Right) },
-                MergedBorders = cell.MergedBorders?
+                MergedBorders = context.CollectTextOnly ? null : cell.MergedBorders?
                     .Where(border => context.ColumnLayouts.ContainsKey(border.Address.Column) &&
                         context.RowLayouts.ContainsKey(border.Address.Row))
                     .Select(border =>

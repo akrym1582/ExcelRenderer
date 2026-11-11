@@ -1,0 +1,27 @@
+# Working directory: /workspace/ExcelRenderer
+# Fetch/fast-forward occurred before implementation; starting checkout was clean.
+git fetch origin main
+git merge --ff-only origin/main
+dotnet restore ExcelRenderer.slnx
+# Release validation runtimes were built and copied separately after each phase.
+dotnet build tools/ExcelRenderer.Core.Validation/ExcelRenderer.Core.Validation.csproj -c Release -m:1 --no-restore --verbosity:minimal
+# Required final checks (sequential):
+dotnet build ExcelRenderer.slnx -c Release -m:1 -t:Rebuild --no-restore --verbosity:minimal
+dotnet build ExcelRenderer.slnx -m:1 -t:Rebuild --no-restore --verbosity:minimal
+source scripts/test-fonts.sh
+dotnet test ExcelRenderer.slnx -m:1 --no-restore --logger 'trx;LogFilePrefix=core-optimization-final'
+dotnet test tests/ExcelRenderer.Core.Tests/ExcelRenderer.Core.Tests.csproj -c Release --no-build --filter 'Category!=Performance' -p:CollectCoverage=true
+dotnet test tests/ExcelRenderer.Core.Tests/ExcelRenderer.Core.Tests.csproj -c Release --no-build --filter 'Category=Performance'
+python3 scripts/check-source-namespaces.py
+python3 scripts/check-no-pdfsharp.py
+python3 scripts/validate-reader-isolation.py --output docs/validation/core-performance-optimization/reader-isolation.json
+dotnet build-server shutdown
+python3 scripts/measure-core-optimization.py
+python3 scripts/recheck-core-optimization.py
+python3 scripts/validate-core-optimization.py
+dotnet build-server shutdown
+python3 scripts/recheck-core-optimization-regressions.py
+# baseline-instrumented was built separately with baseline-diagnostics.patch.
+# Final product source was restored byte-for-byte and the Release solution rebuilt before these observations.
+python3 scripts/observe-core-baseline.py
+python3 scripts/summarize-core-optimization.py

@@ -1,0 +1,103 @@
+diff --git a/tools/ExcelRenderer.Core.Validation/Program.cs b/tools/ExcelRenderer.Core.Validation/Program.cs
+index a2c3fa9..728a959 100644
+--- a/tools/ExcelRenderer.Core.Validation/Program.cs
++++ b/tools/ExcelRenderer.Core.Validation/Program.cs
+@@ -1,5 +1,6 @@
+ using System.Diagnostics;
+ using System.Globalization;
++using System.Reflection;
+ using System.Text.Json;
+ using DocumentFormat.OpenXml;
+ using DocumentFormat.OpenXml.Packaging;
+@@ -118,42 +119,68 @@ for (var iteration = 0; iteration < repeats; iteration++)
+ {
+     var maximumManaged = GC.GetTotalMemory(false);
+     using var timer = new Timer(_ => InterlockedExtensions.UpdateMaximum(ref maximumManaged, GC.GetTotalMemory(false)), null, 0, 10);
+-    var allocated = GC.GetTotalAllocatedBytes(false);
+-    var clock = Stopwatch.StartNew();
+-#if REFERENCE
+-    File.Delete(args[2]);
+-    await ExcelConverter.ConvertToPdfAsync(args[1], args[2], new PdfExportOptions
++    var metrics = new Dictionary<string, double>();
++    var observer = typeof(ExcelConverter).Assembly.GetType("ExcelRenderer.Core.Rendering.ConversionMetrics")?.GetProperty("Observer", BindingFlags.Static | BindingFlags.NonPublic);
++    if (Environment.GetEnvironmentVariable("CORE_PERF_DIAGNOSTICS") == "1")
+     {
+-        Hyperlinks = HyperlinkMode.None,
+-
+-        // Core measures column widths with the supplied font, including a saved Normal family that differs.
+-        ReadOptions = new()
++        Action<string, double> collectMetrics = (name, value) =>
+         {
+-            ColumnWidthMetrics = new() { SourceFontFile = args[3] },
+-        },
+-        FontOptions = new FontOptions
++            metrics[name] = name is "pagePayloadActive" or "layoutCacheEntries" or "layoutCacheRetainedUnits"
++                ? Math.Max(metrics.GetValueOrDefault(name), value)
++                : metrics.GetValueOrDefault(name) + value;
++        };
++        observer?.SetValue(null, collectMetrics);
++    }
++
++    var collections = Enumerable.Range(0, 3).Select(GC.CollectionCount).ToArray();
++    var allocated = GC.GetTotalAllocatedBytes(precise: true);
++    var clock = Stopwatch.StartNew();
++    try
++    {
++#if REFERENCE
++        File.Delete(args[2]);
++        await ExcelConverter.ConvertToPdfAsync(args[1], args[2], new PdfExportOptions
+         {
+-            FontFiles = [args[3]],
+-            AllowSystemFonts = false,
+-            UseFontPack = false,
+-            FallbackFamilies = ["Noto Sans JP"],
+-        },
+-    });
++            Hyperlinks = HyperlinkMode.None,
++
++            // Core measures column widths with the supplied font, including a saved Normal family that differs.
++            ReadOptions = new()
++            {
++                ColumnWidthMetrics = new() { SourceFontFile = args[3] },
++            },
++            FontOptions = new FontOptions
++            {
++                FontFiles = [args[3]],
++                AllowSystemFonts = false,
++                UseFontPack = false,
++                FallbackFamilies = ["Noto Sans JP"],
++            },
++        });
+ #else
+-    using (var input = File.OpenRead(args[1]))
+-    using (var output = new FileStream(args[2], FileMode.Create, FileAccess.ReadWrite))
++        using (var input = File.OpenRead(args[1]))
++        using (var output = new FileStream(args[2], FileMode.Create, FileAccess.ReadWrite))
++        {
++            await ExcelConverter.ConvertAsync(input, output, new() { FontFilePath = args[3] });
++        }
++#endif
++    }
++    finally
+     {
+-        await ExcelConverter.ConvertAsync(input, output, new() { FontFilePath = args[3] });
++        observer?.SetValue(null, null);
+     }
+-#endif
++
+     clock.Stop();
++    var conversionAllocated = GC.GetTotalAllocatedBytes(precise: true) - allocated;
++    var gcCounts = Enumerable.Range(0, 3).Select(generation => GC.CollectionCount(generation) - collections[generation]).ToArray();
+     using var process = Process.GetCurrentProcess();
+     using var document = PdfDocument.Open(args[2]);
+     samples.Add(new
+     {
+         Iteration = iteration,
+         Milliseconds = clock.Elapsed.TotalMilliseconds,
+-        AllocatedBytes = GC.GetTotalAllocatedBytes(false) - allocated,
++        AllocatedBytes = conversionAllocated,
++        GCCollections = gcCounts,
++        Metrics = metrics,
+         PeakRss = process.PeakWorkingSet64,
+         Rss = process.WorkingSet64,
+         ManagedMax = maximumManaged,

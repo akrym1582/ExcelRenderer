@@ -1,0 +1,14 @@
+ .../Excel/ColumnWidthCalculator.cs                 |  8 +++-
+ .../Excel/CoreExcelReader.OpenXml.cs               | 56 +++++++++++++++++++++-
+ src/ExcelRenderer.Core/Excel/CoreExcelReader.cs    |  5 +-
+ src/ExcelRenderer.Core/Excel/ICoreFontMetrics.cs   |  7 ++-
+ src/ExcelRenderer.Core/Excel/SingleFontMetrics.cs  | 12 +++--
+ .../Excel/SourceFontFallbackMetrics.cs             | 27 +++++++++++
+ src/ExcelRenderer.Core/ExcelConverter.cs           |  7 ++-
+ src/ExcelRenderer.Core/ExcelReadOptions.cs         |  6 +++
+ src/ExcelRenderer.Core/Fonts/SingleFontContext.cs  | 14 +++++-
+ src/ExcelRenderer.Core/Layout/PageBandBuilder.cs   | 12 ++++-
+ src/ExcelRenderer.Core/Layout/PaginationPass.cs    |  9 ++--
+ .../Layout/PrintScaleResolver.cs                   | 22 ++++++---
+ src/ExcelRenderer.Core/Model/ReportSheet.cs        |  3 ++
+ 13 files changed, 163 insertions(+), 25 deletions(-)

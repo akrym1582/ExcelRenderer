@@ -88,15 +88,37 @@ internal sealed class DrawCommandGeneratorPass
 
         commands.AddRange(extension?.CreateObjectCommands(page) ?? (page.Images ?? []).OrderBy(image => image.ZIndex)
             .Select(image => (DrawCommand)new DrawImageCommand(page.Number, image.Bounds, image.ImageBytes)));
-        commands.AddRange((page.HeaderFooterTexts ?? [])
-            .Select(x => (DrawCommand)new DrawTextCommand(page.Number, x.Bounds, x.Text, x.Style)
-            {
-                TextLayout = measurer?.Layout(x.Text, x.Style.Font, x.Bounds.Width, false),
-            }));
+        commands.AddRange(GenerateHeaderFooter(page, measurer));
 
         Rendering.ConversionMetrics.Report("coreCommandBuild", 1);
         return commands;
     }
+
+    /// <summary>Streams the same finalized text commands used by painting, without other layers.</summary>
+    /// <param name="page">The text-only page payload.</param>
+    /// <param name="measurer">The shared header/footer measurer.</param>
+    /// <returns>Cell text followed by header/footer text.</returns>
+    internal IEnumerable<DrawTextCommand> GenerateText(RenderPage page, Abstractions.ITextLayoutService? measurer)
+    {
+        foreach (var cell in page.Cells)
+        {
+            foreach (var command in GenerateCellLayer(page.Number, cell, 3, true))
+            {
+                yield return (DrawTextCommand)command;
+            }
+        }
+
+        foreach (var command in GenerateHeaderFooter(page, measurer))
+        {
+            yield return command;
+        }
+    }
+
+    private static IEnumerable<DrawTextCommand> GenerateHeaderFooter(RenderPage page, Abstractions.ITextLayoutService? measurer) =>
+        (page.HeaderFooterTexts ?? []).Select(x => new DrawTextCommand(page.Number, x.Bounds, x.Text, x.Style)
+        {
+            TextLayout = measurer?.Layout(x.Text, x.Style.Font, x.Bounds.Width, false),
+        });
 
     private static ReportRect GetContentBounds(RenderCell cell) =>
         cell.ContentBounds.Width > 0 || cell.ContentBounds.Height > 0

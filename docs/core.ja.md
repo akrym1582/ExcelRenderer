@@ -74,7 +74,9 @@ dotnet run --project samples/ExcelRenderer.Core.Sample -c Release -- input.xlsx 
 ```
 
 font収集と描画の各passで1ページのpayloadだけを生成します。Coreが共通Skia文書・subset・
-基本描画・incremental finalizerを所有します。文字cacheは512件・2048文字まで、decoded画像の
+基本描画・incremental finalizerを所有します。文字cacheは512件のCLOCK・入力2048文字以下・保持text/行文字/glyph合計131072単位までです。
+収集周は文字のみを構築し、描画位置はnative run bufferへ直接書き込み、rendererごとにPaint最大2個を再利用します。
+[性能改善の詳細](core-performance-optimization.md)も参照してください。decoded画像の
 推定cache上限は64MiBです。PDF中間spoolは8MiBを超えると一時ファイルを使い、成功・失敗時に
 削除します。入力spoolの設定とは独立しています。Skia文書の資源も保持するため定メモリではありません。
 

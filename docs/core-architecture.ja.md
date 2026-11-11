@@ -71,3 +71,17 @@ CoreExcelReader が表示ポリシーと診断候補を管理します。scratch
 診断のために空白ページを追加しません。旧計測器は任意の RenderRequest.TextMeasurer で借用します。
 
 汎用の入力検査・spool は `ExcelRenderer.OpenXml.Reader/Input` が所有します。Core が参照する製品プロジェクトはReaderだけです。CoreはReaderの入力設定・入力準備を直接使用し、変換単位のspill通知を接続します。本体は既存の公開入力設定をReaderへ変換します。本体・Mappingも同じReaderを参照します。[エンジン選択](openxml-integration.ja.md)を参照してください。
+
+## Core PDF のページ単位高速化
+
+フォント収集は本描画と共通のセル・ヘッダー・フッター文字生成を逐次使用します。
+収集用ページでは画像配置、結合罫線fragment、隣接罫線収集、罫線競合解決を省きます。
+本体のpreflightは既存の製品方針を維持します。通常アウトラインフォントと正常なUTF-16では
+段落glyphを一度取得し、文字要素境界と整数hmtx advanceで折り返します。
+色付きフォント、カスタム計測、本体の文字処理は互換経路を維持します。
+各確定行のUnicode clusterは行頭を基準に作成します。
+ページ計画で選択済みの候補は元順序・重複なしの契約を受け渡し、後段の再索引・再ソートを省きます。
+単一フォントcacheは512件のCLOCK、入力2048文字以下、保持text・行文字・glyphの合計131072単位です。
+装飾と折り返しなしの幅はキーから除き、縮小はcache外で適用します。
+PDF位置はbuilder所有のSpanへ書き込み、rendererごとにPaint最大2個とdash effect最大1個を所有します。
+実装と測定証拠は[性能改善レポート](core-performance-optimization.md)を参照してください。

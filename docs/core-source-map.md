@@ -332,3 +332,16 @@ No OS/font-package discovery, additional font, public API or Core dependency is 
 Core standalone rich strings are flattened to ordinary cell text. Per-run size, color,
 underline and face styling remain main-only; the single-font cell-level guarantees do not
 extend to partial formatting. This boundary was explicitly confirmed for the comparison follow-up.
+
+## Core performance ownership
+
+`DrawCommandGeneratorPass.GenerateText` shares cell layer 3 and header/footer generation
+with painting. `SheetLayoutPlan` alone supplies `SelectedPageCells` (unique source-order
+addresses satisfying the page selection); `RenderPageBuilder` retains its generic
+independent-layout path. Core-only collection sets the internal text payload purpose;
+main preflight keeps images, shapes, links, diagnostics and trim work.
+`SkiaTextMeasurer` owns outline paragraph wrapping and its bounded single-font CLOCK.
+`SkiaFontFace.WritePositions` writes into the native builder's borrowed position span.
+`SkiaPaintResources` owns renderer-local fill/stroke paints and the last dash effect;
+shared PNG/SVG primitives retain their fresh-paint path. See
+[performance implementation and validation](core-performance-optimization.md).

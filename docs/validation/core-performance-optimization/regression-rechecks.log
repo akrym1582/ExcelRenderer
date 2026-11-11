@@ -1,0 +1,66 @@
+Core 0 text1000 baseline
+Core 0 text1000 phase5
+Core 0 text5000 baseline
+Core 0 text5000 phase5
+Core 0 text10000 baseline
+Core 0 text10000 phase5
+Core 0 mixed1000 baseline
+Core 0 mixed1000 phase5
+Core 1 text1000 phase5
+Core 1 text1000 baseline
+Core 1 text5000 phase5
+Core 1 text5000 baseline
+Core 1 text10000 phase5
+Core 1 text10000 baseline
+Core 1 mixed1000 phase5
+Core 1 mixed1000 baseline
+Core 2 text1000 baseline
+Core 2 text1000 phase5
+Core 2 text5000 baseline
+Core 2 text5000 phase5
+Core 2 text10000 baseline
+Core 2 text10000 phase5
+Core 2 mixed1000 baseline
+Core 2 mixed1000 phase5
+main 0 02-image Pdf baseline-main
+main 0 02-image Pdf final-main
+main 0 02-image Png baseline-main
+main 0 02-image Png final-main
+main 0 04-text-decoration Pdf baseline-main
+main 0 04-text-decoration Pdf final-main
+main 0 05-borders Svg baseline-main
+main 0 05-borders Svg final-main
+main 0 06-layout-and-pagination Pdf baseline-main
+main 0 06-layout-and-pagination Pdf final-main
+main 0 06-layout-and-pagination Png baseline-main
+main 0 06-layout-and-pagination Png final-main
+main 0 06-layout-and-pagination Svg baseline-main
+main 0 06-layout-and-pagination Svg final-main
+main 1 02-image Pdf final-main
+main 1 02-image Pdf baseline-main
+main 1 02-image Png final-main
+main 1 02-image Png baseline-main
+main 1 04-text-decoration Pdf final-main
+main 1 04-text-decoration Pdf baseline-main
+main 1 05-borders Svg final-main
+main 1 05-borders Svg baseline-main
+main 1 06-layout-and-pagination Pdf final-main
+main 1 06-layout-and-pagination Pdf baseline-main
+main 1 06-layout-and-pagination Png final-main
+main 1 06-layout-and-pagination Png baseline-main
+main 1 06-layout-and-pagination Svg final-main
+main 1 06-layout-and-pagination Svg baseline-main
+main 2 02-image Pdf baseline-main
+main 2 02-image Pdf final-main
+main 2 02-image Png baseline-main
+main 2 02-image Png final-main
+main 2 04-text-decoration Pdf baseline-main
+main 2 04-text-decoration Pdf final-main
+main 2 05-borders Svg baseline-main
+main 2 05-borders Svg final-main
+main 2 06-layout-and-pagination Pdf baseline-main
+main 2 06-layout-and-pagination Pdf final-main
+main 2 06-layout-and-pagination Png baseline-main
+main 2 06-layout-and-pagination Png final-main
+main 2 06-layout-and-pagination Svg baseline-main
+main 2 06-layout-and-pagination Svg final-main

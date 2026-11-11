@@ -20,11 +20,11 @@ internal sealed class RenderPageBuilder
     private readonly double _titleHeight;
     private readonly double _scale;
 
-    private readonly BandIndex<CellLayout> _cells;
-    private readonly CellLayout[] _repeatedRows;
+    private readonly BandIndex<CellLayout>? _cells;
+    private readonly CellLayout[] _repeatedRows = [];
     private readonly HashSet<int> _titleRowSet;
     private readonly HashSet<int> _titleColumnSet;
-    private readonly Dictionary<CellAddress, int> _cellOrder;
+    private readonly Dictionary<CellAddress, int>? _cellOrder;
     private readonly Dictionary<CellStyle, CellStyle> _scaledStyles = new();
     private readonly Dictionary<BorderStyle, BorderStyle> _scaledBorders = new();
 
@@ -63,10 +63,15 @@ internal sealed class RenderPageBuilder
         _scale = scale;
         _titleRowSet = new(titleRows);
         _titleColumnSet = new(titleColumns);
-        _cells = new(context.CellLayouts.Values.Select(layout =>
-            (layout, layout.Bounds.Y, layout.Bounds.Y + Math.Max(layout.Bounds.Height, Epsilon))));
-        _repeatedRows = context.CellLayouts.Values.Where(layout => _titleRowSet.Contains(layout.Address.Row)).ToArray();
-        _cellOrder = context.CellLayouts.Keys.Select((address, order) => (address, order)).ToDictionary(pair => pair.address, pair => pair.order);
+        if (context.SelectedPageCells is null)
+        {
+            _cells = new(context.CellLayouts.Values.Select(layout =>
+                (layout, layout.Bounds.Y, layout.Bounds.Y + Math.Max(layout.Bounds.Height, Epsilon))));
+            _repeatedRows = context.CellLayouts.Values.Where(layout => _titleRowSet.Contains(layout.Address.Row)).ToArray();
+            _cellOrder = context.CellLayouts.Keys.Select((address, order) => (address, order)).ToDictionary(pair => pair.address, pair => pair.order);
+            Rendering.ConversionMetrics.Report("pageCellIndexBuild", 1);
+        }
+
         context.ObjectLayouts ??= new SheetObjectLayoutIndex(context);
     }
 
@@ -95,20 +100,35 @@ internal sealed class RenderPageBuilder
             repeatRows ? _titleHeight : 0,
             _scale);
 
-        var candidates = _cells.Query(vertical.Start, vertical.End);
-        if (repeatRows)
+        IEnumerable<CellLayout> selected;
+        if (_context.SelectedPageCells is { } proven)
         {
-            candidates = candidates.Concat(_repeatedRows);
+            selected = proven.Addresses.Where(_context.CellLayouts.ContainsKey).Select(address => _context.CellLayouts[address]);
+        }
+        else
+        {
+            var candidates = _cells!.Query(vertical.Start, vertical.End);
+            if (repeatRows)
+            {
+                candidates = candidates.Concat(_repeatedRows);
+            }
+
+            selected = candidates.GroupBy(layout => layout.Address).Select(group => group.First())
+                .Where(layout => selection.Contains(layout.Address, layout.Bounds, _context.Sheet.Cells[layout.Address].ColumnSpan > 1 || _context.Sheet.Cells[layout.Address].RowSpan > 1))
+                .OrderBy(layout => _cellOrder![layout.Address]);
+            Rendering.ConversionMetrics.Report("pageCellDeduplicateSort", 1);
         }
 
-        var cells = candidates.GroupBy(layout => layout.Address).Select(group => group.First())
-            .Where(layout => selection.Contains(layout.Address, layout.Bounds, _context.Sheet.Cells[layout.Address].ColumnSpan > 1 || _context.Sheet.Cells[layout.Address].RowSpan > 1))
-            .OrderBy(layout => _cellOrder[layout.Address])
-            .Select(layout => BuildCell(layout, placement, repeatColumns, repeatRows))
-            .ToArray();
+        var cells = selected.Select(layout => BuildCell(layout, placement, repeatColumns, repeatRows)).ToArray();
         var pageContext = new CorePageBuildContext(_context, placement, horizontal, vertical, _bodyColumns, _bodyRows, _titleColumns, _titleRows, repeatColumns, repeatRows);
-        var images = _context.Policy.BuildPageImages(pageContext);
+        var images = _context.CollectTextOnly ? [] : _context.Policy.BuildPageImages(pageContext);
         Rendering.ConversionMetrics.Report("corePageBuild", 1);
+        if (_context.CollectTextOnly)
+        {
+            Rendering.ConversionMetrics.Report("coreTextPageBuild", 1);
+            return new(pageNumber, cells);
+        }
+
         var page = _context.Policy.BuildAdditionalPageContent(pageContext, new(pageNumber, cells, images));
         _context.BorderNeighbors ??= new(_context.Sheet);
         if (!_context.BorderNeighbors.HasEdges)

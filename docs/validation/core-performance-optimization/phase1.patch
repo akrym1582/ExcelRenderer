@@ -1,0 +1,154 @@
+diff --git a/src/ExcelRenderer.Core/Drawing/DrawCommandGeneratorPass.cs b/src/ExcelRenderer.Core/Drawing/DrawCommandGeneratorPass.cs
+index 4ea7db2..9d95892 100644
+--- a/src/ExcelRenderer.Core/Drawing/DrawCommandGeneratorPass.cs
++++ b/src/ExcelRenderer.Core/Drawing/DrawCommandGeneratorPass.cs
+@@ -88,16 +88,38 @@ internal sealed class DrawCommandGeneratorPass
+ 
+         commands.AddRange(extension?.CreateObjectCommands(page) ?? (page.Images ?? []).OrderBy(image => image.ZIndex)
+             .Select(image => (DrawCommand)new DrawImageCommand(page.Number, image.Bounds, image.ImageBytes)));
+-        commands.AddRange((page.HeaderFooterTexts ?? [])
+-            .Select(x => (DrawCommand)new DrawTextCommand(page.Number, x.Bounds, x.Text, x.Style)
+-            {
+-                TextLayout = measurer?.Layout(x.Text, x.Style.Font, x.Bounds.Width, false),
+-            }));
++        commands.AddRange(GenerateHeaderFooter(page, measurer));
+ 
+         Rendering.ConversionMetrics.Report("coreCommandBuild", 1);
+         return commands;
+     }
+ 
++    /// <summary>Streams the same finalized text commands used by painting, without other layers.</summary>
++    /// <param name="page">The text-only page payload.</param>
++    /// <param name="measurer">The shared header/footer measurer.</param>
++    /// <returns>Cell text followed by header/footer text.</returns>
++    internal IEnumerable<DrawTextCommand> GenerateText(RenderPage page, Abstractions.ITextLayoutService? measurer)
++    {
++        foreach (var cell in page.Cells)
++        {
++            foreach (var command in GenerateCellLayer(page.Number, cell, 3, true))
++            {
++                yield return (DrawTextCommand)command;
++            }
++        }
++
++        foreach (var command in GenerateHeaderFooter(page, measurer))
++        {
++            yield return command;
++        }
++    }
++
++    private static IEnumerable<DrawTextCommand> GenerateHeaderFooter(RenderPage page, Abstractions.ITextLayoutService? measurer) =>
++        (page.HeaderFooterTexts ?? []).Select(x => new DrawTextCommand(page.Number, x.Bounds, x.Text, x.Style)
++        {
++            TextLayout = measurer?.Layout(x.Text, x.Style.Font, x.Bounds.Width, false),
++        });
++
+     private static ReportRect GetContentBounds(RenderCell cell) =>
+         cell.ContentBounds.Width > 0 || cell.ContentBounds.Height > 0
+             ? cell.ContentBounds
+diff --git a/src/ExcelRenderer.Core/ExcelConverter.cs b/src/ExcelRenderer.Core/ExcelConverter.cs
+index d6da362..33c42c4 100644
+--- a/src/ExcelRenderer.Core/ExcelConverter.cs
++++ b/src/ExcelRenderer.Core/ExcelConverter.cs
+@@ -116,18 +116,17 @@ public static class ExcelConverter
+                         ConversionMetrics.Report("pagePayloadActive", 1);
+                         try
+                         {
+-                            var page = plan.Build(index, ++number, sheetCount, measurer, cancellationToken) with
++                            var page = plan.Build(index, ++number, sheetCount, measurer, cancellationToken, collectTextOnly: pass == 0) with
+                             {
+                                 HeaderFooterTexts = PaginationPass.GetHeaderFooterTexts(entry.Sheet, ++sheetNumber, sheetCount, timestamp),
+                             };
+-                            var commands = generator.GeneratePage(page, measurer);
+                             if (pass == 0)
+                             {
+-                                renderer.Collect(commands);
++                                renderer.Collect(generator.GenerateText(page, measurer));
+                             }
+                             else
+                             {
+-                                renderer.AppendPage(entry.Sheet.PageSettings, commands);
++                                renderer.AppendPage(entry.Sheet.PageSettings, generator.GeneratePage(page, measurer));
+                             }
+                         }
+                         finally
+diff --git a/src/ExcelRenderer.Core/Layout/CellBoundsPass.cs b/src/ExcelRenderer.Core/Layout/CellBoundsPass.cs
+index 4c5eabd..46b2ecb 100644
+--- a/src/ExcelRenderer.Core/Layout/CellBoundsPass.cs
++++ b/src/ExcelRenderer.Core/Layout/CellBoundsPass.cs
+@@ -17,6 +17,11 @@ internal sealed class CellBoundsPass : IReportLayoutPass
+         foreach (var (address, bounds) in EnumerateBounds(context))
+         {
+             var cell = context.Sheet.Cells[address];
++            if (context.CollectTextOnly && string.IsNullOrEmpty(cell.Text))
++            {
++                continue;
++            }
++
+             var content = CellContentBounds.Calculate(bounds, cell.Style);
+             var insets = context.Policy.GetCellContentInsets(cell, content.Width, bounds.Height);
+             context.CellLayouts[address] = new(
+@@ -25,7 +30,7 @@ internal sealed class CellBoundsPass : IReportLayoutPass
+                 context.TextSizes.GetValueOrDefault(address))
+             {
+                 ContentBounds = content with { X = content.X + insets.Left, Width = Math.Max(0, content.Width - insets.Left - insets.Right) },
+-                MergedBorders = cell.MergedBorders?
++                MergedBorders = context.CollectTextOnly ? null : cell.MergedBorders?
+                     .Where(border => context.ColumnLayouts.ContainsKey(border.Address.Column) &&
+                         context.RowLayouts.ContainsKey(border.Address.Row))
+                     .Select(border =>
+diff --git a/src/ExcelRenderer.Core/Layout/RenderPageBuilder.cs b/src/ExcelRenderer.Core/Layout/RenderPageBuilder.cs
+index 26d5145..db963a2 100644
+--- a/src/ExcelRenderer.Core/Layout/RenderPageBuilder.cs
++++ b/src/ExcelRenderer.Core/Layout/RenderPageBuilder.cs
+@@ -107,8 +107,14 @@ internal sealed class RenderPageBuilder
+             .Select(layout => BuildCell(layout, placement, repeatColumns, repeatRows))
+             .ToArray();
+         var pageContext = new CorePageBuildContext(_context, placement, horizontal, vertical, _bodyColumns, _bodyRows, _titleColumns, _titleRows, repeatColumns, repeatRows);
+-        var images = _context.Policy.BuildPageImages(pageContext);
++        var images = _context.CollectTextOnly ? [] : _context.Policy.BuildPageImages(pageContext);
+         Rendering.ConversionMetrics.Report("corePageBuild", 1);
++        if (_context.CollectTextOnly)
++        {
++            Rendering.ConversionMetrics.Report("coreTextPageBuild", 1);
++            return new(pageNumber, cells);
++        }
++
+         var page = _context.Policy.BuildAdditionalPageContent(pageContext, new(pageNumber, cells, images));
+         _context.BorderNeighbors ??= new(_context.Sheet);
+         if (!_context.BorderNeighbors.HasEdges)
+diff --git a/src/ExcelRenderer.Core/Layout/ReportLayoutContext.cs b/src/ExcelRenderer.Core/Layout/ReportLayoutContext.cs
+index abd7d3f..183da41 100644
+--- a/src/ExcelRenderer.Core/Layout/ReportLayoutContext.cs
++++ b/src/ExcelRenderer.Core/Layout/ReportLayoutContext.cs
+@@ -92,6 +92,9 @@ internal sealed class ReportLayoutContext
+     /// <summary>Gets or sets the page-local cell addresses to measure.</summary>
+     internal IReadOnlyList<CellAddress>? CandidateAddresses { get; set; }
+ 
++    /// <summary>Gets or sets a value indicating whether this Core-only build omits nontext page payloads.</summary>
++    internal bool CollectTextOnly { get; set; }
++
+     /// <summary>Gets or sets shared lightweight object geometry without retaining other page payloads.</summary>
+     internal SheetObjectLayoutIndex? ObjectLayouts { get; set; }
+ 
+diff --git a/src/ExcelRenderer.Core/Layout/SheetLayoutPlan.cs b/src/ExcelRenderer.Core/Layout/SheetLayoutPlan.cs
+index 75f6818..f1ef9c5 100644
+--- a/src/ExcelRenderer.Core/Layout/SheetLayoutPlan.cs
++++ b/src/ExcelRenderer.Core/Layout/SheetLayoutPlan.cs
+@@ -84,13 +84,15 @@ internal sealed class SheetLayoutPlan
+     /// <param name="count">The count used by this operation.</param>
+     /// <param name="measurer">The measurer used by this operation.</param>
+     /// <param name="cancellationToken">The page-build cancellation token.</param>
++    /// <param name="collectTextOnly">Whether to omit nontext payloads during Core font collection.</param>
+     /// <returns>The planned or generated result.</returns>
+-    internal RenderPage Build(int index, int number, int count, ITextMeasurer measurer, CancellationToken cancellationToken = default)
++    internal RenderPage Build(int index, int number, int count, ITextMeasurer measurer, CancellationToken cancellationToken = default, bool collectTextOnly = false)
+     {
+         var plan = Pages[index];
+         var context = new ReportLayoutContext(sheet, measurer, geometry)
+         {
+             CancellationToken = cancellationToken,
++            CollectTextOnly = collectTextOnly,
+             Policy = policy,
+             PrintArea = printArea,
+             VisibleColumns = visibleColumns,

@@ -4,6 +4,11 @@ This follow-up starts at `a71e21d9f8a612c8747918383eced1742b385ada`, after
 PR #114 was merged. The original checkout remains unchanged; implementation is in
 branch `perf/main-rendering-optimizations`. [日本語](main-performance-optimization.ja.md).
 
+The later [rendering review fixes](rendering-review-fixes.md) correct CLOCK
+free-slot scanning, unify page-build purpose and text collection order, and stop
+caching plain unwrapped lines twice. The measurements below remain the historical
+results for this optimization, not results for that follow-up.
+
 ## Implemented boundaries
 
 1. **Paint resources.** Main PDF's `SkiaPdfDocumentWriter` owns its disposable

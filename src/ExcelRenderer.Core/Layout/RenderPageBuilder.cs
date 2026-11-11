@@ -121,14 +121,14 @@ internal sealed class RenderPageBuilder
 
         var cells = selected.Select(layout => BuildCell(layout, placement, repeatColumns, repeatRows)).ToArray();
         var pageContext = new CorePageBuildContext(_context, placement, horizontal, vertical, _bodyColumns, _bodyRows, _titleColumns, _titleRows, repeatColumns, repeatRows);
-        var images = _context.CollectTextOnly ? [] : _context.Policy.BuildPageImages(pageContext);
+        var images = _context.Purpose == PageBuildPurpose.Render ? _context.Policy.BuildPageImages(pageContext) : [];
         Rendering.ConversionMetrics.Report("corePageBuild", 1);
-        if (_context.CollectTextOnly)
+        if (_context.Purpose != PageBuildPurpose.Render)
         {
             Rendering.ConversionMetrics.Report("coreTextPageBuild", 1);
-            var textPage = new RenderPage(pageNumber, cells);
-            return _context.PreservePreflightMetadata
-                ? _context.Policy.BuildAdditionalPageContent(pageContext, textPage) with { IsTextPreflight = true }
+            var textPage = new RenderPage(pageNumber, cells) { Purpose = _context.Purpose };
+            return _context.Purpose == PageBuildPurpose.Preflight
+                ? _context.Policy.BuildAdditionalPageContent(pageContext, textPage)
                 : textPage;
         }
 

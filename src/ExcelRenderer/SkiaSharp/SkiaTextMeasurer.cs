@@ -109,7 +109,7 @@ public sealed partial class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
         return result;
     }
 
-    private TextLayoutLine CreateLine(
+    private TextLayoutLine CreateCachedLine(
         string text,
         bool explicitBreak,
         FontStyle style,
@@ -124,6 +124,23 @@ public sealed partial class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
             return cached;
         }
 
+        var result = CreateLine(text, explicitBreak, style, request, selectedRun, selectedGlyphs);
+        if (cacheable)
+        {
+            lineLayouts!.Store(key, result, text.Length + (long)style.Family.Length + LineUnits(result));
+        }
+
+        return result;
+    }
+
+    private TextLayoutLine CreateLine(
+        string text,
+        bool explicitBreak,
+        FontStyle style,
+        FontRequest request,
+        TextRun? selectedRun = null,
+        ushort[]? selectedGlyphs = null)
+    {
         IReadOnlyList<TextRun> resolvedRuns = selectedRun is null ? _fontManager.ResolveTextRuns(text, request) : [selectedRun];
         var positionedRuns = new List<TextLayoutRun>();
         var x = 0d;
@@ -154,11 +171,6 @@ public sealed partial class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
             Descent = descent,
             Leading = leading,
         };
-        if (cacheable)
-        {
-            lineLayouts!.Store(key, result, text.Length + (long)style.Family.Length + LineUnits(result));
-        }
-
         return result;
     }
 

@@ -1,0 +1,228 @@
+{
+  "protocol": {
+    "before": "artifacts/rendering-review/before",
+    "after": "artifacts/rendering-review/clock-only",
+    "output": "artifacts/rendering-review/clock-comparison",
+    "generate": false,
+    "diagnostics": false,
+    "rounds": 3,
+    "warmups": 3,
+    "samples": 5,
+    "case": [
+      "text1000-Pdf",
+      "wrap1000-Pdf",
+      "borders1000-Pdf"
+    ],
+    "cpuAffinity": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "caseWarmups": {
+      "text1000-Pdf": 3,
+      "wrap1000-Pdf": 3,
+      "borders1000-Pdf": 3
+    }
+  },
+  "products": {
+    "before": {
+      "ExcelRenderer.Fonts.dll": "a4b71f286cc2d9b7a8754bfcd70c4c1ecccef145dfca5a0c83780aff16ac36c4",
+      "ExcelRenderer.OpenXml.dll": "7887ff055c55626559211fd2df82516ebf2e188e15096105f350caca45bc3ccc",
+      "ExcelRenderer.Performance.dll": "519763b9469c2791eaf088d880e22ff6fcb5b0bfb290b08b599bb0428e6b26dc",
+      "ExcelRenderer.Core.dll": "9d241f35ba92fd634e1268019d7aa888379750988daecb17db5da073bc02de7d",
+      "ExcelRenderer.Formulas.dll": "747f0cec1951c0323d184ea6105629129728305bbd0b48757f175bcb99cbd986",
+      "ExcelRenderer.Mapping.dll": "04838d9da3a8cf7e41b0bb47b692232a750ddcbb7faec334898628943a009223",
+      "ExcelRenderer.OpenXml.Reader.dll": "98c7c6a64946843dd9db8084d7e2c96bdd8a5bc5eeea9a09a90508ccbd9d3d13",
+      "ExcelRenderer.dll": "4caa272cdf1b540511d68399414d24ef4e3855b7b774cd1d650d6a7408fdfbd6"
+    },
+    "after": {
+      "ExcelRenderer.Fonts.dll": "a4b71f286cc2d9b7a8754bfcd70c4c1ecccef145dfca5a0c83780aff16ac36c4",
+      "ExcelRenderer.OpenXml.dll": "7887ff055c55626559211fd2df82516ebf2e188e15096105f350caca45bc3ccc",
+      "ExcelRenderer.Performance.dll": "ef937a46bf71b9741589c8da307dfd1375d9543e7cd650ad7de84756baacbe23",
+      "ExcelRenderer.Core.dll": "fe6662294e1c6f011d15e451c913b53f586c71dcf8e431036897af5ed7233747",
+      "ExcelRenderer.Formulas.dll": "747f0cec1951c0323d184ea6105629129728305bbd0b48757f175bcb99cbd986",
+      "ExcelRenderer.Mapping.dll": "04838d9da3a8cf7e41b0bb47b692232a750ddcbb7faec334898628943a009223",
+      "ExcelRenderer.OpenXml.Reader.dll": "98c7c6a64946843dd9db8084d7e2c96bdd8a5bc5eeea9a09a90508ccbd9d3d13",
+      "ExcelRenderer.dll": "8af21a7a3e41642e5db0751b050035273a0e5a510672ece1a8fd8bc939f3e6a1"
+    }
+  },
+  "inputs": {},
+  "summary": [
+    {
+      "case": "text1000-Pdf",
+      "before": {
+        "milliseconds": 187.0434,
+        "allocationBytes": 57569160,
+        "peakRssBytes": 183189504,
+        "gc": [
+          2,
+          0,
+          0
+        ],
+        "outputBytes": 140223,
+        "pages": 25,
+        "roundMedians": [
+          164.6032,
+          187.0434,
+          190.5623
+        ],
+        "minimum": 159.039,
+        "maximum": 229.6806,
+        "coldMilliseconds": [
+          949.7034,
+          550.3813,
+          531.6658
+        ]
+      },
+      "after": {
+        "milliseconds": 138.7068,
+        "allocationBytes": 56334648,
+        "peakRssBytes": 186118144,
+        "gc": [
+          2,
+          0,
+          0
+        ],
+        "outputBytes": 140223,
+        "pages": 25,
+        "roundMedians": [
+          137.4778,
+          129.3993,
+          147.3087
+        ],
+        "minimum": 126.5811,
+        "maximum": 220.2813,
+        "coldMilliseconds": [
+          493.0332,
+          504.2527,
+          493.7706
+        ]
+      },
+      "timeChangePercent": -25.8424515379853,
+      "allocationChangePercent": -2.144398146507609,
+      "pairedRoundChanges": [
+        -16.479266502716825,
+        -30.81856938015455,
+        -22.697878856415986
+      ]
+    },
+    {
+      "case": "wrap1000-Pdf",
+      "before": {
+        "milliseconds": 468.0119,
+        "allocationBytes": 442902048,
+        "peakRssBytes": 194584576,
+        "gc": [
+          25,
+          4,
+          0
+        ],
+        "outputBytes": 148157,
+        "pages": 25,
+        "roundMedians": [
+          468.0119,
+          501.4405,
+          465.5023
+        ],
+        "minimum": 450.5424,
+        "maximum": 549.7306,
+        "coldMilliseconds": [
+          1389.513,
+          1341.0755,
+          1668.0629
+        ]
+      },
+      "after": {
+        "milliseconds": 464.5056,
+        "allocationBytes": 442897768,
+        "peakRssBytes": 204521472,
+        "gc": [
+          25,
+          4,
+          0
+        ],
+        "outputBytes": 148157,
+        "pages": 25,
+        "roundMedians": [
+          446.1027,
+          464.5056,
+          465.783
+        ],
+        "minimum": 439.6624,
+        "maximum": 505.7477,
+        "coldMilliseconds": [
+          1364.9993,
+          1356.5999,
+          1365.303
+        ]
+      },
+      "timeChangePercent": -0.7491903517837906,
+      "allocationChangePercent": -0.0009663536258974759,
+      "pairedRoundChanges": [
+        -4.681333957533984,
+        -7.36575924760764,
+        0.060300453939765575
+      ]
+    },
+    {
+      "case": "borders1000-Pdf",
+      "before": {
+        "milliseconds": 169.25,
+        "allocationBytes": 62272720,
+        "peakRssBytes": 176730112,
+        "gc": [
+          2,
+          0,
+          0
+        ],
+        "outputBytes": 154483,
+        "pages": 25,
+        "roundMedians": [
+          165.1976,
+          167.3586,
+          173.3601
+        ],
+        "minimum": 153.3695,
+        "maximum": 207.73,
+        "coldMilliseconds": [
+          629.3053,
+          509.6833,
+          518.0195
+        ]
+      },
+      "after": {
+        "milliseconds": 157.174,
+        "allocationBytes": 62334768,
+        "peakRssBytes": 188456960,
+        "gc": [
+          2,
+          0,
+          0
+        ],
+        "outputBytes": 154483,
+        "pages": 25,
+        "roundMedians": [
+          140.9898,
+          160.216,
+          162.9768
+        ],
+        "minimum": 134.0676,
+        "maximum": 236.8679,
+        "coldMilliseconds": [
+          529.0775,
+          554.0158,
+          552.39
+        ]
+      },
+      "timeChangePercent": -7.135007385524372,
+      "allocationChangePercent": 0.09963913572428318,
+      "pairedRoundChanges": [
+        -14.653844850046237,
+        -4.267841628694303,
+        -5.989440476787911
+      ]
+    }
+  ]
+}

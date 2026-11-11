@@ -24,7 +24,12 @@ public sealed partial class SkiaTextMeasurer
             foreach (var line in TextLineBreaker.Break(text, width, wrap, value => MeasureWidth(value, font, request)))
             {
                 ConversionFontResources.Current!.Token.ThrowIfCancellationRequested();
-                yield return CreateLine(line.Text, line.ExplicitBreak, font, request);
+
+                // Whole unwrapped layouts already have a cache. Reserve the line
+                // cache for fragments shared across wrapped or partially styled text.
+                yield return wrap && width > 0
+                    ? CreateCachedLine(line.Text, line.ExplicitBreak, font, request)
+                    : CreateLine(line.Text, line.ExplicitBreak, font, request);
             }
 
             yield break;
@@ -48,11 +53,11 @@ public sealed partial class SkiaTextMeasurer
                     var previous = lines.Current;
                     while (lines.MoveNext())
                     {
-                        yield return CreateLine(previous.Text, false, font, request);
+                        yield return CreateCachedLine(previous.Text, false, font, request);
                         previous = lines.Current;
                     }
 
-                    yield return CreateLine(previous.Text, index < paragraphs.Length - 1, font, request);
+                    yield return CreateCachedLine(previous.Text, index < paragraphs.Length - 1, font, request);
                 }
 
                 continue;
@@ -70,7 +75,7 @@ public sealed partial class SkiaTextMeasurer
 
             yield return CreateSelected(pending, index < paragraphs.Length - 1);
 
-            TextLayoutLine CreateSelected((string Text, ushort[] Glyphs) line, bool explicitBreak) => CreateLine(
+            TextLayoutLine CreateSelected((string Text, ushort[] Glyphs) line, bool explicitBreak) => CreateCachedLine(
                 line.Text,
                 explicitBreak,
                 font,

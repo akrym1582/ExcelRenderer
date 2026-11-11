@@ -1,0 +1,3185 @@
+{
+  "primary": [
+    {
+      "case": "text1-Pdf",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 20.4815,
+          "allocationBytes": 18774688,
+          "peakRssBytes": 148045824
+        },
+        "after": {
+          "milliseconds": 17.9354,
+          "allocationBytes": 18621760,
+          "peakRssBytes": 137437184
+        }
+      },
+      "processPeaks": {
+        "before": 159051776,
+        "after": 137469952
+      },
+      "ratios": {
+        "milliseconds": 0.8756878158338013,
+        "allocationBytes": 0.9918545650399091,
+        "peakRssBytes": 0.9283421868083223,
+        "processPeakRssBytes": 0.8643094434858747
+      },
+      "investigate": false
+    },
+    {
+      "case": "text1-Pdf",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 17.699,
+          "allocationBytes": 18627368,
+          "peakRssBytes": 142856192
+        },
+        "after": {
+          "milliseconds": 18.9783,
+          "allocationBytes": 18622656,
+          "peakRssBytes": 143716352
+        }
+      },
+      "processPeaks": {
+        "before": 142880768,
+        "after": 143732736
+      },
+      "ratios": {
+        "milliseconds": 1.0722809198259788,
+        "allocationBytes": 0.9997470388731248,
+        "peakRssBytes": 1.0060211600768414,
+        "processPeakRssBytes": 1.005962789897658
+      },
+      "investigate": true
+    },
+    {
+      "case": "text1-Pdf",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 18.5178,
+          "allocationBytes": 18627728,
+          "peakRssBytes": 143859712
+        },
+        "after": {
+          "milliseconds": 18.0029,
+          "allocationBytes": 18622208,
+          "peakRssBytes": 147640320
+        }
+      },
+      "processPeaks": {
+        "before": 143896576,
+        "after": 147660800
+      },
+      "ratios": {
+        "milliseconds": 0.9721943211396602,
+        "allocationBytes": 0.999703667564826,
+        "peakRssBytes": 1.0262798246113547,
+        "processPeakRssBytes": 1.0261592325866045
+      },
+      "investigate": false
+    },
+    {
+      "case": "text1000-Pdf",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 165.4272,
+          "allocationBytes": 57872312,
+          "peakRssBytes": 184762368
+        },
+        "after": {
+          "milliseconds": 222.7937,
+          "allocationBytes": 57521824,
+          "peakRssBytes": 177180672
+        }
+      },
+      "processPeaks": {
+        "before": 184963072,
+        "after": 188919808
+      },
+      "ratios": {
+        "milliseconds": 1.3467779180207367,
+        "allocationBytes": 0.9939437705547344,
+        "peakRssBytes": 0.9589651503059324,
+        "processPeakRssBytes": 1.0213920322430632
+      },
+      "investigate": true
+    },
+    {
+      "case": "text1000-Pdf",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 209.31,
+          "allocationBytes": 57872088,
+          "peakRssBytes": 184053760
+        },
+        "after": {
+          "milliseconds": 174.6468,
+          "allocationBytes": 57218672,
+          "peakRssBytes": 166092800
+        }
+      },
+      "processPeaks": {
+        "before": 184377344,
+        "after": 177754112
+      },
+      "ratios": {
+        "milliseconds": 0.8343930055897951,
+        "allocationBytes": 0.9887093066350051,
+        "peakRssBytes": 0.9024145988650273,
+        "processPeakRssBytes": 0.9640778424490158
+      },
+      "investigate": false
+    },
+    {
+      "case": "text1000-Pdf",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 191.6005,
+          "allocationBytes": 56334872,
+          "peakRssBytes": 182812672
+        },
+        "after": {
+          "milliseconds": 178.6253,
+          "allocationBytes": 57214240,
+          "peakRssBytes": 165912576
+        }
+      },
+      "processPeaks": {
+        "before": 194719744,
+        "after": 173502464
+      },
+      "ratios": {
+        "milliseconds": 0.9322799262006102,
+        "allocationBytes": 1.0156096564841754,
+        "peakRssBytes": 0.9075551174045527,
+        "processPeakRssBytes": 0.891036832916132
+      },
+      "investigate": false
+    },
+    {
+      "case": "wrap1000-Pdf",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 536.7375,
+          "allocationBytes": 442652392,
+          "peakRssBytes": 188026880
+        },
+        "after": {
+          "milliseconds": 526.0746,
+          "allocationBytes": 440818336,
+          "peakRssBytes": 198463488
+        }
+      },
+      "processPeaks": {
+        "before": 195518464,
+        "after": 199876608
+      },
+      "ratios": {
+        "milliseconds": 0.9801338643191506,
+        "allocationBytes": 0.9958566675948292,
+        "peakRssBytes": 1.0555059361725303,
+        "processPeakRssBytes": 1.0222901914777727
+      },
+      "investigate": true
+    },
+    {
+      "case": "wrap1000-Pdf",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 515.9835,
+          "allocationBytes": 443008552,
+          "peakRssBytes": 199110656
+        },
+        "after": {
+          "milliseconds": 526.6736,
+          "allocationBytes": 440804992,
+          "peakRssBytes": 188694528
+        }
+      },
+      "processPeaks": {
+        "before": 200077312,
+        "after": 190177280
+      },
+      "ratios": {
+        "milliseconds": 1.0207179105533413,
+        "allocationBytes": 0.9950259199510894,
+        "peakRssBytes": 0.9476867375696859,
+        "processPeakRssBytes": 0.9505189673879665
+      },
+      "investigate": false
+    },
+    {
+      "case": "wrap1000-Pdf",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 698.2803,
+          "allocationBytes": 442640152,
+          "peakRssBytes": 189067264
+        },
+        "after": {
+          "milliseconds": 501.8523,
+          "allocationBytes": 441092032,
+          "peakRssBytes": 192647168
+        }
+      },
+      "processPeaks": {
+        "before": 190185472,
+        "after": 193007616
+      },
+      "ratios": {
+        "milliseconds": 0.7186974915374241,
+        "allocationBytes": 0.9965025314739183,
+        "peakRssBytes": 1.0189345523083255,
+        "processPeakRssBytes": 1.0148389042039971
+      },
+      "investigate": false
+    },
+    {
+      "case": "borders1000-Pdf",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 197.1672,
+          "allocationBytes": 61099864,
+          "peakRssBytes": 180056064
+        },
+        "after": {
+          "milliseconds": 183.7251,
+          "allocationBytes": 61984504,
+          "peakRssBytes": 174768128
+        }
+      },
+      "processPeaks": {
+        "before": 191827968,
+        "after": 175230976
+      },
+      "ratios": {
+        "milliseconds": 0.9318238530546662,
+        "allocationBytes": 1.014478591965442,
+        "peakRssBytes": 0.9706317250164926,
+        "processPeakRssBytes": 0.9134798112442082
+      },
+      "investigate": false
+    },
+    {
+      "case": "borders1000-Pdf",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 234.3612,
+          "allocationBytes": 62334992,
+          "peakRssBytes": 178114560
+        },
+        "after": {
+          "milliseconds": 182.9301,
+          "allocationBytes": 61984024,
+          "peakRssBytes": 168349696
+        }
+      },
+      "processPeaks": {
+        "before": 179118080,
+        "after": 180715520
+      },
+      "ratios": {
+        "milliseconds": 0.7805477186496741,
+        "allocationBytes": 0.994369647147785,
+        "peakRssBytes": 0.9451764976428654,
+        "processPeakRssBytes": 1.0089183626800824
+      },
+      "investigate": false
+    },
+    {
+      "case": "borders1000-Pdf",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 195.9464,
+          "allocationBytes": 60541584,
+          "peakRssBytes": 180940800
+        },
+        "after": {
+          "milliseconds": 189.8514,
+          "allocationBytes": 61984472,
+          "peakRssBytes": 180572160
+        }
+      },
+      "processPeaks": {
+        "before": 182005760,
+        "after": 180596736
+      },
+      "ratios": {
+        "milliseconds": 0.9688945548374454,
+        "allocationBytes": 1.0238330070782422,
+        "peakRssBytes": 0.9979626485568761,
+        "processPeakRssBytes": 0.9922583549004164
+      },
+      "investigate": false
+    },
+    {
+      "case": "imagesonly-Pdf",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 11.9979,
+          "allocationBytes": 18188840,
+          "peakRssBytes": 140623872
+        },
+        "after": {
+          "milliseconds": 20.0819,
+          "allocationBytes": 18185192,
+          "peakRssBytes": 146759680
+        }
+      },
+      "processPeaks": {
+        "before": 140636160,
+        "after": 146771968
+      },
+      "ratios": {
+        "milliseconds": 1.6737845789679862,
+        "allocationBytes": 0.999799437457254,
+        "peakRssBytes": 1.0436327624373762,
+        "processPeakRssBytes": 1.0436289500509683
+      },
+      "investigate": true
+    },
+    {
+      "case": "imagesonly-Pdf",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 12.3643,
+          "allocationBytes": 18188168,
+          "peakRssBytes": 152051712
+        },
+        "after": {
+          "milliseconds": 12.7638,
+          "allocationBytes": 18187160,
+          "peakRssBytes": 135876608
+        }
+      },
+      "processPeaks": {
+        "before": 152068096,
+        "after": 135876608
+      },
+      "ratios": {
+        "milliseconds": 1.0323107656721366,
+        "allocationBytes": 0.9999445793551061,
+        "peakRssBytes": 0.8936210333494963,
+        "processPeakRssBytes": 0.8935247535419921
+      },
+      "investigate": false
+    },
+    {
+      "case": "imagesonly-Pdf",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 11.5918,
+          "allocationBytes": 18186424,
+          "peakRssBytes": 135856128
+        },
+        "after": {
+          "milliseconds": 12.0475,
+          "allocationBytes": 18188280,
+          "peakRssBytes": 151814144
+        }
+      },
+      "processPeaks": {
+        "before": 135856128,
+        "after": 151830528
+      },
+      "ratios": {
+        "milliseconds": 1.0393122724684691,
+        "allocationBytes": 1.0001020541476433,
+        "peakRssBytes": 1.1174626145682585,
+        "processPeakRssBytes": 1.1175832127351664
+      },
+      "investigate": true
+    },
+    {
+      "case": "header-Pdf",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 18.3628,
+          "allocationBytes": 18604040,
+          "peakRssBytes": 131366912
+        },
+        "after": {
+          "milliseconds": 17.9081,
+          "allocationBytes": 18599888,
+          "peakRssBytes": 142340096
+        }
+      },
+      "processPeaks": {
+        "before": 131411968,
+        "after": 142385152
+      },
+      "ratios": {
+        "milliseconds": 0.9752379811357745,
+        "allocationBytes": 0.9997768226686247,
+        "peakRssBytes": 1.0835308056872037,
+        "processPeakRssBytes": 1.0835021662562727
+      },
+      "investigate": true
+    },
+    {
+      "case": "header-Pdf",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 17.9731,
+          "allocationBytes": 18605040,
+          "peakRssBytes": 131424256
+        },
+        "after": {
+          "milliseconds": 18.6942,
+          "allocationBytes": 18599560,
+          "peakRssBytes": 142630912
+        }
+      },
+      "processPeaks": {
+        "before": 142430208,
+        "after": 142647296
+      },
+      "ratios": {
+        "milliseconds": 1.0401210698210104,
+        "allocationBytes": 0.9997054561559663,
+        "peakRssBytes": 1.0852708346319266,
+        "processPeakRssBytes": 1.001524171052253
+      },
+      "investigate": true
+    },
+    {
+      "case": "header-Pdf",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 17.5472,
+          "allocationBytes": 18605176,
+          "peakRssBytes": 135356416
+        },
+        "after": {
+          "milliseconds": 18.9827,
+          "allocationBytes": 18599976,
+          "peakRssBytes": 137687040
+        }
+      },
+      "processPeaks": {
+        "before": 135430144,
+        "after": 137715712
+      },
+      "ratios": {
+        "milliseconds": 1.081807923771314,
+        "allocationBytes": 0.9997205078844725,
+        "peakRssBytes": 1.0172184228045755,
+        "processPeakRssBytes": 1.0168763609968545
+      },
+      "investigate": true
+    },
+    {
+      "case": "empty-Pdf",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 10.4293,
+          "allocationBytes": 17712808,
+          "peakRssBytes": 91070464
+        },
+        "after": {
+          "milliseconds": 9.7974,
+          "allocationBytes": 17712696,
+          "peakRssBytes": 91508736
+        }
+      },
+      "processPeaks": {
+        "before": 91070464,
+        "after": 91508736
+      },
+      "ratios": {
+        "milliseconds": 0.93941108223946,
+        "allocationBytes": 0.9999936768918852,
+        "peakRssBytes": 1.0048124494018171,
+        "processPeakRssBytes": 1.0048124494018171
+      },
+      "investigate": false
+    },
+    {
+      "case": "empty-Pdf",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 10.6379,
+          "allocationBytes": 17713664,
+          "peakRssBytes": 91320320
+        },
+        "after": {
+          "milliseconds": 10.8535,
+          "allocationBytes": 17712880,
+          "peakRssBytes": 91492352
+        }
+      },
+      "processPeaks": {
+        "before": 91332608,
+        "after": 91492352
+      },
+      "ratios": {
+        "milliseconds": 1.0202671579917089,
+        "allocationBytes": 0.9999557403821141,
+        "peakRssBytes": 1.001883830455259,
+        "processPeakRssBytes": 1.001749035787963
+      },
+      "investigate": false
+    },
+    {
+      "case": "empty-Pdf",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 10.5667,
+          "allocationBytes": 17713888,
+          "peakRssBytes": 91086848
+        },
+        "after": {
+          "milliseconds": 10.2065,
+          "allocationBytes": 17712656,
+          "peakRssBytes": 91414528
+        }
+      },
+      "processPeaks": {
+        "before": 91095040,
+        "after": 91430912
+      },
+      "ratios": {
+        "milliseconds": 0.9659117794581089,
+        "allocationBytes": 0.9999304500513947,
+        "peakRssBytes": 1.0035974458134724,
+        "processPeakRssBytes": 1.0036870503597122
+      },
+      "investigate": false
+    },
+    {
+      "case": "mixed1000-Pdf",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 151.6848,
+          "allocationBytes": 50041944,
+          "peakRssBytes": 172093440
+        },
+        "after": {
+          "milliseconds": 162.6157,
+          "allocationBytes": 49566696,
+          "peakRssBytes": 171266048
+        }
+      },
+      "processPeaks": {
+        "before": 184320000,
+        "after": 172302336
+      },
+      "ratios": {
+        "milliseconds": 1.072063252217757,
+        "allocationBytes": 0.990503006837624,
+        "peakRssBytes": 0.9951921932643104,
+        "processPeakRssBytes": 0.9348
+      },
+      "investigate": true
+    },
+    {
+      "case": "mixed1000-Pdf",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 187.9947,
+          "allocationBytes": 50041912,
+          "peakRssBytes": 171986944
+        },
+        "after": {
+          "milliseconds": 146.0995,
+          "allocationBytes": 49467848,
+          "peakRssBytes": 166592512
+        }
+      },
+      "processPeaks": {
+        "before": 183021568,
+        "after": 166907904
+      },
+      "ratios": {
+        "milliseconds": 0.7771469089288155,
+        "allocationBytes": 0.988528336007625,
+        "peakRssBytes": 0.9686346424063446,
+        "processPeakRssBytes": 0.9119575677550746
+      },
+      "investigate": false
+    },
+    {
+      "case": "mixed1000-Pdf",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 163.7021,
+          "allocationBytes": 49739392,
+          "peakRssBytes": 162402304
+        },
+        "after": {
+          "milliseconds": 140.3187,
+          "allocationBytes": 49766088,
+          "peakRssBytes": 171622400
+        }
+      },
+      "processPeaks": {
+        "before": 162652160,
+        "after": 178376704
+      },
+      "ratios": {
+        "milliseconds": 0.8571588269179199,
+        "allocationBytes": 1.0005367174572621,
+        "peakRssBytes": 1.056773184695705,
+        "processPeakRssBytes": 1.0966759002770083
+      },
+      "investigate": true
+    },
+    {
+      "case": "02-image-Png",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 37.2343,
+          "allocationBytes": 18812968,
+          "peakRssBytes": 100786176
+        },
+        "after": {
+          "milliseconds": 33.3121,
+          "allocationBytes": 18806736,
+          "peakRssBytes": 101380096
+        }
+      },
+      "processPeaks": {
+        "before": 100786176,
+        "after": 101380096
+      },
+      "ratios": {
+        "milliseconds": 0.894661642625214,
+        "allocationBytes": 0.9996687391378117,
+        "peakRssBytes": 1.0058928716573194,
+        "processPeakRssBytes": 1.0058928716573194
+      },
+      "investigate": false
+    },
+    {
+      "case": "02-image-Png",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 37.7773,
+          "allocationBytes": 18812496,
+          "peakRssBytes": 102072320
+        },
+        "after": {
+          "milliseconds": 41.3053,
+          "allocationBytes": 18803680,
+          "peakRssBytes": 103407616
+        }
+      },
+      "processPeaks": {
+        "before": 103452672,
+        "after": 103428096
+      },
+      "ratios": {
+        "milliseconds": 1.0933894163955604,
+        "allocationBytes": 0.9995313753156413,
+        "peakRssBytes": 1.0130818619582664,
+        "processPeakRssBytes": 0.9997624420952608
+      },
+      "investigate": true
+    },
+    {
+      "case": "02-image-Png",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 35.4799,
+          "allocationBytes": 18813392,
+          "peakRssBytes": 100511744
+        },
+        "after": {
+          "milliseconds": 32.902,
+          "allocationBytes": 18808592,
+          "peakRssBytes": 101470208
+        }
+      },
+      "processPeaks": {
+        "before": 100519936,
+        "after": 101470208
+      },
+      "ratios": {
+        "milliseconds": 0.9273419598138665,
+        "allocationBytes": 0.9997448625957509,
+        "peakRssBytes": 1.0095358409063124,
+        "processPeakRssBytes": 1.0094535674992868
+      },
+      "investigate": false
+    },
+    {
+      "case": "02-image-Svg",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 22.4825,
+          "allocationBytes": 19155672,
+          "peakRssBytes": 99274752
+        },
+        "after": {
+          "milliseconds": 23.3698,
+          "allocationBytes": 19149992,
+          "peakRssBytes": 99217408
+        }
+      },
+      "processPeaks": {
+        "before": 99287040,
+        "after": 99246080
+      },
+      "ratios": {
+        "milliseconds": 1.039466251528967,
+        "allocationBytes": 0.999703482080921,
+        "peakRssBytes": 0.9994223707554565,
+        "processPeakRssBytes": 0.9995874587458746
+      },
+      "investigate": false
+    },
+    {
+      "case": "02-image-Svg",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 20.5907,
+          "allocationBytes": 19154200,
+          "peakRssBytes": 99733504
+        },
+        "after": {
+          "milliseconds": 22.4583,
+          "allocationBytes": 19149992,
+          "peakRssBytes": 99360768
+        }
+      },
+      "processPeaks": {
+        "before": 99733504,
+        "after": 99381248
+      },
+      "ratios": {
+        "milliseconds": 1.0907011417775987,
+        "allocationBytes": 0.999780309279427,
+        "peakRssBytes": 0.996262680192205,
+        "processPeakRssBytes": 0.9964680274343916
+      },
+      "investigate": true
+    },
+    {
+      "case": "02-image-Svg",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 22.442,
+          "allocationBytes": 19155064,
+          "peakRssBytes": 99528704
+        },
+        "after": {
+          "milliseconds": 21.8898,
+          "allocationBytes": 19151584,
+          "peakRssBytes": 99393536
+        }
+      },
+      "processPeaks": {
+        "before": 99536896,
+        "after": 99405824
+      },
+      "ratios": {
+        "milliseconds": 0.9753943498796899,
+        "allocationBytes": 0.9998183248043442,
+        "peakRssBytes": 0.9986419194205522,
+        "processPeakRssBytes": 0.9986831817620674
+      },
+      "investigate": false
+    },
+    {
+      "case": "04-text-decoration-Png",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 35.0231,
+          "allocationBytes": 18561744,
+          "peakRssBytes": 99213312
+        },
+        "after": {
+          "milliseconds": 34.1069,
+          "allocationBytes": 18558760,
+          "peakRssBytes": 99385344
+        }
+      },
+      "processPeaks": {
+        "before": 100118528,
+        "after": 99385344
+      },
+      "ratios": {
+        "milliseconds": 0.9738401226619003,
+        "allocationBytes": 0.9998392392438986,
+        "peakRssBytes": 1.0017339608620262,
+        "processPeakRssBytes": 0.9926768399950906
+      },
+      "investigate": false
+    },
+    {
+      "case": "04-text-decoration-Png",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 33.1015,
+          "allocationBytes": 18565432,
+          "peakRssBytes": 99344384
+        },
+        "after": {
+          "milliseconds": 33.1133,
+          "allocationBytes": 18558088,
+          "peakRssBytes": 99131392
+        }
+      },
+      "processPeaks": {
+        "before": 101228544,
+        "after": 99131392
+      },
+      "ratios": {
+        "milliseconds": 1.0003564793136264,
+        "allocationBytes": 0.9996044261183904,
+        "peakRssBytes": 0.99785602374866,
+        "processPeakRssBytes": 0.9792829974913004
+      },
+      "investigate": false
+    },
+    {
+      "case": "04-text-decoration-Png",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 39.7107,
+          "allocationBytes": 18560680,
+          "peakRssBytes": 100061184
+        },
+        "after": {
+          "milliseconds": 36.2918,
+          "allocationBytes": 18558864,
+          "peakRssBytes": 99799040
+        }
+      },
+      "processPeaks": {
+        "before": 100974592,
+        "after": 99799040
+      },
+      "ratios": {
+        "milliseconds": 0.9139048165859579,
+        "allocationBytes": 0.9999021587571145,
+        "peakRssBytes": 0.9973801629211183,
+        "processPeakRssBytes": 0.9883579425604413
+      },
+      "investigate": false
+    },
+    {
+      "case": "04-text-decoration-Svg",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 23.78,
+          "allocationBytes": 18906656,
+          "peakRssBytes": 96727040
+        },
+        "after": {
+          "milliseconds": 21.9747,
+          "allocationBytes": 18900432,
+          "peakRssBytes": 96935936
+        }
+      },
+      "processPeaks": {
+        "before": 96727040,
+        "after": 98623488
+      },
+      "ratios": {
+        "milliseconds": 0.9240832632464254,
+        "allocationBytes": 0.9996708037635,
+        "peakRssBytes": 1.002159644293881,
+        "processPeakRssBytes": 1.0196061825111158
+      },
+      "investigate": false
+    },
+    {
+      "case": "04-text-decoration-Svg",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 21.0173,
+          "allocationBytes": 18906928,
+          "peakRssBytes": 96579584
+        },
+        "after": {
+          "milliseconds": 21.6438,
+          "allocationBytes": 18895768,
+          "peakRssBytes": 96587776
+        }
+      },
+      "processPeaks": {
+        "before": 96579584,
+        "after": 96587776
+      },
+      "ratios": {
+        "milliseconds": 1.0298087765792943,
+        "allocationBytes": 0.9994097401756648,
+        "peakRssBytes": 1.0000848212392384,
+        "processPeakRssBytes": 1.0000848212392384
+      },
+      "investigate": false
+    },
+    {
+      "case": "04-text-decoration-Svg",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 22.8107,
+          "allocationBytes": 18902536,
+          "peakRssBytes": 97177600
+        },
+        "after": {
+          "milliseconds": 22.5111,
+          "allocationBytes": 18899216,
+          "peakRssBytes": 96612352
+        }
+      },
+      "processPeaks": {
+        "before": 97177600,
+        "after": 96616448
+      },
+      "ratios": {
+        "milliseconds": 0.986865812973736,
+        "allocationBytes": 0.9998243621914013,
+        "peakRssBytes": 0.9941833508956797,
+        "processPeakRssBytes": 0.9942255005268704
+      },
+      "investigate": false
+    },
+    {
+      "case": "05-borders-Png",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 46.5165,
+          "allocationBytes": 18813896,
+          "peakRssBytes": 99495936
+        },
+        "after": {
+          "milliseconds": 46.5059,
+          "allocationBytes": 18805600,
+          "peakRssBytes": 99491840
+        }
+      },
+      "processPeaks": {
+        "before": 101433344,
+        "after": 99491840
+      },
+      "ratios": {
+        "milliseconds": 0.9997721238700246,
+        "allocationBytes": 0.9995590493324721,
+        "peakRssBytes": 0.9999588324893993,
+        "processPeakRssBytes": 0.9808593119043774
+      },
+      "investigate": false
+    },
+    {
+      "case": "05-borders-Png",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 46.7507,
+          "allocationBytes": 18816456,
+          "peakRssBytes": 104267776
+        },
+        "after": {
+          "milliseconds": 49.2141,
+          "allocationBytes": 18806144,
+          "peakRssBytes": 101330944
+        }
+      },
+      "processPeaks": {
+        "before": 104267776,
+        "after": 101363712
+      },
+      "ratios": {
+        "milliseconds": 1.052692259153339,
+        "allocationBytes": 0.999451969063675,
+        "peakRssBytes": 0.9718337523570082,
+        "processPeakRssBytes": 0.9721480201131364
+      },
+      "investigate": true
+    },
+    {
+      "case": "05-borders-Png",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 45.8482,
+          "allocationBytes": 18819272,
+          "peakRssBytes": 99504128
+        },
+        "after": {
+          "milliseconds": 45.2075,
+          "allocationBytes": 18806680,
+          "peakRssBytes": 99295232
+        }
+      },
+      "processPeaks": {
+        "before": 99504128,
+        "after": 99295232
+      },
+      "ratios": {
+        "milliseconds": 0.9860256236886072,
+        "allocationBytes": 0.9993308986660058,
+        "peakRssBytes": 0.9979006298110566,
+        "processPeakRssBytes": 0.9979006298110566
+      },
+      "investigate": false
+    },
+    {
+      "case": "05-borders-Svg",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 20.8863,
+          "allocationBytes": 19616960,
+          "peakRssBytes": 97419264
+        },
+        "after": {
+          "milliseconds": 20.615,
+          "allocationBytes": 19606376,
+          "peakRssBytes": 97591296
+        }
+      },
+      "processPeaks": {
+        "before": 97419264,
+        "after": 97591296
+      },
+      "ratios": {
+        "milliseconds": 0.9870106241890617,
+        "allocationBytes": 0.9994604668613282,
+        "peakRssBytes": 1.001765893037336,
+        "processPeakRssBytes": 1.001765893037336
+      },
+      "investigate": false
+    },
+    {
+      "case": "05-borders-Svg",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 23.8894,
+          "allocationBytes": 19613016,
+          "peakRssBytes": 98299904
+        },
+        "after": {
+          "milliseconds": 21.7412,
+          "allocationBytes": 19606168,
+          "peakRssBytes": 97873920
+        }
+      },
+      "processPeaks": {
+        "before": 98299904,
+        "after": 98893824
+      },
+      "ratios": {
+        "milliseconds": 0.9100772727653269,
+        "allocationBytes": 0.9996508441129095,
+        "peakRssBytes": 0.9956664861035877,
+        "processPeakRssBytes": 1.0060419184132672
+      },
+      "investigate": false
+    },
+    {
+      "case": "05-borders-Svg",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 20.5102,
+          "allocationBytes": 19616224,
+          "peakRssBytes": 97357824
+        },
+        "after": {
+          "milliseconds": 22.1214,
+          "allocationBytes": 19608240,
+          "peakRssBytes": 97267712
+        }
+      },
+      "processPeaks": {
+        "before": 97357824,
+        "after": 97267712
+      },
+      "ratios": {
+        "milliseconds": 1.0785560355335395,
+        "allocationBytes": 0.9995929899658569,
+        "peakRssBytes": 0.9990744246707897,
+        "processPeakRssBytes": 0.9990744246707897
+      },
+      "investigate": true
+    },
+    {
+      "case": "rich-Pdf",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 19.3023,
+          "allocationBytes": 19235048,
+          "peakRssBytes": 146108416
+        },
+        "after": {
+          "milliseconds": 20.668,
+          "allocationBytes": 19235296,
+          "peakRssBytes": 146022400
+        }
+      },
+      "processPeaks": {
+        "before": 146141184,
+        "after": 146059264
+      },
+      "ratios": {
+        "milliseconds": 1.0707532262994566,
+        "allocationBytes": 1.00001289313133,
+        "peakRssBytes": 0.9994112864792128,
+        "processPeakRssBytes": 0.9994394461728188
+      },
+      "investigate": true
+    },
+    {
+      "case": "rich-Pdf",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 19.746,
+          "allocationBytes": 19235048,
+          "peakRssBytes": 150638592
+        },
+        "after": {
+          "milliseconds": 23.7517,
+          "allocationBytes": 19235848,
+          "peakRssBytes": 151228416
+        }
+      },
+      "processPeaks": {
+        "before": 150659072,
+        "after": 151334912
+      },
+      "ratios": {
+        "milliseconds": 1.2028613390053682,
+        "allocationBytes": 1.0000415907462252,
+        "peakRssBytes": 1.0039154906599232,
+        "processPeakRssBytes": 1.0044858898374205
+      },
+      "investigate": true
+    },
+    {
+      "case": "rich-Pdf",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 20.0699,
+          "allocationBytes": 19235496,
+          "peakRssBytes": 124096512
+        },
+        "after": {
+          "milliseconds": 20.3482,
+          "allocationBytes": 19234400,
+          "peakRssBytes": 150564864
+        }
+      },
+      "processPeaks": {
+        "before": 124096512,
+        "after": 150609920
+      },
+      "ratios": {
+        "milliseconds": 1.0138665364550894,
+        "allocationBytes": 0.9999430220047354,
+        "peakRssBytes": 1.2132884444004357,
+        "processPeakRssBytes": 1.2136515166518138
+      },
+      "investigate": true
+    },
+    {
+      "case": "rich-Png",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 13.0416,
+          "allocationBytes": 18160072,
+          "peakRssBytes": 96219136
+        },
+        "after": {
+          "milliseconds": 12.9615,
+          "allocationBytes": 18159512,
+          "peakRssBytes": 96047104
+        }
+      },
+      "processPeaks": {
+        "before": 96219136,
+        "after": 96047104
+      },
+      "ratios": {
+        "milliseconds": 0.9938581155686418,
+        "allocationBytes": 0.9999691631178554,
+        "peakRssBytes": 0.9982120812225959,
+        "processPeakRssBytes": 0.9982120812225959
+      },
+      "investigate": false
+    },
+    {
+      "case": "rich-Png",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 13.3263,
+          "allocationBytes": 18165224,
+          "peakRssBytes": 96059392
+        },
+        "after": {
+          "milliseconds": 14.0298,
+          "allocationBytes": 18157568,
+          "peakRssBytes": 100966400
+        }
+      },
+      "processPeaks": {
+        "before": 96067584,
+        "after": 101027840
+      },
+      "ratios": {
+        "milliseconds": 1.052790346907994,
+        "allocationBytes": 0.999578535337632,
+        "peakRssBytes": 1.0510830632781851,
+        "processPeakRssBytes": 1.0516329837127996
+      },
+      "investigate": true
+    },
+    {
+      "case": "rich-Png",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 12.1787,
+          "allocationBytes": 18159664,
+          "peakRssBytes": 96591872
+        },
+        "after": {
+          "milliseconds": 14.231,
+          "allocationBytes": 18157984,
+          "peakRssBytes": 101396480
+        }
+      },
+      "processPeaks": {
+        "before": 96591872,
+        "after": 101400576
+      },
+      "ratios": {
+        "milliseconds": 1.1685155230032762,
+        "allocationBytes": 0.9999074872750949,
+        "peakRssBytes": 1.049741328131626,
+        "processPeakRssBytes": 1.0497837333559494
+      },
+      "investigate": true
+    },
+    {
+      "case": "rich-Svg",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 12.8169,
+          "allocationBytes": 18235072,
+          "peakRssBytes": 96522240
+        },
+        "after": {
+          "milliseconds": 13.4371,
+          "allocationBytes": 18234960,
+          "peakRssBytes": 96415744
+        }
+      },
+      "processPeaks": {
+        "before": 96522240,
+        "after": 96419840
+      },
+      "ratios": {
+        "milliseconds": 1.048389236086729,
+        "allocationBytes": 0.9999938579897025,
+        "peakRssBytes": 0.9988966687884575,
+        "processPeakRssBytes": 0.998939104604286
+      },
+      "investigate": false
+    },
+    {
+      "case": "rich-Svg",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 13.3579,
+          "allocationBytes": 18235072,
+          "peakRssBytes": 96141312
+        },
+        "after": {
+          "milliseconds": 13.4885,
+          "allocationBytes": 18239480,
+          "peakRssBytes": 96006144
+        }
+      },
+      "processPeaks": {
+        "before": 96141312,
+        "after": 96014336
+      },
+      "ratios": {
+        "milliseconds": 1.0097769859034729,
+        "allocationBytes": 1.0002417319767094,
+        "peakRssBytes": 0.9985940695296524,
+        "processPeakRssBytes": 0.9986792774369462
+      },
+      "investigate": false
+    },
+    {
+      "case": "rich-Svg",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 12.4554,
+          "allocationBytes": 18236808,
+          "peakRssBytes": 96100352
+        },
+        "after": {
+          "milliseconds": 13.2857,
+          "allocationBytes": 18239256,
+          "peakRssBytes": 95916032
+        }
+      },
+      "processPeaks": {
+        "before": 96100352,
+        "after": 95916032
+      },
+      "ratios": {
+        "milliseconds": 1.066661849478941,
+        "allocationBytes": 1.0001342340172688,
+        "peakRssBytes": 0.998082004944165,
+        "processPeakRssBytes": 0.998082004944165
+      },
+      "investigate": true
+    },
+    {
+      "case": "shapes-Pdf",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 20.0547,
+          "allocationBytes": 19186872,
+          "peakRssBytes": 145977344
+        },
+        "after": {
+          "milliseconds": 20.7501,
+          "allocationBytes": 19180528,
+          "peakRssBytes": 130265088
+        }
+      },
+      "processPeaks": {
+        "before": 145997824,
+        "after": 141352960
+      },
+      "ratios": {
+        "milliseconds": 1.0346751634280242,
+        "allocationBytes": 0.9996693572563574,
+        "peakRssBytes": 0.8923651056426948,
+        "processPeakRssBytes": 0.9681853888452474
+      },
+      "investigate": false
+    },
+    {
+      "case": "shapes-Pdf",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 20.997,
+          "allocationBytes": 19185888,
+          "peakRssBytes": 146239488
+        },
+        "after": {
+          "milliseconds": 20.27,
+          "allocationBytes": 19180944,
+          "peakRssBytes": 150585344
+        }
+      },
+      "processPeaks": {
+        "before": 146280448,
+        "after": 150597632
+      },
+      "ratios": {
+        "milliseconds": 0.965376006096109,
+        "allocationBytes": 0.9997423105982898,
+        "peakRssBytes": 1.0297173906954598,
+        "processPeakRssBytes": 1.0295130624702489
+      },
+      "investigate": false
+    },
+    {
+      "case": "shapes-Pdf",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 20.6839,
+          "allocationBytes": 19185528,
+          "peakRssBytes": 139935744
+        },
+        "after": {
+          "milliseconds": 20.1905,
+          "allocationBytes": 19178192,
+          "peakRssBytes": 130109440
+        }
+      },
+      "processPeaks": {
+        "before": 139943936,
+        "after": 130121728
+      },
+      "ratios": {
+        "milliseconds": 0.9761456978616218,
+        "allocationBytes": 0.999617628454114,
+        "peakRssBytes": 0.9297798852593373,
+        "processPeakRssBytes": 0.9298132646490663
+      },
+      "investigate": false
+    },
+    {
+      "case": "shapes-Png",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 13.0453,
+          "allocationBytes": 18125384,
+          "peakRssBytes": 96063488
+        },
+        "after": {
+          "milliseconds": 13.6277,
+          "allocationBytes": 18122008,
+          "peakRssBytes": 96460800
+        }
+      },
+      "processPeaks": {
+        "before": 96071680,
+        "after": 96460800
+      },
+      "ratios": {
+        "milliseconds": 1.044644431327758,
+        "allocationBytes": 0.9998137418771376,
+        "peakRssBytes": 1.0041359314373428,
+        "processPeakRssBytes": 1.0040503091025368
+      },
+      "investigate": false
+    },
+    {
+      "case": "shapes-Png",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 13.5044,
+          "allocationBytes": 18127672,
+          "peakRssBytes": 95694848
+        },
+        "after": {
+          "milliseconds": 13.6626,
+          "allocationBytes": 18117904,
+          "peakRssBytes": 95518720
+        }
+      },
+      "processPeaks": {
+        "before": 95694848,
+        "after": 95531008
+      },
+      "ratios": {
+        "milliseconds": 1.0117147003939455,
+        "allocationBytes": 0.9994611552989264,
+        "peakRssBytes": 0.9981594829431152,
+        "processPeakRssBytes": 0.9982878911098746
+      },
+      "investigate": false
+    },
+    {
+      "case": "shapes-Png",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 12.3855,
+          "allocationBytes": 18127000,
+          "peakRssBytes": 101691392
+        },
+        "after": {
+          "milliseconds": 15.1854,
+          "allocationBytes": 18118800,
+          "peakRssBytes": 101240832
+        }
+      },
+      "processPeaks": {
+        "before": 101691392,
+        "after": 101249024
+      },
+      "ratios": {
+        "milliseconds": 1.2260627346493884,
+        "allocationBytes": 0.9995476361229105,
+        "peakRssBytes": 0.9955693398316349,
+        "processPeakRssBytes": 0.9956498972892416
+      },
+      "investigate": true
+    },
+    {
+      "case": "shapes-Svg",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 12.0306,
+          "allocationBytes": 18203592,
+          "peakRssBytes": 96522240
+        },
+        "after": {
+          "milliseconds": 13.151,
+          "allocationBytes": 18198888,
+          "peakRssBytes": 96092160
+        }
+      },
+      "processPeaks": {
+        "before": 96522240,
+        "after": 96092160
+      },
+      "ratios": {
+        "milliseconds": 1.0931291872392066,
+        "allocationBytes": 0.9997415894621238,
+        "peakRssBytes": 0.9955442393380013,
+        "processPeakRssBytes": 0.9955442393380013
+      },
+      "investigate": true
+    },
+    {
+      "case": "shapes-Svg",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 14.8291,
+          "allocationBytes": 18206568,
+          "peakRssBytes": 100888576
+        },
+        "after": {
+          "milliseconds": 12.6029,
+          "allocationBytes": 18197992,
+          "peakRssBytes": 101183488
+        }
+      },
+      "processPeaks": {
+        "before": 100925440,
+        "after": 101195776
+      },
+      "ratios": {
+        "milliseconds": 0.8498762568193619,
+        "allocationBytes": 0.9995289611968604,
+        "peakRssBytes": 1.0029231456294914,
+        "processPeakRssBytes": 1.0026785714285715
+      },
+      "investigate": false
+    },
+    {
+      "case": "shapes-Svg",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 13.3934,
+          "allocationBytes": 18204144,
+          "peakRssBytes": 101167104
+        },
+        "after": {
+          "milliseconds": 11.6706,
+          "allocationBytes": 18196944,
+          "peakRssBytes": 96292864
+        }
+      },
+      "processPeaks": {
+        "before": 101183488,
+        "after": 96292864
+      },
+      "ratios": {
+        "milliseconds": 0.8713694804903909,
+        "allocationBytes": 0.9996044856599684,
+        "peakRssBytes": 0.9518199117373173,
+        "processPeakRssBytes": 0.951665789580213
+      },
+      "investigate": false
+    },
+    {
+      "case": "range-trim-Pdf",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 31.7712,
+          "allocationBytes": 22341152,
+          "peakRssBytes": 142479360
+        },
+        "after": {
+          "milliseconds": 34.0529,
+          "allocationBytes": 22336120,
+          "peakRssBytes": 142340096
+        }
+      },
+      "processPeaks": {
+        "before": 142483456,
+        "after": 144191488
+      },
+      "ratios": {
+        "milliseconds": 1.0718166137885885,
+        "allocationBytes": 0.9997747654194377,
+        "peakRssBytes": 0.9990225671985051,
+        "processPeakRssBytes": 1.0119875812108319
+      },
+      "investigate": true
+    },
+    {
+      "case": "range-trim-Pdf",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 36.7866,
+          "allocationBytes": 22341376,
+          "peakRssBytes": 144113664
+        },
+        "after": {
+          "milliseconds": 51.2859,
+          "allocationBytes": 22489776,
+          "peakRssBytes": 164188160
+        }
+      },
+      "processPeaks": {
+        "before": 144355328,
+        "after": 164241408
+      },
+      "ratios": {
+        "milliseconds": 1.3941462380323268,
+        "allocationBytes": 1.006642384068018,
+        "peakRssBytes": 1.1392962710322874,
+        "processPeakRssBytes": 1.137757852623216
+      },
+      "investigate": true
+    },
+    {
+      "case": "range-trim-Pdf",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 36.542,
+          "allocationBytes": 22341320,
+          "peakRssBytes": 142331904
+        },
+        "after": {
+          "milliseconds": 40.1786,
+          "allocationBytes": 22336480,
+          "peakRssBytes": 154943488
+        }
+      },
+      "processPeaks": {
+        "before": 144117760,
+        "after": 154984448
+      },
+      "ratios": {
+        "milliseconds": 1.0995183624322697,
+        "allocationBytes": 0.9997833610547631,
+        "peakRssBytes": 1.0886068663846442,
+        "processPeakRssBytes": 1.075401449481313
+      },
+      "investigate": true
+    },
+    {
+      "case": "selected-Pdf",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 163.4931,
+          "allocationBytes": 48959304,
+          "peakRssBytes": 168525824
+        },
+        "after": {
+          "milliseconds": 160.0277,
+          "allocationBytes": 48935368,
+          "peakRssBytes": 168853504
+        }
+      },
+      "processPeaks": {
+        "before": 173703168,
+        "after": 169328640
+      },
+      "ratios": {
+        "milliseconds": 0.978803998456204,
+        "allocationBytes": 0.9995111041611212,
+        "peakRssBytes": 1.0019443904335992,
+        "processPeakRssBytes": 0.9748160724391625
+      },
+      "investigate": false
+    },
+    {
+      "case": "selected-Pdf",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 196.9766,
+          "allocationBytes": 48959080,
+          "peakRssBytes": 168407040
+        },
+        "after": {
+          "milliseconds": 208.8576,
+          "allocationBytes": 48939048,
+          "peakRssBytes": 165285888
+        }
+      },
+      "processPeaks": {
+        "before": 168411136,
+        "after": 165658624
+      },
+      "ratios": {
+        "milliseconds": 1.0603168092047481,
+        "allocationBytes": 0.9995908419847759,
+        "peakRssBytes": 0.9814666180226195,
+        "processPeakRssBytes": 0.9836559976651426
+      },
+      "investigate": true
+    },
+    {
+      "case": "selected-Pdf",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 217.4543,
+          "allocationBytes": 48958888,
+          "peakRssBytes": 160944128
+        },
+        "after": {
+          "milliseconds": 152.4952,
+          "allocationBytes": 48939752,
+          "peakRssBytes": 170741760
+        }
+      },
+      "processPeaks": {
+        "before": 161243136,
+        "after": 171397120
+      },
+      "ratios": {
+        "milliseconds": 0.7012747046160964,
+        "allocationBytes": 0.9996091414494545,
+        "peakRssBytes": 1.0608759829995165,
+        "processPeakRssBytes": 1.062973124015648
+      },
+      "investigate": true
+    }
+  ],
+  "flaggedCases": [
+    "02-image-Png",
+    "02-image-Svg",
+    "05-borders-Png",
+    "05-borders-Svg",
+    "header-Pdf",
+    "imagesonly-Pdf",
+    "mixed1000-Pdf",
+    "range-trim-Pdf",
+    "rich-Pdf",
+    "rich-Png",
+    "rich-Svg",
+    "selected-Pdf",
+    "shapes-Png",
+    "shapes-Svg",
+    "text1-Pdf",
+    "text1000-Pdf",
+    "wrap1000-Pdf"
+  ],
+  "controlled": [
+    {
+      "case": "02-image-Png",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 35.505399999999995,
+          "allocationBytes": 18812064.0,
+          "peakRssBytes": 106422272.0
+        },
+        "after": {
+          "milliseconds": 33.9272,
+          "allocationBytes": 18804612.0,
+          "peakRssBytes": 107474944.0
+        }
+      },
+      "processPeaks": {
+        "before": 106422272,
+        "after": 107474944
+      },
+      "ratios": {
+        "milliseconds": 0.9555504233158901,
+        "allocationBytes": 0.9996038712179589,
+        "peakRssBytes": 1.0098914633207605,
+        "processPeakRssBytes": 1.0098914633207605
+      },
+      "investigate": false
+    },
+    {
+      "case": "02-image-Png",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 33.97605,
+          "allocationBytes": 18813104.0,
+          "peakRssBytes": 106149888.0
+        },
+        "after": {
+          "milliseconds": 32.726,
+          "allocationBytes": 18805016.0,
+          "peakRssBytes": 106651648.0
+        }
+      },
+      "processPeaks": {
+        "before": 106151936,
+        "after": 106659840
+      },
+      "ratios": {
+        "milliseconds": 0.9632079067460755,
+        "allocationBytes": 0.9995700868926255,
+        "peakRssBytes": 1.004726900889429,
+        "processPeakRssBytes": 1.0047846889952152
+      },
+      "investigate": false
+    },
+    {
+      "case": "02-image-Png",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 32.265,
+          "allocationBytes": 18811552.0,
+          "peakRssBytes": 106315776.0
+        },
+        "after": {
+          "milliseconds": 32.645700000000005,
+          "allocationBytes": 18805560.0,
+          "peakRssBytes": 106856448.0
+        }
+      },
+      "processPeaks": {
+        "before": 106315776,
+        "after": 106864640
+      },
+      "ratios": {
+        "milliseconds": 1.0117991631799164,
+        "allocationBytes": 0.9996814723208377,
+        "peakRssBytes": 1.005085529357374,
+        "processPeakRssBytes": 1.0051625828324857
+      },
+      "investigate": false
+    },
+    {
+      "case": "02-image-Svg",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 20.182000000000002,
+          "allocationBytes": 19153872.0,
+          "peakRssBytes": 105046016.0
+        },
+        "after": {
+          "milliseconds": 21.1401,
+          "allocationBytes": 19145368.0,
+          "peakRssBytes": 105332736.0
+        }
+      },
+      "processPeaks": {
+        "before": 105054208,
+        "after": 105340928
+      },
+      "ratios": {
+        "milliseconds": 1.047472995738777,
+        "allocationBytes": 0.999556016663367,
+        "peakRssBytes": 1.0027294704827263,
+        "processPeakRssBytes": 1.0027292576419213
+      },
+      "investigate": false
+    },
+    {
+      "case": "02-image-Svg",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 19.64105,
+          "allocationBytes": 19153672.0,
+          "peakRssBytes": 104966144.0
+        },
+        "after": {
+          "milliseconds": 20.204700000000003,
+          "allocationBytes": 19148096.0,
+          "peakRssBytes": 105676800.0
+        }
+      },
+      "processPeaks": {
+        "before": 104980480,
+        "after": 105684992
+      },
+      "ratios": {
+        "milliseconds": 1.0286975492654415,
+        "allocationBytes": 0.999708880887174,
+        "peakRssBytes": 1.0067703353950013,
+        "processPeakRssBytes": 1.0067108856808427
+      },
+      "investigate": false
+    },
+    {
+      "case": "02-image-Svg",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 18.0567,
+          "allocationBytes": 19154448.0,
+          "peakRssBytes": 105746432.0
+        },
+        "after": {
+          "milliseconds": 20.62245,
+          "allocationBytes": 19145052.0,
+          "peakRssBytes": 105023488.0
+        }
+      },
+      "processPeaks": {
+        "before": 105746432,
+        "after": 105025536
+      },
+      "ratios": {
+        "milliseconds": 1.1420940703450797,
+        "allocationBytes": 0.9995094611966892,
+        "peakRssBytes": 0.9931634194522989,
+        "processPeakRssBytes": 0.9931827865360034
+      },
+      "investigate": true
+    },
+    {
+      "case": "05-borders-Png",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 44.7359,
+          "allocationBytes": 18812948.0,
+          "peakRssBytes": 106610688.0
+        },
+        "after": {
+          "milliseconds": 44.1242,
+          "allocationBytes": 18805796.0,
+          "peakRssBytes": 107059200.0
+        }
+      },
+      "processPeaks": {
+        "before": 106618880,
+        "after": 107065344
+      },
+      "ratios": {
+        "milliseconds": 0.9863264179328012,
+        "allocationBytes": 0.9996198362957257,
+        "peakRssBytes": 1.0042070078377132,
+        "processPeakRssBytes": 1.004187475989243
+      },
+      "investigate": false
+    },
+    {
+      "case": "05-borders-Png",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 43.4069,
+          "allocationBytes": 18813008.0,
+          "peakRssBytes": 106831872.0
+        },
+        "after": {
+          "milliseconds": 42.73785,
+          "allocationBytes": 18804776.0,
+          "peakRssBytes": 106795008.0
+        }
+      },
+      "processPeaks": {
+        "before": 106840064,
+        "after": 106795008
+      },
+      "ratios": {
+        "milliseconds": 0.9845865519076461,
+        "allocationBytes": 0.9995624304204835,
+        "peakRssBytes": 0.9996549344375432,
+        "processPeakRssBytes": 0.9995782855390277
+      },
+      "investigate": false
+    },
+    {
+      "case": "05-borders-Png",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 43.88935,
+          "allocationBytes": 18814064.0,
+          "peakRssBytes": 106860544.0
+        },
+        "after": {
+          "milliseconds": 43.921949999999995,
+          "allocationBytes": 18804644.0,
+          "peakRssBytes": 106688512.0
+        }
+      },
+      "processPeaks": {
+        "before": 106868736,
+        "after": 106688512
+      },
+      "ratios": {
+        "milliseconds": 1.0007427770062667,
+        "allocationBytes": 0.9994993107283998,
+        "peakRssBytes": 0.9983901261067883,
+        "processPeakRssBytes": 0.9983135947261508
+      },
+      "investigate": false
+    },
+    {
+      "case": "05-borders-Svg",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 18.628500000000003,
+          "allocationBytes": 19612428.0,
+          "peakRssBytes": 103491584.0
+        },
+        "after": {
+          "milliseconds": 19.24505,
+          "allocationBytes": 19604560.0,
+          "peakRssBytes": 102918144.0
+        }
+      },
+      "processPeaks": {
+        "before": 103501824,
+        "after": 102932480
+      },
+      "ratios": {
+        "milliseconds": 1.0330971361086505,
+        "allocationBytes": 0.9995988258057595,
+        "peakRssBytes": 0.9944590663526804,
+        "processPeakRssBytes": 0.994499188729273
+      },
+      "investigate": false
+    },
+    {
+      "case": "05-borders-Svg",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 20.7821,
+          "allocationBytes": 19612104.0,
+          "peakRssBytes": 103538688.0
+        },
+        "after": {
+          "milliseconds": 19.0987,
+          "allocationBytes": 19603288.0,
+          "peakRssBytes": 104046592.0
+        }
+      },
+      "processPeaks": {
+        "before": 103542784,
+        "after": 104046592
+      },
+      "ratios": {
+        "milliseconds": 0.9189975988952032,
+        "allocationBytes": 0.9995504816821286,
+        "peakRssBytes": 1.0049054513806472,
+        "processPeakRssBytes": 1.0048656988013767
+      },
+      "investigate": false
+    },
+    {
+      "case": "05-borders-Svg",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 18.69155,
+          "allocationBytes": 19611036.0,
+          "peakRssBytes": 103526400.0
+        },
+        "after": {
+          "milliseconds": 18.37855,
+          "allocationBytes": 19606372.0,
+          "peakRssBytes": 103395328.0
+        }
+      },
+      "processPeaks": {
+        "before": 103526400,
+        "after": 103395328
+      },
+      "ratios": {
+        "milliseconds": 0.9832544652530154,
+        "allocationBytes": 0.9997621747265162,
+        "peakRssBytes": 0.9987339268051434,
+        "processPeakRssBytes": 0.9987339268051434
+      },
+      "investigate": false
+    },
+    {
+      "case": "header-Pdf",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 17.24045,
+          "allocationBytes": 18604144.0,
+          "peakRssBytes": 147392512.0
+        },
+        "after": {
+          "milliseconds": 17.08725,
+          "allocationBytes": 18599560.0,
+          "peakRssBytes": 147189760.0
+        }
+      },
+      "processPeaks": {
+        "before": 163446784,
+        "after": 158334976
+      },
+      "ratios": {
+        "milliseconds": 0.9911139210403441,
+        "allocationBytes": 0.9997536032832255,
+        "peakRssBytes": 0.9986244077311065,
+        "processPeakRssBytes": 0.9687249398556536
+      },
+      "investigate": false
+    },
+    {
+      "case": "header-Pdf",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 18.50715,
+          "allocationBytes": 18604176.0,
+          "peakRssBytes": 144422912.0
+        },
+        "after": {
+          "milliseconds": 17.0616,
+          "allocationBytes": 18599336.0,
+          "peakRssBytes": 155633664.0
+        }
+      },
+      "processPeaks": {
+        "before": 152748032,
+        "after": 163749888
+      },
+      "ratios": {
+        "milliseconds": 0.9218923497134891,
+        "allocationBytes": 0.9997398433555993,
+        "peakRssBytes": 1.0776244700009927,
+        "processPeakRssBytes": 1.072026171833101
+      },
+      "investigate": true
+    },
+    {
+      "case": "header-Pdf",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 16.42105,
+          "allocationBytes": 18604400.0,
+          "peakRssBytes": 167649280.0
+        },
+        "after": {
+          "milliseconds": 16.4803,
+          "allocationBytes": 18599560.0,
+          "peakRssBytes": 147398656.0
+        }
+      },
+      "processPeaks": {
+        "before": 167677952,
+        "after": 147398656
+      },
+      "ratios": {
+        "milliseconds": 1.0036081736551559,
+        "allocationBytes": 0.9997398464879276,
+        "peakRssBytes": 0.8792084045932079,
+        "processPeakRssBytes": 0.8790580648313262
+      },
+      "investigate": false
+    },
+    {
+      "case": "imagesonly-Pdf",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 11.6303,
+          "allocationBytes": 18260156.0,
+          "peakRssBytes": 158042112.0
+        },
+        "after": {
+          "milliseconds": 10.9062,
+          "allocationBytes": 18187836.0,
+          "peakRssBytes": 163633152.0
+        }
+      },
+      "processPeaks": {
+        "before": 174583808,
+        "after": 169172992
+      },
+      "ratios": {
+        "milliseconds": 0.9377402130641515,
+        "allocationBytes": 0.996039464284971,
+        "peakRssBytes": 1.0353769000505384,
+        "processPeakRssBytes": 0.9690073434530653
+      },
+      "investigate": false
+    },
+    {
+      "case": "imagesonly-Pdf",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 10.37905,
+          "allocationBytes": 18188376.0,
+          "peakRssBytes": 142016512.0
+        },
+        "after": {
+          "milliseconds": 12.1086,
+          "allocationBytes": 18188516.0,
+          "peakRssBytes": 152981504.0
+        }
+      },
+      "processPeaks": {
+        "before": 142020608,
+        "after": 163954688
+      },
+      "ratios": {
+        "milliseconds": 1.1666385651866018,
+        "allocationBytes": 1.0000076972237653,
+        "peakRssBytes": 1.0772092754960776,
+        "processPeakRssBytes": 1.1544429383093473
+      },
+      "investigate": true
+    },
+    {
+      "case": "imagesonly-Pdf",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 9.647400000000001,
+          "allocationBytes": 18187912.0,
+          "peakRssBytes": 141910016.0
+        },
+        "after": {
+          "milliseconds": 10.34995,
+          "allocationBytes": 18187040.0,
+          "peakRssBytes": 152883200.0
+        }
+      },
+      "processPeaks": {
+        "before": 141930496,
+        "after": 152915968
+      },
+      "ratios": {
+        "milliseconds": 1.0728227294400563,
+        "allocationBytes": 0.9999520560688879,
+        "peakRssBytes": 1.0773249437164463,
+        "processPeakRssBytes": 1.0774003636258693
+      },
+      "investigate": true
+    },
+    {
+      "case": "mixed1000-Pdf",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 67.2678,
+          "allocationBytes": 49574696.0,
+          "peakRssBytes": 183056384.0
+        },
+        "after": {
+          "milliseconds": 59.957300000000004,
+          "allocationBytes": 49304200.0,
+          "peakRssBytes": 171929600.0
+        }
+      },
+      "processPeaks": {
+        "before": 183091200,
+        "after": 171929600
+      },
+      "ratios": {
+        "milliseconds": 0.8913224455088469,
+        "allocationBytes": 0.9945436680035314,
+        "peakRssBytes": 0.939216629560431,
+        "processPeakRssBytes": 0.9390380313199105
+      },
+      "investigate": false
+    },
+    {
+      "case": "mixed1000-Pdf",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 65.3441,
+          "allocationBytes": 49574920.0,
+          "peakRssBytes": 173961216.0
+        },
+        "after": {
+          "milliseconds": 60.3811,
+          "allocationBytes": 49304424.0,
+          "peakRssBytes": 174116864.0
+        }
+      },
+      "processPeaks": {
+        "before": 173973504,
+        "after": 174116864
+      },
+      "ratios": {
+        "milliseconds": 0.9240482308272668,
+        "allocationBytes": 0.994543692657497,
+        "peakRssBytes": 1.0008947281674554,
+        "processPeakRssBytes": 1.0008240335263927
+      },
+      "investigate": false
+    },
+    {
+      "case": "mixed1000-Pdf",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 63.46995,
+          "allocationBytes": 49574472.0,
+          "peakRssBytes": 189792256.0
+        },
+        "after": {
+          "milliseconds": 62.30575,
+          "allocationBytes": 49303752.0,
+          "peakRssBytes": 194449408.0
+        }
+      },
+      "processPeaks": {
+        "before": 189796352,
+        "after": 194478080
+      },
+      "ratios": {
+        "milliseconds": 0.9816574615231304,
+        "allocationBytes": 0.9945391248947644,
+        "peakRssBytes": 1.024538156077348,
+        "processPeakRssBytes": 1.0246671126745366
+      },
+      "investigate": false
+    },
+    {
+      "case": "range-trim-Pdf",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 23.1839,
+          "allocationBytes": 22305736.0,
+          "peakRssBytes": 164958208.0
+        },
+        "after": {
+          "milliseconds": 23.4837,
+          "allocationBytes": 22299104.0,
+          "peakRssBytes": 153186304.0
+        }
+      },
+      "processPeaks": {
+        "before": 164962304,
+        "after": 153186304
+      },
+      "ratios": {
+        "milliseconds": 1.0129313877302781,
+        "allocationBytes": 0.9997026773741068,
+        "peakRssBytes": 0.9286370521192858,
+        "processPeakRssBytes": 0.92861399414014
+      },
+      "investigate": false
+    },
+    {
+      "case": "range-trim-Pdf",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 22.84855,
+          "allocationBytes": 22305960.0,
+          "peakRssBytes": 164503552.0
+        },
+        "after": {
+          "milliseconds": 23.238300000000002,
+          "allocationBytes": 22300928.0,
+          "peakRssBytes": 169023488.0
+        }
+      },
+      "processPeaks": {
+        "before": 164519936,
+        "after": 169041920
+      },
+      "ratios": {
+        "milliseconds": 1.0170579752325641,
+        "allocationBytes": 0.9997744100679818,
+        "peakRssBytes": 1.0274762213037198,
+        "processPeakRssBytes": 1.0274859333764876
+      },
+      "investigate": false
+    },
+    {
+      "case": "range-trim-Pdf",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 22.87205,
+          "allocationBytes": 22305976.0,
+          "peakRssBytes": 161089536.0
+        },
+        "after": {
+          "milliseconds": 23.19565,
+          "allocationBytes": 22300928.0,
+          "peakRssBytes": 169648128.0
+        }
+      },
+      "processPeaks": {
+        "before": 169209856,
+        "after": 169668608
+      },
+      "ratios": {
+        "milliseconds": 1.0141482726734157,
+        "allocationBytes": 0.99977369293323,
+        "peakRssBytes": 1.0531294099698691,
+        "processPeakRssBytes": 1.0027111423107646
+      },
+      "investigate": true
+    },
+    {
+      "case": "rich-Pdf",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 17.48415,
+          "allocationBytes": 19234304.0,
+          "peakRssBytes": 167108608.0
+        },
+        "after": {
+          "milliseconds": 18.26605,
+          "allocationBytes": 19234640.0,
+          "peakRssBytes": 162125824.0
+        }
+      },
+      "processPeaks": {
+        "before": 167120896,
+        "after": 162144256
+      },
+      "ratios": {
+        "milliseconds": 1.0447205039993366,
+        "allocationBytes": 1.0000174687890968,
+        "peakRssBytes": 0.9701823618804843,
+        "processPeakRssBytes": 0.9702213181049484
+      },
+      "investigate": false
+    },
+    {
+      "case": "rich-Pdf",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 18.05985,
+          "allocationBytes": 19234976.0,
+          "peakRssBytes": 157536256.0
+        },
+        "after": {
+          "milliseconds": 18.47115,
+          "allocationBytes": 19234416.0,
+          "peakRssBytes": 160079872.0
+        }
+      },
+      "processPeaks": {
+        "before": 157548544,
+        "after": 160079872
+      },
+      "ratios": {
+        "milliseconds": 1.02277427553385,
+        "allocationBytes": 0.999970886368665,
+        "peakRssBytes": 1.0161462260471648,
+        "processPeakRssBytes": 1.0160669717138102
+      },
+      "investigate": false
+    },
+    {
+      "case": "rich-Pdf",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 17.77585,
+          "allocationBytes": 19233600.0,
+          "peakRssBytes": 161982464.0
+        },
+        "after": {
+          "milliseconds": 17.589199999999998,
+          "allocationBytes": 19231284.0,
+          "peakRssBytes": 163506176.0
+        }
+      },
+      "processPeaks": {
+        "before": 161996800,
+        "after": 171614208
+      },
+      "ratios": {
+        "milliseconds": 0.9894997988844415,
+        "allocationBytes": 0.9998795857249813,
+        "peakRssBytes": 1.0094066478702288,
+        "processPeakRssBytes": 1.0593678887484197
+      },
+      "investigate": true
+    },
+    {
+      "case": "rich-Png",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 10.11865,
+          "allocationBytes": 18159200.0,
+          "peakRssBytes": 102252544.0
+        },
+        "after": {
+          "milliseconds": 11.5073,
+          "allocationBytes": 18158680.0,
+          "peakRssBytes": 107008000.0
+        }
+      },
+      "processPeaks": {
+        "before": 102252544,
+        "after": 107008000
+      },
+      "ratios": {
+        "milliseconds": 1.1372366867121602,
+        "allocationBytes": 0.9999713643772853,
+        "peakRssBytes": 1.046506970036853,
+        "processPeakRssBytes": 1.046506970036853
+      },
+      "investigate": true
+    },
+    {
+      "case": "rich-Png",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 11.80135,
+          "allocationBytes": 18160096.0,
+          "peakRssBytes": 102273024.0
+        },
+        "after": {
+          "milliseconds": 10.5685,
+          "allocationBytes": 18158652.0,
+          "peakRssBytes": 102334464.0
+        }
+      },
+      "processPeaks": {
+        "before": 102273024,
+        "after": 102334464
+      },
+      "ratios": {
+        "milliseconds": 0.8955331381579227,
+        "allocationBytes": 0.9999204850018414,
+        "peakRssBytes": 1.0006007449237053,
+        "processPeakRssBytes": 1.0006007449237053
+      },
+      "investigate": false
+    },
+    {
+      "case": "rich-Png",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 12.719750000000001,
+          "allocationBytes": 18159464.0,
+          "peakRssBytes": 107024384.0
+        },
+        "after": {
+          "milliseconds": 11.0135,
+          "allocationBytes": 18158416.0,
+          "peakRssBytes": 102436864.0
+        }
+      },
+      "processPeaks": {
+        "before": 107024384,
+        "after": 102436864
+      },
+      "ratios": {
+        "milliseconds": 0.8658582126221034,
+        "allocationBytes": 0.9999422890455357,
+        "peakRssBytes": 0.9571357495503081,
+        "processPeakRssBytes": 0.9571357495503081
+      },
+      "investigate": false
+    },
+    {
+      "case": "rich-Svg",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 10.8553,
+          "allocationBytes": 18235100.0,
+          "peakRssBytes": 102354944.0
+        },
+        "after": {
+          "milliseconds": 11.71425,
+          "allocationBytes": 18233904.0,
+          "peakRssBytes": 101888000.0
+        }
+      },
+      "processPeaks": {
+        "before": 102354944,
+        "after": 101888000
+      },
+      "ratios": {
+        "milliseconds": 1.0791272465984358,
+        "allocationBytes": 0.9999344122050331,
+        "peakRssBytes": 0.9954379927167953,
+        "processPeakRssBytes": 0.9954379927167953
+      },
+      "investigate": true
+    },
+    {
+      "case": "rich-Svg",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 10.848700000000001,
+          "allocationBytes": 18234424.0,
+          "peakRssBytes": 102547456.0
+        },
+        "after": {
+          "milliseconds": 11.266200000000001,
+          "allocationBytes": 18233640.0,
+          "peakRssBytes": 101916672.0
+        }
+      },
+      "processPeaks": {
+        "before": 102547456,
+        "after": 101920768
+      },
+      "ratios": {
+        "milliseconds": 1.0384838736438469,
+        "allocationBytes": 0.9999570044000293,
+        "peakRssBytes": 0.9938488576449912,
+        "processPeakRssBytes": 0.993888800127816
+      },
+      "investigate": false
+    },
+    {
+      "case": "rich-Svg",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 11.59715,
+          "allocationBytes": 18234648.0,
+          "peakRssBytes": 101986304.0
+        },
+        "after": {
+          "milliseconds": 11.3942,
+          "allocationBytes": 18234560.0,
+          "peakRssBytes": 102023168.0
+        }
+      },
+      "processPeaks": {
+        "before": 101986304,
+        "after": 102043648
+      },
+      "ratios": {
+        "milliseconds": 0.9825000107785102,
+        "allocationBytes": 0.9999951740225531,
+        "peakRssBytes": 1.0003614602996105,
+        "processPeakRssBytes": 1.0005622715771718
+      },
+      "investigate": false
+    },
+    {
+      "case": "selected-Pdf",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 72.4208,
+          "allocationBytes": 48889544.0,
+          "peakRssBytes": 177549312.0
+        },
+        "after": {
+          "milliseconds": 73.2008,
+          "allocationBytes": 48870852.0,
+          "peakRssBytes": 167475200.0
+        }
+      },
+      "processPeaks": {
+        "before": 177586176,
+        "after": 173260800
+      },
+      "ratios": {
+        "milliseconds": 1.0107703864083246,
+        "allocationBytes": 0.9996176687596022,
+        "peakRssBytes": 0.943260202551503,
+        "processPeakRssBytes": 0.9756435095488514
+      },
+      "investigate": false
+    },
+    {
+      "case": "selected-Pdf",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 71.6251,
+          "allocationBytes": 48889544.0,
+          "peakRssBytes": 154986496.0
+        },
+        "after": {
+          "milliseconds": 77.48105000000001,
+          "allocationBytes": 48870376.0,
+          "peakRssBytes": 166080512.0
+        }
+      },
+      "processPeaks": {
+        "before": 154988544,
+        "after": 177266688
+      },
+      "ratios": {
+        "milliseconds": 1.081758350075602,
+        "allocationBytes": 0.9996079325264314,
+        "peakRssBytes": 1.0715805330549573,
+        "processPeakRssBytes": 1.1437405851106002
+      },
+      "investigate": true
+    },
+    {
+      "case": "selected-Pdf",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 72.81344999999999,
+          "allocationBytes": 48889544.0,
+          "peakRssBytes": 165928960.0
+        },
+        "after": {
+          "milliseconds": 74.90565000000001,
+          "allocationBytes": 48864936.0,
+          "peakRssBytes": 166076416.0
+        }
+      },
+      "processPeaks": {
+        "before": 165933056,
+        "after": 166076416
+      },
+      "ratios": {
+        "milliseconds": 1.0287337023585619,
+        "allocationBytes": 0.9994966612901932,
+        "peakRssBytes": 1.0008886694643297,
+        "processPeakRssBytes": 1.000863962874281
+      },
+      "investigate": false
+    },
+    {
+      "case": "shapes-Png",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 11.30545,
+          "allocationBytes": 18122736.0,
+          "peakRssBytes": 101773312.0
+        },
+        "after": {
+          "milliseconds": 10.638449999999999,
+          "allocationBytes": 18118112.0,
+          "peakRssBytes": 107683840.0
+        }
+      },
+      "processPeaks": {
+        "before": 101789696,
+        "after": 107683840
+      },
+      "ratios": {
+        "milliseconds": 0.9410019061603031,
+        "allocationBytes": 0.9997448508878571,
+        "peakRssBytes": 1.05807542158007,
+        "processPeakRssBytes": 1.0579051144823146
+      },
+      "investigate": true
+    },
+    {
+      "case": "shapes-Png",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 11.52035,
+          "allocationBytes": 18123592.0,
+          "peakRssBytes": 101634048.0
+        },
+        "after": {
+          "milliseconds": 11.09455,
+          "allocationBytes": 18117664.0,
+          "peakRssBytes": 101797888.0
+        }
+      },
+      "processPeaks": {
+        "before": 101634048,
+        "after": 101797888
+      },
+      "ratios": {
+        "milliseconds": 0.9630393173818503,
+        "allocationBytes": 0.9996729125219769,
+        "peakRssBytes": 1.0016120581953007,
+        "processPeakRssBytes": 1.0016120581953007
+      },
+      "investigate": false
+    },
+    {
+      "case": "shapes-Png",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 11.0199,
+          "allocationBytes": 18122960.0,
+          "peakRssBytes": 106774528.0
+        },
+        "after": {
+          "milliseconds": 10.20345,
+          "allocationBytes": 18118112.0,
+          "peakRssBytes": 102137856.0
+        }
+      },
+      "processPeaks": {
+        "before": 106774528,
+        "after": 102137856
+      },
+      "ratios": {
+        "milliseconds": 0.925911305910217,
+        "allocationBytes": 0.9997324940296729,
+        "peakRssBytes": 0.9565751112475065,
+        "processPeakRssBytes": 0.9565751112475065
+      },
+      "investigate": false
+    },
+    {
+      "case": "shapes-Svg",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 10.3174,
+          "allocationBytes": 18201288.0,
+          "peakRssBytes": 101924864.0
+        },
+        "after": {
+          "milliseconds": 11.3407,
+          "allocationBytes": 18196704.0,
+          "peakRssBytes": 102019072.0
+        }
+      },
+      "processPeaks": {
+        "before": 101924864,
+        "after": 102019072
+      },
+      "ratios": {
+        "milliseconds": 1.0991819644484075,
+        "allocationBytes": 0.9997481496913845,
+        "peakRssBytes": 1.000924288699566,
+        "processPeakRssBytes": 1.000924288699566
+      },
+      "investigate": true
+    },
+    {
+      "case": "shapes-Svg",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 11.85165,
+          "allocationBytes": 18201960.0,
+          "peakRssBytes": 107106304.0
+        },
+        "after": {
+          "milliseconds": 10.40595,
+          "allocationBytes": 18196480.0,
+          "peakRssBytes": 102510592.0
+        }
+      },
+      "processPeaks": {
+        "before": 107118592,
+        "after": 102510592
+      },
+      "ratios": {
+        "milliseconds": 0.8780169849767755,
+        "allocationBytes": 0.9996989335214449,
+        "peakRssBytes": 0.9570920494091553,
+        "processPeakRssBytes": 0.9569822575711227
+      },
+      "investigate": false
+    },
+    {
+      "case": "shapes-Svg",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 10.8392,
+          "allocationBytes": 18201512.0,
+          "peakRssBytes": 101863424.0
+        },
+        "after": {
+          "milliseconds": 11.00805,
+          "allocationBytes": 18196928.0,
+          "peakRssBytes": 101908480.0
+        }
+      },
+      "processPeaks": {
+        "before": 101863424,
+        "after": 101908480
+      },
+      "ratios": {
+        "milliseconds": 1.0155777179127612,
+        "allocationBytes": 0.9997481527908231,
+        "peakRssBytes": 1.0004423177449837,
+        "processPeakRssBytes": 1.0004423177449837
+      },
+      "investigate": false
+    },
+    {
+      "case": "text1-Pdf",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 16.5089,
+          "allocationBytes": 18625032.0,
+          "peakRssBytes": 148262912.0
+        },
+        "after": {
+          "milliseconds": 15.9411,
+          "allocationBytes": 18621152.0,
+          "peakRssBytes": 159657984.0
+        }
+      },
+      "processPeaks": {
+        "before": 148275200,
+        "after": 159686656
+      },
+      "ratios": {
+        "milliseconds": 0.9656064304708369,
+        "allocationBytes": 0.999791678210271,
+        "peakRssBytes": 1.0768571981103405,
+        "processPeakRssBytes": 1.076961325966851
+      },
+      "investigate": true
+    },
+    {
+      "case": "text1-Pdf",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 16.20265,
+          "allocationBytes": 18626956.0,
+          "peakRssBytes": 163692544.0
+        },
+        "after": {
+          "milliseconds": 17.42045,
+          "allocationBytes": 18622048.0,
+          "peakRssBytes": 164548608.0
+        }
+      },
+      "processPeaks": {
+        "before": 163700736,
+        "after": 164581376
+      },
+      "ratios": {
+        "milliseconds": 1.0751605447257084,
+        "allocationBytes": 0.9997365108931379,
+        "peakRssBytes": 1.0052297067360625,
+        "processPeakRssBytes": 1.0053795726367412
+      },
+      "investigate": true
+    },
+    {
+      "case": "text1-Pdf",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 16.30785,
+          "allocationBytes": 18627880.0,
+          "peakRssBytes": 153192448.0
+        },
+        "after": {
+          "milliseconds": 16.00865,
+          "allocationBytes": 18620372.0,
+          "peakRssBytes": 153088000.0
+        }
+      },
+      "processPeaks": {
+        "before": 153214976,
+        "after": 153133056
+      },
+      "ratios": {
+        "milliseconds": 0.9816530076006341,
+        "allocationBytes": 0.9995969482302871,
+        "peakRssBytes": 0.9993181909332763,
+        "processPeakRssBytes": 0.9994653264182217
+      },
+      "investigate": false
+    },
+    {
+      "case": "text1000-Pdf",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 75.70679999999999,
+          "allocationBytes": 57405544.0,
+          "peakRssBytes": 183463936.0
+        },
+        "after": {
+          "milliseconds": 71.5652,
+          "allocationBytes": 57054576.0,
+          "peakRssBytes": 178479104.0
+        }
+      },
+      "processPeaks": {
+        "before": 183496704,
+        "after": 178520064
+      },
+      "ratios": {
+        "milliseconds": 0.9452942139939875,
+        "allocationBytes": 0.9938861654198416,
+        "peakRssBytes": 0.9728293630416824,
+        "processPeakRssBytes": 0.9728788589031006
+      },
+      "investigate": false
+    },
+    {
+      "case": "text1000-Pdf",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 77.66725,
+          "allocationBytes": 57405768.0,
+          "peakRssBytes": 167331840.0
+        },
+        "after": {
+          "milliseconds": 72.9323,
+          "allocationBytes": 57054800.0,
+          "peakRssBytes": 183236608.0
+        }
+      },
+      "processPeaks": {
+        "before": 167387136,
+        "after": 183250944
+      },
+      "ratios": {
+        "milliseconds": 0.9390354364291256,
+        "allocationBytes": 0.993886189276311,
+        "peakRssBytes": 1.0950492625910286,
+        "processPeakRssBytes": 1.0947731610629863
+      },
+      "investigate": true
+    },
+    {
+      "case": "text1000-Pdf",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 81.7726,
+          "allocationBytes": 57405008.0,
+          "peakRssBytes": 178642944.0
+        },
+        "after": {
+          "milliseconds": 70.8918,
+          "allocationBytes": 57054800.0,
+          "peakRssBytes": 178769920.0
+        }
+      },
+      "processPeaks": {
+        "before": 178671616,
+        "after": 178778112
+      },
+      "ratios": {
+        "milliseconds": 0.8669383143008783,
+        "allocationBytes": 0.9938993475969902,
+        "peakRssBytes": 1.0007107809418994,
+        "processPeakRssBytes": 1.0005960431902066
+      },
+      "investigate": false
+    },
+    {
+      "case": "wrap1000-Pdf",
+      "round": 0,
+      "medians": {
+        "before": {
+          "milliseconds": 671.11455,
+          "allocationBytes": 448706480.0,
+          "peakRssBytes": 181696512.0
+        },
+        "after": {
+          "milliseconds": 690.77085,
+          "allocationBytes": 446979360.0,
+          "peakRssBytes": 188311552.0
+        }
+      },
+      "processPeaks": {
+        "before": 188301312,
+        "after": 188354560
+      },
+      "ratios": {
+        "milliseconds": 1.0292890386596445,
+        "allocationBytes": 0.9961508913354672,
+        "peakRssBytes": 1.0364070830374554,
+        "processPeakRssBytes": 1.0002827808231096
+      },
+      "investigate": false
+    },
+    {
+      "case": "wrap1000-Pdf",
+      "round": 1,
+      "medians": {
+        "before": {
+          "milliseconds": 687.01735,
+          "allocationBytes": 448707228.0,
+          "peakRssBytes": 187895808.0
+        },
+        "after": {
+          "milliseconds": 682.67065,
+          "allocationBytes": 446979584.0,
+          "peakRssBytes": 177186816.0
+        }
+      },
+      "processPeaks": {
+        "before": 194539520,
+        "after": 177238016
+      },
+      "ratios": {
+        "milliseconds": 0.9936730855487129,
+        "allocationBytes": 0.9961497299526452,
+        "peakRssBytes": 0.9430056896213459,
+        "processPeakRssBytes": 0.9110643225602695
+      },
+      "investigate": false
+    },
+    {
+      "case": "wrap1000-Pdf",
+      "round": 2,
+      "medians": {
+        "before": {
+          "milliseconds": 713.6766,
+          "allocationBytes": 448705112.0,
+          "peakRssBytes": 198658048.0
+        },
+        "after": {
+          "milliseconds": 678.4266,
+          "allocationBytes": 446979360.0,
+          "peakRssBytes": 188289024.0
+        }
+      },
+      "processPeaks": {
+        "before": 204279808,
+        "after": 188329984
+      },
+      "ratios": {
+        "milliseconds": 0.9506078803760695,
+        "allocationBytes": 0.9961539283733412,
+        "peakRssBytes": 0.9478046618076102,
+        "processPeakRssBytes": 0.9219216810699176
+      },
+      "investigate": false
+    }
+  ],
+  "interpretation": "Every primary case/round over 1.05 is listed. Controlled runs change tiering and warm count; they investigate but do not replace the primary protocol. No pooled-median acceptance."
+}

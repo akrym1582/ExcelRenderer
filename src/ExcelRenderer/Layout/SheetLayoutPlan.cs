@@ -59,8 +59,8 @@ internal sealed class SheetLayoutPlan
     /// <param name="count">The sheet page count.</param>
     /// <param name="measurer">The product measurer.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    /// <param name="textPreflight">Whether the product may omit nontext payload work.</param>
+    /// <param name="purpose">The requested page payload.</param>
     /// <returns>The neutral page with borrowed full runs and objects.</returns>
-    internal Core.Layout.RenderPage BuildCore(int index, int number, int count, ITextMeasurer measurer, CancellationToken cancellationToken, bool textPreflight = false) =>
-        inner.Build(index, number, count, ReferenceEquals(measurer, this.measurer) ? coreMeasurer : CoreIntegration.CoreTextMeasurerAdapter.Create(measurer), cancellationToken, textPreflight: textPreflight);
+    internal Core.Layout.RenderPage BuildCore(int index, int number, int count, ITextMeasurer measurer, CancellationToken cancellationToken, Core.Layout.PageBuildPurpose purpose = Core.Layout.PageBuildPurpose.Render) =>
+        inner.Build(index, number, count, ReferenceEquals(measurer, this.measurer) ? coreMeasurer : CoreIntegration.CoreTextMeasurerAdapter.Create(measurer), cancellationToken, purpose);
 }

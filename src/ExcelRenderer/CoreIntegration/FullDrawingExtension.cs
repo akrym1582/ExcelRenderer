@@ -49,10 +49,8 @@ internal sealed class FullDrawingExtension : Core.Extensibility.ICoreDrawingExte
             .OrderBy(item => item.Z).Select(item => CoreCommandAdapter.ToCore(item.Command));
     }
 
-    /// <summary>Retains shape text in the same stable Z order as the full object stage.</summary>
-    /// <param name="page">The page's borrowed full metadata.</param>
-    /// <returns>Only shape commands that require font collection.</returns>
-    internal static IEnumerable<Core.Drawing.DrawCommand> CreateShapeTextCommands(Core.Layout.RenderPage page) =>
+    /// <inheritdoc/>
+    public IEnumerable<Core.Drawing.DrawCommand> CreateTextObjectCommands(Core.Layout.RenderPage page) =>
         ((page.ExtensionData as FullPageData)?.Shapes ?? [])
         .Where(shape => shape.Shape.Text is not null)
         .OrderBy(shape => shape.Shape.ZIndex)

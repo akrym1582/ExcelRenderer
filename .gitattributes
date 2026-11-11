@@ -9,3 +9,8 @@ docs/validation/core-performance-optimization/** -text
 # Unified patches require space-prefixed empty context lines; logs retain raw tool output.
 docs/validation/core-performance-optimization/*.patch -whitespace
 docs/validation/core-performance-optimization/*.log -whitespace
+
+# Preserve review measurements and their artifact hashes across checkout platforms.
+docs/validation/rendering-review-fixes/** -text
+docs/validation/rendering-review-fixes/*.patch -whitespace
+docs/validation/rendering-review-fixes/logs/*.log -whitespace

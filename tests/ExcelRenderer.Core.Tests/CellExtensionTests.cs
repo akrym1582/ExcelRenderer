@@ -82,5 +82,7 @@ public sealed class CellExtensionTests
         public bool ShouldDrawCellText(RenderCell cell) => cell.SourceAddress?.Row != 1;
 
         public IEnumerable<DrawCommand> CreateObjectCommands(RenderPage page) => [new FillRectangleCommand(page.Number, new(0, 0, 1, 1), new(0, 0, 255))];
+
+        public IEnumerable<DrawCommand> CreateTextObjectCommands(RenderPage page) => [];
     }
 }

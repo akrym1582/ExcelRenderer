@@ -339,7 +339,8 @@ extend to partial formatting. This boundary was explicitly confirmed for the com
 with painting. `SheetLayoutPlan` alone supplies `SelectedPageCells` (unique source-order
 addresses satisfying the page selection); `RenderPageBuilder` retains its generic
 independent-layout path. Core-only collection sets the internal text payload purpose;
-main preflight keeps images, shapes, links, diagnostics and trim work.
+main requests metadata-preserving text collection only when full preflight is not
+required. Shape/link policy, diagnostics and trim remain owned by main.
 `SkiaTextMeasurer` owns outline paragraph wrapping and its bounded single-font CLOCK.
 `SkiaFontFace.WritePositions` writes into the native builder's borrowed position span.
 `SkiaPaintResources` owns renderer-local fill/stroke paints and the last dash effect;
@@ -355,6 +356,14 @@ main retains font selection, rich decoration and native raster compatibility.
 Conditional main PDF text preflight preserves product regions, clips and shape
 metadata through the full policy hook, while other preflight requirements retain
 their complete path. See [implemented boundaries and validation](main-performance-optimization.md).
+
+The review follow-up gives Core ownership of one resolved `PageBuildPurpose` for
+placement and command generation. `ICoreDrawingExtension.CreateTextObjectCommands`
+supplies product text-bearing objects; Core owns the cell/object/header/footer
+collection sequence. Main retains request-level eligibility and full product
+metadata policy. CLOCK reuses released slots and accounts for all ring scans;
+main retains cache-key/admission policy, including uncached plain unwrapped lines
+inside the whole-layout cache. See [review fixes](rendering-review-fixes.md).
 
 ## Core glyph storage follow-up
 

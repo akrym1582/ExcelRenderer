@@ -1,0 +1,316 @@
+diff --git a/src/ExcelRenderer.Core/Drawing/DrawCommandGeneratorPass.cs b/src/ExcelRenderer.Core/Drawing/DrawCommandGeneratorPass.cs
+index efe00be..e8a578e 100644
+--- a/src/ExcelRenderer.Core/Drawing/DrawCommandGeneratorPass.cs
++++ b/src/ExcelRenderer.Core/Drawing/DrawCommandGeneratorPass.cs
+@@ -108,24 +108,25 @@ internal sealed class DrawCommandGeneratorPass
+     /// <param name="page">The text-only page payload.</param>
+     /// <param name="measurer">The shared header/footer measurer.</param>
+     /// <param name="extension">Optional product cell-text visibility and completion policy.</param>
+-    /// <param name="includeHeaderFooter">Whether to append headers and footers after cell text.</param>
+-    /// <returns>Cell text followed by header/footer text.</returns>
+-    internal IEnumerable<DrawTextCommand> GenerateText(RenderPage page, Abstractions.ITextLayoutService? measurer, Extensibility.ICoreDrawingExtension? extension = null, bool includeHeaderFooter = true)
++    /// <returns>Cell text, product object text, then header/footer text in rendering order.</returns>
++    internal IEnumerable<DrawCommand> GenerateText(RenderPage page, Abstractions.ITextLayoutService? measurer, Extensibility.ICoreDrawingExtension? extension = null)
+     {
+         foreach (var cell in page.Cells.Where(cell => extension?.ShouldDrawCellText(cell) ?? true))
+         {
+             foreach (var command in GenerateCellLayer(page.Number, cell, 3, extension?.RequiresTextLayout ?? true))
+             {
+-                yield return (DrawTextCommand)command;
++                yield return command;
+             }
+         }
+ 
+-        if (includeHeaderFooter)
++        foreach (var command in extension?.CreateTextObjectCommands(page) ?? [])
+         {
+-            foreach (var command in GenerateHeaderFooter(page, measurer))
+-            {
+-                yield return command;
+-            }
++            yield return command;
++        }
++
++        foreach (var command in GenerateHeaderFooter(page, measurer))
++        {
++            yield return command;
+         }
+     }
+ 
+diff --git a/src/ExcelRenderer.Core/ExcelConverter.cs b/src/ExcelRenderer.Core/ExcelConverter.cs
+index 3ed2567..90f328a 100644
+--- a/src/ExcelRenderer.Core/ExcelConverter.cs
++++ b/src/ExcelRenderer.Core/ExcelConverter.cs
+@@ -119,7 +119,7 @@ public static class ExcelConverter
+                             var pageNumber = ++number;
+                             var page = ConversionMetrics.Measure(
+                                 pass == 0 ? "fontCollectionPageBuild" : "drawingPageBuild",
+-                                () => plan.Build(index, pageNumber, sheetCount, measurer, cancellationToken, collectTextOnly: pass == 0)) with
++                                () => plan.Build(index, pageNumber, sheetCount, measurer, cancellationToken, pass == 0 ? PageBuildPurpose.FontCollection : PageBuildPurpose.Render)) with
+                             {
+                                 HeaderFooterTexts = PaginationPass.GetHeaderFooterTexts(entry.Sheet, ++sheetNumber, sheetCount, timestamp),
+                             };
+diff --git a/src/ExcelRenderer.Core/Extensibility/ICoreDrawingExtension.cs b/src/ExcelRenderer.Core/Extensibility/ICoreDrawingExtension.cs
+index 1b0a302..ef2bbc6 100644
+--- a/src/ExcelRenderer.Core/Extensibility/ICoreDrawingExtension.cs
++++ b/src/ExcelRenderer.Core/Extensibility/ICoreDrawingExtension.cs
+@@ -24,4 +24,9 @@ internal interface ICoreDrawingExtension
+     /// <param name="page">The page.</param>
+     /// <returns>The ordered object commands.</returns>
+     IEnumerable<DrawCommand> CreateObjectCommands(RenderPage page);
++
++    /// <summary>Creates only object commands requiring font collection, in the same product Z order.</summary>
++    /// <param name="page">The page with product object metadata.</param>
++    /// <returns>The ordered text-bearing object commands.</returns>
++    IEnumerable<DrawCommand> CreateTextObjectCommands(RenderPage page);
+ }
+diff --git a/src/ExcelRenderer.Core/Layout/CellBoundsPass.cs b/src/ExcelRenderer.Core/Layout/CellBoundsPass.cs
+index 46b2ecb..5a7b71b 100644
+--- a/src/ExcelRenderer.Core/Layout/CellBoundsPass.cs
++++ b/src/ExcelRenderer.Core/Layout/CellBoundsPass.cs
+@@ -17,7 +17,7 @@ internal sealed class CellBoundsPass : IReportLayoutPass
+         foreach (var (address, bounds) in EnumerateBounds(context))
+         {
+             var cell = context.Sheet.Cells[address];
+-            if (context.CollectTextOnly && string.IsNullOrEmpty(cell.Text))
++            if (context.Purpose != PageBuildPurpose.Render && string.IsNullOrEmpty(cell.Text))
+             {
+                 continue;
+             }
+@@ -30,7 +30,7 @@ internal sealed class CellBoundsPass : IReportLayoutPass
+                 context.TextSizes.GetValueOrDefault(address))
+             {
+                 ContentBounds = content with { X = content.X + insets.Left, Width = Math.Max(0, content.Width - insets.Left - insets.Right) },
+-                MergedBorders = context.CollectTextOnly ? null : cell.MergedBorders?
++                MergedBorders = context.Purpose != PageBuildPurpose.Render ? null : cell.MergedBorders?
+                     .Where(border => context.ColumnLayouts.ContainsKey(border.Address.Column) &&
+                         context.RowLayouts.ContainsKey(border.Address.Row))
+                     .Select(border =>
+diff --git a/src/ExcelRenderer.Core/Layout/PaginationPass.cs b/src/ExcelRenderer.Core/Layout/PaginationPass.cs
+index 2ef3418..4b0e819 100644
+--- a/src/ExcelRenderer.Core/Layout/PaginationPass.cs
++++ b/src/ExcelRenderer.Core/Layout/PaginationPass.cs
+@@ -17,7 +17,7 @@ internal sealed class PaginationPass
+     internal static RenderPage Materialize(ReportLayoutContext context, PaginationPagePlan plan, int number, int count)
+     {
+         var page = plan.Horizontal is null || plan.Vertical is null
+-            ? new RenderPage(number, [])
++            ? new RenderPage(number, []) { Purpose = context.Purpose }
+             : new RenderPageBuilder(context, plan.BodyColumns, plan.BodyRows, plan.TitleColumns, plan.TitleRows, plan.TitleColumnEnd, plan.TitleRowEnd, plan.TitleWidth, plan.TitleHeight, plan.Scale)
+                 .Build(number, plan.Horizontal.Value, plan.Vertical.Value);
+         return page;
+diff --git a/src/ExcelRenderer.Core/Layout/RenderPage.cs b/src/ExcelRenderer.Core/Layout/RenderPage.cs
+index 9f8b90f..66dfacd 100644
+--- a/src/ExcelRenderer.Core/Layout/RenderPage.cs
++++ b/src/ExcelRenderer.Core/Layout/RenderPage.cs
+@@ -12,8 +12,8 @@ internal sealed record RenderPage(
+     IReadOnlyList<RenderImage>? Images = null,
+     IReadOnlyList<RenderText>? HeaderFooterTexts = null)
+ {
+-    /// <summary>Gets a value indicating whether this payload omits nontext drawing layers for product preflight.</summary>
+-    internal bool IsTextPreflight { get; init; }
++    /// <summary>Gets the resolved payload purpose shared by placement and command generation.</summary>
++    internal PageBuildPurpose Purpose { get; init; }
+ 
+     /// <summary>Gets placed external border owners without their content.</summary>
+     internal IReadOnlyList<RenderCell> BorderOnlyCells { get; init; } = [];
+diff --git a/src/ExcelRenderer.Core/Layout/RenderPageBuilder.cs b/src/ExcelRenderer.Core/Layout/RenderPageBuilder.cs
+index 1a70c90..a335d24 100644
+--- a/src/ExcelRenderer.Core/Layout/RenderPageBuilder.cs
++++ b/src/ExcelRenderer.Core/Layout/RenderPageBuilder.cs
+@@ -121,14 +121,14 @@ internal sealed class RenderPageBuilder
+ 
+         var cells = selected.Select(layout => BuildCell(layout, placement, repeatColumns, repeatRows)).ToArray();
+         var pageContext = new CorePageBuildContext(_context, placement, horizontal, vertical, _bodyColumns, _bodyRows, _titleColumns, _titleRows, repeatColumns, repeatRows);
+-        var images = _context.CollectTextOnly ? [] : _context.Policy.BuildPageImages(pageContext);
++        var images = _context.Purpose == PageBuildPurpose.Render ? _context.Policy.BuildPageImages(pageContext) : [];
+         Rendering.ConversionMetrics.Report("corePageBuild", 1);
+-        if (_context.CollectTextOnly)
++        if (_context.Purpose != PageBuildPurpose.Render)
+         {
+             Rendering.ConversionMetrics.Report("coreTextPageBuild", 1);
+-            var textPage = new RenderPage(pageNumber, cells);
+-            return _context.PreservePreflightMetadata
+-                ? _context.Policy.BuildAdditionalPageContent(pageContext, textPage) with { IsTextPreflight = true }
++            var textPage = new RenderPage(pageNumber, cells) { Purpose = _context.Purpose };
++            return _context.Purpose == PageBuildPurpose.Preflight
++                ? _context.Policy.BuildAdditionalPageContent(pageContext, textPage)
+                 : textPage;
+         }
+ 
+diff --git a/src/ExcelRenderer.Core/Layout/ReportLayoutContext.cs b/src/ExcelRenderer.Core/Layout/ReportLayoutContext.cs
+index bbadcf8..b6ee437 100644
+--- a/src/ExcelRenderer.Core/Layout/ReportLayoutContext.cs
++++ b/src/ExcelRenderer.Core/Layout/ReportLayoutContext.cs
+@@ -95,11 +95,8 @@ internal sealed class ReportLayoutContext
+     /// <summary>Gets or sets the page-local cell addresses to measure.</summary>
+     internal IReadOnlyList<CellAddress>? CandidateAddresses { get; set; }
+ 
+-    /// <summary>Gets or sets a value indicating whether this Core-only build omits nontext page payloads.</summary>
+-    internal bool CollectTextOnly { get; set; }
+-
+-    /// <summary>Gets or sets a value indicating whether text collection must preserve product regions and shape text.</summary>
+-    internal bool PreservePreflightMetadata { get; set; }
++    /// <summary>Gets or sets the resolved payload purpose before measurement and placement.</summary>
++    internal PageBuildPurpose Purpose { get; set; }
+ 
+     /// <summary>Gets or sets shared lightweight object geometry without retaining other page payloads.</summary>
+     internal SheetObjectLayoutIndex? ObjectLayouts { get; set; }
+diff --git a/src/ExcelRenderer.Core/Layout/SheetLayoutPlan.cs b/src/ExcelRenderer.Core/Layout/SheetLayoutPlan.cs
+index bd254d9..c28cd59 100644
+--- a/src/ExcelRenderer.Core/Layout/SheetLayoutPlan.cs
++++ b/src/ExcelRenderer.Core/Layout/SheetLayoutPlan.cs
+@@ -101,16 +101,14 @@ internal sealed class SheetLayoutPlan
+     /// <param name="count">The count used by this operation.</param>
+     /// <param name="measurer">The measurer used by this operation.</param>
+     /// <param name="cancellationToken">The page-build cancellation token.</param>
+-    /// <param name="collectTextOnly">Whether to omit nontext payloads during Core font collection.</param>
+-    /// <param name="textPreflight">Whether to ask the product policy for a metadata-preserving text payload.</param>
++    /// <param name="purpose">The requested payload; product preflight falls back to rendering when ineligible.</param>
+     /// <returns>The planned or generated result.</returns>
+-    internal RenderPage Build(int index, int number, int count, ITextMeasurer measurer, CancellationToken cancellationToken = default, bool collectTextOnly = false, bool textPreflight = false)
++    internal RenderPage Build(int index, int number, int count, ITextMeasurer measurer, CancellationToken cancellationToken = default, PageBuildPurpose purpose = PageBuildPurpose.Render)
+     {
+         var plan = Pages[index];
+         var context = new ReportLayoutContext(sheet, measurer, geometry)
+         {
+             CancellationToken = cancellationToken,
+-            CollectTextOnly = collectTextOnly,
+             Policy = policy,
+             PrintArea = printArea,
+             VisibleColumns = visibleColumns,
+@@ -123,8 +121,13 @@ internal sealed class SheetLayoutPlan
+ 
+         context.SelectedPageCells = new(GetCandidateAddresses(index));
+         context.CandidateAddresses = context.SelectedPageCells.Addresses;
+-        context.PreservePreflightMetadata = textPreflight && policy.CanBuildTextPreflight(context);
+-        context.CollectTextOnly |= context.PreservePreflightMetadata;
++        context.Purpose = purpose switch
++        {
++            PageBuildPurpose.Render => PageBuildPurpose.Render,
++            PageBuildPurpose.FontCollection => PageBuildPurpose.FontCollection,
++            PageBuildPurpose.Preflight => policy.CanBuildTextPreflight(context) ? PageBuildPurpose.Preflight : PageBuildPurpose.Render,
++            _ => throw new ArgumentOutOfRangeException(nameof(purpose)),
++        };
+ 
+         new TextMeasurePass().Execute(context);
+         new CellBoundsPass().Execute(context);
+diff --git a/src/ExcelRenderer/CoreIntegration/FullDrawingExtension.cs b/src/ExcelRenderer/CoreIntegration/FullDrawingExtension.cs
+index 637fb66..ca831e4 100644
+--- a/src/ExcelRenderer/CoreIntegration/FullDrawingExtension.cs
++++ b/src/ExcelRenderer/CoreIntegration/FullDrawingExtension.cs
+@@ -49,10 +49,8 @@ internal sealed class FullDrawingExtension : Core.Extensibility.ICoreDrawingExte
+             .OrderBy(item => item.Z).Select(item => CoreCommandAdapter.ToCore(item.Command));
+     }
+ 
+-    /// <summary>Retains shape text in the same stable Z order as the full object stage.</summary>
+-    /// <param name="page">The page's borrowed full metadata.</param>
+-    /// <returns>Only shape commands that require font collection.</returns>
+-    internal static IEnumerable<Core.Drawing.DrawCommand> CreateShapeTextCommands(Core.Layout.RenderPage page) =>
++    /// <inheritdoc/>
++    public IEnumerable<Core.Drawing.DrawCommand> CreateTextObjectCommands(Core.Layout.RenderPage page) =>
+         ((page.ExtensionData as FullPageData)?.Shapes ?? [])
+         .Where(shape => shape.Shape.Text is not null)
+         .OrderBy(shape => shape.Shape.ZIndex)
+diff --git a/src/ExcelRenderer/ExcelConverter.RenderAsync.cs b/src/ExcelRenderer/ExcelConverter.RenderAsync.cs
+index b2a061a..aa442fa 100644
+--- a/src/ExcelRenderer/ExcelConverter.RenderAsync.cs
++++ b/src/ExcelRenderer/ExcelConverter.RenderAsync.cs
+@@ -55,8 +55,9 @@ public static partial class ExcelConverter
+             using var source = await WorkbookInputPreparer.ReadAsync(input, request.Input, cancellationToken).ConfigureAwait(false);
+             ConversionMetrics.Report("input.ms", inputTimer.Elapsed.TotalMilliseconds);
+             var fontManager = ConversionMetrics.Measure("fonts", () => new FontManager(request.FontOptions, request.OutputFormat == OutputFormat.Pdf));
+-            resources.TextMeasurer = request.TextMeasurer ?? new SkiaTextMeasurer(fontManager, cacheLayouts: true);
+-            resources.ResolvedTextLayout = new SkiaTextMeasurer(fontManager, cacheLayouts: true);
++            var resolvedLayout = new SkiaTextMeasurer(fontManager, cacheLayouts: true);
++            resources.TextMeasurer = request.TextMeasurer ?? resolvedLayout;
++            resources.ResolvedTextLayout = resolvedLayout;
+             resources.RasterTextLayout = request.OutputFormat is OutputFormat.Png or OutputFormat.Svg ? new SkiaCompatibilityTextLayout(fontManager) : null;
+             var readOptions = request.ReadOptions with
+             {
+@@ -341,7 +342,7 @@ public static partial class ExcelConverter
+             return SheetPage.CreateContinuous(selected.Sheet, descriptor, plan);
+         }).ToArray();
+ 
+-    private static PageRenderPayload BuildPage(SheetPage page, FontManager fonts, CancellationToken token, bool textPreflight = false)
++    private static PageRenderPayload BuildPage(SheetPage page, FontManager fonts, CancellationToken token, Core.Layout.PageBuildPurpose purpose = Core.Layout.PageBuildPurpose.Render)
+     {
+         var measurer = RenderResourceSession.Current?.TextMeasurer ?? new SkiaTextMeasurer(fonts, cacheLayouts: true);
+         if (page.CanvasPlan is { } canvas)
+@@ -350,7 +351,7 @@ public static partial class ExcelConverter
+         }
+ 
+         var built = page.Plan is { } plan
+-            ? plan.BuildCore(page.PlanIndex, page.Descriptor.SourcePageNumber, page.SheetPageCount, measurer, token, textPreflight)
++            ? plan.BuildCore(page.PlanIndex, page.Descriptor.SourcePageNumber, page.SheetPageCount, measurer, token, purpose)
+             : new Core.Layout.RenderPage(1, []);
+         var headers = PaginationPass.GetHeaderFooterTexts(page.Sheet, page.Descriptor.SourcePageNumber, page.SheetPageCount, RenderResourceSession.Current?.HeaderFooterTimestamp);
+         built = built with
+@@ -359,13 +360,11 @@ public static partial class ExcelConverter
+         };
+         var generator = new Core.Drawing.DrawCommandGeneratorPass();
+         var extension = new CoreIntegration.FullDrawingExtension();
+-        IEnumerable<Core.Drawing.DrawCommand> generated = built.IsTextPreflight
+-            ? generator.GenerateText(built, null, extension, includeHeaderFooter: false)
+-                .Concat(CoreIntegration.FullDrawingExtension.CreateShapeTextCommands(built))
+-                .Concat(Core.Drawing.DrawCommandGeneratorPass.GenerateHeaderFooter(built, null))
++        IEnumerable<Core.Drawing.DrawCommand> generated = built.Purpose == Core.Layout.PageBuildPurpose.Preflight
++            ? generator.GenerateText(built, null, extension)
+             : generator.GeneratePage(built, null, extension);
+         var commands = generated.Select(CoreIntegration.CoreCommandAdapter.CreatePublicProjection()).ToArray();
+-        ConversionMetrics.Report(built.IsTextPreflight ? "mainTextPreflightBuilds" : "mainFullPageBuilds", 1);
++        ConversionMetrics.Report(built.Purpose == Core.Layout.PageBuildPurpose.Preflight ? "mainTextPreflightBuilds" : "mainFullPageBuilds", 1);
+         ConversionMetrics.Report("renderCells", built.Cells.Count);
+         ConversionMetrics.Report("commands", commands.Length);
+         return new(commands, (built.ExtensionData as CoreIntegration.FullPageData)?.Regions ?? []);
+@@ -377,10 +376,11 @@ public static partial class ExcelConverter
+         ConversionMetrics.Report("pagePayloadActive", 1);
+         try
+         {
+-            var textPreflight = request.OutputFormat == OutputFormat.Pdf && !request.Trim.Enabled &&
++            var purpose = request.OutputFormat == OutputFormat.Pdf && !request.Trim.Enabled &&
+                 page.Sheet.RequestedRange is null && !request.DiagnosticOptions.EnableLayoutWarnings &&
+-                !request.DiagnosticOptions.DetectUnsupportedFeatures && Pdf.PdfRenderObserver.Current is null;
+-            var payload = ConversionMetrics.Measure("pageBuild", () => BuildPage(page, fonts, token, textPreflight));
++                !request.DiagnosticOptions.DetectUnsupportedFeatures && Pdf.PdfRenderObserver.Current is null
++                ? Core.Layout.PageBuildPurpose.Preflight : Core.Layout.PageBuildPurpose.Render;
++            var payload = ConversionMetrics.Measure("pageBuild", () => BuildPage(page, fonts, token, purpose));
+             payload = payload with { Commands = FinalizeCommands(payload.Commands, fonts, token) };
+             if (request.DiagnosticOptions.EnableLayoutWarnings || request.DiagnosticOptions.DetectUnsupportedFeatures)
+             {
+diff --git a/src/ExcelRenderer/Layout/SheetLayoutPlan.cs b/src/ExcelRenderer/Layout/SheetLayoutPlan.cs
+index 03a255d..e66e924 100644
+--- a/src/ExcelRenderer/Layout/SheetLayoutPlan.cs
++++ b/src/ExcelRenderer/Layout/SheetLayoutPlan.cs
+@@ -59,8 +59,8 @@ internal sealed class SheetLayoutPlan
+     /// <param name="count">The sheet page count.</param>
+     /// <param name="measurer">The product measurer.</param>
+     /// <param name="cancellationToken">The cancellation token.</param>
+-    /// <param name="textPreflight">Whether the product may omit nontext payload work.</param>
++    /// <param name="purpose">The requested page payload.</param>
+     /// <returns>The neutral page with borrowed full runs and objects.</returns>
+-    internal Core.Layout.RenderPage BuildCore(int index, int number, int count, ITextMeasurer measurer, CancellationToken cancellationToken, bool textPreflight = false) =>
+-        inner.Build(index, number, count, ReferenceEquals(measurer, this.measurer) ? coreMeasurer : CoreIntegration.CoreTextMeasurerAdapter.Create(measurer), cancellationToken, textPreflight: textPreflight);
++    internal Core.Layout.RenderPage BuildCore(int index, int number, int count, ITextMeasurer measurer, CancellationToken cancellationToken, Core.Layout.PageBuildPurpose purpose = Core.Layout.PageBuildPurpose.Render) =>
++        inner.Build(index, number, count, ReferenceEquals(measurer, this.measurer) ? coreMeasurer : CoreIntegration.CoreTextMeasurerAdapter.Create(measurer), cancellationToken, purpose);
+ }
+diff --git a/src/ExcelRenderer.Core/Layout/PageBuildPurpose.cs b/src/ExcelRenderer.Core/Layout/PageBuildPurpose.cs
+new file mode 100644
+index 0000000..7b134b3
+--- /dev/null
++++ b/src/ExcelRenderer.Core/Layout/PageBuildPurpose.cs
+@@ -0,0 +1,14 @@
++namespace ExcelRenderer.Core.Layout;
++
++/// <summary>Defines the payload required by one page build.</summary>
++internal enum PageBuildPurpose
++{
++    /// <summary>Builds all content for rendering, trimming or diagnostics.</summary>
++    Render,
++
++    /// <summary>Builds only Core cell text for font collection.</summary>
++    FontCollection,
++
++    /// <summary>Collects product text while retaining source regions and object metadata.</summary>
++    Preflight,
++}

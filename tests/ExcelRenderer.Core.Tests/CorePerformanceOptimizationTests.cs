@@ -174,6 +174,8 @@ public sealed class CorePerformanceOptimizationTests
             var plan = new SheetLayoutPlan(context);
             Assert.True(plan.Pages.Count > 1);
             var generator = new DrawCommandGeneratorPass();
+            Assert.Throws<ArgumentOutOfRangeException>(() => plan.Build(0, 1, plan.Pages.Count, measurer, purpose: (PageBuildPurpose)99));
+            Assert.Equal(PageBuildPurpose.Render, plan.Build(0, 1, plan.Pages.Count, measurer, purpose: PageBuildPurpose.Preflight).Purpose);
             for (var index = 0; index < plan.Pages.Count; index++)
             {
                 var generic = PaginationPass.Materialize(context, plan.Pages[index], index + 1, plan.Pages.Count);
@@ -182,11 +184,13 @@ public sealed class CorePerformanceOptimizationTests
                 Assert.Equal(generic.Cells.Select(cell => cell.Bounds), actual.Cells.Select(cell => cell.Bounds));
                 var headers = PaginationPass.GetHeaderFooterTexts(sheet, index + 1, plan.Pages.Count, DateTime.UnixEpoch);
                 actual = actual with { HeaderFooterTexts = headers };
-                var textOnly = plan.Build(index, index + 1, plan.Pages.Count, measurer, collectTextOnly: true) with { HeaderFooterTexts = headers };
+                var textOnly = plan.Build(index, index + 1, plan.Pages.Count, measurer, purpose: PageBuildPurpose.FontCollection) with { HeaderFooterTexts = headers };
+                Assert.Equal(PageBuildPurpose.Render, actual.Purpose);
+                Assert.Equal(PageBuildPurpose.FontCollection, textOnly.Purpose);
                 Assert.Empty(textOnly.Images ?? []);
                 Assert.Empty(textOnly.BorderOnlyCells);
                 var fullTexts = generator.GeneratePage(actual, measurer).OfType<DrawTextCommand>().ToArray();
-                var collected = generator.GenerateText(textOnly, measurer).ToArray();
+                var collected = generator.GenerateText(textOnly, measurer).Cast<DrawTextCommand>().ToArray();
                 Assert.Equal(fullTexts.Select(text => (text.Text, text.Bounds, text.Style)), collected.Select(text => (text.Text, text.Bounds, text.Style)));
                 Assert.Equal(fullTexts.SelectMany(text => text.TextLayout!.Lines).SelectMany(line => line.Glyphs!.Glyphs),
                     collected.SelectMany(text => text.TextLayout!.Lines).SelectMany(line => line.Glyphs!.Glyphs));

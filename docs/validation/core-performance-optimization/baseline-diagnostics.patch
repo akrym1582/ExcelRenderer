@@ -1,0 +1,143 @@
+diff --git a/src/ExcelRenderer.Core/ExcelConverter.cs b/src/ExcelRenderer.Core/ExcelConverter.cs
+index d6da362..9131760 100644
+--- a/src/ExcelRenderer.Core/ExcelConverter.cs
++++ b/src/ExcelRenderer.Core/ExcelConverter.cs
+@@ -116,14 +116,26 @@ public static class ExcelConverter
+                         ConversionMetrics.Report("pagePayloadActive", 1);
+                         try
+                         {
+-                            var page = plan.Build(index, ++number, sheetCount, measurer, cancellationToken) with
++                            var pageNumber = ++number;
++                            var page = ConversionMetrics.Measure(
++                                pass == 0 ? "fontCollectionPageBuild" : "drawingPageBuild",
++                                () => plan.Build(index, pageNumber, sheetCount, measurer, cancellationToken)) with
+                             {
+                                 HeaderFooterTexts = PaginationPass.GetHeaderFooterTexts(entry.Sheet, ++sheetNumber, sheetCount, timestamp),
+                             };
+-                            var commands = generator.GeneratePage(page, measurer);
++                            var commands = ConversionMetrics.Measure(
++                                pass == 0 ? "fontCollectionCommandBuild" : "drawingCommandBuild",
++                                () => generator.GeneratePage(page, measurer));
+                             if (pass == 0)
+                             {
+-                                renderer.Collect(commands);
++                                ConversionMetrics.Report("collectionNonTextCommands", commands.Count(command => command is not DrawTextCommand));
++                                ConversionMetrics.Report("collectionFillCommands", commands.OfType<FillRectangleCommand>().Count());
++                                ConversionMetrics.Report("collectionImageCommands", commands.OfType<DrawImageCommand>().Count());
++                                ConversionMetrics.Measure("fontCollectionRegister", () =>
++                                {
++                                    renderer.Collect(commands);
++                                    return 0;
++                                });
+                             }
+                             else
+                             {
+diff --git a/src/ExcelRenderer.Core/Fonts/SkiaFontFace.cs b/src/ExcelRenderer.Core/Fonts/SkiaFontFace.cs
+index 73bb559..16733a1 100644
+--- a/src/ExcelRenderer.Core/Fonts/SkiaFontFace.cs
++++ b/src/ExcelRenderer.Core/Fonts/SkiaFontFace.cs
+@@ -134,6 +134,8 @@ internal sealed class SkiaFontFace : IDisposable
+     /// <returns>Point-coordinate positions relative to the run.</returns>
+     internal SKPoint[] Positions(ReadOnlySpan<ushort> glyphs, double size)
+     {
++        Rendering.ConversionMetrics.Report("positionArrayCreated", 1);
++        Rendering.ConversionMetrics.Report("positionArrayElements", glyphs.Length);
+         var result = new SKPoint[glyphs.Length];
+         var colorAdvances = Color ? Advances(glyphs, size) : null;
+         double x = 0;
+diff --git a/src/ExcelRenderer.Core/Layout/RenderPageBuilder.cs b/src/ExcelRenderer.Core/Layout/RenderPageBuilder.cs
+index 26d5145..55672e4 100644
+--- a/src/ExcelRenderer.Core/Layout/RenderPageBuilder.cs
++++ b/src/ExcelRenderer.Core/Layout/RenderPageBuilder.cs
+@@ -67,6 +67,7 @@ internal sealed class RenderPageBuilder
+             (layout, layout.Bounds.Y, layout.Bounds.Y + Math.Max(layout.Bounds.Height, Epsilon))));
+         _repeatedRows = context.CellLayouts.Values.Where(layout => _titleRowSet.Contains(layout.Address.Row)).ToArray();
+         _cellOrder = context.CellLayouts.Keys.Select((address, order) => (address, order)).ToDictionary(pair => pair.address, pair => pair.order);
++        Rendering.ConversionMetrics.Report("pageCellIndexBuild", 1);
+         context.ObjectLayouts ??= new SheetObjectLayoutIndex(context);
+     }
+ 
+@@ -106,6 +107,7 @@ internal sealed class RenderPageBuilder
+             .OrderBy(layout => _cellOrder[layout.Address])
+             .Select(layout => BuildCell(layout, placement, repeatColumns, repeatRows))
+             .ToArray();
++        Rendering.ConversionMetrics.Report("pageCellDeduplicateSort", 1);
+         var pageContext = new CorePageBuildContext(_context, placement, horizontal, vertical, _bodyColumns, _bodyRows, _titleColumns, _titleRows, repeatColumns, repeatRows);
+         var images = _context.Policy.BuildPageImages(pageContext);
+         Rendering.ConversionMetrics.Report("corePageBuild", 1);
+diff --git a/src/ExcelRenderer.Core/Pdf/SkiaDrawingPrimitives.cs b/src/ExcelRenderer.Core/Pdf/SkiaDrawingPrimitives.cs
+index baee6e2..3a85c2d 100644
+--- a/src/ExcelRenderer.Core/Pdf/SkiaDrawingPrimitives.cs
++++ b/src/ExcelRenderer.Core/Pdf/SkiaDrawingPrimitives.cs
+@@ -90,13 +90,17 @@ internal static class SkiaDrawingPrimitives
+     /// <param name="style">The paint style.</param>
+     /// <param name="width">The stroke width.</param>
+     /// <returns>The caller-owned paint.</returns>
+-    internal static SKPaint CreatePaint(ReportColor color, SKPaintStyle style, double width = 1) => new()
++    internal static SKPaint CreatePaint(ReportColor color, SKPaintStyle style, double width = 1)
+     {
+-        Color = new(color.Red, color.Green, color.Blue, color.Alpha),
+-        Style = style,
+-        StrokeWidth = (float)width,
+-        IsAntialias = true,
+-    };
++        Rendering.ConversionMetrics.Report("paintCreated", 1);
++        return new()
++        {
++            Color = new(color.Red, color.Green, color.Blue, color.Alpha),
++            Style = style,
++            StrokeWidth = (float)width,
++            IsAntialias = true,
++        };
++    }
+ 
+     private static SKPaint CreateBorderPaint(BorderSide side)
+     {
+diff --git a/src/ExcelRenderer.Core/Pdf/SkiaTextMeasurer.cs b/src/ExcelRenderer.Core/Pdf/SkiaTextMeasurer.cs
+index 921ab51..78e4df7 100644
+--- a/src/ExcelRenderer.Core/Pdf/SkiaTextMeasurer.cs
++++ b/src/ExcelRenderer.Core/Pdf/SkiaTextMeasurer.cs
+@@ -39,10 +39,12 @@ internal sealed class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
+         var key = (text, font, availableWidth, wrap);
+         if (_layouts.TryGetValue(key, out var cached))
+         {
++            Rendering.ConversionMetrics.Report("layoutCacheHit", 1);
+             return cached;
+         }
+ 
+-        var lineTexts = TextLineBreaker.Break(text, availableWidth, wrap, value => context.Face.Measure(context.Face.Typeface.GetGlyphs(value), font.Size));
++        Rendering.ConversionMetrics.Report("layoutCacheMiss", 1);
++        var lineTexts = TextLineBreaker.Break(text, availableWidth, wrap, value => context.Face.Measure(SelectGlyphs(value), font.Size));
+         var lines = lineTexts.Select(line => CreateLine(line.Text, line.ExplicitBreak, font)).ToArray();
+         var result = new TextLayoutResult(
+             new(lines.Length == 0 ? 0 : lines.Max(line => line.Width), lines.Sum(line => line.Height)),
+@@ -54,19 +56,28 @@ internal sealed class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
+         {
+             if (_layouts.Count >= 512)
+             {
++                Rendering.ConversionMetrics.Report("layoutCacheEviction", _layouts.Count);
+                 _layouts.Clear();
+             }
+ 
+             _layouts[key] = result;
++            Rendering.ConversionMetrics.Report("layoutCacheEntries", _layouts.Count);
+         }
+ 
+         return result;
+     }
+ 
++    private ushort[] SelectGlyphs(string text)
++    {
++        Rendering.ConversionMetrics.Report("textGlyphCalls", 1);
++        Rendering.ConversionMetrics.Report("textGlyphCharacters", text.Length);
++        return context.Face.Typeface.GetGlyphs(text);
++    }
++
+     private TextLayoutLine CreateLine(string text, bool explicitBreak, FontStyle style)
+     {
+         var (ascent, descent, leading) = context.Metrics(style.Size);
+-        var glyphs = context.Face.Typeface.GetGlyphs(text);
++        var glyphs = SelectGlyphs(text);
+         return new(text, context.Face.Measure(glyphs, style.Size), ascent + descent + leading, ascent, explicitBreak)
+         {
+             Glyphs = new(context.Face, glyphs, text, text),

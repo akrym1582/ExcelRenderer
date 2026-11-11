@@ -122,7 +122,12 @@ public sealed class PerformanceTests(ITestOutputHelper output)
         var metrics = measurement.Metrics;
         Assert.Equal(1, metrics["pdfSave"]);
         Assert.Equal(2 * expectedPages, metrics["corePageBuild"]);
-        Assert.Equal(2 * expectedPages, metrics["coreCommandBuild"]);
+        Assert.Equal(expectedPages, metrics["coreCommandBuild"]);
+        Assert.Equal(expectedPages, metrics["coreTextPageBuild"]);
+        Assert.False(metrics.ContainsKey("pageCellIndexBuild"));
+        Assert.False(metrics.ContainsKey("pageCellDeduplicateSort"));
+        Assert.Equal(metrics["paintCreated"], metrics["paintDisposed"]);
+        Assert.InRange(metrics["paintCreated"], 1, 2);
         Assert.Equal(metrics["typefaceCreated"], metrics["typefaceDisposed"]);
         Assert.Equal(metrics["pdfFontCreated"], metrics["pdfFontDisposed"]);
         Assert.True(measurement.Sample.AllocatedBytes > 0);

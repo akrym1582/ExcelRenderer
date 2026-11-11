@@ -3,3 +3,9 @@
 
 # Frozen captures include binary and textual files whose exact hashes are retained.
 tests/Shared/PdfRemovalBaseline/** -text
+
+# Preserve hash-pinned Core performance evidence on every checkout platform.
+docs/validation/core-performance-optimization/** -text
+# Unified patches require space-prefixed empty context lines; logs retain raw tool output.
+docs/validation/core-performance-optimization/*.patch -whitespace
+docs/validation/core-performance-optimization/*.log -whitespace

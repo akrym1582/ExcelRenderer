@@ -13,6 +13,7 @@ namespace ExcelRenderer.Core.Pdf;
 /// <summary>Owns Core's basic Skia PDF rendering using a single validated font snapshot.</summary>
 internal sealed class CorePdfRenderer : IDisposable
 {
+    private readonly SkiaPaintResources paints = new();
     private readonly PdfFontCollection fonts;
     private readonly SkiaPdfDocument document;
     private readonly Extensibility.ICorePdfTextPainter? textPainter;
@@ -26,7 +27,7 @@ internal sealed class CorePdfRenderer : IDisposable
         this.token = token;
         fonts = new(token);
         document = new(new InputBufferOptions { MemoryThresholdBytes = 8 * 1024 * 1024, AllowTemporaryFiles = true }, token);
-        textPainter = context is null ? null : new SkiaFinalizedTextPainter(context, fonts);
+        textPainter = context is null ? null : new SkiaFinalizedTextPainter(context, fonts, paints);
     }
 
     /// <summary>Gets the diagnostic callback.</summary>
@@ -44,7 +45,14 @@ internal sealed class CorePdfRenderer : IDisposable
         }
         finally
         {
-            fonts.Dispose();
+            try
+            {
+                fonts.Dispose();
+            }
+            finally
+            {
+                paints.Dispose();
+            }
         }
     }
 
@@ -131,18 +139,15 @@ internal sealed class CorePdfRenderer : IDisposable
         switch (command)
         {
             case FillRectangleCommand fill:
-                using (var paint = SkiaDrawingPrimitives.CreatePaint(fill.Color, SKPaintStyle.Fill))
-                {
-                    var b = fill.Bounds;
-                    canvas.DrawRect((float)b.X, (float)b.Y, (float)b.Width, (float)b.Height, paint);
-                }
+                var b = fill.Bounds;
+                canvas.DrawRect((float)b.X, (float)b.Y, (float)b.Width, (float)b.Height, paints.Fill(fill.Color));
 
                 break;
             case DrawBorderCommand border:
-                SkiaDrawingPrimitives.DrawBorder(canvas, border);
+                SkiaDrawingPrimitives.DrawBorder(canvas, border, paints);
                 break;
             case DrawLineCommand line:
-                SkiaDrawingPrimitives.DrawStyledLine(canvas, line.Style, line.X1, line.Y1, line.X2, line.Y2);
+                SkiaDrawingPrimitives.DrawStyledLine(canvas, line.Style, line.X1, line.Y1, line.X2, line.Y2, resources: paints);
                 break;
             case DrawTextCommand text:
                 (textPainter ?? throw new InvalidOperationException("The conversion font is missing.")).Paint(canvas, text);

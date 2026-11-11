@@ -161,7 +161,8 @@ internal sealed class PdfFontCollection : IDisposable
         using var builder = new SKTextBlobBuilder();
         var buffer = builder.AllocatePositionedTextRun(font, glyphs.Length, source.Length);
         buffer.SetGlyphs(glyphs);
-        buffer.SetPositions(entry.Face.Positions(glyphs, size));
+        entry.Face.WritePositions(glyphs, size, buffer.Positions);
+        ConversionMetrics.Report("pdfPositionsWritten", glyphs.Length);
         buffer.SetText(source);
         buffer.SetClusters(clusters);
         using var blob = builder.Build();

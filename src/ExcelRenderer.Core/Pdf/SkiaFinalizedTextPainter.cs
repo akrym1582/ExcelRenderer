@@ -7,7 +7,7 @@ using SkiaSharp;
 namespace ExcelRenderer.Core.Pdf;
 
 /// <summary>Draws Core's finalized single-font lines without repeating layout.</summary>
-internal sealed class SkiaFinalizedTextPainter(SingleFontContext context, PdfFontCollection fonts) : Extensibility.ICorePdfTextPainter
+internal sealed class SkiaFinalizedTextPainter(SingleFontContext context, PdfFontCollection fonts, SkiaPaintResources paints) : Extensibility.ICorePdfTextPainter
 {
     /// <inheritdoc/>
     public void Collect(DrawTextCommand command)
@@ -44,7 +44,7 @@ internal sealed class SkiaFinalizedTextPainter(SingleFontContext context, PdfFon
                 canvas.ClipRect(new((float)b.X, (float)b.Y, (float)(b.X + b.Width), (float)(b.Y + b.Height)));
             }
 
-            using var paint = SkiaDrawingPrimitives.CreatePaint(command.Style.Font.Color ?? new(0, 0, 0), SKPaintStyle.Fill);
+            var paint = paints.Fill(command.Style.Font.Color ?? new(0, 0, 0));
             foreach (var position in TextLayoutPlacement.Place(layout, command.Bounds, command.Style.HorizontalAlignment, command.Style.VerticalAlignment))
             {
                 var text = position.Line.Text;

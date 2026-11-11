@@ -1,0 +1,451 @@
+diff --git a/src/ExcelRenderer.Core/Drawing/DrawCommandGeneratorPass.cs b/src/ExcelRenderer.Core/Drawing/DrawCommandGeneratorPass.cs
+index 4ea7db2..9d95892 100644
+--- a/src/ExcelRenderer.Core/Drawing/DrawCommandGeneratorPass.cs
++++ b/src/ExcelRenderer.Core/Drawing/DrawCommandGeneratorPass.cs
+@@ -88,16 +88,38 @@ internal sealed class DrawCommandGeneratorPass
+ 
+         commands.AddRange(extension?.CreateObjectCommands(page) ?? (page.Images ?? []).OrderBy(image => image.ZIndex)
+             .Select(image => (DrawCommand)new DrawImageCommand(page.Number, image.Bounds, image.ImageBytes)));
+-        commands.AddRange((page.HeaderFooterTexts ?? [])
+-            .Select(x => (DrawCommand)new DrawTextCommand(page.Number, x.Bounds, x.Text, x.Style)
+-            {
+-                TextLayout = measurer?.Layout(x.Text, x.Style.Font, x.Bounds.Width, false),
+-            }));
++        commands.AddRange(GenerateHeaderFooter(page, measurer));
+ 
+         Rendering.ConversionMetrics.Report("coreCommandBuild", 1);
+         return commands;
+     }
+ 
++    /// <summary>Streams the same finalized text commands used by painting, without other layers.</summary>
++    /// <param name="page">The text-only page payload.</param>
++    /// <param name="measurer">The shared header/footer measurer.</param>
++    /// <returns>Cell text followed by header/footer text.</returns>
++    internal IEnumerable<DrawTextCommand> GenerateText(RenderPage page, Abstractions.ITextLayoutService? measurer)
++    {
++        foreach (var cell in page.Cells)
++        {
++            foreach (var command in GenerateCellLayer(page.Number, cell, 3, true))
++            {
++                yield return (DrawTextCommand)command;
++            }
++        }
++
++        foreach (var command in GenerateHeaderFooter(page, measurer))
++        {
++            yield return command;
++        }
++    }
++
++    private static IEnumerable<DrawTextCommand> GenerateHeaderFooter(RenderPage page, Abstractions.ITextLayoutService? measurer) =>
++        (page.HeaderFooterTexts ?? []).Select(x => new DrawTextCommand(page.Number, x.Bounds, x.Text, x.Style)
++        {
++            TextLayout = measurer?.Layout(x.Text, x.Style.Font, x.Bounds.Width, false),
++        });
++
+     private static ReportRect GetContentBounds(RenderCell cell) =>
+         cell.ContentBounds.Width > 0 || cell.ContentBounds.Height > 0
+             ? cell.ContentBounds
+diff --git a/src/ExcelRenderer.Core/ExcelConverter.cs b/src/ExcelRenderer.Core/ExcelConverter.cs
+index d6da362..328ee16 100644
+--- a/src/ExcelRenderer.Core/ExcelConverter.cs
++++ b/src/ExcelRenderer.Core/ExcelConverter.cs
+@@ -85,7 +85,7 @@ public static class ExcelConverter
+         var reader = new CoreExcelReader(font, diagnostics, options.ReadOptions);
+         var report = ConversionMetrics.Measure("reader", () => reader.Read(prepared, diagnostics, sheetNames, cancellationToken, options.ReadOptions));
+         cancellationToken.ThrowIfCancellationRequested();
+-        var measurer = new SkiaTextMeasurer(font);
++        var measurer = new SkiaTextMeasurer(font, cancellationToken);
+         var engine = new ReportLayoutEngine(measurer);
+         var selectedSheets = sheetNames is null
+             ? report.Sheets
+@@ -116,18 +116,17 @@ public static class ExcelConverter
+                         ConversionMetrics.Report("pagePayloadActive", 1);
+                         try
+                         {
+-                            var page = plan.Build(index, ++number, sheetCount, measurer, cancellationToken) with
++                            var page = plan.Build(index, ++number, sheetCount, measurer, cancellationToken, collectTextOnly: pass == 0) with
+                             {
+                                 HeaderFooterTexts = PaginationPass.GetHeaderFooterTexts(entry.Sheet, ++sheetNumber, sheetCount, timestamp),
+                             };
+-                            var commands = generator.GeneratePage(page, measurer);
+                             if (pass == 0)
+                             {
+-                                renderer.Collect(commands);
++                                renderer.Collect(generator.GenerateText(page, measurer));
+                             }
+                             else
+                             {
+-                                renderer.AppendPage(entry.Sheet.PageSettings, commands);
++                                renderer.AppendPage(entry.Sheet.PageSettings, generator.GeneratePage(page, measurer));
+                             }
+                         }
+                         finally
+diff --git a/src/ExcelRenderer.Core/Fonts/SkiaFontFace.cs b/src/ExcelRenderer.Core/Fonts/SkiaFontFace.cs
+index 73bb559..9d8ce25 100644
+--- a/src/ExcelRenderer.Core/Fonts/SkiaFontFace.cs
++++ b/src/ExcelRenderer.Core/Fonts/SkiaFontFace.cs
+@@ -163,7 +163,16 @@ internal sealed class SkiaFontFace : IDisposable
+         return result;
+     }
+ 
+-    private int AdvanceUnits(ushort glyph)
++    /// <summary>Converts an exact accumulated design advance using layout's operation order.</summary>
++    /// <param name="units">The accumulated integer advance.</param>
++    /// <param name="size">The point size.</param>
++    /// <returns>The advance in points.</returns>
++    internal double MeasureUnits(long units, double size) => units * size / Units;
++
++    /// <summary>Gets the exact unscaled horizontal advance for an outline glyph.</summary>
++    /// <param name="glyph">The selected glyph.</param>
++    /// <returns>The design advance.</returns>
++    internal int AdvanceUnits(ushort glyph)
+     {
+         var offset = Math.Min(glyph, MetricCount - 1) * 4;
+         return (hmtx[offset] << 8) | hmtx[offset + 1];
+diff --git a/src/ExcelRenderer.Core/Layout/CellBoundsPass.cs b/src/ExcelRenderer.Core/Layout/CellBoundsPass.cs
+index 4c5eabd..46b2ecb 100644
+--- a/src/ExcelRenderer.Core/Layout/CellBoundsPass.cs
++++ b/src/ExcelRenderer.Core/Layout/CellBoundsPass.cs
+@@ -17,6 +17,11 @@ internal sealed class CellBoundsPass : IReportLayoutPass
+         foreach (var (address, bounds) in EnumerateBounds(context))
+         {
+             var cell = context.Sheet.Cells[address];
++            if (context.CollectTextOnly && string.IsNullOrEmpty(cell.Text))
++            {
++                continue;
++            }
++
+             var content = CellContentBounds.Calculate(bounds, cell.Style);
+             var insets = context.Policy.GetCellContentInsets(cell, content.Width, bounds.Height);
+             context.CellLayouts[address] = new(
+@@ -25,7 +30,7 @@ internal sealed class CellBoundsPass : IReportLayoutPass
+                 context.TextSizes.GetValueOrDefault(address))
+             {
+                 ContentBounds = content with { X = content.X + insets.Left, Width = Math.Max(0, content.Width - insets.Left - insets.Right) },
+-                MergedBorders = cell.MergedBorders?
++                MergedBorders = context.CollectTextOnly ? null : cell.MergedBorders?
+                     .Where(border => context.ColumnLayouts.ContainsKey(border.Address.Column) &&
+                         context.RowLayouts.ContainsKey(border.Address.Row))
+                     .Select(border =>
+diff --git a/src/ExcelRenderer.Core/Layout/RenderPageBuilder.cs b/src/ExcelRenderer.Core/Layout/RenderPageBuilder.cs
+index 26d5145..e11b6df 100644
+--- a/src/ExcelRenderer.Core/Layout/RenderPageBuilder.cs
++++ b/src/ExcelRenderer.Core/Layout/RenderPageBuilder.cs
+@@ -20,11 +20,11 @@ internal sealed class RenderPageBuilder
+     private readonly double _titleHeight;
+     private readonly double _scale;
+ 
+-    private readonly BandIndex<CellLayout> _cells;
+-    private readonly CellLayout[] _repeatedRows;
++    private readonly BandIndex<CellLayout>? _cells;
++    private readonly CellLayout[] _repeatedRows = [];
+     private readonly HashSet<int> _titleRowSet;
+     private readonly HashSet<int> _titleColumnSet;
+-    private readonly Dictionary<CellAddress, int> _cellOrder;
++    private readonly Dictionary<CellAddress, int>? _cellOrder;
+     private readonly Dictionary<CellStyle, CellStyle> _scaledStyles = new();
+     private readonly Dictionary<BorderStyle, BorderStyle> _scaledBorders = new();
+ 
+@@ -63,10 +63,15 @@ internal sealed class RenderPageBuilder
+         _scale = scale;
+         _titleRowSet = new(titleRows);
+         _titleColumnSet = new(titleColumns);
+-        _cells = new(context.CellLayouts.Values.Select(layout =>
+-            (layout, layout.Bounds.Y, layout.Bounds.Y + Math.Max(layout.Bounds.Height, Epsilon))));
+-        _repeatedRows = context.CellLayouts.Values.Where(layout => _titleRowSet.Contains(layout.Address.Row)).ToArray();
+-        _cellOrder = context.CellLayouts.Keys.Select((address, order) => (address, order)).ToDictionary(pair => pair.address, pair => pair.order);
++        if (context.SelectedPageCells is null)
++        {
++            _cells = new(context.CellLayouts.Values.Select(layout =>
++                (layout, layout.Bounds.Y, layout.Bounds.Y + Math.Max(layout.Bounds.Height, Epsilon))));
++            _repeatedRows = context.CellLayouts.Values.Where(layout => _titleRowSet.Contains(layout.Address.Row)).ToArray();
++            _cellOrder = context.CellLayouts.Keys.Select((address, order) => (address, order)).ToDictionary(pair => pair.address, pair => pair.order);
++            Rendering.ConversionMetrics.Report("pageCellIndexBuild", 1);
++        }
++
+         context.ObjectLayouts ??= new SheetObjectLayoutIndex(context);
+     }
+ 
+@@ -95,20 +100,35 @@ internal sealed class RenderPageBuilder
+             repeatRows ? _titleHeight : 0,
+             _scale);
+ 
+-        var candidates = _cells.Query(vertical.Start, vertical.End);
+-        if (repeatRows)
++        IEnumerable<CellLayout> selected;
++        if (_context.SelectedPageCells is { } proven)
+         {
+-            candidates = candidates.Concat(_repeatedRows);
++            selected = proven.Addresses.Where(_context.CellLayouts.ContainsKey).Select(address => _context.CellLayouts[address]);
+         }
++        else
++        {
++            var candidates = _cells!.Query(vertical.Start, vertical.End);
++            if (repeatRows)
++            {
++                candidates = candidates.Concat(_repeatedRows);
++            }
+ 
+-        var cells = candidates.GroupBy(layout => layout.Address).Select(group => group.First())
+-            .Where(layout => selection.Contains(layout.Address, layout.Bounds, _context.Sheet.Cells[layout.Address].ColumnSpan > 1 || _context.Sheet.Cells[layout.Address].RowSpan > 1))
+-            .OrderBy(layout => _cellOrder[layout.Address])
+-            .Select(layout => BuildCell(layout, placement, repeatColumns, repeatRows))
+-            .ToArray();
++            selected = candidates.GroupBy(layout => layout.Address).Select(group => group.First())
++                .Where(layout => selection.Contains(layout.Address, layout.Bounds, _context.Sheet.Cells[layout.Address].ColumnSpan > 1 || _context.Sheet.Cells[layout.Address].RowSpan > 1))
++                .OrderBy(layout => _cellOrder![layout.Address]);
++            Rendering.ConversionMetrics.Report("pageCellDeduplicateSort", 1);
++        }
++
++        var cells = selected.Select(layout => BuildCell(layout, placement, repeatColumns, repeatRows)).ToArray();
+         var pageContext = new CorePageBuildContext(_context, placement, horizontal, vertical, _bodyColumns, _bodyRows, _titleColumns, _titleRows, repeatColumns, repeatRows);
+-        var images = _context.Policy.BuildPageImages(pageContext);
++        var images = _context.CollectTextOnly ? [] : _context.Policy.BuildPageImages(pageContext);
+         Rendering.ConversionMetrics.Report("corePageBuild", 1);
++        if (_context.CollectTextOnly)
++        {
++            Rendering.ConversionMetrics.Report("coreTextPageBuild", 1);
++            return new(pageNumber, cells);
++        }
++
+         var page = _context.Policy.BuildAdditionalPageContent(pageContext, new(pageNumber, cells, images));
+         _context.BorderNeighbors ??= new(_context.Sheet);
+         if (!_context.BorderNeighbors.HasEdges)
+diff --git a/src/ExcelRenderer.Core/Layout/ReportLayoutContext.cs b/src/ExcelRenderer.Core/Layout/ReportLayoutContext.cs
+index abd7d3f..b24b68a 100644
+--- a/src/ExcelRenderer.Core/Layout/ReportLayoutContext.cs
++++ b/src/ExcelRenderer.Core/Layout/ReportLayoutContext.cs
+@@ -89,9 +89,15 @@ internal sealed class ReportLayoutContext
+     /// <summary>Gets or sets the cancellation token for internal page-local layout work.</summary>
+     internal CancellationToken CancellationToken { get; set; }
+ 
++    /// <summary>Gets or sets the proven plan selection; independent layout passes leave this unset.</summary>
++    internal SelectedPageCells? SelectedPageCells { get; set; }
++
+     /// <summary>Gets or sets the page-local cell addresses to measure.</summary>
+     internal IReadOnlyList<CellAddress>? CandidateAddresses { get; set; }
+ 
++    /// <summary>Gets or sets a value indicating whether this Core-only build omits nontext page payloads.</summary>
++    internal bool CollectTextOnly { get; set; }
++
+     /// <summary>Gets or sets shared lightweight object geometry without retaining other page payloads.</summary>
+     internal SheetObjectLayoutIndex? ObjectLayouts { get; set; }
+ 
+diff --git a/src/ExcelRenderer.Core/Layout/SheetLayoutPlan.cs b/src/ExcelRenderer.Core/Layout/SheetLayoutPlan.cs
+index 75f6818..0d7881e 100644
+--- a/src/ExcelRenderer.Core/Layout/SheetLayoutPlan.cs
++++ b/src/ExcelRenderer.Core/Layout/SheetLayoutPlan.cs
+@@ -65,12 +65,29 @@ internal sealed class SheetLayoutPlan
+                 candidates = candidates.Concat(repeatedRows);
+             }
+ 
+-            return candidates.Distinct().OrderBy(i => i).Where(i =>
++            var ordered = candidates.ToList();
++            ordered.Sort();
++            Rendering.ConversionMetrics.Report("pageCandidateSort", 1);
++            var addresses = new List<CellAddress>(ordered.Count);
++            var previous = -1;
++            foreach (var candidate in ordered)
+             {
+-                var (address, bounds) = cells[i];
++                if (candidate == previous)
++                {
++                    continue;
++                }
++
++                previous = candidate;
++                var (address, bounds) = cells[candidate];
+                 var cell = sheet.Cells[address];
+-                return selection.Contains(address, bounds, cell.ColumnSpan > 1 || cell.RowSpan > 1);
+-            }).Select(i => cells[i].Address).ToArray();
++                if (selection.Contains(address, bounds, cell.ColumnSpan > 1 || cell.RowSpan > 1))
++                {
++                    addresses.Add(address);
++                }
++            }
++
++            Rendering.ConversionMetrics.Report("pageCandidateCount", addresses.Count);
++            return addresses;
+         }
+         else
+         {
+@@ -84,13 +101,15 @@ internal sealed class SheetLayoutPlan
+     /// <param name="count">The count used by this operation.</param>
+     /// <param name="measurer">The measurer used by this operation.</param>
+     /// <param name="cancellationToken">The page-build cancellation token.</param>
++    /// <param name="collectTextOnly">Whether to omit nontext payloads during Core font collection.</param>
+     /// <returns>The planned or generated result.</returns>
+-    internal RenderPage Build(int index, int number, int count, ITextMeasurer measurer, CancellationToken cancellationToken = default)
++    internal RenderPage Build(int index, int number, int count, ITextMeasurer measurer, CancellationToken cancellationToken = default, bool collectTextOnly = false)
+     {
+         var plan = Pages[index];
+         var context = new ReportLayoutContext(sheet, measurer, geometry)
+         {
+             CancellationToken = cancellationToken,
++            CollectTextOnly = collectTextOnly,
+             Policy = policy,
+             PrintArea = printArea,
+             VisibleColumns = visibleColumns,
+@@ -101,7 +120,8 @@ internal sealed class SheetLayoutPlan
+         context.ColumnLayouts = columns;
+         context.RowLayouts = rows;
+ 
+-        context.CandidateAddresses = GetCandidateAddresses(index);
++        context.SelectedPageCells = new(GetCandidateAddresses(index));
++        context.CandidateAddresses = context.SelectedPageCells.Addresses;
+ 
+         new TextMeasurePass().Execute(context);
+         new CellBoundsPass().Execute(context);
+diff --git a/src/ExcelRenderer.Core/Pdf/SkiaTextMeasurer.cs b/src/ExcelRenderer.Core/Pdf/SkiaTextMeasurer.cs
+index 921ab51..7d6877f 100644
+--- a/src/ExcelRenderer.Core/Pdf/SkiaTextMeasurer.cs
++++ b/src/ExcelRenderer.Core/Pdf/SkiaTextMeasurer.cs
+@@ -1,3 +1,4 @@
++using System.Globalization;
+ using ExcelRenderer.Core.Abstractions;
+ using ExcelRenderer.Core.Drawing;
+ using ExcelRenderer.Core.Fonts;
+@@ -10,11 +11,17 @@ namespace ExcelRenderer.Core.Pdf;
+ internal sealed class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
+ {
+     private readonly SingleFontContext context;
++    private readonly CancellationToken token;
+     private readonly Dictionary<(string Text, FontStyle Font, double Width, bool Wrap), TextLayoutResult> _layouts = new();
+ 
+     /// <summary>Initializes a new instance of the <see cref="SkiaTextMeasurer"/> class.</summary>
+     /// <param name="context">The conversion font snapshot.</param>
+-    internal SkiaTextMeasurer(SingleFontContext context) => this.context = context;
++    /// <param name="token">The conversion cancellation token.</param>
++    internal SkiaTextMeasurer(SingleFontContext context, CancellationToken token = default)
++    {
++        this.context = context;
++        this.token = token;
++    }
+ 
+     /// <summary>指定したフォントで文字列を測定し、必要に応じて利用可能幅に収まる行数へ折り返した寸法を算出します。</summary>
+     /// <param name="text">寸法を測定する文字列です。</param>
+@@ -42,8 +49,11 @@ internal sealed class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
+             return cached;
+         }
+ 
+-        var lineTexts = TextLineBreaker.Break(text, availableWidth, wrap, value => context.Face.Measure(context.Face.Typeface.GetGlyphs(value), font.Size));
+-        var lines = lineTexts.Select(line => CreateLine(line.Text, line.ExplicitBreak, font)).ToArray();
++        token.ThrowIfCancellationRequested();
++        var lines = (!context.Face.Color && IsValidUtf16(text)
++            ? LayoutOutline(text, font, availableWidth, wrap)
++            : TextLineBreaker.Break(text, availableWidth, wrap, value => context.Face.Measure(SelectGlyphs(value), font.Size))
++                .Select(line => CreateLine(line.Text, line.ExplicitBreak, font))).ToArray();
+         var result = new TextLayoutResult(
+             new(lines.Length == 0 ? 0 : lines.Max(line => line.Width), lines.Sum(line => line.Height)),
+             Array.AsReadOnly(lines))
+@@ -63,10 +73,93 @@ internal sealed class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
+         return result;
+     }
+ 
+-    private TextLayoutLine CreateLine(string text, bool explicitBreak, FontStyle style)
++    private static bool IsValidUtf16(string text)
++    {
++        for (var index = 0; index < text.Length; index++)
++        {
++            if (char.IsHighSurrogate(text[index]))
++            {
++                if (++index == text.Length || !char.IsLowSurrogate(text[index]))
++                {
++                    return false;
++                }
++            }
++            else if (char.IsLowSurrogate(text[index]))
++            {
++                return false;
++            }
++        }
++
++        return true;
++    }
++
++    private IEnumerable<TextLayoutLine> LayoutOutline(string text, FontStyle font, double width, bool wrap)
++    {
++        var paragraphs = text.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n');
++        for (var paragraphIndex = 0; paragraphIndex < paragraphs.Length; paragraphIndex++)
++        {
++            token.ThrowIfCancellationRequested();
++            var paragraph = paragraphs[paragraphIndex];
++            var glyphs = SelectGlyphs(paragraph);
++            var explicitBreak = paragraphIndex < paragraphs.Length - 1;
++            if (!wrap || width <= 0)
++            {
++                yield return CreateLine(paragraph, explicitBreak, font, glyphs);
++                continue;
++            }
++
++            var boundaries = StringInfo.ParseCombiningCharacters(paragraph);
++            var start = 0;
++            var firstGlyph = 0;
++            var glyphIndex = 0;
++            long units = 0;
++            for (var index = 0; index < boundaries.Length; index++)
++            {
++                if ((index & 255) == 0)
++                {
++                    token.ThrowIfCancellationRequested();
++                }
++
++                var elementStart = boundaries[index];
++                var elementEnd = index + 1 < boundaries.Length ? boundaries[index + 1] : paragraph.Length;
++                var elementGlyph = glyphIndex;
++                long elementUnits = 0;
++                for (var character = elementStart; character < elementEnd; character++)
++                {
++                    elementUnits += context.Face.AdvanceUnits(glyphs[glyphIndex++]);
++                    if (char.IsHighSurrogate(paragraph[character]))
++                    {
++                        character++;
++                    }
++                }
++
++                Rendering.ConversionMetrics.Report("textWrapComparisons", 1);
++                if (elementStart > start && !TextLineBreaker.Fits(context.Face.MeasureUnits(units + elementUnits, font.Size), width))
++                {
++                    yield return CreateLine(paragraph.Substring(start, elementStart - start), false, font, glyphs.AsSpan(firstGlyph, elementGlyph - firstGlyph).ToArray());
++                    start = elementStart;
++                    firstGlyph = elementGlyph;
++                    units = 0;
++                }
++
++                units += elementUnits;
++            }
++
++            yield return CreateLine(paragraph.Substring(start), explicitBreak, font, glyphs.AsSpan(firstGlyph).ToArray());
++        }
++    }
++
++    private ushort[] SelectGlyphs(string text)
++    {
++        Rendering.ConversionMetrics.Report("textGlyphCalls", 1);
++        Rendering.ConversionMetrics.Report("textGlyphCharacters", text.Length);
++        return context.Face.Typeface.GetGlyphs(text);
++    }
++
++    private TextLayoutLine CreateLine(string text, bool explicitBreak, FontStyle style, ushort[]? selectedGlyphs = null)
+     {
+         var (ascent, descent, leading) = context.Metrics(style.Size);
+-        var glyphs = context.Face.Typeface.GetGlyphs(text);
++        var glyphs = selectedGlyphs ?? SelectGlyphs(text);
+         return new(text, context.Face.Measure(glyphs, style.Size), ascent + descent + leading, ascent, explicitBreak)
+         {
+             Glyphs = new(context.Face, glyphs, text, text),
+diff --git a/src/ExcelRenderer.Core/Layout/SelectedPageCells.cs b/src/ExcelRenderer.Core/Layout/SelectedPageCells.cs
+new file mode 100644
+index 0000000..b3c69b1
+--- /dev/null
++++ b/src/ExcelRenderer.Core/Layout/SelectedPageCells.cs
+@@ -0,0 +1,8 @@
++using ExcelRenderer.Core.Model;
++
++namespace ExcelRenderer.Core.Layout;
++
++/// <summary>Page-local candidates selected by SheetLayoutPlan: unique, in original cell order,
++/// and already satisfying the page selection, including repeated titles and merged spans.</summary>
++/// <param name="Addresses">The selected source addresses, borrowed until this page is released.</param>
++internal sealed record SelectedPageCells(IReadOnlyList<CellAddress> Addresses);

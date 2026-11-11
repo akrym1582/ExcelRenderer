@@ -1,0 +1,34 @@
+{
+  "head": "8fc3ec11554f001f82fda63be25ebfe02edd2a9a",
+  "source_sha256": {
+    "src/ExcelRenderer.Core/Drawing/DrawCommandGeneratorPass.cs": "02664b29f6b17016cc52385d67cc99a28c0fbe940f5da1a67f8f4bfda07aa2bb",
+    "src/ExcelRenderer.Core/ExcelConverter.cs": "58e2e33e9b27a3addce018ad221723cf80f2c3fba91485a87fb49f450b207e68",
+    "src/ExcelRenderer.Core/Fonts/SkiaFontFace.cs": "60086fb09dbfabf8404a9d1020e1258910efabfb1f4c5a8726987e0b94065600",
+    "src/ExcelRenderer.Core/Layout/CellBoundsPass.cs": "9ad63afafa429ce645531dd5a7b827296ec6bd8f78e0f26011988847e27b85d0",
+    "src/ExcelRenderer.Core/Layout/RenderPageBuilder.cs": "2212d9e6e9a6dc609792d2b4f621f3fc567b46d237bf67b6afc213a7e158b7b9",
+    "src/ExcelRenderer.Core/Layout/ReportLayoutContext.cs": "861831aae852a0d5b5c7434b112ac28c06b0d9c4e36ded436a5d40b7bae26a42",
+    "src/ExcelRenderer.Core/Layout/SheetLayoutPlan.cs": "84ca2bc41803db7b5b3d1e5b5700c3e317dfc73b4295b18ea76046d40f0d2356",
+    "src/ExcelRenderer.Core/Pdf/CorePdfRenderer.cs": "9527042b3ab94e3711eae13d249a806fde89954bb6a40100d633b05eddcd3666",
+    "src/ExcelRenderer.Core/Pdf/PdfFontCollection.cs": "298e1ed0e373c12c01747aed119fb76c696fcd3bbcc91c06a26b016b2cab58a8",
+    "src/ExcelRenderer.Core/Pdf/SkiaDrawingPrimitives.cs": "46cd3f86554c0bd36569b7fc18a9c9418895afe57f107719d1b32f9b0ffbea3d",
+    "src/ExcelRenderer.Core/Pdf/SkiaFinalizedTextPainter.cs": "3bdabcb6e35f828166440e0b0d70c6044ea5e075bf7df3c7435679e80427a9ed",
+    "src/ExcelRenderer.Core/Pdf/SkiaTextMeasurer.cs": "cdedca2accdafe2ffa85156e498b72e048efe2bb7d33366da4e61c3bbf26c69f",
+    "tests/ExcelRenderer.Core.Tests/PerformanceTests.cs": "7871d7f74cfe1d224f58e29050600d3bec7dbc55da9a955ea494ffcbad1a7713",
+    "tools/ExcelRenderer.Core.Validation/Program.cs": "cff7aea507f406d18185c8bb0d8f4ab18e3dbe89ec06533924e743d1751e1a95",
+    "src/ExcelRenderer.Core/Layout/SelectedPageCells.cs": "58d3c7b63307399b14f667744715ae4767b2c4a143a53b5fc894d05d9e9f6c1c",
+    "src/ExcelRenderer.Core/Pdf/SkiaPaintResources.cs": "a1fcdf77e99750b3f67c9fe1dd375bfd58892debba0742f5fd285dab3dfaddc9",
+    "tests/ExcelRenderer.Core.Tests/CorePerformanceOptimizationTests.cs": "111d97cf404cd02d7fd4b24c45f01ee9cffccd5fdc562c29f618bf4e53095b74"
+  },
+  "release_binary_matches_saved_runtime": {
+    "ExcelRenderer.Core": true,
+    "ExcelRenderer": true
+  },
+  "evidence_scripts_sha256": {
+    "scripts/recheck-core-optimization-regressions.py": "ceb7e6209791d5ff9a5147362ee3abfe84f8d6ed5d113ec1fe62fd5b06c49185",
+    "scripts/measure-core-optimization.py": "33d6fd0e7252ea445db7681ce31ebd9762c7e503d3ca2b21dd07c005d8a8f2a4",
+    "scripts/recheck-core-optimization.py": "bdd8f14c789aae48453d148ccf8d84881964a4dd4baac01e40c7a37904a42006",
+    "scripts/summarize-core-optimization.py": "fbfc8b065272e7989d3614052d29c4d94401cbe7341db895b01dac7da707bf9a",
+    "scripts/validate-core-optimization.py": "46a4907d6217a4b30c793168783095626dd18250755b84b751b23cf6ccca46a6",
+    "scripts/observe-core-baseline.py": "1a8c16600269146b4e01156e7a1a1d31a7fe2fe4e88c96ca801bdf4fe65bb9db"
+  }
+}

@@ -1,0 +1,21 @@
+Core borders1000 all phases equal
+Core empty all phases equal
+Core header all phases equal
+Core images1000 all phases equal
+Core imagesonly all phases equal
+Core mixed1000 all phases equal
+Core repeat1000 all phases equal
+Core text1 all phases equal
+Core text1000 all phases equal
+Core text10000 all phases equal
+Core text5000 all phases equal
+Core wrap1000 all phases equal
+Samples 01-japanese.xlsx Core/main equal
+Samples 02-image.xlsx Core/main equal
+Samples 03-wrapped-text.xlsx Core/main equal
+Samples 04-text-decoration.xlsx Core/main equal
+Samples 05-borders.xlsx Core/main equal
+Samples 06-layout-and-pagination.xlsx Core/main equal
+Samples 07-multiple-sheets.xlsx Core/main equal
+Samples 08-print-scaling.xlsx Core/main equal
+Samples 09-cell-border.xlsx Core/main equal

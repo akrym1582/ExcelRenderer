@@ -1,0 +1,288 @@
+0 text1 baseline 67.65
+0 text1 phase1 69.68
+0 text1 phase2 18.68
+0 text1 phase3 17.28
+0 text1 phase4 65.34
+0 text1 phase5 19.12
+0 text1000 baseline 121.51
+0 text1000 phase1 171.4
+0 text1000 phase2 115.92
+0 text1000 phase3 91.82
+0 text1000 phase4 106.36
+0 text1000 phase5 90.33
+0 text5000 baseline 414.0
+0 text5000 phase1 410.73
+0 text5000 phase2 405.82
+0 text5000 phase3 371.17
+0 text5000 phase4 394.98
+0 text5000 phase5 358.75
+0 text10000 baseline 722.44
+0 text10000 phase1 659.53
+0 text10000 phase2 875.1
+0 text10000 phase3 727.76
+0 text10000 phase4 706.57
+0 text10000 phase5 789.04
+0 empty baseline 11.2
+0 empty phase1 10.33
+0 empty phase2 14.91
+0 empty phase3 10.45
+0 empty phase4 14.96
+0 empty phase5 10.16
+0 header baseline 18.74
+0 header phase1 26.78
+0 header phase2 21.7
+0 header phase3 65.88
+0 header phase4 17.45
+0 header phase5 17.0
+0 imagesonly baseline 12.14
+0 imagesonly phase1 11.38
+0 imagesonly phase2 10.45
+0 imagesonly phase3 10.89
+0 imagesonly phase4 11.4
+0 imagesonly phase5 11.85
+0 borders1000 baseline 106.79
+0 borders1000 phase1 116.88
+0 borders1000 phase2 107.28
+0 borders1000 phase3 109.7
+0 borders1000 phase4 114.78
+0 borders1000 phase5 132.22
+0 wrap1000 baseline 768.14
+0 wrap1000 phase1 773.02
+0 wrap1000 phase2 424.12
+0 wrap1000 phase3 375.03
+0 wrap1000 phase4 351.91
+0 wrap1000 phase5 406.92
+0 repeat1000 baseline 93.2
+0 repeat1000 phase1 80.26
+0 repeat1000 phase2 76.86
+0 repeat1000 phase3 68.39
+0 repeat1000 phase4 66.77
+0 repeat1000 phase5 117.11
+0 mixed1000 baseline 93.01
+0 mixed1000 phase1 74.84
+0 mixed1000 phase2 85.08
+0 mixed1000 phase3 78.48
+0 mixed1000 phase4 73.89
+0 mixed1000 phase5 81.4
+0 images1000 baseline 121.56
+0 images1000 phase1 116.23
+0 images1000 phase2 113.24
+0 images1000 phase3 105.88
+0 images1000 phase4 151.29
+0 images1000 phase5 134.06
+1 text1 phase5 17.7
+1 text1 phase4 18.18
+1 text1 phase3 18.24
+1 text1 phase2 25.21
+1 text1 phase1 18.54
+1 text1 baseline 17.5
+1 text1000 phase5 91.12
+1 text1000 phase4 90.73
+1 text1000 phase3 96.47
+1 text1000 phase2 112.35
+1 text1000 phase1 115.38
+1 text1000 baseline 94.27
+1 text5000 phase5 420.6
+1 text5000 phase4 361.06
+1 text5000 phase3 379.52
+1 text5000 phase2 435.46
+1 text5000 phase1 369.25
+1 text5000 baseline 445.2
+1 text10000 phase5 729.28
+1 text10000 phase4 719.99
+1 text10000 phase3 735.36
+1 text10000 phase2 756.33
+1 text10000 phase1 814.58
+1 text10000 baseline 850.92
+1 empty phase5 12.02
+1 empty phase4 15.7
+1 empty phase3 15.29
+1 empty phase2 11.67
+1 empty phase1 10.25
+1 empty baseline 21.75
+1 header phase5 17.62
+1 header phase4 18.61
+1 header phase3 17.77
+1 header phase2 58.79
+1 header phase1 19.42
+1 header baseline 17.74
+1 imagesonly phase5 13.69
+1 imagesonly phase4 12.35
+1 imagesonly phase3 13.0
+1 imagesonly phase2 11.28
+1 imagesonly phase1 18.62
+1 imagesonly baseline 11.95
+1 borders1000 phase5 114.89
+1 borders1000 phase4 176.0
+1 borders1000 phase3 128.61
+1 borders1000 phase2 110.49
+1 borders1000 phase1 107.45
+1 borders1000 baseline 112.4
+1 wrap1000 phase5 383.18
+1 wrap1000 phase4 378.41
+1 wrap1000 phase3 403.35
+1 wrap1000 phase2 473.7
+1 wrap1000 phase1 811.53
+1 wrap1000 baseline 820.27
+1 repeat1000 phase5 79.01
+1 repeat1000 phase4 79.99
+1 repeat1000 phase3 94.72
+1 repeat1000 phase2 113.65
+1 repeat1000 phase1 91.43
+1 repeat1000 baseline 103.3
+1 mixed1000 phase5 123.66
+1 mixed1000 phase4 90.21
+1 mixed1000 phase3 107.72
+1 mixed1000 phase2 121.32
+1 mixed1000 phase1 84.82
+1 mixed1000 baseline 79.49
+1 images1000 phase5 121.7
+1 images1000 phase4 124.95
+1 images1000 phase3 141.05
+1 images1000 phase2 174.01
+1 images1000 phase1 152.06
+1 images1000 baseline 121.6
+2 text1 baseline 18.65
+2 text1 phase1 20.92
+2 text1 phase2 20.02
+2 text1 phase3 18.08
+2 text1 phase4 17.74
+2 text1 phase5 23.89
+2 text1000 baseline 86.25
+2 text1000 phase1 85.16
+2 text1000 phase2 120.74
+2 text1000 phase3 82.97
+2 text1000 phase4 93.7
+2 text1000 phase5 104.37
+2 text5000 baseline 406.36
+2 text5000 phase1 437.95
+2 text5000 phase2 456.43
+2 text5000 phase3 358.91
+2 text5000 phase4 348.27
+2 text5000 phase5 358.53
+2 text10000 baseline 563.83
+2 text10000 phase1 768.19
+2 text10000 phase2 883.66
+2 text10000 phase3 883.74
+2 text10000 phase4 681.49
+2 text10000 phase5 868.68
+2 empty baseline 10.08
+2 empty phase1 11.09
+2 empty phase2 14.61
+2 empty phase3 56.07
+2 empty phase4 11.1
+2 empty phase5 11.52
+2 header baseline 21.37
+2 header phase1 22.96
+2 header phase2 20.3
+2 header phase3 21.32
+2 header phase4 16.78
+2 header phase5 18.09
+2 imagesonly baseline 11.49
+2 imagesonly phase1 12.52
+2 imagesonly phase2 12.3
+2 imagesonly phase3 13.15
+2 imagesonly phase4 11.68
+2 imagesonly phase5 14.43
+2 borders1000 baseline 106.45
+2 borders1000 phase1 142.51
+2 borders1000 phase2 117.28
+2 borders1000 phase3 111.32
+2 borders1000 phase4 200.17
+2 borders1000 phase5 158.23
+2 wrap1000 baseline 760.48
+2 wrap1000 phase1 854.08
+2 wrap1000 phase2 341.64
+2 wrap1000 phase3 533.97
+2 wrap1000 phase4 426.96
+2 wrap1000 phase5 388.08
+2 repeat1000 baseline 78.59
+2 repeat1000 phase1 102.9
+2 repeat1000 phase2 171.48
+2 repeat1000 phase3 109.81
+2 repeat1000 phase4 88
+2 repeat1000 phase5 70.6
+2 mixed1000 baseline 85.14
+2 mixed1000 phase1 90.79
+2 mixed1000 phase2 116.29
+2 mixed1000 phase3 87.01
+2 mixed1000 phase4 94.96
+2 mixed1000 phase5 78.53
+2 images1000 baseline 136.01
+2 images1000 phase1 120.36
+2 images1000 phase2 137.77
+2 images1000 phase3 122.47
+2 images1000 phase4 160.73
+2 images1000 phase5 112.68
+main 0 02-image Pdf baseline-main
+main 0 02-image Pdf final-main
+main 0 02-image Png baseline-main
+main 0 02-image Png final-main
+main 0 02-image Svg baseline-main
+main 0 02-image Svg final-main
+main 0 04-text-decoration Pdf baseline-main
+main 0 04-text-decoration Pdf final-main
+main 0 04-text-decoration Png baseline-main
+main 0 04-text-decoration Png final-main
+main 0 04-text-decoration Svg baseline-main
+main 0 04-text-decoration Svg final-main
+main 0 05-borders Pdf baseline-main
+main 0 05-borders Pdf final-main
+main 0 05-borders Png baseline-main
+main 0 05-borders Png final-main
+main 0 05-borders Svg baseline-main
+main 0 05-borders Svg final-main
+main 0 06-layout-and-pagination Pdf baseline-main
+main 0 06-layout-and-pagination Pdf final-main
+main 0 06-layout-and-pagination Png baseline-main
+main 0 06-layout-and-pagination Png final-main
+main 0 06-layout-and-pagination Svg baseline-main
+main 0 06-layout-and-pagination Svg final-main
+main 1 02-image Pdf final-main
+main 1 02-image Pdf baseline-main
+main 1 02-image Png final-main
+main 1 02-image Png baseline-main
+main 1 02-image Svg final-main
+main 1 02-image Svg baseline-main
+main 1 04-text-decoration Pdf final-main
+main 1 04-text-decoration Pdf baseline-main
+main 1 04-text-decoration Png final-main
+main 1 04-text-decoration Png baseline-main
+main 1 04-text-decoration Svg final-main
+main 1 04-text-decoration Svg baseline-main
+main 1 05-borders Pdf final-main
+main 1 05-borders Pdf baseline-main
+main 1 05-borders Png final-main
+main 1 05-borders Png baseline-main
+main 1 05-borders Svg final-main
+main 1 05-borders Svg baseline-main
+main 1 06-layout-and-pagination Pdf final-main
+main 1 06-layout-and-pagination Pdf baseline-main
+main 1 06-layout-and-pagination Png final-main
+main 1 06-layout-and-pagination Png baseline-main
+main 1 06-layout-and-pagination Svg final-main
+main 1 06-layout-and-pagination Svg baseline-main
+main 2 02-image Pdf baseline-main
+main 2 02-image Pdf final-main
+main 2 02-image Png baseline-main
+main 2 02-image Png final-main
+main 2 02-image Svg baseline-main
+main 2 02-image Svg final-main
+main 2 04-text-decoration Pdf baseline-main
+main 2 04-text-decoration Pdf final-main
+main 2 04-text-decoration Png baseline-main
+main 2 04-text-decoration Png final-main
+main 2 04-text-decoration Svg baseline-main
+main 2 04-text-decoration Svg final-main
+main 2 05-borders Pdf baseline-main
+main 2 05-borders Pdf final-main
+main 2 05-borders Png baseline-main
+main 2 05-borders Png final-main
+main 2 05-borders Svg baseline-main
+main 2 05-borders Svg final-main
+main 2 06-layout-and-pagination Pdf baseline-main
+main 2 06-layout-and-pagination Pdf final-main
+main 2 06-layout-and-pagination Png baseline-main
+main 2 06-layout-and-pagination Png final-main
+main 2 06-layout-and-pagination Svg baseline-main
+main 2 06-layout-and-pagination Svg final-main

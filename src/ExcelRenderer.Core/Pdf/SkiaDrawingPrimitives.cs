@@ -48,7 +48,8 @@ internal static class SkiaDrawingPrimitives
     /// <summary>Paints all styled cell edges through shared stroke geometry.</summary>
     /// <param name="canvas">The target canvas.</param>
     /// <param name="command">The border command.</param>
-    internal static void DrawBorder(SKCanvas canvas, DrawBorderCommand command)
+    /// <param name="resources">Optional renderer-owned reusable paints.</param>
+    internal static void DrawBorder(SKCanvas canvas, DrawBorderCommand command, SkiaPaintResources? resources = null)
     {
         var rect = command.Bounds;
         DrawSide(command.Border.Top, rect.X, rect.Y, rect.X + rect.Width, rect.Y, 0, 1);
@@ -63,7 +64,7 @@ internal static class SkiaDrawingPrimitives
                 return;
             }
 
-            DrawStyledLine(canvas, side, x1, y1, x2, y2, inwardX, inwardY);
+            DrawStyledLine(canvas, side, x1, y1, x2, y2, inwardX, inwardY, resources);
         }
     }
 
@@ -76,9 +77,11 @@ internal static class SkiaDrawingPrimitives
     /// <param name="y2">The end Y.</param>
     /// <param name="inwardX">The inward X direction.</param>
     /// <param name="inwardY">The inward Y direction.</param>
-    internal static void DrawStyledLine(SKCanvas canvas, BorderSide side, double x1, double y1, double x2, double y2, double inwardX = 0, double inwardY = 0)
+    /// <param name="resources">Optional renderer-owned reusable paints.</param>
+    internal static void DrawStyledLine(SKCanvas canvas, BorderSide side, double x1, double y1, double x2, double y2, double inwardX = 0, double inwardY = 0, SkiaPaintResources? resources = null)
     {
-        using var paint = CreateBorderPaint(side);
+        using var ownedPaint = resources is null ? CreateBorderPaint(side) : null;
+        var paint = ownedPaint ?? resources!.Stroke(side);
         foreach (var stroke in BorderStrokeGeometry.GetStrokes(side, x1, y1, x2, y2, inwardX, inwardY))
         {
             canvas.DrawLine((float)stroke.X1, (float)stroke.Y1, (float)stroke.X2, (float)stroke.Y2, paint);
@@ -98,9 +101,11 @@ internal static class SkiaDrawingPrimitives
         IsAntialias = true,
     };
 
-    private static SKPaint CreateBorderPaint(BorderSide side)
+    /// <summary>Creates a caller-owned dash effect under the shared border policy.</summary>
+    /// <param name="side">The finalized line style and width.</param>
+    /// <returns>The effect, or null for a continuous stroke.</returns>
+    internal static SKPathEffect? CreateDashEffect(BorderSide side)
     {
-        var paint = CreatePaint(side.Color ?? new(0, 0, 0), SKPaintStyle.Stroke, side.Width);
         var pattern = side.LineStyle switch
         {
             BorderLineStyle.Dotted => new float[] { 1, 2 },
@@ -109,12 +114,14 @@ internal static class SkiaDrawingPrimitives
             BorderLineStyle.DashDotDot => new float[] { 3, 2, 1, 2, 1, 2 },
             _ => null,
         };
-        if (pattern is not null)
-        {
-            using var effect = SKPathEffect.CreateDash(pattern.Select(x => x * (float)side.Width).ToArray(), 0);
-            paint.PathEffect = effect;
-        }
+        return pattern is null ? null : SKPathEffect.CreateDash(pattern.Select(x => x * (float)side.Width).ToArray(), 0);
+    }
 
+    private static SKPaint CreateBorderPaint(BorderSide side)
+    {
+        var paint = CreatePaint(side.Color ?? new(0, 0, 0), SKPaintStyle.Stroke, side.Width);
+        using var effect = CreateDashEffect(side);
+        paint.PathEffect = effect;
         return paint;
     }
 }

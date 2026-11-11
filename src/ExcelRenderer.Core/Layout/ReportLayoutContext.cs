@@ -89,8 +89,14 @@ internal sealed class ReportLayoutContext
     /// <summary>Gets or sets the cancellation token for internal page-local layout work.</summary>
     internal CancellationToken CancellationToken { get; set; }
 
+    /// <summary>Gets or sets the proven plan selection; independent layout passes leave this unset.</summary>
+    internal SelectedPageCells? SelectedPageCells { get; set; }
+
     /// <summary>Gets or sets the page-local cell addresses to measure.</summary>
     internal IReadOnlyList<CellAddress>? CandidateAddresses { get; set; }
+
+    /// <summary>Gets or sets a value indicating whether this Core-only build omits nontext page payloads.</summary>
+    internal bool CollectTextOnly { get; set; }
 
     /// <summary>Gets or sets shared lightweight object geometry without retaining other page payloads.</summary>
     internal SheetObjectLayoutIndex? ObjectLayouts { get; set; }

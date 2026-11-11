@@ -65,12 +65,29 @@ internal sealed class SheetLayoutPlan
                 candidates = candidates.Concat(repeatedRows);
             }
 
-            return candidates.Distinct().OrderBy(i => i).Where(i =>
+            var ordered = candidates.ToList();
+            ordered.Sort();
+            Rendering.ConversionMetrics.Report("pageCandidateSort", 1);
+            var addresses = new List<CellAddress>(ordered.Count);
+            var previous = -1;
+            foreach (var candidate in ordered)
             {
-                var (address, bounds) = cells[i];
+                if (candidate == previous)
+                {
+                    continue;
+                }
+
+                previous = candidate;
+                var (address, bounds) = cells[candidate];
                 var cell = sheet.Cells[address];
-                return selection.Contains(address, bounds, cell.ColumnSpan > 1 || cell.RowSpan > 1);
-            }).Select(i => cells[i].Address).ToArray();
+                if (selection.Contains(address, bounds, cell.ColumnSpan > 1 || cell.RowSpan > 1))
+                {
+                    addresses.Add(address);
+                }
+            }
+
+            Rendering.ConversionMetrics.Report("pageCandidateCount", addresses.Count);
+            return addresses;
         }
         else
         {
@@ -84,13 +101,15 @@ internal sealed class SheetLayoutPlan
     /// <param name="count">The count used by this operation.</param>
     /// <param name="measurer">The measurer used by this operation.</param>
     /// <param name="cancellationToken">The page-build cancellation token.</param>
+    /// <param name="collectTextOnly">Whether to omit nontext payloads during Core font collection.</param>
     /// <returns>The planned or generated result.</returns>
-    internal RenderPage Build(int index, int number, int count, ITextMeasurer measurer, CancellationToken cancellationToken = default)
+    internal RenderPage Build(int index, int number, int count, ITextMeasurer measurer, CancellationToken cancellationToken = default, bool collectTextOnly = false)
     {
         var plan = Pages[index];
         var context = new ReportLayoutContext(sheet, measurer, geometry)
         {
             CancellationToken = cancellationToken,
+            CollectTextOnly = collectTextOnly,
             Policy = policy,
             PrintArea = printArea,
             VisibleColumns = visibleColumns,
@@ -101,7 +120,8 @@ internal sealed class SheetLayoutPlan
         context.ColumnLayouts = columns;
         context.RowLayouts = rows;
 
-        context.CandidateAddresses = GetCandidateAddresses(index);
+        context.SelectedPageCells = new(GetCandidateAddresses(index));
+        context.CandidateAddresses = context.SelectedPageCells.Addresses;
 
         new TextMeasurePass().Execute(context);
         new CellBoundsPass().Execute(context);

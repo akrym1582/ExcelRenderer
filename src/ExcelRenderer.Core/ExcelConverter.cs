@@ -85,7 +85,7 @@ public static class ExcelConverter
         var reader = new CoreExcelReader(font, diagnostics, options.ReadOptions);
         var report = ConversionMetrics.Measure("reader", () => reader.Read(prepared, diagnostics, sheetNames, cancellationToken, options.ReadOptions));
         cancellationToken.ThrowIfCancellationRequested();
-        var measurer = new SkiaTextMeasurer(font);
+        var measurer = new SkiaTextMeasurer(font, cancellationToken);
         var engine = new ReportLayoutEngine(measurer);
         var selectedSheets = sheetNames is null
             ? report.Sheets
@@ -116,18 +116,24 @@ public static class ExcelConverter
                         ConversionMetrics.Report("pagePayloadActive", 1);
                         try
                         {
-                            var page = plan.Build(index, ++number, sheetCount, measurer, cancellationToken) with
+                            var pageNumber = ++number;
+                            var page = ConversionMetrics.Measure(
+                                pass == 0 ? "fontCollectionPageBuild" : "drawingPageBuild",
+                                () => plan.Build(index, pageNumber, sheetCount, measurer, cancellationToken, collectTextOnly: pass == 0)) with
                             {
                                 HeaderFooterTexts = PaginationPass.GetHeaderFooterTexts(entry.Sheet, ++sheetNumber, sheetCount, timestamp),
                             };
-                            var commands = generator.GeneratePage(page, measurer);
                             if (pass == 0)
                             {
-                                renderer.Collect(commands);
+                                ConversionMetrics.Measure("fontCollectionText", () =>
+                                {
+                                    renderer.Collect(generator.GenerateText(page, measurer));
+                                    return 0;
+                                });
                             }
                             else
                             {
-                                renderer.AppendPage(entry.Sheet.PageSettings, commands);
+                                renderer.AppendPage(entry.Sheet.PageSettings, generator.GeneratePage(page, measurer));
                             }
                         }
                         finally

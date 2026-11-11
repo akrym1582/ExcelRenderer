@@ -28,8 +28,7 @@ jobs:
         if: runner.os == 'Linux'
         shell: bash
         run: |
-          sudo apt-get update
-          sudo apt-get install -y poppler-utils fontconfig
+          bash scripts/install-ci-apt-packages.sh poppler-utils fontconfig
           python -m venv artifacts/font-validation-venv
           artifacts/font-validation-venv/bin/pip install fonttools==4.61.1 PyMuPDF==1.26.6 numpy==2.3.5
           source scripts/test-fonts.sh

@@ -98,7 +98,7 @@ PDF位置はbuilder所有のSpanへ書き込み、rendererごとにPaint最大2�
 planが適用条件を確認して目的を確定し、配置とcommand生成が同じ値を使用する。
 セル文字→製品固有の図形文字→ヘッダー/フッターの収集順は共通generatorが所有する。
 CLOCKは退避/置換で空いた位置を再利用し、走査指標は空き位置探しも数える。
-本体の通常非折り返し文字はlayout cacheで保持し、line cacheは折り返し/部分書式の断片に使う。
+本体の折り返しなしの通常単一行はlayout cacheで保持し、line cacheは明示改行・自動折り返し・部分書式の断片の再利用に使う。
 既定の計測とrun補完は同じmeasurerを共有し、custom measurer指定時は独立した補完を維持する。
 [レビュー対応と測定](rendering-review-fixes.ja.md)を参照。
 

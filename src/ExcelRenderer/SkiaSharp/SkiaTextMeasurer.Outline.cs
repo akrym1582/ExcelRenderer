@@ -19,15 +19,18 @@ public sealed partial class SkiaTextMeasurer
     private IEnumerable<TextLayoutLine> CreateLines(string text, FontStyle font, FontRequest request, double width, bool wrap)
     {
         // Finalize unwrapped lines directly; custom resolvers retain their complete-line input.
-        if (!wrap || width <= 0 || _fontManager is not FontManager || !OutlineParagraph.IsValidUtf16(text))
+        var unwrapped = !wrap || width <= 0;
+        if (unwrapped || _fontManager is not FontManager || !OutlineParagraph.IsValidUtf16(text))
         {
+            var reuseLines = !unwrapped;
             foreach (var line in TextLineBreaker.Break(text, width, wrap, value => MeasureWidth(value, font, request)))
             {
                 ConversionFontResources.Current!.Token.ThrowIfCancellationRequested();
 
-                // Whole unwrapped layouts already have a cache. Reserve the line
-                // cache for fragments shared across wrapped or partially styled text.
-                yield return wrap && width > 0
+                // The first explicit break identifies a multiline layout. Keep
+                // reusing its fragments through the final line.
+                reuseLines |= line.ExplicitBreak;
+                yield return reuseLines
                     ? CreateCachedLine(line.Text, line.ExplicitBreak, font, request)
                     : CreateLine(line.Text, line.ExplicitBreak, font, request);
             }

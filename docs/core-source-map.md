@@ -362,8 +362,8 @@ placement and command generation. `ICoreDrawingExtension.CreateTextObjectCommand
 supplies product text-bearing objects; Core owns the cell/object/header/footer
 collection sequence. Main retains request-level eligibility and full product
 metadata policy. CLOCK reuses released slots and accounts for all ring scans;
-main retains cache-key/admission policy, including uncached plain unwrapped lines
-inside the whole-layout cache. See [review fixes](rendering-review-fixes.md).
+main retains cache-key/admission policy, including skipping the line cache for
+plain single-line text without wrapping. See [review fixes](rendering-review-fixes.md).
 
 ## Core glyph storage follow-up
 

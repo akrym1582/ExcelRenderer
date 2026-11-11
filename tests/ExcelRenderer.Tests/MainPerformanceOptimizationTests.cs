@@ -38,6 +38,36 @@ public sealed class MainPerformanceOptimizationTests
     }
 
     [Theory]
+    [InlineData(1)]
+    [InlineData(2050)]
+    public void Explicit_lines_reuse_shared_fragments_without_automatic_wrapping(int uniqueLineLength)
+    {
+        using var resources = new ConversionFontResources();
+        var measurer = new SkiaTextMeasurer(Manager(), true);
+        var lineHits = 0d;
+        ConversionMetrics.Observer = (name, value) =>
+        {
+            if (name == "textLineCacheHits")
+            {
+                lineHits += value;
+            }
+        };
+
+        try
+        {
+            var first = measurer.Layout("heading\r\n" + new string('a', uniqueLineLength), new(), 180, false);
+            var second = measurer.Layout("heading\n" + new string('b', uniqueLineLength), new(), 180, false);
+            Assert.Equal(1, lineHits);
+            Assert.Same(first.Lines[0], second.Lines[0]);
+            Assert.True(second.Lines[0].ExplicitBreak);
+        }
+        finally
+        {
+            ConversionMetrics.Observer = null;
+        }
+    }
+
+    [Theory]
     [InlineData(false, false)]
     [InlineData(true, false)]
     [InlineData(false, true)]

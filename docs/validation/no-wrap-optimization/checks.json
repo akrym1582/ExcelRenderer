@@ -1,0 +1,39 @@
+{
+  "debugRebuild": {
+    "warnings": 0,
+    "errors": 0
+  },
+  "releaseRebuild": {
+    "warnings": 0,
+    "errors": 0
+  },
+  "solutionTests": 3076,
+  "coreNonPerformance": 455,
+  "coreCoverage": {
+    "line": 84.78,
+    "branch": 74.31,
+    "gatePassed": true
+  },
+  "corePerformanceTests": 8,
+  "corePdfPairs": 7,
+  "mainOutputFiles": 24,
+  "coreMainParity": 19,
+  "readerCoreIsolation": true,
+  "namespace": true,
+  "dependencyAudit": true,
+  "prohibitedDependencyAudit": true,
+  "publicApi": {
+    "mainEntries": 2361,
+    "coreEntries": 82,
+    "equal": true
+  },
+  "fixedPdf": {
+    "fixtures": 25,
+    "unmetGates": 0,
+    "frozenBDifferences": 0
+  },
+  "productPatchApplies": true,
+  "allCaseFivePercentEstablished": false,
+  "windowsExecuted": false,
+  "interpretation": "No stable speedup or material allocation reduction established. Separate experimental commit; previous main text1000 regression remains unresolved."
+}

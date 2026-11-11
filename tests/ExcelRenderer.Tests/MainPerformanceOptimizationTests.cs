@@ -14,6 +14,32 @@ namespace ExcelRenderer.Tests;
 
 public sealed class MainPerformanceOptimizationTests
 {
+    [Theory]
+    [InlineData(false, 80)]
+    [InlineData(true, 0)]
+    [InlineData(true, -1)]
+    public void Unwrapped_lines_skip_outline_paragraphs_and_preserve_cancellation(bool wrap, double width)
+    {
+        using var cancellation = new CancellationTokenSource();
+        using var resources = new ConversionFontResources(cancellation.Token);
+        var measurer = new SkiaTextMeasurer(Manager(), true);
+        var counts = new Dictionary<string, double>();
+        ConversionMetrics.Observer = (name, value) => counts[name] = counts.GetValueOrDefault(name) + value;
+        try
+        {
+            var result = measurer.Layout("first  \r\n\nlast ", new(), width, wrap);
+            Assert.Equal(new[] { "first  ", "", "last " }, result.Lines.Select(line => line.Text));
+            Assert.Equal(new[] { true, true, false }, result.Lines.Select(line => line.ExplicitBreak));
+            Assert.False(counts.ContainsKey("outlineParagraphs"));
+            cancellation.Cancel();
+            Assert.Throws<OperationCanceledException>(() => measurer.Layout("first  \nnew", new(), width, wrap));
+        }
+        finally
+        {
+            ConversionMetrics.Observer = null;
+        }
+    }
+
     [Fact]
     public void Outline_matches_compatibility_at_exact_wrap_boundaries()
     {

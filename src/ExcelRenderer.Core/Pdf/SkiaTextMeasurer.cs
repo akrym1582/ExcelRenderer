@@ -53,7 +53,7 @@ internal sealed class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
         Rendering.ConversionMetrics.Report("layoutCacheMiss", 1);
 
         token.ThrowIfCancellationRequested();
-        var lines = (!context.Face.Color && OutlineParagraph.IsValidUtf16(text)
+        var lines = (wrap && !(availableWidth <= 0) && !context.Face.Color && OutlineParagraph.IsValidUtf16(text)
             ? LayoutOutline(text, font, availableWidth, wrap)
             : TextLineBreaker.Break(text, availableWidth, wrap, value => context.Face.Measure(SelectGlyphs(value), font.Size))
                 .Select(line => CreateLine(line.Text, line.ExplicitBreak, font))).ToArray();
@@ -107,6 +107,7 @@ internal sealed class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
 
     private TextLayoutLine CreateLine(string text, bool explicitBreak, FontStyle style, GlyphSequence? selectedGlyphs = null)
     {
+        token.ThrowIfCancellationRequested();
         var (ascent, descent, leading) = context.Metrics(style.Size);
         var glyphs = selectedGlyphs is null ? SelectGlyphs(text) : null;
         var width = glyphs is null ? context.Face.Measure(selectedGlyphs!.Glyphs, style.Size) : context.Face.Measure(glyphs, style.Size);

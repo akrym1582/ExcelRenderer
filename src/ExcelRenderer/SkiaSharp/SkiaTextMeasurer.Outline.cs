@@ -18,11 +18,12 @@ public sealed partial class SkiaTextMeasurer
 
     private IEnumerable<TextLayoutLine> CreateLines(string text, FontStyle font, FontRequest request, double width, bool wrap)
     {
-        // Custom resolvers may depend on complete input or have mutable policies.
-        if (_fontManager is not FontManager || !OutlineParagraph.IsValidUtf16(text))
+        // Finalize unwrapped lines directly; custom resolvers retain their complete-line input.
+        if (!wrap || width <= 0 || _fontManager is not FontManager || !OutlineParagraph.IsValidUtf16(text))
         {
             foreach (var line in TextLineBreaker.Break(text, width, wrap, value => MeasureWidth(value, font, request)))
             {
+                ConversionFontResources.Current!.Token.ThrowIfCancellationRequested();
                 yield return CreateLine(line.Text, line.ExplicitBreak, font, request);
             }
 

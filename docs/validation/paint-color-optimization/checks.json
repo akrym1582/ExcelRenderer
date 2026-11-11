@@ -1,0 +1,42 @@
+{
+  "debugRebuild": {
+    "warnings": 0,
+    "errors": 0
+  },
+  "releaseRebuild": {
+    "warnings": 0,
+    "errors": 0
+  },
+  "solutionTests": 3080,
+  "coreNonPerformance": 459,
+  "coreCoverage": {
+    "line": 84.84,
+    "branch": 74.33,
+    "gatePassed": true
+  },
+  "corePerformanceTests": 8,
+  "mainOutputs": 24,
+  "corePairs": 7,
+  "diagnosticCorePairs": 4,
+  "coreMainParity": 19,
+  "readerIsolation": true,
+  "namespace": true,
+  "dependencyDirection": true,
+  "prohibitedDependency": true,
+  "publicApi": {
+    "mainEntries": 2361,
+    "coreEntries": 82,
+    "equal": true
+  },
+  "fixedPdf": {
+    "fixtures": 25,
+    "unmetGates": 0,
+    "frozenBDifferences": 0,
+    "reviewedDifferencesPath": "../no-wrap-optimization/fixed-pdf/differences.json",
+    "reviewedDifferencesSha256": "dd85ac62a1b7eefeb8032ad7e40b7bf8e54b51e819d6a9229ef7b7ff3fca9a06"
+  },
+  "allCaseFivePercentEstablished": false,
+  "windowsExecuted": false,
+  "productPatchApplies": true,
+  "commonHarnessPatchApplies": true
+}

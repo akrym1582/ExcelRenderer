@@ -30,5 +30,6 @@
   "tests/Shared/PdfRemovalBaseline/manifest.json": "d8aa72eaa6bb823b6b5a2ec1570cbf294662a9dd58a8f49f718a5f9a0083d098",
   "tools/ExcelRenderer.PdfComparison/reviewed-differences.json": "6f92ff121223cce385adac4fb4144167c3c1c7f37d901501730b9b7acef8d4b5",
   "docs/pdfsharp-removal-results/api-diff.json": "8e5cc77a1859db063bff0367e9eea9b3beb21fe7f988710052af7033b1cbebee",
-  "docs/pdfsharp-removal-results/A-C-differences.json": "977cad88db20dc1f8f3abe8e18bd20b09e41f8b2616ae0061ff18647d12f517e"
+  "docs/pdfsharp-removal-results/A-C-differences.json": "977cad88db20dc1f8f3abe8e18bd20b09e41f8b2616ae0061ff18647d12f517e",
+  "docs/validation/no-wrap-optimization/fixed-pdf/differences.json": "dd85ac62a1b7eefeb8032ad7e40b7bf8e54b51e819d6a9229ef7b7ff3fca9a06"
 }

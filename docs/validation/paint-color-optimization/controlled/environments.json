@@ -1,0 +1,2222 @@
+[
+  {
+    "round": 0,
+    "stage": "before",
+    "case": "text1-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "text1-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/text1.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "88505D85011FB9BCB36D4E48DFF7804B9368F51493BB37FAC6F06EE7D12F8C3C",
+      "templateSha256": "88505D85011FB9BCB36D4E48DFF7804B9368F51493BB37FAC6F06EE7D12F8C3C",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "D4E9A599FBAF3D67B38845CEA09BD7B9691C5E6A63B6503E2D01BA2A6BE9F038",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "3EB883F906F06575CB6A9707BAB8C4CD95CA5CDA036633B4E22FFA8F43234CE4",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "after",
+    "case": "text1-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "text1-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/text1.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "88505D85011FB9BCB36D4E48DFF7804B9368F51493BB37FAC6F06EE7D12F8C3C",
+      "templateSha256": "88505D85011FB9BCB36D4E48DFF7804B9368F51493BB37FAC6F06EE7D12F8C3C",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "F35046F20AEA5BE1DC7EA7D86F35FDE694EF09560DA4F835027EE80784AD99E4",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "F698A0106735B503F8D3B33DA76783C60830D1BA909BAA451E4697CBB1D264D6",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "before",
+    "case": "text1000-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "text1000-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/text1000.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "C6FDBC2E54EC4FDE141493B46B98310DFD0202E96CBD0C8B12844B8EC337FC03",
+      "templateSha256": "C6FDBC2E54EC4FDE141493B46B98310DFD0202E96CBD0C8B12844B8EC337FC03",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "D4E9A599FBAF3D67B38845CEA09BD7B9691C5E6A63B6503E2D01BA2A6BE9F038",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "3EB883F906F06575CB6A9707BAB8C4CD95CA5CDA036633B4E22FFA8F43234CE4",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "after",
+    "case": "text1000-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "text1000-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/text1000.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "C6FDBC2E54EC4FDE141493B46B98310DFD0202E96CBD0C8B12844B8EC337FC03",
+      "templateSha256": "C6FDBC2E54EC4FDE141493B46B98310DFD0202E96CBD0C8B12844B8EC337FC03",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "F35046F20AEA5BE1DC7EA7D86F35FDE694EF09560DA4F835027EE80784AD99E4",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "F698A0106735B503F8D3B33DA76783C60830D1BA909BAA451E4697CBB1D264D6",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "before",
+    "case": "wrap1000-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "wrap1000-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/wrap1000.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "7BD2C23AE89C8BD7986E56ABA1102F18BA2E997EF2EFFD8B7C0314E1ECCE2684",
+      "templateSha256": "7BD2C23AE89C8BD7986E56ABA1102F18BA2E997EF2EFFD8B7C0314E1ECCE2684",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "D4E9A599FBAF3D67B38845CEA09BD7B9691C5E6A63B6503E2D01BA2A6BE9F038",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "3EB883F906F06575CB6A9707BAB8C4CD95CA5CDA036633B4E22FFA8F43234CE4",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "after",
+    "case": "wrap1000-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "wrap1000-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/wrap1000.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "7BD2C23AE89C8BD7986E56ABA1102F18BA2E997EF2EFFD8B7C0314E1ECCE2684",
+      "templateSha256": "7BD2C23AE89C8BD7986E56ABA1102F18BA2E997EF2EFFD8B7C0314E1ECCE2684",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "F35046F20AEA5BE1DC7EA7D86F35FDE694EF09560DA4F835027EE80784AD99E4",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "F698A0106735B503F8D3B33DA76783C60830D1BA909BAA451E4697CBB1D264D6",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "before",
+    "case": "borders1000-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "borders1000-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/borders1000.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "6B2F8DA7ADE3D211177E4931CF706E153F9E85EC138245B8D0D8757B423141CF",
+      "templateSha256": "6B2F8DA7ADE3D211177E4931CF706E153F9E85EC138245B8D0D8757B423141CF",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "D4E9A599FBAF3D67B38845CEA09BD7B9691C5E6A63B6503E2D01BA2A6BE9F038",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "3EB883F906F06575CB6A9707BAB8C4CD95CA5CDA036633B4E22FFA8F43234CE4",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "after",
+    "case": "borders1000-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "borders1000-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/borders1000.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "6B2F8DA7ADE3D211177E4931CF706E153F9E85EC138245B8D0D8757B423141CF",
+      "templateSha256": "6B2F8DA7ADE3D211177E4931CF706E153F9E85EC138245B8D0D8757B423141CF",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "F35046F20AEA5BE1DC7EA7D86F35FDE694EF09560DA4F835027EE80784AD99E4",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "F698A0106735B503F8D3B33DA76783C60830D1BA909BAA451E4697CBB1D264D6",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "before",
+    "case": "imagesonly-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "imagesonly-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/imagesonly.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "9762BD0954CC55910BFA50D196AF1A1B7D3FA83757EFBCACA19BAE26EFB55D3C",
+      "templateSha256": "9762BD0954CC55910BFA50D196AF1A1B7D3FA83757EFBCACA19BAE26EFB55D3C",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "D4E9A599FBAF3D67B38845CEA09BD7B9691C5E6A63B6503E2D01BA2A6BE9F038",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "3EB883F906F06575CB6A9707BAB8C4CD95CA5CDA036633B4E22FFA8F43234CE4",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "after",
+    "case": "imagesonly-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "imagesonly-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/imagesonly.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "9762BD0954CC55910BFA50D196AF1A1B7D3FA83757EFBCACA19BAE26EFB55D3C",
+      "templateSha256": "9762BD0954CC55910BFA50D196AF1A1B7D3FA83757EFBCACA19BAE26EFB55D3C",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "F35046F20AEA5BE1DC7EA7D86F35FDE694EF09560DA4F835027EE80784AD99E4",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "F698A0106735B503F8D3B33DA76783C60830D1BA909BAA451E4697CBB1D264D6",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "before",
+    "case": "header-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "header-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/header.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "18309BB98675F31F9A885753B979A4F86A7D5BDC878AE0BD01742C56862955A0",
+      "templateSha256": "18309BB98675F31F9A885753B979A4F86A7D5BDC878AE0BD01742C56862955A0",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "D4E9A599FBAF3D67B38845CEA09BD7B9691C5E6A63B6503E2D01BA2A6BE9F038",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "3EB883F906F06575CB6A9707BAB8C4CD95CA5CDA036633B4E22FFA8F43234CE4",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "after",
+    "case": "header-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "header-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/header.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "18309BB98675F31F9A885753B979A4F86A7D5BDC878AE0BD01742C56862955A0",
+      "templateSha256": "18309BB98675F31F9A885753B979A4F86A7D5BDC878AE0BD01742C56862955A0",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "F35046F20AEA5BE1DC7EA7D86F35FDE694EF09560DA4F835027EE80784AD99E4",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "F698A0106735B503F8D3B33DA76783C60830D1BA909BAA451E4697CBB1D264D6",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "before",
+    "case": "empty-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "empty-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/empty.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "DC632D34252DD2DDAA9E44869F79C269F79E3331E68A642F65F31B2163B70C86",
+      "templateSha256": "DC632D34252DD2DDAA9E44869F79C269F79E3331E68A642F65F31B2163B70C86",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "D4E9A599FBAF3D67B38845CEA09BD7B9691C5E6A63B6503E2D01BA2A6BE9F038",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "3EB883F906F06575CB6A9707BAB8C4CD95CA5CDA036633B4E22FFA8F43234CE4",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "after",
+    "case": "empty-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "empty-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/empty.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "DC632D34252DD2DDAA9E44869F79C269F79E3331E68A642F65F31B2163B70C86",
+      "templateSha256": "DC632D34252DD2DDAA9E44869F79C269F79E3331E68A642F65F31B2163B70C86",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "F35046F20AEA5BE1DC7EA7D86F35FDE694EF09560DA4F835027EE80784AD99E4",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "F698A0106735B503F8D3B33DA76783C60830D1BA909BAA451E4697CBB1D264D6",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "before",
+    "case": "05-borders-Png",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "05-borders-Png",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/05-borders.xlsx",
+        "Format": "Png",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "074CFD50A3D4556380F462A69287D9B0254A71EBE412E267B395CA345A54EAC2",
+      "templateSha256": "074CFD50A3D4556380F462A69287D9B0254A71EBE412E267B395CA345A54EAC2",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "D4E9A599FBAF3D67B38845CEA09BD7B9691C5E6A63B6503E2D01BA2A6BE9F038",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "3EB883F906F06575CB6A9707BAB8C4CD95CA5CDA036633B4E22FFA8F43234CE4",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "after",
+    "case": "05-borders-Png",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "05-borders-Png",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/05-borders.xlsx",
+        "Format": "Png",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "074CFD50A3D4556380F462A69287D9B0254A71EBE412E267B395CA345A54EAC2",
+      "templateSha256": "074CFD50A3D4556380F462A69287D9B0254A71EBE412E267B395CA345A54EAC2",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "F35046F20AEA5BE1DC7EA7D86F35FDE694EF09560DA4F835027EE80784AD99E4",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "F698A0106735B503F8D3B33DA76783C60830D1BA909BAA451E4697CBB1D264D6",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "before",
+    "case": "05-borders-Svg",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "05-borders-Svg",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/05-borders.xlsx",
+        "Format": "Svg",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "074CFD50A3D4556380F462A69287D9B0254A71EBE412E267B395CA345A54EAC2",
+      "templateSha256": "074CFD50A3D4556380F462A69287D9B0254A71EBE412E267B395CA345A54EAC2",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "D4E9A599FBAF3D67B38845CEA09BD7B9691C5E6A63B6503E2D01BA2A6BE9F038",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "3EB883F906F06575CB6A9707BAB8C4CD95CA5CDA036633B4E22FFA8F43234CE4",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "after",
+    "case": "05-borders-Svg",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "05-borders-Svg",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/05-borders.xlsx",
+        "Format": "Svg",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "074CFD50A3D4556380F462A69287D9B0254A71EBE412E267B395CA345A54EAC2",
+      "templateSha256": "074CFD50A3D4556380F462A69287D9B0254A71EBE412E267B395CA345A54EAC2",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "F35046F20AEA5BE1DC7EA7D86F35FDE694EF09560DA4F835027EE80784AD99E4",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "F698A0106735B503F8D3B33DA76783C60830D1BA909BAA451E4697CBB1D264D6",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "before",
+    "case": "rich-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "rich-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/RichTextAcceptanceTests.RangeTrimAndMergedCellRetainRichTextInAllOutputFormats.79F50EFE1F4F079D.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": true,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "E558CD35F95B7D0FC240A5B79120A149F56665B55FBDF1E2FB424C3E38C10B31",
+      "templateSha256": "E558CD35F95B7D0FC240A5B79120A149F56665B55FBDF1E2FB424C3E38C10B31",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "D4E9A599FBAF3D67B38845CEA09BD7B9691C5E6A63B6503E2D01BA2A6BE9F038",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "3EB883F906F06575CB6A9707BAB8C4CD95CA5CDA036633B4E22FFA8F43234CE4",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 0,
+    "stage": "after",
+    "case": "rich-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "rich-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/RichTextAcceptanceTests.RangeTrimAndMergedCellRetainRichTextInAllOutputFormats.79F50EFE1F4F079D.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": true,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "E558CD35F95B7D0FC240A5B79120A149F56665B55FBDF1E2FB424C3E38C10B31",
+      "templateSha256": "E558CD35F95B7D0FC240A5B79120A149F56665B55FBDF1E2FB424C3E38C10B31",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "F35046F20AEA5BE1DC7EA7D86F35FDE694EF09560DA4F835027EE80784AD99E4",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "F698A0106735B503F8D3B33DA76783C60830D1BA909BAA451E4697CBB1D264D6",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "after",
+    "case": "text1-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "text1-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/text1.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "88505D85011FB9BCB36D4E48DFF7804B9368F51493BB37FAC6F06EE7D12F8C3C",
+      "templateSha256": "88505D85011FB9BCB36D4E48DFF7804B9368F51493BB37FAC6F06EE7D12F8C3C",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "F35046F20AEA5BE1DC7EA7D86F35FDE694EF09560DA4F835027EE80784AD99E4",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "F698A0106735B503F8D3B33DA76783C60830D1BA909BAA451E4697CBB1D264D6",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "before",
+    "case": "text1-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "text1-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/text1.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "88505D85011FB9BCB36D4E48DFF7804B9368F51493BB37FAC6F06EE7D12F8C3C",
+      "templateSha256": "88505D85011FB9BCB36D4E48DFF7804B9368F51493BB37FAC6F06EE7D12F8C3C",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "D4E9A599FBAF3D67B38845CEA09BD7B9691C5E6A63B6503E2D01BA2A6BE9F038",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "3EB883F906F06575CB6A9707BAB8C4CD95CA5CDA036633B4E22FFA8F43234CE4",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "after",
+    "case": "text1000-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "text1000-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/text1000.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "C6FDBC2E54EC4FDE141493B46B98310DFD0202E96CBD0C8B12844B8EC337FC03",
+      "templateSha256": "C6FDBC2E54EC4FDE141493B46B98310DFD0202E96CBD0C8B12844B8EC337FC03",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "F35046F20AEA5BE1DC7EA7D86F35FDE694EF09560DA4F835027EE80784AD99E4",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "F698A0106735B503F8D3B33DA76783C60830D1BA909BAA451E4697CBB1D264D6",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "before",
+    "case": "text1000-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "text1000-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/text1000.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "C6FDBC2E54EC4FDE141493B46B98310DFD0202E96CBD0C8B12844B8EC337FC03",
+      "templateSha256": "C6FDBC2E54EC4FDE141493B46B98310DFD0202E96CBD0C8B12844B8EC337FC03",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "D4E9A599FBAF3D67B38845CEA09BD7B9691C5E6A63B6503E2D01BA2A6BE9F038",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "3EB883F906F06575CB6A9707BAB8C4CD95CA5CDA036633B4E22FFA8F43234CE4",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "after",
+    "case": "wrap1000-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "wrap1000-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/wrap1000.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "7BD2C23AE89C8BD7986E56ABA1102F18BA2E997EF2EFFD8B7C0314E1ECCE2684",
+      "templateSha256": "7BD2C23AE89C8BD7986E56ABA1102F18BA2E997EF2EFFD8B7C0314E1ECCE2684",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "F35046F20AEA5BE1DC7EA7D86F35FDE694EF09560DA4F835027EE80784AD99E4",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "F698A0106735B503F8D3B33DA76783C60830D1BA909BAA451E4697CBB1D264D6",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "before",
+    "case": "wrap1000-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "wrap1000-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/wrap1000.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "7BD2C23AE89C8BD7986E56ABA1102F18BA2E997EF2EFFD8B7C0314E1ECCE2684",
+      "templateSha256": "7BD2C23AE89C8BD7986E56ABA1102F18BA2E997EF2EFFD8B7C0314E1ECCE2684",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "D4E9A599FBAF3D67B38845CEA09BD7B9691C5E6A63B6503E2D01BA2A6BE9F038",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "3EB883F906F06575CB6A9707BAB8C4CD95CA5CDA036633B4E22FFA8F43234CE4",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "after",
+    "case": "borders1000-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "borders1000-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/borders1000.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "6B2F8DA7ADE3D211177E4931CF706E153F9E85EC138245B8D0D8757B423141CF",
+      "templateSha256": "6B2F8DA7ADE3D211177E4931CF706E153F9E85EC138245B8D0D8757B423141CF",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "F35046F20AEA5BE1DC7EA7D86F35FDE694EF09560DA4F835027EE80784AD99E4",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "F698A0106735B503F8D3B33DA76783C60830D1BA909BAA451E4697CBB1D264D6",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "before",
+    "case": "borders1000-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "borders1000-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/borders1000.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "6B2F8DA7ADE3D211177E4931CF706E153F9E85EC138245B8D0D8757B423141CF",
+      "templateSha256": "6B2F8DA7ADE3D211177E4931CF706E153F9E85EC138245B8D0D8757B423141CF",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "D4E9A599FBAF3D67B38845CEA09BD7B9691C5E6A63B6503E2D01BA2A6BE9F038",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "3EB883F906F06575CB6A9707BAB8C4CD95CA5CDA036633B4E22FFA8F43234CE4",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "after",
+    "case": "imagesonly-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "imagesonly-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/imagesonly.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "9762BD0954CC55910BFA50D196AF1A1B7D3FA83757EFBCACA19BAE26EFB55D3C",
+      "templateSha256": "9762BD0954CC55910BFA50D196AF1A1B7D3FA83757EFBCACA19BAE26EFB55D3C",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "F35046F20AEA5BE1DC7EA7D86F35FDE694EF09560DA4F835027EE80784AD99E4",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "F698A0106735B503F8D3B33DA76783C60830D1BA909BAA451E4697CBB1D264D6",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "before",
+    "case": "imagesonly-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "imagesonly-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/imagesonly.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "9762BD0954CC55910BFA50D196AF1A1B7D3FA83757EFBCACA19BAE26EFB55D3C",
+      "templateSha256": "9762BD0954CC55910BFA50D196AF1A1B7D3FA83757EFBCACA19BAE26EFB55D3C",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "D4E9A599FBAF3D67B38845CEA09BD7B9691C5E6A63B6503E2D01BA2A6BE9F038",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "3EB883F906F06575CB6A9707BAB8C4CD95CA5CDA036633B4E22FFA8F43234CE4",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "after",
+    "case": "header-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "header-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/header.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "18309BB98675F31F9A885753B979A4F86A7D5BDC878AE0BD01742C56862955A0",
+      "templateSha256": "18309BB98675F31F9A885753B979A4F86A7D5BDC878AE0BD01742C56862955A0",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "F35046F20AEA5BE1DC7EA7D86F35FDE694EF09560DA4F835027EE80784AD99E4",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "F698A0106735B503F8D3B33DA76783C60830D1BA909BAA451E4697CBB1D264D6",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "before",
+    "case": "header-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "header-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/header.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "18309BB98675F31F9A885753B979A4F86A7D5BDC878AE0BD01742C56862955A0",
+      "templateSha256": "18309BB98675F31F9A885753B979A4F86A7D5BDC878AE0BD01742C56862955A0",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "D4E9A599FBAF3D67B38845CEA09BD7B9691C5E6A63B6503E2D01BA2A6BE9F038",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "3EB883F906F06575CB6A9707BAB8C4CD95CA5CDA036633B4E22FFA8F43234CE4",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "after",
+    "case": "empty-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "empty-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/empty.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "DC632D34252DD2DDAA9E44869F79C269F79E3331E68A642F65F31B2163B70C86",
+      "templateSha256": "DC632D34252DD2DDAA9E44869F79C269F79E3331E68A642F65F31B2163B70C86",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "F35046F20AEA5BE1DC7EA7D86F35FDE694EF09560DA4F835027EE80784AD99E4",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "F698A0106735B503F8D3B33DA76783C60830D1BA909BAA451E4697CBB1D264D6",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "before",
+    "case": "empty-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "empty-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/empty.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "DC632D34252DD2DDAA9E44869F79C269F79E3331E68A642F65F31B2163B70C86",
+      "templateSha256": "DC632D34252DD2DDAA9E44869F79C269F79E3331E68A642F65F31B2163B70C86",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "D4E9A599FBAF3D67B38845CEA09BD7B9691C5E6A63B6503E2D01BA2A6BE9F038",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "3EB883F906F06575CB6A9707BAB8C4CD95CA5CDA036633B4E22FFA8F43234CE4",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "after",
+    "case": "05-borders-Png",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "05-borders-Png",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/05-borders.xlsx",
+        "Format": "Png",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "074CFD50A3D4556380F462A69287D9B0254A71EBE412E267B395CA345A54EAC2",
+      "templateSha256": "074CFD50A3D4556380F462A69287D9B0254A71EBE412E267B395CA345A54EAC2",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "F35046F20AEA5BE1DC7EA7D86F35FDE694EF09560DA4F835027EE80784AD99E4",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "F698A0106735B503F8D3B33DA76783C60830D1BA909BAA451E4697CBB1D264D6",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "before",
+    "case": "05-borders-Png",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "05-borders-Png",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/05-borders.xlsx",
+        "Format": "Png",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "074CFD50A3D4556380F462A69287D9B0254A71EBE412E267B395CA345A54EAC2",
+      "templateSha256": "074CFD50A3D4556380F462A69287D9B0254A71EBE412E267B395CA345A54EAC2",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "D4E9A599FBAF3D67B38845CEA09BD7B9691C5E6A63B6503E2D01BA2A6BE9F038",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "3EB883F906F06575CB6A9707BAB8C4CD95CA5CDA036633B4E22FFA8F43234CE4",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "after",
+    "case": "05-borders-Svg",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "05-borders-Svg",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/05-borders.xlsx",
+        "Format": "Svg",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "074CFD50A3D4556380F462A69287D9B0254A71EBE412E267B395CA345A54EAC2",
+      "templateSha256": "074CFD50A3D4556380F462A69287D9B0254A71EBE412E267B395CA345A54EAC2",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "F35046F20AEA5BE1DC7EA7D86F35FDE694EF09560DA4F835027EE80784AD99E4",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "F698A0106735B503F8D3B33DA76783C60830D1BA909BAA451E4697CBB1D264D6",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "before",
+    "case": "05-borders-Svg",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "05-borders-Svg",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/05-borders.xlsx",
+        "Format": "Svg",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "074CFD50A3D4556380F462A69287D9B0254A71EBE412E267B395CA345A54EAC2",
+      "templateSha256": "074CFD50A3D4556380F462A69287D9B0254A71EBE412E267B395CA345A54EAC2",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "D4E9A599FBAF3D67B38845CEA09BD7B9691C5E6A63B6503E2D01BA2A6BE9F038",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "3EB883F906F06575CB6A9707BAB8C4CD95CA5CDA036633B4E22FFA8F43234CE4",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "after",
+    "case": "rich-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "rich-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/RichTextAcceptanceTests.RangeTrimAndMergedCellRetainRichTextInAllOutputFormats.79F50EFE1F4F079D.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": true,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "E558CD35F95B7D0FC240A5B79120A149F56665B55FBDF1E2FB424C3E38C10B31",
+      "templateSha256": "E558CD35F95B7D0FC240A5B79120A149F56665B55FBDF1E2FB424C3E38C10B31",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "F35046F20AEA5BE1DC7EA7D86F35FDE694EF09560DA4F835027EE80784AD99E4",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "F698A0106735B503F8D3B33DA76783C60830D1BA909BAA451E4697CBB1D264D6",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 1,
+    "stage": "before",
+    "case": "rich-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "rich-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/RichTextAcceptanceTests.RangeTrimAndMergedCellRetainRichTextInAllOutputFormats.79F50EFE1F4F079D.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": true,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "E558CD35F95B7D0FC240A5B79120A149F56665B55FBDF1E2FB424C3E38C10B31",
+      "templateSha256": "E558CD35F95B7D0FC240A5B79120A149F56665B55FBDF1E2FB424C3E38C10B31",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "D4E9A599FBAF3D67B38845CEA09BD7B9691C5E6A63B6503E2D01BA2A6BE9F038",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "3EB883F906F06575CB6A9707BAB8C4CD95CA5CDA036633B4E22FFA8F43234CE4",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "before",
+    "case": "text1-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "text1-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/text1.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "88505D85011FB9BCB36D4E48DFF7804B9368F51493BB37FAC6F06EE7D12F8C3C",
+      "templateSha256": "88505D85011FB9BCB36D4E48DFF7804B9368F51493BB37FAC6F06EE7D12F8C3C",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "D4E9A599FBAF3D67B38845CEA09BD7B9691C5E6A63B6503E2D01BA2A6BE9F038",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "3EB883F906F06575CB6A9707BAB8C4CD95CA5CDA036633B4E22FFA8F43234CE4",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "after",
+    "case": "text1-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "text1-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/text1.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "88505D85011FB9BCB36D4E48DFF7804B9368F51493BB37FAC6F06EE7D12F8C3C",
+      "templateSha256": "88505D85011FB9BCB36D4E48DFF7804B9368F51493BB37FAC6F06EE7D12F8C3C",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "F35046F20AEA5BE1DC7EA7D86F35FDE694EF09560DA4F835027EE80784AD99E4",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "F698A0106735B503F8D3B33DA76783C60830D1BA909BAA451E4697CBB1D264D6",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "before",
+    "case": "text1000-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "text1000-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/text1000.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "C6FDBC2E54EC4FDE141493B46B98310DFD0202E96CBD0C8B12844B8EC337FC03",
+      "templateSha256": "C6FDBC2E54EC4FDE141493B46B98310DFD0202E96CBD0C8B12844B8EC337FC03",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "D4E9A599FBAF3D67B38845CEA09BD7B9691C5E6A63B6503E2D01BA2A6BE9F038",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "3EB883F906F06575CB6A9707BAB8C4CD95CA5CDA036633B4E22FFA8F43234CE4",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "after",
+    "case": "text1000-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "text1000-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/text1000.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "C6FDBC2E54EC4FDE141493B46B98310DFD0202E96CBD0C8B12844B8EC337FC03",
+      "templateSha256": "C6FDBC2E54EC4FDE141493B46B98310DFD0202E96CBD0C8B12844B8EC337FC03",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "F35046F20AEA5BE1DC7EA7D86F35FDE694EF09560DA4F835027EE80784AD99E4",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "F698A0106735B503F8D3B33DA76783C60830D1BA909BAA451E4697CBB1D264D6",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "before",
+    "case": "wrap1000-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "wrap1000-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/wrap1000.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "7BD2C23AE89C8BD7986E56ABA1102F18BA2E997EF2EFFD8B7C0314E1ECCE2684",
+      "templateSha256": "7BD2C23AE89C8BD7986E56ABA1102F18BA2E997EF2EFFD8B7C0314E1ECCE2684",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "D4E9A599FBAF3D67B38845CEA09BD7B9691C5E6A63B6503E2D01BA2A6BE9F038",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "3EB883F906F06575CB6A9707BAB8C4CD95CA5CDA036633B4E22FFA8F43234CE4",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "after",
+    "case": "wrap1000-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "wrap1000-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/wrap1000.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "7BD2C23AE89C8BD7986E56ABA1102F18BA2E997EF2EFFD8B7C0314E1ECCE2684",
+      "templateSha256": "7BD2C23AE89C8BD7986E56ABA1102F18BA2E997EF2EFFD8B7C0314E1ECCE2684",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "F35046F20AEA5BE1DC7EA7D86F35FDE694EF09560DA4F835027EE80784AD99E4",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "F698A0106735B503F8D3B33DA76783C60830D1BA909BAA451E4697CBB1D264D6",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "before",
+    "case": "borders1000-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "borders1000-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/borders1000.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "6B2F8DA7ADE3D211177E4931CF706E153F9E85EC138245B8D0D8757B423141CF",
+      "templateSha256": "6B2F8DA7ADE3D211177E4931CF706E153F9E85EC138245B8D0D8757B423141CF",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "D4E9A599FBAF3D67B38845CEA09BD7B9691C5E6A63B6503E2D01BA2A6BE9F038",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "3EB883F906F06575CB6A9707BAB8C4CD95CA5CDA036633B4E22FFA8F43234CE4",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "after",
+    "case": "borders1000-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "borders1000-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/borders1000.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "6B2F8DA7ADE3D211177E4931CF706E153F9E85EC138245B8D0D8757B423141CF",
+      "templateSha256": "6B2F8DA7ADE3D211177E4931CF706E153F9E85EC138245B8D0D8757B423141CF",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "F35046F20AEA5BE1DC7EA7D86F35FDE694EF09560DA4F835027EE80784AD99E4",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "F698A0106735B503F8D3B33DA76783C60830D1BA909BAA451E4697CBB1D264D6",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "before",
+    "case": "imagesonly-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "imagesonly-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/imagesonly.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "9762BD0954CC55910BFA50D196AF1A1B7D3FA83757EFBCACA19BAE26EFB55D3C",
+      "templateSha256": "9762BD0954CC55910BFA50D196AF1A1B7D3FA83757EFBCACA19BAE26EFB55D3C",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "D4E9A599FBAF3D67B38845CEA09BD7B9691C5E6A63B6503E2D01BA2A6BE9F038",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "3EB883F906F06575CB6A9707BAB8C4CD95CA5CDA036633B4E22FFA8F43234CE4",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "after",
+    "case": "imagesonly-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "imagesonly-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/imagesonly.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "9762BD0954CC55910BFA50D196AF1A1B7D3FA83757EFBCACA19BAE26EFB55D3C",
+      "templateSha256": "9762BD0954CC55910BFA50D196AF1A1B7D3FA83757EFBCACA19BAE26EFB55D3C",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "F35046F20AEA5BE1DC7EA7D86F35FDE694EF09560DA4F835027EE80784AD99E4",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "F698A0106735B503F8D3B33DA76783C60830D1BA909BAA451E4697CBB1D264D6",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "before",
+    "case": "header-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "header-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/header.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "18309BB98675F31F9A885753B979A4F86A7D5BDC878AE0BD01742C56862955A0",
+      "templateSha256": "18309BB98675F31F9A885753B979A4F86A7D5BDC878AE0BD01742C56862955A0",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "D4E9A599FBAF3D67B38845CEA09BD7B9691C5E6A63B6503E2D01BA2A6BE9F038",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "3EB883F906F06575CB6A9707BAB8C4CD95CA5CDA036633B4E22FFA8F43234CE4",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "after",
+    "case": "header-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "header-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/header.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "18309BB98675F31F9A885753B979A4F86A7D5BDC878AE0BD01742C56862955A0",
+      "templateSha256": "18309BB98675F31F9A885753B979A4F86A7D5BDC878AE0BD01742C56862955A0",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "F35046F20AEA5BE1DC7EA7D86F35FDE694EF09560DA4F835027EE80784AD99E4",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "F698A0106735B503F8D3B33DA76783C60830D1BA909BAA451E4697CBB1D264D6",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "before",
+    "case": "empty-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "empty-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/empty.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "DC632D34252DD2DDAA9E44869F79C269F79E3331E68A642F65F31B2163B70C86",
+      "templateSha256": "DC632D34252DD2DDAA9E44869F79C269F79E3331E68A642F65F31B2163B70C86",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "D4E9A599FBAF3D67B38845CEA09BD7B9691C5E6A63B6503E2D01BA2A6BE9F038",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "3EB883F906F06575CB6A9707BAB8C4CD95CA5CDA036633B4E22FFA8F43234CE4",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "after",
+    "case": "empty-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "empty-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/empty.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "DC632D34252DD2DDAA9E44869F79C269F79E3331E68A642F65F31B2163B70C86",
+      "templateSha256": "DC632D34252DD2DDAA9E44869F79C269F79E3331E68A642F65F31B2163B70C86",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "F35046F20AEA5BE1DC7EA7D86F35FDE694EF09560DA4F835027EE80784AD99E4",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "F698A0106735B503F8D3B33DA76783C60830D1BA909BAA451E4697CBB1D264D6",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "before",
+    "case": "05-borders-Png",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "05-borders-Png",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/05-borders.xlsx",
+        "Format": "Png",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "074CFD50A3D4556380F462A69287D9B0254A71EBE412E267B395CA345A54EAC2",
+      "templateSha256": "074CFD50A3D4556380F462A69287D9B0254A71EBE412E267B395CA345A54EAC2",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "D4E9A599FBAF3D67B38845CEA09BD7B9691C5E6A63B6503E2D01BA2A6BE9F038",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "3EB883F906F06575CB6A9707BAB8C4CD95CA5CDA036633B4E22FFA8F43234CE4",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "after",
+    "case": "05-borders-Png",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "05-borders-Png",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/05-borders.xlsx",
+        "Format": "Png",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "074CFD50A3D4556380F462A69287D9B0254A71EBE412E267B395CA345A54EAC2",
+      "templateSha256": "074CFD50A3D4556380F462A69287D9B0254A71EBE412E267B395CA345A54EAC2",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "F35046F20AEA5BE1DC7EA7D86F35FDE694EF09560DA4F835027EE80784AD99E4",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "F698A0106735B503F8D3B33DA76783C60830D1BA909BAA451E4697CBB1D264D6",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "before",
+    "case": "05-borders-Svg",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "05-borders-Svg",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/05-borders.xlsx",
+        "Format": "Svg",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "074CFD50A3D4556380F462A69287D9B0254A71EBE412E267B395CA345A54EAC2",
+      "templateSha256": "074CFD50A3D4556380F462A69287D9B0254A71EBE412E267B395CA345A54EAC2",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "D4E9A599FBAF3D67B38845CEA09BD7B9691C5E6A63B6503E2D01BA2A6BE9F038",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "3EB883F906F06575CB6A9707BAB8C4CD95CA5CDA036633B4E22FFA8F43234CE4",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "after",
+    "case": "05-borders-Svg",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "05-borders-Svg",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/05-borders.xlsx",
+        "Format": "Svg",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": false,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "074CFD50A3D4556380F462A69287D9B0254A71EBE412E267B395CA345A54EAC2",
+      "templateSha256": "074CFD50A3D4556380F462A69287D9B0254A71EBE412E267B395CA345A54EAC2",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "F35046F20AEA5BE1DC7EA7D86F35FDE694EF09560DA4F835027EE80784AD99E4",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "F698A0106735B503F8D3B33DA76783C60830D1BA909BAA451E4697CBB1D264D6",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "before",
+    "case": "rich-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "rich-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/RichTextAcceptanceTests.RangeTrimAndMergedCellRetainRichTextInAllOutputFormats.79F50EFE1F4F079D.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": true,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "E558CD35F95B7D0FC240A5B79120A149F56665B55FBDF1E2FB424C3E38C10B31",
+      "templateSha256": "E558CD35F95B7D0FC240A5B79120A149F56665B55FBDF1E2FB424C3E38C10B31",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "D4E9A599FBAF3D67B38845CEA09BD7B9691C5E6A63B6503E2D01BA2A6BE9F038",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "3EB883F906F06575CB6A9707BAB8C4CD95CA5CDA036633B4E22FFA8F43234CE4",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  },
+  {
+    "round": 2,
+    "stage": "after",
+    "case": "rich-Pdf",
+    "environment": {
+      "runtime": "10.0.12",
+      "os": "Unix 6.18.57.0",
+      "item": {
+        "Name": "rich-Pdf",
+        "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/controlled/inputs/RichTextAcceptanceTests.RangeTrimAndMergedCellRetainRichTextInAllOutputFormats.79F50EFE1F4F079D.xlsx",
+        "Format": "Pdf",
+        "ReadOnly": false,
+        "ConditionalFormatting": true,
+        "Continuous": false,
+        "Trim": true,
+        "Pages": null,
+        "Range": null,
+        "Capture": null,
+        "Mode": "cached",
+        "FontPack": false,
+        "Template": null
+      },
+      "inputSha256": "E558CD35F95B7D0FC240A5B79120A149F56665B55FBDF1E2FB424C3E38C10B31",
+      "templateSha256": "E558CD35F95B7D0FC240A5B79120A149F56665B55FBDF1E2FB424C3E38C10B31",
+      "fontSha256": "D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC",
+      "dlls": {
+        "ExcelRenderer.dll": "F35046F20AEA5BE1DC7EA7D86F35FDE694EF09560DA4F835027EE80784AD99E4",
+        "ExcelRenderer.Formulas.dll": "98B2A7E666464EF7B683649080E8EC58506D09BC520028C0AB3585BB22CD2429",
+        "ExcelRenderer.OpenXml.Reader.dll": "77121EFA5963E25E864293B00FCC6CA54144E4F6E708592E209B8917E404B540",
+        "ExcelRenderer.Fonts.dll": "6648D11E91F8AA3AB9B0479CE265EA9E596211643E77A48FE4927D3256F2CB01",
+        "ExcelRenderer.OpenXml.dll": "2C2CE15B5F79103A4F26B639D755767FB503EB3CCD78D058B6458A1F0DBE6FBA",
+        "ExcelRenderer.Mapping.dll": "6B14DB38BED077C93E0C265C32EBA015392EA01CAE852CC145ED17E97E66E3A2",
+        "ExcelRenderer.Core.dll": "F698A0106735B503F8D3B33DA76783C60830D1BA909BAA451E4697CBB1D264D6",
+        "ExcelRenderer.Performance.dll": "8EF0D15BF31FC9350F049EB3057100ABAB747F07A94224B977C59C7DFF9908C8"
+      }
+    }
+  }
+]

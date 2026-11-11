@@ -1,0 +1,126 @@
+0: text1-Pdf/before
+0: text1-Pdf/after
+0: text1000-Pdf/before
+0: text1000-Pdf/after
+0: wrap1000-Pdf/before
+0: wrap1000-Pdf/after
+0: borders1000-Pdf/before
+0: borders1000-Pdf/after
+0: imagesonly-Pdf/before
+0: imagesonly-Pdf/after
+0: header-Pdf/before
+0: header-Pdf/after
+0: empty-Pdf/before
+0: empty-Pdf/after
+0: 05-borders-Png/before
+0: 05-borders-Png/after
+0: 05-borders-Svg/before
+0: 05-borders-Svg/after
+0: rich-Pdf/before
+0: rich-Pdf/after
+1: text1-Pdf/after
+1: text1-Pdf/before
+1: text1000-Pdf/after
+1: text1000-Pdf/before
+1: wrap1000-Pdf/after
+1: wrap1000-Pdf/before
+1: borders1000-Pdf/after
+1: borders1000-Pdf/before
+1: imagesonly-Pdf/after
+1: imagesonly-Pdf/before
+1: header-Pdf/after
+1: header-Pdf/before
+1: empty-Pdf/after
+1: empty-Pdf/before
+1: 05-borders-Png/after
+1: 05-borders-Png/before
+1: 05-borders-Svg/after
+1: 05-borders-Svg/before
+1: rich-Pdf/after
+1: rich-Pdf/before
+2: text1-Pdf/before
+2: text1-Pdf/after
+2: text1000-Pdf/before
+2: text1000-Pdf/after
+2: wrap1000-Pdf/before
+2: wrap1000-Pdf/after
+2: borders1000-Pdf/before
+2: borders1000-Pdf/after
+2: imagesonly-Pdf/before
+2: imagesonly-Pdf/after
+2: header-Pdf/before
+2: header-Pdf/after
+2: empty-Pdf/before
+2: empty-Pdf/after
+2: 05-borders-Png/before
+2: 05-borders-Png/after
+2: 05-borders-Svg/before
+2: 05-borders-Svg/after
+2: rich-Pdf/before
+2: rich-Pdf/after
+0 micro-fill-repeat before
+0 micro-fill-repeat after
+0 micro-fill-alternate before
+0 micro-fill-alternate after
+0 micro-stroke-repeat before
+0 micro-stroke-repeat after
+0 micro-stroke-alternate before
+0 micro-stroke-alternate after
+0 text1 before
+0 text1 after
+0 text1000 before
+0 text1000 after
+0 wrap1000 before
+0 wrap1000 after
+0 borders1000 before
+0 borders1000 after
+0 empty before
+0 empty after
+0 imagesonly before
+0 imagesonly after
+0 header before
+0 header after
+1 micro-fill-repeat after
+1 micro-fill-repeat before
+1 micro-fill-alternate after
+1 micro-fill-alternate before
+1 micro-stroke-repeat after
+1 micro-stroke-repeat before
+1 micro-stroke-alternate after
+1 micro-stroke-alternate before
+1 text1 after
+1 text1 before
+1 text1000 after
+1 text1000 before
+1 wrap1000 after
+1 wrap1000 before
+1 borders1000 after
+1 borders1000 before
+1 empty after
+1 empty before
+1 imagesonly after
+1 imagesonly before
+1 header after
+1 header before
+2 micro-fill-repeat before
+2 micro-fill-repeat after
+2 micro-fill-alternate before
+2 micro-fill-alternate after
+2 micro-stroke-repeat before
+2 micro-stroke-repeat after
+2 micro-stroke-alternate before
+2 micro-stroke-alternate after
+2 text1 before
+2 text1 after
+2 text1000 before
+2 text1000 after
+2 wrap1000 before
+2 wrap1000 after
+2 borders1000 before
+2 borders1000 after
+2 empty before
+2 empty after
+2 imagesonly before
+2 imagesonly after
+2 header before
+2 header after

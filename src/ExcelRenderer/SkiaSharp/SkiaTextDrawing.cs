@@ -424,6 +424,8 @@ internal sealed class SkiaTextDrawing
                 using var builder = new SKTextBlobBuilder();
                 builder.AddRun([emojiGlyph], font, new SKPoint(x, y));
                 using var blob = builder.Build();
+
+                // Restore this borrowed fill before its owner can reuse the cached RGBA.
                 var color = paint.Color;
                 try
                 {

@@ -1,0 +1,113 @@
+[
+  {
+    "Name": "text1-Pdf",
+    "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/primary/inputs/text1.xlsx"
+  },
+  {
+    "Name": "text1000-Pdf",
+    "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/primary/inputs/text1000.xlsx"
+  },
+  {
+    "Name": "wrap1000-Pdf",
+    "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/primary/inputs/wrap1000.xlsx"
+  },
+  {
+    "Name": "borders1000-Pdf",
+    "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/primary/inputs/borders1000.xlsx"
+  },
+  {
+    "Name": "imagesonly-Pdf",
+    "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/primary/inputs/imagesonly.xlsx"
+  },
+  {
+    "Name": "header-Pdf",
+    "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/primary/inputs/header.xlsx"
+  },
+  {
+    "Name": "empty-Pdf",
+    "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/primary/inputs/empty.xlsx"
+  },
+  {
+    "Name": "mixed1000-Pdf",
+    "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/primary/inputs/mixed1000.xlsx"
+  },
+  {
+    "Name": "02-image-Png",
+    "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/primary/inputs/02-image.xlsx",
+    "Format": "Png"
+  },
+  {
+    "Name": "02-image-Svg",
+    "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/primary/inputs/02-image.xlsx",
+    "Format": "Svg"
+  },
+  {
+    "Name": "04-text-decoration-Png",
+    "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/primary/inputs/04-text-decoration.xlsx",
+    "Format": "Png"
+  },
+  {
+    "Name": "04-text-decoration-Svg",
+    "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/primary/inputs/04-text-decoration.xlsx",
+    "Format": "Svg"
+  },
+  {
+    "Name": "05-borders-Png",
+    "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/primary/inputs/05-borders.xlsx",
+    "Format": "Png"
+  },
+  {
+    "Name": "05-borders-Svg",
+    "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/primary/inputs/05-borders.xlsx",
+    "Format": "Svg"
+  },
+  {
+    "Name": "rich-Pdf",
+    "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/primary/inputs/RichTextAcceptanceTests.RangeTrimAndMergedCellRetainRichTextInAllOutputFormats.79F50EFE1F4F079D.xlsx",
+    "Format": "Pdf",
+    "Trim": true
+  },
+  {
+    "Name": "rich-Png",
+    "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/primary/inputs/RichTextAcceptanceTests.RangeTrimAndMergedCellRetainRichTextInAllOutputFormats.79F50EFE1F4F079D.xlsx",
+    "Format": "Png",
+    "Trim": true
+  },
+  {
+    "Name": "rich-Svg",
+    "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/primary/inputs/RichTextAcceptanceTests.RangeTrimAndMergedCellRetainRichTextInAllOutputFormats.79F50EFE1F4F079D.xlsx",
+    "Format": "Svg",
+    "Trim": true
+  },
+  {
+    "Name": "shapes-Pdf",
+    "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/primary/inputs/ShapeAndFontTests.CreateWorkbookWithShapes.C704163BF33ECFBD.xlsx",
+    "Format": "Pdf",
+    "Trim": true
+  },
+  {
+    "Name": "shapes-Png",
+    "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/primary/inputs/ShapeAndFontTests.CreateWorkbookWithShapes.C704163BF33ECFBD.xlsx",
+    "Format": "Png",
+    "Trim": true
+  },
+  {
+    "Name": "shapes-Svg",
+    "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/primary/inputs/ShapeAndFontTests.CreateWorkbookWithShapes.C704163BF33ECFBD.xlsx",
+    "Format": "Svg",
+    "Trim": true
+  },
+  {
+    "Name": "range-trim-Pdf",
+    "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/primary/inputs/range-source.xlsx",
+    "Range": "A5:F15",
+    "Trim": true
+  },
+  {
+    "Name": "selected-Pdf",
+    "Input": "/workspace/ExcelRenderer-review/artifacts/paint-color-optimization/primary/inputs/text1000.xlsx",
+    "Pages": [
+      1
+    ]
+  }
+]

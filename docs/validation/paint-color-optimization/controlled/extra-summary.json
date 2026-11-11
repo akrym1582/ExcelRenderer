@@ -1,0 +1,761 @@
+[
+  {
+    "case": "micro-fill-repeat",
+    "round": 0,
+    "medians": {
+      "before": {
+        "milliseconds": 2.6627,
+        "allocationBytes": 192,
+        "peakRssBytes": 41463808
+      },
+      "after": {
+        "milliseconds": 0.8916,
+        "allocationBytes": 200,
+        "peakRssBytes": 41619456
+      }
+    },
+    "ratios": {
+      "milliseconds": 0.33484808652871145,
+      "allocationBytes": 1.0416666666666667,
+      "peakRssBytes": 1.0037538279166256,
+      "processPeakRssBytes": 1.0037527157811574
+    },
+    "investigate": false
+  },
+  {
+    "case": "micro-fill-alternate",
+    "round": 0,
+    "medians": {
+      "before": {
+        "milliseconds": 2.6126,
+        "allocationBytes": 192,
+        "peakRssBytes": 41541632
+      },
+      "after": {
+        "milliseconds": 1.7321,
+        "allocationBytes": 200,
+        "peakRssBytes": 41660416
+      }
+    },
+    "ratios": {
+      "milliseconds": 0.6629794074867947,
+      "allocationBytes": 1.0416666666666667,
+      "peakRssBytes": 1.002859396568724,
+      "processPeakRssBytes": 1.0029571217348447
+    },
+    "investigate": false
+  },
+  {
+    "case": "micro-stroke-repeat",
+    "round": 0,
+    "medians": {
+      "before": {
+        "milliseconds": 3.4474,
+        "allocationBytes": 216,
+        "peakRssBytes": 41738240
+      },
+      "after": {
+        "milliseconds": 2.6547,
+        "allocationBytes": 224,
+        "peakRssBytes": 41713664
+      }
+    },
+    "ratios": {
+      "milliseconds": 0.7700585948831004,
+      "allocationBytes": 1.037037037037037,
+      "peakRssBytes": 0.9994111874386653,
+      "processPeakRssBytes": 0.9994113607377612
+    },
+    "investigate": false
+  },
+  {
+    "case": "micro-stroke-alternate",
+    "round": 0,
+    "medians": {
+      "before": {
+        "milliseconds": 3.5428,
+        "allocationBytes": 216,
+        "peakRssBytes": 41586688
+      },
+      "after": {
+        "milliseconds": 3.8834,
+        "allocationBytes": 224,
+        "peakRssBytes": 41779200
+      }
+    },
+    "ratios": {
+      "milliseconds": 1.0961386473975385,
+      "allocationBytes": 1.037037037037037,
+      "peakRssBytes": 1.0046291736432582,
+      "processPeakRssBytes": 1.0046278062229224
+    },
+    "investigate": true
+  },
+  {
+    "case": "text1",
+    "round": 0,
+    "medians": {
+      "before": {
+        "milliseconds": 23.8898,
+        "allocationBytes": 18133056,
+        "peakRssBytes": 176984064
+      },
+      "after": {
+        "milliseconds": 14.5158,
+        "allocationBytes": 18143840,
+        "peakRssBytes": 163987456
+      }
+    },
+    "ratios": {
+      "milliseconds": 0.6076149653827156,
+      "allocationBytes": 1.0005947149779937,
+      "peakRssBytes": 0.9265662246291282,
+      "processPeakRssBytes": 0.818782338384768
+    },
+    "investigate": false
+  },
+  {
+    "case": "text1000",
+    "round": 0,
+    "medians": {
+      "before": {
+        "milliseconds": 60.443,
+        "allocationBytes": 35552568,
+        "peakRssBytes": 177795072
+      },
+      "after": {
+        "milliseconds": 42.9476,
+        "allocationBytes": 35552800,
+        "peakRssBytes": 178032640
+      }
+    },
+    "ratios": {
+      "milliseconds": 0.7105471270453154,
+      "allocationBytes": 1.0000065255483093,
+      "peakRssBytes": 1.0013361900154354,
+      "processPeakRssBytes": 1.0057313845091496
+    },
+    "investigate": false
+  },
+  {
+    "case": "wrap1000",
+    "round": 0,
+    "medians": {
+      "before": {
+        "milliseconds": 225.7153,
+        "allocationBytes": 139640760,
+        "peakRssBytes": 162004992
+      },
+      "after": {
+        "milliseconds": 226.0501,
+        "allocationBytes": 139801648,
+        "peakRssBytes": 162492416
+      }
+    },
+    "ratios": {
+      "milliseconds": 1.0014832844738482,
+      "allocationBytes": 1.001152156433408,
+      "peakRssBytes": 1.0030086974110033,
+      "processPeakRssBytes": 1.0144793206242642
+    },
+    "investigate": false
+  },
+  {
+    "case": "borders1000",
+    "round": 0,
+    "medians": {
+      "before": {
+        "milliseconds": 50.95,
+        "allocationBytes": 39913816,
+        "peakRssBytes": 175108096
+      },
+      "after": {
+        "milliseconds": 51.9556,
+        "allocationBytes": 39908648,
+        "peakRssBytes": 175845376
+      }
+    },
+    "ratios": {
+      "milliseconds": 1.0197369970559371,
+      "allocationBytes": 0.9998705210245996,
+      "peakRssBytes": 1.0042104278262496,
+      "processPeakRssBytes": 1.0016736012644987
+    },
+    "investigate": false
+  },
+  {
+    "case": "empty",
+    "round": 0,
+    "medians": {
+      "before": {
+        "milliseconds": 56.1736,
+        "allocationBytes": 17233064,
+        "peakRssBytes": 165584896
+      },
+      "after": {
+        "milliseconds": 7.9185,
+        "allocationBytes": 17245776,
+        "peakRssBytes": 159232000
+      }
+    },
+    "ratios": {
+      "milliseconds": 0.14096479485024993,
+      "allocationBytes": 1.0007376517605924,
+      "peakRssBytes": 0.9616336021372384,
+      "processPeakRssBytes": 0.8536734515593606
+    },
+    "investigate": false
+  },
+  {
+    "case": "imagesonly",
+    "round": 0,
+    "medians": {
+      "before": {
+        "milliseconds": 8.2698,
+        "allocationBytes": 17464216,
+        "peakRssBytes": 162074624
+      },
+      "after": {
+        "milliseconds": 8.547,
+        "allocationBytes": 17464512,
+        "peakRssBytes": 163102720
+      }
+    },
+    "ratios": {
+      "milliseconds": 1.0335195530726258,
+      "allocationBytes": 1.0000169489429127,
+      "peakRssBytes": 1.0063433495918521,
+      "processPeakRssBytes": 1.0689481757147528
+    },
+    "investigate": true
+  },
+  {
+    "case": "header",
+    "round": 0,
+    "medians": {
+      "before": {
+        "milliseconds": 13.789,
+        "allocationBytes": 18126672,
+        "peakRssBytes": 163319808
+      },
+      "after": {
+        "milliseconds": 16.0936,
+        "allocationBytes": 18133568,
+        "peakRssBytes": 168771584
+      }
+    },
+    "ratios": {
+      "milliseconds": 1.1671332221335846,
+      "allocationBytes": 1.0003804338711486,
+      "peakRssBytes": 1.033380984626188,
+      "processPeakRssBytes": 1.033380984626188
+    },
+    "investigate": true
+  },
+  {
+    "case": "micro-fill-repeat",
+    "round": 1,
+    "medians": {
+      "before": {
+        "milliseconds": 2.636,
+        "allocationBytes": 192,
+        "peakRssBytes": 41484288
+      },
+      "after": {
+        "milliseconds": 0.8736,
+        "allocationBytes": 200,
+        "peakRssBytes": 41525248
+      }
+    },
+    "ratios": {
+      "milliseconds": 0.3314112291350531,
+      "allocationBytes": 1.0416666666666667,
+      "peakRssBytes": 1.0009873617693523,
+      "processPeakRssBytes": 1.0009870693909781
+    },
+    "investigate": false
+  },
+  {
+    "case": "micro-fill-alternate",
+    "round": 1,
+    "medians": {
+      "before": {
+        "milliseconds": 2.5628,
+        "allocationBytes": 192,
+        "peakRssBytes": 41766912
+      },
+      "after": {
+        "milliseconds": 1.8913,
+        "allocationBytes": 200,
+        "peakRssBytes": 41771008
+      }
+    },
+    "ratios": {
+      "milliseconds": 0.7379818948025596,
+      "allocationBytes": 1.0416666666666667,
+      "peakRssBytes": 1.000098068059233,
+      "processPeakRssBytes": 1.0000980392156862
+    },
+    "investigate": false
+  },
+  {
+    "case": "micro-stroke-repeat",
+    "round": 1,
+    "medians": {
+      "before": {
+        "milliseconds": 3.447,
+        "allocationBytes": 216,
+        "peakRssBytes": 41480192
+      },
+      "after": {
+        "milliseconds": 2.6557,
+        "allocationBytes": 224,
+        "peakRssBytes": 41820160
+      }
+    },
+    "ratios": {
+      "milliseconds": 0.7704380620829707,
+      "allocationBytes": 1.037037037037037,
+      "peakRssBytes": 1.0081959119186334,
+      "processPeakRssBytes": 1.008192675945119
+    },
+    "investigate": false
+  },
+  {
+    "case": "micro-stroke-alternate",
+    "round": 1,
+    "medians": {
+      "before": {
+        "milliseconds": 3.5871,
+        "allocationBytes": 216,
+        "peakRssBytes": 41746432
+      },
+      "after": {
+        "milliseconds": 3.5589,
+        "allocationBytes": 224,
+        "peakRssBytes": 41840640
+      }
+    },
+    "ratios": {
+      "milliseconds": 0.9921384962783307,
+      "allocationBytes": 1.037037037037037,
+      "peakRssBytes": 1.002256671899529,
+      "processPeakRssBytes": 1.0021577089054532
+    },
+    "investigate": false
+  },
+  {
+    "case": "text1",
+    "round": 1,
+    "medians": {
+      "before": {
+        "milliseconds": 13.6589,
+        "allocationBytes": 18138496,
+        "peakRssBytes": 164098048
+      },
+      "after": {
+        "milliseconds": 16.214,
+        "allocationBytes": 18133872,
+        "peakRssBytes": 154918912
+      }
+    },
+    "ratios": {
+      "milliseconds": 1.187064844167539,
+      "allocationBytes": 0.9997450725793362,
+      "peakRssBytes": 0.944063100616529,
+      "processPeakRssBytes": 1.0140528667348925
+    },
+    "investigate": true
+  },
+  {
+    "case": "text1000",
+    "round": 1,
+    "medians": {
+      "before": {
+        "milliseconds": 48.5689,
+        "allocationBytes": 35553080,
+        "peakRssBytes": 177446912
+      },
+      "after": {
+        "milliseconds": 47.7023,
+        "allocationBytes": 35553024,
+        "peakRssBytes": 178229248
+      }
+    },
+    "ratios": {
+      "milliseconds": 0.9821573064244815,
+      "allocationBytes": 0.999998424890333,
+      "peakRssBytes": 1.0044088453903328,
+      "processPeakRssBytes": 1.0032369146005509
+    },
+    "investigate": false
+  },
+  {
+    "case": "wrap1000",
+    "round": 1,
+    "medians": {
+      "before": {
+        "milliseconds": 228.7024,
+        "allocationBytes": 139644000,
+        "peakRssBytes": 165482496
+      },
+      "after": {
+        "milliseconds": 234.8097,
+        "allocationBytes": 139632144,
+        "peakRssBytes": 159105024
+      }
+    },
+    "ratios": {
+      "milliseconds": 1.0267041360300546,
+      "allocationBytes": 0.9999150983930566,
+      "peakRssBytes": 0.9614613499665849,
+      "processPeakRssBytes": 1.0328208671618586
+    },
+    "investigate": false
+  },
+  {
+    "case": "borders1000",
+    "round": 1,
+    "medians": {
+      "before": {
+        "milliseconds": 62.3281,
+        "allocationBytes": 39908864,
+        "peakRssBytes": 178454528
+      },
+      "after": {
+        "milliseconds": 56.6317,
+        "allocationBytes": 40091216,
+        "peakRssBytes": 178323456
+      }
+    },
+    "ratios": {
+      "milliseconds": 0.9086062305765779,
+      "allocationBytes": 1.0045692104891786,
+      "peakRssBytes": 0.9992655159750276,
+      "processPeakRssBytes": 0.9995884585486304
+    },
+    "investigate": false
+  },
+  {
+    "case": "empty",
+    "round": 1,
+    "medians": {
+      "before": {
+        "milliseconds": 6.9904,
+        "allocationBytes": 17245768,
+        "peakRssBytes": 159248384
+      },
+      "after": {
+        "milliseconds": 8.8028,
+        "allocationBytes": 17250440,
+        "peakRssBytes": 160034816
+      }
+    },
+    "ratios": {
+      "milliseconds": 1.259269855802243,
+      "allocationBytes": 1.0002709070422378,
+      "peakRssBytes": 1.0049383986213638,
+      "processPeakRssBytes": 1.0010501511193075
+    },
+    "investigate": true
+  },
+  {
+    "case": "imagesonly",
+    "round": 1,
+    "medians": {
+      "before": {
+        "milliseconds": 10.4588,
+        "allocationBytes": 17465216,
+        "peakRssBytes": 167337984
+      },
+      "after": {
+        "milliseconds": 14.4415,
+        "allocationBytes": 17469016,
+        "peakRssBytes": 168595456
+      }
+    },
+    "ratios": {
+      "milliseconds": 1.3807989444295712,
+      "allocationBytes": 1.0002175753222864,
+      "peakRssBytes": 1.007514564057375,
+      "processPeakRssBytes": 1.0370181074766356
+    },
+    "investigate": true
+  },
+  {
+    "case": "header",
+    "round": 1,
+    "medians": {
+      "before": {
+        "milliseconds": 23.9427,
+        "allocationBytes": 18108232,
+        "peakRssBytes": 175882240
+      },
+      "after": {
+        "milliseconds": 14.0285,
+        "allocationBytes": 18126056,
+        "peakRssBytes": 164249600
+      }
+    },
+    "ratios": {
+      "milliseconds": 0.5859197166568516,
+      "allocationBytes": 1.0009843037133608,
+      "peakRssBytes": 0.9338612016767582,
+      "processPeakRssBytes": 0.8263781555899021
+    },
+    "investigate": false
+  },
+  {
+    "case": "micro-fill-repeat",
+    "round": 2,
+    "medians": {
+      "before": {
+        "milliseconds": 2.6545,
+        "allocationBytes": 192,
+        "peakRssBytes": 41623552
+      },
+      "after": {
+        "milliseconds": 0.8758,
+        "allocationBytes": 200,
+        "peakRssBytes": 41754624
+      }
+    },
+    "ratios": {
+      "milliseconds": 0.3299303070258052,
+      "allocationBytes": 1.0416666666666667,
+      "peakRssBytes": 1.003148986419996,
+      "processPeakRssBytes": 1.003049380287232
+    },
+    "investigate": false
+  },
+  {
+    "case": "micro-fill-alternate",
+    "round": 2,
+    "medians": {
+      "before": {
+        "milliseconds": 2.5749,
+        "allocationBytes": 192,
+        "peakRssBytes": 41385984
+      },
+      "after": {
+        "milliseconds": 1.6849,
+        "allocationBytes": 200,
+        "peakRssBytes": 41603072
+      }
+    },
+    "ratios": {
+      "milliseconds": 0.6543555089518039,
+      "allocationBytes": 1.0416666666666667,
+      "peakRssBytes": 1.0052454473475851,
+      "processPeakRssBytes": 1.0052433715868618
+    },
+    "investigate": false
+  },
+  {
+    "case": "micro-stroke-repeat",
+    "round": 2,
+    "medians": {
+      "before": {
+        "milliseconds": 3.5866,
+        "allocationBytes": 216,
+        "peakRssBytes": 41689088
+      },
+      "after": {
+        "milliseconds": 2.7777,
+        "allocationBytes": 224,
+        "peakRssBytes": 41705472
+      }
+    },
+    "ratios": {
+      "milliseconds": 0.7744660681425305,
+      "allocationBytes": 1.037037037037037,
+      "peakRssBytes": 1.000393004519552,
+      "processPeakRssBytes": 1.0003928887142717
+    },
+    "investigate": false
+  },
+  {
+    "case": "micro-stroke-alternate",
+    "round": 2,
+    "medians": {
+      "before": {
+        "milliseconds": 3.5636,
+        "allocationBytes": 216,
+        "peakRssBytes": 41750528
+      },
+      "after": {
+        "milliseconds": 3.4911,
+        "allocationBytes": 224,
+        "peakRssBytes": 41775104
+      }
+    },
+    "ratios": {
+      "milliseconds": 0.9796554046469861,
+      "allocationBytes": 1.037037037037037,
+      "peakRssBytes": 1.0005886392622387,
+      "processPeakRssBytes": 1.0004903402961656
+    },
+    "investigate": false
+  },
+  {
+    "case": "text1",
+    "round": 2,
+    "medians": {
+      "before": {
+        "milliseconds": 16.1361,
+        "allocationBytes": 18137776,
+        "peakRssBytes": 163819520
+      },
+      "after": {
+        "milliseconds": 15.3413,
+        "allocationBytes": 18135360,
+        "peakRssBytes": 153260032
+      }
+    },
+    "ratios": {
+      "milliseconds": 0.9507439839862173,
+      "allocationBytes": 0.999866797340534,
+      "peakRssBytes": 0.9355419427428429,
+      "processPeakRssBytes": 0.9460182522815352
+    },
+    "investigate": false
+  },
+  {
+    "case": "text1000",
+    "round": 2,
+    "medians": {
+      "before": {
+        "milliseconds": 45.6644,
+        "allocationBytes": 35553464,
+        "peakRssBytes": 177295360
+      },
+      "after": {
+        "milliseconds": 46.7266,
+        "allocationBytes": 35546288,
+        "peakRssBytes": 180101120
+      }
+    },
+    "ratios": {
+      "milliseconds": 1.023261008575608,
+      "allocationBytes": 0.9997981631269459,
+      "peakRssBytes": 1.0158253436525355,
+      "processPeakRssBytes": 1.050173927065816
+    },
+    "investigate": true
+  },
+  {
+    "case": "wrap1000",
+    "round": 2,
+    "medians": {
+      "before": {
+        "milliseconds": 242.8819,
+        "allocationBytes": 139639432,
+        "peakRssBytes": 161304576
+      },
+      "after": {
+        "milliseconds": 226.3107,
+        "allocationBytes": 139639704,
+        "peakRssBytes": 162627584
+      }
+    },
+    "ratios": {
+      "milliseconds": 0.9317726022400187,
+      "allocationBytes": 1.0000019478738642,
+      "peakRssBytes": 1.0082019247860643,
+      "processPeakRssBytes": 1.011826544021025
+    },
+    "investigate": false
+  },
+  {
+    "case": "borders1000",
+    "round": 2,
+    "medians": {
+      "before": {
+        "milliseconds": 53.304,
+        "allocationBytes": 39902512,
+        "peakRssBytes": 176095232
+      },
+      "after": {
+        "milliseconds": 64.9074,
+        "allocationBytes": 39902360,
+        "peakRssBytes": 178917376
+      }
+    },
+    "ratios": {
+      "milliseconds": 1.2176834759117514,
+      "allocationBytes": 0.9999961907160131,
+      "peakRssBytes": 1.0160262374395237,
+      "processPeakRssBytes": 1.014467761080379
+    },
+    "investigate": true
+  },
+  {
+    "case": "empty",
+    "round": 2,
+    "medians": {
+      "before": {
+        "milliseconds": 22.0141,
+        "allocationBytes": 17246824,
+        "peakRssBytes": 165314560
+      },
+      "after": {
+        "milliseconds": 7.2518,
+        "allocationBytes": 17246224,
+        "peakRssBytes": 159502336
+      }
+    },
+    "ratios": {
+      "milliseconds": 0.3294161469240169,
+      "allocationBytes": 0.9999652109860923,
+      "peakRssBytes": 0.9648414271555996,
+      "processPeakRssBytes": 0.8548002711152896
+    },
+    "investigate": false
+  },
+  {
+    "case": "imagesonly",
+    "round": 2,
+    "medians": {
+      "before": {
+        "milliseconds": 18.6198,
+        "allocationBytes": 17443456,
+        "peakRssBytes": 156897280
+      },
+      "after": {
+        "milliseconds": 7.0958,
+        "allocationBytes": 17443464,
+        "peakRssBytes": 169111552
+      }
+    },
+    "ratios": {
+      "milliseconds": 0.3810889483238273,
+      "allocationBytes": 1.0000004586247129,
+      "peakRssBytes": 1.0778488447983292,
+      "processPeakRssBytes": 1.000750469043152
+    },
+    "investigate": true
+  },
+  {
+    "case": "header",
+    "round": 2,
+    "medians": {
+      "before": {
+        "milliseconds": 14.6277,
+        "allocationBytes": 18123720,
+        "peakRssBytes": 162828288
+      },
+      "after": {
+        "milliseconds": 13.2369,
+        "allocationBytes": 18127432,
+        "peakRssBytes": 163459072
+      }
+    },
+    "ratios": {
+      "milliseconds": 0.9049201173116758,
+      "allocationBytes": 1.0002048144641387,
+      "peakRssBytes": 1.0038739214650467,
+      "processPeakRssBytes": 1.0038739214650467
+    },
+    "investigate": false
+  }
+]

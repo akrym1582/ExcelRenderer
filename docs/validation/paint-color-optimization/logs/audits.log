@@ -1,0 +1,6 @@
+No removed PDF dependency: 1731 source/config files, 24 restored projects, 753 managed AssemblyRef inventories, 0 packages
+742 namespace declarations match source folders; 2 required compiler shims verified
+Core dependency direction and migrated helper ownership passed
+Shared conversion pipeline and compatibility facade ownership passed
+Shared OpenXml dependency direction and input ownership passed
+Source-neutral reader hooks and shared mapping language passed

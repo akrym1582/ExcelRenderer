@@ -171,6 +171,16 @@ filtering remains with the main converter, which owns selection. FullExcelReader
 chart-sheet metadata placeholders; the converter reports them without rendering pages.
 RenderRequest.TextMeasurer is an optional borrowed service, not a new DI/plugin layer.
 
+CoreExcelReader detects missing saved pivot output and includes repeated print titles
+when checking print-area intersections. Core and standalone ExcelReader reads reject
+missing values immediately. Main conversions with explicit page selection retain the
+error candidate in CellReadDiagnostics, including geometry-only formula/conditional
+formatting preflight reads, and filter it against final selected page source regions.
+All-page conversions retain immediate rejection, including pivots beyond saved used
+cells. Diagnostic suppression and retention limits never permit missing selected
+pivot output to be written. Pivot aggregate calculation remains unsupported.
+
+
 ## Shared workbook input (OpenXml integration)
 
 `ExcelRenderer.OpenXml/Input` owns bounded workbook preparation, ZIP limits and the seekable memory/file spool. Core input types preserve existing callers through thin adapters; image-resource ownership and rendering policy remain in Core. OpenXml has no project references. Core, main and Mapping depend on OpenXml.
@@ -313,8 +323,10 @@ verify output behavior without ASP.NET dependencies. See the [file sample](../sa
 
 Core SingleFontMetrics separates source Normal column metrics from the supplied drawing font.
 It measures the supplied snapshot only for a matching physical family name; substituted or
-missing source families use the main-compatible 7px/96-DPI MDW and report
+missing source families use the shared SourceFontFallbackMetrics profile and report
 MaximumDigitWidthFallback. Text measurement and painting continue to use the supplied font.
+MS P Gothic uses a size-dependent Noto Sans digit profile (8.4px at 11pt) matching
+Calc substitution; other missing families and absent Normal metadata retain 7px/96 DPI.
 No OS/font-package discovery, additional font, public API or Core dependency is introduced.
 
 Core standalone rich strings are flattened to ordinary cell text. Per-run size, color,

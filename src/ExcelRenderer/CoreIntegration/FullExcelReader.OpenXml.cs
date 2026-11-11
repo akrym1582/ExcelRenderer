@@ -11,6 +11,9 @@ internal sealed partial class FullExcelReader
     protected override bool DeferOpenXmlDiagnostics => true;
 
     /// <inheritdoc/>
+    protected override bool DeferPivotValidation => readOptions.DeferPivotValidation;
+
+    /// <inheritdoc/>
     protected override CellStyle NormalizeCellStyle(CellStyle style) => style;
 
     /// <inheritdoc/>
@@ -19,6 +22,7 @@ internal sealed partial class FullExcelReader
         var data = (FullWorkbookData)context.Metadata.ExtensionData!;
         return sheet with
         {
+            PreserveLegacyMergePagination = readOptions.ColumnWidthMetrics.Mode == Excel.ColumnWidthMetricsMode.RenderingFontLegacy,
             Images = sheet.Images?.Select(image => image.SourceImage is { } source
                 ? image with { ExtensionData = new FullPictureData(Picture(source, image.DrawingAnchor!)), SourceImage = null }
                 : image).ToArray(),

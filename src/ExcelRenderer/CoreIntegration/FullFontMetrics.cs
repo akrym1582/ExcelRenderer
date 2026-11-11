@@ -30,13 +30,16 @@ internal sealed class FullFontMetrics : ICoreFontMetrics
     public NormalFontMetadata DefaultFont => new("Calibri", 11);
 
     /// <inheritdoc/>
+    public bool UseLibreOfficeColumnWidths => options.Mode == ColumnWidthMetricsMode.LibreOfficeCompatible;
+
+    /// <inheritdoc/>
     public double MaximumDigitWidth(NormalFontMetadata? normalFont, string sheetName)
     {
         var normal = normalFont ?? DefaultFont;
         var key = (normalFont, options, (fontManager as FontManager)?.RegistrationGeneration ?? 0);
         if (!cache.Values.TryGetValue(key, out var decision))
         {
-            decision = normalFont is null && options.MaximumDigitWidthPixels96Dpi is null && options.SourceFontFile is null
+            decision = normalFont is null && !UseLibreOfficeColumnWidths && options.MaximumDigitWidthPixels96Dpi is null && options.SourceFontFile is null
                 ? new(7, options.Mode == ColumnWidthMetricsMode.RenderingFontLegacy ? "legacy" : "compatibility", "7px compatibility metric (Normal metadata unavailable)", true)
                 : Resolve(normal);
             cache.Values.Add(key, decision);
@@ -58,12 +61,20 @@ internal sealed class FullFontMetrics : ICoreFontMetrics
         return decision.Width;
     }
 
-    private static MetricDecision Measure(ResolvedFont resolved, NormalFontMetadata normal, string source)
+    private MetricDecision Measure(ResolvedFont resolved, NormalFontMetadata normal, string source)
     {
         using var ownedResources = ConversionFontResources.Current is null ? new ConversionFontResources() : null;
         var typeface = ConversionFontResources.Current!.GetTypeface(resolved);
         using var font = new SKFont(typeface, (float)(normal.Size * 96 / 72));
-        var width = Math.Max(1, Math.Round(Enumerable.Range(0, 10).Max(digit => font.MeasureText(digit.ToString())), MidpointRounding.AwayFromZero));
+        if (UseLibreOfficeColumnWidths)
+        {
+            font.LinearMetrics = true;
+            font.Subpixel = true;
+            font.Hinting = SKFontHinting.None;
+        }
+
+        var scale = UseLibreOfficeColumnWidths ? 15 : 1;
+        var width = Math.Max(1, Math.Round(Enumerable.Range(0, 10).Max(digit => font.MeasureText(digit.ToString())) * scale, MidpointRounding.AwayFromZero) / scale);
         var style = typeface.FontStyle;
         var italic = style.Slant != SKFontStyleSlant.Upright;
         var approximated = style.Weight != normal.Weight || italic != normal.Italic;
@@ -93,7 +104,7 @@ internal sealed class FullFontMetrics : ICoreFontMetrics
 
         try
         {
-            if (options.Mode == ColumnWidthMetricsMode.SourceFont)
+            if (options.Mode is ColumnWidthMetricsMode.SourceFont or ColumnWidthMetricsMode.LibreOfficeCompatible)
             {
                 fontManager ??= new FontManager();
             }
@@ -103,6 +114,12 @@ internal sealed class FullFontMetrics : ICoreFontMetrics
             {
                 // Historical MDW resolution requested the regular drawing family.
                 return Measure(fontManager.Resolve(new(normal.Family)), normal, "legacy");
+            }
+
+            if (UseLibreOfficeColumnWidths && fontManager is not null)
+            {
+                var substitute = fontManager.Resolve(request);
+                return Measure(substitute, normal, "libreoffice-font") with { IsFallback = !FontManager.MatchesSourceFamily(substitute, normal.Family) };
             }
 
             var exact = fontManager is FontManager builtIn ? builtIn.ResolveExact(request) : fontManager?.Resolve(request);
@@ -116,7 +133,8 @@ internal sealed class FullFontMetrics : ICoreFontMetrics
             // Implicit discovery is best effort; explicit files are validated above.
         }
 
-        return new(7, options.Mode == ColumnWidthMetricsMode.RenderingFontLegacy ? "legacy" : "compatibility", "7px compatibility metric", true);
+        var fallbackWidth = options.Mode == ColumnWidthMetricsMode.RenderingFontLegacy ? 7 : SourceFontFallbackMetrics.MaximumDigitWidth(normal);
+        return new(fallbackWidth, options.Mode == ColumnWidthMetricsMode.RenderingFontLegacy ? "legacy" : "compatibility", $"{fallbackWidth}px compatibility metric", true);
     }
 
     /// <summary>Conversion-owned decisions, also used by selection preflight.</summary>

@@ -26,6 +26,7 @@ internal static class PrintScaleResolver
     /// <param name="titleWidth">The titleWidth value.</param>
     /// <param name="titleRowEnd">The titleRowEnd value.</param>
     /// <param name="titleHeight">The titleHeight value.</param>
+    /// <param name="splitOversizedMerges">Whether oversized merges may split at ordinary axis boundaries.</param>
     internal static double Resolve(
         PageSettings settings,
         IReadOnlyList<int> columns,
@@ -39,7 +40,8 @@ internal static class PrintScaleResolver
         double titleColumnEnd,
         double titleWidth,
         double titleRowEnd,
-        double titleHeight)
+        double titleHeight,
+        bool splitOversizedMerges = true)
     {
         var usesExplicitScale = settings.ScaleMode == PrintScaleMode.Explicit ||
             (settings.ScaleMode is null && settings.Scale is > 0);
@@ -63,7 +65,8 @@ internal static class PrintScaleResolver
             getMergedColumnEnd,
             titleColumnEnd,
             titleWidth,
-            scales);
+            scales,
+            splitOversizedMerges);
         AddFitScale(
             settings.FitToPagesTall,
             settings.Height - settings.MarginTop - settings.MarginBottom,
@@ -73,7 +76,8 @@ internal static class PrintScaleResolver
             getMergedRowEnd,
             titleRowEnd,
             titleHeight,
-            scales);
+            scales,
+            splitOversizedMerges);
         return scales.Count == 0 ? 1 : scales.Min();
     }
 
@@ -86,7 +90,8 @@ internal static class PrintScaleResolver
         Func<int, double, double> getMergedEnd,
         double repeatedEnd,
         double repeatedSize,
-        ICollection<double> scales)
+        ICollection<double> scales,
+        bool splitOversizedMerges)
     {
         if (pageCount is not > 0 || indices.Count == 0)
         {
@@ -105,7 +110,8 @@ internal static class PrintScaleResolver
                 getEnd,
                 getMergedEnd,
                 repeatedEnd,
-                repeatedSize));
+                repeatedSize,
+                splitOversizedMerges));
         }
     }
 
@@ -118,7 +124,8 @@ internal static class PrintScaleResolver
         Func<int, double> getEnd,
         Func<int, double, double> getMergedEnd,
         double repeatedEnd,
-        double repeatedSize)
+        double repeatedSize,
+        bool splitOversizedMerges)
     {
         if (pageCount <= 0 || !double.IsFinite(pageSize) || pageSize <= 0 ||
             !double.IsFinite(contentSize) || contentSize <= 0)
@@ -158,7 +165,8 @@ internal static class PrintScaleResolver
                 availableSize,
                 getMergedEnd,
                 repeatedEnd,
-                repeatedSize);
+                repeatedSize,
+                splitOversizedMerges: splitOversizedMerges);
             if (bands.Count > pageCount)
             {
                 return false;

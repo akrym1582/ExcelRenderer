@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using ExcelRenderer.Mapping.Configuration;
+using ExcelRenderer.Mapping.Diagnostics;
 using ExcelRenderer.Mapping.Expansion;
 using ExcelRenderer.Mapping.Templates;
 using ExcelRenderer.OpenXml.Calculation;
@@ -22,6 +23,32 @@ public static partial class ExcelTemplateMapper
         using var input = source.OpenRead();
         using var reader = OpenXmlWorkbookReader.Open(input, cancellationToken: token);
         var templates = reader.SelectedWorksheetIndices.Select(index => (Index: index, Template: new TemplateSheet(TemplateSnapshot.FromOpenXml(reader, index, token, options.FormulaCalculationMode == FormulaCalculationMode.Recalculate)))).ToArray();
+        var preservesMetadata = templates.All(item => !Repeated(item.Template.Nodes).Any());
+        using (var formulaSource = source.OpenRead())
+        {
+            var formula = WorkbookFormulaInspection.Find(formulaSource, token, preservesMetadata);
+            if (formula is not null && options.FormulaCalculationMode == FormulaCalculationMode.CachedValue)
+            {
+                throw new MappingException(
+                    formula.Sheet,
+                    formula.Cell,
+                    formula.Name,
+                    "MappingFormulaNotSupported: " + formula.Kind + ". Calculate values in the caller and replace template formulas with value placeholders.")
+                {
+                    ReasonCode = "MappingFormulaNotSupported",
+                };
+            }
+        }
+
+        using (var inspected = source.OpenRead())
+        {
+            var unsupported = WorkbookWriteCapabilities.Inspect(inspected, token, options.FormulaCalculationMode == FormulaCalculationMode.Recalculate, preservesMetadata);
+            if (unsupported.Count > 0 && (!preservesMetadata || !WorkbookWriteCapabilities.CanPreserveMetadata(unsupported)))
+            {
+                throw new NotSupportedException("OpenXml mapping is unsupported: " + string.Join(", ", unsupported));
+            }
+        }
+
         foreach (var item in templates)
         {
             item.Template.ValidateRepeatedRanges();

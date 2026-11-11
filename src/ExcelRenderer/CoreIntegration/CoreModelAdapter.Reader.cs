@@ -31,6 +31,7 @@ internal static partial class CoreModelAdapter
             DefaultRowsHidden = value.DefaultRowsHidden,
             PrintAreas = value.PrintAreas.Select(ToPublic).ToArray(),
             SourceSheetIndex = value.SourceSheetIndex,
+            PreserveLegacyMergePagination = value.PreserveLegacyMergePagination,
             UnsupportedFeatures = data?.UnsupportedFeatures ?? [],
             CellReadDiagnostics = data?.CellReadDiagnostics ?? [],
             Hyperlinks = data?.Hyperlinks?.Links ?? [],

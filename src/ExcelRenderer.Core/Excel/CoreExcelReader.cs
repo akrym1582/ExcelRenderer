@@ -13,8 +13,9 @@ internal partial class CoreExcelReader
     /// <summary>Initializes a new instance of the <see cref="CoreExcelReader"/> class.</summary>
     /// <param name="fontManager">The single conversion font.</param>
     /// <param name="diagnostics">The optional column metric diagnostic collector.</param>
-    internal CoreExcelReader(SingleFontContext fontManager, DiagnosticCollector? diagnostics = null)
-        : this(new SingleFontMetrics(fontManager, diagnostics))
+    /// <param name="options">Column metric compatibility settings.</param>
+    internal CoreExcelReader(SingleFontContext fontManager, DiagnosticCollector? diagnostics = null, ExcelReadOptions? options = null)
+        : this(new SingleFontMetrics(fontManager, diagnostics, options))
     {
     }
 

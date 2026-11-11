@@ -83,7 +83,8 @@ internal sealed class PaginationPass
             titleColumnEnd,
             titleWidth,
             titleRowEnd,
-            titleHeight);
+            titleHeight,
+            !context.Sheet.PreserveLegacyMergePagination);
         var horizontalBands = PageBandBuilder.Create(
             bodyColumns,
             column => context.ColumnLayouts[column].X,
@@ -92,7 +93,8 @@ internal sealed class PaginationPass
             GetColumnEnd,
             titleColumnEnd,
             titleWidth,
-            PrintScaleResolver.UsesFitMode(settings) ? null : settings.ManualColumnBreaks);
+            PrintScaleResolver.UsesFitMode(settings) ? null : settings.ManualColumnBreaks,
+            !context.Sheet.PreserveLegacyMergePagination);
         var verticalBands = PageBandBuilder.Create(
             bodyRows,
             row => context.RowLayouts[row].Y,
@@ -101,7 +103,8 @@ internal sealed class PaginationPass
             GetRowEnd,
             titleRowEnd,
             titleHeight,
-            PrintScaleResolver.UsesFitMode(settings) ? null : settings.ManualRowBreaks);
+            PrintScaleResolver.UsesFitMode(settings) ? null : settings.ManualRowBreaks,
+            !context.Sheet.PreserveLegacyMergePagination);
 
         var bandPairs = settings.PageOrder == PrintPageOrder.DownThenOver
             ? horizontalBands.SelectMany((horizontal, horizontalIndex) => verticalBands.Select(

@@ -173,6 +173,13 @@ foreach (var scene in CompatibilityFixtures.Create(measurer).Where(scene => fixt
     reports.Add(expected);
 }
 
+var colorContracts = JsonNode.Parse(File.ReadAllText(Path.Combine(root, "tools/ExcelRenderer.PdfComparison/number-format-color-contracts.json")))!;
+var borderContractFile = Path.Combine(root, "tools/ExcelRenderer.PdfComparison/shared-border-contracts.json");
+if (Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(borderContractFile))).ToLowerInvariant() != colorContracts["historical_border_contract_sha256"]!.GetValue<string>())
+{
+    throw new InvalidOperationException("Historical border contract changed.");
+}
+
 var samples = new Dictionary<string, string>
 {
     ["invoice"] = "samples/mapping/invoice/invoice.xlsx",
@@ -201,7 +208,15 @@ foreach (var sample in samples.Where(sample => fixtureFilter == "all" || fixture
     using var frozenReader = JsonDocument.Parse(File.ReadAllText(Path.Combine(root, "tests/Shared/PdfRemovalBaseline", sample.Key, "reader-snapshot.json")));
     if (!JsonElement.DeepEquals(readerSnapshot, frozenReader.RootElement))
     {
-        throw new InvalidOperationException($"{sample.Key}: source row/column/MDW, merge, print settings or rich runs changed.");
+        var review = colorContracts["full"]?[sample.Key];
+        var prior = Path.Combine(root, "tests/Shared/PdfRemovalBaseline", sample.Key, "reader-snapshot.json");
+        var current = Path.Combine(directory, "reader-snapshot.json");
+        if (review is null ||
+            Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(prior))).ToLowerInvariant() != review["historical_reader_sha256"]!.GetValue<string>() ||
+            Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(current))).ToLowerInvariant() != review["reader_sha256"]!.GetValue<string>())
+        {
+            throw new InvalidOperationException($"{sample.Key}: source snapshot differs from the frozen or reviewed number-color contract.");
+        }
     }
 
     var results = new Dictionary<PdfBackend, ConversionResult>();
@@ -281,6 +296,11 @@ foreach (var report in reports)
         // Only the reviewed cell-border fingerprints change. Page plans,
         // diagnostics and every other frozen report field remain mandatory.
         frozen["commandFingerprints"] = borderContract["commandFingerprints"]!.DeepClone();
+    }
+
+    if (colorContracts["full"]?[name] is { } colorContract)
+    {
+        frozen["commandFingerprints"] = colorContract["commandFingerprints"]!.DeepClone();
     }
 
     if (!JsonNode.DeepEquals(JsonNode.Parse(actual.GetRawText()), frozen))

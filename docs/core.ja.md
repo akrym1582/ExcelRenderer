@@ -49,7 +49,7 @@ var separate = options with
 
 呼出し側が指定する単体の固定 TrueType sfnt、または TTC/OTC 内の選択 face を使います。FontCollectionIndex（0始まり、既定0）で選び、計測・描画前に同じ単体 face へ正規化します。既存の非可変カラー face は共通 Skia カラー経路を使います。拡張子では判定しません。CFF/CFF2・可変・WOFF/WOFF2・旧 true/typ1 は PDF 対象外です。破損・未対応形式は InvalidDataException、不存在は FileNotFoundException、不正 index は引数エラーです。[形式の契約](managed-truetype-subset.ja.md)を参照してください。
 
-フォントbytesは変換ごとに一度読み、同じsnapshotで行高・文字幅・PDF描画を処理します。列幅のMDWは、指定フォントの物理ファミリー名と元ブックのNormalファミリー名が一致する場合（大文字小文字を区別しない）だけ同じsnapshotで実測します。不一致またはNormal情報がない場合は、本体と同じ96dpi・7pxの互換MDWを使い、`MaximumDigitWidthFallback`を通知します。描画用の代替フォントの数字幅だけを理由に保存列幅を広げません。この互換値が利用できない元フォントのExcel寸法を保証するものではありません。セルとヘッダー/フッターは通常書体に統一します。太字・斜体の疑似描画、フォント探索・fallback、IVSの異体字形の再現、外字・カラー絵文字の特別処理はありません。セルとヘッダー/フッターの異体字セレクター（U+FE00–U+FE0F、U+E0100–U+E01EF）は計測・描画前に除去し、基底文字を表示します。例えば「葛」＋IVSは「葛」として表示し、セレクター由来の追加の豆腐や文字幅は生成しません。基底文字自体が指定フォントに未収録の場合の表示は保証しません。通常セル全体のサイズ・色・下線を維持します。リッチテキストの部分書式は未対応です。共有文字列・inline文字列のrunは本文へ連結し、通常セルのフォントで描画します。run個別のサイズ・色・下線・太字・斜体は維持しません。未収録文字は指定フォント/Skiaの欠字表示に従い、すべてのUnicode文字の表示は保証しません。指定した描画フォントによって折返しは変わり得ます。元のNormalフォント寸法を利用できない場合の列幅はExcel原本と異なることがあり、CoreがOSから元フォントを探索することはありません。
+フォントbytesは変換ごとに一度読み、同じsnapshotで行高・文字幅・PDF描画を処理します。既定設定では、列幅のMDWは、指定フォントの物理ファミリー名と元ブックのNormalファミリー名が一致する場合（大文字小文字を区別しない）だけ同じsnapshotで実測します。不一致の場合は本体と共通の決定的な互換MDWを使い、`MaximumDigitWidthFallback`を通知します。MS PゴシックはCalcのNoto Sans代替に近い数字幅0.572emをtwipへ丸めます（11ptで8.4px）。その他の元書体不在とNormal情報なしは96dpi・7pxです。描画用の代替フォントの数字幅だけを理由に保存列幅を広げません。この互換値が利用できない元フォントのExcel寸法を保証するものではありません。セルとヘッダー/フッターは通常書体に統一します。太字・斜体の疑似描画、フォント探索・fallback、IVSの異体字形の再現、外字・カラー絵文字の特別処理はありません。セルとヘッダー/フッターの異体字セレクター（U+FE00–U+FE0F、U+E0100–U+E01EF）は計測・描画前に除去し、基底文字を表示します。例えば「葛」＋IVSは「葛」として表示し、セレクター由来の追加の豆腐や文字幅は生成しません。基底文字自体が指定フォントに未収録の場合の表示は保証しません。通常セル全体のサイズ・色・下線を維持します。リッチテキストの部分書式は未対応です。共有文字列・inline文字列のrunは本文へ連結し、通常セルのフォントで描画します。run個別のサイズ・色・下線・太字・斜体は維持しません。未収録文字は指定フォント/Skiaの欠字表示に従い、すべてのUnicode文字の表示は保証しません。指定した描画フォントによって折返しは変わり得ます。元のNormalフォント寸法を利用できない場合の列幅はExcel原本と異なることがあり、CoreがOSから元フォントを探索することはありません。
 
 ## 印刷と画像
 
@@ -131,3 +131,36 @@ excelrenderer core input.xlsx -o core.pdf --font-file ./regular.ttf --sheet Shee
 所要時間、変換メトリクス、例外詳細を標準エラーに出力します。Core の診断は常に表示します。
 `--data data.json` で先に本体の Mapping を実行することもできます。
 Core の変換自体は保存済み値を読み取り、数式を再計算しません。
+
+
+## 小数の列幅を保持するオプション
+
+`PdfExportOptions.ReadOptions.UseLibreOfficeColumnWidths` の既定値は `false` です。
+`true` を明示すると、供給した通常書体をブックのNormalサイズで計測し、数字幅をtwip単位
+（96dpiで1/15ピクセル）へ丸め、列幅の小数ピクセルを保持します。
+`MaximumDigitWidthPixels96Dpi` を明示すれば計測値より優先し、描画フォントから独立した寸法を指定できます。
+数値は有限かつ1以上である必要があります。MDWだけの指定では小数計算へ切り替わりません。
+
+```csharp
+var options = new ExcelRenderer.Core.PdfExportOptions
+{
+    FontFilePath = "fonts/NotoSansJP-Regular.ttf",
+    ReadOptions = new()
+    {
+        UseLibreOfficeColumnWidths = true,
+        MaximumDigitWidthPixels96Dpi = 8.8,
+    },
+};
+```
+
+```bash
+excelrenderer core input.xlsx -o core.pdf --font-file NotoSansJP-Regular.ttf --column-width-metrics libreoffice --column-width-mdw 8.8
+```
+
+CLIは `source`（既定）と `libreoffice` に対応します。通常版のレイアウト専用フォントの
+ファイル・index指定と `legacy` モードはCoreにはありません。
+8.8pxは今回の参照環境のNoto Sans Mono・11pt用の例です。省略時は供給フォントを計測するため、
+参照先のフォント代替が違えばセル幅も異なり得ます。LibreOfficeのフォント探索やヘッダー位置を
+自動再現する設定ではありません。保存行高と印刷倍率は維持しますが、列幅に依存する折り返しや改ページは変わります。
+[通常版・Coreの設定比較](../README.ja.md#libreoffice互換の列幅計算を選ぶ場合)と
+[セル実寸の検証結果](validation/cell-width-compatibility/README.md)を参照してください。

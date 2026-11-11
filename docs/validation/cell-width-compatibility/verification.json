@@ -1,0 +1,31 @@
+{
+  "success": {
+    "tests": 3012,
+    "rebuild_warnings": 0,
+    "rebuild_errors": 0,
+    "core_line_coverage_percent": 83.13,
+    "core_branch_coverage_percent": 72.04,
+    "core_performance_tests": 8,
+    "strict_appearance_pdfs": 44,
+    "appearance_mutations": 11,
+    "main_core_parity_pairs": 19,
+    "cell_width_pt": 276.5472666,
+    "reference_width_pt": 276.46300888061523,
+    "reference_width_error_mm": 0.02972425100518134,
+    "saved_row_height_pt": 120,
+    "packaged_products": 4,
+    "isolated_package_consumers": 11,
+    "installed_cli_dimensional_audit": true,
+    "reader_core_isolation": true
+  },
+  "not_changed": [
+    "Default/legacy column metric policies",
+    "Saved row heights and print settings",
+    "Header/body vertical positioning"
+  ],
+  "limits": [
+    "Opt-in LibreOfficeCompatible mode; specify actual reference MDW when substitute fonts differ",
+    "LibreOffice complete pagination/font/header behavior is not emulated",
+    "Desktop Microsoft Excel not run"
+  ]
+}

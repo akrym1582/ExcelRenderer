@@ -269,7 +269,8 @@ internal static class CommandSupport
             {
                 "source" => Excel.ColumnWidthMetricsMode.SourceFont,
                 "legacy" => Excel.ColumnWidthMetricsMode.RenderingFontLegacy,
-                _ => throw new ArgumentException("--column-width-metrics must be source or legacy."),
+                "libreoffice" => Excel.ColumnWidthMetricsMode.LibreOfficeCompatible,
+                _ => throw new ArgumentException("--column-width-metrics must be source, legacy or libreoffice."),
             },
             MaximumDigitWidthPixels96Dpi = result.GetValue(fonts.ColumnWidthMdw),
             SourceFontFile = result.GetValue(fonts.LayoutFont),
@@ -329,6 +330,6 @@ internal static class CommandSupport
         internal Option<int?> LayoutFontIndex { get; } = new("--layout-font-index") { Description = "Zero-based face index; requires --layout-font." };
 
         /// <summary>Gets the column metric policy.</summary>
-        internal Option<string> ColumnWidthMetrics { get; } = new("--column-width-metrics") { Description = "Column metrics: source (default) or legacy.", DefaultValueFactory = _ => "source" };
+        internal Option<string> ColumnWidthMetrics { get; } = new("--column-width-metrics") { Description = "Column metrics: source (default), legacy or libreoffice.", DefaultValueFactory = _ => "source" };
     }
 }

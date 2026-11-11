@@ -1,0 +1,1176 @@
+{
+  "contract": "tests/Shared/LibreOfficeComparisonBaseline",
+  "records": [
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "01-japanese",
+      "engine": "main"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "01-japanese",
+      "engine": "core"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "02-image",
+      "engine": "main"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "02-image",
+      "engine": "core"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "03-wrapped-text",
+      "engine": "main"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "03-wrapped-text",
+      "engine": "core"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "04-text-decoration",
+      "engine": "main"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "04-text-decoration",
+      "engine": "core"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 2,
+      "actual_pages": 2,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        },
+        {
+          "page": 2,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "historical_comparison": {
+        "passed": false,
+        "errors": [
+          "Poppler extracted source text changed",
+          "Page 1: text changed",
+          "Page 1: glyphs changed",
+          "Page 1: paint changed",
+          "Page 1: 144dpi pixels changed",
+          "Page 1: 288dpi pixels changed",
+          "Page 2: text changed",
+          "Page 2: glyphs changed",
+          "Page 2: paint changed",
+          "Page 2: 144dpi pixels changed",
+          "Page 2: 288dpi pixels changed"
+        ],
+        "expected_pages": 2,
+        "actual_pages": 2,
+        "poppler_text_equal": false,
+        "pages": [
+          {
+            "page": 1,
+            "different_components": [
+              "text",
+              "glyphs",
+              "paint"
+            ],
+            "pixels_equal": {
+              "144": false,
+              "288": false
+            }
+          },
+          {
+            "page": 2,
+            "different_components": [
+              "text",
+              "glyphs",
+              "paint"
+            ],
+            "pixels_equal": {
+              "144": false,
+              "288": false
+            }
+          }
+        ]
+      },
+      "classification": "reviewed-oversized-merged-pagination",
+      "expected_pdf": "tests/Shared/LibreOfficeComparisonBaseline/reviewed-pagination/main-05-borders.pdf",
+      "case_id": "05-borders",
+      "engine": "main"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 2,
+      "actual_pages": 2,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        },
+        {
+          "page": 2,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "historical_comparison": {
+        "passed": false,
+        "errors": [
+          "Poppler extracted source text changed",
+          "Page 1: text changed",
+          "Page 1: glyphs changed",
+          "Page 1: paint changed",
+          "Page 1: 144dpi pixels changed",
+          "Page 1: 288dpi pixels changed",
+          "Page 2: text changed",
+          "Page 2: glyphs changed",
+          "Page 2: paint changed",
+          "Page 2: 144dpi pixels changed",
+          "Page 2: 288dpi pixels changed"
+        ],
+        "expected_pages": 2,
+        "actual_pages": 2,
+        "poppler_text_equal": false,
+        "pages": [
+          {
+            "page": 1,
+            "different_components": [
+              "text",
+              "glyphs",
+              "paint"
+            ],
+            "pixels_equal": {
+              "144": false,
+              "288": false
+            }
+          },
+          {
+            "page": 2,
+            "different_components": [
+              "text",
+              "glyphs",
+              "paint"
+            ],
+            "pixels_equal": {
+              "144": false,
+              "288": false
+            }
+          }
+        ]
+      },
+      "classification": "reviewed-oversized-merged-pagination",
+      "expected_pdf": "tests/Shared/LibreOfficeComparisonBaseline/reviewed-pagination/core-05-borders.pdf",
+      "case_id": "05-borders",
+      "engine": "core"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 4,
+      "actual_pages": 4,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        },
+        {
+          "page": 2,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        },
+        {
+          "page": 3,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        },
+        {
+          "page": 4,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "06-layout-and-pagination",
+      "engine": "main"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 4,
+      "actual_pages": 4,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        },
+        {
+          "page": 2,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        },
+        {
+          "page": 3,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        },
+        {
+          "page": 4,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "06-layout-and-pagination",
+      "engine": "core"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 2,
+      "actual_pages": 2,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        },
+        {
+          "page": 2,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "07-multiple-sheets",
+      "engine": "main"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 2,
+      "actual_pages": 2,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        },
+        {
+          "page": 2,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "07-multiple-sheets",
+      "engine": "core"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "08-print-scaling",
+      "engine": "main"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "08-print-scaling",
+      "engine": "core"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "09-cell-border",
+      "engine": "main"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "09-cell-border",
+      "engine": "core"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "cell-argb",
+      "engine": "main"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "cell-argb",
+      "engine": "core"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 5,
+      "actual_pages": 5,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        },
+        {
+          "page": 2,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        },
+        {
+          "page": 3,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        },
+        {
+          "page": 4,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        },
+        {
+          "page": 5,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "border-conflicts",
+      "engine": "main"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 5,
+      "actual_pages": 5,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        },
+        {
+          "page": 2,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        },
+        {
+          "page": 3,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        },
+        {
+          "page": 4,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        },
+        {
+          "page": 5,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "border-conflicts",
+      "engine": "core"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "richtext",
+      "engine": "main"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "richtext",
+      "engine": "core"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "cf-phase1",
+      "engine": "main"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "cf-phase1",
+      "engine": "core"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "cf-phase2",
+      "engine": "main"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "cf-phase2",
+      "engine": "core"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "cf-mapped-scale",
+      "engine": "main"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "cf-mapped-scale",
+      "engine": "core"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "cf-phase3-icons",
+      "engine": "main"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "cf-phase3-icons",
+      "engine": "core"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "cf-phase3-layout-mapping",
+      "engine": "main"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "cf-phase3-layout-mapping",
+      "engine": "core"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "cf-phase3-legacy-bars",
+      "engine": "main"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "cf-phase3-legacy-bars",
+      "engine": "core"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "cf-phase3-x14-bars",
+      "engine": "main"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "cf-phase3-x14-bars",
+      "engine": "core"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "shapes",
+      "engine": "main"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "shapes",
+      "engine": "core"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "actual-shape-text",
+      "engine": "main"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "actual-shape-text",
+      "engine": "core"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "japanese-grid-report",
+      "engine": "main"
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "expected_pages": 1,
+      "actual_pages": 1,
+      "poppler_text_equal": true,
+      "pages": [
+        {
+          "page": 1,
+          "different_components": [],
+          "pixels_equal": {
+            "144": true,
+            "288": true
+          }
+        }
+      ],
+      "case_id": "japanese-grid-report",
+      "engine": "core"
+    }
+  ],
+  "mutation_checks": [
+    {
+      "mutation": "missing-text",
+      "detected": true,
+      "errors": [
+        "Poppler extracted source text changed",
+        "Page 1: text changed",
+        "Page 1: glyphs changed",
+        "Page 1: 144dpi pixels changed",
+        "Page 1: 288dpi pixels changed"
+      ]
+    },
+    {
+      "mutation": "missing-border",
+      "detected": true,
+      "errors": [
+        "Page 1: paint changed",
+        "Page 1: 144dpi pixels changed",
+        "Page 1: 288dpi pixels changed"
+      ]
+    },
+    {
+      "mutation": "duplicate-border",
+      "detected": true,
+      "errors": [
+        "Page 1: paint changed",
+        "Page 1: 144dpi pixels changed",
+        "Page 1: 288dpi pixels changed"
+      ]
+    },
+    {
+      "mutation": "extra-ink",
+      "detected": true,
+      "errors": [
+        "Page 1: paint changed",
+        "Page 1: 144dpi pixels changed",
+        "Page 1: 288dpi pixels changed"
+      ]
+    },
+    {
+      "mutation": "shifted-content",
+      "detected": true,
+      "errors": [
+        "Page 1: glyphs changed",
+        "Page 1: paint changed",
+        "Page 1: 144dpi pixels changed",
+        "Page 1: 288dpi pixels changed"
+      ]
+    },
+    {
+      "mutation": "wrong-source-text",
+      "detected": true,
+      "errors": [
+        "Poppler extracted source text changed",
+        "Page 1: text changed"
+      ]
+    },
+    {
+      "mutation": "extra-page",
+      "detected": true,
+      "errors": [
+        "Poppler extracted source text changed",
+        "Page count: expected 1, actual 2"
+      ]
+    },
+    {
+      "mutation": "pagination-missing-text",
+      "detected": true,
+      "errors": [
+        "Poppler extracted source text changed",
+        "Page 1: text changed",
+        "Page 1: glyphs changed",
+        "Page 1: 144dpi pixels changed",
+        "Page 1: 288dpi pixels changed"
+      ]
+    },
+    {
+      "mutation": "pagination-missing-border",
+      "detected": true,
+      "errors": [
+        "Page 1: paint changed",
+        "Page 1: 144dpi pixels changed",
+        "Page 1: 288dpi pixels changed"
+      ]
+    },
+    {
+      "mutation": "pagination-shifted-content",
+      "detected": true,
+      "errors": [
+        "Page 1: glyphs changed",
+        "Page 1: paint changed",
+        "Page 1: 144dpi pixels changed",
+        "Page 1: 288dpi pixels changed"
+      ]
+    }
+  ],
+  "errors": []
+}

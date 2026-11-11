@@ -46,8 +46,10 @@ public static partial class OpenXmlWorkbookWriter
             throw new ArgumentException("Input and writable output must differ.");
         }
 
-        var reasons = WorkbookWriteCapabilities.Inspect(input, cancellationToken, plan.RewriteFormulas);
-        if (reasons.Count != 0)
+        var unchangedRows = plan.Sheets.All(sheet => sheet.Rows.Count == sheet.SourceLastRow && sheet.Rows.All(row => row.SourceRow == row.OutputRow));
+        var reasons = WorkbookWriteCapabilities.Inspect(input, cancellationToken, plan.RewriteFormulas, unchangedRows);
+        var preserveMetadata = unchangedRows && reasons.Count > 0 && WorkbookWriteCapabilities.CanPreserveMetadata(reasons);
+        if (reasons.Count != 0 && !preserveMetadata)
         {
             throw new NotSupportedException("OpenXml editing is unsupported: " + string.Join(", ", reasons));
         }
@@ -156,7 +158,8 @@ public static partial class OpenXmlWorkbookWriter
             try
             {
                 var references = new StructuralReferences(names);
-                RewriteStructures(input, archive, sources, replacements, references, buffers, cancellationToken, plan.RewriteFormulas);
+                RewriteStructures(input, archive, sources, replacements, references, buffers, cancellationToken, plan.RewriteFormulas, preserveMetadata);
+
                 foreach (var item in sources)
                 {
                     if (!plan.RewriteFormulas && !NeedsWorksheetEdit(item.Value.Plan) && !item.Value.Children.Any(child => child.Name.LocalName is "hyperlinks" or "conditionalFormatting" or "dataValidations"))

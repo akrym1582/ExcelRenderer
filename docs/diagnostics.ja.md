@@ -46,9 +46,11 @@ Unicode列）は発生回数を合算。上限到達後も保持済み識別子�
 
 | コード | 本体 / Core | 意味・出力への影響 | 対応 / 関連テスト |
 | --- | --- | --- | --- |
-| MaximumDigitWidthFallback | 両方 | 元Normalの寸法なし、7px互換MDWで列幅・改ページが変わる可能性 | 本体なら元フォント寸法を指定。Normal情報維持。ColumnWidthMetricsTests / MainCoreParityTests |
+| MaximumDigitWidthFallback | 両方 | 元Normalの寸法なし、互換MDW（MS Pゴシック11ptは8.4px、その他7px）で列幅・改ページが変わる可能性 | 本体なら元フォント寸法を指定。Normal情報維持。ColumnWidthMetricsTests / MainCoreParityTests |
 | MaximumDigitWidthResolved | 本体Info / Core通知なし | 解決・上書きしたMDWの記録 | 寸法の出所確認。ColumnWidthMetricsTests |
 | FormulaCachedValueMissing | 両方 | 保存結果なし、保存値モードで空文字 | 計算後保存、または本体の限定再計算を明示選択。FormulaDisplayTests / MainCoreParityTests |
+| PivotSavedValuesMissing | 両方 | 印刷対象のピボット範囲に非空の保存セルがなく、PDF出力前に失敗（Coreは例外） | 表計算ソフトで更新・保存。PivotDisplayTests |
+| PivotRefreshRequired | 両方 | キャッシュに更新要求があり、保存セルが古い可能性 | 更新・保存が必要。Mappingのキャッシュ更新は表示用集計セルを生成しない |
 | ImageDecodeFailed | 両方 | 完全decodeに失敗し画像省略 | 画像を交換。本体ImageReviewTests / Core ImagePayloadTests・PageAndImageTests |
 | MissingIvsGlyph | 本体 / Core通知なし | 指定した異体字の字形なし | 対応フォントまたは基底文字置換を許可。ShapeAndFontTests |
 | MissingPrivateUseGlyph | 本体 / Core通知なし | 私用領域の字形なし | 本来のフォントを指定。ShapeAndFontTests |

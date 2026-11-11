@@ -6,6 +6,10 @@ Usage guides: [Main/Core parity](docs/main-core-parity.md) · [Diagnostics and d
 
 English | [日本語](README.ja.md)
 
+Main and Core apply the eight named Excel number-format colors (for example `[Red]` in the negative-value section). Indexed `[ColorN]` palettes are not resolved. Pivot tables render saved worksheet cells; aggregate generation is not implemented. A pivot with no nonempty saved output in the selected print region fails before rendering (`PivotSavedValuesMissing`). A cache requesting refresh produces `PivotRefreshRequired`; refresh and save in a spreadsheet application to obtain current totals. Mapping refreshes supported cache records, not the displayed aggregate cells.
+
+Cell-width compatibility: main's `ColumnWidthMetricsMode.LibreOfficeCompatible` and Core's `ReadOptions.UseLibreOfficeColumnWidths` retain fractional digit/column widths. Both CLI commands accept `--column-width-metrics libreoffice --column-width-mdw 8.8`. Use the digit width of the actual reference font; 8.8px is specific to Noto Sans Mono at 11pt, not a universal replacement. Existing defaults remain unchanged. See [the measured cell-size validation](docs/validation/cell-width-compatibility/README.md).
+
 ## Overview
 
 ExcelRenderer is a .NET library for rendering Excel (`.xlsx`) worksheets as PDF or PostScript documents or page-by-page PNG and SVG images.
@@ -477,16 +481,81 @@ excelrenderer render input.xlsx --format pdf -o output.pdf --column-width-mdw 9
 excelrenderer pdf input.xlsx -o output.pdf --column-width-metrics legacy
 ```
 
-The shared flags are `--column-width-mdw`, `--layout-font`, `--layout-font-index`, and
-`--column-width-metrics source|legacy`. In the library, migration compatibility is
+The main CLI flags are `--column-width-mdw`, `--layout-font`, `--layout-font-index`, and
+`--column-width-metrics source|legacy|libreoffice` for main. Core accepts
+`--column-width-metrics source|libreoffice` and `--column-width-mdw`; layout-font
+file/index flags and legacy mode are main-only. In the library, migration compatibility is
 `ColumnWidthMetrics = new() { Mode = ColumnWidthMetricsMode.RenderingFontLegacy }`.
 Legacy cannot be combined with a source file; explicit MDW still takes precedence.
+Legacy also preserves historical merged-cell page bands; source mode lets a merge
+larger than a page split at ordinary row/column boundaries.
 All rendering formats, range/continuous rendering, and page-selection preflight use
 the same read settings and conversion-local metric decisions. Core's independent
 single-supplied-font contract is unchanged.
 
-If the original family is unavailable, SourceFont uses the deterministic 7px
-compatibility metric and reports `MaximumDigitWidthFallback`. StrictMode treats this
+### Optional LibreOffice column-width calculation
+
+This is **opt-in**. Omitting the option keeps the existing `SourceFont` behavior;
+Core defaults to `UseLibreOfficeColumnWidths = false`.
+
+| Choice | Main API | Core API | Purpose |
+| --- | --- | --- | --- |
+| Default | `ColumnWidthMetricsMode.SourceFont` | `UseLibreOfficeColumnWidths = false` | Preserve the existing source-font/compatibility column calculation |
+| LibreOffice compatibility | `ColumnWidthMetricsMode.LibreOfficeCompatible` | `UseLibreOfficeColumnWidths = true` | Measure fractional digit advances and retain fractional column pixels |
+| Historical migration | `ColumnWidthMetricsMode.RenderingFontLegacy` | Not available | Reproduce main's historical drawing-font column policy |
+
+Main library configuration:
+
+```csharp
+var read = new ExcelRenderer.Excel.ExcelReadOptions
+{
+    ColumnWidthMetrics = new()
+    {
+        Mode = ExcelRenderer.Excel.ColumnWidthMetricsMode.LibreOfficeCompatible,
+        MaximumDigitWidthPixels96Dpi = 8.8,
+    },
+};
+// Pass read as PdfExportOptions.ReadOptions or RenderRequest.ReadOptions.
+```
+
+Core library configuration:
+
+```csharp
+var options = new ExcelRenderer.Core.PdfExportOptions
+{
+    FontFilePath = "fonts/NotoSansJP-Regular.ttf",
+    ReadOptions = new()
+    {
+        UseLibreOfficeColumnWidths = true,
+        MaximumDigitWidthPixels96Dpi = 8.8,
+    },
+};
+```
+
+CLI equivalents:
+
+```bash
+excelrenderer render input.xlsx --format pdf -o main.pdf --font-file NotoSansJP-Regular.ttf --column-width-metrics libreoffice --column-width-mdw 8.8
+excelrenderer core input.xlsx -o core.pdf --font-file NotoSansJP-Regular.ttf --column-width-metrics libreoffice --column-width-mdw 8.8
+```
+
+**8.8 is an example for the reviewed reference's Noto Sans Mono substitution at 11pt,
+not a general font preset.** An explicit MDW is optional and overrides measurement;
+without one, main measures the resolved layout font and Core measures its supplied
+regular font, both at the workbook Normal size. Main can select a layout-only font
+with `SourceFontFile` / `--layout-font`. Enabling the mode does not automatically
+replicate LibreOffice's font substitution. Set the reference font/metric explicitly
+when reproducible dimensions are required. A numeric MDW override alone does not
+enable the fractional column calculation.
+
+This option can change cell widths, wrapping and page boundaries. It preserves saved
+row heights and print settings; it does not reproduce LibreOffice's header positioning
+or every rendering rule. See the [measured before/after comparison](docs/validation/cell-width-compatibility/README.md).
+
+In default SourceFont mode, if the original family is unavailable, SourceFont uses a deterministic compatibility
+metric and reports `MaximumDigitWidthFallback`. MS P Gothic uses a size-dependent
+Noto Sans digit profile matching Calc substitution (8.4px at 11pt); other unavailable
+families and missing Normal metadata use 7px. StrictMode treats this
 warning as a conversion failure. This does **not**
 guarantee Excel-equivalent geometry. Supply the original font or its measured MDW
 for accurate column sizing. `MaximumDigitWidthResolved` identifies the requested
@@ -559,7 +628,8 @@ var settings = new PageSettings(FitToPagesWide: 1)
 For xlsx input, explicit and default raw column widths are converted at the fixed Excel
 reference DPI of 96; output PNG DPI does not change sheet geometry. The Normal style is resolved
 through its style XF and theme major/minor font before measuring digits 0–9 with the configured
-font manager. If that font cannot be measured, a 7px compatibility width is used and
+font manager. If that font cannot be measured, a compatibility width is used (MS P Gothic:
+8.4px at 11pt, scaled and rounded to twips; otherwise 7px), and
 `MaximumDigitWidthFallback` is reported through conversion diagnostics.
 
 Distinct print areas are paginated independently without filling their bounding rectangle.

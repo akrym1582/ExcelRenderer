@@ -1,0 +1,22 @@
+{
+  "historical_manifest_sha256": "511f7a094d3da609a6027ba7dad30acf6a0b9709deb58e5c50bf7ab1cc8f925b",
+  "reason": "Apply the saved [Red] negative-number section. No other glyph metadata, page geometry, text, paint or images changed.",
+  "cases": {
+    "japanese-grid-report/main": {
+      "input": "samples/excel/japanese-grid-report.xlsx",
+      "input_sha256": "4907d79963eb8267eab4230c7aad9bbd0d580238d3d42f402b34fb4c0ff217a1",
+      "pdf": "reviewed-number-format-colors/main-japanese-grid-report.pdf",
+      "pdf_sha256": "369525b7fb67c00b3007ae4b2bf50eb528595b751c0cb1d8f441e2e69050cf41",
+      "pages": 1,
+      "historical_pdf_sha256": "9c097f21e16386447851017e598eccf06af6d51f31db6187496e7e0318eca277"
+    },
+    "japanese-grid-report/core": {
+      "input": "samples/excel/japanese-grid-report.xlsx",
+      "input_sha256": "4907d79963eb8267eab4230c7aad9bbd0d580238d3d42f402b34fb4c0ff217a1",
+      "pdf": "reviewed-number-format-colors/core-japanese-grid-report.pdf",
+      "pdf_sha256": "978af9e893143802d24c510424cb607e25cc1eeb5be72e5722c52d837c5fb8fd",
+      "pages": 1,
+      "historical_pdf_sha256": "9cec1890e2612bbfc1c026e01c040da56229413a61b799457ec8233bdddb3076"
+    }
+  }
+}

@@ -13,6 +13,7 @@ internal static class PageBandBuilder
     /// <param name="repeatedEnd">The repeatedEnd value.</param>
     /// <param name="repeatedSize">The repeatedSize value.</param>
     /// <param name="manualBreaks">The manualBreaks value.</param>
+    /// <param name="splitOversizedMerges">Whether merges larger than a page may split at ordinary axis boundaries.</param>
     internal static IReadOnlyList<PageBand> Create(
         IReadOnlyList<int> indices,
         Func<int, double> getStart,
@@ -21,7 +22,8 @@ internal static class PageBandBuilder
         Func<int, double, double> getMergedEnd,
         double repeatedEnd = double.NegativeInfinity,
         double repeatedSize = 0,
-        IReadOnlyCollection<int>? manualBreaks = null)
+        IReadOnlyCollection<int>? manualBreaks = null,
+        bool splitOversizedMerges = true)
     {
         var bands = new List<PageBand>();
         for (var position = 0; position < indices.Count;)
@@ -37,7 +39,13 @@ internal static class PageBandBuilder
                     break;
                 }
 
-                var candidateEnd = getMergedEnd(indices[position], Math.Max(end, getEnd(indices[position])));
+                var candidateEnd = Math.Max(end, getEnd(indices[position]));
+                var mergedEnd = getMergedEnd(indices[position], candidateEnd);
+                if (!splitOversizedMerges || mergedEnd - getStart(indices[position]) <= pageAvailableSize + 1e-7)
+                {
+                    candidateEnd = mergedEnd;
+                }
+
                 if (position > firstPosition && candidateEnd - start > pageAvailableSize + 1e-7)
                 {
                     break;

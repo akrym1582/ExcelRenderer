@@ -1,0 +1,198 @@
+{
+  "source_sha256": "632d32741d9a30c2adf622634b6848925b81c5b7d04e682aa9e581d9a3dbbca9",
+  "reference_sha256": "649b183caaa4e4845384496c69dd70f43c71d97563c33f49aee1cc78bd7d5f26",
+  "reference": {
+    "rect_pt": [
+      47.99100112915039,
+      81.86480712890625,
+      324.4540100097656,
+      201.8837890625
+    ],
+    "width_pt": 276.46300888061523,
+    "height_pt": 120.01898193359375,
+    "text": "折り返し\n文字折り返しサンプル\n差し込み確認。長文の折り返しを検証します。差\nし込み確認。長文の折り返しを検証します。差し\n込み確認。長文の折り返しを検証します。差し込\nみ確認。長文の折り返しを検証します。差し込み\n確認。長文の折り返しを検証します。\n"
+  },
+  "records": [
+    {
+      "engine": "main",
+      "mode": "source",
+      "command": [
+        "dotnet",
+        "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+        "render",
+        "/workspace/ExcelRenderer/docs/validation/pr113-display-followup/additional-forms/wrapped/after.xlsx",
+        "-o",
+        "/workspace/ExcelRenderer/artifacts/cell-width-final-all/main-source.pdf",
+        "--font-file",
+        "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf",
+        "--column-width-metrics",
+        "source",
+        "--format",
+        "pdf",
+        "--no-system-fonts",
+        "--fallback-font",
+        "Noto Sans JP"
+      ],
+      "stderr": "Warning: MaximumDigitWidthFallback [折り返し!workbook]: Normal 'Calibri', 11pt, weight 400, italic False; measurement '7px compatibility metric', MDW 7px at 96 DPI; source=compatibility. Exact Excel layout cannot be guaranteed; specify SourceFontFile or MaximumDigitWidthPixels96Dpi to supply original metrics.\n",
+      "pdf_sha256": "3e6df7840674f5f1a10de5129b5bd1327f305ff541ef59b3abf416ca6d72c15e",
+      "rect_pt": [
+        48.0,
+        78.00001525878906,
+        267.75,
+        198.00001525878906
+      ],
+      "width_pt": 219.75,
+      "height_pt": 120.0,
+      "text": "文字折り返しサンプル\n差し込み確認。長文の折り返しを検証し\nます。差し込み確認。長文の折り返しを\n検証します。差し込み確認。長文の折り\n返しを検証します。差し込み確認。長文\nの折り返しを検証します。差し込み確認\n。長文の折り返しを検証します。\n折り返し\nページ 1 / 1\n"
+    },
+    {
+      "engine": "main",
+      "mode": "libreoffice",
+      "command": [
+        "dotnet",
+        "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+        "render",
+        "/workspace/ExcelRenderer/docs/validation/pr113-display-followup/additional-forms/wrapped/after.xlsx",
+        "-o",
+        "/workspace/ExcelRenderer/artifacts/cell-width-final-all/main-libreoffice.pdf",
+        "--font-file",
+        "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf",
+        "--column-width-metrics",
+        "libreoffice",
+        "--column-width-mdw",
+        "8.8",
+        "--format",
+        "pdf",
+        "--no-system-fonts",
+        "--fallback-font",
+        "Noto Sans JP"
+      ],
+      "stderr": "",
+      "pdf_sha256": "d81957238a156db5512e56f5a24e00d286e94c0c4e0a7696bbb3981d446e6548",
+      "rect_pt": [
+        48.0,
+        78.00001525878906,
+        324.5472717285156,
+        198.00001525878906
+      ],
+      "width_pt": 276.5472717285156,
+      "height_pt": 120.0,
+      "text": "文字折り返しサンプル\n差し込み確認。長文の折り返しを検証します。差\nし込み確認。長文の折り返しを検証します。差し\n込み確認。長文の折り返しを検証します。差し込\nみ確認。長文の折り返しを検証します。差し込み\n確認。長文の折り返しを検証します。\n折り返し\nページ 1 / 1\n"
+    },
+    {
+      "engine": "main",
+      "mode": "libreoffice-auto",
+      "command": [
+        "dotnet",
+        "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+        "render",
+        "/workspace/ExcelRenderer/docs/validation/pr113-display-followup/additional-forms/wrapped/after.xlsx",
+        "-o",
+        "/workspace/ExcelRenderer/artifacts/cell-width-final-all/main-libreoffice-auto.pdf",
+        "--font-file",
+        "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf",
+        "--column-width-metrics",
+        "libreoffice",
+        "--format",
+        "pdf",
+        "--no-system-fonts",
+        "--fallback-font",
+        "Noto Sans JP"
+      ],
+      "stderr": "Warning: MaximumDigitWidthFallback [折り返し!workbook]: Normal 'Calibri', 11pt, weight 400, italic False; measurement 'Noto Sans JP, weight 400, italic False, approximated False, face 0, D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC', MDW 8.133333333333333px at 96 DPI; source=libreoffice-font. Exact Excel layout cannot be guaranteed; specify SourceFontFile or MaximumDigitWidthPixels96Dpi to supply original metrics.\n",
+      "pdf_sha256": "dc97d9de5b52de02fdfc92f2f8c63bab13fc22e8d02c684d1c5b461133604f8c",
+      "rect_pt": [
+        48.0,
+        78.00001525878906,
+        303.5967102050781,
+        198.00001525878906
+      ],
+      "width_pt": 255.59671020507812,
+      "height_pt": 120.0,
+      "text": "文字折り返しサンプル\n差し込み確認。長文の折り返しを検証します。\n差し込み確認。長文の折り返しを検証します。\n差し込み確認。長文の折り返しを検証します。\n差し込み確認。長文の折り返しを検証します。\n差し込み確認。長文の折り返しを検証します。\n折り返し\nページ 1 / 1\n"
+    },
+    {
+      "engine": "core",
+      "mode": "source",
+      "command": [
+        "dotnet",
+        "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+        "core",
+        "/workspace/ExcelRenderer/docs/validation/pr113-display-followup/additional-forms/wrapped/after.xlsx",
+        "-o",
+        "/workspace/ExcelRenderer/artifacts/cell-width-final-all/core-source.pdf",
+        "--font-file",
+        "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf",
+        "--column-width-metrics",
+        "source"
+      ],
+      "stderr": "Warning: SavedPageBreaks [折り返し, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nWarning: MaximumDigitWidthFallback [折り返し, page ]: Normal 'Calibri', 11pt; supplied drawing font 'Noto Sans JP' is not the source Normal font. Column layout uses a 7px compatibility metric at 96 DPI; exact Excel layout cannot be guaranteed.\n",
+      "pdf_sha256": "3e6df7840674f5f1a10de5129b5bd1327f305ff541ef59b3abf416ca6d72c15e",
+      "rect_pt": [
+        48.0,
+        78.00001525878906,
+        267.75,
+        198.00001525878906
+      ],
+      "width_pt": 219.75,
+      "height_pt": 120.0,
+      "text": "文字折り返しサンプル\n差し込み確認。長文の折り返しを検証し\nます。差し込み確認。長文の折り返しを\n検証します。差し込み確認。長文の折り\n返しを検証します。差し込み確認。長文\nの折り返しを検証します。差し込み確認\n。長文の折り返しを検証します。\n折り返し\nページ 1 / 1\n"
+    },
+    {
+      "engine": "core",
+      "mode": "libreoffice",
+      "command": [
+        "dotnet",
+        "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+        "core",
+        "/workspace/ExcelRenderer/docs/validation/pr113-display-followup/additional-forms/wrapped/after.xlsx",
+        "-o",
+        "/workspace/ExcelRenderer/artifacts/cell-width-final-all/core-libreoffice.pdf",
+        "--font-file",
+        "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf",
+        "--column-width-metrics",
+        "libreoffice",
+        "--column-width-mdw",
+        "8.8"
+      ],
+      "stderr": "Warning: SavedPageBreaks [折り返し, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nWarning: MaximumDigitWidthFallback [折り返し, page ]: Normal 'Calibri', 11pt; supplied drawing font 'Noto Sans JP' is not the source Normal font. Column layout uses a 8.8px compatibility metric at 96 DPI; exact Excel layout cannot be guaranteed.\n",
+      "pdf_sha256": "d81957238a156db5512e56f5a24e00d286e94c0c4e0a7696bbb3981d446e6548",
+      "rect_pt": [
+        48.0,
+        78.00001525878906,
+        324.5472717285156,
+        198.00001525878906
+      ],
+      "width_pt": 276.5472717285156,
+      "height_pt": 120.0,
+      "text": "文字折り返しサンプル\n差し込み確認。長文の折り返しを検証します。差\nし込み確認。長文の折り返しを検証します。差し\n込み確認。長文の折り返しを検証します。差し込\nみ確認。長文の折り返しを検証します。差し込み\n確認。長文の折り返しを検証します。\n折り返し\nページ 1 / 1\n"
+    },
+    {
+      "engine": "core",
+      "mode": "libreoffice-auto",
+      "command": [
+        "dotnet",
+        "/workspace/ExcelRenderer/src/ExcelRenderer.Tool/bin/Release/net10.0/ExcelRenderer.Tool.dll",
+        "core",
+        "/workspace/ExcelRenderer/docs/validation/pr113-display-followup/additional-forms/wrapped/after.xlsx",
+        "-o",
+        "/workspace/ExcelRenderer/artifacts/cell-width-final-all/core-libreoffice-auto.pdf",
+        "--font-file",
+        "/workspace/ExcelRenderer/third_party/NotoSansJP/NotoSansJP-Regular.ttf",
+        "--column-width-metrics",
+        "libreoffice"
+      ],
+      "stderr": "Warning: SavedPageBreaks [折り返し, page ]: Manual row breaks: 0; manual column breaks: 0; excluded automatic row breaks: 0; excluded automatic column breaks: 0; saved print scale percent: 100.\nWarning: MaximumDigitWidthFallback [折り返し, page ]: Normal 'Calibri', 11pt; supplied drawing font 'Noto Sans JP' is not the source Normal font. Column layout uses a 8.133333333333333px compatibility metric at 96 DPI; exact Excel layout cannot be guaranteed.\n",
+      "pdf_sha256": "dc97d9de5b52de02fdfc92f2f8c63bab13fc22e8d02c684d1c5b461133604f8c",
+      "rect_pt": [
+        48.0,
+        78.00001525878906,
+        303.5967102050781,
+        198.00001525878906
+      ],
+      "width_pt": 255.59671020507812,
+      "height_pt": 120.0,
+      "text": "文字折り返しサンプル\n差し込み確認。長文の折り返しを検証します。\n差し込み確認。長文の折り返しを検証します。\n差し込み確認。長文の折り返しを検証します。\n差し込み確認。長文の折り返しを検証します。\n差し込み確認。長文の折り返しを検証します。\n折り返し\nページ 1 / 1\n"
+    }
+  ]
+}

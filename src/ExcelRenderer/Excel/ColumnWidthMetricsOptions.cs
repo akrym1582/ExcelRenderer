@@ -12,7 +12,7 @@ public sealed record ColumnWidthMetricsOptions
     /// <summary>Gets the original Normal font's maximum digit width at 96 DPI. Must be finite and at least one.</summary>
     public double? MaximumDigitWidthPixels96Dpi { get; init; }
 
-    /// <summary>Gets a font file used exclusively for layout measurements, without registering it for drawing.</summary>
+    /// <summary>Gets a font file used exclusively for layout measurements, without registering it for drawing. LibreOfficeCompatible permits a substitute font.</summary>
     public string? SourceFontFile { get; init; }
 
     /// <summary>Gets the zero-based source collection face index; standalone fonts require zero.</summary>

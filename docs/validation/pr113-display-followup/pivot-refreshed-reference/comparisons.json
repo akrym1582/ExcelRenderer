@@ -1,0 +1,398 @@
+{
+  "main-libreoffice": {
+    "left_pages": 1,
+    "right_pages": 1,
+    "characters_only_left": {
+      "e": 2,
+      "l": 2,
+      "t": 4,
+      "W": 2,
+      "s": 2
+    },
+    "characters_only_right": {},
+    "matched_span_positions": [
+      {
+        "page": 1,
+        "text": "Header",
+        "dx_pt": 0.349,
+        "dy_pt": -0.453
+      },
+      {
+        "page": 1,
+        "text": "Color",
+        "dx_pt": 8.587,
+        "dy_pt": -0.468
+      },
+      {
+        "page": 1,
+        "text": "Red",
+        "dx_pt": 10.235,
+        "dy_pt": -0.468
+      },
+      {
+        "page": 1,
+        "text": "Color",
+        "dx_pt": 16.825,
+        "dy_pt": -0.468
+      },
+      {
+        "page": 1,
+        "text": "Red",
+        "dx_pt": 18.473,
+        "dy_pt": -0.468
+      },
+      {
+        "page": 1,
+        "text": "Category Region",
+        "dx_pt": 0.349,
+        "dy_pt": -0.497
+      },
+      {
+        "page": 1,
+        "text": "Color",
+        "dx_pt": 3.644,
+        "dy_pt": -0.497
+      },
+      {
+        "page": 1,
+        "text": "Amount",
+        "dx_pt": 5.292,
+        "dy_pt": -0.497
+      },
+      {
+        "page": 1,
+        "text": "East",
+        "dx_pt": -200.503,
+        "dy_pt": 10.813
+      },
+      {
+        "page": 1,
+        "text": "Total Result",
+        "dx_pt": -21.868,
+        "dy_pt": -0.497
+      },
+      {
+        "page": 1,
+        "text": "Total Result",
+        "dx_pt": -13.629,
+        "dy_pt": -0.497
+      },
+      {
+        "page": 1,
+        "text": "New",
+        "dx_pt": 0.349,
+        "dy_pt": -0.512
+      },
+      {
+        "page": 1,
+        "text": "Red",
+        "dx_pt": 3.644,
+        "dy_pt": -0.512
+      },
+      {
+        "page": 1,
+        "text": "10",
+        "dx_pt": 6.171,
+        "dy_pt": -0.512
+      },
+      {
+        "page": 1,
+        "text": "New",
+        "dx_pt": 8.587,
+        "dy_pt": -0.512
+      },
+      {
+        "page": 1,
+        "text": "10",
+        "dx_pt": -22.636,
+        "dy_pt": -0.512
+      },
+      {
+        "page": 1,
+        "text": "10",
+        "dx_pt": -20.988,
+        "dy_pt": -0.512
+      },
+      {
+        "page": 1,
+        "text": "New",
+        "dx_pt": 16.825,
+        "dy_pt": -0.512
+      },
+      {
+        "page": 1,
+        "text": "10",
+        "dx_pt": -14.398,
+        "dy_pt": -0.512
+      },
+      {
+        "page": 1,
+        "text": "10",
+        "dx_pt": -12.75,
+        "dy_pt": -0.512
+      },
+      {
+        "page": 1,
+        "text": "Two",
+        "dx_pt": 0.349,
+        "dy_pt": -0.527
+      },
+      {
+        "page": 1,
+        "text": "West",
+        "dx_pt": 1.997,
+        "dy_pt": -0.527
+      },
+      {
+        "page": 1,
+        "text": "Blue",
+        "dx_pt": 3.644,
+        "dy_pt": -0.527
+      },
+      {
+        "page": 1,
+        "text": "20",
+        "dx_pt": 6.171,
+        "dy_pt": -0.527
+      },
+      {
+        "page": 1,
+        "text": "10",
+        "dx_pt": -22.636,
+        "dy_pt": -0.527
+      },
+      {
+        "page": 1,
+        "text": "10",
+        "dx_pt": -20.988,
+        "dy_pt": -0.527
+      },
+      {
+        "page": 1,
+        "text": "10",
+        "dx_pt": -14.398,
+        "dy_pt": -0.527
+      },
+      {
+        "page": 1,
+        "text": "10",
+        "dx_pt": -12.75,
+        "dy_pt": -0.527
+      }
+    ],
+    "image_counts": [
+      [
+        0
+      ],
+      [
+        0
+      ]
+    ],
+    "drawing_counts": [
+      [
+        24
+      ],
+      [
+        26
+      ]
+    ]
+  },
+  "core-libreoffice": {
+    "left_pages": 1,
+    "right_pages": 1,
+    "characters_only_left": {
+      "e": 2,
+      "l": 2,
+      "t": 4,
+      "W": 2,
+      "s": 2
+    },
+    "characters_only_right": {},
+    "matched_span_positions": [
+      {
+        "page": 1,
+        "text": "Header",
+        "dx_pt": 0.349,
+        "dy_pt": -0.453
+      },
+      {
+        "page": 1,
+        "text": "Color",
+        "dx_pt": 8.587,
+        "dy_pt": -0.468
+      },
+      {
+        "page": 1,
+        "text": "Red",
+        "dx_pt": 10.235,
+        "dy_pt": -0.468
+      },
+      {
+        "page": 1,
+        "text": "Color",
+        "dx_pt": 16.825,
+        "dy_pt": -0.468
+      },
+      {
+        "page": 1,
+        "text": "Red",
+        "dx_pt": 18.473,
+        "dy_pt": -0.468
+      },
+      {
+        "page": 1,
+        "text": "Category Region",
+        "dx_pt": 0.349,
+        "dy_pt": -0.497
+      },
+      {
+        "page": 1,
+        "text": "Color",
+        "dx_pt": 3.644,
+        "dy_pt": -0.497
+      },
+      {
+        "page": 1,
+        "text": "Amount",
+        "dx_pt": 5.292,
+        "dy_pt": -0.497
+      },
+      {
+        "page": 1,
+        "text": "East",
+        "dx_pt": -200.503,
+        "dy_pt": 10.813
+      },
+      {
+        "page": 1,
+        "text": "Total Result",
+        "dx_pt": -21.868,
+        "dy_pt": -0.497
+      },
+      {
+        "page": 1,
+        "text": "Total Result",
+        "dx_pt": -13.629,
+        "dy_pt": -0.497
+      },
+      {
+        "page": 1,
+        "text": "New",
+        "dx_pt": 0.349,
+        "dy_pt": -0.512
+      },
+      {
+        "page": 1,
+        "text": "Red",
+        "dx_pt": 3.644,
+        "dy_pt": -0.512
+      },
+      {
+        "page": 1,
+        "text": "10",
+        "dx_pt": 6.171,
+        "dy_pt": -0.512
+      },
+      {
+        "page": 1,
+        "text": "New",
+        "dx_pt": 8.587,
+        "dy_pt": -0.512
+      },
+      {
+        "page": 1,
+        "text": "10",
+        "dx_pt": -22.636,
+        "dy_pt": -0.512
+      },
+      {
+        "page": 1,
+        "text": "10",
+        "dx_pt": -20.988,
+        "dy_pt": -0.512
+      },
+      {
+        "page": 1,
+        "text": "New",
+        "dx_pt": 16.825,
+        "dy_pt": -0.512
+      },
+      {
+        "page": 1,
+        "text": "10",
+        "dx_pt": -14.398,
+        "dy_pt": -0.512
+      },
+      {
+        "page": 1,
+        "text": "10",
+        "dx_pt": -12.75,
+        "dy_pt": -0.512
+      },
+      {
+        "page": 1,
+        "text": "Two",
+        "dx_pt": 0.349,
+        "dy_pt": -0.527
+      },
+      {
+        "page": 1,
+        "text": "West",
+        "dx_pt": 1.997,
+        "dy_pt": -0.527
+      },
+      {
+        "page": 1,
+        "text": "Blue",
+        "dx_pt": 3.644,
+        "dy_pt": -0.527
+      },
+      {
+        "page": 1,
+        "text": "20",
+        "dx_pt": 6.171,
+        "dy_pt": -0.527
+      },
+      {
+        "page": 1,
+        "text": "10",
+        "dx_pt": -22.636,
+        "dy_pt": -0.527
+      },
+      {
+        "page": 1,
+        "text": "10",
+        "dx_pt": -20.988,
+        "dy_pt": -0.527
+      },
+      {
+        "page": 1,
+        "text": "10",
+        "dx_pt": -14.398,
+        "dy_pt": -0.527
+      },
+      {
+        "page": 1,
+        "text": "10",
+        "dx_pt": -12.75,
+        "dy_pt": -0.527
+      }
+    ],
+    "image_counts": [
+      [
+        0
+      ],
+      [
+        0
+      ]
+    ],
+    "drawing_counts": [
+      [
+        24
+      ],
+      [
+        26
+      ]
+    ]
+  }
+}

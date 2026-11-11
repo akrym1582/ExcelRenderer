@@ -58,6 +58,11 @@ public static class ExcelConverter
             throw new ArgumentException("ReadOptions is required.", nameof(options));
         }
 
+        if (options.ReadOptions.MaximumDigitWidthPixels96Dpi is { } mdw && (!double.IsFinite(mdw) || mdw < 1))
+        {
+            throw new ArgumentOutOfRangeException(nameof(options), "MaximumDigitWidthPixels96Dpi must be finite and at least one.");
+        }
+
         if (options.SheetName is not null && options.SheetNames is not null)
         {
             throw new ArgumentException("SheetName and SheetNames cannot be combined.", nameof(options));
@@ -77,7 +82,7 @@ public static class ExcelConverter
             () => ConversionMetrics.Report("buffer.spillCount", 1)).ConfigureAwait(false);
         using var font = new SingleFontContext(options.FontFilePath, options.FontCollectionIndex, cancellationToken);
         var diagnostics = new DiagnosticCollector();
-        var reader = new CoreExcelReader(font, diagnostics);
+        var reader = new CoreExcelReader(font, diagnostics, options.ReadOptions);
         var report = ConversionMetrics.Measure("reader", () => reader.Read(prepared, diagnostics, sheetNames, cancellationToken, options.ReadOptions));
         cancellationToken.ThrowIfCancellationRequested();
         var measurer = new SkiaTextMeasurer(font);

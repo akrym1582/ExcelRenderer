@@ -1,0 +1,10 @@
+invoice-repeat before {'main': 1, 'core': 1, 'libreoffice': 1}
+invoice-repeat after {'main': 1, 'core': 1, 'libreoffice': 1}
+invoice-manual before {'main': 1, 'core': 1, 'libreoffice': 1}
+invoice-manual after {'main': 3, 'core': 3, 'libreoffice': 6}
+wrapped before {'main': 1, 'core': 1, 'libreoffice': 1}
+wrapped after {'main': 1, 'core': 1, 'libreoffice': 1}
+crossing-images before {'main': 3, 'core': 3, 'libreoffice': 6}
+crossing-images after {'main': 3, 'core': 3, 'libreoffice': 6}
+pivot-opaque before {'main': 0, 'core': 0, 'libreoffice': 2}
+pivot-opaque after {'main': 0, 'core': 0, 'libreoffice': 2}

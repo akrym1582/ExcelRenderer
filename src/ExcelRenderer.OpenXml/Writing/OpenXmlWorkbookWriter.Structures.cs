@@ -20,7 +20,7 @@ namespace ExcelRenderer.OpenXml.Writing;
 /// <summary>Updates workbook relationships and structural references from the same row plan.</summary>
 public static partial class OpenXmlWorkbookWriter
 {
-    private static void RewriteStructures(Stream input, ZipArchive archive, Dictionary<string, SheetSource> sources, Dictionary<string, SpillableBufferStream> replacements, StructuralReferences references, InputBufferOptions buffers, CancellationToken token, bool formulaAst = false)
+    private static void RewriteStructures(Stream input, ZipArchive archive, Dictionary<string, SheetSource> sources, Dictionary<string, SpillableBufferStream> replacements, StructuralReferences references, InputBufferOptions buffers, CancellationToken token, bool formulaAst = false, bool preserveMetadata = false)
     {
         input.Position = 0;
         using var document = SpreadsheetDocument.Open(new LeaveOpenStream(input), false);
@@ -28,7 +28,7 @@ public static partial class OpenXmlWorkbookWriter
         var sheetNames = workbook.Workbook.Sheets!.Elements<S.Sheet>().Select(sheet => sheet.Name!.Value!).ToArray();
         foreach (var definition in workbook.Workbook.DefinedNames?.Elements<S.DefinedName>() ?? Enumerable.Empty<S.DefinedName>())
         {
-            if (!formulaAst && definition.Name!.Value is not "_xlnm.Print_Area" and not "_xlnm.Print_Titles")
+            if (!preserveMetadata && !formulaAst && definition.Name!.Value is not "_xlnm.Print_Area" and not "_xlnm.Print_Titles")
             {
                 references.ValidateName(definition.Text, sheetNames[(int?)definition.LocalSheetId?.Value ?? 0]);
             }
@@ -45,16 +45,25 @@ public static partial class OpenXmlWorkbookWriter
             }
         }
 
-        var cacheUpdates = RewritePivotCaches(workbook, archive, sources, replacements, references, buffers, token);
+        var cacheUpdates = RewritePivotCaches(workbook, archive, sources, replacements, references, buffers, token, preserveMetadata);
         foreach (var sheet in workbook.Workbook.Sheets!.Elements<S.Sheet>())
         {
             token.ThrowIfCancellationRequested();
             var part = (WorksheetPart)workbook.GetPartById(sheet.Id!);
             var source = sources[part.Uri.ToString().TrimStart('/')];
             var name = sheet.Name!.Value!;
-            RewriteSheetStructures(source, references, name, token);
+            if (!preserveMetadata)
+            {
+                RewriteSheetStructures(source, references, name, token);
+            }
+
             foreach (var pivot in part.PivotTableParts)
             {
+                if (preserveMetadata && (pivot.PivotTableCacheDefinitionPart is not { } supportedCache || !cacheUpdates.ContainsKey(supportedCache.Uri)))
+                {
+                    continue;
+                }
+
                 EditPart(pivot, root =>
                 {
                     foreach (var location in root.Elements(Ns + "location"))
@@ -79,6 +88,11 @@ public static partial class OpenXmlWorkbookWriter
                         }
                     }
                 });
+            }
+
+            if (preserveMetadata)
+            {
+                continue;
             }
 
             foreach (var table in part.TableDefinitionParts)

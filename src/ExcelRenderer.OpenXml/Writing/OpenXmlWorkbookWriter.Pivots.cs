@@ -26,14 +26,47 @@ public static partial class OpenXmlWorkbookWriter
         ItemsChanged,
     }
 
-    private static Dictionary<Uri, PivotCacheUpdate> RewritePivotCaches(WorkbookPart workbook, ZipArchive archive, Dictionary<string, SheetSource> sources, Dictionary<string, SpillableBufferStream> replacements, StructuralReferences references, InputBufferOptions buffers, CancellationToken token)
+    private static Dictionary<Uri, PivotCacheUpdate> RewritePivotCaches(WorkbookPart workbook, ZipArchive archive, Dictionary<string, SheetSource> sources, Dictionary<string, SpillableBufferStream> replacements, StructuralReferences references, InputBufferOptions buffers, CancellationToken token, bool preserveMetadata = false)
     {
         var sheets = workbook.Workbook.Sheets!.Elements<S.Sheet>().ToDictionary(sheet => sheet.Name!.Value!, sheet => sources[workbook.GetPartById(sheet.Id!).Uri.ToString().TrimStart('/')], StringComparer.OrdinalIgnoreCase);
         var updates = new Dictionary<Uri, PivotCacheUpdate>();
         var indexedFields = new Dictionary<Uri, HashSet<int>>();
+        var excludedCaches = new HashSet<Uri>();
+        if (preserveMetadata)
+        {
+            foreach (var cache in workbook.PivotTableCacheDefinitionParts)
+            {
+                var reasons = new HashSet<string>(StringComparer.Ordinal);
+                WorkbookWriteCapabilities.InspectPivotPart(cache, reasons);
+                foreach (var pivot in workbook.WorksheetParts.SelectMany(part => part.PivotTableParts).Where(pivot => pivot.PivotTableCacheDefinitionPart?.Uri == cache.Uri))
+                {
+                    WorkbookWriteCapabilities.InspectPivotPart(pivot, reasons);
+                }
+
+                if (cache.PivotTableCacheRecordsPart is { } records)
+                {
+                    using var stream = records.GetStream(FileMode.Open, FileAccess.Read);
+                    if (XDocument.Load(stream).Descendants().Any(element => element.Name.LocalName is "extLst" or "AlternateContent"))
+                    {
+                        reasons.Add("UnsupportedPivotRecordsExtension");
+                    }
+                }
+
+                if (reasons.Count > 0)
+                {
+                    excludedCaches.Add(cache.Uri);
+                }
+            }
+        }
+
         foreach (var pivot in workbook.WorksheetParts.SelectMany(part => part.PivotTableParts))
         {
-            var cacheUri = pivot.PivotTableCacheDefinitionPart!.Uri;
+            if (pivot.PivotTableCacheDefinitionPart is not { } pivotCache || excludedCaches.Contains(pivotCache.Uri))
+            {
+                continue;
+            }
+
+            var cacheUri = pivotCache.Uri;
             if (!indexedFields.TryGetValue(cacheUri, out var indexed))
             {
                 indexed = new HashSet<int>();
@@ -65,6 +98,11 @@ public static partial class OpenXmlWorkbookWriter
         foreach (var cache in workbook.Parts.Select(pair => pair.OpenXmlPart).OfType<PivotTableCacheDefinitionPart>())
         {
             token.ThrowIfCancellationRequested();
+            if (excludedCaches.Contains(cache.Uri))
+            {
+                continue;
+            }
+
             using var input = archive.GetEntry(cache.Uri.ToString().TrimStart('/'))!.Open();
             var definition = XDocument.Load(input);
             var worksheet = definition.Root!.Element(Ns + "cacheSource")?.Element(Ns + "worksheetSource") ?? throw new NotSupportedException("A pivot cache requires a worksheet source.");

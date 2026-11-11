@@ -145,6 +145,128 @@ public sealed class PivotMappingReviewTests
         foreach (var pair in before) Assert.Equal(pair.Value, after[pair.Key]);
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void Fixed_source_mapping_updates_pivots_while_preserving_printer_settings(bool recalculate)
+    {
+        using var input = Fixture();
+        byte[] printerBytes = [1, 2, 3, 4];
+        using (var package = SpreadsheetDocument.Open(input, true))
+        {
+            var sheet = package.WorkbookPart!.WorksheetParts.Single();
+            var printer = sheet.AddNewPart<SpreadsheetPrinterSettingsPart>();
+            using var bytes = new MemoryStream(printerBytes);
+            printer.FeedData(bytes);
+            sheet.Worksheet.Append(new S.PageSetup { Id = sheet.GetIdOfPart(printer), Scale = 75 });
+            var data = sheet.Worksheet.GetFirstChild<S.SheetData>()!;
+            data.Elements<S.Row>().Single(row => row.RowIndex?.Value == 2).Remove();
+            var cell = data.Descendants<S.Cell>().Single(cell => cell.CellReference == "A5");
+            cell.Parent!.ReplaceChild(SdkWorkbook.Text("A5", "**category"), cell);
+        }
+
+        input.Position = 0;
+        using var output = new MemoryStream();
+        var evidenceDirectory = Path.Combine(AppContext.BaseDirectory, "SampleOutputs", "PivotOpaque");
+        Directory.CreateDirectory(evidenceDirectory);
+        File.WriteAllBytes(Path.Combine(evidenceDirectory, "template.xlsx"), input.ToArray());
+        ExcelTemplateMapper.Map(input, output, new { category = "New" }, new Configuration.MappingOptions
+        {
+            FormulaCalculationMode = recalculate ? OpenXml.Calculation.FormulaCalculationMode.Recalculate : OpenXml.Calculation.FormulaCalculationMode.CachedValue,
+        });
+        output.Position = 0;
+        using var actual = SpreadsheetDocument.Open(output, false);
+        Assert.Empty(new OpenXmlValidator().Validate(actual).Select(error => error.Description));
+        var worksheet = actual.WorkbookPart!.WorksheetParts.Single();
+        Assert.Equal("New", worksheet.Worksheet.Descendants<S.Cell>().Single(cell => cell.CellReference == "A5").InnerText);
+        using var printerInput = worksheet.SpreadsheetPrinterSettingsParts.Single().GetStream();
+        using var printerCopy = new MemoryStream();
+        printerInput.CopyTo(printerCopy);
+        Assert.Equal(printerBytes, printerCopy.ToArray());
+        Assert.Equal(75u, worksheet.Worksheet.GetFirstChild<S.PageSetup>()!.Scale!.Value);
+        var cache = actual.WorkbookPart.PivotTableCacheDefinitionParts.Single();
+        File.WriteAllBytes(Path.Combine(evidenceDirectory, recalculate ? "mapped-recalculate.xlsx" : "mapped-cached.xlsx"), output.ToArray());
+        Assert.True(cache.PivotCacheDefinition.RefreshOnLoad?.Value);
+        Assert.True(cache.PivotCacheDefinition.Invalid?.Value);
+        var shared = cache.PivotCacheDefinition.CacheFields!.First().GetFirstChild<S.SharedItems>()!;
+        Assert.Equal(new[] { "1", "Two", "New" }, shared.Elements<S.StringItem>().Select(value => value.Val!.Value));
+        using var recordsInput = cache.PivotTableCacheRecordsPart!.GetStream();
+        var records = XDocument.Load(recordsInput).Root!.Elements().ToArray();
+        Assert.Equal("s:New", ResolveRecord(records[0], XElement.Parse(shared.OuterXml).Elements().ToArray()));
+        Assert.Equal("s:Two", ResolveRecord(records[1], XElement.Parse(shared.OuterXml).Elements().ToArray()));
+        foreach (var pivot in worksheet.PivotTableParts)
+        {
+            AssertSettings(pivot, cache);
+            Assert.Equal(new uint?[] { 1, 0, null, 2 }, pivot.PivotTableDefinition.PivotFields!.First().GetFirstChild<S.Items>()!.Elements<S.Item>().Select(item => item.Index?.Value));
+        }
+    }
+
+    [Fact]
+    public void Opaque_pivot_cache_does_not_prevent_an_independent_supported_cache_update()
+    {
+        using var input = Fixture();
+        string opaqueCachePath;
+        string opaqueRecordsPath;
+        string opaquePivotPath;
+        using (var package = SpreadsheetDocument.Open(input, true))
+        {
+            var workbook = package.WorkbookPart!;
+            var original = workbook.PivotTableCacheDefinitionParts.Single();
+            var opaque = workbook.AddNewPart<PivotTableCacheDefinitionPart>();
+            var records = opaque.AddNewPart<PivotTableCacheRecordsPart>();
+            records.PivotCacheRecords = (S.PivotCacheRecords)original.PivotTableCacheRecordsPart!.PivotCacheRecords.CloneNode(true);
+            opaque.PivotCacheDefinition = (S.PivotCacheDefinition)original.PivotCacheDefinition.CloneNode(true);
+            opaque.PivotCacheDefinition.Id = opaque.GetIdOfPart(records);
+            opaque.PivotCacheDefinition.Append(new S.PivotCacheDefinitionExtensionList(new S.PivotCacheDefinitionExtension
+            {
+                Uri = "opaque-cache", InnerXml = "<payload xmlns='urn:test'>keep-cache</payload>",
+            }));
+            workbook.Workbook.GetFirstChild<S.PivotCaches>()!.Append(new S.PivotCache { CacheId = 1, Id = workbook.GetIdOfPart(opaque) });
+            var pivot = workbook.WorksheetParts.Single().PivotTableParts.Last();
+            pivot.DeletePart(original);
+            pivot.AddPart(opaque);
+            pivot.PivotTableDefinition.CacheId = 1;
+            opaqueCachePath = opaque.Uri.ToString().TrimStart('/');
+            opaqueRecordsPath = records.Uri.ToString().TrimStart('/');
+            opaquePivotPath = pivot.Uri.ToString().TrimStart('/');
+        }
+
+        var before = PivotParts(input);
+        var rows = Enumerable.Range(1, 6).Select(row => new OutputRowOccurrence(row, row, 0, 0,
+            row == 5 ? new[] { new CellValueEdit(1, "New") } : Array.Empty<CellValueEdit>())).ToArray();
+        using var output = new MemoryStream();
+        OpenXmlWorkbookWriter.Write(input, output, new WorkbookEditPlan([new SheetEditPlan(1, 6, rows, [], [], false)]));
+        var after = PivotParts(output);
+        foreach (var path in new[] { opaqueCachePath, opaqueRecordsPath, opaquePivotPath }) Assert.Equal(before[path], after[path]);
+        output.Position = 0;
+        using var actual = SpreadsheetDocument.Open(output, false);
+        var supported = actual.WorkbookPart!.PivotTableCacheDefinitionParts.Single(cache => cache.Uri.ToString().TrimStart('/') != opaqueCachePath);
+        Assert.True(supported.PivotCacheDefinition.RefreshOnLoad?.Value);
+        Assert.Contains(supported.PivotCacheDefinition.CacheFields!.First().GetFirstChild<S.SharedItems>()!.Elements<S.StringItem>(), item => item.Val == "New");
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(2)]
+    public void Pivot_with_printer_settings_still_rejects_row_deletion_or_expansion(int count)
+    {
+        using var input = Fixture();
+        using (var package = SpreadsheetDocument.Open(input, true))
+        {
+            var sheet = package.WorkbookPart!.WorksheetParts.Single();
+            var printer = sheet.AddNewPart<SpreadsheetPrinterSettingsPart>();
+            using var bytes = new MemoryStream(new byte[] { 1, 2, 3, 4 });
+            printer.FeedData(bytes);
+            sheet.Worksheet.Append(new S.PageSetup { Id = sheet.GetIdOfPart(printer) });
+        }
+
+        input.Position = 0;
+        using var output = new MemoryStream();
+        output.Write([7, 8]);
+        Assert.Throws<NotSupportedException>(() => ExcelTemplateMapper.Map(input, output, new { items = Enumerable.Range(1, count).ToArray() }));
+        Assert.Equal(new byte[] { 7, 8 }, output.ToArray());
+    }
+
     private static string ResolveRecord(XElement record, XElement[] shared)
     {
         var index = (int)record.Elements().First().Attribute("v")!;

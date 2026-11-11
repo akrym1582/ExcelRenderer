@@ -6,6 +6,10 @@
 
 [English](README.md) | 日本語
 
+通常版・Core版とも、数値表示形式の8種類の名前付き色（負数区分の `[Red]` など）を反映します。`[ColorN]` のパレット色は未対応です。ピボットは保存済みのワークシートセルを描画し、集計表の自動生成は行いません。印刷対象のピボット範囲に非空の保存セルがない場合は、描画前に `PivotSavedValuesMissing` で失敗します。キャッシュに更新要求がある場合は `PivotRefreshRequired` を通知するため、最新の集計には表計算ソフトで更新・保存してください。Mappingの対応済みキャッシュ更新は、表示用集計セルの更新とは別です。
+
+セル幅の互換設定：通常版の `ColumnWidthMetricsMode.LibreOfficeCompatible`、Coreの `ReadOptions.UseLibreOfficeColumnWidths` で数字幅・列幅の小数を保持できます。両CLIで `--column-width-metrics libreoffice --column-width-mdw 8.8` を指定できます。数字幅は参照環境に合わせて指定してください。8.8pxは11ptのNoto Sans Mono用で、全フォント共通の値ではありません。既定の計算は維持します。[セル実寸の検証結果](docs/validation/cell-width-compatibility/README.md)を参照してください。
+
 ## 概要
 
 Excel ワークブックを読み込み、レイアウト計算を経て PDF・PostScript 文書またはページごとの PNG・SVG を生成する .NET ライブラリです。
@@ -482,7 +486,8 @@ var settings = new PageSettings(FitToPagesWide: 1)
 xlsx の個別列幅と既定列幅は、Excel の基準である固定96 DPIのraw値から変換します。PNGの出力DPIは
 シートの幾何には影響しません。Normalスタイルのstyle XFからフォントをたどり、themeのmajor/minor
 指定を解決したうえで、設定されたフォントマネージャーにより0～9を計測します。計測できない場合は
-最大数字幅7pxを使用し、変換診断へ`MaximumDigitWidthFallback`を記録します。
+互換最大数字幅を使用し、変換診断へ`MaximumDigitWidthFallback`を記録します。
+MS PゴシックはCalcのNoto Sans代替に近いサイズ依存値（11ptで8.4px）、その他は7pxです。
 
 離れた複数の印刷範囲は外接矩形へ結合せず、個別にページ化します。明示倍率では保存された行・列の
 手動改ページとページ順を反映し、Fitでは手動改ページを無視します。全領域を結合したページ番号を一度だけ
@@ -969,14 +974,77 @@ excelrenderer render input.xlsx --format pdf -o output.pdf --column-width-mdw 9
 excelrenderer pdf input.xlsx -o output.pdf --column-width-metrics legacy
 ```
 
-共通オプションは `--column-width-mdw`、`--layout-font`、`--layout-font-index`、
-`--column-width-metrics source|legacy` です。ライブラリの従来互換設定は
+通常版CLIのオプションは `--column-width-mdw`、`--layout-font`、`--layout-font-index`、
+通常版の `--column-width-metrics source|legacy|libreoffice` です。
+Coreは `--column-width-metrics source|libreoffice` と `--column-width-mdw` に対応します。
+レイアウト専用フォントのファイル・index指定とlegacyモードは通常版のみです。ライブラリの従来互換設定は
 `ColumnWidthMetrics = new() { Mode = ColumnWidthMetricsMode.RenderingFontLegacy }` です。
 Legacyと元フォントファイルは併用不可ですが、明示MDWはLegacyでも最優先です。
 各出力形式、範囲・連続描画、選択ページの事前計画は同じ読取設定と変換単位の決定を使います。
 Core単独APIの単一供給フォントという契約は変更しません。
+legacyモードは従来の結合セル改ページも維持します。sourceモードでは用紙より大きい結合を
+通常の行・列境界で分割し、結合の直前に余分なページができることを防ぎます。
 
-元フォントが見つからない場合は決定的な7px互換値を使用し、
+### LibreOffice互換の列幅計算を選ぶ場合
+
+**明示的に有効にするオプションです。** 指定しなければ既存の `SourceFont` の動作を維持します。
+Coreの `UseLibreOfficeColumnWidths` も既定は `false` です。
+
+| 選択 | 通常版API | Core API | 用途 |
+| --- | --- | --- | --- |
+| 既定 | `ColumnWidthMetricsMode.SourceFont` | `UseLibreOfficeColumnWidths = false` | 既存の元フォント・互換寸法による列幅計算 |
+| LibreOffice互換 | `ColumnWidthMetricsMode.LibreOfficeCompatible` | `UseLibreOfficeColumnWidths = true` | 数字幅と列幅の小数を保持する計算 |
+| 過去の出力への移行互換 | `ColumnWidthMetricsMode.RenderingFontLegacy` | なし | 通常版の従来の描画フォント経由の列幅計算 |
+
+通常版のライブラリ設定例です。
+
+```csharp
+var read = new ExcelRenderer.Excel.ExcelReadOptions
+{
+    ColumnWidthMetrics = new()
+    {
+        Mode = ExcelRenderer.Excel.ColumnWidthMetricsMode.LibreOfficeCompatible,
+        MaximumDigitWidthPixels96Dpi = 8.8,
+    },
+};
+// PdfExportOptions.ReadOptions または RenderRequest.ReadOptions に渡します。
+```
+
+Coreの設定例です。
+
+```csharp
+var options = new ExcelRenderer.Core.PdfExportOptions
+{
+    FontFilePath = "fonts/NotoSansJP-Regular.ttf",
+    ReadOptions = new()
+    {
+        UseLibreOfficeColumnWidths = true,
+        MaximumDigitWidthPixels96Dpi = 8.8,
+    },
+};
+```
+
+CLIでは次のように指定します。
+
+```bash
+excelrenderer render input.xlsx --format pdf -o main.pdf --font-file NotoSansJP-Regular.ttf --column-width-metrics libreoffice --column-width-mdw 8.8
+excelrenderer core input.xlsx -o core.pdf --font-file NotoSansJP-Regular.ttf --column-width-metrics libreoffice --column-width-mdw 8.8
+```
+
+**8.8は今回の参照環境でCalibriの代わりに使われたNoto Sans Mono・11pt用の例であり、
+全フォント共通の推奨値ではありません。** MDWの明示指定は任意で、指定すれば計測値より優先します。
+省略した場合は、通常版は解決されたレイアウトフォント、Coreは供給された通常書体を、
+ブックのNormalサイズで計測します。通常版では `SourceFontFile`／`--layout-font` で
+レイアウト専用フォントを選ぶこともできます。モードを有効にしてもLibreOffice側の
+フォント代替を自動再現するわけではないため、寸法を再現したい場合は参照先のフォント・MDWを指定してください。
+MDWの数値指定だけでは、小数の列幅計算へ切り替わりません。
+
+この設定でセル幅・折り返し・改ページ結果が変わることがあります。保存行高と印刷設定は維持し、
+ヘッダー位置などLibreOfficeの描画規則全体を再現する設定ではありません。
+[今回のセル実寸の比較結果](docs/validation/cell-width-compatibility/README.md)も参照してください。
+
+既定のSourceFontモードで元フォントが見つからない場合は決定的な互換値を使用し、
+MS PゴシックはCalcのNoto Sans代替に近いサイズ依存値（11ptで8.4px）、その他とNormal情報なしは7pxとします。
 `MaximumDigitWidthFallback` を警告します。StrictModeではこの警告により変換が失敗します。
 Excelとの完全一致は保証できません。
 元フォントまたはその実測MDWを指定してください。`MaximumDigitWidthResolved` は

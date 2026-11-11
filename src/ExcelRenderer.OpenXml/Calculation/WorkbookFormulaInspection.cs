@@ -22,13 +22,14 @@ internal static class WorkbookFormulaInspection
     /// <summary>Finds the first prohibited formula or uninspectable worksheet extension.</summary>
     /// <param name="input">Validated seekable XLSX input, left open.</param>
     /// <param name="token">Cooperative cancellation.</param>
+    /// <param name="preserveMetadata">Whether opaque extensions will be retained unchanged.</param>
     /// <returns>The source location, or null when all value definitions are static.</returns>
-    internal static FormulaLocation? Find(Stream input, CancellationToken token)
+    internal static FormulaLocation? Find(Stream input, CancellationToken token, bool preserveMetadata = false)
     {
         token.ThrowIfCancellationRequested();
         using var document = SpreadsheetDocument.Open(new LeaveOpenStream(input), false);
         var workbook = document.WorkbookPart!;
-        if (workbook.Workbook.ChildElements.Any(element => element.LocalName is "extLst" or "AlternateContent"))
+        if (!preserveMetadata && workbook.Workbook.ChildElements.Any(element => element.LocalName is "extLst" or "AlternateContent"))
         {
             return new FormulaLocation(string.Empty, string.Empty, string.Empty, "UnknownWorkbookExtension");
         }
@@ -88,6 +89,13 @@ internal static class WorkbookFormulaInspection
                 token.ThrowIfCancellationRequested();
                 if (xml.NodeType != XmlNodeType.Element)
                 {
+                    continue;
+                }
+
+                if (preserveMetadata && (xml.NamespaceURI != MainNamespace || xml.LocalName is "extLst" or "AlternateContent"))
+                {
+                    using var subtree = xml.ReadSubtree();
+                    System.Xml.Linq.XElement.Load(subtree);
                     continue;
                 }
 

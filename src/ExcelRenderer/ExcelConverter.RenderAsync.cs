@@ -54,12 +54,13 @@ public static partial class ExcelConverter
             var inputTimer = System.Diagnostics.Stopwatch.StartNew();
             using var source = await WorkbookInputPreparer.ReadAsync(input, request.Input, cancellationToken).ConfigureAwait(false);
             ConversionMetrics.Report("input.ms", inputTimer.Elapsed.TotalMilliseconds);
-            var fontManager = ConversionMetrics.Measure("fonts", () => new FontManager(request.FontOptions));
+            var fontManager = ConversionMetrics.Measure("fonts", () => new FontManager(request.FontOptions, request.OutputFormat == OutputFormat.Pdf));
             resources.TextMeasurer = request.TextMeasurer ?? new SkiaTextMeasurer(fontManager, cacheLayouts: true);
             resources.ResolvedTextLayout = new SkiaTextMeasurer(fontManager, cacheLayouts: true);
             resources.RasterTextLayout = request.OutputFormat is OutputFormat.Png or OutputFormat.Svg ? new SkiaCompatibilityTextLayout(fontManager) : null;
             var readOptions = request.ReadOptions with
             {
+                DeferPivotValidation = request.Selection.Pages is not null,
                 ColumnWidthMetricsCache = new CoreIntegration.FullFontMetrics.MetricCache(),
                 IgnoreFormulaPrintAreas = request.OutputFormat == OutputFormat.Markdown || request.ImageLayout == ImageLayoutMode.Continuous,
                 GetSelectedRange = name => request.Selection.Ranges?.FirstOrDefault(range => range.SheetName == name)?.Range is { } selected
@@ -210,6 +211,11 @@ public static partial class ExcelConverter
         catch (ConversionException)
         {
             throw;
+        }
+        catch (PdfFontResolutionException exception)
+        {
+            diagnostics.Add(new("PdfFontResolutionFailed", DiagnosticSeverity.Error, DiagnosticStage.Layout, exception.Message));
+            throw Failure("Conversion failed.", exception, diagnostics, artifacts);
         }
         catch (Exception exception)
         {

@@ -60,6 +60,9 @@ public sealed class WorksheetInfo
         ConditionalFormattingRules = conditionalFormattingRules ?? System.Array.Empty<ConditionalFormatting.ConditionalFormattingRuleInfo>();
     }
 
+    /// <summary>Gets saved pivot locations and cache refresh flags.</summary>
+    public IReadOnlyList<PivotTableInfo> PivotTables { get; internal set; } = System.Array.Empty<PivotTableInfo>();
+
     /// <summary>Gets a value indicating whether the first saved sheet view is right to left.</summary>
     public bool RightToLeft { get; }
 

@@ -569,14 +569,21 @@ tax and totals in the caller and supply the resulting values through C# objects
 or JSON and value placeholders. Static names accept only literal constants and finite A1
 reference unions; functions, arithmetic, dynamic/external/3D references, aliases and
 unknown grammar are rejected. Unknown workbook/worksheet/table extension payloads
-are rejected when the absence of value formulas cannot be established. Conditional
+are retained without interpretation for fixed-cell mapping. They remain rejected
+for repeated regions when the absence of value formulas cannot be established. Conditional
 formatting and validation formulas remain structural metadata. Their supported A1
 references move without evaluating formulas or rendering conditional styles.
 
 Merges entirely inside a repeated block are supported. Merges crossing an array
 boundary, merged marker rows, Excel tables intersecting repeated regions, and
 pictures intersecting repeated regions are rejected with template diagnostics.
-Unknown parts/extensions, macros, signatures and Strict packages are rejected.
+Fixed-cell mapping preserves unknown parts and extension metadata, including charts,
+controls, external links and printer settings, without executing or refreshing them.
+Opaque parts are copied byte for byte, and embedded extension XML is retained;
+worksheet values and supported formula caches
+are updated. This passthrough applies only when no rows are repeated, inserted or deleted.
+Repeated-row mapping retains its conservative capability checks. Macros, signatures,
+Strict packages and invalid relationships remain rejected.
 Use ordinary cell-based templates for repeated regions.
 
 Default-mode saving disables formula evaluation and preserves the original `calcPr`

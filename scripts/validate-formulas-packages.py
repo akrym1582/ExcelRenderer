@@ -9,7 +9,7 @@ import sys
 import zipfile
 from pathlib import Path
 import subprocess
-from package_distribution import check_packages
+from package_distribution import check_packages, skia_version
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--packages', required=True, type=Path)
@@ -129,6 +129,23 @@ foreach (var backend in new[] { new ExcelRenderer.Rendering.RenderRequest().PdfB
     if(pdfOutput.Length==0 || !System.Text.Encoding.ASCII.GetString(pdfOutput.ToArray()).StartsWith("%PDF"))
         throw new Exception("Package-only PDF backend failure: " + backend);
 }
+foreach (var format in new[] { ExcelRenderer.Rendering.OutputFormat.Png, ExcelRenderer.Rendering.OutputFormat.Svg }) {
+    input.Position=0;
+    var directory=Path.Combine("rendered", format.ToString());
+    await ExcelRenderer.ExcelConverter.RenderAsync(input,new(){
+        OutputFormat=format,
+        FontOptions=new(){FontFiles=new[]{args[1]},AllowSystemFonts=false,UseFontPack=false}},
+        new ExcelRenderer.Rendering.DirectoryOutputSink(directory));
+    var files=Directory.GetFiles(directory, "*", SearchOption.AllDirectories);
+    if(files.Length==0 || files.Any(file => new FileInfo(file).Length==0))
+        throw new Exception("Package-only rendering failure: " + format);
+    foreach(var file in files) {
+        if(format==ExcelRenderer.Rendering.OutputFormat.Png && !File.ReadAllBytes(file).Take(8).SequenceEqual(new byte[]{137,80,78,71,13,10,26,10}))
+            throw new Exception("Invalid PNG: " + file);
+        if(format==ExcelRenderer.Rendering.OutputFormat.Svg && !File.ReadAllText(file).Contains("<svg"))
+            throw new Exception("Invalid SVG: " + file);
+    }
+}
 ''')}
 programs['combined'] = (['ExcelRenderer', 'ExcelRenderer.Mapping'], programs['main-core'][1] + """
 input.Position = 0;
@@ -212,6 +229,8 @@ font=root/'third_party/NotoSansJP/NotoSansJP-Regular.ttf'
 for name,(refs,code) in programs.items():
     directory=work/name;directory.mkdir(exist_ok=True)
     references=''.join(f'<PackageReference Include="{ref}" Version="{versions[ref]}"/>' for ref in refs)
+    if 'ExcelRenderer' in refs:
+        references += f'<PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="{skia_version()}"/>'
     (directory/'consumer.csproj').write_text(f'<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable></PropertyGroup><ItemGroup>{references}</ItemGroup></Project>', encoding='utf-8')
     (directory/'Program.cs').write_text(code+'\nConsole.WriteLine("'+name+' passed");\n', encoding='utf-8')
     run('dotnet','restore','--configfile',config,cwd=directory)

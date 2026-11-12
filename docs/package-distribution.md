@@ -102,6 +102,23 @@ NuGet 公開対象は本体・Mapping・Tool・Fonts の4つだけです。Core�
 
 ## PDF fonts and native assets
 
+The main library and Core reference managed SkiaSharp only. Linux applications
+must explicitly reference `SkiaSharp.NativeAssets.Linux` at the same version as
+SkiaSharp (currently 4.151.0); native initialization remains necessary for PDF
+generation and text measurement. `ExcelRenderer.Tool` declares and bundles the
+Linux native assets so CLI users need no extra NuGet installation. Fontconfig
+remains an OS prerequisite for the standard Linux assets. The optional Fonts
+package and the four-package publication contract are unchanged.
+
+Rendering tests, samples and tools declare their own Linux native-assets
+references. Generated Core/rendering consumers do the same; Reader/Mapping-only
+consumers stay free of Skia. Do not condition references on the build host OS,
+because applications can be published for Linux from another OS. When changing
+SkiaSharp, update these native-assets references, lock files and the installation
+instructions together. Package audits require the main package to have no Linux
+native-assets dependency or binary, and the CLI to carry the matching package
+and Linux binary. An isolated main-only restore verifies the transitive graph.
+
 Core contains a BCL-only static TrueType subsetter and TTC/OTC face extractor.
 Normal restore/build/test/pack needs no custom native subset adapter, CMake/C++
 compiler or HarfBuzz source acquisition. SkiaSharp native assets remain required

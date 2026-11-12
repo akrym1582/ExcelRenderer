@@ -101,11 +101,43 @@ dotnet add package ExcelRenderer
 dotnet add package ExcelRenderer.Fonts  # optional Japanese fonts
 ```
 
-`ExcelRenderer` is sufficient when your application provides its own fonts.
+If your application provides its own fonts, you can omit `ExcelRenderer.Fonts`.
 `ExcelRenderer.Fonts` adds only the bundled font resources; it is not required
 to use the library API. The package includes Noto Sans JP Regular, IPAmj Mincho,
 and Noto Color Emoji under their respective licenses. See
 [third-party notices](THIRD-PARTY-NOTICES.md) for redistribution requirements.
+
+#### Additional step for Linux library applications
+
+**When your application runs on Linux, add the SkiaSharp Linux native assets to
+the application project as well.** The library and its bundled Core assembly
+reference managed `SkiaSharp`, but no longer bring in `SkiaSharp.NativeAssets.Linux`
+automatically. This applies to PDF, PostScript, PNG and SVG rendering, including
+PDF-only Core usage; PDF generation and text measurement still need native Skia.
+
+```bash
+# Linux application: run after adding ExcelRenderer
+dotnet add package SkiaSharp.NativeAssets.Linux --version 4.151.0
+```
+
+This source revision uses **SkiaSharp 4.151.0**. Use the same version for the
+native-assets package. When upgrading ExcelRenderer, check its resolved SkiaSharp
+version (`dotnet list package --include-transitive`) and update native assets
+together if that version changes. Updating only native assets can produce an
+incompatible managed/native combination. Existing Linux applications upgrading
+to this source revision must add this explicit reference too.
+
+The standard Linux package uses Fontconfig; install `libfontconfig1` on
+Debian/Ubuntu (for example, `apt-get install libfontconfig1`), including in minimal
+container images. Applications choosing `SkiaSharp.NativeAssets.Linux.NoDependencies`
+should use it **instead of** the standard Linux package, match the SkiaSharp
+version, and verify their font discovery and rendering on the target Linux system.
+The Fonts package supplies font files, not native Skia libraries.
+
+**CLI users can skip this step:** `ExcelRenderer.Tool` bundles Linux native assets
+and fonts. The operating system's native-library prerequisites still apply.
+Mapping, formula evaluation and low-level XLSX APIs without rendering do not
+require this additional package.
 
 ### Template mapping library (NuGet)
 
@@ -168,7 +200,8 @@ excelrenderer --help
 ```
 
 The package name is `ExcelRenderer.Tool`; the executable command is `excelrenderer`.
-The tool includes the rendering, mapping and bundled font libraries. You do not
+The tool includes the rendering, mapping, bundled font libraries and SkiaSharp
+Linux native assets. You do not
 need to install their NuGet packages separately to use the CLI. These commands
 assume NuGet.org is enabled in your NuGet sources.
 

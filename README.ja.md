@@ -86,11 +86,41 @@ dotnet add package ExcelRenderer
 dotnet add package ExcelRenderer.Fonts  # 日本語フォントが必要な場合
 ```
 
-`ExcelRenderer` はアプリケーション側でフォントを用意する場合、単独で使用できます。
+アプリケーション側でフォントを用意する場合、`ExcelRenderer.Fonts` は省略できます。
 `ExcelRenderer.Fonts` は通常描画用 Noto Sans JP Regular TTF、IVS 用 IPAmj 明朝、Noto Color Emoji の
 フォントリソースだけを追加する任意パッケージであり、ライブラリ API の利用には
 必須ではありません。フォントを再配布する場合は、それぞれのライセンスに従って
 ください。詳細は[サードパーティ通知](THIRD-PARTY-NOTICES.md)を参照してください。
+
+#### Linux でライブラリを使う場合の追加手順
+
+**Linux 上でアプリケーションを動かす場合は、アプリ側のプロジェクトに
+SkiaSharp の Linux native assets も追加してください。** 本体と同梱の Core は
+管理 DLL の `SkiaSharp` を参照しますが、`SkiaSharp.NativeAssets.Linux` は
+自動では追加しません。PDF・PostScript・PNG・SVG の描画が対象です。
+PDF 専用の Core も、PDF 生成や文字計測にネイティブの Skia が必要です。
+
+```bash
+# Linux のアプリ側で、ExcelRenderer の追加後に実行
+dotnet add package SkiaSharp.NativeAssets.Linux --version 4.151.0
+```
+
+このソース版の **SkiaSharp は 4.151.0** です。native assets も同じバージョンに
+揃えてください。ExcelRenderer を更新するときは、解決された SkiaSharp のバージョンを
+`dotnet list package --include-transitive` で確認し、変更されていれば native assets も
+合わせて更新します。native assets だけを更新すると、管理 DLL と互換性のない組み合わせに
+なることがあります。既存の Linux アプリも、このソース版への更新時に明示参照の追加が必要です。
+
+通常の Linux パッケージは Fontconfig を利用します。Debian／Ubuntu では
+`apt-get install libfontconfig1` などで導入してください。最小構成のコンテナーも同様です。
+`SkiaSharp.NativeAssets.Linux.NoDependencies` を選ぶ場合は、通常の Linux パッケージの
+**代わりに**追加して SkiaSharp とバージョンを揃え、対象 Linux 環境でフォント探索と
+描画を検証してください。Fonts パッケージはフォントファイルを提供するもので、
+ネイティブの Skia ライブラリは含みません。
+
+**CLI の利用者はこの追加手順が不要です。** `ExcelRenderer.Tool` に Linux native assets と
+フォントを同梱します。ただし、OS 側のネイティブライブラリの前提条件は同じです。
+描画しない Mapping・数式評価・低レベル XLSX API の利用にも、この追加パッケージは不要です。
 
 ### テンプレートマッピングライブラリ（NuGet）
 
@@ -153,7 +183,7 @@ excelrenderer --help
 ```
 
 パッケージ名は `ExcelRenderer.Tool`、実行コマンド名は `excelrenderer` です。
-CLI は描画・マッピング・同梱フォントのライブラリを含むため、各 NuGet パッケージを
+CLI は描画・マッピング・同梱フォントのライブラリと SkiaSharp の Linux native assets を含むため、各 NuGet パッケージを
 個別にインストールする必要はありません。これらのコマンドは、NuGet の
 パッケージソースで NuGet.org が有効になっていることを前提とします。
 

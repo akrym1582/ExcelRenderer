@@ -21,4 +21,7 @@
     <ProjectReference Include="../../src/ExcelRenderer.Core/ExcelRenderer.Core.csproj" />
     <ProjectReference Include="../../src/ExcelRenderer.OpenXml.Reader/ExcelRenderer.OpenXml.Reader.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="4.151.0" />
+  </ItemGroup>
 </Project>

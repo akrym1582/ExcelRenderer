@@ -2,6 +2,12 @@
   "version": 1,
   "dependencies": {
     "net10.0": {
+      "SkiaSharp.NativeAssets.Linux": {
+        "type": "Direct",
+        "requested": "[4.151.0, )",
+        "resolved": "4.151.0",
+        "contentHash": "q4UgnZB9LGk4a9UqtZQ2d27jFm+nnS/yiy4m/C3R32glihjr8wapLkX8ZHKVXkb/c9Qr+jyxhGQvrAJ7nQCwaQ=="
+      },
       "StyleCop.Analyzers": {
         "type": "Direct",
         "requested": "[1.2.0-beta.556, )",
@@ -41,11 +47,6 @@
           "SkiaSharp.NativeAssets.macOS": "4.151.0"
         }
       },
-      "SkiaSharp.NativeAssets.Linux": {
-        "type": "Transitive",
-        "resolved": "4.151.0",
-        "contentHash": "q4UgnZB9LGk4a9UqtZQ2d27jFm+nnS/yiy4m/C3R32glihjr8wapLkX8ZHKVXkb/c9Qr+jyxhGQvrAJ7nQCwaQ=="
-      },
       "SkiaSharp.NativeAssets.macOS": {
         "type": "Transitive",
         "resolved": "4.151.0",
@@ -71,8 +72,7 @@
         "dependencies": {
           "DocumentFormat.OpenXml": "[3.3.0, )",
           "ExcelNumberFormat": "[1.1.0, )",
-          "SkiaSharp": "[4.151.0, )",
-          "SkiaSharp.NativeAssets.Linux": "[4.151.0, )"
+          "SkiaSharp": "[4.151.0, )"
         }
       },
       "excelrenderer.formulas": {

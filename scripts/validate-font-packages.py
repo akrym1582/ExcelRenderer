@@ -9,7 +9,7 @@ import tempfile
 import xml.etree.ElementTree as ET
 import zipfile
 
-from package_distribution import ROOT, check_packages
+from package_distribution import ROOT, check_packages, skia_version
 
 
 def main():
@@ -59,6 +59,8 @@ def main():
         subprocess.run(list(map(str, command)), cwd=work, env=env, check=True)
 
     programs = {
+        'without-native-assets': '''Console.WriteLine(typeof(ExcelRenderer.ExcelConverter).Assembly.GetName().Name);
+''',
         'without-fonts': '''using ExcelRenderer.Fonts;
 var manager = new FontManager(new FontOptions { AllowSystemFonts = false, FallbackFamilies = [] });
 try { manager.Resolve(new FontRequest("Noto Sans JP")); throw new Exception("Unexpected bundled font"); }
@@ -83,6 +85,8 @@ foreach (var family in new[] { "Noto Sans JP", "Noto Color Emoji", "IPAmjMincho"
             ET.SubElement(properties, key).text = value
         references = ET.SubElement(project, 'ItemGroup')
         ET.SubElement(references, 'PackageReference', Include='ExcelRenderer', Version=version)
+        if name != 'without-native-assets':
+            ET.SubElement(references, 'PackageReference', Include='SkiaSharp.NativeAssets.Linux', Version=skia_version())
         if name == 'with-fonts':
             ET.SubElement(references, 'PackageReference', Include='ExcelRenderer.Fonts', Version=version)
         path = directory / 'Consumer.csproj'
@@ -90,6 +94,11 @@ foreach (var family in new[] { "Noto Sans JP", "Noto Color Emoji", "IPAmjMincho"
         (directory / 'Program.cs').write_text(program)
         run('dotnet', 'restore', path, '--configfile', config_path)
         run('dotnet', 'run', '--project', path, '-c', 'Release', '--no-restore')
+        if name == 'without-native-assets':
+            for graph in [directory / 'obj/project.assets.json', directory / 'bin/Release/net10.0/Consumer.deps.json']:
+                libraries = json.loads(graph.read_text())['libraries']
+                assert not any(key.startswith('SkiaSharp.NativeAssets.Linux') for key in libraries), (graph, libraries)
+            assert not list((directory / 'bin').rglob('libSkiaSharp.so')), 'Main-only consumer must not receive Linux native assets'
     run('dotnet', 'tool', 'install', 'ExcelRenderer.Tool', '--version', version,
         '--tool-path', work / 'tool', '--configfile', config_path)
     run(work / 'tool' / ('excelrenderer.exe' if os.name == 'nt' else 'excelrenderer'), '--help')

@@ -1,0 +1,18 @@
+{
+  "ExcelRenderer": {
+    "before": "artifacts/rendering-review/before/ExcelRenderer.dll",
+    "after": "artifacts/rendering-review/after/ExcelRenderer.dll",
+    "removed": [],
+    "added": [],
+    "beforeCount": 1894,
+    "afterCount": 1894
+  },
+  "ExcelRenderer.Core": {
+    "before": "artifacts/rendering-review/before/ExcelRenderer.Core.dll",
+    "after": "artifacts/rendering-review/after/ExcelRenderer.Core.dll",
+    "removed": [],
+    "added": [],
+    "beforeCount": 68,
+    "afterCount": 68
+  }
+}

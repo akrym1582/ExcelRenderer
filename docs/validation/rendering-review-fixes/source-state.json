@@ -1,0 +1,30 @@
+{
+  "baseCommit": "df74eb0523e712db96e918c3038abb077590365a",
+  "historicalBaseCommit": "a71e21d9f8a612c8747918383eced1742b385ada",
+  "branch": "fix/rendering-review",
+  "stages": {
+    "before": "unchanged base",
+    "clock-only": "base + clock-only.patch",
+    "current": "base + clock-only.patch + preflight.patch",
+    "after": "base + all three patches"
+  },
+  "sources": {
+    "src/ExcelRenderer.Core/Drawing/DrawCommandGeneratorPass.cs": "7dd67a8652313c786495f8707d9071d1d455778693aeb7286ab880b8f24d5b04",
+    "src/ExcelRenderer.Core/ExcelConverter.cs": "250e120654db0d21f2bf67f6c4e688b07cdeb2fd3f51c19068eeb9bd4c4e332c",
+    "src/ExcelRenderer.Core/Extensibility/ICoreDrawingExtension.cs": "5ce42f644cc021f036d5dc40438fe8a981dbb1fe1f4763e8b152d4c5ddaa46dd",
+    "src/ExcelRenderer.Core/Layout/CellBoundsPass.cs": "1c91c9d7b439dba996a7b78ed89d65879b1354c8188de32501a328ba73bbd0e7",
+    "src/ExcelRenderer.Core/Layout/PageBuildPurpose.cs": "2e8a6254449e7ab2c1aefae0b8675b35fde6c0373d4fdfd9c24c795fe1901f8c",
+    "src/ExcelRenderer.Core/Layout/PaginationPass.cs": "8d8f84183e254200c7da2f782a6b13912782a1c2a6de85ae8e0bef71ed81b095",
+    "src/ExcelRenderer.Core/Layout/RenderPage.cs": "e274d37dd7b71027384f4f95d247c76fc1f277ab8150502beff5f2e2d971b710",
+    "src/ExcelRenderer.Core/Layout/RenderPageBuilder.cs": "60772494045f5682e602a4cc7cfe48d588a76fd571e084ecce4af3521b1c08f1",
+    "src/ExcelRenderer.Core/Layout/ReportLayoutContext.cs": "7399131c8241f8bf2d3f65076b63cb20ad0d79f134be9d3f8191b415cffaf51f",
+    "src/ExcelRenderer.Core/Layout/SheetLayoutPlan.cs": "b02772742fd05571ab2fb9407e3861d3d03863005f05c93eb220b6ee2f94cfcf",
+    "src/ExcelRenderer.Core/Rendering/BoundedClockCache.cs": "b2d7884d97b81af1632b2e88afd8c37498f3111b2072968e8baf249e5df741be",
+    "src/ExcelRenderer/CoreIntegration/FullDrawingExtension.cs": "2d8e1cfda77c22a4c99c75ffaa0e405ba50c0d9574a49988fdbb1c4a4e080806",
+    "src/ExcelRenderer/ExcelConverter.RenderAsync.cs": "90359d83897a87d2ba977003152e719f84fd79088f203c538d78ff70bb3c6156",
+    "src/ExcelRenderer/Layout/SheetLayoutPlan.cs": "9e84dc7b08dc2222c6d92492527ed29b7cbce78fda5bfa7faf4127b35d238641",
+    "src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.Outline.cs": "598fe698a22c2d94da77fcca8eb668d2058b062c33133c05095c938845256fe0",
+    "src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.RichText.cs": "56e4e77c9fa19351f5da29139f41847ccc7e871fd885ae7555e4fd5b0a305fc1",
+    "src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.cs": "2811c736fb4026a3da2b432d6a2297466a64836c58a4358b6463d1dfa99d3626"
+  }
+}

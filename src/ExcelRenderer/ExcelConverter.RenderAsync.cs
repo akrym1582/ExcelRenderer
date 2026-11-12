@@ -55,8 +55,9 @@ public static partial class ExcelConverter
             using var source = await WorkbookInputPreparer.ReadAsync(input, request.Input, cancellationToken).ConfigureAwait(false);
             ConversionMetrics.Report("input.ms", inputTimer.Elapsed.TotalMilliseconds);
             var fontManager = ConversionMetrics.Measure("fonts", () => new FontManager(request.FontOptions, request.OutputFormat == OutputFormat.Pdf));
-            resources.TextMeasurer = request.TextMeasurer ?? new SkiaTextMeasurer(fontManager, cacheLayouts: true);
-            resources.ResolvedTextLayout = new SkiaTextMeasurer(fontManager, cacheLayouts: true);
+            var resolvedLayout = new SkiaTextMeasurer(fontManager, cacheLayouts: true);
+            resources.TextMeasurer = request.TextMeasurer ?? resolvedLayout;
+            resources.ResolvedTextLayout = resolvedLayout;
             resources.RasterTextLayout = request.OutputFormat is OutputFormat.Png or OutputFormat.Svg ? new SkiaCompatibilityTextLayout(fontManager) : null;
             var readOptions = request.ReadOptions with
             {
@@ -341,7 +342,7 @@ public static partial class ExcelConverter
             return SheetPage.CreateContinuous(selected.Sheet, descriptor, plan);
         }).ToArray();
 
-    private static PageRenderPayload BuildPage(SheetPage page, FontManager fonts, CancellationToken token, bool textPreflight = false)
+    private static PageRenderPayload BuildPage(SheetPage page, FontManager fonts, CancellationToken token, Core.Layout.PageBuildPurpose purpose = Core.Layout.PageBuildPurpose.Render)
     {
         var measurer = RenderResourceSession.Current?.TextMeasurer ?? new SkiaTextMeasurer(fonts, cacheLayouts: true);
         if (page.CanvasPlan is { } canvas)
@@ -350,7 +351,7 @@ public static partial class ExcelConverter
         }
 
         var built = page.Plan is { } plan
-            ? plan.BuildCore(page.PlanIndex, page.Descriptor.SourcePageNumber, page.SheetPageCount, measurer, token, textPreflight)
+            ? plan.BuildCore(page.PlanIndex, page.Descriptor.SourcePageNumber, page.SheetPageCount, measurer, token, purpose)
             : new Core.Layout.RenderPage(1, []);
         var headers = PaginationPass.GetHeaderFooterTexts(page.Sheet, page.Descriptor.SourcePageNumber, page.SheetPageCount, RenderResourceSession.Current?.HeaderFooterTimestamp);
         built = built with
@@ -359,13 +360,11 @@ public static partial class ExcelConverter
         };
         var generator = new Core.Drawing.DrawCommandGeneratorPass();
         var extension = new CoreIntegration.FullDrawingExtension();
-        IEnumerable<Core.Drawing.DrawCommand> generated = built.IsTextPreflight
-            ? generator.GenerateText(built, null, extension, includeHeaderFooter: false)
-                .Concat(CoreIntegration.FullDrawingExtension.CreateShapeTextCommands(built))
-                .Concat(Core.Drawing.DrawCommandGeneratorPass.GenerateHeaderFooter(built, null))
+        IEnumerable<Core.Drawing.DrawCommand> generated = built.Purpose == Core.Layout.PageBuildPurpose.Preflight
+            ? generator.GenerateText(built, null, extension)
             : generator.GeneratePage(built, null, extension);
         var commands = generated.Select(CoreIntegration.CoreCommandAdapter.CreatePublicProjection()).ToArray();
-        ConversionMetrics.Report(built.IsTextPreflight ? "mainTextPreflightBuilds" : "mainFullPageBuilds", 1);
+        ConversionMetrics.Report(built.Purpose == Core.Layout.PageBuildPurpose.Preflight ? "mainTextPreflightBuilds" : "mainFullPageBuilds", 1);
         ConversionMetrics.Report("renderCells", built.Cells.Count);
         ConversionMetrics.Report("commands", commands.Length);
         return new(commands, (built.ExtensionData as CoreIntegration.FullPageData)?.Regions ?? []);
@@ -377,10 +376,11 @@ public static partial class ExcelConverter
         ConversionMetrics.Report("pagePayloadActive", 1);
         try
         {
-            var textPreflight = request.OutputFormat == OutputFormat.Pdf && !request.Trim.Enabled &&
+            var purpose = request.OutputFormat == OutputFormat.Pdf && !request.Trim.Enabled &&
                 page.Sheet.RequestedRange is null && !request.DiagnosticOptions.EnableLayoutWarnings &&
-                !request.DiagnosticOptions.DetectUnsupportedFeatures && Pdf.PdfRenderObserver.Current is null;
-            var payload = ConversionMetrics.Measure("pageBuild", () => BuildPage(page, fonts, token, textPreflight));
+                !request.DiagnosticOptions.DetectUnsupportedFeatures && Pdf.PdfRenderObserver.Current is null
+                ? Core.Layout.PageBuildPurpose.Preflight : Core.Layout.PageBuildPurpose.Render;
+            var payload = ConversionMetrics.Measure("pageBuild", () => BuildPage(page, fonts, token, purpose));
             payload = payload with { Commands = FinalizeCommands(payload.Commands, fonts, token) };
             if (request.DiagnosticOptions.EnableLayoutWarnings || request.DiagnosticOptions.DetectUnsupportedFeatures)
             {

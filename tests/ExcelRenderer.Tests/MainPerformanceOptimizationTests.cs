@@ -14,6 +14,109 @@ namespace ExcelRenderer.Tests;
 
 public sealed class MainPerformanceOptimizationTests
 {
+    [Fact]
+    public void Unwrapped_layouts_use_one_cache_while_wrapped_fragments_keep_line_reuse()
+    {
+        using var resources = new ConversionFontResources();
+        var measurer = new SkiaTextMeasurer(Manager(), true);
+        var metrics = new Dictionary<string, double>();
+        ConversionMetrics.Observer = (name, value) => metrics[name] = metrics.GetValueOrDefault(name) + value;
+        try
+        {
+            var first = measurer.Layout("heading", new(), 80, false);
+            Assert.Same(first, measurer.Layout("heading", new(), 180, false));
+            Assert.Equal(1, metrics["textLayoutCacheHits"]);
+            Assert.False(metrics.ContainsKey("textLineCacheMisses"));
+            measurer.Layout("heading\na", new(), 180, true);
+            measurer.Layout("heading\nb", new(), 180, true);
+            Assert.True(metrics["textLineCacheHits"] > 0);
+        }
+        finally
+        {
+            ConversionMetrics.Observer = null;
+        }
+    }
+
+    [Theory]
+    [InlineData(1)]
+    [InlineData(2050)]
+    public void Explicit_lines_reuse_shared_fragments_without_automatic_wrapping(int uniqueLineLength)
+    {
+        using var resources = new ConversionFontResources();
+        var measurer = new SkiaTextMeasurer(Manager(), true);
+        var lineHits = 0d;
+        ConversionMetrics.Observer = (name, value) =>
+        {
+            if (name == "textLineCacheHits")
+            {
+                lineHits += value;
+            }
+        };
+
+        try
+        {
+            var first = measurer.Layout("heading\r\n" + new string('a', uniqueLineLength), new(), 180, false);
+            var second = measurer.Layout("heading\n" + new string('b', uniqueLineLength), new(), 180, false);
+            Assert.Equal(1, lineHits);
+            Assert.Same(first.Lines[0], second.Lines[0]);
+            Assert.True(second.Lines[0].ExplicitBreak);
+        }
+        finally
+        {
+            ConversionMetrics.Observer = null;
+        }
+    }
+
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    public void Page_purpose_preserves_regions_and_collects_cell_shape_header_text_in_order(bool decorated, bool shapeOnly)
+    {
+        using var resources = new ConversionFontResources();
+        var measurer = new SkiaTextMeasurer(Manager(), true);
+        var style = CellStyle.Default with { Border = new(Bottom: new(1)) };
+        var cells = new Dictionary<CellAddress, ReportCell>
+        {
+            [new(0, 0)] = new(shapeOnly ? null : "body", style)
+            {
+                ConditionalVisual = decorated ? new(null, null) : null,
+            },
+            [new(1, 0)] = new(null, style),
+        };
+        ReportShape Shape(string? text, int z) => new(new(0, 0), 0, 0, 50, 12, ShapeKind.Rectangle, new(null, null),
+            text is null ? null : new(text, new(), HorizontalAlignment.Left, VerticalAlignment.Top, false, 0, 0, 0, 0), 0, z);
+        var sheet = new ReportSheet("test", cells, new Dictionary<int, ColumnDefinition>(), new Dictionary<int, RowDefinition>(), [],
+            new(200, 200, 10, 10, 10, 10), HeaderFooter: new(new(Center: "header"), new(Center: "footer")),
+            Shapes: [Shape("last", 30), Shape(null, 20), Shape("first", 10)]);
+        var plan = Assert.Single(new ReportLayoutEngine(measurer).Plan(sheet));
+        var full = plan.BuildCore(0, 1, 1, measurer, default);
+        var preflight = plan.BuildCore(0, 1, 1, measurer, default, Core.Layout.PageBuildPurpose.Preflight);
+        Assert.Equal(decorated || shapeOnly ? Core.Layout.PageBuildPurpose.Render : Core.Layout.PageBuildPurpose.Preflight, preflight.Purpose);
+        Assert.Equal(((CoreIntegration.FullPageData)full.ExtensionData!).Regions, ((CoreIntegration.FullPageData)preflight.ExtensionData!).Regions);
+        if (!decorated && !shapeOnly)
+        {
+            Assert.Single(preflight.Cells);
+            Assert.Equal(2, full.Cells.Count);
+            Assert.Empty(preflight.BorderOnlyCells);
+        }
+
+        full = full with { HeaderFooterTexts = Core.Layout.PaginationPass.GetHeaderFooterTexts(CoreIntegration.CoreModelAdapter.ToCore(sheet), 1, 1) };
+        preflight = preflight with { HeaderFooterTexts = full.HeaderFooterTexts };
+        var generator = new Core.Drawing.DrawCommandGeneratorPass();
+        var extension = new CoreIntegration.FullDrawingExtension();
+        var projected = generator.GeneratePage(full, null, extension).Select(CoreIntegration.CoreCommandAdapter.CreatePublicProjection()).ToArray();
+        var collected = generator.GenerateText(preflight, null, extension).Select(CoreIntegration.CoreCommandAdapter.CreatePublicProjection()).ToArray();
+        static IEnumerable<string> Texts(IEnumerable<DrawCommand> commands) => commands.Select(command => command switch
+        {
+            DrawTextCommand text => text.Text,
+            DrawShapeCommand shape => shape.Shape.Text?.Text,
+            _ => null,
+        }).OfType<string>();
+        Assert.Equal(Texts(projected), Texts(collected));
+        Assert.Equal(shapeOnly ? new[] { "first", "last", "header", "footer" } : new[] { "body", "first", "last", "header", "footer" }, Texts(collected));
+    }
+
     [Theory]
     [InlineData(false, 80)]
     [InlineData(true, 0)]

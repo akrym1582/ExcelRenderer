@@ -23,8 +23,7 @@ jobs:
 
       - name: Set up fixed fonts for public renderer smoke tests
         run: |
-          sudo apt-get update
-          sudo apt-get install -y fontconfig ghostscript
+          bash scripts/install-ci-apt-packages.sh fontconfig ghostscript
           gs --version
           source scripts/test-fonts.sh
           echo "FONTCONFIG_FILE=$FONTCONFIG_FILE" >> "$GITHUB_ENV"
@@ -86,8 +85,7 @@ jobs:
 
       - name: Set up independent PDF validation tools
         run: |
-          sudo apt-get update
-          sudo apt-get install -y poppler-utils
+          bash scripts/install-ci-apt-packages.sh poppler-utils
           python -m pip install PyMuPDF==1.26.6 numpy==2.3.5 Pillow==12.3.0 fonttools==4.61.1 scipy==1.17.0
 
       - name: Compare finalized commands and public API fixtures

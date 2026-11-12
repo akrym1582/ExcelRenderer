@@ -119,7 +119,7 @@ public static class ExcelConverter
                             var pageNumber = ++number;
                             var page = ConversionMetrics.Measure(
                                 pass == 0 ? "fontCollectionPageBuild" : "drawingPageBuild",
-                                () => plan.Build(index, pageNumber, sheetCount, measurer, cancellationToken, collectTextOnly: pass == 0)) with
+                                () => plan.Build(index, pageNumber, sheetCount, measurer, cancellationToken, pass == 0 ? PageBuildPurpose.FontCollection : PageBuildPurpose.Render)) with
                             {
                                 HeaderFooterTexts = PaginationPass.GetHeaderFooterTexts(entry.Sheet, ++sheetNumber, sheetCount, timestamp),
                             };

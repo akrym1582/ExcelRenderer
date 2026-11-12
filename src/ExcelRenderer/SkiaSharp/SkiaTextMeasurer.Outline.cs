@@ -19,12 +19,20 @@ public sealed partial class SkiaTextMeasurer
     private IEnumerable<TextLayoutLine> CreateLines(string text, FontStyle font, FontRequest request, double width, bool wrap)
     {
         // Finalize unwrapped lines directly; custom resolvers retain their complete-line input.
-        if (!wrap || width <= 0 || _fontManager is not FontManager || !OutlineParagraph.IsValidUtf16(text))
+        var unwrapped = !wrap || width <= 0;
+        if (unwrapped || _fontManager is not FontManager || !OutlineParagraph.IsValidUtf16(text))
         {
+            var reuseLines = !unwrapped;
             foreach (var line in TextLineBreaker.Break(text, width, wrap, value => MeasureWidth(value, font, request)))
             {
                 ConversionFontResources.Current!.Token.ThrowIfCancellationRequested();
-                yield return CreateLine(line.Text, line.ExplicitBreak, font, request);
+
+                // The first explicit break identifies a multiline layout. Keep
+                // reusing its fragments through the final line.
+                reuseLines |= line.ExplicitBreak;
+                yield return reuseLines
+                    ? CreateCachedLine(line.Text, line.ExplicitBreak, font, request)
+                    : CreateLine(line.Text, line.ExplicitBreak, font, request);
             }
 
             yield break;
@@ -48,11 +56,11 @@ public sealed partial class SkiaTextMeasurer
                     var previous = lines.Current;
                     while (lines.MoveNext())
                     {
-                        yield return CreateLine(previous.Text, false, font, request);
+                        yield return CreateCachedLine(previous.Text, false, font, request);
                         previous = lines.Current;
                     }
 
-                    yield return CreateLine(previous.Text, index < paragraphs.Length - 1, font, request);
+                    yield return CreateCachedLine(previous.Text, index < paragraphs.Length - 1, font, request);
                 }
 
                 continue;
@@ -70,7 +78,7 @@ public sealed partial class SkiaTextMeasurer
 
             yield return CreateSelected(pending, index < paragraphs.Length - 1);
 
-            TextLayoutLine CreateSelected((string Text, ushort[] Glyphs) line, bool explicitBreak) => CreateLine(
+            TextLayoutLine CreateSelected((string Text, ushort[] Glyphs) line, bool explicitBreak) => CreateCachedLine(
                 line.Text,
                 explicitBreak,
                 font,

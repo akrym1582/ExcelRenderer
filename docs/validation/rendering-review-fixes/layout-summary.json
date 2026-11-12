@@ -1,0 +1,92 @@
+[
+  {
+    "round": 0,
+    "workload": "plain",
+    "layoutEqual": true,
+    "ratios": {
+      "TotalMs": 0.4936210640608035,
+      "AllocatedBytes": 1.0,
+      "PeakWorkingSet64": 1.0263692381837586
+    }
+  },
+  {
+    "round": 0,
+    "workload": "plain-wrap",
+    "layoutEqual": true,
+    "ratios": {
+      "TotalMs": 0.8847891981262055,
+      "AllocatedBytes": 0.9986511421337229,
+      "PeakWorkingSet64": 0.9974842333804321
+    }
+  },
+  {
+    "round": 0,
+    "workload": "rich-wrap",
+    "layoutEqual": true,
+    "ratios": {
+      "TotalMs": 2.6696275976181925,
+      "AllocatedBytes": 0.9982527723924441,
+      "PeakWorkingSet64": 1.230940557908573
+    }
+  },
+  {
+    "round": 1,
+    "workload": "plain",
+    "layoutEqual": true,
+    "ratios": {
+      "TotalMs": 1.0665289221491503,
+      "AllocatedBytes": 0.999781949060148,
+      "PeakWorkingSet64": 1.199466221851543
+    }
+  },
+  {
+    "round": 1,
+    "workload": "plain-wrap",
+    "layoutEqual": true,
+    "ratios": {
+      "TotalMs": 0.8518304987027963,
+      "AllocatedBytes": 0.9986511421337229,
+      "PeakWorkingSet64": 0.8097355029916681
+    }
+  },
+  {
+    "round": 1,
+    "workload": "rich-wrap",
+    "layoutEqual": true,
+    "ratios": {
+      "TotalMs": 1.0678071807223735,
+      "AllocatedBytes": 0.9982369370747433,
+      "PeakWorkingSet64": 1.2289477524810275
+    }
+  },
+  {
+    "round": 2,
+    "workload": "plain",
+    "layoutEqual": true,
+    "ratios": {
+      "TotalMs": 0.9532643117186699,
+      "AllocatedBytes": 1.0002180984964342,
+      "PeakWorkingSet64": 0.8339637334519969
+    }
+  },
+  {
+    "round": 2,
+    "workload": "plain-wrap",
+    "layoutEqual": true,
+    "ratios": {
+      "TotalMs": 1.0044144560867205,
+      "AllocatedBytes": 0.9986511421337229,
+      "PeakWorkingSet64": 1.0003451608449538
+    }
+  },
+  {
+    "round": 2,
+    "workload": "rich-wrap",
+    "layoutEqual": true,
+    "ratios": {
+      "TotalMs": 1.017088868456929,
+      "AllocatedBytes": 0.9995541907768538,
+      "PeakWorkingSet64": 0.9989791453988625
+    }
+  }
+]

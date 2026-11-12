@@ -108,24 +108,25 @@ internal sealed class DrawCommandGeneratorPass
     /// <param name="page">The text-only page payload.</param>
     /// <param name="measurer">The shared header/footer measurer.</param>
     /// <param name="extension">Optional product cell-text visibility and completion policy.</param>
-    /// <param name="includeHeaderFooter">Whether to append headers and footers after cell text.</param>
-    /// <returns>Cell text followed by header/footer text.</returns>
-    internal IEnumerable<DrawTextCommand> GenerateText(RenderPage page, Abstractions.ITextLayoutService? measurer, Extensibility.ICoreDrawingExtension? extension = null, bool includeHeaderFooter = true)
+    /// <returns>Cell text, product object text, then header/footer text in rendering order.</returns>
+    internal IEnumerable<DrawCommand> GenerateText(RenderPage page, Abstractions.ITextLayoutService? measurer, Extensibility.ICoreDrawingExtension? extension = null)
     {
         foreach (var cell in page.Cells.Where(cell => extension?.ShouldDrawCellText(cell) ?? true))
         {
             foreach (var command in GenerateCellLayer(page.Number, cell, 3, extension?.RequiresTextLayout ?? true))
             {
-                yield return (DrawTextCommand)command;
+                yield return command;
             }
         }
 
-        if (includeHeaderFooter)
+        foreach (var command in extension?.CreateTextObjectCommands(page) ?? [])
         {
-            foreach (var command in GenerateHeaderFooter(page, measurer))
-            {
-                yield return command;
-            }
+            yield return command;
+        }
+
+        foreach (var command in GenerateHeaderFooter(page, measurer))
+        {
+            yield return command;
         }
     }
 

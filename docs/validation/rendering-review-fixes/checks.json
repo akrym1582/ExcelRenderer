@@ -1,0 +1,40 @@
+{
+  "configuration": "Linux x64 / .NET SDK 10.0.401, Release tests",
+  "rebuild": {
+    "Debug": {
+      "warnings": 0,
+      "errors": 0
+    },
+    "Release": {
+      "warnings": 0,
+      "errors": 0
+    }
+  },
+  "tests": {
+    "Core": 470,
+    "Formulas": 833,
+    "Mapping": 226,
+    "OpenXml": 227,
+    "Main": 1196,
+    "Tool": 135,
+    "total": 3087,
+    "failed": 0,
+    "skipped": 0
+  },
+  "CoreCoverage": {
+    "tests": 462,
+    "linePercent": 84.9,
+    "branchPercent": 74.36,
+    "lineThreshold": 82.12,
+    "branchThreshold": 70.08,
+    "passed": true
+  },
+  "CorePerformanceTests": 8,
+  "readerIsolation": "passed",
+  "namespace": "passed",
+  "ownership": "passed",
+  "forbiddenDependency": "passed",
+  "measuredProductDllsMatchReleaseRebuild": true,
+  "sourceHashesMatch": true,
+  "scope": "No package/project/dependency version changes. Windows not executed."
+}

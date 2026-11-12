@@ -59,3 +59,7 @@ DOTNET_TieredCompilation=0 dotnet tools/ExcelRenderer.Performance/bin/Release/ne
 The required full rebuild, full solution tests, independent Reader/Core consumer checks, namespace check, removed-PDF-dependency check, and Core CI coverage/performance gates are recorded alongside this report. The Core coverage gate passes at **85.29% lines / 75.13% branches**; its non-performance suite has 478 passing tests and its separate performance suite has 8. The final full solution run passes all **3,122 tests** (Core 486, Formulas 833, Mapping 226, OpenXml 227, main 1,215, CLI 135). The full rebuild reports zero warnings and errors, and both isolated consumers pass. Full results are retained in `tests.log`.
 
 `artifact-hashes.json` pins the retained report, sources, fixtures, raw samples, checks, and visual evidence. Native/runtime binaries and generated consumer directories are not committed.
+
+## PR CI follow-up
+
+PR #117 run `43209763464` passed all unit tests and independent PDF appearance comparisons, but all three dependency-audit jobs rejected the removed dependency name in this report's JSON hash manifest. The retained audit log was renamed to `dependency-audit.log`, preserving its bytes and updating the manifest key. The audit policy is unchanged. After the rename, the local audit passes for 1,746 source/configuration files, 24 restored projects, and 726 managed AssemblyRef inventories; all 45 retained artifact hashes also verify.

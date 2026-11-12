@@ -1,5 +1,5 @@
 {
-  "README.md": "0db3c3bacaf3924a8b4436b823afe9744c4a067e73af17bcba7327bb7b1f83ab",
+  "README.md": "5a5c627e708ac5c092167890d2b5a5812255bbfaffc1f7bd15023dc752d656e1",
   "after-core-short.jsonl": "1b9b089cc00b9109260de5ef0672d7a5d812a63434075fe985fbb30bfb2b7596",
   "after-core-sparse.jsonl": "36321575244eb85997effad0c06ef65caba7f9520d01668125d635259364fb73",
   "after-main-short.jsonl": "b6baea71f93c54b9b06e0ba211bca0642c556481dea4578d90e199debc555b2c",
@@ -23,7 +23,6 @@
   "initial/before-main-short.jsonl": "60c13eea092ed3453fc0069a2b3d1d402e193866c73f6715c3d8d18e0e696e66",
   "initial/before-main-sparse.jsonl": "c293449c241c5543b66b1a1b0276537ca4c92c21023218b0e312da5263e0ea5b",
   "namespaces.log": "d6690370cb1cb418d3887e2321fa9532647d7c4cf2287896b70c7dc289ed07ac",
-  "no-pdfsharp.log": "0df324ec34e87b4dbcdb18df4bc19dbb62ced3d9ac0a210a1c7ca3cb07e62c16",
   "reader-isolation.json": "f2dc40309a2d48d30f09a2cad75131d9a9259f9f3d9b7a37820eee6c55719beb",
   "reader-isolation.log": "0eb03c4cc7ec85bdbb6cc965b04103cddab2f2808762eac91c64fa8fcfdb32f3",
   "rebuild.log": "de18a9a456f24308197302b95031677a9003b89a1efc930f09069ccb289f7b78",
@@ -43,5 +42,6 @@
   "review/template-1-before-after.png": "c097008a6e230921e165041bc0a379fe543d2a875bffa2ea1513f07d7924d84c",
   "short.xlsx": "53fb9b92ec55452f4bd114b7cbc7080d83eca061d5d8bb011cf44f792149f974",
   "sparse.xlsx": "85e89be1cbf4ea0eb3013b3840a18b0a35e4992ea5efe93e3699a3f1366a1f9f",
-  "tests.log": "daa06e158358a9c50db3db9b694807c4f234d8a99e4f4b1af06bbaf36b21b392"
+  "tests.log": "daa06e158358a9c50db3db9b694807c4f234d8a99e4f4b1af06bbaf36b21b392",
+  "dependency-audit.log": "0df324ec34e87b4dbcdb18df4bc19dbb62ced3d9ac0a210a1c7ca3cb07e62c16"
 }

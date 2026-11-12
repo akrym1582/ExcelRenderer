@@ -171,6 +171,7 @@ public sealed class TextOverflowTests
     {
         public bool RequiresTextLayout => false;
         public IEnumerable<DrawCommand> CreateObjectCommands(RenderPage page) => [];
+        public IEnumerable<DrawCommand> CreateTextObjectCommands(RenderPage page) => [];
         public IEnumerable<DrawCommand> CreateCellDecorationCommands(int pageNumber, RenderCell cell) => [];
         public bool ShouldDrawCellText(RenderCell cell) => true;
     }

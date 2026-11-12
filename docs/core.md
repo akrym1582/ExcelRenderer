@@ -82,6 +82,8 @@ Skia retains document resources until native close. The structural finalizer wri
 
 Sources were selected from main 1.7.2 at `32e9165d145516dbd0bcb4c2ae31a78ce6774bce`; see the [source map](core-source-map.md). PDFsharp and its unused cryptography pin have been removed; SkiaSharp 4.151.0 and the managed TrueType subsetter provide output. Fix shared algorithms in Core and regress both product policies. The source map records final ownership and product differences. Test font assets retain their OFL/copyright notices and are never embedded in the Core product.
 
+Linux library applications must explicitly add native assets matching SkiaSharp; see the [Linux installation steps](../README.md#additional-step-for-linux-library-applications). The CLI bundles them.
+
 See [validation results and reproduction](core-validation.md). Linux results do not establish Windows results; CI tests both platforms.
 
 Header/footer handling inherits the existing field expansion and placement, without adding a parser for Excel formatting control codes. On Linux, Skia native initialization can access fontconfig. Rendering still selects only the supplied snapshot; absence of all native initialization accesses is not claimed.

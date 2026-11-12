@@ -97,6 +97,8 @@ stream bytesを保持します。画像辞書の追記revisionは圧縮済み画
 
 ## 検証
 
+Linux のライブラリ利用では、アプリ側に SkiaSharp と同じバージョンの native assets を明示追加します。[README のインストール手順](../README.ja.md#linux-でライブラリを使う場合の追加手順)を参照してください。CLI は同梱しています。
+
 [検証結果と再現手順](core-validation.md)を参照してください。Windows CIの結果は、このLinux環境の実行結果とは区別します。
 
 ファイルの対応・所有者・製品ごとの差分は[所有者表](core-source-map.md)を参照してください。

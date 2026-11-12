@@ -7,6 +7,7 @@ import tempfile
 from pathlib import Path
 from xml.sax.saxutils import escape
 from zipfile import ZipFile, ZIP_DEFLATED
+from package_distribution import skia_version
 
 ROOT = Path(__file__).resolve().parents[1]
 FORBIDDEN = {'ExcelRenderer.OpenXml', 'ExcelRenderer.Formulas', 'ExcelRenderer.Mapping', 'ExcelRenderer', 'ExcelRenderer.Fonts', 'ExcelRenderer.Tool'}
@@ -72,7 +73,8 @@ def validate(work, configuration):
         directory = work / kind
         directory.mkdir()
         project = ROOT / 'src' / name / f'{name}.csproj'
-        (directory / 'consumer.csproj').write_text(f'<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable><IsPackable>false</IsPackable></PropertyGroup><ItemGroup><ProjectReference Include="{escape(str(project))}"/></ItemGroup></Project>')
+        native = f'<PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="{skia_version()}"/>' if kind == 'core' else ''
+        (directory / 'consumer.csproj').write_text(f'<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable><IsPackable>false</IsPackable></PropertyGroup><ItemGroup><ProjectReference Include="{escape(str(project))}"/>{native}</ItemGroup></Project>')
         (directory / 'Program.cs').write_text(code + METADATA)
         def run(*command):
             result = subprocess.run(list(map(str, command)), cwd=directory, text=True, capture_output=True)

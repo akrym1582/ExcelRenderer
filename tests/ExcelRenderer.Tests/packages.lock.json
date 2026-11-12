@@ -18,6 +18,12 @@
         "resolved": "0.1.14",
         "contentHash": "V2Anq0Yvyn3bGGG8WCQxqEAshG0KHIehB0QOotCz14vTkEk1PR3ErPOSmbnEsyOewhdF3G5XpQHywK2L50Xu+A=="
       },
+      "SkiaSharp.NativeAssets.Linux": {
+        "type": "Direct",
+        "requested": "[4.151.0, )",
+        "resolved": "4.151.0",
+        "contentHash": "q4UgnZB9LGk4a9UqtZQ2d27jFm+nnS/yiy4m/C3R32glihjr8wapLkX8ZHKVXkb/c9Qr+jyxhGQvrAJ7nQCwaQ=="
+      },
       "Svg.Skia": {
         "type": "Direct",
         "requested": "[5.2.3, )",
@@ -134,11 +140,6 @@
           "SkiaSharp.NativeAssets.macOS": "4.151.0"
         }
       },
-      "SkiaSharp.NativeAssets.Linux": {
-        "type": "Transitive",
-        "resolved": "4.151.0",
-        "contentHash": "q4UgnZB9LGk4a9UqtZQ2d27jFm+nnS/yiy4m/C3R32glihjr8wapLkX8ZHKVXkb/c9Qr+jyxhGQvrAJ7nQCwaQ=="
-      },
       "SkiaSharp.NativeAssets.macOS": {
         "type": "Transitive",
         "resolved": "4.151.0",
@@ -237,8 +238,7 @@
         "dependencies": {
           "DocumentFormat.OpenXml": "[3.3.0, )",
           "ExcelNumberFormat": "[1.1.0, )",
-          "SkiaSharp": "[4.151.0, )",
-          "SkiaSharp.NativeAssets.Linux": "[4.151.0, )"
+          "SkiaSharp": "[4.151.0, )"
         }
       },
       "excelrenderer.core": {
@@ -246,8 +246,7 @@
         "dependencies": {
           "DocumentFormat.OpenXml": "[3.3.0, )",
           "ExcelRenderer.OpenXml.Reader": "[1.8.0, )",
-          "SkiaSharp": "[4.151.0, )",
-          "SkiaSharp.NativeAssets.Linux": "[4.151.0, )"
+          "SkiaSharp": "[4.151.0, )"
         }
       },
       "excelrenderer.fonts": {
@@ -281,7 +280,8 @@
       "excelrenderer.sample": {
         "type": "Project",
         "dependencies": {
-          "ExcelRenderer": "[1.10.4, )"
+          "ExcelRenderer": "[1.10.5, )",
+          "SkiaSharp.NativeAssets.Linux": "[4.151.0, )"
         }
       }
     }

@@ -13,12 +13,24 @@ PUBLISHED = {'ExcelRenderer', 'ExcelRenderer.Mapping', 'ExcelRenderer.Tool', 'Ex
 INTERNAL = {'ExcelRenderer.Core', 'ExcelRenderer.OpenXml.Reader', 'ExcelRenderer.OpenXml', 'ExcelRenderer.Formulas'}
 
 
+def skia_version():
+    """Keep generated Linux consumers aligned with the library's managed SkiaSharp."""
+    project = ET.parse(ROOT / 'src/ExcelRenderer/ExcelRenderer.csproj')
+    return project.find(".//PackageReference[@Include='SkiaSharp']").attrib['Version']
+
+
 def check_projects():
     projects = {}
     for directory in ['src', 'tests', 'samples', 'tools']:
         for path in sorted((ROOT / directory).rglob('*.csproj')):
             if {'bin', 'obj'} & set(path.relative_to(ROOT).parts):
                 continue
+            references = {node.attrib['Include']: node.attrib.get('Version') for node in ET.parse(path).findall('.//PackageReference')}
+            native = {name for name in references if name.startswith('SkiaSharp.NativeAssets.Linux')}
+            if path.relative_to(ROOT).as_posix() in {f'src/{name}/{name}.csproj' for name in ('ExcelRenderer', 'ExcelRenderer.Core')}:
+                assert not native, (path, 'Library projects must leave Linux native assets to applications')
+            for name in native:
+                assert references[name] == skia_version(), (path, name, 'Native assets must match SkiaSharp')
             result = subprocess.check_output([
                 'dotnet', 'msbuild', str(path), '-nologo',
                 '-getProperty:IsPackable,PackageId,Version',
@@ -49,6 +61,14 @@ def check_packages(packages):
             dependencies = {node.attrib['id']: node.attrib['version'] for node in spec.iter() if node.tag.rsplit('}', 1)[-1] == 'dependency'}
             assert not INTERNAL.intersection(dependencies), (name, dependencies)
             assert not any(dep.startswith(('ClosedXML', 'NPOI', 'Antlr')) for dep in dependencies), (name, dependencies)
+            assert not any(dep.startswith('SkiaSharp.NativeAssets.Linux') for dep in dependencies), (name, dependencies)
+            if name != 'ExcelRenderer.Tool':
+                assert not any(path.endswith('/libSkiaSharp.so') for path in names), (name, 'Linux native assets must be supplied by the application')
+            else:
+                deps = json.loads(archive.read(next(path for path in names if path.endswith('/ExcelRenderer.Tool.deps.json'))))
+                assert f'SkiaSharp/{skia_version()}' in deps['libraries'], 'CLI managed SkiaSharp version differs from the library'
+                assert f'SkiaSharp.NativeAssets.Linux/{skia_version()}' in deps['libraries'], 'CLI must bundle Linux native assets matching SkiaSharp'
+                assert any(path.endswith('/runtimes/linux-x64/native/libSkiaSharp.so') for path in names), 'CLI Linux native library missing'
             dlls = [path for path in names if path.endswith('.dll')]
             if name == 'ExcelRenderer.Fonts':
                 assert sum(path.endswith('/ExcelRenderer.Fonts.dll') for path in dlls) == 1

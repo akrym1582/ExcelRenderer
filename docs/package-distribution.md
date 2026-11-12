@@ -73,6 +73,13 @@ main plus Core, main plus Mapping, the namespace migration sample with main/Mapp
 and the installed CLI using only the generated packages.
 `validate-openxml-packages.py` delegates to this current validation.
 
+The main package includes Core DLL/XML explicitly from its built output directory.
+Packing with `--no-build -p:BuildProjectReferences=false` must not depend on Core
+being present in MSBuild's copy-local reference list. If either required Core
+file is absent, packing fails immediately instead of producing an incomplete
+package. Keep the distribution audit: a missing Core DLL makes the library
+package unusable even when source-project tests have passed.
+
 PR CI and the release workflow both enforce this contract. Release verification
 runs before uploading packages or creating the release commit/tag. Historical
 validation reports describe their recorded package layout; this contract replaces

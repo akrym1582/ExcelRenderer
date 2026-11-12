@@ -271,7 +271,7 @@ internal sealed partial class ConditionalFormattingSession
             }
 
             var effectiveProperties = properties ?? EmptyProperties;
-            var cell = cells.GetValueOrDefault(address) ?? new ReportCell(string.Empty, blankStyle(address));
+            var cell = cells.GetValueOrDefault(address) ?? new ReportCell(string.Empty, blankStyle(address)) { HasStoredValue = false };
             var style = styles.Intern(ConditionalStyle.Apply(cell.Style, effectiveProperties, dynamicBackground));
             if (!cells.ContainsKey(address) && style.Background is null && style.Border is null)
             {
@@ -306,7 +306,7 @@ internal sealed partial class ConditionalFormattingSession
                     token.ThrowIfCancellationRequested();
                     var address = vertical ? new CellAddress(coordinate, property.Key == "left" ? range.First.Column : range.Last.Column) :
                         new CellAddress(property.Key == "top" ? range.First.Row : range.Last.Row, coordinate);
-                    var cell = cells.GetValueOrDefault(address) ?? new ReportCell(string.Empty, blankStyle(address));
+                    var cell = cells.GetValueOrDefault(address) ?? new ReportCell(string.Empty, blankStyle(address)) { HasStoredValue = false };
                     cells[address] = cell with { Style = styles.Intern(ConditionalStyle.Apply(cell.Style, edge)) };
                 }
             }

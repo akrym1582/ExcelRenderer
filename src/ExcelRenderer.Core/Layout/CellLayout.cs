@@ -15,4 +15,7 @@ internal sealed record CellLayout(CellAddress Address, ReportRect Bounds, TextSi
     /// Gets the merged-cell border fragments. 結合セルを構成する各セル位置の罫線と配置矩形を取得します。
     /// </summary>
     public IReadOnlyList<RenderBorder>? MergedBorders { get; init; }
+
+    /// <summary>Gets the allowed horizontal text interval in sheet points.</summary>
+    internal (double Left, double Right)? TextOverflowBounds { get; init; }
 }

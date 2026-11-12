@@ -16,6 +16,7 @@ internal sealed class PaginationPass
     /// <returns>The planned or generated result.</returns>
     internal static RenderPage Materialize(ReportLayoutContext context, PaginationPagePlan plan, int number, int count)
     {
+        new TextOverflowPass().Execute(context);
         var page = plan.Horizontal is null || plan.Vertical is null
             ? new RenderPage(number, []) { Purpose = context.Purpose }
             : new RenderPageBuilder(context, plan.BodyColumns, plan.BodyRows, plan.TitleColumns, plan.TitleRows, plan.TitleColumnEnd, plan.TitleRowEnd, plan.TitleWidth, plan.TitleHeight, plan.Scale)

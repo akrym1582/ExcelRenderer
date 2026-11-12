@@ -1,0 +1,96 @@
+{
+  "reader": {
+    "dlls": [
+      "DocumentFormat.OpenXml.Framework.dll",
+      "DocumentFormat.OpenXml.dll",
+      "ExcelNumberFormat.dll",
+      "ExcelRenderer.OpenXml.Reader.dll",
+      "System.IO.Packaging.dll",
+      "consumer.dll"
+    ],
+    "graphs": {
+      "reader/obj/project.assets.json": [
+        "DocumentFormat.OpenXml.Framework/3.3.0",
+        "DocumentFormat.OpenXml/3.3.0",
+        "ExcelNumberFormat/1.1.0",
+        "ExcelRenderer.OpenXml.Reader/1.8.0",
+        "System.IO.Packaging/8.0.1"
+      ],
+      "reader/publish/consumer.deps.json": [
+        "DocumentFormat.OpenXml.Framework/3.3.0",
+        "DocumentFormat.OpenXml/3.3.0",
+        "ExcelNumberFormat/1.1.0",
+        "ExcelRenderer.OpenXml.Reader/1.8.0",
+        "System.IO.Packaging/8.0.1",
+        "consumer/1.0.0"
+      ]
+    },
+    "assemblyRefs": {
+      "ExcelRenderer.OpenXml.Reader": [
+        "netstandard",
+        "DocumentFormat.OpenXml",
+        "ExcelNumberFormat",
+        "DocumentFormat.OpenXml.Framework"
+      ]
+    },
+    "execution": "passed"
+  },
+  "core": {
+    "dlls": [
+      "DocumentFormat.OpenXml.Framework.dll",
+      "DocumentFormat.OpenXml.dll",
+      "ExcelNumberFormat.dll",
+      "ExcelRenderer.Core.dll",
+      "ExcelRenderer.OpenXml.Reader.dll",
+      "SkiaSharp.dll",
+      "System.IO.Packaging.dll",
+      "consumer.dll",
+      "libSkiaSharp.dll",
+      "libSkiaSharp.dll",
+      "libSkiaSharp.dll"
+    ],
+    "graphs": {
+      "core/obj/project.assets.json": [
+        "DocumentFormat.OpenXml.Framework/3.3.0",
+        "DocumentFormat.OpenXml/3.3.0",
+        "ExcelNumberFormat/1.1.0",
+        "ExcelRenderer.Core/1.0.0",
+        "ExcelRenderer.OpenXml.Reader/1.8.0",
+        "SkiaSharp.NativeAssets.Linux/4.151.0",
+        "SkiaSharp.NativeAssets.Win32/4.151.0",
+        "SkiaSharp.NativeAssets.macOS/4.151.0",
+        "SkiaSharp/4.151.0",
+        "System.IO.Packaging/8.0.1"
+      ],
+      "core/publish/consumer.deps.json": [
+        "DocumentFormat.OpenXml.Framework/3.3.0",
+        "DocumentFormat.OpenXml/3.3.0",
+        "ExcelNumberFormat/1.1.0",
+        "ExcelRenderer.Core/1.0.0",
+        "ExcelRenderer.OpenXml.Reader/1.8.0",
+        "SkiaSharp.NativeAssets.Linux/4.151.0",
+        "SkiaSharp.NativeAssets.Win32/4.151.0",
+        "SkiaSharp.NativeAssets.macOS/4.151.0",
+        "SkiaSharp/4.151.0",
+        "System.IO.Packaging/8.0.1",
+        "consumer/1.0.0"
+      ]
+    },
+    "assemblyRefs": {
+      "ExcelRenderer.Core": [
+        "netstandard",
+        "ExcelRenderer.OpenXml.Reader",
+        "SkiaSharp",
+        "DocumentFormat.OpenXml",
+        "DocumentFormat.OpenXml.Framework"
+      ],
+      "ExcelRenderer.OpenXml.Reader": [
+        "netstandard",
+        "DocumentFormat.OpenXml",
+        "ExcelNumberFormat",
+        "DocumentFormat.OpenXml.Framework"
+      ]
+    },
+    "execution": "passed"
+  }
+}

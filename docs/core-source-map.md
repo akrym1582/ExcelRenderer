@@ -79,6 +79,7 @@ Source: main 1.7.2, commit `32e9165d145516dbd0bcb4c2ae31a78ce6774bce`. Every cop
 | Layout/ResolvePrintAreaPass.cs | Layout/ResolvePrintAreaPass.cs | Core単独所有 / 本体wrapper | Shared Core implementation; main delegates and maps only boundary state |
 | Layout/RowLayout.cs | Layout/RowLayout.cs | 本体専用差分 / Core内部型 | Compatibility value types retained in main; neutral Core values and explicit adapters do not duplicate algorithms |
 | Layout/RowLayoutPass.cs | Layout/RowLayoutPass.cs | Core単独所有 / 本体wrapper | Shared Core implementation; main delegates and maps only boundary state |
+| — (new shared behavior) | Layout/TextOverflowIndex.cs and Layout/TextOverflowPass.cs | Core単独所有 / 本体adapter | Saved occupancy, sparse row/merge intervals and text-only overflow limits; main maps clips for paged and continuous rendering |
 | Layout/SheetGeometry.cs | Layout/SheetGeometry.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
 | Layout/SheetLayoutPlan.cs | Layout/SheetLayoutPlan.cs | Core単独所有 / 本体wrapper | Shared Core implementation; main delegates and maps only boundary state |
 | Layout/SheetObjectLayoutIndex.cs | Layout/SheetObjectLayoutIndex.cs | Core単独所有 / 本体wrapper | Shared Core implementation; main delegates and maps only boundary state |

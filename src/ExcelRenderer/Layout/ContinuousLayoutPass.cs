@@ -10,10 +10,21 @@ public sealed class ContinuousLayoutPass : IReportLayoutPass
     /// <param name="context">入力シートおよび計算済みのレイアウトを保持するコンテキストです。</param>
     public void Execute(ReportLayoutContext context)
     {
+        var core = CoreIntegration.CoreLayoutContextAdapter.CreatePage(context);
+        new Core.Layout.TextOverflowPass().Execute(core);
+        var region = context.ColumnLayouts.Count == 0 || context.RowLayouts.Count == 0
+            ? new Core.Layout.ReportRect(0, 0, 0, 0)
+            : new Core.Layout.ReportRect(
+                context.ColumnLayouts.Values.Min(column => column.X),
+                context.RowLayouts.Values.Min(row => row.Y),
+                context.ColumnLayouts.Values.Max(column => column.X + column.Width) - context.ColumnLayouts.Values.Min(column => column.X),
+                context.RowLayouts.Values.Max(row => row.Y + row.Height) - context.RowLayouts.Values.Min(row => row.Y));
         var cells = context.CellLayouts.Values
             .Select(layout => new RenderCell(context.Sheet.Cells[layout.Address], layout.Bounds)
             {
                 SourceAddress = layout.Address,
+                TextClipBounds = Core.Layout.TextOverflowPass.GetClip(core.CellLayouts[CoreIntegration.CoreModelAdapter.ToCore(layout.Address)], core.Sheet.Cells[CoreIntegration.CoreModelAdapter.ToCore(layout.Address)].Style, region) is { } clip
+                    ? CoreIntegration.CoreModelAdapter.ToPublic(clip) : null,
                 ContentBounds = layout.ContentBounds,
                 MergedBorders = layout.MergedBorders,
                 TextLayout = context.TextLayouts.GetValueOrDefault(layout.Address),

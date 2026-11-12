@@ -11,6 +11,7 @@ internal sealed class SheetGeometry
 {
     private readonly Axis columns;
     private readonly Axis rows;
+    private TextOverflowIndex? textOverflow;
 
     /// <summary>Initializes a new instance of the <see cref="SheetGeometry"/> class.</summary>
     /// <param name="sheet">The source sheet.</param>
@@ -53,6 +54,11 @@ internal sealed class SheetGeometry
     /// <param name="y">The Y coordinate in points.</param>
     /// <returns>The 1-based row index.</returns>
     internal int RowAt(double y) => rows.IndexAt(y);
+
+    /// <summary>Reuses the sparse occupancy index for this conversion's sheet geometry.</summary>
+    /// <param name="sheet">The source sheet.</param>
+    /// <returns>The lazily prepared occupancy index.</returns>
+    internal TextOverflowIndex GetTextOverflow(ReportSheet sheet) => textOverflow ??= new(sheet, this);
 
     private sealed class Axis
     {

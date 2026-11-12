@@ -89,6 +89,17 @@ public sealed class OpenXmlIntegrationTests
                 }
             }
 
+            var overflowUpdates = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, Dictionary<string, string>>>>(
+                File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "ReaderGolden", "overflow-artifacts.json")))!;
+            if (overflowUpdates.TryGetValue(name, out var overflow))
+            {
+                foreach (var (key, update) in overflow.Where(pair => pair.Key.StartsWith(format + "/", StringComparison.Ordinal)))
+                {
+                    Assert.Equal(update["old"], expected[key]);
+                    expected[key] = update["new"];
+                }
+            }
+
             Assert.Equal(expected.Keys.Order(), hashes.Keys.Order());
             foreach (var pair in expected) Assert.True(pair.Value == hashes[pair.Key], name + " " + pair.Key + " differs from retained output");
         }

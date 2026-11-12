@@ -30,4 +30,7 @@ public sealed record RenderCell(ReportCell Cell, ReportRect Bounds)
 
     /// <summary>Gets the source-to-page scale for product decorations.</summary>
     internal double DecorationScale { get; init; } = 1;
+
+    /// <summary>Gets the cell-text-only clip in drawing coordinates.</summary>
+    internal ReportRect? TextClipBounds { get; init; }
 }

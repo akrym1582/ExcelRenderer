@@ -59,6 +59,8 @@ internal static partial class CoreModelAdapter
 
             return new(cell.Text, style, cell.RowSpan, cell.ColumnSpan, cell.Formula)
             {
+                HasStoredValue = cell.HasStoredValue,
+                SuppressTextOverflow = cell.SuppressTextOverflow,
                 FormulaSharedIndex = cell.FormulaSharedIndex,
                 FormulaMasterAddress = cell.FormulaMasterAddress is { } master ? ToCore(master) : null,
                 ExtensionData = richSnapshots.GetValueOrDefault(cell),
@@ -116,6 +118,8 @@ internal static partial class CoreModelAdapter
     /// <returns>The public cell.</returns>
     internal static ReportCell ToPublic(Core.Model.ReportCell value, Excel.StylePool styles) => new(value.Text, styles.Intern(ToPublic(value.Style)), value.RowSpan, value.ColumnSpan, value.Formula)
     {
+        HasStoredValue = value.HasStoredValue,
+        SuppressTextOverflow = value.SuppressTextOverflow,
         FormulaSharedIndex = value.FormulaSharedIndex,
         FormulaMasterAddress = value.FormulaMasterAddress is { } master ? ToPublic(master) : null,
         ConditionalVisual = FullCellPresentationData.Decoration(value.ExtensionData),

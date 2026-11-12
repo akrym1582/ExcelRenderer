@@ -1,0 +1,798 @@
+[
+  {
+    "stage": "before",
+    "case": "text1-Pdf",
+    "metrics": {
+      "typefaceCreated": 1,
+      "readerStyleCacheHits": 1,
+      "supportCacheHits": 1,
+      "pagePayloadMax": 1,
+      "textLayoutCacheMisses": 1,
+      "textLineCacheMisses": 1,
+      "textLayoutCacheHits": 3,
+      "mainTextPreflightBuilds": 1,
+      "pdfSubsetTypefaceCreated": 1,
+      "mainFullPageBuilds": 1,
+      "paintCreated": 1,
+      "pdfFontCreated": 1,
+      "paintDisposed": 1,
+      "pdfFontDisposed": 1,
+      "pdfSubsetTypefaceDisposed": 1,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "after",
+    "case": "text1-Pdf",
+    "metrics": {
+      "typefaceCreated": 1,
+      "readerStyleCacheHits": 1,
+      "supportCacheHits": 1,
+      "pagePayloadMax": 1,
+      "textLayoutCacheMisses": 1,
+      "textLayoutCacheHits": 3,
+      "mainTextPreflightBuilds": 1,
+      "pdfSubsetTypefaceCreated": 1,
+      "mainFullPageBuilds": 1,
+      "paintCreated": 1,
+      "pdfFontCreated": 1,
+      "paintDisposed": 1,
+      "pdfFontDisposed": 1,
+      "pdfSubsetTypefaceDisposed": 1,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "before",
+    "case": "text1000-Pdf",
+    "metrics": {
+      "typefaceCreated": 1,
+      "readerStyleCacheHits": 1999,
+      "supportCacheHits": 29663,
+      "pagePayloadMax": 1,
+      "textLayoutCacheMisses": 2000,
+      "textLineCacheMisses": 2000,
+      "textLayoutCacheHits": 2000,
+      "mainTextPreflightBuilds": 25,
+      "pdfSubsetTypefaceCreated": 1,
+      "mainFullPageBuilds": 25,
+      "paintCreated": 1,
+      "pdfFontCreated": 1,
+      "paintDisposed": 1,
+      "pdfFontDisposed": 1,
+      "pdfSubsetTypefaceDisposed": 1,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "after",
+    "case": "text1000-Pdf",
+    "metrics": {
+      "typefaceCreated": 1,
+      "readerStyleCacheHits": 1999,
+      "supportCacheHits": 29663,
+      "pagePayloadMax": 1,
+      "textLayoutCacheMisses": 2000,
+      "textLayoutCacheHits": 2000,
+      "mainTextPreflightBuilds": 25,
+      "pdfSubsetTypefaceCreated": 1,
+      "mainFullPageBuilds": 25,
+      "paintCreated": 1,
+      "pdfFontCreated": 1,
+      "paintDisposed": 1,
+      "pdfFontDisposed": 1,
+      "pdfSubsetTypefaceDisposed": 1,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "before",
+    "case": "wrap1000-Pdf",
+    "metrics": {
+      "typefaceCreated": 1,
+      "readerStyleCacheHits": 1999,
+      "supportCacheHits": 1820644,
+      "pagePayloadMax": 1,
+      "textLayoutCacheMisses": 4000,
+      "textLineCacheMisses": 4016,
+      "textLineCacheHits": 71984,
+      "mainTextPreflightBuilds": 25,
+      "pdfSubsetTypefaceCreated": 1,
+      "mainFullPageBuilds": 25,
+      "paintCreated": 1,
+      "pdfFontCreated": 1,
+      "paintDisposed": 1,
+      "pdfFontDisposed": 1,
+      "pdfSubsetTypefaceDisposed": 1,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "after",
+    "case": "wrap1000-Pdf",
+    "metrics": {
+      "typefaceCreated": 1,
+      "readerStyleCacheHits": 1999,
+      "supportCacheHits": 1820644,
+      "pagePayloadMax": 1,
+      "textLayoutCacheMisses": 4000,
+      "textLineCacheMisses": 4016,
+      "textLineCacheHits": 71984,
+      "mainTextPreflightBuilds": 25,
+      "pdfSubsetTypefaceCreated": 1,
+      "mainFullPageBuilds": 25,
+      "paintCreated": 1,
+      "pdfFontCreated": 1,
+      "paintDisposed": 1,
+      "pdfFontDisposed": 1,
+      "pdfSubsetTypefaceDisposed": 1,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "before",
+    "case": "borders1000-Pdf",
+    "metrics": {
+      "typefaceCreated": 1,
+      "readerStyleCacheHits": 1999,
+      "supportCacheHits": 29663,
+      "pagePayloadMax": 1,
+      "textLayoutCacheMisses": 2000,
+      "textLineCacheMisses": 2000,
+      "textLayoutCacheHits": 2000,
+      "mainTextPreflightBuilds": 25,
+      "pdfSubsetTypefaceCreated": 1,
+      "mainFullPageBuilds": 25,
+      "paintCreated": 2,
+      "pdfFontCreated": 1,
+      "paintDisposed": 2,
+      "pdfFontDisposed": 1,
+      "pdfSubsetTypefaceDisposed": 1,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "after",
+    "case": "borders1000-Pdf",
+    "metrics": {
+      "typefaceCreated": 1,
+      "readerStyleCacheHits": 1999,
+      "supportCacheHits": 29663,
+      "pagePayloadMax": 1,
+      "textLayoutCacheMisses": 2000,
+      "textLayoutCacheHits": 2000,
+      "mainTextPreflightBuilds": 25,
+      "pdfSubsetTypefaceCreated": 1,
+      "mainFullPageBuilds": 25,
+      "paintCreated": 2,
+      "pdfFontCreated": 1,
+      "paintDisposed": 2,
+      "pdfFontDisposed": 1,
+      "pdfSubsetTypefaceDisposed": 1,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "before",
+    "case": "imagesonly-Pdf",
+    "metrics": {
+      "typefaceCreated": 1,
+      "readerStyleCacheHits": 0,
+      "pagePayloadMax": 1,
+      "mainFullPageBuilds": 2,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "after",
+    "case": "imagesonly-Pdf",
+    "metrics": {
+      "typefaceCreated": 1,
+      "readerStyleCacheHits": 0,
+      "pagePayloadMax": 1,
+      "mainFullPageBuilds": 2,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "before",
+    "case": "header-Pdf",
+    "metrics": {
+      "typefaceCreated": 1,
+      "readerStyleCacheHits": 0,
+      "pagePayloadMax": 1,
+      "mainFullPageBuilds": 2,
+      "textLayoutCacheMisses": 1,
+      "textLineCacheMisses": 1,
+      "supportCacheHits": 3,
+      "pdfSubsetTypefaceCreated": 1,
+      "textLayoutCacheHits": 1,
+      "paintCreated": 1,
+      "pdfFontCreated": 1,
+      "paintDisposed": 1,
+      "pdfFontDisposed": 1,
+      "pdfSubsetTypefaceDisposed": 1,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "after",
+    "case": "header-Pdf",
+    "metrics": {
+      "typefaceCreated": 1,
+      "readerStyleCacheHits": 0,
+      "pagePayloadMax": 1,
+      "mainFullPageBuilds": 2,
+      "textLayoutCacheMisses": 1,
+      "supportCacheHits": 3,
+      "pdfSubsetTypefaceCreated": 1,
+      "textLayoutCacheHits": 1,
+      "paintCreated": 1,
+      "pdfFontCreated": 1,
+      "paintDisposed": 1,
+      "pdfFontDisposed": 1,
+      "pdfSubsetTypefaceDisposed": 1,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "before",
+    "case": "empty-Pdf",
+    "metrics": {
+      "typefaceCreated": 1,
+      "readerStyleCacheHits": 0,
+      "pagePayloadMax": 1,
+      "mainFullPageBuilds": 2,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "after",
+    "case": "empty-Pdf",
+    "metrics": {
+      "typefaceCreated": 1,
+      "readerStyleCacheHits": 0,
+      "pagePayloadMax": 1,
+      "mainFullPageBuilds": 2,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "before",
+    "case": "mixed1000-Pdf",
+    "metrics": {
+      "typefaceCreated": 1,
+      "readerStyleCacheHits": 1999,
+      "supportCacheHits": 6881,
+      "pagePayloadMax": 1,
+      "textLayoutCacheMisses": 1335,
+      "textLineCacheMisses": 1335,
+      "textLayoutCacheHits": 2665,
+      "mainTextPreflightBuilds": 25,
+      "pdfSubsetTypefaceCreated": 1,
+      "mainFullPageBuilds": 25,
+      "paintCreated": 1,
+      "pdfFontCreated": 1,
+      "paintDisposed": 1,
+      "pdfFontDisposed": 1,
+      "pdfSubsetTypefaceDisposed": 1,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "after",
+    "case": "mixed1000-Pdf",
+    "metrics": {
+      "typefaceCreated": 1,
+      "readerStyleCacheHits": 1999,
+      "supportCacheHits": 6881,
+      "pagePayloadMax": 1,
+      "textLayoutCacheMisses": 1335,
+      "textLayoutCacheHits": 2665,
+      "mainTextPreflightBuilds": 25,
+      "pdfSubsetTypefaceCreated": 1,
+      "mainFullPageBuilds": 25,
+      "paintCreated": 1,
+      "pdfFontCreated": 1,
+      "paintDisposed": 1,
+      "pdfFontDisposed": 1,
+      "pdfSubsetTypefaceDisposed": 1,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "before",
+    "case": "02-image-Png",
+    "metrics": {
+      "readerStyleCacheHits": 1,
+      "typefaceCreated": 1,
+      "supportCacheHits": 8,
+      "pagePayloadMax": 1,
+      "textLayoutCacheMisses": 3,
+      "textLineCacheMisses": 3,
+      "mainFullPageBuilds": 2,
+      "textLayoutCacheHits": 3,
+      "paintCreated": 1,
+      "paintDisposed": 1,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "after",
+    "case": "02-image-Png",
+    "metrics": {
+      "readerStyleCacheHits": 1,
+      "typefaceCreated": 1,
+      "supportCacheHits": 8,
+      "pagePayloadMax": 1,
+      "textLayoutCacheMisses": 3,
+      "mainFullPageBuilds": 2,
+      "textLayoutCacheHits": 3,
+      "paintCreated": 1,
+      "paintDisposed": 1,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "before",
+    "case": "02-image-Svg",
+    "metrics": {
+      "readerStyleCacheHits": 1,
+      "typefaceCreated": 1,
+      "supportCacheHits": 8,
+      "pagePayloadMax": 1,
+      "textLayoutCacheMisses": 3,
+      "textLineCacheMisses": 3,
+      "mainFullPageBuilds": 2,
+      "textLayoutCacheHits": 3,
+      "paintCreated": 1,
+      "paintDisposed": 1,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "after",
+    "case": "02-image-Svg",
+    "metrics": {
+      "readerStyleCacheHits": 1,
+      "typefaceCreated": 1,
+      "supportCacheHits": 8,
+      "pagePayloadMax": 1,
+      "textLayoutCacheMisses": 3,
+      "mainFullPageBuilds": 2,
+      "textLayoutCacheHits": 3,
+      "paintCreated": 1,
+      "paintDisposed": 1,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "before",
+    "case": "04-text-decoration-Png",
+    "metrics": {
+      "readerStyleCacheHits": 0,
+      "typefaceCreated": 1,
+      "supportCacheHits": 12,
+      "pagePayloadMax": 1,
+      "textLayoutCacheMisses": 7,
+      "textLineCacheMisses": 7,
+      "mainFullPageBuilds": 2,
+      "textLayoutCacheHits": 7,
+      "paintCreated": 2,
+      "paintDisposed": 2,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "after",
+    "case": "04-text-decoration-Png",
+    "metrics": {
+      "readerStyleCacheHits": 0,
+      "typefaceCreated": 1,
+      "supportCacheHits": 12,
+      "pagePayloadMax": 1,
+      "textLayoutCacheMisses": 7,
+      "mainFullPageBuilds": 2,
+      "textLayoutCacheHits": 7,
+      "paintCreated": 2,
+      "paintDisposed": 2,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "before",
+    "case": "04-text-decoration-Svg",
+    "metrics": {
+      "readerStyleCacheHits": 0,
+      "typefaceCreated": 1,
+      "supportCacheHits": 12,
+      "pagePayloadMax": 1,
+      "textLayoutCacheMisses": 7,
+      "textLineCacheMisses": 7,
+      "mainFullPageBuilds": 2,
+      "textLayoutCacheHits": 7,
+      "paintCreated": 2,
+      "paintDisposed": 2,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "after",
+    "case": "04-text-decoration-Svg",
+    "metrics": {
+      "readerStyleCacheHits": 0,
+      "typefaceCreated": 1,
+      "supportCacheHits": 12,
+      "pagePayloadMax": 1,
+      "textLayoutCacheMisses": 7,
+      "mainFullPageBuilds": 2,
+      "textLayoutCacheHits": 7,
+      "paintCreated": 2,
+      "paintDisposed": 2,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "before",
+    "case": "05-borders-Png",
+    "metrics": {
+      "readerStyleCacheHits": 2,
+      "typefaceCreated": 1,
+      "supportCacheHits": 31,
+      "pagePayloadMax": 1,
+      "textLayoutCacheMisses": 9,
+      "textLineCacheMisses": 9,
+      "mainFullPageBuilds": 4,
+      "textLayoutCacheHits": 9,
+      "paintCreated": 4,
+      "paintDisposed": 4,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "after",
+    "case": "05-borders-Png",
+    "metrics": {
+      "readerStyleCacheHits": 2,
+      "typefaceCreated": 1,
+      "supportCacheHits": 31,
+      "pagePayloadMax": 1,
+      "textLayoutCacheMisses": 9,
+      "mainFullPageBuilds": 4,
+      "textLayoutCacheHits": 9,
+      "paintCreated": 4,
+      "paintDisposed": 4,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "before",
+    "case": "05-borders-Svg",
+    "metrics": {
+      "readerStyleCacheHits": 2,
+      "typefaceCreated": 1,
+      "supportCacheHits": 31,
+      "pagePayloadMax": 1,
+      "textLayoutCacheMisses": 9,
+      "textLineCacheMisses": 9,
+      "mainFullPageBuilds": 4,
+      "textLayoutCacheHits": 9,
+      "paintCreated": 4,
+      "paintDisposed": 4,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "after",
+    "case": "05-borders-Svg",
+    "metrics": {
+      "readerStyleCacheHits": 2,
+      "typefaceCreated": 1,
+      "supportCacheHits": 31,
+      "pagePayloadMax": 1,
+      "textLayoutCacheMisses": 9,
+      "mainFullPageBuilds": 4,
+      "textLayoutCacheHits": 9,
+      "paintCreated": 4,
+      "paintDisposed": 4,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "before",
+    "case": "rich-Pdf",
+    "metrics": {
+      "readerStyleCacheHits": 0,
+      "typefaceCreated": 1,
+      "supportCacheHits": 8,
+      "pagePayloadMax": 1,
+      "richTextLayoutCacheMisses": 1,
+      "textLineCacheMisses": 2,
+      "mainFullPageBuilds": 2,
+      "pdfSubsetTypefaceCreated": 1,
+      "richTextLayoutCacheHits": 1,
+      "paintCreated": 1,
+      "pdfFontCreated": 2,
+      "paintDisposed": 1,
+      "pdfFontDisposed": 2,
+      "pdfSubsetTypefaceDisposed": 1,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "after",
+    "case": "rich-Pdf",
+    "metrics": {
+      "readerStyleCacheHits": 0,
+      "typefaceCreated": 1,
+      "supportCacheHits": 8,
+      "pagePayloadMax": 1,
+      "richTextLayoutCacheMisses": 1,
+      "textLineCacheMisses": 2,
+      "mainFullPageBuilds": 2,
+      "pdfSubsetTypefaceCreated": 1,
+      "richTextLayoutCacheHits": 1,
+      "paintCreated": 1,
+      "pdfFontCreated": 2,
+      "paintDisposed": 1,
+      "pdfFontDisposed": 2,
+      "pdfSubsetTypefaceDisposed": 1,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "before",
+    "case": "rich-Png",
+    "metrics": {
+      "readerStyleCacheHits": 0,
+      "typefaceCreated": 1,
+      "supportCacheHits": 8,
+      "pagePayloadMax": 1,
+      "richTextLayoutCacheMisses": 1,
+      "textLineCacheMisses": 2,
+      "mainFullPageBuilds": 2,
+      "richTextLayoutCacheHits": 1,
+      "paintCreated": 1,
+      "paintDisposed": 1,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "after",
+    "case": "rich-Png",
+    "metrics": {
+      "readerStyleCacheHits": 0,
+      "typefaceCreated": 1,
+      "supportCacheHits": 8,
+      "pagePayloadMax": 1,
+      "richTextLayoutCacheMisses": 1,
+      "textLineCacheMisses": 2,
+      "mainFullPageBuilds": 2,
+      "richTextLayoutCacheHits": 1,
+      "paintCreated": 1,
+      "paintDisposed": 1,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "before",
+    "case": "rich-Svg",
+    "metrics": {
+      "readerStyleCacheHits": 0,
+      "typefaceCreated": 1,
+      "supportCacheHits": 8,
+      "pagePayloadMax": 1,
+      "richTextLayoutCacheMisses": 1,
+      "textLineCacheMisses": 2,
+      "mainFullPageBuilds": 2,
+      "richTextLayoutCacheHits": 1,
+      "paintCreated": 1,
+      "paintDisposed": 1,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "after",
+    "case": "rich-Svg",
+    "metrics": {
+      "readerStyleCacheHits": 0,
+      "typefaceCreated": 1,
+      "supportCacheHits": 8,
+      "pagePayloadMax": 1,
+      "richTextLayoutCacheMisses": 1,
+      "textLineCacheMisses": 2,
+      "mainFullPageBuilds": 2,
+      "richTextLayoutCacheHits": 1,
+      "paintCreated": 1,
+      "paintDisposed": 1,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "before",
+    "case": "shapes-Pdf",
+    "metrics": {
+      "readerStyleCacheHits": 0,
+      "typefaceCreated": 1,
+      "pagePayloadMax": 1,
+      "textLayoutCacheMisses": 1,
+      "textLineCacheMisses": 1,
+      "mainFullPageBuilds": 2,
+      "pdfSubsetTypefaceCreated": 1,
+      "textLayoutCacheHits": 1,
+      "paintCreated": 1,
+      "pdfFontCreated": 1,
+      "paintDisposed": 1,
+      "pdfFontDisposed": 1,
+      "pdfSubsetTypefaceDisposed": 1,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "after",
+    "case": "shapes-Pdf",
+    "metrics": {
+      "readerStyleCacheHits": 0,
+      "typefaceCreated": 1,
+      "pagePayloadMax": 1,
+      "textLayoutCacheMisses": 1,
+      "mainFullPageBuilds": 2,
+      "pdfSubsetTypefaceCreated": 1,
+      "textLayoutCacheHits": 1,
+      "paintCreated": 1,
+      "pdfFontCreated": 1,
+      "paintDisposed": 1,
+      "pdfFontDisposed": 1,
+      "pdfSubsetTypefaceDisposed": 1,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "before",
+    "case": "shapes-Png",
+    "metrics": {
+      "readerStyleCacheHits": 0,
+      "typefaceCreated": 1,
+      "pagePayloadMax": 1,
+      "textLayoutCacheMisses": 1,
+      "textLineCacheMisses": 1,
+      "mainFullPageBuilds": 2,
+      "textLayoutCacheHits": 1,
+      "paintCreated": 1,
+      "paintDisposed": 1,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "after",
+    "case": "shapes-Png",
+    "metrics": {
+      "readerStyleCacheHits": 0,
+      "typefaceCreated": 1,
+      "pagePayloadMax": 1,
+      "textLayoutCacheMisses": 1,
+      "mainFullPageBuilds": 2,
+      "textLayoutCacheHits": 1,
+      "paintCreated": 1,
+      "paintDisposed": 1,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "before",
+    "case": "shapes-Svg",
+    "metrics": {
+      "readerStyleCacheHits": 0,
+      "typefaceCreated": 1,
+      "pagePayloadMax": 1,
+      "textLayoutCacheMisses": 1,
+      "textLineCacheMisses": 1,
+      "mainFullPageBuilds": 2,
+      "textLayoutCacheHits": 1,
+      "paintCreated": 1,
+      "paintDisposed": 1,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "after",
+    "case": "shapes-Svg",
+    "metrics": {
+      "readerStyleCacheHits": 0,
+      "typefaceCreated": 1,
+      "pagePayloadMax": 1,
+      "textLayoutCacheMisses": 1,
+      "mainFullPageBuilds": 2,
+      "textLayoutCacheHits": 1,
+      "paintCreated": 1,
+      "paintDisposed": 1,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "before",
+    "case": "range-trim-Pdf",
+    "metrics": {
+      "typefaceCreated": 1,
+      "readerStyleCacheHits": 391,
+      "supportCacheHits": 1,
+      "pagePayloadMax": 1,
+      "textLayoutCacheMisses": 1,
+      "textLineCacheMisses": 1,
+      "textLayoutCacheHits": 131,
+      "mainFullPageBuilds": 2,
+      "glyphInkCacheHits": 65,
+      "pdfSubsetTypefaceCreated": 1,
+      "paintCreated": 2,
+      "pdfFontCreated": 1,
+      "paintDisposed": 2,
+      "pdfFontDisposed": 1,
+      "pdfSubsetTypefaceDisposed": 1,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "after",
+    "case": "range-trim-Pdf",
+    "metrics": {
+      "typefaceCreated": 1,
+      "readerStyleCacheHits": 391,
+      "supportCacheHits": 1,
+      "pagePayloadMax": 1,
+      "textLayoutCacheMisses": 1,
+      "textLayoutCacheHits": 131,
+      "mainFullPageBuilds": 2,
+      "glyphInkCacheHits": 65,
+      "pdfSubsetTypefaceCreated": 1,
+      "paintCreated": 2,
+      "pdfFontCreated": 1,
+      "paintDisposed": 2,
+      "pdfFontDisposed": 1,
+      "pdfSubsetTypefaceDisposed": 1,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "before",
+    "case": "selected-Pdf",
+    "metrics": {
+      "typefaceCreated": 1,
+      "readerStyleCacheHits": 3998,
+      "supportCacheHits": 10237,
+      "pagePayloadMax": 1,
+      "textLayoutCacheMisses": 41,
+      "textLineCacheMisses": 41,
+      "textLayoutCacheHits": 123,
+      "mainTextPreflightBuilds": 1,
+      "pdfSubsetTypefaceCreated": 1,
+      "mainFullPageBuilds": 1,
+      "paintCreated": 1,
+      "pdfFontCreated": 1,
+      "paintDisposed": 1,
+      "pdfFontDisposed": 1,
+      "pdfSubsetTypefaceDisposed": 1,
+      "typefaceDisposed": 1
+    }
+  },
+  {
+    "stage": "after",
+    "case": "selected-Pdf",
+    "metrics": {
+      "typefaceCreated": 1,
+      "readerStyleCacheHits": 3998,
+      "supportCacheHits": 10237,
+      "pagePayloadMax": 1,
+      "textLayoutCacheMisses": 41,
+      "textLayoutCacheHits": 123,
+      "mainTextPreflightBuilds": 1,
+      "pdfSubsetTypefaceCreated": 1,
+      "mainFullPageBuilds": 1,
+      "paintCreated": 1,
+      "pdfFontCreated": 1,
+      "paintDisposed": 1,
+      "pdfFontDisposed": 1,
+      "pdfSubsetTypefaceDisposed": 1,
+      "typefaceDisposed": 1
+    }
+  }
+]

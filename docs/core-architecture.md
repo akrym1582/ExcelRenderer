@@ -73,6 +73,21 @@ Conditional main PDF text preflight preserves product regions, clips and shape
 metadata through the full policy hook, while other preflight requirements retain
 their complete path. See [implemented boundaries and validation](main-performance-optimization.md).
 
+Page building carries one resolved `PageBuildPurpose`: rendering, Core font
+collection, or product preflight with metadata. The plan validates that purpose
+and resolves ineligible product preflight to rendering before measurement.
+Placement and command generation consume the same purpose; cell, product-object
+and header/footer text collection order belongs to the common command generator.
+The drawing extension supplies only its text-bearing objects.
+
+CLOCK replacement/eviction reuses the released slot without searching the ring
+again. Scan metrics include free-slot searches. Main's whole-layout cache owns
+plain single-line text without wrapping. The line cache also reuses fragments
+from explicit line breaks, automatic wrapping and rich text.
+Default measurement and run completion share one built-in measurer; a supplied
+custom measurer retains a separate built-in completion service. See the
+[review fixes and measurements](rendering-review-fixes.md).
+
 ## Core glyph storage follow-up
 
 Core outline layout consumes paragraph-relative glyph ranges and freezes each

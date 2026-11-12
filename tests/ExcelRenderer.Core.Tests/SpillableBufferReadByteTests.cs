@@ -63,20 +63,33 @@ public sealed class SpillableBufferReadByteTests
         stream.Write(bytes);
         for (var round = 0; round < 2; round++)
         {
-            stream.Position = 0;
-            while (stream.ReadByte() >= 0) { }
+            ReadToEnd(stream);
         }
 
+        // Use the lowest of several steady-state passes so a one-off runtime
+        // allocation cannot look like an allocation on every byte read.
+        var minimumAllocated = long.MaxValue;
+        for (var round = 0; round < 5; round++)
+        {
+            var before = GC.GetAllocatedBytesForCurrentThread();
+            var read = ReadToEnd(stream);
+            var allocated = GC.GetAllocatedBytesForCurrentThread() - before;
+            minimumAllocated = Math.Min(minimumAllocated, allocated);
+            Assert.Equal(bytes.Length, read);
+        }
+
+        Assert.InRange(minimumAllocated, 0, 1024);
+    }
+
+    private static int ReadToEnd(Stream stream)
+    {
         stream.Position = 0;
-        var before = GC.GetAllocatedBytesForCurrentThread();
         var read = 0;
         while (stream.ReadByte() >= 0)
         {
             read++;
         }
 
-        var allocated = GC.GetAllocatedBytesForCurrentThread() - before;
-        Assert.Equal(bytes.Length, read);
-        Assert.InRange(allocated, 0, 1024);
+        return read;
     }
 }

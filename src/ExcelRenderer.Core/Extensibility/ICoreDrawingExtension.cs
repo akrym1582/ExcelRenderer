@@ -24,4 +24,9 @@ internal interface ICoreDrawingExtension
     /// <param name="page">The page.</param>
     /// <returns>The ordered object commands.</returns>
     IEnumerable<DrawCommand> CreateObjectCommands(RenderPage page);
+
+    /// <summary>Creates only object commands requiring font collection, in the same product Z order.</summary>
+    /// <param name="page">The page with product object metadata.</param>
+    /// <returns>The ordered text-bearing object commands.</returns>
+    IEnumerable<DrawCommand> CreateTextObjectCommands(RenderPage page);
 }

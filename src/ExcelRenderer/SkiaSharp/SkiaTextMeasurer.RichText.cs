@@ -140,7 +140,7 @@ public sealed partial class SkiaTextMeasurer
     {
         if (elements.Count == 0)
         {
-            return CreateLine(string.Empty, explicitBreak, emptyFont, new(emptyFont.Family, emptyFont.Bold ? 700 : 400, emptyFont.Italic));
+            return CreateCachedLine(string.Empty, explicitBreak, emptyFont, new(emptyFont.Family, emptyFont.Bold ? 700 : 400, emptyFont.Italic));
         }
 
         var runs = new List<TextLayoutRun>();
@@ -150,7 +150,7 @@ public sealed partial class SkiaTextMeasurer
         var leading = 0d;
         foreach (var (text, style) in Segments(elements))
         {
-            var line = CreateLine(text, false, style, new(style.Family, style.Bold ? 700 : 400, style.Italic));
+            var line = CreateCachedLine(text, false, style, new(style.Family, style.Bold ? 700 : 400, style.Italic));
             runs.AddRange(line.Runs.Select(run => run with { X = run.X + x, Font = style }));
             x += line.Width;
             ascent = Math.Max(ascent, line.Ascent);

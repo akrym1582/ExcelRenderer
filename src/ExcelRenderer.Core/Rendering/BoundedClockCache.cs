@@ -62,6 +62,7 @@ internal sealed class BoundedClockCache<TKey, TValue>
         }
 
         var slots = this.slots ??= new Entry[maximumEntries];
+        var available = -1;
 
         // Existing weak values can expire; replace their entry without clearing other slots.
         if (entries.TryGetValue(key, out var previous))
@@ -69,6 +70,7 @@ internal sealed class BoundedClockCache<TKey, TValue>
             entries.Remove(key);
             RetainedUnits -= previous.Units;
             slots[previous.Slot] = null;
+            available = previous.Slot;
         }
 
         while (entries.Count >= slots.Length || RetainedUnits + units > maximumUnits)
@@ -86,6 +88,7 @@ internal sealed class BoundedClockCache<TKey, TValue>
                     entries.Remove(entry.Key);
                     RetainedUnits -= entry.Units;
                     slots[hand] = null;
+                    available = hand;
                     Report("Evictions", 1);
                     if (metric == "layoutCache")
                     {
@@ -97,16 +100,25 @@ internal sealed class BoundedClockCache<TKey, TValue>
             hand = (hand + 1) % slots.Length;
         }
 
-        while (slots[hand] is not null)
+        // Reuse the slot just released by replacement or eviction. Advancing the
+        // clock and searching again would scan the entire ring at capacity.
+        if (available < 0)
         {
-            hand = (hand + 1) % slots.Length;
+            while (slots[hand] is not null)
+            {
+                Report("Scans", 1);
+                hand = (hand + 1) % slots.Length;
+            }
+
+            Report("Scans", 1);
+            available = hand;
         }
 
-        var added = new Entry(key, value, (int)units, hand);
-        slots[hand] = added;
+        var added = new Entry(key, value, (int)units, available);
+        slots[available] = added;
         entries.Add(key, added);
         RetainedUnits += added.Units;
-        hand = (hand + 1) % slots.Length;
+        hand = (available + 1) % slots.Length;
         if (metric == "layoutCache")
         {
             ConversionMetrics.Report("layoutCacheEntries", Count);

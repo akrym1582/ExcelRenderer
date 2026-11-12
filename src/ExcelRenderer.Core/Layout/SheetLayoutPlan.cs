@@ -101,16 +101,14 @@ internal sealed class SheetLayoutPlan
     /// <param name="count">The count used by this operation.</param>
     /// <param name="measurer">The measurer used by this operation.</param>
     /// <param name="cancellationToken">The page-build cancellation token.</param>
-    /// <param name="collectTextOnly">Whether to omit nontext payloads during Core font collection.</param>
-    /// <param name="textPreflight">Whether to ask the product policy for a metadata-preserving text payload.</param>
+    /// <param name="purpose">The requested payload; product preflight falls back to rendering when ineligible.</param>
     /// <returns>The planned or generated result.</returns>
-    internal RenderPage Build(int index, int number, int count, ITextMeasurer measurer, CancellationToken cancellationToken = default, bool collectTextOnly = false, bool textPreflight = false)
+    internal RenderPage Build(int index, int number, int count, ITextMeasurer measurer, CancellationToken cancellationToken = default, PageBuildPurpose purpose = PageBuildPurpose.Render)
     {
         var plan = Pages[index];
         var context = new ReportLayoutContext(sheet, measurer, geometry)
         {
             CancellationToken = cancellationToken,
-            CollectTextOnly = collectTextOnly,
             Policy = policy,
             PrintArea = printArea,
             VisibleColumns = visibleColumns,
@@ -123,8 +121,13 @@ internal sealed class SheetLayoutPlan
 
         context.SelectedPageCells = new(GetCandidateAddresses(index));
         context.CandidateAddresses = context.SelectedPageCells.Addresses;
-        context.PreservePreflightMetadata = textPreflight && policy.CanBuildTextPreflight(context);
-        context.CollectTextOnly |= context.PreservePreflightMetadata;
+        context.Purpose = purpose switch
+        {
+            PageBuildPurpose.Render => PageBuildPurpose.Render,
+            PageBuildPurpose.FontCollection => PageBuildPurpose.FontCollection,
+            PageBuildPurpose.Preflight => policy.CanBuildTextPreflight(context) ? PageBuildPurpose.Preflight : PageBuildPurpose.Render,
+            _ => throw new ArgumentOutOfRangeException(nameof(purpose)),
+        };
 
         new TextMeasurePass().Execute(context);
         new CellBoundsPass().Execute(context);

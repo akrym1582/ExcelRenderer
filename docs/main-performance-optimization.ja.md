@@ -4,6 +4,10 @@ PR #114マージ後の `a71e21d9f8a612c8747918383eced1742b385ada` を変更前�
 [英語の実装説明](main-performance-optimization.md)と
 [検証・測定記録](validation/main-performance-optimization/README.md)を参照。
 
+後続の[レビュー指摘への対応](rendering-review-fixes.ja.md)では、CLOCKの空き位置再走査、
+ページ生成目的と文字収集順、通常文字の二重キャッシュを修正した。
+以下の測定値は修正前の履歴として保持し、後続修正の結果とは区別する。
+
 ## 実装した範囲
 
 - PDFは文書writer、PNG/SVGは描画呼び出しscopeがdispose可能なdrawing contextを所有する。

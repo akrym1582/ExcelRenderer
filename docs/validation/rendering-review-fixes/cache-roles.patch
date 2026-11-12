@@ -1,0 +1,112 @@
+diff --git a/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.Outline.cs b/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.Outline.cs
+index f124446..eb9d06a 100644
+--- a/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.Outline.cs
++++ b/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.Outline.cs
+@@ -24,7 +24,12 @@ public sealed partial class SkiaTextMeasurer
+             foreach (var line in TextLineBreaker.Break(text, width, wrap, value => MeasureWidth(value, font, request)))
+             {
+                 ConversionFontResources.Current!.Token.ThrowIfCancellationRequested();
+-                yield return CreateLine(line.Text, line.ExplicitBreak, font, request);
++
++                // Whole unwrapped layouts already have a cache. Reserve the line
++                // cache for fragments shared across wrapped or partially styled text.
++                yield return wrap && width > 0
++                    ? CreateCachedLine(line.Text, line.ExplicitBreak, font, request)
++                    : CreateLine(line.Text, line.ExplicitBreak, font, request);
+             }
+ 
+             yield break;
+@@ -48,11 +53,11 @@ public sealed partial class SkiaTextMeasurer
+                     var previous = lines.Current;
+                     while (lines.MoveNext())
+                     {
+-                        yield return CreateLine(previous.Text, false, font, request);
++                        yield return CreateCachedLine(previous.Text, false, font, request);
+                         previous = lines.Current;
+                     }
+ 
+-                    yield return CreateLine(previous.Text, index < paragraphs.Length - 1, font, request);
++                    yield return CreateCachedLine(previous.Text, index < paragraphs.Length - 1, font, request);
+                 }
+ 
+                 continue;
+@@ -70,7 +75,7 @@ public sealed partial class SkiaTextMeasurer
+ 
+             yield return CreateSelected(pending, index < paragraphs.Length - 1);
+ 
+-            TextLayoutLine CreateSelected((string Text, ushort[] Glyphs) line, bool explicitBreak) => CreateLine(
++            TextLayoutLine CreateSelected((string Text, ushort[] Glyphs) line, bool explicitBreak) => CreateCachedLine(
+                 line.Text,
+                 explicitBreak,
+                 font,
+diff --git a/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.RichText.cs b/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.RichText.cs
+index 09ba272..ebc7672 100644
+--- a/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.RichText.cs
++++ b/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.RichText.cs
+@@ -140,7 +140,7 @@ public sealed partial class SkiaTextMeasurer
+     {
+         if (elements.Count == 0)
+         {
+-            return CreateLine(string.Empty, explicitBreak, emptyFont, new(emptyFont.Family, emptyFont.Bold ? 700 : 400, emptyFont.Italic));
++            return CreateCachedLine(string.Empty, explicitBreak, emptyFont, new(emptyFont.Family, emptyFont.Bold ? 700 : 400, emptyFont.Italic));
+         }
+ 
+         var runs = new List<TextLayoutRun>();
+@@ -150,7 +150,7 @@ public sealed partial class SkiaTextMeasurer
+         var leading = 0d;
+         foreach (var (text, style) in Segments(elements))
+         {
+-            var line = CreateLine(text, false, style, new(style.Family, style.Bold ? 700 : 400, style.Italic));
++            var line = CreateCachedLine(text, false, style, new(style.Family, style.Bold ? 700 : 400, style.Italic));
+             runs.AddRange(line.Runs.Select(run => run with { X = run.X + x, Font = style }));
+             x += line.Width;
+             ascent = Math.Max(ascent, line.Ascent);
+diff --git a/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.cs b/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.cs
+index 61aa8f6..afbb011 100644
+--- a/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.cs
++++ b/src/ExcelRenderer/SkiaSharp/SkiaTextMeasurer.cs
+@@ -109,7 +109,7 @@ public sealed partial class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
+         return result;
+     }
+ 
+-    private TextLayoutLine CreateLine(
++    private TextLayoutLine CreateCachedLine(
+         string text,
+         bool explicitBreak,
+         FontStyle style,
+@@ -124,6 +124,23 @@ public sealed partial class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
+             return cached;
+         }
+ 
++        var result = CreateLine(text, explicitBreak, style, request, selectedRun, selectedGlyphs);
++        if (cacheable)
++        {
++            lineLayouts!.Store(key, result, text.Length + (long)style.Family.Length + LineUnits(result));
++        }
++
++        return result;
++    }
++
++    private TextLayoutLine CreateLine(
++        string text,
++        bool explicitBreak,
++        FontStyle style,
++        FontRequest request,
++        TextRun? selectedRun = null,
++        ushort[]? selectedGlyphs = null)
++    {
+         IReadOnlyList<TextRun> resolvedRuns = selectedRun is null ? _fontManager.ResolveTextRuns(text, request) : [selectedRun];
+         var positionedRuns = new List<TextLayoutRun>();
+         var x = 0d;
+@@ -154,11 +171,6 @@ public sealed partial class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
+             Descent = descent,
+             Leading = leading,
+         };
+-        if (cacheable)
+-        {
+-            lineLayouts!.Store(key, result, text.Length + (long)style.Family.Length + LineUnits(result));
+-        }
+-
+         return result;
+     }
+ 

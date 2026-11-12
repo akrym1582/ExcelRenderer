@@ -37,6 +37,8 @@ public sealed class PerformanceTests(ITestOutputHelper output)
                 if (images && row % 50 == 1) TestWorkbook.Image(part.WorksheetParts.Single(), TestSupport.Png(), "image-" + row, row - 1, 1);
             }
 
+            // Keep row identifiers inside A: B contains a value and now correctly blocks text overflow.
+            sheet.InsertBefore(new S.Columns(new S.Column { Min = 1, Max = 1, Width = 12, CustomWidth = true }), data);
             sheet.Append(new S.PageMargins { Left = 0.5, Right = 0.5, Top = 0.5, Bottom = 0.5, Header = 0, Footer = 0 },
                 new S.PageSetup { PaperSize = 1, Scale = 100 }, breaks);
             TestSupport.Print(part, $"First!$A$1:$B${rows}");

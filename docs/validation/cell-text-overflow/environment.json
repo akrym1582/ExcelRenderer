@@ -1,0 +1,60 @@
+{
+  "baseline_commit": "df74eb0",
+  "runtime": ".NET SDK:\n Version:           10.0.401\n Commit:            e34a38d2ae\n Workload version:  10.0.400-manifests.63b36e85\n MSBuild version:   18.9.11+e34a38d2a\n\nRuntime Environment:\n OS Name:     debian\n OS Version:  13\n OS Platform: Linux\n RID:         linux-x64\n Base Path:   /workspace/.tools/dotnet/sdk/10.0.401/\n\n.NET workloads installed:\nThere are no installed workloads to display.\nConfigured to use workload sets when installing new manifests.\nNo workload sets are installed. Run \"dotnet workload restore\" to install a workload set.\n\nHost:\n  Version:      10.0.12\n  Architecture: x64\n  Commit:       95017c711e\n\n.NET SDKs installed:\n  10.0.401 [/workspace/.tools/dotnet/sdk]\n\n.NET runtimes installed:\n  Microsoft.AspNetCore.App 10.0.12 [/workspace/.tools/dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.NETCore.App 10.0.12 [/workspace/.tools/dotnet/shared/Microsoft.NETCore.App]\n\nOther architectures found:\n  None\n\nEnvironment variables:\n  DOTNET_CLI_HOME                          [/workspace/.tools/dotnet-home]\n  DOTNET_ROOT                              [/workspace/.tools/dotnet]\n\nglobal.json file:\n  Not found\n\nLearn more:\n  https://aka.ms/dotnet/info\n\nDownload .NET:\n  https://aka.ms/dotnet/download\n",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "benchmark": {
+    "warmups": 2,
+    "measured_rounds": 7,
+    "DOTNET_TieredCompilation": "0",
+    "output": "PDF to MemoryStream",
+    "execution": "Sequential fresh processes; no overlapping builds, tests, or rendering measurements",
+    "initial_samples": "initial/*.jsonl retained with default tiered compilation; not pooled with the controlled follow-up"
+  },
+  "assemblies": {
+    "before": {
+      "DocumentFormat.OpenXml.Framework.dll": "5b8c2b9ca1aa70539af0b8054d649bd09fdce4dec812b263ab511b13789c8589",
+      "DocumentFormat.OpenXml.dll": "72e8f6e3e3527d7e6ee29f2f9182ef1b39a4de6da355a33013c0940efb24d87e",
+      "ExcelNumberFormat.dll": "d7c45b8e4e1027831e2fc8cdf941faf51d28a66feacfcaaa737da73262e7b507",
+      "ExcelRenderer.Core.dll": "0286ac37cfea92bac075aae158e3e5e5fd47deea0cb316427115ad0584c4630d",
+      "ExcelRenderer.Fonts.dll": "a8cecdd0035341c5539092faade5fbf650f42832a9fdb02ec0cf7ab9d3e10f0e",
+      "ExcelRenderer.Formulas.dll": "f867627317bcbcc784ee2b5ea3a6b802ebab7a9ecaa1d08acb07a76de48413c6",
+      "ExcelRenderer.Mapping.dll": "79f8a0ed65d3ffd0e64cd7e474ac9e115c70ee3721d34ee252f3d913f7715680",
+      "ExcelRenderer.OpenXml.Reader.dll": "01f8ab7642cb0d0a3ae0dba7d923d32dc645bdb381b7f8c82eec75e67b65f562",
+      "ExcelRenderer.OpenXml.dll": "df2378106d46f36d79a7b6d299cf10cb2cc48fc9c977ea3dda5974e68179e494",
+      "ExcelRenderer.Performance.dll": "8537d4a3b39f09275a0ac10b44237316391b7d748a85c804f5ab557f9a83efab",
+      "ExcelRenderer.dll": "c308cff1e3a93091e152d56d0773da480c9d0677e86aa0dda7f4cbddc65ab4a1",
+      "SkiaSharp.dll": "6e9f9367c0a30ca826065af19b2a6d6138c35ca9b47a72865539267f7e1bb1d1",
+      "System.IO.Packaging.dll": "12ddc8bff279fad856551a74894dc52b80fa437d5d2b32722e70ae6899217b7c",
+      "UglyToad.PdfPig.Core.dll": "70d93534a6573cb6674d94f6d3c2235c09a6a9e09d1d13b032a2a4a1c3b19818",
+      "UglyToad.PdfPig.DocumentLayoutAnalysis.dll": "3a763e3afd8b290fd46bbc91750459d057d6f64b8dc11ecd6527c977044086be",
+      "UglyToad.PdfPig.Fonts.dll": "aade3f7c3211c961303b136d78888da4194c183a1ea6503b72818b24cbd3a72a",
+      "UglyToad.PdfPig.Package.dll": "6da637d4a06099adf02036d632c3f4a7ea93f01c37145534e6d061725b0361b5",
+      "UglyToad.PdfPig.Tokenization.dll": "ad06282eb18bed04e3da01c757bcc16bc6fbfd8471660c1cddb5f75cbd643758",
+      "UglyToad.PdfPig.Tokens.dll": "128195b9c82ecf521ba2ddbfb358ff033c6d0a67938c87493ca8bf0991fff91d",
+      "UglyToad.PdfPig.dll": "e062781488d3a8557bcf670c57d6776ea7e723faa683b49ec4c6d449c087f5a1"
+    },
+    "after": {
+      "DocumentFormat.OpenXml.Framework.dll": "5b8c2b9ca1aa70539af0b8054d649bd09fdce4dec812b263ab511b13789c8589",
+      "DocumentFormat.OpenXml.dll": "72e8f6e3e3527d7e6ee29f2f9182ef1b39a4de6da355a33013c0940efb24d87e",
+      "ExcelNumberFormat.dll": "d7c45b8e4e1027831e2fc8cdf941faf51d28a66feacfcaaa737da73262e7b507",
+      "ExcelRenderer.Core.dll": "cc61478543b187d2802e9ad44ca8cdebb599528aa3ea8b0474757eae0f5f81c8",
+      "ExcelRenderer.Fonts.dll": "2dcc1ddbc219f1f5c2fa6f537cd94a31414578df3a5514f9f4a2ab486ec58d81",
+      "ExcelRenderer.Formulas.dll": "38decdbcf9fa75d1764a1d924eaf29e19530ec588934d47bb1db8e718798b69e",
+      "ExcelRenderer.Mapping.dll": "fc9f0a81c8b4f5a730089d1b56598dc8eae7840471cf1ce9a1c15ed7f3a10c36",
+      "ExcelRenderer.OpenXml.Reader.dll": "b1b12eba5136e0099ccc6e8ab34a014c32cbbf78b37a4759775929900c287dda",
+      "ExcelRenderer.OpenXml.dll": "3409c337c982fcf5a38ba14ea6187e970bb44353fae68fb181c3bfdd9c9e4dd3",
+      "ExcelRenderer.Performance.dll": "bbe77abe21079a23d86be7c05a60ea99c2f3befe2b8d5d073fb04e6f5888ab85",
+      "ExcelRenderer.dll": "c70024a94c593640d6633328aa75c37b9f3e03196d57482aded6ad535c9eda42",
+      "SkiaSharp.dll": "6e9f9367c0a30ca826065af19b2a6d6138c35ca9b47a72865539267f7e1bb1d1",
+      "System.IO.Packaging.dll": "12ddc8bff279fad856551a74894dc52b80fa437d5d2b32722e70ae6899217b7c",
+      "UglyToad.PdfPig.Core.dll": "70d93534a6573cb6674d94f6d3c2235c09a6a9e09d1d13b032a2a4a1c3b19818",
+      "UglyToad.PdfPig.DocumentLayoutAnalysis.dll": "3a763e3afd8b290fd46bbc91750459d057d6f64b8dc11ecd6527c977044086be",
+      "UglyToad.PdfPig.Fonts.dll": "aade3f7c3211c961303b136d78888da4194c183a1ea6503b72818b24cbd3a72a",
+      "UglyToad.PdfPig.Package.dll": "6da637d4a06099adf02036d632c3f4a7ea93f01c37145534e6d061725b0361b5",
+      "UglyToad.PdfPig.Tokenization.dll": "ad06282eb18bed04e3da01c757bcc16bc6fbfd8471660c1cddb5f75cbd643758",
+      "UglyToad.PdfPig.Tokens.dll": "128195b9c82ecf521ba2ddbfb358ff033c6d0a67938c87493ca8bf0991fff91d",
+      "UglyToad.PdfPig.dll": "e062781488d3a8557bcf670c57d6776ea7e723faa683b49ec4c6d449c087f5a1"
+    }
+  },
+  "verified_remote_main": "df74eb0523e712db96e918c3038abb077590365a"
+}

@@ -47,7 +47,7 @@ internal sealed class DrawCommandGeneratorPass
                     {
                         SourceAddress = cell.SourceAddress,
                         TextLayout = cell.TextLayout ?? (requiresTextLayout ? throw new InvalidOperationException("Cell text layout is missing.") : null),
-                        ClipBounds = clip,
+                        ClipBounds = TextOverflowPass.Intersect(clip, cell.TextClipBounds),
                     };
                 }
 

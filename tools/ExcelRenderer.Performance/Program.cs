@@ -14,6 +14,18 @@ if (args.Length > 0 && args[0] == "async-pdf")
     return;
 }
 
+if (args[0] == "text-overflow-case")
+{
+    await TextOverflowBenchmark.RunAsync(args);
+    return;
+}
+
+if (args[0] == "text-overflow-snapshots")
+{
+    await TextOverflowBenchmark.SnapshotsAsync(args[1]);
+    return;
+}
+
 var command = args[0];
 var path = args[1];
 if (command == "paint-color-case")

@@ -20,6 +20,7 @@ internal static class CorePageAdapter
             DecorationClipBounds = cell.DecorationClipBounds is { } decorationClip ? CoreModelAdapter.ToPublic(decorationClip) : null,
             ContentBounds = CoreModelAdapter.ToPublic(cell.ContentBounds),
             ClipBounds = cell.ClipBounds is { } clip ? CoreModelAdapter.ToPublic(clip) : null,
+            TextClipBounds = cell.TextClipBounds is { } textClip ? CoreModelAdapter.ToPublic(textClip) : null,
             TextLayout = cell.TextLayout is { } layout ? CoreTextLayoutAdapter.ToPublic(layout) : null,
             MergedBorders = cell.MergedBorders?.Select(border => new RenderBorder(CoreModelAdapter.ToPublic(border.Bounds), styles.Intern(CoreModelAdapter.ToPublic(border.Border)))).ToArray(),
         }).ToArray();
@@ -39,6 +40,8 @@ internal static class CorePageAdapter
         new Core.Model.ReportCell(cell.Cell.Text, CoreModelAdapter.ToCore(cell.Cell.Style), cell.Cell.RowSpan, cell.Cell.ColumnSpan, cell.Cell.Formula)
         {
             ExtensionData = FullCellPresentationData.Create(cell.Cell),
+            HasStoredValue = cell.Cell.HasStoredValue,
+            SuppressTextOverflow = cell.Cell.SuppressTextOverflow,
             FormulaSharedIndex = cell.Cell.FormulaSharedIndex,
             FormulaMasterAddress = cell.Cell.FormulaMasterAddress is { } master ? CoreModelAdapter.ToCore(master) : null,
         },
@@ -49,6 +52,7 @@ internal static class CorePageAdapter
         DecorationClipBounds = cell.DecorationClipBounds is { } decorationClip ? CoreModelAdapter.ToCore(decorationClip) : null,
         ContentBounds = CoreModelAdapter.ToCore(cell.ContentBounds),
         ClipBounds = cell.ClipBounds is { } clip ? CoreModelAdapter.ToCore(clip) : null,
+        TextClipBounds = cell.TextClipBounds is { } textClip ? CoreModelAdapter.ToCore(textClip) : null,
         TextLayout = cell.TextLayout is { } text ? CoreTextLayoutAdapter.ToCore(text) : null,
         MergedBorders = cell.MergedBorders?.Select(border => new Core.Layout.RenderBorder(CoreModelAdapter.ToCore(border.Bounds), CoreModelAdapter.ToCore(border.Border))).ToArray(),
     };

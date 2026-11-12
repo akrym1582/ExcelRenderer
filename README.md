@@ -642,6 +642,8 @@ cells, objects, and their body clip together; continuous output intentionally ig
 Cell indentation, content padding, ordinary rotation, and stacked top-to-bottom text are carried
 into PDF, PNG, and SVG drawing.
 
+Ordinary horizontal text with wrapping and shrink-to-fit disabled can extend across consecutive empty cells in the same row. Left-aligned text extends right, right-aligned text extends left, and centered text uses independent boundaries on both sides without moving its anchor. Stored values (including explicit empty strings and values hidden by formatting), formulas (including empty or missing results), and entire merged ranges stop overflow. Style-only blanks are transparent to this search; hidden columns have zero width. Text is clipped to the current page, print area, repeated-title region, selected range, or continuous canvas. Merged source cells, rotated/vertical text, and special alignments retain their existing behavior. This affects visual output; Markdown keeps the complete cell text.
+
 Wrapped cell text is finalized during layout into lines and resolved font runs, including
 grapheme-safe forced breaks and explicit-newline markers. The result is carried by the draw
 command. PDF, PNG, and SVG consume the finalized effective font size, per-line baseline and

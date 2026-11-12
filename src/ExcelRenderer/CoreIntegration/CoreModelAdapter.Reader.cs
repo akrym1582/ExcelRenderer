@@ -48,6 +48,8 @@ internal static partial class CoreModelAdapter
 
             return new(cell.Text, style, cell.RowSpan, cell.ColumnSpan, cell.Formula)
             {
+                HasStoredValue = cell.HasStoredValue,
+                SuppressTextOverflow = cell.SuppressTextOverflow,
                 FormulaSharedIndex = cell.FormulaSharedIndex,
                 FormulaMasterAddress = cell.FormulaMasterAddress is { } master ? ToPublic(master) : null,
                 ConditionalVisual = FullCellPresentationData.Decoration(cell.ExtensionData),

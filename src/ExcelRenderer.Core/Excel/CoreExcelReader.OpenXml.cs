@@ -336,7 +336,7 @@ internal partial class CoreExcelReader
                     styleHits++;
                 }
 
-                if (cell.Value.Type == CellValueType.Blank && cell.Formula is null && cell.StyleIndex == 0 && style.Background is null && style.Border is null && !isLeader &&
+                if (cell.Value.Type == CellValueType.Blank && sourceCell.Formula is null && cell.Formula is null && cell.StyleIndex == 0 && style.Background is null && style.Border is null && !isLeader &&
                     !Paint(BlankStyle(rowDefaults.TryGetValue(cell.Address.Row, out var inheritedRow) ? inheritedRow : columnDefaults[cell.Address.Column] ?? 0)))
                 {
                     continue;
@@ -361,6 +361,9 @@ internal partial class CoreExcelReader
 
                 var model = new ReportCell(NormalizeDisplayText(display.Text), style, Formula: cell.Formula?.RawFormula is { Length: > 0 } formula ? "=" + formula : null)
                 {
+                    HasStoredValue = sourceCell.Value.Type != CellValueType.Blank || sourceCell.Formula is not null,
+                    SuppressTextOverflow = Attribute(originalStyle.Alignment, "horizontal") is not (null or "general" or "left" or "right" or "center") ||
+                        Number(originalStyle.Alignment, "textRotation", 0) != 0,
                     FormulaSharedIndex = cell.Formula?.SharedIndex,
                     FormulaMasterAddress = cell.Formula?.MasterAddress is { } master ? new(master.Row, master.Column) : null,
                 };
@@ -476,7 +479,7 @@ internal partial class CoreExcelReader
             void AddMissingLeader(OpenXml.Reader.Model.Cells.CellAddress address)
             {
                 var index = rowDefaults.TryGetValue(address.Row, out var rowStyle) ? rowStyle : columnDefaults[address.Column] ?? 0;
-                cells.Add(new(address.Row, address.Column), new(string.Empty, BlankStyle(index)));
+                cells.Add(new(address.Row, address.Column), new(string.Empty, BlankStyle(index)) { HasStoredValue = false });
             }
 
             static bool Paint(CellStyle style) => style.Background is not null || style.Border is not null;

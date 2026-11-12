@@ -1,0 +1,22 @@
+{
+  "core": {
+    "red_pixels_in_blank_B1": 84,
+    "red_pixels_in_occupied_C1_and_beyond": 0,
+    "raster_dpi": 72,
+    "page_pixels": [
+      612,
+      792
+    ],
+    "occupied_boundary_points": 121.5
+  },
+  "main": {
+    "red_pixels_in_blank_B1": 84,
+    "red_pixels_in_occupied_C1_and_beyond": 0,
+    "raster_dpi": 72,
+    "page_pixels": [
+      612,
+      792
+    ],
+    "occupied_boundary_points": 121.5
+  }
+}

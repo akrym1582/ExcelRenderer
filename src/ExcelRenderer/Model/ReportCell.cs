@@ -29,4 +29,10 @@ public sealed record ReportCell(
 
     /// <summary>Gets a value indicating whether source partial decorations cannot be rendered.</summary>
     internal bool UnsupportedRichTextFormatting { get; init; }
+
+    /// <summary>Gets the saved occupancy before display formatting or recalculation; null uses model text and formula metadata.</summary>
+    internal bool? HasStoredValue { get; init; }
+
+    /// <summary>Gets a value indicating whether the source uses an unsupported overflow alignment or text orientation.</summary>
+    internal bool SuppressTextOverflow { get; init; }
 }

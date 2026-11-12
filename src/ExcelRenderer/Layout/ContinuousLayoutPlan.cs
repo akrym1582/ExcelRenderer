@@ -218,16 +218,24 @@ internal sealed class ContinuousLayoutPlan
             }
 
             new Core.Layout.CellBoundsPass().Execute(context);
+            if (layer is null or DrawingLayer.Text)
+            {
+                new Core.Layout.TextOverflowPass().Execute(context);
+            }
+
             if (!context.CellLayouts.TryGetValue(coreAddress, out var cell) ||
                 (clip is { } selected && RectangleGeometry.Intersect(CoreIntegration.CoreModelAdapter.ToPublic(cell.Bounds), selected) is null))
             {
                 continue;
             }
 
+            var sourceRegion = new Core.Layout.ReportRect(-shiftX, -shiftY, Width, Height);
+            var textClip = Core.Layout.TextOverflowPass.GetClip(cell, context.Sheet.Cells[coreAddress].Style, sourceRegion);
             yield return new(sheet.Cells[address], Move(CoreIntegration.CoreModelAdapter.ToPublic(cell.Bounds)))
             {
                 SourceAddress = address,
                 ContentBounds = Move(CoreIntegration.CoreModelAdapter.ToPublic(cell.ContentBounds)),
+                TextClipBounds = textClip is { } overflowClip ? Move(CoreIntegration.CoreModelAdapter.ToPublic(overflowClip)) : null,
                 TextLayout = context.TextLayouts.TryGetValue(coreAddress, out var text) ? CoreIntegration.CoreTextLayoutAdapter.ToPublic(text) : null,
                 MergedBorders = cell.MergedBorders?.Select(border => new RenderBorder(Move(CoreIntegration.CoreModelAdapter.ToPublic(border.Bounds)), CoreIntegration.CoreModelAdapter.ToPublic(border.Border))).ToArray(),
                 ClipBounds = clip is null ? null : Move(clip.Value),

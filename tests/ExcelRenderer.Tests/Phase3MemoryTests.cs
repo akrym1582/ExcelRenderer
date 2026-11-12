@@ -413,8 +413,9 @@ public sealed class Phase3MemoryTests
         var svg = new SvgRenderer(manager);
         svg.RenderCanvas(new DrawCommandGeneratorPass().GenerateContinuous(plan, measurer), plan.Width, plan.Height, lazySvg);
         svg.RenderCanvas(new DrawCommandGeneratorPass().Generate(materialized.Document), materialized.Width, materialized.Height, fullSvg);
-        Assert.Equal(System.Xml.Linq.XDocument.Parse(System.Text.Encoding.UTF8.GetString(fullSvg.ToArray())).ToString(),
-            System.Xml.Linq.XDocument.Parse(System.Text.Encoding.UTF8.GetString(lazySvg.ToArray())).ToString());
+        // Skia assigns process-wide clip IDs; compare the serialized structure after consistent resource renaming.
+        Assert.Equal(ExcelRenderer.TestFixtures.ReaderSnapshot.CanonicalSvg(fullSvg.ToArray()),
+            ExcelRenderer.TestFixtures.ReaderSnapshot.CanonicalSvg(lazySvg.ToArray()));
     }
 
     /// <summary>SVG のファイル退避出力がメモリ出力と一致し、出力先への書き込み失敗後も一時ファイルが残らないことを検証します。</summary>

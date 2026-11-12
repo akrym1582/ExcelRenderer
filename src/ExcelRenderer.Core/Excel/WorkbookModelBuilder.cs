@@ -149,7 +149,7 @@ internal static class WorkbookModelBuilder
             var style = Style(index);
             if (Paint(style))
             {
-                cells.Add(address, new(string.Empty, style));
+                cells.Add(address, new(string.Empty, style) { HasStoredValue = false });
             }
         }
     }

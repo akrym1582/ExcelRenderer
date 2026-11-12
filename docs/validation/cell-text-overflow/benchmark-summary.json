@@ -1,0 +1,62 @@
+[
+  {
+    "fixture": "short",
+    "engine": "main",
+    "DOTNET_TieredCompilation": "0",
+    "before": {
+      "median_ms": 87.3287,
+      "median_allocated_bytes": 70755264,
+      "pages": 1
+    },
+    "after": {
+      "median_ms": 90.6445,
+      "median_allocated_bytes": 71595288,
+      "pages": 1
+    }
+  },
+  {
+    "fixture": "short",
+    "engine": "core",
+    "DOTNET_TieredCompilation": "0",
+    "before": {
+      "median_ms": 56.8238,
+      "median_allocated_bytes": 50888304,
+      "pages": 1
+    },
+    "after": {
+      "median_ms": 52.8696,
+      "median_allocated_bytes": 51647224,
+      "pages": 1
+    }
+  },
+  {
+    "fixture": "sparse",
+    "engine": "main",
+    "DOTNET_TieredCompilation": "0",
+    "before": {
+      "median_ms": 54.8228,
+      "median_allocated_bytes": 22480584,
+      "pages": 1
+    },
+    "after": {
+      "median_ms": 55.5397,
+      "median_allocated_bytes": 22606168,
+      "pages": 1
+    }
+  },
+  {
+    "fixture": "sparse",
+    "engine": "core",
+    "DOTNET_TieredCompilation": "0",
+    "before": {
+      "median_ms": 51.2491,
+      "median_allocated_bytes": 21456912,
+      "pages": 1
+    },
+    "after": {
+      "median_ms": 49.9587,
+      "median_allocated_bytes": 21577520,
+      "pages": 1
+    }
+  }
+]

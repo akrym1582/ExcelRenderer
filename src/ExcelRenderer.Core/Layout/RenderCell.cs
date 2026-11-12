@@ -30,4 +30,7 @@ internal sealed record RenderCell(ReportCell Cell, ReportRect Bounds)
 
     /// <summary>Gets an optional page-space viewport supplied by a selection policy.</summary>
     internal ReportRect? ClipBounds { get; init; }
+
+    /// <summary>Gets the cell-text-only clip in drawing coordinates.</summary>
+    internal ReportRect? TextClipBounds { get; init; }
 }

@@ -263,9 +263,11 @@ internal sealed class RenderPageBuilder
             layout.Bounds.Width * _scale,
             layout.Bounds.Height * _scale);
         var cell = _context.Sheet.Cells[layout.Address];
+        var sourceClip = GetTextClip(layout, placement, PageX(0), PageY(0));
         return new(ScaleCell(cell, _scale), bounds)
         {
             DecorationScale = _scale,
+            TextClipBounds = sourceClip is { } clip ? new(PageX(clip.X), PageY(clip.Y), clip.Width * _scale, clip.Height * _scale) : null,
             SourceAddress = layout.Address,
             ContentBounds = new(
                 bounds.X + ((layout.ContentBounds.X - layout.Bounds.X) * _scale),
@@ -283,6 +285,59 @@ internal sealed class RenderPageBuilder
                     border.Bounds.Height * _scale),
                 ScaleBorder(border.Border, _scale))).ToArray(),
         };
+    }
+
+    private ReportRect? GetTextClip(CellLayout layout, PagePlacement placement, double originX, double originY)
+    {
+        if (layout.TextOverflowBounds is null)
+        {
+            return null;
+        }
+
+        var printableRight = (_context.Sheet.PageSettings.Width - _context.Sheet.PageSettings.MarginRight - originX) / _scale;
+        var sourceRight = _context.Sheet.PrintArea is not null || _context.Sheet.RequestedRange is not null ? LastColumnEnd() : printableRight;
+        var left = placement.Horizontal.Start;
+        var right = Math.Min(placement.Horizontal.End, sourceRight);
+        if (_titleColumns.Count > 0)
+        {
+            var titleLeft = _context.ColumnLayouts[_titleColumns[0]].X;
+            if (_titleColumnSet.Contains(layout.Address.Column))
+            {
+                left = titleLeft;
+                right = _titleColumnEnd;
+            }
+            else if (layout.Bounds.X >= _titleColumnEnd)
+            {
+                left = Math.Max(left, _titleColumnEnd);
+            }
+            else
+            {
+                right = Math.Min(right, titleLeft);
+            }
+        }
+
+        // Horizontal overflow must not introduce the source cell's row-height clip.
+        var top = -originY / _scale;
+        var bottom = top + (_context.Sheet.PageSettings.Height / _scale);
+        if (_titleRows.Count > 0)
+        {
+            var titleTop = _context.RowLayouts[_titleRows[0]].Y;
+            if (_titleRowSet.Contains(layout.Address.Row))
+            {
+                top = Math.Max(top, titleTop);
+                bottom = _titleRowEnd;
+            }
+            else if (layout.Bounds.Y >= _titleRowEnd)
+            {
+                top = Math.Max(top, Math.Max(placement.Vertical.Start, _titleRowEnd));
+            }
+            else
+            {
+                bottom = Math.Min(bottom, titleTop);
+            }
+        }
+
+        return TextOverflowPass.GetClip(layout, _context.Sheet.Cells[layout.Address].Style, new(left, top, Math.Max(0, right - left), Math.Max(0, bottom - top)));
     }
 
     private double LastColumnEnd()

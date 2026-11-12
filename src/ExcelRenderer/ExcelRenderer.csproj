@@ -36,9 +36,14 @@
     <PackageReference Include="SkiaSharp" Version="4.151.0" />
   </ItemGroup>
   <Target Name="IncludeCoreBuildOutput" DependsOnTargets="ResolveReferences">
+    <!-- Bundle the verified library output independently of copy-local item
+         enumeration. Missing required files must fail packing explicitly. -->
     <ItemGroup>
-      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths)" Condition="'%(ReferenceCopyLocalPaths.Filename)' == 'ExcelRenderer.Core' And '%(ReferenceCopyLocalPaths.Extension)' == '.dll'" />
-      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->'%(RootDir)%(Directory)ExcelRenderer.Core.xml')" Condition="'%(ReferenceCopyLocalPaths.Filename)' == 'ExcelRenderer.Core' And '%(ReferenceCopyLocalPaths.Extension)' == '.dll' And Exists('%(ReferenceCopyLocalPaths.RootDir)%(ReferenceCopyLocalPaths.Directory)ExcelRenderer.Core.xml')" />
+      <_RequiredCoreOutput Include="$(TargetDir)ExcelRenderer.Core.dll;$(TargetDir)ExcelRenderer.Core.xml" />
+    </ItemGroup>
+    <Error Condition="!Exists('%(_RequiredCoreOutput.Identity)')" Text="Required Core package output is missing: %(_RequiredCoreOutput.Identity). Build ExcelRenderer before packing." />
+    <ItemGroup>
+      <BuildOutputInPackage Include="@(_RequiredCoreOutput)" />
     </ItemGroup>
   </Target>
   <ItemGroup>

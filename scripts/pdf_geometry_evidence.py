@@ -245,7 +245,7 @@ def verify_font_formats(directory):
     for name in ("static.ttf", "cff.otf", "variable.ttf", "collection.ttc", "colr.ttf", "colr-v1.ttf"):
         path = directory / (name + ".pdf")
         outcomes = json.loads((directory / (name + '.json')).read_text(encoding='utf-8'))
-        assert len(outcomes) == 2, (name, outcomes)
+        assert len(outcomes) == 1, (name, outcomes)
         if name in ('cff.otf', 'variable.ttf'):
             reason = 'CFF' if name == 'cff.otf' else 'variable'
             assert all(not row['success'] and reason in row['error'] for row in outcomes), (name, outcomes)

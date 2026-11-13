@@ -49,7 +49,20 @@ var separate = options with
 
 呼出し側が指定する単体の固定 TrueType sfnt、または TTC/OTC 内の選択 face を使います。FontCollectionIndex（0始まり、既定0）で選び、計測・描画前に同じ単体 face へ正規化します。既存の非可変カラー face は共通 Skia カラー経路を使います。拡張子では判定しません。CFF/CFF2・可変・WOFF/WOFF2・旧 true/typ1 は PDF 対象外です。破損・未対応形式は InvalidDataException、不存在は FileNotFoundException、不正 index は引数エラーです。[形式の契約](managed-truetype-subset.ja.md)を参照してください。
 
-フォントbytesは変換ごとに一度読み、同じsnapshotで行高・文字幅・PDF描画を処理します。既定設定では、列幅のMDWは、指定フォントの物理ファミリー名と元ブックのNormalファミリー名が一致する場合（大文字小文字を区別しない）だけ同じsnapshotで実測します。不一致の場合は本体と共通の決定的な互換MDWを使い、`MaximumDigitWidthFallback`を通知します。MS PゴシックはCalcのNoto Sans代替に近い数字幅0.572emをtwipへ丸めます（11ptで8.4px）。その他の元書体不在とNormal情報なしは96dpi・7pxです。描画用の代替フォントの数字幅だけを理由に保存列幅を広げません。この互換値が利用できない元フォントのExcel寸法を保証するものではありません。セルとヘッダー/フッターは通常書体に統一します。太字・斜体の疑似描画、フォント探索・fallback、IVSの異体字形の再現、外字・カラー絵文字の特別処理はありません。セルとヘッダー/フッターの異体字セレクター（U+FE00–U+FE0F、U+E0100–U+E01EF）は計測・描画前に除去し、基底文字を表示します。例えば「葛」＋IVSは「葛」として表示し、セレクター由来の追加の豆腐や文字幅は生成しません。基底文字自体が指定フォントに未収録の場合の表示は保証しません。通常セル全体のサイズ・色・下線を維持します。リッチテキストの部分書式は未対応です。共有文字列・inline文字列のrunは本文へ連結し、通常セルのフォントで描画します。run個別のサイズ・色・下線・太字・斜体は維持しません。未収録文字は指定フォント/Skiaの欠字表示に従い、すべてのUnicode文字の表示は保証しません。指定した描画フォントによって折返しは変わり得ます。元のNormalフォント寸法を利用できない場合の列幅はExcel原本と異なることがあり、CoreがOSから元フォントを探索することはありません。
+描画フォントbytesは変換ごとに一度読み、同じsnapshotで文字幅とPDF描画を処理します。列幅は元ブックのNormalのファミリー・サイズ・太字・斜体を基準に、描画用の代替フォントと分けて計測します。`ReadOptions.MaximumDigitWidthPixels96Dpi`は常に優先します。次に`ReadOptions.SourceFontFile`と任意の`SourceFontCollectionIndex`で指定した列幅計算専用のフォントを使います。指定がなければ、描画フォントの物理ファミリー名（ローカライズ名を含む）がNormalと一致する場合はそのsnapshotを実測し、不一致ならSkiaのシステムフォント検索で元ファミリーを取得します。列幅計測だけの検索で、`UseSystemFontsForColumnWidths = false`（Core CLIでは`--no-system-fonts`）で無効化できます。別ファミリーのシステム代替フォントは元フォントとして扱いません。
+
+元フォントを取得できない場合は、`ReadOptions.FallbackMaximumDigitWidthPixels96Dpi`を指定していればその値を使用し、未指定なら描画用の代替フォントをNormalのサイズで実測します。Normal情報がない場合の基準サイズは11ptです。ファミリー別の固定MDWは使用しません。`MaximumDigitWidthFallback`に代替フォントまたは指定値・使用したMDWを記録します。Excelに対して列幅・折返し・ページ数が変わることがあります。取得できた元フォントの実測や常時優先する幅指定は`MaximumDigitWidthResolved`へ記録し、Core CLIでは`--verbose`で表示します。
+
+```sh
+# 通常は元フォント、取得できなければ描画用フォントで計測。
+excelrenderer core report.xlsx --font-file NotoSansJP-Regular.ttf -o report.pdf
+# 元フォントを取得できない場合だけ7pxを使用。
+excelrenderer core report.xlsx --font-file NotoSansJP-Regular.ttf --column-width-fallback-mdw 7 -o compatible.pdf
+# 列幅計算専用に元フォントを指定。
+excelrenderer core report.xlsx --font-file NotoSansJP-Regular.ttf --layout-font original.ttc --layout-font-index 0 -o measured.pdf
+```
+
+セルとヘッダー/フッターは通常書体に統一します。太字・斜体の疑似描画、描画用フォントの探索・fallback、IVSの異体字形の再現、外字・カラー絵文字の特別処理はありません。セルとヘッダー/フッターの異体字セレクター（U+FE00–U+FE0F、U+E0100–U+E01EF）は計測・描画前に除去し、基底文字を表示します。例えば「葛」＋IVSは「葛」として表示し、セレクター由来の追加の豆腐や文字幅は生成しません。基底文字自体が指定フォントに未収録の場合の表示は保証しません。通常セル全体のサイズ・色・下線を維持します。リッチテキストの部分書式は未対応です。共有文字列・inline文字列のrunは本文へ連結し、通常セルのフォントで描画します。run個別のサイズ・色・下線・太字・斜体は維持しません。未収録文字は指定フォント/Skiaの欠字表示に従い、すべてのUnicode文字の表示は保証しません。指定した描画フォントによって折返しは変わり得ます。元のNormalフォント寸法を利用できない場合の列幅はExcel原本と異なることがあり、OS検索は列幅計測に限定します。
 
 ## 印刷と画像
 

@@ -63,6 +63,16 @@ public static class ExcelConverter
             throw new ArgumentOutOfRangeException(nameof(options), "MaximumDigitWidthPixels96Dpi must be finite and at least one.");
         }
 
+        if (options.ReadOptions.SourceFontCollectionIndex is < 0 || (options.ReadOptions.SourceFontCollectionIndex is not null && options.ReadOptions.SourceFontFile is null))
+        {
+            throw new ArgumentException("SourceFontCollectionIndex requires SourceFontFile and a nonnegative index.", nameof(options));
+        }
+
+        if (options.ReadOptions.FallbackMaximumDigitWidthPixels96Dpi is { } fallbackMdw && (!double.IsFinite(fallbackMdw) || fallbackMdw < 1))
+        {
+            throw new ArgumentOutOfRangeException(nameof(options), "FallbackMaximumDigitWidthPixels96Dpi must be finite and at least one.");
+        }
+
         if (options.SheetName is not null && options.SheetNames is not null)
         {
             throw new ArgumentException("SheetName and SheetNames cannot be combined.", nameof(options));

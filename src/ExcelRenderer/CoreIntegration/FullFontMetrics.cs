@@ -39,8 +39,10 @@ internal sealed class FullFontMetrics : ICoreFontMetrics
         var key = (normalFont, options, (fontManager as FontManager)?.RegistrationGeneration ?? 0);
         if (!cache.Values.TryGetValue(key, out var decision))
         {
-            decision = normalFont is null && !UseLibreOfficeColumnWidths && options.MaximumDigitWidthPixels96Dpi is null && options.SourceFontFile is null
-                ? new(7, options.Mode == ColumnWidthMetricsMode.RenderingFontLegacy ? "legacy" : "compatibility", "7px compatibility metric (Normal metadata unavailable)", true)
+            decision = normalFont is null && options.MaximumDigitWidthPixels96Dpi is null && options.SourceFontFile is null
+                ? options.Mode == ColumnWidthMetricsMode.RenderingFontLegacy
+                    ? new(7, "legacy", "7px compatibility metric (Normal metadata unavailable)", true)
+                    : ResolveFallback(normal)
                 : Resolve(normal);
             cache.Values.Add(key, decision);
         }
@@ -65,16 +67,7 @@ internal sealed class FullFontMetrics : ICoreFontMetrics
     {
         using var ownedResources = ConversionFontResources.Current is null ? new ConversionFontResources() : null;
         var typeface = ConversionFontResources.Current!.GetTypeface(resolved);
-        using var font = new SKFont(typeface, (float)(normal.Size * 96 / 72));
-        if (UseLibreOfficeColumnWidths)
-        {
-            font.LinearMetrics = true;
-            font.Subpixel = true;
-            font.Hinting = SKFontHinting.None;
-        }
-
-        var scale = UseLibreOfficeColumnWidths ? 15 : 1;
-        var width = Math.Max(1, Math.Round(Enumerable.Range(0, 10).Max(digit => font.MeasureText(digit.ToString())) * scale, MidpointRounding.AwayFromZero) / scale);
+        var width = Core.Fonts.ColumnFontMetrics.Measure(typeface, normal.Size, UseLibreOfficeColumnWidths);
         var style = typeface.FontStyle;
         var italic = style.Slant != SKFontStyleSlant.Upright;
         var approximated = style.Weight != normal.Weight || italic != normal.Italic;
@@ -119,7 +112,10 @@ internal sealed class FullFontMetrics : ICoreFontMetrics
             if (UseLibreOfficeColumnWidths && fontManager is not null)
             {
                 var substitute = fontManager.Resolve(request);
-                return Measure(substitute, normal, "libreoffice-font") with { IsFallback = !FontManager.MatchesSourceFamily(substitute, normal.Family) };
+                var matches = FontManager.MatchesSourceFamily(substitute, normal.Family);
+                return !matches && options.FallbackMaximumDigitWidthPixels96Dpi is { } fallbackWidth
+                    ? new(fallbackWidth, "fallback-override", "explicit fallback MDW", true)
+                    : Measure(substitute, normal, "libreoffice-font") with { IsFallback = !matches };
             }
 
             var exact = fontManager is FontManager builtIn ? builtIn.ResolveExact(request) : fontManager?.Resolve(request);
@@ -133,8 +129,25 @@ internal sealed class FullFontMetrics : ICoreFontMetrics
             // Implicit discovery is best effort; explicit files are validated above.
         }
 
-        var fallbackWidth = options.Mode == ColumnWidthMetricsMode.RenderingFontLegacy ? 7 : SourceFontFallbackMetrics.MaximumDigitWidth(normal);
-        return new(fallbackWidth, options.Mode == ColumnWidthMetricsMode.RenderingFontLegacy ? "legacy" : "compatibility", $"{fallbackWidth}px compatibility metric", true);
+        if (options.Mode == ColumnWidthMetricsMode.RenderingFontLegacy)
+        {
+            return new(7, "legacy", "7px compatibility metric", true);
+        }
+
+        return ResolveFallback(normal);
+    }
+
+    private MetricDecision ResolveFallback(NormalFontMetadata normal)
+    {
+        // The drawing substitute is the final source-metric fallback. It is measured
+        // at the workbook Normal size, rather than at an individual cell's size.
+        if (options.FallbackMaximumDigitWidthPixels96Dpi is { } fallback)
+        {
+            return new(fallback, "fallback-override", "explicit fallback MDW", true);
+        }
+
+        fontManager ??= new FontManager();
+        return Measure(fontManager.Resolve(new(normal.Family, normal.Weight, normal.Italic)), normal, "drawing-font") with { IsFallback = true };
     }
 
     /// <summary>Conversion-owned decisions, also used by selection preflight.</summary>
@@ -148,6 +161,6 @@ internal sealed class FullFontMetrics : ICoreFontMetrics
     /// <param name="Width">Maximum digit width.</param>
     /// <param name="Source">Decision source.</param>
     /// <param name="Font">Physical measurement identity.</param>
-    /// <param name="IsFallback">Whether no physical measurement was available.</param>
+    /// <param name="IsFallback">Whether a substitute font or fallback override was used.</param>
     internal sealed record MetricDecision(double Width, string Source, string Font, bool IsFallback = false);
 }

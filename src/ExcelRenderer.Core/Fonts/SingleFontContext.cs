@@ -40,17 +40,7 @@ internal sealed class SingleFontContext : IDisposable
     /// <param name="libreOfficeCompatible">Whether to round digit advances to twips instead of integer pixels.</param>
     internal double MaximumDigitWidth(double size, bool libreOfficeCompatible = false)
     {
-        using var font = new SKFont(typeface, (float)(size * 96 / 72));
-        if (libreOfficeCompatible)
-        {
-            font.LinearMetrics = true;
-            font.Subpixel = true;
-            font.Hinting = SKFontHinting.None;
-        }
-
-        var width = Enumerable.Range(0, 10).Max(digit => font.MeasureText(digit.ToString()));
-        var scale = libreOfficeCompatible ? 15 : 1;
-        return Math.Max(1, Math.Round(width * scale, MidpointRounding.AwayFromZero) / scale);
+        return ColumnFontMetrics.Measure(typeface, size, libreOfficeCompatible);
     }
 
     private static byte[] ReadFace(string path, int collectionIndex, CancellationToken token)

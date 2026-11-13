@@ -296,7 +296,12 @@ without font dependencies. NormalFontMetadata retains weight/italic in addition 
 Main's ColumnWidthMetricsOptions and FullFontMetrics resolve source-font files, exact families,
 explicit MDW and legacy drawing metrics before passing a decided MDW through ICoreFontMetrics.
 FontManager's internal exact lookup respects its existing discovery permissions and verifies
-physical family names. No IFontManager contract member or Core system-font search was added.
+physical family names. Core's ColumnFontMetrics now owns shared physical-family verification,
+source-file loading and digit measurement. SingleFontMetrics optionally resolves the original
+Normal family through Skia's system font manager for column measurements only. Both adapters
+use an optional FallbackMaximumDigitWidthPixels96Dpi when source metrics are unavailable,
+otherwise measuring their drawing substitute at the Normal size. No family-specific numeric
+fallback profiles or new IFontManager contract members are used.
 Main shares conversion-local metric decisions between selection preflight and the actual read;
 all output formats consume Core's common geometry plan. Core's single supplied font is unchanged.
 
@@ -323,12 +328,14 @@ verify output behavior without ASP.NET dependencies. See the [file sample](../sa
 ## Core source column metrics
 
 Core SingleFontMetrics separates source Normal column metrics from the supplied drawing font.
-It measures the supplied snapshot only for a matching physical family name; substituted or
-missing source families use the shared SourceFontFallbackMetrics profile and report
-MaximumDigitWidthFallback. Text measurement and painting continue to use the supplied font.
-MS P Gothic uses a size-dependent Noto Sans digit profile (8.4px at 11pt) matching
-Calc substitution; other missing families and absent Normal metadata retain 7px/96 DPI.
-No OS/font-package discovery, additional font, public API or Core dependency is introduced.
+It measures an explicit layout-only source file, the matching supplied snapshot (including
+localized physical family names), or the original system family. System lookup is optional
+and limited to column measurements; drawing still uses one supplied font. Missing source
+families use FallbackMaximumDigitWidthPixels96Dpi when provided, otherwise the drawing
+snapshot measured at the workbook Normal size, and report MaximumDigitWidthFallback.
+Absent Normal metadata uses the same fallback policy at 11pt. ColumnFontMetrics owns
+shared measurement, physical-family checks and source-file validation. Core adds no
+product-project dependency or font-package discovery.
 
 Core standalone rich strings are flattened to ordinary cell text. Per-run size, color,
 underline and face styling remain main-only; the single-font cell-level guarantees do not

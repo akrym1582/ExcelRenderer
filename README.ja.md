@@ -517,7 +517,7 @@ xlsx の個別列幅と既定列幅は、Excel の基準である固定96 DPIの
 シートの幾何には影響しません。Normalスタイルのstyle XFからフォントをたどり、themeのmajor/minor
 指定を解決したうえで、設定されたフォントマネージャーにより0～9を計測します。計測できない場合は
 互換最大数字幅を使用し、変換診断へ`MaximumDigitWidthFallback`を記録します。
-MS PゴシックはCalcのNoto Sans代替に近いサイズ依存値（11ptで8.4px）、その他は7pxです。
+元フォントを取得できない場合は`ColumnWidthMetrics.FallbackMaximumDigitWidthPixels96Dpi`（CLIの`--column-width-fallback-mdw`）を使い、未指定なら描画用の代替フォントをNormalのサイズで実測します。
 
 離れた複数の印刷範囲は外接矩形へ結合せず、個別にページ化します。明示倍率では保存された行・列の
 手動改ページとページ順を反映し、Fitでは手動改ページを無視します。全領域を結合したページ番号を一度だけ
@@ -1006,14 +1006,14 @@ excelrenderer render input.xlsx --format pdf -o output.pdf --column-width-mdw 9
 excelrenderer pdf input.xlsx -o output.pdf --column-width-metrics legacy
 ```
 
-通常版CLIのオプションは `--column-width-mdw`、`--layout-font`、`--layout-font-index`、
-通常版の `--column-width-metrics source|legacy|libreoffice` です。
-Coreは `--column-width-metrics source|libreoffice` と `--column-width-mdw` に対応します。
-レイアウト専用フォントのファイル・index指定とlegacyモードは通常版のみです。ライブラリの従来互換設定は
+両CLIで `--column-width-mdw`、`--column-width-fallback-mdw`、`--layout-font`、`--layout-font-index`、
+`--column-width-metrics source|libreoffice` を利用できます。legacyモードは通常版のみです。
+フォールバックMDWは元フォントが取得できない場合だけ使用し、未指定なら描画用の代替フォントを実測します。
+以前の7pxフォールバックを維持する場合は `--column-width-fallback-mdw 7` を指定します。ライブラリの従来互換設定は
 `ColumnWidthMetrics = new() { Mode = ColumnWidthMetricsMode.RenderingFontLegacy }` です。
 Legacyと元フォントファイルは併用不可ですが、明示MDWはLegacyでも最優先です。
 各出力形式、範囲・連続描画、選択ページの事前計画は同じ読取設定と変換単位の決定を使います。
-Core単独APIの単一供給フォントという契約は変更しません。
+Coreの描画用フォントは単一のままです。元フォントのOS検索・計測用ファイルは列幅計測に限定します。
 legacyモードは従来の結合セル改ページも維持します。sourceモードでは用紙より大きい結合を
 通常の行・列境界で分割し、結合の直前に余分なページができることを防ぎます。
 
@@ -1075,8 +1075,10 @@ MDWの数値指定だけでは、小数の列幅計算へ切り替わりませ�
 ヘッダー位置などLibreOfficeの描画規則全体を再現する設定ではありません。
 [今回のセル実寸の比較結果](docs/validation/cell-width-compatibility/README.md)も参照してください。
 
-既定のSourceFontモードで元フォントが見つからない場合は決定的な互換値を使用し、
-MS PゴシックはCalcのNoto Sans代替に近いサイズ依存値（11ptで8.4px）、その他とNormal情報なしは7pxとします。
+既定のSourceFontモードで元フォントが見つからない場合は、`ColumnWidthMetrics.FallbackMaximumDigitWidthPixels96Dpi`
+（CLIの`--column-width-fallback-mdw`）を指定していればその値を使い、未指定なら描画用の代替フォントをNormalのサイズで実測します。
+Normal情報がなければ基準サイズは11ptです。フォールバック指定は取得できた元フォント、計算用フォント、常時優先するMDW指定には適用しません。
+Coreも`ReadOptions`直下の同名プロパティに対応し、`--layout-font` / `--layout-font-index`と、列幅計測専用の元フォントのOS検索を利用できます。
 `MaximumDigitWidthFallback` を警告します。StrictModeではこの警告により変換が失敗します。
 Excelとの完全一致は保証できません。
 元フォントまたはその実測MDWを指定してください。`MaximumDigitWidthResolved` は

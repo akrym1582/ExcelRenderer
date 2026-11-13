@@ -180,16 +180,16 @@ public sealed class PdfTests
     }
 
     [Theory]
-    [InlineData("01-japanese.xlsx", 1)]
-    [InlineData("02-image.xlsx", 1)]
-    [InlineData("03-wrapped-text.xlsx", 1)]
-    [InlineData("04-text-decoration.xlsx", 1)]
-    [InlineData("05-borders.xlsx", 2)]
-    [InlineData("06-layout-and-pagination.xlsx", 4)]
-    [InlineData("07-multiple-sheets.xlsx", 2)]
-    [InlineData("08-print-scaling.xlsx", 1)]
-    [InlineData("09-cell-border.xlsx", 1)]
-    public async Task Core_owned_workbooks_keep_expected_page_counts_and_readable_PDF(string name, int expectedPages)
+    [InlineData("01-japanese.xlsx", 2, 1)]
+    [InlineData("02-image.xlsx", 2, 1)]
+    [InlineData("03-wrapped-text.xlsx", 1, 1)]
+    [InlineData("04-text-decoration.xlsx", 1, 1)]
+    [InlineData("05-borders.xlsx", 2, 2)]
+    [InlineData("06-layout-and-pagination.xlsx", 4, 4)]
+    [InlineData("07-multiple-sheets.xlsx", 2, 2)]
+    [InlineData("08-print-scaling.xlsx", 2, 1)]
+    [InlineData("09-cell-border.xlsx", 1, 1)]
+    public async Task Core_owned_workbooks_keep_expected_page_counts_and_readable_PDF(string name, int expectedPages, int fixedWidthPages)
     {
         using var input = File.OpenRead(Path.Combine(AppContext.BaseDirectory, "Baselines", "Inputs", name)); using var output = new MemoryStream();
         var result = await ExcelConverter.ConvertAsync(input, output, TestSupport.Options);
@@ -198,5 +198,12 @@ public sealed class PdfTests
         Assert.Equal(expectedPages, document.NumberOfPages);
         var directory = Path.Combine(AppContext.BaseDirectory, "SampleOutputs"); Directory.CreateDirectory(directory);
         await File.WriteAllBytesAsync(Path.Combine(directory, name.Replace(".xlsx", ".pdf")), output.ToArray());
+        input.Position = 0;
+        using var compatible = new MemoryStream();
+        var fixedWidth = await ExcelConverter.ConvertAsync(input, compatible, TestSupport.Options with
+        {
+            ReadOptions = new() { FallbackMaximumDigitWidthPixels96Dpi = 7 },
+        });
+        Assert.Equal(fixedWidthPages, fixedWidth.PageCount);
     }
 }

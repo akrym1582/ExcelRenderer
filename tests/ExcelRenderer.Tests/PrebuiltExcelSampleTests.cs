@@ -73,7 +73,10 @@ public sealed class PrebuiltExcelSampleTests
         var textDecoration = SampleOutputTestSupport.ReadAndLayout("04-text-decoration.xlsx");
         var borders = SampleOutputTestSupport.ReadAndLayout("05-borders.xlsx");
         var pagination = SampleOutputTestSupport.ReadAndLayout("06-layout-and-pagination.xlsx");
-        var printScaling = SampleOutputTestSupport.ReadAndLayout("08-print-scaling.xlsx");
+        var printScaling = SampleOutputTestSupport.ReadAndLayout("08-print-scaling.xlsx", new()
+        {
+            ColumnWidthMetrics = new() { FallbackMaximumDigitWidthPixels96Dpi = 7 },
+        });
 
         Assert.Equal("日本語 PDF 出力サンプル", japanese.Sheet.Cells[new(1, 1)].Text);
         Assert.Equal(2, images.Commands.OfType<DrawImageCommand>().Count());

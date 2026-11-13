@@ -104,6 +104,7 @@ internal static class CommandSupport
     internal static void AddFontOptions(Command command, FontOptionsArguments options)
     {
         command.Options.Add(options.ColumnWidthMdw);
+        command.Options.Add(options.ColumnWidthFallbackMdw);
         command.Options.Add(options.LayoutFont);
         command.Options.Add(options.LayoutFontIndex);
         command.Options.Add(options.ColumnWidthMetrics);
@@ -273,6 +274,7 @@ internal static class CommandSupport
                 _ => throw new ArgumentException("--column-width-metrics must be source, legacy or libreoffice."),
             },
             MaximumDigitWidthPixels96Dpi = result.GetValue(fonts.ColumnWidthMdw),
+            FallbackMaximumDigitWidthPixels96Dpi = result.GetValue(fonts.ColumnWidthFallbackMdw),
             SourceFontFile = result.GetValue(fonts.LayoutFont),
             SourceFontCollectionIndex = result.GetValue(fonts.LayoutFontIndex),
         },
@@ -322,6 +324,9 @@ internal static class CommandSupport
     {
         /// <summary>Gets explicit Normal digit width.</summary>
         internal Option<double?> ColumnWidthMdw { get; } = new("--column-width-mdw") { Description = "Original Normal font MDW in pixels at 96 DPI (finite, at least 1)." };
+
+        /// <summary>Gets the digit width used only when the source font is unavailable.</summary>
+        internal Option<double?> ColumnWidthFallbackMdw { get; } = new("--column-width-fallback-mdw") { Description = "Normal digit width at 96 DPI used only if the original font is unavailable; defaults to measuring the drawing font." };
 
         /// <summary>Gets the source layout font file.</summary>
         internal Option<string?> LayoutFont { get; } = new("--layout-font") { Description = "Original font file for column layout only; does not register a drawing font." };

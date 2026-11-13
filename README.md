@@ -514,17 +514,17 @@ excelrenderer render input.xlsx --format pdf -o output.pdf --column-width-mdw 9
 excelrenderer pdf input.xlsx -o output.pdf --column-width-metrics legacy
 ```
 
-The main CLI flags are `--column-width-mdw`, `--layout-font`, `--layout-font-index`, and
-`--column-width-metrics source|legacy|libreoffice` for main. Core accepts
-`--column-width-metrics source|libreoffice` and `--column-width-mdw`; layout-font
-file/index flags and legacy mode are main-only. In the library, migration compatibility is
+Both CLIs accept `--column-width-mdw`, `--column-width-fallback-mdw`, `--layout-font`,
+`--layout-font-index`, and `--column-width-metrics source|libreoffice`. Main also supports
+`--column-width-metrics legacy`. The fallback MDW applies only when the original font
+is unavailable; without it the drawing substitute is measured. To retain a former 7px
+fallback, pass `--column-width-fallback-mdw 7`. In the library, migration compatibility is
 `ColumnWidthMetrics = new() { Mode = ColumnWidthMetricsMode.RenderingFontLegacy }`.
 Legacy cannot be combined with a source file; explicit MDW still takes precedence.
 Legacy also preserves historical merged-cell page bands; source mode lets a merge
 larger than a page split at ordinary row/column boundaries.
 All rendering formats, range/continuous rendering, and page-selection preflight use
-the same read settings and conversion-local metric decisions. Core's independent
-single-supplied-font contract is unchanged.
+the same read settings and conversion-local metric decisions. Core still draws with one supplied font; its optional system/source-file measurements affect only column widths.
 
 ### Optional LibreOffice column-width calculation
 
@@ -585,10 +585,13 @@ This option can change cell widths, wrapping and page boundaries. It preserves s
 row heights and print settings; it does not reproduce LibreOffice's header positioning
 or every rendering rule. See the [measured before/after comparison](docs/validation/cell-width-compatibility/README.md).
 
-In default SourceFont mode, if the original family is unavailable, SourceFont uses a deterministic compatibility
-metric and reports `MaximumDigitWidthFallback`. MS P Gothic uses a size-dependent
-Noto Sans digit profile matching Calc substitution (8.4px at 11pt); other unavailable
-families and missing Normal metadata use 7px. StrictMode treats this
+In default SourceFont mode, an unavailable original family is reported as `MaximumDigitWidthFallback`: `ColumnWidthMetrics.FallbackMaximumDigitWidthPixels96Dpi`
+(`--column-width-fallback-mdw`) is used when specified; otherwise the resolved drawing font
+is measured at the workbook Normal size (11pt if Normal metadata is missing). The fallback
+option does not replace an available original font, explicit layout font, or unconditional
+`MaximumDigitWidthPixels96Dpi` override. Core exposes the same fallback property directly
+on `ReadOptions`, and also supports `--layout-font` / `--layout-font-index` and system
+lookup of the original Normal font for column measurements only. StrictMode treats this
 warning as a conversion failure. This does **not**
 guarantee Excel-equivalent geometry. Supply the original font or its measured MDW
 for accurate column sizing. `MaximumDigitWidthResolved` identifies the requested
@@ -661,8 +664,8 @@ var settings = new PageSettings(FitToPagesWide: 1)
 For xlsx input, explicit and default raw column widths are converted at the fixed Excel
 reference DPI of 96; output PNG DPI does not change sheet geometry. The Normal style is resolved
 through its style XF and theme major/minor font before measuring digits 0–9 with the configured
-font manager. If that font cannot be measured, a compatibility width is used (MS P Gothic:
-8.4px at 11pt, scaled and rounded to twips; otherwise 7px), and
+font manager. If that font cannot be measured, the optional fallback MDW is used;
+without one, the drawing substitute is measured at the Normal size, and
 `MaximumDigitWidthFallback` is reported through conversion diagnostics.
 
 Distinct print areas are paginated independently without filling their bounding rectangle.

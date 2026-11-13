@@ -28,7 +28,15 @@ internal partial class CoreExcelReader
     /// <returns>The product appearance.</returns>
     protected virtual CellStyle NormalizeCellStyle(CellStyle style) => style with
     {
-        Font = style.Font with { Family = Fonts.SingleFontContext.Family, Bold = false, Italic = false },
+        Font = style.Font with
+        {
+            Family = drawingFonts?.IsMultiple == true
+                ? drawingFonts.Resolve(style.Font.Family, style.Font.FamilyClassification).Identity
+                : Fonts.SingleFontContext.Family,
+            FamilyClassification = 0,
+            Bold = false,
+            Italic = false,
+        },
         TextRotation = 0,
         TopToBottom = false,
     };
@@ -436,7 +444,15 @@ internal partial class CoreExcelReader
             }
 
             var normal = reader.Workbook.DefaultFontProperties;
-            var mdw = fontMetrics.MaximumDigitWidth(reader.Workbook.DefaultFont.Children.Count == 0 ? null : new(normal.Name ?? "Calibri", normal.SizePt ?? 11, normal.Bold == true ? 700 : 400, normal.Italic == true), info.Sheet.Name);
+            var normalFont = reader.Workbook.DefaultFont.Children.Count == 0 ? null : new NormalFontMetadata(
+                normal.Name ?? "Calibri",
+                normal.SizePt ?? 11,
+                normal.Bold == true ? 700 : 400,
+                normal.Italic == true)
+            {
+                FamilyClassification = (int)Number(Child(reader.Workbook.DefaultFont, "family"), "val", 0),
+            };
+            var mdw = fontMetrics.MaximumDigitWidth(normalFont, info.Sheet.Name);
             var defaultWidth = info.DefaultColumnWidthExcel ?? ColumnWidthCalculator.FromBaseColumnWidth(info.BaseColumnWidthCharacters, mdw);
             var columns = new Dictionary<int, ColumnDefinition>();
             foreach (var column in info.Columns)

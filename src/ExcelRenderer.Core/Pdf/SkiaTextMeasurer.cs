@@ -43,7 +43,8 @@ internal sealed class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
         }
 
         var wraps = wrap && !(availableWidth <= 0);
-        var key = new LayoutKey(text, font.Size, wraps ? availableWidth : 0, wraps);
+        var face = context.Resolve(font.Family, font.FamilyClassification);
+        var key = new LayoutKey(face.Identity, text, font.Size, wraps ? availableWidth : 0, wraps);
         if (layouts.TryGetValue(key, out var cached))
         {
             Rendering.ConversionMetrics.Report("layoutCacheHit", 1);
@@ -53,9 +54,9 @@ internal sealed class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
         Rendering.ConversionMetrics.Report("layoutCacheMiss", 1);
 
         token.ThrowIfCancellationRequested();
-        var lines = (wrap && !(availableWidth <= 0) && !context.Face.Color && OutlineParagraph.IsValidUtf16(text)
+        var lines = (wrap && !(availableWidth <= 0) && !face.Color && OutlineParagraph.IsValidUtf16(text)
             ? LayoutOutline(text, font, availableWidth, wrap)
-            : TextLineBreaker.Break(text, availableWidth, wrap, value => context.Face.Measure(SelectGlyphs(value), font.Size))
+            : TextLineBreaker.Break(text, availableWidth, wrap, value => face.Measure(SelectGlyphs(value, face), font.Size))
                 .Select(line => CreateLine(line.Text, line.ExplicitBreak, font))).ToArray();
         var result = new TextLayoutResult(
             new(lines.Length == 0 ? 0 : lines.Max(line => line.Width), lines.Sum(line => line.Height)),
@@ -77,7 +78,7 @@ internal sealed class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
         var paragraphs = text.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n');
         for (var index = 0; index < paragraphs.Length; index++)
         {
-            var paragraph = new OutlineParagraph(paragraphs[index], context.Face, token);
+            var paragraph = new OutlineParagraph(paragraphs[index], context.Resolve(font.Family, font.FamilyClassification), token);
             var selected = paragraph.BreakRanges(font.Size, width, wrap).GetEnumerator();
             using (selected)
             {
@@ -98,27 +99,28 @@ internal sealed class SkiaTextMeasurer : ITextMeasurer, ITextLayoutService
         }
     }
 
-    private ushort[] SelectGlyphs(string text)
+    private ushort[] SelectGlyphs(string text, SkiaFontFace face)
     {
         Rendering.ConversionMetrics.Report("textGlyphCalls", 1);
         Rendering.ConversionMetrics.Report("textGlyphCharacters", text.Length);
-        return context.Face.Typeface.GetGlyphs(text);
+        return face.Typeface.GetGlyphs(text);
     }
 
     private TextLayoutLine CreateLine(string text, bool explicitBreak, FontStyle style, GlyphSequence? selectedGlyphs = null)
     {
         token.ThrowIfCancellationRequested();
-        var (ascent, descent, leading) = context.Metrics(style.Size);
-        var glyphs = selectedGlyphs is null ? SelectGlyphs(text) : null;
-        var width = glyphs is null ? context.Face.Measure(selectedGlyphs!.Glyphs, style.Size) : context.Face.Measure(glyphs, style.Size);
+        var face = context.Resolve(style.Family, style.FamilyClassification);
+        var (ascent, descent, leading) = face.Metrics(style.Size);
+        var glyphs = selectedGlyphs is null ? SelectGlyphs(text, face) : null;
+        var width = glyphs is null ? face.Measure(selectedGlyphs!.Glyphs, style.Size) : face.Measure(glyphs, style.Size);
         return new(text, width, ascent + descent + leading, ascent, explicitBreak)
         {
-            Glyphs = selectedGlyphs ?? new(context.Face, glyphs!, text, text),
+            Glyphs = selectedGlyphs ?? new(face, glyphs!, text, text),
             Ascent = ascent,
             Descent = descent,
             Leading = leading,
         };
     }
 
-    private readonly record struct LayoutKey(string Text, double Size, double Width, bool Wrap);
+    private readonly record struct LayoutKey(string Face, string Text, double Size, double Width, bool Wrap);
 }

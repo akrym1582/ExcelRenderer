@@ -15,7 +15,7 @@ internal static class OpenXmlStyleConverter
     /// <returns>The neutral style.</returns>
     internal static CellStyle Convert(CellStyleInfo style, CellValueType type)
     {
-        var font = Font(style.FontProperties);
+        var font = Font(style.FontProperties) with { FamilyClassification = (int)Number(Child(style.Font, "family"), "val", 0) };
         var pattern = Child(style.Fill, "patternFill");
         var background = Attribute(pattern, "patternType") is null or "none" ? null : Color(Child(pattern, "fgColor"));
         var left = Border(Child(style.Border, "left"));

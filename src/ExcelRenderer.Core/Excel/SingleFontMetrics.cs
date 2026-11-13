@@ -4,7 +4,7 @@ using SkiaSharp;
 
 namespace ExcelRenderer.Core.Excel;
 
-/// <summary>Resolves source column metrics separately from single-font drawing substitutions.</summary>
+/// <summary>Resolves source column metrics separately from explicit drawing-font substitutions.</summary>
 internal sealed class SingleFontMetrics : ICoreFontMetrics
 {
     private readonly SingleFontContext context;
@@ -99,16 +99,18 @@ internal sealed class SingleFontMetrics : ICoreFontMetrics
             return new(ColumnFontMetrics.Measure(face, normal.Size, UseLibreOfficeColumnWidths), "source-file", face.FamilyName);
         }
 
-        if (UseLibreOfficeColumnWidths)
+        var supplied = context.FindExact(normal.Family);
+        if (supplied is not null)
         {
-            return ColumnFontMetrics.MatchesFamily(context.Face.Typeface, normal.Family)
-                ? new(context.MaximumDigitWidth(normal.Size, true), "libreoffice-font", context.Face.Typeface.FamilyName)
-                : ResolveFallback(normal);
+            return new(
+                ColumnFontMetrics.Measure(supplied.Typeface, normal.Size, UseLibreOfficeColumnWidths),
+                UseLibreOfficeColumnWidths ? "libreoffice-font" : "supplied-font",
+                supplied.Typeface.FamilyName);
         }
 
-        if (ColumnFontMetrics.MatchesFamily(context.Face.Typeface, normal.Family))
+        if (UseLibreOfficeColumnWidths)
         {
-            return new(context.MaximumDigitWidth(normal.Size), "supplied-font", context.Face.Typeface.FamilyName);
+            return ResolveFallback(normal);
         }
 
         if (options.UseSystemFontsForColumnWidths)
@@ -130,9 +132,16 @@ internal sealed class SingleFontMetrics : ICoreFontMetrics
         return ResolveFallback(normal);
     }
 
-    private MetricDecision ResolveFallback(NormalFontMetadata normal) => options.FallbackMaximumDigitWidthPixels96Dpi is { } width
-        ? new(width, "fallback-override", "configured fallback MDW", true)
-        : new(context.MaximumDigitWidth(normal.Size, UseLibreOfficeColumnWidths), "drawing-font", context.Face.Typeface.FamilyName, true);
+    private MetricDecision ResolveFallback(NormalFontMetadata normal)
+    {
+        if (options.FallbackMaximumDigitWidthPixels96Dpi is { } width)
+        {
+            return new(width, "fallback-override", "configured fallback MDW", true);
+        }
+
+        var face = context.Resolve(normal.Family, normal.FamilyClassification);
+        return new(ColumnFontMetrics.Measure(face.Typeface, normal.Size, UseLibreOfficeColumnWidths), "drawing-font", face.Typeface.FamilyName, true);
+    }
 
     private sealed record MetricDecision(double Width, string Source, string Font, bool IsFallback = false);
 }

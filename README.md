@@ -362,7 +362,8 @@ excelrenderer core input.xlsx -o core.pdf --font-file ./NotoSansJP-Regular.ttf -
 excelrenderer pdf input.xlsx -o selected.pdf --sheet Sheet3 --sheet Sheet1
 ```
 
-`core` invokes the Core converter with one supplied font, without main-library shapes,
+`core` uses bundled Noto Sans JP when `--font-file` is omitted; an explicit file overrides it.
+The Core API also accepts explicit multiple fonts and family substitutions through `PdfExportOptions.Fonts` (see [Core fonts](docs/core-fonts.md)). Core omits main-library shapes,
 hyperlink annotations or formula recalculation. Its output file must be new.
 See [Core usage and limits](docs/core.md).
 
@@ -527,7 +528,7 @@ Legacy and fallback modes cannot be combined with a source file; explicit MDW st
 Legacy also preserves historical merged-cell page bands; source mode lets a merge
 larger than a page split at ordinary row/column boundaries.
 All rendering formats, range/continuous rendering, and page-selection preflight use
-the same read settings and conversion-local metric decisions. Core still draws with one supplied font; its optional system/source-file measurements affect only column widths.
+the same read settings and conversion-local metric decisions. Core draws with explicitly supplied fonts; its optional system/source-file discovery affects only column measurements.
 
 ### Optional LibreOffice column-width calculation
 
@@ -809,7 +810,7 @@ underline in ordinary string cells. `ReportCell.RichTextRuns` contains effective
 `CellTextRun` values; `Text` remains the complete plain string. Manual models must
 supply matching text and valid positive sizes. The built-in measurer implements
 `IRichTextLayoutService`; existing custom measurers keep working with a cell-font
-fallback. Core-only output keeps its single regular font. Markdown stays plain text.
+fallback. Core-only output selects one explicit regular font per cell. Markdown stays plain text.
 
 Partial formatting with rotated/vertical cell text falls back to the cell font.
 Strikethrough, superscript/subscript, double/accounting underlines and phonetics are

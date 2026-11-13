@@ -97,14 +97,28 @@ public sealed partial class ToolIntegrationTests
     }
 
     [Fact]
-    public async Task Core_requires_font_and_cleans_up_after_invalid_font()
+    public async Task Core_defaults_to_bundled_font_and_cleans_up_after_invalid_font()
     {
         var input = CreateMultiSheetInput();
         var output = Path.Combine(_directory, "core.pdf");
-        Assert.NotEqual(0, (await RunAsync("core", input, "-o", output)).ExitCode);
+        Assert.Equal(0, (await RunAsync("core", input, "-o", output)).ExitCode);
+        var bundledPdf = System.Text.Encoding.ASCII.GetString(File.ReadAllBytes(output));
+        Assert.StartsWith("%PDF", bundledPdf);
+        Assert.Contains("NotoSansJP", bundledPdf);
+
+        File.Delete(output);
         Assert.NotEqual(0, (await RunAsync("core", input, "-o", output, "--font-file", "missing.ttf")).ExitCode);
         Assert.False(File.Exists(output));
         Assert.Empty(Directory.GetFiles(_directory, "*.tmp"));
+        Assert.Empty(Directory.GetFiles(_directory, "*.tmp.ttf"));
+        var invalidInput = Path.Combine(_directory, "invalid.xlsx");
+        await File.WriteAllTextAsync(invalidInput, "invalid workbook");
+        Assert.NotEqual(0, (await RunAsync("core", invalidInput, "-o", output)).ExitCode);
+        Assert.False(File.Exists(output));
+        Assert.Empty(Directory.GetFiles(_directory, "*.tmp"));
+        Assert.Empty(Directory.GetFiles(_directory, "*.tmp.ttf"));
+        Assert.NotEqual(0, (await RunAsync("core", input, "-o", output, "--font-collection-index", "1")).ExitCode);
+        Assert.False(File.Exists(output));
     }
 
     private static string CoreFont => Path.Combine(FindRepositoryRoot(), "third_party", "NotoSansJP", "NotoSansJP-Regular.ttf");

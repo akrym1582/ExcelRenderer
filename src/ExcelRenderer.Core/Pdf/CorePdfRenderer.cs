@@ -10,7 +10,7 @@ using RenderingDiagnostic = ExcelRenderer.Core.Rendering.ConversionDiagnostic;
 
 namespace ExcelRenderer.Core.Pdf;
 
-/// <summary>Owns Core's basic Skia PDF rendering using a single validated font snapshot.</summary>
+/// <summary>Owns Core's basic Skia PDF rendering using validated explicit font snapshots.</summary>
 internal sealed class CorePdfRenderer : IDisposable
 {
     private readonly SkiaPaintResources paints = new();
@@ -20,7 +20,7 @@ internal sealed class CorePdfRenderer : IDisposable
     private readonly CancellationToken token;
 
     /// <summary>Initializes a new instance of the <see cref="CorePdfRenderer"/> class.</summary>
-    /// <param name="context">The conversion-owned single font, or null for image-only output.</param>
+    /// <param name="context">The conversion-owned fonts, or null for image-only output.</param>
     /// <param name="token">The conversion token.</param>
     internal CorePdfRenderer(SingleFontContext? context = null, CancellationToken token = default)
     {

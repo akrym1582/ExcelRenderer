@@ -7,7 +7,7 @@
 
 XLSXからPDFだけを生成する独立したソースプロジェクトです。`netstandard2.1`で、.NET 8/10からProjectReferenceできます。Core単独のNuGetパッケージ、専用CLIパッケージ、フォント入りDLLは作成しません。既存の ExcelRenderer.Tool の `core` サブコマンドから試せます。本体パッケージには同じbuildのCore DLL/XMLを同梱します。
 
-公開型には `ExcelConverter`、`PdfExportOptions`、`ExcelReadOptions`、`ConversionResult`、`ConversionDiagnostic` があります。名前空間は `ExcelRenderer.Core` で、設定や結果のメンバーは以下に示すCore版の対応範囲に合わせています。
+公開型には `ExcelConverter`、`PdfExportOptions`、`ExcelReadOptions`、`ExcelRenderer.Core.Fonts.FontOptions`、`ConversionResult`、`ConversionDiagnostic` があります。名前空間は `ExcelRenderer.Core` で、設定や結果のメンバーは以下に示すCore版の対応範囲に合わせています。
 
 ```xml
 <ItemGroup>
@@ -47,6 +47,10 @@ var separate = options with
 
 ## フォントと表示
 
+APIでは従来の `FontFilePath`、または複数フォント用の `Fonts.Files` を指定します。
+`Fonts` は名前の対応表とserif／sans-serif別の代替設定を持ちます。[設定例と選択順序](core-fonts.ja.md)を参照してください。
+Core自体は描画用フォントの自動検索やフォントの内蔵を行いません。CLIでは `--font-file` を省略すると、既存のフォントパックにある Noto Sans JP を渡します。
+
 呼出し側が指定する単体の固定 TrueType sfnt、または TTC/OTC 内の選択 face を使います。FontCollectionIndex（0始まり、既定0）で選び、計測・描画前に同じ単体 face へ正規化します。既存の非可変カラー face は共通 Skia カラー経路を使います。拡張子では判定しません。CFF/CFF2・可変・WOFF/WOFF2・旧 true/typ1 は PDF 対象外です。破損・未対応形式は InvalidDataException、不存在は FileNotFoundException、不正 index は引数エラーです。[形式の契約](managed-truetype-subset.ja.md)を参照してください。
 
 描画フォントbytesは変換ごとに一度読み、同じsnapshotで文字幅とPDF描画を処理します。列幅は元ブックのNormalのファミリー・サイズ・太字・斜体を基準に、描画用の代替フォントと分けて計測します。`ReadOptions.MaximumDigitWidthPixels96Dpi`は常に優先します。次に`ReadOptions.SourceFontFile`と任意の`SourceFontCollectionIndex`で指定した列幅計算専用のフォントを使います。指定がなければ、描画フォントの物理ファミリー名（ローカライズ名を含む）がNormalと一致する場合はそのsnapshotを実測し、不一致ならSkiaのシステムフォント検索で元ファミリーを取得します。列幅計測だけの検索で、`UseSystemFontsForColumnWidths = false`（Core CLIでは`--no-system-fonts`）で無効化できます。別ファミリーのシステム代替フォントは元フォントとして扱いません。
@@ -77,7 +81,7 @@ excelrenderer core report.xlsx --font-file NotoSansJP-Regular.ttf --column-width
 excelrenderer core report.xlsx --font-file NotoSansJP-Regular.ttf --layout-font original.ttc --layout-font-index 0 -o measured.pdf
 ```
 
-セルとヘッダー/フッターは通常書体に統一します。太字・斜体の疑似描画、描画用フォントの探索・fallback、IVSの異体字形の再現、外字・カラー絵文字の特別処理はありません。セルとヘッダー/フッターの異体字セレクター（U+FE00–U+FE0F、U+E0100–U+E01EF）は計測・描画前に除去し、基底文字を表示します。例えば「葛」＋IVSは「葛」として表示し、セレクター由来の追加の豆腐や文字幅は生成しません。基底文字自体が指定フォントに未収録の場合の表示は保証しません。通常セル全体のサイズ・色・下線を維持します。リッチテキストの部分書式は未対応です。共有文字列・inline文字列のrunは本文へ連結し、通常セルのフォントで描画します。run個別のサイズ・色・下線・太字・斜体は維持しません。未収録文字は指定フォント/Skiaの欠字表示に従い、すべてのUnicode文字の表示は保証しません。指定した描画フォントによって折返しは変わり得ます。元のNormalフォント寸法を利用できない場合の列幅はExcel原本と異なることがあり、OS検索は列幅計測に限定します。
+セルとヘッダー/フッターは通常書体に統一します。太字・斜体の疑似描画、描画用フォントのOS検索・文字単位の補完、IVSの異体字形の再現、外字・カラー絵文字の特別処理はありません。セルとヘッダー/フッターの異体字セレクター（U+FE00–U+FE0F、U+E0100–U+E01EF）は計測・描画前に除去し、基底文字を表示します。例えば「葛」＋IVSは「葛」として表示し、セレクター由来の追加の豆腐や文字幅は生成しません。基底文字自体が指定フォントに未収録の場合の表示は保証しません。通常セル全体のサイズ・色・下線を維持します。リッチテキストの部分書式は未対応です。共有文字列・inline文字列のrunは本文へ連結し、通常セルのフォントで描画します。run個別のサイズ・色・下線・太字・斜体は維持しません。未収録文字は指定フォント/Skiaの欠字表示に従い、すべてのUnicode文字の表示は保証しません。指定した描画フォントによって折返しは変わり得ます。元のNormalフォント寸法を利用できない場合の列幅はExcel原本と異なることがあり、OS検索は列幅計測に限定します。
 
 ## 印刷と画像
 
@@ -159,7 +163,7 @@ Coreが参照する自作プロジェクトは `ExcelRenderer.OpenXml.Reader` �
 excelrenderer core input.xlsx -o core.pdf --font-file ./regular.ttf --sheet Sheet3 Sheet1 --verbose
 ```
 
-`--font-file` は必須です。コレクション内の face は `--font-collection-index`（0始まり、既定0）
+`--font-file` は省略可能（省略時は同梱 Noto Sans JP）です。コレクション内の face は `--font-collection-index`（0始まり、既定0）
 で指定できます。`--sheet` は複数名と繰り返し指定に対応し、省略すると全シートを選択します。
 出力先は新規ファイルに限り、失敗時は一時 PDF を削除します。`--verbose` は実行引数、
 所要時間、変換メトリクス、例外詳細を標準エラーに出力します。Core の診断は常に表示します。

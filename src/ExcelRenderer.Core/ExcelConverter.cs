@@ -7,13 +7,13 @@ using ExcelRenderer.Core.Rendering;
 
 namespace ExcelRenderer.Core;
 
-/// <summary>Converts XLSX streams to one PDF using one caller-supplied font.</summary>
+/// <summary>Converts XLSX streams to one PDF using caller-supplied fonts.</summary>
 public static class ExcelConverter
 {
     /// <summary>Reads from the input's current position and writes a PDF without closing either stream.</summary>
     /// <param name="xlsx">The readable XLSX stream.</param>
     /// <param name="pdf">A writable stream; seekable destinations must be empty and positioned at zero.</param>
-    /// <param name="options">The required font and optional sheet/input settings.</param>
+    /// <param name="options">The explicit fonts and optional sheet/input settings.</param>
     /// <param name="cancellationToken">The conversion cancellation token.</param>
     /// <returns>The page count and nonfatal diagnostics.</returns>
     /// <remarks>
@@ -43,9 +43,14 @@ public static class ExcelConverter
             throw new ArgumentException("Input must be readable; output must be writable and, if seekable, empty and positioned at zero.");
         }
 
-        if (string.IsNullOrWhiteSpace(options.FontFilePath) || options.Input is null)
+        if ((string.IsNullOrWhiteSpace(options.FontFilePath) && options.Fonts is null) || options.Input is null)
         {
-            throw new ArgumentException("FontFilePath and Input are required.", nameof(options));
+            throw new ArgumentException("FontFilePath or Fonts, and Input are required.", nameof(options));
+        }
+
+        if (options.Fonts is not null && (!string.IsNullOrEmpty(options.FontFilePath) || options.FontCollectionIndex != 0))
+        {
+            throw new ArgumentException("Fonts cannot be combined with FontFilePath or FontCollectionIndex.", nameof(options));
         }
 
         if (options.FontCollectionIndex < 0)
@@ -95,7 +100,9 @@ public static class ExcelConverter
             options.Input,
             cancellationToken,
             () => ConversionMetrics.Report("buffer.spillCount", 1)).ConfigureAwait(false);
-        using var font = new SingleFontContext(options.FontFilePath, options.FontCollectionIndex, cancellationToken);
+        using var font = options.Fonts is { } fonts
+            ? new SingleFontContext(fonts, cancellationToken)
+            : new SingleFontContext(options.FontFilePath, options.FontCollectionIndex, cancellationToken);
         var diagnostics = new DiagnosticCollector();
         var reader = new CoreExcelReader(font, diagnostics, options.ReadOptions);
         var report = ConversionMetrics.Measure("reader", () => reader.Read(prepared, diagnostics, sheetNames, cancellationToken, options.ReadOptions));

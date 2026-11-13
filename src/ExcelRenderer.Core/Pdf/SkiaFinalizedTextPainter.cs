@@ -6,7 +6,7 @@ using SkiaSharp;
 
 namespace ExcelRenderer.Core.Pdf;
 
-/// <summary>Draws Core's finalized single-font lines without repeating layout.</summary>
+/// <summary>Draws Core's finalized explicit-font lines without repeating layout.</summary>
 internal sealed class SkiaFinalizedTextPainter(SingleFontContext context, PdfFontCollection fonts, SkiaPaintResources paints) : Extensibility.ICorePdfTextPainter
 {
     /// <inheritdoc/>
@@ -18,10 +18,11 @@ internal sealed class SkiaFinalizedTextPainter(SingleFontContext context, PdfFon
             return;
         }
 
+        var face = context.Resolve(command.Style.Font.Family, command.Style.Font.FamilyClassification);
         foreach (var line in layout.Lines)
         {
-            var selection = line.Glyphs ?? new(context.Face, context.Face.Typeface.GetGlyphs(line.Text), line.Text, line.Text);
-            fonts.Collect(context.Face, selection.GlyphSpan);
+            var selection = line.Glyphs ?? new(face, face.Typeface.GetGlyphs(line.Text), line.Text, line.Text);
+            fonts.Collect(context.Resolve(selection.FontIdentity), selection.GlyphSpan);
         }
     }
 
@@ -35,6 +36,7 @@ internal sealed class SkiaFinalizedTextPainter(SingleFontContext context, PdfFon
             return;
         }
 
+        var face = context.Resolve(command.Style.Font.Family, command.Style.Font.FamilyClassification);
         canvas.Save();
         try
         {
@@ -48,8 +50,8 @@ internal sealed class SkiaFinalizedTextPainter(SingleFontContext context, PdfFon
             foreach (var position in TextLayoutPlacement.Place(layout, command.Bounds, command.Style.HorizontalAlignment, command.Style.VerticalAlignment))
             {
                 var text = position.Line.Text;
-                var selection = position.Line.Glyphs ?? new(context.Face, context.Face.Typeface.GetGlyphs(text), text, text);
-                fonts.Draw(canvas, context.Face, selection.GlyphSpan, selection.SourceSpan, selection.ClusterSpan, (float)size, (float)position.Left, (float)position.Baseline, paint);
+                var selection = position.Line.Glyphs ?? new(face, face.Typeface.GetGlyphs(text), text, text);
+                fonts.Draw(canvas, context.Resolve(selection.FontIdentity), selection.GlyphSpan, selection.SourceSpan, selection.ClusterSpan, (float)size, (float)position.Left, (float)position.Baseline, paint);
                 if (command.Style.Font.Underline && !fonts.IsCollecting)
                 {
                     canvas.DrawLine((float)position.Left, (float)(position.Baseline + 1), (float)(position.Left + position.Line.Width), (float)(position.Baseline + 1), paint);

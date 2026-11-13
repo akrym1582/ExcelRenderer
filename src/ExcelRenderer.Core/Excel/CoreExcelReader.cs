@@ -9,6 +9,7 @@ namespace ExcelRenderer.Core.Excel;
 internal partial class CoreExcelReader
 {
     private readonly ICoreFontMetrics fontMetrics;
+    private readonly SingleFontContext? drawingFonts;
 
     /// <summary>Initializes a new instance of the <see cref="CoreExcelReader"/> class.</summary>
     /// <param name="fontManager">The single conversion font.</param>
@@ -17,6 +18,7 @@ internal partial class CoreExcelReader
     internal CoreExcelReader(SingleFontContext fontManager, DiagnosticCollector? diagnostics = null, ExcelReadOptions? options = null)
         : this(new SingleFontMetrics(fontManager, diagnostics, options))
     {
+        drawingFonts = fontManager;
     }
 
     /// <summary>Initializes a new instance of the <see cref="CoreExcelReader"/> class.</summary>

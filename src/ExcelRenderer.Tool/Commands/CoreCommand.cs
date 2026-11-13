@@ -1,17 +1,18 @@
 using System.CommandLine;
+using ExcelRenderer.Fonts;
 
 namespace ExcelRenderer.Tool.Commands;
 
 /// <summary>Builds the PDF-only Core conversion command.</summary>
 public static class CoreCommand
 {
-    /// <summary>Creates the core command using one caller-supplied font.</summary>
+    /// <summary>Creates the core command using an explicit or bundled drawing font.</summary>
     /// <returns>The Core PDF conversion command.</returns>
     public static Command Create()
     {
         var input = CommandSupport.InputArgument();
         var output = CommandSupport.OutputOption("Path to a new output PDF file.");
-        var font = new Option<string>("--font-file") { Description = "Single static TrueType font file or collection.", Required = true };
+        var font = new Option<string>("--font-file") { Description = "Static TrueType font file or collection; omitted uses bundled Noto Sans JP." };
         var fontIndex = new Option<int>("--font-collection-index") { Description = "Zero-based font collection face index." };
         var sheet = new Option<string[]>("--sheet") { Description = "Worksheet names in output order (repeatable).", AllowMultipleArgumentsPerToken = true };
         var verbose = CommandSupport.VerboseOption();
@@ -23,7 +24,7 @@ public static class CoreCommand
         var layoutFontIndex = new Option<int?>("--layout-font-index") { Description = "Zero-based measurement face index; requires --layout-font." };
         var noSystemFonts = new Option<bool>("--no-system-fonts") { Description = "Disable system lookup of the original Normal font for column measurements." };
         var data = MappingCommandSupport.DataOption();
-        var command = new Command("core", "Convert Excel to PDF using ExcelRenderer.Core and one supplied font (saved values only).")
+        var command = new Command("core", "Convert Excel to PDF using ExcelRenderer.Core and an explicit or bundled font (saved values only).")
         {
             input, output, font, fontIndex, sheet, verbose, data, metrics, mdw, fallbackMdw, fallbackMetrics, layoutFont, layoutFontIndex, noSystemFonts,
         };
@@ -51,7 +52,7 @@ public static class CoreCommand
                         SourceFontCollectionIndex = result.GetValue(layoutFontIndex),
                         UseSystemFontsForColumnWidths = !result.GetValue(noSystemFonts),
                     },
-                    FontFilePath = result.GetValue(font)!,
+                    FontFilePath = result.GetValue(font) ?? string.Empty,
                     FontCollectionIndex = result.GetValue(fontIndex),
                     SheetNames = CommandSupport.GetSheetNames(result.GetValue(sheet)),
                 },
@@ -72,8 +73,34 @@ public static class CoreCommand
         await using var input = File.OpenRead(inputPath);
         Directory.CreateDirectory(Path.GetDirectoryName(outputPath)!);
         var temporary = outputPath + $".{Guid.NewGuid():N}.tmp";
+        string? bundledFont = null;
         try
         {
+            if (string.IsNullOrWhiteSpace(options.FontFilePath))
+            {
+                if (options.FontCollectionIndex != 0)
+                {
+                    throw new ArgumentException("--font-collection-index requires --font-file.");
+                }
+
+                var resolved = new FontManager(new FontOptions
+                {
+                    AllowSystemFonts = false,
+                    FallbackFamilies = [],
+                }).Resolve(new FontRequest("Noto Sans JP"));
+                bundledFont = temporary + ".ttf";
+                if (resolved.FontData is { } bytes)
+                {
+                    await File.WriteAllBytesAsync(bundledFont, bytes, cancellationToken).ConfigureAwait(false);
+                }
+                else
+                {
+                    File.Copy(resolved.FilePath, bundledFont);
+                }
+
+                options = options with { FontFilePath = bundledFont, FontCollectionIndex = resolved.FontCollectionIndex };
+            }
+
             Core.ConversionResult conversion;
             await using (var output = new FileStream(temporary, FileMode.CreateNew, FileAccess.Write, FileShare.None))
             {
@@ -99,6 +126,10 @@ public static class CoreCommand
         finally
         {
             File.Delete(temporary);
+            if (bundledFont is not null)
+            {
+                File.Delete(bundledFont);
+            }
         }
     }
 }

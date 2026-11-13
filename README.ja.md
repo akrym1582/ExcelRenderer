@@ -285,7 +285,7 @@ excelrenderer <command> <input.xlsx> --output <path> [options]
 | --- | --- | --- |
 | `xlsx` | マッピング済みの XLSX ファイル | `--data <data.json>`（必須） |
 | `pdf` | 1 個の PDF | `--sheet <シート名>...`（繰り返し可） |
-| `core` | Core と保存済みセル値を使う1個の PDF | `--font-file <パス>`（必須）、`--font-collection-index <番号>`、`--sheet <シート名>...` |
+| `core` | Core と保存済みセル値を使う1個の PDF | `--font-file <パス>`（省略時は同梱 Noto Sans JP）、`--font-collection-index <番号>`、`--sheet <シート名>...` |
 | `image` | 印刷ページごとの PNG | `--sheet <シート名>...`、`--dpi <数値>`（既定値 `144`） |
 | `svg` | 印刷ページごとの自己完結 SVG | `--sheet <シート名>...` |
 | `ps` | TrueType フォントを埋め込んだ複数ページの PostScript ファイル | `--sheet <シート名>...` と buffer オプション |
@@ -349,8 +349,9 @@ BMP 私用領域 (U+E000–U+F8FF) は要求フォント、指定ファイル（
 excelrenderer core input.xlsx -o core.pdf --font-file ./NotoSansJP-Regular.ttf --sheet Sheet3 Sheet1 --verbose
 ```
 
-`core` サブコマンドは、指定した単一フォントで Core API の PDF 出力を実行します。
-`--font-file` は必須で、コレクション内の face は `--font-collection-index` で指定できます。
+`core` サブコマンドは、`--font-file` を省略すると同梱の Noto Sans JP を使います。
+明示したファイルを使う場合、コレクション内の face は `--font-collection-index` で指定できます。
+Core APIでは `PdfExportOptions.Fonts` による複数フォントと名前・系統別の置換も指定できます。[設定例](docs/core-fonts.ja.md)を参照してください。
 保存済みセル値を使用し、本体の図形・リンク注釈・数式再計算には対応しません。
 既存の出力ファイルは上書きしません。[Core の使い方と制限](docs/core.ja.md)も参照してください。
 
@@ -473,7 +474,7 @@ SingleStreamOutputSinkを使用し、FontOptionsを明示してください。
 cleanup の二次例外は元例外の `Data["AbortException"]` に記録します。
 
 Core の `ConvertAsync(xlsx, outputStream, options, cancellationToken)` も同じ非 Seek・非同期専用出力に対応します。
-Core は通常フォントの明示指定が必須で、最後の Flush は呼び出し側が行います。
+Core API は `FontFilePath` または `Fonts.Files` によるフォントの明示指定が必要です。CLIで省略した場合は同梱 Noto Sans JP を渡します。最後の Flush は呼び出し側が行います。
 詳細は [Core の Stream 契約](docs/core.ja.md) を参照してください。
 今回の保証対象は PDF で、他形式は従来の動作を維持します。
 
@@ -641,7 +642,7 @@ PDF・PNG・SVG は、通常の文字列セルのフォント名・サイズ・�
 `CellTextRun`、`Text` はプレーン全文です。手動モデルでは両者の全文が一致し、
 サイズが正の有限値である必要があります。組込み計測器は
 `IRichTextLayoutService` に対応し、従来のカスタム計測器はセル単一書式へ縮退します。
-Core 単独の通常フォント一つという仕様と、Markdown のプレーン出力は維持します。
+Core 単独のセルごとに通常フォントを一つ選ぶ仕様と、Markdown のプレーン出力は維持します。
 
 回転・縦書きとの併用はセル単一書式へ縮退します。取り消し線、上付き・下付き、
 二重・会計下線、ふりがなは描画しません。追加検出を有効にすると、未対応の部分書式と
@@ -951,7 +952,7 @@ PDF は上限付き seekable spool と文書内共有 subset を使います。�
 
 standalone `SkiaTextMeasurer` は独立 native scope を所有し、変換内部は現在の scope を借ります。
 確定 glyph/font snapshot は scope 終了後も再描画できます。呼出側 measurer/stream の所有権は維持します。
-Core は単一 regular static TrueType font と IVS の基底文字化を維持します。
+Core は明示指定した regular static TrueType font をセルごとに選択し、IVS は基底文字化します。
 
 [撤去の検証記録](docs/pdfsharp-removal-validation.md)、
 [固定 A/B/C 比較](tools/ExcelRenderer.PdfComparison/README.md)、
@@ -1013,7 +1014,7 @@ excelrenderer pdf input.xlsx -o output.pdf --column-width-metrics legacy
 `ColumnWidthMetrics = new() { Mode = ColumnWidthMetricsMode.RenderingFontLegacy }` です。
 Legacy・fallbackモードと元フォントファイルは併用不可ですが、明示MDWはこれらのモードでも最優先です。
 各出力形式、範囲・連続描画、選択ページの事前計画は同じ読取設定と変換単位の決定を使います。
-Coreの描画用フォントは単一のままです。元フォントのOS検索・計測用ファイルは列幅計測に限定します。
+Coreの描画用フォントは明示指定したものからセルごとに選びます。元フォントのOS検索・計測用ファイルは列幅計測に限定します。
 legacyモードは従来の結合セル改ページも維持します。sourceモードでは用紙より大きい結合を
 通常の行・列境界で分割し、結合の直前に余分なページができることを防ぎます。
 

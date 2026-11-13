@@ -1,6 +1,6 @@
 # Main and Core architecture
 
-`ExcelRenderer.Core` is the single-font PDF engine and the shared foundation.
+`ExcelRenderer.Core` is the explicit-font PDF engine and the shared foundation.
 `ExcelRenderer` extends that engine and retains its original public assembly/types.
 Both use the same Skia drawing and PDF foundation with different product policies;
 see [Skia rendering and font design](skia-rendering.md).
@@ -18,7 +18,7 @@ ExcelRenderer public APIs / multi-format orchestration
                          ↓
 ExcelRenderer.Core (also independently usable through ProjectReference)
     Reader input/spool → saved-value reader → geometry/pagination/placement → commands → PDF
-    regular single font; no shapes/annotations/selection or image splitting
+    explicit supplied fonts, selected per cell; no shapes/annotations/selection or image splitting
 ```
 
 Extension contracts are internal and visible only to the main engine and existing tests.
@@ -58,7 +58,7 @@ wraps on Unicode element boundaries with integer hmtx advances. Color fonts and
 custom/full measurers retain their compatibility paths. Finalized line clusters are
 rebuilt relative to each line. Plan-selected candidates retain source order and
 uniqueness, allowing placement to skip a second page-local band index and sort.
-The single-font cache uses a 512-entry CLOCK, excludes texts over 2048 characters,
+The physical-face-keyed cache uses a 512-entry CLOCK, excludes texts over 2048 characters,
 and limits retained text/line/glyph units to 131072. Its key excludes decoration
 and unused unwrapped width; shrink-to-fit remains outside the cache. PDF positions
 are written to the builder-owned span; each Core renderer lazily owns at most two

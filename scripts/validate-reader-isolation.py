@@ -59,6 +59,21 @@ using var input = File.OpenRead(args[0]);
 using var output = File.Create(args[2]);
 var result = await ExcelRenderer.Core.ExcelConverter.ConvertAsync(input, output, new() { FontFilePath = args[1] });
 if (result.PageCount < 1 || output.Length < 5 || !result.Diagnostics.Any(d => d.Code == "FormulaCachedValueMissing")) throw new Exception("Saved-value PDF failed");
+using var explicitInput = File.OpenRead(args[0]);
+using var explicitOutput = new MemoryStream();
+var explicitResult = await ExcelRenderer.Core.ExcelConverter.ConvertAsync(explicitInput, explicitOutput, new()
+{
+    Fonts = new()
+    {
+        Files = [args[1]],
+        FamilyAliases = { ["Calibri"] = "Noto Sans JP" },
+        SansSerifFallback = "Noto Sans JP",
+        SerifFallback = "Noto Sans JP",
+        DefaultFamily = "Noto Sans JP",
+    },
+    ReadOptions = new() { UseSourceFontForColumnWidths = false },
+});
+if (explicitResult.PageCount != result.PageCount || explicitOutput.Length < 5) throw new Exception("Explicit-font API failed");
 '''
 
 

@@ -2,9 +2,9 @@
 
 [日本語](main-core-parity.ja.md) · [Diagnostics and delivery](diagnostics.md) · [Core contract](core.md)
 
-Use main for multiple fonts, partial rich text, conditional formatting, shapes, links,
+Use main for automatic per-character font fallback, partial rich text, conditional formatting, shapes, links,
 recalculation, range/page selection, trim, or PNG/SVG/Markdown/PostScript. Use Core for
-PDF from saved values with one supplied static regular TrueType face. Core is bundled
+PDF from saved values with explicitly supplied static regular TrueType faces, selected per cell ([font configuration](core-fonts.md)). Core is bundled
 in the main NuGet distribution; there is no standalone Core NuGet package.
 
 | Contract | Relationship | Conditions / intended difference |
@@ -15,7 +15,7 @@ in the main NuGet distribution; there is no standalone Core NuGet package.
 | Size, color, underline | Common | Cell formatting with regular text |
 | Bold, italic, partial runs | Intended difference | Core uses regular face, flattens run text into the cell style |
 | Conditional formatting, shapes, PDF links | Intended difference | Core omits them; display text remains |
-| IVS / fallback | Intended difference | Core removes selectors and uses the supplied face without discovery/fallback |
+| IVS / fallback | Intended difference | Core removes selectors and selects from explicit faces by family/alias/classification, without OS drawing discovery or per-character fallback |
 | Basic images | Common | Complete image, start anchor in one page, no title repetition |
 | Image crop/rotation/flips, boundary crossing, repeated titles | Intended difference | Core stretches complete source and emits only on the start page |
 | Cell rotation | Intended difference | Core ignores rotation |

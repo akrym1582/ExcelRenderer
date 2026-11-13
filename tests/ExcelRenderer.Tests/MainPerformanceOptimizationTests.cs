@@ -149,7 +149,8 @@ public sealed class MainPerformanceOptimizationTests
         var manager = Manager();
         using var resources = new ConversionFontResources();
         var fast = new SkiaTextMeasurer(manager, true);
-        var original = new SkiaTextMeasurer(new CompatibilityManager(manager));
+        // Keep the compatibility algorithm uncached while borrowing this test's font resources.
+        var original = new SkiaTextMeasurer(new CompatibilityManager(manager), cacheLayouts: false);
         var random = new Random(43119);
         string[] elements = ["a", " ", "日", "本", "e\u0301", "😀", "👩‍👩‍👧", "\r\n", "\n", "\t", "\u0378", "葛\U000E0100"];
         var texts = new List<string> { "", "\n", "\n\n", "abc \r\n\n", "日 本   ", "a" + new string('\u0301', 256) };
@@ -160,12 +161,14 @@ public sealed class MainPerformanceOptimizationTests
             texts.Add(text.ToString());
         }
 
+        double[] sizes = [0d, 7.25, 11, 28];
+        var boundaries = sizes.ToDictionary(size => size, size => original.Layout("a日", new FontStyle(Size: size), 100, false).Size.Width);
         foreach (var text in texts)
-        foreach (var size in new[] { 0d, 7.25, 11, 28 })
+        foreach (var size in sizes)
         foreach (var wrap in new[] { false, true })
         {
             var style = new FontStyle(Size: size);
-            var boundary = original.Layout("a日", style, 100, false).Size.Width;
+            var boundary = boundaries[size];
             foreach (var width in new[] { -1d, 0, Math.BitDecrement(boundary), boundary, Math.BitIncrement(boundary), 37.5 })
             {
                 EqualLayout(original.Layout(text, style, width, wrap), fast.Layout(text, style, width, wrap));

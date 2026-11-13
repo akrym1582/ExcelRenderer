@@ -55,11 +55,9 @@ public sealed class PdfBackendTests
     }
 
     [Theory]
-    [InlineData(null, Excel.FormulaDisplayMode.CachedValue, "7")]
-    [InlineData(PdfBackend.SkiaSharp, Excel.FormulaDisplayMode.CachedValue, "7")]
-    [InlineData(null, Excel.FormulaDisplayMode.Recalculate, "42")]
-    [InlineData(PdfBackend.SkiaSharp, Excel.FormulaDisplayMode.Recalculate, "42")]
-    public async Task File_api_propagates_reader_formula_policy(PdfBackend? backend, Excel.FormulaDisplayMode mode, string expected)
+    [InlineData(Excel.FormulaDisplayMode.CachedValue, "7")]
+    [InlineData(Excel.FormulaDisplayMode.Recalculate, "42")]
+    public async Task File_api_propagates_reader_formula_policy(Excel.FormulaDisplayMode mode, string expected)
     {
         var directory = Path.Combine(Path.GetTempPath(), "pdf-formula-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(directory);
@@ -73,7 +71,6 @@ public sealed class PdfBackendTests
             var output = Path.Combine(directory, "formula.pdf");
             await ExcelConverter.ConvertToPdfAsync(path, output, new()
             {
-                PdfBackend = backend ?? new RenderRequest().PdfBackend,
                 ReadOptions = new() { FormulaDisplayMode = mode },
                 FontOptions = new() { AllowSystemFonts = false },
             });
@@ -103,10 +100,8 @@ public sealed class PdfBackendTests
         await Assert.ThrowsAsync<ArgumentException>(() => ExcelConverter.ConvertToPdfAsync("missing.xlsx", "missing.pdf", new() { PdfBackend = (PdfBackend)42 }));
     }
 
-    [Theory]
-    [InlineData(null)]
-    [InlineData(PdfBackend.SkiaSharp)]
-    public async Task Nonseekable_streams_and_borrowed_measurer_remain_open(PdfBackend? backend)
+    [Fact]
+    public async Task Nonseekable_streams_and_borrowed_measurer_remain_open()
     {
         using var inputData = Workbook();
         using var input = new NonseekableStream(inputData);
@@ -114,7 +109,7 @@ public sealed class PdfBackendTests
         using var output = new NonseekableStream(outputData);
         var measurer = new BorrowedMeasurer();
         var result = await ExcelConverter.RenderAsync(input,
-            new() { OutputFormat = OutputFormat.Pdf, PdfBackend = backend ?? new RenderRequest().PdfBackend, TextMeasurer = measurer, FontOptions = new() { AllowSystemFonts = false } },
+            new() { OutputFormat = OutputFormat.Pdf, TextMeasurer = measurer, FontOptions = new() { AllowSystemFonts = false } },
             new SingleStreamOutputSink(output));
         Assert.Single(result.Pages);
         Assert.Single(result.Artifacts);
@@ -128,17 +123,15 @@ public sealed class PdfBackendTests
         Assert.Single(pdf.Pages);
     }
 
-    [Theory]
-    [InlineData(null)]
-    [InlineData(PdfBackend.SkiaSharp)]
-    public async Task Cancelled_conversion_does_not_commit(PdfBackend? backend)
+    [Fact]
+    public async Task Cancelled_conversion_does_not_commit()
     {
         using var input = Workbook();
         using var output = new MemoryStream();
         using var cancellation = new CancellationTokenSource();
         cancellation.Cancel();
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => ExcelConverter.RenderAsync(input,
-            new() { OutputFormat = OutputFormat.Pdf, PdfBackend = backend ?? new RenderRequest().PdfBackend }, new SingleStreamOutputSink(output), cancellation.Token));
+            new() { OutputFormat = OutputFormat.Pdf }, new SingleStreamOutputSink(output), cancellation.Token));
         Assert.Equal(0, output.Length);
     }
 
@@ -270,80 +263,70 @@ public sealed class PdfBackendTests
     [InlineData("colr-v1.ttf")]
     public async Task Public_font_format_probe_loads_all_supported_snapshots(string name)
     {
-        var outcomes = new List<object>();
-        var successes = new List<bool>();
-        foreach (var backend in new PdfBackend?[] { null, PdfBackend.SkiaSharp })
+        using var input = Workbook("A B");
+        using var output = new MemoryStream();
+        var request = new RenderRequest
         {
-            using var input = Workbook("A B");
-            using var output = new MemoryStream();
-            try
+            OutputFormat = OutputFormat.Pdf,
+            FontOptions = new()
             {
-                var result = await ExcelConverter.RenderAsync(input, new()
-                {
-                    OutputFormat = OutputFormat.Pdf,
-                    PdfBackend = backend ?? new RenderRequest().PdfBackend,
-                    FontOptions = new()
-                    {
-                        AllowSystemFonts = false,
-                        UseFontPack = false,
-                        FallbackFamilies = ["Noto Sans JP"],
-                        Registrations = [new("Noto Sans JP", Path.Combine(AppContext.BaseDirectory, "Fonts", "PdfFormats", name))],
-                    },
-                }, new SingleStreamOutputSink(output));
-                successes.Add(true);
-                Assert.Single(result.Artifacts);
-                outcomes.Add(new { backend = backend.ToString(), success = true, error = (string?)null });
-            }
-            catch (ConversionException error)
-            {
-                successes.Add(false);
-                Assert.Empty(error.CompletedArtifacts);
-                Assert.Equal(0, output.Length);
-                outcomes.Add(new { backend = backend.ToString(), success = false, error = error.InnerException?.Message ?? error.Message });
-            }
+                AllowSystemFonts = false,
+                UseFontPack = false,
+                FallbackFamilies = ["Noto Sans JP"],
+                Registrations = [new("Noto Sans JP", Path.Combine(AppContext.BaseDirectory, "Fonts", "PdfFormats", name))],
+            },
+        };
+        bool success;
+        string? failure = null;
+        try
+        {
+            var result = await ExcelConverter.RenderAsync(input, request, new SingleStreamOutputSink(output));
+            success = true;
+            Assert.Single(result.Artifacts);
+        }
+        catch (ConversionException error)
+        {
+            success = false;
+            failure = error.InnerException?.Message ?? error.Message;
+            Assert.Empty(error.CompletedArtifacts);
+            Assert.Equal(0, output.Length);
         }
 
         var directory = Path.Combine(AppContext.BaseDirectory, "SampleOutputs", "PdfFormats");
         Directory.CreateDirectory(directory);
+        var outcomes = new[] { new { backend = request.PdfBackend.ToString(), success, error = failure } };
         File.WriteAllText(Path.Combine(directory, name + ".json"), System.Text.Json.JsonSerializer.Serialize(outcomes));
-        Assert.All(successes, success => Assert.Equal(name is not ("cff.otf" or "variable.ttf"), success));
+        Assert.Equal(name is not ("cff.otf" or "variable.ttf"), success);
     }
 
     [Fact]
-    public async Task Default_and_explicit_skia_keep_page_plans_and_link_tooltips()
+    public async Task Pdf_preserves_page_dimensions_and_link_tooltips()
     {
-        var results = new List<ConversionResult>();
-        foreach (var backend in new PdfBackend?[] { null, PdfBackend.SkiaSharp })
-        {
-            using var input = Workbook(links: true);
-            using var output = new MemoryStream();
-            results.Add(await ExcelConverter.RenderAsync(input,
-                new() { OutputFormat = OutputFormat.Pdf, PdfBackend = backend ?? new RenderRequest().PdfBackend, FontOptions = new() { AllowSystemFonts = false } }, new SingleStreamOutputSink(output)));
-            output.Position = 0;
-            using var pdf = PdfTestFile.Open(output);
-            Assert.Single(pdf.Pages[0].Annotations);
-            Assert.Equal("linktooltip", pdf.Pages[0].Annotations[0].Elements.GetString("/Contents"));
-            Assert.InRange(pdf.Pages[0].MediaBox.Width, 595.27, 595.28);
-            Assert.InRange(pdf.Pages[0].MediaBox.Height, 841.88, 841.90);
-            Assert.True(output.Length < 1024 * 1024);
-        }
-
-        Assert.Equal(System.Text.Json.JsonSerializer.Serialize(results[0].Pages), System.Text.Json.JsonSerializer.Serialize(results[1].Pages));
-        Assert.Equal(results[0].Diagnostics, results[1].Diagnostics);
+        using var input = Workbook(links: true);
+        using var output = new MemoryStream();
+        var result = await ExcelConverter.RenderAsync(input,
+            new() { OutputFormat = OutputFormat.Pdf, FontOptions = new() { AllowSystemFonts = false } }, new SingleStreamOutputSink(output));
+        Assert.Single(result.Pages);
+        output.Position = 0;
+        using var pdf = PdfTestFile.Open(output);
+        Assert.Single(pdf.Pages);
+        Assert.Single(pdf.Pages[0].Annotations);
+        Assert.Equal("linktooltip", pdf.Pages[0].Annotations[0].Elements.GetString("/Contents"));
+        Assert.InRange(pdf.Pages[0].MediaBox.Width, 595.27, 595.28);
+        Assert.InRange(pdf.Pages[0].MediaBox.Height, 841.88, 841.90);
+        Assert.True(output.Length < 1024 * 1024);
     }
 
     [Theory]
-    [InlineData(null, false)]
-    [InlineData(PdfBackend.SkiaSharp, false)]
-    [InlineData(null, true)]
-    [InlineData(PdfBackend.SkiaSharp, true)]
-    public async Task Write_failure_or_midwrite_cancellation_aborts_once_and_releases_resources(PdfBackend? backend, bool cancel)
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Write_failure_or_midwrite_cancellation_aborts_once_and_releases_resources(bool cancel)
     {
         using var cancellation = new CancellationTokenSource();
         using var input = Workbook();
         using var output = new FailingOutput(cancel ? cancellation : null);
         var sink = new ObservedSink(output);
-        var request = new RenderRequest { OutputFormat = OutputFormat.Pdf, PdfBackend = backend ?? new RenderRequest().PdfBackend, FontOptions = new() { AllowSystemFonts = false } };
+        var request = new RenderRequest { OutputFormat = OutputFormat.Pdf, FontOptions = new() { AllowSystemFonts = false } };
         if (cancel)
         {
             await Assert.ThrowsAnyAsync<OperationCanceledException>(() => ExcelConverter.RenderAsync(input, request, sink, cancellation.Token));
@@ -534,11 +517,9 @@ public sealed class PdfBackendTests
     }
 
     [Theory]
-    [InlineData(null, false)]
-    [InlineData(PdfBackend.SkiaSharp, false)]
-    [InlineData(null, true)]
-    [InlineData(PdfBackend.SkiaSharp, true)]
-    public async Task Corrupt_images_keep_warning_locations_and_strict_failure_policy(PdfBackend? backend, bool strict)
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Corrupt_images_keep_warning_locations_and_strict_failure_policy(bool strict)
     {
         using var input = Workbook();
         using (var document = DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Open(input, true))
@@ -552,7 +533,6 @@ public sealed class PdfBackendTests
         var request = new RenderRequest
         {
             OutputFormat = OutputFormat.Pdf,
-            PdfBackend = backend ?? new RenderRequest().PdfBackend,
             DiagnosticOptions = new() { StrictMode = strict },
             ReadOptions = new() { ColumnWidthMetrics = new() { MaximumDigitWidthPixels96Dpi = 7 } },
             FontOptions = new() { AllowSystemFonts = false },

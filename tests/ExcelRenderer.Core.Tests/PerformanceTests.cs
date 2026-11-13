@@ -58,6 +58,7 @@ public sealed class PerformanceTests(ITestOutputHelper output)
             OS = RuntimeInformation.OSDescription,
             Architecture = RuntimeInformation.ProcessArchitecture.ToString(),
             ObserverEnabled = true,
+            SystemFontLookup = false,
             ProcessorCount = Environment.ProcessorCount,
             ServerGC = System.Runtime.GCSettings.IsServerGC,
             InputSha256 = Convert.ToHexString(SHA256.HashData(inputBytes)),
@@ -87,11 +88,12 @@ public sealed class PerformanceTests(ITestOutputHelper output)
         var managedBefore = GC.GetTotalMemory(false);
         using var process = Process.GetCurrentProcess();
         var workingSetBefore = process.WorkingSet64;
+        var options = TestSupport.Options with { ReadOptions = new() { UseSystemFontsForColumnWidths = false } };
         try
         {
             var before = GC.GetTotalAllocatedBytes(precise: true);
             var started = Stopwatch.GetTimestamp();
-            result = await ExcelConverter.ConvertAsync(input, pdf, TestSupport.Options);
+            result = await ExcelConverter.ConvertAsync(input, pdf, options);
             elapsed = Stopwatch.GetElapsedTime(started).TotalMilliseconds;
             allocated = GC.GetTotalAllocatedBytes(precise: true) - before;
         }

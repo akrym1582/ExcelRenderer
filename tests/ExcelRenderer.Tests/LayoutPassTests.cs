@@ -720,13 +720,14 @@ public sealed class LayoutPassTests
         {
             RetainedWorkbook.Copy("LayoutPassTests.ExcelReader_reads_print_settings_and_converts_column_widths.E75FF45871D7487A.xlsx", path);
 
-            var sheet = new ExcelReader().Read(path).Sheets[0];
+            var fonts = new FontManager(new() { AllowSystemFonts = false });
+            var sheet = new ExcelReader(fonts).Read(path).Sheets[0];
 
             Assert.Equal(new CellRange(new(2, 3), new(4, 5)), sheet.PrintArea);
             Assert.Equal(841.89, sheet.PageSettings.Width, 2);
             Assert.Equal(36, sheet.PageSettings.MarginLeft, 2);
             Assert.Equal(51.75, sheet.Columns[3].Width, 2);
-            var compatible = new ExcelReader().Read(path, new()
+            var compatible = new ExcelReader(fonts).Read(path, new()
             {
                 ColumnWidthMetrics = new() { FallbackMaximumDigitWidthPixels96Dpi = 7 },
             }).Sheets[0];

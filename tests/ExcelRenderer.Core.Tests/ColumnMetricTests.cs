@@ -2,6 +2,7 @@ using ExcelRenderer.Core.Excel;
 using ExcelRenderer.Core.Fonts;
 using ExcelRenderer.Core.Layout;
 using ExcelRenderer.Core.Rendering;
+using SkiaSharp;
 using Xunit;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 
@@ -22,7 +23,7 @@ public sealed class ColumnMetricTests
             row.Height = 120;
             row.CustomHeight = true;
         });
-        var options = new ExcelReadOptions { UseLibreOfficeColumnWidths = compatible, MaximumDigitWidthPixels96Dpi = compatible ? 8.8 : null };
+        var options = new ExcelReadOptions { UseSystemFontsForColumnWidths = false, UseLibreOfficeColumnWidths = compatible, MaximumDigitWidthPixels96Dpi = compatible ? 8.8 : null };
         using var font = new SingleFontContext(TestSupport.JapaneseFont);
         using var prepared = await OpenXml.Reader.Input.WorkbookInputPreparer.ReadAsync(input, new(), default);
         var sheet = new CoreExcelReader(font, null, options).Read(prepared, null).Sheets.Single();
@@ -69,9 +70,10 @@ public sealed class ColumnMetricTests
             });
             using var font = new SingleFontContext(path);
             var diagnostics = new DiagnosticCollector();
-            Assert.Equal(expected, new SingleFontMetrics(font, diagnostics).MaximumDigitWidth(new(family, size), "First"));
+            var options = new ExcelReadOptions { UseSystemFontsForColumnWidths = false };
+            Assert.Equal(expected, new SingleFontMetrics(font, diagnostics, options).MaximumDigitWidth(new(family, size), "First"));
             using var prepared = await OpenXml.Reader.Input.WorkbookInputPreparer.ReadAsync(input, new(), default);
-            var sheet = new CoreExcelReader(font, diagnostics).Read(prepared, diagnostics).Sheets.Single();
+            var sheet = new CoreExcelReader(font, diagnostics, options).Read(prepared, diagnostics).Sheets.Single();
             Assert.Equal(ColumnWidthCalculator.ToPoints(3.12, expected), sheet.Columns[1].Width);
             Assert.All(diagnostics.ToArray().Where(diagnostic => diagnostic.Code == "MaximumDigitWidthFallback"), diagnostic =>
             {
@@ -112,8 +114,50 @@ public sealed class ColumnMetricTests
         using var font = new SingleFontContext(TestSupport.JapaneseFont);
         var diagnostics = new DiagnosticCollector();
         var options = new ExcelReadOptions { UseSystemFontsForColumnWidths = allowSystem, FallbackMaximumDigitWidthPixels96Dpi = allowSystem ? 17 : null };
-        Assert.Equal(expected, new SingleFontMetrics(font, diagnostics, options).MaximumDigitWidth(new("Noto Sans Mono", 11), "First"));
+        var lookups = 0;
+        var metrics = new SingleFontMetrics(font, diagnostics, options, normal =>
+        {
+            lookups++;
+            Assert.Equal("Noto Sans Mono", normal.Family);
+            return SKTypeface.FromFile(TestSupport.MonoFont);
+        });
+        Assert.Equal(expected, metrics.MaximumDigitWidth(new("Noto Sans Mono", 11), "First"));
+        Assert.Equal(allowSystem ? 1 : 0, lookups);
         Assert.Contains("source=" + source, Assert.Single(diagnostics.ToArray()).Message);
+    }
+
+    [Theory]
+    [InlineData("missing", null, 8d)]
+    [InlineData("substituted", null, 8d)]
+    [InlineData("unreadable", 7.5, 7.5)]
+    public void Unavailable_or_unrelated_system_faces_use_the_requested_fallback(string result, double? fallback, double expected)
+    {
+        using var font = new SingleFontContext(TestSupport.JapaneseFont);
+        var diagnostics = new DiagnosticCollector();
+        var options = new ExcelReadOptions { FallbackMaximumDigitWidthPixels96Dpi = fallback };
+        var metrics = new SingleFontMetrics(font, diagnostics, options, _ => result switch
+        {
+            "missing" => null,
+            "substituted" => SKTypeface.FromFile(TestSupport.JapaneseFont),
+            _ => throw new IOException("Source font is unavailable."),
+        });
+        Assert.Equal(expected, metrics.MaximumDigitWidth(new("Noto Sans Mono", 11), "First"));
+        Assert.Equal("MaximumDigitWidthFallback", Assert.Single(diagnostics.ToArray()).Code);
+    }
+
+    [Fact]
+    public void Native_system_lookup_handles_the_fonts_available_on_this_host()
+    {
+        using var font = new SingleFontContext(TestSupport.JapaneseFont);
+        var family = SKFontManager.Default.FontFamilies.FirstOrDefault(candidate => !ColumnFontMetrics.MatchesFamily(font.Face.Typeface, candidate));
+        var normal = new NormalFontMetadata(family ?? "Unavailable source font", 11);
+        using var source = SKFontManager.Default.MatchFamily(normal.Family);
+        var available = family is not null && source is not null && ColumnFontMetrics.MatchesFamily(source, family);
+        var expected = available ? ColumnFontMetrics.Measure(source!, 11) : 17;
+        var diagnostics = new DiagnosticCollector();
+        var metrics = new SingleFontMetrics(font, diagnostics, new() { FallbackMaximumDigitWidthPixels96Dpi = 17 });
+        Assert.Equal(expected, metrics.MaximumDigitWidth(normal, "First"));
+        Assert.Contains(available ? "source=system-font" : "source=fallback-override", Assert.Single(diagnostics.ToArray()).Message);
     }
 
     [Theory]
@@ -168,7 +212,7 @@ public sealed class ColumnMetricTests
         });
         using var font = new SingleFontContext(TestSupport.JapaneseFont);
         using var prepared = await OpenXml.Reader.Input.WorkbookInputPreparer.ReadAsync(input, new(), default);
-        var options = new ExcelReadOptions { FallbackMaximumDigitWidthPixels96Dpi = fallback };
+        var options = new ExcelReadOptions { UseSystemFontsForColumnWidths = false, FallbackMaximumDigitWidthPixels96Dpi = fallback };
         var sheet = new CoreExcelReader(font, null, options).Read(prepared, null).Sheets.Single();
         var plan = Assert.Single(new ReportLayoutEngine(new RangeOnlyMeasurer()).Plan(sheet));
         var page = Assert.Single(plan.Pages);

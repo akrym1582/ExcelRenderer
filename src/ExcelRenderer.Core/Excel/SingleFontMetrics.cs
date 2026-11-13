@@ -10,6 +10,7 @@ internal sealed class SingleFontMetrics : ICoreFontMetrics
     private readonly SingleFontContext context;
     private readonly ExcelReadOptions options;
     private readonly DiagnosticCollector? diagnostics;
+    private readonly Func<NormalFontMetadata, SKTypeface?> systemFontResolver;
     private readonly byte[]? sourceFont;
     private readonly Dictionary<NormalFontMetadata, MetricDecision> widths = new();
 
@@ -17,11 +18,13 @@ internal sealed class SingleFontMetrics : ICoreFontMetrics
     /// <param name="context">The conversion-owned font.</param>
     /// <param name="diagnostics">The conversion diagnostic collector.</param>
     /// <param name="options">Column metric compatibility settings.</param>
-    internal SingleFontMetrics(SingleFontContext context, DiagnosticCollector? diagnostics = null, ExcelReadOptions? options = null)
+    /// <param name="systemFontResolver">Optional owned-face lookup for isolated source-font resolution.</param>
+    internal SingleFontMetrics(SingleFontContext context, DiagnosticCollector? diagnostics = null, ExcelReadOptions? options = null, Func<NormalFontMetadata, SKTypeface?>? systemFontResolver = null)
     {
         this.context = context;
         this.options = options ?? new();
         this.diagnostics = diagnostics;
+        this.systemFontResolver = systemFontResolver ?? ResolveSystemFont;
         sourceFont = this.options.SourceFontFile is { } path ? ColumnFontMetrics.Load(path, this.options.SourceFontCollectionIndex ?? 0) : null;
     }
 
@@ -53,6 +56,12 @@ internal sealed class SingleFontMetrics : ICoreFontMetrics
             message,
             sheetName));
         return decision.Width;
+    }
+
+    private static SKTypeface? ResolveSystemFont(NormalFontMetadata normal)
+    {
+        using var style = new SKFontStyle(normal.Weight, (int)SKFontStyleWidth.Normal, normal.Italic ? SKFontStyleSlant.Italic : SKFontStyleSlant.Upright);
+        return SKFontManager.Default.MatchFamily(normal.Family, style);
     }
 
     private MetricDecision ResolveCached(NormalFontMetadata normal)
@@ -96,8 +105,7 @@ internal sealed class SingleFontMetrics : ICoreFontMetrics
         {
             try
             {
-                using var style = new SKFontStyle(normal.Weight, (int)SKFontStyleWidth.Normal, normal.Italic ? SKFontStyleSlant.Italic : SKFontStyleSlant.Upright);
-                using var face = SKFontManager.Default.MatchFamily(normal.Family, style);
+                using var face = systemFontResolver(normal);
                 if (face is not null && ColumnFontMetrics.MatchesFamily(face, normal.Family))
                 {
                     return new(ColumnFontMetrics.Measure(face, normal.Size), "system-font", face.FamilyName);

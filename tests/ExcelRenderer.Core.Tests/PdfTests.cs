@@ -192,7 +192,8 @@ public sealed class PdfTests
     public async Task Core_owned_workbooks_keep_expected_page_counts_and_readable_PDF(string name, int expectedPages, int fixedWidthPages)
     {
         using var input = File.OpenRead(Path.Combine(AppContext.BaseDirectory, "Baselines", "Inputs", name)); using var output = new MemoryStream();
-        var result = await ExcelConverter.ConvertAsync(input, output, TestSupport.Options);
+        var options = TestSupport.Options with { ReadOptions = new() { UseSystemFontsForColumnWidths = false } };
+        var result = await ExcelConverter.ConvertAsync(input, output, options);
         using var document = TestSupport.Open(output.ToArray());
         Assert.Equal(expectedPages, result.PageCount);
         Assert.Equal(expectedPages, document.NumberOfPages);
@@ -202,7 +203,7 @@ public sealed class PdfTests
         using var compatible = new MemoryStream();
         var fixedWidth = await ExcelConverter.ConvertAsync(input, compatible, TestSupport.Options with
         {
-            ReadOptions = new() { FallbackMaximumDigitWidthPixels96Dpi = 7 },
+            ReadOptions = new() { UseSystemFontsForColumnWidths = false, FallbackMaximumDigitWidthPixels96Dpi = 7 },
         });
         Assert.Equal(fixedWidthPages, fixedWidth.PageCount);
     }

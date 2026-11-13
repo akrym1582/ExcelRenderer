@@ -5,6 +5,13 @@ from `tests/Shared` and reads no assets from other test projects. The Core CI jo
 uses a sparse checkout containing only these projects and the supplied Japanese
 font. Python, Poppler, a reference renderer and system font setup are unnecessary.
 
+Column-metric tests explicitly disable OS lookup when asserting substitute-font
+widths or page counts. The successful-system-lookup test supplies an owned fixture
+face through the internal resolver; it never assumes Noto Sans Mono is installed.
+A separate native smoke test checks whichever families the host exposes, including
+the no-matching-font fallback. Product defaults still resolve the original system
+font and measure the drawing substitute when that font is unavailable.
+
 `TestWorkbook` creates small XLSX packages directly with the Open XML SDK.
 `TestImages` creates deterministic images, including a valid-header PNG with
 corrupt pixels. `Fonts` owns the second font and tiny format fixtures. The nine
@@ -52,6 +59,8 @@ raw samples and median. CI runs this category after coverage restores the clean
 assembly. Run it without overlapping builds/tests/rendering or coverage/profiling.
 
 The timed and allocated-byte intervals contain only `ExcelConverter.ConvertAsync`.
+Performance conversions disable system font lookup explicitly, so installed
+Calibri or Japanese fonts do not change the measured layout or diagnostics.
 Input generation, stream setup, PdfPig verification, assertions, hashing and JSON
 writing occur outside both intervals. The observer is enabled consistently to
 check two page builds per page, one save and matching native font disposal.

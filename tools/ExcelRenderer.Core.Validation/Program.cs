@@ -114,6 +114,7 @@ if (args[0] == "normalize")
 }
 
 var repeats = args.Length > 4 ? int.Parse(args[4], CultureInfo.InvariantCulture) : 1;
+var fallbackMdw = args.Length > 5 ? double.Parse(args[5], CultureInfo.InvariantCulture) : (double?)null;
 var samples = new List<object>();
 for (var iteration = 0; iteration < repeats; iteration++)
 {
@@ -146,7 +147,9 @@ for (var iteration = 0; iteration < repeats; iteration++)
             // Core measures column widths with the supplied font, including a saved Normal family that differs.
             ReadOptions = new()
             {
-                ColumnWidthMetrics = new() { SourceFontFile = args[3] },
+                ColumnWidthMetrics = fallbackMdw is { } referenceWidth
+                    ? new() { FallbackMaximumDigitWidthPixels96Dpi = referenceWidth }
+                    : new() { SourceFontFile = args[3] },
             },
             FontOptions = new FontOptions
             {
@@ -160,7 +163,15 @@ for (var iteration = 0; iteration < repeats; iteration++)
         using (var input = File.OpenRead(args[1]))
         using (var output = new FileStream(args[2], FileMode.Create, FileAccess.ReadWrite))
         {
-            await ExcelConverter.ConvertAsync(input, output, new() { FontFilePath = args[3] });
+            await ExcelConverter.ConvertAsync(input, output, new()
+            {
+                FontFilePath = args[3],
+                ReadOptions = new()
+                {
+                    FallbackMaximumDigitWidthPixels96Dpi = fallbackMdw,
+                    UseSystemFontsForColumnWidths = fallbackMdw is null,
+                },
+            });
         }
 #endif
     }

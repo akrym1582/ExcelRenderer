@@ -144,12 +144,12 @@ for (var iteration = 0; iteration < repeats; iteration++)
         {
             Hyperlinks = HyperlinkMode.None,
 
-            // Core measures column widths with the supplied font, including a saved Normal family that differs.
+            // Preserve source-font matching and the configured missing-source fallback.
             ReadOptions = new()
             {
                 ColumnWidthMetrics = fallbackMdw is { } referenceWidth
                     ? new() { FallbackMaximumDigitWidthPixels96Dpi = referenceWidth }
-                    : new() { SourceFontFile = args[3] },
+                    : new(),
             },
             FontOptions = new FontOptions
             {
@@ -166,11 +166,9 @@ for (var iteration = 0; iteration < repeats; iteration++)
             await ExcelConverter.ConvertAsync(input, output, new()
             {
                 FontFilePath = args[3],
-                ReadOptions = new()
-                {
-                    FallbackMaximumDigitWidthPixels96Dpi = fallbackMdw,
-                    UseSystemFontsForColumnWidths = fallbackMdw is null,
-                },
+                ReadOptions = fallbackMdw is { } width
+                    ? new() { FallbackMaximumDigitWidthPixels96Dpi = width, UseSystemFontsForColumnWidths = false }
+                    : new(),
             });
         }
 #endif

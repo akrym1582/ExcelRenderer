@@ -35,7 +35,7 @@ public sealed class ColumnMetricTests
     public void LibreOffice_metrics_retain_twip_precision_for_the_selected_font()
     {
         using var font = new SingleFontContext(TestSupport.JapaneseFont);
-        var metrics = new SingleFontMetrics(font, null, new() { UseLibreOfficeColumnWidths = true });
+        var metrics = new SingleFontMetrics(font, null, new() { UseLibreOfficeColumnWidths = true, FallbackMaximumDigitWidthPixels96Dpi = null });
         Assert.Equal(122d / 15, metrics.MaximumDigitWidth(new("Calibri", 11), "First"));
     }
 
@@ -70,7 +70,7 @@ public sealed class ColumnMetricTests
             });
             using var font = new SingleFontContext(path);
             var diagnostics = new DiagnosticCollector();
-            var options = new ExcelReadOptions { UseSystemFontsForColumnWidths = false };
+            var options = new ExcelReadOptions { UseSystemFontsForColumnWidths = false, FallbackMaximumDigitWidthPixels96Dpi = null };
             Assert.Equal(expected, new SingleFontMetrics(font, diagnostics, options).MaximumDigitWidth(new(family, size), "First"));
             using var prepared = await OpenXml.Reader.Input.WorkbookInputPreparer.ReadAsync(input, new(), default);
             var sheet = new CoreExcelReader(font, diagnostics, options).Read(prepared, diagnostics).Sheets.Single();
@@ -96,14 +96,62 @@ public sealed class ColumnMetricTests
         Assert.All(diagnostics.ToArray(), diagnostic => Assert.Equal("MaximumDigitWidthResolved", diagnostic.Code));
     }
 
-    /// <summary>Missing source metadata uses the drawing font at the documented default Normal size.</summary>
-    [Fact]
-    public void Missing_Normal_metadata_uses_a_diagnosed_drawing_font_width()
+    [Theory]
+    [InlineData(6)]
+    [InlineData(11)]
+    [InlineData(20)]
+    public void Missing_source_defaults_to_8px_independently_of_drawing_font_and_Normal_size(double size)
     {
-        using var font = new SingleFontContext(TestSupport.JapaneseFont);
+        Assert.Equal(8, new ExcelReadOptions().FallbackMaximumDigitWidthPixels96Dpi);
+        foreach (var path in new[] { TestSupport.JapaneseFont, TestSupport.MonoFont })
+        {
+            using var font = new SingleFontContext(path);
+            var diagnostics = new DiagnosticCollector();
+            var metrics = new SingleFontMetrics(font, diagnostics, new() { UseSystemFontsForColumnWidths = false });
+            Assert.Equal(8, metrics.MaximumDigitWidth(new("Unavailable source font", size), "First"));
+            Assert.Contains("source=fallback-override", Assert.Single(diagnostics.ToArray()).Message);
+        }
+    }
+
+    [Theory]
+    [InlineData(8d, null, 8)]
+    [InlineData(null, null, 16)]
+    [InlineData(7.5, null, 7.5)]
+    [InlineData(8d, 12.5, 12.5)]
+    public void Fallback_only_mode_skips_source_matching_and_system_lookup(double? fallback, double? forced, double expected)
+    {
+        using var font = new SingleFontContext(TestSupport.MonoFont);
+        foreach (var family in new[] { "Noto Sans Mono", "Noto Sans JP" })
+        {
+            var diagnostics = new DiagnosticCollector();
+            var options = new ExcelReadOptions { UseSourceFontForColumnWidths = false, FallbackMaximumDigitWidthPixels96Dpi = fallback, MaximumDigitWidthPixels96Dpi = forced };
+            var metrics = new SingleFontMetrics(font, diagnostics, options, _ => throw new InvalidOperationException("Source lookup must not run."));
+            Assert.Equal(expected, metrics.MaximumDigitWidth(new(family, 20), "First"));
+            var diagnostic = Assert.Single(diagnostics.ToArray());
+            Assert.Contains("Source-font lookup is disabled", diagnostic.Message);
+            Assert.Equal(forced is null ? "MaximumDigitWidthFallback" : "MaximumDigitWidthResolved", diagnostic.Code);
+        }
+    }
+
+    [Fact]
+    public async Task Fallback_only_mode_rejects_an_explicit_source_file_without_output()
+    {
+        using var input = TestSupport.Workbook();
+        using var output = new MemoryStream();
+        var options = TestSupport.Options with { ReadOptions = new() { UseSourceFontForColumnWidths = false, SourceFontFile = TestSupport.JapaneseFont } };
+        await Assert.ThrowsAsync<ArgumentException>(() => ExcelConverter.ConvertAsync(input, output, options));
+        Assert.Equal(0, output.Length);
+    }
+
+    /// <summary>Missing source metadata uses the fixed default unless drawing-font measurement is requested.</summary>
+    [Fact]
+    public void Missing_Normal_metadata_defaults_to_fixed_width_and_can_measure_the_drawing_font()
+    {
+        using var font = new SingleFontContext(TestSupport.MonoFont);
         var diagnostics = new DiagnosticCollector();
         Assert.Equal(8, new SingleFontMetrics(font, diagnostics).MaximumDigitWidth(null, "First"));
         Assert.Contains("unknown", Assert.Single(diagnostics.ToArray()).Message);
+        Assert.Equal(9, new SingleFontMetrics(font, null, new() { FallbackMaximumDigitWidthPixels96Dpi = null }).MaximumDigitWidth(null, "First"));
     }
 
     [Theory]

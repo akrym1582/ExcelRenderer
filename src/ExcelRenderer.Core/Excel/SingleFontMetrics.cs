@@ -49,6 +49,11 @@ internal sealed class SingleFontMetrics : ICoreFontMetrics
             message += " Exact Excel layout cannot be guaranteed; specify SourceFontFile or MaximumDigitWidthPixels96Dpi to supply original metrics.";
         }
 
+        if (!options.UseSourceFontForColumnWidths)
+        {
+            message += " Source-font lookup is disabled.";
+        }
+
         diagnostics?.Add(new(
             decision.IsFallback ? "MaximumDigitWidthFallback" : "MaximumDigitWidthResolved",
             decision.IsFallback ? DiagnosticSeverity.Warning : DiagnosticSeverity.Info,
@@ -80,6 +85,11 @@ internal sealed class SingleFontMetrics : ICoreFontMetrics
         if (options.MaximumDigitWidthPixels96Dpi is { } width)
         {
             return new(width, "override", "explicit MDW");
+        }
+
+        if (!options.UseSourceFontForColumnWidths)
+        {
+            return ResolveFallback(normal);
         }
 
         if (sourceFont is not null)
@@ -121,7 +131,7 @@ internal sealed class SingleFontMetrics : ICoreFontMetrics
     }
 
     private MetricDecision ResolveFallback(NormalFontMetadata normal) => options.FallbackMaximumDigitWidthPixels96Dpi is { } width
-        ? new(width, "fallback-override", "explicit fallback MDW", true)
+        ? new(width, "fallback-override", "configured fallback MDW", true)
         : new(context.MaximumDigitWidth(normal.Size, UseLibreOfficeColumnWidths), "drawing-font", context.Face.Typeface.FamilyName, true);
 
     private sealed record MetricDecision(double Width, string Source, string Font, bool IsFallback = false);

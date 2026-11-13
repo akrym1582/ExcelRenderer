@@ -10,7 +10,8 @@ widths or page counts. The successful-system-lookup test supplies an owned fixtu
 face through the internal resolver; it never assumes Noto Sans Mono is installed.
 A separate native smoke test checks whichever families the host exposes, including
 the no-matching-font fallback. Product defaults still resolve the original system
-font and measure the drawing substitute when that font is unavailable.
+font and use a fixed 8px fallback when that font is unavailable. Explicit null
+opts into drawing-substitute measurement at the Normal size.
 
 `TestWorkbook` creates small XLSX packages directly with the Open XML SDK.
 `TestImages` creates deterministic images, including a valid-header PNG with

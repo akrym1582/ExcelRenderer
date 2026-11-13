@@ -299,9 +299,10 @@ FontManager's internal exact lookup respects its existing discovery permissions 
 physical family names. Core's ColumnFontMetrics now owns shared physical-family verification,
 source-file loading and digit measurement. SingleFontMetrics optionally resolves the original
 Normal family through Skia's system font manager for column measurements only. Both adapters
-use an optional FallbackMaximumDigitWidthPixels96Dpi when source metrics are unavailable,
-otherwise measuring their drawing substitute at the Normal size. No family-specific numeric
-fallback profiles or new IFontManager contract members are used.
+use FallbackMaximumDigitWidthPixels96Dpi when source metrics are unavailable (fixed
+8px by default); explicitly setting it to null measures their drawing substitute
+at the Normal size. The fallback-only mode skips source matching/discovery in both adapters.
+No family-specific numeric fallback profiles or new IFontManager contract members are used.
 Main shares conversion-local metric decisions between selection preflight and the actual read;
 all output formats consume Core's common geometry plan. Core's single supplied font is unchanged.
 
@@ -331,8 +332,9 @@ Core SingleFontMetrics separates source Normal column metrics from the supplied 
 It measures an explicit layout-only source file, the matching supplied snapshot (including
 localized physical family names), or the original system family. System lookup is optional
 and limited to column measurements; drawing still uses one supplied font. Missing source
-families use FallbackMaximumDigitWidthPixels96Dpi when provided, otherwise the drawing
-snapshot measured at the workbook Normal size, and report MaximumDigitWidthFallback.
+families use FallbackMaximumDigitWidthPixels96Dpi, defaulting to fixed 8px. Explicit
+null opts into measuring the drawing snapshot at the workbook Normal size. Both
+paths report MaximumDigitWidthFallback.
 Absent Normal metadata uses the same fallback policy at 11pt. ColumnFontMetrics owns
 shared measurement, physical-family checks and source-file validation. Core adds no
 product-project dependency or font-package discovery.

@@ -51,11 +51,26 @@ var separate = options with
 
 描画フォントbytesは変換ごとに一度読み、同じsnapshotで文字幅とPDF描画を処理します。列幅は元ブックのNormalのファミリー・サイズ・太字・斜体を基準に、描画用の代替フォントと分けて計測します。`ReadOptions.MaximumDigitWidthPixels96Dpi`は常に優先します。次に`ReadOptions.SourceFontFile`と任意の`SourceFontCollectionIndex`で指定した列幅計算専用のフォントを使います。指定がなければ、描画フォントの物理ファミリー名（ローカライズ名を含む）がNormalと一致する場合はそのsnapshotを実測し、不一致ならSkiaのシステムフォント検索で元ファミリーを取得します。列幅計測だけの検索で、`UseSystemFontsForColumnWidths = false`（Core CLIでは`--no-system-fonts`）で無効化できます。別ファミリーのシステム代替フォントは元フォントとして扱いません。
 
-元フォントを取得できない場合は、`ReadOptions.FallbackMaximumDigitWidthPixels96Dpi`を指定していればその値を使用し、未指定なら描画用の代替フォントをNormalのサイズで実測します。Normal情報がない場合の基準サイズは11ptです。ファミリー別の固定MDWは使用しません。`MaximumDigitWidthFallback`に代替フォントまたは指定値・使用したMDWを記録します。Excelに対して列幅・折返し・ページ数が変わることがあります。取得できた元フォントの実測や常時優先する幅指定は`MaximumDigitWidthResolved`へ記録し、Core CLIでは`--verbose`で表示します。
+元フォントを取得できない場合の`ReadOptions.FallbackMaximumDigitWidthPixels96Dpi`の既定値は、96 DPIで8px固定です。描画用フォントやNormalサイズには比例させません。同プロパティを明示的に`null`にするか、CLIで`--column-width-fallback-metrics font`を指定すると、描画用の代替フォントをNormalのサイズで実測します。`--column-width-fallback-mdw`の数値指定があればそちらを優先します。Normal情報がない場合の基準サイズは11ptです。ファミリー別の固定MDWは使用しません。`MaximumDigitWidthFallback`に代替フォントまたは指定値・使用したMDWを記録します。Excelに対して列幅・折返し・ページ数が変わることがあります。取得できた元フォントの実測や常時優先する幅指定は`MaximumDigitWidthResolved`へ記録し、Core CLIでは`--verbose`で表示します。
+
+8pxの基準は、日本語版Windows Excelの游ゴシック11pt・96 DPI・表示倍率100%での半角数字の最大幅（MDW）です。
+表示例「列幅8.38（72px）」から余白・罫線の5pxを引くと、`(72 − 5) ÷ 8.38 ≈ 7.995`となり、8pxと整合します。
+すべてのフォント・サイズの実測値を8pxとみなすものではありません。画面上の列幅は丸められており、
+保存されたSpreadsheetMLのraw列幅は、この表示値とは分けて換算します。
+
+`UseSourceFontForColumnWidths = false`（CLIの`--column-width-metrics fallback`）では、元フォントの検索と照合を行いません。
+描画用フォントがNormalと一致していても元フォントの寸法としては使わず、既定の8px・指定した数値・明示的に選んだ代替フォントの実測値を使います。
+Windowsに元フォントがある場合でも、元フォントがない環境での列幅計算を再現できます。
+`SourceFontFile`とは併用できません。常時優先するMDWの明示指定は有効です。
+`UseSystemFontsForColumnWidths = false`はOS検索だけを止め、一致する供給フォントの実測は行うため、このモードとは異なります。
 
 ```sh
-# 通常は元フォント、取得できなければ描画用フォントで計測。
+# 通常は元フォントを実測し、取得できなければ8px固定。
 excelrenderer core report.xlsx --font-file NotoSansJP-Regular.ttf -o report.pdf
+# 元フォントを取得できない場合に、描画用の代替フォントを実測。
+excelrenderer core report.xlsx --font-file NotoSansJP-Regular.ttf --column-width-fallback-metrics font -o font-metrics.pdf
+# 元フォントがインストールされていても、その検索・照合をせず計算。
+excelrenderer core report.xlsx --font-file NotoSansJP-Regular.ttf --column-width-metrics fallback -o source-free.pdf
 # 元フォントを取得できない場合だけ7pxを使用。
 excelrenderer core report.xlsx --font-file NotoSansJP-Regular.ttf --column-width-fallback-mdw 7 -o compatible.pdf
 # 列幅計算専用に元フォントを指定。

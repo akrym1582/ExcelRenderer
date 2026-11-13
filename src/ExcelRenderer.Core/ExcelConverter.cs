@@ -68,6 +68,11 @@ public static class ExcelConverter
             throw new ArgumentException("SourceFontCollectionIndex requires SourceFontFile and a nonnegative index.", nameof(options));
         }
 
+        if (!options.ReadOptions.UseSourceFontForColumnWidths && options.ReadOptions.SourceFontFile is not null)
+        {
+            throw new ArgumentException("SourceFontFile cannot be combined with UseSourceFontForColumnWidths=false.", nameof(options));
+        }
+
         if (options.ReadOptions.FallbackMaximumDigitWidthPixels96Dpi is { } fallbackMdw && (!double.IsFinite(fallbackMdw) || fallbackMdw < 1))
         {
             throw new ArgumentOutOfRangeException(nameof(options), "FallbackMaximumDigitWidthPixels96Dpi must be finite and at least one.");

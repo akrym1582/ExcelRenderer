@@ -54,6 +54,11 @@ internal sealed class FullFontMetrics : ICoreFontMetrics
             message += " Exact Excel layout cannot be guaranteed; specify SourceFontFile or MaximumDigitWidthPixels96Dpi to supply original metrics.";
         }
 
+        if (options.Mode == ColumnWidthMetricsMode.Fallback)
+        {
+            message += " Source-font lookup is disabled.";
+        }
+
         diagnostics?.Add(new(
             fallback ? "MaximumDigitWidthFallback" : "MaximumDigitWidthResolved",
             fallback ? DiagnosticSeverity.Warning : DiagnosticSeverity.Info,
@@ -79,6 +84,11 @@ internal sealed class FullFontMetrics : ICoreFontMetrics
         if (options.MaximumDigitWidthPixels96Dpi is { } width)
         {
             return new(width, "override", "explicit MDW");
+        }
+
+        if (options.Mode == ColumnWidthMetricsMode.Fallback)
+        {
+            return ResolveFallback(normal);
         }
 
         if (options.SourceFontFile is not null)
@@ -114,7 +124,7 @@ internal sealed class FullFontMetrics : ICoreFontMetrics
                 var substitute = fontManager.Resolve(request);
                 var matches = FontManager.MatchesSourceFamily(substitute, normal.Family);
                 return !matches && options.FallbackMaximumDigitWidthPixels96Dpi is { } fallbackWidth
-                    ? new(fallbackWidth, "fallback-override", "explicit fallback MDW", true)
+                    ? new(fallbackWidth, "fallback-override", "configured fallback MDW", true)
                     : Measure(substitute, normal, "libreoffice-font") with { IsFallback = !matches };
             }
 
@@ -139,11 +149,11 @@ internal sealed class FullFontMetrics : ICoreFontMetrics
 
     private MetricDecision ResolveFallback(NormalFontMetadata normal)
     {
-        // The drawing substitute is the final source-metric fallback. It is measured
-        // at the workbook Normal size, rather than at an individual cell's size.
+        // A numeric fallback stabilizes missing-source layout. Explicit null opts
+        // into measuring the drawing substitute at the workbook Normal size.
         if (options.FallbackMaximumDigitWidthPixels96Dpi is { } fallback)
         {
-            return new(fallback, "fallback-override", "explicit fallback MDW", true);
+            return new(fallback, "fallback-override", "configured fallback MDW", true);
         }
 
         fontManager ??= new FontManager();

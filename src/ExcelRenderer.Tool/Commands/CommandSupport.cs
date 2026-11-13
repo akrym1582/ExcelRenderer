@@ -105,6 +105,7 @@ internal static class CommandSupport
     {
         command.Options.Add(options.ColumnWidthMdw);
         command.Options.Add(options.ColumnWidthFallbackMdw);
+        command.Options.Add(options.ColumnWidthFallbackMetrics);
         command.Options.Add(options.LayoutFont);
         command.Options.Add(options.LayoutFontIndex);
         command.Options.Add(options.ColumnWidthMetrics);
@@ -269,12 +270,13 @@ internal static class CommandSupport
             Mode = result.GetValue(fonts.ColumnWidthMetrics) switch
             {
                 "source" => Excel.ColumnWidthMetricsMode.SourceFont,
+                "fallback" => Excel.ColumnWidthMetricsMode.Fallback,
                 "legacy" => Excel.ColumnWidthMetricsMode.RenderingFontLegacy,
                 "libreoffice" => Excel.ColumnWidthMetricsMode.LibreOfficeCompatible,
-                _ => throw new ArgumentException("--column-width-metrics must be source, legacy or libreoffice."),
+                _ => throw new ArgumentException("--column-width-metrics must be source, fallback, legacy or libreoffice."),
             },
             MaximumDigitWidthPixels96Dpi = result.GetValue(fonts.ColumnWidthMdw),
-            FallbackMaximumDigitWidthPixels96Dpi = result.GetValue(fonts.ColumnWidthFallbackMdw),
+            FallbackMaximumDigitWidthPixels96Dpi = GetFallbackColumnWidth(result, fonts.ColumnWidthFallbackMdw, fonts.ColumnWidthFallbackMetrics),
             SourceFontFile = result.GetValue(fonts.LayoutFont),
             SourceFontCollectionIndex = result.GetValue(fonts.LayoutFontIndex),
         },
@@ -284,6 +286,18 @@ internal static class CommandSupport
             "recalculate" => Excel.FormulaDisplayMode.Recalculate,
             _ => throw new ArgumentException("Invalid formula mode."),
         },
+    };
+
+    /// <summary>Resolves fixed or drawing-font fallback metrics, with explicit numeric width taking precedence.</summary>
+    /// <param name="result">The parsed command.</param>
+    /// <param name="width">The optional numeric fallback width.</param>
+    /// <param name="metrics">The fixed or font measurement policy.</param>
+    /// <returns>The fallback width, or null to measure the drawing font.</returns>
+    internal static double? GetFallbackColumnWidth(ParseResult result, Option<double?> width, Option<string> metrics) => result.GetValue(metrics) switch
+    {
+        "fixed" => result.GetValue(width) ?? 8,
+        "font" => result.GetValue(width),
+        _ => throw new ArgumentException("--column-width-fallback-metrics must be fixed or font."),
     };
 
     /// <summary>Maps a validated formula mode to template mapping settings.</summary>
@@ -326,7 +340,10 @@ internal static class CommandSupport
         internal Option<double?> ColumnWidthMdw { get; } = new("--column-width-mdw") { Description = "Original Normal font MDW in pixels at 96 DPI (finite, at least 1)." };
 
         /// <summary>Gets the digit width used only when the source font is unavailable.</summary>
-        internal Option<double?> ColumnWidthFallbackMdw { get; } = new("--column-width-fallback-mdw") { Description = "Normal digit width at 96 DPI used only if the original font is unavailable; defaults to measuring the drawing font." };
+        internal Option<double?> ColumnWidthFallbackMdw { get; } = new("--column-width-fallback-mdw") { Description = "Normal digit width at 96 DPI used only if the original font is unavailable; overrides the fallback policy." };
+
+        /// <summary>Gets the missing-source column metric policy.</summary>
+        internal Option<string> ColumnWidthFallbackMetrics { get; } = new("--column-width-fallback-metrics") { Description = "Missing-source metrics: fixed (default, 8px) or font (measure the drawing substitute).", DefaultValueFactory = _ => "fixed" };
 
         /// <summary>Gets the source layout font file.</summary>
         internal Option<string?> LayoutFont { get; } = new("--layout-font") { Description = "Original font file for column layout only; does not register a drawing font." };
@@ -335,6 +352,6 @@ internal static class CommandSupport
         internal Option<int?> LayoutFontIndex { get; } = new("--layout-font-index") { Description = "Zero-based face index; requires --layout-font." };
 
         /// <summary>Gets the column metric policy.</summary>
-        internal Option<string> ColumnWidthMetrics { get; } = new("--column-width-metrics") { Description = "Column metrics: source (default), legacy or libreoffice.", DefaultValueFactory = _ => "source" };
+        internal Option<string> ColumnWidthMetrics { get; } = new("--column-width-metrics") { Description = "Column metrics: source (default), fallback (skip original-font lookup), legacy or libreoffice.", DefaultValueFactory = _ => "source" };
     }
 }

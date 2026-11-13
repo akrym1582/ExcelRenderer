@@ -11,8 +11,8 @@ public sealed record ColumnWidthMetricsOptions
     /// <summary>Gets the original Normal font's maximum digit width at 96 DPI. Must be finite and at least one.</summary>
     public double? MaximumDigitWidthPixels96Dpi { get; init; }
 
-    /// <summary>Gets an optional digit width at 96 DPI used only when the original Normal font is unavailable. Otherwise the drawing font is measured.</summary>
-    public double? FallbackMaximumDigitWidthPixels96Dpi { get; init; }
+    /// <summary>Gets the digit width at 96 DPI used only when the original Normal font is unavailable. Defaults to 8; null measures the drawing font at the Normal size.</summary>
+    public double? FallbackMaximumDigitWidthPixels96Dpi { get; init; } = 8;
 
     /// <summary>Gets a font file used exclusively for layout measurements, without registering it for drawing. LibreOfficeCompatible permits a substitute font.</summary>
     public string? SourceFontFile { get; init; }
@@ -45,9 +45,9 @@ public sealed record ColumnWidthMetricsOptions
 
         if (SourceFontFile is not null)
         {
-            if (Mode == ColumnWidthMetricsMode.RenderingFontLegacy)
+            if (Mode is ColumnWidthMetricsMode.RenderingFontLegacy or ColumnWidthMetricsMode.Fallback)
             {
-                throw new ArgumentException("SourceFontFile cannot be combined with RenderingFontLegacy.");
+                throw new ArgumentException("SourceFontFile cannot be combined with RenderingFontLegacy or Fallback.");
             }
 
             _ = LoadSourceFont();

@@ -11,4 +11,7 @@ public enum ColumnWidthMetricsMode
 
     /// <summary>Use substitute-font digit metrics and fractional column widths for LibreOffice compatibility.</summary>
     LibreOfficeCompatible,
+
+    /// <summary>Use fallback metrics without matching or discovering the original Normal font.</summary>
+    Fallback,
 }

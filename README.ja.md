@@ -8,7 +8,7 @@
 
 通常版・Core版とも、数値表示形式の8種類の名前付き色（負数区分の `[Red]` など）を反映します。`[ColorN]` のパレット色は未対応です。ピボットは保存済みのワークシートセルを描画し、集計表の自動生成は行いません。印刷対象のピボット範囲に非空の保存セルがない場合は、描画前に `PivotSavedValuesMissing` で失敗します。キャッシュに更新要求がある場合は `PivotRefreshRequired` を通知するため、最新の集計には表計算ソフトで更新・保存してください。Mappingの対応済みキャッシュ更新は、表示用集計セルの更新とは別です。
 
-セル幅の互換設定：通常版の `ColumnWidthMetricsMode.LibreOfficeCompatible`、Coreの `ReadOptions.UseLibreOfficeColumnWidths` で数字幅・列幅の小数を保持できます。両CLIで `--column-width-metrics libreoffice --column-width-mdw 8.8` を指定できます。数字幅は参照環境に合わせて指定してください。8.8pxは11ptのNoto Sans Mono用で、全フォント共通の値ではありません。既定の計算は維持します。[セル実寸の検証結果](docs/validation/cell-width-compatibility/README.md)を参照してください。
+セル幅の互換設定：通常版の `ColumnWidthMetricsMode.LibreOfficeCompatible`、Coreの `ReadOptions.UseLibreOfficeColumnWidths` で数字幅・列幅の小数を保持できます。両CLIで `--column-width-metrics libreoffice --column-width-mdw 8.8` を指定できます。数字幅は参照環境に合わせて指定してください。8.8pxは11ptのNoto Sans Mono用で、全フォント共通の値ではありません。既定のモードはSourceFontのままです。元フォントを取得できない場合は8px固定とし、代替フォントの実測は明示指定します。[セル実寸の検証結果](docs/validation/cell-width-compatibility/README.md)を参照してください。
 
 ## 概要
 
@@ -517,7 +517,7 @@ xlsx の個別列幅と既定列幅は、Excel の基準である固定96 DPIの
 シートの幾何には影響しません。Normalスタイルのstyle XFからフォントをたどり、themeのmajor/minor
 指定を解決したうえで、設定されたフォントマネージャーにより0～9を計測します。計測できない場合は
 互換最大数字幅を使用し、変換診断へ`MaximumDigitWidthFallback`を記録します。
-元フォントを取得できない場合は`ColumnWidthMetrics.FallbackMaximumDigitWidthPixels96Dpi`（CLIの`--column-width-fallback-mdw`）を使い、未指定なら描画用の代替フォントをNormalのサイズで実測します。
+元フォントを取得できない場合は`ColumnWidthMetrics.FallbackMaximumDigitWidthPixels96Dpi`（CLIの`--column-width-fallback-mdw`）を使い、既定値は96 DPIで8px固定です。`--column-width-fallback-metrics font`（APIでは同プロパティを明示的に`null`）で、描画用の代替フォントをNormalのサイズで実測できます。
 
 離れた複数の印刷範囲は外接矩形へ結合せず、個別にページ化します。明示倍率では保存された行・列の
 手動改ページとページ順を反映し、Fitでは手動改ページを無視します。全領域を結合したページ番号を一度だけ
@@ -1006,12 +1006,12 @@ excelrenderer render input.xlsx --format pdf -o output.pdf --column-width-mdw 9
 excelrenderer pdf input.xlsx -o output.pdf --column-width-metrics legacy
 ```
 
-両CLIで `--column-width-mdw`、`--column-width-fallback-mdw`、`--layout-font`、`--layout-font-index`、
-`--column-width-metrics source|libreoffice` を利用できます。legacyモードは通常版のみです。
-フォールバックMDWは元フォントが取得できない場合だけ使用し、未指定なら描画用の代替フォントを実測します。
+両CLIで `--column-width-mdw`、`--column-width-fallback-mdw`、`--column-width-fallback-metrics fixed|font`、`--layout-font`、`--layout-font-index`、
+`--column-width-metrics source|fallback|libreoffice` を利用できます。legacyモードは通常版のみです。
+フォールバックMDWは元フォントが取得できない場合だけ使用し、既定値は8px固定です。`--column-width-fallback-metrics font`で代替フォントの実測に切り替え、数値指定があればそちらを優先します。
 以前の7pxフォールバックを維持する場合は `--column-width-fallback-mdw 7` を指定します。ライブラリの従来互換設定は
 `ColumnWidthMetrics = new() { Mode = ColumnWidthMetricsMode.RenderingFontLegacy }` です。
-Legacyと元フォントファイルは併用不可ですが、明示MDWはLegacyでも最優先です。
+Legacy・fallbackモードと元フォントファイルは併用不可ですが、明示MDWはこれらのモードでも最優先です。
 各出力形式、範囲・連続描画、選択ページの事前計画は同じ読取設定と変換単位の決定を使います。
 Coreの描画用フォントは単一のままです。元フォントのOS検索・計測用ファイルは列幅計測に限定します。
 legacyモードは従来の結合セル改ページも維持します。sourceモードでは用紙より大きい結合を
@@ -1065,8 +1065,8 @@ excelrenderer core input.xlsx -o core.pdf --font-file NotoSansJP-Regular.ttf --c
 
 **8.8は今回の参照環境でCalibriの代わりに使われたNoto Sans Mono・11pt用の例であり、
 全フォント共通の推奨値ではありません。** MDWの明示指定は任意で、指定すれば計測値より優先します。
-省略した場合は、通常版は解決されたレイアウトフォント、Coreは供給された通常書体を、
-ブックのNormalサイズで計測します。通常版では `SourceFontFile`／`--layout-font` で
+省略した場合は、取得できた元フォント・計算用フォントをブックのNormalサイズで計測します。
+元フォントが取得できない場合の既定値は8px固定です。`--column-width-fallback-metrics font`で代替フォントの実測に切り替えます。通常版では `SourceFontFile`／`--layout-font` で
 レイアウト専用フォントを選ぶこともできます。モードを有効にしてもLibreOffice側の
 フォント代替を自動再現するわけではないため、寸法を再現したい場合は参照先のフォント・MDWを指定してください。
 MDWの数値指定だけでは、小数の列幅計算へ切り替わりません。
@@ -1076,7 +1076,7 @@ MDWの数値指定だけでは、小数の列幅計算へ切り替わりませ�
 [今回のセル実寸の比較結果](docs/validation/cell-width-compatibility/README.md)も参照してください。
 
 既定のSourceFontモードで元フォントが見つからない場合は、`ColumnWidthMetrics.FallbackMaximumDigitWidthPixels96Dpi`
-（CLIの`--column-width-fallback-mdw`）を指定していればその値を使い、未指定なら描画用の代替フォントをNormalのサイズで実測します。
+（CLIの`--column-width-fallback-mdw`）を指定していればその値を使い、既定値は96 DPIで8px固定です。`--column-width-fallback-metrics font`（APIでは同プロパティを明示的に`null`）で、描画用の代替フォントをNormalのサイズで実測できます。
 Normal情報がなければ基準サイズは11ptです。フォールバック指定は取得できた元フォント、計算用フォント、常時優先するMDW指定には適用しません。
 Coreも`ReadOptions`直下の同名プロパティに対応し、`--layout-font` / `--layout-font-index`と、列幅計測専用の元フォントのOS検索を利用できます。
 `MaximumDigitWidthFallback` を警告します。StrictModeではこの警告により変換が失敗します。
@@ -1087,3 +1087,25 @@ Normalの要求書体、寸法計測元、MDW、決定元（override／source-fi
 `DiagnosticOptions.EnableLayoutWarnings` を有効にすると、印刷範囲ごとに寸法・余白・倍率・
 横縦ページ数を `PaginationMetrics` へ記録します。
 合成fixtureの結果と実機比較の制限は[検証記録](docs/pagination-source-metrics-validation.md)を参照してください。
+
+### 8pxフォールバックの根拠と、元フォントを検索しないモード
+
+既定の8pxは、日本語版Windows Excelの**游ゴシック11pt・96 DPI・表示倍率100%**における、
+半角数字の最大幅（MDW）を基準にしています。表示例「**列幅8.38（72px）**」から、
+余白と罫線の5pxを引くと、`(72 − 5) ÷ 8.38 ≈ 7.995`となり、8pxと整合します。
+すべてのフォント・サイズの実測値が8pxという意味ではなく、元フォントを取得できない場合の互換値です。
+画面上の表示列幅は丸められており、実装ではXLSXに保存されたraw列幅をSpreadsheetMLの式で換算します。
+
+Windowsに元フォントがインストールされていても、それを使わず計算するには
+`--column-width-metrics fallback`を指定します。元フォントの検索・照合を行わず、
+既定では8px固定、`--column-width-fallback-mdw`指定時はその数値、
+`--column-width-fallback-metrics font`指定時は描画用の代替フォントを実測します。数値指定が最優先です。
+APIでは、本体は`ColumnWidthMetrics.Mode = ColumnWidthMetricsMode.Fallback`、
+Coreは`ReadOptions.UseSourceFontForColumnWidths = false`を指定します。
+このモードと計算用の元フォントファイルは併用できません。
+本体で描画用フォントのOS検索も止める場合は`--no-system-fonts`を併用し、両環境で同じ描画用ファイルを指定してください。
+
+```sh
+excelrenderer core report.xlsx --font-file NotoSansJP-Regular.ttf --column-width-metrics fallback -o fixed-8px.pdf
+excelrenderer core report.xlsx --font-file NotoSansJP-Regular.ttf --column-width-metrics fallback --column-width-fallback-metrics font -o measured-substitute.pdf
+```

@@ -15,16 +15,17 @@ public static class CoreCommand
         var fontIndex = new Option<int>("--font-collection-index") { Description = "Zero-based font collection face index." };
         var sheet = new Option<string[]>("--sheet") { Description = "Worksheet names in output order (repeatable).", AllowMultipleArgumentsPerToken = true };
         var verbose = CommandSupport.VerboseOption();
-        var metrics = new Option<string>("--column-width-metrics") { Description = "Column metrics: source (default) or libreoffice.", DefaultValueFactory = _ => "source" };
+        var metrics = new Option<string>("--column-width-metrics") { Description = "Column metrics: source (default), fallback (skip original-font lookup) or libreoffice.", DefaultValueFactory = _ => "source" };
         var mdw = new Option<double?>("--column-width-mdw") { Description = "Explicit Normal digit width in pixels at 96 DPI." };
-        var fallbackMdw = new Option<double?>("--column-width-fallback-mdw") { Description = "Normal digit width at 96 DPI used only if the original font is unavailable; defaults to measuring the drawing font." };
+        var fallbackMdw = new Option<double?>("--column-width-fallback-mdw") { Description = "Normal digit width at 96 DPI used only if the original font is unavailable; overrides the fallback policy." };
+        var fallbackMetrics = new Option<string>("--column-width-fallback-metrics") { Description = "Missing-source metrics: fixed (default, 8px) or font (measure the drawing substitute).", DefaultValueFactory = _ => "fixed" };
         var layoutFont = new Option<string?>("--layout-font") { Description = "Original font file used only for column measurements." };
         var layoutFontIndex = new Option<int?>("--layout-font-index") { Description = "Zero-based measurement face index; requires --layout-font." };
         var noSystemFonts = new Option<bool>("--no-system-fonts") { Description = "Disable system lookup of the original Normal font for column measurements." };
         var data = MappingCommandSupport.DataOption();
         var command = new Command("core", "Convert Excel to PDF using ExcelRenderer.Core and one supplied font (saved values only).")
         {
-            input, output, font, fontIndex, sheet, verbose, data, metrics, mdw, fallbackMdw, layoutFont, layoutFontIndex, noSystemFonts,
+            input, output, font, fontIndex, sheet, verbose, data, metrics, mdw, fallbackMdw, fallbackMetrics, layoutFont, layoutFontIndex, noSystemFonts,
         };
         command.SetAction((result, cancellationToken) => CommandSupport.RunAsync(result, () => MappingCommandSupport.WithInputAsync(
             result.GetValue(input)!,
@@ -39,12 +40,13 @@ public static class CoreCommand
                     {
                         UseLibreOfficeColumnWidths = result.GetValue(metrics) switch
                         {
-                            "source" => false,
+                            "source" or "fallback" => false,
                             "libreoffice" => true,
-                            _ => throw new ArgumentException("--column-width-metrics must be source or libreoffice."),
+                            _ => throw new ArgumentException("--column-width-metrics must be source, fallback or libreoffice."),
                         },
+                        UseSourceFontForColumnWidths = result.GetValue(metrics) != "fallback",
                         MaximumDigitWidthPixels96Dpi = result.GetValue(mdw),
-                        FallbackMaximumDigitWidthPixels96Dpi = result.GetValue(fallbackMdw),
+                        FallbackMaximumDigitWidthPixels96Dpi = CommandSupport.GetFallbackColumnWidth(result, fallbackMdw, fallbackMetrics),
                         SourceFontFile = result.GetValue(layoutFont),
                         SourceFontCollectionIndex = result.GetValue(layoutFontIndex),
                         UseSystemFontsForColumnWidths = !result.GetValue(noSystemFonts),

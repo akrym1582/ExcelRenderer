@@ -10,6 +10,23 @@ namespace ExcelRenderer.Core.Tests;
 public sealed class TextOverflowTests
 {
     [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void Merged_blocker_requires_visible_overlapping_rows(bool hidden)
+    {
+        var sheet = Sheet(new Dictionary<CellAddress, ReportCell>
+        {
+            [new(1, 2)] = new("source", CellStyle.Default, RowSpan: 2, ColumnSpan: 2),
+        }) with
+        {
+            Rows = new Dictionary<int, RowDefinition> { [2] = new(10, hidden) },
+            MergedRanges = [new(new(2, 5), new(3, 6))],
+        };
+        var limits = new SheetGeometry(sheet).GetTextOverflow(sheet).Find(new(1, 2), 2, 2);
+        Assert.Equal(hidden ? double.PositiveInfinity : 80d, limits!.Value.Right);
+    }
+
+    [Theory]
     [InlineData((int)HorizontalAlignment.Left, 0, 3, 20, 60)]
     [InlineData((int)HorizontalAlignment.Right, 1, 0, 20, 40)]
     [InlineData((int)HorizontalAlignment.Center, 1, 3, 20, 60)]

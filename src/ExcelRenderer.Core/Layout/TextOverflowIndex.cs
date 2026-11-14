@@ -127,7 +127,8 @@ internal sealed class TextOverflowIndex
 
         foreach (var range in merges.Query(address.Row, lastRow + 1))
         {
-            if (geometry.ColumnStart(range.Last.Column + 1) <= geometry.ColumnStart(range.First.Column))
+            if (geometry.ColumnStart(range.Last.Column + 1) <= geometry.ColumnStart(range.First.Column) ||
+                geometry.RowStart(Math.Min(lastRow, range.Last.Row) + 1) <= geometry.RowStart(Math.Max(address.Row, range.First.Row)))
             {
                 continue;
             }

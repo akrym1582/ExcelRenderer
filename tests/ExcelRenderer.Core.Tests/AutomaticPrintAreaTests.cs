@@ -6,6 +6,24 @@ namespace ExcelRenderer.Core.Tests;
 
 public sealed class AutomaticPrintAreaTests
 {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void Whole_axis_area_ignores_content_outside_its_fixed_axis(bool wholeRows)
+    {
+        var sheet = new ReportSheet("Sheet1",
+            new Dictionary<CellAddress, ReportCell>
+            {
+                [new(2, 2)] = new("inside", CellStyle.Default),
+                [new(10000, 100)] = new("outside", CellStyle.Default),
+            },
+            new Dictionary<int, ColumnDefinition>(), new Dictionary<int, RowDefinition>(), [], new(),
+            PrintArea: wholeRows ? new(new(1, 1), new(3, 16384)) : new(new(1, 1), new(1048576, 3)));
+        var context = new ReportLayoutContext(sheet, new RangeOnlyMeasurer());
+        new ResolvePrintAreaPass().Execute(context);
+        Assert.Equal(wholeRows ? new CellRange(new(1, 1), new(3, 2)) : new CellRange(new(1, 1), new(2, 3)), context.PrintArea);
+    }
+
     /// <summary>Automatic printing keeps leading whitespace, while explicit areas and canvases retain their origins.</summary>
     [Theory]
     [InlineData(false, false, 1, 1)]

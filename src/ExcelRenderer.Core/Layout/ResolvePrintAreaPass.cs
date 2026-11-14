@@ -25,12 +25,21 @@ internal sealed class ResolvePrintAreaPass : IReportLayoutPass
             var wholeRows = explicitArea.First.Column == 1 && explicitArea.Last.Column == 16384;
             if ((wholeColumns || wholeRows) && context.Sheet.RequestedRange is null)
             {
-                var content = context.Policy.ResolveUsedRange(context);
+                var ranges = context.Sheet.Cells.Select(cell => new CellRange(cell.Key, new(
+                    cell.Key.Row + cell.Value.RowSpan - 1,
+                    cell.Key.Column + cell.Value.ColumnSpan - 1)))
+                    .Concat(context.Policy.GetObjectGeometry(context).Select(item => new CellRange(
+                        new(Math.Min(item.Anchor.Row, context.Geometry.RowAt(item.Visual.Y)), Math.Min(item.Anchor.Column, context.Geometry.ColumnAt(item.Visual.X))),
+                        new(Math.Max(item.Anchor.Row, context.Geometry.RowAt(Math.Max(item.Visual.Y, item.Visual.Y + item.Visual.Height - Epsilon))),
+                            Math.Max(item.Anchor.Column, context.Geometry.ColumnAt(Math.Max(item.Visual.X, item.Visual.X + item.Visual.Width - Epsilon)))))))
+                    .Where(range => range.First.Column <= explicitArea.Last.Column && range.Last.Column >= explicitArea.First.Column &&
+                        range.First.Row <= explicitArea.Last.Row && range.Last.Row >= explicitArea.First.Row)
+                    .ToArray();
                 explicitArea = new CellRange(
                     explicitArea.First,
                     new(
-                        wholeColumns ? Math.Max(explicitArea.First.Row, content?.Last.Row ?? 1) : explicitArea.Last.Row,
-                        wholeRows ? Math.Max(explicitArea.First.Column, content?.Last.Column ?? 1) : explicitArea.Last.Column));
+                        wholeColumns ? Math.Max(explicitArea.First.Row, ranges.Select(range => range.Last.Row).DefaultIfEmpty(1).Max()) : explicitArea.Last.Row,
+                        wholeRows ? Math.Max(explicitArea.First.Column, ranges.Select(range => range.Last.Column).DefaultIfEmpty(1).Max()) : explicitArea.Last.Column));
             }
 
             context.PrintArea = explicitArea;

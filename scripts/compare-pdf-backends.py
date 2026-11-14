@@ -24,6 +24,7 @@ from scipy.ndimage import binary_dilation
 from pdf_native_evidence import evidence as native_precision_evidence, verify_frozen_baseline
 from pdf_geometry_evidence import inspect_page, verify_outlines, ellipse_evidence, image_crop_evidence
 from shared_border_evidence import raster_matches as border_raster_matches
+from print_origin_evidence import checked_pdf as checked_origin_pdf, contracts as origin_contracts
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -57,6 +58,9 @@ def main():
         if args.fixture != "all" and name != args.fixture and not (args.fixture == "commands" and name.startswith("commands-")):
             continue
         reference_path = directory / ("pdfsharp.pdf" if args.reference == "A" else "baseline-skiasharp.pdf")
+        origin = origin_contracts().get('full/' + name)
+        if origin is not None:
+            reference_path = checked_origin_pdf('full/' + name, ROOT / origin['historical_pdf'])
         left = fitz.open(reference_path)
         right = fitz.open(directory / "skiasharp.pdf")
         native_evidence = native_precision_evidence(directory) if (directory / "baseline-skiasharp.pdf").exists() else None

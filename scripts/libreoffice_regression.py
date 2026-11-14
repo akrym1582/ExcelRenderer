@@ -122,6 +122,9 @@ def reviewed_core_layout(name, source, historical, actual):
 def current_baseline(case_id, engine, historical):
     """Use explicitly reviewed pagination/color follow-ups; retain all old PDFs/hashes."""
     original = checked_baseline(historical)
+    if case_id == '09-cell-border':
+        from print_origin_evidence import checked_pdf
+        return checked_pdf('appearance/' + engine + '/' + case_id, original)
     if case_id == 'japanese-grid-report':
         colors = json.loads((BASE / 'reviewed-number-format-colors/manifest.json').read_text())
         if sha(MANIFEST) != colors['historical_manifest_sha256'] or set(colors['cases']) != {'japanese-grid-report/main', 'japanese-grid-report/core'}:

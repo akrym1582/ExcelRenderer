@@ -89,7 +89,9 @@ jobs:
           python -m pip install PyMuPDF==1.26.6 numpy==2.3.5 Pillow==12.3.0 fonttools==4.61.1 scipy==1.17.0
 
       - name: Compare finalized commands and public API fixtures
-        run: python scripts/compare-pdf-backends.py --no-build
+        run: |
+          python scripts/test_print_origin_evidence.py
+          python scripts/compare-pdf-backends.py --no-build
 
       - name: Compare frozen stage B against the new measurement and writer
         run: python scripts/compare-pdf-backends.py --no-generate --reference B --no-exceptions

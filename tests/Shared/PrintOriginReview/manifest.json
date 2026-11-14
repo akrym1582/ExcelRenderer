@@ -1,0 +1,185 @@
+{
+  "full/image-anchor": {
+    "input": "tests/Shared/RetainedWorkbooks/LayoutPassTests.ExcelReader_preserves_picture_anchor_crop_and_transform.7F9B1506D1CCAB03.xlsx",
+    "input_sha256": "cdbdadebc8a76486831aafcf585b22632f6bff3dd8165339c9b5295a461c8c3c",
+    "historical_pdf": "tests/Shared/PdfRemovalBaseline/image-anchor/skiasharp.pdf",
+    "historical_pdf_sha256": "df3b98d24d9afec273fa6d72bc7dcb008cc593c26670168cd992cd485c617224",
+    "pdf": "image-anchor.pdf",
+    "pdf_sha256": "14329e5c2118e1a4cd0b07615b351d3787db53b0cdfeff70852c4ddd5f72f215",
+    "shift_points": [
+      103.5,
+      15
+    ],
+    "dotted_phase_paths": [],
+    "pages": {
+      "1": {
+        "before": {
+          "contentSha256": "93d36c0182d2a58735728f2de1ac7d58e6601dab5d56396796bd1c3640870356",
+          "paintSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "rasterSha256": {
+            "144": "bcd6c8cc187f2bf3ef0ebef59ac7ad0bf01b4f7fcf8c25f1c0560c3ec7784489",
+            "300": "efd772621a49fafd8e7b2871c2e389cde91b24d39895df6d34f331957ddd703c"
+          }
+        },
+        "after": {
+          "contentSha256": "417ec64114c1b0c2f7178fd6c6730ad4d0b43fcb83cf9c75908c1bb1d11129e6",
+          "paintSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "rasterSha256": {
+            "144": "b7c1a2b88e43719f6e4738bc79cb51e3a8952d025f0dd59ab09f30be298fea48",
+            "300": "ad0f849f60aa6755f41d1c0b4c7bf562c4468c747842cec76cd6e29b4e7b4381"
+          }
+        }
+      }
+    },
+    "historical_expected_sha256": "f6b80c0c0d02e70dc03b92cfe768efad9a01c1a001a7cbf00d19848ecf06df6b",
+    "expected": {
+      "name": "image-anchor",
+      "path": "e2e",
+      "commandFingerprints": {
+        "1": "AF65A5E7E5B4F3537B52F4C427F49311C8399EF8E13BB65F44C3E15E655B42A0"
+      },
+      "pagePlanSha256": "4FE08A7DA31558FAA4C7C4BDF9AC31AA50953DCACE736B070A0942B9AFC20DF5",
+      "pages": [
+        {
+          "SourceSheetIndex": 1,
+          "SourceSheetName": "Sheet1",
+          "SourcePageNumber": 1,
+          "DocumentPageNumber": 1,
+          "OutputPageNumber": 1,
+          "WidthPoints": 612,
+          "HeightPoints": 792,
+          "PixelWidth": 816,
+          "PixelHeight": 1056,
+          "Dpi": 96,
+          "RequestedRange": null,
+          "SourceCellRanges": [
+            {
+              "First": {
+                "Row": 1,
+                "Column": 1
+              },
+              "Last": {
+                "Row": 2,
+                "Column": 3
+              }
+            }
+          ],
+          "SourceRegions": [
+            {
+              "X": 0,
+              "Y": 0,
+              "Width": 155.25,
+              "Height": 30
+            }
+          ],
+          "OriginalWidthPoints": null,
+          "OriginalHeightPoints": null,
+          "CropBounds": null,
+          "PaddingPoints": null
+        }
+      ],
+      "diagnostics": [
+        {
+          "Code": "MaximumDigitWidthResolved",
+          "Severity": 0,
+          "Stage": 0,
+          "Message": "Normal font 'Calibri' resolved to 'Noto Sans JP' with MDW 8px.",
+          "SheetName": "Sheet1",
+          "CellRange": null,
+          "ObjectId": null,
+          "SourcePageNumber": null,
+          "OccurrenceCount": 1,
+          "UnicodeSequence": null
+        }
+      ]
+    }
+  },
+  "appearance/main/09-cell-border": {
+    "input": "tests/ExcelRenderer.Tests/SampleInputs/09-cell-border.xlsx",
+    "input_sha256": "5655ee7b5407c1c9af6836ec65f573819b0265c833660210d04060ca8c368d70",
+    "historical_pdf": "tests/Shared/LibreOfficeComparisonBaseline/main/09-cell-border.pdf",
+    "historical_pdf_sha256": "65b525b28bfc5ca03fad7a8d4b12cbcf40bbc92c595f334283d85a0304b957b2",
+    "pdf": "09-cell-border-main.pdf",
+    "pdf_sha256": "2dab4b1fd3ce606d8b3ee568d2971a23f2067343c9856eeecf8bad15a84272c1",
+    "shift_points": [
+      10.8,
+      10.8
+    ],
+    "dotted_phase_paths": [
+      22,
+      23,
+      25,
+      26,
+      27,
+      34,
+      35,
+      37,
+      38,
+      39
+    ],
+    "pages": {
+      "1": {
+        "before": {
+          "contentSha256": "be7e1229b66de9bcf65e080db0ea24e4af17de07119cf041180578cc8b982da1",
+          "paintSha256": "cdb4d424eedb0f3bf16a4a12433475301e78cec70646f91f89188d667b1b92b5",
+          "rasterSha256": {
+            "144": "6a6d4f692214e6f438a78de5a38e391d7ee6ceb4cc2bba0a744dc41bc878b3d5",
+            "300": "047b4ce720993972f0a5883983b7a71990fe54cc8c455852fda16c4574371b4c"
+          }
+        },
+        "after": {
+          "contentSha256": "95d80b8ff94423d7ec5f7124027975234f2984539d9427828a8aa27424cd6345",
+          "paintSha256": "366910e17bf475eaf47124fe06049da526ff52c65891b0ce99aacf83da9c7274",
+          "rasterSha256": {
+            "144": "e72762f4c5f4038ecba8b021f0c6fe65647a416a733b02b202e42dd89bde34e4",
+            "300": "a2d57fa9c774cad24fe33994a5cfbfe5cde37b0a875f04459916daa477b4392a"
+          }
+        }
+      }
+    }
+  },
+  "appearance/core/09-cell-border": {
+    "input": "tests/ExcelRenderer.Tests/SampleInputs/09-cell-border.xlsx",
+    "input_sha256": "5655ee7b5407c1c9af6836ec65f573819b0265c833660210d04060ca8c368d70",
+    "historical_pdf": "tests/Shared/LibreOfficeComparisonBaseline/core/09-cell-border.pdf",
+    "historical_pdf_sha256": "0ad8bfba04d1baf6018eb5f4ba0943a8f5fc7f07b0f8a750dc77fdf4eb43b7c4",
+    "pdf": "09-cell-border-core.pdf",
+    "pdf_sha256": "2c442f24cefa80f9317135d0a9976913f2afa85dd9472ce93351ede7c9fae7ba",
+    "shift_points": [
+      10.8,
+      10.8
+    ],
+    "dotted_phase_paths": [
+      22,
+      23,
+      25,
+      26,
+      27,
+      34,
+      35,
+      37,
+      38,
+      39
+    ],
+    "pages": {
+      "1": {
+        "before": {
+          "contentSha256": "a39d17cc8b4d6c4d06bde035f094bd94a89f5dafd66b4f5788df37ae41a92b8a",
+          "paintSha256": "cdb4d424eedb0f3bf16a4a12433475301e78cec70646f91f89188d667b1b92b5",
+          "rasterSha256": {
+            "144": "6a6d4f692214e6f438a78de5a38e391d7ee6ceb4cc2bba0a744dc41bc878b3d5",
+            "300": "047b4ce720993972f0a5883983b7a71990fe54cc8c455852fda16c4574371b4c"
+          }
+        },
+        "after": {
+          "contentSha256": "1f2123d644208d026e7e45a2a113f3ec53149c82137acdb6c1b8c8d65ac7dc6c",
+          "paintSha256": "366910e17bf475eaf47124fe06049da526ff52c65891b0ce99aacf83da9c7274",
+          "rasterSha256": {
+            "144": "e72762f4c5f4038ecba8b021f0c6fe65647a416a733b02b202e42dd89bde34e4",
+            "300": "a2d57fa9c774cad24fe33994a5cfbfe5cde37b0a875f04459916daa477b4392a"
+          }
+        }
+      }
+    }
+  }
+}

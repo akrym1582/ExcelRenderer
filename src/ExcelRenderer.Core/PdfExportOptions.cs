@@ -2,11 +2,14 @@ using ExcelRenderer.OpenXml.Reader.Input;
 
 namespace ExcelRenderer.Core;
 
-/// <summary>Options for a PDF-only, single-font conversion.</summary>
+/// <summary>Options for a PDF-only conversion using explicitly supplied fonts.</summary>
 public sealed record PdfExportOptions
 {
-    /// <summary>Gets the required path to a static TrueType font file or collection.</summary>
+    /// <summary>Gets the legacy single-font path. Cannot be combined with Fonts.</summary>
     public string FontFilePath { get; init; } = string.Empty;
+
+    /// <summary>Gets explicit font files and family substitution settings instead of FontFilePath.</summary>
+    public Fonts.FontOptions? Fonts { get; init; }
 
     /// <summary>Gets the zero-based face index within the font collection; standalone fonts require zero.</summary>
     public int FontCollectionIndex { get; init; }

@@ -1,14 +1,14 @@
 # 本体とCoreの共通基盤・製品構成
 
-`ExcelRenderer.Core`は、共通の基盤と単一通常フォントのPDF製品を
+`ExcelRenderer.Core`は、共通の基盤と明示フォントを使うPDF製品を
 同じプロジェクトに置きます。本体`ExcelRenderer`はCoreを参照します。Coreは
-`netstandard2.1`の非packableプロジェクトで、共有`ExcelRenderer.OpenXml`だけをProjectReferenceし、
+`netstandard2.1`の非packableプロジェクトで、共有`ExcelRenderer.OpenXml.Reader`だけをProjectReferenceし、
 本体・Fonts・Toolへの参照を持ちません。
 本体とToolの既存パッケージには、同じbuildのCore DLLを同梱します。
 両製品は同じSkia描画・PDF基盤を使い、製品ごとの方針を分けます。
 全体像は[Skia描画・フォント設計](skia-rendering.ja.md)を参照してください。
 
-OpenXml に委譲する input/spool adapter、基本reader、style intern、列幅・行列座標、geometry、ページ計画、
+Readerに委譲する入力準備/spool、基本reader、style intern、列幅・行列座標、geometry、ページ計画、
 candidate抽出、セル配置、文字placement、背景・罫線・文字コマンド、画像decode、
 基本PDF描画・subset・文書生成・構造保存、診断集約はCoreが所有します。
 
@@ -55,7 +55,7 @@ Windowsでも成功した結果として扱いません。
 Core は run のフォントを解釈せず、`IExtendedTextLayoutService` 経由で本体へ計測を委譲します。
 折り返し結果の配置・縮小・印刷倍率の共通処理は引き続き Core にあります。
 本体 adapter が payload の倍率を run のサイズ・座標へ一度だけ適用し、PDF／Skia は
-確定済み run を再解決・再折り返しせず描画します。Core 単独の通常フォント一つ・
+確定済み run を再解決・再折り返しせず描画します。Core 単独のセルごとに通常フォントを一つ選ぶ方針・
 IVS 基底文字化・PDF の製品範囲は変更しません。
 
 追加の文字切れ判定は Core の `CellTextDiagnostics`、診断方針・選択ページへの絞り込みは
@@ -81,7 +81,7 @@ CoreExcelReader が表示ポリシーと診断候補を管理します。scratch
 色付きフォント、カスタム計測、本体の文字処理は互換経路を維持します。
 各確定行のUnicode clusterは行頭を基準に作成します。
 ページ計画で選択済みの候補は元順序・重複なしの契約を受け渡し、後段の再索引・再ソートを省きます。
-単一フォントcacheは512件のCLOCK、入力2048文字以下、保持text・行文字・glyphの合計131072単位です。
+物理フォントidentityを含むcacheは512件のCLOCK、入力2048文字以下、保持text・行文字・glyphの合計131072単位です。
 装飾と折り返しなしの幅はキーから除き、縮小はcache外で適用します。
 PDF位置はbuilder所有のSpanへ書き込み、rendererごとにPaint最大2個とdash effect最大1個を所有します。
 実装と測定証拠は[性能改善レポート](core-performance-optimization.md)を参照してください。

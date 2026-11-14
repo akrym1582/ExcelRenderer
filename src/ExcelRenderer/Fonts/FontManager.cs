@@ -203,8 +203,7 @@ public sealed class FontManager : IFontManager
     {
         using var ownedResources = ConversionFontResources.Current is null ? new ConversionFontResources() : null;
         var typeface = ConversionFontResources.Current!.GetTypeface(font);
-        return string.Equals(typeface.FamilyName, family, StringComparison.OrdinalIgnoreCase) ||
-            HasFamilyName(typeface.GetTableData(0x6e616d65), family);
+        return Core.Fonts.ColumnFontMetrics.MatchesFamily(typeface, family);
     }
 
     /// <summary>Resolves only the requested source family within already permitted discovery roots.</summary>
@@ -226,7 +225,7 @@ public sealed class FontManager : IFontManager
         {
             try
             {
-                if (HasFamilyName(face.FamilyNames.Value, request.Family))
+                if (Core.Fonts.ColumnFontMetrics.HasFamilyName(face.FamilyNames.Value, request.Family))
                 {
                     aliases.Add(face);
                 }
@@ -250,37 +249,6 @@ public sealed class FontManager : IFontManager
     {
         var face = new FontCollectionReader(container, ConversionFontResources.Current?.Token ?? default).ReadFace(collectionIndex);
         return face.Tables.TryGetValue("name", out var names) ? container.AsSpan(names.Offset, names.Length).ToArray() : [];
-    }
-
-    private static bool HasFamilyName(byte[] table, string family)
-    {
-        if (table.Length < 6)
-        {
-            return false;
-        }
-
-        int Read(int offset) => (table[offset] << 8) | table[offset + 1];
-        var count = Read(2);
-        var strings = Read(4);
-        for (var index = 0; index < count && 6 + ((index + 1) * 12) <= table.Length; index++)
-        {
-            var record = 6 + (index * 12);
-            var platform = Read(record);
-            var name = Read(record + 6);
-            var length = Read(record + 8);
-            var start = strings + Read(record + 10);
-            if (name is not (1 or 16) || platform is not (0 or 3) || (length % 2) != 0 || start + length > table.Length)
-            {
-                continue;
-            }
-
-            if (string.Equals(System.Text.Encoding.BigEndianUnicode.GetString(table, start, length), family, StringComparison.OrdinalIgnoreCase))
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     private static byte[] LoadContainer(string path, long expectedLength, long expectedModified)

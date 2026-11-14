@@ -7,4 +7,8 @@ namespace ExcelRenderer.Core.Excel;
 /// <param name="Size">ポイント単位のフォントサイズです。</param>
 /// <param name="Weight">Normal style weight.</param>
 /// <param name="Italic">Whether Normal is italic.</param>
-internal sealed record NormalFontMetadata(string Family, double Size, int Weight = 400, bool Italic = false);
+internal sealed record NormalFontMetadata(string Family, double Size, int Weight = 400, bool Italic = false)
+{
+    /// <summary>Gets the saved Roman or Swiss family classification.</summary>
+    internal int FamilyClassification { get; init; }
+}

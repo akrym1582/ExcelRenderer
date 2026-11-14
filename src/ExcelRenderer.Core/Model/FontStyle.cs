@@ -9,6 +9,9 @@ internal sealed record FontStyle(
     bool Underline = false,
     ReportColor? Color = null)
 {
+    /// <summary>Gets the saved SpreadsheetML family classification (1 Roman, 2 Swiss).</summary>
+    public int FamilyClassification { get; init; }
+
     /// <summary>Gets a value indicating whether the source font is bold.</summary>
     public bool Bold { get; init; }
 

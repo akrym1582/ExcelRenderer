@@ -21,6 +21,50 @@ public sealed class ColumnWidthMetricsTests
     private static string Collection => Path.Combine(AppContext.BaseDirectory, "Fonts", "PdfFormats", "collection-distinct.ttc");
 
     [Theory]
+    [InlineData(8d, null, 8)]
+    [InlineData(null, null, 16)]
+    [InlineData(7.5, null, 7.5)]
+    [InlineData(8d, 12.5, 12.5)]
+    public void Fallback_only_mode_skips_source_matching_and_discovery(double? fallback, double? forced, double expected)
+    {
+        var manager = new SubstituteManager(Mono);
+        var diagnostics = new DiagnosticCollector(new());
+        var options = new ExcelReadOptions { ColumnWidthMetrics = new() { Mode = ColumnWidthMetricsMode.Fallback, FallbackMaximumDigitWidthPixels96Dpi = fallback, MaximumDigitWidthPixels96Dpi = forced } };
+        var metrics = new FullFontMetrics(manager, diagnostics, options);
+        Assert.Equal(expected, metrics.MaximumDigitWidth(new("Noto Sans Mono", 20), "data"));
+        Assert.Equal(fallback is null && forced is null ? 1 : 0, manager.Requests.Count);
+        Assert.Contains("Source-font lookup is disabled", Assert.Single(diagnostics.ToArray()).Message);
+    }
+
+    [Theory]
+    [InlineData(ColumnWidthMetricsMode.SourceFont)]
+    [InlineData(ColumnWidthMetricsMode.LibreOfficeCompatible)]
+    public void Fallback_override_does_not_replace_available_source_or_explicit_metrics(ColumnWidthMetricsMode mode)
+    {
+        var manager = new SubstituteManager(Noto);
+        var normal = new Core.Excel.NormalFontMetadata("Missing Original", 11);
+        var diagnostics = new DiagnosticCollector(new());
+        var settings = new ColumnWidthMetricsOptions { Mode = mode, FallbackMaximumDigitWidthPixels96Dpi = 7.5 };
+        Assert.Equal(7.5, new FullFontMetrics(manager, diagnostics, new() { ColumnWidthMetrics = settings }).MaximumDigitWidth(normal, "data"));
+        Assert.Contains(diagnostics.ToArray(), item => item.Code == "MaximumDigitWidthFallback" && item.Message.Contains("source=fallback-override"));
+        var physical = new Core.Excel.NormalFontMetadata("Noto Sans JP", 11);
+        var expected = mode == ColumnWidthMetricsMode.SourceFont ? 8 : 122d / 15;
+        Assert.Equal(expected, new FullFontMetrics(manager, null, new() { ColumnWidthMetrics = settings }).MaximumDigitWidth(physical, "data"));
+        Assert.Equal(expected, new FullFontMetrics(manager, null, new() { ColumnWidthMetrics = settings with { SourceFontFile = Noto } }).MaximumDigitWidth(normal, "data"));
+        Assert.Equal(12.5, new FullFontMetrics(manager, null, new() { ColumnWidthMetrics = settings with { MaximumDigitWidthPixels96Dpi = 12.5 } }).MaximumDigitWidth(normal, "data"));
+    }
+
+    [Theory]
+    [InlineData(double.NaN)]
+    [InlineData(double.PositiveInfinity)]
+    [InlineData(0.5)]
+    public void Invalid_fallback_width_is_rejected_before_input_is_opened(double width)
+    {
+        var options = new ExcelReadOptions { ColumnWidthMetrics = new() { FallbackMaximumDigitWidthPixels96Dpi = width } };
+        Assert.Throws<ArgumentOutOfRangeException>(() => new ExcelReader().Read("missing-workbook.xlsx", options));
+    }
+
+    [Theory]
     [InlineData(false, 219.75)]
     [InlineData(true, 276.5472666)]
     public void LibreOffice_mode_changes_column_geometry_without_changing_row_height(bool compatible, double expected)
@@ -48,17 +92,23 @@ public sealed class ColumnWidthMetricsTests
     }
 
     [Theory]
-    [InlineData("ＭＳ Ｐゴシック", 11, 8.4)]
-    [InlineData("MS PGothic", 10, 7.6)]
-    public void Missing_Japanese_source_metrics_match_Core_and_respect_explicit_settings(string family, double size, double expected)
+    [InlineData("ＭＳ Ｐゴシック", 11)]
+    [InlineData("MS PGothic", 10)]
+    [InlineData("游ゴシック", 11)]
+    [InlineData("Yu Gothic", 20)]
+    public void Missing_Japanese_source_metrics_match_Core_and_respect_explicit_settings(string family, double size)
     {
         var normal = new Core.Excel.NormalFontMetadata(family, size);
         foreach (var file in new[] { Mono, Noto })
         {
             var manager = new SubstituteManager(file);
             var diagnostics = new DiagnosticCollector(new());
-            Assert.Equal(expected, new FullFontMetrics(manager, diagnostics).MaximumDigitWidth(normal, "data"));
+            Assert.Equal(8, new FullFontMetrics(manager, diagnostics).MaximumDigitWidth(normal, "data"));
             Assert.Contains(diagnostics.ToArray(), item => item.Code == "MaximumDigitWidthFallback");
+            Assert.Equal(Measure(file, 0, size), new FullFontMetrics(manager, null, new()
+            {
+                ColumnWidthMetrics = new() { FallbackMaximumDigitWidthPixels96Dpi = null },
+            }).MaximumDigitWidth(normal, "data"));
             Assert.Equal(7, new FullFontMetrics(manager, null, new()
             {
                 ColumnWidthMetrics = new() { MaximumDigitWidthPixels96Dpi = 7 },
@@ -71,17 +121,17 @@ public sealed class ColumnWidthMetricsTests
     }
 
     [Fact]
-    public void Substituted_families_use_7px_and_do_not_change_layout()
+    public void Substituted_families_default_to_fixed_8px_and_report_fallback()
     {
         var diagnostics = new DiagnosticCollector(new());
         var normal = new Core.Excel.NormalFontMetadata("Missing Original", 11);
         foreach (var file in new[] { Mono, Noto })
         {
             var manager = new SubstituteManager(file);
-            Assert.Equal(7, new FullFontMetrics(manager, diagnostics).MaximumDigitWidth(normal, "data"));
+            Assert.Equal(8, new FullFontMetrics(manager, diagnostics).MaximumDigitWidth(normal, "data"));
             using var input = BoundaryWorkbook();
             var sheet = new ExcelReader(manager).Read(input).Sheets.Single();
-            Assert.Equal(ColumnWidthCalculator.ToPoints(12, 7), sheet.Columns[1].Width);
+            Assert.Equal(72, sheet.Columns[1].Width);
         }
 
         Assert.Contains(diagnostics.ToArray(), item => item.Code == "MaximumDigitWidthFallback" && item.Message.Contains("SourceFontFile"));
@@ -132,7 +182,7 @@ public sealed class ColumnWidthMetricsTests
         Assert.Single(manager.Requests);
         var explicitOptions = legacy with { ColumnWidthMetrics = new() { Mode = ColumnWidthMetricsMode.RenderingFontLegacy, MaximumDigitWidthPixels96Dpi = 13 } };
         Assert.Equal(13, new FullFontMetrics(manager, null, explicitOptions).MaximumDigitWidth(null, "data"));
-        Assert.Equal(7, new FullFontMetrics(manager, null).MaximumDigitWidth(null, "data"));
+        Assert.Equal(8, new FullFontMetrics(manager, null).MaximumDigitWidth(null, "data"));
     }
 
     [Fact]
@@ -144,9 +194,12 @@ public sealed class ColumnWidthMetricsTests
         foreach (var mode in new[] { ColumnWidthMetricsMode.SourceFont, ColumnWidthMetricsMode.RenderingFontLegacy, ColumnWidthMetricsMode.SourceFont })
         {
             var options = new ExcelReadOptions { ColumnWidthMetrics = new() { Mode = mode }, ColumnWidthMetricsCache = cache };
-            Assert.Equal(mode == ColumnWidthMetricsMode.SourceFont ? 7 : Measure(Mono, 0, 11), new FullFontMetrics(manager, null, options).MaximumDigitWidth(normal, "data"));
+            Assert.Equal(mode == ColumnWidthMetricsMode.SourceFont ? 8 : Measure(Mono, 0, 11), new FullFontMetrics(manager, null, options).MaximumDigitWidth(normal, "data"));
         }
 
+        var measured = new ExcelReadOptions { ColumnWidthMetrics = new() { FallbackMaximumDigitWidthPixels96Dpi = null }, ColumnWidthMetricsCache = cache };
+        Assert.Equal(9, new FullFontMetrics(manager, null, measured).MaximumDigitWidth(normal, "data"));
+        Assert.Equal(8, new FullFontMetrics(manager, null, measured with { ColumnWidthMetrics = new() }).MaximumDigitWidth(normal, "data"));
         var explicitOptions = new ExcelReadOptions { ColumnWidthMetrics = new() { MaximumDigitWidthPixels96Dpi = 17 }, ColumnWidthMetricsCache = cache };
         Assert.Equal(17, new FullFontMetrics(manager, null, explicitOptions).MaximumDigitWidth(normal, "data"));
         foreach (var index in new[] { 1, 0, 1 })
@@ -187,7 +240,7 @@ public sealed class ColumnWidthMetricsTests
         var manager = new FontManager(new() { AllowSystemFonts = false, UseFontPack = false, FontDirectories = [], FontFiles = [], FallbackFamilies = [] });
         Assert.Null(manager.ResolveExact(new("Noto Sans JP")));
         var fakeIdentity = new FontManager(new() { AllowSystemFonts = false, UseFontPack = false, Registrations = [new FontRegistration("Missing Original", Mono)], FallbackFamilies = [] });
-        Assert.Equal(7, new FullFontMetrics(fakeIdentity, null).MaximumDigitWidth(new("Missing Original", 11), "data"));
+        Assert.Equal(8, new FullFontMetrics(fakeIdentity, null).MaximumDigitWidth(new("Missing Original", 11), "data"));
     }
 
     [Fact]
@@ -243,6 +296,7 @@ public sealed class ColumnWidthMetricsTests
             new ColumnWidthMetricsOptions { SourceFontFile = Collection, SourceFontCollectionIndex = 50 },
             new ColumnWidthMetricsOptions { SourceFontFile = "missing-font.ttf", MaximumDigitWidthPixels96Dpi = 9 },
             new ColumnWidthMetricsOptions { SourceFontFile = Mono, Mode = ColumnWidthMetricsMode.RenderingFontLegacy },
+            new ColumnWidthMetricsOptions { SourceFontFile = Mono, Mode = ColumnWidthMetricsMode.Fallback },
         })
         {
             Assert.ThrowsAny<ArgumentException>(() => new ExcelReadOptions { ColumnWidthMetrics = settings }.Validate());

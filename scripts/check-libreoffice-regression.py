@@ -65,7 +65,7 @@ def main():
                 checked_baseline(record)
             for engine, record in case['engines'].items():
                 current_baseline(case['id'], engine, record)
-        subprocess.run(['python3', str(ROOT / 'scripts/compare-libreoffice.py'), 'render', '--run', str(output)], cwd=ROOT, check=True)
+        subprocess.run(['python3', str(ROOT / 'scripts/compare-libreoffice.py'), 'render', '--historical-column-metrics', '--run', str(output)], cwd=ROOT, check=True)
     report = {'contract': str(BASE.relative_to(ROOT)), 'records': [], 'mutation_checks': mutation_checks(output, data)}
     errors = []
     for case in data['cases']:

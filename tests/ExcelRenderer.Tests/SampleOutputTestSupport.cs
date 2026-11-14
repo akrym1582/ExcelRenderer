@@ -41,12 +41,13 @@ internal static class SampleOutputTestSupport
     /// サンプル Excel ブックの先頭シートを読み取り、描画レイアウトまで生成します。
     /// </summary>
     /// <param name="excelFileName">入力に使用するサンプル Excel ファイルの名前。</param>
+    /// <param name="readOptions">Optional source-metric settings for a frozen sample layout.</param>
     /// <returns>読み取った先頭シート、ページレイアウト、およびその描画命令をまとめた検証用データ。</returns>
-    internal static SampleOutput ReadAndLayout(string excelFileName)
+    internal static SampleOutput ReadAndLayout(string excelFileName, ExcelReadOptions? readOptions = null)
     {
         var excelPath = Path.Combine(InputDirectory, excelFileName);
         Assert.True(File.Exists(excelPath), $"入力 Excel ファイルが見つかりません: {excelPath}");
-        var sheet = Assert.Single(new ExcelReader().Read(excelPath).Sheets);
+        var sheet = Assert.Single(new ExcelReader().Read(excelPath, readOptions ?? new()).Sheets);
         var layout = new ReportLayoutEngine(new SkiaTextMeasurer(new Fonts.FontManager(new Fonts.FontOptions { AllowSystemFonts = false }))).Layout(sheet);
         var commands = new DrawCommandGeneratorPass().Generate(layout);
         return new(sheet, layout, commands);

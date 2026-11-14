@@ -24,6 +24,9 @@ dependencies (`DocumentFormat.OpenXml` and `ExcelNumberFormat`) directly, withou
 dependencies on unpublished ExcelRenderer packages.
 
 `build/EmbeddedOpenXml.targets` owns shared assembly inclusion. Internal project
+DLL/XML files are taken explicitly from the built output directory and checked
+for existence, independently of MSBuild's copy-local reference enumeration.
+Internal project
 references use `PrivateAssets="all"`, so source projects that directly use Reader, OpenXml
 or Formulas APIs must declare their own project reference. Package consumers get
 these APIs from the DLLs in the published main or Mapping package.
@@ -74,9 +77,9 @@ and the installed CLI using only the generated packages.
 `validate-openxml-packages.py` delegates to this current validation.
 
 The main package includes Core DLL/XML explicitly from its built output directory.
-Packing with `--no-build -p:BuildProjectReferences=false` must not depend on Core
-being present in MSBuild's copy-local reference list. If either required Core
-file is absent, packing fails immediately instead of producing an incomplete
+Packing with `--no-build -p:BuildProjectReferences=false` must not depend on Core,
+Reader, OpenXml or Formulas being present in MSBuild's copy-local reference list.
+If any required DLL/XML file is absent, packing fails immediately instead of producing an incomplete
 package. Keep the distribution audit: a missing Core DLL makes the library
 package unusable even when source-project tests have passed.
 
@@ -104,6 +107,8 @@ workflows. Run it locally after packing with `--packages <pack-output>` and
 
 NuGet 公開対象は本体・Mapping・Tool・Fonts の4つだけです。Core・OpenXml.Reader・OpenXml・Formulas は
 非公開のソースプロジェクトとし、必要な DLL/XML を公開パッケージに同梱します。
+本体・Mappingの内部DLL/XMLと本体のCore DLL/XMLはビルド出力から明示的に同梱し、
+copy-local一覧に依存しません。必要なファイルがなければ、不完全なパッケージを作らずpackを失敗させます。
 テスト・サンプル・検証・性能測定の各 csproj も公開しません。新規プロジェクトも既定で
 非公開にし、CI とリリース前の検証で公開対象の追加や未公開パッケージへの依存を検出します。
 

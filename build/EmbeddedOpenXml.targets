@@ -8,10 +8,16 @@
     <PackageReference Include="ExcelNumberFormat" Version="1.1.0" />
   </ItemGroup>
   <Target Name="IncludeOpenXmlBuildOutput" DependsOnTargets="ResolveReferences">
+    <!-- Required runtime assemblies must also be included when no-build packing
+         leaves ReferenceCopyLocalPaths incomplete. Verify the built outputs. -->
     <ItemGroup>
-      <_EmbeddedOpenXmlAssembly Include="@(ReferenceCopyLocalPaths)" Condition="('%(ReferenceCopyLocalPaths.Filename)' == 'ExcelRenderer.OpenXml.Reader' Or '%(ReferenceCopyLocalPaths.Filename)' == 'ExcelRenderer.OpenXml' Or '%(ReferenceCopyLocalPaths.Filename)' == 'ExcelRenderer.Formulas') And '%(ReferenceCopyLocalPaths.Extension)' == '.dll'" />
-      <BuildOutputInPackage Include="@(_EmbeddedOpenXmlAssembly)" />
-      <BuildOutputInPackage Include="@(_EmbeddedOpenXmlAssembly->'%(RootDir)%(Directory)%(Filename).xml')" Condition="Exists('%(_EmbeddedOpenXmlAssembly.RootDir)%(_EmbeddedOpenXmlAssembly.Directory)%(_EmbeddedOpenXmlAssembly.Filename).xml')" />
+      <_RequiredEmbeddedOpenXmlOutput Include="$(TargetDir)ExcelRenderer.OpenXml.Reader.dll;$(TargetDir)ExcelRenderer.OpenXml.Reader.xml" />
+      <_RequiredEmbeddedOpenXmlOutput Include="$(TargetDir)ExcelRenderer.OpenXml.dll;$(TargetDir)ExcelRenderer.OpenXml.xml" />
+      <_RequiredEmbeddedOpenXmlOutput Include="$(TargetDir)ExcelRenderer.Formulas.dll;$(TargetDir)ExcelRenderer.Formulas.xml" />
+    </ItemGroup>
+    <Error Condition="!Exists('%(_RequiredEmbeddedOpenXmlOutput.Identity)')" Text="Required embedded package output is missing: %(_RequiredEmbeddedOpenXmlOutput.Identity). Build $(MSBuildProjectName) before packing." />
+    <ItemGroup>
+      <BuildOutputInPackage Include="@(_RequiredEmbeddedOpenXmlOutput)" />
     </ItemGroup>
   </Target>
 </Project>

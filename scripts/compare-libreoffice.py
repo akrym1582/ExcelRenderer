@@ -80,7 +80,7 @@ def validate_inputs(manifest):
     return records
 
 
-def render(run, manifest):
+def render(run, manifest, historical_column_metrics=False):
     checks = validate_inputs(manifest)
     save(run / 'input-reference-hashes.json', checks)
     save(run / 'environment.json', {
@@ -120,6 +120,10 @@ def render(run, manifest):
                         args += ['--font-file', f]
                 else:
                     args += ['--font-file', FONT]
+                if historical_column_metrics:
+                    # Frozen appearance contracts were reviewed with a 7px fallback.
+                    # Keep that explicit policy separate from the current defaults.
+                    args += ['--no-system-fonts', '--column-width-fallback-mdw', '7']
                 start = time.monotonic()
                 result.update(command(args))
                 result['elapsed_seconds'] = time.monotonic() - start
@@ -444,10 +448,12 @@ def main():
     parser.add_argument('action', choices=['render', 'compare', 'self-test', 'investigate', 'review'])
     parser.add_argument('--run', type=Path, default=ROOT / 'artifacts/libreoffice-comparison')
     parser.add_argument('--report', type=Path, default=ROOT / 'docs/validation/libreoffice-comparison')
+    parser.add_argument('--historical-column-metrics', action='store_true',
+                        help='Render frozen appearance contracts with system lookup disabled and an explicit 7px fallback.')
     args = parser.parse_args()
     manifest = json.loads(MANIFEST.read_text())
     if args.action == 'render':
-        render(args.run.resolve(), manifest)
+        render(args.run.resolve(), manifest, args.historical_column_metrics)
     elif args.action == 'compare':
         compare(args.run.resolve(), manifest, args.report.resolve())
     elif args.action == 'self-test':

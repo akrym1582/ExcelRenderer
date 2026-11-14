@@ -64,7 +64,7 @@ def main():
                          ('scaling', 'tests/ExcelRenderer.Core.Tests/Baselines/Inputs/08-print-scaling.xlsx')]:
         output = OUT / (name + '.pdf')
         process = subprocess.run(['dotnet', str(ROOT / 'tools/ExcelRenderer.Core.Validation/bin/Release/net10.0/ExcelRenderer.Core.Validation.dll'),
-                                  'render', source, str(output), str(FONT), '1'], cwd=ROOT, text=True, capture_output=True, check=True)
+                                  'render', source, str(output), str(FONT), '1', '7'], cwd=ROOT, text=True, capture_output=True, check=True)
         (OUT / (name + '.json')).write_text(process.stdout)
         baseline = ROOT / 'tests/Shared/PdfRemovalBaseline/core' / (name + '.pdf')
         missing = missing_source_scalars(ROOT / source)

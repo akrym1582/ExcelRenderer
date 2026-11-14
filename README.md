@@ -8,7 +8,7 @@ English | [日本語](README.ja.md)
 
 Main and Core apply the eight named Excel number-format colors (for example `[Red]` in the negative-value section). Indexed `[ColorN]` palettes are not resolved. Pivot tables render saved worksheet cells; aggregate generation is not implemented. A pivot with no nonempty saved output in the selected print region fails before rendering (`PivotSavedValuesMissing`). A cache requesting refresh produces `PivotRefreshRequired`; refresh and save in a spreadsheet application to obtain current totals. Mapping refreshes supported cache records, not the displayed aggregate cells.
 
-Cell-width compatibility: main's `ColumnWidthMetricsMode.LibreOfficeCompatible` and Core's `ReadOptions.UseLibreOfficeColumnWidths` retain fractional digit/column widths. Both CLI commands accept `--column-width-metrics libreoffice --column-width-mdw 8.8`. Use the digit width of the actual reference font; 8.8px is specific to Noto Sans Mono at 11pt, not a universal replacement. Existing defaults remain unchanged. See [the measured cell-size validation](docs/validation/cell-width-compatibility/README.md).
+Cell-width compatibility: main's `ColumnWidthMetricsMode.LibreOfficeCompatible` and Core's `ReadOptions.UseLibreOfficeColumnWidths` retain fractional digit/column widths. Both CLI commands accept `--column-width-metrics libreoffice --column-width-mdw 8.8`. Use the digit width of the actual reference font; 8.8px is specific to Noto Sans Mono at 11pt, not a universal replacement. `SourceFont` remains the default mode; unavailable fonts use fixed 8px unless substitute measurement is requested. See [the measured cell-size validation](docs/validation/cell-width-compatibility/README.md).
 
 ## Overview
 
@@ -67,12 +67,6 @@ These are the four published NuGet packages. `ExcelRenderer.OpenXml.Reader`,
 `ExcelRenderer.Formulas` and `ExcelRenderer.OpenXml` are separate assemblies bundled in both `ExcelRenderer`
 and `ExcelRenderer.Mapping`, not installable package IDs. For their APIs, install
 either package as shown [below](#formula-and-low-level-xlsx-apis).
-
-> [!WARNING]
-> Upgrading from 1.9.0 to 1.9.1 changes public Formulas/OpenXml namespaces and breaks
-> source and binary compatibility. Update imports and stored type names, and rebuild
-> all dependent libraries and applications. See the [migration guide](docs/namespace-migration.md)
-> for the affected types, package restore caveat and reproduced failures.
 
 The commands below use NuGet.org and require a published version containing the
 feature you need. To use a feature before its package is published, see
@@ -362,7 +356,8 @@ excelrenderer core input.xlsx -o core.pdf --font-file ./NotoSansJP-Regular.ttf -
 excelrenderer pdf input.xlsx -o selected.pdf --sheet Sheet3 --sheet Sheet1
 ```
 
-`core` invokes the Core converter with one supplied font, without main-library shapes,
+`core` uses bundled Noto Sans JP when `--font-file` is omitted; an explicit file overrides it.
+The Core API also accepts explicit multiple fonts and family substitutions through `PdfExportOptions.Fonts` (see [Core fonts](docs/core-fonts.md)). Core omits main-library shapes,
 hyperlink annotations or formula recalculation. Its output file must be new.
 See [Core usage and limits](docs/core.md).
 
@@ -514,17 +509,20 @@ excelrenderer render input.xlsx --format pdf -o output.pdf --column-width-mdw 9
 excelrenderer pdf input.xlsx -o output.pdf --column-width-metrics legacy
 ```
 
-The main CLI flags are `--column-width-mdw`, `--layout-font`, `--layout-font-index`, and
-`--column-width-metrics source|legacy|libreoffice` for main. Core accepts
-`--column-width-metrics source|libreoffice` and `--column-width-mdw`; layout-font
-file/index flags and legacy mode are main-only. In the library, migration compatibility is
+Both CLIs accept `--column-width-mdw`, `--column-width-fallback-mdw`,
+`--column-width-fallback-metrics fixed|font`, `--layout-font`, `--layout-font-index`,
+and `--column-width-metrics source|fallback|libreoffice`. Main also supports
+`--column-width-metrics legacy`. The fallback MDW applies only when the original font
+is unavailable. The default is fixed at 8px/96 DPI, independent of the substitute
+font and Normal size. Select `--column-width-fallback-metrics font` to measure the
+drawing substitute instead; an explicit numeric fallback takes precedence over this
+selection. To retain a former 7px fallback, pass `--column-width-fallback-mdw 7`. In the library, migration compatibility is
 `ColumnWidthMetrics = new() { Mode = ColumnWidthMetricsMode.RenderingFontLegacy }`.
-Legacy cannot be combined with a source file; explicit MDW still takes precedence.
+Legacy and fallback modes cannot be combined with a source file; explicit MDW still takes precedence.
 Legacy also preserves historical merged-cell page bands; source mode lets a merge
 larger than a page split at ordinary row/column boundaries.
 All rendering formats, range/continuous rendering, and page-selection preflight use
-the same read settings and conversion-local metric decisions. Core's independent
-single-supplied-font contract is unchanged.
+the same read settings and conversion-local metric decisions. Core draws with explicitly supplied fonts; its optional system/source-file discovery affects only column measurements.
 
 ### Optional LibreOffice column-width calculation
 
@@ -535,6 +533,7 @@ Core defaults to `UseLibreOfficeColumnWidths = false`.
 | --- | --- | --- | --- |
 | Default | `ColumnWidthMetricsMode.SourceFont` | `UseLibreOfficeColumnWidths = false` | Preserve the existing source-font/compatibility column calculation |
 | LibreOffice compatibility | `ColumnWidthMetricsMode.LibreOfficeCompatible` | `UseLibreOfficeColumnWidths = true` | Measure fractional digit advances and retain fractional column pixels |
+| Fallback only | `ColumnWidthMetricsMode.Fallback` | `UseSourceFontForColumnWidths = false` | Skip source matching/discovery; use the configured fallback (8px by default) |
 | Historical migration | `ColumnWidthMetricsMode.RenderingFontLegacy` | Not available | Reproduce main's historical drawing-font column policy |
 
 Main library configuration:
@@ -574,8 +573,10 @@ excelrenderer core input.xlsx -o core.pdf --font-file NotoSansJP-Regular.ttf --c
 
 **8.8 is an example for the reviewed reference's Noto Sans Mono substitution at 11pt,
 not a general font preset.** An explicit MDW is optional and overrides measurement;
-without one, main measures the resolved layout font and Core measures its supplied
-regular font, both at the workbook Normal size. Main can select a layout-only font
+without one, available source/layout fonts are measured at the workbook Normal size.
+If the original font is unavailable, the fallback policy applies: fixed 8px by default,
+or substitute-font measurement with `--column-width-fallback-metrics font`.
+Main can select a layout-only font
 with `SourceFontFile` / `--layout-font`. Enabling the mode does not automatically
 replicate LibreOffice's font substitution. Set the reference font/metric explicitly
 when reproducible dimensions are required. A numeric MDW override alone does not
@@ -585,10 +586,14 @@ This option can change cell widths, wrapping and page boundaries. It preserves s
 row heights and print settings; it does not reproduce LibreOffice's header positioning
 or every rendering rule. See the [measured before/after comparison](docs/validation/cell-width-compatibility/README.md).
 
-In default SourceFont mode, if the original family is unavailable, SourceFont uses a deterministic compatibility
-metric and reports `MaximumDigitWidthFallback`. MS P Gothic uses a size-dependent
-Noto Sans digit profile matching Calc substitution (8.4px at 11pt); other unavailable
-families and missing Normal metadata use 7px. StrictMode treats this
+In default SourceFont mode, an unavailable original family is reported as `MaximumDigitWidthFallback`: `ColumnWidthMetrics.FallbackMaximumDigitWidthPixels96Dpi`
+(`--column-width-fallback-mdw`) defaults to 8px at 96 DPI. Explicitly set the property
+to `null`, or use `--column-width-fallback-metrics font`, to measure the resolved
+drawing font at the workbook Normal size (11pt if Normal metadata is missing). The fallback
+option does not replace an available original font, explicit layout font, or unconditional
+`MaximumDigitWidthPixels96Dpi` override. Core exposes the same fallback property directly
+on `ReadOptions`, and also supports `--layout-font` / `--layout-font-index` and system
+lookup of the original Normal font for column measurements only. StrictMode treats this
 warning as a conversion failure. This does **not**
 guarantee Excel-equivalent geometry. Supply the original font or its measured MDW
 for accurate column sizing. `MaximumDigitWidthResolved` identifies the requested
@@ -598,6 +603,29 @@ break counts. `DiagnosticOptions.EnableLayoutWarnings` also enables per-print-ar
 `PaginationMetrics` (dimensions, margins, scale, and horizontal/vertical page counts).
 See [validation evidence](docs/pagination-source-metrics-validation.md) for synthetic
 fixtures and the limits of comparisons without the user's workbook or Windows fonts.
+
+### Fixed fallback and disabling source-font lookup
+
+The **8px fallback** is based on the maximum half-width digit advance (MDW) of
+Yu Gothic 11pt in Japanese Windows Excel at 96 DPI and 100% display zoom.
+For the displayed example **column width 8.38 (72px)**, subtracting the 5px of
+cell padding and gridline gives `(72 - 5) / 8.38 ≈ 7.995`, consistent with 8px.
+This is the reference for the fallback, not a claim that every font and size has
+an 8px MDW. Displayed character widths are rounded; the renderer still converts
+the XLSX's saved raw width using the SpreadsheetML formula.
+
+Use `--column-width-metrics fallback` to skip original-font matching and discovery,
+even when the original font is installed on Windows. It uses fixed 8px by default,
+or the selected numeric/font fallback. In the API, set
+`ColumnWidthMetrics.Mode = ColumnWidthMetricsMode.Fallback` (main) or
+`ReadOptions.UseSourceFontForColumnWidths = false` (Core). An explicit layout font
+cannot be combined with this mode. Main's `--no-system-fonts` additionally disables
+OS discovery for drawing fonts; use the same supplied drawing file on both hosts.
+
+```sh
+excelrenderer core report.xlsx --font-file NotoSansJP-Regular.ttf --column-width-metrics fallback -o fixed-8px.pdf
+excelrenderer core report.xlsx --font-file NotoSansJP-Regular.ttf --column-width-metrics fallback --column-width-fallback-metrics font -o measured-substitute.pdf
+```
 
 ### Asynchronous PDF streams
 
@@ -661,8 +689,8 @@ var settings = new PageSettings(FitToPagesWide: 1)
 For xlsx input, explicit and default raw column widths are converted at the fixed Excel
 reference DPI of 96; output PNG DPI does not change sheet geometry. The Normal style is resolved
 through its style XF and theme major/minor font before measuring digits 0–9 with the configured
-font manager. If that font cannot be measured, a compatibility width is used (MS P Gothic:
-8.4px at 11pt, scaled and rounded to twips; otherwise 7px), and
+font manager. If that font cannot be measured, the fallback MDW is used (8px by default).
+Setting that property to `null` opts into measuring the drawing substitute at the Normal size, and
 `MaximumDigitWidthFallback` is reported through conversion diagnostics.
 
 Distinct print areas are paginated independently without filling their bounding rectangle.
@@ -776,7 +804,7 @@ underline in ordinary string cells. `ReportCell.RichTextRuns` contains effective
 `CellTextRun` values; `Text` remains the complete plain string. Manual models must
 supply matching text and valid positive sizes. The built-in measurer implements
 `IRichTextLayoutService`; existing custom measurers keep working with a cell-font
-fallback. Core-only output keeps its single regular font. Markdown stays plain text.
+fallback. Core-only output selects one explicit regular font per cell. Markdown stays plain text.
 
 Partial formatting with rotated/vertical cell text falls back to the cell font.
 Strikethrough, superscript/subscript, double/accounting underlines and phonetics are

@@ -10,6 +10,15 @@ The original LibreOffice references and historical A/B/Core PDFs remain unchange
 Linux PR job generates 22 main PDFs (cached values, CF enabled, explicit fonts)
 and 22 Core PDFs (saved values, one font), then compares each with its own baseline:
 
+The frozen gate explicitly disables system lookup and supplies a 7px fallback for
+unavailable source fonts, matching the metric policy used when these PDFs were
+reviewed. Matching physical source fonts are still measured. The generator's
+`--historical-column-metrics` mode records these CLI settings in every run record;
+ordinary `compare-libreoffice.py render` continues to use product defaults.
+Current default substitute measurement and source/fallback precedence are checked
+separately by `ColumnMetricTests` and `ColumnWidthMetricsTests`, including the
+42-column form's 730.8pt default and 630.0pt explicit-fallback results.
+
 - Page count, MediaBox, CropBox and rotation.
 - Full extracted text from both Poppler and MuPDF, plus glyph IDs, font, size,
   color, positions and bounds from MuPDF text traces.
@@ -53,7 +62,8 @@ The manifest binds the historical PDF hash, input hash and new PDF hash. Only
 these three explicitly named changes use the new complete geometry/pixel contract,
 including 300 DPI, plus the existing independent font-outline check. Unknown cases
 retain the historical checks. Original PDFs, border contracts, AA reviews and
-thresholds are preserved. The ordinary 44-PDF gate tests production defaults too.
+thresholds are preserved. These frozen comparisons exercise the explicit historical
+metric settings; they do not assert the product's current default column widths.
 
 ## Maintenance
 

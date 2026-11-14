@@ -39,8 +39,9 @@ Source: main 1.7.2, commit `32e9165d145516dbd0bcb4c2ae31a78ce6774bce`. Every cop
 | New Core implementation | Excel/SingleFontMetrics.cs | Core単独所有 | ICoreFontMetrics measures the supplied font; the legacy graphic engine was removed |
 | Excel/StylePool.cs | Excel/StylePool.cs | Core単独所有 / 本体wrapper | Shared Core implementation; main delegates and maps only boundary state |
 | Excel/WorkbookLayoutMetadataReader.cs | Excel/WorkbookLayoutMetadataReader.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
-| New Core implementation | Fonts/SingleFontContext.cs | Core単独所有 | Complete; Core single-font product implementation |
-| New Core implementation | Fonts/SingleFontResolver.cs | Core単独所有 | Complete; Core single-font product implementation |
+| New Core implementation | Fonts/SingleFontContext.cs | Core単独所有 | Complete; Core explicit-font product implementation |
+| New Core implementation | Fonts/FontOptions.cs | Core単独所有 | Explicit files, aliases and Roman/Swiss/default families; no drawing-font discovery |
+| New Core implementation | Fonts/SingleFontResolver.cs | Core単独所有 | Complete; Core explicit-font product implementation |
 | GlobalUsings.cs | GlobalUsings.cs | 本体専用差分 / Core内部型 | Public compatibility value/contracts stay in main; neutral internal equivalents stay in Core |
 | Rendering/BufferReadStream.cs | ../ExcelRenderer.OpenXml.Reader/Input/BufferReadStream.cs | Reader所有 / Core・本体adapter | Generic implementation shared with Mapping; Core preserves input types and metrics |
 | Rendering/CancellationReadStream.cs | Input/CancellationReadStream.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
@@ -110,24 +111,24 @@ Source: main 1.7.2, commit `32e9165d145516dbd0bcb4c2ae31a78ce6774bce`. Every cop
 | Model/ReportSheet.cs | Model/ReportSheet.cs | 本体専用差分 / Core内部型 | Public compatibility value/contracts stay in main; neutral internal equivalents stay in Core |
 | Model/RowDefinition.cs | Model/RowDefinition.cs | 本体専用差分 / Core内部型 | Public compatibility value/contracts stay in main; neutral internal equivalents stay in Core |
 | Model/VerticalAlignment.cs | Model/VerticalAlignment.cs | 本体専用差分 / Core内部型 | Public compatibility value/contracts stay in main; neutral internal equivalents stay in Core |
-| PdfSharp/PdfSharpFinalizedTextPainter.cs (historical) | Pdf/SkiaFinalizedTextPainter.cs | Core単独所有 / 本体専用差分 | Core owns single-font placement; main supplies rich/IVS/color policy |
+| PdfSharp/PdfSharpFinalizedTextPainter.cs (historical) | Pdf/SkiaFinalizedTextPainter.cs | Core単独所有 / 本体専用差分 | Core owns finalized explicit-font placement; main supplies rich/IVS/color policy |
 | PdfSharp/PdfSharpRenderer.cs (historical) | Pdf/CorePdfRenderer.cs, SkiaPdfDocument.cs | Core単独所有 / 本体adapter | Skia document lifecycle and basic primitives; full image/shape/link adapters stay in main |
 | PdfSharp/PdfSharpTextMeasurer.cs (historical) | Fonts/SkiaFontFace.cs, Layout/TextLineBreaker.cs, Pdf/SkiaTextMeasurer.cs | Core単独所有 / 本体policy | Shared physical metrics/Unicode boundaries; full fallback/rich layout remains in main |
-| New Core implementation | Properties/AssemblyInfo.cs | Core単独所有 | Complete; Core single-font product implementation |
-| New Core implementation | Rendering/CancellationWriteStream.cs | Core単独所有 | Complete; Core single-font product implementation |
+| New Core implementation | Properties/AssemblyInfo.cs | Core単独所有 | Complete; Core explicit-font product implementation |
+| New Core implementation | Rendering/CancellationWriteStream.cs | Core単独所有 | Complete; Core explicit-font product implementation |
 | Rendering/ConversionDiagnostic.cs | Rendering/ConversionDiagnostic.cs | 本体専用差分 / Core内部型 | Compatibility value types retained in main; neutral Core values and explicit adapters do not duplicate algorithms |
 | Rendering/ConversionMetrics.cs | Rendering/ConversionMetrics.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
 | Rendering/DiagnosticCollector.cs | Rendering/DiagnosticCollector.cs | Core単独所有 / 本体wrapper | Shared Core implementation; main delegates and maps only boundary state |
 | Rendering/DiagnosticSeverity.cs | Rendering/DiagnosticSeverity.cs | 本体専用差分 / Core内部型 | Compatibility value types retained in main; neutral Core values and explicit adapters do not duplicate algorithms |
 | Rendering/DiagnosticStage.cs | Rendering/DiagnosticStage.cs | 本体専用差分 / Core内部型 | Compatibility value types retained in main; neutral Core values and explicit adapters do not duplicate algorithms |
 | Rendering/ImageResources.cs | Rendering/ImageResources.cs | Core単独所有 / 本体wrapper | Complete; shared implementation, public metadata mapping where needed |
-| New Core implementation | ConversionDiagnostic.cs | Core単独所有 | Complete; Core single-font product implementation |
-| New Core implementation | ExcelConverter.cs | Core単独所有 | Complete; Core single-font product implementation |
+| New Core implementation | ConversionDiagnostic.cs | Core単独所有 | Complete; Core explicit-font product implementation |
+| New Core implementation | ExcelConverter.cs | Core単独所有 | Complete; Core explicit-font product implementation |
 | Rendering/WorkbookInputOptions.cs | ../ExcelRenderer.OpenXml.Reader/Input/WorkbookInputOptions.cs | Reader所有 / 本体の公開recordを維持 | Core exposes Reader sealed class/set settings directly; main retains its public record/init settings and copies them at preparation |
-| New Core implementation | PdfExportOptions.cs | Core単独所有 | Complete; Core single-font product implementation |
-| New Core implementation | ConversionResult.cs | Core単独所有 | Complete; Core single-font product implementation |
+| New Core implementation | PdfExportOptions.cs | Core単独所有 | Complete; Core explicit-font product implementation |
+| New Core implementation | ConversionResult.cs | Core単独所有 | Complete; Core explicit-font product implementation |
 
-FontManager, font runs/glyph special cases, shape/link models and renderers, API range/viewport/continuous orchestration, output sinks/formats, Markdown and Skia output renderers remain main-only. Core DrawingMLReader owns picture anchors and Z order; main enriches those anchors with shape/theme/crop/rotation metadata. SkiaTextMeasurer and the single-font painter use one immutable physical font snapshot; Reader uses ICoreFontMetrics with SingleFontContext and never constructs a legacy workbook. Reader InputBufferOptions contains only generic spool controls. Core and main use Reader storage types directly; only public-setting conversion and metrics-aware buffer creation remain at the product boundaries. Input defaults remain 16 MiB memory / 128 MiB total / 10,000 ZIP entries / 512 MiB expanded, while output defaults remain 8 MiB with temporary files enabled.
+FontManager, font runs/glyph special cases, shape/link models and renderers, API range/viewport/continuous orchestration, output sinks/formats, Markdown and Skia output renderers remain main-only. Core DrawingMLReader owns picture anchors and Z order; main enriches those anchors with shape/theme/crop/rotation metadata. SkiaTextMeasurer and the explicit-font painter share the selected immutable physical font snapshot for each cell; Reader uses ICoreFontMetrics with SingleFontContext and never constructs a legacy workbook. Reader InputBufferOptions contains only generic spool controls. Core and main use Reader storage types directly; only public-setting conversion and metrics-aware buffer creation remain at the product boundaries. Input defaults remain 16 MiB memory / 128 MiB total / 10,000 ZIP entries / 512 MiB expanded, while output defaults remain 8 MiB with temporary files enabled.
 
 Tests adapted from PdfContentProbe, DrawingAnchorWorkbookFixture and PaginationComponentTests; SampleInputs and Noto fixtures are reused without product embedding. Additional Core tests and validation harnesses are new.
 
@@ -136,7 +137,7 @@ Fix basic algorithms in Core and run both product regressions. CoreLayoutPolicy/
 
 ## Extension and lifetime boundaries
 
-- `FullExcelReader` retains original styles/display/source geometry in the reader hooks before Core normalizes its single-font product.
+- `FullExcelReader` retains original styles/display/source geometry in the reader hooks before Core applies its per-cell explicit-font policy.
 - `FullLayoutPolicy` supplies shape/image visual bounds before used-range and pagination resolution, selection rules, transformed images, shapes and source regions. Core owns band planning, candidate extraction, measurements and placement.
 - `CoreTextLayoutAdapter` stores finalized full runs in `FullLineData`; Core scales neutral metrics and a payload scale, while main restores run offsets without searching for fonts or rewrapping.
 - `ICoreDrawingExtension` supplies the shared image/shape Z stage. Background/border/merged-border/text layer generation is Core-only, including continuous rescans.
@@ -226,7 +227,7 @@ All active project graphs are free of ClosedXML. See the
 Core owns `Fonts/SkiaFontFace`, `Fonts/GlyphSequence`, `Layout/TextLineBreaker`,
 `Pdf/PdfFontCollection`, `Fonts/TrueType/TrueTypeSubsetter`, `Fonts/TrueType/FontFaceExtractor`, `Pdf/SkiaPdfDocument`,
 `Pdf/SkiaDrawingPrimitives`, `Pdf/GeneratedPdfFinalizer` and its bounded syntax reader.
-Core's single-font measurer/renderer compose those primitives. They do not reference main/Fonts/Tool.
+Core's explicit-font measurer/renderer compose those primitives. They do not reference main/Fonts/Tool.
 
 Main owns `SkiaSharp/SkiaTextMeasurer` (fallback, IVS, rich text policy),
 `Fonts/ConversionFontResources` / `ResolvedGlyphLayout` / `TextRunBuilder`, `Pdf/PdfRenderer`,
@@ -296,9 +297,15 @@ without font dependencies. NormalFontMetadata retains weight/italic in addition 
 Main's ColumnWidthMetricsOptions and FullFontMetrics resolve source-font files, exact families,
 explicit MDW and legacy drawing metrics before passing a decided MDW through ICoreFontMetrics.
 FontManager's internal exact lookup respects its existing discovery permissions and verifies
-physical family names. No IFontManager contract member or Core system-font search was added.
+physical family names. Core's ColumnFontMetrics now owns shared physical-family verification,
+source-file loading and digit measurement. SingleFontMetrics optionally resolves the original
+Normal family through Skia's system font manager for column measurements only. Both adapters
+use FallbackMaximumDigitWidthPixels96Dpi when source metrics are unavailable (fixed
+8px by default); explicitly setting it to null measures their drawing substitute
+at the Normal size. The fallback-only mode skips source matching/discovery in both adapters.
+No family-specific numeric fallback profiles or new IFontManager contract members are used.
 Main shares conversion-local metric decisions between selection preflight and the actual read;
-all output formats consume Core's common geometry plan. Core's single supplied font is unchanged.
+all output formats consume Core's common geometry plan. Core's per-cell explicit font selection does not add partial-run formatting.
 
 ## Command finalization and two-pass collection
 
@@ -320,18 +327,31 @@ notifies sink completion or noncancelable abort cleanup. Core's public converter
 nonseekable outputs and leaves flushing to the caller. Async-only stream regression tests
 verify output behavior without ASP.NET dependencies. See the [file sample](../samples/ExcelRenderer.Sample).
 
+## Core explicit drawing fonts
+
+`Fonts/FontOptions.cs` and `SingleFontContext` own file snapshots, exact-family matching,
+name aliases, Roman/Swiss fallbacks and the final default for Core. The reader captures
+saved family classification and finalizes each cell to a physical identity. Core
+SkiaTextMeasurer keys its CLOCK by physical face, and the painter collects/embeds that
+same face. Tool alone supplies bundled Noto Sans JP for an omitted CLI font.
+Core still has no drawing-font discovery, per-character fallback or Fonts dependency.
+See [API and CLI settings](core-fonts.md).
+
 ## Core source column metrics
 
 Core SingleFontMetrics separates source Normal column metrics from the supplied drawing font.
-It measures the supplied snapshot only for a matching physical family name; substituted or
-missing source families use the shared SourceFontFallbackMetrics profile and report
-MaximumDigitWidthFallback. Text measurement and painting continue to use the supplied font.
-MS P Gothic uses a size-dependent Noto Sans digit profile (8.4px at 11pt) matching
-Calc substitution; other missing families and absent Normal metadata retain 7px/96 DPI.
-No OS/font-package discovery, additional font, public API or Core dependency is introduced.
+It measures an explicit layout-only source file, the matching supplied snapshot (including
+localized physical family names), or the original system family. System lookup is optional
+and limited to column measurements; drawing uses only explicitly supplied fonts. Missing source
+families use FallbackMaximumDigitWidthPixels96Dpi, defaulting to fixed 8px. Explicit
+null opts into measuring the drawing snapshot at the workbook Normal size. Both
+paths report MaximumDigitWidthFallback.
+Absent Normal metadata uses the same fallback policy at 11pt. ColumnFontMetrics owns
+shared measurement, physical-family checks and source-file validation. Core adds no
+product-project dependency or font-package discovery.
 
 Core standalone rich strings are flattened to ordinary cell text. Per-run size, color,
-underline and face styling remain main-only; the single-font cell-level guarantees do not
+underline and face styling remain main-only; the cell-level explicit-font guarantees do not
 extend to partial formatting. This boundary was explicitly confirmed for the comparison follow-up.
 
 ## Core performance ownership
@@ -342,7 +362,7 @@ addresses satisfying the page selection); `RenderPageBuilder` retains its generi
 independent-layout path. Core-only collection sets the internal text payload purpose;
 main requests metadata-preserving text collection only when full preflight is not
 required. Shape/link policy, diagnostics and trim remain owned by main.
-`SkiaTextMeasurer` owns outline paragraph wrapping and its bounded single-font CLOCK.
+`SkiaTextMeasurer` owns outline paragraph wrapping and its bounded physical-face-keyed CLOCK.
 `SkiaFontFace.WritePositions` writes into the native builder's borrowed position span.
 `SkiaPaintResources` owns renderer-local fill/stroke paints and the last dash effect;
 main PDF/PNG/SVG contexts now pass their drawing-scope resources to shared primitives;

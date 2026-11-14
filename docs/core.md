@@ -52,13 +52,44 @@ Pictures use their complete source image stretched into the placement rectangle.
 
 There is no format/range/page extraction/trim/continuous-image API and no PNG/SVG/Markdown renderer.
 
-## One font
+## Explicit fonts
 
-FontFilePath is required. Supply one static TrueType sfnt or select a static TrueType face in a TTC/OTC collection using FontCollectionIndex (zero-based, default 0). The selected face is normalized before measurement and drawing. Existing nonvariable color faces use the shared Skia color route. Extensions do not determine acceptance. CFF/CFF2, variable fonts, WOFF/WOFF2 and legacy true/typ1 remain unsupported for PDF. Missing files throw FileNotFoundException; unsupported/corrupt fonts throw InvalidDataException; invalid indices are argument errors. See [the current font contract](managed-truetype-subset.md).
+Specify either `FontFilePath` (the existing single-font API) or `Fonts.Files` with optional name aliases and Roman/Swiss fallback families. See [multiple-font configuration](core-fonts.md) for selection order and examples. Core does not discover drawing fonts or embed a default font itself. The CLI supplies bundled Noto Sans JP when no font is specified. With `FontFilePath`, supply one static TrueType sfnt or select a static TrueType face in a TTC/OTC collection using FontCollectionIndex (zero-based, default 0). The selected face is normalized before measurement and drawing. Existing nonvariable color faces use the shared Skia color route. Extensions do not determine acceptance. CFF/CFF2, variable fonts, WOFF/WOFF2 and legacy true/typ1 remain unsupported for PDF. Missing files throw FileNotFoundException; unsupported/corrupt fonts throw InvalidDataException; invalid indices are argument errors. See [the current font contract](managed-truetype-subset.md).
 
 Ordinary horizontal cell text with wrapping and shrink-to-fit disabled extends through consecutive empty cells, stopping at the nearest stored value, formula, or merged range. Explicit empty strings, hidden-by-format values, empty formula results, and missing/shared formula caches still occupy cells. Style-only blanks do not; hidden columns have zero width. Left/right alignment extends in its corresponding direction; center alignment clips each side independently while preserving the original center. Clips stay within the current page, explicit print area, and title/body region and do not add a source-row-height clip. Merged source cells and source special alignments/orientations retain their existing processing. The sparse occupancy index and text clipping are shared with the main renderer.
 
-The file is read once per conversion. The same snapshot supplies line metrics, text width, and PDF rendering. By default, column digit width uses that snapshot only when its physical family name matches the original workbook Normal family (case-insensitive). Otherwise Core uses the main renderer's deterministic compatibility profile and reports `MaximumDigitWidthFallback`: MS P Gothic uses the Noto Sans tabular digit advance of 0.572em rounded to twips (8.4px at 11pt), matching Calc substitution; other missing families and absent Normal metadata retain 7px/96 DPI. A drawing-font substitution therefore no longer widens saved columns simply because its digits are wider. This fallback does not guarantee Excel geometry for an unavailable original font. Every family and bold/italic face becomes the supplied regular face, without simulations. Cell-level size, color, and underline remain. Partial rich-text run formatting is unsupported: shared/inline rich strings are flattened to text and rendered with the ordinary cell font, so run-specific size, color, underline, bold and italic are not retained. There is no OS/DLL exploration, fallback, or IVS glyph selection/private-use/color-emoji handling. Variation selectors (U+FE00–U+FE0F and U+E0100–U+E01EF) are removed from cell and header/footer text before measurement and drawing: an IVS sequence renders as its base character, without an extra selector glyph or advance. The base character still needs coverage in the supplied font. Missing characters follow the font/Skia's missing-glyph behavior; complete Unicode coverage is not promised. Text wrapping can still differ with the supplied drawing font. Column widths can differ from Excel when original Normal metrics are unavailable; Core never searches the OS for them.
+Each drawing file is read once per conversion. Its snapshot supplies both text metrics and PDF rendering. Column widths use the workbook's saved Normal family, size, weight and italic style, independently of cell drawing substitutions. `ReadOptions.MaximumDigitWidthPixels96Dpi` always overrides measurement. Otherwise `ReadOptions.SourceFontFile` (with optional zero-based `SourceFontCollectionIndex`) supplies a layout-only face. Without an explicit source, Core measures the supplied drawing face when its physical family matches Normal, including localized family names; otherwise it looks up the original family through Skia's system font manager. This lookup is only for column measurements and can be disabled with `UseSystemFontsForColumnWidths = false` (`--no-system-fonts` in the Core CLI). An unrelated system substitute is never accepted as the original family.
+
+If the original font is unavailable, `ReadOptions.FallbackMaximumDigitWidthPixels96Dpi` defaults to a fixed 8px at 96 DPI, independently of the drawing font and Normal size. Set it explicitly to `null`, or pass `--column-width-fallback-metrics font`, to measure the supplied drawing font at the workbook Normal size. A numeric `--column-width-fallback-mdw` takes precedence over the fallback measurement mode. Missing Normal metadata uses the default Normal size of 11pt. No family-specific numeric fallback profiles are used. `MaximumDigitWidthFallback` identifies the substitute or numeric fallback and its measured width; this approximation can change column widths, wrapping and page counts relative to Excel. `MaximumDigitWidthResolved` identifies successful measurement or an unconditional override. Core's CLI shows resolved metrics with `--verbose`.
+
+The 8px reference is Yu Gothic 11pt in Japanese Windows Excel at 96 DPI and 100%
+display zoom. Its displayed example, column width 8.38 (72px), gives
+`(72 - 5) / 8.38 ≈ 7.995` after subtracting 5px of padding and gridline. This
+supports the fallback value; it does not make all fonts/sizes equivalent. The
+saved SpreadsheetML raw width is converted separately from this rounded UI value.
+
+Set `UseSourceFontForColumnWidths = false` (`--column-width-metrics fallback`)
+to skip original-family matching and system lookup altogether, including when
+the drawing face matches Normal. This reproduces missing-source layout on Windows:
+fixed 8px by default, an explicit numeric fallback, or opt-in substitute measurement.
+`SourceFontFile` cannot be combined with this mode; an unconditional MDW still wins.
+This is broader than `UseSystemFontsForColumnWidths = false`, which only skips OS
+lookup and still measures a matching supplied source face.
+
+```sh
+# Default: original font when available, otherwise fixed 8px.
+excelrenderer core report.xlsx --font-file NotoSansJP-Regular.ttf -o report.pdf
+# Opt into measuring the drawing substitute when the original font is unavailable.
+excelrenderer core report.xlsx --font-file NotoSansJP-Regular.ttf --column-width-fallback-metrics font -o font-metrics.pdf
+# Reproduce missing-source layout even on a host with the original font installed.
+excelrenderer core report.xlsx --font-file NotoSansJP-Regular.ttf --column-width-metrics fallback -o source-free.pdf
+# Use 7px only when the original font cannot be obtained.
+excelrenderer core report.xlsx --font-file NotoSansJP-Regular.ttf --column-width-fallback-mdw 7 -o compatible.pdf
+# Supply an original font exclusively for column measurements.
+excelrenderer core report.xlsx --font-file NotoSansJP-Regular.ttf --layout-font original.ttc --layout-font-index 0 -o measured.pdf
+```
+
+The legacy single-font API replaces every family with its supplied face. With `Fonts`, each cell selects a supplied face by family, alias, saved classification, or default. Bold/italic face selection and simulations are not added. Cell-level size, color, and underline remain. Partial rich-text run formatting is unsupported: shared/inline rich strings are flattened to text and rendered with the ordinary cell font, so run-specific size, color, underline, bold and italic are not retained. Drawing uses only supplied faces: there is no DLL/OS drawing-font discovery, per-character fallback, or IVS glyph selection/private-use/color-emoji handling. Variation selectors (U+FE00–U+FE0F and U+E0100–U+E01EF) are removed from cell and header/footer text before measurement and drawing: an IVS sequence renders as its base character, without an extra selector glyph or advance. The base character still needs coverage in the supplied font. Missing characters follow the font/Skia's missing-glyph behavior; complete Unicode coverage is not promised. Text wrapping can still differ with the supplied drawing font. Column widths can differ from Excel when original Normal metrics are unavailable; system lookup is limited to column measurements.
 
 ## Streams and lifetime
 
@@ -114,7 +145,7 @@ The existing ExcelRenderer.Tool package includes a `core` subcommand (no separat
 excelrenderer core input.xlsx -o core.pdf --font-file ./regular.ttf --sheet Sheet3 Sheet1 --verbose
 ```
 
-`--font-file` is required. `--font-collection-index` selects the zero-based face
+`--font-file` is optional: omission uses Noto Sans JP from the existing optional font pack shipped with the CLI. No new font resource or Core dependency is added. `--font-collection-index` requires `--font-file` for nonzero values and selects the zero-based face
 (default: 0). `--sheet` accepts multiple names and can be repeated. Omitting it
 selects all worksheets. The output must be a new file; failed conversions clean up
 the temporary PDF. `--verbose` writes command details, elapsed time, conversion

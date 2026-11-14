@@ -15,12 +15,10 @@ FORBIDDEN = re.compile(r"pdf[-_.]?sharp", re.I)
 # Every allowed executable occurrence is a reserved-value/rejection or prohibition check.
 ALLOWED_LINES = {
     ".github/workflows/unit-tests.yml": {
-        'run: python scripts/check-no-pdfsharp.py --packages artifacts/formulas-packages',
-        'run: python scripts/check-no-pdfsharp-mutations.py'},
+        'artifacts/pdfsharp-removal-current/**'},
     ".github/workflows/pdf-build-distribution.yml": {
-        '- run: python scripts/check-no-pdfsharp.py --packages artifacts/pdf-packages --publish artifacts/pdf-publish'},
-    ".github/workflows/verify-font-split.yml": {
-        '- run: python scripts/check-no-pdfsharp.py --packages artifacts/packages'},
+        '- run: python scripts/check-no-pdfsharp.py --packages artifacts/pdf-packages --publish artifacts/pdf-publish',
+        'run: python3 scripts/check-no-pdfsharp-mutations.py'},
     "src/ExcelRenderer/PdfBackend.cs": {
         '[Obsolete("PDFsharp has been removed. Specify SkiaSharp.")]', 'PdfSharp = 0,'},
     "src/ExcelRenderer/ExcelConverter.RenderAsync.cs": {

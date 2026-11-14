@@ -1,36 +1,14 @@
 # ExcelRenderer
 
-利用ガイド: [本体/Core比較](docs/main-core-parity.ja.md) · [診断と出力](docs/diagnostics.ja.md)
-
-> PDF 出力では通常文字を検索可能なテキストとして維持しますが、対応する漢字 IVS は format 14 で選択された字形を保持するためベクター輪郭として出力します。輪郭化された IVS 部分はテキストとして検索・コピーできません。
-
 [English](README.md) | 日本語
 
-通常版・Core版とも、数値表示形式の8種類の名前付き色（負数区分の `[Red]` など）を反映します。`[ColorN]` のパレット色は未対応です。ピボットは保存済みのワークシートセルを描画し、集計表の自動生成は行いません。印刷対象のピボット範囲に非空の保存セルがない場合は、描画前に `PivotSavedValuesMissing` で失敗します。キャッシュに更新要求がある場合は `PivotRefreshRequired` を通知するため、最新の集計には表計算ソフトで更新・保存してください。Mappingの対応済みキャッシュ更新は、表示用集計セルの更新とは別です。
-
-セル幅の互換設定：通常版の `ColumnWidthMetricsMode.LibreOfficeCompatible`、Coreの `ReadOptions.UseLibreOfficeColumnWidths` で数字幅・列幅の小数を保持できます。両CLIで `--column-width-metrics libreoffice --column-width-mdw 8.8` を指定できます。数字幅は参照環境に合わせて指定してください。8.8pxは11ptのNoto Sans Mono用で、全フォント共通の値ではありません。既定のモードはSourceFontのままです。元フォントを取得できない場合は8px固定とし、代替フォントの実測は明示指定します。[セル実寸の検証結果](docs/validation/cell-width-compatibility/README.md)を参照してください。
+クイックスタート: [インストール](#インストール) · [変換の例](#クイックスタート) · [CLI](#cli-の使い方) · [C# API](#c-api高レベル) · [リファレンス](#ドキュメント)
 
 ## 概要
 
 Excel ワークブックを読み込み、レイアウト計算を経て PDF・PostScript 文書またはページごとの PNG・SVG を生成する .NET ライブラリです。
 
-Excel を直接 PDF へ描画するのではなく、次の中間モデルを段階的に生成します。
-
-```text
-Excel (.xlsx)
-    ↓
-ReportDocument
-    ↓
-RenderDocument
-    ↓
-DrawCommand
-    ↓
-PDF / PostScript / PNG / SVG
-```
-
-読み込み、レイアウト計算、描画命令生成、出力を分離することで、処理内容を理解しやすくし、将来的な機能追加や出力先の追加を行いやすい構成にしています。
-
-ライブラリに加えて、PDF・PostScript・PNG・SVGへ変換するコマンドラインツールを提供します。
+C# API またはコマンドラインから、既存の帳票を変換できます。Excel テンプレートに C# オブジェクトや JSON のデータを設定し、XLSX の保存や PDF・画像への変換にも利用できます。
 
 ### 主な機能
 
@@ -708,6 +686,8 @@ AST 参照書換え・再計算を行います。`=` で始まる入力値は文
 
 ## フォント
 
+> PDF 出力では通常文字を検索可能なテキストとして維持しますが、対応する漢字 IVS は format 14 で選択された字形を保持するためベクター輪郭として出力します。輪郭化された IVS 部分はテキストとして検索・コピーできません。
+
 PDF と PNG の変換では、任意の `ExcelRenderer.Fonts` パッケージが導入されていれば、
 埋め込まれた Noto Sans JP Regular TTF、IVS 用の IPAmj 明朝、および Noto Color Emoji を使用できます。単体の絵文字と VS16 付き絵文字はカラーで描画し、PDF と SVG には画像として埋め込みます。ZWJ などの複合絵文字には別途シェーピングが必要です。未導入
 の場合は登録済みまたは OS のフォントを解決します。外部フォントは `FontOptions` の
@@ -760,6 +740,22 @@ Excel (.xlsx) → ReportDocument → RenderDocument → DrawCommand → PDF / Po
 ```
 
 レイアウト Pass、描画コマンド、レンダラー、拡張方法、ソースコード構成の詳細は [アーキテクチャ](docs/architecture.ja.md)を参照してください。
+
+## 互換性と描画上の注意点
+
+### 数値表示形式の色
+
+通常版・Core版とも、数値表示形式の8種類の名前付き色（負数区分の `[Red]` など）を反映します。`[ColorN]` のパレット色は未対応です。
+
+### ピボットテーブルの保存結果
+
+ピボットは保存済みのワークシートセルを描画し、集計表の自動生成は行いません。印刷対象のピボット範囲に非空の保存セルがない場合は、描画前に `PivotSavedValuesMissing` で失敗します。キャッシュに更新要求がある場合は `PivotRefreshRequired` を通知するため、最新の集計には表計算ソフトで更新・保存してください。Mappingの対応済みキャッシュ更新は、表示用集計セルの更新とは別です。
+
+### セル幅の互換設定
+
+通常版の `ColumnWidthMetricsMode.LibreOfficeCompatible`、Coreの `ReadOptions.UseLibreOfficeColumnWidths` で数字幅・列幅の小数を保持できます。両CLIで `--column-width-metrics libreoffice --column-width-mdw 8.8` を指定できます。数字幅は参照環境に合わせて指定してください。8.8pxは11ptのNoto Sans Mono用で、全フォント共通の値ではありません。既定のモードはSourceFontのままです。元フォントを取得できない場合は8px固定とし、代替フォントの実測は明示指定します。[セル実寸の検証結果](docs/validation/cell-width-compatibility/README.md)を参照してください。
+
+利用ガイド: [本体/Core比較](docs/main-core-parity.ja.md) · [診断と出力](docs/diagnostics.ja.md)
 
 ## 制約
 

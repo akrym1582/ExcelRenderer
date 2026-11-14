@@ -1,6 +1,15 @@
 name: Verify PDF build and distribution
 on:
   workflow_call:
+    inputs:
+      platforms:
+        description: Operating systems to validate
+        type: string
+        default: '["ubuntu-22.04", "windows-latest"]'
+      skip-duplicate-tests:
+        description: PR callers already run Core and main Linux tests in dedicated jobs
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
@@ -8,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, windows-latest]
+        os: ${{ fromJSON(inputs.platforms) }}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -17,13 +26,21 @@ jobs:
           dotnet-version: 10.0.x
       - run: dotnet restore ExcelRenderer.slnx --locked-mode
       - run: dotnet build ExcelRenderer.slnx -c Release -t:Rebuild --no-restore --verbosity:minimal -m:1
-      - run: dotnet test tests/ExcelRenderer.Core.Tests -c Release --no-build --no-restore
-      - run: dotnet test tests/ExcelRenderer.Tests -c Release --no-build --no-restore --filter "FullyQualifiedName~FontCollectionTests|FullyQualifiedName~PdfBackendTests|FullyQualifiedName~PdfRemovalContractTests|FullyQualifiedName~GlyphAdvanceTests|FullyQualifiedName~RichTextTests|FullyQualifiedName~FontManager_|FullyQualifiedName~ImageReviewTests"
+      - if: ${{ !inputs.skip-duplicate-tests }}
+        run: dotnet test tests/ExcelRenderer.Core.Tests -c Release --no-build --no-restore
+      - if: ${{ !inputs.skip-duplicate-tests || runner.os == 'Windows' }}
+        run: dotnet test tests/ExcelRenderer.Tests -c Release --no-build --no-restore --filter "FullyQualifiedName~FontCollectionTests|FullyQualifiedName~PdfBackendTests|FullyQualifiedName~PdfRemovalContractTests|FullyQualifiedName~GlyphAdvanceTests|FullyQualifiedName~RichTextTests|FullyQualifiedName~FontManager_|FullyQualifiedName~ImageReviewTests"
       - run: dotnet test tests/ExcelRenderer.Tool.Tests -c Release --no-build --no-restore
       - uses: actions/setup-python@v5
         if: runner.os == 'Linux'
         with:
           python-version: '3.12'
+      # Independent validation consumes these PDFs even when the broad suite is skipped.
+      - name: Generate color-font fixtures for independent validation
+        if: ${{ inputs.skip-duplicate-tests && runner.os == 'Linux' }}
+        run: >-
+          dotnet test tests/ExcelRenderer.Tests -c Release --no-build --no-restore
+          --filter "FullyQualifiedName~PdfBackendTests.Reachable_font_formats_keep_glyphs_and_subset_or_native_color_drawing|FullyQualifiedName~FontCollectionTests.Custom_resolver_keeps_the_nonzero_memory_index_and_uses_color_without_subsetting"
       - name: Independently validate managed fonts and full/subset PDF pairs
         if: runner.os == 'Linux'
         shell: bash
@@ -40,7 +57,14 @@ jobs:
       - run: python scripts/check-no-pdfsharp.py --packages artifacts/pdf-packages --publish artifacts/pdf-publish
       - run: python scripts/package_distribution.py --packages artifacts/pdf-packages --output artifacts/pdf-inventory.json
       - run: python scripts/validate-formulas-packages.py --packages artifacts/pdf-packages --work "${{ runner.temp }}/pdf-consumers"
+      - name: Verify optional fonts and installed CLI
+        if: runner.os == 'Linux'
+        run: python3 scripts/validate-font-packages.py --packages artifacts/pdf-packages --work "${{ runner.temp }}/font-package-consumers"
+      - name: Verify dependency audit rejects deliberate contamination
+        if: runner.os == 'Linux'
+        run: python3 scripts/check-no-pdfsharp-mutations.py
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: release-pdf-distribution-${{ runner.os }}
           path: |

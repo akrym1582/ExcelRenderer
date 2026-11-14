@@ -334,12 +334,19 @@ All rendering commands accept multiple worksheet names: `--sheet Sheet3 Sheet1` 
 `--sheet Sheet3 --sheet Sheet1`. Output follows the requested order; duplicates are
 removed. Omitting `--sheet` exports all worksheets in workbook order.
 
-Use `--verbose` on any subcommand (including `xlsx`) to write the command arguments,
-elapsed time, available conversion metrics and full exception details to standard error.
-`render --verbose` also includes informational diagnostics. Normal logging stays concise.
+Every subcommand (including `xlsx`) writes command arguments, elapsed time and
+available conversion metrics to standard output. Rendering commands also print all
+collected diagnostics, including informational entries. Failures print full exception
+details to standard error. No verbosity option is required.
+`Metric managedAllocatedBytes` reports cumulative managed allocations in bytes across
+all process threads during the command, including allocations already collected by GC.
+It excludes native allocations (such as Skia buffers) and is not peak or retained memory.
+See [CLI metric aggregation](docs/cli-metrics.md) for totals, peaks and snapshots.
+Rendering also prints representative per-page metrics and per-sheet summaries,
+including rendering time, managed allocation bytes and logical command counts.
 
 ```bash
-excelrenderer core input.xlsx -o core.pdf --font-file ./NotoSansJP-Regular.ttf --sheet Sheet3 Sheet1 --verbose
+excelrenderer core input.xlsx -o core.pdf --font-file ./NotoSansJP-Regular.ttf --sheet Sheet3 Sheet1
 excelrenderer pdf input.xlsx -o selected.pdf --sheet Sheet3 --sheet Sheet1
 ```
 

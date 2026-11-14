@@ -63,7 +63,11 @@ for case in dict.fromkeys(entry['case'] for entry in diagnostics):
     assert before.get('pdfFontRunsCollected', 0) == after.get('pdfFontRunsCollected', 0), case
     assert before['coreCommandBuild'] == 2*new['Pages'], case
     assert after['coreCommandBuild'] == new['Pages'], case
-    assert after['pagePayloadActive'] == 1, case
+    # Historical reports stored the peak under pagePayloadActive. New reports separate current and peak.
+    maximum_payload = after.get('pagePayloadMax', after['pagePayloadActive'])
+    assert maximum_payload == 1, case
+    if 'pagePayloadMax' in after:
+        assert after['pagePayloadActive'] == 0, case
     assert after.get('layoutCacheEntries', 0) <= 512, case
     assert after.get('layoutCacheRetainedUnits', 0) <= 131072, case
     assert after.get('pageCellIndexBuild', 0) == after.get('pageCellDeduplicateSort', 0) == 0, case
@@ -71,7 +75,7 @@ for case in dict.fromkeys(entry['case'] for entry in diagnostics):
     for name in ['paint', 'pathEffect', 'typeface', 'pdfFont', 'pdfSubsetTypeface']:
         assert after.get(name+'Created', 0) == after.get(name+'Disposed', 0), (case, name)
     proof.append({'case': case, 'font_runs_collected_equal': True, 'full_command_builds_before': before['coreCommandBuild'],
-                  'full_command_builds_after': after['coreCommandBuild'], 'maximum_active_payload': after['pagePayloadActive'],
+                  'full_command_builds_after': after['coreCommandBuild'], 'maximum_active_payload': maximum_payload,
                   'border_candidates_before': before.get('borderCandidates', 0), 'border_candidates_after': after.get('borderCandidates', 0),
                   'paint_created': after.get('paintCreated', 0), 'native_counts_balanced': True,
                   'cache_entries_max': after.get('layoutCacheEntries', 0), 'cache_retained_units_max': after.get('layoutCacheRetainedUnits', 0),

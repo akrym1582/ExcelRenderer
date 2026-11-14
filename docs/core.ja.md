@@ -55,7 +55,7 @@ Core自体は描画用フォントの自動検索やフォントの内蔵を行�
 
 描画フォントbytesは変換ごとに一度読み、同じsnapshotで文字幅とPDF描画を処理します。列幅は元ブックのNormalのファミリー・サイズ・太字・斜体を基準に、描画用の代替フォントと分けて計測します。`ReadOptions.MaximumDigitWidthPixels96Dpi`は常に優先します。次に`ReadOptions.SourceFontFile`と任意の`SourceFontCollectionIndex`で指定した列幅計算専用のフォントを使います。指定がなければ、描画フォントの物理ファミリー名（ローカライズ名を含む）がNormalと一致する場合はそのsnapshotを実測し、不一致ならSkiaのシステムフォント検索で元ファミリーを取得します。列幅計測だけの検索で、`UseSystemFontsForColumnWidths = false`（Core CLIでは`--no-system-fonts`）で無効化できます。別ファミリーのシステム代替フォントは元フォントとして扱いません。
 
-元フォントを取得できない場合の`ReadOptions.FallbackMaximumDigitWidthPixels96Dpi`の既定値は、96 DPIで8px固定です。描画用フォントやNormalサイズには比例させません。同プロパティを明示的に`null`にするか、CLIで`--column-width-fallback-metrics font`を指定すると、描画用の代替フォントをNormalのサイズで実測します。`--column-width-fallback-mdw`の数値指定があればそちらを優先します。Normal情報がない場合の基準サイズは11ptです。ファミリー別の固定MDWは使用しません。`MaximumDigitWidthFallback`に代替フォントまたは指定値・使用したMDWを記録します。Excelに対して列幅・折返し・ページ数が変わることがあります。取得できた元フォントの実測や常時優先する幅指定は`MaximumDigitWidthResolved`へ記録し、Core CLIでは`--verbose`で表示します。
+元フォントを取得できない場合の`ReadOptions.FallbackMaximumDigitWidthPixels96Dpi`の既定値は、96 DPIで8px固定です。描画用フォントやNormalサイズには比例させません。同プロパティを明示的に`null`にするか、CLIで`--column-width-fallback-metrics font`を指定すると、描画用の代替フォントをNormalのサイズで実測します。`--column-width-fallback-mdw`の数値指定があればそちらを優先します。Normal情報がない場合の基準サイズは11ptです。ファミリー別の固定MDWは使用しません。`MaximumDigitWidthFallback`に代替フォントまたは指定値・使用したMDWを記録します。Excelに対して列幅・折返し・ページ数が変わることがあります。取得できた元フォントの実測や常時優先する幅指定は`MaximumDigitWidthResolved`へ記録し、Core CLIでは標準出力へ常に表示します。
 
 8pxの基準は、日本語版Windows Excelの游ゴシック11pt・96 DPI・表示倍率100%での半角数字の最大幅（MDW）です。
 表示例「列幅8.38（72px）」から余白・罫線の5pxを引くと、`(72 − 5) ÷ 8.38 ≈ 7.995`となり、8pxと整合します。
@@ -160,13 +160,13 @@ Coreが参照する自作プロジェクトは `ExcelRenderer.OpenXml.Reader` �
 既存の ExcelRenderer.Tool パッケージに含まれるサブコマンドです。
 
 ```bash
-excelrenderer core input.xlsx -o core.pdf --font-file ./regular.ttf --sheet Sheet3 Sheet1 --verbose
+excelrenderer core input.xlsx -o core.pdf --font-file ./regular.ttf --sheet Sheet3 Sheet1
 ```
 
 `--font-file` は省略可能（省略時は同梱 Noto Sans JP）です。コレクション内の face は `--font-collection-index`（0始まり、既定0）
 で指定できます。`--sheet` は複数名と繰り返し指定に対応し、省略すると全シートを選択します。
-出力先は新規ファイルに限り、失敗時は一時 PDF を削除します。`--verbose` は実行引数、
-所要時間、変換メトリクス、例外詳細を標準エラーに出力します。Core の診断は常に表示します。
+出力先は新規ファイルに限り、失敗時は一時 PDF を削除します。実行引数、所要時間、
+変換メトリクスとすべての診断は標準出力へ常に表示し、例外詳細は標準エラーへ出力します。
 `--data data.json` で先に本体の Mapping を実行することもできます。
 Core の変換自体は保存済み値を読み取り、数式を再計算しません。
 

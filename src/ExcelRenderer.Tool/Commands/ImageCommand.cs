@@ -1,5 +1,6 @@
 using System.CommandLine;
 using ExcelRenderer;
+using ExcelRenderer.Rendering;
 
 namespace ExcelRenderer.Tool.Commands;
 
@@ -15,7 +16,6 @@ public static class ImageCommand
     public static Command Create()
     {
         var input = CommandSupport.InputArgument();
-        var verbose = CommandSupport.VerboseOption();
         var data = MappingCommandSupport.DataOption();
         var formulaMode = CommandSupport.FormulaModeOption();
         var output = CommandSupport.OutputOption("Directory for generated PNG files.");
@@ -33,15 +33,14 @@ public static class ImageCommand
         command.Add(data);
         command.Add(formulaMode);
         CommandSupport.AddFontOptions(command, fonts);
-        command.Add(verbose);
         command.SetAction((parseResult, cancellationToken) => CommandSupport.RunAsync(parseResult, () => MappingCommandSupport.WithInputAsync(
             parseResult.GetValue(input)!,
             parseResult.GetValue(data),
             parseResult.GetValue(output)!,
-            mappedInput => ExcelConverter.ConvertToImagesAsync(
+            mappedInput => CommandSupport.RenderFileAsync(
                 mappedInput,
                 parseResult.GetValue(output)!,
-                new ImageExportOptions { SheetNames = CommandSupport.GetSheetNames(parseResult.GetValue(sheet)), Dpi = parseResult.GetValue(dpi), ReadOptions = CommandSupport.GetReadOptions(parseResult.GetValue(formulaMode)!, parseResult, fonts), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
+                new RenderRequest { OutputFormat = OutputFormat.Png, Selection = new SelectionOptions { SheetNames = CommandSupport.GetSheetNames(parseResult.GetValue(sheet)) }, Dpi = parseResult.GetValue(dpi), ReadOptions = CommandSupport.GetReadOptions(parseResult.GetValue(formulaMode)!, parseResult, fonts), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
                 cancellationToken),
             cancellationToken,
             CommandSupport.GetMappingOptions(parseResult.GetValue(formulaMode)!))));

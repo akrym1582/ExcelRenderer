@@ -139,7 +139,18 @@ public sealed class CoreIntegrationTests
         foreach (var core in new[] { true, false })
         {
             var metrics = new Dictionary<string, double>();
-            Core.Rendering.ConversionMetrics.Observer = (name, value) => metrics[name] = Math.Max(metrics.GetValueOrDefault(name), value);
+            var active = 0d;
+            var peak = 0d;
+            Core.Rendering.ConversionMetrics.Observer = (name, value) =>
+            {
+                metrics[name] = Math.Max(metrics.GetValueOrDefault(name), value);
+                if (name == "pagePayloadActive")
+                {
+                    Assert.True(value is 1 or -1);
+                    active += value;
+                    peak = Math.Max(peak, active);
+                }
+            };
             try
             {
                 if (core) await ConvertCore(Workbook());
@@ -149,7 +160,8 @@ public sealed class CoreIntegrationTests
                 Assert.Equal(1, metrics["coreCommandBuild"]);
                 Assert.Equal(1, metrics["coreBorderGeometry"]);
                 Assert.Equal(1, metrics["pdfSave"]);
-                Assert.True(metrics.GetValueOrDefault("pagePayloadMax", metrics.GetValueOrDefault("pagePayloadActive")) <= 1);
+                Assert.Equal(0, active);
+                Assert.Equal(1, peak);
             }
             finally
             {

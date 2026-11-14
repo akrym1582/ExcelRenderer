@@ -74,6 +74,35 @@
           "Microsoft.TestPlatform.ObjectModel": "18.8.1"
         }
       },
+      "SkiaSharp": {
+        "type": "Transitive",
+        "resolved": "4.151.0",
+        "contentHash": "2gObGpRfF0R/1AZiR3YlOjVnlQIOQHAbwFe/fVMfDTnge4yIzEA7rECCbEuEgfGnbThk17pWp+HLhGtETRWOBQ==",
+        "dependencies": {
+          "SkiaSharp.NativeAssets.Win32": "4.151.0",
+          "SkiaSharp.NativeAssets.macOS": "4.151.0"
+        }
+      },
+      "SkiaSharp.NativeAssets.Linux": {
+        "type": "Transitive",
+        "resolved": "4.151.0",
+        "contentHash": "q4UgnZB9LGk4a9UqtZQ2d27jFm+nnS/yiy4m/C3R32glihjr8wapLkX8ZHKVXkb/c9Qr+jyxhGQvrAJ7nQCwaQ=="
+      },
+      "SkiaSharp.NativeAssets.macOS": {
+        "type": "Transitive",
+        "resolved": "4.151.0",
+        "contentHash": "6MgPBabP9nr8RBleN+UJx8fP8OXjpsqvCzCtmIMlWRtKdk+8f2Ph4Jz6DcclBL0/zie7HPkStb63wDguzG98HA=="
+      },
+      "SkiaSharp.NativeAssets.Win32": {
+        "type": "Transitive",
+        "resolved": "4.151.0",
+        "contentHash": "YmpiHa/k+Cvfsr9yaKMdcv+nzYkqDLGxmESzqvMqNuhbIosMt+JnxqlZ/7YZuBnPVXWvrIIFIk626Gof87RzvQ=="
+      },
+      "System.CommandLine": {
+        "type": "Transitive",
+        "resolved": "2.0.11",
+        "contentHash": "Pmg3/T0M37ZS3ovwPHtfBNTCdqNpnxo+tnZMg8JDHVR0qD8KwcPUKlheEiZysb1En8IyH7yDoa9QDq97Ny/vhQ=="
+      },
       "System.IO.Packaging": {
         "type": "Transitive",
         "resolved": "8.0.1",
@@ -119,6 +148,25 @@
           "xunit.extensibility.core": "[2.9.3]"
         }
       },
+      "excelrenderer": {
+        "type": "Project",
+        "dependencies": {
+          "DocumentFormat.OpenXml": "[3.3.0, )",
+          "ExcelNumberFormat": "[1.1.0, )",
+          "SkiaSharp": "[4.151.0, )"
+        }
+      },
+      "excelrenderer.core": {
+        "type": "Project",
+        "dependencies": {
+          "DocumentFormat.OpenXml": "[3.3.0, )",
+          "ExcelRenderer.OpenXml.Reader": "[1.8.0, )",
+          "SkiaSharp": "[4.151.0, )"
+        }
+      },
+      "excelrenderer.fonts": {
+        "type": "Project"
+      },
       "excelrenderer.formulas": {
         "type": "Project"
       },
@@ -142,6 +190,18 @@
         "dependencies": {
           "DocumentFormat.OpenXml": "[3.3.0, )",
           "ExcelNumberFormat": "[1.1.0, )"
+        }
+      },
+      "excelrenderer.tool": {
+        "type": "Project",
+        "dependencies": {
+          "ExcelRenderer": "[1.10.5, )",
+          "ExcelRenderer.Core": "[1.0.0, )",
+          "ExcelRenderer.Fonts": "[1.10.5, )",
+          "ExcelRenderer.Mapping": "[1.10.5, )",
+          "ExcelRenderer.OpenXml": "[1.8.0, )",
+          "SkiaSharp.NativeAssets.Linux": "[4.151.0, )",
+          "System.CommandLine": "[2.0.11, )"
         }
       }
     }

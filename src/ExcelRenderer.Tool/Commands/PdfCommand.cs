@@ -1,5 +1,6 @@
 using System.CommandLine;
 using ExcelRenderer;
+using ExcelRenderer.Rendering;
 
 namespace ExcelRenderer.Tool.Commands;
 
@@ -15,7 +16,6 @@ public static class PdfCommand
     public static Command Create()
     {
         var input = CommandSupport.InputArgument();
-        var verbose = CommandSupport.VerboseOption();
         var data = MappingCommandSupport.DataOption();
         var formulaMode = CommandSupport.FormulaModeOption();
         var output = CommandSupport.OutputOption("Path to the output PDF file.");
@@ -29,15 +29,14 @@ public static class PdfCommand
         command.Add(data);
         command.Add(formulaMode);
         CommandSupport.AddFontOptions(command, fonts);
-        command.Add(verbose);
         command.SetAction((parseResult, cancellationToken) => CommandSupport.RunAsync(parseResult, () => MappingCommandSupport.WithInputAsync(
             parseResult.GetValue(input)!,
             parseResult.GetValue(data),
             parseResult.GetValue(output)!,
-            mappedInput => ExcelConverter.ConvertToPdfAsync(
+            mappedInput => CommandSupport.RenderFileAsync(
                 mappedInput,
                 parseResult.GetValue(output)!,
-                new PdfExportOptions { PdfBackend = CommandSupport.GetPdfBackend(parseResult.GetValue(backend)!), Hyperlinks = CommandSupport.GetHyperlinks(parseResult.GetValue(hyperlinks)!), SheetNames = CommandSupport.GetSheetNames(parseResult.GetValue(sheet)), ReadOptions = CommandSupport.GetReadOptions(parseResult.GetValue(formulaMode)!, parseResult, fonts), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
+                new RenderRequest { OutputFormat = OutputFormat.Pdf, PdfBackend = CommandSupport.GetPdfBackend(parseResult.GetValue(backend)!), Hyperlinks = CommandSupport.GetHyperlinks(parseResult.GetValue(hyperlinks)!), Selection = new SelectionOptions { SheetNames = CommandSupport.GetSheetNames(parseResult.GetValue(sheet)) }, ReadOptions = CommandSupport.GetReadOptions(parseResult.GetValue(formulaMode)!, parseResult, fonts), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
                 cancellationToken),
             cancellationToken,
             CommandSupport.GetMappingOptions(parseResult.GetValue(formulaMode)!))));

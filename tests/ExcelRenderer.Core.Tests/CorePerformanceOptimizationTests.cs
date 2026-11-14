@@ -243,15 +243,21 @@ public sealed class CorePerformanceOptimizationTests
         using var output = new MemoryStream();
         var metrics = new Dictionary<string, double>();
         var maximumPayload = 0d;
+        var activePayload = 0d;
         ConversionMetrics.Observer = (name, value) =>
         {
             metrics[name] = metrics.GetValueOrDefault(name) + value;
-            if (name == "pagePayloadActive") maximumPayload = Math.Max(maximumPayload, value);
+            if (name == "pagePayloadActive")
+            {
+                activePayload += value;
+                maximumPayload = Math.Max(maximumPayload, activePayload);
+            }
         };
         try
         {
             var result = await ExcelConverter.ConvertAsync(workbook, output, TestSupport.Options);
             Assert.Equal(1, maximumPayload);
+            Assert.Equal(0, activePayload);
             Assert.Equal(result.PageCount, metrics["coreCommandBuild"]);
             Assert.Equal(result.PageCount, metrics["coreTextPageBuild"]);
             Assert.False(metrics.ContainsKey("pageCellIndexBuild"));

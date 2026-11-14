@@ -60,7 +60,7 @@ Ordinary horizontal cell text with wrapping and shrink-to-fit disabled extends t
 
 Each drawing file is read once per conversion. Its snapshot supplies both text metrics and PDF rendering. Column widths use the workbook's saved Normal family, size, weight and italic style, independently of cell drawing substitutions. `ReadOptions.MaximumDigitWidthPixels96Dpi` always overrides measurement. Otherwise `ReadOptions.SourceFontFile` (with optional zero-based `SourceFontCollectionIndex`) supplies a layout-only face. Without an explicit source, Core measures the supplied drawing face when its physical family matches Normal, including localized family names; otherwise it looks up the original family through Skia's system font manager. This lookup is only for column measurements and can be disabled with `UseSystemFontsForColumnWidths = false` (`--no-system-fonts` in the Core CLI). An unrelated system substitute is never accepted as the original family.
 
-If the original font is unavailable, `ReadOptions.FallbackMaximumDigitWidthPixels96Dpi` defaults to a fixed 8px at 96 DPI, independently of the drawing font and Normal size. Set it explicitly to `null`, or pass `--column-width-fallback-metrics font`, to measure the supplied drawing font at the workbook Normal size. A numeric `--column-width-fallback-mdw` takes precedence over the fallback measurement mode. Missing Normal metadata uses the default Normal size of 11pt. No family-specific numeric fallback profiles are used. `MaximumDigitWidthFallback` identifies the substitute or numeric fallback and its measured width; this approximation can change column widths, wrapping and page counts relative to Excel. `MaximumDigitWidthResolved` identifies successful measurement or an unconditional override. Core's CLI shows resolved metrics with `--verbose`.
+If the original font is unavailable, `ReadOptions.FallbackMaximumDigitWidthPixels96Dpi` defaults to a fixed 8px at 96 DPI, independently of the drawing font and Normal size. Set it explicitly to `null`, or pass `--column-width-fallback-metrics font`, to measure the supplied drawing font at the workbook Normal size. A numeric `--column-width-fallback-mdw` takes precedence over the fallback measurement mode. Missing Normal metadata uses the default Normal size of 11pt. No family-specific numeric fallback profiles are used. `MaximumDigitWidthFallback` identifies the substitute or numeric fallback and its measured width; this approximation can change column widths, wrapping and page counts relative to Excel. `MaximumDigitWidthResolved` identifies successful measurement or an unconditional override. Core's CLI always shows resolved metrics on standard output.
 
 The 8px reference is Yu Gothic 11pt in Japanese Windows Excel at 96 DPI and 100%
 display zoom. Its displayed example, column width 8.38 (72px), gives
@@ -142,14 +142,14 @@ Core renders ordinary saved styles and never evaluates conditional formatting. T
 The existing ExcelRenderer.Tool package includes a `core` subcommand (no separate Core tool package):
 
 ```bash
-excelrenderer core input.xlsx -o core.pdf --font-file ./regular.ttf --sheet Sheet3 Sheet1 --verbose
+excelrenderer core input.xlsx -o core.pdf --font-file ./regular.ttf --sheet Sheet3 Sheet1
 ```
 
 `--font-file` is optional: omission uses Noto Sans JP from the existing optional font pack shipped with the CLI. No new font resource or Core dependency is added. `--font-collection-index` requires `--font-file` for nonzero values and selects the zero-based face
 (default: 0). `--sheet` accepts multiple names and can be repeated. Omitting it
 selects all worksheets. The output must be a new file; failed conversions clean up
-the temporary PDF. `--verbose` writes command details, elapsed time, conversion
-metrics and full exceptions to standard error. Core diagnostics are always reported.
+the temporary PDF. Command details, elapsed time, conversion metrics and all Core
+diagnostics are always written to standard output. Full exceptions go to standard error.
 Optional `--data data.json` maps the template first using the main Mapping package;
 the Core conversion itself still reads saved values and does not recalculate formulas.
 

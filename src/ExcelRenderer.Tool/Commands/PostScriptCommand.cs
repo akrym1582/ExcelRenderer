@@ -1,5 +1,6 @@
 using System.CommandLine;
 using ExcelRenderer;
+using ExcelRenderer.Rendering;
 
 namespace ExcelRenderer.Tool.Commands;
 
@@ -15,7 +16,6 @@ public static class PostScriptCommand
     public static Command Create()
     {
         var input = CommandSupport.InputArgument();
-        var verbose = CommandSupport.VerboseOption();
         var data = MappingCommandSupport.DataOption();
         var formulaMode = CommandSupport.FormulaModeOption();
         var output = CommandSupport.OutputOption("Path to the output PostScript file.");
@@ -27,15 +27,14 @@ public static class PostScriptCommand
         command.Add(formulaMode);
         CommandSupport.AddFontOptions(command, fonts);
         buffering.AddTo(command);
-        command.Add(verbose);
         command.SetAction((parseResult, cancellationToken) => CommandSupport.RunAsync(parseResult, () => MappingCommandSupport.WithInputAsync(
             parseResult.GetValue(input)!,
             parseResult.GetValue(data),
             parseResult.GetValue(output)!,
-            mappedInput => ExcelConverter.ConvertToPostScriptAsync(
+            mappedInput => CommandSupport.RenderFileAsync(
                 mappedInput,
                 parseResult.GetValue(output)!,
-                new PostScriptExportOptions { Buffering = buffering.Get(parseResult), SheetNames = CommandSupport.GetSheetNames(parseResult.GetValue(sheet)), ReadOptions = CommandSupport.GetReadOptions(parseResult.GetValue(formulaMode)!, parseResult, fonts), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
+                new RenderRequest { OutputFormat = OutputFormat.PostScript, Buffering = buffering.Get(parseResult), Selection = new SelectionOptions { SheetNames = CommandSupport.GetSheetNames(parseResult.GetValue(sheet)) }, ReadOptions = CommandSupport.GetReadOptions(parseResult.GetValue(formulaMode)!, parseResult, fonts), FontOptions = CommandSupport.GetFontOptions(parseResult, fonts) },
                 cancellationToken),
             cancellationToken,
             CommandSupport.GetMappingOptions(parseResult.GetValue(formulaMode)!))));

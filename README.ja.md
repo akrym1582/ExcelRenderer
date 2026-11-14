@@ -317,12 +317,16 @@ BMP 私用領域 (U+E000–U+F8FF) は要求フォント、指定ファイル（
 `--sheet Sheet3 --sheet Sheet1` と複数シートを指定できます。指定順に出力し、
 重複を除きます。省略時はブック順に全シートを出力します。
 
-各サブコマンド（`xlsx` を含む）の `--verbose` は、実行引数、所要時間、
-取得できる変換メトリクス、例外のスタックトレースを標準エラーへ出力します。
-`render --verbose` では情報レベルの診断も表示します。
+各サブコマンド（`xlsx` を含む）は、実行引数、所要時間、取得できる変換メトリクスを
+標準出力へ常に表示します。描画コマンドは情報レベルを含む収集済みの診断をすべて表示します。
+失敗時の例外詳細と引数エラーは標準エラーへ出力します。詳細表示用のオプションは不要です。
+`Metric managedAllocatedBytes` はコマンド実行中の全スレッドのマネージド割り当て総量（バイト）です。
+GCで回収済みの割り当ても含みます。Skia等のネイティブ割り当ては含まず、ピーク使用量や生存メモリ量とは異なります。
+累計・最大値・最終値の区別は[CLIメトリックの集計仕様](docs/cli-metrics.md)を参照してください。
+レンダリング時はページ別・シート別に、描画処理時間、マネージド割り当て量、描画コマンド数などの代表値も表示します。
 
 ```bash
-excelrenderer core input.xlsx -o core.pdf --font-file ./NotoSansJP-Regular.ttf --sheet Sheet3 Sheet1 --verbose
+excelrenderer core input.xlsx -o core.pdf --font-file ./NotoSansJP-Regular.ttf --sheet Sheet3 Sheet1
 ```
 
 `core` サブコマンドは、`--font-file` を省略すると同梱の Noto Sans JP を使います。
@@ -393,7 +397,7 @@ var request = new RenderRequest
 
 PDF出力では画素の完全なデコードを確認し、破損・途中までしか復元できない画像をスキップして、
 `ImageDecodeFailed` の警告を報告します。診断にはシート名、元ページ番号、画像の位置・寸法、
-バイト数、先頭最大16バイト、失敗理由が含まれます。`render` コマンドは警告を標準エラーに表示し、
+バイト数、先頭最大16バイト、失敗理由が含まれます。`render` コマンドは警告を標準出力に表示し、
 `--manifest report.json` で詳細をJSONに保存できます。厳格モード、またはこの警告コードを
 エラー扱いにした場合は変換を中止します。低レベルの `PdfRenderer` では
 `DiagnosticHandler` で警告を受け取れます。`System.Diagnostics.Trace` のリスナーにも出力します。

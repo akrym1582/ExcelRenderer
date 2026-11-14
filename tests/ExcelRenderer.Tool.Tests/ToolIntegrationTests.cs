@@ -276,16 +276,16 @@ public sealed partial class ToolIntegrationTests : IDisposable
     }
 
     /// <summary>
-    /// 存在しないシート名を指定した場合、スタックトレースを出さずエラー終了することを検証します。
+    /// 存在しないシート名を指定した場合、スタックトレースを表示してエラー終了することを検証します。
     /// </summary>
     /// <returns>非同期の検証処理を表すタスク。</returns>
-    [Fact(DisplayName = "存在しないシート名を指定した場合、スタックトレースを出さずエラー終了する")]
-    public async Task Unknown_sheet_fails_without_a_stack_trace()
+    [Fact(DisplayName = "存在しないシート名を指定した場合、スタックトレースを表示してエラー終了する")]
+    public async Task Unknown_sheet_reports_a_full_exception()
     {
         var result = await RunAsync("image", Input, "-o", Path.Combine(_directory, "images"), "--sheet", "UnknownSheet");
         Assert.Equal(1, result.ExitCode);
         Assert.Contains("Worksheet was not found", result.Error);
-        Assert.DoesNotContain(" at ", result.Error);
+        Assert.Contains(" at ", result.Error);
     }
 
     /// <summary>render コマンドに範囲・トリミング・リンク設定を指定して事前検証を行い、PDF が生成されることを検証します。</summary>

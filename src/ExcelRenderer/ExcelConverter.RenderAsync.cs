@@ -323,7 +323,6 @@ public static partial class ExcelConverter
         var commands = generated.Select(CoreIntegration.CoreCommandAdapter.CreatePublicProjection()).ToArray();
         ConversionMetrics.Report(built.Purpose == Core.Layout.PageBuildPurpose.Preflight ? "mainTextPreflightBuilds" : "mainFullPageBuilds", 1);
         ConversionMetrics.Report("renderCells", built.Cells.Count);
-        ConversionMetrics.Report("commands", commands.Length);
         return new(commands, (built.ExtensionData as CoreIntegration.FullPageData)?.Regions ?? []);
     }
 
@@ -388,11 +387,12 @@ public static partial class ExcelConverter
     private static void RenderPagePayload(SheetPage page, FontManager fonts, CancellationToken token, Action<IEnumerable<DrawCommand>> render)
     {
         token.ThrowIfCancellationRequested();
+        using var pageMetrics = Core.Rendering.ConversionMetrics.BeginPage(page.Sheet.Name, page.Descriptor.SourcePageNumber, page.Descriptor.OutputPageNumber);
         ConversionMetrics.Report("pagePayloadActive", 1);
         try
         {
             var payload = ConversionMetrics.Measure("pageBuild", () => BuildPage(page, fonts, token));
-            var finalized = FinalizeCommands(payload.Commands, fonts, token);
+            var finalized = Core.Rendering.ConversionMetrics.CountRenderedCommands(FinalizeCommands(payload.Commands, fonts, token));
             var commands = page.Descriptor.CropBounds is not null
                 ? ApplyViewport(finalized, page.Viewport!, page.Descriptor.SourcePageNumber)
                 : finalized;

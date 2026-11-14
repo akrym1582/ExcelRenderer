@@ -35,6 +35,12 @@ jobs:
         if: runner.os == 'Linux'
         with:
           python-version: '3.12'
+      # Independent validation consumes these PDFs even when the broad suite is skipped.
+      - name: Generate color-font fixtures for independent validation
+        if: ${{ inputs.skip-duplicate-tests && runner.os == 'Linux' }}
+        run: >-
+          dotnet test tests/ExcelRenderer.Tests -c Release --no-build --no-restore
+          --filter "FullyQualifiedName~PdfBackendTests.Reachable_font_formats_keep_glyphs_and_subset_or_native_color_drawing|FullyQualifiedName~FontCollectionTests.Custom_resolver_keeps_the_nonzero_memory_index_and_uses_color_without_subsetting"
       - name: Independently validate managed fonts and full/subset PDF pairs
         if: runner.os == 'Linux'
         shell: bash

@@ -20,7 +20,10 @@ so a rendering comparison failure cannot skip package validation.
 The reusable distribution workflow defaults to running its Core and selected main
 renderer tests. Release callers retain that behavior. The PR workflow opts out of
 Core tests and Linux main tests already owned by dedicated jobs. Windows main
-renderer checks remain enabled. The font-split push workflow uses the same
+renderer checks remain enabled. On Linux PR runs, the two fixture-producing
+font tests still run locally: independent managed-font validation requires their
+`PdfFormats/colr*.pdf` and `ManagedTrueType/collection-*.pdf` outputs. This keeps
+distribution independent of the main job without rerunning its broad test suite. The font-split push workflow uses the same
 validation implementation with a Linux-only matrix.
 
 ## Source mutation checks

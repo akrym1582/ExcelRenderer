@@ -46,6 +46,11 @@ Choose the package for your task:
 | `ExcelRenderer.Fonts` | Add optional bundled Japanese and emoji fonts for rendering | Use alongside `ExcelRenderer` |
 | `ExcelRenderer.Tool` | Map and convert workbooks from the command line | .NET 10 SDK |
 
+For package-specific installation instructions and quick-start examples, see the dedicated NuGet READMEs:
+
+- [ExcelRenderer.Tool — command-line conversion and report generation](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/nuget/ExcelRenderer.Tool.md)
+- [ExcelRenderer.Mapping — populate templates from C# or JSON](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/nuget/ExcelRenderer.Mapping.md)
+
 These are the four published NuGet packages. `ExcelRenderer.OpenXml.Reader`,
 `ExcelRenderer.Formulas` and `ExcelRenderer.OpenXml` are separate assemblies bundled in both `ExcelRenderer`
 and `ExcelRenderer.Mapping`, not installable package IDs. For their APIs, install

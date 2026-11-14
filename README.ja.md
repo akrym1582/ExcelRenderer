@@ -39,6 +39,11 @@ C# API またはコマンドラインから、既存の帳票を変換できま�
 | `ExcelRenderer.Fonts` | 描画用の日本語・絵文字フォントを追加 | `ExcelRenderer` と併用 |
 | `ExcelRenderer.Tool` | コマンドラインでマッピング・変換 | .NET 10 SDK |
 
+パッケージ別のインストール方法と最小の使用例は、NuGet 向けの専用 README を参照してください。
+
+- [ExcelRenderer.Tool — CLI での変換・帳票作成](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/nuget/ExcelRenderer.Tool.md)
+- [ExcelRenderer.Mapping — C#・JSON によるテンプレートへの値の設定](https://github.com/akrym1582/ExcelRenderer/blob/main/docs/nuget/ExcelRenderer.Mapping.md)
+
 NuGet 公開対象はこの4つです。`ExcelRenderer.OpenXml.Reader`・`ExcelRenderer.Formulas`・`ExcelRenderer.OpenXml` は
 本体と Mapping の両方に同梱される独立したアセンブリであり、インストールする
 パッケージ ID ではありません。API の利用には[後述の手順](#数式と低レベル-xlsx-api)で

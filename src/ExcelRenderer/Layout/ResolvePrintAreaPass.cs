@@ -4,7 +4,7 @@ using ExcelRenderer.Model;
 namespace ExcelRenderer.Layout;
 
 /// <summary>
-/// 明示された印刷範囲を採用し、未指定の場合はセル、画像、および図形から使用範囲を求めます。
+/// 印刷範囲を解決し、未指定の場合は A1 から内容の終端までを保持します。
 /// </summary>
 public sealed class ResolvePrintAreaPass : IReportLayoutPass
 {
@@ -12,12 +12,14 @@ public sealed class ResolvePrintAreaPass : IReportLayoutPass
     public bool IgnoreExplicitPrintArea { get; init; }
 
     /// <summary>
-    /// 明示された印刷範囲を採用し、未指定の場合は内容が存在するセル、画像、および図形を包含する範囲を設定します。
+    /// 列全体・行全体の印刷範囲の未指定軸を使用範囲で制限し、自動印刷では先頭の空白行列を保持します。
     /// </summary>
     /// <param name="context">入力シート、計測機能、および各工程の計算結果を保持するレイアウトコンテキストです。</param>
     public void Execute(ReportLayoutContext context)
     {
-        context.PrintArea = !IgnoreExplicitPrintArea ? context.Sheet.PrintArea ?? GetUsedRange(context.Sheet) : GetUsedRange(context.Sheet);
+        var core = CoreIntegration.CoreLayoutContextAdapter.CreateGeometry(context);
+        new Core.Layout.ResolvePrintAreaPass { IgnoreExplicitPrintArea = IgnoreExplicitPrintArea }.Execute(core);
+        context.PrintArea = core.PrintArea is { } area ? CoreIntegration.CoreModelAdapter.ToPublic(area) : null;
     }
 
     /// <summary>Gets the get used range.</summary>

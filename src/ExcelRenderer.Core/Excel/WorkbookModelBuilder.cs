@@ -11,7 +11,14 @@ internal static class WorkbookModelBuilder
     /// <returns>A model with dimensions through each used or geometrical range.</returns>
     internal static ReportSheet WithMaterializedDimensions(ReportSheet sheet, IReadOnlyList<CellRange>? additionalGeometry = null)
     {
-        var ranges = sheet.MergedRanges.Concat(sheet.PrintAreas).Concat(sheet.Cells.Keys.Select(address => new CellRange(address, address)))
+        // Whole-axis print definitions must not allocate a dictionary entry for every worksheet row or column.
+        // Other content and object ranges still contribute their actual finite dimensions.
+        var printDimensions = sheet.PrintAreas.Select(range => new CellRange(
+            range.First,
+            new(
+                range.First.Row == 1 && range.Last.Row == 1048576 ? 1 : range.Last.Row,
+                range.First.Column == 1 && range.Last.Column == 16384 ? 1 : range.Last.Column)));
+        var ranges = sheet.MergedRanges.Concat(printDimensions).Concat(sheet.Cells.Keys.Select(address => new CellRange(address, address)))
             .Concat((sheet.Images ?? []).Select(image => new CellRange(
                 image.DrawingAnchor?.From ?? image.Anchor,
                 image.DrawingAnchor?.To ?? image.DrawingAnchor?.From ?? image.Anchor)))

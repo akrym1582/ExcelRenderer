@@ -64,7 +64,6 @@ public sealed class TextOverflowTests
     [InlineData("rotation")]
     [InlineData("vertical")]
     [InlineData("special")]
-    [InlineData("merge")]
     [InlineData("short")]
     public void Existing_text_modes_and_short_text_do_not_gain_a_clip(string mode)
     {
@@ -156,6 +155,40 @@ public sealed class TextOverflowTests
         });
         var page = new ReportLayoutEngine(new Measurer()).Plan(sheet)[0].Build(0, 1, 1, new Measurer());
         Assert.All(page.Cells, cell => Assert.Null(cell.TextClipBounds));
+    }
+
+    [Theory]
+    [InlineData(1, 2, 1)]
+    [InlineData(2, 1, 2)]
+    public void Merged_text_overflows_blanks_but_stops_at_values_on_every_spanned_row(int rowSpan, int columnSpan, int blockerRow)
+    {
+        var sheet = Sheet(new Dictionary<CellAddress, ReportCell>
+        {
+            [new(1, 2)] = new(new string('W', 40), CellStyle.Default, RowSpan: rowSpan, ColumnSpan: columnSpan),
+            [new(blockerRow, 5)] = new("neighbor", CellStyle.Default),
+        }) with { PrintArea = new(new(1, 1), new(2, 6)) };
+        var page = new ReportLayoutEngine(new Measurer()).Plan(sheet)[0].Build(0, 1, 1, new Measurer());
+        var cell = page.Cells.Single(cell => cell.SourceAddress == new CellAddress(1, 2));
+        var text = Assert.IsType<DrawTextCommand>(Assert.Single(DrawCommandGeneratorPass.GenerateCellLayer(1, cell, 3, false)));
+
+        Assert.Equal(20, text.ClipBounds!.Value.X);
+        Assert.Equal(80, text.ClipBounds.Value.X + text.ClipBounds.Value.Width);
+        Assert.True(text.ClipBounds.Value.Width > cell.Bounds.Width);
+    }
+
+    [Fact]
+    public void Merged_overflow_uses_sparse_rows_and_independent_left_and_right_limits()
+    {
+        var source = new CellAddress(1, 3);
+        var sheet = Sheet(new Dictionary<CellAddress, ReportCell>
+        {
+            [source] = new("long", CellStyle.Default, RowSpan: 1000000, ColumnSpan: 2),
+            [new(999999, 1)] = new("left", CellStyle.Default),
+            [new(999998, 6)] = new("right", CellStyle.Default),
+        });
+        var index = new SheetGeometry(sheet).GetTextOverflow(sheet);
+
+        Assert.Equal((20d, 100d), index.Find(source, 1000000, 2)!.Value);
     }
 
     internal static ReportSheet Sheet(IReadOnlyDictionary<CellAddress, ReportCell> cells) => new("overflow", cells,

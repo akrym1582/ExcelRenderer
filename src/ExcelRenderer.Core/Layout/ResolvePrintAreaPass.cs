@@ -4,7 +4,7 @@ using ExcelRenderer.Core.Model;
 namespace ExcelRenderer.Core.Layout;
 
 /// <summary>
-/// 明示された印刷範囲を採用し、未指定の場合はセル、画像から使用範囲を求めます。
+/// 印刷範囲を解決し、未指定の場合は A1 から内容の終端までを保持します。
 /// </summary>
 internal sealed class ResolvePrintAreaPass : IReportLayoutPass
 {
@@ -14,12 +14,36 @@ internal sealed class ResolvePrintAreaPass : IReportLayoutPass
     public bool IgnoreExplicitPrintArea { get; init; }
 
     /// <summary>
-    /// 明示された印刷範囲を採用し、未指定の場合は内容が存在するセル、画像を包含する範囲を設定します。
+    /// 列全体・行全体の印刷範囲の未指定軸を使用範囲で制限し、自動印刷では先頭の空白行列を保持します。
     /// </summary>
     /// <param name="context">入力シート、計測機能、および各工程の計算結果を保持するレイアウトコンテキストです。</param>
     public void Execute(ReportLayoutContext context)
     {
-        context.PrintArea = !IgnoreExplicitPrintArea ? context.Sheet.PrintArea ?? context.Policy.ResolveUsedRange(context) : context.Policy.ResolveUsedRange(context);
+        if (!IgnoreExplicitPrintArea && context.Sheet.PrintArea is { } explicitArea)
+        {
+            var wholeColumns = explicitArea.First.Row == 1 && explicitArea.Last.Row == 1048576;
+            var wholeRows = explicitArea.First.Column == 1 && explicitArea.Last.Column == 16384;
+            if ((wholeColumns || wholeRows) && context.Sheet.RequestedRange is null)
+            {
+                var content = context.Policy.ResolveUsedRange(context);
+                explicitArea = new CellRange(
+                    explicitArea.First,
+                    new(
+                        wholeColumns ? Math.Max(explicitArea.First.Row, content?.Last.Row ?? 1) : explicitArea.Last.Row,
+                        wholeRows ? Math.Max(explicitArea.First.Column, content?.Last.Column ?? 1) : explicitArea.Last.Column));
+            }
+
+            context.PrintArea = explicitArea;
+            return;
+        }
+
+        var used = context.Policy.ResolveUsedRange(context);
+
+        // Printed worksheets retain the blank rows and columns before their first content.
+        // Continuous canvases still request the tight used range explicitly.
+        context.PrintArea = !IgnoreExplicitPrintArea && used is { } range
+            ? new CellRange(new(Math.Min(1, range.First.Row), Math.Min(1, range.First.Column)), range.Last)
+            : used;
     }
 
     /// <summary>Gets the get used range.</summary>

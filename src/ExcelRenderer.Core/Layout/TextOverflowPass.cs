@@ -6,7 +6,7 @@ namespace ExcelRenderer.Core.Layout;
 /// <summary>Resolves horizontal overflow after measurement and cell placement, without changing text layout.</summary>
 internal sealed class TextOverflowPass : IReportLayoutPass
 {
-    /// <summary>Prepares limits only for ordinary unmerged horizontal text wider than its original content rectangle.</summary>
+    /// <summary>Prepares limits for ordinary horizontal text wider than its original content rectangle.</summary>
     /// <param name="context">The measured sheet or page context.</param>
     public void Execute(ReportLayoutContext context)
     {
@@ -15,13 +15,13 @@ internal sealed class TextOverflowPass : IReportLayoutPass
         {
             var cell = context.Sheet.Cells[address];
             var style = cell.Style;
-            if (string.IsNullOrEmpty(cell.Text) || cell.RowSpan != 1 || cell.ColumnSpan != 1 || cell.SuppressTextOverflow ||
+            if (string.IsNullOrEmpty(cell.Text) || cell.SuppressTextOverflow ||
                 style.WrapText || style.ShrinkToFit || style.TextRotation != 0 || style.TopToBottom || layout.TextSize.Width <= layout.ContentBounds.Width)
             {
                 continue;
             }
 
-            if (context.Geometry.GetTextOverflow(context.Sheet).Find(address) is not { } limits)
+            if (context.Geometry.GetTextOverflow(context.Sheet).Find(address, cell.RowSpan, cell.ColumnSpan) is not { } limits)
             {
                 continue;
             }

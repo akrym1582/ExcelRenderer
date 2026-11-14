@@ -216,6 +216,40 @@ public sealed class CellTextOverflowTests
         AssertRed(bitmap, 40, 60);
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void Merged_text_overflows_blank_cells_but_is_cropped_before_the_neighbor(bool continuous)
+    {
+        var original = Sheet(HorizontalAlignment.Left);
+        var cells = new Dictionary<CellAddress, ReportCell>
+        {
+            [new(2, 1)] = original.Cells[new(2, 1)],
+            [new(2, 3)] = original.Cells[new(2, 3)] with { ColumnSpan = 2 },
+            [new(2, 6)] = original.Cells[new(2, 5)],
+        };
+        var sheet = original with
+        {
+            Cells = cells,
+            MergedRanges = [new(new(2, 3), new(2, 4))],
+            PageSettings = new(120, 60, 0, 0, 0, 0),
+            PrintArea = new(new(1, 1), new(3, 6)),
+        };
+        var manager = new OutputFixture.FixedManager();
+        var measurer = new SkiaTextMeasurer(manager);
+        var commands = continuous
+            ? new DrawCommandGeneratorPass().GenerateContinuous(new(sheet, measurer), measurer).ToArray()
+            : new DrawCommandGeneratorPass().Generate(new ReportLayoutEngine(measurer).Layout(sheet));
+        using var output = new MemoryStream();
+        new PngRenderer(manager).RenderPage(commands, sheet.PageSettings, output, 72);
+        using var bitmap = SKBitmap.Decode(output.ToArray());
+
+        AssertRed(bitmap, 80, 100);
+        AssertNoRed(bitmap, 100, 120);
+        var viewport = Assert.Single(commands.OfType<DrawViewportCommand>());
+        Assert.Equal(60, viewport.Clip.Width);
+    }
+
     private static ReportSheet Sheet(HorizontalAlignment alignment)
     {
         var font = new FontStyle("Noto Sans JP", 12, Color: new(255, 0, 0));

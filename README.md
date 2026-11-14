@@ -68,12 +68,6 @@ These are the four published NuGet packages. `ExcelRenderer.OpenXml.Reader`,
 and `ExcelRenderer.Mapping`, not installable package IDs. For their APIs, install
 either package as shown [below](#formula-and-low-level-xlsx-apis).
 
-> [!WARNING]
-> Upgrading from 1.9.0 to 1.9.1 changes public Formulas/OpenXml namespaces and breaks
-> source and binary compatibility. Update imports and stored type names, and rebuild
-> all dependent libraries and applications. See the [migration guide](docs/namespace-migration.md)
-> for the affected types, package restore caveat and reproduced failures.
-
 The commands below use NuGet.org and require a published version containing the
 feature you need. To use a feature before its package is published, see
 [Development](#development). The .NET Standard 2.1 libraries support applications

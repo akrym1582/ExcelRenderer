@@ -115,10 +115,10 @@ var core=await ExcelRenderer.Core.ExcelConverter.ConvertAsync(input,output,optio
 if(core.PageCount<1 || output.Length==0) throw new Exception("Core saved-value failure");
 input.Position=0;output.SetLength(0);
 await ExcelRenderer.ExcelConverter.RenderAsync(input,new ExcelRenderer.Rendering.RenderRequest{
-OutputFormat=ExcelRenderer.Rendering.OutputFormat.Markdown,
+OutputFormat=ExcelRenderer.Rendering.OutputFormat.Pdf,
 ReadOptions=new(){FormulaDisplayMode=ExcelRenderer.Excel.FormulaDisplayMode.Recalculate},
 FontOptions=new(){FontFiles=new[]{args[1]},AllowSystemFonts=false}},new ExcelRenderer.Rendering.SingleStreamOutputSink(output));
-if(!System.Text.Encoding.UTF8.GetString(output.ToArray()).Contains("413")) throw new Exception("Main recalc failure");
+File.WriteAllBytes("recalculated.pdf",output.ToArray());
 foreach (var backend in new[] { new ExcelRenderer.Rendering.RenderRequest().PdfBackend, ExcelRenderer.PdfBackend.SkiaSharp }) {
     input.Position=0;
     using var pdfOutput=new MemoryStream();
@@ -236,6 +236,8 @@ for name,(refs,code) in programs.items():
     run('dotnet','restore','--configfile',config,cwd=directory)
     arguments = [] if name.startswith('namespace-') else [fixture_path, font, root / 'tests/ExcelRenderer.Tests/Fonts/PdfFormats/collection-distinct.ttc']
     run('dotnet','run','-c','Release','--no-restore','--',*arguments,cwd=directory)
+    if name == 'main-core':
+        assert '413' in subprocess.check_output(['pdftotext', str(directory/'recalculated.pdf'), '-'], text=True)
     audit_consumer(directory)
     # Every consumer copied all native RIDs (including large debug symbols).
     # Keep its source/log evidence but release disposable build products before
@@ -246,10 +248,10 @@ tool=work/'tool'
 tool_command = tool / ('excelrenderer.exe' if os.name == 'nt' else 'excelrenderer')
 if tool_command.exists():
     run('dotnet','tool','uninstall','ExcelRenderer.Tool','--tool-path',tool)
-(work/'cli.md').unlink(missing_ok=True)
+(work/'cli.pdf').unlink(missing_ok=True)
 run('dotnet','tool','install','ExcelRenderer.Tool','--version',versions['ExcelRenderer.Tool'],'--tool-path',tool,'--configfile',config)
-run(tool_command,'md',fixture_path,'--formula-mode','recalculate','-o',work/'cli.md')
-assert '413' in (work/'cli.md').read_text(encoding='utf-8')
+run(tool_command,'pdf',fixture_path,'--formula-mode','recalculate','-o',work/'cli.pdf')
+assert '413' in subprocess.check_output(['pdftotext', str(work/'cli.pdf'), '-'], text=True)
 for command in ('pdf', 'render'):
     destination = work / f'cli-{command}-skia.pdf'
     destination.unlink(missing_ok=True)

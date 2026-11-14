@@ -89,7 +89,6 @@ PDF / PNG / SVG
 3. 描画コマンドの生成
 4. PDF・PNG・SVG への描画
 
-Markdown は `ReportDocument` を別経路で読み取って出力します。
 
 ## 1. Excel ファイルの読み込み
 
@@ -411,4 +410,4 @@ native の描画 API に依存しません。
 
 描画コマンドは確定文字レイアウトを保持し、セルごとのclipと元の回転オブジェクトのclipを適用します。`DrawCommandBounds` がclip後の可視境界をunionし、`PageViewport` が確定シーンを平行移動してPDF／PNG／SVGとdescriptorへ最終寸法を供給します。viewportのSaveはfinallyでRestoreし、PNG上限は事前検証します。元セル領域・要求範囲・元寸法・crop・paddingはSchema 1の任意metadataです。
 
-`HyperlinkReader` はXML定義・relationship・名前スコープ・literal HYPERLINKを読み、リンク先の取得や数式評価をしません。問題は元定義に保持し、PDF／Markdownでリンク元が出力される場合に確定します。`HyperlinkPolicy` はURI方針と単純内部参照解決を共用します。PDFは選択後の最終ページと元領域で解決し、`GeneratedPdfFinalizer` はSkiaが生成文書をcloseした後に解決済み注釈を反映し、上端基準ptをPDF座標に変換します。Markdownはplain textとリンク先を分離し、全表示経路で共通formatterを使用し、必要な安定アンカーと空／範囲リンクの明示一覧を出力します。Noneと画像出力ではリンク診断を評価しません。
+`HyperlinkReader` はXML定義・relationship・名前スコープ・literal HYPERLINKを読み、リンク先の取得や数式評価をしません。問題は元定義に保持し、PDFでリンク元が出力される場合に確定します。`HyperlinkPolicy` はURI方針と単純内部参照解決を共用します。PDFは選択後の最終ページと元領域で解決し、`GeneratedPdfFinalizer` はSkiaが生成文書をcloseした後に解決済み注釈を反映し、上端基準ptをPDF座標に変換します。Noneと画像出力ではリンク診断を評価しません。

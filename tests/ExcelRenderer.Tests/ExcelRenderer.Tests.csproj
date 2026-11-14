@@ -51,6 +51,7 @@
     <Compile Include="../Shared/ImageReviewFixture.cs" Link="Fixtures/ImageReviewFixture.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="../Shared/PdfText.cs" Link="Fixtures/PdfText.cs" />
     <Compile Include="../Shared/RetainedWorkbook.cs" Link="Fixtures/RetainedWorkbook.cs" />
     <None Include="../Shared/RetainedWorkbooks/*.xlsx" Link="RetainedWorkbooks/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>

@@ -75,7 +75,7 @@ internal static class TextOverflowBenchmark
         {
             var artifacts = new Dictionary<string, string>();
             hashes.Add(path, artifacts);
-            foreach (var format in new[] { OutputFormat.Png, OutputFormat.Svg, OutputFormat.Markdown })
+            foreach (var format in new[] { OutputFormat.Png, OutputFormat.Svg })
             {
                 using var input = File.OpenRead(path);
                 using var sink = new SnapshotSink();

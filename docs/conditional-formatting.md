@@ -11,7 +11,6 @@ No new product project, package or Core calculation dependency is introduced.
 Pass `new ExcelReadOptions { ApplyConditionalFormatting = false }` to `ExcelReader.Read`,
 or set `RenderRequest.ReadOptions` for conversion. Existing high-level options that
 carry a RenderRequest use the same setting. There is no Core option or new CLI flag.
-Markdown remains plain text; no color syntax is added.
 
 In the default `FormulaDisplayMode.CachedValue`, conditions are evaluated against
 saved **typed** values. Source formulas are not recalculated. A formula without a
@@ -286,8 +285,8 @@ grays are #595959/#8C8C8C/#BFBFBF. 3Symbols draws white marks in colored circles
 
 The first valid numeric bar and first valid numeric icon reserve separate priority
 slots; they can coexist with each other and a conditional background. Either winner's
-showValue=false suppresses only visual text commands. Values, formulas, rich text and
-Markdown remain present. An earlier stopIfTrue stops lower decorations. Visual rules
+showValue=false suppresses only visual text commands. Values, formulas and rich text
+remain present. An earlier stopIfTrue stops lower decorations. Visual rules
 with stopIfTrue=true, dxf/dxfId or activePresent/direct xm:f are outside this input
 profile. Any reached invalid/unsupported rule rolls the whole cell back to ordinary
 appearance. Outside border owners contribute borders only.

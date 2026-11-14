@@ -174,7 +174,7 @@ public sealed partial class ConditionalFormattingTests
         Mapping.ExcelTemplateMapper.Map(template, mapped, new { items = new[] { 0, 50, 100 } });
         var sheet = Read(mapped);
         Assert.Equal(new[] { 0, 1, 2 }, sheet.Cells.OrderBy(entry => entry.Key.Row).Select(entry => entry.Value.ConditionalVisual!.Icon!.Index));
-        foreach (var format in new[] { OutputFormat.Pdf, OutputFormat.Png, OutputFormat.Svg, OutputFormat.PostScript, OutputFormat.Markdown })
+        foreach (var format in new[] { OutputFormat.Pdf, OutputFormat.Png, OutputFormat.Svg, OutputFormat.PostScript })
         {
             mapped.Position = 0;
             using var output = new MemoryStream();
@@ -185,11 +185,6 @@ public sealed partial class ConditionalFormattingTests
                 using var bitmap = global::SkiaSharp.SKBitmap.Decode(output.ToArray());
                 var lowColor = set == "3ArrowsGray" ? new global::SkiaSharp.SKColor(89, 89, 89) : new global::SkiaSharp.SKColor(192, 80, 77);
                 Assert.Contains(bitmap.Pixels, pixel => pixel == lowColor);
-            }
-
-            if (format == OutputFormat.Markdown)
-            {
-                Assert.Contains("100", System.Text.Encoding.UTF8.GetString(output.ToArray()));
             }
 
             SavePhase3Artifact($"{set}.{format.ToString().ToLowerInvariant()}", output.ToArray());

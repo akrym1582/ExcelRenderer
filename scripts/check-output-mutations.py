@@ -78,8 +78,6 @@ change('pdf-destination-selection', 'src/ExcelRenderer/ExcelConverter.Viewports.
 change('merged-source-outside-range', 'src/ExcelRenderer/CoreIntegration/FullCellSelection.cs',
        'requestedRange && isMerged', '!requestedRange && isMerged',
        'Generated_range_replaces_print_area_and_preserves_partial_merge_geometry')
-change('markdown-href-escaping', 'src/ExcelRenderer/Markdown/MarkdownHyperlinks.cs',
-       'Html(uri)', 'uri', 'Markdown_links_anchors_lists_and_HTML_attributes_are_safe_and_None_is_plain')
 
 originals = {path: (root / path).read_bytes() for _, path, *_ in mutations}
 results = []

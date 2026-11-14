@@ -4,7 +4,6 @@ using ExcelRenderer.Drawing;
 using ExcelRenderer.Excel;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
-using ExcelRenderer.Markdown;
 using ExcelRenderer.Model;
 using ExcelRenderer.SkiaSharp;
 

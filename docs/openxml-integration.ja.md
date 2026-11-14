@@ -49,7 +49,7 @@ friendly text で保存結果や空表示を上書きしません。
 式文字列は表示結果とは別のメタデータです。`ReportCell.Formula` は元の本文が
 ある場合だけ先頭に `=` を付けて保持します。本文のない共有式・配列式 follower は null、
 `FormulaSharedIndex` / `FormulaMasterAddress` に共有 index と master 位置を保持します。
-Markdown の `VisualCell` にも伝播します。描画用の式展開は行いません。低レベル公開 `FormulaTextResolver` は既存利用者向けに
+描画用の式展開は行いません。低レベル公開 `FormulaTextResolver` は既存利用者向けに
 残しますが、描画経路では利用しません。
 
 Reader は OpenXml モデルを一度だけ構築します。診断にはシート・明示範囲・hidden・

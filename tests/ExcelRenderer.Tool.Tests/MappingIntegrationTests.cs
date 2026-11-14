@@ -17,7 +17,6 @@ public sealed partial class ToolIntegrationTests
     [InlineData("render", "pdf", "skiasharp")]
     [InlineData("render", "svg")]
     [InlineData("render", "png")]
-    [InlineData("markdown", null)]
     public async Task Json_mapping_completes_for_xlsx_and_all_render_commands(string command, string? format, string? backend = null)
     {
         Directory.CreateDirectory(_directory);
@@ -27,7 +26,7 @@ public sealed partial class ToolIntegrationTests
 
         await File.WriteAllTextAsync(data, """{"title":"MAPPED_VALUE","items":[{"name":"First","value":12.5},{"name":"Second","value":23}]}""");
         var outputFormat = format ?? (command == "image" ? "png" : command);
-        var output = Path.Combine(_directory, outputFormat is "pdf" or "xlsx" or "markdown" ? "result." + outputFormat : "render-output");
+        var output = Path.Combine(_directory, outputFormat is "pdf" or "xlsx" ? "result." + outputFormat : "render-output");
         var args = new List<string> { command, template, "--data", data, "-o", output };
         if (format is not null)
         {
@@ -67,9 +66,6 @@ public sealed partial class ToolIntegrationTests
                 var svg = await File.ReadAllTextAsync(Assert.Single(Directory.GetFiles(output, "*.svg")));
                 Assert.Contains("<path", svg);
                 Assert.DoesNotContain("**@", svg);
-                break;
-            case "markdown":
-                Assert.Contains("MAPPED\\_VALUE", await File.ReadAllTextAsync(output));
                 break;
         }
     }

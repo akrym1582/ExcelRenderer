@@ -24,7 +24,7 @@ friendは本体と既存テストだけです。第三の共通エンジン、�
 型転送、DI container、plugin探索は追加しません。typed payloadはCoreから本体を
 解釈する仕組みではなく、本体だけが借用した元情報を読むためのものです。
 
-通常変換はCoreのセルをそのままlayoutとcommand生成へ渡します。選択・診断・Markdownは
+通常変換はCoreのセルをそのままlayoutとcommand生成へ渡します。選択・診断は
 順序を維持したviewを読み、全ブックを二重保持しません。範囲指定も値をコピーしない
 filter viewです。利用者が作った公開sheetはstyle cache付きprojectionで受けます。
 公開`ExcelReader.Read`の互換戻り値だけは公開辞書としてmaterializeします。公開passの

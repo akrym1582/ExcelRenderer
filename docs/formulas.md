@@ -23,7 +23,7 @@ var document = new ExcelRenderer.Excel.ExcelReader().Read(input,
     });
 ```
 
-Core reads saved values only and no longer exposes formula mode/evaluation options. Use main rendering or WorkbookRecalculator for explicit recalculation. See [Reader split migration](openxml-reader-split.md). Main PDF, PNG, SVG and Markdown APIs use their
+Core reads saved values only and no longer exposes formula mode/evaluation options. Use main rendering or WorkbookRecalculator for explicit recalculation. See [Reader split migration](openxml-reader-split.md). Main PDF, PNG and SVG APIs use their
 existing `ReadOptions`. CLI rendering commands accept `--formula-mode recalculate`;
 `--formula-mode cached` remains the default. Historical `Legacy` mode is rejected.
 
@@ -191,7 +191,7 @@ as page materialization, including repeated titles. Saved row/column geometry an
 object bounds determine the pages; cached text is not treated as a calculated result.
 The actual reader then calculates those candidates before formatting or text
 measurement. An unrelated cycle or unsupported formula on an excluded page does not
-stop rendering. Markdown and continuous output follow their existing region rules
+stop rendering. Continuous output follows its existing region rules
 rather than applying paginated print-area rules.
 
 Mapping's `RecalculateMappedWorkbook` defaults to true, calculating all formulas for
@@ -202,7 +202,7 @@ and the matching Reader property configure resource limits.
 
 OOXML `cm`/`vm` calculation metadata is conservatively rejected when reached, so metadata-backed dynamic arrays or rich values are never assumed to be ordinary scalars.
 
-The executable [invoice sample](../samples/ExcelRenderer.Formulas.Sample/README.md) creates XLSX and verifies 0/1/3/70-line totals and PDF, PNG, SVG and Markdown output.
+The executable [invoice sample](../samples/ExcelRenderer.Formulas.Sample/README.md) creates XLSX and verifies 0/1/3/70-line totals and PDF, PNG and SVG output.
 
 ## Expanded report functions
 

@@ -36,7 +36,7 @@ ALLOWED_LINES = {
     "tools/ExcelRenderer.PdfComparison/AssemblyReferenceAudit.cs": {
         'if (references.Any(name => name.Contains("PdfSharp", StringComparison.OrdinalIgnoreCase)))'},
     "tests/ExcelRenderer.Tool.Tests/PdfBackendIntegrationTests.cs": {
-        '[InlineData("png", "pdfsharp")]', '[InlineData("markdown", "pdfsharp")]', '[InlineData("pdf", "pdfsharp")]'},
+        '[InlineData("png", "pdfsharp")]', '[InlineData("pdf", "pdfsharp")]'},
 }
 
 ALLOWED_LINES['scripts/validate-formulas-packages.py'] = {

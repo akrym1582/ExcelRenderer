@@ -50,16 +50,15 @@ public sealed class LayoutDiagnosticTests
     }
 
     [Fact]
-    public async Task MarkdownHasNoLayoutWarningsAndSupportedConditionalFormattingIsNotReportedUnsupported()
+    public async Task SupportedConditionalFormattingIsNotReportedUnsupported()
     {
         using var input = CreateWorkbook();
         using var output = new MemoryStream();
         var result = await ExcelConverter.RenderAsync(input, new()
         {
-            OutputFormat = OutputFormat.Markdown,
+            OutputFormat = OutputFormat.Pdf,
             DiagnosticOptions = new() { EnableLayoutWarnings = true, DetectUnsupportedFeatures = true },
         }, new SingleStreamOutputSink(output));
-        Assert.DoesNotContain(result.Diagnostics, d => d.Code is "CellTextClipped" or "CellTextTooSmall");
         Assert.DoesNotContain(result.Diagnostics, d => d.Code == "UnsupportedConditionalFormatting");
     }
 

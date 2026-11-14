@@ -64,7 +64,6 @@ public sealed class FormulaDisplayTests
 
     [Theory]
     [InlineData(OutputFormat.Pdf)]
-    [InlineData(OutputFormat.Markdown)]
     public async Task MissingCacheDiagnosticIsSelectedAndFailsBeforeSink(OutputFormat format)
     {
         using var input = CreateWorkbook();
@@ -74,16 +73,11 @@ public sealed class FormulaDisplayTests
         {
             OutputFormat = format,
             ReadOptions = Cached(),
-            Selection = format == OutputFormat.Markdown ? new() : new() { Ranges = [new("formulas", new(new(4, 1), new(4, 1)))] },
+            Selection = new() { Ranges = [new("formulas", new(new(4, 1), new(4, 1)))] },
             DiagnosticOptions = new() { TreatAsErrors = ["FormulaCachedValueMissing"], SuppressedCodes = ["FormulaCachedValueMissing"], MaxDiagnostics = 1 },
         };
         await Assert.ThrowsAsync<ConversionException>(() => ExcelConverter.RenderAsync(input, request, new SingleStreamOutputSink(output)));
         Assert.Equal(new byte[] { 1, 2, 3 }, output.ToArray());
-        if (format == OutputFormat.Markdown)
-        {
-            return;
-        }
-
         input.Position = 0;
         using var selectedOutput = new MemoryStream();
         var result = await ExcelConverter.RenderAsync(input, request with
@@ -155,12 +149,12 @@ public sealed class FormulaDisplayTests
         using var output = new MemoryStream();
         var result = await ExcelConverter.RenderAsync(input, new()
         {
-            OutputFormat = OutputFormat.Markdown,
+            OutputFormat = OutputFormat.Pdf,
             ReadOptions = Cached(),
             Hyperlinks = hyperlinks,
         }, new SingleStreamOutputSink(output));
-        var text = System.Text.Encoding.UTF8.GetString(output.ToArray());
-        // Formula metadata may contain the original friendly argument; cell display remains empty.
+        var text = PdfText.Read(output.ToArray());
+        // Hyperlink handling must preserve the saved formula display.
         input.Position = 0;
         Assert.Equal(string.Empty, new ExcelReader().Read(input).Sheets[0].Cells[new(8, 1)].Text);
         Assert.Contains("99", text);
@@ -201,9 +195,9 @@ public sealed class FormulaDisplayTests
         Assert.Equal("0", sheet.Cells[new(1, 1)].Text);
         Assert.Equal("FALSE", sheet.Cells[new(2, 1)].Text);
         Assert.Null(sheet.Cells[new(2, 1)].Formula);
-        var visual = new Markdown.VisualCellBuilder().Build(sheet).Single(cell => cell.Range.First == new CellAddress(2, 1));
-        Assert.Equal(9, visual.FormulaSharedIndex);
-        Assert.Equal(new CellAddress(1, 1), visual.FormulaMasterAddress);
+        var follower = sheet.Cells[new(2, 1)];
+        Assert.Equal(9, follower.FormulaSharedIndex);
+        Assert.Equal(new CellAddress(1, 1), follower.FormulaMasterAddress);
         Assert.DoesNotContain(sheet.CellReadDiagnostics, d => d.Code == "FormulaTextUnavailable");
     }
 

@@ -171,7 +171,7 @@ public sealed class CellTextOverflowTests
     }
 
     [Fact]
-    public async Task Same_workbook_reaches_Core_PDF_and_preserves_main_links_and_markdown()
+    public async Task Same_workbook_reaches_Core_PDF_and_preserves_main_links()
     {
         using var input = Workbook();
         using var core = new MemoryStream();
@@ -187,10 +187,6 @@ public sealed class CellTextOverflowTests
         File.WriteAllBytes(Path.Combine(directory, "common.xlsx"), ((MemoryStream)input).ToArray());
         using var pdf = UglyToad.PdfPig.PdfDocument.Open(main.ToArray());
         Assert.Single(pdf.GetPage(1).GetHyperlinks());
-        input.Position = 0;
-        using var markdown = new MemoryStream();
-        await ExcelConverter.RenderAsync(input, new() { OutputFormat = OutputFormat.Markdown }, new SingleStreamOutputSink(markdown));
-        Assert.Contains(new string('W', 30), Encoding.UTF8.GetString(markdown.ToArray()));
     }
 
     [Theory]

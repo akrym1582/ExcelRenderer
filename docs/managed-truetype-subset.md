@@ -24,7 +24,7 @@ bitmap-only flags reject outline subsetting without clearing the license bits.
 
 PDF restrictions apply when collecting/preparing fonts actually used on selected
 pages. Merely registering an unsupported face does not fail conversion. Shared
-font resolution/PNG/SVG/Markdown do not inherit the PDF-only restrictions. Core
+font resolution/PNG/SVG do not inherit the PDF-only restrictions. Core
 retains its single supplied regular font and variation-selector-to-base policy.
 The main PDF conversion API skips incompatible drawing candidates and tries the
 configured fallback families before layout and glyph collection. This includes CFF,

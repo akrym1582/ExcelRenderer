@@ -120,6 +120,3 @@ for folder in ('Templates', 'Expansion', 'Expressions'):
     for path in paths:
         assert not re.search(r'\b(IXL\w*|XLCellValue|XLWorkbook)\b|using ClosedXML', path.read_text()), f'{path}: language depends on legacy cells'
 print('Source-neutral reader hooks and shared mapping language passed')
-
-markdown_geometry = (ROOT / "src/ExcelRenderer/Markdown/VisualCellBuilder.cs").read_text()
-assert "Layout.SheetGeometry" in markdown_geometry and "PrefixSums" not in markdown_geometry, "Markdown geometry must delegate sparse defaults and hidden axes to Core"

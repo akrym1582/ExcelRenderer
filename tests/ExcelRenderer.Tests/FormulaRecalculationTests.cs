@@ -13,7 +13,6 @@ public sealed class FormulaRecalculationTests
     [InlineData(OutputFormat.Pdf)]
     [InlineData(OutputFormat.Png)]
     [InlineData(OutputFormat.Svg)]
-    [InlineData(OutputFormat.Markdown)]
     public async Task ExpandedFunctionsRenderThroughEveryOutput(OutputFormat format)
     {
         using var input = CreateWorkbook();
@@ -34,7 +33,7 @@ public sealed class FormulaRecalculationTests
         using var output = new MemoryStream();
         await ExcelConverter.RenderAsync(input, new() { OutputFormat = format, ReadOptions = new() { FormulaDisplayMode = FormulaDisplayMode.Recalculate } }, new SingleStreamOutputSink(output));
         Assert.NotEmpty(output.ToArray());
-        if (format == OutputFormat.Markdown) Assert.Contains("2026-02-28", System.Text.Encoding.UTF8.GetString(output.ToArray()));
+        if (format == OutputFormat.Pdf) Assert.Contains("2026-02-28", PdfText.Read(output.ToArray()));
     }
 
     [Fact]
@@ -57,16 +56,15 @@ public sealed class FormulaRecalculationTests
     [InlineData(OutputFormat.Pdf)]
     [InlineData(OutputFormat.Png)]
     [InlineData(OutputFormat.Svg)]
-    [InlineData(OutputFormat.Markdown)]
     public async Task RecalculationRendersThroughEveryOutput(OutputFormat format)
     {
         using var input = CreateWorkbook();
         using var output = new MemoryStream();
         await ExcelConverter.RenderAsync(input, new() { OutputFormat = format, ReadOptions = new() { FormulaDisplayMode = FormulaDisplayMode.Recalculate } }, new SingleStreamOutputSink(output));
         Assert.NotEmpty(output.ToArray());
-        if (format == OutputFormat.Markdown)
+        if (format == OutputFormat.Pdf)
         {
-            var text = System.Text.Encoding.UTF8.GetString(output.ToArray());
+            var text = PdfText.Read(output.ToArray());
             Assert.Contains("done", text);
             Assert.DoesNotContain("999", text);
         }
@@ -161,26 +159,6 @@ public sealed class FormulaRecalculationTests
     }
 
     [Fact]
-    public async Task MarkdownRecalculatesVisibleCellsOutsidePrintArea()
-    {
-        using var input = CreateWorkbook();
-        using (var package = SpreadsheetDocument.Open(input, true))
-        {
-            var workbook = package.WorkbookPart!;
-            workbook.Workbook.DefinedNames = new S.DefinedNames(new S.DefinedName("Sheet1!$A$1:$A$2") { Name = "_xlnm.Print_Area", LocalSheetId = 0 });
-        }
-        input.Position = 0;
-        using var output = new MemoryStream();
-        await ExcelConverter.RenderAsync(input, new()
-        {
-            OutputFormat = OutputFormat.Markdown,
-            ReadOptions = new() { FormulaDisplayMode = FormulaDisplayMode.Recalculate },
-        }, new SingleStreamOutputSink(output));
-        Assert.Contains("done", System.Text.Encoding.UTF8.GetString(output.ToArray()));
-        Assert.DoesNotContain("999", System.Text.Encoding.UTF8.GetString(output.ToArray()));
-    }
-
-    [Fact]
     public async Task SelectedPageRecalculatesRepeatedTitleAndBody()
     {
         using var input = CreateWorkbook();
@@ -212,7 +190,7 @@ public sealed class FormulaRecalculationTests
     [InlineData("ROUNDUP(0.07,2)", "0.07")]
     [InlineData("ROUND(1.005,2)", "1.01")]
     [InlineData("IF(TRUE,\"-\",\"\")", "-")]
-    public async Task CorrectedValuesReachMarkdownRendering(string formula, string expected)
+    public async Task CorrectedValuesReachPdfRendering(string formula, string expected)
     {
         using var input = CreateWorkbook();
         using (var package = SpreadsheetDocument.Open(input, true))
@@ -221,10 +199,10 @@ public sealed class FormulaRecalculationTests
         using var output = new MemoryStream();
         await ExcelConverter.RenderAsync(input, new()
         {
-            OutputFormat = OutputFormat.Markdown,
+            OutputFormat = OutputFormat.Pdf,
             ReadOptions = new() { FormulaDisplayMode = FormulaDisplayMode.Recalculate },
         }, new SingleStreamOutputSink(output));
-        string text = System.Text.Encoding.UTF8.GetString(output.ToArray());
+        string text = PdfText.Read(output.ToArray());
         Assert.Contains(expected, text);
         Assert.DoesNotContain("999", text);
     }
@@ -248,11 +226,11 @@ public sealed class FormulaRecalculationTests
         using var output = new MemoryStream();
         await ExcelConverter.RenderAsync(input, new()
         {
-            OutputFormat = OutputFormat.Markdown,
+            OutputFormat = OutputFormat.Pdf,
             ReadOptions = new() { FormulaDisplayMode = FormulaDisplayMode.Recalculate },
             Selection = new() { SheetNames = ["Sheet1"] },
         }, new SingleStreamOutputSink(output));
-        var text = System.Text.Encoding.UTF8.GetString(output.ToArray());
+        var text = PdfText.Read(output.ToArray());
         Assert.Contains("6", text);
         Assert.DoesNotContain("999", text);
     }
@@ -337,14 +315,14 @@ public sealed class FormulaRecalculationTests
             using var output = new MemoryStream();
             await ExcelConverter.RenderAsync(input, new()
             {
-                OutputFormat = OutputFormat.Markdown,
+                OutputFormat = OutputFormat.Pdf,
                 ReadOptions = new()
                 {
                     FormulaDisplayMode = FormulaDisplayMode.Recalculate,
                     FormulaEvaluationOptions = new() { MaxFormulaCells = 10 + index },
                 },
             }, new SingleStreamOutputSink(output));
-            var text = System.Text.Encoding.UTF8.GetString(output.ToArray());
+            var text = PdfText.Read(output.ToArray());
             Assert.Contains((index * 101).ToString(System.Globalization.CultureInfo.InvariantCulture), text);
             Assert.DoesNotContain("999", text);
         })));

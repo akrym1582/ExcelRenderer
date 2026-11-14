@@ -51,7 +51,6 @@ public sealed class PivotPageSelectionTests
     [InlineData(OutputFormat.Png)]
     [InlineData(OutputFormat.Svg)]
     [InlineData(OutputFormat.PostScript)]
-    [InlineData(OutputFormat.Markdown)]
     public async Task All_page_output_cannot_suppress_missing_pivot_failure(OutputFormat format)
     {
         using var input = Workbook();
@@ -63,12 +62,9 @@ public sealed class PivotPageSelectionTests
         };
         await Assert.ThrowsAsync<ConversionException>(() => ExcelConverter.RenderAsync(input, request, sink));
         Assert.Equal(0, sink.OpenCount);
-        if (format != OutputFormat.Markdown)
-        {
-            input.Position = 0;
-            await Assert.ThrowsAsync<ConversionException>(() => ExcelConverter.RenderAsync(input, request with { Selection = new() { Pages = [2] } }, sink));
-            Assert.Equal(0, sink.OpenCount);
-        }
+        input.Position = 0;
+        await Assert.ThrowsAsync<ConversionException>(() => ExcelConverter.RenderAsync(input, request with { Selection = new() { Pages = [2] } }, sink));
+        Assert.Equal(0, sink.OpenCount);
     }
 
     [Theory]

@@ -22,7 +22,6 @@ flowchart TD
     L --> C["確定文字・描画コマンド"]
     C --> P["PDF: Skia + Core文書生成・構造保存"]
     C --> I["PNG / SVG: 共通Skia描画"]
-    R --> M["Markdown: 文書モデルから別経路"]
 ```
 
 座標はポイントで保持し、PNG出力時にDPIを使ってピクセルへ変換します。
@@ -37,7 +36,7 @@ advance方針もあるため、形式間で全画素が同じになるという�
 | --- | --- |
 | `ExcelRenderer.OpenXml` / `Formulas` | XLSX入力・検査・入力spool、元データと型付き編集、独立した数式計算 |
 | `ExcelRenderer.Core` | 共通reader、geometry、ページ計画、配置、セル描画、font face・subset、画像取得、PDF文書と構造保存 |
-| `ExcelRenderer` | 公開API、本体のfont fallback・IVS・部分書式、図形・変形画像、選択・trim・リンク、PDF／PNG／SVG／Markdownの統括 |
+| `ExcelRenderer` | 公開API、本体のfont fallback・IVS・部分書式、図形・変形画像、選択・trim・リンク、PDF／PNG／SVGの統括 |
 | `ExcelRenderer.Mapping` | 描画・fontへ依存しないテンプレート構文、データ評価とXLSX展開 |
 
 本体はCoreを参照し、Coreから本体・Fonts・Toolへの逆参照は持ちません。

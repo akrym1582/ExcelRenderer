@@ -89,7 +89,6 @@ public sealed class PdfBackendTests
     [InlineData((PdfBackend)42, OutputFormat.Pdf)]
     [InlineData((PdfBackend)42, OutputFormat.Png)]
     [InlineData((PdfBackend)42, OutputFormat.Svg)]
-    [InlineData((PdfBackend)42, OutputFormat.Markdown)]
     public async Task Invalid_backend_is_rejected_before_reading_or_opening_output(PdfBackend? backend, OutputFormat format)
     {
         using var input = new UnreadableInput();

@@ -1,9 +1,7 @@
-using System.Text;
 using ExcelRenderer.Drawing;
 using ExcelRenderer.Excel;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
-using ExcelRenderer.Markdown;
 using ExcelRenderer.Model;
 using ExcelRenderer.Rendering;
 using ExcelRenderer.SkiaSharp;
@@ -63,7 +61,7 @@ public static partial class ExcelConverter
             {
                 DeferPivotValidation = request.Selection.Pages is not null,
                 ColumnWidthMetricsCache = new CoreIntegration.FullFontMetrics.MetricCache(),
-                IgnoreFormulaPrintAreas = request.OutputFormat == OutputFormat.Markdown || request.ImageLayout == ImageLayoutMode.Continuous,
+                IgnoreFormulaPrintAreas = request.ImageLayout == ImageLayoutMode.Continuous,
                 GetSelectedRange = name => request.Selection.Ranges?.FirstOrDefault(range => range.SheetName == name)?.Range is { } selected
                     ? (selected.First.Row, selected.First.Column, selected.Last.Row, selected.Last.Column) : null,
             };
@@ -98,42 +96,6 @@ public static partial class ExcelConverter
             if (sheets.Count == 0 && request.Selection.Pages is null)
             {
                 return new(ConversionManifest.SchemaVersion, "Completed", [], [], artifacts, diagnostics.ToArray());
-            }
-
-            if (request.OutputFormat == OutputFormat.Markdown && request.Selection.Pages is not null)
-            {
-                throw new ArgumentException("Page selection is not supported for Markdown.", nameof(request));
-            }
-
-            if (request.OutputFormat == OutputFormat.Markdown)
-            {
-                foreach (var selected in sheets)
-                {
-                    CollectCellReadDiagnostics(selected.Sheet, null, null, diagnostics);
-                }
-
-                if (request.DiagnosticOptions.DetectUnsupportedFeatures)
-                {
-                    foreach (var selected in sheets)
-                    {
-                        CollectUnsupportedFeatures(selected.Sheet, null, null, diagnostics);
-                    }
-                }
-
-                _ = new MarkdownHyperlinks(new ReportDocument(sheets.Select(s => s.Sheet).ToArray()), request.Hyperlinks, diagnostics);
-                if (diagnostics.HasFailure)
-                {
-                    throw Failure("Conversion was stopped by diagnostic policy.", null, diagnostics, artifacts);
-                }
-
-                await WriteMarkdownAsync(sheets, request.Hyperlinks, sink, artifacts, cancellationToken).ConfigureAwait(false);
-                return new(
-                    ConversionManifest.SchemaVersion,
-                    "Completed",
-                    sheets.Select(x => x.Sheet.Name).ToArray(),
-                    Array.Empty<RenderPageDescriptor>(),
-                    artifacts,
-                    diagnostics.ToArray());
             }
 
             ConversionMetrics.Measure("diagnostics", () =>
@@ -261,11 +223,6 @@ public static partial class ExcelConverter
         if (request.Selection.MaxRangeCells <= 0 || !double.IsFinite(request.Trim.PaddingPoints) || request.Trim.PaddingPoints < 0)
         {
             throw new ArgumentOutOfRangeException(nameof(request), "Range limits must be positive and padding must be finite and nonnegative.");
-        }
-
-        if (request.OutputFormat == OutputFormat.Markdown && (request.Selection.Ranges is not null || request.Trim.Enabled || request.Selection.Pages is not null))
-        {
-            throw new ArgumentException("Markdown does not support explicit ranges, trimming or page selection.", nameof(request));
         }
 
         if (double.IsNaN(request.Dpi) || double.IsInfinity(request.Dpi) || request.Dpi <= 0)
@@ -806,41 +763,6 @@ public static partial class ExcelConverter
 
             return name + (address.Row + 1);
         }
-    }
-
-    private static Task WriteMarkdownAsync(IReadOnlyList<SelectedSheet> sheets, HyperlinkMode hyperlinks, IRenderOutputSink sink, List<ArtifactMetadata> artifacts, CancellationToken token)
-    {
-        var descriptor = new ArtifactDescriptor("markdown", "markdown", "text/markdown", "workbook.md");
-        if (sink is IMarkdownDocumentOutputSink markdownSink)
-        {
-            return WriteLegacyMarkdownAsync(markdownSink, sheets, descriptor, artifacts, token);
-        }
-
-        return WriteArtifactAsync(
-            sink,
-            descriptor,
-            artifacts,
-            stream =>
-            {
-                using var writer = new StreamWriter(stream, new UTF8Encoding(false), 1024, leaveOpen: true);
-                writer.Write(MarkdownExporter.Build(
-                    new ReportDocument(sheets.Select(s => s.Sheet).ToArray()),
-                    string.Empty,
-                    "workbook.xlsx",
-                    new MarkdownExportOptions { ExportImages = false, Hyperlinks = hyperlinks }));
-            },
-            token);
-    }
-
-    private static async Task WriteLegacyMarkdownAsync(
-        IMarkdownDocumentOutputSink sink,
-        IReadOnlyList<SelectedSheet> sheets,
-        ArtifactDescriptor descriptor,
-        List<ArtifactMetadata> artifacts,
-        CancellationToken token)
-    {
-        await sink.WriteMarkdownAsync(new ReportDocument(sheets.Select(x => x.Sheet).ToArray()), token).ConfigureAwait(false);
-        artifacts.Add(new(descriptor, sink.GetMarkdownByteLength()));
     }
 
     private static Task WriteArtifactAsync(IRenderOutputSink sink, ArtifactDescriptor descriptor, List<ArtifactMetadata> artifacts, Action<Stream> write, CancellationToken token) =>

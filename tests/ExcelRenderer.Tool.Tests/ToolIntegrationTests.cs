@@ -102,17 +102,24 @@ public sealed partial class ToolIntegrationTests : IDisposable
         Assert.NotEqual(0, result.ExitCode);
     }
 
-    /// <summary>
-    /// md エイリアスが Excel 入力から Markdown ファイルを生成することを検証します。
-    /// </summary>
+    /// <summary>未対応の出力指定を解析時に拒否し、既存の出力を保持します。</summary>
+    /// <param name="arguments">未対応のコマンドまたは形式。</param>
     /// <returns>非同期の検証処理を表すタスク。</returns>
-    [Fact(DisplayName = "md エイリアスが Excel 入力から Markdown ファイルを生成する")]
-    public async Task Md_alias_creates_markdown()
+    [Theory]
+    [InlineData("markdown")]
+    [InlineData("md")]
+    [InlineData("render", "--format", "markdown")]
+    public async Task Unsupported_output_is_rejected_before_input_and_output(params string[] arguments)
     {
-        var output = Path.Combine(_directory, "nested", "report.md");
-        var result = await RunAsync("md", Input, "-o", output);
-        AssertSuccess(result);
-        Assert.Contains("折り返し", await File.ReadAllTextAsync(output));
+        Directory.CreateDirectory(_directory);
+        var output = Path.Combine(_directory, "sentinel");
+        await File.WriteAllTextAsync(output, "unchanged");
+        var result = await RunAsync([.. arguments, "missing.xlsx", "-o", output]);
+        Assert.NotEqual(0, result.ExitCode);
+        Assert.True((result.Error + result.Output).Contains("Unrecognized", StringComparison.OrdinalIgnoreCase) ||
+            (result.Error + result.Output).Contains("--format must be one of", StringComparison.Ordinal));
+        Assert.Equal("unchanged", await File.ReadAllTextAsync(output));
+        Assert.DoesNotContain("Starting", result.Error);
     }
 
     /// <summary>render コマンドが RenderAsync 経由で PDF とマニフェストを生成することを検証します。</summary>
@@ -174,7 +181,6 @@ public sealed partial class ToolIntegrationTests : IDisposable
     [InlineData("pdf")]
     [InlineData("image")]
     [InlineData("svg")]
-    [InlineData("markdown")]
     [InlineData("render")]
     public async Task Every_command_exposes_font_options(string command)
     {
@@ -253,8 +259,8 @@ public sealed partial class ToolIntegrationTests : IDisposable
     /// <param name="arguments">入力エラーを発生させるコマンドライン引数。</param>
     /// <returns>非同期の検証処理を表すタスク。</returns>
     [Theory(DisplayName = "存在しない入力パスまたは未対応の拡張子に対してコマンドが失敗する")]
-    [InlineData("md")]
-    [InlineData("md", "not-found.xlsx", "-o", "output.md")]
+    [InlineData("pdf")]
+    [InlineData("pdf", "not-found.xlsx", "-o", "output.pdf")]
     public async Task Invalid_input_fails(params string[] arguments) => Assert.NotEqual(0, (await RunAsync(arguments)).ExitCode);
 
     /// <summary>

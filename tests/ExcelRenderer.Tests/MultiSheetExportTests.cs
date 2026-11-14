@@ -1,5 +1,4 @@
 using DocumentFormat.OpenXml.Packaging;
-using ExcelRenderer.Markdown;
 using ExcelRenderer.TestFixtures;
 using UglyToad.PdfPig;
 using Xunit;
@@ -16,7 +15,6 @@ public sealed class MultiSheetExportTests : IDisposable
     [InlineData("image")]
     [InlineData("svg")]
     [InlineData("ps")]
-    [InlineData("markdown")]
     public async Task Format_specific_exports_select_multiple_sheets(string format)
     {
         var input = CreateWorkbook();
@@ -41,14 +39,7 @@ public sealed class MultiSheetExportTests : IDisposable
         {
             var text = await File.ReadAllTextAsync(output);
             Assert.DoesNotContain("SecondValue", text);
-            if (format == "markdown")
-            {
-                Assert.True(text.IndexOf("ThirdValue", StringComparison.Ordinal) < text.IndexOf("FirstValue", StringComparison.Ordinal));
-            }
-            else
-            {
-                Assert.Contains("%%Pages: 2", text);
-            }
+            Assert.Contains("%%Pages: 2", text);
         }
     }
 
@@ -57,7 +48,6 @@ public sealed class MultiSheetExportTests : IDisposable
     [InlineData("image")]
     [InlineData("svg")]
     [InlineData("ps")]
-    [InlineData("markdown")]
     public async Task Invalid_or_conflicting_names_preserve_destination(string format)
     {
         var input = CreateWorkbook();
@@ -84,7 +74,7 @@ public sealed class MultiSheetExportTests : IDisposable
         "image" => ExcelConverter.ConvertToImagesAsync(input, output, new() { SheetName = single, SheetNames = names, Dpi = 36 }),
         "svg" => ExcelConverter.ConvertToSvgAsync(input, output, new() { SheetName = single, SheetNames = names }),
         "ps" => ExcelConverter.ConvertToPostScriptAsync(input, output, new() { SheetName = single, SheetNames = names }),
-        _ => ExcelConverter.ConvertToMarkdownAsync(input, output, new MarkdownExportOptions { SheetName = single, SheetNames = names }),
+        _ => throw new ArgumentOutOfRangeException(nameof(format)),
     };
 
     private string CreateWorkbook()

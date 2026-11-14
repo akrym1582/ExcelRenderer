@@ -9,7 +9,7 @@ public sealed partial class ToolIntegrationTests
 {
     [Theory]
     [InlineData("xlsx")]
-    [InlineData("md")]
+    [InlineData("render")]
     public async Task MappingCommandsApplyValuesBeforeRecalculation(string command)
     {
         Directory.CreateDirectory(_directory);
@@ -30,8 +30,10 @@ public sealed partial class ToolIntegrationTests
             using var streamOut = zip.CreateEntry("xl/worksheets/sheet1.xml").Open();
             xml.Save(streamOut);
         }
-        AssertSuccess(await RunAsync(command, input, "--data", data, "-o", output, "--formula-mode", "recalculate"));
-        if (command == "md") Assert.Contains("25", File.ReadAllText(output));
+        var args = new List<string> { command, input, "--data", data, "-o", output, "--formula-mode", "recalculate" };
+        if (command == "render") args.AddRange(["--format", "pdf", "--range", "A1:D4"]);
+        AssertSuccess(await RunAsync(args.ToArray()));
+        if (command == "render") Assert.Contains("25", PdfText.Read(File.ReadAllBytes(output)));
         else
         {
             using var zip = ZipFile.OpenRead(output);
@@ -48,7 +50,6 @@ public sealed partial class ToolIntegrationTests
     [InlineData("render", "skiasharp")]
     [InlineData("image")]
     [InlineData("svg")]
-    [InlineData("md")]
     [InlineData("render")]
     public async Task RenderingCommandsAcceptRecalculation(string command, string? backend = null)
     {
@@ -70,12 +71,12 @@ public sealed partial class ToolIntegrationTests
             using var streamOut = zip.CreateEntry("xl/worksheets/sheet1.xml").Open();
             xml.Save(streamOut);
         }
-        var path = Path.Combine(_directory, command == "md" ? "calculated.md" : command == "pdf" ? "calculated.pdf" : "calculated");
+        var path = Path.Combine(_directory, command == "pdf" ? "calculated.pdf" : "calculated");
         var args = new List<string> { command, input, "-o", path, "--formula-mode", "recalculate" };
-        if (command == "render") args.AddRange(["--format", backend is null ? "markdown" : "pdf"]);
+        if (command == "render") args.AddRange(["--format", "pdf"]);
         if (backend is not null) args.AddRange(["--pdf-backend", backend]);
         AssertSuccess(await RunAsync(args.ToArray()));
-        if (command == "md") Assert.Contains("246", File.ReadAllText(path));
+        if (command is "pdf" or "render") Assert.Contains("246", PdfText.Read(File.ReadAllBytes(path)));
         else Assert.True(File.Exists(path) || Directory.EnumerateFiles(path).Any());
     }
 
@@ -83,7 +84,6 @@ public sealed partial class ToolIntegrationTests
     [InlineData("pdf")]
     [InlineData("image")]
     [InlineData("svg")]
-    [InlineData("md")]
     [InlineData("render")]
     public async Task FormulaModeIsValidatedBeforeInputAndOutput(string command)
     {
@@ -105,7 +105,6 @@ public sealed partial class ToolIntegrationTests
     [InlineData("pdf")]
     [InlineData("image")]
     [InlineData("svg")]
-    [InlineData("md")]
     [InlineData("render")]
     [InlineData("pdf", "skiasharp")]
     [InlineData("render", "skiasharp")]
@@ -130,13 +129,12 @@ public sealed partial class ToolIntegrationTests
             xml.Save(output);
         }
 
-        var path = Path.Combine(_directory, command == "md" ? "result.md" : command == "pdf" ? "result.pdf" : "result");
+        var path = Path.Combine(_directory, command == "pdf" ? "result.pdf" : "result");
         var args = new List<string> { command, input, "-o", path };
-        if (command == "render") args.AddRange(["--format", backend is null ? "markdown" : "pdf"]);
+        if (command == "render") args.AddRange(["--format", "pdf"]);
         if (backend is not null) args.AddRange(["--pdf-backend", backend]);
         AssertSuccess(await RunAsync(args.ToArray()));
-        if (command == "md") Assert.Contains("SAVEDRESULT", File.ReadAllText(path));
-        else if (command == "render" && backend is null) Assert.Contains("SAVEDRESULT", File.Exists(path) ? File.ReadAllText(path) : string.Join("", Directory.GetFiles(path, "*.md").Select(File.ReadAllText)));
+        if (command is "pdf" or "render") Assert.Contains("SAVEDRESULT", PdfText.Read(File.ReadAllBytes(path)));
         else Assert.True(File.Exists(path) || Directory.EnumerateFiles(path).Any());
     }
 }

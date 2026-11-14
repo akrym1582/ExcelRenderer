@@ -44,7 +44,7 @@ public static partial class ExcelConverter
                     page.Sheet.Cells.TryGetValue(unsupportedAddress, out var unsupportedCell) && unsupportedCell.UnsupportedRichTextFormatting &&
                     seen.Add((unsupportedAddress, "UnsupportedRichTextFormatting")))
                 {
-                    diagnostics.Add(new("UnsupportedRichTextFormatting", DiagnosticSeverity.Warning, DiagnosticStage.Layout, "Some partial text decorations or rotated formatting are not rendered.", page.Sheet.Name, Markdown.MarkdownExporter.Range(new(unsupportedAddress, unsupportedAddress)), SourcePageNumber: page.Descriptor.SourcePageNumber));
+                    diagnostics.Add(new("UnsupportedRichTextFormatting", DiagnosticSeverity.Warning, DiagnosticStage.Layout, "Some partial text decorations or rotated formatting are not rendered.", page.Sheet.Name, CellRangeFormatter.Range(new(unsupportedAddress, unsupportedAddress)), SourcePageNumber: page.Descriptor.SourcePageNumber));
                 }
 
                 if (options.DetectUnsupportedFeatures && command is DrawTextCommand { SourceAddress: { } fallbackAddress } &&
@@ -58,7 +58,7 @@ public static partial class ExcelConverter
                         DiagnosticStage.Layout,
                         "The supplied measurement service has no partial-formatting capability; cell formatting is used for the complete text.",
                         page.Sheet.Name,
-                        Markdown.MarkdownExporter.Range(new(fallbackAddress, fallbackAddress)),
+                        CellRangeFormatter.Range(new(fallbackAddress, fallbackAddress)),
                         SourcePageNumber: page.Descriptor.SourcePageNumber));
                 }
 
@@ -68,7 +68,7 @@ public static partial class ExcelConverter
                     Layout.RectangleGeometry.Intersect(unmeasured.Bounds, new(0, 0, page.Descriptor.WidthPoints, page.Descriptor.HeightPoints)) is not null &&
                     seen.Add((unmeasuredAddress, "CellTextTooSmall")))
                 {
-                    diagnostics.Add(new("CellTextTooSmall", DiagnosticSeverity.Warning, DiagnosticStage.Layout, "Visible cell text is smaller than the configured minimum output font size.", page.Sheet.Name, Markdown.MarkdownExporter.Range(new(unmeasuredAddress, unmeasuredAddress)), SourcePageNumber: page.Descriptor.SourcePageNumber));
+                    diagnostics.Add(new("CellTextTooSmall", DiagnosticSeverity.Warning, DiagnosticStage.Layout, "Visible cell text is smaller than the configured minimum output font size.", page.Sheet.Name, CellRangeFormatter.Range(new(unmeasuredAddress, unmeasuredAddress)), SourcePageNumber: page.Descriptor.SourcePageNumber));
                 }
 
                 if (command is DrawTextCommand { SourceAddress: { } address, TextLayout: { } layout } text)
@@ -99,7 +99,7 @@ public static partial class ExcelConverter
                     {
                         if (seen.Add((address, code)))
                         {
-                            diagnostics.Add(new(code, DiagnosticSeverity.Warning, DiagnosticStage.Layout, message, page.Sheet.Name, Markdown.MarkdownExporter.Range(new(address, address)), SourcePageNumber: page.Descriptor.SourcePageNumber));
+                            diagnostics.Add(new(code, DiagnosticSeverity.Warning, DiagnosticStage.Layout, message, page.Sheet.Name, CellRangeFormatter.Range(new(address, address)), SourcePageNumber: page.Descriptor.SourcePageNumber));
                         }
                     }
                 }
@@ -165,7 +165,7 @@ public static partial class ExcelConverter
                 var bounds = Layout.ObjectGeometry.GetSheetRect(geometry, anchor.From ?? new(1, 1), anchor.FromOffsetX, anchor.FromOffsetY, anchor.ExtentWidth, anchor.ExtentHeight, anchor);
                 if (bounds.Width > 0 && bounds.Height > 0 && (regions is null || regions.Any(region => Layout.RectangleGeometry.Intersect(bounds, region.SourceBounds) is not null)))
                 {
-                    diagnostics.Add(new(feature.Code, feature.Code == "ConditionalFormattingDisabled" ? DiagnosticSeverity.Info : DiagnosticSeverity.Warning, DiagnosticStage.Read, feature.Message, sheet.Name, feature.Ranges.Count == 0 ? null : string.Join(" ", feature.Ranges.Select(Markdown.MarkdownExporter.Range)), feature.Id, SourcePageNumber: pageNumber));
+                    diagnostics.Add(new(feature.Code, feature.Code == "ConditionalFormattingDisabled" ? DiagnosticSeverity.Info : DiagnosticSeverity.Warning, DiagnosticStage.Read, feature.Message, sheet.Name, feature.Ranges.Count == 0 ? null : string.Join(" ", feature.Ranges.Select(CellRangeFormatter.Range)), feature.Id, SourcePageNumber: pageNumber));
                 }
 
                 continue;
@@ -179,7 +179,7 @@ public static partial class ExcelConverter
             }).ToArray();
             if (visible.Length > 0)
             {
-                diagnostics.Add(new(feature.Code, feature.Code == "ConditionalFormattingDisabled" ? DiagnosticSeverity.Info : DiagnosticSeverity.Warning, DiagnosticStage.Read, feature.Message, sheet.Name, string.Join(" ", visible.Select(Markdown.MarkdownExporter.Range)), feature.Id, SourcePageNumber: pageNumber));
+                diagnostics.Add(new(feature.Code, feature.Code == "ConditionalFormattingDisabled" ? DiagnosticSeverity.Info : DiagnosticSeverity.Warning, DiagnosticStage.Read, feature.Message, sheet.Name, string.Join(" ", visible.Select(CellRangeFormatter.Range)), feature.Id, SourcePageNumber: pageNumber));
             }
         }
     }

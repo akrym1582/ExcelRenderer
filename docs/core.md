@@ -50,7 +50,7 @@ All sheets, including hidden sheets, print in workbook order when both `SheetNam
 
 Pictures use their complete source image stretched into the placement rectangle. Position, size, and Z order remain supported. Only the page containing the picture's top-left point prints it; points outside the print area are omitted. Overflow is clipped at the PDF page boundary. Pictures are neither split nor repeated across pages or print titles. Each matching print area prints independently. Crop, rotation, and flips are ignored. Shapes, callouts, shape text, and PDF link annotations are omitted. Cell hyperlink display text remains; HYPERLINK formulas use CachedValue. In default CachedValue mode, formula displays use typed saved results from the original XML. OpenXml.Reader formats the immutable saved values directly. Missing caches display empty text with a diagnostic. Core has no formula mode or evaluation options; formula text and typed/shared saved results remain available as metadata. Non-formula cells retain ordinary formatting. Images require a complete successful pixel decode; partial or corrupt images are skipped with nonfatal diagnostics.
 
-There is no format/range/page extraction/trim/continuous-image API and no PNG/SVG/Markdown renderer.
+There is no format/range/page extraction/trim/continuous-image API and no PNG/SVG renderer.
 
 ## Explicit fonts
 
@@ -121,7 +121,7 @@ Header/footer handling inherits the existing field expansion and placement, with
 
 ## Shared implementation
 
-Reader owns shared input preparation/spooling; Core uses its settings and preparer directly, while main retains its public settings adapter. The main library delegates image resources, workbook/cell traversal, style interning, geometry/page planning and building, text placement, cell-layer command generation, diagnostic aggregation and basic PDF drawing/saving to Core. The main assembly retains its public models, advanced font painters, image transforms, shapes, links, PNG/SVG/Markdown, selection/trim, and continuous orchestration.
+Reader owns shared input preparation/spooling; Core uses its settings and preparer directly, while main retains its public settings adapter. The main library delegates image resources, workbook/cell traversal, style interning, geometry/page planning and building, text placement, cell-layer command generation, diagnostic aggregation and basic PDF drawing/saving to Core. The main assembly retains its public models, advanced font painters, image transforms, shapes, links, PNG/SVG, selection/trim, and continuous orchestration.
 
 Full reader/layout/drawing/PDF adapters provide the advanced behavior. Public main APIs stay in their existing assembly. See [the architecture](core-architecture.md), [verification results](core-refactor-validation.md) and [source ownership](core-source-map.md).
 

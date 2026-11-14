@@ -49,13 +49,13 @@ for name,source,options in cases:
  report['cases'].append({'case':name,'pages':len(olds),'max_pixel_mae':mae,'structure_equal':True})
  print(name,len(olds),mae,'structure equal',flush=True)
 # Compare native formats and continuous output on a bounded feature selection.
-for fmt,layout in [('png','paginated'),('svg','paginated'),('png','continuous'),('svg','continuous'),('markdown','paginated')]:
+for fmt,layout in [('png','paginated'),('svg','paginated'),('png','continuous'),('svg','continuous')]:
  name=fmt+'-'+layout
  dirs=[]
  for tag,tool in [('old',old),('new',new)]:
   dest=O/(name+'-'+tag);shutil.rmtree(dest,ignore_errors=True);dirs.append(dest)
   options=['--sheet','Synthetic']
-  if fmt != 'markdown':options+=['--range','A1:F20']
+  options+=['--range','A1:F20']
   if fmt in ['png','svg']:options+=['--image-layout',layout]
   run('dotnet',tool,'render',feature,'--format',fmt,'-o',dest,'--font-file',font,'--no-system-fonts',*options)
  files=[sorted(p.relative_to(d) for p in d.rglob('*') if p.is_file()) for d in dirs];assert files[0]==files[1],name

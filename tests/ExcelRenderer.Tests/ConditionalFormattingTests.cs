@@ -278,7 +278,7 @@ public sealed partial class ConditionalFormattingTests
     {
         using var input = Book("<row r=\"1\"><c r=\"A1\"><v>1</v></c></row>", Rule(type, body, priority: code.EndsWith("PriorityInvalid", StringComparison.Ordinal) ? 0 : 1, dxf: dxf));
         using var output = new MemoryStream();
-        var result = await ExcelConverter.RenderAsync(input, new() { OutputFormat = OutputFormat.Markdown, DiagnosticOptions = new() { DetectUnsupportedFeatures = true } }, new SingleStreamOutputSink(output));
+        var result = await ExcelConverter.RenderAsync(input, new() { OutputFormat = OutputFormat.Pdf, DiagnosticOptions = new() { DetectUnsupportedFeatures = true } }, new SingleStreamOutputSink(output));
         Assert.Contains(result.Diagnostics, diagnostic => diagnostic.Code == code && diagnostic.ObjectId == "conditional-format-1");
     }
 
@@ -289,7 +289,7 @@ public sealed partial class ConditionalFormattingTests
         using var output = new MemoryStream();
         var result = await ExcelConverter.RenderAsync(input, new()
         {
-            OutputFormat = OutputFormat.Markdown,
+            OutputFormat = OutputFormat.Pdf,
             ReadOptions = new() { ApplyConditionalFormatting = false, ColumnWidthMetrics = new() { MaximumDigitWidthPixels96Dpi = 7 } },
             DiagnosticOptions = new() { DetectUnsupportedFeatures = true, StrictMode = true },
         }, new SingleStreamOutputSink(output));

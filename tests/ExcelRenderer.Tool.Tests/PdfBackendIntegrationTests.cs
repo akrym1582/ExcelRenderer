@@ -70,7 +70,6 @@ public sealed partial class ToolIntegrationTests
     [Theory]
     [InlineData("png", "pdfsharp")]
     [InlineData("svg", "skiasharp")]
-    [InlineData("markdown", "pdfsharp")]
     [InlineData("pdf", "unknown")]
     [InlineData("pdf", "pdfsharp")]
     [InlineData("pdf", "SKIASHARP")]

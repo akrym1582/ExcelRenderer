@@ -19,7 +19,6 @@ public sealed class PdfRemovalContractTests
     [InlineData(OutputFormat.Pdf)]
     [InlineData(OutputFormat.Png)]
     [InlineData(OutputFormat.Svg)]
-    [InlineData(OutputFormat.Markdown)]
     public async Task Reserved_zero_fails_before_input_and_sink_access(OutputFormat format)
     {
         using var input = new MemoryStream([1, 2, 3]);
@@ -35,26 +34,13 @@ public sealed class PdfRemovalContractTests
     [InlineData(OutputFormat.Pdf)]
     [InlineData(OutputFormat.Png)]
     [InlineData(OutputFormat.Svg)]
-    [InlineData(OutputFormat.Markdown)]
     public async Task Default_engine_allows_every_output_format(OutputFormat format)
     {
         using var input = Workbook();
         using var output = new MemoryStream();
-        var metrics = new Dictionary<string, double>();
-        ConversionMetrics.Observer = (key, value) => metrics[key] = metrics.GetValueOrDefault(key) + value;
-        try
-        {
-            var result = await ExcelConverter.RenderAsync(input, new() { OutputFormat = format, FontOptions = new() { AllowSystemFonts = false } }, new SingleStreamOutputSink(output));
-            Assert.Single(result.Artifacts);
-            Assert.True(output.Length > 0);
-            if (format == OutputFormat.Markdown)
-            {
-                Assert.False(metrics.ContainsKey("pdfBackend"));
-                Assert.False(metrics.ContainsKey("pdfSubset.ms"));
-                Assert.False(metrics.ContainsKey("pdfSave"));
-            }
-        }
-        finally { ConversionMetrics.Observer = null; }
+        var result = await ExcelConverter.RenderAsync(input, new() { OutputFormat = format, FontOptions = new() { AllowSystemFonts = false } }, new SingleStreamOutputSink(output));
+        Assert.Single(result.Artifacts);
+        Assert.True(output.Length > 0);
     }
 
     [Fact]

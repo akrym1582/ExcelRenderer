@@ -13,7 +13,7 @@ dotnet run --project samples/ExcelRenderer.Formulas.Sample -c Release -- /tmp/fo
 
 引数は、新規または空の出力ディレクトリ、明細件数（0～1000、既定 3）、通常の TrueType フォントのパスです。フォント省略時はリポジトリの `third_party/NotoSansJP/NotoSansJP-Regular.ttf` を使います。描画に必要なネイティブ依存は本体ライブラリと同じです。
 
-`template.xlsx` を生成し、数量・単価を Mapping で設定して明細行を展開します。数式と名前付き範囲 `Amounts` を書き換え、再計算した `invoice.xlsx` を保存し、保存済み合計値を検証します。計算順序は数量×単価 → 別シートの固定税率 `Rates!$A$1` → ROUND → SUM です。元テンプレートには意図的に古いキャッシュ 999 を設定しています。その後、Invoice シートを明示再計算モードで PDF・PNG・SVG・Markdown に出力します。外部表計算エンジンは使いません。
+`template.xlsx` を生成し、数量・単価を Mapping で設定して明細行を展開します。数式と名前付き範囲 `Amounts` を書き換え、再計算した `invoice.xlsx` を保存し、保存済み合計値を検証します。計算順序は数量×単価 → 別シートの固定税率 `Rates!$A$1` → ROUND → SUM です。元テンプレートには意図的に古いキャッシュ 999 を設定しています。その後、Invoice シートを明示再計算モードで PDF・PNG・SVG に出力します。外部表計算エンジンは使いません。
 
 出力先を分けて 0・1・4 件も実行できます。
 

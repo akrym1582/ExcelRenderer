@@ -11,51 +11,37 @@ namespace ExcelRenderer.Mapping.Expressions;
 internal sealed class CellExpression
 {
     private readonly string? function;
+    private readonly DataPath? colorPath;
     private readonly string[] arguments = System.Array.Empty<string>();
 
     /// <summary>Initializes a new instance of the <see cref="CellExpression"/> class.</summary>
     /// <param name="text">The text.</param>
     internal CellExpression(string text)
     {
-        var quote = '\0';
-        var escaped = false;
-        var separator = -1;
-        for (var i = 0; i < text.Length; i++)
+        var segments = Split(text);
+        Path = new DataPath(segments[0].Trim());
+        foreach (var segment in segments.GetRange(1, segments.Count - 1))
         {
-            var c = text[i];
-            if (escaped)
-            {
-                escaped = false;
-            }
-            else if (c == '\\' && quote != '\0')
-            {
-                escaped = true;
-            }
-            else if (quote != '\0')
-            {
-                if (c == quote)
-                {
-                    quote = '\0';
-                }
-            }
-            else if (c == '\'' || c == '"')
-            {
-                quote = c;
-            }
-            else if (c == '|')
-            {
-                separator = i;
-                break;
-            }
-        }
-
-        Path = new DataPath((separator < 0 ? text : text.Substring(0, separator)).Trim());
-        if (separator >= 0)
-        {
-            var match = Regex.Match(text.Substring(separator + 1).Trim(), @"^(format|date)\((.*)\)$", RegexOptions.Singleline);
+            var match = Regex.Match(segment.Trim(), @"^(format|date|font-color)\((.*)\)$", RegexOptions.Singleline);
             if (!match.Success)
             {
-                throw new FormatException("Expected format(\"format\"[, \"culture\"]) or date(\"format\"[, \"culture\"]).");
+                throw new FormatException("Expected format(), date(), or font-color().");
+            }
+
+            if (match.Groups[1].Value == "font-color")
+            {
+                if (colorPath is not null)
+                {
+                    throw new FormatException("font-color may only appear once.");
+                }
+
+                colorPath = new DataPath(match.Groups[2].Value.Trim());
+                continue;
+            }
+
+            if (function is not null)
+            {
+                throw new FormatException("Only one format() or date() conversion is supported.");
             }
 
             function = match.Groups[1].Value;
@@ -74,6 +60,45 @@ internal sealed class CellExpression
 
     /// <summary>Gets the compiled data path.</summary>
     internal DataPath Path { get; }
+
+    /// <summary>Gets paths used by cell decorations.</summary>
+    internal IEnumerable<DataPath> DecorationPaths
+    {
+        get
+        {
+            if (colorPath is not null)
+            {
+                yield return colorPath;
+            }
+        }
+    }
+
+    /// <summary>Evaluates an optional font color.</summary>
+    /// <param name="root">Root data.</param>
+    /// <param name="aliases">Scoped aliases.</param>
+    /// <param name="element">Repeated element.</param>
+    /// <param name="substituteWildcard">Whether to substitute the wildcard.</param>
+    /// <returns>A six-digit RGB color or null.</returns>
+    internal string? EvaluateColor(object? root, IReadOnlyDictionary<string, object?> aliases, object? element, bool substituteWildcard)
+    {
+        if (colorPath is null)
+        {
+            return null;
+        }
+
+        var value = DataPath.Scalar(colorPath.Resolve(root, aliases, element, substituteWildcard));
+        if (value is null)
+        {
+            return null;
+        }
+
+        if (value is not string text || !Regex.IsMatch(text, @"^#[0-9a-fA-F]{6}\z"))
+        {
+            throw new FormatException("font-color requires #RRGGBB or null.");
+        }
+
+        return text.Substring(1).ToUpperInvariant();
+    }
 
     /// <summary>Resolves and formats a cell expression.</summary>
     /// <param name="root">The root.</param>
@@ -117,5 +142,49 @@ internal sealed class CellExpression
         }
 
         return formattable.ToString(arguments[0], culture);
+    }
+
+    private static List<string> Split(string text)
+    {
+        var result = new List<string>();
+        var quote = '\0';
+        var escaped = false;
+        var start = 0;
+        for (var index = 0; index < text.Length; index++)
+        {
+            var character = text[index];
+            if (escaped)
+            {
+                escaped = false;
+            }
+            else if (quote != '\0' && character == '\\')
+            {
+                escaped = true;
+            }
+            else if (quote != '\0')
+            {
+                if (character == quote)
+                {
+                    quote = '\0';
+                }
+            }
+            else if (character is '\'' or '"')
+            {
+                quote = character;
+            }
+            else if (character == '|')
+            {
+                result.Add(text.Substring(start, index - start));
+                start = index + 1;
+            }
+        }
+
+        if (quote != '\0')
+        {
+            throw new FormatException("Unterminated expression quote.");
+        }
+
+        result.Add(text.Substring(start));
+        return result;
     }
 }

@@ -240,6 +240,8 @@ See [Command-line usage](#command-line-usage), [C# API (high-level)](#c-api-high
 
 ## Excel template mapping
 
+Mapping templates support `**//` comments, variable font colors with `font-color(path)`, and PNG/JPEG byte-array or Base64 image binding with `**@image`. Image dimensions default to pixels; explicit `px` and `pt` are supported. See the [Mapping guide](docs/mapping.md#template-comments-font-colors-and-bound-images).
+
 `ExcelRenderer.Mapping` is a standalone .NET Standard 2.1 package for mapping C#
 objects or JSON into XLSX templates. It supports `**` cell paths, single-row arrays,
 nested `**@start-array` / `**@end-array` blocks, explicit CLR formatting and manual

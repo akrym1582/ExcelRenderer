@@ -124,6 +124,8 @@ dotnet add package SkiaSharp.NativeAssets.Linux --version 4.151.0
 dotnet add package ExcelRenderer.Mapping
 ```
 
+テンプレートでは `**//` コメント、`font-color(path)` による変数の文字色指定、`**@image` による PNG/JPEG のバイト配列・Base64 画像差し込みに対応します。画像寸法は単位なしなら px、明示指定は `px`・`pt` を使用できます。詳細は [Mapping ガイド](docs/mapping.ja.md) を参照してください。
+
 `ExcelRenderer.Mapping` 名前空間の `ExcelTemplateMapper` を使用します。
 マッピング後に C# から PDF などへ変換する場合は `ExcelRenderer` も追加し、
 必要に応じて `ExcelRenderer.Fonts` を併用してください。

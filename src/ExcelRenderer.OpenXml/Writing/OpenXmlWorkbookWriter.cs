@@ -279,6 +279,7 @@ public static partial class OpenXmlWorkbookWriter
                 workbookPart.Workbook.Save();
             }
 
+            AddImages(stage, plan, cancellationToken);
             stage.Position = 0;
             using (var validation = OpenXmlWorkbookReader.Open(stage, cancellationToken: cancellationToken))
             {
@@ -537,6 +538,11 @@ public static partial class OpenXmlWorkbookWriter
     {
         cell.Elements().Where(child => child.Name.LocalName is "v" or "is" or "f").Remove();
         cell.Attribute("t")?.Remove();
+        if (edit.FontColor is { } color)
+        {
+            ApplyFontColor(cell, row, source, edit.Column, color, styles!, styleEdits);
+        }
+
         var value = edit.Value;
         if (value == null)
         {

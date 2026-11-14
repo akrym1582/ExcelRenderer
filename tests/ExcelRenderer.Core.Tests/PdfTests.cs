@@ -188,7 +188,7 @@ public sealed class PdfTests
     [InlineData("06-layout-and-pagination.xlsx", 4, 4)]
     [InlineData("07-multiple-sheets.xlsx", 2, 2)]
     [InlineData("08-print-scaling.xlsx", 2, 1)]
-    [InlineData("09-cell-border.xlsx", 1, 1)]
+    [InlineData("09-cell-border.xlsx", 2, 1)]
     public async Task Core_owned_workbooks_keep_expected_page_counts_and_readable_PDF(string name, int expectedPages, int fixedWidthPages)
     {
         using var input = File.OpenRead(Path.Combine(AppContext.BaseDirectory, "Baselines", "Inputs", name)); using var output = new MemoryStream();

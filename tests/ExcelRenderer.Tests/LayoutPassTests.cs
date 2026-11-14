@@ -1252,7 +1252,7 @@ public sealed class LayoutPassTests
         var page = Assert.Single(new ReportLayoutEngine(new FixedTextMeasurer()).Layout(sheet).Pages);
 
         var image = Assert.Single(page.Images!);
-        Assert.Equal(new ReportRect(36, 36, 10, 11), image.Bounds);
+        Assert.Equal(new ReportRect(164, 51, 10, 11), image.Bounds);
         Assert.Equal(imageBytes, image.ImageBytes);
     }
 
@@ -1298,7 +1298,7 @@ public sealed class LayoutPassTests
 
         new ResolvePrintAreaPass().Execute(context);
 
-        Assert.Equal(new CellRange(new(4, 6), new(4, 6)), context.PrintArea);
+        Assert.Equal(new CellRange(new(1, 1), new(4, 6)), context.PrintArea);
     }
 
     /// <summary>

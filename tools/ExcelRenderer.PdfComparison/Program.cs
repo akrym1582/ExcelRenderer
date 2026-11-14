@@ -285,6 +285,7 @@ if (reports.Count == 0)
 }
 
 var borderContracts = JsonNode.Parse(File.ReadAllText(Path.Combine(root, "tools/ExcelRenderer.PdfComparison/shared-border-contracts.json")))!;
+var originContracts = JsonNode.Parse(File.ReadAllText(Path.Combine(root, "tests/Shared/PrintOriginReview/manifest.json")))!;
 foreach (var report in reports)
 {
     var actual = JsonSerializer.SerializeToElement(report);
@@ -301,6 +302,21 @@ foreach (var report in reports)
     if (colorContracts["full"]?[name] is { } colorContract)
     {
         frozen["commandFingerprints"] = colorContract["commandFingerprints"]!.DeepClone();
+    }
+
+    if (originContracts["full/" + name] is { } originContract)
+    {
+        var source = Path.Combine(root, samples[name]);
+        if (Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(baseline))).ToLowerInvariant() != originContract["historical_expected_sha256"]!.GetValue<string>() ||
+            Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(source))).ToLowerInvariant() != originContract["input_sha256"]!.GetValue<string>())
+        {
+            throw new InvalidOperationException("Print-origin review does not bind the frozen input and report.");
+        }
+
+        foreach (var field in new[] { "commandFingerprints", "pagePlanSha256", "pages" })
+        {
+            frozen[field] = originContract["expected"]![field]!.DeepClone();
+        }
     }
 
     if (!JsonNode.DeepEquals(JsonNode.Parse(actual.GetRawText()), frozen))

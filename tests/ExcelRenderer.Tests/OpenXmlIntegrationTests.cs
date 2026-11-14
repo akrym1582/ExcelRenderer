@@ -100,6 +100,15 @@ public sealed class OpenXmlIntegrationTests
                 }
             }
 
+            var printAreaUpdates = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, Dictionary<string, string>>>>(
+                File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "ReaderGolden", "print-area-overflow-artifacts.json")))!;
+            if (printAreaUpdates.TryGetValue(name, out var printAreaUpdate))
+            {
+                var previous = printAreaUpdate["old"].Where(pair => pair.Key.StartsWith(format + "/", StringComparison.Ordinal)).ToDictionary();
+                Assert.Equal(previous.OrderBy(pair => pair.Key), expected.OrderBy(pair => pair.Key));
+                expected = printAreaUpdate["new"].Where(pair => pair.Key.StartsWith(format + "/", StringComparison.Ordinal)).ToDictionary();
+            }
+
             Assert.Equal(expected.Keys.Order(), hashes.Keys.Order());
             foreach (var pair in expected) Assert.True(pair.Value == hashes[pair.Key], name + " " + pair.Key + " differs from retained output");
         }

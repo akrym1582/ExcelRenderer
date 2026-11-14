@@ -677,7 +677,7 @@ font manager. If that font cannot be measured, the fallback MDW is used (8px by 
 Setting that property to `null` opts into measuring the drawing substitute at the Normal size, and
 `MaximumDigitWidthFallback` is reported through conversion diagnostics.
 
-Distinct print areas are paginated independently without filling their bounding rectangle.
+Distinct print areas are paginated independently without filling their bounding rectangle. When no print area is specified, paginated output starts at A1 and preserves leading blank rows and columns. Whole-column print areas (such as `A:Z`) use the last used row; whole-row print areas use the last used column. The explicitly specified axis is retained.
 Explicit-scale output honors saved row and column page breaks and the worksheet page order;
 Fit-to-pages ignores manual breaks. The combined pages are renumbered once across all areas, so
 page fields and PDF/PNG/SVG page selection use the same sequence. Objects intersecting more than
@@ -687,7 +687,7 @@ cells, objects, and their body clip together; continuous output intentionally ig
 Cell indentation, content padding, ordinary rotation, and stacked top-to-bottom text are carried
 into PDF, PNG, and SVG drawing.
 
-Ordinary horizontal text with wrapping and shrink-to-fit disabled can extend across consecutive empty cells in the same row. Left-aligned text extends right, right-aligned text extends left, and centered text uses independent boundaries on both sides without moving its anchor. Stored values (including explicit empty strings and values hidden by formatting), formulas (including empty or missing results), and entire merged ranges stop overflow. Style-only blanks are transparent to this search; hidden columns have zero width. Text is clipped to the current page, print area, repeated-title region, selected range, or continuous canvas. Merged source cells, rotated/vertical text, and special alignments retain their existing behavior.
+Ordinary horizontal text with wrapping and shrink-to-fit disabled can extend across consecutive empty cells in the same row. Left-aligned text extends right, right-aligned text extends left, and centered text uses independent boundaries on both sides without moving its anchor. Stored values (including explicit empty strings and values hidden by formatting), formulas (including empty or missing results), and entire merged ranges stop overflow. Style-only blanks are transparent to this search; hidden columns have zero width. Text is clipped to the current page, print area, repeated-title region, selected range, or continuous canvas. Merged source text can also overflow blank cells; occupied neighbors on any row spanned by the merge bound that overflow. Rotated/vertical text and special alignments retain their existing behavior.
 
 Wrapped cell text is finalized during layout into lines and resolved font runs, including
 grapheme-safe forced breaks and explicit-newline markers. The result is carried by the draw

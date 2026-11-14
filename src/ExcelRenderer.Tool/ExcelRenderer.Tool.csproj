@@ -20,7 +20,7 @@
     <PackageTags>excel xlsx pdf postscript png cli dotnet-tool</PackageTags>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="../../README.md" Pack="true" PackagePath="/" />
+    <None Include="../../docs/nuget/ExcelRenderer.Tool.md" Pack="true" PackagePath="/README.md" />
     <None Include="../../THIRD-PARTY-NOTICES.md" Pack="true" PackagePath="/" />
   </ItemGroup>
   <ItemGroup>

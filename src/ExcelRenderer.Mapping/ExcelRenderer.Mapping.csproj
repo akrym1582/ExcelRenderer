@@ -16,7 +16,7 @@
   <ItemGroup>
     <PackageReference Include="DocumentFormat.OpenXml" Version="3.3.0" />
     <PackageReference Include="System.Text.Json" Version="10.0.0" />
-    <None Include="../../docs/mapping.md" Pack="true" PackagePath="README.md" />
+    <None Include="../../docs/nuget/ExcelRenderer.Mapping.md" Pack="true" PackagePath="/README.md" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../ExcelRenderer.OpenXml/ExcelRenderer.OpenXml.csproj" PrivateAssets="all" />

@@ -1,0 +1,56 @@
+name: Source mutation checks
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/source-mutations.yml'
+      - 'scripts/check-output-mutations.py'
+      - 'scripts/check-core-shared-mutations.py'
+      - 'scripts/test-fonts.sh'
+      - 'src/ExcelRenderer/SkiaSharp/**'
+      - 'Directory.Build.*'
+      - 'Directory.Packages.props'
+      - 'global.json'
+      - 'src/ExcelRenderer/Rendering/PageViewport.cs'
+      - 'src/ExcelRenderer/ExcelConverter.Viewports.cs'
+      - 'src/ExcelRenderer/CoreIntegration/FullCellSelection.cs'
+      - 'src/ExcelRenderer.Core/Excel/CoreExcelReader.OpenXml.cs'
+      - 'src/ExcelRenderer.Core/Pdf/GeneratedPdfFinalizer.cs'
+      - 'src/ExcelRenderer.Core/Layout/SheetGeometry.cs'
+      - 'tests/**'
+  schedule:
+    - cron: '23 3 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  mutations:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Set up fixed fonts
+        run: |
+          bash scripts/install-ci-apt-packages.sh fontconfig ghostscript
+          source scripts/test-fonts.sh
+          echo "FONTCONFIG_FILE=$FONTCONFIG_FILE" >> "$GITHUB_ENV"
+      - run: dotnet restore ExcelRenderer.slnx --locked-mode
+      - name: Check regression detection with temporary mutations
+        run: python3 scripts/check-output-mutations.py
+
+      - name: Verify shared Core geometry regression detection
+        run: python3 scripts/check-core-shared-mutations.py
+
+      - name: Upload mutation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: source-mutations
+          path: |
+            TestResults/Mutations/**
+            TestResults/Core/SharedMutations/**
+          retention-days: 14

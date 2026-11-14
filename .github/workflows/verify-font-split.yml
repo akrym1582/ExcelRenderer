@@ -12,21 +12,6 @@ permissions:
 
 jobs:
   verify:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 10.0.x
-      - name: Restore all projects for the dependency audit
-        run: dotnet restore ExcelRenderer.slnx --locked-mode
-      - name: Rebuild all projects, including samples and audit tools
-        run: dotnet build ExcelRenderer.slnx -c Release -t:Rebuild --no-restore --verbosity:minimal -m:1
-      - run: dotnet test ExcelRenderer.slnx --configuration Release --no-build --no-restore -m:1
-      - name: Pack all four distribution packages from the verified build
-        run: dotnet pack ExcelRenderer.slnx -c Release --no-build --no-restore -m:1 -p:BuildProjectReferences=false -o artifacts/packages
-      - run: python scripts/check-no-pdfsharp.py --packages artifacts/packages
-      - name: Verify the package distribution contract
-        run: python scripts/package_distribution.py --packages artifacts/packages
-      - name: Verify optional fonts and installed CLI with shared PR checks
-        run: python3 scripts/validate-font-packages.py --packages artifacts/packages --work "$RUNNER_TEMP/font-package-consumers"
+    uses: ./.github/workflows/pdf-build-distribution.yml
+    with:
+      platforms: '["ubuntu-22.04"]'

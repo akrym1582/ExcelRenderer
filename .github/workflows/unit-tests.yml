@@ -44,27 +44,17 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore ExcelRenderer.slnx --locked-mode
 
-      - name: Check regression detection with temporary mutations
-        run: python3 scripts/check-output-mutations.py
-
-      - name: Verify shared Core geometry regression detection
-        run: python3 scripts/check-core-shared-mutations.py
-
       - name: Rebuild solution
         run: dotnet build ExcelRenderer.slnx -t:Rebuild --configuration Release --no-restore
 
-      - name: Verify standalone Reader and Core dependency isolation
-        run: python3 scripts/validate-reader-isolation.py
-
-      - name: Run unit tests
+      # Core and Formulas own their isolated suites; distribution owns CLI tests.
+      - name: Run main, OpenXml and Mapping tests
         env:
           EXCELRENDERER_REQUIRE_GHOSTSCRIPT: '1'
-        run: >-
-          dotnet test ExcelRenderer.slnx
-          --configuration Release
-          --no-build
-          --logger "trx;LogFileName=unit-tests.trx"
-          --results-directory TestResults
+        run: |
+          for project in ExcelRenderer.Tests ExcelRenderer.OpenXml.Tests ExcelRenderer.Mapping.Tests; do
+            dotnet test "tests/$project" -c Release --no-build --no-restore --logger "trx;LogFileName=$project.trx" --results-directory TestResults
+          done
 
       - name: Decode PostScript source text and glyph metadata independently
         run: >-
@@ -79,6 +69,40 @@ jobs:
           tests/ExcelRenderer.Tests/bin/Release/net10.0/SampleOutputs/PostScript/drawing.ps
           --output tests/ExcelRenderer.Tests/bin/Release/net10.0/SampleOutputs/PostScript/font-validation.json
 
+      - name: Upload test output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-output-pr-${{ github.event.pull_request.number }}
+          path: |
+            TestResults/**/*.trx
+            tests/ExcelRenderer.Tests/bin/Release/net10.0/SampleOutputs/**
+          if-no-files-found: warn
+          retention-days: 14
+
+  rendering:
+    name: PDF rendering regression
+    needs: [test, core]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Set up fixed fonts
+        run: |
+          bash scripts/install-ci-apt-packages.sh fontconfig
+          source scripts/test-fonts.sh
+          echo "FONTCONFIG_FILE=$FONTCONFIG_FILE" >> "$GITHUB_ENV"
+      - run: dotnet restore ExcelRenderer.slnx --locked-mode
+      - run: dotnet build ExcelRenderer.slnx -c Release --no-restore
+      # Both artifacts retain repository-relative paths (tests/ and TestResults/).
+      - uses: actions/download-artifact@v4
+        with:
+          name: test-output-pr-${{ github.event.pull_request.number }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: core-ubuntu-latest
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -134,33 +158,17 @@ jobs:
       - name: Verify comparison detects removed glyphs and additional ink
         run: python scripts/check-pdf-comparison-mutations.py
 
-      - name: Pack four distribution packages
-        run: dotnet pack ExcelRenderer.slnx -c Release --no-build --no-restore -p:BuildProjectReferences=false -o artifacts/formulas-packages
-
-      - name: Audit removed dependency in source, graphs, assemblies and packages
-        run: python scripts/check-no-pdfsharp.py --packages artifacts/formulas-packages
-
-      - name: Verify dependency audit rejects deliberate contamination
-        run: python scripts/check-no-pdfsharp-mutations.py
-
-      - name: Verify isolated formula package consumers
-        run: python3 scripts/validate-formulas-packages.py --packages artifacts/formulas-packages --work "$RUNNER_TEMP/formula-package-consumers"
-
-      - name: Verify font package split with the same checks as the standalone workflow
-        run: python3 scripts/validate-font-packages.py --packages artifacts/formulas-packages --work "$RUNNER_TEMP/font-package-consumers"
-
-      - name: Upload test output
+      - name: Upload rendering evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-output-pr-${{ github.event.pull_request.number }}
+          name: rendering-regression
           path: |
-            TestResults/**/*.trx
-            TestResults/Mutations/**
-            tests/ExcelRenderer.Tests/bin/Release/net10.0/SampleOutputs/**
             artifacts/pdf-comparison/**
+            artifacts/pdfsharp-removal-current/**
             artifacts/pr90-image-review/independent.json
             artifacts/libreoffice-regression/**
+            artifacts/shared-border-mutations.json
           if-no-files-found: warn
           retention-days: 14
 
@@ -261,3 +269,5 @@ jobs:
 
   pdf-distribution:
     uses: ./.github/workflows/pdf-build-distribution.yml
+    with:
+      skip-duplicate-tests: true

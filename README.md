@@ -1,30 +1,14 @@
 # ExcelRenderer
 
-Usage guides: [Main/Core parity](docs/main-core-parity.md) · [Diagnostics and delivery](docs/diagnostics.md)
-
-> PDF output keeps ordinary text searchable, but supported ideographic variation sequences (IVS) are emitted as vector outlines so the selected format 14 glyph is preserved. Those outlined IVS characters are not searchable or copyable as text.
-
 English | [日本語](README.ja.md)
 
-Main and Core apply the eight named Excel number-format colors (for example `[Red]` in the negative-value section). Indexed `[ColorN]` palettes are not resolved. Pivot tables render saved worksheet cells; aggregate generation is not implemented. A pivot with no nonempty saved output in the selected print region fails before rendering (`PivotSavedValuesMissing`). A cache requesting refresh produces `PivotRefreshRequired`; refresh and save in a spreadsheet application to obtain current totals. Mapping refreshes supported cache records, not the displayed aggregate cells.
-
-Cell-width compatibility: main's `ColumnWidthMetricsMode.LibreOfficeCompatible` and Core's `ReadOptions.UseLibreOfficeColumnWidths` retain fractional digit/column widths. Both CLI commands accept `--column-width-metrics libreoffice --column-width-mdw 8.8`. Use the digit width of the actual reference font; 8.8px is specific to Noto Sans Mono at 11pt, not a universal replacement. `SourceFont` remains the default mode; unavailable fonts use fixed 8px unless substitute measurement is requested. See [the measured cell-size validation](docs/validation/cell-width-compatibility/README.md).
+Get started: [Installation](#installation) · [Quick start](#quick-start) · [CLI](#command-line-usage) · [C# API](#c-api-high-level) · [Reference guides](#documentation)
 
 ## Overview
 
 ExcelRenderer is a .NET library for rendering Excel (`.xlsx`) worksheets as PDF or PostScript documents or page-by-page PNG and SVG images.
 
-It separates workbook parsing, layout, drawing-command generation, and output rendering into distinct stages:
-
-```text
-Excel (.xlsx)
-    -> ReportDocument
-    -> RenderDocument
-    -> DrawCommand
-    -> PDF / PostScript / PNG / SVG
-```
-
-This makes the rendering pipeline easier to test, understand, and extend with new layout behavior or output formats.
+Use the C# API or command-line tool to convert existing reports. You can also populate Excel templates from C# objects or JSON, then save them as XLSX or render them as documents and images.
 
 > [!NOTE]
 > ExcelRenderer does not aim for pixel-perfect parity with Microsoft Excel.
@@ -870,6 +854,8 @@ Mapped strings beginning with `=` remain strings. See the [Mapping guide](docs/m
 
 ## Fonts
 
+> PDF output keeps ordinary text searchable, but supported ideographic variation sequences (IVS) are emitted as vector outlines so the selected format 14 glyph is preserved. Those outlined IVS characters are not searchable or copyable as text.
+
 When loading the optional bundled fonts, ExcelRenderer looks for each expected
 file name (`NotoSansJP-Regular.ttf`, `ipamjm.ttf`, and `NotoColorEmoji.ttf`) in
 this order:
@@ -931,6 +917,22 @@ Excel (.xlsx) -> ReportDocument -> RenderDocument -> DrawCommand -> PDF / PostSc
 ```
 
 See [Architecture](docs/architecture.md) for the layout passes, drawing commands, renderers, extension points, and source layout.
+
+## Compatibility and rendering notes
+
+### Number-format colors
+
+Main and Core apply the eight named Excel number-format colors (for example `[Red]` in the negative-value section). Indexed `[ColorN]` palettes are not resolved.
+
+### Saved pivot-table results
+
+Pivot tables render saved worksheet cells; aggregate generation is not implemented. A pivot with no nonempty saved output in the selected print region fails before rendering (`PivotSavedValuesMissing`). A cache requesting refresh produces `PivotRefreshRequired`; refresh and save in a spreadsheet application to obtain current totals. Mapping refreshes supported cache records, not the displayed aggregate cells.
+
+### Cell-width compatibility
+
+Main's `ColumnWidthMetricsMode.LibreOfficeCompatible` and Core's `ReadOptions.UseLibreOfficeColumnWidths` retain fractional digit/column widths. Both CLI commands accept `--column-width-metrics libreoffice --column-width-mdw 8.8`. Use the digit width of the actual reference font; 8.8px is specific to Noto Sans Mono at 11pt, not a universal replacement. `SourceFont` remains the default mode; unavailable fonts use fixed 8px unless substitute measurement is requested. See [the measured cell-size validation](docs/validation/cell-width-compatibility/README.md).
+
+Usage guides: [Main/Core parity](docs/main-core-parity.md) · [Diagnostics and delivery](docs/diagnostics.md)
 
 ## Current limitations
 

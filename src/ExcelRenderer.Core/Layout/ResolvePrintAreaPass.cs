@@ -30,7 +30,8 @@ internal sealed class ResolvePrintAreaPass : IReportLayoutPass
                     cell.Key.Column + cell.Value.ColumnSpan - 1)))
                     .Concat(context.Policy.GetObjectGeometry(context).Select(item => new CellRange(
                         new(Math.Min(item.Anchor.Row, context.Geometry.RowAt(item.Visual.Y)), Math.Min(item.Anchor.Column, context.Geometry.ColumnAt(item.Visual.X))),
-                        new(Math.Max(item.Anchor.Row, context.Geometry.RowAt(Math.Max(item.Visual.Y, item.Visual.Y + item.Visual.Height - Epsilon))),
+                        new(
+                            Math.Max(item.Anchor.Row, context.Geometry.RowAt(Math.Max(item.Visual.Y, item.Visual.Y + item.Visual.Height - Epsilon))),
                             Math.Max(item.Anchor.Column, context.Geometry.ColumnAt(Math.Max(item.Visual.X, item.Visual.X + item.Visual.Width - Epsilon)))))))
                     .Where(range => range.First.Column <= explicitArea.Last.Column && range.Last.Column >= explicitArea.First.Column &&
                         range.First.Row <= explicitArea.Last.Row && range.Last.Row >= explicitArea.First.Row)

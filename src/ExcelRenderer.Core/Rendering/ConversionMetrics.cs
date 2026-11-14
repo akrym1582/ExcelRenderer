@@ -6,6 +6,7 @@ namespace ExcelRenderer.Core.Rendering;
 internal static class ConversionMetrics
 {
     private static readonly AsyncLocal<Action<string, double>?> ObserverSlot = new();
+    private static readonly AsyncLocal<Func<string, int, int?, IDisposable?>?> PageObserverSlot = new();
 
     /// <summary>Gets or sets the observer in the current asynchronous conversion context.</summary>
     internal static Action<string, double>? Observer
@@ -13,6 +14,20 @@ internal static class ConversionMetrics
         get => ObserverSlot.Value;
         set => ObserverSlot.Value = value;
     }
+
+    /// <summary>Gets or sets an optional rendering-page scope factory in the current conversion context.</summary>
+    internal static Func<string, int, int?, IDisposable?>? PageObserver
+    {
+        get => PageObserverSlot.Value;
+        set => PageObserverSlot.Value = value;
+    }
+
+    /// <summary>Starts an optional scope around actual page generation and drawing, excluding preflight.</summary>
+    /// <param name="sheetName">The source sheet name.</param>
+    /// <param name="sourcePage">The source sheet page number.</param>
+    /// <param name="outputPage">The selected output page number, or null for a continuous canvas.</param>
+    /// <returns>The observer-owned scope, or null when page logging is disabled.</returns>
+    internal static IDisposable? BeginPage(string sheetName, int sourcePage, int? outputPage) => PageObserver?.Invoke(sheetName, sourcePage, outputPage);
 
     /// <summary>Reports an aggregate counter or snapshot.</summary>
     /// <param name="name">The metric name.</param>
@@ -84,6 +99,30 @@ internal static class ConversionMetrics
         }
 
         return MeasureCommandCore(commands);
+    }
+
+    /// <summary>Counts commands generated for the rendering pass without buffering or counting preflight.</summary>
+    /// <typeparam name="T">The command type.</typeparam>
+    /// <param name="commands">The commands generated for output.</param>
+    /// <returns>The original stream with a command-count observation when enumeration ends.</returns>
+    internal static IEnumerable<T> CountRenderedCommands<T>(IEnumerable<T> commands) =>
+        Observer is null ? commands : CountRenderedCommandCore(commands);
+
+    private static IEnumerable<T> CountRenderedCommandCore<T>(IEnumerable<T> commands)
+    {
+        long count = 0;
+        try
+        {
+            foreach (var command in commands)
+            {
+                count++;
+                yield return command;
+            }
+        }
+        finally
+        {
+            Report("commands", count);
+        }
     }
 
     private static IEnumerable<T> MeasureCommandCore<T>(IEnumerable<T> commands)

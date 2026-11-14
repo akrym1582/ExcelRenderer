@@ -137,10 +137,13 @@ internal static class CommandSupport
         var allocatedBefore = GC.GetTotalAllocatedBytes(precise: true);
         var timer = Stopwatch.StartNew();
         var previousObserver = Core.Rendering.ConversionMetrics.Observer;
-        var metrics = new Dictionary<string, double>(StringComparer.Ordinal);
+        var previousPageObserver = Core.Rendering.ConversionMetrics.PageObserver;
+        var pages = new PageMetricLog(Console.Out);
+        Core.Rendering.ConversionMetrics.PageObserver = pages.BeginPage;
+        var metrics = new MetricSummary();
         Core.Rendering.ConversionMetrics.Observer = (name, value) =>
         {
-            metrics[name] = name.EndsWith(".ms", StringComparison.Ordinal) ? metrics.GetValueOrDefault(name) + value : value;
+            metrics.Report(name, value);
             previousObserver?.Invoke(name, value);
         };
         Console.WriteLine($"Starting {result.CommandResult.Command.Name}: {string.Join(" ", result.Tokens.Select(token => token.Value))}");
@@ -174,9 +177,11 @@ internal static class CommandSupport
         {
             var allocatedBytes = GC.GetTotalAllocatedBytes(precise: true) - allocatedBefore;
             Core.Rendering.ConversionMetrics.Observer = previousObserver;
-            metrics["managedAllocatedBytes"] = allocatedBytes;
+            Core.Rendering.ConversionMetrics.PageObserver = previousPageObserver;
+            pages.WriteSheetSummaries();
+            metrics.Report("managedAllocatedBytes", allocatedBytes);
             Console.WriteLine($"Completed in {timer.Elapsed.TotalMilliseconds:F1} ms.");
-            foreach (var metric in metrics.OrderBy(item => item.Key, StringComparer.Ordinal))
+            foreach (var metric in metrics.Snapshot())
             {
                 Console.WriteLine($"Metric {metric.Key}: {metric.Value:F3}");
             }

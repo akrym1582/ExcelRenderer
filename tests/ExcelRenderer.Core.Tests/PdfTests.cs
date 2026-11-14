@@ -160,7 +160,7 @@ public sealed class PdfTests
         var active = 0; var max = 0; var saves = 0; var created = 0; var disposed = 0;
         ConversionMetrics.Observer = (key, value) =>
         {
-            if (key == "pagePayloadActive") { active = (int)value; max = Math.Max(max, active); }
+            if (key == "pagePayloadActive") { active += (int)value; max = Math.Max(max, active); }
             if (key == "pdfSave") saves++;
             if (key == "typefaceCreated") created++;
             if (key == "typefaceDisposed") disposed++;

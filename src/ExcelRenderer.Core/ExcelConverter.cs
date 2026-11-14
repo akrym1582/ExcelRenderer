@@ -135,6 +135,7 @@ public static class ExcelConverter
                     for (var index = 0; index < plan.Pages.Count; index++)
                     {
                         cancellationToken.ThrowIfCancellationRequested();
+                        using var pageMetrics = pass == 0 ? null : ConversionMetrics.BeginPage(entry.Sheet.Name, sheetNumber + 1, number + 1);
                         ConversionMetrics.Report("pagePayloadActive", 1);
                         try
                         {
@@ -155,12 +156,12 @@ public static class ExcelConverter
                             }
                             else
                             {
-                                renderer.AppendPage(entry.Sheet.PageSettings, generator.GeneratePage(page, measurer));
+                                renderer.AppendPage(entry.Sheet.PageSettings, ConversionMetrics.CountRenderedCommands(generator.GeneratePage(page, measurer)));
                             }
                         }
                         finally
                         {
-                            ConversionMetrics.Report("pagePayloadActive", 0);
+                            ConversionMetrics.Report("pagePayloadActive", -1);
                         }
                     }
                 }

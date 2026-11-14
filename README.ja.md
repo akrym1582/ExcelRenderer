@@ -322,6 +322,8 @@ BMP 私用領域 (U+E000–U+F8FF) は要求フォント、指定ファイル（
 失敗時の例外詳細と引数エラーは標準エラーへ出力します。詳細表示用のオプションは不要です。
 `Metric managedAllocatedBytes` はコマンド実行中の全スレッドのマネージド割り当て総量（バイト）です。
 GCで回収済みの割り当ても含みます。Skia等のネイティブ割り当ては含まず、ピーク使用量や生存メモリ量とは異なります。
+累計・最大値・最終値の区別は[CLIメトリックの集計仕様](docs/cli-metrics.md)を参照してください。
+レンダリング時はページ別・シート別に、描画処理時間、マネージド割り当て量、描画コマンド数などの代表値も表示します。
 
 ```bash
 excelrenderer core input.xlsx -o core.pdf --font-file ./NotoSansJP-Regular.ttf --sheet Sheet3 Sheet1

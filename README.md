@@ -341,6 +341,9 @@ details to standard error. No verbosity option is required.
 `Metric managedAllocatedBytes` reports cumulative managed allocations in bytes across
 all process threads during the command, including allocations already collected by GC.
 It excludes native allocations (such as Skia buffers) and is not peak or retained memory.
+See [CLI metric aggregation](docs/cli-metrics.md) for totals, peaks and snapshots.
+Rendering also prints representative per-page metrics and per-sheet summaries,
+including rendering time, managed allocation bytes and logical command counts.
 
 ```bash
 excelrenderer core input.xlsx -o core.pdf --font-file ./NotoSansJP-Regular.ttf --sheet Sheet3 Sheet1

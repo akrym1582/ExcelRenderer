@@ -126,9 +126,13 @@ for (var iteration = 0; iteration < repeats; iteration++)
     {
         Action<string, double> collectMetrics = (name, value) =>
         {
-            metrics[name] = name is "pagePayloadActive" or "layoutCacheEntries" or "layoutCacheRetainedUnits"
+            metrics[name] = name is "layoutCacheEntries" or "layoutCacheRetainedUnits"
                 ? Math.Max(metrics.GetValueOrDefault(name), value)
                 : metrics.GetValueOrDefault(name) + value;
+            if (name == "pagePayloadActive")
+            {
+                metrics["pagePayloadMax"] = Math.Max(metrics.GetValueOrDefault("pagePayloadMax"), metrics[name]);
+            }
         };
         observer?.SetValue(null, collectMetrics);
     }

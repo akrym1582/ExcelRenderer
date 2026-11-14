@@ -15,7 +15,6 @@ public static class RenderCommand
     public static Command Create()
     {
         var input = CommandSupport.InputArgument();
-        var verbose = CommandSupport.VerboseOption();
         var data = MappingCommandSupport.DataOption();
         var formulaMode = CommandSupport.FormulaModeOption();
         var output = CommandSupport.OutputOption("Output file for PDF/PostScript, or output directory for other formats.");
@@ -94,7 +93,6 @@ public static class RenderCommand
         CommandSupport.AddFontOptions(command, fonts);
         buffering.AddTo(command);
 
-        command.Add(verbose);
         command.SetAction((result, cancellationToken) => CommandSupport.RunAsync(result, () => MappingCommandSupport.WithInputAsync(
             result.GetValue(input)!,
             result.GetValue(data),
@@ -121,7 +119,6 @@ public static class RenderCommand
                 result.GetValue(manifest),
                 CommandSupport.GetFontOptions(result, fonts),
                 buffering.Get(result),
-                result.GetValue(verbose),
                 cancellationToken),
             cancellationToken,
             CommandSupport.GetMappingOptions(result.GetValue(formulaMode)!))));
@@ -150,7 +147,6 @@ public static class RenderCommand
         string? manifestPath,
         FontOptions fontOptions,
         RenderBufferOptions buffering,
-        bool verbose,
         CancellationToken cancellationToken)
     {
         if (!TryParseFormat(formatText, out var format) || !TryParsePages(pagesText, out var pages) ||
@@ -232,11 +228,7 @@ public static class RenderCommand
             conversion = await ExcelConverter.RenderAsync(input, request, new DirectoryOutputSink(outputPath), cancellationToken).ConfigureAwait(false);
         }
 
-        foreach (var diagnostic in conversion.Diagnostics.Where(x => verbose || x.Severity != DiagnosticSeverity.Info))
-        {
-            var location = diagnostic.CellRange ?? diagnostic.ObjectId ?? "workbook";
-            Console.Error.WriteLine($"{diagnostic.Severity}: {diagnostic.Code} [{diagnostic.SheetName ?? "workbook"}!{location}]: {diagnostic.Message}");
-        }
+        CommandSupport.WriteDiagnostics(conversion.Diagnostics);
 
         if (manifestPath is not null)
         {

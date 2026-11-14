@@ -6,18 +6,24 @@ namespace ExcelRenderer.Tool.Commands;
 internal sealed class FileOutputSink : IRenderOutputSink
 {
     private readonly string path;
+    private readonly bool overwrite;
     private Stream? stream;
 
     /// <summary>Initializes a new instance of the <see cref="FileOutputSink"/> class.</summary>
     /// <param name="path">The output file path.</param>
-    internal FileOutputSink(string path) => this.path = path;
+    /// <param name="overwrite">Whether an existing destination may be replaced.</param>
+    internal FileOutputSink(string path, bool overwrite = true)
+    {
+        this.path = path;
+        this.overwrite = overwrite;
+    }
 
     /// <inheritdoc/>
     public ValueTask<Stream> OpenAsync(ArtifactDescriptor artifact, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
         Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(path))!);
-        stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
+        stream = new FileStream(path, overwrite ? FileMode.Create : FileMode.CreateNew, FileAccess.Write, FileShare.None);
         return new(stream);
     }
 

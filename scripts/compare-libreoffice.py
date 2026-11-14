@@ -110,7 +110,7 @@ def render(run, manifest, historical_column_metrics=False):
                 result.update(status='unverified', reason='Input/reference hash mismatch or no visible sheets')
             else:
                 args = ['dotnet', str(dll), 'render' if engine == 'main' else 'core', c['input'],
-                        '--output', str(out), '--verbose', '--sheet', *sheets]
+                        '--output', str(out), '--sheet', *sheets]
                 if engine == 'main':
                     args += ['--format', 'pdf', '--formula-mode', 'cached', '--font-policy', 'requested',
                              '--no-system-fonts', '--fallback-font', 'Noto Sans JP', '--fallback-font', 'IPAmjMincho',
@@ -359,7 +359,7 @@ def investigate(run):
         args = ['dotnet', dll, 'render', f'tests/ExcelRenderer.Tests/SampleInputs/{case_id}.xlsx',
                 '--format', 'pdf', '--output', str(path), '--font-policy', 'requested',
                 '--no-system-fonts', '--font-file', FONT, '--fallback-font', 'Noto Sans JP',
-                '--layout-warnings', '--verbose', *extra]
+                '--layout-warnings', *extra]
         if 'recalculate' not in extra:
             args += ['--formula-mode', 'cached']
         r = command(args)
@@ -384,7 +384,7 @@ def investigate(run):
         path = directory / ('hidden-' + label + '.pdf')
         if path.exists():
             raise FileExistsError(path)
-        r = command(['dotnet', dll, 'core', str(hidden), '--output', str(path), '--font-file', FONT, '--verbose', *options])
+        r = command(['dotnet', dll, 'core', str(hidden), '--output', str(path), '--font-file', FONT, *options])
         with fitz.open(path) as pdf:
             r.update(experiment='hidden-sheet-' + label, page_count=len(pdf),
                      text=''.join(p.get_text() for p in pdf), input_sha256=sha(hidden), pdf_sha256=sha(path))

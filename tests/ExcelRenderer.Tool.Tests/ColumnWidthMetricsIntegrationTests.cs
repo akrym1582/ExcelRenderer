@@ -19,7 +19,13 @@ public sealed partial class ToolIntegrationTests
         var args = new List<string> { command, Input, "-o", output, "--column-width-mdw", "16", "--column-width-fallback-mdw", "7.5", "--column-width-fallback-metrics", "font", "--column-width-metrics", "source", "--layout-font", Path.Combine(AppContext.BaseDirectory, "Fonts", "PdfFormats", "collection-distinct.ttc"), "--layout-font-index", "1" };
         if (command == "render") args.AddRange(["--format", "svg"]);
         if (command == "core") args.AddRange(["--font-file", CoreFont]);
-        AssertSuccess(await RunAsync(args.ToArray()));
+        var result = await RunAsync(args.ToArray());
+        AssertSuccess(result);
+        Assert.Contains("Info: MaximumDigitWidthResolved", result.Output);
+        Assert.Contains("Starting " + command, result.Output);
+        Assert.Contains("Completed in", result.Output);
+        Assert.Contains("Metric reader.ms:", result.Output);
+        Assert.Empty(result.Error);
     }
 
     [Theory]
@@ -50,15 +56,15 @@ public sealed partial class ToolIntegrationTests
         var input = CreateMultiSheetInput();
         var output = Path.Combine(_directory, "fallback.pdf");
         var font = Path.Combine(AppContext.BaseDirectory, "Fonts", "PdfFormats", "collection-distinct.ttc");
-        var args = new List<string> { command, input, "-o", output, "--font-file", font, "--no-system-fonts", "--verbose" };
+        var args = new List<string> { command, input, "-o", output, "--font-file", font, "--no-system-fonts" };
         if (command == "core") args.AddRange(["--font-collection-index", "1"]);
         else args.AddRange(["--format", "pdf", "--font-face-index", "1", "--font-policy", "requested", "--fallback-font", "PDF Format Fixture"]);
         if (mode is not null) args.AddRange(["--column-width-fallback-metrics", mode]);
         if (width is not null) args.AddRange(["--column-width-fallback-mdw", width.Value.ToString(System.Globalization.CultureInfo.InvariantCulture)]);
         var result = await RunAsync(args.ToArray());
         AssertSuccess(result);
-        Assert.Contains($"MDW {expected.ToString(System.Globalization.CultureInfo.InvariantCulture)}px", result.Error);
-        Assert.Contains("source=" + source, result.Error);
+        Assert.Contains($"MDW {expected.ToString(System.Globalization.CultureInfo.InvariantCulture)}px", result.Output);
+        Assert.Contains("source=" + source, result.Output);
     }
 
     [Fact]
@@ -94,14 +100,14 @@ public sealed partial class ToolIntegrationTests
 
         var output = Path.Combine(_directory, "source-policy.pdf");
         var font = Path.Combine(AppContext.BaseDirectory, "Fonts", "PdfFormats", "collection-distinct.ttc");
-        var args = new List<string> { command, input, "-o", output, "--font-file", font, "--no-system-fonts", "--column-width-metrics", metrics, "--verbose" };
+        var args = new List<string> { command, input, "-o", output, "--font-file", font, "--no-system-fonts", "--column-width-metrics", metrics };
         if (command == "core") args.AddRange(["--font-collection-index", "1"]);
         else args.AddRange(["--format", "pdf", "--font-face-index", "1", "--font-policy", "requested", "--fallback-font", "PDF Format Fixture"]);
         if (fallbackMetrics is not null) args.AddRange(["--column-width-fallback-metrics", fallbackMetrics]);
         var result = await RunAsync(args.ToArray());
         AssertSuccess(result);
-        Assert.Contains($"MDW {expected.ToString(System.Globalization.CultureInfo.InvariantCulture)}px", result.Error);
-        Assert.Contains("source=" + source, result.Error);
-        if (metrics == "fallback") Assert.Contains("Source-font lookup is disabled", result.Error);
+        Assert.Contains($"MDW {expected.ToString(System.Globalization.CultureInfo.InvariantCulture)}px", result.Output);
+        Assert.Contains("source=" + source, result.Output);
+        if (metrics == "fallback") Assert.Contains("Source-font lookup is disabled", result.Output);
     }
 }

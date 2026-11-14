@@ -134,28 +134,19 @@ internal static class CommandSupport
     /// <returns>正常に完了した場合は <c>0</c>、キャンセルまたは例外が発生した場合は <c>1</c>。</returns>
     internal static async Task<int> RunAsync(ParseResult result, Func<Task> conversion)
     {
-        var verbose = result.GetValue<bool>("--verbose");
         var timer = Stopwatch.StartNew();
         var previousObserver = Core.Rendering.ConversionMetrics.Observer;
         var metrics = new Dictionary<string, double>(StringComparer.Ordinal);
-        if (verbose)
+        Core.Rendering.ConversionMetrics.Observer = (name, value) =>
         {
-            Core.Rendering.ConversionMetrics.Observer = (name, value) =>
-            {
-                metrics[name] = name.EndsWith(".ms", StringComparison.Ordinal) ? metrics.GetValueOrDefault(name) + value : value;
-                previousObserver?.Invoke(name, value);
-            };
-            Console.Error.WriteLine($"Starting {result.CommandResult.Command.Name}: {string.Join(" ", result.Tokens.Select(token => token.Value))}");
-        }
+            metrics[name] = name.EndsWith(".ms", StringComparison.Ordinal) ? metrics.GetValueOrDefault(name) + value : value;
+            previousObserver?.Invoke(name, value);
+        };
+        Console.WriteLine($"Starting {result.CommandResult.Command.Name}: {string.Join(" ", result.Tokens.Select(token => token.Value))}");
 
         try
         {
             await conversion().ConfigureAwait(false);
-            if (verbose)
-            {
-                Console.Error.WriteLine($"Completed in {timer.Elapsed.TotalMilliseconds:F1} ms.");
-            }
-
             return 0;
         }
         catch (OperationCanceledException)
@@ -165,7 +156,12 @@ internal static class CommandSupport
         }
         catch (Exception exception)
         {
-            Console.Error.WriteLine(verbose ? exception.ToString() : $"Error: {exception.Message}");
+            if (exception is ExcelRenderer.Rendering.ConversionException failed)
+            {
+                WriteDiagnostics(failed.CollectedDiagnostics);
+            }
+
+            Console.Error.WriteLine(exception.ToString());
             if (exception is ExcelRenderer.Rendering.ConversionException && exception.InnerException is { } cause)
             {
                 Console.Error.WriteLine(cause.Message);
@@ -176,12 +172,10 @@ internal static class CommandSupport
         finally
         {
             Core.Rendering.ConversionMetrics.Observer = previousObserver;
-            if (verbose)
+            Console.WriteLine($"Completed in {timer.Elapsed.TotalMilliseconds:F1} ms.");
+            foreach (var metric in metrics.OrderBy(item => item.Key, StringComparer.Ordinal))
             {
-                foreach (var metric in metrics.OrderBy(item => item.Key, StringComparer.Ordinal))
-                {
-                    Console.Error.WriteLine($"Metric {metric.Key}: {metric.Value:F3}");
-                }
+                Console.WriteLine($"Metric {metric.Key}: {metric.Value:F3}");
             }
         }
     }
@@ -315,9 +309,51 @@ internal static class CommandSupport
         RecalculateMappedWorkbook = recalculateMappedWorkbook,
     };
 
-    /// <summary>Creates the shared detailed logging option.</summary>
-    /// <returns>The verbosity flag.</returns>
-    internal static Option<bool> VerboseOption() => new("--verbose") { Description = "Write command details, elapsed time, conversion metrics, informational diagnostics and full exceptions to standard error." };
+    /// <summary>Writes all collected conversion diagnostics to standard output.</summary>
+    /// <param name="diagnostics">The collected diagnostics.</param>
+    internal static void WriteDiagnostics(IEnumerable<ExcelRenderer.Rendering.ConversionDiagnostic> diagnostics)
+    {
+        foreach (var diagnostic in diagnostics)
+        {
+            var location = diagnostic.CellRange ?? diagnostic.ObjectId ?? "workbook";
+            Console.WriteLine($"{diagnostic.Severity}: {diagnostic.Code} [{diagnostic.SheetName ?? "workbook"}!{location}]: {diagnostic.Message}");
+        }
+    }
+
+    /// <summary>Renders a convenience command while retaining its diagnostics.</summary>
+    /// <param name="inputPath">The source workbook.</param>
+    /// <param name="outputPath">The destination file or directory.</param>
+    /// <param name="request">The rendering options.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The conversion task.</returns>
+    internal static async Task RenderFileAsync(string inputPath, string outputPath, ExcelRenderer.Rendering.RenderRequest request, CancellationToken cancellationToken)
+    {
+        var singleFile = request.OutputFormat is ExcelRenderer.Rendering.OutputFormat.Pdf or ExcelRenderer.Rendering.OutputFormat.PostScript;
+        if (singleFile && File.Exists(outputPath))
+        {
+            throw new IOException($"Output file already exists: {outputPath}");
+        }
+
+        if (!singleFile && Directory.Exists(outputPath) && Directory.EnumerateFileSystemEntries(outputPath).Any())
+        {
+            throw new IOException($"Output directory is not empty: {outputPath}");
+        }
+
+        await using var input = File.OpenRead(inputPath);
+        ExcelRenderer.Rendering.IRenderOutputSink sink = singleFile ? new FileOutputSink(outputPath, overwrite: false) : new ExcelRenderer.Rendering.DirectoryOutputSink(outputPath);
+        request = request with
+        {
+            Input = new ExcelRenderer.Rendering.WorkbookInputOptions
+            {
+                MemoryThresholdBytes = long.MaxValue,
+                MaxInputBytes = long.MaxValue,
+                MaxZipEntryCount = int.MaxValue,
+                MaxUncompressedZipBytes = long.MaxValue,
+            },
+        };
+        var conversion = await ExcelConverter.RenderAsync(input, request, sink, cancellationToken).ConfigureAwait(false);
+        WriteDiagnostics(conversion.Diagnostics);
+    }
 
     /// <summary>Normalizes an omitted worksheet option to all worksheets.</summary>
     /// <param name="names">The parsed names.</param>

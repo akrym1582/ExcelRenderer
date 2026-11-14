@@ -46,7 +46,7 @@ public sealed partial class ToolIntegrationTests
         AssertSuccess(help);
         Assert.DoesNotContain("--reader-backend", help.Output);
         Assert.DoesNotContain("--mapping-backend", help.Output);
-        Assert.Contains("--verbose", help.Output);
+        Assert.DoesNotContain("--verbose", help.Output);
         Assert.Contains("--formula-mode", help.Output);
 
         var template = Path.Combine(_directory, "template.xlsx");

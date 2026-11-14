@@ -15,7 +15,6 @@ public static class CoreCommand
         var font = new Option<string>("--font-file") { Description = "Static TrueType font file or collection; omitted uses bundled Noto Sans JP." };
         var fontIndex = new Option<int>("--font-collection-index") { Description = "Zero-based font collection face index." };
         var sheet = new Option<string[]>("--sheet") { Description = "Worksheet names in output order (repeatable).", AllowMultipleArgumentsPerToken = true };
-        var verbose = CommandSupport.VerboseOption();
         var metrics = new Option<string>("--column-width-metrics") { Description = "Column metrics: source (default), fallback (skip original-font lookup) or libreoffice.", DefaultValueFactory = _ => "source" };
         var mdw = new Option<double?>("--column-width-mdw") { Description = "Explicit Normal digit width in pixels at 96 DPI." };
         var fallbackMdw = new Option<double?>("--column-width-fallback-mdw") { Description = "Normal digit width at 96 DPI used only if the original font is unavailable; overrides the fallback policy." };
@@ -26,7 +25,7 @@ public static class CoreCommand
         var data = MappingCommandSupport.DataOption();
         var command = new Command("core", "Convert Excel to PDF using ExcelRenderer.Core and an explicit or bundled font (saved values only).")
         {
-            input, output, font, fontIndex, sheet, verbose, data, metrics, mdw, fallbackMdw, fallbackMetrics, layoutFont, layoutFontIndex, noSystemFonts,
+            input, output, font, fontIndex, sheet, data, metrics, mdw, fallbackMdw, fallbackMetrics, layoutFont, layoutFontIndex, noSystemFonts,
         };
         command.SetAction((result, cancellationToken) => CommandSupport.RunAsync(result, () => MappingCommandSupport.WithInputAsync(
             result.GetValue(input)!,
@@ -56,13 +55,12 @@ public static class CoreCommand
                     FontCollectionIndex = result.GetValue(fontIndex),
                     SheetNames = CommandSupport.GetSheetNames(result.GetValue(sheet)),
                 },
-                result.GetValue(verbose),
                 cancellationToken),
             cancellationToken)));
         return command;
     }
 
-    private static async Task ConvertAsync(string inputPath, string outputPath, Core.PdfExportOptions options, bool verbose, CancellationToken cancellationToken)
+    private static async Task ConvertAsync(string inputPath, string outputPath, Core.PdfExportOptions options, CancellationToken cancellationToken)
     {
         outputPath = Path.GetFullPath(outputPath);
         if (File.Exists(outputPath))
@@ -110,18 +108,12 @@ public static class CoreCommand
             foreach (var diagnostic in conversion.Diagnostics)
             {
                 var resolved = diagnostic.Code == "MaximumDigitWidthResolved";
-                if (!resolved || verbose)
-                {
-                    Console.Error.WriteLine($"{(resolved ? "Info" : "Warning")}: {diagnostic.Code} [{diagnostic.SheetName ?? "workbook"}, page {diagnostic.PageNumber}]: {diagnostic.Message}");
-                }
+                Console.WriteLine($"{(resolved ? "Info" : "Warning")}: {diagnostic.Code} [{diagnostic.SheetName ?? "workbook"}, page {diagnostic.PageNumber}]: {diagnostic.Message}");
             }
 
             cancellationToken.ThrowIfCancellationRequested();
             File.Move(temporary, outputPath);
-            if (verbose)
-            {
-                Console.Error.WriteLine($"Core PDF: {conversion.PageCount} pages; {conversion.Diagnostics.Count} diagnostics; output: {outputPath}");
-            }
+            Console.WriteLine($"Core PDF: {conversion.PageCount} pages; {conversion.Diagnostics.Count} diagnostics; output: {outputPath}");
         }
         finally
         {

@@ -61,31 +61,33 @@ public sealed partial class ToolIntegrationTests
     [InlineData("ps")]
     [InlineData("render")]
     [InlineData("xlsx")]
-    public async Task Verbose_reports_command_details_and_full_errors(string command)
+    public async Task Commands_report_details_and_full_errors_by_default(string command)
     {
-        var args = new List<string> { command, "missing.xlsx", "-o", Path.Combine(_directory, "output"), "--verbose" };
+        var args = new List<string> { command, "missing.xlsx", "-o", Path.Combine(_directory, "output") };
         if (command == "core") args.AddRange(["--font-file", CoreFont]);
         if (command == "render") args.AddRange(["--format", "pdf"]);
         if (command == "xlsx") args.AddRange(["--data", "missing.json"]);
         var result = await RunAsync(args.ToArray());
         Assert.NotEqual(0, result.ExitCode);
-        Assert.Contains("Starting " + command, result.Error);
+        Assert.Contains("Starting " + command, result.Output);
+        Assert.Contains("Completed in", result.Output);
         Assert.Contains("Exception", result.Error);
         Assert.Contains("   at ", result.Error);
     }
 
     [Fact]
-    public async Task Core_command_writes_pdf_and_verbose_metrics_without_overwriting_existing_output()
+    public async Task Core_command_writes_pdf_and_metrics_without_overwriting_existing_output()
     {
         var input = CreateMultiSheetInput();
         var output = Path.Combine(_directory, "nested", "core.pdf");
-        var result = await RunAsync("core", input, "-o", output, "--font-file", CoreFont, "--verbose");
+        var result = await RunAsync("core", input, "-o", output, "--font-file", CoreFont);
         AssertSuccess(result);
         Assert.Equal("%PDF", System.Text.Encoding.ASCII.GetString(File.ReadAllBytes(output), 0, 4));
-        Assert.Contains("Core PDF: 3 pages", result.Error);
-        Assert.Contains("Completed in", result.Error);
-        Assert.Contains("Metric reader.ms:", result.Error);
-        Assert.Contains("Metric pdfFinalSave.ms:", result.Error);
+        Assert.Contains("Core PDF: 3 pages", result.Output);
+        Assert.Contains("Completed in", result.Output);
+        Assert.Contains("Metric reader.ms:", result.Output);
+        Assert.Contains("Metric pdfFinalSave.ms:", result.Output);
+        Assert.Empty(result.Error);
         Assert.Empty(Directory.GetFiles(Path.GetDirectoryName(output)!, "*.tmp"));
         var bytes = File.ReadAllBytes(output);
         var rejected = await RunAsync("core", input, "-o", output, "--font-file", CoreFont);

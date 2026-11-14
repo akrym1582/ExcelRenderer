@@ -306,8 +306,8 @@ Directive names are case-sensitive. Write `**@end-array` and unconditional
 `**@page-break` exactly, without trailing spaces or arguments. A conditional
 page break accepts `if` followed by the numeric comparison described below.
 There are no direction or page-count parameters. Formatting accepts one `format()` or
-`date()` function with one or two JSON string arguments; chaining functions is
-not supported. Apart from page-break conditions, arithmetic and calculations belong in the caller, not Excel formulas.
+`date()` function with one or two JSON string arguments, optionally combined with
+one `font-color(path)` modifier in either order. Duplicate modifiers are rejected. Apart from page-break conditions, arithmetic and calculations belong in the caller, not Excel formulas.
 
 Mapping validates the structure and path syntax of every worksheet, then
 evaluates the instantiated rows before applying expansion. It is independent
@@ -656,3 +656,58 @@ workbook.Workbook.DefinedNames = new S.DefinedNames(new S.DefinedName("'Invoice'
 | `MappingFormulaNotSupported` | Calculate the value in the caller and replace the formula with a value placeholder. The check covers all sheets. |
 | Rendering reports that output already exists | Use a fresh output file or an empty output directory. Successful `xlsx` mapping, unlike rendering, replaces an existing output XLSX. |
 | An unselected worksheet causes a mapping error | Mapping evaluates all worksheets before rendering selection. Fix its expressions or remove that worksheet from the template. |
+
+## Template comments, font colors and bound images
+
+A cell beginning with `**//` is a template comment. Mapping clears its text while
+preserving its style and row/column. The body is never parsed; comment-only rows
+remain blank rows. `\**//text` emits literal `**//text`. These are not Excel notes
+and trailing comments on another expression are not supported.
+
+```text
+**//The caller supplies the amount color
+**$.Amount | font-color($.AmountColor)
+**@item.Amount | format("N0") | font-color(@item.Color)
+```
+
+`font-color(path)` accepts a variable containing `#RRGGBB` (case-insensitive hex).
+Null retains the template color; missing paths and invalid colors report the
+original template cell. Color changes preserve the value type and all other
+style properties. `format()`/`date()` still explicitly convert values to text.
+One formatting conversion and one color modifier may be combined. Color decisions
+belong to caller code. In implicit row arrays, color wildcards must match the
+value path's array; block expressions can use scoped aliases.
+
+```text
+**@image $.Logo
+**@image $.Logo scale=1.5 offset-x=8 offset-y=-4pt
+**@image $.Logo width=120 height=60 fit=contain
+**@image @item.Photo width=@item.Width
+```
+
+Images accept PNG/JPEG `byte[]` values or Base64 strings (including JSON input).
+Null clears the directive without inserting an image. Missing paths, unsupported
+formats and invalid image structures are errors. No file or URL is fetched.
+The image floats from the directive cell's top-left corner without cell clipping;
+its directive text is cleared. Each repeated occurrence gets its own final-cell
+anchor. Existing template pictures intersecting repeated regions remain unsupported.
+
+| Argument | Meaning | Default |
+| --- | --- | --- |
+| `width`, `height` | Requested dimensions | Natural size or proportional dimension |
+| `scale` | Natural-size multiplier; cannot combine with width/height | `1` |
+| `offset-x`, `offset-y` | Right/down displacement; negative values allowed | `0` |
+| `fit` | `stretch` or `contain`; requires both width and height | `stretch` |
+
+Dimensions without units and numeric variables are pixels. Explicit `px` and `pt`
+are supported, including string variables such as `"120px"` and `"90pt"`.
+Pixels always use 96 dpi: `1px = 0.75pt`, independently of PNG output DPI or image
+resolution metadata. Natural size uses the image's pixel dimensions at 96 dpi.
+One supplied dimension preserves aspect ratio. Two dimensions stretch by default;
+`fit=contain` preserves aspect ratio inside the box and aligns at its top-left.
+Scale and dimensions must be positive finite values; offsets must be finite.
+All arguments can reference root/scoped variables, for example
+`width=$.LogoWidth offset-x=$.LogoOffsetX fit=$.LogoFit`. Duplicate/unknown arguments,
+null argument values and incompatible sizing options are errors. Geometry arguments
+are validated even when image data is null. Empty array blocks are syntax-checked
+without evaluating their data paths.

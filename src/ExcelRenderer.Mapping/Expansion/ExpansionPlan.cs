@@ -82,6 +82,16 @@ internal sealed class ExpansionPlan
 
     private MappedValue Value(TemplateCell cell, IReadOnlyDictionary<string, object?> aliases, object? item, bool implicitArray)
     {
+        if (cell.Image is not null)
+        {
+            return new MappedValue(null, image: cell.Image.Evaluate(root, aliases, item, implicitArray));
+        }
+
+        if (cell.IsComment)
+        {
+            return new MappedValue(null);
+        }
+
         if (cell.IsPageBreak)
         {
             return new MappedValue(cell.Condition is null || cell.Condition.Evaluate(aliases));
@@ -93,9 +103,10 @@ internal sealed class ExpansionPlan
         }
 
         var value = cell.Expression.Evaluate(root, aliases, options, item, implicitArray);
+        var color = cell.Expression.EvaluateColor(root, aliases, item, implicitArray);
         if (value is null)
         {
-            return new MappedValue(null);
+            return new MappedValue(null, color);
         }
 
         if (value is not string && value is not bool && value is not DateTime && value is not TimeSpan &&
@@ -117,6 +128,6 @@ internal sealed class ExpansionPlan
             throw new InvalidOperationException("Excel numeric values must be finite.");
         }
 
-        return new MappedValue(value);
+        return new MappedValue(value, color);
     }
 }

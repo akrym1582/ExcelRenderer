@@ -110,7 +110,10 @@ public static partial class ExcelTemplateMapper
                             for (var index = 0; index < values.Count; index++)
                             {
                                 var cell = node.Template.Cells[index];
-                                edits.Add(Edit(cell.Column, cell.IsPageBreak ? null : values[index].Value));
+                                var edit = Edit(cell.Column, cell.IsPageBreak ? null : values[index].Value);
+                                edit.FontColor = values[index].FontColor;
+                                edit.Image = values[index].Image;
+                                edits.Add(edit);
                                 if (cell.IsPageBreak && values[index].Value is true)
                                 {
                                     explicitBreak = true;

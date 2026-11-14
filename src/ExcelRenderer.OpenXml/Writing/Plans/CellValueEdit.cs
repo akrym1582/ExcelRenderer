@@ -50,6 +50,12 @@ public sealed class CellValueEdit
         Value = value;
     }
 
+    /// <summary>Gets or sets the image placed at this cell.</summary>
+    public CellImageEdit? Image { get; set; }
+
+    /// <summary>Gets or sets the optional six-digit RGB font color.</summary>
+    public string? FontColor { get; set; }
+
     /// <summary>Gets the one-based cell column.</summary>
     public int Column { get; }
 

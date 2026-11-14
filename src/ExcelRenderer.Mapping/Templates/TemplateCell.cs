@@ -25,11 +25,17 @@ internal sealed class TemplateCell
     /// <summary>Gets the original expression text.</summary>
     internal string Text { get; }
 
+    /// <summary>Gets or sets a value indicating whether this cell is a template comment.</summary>
+    internal bool IsComment { get; set; }
+
     /// <summary>Gets or sets a value indicating whether this cell is a page-break directive.</summary>
     internal bool IsPageBreak { get; set; }
 
     /// <summary>Gets or sets the optional page-break condition.</summary>
     internal PageBreakCondition? Condition { get; set; }
+
+    /// <summary>Gets or sets the optional image directive.</summary>
+    internal ImageExpression? Image { get; set; }
 
     /// <summary>Gets or sets the optional compiled expression.</summary>
     internal CellExpression? Expression { get; set; }

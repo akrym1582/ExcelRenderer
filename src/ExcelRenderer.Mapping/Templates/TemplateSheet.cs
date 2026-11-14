@@ -121,7 +121,12 @@ internal sealed class TemplateSheet
             var ordinary = new TemplateNode(row, row, cells.FirstOrDefault() ?? new TemplateCell($"A{row}", 1, string.Empty));
             foreach (var cell in cells)
             {
-                if (cell.Text == "**@page-break" || cell.Text.StartsWith("**@page-break ", StringComparison.Ordinal))
+                if (cell.Text.StartsWith("**//", StringComparison.Ordinal))
+                {
+                    cell.IsComment = true;
+                    ordinary.Cells.Add(cell);
+                }
+                else if (cell.Text == "**@page-break" || cell.Text.StartsWith("**@page-break ", StringComparison.Ordinal))
                 {
                     cell.IsPageBreak = true;
                     if (cell.Text != "**@page-break")
@@ -139,10 +144,39 @@ internal sealed class TemplateSheet
                 {
                     ordinary.Cells.Add(cell);
                 }
+                else if (cell.Text == "**@image" || cell.Text.StartsWith("**@image ", StringComparison.Ordinal))
+                {
+                    cell.Image = At(Sheet, cell, () => new ImageExpression(cell.Text.Substring(8)));
+                    foreach (var path in cell.Image.Paths)
+                    {
+                        ValidateAlias(cell, path, aliases);
+                        if (path.WildcardIndex >= 0)
+                        {
+                            if (insideArray || (ordinary.Path is not null && ordinary.Path.ArrayKey != path.ArrayKey))
+                            {
+                                throw Error(cell, "Image wildcards must match the row array; use aliases inside blocks.");
+                            }
+
+                            ordinary.Path = path;
+                            ordinary.Location = cell;
+                        }
+                    }
+
+                    ordinary.Cells.Add(cell);
+                }
                 else if (cell.Text.StartsWith("**", StringComparison.Ordinal))
                 {
                     cell.Expression = At(Sheet, cell, () => new CellExpression(cell.Text.Substring(2)));
                     ValidateAlias(cell, cell.Expression.Path, aliases);
+                    foreach (var path in cell.Expression.DecorationPaths)
+                    {
+                        ValidateAlias(cell, path, aliases);
+                        if (path.WildcardIndex >= 0 && path.ArrayKey != cell.Expression.Path.ArrayKey)
+                        {
+                            throw Error(cell, "Decoration wildcards must match the cell value array.");
+                        }
+                    }
+
                     if (cell.Expression.Path.WildcardIndex >= 0)
                     {
                         if (insideArray)

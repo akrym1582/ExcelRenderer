@@ -25,7 +25,14 @@ public static partial class OpenXmlWorkbookWriter
             var formats = styles.Root!.Element(Ns + "cellXfs") ?? throw new InvalidDataException("Missing cell formats.");
             var fonts = styles.Root.Element(Ns + "fonts") ?? throw new InvalidDataException("Missing fonts.");
             var format = new XElement(formats.Elements().ElementAt(original));
-            var font = new XElement(fonts.Elements().ElementAt((int?)format.Attribute("fontId") ?? 0));
+            var fontId = (int?)format.Attribute("fontId");
+            if (fontId is null && (int?)format.Attribute("xfId") is int parentIndex)
+            {
+                var parent = styles.Root.Element(Ns + "cellStyleXfs")?.Elements(Ns + "xf").ElementAtOrDefault(parentIndex);
+                fontId = (int?)parent?.Attribute("fontId");
+            }
+
+            var font = new XElement(fonts.Elements(Ns + "font").ElementAt(fontId ?? 0));
             font.Elements(Ns + "color").Remove();
             var coloredFont = new DocumentFormat.OpenXml.Spreadsheet.Font(font.ToString());
             coloredFont.Color = new DocumentFormat.OpenXml.Spreadsheet.Color { Rgb = "FF" + color.ToUpperInvariant() };

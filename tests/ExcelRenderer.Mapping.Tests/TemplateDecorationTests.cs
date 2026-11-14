@@ -43,6 +43,28 @@ public sealed class TemplateDecorationTests
         Assert.Empty(new OpenXmlValidator().Validate(document).Select(error => error.Description));
     }
 
+    [Fact]
+    public void Color_preserves_font_properties_inherited_from_parent_style()
+    {
+        var styles = SdkWorkbook.Styles(new S.CellFormat { FormatId = 1 });
+        styles.Fonts!.Append(new S.Font(new S.Bold(), new S.FontSize { Val = 19 }, new S.FontName { Val = "Cambria" }));
+        styles.CellStyleFormats!.Append(new S.CellFormat { FontId = 1 });
+        styles.CellStyles!.Append(new S.CellStyle { Name = "Custom", FormatId = 1 });
+        using var input = SdkWorkbook.Create(new S.Worksheet(new S.SheetData(
+            new S.Row(SdkWorkbook.Text("A1", "**$.Amount | font-color($.Color)")) { RowIndex = 1 })), styles);
+        using var output = Map(input, new { Amount = 42, Color = "#123456" });
+        using var document = SpreadsheetDocument.Open(output, false);
+        var workbook = document.WorkbookPart!;
+        var cell = workbook.WorksheetParts.Single().Worksheet.Descendants<S.Cell>().Single();
+        var mappedStyles = workbook.WorkbookStylesPart!.Stylesheet;
+        var format = mappedStyles.CellFormats!.Elements<S.CellFormat>().ElementAt((int)cell.StyleIndex!.Value);
+        var font = mappedStyles.Fonts!.Elements<S.Font>().ElementAt((int)format.FontId!.Value);
+        Assert.NotNull(font.Bold);
+        Assert.Equal(19d, font.FontSize!.Val!.Value);
+        Assert.Equal("Cambria", font.FontName!.Val!.Value);
+        Assert.Equal("FF123456", font.Color!.Rgb!.Value);
+    }
+
     [Theory]
     [InlineData("", 9525, 9525)]
     [InlineData("scale=2", 19050, 19050)]
@@ -95,6 +117,39 @@ public sealed class TemplateDecorationTests
         Assert.Equal(new[] { "0", "1" }, part.DrawingsPart!.WorksheetDrawing!.Elements<Xdr.OneCellAnchor>().Select(a => a.FromMarker!.RowId!.Text));
         Assert.Equal(new[] { "1", "2" }, part.Worksheet.Descendants<S.Cell>().Where(c => c.CellReference!.Value!.StartsWith("B")).Select(c => c.CellValue!.Text));
         Assert.Empty(new OpenXmlValidator().Validate(document).Select(error => error.Description));
+    }
+
+    [Fact]
+    public void Image_ids_continue_after_existing_drawing_ids()
+    {
+        using var input = Template("Title", "**@image $.Items[*]");
+        using (var template = SpreadsheetDocument.Open(input, true))
+        {
+            var part = template.WorkbookPart!.WorksheetParts.Single();
+            SdkWorkbook.Image(part, Png);
+            part.DrawingsPart!.WorksheetDrawing!.Descendants<Xdr.NonVisualDrawingProperties>().Single().Id = 23U;
+        }
+
+        input.Position = 0;
+        using var output = Map(input, new { Items = new[] { Png, Png } });
+        using var document = SpreadsheetDocument.Open(output, false);
+        var drawing = document.WorkbookPart!.WorksheetParts.Single().DrawingsPart!.WorksheetDrawing!;
+        Assert.Equal(new uint[] { 23, 24, 25 }, drawing.Descendants<Xdr.NonVisualDrawingProperties>().Select(item => item.Id!.Value));
+    }
+
+    [Theory]
+    [InlineData("FFD8FFC0000B080001000101011100FFD9")]
+    [InlineData("FFD8FFC0000B080001000101011100FFDA0008010100003F00FFD9")]
+    [InlineData("FFD8FFC0000B080001000101011100FFDA0008010100003F0001FFE10008FFD9")]
+    public void Incomplete_jpeg_reports_original_cell_and_preserves_output(string jpeg)
+    {
+        using var input = Template("Title", "**@image $.Logo");
+        using var output = new MemoryStream();
+        output.WriteByte(42);
+        var error = Assert.Throws<MappingException>(() => ExcelTemplateMapper.Map(input, output, new { Logo = Convert.FromHexString(jpeg) }));
+        Assert.Equal("A2", error.CellAddress);
+        Assert.Contains("JPEG", error.Message);
+        Assert.Equal(new byte[] { 42 }, output.ToArray());
     }
 
     [Theory]

@@ -28,6 +28,7 @@ public static partial class OpenXmlWorkbookWriter
         foreach (var sheet in plan.Sheets)
         {
             var part = (WorksheetPart)workbook.GetPartById(sheets[sheet.SheetIndex - 1].Id!);
+            uint? lastDrawingId = null;
             foreach (var row in sheet.Rows)
             {
                 foreach (var edit in row.Values)
@@ -53,7 +54,9 @@ public static partial class OpenXmlWorkbookWriter
                     }
 
                     var drawing = drawings.WorksheetDrawing!;
-                    var id = checked(drawing.Descendants<Xdr.NonVisualDrawingProperties>().Select(item => item.Id?.Value ?? 0U).DefaultIfEmpty().Max() + 1);
+                    lastDrawingId ??= drawing.Descendants<Xdr.NonVisualDrawingProperties>().Select(item => item.Id?.Value ?? 0U).DefaultIfEmpty().Max();
+                    var id = checked(lastDrawingId.Value + 1);
+                    lastDrawingId = id;
                     var width = Emu(image.Width);
                     var height = Emu(image.Height);
                     var picture = new Xdr.Picture(

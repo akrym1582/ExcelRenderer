@@ -109,47 +109,125 @@ public sealed class CellImageEdit
 
         if (data.Length >= 4 && data[0] == 255 && data[1] == 216 && data[data.Length - 2] == 255 && data[data.Length - 1] == 217)
         {
-            var position = 2;
-            while (position < data.Length - 3)
-            {
-                if (data[position++] != 255)
-                {
-                    break;
-                }
-
-                while (position < data.Length && data[position] == 255)
-                {
-                    position++;
-                }
-
-                if (position >= data.Length - 2)
-                {
-                    break;
-                }
-
-                var marker = data[position++];
-                var length = (data[position] << 8) | data[position + 1];
-                if (length < 2 || length > data.Length - position)
-                {
-                    break;
-                }
-
-                if (marker is >= 192 and <= 207 && marker is not 196 and not 200 and not 204 && length >= 8)
-                {
-                    var height = (data[position + 3] << 8) | data[position + 4];
-                    var width = (data[position + 5] << 8) | data[position + 6];
-                    if (width > 0 && height > 0)
-                    {
-                        return (width, height, false);
-                    }
-                }
-
-                position += length;
-            }
+            var (width, height) = JpegDimensions(data);
+            return (width, height, false);
         }
 
         throw new InvalidDataException("Expected a complete PNG or JPEG image.");
     }
+
+    private static (int Width, int Height) JpegDimensions(byte[] data)
+    {
+        var position = 2;
+        var width = 0;
+        var height = 0;
+        var hasScan = false;
+        while (position < data.Length && data[position++] == 255)
+        {
+            while (position < data.Length && data[position] == 255)
+            {
+                position++;
+            }
+
+            if (position >= data.Length)
+            {
+                break;
+            }
+
+            var marker = data[position++];
+            if (marker == 217)
+            {
+                if (position == data.Length && hasScan)
+                {
+                    return (width, height);
+                }
+
+                break;
+            }
+
+            if (marker == 0 || marker is >= 208 and <= 216 || position > data.Length - 2)
+            {
+                break;
+            }
+
+            var length = Read16(data, position);
+            if (length < 2 || length > data.Length - position)
+            {
+                break;
+            }
+
+            if (marker is >= 192 and <= 207 && marker is not 196 and not 200 and not 204)
+            {
+                if (length < 11 || length != 8 + (3 * data[position + 7]))
+                {
+                    break;
+                }
+
+                height = Read16(data, position + 3);
+                width = Read16(data, position + 5);
+                if (height == 0 || width == 0)
+                {
+                    break;
+                }
+            }
+
+            if (marker != 218)
+            {
+                position += length;
+                continue;
+            }
+
+            if (width == 0 || length < 8 || length != 6 + (2 * data[position + 2]) ||
+                !ReadJpegScan(data, position + length, out position))
+            {
+                break;
+            }
+
+            hasScan = true;
+        }
+
+        throw new InvalidDataException("Incomplete or invalid JPEG image.");
+    }
+
+    private static bool ReadJpegScan(byte[] data, int start, out int nextMarker)
+    {
+        var hasData = false;
+        var position = start;
+        while (position < data.Length)
+        {
+            if (data[position++] != 255)
+            {
+                hasData = true;
+                continue;
+            }
+
+            nextMarker = position - 1;
+            while (position < data.Length && data[position] == 255)
+            {
+                position++;
+            }
+
+            if (position == data.Length)
+            {
+                break;
+            }
+
+            var marker = data[position++];
+            if (marker == 0)
+            {
+                hasData = true;
+            }
+            else if (marker is < 208 or > 215)
+            {
+                return hasData;
+            }
+        }
+
+        nextMarker = data.Length;
+        return false;
+    }
+
+    private static int Read16(byte[] data, int offset) => (data[offset] << 8) | data[offset + 1];
 
     private static int Read32(byte[] data, int offset) => (data[offset] << 24) | (data[offset + 1] << 16) | (data[offset + 2] << 8) | data[offset + 3];
 }

@@ -27,7 +27,7 @@ Excel (.xlsx)
 This makes the rendering pipeline easier to test, understand, and extend with new layout behavior or output formats.
 
 > [!NOTE]
-> ExcelRenderer is currently an MVP and does not aim for pixel-perfect parity with Microsoft Excel.
+> ExcelRenderer does not aim for pixel-perfect parity with Microsoft Excel.
 
 ### Features
 

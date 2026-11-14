@@ -338,6 +338,9 @@ Every subcommand (including `xlsx`) writes command arguments, elapsed time and
 available conversion metrics to standard output. Rendering commands also print all
 collected diagnostics, including informational entries. Failures print full exception
 details to standard error. No verbosity option is required.
+`Metric managedAllocatedBytes` reports cumulative managed allocations in bytes across
+all process threads during the command, including allocations already collected by GC.
+It excludes native allocations (such as Skia buffers) and is not peak or retained memory.
 
 ```bash
 excelrenderer core input.xlsx -o core.pdf --font-file ./NotoSansJP-Regular.ttf --sheet Sheet3 Sheet1

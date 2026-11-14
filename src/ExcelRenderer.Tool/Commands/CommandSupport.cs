@@ -129,11 +129,12 @@ internal static class CommandSupport
     /// <summary>
     /// 変換処理を実行し、キャンセルまたは例外を標準エラーへ通知して終了コードへ変換します。
     /// </summary>
-    /// <param name="result">The parsed command and verbosity option.</param>
+    /// <param name="result">The parsed command.</param>
     /// <param name="conversion">実行する非同期の変換処理。</param>
     /// <returns>正常に完了した場合は <c>0</c>、キャンセルまたは例外が発生した場合は <c>1</c>。</returns>
     internal static async Task<int> RunAsync(ParseResult result, Func<Task> conversion)
     {
+        var allocatedBefore = GC.GetTotalAllocatedBytes(precise: true);
         var timer = Stopwatch.StartNew();
         var previousObserver = Core.Rendering.ConversionMetrics.Observer;
         var metrics = new Dictionary<string, double>(StringComparer.Ordinal);
@@ -171,7 +172,9 @@ internal static class CommandSupport
         }
         finally
         {
+            var allocatedBytes = GC.GetTotalAllocatedBytes(precise: true) - allocatedBefore;
             Core.Rendering.ConversionMetrics.Observer = previousObserver;
+            metrics["managedAllocatedBytes"] = allocatedBytes;
             Console.WriteLine($"Completed in {timer.Elapsed.TotalMilliseconds:F1} ms.");
             foreach (var metric in metrics.OrderBy(item => item.Key, StringComparer.Ordinal))
             {

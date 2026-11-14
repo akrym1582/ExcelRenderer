@@ -24,6 +24,7 @@ public sealed partial class ToolIntegrationTests
         Assert.Contains("Info: MaximumDigitWidthResolved", result.Output);
         Assert.Contains("Starting " + command, result.Output);
         Assert.Contains("Completed in", result.Output);
+        Assert.Matches(@"Metric managedAllocatedBytes: [1-9][0-9]*", result.Output);
         Assert.Contains("Metric reader.ms:", result.Output);
         Assert.Empty(result.Error);
     }

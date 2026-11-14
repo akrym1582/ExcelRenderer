@@ -71,6 +71,7 @@ public sealed partial class ToolIntegrationTests
         Assert.NotEqual(0, result.ExitCode);
         Assert.Contains("Starting " + command, result.Output);
         Assert.Contains("Completed in", result.Output);
+        Assert.Matches(@"Metric managedAllocatedBytes: [1-9][0-9]*", result.Output);
         Assert.Contains("Exception", result.Error);
         Assert.Contains("   at ", result.Error);
     }
@@ -85,6 +86,7 @@ public sealed partial class ToolIntegrationTests
         Assert.Equal("%PDF", System.Text.Encoding.ASCII.GetString(File.ReadAllBytes(output), 0, 4));
         Assert.Contains("Core PDF: 3 pages", result.Output);
         Assert.Contains("Completed in", result.Output);
+        Assert.Matches(@"Metric managedAllocatedBytes: [1-9][0-9]*", result.Output);
         Assert.Contains("Metric reader.ms:", result.Output);
         Assert.Contains("Metric pdfFinalSave.ms:", result.Output);
         Assert.Empty(result.Error);

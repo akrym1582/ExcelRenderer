@@ -14,7 +14,7 @@ ExcelRenderer public APIs / multi-format orchestration
     CoreTextLayoutAdapter → finalized full runs in borrowed typed payloads
     FullDrawingExtension → common cell layers + image/shape Z stage
     PdfRenderer / SkiaPdfDocumentWriter → Core document / subsets / structural save
-    PNG / SVG / Markdown / continuous / trim / link preflight remain in main
+    PNG / SVG / continuous / trim / link preflight remain in main
                          ↓
 ExcelRenderer.Core (also independently usable through ProjectReference)
     Reader input/spool → saved-value reader → geometry/pagination/placement → commands → PDF
@@ -27,7 +27,7 @@ extension API, type forwarding, or public record inheritance. Typed payloads nev
 native resources. Main font/shapes/link types do not appear in Core signatures.
 
 Normal conversion reads neutral cells and passes them directly to Core layout and command
-generation. Selection, diagnostics and Markdown use ordered public dictionary views of
+generation. Selection and diagnostics use ordered public dictionary views of
 those cells. Range filtering retains neutral values. Caller-built public sheets enter
 through a lazy projection with a style cache. Public `ExcelReader.Read` alone materializes
 public dictionaries for its compatibility contract. Public pass facades synchronize only

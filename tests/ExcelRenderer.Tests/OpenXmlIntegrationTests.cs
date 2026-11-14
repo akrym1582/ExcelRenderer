@@ -53,14 +53,14 @@ public sealed class OpenXmlIntegrationTests
 
     [Theory]
     [MemberData(nameof(Fixtures))]
-    public async Task LegacyColumnMetricsPreserveReaderMigrationPngSvgAndMarkdown(string path)
+    public async Task LegacyColumnMetricsPreserveReaderMigrationPngAndSvg(string path)
     {
         using var culture = new ReaderSnapshot.InvariantCultureScope();
         var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../"));
         var name = Path.GetRelativePath(root, path).Replace(Path.DirectorySeparatorChar, '/');
         var all = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "ReaderGolden", "artifacts.json")))!;
         var borderUpdates = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "ReaderGolden", "border-artifacts.json")))!;
-        foreach (var format in new[] { OutputFormat.Png, OutputFormat.Svg, OutputFormat.Markdown })
+        foreach (var format in new[] { OutputFormat.Png, OutputFormat.Svg })
         {
             using var input = File.OpenRead(path);
             using var actual = new ReaderSnapshot.Capture();

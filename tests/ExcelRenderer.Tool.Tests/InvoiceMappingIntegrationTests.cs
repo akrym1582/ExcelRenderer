@@ -139,9 +139,9 @@ public sealed partial class ToolIntegrationTests
             Assert.Equal("30 Nov 2026", Text(sheet, "F20"));
         }
 
-        var markdown = Path.Combine(_directory, "clr.md");
-        AssertSuccess(await RunAsync("markdown", mapped, "-o", markdown));
-        var displayed = await File.ReadAllTextAsync(markdown);
+        var pdf = Path.Combine(_directory, "clr.pdf");
+        AssertSuccess(await RunAsync("pdf", mapped, "-o", pdf));
+        var displayed = PdfText.Read(File.ReadAllBytes(pdf));
         Assert.Contains("2026/10/09", displayed);
         Assert.Contains("27:00:00", displayed);
         Assert.Contains("TRUE", displayed);
@@ -183,9 +183,9 @@ public sealed partial class ToolIntegrationTests
             }
         }
 
-        var markdown = Path.Combine(_directory, "display.md");
-        AssertSuccess(await RunAsync("markdown", template, "--data", json, "-o", markdown));
-        var displayed = await File.ReadAllTextAsync(markdown);
+        var pdf = Path.Combine(_directory, "display.pdf");
+        AssertSuccess(await RunAsync("pdf", template, "--data", json, "-o", pdf));
+        var displayed = PdfText.Read(File.ReadAllBytes(pdf));
         Assert.Contains("株式会社サンプル 御中", displayed);
         Assert.Contains("2026/10/09", displayed);
         Assert.Contains("FALSE", displayed);

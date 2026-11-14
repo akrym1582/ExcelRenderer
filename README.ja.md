@@ -30,7 +30,7 @@ PDF / PostScript / PNG / SVG
 
 読み込み、レイアウト計算、描画命令生成、出力を分離することで、処理内容を理解しやすくし、将来的な機能追加や出力先の追加を行いやすい構成にしています。
 
-ライブラリに加えて、PDF・PostScript・PNG・SVG・Markdownへ変換するコマンドラインツールを提供します。
+ライブラリに加えて、PDF・PostScript・PNG・SVGへ変換するコマンドラインツールを提供します。
 
 ### 主な機能
 
@@ -56,7 +56,7 @@ PDF / PostScript / PNG / SVG
 
 | パッケージ | 用途 | 必要な環境 |
 | --- | --- | --- |
-| `ExcelRenderer` | C# から既存の XLSX を PDF・PostScript・PNG・SVG・Markdown に変換 | .NET Standard 2.1 と互換性のあるアプリケーション |
+| `ExcelRenderer` | C# から既存の XLSX を PDF・PostScript・PNG・SVG に変換 | .NET Standard 2.1 と互換性のあるアプリケーション |
 | `ExcelRenderer.Mapping` | C# オブジェクト・JSON をテンプレートへ設定して XLSX を保存 | .NET Standard 2.1 と互換性のあるアプリケーション。描画・フォントは不要 |
 | `ExcelRenderer.Fonts` | 描画用の日本語・絵文字フォントを追加 | `ExcelRenderer` と併用 |
 | `ExcelRenderer.Tool` | コマンドラインでマッピング・変換 | .NET 10 SDK |
@@ -199,13 +199,12 @@ dotnet tool run excelrenderer --help
 
 ## クイックスタート
 
-CLI で PDF・画像・SVG・Markdown に変換します。
+CLI で PDF・画像・SVG に変換します。
 
 ```bash
 excelrenderer pdf input.xlsx -o output.pdf
 excelrenderer image input.xlsx -o ./images
 excelrenderer svg input.xlsx -o ./svg-output
-excelrenderer md input.xlsx -o output.md
 ```
 
 C# から呼び出す場合は、ライブラリを追加して次の 1 行で変換できます。
@@ -283,8 +282,7 @@ excelrenderer <command> <input.xlsx> --output <path> [options]
 | `image` | 印刷ページごとの PNG | `--sheet <シート名>...`、`--dpi <数値>`（既定値 `144`） |
 | `svg` | 印刷ページごとの自己完結 SVG | `--sheet <シート名>...` |
 | `ps` | TrueType フォントを埋め込んだ複数ページの PostScript ファイル | `--sheet <シート名>...` と buffer オプション |
-| `markdown` / `md` | 1 個の Markdown と任意の抽出画像 | `--sheet`、`--image-dir`、`--[no-]images`、`--[no-]cell-addresses`、`--[no-]formulas`、`--[no-]layout-detection`、`--[no-]region-detection` |
-| `render` | PDF/PostScript ファイル、または PNG/SVG/Markdown の出力ディレクトリ | `--format pdf\|ps\|png\|svg\|markdown` と選択、レイアウト、診断、マニフェスト、フォント方針の各オプション |
+| `render` | PDF/PostScript ファイル、または PNG/SVG の出力ディレクトリ | `--format pdf\|ps\|png\|svg` と選択、レイアウト、診断、マニフェスト、フォント方針の各オプション |
 
 描画コマンドはすべて `--data <data.json>` を指定すると、テンプレートへ値を設定してから
 変換します。省略時は従来どおり既存のワークブックを変換します。
@@ -303,7 +301,7 @@ excelrenderer <command> <input.xlsx> --output <path> [options]
 | `--font-policy bundled\|requested` | 同梱の互換フォント（既定）と、要求・明示指定したフォントのどちらを優先するか選びます。 |
 | `--ivs-font-style gothic\|mincho` | IVS に使用する同梱フォントの書体を選びます（既定値 `gothic`）。 |
 
-これらは PDF、PNG、SVG の字形選択に影響します。Markdown は字形を描画しませんが、共通のフォント引数を持つスクリプトでコマンドを切り替えられるよう同じ指定を受け付けます。空白を含むパスは引用符で囲んでください。コンテナーで再現可能な出力にする例:
+これらは PDF、PNG、SVG の字形選択に影響します。空白を含むパスは引用符で囲んでください。コンテナーで再現可能な出力にする例:
 
 ```bash
 excelrenderer pdf report.xlsx -o report.pdf \
@@ -325,8 +323,7 @@ BMP 私用領域 (U+E000–U+F8FF) は要求フォント、指定ファイル（
 フォールバックの順に調べます。どのフォントにも字形がなければ `MissingPrivateUseGlyph` を
 報告して U+FFFD を描画し、`--strict` または `--warnings-as-errors MissingPrivateUseGlyph` で
 変換を失敗させられます。ファイルは読取可能かつ有効でなければならず、ライセンスと PDF
-埋め込み条件の確認は利用者の責任です。Markdown は字形を描画しないため、この指定の影響を
-受けません。既定の
+埋め込み条件の確認は利用者の責任です。既定の
 `bundled` は既存出力との互換性のため同梱フォントを優先し、`requested` は指定フォントと
 追加ディレクトリを設定済みフォールバックおよび同梱フォントより先に検索します。フォール
 バックは Unicode テキスト要素単位で決定するため、サロゲートペアと結合文字列は分断しません。
@@ -370,7 +367,6 @@ excelrenderer render input.xlsx -o report.pdf --format pdf \
 excelrenderer render input.xlsx -o images --format png \
   --sheet Sheet1 --range B2:F40 --image-layout continuous --trim
 excelrenderer render input.xlsx -o svg --format svg --sheet Sheet1 --range B2:F40 --trim
-excelrenderer render input.xlsx -o markdown --format markdown --hyperlinks preserve
 ```
 
 | オプション | 動作 |
@@ -379,13 +375,13 @@ excelrenderer render input.xlsx -o markdown --format markdown --hyperlinks prese
 | `--max-range-cells` | 明示範囲の総セル数上限。正の整数、既定100万。空セルも数えます。処理量の制限でありメモリ保証ではありません。 |
 | `--trim` | 通常の改ページ後、各ページ／連続キャンバスの描画内容の外周を切り詰めます。再配置・再倍率計算をしません。 |
 | `--trim-padding` | 四辺のpt余白。非負有限値、既定2。`--trim` が必要です。 |
-| `--hyperlinks preserve\|none` | 既定 `preserve`。旧 `pdf` と `markdown`／`md` でも使用可能。`none` は表示・書式を保ち、リンク診断・追加アンカー・リンク一覧を出しません。 |
+| `--hyperlinks preserve\|none` | 既定 `preserve`。旧 `pdf` でも使用可能。`none` は表示・書式を保ち、リンク注釈・リンク診断を出しません。 |
 
 明示範囲はシートの既存印刷範囲を置き換え、用紙・余白・倍率・ページ順を維持します。印刷タイトルは指定範囲との交差部分だけ反復します。範囲でシートを暗黙選択しません。全行／全列、union、名前、逆順、外部／3D参照は引数エラーです。連続画像では指定矩形を使い、範囲外オブジェクトで自動拡張しません。部分結合セルは元の幅で文字を計測し、整列・罫線・位置を保ってclipし、`ClippedMergedCell` Warningを記録します。`--pages` は範囲適用後・trim前の文書通番です。全非表示範囲も空ページ／キャンバスを維持します。
 
 trimの対象は可視の塗り（明示白塗りも含む）、線、配置済み文字、画像、図形、ヘッダー／フッターです。取得可能な文字は字形境界を使い、絵文字・互換字形は確定配置の安全側の論理境界を使います。画像内の白／透明領域をピクセル解析して除去する処理ではありません。空のtrim結果は1×1ptに四辺paddingを加え（既定5×5pt）、`EmptyContent` Infoを記録します。PNGは最終pt寸法からceilでpx寸法を求め、ページ／連続の双方でbitmap確保前に `RenderRequest.MaxPngPixels` を適用します。
 
-PDF／Markdownは `http`、`https`、`mailto` と同一ブックのセルリンクを保持します。範囲ref、空セル、単純A1を参照するスコープ付き名前、定数文字列引数の `HYPERLINK` に対応します。XMLの明示定義を数式より優先し、cached表示を保持します。cached値がなければ空表示と `FormulaCachedValueMissing` にし、literalの表示名／リンク先で補いません。PDF注釈は最終結合文書へ付け、ページ選択・範囲・trimを反映します。Markdownは安定した `xl-sN-rN-cN` アンカーと、空セル／範囲refを表す明示一覧を使います。PNG／SVGはセルの見た目を保持し、クリック機能やリンク警告を追加しません。SVGリンクやリンクsidecarは生成しません。
+PDFは `http`、`https`、`mailto` と同一ブックのセルリンクを保持します。範囲ref、空セル、単純A1を参照するスコープ付き名前、定数文字列引数の `HYPERLINK` に対応します。XMLの明示定義を数式より優先し、cached表示を保持します。cached値がなければ空表示と `FormulaCachedValueMissing` にし、literalの表示名／リンク先で補いません。PDF注釈は最終結合文書へ付け、ページ選択・範囲・trimを反映します。PNG／SVGはセルの見た目を保持し、クリック機能やリンク警告を追加しません。SVGリンクやリンクsidecarは生成しません。
 
 ローカルファイル、相対パス、UNC、HTTP埋込み認証情報、制御文字、非対応schemeや競合定義は表示文字を残して `HyperlinkRejected`、動的数式等は `HyperlinkUnsupported` Warningになります。未存在／出力外の内部リンク先は `HyperlinkTargetOmitted`。出力外のリンク元にはリンク先欠落警告を出しません。診断にURL・宛先・query全文を載せません。読込可能な不正リンク定義はWarningですが、破損 package やリンク relationship の欠落は致命的入力エラーです。Strict／指定したwarnings-as-errorsはSink Open前に失敗します。PDF CLIは事前検証後に初めて作成・truncateし、入力と出力の同一パスは読込前に拒否します。
 
@@ -406,7 +402,7 @@ var request = new RenderRequest
 };
 ```
 
-設定には `ExcelRenderer.Rendering` と `ExcelRenderer.Model` をimportします。旧PDF／Markdown設定にも `Hyperlinks` があります。Markdownの範囲・trim・ページ選択は出力前に拒否します。範囲／trimなしでは従来のページ寸法と配置を維持します。manifestはSchemaVersion=1にページ・範囲・crop情報を任意項目として追加します。幅・高さは最終寸法、元寸法とcrop座標はtrim前ページを表します。範囲省略は従来の印刷／使用範囲、crop／padding省略は恒等変換です。リンク先やtooltip全文をmanifestに列挙しません。
+設定には `ExcelRenderer.Rendering` と `ExcelRenderer.Model` をimportします。旧PDF設定にも `Hyperlinks` があります。範囲／trimなしでは従来のページ寸法と配置を維持します。manifestはSchemaVersion=1にページ・範囲・crop情報を任意項目として追加します。幅・高さは最終寸法、元寸法とcrop座標はtrim前ページを表します。範囲省略は従来の印刷／使用範囲、crop／padding省略は恒等変換です。リンク先やtooltip全文をmanifestに列挙しません。
 
 ## C# API（高レベル）
 
@@ -426,11 +422,10 @@ await ExcelConverter.ConvertToPdfAsync("input.xlsx", "output.pdf");
 await ExcelConverter.ConvertToImagesAsync("input.xlsx", "./images");
 await ExcelConverter.ConvertToSvgAsync("input.xlsx", "./svg-output");
 await ExcelConverter.ConvertToPostScriptAsync("input.xlsx", "report.ps");
-await ExcelConverter.ConvertToMarkdownAsync("input.xlsx", "output.md");
 ```
 
 形式別 API の `PdfExportOptions`、`ImageExportOptions`、`SvgExportOptions`、
-`PostScriptExportOptions`、`MarkdownExportOptions` と Core の `PdfExportOptions` に
+`PostScriptExportOptions` と Core の `PdfExportOptions` に
 `SheetNames` を追加しました。既存の `SheetName` も利用できます。
 両方 null なら全シート、どちらか一方を指定すれば対象を選択します。
 併用、空リスト、空文字/null の名前、不存在のシート名は `ArgumentException` です。
@@ -446,8 +441,7 @@ await ExcelConverter.ConvertToPdfAsync("input.xlsx", "selected.pdf", new PdfExpo
 ストリーム連携には `RenderAsync` を使用できます。入力は現在位置から読み取り、入力
 ストリームと `SingleStreamOutputSink` の出力ストリームは閉じません。ページごとの
 PNG/SVG には `DirectoryOutputSink` を使用します。`RenderRequest` では完全一致の
-シート名（指定順）と PDF/PNG/SVG の文書ページを選択できます。Markdown はページ
-選択を受け付けません。`ConversionManifest.WriteAsync` は完了した成果物メタデータと診断を記録します。
+シート名（指定順）と PDF/PNG/SVG の文書ページを選択できます。`ConversionManifest.WriteAsync` は完了した成果物メタデータと診断を記録します。
 
 ### PDF の非同期Stream出力
 
@@ -521,7 +515,7 @@ xlsx の個別列幅と既定列幅は、Excel の基準である固定96 DPIの
 保存された水平・垂直中央配置ではセル、オブジェクト、本文clipを同じ量だけ移動します。連続出力では印刷設定を
 適用しません。セルのインデント、内容余白、通常回転、文字要素を積むTopToBottomはPDF、PNG、SVGへ引き継ぎます。
 
-折り返し・縮小表示が無効な通常の横書き文字は、同じ行の連続した空白セルへはみ出して表示します。左揃えは右、右揃えは左、中央揃えは左右それぞれの境界まで描画し、元セルの配置基準点は動かしません。値（明示的な空文字列や書式で見えない値を含む）、数式（空文字列の結果やキャッシュの欠落を含む）、結合範囲全体が境界になります。書式だけの空白セルは通過し、非表示列は幅ゼロとして扱います。描画はページ、印刷範囲、繰り返し見出し、選択範囲、連続キャンバスの境界で切ります。結合された元セル、回転・縦書き、特殊な横揃えは既存の動作を維持し、Markdown はセル文字列全体を出力します。
+折り返し・縮小表示が無効な通常の横書き文字は、同じ行の連続した空白セルへはみ出して表示します。左揃えは右、右揃えは左、中央揃えは左右それぞれの境界まで描画し、元セルの配置基準点は動かしません。値（明示的な空文字列や書式で見えない値を含む）、数式（空文字列の結果やキャッシュの欠落を含む）、結合範囲全体が境界になります。書式だけの空白セルは通過し、非表示列は幅ゼロとして扱います。描画はページ、印刷範囲、繰り返し見出し、選択範囲、連続キャンバスの境界で切ります。結合された元セル、回転・縦書き、特殊な横揃えは既存の動作を維持します。
 
 折り返しセル文字列はレイアウト段階で行と解決済みフォントrunへ確定し、書記素単位の強制分割と
 明示改行の情報を保持します。確定結果を描画命令まで渡すため、PDF、PNG、SVGが個別に異なる位置で
@@ -636,7 +630,7 @@ PDF・PNG・SVG は、通常の文字列セルのフォント名・サイズ・�
 `CellTextRun`、`Text` はプレーン全文です。手動モデルでは両者の全文が一致し、
 サイズが正の有限値である必要があります。組込み計測器は
 `IRichTextLayoutService` に対応し、従来のカスタム計測器はセル単一書式へ縮退します。
-Core 単独のセルごとに通常フォントを一つ選ぶ仕様と、Markdown のプレーン出力は維持します。
+Core 単独のセルごとに通常フォントを一つ選ぶ仕様は維持します。
 
 回転・縦書きとの併用はセル単一書式へ縮退します。取り消し線、上付き・下付き、
 二重・会計下線、ふりがなは描画しません。追加検出を有効にすると、未対応の部分書式と
@@ -654,7 +648,7 @@ excelrenderer render input.xlsx -o output.pdf --format pdf \
 CLI では `--layout-warnings` との併用が必要です。`CellTextClipped` は横書きの折り返し・
 縮小セルを対象に、確定済みの論理行配置を 0.25pt の許容差で判定します。全グリフの
 ink bounds を完全に判定する機能ではありません。`CellTextTooSmall` は出力倍率適用後の
-可視 run サイズを使います。セルの寸法は変更せず、Markdown にはレイアウト診断を出しません。
+可視 run サイズを使います。セルの寸法は変更しません。
 追加診断は preflight で収集し、診断による失敗は出力 sink を開く前に確定します。
 
 `DetectUnsupportedFeatures` 有効時、チャートシートは位置不明のシート単位診断
@@ -673,7 +667,6 @@ stopIfTrue に従って合成し、PDF・PNG・SVG・PostScript 共通のモデ�
 `RenderRequest.ReadOptions` からも指定できます。保存値モードでは参照先の
 保存された型付き値を使い、再計算モードでは表示と同じ計算セッションを使います。
 **Core 単独は条件付き書式に対応せず、通常の保存書式を維持します。**
-Markdown に新しい色表現は追加しません。
 
 集計は非表示・出力選択外を含むルール全範囲の和集合を使います。
 カラースケールの閾値が一致する退化ケースは診断し、元背景を維持します。
@@ -795,7 +788,7 @@ converter は最初にページ band を計画し、元の文書順でページ�
 その後は1ページずつ生成・出力します。ページ別出力は事前確認と本描画の2周です。
 公開 `ReportLayoutEngine.Layout` は materialize する互換 API のままです。
 連続 PNG/SVG は描画層ごとにセルを再走査し、背景・罫線・文字・オブジェクトの順序を
-保ちながら全命令の保持を避けます。Markdown は既存経路を維持します。
+保ちながら全命令の保持を避けます。
 罫線解決は辺のメタデータを保持・ソートするため、メモリ使用量は指定された辺の数に
 比例します。範囲指定のない連続キャンバスは線のはみ出しも含め、明示範囲のclipは維持します。
 
@@ -854,11 +847,9 @@ seekable な一時ファイルへ spool します。reader は独立した curso
 Formulas／OpenXmlの公開APIのnamespaceはフォルダ構成に一致させました。
 更新するusingと型の配置は[namespace移行ガイド](docs/namespace-migration.md)を参照してください。
 
-
 NuGet 公開対象は `ExcelRenderer`・`ExcelRenderer.Mapping`・`ExcelRenderer.Tool`・
 `ExcelRenderer.Fonts` の4つです。Core・OpenXml.Reader・OpenXml・Formulas は公開パッケージへ DLL を
 同梱するソースプロジェクトで、個別公開しません。詳しくは[配布構成](docs/package-distribution.md)を参照してください。
-
 
 必要な SDK は .NET 10 です。テストはリポジトリのルートで実行します。
 

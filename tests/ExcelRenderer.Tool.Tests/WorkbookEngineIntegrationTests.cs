@@ -10,8 +10,6 @@ public sealed partial class ToolIntegrationTests
     [InlineData("pdf")]
     [InlineData("image")]
     [InlineData("svg")]
-    [InlineData("markdown")]
-    [InlineData("md")]
     [InlineData("render")]
     public async Task RemovedEngineOptionsFailBeforeOpeningInputDataOrOutput(string command)
     {
@@ -40,8 +38,6 @@ public sealed partial class ToolIntegrationTests
     [InlineData("pdf")]
     [InlineData("image")]
     [InlineData("svg")]
-    [InlineData("markdown")]
-    [InlineData("md")]
     [InlineData("render")]
     public async Task CommandsUseOpenXmlWithoutEngineOptions(string command)
     {
@@ -59,16 +55,16 @@ public sealed partial class ToolIntegrationTests
         await File.WriteAllTextAsync(data, """{"message":"MappedOpenXmlValue"}""");
         var output = Path.Combine(_directory, "result");
         var args = new List<string> { command, template, "-o", output, "--data", data };
-        if (command == "render") args.AddRange(["--format", "markdown"]);
+        if (command == "render") args.AddRange(["--format", "pdf"]);
         var result = await RunAsync(args.ToArray());
         AssertSuccess(result);
         Assert.DoesNotContain("Mapping:", result.Error + result.Output);
         Assert.DoesNotContain("Reader:", result.Error + result.Output);
         Assert.True(File.Exists(output) || Directory.Exists(output));
-        if (command is "markdown" or "md" or "render")
+        if (command == "render")
         {
-            var markdown = command == "render" ? Directory.GetFiles(output, "*.md", SearchOption.AllDirectories).Single() : output;
-            Assert.Contains("MappedOpenXmlValue", await File.ReadAllTextAsync(markdown));
+            var renderedText = PdfText.Read(File.ReadAllBytes(output));
+            Assert.Contains("MappedOpenXmlValue", renderedText);
         }
         else if (command == "xlsx")
         {

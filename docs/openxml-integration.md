@@ -49,7 +49,7 @@ arguments may supply a static target, but never replace a saved or missing displ
 Formula text is separate metadata. `ReportCell.Formula` contains only the original
 nonempty body with a leading equals sign. Shared/array followers without a body
 have null text and retain `FormulaSharedIndex` / `FormulaMasterAddress` on the cell
-and Markdown `VisualCell`. Drawing does not expand formulas or fall back because
+model. Drawing does not expand formulas or fall back because
 formula text cannot be expanded. The standalone low-level `FormulaTextResolver`
 remains available to existing callers; it is used by the recalculation adapter, while cached rendering preserves raw metadata.
 

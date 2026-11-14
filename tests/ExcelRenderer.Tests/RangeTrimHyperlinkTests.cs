@@ -5,7 +5,6 @@ using ExcelRenderer.Drawing;
 using ExcelRenderer.Excel;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
-using ExcelRenderer.Markdown;
 using ExcelRenderer.Model;
 using ExcelRenderer.Pdf;
 using ExcelRenderer.SkiaSharp;
@@ -237,27 +236,6 @@ public sealed class RangeTrimHyperlinkTests
         Assert.Equal(2, result.Pages[1].OutputPageNumber);
     }
 
-    /// <summary>Markdown のリンク・内部アンカー・HTML 属性をエスケープし、リンク無効時にはリンク要素と関連診断を出さないことを検証します。</summary>
-    /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
-    [Fact(DisplayName = "Markdown のリンク・内部アンカー・HTML 属性をエスケープし、リンク無効時にはリンク要素と関連診断を出さない")]
-    public async Task Markdown_links_anchors_lists_and_HTML_attributes_are_safe_and_None_is_plain()
-    {
-        var (_, bytes) = await Render(Fixture(), Request(OutputFormat.Markdown));
-        var text = Encoding.UTF8.GetString(bytes);
-        Assert.Contains("href=\"https://example.com/a?x=1&amp;y=2\"", text);
-        Assert.Contains("#xl-s2-r2-c2", text);
-        Assert.Contains("id=\"xl-s2-r2-c2\"", text);
-        Assert.Contains("Link at B4:C4", text);
-        Assert.Contains("Link at B5", text);
-        Assert.Contains("literal label", text);
-        var (result, plain) = await Render(Fixture(), Request(OutputFormat.Markdown) with { Hyperlinks = HyperlinkMode.None });
-        Assert.DoesNotContain("<a ", Encoding.UTF8.GetString(plain));
-        Assert.DoesNotContain(result.Diagnostics, d => d.Code.StartsWith("Hyperlink"));
-        Assert.Equal(
-            "<a href=\"https://example.com/?a=&quot;x&quot;&amp;b=2\">&lt;&amp;&quot;</a>",
-            MarkdownHyperlinks.Format("<&\"", "https://example.com/?a=\"x\"&b=2", true, false));
-    }
-
     /// <summary>厳格モードの診断エラーと不正な範囲・トリミング・リンク引数を、出力先を開く前に拒否することを検証します。</summary>
     /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
     [Fact(DisplayName = "厳格モードの診断エラーと不正な範囲・トリミング・リンク引数を、出力先を開く前に拒否する")]
@@ -269,7 +247,7 @@ public sealed class RangeTrimHyperlinkTests
         Assert.Equal(0, sink.OpenCount);
         foreach (var invalid in new[]
         {
-            Request(OutputFormat.Markdown) with { Trim = new() { Enabled = true } },
+            Request((OutputFormat)3),
             Request(OutputFormat.Pdf) with { Trim = new() { PaddingPoints = double.NaN } },
             Request(OutputFormat.Pdf) with { Hyperlinks = (HyperlinkMode)10 },
             Request(OutputFormat.Pdf) with { Selection = new() { Ranges = [new("Sheet1", new(new(1, 1), new(1000, 1000)))], MaxRangeCells = 10 } },
@@ -483,14 +461,14 @@ public sealed class RangeTrimHyperlinkTests
         Assert.Equal(new CellAddress(2, 2), address);
         Assert.False(HyperlinkPolicy.Internal(document.Sheets[0], "Missing!Jump", document.Sheets, out _, out _, out var omitted));
         Assert.Equal("HyperlinkTargetOmitted", omitted);
-        var (result, _) = await Render(stream.ToArray(), Request(OutputFormat.Markdown));
+        var (result, _) = await Render(stream.ToArray(), Request(OutputFormat.Pdf));
         Assert.Contains(result.Diagnostics, d => d.Code == "HyperlinkRejected");
         Assert.Contains(result.Diagnostics, d => d.Code == "HyperlinkUnsupported");
     }
 
-    /// <summary>リンクだけの範囲では空セルを実体化せず、PDF 注釈と Markdown のリンク一覧にリンクを保持することを検証します。</summary>
+    /// <summary>リンクだけの範囲では空セルを実体化せず、PDF 注釈にリンクを保持することを検証します。</summary>
     /// <returns>変換処理と出力結果の検証が完了するまでの非同期処理。</returns>
-    [Fact(DisplayName = "リンクだけの範囲では空セルを実体化せず、PDF 注釈と Markdown のリンク一覧にリンクを保持する")]
+    [Fact(DisplayName = "リンクだけの範囲では空セルを実体化せず、PDF 注釈にリンクを保持する")]
     public async Task Link_only_ranges_do_not_materialize_blank_cells_and_keep_output_links()
     {
         using var saved = RetainedWorkbook.Open("RangeTrimHyperlinkTests.Link_only_ranges_do_not_materialize_blank_cells_and_keep_output_links.ABC50793D8F30865.xlsx");
@@ -508,8 +486,6 @@ public sealed class RangeTrimHyperlinkTests
         var (_, pdfBytes) = await Render(bytes, Request(OutputFormat.Pdf));
         using var pdf = PdfTestFile.Open(new MemoryStream(pdfBytes));
         Assert.True(pdf.Pages[0].Annotations.Count > 0);
-        var (_, markdown) = await Render(bytes, Request(OutputFormat.Markdown));
-        Assert.Contains("Link at B2:D4", Encoding.UTF8.GetString(markdown));
     }
 
     /// <summary>不正な参照範囲は出力時の診断に回し、存在しないリンク関連付けは出力先を開く前に失敗することを検証します。</summary>
@@ -554,12 +530,12 @@ public sealed class RangeTrimHyperlinkTests
         File.WriteAllBytes(Path.Combine(folder, "fixture.xlsx"), fixture);
         byte[]? png = null;
         byte[]? svg = null;
-        foreach (var format in new[] { OutputFormat.Pdf, OutputFormat.Png, OutputFormat.Svg, OutputFormat.Markdown })
+        foreach (var format in new[] { OutputFormat.Pdf, OutputFormat.Png, OutputFormat.Svg })
         {
-            var request = Request(format) with { Dpi = 72, Trim = new() { Enabled = format != OutputFormat.Markdown },
+            var request = Request(format) with { Dpi = 72, Trim = new() { Enabled = true },
                 Selection = format is OutputFormat.Png or OutputFormat.Svg ? new() { SheetNames = ["Sheet1"] } : new() };
             var (result, bytes) = await Render(fixture, request);
-            var extension = format == OutputFormat.Markdown ? "md" : format.ToString().ToLowerInvariant();
+            var extension = format.ToString().ToLowerInvariant();
             File.WriteAllBytes(Path.Combine(folder, "sample." + extension), bytes);
             if (format == OutputFormat.Png) { png = bytes; }
             if (format == OutputFormat.Svg) { svg = bytes; }

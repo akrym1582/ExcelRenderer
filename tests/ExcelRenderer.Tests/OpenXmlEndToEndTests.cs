@@ -30,7 +30,6 @@ public sealed class OpenXmlEndToEndTests
     [InlineData(OutputFormat.Pdf)]
     [InlineData(OutputFormat.Png)]
     [InlineData(OutputFormat.Svg)]
-    [InlineData(OutputFormat.Markdown)]
     public async Task MappedFormulaFreeWorkbookRendersThroughStreamingReader(OutputFormat format)
     {
         using var source = RetainedWorkbook.Open("OpenXmlEndToEndTests.MappedFormulaFreeWorkbookRendersThroughStreamingReader.3D5603D2784D3681.xlsx");
@@ -55,7 +54,7 @@ public sealed class OpenXmlEndToEndTests
     }
 
     [Fact]
-    public async Task CallerCalculatedMappingValuesReachStreamingMarkdown()
+    public async Task CallerCalculatedMappingValuesReachStreamingPdf()
     {
         using var template = RetainedWorkbook.Open("OpenXmlEndToEndTests.CallerCalculatedMappingAutoValuesReachStreamingMarkdown.29D1CBEC155574A1.xlsx");
         var rendered = new List<byte[]>();
@@ -74,10 +73,10 @@ public sealed class OpenXmlEndToEndTests
             using var output = new MemoryStream();
             await ExcelConverter.RenderAsync(mapped, new RenderRequest
             {
-                OutputFormat = OutputFormat.Markdown,
+                OutputFormat = OutputFormat.Pdf,
                 ReadOptions = new() { FormulaDisplayMode = FormulaDisplayMode.CachedValue },
             }, new SingleStreamOutputSink(output));
-            Assert.Contains((amount * 2).ToString(), System.Text.Encoding.UTF8.GetString(output.ToArray()));
+            Assert.Contains((amount * 2).ToString(), PdfText.Read(output.ToArray()));
             rendered.Add(output.ToArray());
         }
 

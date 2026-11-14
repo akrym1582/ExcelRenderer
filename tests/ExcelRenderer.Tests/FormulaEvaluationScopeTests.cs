@@ -26,7 +26,6 @@ public sealed class FormulaEvaluationScopeTests
         await Assert.ThrowsAsync<NotSupportedException>(() => ExcelConverter.ConvertToPdfAsync("missing.xlsx", "unused.pdf", new() { ReadOptions = options }));
         await Assert.ThrowsAsync<NotSupportedException>(() => ExcelConverter.ConvertToImagesAsync("missing.xlsx", "unused-images", new() { ReadOptions = options }));
         await Assert.ThrowsAsync<NotSupportedException>(() => ExcelConverter.ConvertToSvgAsync("missing.xlsx", "unused-svg", new() { ReadOptions = options }));
-        await Assert.ThrowsAsync<NotSupportedException>(() => ExcelConverter.ConvertToMarkdownAsync("missing.xlsx", "unused.md", new() { ReadOptions = options }));
 
     }
 

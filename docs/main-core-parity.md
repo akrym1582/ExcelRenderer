@@ -3,7 +3,7 @@
 [日本語](main-core-parity.ja.md) · [Diagnostics and delivery](diagnostics.md) · [Core contract](core.md)
 
 Use main for automatic per-character font fallback, partial rich text, conditional formatting, shapes, links,
-recalculation, range/page selection, trim, or PNG/SVG/Markdown/PostScript. Use Core for
+recalculation, range/page selection, trim, or PNG/SVG/PostScript. Use Core for
 PDF from saved values with explicitly supplied static regular TrueType faces, selected per cell ([font configuration](core-fonts.md)). Core is bundled
 in the main NuGet distribution; there is no standalone Core NuGet package.
 

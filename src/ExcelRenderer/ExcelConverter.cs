@@ -4,14 +4,13 @@ using ExcelRenderer.Drawing;
 using ExcelRenderer.Excel;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Layout;
-using ExcelRenderer.Markdown;
 using ExcelRenderer.Model;
 using ExcelRenderer.Rendering;
 using ExcelRenderer.SkiaSharp;
 
 namespace ExcelRenderer;
 
-/// <summary>Excel ファイルを PDF、PNG、SVG、または Markdown 文書へ変換する一連の操作を提供します。</summary>
+/// <summary>Excel ファイルを PDF、PostScript、PNG、SVG 文書へ変換する一連の操作を提供します。</summary>
 public static partial class ExcelConverter
 {
     /// <summary>Excel ブックのワークシートをレイアウトし、単一の PDF 文書へ非同期に変換します。</summary>
@@ -107,36 +106,6 @@ public static partial class ExcelConverter
             input,
             CreateLegacyRequest(OutputFormat.Svg, ResolveSheetNames(options.SheetName, options.SheetNames), fontOptions: options.FontOptions) with { Buffering = options.Buffering, ReadOptions = options.ReadOptions },
             new DirectoryOutputSink(outputDirectory),
-            cancellationToken).ConfigureAwait(false);
-    }
-
-    /// <summary>Excel ブックの表領域を Markdown の表または HTML として表現し、埋め込み画像とともに非同期に出力します。</summary>
-    /// <param name="inputPath">読み取る Excel ファイルのパスです。</param>
-    /// <param name="outputPath">変換した Markdown 文書を新規作成するファイルパスです。</param>
-    /// <param name="options">対象ワークシート、画像格納先、およびレイアウト解析方法を指定する設定です。省略時は既定値を使用します。</param>
-    /// <param name="cancellationToken">変換処理のキャンセルを通知するトークンです。</param>
-    /// <returns>Markdown 文書と付随する画像ファイルの書き込みが完了したときに完了するタスクを返します。</returns>
-    public static async Task ConvertToMarkdownAsync(
-        string inputPath,
-        string outputPath,
-        MarkdownExportOptions? options = null,
-        CancellationToken cancellationToken = default)
-    {
-        options ??= new MarkdownExportOptions();
-        (options.ReadOptions ?? throw new ArgumentException("ReadOptions are required.", nameof(options))).Validate();
-        ValidateInput(inputPath);
-        ValidateNewFile(outputPath);
-        if (string.IsNullOrWhiteSpace(options.ImageDirectoryName) || Path.IsPathRooted(options.ImageDirectoryName) ||
-            options.ImageDirectoryName.Split(new[] { '/', '\\' }).Any(part => part == ".."))
-        {
-            throw new ArgumentException("The image directory must be a relative path below the Markdown output directory.", nameof(options));
-        }
-
-        await using var input = File.OpenRead(inputPath);
-        await RenderAsync(
-            input,
-            CreateLegacyRequest(OutputFormat.Markdown, ResolveSheetNames(options.SheetName, options.SheetNames), fontOptions: options.FontOptions) with { Hyperlinks = options.Hyperlinks, ReadOptions = options.ReadOptions },
-            new LegacyMarkdownOutputSink(outputPath, options, Path.GetFileName(inputPath)),
             cancellationToken).ConfigureAwait(false);
     }
 

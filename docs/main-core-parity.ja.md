@@ -3,7 +3,7 @@
 [English](main-core-parity.md) · [診断と出力](diagnostics.ja.md) · [Coreの契約](core.ja.md)
 
 文字単位の自動フォント補完、部分書式、条件付き書式、図形、リンク、再計算、範囲・ページ選択、trim、
-PNG/SVG/Markdown/PostScriptが必要なら本体を使います。Coreは、明示指定した通常体TrueTypeをセルごとに選び、保存済み値でPDFを作る用途です（[フォント設定](core-fonts.ja.md)）。Core DLLは本体NuGetに同梱され、単独Coreパッケージはありません。
+PNG/SVG/PostScriptが必要なら本体を使います。Coreは、明示指定した通常体TrueTypeをセルごとに選び、保存済み値でPDFを作る用途です（[フォント設定](core-fonts.ja.md)）。Core DLLは本体NuGetに同梱され、単独Coreパッケージはありません。
 
 | 機能 | 関係 | 条件・意図した差 |
 | --- | --- | --- |

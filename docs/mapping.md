@@ -13,7 +13,7 @@ and rendering packages.
 
 Use it to keep the layout in Excel and supply the values from your application.
 The result is an ordinary XLSX workbook, which you can open in Excel or pass to
-ExcelRenderer for PDF, PNG, SVG or Markdown output.
+ExcelRenderer for PDF, PNG or SVG output.
 
 For the first run, follow [First workbook](#first-workbook-an-invoice).
 For template design, see [Specification reference](#specification-reference),
@@ -133,7 +133,6 @@ Or map and render directly from the template in one command:
 excelrenderer pdf template.xlsx --data data.json -o report.pdf
 excelrenderer svg template.xlsx --data data.json -o ./svg-output
 excelrenderer image template.xlsx --data data.json -o ./png-output
-excelrenderer markdown template.xlsx --data data.json -o report.md
 excelrenderer render template.xlsx --data data.json --format png -o ./png-output
 ```
 
@@ -147,11 +146,10 @@ reject existing output files or non-empty output directories.
 | `xlsx` | XLSX file | `--data <data.json>` required |
 | `pdf` | PDF file | `--data <data.json>` optional |
 | `image` / `svg` | Output directory | `--data <data.json>` optional |
-| `markdown` / `md` | Markdown file | `--data <data.json>` optional |
-| `render` | PDF file, or PNG/SVG/Markdown directory | `--data <data.json>` optional; `--format` required |
+| `render` | PDF file, or PNG/SVG directory | `--data <data.json>` optional; `--format` required |
 
 `xlsx` requires `--data` and only maps and saves the workbook. `--data` is optional
-on `pdf`, `image`, `svg`, `markdown`/`md` and `render`; omitting it preserves their
+on `pdf`, `image`, `svg` and `render`; omitting it preserves their
 existing behavior. Mapping precedes rendering. A temporary mapped workbook keeps
 the original input filename and is deleted on success or failure. Input XLSX and
 JSON paths cannot also be the output path. Mapping errors are detected before
@@ -546,7 +544,7 @@ more pages after mapping.
 
 The mapped XLSX stores manual breaks for printing or print preview; it does not
 split the workbook into separate worksheets. Paginated rendering uses those
-breaks. Continuous image output and Markdown do not become paginated output
+breaks. Continuous image output does not become paginated output
 because of this directive.
 
 ## Excel behavior and limitations

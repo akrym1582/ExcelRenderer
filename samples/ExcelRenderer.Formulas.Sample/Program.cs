@@ -6,7 +6,6 @@ using ExcelRenderer.Excel;
 using ExcelRenderer.Fonts;
 using ExcelRenderer.Mapping;
 using ExcelRenderer.Mapping.Configuration;
-using ExcelRenderer.Markdown;
 using ExcelRenderer.OpenXml.Calculation;
 using ExcelRenderer.OpenXml.Reader;
 using S = DocumentFormat.OpenXml.Spreadsheet;
@@ -73,8 +72,7 @@ var read = new ExcelReadOptions { FormulaDisplayMode = FormulaDisplayMode.Recalc
 await ExcelConverter.ConvertToPdfAsync(mappedPath, Path.Combine(directory, "invoice.pdf"), new PdfExportOptions { SheetName = "Invoice", FontOptions = fonts, ReadOptions = read });
 await ExcelConverter.ConvertToImagesAsync(mappedPath, Path.Combine(directory, "png"), new ImageExportOptions { SheetName = "Invoice", FontOptions = fonts, ReadOptions = read });
 await ExcelConverter.ConvertToSvgAsync(mappedPath, Path.Combine(directory, "svg"), new SvgExportOptions { SheetName = "Invoice", FontOptions = fonts, ReadOptions = read });
-await ExcelConverter.ConvertToMarkdownAsync(mappedPath, Path.Combine(directory, "invoice.md"), new MarkdownExportOptions { SheetName = "Invoice", FontOptions = fonts, ReadOptions = read });
-Console.WriteLine($"Verified {count} lines; total {expected}. XLSX, PDF, PNG, SVG and Markdown: {directory}");
+Console.WriteLine($"Verified {count} lines; total {expected}. XLSX, PDF, PNG, SVG: {directory}");
 return 0;
 
 static void CreateTemplate(string path)

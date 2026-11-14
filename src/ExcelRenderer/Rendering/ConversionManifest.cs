@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text;
+using ExcelRenderer.Model;
 
 namespace ExcelRenderer.Rendering;
 
@@ -67,7 +68,7 @@ public static class ConversionManifest
         return "{\"sourceSheetIndex\":" + page.SourceSheetIndex + ",\"sourceSheetName\":\"" + Escape(page.SourceSheetName) +
             "\",\"sourcePageNumber\":" + page.SourcePageNumber + ",\"documentPageNumber\":" + page.DocumentPageNumber +
             ",\"outputPageNumber\":" + (page.OutputPageNumber?.ToString(CultureInfo.InvariantCulture) ?? "null") + OptionalArtifactMetadata(metadata) +
-            (page.SourceCellRanges is { Count: > 0 } regions ? ",\"sourceCellRanges\":[" + string.Join(",", regions.Select(r => "\"" + Markdown.MarkdownExporter.Range(r) + "\"")) + "]" : string.Empty) + "}";
+            (page.SourceCellRanges is { Count: > 0 } regions ? ",\"sourceCellRanges\":[" + string.Join(",", regions.Select(r => "\"" + CellRangeFormatter.Range(r) + "\"")) + "]" : string.Empty) + "}";
     }
 
     private static string Artifact(ArtifactMetadata artifact) =>
@@ -111,7 +112,7 @@ public static class ConversionManifest
 
         if (descriptor.RequestedRange is { } range)
         {
-            properties.Add("\"requestedRange\":\"" + Markdown.MarkdownExporter.Range(range) + "\"");
+            properties.Add("\"requestedRange\":\"" + CellRangeFormatter.Range(range) + "\"");
         }
 
         if (descriptor.OriginalWidthPoints is { } originalWidth)

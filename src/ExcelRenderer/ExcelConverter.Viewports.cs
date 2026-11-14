@@ -53,7 +53,7 @@ public static partial class ExcelConverter
                     DiagnosticStage.Layout,
                     "The explicit selection clips an original merged cell.",
                     sheet.Name,
-                    Markdown.MarkdownExporter.Range(merged)));
+                    CellRangeFormatter.Range(merged)));
             }
 
             IndexRange? Limit(IndexRange? title, int first, int last) => title is { } t && Math.Max(t.First, first) <= Math.Min(t.Last, last)
@@ -202,7 +202,7 @@ public static partial class ExcelConverter
                         DiagnosticStage.Layout,
                         reason!,
                         page.Sheet.Name,
-                        link.SourceRange == default ? null : Markdown.MarkdownExporter.Range(link.SourceRange)));
+                        link.SourceRange == default ? null : CellRangeFormatter.Range(link.SourceRange)));
                     continue;
                 }
 

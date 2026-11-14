@@ -23,7 +23,7 @@ var document = new ExcelRenderer.Excel.ExcelReader().Read(input,
 ```
 
 Coreは保存値専用で、数式モード・評価オプションは削除しました。再計算は本体または `WorkbookRecalculator` を利用してください。[Reader分離の移行案内](openxml-reader-split.md)を参照してください。
-本体の PDF・PNG・SVG・Markdown も既存の `ReadOptions` を使います。
+本体の PDF・PNG・SVG も既存の `ReadOptions` を使います。
 既存 CLI の描画コマンドは `--formula-mode recalculate` に対応し、既定値は `cached` です。
 過去の `Legacy` モードは引き続き拒否します。
 
@@ -168,7 +168,7 @@ Excel 実機照合は未実施です。二進丸め境界、Unicode 照合、極
 保存された行列寸法とオブジェクト範囲からページを決めるため、古いキャッシュを計算結果として
 扱いません。その後の実読込で候補セルを計算し、書式化・文字計測へ進みます。
 除外ページの無関係な循環や未対応式は描画を止めません。
-Markdown と連続出力は、ページ出力の印刷範囲を流用せず既存の領域規則に従います。
+連続出力は、ページ出力の印刷範囲を流用せず既存の領域規則に従います。
 
 Mapping の `RecalculateMappedWorkbook` は既定で true（全数式の計算結果を保存）。
 false にすると参照書換えと全数式キャッシュ失効までを行い、後続 Reader に対象評価を委ねます。
@@ -177,7 +177,7 @@ false にすると参照書換えと全数式キャッシュ失効までを行�
 
 OOXML の `cm` / `vm` 計算メタデータも、動的配列・rich value を誤ってスカラーとして扱わないため、到達時は保守的に拒否します。
 
-実行可能な [請求書サンプル](../samples/ExcelRenderer.Formulas.Sample/README.ja.md) は XLSX を生成し、0/1/3/70明細の計算とPDF・PNG・SVG・Markdown出力を検証できます。
+実行可能な [請求書サンプル](../samples/ExcelRenderer.Formulas.Sample/README.ja.md) は XLSX を生成し、0/1/3/70明細の計算とPDF・PNG・SVG出力を検証できます。
 
 ## 帳票関数の追加
 

@@ -13,7 +13,7 @@ CLI はマッピングと描画のライブラリを組み合わせて使用し�
 
 レイアウトは Excel で作成し、値はアプリケーションから渡せます。
 生成したファイルは通常の XLSX なので、Excel で開くことも、ExcelRenderer で
-PDF・PNG・SVG・Markdown へ変換することもできます。
+PDF・PNG・SVG へ変換することもできます。
 
 初回の手順は[最初のワークブック](#最初のワークブック請求書)、
 テンプレートの設計には[仕様一覧](#仕様一覧)、
@@ -131,7 +131,6 @@ excelrenderer pdf report.xlsx -o report.pdf
 excelrenderer pdf template.xlsx --data data.json -o report.pdf
 excelrenderer svg template.xlsx --data data.json -o ./svg-output
 excelrenderer image template.xlsx --data data.json -o ./png-output
-excelrenderer markdown template.xlsx --data data.json -o report.md
 excelrenderer render template.xlsx --data data.json --format png -o ./png-output
 ```
 
@@ -145,8 +144,7 @@ excelrenderer render template.xlsx --data data.json --format png -o ./png-output
 | `xlsx` | XLSX ファイル | `--data <data.json>` が必須 |
 | `pdf` | PDF ファイル | `--data <data.json>` は任意 |
 | `image` / `svg` | 出力ディレクトリ | `--data <data.json>` は任意 |
-| `markdown` / `md` | Markdown ファイル | `--data <data.json>` は任意 |
-| `render` | PDF ファイル、または PNG/SVG/Markdown のディレクトリ | `--data <data.json>` は任意。`--format` は必須 |
+| `render` | PDF ファイル、または PNG/SVG のディレクトリ | `--data <data.json>` は任意。`--format` は必須 |
 
 `xlsx` は `--data` が必須で、マッピングと保存だけを行います。
 描画コマンドで `--data` を省略すると、従来どおり既存のワークブックを変換します。
@@ -534,7 +532,7 @@ A3: **@end-array
 
 XLSX には印刷・印刷プレビュー用の手動改ページとして保存します。
 ワークブックを別々のシートへ分割する機能ではありません。ページ単位の描画はこの改ページを使います。
-連続画像や Markdown が、この指定によってページ単位の出力へ変わることはありません。
+連続画像が、この指定によってページ単位の出力へ変わることはありません。
 
 ## Excel 機能と制約
 

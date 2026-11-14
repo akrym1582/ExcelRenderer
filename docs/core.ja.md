@@ -93,7 +93,7 @@ excelrenderer core report.xlsx --font-file NotoSansJP-Regular.ttf --layout-font 
 
 図形・吹き出し・図形内文字・クリック可能なPDFリンクは生成しません。リンク付きセルの表示文字を保持し、HYPERLINKを含む数式は元XMLの型付き保存結果だけを表示します。OpenXml.Readerが不変の保存値を直接書式化します。保存結果がなければ空表示と診断を返し、friendly textでは補いません。Coreは保存結果専用です。CoreのFormulaDisplayModeとFormulaEvaluationOptionsは削除しました。再計算には本体またはOpenXmlの再計算APIを使ってください。通常セルは通常の書式処理に従います。仕様上無視する図形や画像加工ごとの大量警告は作りません。画像decode失敗などの非致命的な診断はresult.Diagnosticsで取得できます。
 
-APIのセル範囲、ページ抽出、trim、連続画像、PNG/SVG/Markdownはありません。
+APIのセル範囲、ページ抽出、trim、連続画像、PNG/SVGはありません。
 
 ## Stream・資源契約
 
@@ -139,7 +139,7 @@ Linux のライブラリ利用では、アプリ側に SkiaSharp と同じバー
 
 ## 共通実装
 
-入力準備/spoolはReaderが所有します。画像資源、workbook/cell走査、style intern、幾何・ページ計画/構築、文字placement、セルcommand生成、診断集計、基本PDF描画/SaveはCoreへ集約しています。本体の公開型、完全font painter、画像変形、図形、リンク、PNG/SVG/Markdown、選択/trim、連続出力は本体に残ります。
+入力準備/spoolはReaderが所有します。画像資源、workbook/cell走査、style intern、幾何・ページ計画/構築、文字placement、セルcommand生成、診断集計、基本PDF描画/SaveはCoreへ集約しています。本体の公開型、完全font painter、画像変形、図形、リンク、PNG/SVG、選択/trim、連続出力は本体に残ります。
 
 Full reader/layout/drawing/PDF adapterが高機能部分を拡張し、本体の公開APIは既存assemblyに維持します。[構成](core-architecture.ja.md)、[検証結果](core-refactor-validation.md)と[所有者表](core-source-map.md)を参照してください。
 

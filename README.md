@@ -42,7 +42,6 @@ This makes the rendering pipeline easier to test, understand, and extend with ne
 - Produces PDF output with SkiaSharp and shared subset fonts
 - Produces one PNG image per page with SkiaSharp
 - Produces one self-contained SVG per page with outlined text and embedded images
-- Exports AI-friendly Markdown with merged-cell HTML, layout-aware reading order, formulas, and external images
 - Populates XLSX templates from C# objects or JSON with the standalone mapping package
 - Recalculates a limited formula language on request; see [supported syntax and 40 functions](docs/formulas-reference.md)
 
@@ -58,7 +57,7 @@ Choose the package for your task:
 
 | Package | Use it for | Requirements |
 | --- | --- | --- |
-| `ExcelRenderer` | Render existing XLSX files to PDF, PostScript, PNG, SVG or Markdown from C# | .NET Standard 2.1-compatible application |
+| `ExcelRenderer` | Render existing XLSX files to PDF, PostScript, PNG or SVG from C# | .NET Standard 2.1-compatible application |
 | `ExcelRenderer.Mapping` | Populate XLSX templates from C# objects or JSON and save XLSX | .NET Standard 2.1-compatible application; no rendering or fonts required |
 | `ExcelRenderer.Fonts` | Add optional bundled Japanese and emoji fonts for rendering | Use alongside `ExcelRenderer` |
 | `ExcelRenderer.Tool` | Map and convert workbooks from the command line | .NET 10 SDK |
@@ -223,7 +222,6 @@ Convert a workbook with the CLI:
 excelrenderer pdf input.xlsx -o output.pdf
 excelrenderer image input.xlsx -o ./images
 excelrenderer svg input.xlsx -o ./svg-output
-excelrenderer md input.xlsx -o output.md
 ```
 
 Or from C#, after adding the library:
@@ -299,7 +297,6 @@ The format-specific commands cover the common conversion cases:
 excelrenderer pdf input.xlsx -o output.pdf
 excelrenderer image input.xlsx -o ./images
 excelrenderer svg input.xlsx -o ./svg-output
-excelrenderer md input.xlsx -o output.md
 ```
 
 | Command | Output | Command-specific options |
@@ -310,8 +307,7 @@ excelrenderer md input.xlsx -o output.md
 | `image` | One paginated PNG per worksheet page | `--sheet <name>...`, `--dpi <number>` (default: `144`) |
 | `svg` | One self-contained SVG per worksheet page | `--sheet <name>...` |
 | `ps` | One multipage PostScript file with embedded TrueType fonts | `--sheet <name>...` and buffer options |
-| `markdown` / `md` | One Markdown file and optional extracted images | `--sheet`, `--image-dir`, `--[no-]images`, `--[no-]cell-addresses`, `--[no-]formulas`, `--[no-]layout-detection`, `--[no-]region-detection` |
-| `render` | PDF/PostScript file, or a PNG/SVG/Markdown output directory | `--format pdf\|ps\|png\|svg\|markdown` plus selection, layout, diagnostics, manifest, and font-policy options |
+| `render` | PDF/PostScript file, or a PNG/SVG output directory | `--format pdf\|ps\|png\|svg` plus selection, layout, diagnostics, manifest, and font-policy options |
 
 All rendering commands also accept `--data <data.json>` to populate a template
 before conversion. Without it, they convert the existing workbook as before.
@@ -330,7 +326,7 @@ Every rendering command accepts these font-source options; `xlsx` does not need 
 | `--font-policy bundled\|requested` | Choose whether bundled compatibility fonts (the default) or requested/explicit fonts take priority. |
 | `--ivs-font-style gothic\|mincho` | Choose the bundled font style used for ideographic variation sequences (default: `gothic`). |
 
-Font options affect glyph selection for PDF, PNG, and SVG. Markdown does not render glyphs, but accepts the same options so scripts can switch commands without changing their shared font arguments. Paths containing spaces must be quoted. For reproducible rendering in a container, for example:
+Font options affect glyph selection for PDF, PNG, and SVG. Paths containing spaces must be quoted. For reproducible rendering in a container, for example:
 
 ```bash
 excelrenderer pdf report.xlsx -o report.pdf \
@@ -382,7 +378,6 @@ excelrenderer render input.xlsx -o report.pdf --format pdf \
 excelrenderer render input.xlsx -o images --format png \
   --sheet Sheet1 --range B2:F40 --image-layout continuous --trim
 excelrenderer render input.xlsx -o svg --format svg --sheet Sheet1 --range B2:F40 --trim
-excelrenderer render input.xlsx -o markdown --format markdown --hyperlinks preserve
 ```
 
 | Option | Behavior |
@@ -391,13 +386,13 @@ excelrenderer render input.xlsx -o markdown --format markdown --hyperlinks prese
 | `--max-range-cells` | Positive total limit for explicitly selected rectangles, default 1,000,000. Includes empty cells; this is a processing limit, not a memory guarantee. |
 | `--trim` | Crop each already paginated page or continuous canvas around visible drawing bounds without reflowing or rescaling content. |
 | `--trim-padding` | Nonnegative finite padding in points, default 2; requires `--trim`. |
-| `--hyperlinks preserve\|none` | Default `preserve`; also available on `pdf` and `markdown`/`md`. `none` retains display text and formatting without hyperlink diagnostics, anchors or link lists. |
+| `--hyperlinks preserve\|none` | Default `preserve`; also available on `pdf`. `none` retains display text and formatting without hyperlink annotations or diagnostics. |
 
 A range replaces that sheet's print areas, preserves paper, margins, scaling and page order, and intersects repeated print titles with the selection. Ranges never select additional sheets. Entire rows/columns, unions, names, reversed ranges and external/3D references are rejected. A continuous image uses the explicit rectangle without expansion by outside objects. Partially selected merges retain their original measurement, alignment and borders and are clipped, with a `ClippedMergedCell` warning. `--pages` selects document page numbers after range pagination and before trimming. Hidden-only selections keep an empty page/canvas.
 
 Trimming includes visible fills (including explicitly white fills), strokes, positioned text, images, shapes and headers/footers. Font glyph bounds are used where available; emoji and compatibility glyphs use conservative finalized logical bounds. This is drawing-bound cropping, not pixel-based removal of white or transparent areas inside images. An empty trimmed page remains 1×1pt plus padding (5×5pt by default), with `EmptyContent` information. PNG dimensions use ceiling at the requested DPI, and `RenderRequest.MaxPngPixels` applies to both page and continuous output before bitmap allocation.
 
-PDF and Markdown preserve `http`, `https`, `mailto` and same-workbook cell links, including range references, empty source cells, simple scoped A1 names, and literal-string `HYPERLINK` formulas. Explicit XML definitions take precedence over formulas. Only saved displays are used; uncached formulas display empty text and report `FormulaCachedValueMissing`. PDF annotations are attached to the final merged document and follow page selection and trimming. Markdown uses stable `xl-sN-rN-cN` anchors and explicit target/source lists where a blank cell or source range cannot carry a natural label. PNG and SVG retain cell appearance without clickable links or hyperlink warnings. SVG links and link sidecars are not generated.
+PDF preserves `http`, `https`, `mailto` and same-workbook cell links, including range references, empty source cells, simple scoped A1 names, and literal-string `HYPERLINK` formulas. Explicit XML definitions take precedence over formulas. Only saved displays are used; uncached formulas display empty text and report `FormulaCachedValueMissing`. PDF annotations are attached to the final merged document and follow page selection and trimming. PNG and SVG retain cell appearance without clickable links or hyperlink warnings. SVG links and link sidecars are not generated.
 
 Unsafe URIs (including local files, relative paths, UNC, embedded HTTP credentials, control characters and unsupported schemes), conflicting definitions and unsupported dynamic formulas retain display text and yield `HyperlinkRejected`/`HyperlinkUnsupported` warnings. Missing or omitted internal destinations yield `HyperlinkTargetOmitted`; excluded sources do not produce destination warnings. Diagnostics omit URI/recipient/query contents. Readable invalid link definitions are warnings; corrupt packages and missing hyperlink relationships are fatal input errors. Strict mode or matching `--warnings-as-errors` stops output before the sink opens. The PDF CLI creates/truncates its file only after preflight; identical input/output paths are rejected before reading.
 
@@ -418,7 +413,7 @@ var request = new RenderRequest
 };
 ```
 
-Import `ExcelRenderer.Rendering` and `ExcelRenderer.Model` for these settings. PDF/Markdown legacy options also expose `Hyperlinks`. Markdown rejects ranges, trimming and page selection before output. With no ranges or trim, page dimensions and existing layout stay unchanged. Schema-version-1 manifests add optional page/range/crop metadata: widths/heights describe final output, while original dimensions and crop coordinates describe the page before trim. Missing range means existing print/used-range selection; missing crop/padding means identity translation. No link targets or full tooltips are listed in manifests.
+Import `ExcelRenderer.Rendering` and `ExcelRenderer.Model` for these settings. PDF legacy options also expose `Hyperlinks`. With no ranges or trim, page dimensions and existing layout stay unchanged. Schema-version-1 manifests add optional page/range/crop metadata: widths/heights describe final output, while original dimensions and crop coordinates describe the page before trim. Missing range means existing print/used-range selection; missing crop/padding means identity translation. No link targets or full tooltips are listed in manifests.
 
 ## C# API (high-level)
 
@@ -431,13 +426,12 @@ await ExcelConverter.ConvertToPdfAsync("input.xlsx", "output.pdf");
 await ExcelConverter.ConvertToImagesAsync("input.xlsx", "./images");
 await ExcelConverter.ConvertToSvgAsync("input.xlsx", "./svg-output");
 await ExcelConverter.ConvertToPostScriptAsync("input.xlsx", "report.ps");
-await ExcelConverter.ConvertToMarkdownAsync("input.xlsx", "output.md");
 ```
 
 For stream-based integrations, `RenderAsync` reads from the input's current position and leaves both
 the input stream and a `SingleStreamOutputSink` output stream open. Use `DirectoryOutputSink` for
 page-by-page PNG/SVG output. `RenderRequest` selects sheets by exact name (in request order) and
-can select rendered PDF/PostScript/PNG/SVG document pages; Markdown does not support page selection.
+can select rendered PDF/PostScript/PNG/SVG document pages.
 `ConversionManifest.WriteAsync` writes the completed artifact metadata and diagnostics as schema
 version 1 JSON with relative artifact names.
 
@@ -449,7 +443,7 @@ Strict mode or treating `ImageDecodeFailed` as an error stops conversion instead
 Low-level `PdfRenderer` callers can receive warnings through `DiagnosticHandler`;
 warnings are also written to `System.Diagnostics.Trace` listeners.
 
-Use `PdfExportOptions`, `ImageExportOptions`, `SvgExportOptions`, `PostScriptExportOptions`, and `MarkdownExportOptions` to select worksheets or configure format-specific behavior. Existing output files, and non-empty image or SVG output directories, are not overwritten.
+Use `PdfExportOptions`, `ImageExportOptions`, `SvgExportOptions`, and `PostScriptExportOptions` to select worksheets or configure format-specific behavior. Existing output files, and non-empty image or SVG output directories, are not overwritten.
 
 Each format-specific options type now accepts `SheetNames`, including Core's
 `PdfExportOptions`. `SheetName` remains available for existing callers. Leave both
@@ -463,7 +457,6 @@ await ExcelConverter.ConvertToPdfAsync("input.xlsx", "selected.pdf", new PdfExpo
     SheetNames = new[] { "Sheet3", "Sheet1" },
 });
 ```
-
 
 ## Column widths, saved row heights, and pagination
 
@@ -703,7 +696,7 @@ cells, objects, and their body clip together; continuous output intentionally ig
 Cell indentation, content padding, ordinary rotation, and stacked top-to-bottom text are carried
 into PDF, PNG, and SVG drawing.
 
-Ordinary horizontal text with wrapping and shrink-to-fit disabled can extend across consecutive empty cells in the same row. Left-aligned text extends right, right-aligned text extends left, and centered text uses independent boundaries on both sides without moving its anchor. Stored values (including explicit empty strings and values hidden by formatting), formulas (including empty or missing results), and entire merged ranges stop overflow. Style-only blanks are transparent to this search; hidden columns have zero width. Text is clipped to the current page, print area, repeated-title region, selected range, or continuous canvas. Merged source cells, rotated/vertical text, and special alignments retain their existing behavior. This affects visual output; Markdown keeps the complete cell text.
+Ordinary horizontal text with wrapping and shrink-to-fit disabled can extend across consecutive empty cells in the same row. Left-aligned text extends right, right-aligned text extends left, and centered text uses independent boundaries on both sides without moving its anchor. Stored values (including explicit empty strings and values hidden by formatting), formulas (including empty or missing results), and entire merged ranges stop overflow. Style-only blanks are transparent to this search; hidden columns have zero width. Text is clipped to the current page, print area, repeated-title region, selected range, or continuous canvas. Merged source cells, rotated/vertical text, and special alignments retain their existing behavior.
 
 Wrapped cell text is finalized during layout into lines and resolved font runs, including
 grapheme-safe forced breaks and explicit-newline markers. The result is carried by the draw
@@ -746,19 +739,6 @@ new SvgRenderer().Render(
 ```
 
 SVG text is converted to vector paths so the viewer does not need the source font. This intentionally prevents text search and copy; it does not prevent editing. Raster images are embedded in each SVG. Text shaping has the same limitations as PNG rendering, and complex scripts or color/bitmap-only glyphs are not guaranteed.
-
-To convert an entire workbook to Markdown and extract its images:
-
-```csharp
-using ExcelRenderer.Markdown;
-
-await ExcelMarkdownConverter.ConvertAsync("sample.xlsx", "output");
-```
-
-This creates `output/sample.md` and image files under `output/images`. Use
-`MarkdownExportOptions` to control formula/address metadata, hidden rows and columns,
-nearby image text, layout analysis, and image export. Markdown export consumes the
-same `ReportDocument` model as the renderers and does not alter the PDF/PNG pipeline.
 
 ## PostScript output
 
@@ -804,7 +784,7 @@ underline in ordinary string cells. `ReportCell.RichTextRuns` contains effective
 `CellTextRun` values; `Text` remains the complete plain string. Manual models must
 supply matching text and valid positive sizes. The built-in measurer implements
 `IRichTextLayoutService`; existing custom measurers keep working with a cell-font
-fallback. Core-only output selects one explicit regular font per cell. Markdown stays plain text.
+fallback. Core-only output selects one explicit regular font per cell.
 
 Partial formatting with rotated/vertical cell text falls back to the cell font.
 Strikethrough, superscript/subscript, double/accounting underlines and phonetics are
@@ -824,7 +804,7 @@ it alone does not enable warnings. The CLI requires `--layout-warnings` with
 `--min-readable-font-size`. `CellTextClipped` checks finalized logical line placement
 for horizontal wrapped/shrunk cells with a 0.25pt tolerance, not complete glyph ink
 bounds. `CellTextTooSmall` uses final scaled visible run sizes. These warnings do
-not resize cells and are not emitted for Markdown. New warnings run in preflight;
+not resize cells. New warnings run in preflight;
 diagnostic failure occurs before opening output sinks.
 
 With `DetectUnsupportedFeatures`, chart sheets are reported at sheet level with unknown
@@ -844,7 +824,7 @@ across PDF, PNG, SVG and PostScript. Disable with
 `new ExcelReadOptions { ApplyConditionalFormatting = false }`, also available through
 `RenderRequest.ReadOptions`. Cached mode uses saved dependency values; Recalculate
 shares the display calculation session. **Core retains ordinary saved styles and does
-not evaluate conditional formatting.** Markdown adds no color syntax.
+not evaluate conditional formatting.**
 
 Population rules include hidden and selected-out source values. Unsupported rules/styles
 and evaluation failures remain diagnosable. Collapsed color-scale thresholds retain
@@ -928,7 +908,7 @@ these files in command-line order and then normal family fallbacks. If none cont
 `MissingPrivateUseGlyph` is reported and U+FFFD is rendered; `--strict` and
 `--warnings-as-errors MissingPrivateUseGlyph` can make this a conversion failure. Font files must
 be readable and valid, and users are responsible for their licenses and PDF embedding rights.
-The option has no effect on Markdown output because Markdown does not render glyphs.
+
 `bundled` is the default for compatibility;
 `requested` prioritizes registered and supplied font directories before configured fallbacks and the
 bundled font. Font fallback is selected per Unicode text element, so surrogate pairs and combining
@@ -981,7 +961,7 @@ all selected output dimensions, trimming and links before opening any output sin
 It then generates and writes one page at a time. Paginated output uses two page
 passes; public `ReportLayoutEngine.Layout` remains a materializing compatibility API.
 Continuous PNG/SVG rescans cells by drawing layer, preserving backgrounds, borders,
-text and object order without keeping all commands. Markdown retains its existing path.
+text and object order without keeping all commands.
 Border resolution retains and sorts edge metadata, using memory proportional to the
 number of defined edges. An unselected continuous canvas includes stroke extents;
 an explicit range keeps its original clip.
@@ -1046,12 +1026,10 @@ input and output streams stay open. Heavy native drawing and encoding operations
 The Formulas/OpenXml API namespaces now follow their source folders. See the
 [namespace migration guide](docs/namespace-migration.md) for updated imports and public type locations.
 
-
 NuGet publication is limited to `ExcelRenderer`, `ExcelRenderer.Mapping`,
 `ExcelRenderer.Tool` and `ExcelRenderer.Fonts`. Core, OpenXml.Reader, OpenXml and Formulas are
 source projects whose assemblies ship inside those packages; they are not published
 separately. See [package distribution](docs/package-distribution.md).
-
 
 To try the CLI from source before publishing, create and install a local package:
 

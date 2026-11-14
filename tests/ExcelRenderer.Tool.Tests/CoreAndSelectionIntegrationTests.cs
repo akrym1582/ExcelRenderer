@@ -1,5 +1,6 @@
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
+using ExcelRenderer.TestFixtures;
 using Xunit;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 
@@ -13,7 +14,6 @@ public sealed partial class ToolIntegrationTests
     [InlineData("image")]
     [InlineData("svg")]
     [InlineData("ps")]
-    [InlineData("markdown")]
     [InlineData("render")]
     public async Task Commands_accept_multiple_sheet_names_and_reject_missing_names(string command)
     {
@@ -21,7 +21,7 @@ public sealed partial class ToolIntegrationTests
         var output = Path.Combine(_directory, "multi-output");
         var args = new List<string> { command, input, "-o", output, "--sheet", "Third", "First", "--sheet", "Third" };
         if (command == "core") args.AddRange(["--font-file", CoreFont]);
-        if (command == "render") args.AddRange(["--format", "markdown"]);
+        if (command == "render") args.AddRange(["--format", "pdf"]);
         if (command == "image") args.AddRange(["--dpi", "36"]);
         var result = await RunAsync(args.ToArray());
         AssertSuccess(result);
@@ -33,10 +33,9 @@ public sealed partial class ToolIntegrationTests
             Assert.Equal(2, files.Length);
             Assert.DoesNotContain(files, name => name.Contains("Second", StringComparison.Ordinal));
         }
-        else if (command is "markdown" or "render")
+        else if (command == "render")
         {
-            var markdown = command == "render" ? Directory.GetFiles(output, "*.md").Single() : output;
-            var text = await File.ReadAllTextAsync(markdown);
+            var text = PdfText.Read(File.ReadAllBytes(output));
             Assert.DoesNotContain("SecondValue", text);
             Assert.True(text.IndexOf("ThirdValue", StringComparison.Ordinal) < text.IndexOf("FirstValue", StringComparison.Ordinal));
         }
@@ -60,7 +59,6 @@ public sealed partial class ToolIntegrationTests
     [InlineData("image")]
     [InlineData("svg")]
     [InlineData("ps")]
-    [InlineData("markdown")]
     [InlineData("render")]
     [InlineData("xlsx")]
     public async Task Verbose_reports_command_details_and_full_errors(string command)

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compare two CLI revisions: PDF text/page geometry and complete Markdown artifacts for tracked fixtures."""
+"""Compare two CLI revisions: PDF text/page geometry for tracked fixtures."""
 import argparse
 import hashlib
 import json
@@ -29,15 +29,14 @@ for index, relative in enumerate(tracked):
         for generated in directory.rglob("*"):
             if generated.is_file():
                 generated.unlink()
-        for command, name in [('pdf', 'report.pdf'), ('md', 'report.md')]:
+        for command, name in [('pdf', 'report.pdf')]:
             subprocess.run(['dotnet', str(executable), command, str(fixture), '-o', str(directory / name), '--formula-mode', 'cached', '--font-file', str(font), '--no-system-fonts'], cwd=root, capture_output=True, text=True, check=True)
         text = subprocess.check_output(['pdftotext', '-layout', '-enc', 'UTF-8', str(directory / 'report.pdf'), '-'])
         info = subprocess.check_output(['pdfinfo', str(directory / 'report.pdf')], text=True)
         geometry = [line for line in info.splitlines() if line.startswith(('Pages:', 'Page size:'))]
-        markdown = {str(path.relative_to(directory)): hashlib.sha256(path.read_bytes()).hexdigest() for path in directory.rglob('*') if path.is_file() and path.suffix != '.pdf'}
-        artifacts[label] = {'textSha256': hashlib.sha256(text).hexdigest(), 'geometry': geometry, 'markdownArtifacts': markdown}
+        artifacts[label] = {'textSha256': hashlib.sha256(text).hexdigest(), 'geometry': geometry}
     assert artifacts['baseline'] == artifacts['current'], (relative, artifacts)
     results.append({'fixture': relative, 'comparison': artifacts['current'], 'equal': True})
-    print(f'{relative}: PDF text/pages/size and Markdown/image artifacts equal', flush=True)
+    print(f'{relative}: PDF text/pages/size equal', flush=True)
 args.output.parent.mkdir(parents=True, exist_ok=True)
 args.output.write_text(json.dumps(results, ensure_ascii=False, indent=2) + '\n')

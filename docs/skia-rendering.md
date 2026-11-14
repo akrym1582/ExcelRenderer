@@ -23,7 +23,6 @@ flowchart TD
     L --> C["Finalized text and drawing commands"]
     C --> P["PDF: Skia + Core document / structural save"]
     C --> I["PNG / SVG: shared Skia drawing"]
-    R --> M["Markdown: separate document-model path"]
 ```
 
 Geometry stays in points; PNG converts to pixels at output DPI. Measurement

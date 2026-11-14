@@ -1,15 +1,15 @@
 # CI validation ownership
 
-The `Unit tests` workflow runs on every pull request and on manual dispatch.
+The `Unit tests` workflow runs on every pull request and on manual dispatch,
+using Linux only. Windows validation is deferred to the publish workflow.
 
 | Job | Responsibility |
 | --- | --- |
 | Run unit tests | Main renderer, OpenXml and Mapping suites; namespace, dependency-direction and publication-allowlist checks; PostScript validation |
-| Core (Linux / Windows) | Core suite in a sparse checkout without shared fixtures or OS font setup; coverage and separate uninstrumented performance checks |
-| Formulas (Linux / Windows) | Isolated calculation suite, dependency audit and formula oracle |
-| Main/Core semantic parity (Windows) | Windows semantic parity and public API contracts |
+| Core (Linux) | Core suite in a sparse checkout without shared fixtures or OS font setup; coverage and separate uninstrumented performance checks |
+| Formulas (Linux) | Isolated calculation suite, dependency audit and formula oracle |
 | PDF rendering regression | Frozen A/B/Core baselines, visual parity, reviewed PDFs, borders, pagination, images, font extraction and PDF-comparator mutation checks |
-| pdf-distribution (Linux / Windows) | CLI suite, pack/publish, dependency and package inventory audits, isolated package consumers; Windows renderer checks; Linux managed-font and optional-font validation |
+| pdf-distribution (Linux) | CLI suite, pack/publish, dependency and package inventory audits, isolated package consumers; managed-font and optional-font validation |
 
 Rendering waits for the main and Core jobs and downloads their existing artifacts.
 Both artifacts preserve repository-relative paths, including `tests/.../SampleOutputs`.
@@ -18,9 +18,11 @@ it does not rerun the suites to regenerate them. Distribution runs independently
 so a rendering comparison failure cannot skip package validation.
 
 The reusable distribution workflow defaults to running its Core and selected main
-renderer tests. Release callers retain that behavior. The PR workflow opts out of
-Core tests and Linux main tests already owned by dedicated jobs. Windows main
-renderer checks remain enabled. On Linux PR runs, the two fixture-producing
+renderer tests on Linux and Windows. The publish workflow retains this default,
+including the Windows solution build and package validation before publishing.
+The PR workflow selects Linux only and opts out of Core tests and Linux main
+tests already owned by dedicated jobs. Main/Core semantic parity remains covered
+by the main Linux suite; the separate Windows parity job is disabled. On Linux PR runs, the two fixture-producing
 font tests still run locally: independent managed-font validation requires their
 `PdfFormats/colr*.pdf` and `ManagedTrueType/collection-*.pdf` outputs. This keeps
 distribution independent of the main job without rerunning its broad test suite. The font-split push workflow uses the same

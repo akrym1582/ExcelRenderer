@@ -208,6 +208,30 @@ public sealed class TextOverflowTests
         Assert.Equal((20d, 100d), index.Find(source, 1000000, 2)!.Value);
     }
 
+    [Theory]
+    [InlineData(false, 1)]
+    [InlineData(false, 2)]
+    [InlineData(true, 1)]
+    [InlineData(true, 2)]
+    public void Rightmost_text_stops_at_the_resolved_print_boundary(bool explicitArea, int span)
+    {
+        var sheet = Sheet(new Dictionary<CellAddress, ReportCell>
+        {
+            [new(1, 5 - span)] = new(new string('W', 40), CellStyle.Default, ColumnSpan: span),
+        }) with
+        {
+            PrintArea = explicitArea ? new(new(1, 3), new(1, 4)) : null,
+            PageSettings = new(200, 100, 10, 10, 10, 10, Scale: .75),
+        };
+        var plan = new ReportLayoutEngine(new Measurer()).Plan(sheet)[0];
+        var page = plan.Build(0, 1, plan.Pages.Count, new Measurer());
+        var cell = Assert.Single(page.Cells);
+        var clip = cell.TextClipBounds!.Value;
+        var expectedRight = 10 + ((explicitArea ? 40 : 80) * .75);
+
+        Assert.Equal(expectedRight, clip.X + clip.Width);
+    }
+
     internal static ReportSheet Sheet(IReadOnlyDictionary<CellAddress, ReportCell> cells) => new("overflow", cells,
         new Dictionary<int, ColumnDefinition>(), new Dictionary<int, RowDefinition>(), [], new(120, 100, 0, 0, 0, 0), new(new(1, 1), new(1, 6)))
     { DefaultColumnWidth = 20, DefaultRowHeight = 10 };

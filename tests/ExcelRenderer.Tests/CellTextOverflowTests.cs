@@ -250,6 +250,53 @@ public sealed class CellTextOverflowTests
         Assert.Equal(60, viewport.Clip.Width);
     }
 
+    [Theory]
+    [InlineData(false, 1)]
+    [InlineData(false, 2)]
+    [InlineData(true, 1)]
+    [InlineData(true, 2)]
+    public void Print_boundary_clips_text_ink_even_when_the_page_has_room(bool explicitArea, int span)
+    {
+        var original = Sheet(HorizontalAlignment.Left);
+        var sheet = original with
+        {
+            Cells = new Dictionary<CellAddress, ReportCell>
+            {
+                [new(2, 5 - span)] = original.Cells[new(2, 3)] with { ColumnSpan = span },
+            },
+            PrintArea = explicitArea ? new(new(1, 3), new(3, 4)) : null,
+            PageSettings = new(140, 80, 10, 10, 10, 10),
+        };
+        var manager = new OutputFixture.FixedManager();
+        var commands = new DrawCommandGeneratorPass().Generate(new ReportLayoutEngine(new SkiaTextMeasurer(manager)).Layout(sheet));
+        var right = explicitArea ? 50 : 90;
+        using var output = new MemoryStream();
+        new PngRenderer(manager).RenderPage(commands, sheet.PageSettings, output, 72);
+        using var bitmap = SKBitmap.Decode(output.ToArray());
+
+        AssertRed(bitmap, right - 20, right);
+        AssertNoRed(bitmap, right, 140);
+        using var svgOutput = new MemoryStream();
+        new SvgRenderer(manager).RenderPage(commands, sheet.PageSettings, svgOutput);
+        svgOutput.Position = 0;
+        using var svg = new SKSvg();
+        var picture = svg.Load(svgOutput)!;
+        using var raster = new SKBitmap(140, 80);
+        using (var canvas = new SKCanvas(raster))
+        {
+            canvas.Clear(SKColors.White);
+            canvas.Scale(140 / picture.CullRect.Width, 80 / picture.CullRect.Height);
+            canvas.Translate(-picture.CullRect.Left, -picture.CullRect.Top);
+            canvas.DrawPicture(picture);
+        }
+
+        AssertRed(raster, right - 20, right);
+        AssertNoRed(raster, right, 140);
+        using var pdf = new MemoryStream();
+        new PdfRenderer(manager).Render(commands, sheet.PageSettings, pdf);
+        Assert.Contains("W", OutputFixture.Content(pdf.ToArray()));
+    }
+
     private static ReportSheet Sheet(HorizontalAlignment alignment)
     {
         var font = new FontStyle("Noto Sans JP", 12, Color: new(255, 0, 0));

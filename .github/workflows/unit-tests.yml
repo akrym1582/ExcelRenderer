@@ -115,6 +115,7 @@ jobs:
       - name: Compare finalized commands and public API fixtures
         run: |
           python scripts/test_print_origin_evidence.py
+          python scripts/test_print_boundary_evidence.py
           python scripts/compare-pdf-backends.py --no-build
 
       - name: Compare frozen stage B against the new measurement and writer

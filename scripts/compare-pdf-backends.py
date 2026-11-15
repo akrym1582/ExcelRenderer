@@ -25,6 +25,7 @@ from pdf_native_evidence import evidence as native_precision_evidence, verify_fr
 from pdf_geometry_evidence import inspect_page, verify_outlines, ellipse_evidence, image_crop_evidence
 from shared_border_evidence import raster_matches as border_raster_matches
 from print_origin_evidence import checked_pdf as checked_origin_pdf, contracts as origin_contracts
+from print_boundary_evidence import checked_pdf as checked_boundary_pdf
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -61,6 +62,9 @@ def main():
         origin = origin_contracts().get('full/' + name)
         if origin is not None:
             reference_path = checked_origin_pdf('full/' + name, ROOT / origin['historical_pdf'])
+        boundary = checked_boundary_pdf('full/' + name, directory / 'baseline-skiasharp.pdf')
+        if boundary is not None:
+            reference_path = boundary
         left = fitz.open(reference_path)
         right = fitz.open(directory / "skiasharp.pdf")
         native_evidence = native_precision_evidence(directory) if (directory / "baseline-skiasharp.pdf").exists() else None

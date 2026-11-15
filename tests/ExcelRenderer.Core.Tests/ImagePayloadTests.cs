@@ -84,6 +84,7 @@ public sealed class ImagePayloadTests
     {
         using var input = TestSupport.Workbook(workbook =>
         {
+            TestSupport.WidenFirstColumn(workbook);
             var sheet = workbook.WorksheetParts.Single();
             TestWorkbook.Image(sheet, TestImages.CorruptPng(), row: 0);
             TestWorkbook.Image(sheet, TestSupport.Png(), row: 2);

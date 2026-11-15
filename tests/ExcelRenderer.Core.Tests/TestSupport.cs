@@ -29,6 +29,12 @@ internal static class TestSupport
         return stream;
     }
 
+    internal static void WidenFirstColumn(WorkbookPart workbook)
+    {
+        var sheet = Sheet(workbook);
+        sheet.InsertBefore(new S.Columns(new S.Column { Min = 1, Max = 1, Width = 24, CustomWidth = true }), sheet.GetFirstChild<S.SheetData>()!);
+    }
+
     internal static S.Worksheet Sheet(WorkbookPart workbook) => workbook.WorksheetParts.First().Worksheet;
 
     internal static void Print(WorkbookPart workbook, string reference, string name = "_xlnm.Print_Area")

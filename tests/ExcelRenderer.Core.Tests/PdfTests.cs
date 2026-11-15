@@ -16,7 +16,7 @@ public sealed class PdfTests
     [Fact]
     public async Task Japanese_text_has_embedded_font_and_ToUnicode_map()
     {
-        var (result, bytes) = await TestSupport.Convert();
+        var (result, bytes) = await TestSupport.Convert(TestSupport.WidenFirstColumn);
         Assert.Equal(1, result.PageCount);
         using var document = TestSupport.Open(bytes);
         var fonts = TestSupport.Fonts(document).ToArray(); Assert.NotEmpty(fonts);

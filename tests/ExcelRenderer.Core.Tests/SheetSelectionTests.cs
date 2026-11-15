@@ -11,6 +11,7 @@ public sealed class SheetSelectionTests
     {
         using var input = TestSupport.Workbook(workbook =>
         {
+            TestSupport.WidenFirstColumn(workbook);
             AddSheet(workbook, "Second");
             AddSheet(workbook, "Third");
         });

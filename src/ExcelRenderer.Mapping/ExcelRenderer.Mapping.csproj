@@ -8,7 +8,8 @@
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <Version>1.11.0</Version>
     <PackageId>ExcelRenderer.Mapping</PackageId>
-    <Description>Map C# objects and JSON into Excel templates with nested row arrays.</Description>
+    <Description>Fill Excel templates with C# objects or JSON, including nested row arrays.</Description>
+    <PackageTags>excel xlsx excel-template json-to-excel csharp reporting</PackageTags>
     <Authors>akrym1582</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>

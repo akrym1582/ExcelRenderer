@@ -11,13 +11,13 @@
     <PackageId>ExcelRenderer.Tool</PackageId>
     <Version>1.11.0</Version>
     <Title>ExcelRenderer command-line tool</Title>
-    <Description>Convert Excel XLSX files to PDF, PostScript, PNG and SVG.</Description>
+    <Description>Convert Excel to PDF from the command line with a .NET tool. Render XLSX files to PDF, PostScript, PNG and SVG.</Description>
     <Authors>akrym1582</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/akrym1582/ExcelRenderer</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageTags>excel xlsx pdf postscript png cli dotnet-tool</PackageTags>
+    <PackageTags>excel xlsx pdf excel-to-pdf xlsx-to-pdf cli dotnet-tool postscript png svg</PackageTags>
   </PropertyGroup>
   <ItemGroup>
     <None Include="../../docs/nuget/ExcelRenderer.Tool.md" Pack="true" PackagePath="/README.md" />

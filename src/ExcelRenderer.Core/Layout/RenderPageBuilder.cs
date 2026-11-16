@@ -88,7 +88,7 @@ internal sealed class RenderPageBuilder
         var selection = _context.Policy.CreateCellSelection(horizontal, vertical, _titleColumnSet, _titleRowSet, _titleColumnEnd, _titleRowEnd, _context.Sheet);
         var repeatColumns = selection.RepeatColumns;
         var repeatRows = selection.RepeatRows;
-        var horizontalEnd = double.IsFinite(horizontal.End) ? horizontal.End : LastColumnEnd();
+        var horizontalEnd = double.IsFinite(horizontal.End) ? horizontal.End : Math.Max(LastColumnEnd(), _context.TextOverflowPrintEnd ?? double.NegativeInfinity);
         var verticalEnd = double.IsFinite(vertical.End) ? vertical.End : LastRowEnd();
         var placement = new PagePlacement(
             _context.Sheet.PageSettings,
@@ -275,7 +275,7 @@ internal sealed class RenderPageBuilder
                 layout.ContentBounds.Width * _scale,
                 layout.ContentBounds.Height * _scale),
             TextLayout = _context.TextLayouts.TryGetValue(layout.Address, out var textLayout)
-                ? TextLayoutTransform.Scale(textLayout, _scale)
+                ? TextLayoutTransform.Scale(textLayout, _scale) with { UseDesignAdvances = _context.TextOverflowPrintEnd is not null }
                 : null,
             MergedBorders = layout.MergedBorders?.Select(border => new RenderBorder(
                 new(
@@ -295,7 +295,7 @@ internal sealed class RenderPageBuilder
         }
 
         var printableRight = (_context.Sheet.PageSettings.Width - _context.Sheet.PageSettings.MarginRight - originX) / _scale;
-        var sourceRight = Math.Min(LastColumnEnd(), printableRight);
+        var sourceRight = _context.Sheet.RequestedRange is not null ? Math.Min(LastColumnEnd(), printableRight) : printableRight;
         var left = placement.Horizontal.Start;
         var right = Math.Min(placement.Horizontal.End, sourceRight);
         if (_titleColumns.Count > 0)

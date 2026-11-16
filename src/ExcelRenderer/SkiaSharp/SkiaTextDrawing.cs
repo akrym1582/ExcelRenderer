@@ -181,7 +181,8 @@ internal sealed class SkiaTextDrawing
                         (float)positioned.Left,
                         (float)positioned.Baseline,
                         paint,
-                        _textAsPaths);
+                        _textAsPaths,
+                        layout.UseDesignAdvances);
                 }
                 else
                 {
@@ -198,7 +199,8 @@ internal sealed class SkiaTextDrawing
                             (float)positioned.Baseline,
                             runPaint,
                             _textAsPaths,
-                            run.Glyphs);
+                            run.Glyphs,
+                            layout.UseDesignAdvances);
                         if (font?.Underline == true)
                         {
                             canvas.DrawLine((float)(positioned.Left + run.X), (float)(positioned.Baseline + 1), (float)(positioned.Left + run.X + run.Advance), (float)(positioned.Baseline + 1), runPaint);
@@ -331,24 +333,25 @@ internal sealed class SkiaTextDrawing
         float x,
         float y,
         SKPaint paint,
-        bool asPaths)
+        bool asPaths,
+        bool useDesignAdvances = false)
     {
         var runs = _fontManager?.ResolveTextRuns(text, request);
         if (runs is null)
         {
-            using var font = new SKFont(primaryTypeface, size);
+            using var font = useDesignAdvances ? Core.Fonts.SkiaFontFace.CreateFont(primaryTypeface, size) : new SKFont(primaryTypeface, size);
             DrawUnresolvedRun(canvas, text, x, y, font, paint, asPaths);
             return;
         }
 
         foreach (var run in runs)
         {
-            DrawResolvedRun(canvas, run, size, x, y, paint, asPaths);
+            DrawResolvedRun(canvas, run, size, x, y, paint, asPaths, useDesignAdvances: useDesignAdvances);
             using var lease = run.Font.SnapshotData is null && run.Font.FontData is null && string.IsNullOrEmpty(run.Font.FilePath)
                 ? (TypefaceLease?)null
                 : LeaseTypeface(run.Font);
             var typeface = lease?.Typeface;
-            using var font = new SKFont(typeface ?? SKTypeface.Default, size);
+            using var font = useDesignAdvances && run.ColorEmojiGlyphId is null ? Core.Fonts.SkiaFontFace.CreateFont(typeface ?? SKTypeface.Default, size) : new SKFont(typeface ?? SKTypeface.Default, size);
             x += MeasureRun(font, run, paint);
         }
     }
@@ -386,7 +389,8 @@ internal sealed class SkiaTextDrawing
         float y,
         SKPaint paint,
         bool asPaths,
-        Core.Fonts.GlyphSequence? selection = null)
+        Core.Fonts.GlyphSequence? selection = null,
+        bool useDesignAdvances = false)
     {
         if (_pdfFonts is not null)
         {
@@ -396,7 +400,7 @@ internal sealed class SkiaTextDrawing
 
         if (selection is not null && run.ColorEmojiGlyphId is null && run.GlyphId is null)
         {
-            DrawSelectedRun(canvas, run, selection, size, x, y, paint, asPaths);
+            DrawSelectedRun(canvas, run, selection, size, x, y, paint, asPaths, useDesignAdvances);
             return;
         }
 
@@ -404,7 +408,7 @@ internal sealed class SkiaTextDrawing
             ? (TypefaceLease?)null
             : LeaseTypeface(run.Font);
         var typeface = lease?.Typeface;
-        using var font = new SKFont(typeface ?? SKTypeface.Default, size);
+        using var font = useDesignAdvances && run.ColorEmojiGlyphId is null ? Core.Fonts.SkiaFontFace.CreateFont(typeface ?? SKTypeface.Default, size) : new SKFont(typeface ?? SKTypeface.Default, size);
         if (run.ColorEmojiGlyphId is { } emojiGlyph)
         {
             if (asPaths)
@@ -476,7 +480,7 @@ internal sealed class SkiaTextDrawing
         }
     }
 
-    private void DrawSelectedRun(SKCanvas canvas, TextRun run, Core.Fonts.GlyphSequence selection, float size, float x, float y, SKPaint paint, bool asPaths)
+    private void DrawSelectedRun(SKCanvas canvas, TextRun run, Core.Fonts.GlyphSequence selection, float size, float x, float y, SKPaint paint, bool asPaths, bool useDesignAdvances)
     {
         using var resources = ConversionFontResources.Current is null ? new ConversionFontResources() : null;
         var face = ConversionFontResources.Current!.GetFace(run.Font);
@@ -486,10 +490,11 @@ internal sealed class SkiaTextDrawing
         }
 
         var glyphs = selection.GlyphSpan;
-        using var font = new SKFont(face.Typeface, size);
+        using var font = useDesignAdvances && !face.Color ? Core.Fonts.SkiaFontFace.CreateFont(face.Typeface, size) : new SKFont(face.Typeface, size);
 
-        // Preserve the established PNG/SVG native advance/raster policy while
-        // emitting the already selected glyph IDs, without fallback or shaping.
+        // Fitted text uses its measured advances so native integer rounding cannot
+        // push the final glyph outside the fitted page. Other output retains its
+        // established native raster policy. Glyph IDs remain finalized.
         if (asPaths)
         {
             using var path = font.GetTextPath(MemoryMarshal.AsBytes(glyphs), SKTextEncoding.GlyphId, new SKPoint(x, y));

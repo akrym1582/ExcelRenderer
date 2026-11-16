@@ -30,6 +30,17 @@ public static partial class ExcelConverter
         }
 
         sheets = sheets.Select(selected => selected with { Sheet = ProjectSheet(selected.Sheet, request) }).ToArray();
+
+        // One-page width fitting depends on calculated text and conditional styles.
+        // Resolve the selected source regions before pagination; cached geometry can
+        // otherwise exclude cells that move onto the requested page after shrinking.
+        if (sheets.Any(selected => selected.Sheet.RequestedRange is null &&
+            Core.Layout.PrintScaleResolver.UsesFitMode(CoreIntegration.CoreModelAdapter.ToCore(selected.Sheet.PageSettings)) &&
+            selected.Sheet.PageSettings.FitToPagesWide == 1))
+        {
+            return options;
+        }
+
         var pages = SelectPages(LayoutPages(sheets, request.Dpi, fonts), request.Selection.Pages);
         var targets = new Dictionary<string, HashSet<CellAddress>>(StringComparer.OrdinalIgnoreCase);
         var appearanceTargets = new Dictionary<string, List<Func<int, int, bool>>>(StringComparer.OrdinalIgnoreCase);

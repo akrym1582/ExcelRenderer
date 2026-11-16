@@ -213,11 +213,11 @@ public sealed class TextOverflowTests
     [InlineData(false, 2)]
     [InlineData(true, 1)]
     [InlineData(true, 2)]
-    public void Rightmost_text_stops_at_the_resolved_print_boundary(bool explicitArea, int span)
+    public void Rightmost_text_can_extend_beyond_the_resolved_print_boundary(bool explicitArea, int span)
     {
         var sheet = Sheet(new Dictionary<CellAddress, ReportCell>
         {
-            [new(1, 5 - span)] = new(new string('W', 40), CellStyle.Default, ColumnSpan: span),
+            [new(1, 5 - span)] = new(new string('W', 80), CellStyle.Default, ColumnSpan: span),
         }) with
         {
             PrintArea = explicitArea ? new(new(1, 3), new(1, 4)) : null,
@@ -227,14 +227,154 @@ public sealed class TextOverflowTests
         var page = plan.Build(0, 1, plan.Pages.Count, new Measurer());
         var cell = Assert.Single(page.Cells);
         var clip = cell.TextClipBounds!.Value;
-        var expectedRight = 10 + ((explicitArea ? 40 : 80) * .75);
+        var expectedRight = 190;
 
         Assert.Equal(expectedRight, clip.X + clip.Width);
+    }
+
+    [Theory]
+    [InlineData(false, 1, false)]
+    [InlineData(false, 2, false)]
+    [InlineData(true, 1, false)]
+    [InlineData(true, 2, false)]
+    [InlineData(false, 1, true)]
+    [InlineData(true, 2, true)]
+    public void Fit_one_page_includes_trailing_text_and_horizontal_centering(bool explicitArea, int span, bool centered)
+    {
+        var sheet = Sheet(new Dictionary<CellAddress, ReportCell>
+        {
+            [new(1, 5 - span)] = new(new string('W', 80), CellStyle.Default, ColumnSpan: span),
+        }) with
+        {
+            PrintArea = explicitArea ? new(new(1, 3), new(1, 4)) : null,
+            PageSettings = new(200, 100, 10, 10, 10, 10, Scale: null, FitToPagesWide: 1) { HorizontalCentered = centered },
+        };
+        var plan = Assert.Single(new ReportLayoutEngine(new Measurer()).Plan(sheet));
+        Assert.Single(plan.Pages);
+        var cell = Assert.Single(plan.Build(0, 1, 1, new Measurer()).Cells);
+        var scale = cell.DecorationScale;
+        var textRight = cell.ContentBounds.X + (400 * scale);
+        Assert.InRange(scale, 0.3, 0.5);
+        Assert.InRange(textRight, 186, 190);
+        Assert.Equal(span * 20 * scale, cell.Bounds.Width, 6);
+        Assert.Equal(10 + ((explicitArea ? 2 - span : 4 - span) * 20 * scale), cell.Bounds.X, 6);
+    }
+
+    [Theory]
+    [InlineData("wrap")]
+    [InlineData("shrink")]
+    [InlineData("rotation")]
+    [InlineData("vertical")]
+    [InlineData("special")]
+    [InlineData("right")]
+    [InlineData("short")]
+    [InlineData("blocked")]
+    [InlineData("hidden")]
+    public void Fit_width_does_not_expand_for_ineligible_or_blocked_text(string mode)
+    {
+        var style = CellStyle.Default with
+        {
+            WrapText = mode == "wrap", ShrinkToFit = mode == "shrink", TextRotation = mode == "rotation" ? 30 : 0,
+            TopToBottom = mode == "vertical", HorizontalAlignment = mode == "right" ? HorizontalAlignment.Right : HorizontalAlignment.Left,
+        };
+        var cells = new Dictionary<CellAddress, ReportCell>
+        {
+            [new(1, 1)] = new(mode == "short" ? "a" : new string('W', 80), style) { SuppressTextOverflow = mode == "special" },
+        };
+        if (mode == "blocked") cells[new(1, 2)] = new("x", CellStyle.Default);
+        var sheet = Sheet(cells) with
+        {
+            Columns = mode == "hidden" ? new Dictionary<int, ColumnDefinition> { [1] = new(20, true) } : new Dictionary<int, ColumnDefinition>(),
+            PageSettings = new(200, 100, 10, 10, 10, 10, Scale: null, FitToPagesWide: 1),
+        };
+        var plan = Assert.Single(new ReportLayoutEngine(new Measurer()).Plan(sheet));
+        Assert.All(plan.Pages, page => Assert.Equal(1, page.Scale));
+    }
+
+    [Fact]
+    public void Fit_width_limits_overflow_at_a_blocker_outside_the_print_area()
+    {
+        var sheet = Sheet(new Dictionary<CellAddress, ReportCell>
+        {
+            [new(1, 1)] = new(new string('W', 80), CellStyle.Default),
+            [new(1, 8)] = new("outside", CellStyle.Default),
+        }) with
+        {
+            PrintArea = new(new(1, 1), new(1, 1)),
+            PageSettings = new(120, 100, 10, 10, 10, 10, Scale: null, FitToPagesWide: 1),
+        };
+        var plan = Assert.Single(new ReportLayoutEngine(new Measurer()).Plan(sheet));
+        var cell = Assert.Single(plan.Build(0, 1, 1, new Measurer()).Cells);
+        Assert.Equal(100d / 140, cell.DecorationScale, 6);
+        Assert.Equal(110, cell.TextClipBounds!.Value.X + cell.TextClipBounds.Value.Width, 6);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void Fit_width_keeps_title_clips_and_respects_a_stricter_height_fit(bool fitHeight)
+    {
+        var sheet = Sheet(new Dictionary<CellAddress, ReportCell>
+        {
+            [new(1, 1)] = new(new string('T', 200), CellStyle.Default),
+            [new(1, 3)] = new(new string('W', 80), CellStyle.Default),
+        }) with
+        {
+            DefaultRowHeight = fitHeight ? 1000 : 10,
+            PageSettings = new(200, 100, 10, 10, 10, 10, Scale: null, FitToPagesWide: 1, FitToPagesTall: fitHeight ? 1 : null, TitleColumns: new(1, 1)),
+        };
+        var plan = Assert.Single(new ReportLayoutEngine(new Measurer()).Plan(sheet));
+        Assert.Single(plan.Pages);
+        var page = plan.Build(0, 1, 1, new Measurer());
+        var title = page.Cells.Single(cell => cell.SourceAddress == new CellAddress(1, 1));
+        Assert.Equal(10 + (20 * title.DecorationScale), title.TextClipBounds!.Value.X + title.TextClipBounds.Value.Width, 6);
+        if (fitHeight) Assert.Equal(.08, title.DecorationScale, 6);
+        else Assert.InRange(title.DecorationScale, .4, .42);
+    }
+
+    [Theory]
+    [InlineData("explicit")]
+    [InlineData("two")]
+    [InlineData("range")]
+    public void Non_fitting_modes_and_selected_ranges_do_not_measure_text_during_planning(string mode)
+    {
+        var sheet = Sheet(new Dictionary<CellAddress, ReportCell>
+        {
+            [new(1, 1)] = new(new string('W', 80), CellStyle.Default),
+        }) with
+        {
+            RequestedRange = mode == "range" ? new(new(1, 1), new(1, 6)) : null,
+            PageSettings = new(200, 100, 10, 10, 10, 10, Scale: mode == "explicit" ? 1 : null, FitToPagesWide: mode == "two" ? 2 : 1),
+        };
+        var plan = Assert.Single(new ReportLayoutEngine(new RejectMeasurement()).Plan(sheet));
+        Assert.Equal(1, Assert.Single(plan.Pages).Scale);
+    }
+
+    [Fact]
+    public void Fit_width_does_not_extend_body_text_across_a_later_title_region()
+    {
+        var sheet = Sheet(new Dictionary<CellAddress, ReportCell>
+        {
+            [new(1, 1)] = new(new string('W', 80), CellStyle.Default),
+        }) with
+        {
+            PrintArea = new(new(1, 1), new(1, 2)),
+            PageSettings = new(110, 100, 10, 10, 10, 10, Scale: null, FitToPagesWide: 1, TitleColumns: new(3, 4)),
+        };
+        var plan = Assert.Single(new ReportLayoutEngine(new Measurer()).Plan(sheet));
+        Assert.Equal(1, Assert.Single(plan.Pages).Scale);
+        var cell = Assert.Single(plan.Build(0, 1, 1, new Measurer()).Cells);
+        Assert.Equal(50, cell.TextClipBounds!.Value.X + cell.TextClipBounds.Value.Width);
     }
 
     internal static ReportSheet Sheet(IReadOnlyDictionary<CellAddress, ReportCell> cells) => new("overflow", cells,
         new Dictionary<int, ColumnDefinition>(), new Dictionary<int, RowDefinition>(), [], new(120, 100, 0, 0, 0, 0), new(new(1, 1), new(1, 6)))
     { DefaultColumnWidth = 20, DefaultRowHeight = 10 };
+
+    private sealed class RejectMeasurement : ITextMeasurer
+    {
+        public TextSize Measure(string text, FontStyle font, double availableWidth, bool wrap) => throw new InvalidOperationException("Unexpected planning measurement");
+    }
 
     private sealed class Measurer : ITextMeasurer
     {

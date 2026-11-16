@@ -39,7 +39,7 @@ internal sealed class ReportLayoutEngine
     /// </summary>
     public ITextMeasurer TextMeasurer { get; }
 
-    /// <summary>Prepares row, column, and print-area geometry without measuring cell text, then plans page bands.</summary>
+    /// <summary>Prepares geometry and optional one-page overflow measurements, then plans page bands.</summary>
     /// <param name="sheet">The sheet used by this operation.</param>
     /// <returns>The planned or generated result.</returns>
     internal IReadOnlyList<SheetLayoutPlan> Plan(ReportSheet sheet)
@@ -55,6 +55,7 @@ internal sealed class ReportLayoutEngine
                 pass.Execute(context);
             }
 
+            new FitTextOverflowPass().Execute(context);
             return new SheetLayoutPlan(context);
         }).ToArray();
         if (ensureEmptyPage && plans.All(plan => plan.Pages.Count == 0))

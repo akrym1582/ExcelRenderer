@@ -38,7 +38,7 @@ internal static class TextLayoutTransform
                 Descent = line.Descent * factor,
                 Leading = line.Leading * factor,
                 ExtensionScale = line.ExtensionScale * factor,
-            }).ToArray());
+            }).ToArray()) { UseDesignAdvances = layout.UseDesignAdvances };
         return layout.HasExplicitEffectiveFontSize
             ? scaled with { EffectiveFontSize = layout.EffectiveFontSize * factor }
             : scaled;

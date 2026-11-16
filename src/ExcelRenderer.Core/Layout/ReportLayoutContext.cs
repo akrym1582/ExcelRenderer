@@ -79,6 +79,9 @@ internal sealed class ReportLayoutContext
     /// </summary>
     public Dictionary<CellAddress, CellLayout> CellLayouts { get; } = [];
 
+    /// <summary>Gets or sets the trailing text extent used when fitting the sheet to one page wide.</summary>
+    internal double? TextOverflowPrintEnd { get; set; }
+
     /// <summary>Gets the conversion-local product policy.</summary>
     internal CoreLayoutPolicy Policy { get; init; } = new();
 

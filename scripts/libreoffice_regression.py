@@ -122,10 +122,6 @@ def reviewed_core_layout(name, source, historical, actual):
 def current_baseline(case_id, engine, historical):
     """Use explicitly reviewed pagination/color follow-ups; retain all old PDFs/hashes."""
     original = checked_baseline(historical)
-    from print_boundary_evidence import checked_pdf as checked_boundary_pdf
-    boundary = checked_boundary_pdf('appearance/' + engine + '/' + case_id, original)
-    if boundary is not None:
-        return boundary
     if case_id == '09-cell-border':
         from print_origin_evidence import checked_pdf
         return checked_pdf('appearance/' + engine + '/' + case_id, original)

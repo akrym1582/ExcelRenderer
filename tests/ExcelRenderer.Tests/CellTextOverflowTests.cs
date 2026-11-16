@@ -10,6 +10,7 @@ using ExcelRenderer.Model;
 using ExcelRenderer.Pdf;
 using ExcelRenderer.PostScript;
 using ExcelRenderer.Rendering;
+using ExcelRenderer.TestFixtures;
 using ExcelRenderer.SkiaSharp;
 using SkiaSharp;
 using Svg.Skia;
@@ -255,7 +256,7 @@ public sealed class CellTextOverflowTests
     [InlineData(false, 2)]
     [InlineData(true, 1)]
     [InlineData(true, 2)]
-    public void Print_boundary_clips_text_ink_even_when_the_page_has_room(bool explicitArea, int span)
+    public void Print_boundary_allows_text_ink_in_the_remaining_printable_page(bool explicitArea, int span)
     {
         var original = Sheet(HorizontalAlignment.Left);
         var sheet = original with
@@ -275,7 +276,8 @@ public sealed class CellTextOverflowTests
         using var bitmap = SKBitmap.Decode(output.ToArray());
 
         AssertRed(bitmap, right - 20, right);
-        AssertNoRed(bitmap, right, 140);
+        AssertRed(bitmap, right, 130);
+        AssertNoRed(bitmap, 130, 140);
         using var svgOutput = new MemoryStream();
         new SvgRenderer(manager).RenderPage(commands, sheet.PageSettings, svgOutput);
         svgOutput.Position = 0;
@@ -291,10 +293,64 @@ public sealed class CellTextOverflowTests
         }
 
         AssertRed(raster, right - 20, right);
-        AssertNoRed(raster, right, 140);
+        AssertRed(raster, right, 130);
+        AssertNoRed(raster, 130, 140);
         using var pdf = new MemoryStream();
         new PdfRenderer(manager).Render(commands, sheet.PageSettings, pdf);
         Assert.Contains("W", OutputFixture.Content(pdf.ToArray()));
+    }
+
+    [Theory]
+    [InlineData(false, 1, false)]
+    [InlineData(false, 2, false)]
+    [InlineData(true, 1, false)]
+    [InlineData(true, 2, false)]
+    [InlineData(false, 2, true)]
+    [InlineData(true, 1, true)]
+    public void Fit_one_page_renders_the_final_glyph_beyond_the_original_print_area(bool explicitArea, int span, bool rich)
+    {
+        var original = Sheet(HorizontalAlignment.Left);
+        var red = original.Cells[new(2, 3)].Style;
+        var sheet = original with
+        {
+            Cells = new Dictionary<CellAddress, ReportCell>
+            {
+                [new(2, 5 - span)] = new("WWWWWWWWWWWWWWWWWWWWEND", red, ColumnSpan: span)
+                {
+                    RichTextRuns = rich ? [new(new string('W', 20), red.Font with { Size = 18 }), new("END", red.Font)] : null,
+                },
+            },
+            PrintArea = explicitArea ? new(new(1, 3), new(3, 4)) : null,
+            PageSettings = new(140, 80, 10, 10, 10, 10, Scale: null, FitToPagesWide: 1) { HorizontalCentered = true },
+        };
+        var manager = new OutputFixture.FixedManager();
+        var document = new ReportLayoutEngine(new SkiaTextMeasurer(manager)).Layout(sheet);
+        var cell = Assert.Single(Assert.Single(document.Pages).Cells);
+        Assert.True(cell.DecorationScale < 1);
+        var commands = new DrawCommandGeneratorPass().Generate(document);
+        using var output = new MemoryStream();
+        new PngRenderer(manager).RenderPage(commands, sheet.PageSettings, output, 288);
+        using var bitmap = SKBitmap.Decode(output.ToArray());
+        AssertRed(bitmap, 480, 520);
+        AssertNoRed(bitmap, 520, 560);
+        using var svgOutput = new MemoryStream();
+        new SvgRenderer(manager).RenderPage(commands, sheet.PageSettings, svgOutput);
+        svgOutput.Position = 0;
+        using var svg = new SKSvg();
+        var picture = svg.Load(svgOutput)!;
+        using var raster = new SKBitmap(560, 320);
+        using (var canvas = new SKCanvas(raster))
+        {
+            canvas.Clear(SKColors.White);
+            canvas.Scale(560 / picture.CullRect.Width, 320 / picture.CullRect.Height);
+            canvas.Translate(-picture.CullRect.Left, -picture.CullRect.Top);
+            canvas.DrawPicture(picture);
+        }
+        AssertRed(raster, 480, 520);
+        AssertNoRed(raster, 520, 560);
+        using var pdf = new MemoryStream();
+        new PdfRenderer(manager).Render(commands, sheet.PageSettings, pdf);
+        Assert.Contains("END", PdfText.Read(pdf.ToArray()));
     }
 
     private static ReportSheet Sheet(HorizontalAlignment alignment)

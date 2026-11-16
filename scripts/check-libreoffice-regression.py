@@ -80,8 +80,7 @@ def main():
                 result = compare(expected, actual, differences=output / 'differences' / engine / case['id'])
             if historical != expected and actual.exists():
                 result['historical_comparison'] = compare(historical, actual)
-                result['classification'] = ('reviewed-print-boundary' if case['id'] in ('07-multiple-sheets', 'cf-phase1') else
-                                            'reviewed-number-format-color' if case['id'] == 'japanese-grid-report' else
+                result['classification'] = ('reviewed-number-format-color' if case['id'] == 'japanese-grid-report' else
                                             'reviewed-print-origin' if case['id'] == '09-cell-border' else
                                             'reviewed-oversized-merged-pagination')
                 result['expected_pdf'] = str(expected.relative_to(ROOT))

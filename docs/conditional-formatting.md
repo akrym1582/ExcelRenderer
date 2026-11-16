@@ -20,7 +20,10 @@ one calculation session. Dependencies can be on unselected sheets or outside the
 print area. Existing explicit-recalculation failures still throw for display targets.
 No calculation snapshot is made for a cached read with no rules, or for a cached read with disabled
 conditional formatting. Explicit display recalculation still creates its normal session. A geometry-only page-selection read disables conditional
-evaluation; the real read evaluates only selected candidates.
+evaluation; the real read evaluates only selected candidates. One-page-wide fitting
+is an exception: text width and conditional styling can change page boundaries,
+so selected source regions are resolved before final page selection (see
+[formula selection boundaries](formulas.md#selection-boundary)).
 
 ## Supported conditions and styles
 

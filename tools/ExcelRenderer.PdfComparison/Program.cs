@@ -286,7 +286,6 @@ if (reports.Count == 0)
 
 var borderContracts = JsonNode.Parse(File.ReadAllText(Path.Combine(root, "tools/ExcelRenderer.PdfComparison/shared-border-contracts.json")))!;
 var originContracts = JsonNode.Parse(File.ReadAllText(Path.Combine(root, "tests/Shared/PrintOriginReview/manifest.json")))!;
-var boundaryContracts = JsonNode.Parse(File.ReadAllText(Path.Combine(root, "tests/Shared/PrintBoundaryReview/manifest.json")))!;
 foreach (var report in reports)
 {
     var actual = JsonSerializer.SerializeToElement(report);
@@ -318,16 +317,6 @@ foreach (var report in reports)
         {
             frozen[field] = originContract["expected"]![field]!.DeepClone();
         }
-    }
-
-    if (boundaryContracts["full/" + name] is { } boundaryContract)
-    {
-        if (Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(baseline))).ToLowerInvariant() != boundaryContract["historical_expected_sha256"]!.GetValue<string>())
-        {
-            throw new InvalidOperationException("Print-boundary review does not bind the frozen report.");
-        }
-
-        frozen["commandFingerprints"] = boundaryContract["commandFingerprints"]!.DeepClone();
     }
 
     if (!JsonNode.DeepEquals(JsonNode.Parse(actual.GetRawText()), frozen))

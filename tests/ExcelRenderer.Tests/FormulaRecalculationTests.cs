@@ -159,6 +159,38 @@ public sealed class FormulaRecalculationTests
     }
 
     [Fact]
+    public async Task Fit_one_page_uses_calculated_overflow_before_selecting_pages()
+    {
+        using var input = CreateWorkbook();
+        var longText = new string('W', 300);
+        using (var package = SpreadsheetDocument.Open(input, true))
+        {
+            var sheet = package.WorkbookPart!.WorksheetParts.Single().Worksheet;
+            sheet.InsertAt(new S.SheetProperties(new S.PageSetupProperties { FitToPage = true }), 0);
+            foreach (var row in sheet.Descendants<S.Row>())
+            {
+                row.Height = 300;
+                row.CustomHeight = true;
+            }
+            sheet.Descendants<S.Cell>().Last().CellFormula = new("\"" + longText + "\"");
+            sheet.Append(new S.PageSetup { FitToWidth = 1, FitToHeight = 0 });
+        }
+        input.Position = 0;
+        using var output = new MemoryStream();
+        var measurer = new RecordingMeasurer();
+        var result = await ExcelConverter.RenderAsync(input, new()
+        {
+            OutputFormat = OutputFormat.Svg,
+            TextMeasurer = measurer,
+            ReadOptions = new() { FormulaDisplayMode = FormulaDisplayMode.Recalculate },
+            Selection = new() { Pages = [1] },
+        }, new SingleStreamOutputSink(output));
+        Assert.Single(result.Pages);
+        Assert.Contains(longText, measurer.Texts);
+        Assert.DoesNotContain("999", measurer.Texts);
+    }
+
+    [Fact]
     public async Task SelectedPageRecalculatesRepeatedTitleAndBody()
     {
         using var input = CreateWorkbook();

@@ -27,7 +27,7 @@ def change(name, path, old, new, test, occurrence=0):
     mutations.append((name, path, old, new, test, occurrence))
 
 change('skia-drawing-face', skia,
-       'using var font = new SKFont(primaryTypeface, size);',
+       'using var font = useDesignAdvances ? Core.Fonts.SkiaFontFace.CreateFont(primaryTypeface, size) : new SKFont(primaryTypeface, size);',
        'using var mutationFace = SKTypeface.FromFile(Path.Combine(AppContext.BaseDirectory, "Fonts/NotoSansMono-Regular.ttf"));\n'
        '            using var font = new SKFont(mutationFace, size);',
        'Skia_legacy_uses_selected_face_for_measurement_and_drawing')

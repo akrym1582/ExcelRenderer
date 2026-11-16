@@ -22,6 +22,9 @@ public sealed record TextLayoutResult(TextSize Size, IReadOnlyList<TextLayoutLin
         }
     }
 
+    /// <summary>Gets a value indicating whether fitted text preserves measured design advances in raster output.</summary>
+    internal bool UseDesignAdvances { get; init; }
+
     /// <summary>Gets a value indicating whether an effective size was explicitly finalized.</summary>
     internal bool HasExplicitEffectiveFontSize => _effectiveFontSize.HasValue;
 }

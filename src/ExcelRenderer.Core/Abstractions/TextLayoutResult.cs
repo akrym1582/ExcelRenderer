@@ -25,6 +25,9 @@ internal sealed record TextLayoutResult(TextSize Size, IReadOnlyList<TextLayoutL
     /// <summary>Gets borrowed source-layout metadata interpreted by the product adapter.</summary>
     internal Extensibility.ICoreExtensionData? ExtensionData { get; init; }
 
+    /// <summary>Gets a value indicating whether fitted text preserves measured design advances in raster output.</summary>
+    internal bool UseDesignAdvances { get; init; }
+
     /// <summary>Gets a value indicating whether an effective size was explicitly finalized.</summary>
     internal bool HasExplicitEffectiveFontSize => _effectiveFontSize.HasValue;
 }

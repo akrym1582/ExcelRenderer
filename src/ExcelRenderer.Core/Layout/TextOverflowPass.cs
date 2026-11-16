@@ -15,8 +15,7 @@ internal sealed class TextOverflowPass : IReportLayoutPass
         {
             var cell = context.Sheet.Cells[address];
             var style = cell.Style;
-            if (string.IsNullOrEmpty(cell.Text) || cell.SuppressTextOverflow ||
-                style.WrapText || style.ShrinkToFit || style.TextRotation != 0 || style.TopToBottom || layout.TextSize.Width <= layout.ContentBounds.Width)
+            if (!CanOverflow(cell) || layout.TextSize.Width <= layout.ContentBounds.Width)
             {
                 continue;
             }
@@ -58,17 +57,29 @@ internal sealed class TextOverflowPass : IReportLayoutPass
 
         var left = Math.Clamp(limits.Left, region.X, region.X + region.Width);
         var right = Math.Clamp(limits.Right, left, region.X + region.Width);
-        var textLeft = style.HorizontalAlignment switch
-        {
-            HorizontalAlignment.Right => layout.ContentBounds.X + layout.ContentBounds.Width - layout.TextSize.Width,
-            HorizontalAlignment.Center => layout.ContentBounds.X + ((layout.ContentBounds.Width - layout.TextSize.Width) / 2),
-            _ => layout.ContentBounds.X,
-        };
+        var textLeft = GetTextLeft(layout, style);
         var overhang = style.Font.Size / 4;
         var clipsLeft = style.HorizontalAlignment != HorizontalAlignment.Left && textLeft - overhang < left;
         var clipsRight = style.HorizontalAlignment != HorizontalAlignment.Right && textLeft + layout.TextSize.Width + overhang > right;
         return clipsLeft || clipsRight ? new(left, region.Y, right - left, region.Height) : null;
     }
+
+    /// <summary>Tests whether effective cell styling permits ordinary horizontal overflow.</summary>
+    /// <param name="cell">The effective cell.</param>
+    /// <returns>Whether the cell can overflow blank neighbors.</returns>
+    internal static bool CanOverflow(ReportCell cell) => !string.IsNullOrEmpty(cell.Text) && !cell.SuppressTextOverflow &&
+        !cell.Style.WrapText && !cell.Style.ShrinkToFit && cell.Style.TextRotation == 0 && !cell.Style.TopToBottom;
+
+    /// <summary>Resolves the original alignment anchor without moving overflowing text.</summary>
+    /// <param name="layout">The measured cell.</param>
+    /// <param name="style">The effective style.</param>
+    /// <returns>The unscaled text origin.</returns>
+    internal static double GetTextLeft(CellLayout layout, CellStyle style) => style.HorizontalAlignment switch
+    {
+        HorizontalAlignment.Right => layout.ContentBounds.X + layout.ContentBounds.Width - layout.TextSize.Width,
+        HorizontalAlignment.Center => layout.ContentBounds.X + ((layout.ContentBounds.Width - layout.TextSize.Width) / 2),
+        _ => layout.ContentBounds.X,
+    };
 
     /// <summary>Intersects optional drawing clips, preserving an empty intersection as an empty clip.</summary>
     /// <param name="first">The existing selection clip.</param>

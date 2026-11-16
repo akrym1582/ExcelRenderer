@@ -186,12 +186,16 @@ remain unverified against Excel.
 ## Selection boundary
 
 Rendering evaluates selected source cells and their reached dependencies. Explicit
-page selection uses a geometry-only prepass and the same candidate-selection method
+page selection normally uses a geometry-only prepass and the same candidate-selection method
 as page materialization, including repeated titles. Saved row/column geometry and
 object bounds determine the pages; cached text is not treated as a calculated result.
 The actual reader then calculates those candidates before formatting or text
 measurement. An unrelated cycle or unsupported formula on an excluded page does not
-stop rendering. Continuous output follows its existing region rules
+stop rendering. For sheets fitted to one page wide, trailing text changes the scale and therefore
+the vertical page boundaries. If any selected sheet uses that mode, the selected
+source regions are calculated and conditionally formatted before final page
+selection; formulas on otherwise unselected pages can therefore be evaluated.
+Continuous output follows its existing region rules
 rather than applying paginated print-area rules.
 
 Mapping's `RecalculateMappedWorkbook` defaults to true, calculating all formulas for

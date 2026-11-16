@@ -10,6 +10,7 @@ internal sealed class SheetLayoutPlan
     private readonly CoreLayoutPolicy policy;
     private readonly SheetGeometry geometry;
     private readonly CellRange? printArea;
+    private readonly double? textOverflowPrintEnd;
     private readonly IReadOnlyList<int> visibleColumns;
     private readonly IReadOnlyList<int> visibleRows;
     private readonly Dictionary<int, ColumnLayout> columns;
@@ -30,6 +31,7 @@ internal sealed class SheetLayoutPlan
         policy = context.Policy;
         geometry = context.Geometry;
         printArea = context.PrintArea;
+        textOverflowPrintEnd = context.TextOverflowPrintEnd;
         visibleColumns = context.VisibleColumns;
         visibleRows = context.VisibleRows;
         columns = context.ColumnLayouts;
@@ -111,6 +113,7 @@ internal sealed class SheetLayoutPlan
             CancellationToken = cancellationToken,
             Policy = policy,
             PrintArea = printArea,
+            TextOverflowPrintEnd = textOverflowPrintEnd,
             VisibleColumns = visibleColumns,
             VisibleRows = visibleRows,
             ObjectLayouts = objects,

@@ -86,6 +86,18 @@ internal sealed class PaginationPass
             titleRowEnd,
             titleHeight,
             !context.Sheet.PreserveLegacyMergePagination);
+        if (context.TextOverflowPrintEnd is { } textEnd)
+        {
+            var start = context.ColumnLayouts[bodyColumns[0]].X;
+            var repeatedWidth = start >= titleColumnEnd - 1e-7 ? titleWidth : 0;
+            var width = textEnd - start + repeatedWidth;
+            var availableWidth = settings.Width - settings.MarginLeft - settings.MarginRight;
+            if (width > 0 && double.IsFinite(width) && availableWidth > 0 && double.IsFinite(availableWidth))
+            {
+                scale = Math.Min(scale, availableWidth / width);
+            }
+        }
+
         var horizontalBands = PageBandBuilder.Create(
             bodyColumns,
             column => context.ColumnLayouts[column].X,

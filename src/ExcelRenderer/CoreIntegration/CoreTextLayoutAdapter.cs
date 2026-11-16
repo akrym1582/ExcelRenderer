@@ -50,6 +50,7 @@ internal sealed class CoreTextLayoutAdapter : CoreTextMeasurerAdapter, Core.Abst
         }).ToArray();
         var result = new Core.Abstractions.TextLayoutResult(new(value.Size.Width, value.Size.Height), immutable ? Array.AsReadOnly(lines) : lines)
         {
+            UseDesignAdvances = value.UseDesignAdvances,
             ExtensionData = immutable ? new FullTextLayoutData(value) : null,
         };
         return value.HasExplicitEffectiveFontSize ? result with { EffectiveFontSize = value.EffectiveFontSize } : result;
@@ -65,7 +66,7 @@ internal sealed class CoreTextLayoutAdapter : CoreTextMeasurerAdapter, Core.Abst
             return original.Layout;
         }
 
-        var result = new TextLayoutResult(new(value.Size.Width, value.Size.Height), value.Lines.Select(ConvertLine).ToArray());
+        var result = new TextLayoutResult(new(value.Size.Width, value.Size.Height), value.Lines.Select(ConvertLine).ToArray()) { UseDesignAdvances = value.UseDesignAdvances };
         return value.HasExplicitEffectiveFontSize ? result with { EffectiveFontSize = value.EffectiveFontSize } : result;
     }
 
@@ -89,7 +90,7 @@ internal sealed class CoreTextLayoutAdapter : CoreTextMeasurerAdapter, Core.Abst
 
     private static bool Unchanged(Core.Abstractions.TextLayoutResult value, TextLayoutResult original)
     {
-        if (value.Size.Width != original.Size.Width || value.Size.Height != original.Size.Height || value.HasExplicitEffectiveFontSize != original.HasExplicitEffectiveFontSize || value.EffectiveFontSize != original.EffectiveFontSize || value.Lines.Count != original.Lines.Count)
+        if (value.UseDesignAdvances != original.UseDesignAdvances || value.Size.Width != original.Size.Width || value.Size.Height != original.Size.Height || value.HasExplicitEffectiveFontSize != original.HasExplicitEffectiveFontSize || value.EffectiveFontSize != original.EffectiveFontSize || value.Lines.Count != original.Lines.Count)
         {
             return false;
         }

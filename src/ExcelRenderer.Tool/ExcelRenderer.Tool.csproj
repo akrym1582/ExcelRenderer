@@ -17,7 +17,7 @@
     <RepositoryUrl>https://github.com/akrym1582/ExcelRenderer</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageTags>excel xlsx pdf excel-to-pdf xlsx-to-pdf cli dotnet-tool postscript png svg</PackageTags>
+    <PackageTags>excel xlsx pdf excel-to-pdf xlsx-to-pdf cli dotnet-tool postscript png svg render renderer rendering convert converter conversion</PackageTags>
   </PropertyGroup>
   <ItemGroup>
     <None Include="../../docs/nuget/ExcelRenderer.Tool.md" Pack="true" PackagePath="/README.md" />

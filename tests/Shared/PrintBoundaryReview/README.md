@@ -1,6 +1,12 @@
-# Automatic print-boundary clipping
+# Automatic print-boundary clipping (historical)
 
-Horizontal cell-text overflow now stops at the resolved print boundary even when
+This directory records the superseded clipping behavior from PR #127. Its PDFs,
+manifest and proof tests remain historical evidence. Current output comparisons
+use the original references again; these clipped PDFs are no longer active
+expectations. Current overflow and one-page fitting are covered by the Core and
+main `TextOverflowTests` / `CellTextOverflowTests` suites.
+
+At the recorded revision, horizontal cell-text overflow stops at the resolved print boundary even when
 no print area is saved in the workbook. The supplied paper may be wider than the
 last used column; that extra space no longer permits cell text to escape the
 resolved print range. Ordinary and merged cells use the same shared Core rule.

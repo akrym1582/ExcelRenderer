@@ -6,7 +6,7 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-    <Version>1.11.1</Version>
+    <Version>1.11.2</Version>
     <PackageId>ExcelRenderer.Mapping</PackageId>
     <Description>Fill Excel templates with C# objects or JSON, including nested row arrays.</Description>
     <PackageTags>excel xlsx excel-template json-to-excel csharp reporting</PackageTags>

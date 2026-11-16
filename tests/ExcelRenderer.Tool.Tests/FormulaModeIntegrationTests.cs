@@ -113,6 +113,7 @@ public sealed partial class ToolIntegrationTests
         Directory.CreateDirectory(_directory);
         var input = Path.Combine(_directory, "formula.xlsx");
         RetainedWorkbook.Copy("FormulaModeIntegrationTests.RenderingCommandsAcceptSavedFormulaDisplay.F08CB6342C0F4ADB.xlsx", input);
+        WidenFirstInputColumn(input);
 
         using (var zip = ZipFile.Open(input, ZipArchiveMode.Update))
         {

@@ -1,0 +1,329 @@
+{
+  "full/rich-theme": {
+    "historical_pdf_sha256": "7f32b74d0d0440afd2935b20dd6426c04394165dd3ae910336a88f16cc271216",
+    "pdf": "rich-theme.pdf",
+    "pdf_sha256": "1917d61738a9416bf2c432c0c2f06cde4ac754cdf47be55c4f8b3b94b3d4055c",
+    "historical_expected_sha256": "a2c144cfa5cc306f1783df35c26270f480d1eafcef7ecb32541c4fb053da8595",
+    "commandFingerprints": {
+      "1": "30BC9016889C63F2ABBCAE5445F6ED6579AF10500F048BADA77AA63BF0B88333"
+    },
+    "pages": {
+      "1": {
+        "clip": {
+          "X": 54,
+          "Y": 0,
+          "Width": 51.75,
+          "Height": 792
+        },
+        "before": {
+          "contentSha256": "2a55121316aa6df5996a4b212554741f06bd43571343a29cee091d69e8220f5f",
+          "paintSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "rasterSha256": {
+            "144": "5c5003f98bf8b32102deeae6187f53a55004a98d92e433ea451e513f9121290a",
+            "300": "121bdb9ef19a02f4117a747fd54bc8e4eb384410093aea707ee63a61dee13797"
+          }
+        },
+        "after": {
+          "contentSha256": "e79676bebcce5e3bcc21af57713d2ffe539c07bc3781dfa96a8562f7067b5125",
+          "paintSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "rasterSha256": {
+            "144": "66d43f2d6a29e9247a69917f15385c6e60b8130cab9869dab8a31bde5594672a",
+            "300": "4c3c4cf92bc6a51db628d74059c02d999243b4171c61fbcc125548fc35b9e541"
+          }
+        },
+        "commands": [
+          "DrawViewportCommand{\"Clip\":{\"X\":54,\"Y\":0,\"Width\":51.75,\"Height\":792},\"OffsetX\":0,\"OffsetY\":0,\"children\":[\"DrawTextCommand{\\u0022Bounds\\u0022:{\\u0022X\\u0022:54.5,\\u0022Y\\u0022:54.5,\\u0022Width\\u0022:50.75,\\u0022Height\\u0022:14},\\u0022Text\\u0022:\\u0022inherited\\u0022,\\u0022Style\\u0022:{\\u0022Font\\u0022:{\\u0022Family\\u0022:\\u0022Noto Sans JP\\u0022,\\u0022Size\\u0022:22,\\u0022Bold\\u0022:true,\\u0022Italic\\u0022:false,\\u0022Underline\\u0022:false,\\u0022Color\\u0022:{\\u0022Red\\u0022:0,\\u0022Green\\u0022:0,\\u0022Blue\\u0022:0,\\u0022Alpha\\u0022:255}},\\u0022Background\\u0022:null,\\u0022Border\\u0022:null,\\u0022HorizontalAlignment\\u0022:0,\\u0022VerticalAlignment\\u0022:2,\\u0022WrapText\\u0022:false,\\u0022ShrinkToFit\\u0022:false,\\u0022Indent\\u0022:0,\\u0022TextRotation\\u0022:0,\\u0022TopToBottom\\u0022:false},\\u0022EffectiveFontSize\\u0022:22,\\u0022lines\\u0022:[{\\u0022Text\\u0022:\\u0022inherited\\u0022,\\u0022Width\\u0022:93.72,\\u0022Ascent\\u0022:25.51999855041504,\\u0022Descent\\u0022:6.335999488830566,\\u0022runs\\u0022:[{\\u0022X\\u0022:0,\\u0022Advance\\u0022:93.72,\\u0022Font\\u0022:{\\u0022Family\\u0022:\\u0022Noto Sans JP\\u0022,\\u0022Size\\u0022:22,\\u0022Bold\\u0022:true,\\u0022Italic\\u0022:false,\\u0022Underline\\u0022:false,\\u0022Color\\u0022:{\\u0022Red\\u0022:255,\\u0022Green\\u0022:128,\\u0022Blue\\u0022:128,\\u0022Alpha\\u0022:255}},\\u0022Text\\u0022:\\u0022inherited\\u0022,\\u0022SourceText\\u0022:\\u0022inherited\\u0022,\\u0022GlyphId\\u0022:null,\\u0022ColorEmojiGlyphId\\u0022:null,\\u0022FaceId\\u0022:\\u0022D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC\\u0022}]}]}\"]}"
+        ],
+        "historical_commands_sha256": "be614d9b9f5440300c8fa359d702d0d336365d6b3c7ccf0f50ea0cfb89d16882"
+      }
+    }
+  },
+  "full/pages-selection": {
+    "historical_pdf_sha256": "5cf49703fc0dae41f4398041d5261f0e33edadea7636081af63207227c314bdd",
+    "pdf": "pages-selection.pdf",
+    "pdf_sha256": "affbecbe9a99ec685507f5febbe8245b64565ec917eef9fee48c9a8fdf4a5a88",
+    "historical_expected_sha256": "3324a3404c70f6c571cbf74102a8564f97ee438aeac38d2e9cb0b4dc08705d78",
+    "commandFingerprints": {
+      "1": "F313CC2EEEF3D1786E70D77713CD7ED91286DB1D17457B84E65BBABF509351A2",
+      "2": "91BBBEB6B589ECB3A7B6B46361386E2D5004BD6FFF1C0F3DE6732EDDC7721C05"
+    },
+    "pages": {
+      "1": {
+        "clip": {
+          "X": 54,
+          "Y": 0,
+          "Width": 45.75,
+          "Height": 612
+        },
+        "before": {
+          "contentSha256": "537cdfeff92e90268407cb20e37cea852a95c942f310914de295fc639400a146",
+          "paintSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "rasterSha256": {
+            "144": "61ab2b38be07487f96292714b608c74412095f7e7de784d879ef5363f1f3fd10",
+            "300": "7e38ab76add34fd5089a2af5265dc357b951d1b12692d778f147a03519e9405f"
+          }
+        },
+        "after": {
+          "contentSha256": "5a12bc5eb2c80a0ed6eadc01c74073f7e434ca0079288c42ed4b64b876758c96",
+          "paintSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "rasterSha256": {
+            "144": "daa89e87bd7744fe778a3931dd250275178df27d4b620281a14000a3d1b2f3c0",
+            "300": "4f6df5d42ab6dd0a03c9194bd2cc99d4338f20feffc1d4a30a9d36fa9781bec0"
+          }
+        },
+        "commands": [
+          "DrawViewportCommand{\"Clip\":{\"X\":54,\"Y\":0,\"Width\":45.75,\"Height\":612},\"OffsetX\":0,\"OffsetY\":0,\"children\":[\"DrawTextCommand{\\u0022Bounds\\u0022:{\\u0022X\\u0022:54.5,\\u0022Y\\u0022:54.5,\\u0022Width\\u0022:44.75,\\u0022Height\\u0022:14},\\u0022Text\\u0022:\\u0022Second sheet\\u0022,\\u0022Style\\u0022:{\\u0022Font\\u0022:{\\u0022Family\\u0022:\\u0022Calibri\\u0022,\\u0022Size\\u0022:11,\\u0022Bold\\u0022:false,\\u0022Italic\\u0022:false,\\u0022Underline\\u0022:false,\\u0022Color\\u0022:{\\u0022Red\\u0022:0,\\u0022Green\\u0022:0,\\u0022Blue\\u0022:0,\\u0022Alpha\\u0022:255}},\\u0022Background\\u0022:null,\\u0022Border\\u0022:null,\\u0022HorizontalAlignment\\u0022:0,\\u0022VerticalAlignment\\u0022:2,\\u0022WrapText\\u0022:false,\\u0022ShrinkToFit\\u0022:false,\\u0022Indent\\u0022:0,\\u0022TextRotation\\u0022:0,\\u0022TopToBottom\\u0022:false},\\u0022EffectiveFontSize\\u0022:11,\\u0022lines\\u0022:[{\\u0022Text\\u0022:\\u0022Second sheet\\u0022,\\u0022Width\\u0022:69.08,\\u0022Ascent\\u0022:12.75999927520752,\\u0022Descent\\u0022:3.167999744415283,\\u0022runs\\u0022:[{\\u0022X\\u0022:0,\\u0022Advance\\u0022:69.08,\\u0022Font\\u0022:null,\\u0022Text\\u0022:\\u0022Second sheet\\u0022,\\u0022SourceText\\u0022:\\u0022Second sheet\\u0022,\\u0022GlyphId\\u0022:null,\\u0022ColorEmojiGlyphId\\u0022:null,\\u0022FaceId\\u0022:\\u0022D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC\\u0022}]}]}\"]}",
+          "DrawTextCommand{\"Bounds\":{\"X\":54,\"Y\":0,\"Width\":684,\"Height\":54},\"Text\":\"10/18/2026 12:34 1 / 1\",\"Style\":{\"Font\":{\"Family\":\"Noto Sans JP\",\"Size\":10,\"Bold\":false,\"Italic\":false,\"Underline\":false,\"Color\":null},\"Background\":null,\"Border\":null,\"HorizontalAlignment\":0,\"VerticalAlignment\":1,\"WrapText\":false,\"ShrinkToFit\":false,\"Indent\":0,\"TextRotation\":0,\"TopToBottom\":false},\"EffectiveFontSize\":10,\"lines\":[{\"Text\":\"10/18/2026 12:34 1 / 1\",\"Width\":101.2,\"Ascent\":11.59999942779541,\"Descent\":2.879999876022339,\"runs\":[{\"X\":0,\"Advance\":101.2,\"Font\":null,\"Text\":\"10/18/2026 12:34 1 / 1\",\"SourceText\":\"10/18/2026 12:34 1 / 1\",\"GlyphId\":null,\"ColorEmojiGlyphId\":null,\"FaceId\":\"D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC\"}]}]}"
+        ],
+        "historical_commands_sha256": "312f70f891bb64cafda30711adb8ccd6a4db57a7d3d45641438b1a5759a80047"
+      },
+      "2": {
+        "clip": {
+          "X": 54,
+          "Y": 0,
+          "Width": 45.75,
+          "Height": 841.8900146484375
+        },
+        "before": {
+          "contentSha256": "a95b425e25ba1f84128db0d24f9ff7386a9e16691192b6337f0356f548be6c56",
+          "paintSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "rasterSha256": {
+            "144": "75aeb4002a410b46f2f9eb72e2edb1eee76558a5eb6e698e2287791d0beca205",
+            "300": "052e6d21f15095b2c144c5140b5cb00642d2cd6d310cba06032d6fff8f436fd1"
+          }
+        },
+        "after": {
+          "contentSha256": "a95b425e25ba1f84128db0d24f9ff7386a9e16691192b6337f0356f548be6c56",
+          "paintSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "rasterSha256": {
+            "144": "75aeb4002a410b46f2f9eb72e2edb1eee76558a5eb6e698e2287791d0beca205",
+            "300": "052e6d21f15095b2c144c5140b5cb00642d2cd6d310cba06032d6fff8f436fd1"
+          }
+        },
+        "commands": [
+          "DrawTextCommand{\"Bounds\":{\"X\":54.5,\"Y\":69.5,\"Width\":44.75,\"Height\":14},\"Text\":\"Page two\",\"Style\":{\"Font\":{\"Family\":\"Calibri\",\"Size\":11,\"Bold\":false,\"Italic\":false,\"Underline\":false,\"Color\":{\"Red\":0,\"Green\":0,\"Blue\":0,\"Alpha\":255}},\"Background\":null,\"Border\":null,\"HorizontalAlignment\":0,\"VerticalAlignment\":2,\"WrapText\":false,\"ShrinkToFit\":false,\"Indent\":0,\"TextRotation\":0,\"TopToBottom\":false},\"EffectiveFontSize\":11,\"lines\":[{\"Text\":\"Page two\",\"Width\":47.553,\"Ascent\":12.75999927520752,\"Descent\":3.167999744415283,\"runs\":[{\"X\":0,\"Advance\":47.553,\"Font\":null,\"Text\":\"Page two\",\"SourceText\":\"Page two\",\"GlyphId\":null,\"ColorEmojiGlyphId\":null,\"FaceId\":\"D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC\"}]}]}"
+        ],
+        "historical_commands_sha256": "3253df370da84fbbe7327de80a8337a8ac5d69144f0b8ec26bcd487c77759ab1"
+      }
+    }
+  },
+  "full/missing-glyph": {
+    "historical_pdf_sha256": "90cee5413d48e5964a4999ad46bc25ce66d1486d49d9406b3235d13b345ad4f4",
+    "pdf": "missing-glyph.pdf",
+    "pdf_sha256": "6bbcb034a2ff66b301136ba0e5f8d71d7c510ae00f597084a00df742aaa0b697",
+    "historical_expected_sha256": "d7f5eda498b50a600eab9b897d0be3f53db1bb74197a54a6ccd1eaa884dbf3dc",
+    "commandFingerprints": {
+      "1": "9C923B5382E751D35FCF041BFCEF7BE1FE5DEDEA49436C9A2DC69CB1956659AE"
+    },
+    "pages": {
+      "1": {
+        "clip": {
+          "X": 54,
+          "Y": 0,
+          "Width": 45.75,
+          "Height": 792
+        },
+        "before": {
+          "contentSha256": "13115326b7bf5b5b683aaa86ec6518490d85a3181682a22850848ad711abcc06",
+          "paintSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "rasterSha256": {
+            "144": "ca1fcf116297666211898bdbe05013fab409570fad6f27202e63f7fe0fb53818",
+            "300": "f34c0ce58e4476d9450454ca2013fc4c82c62e21b96a685f9d40703848078970"
+          }
+        },
+        "after": {
+          "contentSha256": "fa6d7375abee3c49cd564214df63cab7ba249f4188a4cfaf9b5f7d4d96be621c",
+          "paintSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "rasterSha256": {
+            "144": "166fd1647993f39a88701ad57c091c9bdc0c71220db7a627e8d78926405b8d9d",
+            "300": "b1569c4a4eb611f88e3315ce1dade46dc843d5ab5298cebe84c3c593b7450275"
+          }
+        },
+        "commands": [
+          "DrawViewportCommand{\"Clip\":{\"X\":54,\"Y\":0,\"Width\":45.75,\"Height\":792},\"OffsetX\":0,\"OffsetY\":0,\"children\":[\"DrawTextCommand{\\u0022Bounds\\u0022:{\\u0022X\\u0022:54.5,\\u0022Y\\u0022:54.5,\\u0022Width\\u0022:44.75,\\u0022Height\\u0022:14},\\u0022Text\\u0022:\\u0022missing \\\\uE000\\u0022,\\u0022Style\\u0022:{\\u0022Font\\u0022:{\\u0022Family\\u0022:\\u0022Calibri\\u0022,\\u0022Size\\u0022:11,\\u0022Bold\\u0022:false,\\u0022Italic\\u0022:false,\\u0022Underline\\u0022:false,\\u0022Color\\u0022:{\\u0022Red\\u0022:0,\\u0022Green\\u0022:0,\\u0022Blue\\u0022:0,\\u0022Alpha\\u0022:255}},\\u0022Background\\u0022:null,\\u0022Border\\u0022:null,\\u0022HorizontalAlignment\\u0022:0,\\u0022VerticalAlignment\\u0022:2,\\u0022WrapText\\u0022:false,\\u0022ShrinkToFit\\u0022:false,\\u0022Indent\\u0022:0,\\u0022TextRotation\\u0022:0,\\u0022TopToBottom\\u0022:false},\\u0022EffectiveFontSize\\u0022:11,\\u0022lines\\u0022:[{\\u0022Text\\u0022:\\u0022missing \\\\uE000\\u0022,\\u0022Width\\u0022:52.91,\\u0022Ascent\\u0022:12.75999927520752,\\u0022Descent\\u0022:3.167999744415283,\\u0022runs\\u0022:[{\\u0022X\\u0022:0,\\u0022Advance\\u0022:52.91,\\u0022Font\\u0022:null,\\u0022Text\\u0022:\\u0022missing \\\\uE000\\u0022,\\u0022SourceText\\u0022:\\u0022missing \\\\uE000\\u0022,\\u0022GlyphId\\u0022:null,\\u0022ColorEmojiGlyphId\\u0022:null,\\u0022FaceId\\u0022:\\u0022D930D5D52D15231C283089760F84584272AD5E37E14607BA0D19C798E7A9CAEC\\u0022}]}]}\"]}"
+        ],
+        "historical_commands_sha256": "8d367e62ad6541f9b69a76c5697675659390fdf3bf1313a028a7f348ec2050d7"
+      }
+    }
+  },
+  "appearance/main/07-multiple-sheets": {
+    "input": "tests/ExcelRenderer.Tests/SampleInputs/07-multiple-sheets.xlsx",
+    "input_sha256": "2da1636a03384c0aa0ecb14ec3183631f3c41a90f1348693e795c329c0cae20e",
+    "historical_pdf_sha256": "63f63b4d0b2ae4a57361d489384f7633ef5396fec6b68009752c5478f476762f",
+    "pdf": "07-multiple-sheets-main.pdf",
+    "pdf_sha256": "f1052403bde02a3b15d1d067e81018a61e936e27d5842a9c275aba8f95d59cca",
+    "pages": {
+      "1": {
+        "clip": {
+          "X": 54,
+          "Y": 0,
+          "Width": 45.75,
+          "Height": 792.0
+        },
+        "before": {
+          "contentSha256": "5ff758b5c57a263dd9e45008424cdd43165c30e4d922092e2b57b86b5c93acc4",
+          "paintSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "rasterSha256": {
+            "144": "d8b533abbcbeef35b2e2f20e3f815dc66ead05fe135d8ee1fcfb94f5ea3b086d",
+            "300": "b04b099dd8ba3597501120727c971067e900fe4f43b7cb70927f8228cc8166c9"
+          }
+        },
+        "after": {
+          "contentSha256": "8e663c64b4cb78640d3bae0a686870cc62fbe878ca5293e418a89cc227d93a8e",
+          "paintSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "rasterSha256": {
+            "144": "33cd62de52810d611381bb298530af7dbdadcb8f5b8811e79c5ca0acf1b05a82",
+            "300": "49d1cc5e5f4451c0984e1d96bb7fdae510e166330f6ea4f5ee632a188b1ff2bc"
+          }
+        }
+      },
+      "2": {
+        "clip": {
+          "X": 54,
+          "Y": 0,
+          "Width": 45.75,
+          "Height": 792.0
+        },
+        "before": {
+          "contentSha256": "cf68b6cea63b28701964aee860dbd05693c246217870df06cbe2622e6e11e775",
+          "paintSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "rasterSha256": {
+            "144": "746cd143b56051182443f5dd67c85d4c4c9b7c80db2c351d8a3163b843399ab3",
+            "300": "f4f33ae13e621b8610fa55a72fdbda51c4e10eed5b3943525b5545d22e1c5a1c"
+          }
+        },
+        "after": {
+          "contentSha256": "e3be53ab06928d08e6a87cc39d250a0e3960a2115c6e7c18b0f65b0fb67b4817",
+          "paintSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "rasterSha256": {
+            "144": "13d5c50ed0f2ce539435b1dbb70d2b2e0458c79407d66c743c30d0f6d9f30cb4",
+            "300": "2c115442457d05c21f3234c527c8600f80b99317c75eb1dfbcb9278827cdaaf7"
+          }
+        }
+      }
+    }
+  },
+  "appearance/main/cf-phase1": {
+    "input": "docs/validation/conditional-formatting/representative.xlsx",
+    "input_sha256": "2de333cf34b705aa6a0cec71a69c61a85df446302831cc4157078e7a83c39826",
+    "historical_pdf_sha256": "6e415dd9987f6ceb017e66497a59e41154ec483ac364cb18dfd5e9979b1d78a3",
+    "pdf": "cf-phase1-main.pdf",
+    "pdf_sha256": "387895eb7d6f964ba32adb22668d9874c135cefdd9168c8c918749a5f68ff3be",
+    "pages": {
+      "1": {
+        "clip": {
+          "X": 54,
+          "Y": 0,
+          "Width": 45.75,
+          "Height": 792.0
+        },
+        "before": {
+          "contentSha256": "759c1ef0c6689b7bdf771bc4933fc7486dec50d306bfbca1a5bee9b53745a1fb",
+          "paintSha256": "f076e7fa579897ccb978998246902bb6bfbdf684e22af3d2b00eb1c2ca834dae",
+          "rasterSha256": {
+            "144": "dc6699e39535b52630e0cfbb4232b8158c38eb37056beb14a772dfcc946dd606",
+            "300": "34a53201b7ecab8257c11a38e368ab5185025bc187342399967adbc10c3e70f9"
+          }
+        },
+        "after": {
+          "contentSha256": "034cbfb10cbf5987a284bf6b5a4629ecd391a6cc0b8126b17f7fec50808212aa",
+          "paintSha256": "f076e7fa579897ccb978998246902bb6bfbdf684e22af3d2b00eb1c2ca834dae",
+          "rasterSha256": {
+            "144": "a7b3b23524f2428cb3a9fc4e6f63dafcfa7e3d09463a68584ce181354798f089",
+            "300": "8807e28bbf1cd9064f14309d11b3a46291751ac4a89b5fe93f47d4a4e5d0171a"
+          }
+        }
+      }
+    }
+  },
+  "appearance/core/07-multiple-sheets": {
+    "input": "tests/ExcelRenderer.Tests/SampleInputs/07-multiple-sheets.xlsx",
+    "input_sha256": "2da1636a03384c0aa0ecb14ec3183631f3c41a90f1348693e795c329c0cae20e",
+    "historical_pdf_sha256": "63f63b4d0b2ae4a57361d489384f7633ef5396fec6b68009752c5478f476762f",
+    "pdf": "07-multiple-sheets-core.pdf",
+    "pdf_sha256": "f1052403bde02a3b15d1d067e81018a61e936e27d5842a9c275aba8f95d59cca",
+    "pages": {
+      "1": {
+        "clip": {
+          "X": 54,
+          "Y": 0,
+          "Width": 45.75,
+          "Height": 792.0
+        },
+        "before": {
+          "contentSha256": "5ff758b5c57a263dd9e45008424cdd43165c30e4d922092e2b57b86b5c93acc4",
+          "paintSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "rasterSha256": {
+            "144": "d8b533abbcbeef35b2e2f20e3f815dc66ead05fe135d8ee1fcfb94f5ea3b086d",
+            "300": "b04b099dd8ba3597501120727c971067e900fe4f43b7cb70927f8228cc8166c9"
+          }
+        },
+        "after": {
+          "contentSha256": "8e663c64b4cb78640d3bae0a686870cc62fbe878ca5293e418a89cc227d93a8e",
+          "paintSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "rasterSha256": {
+            "144": "33cd62de52810d611381bb298530af7dbdadcb8f5b8811e79c5ca0acf1b05a82",
+            "300": "49d1cc5e5f4451c0984e1d96bb7fdae510e166330f6ea4f5ee632a188b1ff2bc"
+          }
+        }
+      },
+      "2": {
+        "clip": {
+          "X": 54,
+          "Y": 0,
+          "Width": 45.75,
+          "Height": 792.0
+        },
+        "before": {
+          "contentSha256": "cf68b6cea63b28701964aee860dbd05693c246217870df06cbe2622e6e11e775",
+          "paintSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "rasterSha256": {
+            "144": "746cd143b56051182443f5dd67c85d4c4c9b7c80db2c351d8a3163b843399ab3",
+            "300": "f4f33ae13e621b8610fa55a72fdbda51c4e10eed5b3943525b5545d22e1c5a1c"
+          }
+        },
+        "after": {
+          "contentSha256": "e3be53ab06928d08e6a87cc39d250a0e3960a2115c6e7c18b0f65b0fb67b4817",
+          "paintSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "rasterSha256": {
+            "144": "13d5c50ed0f2ce539435b1dbb70d2b2e0458c79407d66c743c30d0f6d9f30cb4",
+            "300": "2c115442457d05c21f3234c527c8600f80b99317c75eb1dfbcb9278827cdaaf7"
+          }
+        }
+      }
+    }
+  },
+  "appearance/core/cf-phase1": {
+    "input": "docs/validation/conditional-formatting/representative.xlsx",
+    "input_sha256": "2de333cf34b705aa6a0cec71a69c61a85df446302831cc4157078e7a83c39826",
+    "historical_pdf_sha256": "a8a7667f28675425a62c02bea4eed62a14fbe8d51ff139c07c6de998275041e2",
+    "pdf": "cf-phase1-core.pdf",
+    "pdf_sha256": "ec5828b1785115c8a4030c38369509417d7f3e4970e8008c05516c2c85e51617",
+    "pages": {
+      "1": {
+        "clip": {
+          "X": 54,
+          "Y": 0,
+          "Width": 45.75,
+          "Height": 792.0
+        },
+        "before": {
+          "contentSha256": "9b113509b4dc6bde81aacb0d135c734bc4117ed5d2525e81f14e169e75b6f39d",
+          "paintSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "rasterSha256": {
+            "144": "9c668ee6b2d02d8dbb4e23c824c0897b674ecdb70ce748b0be74d7b99f898418",
+            "300": "7914148115b57c0f1610a0b766f14550f16c88b2a8b694a53f00e89195848d03"
+          }
+        },
+        "after": {
+          "contentSha256": "e655b50b1d041a706814e6a9d2873c579a24caae6d858a27e24f328e6cd4d1f4",
+          "paintSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "rasterSha256": {
+            "144": "e7f9d1825f2ea6697594f4fd5c6ccc875cf86ac65567b198f92e255b4044ab26",
+            "300": "8074df665429e58d3bbba040b9b01d19173dd75160a15fc12ac3eb5fda24da49"
+          }
+        }
+      }
+    }
+  }
+}

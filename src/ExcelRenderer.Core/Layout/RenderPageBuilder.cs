@@ -295,7 +295,7 @@ internal sealed class RenderPageBuilder
         }
 
         var printableRight = (_context.Sheet.PageSettings.Width - _context.Sheet.PageSettings.MarginRight - originX) / _scale;
-        var sourceRight = _context.Sheet.PrintArea is not null || _context.Sheet.RequestedRange is not null ? LastColumnEnd() : printableRight;
+        var sourceRight = Math.Min(LastColumnEnd(), printableRight);
         var left = placement.Horizontal.Start;
         var right = Math.Min(placement.Horizontal.End, sourceRight);
         if (_titleColumns.Count > 0)

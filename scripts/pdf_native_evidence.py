@@ -9,6 +9,7 @@ from fontTools.ttLib import TTFont
 from pdf_geometry_evidence import verify_outlines
 from shared_border_evidence import evidence as shared_border_evidence
 from print_origin_evidence import evidence as print_origin_evidence
+from print_boundary_evidence import checked_pdf as checked_boundary_pdf
 
 ROOT = Path(__file__).resolve().parents[1]
 NUMBER = re.compile(r'(?<![A-Za-z_])[-+]?(?:\d+\.?\d*|\.\d+)(?![A-Za-z_])')
@@ -115,7 +116,8 @@ def evidence(directory):
     expected_hash = manifest['files'][directory.name + '/skiasharp.pdf']
     if hashlib.sha256(baseline.read_bytes()).hexdigest() != expected_hash:
         errors.append('Frozen B PDF differs from its recorded hash')
-    old, new, raw = fitz.open(baseline), fitz.open(current), fitz.open(raw_path)
+    boundary = checked_boundary_pdf('full/' + directory.name, baseline)
+    old, new, raw = fitz.open(boundary or baseline), fitz.open(current), fitz.open(raw_path)
     # A single-revision structural save replaces the original native-prefix contract.
     # Preserve every encoded stream at its original object identity, exactly once.
     raw_streams = {xref: hashlib.sha256(raw.xref_stream_raw(xref)).hexdigest()

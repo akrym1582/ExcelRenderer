@@ -73,7 +73,7 @@ public sealed class MainCoreExpectedDifferenceTests
         stream.Write(MainCoreParityTests.Fixture("portrait"));
         using (var workbook = SpreadsheetDocument.Open(stream, true))
         {
-            SdkWorkbook.AddSheet(workbook.WorkbookPart!, new S.Worksheet(new S.SheetData(new S.Row(SdkWorkbook.Text("A1", "HIDDEN SHEET")) { RowIndex = 1 })), "hidden", S.SheetStateValues.Hidden);
+            SdkWorkbook.AddSheet(workbook.WorkbookPart!, new S.Worksheet(new S.Columns(new S.Column { Min = 1, Max = 1, Width = 24, CustomWidth = true }), new S.SheetData(new S.Row(SdkWorkbook.Text("A1", "HIDDEN SHEET")) { RowIndex = 1 })), "hidden", S.SheetStateValues.Hidden);
         }
         var (main, core, _, _) = await MainCoreParityTests.Render(stream.ToArray(), null);
         await Retain("default-selection", stream.ToArray(), main, core);

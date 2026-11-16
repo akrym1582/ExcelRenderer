@@ -1,5 +1,7 @@
+using DocumentFormat.OpenXml.Packaging;
 using ExcelRenderer.TestFixtures;
 using Xunit;
+using S = DocumentFormat.OpenXml.Spreadsheet;
 
 namespace ExcelRenderer.Tool.Tests;
 
@@ -51,6 +53,7 @@ public sealed partial class ToolIntegrationTests
 
         var template = Path.Combine(_directory, "template.xlsx");
         RetainedWorkbook.Copy("BackendIntegrationTests.ExplicitOpenXmlMappingAndReaderReachAllCommands.68C70801705FC28D.xlsx", template);
+        WidenFirstInputColumn(template);
         var data = Path.Combine(_directory, "data.json");
         await File.WriteAllTextAsync(data, """{"message":"MappedOpenXmlValue"}""");
         var output = Path.Combine(_directory, "result");
@@ -73,4 +76,23 @@ public sealed partial class ToolIntegrationTests
             Assert.Contains(reader.EnumerateCells(1), cell => cell.Value.Text == "MappedOpenXmlValue");
         }
     }
+    private static void WidenFirstInputColumn(string path)
+    {
+        using var workbook = SpreadsheetDocument.Open(path, true);
+        var sheet = workbook.WorkbookPart!.WorksheetParts.First().Worksheet;
+        var columns = sheet.GetFirstChild<S.Columns>();
+        if (columns is null)
+        {
+            columns = sheet.InsertBefore(new S.Columns(), sheet.GetFirstChild<S.SheetData>()!);
+        }
+        var first = columns.Elements<S.Column>().FirstOrDefault(column => column.Min!.Value <= 1 && column.Max!.Value >= 1);
+        if (first is null)
+        {
+            first = columns.PrependChild(new S.Column { Min = 1, Max = 1 });
+        }
+        first.Width = 32;
+        first.CustomWidth = true;
+        sheet.Save();
+    }
+
 }

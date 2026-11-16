@@ -109,6 +109,16 @@ public sealed class OpenXmlIntegrationTests
                 expected = printAreaUpdate["new"].Where(pair => pair.Key.StartsWith(format + "/", StringComparison.Ordinal)).ToDictionary();
             }
 
+            var boundaryUpdates = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, Dictionary<string, string>>>>(
+                File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "ReaderGolden", "print-boundary-artifacts.json")))!;
+            if (boundaryUpdates.TryGetValue(name, out var boundaryUpdate))
+            {
+                Assert.Equal(boundaryUpdate["input"]["sha256"], ReaderSnapshot.Hash(File.ReadAllBytes(path)));
+                var previous = boundaryUpdate["old"].Where(pair => pair.Key.StartsWith(format + "/", StringComparison.Ordinal)).ToDictionary();
+                Assert.Equal(previous.OrderBy(pair => pair.Key), expected.OrderBy(pair => pair.Key));
+                expected = boundaryUpdate["new"].Where(pair => pair.Key.StartsWith(format + "/", StringComparison.Ordinal)).ToDictionary();
+            }
+
             Assert.Equal(expected.Keys.Order(), hashes.Keys.Order());
             foreach (var pair in expected) Assert.True(pair.Value == hashes[pair.Key], name + " " + pair.Key + " differs from retained output");
         }

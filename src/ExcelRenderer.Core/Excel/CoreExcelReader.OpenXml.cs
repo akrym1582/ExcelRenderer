@@ -371,7 +371,7 @@ internal partial class CoreExcelReader
                 {
                     HasStoredValue = sourceCell.Value.Type != CellValueType.Blank || sourceCell.Formula is not null,
                     SuppressTextOverflow = Attribute(originalStyle.Alignment, "horizontal") is not (null or "general" or "left" or "right" or "center") ||
-                        Number(originalStyle.Alignment, "textRotation", 0) != 0,
+                        style.TextRotation != 0 || style.TopToBottom,
                     FormulaSharedIndex = cell.Formula?.SharedIndex,
                     FormulaMasterAddress = cell.Formula?.MasterAddress is { } master ? new(master.Row, master.Column) : null,
                 };

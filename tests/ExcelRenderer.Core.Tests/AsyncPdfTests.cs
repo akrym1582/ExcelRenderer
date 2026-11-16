@@ -10,7 +10,7 @@ public sealed class AsyncPdfTests
     [Fact]
     public async Task Core_awaits_nonseekable_output_without_flushing_or_disposing_it()
     {
-        using var input = TestSupport.Workbook();
+        using var input = TestSupport.Workbook(TestSupport.WidenFirstColumn);
         var gate = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         using var output = new AsyncOnlyWriteStream { Gate = gate };
         var saved = false;

@@ -14,7 +14,7 @@
     <Title>ExcelRenderer</Title>
     <Description>Convert Excel to PDF in C#. Render XLSX worksheets to PDF, PostScript, PNG and SVG.</Description>
     <Authors>akrym1582</Authors>
-    <PackageTags>excel xlsx pdf excel-to-pdf xlsx-to-pdf csharp reporting postscript png svg openxml skia</PackageTags>
+    <PackageTags>excel xlsx pdf excel-to-pdf xlsx-to-pdf csharp reporting postscript png svg openxml skia render renderer rendering convert converter conversion</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/akrym1582/ExcelRenderer</RepositoryUrl>
     <RepositoryType>git</RepositoryType>

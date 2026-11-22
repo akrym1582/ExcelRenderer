@@ -32,7 +32,7 @@ internal sealed class TemplateCell
     internal bool IsPageBreak { get; set; }
 
     /// <summary>Gets or sets the optional page-break condition.</summary>
-    internal PageBreakCondition? Condition { get; set; }
+    internal MappingCondition? Condition { get; set; }
 
     /// <summary>Gets or sets the optional image directive.</summary>
     internal ImageExpression? Image { get; set; }

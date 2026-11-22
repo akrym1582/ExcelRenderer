@@ -3,7 +3,7 @@ using ExcelRenderer.Mapping.Expressions;
 
 namespace ExcelRenderer.Mapping.Templates;
 
-/// <summary>A template row or an explicitly delimited array block.</summary>
+/// <summary>A template row or an explicitly delimited array or conditional block.</summary>
 internal sealed class TemplateNode
 {
     /// <summary>Initializes a new instance of the <see cref="TemplateNode"/> class.</summary>
@@ -42,6 +42,9 @@ internal sealed class TemplateNode
 
     /// <summary>Gets the optional zero-based index alias.</summary>
     internal string? IndexAlias { get; }
+
+    /// <summary>Gets or sets the condition that controls this block.</summary>
+    internal MappingCondition? Condition { get; set; }
 
     /// <summary>Gets the nested template regions.</summary>
     internal List<TemplateNode>? Children { get; }

@@ -98,7 +98,14 @@ public static partial class ExcelTemplateMapper
                     {
                         foreach (var block in node.Blocks)
                         {
-                            Flatten(block, checked(++nextOccurrence), occurrenceId);
+                            if (node.Template.Condition is not null)
+                            {
+                                Flatten(block, occurrenceId, parentOccurrenceId);
+                            }
+                            else
+                            {
+                                Flatten(block, checked(++nextOccurrence), occurrenceId);
+                            }
                         }
                     }
                     else
@@ -164,7 +171,7 @@ public static partial class ExcelTemplateMapper
     {
         foreach (var node in nodes)
         {
-            if (node.Path is not null)
+            if (node.Path is not null || node.Condition is not null)
             {
                 yield return node;
             }

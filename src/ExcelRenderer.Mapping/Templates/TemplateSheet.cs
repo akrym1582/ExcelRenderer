@@ -18,7 +18,7 @@ internal sealed class TemplateSheet
         LastRow = sheet.LastRow;
         LastColumn = sheet.LastColumn;
         var row = 1;
-        Nodes = Parse(ref row, new HashSet<string>(StringComparer.Ordinal), false);
+        Nodes = Parse(ref row, new HashSet<string>(StringComparer.Ordinal), false, null);
     }
 
     /// <summary>Gets the template worksheet.</summary>
@@ -54,32 +54,105 @@ internal sealed class TemplateSheet
     /// <summary>Validates repeated-region restrictions after every sheet has compiled its syntax.</summary>
     internal void ValidateRepeatedRanges() => Validate(Nodes);
 
-    private List<TemplateNode> Parse(ref int row, HashSet<string> aliases, bool insideArray)
+    private static string NormalizeDirective(string text)
+    {
+        var position = 3;
+        if (!text.StartsWith("**@ ", StringComparison.Ordinal))
+        {
+            return text;
+        }
+
+        while (position < text.Length && text[position] == ' ')
+        {
+            position++;
+        }
+
+        return "**@" + text.Substring(position);
+    }
+
+    private static bool IsDirective(string text, string marker) =>
+        text.StartsWith(marker, StringComparison.Ordinal) &&
+        (text.Length == marker.Length || char.IsWhiteSpace(text[marker.Length]));
+
+    private static bool IsBlockMarker(string text, HashSet<string> aliases, string? endMarker)
+    {
+        if (IsDirective(text, "**@if") || IsDirective(text, "**@endif"))
+        {
+            var alias = IsDirective(text, "**@if") ? "if" : "endif";
+            if (aliases.Contains(alias))
+            {
+                var suffix = text.Substring(3 + alias.Length).TrimStart();
+                if (suffix.StartsWith("|", StringComparison.Ordinal) || (suffix.Length == 0 && text != endMarker))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        return text.StartsWith("**@start-array", StringComparison.Ordinal) || text.StartsWith("**@end-array", StringComparison.Ordinal);
+    }
+
+    private List<TemplateNode> Parse(ref int row, HashSet<string> aliases, bool insideArray, string? endMarker)
     {
         var nodes = new List<TemplateNode>();
         while (row <= LastRow)
         {
             var sourceRow = row;
             var cells = Sheet.TextCells.TryGetValue(row, out var sourceCells) ? sourceCells : Array.Empty<TemplateCell>();
-            var marker = cells.FirstOrDefault(c => c.Text.StartsWith("**@start-array", StringComparison.Ordinal) || c.Text.StartsWith("**@end-array", StringComparison.Ordinal));
+            var marker = cells.FirstOrDefault(c => IsBlockMarker(NormalizeDirective(c.Text), aliases, endMarker));
             if (marker is not null)
             {
+                var directive = NormalizeDirective(marker.Text);
+                var conditional = IsDirective(directive, "**@if") || IsDirective(directive, "**@endif");
                 if (Sheet.ContentCounts[sourceRow] != 1 || Sheet.MergedRanges.Any(r => r.First.Row <= sourceRow && r.Last.Row >= sourceRow))
                 {
-                    throw Error(marker, "An array marker requires a dedicated, unmerged row with no other content.");
+                    var message = conditional
+                        ? "A conditional marker requires a dedicated, unmerged row with no other content."
+                        : "An array marker requires a dedicated, unmerged row with no other content.";
+                    throw Error(marker, message);
                 }
 
-                if (marker.Text == "**@end-array")
+                if (directive == "**@end-array" || IsDirective(directive, "**@endif"))
                 {
-                    if (!insideArray)
+                    if (directive != "**@end-array" && directive != "**@endif")
                     {
-                        throw Error(marker, "An end-array marker has no matching start-array.");
+                        throw Error(marker, "Expected **@endif without arguments.");
+                    }
+
+                    if (directive != endMarker)
+                    {
+                        var message = directive == "**@endif"
+                            ? "An endif marker has no matching if at this nesting level."
+                            : "An end-array marker has no matching start-array at this nesting level.";
+                        throw Error(marker, message);
                     }
 
                     return nodes;
                 }
 
-                var match = Regex.Match(marker.Text, @"^\*\*@start-array\s+(.+?)\s+as\s+([\p{L}_][\p{L}\p{N}_]*)(?:\s*,\s*([\p{L}_][\p{L}\p{N}_]*))?$");
+                if (conditional)
+                {
+                    var condition = At(Sheet, marker, () => new MappingCondition(directive.Substring(5)));
+                    foreach (var conditionPath in condition.Paths)
+                    {
+                        ValidateAlias(marker, conditionPath, aliases);
+                    }
+
+                    row++;
+                    var body = Parse(ref row, aliases, insideArray, "**@endif");
+                    if (row > LastRow)
+                    {
+                        throw Error(marker, "The if marker has no matching endif.");
+                    }
+
+                    nodes.Add(new TemplateNode(sourceRow, row, marker, children: body) { Condition = condition });
+                    row++;
+                    continue;
+                }
+
+                var match = Regex.Match(directive, @"^\*\*@start-array\s+(.+?)\s+as\s+([\p{L}_][\p{L}\p{N}_]*)(?:\s*,\s*([\p{L}_][\p{L}\p{N}_]*))?$");
                 if (!match.Success)
                 {
                     throw Error(marker, "Expected **@start-array path[*] as alias[, index].");
@@ -106,7 +179,7 @@ internal sealed class TemplateSheet
                 }
 
                 row++;
-                var children = Parse(ref row, nestedAliases, true);
+                var children = Parse(ref row, nestedAliases, true, "**@end-array");
                 if (row > LastRow)
                 {
                     throw Error(marker, "The start-array marker has no matching end-array.");
@@ -121,17 +194,18 @@ internal sealed class TemplateSheet
             var ordinary = new TemplateNode(row, row, cells.FirstOrDefault() ?? new TemplateCell($"A{row}", 1, string.Empty));
             foreach (var cell in cells)
             {
-                if (cell.Text.StartsWith("**//", StringComparison.Ordinal))
+                var text = NormalizeDirective(cell.Text);
+                if (text.StartsWith("**//", StringComparison.Ordinal))
                 {
                     cell.IsComment = true;
                     ordinary.Cells.Add(cell);
                 }
-                else if (cell.Text == "**@page-break" || cell.Text.StartsWith("**@page-break ", StringComparison.Ordinal))
+                else if (text == "**@page-break" || text.StartsWith("**@page-break ", StringComparison.Ordinal))
                 {
                     cell.IsPageBreak = true;
-                    if (cell.Text != "**@page-break")
+                    if (text != "**@page-break")
                     {
-                        cell.Condition = At(Sheet, cell, () => new PageBreakCondition(cell.Text));
+                        cell.Condition = At(Sheet, cell, () => new MappingCondition(text, pageBreak: true));
                         foreach (var path in cell.Condition.Paths)
                         {
                             ValidateAlias(cell, path, aliases);
@@ -140,13 +214,13 @@ internal sealed class TemplateSheet
 
                     ordinary.Cells.Add(cell);
                 }
-                else if (cell.Text.StartsWith("\\**", StringComparison.Ordinal))
+                else if (text.StartsWith("\\**", StringComparison.Ordinal))
                 {
                     ordinary.Cells.Add(cell);
                 }
-                else if (cell.Text == "**@image" || cell.Text.StartsWith("**@image ", StringComparison.Ordinal))
+                else if (text == "**@image" || text.StartsWith("**@image ", StringComparison.Ordinal))
                 {
-                    cell.Image = At(Sheet, cell, () => new ImageExpression(cell.Text.Substring(8)));
+                    cell.Image = At(Sheet, cell, () => new ImageExpression(text.Substring(8)));
                     foreach (var path in cell.Image.Paths)
                     {
                         ValidateAlias(cell, path, aliases);
@@ -164,9 +238,9 @@ internal sealed class TemplateSheet
 
                     ordinary.Cells.Add(cell);
                 }
-                else if (cell.Text.StartsWith("**", StringComparison.Ordinal))
+                else if (text.StartsWith("**", StringComparison.Ordinal))
                 {
-                    cell.Expression = At(Sheet, cell, () => new CellExpression(cell.Text.Substring(2)));
+                    cell.Expression = At(Sheet, cell, () => new CellExpression(text.Substring(2)));
                     ValidateAlias(cell, cell.Expression.Path, aliases);
                     foreach (var path in cell.Expression.DecorationPaths)
                     {
@@ -216,7 +290,7 @@ internal sealed class TemplateSheet
     {
         foreach (var node in nodes)
         {
-            if (node.Path is not null)
+            if (node.Path is not null || node.Condition is not null)
             {
                 Sheet.ValidateRepeatedRange(node);
             }

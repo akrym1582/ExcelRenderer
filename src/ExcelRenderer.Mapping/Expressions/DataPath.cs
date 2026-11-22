@@ -242,6 +242,11 @@ internal sealed class DataPath
                 return member;
             }
 
+            if (allowMissing && json.ValueKind != JsonValueKind.Object)
+            {
+                throw new InvalidOperationException($"Property '{name}' requires an object.");
+            }
+
             return MissingMember(name, allowMissing);
         }
 
@@ -277,6 +282,11 @@ internal sealed class DataPath
             return MissingMember(name, allowMissing);
         }
 
+        if (allowMissing && (value is IList || value is string || (type is not null && (type.IsPrimitive || type.IsEnum || value is decimal || value is DateTime || value is TimeSpan))))
+        {
+            throw new InvalidOperationException($"Property '{name}' requires an object.");
+        }
+
         var property = type?.GetProperty(name, BindingFlags.Instance | BindingFlags.Public);
         if (property?.GetMethod?.IsPublic == true && property.GetIndexParameters().Length == 0)
         {
@@ -301,6 +311,11 @@ internal sealed class DataPath
 
         for (var i = start; i < count; i++)
         {
+            if (allowMissing && (value is null || value is JsonElement { ValueKind: JsonValueKind.Null }))
+            {
+                return null;
+            }
+
             if (tokens[i] is string name)
             {
                 value = Member(value, name, allowMissing);
@@ -317,6 +332,11 @@ internal sealed class DataPath
                 }
                 else if (allowMissing)
                 {
+                    if (value is not IList && value is not JsonElement { ValueKind: JsonValueKind.Array })
+                    {
+                        throw new InvalidOperationException($"Index {index} requires an array.");
+                    }
+
                     return null;
                 }
                 else

@@ -74,10 +74,25 @@ internal sealed class TemplateSheet
         text.StartsWith(marker, StringComparison.Ordinal) &&
         (text.Length == marker.Length || char.IsWhiteSpace(text[marker.Length]));
 
-    private static bool IsBlockMarker(string text) =>
-        text.StartsWith("**@start-array", StringComparison.Ordinal) ||
-        text.StartsWith("**@end-array", StringComparison.Ordinal) ||
-        IsDirective(text, "**@if") || IsDirective(text, "**@endif");
+    private static bool IsBlockMarker(string text, HashSet<string> aliases, string? endMarker)
+    {
+        if (IsDirective(text, "**@if") || IsDirective(text, "**@endif"))
+        {
+            var alias = IsDirective(text, "**@if") ? "if" : "endif";
+            if (aliases.Contains(alias))
+            {
+                var suffix = text.Substring(3 + alias.Length).TrimStart();
+                if (suffix.StartsWith("|", StringComparison.Ordinal) || (suffix.Length == 0 && text != endMarker))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        return text.StartsWith("**@start-array", StringComparison.Ordinal) || text.StartsWith("**@end-array", StringComparison.Ordinal);
+    }
 
     private List<TemplateNode> Parse(ref int row, HashSet<string> aliases, bool insideArray, string? endMarker)
     {
@@ -86,7 +101,7 @@ internal sealed class TemplateSheet
         {
             var sourceRow = row;
             var cells = Sheet.TextCells.TryGetValue(row, out var sourceCells) ? sourceCells : Array.Empty<TemplateCell>();
-            var marker = cells.FirstOrDefault(c => IsBlockMarker(NormalizeDirective(c.Text)));
+            var marker = cells.FirstOrDefault(c => IsBlockMarker(NormalizeDirective(c.Text), aliases, endMarker));
             if (marker is not null)
             {
                 var directive = NormalizeDirective(marker.Text);

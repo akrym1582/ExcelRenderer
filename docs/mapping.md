@@ -446,6 +446,10 @@ and can indent block markers, alias cells, page breaks, and images. Matching
 markers determine nesting. Use `\**@  endif` to output the marker as text
 with its spaces preserved.
 
+When `if` or `endif` is an array alias, a bare alias cell outputs its value.
+Inside an open conditional block a bare `**@endif` closes the block. An alias
+with a formatting modifier remains a cell expression.
+
 A condition can read a Boolean path such as `$.ShowDetails` or `@item.ShowNote`.
 Missing and null values evaluate to false. Other types produce an error at the
 original condition cell. Conditions also support numeric alias comparisons

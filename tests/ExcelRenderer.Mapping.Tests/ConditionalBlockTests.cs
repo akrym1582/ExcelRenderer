@@ -140,6 +140,67 @@ public sealed class ConditionalBlockTests
         Assert.Contains("Boolean", error.Message);
     }
 
+    [Theory]
+    [InlineData("if")]
+    [InlineData("endif")]
+    public void Keyword_aliases_coexist_with_conditional_rows(string alias)
+    {
+        using var input = Template(
+            "**@start-array $.items[*] as " + alias,
+            "**@" + alias,
+            "**@if $.show",
+            "Details",
+            "**@endif",
+            "**@  " + alias + " | format(\"D2\")",
+            "**@end-array");
+        using var output = new MemoryStream();
+        ExcelTemplateMapper.Map(input, output, new { items = new[] { 5 }, show = true });
+        using var result = WorkbookProbe.Open(output);
+        Assert.Equal(5, Number(result, "A1"));
+        Assert.Equal("Details", Text(result, "A2"));
+        Assert.Equal("05", Text(result, "A3"));
+    }
+
+    [Theory]
+    [InlineData("$.flags[0]", "array")]
+    [InlineData("$.flags.enabled", "object")]
+    public void Wrong_intermediate_type_reports_condition_cell(string path, string expectedType)
+    {
+        foreach (var json in new[] { true, false })
+        {
+            using var input = Template("Header", "**@if " + path, "Details", "**@endif");
+            using var output = new MemoryStream();
+            var error = Assert.Throws<MappingException>(() =>
+            {
+                if (json)
+                {
+                    ExcelTemplateMapper.MapJson(input, output, """{"flags":true}""");
+                }
+                else
+                {
+                    ExcelTemplateMapper.Map(input, output, new { flags = true });
+                }
+            });
+            Assert.Equal("A2", error.CellAddress);
+            Assert.Contains(expectedType, error.Message);
+            Assert.Empty(output.ToArray());
+        }
+    }
+
+    [Theory]
+    [InlineData("{}")]
+    [InlineData("""{"flags":null}""")]
+    [InlineData("""{"flags":[]}""")]
+    [InlineData("""{"flags":[{}]}""")]
+    public void Missing_intermediate_values_skip_rows(string json)
+    {
+        using var input = Template("**@if $.flags[0].enabled", "Details", "**@endif", "Total");
+        using var output = new MemoryStream();
+        ExcelTemplateMapper.MapJson(input, output, json);
+        using var result = WorkbookProbe.Open(output);
+        Assert.Equal("Total", Text(result, "A1"));
+    }
+
     private static MemoryStream Template(params string[] values)
     {
         var rows = values.Select((value, index) => new S.Row(SdkWorkbook.Text($"A{index + 1}", value)) { RowIndex = (uint)index + 1 });

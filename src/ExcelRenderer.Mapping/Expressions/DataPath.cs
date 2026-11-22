@@ -154,10 +154,11 @@ internal sealed class DataPath
     /// <param name="aliases">The aliases.</param>
     /// <param name="element">The element.</param>
     /// <param name="substituteWildcard">The substitute wildcard.</param>
+    /// <param name="allowMissing">Whether missing properties and indices resolve to null.</param>
     /// <returns>The resolved value.</returns>
-    internal object? Resolve(object? root, IReadOnlyDictionary<string, object?> aliases, object? element = null, bool substituteWildcard = false)
+    internal object? Resolve(object? root, IReadOnlyDictionary<string, object?> aliases, object? element = null, bool substituteWildcard = false, bool allowMissing = false)
     {
-        return ResolveCount(root, aliases, tokens.Count, element, substituteWildcard);
+        return ResolveCount(root, aliases, tokens.Count, element, substituteWildcard, allowMissing);
     }
 
     /// <summary>Resolves the array prefix with a bounded enumeration.</summary>
@@ -232,7 +233,7 @@ internal sealed class DataPath
         }
     }
 
-    private static object? Member(object? value, string name)
+    private static object? Member(object? value, string name, bool allowMissing)
     {
         if (value is JsonElement json)
         {
@@ -241,7 +242,7 @@ internal sealed class DataPath
                 return member;
             }
 
-            throw new InvalidOperationException($"Property '{name}' was not found (names are case-sensitive).");
+            return MissingMember(name, allowMissing);
         }
 
         if (value is IDictionary dictionary)
@@ -251,7 +252,7 @@ internal sealed class DataPath
                 return dictionary[name];
             }
 
-            throw new InvalidOperationException($"Property '{name}' was not found (names are case-sensitive).");
+            return MissingMember(name, allowMissing);
         }
 
         if (value is IDictionary<string, object?> objectDictionary)
@@ -261,7 +262,7 @@ internal sealed class DataPath
                 return entry;
             }
 
-            throw new InvalidOperationException($"Property '{name}' was not found (names are case-sensitive).");
+            return MissingMember(name, allowMissing);
         }
 
         var type = value?.GetType();
@@ -273,7 +274,7 @@ internal sealed class DataPath
                 return readOnlyDictionary.GetProperty("Item")!.GetValue(value, new object[] { name });
             }
 
-            throw new InvalidOperationException($"Property '{name}' was not found (names are case-sensitive).");
+            return MissingMember(name, allowMissing);
         }
 
         var property = type?.GetProperty(name, BindingFlags.Instance | BindingFlags.Public);
@@ -282,10 +283,14 @@ internal sealed class DataPath
             return property.GetValue(value);
         }
 
-        throw new InvalidOperationException($"Property '{name}' was not found (names are case-sensitive).");
+        return MissingMember(name, allowMissing);
     }
 
-    private object? ResolveCount(object? root, IReadOnlyDictionary<string, object?> aliases, int count, object? element, bool substituteWildcard)
+    private static object? MissingMember(string name, bool allowMissing) => allowMissing
+        ? null
+        : throw new InvalidOperationException($"Property '{name}' was not found (names are case-sensitive).");
+
+    private object? ResolveCount(object? root, IReadOnlyDictionary<string, object?> aliases, int count, object? element, bool substituteWildcard, bool allowMissing = false)
     {
         var start = substituteWildcard && WildcardIndex >= 0 ? WildcardIndex + 1 : 0;
         var value = start > 0 ? element : root;
@@ -298,7 +303,7 @@ internal sealed class DataPath
         {
             if (tokens[i] is string name)
             {
-                value = Member(value, name);
+                value = Member(value, name, allowMissing);
             }
             else if (tokens[i] is int index)
             {
@@ -309,6 +314,10 @@ internal sealed class DataPath
                 else if (value is IList list && index < list.Count)
                 {
                     value = list[index];
+                }
+                else if (allowMissing)
+                {
+                    return null;
                 }
                 else
                 {

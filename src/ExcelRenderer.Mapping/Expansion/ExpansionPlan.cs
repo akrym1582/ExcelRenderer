@@ -40,6 +40,17 @@ internal sealed class ExpansionPlan
         {
             cancellationToken.ThrowIfCancellationRequested();
             var planned = new ExpansionNode(node);
+            if (node.Condition is { } condition)
+            {
+                if (TemplateSheet.At(template.Sheet, node.Location, () => condition.Evaluate(root, aliases)))
+                {
+                    planned.Blocks.Add(Plan(node.Children!, aliases));
+                }
+
+                result.Add(planned);
+                continue;
+            }
+
             var items = node.Path is null ? new object?[] { null } :
                 TemplateSheet.At(template.Sheet, node.Location, () => node.Path.Array(root, aliases, options.MaxOutputRows));
             for (var index = 0; index < items.Count; index++)
@@ -94,7 +105,7 @@ internal sealed class ExpansionPlan
 
         if (cell.IsPageBreak)
         {
-            return new MappedValue(cell.Condition is null || cell.Condition.Evaluate(aliases));
+            return new MappedValue(cell.Condition is null || cell.Condition.Evaluate(root, aliases));
         }
 
         if (cell.Expression is null)

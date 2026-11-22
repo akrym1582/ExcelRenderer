@@ -307,7 +307,7 @@ Directive names are case-sensitive. Write `**@end-array` and unconditional
 page break accepts `if` followed by the numeric comparison described below.
 There are no direction or page-count parameters. Formatting accepts one `format()` or
 `date()` function with one or two JSON string arguments, optionally combined with
-one `font-color(path)` modifier in either order. Duplicate modifiers are rejected. Apart from page-break conditions, arithmetic and calculations belong in the caller, not Excel formulas.
+one `font-color(path)` modifier in either order. Duplicate modifiers are rejected. Conditions support the remainder operator. Calculate other values in the caller.
 
 Mapping validates the structure and path syntax of every worksheet, then
 evaluates the instantiated rows before applying expansion. It is independent
@@ -422,6 +422,37 @@ Inside a block, use explicit nested markers rather than implicit wildcard-row
 repetition. Start-array paths must end in `[*]`. Marker mismatch, unknown aliases,
 and unsupported path syntax are validated even when an array is empty. Missing
 data in an uninstantiated empty block is not evaluated.
+
+## Conditional rows
+
+Place `**@if condition` and `**@endif` on separate, unmerged rows with one
+content cell each. Mapping removes both marker rows. A true condition outputs
+the body. A false condition removes the body and moves later rows up.
+
+```text
+**@if $.ShowDetails
+**@  start-array $.Items[*] as item
+**@    item.Name
+**@    if @item.ShowNote
+**@      item.Note
+**@    endif
+**@  end-array
+**@endif
+```
+
+Conditional and array blocks can nest in either order. Conditions can use
+aliases from enclosing arrays. Spaces immediately after `**@` are optional
+and can indent block markers, alias cells, page breaks, and images. Matching
+markers determine nesting. Use `\**@  endif` to output the marker as text
+with its spaces preserved.
+
+A condition can read a Boolean path such as `$.ShowDetails` or `@item.ShowNote`.
+Missing and null values evaluate to false. Other types produce an error at the
+original condition cell. Conditions also support numeric alias comparisons
+such as `index % 10 == 0`, `!`, `&&`, `||`, and parentheses. The template
+parser checks syntax and alias scope in every block. Data is only looked up
+as needed, including when evaluating logical operands. Structural restrictions
+for repeated regions also apply to conditional blocks.
 
 ## Page breaks
 

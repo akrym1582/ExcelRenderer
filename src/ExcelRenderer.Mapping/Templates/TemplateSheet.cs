@@ -54,6 +54,31 @@ internal sealed class TemplateSheet
     /// <summary>Validates repeated-region restrictions after every sheet has compiled its syntax.</summary>
     internal void ValidateRepeatedRanges() => Validate(Nodes);
 
+    private static string NormalizeDirective(string text)
+    {
+        var position = 3;
+        if (!text.StartsWith("**@ ", StringComparison.Ordinal))
+        {
+            return text;
+        }
+
+        while (position < text.Length && text[position] == ' ')
+        {
+            position++;
+        }
+
+        return "**@" + text.Substring(position);
+    }
+
+    private static bool IsDirective(string text, string marker) =>
+        text.StartsWith(marker, StringComparison.Ordinal) &&
+        (text.Length == marker.Length || char.IsWhiteSpace(text[marker.Length]));
+
+    private static bool IsBlockMarker(string text) =>
+        text.StartsWith("**@start-array", StringComparison.Ordinal) ||
+        text.StartsWith("**@end-array", StringComparison.Ordinal) ||
+        IsDirective(text, "**@if") || IsDirective(text, "**@endif");
+
     private List<TemplateNode> Parse(ref int row, HashSet<string> aliases, bool insideArray, string? endMarker)
     {
         var nodes = new List<TemplateNode>();
@@ -68,9 +93,10 @@ internal sealed class TemplateSheet
                 var conditional = IsDirective(directive, "**@if") || IsDirective(directive, "**@endif");
                 if (Sheet.ContentCounts[sourceRow] != 1 || Sheet.MergedRanges.Any(r => r.First.Row <= sourceRow && r.Last.Row >= sourceRow))
                 {
-                    throw Error(marker, conditional
+                    var message = conditional
                         ? "A conditional marker requires a dedicated, unmerged row with no other content."
-                        : "An array marker requires a dedicated, unmerged row with no other content.");
+                        : "An array marker requires a dedicated, unmerged row with no other content.";
+                    throw Error(marker, message);
                 }
 
                 if (directive == "**@end-array" || IsDirective(directive, "**@endif"))
@@ -82,9 +108,10 @@ internal sealed class TemplateSheet
 
                     if (directive != endMarker)
                     {
-                        throw Error(marker, directive == "**@endif"
+                        var message = directive == "**@endif"
                             ? "An endif marker has no matching if at this nesting level."
-                            : "An end-array marker has no matching start-array at this nesting level.");
+                            : "An end-array marker has no matching start-array at this nesting level.";
+                        throw Error(marker, message);
                     }
 
                     return nodes;
@@ -93,9 +120,9 @@ internal sealed class TemplateSheet
                 if (conditional)
                 {
                     var condition = At(Sheet, marker, () => new MappingCondition(directive.Substring(5)));
-                    foreach (var path in condition.Paths)
+                    foreach (var conditionPath in condition.Paths)
                     {
-                        ValidateAlias(marker, path, aliases);
+                        ValidateAlias(marker, conditionPath, aliases);
                     }
 
                     row++;
@@ -235,31 +262,6 @@ internal sealed class TemplateSheet
 
         return nodes;
     }
-
-    private static string NormalizeDirective(string text)
-    {
-        var position = 3;
-        if (!text.StartsWith("**@ ", StringComparison.Ordinal))
-        {
-            return text;
-        }
-
-        while (position < text.Length && text[position] == ' ')
-        {
-            position++;
-        }
-
-        return "**@" + text.Substring(position);
-    }
-
-    private static bool IsDirective(string text, string marker) =>
-        text.StartsWith(marker, StringComparison.Ordinal) &&
-        (text.Length == marker.Length || char.IsWhiteSpace(text[marker.Length]));
-
-    private static bool IsBlockMarker(string text) =>
-        text.StartsWith("**@start-array", StringComparison.Ordinal) ||
-        text.StartsWith("**@end-array", StringComparison.Ordinal) ||
-        IsDirective(text, "**@if") || IsDirective(text, "**@endif");
 
     private void ValidateAlias(TemplateCell cell, DataPath path, HashSet<string> aliases)
     {

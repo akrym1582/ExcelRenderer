@@ -43,13 +43,13 @@ internal sealed class MappingCondition
     /// <summary>Gets all referenced paths, including those in short-circuited branches.</summary>
     internal List<DataPath> Paths { get; } = new List<DataPath>();
 
+    private string ConditionName => pageBreak ? "page-break condition" : "if condition";
+
     /// <summary>Evaluates the condition with logical short-circuiting.</summary>
     /// <param name="root">The caller data.</param>
     /// <param name="aliases">The scoped aliases.</param>
     /// <returns>The condition result.</returns>
     internal bool Evaluate(object? root, IReadOnlyDictionary<string, object?> aliases) => evaluate(root, aliases);
-
-    private string ConditionName => pageBreak ? "page-break condition" : "if condition";
 
     private bool Compare(object? value, decimal? divisor, string comparison, decimal expected)
     {
